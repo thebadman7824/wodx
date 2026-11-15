@@ -228,6 +228,32 @@ async function onStage(p = {}) {
   }
 }
 
+/* ---- a call for help (B4883) ---- */
+
+/** Someone calls for help from a scene: the watch or the police come after the era's delay, on the clock. */
+export async function callHelp({scene, near = null, how = "shout", who = ""} = {}) {
+  if ( !isActiveGM() || !on() || !scene ) return null;
+  const p = R.helpPlan(how, yearNow()), st = reachState();
+  st.help = [...(st.help ?? []), {scene: scene.id, token: near?.id ?? null, at: now() + p.seconds, who: String(who ?? "")}].slice(-20);
+  await game.settings.set(MOD, "reachState", st);
+  await log({kind: "note", text: `${who || "Someone"} calls for help at ${scene.navName || scene.name}: ${p.words} are on the way.`});
+  return p;
+}
+async function helpArrives() {
+  const st = reachState(), due = R.helpDue(st.help, now());
+  if ( !due.length ) return 0;
+  st.help = (st.help ?? []).filter(h => !due.includes(h));
+  await game.settings.set(MOD, "reachState", st);
+  for ( const h of due ) {
+    const scene = game.scenes.get(h.scene);
+    if ( !scene ) continue;
+    const near = h.token ? scene.tokens.get(h.token) : null;
+    const made = await send({kind: "law", scene, near, why: "a call for help", flag: {help: true}});
+    await gmCard(`Help comes to ${scene.navName || scene.name}`, `${R.forceWords("law", yearNow()).replace(/^\w/, c => c.toUpperCase())} answer ${h.who ? `${h.who}'s` : "the"} call for help.`, {scene, tokens: made});
+  }
+  return due.length;
+}
+
 /** Through a manhunt: a patrol each night to the culprit, and a knock at a day sleeper's haven by day. */
 export async function patrols() {
   if ( !isActiveGM() || !on() ) return 0;
@@ -382,7 +408,7 @@ export async function projectDone(actor, task) {
 
 export function registerReachHooks() {
   Hooks.on("wodxLawStage", p => { onStage(p).catch(e => console.error(`${MOD} | law stage`, e)); });
-  Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } patrols().catch(e => console.error(`${MOD} | patrols`, e)); });
+  Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } patrols().catch(e => console.error(`${MOD} | patrols`, e)); if ( isActiveGM() && on() ) helpArrives().catch(e => console.error(`${MOD} | help`, e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const html = el?.[0] ?? el;
     const away = message.flags?.[MOD]?.reachAway;
@@ -415,4 +441,4 @@ export async function onRequest(p = {}) {
   return answer({...d, choice: p.choice === "resist" ? "resist" : "yield"}, message);
 }
 
-export const api = () => ({send, sendAway, whereIs, road, raid, lawCome, answer, patrols, lever, writeBack, projectDone, rules: R});
+export const api = () => ({send, sendAway, whereIs, road, raid, lawCome, answer, patrols, callHelp, helpArrives, lever, writeBack, projectDone, rules: R});

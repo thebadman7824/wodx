@@ -83,7 +83,19 @@ export function pruneReads(reads = {}, now, max = 40) {
  * The ring a token gets under a sight: {colour, alpha, words} or null. safe: the colour-blind palette.
  * needsRead (0.10.0): Aura Perception shows only what `read` (from readFor) showed; false gives every ring as before.
  */
-export function ringFor(sight, profile, {safe = false, needsRead = false, read = null} = {}) {
+/**
+ * B5094, B5095: a vampire in Golconda (Ben's Golconda Desk, house readings: the books leave it unsaid). Its aura is
+ * still, pale without the Beast's flickers, and a soft halo shows to anyone using a sight that reads auras or senses,
+ * and to the Storyteller always.
+ */
+export const GOLCONDA_HALO = {colour: 0xf6f0d8, alpha: 0.45, words: "a stillness"};
+export const isGolconda = a => !!a?.flags?.["wodx-actions"]?.golconda;
+export function ringFor(sight, profile, {safe = false, needsRead = false, read = null, golconda = false} = {}) {
+  const r0 = ringBase(sight, profile, {safe, needsRead, read});
+  if ( r0 && golconda && SIGHTS[sight]?.rings === "aura" && r0.key === "kindred" ) return {...r0, words: "pale and still", golconda: true};
+  return r0;
+}
+function ringBase(sight, profile, {safe = false, needsRead = false, read = null} = {}) {
   const kind = SIGHTS[sight]?.rings;
   let r = null;
   if ( kind === "aura" && needsRead ) {

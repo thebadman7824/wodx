@@ -14,6 +14,8 @@ while ($true) {
   }
   # Logs older than 14 days go, so the runner never fills the drive.
   Get-ChildItem $logs -File | ? { $_.LastWriteTime -lt (Get-Date).AddDays(-14) } | Remove-Item -Force -EA SilentlyContinue
+  # B5211: the watchdog runs apart from this script; start-runner.ps1 starts it when it is missing.
+  if (Test-Path "$repo\tools\pcq\start-runner.ps1") { & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$repo\tools\pcq\start-runner.ps1" 2>&1 | Out-Null }
   & node "$repo\tools\pcq\runner.mjs" *>> "$logs\runner-console.log"
   $code = $LASTEXITCODE
   "$(Get-Date -Format o) runner exit $code" | Add-Content "$logs\runner-console.log"

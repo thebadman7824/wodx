@@ -54,7 +54,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.83.1";
+const VERSION = "0.88.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -155,7 +155,9 @@ const wounds = actor => {
 };
 const cardsNow = () => (game.messages?.contents ?? []).slice(-400).map(m => m.getFlag?.("wodx-combat", "data")).filter(Boolean);
 const hiddenByObfuscate = tok => !!tok.actor?.statuses?.has?.("wodx-obfuscated") || !!chron()?.conditions?.hasCondition?.(tok.actor, "obfuscated");
-const hidden = tok => tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || hiddenByObfuscate(tok);
+// B4885: a token an NPC's search found stays found for the rest of that fight
+const spottedNow = tok => { const f = tok.document?.flags?.[MOD]?.spotted; return !!f && !!game.combat && f === game.combat.id; };
+const hidden = tok => !spottedNow(tok) && (tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || hiddenByObfuscate(tok));
 const supernatural = actor => (C()?.getKind?.(actor) ?? "mortal") !== "mortal";
 /**
  * 0.33.0 (B1380): a fighter goes for "the monster" only once it can tell one: plainly inhuman, shown by a sense, or
@@ -277,6 +279,7 @@ export function readFight(tok, combat = game.combat) {
   const state = {
     self: {kind, wounds: wounds(actor), willpower: num(adv.willpower?.temporary), blood: num(adv.bloodpool?.temporary), bloodMax: num(adv.bloodpool?.max),
       selfcontrol: num(adv.virtues?.selfcontrol?.permanent) || 3, rage: num(adv.rage?.temporary), rageMax: num(adv.rage?.permanent),
+      animalGhoul: !!(actor.flags?.["wodx-creation"]?.animalGhoul || (actor.flags?.["wodx-creation"]?.animal && s.settings?.variant === "ghoul")),
       hasPowers: actor.items.some(i => i.type === "Power"), inFrenzy: !!s.conditions?.isfrenzy || !!chron()?.conditions?.hasCondition?.(actor, "frenzy"),
       rotschreck: !!chron()?.conditions?.hasCondition?.(actor, "rotschreck"),
       // A Fear keyword from WoDX Actions (Traits With Teeth step 5): the NPC keeps away and flees
@@ -530,6 +533,21 @@ async function undo(snap) {
   }
 }
 
+/**
+ * B5056: an animal ghoul's frenzy check: Willpower at difficulty 6 (an animal has no Self-Control, B5046; no easier
+ * difficulty for animals, Ben's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
+ */
+async function animalFrenzy(tok) {
+  const actor = tok.actor;
+  const dice = Math.max(1, num(actor.system?.advantages?.willpower?.permanent) || 1);
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
+  const net = faces.filter(f => f >= 6).length - faces.filter(f => f === 1).length;
+  const holds = net > 0;
+  if ( !holds ) { try { await chron()?.conditions?.setCondition?.(actor, "frenzy", true); } catch (e) { console.warn(`${MOD} | frenzy`, e); } }
+  return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at 6 (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
+}
+
 /** Carry out one option. Returns {done, text}. */
 async function execute(tok, opt) {
   const actor = tok.actor;
@@ -566,12 +584,14 @@ async function execute(tok, opt) {
     }
     case "flee": {
       if ( !squareGrid() ) return {done: false, text: "This scene is gridless and WoDX is set not to move NPCs there: move the token by hand."};
-      const foes = readFight(tok).enemies.map(cellOf);
+      const foeToks = readFight(tok).enemies, foes = foeToks.map(cellOf);
       const map = NR.reachable(cellOf(tok), passableFor(tok), cellsFor(lim.run), {neighbors: stepsFor()});
       const px = c => grid().getCenterPoint(c);
       const cell = NR.fleeCell(map, foes, gridKind() === "hex" ? ((a, b) => Math.hypot(px(a).x - px(b).x, px(a).y - px(b).y)) : undefined);
       const path = cell ? NR.pathTo(cell) : null;
       const moved = path ? await walk(tok, path) : false;
+      // B4887: foes close behind give chase (WoDX Interactables)
+      if ( moved ) { try { await game.modules.get("wodx-interactables")?.api?.chase?.fled?.(tok.document, foeToks); } catch (e) { console.warn(`${MOD} | chase`, e); } }
       return {done: moved, path, text: moved ? `${tok.name} ${pace.atWheel ? `drives off in the ${String(pace.ride?.label ?? "vehicle").toLowerCase()}` : "flees"}.` : `${tok.name} has nowhere to run.`};
     }
     case "board": {
@@ -596,8 +616,9 @@ async function execute(tok, opt) {
     }
     case "defend":
       await tok.document.setFlag(MOD, "fullDefense", `${game.combat?.id}:${game.combat?.round}`);
-      return {done: true, text: `${tok.name} goes on full defence: every action this turn is a dodge, block or parry (the Storyteller rolls them as they come).`};
+      return {done: true, text: `${tok.name} goes on full defence: no attack this turn, and WoDX Combat meets every attack on them with their best dodge, block or parry.`};
     case "frenzy":
+      if ( opt.animal ) return animalFrenzy(tok);
       if ( C().getKind(actor) === "lupine" ) await A()?.rageRoll?.({actor});
       else await A()?.frenzy?.({actor});
       return {done: true, text: `Frenzy check for ${tok.name}.`};
@@ -615,11 +636,45 @@ async function execute(tok, opt) {
       const made = await game.combat.createEmbeddedDocuments("Combatant", near.map(t => ({tokenId: t.id, sceneId: t.scene.id, actorId: t.actor?.id})));
       return {done: true, text: `${tok.name} calls for help: ${near.map(t => t.name).join(" and ")} join the fight (they roll initiative next turn).`, added: made.map(c => c.id)};
     }
-    case "search": return {done: true, text: `${tok.name} searches for the unseen (Perception + Alertness, or Auspex against Obfuscate: the Storyteller rolls).`};
+    case "search": {
+      // B4885: the same notice roll as the reaction regions, against everyone hidden within sight
+      const unseen = canvas.tokens.placeables.filter(t => t.id !== tok.id && t.actor && hidden(t) && (t.actor.hasPlayerOwner || !t.document.hidden));
+      const found = [];
+      for ( const t of unseen ) {
+        const r = await routines.noticeBy(tok, t).catch(() => null);
+        if ( !r?.noticed ) continue;
+        found.push(t.name);
+        await t.document.setFlag(MOD, "spotted", game.combat?.id ?? "yes");
+        if ( t.document.hidden && t.actor.hasPlayerOwner ) await t.document.update({hidden: false});
+        if ( t.document.flags?.[MOD]?.sneaking ) await t.document.unsetFlag(MOD, "sneaking");
+      }
+      return {done: true, text: unseen.length ? (found.length ? `${tok.name} searches and finds ${found.join(", ")}.` : `${tok.name} searches and finds no one.`) : `${tok.name} searches; there is no one hidden here.`};
+    }
     case "surrender":
       await tok.document.setFlag(MOD, "surrendered", game.combat?.id ?? "yes");
       return {done: true, text: `${tok.name} throws down their arms and yields. They take no more actions in this fight unless the Storyteller says so.`};
-    case "hostage": return {done: true, text: `${tok.name} tries to seize a bystander as a shield (the Storyteller decides who and rolls it).`};
+    case "hostage": {
+      // B4885: the nearest bystander or passer-by not in the fight, seized with Dexterity + Brawl (difficulty 6) and held as a shield
+      const inFight = new Set((game.combat?.combatants ?? []).map(c => c.tokenId));
+      const near = canvas.tokens.placeables.filter(t => t.id !== tok.id && t.actor && !t.actor.hasPlayerOwner && !inFight.has(t.id) && !t.document.hidden && !t.actor.statuses?.has?.("dead") && !t.actor.statuses?.has?.("unconscious"))
+        .map(t => ({t, d: yardsBetween(tok, t) ?? 1e9})).filter(x => x.d <= 2 * (lim.run || 0) + 2).sort((a, b) => a.d - b.d)[0]?.t ?? null;
+      if ( !near ) return {done: false, text: `${tok.name} looks for someone to seize, and there is no one near.`};
+      let path = null;
+      if ( (yardsBetween(tok, near) ?? 0) > 2 ) {
+        const way = approach(tok, near);
+        if ( !way.path || way.cost > cellsFor(lim.attackAfter) ) return {done: false, text: `${tok.name} cannot reach ${near.name} this turn.`};
+        if ( await walk(tok, way.path) ) path = way.path;
+      }
+      const dice = Math.max(1, (Number(actor.system?.attributes?.dexterity?.value) || 0) + (Number(actor.system?.abilities?.brawl?.value) || 0));
+      const roll = await new Roll(`${dice}d10cs>=6`).evaluate();
+      const ok = (Number(roll.total) || 0) > 0;
+      if ( ok ) {
+        await tok.document.setFlag(MOD, "hostage", {token: near.id, combat: game.combat?.id ?? null});
+        try { await chron()?.conditions?.setCondition?.(near.actor, "held", true); } catch (e) { /* no conditions */ }
+      }
+      await roll.toMessage({speaker: ChatMessage.getSpeaker({token: tok.document}), flavor: `${tok.name} grabs at ${near.name}: Dexterity + Brawl, ${dice} dice at 6`}, {rollMode: "gmroll"});
+      return {done: true, path, text: ok ? `${tok.name} seizes ${near.name} and holds them as a shield: attacks on ${tok.name} are 2 harder while they hold on.` : `${tok.name} grabs at ${near.name}, who twists free.`};
+    }
     default: return {done: true, text: `${tok.name} waits.`};
   }
 }
@@ -985,14 +1040,14 @@ Hooks.once("init", () => {
     fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, onSkipEnd: FATES.onSkipEnd, rules: FATES.rules},
     cults, openCults: cults.open,
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
-    bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
+    bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, payFamiliar: BONDS.payFamiliar, rules: BONDS.rules},
     servants: {records: SERVANTS.records, mastersOf: SERVANTS.mastersOf, servantsOf: SERVANTS.servantsOf, bind: SERVANTS.bind, unbind: SERVANTS.unbind,
       restrain: SERVANTS.restrain, orderWeight: SERVANTS.orderWeight, warmFloor: SERVANTS.warmFloor, dominateShift: SERVANTS.dominateShift,
       condition: SERVANTS.condition, socialRoll: SERVANTS.socialRoll, flash: SERVANTS.flash, flashBetween: SERVANTS.flashBetween,
       openBind: SERVANTS.openBind, setRevenantMaster: SERVANTS.setRevenantMaster, familyKeyOf: SERVANTS.familyKeyOf, rules: SERVANTS.rules},
     memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
-      answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+      answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
     family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,
       makeChild: FAMILY.makeChild, childSheet: FAMILY.childSheetOf, ageOf: FAMILY.ageOf, growthPlan: FAMILY.growthPlan, grow: FAMILY.applyGrowth, planLines: FAMILY.planLines,
       propose: FAMILY.propose, answer: FAMILY.answer, checkWeddings: FAMILY.checkWeddings, rules: FAMILY.rules},
@@ -1115,6 +1170,27 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });
+/**
+ * B5057: a Storyteller's ghoul that botches its craving roll (WoDX Chronicle B5051) goes for the nearest living person
+ * on its scene: its token moves next to them and the Storyteller is told it means to drink.
+ */
+Hooks.on("wodxGhoulCraving", async e => {
+  try {
+    if ( !isActiveGM() || e?.result !== "botch" || !e.actor || e.actor.hasPlayerOwner ) return;
+    const tok = canvas?.tokens?.placeables?.find(t => t.actor?.id === e.actor.id);
+    if ( !tok ) return;
+    const prey = canvas.tokens.placeables.filter(t => t !== tok && t.actor && !t.document.hidden && (C()?.getKind?.(t.actor) ?? "mortal") === "mortal"
+      && !t.actor.statuses?.has?.("dead") && t.actor.flags?.["wodx-creation"]?.animalGhoul !== true)
+      .sort((a, b) => (yardsBetween(tok, a) ?? 1e9) - (yardsBetween(tok, b) ?? 1e9))[0];
+    if ( !prey ) return;
+    const g = canvas.grid.size;
+    const dx = Math.sign(tok.document.x - prey.document.x) * g, dy = Math.sign(tok.document.y - prey.document.y) * g;
+    await tok.document.update({x: prey.document.x + dx, y: prey.document.y + dy});
+    await ChatMessage.create({speaker: {alias: "Behaviour"}, whisper: gmIds(),
+      content: `<div class="wodx-card"><p><b>${esc(tok.name)}</b> cannot hold back the craving and goes for ${esc(prey.name)} to drink (V20 Dark Ages p. 401).</p></div>`});
+  } catch (err) { console.error(`${MOD} | craving`, err); }
+});
+
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;
   const root = html instanceof HTMLElement ? html : html[0];

@@ -3,14 +3,26 @@
 # The runner is started through WMI so it does not belong to whatever started this script, at below-normal priority.
 $base = 'D:\WoDX\pcq'; $repo = "$base\repo"
 New-Item -ItemType Directory -Force "$base\logs" | Out-Null
+# B5211: the watchdog runs apart from the runner and starts it again if it dies.
+function Start-Watchdog {
+  if (-not (Test-Path "$base\watchdog.ps1")) { return }
+  $dog = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*-File D:\WoDX\pcq\watchdog.ps1*' }
+  if ($dog -or (Test-Path "$base\watchdog-off")) { return }
+  $w = Invoke-CimMethod Win32_Process -MethodName Create -Arguments @{CommandLine = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $base\watchdog.ps1"; CurrentDirectory = $base}
+  if ($w.ReturnValue -eq 0) { "Watchdog started (process $($w.ProcessId))." }
+}
+foreach ($f in 'start-runner.ps1', 'watchdog.ps1') {
+  if (Test-Path "$repo\tools\pcq\$f") { Copy-Item "$repo\tools\pcq\$f" "$base\$f" -Force -EA SilentlyContinue }
+}
 $running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*-File D:\WoDX\pcq\run-runner.ps1*' }
-if ($running) { "PC runner already running (process $($running[0].ProcessId))."; exit 0 }
+if ($running) { Start-Watchdog; "PC runner already running (process $($running[0].ProcessId))."; exit 0 }
 if (-not (Test-Path "$repo\.git")) {
   git clone -q https://github.com/thebadman7824/wodx.git $repo
   if ($LASTEXITCODE) { "Clone failed."; exit 1 }
 }
 git -C $repo fetch -q origin; git -C $repo checkout -q -f --detach origin/main
 Copy-Item "$repo\tools\pcq\run-runner.ps1" "$base\run-runner.ps1" -Force
+Start-Watchdog
 $r = Invoke-CimMethod Win32_Process -MethodName Create -Arguments @{CommandLine = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $base\run-runner.ps1"; CurrentDirectory = $base}
 if ($r.ReturnValue -ne 0) { "Could not start the runner (WMI $($r.ReturnValue))."; exit 1 }
 Start-Sleep 2

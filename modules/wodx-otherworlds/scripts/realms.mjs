@@ -181,7 +181,7 @@ export async function checkDisembodiment(now = game.time.worldTime) {
     if ( !d.due || actor.getFlag(MODULE_ID, "disembodyWarned") === since ) continue;
     await actor.setFlag(MODULE_ID, "disembodyWarned", since);
     await chron().propose({type: DISEMBODY_TYPE, key: `${DISEMBODY_TYPE}:${actor.id}:${since}`, title: `${actor.name}: Disembodiment`,
-      detail: `${actor.name} has been beyond the Penumbra for ${Math.floor(d.days)} days, past three phases of the moon. The body starts to fade into spirit stuff (M20 pdf 89-90 / pp. 88-89). The book gives no roll; approve to mark it begun, and decide how it shows.`,
+      detail: `${actor.name} has been beyond the Penumbra for ${Math.floor(d.days)} days, past three phases of the moon. The body starts to fade into spirit stuff (M20 pdf 89-90 / pp. 88-89). The book gives no roll; approve and it begins: a step for each lunar month more beyond the Penumbra, dice off the body's rolls, shown on the token.`,
       data: {actorId: actor.id, since}});
     k++;
   }
@@ -191,8 +191,8 @@ export function registerDisembodiment() {
   chron()?.registerApprovalHandler?.(DISEMBODY_TYPE, {label: "Disembodiment", approve: async e => {
     const actor = game.actors.get(e.data?.actorId);
     if ( !actor ) throw new Error("The character is gone");
-    await actor.setFlag(MODULE_ID, "disembodied", {since: e.data.since, begun: game.time.worldTime});
-    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"}, content: card("Disembodiment", `<p><strong>${esc(actor.name)}</strong> begins to turn to spirit stuff. The mind keeps on; the body fades. The Storyteller decides the rest.</p>`)});
+    await actor.setFlag(MODULE_ID, "disembodied", {since: e.data.since, begun: game.time.worldTime, last: game.time.worldTime, away: 0, step: 1});
+    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"}, content: card("Disembodiment", `<p><strong>${esc(actor.name)}</strong> begins to turn to spirit stuff. The mind keeps on; the body fades a step each lunar month more beyond the Penumbra.</p>`)});
   }});
 }
 /** Record when an actor went beyond the Penumbra, and forget it on return. */

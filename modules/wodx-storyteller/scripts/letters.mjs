@@ -61,6 +61,8 @@ export async function planFor(how, {from, to, reach = "near", year = yearNow()} 
 
 export function registerLetterSettings() {
   game.settings.register(MOD, "letters", {scope: "world", config: false, type: Array, default: []});
+  game.settings.register(MOD, "npcAnswers", {scope: "world", config: true, type: Boolean, default: true,
+    name: "NPCs answer letters", hint: "Someone you play writes back on their own when a letter reaches them, from their talk sheet and in the tone they hold toward the sender. The answer comes back the same long way; you can lose it, hold it, have it read or rewrite it on the way."});
 }
 const letters = () => L.normLetters(setting("letters"));
 const saveLetters = list => game.settings.set(MOD, "letters", L.prune(list, game.time.worldTime));
@@ -134,7 +136,7 @@ export async function send(payload) {
   return l;
 }
 
-const buttons = id => `<button type="button" data-wst-letter="held" data-id="${id}">Lost on the way</button> <button type="button" data-wst-letter="late" data-id="${id}">Put it back some days</button> <button type="button" data-wst-letter="read" data-id="${id}">Read on the way</button> <button type="button" data-wst-letter="way" data-id="${id}">Let it go</button>`;
+const buttons = id => `<button type="button" data-wst-letter="held" data-id="${id}">Lost on the way</button> <button type="button" data-wst-letter="late" data-id="${id}">Put it back some days</button> <button type="button" data-wst-letter="read" data-id="${id}">Read on the way</button> <button type="button" data-wst-letter="rewrite" data-id="${id}">Rewrite it</button> <button type="button" data-wst-letter="way" data-id="${id}">Let it go</button>`;
 
 /** Hold a letter back (lost, stopped or read on the way) or let it go on. */
 export async function setLetter(id, state) {
@@ -181,6 +183,11 @@ async function ask(id, what) {
       content: `<div class="form-group"><label>Read by</label><input type="text" name="by" placeholder="${esc(L.CARRIERS[l.how]?.read ?? "")}"></div>`,
       ok: {label: "So noted", callback: (ev, b) => b.form.elements.by.value}});
     if ( by !== null && by !== undefined ) await readOnTheWay(id, by);
+  } else if ( what === "rewrite" ) {
+    const t = await foundry.applications.api.DialogV2.prompt({window: {title: "Rewrite it"}, rejectClose: false,
+      content: `<div class="form-group stacked"><textarea name="text" rows="8">${esc(l.text)}</textarea></div>`,
+      ok: {label: "Rewrite", callback: (ev, b) => b.form.elements.text.value}});
+    if ( t ) await rewriteLetter(id, t);
   } else await setLetter(id, what);
 }
 
@@ -196,10 +203,33 @@ export async function deliver(now = game.time.worldTime) {
     const away = l.fromRegion && l.toRegion && l.fromRegion !== l.toRegion ? ` in ${esc(regionName(l.fromRegion))}` : "";
     const seal = l.readBy && to ? " The seal has been broken and pressed back." : "";
     await ChatMessage.create({whisper, speaker: {alias: "Letters"}, flags: {[MOD]: {letterIn: l.id}},
-      content: `<div class="vta-card wst-letter"><h3>${head}</h3><p class="wodx-quiet">Sent${away} ${esc(l.sentLabel)}.${l.late ? " It was held up on the way." : ""}${seal}${to ? "" : " The answer is yours to write."}</p><blockquote>${esc(l.text).replace(/\n/g, "<br>")}</blockquote>${to ? "" : `<p><button type="button" data-wst-answer="${l.id}">Write the answer</button></p>`}</div>`});
+      content: `<div class="vta-card wst-letter"><h3>${head}</h3><p class="wodx-quiet">Sent${away} ${esc(l.sentLabel)}.${l.late ? " It was held up on the way." : ""}${seal}${to ? "" : setting("npcAnswers") && l.from ? " They write back on their own; their answer shows on your card as it goes, to rewrite, hold or lose." : " The answer is yours to write."}</p><blockquote>${esc(l.text).replace(/\n/g, "<br>")}</blockquote>${to ? "" : `<p><button type="button" data-wst-answer="${l.id}">Write the answer</button></p>`}</div>`});
     list.find(x => x.id === l.id).state = "done";
   }
   await saveLetters(list);
+  for ( const l of ready ) if ( !l.to ) await npcAnswer(l).catch(e => console.error(`${MOD} | letters`, e));
+}
+
+/** B4882: someone the Storyteller plays writes back on their own, from WoDX NPC's talk sheets and their regard for the sender. */
+async function npcAnswer(l) {
+  if ( !setting("npcAnswers") || !l.from ) return null;
+  const sender = game.actors.get(l.from), npc = game.actors.find(a => !isPC(a) && a.name === l.toName);
+  if ( !sender || !npc ) return null;
+  const text = game.modules.get("wodx-npc")?.api?.talk?.letterReply?.(npc, sender) ?? "";
+  if ( !text ) return null;
+  const gm = game.users.activeGM ?? game.user;
+  return send({userId: gm.id, from: npc.id, fromName: npc.name, to: sender.id, how: l.how, reach: l.reach, fromRegion: l.toRegion, toRegion: l.fromRegion, text, answers: l.id});
+}
+
+/** The Storyteller rewrites a letter on its way (an NPC's own answer, or anything else). */
+export async function rewriteLetter(id, text) {
+  if ( !game.user.isGM ) return null;
+  const list = letters(), l = list.find(x => x.id === id);
+  if ( !l || l.state === "done" || !String(text ?? "").trim() ) return null;
+  l.text = String(text);
+  await saveLetters(list);
+  ui.notifications.info(`${l.fromName}'s letter is rewritten.`);
+  return l;
 }
 
 /** The Storyteller's list of every letter still on the way or held back. */

@@ -109,9 +109,18 @@ export function build(ctx) {
   }
 
   /** Check a request and find the two tokens. */
+  // B4883: an open telephone or radio line, {meTokenId: {sceneId, npcTokenId, until}} on the Storyteller's client
+  const phoneLines = new Map();
   function resolve(p, user) {
     if ( !setting("talkMenu") ) return {why: "Talking to NPCs is off in this world."};
     const scene = game.scenes.get(p?.sceneId);
+    if ( p?.phone ) {
+      const line = phoneLines.get(p.meTokenId), me = scene?.tokens?.get(p.meTokenId);
+      const far = game.scenes.get(line?.sceneId)?.tokens?.get(line?.npcTokenId);
+      if ( !line || line.until < Date.now() || !far?.actor || !me?.actor ) return {why: "The line is dead."};
+      if ( !owns(user, me.actor) ) return {why: "That is not your character."};
+      return {scene, npcTok: far, me, phone: true};
+    }
     const npcTok = scene?.tokens?.get(p?.npcTokenId), me = scene?.tokens?.get(p?.meTokenId);
     if ( !npcTok?.actor || !me?.actor ) return {why: "They are not on the scene."};
     if ( npcTok.actor.hasPlayerOwner ) return {why: "That is a player's character: talk to them yourselves."};
@@ -369,7 +378,7 @@ export function build(ctx) {
     const content = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} asks about ${esc(TK.topicLabel(topic).toLowerCase())}.</p>`
       + `${gate ? `<p class="wodx-quiet wnpc-gate">[${esc(gate)}]</p>` : ""}<p class="wnpc-said">${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${heard ? `<p class="wodx-quiet wnpc-heard"><i>${esc(heard)}</i></p>` : ""}${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
-    const aloud = !!line?.then?.aloud;
+    const aloud = !!line?.then?.aloud && !r.phone;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),
       flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", generated: !!line?.rule, gen: line?.gen ?? null, said: say, rumour: line?.rumourId ?? null, lie: !!line?.then?.lie,
         ...(wantAsked(r, topic) ? {want: {npc: game.actors.get(r.npcTok.actor?.id)?.id ?? null}} : {})}}}});
@@ -561,7 +570,18 @@ export function build(ctx) {
     if ( !npc?.actor ) return ui.notifications.info("Target the person you want to talk to first (hover over their token and press T).");
     if ( !reachOK(me, npc, scene) ) return ui.notifications.info(`Step closer: within ${Number(setting("talkReach")) || 2} squares.`);
     if ( !canSee(me, npc) ) return ui.notifications.info("You cannot see them from there.");
-    const req = {sceneId: scene.id, npcTokenId: npc.id, meTokenId: me.id};
+    return talkWindow({sceneId: scene.id, npcTokenId: npc.id, meTokenId: me.id});
+  }
+  /** B4883: the Storyteller's client opens a line from a caller's token to the one who picks up, and tells the caller's player. */
+  function openLine(meTok, npcTok, userId = game.user.id) {
+    if ( !isActiveGM() || !meTok || !npcTok ) return false;
+    phoneLines.set(meTok.id, {sceneId: npcTok.parent?.id, npcTokenId: npcTok.id, until: Date.now() + 15 * 60 * 1000});
+    const req = {sceneId: meTok.parent?.id, meTokenId: meTok.id, npcTokenId: npcTok.id, phone: true};
+    if ( userId === game.user.id ) talkWindow(req).catch(e => console.error(`${MOD} | phone`, e));
+    else game.socket.emit(SOCKET, {type: "talk.phone", userId, req});
+    return true;
+  }
+  async function talkWindow(req) {
     const r = await request("menu", req);
     if ( !r.ok ) return ui.notifications.warn(r.why);
     try { win?.dlg?.close?.(); } catch (e) { /* already shut */ }
@@ -709,6 +729,28 @@ export function build(ctx) {
     return TK.moreLine(kind, {more: MORE, era: c.era, regard: c.regard, seed: c.seed});
   }
 
+  /**
+   * B4882: the words of an NPC's answer to a letter, made on the Storyteller's client. The Storyteller's own lines
+   * come first (a "letter" topic on the talk sheet, then their greeting and farewell); stock talk fills in the rest,
+   * in the era's words and in the tone the NPC holds toward the sender. Returns the text, or "" when they will not answer.
+   */
+  function letterReply(npcLike, pcLike) {
+    const npc = npcLike?.actor ?? npcLike, pc = pcLike?.actor ?? pcLike;
+    if ( !npc || !pc ) return "";
+    const r = {npcTok: {actor: npc, actorId: npc.id, id: null}, me: {actor: pc, actorId: pc.id, name: pc.name}, scene: null};
+    const chain = chainOf(npc, null), check = checker(pc, null, npc);
+    const own = k => { const a = TK.answerFor(k, chain, check); return a && !a.none ? a.line?.say ?? "" : ""; };
+    const written = own("letter");
+    if ( written ) return written;
+    if ( !stockOn(npc) ) return "";
+    const c = stockCtx(r, "letter");
+    if ( c.regard === "hate" && c.seed % 2 === 0 ) return "";
+    const greet = own("greet") || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
+    const news = stockAnswer(r, c.seed % 3 === 0 ? "news" : "rumours")?.say ?? "";
+    const bye = own("farewell") || TK.moreLine("farewell", {more: MORE, era: c.era, regard: c.regard, seed: c.seed}) || "";
+    return [greet, news, bye].filter(Boolean).join("\n\n");
+  }
+
   /* ---------------- Hooks ---------------- */
 
   function hooks() {
@@ -716,6 +758,7 @@ export function build(ctx) {
       game.socket.on(SOCKET, async m => {
         if ( m?.type === "talk.res" ) { if ( m.userId === game.user.id ) pending.get(m.reqId)?.(m.result); return; }
         if ( m?.type === "talk.said" ) { onSaid(m); return; }
+        if ( m?.type === "talk.phone" ) { if ( m.userId === game.user.id ) talkWindow(m.req).catch(e => console.error(`${MOD} | phone`, e)); return; }
         if ( m?.type !== "talk.req" || !isActiveGM() ) return;
         const result = await serve(m.kind, m.payload, m.userId).catch(e => { console.error(`${MOD} | talk`, e); return {ok: false, why: "Something went wrong. The Storyteller can see the console."}; });
         game.socket.emit(SOCKET, {type: "talk.res", reqId: m.reqId, userId: m.userId, result});
@@ -770,5 +813,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, letterReply, openLine, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet};
 }

@@ -10,6 +10,7 @@
  *   pool: {label, value, max}          what the item holds (blood points, Glamour, Faith, Sekhem, Quintessence)
  *   uses: {value, max}                 charges for the whole item; at 0 the item is spent
  *   oneUse: true                       spent after any power runs (charms, talens, a Splinter Servant)
+ *   renew: seconds                     running it sets flag.expires to now + seconds (a talisman's keeping, B5015)
  *   spent: true                        set by WoDX when it has nothing left
  *   used: {powerId: n}                 how often a power with its own `uses` has run
  *   worn: [{attr, value, label}]       Attribute bonuses while the item is equipped (the system's bonuslist)
@@ -98,7 +99,7 @@ export function blockersOf(power, {flag = {}, values = {}, isGM = false, now = n
   const out = [];
   if ( !power ) return ["no such power"];
   if ( flag?.spent ) out.push("it has nothing left in it");
-  if ( flag?.expires && now !== null && n(now) > n(flag.expires) ) out.push(flag.expiredText ?? "its time has run out");
+  if ( flag?.expires && now !== null && n(now) > n(flag.expires) && !power.renew ) out.push(flag.expiredText ?? "its time has run out");
   if ( power.perNight && now !== null && flag?.nightRun?.[power.id] != null && n(flag.nightRun[power.id]) === nightOf(now) ) out.push("already tried tonight");
   if ( power.gain ) { const p = poolOf(flag); if ( p && p.value >= p.max ) out.push(`the ${p.label} is full`); }
   if ( power.gm && !isGM ) out.push("only the Storyteller sets this off");
@@ -171,6 +172,12 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}, now 
     const amt = Math.max(0, Math.min(want, (pool?.max ?? 0) - have));
     if ( amt > 0 ) { set("item", have + amt); lines.push(`${amt} ${pool?.label ?? "points"} taken in.`); }
     else lines.push("Nothing taken in.");
+  }
+  // B5015: a keeping renews the time the thing works (a talisman's keeping)
+  if ( power.renew && now !== null ) {
+    const p = "flags.wodx-library.wonder.expires";
+    undoItem[p] = flag?.expires ?? null; item[p] = n(now) + n(power.renew);
+    lines.push(power.renewText ?? "It is kept, and works again.");
   }
   if ( power.perNight && now !== null ) {
     const p = `flags.wodx-library.wonder.nightRun.${power.id}`;

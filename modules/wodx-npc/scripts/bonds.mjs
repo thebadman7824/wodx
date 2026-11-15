@@ -61,9 +61,31 @@ export async function onHarm(actor, data = {}) {
   if ( !(Number(data.levels) > 0) && !(Number(data.after) > Number(data.before)) ) return [];
   return tell(BR.cardsFor({kind: "harm", of: actor.id}, edges()), `${actor.name} is hurt`);
 }
-export async function onDeath(actor) {
+const bgDots = (a, re) => Number([...(a?.items ?? [])].find(i => re.test(String(i.name ?? "").trim()))?.system?.value) || 0;
+/** A familiar is dead: its mage pays the M20 cost (Willpower, Quintessence, Paradox for the shortfall) and the Background clears. */
+export async function payFamiliar(mageLike, familiarName = "the familiar") {
+  const m = actorOf(mageLike);
+  if ( !m || m.getFlag?.(MOD, `familiarPaid.${familiarName}`) ) return null;
+  const s = m.system ?? {}, item = [...(m.items ?? [])].find(i => /^familiar\b/i.test(String(i.name ?? "").trim()));
+  const c = BR.familiarCost(bgDots(m, /^familiar\b/i), {willPerm: s.advantages?.willpower?.permanent, willTemp: s.advantages?.willpower?.temporary,
+    quint: s.quintessence?.temporary, paradox: s.paradox?.temporary});
+  const upd = {"system.advantages.willpower.permanent": c.willpower.permanent, "system.advantages.willpower.temporary": c.willpower.temporary};
+  if ( s.quintessence ) upd["system.quintessence.temporary"] = c.quintessence;
+  if ( s.paradox ) upd["system.paradox.temporary"] = c.paradox;
+  await m.update(upd);
+  await m.setFlag(MOD, `familiarPaid.${familiarName}`, game.time?.worldTime ?? 0);
+  if ( item ) await item.update({"system.value": 0});
+  return c;
+}
+export async function onDeath(actor, cards = null) {
   if ( !isActiveGM() || !on() || !actor?.id ) return [];
-  return tell(BR.cardsFor({kind: "death", of: actor.id}, edges()), `${actor.name} is dead`);
+  const list = cards ?? BR.cardsFor({kind: "death", of: actor.id}, edges());
+  for ( const e of edges().filter(x => x.kind === "familiar" && x.to?.id === actor.id) ) {
+    const c = await payFamiliar(e.from, actor.name).catch(err => { console.error(`${MOD} | familiar`, err); return null; });
+    const at = list.find(x => x.to === e.from && /familiar/.test(x.text));
+    if ( c && at ) at.text = `${at.text} ${c.lines.join(" ")}`;
+  }
+  return tell(list, `${actor.name} is dead`);
 }
 
 export function listen() {
@@ -71,7 +93,7 @@ export function listen() {
   Hooks.on("wodxDamageApplied", (a, d) => { onHarm(a, d).catch(e => console.error(`${MOD} | bonds`, e)); });
   Hooks.on("updateActor", (a, change) => { const d = change?.flags?.["wodx-creation"]?.chronology?.died; if ( d !== undefined && d !== null ) onDeath(a).catch(e => console.error(`${MOD} | bonds`, e)); });
   // A sheet deleted: work the edges out while it still exists
-  Hooks.on("preDeleteActor", a => { if ( isActiveGM() && on() && !a.flags?.[MOD]?.passerbyBase ) { const cards = BR.cardsFor({kind: "death", of: a.id}, edges()); if ( cards.length ) setTimeout(() => tell(cards, `${a.name} is gone`).catch(() => null), 0); } });
+  Hooks.on("preDeleteActor", a => { if ( isActiveGM() && on() && !a.flags?.[MOD]?.passerbyBase ) { const cards = BR.cardsFor({kind: "death", of: a.id}, edges()); const fam = edges().filter(x => x.kind === "familiar" && x.to?.id === a.id).map(x => x.from); if ( cards.length ) setTimeout(async () => { for ( const f of fam ) { const c = await payFamiliar(f, a.name).catch(() => null); const at = cards.find(x => x.to === f && /familiar/.test(x.text)); if ( c && at ) at.text = `${at.text} ${c.lines.join(" ")}`; } await tell(cards, `${a.name} is gone`).catch(() => null); }, 0); } });
 }
 
 export const rules = BR;

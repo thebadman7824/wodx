@@ -15,8 +15,10 @@
  */
 
 import * as S from "./sunlight-rules.js";
+import * as KRG from "./kindred-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { floatLocal } from "./daysleep.js";
 
 const MOD = "wodx-actions";
 export const TYPE = `${MOD}.sunlight`;
@@ -148,14 +150,41 @@ export function build(ctx) {
         return { exposed: true, light, exposure: pl.exposure ?? 3, diff: S.SOAK_DIFF[light], why: `${pl.why}${sun.phase === "twilight" ? ", twilight" : ""}${sky() !== "clear" && !pl.ignoreSky ? `, ${S.SKIES[sky()]?.label.toLowerCase()}` : ""}${actor.getFlag?.(MOD, "sunCover") ? ", heavily clothed" : ""}`, protection: prot };
     }
 
+    /** B4896: the sun shown on the map: the burning marker while in the light, a word over the token for everyone. */
+    async function showBurn(actor, on, word = "") {
+        try { await ctx.statusEffect?.(actor, "burning", on); } catch (e) { /* no marker */ }
+        if (!on || !word) return;
+        const tokens = (actor.getActiveTokens?.() ?? []).map(t => t.id ?? t.document?.id).filter(Boolean);
+        if (!tokens.length) return;
+        const p = { tokens, word, color: "#ff8a3d" };
+        floatLocal(p);
+        try { game.socket?.emit?.(`module.${MOD}`, { action: "float", ...p }); } catch (e) { /* offline */ }
+    }
+    const burning = a => !!a?.statuses?.has?.("burning") || [...(a?.effects ?? [])].some(e => e.statuses?.has?.("burning"));
+    /** Out of the light, or night fell: the marker comes off. */
+    async function coolOff(actor) { if (burning(actor)) await showBurn(actor, false); }
+
     const sbtn = (k, actor, label, arg = "") => `<button type="button" class="vta-btn" data-sx="${k}" data-actor="${esc(actor?.uuid ?? "")}" data-arg="${esc(arg)}">${esc(label)}</button>`;
 
     /** Burn a Cainite for some turns of sunlight: Fortitude soaks each turn, the rest aggravated (p. 359). */
     async function applySun(actor, { light = "direct", exposure = 3, turns = 1, why = "", lethal = false, noRotschreck = false } = {}) {
+        // B4985: the sun rots a Kuei-jin by Kindred of the East's own rule (p. 151), not a Cainite's burn
+        if (actor?.system?.settings?.variant === "kindredeast" && ctx.kotSunAuto) {
+            const r = await ctx.kotSunAuto(actor, { turns, direct: light === "direct" });
+            await showBurn(actor, true, r?.rot ? `Rots: ${r.rot}` : "Endures the sun");
+            return r;
+        }
+        // B5096: Golconda's grace, one step weaker on the ladder (Ben's pick, a house rule)
+        let graced = false;
+        if (actor?.getFlag?.(MOD, "golconda") && (() => { try { return setting("golcondaRules") !== false; } catch (e) { return true; } })()) {
+            const weaker = KRG.golcondaSun(light);
+            graced = weaker !== light; light = weaker;
+        }
         const fort = ctx.discipline(actor, "Fortitude");
         const diff = S.SOAK_DIFF[light] ?? 10;
         const rolls = [];
         let html = `<div class="vta-sub">${esc(S.LIGHTS[light] ?? light)}${why ? ` (${esc(why)})` : ""}: ${exposure} level${exposure === 1 ? "" : "s"} a turn${turns > 1 ? `, ${turns} turns` : ""} (VtDA20 p. 359).</div>`;
+        if (graced) html += `<div class="vta-note">Golconda's grace: the sun falls on ${esc(actor.name)} one step weaker.</div>`;
         let levels = 0;
         const soakDice = lethal ? fort + ctx.attr(actor, "stamina") : fort;
         for (let t = 1; t <= Math.max(1, turns); t++) {
@@ -169,13 +198,20 @@ export function build(ctx) {
         }
         const type = lethal ? "lethal" : "aggravated";
         html += `<div class="vta-big ${levels ? "bad" : "good"}">${levels ? `${levels} ${type} level${levels === 1 ? "" : "s"}` : "No damage"}</div>`;
+        await showBurn(actor, true, levels ? `Burns: ${levels} ${type}` : "Smoulders");
         if (levels) {
+            // B4981: the sun's own Rötschreck below is the one rolled; the wound card's check for this burn stands down
+            if (!noRotschreck) ctx.claimFear?.(actor);
             const res = await ctx.applyDamage(actor, type, levels);
             if (res?.after) html += `<div class="vta-res">Now ${ctx.healthText(actor, res.after)}${res.condition?.text ? `: <b>${esc(res.condition.text)}</b>` : ""}</div>`;
             await ctx.logEvent?.(actor, `Burned by the sun: ${levels} ${type}.`, "sun");
         }
-        if (!noRotschreck && !actor.system?.conditions?.isfrenzy) html += `<button type="button" class="vta-btn" data-kx="rotschreck" data-actor="${esc(actor.uuid)}" data-arg="${light === "direct" ? "directsun" : "obscuredsun"}">Rötschreck check</button>`;
-        return post(actor, `${actor.name}: sunlight`, html, rolls);
+        const autoFear = !noRotschreck && !actor.system?.conditions?.isfrenzy && (() => { try { return setting("autoBeast") !== false; } catch (e) { return false; } })() && !!ctx.autoBeast;
+        if (!noRotschreck && !actor.system?.conditions?.isfrenzy && !autoFear) html += `<button type="button" class="vta-btn" data-kx="rotschreck" data-actor="${esc(actor.uuid)}" data-arg="${light === "direct" ? "directsun" : "obscuredsun"}">Rötschreck check</button>`;
+        const msg = await post(actor, `${actor.name}: sunlight`, html, rolls);
+        // B4981: the Rötschreck check follows the burn by itself
+        if (autoFear) await ctx.autoBeast({ actor, kind: "fear", provocation: light === "direct" ? "directsun" : "obscuredsun", claimed: true }).catch(e => console.warn("WoDX | Rötschreck", e));
+        return msg;
     }
 
     async function sunCard(actor, ex, { turns = 1, title = "In the sun", note = "" } = {}) {
@@ -216,7 +252,7 @@ export function build(ctx) {
             await doc.setFlag(MOD, "inSun", true);
             return sunCard(doc.actor, ex, { title: "Into the sun" });
         }
-        if (!ex.exposed && was) await doc.unsetFlag(MOD, "inSun");
+        if (!ex.exposed && was) { await doc.unsetFlag(MOD, "inSun"); await coolOff(doc.actor); }
         return null;
     }
 
@@ -228,6 +264,8 @@ export function build(ctx) {
         if (!isActiveGM()) return null;
         const sun = await sunAt();
         if (sun.unknown) return null;
+        // B4896: night took the light off every burning marker
+        if (sun.phase === "night") for (const doc of game.scenes?.active?.tokens ?? []) if (doc.actor && P.detectProfile(doc.actor) === "kindred") await coolOff(doc.actor);
         if (sun.phase === "night" && sun.toDawn !== null) {
             const key = Math.round((game.time.worldTime + sun.toDawn) / 600);
             const st = game.settings.get(MOD, "dawnWarned") ?? {};
@@ -246,6 +284,7 @@ export function build(ctx) {
                 if (!doc.actor || game.combat?.combatants?.some?.(c => c.tokenId === doc.id)) continue;
                 const ex = exposureOf(doc, sun);
                 if (ex.exposed) await sunCard(doc.actor, ex, { turns, title: "Left in the sun", note: `${Math.round(dt / 60)} minutes passed` });
+                else if (doc.actor && P.detectProfile(doc.actor) === "kindred") await coolOff(doc.actor);
             }
         }
         return null;
@@ -292,6 +331,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: ${sun.phase === "night" ? `night; dawn in ${sun.toDawn !== null ? Math.round(sun.toDawn / 60) : "?"} minutes` : `${sun.phase}: the sun ${Math.round(sun.altitude)}° up`}.${ex ? ` Now: ${ex.exposed ? `<b>in sunlight</b> (${esc(ex.why)})` : esc(ex.why)}.` : ""}</p>
           <div class="form-group"><label><input type="checkbox" name="cover" ${actor.getFlag(MOD, "sunCover") ? "checked" : ""}/> Heavily clothed: cloak, hood, gloves (light counts as "covered", soak 5)</label></div>
           <div class="form-group"><label><input type="checkbox" name="buried" ${actor.getFlag(MOD, "buried") ? "checked" : ""}/> Buried in the earth (safe from the sun)</label></div>
+          <div class="form-group"><label><input type="checkbox" name="vigil" ${actor.getFlag(MOD, "dawnVigil") ? "checked" : ""}/> At dawn, try to stay awake (the Road at difficulty 8 is rolled by itself; V20 pp. 262-263)</label></div>
           <fieldset><legend>Haven (${esc(h.where)})</legend>
             <div class="form-group"><label>Haven</label>${scenes.length > 4 ? searchBox("select[name=haven]", "Search scenes…", "Search scenes") : ""}<select name="haven">
               <option value="keep">Keep as it is</option>
@@ -304,6 +344,7 @@ export function build(ctx) {
         return dialog(`Sun and haven: ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "sunCover", fd.cover ? true : null);
             await ctx.setFlag(actor, "buried", fd.buried ? true : null);
+            await ctx.setFlag(actor, "dawnVigil", fd.vigil ? true : null);
             let haven = null;
             if (fd.region) {
                 const [sid, rid] = fd.region.split("|"); const sc = game.scenes.get(sid); const r = sc?.regions?.get?.(rid);
@@ -316,7 +357,7 @@ export function build(ctx) {
             }
             if (haven || fd.haven === "clear") await ctx.setFlag(actor, "haven", haven);
             const h2 = havenStatus(actor);
-            return post(actor, `${actor.name}: sun and haven`, `<div class="vta-note">${fd.cover ? "Heavily clothed." : "Not covered."}${fd.buried ? " Buried in the earth." : ""} Haven: ${esc(h2.where)}.</div>`);
+            return post(actor, `${actor.name}: sun and haven`, `<div class="vta-note">${fd.cover ? "Heavily clothed." : "Not covered."}${fd.buried ? " Buried in the earth." : ""}${fd.vigil ? " Tries to stay awake at dawn." : ""} Haven: ${esc(h2.where)}.</div>`);
         }, { width: 520 });
     }
 
@@ -368,7 +409,7 @@ export function build(ctx) {
 /** Settings this part adds (registered by main.js). */
 export function registerSettings(register) {
     game.settings.register(MOD, "sunDamage", { name: "Sunlight damage", hint: "When a Cainite stands in sunlight (a Sunlight region, a region named sunlit, or the open on a scene marked outdoors, outside walls' shadows): roll and apply it each turn of a fight, on stepping into the sun and while the clock runs; or post a card with a button; or nothing.",
-        scope: "world", config: true, type: String, default: "prompt", choices: { prompt: "A card with a button", apply: "Roll and apply it", off: "Off" } });
+        scope: "world", config: true, type: String, default: "apply", choices: { apply: "Roll and apply it", prompt: "A card with a button", off: "Off" } });
     register("dawnWarnings", "Warn before dawn", "Whispered cards 30 and 10 minutes before sunrise, saying whether each Cainite is in their haven.", Boolean, true);
     register("wallHeight", "Height of walls (feet)", "For the shadows walls cast by day; a scene can set its own in Sky and sun.", Number, 10);
     game.settings.register(MOD, "sky", { name: "Sky", hint: "The weather caps sunlight: cloudy days are \"cloudy\" (soak 9), heavy cloud, rain or fog \"faint\" (soak 3). Also set from Sky and sun.",

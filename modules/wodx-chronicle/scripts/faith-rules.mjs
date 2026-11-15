@@ -101,7 +101,7 @@ export const REGION_FAITH = {
   "west-africa": I, "east-africa": I,
   "tibet-himalaya": [[-9999, "tibetan"]], "india": [[-9999, "hindu"]], "china": [[-9999, "chinese"]],
   "japan": [[-9999, "chinese"]], "korea": [[-9999, "chinese"]], "southeast-asia": [[-9999, "theravada"]],
-  "nusantara": [[-9999, "hindu"], [1500, "islamic"]],
+  "nusantara": [[-9999, "hindu"], [1500, "islamic"]], "philippines": late(1571),
   "southern-africa": late(1652), "central-africa": late(1885), "canada": late(1608), "north-america-east": late(1607),
   "north-america-west": late(1769), "mexico": late(1521), "caribbean": late(1492), "andes": late(1533),
   "brazil": late(1500), "southern-cone": late(1536), "australia": late(1788), "aotearoa": late(1840),

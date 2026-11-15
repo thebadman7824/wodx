@@ -49,6 +49,7 @@ import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as derangements from "./derangements.mjs";
 import * as signatures from "./signatures.mjs";
+import * as ghoulNeed from "./ghoul-need.mjs";
 import * as place from "./place.mjs";
 import * as placeRules from "./place-rules.mjs";
 import * as worldRules from "./world-rules.mjs";
@@ -142,6 +143,8 @@ Hooks.once("init", () => {
   // Splat Features Desk: each clan's own feature (Vampire first)
   signatures.registerSignatureSettings();
   signatures.registerSignatureHooks();
+  ghoulNeed.registerGhoulNeedSettings();
+  ghoulNeed.registerGhoulNeedHooks();
   pod.registerPodSettings();
   pod.registerPodHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
@@ -272,6 +275,7 @@ Hooks.once("ready", async () => {
     derangements: derangements.derangementsApi,
     tokenLooks: tokenLooks.api(),
     signatures: signatures.signaturesApi,
+    ghoulNeed: ghoulNeed.ghoulNeedApi,
     pod: pod.podApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},

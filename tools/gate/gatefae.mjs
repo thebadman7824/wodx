@@ -39,9 +39,11 @@ export async function run() {
   const press = async msg => { const el = document.createElement("div"); el.innerHTML = msg.content; Hooks.callAll("renderChatMessageHTML", msg, el); el.querySelector("[data-wct-sig-act]")?.click(); };
   const fae = (name, kith, more = {}) => ({name, type: "Changeling", system: {kith, seeming: "Wilder", court: "Seelie",
     advantages: {willpower: {permanent: 6, temporary: 3}, glamour: {permanent: 6, temporary: 2}}, ...more}});
-  let actors = [];
+  let actors = [], autoWas = null;
   try {
     await game.settings.set(C, "sigChangeling", true);
+    // These steps press the card buttons; with "Features give their points by themselves" on (B4874) the points come at once instead (gatefeatures checks that)
+    autoWas = game.settings.get(C, "sigAuto"); await game.settings.set(C, "sigAuto", false);
     actors = await Actor.create([fae("WoDX gate: Satyr", "wod.bio.changeling.satyrs", {court: "Unseelie", house: "Fiona"}), fae("WoDX gate: Pooka", "wod.bio.changeling.pooka"),
       fae("WoDX gate: Selkie", "wod.bio.changeling.selkies"), fae("WoDX gate: Troll", "wod.bio.changeling.troll"), fae("WoDX gate: Boggan", "wod.bio.changeling.boggans"),
       fae("WoDX gate: Hag", "wod.bio.changeling.nighthags"), fae("WoDX gate: Glome", "wod.bio.changeling.glomes")]);
@@ -97,6 +99,7 @@ export async function run() {
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
       for ( const x of actors ) await game.actors.get(x?.id)?.delete();
       await game.settings.set(C, "sigChangeling", was);
+      if ( autoWas !== null ) await game.settings.set(C, "sigAuto", autoWas);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gatefae-result.json");
