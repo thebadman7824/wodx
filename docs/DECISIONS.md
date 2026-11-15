@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5070
+Next free block: B5390
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -241,6 +241,28 @@ Next free block: B5070
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
+| B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
+| B5200-B5209 | Names raised to 300, Quechua (used B5200) | Creation |
+| B5210-B5219 | PC runner watchdog (used B5210-B5212) | tools (PC job queue) |
+| B5220-B5229 | Names raised to 300, Steppe (used B5220) | Creation |
+| B5230-B5239 | Names raised to 300, Nahua (used B5230) | Creation |
+| B5240-B5249 | Names raised to 300, Tamil (used B5240) | Creation |
+| B5250-B5259 | Names raised to 300, Javanese (used B5250) | Creation |
+| B5260-B5269 | Names raised to 300, Swahili (used B5260) | Creation |
+| B5270-B5279 | Names raised to 300, Hawaiian (used B5270) | Creation |
+| B5280-B5289 | Names raised to 300, Amharic (used B5280) | Creation |
+| B5290-B5299 | Names raised to 300, Tibetan (used B5290) | Creation |
+| B5300-B5309 | Names raised to 300, Romanian (used B5300) | Creation |
+| B5310-B5319 | Names raised to 300, Akan (used B5310) | Creation |
+| B5320-B5329 | Names raised to 300, Vietnamese (used B5320) | Creation |
+| B5330-B5339 | Names raised to 300, Serbian (used B5330) | Creation |
+| B5340-B5349 | Table install speed-up and gate step timeout (used B5340) | Chronicle |
+| B5350-B5359 | Names raised to 300, Turkish (used B5350) | Creation |
+| B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
+| B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
+| B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7929,3 +7951,145 @@ Reverse: the setAlly call in makeGhoul.
 WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal can feed it a point. The Storyteller's feed is at once; a player's goes to the approval queue (type wodx-vitae) and happens by itself on approval or auto-approval. Red "Vitae" rises from the token. Desk item 2.
 
 Reverse: registerFeedVitae in main.mjs.
+
+## B5150. The Philippines a region of its own (2026-11-15)
+WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop philippines from WORLD_REGIONS and the other region tables, and the letter s in Storyteller's data/world.mjs.
+
+## B5151. Who lives there (2026-11-15)
+WoDX Chronicle and Creation. Filipino 78, Moro 17 and Chinese 5 in the medieval age; Filipino 74, Moro 14, Chinese 8 and Spanish 4 in the early modern; Filipino 77, Moro 10, Chinese 8, Spanish 4 and English 1 (the Americans) in the industrial; Filipino 85, Moro 8, Chinese 6 and English 1 now. The Malay world keeps Moro 2 for the Tausug and Bajau of the Sabah coast and no Filipinos.
+
+Reverse: edit the philippines and nusantara mixes in world-rules.mjs.
+
+## B5152. How the islands live by age (2026-11-15)
+WoDX Chronicle, Storyteller, NPC and Library. Island ways (malay) until 1571, then Catholic ways; holy days of the land until 1571, then the church year. Law: the datus and elders with debt bondage, the qadi in the sultanates from 1405, Spain's Audiencia and the friars from 1565, the Guardia Civil from 1868, American rule from 1898, the republic from 1946, martial law 1972 to 1981. Print 1593, papers 1890, radio 1935, television 1965, the net 2008; rail 1892, tram 1888, expressway 1977; post 1767, telegraph 1873, telephone 1890. Cholera 1820, the flu of 1918 and the cholera of 1961 reach it; Kuei-jin courts, Hengeyokai and the Akashic monasteries hold the islands as in the Malay world; church goods from 1565.
+
+Reverse: drop the philippines rows from each table.
+
+## B5153. Lifepath and story hooks (2026-11-15)
+WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with its own origins and callings in each age, and dated origins and marks from Mactan (1521) to the typhoon at Tacloban (2013). Threads of Fate gets two cards: "The galleon is late" (its own hook) and "The datu's buried gold".
+
+Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
+
+## B5180. Thai names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
+
+## B5190. Malay names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Malay list grows from 24 names to 306: the Malacca court, the Hikayat heroes and the village names of the old Malay world, then the names of modern Malaysia and Brunei, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the malay entry in data/people-world.mjs and drop malay from RAISED.
+
+## B5200. Quechua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Quechua list grows from 25 names to 335: the Inca kings, queens and captains and the Quechua names of the Tawantinsuyu before the conquest, then a church name and a Quechua family name from the viceroyalty on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the quechua entry in data/people-world.mjs and drop quechua from RAISED.
+
+## B5210. A watchdog on the PC starts the runner again when it dies (2026-11-15)
+PC job queue. The runner and its wrapper were ended three times on 14 and 15 November with nothing in the log, and
+the pc-heartbeat schedule (B4700) did not notice: GitHub ran that schedule once in seven hours, so the queue sat
+still for 27 minutes until another thread asked. `tools/pcq/watchdog.ps1` checks every two minutes that
+`run-runner.ps1` is running and, if not, runs `start-runner.ps1`, which puts every running job back in the queue.
+
+Reverse: put a file named `watchdog-off` in `D:\WoDX\pcq`.
+
+## B5211. The watchdog lives apart from the runner (2026-11-15)
+PC job queue. `start-runner.ps1` starts the watchdog through WMI, so it is not in the runner's process tree and a kill
+of that tree leaves it running. The wrapper runs `start-runner.ps1` before each runner start, which starts the
+watchdog when it is missing, so each one brings the other back. `start-runner.ps1` copies itself and the watchdog
+from the runner's clone into `D:\WoDX\pcq`, so the copies there stay current.
+
+Reverse: remove the Start-Watchdog calls.
+
+## B5212. The heartbeat issue stays as a second check (2026-11-15)
+PC job queue. The pc-heartbeat workflow is kept: when GitHub does run it, it still opens an issue if the PC itself is
+off or asleep, which the watchdog cannot report.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B5220. Steppe names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Steppe list grows from 28 names to 311: the khans, queens and captains of the Mongol and Kipchak steppe in the old ages, then the names of Mongolia and the Kazakh steppe, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the steppe entry in data/people-world.mjs and drop steppe from RAISED.
+
+## B5230. Nahua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Nahua list grows from 28 names to 320: the tlatoque, captains and calendar names of the Mexica, Acolhua and Tlaxcalteca before 1521, then a church name and a Nahuatl or Spanish family name from New Spain on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the nahua entry in data/people-world.mjs and drop nahua from RAISED.
+
+## B5240. Tamil names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tamil list grows from 32 names to 308: the Chola, Pandya and Pallava kings and queens, the Sangam poets and saints and village names of old, then modern Tamil names, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tamil entry in data/people-world.mjs and drop tamil from RAISED.
+
+## B5250. Javanese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Javanese list grows from 32 names to 308: the kings, queens, saints and poets of Singhasari, Majapahit, Demak and Mataram, the wayang heroines and village names of old Java, then modern Javanese names, one name each. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the javanese entry in data/people-world.mjs and drop javanese from RAISED.
+
+## B5260. Swahili names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Swahili list grows from 32 names to 311: the sultans, poets and traders of Kilwa, Mombasa, Lamu and Zanzibar and the Mwana names of the coast, then modern Tanzanian and Kenyan names, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the swahili entry in data/people-world.mjs and drop swahili from RAISED.
+
+## B5270. Hawaiian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hawaiian list grows from 32 names to 308: the aliʻi of the island kingdoms and the heroines of the chants in the old ages, then Hawaiian church and modern names and family names taken from a father's name after the 1860 law. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hawaiian entry in data/people-world.mjs and drop hawaiian from RAISED.
+
+## B5280. Amharic names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Amharic list grows from 34 names to 301: the Zagwe and Solomonic kings and queens, the saints and the court of Gondar in the old ages, then modern Ethiopian names, the father's name second. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the amharic entry in data/people-world.mjs and drop amharic from RAISED.
+
+## B5290. Tibetan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tibetan list grows from 38 names to 303: old names from the imperial and monastic records, later names from twentieth century lists, clan and house names kept. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tibetan entry in data/people-world.mjs and drop tibetan from RAISED.
+
+## B5300. Romanian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Romanian list grows from 45 names to 309: old names from Wallachian and Moldavian charters, later given names and family names from modern lists. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the romanian entry in data/people-world.mjs and drop romanian from RAISED.
+
+## B5310. Akan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Akan list grows from 45 names to 302: day names, royal and stool names, and family names from Asante and Fante records. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the akan entry in data/people-world.mjs and drop akan from RAISED.
+
+## B5320. Vietnamese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Vietnamese list grows from 46 names to 324: old names from the Lý, Trần and Lê court records, modern given names, the common family names, family name first. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the vietnamese entry in data/people-world.mjs and drop vietnamese from RAISED.
+
+## B5330. Serbian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Serbian list grows from 47 names to 307: old names from Nemanjić charters and monastery records, later given names and -ić family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the serbian entry in data/people-world.mjs and drop serbian from RAISED.
+
+## B5340. Shipped tables written eight at a time (2026-11-15)
+WoDX Chronicle. With the name lists raised to 300, a world that had not yet seen the new data spent over half a minute bringing its shipped Roll Tables up to date one by one, and the names gate timed out at its first step on a reset testbed lane. The install now writes eight tables at a time; what it writes, and the rule that a table the Storyteller edited is never overwritten, are unchanged. The gate kit's step also takes its own timeout, and the names gate gives its start-up step three minutes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the one-at-a-time loop in scripts/gen.mjs doInstall.
+
+## B5350. Turkish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Turkish list grows from 47 names to 420: old names of beys, sultans, viziers, poets, valide sultans and townsfolk from Seljuk and Ottoman records, later names of the Republic, and a longer list of family names taken after the law of 1934. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the turkish entry in data/people-world.mjs and drop turkish from RAISED.
+
+## B5360. Korean names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Korean list grows from 48 names to 424: old names of scholars, generals, painters, clerks, gisaeng and household registers of Goryeo and Joseon, later names since the colonial years, and close to a hundred family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the korean entry in data/people-world.mjs and drop korean from RAISED.
+
+## B5370. Mande names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mande list grows from 48 names to 340: old names of the mansas, griots, captains and royal women of Mali, Kaabu, Segou and the Wassoulou, later names from Mali to the Gambia, and a longer list of clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the mande entry in data/people-world.mjs and drop mande from RAISED.
+
+## B5380. Zulu names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.

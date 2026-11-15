@@ -14,7 +14,7 @@
  *      in Australia before 1788; the Nagah and the Mokolé by name
  *   4. two faction turns with politics on: the leader of the Laibon council is the magaji, each legacy a voice in the kholo;
  *      the Ashirra court's leader is Sultan
- *   5. the faction window shows Where it stands with the homeland and all 44 regions, marked as a fixed list
+ *   5. the faction window shows Where it stands with the homeland and all 45 regions, marked as a fixed list
  *   6. clean up
  * Result: Data/wodx-gate/gateworldcourts-result.json.
  */
@@ -153,7 +153,7 @@ export async function run() {
       const homeLabel = sel?.options[0]?.textContent ?? "";
       dlg?.closest(".application, dialog, .window-app")?.querySelector("[data-action=cancel]")?.click();
       await Promise.race([open, sleep(1500)]);
-      ok("5. Where it stands: the homeland and 44 regions, a fixed list, the faction's own picked", n === 45 && picked === "west-africa" && fixed && /homeland/i.test(homeLabel), {n, picked, fixed, homeLabel});
+      ok("5. Where it stands: the homeland and 45 regions, a fixed list, the faction's own picked", n === 46 && picked === "west-africa" && fixed && /homeland/i.test(homeLabel), {n, picked, fixed, homeLabel});
     });
   } catch (e) { R.errors.push(e.message); }
 
