@@ -57,7 +57,7 @@ export async function run() {
       const lib = game.modules.get("wodx-library")?.api;
       let lookStart = lib?.look ? "started" : null;
       if ( !lookStart ) try { const Lk = await import("/modules/wodx-library/scripts/look.mjs"); await Lk.setupLook(); lookStart = `restartable: ${Object.keys(Lk.api()).length} keys`; } catch (e) { lookStart = `error: ${e?.message ?? e}`; }
-      G.ok("2. every api read finds its path", !misses.length, {lookStart, libraryKeyCount: Object.keys(lib ?? {}).length, misses, places: places.size, partialFallbacks: partial.length, partial: partial.slice(0, 40)});
+      G.ok("2. every api read finds its path", !misses.length, {lookStart, libraryKeys: Object.keys(lib ?? {}).join(","), misses, places: places.size, partialFallbacks: partial.length, partial: partial.slice(0, 40)});
     });
   } finally { return G.finish(); }
 }
