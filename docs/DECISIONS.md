@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5290
+Next free block: B5340
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -253,6 +253,11 @@ Next free block: B5290
 | B5260-B5269 | Names raised to 300, Swahili (used B5260) | Creation |
 | B5270-B5279 | Names raised to 300, Hawaiian (used B5270) | Creation |
 | B5280-B5289 | Names raised to 300, Amharic (used B5280) | Creation |
+| B5290-B5299 | Names raised to 300, Tibetan (used B5290) | Creation |
+| B5300-B5309 | Names raised to 300, Romanian (used B5300) | Creation |
+| B5310-B5319 | Names raised to 300, Akan (used B5310) | Creation |
+| B5320-B5329 | Names raised to 300, Vietnamese (used B5320) | Creation |
+| B5330-B5339 | Names raised to 300, Serbian (used B5330) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8033,3 +8038,28 @@ Reverse: restore the hawaiian entry in data/people-world.mjs and drop hawaiian f
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Amharic list grows from 34 names to 301: the Zagwe and Solomonic kings and queens, the saints and the court of Gondar in the old ages, then modern Ethiopian names, the father's name second. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the amharic entry in data/people-world.mjs and drop amharic from RAISED.
+
+## B5290. Tibetan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tibetan list grows from 38 names to 303: old names from the imperial and monastic records, later names from twentieth century lists, clan and house names kept. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tibetan entry in data/people-world.mjs and drop tibetan from RAISED.
+
+## B5300. Romanian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Romanian list grows from 45 names to 309: old names from Wallachian and Moldavian charters, later given names and family names from modern lists. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the romanian entry in data/people-world.mjs and drop romanian from RAISED.
+
+## B5310. Akan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Akan list grows from 45 names to 302: day names, royal and stool names, and family names from Asante and Fante records. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the akan entry in data/people-world.mjs and drop akan from RAISED.
+
+## B5320. Vietnamese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Vietnamese list grows from 46 names to 324: old names from the Lý, Trần and Lê court records, modern given names, the common family names, family name first. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the vietnamese entry in data/people-world.mjs and drop vietnamese from RAISED.
+
+## B5330. Serbian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Serbian list grows from 47 names to 307: old names from Nemanjić charters and monastery records, later given names and -ić family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the serbian entry in data/people-world.mjs and drop serbian from RAISED.
