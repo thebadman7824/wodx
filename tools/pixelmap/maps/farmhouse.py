@@ -46,7 +46,7 @@ pr.loaf(m, tx + 96, ty + 34, 13, 9); pr.knife(m, tx + 118, ty + 40, .3); pr.jug(
 pr.candle(m, tx + 60, ty + 24)
 pr.bench(m, 6.8, 5.22, 2.0, .36); pr.bench(m, 6.8, 6.9, 2.0, .36); note("bench", 7.8, 5.4); note("bench", 7.8, 7.08)
 pr.stool(m, 9.35, 6.25); note("stool", 9.35, 6.25)
-pr.bed(m, 4.2, 7.75, 1.05, 2.05, head="s", cloth="blue"); note("bed", 4.72, 8.8)
+pr.bed(m, 4.25, 8.4, .95, 1.4, head="s", cloth="blue"); note("bed", 4.72, 8.8)
 pr.painted_chest(m, 5.35, 9.2, 1.0, .62, "red", name="Red painted chest")
 pr.shelf(m, 8.3, 3.16, 2.5, .44, ["jug", "bowl", "plates", "loaf", "cheese", "cups", "pot", "eggs", "bowl", "jug"]); note("shelf of crockery and food", 9.55, 3.4)
 pr.logpile(m, 5.7, 3.22, .95, .44); note("firewood", 6.2, 3.45)
@@ -58,9 +58,9 @@ pr.stool(m, 5.25, 6.75); note("stool", 5.25, 6.75)
 
 # ---- chamber ----
 m.rug(11.5, 4.2, 2.3, 1.5, "blue", "linen"); note("rug", 12.65, 4.95)
-pr.bed(m, 14.35, 3.2, 1.45, 2.15, head="n", cloth="red"); note("great bed", 15.07, 4.3)
+pr.bed(m, 14.4, 3.2, 1.3, 1.5, head="n", cloth="red"); note("great bed", 15.07, 4.3)
 pr.painted_chest(m, 14.55, 5.6, 1.05, .62, "blue", name="Blue painted chest")
-pr.bed(m, 11.2, 5.85, 1.75, .95, head="w", cloth="green"); note("cot", 12.07, 6.32)
+pr.bed(m, 11.3, 5.95, 1.35, .8, head="w", cloth="green"); note("cot", 12.07, 6.32)
 m.table(12.6, 3.2, .9, .6, things=False); pr.candle(m, px(13.2), px(3.5)); note("small table with a candle", 13.05, 3.5)
 cx_, cy_ = px(12.85), px(3.5); L_ = R["linen"]; d.rectangle([cx_ - 12, cy_ - 9, cx_ + 6, cy_ + 9], fill=L_[3], outline=OUT)        # a folded shift
 for k in (-4, 1, 6): d.line([cx_ - 11, cy_ + k, cx_ + 5, cy_ + k], fill=L_[1])
