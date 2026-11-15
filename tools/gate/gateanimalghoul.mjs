@@ -63,12 +63,14 @@ export async function run() {
     });
 
     await G.step("5. feeding from the menu tops it up and shows it", async () => {
-      await horse.update({"system.advantages.bloodpool.temporary": 5});
+      // a Creature's token is unlinked by default, so the drink lands on the token's own actor
+      const mount = th.actor ?? horse;
+      await mount.update({"system.advantages.bloodpool.temporary": 5});
       let shown = false;
       const orig = canvas.interface.createScrollingText.bind(canvas.interface);
       canvas.interface.createScrollingText = (o, t, opt) => { if ( t === "Vitae" ) shown = true; return orig(o, t, opt); };
       try { await C().animals.feed(th.object, tv.object, 2); } finally { canvas.interface.createScrollingText = orig; }
-      const t = Number(horse.system.advantages.bloodpool.temporary);
+      const t = Number(mount.system.advantages.bloodpool.temporary);
       G.ok("5. feeding from the menu tops it up and shows it", t === 7 && shown, {temporary: t, shown});
     });
 
