@@ -6,6 +6,7 @@
 
 import * as FR from "./face-rules.mjs";
 import * as MR from "./mouth-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 export * as FACE from "./face-rules.mjs";
 export const MOD = "wodx-paperdoll";
 export const LOOK_VERSION = 2;
@@ -132,7 +133,7 @@ export const expressionFor = (look, mood = "own") => { const m = MOODS[mood] ?? 
 export const GENDERS = {"": "Not stated", woman: "A woman", man: "A man", nonbinary: "Nonbinary"};
 
 /* ---- The health track ---- */
-export const LEVELS = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"];
+export const LEVELS = TERMS.HEALTH_LEVELS;
 export const LEVEL_LABELS = ["Unhurt", "Bruised", "Hurt", "Injured", "Wounded", "Mauled", "Crippled", "Incapacitated"];
 /** How far down the health track the character is: 0 unhurt, 1 Bruised ... 7 Incapacitated. */
 export function healthLevel(health) {

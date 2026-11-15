@@ -25,11 +25,14 @@ import * as Rumours from "./rumours.mjs";
 import * as Money from "./money.mjs";
 import * as MR from "./money-rules.mjs";
 import {MOD, SOCKET, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
-const DAY = 86400;
 const now = () => game.time?.worldTime ?? 0;
 const hourNow = () => Math.floor(((now() % DAY) + DAY) % DAY / 3600);
 const dayNow = () => Math.floor(now() / DAY);
+/** B6185: the clock's night (sunset to sunrise) where the culprit is, else the active scene's; null without the Chronicle. */
+const nightNow = (actor = null) => { try { const tok = actor?.getActiveTokens?.()?.[0]; const v = chron()?.terms?.isNightHere?.(tok?.document?.parent ?? null); return typeof v === "boolean" ? v : null; } catch (e) { return null; } };
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 1197; } catch (e) { return 1197; } };
 const all = c => (c ? [...(c.contents ?? c)] : []);
 const combat = () => (game.modules.get("wodx-combat")?.active ? game.modules.get("wodx-combat").api ?? null : null);
@@ -68,10 +71,8 @@ function havenWith(actorId) {
   }
   return null;
 }
-const lineOf = a => {
-  const t = String(a?.type ?? "").toLowerCase();
-  return t === "pc" || t === "vampire" ? "vampire" : t;
-};
+// B6187: the shared reading of a sheet's line (a Kuei-jin also sleeps by day)
+const lineOf = a => { const l = TERMS.lineOf(a); return l === "kueijin" ? "vampire" : l; };
 
 /** A point a few squares from a token (or the scene's middle), so the people arrive close by. */
 function nearPoint(scene, token, step = 3) {
@@ -153,7 +154,7 @@ export async function raid({region, kind = "raid", file = null, also = []} = {})
   for ( const id of ids ) {
     const a = game.actors.get(id);
     if ( !a ) continue;
-    const sleeper = R.DAY_SLEEPERS.includes(lineOf(a)) && R.isDayHour(hourNow());
+    const sleeper = R.DAY_SLEEPERS.includes(lineOf(a)) && R.isDayHour(hourNow()) && nightNow(a) !== true;
     const h = sleeper ? havenWith(id) : null;
     const w = h?.token ? h : whereIs(id);
     if ( !w?.scene ) { await log({kind: "hunters", text: `The hunters looked for ${a.name} and found no trace.`}); continue; }
@@ -249,7 +250,7 @@ async function onStage(p = {}) {
   if ( !isActiveGM() || !on() ) return;
   const a = game.actors.get(p.actor);
   if ( !a ) return;
-  const move = R.lawMove(p.stage, {crossed: !!p.crossed, line: lineOf(a), hour: hourNow()});
+  const move = R.lawMove(p.stage, {crossed: !!p.crossed, line: lineOf(a), hour: hourNow(), night: nightNow(a)});
   if ( move === "come" ) {
     const st = reachState();
     st.patrols[a.id] = dayNow();
@@ -297,7 +298,7 @@ export async function patrols() {
     const a = game.actors.get(id);
     if ( !a ) continue;
     const haven = havenWith(id);
-    const move = R.lawMove("manhunt", {line: lineOf(a), hour: hourNow(), havenKnown: !!haven?.token});
+    const move = R.lawMove("manhunt", {line: lineOf(a), hour: hourNow(), havenKnown: !!haven?.token, night: nightNow(a)});
     if ( !move ) continue;
     st.patrols[id] = dayNow();
     n++;
@@ -356,7 +357,14 @@ async function knowCard(asker, who, what, inst) {
     const L = lawApi(), reg = chron()?.world?.here?.(whereIs(who.id)?.scene)?.id ?? "moravia", h = L?.of?.(who.id, reg);
     if ( h && h.stage?.key !== "none" ) lines.push(`The law: ${h.stage.name}.`);
   } else lines.push(`The closed shelves of ${inst.name} are open to ${asker.name} for a season: rolls to research or study there gain two dice.`);
-  if ( what === "lore" ) await asker.setFlag(MOD, "closedShelves", {until: now() + 90 * DAY, inst: inst.id});
+  if ( what === "lore" ) {
+    await asker.setFlag(MOD, "closedShelves", {until: now() + 90 * DAY, inst: inst.id});
+    // B6026: the two dice are a roll effect research and study rolls read for the season, shown on the token, not only a line
+    try {
+      await game.modules.get("wodx-chronicle")?.api?.traits?.addBite?.(asker, {key: `shelves-${inst.id}`, name: `Closed shelves of ${inst.name}`,
+        tags: ["academics", "investigation", "occult", "science", "medicine", "linguistics"], dice: 2, duration: {kind: "time", seconds: 90 * DAY}, source: "WoDX Storyteller reach"});
+    } catch (e) { console.warn(`${MOD} | closed shelves`, e); }
+  }
   const to = [...ownerIds(asker), ...gmIds()];
   await ChatMessage.create({speaker: {alias: inst.name}, whisper: to, content: `<div class="wodx-card wst-reach"><h3>What ${esc(asker.name)} finds</h3>${lines.map(l => `<p>${esc(l)}</p>`).join("")}</div>`});
 }

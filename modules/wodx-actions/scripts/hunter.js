@@ -20,6 +20,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as IB from "./inq-blessings.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -239,7 +240,7 @@ export function build(ctx) {
 
     async function prayer(actor) {
         const i = inq(actor);
-        const f = i.f, today = Math.floor(game.time.worldTime / 86400);
+        const f = i.f, today = Math.floor(game.time.worldTime / DAY);
         if (f.prayerDay === today) return ctx.notify("Prayer renews Conviction once a day (Dark Ages: Inquisitor p. 160).");
         const run = f.prayerDay === today - 1 ? n(f.prayerRun) + 1 : 0;
         // B6362: holy ground on the map gives its own rating, and none when it is kept for another faith

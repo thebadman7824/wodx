@@ -1,3 +1,5 @@
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 /**
  * WoDX Actions (B5780-B5791): effects WoDX works out itself, for powers whose book effect is more than a keyword's
  * plain result. Each runs on the active Storyteller's client from the effects card (effects.js applyCore), and returns
@@ -31,8 +33,8 @@ export const VISION = {id: "vision", name: "Seeing a vision", img: "icons/svg/ey
   summary: "A vision sent into the mind plays out before their eyes.", mods: {}};
 
 /** The mark's span by successes (DtF Lore of Radiance): a day, a week, a month, a year. */
-export const markSpan = s => (n(s) >= 4 ? {label: "a year", seconds: 365 * 86400} : n(s) === 3 ? {label: "a month", seconds: 30 * 86400}
-  : n(s) === 2 ? {label: "a week", seconds: 7 * 86400} : {label: "a day", seconds: 86400});
+export const markSpan = s => (n(s) >= 4 ? {label: "a year", seconds: 365 * DAY} : n(s) === 3 ? {label: "a month", seconds: 30 * DAY}
+  : n(s) === 2 ? {label: "a week", seconds: 7 * DAY} : {label: "a day", seconds: DAY});
 /** Who the mark moves: an NPC whose Wits is below the successes acts on it; the rest roll Willpower 7 and resist on a success. */
 export const markTakes = (wits, successes, resisted = 0) => n(wits) < n(successes) || n(resisted) < 1;
 /** The ailments Cleanse purges, by an effect's name or status. */
@@ -45,8 +47,7 @@ async function rollPool(dice, diff) {
   if ( !d ) return {successes: 0, faces: []};
   const r = await new Roll(`${d}d10`).evaluate();
   const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
-  return {successes: Math.max(0, hits - ones), faces};
+  return {successes: TERMS.successes(faces, diff).successes, faces};
 }
 
 /** A hidden roll card, for the Storyteller only (standing rule 19). */

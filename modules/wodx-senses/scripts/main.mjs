@@ -26,10 +26,11 @@ import {registerQuiet, applyQuiet, quietCard} from "./quiet.mjs";
 import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 import * as OW from "./otherworld-sight.mjs";
 import * as OR from "./otherworld-sight-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.15.0";
+const VERSION = "0.15.1";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -88,12 +89,12 @@ function yardsBetween(a, b, scene) {
     if ( onCanvas(scene) ) {
       const units = scene.grid?.units ?? "ft";
       const d = canvas.grid.measurePath([a, b]).distance;
-      return /m|meter|metre|yd|yard/i.test(units) ? d : d / 3;
+      return TERMS.toYards(d, units);
     }
   } catch (e) { /* below */ }
   const g = scene?.grid?.size ?? 100, dist = num(scene?.grid?.distance) || 5, units = scene?.grid?.units ?? "ft";
   const d = Math.hypot(a.x - b.x, a.y - b.y) / g * dist;
-  return /m|meter|metre|yd|yard/i.test(units) ? d : d / 3;
+  return TERMS.toYards(d, units);
 }
 function wallsBetween(a, b, scene) {
   if ( !onCanvas(scene) ) return 0;
@@ -374,9 +375,8 @@ async function rollPool(dice, diff) {
   const roll = new Roll(`${Math.max(0, dice)}d10`);
   await roll.evaluate();
   const faces = roll.dice[0]?.results?.map(x => x.result) ?? [];
-  let hits = 0, ones = 0;
-  for ( const f of faces ) { if ( f >= diff ) hits++; if ( f === 1 ) ones++; }
-  return {roll, faces, successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0, dice, diff};
+  const r = TERMS.successes(faces, diff);
+  return {roll, faces, successes: r.successes, botch: r.botch, dice, diff: r.difficulty};
 }
 
 /** WoDX Combat's stance for a token (standing when Combat or its ways of moving are off). */

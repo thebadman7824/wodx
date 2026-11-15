@@ -9,6 +9,7 @@
  *     step warmer (house rule), unless filth or blood still shows.
  *   Things for the house or the body that do neither (a plunger, a bathroom scale) are plain things with no Use.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 export const MARKS = ["filthy", "bloody"];
 export const CLEANERS = /\b(soap|towel|sponge|scrub brush|pumice|tin bath|washboard)\b/i;
 export const NO_USE = /plunger|toilet brush|\bmop\b|bathroom scale|sanitary pads|tampon/i;
@@ -17,7 +18,7 @@ export const isCleaner = name => CLEANERS.test(String(name ?? ""));
 export const hasNoUse = name => NO_USE.test(String(name ?? ""));
 
 /** The night a world time falls in (a day counted from noon). */
-export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 43200) / 86400);
+export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 43200) / DAY);
 
 /** What washing or grooming with this does: {clears: [marks taken off], groomed, line}. marks: the marks on them. */
 export function washResult(name, marks = []) {
@@ -37,4 +38,18 @@ export const groomedTonight = (flag, worldTime) => flag !== null && flag !== und
 export function newWound(before = {}, after = {}) {
   const n = v => Number(v) || 0;
   return ["lethal", "aggravated"].some(k => after?.[k] !== undefined && n(after[k]) > n(before?.[k]));
+}
+
+/** B6033: nights without washing before a living body counts as Filthy (house rule). */
+export const UNWASHED_NIGHTS = 7;
+/** B6033: does a fall make them Filthy? Knocked down outdoors in rain, sleet, snow or on lying snow. */
+export function fallDirties(tags = [], outdoor = true) {
+  if ( outdoor === false ) return false;
+  const t = new Set(tags ?? []);
+  return ["rain", "snow", "sleet", "snow-lying"].some(k => t.has(k));
+}
+/** B6033: have they gone too long unwashed? washedNight: the night they last washed (null: never recorded). */
+export function unwashedTooLong(washedNight, worldTime, living = true) {
+  if ( !living || washedNight === null || washedNight === undefined ) return false;
+  return nightOf(worldTime) - Number(washedNight) >= UNWASHED_NIGHTS;
 }

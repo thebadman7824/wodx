@@ -11,10 +11,12 @@
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
 import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 import * as Cover from "./cover-rules.mjs";
+import {DAY, MINUTE, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {MINUTE};
 export {COVERS, COVER_LEVELS, describeCover, cleanCover, coverOnShot} from "./cover-rules.mjs";
 
-export const TURN = 3; // seconds in a turn (V20 Dark Ages printed p. 324)
-export const MINUTE = 60;
+export const TURN = TURN_SECONDS; // seconds in a turn (V20 Dark Ages printed p. 324)
 
 export const KINDS = {door: "Door", gate: "Gate", window: "Window", shutter: "Shutter", hatch: "Hatch"};
 
@@ -507,8 +509,8 @@ export function bringForward(f = {}, {wall = false, year = 0, keys = null} = {})
 /** Eras with keypads, card readers and alarms. */
 const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0, kept = false} = {}) { return MODERN_ERAS.has(eraId) || year >= ELECTRONIC_FROM || !!kept; }
-const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods", "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy"]);
-export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }
+/** B6192: Dark Ages rules as the era profile has them (terms.darkAgesRules); with no era named, before 1450. */
+export function isDarkAge({eraId = "", year = 0} = {}) { return TERMS.eraById(eraId) ? TERMS.darkAgesRules(eraId) : ["classical", "living-gods"].includes(eraId) || (year > 0 && year <= TERMS.MEDIEVAL_YEAR_END); }
 
 /**
  * The Ability a character picks a lock with. The name differs by line and era: Larceny (V20, W20, C20), Legerdemain
@@ -1701,9 +1703,9 @@ export function hears(noise, {yards = 0, walls = 0, asleep = false, perception =
   if ( noise === "loud" && !asleep ) return {inRange: true, hears: true};
   const diff = asleep ? 8 : 7;
   const dice = Math.max(1, perception + alertness);
-  let hits = 0, ones = 0;
-  for ( let k = 0; k < dice; k++ ) { const f = 1 + Math.floor(rng() * 10); if ( f >= diff ) hits++; if ( f === 1 ) ones++; }
-  return {inRange: true, hears: hits - ones > 0, roll: {dice, diff, successes: Math.max(0, hits - ones)}};
+  const faces = Array.from({length: dice}, () => 1 + Math.floor(rng() * 10));
+  const r = TERMS.successes(faces, diff);
+  return {inRange: true, hears: r.successes > 0, roll: {dice, diff, successes: r.successes}};
 }
 
 /** Clean a wall's WoDX settings from the config form. */
@@ -1741,7 +1743,7 @@ export function restockFor(f = {}, {title = "", kinds = []} = {}) {
   for ( const k of kinds ?? [] ) if ( RESTOCK_BY_PLACE[k] ) return RESTOCK_BY_PLACE[k];
   return "";
 }
-export const RESTOCK_SECONDS = {dawn: 86400, week: 7 * 86400, month: 30 * 86400, season: 91 * 86400};
+export const RESTOCK_SECONDS = {dawn: DAY, week: 7 * DAY, month: 30 * DAY, season: 91 * DAY};
 
 /**
  * A stock list (Interactables 0.23.0), the Storyteller's own table for a container: one entry a line,
@@ -1787,7 +1789,7 @@ export function restockDue(restock, last = 0, now = 0) {
   const s = RESTOCK_SECONDS[restock];
   if ( !s ) return false;
   if ( !last ) return true;
-  if ( restock === "dawn" ) return Math.floor(now / 86400) > Math.floor(last / 86400);
+  if ( restock === "dawn" ) return Math.floor(now / DAY) > Math.floor(last / DAY);
   return now - last >= s;
 }
 

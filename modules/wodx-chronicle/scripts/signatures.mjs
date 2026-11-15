@@ -8,6 +8,8 @@ import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
 import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";
 import {isQuiet} from "./quiet.mjs";
+import * as TERMS from "./terms.mjs";
+import {DAY} from "./terms.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -242,7 +244,7 @@ let lastTick = -1;
 export async function tick({force = false, settle = false} = {}) {
   // B6162: a time skip or a hold waits; the skip's end settles it once (settle)
   if ( !on() || !isActiveGM() || (!settle && isQuiet()) ) return;
-  const t = now(), day = Math.floor(t / 86400);
+  const t = now(), day = Math.floor(t / DAY);
   if ( day === lastTick && !force ) return;
   lastTick = day;
   for ( const a of game.actors ) if ( a.hasPlayerOwner || a.flags?.[MODULE_ID]?.[FLAG] ) { await soilTick(a, t); await oddTick(a); await contractTick(a, t); await ghoulTick(a, t); }
@@ -415,7 +417,7 @@ export async function glimpse(actorOrId) {
 /** A riddle about the next dated event, kept so that the Storyteller hears when it comes true (Malkavian, Stargazer). */
 async function giveGlimpse(a, sig, {field, title, quiet}) {
   const nx = nextEvent();
-  const g = nx ? S.glimpseFor(nx.ev, nx.days, S.seedOf(a.id, nx.ev.id, Math.floor(now() / 86400))) : {theme: "none", text: quiet};
+  const g = nx ? S.glimpseFor(nx.ev, nx.days, S.seedOf(a.id, nx.ev.id, Math.floor(now() / DAY))) : {theme: "none", text: quiet};
   sig[field] = now();
   if ( nx ) sig.glimpses = [...(sig.glimpses ?? []).filter(x => x.event !== nx.ev.id), {event: nx.ev.id, at: now(), text: g.text}].slice(-10);
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
@@ -439,7 +441,7 @@ export function hearAs(actorOrId, {topic = "", name = "", npcId = ""} = {}) {
   const a = toActor(actorOrId);
   if ( !a || !(isFeature(a, "glimpse") || isFeature(a, "hear")) ) return null;
   const keys = S.derangementsOf(a.system?.derangement);
-  return S.hearLine(keys, {name: name || "they", topic: topic || "it", seed: S.seedOf(a.id, npcId, topic, Math.floor(now() / 86400))});
+  return S.hearLine(keys, {name: name || "they", topic: topic || "it", seed: S.seedOf(a.id, npcId, topic, Math.floor(now() / DAY))});
 }
 
 /* ---------------- Tzimisce ---------------- */
@@ -477,7 +479,7 @@ export async function emptyFrame(actorOrId, scene = canvas?.scene) {
   if ( !a || !scene || !isFeature(a, "camera") || !isActiveGM() ) return null;
   const year = currentYear(), cam = S.cameraAt(year);
   if ( !S.watched(year, scene.flags?.[MODULE_ID]?.camera) ) return null;
-  const sig = sigOf(a), seen = sig.frames ?? {}, tonight = Math.floor((now() - 43200) / 86400);
+  const sig = sigOf(a), seen = sig.frames ?? {}, tonight = Math.floor((now() - 43200) / DAY);
   if ( seen[scene.id] === tonight ) return null;
   sig.frames = {...seen, [scene.id]: tonight};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
@@ -541,7 +543,7 @@ async function oddTick(a) {
 /* ---------------- Nosferatu ---------------- */
 
 const isMortal = a => /mortal|human|ghoul|kinfolk/.test(String(actorsApi("wodx-combat")?.getKind?.(a) ?? a?.type ?? "").toLowerCase()) && !/vampire|kindred/.test(String(a?.type ?? "").toLowerCase());
-const tonightKey = () => Math.floor((now() - 43200) / 86400);
+const tonightKey = () => Math.floor((now() - 43200) / DAY);
 /** A Nosferatu deals face to face with a mortal: one card a night for each, with a button to record the breach. */
 async function trueFace(a, npc) {
   if ( !isMortal(npc) ) return null;
@@ -1090,7 +1092,7 @@ async function kinHarmed(target) {
   if ( !lineOn("sigWerewolf") || !isActiveGM() ) return;
   const k = target?.flags?.world?.wodx?.kinfolk;
   if ( !k ) return;
-  const day = Math.floor(now() / 86400);
+  const day = Math.floor(now() / DAY);
   if ( kinSeen.get(target.id) === day ) return;
   kinSeen.set(target.id, day);
   const tribe = S.rowIn(S.TRIBES, k);
@@ -1146,14 +1148,14 @@ export async function open(actorOrId) {
   if ( sig.muses?.length ) body += `<h4>Muses</h4><ul>${sig.muses.map(m => `<li>${esc(m.name)} (${esc(S.MUSE_KINDS[m.kind])}): Obsession ${m.obsession}</li>`).join("")}</ul>`;
   if ( sig.cause ) body += `<h4>Cause</h4><p>${esc(sig.cause.label)}${sig.cause.custom && !sig.cause.approved ? " (waiting for the Storyteller)" : ""}. Rant ${sig.cause.rant} of ${S.RANT_POINTS}.</p>`;
   const marks = S.activeMarks(sig.marks ?? [], t);
-  if ( marks.length ) body += `<h4>Marks</h4><ul>${marks.map(m => { const r = S.markByKey(m.key); return `<li>${esc(r.label)}: ${esc(r.edge)}; ${esc(r.cost)}. Heals in ${Math.ceil((m.until - t) / 86400)} days.</li>`; }).join("")}</ul>`;
+  if ( marks.length ) body += `<h4>Marks</h4><ul>${marks.map(m => { const r = S.markByKey(m.key); return `<li>${esc(r.label)}: ${esc(r.edge)}; ${esc(r.cost)}. Heals in ${Math.ceil((m.until - t) / DAY)} days.</li>`; }).join("")}</ul>`;
   if ( sig.soil ) body += `<h4>Native soil</h4><p>${carriesSoil(a) ? "Carried." : "Not carried."}${sig.soil.short ? ` Dice pools halved (${sig.soil.short} night${sig.soil.short === 1 ? "" : "s"} without it).` : ""}</p>`;
   if ( sig.ravnos?.vice ) body += `<h4>Vice</h4><p>${esc(S.ravnosVice(sig.ravnos.vice)?.label)}. Self-Control difficulty to resist now: ${S.ravnosDifficulty(sig.ravnos, t)}.</p>`;
   if ( has("camera") ) { const y = currentYear(), c = S.cameraAt(y); body += `<h4>Cameras</h4><p>${c ? `${esc(c.label)} is the camera of the year. This scene is ${S.watched(y, canvas?.scene?.flags?.[MODULE_ID]?.camera) ? "watched" : "not watched"}.` : "No camera exists yet."}</p>`; }
   const fx = rows.flatMap(r => r.effects ?? []);
   if ( fx.length ) body += `<h4>On the rolls</h4><ul>${fx.map(e => `<li>${esc(e.tags.join(", "))}${e.when ? ` (${esc(e.when)})` : ""}: ${e.dice ? `${e.dice > 0 ? "+" : ""}${e.dice} ${Math.abs(e.dice) === 1 ? "die" : "dice"}` : `difficulty ${e.difficulty > 0 ? "+" : ""}${e.difficulty}`}</li>`).join("")}</ul>`;
   if ( has("pyramid") ) body += `<h4>The Pyramid</h4><p>${esc(S.rankLabel(sig.rank ?? 0))}.</p>`;
-  if ( sig.contracts?.length ) body += `<h4>Contracts</h4><p>Standing at Alamut ${sig.standing ?? 1} of ${S.STANDING_MAX}.</p><ul>${sig.contracts.slice(-8).map(c => `<li>${esc(c.target)}: ${esc(c.status)}${c.status === "open" ? `, due in ${Math.max(0, Math.ceil((c.due - t) / 86400))} days` : ""}</li>`).join("")}</ul>`;
+  if ( sig.contracts?.length ) body += `<h4>Contracts</h4><p>Standing at Alamut ${sig.standing ?? 1} of ${S.STANDING_MAX}.</p><ul>${sig.contracts.slice(-8).map(c => `<li>${esc(c.target)}: ${esc(c.status)}${c.status === "open" ? `, due in ${Math.max(0, Math.ceil((c.due - t) / DAY))} days` : ""}</li>`).join("")}</ul>`;
   if ( sig.servants?.length ) body += `<h4>${rowWith(a, "family")?.servant ? "Bound servants" : "Bound dead"}</h4><ul>${sig.servants.map(w => `<li>${esc(w.name)}${w.fetter ? ` (held by ${esc(w.fetter)})` : ""}</li>`).join("")}</ul>`;
   if ( rows.some(r => r.feature === "family") && currentYear() < 1444 ) body += `<p class="vta-note">In this age the line is the Cappadocians: their deathly look is a Masquerade sign up close.</p>`;
   if ( small && lineOn(S.SMALL_LINES[small].setting) && !rows.length ) body += `<p class="vta-note">Pick the group to see its feature.</p>`;
@@ -1165,7 +1167,7 @@ export async function open(actorOrId) {
   if ( has("watchers") ) body += `<h4>The Watchers</h4><p>In ${yr} they read ${esc(S.recordsAt(yr))}.</p>`;
   if ( sig.guard ) body += `<h4>Guarded place</h4><p>${esc(sig.guard.name)}.</p>`;
   if ( sig.leverage?.length ) body += `<h4>Leverage</h4><ul>${sig.leverage.map(l => `<li>${esc(l.who)}${l.what ? `: ${esc(l.what)}` : ""}</li>`).join("")}</ul>`;
-  if ( has("sky") ) body += `<h4>The stars</h4><p>${S.mayReadSky(sig.skyAt, t) ? "Ready to be read under a clear sky." : `Read again in ${Math.ceil((S.LUNAR_MONTH * 86400 - (t - sig.skyAt)) / 86400)} days.`}</p>`;
+  if ( has("sky") ) body += `<h4>The stars</h4><p>${S.mayReadSky(sig.skyAt, t) ? "Ready to be read under a clear sky." : `Read again in ${Math.ceil((S.LUNAR_MONTH * DAY - (t - sig.skyAt)) / DAY)} days.`}</p>`;
   if ( sig.rulings?.length ) body += `<h4>Rulings</h4><ul>${sig.rulings.slice(-5).map(r => `<li>${r.between ? `${esc(r.between)}: ` : ""}${esc(r.verdict)}</li>`).join("")}</ul>`;
   if ( has("deformity") ) { const d = S.deformityByKey(sig.deformity); body += `<h4>Deformity</h4><p>${d ? esc(d.label) : "Not picked yet."}</p>`; }
   if ( sig.odd?.gifts?.length ) body += `<h4>Odd gifts</h4><ul>${sig.odd.gifts.map(k => `<li>${esc(S.ODD_GIFTS.find(g => g.key === k)?.label ?? k)}</li>`).join("")}</ul>`;
@@ -1384,7 +1386,7 @@ async function devilTiger(combat) {
 async function featureRoll(a, label, dice, diff, why) {
   const roll = await new Roll(`${Math.max(1, dice)}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length, ok = hits - ones > 0;
+  const {raw: hits, ones} = TERMS.successes(faces, diff), ok = hits - ones > 0;
   if ( !ok ) await a.update({"system.advantages.willpower.temporary": S.willpowerStep(wpOf(a), -1)});
   await ChatMessage.create({content: `<div class="wodx-card wct-sig"><h3>${esc(a.name)}: ${esc(label)}</h3><p>${esc(why)}</p><p>${dice} dice at ${diff}: ${faces.join(", ")}. ${ok ? "They hold." : "They give way, and a point of Willpower goes."}</p></div>`,
     speaker: {alias: "Chronicle"}, whisper: [...new Set([...ownerIds(a), ...gmIds()])], rolls: [roll]});
@@ -1451,7 +1453,7 @@ const leaderOf = a => { try { const f = (actorsApi("wodx-npc")?.factions?.state?
 const giftDay = new Map();
 async function piskie({actor, mode, give, owe} = {}) {
   if ( !actor || !hasRow(actor, "piskies") || !S.piskieGift({mode, give, owe}) ) return;
-  const day = Math.floor(now() / 86400);
+  const day = Math.floor(now() / DAY);
   if ( giftDay.get(actor.id) === day ) return;
   giftDay.set(actor.id, day);
   await cardFor(actor, "line", `${actor.name} leaves a gift`, `<p>${esc(give)} left in the trade, freely.</p>`, {whisper: [...new Set([...ownerIds(actor), ...gmIds()])], act: {key: "glamour", label: "A point of Glamour", who: "gm", data: {ids: [actor.id], one: true}}});

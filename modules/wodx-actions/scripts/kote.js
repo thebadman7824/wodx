@@ -19,6 +19,7 @@ import * as K from "./kote-rules.js";
 import * as KA from "./kote-arts.js";
 import * as EF from "./effects.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -35,7 +36,7 @@ export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, notify } = ctx;
     const flag = a => a.getFlag(MOD, "kote") ?? {};
     const saveFlag = (a, patch) => ctx.setFlag(a, "kote", { ...flag(a), ...patch });
-    const night = () => Math.floor(((game.time?.worldTime ?? 0) - 18 * 3600) / 86400);
+    const night = () => Math.floor(((game.time?.worldTime ?? 0) - 18 * 3600) / DAY);
 
     function info(actor) {
         const a = actor.system?.advantages ?? {};
@@ -339,7 +340,7 @@ export function build(ctx) {
     async function sun(actor) {
         const i = info(actor);
         const f = flag(actor);
-        const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+        const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
         const used = f.sunDay === day ? n(f.sunMin) : 0;
         const content = `<form><p>${state(i)}. Minutes already spent in the sun today: ${used}.</p>
           <div class="form-group"><label>Light</label><select name="dir" data-fixed><option value="1">direct</option><option value="0">indirect</option></select></div>
@@ -403,7 +404,7 @@ export function build(ctx) {
     async function sunAuto(actor, { turns = 1, direct = true } = {}) {
         const i = info(actor);
         const f = flag(actor);
-        const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+        const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
         const used = f.sunDay === day ? n(f.sunMin) : 0;
         const minutes = Math.max(1, Math.round(n(turns) * 3 / 6)) / 10;
         const grace = K.sunGrace({ stamina: i.stamina, yinChi: i.chi.yin, yangImbalanced: i.perm === "yang", direct });

@@ -71,7 +71,7 @@ test("every block is built by main.mjs; every button is a WoDX Actions call", ()
 test("routing: the era, the Kuei-jin and Orpheus variants, Reckoning hunters, and the three new types", () => {
   for ( const r of [/isKotE\(actor\) \? "kote"/, /isOrpheus\(actor\) \? "orpheus"/, /"ghoul20"/, /case "Wraith": return "wr20"/, /case "Demon": return "demon"/, /case "Mummy": return "mummy"/,
     /line === "reckoning"/, /isMageDA\(actor\) \? "mageDA" : "m20"/, /isFaeDA\(actor\) \? "faeDA" : "c20"/, /inDA\(\) \? "werewolfDA" : "w20"/] ) assert.match(main, r);
-  for ( const c of ["WraithActorSheet", "DemonActorSheet", "MummyActorSheet"] ) assert.match(main, new RegExp(`wodxSheet\\(${c}`));
+  for ( const c of ["WraithActorSheet", "DemonActorSheet", "MummyActorSheet"] ) assert.match(main, new RegExp(`pick\\("[A-Za-z]+", ${c}, ${c}V2\\)`)); // B6114
   assert.match(main, /\["Wraith", WodxWraithSheet\], \["Demon", WodxDemonSheet\], \["Mummy", WodxMummySheet\]/);
 });
 

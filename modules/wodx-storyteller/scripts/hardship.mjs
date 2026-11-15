@@ -12,6 +12,7 @@ import * as H from "./hardship-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -46,9 +47,7 @@ async function rollStamina(a, diff, dice = stamina(a)) {
   const r = new Roll(`${dice}d10`);
   await r.evaluate();
   const faces = r.dice.flatMap(d => d.results.map(x => x.result));
-  let s = 0, ones = 0;
-  for ( const f of faces ) { if ( f === 1 ) ones++; if ( f >= diff ) s++; }
-  return {successes: Math.max(0, s - ones), faces};
+  return {successes: TERMS.successes(faces, diff).successes, faces};
 }
 
 /** Check one character up to now. Returns {lines, bashing, before} or null when nothing came due. */

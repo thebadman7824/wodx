@@ -89,7 +89,7 @@ export async function run() {
     const sheet = game.actors.get(pc.id).sheet;
     await sheet.render(true);
     await sleep(1500);
-    const el = sheet.element?.[0] ?? sheet.element;
+    const el = (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0]);
     const hasBtn = !!el?.querySelector?.("[data-act=tie-followers]");
     await sheet.close();
     ok("4. sheet button", hasBtn, {});

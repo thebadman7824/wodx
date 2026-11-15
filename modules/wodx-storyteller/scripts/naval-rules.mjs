@@ -30,6 +30,7 @@
 
 import {ENGINES} from "./siege-works-rules.mjs";
 import * as WL from "./war-lands-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -44,9 +45,8 @@ export const QUARTER = 15 * 60, WATCH = 4 * 3600;
 
 /** Count faces at a difficulty: successes less ones; a botch on no success and a one. */
 export function count(faces, diff) {
-  let raw = 0, ones = 0;
-  for ( const f of faces ) { if ( f === 1 ) ones++; if ( f >= diff ) raw++; }
-  return {successes: Math.max(0, raw - ones), botch: raw === 0 && ones > 0};
+  const r = TERMS.successes(faces, diff);
+  return {successes: r.successes, botch: r.botch};
 }
 const roll = (draw, dice, diff) => { const faces = draw(Math.max(1, Math.round(dice))); return {...count(faces, diff), faces, dice: Math.max(1, Math.round(dice)), diff}; };
 

@@ -30,8 +30,8 @@ async function check(label, a, id, words) {
       const e0 = R.errors.length;
       const sheet = a.sheet;
       await sheet.render(true);
-      await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(`.wodx-book[data-sheet='${id}'] .wodx-page2`));
-      const p2 = sheet.element?.[0]?.querySelector(".wodx-page2");
+      await until(() => sheet.rendered && (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0])?.querySelector(`.wodx-book[data-sheet='${id}'] .wodx-page2`));
+      const p2 = (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0])?.querySelector(".wodx-page2");
       const t = p2?.textContent.replace(/\s+/g, " ") ?? "";
       const all = ["Combat", "Gate sword (diff 6, Str+2 L)", "Gate pistol (diff 6, 4 L, range 20, rate 3, clip 7)", "Gate coat (soak 1/1/0, Dex -1)", "Possessions", "Gate lantern", "History and Description", ...words];
       const missing = all.filter(w => !t.includes(w));

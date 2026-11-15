@@ -26,3 +26,5 @@ project repository (wodx-repo), where upstream is tagged as upstream-7.3.2.
 7.3.2-wodx.10 (public repository notice, B2950): the settings sidebar's Dark Pack section adds a line saying WoDX is an unofficial fan work, not official World of Darkness material; the manifest description says the same.
 
 7.3.2-wodx.11 (vehicle sheets, B4968): actor types that a WoDX module defines (their names hold a dot, such as wodx-interactables.vehicle) are skipped by the character data preparation and the load-time migration, as the Group type is.
+
+7.3.2-wodx.12 (line sheets on ApplicationV2, B6110 to B6113): each line sheet's code now runs on either sheet engine. LegacyActorSheetV2 gives a line sheet the old engine's getData, activateListeners, tabs, editors, image picker and whole-form saving on ApplicationV2 with the Handlebars mixin, so its code and templates move unchanged. The lines listed in module/actor/template/lines-v2.js (LINES_V2) use it; the first is Mummy. Each sheet keeps its name and id (WoD.MummyActorSheet), so characters keep their chosen sheet.

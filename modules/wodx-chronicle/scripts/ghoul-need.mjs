@@ -15,11 +15,12 @@ import * as R from "./ghoul-need-rules.mjs";
 import {getEngine} from "./calendar.mjs";
 import {isQuiet} from "./quiet.mjs";
 import {offerFeed} from "./signatures.mjs";
+import {isSkipping} from "./skip.mjs";
+import {MONTH} from "./terms.mjs";
 
 const FLAG = "ghoulNeed";
 const SIG = "sig";
 const DAY = R.DAY;
-const MONTH = 30 * DAY;
 const GREY = "#8a8a8a";
 
 const now = () => game.time?.worldTime ?? 0;

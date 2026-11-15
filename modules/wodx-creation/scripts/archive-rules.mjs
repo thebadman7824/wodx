@@ -8,6 +8,7 @@
  */
 
 /** The choices for the setting: years, 0 for never. */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 export const AUTO_YEARS = {0: "Never (by hand only)", 1: "After a year", 5: "After five years", 10: "After ten years", 25: "After twenty-five years", 50: "After fifty years"};
 export const AUTO_DEFAULT = 10;
 
@@ -44,4 +45,4 @@ export function relink(text, ids = [], toArchive = true) {
 }
 
 /** Whether the clock crossed into a new day since the last look (one look a day at most). */
-export const newDay = (last, now) => Math.floor(Number(now) / 86400) !== Math.floor(Number(last) / 86400);
+export const newDay = (last, now) => Math.floor(Number(now) / DAY) !== Math.floor(Number(last) / DAY);

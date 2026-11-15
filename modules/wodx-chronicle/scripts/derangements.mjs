@@ -15,6 +15,7 @@ import * as D from "./derangement-rules.mjs";
 import {registerCondition, setCondition, hasCondition} from "./conditions.mjs";
 import {addSource} from "./traits.mjs";
 import {isQuiet, isLightTouch} from "./quiet.mjs";
+import * as TERMS from "./terms.mjs";
 
 const FLAG = "bout";
 const now = () => game.time?.worldTime ?? 0;
@@ -28,7 +29,7 @@ export const boutOf = actor => {
 };
 
 function count(faces, diff) {
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
 }
 

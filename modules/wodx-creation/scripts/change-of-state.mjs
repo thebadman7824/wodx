@@ -5,9 +5,10 @@ import * as AG from "./animal-ghoul-rules.mjs";
 import {setAlly} from "./apps.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {setLineage, setChronology, recordDrink, writeLineageJournal, dateLabel, ordinal, handOver} from "./lineage.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const BEFORE_FOLDER = "WoDX · Before the Embrace";
-const NIGHT = 86400;
+const NIGHT = DAY;
 
 /* -------------------------------------------- */
 /*  The Embrace                                 */

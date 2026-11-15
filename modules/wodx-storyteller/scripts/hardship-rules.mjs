@@ -10,8 +10,9 @@
  *     more each day; sleeping clears it (HH2 p. 90; lost sleep on later days as Wraith 20th pdf p. 355).
  * The difficulty for weather (6) and the bashing level a day of thirst or hunger deals are house rules.
  */
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, HOUR};
 
-export const HOUR = 3600, DAY = 86400;
 export const WEATHER = {
   none: {label: "No hardship", every: 0},
   harsh: {label: "Harsh: a roll an hour", every: HOUR},

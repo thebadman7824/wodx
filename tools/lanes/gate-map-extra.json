@@ -94,6 +94,13 @@
     "gatewonders": [
       "wodx-library",
       "wodx-storyteller"
+    ],
+    "gatestillmarks": [
+      "wodx-combat",
+      "wodx-chronicle",
+      "wodx-actions",
+      "wodx-storyteller",
+      "wodx-library"
     ]
   },
   "remove": {},

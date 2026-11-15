@@ -80,7 +80,9 @@ export async function offerMaim(target, offer, {attacker = null} = {}) {
     flags: {[MOD]: {maim: {actor: target.uuid, part: offer.part, label: offer.label, by: attacker?.name ?? "", effect: made?.[0]?.id ?? null}}},
     content: `<div class="vtc-card"><p>A heavy blow to <b>${esc(target.name)}</b>'s <b>${esc(offer.label.toLowerCase())}</b>: crippled until those health levels heal (+2 difficulty on actions with it, VtDA20 p. 348). The Storyteller may rule it lost for good: then ${esc(target.name)} ${esc(offer.stops)}.</p><p><small>At 3 or more lethal or aggravated levels after soak (house rule). Regrowing a lost part: Kindred with blood (VtDA20 p. 340), ghouls with Willpower, blood and a Stamina roll (V20 p. 501), Garou unless it becomes a Battle Scar (W20 p. 259).</small></p><button type="button" data-action="wodx-maim">Lost for good</button> <button type="button" data-action="wodx-cripple-undo">Not crippled after all</button></div>`});
 }
-const crippleEffect = (part, label) => ({name: `Crippled: ${String(label).toLowerCase()}`, img: "icons/svg/bones.svg",
+// B6032: the crippled part shows on the token, not only on the sheet
+const SHOW_ALWAYS = (() => { try { return CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS ?? null; } catch (e) { return null; } })();
+const crippleEffect = (part, label) => ({name: `Crippled: ${String(label).toLowerCase()}`, img: "icons/svg/bones.svg", ...(SHOW_ALWAYS !== null ? {showIcon: SHOW_ALWAYS} : {}),
   description: "+2 difficulty on actions with this part until the health levels on it heal (VtDA20 p. 348). WoDX Combat adds it to attacks with the part and takes this off when the part heals.", flags: {[MOD]: {crippled: part}}});
 
 async function uncripple(message) {

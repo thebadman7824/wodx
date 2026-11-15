@@ -20,13 +20,15 @@
  * the fact's own words (a rumour, a feast, a name). #they# #them# #their# #theirs# #themself# #theyre# #theyve#
  * are always they, them and so on, so generated text stays gender-neutral.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Era bands, as stock talk (data/stock-talk.mjs) has them. */
 export const BANDS = ["medieval", "earlymodern", "nineteenth", "twentieth", "modern", "future"];
 export const REGARDS = ["hate", "dislike", "neutral", "like", "love"];
 /** A year to stand for each band when only the band is known, and the band of a year (as talk-rules eraBand). */
 export const BAND_YEAR = {medieval: 1350, earlymodern: 1650, nineteenth: 1850, twentieth: 1940, modern: 2000, future: 2040};
-export const bandOf = year => { const y = Number(year); return y < 1500 ? "medieval" : y < 1800 ? "earlymodern" : y < 1900 ? "nineteenth" : y < 1980 ? "twentieth" : y < 2026 ? "modern" : "future"; };
+export const bandOf = year => TERMS.speechBand(year);
 export const warmthOf = regard => (regard === "hate" || regard === "dislike" ? "cold" : regard === "like" || regard === "love" ? "warm" : "neutral");
 
 const lc = v => String(v ?? "").trim().toLowerCase();
@@ -197,7 +199,6 @@ export function factsFromSides(sides = [], keys = []) {
   return out;
 }
 
-const DAY = 86400;
 /**
  * The mood an NPC talks in (B1644). The Storyteller's choice wins; else a place in alarm makes them afraid, wounds make
  * them hurt, a fight with this character in the last day or a fall in regard makes them angry, a wary place makes them

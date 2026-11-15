@@ -9,9 +9,10 @@
  * into the sheet's Derangements box. The difficulties and roll effects are house readings of the books' prose.
  */
 import {DERANGEMENTS} from "../data/signatures.mjs";
+import {SCENE_SECONDS} from "./terms.mjs";
+export {SCENE_SECONDS};
 
 /** How long one bout lasts: a scene, read as an hour of game time. */
-export const SCENE_SECONDS = 3600;
 
 /** key → {label, trigger, hold (Willpower difficulty), mods: [{tags, diff, note}], held, grip}. tags [] = every roll. */
 export const TABLE = {

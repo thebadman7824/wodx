@@ -29,6 +29,7 @@
  * Every number here is a house rule (B2380 to B2385).
  */
 import {SUPPLY, TAX_RATES, normMoves} from "./market-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const CHANCE = 1 / 6;
 export const MONOPOLY_SHIFT = 0.3;
@@ -220,7 +221,7 @@ export function describe(mv, {year = 1197, kindLabel = k => k, future = false} =
 /** A raid's roll: force dice at difficulty 6, ones take successes away, the guard takes more. */
 export function rollRaid(force, guard, rand = Math.random) {
   const dice = Array.from({length: clamp(Math.round(force), 1, 10)}, () => 1 + Math.floor(rand() * 10));
-  const hits = dice.filter(d => d >= RAID_DIFF).length, ones = dice.filter(d => d === 1).length;
+  const {raw: hits, ones} = TERMS.successes(dice, RAID_DIFF);
   const successes = Math.max(0, hits - ones);
   return {dice, successes, botch: hits === 0 && ones > 0, net: Math.max(0, successes - Math.max(0, Math.round(guard)))};
 }

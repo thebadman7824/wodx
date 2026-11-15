@@ -7,9 +7,10 @@
  * {endings: {<book>: <ending>}, clocks: {<key>: n}, books: {<book>: "running"|"done"|"skipped"|"offered"}}.
  */
 import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS} from "../data/saga-rothenstein.mjs";
+import {DAY} from "./terms.mjs";
+export {DAY};
 
 export {SAGA, SAGA_CLOCKS, SAGA_ENDINGS};
-export const DAY = 86400;
 /** What a step may do to the town (WoDX Storyteller town-rules SAGA_TOWN has the same keys; B3670). */
 export const TOWN_KINDS = ["boom", "war", "siege", "famine", "plague", "exile", "expulsion", "flood"];
 export const SAGA_PREFIX = `saga:${SAGA.key}:`;

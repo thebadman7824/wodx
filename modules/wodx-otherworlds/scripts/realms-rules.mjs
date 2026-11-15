@@ -4,8 +4,10 @@
  * research/book-checks/otherworld-rules.md, pages pdf / printed. Where a book is silent the figure is a house rule
  * and is logged in docs/PENDING-REVIEW.md.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 const n = v => Math.trunc(Number(v) || 0);
-const count = (dice, diff) => { const d = dice ?? []; const hits = d.filter(x => x >= diff).length, ones = d.filter(x => x === 1).length;
+const count = (dice, diff) => { const d = dice ?? []; const {raw: hits, ones} = TERMS.successes(d, diff);
   return {hits, ones, successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0}; };
 
 /* ------------------------------------------------------------------ */
@@ -158,7 +160,7 @@ export function maelstromDice(bells, {haunt = 0} = {}) {
 export const DISEMBODY_DAYS = 3 * 29.53059;
 export function disembodiment(seconds) {
   if ( !Number.isFinite(Number(seconds)) || seconds === null ) return {known: false, days: 0, due: false};
-  const days = Math.max(0, Number(seconds)) / 86400;
+  const days = Math.max(0, Number(seconds)) / DAY;
   return {known: true, days, due: days >= DISEMBODY_DAYS, left: Math.max(0, DISEMBODY_DAYS - days)};
 }
 

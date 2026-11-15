@@ -9,10 +9,11 @@
  * stays for months, a database for years. At the top a warrant goes out, then a manhunt; an arrest leads to a trial
  * (B3608). The gravity, the stages and the cooling are house figures (docs/PENDING-REVIEW.md).
  */
+import {DAY} from "./terms.mjs";
+export {DAY};
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-export const DAY = 86400;
 export const MAX = 10;
 
 /** How grave each deed is (house figures). breach: a mortal saw something they should not, mostly an assault. extortion: a blackmailed person told the law (B5177). */

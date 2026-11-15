@@ -12,6 +12,7 @@
 import * as AR from "./arms-rules.mjs";
 import * as HY from "./hygiene-rules.mjs";
 import * as DG from "./gadget-rules.mjs";
+import {HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The lines, in the chronicle's order. */
 export const LINES = ["mortal", "ghoul", "vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant"];
@@ -423,7 +424,6 @@ export const STRENGTH_TEXT = {
 export const ABILITY_TAGS = ["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
   "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science",
   "investigation", "firearms", "ranged", "archery", "awareness", "social", "stealth", "alertness", "law", "politics", "technology", "linguistics"];
-const HOUR = 3600;
 /**
  * B5012: what a state in the body does to rolls, as WoDX Chronicle timed roll effects:
  * [{key, name, tags, dice, duration}]. count is the drinks in the last few hours; scale is "weaker" or "stronger"

@@ -22,6 +22,7 @@ import { aim } from "./aim.js";
 import * as DE from "./demon-evocations.js";
 import * as EF from "./effects.js";
 import * as P from "./profiles.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -68,7 +69,7 @@ export function build(ctx) {
     // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
     const sceneKey = () => `s${LIM.sceneNo()}`;
     const flag = a => a.getFlag(MOD, "demon") ?? {};
-    const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400);
+    const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / DAY);
     const saveFlag = (a, patch) => ctx.setFlag(a, "demon", { ...flag(a), ...patch });
     // Evocations still running (p. 171: as many at once as the permanent Faith); each ends at its time
     const running = a => (flag(a).running ?? []).filter(x => n(x.until) > (game.time?.worldTime ?? 0));
