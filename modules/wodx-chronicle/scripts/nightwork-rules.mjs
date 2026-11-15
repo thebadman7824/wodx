@@ -25,8 +25,10 @@ export const DOC_TYPES = ["Actor", "ActorDelta", "Item", "ActiveEffect", "Token"
 export const SKIP_SETTINGS = [/^core\./, /^wodx-chronicle\.nightWork$/, /^wodx-chronicle\.approvals$/, /^wodx-solo\.(log|st|before)$/,
   /^wodx-storyteller\.(timer|session)$/];
 /** Fields that change by themselves and are never written down. */
-export const SKIP_PATHS = [/^_id$/, /^_stats(\.|$)/, /^sort$/, /^folder$/];
-export const CAPS = {entries: 300, opsPerEntry: 400, bytes: 1500000, opBytes: 150000, days: 30};
+export const SKIP_PATHS = [/^_id$/, /^_stats(\.|$)/, /^sort$/, /^folder$/,
+  // Bookkeeping that follows every change by itself (WoDX Sheets' history strip and window state, the sheet's own flag)
+  /^flags\.wodx-sheets\.(history|ui|snap|since)(\.|$)/, /^system\.settings\.isupdated$/];
+export const CAPS = {entries: 300, opsPerEntry: 1000, bytes: 1500000, opBytes: 150000, days: 30};
 export const SINCE = [
   {key: "session", label: "Since the last session ended"},
   {key: "hour", label: "The last hour"},
@@ -268,7 +270,7 @@ export function rows(journal, {since = 0, look, names = () => null} = {}) {
     });
     const warn = lines.filter(l => l.changed.length && !l.hand);
     return {id: e.id, at: e.at, label: e.label, kind: e.kind, kindLabel: KINDS[e.kind] ?? e.kind, source: e.source ?? "", undone: !!e.undone,
-      tooBig: !!e.tooBig, count: (e.ops ?? []).length, canUndo: !e.undone && !e.tooBig && ((e.ops ?? []).length > 0 || !!e.handlerUndo),
+      tooBig: !!e.tooBig, left: Number(e.left) || 0, count: (e.ops ?? []).length, canUndo: !e.undone && !e.tooBig && ((e.ops ?? []).length > 0 || !!e.handlerUndo),
       lines, warn: warn.length, playerWarn: warn.filter(l => l.player).length,
       warnBy: [...new Set(warn.map(l => l.by).filter(Boolean))]};
   });
@@ -279,9 +281,10 @@ export function addEntry(journal, entry, {now = Date.now(), caps = CAPS} = {}) {
   const j = normJournal(journal);
   const e = {...entry};
   if ( (e.ops ?? []).length > caps.opsPerEntry ) { e.ops = e.ops.slice(0, caps.opsPerEntry); e.tooBig = true; }
+  // B6224: a single change too large to keep is left out and counted; the rest of the piece can still be taken back
   e.ops = (e.ops ?? []).filter(op => {
     if ( bytes(op) <= caps.opBytes ) return true;
-    e.tooBig = true;
+    e.left = (e.left ?? 0) + 1;
     return false;
   });
   j.entries.push(e);
@@ -341,7 +344,7 @@ export function listHTML(list, {since = "session", time = "", keep = true} = {})
     return `<li class="wodx-night-row${r.undone ? " undone" : ""}" data-search-item data-search-text="${escH(`${r.label} ${r.source} ${r.kindLabel}`)}">
       <header><input type="checkbox" class="wodx-night-tick" data-id="${escH(r.id)}"${r.canUndo ? "" : " disabled"} aria-label="Take this back">
         <span class="wodx-tag">${escH(r.kindLabel)}</span> <strong>${escH(r.label)}</strong> ${state}</header>
-      <p class="wodx-quiet">${escH(when(r.at))}${r.source ? ` · ${escH(r.source)}` : ""} · ${r.count} change${r.count === 1 ? "" : "s"}</p>${warn}
+      <p class="wodx-quiet">${escH(when(r.at))}${r.source ? ` · ${escH(r.source)}` : ""} · ${r.count} change${r.count === 1 ? "" : "s"}${r.left ? ` (${r.left} too large to keep, left as they are)` : ""}</p>${warn}
       ${lines ? `<details><summary>What it changed</summary><ul class="wodx-night-ops">${lines}</ul></details>` : `<p class="wodx-quiet">It changed nothing that can be taken back here.</p>`}</li>`;
   }).join("");
   return `<div class="wodx-night-since"><label>Show <select name="since" class="wodx-night-sel" data-fixed>${opts}</select></label>

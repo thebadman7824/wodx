@@ -28,7 +28,7 @@ import {currentYear} from "./eras.mjs";
 const QUIET = {hand: 800, approved: 800, auto: 800, seat: 2500, clock: 4000};
 const MAX = {hand: 30000, approved: 30000, auto: 30000, seat: 30000, clock: 90000};
 const STALE = 60000;
-const MOVE = /^(x|y|elevation|rotation|sort)$/;
+const MOVE = /^(x|y|elevation|rotation|sort|level|movementAction|_movement\w*|_movementHistory)(\.|$)/;
 
 let approvals = null;       // handed in at start: {history, undoById, markTakenBack}
 const open = [];            // the pieces of work going on now

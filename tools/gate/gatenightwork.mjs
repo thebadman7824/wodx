@@ -64,8 +64,9 @@ export async function run() {
       auto = (j.entries ?? []).find(e => e.label === "Gate: a stranger is sent");
       if ( auto ) mine.add(auto.id);
       const acts = (auto?.ops ?? []).map(o => o.act);
-      G.ok("2 approval recorded", route === "auto" && auto?.kind === "auto" && ["update", "create", "delete", "setting", "card"].every(a => acts.includes(a)),
-        {route, acts, kind: auto?.kind});
+      G.ok("2 approval recorded", route === "auto" && auto?.kind === "auto" && !auto?.tooBig && ["update", "create", "delete", "setting", "card"].every(a => acts.includes(a)),
+        {route, acts, kind: auto?.kind, tooBig: !!auto?.tooBig, left: auto?.left ?? 0, ops: auto?.ops?.length ?? 0,
+          big: (auto?.ops ?? []).map(o => [o.act, o.doc, JSON.stringify(o).length]).sort((a, b) => b[2] - a[2]).slice(0, 3)});
     });
 
     let tick = null;
@@ -81,8 +82,11 @@ export async function run() {
       const fresh = (game.settings.get(C, "nightWork").entries ?? []).filter(e => !before.includes(e.id));
       fresh.forEach(e => mine.add(e.id));
       tick = fresh.find(e => e.kind === "clock" && e.ops.some(o => o.uuid === hero.uuid));
-      const walked = fresh.some(e => e.ops.some(o => o.uuid === walker.uuid && o.act === "update"));
-      G.ok("3 the clock", !!tick && !walked, {kinds: fresh.map(e => e.kind), walked});
+      // The walk itself (x) is the Storyteller's; other modules answering the new token may still be the Hand's
+      const walkOps = fresh.flatMap(e => e.ops.filter(o => o.uuid === walker.uuid && o.act === "update"));
+      const walked = walkOps.some(o => "x" in (o.after ?? {}));
+      G.ok("3 the clock", !!tick && !walked && !tick.tooBig, {kinds: fresh.map(e => e.kind), walked, tooBig: !!tick?.tooBig, ops: tick?.ops?.length ?? 0,
+        walkPaths: walkOps.map(o => Object.keys(o.after ?? {}).join(",")).slice(0, 4)});
     });
 
     await G.step("4 changed since", async () => {
@@ -107,7 +111,8 @@ export async function run() {
       G.ok("5 one undo", f.hp === 6 && f.xp === 0 && !("mark" in f) && !("tired" in f) && tokenGone && knifeBack && capBack
         && !/<button[^>]*gate-x/.test(cardNow) && /Taken back/.test(cardNow) && approval?.undone === true && !!undoCard
         && r?.ids?.length === 2 && nw.list({since: "all"}).find(x => x.id === auto.id)?.undone === true,
-        {flags: f, tokenGone, knifeBack, capBack, approval: approval?.undone, text: r?.text});
+        {flags: f, tokenGone, knifeBack, capBack, approval: approval?.undone, text: r?.text, steps: r?.plan?.length ?? 0,
+          actions: (r?.plan ?? []).slice(0, 8).map(s => `${s.op.act}:${s.action}${s.failed ? `:${s.failed}` : ""}`)});
     });
 
     await G.step("6 put back anyway", async () => {
