@@ -89,7 +89,10 @@ export async function run() {
         last = await H?.court?.(lover, beloved, "betrayal", {why: "the gate"});
         sick = lover.statuses?.has?.("wodx-grieving");
       }
-      G.ok("6 grieving", sick, {tries, last: last?.heartbreak ?? last?.why ?? null});
+      // what WoDX Actions' social rolls read off the conditions: one die fewer
+      const dice = (C()?.conditions?.conditionsOf?.(lover) ?? []).reduce((t, c) => t + (Number(c.mods?.socialDice) || 0), 0);
+      const actions = !!game.modules.get("wodx-actions")?.active;
+      G.ok("6 grieving", sick && dice === -1, {tries, dice, actions, last: last?.heartbreak ?? last?.why ?? null});
     });
 
     await G.step("7 time served", async () => {
