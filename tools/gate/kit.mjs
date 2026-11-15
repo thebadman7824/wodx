@@ -79,7 +79,7 @@ export function gate(name, {stepTimeout = 30000} = {}) {
 
   /** A scratch scene of its own, viewed (and activated when asked), with a plain square grid. */
   async function scene({name: sceneName = `WoDX gate: ${name}`, width = 2000, height = 1500, grid = 100, activate = false, ...rest} = {}) {
-    const s = await make(Scene, {name: sceneName, width, height, grid: {size: grid, type: 1}, padding: 0, tokenVision: false, fog: {exploration: false}, ...rest});
+    const s = await make(Scene, {name: sceneName, width, height, grid: (grid && typeof grid === "object") ? {type: 1, ...grid} : {size: grid, type: 1}, padding: 0, tokenVision: false, fog: {exploration: false}, ...rest});
     if ( activate ) await s.activate(); else await s.view();
     await waitFor(() => canvas?.ready && canvas.scene?.id === s.id, 20000);
     return s;
