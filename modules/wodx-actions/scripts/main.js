@@ -3254,11 +3254,24 @@ function kindredHooks() {
         sx().onClock(Number(dt) || 0).catch(e => console.error("WoDX |", e));
     });
     // Dark Ages mages: Twilight and Brandings fade with abstinence (3.7.0)
-    let fadeBusy = false;
-    Hooks.on("updateWorldTime", () => {
-        if (fadeBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
+    // One run at a time; a move of the clock during a run gets one more run after it, so the newest time is never dropped.
+    // Each routine runs on its own, so one that fails does not stop the rest.
+    let fadeBusy = false, fadeAgain = false;
+    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
+        () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical()];
+    async function fadeRun() {
         fadeBusy = true;
-        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).then(() => zx().shedAll()).then(() => wx().restAll()).then(() => ox().restAll()).then(() => cx().healChimerical()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
+        try {
+            do {
+                fadeAgain = false;
+                for (const r of clockRoutines) { try { await r(); } catch (e) { console.error("WoDX |", e); } }
+            } while (fadeAgain && !chronicle()?.isSkipping?.());
+        } finally { fadeBusy = false; }
+    }
+    Hooks.on("updateWorldTime", () => {
+        if (!game.user.isGM || chronicle()?.isSkipping?.()) return;
+        if (fadeBusy) { fadeAgain = true; return; }
+        fadeRun();
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {
