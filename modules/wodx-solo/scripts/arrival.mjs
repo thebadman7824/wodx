@@ -46,13 +46,22 @@ export async function landing() {
   }
   if ( H.get("landing") !== scene.id ) await game.settings.set(MOD, "landing", scene.id);
   const active = game.scenes.active;
-  if ( !active || !(active.background?.src ?? active.img) ) {
+  // Foundry's welcome scene, a scene with no map or one where no player's character stands gives way (B5147)
+  const playerTokens = active ? all(active.tokens).filter(t => t.actor && all(game.users).some(u => !u.isGM && R.ownsByName(t.actor.ownership, u.id))).length : 0;
+  if ( R.mayReplaceActive(active ? sceneRow(active) : null, {playerTokens}) ) {
     if ( active?.id !== scene.id ) {
       await scene.activate();
       await H.log({kind: "scene", source: MOD, title: scene.name, note: "made the active scene, to land on"});
     }
   }
   return scene;
+}
+
+/** Take a player to a scene, at the token's level where the scene has levels (Foundry 14). */
+function pull(scene, user, token) {
+  const lv = token?.level ?? null;
+  if ( typeof scene.pullUsers === "function" ) return scene.pullUsers([user], lv ? {level: lv} : {});
+  return game.socket.emit("pullToScene", scene.id, user.id);
 }
 
 /** Put a token for the actor at the landing's way in. */
@@ -85,7 +94,7 @@ async function bringIn(user) {
   if ( step === "make" ) { reply(userId, "arrive.pick", {lines: R.ARRIVAL_LINES}); return step; }
   if ( step === "place" ) { token = await placeToken(actor, scene); at = scene; }
   if ( !user.character && actor ) await user.update({character: actor.id});
-  if ( user.viewedScene !== at.id ) game.socket.emit("pullToScene", at.id, userId);
+  if ( user.viewedScene !== at.id ) pull(at, user, token);
   reply(userId, "arrive.ready", {actorId: actor.id, sceneId: at.id, tokenId: token.id});
   return step;
 }
@@ -105,7 +114,7 @@ export async function make(userId, {name, line} = {}) {
     await H.log({kind: "note", source: MOD, title: "A character was made for the player", note: `${actor.name}, ${R.arrivalLine(line)?.label ?? "Mortal"}, for ${user.name}`});
     const scene = await landing();
     const token = await placeToken(actor, scene);
-    if ( user.viewedScene !== scene.id ) game.socket.emit("pullToScene", scene.id, userId);
+    if ( user.viewedScene !== scene.id ) pull(scene, user, token);
     reply(userId, "arrive.ready", {actorId: actor.id, sceneId: scene.id, tokenId: token.id, made: true});
     await tell(userId, `<p><b>${esc(actor.name)}</b> stands at the way in. The character wizard is open to build the sheet; drag the token to move.</p>`);
     return actor;

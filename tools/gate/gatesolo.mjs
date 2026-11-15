@@ -374,6 +374,9 @@ async function finish(ids, playerSteps) {
     if ( !ar ) return ok("10f. arrival makes a character", false, {error: "no arrival in this version"});
     const second = await User.create({name: `${TAG} newcomer`, role: CONST.USER_ROLES.PLAYER});
     ids.users = [second.id];
+    // An actor every player owns by default (an old test actor) is not the newcomer's character (B5146)
+    const shared = await Actor.create({name: `${TAG} everyone's`, type: "Mortal", ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}});
+    (ids.actors ??= []).push(shared.id);
     const actor = await ar.make(second.id, {name: `${TAG} newcomer's character`, line: "vampire"});
     if ( actor?.id ) (ids.actors ??= []).push(actor.id);
     const scene = game.scenes.get(ids.scene);

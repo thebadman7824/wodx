@@ -44,8 +44,11 @@ const ownable = a => a?.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
 const ownsAlone = (a, user) => !all(game.users).some(u => u.id !== user.id && !u.isGM && a.testUserPermission?.(u, "OWNER"));
 export function characterOf(user) {
   if ( !user ) return null;
-  if ( user.character ) return user.character;
-  const mine = all(game.actors).filter(a => ownable(a) && a.testUserPermission?.(user, "OWNER"));
+  // An actor every player owns by default is nobody's own character (B5146)
+  const named = a => (a?.ownership ? R.ownsByName(a.ownership, user.id) : !!a?.testUserPermission?.(user, "OWNER"));
+  const byDefault = a => Number(a?.ownership?.default) >= 3 && !named(a);
+  if ( user.character && !byDefault(user.character) ) return user.character;
+  const mine = all(game.actors).filter(a => ownable(a) && named(a));
   const viewed = game.scenes?.get?.(user.viewedScene) ?? all(game.scenes).find(s => s.id === user.viewedScene);
   const onView = viewed ? mine.filter(a => all(viewed.tokens).some(t => t.actorId === a.id)) : [];
   const alone = list => list.find(a => ownsAlone(a, user));

@@ -399,8 +399,29 @@ export const LANDING_NAMES = [/Market (Street|Square)/i, /^Rothenstein\b/i, /Low
  * chosen one, a Rothenstein scene with a map (market first), the active scene, any scene with a map. Null when none
  * fits; the seat then makes the plain night scene (LANDING_BLANK).
  */
+/** Foundry's own welcome scene, which a new world opens on; never a landing, and always given way to. */
+export const isCoreScene = s => s?.id === "NUEDEFAULTSCENE0" || /nue\/defaultscene/i.test(String(s?.img ?? ""));
+
+/**
+ * May the landing take the active scene's place? Yes when nothing is active, the active scene has no map, it is
+ * Foundry's welcome scene, or no player's character stands on it (so nobody is in play there).
+ */
+export function mayReplaceActive(active = null, {playerTokens = 0} = {}) {
+  if ( !active ) return true;
+  if ( !active.img || isCoreScene(active) ) return true;
+  return !(Number(playerTokens) > 0);
+}
+
+/**
+ * An actor counts as a player's own only when the player is named its owner: an actor every player owns by default
+ * (an old test actor, a shared sheet) is nobody's character (B5146).
+ */
+export function ownsByName(ownership = {}, userId = "") {
+  return Number(ownership?.[String(userId)]) >= 3;
+}
+
 export function pickLanding(scenes = [], chosen = "") {
-  const list = (scenes ?? []).filter(s => s?.id);
+  const list = (scenes ?? []).filter(s => s?.id && !isCoreScene(s));
   const flagged = list.find(s => s.landing);
   if ( flagged ) return flagged.id;
   if ( chosen && list.some(s => s.id === chosen) ) return chosen;
