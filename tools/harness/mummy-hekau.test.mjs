@@ -21,7 +21,7 @@ test("every listed Hekau has a card, and every path has spells at every level (B
     assert.ok(["spell", "ritual"].includes(s.type), `${id}: type`);
     assert.ok(s.difficulty >= 2 && s.difficulty <= 10 && s.cost >= 0, `${id}: difficulty or cost`);
     for ( const f of ["fx", "lasts", "trait"] ) assert.ok(String(s[f]).length > 3, `${id}: ${f}`);
-    assert.ok(s.spec && E.KEYWORDS[s.spec.kw], `${id}: keyword ${s.spec?.kw}`);
+    assert.ok(s.spec && [s.spec].flat().every(x => E.KEYWORDS[x.kw]), `${id}: keyword ${[s.spec].flat().map(x => x?.kw)}`);
   }
   assert.deepEqual(MH.spellsOf("alchemy", 1).map(id => MH.SPELLS[id].level).filter(l => l > 1), [], "only the levels the path reaches");
 });

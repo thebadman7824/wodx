@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5780
+Next free block: B5840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -246,6 +246,7 @@ Next free block: B5780
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
+| B5070-B5089 | Carrying the fallen and moving large things (Carry Bodies Desk) (used B5070-B5086) | Interactables, Combat, NPC, Solo |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
@@ -303,6 +304,9 @@ Next free block: B5780
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
+| B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
+| B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
+| B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8302,6 +8306,91 @@ Reverse: animalOrderBlock in give().
 ## B5064. Kept for later (2026-11-14)
 Coat colours are stored on the animal (flags.wodx-creation.animal.coat) for the sprite parts; drawing them is the pixel sprites' work.
 
+## B5070. Who can carry or drag (2026-11-14)
+WoDX Interactables. Anyone in reach of a character who is Incapacitated, unconscious, asleep, staked, in torpor, paralysed or dead gets Carry and Drag on the hand button of the token HUD, friend or foe. Seven health levels filled counts as Incapacitated. Ben's pick on the Carry Bodies Desk (c1).
+
+Reverse: turn off "Carrying the fallen and moving large things" in Configure Settings.
+
+## B5071. Carry if the lifting chart lifts it, else drag (2026-11-14)
+WoDX Interactables. The VtDA20 lifting chart (p. 335) against the body's weight. Strength counts the sheet's total (Crinos and the other forms) and Potence; two or more together add their Strength. A grown person weighs 70 kg, a youth 60, a child of 12 to 14 45, of 7 to 11 30, a small child 15; Glabro 110, Crinos 300, Hispo 180, Zulo 160; a creature by its squares (40, 450, 900, 2500 kg); mist and a body in the earth cannot be taken hold of. The weights are house figures. Ben's pick (c2).
+
+Reverse: edit PERSON_KG, SHAPE_KG and CREATURE_KG in haul-rules.mjs.
+
+## B5072. Half pace carrying, quarter dragging, no roll for a body (2026-11-14)
+WoDX Interactables and Combat. WoDX Combat's movement limit and the move ruler's floating count take the cut. A body more than two chart steps past the team's Strength will not move until others take hold (house reading: the desk set that limit for things, and it holds for bodies too). Ben's pick (c3).
+
+Reverse: change PACE in haul-rules.mjs, or drop the haul branch in moveCheck (movement.js).
+
+## B5073. Hands: carrying takes both, dragging one; more hands, more free (2026-11-14)
+WoDX Interactables and Combat. Carrying a body or straining at a thing past the chart takes two hands; dragging, hauling a pile or pushing something light takes one. Hands come from WoDX Combat's body (a Vicissitude extra arm counts; a beast holds in its jaws, one). A weapon from the sheet needs a free hand, two for a two-handed one; with two hands and one dragging, the other is the off hand (+1 difficulty, V20 p. 273, none with Ambidextrous); a shield needs a hand of its own beside the weapon. Natural weapons, punches and kicks need no hands. Ben's pick (c4), with Ben's note: hands must allow for characters with more than two.
+
+Reverse: change HANDS or attackWith in haul-rules.mjs, or drop handsCheck in Combat main.js.
+
+## B5074. In a fight: +1 to dodge, dropping is free, a fall drops it (2026-11-14)
+WoDX Interactables and Combat. Any burden (a body or a thing) puts a dodge at +1 difficulty. Letting go costs no action. Knocked down, dazed, stunned, prone or going down drops the load at once, with a card. Ben's pick (c5).
+
+Reverse: set DODGE to 0 in haul-rules.mjs; drop DROPS in haul.mjs.
+
+## B5075. The body on the map, and the trail (2026-11-14)
+WoDX Interactables. A carried body lies on the carrier's square, turned on its side and dimmed; a dragged one lies a square behind. Dragging leaves a line drawn on the map: scuffs, or blood for a body with lethal or aggravated damage or a dead one. A blood trail also leaves a trail clue where it began, for trackers to study, and a map event for the town. Ben's pick (c6).
+
+Reverse: drop growTrail from lay in haul.mjs.
+
+## B5076. Laying it down: on the ground, aboard, on a bed or a table (2026-11-14)
+WoDX Interactables. Next to a mount or vehicle with a seat free, the body is laid aboard as a passenger and goes where it goes; on a bed or a table it lies on the tile. Ben's pick (c7).
+
+Reverse: drop the onto branches in release (haul.mjs).
+
+## B5077. NPCs rescue their own, hide bodies and take captives (2026-11-14)
+WoDX NPC. An NPC who is retreating with an ally down within reach carries or drags the ally away; a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
+
+Reverse: have carryOption in npc-rules.mjs return null.
+
+## B5078. A carried character who wakes can struggle free or stay (2026-11-14)
+WoDX Interactables. A card to the owner: Struggle free (Strength + Athletics at 6 against the carrier's Strength at 6, more successes win) or Stay carried. Moving their own token is struggling free; one still down is put back. A Storyteller's move of a carried token lets it go. Ben's pick (c9).
+
+Reverse: drop movedWhileCarried and the wake card in haul.mjs.
+
+## B5079. In a Lone Chronicle a companion carries the player (2026-11-14)
+WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Ben's pick (c10).
+
+Reverse: turn off "Companions carry the fallen" in WoDX Solo's settings.
+
+## B5080. Which things move (2026-11-14)
+WoDX Interactables. Made-map chests, boxes and crates, barrels and sacks, cabinets and wardrobes, desks, strongboxes, safes, beds and tables, and carts, carriages, motorcycles and motor cars with nobody at the reins. Counters, bars, walls, doors and the rest of the house stay. Any tile the Storyteller gives a weight moves; Fixed in place keeps one still. WoDX keeps no weights for loose gear and no gear on the map (the Library's Examine left weight out), so heavy loose items are the stores: crates, barrels and sacks. Weights are house figures (a chest 30 kg, a barrel 100, a cabinet 60, a desk 45, a safe 400, a bed 50, a wardrobe 70, a table 30, a cart 250, a carriage 600, a car 1,100, and a kilo for each thing inside). Ben's pick (c11).
+
+Reverse: edit CONTAINER_KG, HIDE_KG, COVER_KG and VEHICLE_KG in haul-rules.mjs.
+
+## B5081. Push and pull by the lifting chart, help adds up (2026-11-14)
+WoDX Interactables. Under the chart: half pace, no roll. Up to two steps over: quarter pace and Strength + Athletics at 6 each turn; a failed roll keeps the thing and its holder where they were. Past that it will not budge, and a player's move is refused until others take hold. A thing that was only part of the map picture cuts its piece of the picture out as it first moves, and the floor beside it covers the spot it left. Ben's pick (c12).
+
+Reverse: change STRAIN_STEPS in haul-rules.mjs; drop liftPicture in haul.mjs.
+
+## B5082. Wheels halve the load, rough ground doubles it, no stairs (2026-11-14)
+WoDX Interactables. A cart, carriage, motorcycle or car, or any tile marked On wheels, counts as half its load and what lies aboard; mud, snow, rubble, sand or a bog (a region's name, the scene's ground, snow lying or rain out of doors) takes it back to full. A wheeled thing stops at a ladder or stairs tile. Ben's pick (c13).
+
+Reverse: change movingKg in haul-rules.mjs.
+
+## B5083. Dragging furniture is loud (2026-11-14)
+WoDX Interactables. Each turn of moving furniture of 20 kg or more without wheels is loud: NPCs in earshot roll to hear it and a map event goes out, as climbing and falls do. A cart creaks (quiet), a dragged body is quiet, carrying is silent. Ben's pick (c14).
+
+Reverse: change noiseOf in haul-rules.mjs.
+
+## B5084. Hauling a pile (2026-11-14)
+WoDX Interactables. A crate, barrel, sack or basket of goods (a container of the box kind) is hauled along at half pace with one hand, its goods inside it. Ben's pick (c15).
+
+Reverse: empty PILE_KINDS in haul-rules.mjs.
+
+## B5085. Furniture in a doorway blocks it (2026-11-14)
+WoDX Interactables. A thing left over a door's middle draws a wall in the doorway (it blocks sight too, unless it is a table or a vehicle) and is good cover (+2, V20 p. 286). Shoving it aside from either side is the same push by the chart. Ben's pick (c16).
+
+Reverse: drop settleBarricade in haul.mjs and the barricade line in coverOnShot (main.mjs).
+
+## B5086. No general encumbrance (2026-11-14)
+WoDX Interactables. Only bodies and large things use these rules; everyday gear stays as it is. Ben's pick (c17).
+
+Reverse: none needed; nothing was built for it.
+
 ## B5090. Golconda ends when its purity fails (2026-11-14)
 WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
 
@@ -9061,3 +9150,103 @@ Reverse: drop the fifth element of each USES row and carryOut.
 WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
 
 Reverse: remove downtimeDoes.
+
+## B5780. The Evocations desk built as picked (2026-11-15)
+WoDX Actions. Ben picked "Build this rule" for all eleven evocations on the Evocations desk and asked that every ritual have a tangible effect (2026-11-15 05:19Z). acts.js works the effects a keyword cannot: memory, vision, seize, mark, cleanse, remote and path. Each runs from the effects card on the active Storyteller's client and leaves an undo record. Evocation specs may now chain several keywords.
+
+Reverse: set the eleven specs in demon-evocations.js back to null and drop acts.js.
+
+## B5781. An NPC's ground effect lands under its target (2026-11-15)
+An NPC has no one to click a spot, so a ground area (a blaze, broken ground) from an NPC's power is placed at its target token's centre.
+
+## B5782. Alter Memory on an NPC forgets the demon (2026-11-15)
+WoDX NPC. Erasing a memory removes the NPC's memory notes and grudges of the demon (memory.forget); Undo restores them (memory.restore). An edit or a planted memory is written into the NPC's memory as a note. A player's character gets a private card to play the change.
+
+## B5783. NPC demons cover their tracks (2026-11-15)
+Ben's note on Alter Memory asked what an NPC demon would do with it. When a fight ends, an NPC demon who knows Alter Memory and has Faith left uses it on each mortal or hunter on the scene who does not already carry a changed memory.
+
+## B5784. Hand of Faith turns the next evocation back (2026-11-15)
+While a demon holds Hand of Faith, another demon's evocation on the scene with fewer successes than the seizing roll lands on its own user instead, and the hold is spent.
+
+## B5785. The Mark of the Celestials, read by NPCs (2026-11-15)
+The mark lasts a day for one success, a week for two, a month for three, a year for four or more. An NPC who meets the bearer reads it when its Wits are below the successes, or when it fails a hidden Willpower roll at 7; it warms (honour) or cools (shun) one step toward the bearer.
+
+## B5786. Touch from Afar and the words of a vision or a mark (2026-11-15)
+A player is asked for the words of a vision, a mark or a changed memory, and for whom Touch from Afar reaches (any token on any scene). An NPC demon reaches its current target.
+
+## B5787. A keyword may carry its flavour (2026-11-15)
+In a power's keyword list, "fortune:curse" or "boost:sap" passes the flavour to the keyword's outcome, so a ritual can chain a curse or a sapping with other keywords.
+
+## B5788. Sense lays a detection sense (2026-11-15)
+The Sense keyword puts a sense-all detection mode on the caster's token, 30 feet a step of duration, for the effect's duration, and whispers what the target's sheet and the scene show (hurt, Willpower, effects, darkness, hidden figures, worked ground). Undo or the end of the effect takes it off.
+
+## B5789. Know finds out a secret (2026-11-15)
+The Know keyword reveals the heaviest secret the target keeps that the caster has not found (WoDX NPC secrets, with its hook in the Ledger). With no secret left, what the sheet shows is pinned on the open case board as a clue and whispered, and the Storyteller may add an answer.
+
+## B5790. Beasts and ghosts need a power to talk (2026-11-15)
+WoDX NPC. The talk menu opens on an animal or a Wraith only for a character with a Speak effect running. Werewolves and other shapeshifters talk with beasts and the dead with the dead. The world setting "Beasts and ghosts need a power to talk" turns it off.
+
+## B5791. Hekau rituals do something (2026-11-15)
+The 36 Hekau rituals that only went to the Storyteller now give results: the weather magics set the weather, Tears of Isis gives Sekhem, the Chattels and Reflections make their things, the Bonds and Bindings bind, Name the Secret and Read the Tree of Life find out a secret and lay a curse or a blessing, Forgetting the Person dims the memories of those near, Rousing Apophis hurts everyone near. Two new spec kinds: K (any keyword's own outcome) and P (points into a pool).
+
+## B5792. The 63 book rituals that only told something chain world keywords (2026-11-15)
+Each of the 63 book rituals whose keywords were only Sense, Know or Speak gains the keyword its own effect names: Sight for the far-seeing rituals, Light, Hold, Fear, Summon, Manifest, Ward, Boost, Bind, Sway, Sideways, Fortune, Imbue or a charge. tools/powers/inventory.mjs now counts no ritual as a card only.
+
+## B5793. A binding holds the bound character's token (2026-11-15)
+The say-or-do audit (d19) found that a binding on a player character only posted a card. Now, while Hold or Possess binds a player's character, its player cannot move the token. Fear keeps the token from going nearer the one feared, who is remembered on the effect. A command or an oath (Sway, Bind) sends each move to the Storyteller, who allows or refuses it on a card. With no Storyteller on (a Lone Chronicle), a command's move stands, with a reminder. The world setting "Bindings hold the token" turns it off.
+
+Reverse: drop binds.js and its setup call in effects.js.
+
+## B5795. A pact gift does what it gives (2026-11-15)
+The say-or-do audit (d12) found that using a pact gift only said "it answers". Now a lesser evocation gift runs one of the giving demon's evocations, up to the gift's level and the demon's Lore, through the effects card as the thrall's own. An innate power lends dice to Social rolls for the scene, and an apocalyptic enhancement lends dice to Physical rolls, by the successes of the Willpower roll.
+
+## B5820. The Shredding Winds hurt (2026-11-15)
+WoDX Otherworlds. The levels rolled go through the combat soak onto the mage (aggravated, lethal while the Storm fades); the Storyteller ticks Insulated when Life magick, enhanced armour or a Wonder spares the traveller. The token flashes.
+
+Reverse: remove the soakAndApply call after the card.
+
+## B5821. Net combat damage is rolled and applied (2026-11-15)
+WoDX Otherworlds. The winner's damage dice against the loser's Wits + protection, both at 6; what gets through is bashing on the loser (house reading: the book says only "damage"); a system loser is cracked open by that much.
+
+Reverse: remove the damage block in netContest.
+
+## B5822. Heightened senses overload is rolled (2026-11-15)
+WoDX Senses. Willpower at 6 for each heightened-senses token hit; a failure gives Dazed for a turn (stunned and deafened). A token already dazed is not rolled again.
+
+Reverse: restore the text-only overload card.
+
+## B5823. Sentences act (2026-11-15)
+WoDX Chronicle. A fine is paid from the purse at once, on credit when short: a month of a modest living (Resources 2 allowance) at weight 3, scaled by weight (house reading). Outlawry and banishment raise the law's heat in that land to Wanted. A death sentence holds the condemned (Held) for the scene.
+
+Reverse: remove carryOut in law-punish.mjs and declareWanted.
+
+## B5824. A raised building is paid for and lifts its town (2026-11-15)
+WoDX Chronicle, Storyteller. The patron pays three months of a Resources 4 living (two for a restoration) unless a cost is given; the scene's town takes a "build" or "restore" event (prosperity +0.15 or +0.1, unrest -0.05).
+
+Reverse: remove the payment and the lever call in raiseBuilding, and the two LEVER_TOWN rows.
+
+## B5825. Project complications act (2026-11-15)
+WoDX Storyteller. Each complication has a deed (TROUBLE_DOES): the next roll waits some days, successes are lost, a week of the character's living is paid, or a rumour starts about the character. A house reading: the texts stay the start of a scene.
+
+Reverse: drop TROUBLE_DOES and the lines in trouble().
+
+## B5826. Heartbreak shows for a week (2026-11-15)
+WoDX NPC. A heartbreak roll that is neither borne nor botched leaves a Heartsick condition for seven days: +1 difficulty on social rolls (Actions reads socialDiff).
+
+Reverse: remove the applyTimed call in heartbreak().
+
+## B5830. run-gate names the failed steps of the older gates (2026-11-15)
+Lanes. The kit's gates put their failed steps in the summary line, but the older gates (gate6b, gate6d, gate7d,
+gateconsensus and others) say only "17/18 passed", and their result files are gone after the next lane reset. When a
+summary has a shortfall and names no step, run-gate now reads the gate's result file, if it was written during this
+run, and adds "failed:" with each failed step and its detail.
+
+Reverse: drop the result-file read after mod.run().
+
+## B5831. gate6d reads three-digit versions; gate7d compares factions whatever the key order (2026-11-15)
+Gates. gate6d's version check was a regular expression that stopped matching at Actions 3.100.0. gate7d step 6
+compared the factions after Undo with a plain JSON.stringify, which fails when the keys come back in another order
+(the gatepolitics fault). Both are fixed, and the shared workflow notes now list these gotchas, along with the
+Foundry 14 rule to pass a fresh options object to each document update.
+
+Reverse: put the old checks back.
