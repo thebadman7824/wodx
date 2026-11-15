@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.106.0 (Shared terms (B6180-B6199): Actions' End scene goes through the Chronicle's, so one press ends every module's scene, and a new active map counts as one new scene, not two. Delirium and marks seen clear on the scene that ended, not only the one the Storyteller is viewing. Day sleep reads the sun of the sleeper's own scene. Power limits file uses by the shared period keys (a turn outside a fight is the table's turn length). Time units, dice counts and distance come from the shared terms)
 - 3.105.0 (Marks that change rolls (B6024-B6025): the night's feeding penalty was a mark no roll read, and the long-sleep "behind the age" difficulty was only on the waking card. Both are now roll effects. Ravenous now gives +1 difficulty in a fight and on social rolls (B6028); Sneaking and Obfuscated now come from play (B6030, B6034))
 - 3.104.0 (Rituals and powers that really work (B6000-B6016): the effects a power or ritual leaves on a character are read by the dice (power-mods.js), the keywords that were only text change the world, and a guard test fails any power whose result nothing reads. A mummy's Forbiddance now keeps the being off the mummy for real, and a Kuei-jin's shadow soul hands the body's moves to the Storyteller (B6018))
 - 3.103.1 (Social rolls read the dice conditions add or take (socialDice), so Grieving takes its die (B5991))

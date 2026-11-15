@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.1 (Shared terms (B6180-B6199): the era bands for what a scene sounds and smells like follow the era profiles' years (the industrial band from 1837, the Victorian Age); a scene measured in miles is no longer read as yards; dice counts, distance and time units come from WoDX Chronicle's shared terms)
 - 0.15.0 (Say or Do: an overload of heightened senses is rolled and acts (B5822))
 - 0.14.1 (Sense Wyrm passes by a fomor with Triatic Sense or a Deception in force (B5616))
 - 0.14.0 (The Golconda halo and the still aura (B5094, B5095; house readings))

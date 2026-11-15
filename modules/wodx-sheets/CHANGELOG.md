@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.22.2 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.22.1 (Line sheets on ApplicationV2 (B6114): a line that the system moves to ApplicationV2 (its LINES_V2 list, Mummy first) gets the same WoDX sheet over the new one, under the same name, so a character's chosen sheet stays chosen. The Gender line, the Print and History controls (in the title bar's menu) and the Sheet tools button (it opens that menu) come with it)
 - 0.22.0 (Nature button on every sheet and Set off on the Derangements panel (B3917))
 - 0.21.0 (An optional Gender line under the name on every character sheet, in the player's own words. For a player character it describes and changes nothing in play (B3501))
