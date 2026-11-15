@@ -523,7 +523,7 @@ def hay(m, x, y, r=26):
 
 
 @openable
-def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
+def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
     """A window one can name from above: the wall cut through to a pale sill between two jambs, a lattice of bars
     across the opening, two plank shutters swung open against the outside of the wall, and daylight on the floor within."""
     from PIL import Image, ImageDraw
@@ -549,6 +549,8 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
         a = a * (1 + k * np.array([.30, .30, .22], np.float32)) + k * np.array([8, 9, 6], np.float32)
         m.img.paste(Image.fromarray(a.clip(0, 255).astype(np.uint8)), (X0, Y0))
     G = [(34, 52, 72), (62, 94, 118), (104, 144, 164), (160, 196, 204), (226, 240, 240)]              # glass, dark to glint
+    if not glass:                                                                # before glass reached a house: the dark of the room through the hole
+        G = [(14, 10, 14), (24, 18, 22), (30, 22, 26), (36, 28, 30), (44, 34, 34)]
     Sh = R["red"]
     rect(0, -t, L, t, fill=W_[2], outline=OUT)                                   # the frame, set through the wall
     rect(1, -t + 1, L - 1, -t + 2, fill=tone(W_[4], 20)); rect(1, t - 2, L - 1, t - 1, fill=W_[1])
@@ -559,8 +561,9 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
         rect(u0, v0, u1, v1, fill=G[1])
         poly([(u0, v0), (u1 - 4, v0), (u0, v1 - 3)], fill=G[2])
         poly([(u0, v0), (u0 + (u1 - u0) * .45, v0), (u0, v0 + (v1 - v0) * .5)], fill=G[3])
-        (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
-        (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
+        if glass:
+            (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
+            (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
         if i: rect(u0 - 3, -t + 4, u0 - 1, t - 4, fill=W_[3], outline=OUT)       # a wooden mullion between panes
     half = L // 2 - 1
     if state == "closed":                                                        # both shutters swung shut over the outside of the glass, barred
