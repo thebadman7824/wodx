@@ -51,3 +51,14 @@ test("Dark Ages powers with no roll and the always-on combat Disciplines take ef
   const hit = PW.powerOutcomes(PW.powerKeywords("disc", "protean-feral-weapons"), 2, {label: "Feral Weapons", hasTarget: true});
   assert.ok(hit.results.some(r => r.key === "harm"), "a rolled use still harms");
 });
+
+/* Final audit (Ben 2026-11-16: why did card-only powers survive several passes?): earlier checks asked whether a
+ * power had a card or a keyword, not whether anything applied it. A power that only shows its card now fails here
+ * unless it names, from its book page, why there is nothing to apply (story). The few left with no story are pinned
+ * by name, so the list can only shrink. */
+const CARD_ONLY_NO_STORY_MOST = 2; // Catechumen and Wreathed in Shadows (Inquisitor), 16 Nov
+test("a power that only shows its card is a story power with its reason, or one of the pinned few", () => {
+  const bare = inv.rows.filter(r => r.status === "card" && !r.story);
+  assert.ok(bare.length <= CARD_ONLY_NO_STORY_MOST,
+    `${bare.length} powers only show a card and give no reason: ${bare.slice(0, 12).map(r => `${r.line}: ${r.name}`).join("; ")}`);
+});
