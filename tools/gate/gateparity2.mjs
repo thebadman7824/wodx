@@ -64,7 +64,9 @@ export async function run() {
     await mort2.update({"system.advantages.willpower.permanent": 3, "system.advantages.willpower.temporary": 3});
     await fae.setFlag(ACT, "daFae", {system: "da", origin: "changeling"});
     await sleep(300);
-    const toks = await G.tokens(scene, [{actor: dem, x: 2, y: 2}, {actor: mum, x: 4, y: 2}, {actor: vamp, x: 6, y: 2}, {actor: mort, x: 8, y: 2}, {actor: mort2, x: 10, y: 2}, {actor: fae, x: 12, y: 2}, {actor: speaker, x: 14, y: 2}]);
+    // linked tokens, so healing and what a witness keeps land on the actors this gate reads (an unlinked token heals itself)
+    const toks = await G.tokens(scene, [{actor: dem, x: 2, y: 2}, {actor: mum, x: 4, y: 2}, {actor: vamp, x: 6, y: 2}, {actor: mort, x: 8, y: 2}, {actor: mort2, x: 10, y: 2}, {actor: fae, x: 12, y: 2}, {actor: speaker, x: 14, y: 2}]
+      .map(o => ({...o, actorLink: true})));
     const tok = d => canvas.tokens.get(d.id) ?? d;
     const [tDem, tMum, tVamp, tMort, tMort2, tFae, tSpk] = toks;
 
@@ -76,6 +78,8 @@ export async function run() {
     });
 
     await G.step("2. a demon and a mummy heal with the clock", async () => {
+      // the heal clock counts from its last tick; an earlier gate that put the clock back leaves it ahead of now
+      await game.settings.set(ACT, "healClock", game.time.worldTime);
       await game.time.advance(DAY);
       await sleep(2500);
       const d = Number(dem.system.health?.damage?.bashing ?? 0), m = Number(mum.system.health?.damage?.bashing ?? 0);
@@ -86,11 +90,16 @@ export async function run() {
       target([]);
       const none = await A().seduction({actor: vamp});
       target([tok(tMort)]);
-      answer(() => "ok");
-      await A().seduction({actor: vamp, shift: -10});
-      await sleep(1500);
-      const sways = vamp.getFlag(ACT, "sways") ?? [];
-      const charmed = (Array.isArray(sways) ? sways : Object.values(sways)).some(s => s?.npc === mort.id && s?.kind === "charmed");
+      let sways = [], charmed = false;
+      for ( let k = 0; k < 3 && !charmed; k++ ) {
+        answer(() => "ok");
+        answer(() => "cancel"); // the Siren's "Feed now?" after a won seduction
+        await A().seduction({actor: vamp, shift: -10});
+        await sleep(1500);
+        queue.length = 0; // a lost seduction asks nothing more
+        sways = vamp.getFlag(ACT, "sways") ?? [];
+        charmed = (Array.isArray(sways) ? sways : Object.values(sways)).some(s => s?.npc === mort.id && s?.kind === "charmed");
+      }
       G.ok("3. Seduction asks for a target, and a won one charms that person", none === null && charmed, {none, sways});
     });
 
