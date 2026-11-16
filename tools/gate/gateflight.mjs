@@ -92,7 +92,7 @@ export async function run() {
 
     await G.step("6. wrecked in the air", async () => {
       const t0 = Date.now();
-      await scene.tiles.get(bike2.id).update({[`flags.${IX}.hullLost`]: 4});
+      await scene.tiles.get(bike2.id).update({[`flags.${IX}.hull`]: {lost: 4}});
       const down = await waitFor(() => el(scene, bike2) === 0 && el(scene, tf) === 0, 8000);
       const card = await waitFor(() => newestMessage(t0, m => /wrecked in the air/.test(text(m.content))), 8000);
       G.ok("6. wrecked in the air", down && !!card, {down, bike: el(scene, bike2), rider: el(scene, tf)});

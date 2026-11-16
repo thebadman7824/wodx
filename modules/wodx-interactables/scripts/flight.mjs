@@ -53,6 +53,13 @@ const dotsOf = (actor, key) => num(actor?.system?.abilities?.[key]?.value);
 const kindOf = doc => deps.describeObj?.(doc)?.kind ?? doc.flags?.[MOD]?.mountKind ?? null;
 const ownersOf = actor => game.users.filter(u => u.isGM || actor?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 
+/** Wrecked: its Structure gone. A tile that has never been struck keeps no Structure of its own: its body's counts. */
+function isWrecked(o, kind) {
+  if ( !o?.hull ) return false;
+  const structure = num(o.hull.structure) || C.bodyOf(kind, o.built || num(deps.yearNow?.()) || 2030)?.structure || 0;
+  return R.hullState(o.hull, structure).state === "wrecked";
+}
+
 /** B6629: what is loaded on a vehicle token (its sheet's hold, less its mounted guns); a mount tile carries none. */
 function cargoOf(doc) {
   try { return (doc?.actor?.items?.contents ?? []).filter(i => i.type !== "Ranged Weapon" && i.type !== "Melee Weapon").length; } catch (e) { return 0; }
@@ -78,7 +85,7 @@ export async function onPilotHeight(tokDoc, want) {
     if ( !F.flies(kind) ) return;
     const ground = groundUnder(doc), gFt = toFeet(scene, ground);
     const skill = F.FLYERS[kind].skill, dots = dotsOf(tokDoc.actor, skill);
-    const wrecked = o?.hull && R.hullState(o.hull, o.hull.structure).state === "wrecked";
+    const wrecked = isWrecked(o, kind);
     const res = wrecked && num(want) > num(doc.elevation)
       ? {to: toFeet(scene, num(doc.elevation)), held: "wrecked", note: "It is wrecked: it goes nowhere but down.", takeoff: false, landing: false}
       : F.climb(kind, {ground: gFt, from: toFeet(scene, num(doc.elevation)), want: toFeet(scene, want), pilotDots: dots, cargo: cargoOf(doc)});
@@ -128,7 +135,7 @@ export async function bringDown(doc, why = "wrecked") {
     const lost = Math.min(body.structure, num(o?.hull?.lost) + levels - body.durability);
     try {
       if ( doc.documentName === "Token" && doc.actor ) await doc.actor.update({"system.lost": lost});
-      else await doc.update({[`flags.${MOD}.hullLost`]: lost});
+      else await doc.update({[`flags.${MOD}.hull`]: {...(doc.flags?.[MOD]?.hull ?? {}), lost, structure: body.structure}});
     } catch (e) { console.warn(`${MOD} | flight`, e); }
   }
   await card(`${label} comes down`, lines);
@@ -161,7 +168,7 @@ async function onCraftChanged(doc) {
   remember(doc);
   if ( !F.airborne(feet) ) return;
   const o = deps.describeObj?.(doc);
-  if ( o?.hull && R.hullState(o.hull, o.hull.structure).state === "wrecked" ) { await bringDown(doc, "wrecked"); return; }
+  if ( isWrecked(o, kind) ) { await bringDown(doc, "wrecked"); return; }
   if ( before ) for ( const u of before.filter(u => !now.includes(u)) ) await steppedOff(doc, u, feet);
   if ( before && before.length && !doc.flags?.[MOD]?.driver?.t ) {
     const u = F.unpiloted(kind, feet);
