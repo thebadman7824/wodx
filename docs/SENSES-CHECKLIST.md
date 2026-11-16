@@ -11,5 +11,5 @@
 - [ ] UI fit on the PC with Foundry's own fonts
 - [ ] Deployed to rothenstein-wodx, gatesenses 12/12
 - [ ] Ben reads the lines (PENDING-REVIEW)
-- [ ] V20 core page refs: Heightened Senses, degrees of success, the lowest difficulty; W20 Lifesight and Deathsight; HtR second sight
+- [x] Page refs (book check 15 November 2026, docs/research/senses-refs.md): V20 Heightened Senses, degrees of success, the lowest difficulty (2); the W20 Gift; Wraith 20 Lifesight and Deathsight; HtR second sight
 - [ ] Tag rothenstein-wodx's scenes with kinds of place (WoDX NPC's Places window) so the right lines come up
