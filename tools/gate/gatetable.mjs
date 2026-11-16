@@ -112,6 +112,9 @@ export async function run() {
       ok("lamp knocked over", !!fire && fire.flags["wodx-interactables"].size === "large" && !lit && scene.tiles.size === n0 && !scene.lights.get(l.id)?.hidden, {fire: !!fire, lit});
     });
     await step("chandelier", async () => {
+      // "two" stands under it; an earlier step's combat can have moved the token (its NPC turn), so it is put back and the move reported
+      const bd = scene.tokens.get(b.id), was = {x: bd?.x, y: bd?.y};
+      if ( bd && (bd.x !== G * 3 || bd.y !== G * 2) ) await bd.update({x: G * 3, y: G * 2}, {animate: false, teleport: true, movement: {[bd.id]: {method: "api", constrainOptions: {ignoreWalls: true, ignoreCost: true}}}});
       const [ch] = await scene.createEmbeddedDocuments("Tile", [{x: G * 3, y: G * 2, width: G, height: G, texture: {src: null}, flags: {"wodx-interactables": {light: true, lightKind: "chandelier", lightIds: "none0000"}}}]);
       const before = new Set(game.messages.map(m => m.id));
       const op = IX().rules.optionsFor(IX().describeTile(ch), {}).find(o => o.id === "dropChandelier");
@@ -119,7 +122,7 @@ export async function run() {
       await until(() => game.messages.get(msg?.id)?.getFlag("wodx-interactables", "done"), 8000);
       const done = game.messages.get(msg?.id)?.getFlag("wodx-interactables", "done");
       const dmg = game.messages.filter(m => !before.has(m.id) && m.getFlag("wodx-combat", "data")?.target === actors[1].uuid);
-      ok("chandelier", !!op && /dodges/.test((done?.lines ?? []).join(" ")) && (dmg.length > 0 || /0 of/.test((done?.lines ?? []).join(" "))), {lines: done?.lines, cards: dmg.length});
+      ok("chandelier", !!op && /dodges/.test((done?.lines ?? []).join(" ")) && (dmg.length > 0 || /0 of/.test((done?.lines ?? []).join(" "))), {lines: done?.lines, cards: dmg.length, twoWas: was});
     });
     await step("sun and sprinklers", async () => {
       const [w] = await scene.createEmbeddedDocuments("Wall", [{c: [G * 5, G * 1, G * 5, G * 3], door: 1, ds: 0, flags: {"wodx-interactables": {kind: "window"}}}]);

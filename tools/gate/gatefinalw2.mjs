@@ -73,7 +73,8 @@ export async function run() {
       const held = B.bindingsOn(who);
       const g = scene.grid.size;
       const j = B.judgeMove(held, {from: {x: st.x, y: st.y}, to: {x: st.x + g * 2, y: st.y}});
-      await who.unsetFlag(MOD, "shadowDominant");
+      // cleared the way WoDX Actions clears it when the Psyche takes back control (wraith.js: the flag set to null)
+      await who.setFlag(MOD, "shadowDominant", null);
       await waitFor(() => !who.getFlag(MOD, "shadowDominant"), 4000);
       const free = B.bindingsOn(who).filter(b => b.key === "shadow");
       // the real answer: the move is not made (ok false) and goes to the Storyteller (ask), naming the Shadow

@@ -86,8 +86,8 @@ export async function run() {
         changes: [{key: "system.attributes.intelligence.value", mode: 2, value: "-2"}], flags: {[OW]: {netBurn: true, heals: "lethal", what: "Net burn", points: 2, last: now - 3.5 * 86400}}}]);
       const r = await ow.net.healBurns(now, [runner]);
       const e = runner.effects.find(x => x.flags?.[OW]?.netBurn);
-      G.ok("4. Net burn heals with the clock", r[0]?.healed === 1 && e?.changes?.[0]?.value === "-1" && e?.statuses?.has?.("wodx-net-burn") && /1 Intelligence lost/.test(e?.name ?? ""),
-        {r, name: e?.name, change: e?.changes?.[0]?.value});
+      G.ok("4. Net burn heals with the clock", r[0]?.healed === 1 && String(e?.changes?.[0]?.value) === "-1" && e?.statuses?.has?.("wodx-net-burn") && /1 Intelligence lost/.test(e?.name ?? ""),
+        {r, effect: e?.name, change: e?.changes?.[0]?.value, statuses: [...(e?.statuses ?? [])]});
     });
 
     await G.step("5. The Maelstrom strikes", async () => {
@@ -112,14 +112,15 @@ export async function run() {
 
     await G.step("7. A remote vehicle drives", async () => {
       const [kat] = await G.make(Actor, [{name: "WoDX gate: Kat", type: "Mortal"}]);
-      const [tk] = await G.tokens(scene, [{actor: kat, x: 10, y: 10}]);
+      const [tk] = await G.tokens(scene, [{actor: kat, x: 1000, y: 1000}]);
+      const x0 = Number((tk.document ?? tk).x);
       const [car] = await scene.createEmbeddedDocuments("Tile", [{x: 1000, y: 1000, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"},
         flags: {"wodx-interactables": {mount: true, title: "WoDX gate: sedan", driver: null, riders: [{t: tk.document?.uuid ?? tk.uuid}]}}}]);
       const line = await ow.net.technica.steer(car, {dir: "e", squares: 2});
       await sleep(300);
       const c = scene.tiles.get(car.id), t = scene.tokens.get(tk.document?.id ?? tk.id);
-      G.ok("7. A remote vehicle drives", c?.x === 1200 && t?.x === 1200 && (c?.flags?.["wodx-interactables"]?.riders ?? []).length === 1 && /drives itself 2 squares east/.test(line ?? ""),
-        {line, car: c?.x, rider: t?.x});
+      G.ok("7. A remote vehicle drives", c?.x === 1200 && t?.x === x0 + 200 && (c?.flags?.["wodx-interactables"]?.riders ?? []).length === 1 && /drives itself 2 squares east/.test(line ?? ""),
+        {line, car: c?.x, rider: t?.x, riderFrom: x0});
       await car.delete().catch(() => {});
     });
 
