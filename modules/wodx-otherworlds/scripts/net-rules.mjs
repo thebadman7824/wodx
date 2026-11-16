@@ -658,7 +658,7 @@ export function leansOnBlood({disc = 0, tech = 0} = {}) { return n(disc) > n(tec
  * own for it). The Cyberpunk 2020 core says lost INT never comes back; WoDX keeps its own reading (PENDING-REVIEW).
  */
 export const BURN_HEAL_DAYS = [1, 3, 7, 30, 60, 90, 90];
-export const burnHealSeconds = points => BURN_HEAL_DAYS[Math.max(1, Math.min(BURN_HEAL_DAYS.length, Math.round(n(points)) || 1)) - 1] * 86400;
+export const burnHealSeconds = points => BURN_HEAL_DAYS[Math.max(1, Math.min(BURN_HEAL_DAYS.length, Math.round(n(points)) || 1)) - 1] * DAY;
 /** {points, last (world time of the last heal or the burn)} at now -> {points, last, healed, next (seconds to the next point, or null)}. */
 export function burnHeal({points = 0, last = 0} = {}, now = 0) {
   const at = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -669,7 +669,7 @@ export function burnHeal({points = 0, last = 0} = {}, now = 0) {
 /** The words for the time to the next point. */
 export function burnWhen(seconds) {
   if ( seconds === null || seconds === undefined ) return "";
-  const d = Math.max(1, Math.ceil(n(seconds) / 86400));
+  const d = Math.max(1, Math.ceil(n(seconds) / DAY));
   return d === 1 ? "a day" : d < 14 ? `${d} days` : d < 60 ? `${Math.round(d / 7)} weeks` : `${Math.round(d / 30)} months`;
 }
 
