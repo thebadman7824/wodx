@@ -128,7 +128,7 @@ export  const updates = async () => {
     let rollSettings = true;
 
     try {
-        attributeSettings = game.settings.get("worldofdarkness", "attributeSettings");
+        attributeSettings = CONFIG.worldofdarkness.attributeSettings ?? "20th"; // B6726: 20th edition only
         rollSettings = game.settings.get('worldofdarkness', 'advantageRolls');
     } 
     catch (e) {

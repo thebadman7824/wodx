@@ -54,9 +54,9 @@ export const systemSettings = function() {
 		config: false,
 		default: "20th",
 		type: String,
+		// WoDX fork (B6726): 20th edition only; the 5th-edition attributes (Composure, Resolve) are not offered
 		choices: {
-			"20th": "20th edition",
-			"5th": "5th edition"
+			"20th": "20th edition"
 		}
 	});
 
@@ -65,10 +65,10 @@ export const systemSettings = function() {
 		hint: game.i18n.localize('wod.settings.fifthedwillpowersettinghint'),
 		scope: "world",
 		config: false,
-		default: "5th",
+		default: "20th",
 		type: String,
+		// WoDX fork (B6726): 20th edition only, as attributeSettings
         choices: {
-			"5th": "5th edition",
 			"20th": "20th edition"
 		}
 	});
@@ -805,7 +805,8 @@ export class Rules extends FormApplication {
         if (hasPermission) {
             for (let s of game.settings.settings.values()) {
                 // Exclude settings the user cannot change
-                if ((s.key == "advantageRolls") || (s.key == "specialityLevel") || (s.key == "attributeSettings") || (s.key == "fifthEditionWillpowerSetting") || (s.key == "willpowerBonusDice"))  {
+                // WoDX fork (B6726): the edition choices are left out of the menu (20th edition only)
+                if ((s.key == "advantageRolls") || (s.key == "specialityLevel") || (s.key == "willpowerBonusDice"))  {
                     // Update setting data
                     const setting = foundry.utils.duplicate(s);
 

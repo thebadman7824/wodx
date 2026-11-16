@@ -542,8 +542,9 @@ function isIpadViewport() {
 
 /** WoDX fork (B6722): the world's rule settings as CONFIG.worldofdarkness reads them (init, and on every change). */
 function readSettingsIntoConfig() {
-	CONFIG.worldofdarkness.attributeSettings = game.settings.get("worldofdarkness", "attributeSettings");
-	CONFIG.worldofdarkness.fifthEditionWillpowerSetting = game.settings.get("worldofdarkness", "fifthEditionWillpowerSetting");
+	// B6726: 20th edition only, whatever an older world stored (nothing from the 5th edition reaches the sheets)
+	CONFIG.worldofdarkness.attributeSettings = "20th";
+	CONFIG.worldofdarkness.fifthEditionWillpowerSetting = "20th";
 	CONFIG.worldofdarkness.willpowerBonusDice = game.settings.get("worldofdarkness", "willpowerBonusDice"); 
 	CONFIG.worldofdarkness.rollSettings = game.settings.get('worldofdarkness', 'advantageRolls');
 	CONFIG.worldofdarkness.successesToDamageRolls = game.settings.get('worldofdarkness', 'successesToDamageRolls');

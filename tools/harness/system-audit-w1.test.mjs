@@ -125,3 +125,45 @@ test("B6722: a rule changed in the settings menus counts without a reload; the e
   assert.equal(CONFIG.worldofdarkness.useexplodingDice, false);
   assert.match(src("module/settings.js"), /default: "never",/);
 });
+
+test("B6726: the 5th-edition attribute choice is gone; the world is read as 20th edition", () => {
+  const s = src("module/settings.js");
+  assert.doesNotMatch(s, /"5th":/);
+  assert.match(s, /s\.key == "willpowerBonusDice"/);
+  assert.doesNotMatch(s, /s\.key == "attributeSettings"/);
+  assert.match(src("wod.js"), /CONFIG\.worldofdarkness\.attributeSettings = "20th"/);
+  assert.match(src("module/migration.js"), /attributeSettings = CONFIG\.worldofdarkness\.attributeSettings \?\? "20th"/);
+});
+
+test("B6727: a line werewolf's form change shows the form's icon on its tokens", async () => {
+  globalThis.game ??= {}; game.i18n = { localize: k => k };
+  globalThis.CONFIG.statusEffects = [];
+  globalThis.CONST ??= { ACTIVE_EFFECT_SHOW_ICON: { ALWAYS: 2 } };
+  const { default: TokenHelper } = await import(SYS + "module/scripts/token-helpers.js");
+  const effects = [];
+  const actor = { effects, async createEmbeddedDocuments(t, list) { for (const e of list) effects.push({ ...e, id: String(effects.length + 1), statuses: new Set(e.statuses) }); },
+    async deleteEmbeddedDocuments(t, ids) { for (const id of ids) effects.splice(effects.findIndex(e => e.id === id), 1); } };
+  assert.equal(await TokenHelper.showForm(actor, "wod.shapes.crinos"), "wod_shapeform_form_crinos");
+  assert.equal(effects.length, 1);
+  assert.match(effects[0].img, /form_crinos\.svg$/);
+  assert.ok(CONFIG.statusEffects.some(x => x.id === "wod_shapeform_form_crinos"));
+  await TokenHelper.showForm(actor, "wod.shapes.lupus");
+  assert.deepEqual(effects.map(e => [...e.statuses][0]), ["wod_shapeform_form_lupus"]);
+  await TokenHelper.showForm(actor, "wod.shapes.homid");
+  assert.equal(effects.length, 0);
+  assert.equal(await TokenHelper.showForm(actor, "nonsense"), null);
+  assert.doesNotMatch(src("module/scripts/token-helpers.js").split("static async showForm")[0], /\n\s*return;\n\s*\n\t*let foundToken/);
+});
+
+test("B6728: a macro roll from actor.api counts WoDX's modifiers; a window's general roll still does not", () => {
+  const direct = container({ origin: "general", wodxDirect: true });
+  assert.equal(applyWodxRollMods(direct, { modsFor: modsFor(grieving) }).dice, -1);
+  assert.equal(direct.numDices, 4);
+  const windowed = container({ origin: "general" });
+  assert.equal(applyWodxRollMods(windowed, { modsFor: modsFor(grieving) }), null);
+  assert.equal(windowed.numDices, 5);
+  const api = src("module/actor/api-handler.js");
+  assert.equal((api.match(/diceRoll\.wodxDirect = true/g) ?? []).length, 3);
+  assert.equal((api.match(/_validateDifficulty\(options\.difficulty\) \?\? 6/g) ?? []).length, 3);
+  assert.match(api, /CONFIG\.worldofdarkness\.specialityLevel/);
+});

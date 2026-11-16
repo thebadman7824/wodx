@@ -25,7 +25,8 @@ const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
  */
 export function applyWodxRollMods(diceRoll, {modsFor = null, on = true, lowest = 2} = {}) {
 	if (!diceRoll || diceRoll.wodxApplied || !on || typeof modsFor !== "function" || !diceRoll.actor) return null;
-	if (!WODX_ORIGINS.includes(diceRoll.origin)) return null;
+	// B6728: a general roll made straight from the actor api (no window, so no WoDX Sheets wrap) is marked wodxDirect
+	if (!WODX_ORIGINS.includes(diceRoll.origin) && !(diceRoll.wodxDirect && diceRoll.origin === "general")) return null;
 	let mods;
 	try {
 		mods = modsFor(diceRoll.actor, { attributeKey: diceRoll.attribute, abilityKey: diceRoll.ability });
