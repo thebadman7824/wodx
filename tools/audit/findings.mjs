@@ -27,7 +27,7 @@ export function closedBy(item, {inRef, tracked, rulings, landed}) {
   for ( const [, n] of String(item.fix ?? "").matchAll(BNUM) ) if ( landed?.(Number(n)) ) return `fix B${n}`;
   if ( item.file && !tracked(item.file) ) return item.verdict === "dead" ? "deleted" : "file removed";
   const id = item.id ?? "";
-  const r = rulings[`item-${id}`]?.pick || rulings[id]?.pick || (item.group ? rulings[`group-${item.group}`]?.pick : "");
+  const r = rulings[`item-${id}`]?.pick || (id && rulings[id]?.pick) || (item.file && rulings[item.file]?.pick) || (item.group ? rulings[`group-${item.group}`]?.pick : "");
   return r ? `ruling: ${r}` : "";
 }
 
