@@ -284,7 +284,9 @@ function onFed(info = {}) {
   const own = t => mine() || may(t);
   const toks = canvas.tokens?.placeables ?? [], by0 = toks.find(t => t.actor?.uuid === info.by?.uuid && t.document.flags?.[MOD]?.sprite);
   const ves0 = toks.find(t => t.actor?.uuid === info.vessel?.uuid && t.document.flags?.[MOD]?.sprite);
-  const by = by0 && own(by0) ? by0 : null, ves = ves0 && own(ves0) ? ves0 : null;
+  // B6787: relayed from a player's computer, the feeder already played there; the Storyteller plays a vessel no player owns
+  const by = !info.relayed && by0 && own(by0) ? by0 : null;
+  const ves = ves0 && (info.relayed ? !ves0.actor?.hasPlayerOwner : own(ves0)) ? ves0 : null;
   if ( by ) {
     // a ghoul given vitae drinks it; a Kindred takes the vessel from behind and the vessel swoons (B5810, B5817)
     const name = by.document.flags[MOD].sprite, has = SR.ACTS[name] ?? [];
@@ -292,7 +294,7 @@ function onFed(info = {}) {
     play(by.document, move, ves0?.document ?? null).catch(() => null);
     if ( by.document.flags?.[MOD]?.need ) by.document.update({flags: {[MOD]: {need: false}}}, {animate: false}).catch(() => null);
   }
-  if ( ves && SR.hasAct(ves.document.flags[MOD].sprite, "swoon") && by?.actor?.type === "Vampire" ) play(ves.document, "swoon", by?.document ?? null).catch(() => null);
+  if ( ves && SR.hasAct(ves.document.flags[MOD].sprite, "swoon") && by0?.actor?.type === "Vampire" ) play(ves.document, "swoon", by0?.document ?? null).catch(() => null);
 }
 /** Work at a door, a lock or a device plays its move (B2616): Hooks.callAll("wodxInteractableWorked", {token, action, thing, scene, result}). */
 function onWorked(info = {}) {

@@ -21,10 +21,15 @@ function tok(id, actor, owner) {
 }
 const hero = {uuid: "Actor.hero", id: "hero", name: "Hero", type: "Werewolf"};
 const tHero = tok("tHero", hero, "pl");
-globalThis.canvas = {ready: false, grid: {size: 100}, tokens: {placeables: [tHero], get: id => [tHero].find(t => t.id === id)}};
+const kin = {uuid: "Actor.kin", id: "kin", name: "Kin", type: "Vampire", hasPlayerOwner: true};
+const tKin = tok("tKin", kin, "pl");
+const mortal = {uuid: "Actor.mortal", id: "mortal", name: "Vessel", type: "Mortal", hasPlayerOwner: false};
+const tVes = tok("tVes", mortal, "gm");
+const all = [tHero, tKin, tVes];
+globalThis.canvas = {ready: false, grid: {size: 100}, tokens: {placeables: all, get: id => all.find(t => t.id === id)}};
 const SR = await import("../../modules/wodx-paperdoll/scripts/sprite-rules.mjs");
 const S = await import("../../modules/wodx-paperdoll/scripts/sprites.mjs");
-SR.learn("worlds/t/wodx-sprites", {sprites: {p1: {name: "Player figure", acts: ["shift", "feed", "pick", "search", "swing"]}}});
+SR.learn("worlds/t/wodx-sprites", {sprites: {p1: {name: "Player figure", acts: ["shift", "feed", "pick", "search", "swing", "swoon"]}}});
 S.startSprites();
 const settle = () => new Promise(r => setTimeout(r, 20));
 
@@ -47,4 +52,16 @@ test("work at a lock, said on the Storyteller's computer, plays the stoop there"
   Hooks.callAll("wodxInteractableWorked", {token: tHero.document.uuid, action: "pick", thing: "door", scene: "s", result: "done"});
   await settle();
   assert.deepEqual(updates, [["tHero", "pick"]]);
+});
+
+test("a player's feeding relayed to the Storyteller: the vessel no player owns swoons there, the feeder is not played twice", async () => {
+  updates.length = 0; me = pl;
+  const fed = {by: {uuid: kin.uuid, name: "Kin"}, vessel: {uuid: mortal.uuid, name: "Vessel"}, drunk: 1};
+  Hooks.callAll("wodxFed", fed);
+  await settle();
+  assert.deepEqual(updates, [["tKin", "feed"]], "on the player's computer: only the feeder");
+  updates.length = 0; me = gm;
+  Hooks.callAll("wodxFed", {...fed, relayed: true});
+  await settle();
+  assert.deepEqual(updates, [["tVes", "swoon"]], "on the Storyteller's: only the vessel");
 });
