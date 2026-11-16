@@ -7,6 +7,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxSoloArrived | solo | chronicle (in solo play the first-night tour is offered once the player's token is on the map, B5144) |
+| wodxFront | chronicle | chronicle (a judgement told as the truth makes Reinhold owe the company a favour, B6653) |
 | wodxSaga | chronicle | storyteller (a Rothenstein saga step with a town change floods, besieges, sickens or empties the saga's town through towns over time, once per step, B3670) |
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
 | wodxRegimeTurn | chronicle | storyteller (a turn of rule sweeps holders out of the institutions of its kinds, in its region or town, or only one character's seats after an election, B3618) |
@@ -91,7 +92,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
 | wodxTwist | chronicle | a twist of book one was revealed: {n, variant, chains, changes} (B4850) |
-| wodxFront | chronicle | a front of book one stepped or was struck, a clue carrier was found, or a judgement came due: {front, step, at, title, scene, people, moves, struck} or {clue, carrier, whole} or {judgement, choice} (B4910) |
 | wodxEncounter | chronicle | an encounter of book one was played, put off, struck or passed unmet: {n, action: "play" \| "later" \| "never" \| "closed", scene, people, moved, talk} (B6640) |
 | wodxTwistShown | chronicle | a revealed twist of book one was shown on the table and its people acted: {n, variant, lines} (B6650) |
 | wodxFavour | chronicle | a favour owed to the company was called in: {who, what, scene, actor} (B6653) |
