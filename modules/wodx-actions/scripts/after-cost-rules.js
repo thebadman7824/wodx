@@ -69,15 +69,23 @@ export const habitNights = successes => Math.max(1, Math.round(Number(successes)
 /**
  * B6156: what keeps a character from acting at all, read by every WoDX Actions window (Any roll, Common checks, the
  * power windows, Feed, Spend Blood, the Actions menu). Asleep for the day (the daySleep flag) or a registered condition
- * that leaves the bearer out cold: no action and no defence (Asleep, Torpor, Incapacitated), or staked. A condition
- * that only takes an action away (Dazed, a fomor's gas form) is shown on the roll, not refused.
- * conds: the actor's registered conditions ({id, name, mods}). Returns the reason, or "" when the character may act.
+ * that leaves the bearer out cold: no action and no defence (Asleep, Torpor, Incapacitated), or staked.
+ * B6660: in a fight, Dazed (V20 Dark Ages p. 348: the next turn goes to shaking it off) also stops a character: no
+ * roll, no attack, no move (movement is part of the turn in a fight, VtDA20 p. 333). Outside a fight there are no turns,
+ * so Dazed is only shown on the roll there. A condition that only takes the attack away (a fomor's gas or liquid form)
+ * is shown on the roll, not refused.
+ * conds: the actor's registered conditions ({id, name, mods}); inFight: the actor is in a running fight.
+ * Returns the reason, or "" when the character may act.
  */
 export const OUT_COLD = ["asleep", "torpor", "incapacitated", "staked"];
-export function cannotActWhy({name = "The character", daySleep = false, conds = []} = {}) {
+/** B6660: the conditions that cost the bearer the whole turn in a fight. */
+export const LOSES_TURN = ["dazed"];
+export function cannotActWhy({name = "The character", daySleep = false, conds = [], inFight = false} = {}) {
   if ( daySleep ) return `${name} is asleep for the day. Use Awaken by day if something rouses them.`;
   const c = (conds ?? []).find(x => OUT_COLD.includes(x?.id) || (x?.mods?.noAction && x?.mods?.noDefense));
-  return c ? `${name} cannot act: ${c.name}${c.summary ? ` (${c.summary})` : ""}.` : "";
+  if ( c ) return `${name} cannot act: ${c.name}${c.summary ? ` (${c.summary})` : ""}.`;
+  const d = inFight ? (conds ?? []).find(x => LOSES_TURN.includes(x?.id)) : null;
+  return d ? `${name} is ${d.name} and loses this turn's action${d.source ? ` (${d.source})` : ""}.` : "";
 }
 
 /** B6156: the WoDX Actions conditions whose bearer loses the turn, for WoDX Combat's turn conductor to read (api.noActionIds). */

@@ -798,8 +798,10 @@ function resolveTokens(attackerArg, targetArg) {
  * since B6360). With the limit only shown, and always for the GM, that last one is a warning (pastWalk), not a refusal.
  */
 function noAttackWhy(attacker, attackerTok) {
-    // B6372: asleep for the day or out cold (WoDX Actions api.cannotAct): a player makes no attack; the Storyteller still may
+    // B6372: asleep for the day or out cold (WoDX Actions api.cannotAct): a player makes no attack; the Storyteller still may.
+    // B6660: Dazed in a fight is one of those reasons; with WoDX Actions off, the Dazed mark is read here
     try { const idle = game.modules.get("wodx-actions")?.api?.cannotAct?.(attacker); if (idle && !game.user.isGM) return { why: String(idle).replace(/\.$/, "") }; } catch (e) { /* Actions off */ }
+    try { if (!game.user.isGM && game.combat?.started && chronicle()?.conditions?.hasCondition?.(attacker, "dazed")) return { why: `${attacker.name} is Dazed and loses this turn's action (V20 Dark Ages p. 348)` }; } catch (e) { /* Chronicle off */ }
     const lost = attacker?.getFlag?.(MOD, "lostAction");
     // B6386: WoDX Chronicle's Phobia bout sets the same flag, naming the derangement in why
     if (lost && R.lostActionNow(lost, game.combats?.get?.(lost.combat))) return { why: lost.why ? `${attacker.name} is in the grip of ${lost.why} and has lost this turn's action` : `${attacker.name} failed to stand up and has lost this turn's action (V20 Dark Ages p. 348)` };
@@ -2173,6 +2175,17 @@ function fightOf(doc) {
     }
     return null;
 }
+/* B6661: a player's token stays put on the turn a failed stand-up spent; the Storyteller may still move it. Registered
+ * before the yards count, so a refused move is not counted. */
+export function lostMoveBlock(doc, changes, options) {
+    if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return true;
+    const f = fightOf(doc);
+    const why = f ? R.lostMoveWhy(doc.actor?.getFlag?.(MOD, "lostAction"), f.combat, doc.name) : "";
+    if (!why) return true;
+    ui.notifications.warn(`${why}.`);
+    return false;
+}
+Hooks.on("preUpdateToken", (doc, changes, options) => lostMoveBlock(doc, changes, options) === false ? false : undefined);
 // Out of turn, a player's token stays put (3.8.1). Registered before the yards count, so a refused move is not counted.
 Hooks.on("preUpdateToken", (doc, changes, options) => {
     if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
