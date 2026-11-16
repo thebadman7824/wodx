@@ -76,9 +76,15 @@ export default {
     {
       id: "war-of-tears", year: 1899, branch: "both", lines: ["werewolf"],
       name: "The War of Tears ends",
-      summary: "The Bunyip are hunted out as Europeans settle Australia. No living Bunyip remains.",
+      summary: "The Bunyip are hunted out as Europeans settle Australia. The tribe is broken; a few hold out in the far country.",
       source: "W20 pp. 40-41",
-      dateNote: "W20 gives no end year; 1899 matches the lost-tribe year in era advancement. Rage Across Australia (pdf 24) makes the war itself a single year of killing, and Past Lives (pdf 70) sets the last stand of the Bunyip in 1937; move it to 1937 to follow Past Lives."
+      dateNote: "W20 gives no end year; 1899 is the house year for the war. Rage Across Australia (pdf 24) makes the war itself a single year of killing; the last of the tribe fall in 1937 (bunyip-last-stand, Past Lives pdf 70)."
+    },
+    {
+      id: "bunyip-last-stand", year: 1937, branch: "both", lines: ["werewolf"],
+      name: "The last stand of the Bunyip",
+      summary: "The last Bunyip make their stand in the far country and fall. No living Bunyip remains.",
+      source: "Past Lives pdf 70"
     },
     {
       id: "fourth-great-maelstrom", year: 1916, month: 7, day: 1, branch: "both", lines: ["wraith"],

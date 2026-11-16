@@ -12,6 +12,7 @@
  *   people are a house rule: a trained mortal with 2 to 3 in what the role does, armed from the weapon charts.
  *   W20 prints no Kinfolk stat blocks (only Kinfolk creation, pdf 381 on), so Kinfolk extras are built as mortals.
  */
+import {gunsOnSheet} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const str = (v, n = 120) => String(v ?? "").trim().slice(0, n);
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -82,10 +83,13 @@ export const EXTRAS = [
   {key: "wolf", label: "Wolf", eras: "late", attrs: A(3, 3, 3, 1, 1, 1, 3, 2, 3), abilities: {alertness: 2, athletics: 1, brawl: 3, stealth: 2}, weapon: {name: "Bite 4, claw 4", damage: "4", kind: ""}, willpower: 3, animal: true, health: "OK, -1, -1, -3, -5, Incapacitated", ref: "V20 p. 391 (pdf 399)"}
 ];
 
-/** The templates for a year: early ones before 1600, late ones from 1600 (when firearms are on the sheet by default), "any" always. */
-export function extrasFor(year) {
-  const y = Number(year);
-  const early = Number.isFinite(y) && year !== null && year !== "" ? y < 1600 : true;
+/**
+ * The templates for a year: early ones while guns are not on the sheet, late ones once they are, "any" always.
+ * B6668: the era profile's firearms switch decides (false: early, true: late); "early" firearms or no switch fall back
+ * to the year (late from 1600, when firearms are on the sheet by default).
+ */
+export function extrasFor(year, firearms) {
+  const early = !gunsOnSheet(firearms, year);
   return EXTRAS.filter(e => e.eras === "any" || (early ? e.eras === "early" : e.eras === "late"));
 }
 

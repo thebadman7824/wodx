@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, lineOf, lineage, isAnimal, animalKindOf, allyOf, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile, keepLifepath} from "./actor-data.mjs";
-import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage} from "./rules.mjs";
+import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage, clansOpen} from "./rules.mjs";
 import {CLANS, EMBRACE, GHOUL} from "../data/vampire.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 import {setAlly} from "./apps.mjs";
@@ -254,7 +254,9 @@ export async function embraceDialog() {
   const d0 = embraceDefaults(sire0);
   // A clan the sheet names but WoDX does not know (a bloodline, "Clan unconfirmed") is offered as written
   const sheetClans = [...new Set(vampires.map(v => clanNameOf(v)).filter(n => n && !CLANS.some(c => c.name === n) && !findClan(n)))];
-  const clanOpts = [...CLANS.map(c => c.name), ...sheetClans]
+  let when = {year: null, futureBranch: false};
+  try { when = {year: Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || null, futureBranch: !!game.settings.get("wodx-chronicle", "rule.futureBranch")}; } catch (e) { /* no chronicle */ }
+  const clanOpts = [...clansOpen(when).map(c => c.name), ...sheetClans]
     .map(n => `<option value="${esc(n)}" ${n === d0.clanName ? "selected" : ""}>${esc(n)}</option>`).join("");
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"],

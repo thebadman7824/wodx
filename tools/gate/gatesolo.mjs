@@ -21,7 +21,8 @@
  *    9e. Storyteller tools (B4800): the player switches them on from the panel, sees the Storyteller's cards, gives
  *        the character the gate's item and 3 experience, opens Check the systems and What is hidden here, and switches them off
  *    9f. arrival (B5140): the player asks to be brought in, and the seat answers with the character's token; the panel
- *        offers no Make my character to a player who has one
+ *        offers no Make my character to a player who has one, and Foundry's User Configuration is closed (B6711)
+ *    9g. the hunger line waits while the character wizard is open on the character (B6710)
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
@@ -282,18 +283,36 @@ async function player(ids) {
     if ( !S()?.arrival ) return ok("9f. arrival", false, {error: "no arrival in this version"});
     let got = null;
     Hooks.once("wodxSoloArrived", d => { got = d; });
+    // B6711: Foundry's User Configuration, open over the arrival, is closed once the token is there
+    const UC = foundry.applications.sheets?.UserConfig ?? foundry.applications.sheets?.UserConfigSheet;
+    if ( UC ) await new UC({document: game.user}).render(true).catch(() => null);
     S().panel.ask("ask.arrive");
     const came = await until(() => !!got, 10000);
+    await sleep(500);
+    const configOpen = [...(foundry.applications.instances?.values?.() ?? [])].some(a => a.rendered && a.document?.documentName === "User" && /UserConfig/.test(a.constructor?.name ?? ""));
     const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
     const offersMake = !!el?.querySelector?.("[data-action=arrive]");
-    ok("9f. arrival", came && got?.tokenId === ids.tokens?.[0] && got?.sceneId === ids.scene && !offersMake,
-      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake,
+    ok("9f. arrival", came && got?.tokenId === ids.tokens?.[0] && got?.sceneId === ids.scene && !offersMake && !configOpen,
+      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake, configOpen, configTried: !!UC,
         // Why, when it does not match: the gate's own ids and what the answer points at
         want: {sceneId: ids.scene, tokenId: ids.tokens?.[0]},
         gotScene: got ? game.scenes.get(got.sceneId)?.name ?? null : null,
         gotToken: got ? (game.scenes.get(got.sceneId)?.tokens?.get?.(got.tokenId)?.name ?? null) : null,
         character: game.user.character?.name ?? null,
         gateTokens: (ids.tokens ?? []).map(id => game.scenes.get(ids.scene)?.tokens?.get?.(id)?.name ?? null)});
+  });
+  await step("9g. the hunger line waits for the wizard", async () => {
+    // B6710: while the character wizard is open on the character, the screen's state does not count the hunger line
+    const P = game.modules.get("wodx-senses")?.api?.perception;
+    const wiz = game.modules.get("wodx-creation")?.api?.wizard;
+    const me = game.user.character;
+    if ( !P?.stateOf || !wiz || !me ) return ok("9g. the hunger line waits for the wizard", false, {error: "no Senses state, no wizard or no character", senses: !!P?.stateOf, wizard: !!wiz, me: !!me});
+    const before = !!P.stateOf(me).building;
+    await wiz(me);
+    const open = await until(() => !!P.stateOf(me).building, 8000);
+    await foundry.applications.instances?.get?.(`wodx-wizard-${me.id}`)?.close?.();
+    const closed = await until(() => !P.stateOf(me).building, 8000);
+    ok("9g. the hunger line waits for the wizard", !before && open && closed, {before, open, closed});
   });
   return steps;
 }

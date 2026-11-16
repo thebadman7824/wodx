@@ -3868,7 +3868,7 @@ export default {
     "mortal"
    ],
    "name": "The Accord murders",
-   "summary": "A string of murders in Lyon, Tokyo and Seoul breaks the Accord in three cities at once.",
+   "summary": "Lyon watches the feeds as murders break the Accord in Night City and two other cities, and its own Kindred and Garou double their guards.",
    "region": "EU",
    "place": "Lyon",
    "tags": [

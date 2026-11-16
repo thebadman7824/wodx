@@ -24,6 +24,11 @@ test("events: a line wiped out ends the factions named for it, with the new powe
   assert.equal(changes[0].set.dormant, true);
   assert.equal(offer?.name, "Kuei-jin envoys");
   assert.equal(F.eventChanges({factions: [fac({id: "c", name: "Croatan war party", kind: "garou"})]}, "croatan", 1589).changes.length, 1);
+  // The Bunyip: broken in the War of Tears (a few survive), gone at the last stand of 1937 (Ben's desk pick, 16 November 2026)
+  const tears = F.eventChanges({factions: [fac({id: "b", name: "Bunyip of the river", kind: "garou"})]}, "war-of-tears", 1899, {newId: () => "far"});
+  assert.equal(tears.changes.length, 0);
+  assert.equal(tears.offer?.name, "Bunyip in the far country");
+  assert.equal(F.eventChanges({factions: [fac({id: "b", name: "Bunyip in the far country", kind: "garou"})]}, "bunyip-last-stand", 1937).changes.length, 1);
 });
 
 test("events: Future Darkness disasters move the markets once each", async () => {

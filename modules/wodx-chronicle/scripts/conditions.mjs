@@ -20,6 +20,7 @@ const registry = new Map();
  *   ownDiff: +difficulty on the bearer's own actions; ownDiffVision: only on actions needing sight;
  *   attackDiceVs: +dice for anyone attacking the bearer; autoHit: attacks hit without a roll;
  *   noAction: the bearer loses its next action; noDefense: the bearer cannot defend
+ * @property {string[]} [also]           Foundry's own statuses the condition brings with it ("blind" takes the token's sight)
  */
 
 export const STATUS_PREFIX = "wodx-";
@@ -37,7 +38,7 @@ function addStatus(c) {
   if ( !Array.isArray(list) ) return;
   const id = STATUS_PREFIX + c.id;
   const existing = list.find(e => e.id === id);
-  const entry = {id, name: c.name, img: c.img, hud: true, description: `${c.summary} (${c.source})`};
+  const entry = {id, name: c.name, img: c.img, hud: true, description: `${c.summary} (${c.source})`, ...(c.also?.length ? {statuses: [...c.also]} : {})};
   if ( existing ) Object.assign(existing, entry);
   else list.push(entry);
 }
@@ -84,11 +85,16 @@ export function attackModifiers(attacker, defender) {
   }
   for ( const c of conditionsOf(defender) ) {
     if ( c.mods.attackDiceVs ) { out.attackerDice += c.mods.attackDiceVs; out.notes.push(`${defender.name}: ${c.name}, +${c.mods.attackDiceVs} dice to hit (${c.source})`); }
-    if ( c.mods.autoHit ) { out.autoHit = true; out.notes.push(`${defender.name}: ${c.name}: hit automatically; damage equals the damage pool, unrolled (${c.source})`); }
+    if ( c.mods.autoHit ) { out.autoHit = true; out.notes.push(`${defender.name}: ${c.name}: hit automatically, with no defence (${c.source})`); }
     if ( c.mods.noDefense || c.mods.autoHit ) out.defenderCannotDefend = true;
     if ( c.mods.ownDiffVision ) out.notes.push(`${defender.name}: ${c.name}, +${c.mods.ownDiffVision} difficulty to defend (${c.source})`);
   }
   return out;
+}
+
+/** B6037: the senses the conditions take away, for WoDX Senses: {cannot: [sense]} (Blinded: sight). */
+export function senseEffectsOf(list = []) {
+  return {cannot: [...new Set((list ?? []).filter(c => c?.cannotSee).map(() => "sight"))]};
 }
 
 /** Defence difficulty from the defender's own conditions (a blinded defender is at +2). */
@@ -105,8 +111,8 @@ export function defenseDifficulty(defender) {
 const VDA = "V20 Dark Ages";
 export const CORE_CONDITIONS = [
   {id: "blinded", name: "Blinded", img: "icons/svg/blind.svg", source: `${VDA} p. 348`,
-    summary: "Attacks against them gain two dice; they are at +2 difficulty on anything needing sight, defence included.",
-    mods: {attackDiceVs: 2, ownDiffVision: 2}},
+    summary: "Attacks against them gain two dice; they are at +2 difficulty on anything needing sight, defence included, and the token sees nothing (B6037).",
+    mods: {attackDiceVs: 2, ownDiffVision: 2}, also: ["blind"], cannotSee: true},
   {id: "crippled", name: "Crippled limb", img: "icons/svg/bones.svg", source: `${VDA} p. 348`,
     summary: "+2 difficulty on actions using that limb while the damage that caused it remains; WoDX Combat counts it on attacks and defence (B6027).",
     mods: {ownDiff: 2}},
@@ -117,7 +123,7 @@ export const CORE_CONDITIONS = [
     summary: "Struggling but immobilized: attacks against them gain two dice.",
     mods: {attackDiceVs: 2}},
   {id: "immobilized", name: "Completely immobilized", img: "icons/svg/padlock.svg", source: `${VDA} p. 348`,
-    summary: "Tied, staked or paralyzed: they are hit automatically, for the damage pool without a roll.",
+    summary: "Tied, staked or paralyzed: they are hit automatically and cannot defend.",
     mods: {autoHit: true}},
   {id: "staked", name: "Staked", img: "icons/svg/sword.svg", source: `${VDA} pp. 13, 348`, lines: ["vampire"],
     summary: "A wooden stake through the heart paralyzes a vampire (V20 Dark Ages p. 13): completely immobilized until it is pulled out.",

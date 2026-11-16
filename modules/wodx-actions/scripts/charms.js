@@ -62,6 +62,14 @@ export function setup() {
     const C = chron();
     // What a Charm did for its time comes off when it ends: rows, the token as it was, lights, the Gauntlet, Rage
     C?.timed?.registerReverter?.("wodx-actions.charmOff", async (actor, data) => charmOff(actor, data ?? {}).catch(e => console.warn("WoDX | charm off", e)));
+    // B6038: Blighted and Possessed are WoDX conditions, so the token shows them and the rolls read them (Blighted: the worst
+    // of the nature rules, read as +1 difficulty on social rolls, house reading)
+    try {
+        C?.registerCondition?.({ id: "blighted", name: "Blighted", img: "icons/svg/poison.svg", source: "W20 p. 367 (Blighted Touch)",
+            summary: "The worst of their nature rules: +1 difficulty on social rolls (WoDX house reading, B6038).", mods: { socialDiff: 1 } });
+        C?.registerCondition?.({ id: "possessed", name: "Possessed", img: "icons/svg/possession.svg", source: "W20 p. 367 (Possession)",
+            summary: "A spirit rides the body: the player cannot move the token; the one who possesses it moves it (B6038).", mods: {} });
+    } catch (e) { console.warn("WoDX | charm conditions", e); }
     // Blighted Touch: whoever the spirit harms resists or is blighted
     Hooks.on("wodxAttackRolled", (attacker, d) => { if (d?.hit && attacker && has(attacker, "blightedtouch") && d.target) blight(attacker, d.target).catch(e => console.warn("WoDX | blighted touch", e)); });
 }
@@ -104,7 +112,7 @@ async function blight(spirit, target) {
     if (n(r.successes) > 0 && !r.botch) return null;
     const c = SC.BY_KEY.blightedtouch, text = `${target.name}'s worst traits rule ${r.botch ? "from now on" : "for the next three hours"} (Blighted Touch).`;
     if (r.botch) await target.createEmbeddedDocuments("ActiveEffect", [{ name: "Blighted", img: "icons/svg/poison.svg", statuses: ["wodx-blighted"], description: text, flags: { [MOD]: { charm: "blightedtouch", by: spirit.name } } }]);
-    else await chron()?.timed?.applyTimed?.(target, { name: "Blighted", img: "icons/svg/poison.svg", duration: { kind: "time", seconds: 3 * 3600 }, key: "wodx-charm-blight", source: SC.pageOf(c), description: text });
+    else await chron()?.timed?.applyTimed?.(target, { name: "Blighted", img: "icons/svg/poison.svg", condition: "blighted", duration: { kind: "time", seconds: 3 * 3600 }, key: "wodx-charm-blight", source: SC.pageOf(c), description: text });
     return ChatMessage.create({ speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>Blighted Touch</h3><p>${esc(text)}</p><p class="wodx-quiet">${SC.pageOf(c)}</p></div>` });
 }
 

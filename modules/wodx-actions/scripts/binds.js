@@ -26,6 +26,10 @@ export function bindingsOn(actor) {
     if ( tk === "wodx-kote-soul" && [...(e.statuses ?? [])].some(x => String(x).endsWith("shadow-soul")) ) {
       out.push({key: "shadow", rule: "ask", name: "Shadow soul", by: null, id: e.id ?? null}); continue;
     }
+    // B6038: a spirit's Possession charm puts its mark on raw (no timer): the body is the spirit's, as a Possess power's is
+    if ( [...(e.statuses ?? [])].includes("wodx-possessed") ) {
+      out.push({key: "possess", rule: RULE.possess, name: e.name ?? "Possessed", by: null, id: e.id ?? null}); continue;
+    }
     const m = tk.match(KEY_RE);
     if ( !m ) continue;
     out.push({key: m[1], rule: RULE[m[1]], name: e.name ?? m[1], by: e.flags?.[MOD]?.bindBy ?? null, id: e.id ?? null});
@@ -51,7 +55,8 @@ const tokenOfActorId = (scene, id) => (id ? [...(scene?.tokens ?? [])].find(t =>
 function onPreUpdate(tok, change, options, userId) {
   if ( options?.wodxBindAllowed || game.user.id !== userId || game.user.isGM ) return true;
   if ( !("x" in change || "y" in change) ) return true;
-  // B6372: a character asleep for the day or out cold (Asleep, torpor, staked...) does not walk; the Storyteller may move it
+  // B6372: a character asleep for the day or out cold (Asleep, torpor, staked...) does not walk; the Storyteller may move it.
+  // B6660: nor, in a fight, a Dazed one: the turn is lost, the move with it (VtDA20 p. 333: movement is part of the turn)
   try { const idle = cannotAct(tok.actor); if ( idle ) { ui.notifications?.warn?.(idle); return false; } } catch (e) { /* no rule */ }
   try { if ( game.settings.get(MOD, "bindingsHold") === false ) return true; } catch (e) { return true; }
   const a = tok.actor;

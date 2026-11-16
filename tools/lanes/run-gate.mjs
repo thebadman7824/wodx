@@ -11,6 +11,8 @@
  *   --step-timeout 45     seconds a dialog or other window the gate opened may wait for an answer before the
  *                         runner closes it, so a step waiting on a click nobody makes goes on (default 45)
  *   --max-minutes N       the whole run's limit (default 15 plus the gate limits plus 2 minutes a gate)
+ *   --list                print the gates the run would take, as "GATES [json]", and stop (B6526)
+ *   --queue <file>        take gates one at a time from a JSON list shared with runs on other lanes (B6526)
  * No run can hang a lane (B3089): a gate past its limit fails, its browser is closed and a new one signed in for the
  * next gate; past the whole run's limit the runner closes its browser, frees the lane and exits with 5. The lane lock
  * carries a deadline that moves on before each gate, so another run takes over a lane whose run has hung past it,
@@ -39,10 +41,11 @@ import {openGM} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
+import {readQueue, takeQueued} from "./gate-queue.mjs";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes"]);
+const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
@@ -54,6 +57,16 @@ if ( args.includes("--touched") ) {
   gates.push(...list);
 }
 gates = [...new Set(gates)];
+// B6526: --list prints the gates this run would take (after --touched/--all) as JSON and stops; the PC runner fills a
+// shared queue from it
+if ( args.includes("--list") ) { console.log(`GATES ${JSON.stringify(gates.filter(g => /^[\w-]+$/.test(g)))}`); process.exit(0); }
+// B6526: --queue FILE takes the gates one at a time from a JSON list shared with other lanes, so a lane that joins
+// late or runs quick gates takes more of the work (the list given on the line is ignored)
+const queueFile = opt("queue");
+if ( queueFile ) {
+  gates = readQueue(queueFile);
+  if ( !gates.length ) { const line = `==== ${new Date().toISOString()} 0 gate(s): the shared queue is empty`; console.log(line); if ( opt("report") ) fs.appendFileSync(opt("report"), `${line}\nexit 0\n`); process.exit(0); }
+}
 const shard = /^(\d+)\/(\d+)$/.exec(opt("shard") ?? "");
 if ( shard ) {
   const before = gates.length;
@@ -157,7 +170,7 @@ try {
     await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {});
     const copied = copyFixtures(repo, lane.dataPath);
     if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
-    for ( const gate of gates ) {
+    for ( let gate, k = 0; (gate = queueFile ? takeQueued(queueFile, lane.id) : gates[k++]); ) {
       const limit = limitOf(gate);
       extendLock(lane, Date.now() + limit + 5 * 60000);
       if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
@@ -303,3 +316,5 @@ function copyFixtures(repo, dataPath) {
   }
   return out;
 }
+
+/* B6526: the shared gate queue (a JSON list), taken from under a lock file so two lanes never take the same gate */

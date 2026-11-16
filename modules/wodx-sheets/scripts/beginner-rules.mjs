@@ -3,6 +3,7 @@
  * Nothing is taken off the sheet: zero-dot Abilities fold behind Show all, rarely used tabs sit behind More, and every
  * quick roll is also on the sheet and in the Actions menu.
  */
+import {walksRoads} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The common checks a new character starts with on the quick roll row (keys of the Actions common checks). */
 export const QUICK_DEFAULT = ["notice", "react", "readperson", "endurance"];
@@ -141,10 +142,13 @@ export const HELP = {
   faith: "The power of true belief. Rolled to drive back the unholy."
 };
 
-/** The help line for a trait label, or "". The label is matched without case and without dots or colons. */
-export function helpFor(label = "", {year = null} = {}) {
+/**
+ * The help line for a trait label, or "". The label is matched without case and without dots or colons.
+ * B6668: Humanity is the Road of Humanity where the era profile's morality switch is "roads", else before 1450.
+ */
+export function helpFor(label = "", {year = null, morality} = {}) {
   const k = String(label).toLowerCase().replace(/[:.]/g, "").replace(/\s+/g, " ").trim();
-  if ( k === "humanity" && Number.isFinite(year) && year < 1450 && HELP.road ) return `${HELP.humanity} In these nights it is called the Road of Humanity.`;
+  if ( k === "humanity" && walksRoads(morality, year) && HELP.road ) return `${HELP.humanity} In these nights it is called the Road of Humanity.`;
   return HELP[k] ?? HELP[k.replace(/\s/g, "")] ?? "";
 }
 

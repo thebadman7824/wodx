@@ -5,6 +5,7 @@
  */
 
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as K from "./reckoning-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -153,8 +154,10 @@ export function build(ctx) {
             const [a, v] = e.roll;
             const stat = k => (ATTR.includes(k) ? attr(actor, k) : K.VIRTUES.includes(k) ? i.virtues[k] : (findAbility(actor, k)?.value ?? 0));
             const dice = (a ? stat(a) : 0) + stat(v) + risk + n(fd.bonus);
-            const r = await rollPool(dice, n(fd.diff) + lim.diff);
-            let body = rollBlock(`${a ? `${cap(a)} + ` : ""}${cap(v)}${risk ? ` + ${risk} risked` : ""}`, r, [e.conviction ? `${e.conviction} Conviction` : "", lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
+            // B6662: the target's ward or Magic Resistance makes an edge on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
+            let body = rollBlock(`${a ? `${cap(a)} + ` : ""}${cap(v)}${risk ? ` + ${risk} risked` : ""}`, r, [e.conviction ? `${e.conviction} Conviction` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             if (risk) {
                 await actor.setFlag(MOD, "riskScene", sceneKey());
                 const ok = !r.botch && r.successes > 0 && (!fd.resisted || fd.won);

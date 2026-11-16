@@ -45,4 +45,5 @@ data = json.dumps(eras, ensure_ascii=False, separators=(',', ':'))
 open('../desk-data-2026-11-12h3.json', 'w').write(data)
 print({e['id']: len(e['items']) for e in eras}, 'round 2 repeats left out', dropped, 'bytes', len(data))
 if len(sys.argv) > 1:
-    open(sys.argv[1], 'w').write(open('../head3.html').read() + 'const ERAS=' + data + ';\n' + open('../tail3.html').read())
+    decon = open('../daily/desk-items.json').read() if os.path.exists('../daily/desk-items.json') else '[]'
+    open(sys.argv[1], 'w').write(open('../head3.html').read() + 'const ERAS=' + data + ';\nconst DECON=' + decon + ';\n' + open('../tail3.html').read())

@@ -76,9 +76,10 @@ async function carryOut(actor, mark, info) {
   }
   if ( mark.kind === "death" ) {
     await applyTimed(actor, {name: "Held for sentence", description: "Held by the court until the sentence is carried out", duration: {kind: "scene"}, condition: "held", key: "wodx-law-held", source: "WoDX Chronicle law"});
-    // B5992: the law comes for the condemned where they are (WoDX Storyteller's raid)
+    // B5992: the law comes for the condemned where they are (WoDX Storyteller's raid). B6667: one the watch already
+    // holds (hidden, lawTaken) is brought out at the place of execution or the watch-house (custody)
     const R = game.modules.get("wodx-storyteller")?.api?.reach;
-    try { await R?.lawCome?.({actorId: actor.id, region: info.region, mode: "arrest", why: "a death sentence"}); } catch (e) { console.warn("WoDX | law comes", e); }
+    try { await R?.lawCome?.({actorId: actor.id, region: info.region, mode: "arrest", why: "a death sentence", custody: true}); } catch (e) { console.warn("WoDX | law comes", e); }
     return R?.lawCome ? "The condemned is held, and the law comes to take them to the sentence." : "The condemned is held (Held for the scene) until you play the sentence out.";
   }
   if ( mark.kind === "time" && mark.until ) return (await sendAway(actor, mark)) ? `Taken away to serve the sentence until ${mark.until}: the character's tokens leave the map until then.` : "";

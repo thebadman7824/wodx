@@ -34,6 +34,7 @@ import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArg
 import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
+import {readQueue, putBack} from "../lanes/gate-queue.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -189,6 +190,8 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
   const faultRetry = async (why, out = "") => {
+    // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
+    if ( job.queue ) requeueUnfinished(job.queue, lane, out);
     if ( retried ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
     await lanesCmd(["reset", "--lane", lane], {logTo: L});
@@ -221,8 +224,9 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   }
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});
-  const gatesN = job.all ? 400 : job.touched ? 150 : job.gates.length;
-  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes: Math.min(16 * Math.ceil(gatesN / n) + 20, 900)});
+  const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
+  const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, 900);
+  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes});
   const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
@@ -296,25 +300,91 @@ const active = new Set();
 // while, which ran finished jobs a second time; these are skipped.
 const finished = new Map();
 const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now() - t > 3600e3 ) finished.delete(k); return finished.has(n); };
+/**
+ * B6526: gates jobs share one queue of gates between their lanes. A job that started on fewer lanes than it asked for
+ * (they were busy) takes more as they free, up to what it asked for, or every lane when nothing else is waiting
+ * (growJobs). Before, a 294-gate touched run that found one lane free ran on it alone for hours.
+ */
+const growing = new Map();
+async function makeQueue(job, lane, tag) {
+  if ( job.kind !== "gates" ) return null;
+  const wt = await worktree(lane, job.ref);
+  if ( wt.error ) return null;
+  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
+    {logTo: path.join(LOGS, `${tag}-list.log`), minutes: 5});
+  const m = /^GATES (\[.*\])$/m.exec(r.out ?? "");
+  let list = null;
+  try { list = m ? JSON.parse(m[1]) : null; } catch (e) { list = null; }
+  if ( !list || list.length < 2 ) return null;
+  const file = path.join(LOGS, `${tag}-queue.json`);
+  fs.writeFileSync(file, JSON.stringify(list));
+  fs.rmSync(`${file}.taken`, {force: true});
+  return {file, size: list.length};
+}
+const queueLeft = file => readQueue(file).length;
+function requeueUnfinished(file, lane, report) {
+  try { const lost = putBack(file, lane, report); if ( lost.length ) log(`lane ${lane}: ${lost.length} unfinished gate(s) back on the shared queue`); }
+  catch (e) { log(`lane ${lane}: could not give gates back: ${e.message}`); }
+}
+function addLane(g, lane, n = 1) {
+  const i = g.used.length;
+  g.used.push(lane); state[lane].busy = g.issue.number;
+  // On a shared queue there is nothing to split; otherwise lane i of n runs shard i of n, as before
+  const p = laneWork(g.job, lane, i, g.job.queue ? 1 : n, g.tag).then(r => r, e => ({code: null, text: `Runner error on lane ${lane}: ${e.message}`}))
+    .then(r => { g.parts.push({lane, ...r}); if ( state[lane].busy === g.issue.number ) state[lane].busy = null; });
+  g.pending.add(p); p.finally(() => g.pending.delete(p));
+}
+/** Free lanes join a running gates job whose queue still holds work. waiting: lane jobs still in the queue. */
+function growJobs(waiting) {
+  for ( const g of growing.values() ) {
+    if ( g.job.lane !== undefined ) continue; // pinned to one lane
+    const cap = waiting ? g.job.lanes ?? 1 : LANES.length;
+    // No more lanes than gates left for the lanes still starting up to take
+    while ( g.used.length < cap && queueLeft(g.job.queue) >= 2 && queueLeft(g.job.queue) > g.used.length - g.parts.length ) {
+      const l = LANES.find(laneFree);
+      if ( !l ) return;
+      log(`#${g.issue.number} takes lane ${l} too (${queueLeft(g.job.queue)} gate(s) left on its queue)`);
+      addLane(g, l);
+    }
+  }
+}
+
 async function start(issue, job, lanes) {
   active.add(issue.number);
   const tag = `job${issue.number}`, t0 = Date.now();
   for ( const l of lanes ) state[l].busy = issue.number;
   log(`#${issue.number} ${job.kind} starting${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""}`);
+  const g = {issue, job, tag, used: [], parts: [], pending: new Set()};
   try {
     await setLabels(issue.number, [LABEL.running]);
     await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}).`);
-    const parts = lanes.length ? await Promise.all(lanes.map((l, i) => laneWork(job, l, i, lanes.length, tag))) : [await runLight(job, tag)];
+    if ( lanes.length ) {
+      const q = await makeQueue(job, lanes[0], tag);
+      if ( q ) {
+        g.job = {...job, queue: q.file, queueSize: q.size, maxMinutes: Math.min(16 * q.size + 20, 900)};
+        growing.set(issue.number, g);
+        log(`#${issue.number}: ${q.size} gate(s) on a shared queue`);
+      }
+      for ( const l of lanes ) addLane(g, l, lanes.length);
+      while ( g.pending.size ) await Promise.race([...g.pending]);
+      growing.delete(issue.number);
+    } else g.parts.push({lane: null, ...(await runLight(job, tag))});
+    const parts = g.parts.sort((a, b) => g.used.indexOf(a.lane) - g.used.indexOf(b.lane));
     const ok = parts.every(p => p.code === 0);
     const mins = Math.round((Date.now() - t0) / 60000);
-    const body = `**${ok ? "Passed" : "Failed"}** in ${mins} min${job.thread ? ` (for thread ${job.thread})` : ""}.\n\n` +
-      parts.map((p, i) => `${lanes.length ? `Lane ${lanes[i]}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
+    const used = parts.filter(p => p.lane).map(p => p.lane);
+    const body = `**${ok ? "Passed" : "Failed"}** in ${mins} min${job.thread ? ` (for thread ${job.thread})` : ""}${g.job.queue ? `, ${g.job.queueSize} gates shared over lanes ${used.join(", ")}` : ""}.\n\n` +
+      parts.map(p => `${p.lane ? `Lane ${p.lane}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
     await finish(issue, ok, body);
     log(`#${issue.number} ${ok ? "passed" : "failed"} in ${mins} min`);
   } catch (e) {
     log(`#${issue.number} runner error: ${e.stack ?? e.message}`);
     await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
-  } finally { for ( const l of lanes ) state[l].busy = null; finished.set(issue.number, Date.now()); active.delete(issue.number); }
+  } finally {
+    growing.delete(issue.number);
+    for ( const l of new Set([...lanes, ...g.used]) ) if ( state[l].busy === issue.number ) state[l].busy = null;
+    finished.set(issue.number, Date.now()); active.delete(issue.number);
+  }
 }
 
 // ---- status issue ----
@@ -434,6 +504,8 @@ for ( ;; ) {
         start(q.issue, q.job, []).finally(() => light--);
       }
     }
+    // B6526: lanes still free join a running gates job that has work left on its shared queue
+    if ( !draining && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number)));
     await status(queue.filter(q => !active.has(q.number)));
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;

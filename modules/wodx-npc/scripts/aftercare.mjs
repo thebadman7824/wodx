@@ -10,7 +10,7 @@
  *   n5  mourning  hearts.mjs: an NPC who loses someone close mourns by faith on the map; regard for the killers sours
  *   n6  robbery   prowl.mjs: the robber spends the night at the tavern; the robbed can report it to the watch
  *   n7  marriage  wodxMarried: the spouses share a home; wodxDivorced moves the mover back
- *   Flags: wodx-npc.mend {last}, kissed {until}, standoffs {otherId: at}, gone {why, at}, diedBy [ids], homeBefore.
+ *   Flags: wodx-npc.mend {last}, kissed {until}, tokenAway {why, after, until, pending, hid, place} (B6665), standoffs {otherId: at}, gone {why, at}, diedBy [ids], homeBefore.
  */
 import * as AC from "./aftercare-rules.mjs";
 import * as LM from "./line-mend.mjs";
@@ -40,6 +40,67 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     const same = sc ? [...sc.tokens].filter(d => d.actorId === w.id).length : 0;
     return same === 1 ? w : null;
   };
+  /**
+   * B6665: an unlinked token whose NPC has no duty holder (a passer-by or placed generic NPC with no routine, or one
+   * of several tokens sharing a world actor) is tended or rests as itself. The token walks to a place of those kinds on
+   * its own scene (a hospital or house of worship to be tended) when that scene is in view, as routines walk the
+   * linked; with no such place there, it walks out by the scene's way in (when it has one) and is hidden while away.
+   * Flag on the token's actor: wodx-npc.tokenAway {why, at, after, until, kinds, pending, hid, place}. A rest waits for
+   * its after (the Daze); awayTick sends it then and brings a rested token back at its until; mendTick brings a tended
+   * token back when it is no longer laid up.
+   */
+  const viewed = sc => !!sc && !!canvas?.ready && canvas.scene?.id === sc.id;
+  function busyOn(exceptId) {
+    const set = new Set(), g = canvas.grid;
+    for ( const t of canvas.tokens?.placeables ?? [] ) {
+      if ( t.id === exceptId || t.document.hidden ) continue;
+      const o = g.getOffset({x: t.document.x + 1, y: t.document.y + 1});
+      for ( let di = 0; di < Math.max(1, Math.round(t.document.height ?? 1)); di++ ) for ( let dj = 0; dj < Math.max(1, Math.round(t.document.width ?? 1)); dj++ ) set.add(`${o.i + di},${o.j + dj}`);
+    }
+    return set;
+  }
+  async function goOff(doc) {
+    const a = doc?.actor, f = flag(a, "tokenAway");
+    if ( !f || !doc.parent ) return null;
+    const sc = doc.parent;
+    const P = routines.listPlaces().filter(p => (f.kinds ?? []).includes(p.kind) && p.region && p.scene?.id === sc.id);
+    const place = (f.kinds ?? []).map(k => P.find(p => p.kind === k)).find(Boolean) ?? null;
+    const goal = place?.region ?? routines.entranceOf?.(sc) ?? null;
+    const tok = viewed(sc) ? doc.object : null;
+    if ( tok && goal ) {
+      const cell = routines.freeCellsIn(goal, tok, null, busyOn(doc.id))[0];
+      if ( cell ) { try { await routines.walkTo(tok, cell); } catch (e) { /* no way through: it still goes */ } }
+    }
+    await a.setFlag(MOD, "tokenAway", {...f, pending: false, hid: !place, place: place?.id ?? null});
+    if ( !place ) await doc.update({hidden: true});
+    return place;
+  }
+  async function tokenAway(doc, {why, kinds = [], after = 0, until = null} = {}) {
+    const a = doc?.actor;
+    if ( !a?.isToken || doc.hidden || flag(a, "tokenAway") ) return null;
+    await a.setFlag(MOD, "tokenAway", {why, at: now(), after, until, kinds, pending: true, hid: false, place: null});
+    if ( now() < after ) return {pending: true};
+    const place = await goOff(doc);
+    return {place};
+  }
+  async function comeBack(a, why) {
+    const f = flag(a, "tokenAway");
+    if ( !f || f.why !== why || f.pending ) return false;
+    if ( f.hid && a.token?.hidden ) await a.token.update({hidden: false});
+    await a.unsetFlag(MOD, "tokenAway");
+    return true;
+  }
+  /** B6665: a rest that waited for the Daze starts; a rest done (morning) brings the token back. */
+  async function awayTick() {
+    const t = now();
+    let n = 0;
+    for ( const a of unlinkedWith("tokenAway") ) {
+      const f = flag(a, "tokenAway");
+      if ( f?.pending && t >= (Number(f.after) || 0) ) { await goOff(a.token); n++; }
+      else if ( f && !f.pending && f.until && t >= f.until && await comeBack(a, f.why) ) n++;
+    }
+    return n;
+  }
   /** Unlinked token actors on every scene that carry a flag of this module (their deltas are not in game.actors). */
   const unlinkedWith = k => [...game.scenes].flatMap(s => [...s.tokens].filter(d => !d.actorLink && d.actor?.flags?.[MOD]?.[k]).map(d => d.actor));
   /** The first tagged place of these kinds: on the actor's scene if it has one there, else anywhere. */
@@ -123,6 +184,10 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
       if ( AC.laidUp(d) && w && routines.routineOf(w)?.on !== false ) {
         const place = (AC.needsCare(d) ? placeOf(AC.HEALERS, w) : null) ?? homeOf(w);
         if ( place ) { await routines.setDuty(w, "tend", AC.tendDuty(place)); out.push(`${a.name} goes to be tended`); }
+      } else if ( AC.laidUp(d) && !w && a.isToken && c.token ) {
+        // B6665: no duty holder (a passer-by, a shared or routine-less NPC): the token itself goes to be tended
+        const r = await tokenAway(c.token, {why: "tend", kinds: AC.needsCare(d) ? AC.HEALERS : []});
+        if ( r ) out.push(r.place ? `${a.name} goes to be tended at ${r.place.name}` : `${a.name} is helped away to be tended`);
       }
     }
     // the dead: who they died fighting, for those who mourn them
@@ -158,6 +223,8 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
       while ( nh && t - last >= nh.seconds && guard++ < 12 ) { await C()?.healDamage?.(a, nh.type, 1); last += nh.seconds; n++; nh = AC.nextHeal(dmg(a)); }
       const d = dmg(a), w = base(a);
       if ( !AC.laidUp(d) && w?.getFlag?.(MOD, "duties")?.tend ) await routines.setDuty(w, "tend", null);
+      // B6665: a token tended as itself comes back once it is no longer laid up
+      if ( !AC.laidUp(d) && a.isToken ) await comeBack(a, "tend");
       if ( !nh ) await a.unsetFlag(MOD, "mend");
       else if ( last !== Number(m.last) ) await a.setFlag(MOD, "mend", {last});
     }
@@ -175,6 +242,8 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     await v.setFlag(MOD, "kissed", {until: weak ? AC.nextMorning(now()) : now() + AC.DAZE_SECONDS, by: base(fromUuidSync(p.by?.uuid))?.id ?? null});
     const h = dutyHolder(v), home = h ? homeOf(h) : null;
     if ( home ) await routines.setDuty(h, "kissed", AC.restDuty(home, now()));
+    // B6665: no duty holder (a passer-by fed on): after the Daze the token itself goes off to rest until morning
+    else if ( !h && v.isToken && v.token ) { const after = now() + AC.DAZE_SECONDS; await tokenAway(v.token, {why: "rest", after, until: AC.nextMorning(after)}); }
     return {weak, home: !!home};
   }
   /** B6173: the Daze lifts on world actors and on unlinked tokens alike (a passer-by fed on is a token's own actor). */
@@ -257,10 +326,10 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
       if ( !isActiveGM() ) return;
       try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* none */ }
       clearTimeout(wait);
-      wait = setTimeout(() => { mendTick().then(kissTick).catch(e => console.error(`${MOD} | aftercare`, e)); }, 800);
+      wait = setTimeout(() => { mendTick().then(kissTick).then(awayTick).catch(e => console.error(`${MOD} | aftercare`, e)); }, 800);
     });
-    Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) mendTick().then(kissTick).catch(e => console.error(`${MOD} | aftercare`, e)); });
+    Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) mendTick().then(kissTick).then(awayTick).catch(e => console.error(`${MOD} | aftercare`, e)); });
   }
 
-  return {hooks, onArrest, onVerdict, onSentence, release, afterFight, mendTick, onFed, kissTick, mourn, spree, reportRobbery, onMarried, onDivorced, rules: AC};
+  return {hooks, onArrest, onVerdict, onSentence, release, afterFight, mendTick, onFed, kissTick, awayTick, mourn, spree, reportRobbery, onMarried, onDivorced, rules: AC};
 }

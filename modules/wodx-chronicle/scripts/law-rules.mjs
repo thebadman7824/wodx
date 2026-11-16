@@ -59,7 +59,7 @@ export const PUNISH = {
   fine: "A fine, or blood money to the victim's kin", penance: "Penance set by the church", pillory: "The pillory or the stocks",
   maiming: "Branding or maiming", banishment: "Banishment from the town or the land", outlawry: "Outlawry: the law no longer protects them",
   hanging: "Death by hanging, the sword or the wheel", burning: "Burning, for heresy and sorcery", galleys: "Rowing in the galleys",
-  prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
+  prison: "Prison", gaol: "Time in the lord's or the town's gaol", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
   confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo",
   "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas",
   "enslave": "Being sold into slavery",
@@ -115,7 +115,9 @@ export const FAMILIES = {
       rule: {form: "A crowned lord over vassals who owe service", ruler: "The king or prince", council: "The great lords and bishops"},
       courts: ["The lord's manor court for the lord's people", "The count's or king's court for the free and the great",
         "The bishop's court for clergy, marriage, wills, oaths and heresy", "A town court where the town has a charter"],
-      proof: ["oath", "ordeal", "combat", "witnesses"], punish: ["fine", "penance", "pillory", "maiming", "banishment", "outlawry", "hanging", "burning", "confiscation"],
+      // B6669: a medieval time sentence. Mage: The Dark Ages (pdf p. 219) has serfs who leave the lord's land
+      // without leave jailed; the length in a gaol is a house figure (law-punish-rules MARKS.gaol)
+      proof: ["oath", "ordeal", "combat", "witnesses"], punish: ["fine", "penance", "pillory", "gaol", "maiming", "banishment", "outlawry", "hanging", "burning", "confiscation"],
       order: ["hue-cry", "bailiff", "town-watch"], taxes: ["The tithe to the church", "Labour and dues to the lord", "Tolls at bridges, gates and markets"],
       bribe: 2, catch: 0.25},
       add: {crimes: ["heresy", "sorcery", "blasphemy", "usury", "poaching", "rebellion", "arms-night"],
@@ -129,7 +131,7 @@ export const FAMILIES = {
     {from: 1560, to: 1680, note: "The great witch trials", add: {warn: ["Witch trials burn across this land: an accusation is deadly"]}},
     {from: 1650, note: "Princes rule without their estates; standing armies", set: {rule: {form: "An absolute monarch; the estates meet seldom or never", council: "The monarch's privy council and ministers"}},
       add: {crimes: ["duelling"], punish: ["galleys"]}},
-    {from: 1780, note: "The Enlightenment: torture is abolished, the witch laws end", drop: {proof: ["learned"], crimes: ["sorcery", "heresy"], punish: ["burning", "maiming"]},
+    {from: 1780, note: "The Enlightenment: torture is abolished, the witch laws end", drop: {proof: ["learned"], crimes: ["sorcery", "heresy"], punish: ["burning", "maiming", "gaol"]},
       add: {proof: ["evidence"], punish: ["prison"]}},
     {from: 1800, note: "Written codes, state courts, a police; the church keeps only its own", set: {
       courts: ["The state's courts of first instance", "Courts of appeal", "A supreme court", "Church courts for the church's own affairs only"],

@@ -71,7 +71,7 @@ import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.54.0";
+const VERSION = "0.54.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -301,7 +301,8 @@ export const sunUp = () => SUN_UP;
 function eraNow() {
   try {
     const e = chron()?.eras;
-    return {eraId: e?.activeEra?.()?.profile?.id ?? "", year: num(e?.currentYear?.())};
+    // B6668: the profile's firearms switch rides along, for the rules that ask whether guns are on the sheet
+    return {eraId: e?.activeEra?.()?.profile?.id ?? "", year: num(e?.currentYear?.()), firearms: e?.eraSwitch?.("firearms")};
   } catch (e) { return {eraId: "", year: 0}; }
 }
 

@@ -19,9 +19,11 @@ export const MAX_DIFF = 10;
  *   powers: {dice, diff, parts} from WoDX Actions' powerMods, or null
  *   conditions: [{name, mods: {ownDiff, ownDiffVision}}]
  *   sight: true when the roll needs sight (a Perception roll), so a Blinded condition counts
+ *   social: true when the roll is social (a Social Attribute or a social Ability, by the trait table's "social" roll
+ *     tag, as WoDX Actions' social rolls read it), so a condition's socialDice and socialDiff count (B6664)
  * Returns {dice, diff, parts}.
  */
-export function combine({traits = null, powers = null, conditions = [], sight = false} = {}) {
+export function combine({traits = null, powers = null, conditions = [], sight = false, social = false} = {}) {
   let dice = 0, diff = 0;
   const parts = [];
   for ( const src of [traits, powers] ) {
@@ -29,14 +31,19 @@ export function combine({traits = null, powers = null, conditions = [], sight = 
     dice += n(src.dice); diff += n(src.diff);
     parts.push(...(src.parts ?? []));
   }
+  const sign = v => `${v > 0 ? "+" : ""}${v}`;
   for ( const c of conditions ?? [] ) {
-    const d = n(c?.mods?.ownDiff) + (sight ? n(c?.mods?.ownDiffVision) : 0);
-    if ( !d ) continue;
-    diff += d;
-    parts.push(`${c.name} ${d > 0 ? "+" : ""}${d} diff`);
+    const d = n(c?.mods?.ownDiff) + (sight ? n(c?.mods?.ownDiffVision) : 0) + (social ? n(c?.mods?.socialDiff) : 0);
+    const k = social ? n(c?.mods?.socialDice) : 0;
+    if ( !d && !k ) continue;
+    diff += d; dice += k;
+    parts.push(`${c.name} ${[k ? `${sign(k)} dice` : "", d ? `${sign(d)} diff` : ""].filter(Boolean).join(", ")}`);
   }
   return {dice, diff, parts};
 }
+
+/** B6664: a roll is social when its trait-table roll tags name it so (Charisma, Manipulation, Appearance, Persuasion...). */
+export const isSocial = (tags = []) => (tags ?? []).includes("social");
 
 /**
  * The system window's bonus dice and difficulty with the modifiers on. The difficulty stays between the system's

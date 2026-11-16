@@ -679,6 +679,15 @@ export function lostActionNow(flag, combat) {
     return !!flag && !!combat && flag.combat === combat.id && Number(flag.round) === Number(combat.round);
 }
 /**
+ * B6661: why a token does not move this turn, or "": a failed stand-up spent the turn's action and the character is
+ * still on the ground (V20 Dark Ages p. 348). A Phobia bout's lost action (the flag names it in why) leaves the
+ * move alone, since fleeing the thing feared is what the bout is. The caller exempts the Storyteller.
+ */
+export function lostMoveWhy(flag, combat, name = "The character") {
+    if (!lostActionNow(flag, combat) || flag.why) return "";
+    return `${name} failed to stand up and has lost this turn's action, the move with it (V20 Dark Ages p. 348)`;
+}
+/**
  * B6151: how long a knockdown lasts. In a fight with the stand-up roll on it lasts until the character stands (the
  * roll at the start of each of their turns clears it); with the roll off, until their next turn as before; outside a
  * fight, until the scene ends.
