@@ -2,7 +2,6 @@
 
 Newest first. Add each new release at the top.
 
-- 0.3.3 (Plot NPCs now speak their talk-sheet answers aloud (B6171): the voice reads the answer line WoDX NPC's talk card writes (its "wnpc-said" paragraph), not only a plain paragraph, which no real talk card had; a card with nothing to say stays silent)
 - 0.3.2 (spoken lines find a browser voice for 37 languages)
 - 0.3.1 (2026-11-12): "Start a fresh cache" is now a real application class, so Foundry no longer logs an error at start. tools/voices/fetch_voices.py reads LibriTTS-R from its Parquet files on the Hugging Face hub (pyarrow) instead of the dataset viewer, which refused with 429; it waits as long as a server asks on 429 and uses HF_TOKEN when set.
 - 0.3.0 (2026-11-12): The Chatterbox voice server on the Storyteller's PC (tools/voices/chatterbox_server.py) is the default engine, with Kokoro and then the browser's speech behind it. Human reference voices from LibriTTS-R (tools/voices/fetch_voices.py), chosen for lively, dialogue-like reading and spread apart. Each line's emotion and pace come from the line, the NPC's regard for the character, its wounds and a temper (flags.wodx-voices.temper). The server's address and key are this browser's own settings. Decisions B2112-B2116.

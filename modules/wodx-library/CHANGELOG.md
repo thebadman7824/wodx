@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.49.0 (A ward is added to Chronicle's trait effects even when Chronicle finishes loading after the Library. First aid that succeeds puts the patient under care, so their lethal wounds past Hurt heal with time (V20 p. 286). Seeds are harvested into Possessions by themselves once the clock passes their days. New api itemByName: the Gear by era item a free-text name means, for long tasks that make a weapon (B6177); New api.look.goods(): the goods list the look already loads, for other modules (B6203))
 - 0.48.3 (The manual's Your character page says how learning from a teacher, a book, a school or practice works when experience is spent (B6230))
 - 0.48.2 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own. The Encyclopaedia shows Future Darkness entries from 2010, when that era begins, not 2023)
 - 0.48.1 (Filthy and Bloody are a step colder (B6029): the summary said so; now social rolls read it; Filthy now comes from play (B6033))

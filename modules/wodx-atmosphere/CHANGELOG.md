@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.18.2 (Light from the clock now reaches scenes nobody ticked by hand: an out-of-doors scene (a built street, a solo landing, a setup scene) follows the clock unless the Storyteller unticks "Follow the clock's light" in the Atmosphere window, and the window's box shows that default (B6168))
 - 0.18.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own. Dawn and dusk sounds, the pale edge before sunrise, the cock-crow card and the scene's opening card follow the sun where the scene stands, not the home town's)
 - 0.18.0 (Recorded cues (B6260-B6264): kit folders may hold a cue for the faith of the scene's land (`dawn-islamic.ogg`), a `common` folder holds birdsong, cock-crow and the heartbeat, and `tools/atmosphere/fetch-cues.mjs` fills them from Freesound (CC0 and CC BY only) with credits. The generated cues stay as the fallback)
 - 0.17.0 (Weather history by part of the world (B5950 to B5955): the climate's history reads the scene's world region and climate instead of applying Europe's to every land)

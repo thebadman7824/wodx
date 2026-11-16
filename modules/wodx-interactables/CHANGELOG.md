@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.54.0 (Houses of worship are holy ground: a region an adopted town map tags as a church, mosque, synagogue or temple counts as an altar of rating 1 (or its own), kept for the faith of the place, and an altar tile takes that faith too; holyUnder gives the faith with the ground, and a demon who starts a turn in any of them is seared (B6362))
 - 0.53.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own. An attempt that takes turns moves the clock by the table's turn length (WoDX Combat's house rule))
 - 0.53.0 (Loose gear and real weights (B6083 to B6089): a chest weighs what is in it, a fallen knight weighs their mail, Set gear down here (Carry and drag menu) leaves things on the ground as a heap on the map, picked up from the Interact menu or hauled like a sack)
 - 0.52.0 (Snow and rail (B6070 to B6072): sleds and sleighs, snow machines, trains and trams as mounts and vehicles, with the snow and railway grounds for chases and fights)

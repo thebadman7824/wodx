@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.32.2 (Sprite tokens play an attack once when WoDX Combat fires it again on the Storyteller's client for a player's roll (B6150))
 - 0.32.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.32.0 (Snow and rail sprites (B6073 to B6076): four new kinds of looks (sled 15, snowmobile 14, train 18, tram 18), the sheet styles that suit them, and a quality pass on the tank and armoured car pictures and on every vehicle's colour ramps)
 - 0.31.0 (Moves only one line has (B5810-B5819): drawn poses and looks for each line, played when the power, state or feeding happens in play)
