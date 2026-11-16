@@ -301,7 +301,8 @@ export const sunUp = () => SUN_UP;
 function eraNow() {
   try {
     const e = chron()?.eras;
-    return {eraId: e?.activeEra?.()?.profile?.id ?? "", year: num(e?.currentYear?.())};
+    // B6668: the profile's firearms switch rides along, for the rules that ask whether guns are on the sheet
+    return {eraId: e?.activeEra?.()?.profile?.id ?? "", year: num(e?.currentYear?.()), firearms: e?.eraSwitch?.("firearms")};
   } catch (e) { return {eraId: "", year: 0}; }
 }
 

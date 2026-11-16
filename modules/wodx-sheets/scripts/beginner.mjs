@@ -21,6 +21,8 @@ export function beginner() {
 }
 const actionsApi = () => (game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null);
 const yearNow = () => { try { return Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || null; } catch (e) { return null; } };
+/** B6668: the era profile's morality switch ("roads" or "humanity-and-paths"), or undefined (then the year decides). */
+const moralityNow = () => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.eraSwitch?.("morality"); } catch (e) { return undefined; } };
 
 export function decorate(sheet, html) {
   const root = html?.[0] ?? html;
@@ -131,10 +133,10 @@ function tuckTabs(root, actor) {
 
 /* Hover help in plain words (B2825) */
 function hoverHelp(root, actor) {
-  const year = yearNow();
+  const year = yearNow(), morality = moralityNow();
   for ( const el of root.querySelectorAll("label.vrollable, .sheet-banner-text, .headlineNormal, label") ) {
     if ( el.dataset.tooltip || el.title ) continue;
-    const h = B.helpFor(el.textContent, {year});
+    const h = B.helpFor(el.textContent, {year, morality});
     if ( h ) el.dataset.tooltip = h;
   }
   for ( const el of root.querySelectorAll(".width-namebox[data-itemid]") ) {

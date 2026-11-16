@@ -192,6 +192,8 @@ export async function kitsDialog() {
 /* ------------------------------------------------------------------ */
 
 const yearNow = () => { try { return C.chron()?.eras?.currentYear?.(); } catch (e) { return null; } };
+/** B6668: a switch of the era profile in force, or undefined (then the year decides). */
+const eraSwitch = key => { try { return C.chron()?.eras?.eraSwitch?.(key); } catch (e) { return undefined; } };
 
 /** Make n extras of a template and place them at the middle of the view (or the given point) on the current scene. */
 export async function makeExtras(key, {n = 1, x = null, y = null, scene: onScene = null, hidden = true, quiet = false, flags = null} = {}) {
@@ -233,7 +235,7 @@ export async function makeExtras(key, {n = 1, x = null, y = null, scene: onScene
 
 export async function extrasDialog() {
   if ( !game.user.isGM ) return null;
-  const list = K.extrasFor(yearNow());
+  const list = K.extrasFor(yearNow(), eraSwitch("firearms"));
   const content = `<form><div class="form-group"><label>Who</label><select name="key" data-fixed>${list.map(e => `<option value="${e.key}">${esc(e.label)}</option>`).join("")}</select></div>
     <div class="form-group"><label>How many</label><input type="number" name="n" value="1" min="1" max="20"></div>
     <ul class="wodx-quiet">${list.map(e => `<li><b>${esc(e.label)}</b>: ${esc(K.extraSummary(e))}</li>`).join("")}</ul>
