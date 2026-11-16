@@ -8,6 +8,8 @@
  *   5. Malady takes dice from the target's Strength roll, not their Wits roll (B6738)
  *   6. a Dark Ages Rain-Strike takes three dice from the target's next roll (B6739)
  *   7. the apocalyptic form's Lordly Mien eases Charisma rolls and stands after a roll (B6830, B6831)
+ *   8. Healing 2 (HH2) takes the wound penalty away while it lasts (B6838)
+ *   9. True Faith 3 stops a Sway put on the faithful (B6838)
  * Result: Data/wodx-gate/gatefinalw2-result.json.
  */
 import {gate, newestMessage, waitFor} from "./kit.mjs";
@@ -24,6 +26,7 @@ export async function run() {
     const PE = await import("/modules/wodx-actions/scripts/path-effects.js");
     const DC = await import("/modules/wodx-actions/scripts/fae-da-cantrips.js");
     const DE = await import("/modules/wodx-actions/scripts/demon-evocations.js");
+    const H = await import("/modules/wodx-actions/scripts/hunter-rules.js");
     const B = await import("/modules/wodx-actions/scripts/binds.js");
     await G.step("0. the api", async () => {
       G.ok("0. the api", typeof A?.effects?.apply === "function" && typeof A?.effects?.powerPlan === "function" && typeof A?.useFetish === "function");
@@ -124,6 +127,24 @@ export async function run() {
       await A.powerMods.spend(who, cha.once);
       const stays = has(who, PM.KEYS.fortune);
       G.ok("7. Lordly Mien eases Charisma rolls and stands after a roll (B6831)", cha.diff === -2 && str === 0 && stays, {cha: cha.diff, str, stays});
+    });
+
+    await G.step("8. Healing 2 takes the wound penalty away (B6838)", async () => {
+      const who = xt.actor ?? victim;
+      const [r] = PE.numinaOutcomes("healing", 2, 2, H.NUMINA.healing);
+      await apply(r, who);
+      const off = await waitFor(() => who.system?.conditions?.isignoringpain === true, 4000);
+      G.ok("8. Healing 2 takes the wound penalty away (B6838)", !!off && r?.out?.painless === true, {flag: who.system?.conditions?.isignoringpain});
+    });
+
+    await G.step("9. True Faith 3 stops a Sway on the faithful (B6838)", async () => {
+      const who = ct.actor ?? caster;
+      await who.setFlag(MOD, "trueFaith", 3);
+      const r = PW.powerOutcomes({keywords: ["sway"]}, 3, {label: "Gate Sway", hasTarget: true}).results.find(x => x.key === "sway");
+      const res = r ? await A.effects.apply({key: r.key, target: who.uuid, by: vamp.uuid, caster: vamp.uuid, out: r.out, name: who.name}, "Gate W2 Vampire") : null;
+      const held = who.effects.some(e => keyOf(e).startsWith(PM.KEYS.sway ?? "wodx-effect-sway"));
+      await who.unsetFlag(MOD, "trueFaith");
+      G.ok("9. True Faith 3 stops a Sway on the faithful (B6838)", !!r && !held, {note: res?.note ?? res, held});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
