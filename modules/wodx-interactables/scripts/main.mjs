@@ -872,6 +872,8 @@ export async function applyAsk(msg) {
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
+    // B6784: the work itself, on the Storyteller's client (WoDX Paperdoll plays the sprite's move: stooping to a lock, a blow at a door)
+    Hooks.callAll("wodxInteractableWorked", {token: tokDoc.uuid, action: op.id, thing: o.kind ?? null, scene: scene.id, result: out.result ?? null});
     releaseEvents(doc.id, heard.map(h => h.uuid));
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, personal, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
@@ -1714,7 +1716,11 @@ export async function beastDown(actor) {
         const g = scene.grid?.size ?? 100;
         carrying.set(td.uuid, {x: num(td.x) + g, y: num(td.y)});
         try { await td.update({x: num(td.x) + g, y: num(td.y)}, STRAIGHT(td)); } catch (e) { carrying.delete(td.uuid); }
-        try { await td.toggleStatusEffect?.("prone", {active: true}); } catch (e) { /* no such status */ }
+        // B6785: thrown riders are Knocked down as WoDX Combat knows it (the stand-up roll, the lost action); core prone without it
+        try {
+          if ( game.wodxCombat?.markFollow && td.actor ) await game.wodxCombat.markFollow(td.actor, {name: "Knocked down", condition: "knockdown", lasts: "turn"});
+          else await td.toggleStatusEffect?.("prone", {active: true});
+        } catch (e) { /* no such status */ }
         let line = `${esc(td.name)} is thrown: two dice of bashing.`;
         if ( game.wodxCombat?.soakAndApply ) {
           try { await game.wodxCombat.soakAndApply(td.object ?? td.actor, {mode: "pool", amount: 2, type: "bashing", fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0}); line += " Soak and the result are on the WoDX Combat card."; }
