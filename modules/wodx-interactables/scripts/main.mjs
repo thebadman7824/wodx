@@ -63,6 +63,7 @@ import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
+import {setupHookListeners} from "./hook-listeners.mjs";
 import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
@@ -2147,6 +2148,8 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.loose = setupLoose({mapEvent});
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
+  // B6923: the trap, hazard and stock hooks have listeners: a word over the token, the Held mark, the stock card
+  setupHookListeners();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
   game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
