@@ -26,6 +26,8 @@ import * as wildRules from "./wild-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
 import * as spirits from "./spirits.mjs";
+import * as net from "./net.mjs";
+import * as netRules from "./net-rules.mjs";
 import * as spiritRules from "./spirit-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -51,12 +53,17 @@ Hooks.once("init", () => {
   corruption.registerCorruptionSettings();
   corruptionLooks.registerCorruptionLookSettings();
   realms.setupRealms();
+  // B6590-B6606: running the Net
+  net.registerNetSettings();
+  net.registerNetStatuses();
+  net.setupNet();
 });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "applyChange" ) await onApplyChangeGM(message.payload ?? {});
+    if ( message?.type === "net" ) await net.onNetMessage(message);
   });
   const api = {
     stepSideways: () => stepSideways({mode: "cross"}),
@@ -86,6 +93,8 @@ Hooks.once("ready", () => {
       drawWild: realmMaps.drawWild, walkOn: realmMaps.walkOn, isWild: realmMaps.isWild, wildRules},
     spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
       courtOptions: spirits.courtOptions, rules: spiritRules},
+    net: {window: net.netWindow, draw: net.drawFortress, jackInto: net.jackInto, jackOut: net.jackOut, run: net.runProgram, file: net.takeFile, iceRound: net.iceRound,
+      hit: net.applyHit, whiteout: net.whiteout, derez: net.derezNow, isFortress: net.isFortress, modelOf: net.modelOf, kind: net.netKindNow, rules: netRules},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
   };
   game.modules.get(MODULE_ID).api = api;
@@ -189,6 +198,10 @@ Hooks.on("getSceneControlButtons", controls => {
   if ( realms.netOpen() ) tokens.tools.wodxJack = {
     name: "wodxJack", title: "Jack into the Net, or out", icon: "fa-solid fa-network-wired", order: 132,
     button: true, visible: true, onChange: () => realms.jack()
+  };
+  if ( net.netKindNow() ) tokens.tools.wodxNet = {
+    name: "wodxNet", title: "The Net: jack into a data fortress, run programs, take files, work remotes", icon: "fa-solid fa-microchip", order: 133,
+    button: true, visible: true, onChange: () => net.netWindow()
   };
   tokens.tools.wodxRatings = {
     name: "wodxRatings", title: "Otherworld ratings by scene", icon: "fa-solid fa-ghost", order: 112,

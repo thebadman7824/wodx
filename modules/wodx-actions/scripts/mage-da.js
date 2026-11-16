@@ -16,6 +16,7 @@
 import * as NPW from "./npc-power-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as M from "./mage-da-rules.js";
 import * as G from "./mage-da-grimoire.js";
 import * as P from "./profiles.js";
@@ -162,6 +163,10 @@ export function build(ctx) {
             const plim = await LIM.gate(actor, { name: rote?.name ?? `Spell: ${Object.entries(levels).filter(([, v]) => n(v) > 0).map(([k, v]) => `${k} ${v}`).join(", ")}`, level: Math.max(0, ...Object.values(levels).map(n)) });
             if (!plim) return null;
             plan.difficulty += plim.diff;
+            // B6662: the target's ward or Magic Resistance makes a spell on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.difficulty = Math.min(10, plan.difficulty + n(rm.diff));
+            plan.notes.push(...rm.parts);
             const qSpend = Math.min(3, n(fd.q)) + plan.steady;
             const lim = M.fountLimits(i.fount);
             if (qSpend > lim.perTurn) { notify(`${actor.name} can spend only ${lim.perTurn} Quintessence a turn (Fount ${i.fount}, pp. 86–87).`); return null; }

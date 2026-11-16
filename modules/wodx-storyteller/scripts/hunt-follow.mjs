@@ -11,12 +11,15 @@
  *                         days, rolling Perception + Investigation each day; harm them or win them over and they go.
  *   h4  found()           someone a hunters' faction finds goes into the region's file.
  *   h5  bodyFound()       a body found drained or savaged adds pressure and, from the age of the coroner, goes to the
- *                         morgue, where the hunters claim it on their next turn.
+ *                         morgue, where the hunters claim it on their next turn. B6666: with the remains house rule off,
+ *                         the hunters keep their own watch (bodyLeft, bodyNear): a body left drained is marked
+ *                         leftBody {at, cause, found} and the first one to come upon it calls bodyFound.
  *   Token flags  wodx-storyteller.reach {kind, target, region, watchUntil, until, day} on the hunters' own tokens;
  *                wodx-storyteller.proof {to, by, at} and remains.morgue {at, claimed} on bodies (hidden, never deleted).
  */
 import * as HF from "./hunt-follow-rules.mjs";
 import * as H from "./hunters-rules.mjs";
+import * as RR from "./remains-rules.mjs";
 import * as Between from "./between.mjs";
 import {MOD, esc, isActiveGM, chron, npc, gmIds, log} from "./core.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -289,6 +292,54 @@ export async function bodyFound(body, cause) {
   return {pressure: n, morgue};
 }
 
+/**
+ * B6666: the hunters read a body left behind whether or not the remains house rule draws it. While "remains" is on,
+ * remains.mjs marks each body and calls bodyFound when it is found; while it is off and the hunters' pressure is on,
+ * these two keep the hunters' own watch: an NPC marked dead with the Kiss's drain on it is a left body (no tint, no
+ * card of its stages), and the first player's character or townsman within talking distance finds it.
+ */
+const settingOn = k => { try { return !!game.settings.get(MOD, k); } catch (e) { return false; } };
+const ownWatch = () => settingOn("hunterPressure") && !settingOn("remains");
+const talkReach = () => { try { return Number(game.settings.get("wodx-npc", "talkReach")) || 2; } catch (e) { return 2; } };
+const isDead = effect => { const s = effect?.statuses ?? new Set(); return !!(s.has?.("dead") || [...s].includes?.("dead")); };
+export async function bodyLeft(effect) {
+  if ( !isActiveGM() || !ownWatch() || !isDead(effect) ) return [];
+  const actor = effect.parent;
+  if ( !actor || actor.documentName !== "Actor" || actor.hasPlayerOwner ) return [];
+  const cause = RR.causeAtDeath(actor.flags?.["wodx-actions"], now());
+  if ( !HF.bodyPressure(cause, yearNow()) ) return [];
+  const toks = actor.isToken ? [actor.token] : all(game.scenes).flatMap(s => all(s.tokens).filter(t => t.actorId === actor.id && t.actorLink));
+  const out = [];
+  for ( const t of toks ) {
+    if ( !t || t.flags?.[MOD]?.remains || t.flags?.[MOD]?.leftBody ) continue;
+    await t.update({[`flags.${MOD}.leftBody`]: {at: now(), cause, found: false}});
+    out.push(t);
+  }
+  return out;
+}
+const nearing = new Set();
+export async function bodyNear(tok, changes = {}) {
+  if ( !isActiveGM() || !ownWatch() || !("x" in changes || "y" in changes) ) return [];
+  const finder = tok?.actor ? RR.finderOf({pc: !!tok.actor.hasPlayerOwner, type: tok.actor.type, hidden: !!tok.hidden,
+    passerby: !!tok.flags?.["wodx-npc"]?.passerby, hunter: !!tok.flags?.[MOD]?.reach}) : null;
+  if ( !finder ) return [];
+  const at = {x: Number(changes.x ?? tok.x) || 0, y: Number(changes.y ?? tok.y) || 0, width: tok.width, height: tok.height};
+  const out = [];
+  for ( const body of all(tok.parent?.tokens) ) {
+    const lb = body.flags?.[MOD]?.leftBody;
+    if ( !lb || lb.found || body.hidden || body.id === tok.id || nearing.has(body.uuid) || RR.squares(at, body, tok.parent?.grid?.size ?? 100) > talkReach() ) continue;
+    // B6439: a move is heard twice (updateToken and moveToken): one finding a body
+    nearing.add(body.uuid);
+    try {
+      await body.update({[`flags.${MOD}.leftBody.found`]: tok.actor.id});
+      const hf = await bodyFound(body, lb.cause);
+      if ( hf.pressure ) await card(`${tok.name} comes upon ${body.name}`, `A body ${lb.cause === "drained" ? "drained of blood" : "savaged"}. Word of it reaches those who hunt the night (pressure +${hf.pressure}).${hf.morgue ? " The body is taken to the morgue, where they can claim it." : ""}`);
+      out.push({body: body.id, ...hf});
+    } finally { nearing.delete(body.uuid); }
+  }
+  return out;
+}
+
 /** On the hunters' turn: bodies at the morgue are claimed and studied (each file in the region grows). */
 export async function claimMorgue() {
   const t = now(), out = [];
@@ -309,6 +360,10 @@ export async function claimMorgue() {
 export function registerHuntFollowHooks() {
   Hooks.on("deleteCombat", c => { raidEnded(c).catch(e => console.error(`${MOD} | raid end`, e)); });
   Hooks.on("wodxBodyTaken", p => { onBodyTaken(p).catch(e => console.error(`${MOD} | proof`, e)); });
+  // B6666: the hunters' own watch for bodies while the remains house rule is off
+  Hooks.on("createActiveEffect", e => { bodyLeft(e).catch(x => console.error(`${MOD} | a body left`, x)); });
+  Hooks.on("updateToken", (doc, changes) => { bodyNear(doc, changes).catch(x => console.error(`${MOD} | a body found`, x)); });
+  Hooks.on("moveToken", (doc, movement) => { const to = movement?.destination ?? {}; bodyNear(doc, {x: to.x ?? doc.x, y: to.y ?? doc.y}).catch(x => console.error(`${MOD} | a body found`, x)); });
   let wait = null;
   Hooks.on("updateWorldTime", () => {
     if ( !isActiveGM() ) return;
@@ -324,4 +379,4 @@ export function registerHuntFollowHooks() {
   });
 }
 
-export const huntFollowApi = () => ({proof, raidEnded, missed, investigator, found, bodyFound, claimMorgue, leave, tick: async () => { await watchers(); await investigators(); }, rules: HF});
+export const huntFollowApi = () => ({proof, raidEnded, missed, investigator, found, bodyFound, bodyLeft, bodyNear, claimMorgue, leave, tick: async () => { await watchers(); await investigators(); }, rules: HF});

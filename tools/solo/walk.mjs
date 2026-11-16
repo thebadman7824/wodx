@@ -158,6 +158,9 @@ try {
     await step("08 the Storyteller tools", async () => {
       await evalIn(() => { const d = document.querySelector("#wodx-solo-panel details.wsolo-more"); if ( d ) d.open = true; });
       await page.locator("#wodx-solo-panel [data-action=sttoggle]").click();
+      // Turning them on asks first (a Yes/No window): answer Yes as the player would
+      const yes = page.locator(".application.dialog button[data-action=yes]").last();
+      await yes.waitFor({state: "visible", timeout: 10000}).then(() => yes.click()).catch(() => null);
       await page.waitForSelector("#wodx-solo-panel [data-action=st]", {timeout: 10000});
       const ids = await evalIn(() => [...document.querySelectorAll("#wodx-solo-panel [data-action=st]")].map(b => b.dataset.id));
       const seen = [];

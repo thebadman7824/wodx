@@ -13,6 +13,7 @@
 
 import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import { spendTime } from "./spend-time.js";
 import * as H from "./hunter-rules.js";
 import * as P from "./profiles.js";
@@ -163,8 +164,10 @@ export function build(ctx) {
             if (fd.noroll) { const E = effectsOf(1); return post(actor, `${actor.name}: ${esc(name)}`, `<div class="vta-note">${cost} Conviction.${bk ? "" : " See Dark Ages: Inquisitor, Chapter Five, for its effect."}</div>${E.html}${await gain(1)}${bk ? `<div class="wodx-quiet">${IB.REF} p. ${bk.p}</div>` : ""}`, [], fxCard(E.items)); }
             const rating = fd.sv === "path" || fd.sv === "virtue" ? n(fd.rating) : i[fd.sv];
             const dice = attr(actor, fd.attr) + rating + risk;
-            const r = await rollPool(dice, fd.diff);
-            let body = rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : ""].filter(Boolean));
+            // B6662: the target's ward or Magic Resistance makes a Blessing on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(dice, Math.min(10, n(fd.diff) + n(rm.diff)));
+            let body = rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
             if (risk) {
                 const R = H.riskConviction(risk, r, after);
                 await actor.setFlag(MOD, "riskScene", sceneKey());
@@ -450,11 +453,13 @@ export function build(ctx) {
             if (!def) return post(actor, `${actor.name}: ${esc(item?.name ?? "a Numen")}`, `<div class="vta-note">Roll it by hand (not in the library).</div>`);
             const [a, b] = def.pool;
             const dice = attr(actor, a) + (findAbility(actor, b)?.value ?? 0);
-            const r = await rollPool(dice, n(fd.diff) + lim.diff);
+            // B6662: the target's ward or Magic Resistance makes a Numen or edge on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const fx = !r.botch && r.successes > 0 && EF.isOn() ? EF.numinaPlan(actor, pickV(String(fd.nm ?? "")).key, n(fd.lvl), r.successes, def) : null;
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
-            return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, n(fd.wp) ? [`${fd.wp} Willpower`] : []) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
+            return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, [...(n(fd.wp) ? [`${fd.wp} Willpower`] : []), ...rm.parts]) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
                 fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=nm]")?.addEventListener("change", () => describe(root));
             // Who it is aimed at: curses and pyrokinesis at a foe, healing at a friend, the rest by its tag (3.43.0)
@@ -506,10 +511,12 @@ export function build(ctx) {
             if (cost && !(await spendWillpower(actor, cost))) return null;
             const [a, b] = def.pool;
             if (!a) return post(actor, `${actor.name}: ${esc(def.label)}`, `<div class="vta-note">Difficulty ${S.difficulty + n(fd.mod)}, ${S.need} success${S.need === 1 ? "" : "es"} needed; the roll is on p. ${def.p}.</div>`);
-            const r = await rollPool(statOf(a) + statOf(b), S.difficulty + n(fd.mod) + lim.diff, { willpower: !!fd.wpx });
+            // B6662: the target's ward or Magic Resistance makes hedge magic on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(statOf(a) + statOf(b), Math.min(10, S.difficulty + n(fd.mod) + lim.diff + n(rm.diff)), { willpower: !!fd.wpx });
             const s = r.botch ? 0 : r.successes, ok = s >= S.need;
             await lim.done({ successes: ok ? s : 0 });
-            let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));
+            let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", ...rm.parts,S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));
             body += `<div class="vta-res ${ok ? "good" : "bad"}">${r.botch ? "A botch: the magic slips its leash (see the page's price of failure)." : ok ? `It works (${s} of ${S.need} needed)${H.pushAspect(s, S.need) ? "; doubled: the Storyteller may let one aspect go a level higher" : ""}.` : `${s} of ${S.need} needed: not yet (an extended casting can go on).`}</div>`;
             body += `<div class="vta-note">${fd.mode === "ritual" ? `${esc(ritual?.name ?? "A ritual")}: at least 10 minutes, usually longer.` : `Casting time ${S.turns} turn${S.turns === 1 ? "" : "s"}.`}${S.overLimit ? " <b>An aspect is above the Path rating.</b>" : ""}</div><div class="wodx-quiet">Sorcerer (Revised) pp. 60–63, ${def.p}</div>`;
             let fxItems = [];

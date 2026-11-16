@@ -47,13 +47,14 @@ test("the conditions carry what the rolls read", () => {
   assert.equal(AC.CONDITIONS.asleep.mods.noAction, true);
 });
 
-test("B6156: asleep for the day, Asleep, Torpor and staked stop a character; Dazed does not", () => {
+test("B6156: asleep for the day, Asleep, Torpor and staked stop a character; Dazed only in a fight (B6660)", () => {
   const C = id => ({id, name: id, summary: "s", mods: {}});
   assert.match(AC.cannotActWhy({name: "Anna", daySleep: true}), /Anna is asleep for the day/);
   assert.match(AC.cannotActWhy({name: "Anna", conds: [AC.CONDITIONS.asleep]}), /cannot act: Asleep/);
   assert.match(AC.cannotActWhy({conds: [C("torpor")]}), /Torpor|torpor/);
   assert.match(AC.cannotActWhy({conds: [C("staked")]}), /staked/);
   assert.equal(AC.cannotActWhy({conds: [{id: "dazed", name: "Dazed", mods: {noAction: true}}]}), "");
+  assert.match(AC.cannotActWhy({conds: [{id: "dazed", name: "Dazed", mods: {noAction: true}}], inFight: true}), /Dazed/);
   assert.equal(AC.cannotActWhy({}), "");
   assert.ok(AC.NO_ACTION_IDS.includes("asleep"));
 });
