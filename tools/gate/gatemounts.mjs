@@ -192,7 +192,7 @@ export async function run() {
       G.ok("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)",
         got.every(x => x.look && x.frame && x.want && x.frame[0] === x.want[0] && x.frame[1] === x.want[1] && x.mesh) && r && !r.hidden && (!fig || fig.chart?.maneuver === 1),
         {got, driver: r, figures: fig ? {label: fig.label, chart: fig.chart, body: fig.body} : null});
-    });
+    }, {timeout: 150000}); // four looks drawn one after another, each may wait up to 30 s
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }
 }
