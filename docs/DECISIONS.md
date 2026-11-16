@@ -354,7 +354,7 @@ Next free block: B6580
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC (used B6520-B6521) | tools (pcq, vision) |
+| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC; gates that failed on main (used B6520-B6523) | tools (pcq, vision, gate), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
@@ -11087,6 +11087,19 @@ Reverse: remove the gpuCheck call from the runner loop.
 tools/vision/blind.py. A local picture model (Ollama with qwen2.5vl 7B, on the graphics card) is shown each drawing with no name and asked what it is, how sure it is, and why. This is the same test the cloud checker runs for map objects. A picture passes when the model gives a true name and is sure 4 or 5. It is unsure on a true name at sure 3, and fails on anything else. A true name is matched on its naming part: "cauldron on a tripod" is named by "cauldron", and "beehive or skep" takes either word. A names file can list other accepted names. One picture takes about 1.5 seconds. Before each picture the script waits up to 30 seconds for a gap in the image model's queue; past that the two share the card. The model is unloaded at the end. Its "sure" is not reliable (it says 5 when wrong), so a PC pass is a first screen. Pictures it fails or is unsure of still go to the cloud checker before a desk. The first run judged the 160 trial drawings from the image model: 33 pass, 127 fail. A spot check by eye agreed with its fails. Most of the rest were other names for the right thing ("barrel" for cask, "bookshelf" for bookcase), which a names file fixes.
 
 Reverse: stop using tools/vision/blind.py; Ollama can be removed from the PC.
+
+## B6522. The one an alarm is about does not answer it (2026-11-16)
+WoDX NPC. When a watcher raised the alarm, every NPC within call heard it, and that included the intruder. An NPC intruder with no fight in it then ran off toward home. The guard could not act on the challenge afterwards, because the intruder had already gone. The intruder is now left out of those who hear the alarm. Found by gatefollow, which had failed on main.
+
+Reverse: drop the intruder test from the alarm's hearers in routines.mjs.
+
+## B6523. Four gates that failed on main, or changed with run order (2026-11-16)
+tools/gate.
+- gatefollow plays at 12:20 on the calendar. The lanes' clock stood nine minutes past an hour, and on the hour the watch rests at its post, so the beat step never moved. Its step 5 now waits for the hostage's memory, which is written after the hold is lifted.
+- gate7d waits for the rumour's second write: who started it and which ledger entry. It had read the rumour between the two writes.
+- gatevehicles step 12 and gategadgets step 3 passed on a lane in the order that had failed. They now report what they saw when they fail, so the next failure names its cause.
+
+Reverse: revert the gate edits.
 
 ## B6530. The Beast played by the game (2026-11-15)
 WoDX Solo. When the lone player's character falls into frenzy (WoDX Actions rolls the check by itself), the seat sets flags.wodx-storyteller.standIn on it, the same flag the Storyteller's absent players use, so WoDX NPC plays its turns. With no fight on the scene it goes for its prey: an enemy in sight (a hostile token), else the nearest living being, within 40 yards (house reading of "anyone near"), and a fight starts with the frenzied on a side of their own. V20 pdf 307: the Storyteller decides how long a frenzy lasts, one scene typically; WoDX ends it when the fight is over, as the scene's end. A botched frenzy is left to WoDX Actions, which rolls it out (B4872). Willpower for control is offered to the Kindred and their ghouls only; the other lines' frenzy runs until it ends.
