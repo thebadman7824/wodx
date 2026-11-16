@@ -1,6 +1,7 @@
 import MessageHelper from "./scripts/message-helpers.js"
 import BonusHelper from "./scripts/bonus-helpers.js";
 import MigrationWizard from "./ui/migration-wizard-helper.js";
+import { systemChanges } from "./scripts/wodx-save.js";
 
 /**
  * Time to update the entire world and patch it correctly
@@ -247,7 +248,9 @@ export  const updates = async () => {
         totalinit = parseInt(actor.system.initiative.base) + parseInt(actor.system.initiative.bonus);
         actorData.system.initiative.total = parseInt(totalinit);
 
-        await actor.update(actorData);
+        // WoDX fork (B6906): this runs on every load; send only what changed, not the whole actor with its items
+        const changes = systemChanges(actor.toObject().system, actorData.system);
+        if (Object.keys(changes).length) await actor.update(changes);
 
         // WoDX fork (7.3.2-wodx.3): upstream deleted a werewolf's old shape effects here by reading effect.icon, which
         // Foundry 12+ no longer has, so the check threw for every werewolf with any effect (WoDX Gifts and conditions are
