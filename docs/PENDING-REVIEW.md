@@ -1624,7 +1624,9 @@ Ben approved every entry that was waiting for review ("Approve on all pending re
 | 2026-11-15 | The Lone Chronicle, step 3: the oracle, the Leads page and night encounters (B5980 to B5985) | The oracle: one d10, five odds two faces apart (yes on 2, 4, 6, 8 or 10 or more), "but" on the faces at the line, "and" on a 10 or a 1 at even odds or better, and an "and" sends a foreshadowing. The Leads page shows the newest ten signs, the character's open oaths, debts, boons and objectives (no consequences) and the last five answers. Each part of the night rolls once, one in three, to bring the people of one of the night's encounters onto the character's scene, four to eight squares off and in sight; a scene's name picks town or wilds. | Turn off "Night encounters find the lone player", set a scene's wodx-solo.encounters flag to none, or change ODDS, CHANCE and RING in WoDX Solo world-rules.mjs. |
 | 2026-11-15 | Rituals and powers that only said they worked (B6000 to B6018) | House readings so every effect does something: a Blessing or Curse is spent on the next roll (Fortune's "next roll"); a Calm eases the frenzy roll by up to 3; a Slow costs 2 Initiative a step; a place rite moves the Gauntlet, Shroud or Banality by 1 (2 at strength 4+); Bind warms an NPC two steps; Possess hands an NPC to the possessor's players; Banish drives a being off 10 feet a success when no power on it can end; Rite of Ostracism is a Social sap; Work toggles the nearest door | Reverse each in changes/decisions/B6000.md (power-mods.js, effects-rules.js, effects.js, book-rituals.js) |
 
-## Waiting for review
+## Approved by Ben, 16 November 2026, 00:53 UTC (all waiting entries)
+
+Ben approved every entry that was waiting for review ("I approve everything on the pending review list") at 00:53 UTC on 16 November 2026 (64 rows). Each still lists how to reverse it. Copying the recorded cue kits to Live (B6260) still waits for a separate go-ahead, as the row says.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1710,3 +1712,8 @@ Ben approved every entry that was waiting for review ("Approve on all pending re
 | 2026-11-15 | Sprite Healing: is there a roll? | No roll: Dark Ages: Fae p. 97 prices the levels in Essence and names none (B6555) | give spritehealing kind "roll" in spirit-charms.js |
 | 2026-11-15 | When does a Charm-cantrip Treasure fade? | At its Dominion's next hour (noon, midnight, sunrise or sunset) if unused; a Dominion Writ at the next noon, a success less for another Dominion's cantrip (B6561) | toJuncture and IMBUE in fae-treasures.js |
 | 2026-11-15 | Excalibur's Scabbard: how much it turns | Dark Ages: lethal and aggravated harm from blades and points put back, bashing held at Injured; Changeling 20th: all lethal and aggravated but fire, cold and drowning put back, held at Injured (B6562) | scabbardKeeps in fae-treasures.js |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
