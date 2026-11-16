@@ -37,6 +37,8 @@ export function applyWodxRollMods(diceRoll, {modsFor = null, on = true, lowest =
 	}
 	const dice = n(mods?.dice), diff = n(mods?.diff), parts = mods?.parts ?? [];
 	diceRoll.wodxApplied = true;
+	// B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89): the roller reads it through wodxNoBotch
+	diceRoll.wodxNoBotch = !!mods?.noBotch;
 	if (!dice && !diff && !parts.length) return null;
 	diceRoll.numDices = Math.max(0, n(diceRoll.numDices) + dice);
 	for (const t of diceRoll.targetlist ?? []) t.numDices = Math.max(0, n(t.numDices) + dice);
@@ -45,6 +47,20 @@ export function applyWodxRollMods(diceRoll, {modsFor = null, on = true, lowest =
 	const sum = [dice ? `${dice > 0 ? "+" : ""}${dice} dice` : "", diff ? `${diff > 0 ? "+" : ""}${diff} difficulty` : ""].filter(Boolean).join(", ");
 	if (parts.length) diceRoll.extraInfo = [...(diceRoll.extraInfo ?? []), `WoDX: ${parts.join("; ")}${sum ? ` (${sum})` : ""}${want > 10 ? " (difficulty held at 10)" : ""}`];
 	return { dice, diff, parts, once: mods?.once ?? [], capped: want > 10 };
+}
+
+/**
+ * B6924: does WoDX say this roll cannot botch? Read from the mods applyWodxRollMods already took, else (the general
+ * window, which WoDX Sheets wraps for dice and difficulty) asked once here for the no-botch flag alone. Soak and
+ * damage are left as the system's settings have them.
+ */
+export function wodxNoBotch(diceRoll, {modsFor = null, on = true} = {}) {
+	if (!diceRoll?.actor || !on || typeof modsFor !== "function") return false;
+	if (["soak", "damage"].includes(diceRoll.origin)) return false;
+	if (diceRoll.wodxNoBotch !== undefined) return !!diceRoll.wodxNoBotch;
+	try { diceRoll.wodxNoBotch = !!modsFor(diceRoll.actor, { attributeKey: diceRoll.attribute, abilityKey: diceRoll.ability })?.noBotch; }
+	catch (e) { diceRoll.wodxNoBotch = false; }
+	return diceRoll.wodxNoBotch;
 }
 
 /** The live sources: WoDX Sheets' api and its world setting (on when WoDX Sheets does not say otherwise). */

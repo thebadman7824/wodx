@@ -395,7 +395,8 @@ export function sigRollEffects(list = [], ctx = {}) {
     }
     // B6729: "not" leaves a roll out (a Redcap's Social rolls are harder, Intimidation aside)
     if ( hit && (e.not ?? []).some(t => want.has(tagKey(t))) ) hit = false;
-    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
+    // B6924: noBotch: the roll cannot botch (a Boggan's Crafts, C20 p. 89)
+    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: "", ...(e.noBotch ? {noBotch: true} : {})});
   }
   return out;
 }

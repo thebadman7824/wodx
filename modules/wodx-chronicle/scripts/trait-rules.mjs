@@ -130,7 +130,7 @@ export function effectsFor(view, ctx = {}, idx = index()) {
         if ( !hit ) continue;
         diff = Number(e.moon[hit]) || 0;
       }
-      out.push({key: m.key, name: m.entry.name, dice: Number(e.dice) || 0, diff, note: e.note ?? ""});
+      out.push({key: m.key, name: m.entry.name, dice: Number(e.dice) || 0, diff, note: e.note ?? "", ...(e.noBotch ? {noBotch: true} : {})});
     }
   }
   return out;
@@ -152,14 +152,16 @@ export function ticksOf(view, idx = index()) {
 
 /** The sum of some effects, with one part per trait for the roll card: {dice, diff, parts: ["Iron Will +3 diff"]}. */
 export function sumEffects(list = []) {
-  let dice = 0, diff = 0;
+  let dice = 0, diff = 0, noBotch = false;
   const parts = [];
   for ( const e of list ) {
-    dice += e.dice; diff += e.diff;
+    dice += Number(e.dice) || 0; diff += Number(e.diff) || 0;
     if ( e.dice ) parts.push(`${e.name} ${e.dice > 0 ? "+" : ""}${e.dice}`);
     if ( e.diff ) parts.push(`${e.name} ${e.diff > 0 ? "+" : ""}${e.diff} diff`);
+    // B6924: an effect kind that keeps the roll from botching
+    if ( e.noBotch ) { noBotch = true; parts.push(`${e.name}: cannot botch`); }
   }
-  return {dice, diff, parts};
+  return noBotch ? {dice, diff, parts, noBotch} : {dice, diff, parts};
 }
 
 /**
