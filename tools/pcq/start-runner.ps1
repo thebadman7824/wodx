@@ -1,12 +1,13 @@
 # Starts the PC job runner if it is not running (B4100-B4109). Safe to run any time: lane-reset.cmd runs it every
 # night, so the runner comes back after a reboot. The first time it clones the repository into D:\WoDX\pcq\repo.
 # The runner is started through WMI so it does not belong to whatever started this script, at below-normal priority.
-$base = 'D:\WoDX\pcq'; $repo = "$base\repo"
+# B6880: the second PC has no D: drive; its runner lives in C:\WoDX\pcq.
+$base = if (Test-Path 'D:\WoDX\pcq') { 'D:\WoDX\pcq' } elseif ($env:WODX_PCQ_HOME) { $env:WODX_PCQ_HOME } else { 'C:\WoDX\pcq' }; $repo = "$base\repo"
 New-Item -ItemType Directory -Force "$base\logs" | Out-Null
 # B5211: the watchdog runs apart from the runner and starts it again if it dies.
 function Start-Watchdog {
   if (-not (Test-Path "$base\watchdog.ps1")) { return }
-  $dog = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*-File D:\WoDX\pcq\watchdog.ps1*' }
+  $dog = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like "*-File $base\watchdog.ps1*" }
   if ($dog -or (Test-Path "$base\watchdog-off")) { return }
   $w = Invoke-CimMethod Win32_Process -MethodName Create -Arguments @{CommandLine = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $base\watchdog.ps1"; CurrentDirectory = $base}
   if ($w.ReturnValue -eq 0) { "Watchdog started (process $($w.ProcessId))." }
@@ -14,7 +15,7 @@ function Start-Watchdog {
 foreach ($f in 'start-runner.ps1', 'watchdog.ps1') {
   if (Test-Path "$repo\tools\pcq\$f") { Copy-Item "$repo\tools\pcq\$f" "$base\$f" -Force -EA SilentlyContinue }
 }
-$running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*-File D:\WoDX\pcq\run-runner.ps1*' }
+$running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like "*-File $base\run-runner.ps1*" }
 if ($running) { Start-Watchdog; "PC runner already running (process $($running[0].ProcessId))."; exit 0 }
 if (-not (Test-Path "$repo\.git")) {
   git clone -q https://github.com/thebadman7824/wodx.git $repo

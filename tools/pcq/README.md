@@ -27,7 +27,7 @@ that needs judgment) still goes to the PC helper thread.
 
 ## The runner
 
-`tools/pcq/runner.mjs`, settings in `runner.json`: lanes 2 to 6, two light slots, holds below 15 GB free on C:, 50 GB
+`tools/pcq/runner.mjs`, settings in `runner.json`: lanes 2 to 5 (lane 6 is kept for the local agents, B6527), two light slots, holds below 15 GB free on C:, 50 GB
 on D: or 3 GB of free memory. It runs from its own clone (`D:\WoDX\pcq\repo`, worktrees per lane in `D:\WoDX\pcq\wt`),
 never from the lanes clone, and updates itself when main changes it. The issue labelled `pc-status` shows every lane,
 the queue and the last results, updated every 2 minutes; an issue labelled `pc-alert` opens when a lane stays down or
@@ -56,3 +56,12 @@ A watchdog (`watchdog.ps1`, B5210-B5212) runs apart from the runner, started thr
 the runner's wrapper starts it again whenever it is missing. Every two minutes it checks that `run-runner.ps1` is
 running and, if not, starts it again and writes a line in `logs\runner-console.log`. A file named `runner-off` in
 `D:\WoDX\pcq` keeps it from restarting the runner; a file named `watchdog-off` stops the watchdog itself.
+
+## The second PC (B6880-B6882)
+
+DESKTOP-S6NV3Q9 runs a second runner from `C:\WoDX\pcq` with `runner.desktop-s6nv3q9.json`: lane 7 (port 30070,
+`C:\WoDX\FoundryData-lane7`), its own status issue "PC runner status (second PC)" and alerts titled "Second PC alert".
+Both runners read the same queue; a claim comment decides which one takes a job. Name `--lane 7` to send a job there,
+or leave the lane out and the first free lane on either PC takes it. Book and Trove lookups stay on the main PC.
+It is slower (2 cores) and has no graphics card, so it suits short gate lists. It also watches https://wodx.online and
+the main runner's status issue and opens an alert when either goes quiet.

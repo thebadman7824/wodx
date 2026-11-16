@@ -187,6 +187,10 @@ test("the picker takes the first lane that is up and free", async () => {
   assert.equal(await pick([1, 2, 3], [1, 2, 3]), null);
   assert.equal(await pick([4], []), null, "a disabled lane is never picked");
   assert.equal((await pick([1, 2, 3], [], ["3"])).id, 3);
+  // B6527: a reserved lane is taken only when named
+  lanes.push({id: 6, reserved: "local-agents"});
+  assert.equal(await pick([6], []), null, "a reserved lane is not picked unasked");
+  assert.equal((await pick([6], [], ["6"])).id, 6);
 });
 
 test("lane tools never name the Live world and keep backups", () => {
@@ -212,4 +216,20 @@ test("B6775: sign-in waits for the WoDX apis that start after game.ready", async
   } finally { globalThis.game = had; }
   const src = fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8");
   assert.match(src, /waitForFunction\(apisReady, LATE_APIS/, "openGM waits for them");
+});
+
+test("lanes on the second PC are seen only there, with its own paths (B6880)", () => {
+  const was = process.env.WODX_HOST;
+  try {
+    process.env.WODX_HOST = "desktop-s6nv3q9";
+    const two = L.loadConfig();
+    assert.deepEqual(two.lanes.map(l => l.id), [7]);
+    assert.equal(two.foundryMain, "C:/WoDX/Foundry/resources/app/main.js");
+    assert.ok(two.allLaneIds.includes("7") && two.allLaneIds.includes("2"));
+    process.env.WODX_HOST = "desktop-mrkcmrg";
+    const main = L.loadConfig();
+    assert.ok(!main.lanes.some(l => l.host));
+    assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
+    assert.match(main.foundryMain, /^G:/);
+  } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
 });

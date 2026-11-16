@@ -8,6 +8,7 @@
  *   server.pid         pid of a server this tooling started
  */
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import https from "node:https";
@@ -30,6 +31,12 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
+  // B6880: lanes can live on more than one PC. A lane with "host" belongs to that PC only; on a PC named in "hosts"
+  // its paths replace the main PC's and only its own lanes are seen. Every other machine sees the lanes without a host.
+  const host = (process.env.WODX_HOST ?? os.hostname()).toLowerCase(), mine = cfg.hosts?.[host];
+  cfg.allLaneIds = (cfg.lanes ?? []).map(l => String(l.id));
+  if ( mine ) { Object.assign(cfg, mine); cfg.lanes = (cfg.lanes ?? []).filter(l => l.host === host); }
+  else cfg.lanes = (cfg.lanes ?? []).filter(l => !l.host);
   // Paths may name environment variables as %NAME% (Windows style), read at run time, so the
   // file holds no user names. A variable that isn't set is left as written.
   const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
@@ -309,6 +316,8 @@ export async function pickLane(cfg, {only = null, up = isUp, state = l => lockSt
   for ( const lane of cfg.lanes ) {
     if ( only && !only.includes(String(lane.id)) ) continue;
     if ( lane.disabled ) continue;
+    // B6527: a reserved lane (lane 6, the local agents') is used only when named
+    if ( lane.reserved && !only?.includes(String(lane.id)) ) continue;
     if ( state(lane).held ) continue;
     if ( await up(lane) ) free.push(lane);
   }
