@@ -279,14 +279,17 @@ function onActorUpdate(actor, change) {
 
 /* Things that happen in the game play their move by themselves (B2612): feeding, a change of form, a line spoken in character. */
 function onFed(info = {}) {
-  if ( !on() || !mine() ) return;
-  const toks = canvas.tokens?.placeables ?? [], by = toks.find(t => t.actor?.uuid === info.by?.uuid && t.document.flags?.[MOD]?.sprite);
-  const ves = toks.find(t => t.actor?.uuid === info.vessel?.uuid && t.document.flags?.[MOD]?.sprite);
+  if ( !on() ) return;
+  // B6783: the hook fires only on the computer that fed (often a player's): there each token its user owns plays
+  const own = t => mine() || may(t);
+  const toks = canvas.tokens?.placeables ?? [], by0 = toks.find(t => t.actor?.uuid === info.by?.uuid && t.document.flags?.[MOD]?.sprite);
+  const ves0 = toks.find(t => t.actor?.uuid === info.vessel?.uuid && t.document.flags?.[MOD]?.sprite);
+  const by = by0 && own(by0) ? by0 : null, ves = ves0 && own(ves0) ? ves0 : null;
   if ( by ) {
     // a ghoul given vitae drinks it; a Kindred takes the vessel from behind and the vessel swoons (B5810, B5817)
     const name = by.document.flags[MOD].sprite, has = SR.ACTS[name] ?? [];
-    const move = has.includes("quaff") && !ves ? "quaff" : has.includes("embrace") ? "embrace" : "feed";
-    play(by.document, move, ves?.document ?? null).catch(() => null);
+    const move = has.includes("quaff") && !ves0 ? "quaff" : has.includes("embrace") ? "embrace" : "feed";
+    play(by.document, move, ves0?.document ?? null).catch(() => null);
     if ( by.document.flags?.[MOD]?.need ) by.document.update({flags: {[MOD]: {need: false}}}, {animate: false}).catch(() => null);
   }
   if ( ves && SR.hasAct(ves.document.flags[MOD].sprite, "swoon") && by?.actor?.type === "Vampire" ) play(ves.document, "swoon", by?.document ?? null).catch(() => null);
@@ -299,9 +302,10 @@ function onWorked(info = {}) {
   if ( move && !t.document.flags?.[MOD]?.act?.hold ) play(t.document, move).catch(() => null);
 }
 function onForm(actor, form) {
-  if ( !on() || !mine() ) return;
+  if ( !on() ) return;
   const f = LR.formOf(form);
-  for ( const t of canvas.tokens?.placeables ?? [] ) if ( (t.actor === actor || (actor?.uuid && t.actor?.uuid === actor.uuid)) && t.document.flags?.[MOD]?.sprite ) {
+  // B6783: the hook fires only on the computer that changed the form (often the player's): there the owned token plays
+  for ( const t of canvas.tokens?.placeables ?? [] ) if ( (t.actor === actor || (actor?.uuid && t.actor?.uuid === actor.uuid)) && t.document.flags?.[MOD]?.sprite && (mine() || may(t)) ) {
     // a Garou drawn in every form goes through the forms between, each in turn (B5813); one drawn once only shows the change
     const name = t.document.flags[MOD].sprite;
     if ( f && SR.formShown(name) && SR.formSprite(name, f) ) shiftByStages(t.document, f).catch(e => console.warn(`${MOD} | change of form`, e));
