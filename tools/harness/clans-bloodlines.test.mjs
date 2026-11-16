@@ -38,3 +38,12 @@ test("B6777: the longest clan name inside a longer name wins", () => {
   assert.equal(R.findClan("Brujah antitribu")?.id, "brujah");
   assert.equal(R.findClan("Old Clan Tzimisce")?.id, "tzimisce");
 });
+
+test("B6777: a bloodline is offered only in the years it walks", () => {
+  const open = y => R.clansOpen({year: y}).map(c => c.id);
+  assert.ok(open(1200).includes("lamia") && !open(2020).includes("lamia"), "the Lamia end with the Cappadocians");
+  assert.ok(!open(1200).includes("samedi") && open(2020).includes("samedi"));
+  assert.ok(open(null).includes("samedi"), "no year known: open");
+  assert.ok(!open(2020).includes("cyberpunks") && R.clansOpen({year: 2020, futureBranch: true}).some(c => c.id === "cyberpunks"));
+  assert.ok(!R.clansOpen({year: null, futureBranch: true}).some(c => c.id === "cyberpunks"), "no year: the Future clans stay shut");
+});

@@ -142,7 +142,12 @@ export function traitMax({line, kind, generation, domitorGeneration, golconda = 
 export function clanOpen(c, {year = null, futureBranch = false} = {}) {
   if ( !c?.opens ) return true;
   if ( c.opens.futureBranch && !futureBranch ) return false;
-  return Number(year) >= c.opens.from;
+  // B6777: a bloodline the books end (the Lamia with the Cappadocians) closes after its last year; with no year known,
+  // only the Future branch's clans stay shut
+  const y = Number(year);
+  if ( year === null || year === undefined || year === "" || !Number.isFinite(y) ) return !c.opens.futureBranch;
+  if ( c.opens.until && y > c.opens.until ) return false;
+  return !c.opens.from || y >= c.opens.from;
 }
 /** The clans open in a year, in table order. */
 export const clansOpen = (when = {}) => CLANS.filter(c => clanOpen(c, when));
