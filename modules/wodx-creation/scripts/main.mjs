@@ -132,8 +132,12 @@ Hooks.once("wodxChronicleReady", () => start());
 Hooks.once("ready", () => {
   if ( !active ) return;
   if ( game.modules.get("wodx-chronicle")?.api ) return start();
+  // B6778: a slow Chronicle start (migrations and the world timeline on a fresh world) took longer than 20 s, and the
+  // module switched itself off, so wodxChronicleReady found it idle and the api never came. Only a Chronicle that is not
+  // enabled ends the wait; a slow one is waited for.
   waiting = setTimeout(() => {
     if ( started ) return;
+    if ( game.modules.get("wodx-chronicle")?.active ) { console.warn("WoDX | WoDX Creation is still waiting for WoDX Chronicle to finish starting."); return; }
     active = false;
     console.error("WoDX | WoDX Creation needs WoDX Chronicle; enable it in Manage Modules.");
     ui.notifications.error("WoDX Creation needs WoDX Chronicle. Enable it in Manage Modules.");
