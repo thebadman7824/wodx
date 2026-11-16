@@ -1401,7 +1401,10 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     // B6416: the roll effects WoDX Chronicle keeps on the attacker (drink and drugs, merits and flaws, derangement
     // bouts) for this Attribute and Ability, as WoDX Actions' rolls and the sheet's rolls count them
     const tr = traitRollMods(attacker, attrKey, w.ability, target);
-    const pm = { ...pm0, dice: num(pm0.dice) + tr.dice, diff: num(pm0.diff) + tr.diff, parts: [...(pm0.parts ?? []), ...tr.parts] };
+    // B6830: the target's own powers can make blows at them harder (a demon's Shroud of Flames, Mirage)
+    let dm = { diff: 0, parts: [] };
+    try { dm = game.modules.get("wodx-actions")?.api?.powerMods?.defend?.(target, { ranged: !!w.ranged }) ?? dm; } catch (e) { /* Actions off */ }
+    const pm = { ...pm0, dice: num(pm0.dice) + tr.dice, diff: num(pm0.diff) + tr.diff + num(dm.diff), parts: [...(pm0.parts ?? []), ...tr.parts, ...(dm.parts ?? []).map(x => `target: ${x}`)] };
     const pool = R.attackPool({
         attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
