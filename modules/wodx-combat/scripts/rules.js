@@ -231,10 +231,10 @@ export const TARGETING = {
 /** Close combat maneuvers that modify a weapon attack (VtDA20 p. 346-347). */
 export const MANEUVERS = {
     normal: { label: "Normal attack", diff: 0, dmg: 0, dice: 0 },
-    greatblow: { label: "Great Blow (+1 diff, +2 dmg, no defense this turn)", diff: 1, dmg: 2, dice: 0 },
+    greatblow: { label: "Great Blow (+1 diff, +2 dmg, no defense this turn)", diff: 1, dmg: 2, dice: 0, noDefense: true },
     riposte: { label: "Riposte (+1 diff, +1 dmg, defender +2 diff; needs a successful defense this turn)", diff: 1, dmg: 1, dice: 0, defDiff: 2 },
     // ---- VtDA20 p. 346-348 (maneuvers that change the roll; unarmed forms are in UNARMED)
-    disarm: { label: "Disarm (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Disarm: roll damage normally; if it beats the victim's Strength dots, the weapon flies a number of yards equal to the extra successes (VtDA20 p. 346)." },
+    disarm: { label: "Disarm (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, disarm: true, note: "Disarm: roll damage normally; if it beats the victim's Strength dots, the weapon flies a number of yards equal to the extra successes (VtDA20 p. 346)." },
     sweep: { label: "Sweep (+1 diff, knockdown)", diff: 1, dmg: 0, dice: 0, note: "Sweep: the victim is knocked down. Standing needs Dexterity + Athletics diff 6; failing loses the action, success costs -2 Initiative (V20 Dark Ages p. 348)." },
     tackle: { label: "Tackle (+1 diff, +1 dmg, knockdown)", diff: 1, dmg: 1, dice: 0, note: "Tackle: both fighters roll Dexterity + Athletics diff 7 or fall; all actions next turn are at +1 difficulty (V20 Dark Ages p. 347)." },
     hold: { label: "Hold (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Hold: the victim is immobilized until their next action, when both roll resisted Strength + Brawl (V20 Dark Ages p. 346)." },
@@ -632,13 +632,24 @@ export function applyBodyDerived(data, body) {
 }
 
 /**
+ * B6781: a Disarm that hits rolls damage; successes beyond the victim's Strength send the weapon flying that many
+ * yards, and the victim takes no damage either way (V20 Dark Ages p. 347). {flies, yards}
+ */
+export function disarmResult(damageSuccesses, strength) {
+    const extra = Math.max(0, Number(damageSuccesses || 0) - Math.max(0, Number(strength || 0)));
+    return { flies: extra > 0, yards: extra };
+}
+
+/**
  * The state a maneuver leaves on its target after a hit (B3754): Sweep and Tackle knock down (V20 Dark Ages pp. 347-348),
  * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
  * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.
  */
 export function followOn(key, { hit = false, damageSuccesses = 0, profile = "", chi = null, metal = false } = {}) {
     if (!hit) return [];
-    if (key === "sweep" || key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
+    if (key === "sweep") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
+    // B6782: after a Tackle both fighters roll Dexterity + Athletics (difficulty 7) or fall (V20 Dark Ages p. 348)
+    if (key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn", resist: 7, both: true }];
     if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "turn" }];
     if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire" && kueiJinStaked(key, chi, metal)) return [{ condition: "staked", name: "Staked", lasts: "staked" }];
     return [];

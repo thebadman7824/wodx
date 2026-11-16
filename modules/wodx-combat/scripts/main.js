@@ -654,6 +654,7 @@ async function onSocket(p) {
     else if (p.action === "blinded") await chronicle()?.applyTimed?.(actor, { name: "Blinded", condition: "blinded", key: "wodx-blinded", duration: { kind: "scene" }, source: "WoDX house rule" });
     else if (p.action === "follow" && ["knockdown", "held", "staked"].includes(p.follow?.condition)) await markFollow(actor, p.follow);
     else if (p.action === "update") await actor.update(p.data);
+    else if (p.action === "disarm") { const it = actor.items?.get?.(p.itemId); if (it) await dropWeapon(actor, it); }
     else if (p.action === "maim" && p.offer?.part) await BD.offerMaim(actor, p.offer, { attacker: p.by ? { name: String(p.by) } : null });
 }
 
@@ -1097,7 +1098,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         const { best, plans } = bestDefense(target, fd, w, maneuver);
         fd.defense = best?.type ?? "none";
         const why = plans.map(p => p.valid ? `${cap(p.type)} ${p.dice} dice at ${p.diff}${p.type === "parry" && !p.weapon ? " (no weapon)" : ""}` : `${cap(p.type)}: not possible`).join("; ");
-        autoNote = best ? `Automatic defense: ${cap(best.type)} is the best choice (${why}).` : `Automatic defense: none possible (${why}).`;
+        autoNote = best ? `Automatic defense: ${cap(best.type)} is the best choice (${why}).` : committedThisRound(target) ? `Automatic defense: none. ${plans[0].invalid}` : `Automatic defense: none possible (${why}).`;
     }
     if (target && fd.defense !== "none") {
         def = await rollDefense(target, fd, w, maneuver);
@@ -1153,6 +1154,20 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         }
     }
 
+    // ---- B6781: a Disarm rolls damage against the victim's Strength; the extra successes send the weapon flying
+    let disarmed = null;
+    if (hit && maneuver.disarm && target) {
+        dmgPool = damagePool(attacker, w, net, maneuver, targeting, fd, pot);
+        const dr = await rollPool(dmgPool.dice, 6, { canBotch: false, autoSuccesses: dmgPool.auto });
+        if (dr.roll) rolls.push(dr.roll);
+        dmgPool = null;
+        const str = attr(target, "strength");
+        const res = R.disarmResult(dr.successes, str);
+        const held = (target.items ?? []).find(i => ["Melee Weapon", "Ranged Weapon"].includes(i.type) && !i.system?.isnatural && i.system?.isequipped);
+        if (res.flies && held) disarmed = held;
+        log.push(`<b>Disarm:</b> damage ${dr.dice} dice at 6: ${dr.successes} success${dr.successes === 1 ? "" : "es"} against Strength ${str}. ${!res.flies ? `${esc(target.name)} keeps hold of their weapon.` : held ? `${esc(held.name)} flies ${res.yards} yard${res.yards === 1 ? "" : "s"} from ${esc(target.name)}'s hand.` : `${esc(target.name)} has no weapon in hand to lose.`}`);
+    }
+
     // ---- Where it lands (hit locations, house rule B1203)
     let location = null;
     if (tBody && hit) {
@@ -1176,7 +1191,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false, fireSun: !!fd.fireSun,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null,
         location: location ? { id: location.id, label: location.label } : null,
-        noise: R.fightNoise({ ...w, silenced: fitNow.silenced })
+        noise: R.fightNoise({ ...w, silenced: fitNow.silenced }),
+        noDefense: !!maneuver.noDefense
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
@@ -1185,9 +1201,26 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const kotE = target?.type === "Vampire" && target.system?.settings?.variant === "kindredeast";
     const chi = kotE ? String(target.getFlag?.("wodx-actions", "kote")?.aspect ?? "") : null;
     const metal = !w?.ranged && R.LONG_METAL.test(String(w?.name ?? ""));
-    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile, chi, metal }) : [];
+    let follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile, chi, metal }) : [];
     if (kotE && chi && ["stake", "impale"].includes(R.maneuverKey(maneuver)) && hit && !atk.botch && (dmg?.successes ?? 0) >= 3 && !follow.some(f => f.condition === "staked"))
         log.push(`${target.name} is a Kuei-jin aspected to ${chi === "yin" ? "Yin: only wood holds them" : chi === "yang" ? "Yang: only a long metal blade through the heart holds them" : "Balance: no stake holds them"} (Kindred of the East).`);
+    // B6782: a fall the fighter may resist (Tackle): each rolls Dexterity + Athletics, and only a failure falls
+    const selfFollow = [];
+    if (follow.some(f => f.resist)) {
+        const kept = [];
+        for (const f of follow) {
+            if (!f.resist) { kept.push(f); continue; }
+            for (const who of f.both ? [target, attacker] : [target]) {
+                const dice = Math.max(0, attr(who, "dexterity") + ability(who, "athletics").value + woundPenalty(who));
+                const r = await rollPool(dice, f.resist);
+                if (r.roll) rolls.push(r.roll);
+                const falls = r.botch || r.successes < 1;
+                log.push(`${esc(who.name)} keeps their feet? Dexterity + Athletics, ${dice} dice at ${f.resist}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}, ${falls ? "knocked down" : "still standing, off balance"}.`);
+                if (falls) (who === target ? kept : selfFollow).push({ condition: f.condition, name: f.name, lasts: f.lasts });
+            }
+        }
+        follow = kept;
+    }
     for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
     // B4772, B4773: the lance and keeping the saddle when struck
     let saddle = { lines: [], rolls: [], apply: async () => {} };
@@ -1228,6 +1261,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     await wreck.apply();
     if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
     for (const f of follow) await markFollow(target, f);
+    for (const f of selfFollow) await markFollow(attacker, f);
+    if (disarmed) await dropWeapon(target, disarmed);
     if (special || (atk.botch && fitNow && w?.ranged && armsLib()?.rules?.kindsOf?.(w)?.has?.("bow"))) await armsAftermath({ attacker, target, w, hit, outcome, special, botch: atk.botch });
     if (target && location && outcome?.levels) {
         const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
@@ -1526,6 +1561,8 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
  * Fortitude or armor; dodging missiles is +2 difficulty unless Celerity is in play.
  */
 function planDefense(target, type, fd, w, maneuver) {
+    // B6780: a Great Blow or Overhead Cleave earlier this turn leaves no defense for the rest of it (V20 Dark Ages p. 347)
+    if (type !== "mount" && committedThisRound(target)) return { type, valid: false, invalid: `${target.name} put everything into a committed blow this turn: no defense.`, expected: 0 };
     // B4771: the mount dodges for its rider, once a turn, at no cost to the rider (V20 Dark Ages p. 399)
     if (type === "mount") {
         let m = null;
@@ -2385,6 +2422,17 @@ function recentCards() {
 /** B4771: whether this rider's mount has already dodged for them this turn. */
 function mountDodgedThisRound(target) {
     return target ? AU.countThisRound(recentCards(), roundKey(), d => d.mountDodge && d.target === target.uuid) > 0 : false;
+}
+/** B6781: a disarmed weapon leaves the hand (unequipped); the Storyteller's client does it for a token the player does not own. */
+async function dropWeapon(actor, item) {
+    if (!actor.isOwner) return requestGM({ action: "disarm", uuid: actor.uuid, itemId: item.id });
+    await item.update({ "system.isequipped": false });
+    const tok = actor.getActiveTokens?.()[0];
+    try { if (tok) MTD.floatFor?.(tok.document ?? tok, "Disarmed!", "#ffd36a"); } catch (e) { /* no float */ }
+}
+/** B6780: whether this fighter made a Great Blow or Overhead Cleave this turn (no defensive actions for the rest of it). */
+function committedThisRound(actor) {
+    return actor ? AU.countThisRound(recentCards(), roundKey(), d => d.noDefense && d.attacker === actor.uuid) > 0 : false;
 }
 /** How many times this defender has already defended this turn (each further defense is −1 die, VtDA20 p. 344). */
 export function defensesThisRound(target) {
