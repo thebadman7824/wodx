@@ -1,5 +1,5 @@
 /**
- * Re-audit gate (B6020-B6034), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * Re-audit gate (B6020-B6038), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatestillmarks.mjs?${Date.now()}`)).run()
  * Makes its own actors and a scratch scene and removes them; moves the clock 2 seconds and puts it back; starts no fight.
  *   1. the setting "Conditions hold the token" is there and on; Combat's movementFor, holdOfActor and traitRoll are up
@@ -14,6 +14,14 @@
  *  10. a player's character seven nights unwashed turns Filthy when the clock moves; one washed tonight stays clean (B6033)
  *  11. two lethal blows adding up on the right arm cripple it, and the Crippled mark draws on the token on the map (B6032);
  *      healing the levels takes the mark off again
+ *  12. a target beaten to Incapacitated gets no defence roll against a real attack, though its sheet could dodge (B6035)
+ *  13. a target frozen still (Completely immobilized) is hit by every attack, however hard the roll (B6035)
+ *  14. a Dazed attacker is named as one who cannot attack this turn (B6036; the refusal is for players, so as the
+ *      Storyteller the gate checks the reason the attack reads)
+ *  15. a Blinded character's token loses its sight, and Senses counts sight as gone (B6037)
+ *  16. a spirit's Possession holds the body; Blighted marks the token and makes social rolls harder (B6038)
+ *  17. Forbidden (a mummy's Balance) stops the being's attack on the mummy and keeps its token from going nearer; a
+ *      Kuei-jin's shadow soul sends each move to the Storyteller (B6018, from the powers thread)
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -177,6 +185,110 @@ export async function run() {
       await ta.update({"system.health.damage.lethal": 0});
       const healed = await waitFor(() => ![...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000);
       G.ok("11b. the crippled arm heals with its levels", healed, {left: [...ta.effects].map(e => e.name)});
+    });
+
+    // Steps 12-17 (B6035-B6038): the rules the conditions only used to name, driven through a real attack, a real token and the real readers
+    const [c, d] = await G.make(Actor, [
+      {name: "Gate Still Striker", type: "Mortal", system: {attributes: {dexterity: {value: 3}, strength: {value: 3}}, abilities: {brawl: {value: 3}}}},
+      {name: "Gate Still Mark", type: "Mortal", system: {attributes: {dexterity: {value: 4}, stamina: {value: 2}}, abilities: {dodge: {value: 4}}}}]);
+    const fs = await G.scene({name: "WoDX gate: gatestillmarks fight"});
+    const [tc, td] = await G.tokens(fs, [{actor: c, x: 3, y: 3}, {actor: d, x: 4, y: 3}]);
+    await wait(500);
+    const tca = tc.actor ?? c, tda = td.actor ?? d;
+    const swing = async () => {
+      const t0 = Date.now(); let rolled = null;
+      const h = Hooks.on("wodxAttackRolled", (att, r) => { if ( att?.id === tca.id || att === tca ) rolled = r; });
+      try { await C.quickAttack({attacker: tc.object, target: td.object}); } finally { Hooks.off("wodxAttackRolled", h); }
+      await wait(400);
+      const msg = [...game.messages].filter(m => (m.timestamp ?? 0) >= t0 && m.flags?.["wodx-combat"]).pop();
+      return {rolled, text: String(msg?.content ?? ""), rolls: msg?.rolls?.length ?? 0};
+    };
+
+    await G.step("12. no defence for the Incapacitated", async () => {
+      const free = C.bestDefense(tda, {defense: "auto"}, {type: "bashing", name: "Punch"}, {})?.best?.type ?? null;
+      await tda.update({"system.health.damage.bashing": 7});
+      await waitFor(() => K.hasCondition(tda, "incapacitated"), 4000).catch(() => null);
+      const incap = !!K.hasCondition(tda, "incapacitated");
+      const r = await swing();
+      const noDef = /No defense: Gate Still Mark cannot defend/.test(r.text) && !/Automatic defense:/.test(r.text);
+      G.ok("12. no defence for the Incapacitated", incap && !!free && noDef && !!r.rolled, {free, incap, noDef, hit: r.rolled?.hit, rolls: r.rolls, text: r.text.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 400)});
+      await tda.update({"system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0});
+      await waitFor(() => !K.hasCondition(tda, "incapacitated"), 4000).catch(() => null);
+    });
+
+    await G.step("13. a body frozen still is hit every time", async () => {
+      // the same mark the witness step puts on a mortal frozen with fear (kindred.js)
+      await X.applyTimed(tda, {name: "Frozen with fear", description: "Frozen by the gate", duration: {kind: "scene"}, condition: "immobilized", key: "wodx-witness-freeze", source: "WoDX witness step"});
+      // and a roll that should nearly always miss: six harder
+      await X.traits.addBite(tca, {key: "gate-still-hard", name: "Gate: six harder", tags: ["all"], diff: 6, duration: {kind: "scene"}, source: "gate"});
+      const out = [];
+      for ( let i = 0; i < 3; i++ ) {
+        out.push(await swing());
+        await tda.update({"system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0});
+      }
+      const hits = out.filter(r => r.rolled?.hit).length, auto = out.filter(r => /Hit automatically/.test(r.text)).length;
+      const noDef = out.every(r => /No defense/.test(r.text));
+      G.ok("13. a body frozen still is hit every time", hits === 3 && noDef && auto >= 1, {hits, auto, noDef});
+      for ( const e of [...tda.effects].filter(e => e.statuses?.has?.("wodx-immobilized")) ) await e.delete();
+      for ( const e of [...tca.effects].filter(e => /Gate: six harder/.test(e.name)) ) await e.delete();
+    });
+
+    await G.step("14. a Dazed attacker loses the attack", async () => {
+      const before = C.cannotActWhy?.(tca) ?? null;
+      // Dazed as the combat card puts it on: a blow past Stamina after soak
+      await X.applyTimed(tca, {name: "Dazed", duration: {kind: "scene"}, condition: "dazed", key: "wodx-dazed", source: "VtDA20 p. 348"});
+      const why = C.cannotActWhy?.(tca) ?? null;
+      G.ok("14. a Dazed attacker loses the attack", before === "" && /Dazed/.test(String(why)), {before, why, gm: game.user.isGM});
+      for ( const e of [...tca.effects].filter(e => e.statuses?.has?.("wodx-dazed")) ) await e.delete();
+    });
+
+    await G.step("15. Blinded takes the token's sight", async () => {
+      const vs = await G.scene({name: "WoDX gate: gatestillmarks sight", tokenVision: true});
+      const [tv] = await G.tokens(vs, [{actor: c, x: 2, y: 2, sight: {enabled: true, range: 30}}]);
+      await wait(600);
+      const tva = tv.actor ?? c;
+      // the mark Combat's blinding attack puts on (an eye shot, a blinding weapon)
+      await X.applyTimed(tva, {name: "Blinded", condition: "blinded", key: "wodx-blinded", duration: {kind: "scene"}, source: "WoDX house rule"});
+      await wait(800);
+      const blind = !!tv.hasStatusEffect?.("blind"), isBlinded = tv.object?.vision?.isBlinded ?? null;
+      const cannot = X.traits?.senses?.(tva)?.cannot ?? [];
+      const roll = game.modules.get("wodx-actions")?.api?.limits?.conditionMods?.(tva, {sight: true}) ?? null;
+      G.ok("15. Blinded takes the token's sight", blind && isBlinded !== false && cannot.includes("sight"), {blind, isBlinded, cannot, roll});
+      for ( const e of [...tva.effects].filter(e => e.statuses?.has?.("wodx-blinded")) ) await e.delete();
+      await wait(400);
+      G.ok("15b. sight comes back when Blinded ends", !tv.hasStatusEffect?.("blind"), {blind: !!tv.hasStatusEffect?.("blind")});
+    });
+
+    const BI = await import("/modules/wodx-actions/scripts/binds.js");
+    await G.step("16. Possessed holds the body; Blighted is on the token and the rolls", async () => {
+      // the marks the spirit Charms put on (charms.js): Possession raw, Blighted Touch for three hours
+      await tda.createEmbeddedDocuments("ActiveEffect", [{name: "Possessed by Gate Bane", img: "icons/svg/possession.svg", statuses: ["wodx-possessed"], flags: {"wodx-actions": {charm: "possession"}}}]);
+      const binds = BI.bindingsOn(tda), move = BI.judgeMove(binds, {from: {x: 0, y: 0}, to: {x: 100, y: 0}});
+      await X.applyTimed(tda, {name: "Blighted", img: "icons/svg/poison.svg", condition: "blighted", duration: {kind: "time", seconds: 3 * 3600}, key: "wodx-charm-blight", source: "gate"});
+      const blighted = !!tda.statuses?.has?.("wodx-blighted") && !!K.hasCondition(tda, "blighted");
+      const soc = game.modules.get("wodx-actions")?.api?.limits?.afterCosts?.socialDiff?.(tda) ?? null;
+      G.ok("16. Possessed holds the body; Blighted is on the token and the rolls", binds.some(b => b.key === "possess") && move.ok === false && blighted && soc >= 1,
+        {binds: binds.map(b => b.key), move, blighted, soc});
+      for ( const e of [...tda.effects].filter(e => e.statuses?.has?.("wodx-possessed") || e.statuses?.has?.("wodx-blighted")) ) await e.delete();
+    });
+
+    await G.step("17. Forbidden and the shadow soul hold", async () => {
+      // the marks a won Forbiddance (mummy.js balance) and a shadow-soul lapse (kote.js) put on, written the same way
+      if ( !K.getCondition("forbidden") ) X.registerCondition?.({id: "forbidden", name: "Forbidden", img: "icons/svg/cancel.svg", source: "Mummy: the Resurrection pp. 141–142", summary: "Forbidden by a mummy's Balance: it cannot attack the mummy and must leave as soon as it can.", mods: {}});
+      const fx = await X.applyTimed(tca, {name: "Afraid", description: "Forbidden by Gate Still Mark", duration: {kind: "scene"}, key: "wodx-effect-fear", condition: "forbidden", source: "gate"});
+      await fx?.update?.({"flags.wodx-actions.bindBy": tda.id, "flags.wodx-actions.forbiddenBy": tda.id});
+      const t0 = Date.now();
+      const res = await C.quickAttack({attacker: tc.object, target: td.object});
+      await wait(300);
+      const card = [...game.messages].some(m => (m.timestamp ?? 0) >= t0 && m.flags?.["wodx-combat"]);
+      const fb = BI.bindingsOn(tca), nearer = BI.judgeMove(fb, {from: {x: 0, y: 0}, to: {x: 90, y: 0}, feared: [{x: 100, y: 0}]}), away = BI.judgeMove(fb, {from: {x: 0, y: 0}, to: {x: -90, y: 0}, feared: [{x: 100, y: 0}]});
+      await fx?.delete?.();
+      if ( !K.getCondition("shadow-soul") ) X.registerCondition?.({id: "shadow-soul", name: "Shadow soul", img: "icons/svg/terror.svg", source: "Kindred of the East p. 151", summary: "The P'o has the body for the scene and plays its Archetype; a Hun roll at 9 keeps the Hun aware.", lines: ["kuei-jin"], mods: {}});
+      const sx = await X.applyTimed(tca, {name: "Shadow soul", duration: {kind: "scene"}, condition: "shadow-soul", key: "wodx-kote-soul", source: "gate"});
+      const sb = BI.bindingsOn(tca), smove = BI.judgeMove(sb, {from: {x: 0, y: 0}, to: {x: 100, y: 0}});
+      await sx?.delete?.();
+      G.ok("17. Forbidden and the shadow soul hold", (res?.length ?? 0) === 0 && !card && nearer.ok === false && away.ok === true && smove.ok === false && smove.ask === true,
+        {results: res?.length ?? null, card, nearer, away, shadow: sb.map(b => b.key), smove});
     });
   } finally { return G.finish(); }
 }

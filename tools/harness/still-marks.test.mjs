@@ -55,3 +55,27 @@ test("an Obfuscate power is known by its keyword id or its line", () => {
   assert.equal(PE.isObfuscate("disc", "", "Obfuscate 2"), true);
   assert.equal(PE.isObfuscate("v20", "auspex-heightened-senses", "Heightened Senses"), false);
 });
+
+/* B6035-B6038: the conditions' rules that only showed as notes now change the roll, the senses and the body. */
+const CD = await import(join(root, "modules/wodx-chronicle/scripts/conditions.mjs"));
+const BI = await import(join(root, "modules/wodx-actions/scripts/binds.js"));
+
+test("a Blinded character sees nothing; Blurred sight only makes it harder", () => {
+  assert.deepEqual(CD.senseEffectsOf([{id: "blinded", name: "Blinded", cannotSee: true, mods: {ownDiffVision: 2}}]).cannot, ["sight"]);
+  assert.deepEqual(CD.senseEffectsOf([{id: "blurred-sight", name: "Blurred sight", mods: {ownDiffVision: 2}}]).cannot, []);
+});
+
+test("the core conditions carry the rules combat reads", () => {
+  const by = Object.fromEntries(CD.CORE_CONDITIONS.map(c => [c.id, c]));
+  for ( const id of ["incapacitated", "torpor"] ) assert.equal(by[id].mods.noDefense, true);
+  for ( const id of ["immobilized", "staked"] ) assert.equal(by[id].mods.autoHit, true);
+  for ( const id of ["dazed", "staked", "incapacitated", "torpor"] ) assert.equal(by[id].mods.noAction, true);
+  assert.deepEqual(by.blinded.also, ["blind"]);
+});
+
+test("a spirit's Possession holds the body like a Possess power", () => {
+  const b = BI.bindingsOn({effects: [{name: "Possessed by a bane", statuses: new Set(["wodx-possessed"]), flags: {}}]});
+  assert.equal(b.length, 1);
+  assert.equal(b[0].rule, "still");
+  assert.equal(BI.judgeMove(b, {}).ok, false);
+});

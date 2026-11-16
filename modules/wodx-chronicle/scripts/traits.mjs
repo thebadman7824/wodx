@@ -6,6 +6,7 @@ import * as T from "./trait-rules.mjs";
 import * as TB from "./trait-bite-rules.mjs";
 import {applyTimed} from "./timed.mjs";
 import {rollEffects as sigRollEffects} from "./signatures.mjs";
+import {conditionsOf, senseEffectsOf} from "./conditions.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
 
 /**
@@ -64,7 +65,14 @@ const fromSources = (actor, ctx) => SOURCES.flatMap(fn => { try { return fn(acto
 /** The traits' effects on one roll, the signature features' (clan, tribe, auspice, breed) when their line is on, and other modules'. */
 export const effects = (actor, ctx = {}) => [...T.effectsFor(view(actor), ctx), ...sigRollEffects(actor, ctx), ...fromSources(actor, ctx)];
 /** For WoDX Senses: what the character's traits do to their own senses, and what others sense about them. */
-export const senses = actor => T.senseEffects(view(actor));
+export const senses = actor => {
+  const s = T.senseEffects(view(actor));
+  // B6037: a Blinded character sees nothing (the difficulty of Blurred sight comes in through WoDX Actions, B6373)
+  try {
+    const c = senseEffectsOf(conditionsOf(actor));
+    return {...s, cannot: [...new Set([...s.cannot, ...c.cannot])]};
+  } catch (e) { return s; }
+};
 export const shows = actor => T.showsOf(view(actor));
 /** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
 export const ticks = actor => T.ticksOf(view(actor));
