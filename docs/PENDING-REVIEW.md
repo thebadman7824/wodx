@@ -1766,7 +1766,9 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 | 2026-11-16 | How long the medieval gaol sentence runs (Latin Christendom, until prison in 1780; Mage: The Dark Ages pdf p. 219 has serfs jailed but gives no term) | 1 to 2 years, a house figure, in the middle tier of punishments (B6669) | Change the gaol time mark in modules/wodx-chronicle/scripts/law-punish-rules.mjs |
 | 2026-11-16 | Ravenous counted one harder twice on a social roll (ownDiff and socialDiff) | Ravenous keeps only ownDiff 1: one harder on every roll until the Garou eats, social rolls included (B6663) | Give Ravenous socialDiff 1 again in modules/wodx-actions/scripts/after-cost-rules.js |
 
-## Waiting for review
+## Approved by Ben, 16 November 2026, 18:02 UTC (Final Audit Desk)
+
+Every entry below was kept as built on the Final Audit Desk, except four ruled another way there: the 300 names rule is 300 per sex and every list grows (a later release); Net burn follows the book and never heals; a Bodach's two fewer health levels now apply in Combat; the other worlds' sound loops are made or sourced later, with the art.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1829,3 +1831,8 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 | 2026-11-16 | B6858: True Faith 3 and 4 immunities by keyword | Dark Ages: Faith 3 stops Sway, Possess and Illusion, Faith 4 also Fear; HH2: Faith 3 stops all four. Mortals and hunters only (a demon's Faith is not True Faith) | faithStops (hunter-rules.js) and faithShields (effects.js) |
 | 2026-11-16 | B6858: Healing 2's 'negates wound penalties' | The sheet's ignoring-pain flag as an Active Effect change for 10 minutes a success | painless in mage-da-effects.js timedNumbers and effects.js |
 | 2026-11-16 | Mortals and aggravated damage in modern eras (final audit) | No change: V20 pp. 292-293 also treats a mortal's aggravated damage as lethal, as VtDA20 does, so WoDX Combat's era-blind rule stands | none needed |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|

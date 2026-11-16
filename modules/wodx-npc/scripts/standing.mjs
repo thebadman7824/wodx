@@ -19,7 +19,9 @@ const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.ge
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const api = () => game.modules.get(MOD).api;
 const actorOf = x => (x?.actor ?? (typeof x === "string" ? game.actors.get(x) : x?.id ? game.actors.get(x.id) ?? x : null));
-const yearNow = () => getEngine().timeToDate(Number(game.time.worldTime) || 0).year;
+// B6948: before the clock is set, the year is the chronicle's saved opening year, not the calendar's 1197
+const openingYear = () => { try { return !game.settings.get("wodx-chronicle", "openingSet") && !Number(game.time.worldTime) ? Number(game.settings.get("wodx-chronicle", "openingYear")) || 0 : 0; } catch (e) { return 0; } };
+const yearNow = () => openingYear() || getEngine().timeToDate(Number(game.time.worldTime) || 0).year;
 const homeland = () => { try { return chron()?.world?.homeland?.() || "moravia"; } catch (e) { return "moravia"; } };
 const sphereOf = (region, year) => { try { return chron()?.world?.rules?.sphereFor?.(region, year) ?? "latin"; } catch (e) { return "latin"; } };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
