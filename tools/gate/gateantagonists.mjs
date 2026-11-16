@@ -37,7 +37,7 @@ export async function run() {
 
     await G.step("1. the api", async () => {
       const sw = npc()?.servants?.world?.rules ?? null;
-      const p15 = sw?.wyrmMaster?.([{id: "p", kind: "pentex"}], {year: 1915}) ?? "missing";
+      const p15 = sw?.wyrmMaster ? (sw.wyrmMaster([{id: "p", kind: "pentex"}], {year: 1915}) ?? null) : "missing";
       const p16 = sw?.wyrmMaster?.([{id: "p", kind: "pentex"}], {year: 1916})?.id ?? null;
       G.ok("1. the api", typeof sigs()?.work === "function" && typeof npc()?.schemes?.applyStep === "function" && p15 === null && p16 === "p", {p15, p16});
     });
