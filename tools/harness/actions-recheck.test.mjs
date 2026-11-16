@@ -176,10 +176,14 @@ test("B6663: the social rolls and the feeding rolls take the conditions", () => 
 test("B6664: a social sheet roll counts socialDice and socialDiff, named; another roll does not", async () => {
   const RR = await imp("modules/wodx-sheets/scripts/sheet-roll-rules.mjs");
   const grieving = {id: "grieving", name: "Grieving", mods: {socialDice: -1}};
-  const ravenous = {id: "ravenous", name: "Ravenous", mods: {ownDiff: 1, socialDiff: 1}};
+  const ravenous = {id: "ravenous", name: "Ravenous", mods: {ownDiff: 1}};
   assert.deepEqual(RR.combine({conditions: [grieving], social: true}), {dice: -1, diff: 0, parts: ["Grieving -1 dice"]});
   assert.deepEqual(RR.combine({conditions: [grieving]}), {dice: 0, diff: 0, parts: []});
-  assert.deepEqual(RR.combine({conditions: [ravenous], social: true}), {dice: 0, diff: 2, parts: ["Ravenous +2 diff"]});
+  // B6663: Ravenous is one harder on a social roll, not two
+  assert.deepEqual(RR.combine({conditions: [ravenous], social: true}), {dice: 0, diff: 1, parts: ["Ravenous +1 diff"]});
+  const AC = await imp("modules/wodx-actions/scripts/after-cost-rules.js");
+  const real = Object.values(AC).find(v => v && typeof v === "object" && v.ravenous)?.ravenous;
+  if (real) assert.deepEqual(real.mods, {ownDiff: 1}, "Ravenous carries no second social difficulty");
   assert.deepEqual(RR.combine({conditions: [{name: "Both", mods: {socialDice: -1, socialDiff: 1}}], social: true}).parts, ["Both -1 dice, +1 diff"]);
   // the trait table's own tags decide, as WoDX Actions' social rolls read them
   const T = await imp("modules/wodx-chronicle/scripts/trait-rules.mjs");

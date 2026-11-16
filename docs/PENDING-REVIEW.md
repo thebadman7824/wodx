@@ -1717,3 +1717,5 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-16 | How long the medieval gaol sentence runs (Latin Christendom, until prison in 1780; Mage: The Dark Ages pdf p. 219 has serfs jailed but gives no term) | 1 to 2 years, a house figure, in the middle tier of punishments (B6669) | Change the gaol time mark in modules/wodx-chronicle/scripts/law-punish-rules.mjs |
+| 2026-11-16 | Ravenous counted one harder twice on a social roll (ownDiff and socialDiff) | Ravenous keeps only ownDiff 1: one harder on every roll until the Garou eats, social rolls included (B6663) | Give Ravenous socialDiff 1 again in modules/wodx-actions/scripts/after-cost-rules.js |
