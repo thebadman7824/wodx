@@ -53,6 +53,11 @@ const dotsOf = (actor, key) => num(actor?.system?.abilities?.[key]?.value);
 const kindOf = doc => deps.describeObj?.(doc)?.kind ?? doc.flags?.[MOD]?.mountKind ?? null;
 const ownersOf = actor => game.users.filter(u => u.isGM || actor?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 
+/** B6629: what is loaded on a vehicle token (its sheet's hold, less its mounted guns); a mount tile carries none. */
+function cargoOf(doc) {
+  try { return (doc?.actor?.items?.contents ?? []).filter(i => i.type !== "Ranged Weapon" && i.type !== "Melee Weapon").length; } catch (e) { return 0; }
+}
+
 /** Moves of our own: their hooks know not to act on them again. */
 const lifting = new Set();
 async function setElevation(doc, elevation) {
@@ -76,7 +81,7 @@ export async function onPilotHeight(tokDoc, want) {
     const wrecked = o?.hull && R.hullState(o.hull, o.hull.structure).state === "wrecked";
     const res = wrecked && num(want) > num(doc.elevation)
       ? {to: toFeet(scene, num(doc.elevation)), held: "wrecked", note: "It is wrecked: it goes nowhere but down.", takeoff: false, landing: false}
-      : F.climb(kind, {ground: gFt, from: toFeet(scene, num(doc.elevation)), want: toFeet(scene, want), pilotDots: dots});
+      : F.climb(kind, {ground: gFt, from: toFeet(scene, num(doc.elevation)), want: toFeet(scene, want), pilotDots: dots, cargo: cargoOf(doc)});
     const to = fromFeet(scene, res.to);
     if ( Math.abs(to - num(want)) > 0.001 ) await setElevation(tokDoc, to);
     await setElevation(doc, to);

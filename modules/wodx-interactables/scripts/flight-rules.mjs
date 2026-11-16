@@ -10,7 +10,7 @@
  *     strap everyone in (Mage 20th p. 459, as WoDX Combat's vehicle-rules has it);
  *   - aircraft need Pilot to fly at all (Mage 20th p. 462);
  *   - a hover bike flies no higher than 20 metres and carries no cargo in the air (Cyberpunk 2020 Concrete Jungle
- *     pdf p. 40);
+ *     pdf p. 40): with anything loaded it will not lift (B6629);
  *   - an AV does not glide: with its engines gone it drops (Cyberpunk 2020 Forlorn Hope pdf p. 72);
  *   - a fast flight low through hills at night is a Pilot roll; a failure goes astray, a fumble crashes; the AV-4's
  *     terrain-following radar makes it possible at all (Forlorn Hope pdf p. 67).
@@ -39,6 +39,7 @@ export const FLYERS = {
   jet:        {ceiling: 45000, hovers: false, unpiloted: "glides", skill: "pilot"},
   gryphon:    {ceiling: 3000, hovers: true, unpiloted: "flies", skill: "ride"},
   aerodyne:   {ceiling: 10000, hovers: true, unpiloted: "drops", skill: "pilot"},
+  aerocab:    {ceiling: 10000, hovers: true, unpiloted: "drops", skill: "pilot"},
   assaultav:  {ceiling: 10000, hovers: true, unpiloted: "drops", skill: "pilot", radar: true},
   hoverbike:  {ceiling: HOVERBIKE_CEILING, hovers: true, unpiloted: "drops", skill: "pilot", dual: true}
 };
@@ -63,14 +64,18 @@ export const airborne = feet => (Number(feet) || 0) >= 1;
 
 /**
  * The height the one at the controls asks for, held by what the kind can do. kind; ground: the floor under it
- * (feet); want: the elevation asked for (feet); pilotDots: the flier's dots in the Ability that flies it.
- * -> {to (elevation, feet), held: null|"cannot"|"ceiling"|"untrained", note, takeoff, landing}
+ * (feet); want: the elevation asked for (feet); pilotDots: the flier's dots in the Ability that flies it; cargo: how
+ * many things are loaded (a hover bike lifts nothing, B6629).
+ * -> {to (elevation, feet), held: null|"cannot"|"ceiling"|"untrained"|"cargo", note, takeoff, landing}
  */
-export function climb(kind, {ground = 0, from = 0, want = 0, pilotDots = 1} = {}) {
+export function climb(kind, {ground = 0, from = 0, want = 0, pilotDots = 1, cargo = 0} = {}) {
   const F = FLYERS[kind], g = Number(ground) || 0, w = Number(want) || 0, f = Number(from) || 0;
   if ( !F ) return {to: g, held: w > g ? "cannot" : null, note: w > g ? "It cannot leave the ground." : "", takeoff: false, landing: false};
   let to = Math.max(g, w), held = null, note = "";
-  if ( to > g && (Number(pilotDots) || 0) < 1 ) {
+  if ( to > g && F.dual && (Number(cargo) || 0) > 0 && f - g < 1 ) {
+    to = g; held = "cargo";
+    note = "Its fans cannot lift a load: unload the hover bike before it flies (Concrete Jungle pdf p. 40).";
+  } else if ( to > g && (Number(pilotDots) || 0) < 1 ) {
     to = g; held = "untrained";
     note = F.dual ? "Its fans stay folded: flying the hover bike takes Pilot, not Drive (Concrete Jungle pdf p. 40)." : "Nobody flies one without Pilot (Mage 20th p. 462).";
   } else if ( to - g > F.ceiling ) {

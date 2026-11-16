@@ -1,10 +1,11 @@
 /**
- * WoDX Interactables, Paperdoll and Storyteller gate: flying cars and flight for every aircraft (B6620 to B6629), in
+ * WoDX Interactables, Paperdoll and Storyteller gate: flying cars and flight for every aircraft (B6620 to B6629, desk
+ * picks 2026-11-16), in
  * rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateflight.mjs?${Date.now()}`)).run()
  * Makes its own scratch scene, aerodyne and hover bike tiles, four actors and their tokens, and removes them; never
  * moves the clock (the tiles are kept out of their era, so any year will do).
- *   1. the api and the three new kinds, each with its drawn looks
+ *   1. the api and the four new kinds, each with its drawn looks
  *   2. the pilot climbs: the aerodyne and its passenger rise with the pilot's token; on the map its picture lifts and
  *      its shadow stays on the ground
  *   3. a hover bike: Drive alone keeps it on the ground; with Pilot it flies, but no higher than 20 metres
@@ -12,7 +13,8 @@
  *   5. the pilot leaves: an AV does not glide, it drops; everyone aboard comes down with a crash card
  *   6. wrecked in the air: the hover bike falls when its Structure is gone
  *   7. a chase: flying low over a crowd is harder than flying above it (rules as deployed)
- *   8. travel: an aerodyne trip flies over water, only when asked for (Storyteller rules as deployed)
+ *   8. travel: an aerodyne trip flies over water when asked for or owned, faster flat out (Storyteller rules as deployed)
+ *   9. a loaded hover bike (a vehicle sheet with cargo in its hold) will not lift; unloaded, it flies
  * Result: Data/wodx-gate/gateflight-result.json.
  */
 import {gate, waitFor, newestMessage} from "./kit.mjs";
@@ -49,7 +51,7 @@ export async function run() {
     await new Promise(r => setTimeout(r, 300));
 
     await G.step("1. api and kinds", async () => {
-      const kinds = ["aerodyne", "assaultav", "hoverbike"];
+      const kinds = ["aerodyne", "aerocab", "assaultav", "hoverbike"];
       const ok = typeof fl?.onPilotHeight === "function" && kinds.every(k => ix.rules.MOUNTS[k]) && (!pd?.sprites?.mounts || kinds.every(k => pd.sprites.mounts.rules.looksOf(k).length >= 3));
       G.ok("1. api and kinds", ok, {flight: Object.keys(fl ?? {}), looks: kinds.map(k => pd?.sprites?.mounts?.rules?.looksOf?.(k)?.length ?? null)});
     });
@@ -106,7 +108,28 @@ export async function run() {
       const R = await import(`/modules/wodx-storyteller/scripts/road-rules.mjs?${Date.now()}`);
       const asked = R.tripByDistance({km: 60, road: "water", year: 2030, future: true, want: "aerodyne"});
       const not = R.tripByDistance({km: 60, road: "road", year: 2030, future: true});
-      G.ok("8. travel by aerodyne", asked?.mode === "aerodyne" && not?.mode !== "aerodyne", {asked, not});
+      const owned = R.tripByDistance({km: 60, road: "road", year: 2030, future: true, owns: ["aerodyne"]});
+      const flat = R.tripByDistance({km: 60, road: "road", year: 2030, future: true, owns: ["aerodyne"], cruise: "flat"});
+      G.ok("8. travel by aerodyne", asked?.mode === "aerodyne" && not?.mode !== "aerodyne" && owned?.mode === "aerodyne" && flat?.minutes < owned?.minutes, {asked, not, owned, flat});
+    });
+
+    await G.step("9. a loaded hover bike stays down", async () => {
+      const t0 = Date.now();
+      const [hb] = await G.make(Actor, [{name: "Gate Hover Bike", type: "wodx-interactables.vehicle", system: {kind: "hoverbike", built: 2030}}]);
+      const [crate] = await hb.createEmbeddedDocuments("Item", [{name: "Gate crate", type: "Item"}]);
+      const [tv] = await G.tokens(scene, [{actor: hb, x: 6, y: 12, actorLink: true}]);
+      await tp.update({x: tv.x, y: tv.y + (scene.grid?.size ?? 100), elevation: 0}, {animate: false, teleport: true});
+      await waitFor(() => tv?.object && tp?.object, 6000);
+      await scene.tokens.get(tv.id).update({[`flags.${IX}.driver`]: seat(tp, scene.tokens.get(tv.id))});
+      const on = await waitFor(() => scene.tokens.get(tv.id)?.flags?.[IX]?.driver?.t === tp.uuid, 10000);
+      await tp.update({elevation: ft(30)});
+      const held = await waitFor(() => el(scene, tv) === 0 && el(scene, tp) === 0, 6000);
+      const card = await waitFor(() => newestMessage(t0, m => /unload the hover bike/.test(text(m.content))), 6000);
+      await hb.deleteEmbeddedDocuments("Item", [crate.id]);
+      await tp.update({elevation: ft(30)});
+      const up = await waitFor(() => Math.abs(el(scene, tv) - ft(30)) < 0.6, 8000);
+      G.ok("9. a loaded hover bike stays down", on && held && !!card && up, {on, held, card: !!card, up, bike: el(scene, tv)});
+      await tp.update({elevation: 0});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }

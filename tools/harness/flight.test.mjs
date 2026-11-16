@@ -12,20 +12,25 @@ const MR = await import(join(root, "modules/wodx-paperdoll/scripts/mount-rules.m
 MR.learn(JSON.parse(readFileSync(join(root, MR.FOLDER, "mounts.json"), "utf8")));
 
 test("the flying cars exist only on the Future Darkness branch, with their book figures (B6620, B6621)", () => {
-  for ( const k of ["aerodyne", "assaultav", "hoverbike"] ) {
+  for ( const k of ["aerodyne", "aerocab", "assaultav", "hoverbike"] ) {
     assert.equal(IR.MOUNTS[k].from, 2023, k);
     assert.ok(C.wayOpen(k, 2030) && !C.wayOpen(k, 2022), k);
     assert.ok(MR.looksOf(k).length >= 3, `${k} looks`);
     assert.equal(MR.lookFor(k, 2030, {seed: "x"}).from >= 2023, true);
   }
-  // the hover bike: 35/80 mph on the ground, 100/195 in the air, SP 5 SDP 35 -> Durability 1, Structure 4
-  assert.deepEqual(C.chartOf("hoverbike", 2030), {safe: 35, top: 80, maneuver: 6});
-  assert.deepEqual(C.chartOf("hoverbike", 2030, 20), {safe: 100, top: 195, maneuver: 7});
-  assert.deepEqual([C.bodyOf("hoverbike", 2030).durability, C.bodyOf("hoverbike", 2030).structure], [1, 4]);
-  // the AV-6's SP 45 and SDP 100 land on Mage 20th's military utility helicopter, 8 and 10
-  assert.deepEqual([C.bodyOf("assaultav", 2030).durability, C.bodyOf("assaultav", 2030).structure], [8, 10]);
+  // Storyteller figures: each on the Mage 20th chart row that does its job (pp. 460-462), a quarter faster from 2040
+  assert.deepEqual(C.chartOf("aerodyne", 2030), {safe: 140, top: 220, maneuver: 6});
+  assert.deepEqual(C.chartOf("aerodyne", 2045), {safe: 175, top: 275, maneuver: 7});
+  assert.deepEqual(C.chartOf("aerocab", 2030), {safe: 150, top: 250, maneuver: 6});
+  assert.deepEqual(C.chartOf("assaultav", 2030), {safe: 180, top: 280, maneuver: 7});
+  assert.deepEqual(C.chartOf("hoverbike", 2030), {safe: 30, top: 70, maneuver: 5});
+  assert.deepEqual(C.chartOf("hoverbike", 2030, 20), {safe: 140, top: 220, maneuver: 7});
+  const dur = k => [C.bodyOf(k, 2030).durability, C.bodyOf(k, 2030).structure];
+  assert.deepEqual(dur("aerodyne"), [4, 6]); assert.deepEqual(dur("aerocab"), [5, 6]);
+  assert.deepEqual(dur("assaultav"), [8, 10]); assert.deepEqual(dur("hoverbike"), [2, 3]);
   assert.equal(IR.MOUNTS.assaultav.min, 3);
-  assert.equal(IR.MOUNTS.assaultav.seats, 12);
+  assert.equal(IR.MOUNTS.assaultav.seats, 13);
+  assert.equal(IR.MOUNTS.aerocab.seats, 5);
   // placed in an earlier year they fall back to what that year had
   assert.equal(IR.SWAPS.mount.aerodyne.early, "helicopter");
   assert.equal(IR.SWAPS.mount.hoverbike.early, "motorbike");
@@ -44,6 +49,10 @@ test("height: the ceiling, Pilot to fly at all, take-off and landing (B6622)", (
   assert.equal(hb.to, F.HOVERBIKE_CEILING); assert.equal(hb.held, "ceiling"); assert.ok(hb.takeoff);
   assert.equal(F.climb("hoverbike", {want: 30, pilotDots: 0}).held, "untrained");
   assert.equal(F.climb("car", {want: 30}).held, "cannot");
+  // B6629: a hover bike lifts no load (Concrete Jungle pdf p. 40)
+  const loaded = F.climb("hoverbike", {want: 30, pilotDots: 2, cargo: 1});
+  assert.equal(loaded.held, "cargo"); assert.equal(loaded.to, 0);
+  assert.equal(F.climb("aerodyne", {want: 30, pilotDots: 1, cargo: 3}).held, null);
   assert.equal(F.climb("aerodyne", {ground: 10, from: 200, want: 10, pilotDots: 1}).landing, true);
   assert.equal(F.climb("aerodyne", {ground: 0, from: 0, want: 500, pilotDots: 1}).to, 500);
 });
@@ -71,6 +80,7 @@ test("falls and crashes from the air (B6624, B6625)", () => {
   assert.equal(av.dice, 3); assert.equal(av.type, "lethal");
   // nothing covers a hover bike's rider, nor straps them in
   assert.equal(F.crashFall("hoverbike", C.bodyOf("hoverbike", 2030), {feet: 60}).dice, 6);
+  assert.equal(F.unpiloted("aerocab", 100).falls, true);
   assert.equal(F.unpiloted("aerodyne", 100).falls, true);
   assert.equal(F.unpiloted("plane", 100).kind, "glides");
   assert.equal(F.unpiloted("aerodyne", 0).falls, false);
@@ -81,5 +91,5 @@ test("the map's picture of height (B6627)", () => {
   const a = F.liftOf(20, 100, 5), b = F.liftOf(200, 100, 5);
   assert.ok(a.lift > 0 && b.lift >= a.lift && b.lift <= 150);
   assert.ok(b.shadow.alpha < a.shadow.alpha && b.shadow.scale < a.shadow.scale);
-  assert.ok(MR.spins("aerodyne"));
+  assert.ok(MR.spins("aerodyne") && MR.spins("aerocab"));
 });

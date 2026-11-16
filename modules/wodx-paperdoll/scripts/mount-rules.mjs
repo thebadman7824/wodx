@@ -121,7 +121,7 @@ export function colOf(kind, st, grid) {
   return Math.floor(st.dist / (grid || 100) * per) % n;
 }
 /** A wing or a rotor turns while the thing is in the air, moving or not. */
-export const spins = kind => ["helicopter", "plane", "jet", "balloon", "aerodyne", "assaultav"].includes(kind);
+export const spins = kind => ["helicopter", "plane", "jet", "balloon", "aerodyne", "aerocab", "assaultav"].includes(kind);
 
 export const rectOf = (look, facing, col = 0) => ({x: col * look.w, y: Math.max(0, ROWS.indexOf(facing)) * look.h, width: look.w, height: look.h});
 

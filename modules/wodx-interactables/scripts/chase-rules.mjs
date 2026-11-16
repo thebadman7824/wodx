@@ -96,23 +96,27 @@ export const WAYS = {
     chart: [[1825, 15, 30, 1], [1850, 30, 50, 1], [1900, 45, 75, 1], [1935, 60, 100, 1], [1960, 70, 100, 1], [1990, 100, 180, 1], [2040, 150, 300, 1]]},
   tram:       {label: "By tram", pool: ["dexterity", "drive"], rails: true, streets: true, motor: true, mounted: true, mount: "tram", from: 1860,
     chart: [[1860, 5, 8, 1], [1895, 10, 20, 1], [1930, 15, 30, 1], [1960, 20, 40, 1], [2040, 25, 45, 1]]},
-  // B6620, B6621: flying cars on the World of Future Darkness branch (from 2023, past the main timeline's last year).
-  // The Cyberpunk 2020 figures, turned to V20 terms (house reading B6621; flight-rules.mjs has the conversion):
-  //   aerodyne   a personal or hire aerodyne: safe 100 mph, top 195 (the aerodyne figures in the hover bike sidebar,
-  //              Cyberpunk 2020 Concrete Jungle pdf p. 40); Maneuver 6 as Mage 20th's news copter;
-  //   assaultav  an armoured police, corporate or military AV: top 200 mph, the speed of the A-20 panzer built on the
-  //              AV-4 line (Forlorn Hope pdf p. 42); Maneuver 7 as Mage 20th's military utility helicopter;
-  //   hoverbike  a motorcycle on the ground (safe 35, top 80 mph), an aerodyne in the air (safe 100, top 195): the
-  //              hover bike sidebar (Concrete Jungle pdf p. 40). The book gives +0 to handle on the ground, +1 in
-  //              the air, so one more Maneuver aloft. hover: the way it goes while its fans hold it up.
+  // B6620, B6621 (desk 2026-11-16): flying cars on the World of Future Darkness branch (from 2023, past the main
+  // timeline's last year). Their figures are Storyteller figures, as every other row here: each kind sits on the Mage
+  // 20th chart row (pp. 460-462) of the aircraft that does its job, and the Cyberpunk 2020 books only say what the
+  // kind is and does (who flies it, how many it carries, that a hover bike rides on the ground and flies low). From
+  // 2040 they go a quarter faster and handle one better (the desk's pick, house reading):
+  //   aerodyne   a private flying car: the News Copter's row, 140 / 220, Maneuver 6;
+  //   aerocab    a hired air taxi, a pilot and four fares: the Large Helicopter's row, 150 / 250, Maneuver 6;
+  //   assaultav  an armoured police, corporate or army AV, a crew of three and ten aboard: the Military Utility
+  //              Helicopter's row, 180 / 280, Maneuver 7;
+  //   hoverbike  on the ground the ATV's row, 30 / 70, Maneuver 5 (it rides low and slow on its skirts); in the air
+  //              the aerodyne's speed, nimbler by one (Maneuver 7). hover: the way it goes while its fans hold it up.
   aerodyne:   {label: "By aerodyne", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "aerodyne", from: 2023,
-    chart: [[2023, 100, 195, 6]]},
+    chart: [[2023, 140, 220, 6], [2040, 175, 275, 7]]},
+  aerocab:    {label: "By aerocab", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "aerocab", from: 2023,
+    chart: [[2023, 150, 250, 6], [2040, 190, 310, 7]]},
   assaultav:  {label: "By armoured AV", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "assaultav", from: 2023, radar: true,
-    chart: [[2023, 120, 200, 7]]},
+    chart: [[2023, 180, 280, 7], [2040, 225, 350, 8]]},
   hoverbike:  {label: "By hover bike", pool: ["dexterity", "drive"], wheels: true, light: true, motor: true, mounted: true, mount: "hoverbike", from: 2023, thrown: true,
-    chart: [[2023, 35, 80, 6]],
+    chart: [[2023, 30, 70, 5], [2040, 40, 90, 6]],
     hover: {label: "By hover bike, in the air", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "hoverbike", thrown: true, like: "aerodyne",
-      chart: [[2023, 100, 195, 7]]}}
+      chart: [[2023, 140, 220, 7], [2040, 175, 275, 8]]}}
 };
 
 /**
@@ -152,15 +156,14 @@ export const BODIES = {
   snowmobile: {rows: [[1910, 2, 4], [1935, 3, 5], [1960, 2, 3], [1990, 3, 4]], mass: 1},
   train:      {rows: [[1825, 6, 10], [1900, 10, 20], [1960, 12, 25]], mass: 8, guard: 3, shelter: true},
   tram:       {rows: [[1860, 3, 6], [1895, 5, 10], [1960, 6, 12]], mass: 5, guard: 2, shelter: true},
-  // B6621: Cyberpunk 2020 armour (SP) and structure (SDP) turned to Durability = SP / 6 and Structure = SDP / 10, rounded
-  // (house reading). It lands on Mage 20th's own aircraft: the AV-6's SP 45 and SDP 100 (Night City Stories pdf
-  // p. 86) give 8 and 10, the book's military utility helicopter (Mage 20th p. 462). The hover bike's SP 5 and SDP 35
-  // (Concrete Jungle pdf p. 40) give 1 and 4, and like a jetpack its body does not cover the rider. The books held
-  // give no figures for a private aerodyne: 4 and 6, Mage 20th's news copter. Aircraft cover those inside fully
-  // (Mage 20th p. 462).
+  // B6621 (desk 2026-11-16): the same Mage 20th rows as their charts (p. 462): the News Copter 4 / 6, the Large
+  // Helicopter 5 / 6, the Military Utility Helicopter 8 / 10 (a crew of three, mass as a lorry, aircraft cover those
+  // inside fully). A hover bike is a motorcycle's frame, the Light Motorcycle's 2 / 3, and like any cycle (p. 460) its
+  // body does not cover the rider.
   aerodyne:   {rows: [[2023, 4, 6]], mass: 1, shelter: true, full: true},
+  aerocab:    {rows: [[2023, 5, 6]], mass: 1, shelter: true, full: true},
   assaultav:  {rows: [[2023, 8, 10]], mass: 3, guard: 2, shelter: true, full: true},
-  hoverbike:  {rows: [[2023, 1, 4]]}
+  hoverbike:  {rows: [[2023, 2, 3]]}
 };
 /** A way's body in a year: {durability, structure, mass, guard, shelter, full}, or null (on foot, a beast). */
 export function bodyOf(way, year) {
@@ -183,7 +186,7 @@ export const GROUNDS = {
   streets: {label: "Town streets", diff: 0, cap: {hooves: 30, wheels: 40}, shuts: ["boat", "motorboat"], cover: true},
   crowd:   {label: "A crowd or a market", diff: 1, wheelDiff: 2, cap: {hooves: 10, wheels: 10}, shuts: ["boat", "motorboat"], cover: true},
   rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15, wheels: 20}, shuts: ["cart", "carriage", "car", "truck", "boat", "motorboat"], cover: true},
-  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel", "aerodyne", "assaultav", "hoverbike"], cover: true},
+  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel", "aerodyne", "aerocab", "assaultav", "hoverbike"], cover: true},
   water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian", "camel", "hoverbike"], cover: false},
   // B6071, B6072: deep snow or ice, where runners and tracks go best and wheels and hooves labour; a railway line
   snow:    {label: "Deep snow or ice", diff: 1, wheelDiff: 2, cap: {hooves: 20, light: 8, wheels: 15}, shuts: ["boat", "motorboat", "bicycle"], cover: false},

@@ -166,18 +166,18 @@ export function ownModes(year, {future = false} = {}) {
     .map(id => ({id, label: Road.MODES[id].label, speed: Road.MODES[id].speed("road", y)}))
     .sort((a, b) => b.speed - a.speed);
 }
-/** B6628: a square crossed in the air: straight over, nothing on the ground slows it. */
-function airStep(on, kind, diag, mode, year) {
+/** B6628: a square crossed in the air: straight over, nothing on the ground slows it. cruise: "safe" or "flat". */
+function airStep(on, kind, diag, mode, year, cruise = "safe") {
   const km = CELL * (diag ? 1.414 : 1);
-  return {min: (km / Road.MODES[mode].speed(kind, year)) * 60, kind: on ? kind : "path", km};
+  return {min: (km / Road.MODES[mode].speed(kind, year, cruise)) * 60, kind: on ? kind : "path", km};
 }
 const ON_ROAD_SLOW = [1, 1, 1.1, 1.25, 1.5], MOTORWAY_SLOW = [1, 1, 1, 1.1, 1.2], OFF_ROAD_SLOW = [1, 1.3, 1.3, 1.7, 2.6];
 /** Minutes to cross into a square, and what was underfoot. Infinity when this way cannot go there. */
-function step(g, roads, i, j, diag, mode, year) {
+function step(g, roads, i, j, diag, mode, year, cruise = "safe") {
   const ri = roads[i], rj = roads[j], on = ri && rj, code = on ? Math.min(ri, rj) : 0;
   let kind = on ? ROAD_CODES[code] : "path";
   const m = Road.MODES[mode];
-  if ( m.air ) return airStep(on, kind, diag, mode, year);
+  if ( m.air ) return airStep(on, kind, diag, mode, year, cruise);
   let speed = m.speed(kind, year);
   if ( !speed && kind === "motorway" ) { kind = "highway"; speed = m.speed(kind, year); }
   if ( !speed ) return {min: Infinity, kind};
@@ -195,8 +195,8 @@ function step(g, roads, i, j, diag, mode, year) {
 
 const FIELDS = new Map();
 /** The cheapest minutes from one square to every other for a way of going: {dist, prev}. Kept for a while. */
-export function field(start, mode, year) {
-  const y = Number(year) || 0, key = `${start}:${mode}:${y}`;
+export function field(start, mode, year, cruise = "safe") {
+  const y = Number(year) || 0, key = `${start}:${mode}:${y}:${cruise}`;
   if ( FIELDS.has(key) ) return FIELDS.get(key);
   const g = grid(), roads = roadsIn(y), n = COLS * ROWS;
   const dist = new Float64Array(n).fill(Infinity), prev = new Int32Array(n).fill(-1), done = new Uint8Array(n);
@@ -219,7 +219,7 @@ export function field(start, mode, year) {
       if ( c2 < 0 || r2 < 0 || c2 >= COLS || r2 >= ROWS ) continue;
       const j = idxOf(c2, r2);
       if ( done[j] ) continue;
-      const s = step(g, roads, i, j, dr && dc, mode, y);
+      const s = step(g, roads, i, j, dr && dc, mode, y, cruise);
       if ( d + s.min < dist[j] ) { dist[j] = d + s.min; prev[j] = i; push([dist[j], j]); }
     }
   }
@@ -231,8 +231,8 @@ export function field(start, mode, year) {
 
 const spotName = (g, i, year, fallback) => (g.town[i] && townStands(g.town[i], year) ? townName(g.town[i]) : fallback);
 /** One's own way from a square to another, as legs split at the towns passed and where the road ends or begins. */
-export function ownLegs(a, b, mode, year, {fromName = "the start", toName = "the end"} = {}) {
-  const y = Number(year) || 0, g = grid(), roads = roadsIn(y), f = field(a, mode, y);
+export function ownLegs(a, b, mode, year, {fromName = "the start", toName = "the end", cruise = "safe"} = {}) {
+  const y = Number(year) || 0, g = grid(), roads = roadsIn(y), f = field(a, mode, y, cruise);
   if ( !Number.isFinite(f.dist[b]) ) return null;
   const path = [];
   for ( let i = b; i !== -1; i = f.prev[i] ) path.push(i);
@@ -249,7 +249,7 @@ export function ownLegs(a, b, mode, year, {fromName = "the start", toName = "the
   };
   for ( let k = 1; k < path.length; k++ ) {
     const i = path[k - 1], j = path[k], c1 = i % COLS, c2 = j % COLS, diag = c1 !== c2 && Math.floor(i / COLS) !== Math.floor(j / COLS);
-    const s = step(g, roads, i, j, diag, mode, y), on = s.kind !== "path";
+    const s = step(g, roads, i, j, diag, mode, y, cruise), on = s.kind !== "path";
     if ( cur && cur.on !== on && cur.cells.length >= 3 ) close(i, false);
     if ( !cur ) cur = {from: legs.length ? legs[legs.length - 1].to : fromName, km: 0, min: 0, on, kinds: {}, lands: {}, cells: []};
     cur.on = on; cur.km += s.km; cur.min += s.min; cur.cells.push(j);
@@ -280,11 +280,16 @@ export const HIRED = {
   "hire:air": {label: "By air", stop: "the airfield", from: 1920, to: 9999, wait: 60, bend: 1,
     edges: y => { const open = Object.keys(D.AIRFIELDS).filter(t => y >= D.AIRFIELDS[t]), out = []; for ( let i = 0; i < open.length; i++ ) for ( let j = i + 1; j < open.length; j++ ) out.push([open[i], open[j], "air"]); return out; },
     speed: (kind, y) => airSpeed(y), fare: y => (y < 1950 ? 1 / 150 : y < 1980 ? 1 / 600 : 1 / 2500), road: "rail", waitAt: y => (y < 1970 ? 60 : 120)},
+  // B6628 (desk 2026-11-16): an aerocab, the hired air taxi, picks the fares up where they stand and sets them down
+  // at the door: no stop to walk to, a short wait for it to come. It flies as an aerodyne at its safe speed. Its fare
+  // is dear: Cyberpunk 2020 puts an AV taxi at four or five times a ground cab's (Night City pdf p. 11); here a
+  // three-hundredth of a month's wage a km, ten times a bus's.
+  "hire:aerocab": {label: "By aerocab", stop: "the pickup", from: 2023, to: 9999, future: true, door: true, wait: 10, fly: "aerodyne", fare: () => 1 / 300, road: "air"},
   "hire:pod": {label: "By transit pod", stop: "the pod station", from: 2040, to: 9999, future: true, wait: 10, bend: 1.15,
     edges: () => D.RAILS.map(([a, b]) => [a, b, "rail"]), speed: () => 300, fare: () => 1 / 2000, road: "rail"}
 };
 /** Older names for a way, as trips were asked for before the map. */
-const WANT = {train: "hire:train", boat: "hire:boat", transit: "hire:pod"};
+const WANT = {train: "hire:train", boat: "hire:boat", transit: "hire:pod", aerocab: "hire:aerocab"};
 
 export function hiredModes(year, {future = false} = {}) {
   const y = Number(year) || 0;
@@ -300,6 +305,14 @@ export function fareOf(mode, km, year, wage) {
 /** The cheapest ride by one hired way between two squares: legs to the stop, the ride, and on from the last stop. */
 function hiredLegs(a, b, mode, year, names) {
   const y = Number(year) || 0, h = HIRED[mode];
+  if ( h.door ) {
+    // B6628: door to door, one ride: the flight's own path, at its safe speed, and the wait for it to come
+    const air = ownLegs(a, b, h.fly, y, names);
+    if ( !air?.length ) return null;
+    const km = sum(air, l => l.km), min = sum(air, l => l.minutes);
+    return [{from: `${h.stop} at ${names.fromName}`, to: names.toName, km: Math.round(km * 10) / 10, minutes: min + h.wait, wait: h.wait, road: h.road,
+      land: air[air.length - 1].land, mode, hired: true, shelter: true, via: air.slice(0, -1).map(l => l.to), stops: [], cells: air.flatMap(l => l.cells)}];
+  }
   const edges = h.edges(y).filter(([s, t]) => townStands(s, y) && townStands(t, y));
   if ( !edges.length ) return null;
   const adj = {};
@@ -354,7 +367,7 @@ const sum = (list, f) => list.reduce((n, x) => n + f(x), 0);
 function slowed(legs, {weather, night, year}) {
   const why = new Set();
   for ( const l of legs ) {
-    const kind = l.road === "path" ? "path" : l.road, mode = l.hired ? ({"hire:train": "train", "hire:coach": "coach", "hire:bus": "car", "hire:boat": "boat"}[l.mode] ?? null) : l.mode;
+    const kind = l.road === "path" ? "path" : l.road, mode = l.hired ? ({"hire:train": "train", "hire:coach": "coach", "hire:bus": "car", "hire:boat": "boat", "hire:aerocab": "aerodyne"}[l.mode] ?? null) : l.mode;
     if ( l.mode === "hire:air" || l.mode === "hire:pod" ) continue;
     const wf = Road.weatherFactor(weather, kind, mode, year), nf = l.hired && l.mode !== "hire:coach" ? 1 : Road.nightFactor(kind, mode, year, night);
     const ride = l.minutes - (l.wait ?? 0);
@@ -365,26 +378,47 @@ function slowed(legs, {weather, night, year}) {
   return [...why];
 }
 
+/** B6628: ways that fly and so may stop anywhere on the way, and go flat out. */
+export const FLIES = ["aerodyne", "hire:aerocab"];
 /**
- * A trip across the country map. from, to: {at} spots. ctx: {year, want, weather, night, future, wage}.
+ * A trip across the country map. from, to: {at} spots. ctx: {year, want, weather, night, future, wage, owns, cruise,
+ * via}. owns: ways of their own the travellers have (an aerodyne then counts as the fastest way, B6628); cruise: "safe"
+ * or "flat", how fast a flight goes; via: [{at, name}] places a flight sets down at on the way, in order (B6628).
  * Returns null when either place is off the map or both sit in one square (a local trip: the older sums apply).
- * Else {minutes, km, mode, modeLabel, road, why, by: "map", legs, hired, fare, options}.
+ * Else {minutes, km, mode, modeLabel, road, why, by: "map", legs, hired, fare, options, flight: {cruise, via} or null}.
  */
 export function countryTrip(from, to, ctx = {}) {
   const a = locate(from?.at), b = locate(to?.at);
   if ( !a || !b || a.i === b.i ) return null;
   const y = Number(ctx.year) || 0, names = {fromName: from?.name ?? "the start", toName: to?.name ?? "the end"};
+  const cruise = ctx.cruise === "flat" ? "flat" : "safe";
+  // B6628: the stops a flight sets down at, in order, skipping any off the map or in the same square as the last
+  const hops = [];
+  for ( const v of ctx.via ?? [] ) { const c = locate(v?.at); if ( c && c.i !== (hops.at(-1)?.i ?? a.i) && c.i !== b.i ) hops.push({i: c.i, name: v.name ?? "a stop on the way"}); }
+  const flight = id => {
+    const points = [{i: a.i, name: names.fromName}, ...hops, {i: b.i, name: names.toName}], out = [];
+    for ( let k = 1; k < points.length; k++ ) {
+      const n = {fromName: points[k - 1].name, toName: points[k].name};
+      const part = id.startsWith("hire:") ? hiredLegs(points[k - 1].i, points[k].i, id, y, n) : ownLegs(points[k - 1].i, points[k].i, id, y, {...n, cruise});
+      if ( !part?.length ) return null;
+      part[part.length - 1].shelter = true;
+      if ( k < points.length - 1 ) part[part.length - 1].setDown = true;
+      out.push(...part);
+    }
+    return out;
+  };
   const build = id => {
-    const legs = id.startsWith("hire:") ? hiredLegs(a.i, b.i, id, y, names) : ownLegs(a.i, b.i, id, y, names);
+    const legs = FLIES.includes(id) ? flight(id) : id.startsWith("hire:") ? hiredLegs(a.i, b.i, id, y, names) : ownLegs(a.i, b.i, id, y, names);
     if ( !legs?.length ) return null;
     const why = slowed(legs, {weather: ctx.weather ?? null, night: !!ctx.night, year: y});
+    const flown = FLIES.includes(id) ? {cruise: id === "aerodyne" ? cruise : "safe", via: hops.map(h => h.name)} : null;
     for ( const l of legs ) l.minutes = Math.max(1, Math.round(l.minutes));
-    const ride = legs.find(l => l.hired) ?? null;
+    const ride = legs.find(l => l.hired) ?? null, rideKm = sum(legs.filter(l => l.hired), l => l.km);
     const byRoad = {};
     for ( const l of legs ) byRoad[l.road] = (byRoad[l.road] ?? 0) + l.minutes;
     return {minutes: sum(legs, l => l.minutes), km: Math.round(sum(legs, l => l.km) * 10) / 10, mode: id,
       modeLabel: id.startsWith("hire:") ? HIRED[id].label : Road.MODES[id].label, road: Object.entries(byRoad).sort((p, q) => q[1] - p[1])[0][0], why, by: "map", legs,
-      hired: !!ride, fare: ride ? fareOf(id, ride.km, y, ctx.wage) : 0, stop: ride ? ride.from : null};
+      hired: !!ride, fare: ride ? fareOf(id, rideKm, y, ctx.wage) : 0, stop: ride ? ride.from : null, flight: flown};
   };
   const ids = [...ownModes(y, {future: !!ctx.future}).map(m => m.id), ...hiredModes(y, {future: !!ctx.future}).map(m => m.id)];
   const want = WANT[ctx.want] ?? ctx.want;
@@ -396,7 +430,7 @@ export function countryTrip(from, to, ctx = {}) {
     if ( !t ) continue;
     options.push({id, label: t.modeLabel, minutes: t.minutes, fare: t.fare});
     if ( id === "hire:air" && t.km < 300 ) continue;   // nobody flies a short hop unless they ask to
-    if ( Road.MODES[id]?.asked ) continue;             // B6628: an aerodyne only when asked for
+    if ( !Road.counts(id, {owns: ctx.owns}) ) continue; // B6628: an aerodyne only when asked for or owned
     if ( !best || t.minutes < best.minutes ) best = t;
   }
   return best ? {...best, options: options.sort((p, q) => p.minutes - q.minutes)} : null;

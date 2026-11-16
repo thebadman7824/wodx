@@ -96,7 +96,7 @@ export function rideOf(tokDoc) {
   return null;
 }
 const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat",
-  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon", camel: "Camel", aerodyne: "Aerodyne", assaultav: "Armoured AV", hoverbike: "Hover bike"};
+  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon", camel: "Camel", aerodyne: "Aerodyne", aerocab: "Aerocab", assaultav: "Armoured AV", hoverbike: "Hover bike"};
 
 /** B4966: a beast's traits for WoDX Combat's mounted rules, off its own sheet. */
 function beastTraits(actor) {

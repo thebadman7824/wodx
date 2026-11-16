@@ -555,10 +555,14 @@ def aerodynes():
     return [
         (2023, 'personal', 'Personal aerodyne', dict(L=150, bl=96, bh=38, style='quad', nose=30, glass=.5, windows=1, seats=4, w=50), 'modern'),
         (2023, 'saloon', 'Aerodyne saloon', dict(L=180, bl=124, bh=44, style='quad', nose=12, glass=.3, windows=2, stripe=True, seats=5, w=58), 'modern'),
-        (2023, 'cab', 'Aerocab', dict(L=176, bl=116, bh=42, style='quad', nose=20, glass=.4, windows=2, stripe=True, seats=5, w=56), 'bright'),
-        (2040, 'quad', 'Four-fan air taxi', dict(L=170, bl=110, bh=42, style='quad', nose=24, glass=.5, windows=1, seats=5, w=54), 'future'),
         (2040, 'sport', 'Sporting aerodyne', dict(L=160, bl=100, bh=34, style='quad', nose=36, glass=.55, windows=1, seats=2, w=48), 'future'),
         (2040, 'executive', 'Executive aerodyne', dict(L=186, bl=128, bh=44, style='quad', nose=20, glass=.3, windows=3, stripe=True, seats=5, w=60), 'future'),
+    ]
+def aerocabs():
+    return [
+        (2023, 'cab', 'Aerocab', dict(L=176, bl=116, bh=42, style='quad', nose=20, glass=.4, windows=2, stripe=True, seats=5, w=56), 'bright'),
+        (2023, 'shuttle', 'Air shuttle', dict(L=186, bl=128, bh=46, style='quad', nose=14, glass=.35, windows=3, stripe=True, seats=5, w=60), 'bright'),
+        (2040, 'quad', 'Four-fan air taxi', dict(L=170, bl=110, bh=42, style='quad', nose=24, glass=.5, windows=1, seats=5, w=54), 'future'),
     ]
 def assaultavs():
     return [

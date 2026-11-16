@@ -291,12 +291,14 @@ export const MOUNTS = {
   snowmobile: {label: "Snow machine", verb: "Drive it", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 2, from: 1910, min: 1, noise: "loud", snow: true},
   train: {label: "Railway train", verb: "Take the controls", reins: "on the footplate", skill: "drive", attr: "dexterity", seats: 40, from: 1825, min: 2, noise: "loud", rails: true},
   tram: {label: "Tram or streetcar", verb: "Take the controls", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 40, from: 1860, min: 2, noise: "loud", rails: true},
-  // B6620: flying cars on the World of Future Darkness branch (from 2023). An aerodyne seats a driver and three (house);
-  // an armoured AV carries ten troopers besides its crew (the police E-Van, Cyberpunk 2020 Forlorn Hope pdf p. 96) and,
-  // as a military aircraft, needs Pilot 3 (Mage 20th p. 462); a hover bike is a motorcycle on the ground, ridden with
-  // Drive, and flown with Pilot (flight-rules.mjs).
+  // B6620 (desk 2026-11-16): flying cars on the World of Future Darkness branch (from 2023), seated as the Mage 20th
+  // rows they stand on (chase-rules): an aerodyne seats a pilot and three (house); an aerocab, the hired one, a pilot
+  // and four fares, as the Large Helicopter; an armoured AV a crew of three and ten aboard, as the Military Utility
+  // Helicopter, and as a military aircraft needs Pilot 3 (Mage 20th p. 462); a hover bike is a motorcycle on the
+  // ground, ridden with Drive, and flown with Pilot (flight-rules.mjs).
   aerodyne: {label: "Aerodyne (flying car)", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 4, from: 2023, min: 1, air: true, noise: "loud"},
-  assaultav: {label: "Armoured AV", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 12, from: 2023, min: 3, air: true, military: true, noise: "loud"},
+  aerocab: {label: "Aerocab (air taxi)", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 5, from: 2023, min: 1, air: true, noise: "loud"},
+  assaultav: {label: "Armoured AV", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 13, from: 2023, min: 3, air: true, military: true, noise: "loud"},
   hoverbike: {label: "Hover bike", verb: "Ride it", reins: "on it", skill: "drive", attr: "dexterity", seats: 1, from: 2023, thrown: true, noise: "loud"}
 };
 /**
@@ -462,7 +464,7 @@ export const SWAPS = {
   light: {switch: {early: "lamp"}, lamp: {late: "switch"}},
   mount: {car: {early: "carriage"}, motorbike: {early: "horse"}, motorboat: {early: "boat"}, carriage: {late: "car"},
     truck: {early: "cart"}, armoured: {early: "car"}, tank: {early: "armoured"}, plane: {early: "balloon"}, helicopter: {early: "plane"}, jet: {early: "plane"},
-    aerodyne: {early: "helicopter"}, assaultav: {early: "helicopter"}, hoverbike: {early: "motorbike"}},
+    aerodyne: {early: "helicopter"}, aerocab: {early: "helicopter"}, assaultav: {early: "helicopter"}, hoverbike: {early: "motorbike"}},
   watch: {radio: {early: "phone"}, phone: {early: "bell"}}
 };
 const FAMILY = {
