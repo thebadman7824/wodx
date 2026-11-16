@@ -26,7 +26,13 @@ const docOf = t => (t?.documentName === "Token" ? t : (t?.document ?? t));
 
 /** The live effects of an actor, in the shape movement-rules reads. */
 export function effectsOf(actor) {
-  return [...(actor?.effects ?? [])].filter(e => !e.disabled).map(e => ({name: e.name ?? "", description: strip(e.description), key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null}));
+  return [...[...(actor?.effects ?? [])].filter(e => !e.disabled).map(e => ({name: e.name ?? "", description: strip(e.description), key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null})),
+    ...formTraitsOf(actor)];
+}
+/** B6729: a switched-on Demon apocalyptic form or Shintai aspect Trait (the system's packs) counts as a live effect. */
+export function formTraitsOf(actor) {
+  return [...(actor?.items ?? [])].filter(i => i?.type === "Trait" && i.system?.isactive && /apocalypticform$|\.aspect$/.test(String(i.system?.type ?? "")))
+    .map(i => ({name: i.name ?? "", description: strip(i.system?.description || i.system?.details), key: null}));
 }
 /** What this actor may do: flight, walls, water. */
 export const abilitiesOf = actor => {

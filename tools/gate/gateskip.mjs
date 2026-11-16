@@ -63,9 +63,16 @@ export async function run() {
       await game.modules.get(C)?.api?.writeLineageJournal?.();
       const changed = [...game.actors].filter(a => actorsBefore.get(a.id) !== print(a)).map(a => a.name);
       const gone = [...actorsBefore.keys()].filter(id => !game.actors.get(id));
+      // What changed on each, down to the first keys, so the writer can be found (B6759)
+      const keysOff = (a, b) => [...new Set([...Object.keys(a ?? {}), ...Object.keys(b ?? {})])].filter(k => JSON.stringify(a?.[k]) !== JSON.stringify(b?.[k]));
+      const what = [...game.actors].filter(a => actorsBefore.has(a.id) && actorsBefore.get(a.id) !== print(a)).map(a => {
+        const was = JSON.parse(actorsBefore.get(a.id)), now = JSON.parse(print(a));
+        const flags = keysOff(was.f, now.f).map(m => `${m}: ${keysOff(was.f?.[m], now.f?.[m]).join(", ")}`);
+        return {name: a.name, system: keysOff(was.s, now.s), flags, folder: was.folder !== now.folder, items: JSON.stringify(was.items) !== JSON.stringify(now.items)};
+      });
       ok(`${R.steps.length + 1}. put back, and no existing character changed`, game.time.worldTime === start.time && game.settings.get(CH, "activeEra") === start.era
         && chron().isHeld() === start.held && !changed.length && !gone.length && !game.actors.some(a => !actorsBefore.has(a.id)),
-        {worldTime: game.time.worldTime, startTime: start.time, era: game.settings.get(CH, "activeEra"), startEra: start.era, changed, gone, removedCards: mine.length, removedActors: newActors.length});
+        {worldTime: game.time.worldTime, startTime: start.time, era: game.settings.get(CH, "activeEra"), startEra: start.era, changed, what, gone, removedCards: mine.length, removedActors: newActors.length});
     } catch (err) { ok("put back", false, {error: err.message}); }
   }
   return save();

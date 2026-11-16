@@ -41,7 +41,8 @@ export function cantripPlan({ art = 0, artLevel = 1, used = [], known = {}, nigh
     { targetBanality = 0, placeBanality = 0, higherTitle = false, freehold = false, enchanted = false, affinity = false, bunk = 0, volunteer = false, mod = 0 } = {}) {
     if (n(art) < 1) return { ok: false, why: "choose an Art the character knows" };
     if (n(artLevel) > n(art)) return { ok: false, why: `that power needs the Art at ${artLevel}` };
-    const prim = used.filter(u => REALMS[u.realm]?.primary);
+    // B6935: the primary Realms are the PRIMARY list
+    const prim = used.filter(u => PRIMARY.includes(u.realm));
     if (!prim.length) return { ok: false, why: "a cantrip needs a primary Realm (Actor, Fae, Nature or Prop); Scene and Time only modify" };
     const notes = [];
     // The book's worked examples (p. 236) roll the Art's rating and the Realm's rating, not the levels the cantrip uses

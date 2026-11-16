@@ -1,7 +1,7 @@
 /**
  * WoDX Solo: Storyteller tools for the lone player (B4800 to B4805).
  *
- * Ben asked (14 November 2026) for a switch in single-player mode that shows Storyteller options, so the one person
+ * The owner asked (14 November 2026) for a switch in single-player mode that shows Storyteller options, so the one person
  * playing can check that everything works as meant and hand their character things to try. The player stays a
  * player in Foundry's eyes: making them a Storyteller would set every WoDX module working on two browsers at once.
  * Instead each tool is an ask over the module's socket, and the seat (the hidden Storyteller browser) answers only the

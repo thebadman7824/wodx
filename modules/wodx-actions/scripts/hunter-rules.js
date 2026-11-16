@@ -4,6 +4,7 @@
  *   The Hunters Hunted II pp. 83–85 later), the mortal Numina of The Hunters Hunted II (pp. 70–85).
  * Hunter: The Reckoning (1999 on) lives in reckoning-rules.js. No Foundry calls here, so the harness can test it.
  */
+import { outcomesOf } from "./mage-da-effects.js";
 
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -148,6 +149,26 @@ export const FAITH_POWERS = {
     ]
 };
 export const faithPowers = (rules, rating) => (FAITH_POWERS[rules] ?? FAITH_POWERS.hh2).filter(([k]) => k <= n(rating));
+/**
+ * B6858: what the faithful's presence does on the table (V20 Dark Ages p. 394, HH2 p. 84): from Faith 2 a sense of the
+ * unnatural near them (the Sense keyword's own result), from Faith 5 every vampire who hears their prayer or is touched
+ * rolls against Rötschreck at difficulty 9 (a Fear that rouses the Beast at strength 3).
+ */
+export function faithPresence(rules, rating, { source = "" } = {}) {
+    const r = n(rating), src = source || (rules === "da20" ? "V20 Dark Ages p. 394" : "The Hunters Hunted II p. 84"), out = [];
+    if (r >= 2) out.push(...outcomesOf({ kw: "sense", kind: "note", who: "self" }, { key: "sense", label: rules === "da20" ? "Unease near the unnatural" : "Senses vampires nearby", source: src }, r, (FAITH_POWERS[rules] ?? FAITH_POWERS.hh2).find(([k]) => k === 2)?.[1] ?? ""));
+    if (r >= 5) out.push(...outcomesOf({ kw: "fear", kind: "kw", who: "each", ctx: { frenzy: true } }, { key: "fear", label: "Holy dread (Rötschreck at 9)", source: src }, 3, (FAITH_POWERS[rules] ?? FAITH_POWERS.hh2).find(([k]) => k === 5)?.[1] ?? ""));
+    return out;
+}
+/**
+ * B6858: the powers True Faith stops on the faithful themselves (V20 Dark Ages p. 394: Faith 3 the mind-clouding
+ * Disciplines, Faith 4 Presence and the emotions; HH2 p. 84: Faith 3 every mind power). By effect keyword.
+ */
+export function faithStops(rules, rating, key) {
+    const r = n(rating);
+    if (rules === "da20") return (r >= 3 && ["sway", "possess", "illusion"].includes(key)) || (r >= 4 && key === "fear");
+    return r >= 3 && ["sway", "possess", "illusion", "fear"].includes(key);
+}
 /** Repelling (both books): the creature's Willpower is the difficulty; no successes, it may not advance; each success a turn of flight (Dark Ages). */
 export function repelDifficulty(rules, creatureWillpower) { return clamp(n(creatureWillpower) || 6, 2, 10); }
 export function repelResult(rules, roll) {
@@ -270,18 +291,20 @@ export const WITHDRAWAL = { difficulty: 7, weeks: stamina => Math.max(1, 6 - n(s
  * from the highest aspect level, the successes and the Path rating. s below need: nothing.
  */
 const sx = (key, who, out) => ({ key, who, out });
+/** B6858: the keyword's own result at the aspect level (a brew made, an object worked, a vision asked), not a line of text. */
+const KR = (kw, who, lv, b, text, learn = false) => outcomesOf(learn ? { kw, kind: "note", who } : { kw, kind: "st", who }, b, lv, text);
 export const SORCERY_FX = {
-    alchemy: (lv, s, rt, b) => [sx("make", "self", { ...b, kind: "note", text: `A brew of level ${lv} is ready: drunk or used, it works as the formula says` })],
-    conjuration: (lv, s, rt, b) => [sx("work", "one", { ...b, kind: "note", text: `Moves or calls an object of weight level ${lv}` })],
+    alchemy: (lv, s, rt, b) => KR("make", "self", lv, b, `A brew of level ${lv} is ready: drunk or used, it works as the formula says`),
+    conjuration: (lv, s, rt, b) => KR("work", "one", lv, b, `Moves or calls an object of weight level ${lv}`),
     conveyance: (lv, s, rt, b) => [sx("move", "self", { ...b, kind: "move", text: `Carried by the spell (level ${lv}${lv >= 4 ? ", teleporting" : ""})` })],
-    divination: (lv, s, rt, b) => [sx("know", "self", { ...b, kind: "note", text: `A glimpse reaching back or ahead by level ${lv}; the Storyteller judges how true it is` })],
-    enchantment: (lv, s, rt, b) => [sx("imbue", "one", { ...b, kind: "note", text: `An item is enchanted at level ${lv}` })],
+    divination: (lv, s, rt, b) => KR("know", "self", lv, b, `A glimpse reaching back or ahead by level ${lv}; the Storyteller judges how true it is`, true),
+    enchantment: (lv, s, rt, b) => KR("imbue", "one", lv, b, `An item is enchanted at level ${lv}`),
     fascination: (lv, s, rt, b) => [sx("boost", "self", { ...b, kind: "timed", name: "Fascination", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `+${lv} to a Social Attribute for the scene` })],
     fortune: (lv, s, rt, b) => [sx("fortune", "one", { ...b, kind: "timed", name: "Fortune", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `A blessing or curse of level ${lv} settles on the target for the scene` })],
     healing: (lv, s, rt, b) => [sx("mend", "one", { ...b, kind: "heal", levels: lv, aggravated: false, text: `heals ${lv} lethal or bashing level${lv === 1 ? "" : "s"}, for good` })],
     hellfire: (lv, s, rt, b) => { const d = 2 * Math.max(1, Math.min(s, n(rt))); return [sx("harm", "one", { ...b, kind: "damage", pool: d, levels: d, type: "lethal", soak: true, text: `${d} lethal damage dice, soaked as usual` })]; },
-    mana: (lv, s, rt, b) => [sx("charge", "self", { ...b, kind: "note", text: `Gathers or shifts mystic energy at level ${lv}` })],
-    oneiromancy: (lv, s, rt, b) => [sx("sense", "one", { ...b, kind: "note", text: `Reads or shapes a dream at level ${lv}` })],
+    mana: (lv, s, rt, b) => KR("charge", "self", lv, b, `Gathers or shifts mystic energy at level ${lv}`),
+    oneiromancy: (lv, s, rt, b) => KR("sense", "one", lv, b, `Reads or enters a dream at level ${lv}`, true),
     shadowcasting: (lv, s, rt, b) => [sx("light", "self", { ...b, kind: "timed", name: "Shadowcasting", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `Shadows gather and obey at level ${lv} for the scene` })],
     shapeshifting: (lv, s, rt, b) => [sx("shape", "self", { ...b, kind: "timed", name: "Shapeshifting", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `A change of shape at level ${lv}, for the scene` })],
     binding: (lv, s, rt, b) => [sx("ward", "one", { ...b, kind: "timed", name: "Ward", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `A ward of level ${lv} holds the place or being` })],

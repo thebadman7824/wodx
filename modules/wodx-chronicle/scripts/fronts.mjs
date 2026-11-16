@@ -14,7 +14,7 @@
  *
  * State in podState.saga.fronts (see front-rules.mjs). Storyteller only; the saga window holds the controls.
  */
-import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
+import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
 import * as F from "./front-rules.mjs";
 import * as S from "./saga-rules.mjs";
 
@@ -122,18 +122,26 @@ async function land(f, n, st, s, {why = ""} = {}) {
   Hooks.callAll("wodxFront", {front: f.key, step: n.key, at, title: n.label, scene: where, people, moves: n.moves ?? null});
 }
 
+/*
+ * B6740: each change to the fronts waits its turn on the story-chain state (util podTurn), with the clock's tick in
+ * pod.mjs, so the tick's older copy of the state never writes over a step, a strike or a clue the Storyteller made.
+ */
+const inTurn = fn => (...args) => podTurn(() => fn(...args));
+
 /** Take a front's next step now (the Storyteller's hand, or the company pushed it hard). */
-export async function stepFront(key, {force = true} = {}) {
+export const stepFront = inTurn(stepFrontNow);
+async function stepFrontNow(key, {force = true} = {}) {
   if ( !game.user.isGM ) return null;
   let r = null, s0 = null;
   await change((st, s) => { s0 = s; r = F.step(st, key, {...ctxOf(s), force}); return r.state; });
   if ( r ) await land(F.frontOf(key), r.step, r.state, s0);
   return r?.step ?? null;
 }
-export async function holdFront(key, on = true) { if ( game.user.isGM ) await change(st => F.hold(st, key, on, now())); }
-export async function pushFront(key) { if ( game.user.isGM ) await change(st => F.push(st, key)); }
+export const holdFront = inTurn(async (key, on = true) => { if ( game.user.isGM ) await change(st => F.hold(st, key, on, now())); });
+export const pushFront = inTurn(async key => { if ( game.user.isGM ) await change(st => F.push(st, key)); });
 /** Strike a front back a step: its marks go back to the step before, or off the map. */
-export async function strikeFront(key) {
+export const strikeFront = inTurn(strikeFrontNow);
+async function strikeFrontNow(key) {
   if ( !game.user.isGM ) return null;
   const r = await change(st => F.strike(st, key, now()));
   const st = r, n = F.stepNow(st, key);
@@ -143,7 +151,9 @@ export async function strikeFront(key) {
 }
 
 /** The weekly turn: every front that is due steps, the courier rides again, judgements whose chapter came send cards. */
-export async function frontTick() {
+export const frontTick = () => podTurn(frontTickNow);
+/** The same inside a turn already taken (pod.mjs's clock tick). */
+export async function frontTickNow() {
   if ( !isActiveGM() ) return;
   const s = pod();
   if ( !running(s) ) return;
@@ -178,15 +188,16 @@ export async function frontTick() {
 
 /* ---- roles, judgements, clues ---- */
 
-export async function setGone(name, on = true) { if ( game.user.isGM ) await change(st => F.setGone(st, name, on)); }
-export async function lean(name, by = 1) { if ( game.user.isGM ) await change(st => F.lean(st, name, by)); }
-export async function chooseHolder(role, name = "") { if ( game.user.isGM ) await change(st => F.choose(st, role, name)); }
-export async function stopCourier() { if ( game.user.isGM ) await change(st => F.stopCourier(st, now())); }
-export async function judge(key, choice = "") { if ( game.user.isGM ) await change(st => F.judge(st, key, choice)); }
+export const setGone = inTurn(async (name, on = true) => { if ( game.user.isGM ) await change(st => F.setGone(st, name, on)); });
+export const lean = inTurn(async (name, by = 1) => { if ( game.user.isGM ) await change(st => F.lean(st, name, by)); });
+export const chooseHolder = inTurn(async (role, name = "") => { if ( game.user.isGM ) await change(st => F.choose(st, role, name)); });
+export const stopCourier = inTurn(async () => { if ( game.user.isGM ) await change(st => F.stopCourier(st, now())); });
+export const judge = inTurn(async (key, choice = "") => { if ( game.user.isGM ) await change(st => F.judge(st, key, choice)); });
 export const holders = () => { const s = pod(); return F.holders(F.normState(sagaOf(s).fronts ?? {}, now()), twistsOf(s)); };
 
 /** A clue carrier found: its card on the open case board, and the whole fact with the third. */
-export async function findCarrier(key, i) {
+export const findCarrier = inTurn(findCarrierNow);
+async function findCarrierNow(key, i) {
   if ( !game.user.isGM ) return null;
   const r = await change(st => F.find(st, key, Number(i)));
   if ( !r?.fresh ) return r;
@@ -202,7 +213,7 @@ export async function findCarrier(key, i) {
   Hooks.callAll("wodxFront", {clue: key, carrier: Number(i), whole: r.whole});
   return r;
 }
-export async function unfindCarrier(key, i) { if ( game.user.isGM ) await change(st => F.unfind(st, key, Number(i))); }
+export const unfindCarrier = inTurn(async (key, i) => { if ( game.user.isGM ) await change(st => F.unfind(st, key, Number(i))); });
 
 /* ---- the saga window ---- */
 

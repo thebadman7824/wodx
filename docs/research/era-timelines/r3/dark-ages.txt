@@ -227,6 +227,7 @@
 1333|H|mor|EU|Florence|flood,disaster|The Arno flood|The Arno sweeps away Florence's bridges.
 1334|H|mor|EU|Florence|building|Giotto's bell tower|Giotto begins the campanile of Florence cathedral.
 1335|H|mor|ME|Tabriz|crown,death|The Ilkhanate breaks up|Abu Said dies without an heir; Mongol Persia falls apart.
+1335|W|vam|EU|The German lands|uprising|Tyler strikes at Hardestadt|The anarch Tyler attacks the Ventrue elder Hardestadt, the first dated blow of the Anarch Revolt.
 1336|H|mor|AS|Kyoto|crown,war|Two courts in Japan|Ashikaga Takauji takes Kyoto; Go-Daigo flees to Yoshino, and the Northern and Southern courts begin.
 1336|H|mor|AS|Vijayanagara|founding,empire|Vijayanagara founded|Harihara and Bukka found the empire of Vijayanagara in southern India.
 1337-5|H|mor|EU|Gascony|war,crown|The Hundred Years War begins|Philip VI confiscates Gascony; Edward III claims the French crown.

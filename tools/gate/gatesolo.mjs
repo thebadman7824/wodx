@@ -23,6 +23,8 @@
  *    9f. arrival (B5140): the player asks to be brought in, and the seat answers with the character's token; the panel
  *        offers no Make my character to a player who has one, and Foundry's User Configuration is closed (B6711)
  *    9g. the hunger line waits while the character wizard is open on the character (B6710)
+ *    9h. Chronicle options (B6757): the player turns on Threads of Fate, Hardship and Bodies left behind from the panel,
+ *        the seat writes them and refuses a key not on its list, and each is put back
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
@@ -217,6 +219,25 @@ async function player(ids) {
     // The main button (B2831) and the five under More
     const want = ["next", ...(S()?.rules?.PANEL ?? []).map(b => b.id)];
     ok("9b. the panel", opened && byItself && want.every(id => buttons.includes(id)) && buttons.length === want.length, {byItself, buttons, want, minVersion: atLeast(MOD, "0.2.0")});
+  });
+  await step("9h. chronicle options from the panel", async () => {
+    // B6757: the lone player sets the Storyteller's off-by-default options from the panel; the seat writes them and
+    // refuses a key that is not on the list. Each setting is put back as it was.
+    const R0 = S()?.rules, opts = (R0?.OPTIONS ?? []).filter(o => read(o.mod, o.key) !== undefined);
+    const was = Object.fromEntries(opts.map(o => [o.key, read(o.mod, o.key)]));
+    const flip = o => { const now = String(was[o.key]); return Object.keys(o.choices).find(v => v !== now && !(o.key === "threads" && now === "suggest" && v === "auto")) ?? now; };
+    const want = Object.fromEntries(opts.map(o => [o.key, flip(o)]));
+    const asWritten = v => v === "true" ? true : v === "false" ? false : v;
+    const hasButton = (R0?.PANEL ?? []).some(b => b.id === "options");
+    S().panel.ask("ask.options", {values: {...want, notAnOption: "on"}});
+    const set = await until(() => opts.every(o => same(read(o.mod, o.key), asWritten(want[o.key]))), 8000);
+    const refused = read("wodx-storyteller", "notAnOption") === undefined && R0?.optionChange?.("notAnOption", "on") === null && R0?.optionChange?.("hardship", "maybe") === null;
+    // a value the panel does not offer (threads "suggest") is put back by the Storyteller's browser in "finish"
+    const offered = opts.filter(o => Object.hasOwn(o.choices, String(was[o.key])));
+    S().panel.ask("ask.options", {values: Object.fromEntries(offered.map(o => [o.key, String(was[o.key])]))});
+    const back = await until(() => offered.every(o => same(read(o.mod, o.key), was[o.key])), 8000);
+    ok("9h. chronicle options from the panel", hasButton && opts.length === (R0?.OPTIONS ?? []).length && opts.length > 0 && set && refused && back,
+      {hasButton, options: opts.map(o => o.key), was, want, set, refused, back});
   });
   await step("9c. pause from the panel", async () => {
     const was = game.paused;
@@ -425,6 +446,12 @@ async function finish(ids, playerSteps) {
     R.stallReport = rep;
     ok("11. the stall report", rep.total >= 4 && rep.rows.some(r => r.end === "answered by the seat") && rep.rows.some(r => r.end === "left waiting"), {total: rep.total, waiting: rep.waiting});
   });
+
+  // 9h ran in the player's browser; put back any option it could not set back from the panel
+  for ( const o of S()?.rules?.OPTIONS ?? [] ) {
+    const was = (playerSteps ?? []).find(x => x.name?.startsWith("9h."))?.was;
+    if ( was && Object.hasOwn(was, o.key) && !same(read(o.mod, o.key), was[o.key]) ) await game.settings.set(o.mod, o.key, was[o.key]);
+  }
 
   await step("12. the switch off", async () => {
     await game.settings.set(MOD, "on", false);

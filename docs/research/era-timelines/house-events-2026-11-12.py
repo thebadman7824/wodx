@@ -1,4 +1,4 @@
-"""Stage 2 (Ben, 2026-11-10; stage 1 approved 2026-11-11): house-only events for each era, set in and around
+"""Stage 2 (the owner, 2026-11-10; stage 1 approved 2026-11-11): house-only events for each era, set in and around
 Rothenstein in Moravia. Two kinds: 'history' (real Moravian and Bohemian history, which the game books do not date,
 with what it means for the night) and 'house' (WoDX's own events). Each card says how it sits beside the approved
 book events (timeline-approved-2026-11-11.json). Named cast members of the chronicle are left out on purpose: what

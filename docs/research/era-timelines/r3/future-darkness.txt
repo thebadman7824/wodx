@@ -233,7 +233,7 @@
 2050|F|mor|EU|Moscow|science,travel|The Moon base|A Russian and European base opens at the lunar south pole to mine ice for the orbital yards.
 2051|F|mor|EU|Bratislava|war,persecution|Slovakia's purge|Slovakia passes a purge law after a crusader government takes power, and Moravia's eastern border fills with people fleeing the gates.
 2051|W|cha|EU|Bratislava|persecution,occult|The fae on the Morava|The house reading has Slovak changelings cross the Morava by night into the Moravian hills, carrying a freehold's Balefire in a lantern.
-2052|F|mor|EU|Rome|faith,law|The hollowed deputies|The crusade's deputies in Rome who take bribes from vampire clients stop hearing their Messengers, and the faithful call them hollowed.
+2052|F|mor|EU|Rome|faith,law|The hollowed deputies|Word reaches Rome that Free State deputies who sell their badge to vampire clients no longer hear the Messengers; the faithful there call them hollowed.
 2052|F|mor|AS|Jakarta|flood,building|Jakarta moves|Indonesia finishes moving its capital inland as the sea takes north Jakarta.
 2052|F|mor|MO|Olomouc|faith,persecution|The archdiocese defies Prague|The archbishop of Olomouc refuses to bless the crusade's gates and is placed under house arrest.
 2053|F|mor|ME|Istanbul|war,siege|The Bosphorus war|The camp cities of Anatolia rise against Istanbul's wall, and the city holds them off for a year with corporate artillery.

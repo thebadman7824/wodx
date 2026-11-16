@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * The PC job runner (B4100-B4109). Runs on Ben's PC, takes PC jobs straight from GitHub issues (label pc-job, opened
+ * The PC job runner (B4100-B4109). Runs on the owner's PC, takes PC jobs straight from GitHub issues (label pc-job, opened
  * by the owner's account; format in jobs.mjs) and runs them on the testbed lanes side by side, one job per lane, in
  * priority order (a waiting job gains a step each hour, B6490), with no thread or coordinator passing them along. Results go back to the issue as a comment and the
  * issue is closed with pc-done or pc-failed.

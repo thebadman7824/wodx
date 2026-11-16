@@ -1,7 +1,7 @@
 /**
  * Sprite tokens (WoDX Paperdoll 0.7.0, B2560 to B2562), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesprites.mjs?${Date.now()}`)).run()
- * It makes up to six tokens named "Sprite test: ..." on the scene being viewed and LEAVES them there for Ben to
+ * It makes up to six tokens named "Sprite test: ..." on the scene being viewed and LEAVES them there for the owner to
  * walk about; run it again and it uses the same tokens. Nothing else is made, changed or deleted, and the clock is
  * not touched. To clear up: delete the tokens whose names begin "Sprite test:".
  *   1. the module: Paperdoll 0.9.0 or later with api.sprites
@@ -13,12 +13,14 @@
  *  15. children (B3480): a character of 9 goes on the roster drawn as a child and the menu offers no "Grown"; a child
  *      figure picked for a grown character marks them a minor, so the age floor refuses romance, and "Grown" takes the
  *      mark away again. Step 15 makes two actors named "Sprite test child: ..." and deletes them.
+ *  16. relayed feeding (B6783, B6787): a feeding sent on from a player's computer (relayed) does not play the
+ *      feeder's move a second time here, and an unrelayed one still does
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
 // a batch create need not hand the documents back in the order asked: put them back in that order by name
 const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
 
-const N = 15;
+const N = 16;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -197,6 +199,18 @@ async function runGate(K) {
         ok("15. children", kidEntry?.growth === "child" && kidAge?.age === 9 && kidAge?.minor === true && !opts.includes("") && opts.includes("child") && before === true && marked && refused && grownEntry?.growth === "small" && cleared,
           {kidEntry: kidEntry ? {growth: kidEntry.growth} : null, kidAge, opts, before, marked, refused, grownGrowth: grownEntry?.growth, cleared});
       } finally { for ( const x of made ) await x.delete().catch(() => null); }
+    }
+    // 16. relayed feeding (B6787): the feeder already played on the player's computer; this one plays it only once
+    {
+      const by = n => docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === n), tm = by("townsman-1888"), la = by("lady-1888");
+      for ( let i = 0; i < 30 && A.playing(tm.id); i++ ) await sleep(200);
+      const idle = !A.playing(tm.id);
+      Hooks.callAll("wodxFed", {by: {uuid: tm.actor.uuid}, vessel: {uuid: la.actor.uuid}, drunk: 1, relayed: true}); await sleep(500);
+      const relayedPlayed = A.playing(tm.id)?.act ?? null;
+      for ( let i = 0; i < 30 && A.playing(tm.id); i++ ) await sleep(200);
+      Hooks.callAll("wodxFed", {by: {uuid: tm.actor.uuid}, vessel: {uuid: la.actor.uuid}, drunk: 1}); await sleep(500);
+      const direct = A.playing(tm.id)?.act ?? null; await sleep(2000);
+      ok("16. relayed feeding", idle && relayedPlayed === null && direct === "feed", {idle, relayedPlayed, direct});
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }

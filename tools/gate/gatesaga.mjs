@@ -13,6 +13,8 @@
  *   7. skipping a book stops its run
  *   9. a saga town change lands on the town named Rothenstein (skipped, with a note, when there is none)
  *   8. every other WoDX module still answers (and current() names the running step)
+ * B6740: the gate waits for the clock's tick to finish (api saga.settled) before it sets the saga's state by hand, and
+ * finds the saga's cards by their words, not by their place among book one's front cards.
  * Result: Data/wodx-gate/gatesaga-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -36,7 +38,10 @@ export async function run() {
   const t0 = Date.now(), time0 = game.time.worldTime, was = Object.fromEntries(KEYS.map(k => [k, foundry.utils.deepClone(game.settings.get(C, k))]));
   let towns0 = null; try { towns0 = foundry.utils.deepClone(game.settings.get("wodx-storyteller", "townState")); } catch (e) { towns0 = null; }
   const pend0 = new Set((appr()?.pending?.() ?? []).map(p => p.id));
-  const cards = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-pod"));
+  // The saga's own cards (book one's fronts send wct-front cards beside them)
+  const cards = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-pod") && !m.content.includes("wct-front"));
+  // B6740: wait for the clock's tick to finish its turn on the story-chain state before the gate sets it by hand
+  const settled = async () => { try { await saga()?.settled?.(); } catch (e) { /* an older Chronicle */ } };
   const heard = [];
   const hook = Hooks.on("wodxSaga", p => heard.push(p));
   try {
@@ -56,7 +61,7 @@ export async function run() {
       const n0 = cards().length;
       const run = await saga().start("red-stone");
       await until(() => cards().length > n0);
-      const c = cards().at(-1)?.content ?? "";
+      const c = cards().slice(n0).find(m => /Chapter I: The First Night/.test(m.content))?.content ?? cards().slice(n0).map(m => m.content).join(" | ");
       ok("2 first chapter", !!run && /Chapter I: The First Night/.test(c) && /waits here/.test(c) && /Notes:/.test(c) && saga().state().books["red-stone"] === "running", {card: c.slice(0, 300)});
     });
 
@@ -77,10 +82,14 @@ export async function run() {
       await game.time.advance(8 * DAY);
       await until(() => (saga().state().clocks.ashfield ?? 0) >= 1, 8000);
       const st = saga().state(), sig = heard.find(h => h.step === "c3");
-      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step)});
+      // B6750: when the vigil is not dealt, say why (a hold or Light-touch left by an earlier gate, or the run's place)
+      const run = game.settings.get(C, "podState").chains?.find(r => r.saga?.book === "red-stone");
+      const why = {quiet: !!game.modules.get(C).api?.isQuiet?.(), held: !!game.modules.get(C).api?.isHeld?.(), at: run?.at ?? null, current: saga().current?.()?.step?.key ?? null};
+      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step), why});
     });
 
     await step("4 ending", async () => {
+      await settled();
       await saga().ending("red-stone", "take");
       const run = game.settings.get(C, "podState").chains.find(r => r.saga?.book === "red-stone");
       const ch = pod().rules.chainOf(run, 1200), e1 = ch.steps.find(x => x.key === "e1");
@@ -89,6 +98,7 @@ export async function run() {
     });
 
     await step("5 next book offered", async () => {
+      await settled();
       const yr = game.modules.get(C).api?.eras?.currentYear?.() ?? 1197;
       await game.settings.set(C, "podState", {cities: {}, chains: []});
       const want = saga().rules.dueBook({}, yr);
@@ -100,11 +110,15 @@ export async function run() {
 
     await step("6 sequel notes", async () => {
       const e = game.journal.getName("The Patriarch's Last Dream (GM only)");
+      await settled();
       await game.settings.set(C, "podState", {cities: {}, chains: []});
       const n0 = cards().length;
       await saga().start("patriarch");
-      await until(() => cards().length > n0);
-      const c = cards().at(-1)?.content ?? "";
+      // B6750: book one's fronts post their own wct-pod cards on the same ticks, so the sequel's card is found by its
+      // chapter, never as the last card (gate rule 1)
+      const mine = () => cards().slice(n0).find(m => /Chapter I: The envoy/.test(m.content));
+      await until(() => !!mine());
+      const c = mine()?.content ?? "";
       ok("6 sequel notes", /Chapter I: The envoy/.test(c) && (!e || /Session 1/.test(c)), {journal: !!e, card: c.slice(0, 300)});
     });
 
@@ -133,6 +147,7 @@ export async function run() {
   finally {
     Hooks.off("wodxSaga", hook);
     try {
+      await settled();
       for ( const p of (appr()?.pending?.() ?? []).filter(p => !pend0.has(p.id)) ) await appr().decide(p.id, "reject", "gate cleanup");
       const msgs = game.messages.filter(m => m.timestamp >= t0);
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));

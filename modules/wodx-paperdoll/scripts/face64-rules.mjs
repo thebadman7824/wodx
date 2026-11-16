@@ -49,7 +49,7 @@ export const TALK_MOUTHS = ["talk1", "talk2", "talk3"];
 const OPEN_MOUTHS = new Set(["anger", "fear", "slack", ...TALK_MOUTHS]);
 
 /**
- * Everyday skin, 24 tones (Ben, 13 November 2026, from 8): light to deep, each with warm, golden, olive, ruddy or cool
+ * Everyday skin, 24 tones (the owner, 13 November 2026, from 8): light to deep, each with warm, golden, olive, ruddy or cool
  * undertones, so that two people seldom share one.
  */
 const SKINS = [
@@ -60,7 +60,7 @@ const SKINS = [
 ];
 /** A fae mien's skin, seen only with fae sight: one changeling in three wears one. */
 export const FAE_SKINS = [[120, 160, 220], [110, 176, 120], [190, 160, 220], [200, 204, 216], [150, 120, 90], [220, 180, 200], [100, 190, 190], [230, 210, 140], [150, 150, 170], [200, 110, 90]];
-/** Natural hair, 22 colours (Ben, 13 November 2026, from 8): black to white through browns, reds and blonds. */
+/** Natural hair, 22 colours (the owner, 13 November 2026, from 8): black to white through browns, reds and blonds. */
 const HAIRS = [
   [20, 18, 22], [34, 26, 26], [30, 30, 44], [52, 36, 30], [70, 44, 28], [88, 58, 38], [104, 62, 36], [124, 84, 52],
   [150, 104, 52], [120, 48, 30], [150, 64, 34], [184, 92, 44], [196, 120, 70], [176, 140, 84], [196, 160, 92], [216, 186, 120],
@@ -104,7 +104,7 @@ export function roll(seed, line = "mortal", {sex = "", fangs = false, kith = ""}
     beard: r.pick(["", "", "stubble", "full", "goatee"]), w: r.pick([12, 13, 14, 14, 15, 16]), jw: r.pick([9, 10, 11, 12, 12, 13, 14]), chin: r.pick([52, 53, 54, 54, 55, 56]), cw: r.pick([3, 4, 5, 5, 6, 7]),
     iris: r.pick(IRISES), cloth: r.pick(CLOTHS), brow: r.pick([27, 28, 28]), lash: r.chance(0.5), bg: [46, 44, 58], cool: false, sunk: false,
     white: [236, 230, 220], ears: "plain", thin: false, fangs: !!fangs, kith: String(kith ?? "").toLowerCase()};
-  S.cf = r.pick([1.4, 2, 2.6, 2.6, 3.4, 4.4]); S.ce = r.pick([0.38, 0.45, 0.5, 0.5, 0.58, 0.66]); S.nose = r.pick(NOSES);   // head shapes and noses (Ben, 13 November 2026)
+  S.cf = r.pick([1.4, 2, 2.6, 2.6, 3.4, 4.4]); S.ce = r.pick([0.38, 0.45, 0.5, 0.5, 0.58, 0.66]); S.nose = r.pick(NOSES);   // head shapes and noses (the owner, 13 November 2026)
   if ( sex === "woman" ) S.lash = true;
   else if ( sex === "man" ) S.lash = false;
   (PRE[S.line] ?? (() => {}))(S, r);
@@ -152,7 +152,7 @@ function headHw(y, [top, eye, jaw, chin, w, jw, cw, cf = 2.6, ce = 0.5]) {
   // ce shapes the crown (lower is broad and flat-topped, higher is narrow and domed); cf the chin's turn (low is pointed, high is square)
   if ( y <= eye ) return w * Math.max(0, 1 - ((eye - y) / (eye - top + 0.5)) ** 2) ** ce;
   if ( y <= jaw ) return w - (w - jw) * ((y - eye) / (jaw - eye));
-  // the jaw holds its width and turns late into a chin that stands out (squarer since 13 November 2026: Ben found the chins weak)
+  // the jaw holds its width and turns late into a chin that stands out (squarer since 13 November 2026: The owner found the chins weak)
   const f = (y - jaw) / (chin - jaw); return jw - (jw - Math.max(cw, 5)) * f ** cf;
 }
 function skin(F, R, shape, neck) {
@@ -408,7 +408,7 @@ const PRE = {
 /** Drawn behind the head (after the clothes): nothing yet; the Nosferatu's ears grow from the side of the head (nosEars). */
 const BACK = {};
 /**
- * The Nosferatu's great ears (redrawn 13 November 2026 at Ben's word: they must not seem to grow from the back of the
+ * The Nosferatu's great ears (redrawn 13 November 2026 at the owner's word: they must not seem to grow from the back of the
  * head). Each is rooted on the side of the head at eye-to-nose height, laid over the head's edge, with its hollow and the
  * opening of the ear at the root facing forward, and rises outward to a point: a bat's ear high, a long ear to the side.
  */
@@ -416,7 +416,7 @@ function nosEars(c) {
   const {F, R, S, shape} = c;
   if ( S.ears === "none" ) return;
   if ( S.ears === "plain" ) return plainEars(c);
-  // Ben (13 November 2026): not every Nosferatu has bat's ears. Some keep plain ears, some have a stub, a torn or a
+  // The owner (13 November 2026): not every Nosferatu has bat's ears. Some keep plain ears, some have a stub, a torn or a
   // drooping ear, a finned fan, bare holes, or two ears that do not match.
   const sides = S.ears === "uneven" ? ["bat", "stub"] : [S.ears, S.ears];
   sides.forEach((kind, i) => {

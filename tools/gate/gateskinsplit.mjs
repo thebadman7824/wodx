@@ -55,6 +55,8 @@ export async function run() {
         await wait(() => elOf(sheet)?.isConnected);
         const win = elOf(sheet)?.closest(".wod20.wod-sheet");
         await wait(() => win && !win.classList.contains("wodx-wait-skin"), 5000);
+        // B6950: on a busy lane a file can land after the page stops waiting; it still counts once it is in
+        await wait(() => win && S().linesOf(win).every(id => S().loaded().includes(id)) && papered(win), 15000);
         const lines = win ? S().linesOf(win) : [];
         rows.push({type: a.type, lines, loaded: lines.every(id => S().loaded().includes(id)), waiting: !!win?.classList.contains("wodx-wait-skin"), papered: !!win && papered(win)});
         await sheet.close();

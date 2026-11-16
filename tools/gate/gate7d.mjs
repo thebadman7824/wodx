@@ -1,5 +1,5 @@
 /**
- * Phase 7d gate (factions and domains), in Foundry, in rothenstein-wodx (Ben's testing world, 2026-11-08), as
+ * Phase 7d gate (factions and domains), in Foundry, in rothenstein-wodx (the owner's testing world, 2026-11-08), as
  * Gamemaster Test:
  *   await (await import(`/wodx-gate/gate7d.mjs?${Date.now()}`)).run()
  * Back the world up first.

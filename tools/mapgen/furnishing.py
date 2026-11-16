@@ -229,11 +229,11 @@ def _things_on(room, pal, R, added):
 
 def _laid_tables(room, pal, R, added, each=2):
     """In a taproom or a kitchen every table, counter and bar has at least `each` things on it: mugs, plates,
-    bread, a jug (Ben's reference maps)."""
+    bread, a jug (the owner's reference maps)."""
     out = []
     hosts = [it for it in room.items if (it.get("piece") or K.piece_of(it["asset"])) in ("table", "counter") or C.BAR.search(it["asset"])]
     seats = [it for it in room.items if (it.get("piece") or K.piece_of(it["asset"])) == "seat"]
-    for b in hosts:                                            # a place laid in front of every chair at the table (Ben's
+    for b in hosts:                                            # a place laid in front of every chair at the table (the owner's
         if C.BAR.search(b["asset"]) or (b.get("piece") or K.piece_of(b["asset"])) == "counter": continue   # interior packs)
         for st in seats:
             if C.gap_between((b["x"], b["y"], b["w"], b["h"]), (st["x"], st["y"], st["w"], st["h"])) > .35: continue
@@ -272,7 +272,7 @@ EARLY = ("medieval", "early", "reform", "industrial")
 
 
 def _wall_hung(room, pal, R):
-    """Kitchenware hung on the wall, taking no floor: pots, pans, herbs, a meat hook (Ben's interior packs). One in a
+    """Kitchenware hung on the wall, taking no floor: pots, pans, herbs, a meat hook (the owner's interior packs). One in a
     poor kitchen, two otherwise; never at a door or window, behind an oven or cupboard, or on a lamp's spot. Before
     the 20th century a pot also hangs over an open fire."""
     if room.kind != "kitchen": return []
@@ -432,7 +432,7 @@ def _straw(room, R):
 FIRESIDE = re.compile(r"Fireplace|Hearth|Cooking_Pit|Fire_?Pit|Stove|Oven", re.I)
 
 def _fireside(room, pal, R):
-    """A rug on the floor in front of the room's fire and a seat on it facing the fire (Ben's reference maps: the
+    """A rug on the floor in front of the room's fire and a seat on it facing the fire (the owner's reference maps: the
     fire anchors a living room, a taproom or a hall). Only where nothing stands there already."""
     if room.kind not in ("hall", "tavern"): return []
     fires = [i for i in room.items if i.get("layer", 100) == 100 and FIRESIDE.search(i["asset"])]
@@ -489,9 +489,9 @@ def fill_room(room):
                                                                # walkways (a barn keeps its threshing floor open)
             room.blocked = [b for b in room.blocked if b[4] != "open floor"]
         limit = FULL.get(kind, FULL_DEFAULT) * room.iw * room.ih
-        # a kitchen always tries for a work table in the middle and a shelf of pots and plates (Ben's reference maps)
+        # a kitchen always tries for a work table in the middle and a shelf of pots and plates (the owner's reference maps)
         prefers = ctx["prefers"] + {"kitchen": ["kitchen-table", "shelf-store", "chopping-block"], "shop": ["corner-counter"],
-                                    "work": ["craft-bench"]}.get(kind, [])     # Ben's interior packs: what each room is known by
+                                    "work": ["craft-bench"]}.get(kind, [])     # the owner's interior packs: what each room is known by
         options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], prefers)
         used, added = {}, []
         def dense():                                           # lived in, however poor: enough pieces for the floor
@@ -622,7 +622,7 @@ LANTERN_SIGN = re.compile(r"Paper Lantern", re.I)
 
 
 def _hang_sign(b, pal, trade, R):
-    """A tavern, inn or shop hangs its sign on the outside wall beside its front door (Ben's interior packs). The sign
+    """A tavern, inn or shop hangs its sign on the outside wall beside its front door (the owner's interior packs). The sign
     is the age's and region's own; a house or a workshop with no trade at the door has none."""
     if not SIGNED.search(f"{b.type or ''} {b.label or ''} {trade or ''}"): return
     tavern = re.search(r"tavern|inn|alehouse|pub|beer|wine|hostel|hotel", f"{b.type} {b.label}", re.I)

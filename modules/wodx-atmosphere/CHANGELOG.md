@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.18.4 (Aging faces wait while the world is held (final audit, B6759). An era put in force during a hold (a gate, a flashback) no longer rewrites the portraits and face records of every character with an aging face. The faces catch up when the clock moves freely again; Final audit fix. The weather card listed these modifiers and no roll read them (B6796))
 - 0.18.3 (The module description no longer says maps change with the year as if WoDX drew them: places that age switch a scene to later pictures of its map that the Storyteller supplies, by the chronicle's year, and no map is generated in play (the map generators in tools/mapgen run outside the game) (B6669))
 - 0.18.2 (Light from the clock now reaches scenes nobody ticked by hand: an out-of-doors scene (a built street, a solo landing, a setup scene) follows the clock unless the Storyteller unticks "Follow the clock's light" in the Atmosphere window, and the window's box shows that default (B6168))
 - 0.18.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own. Dawn and dusk sounds, the pale edge before sunrise, the cock-crow card and the scene's opening card follow the sun where the scene stands, not the home town's)

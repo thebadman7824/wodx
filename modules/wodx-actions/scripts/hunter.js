@@ -378,7 +378,7 @@ export function build(ctx) {
         const powers = H.faithPowers(rules, rating);
         const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${esc(holyNote(actor))}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
           <ul class="wodx-quiet">${powers.map(([k, t]) => `<li>${k ? "•".repeat(k) : "Always"}: ${esc(t)}</li>`).join("")}</ul>
-          <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
+          <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="presence">Their presence (Faith 2 and 5: no cost)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
           <div class="form-group"><label>Creature's Willpower / the power's successes</label><input type="number" name="cw" value="${tw || 6}" min="1" max="10" style="width:4em"/> <input type="number" name="ps" value="0" min="0" style="width:4em"/> <label><input type="checkbox" name="daim"/> Daimoinon</label></div>
           <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${rating}" min="0" max="5"/></div>
           <div class="form-group"><label>Their faith (for holy ground)</label><select name="faith" data-fixed><option value="">${isInquisitor(actor) ? "The Western church (an inquisitor)" : "Not named (any house of worship)"}</option>${Object.entries(FAITH_NAMES).map(([k, v]) => `<option value="${k}"${actor.getFlag(MOD, "faith") === k ? " selected" : ""}>${esc(v)}</option>`).join("")}</select></div></form>`;
@@ -396,6 +396,14 @@ export function build(ctx) {
                 const base = baseFaith(actor);
                 if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": base - 1 }); else await ctx.setFlag(actor, "trueFaith", base - 1); }
                 return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${base} → ${base - 1}.` : "The faith holds."}</div>`, [r.roll]);
+            }
+            // B6858: the passive lines of the faith on the effects card: a sense of the unnatural, and holy dread at Faith 5
+            if (fd.k === "presence") {
+                const res = H.faithPresence(rules, rating);
+                if (!res.length) return ctx.notify(`True Faith ${rating}: nothing to put on the table below Faith 2.`);
+                const pp = EF.isOn() ? EF.planOf(actor, res, rating) : { html: "", items: [] };
+                const items = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                return post(actor, `${actor.name}: the presence of faith`, hb + pp.html, [], items.length ? { kind: "effects", caster: actor.name, items } : undefined);
             }
             if (!(await spendWillpower(actor, 1))) return null;
             if (fd.k === "repel") {

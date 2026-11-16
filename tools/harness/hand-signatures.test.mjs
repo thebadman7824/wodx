@@ -14,9 +14,10 @@ const D = await load("modules/wodx-chronicle/data/signatures.mjs");
 test("soak dice come from the feature and its condition", () => {
   assert.equal(S.sigSoak({ ahroun: true, crinos: true, wyrmFoe: true }).dice, 1);
   assert.equal(S.sigSoak({ ahroun: true, crinos: false, wyrmFoe: true }).dice, 0);
-  assert.equal(S.sigSoak({ troll: true, oathHeld: true }).dice, 1);
+  // B6729: a troll's oath gives Strength and Bruised (C20 p. 113), not soak
+  assert.equal(S.sigSoak({ troll: true, oathHeld: true }).dice, 0);
   assert.equal(S.sigSoak({ defender: true, beside: true, monsterFoe: false }).dice, 0);
-  assert.equal(S.sigSoak({ defender: true, beside: true, monsterFoe: true, troll: true, oathHeld: true }).dice, 2);
+  assert.equal(S.sigSoak({ defender: true, beside: true, monsterFoe: true, troll: true, oathHeld: true }).dice, 1);
 });
 
 test("the awards that now happen at once", () => {

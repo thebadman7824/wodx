@@ -2989,7 +2989,7 @@ export default {
     "mortal"
    ],
    "name": "The hollowed deputies",
-   "summary": "The crusade's deputies in Rome who take bribes from vampire clients stop hearing their Messengers, and the faithful call them hollowed.",
+   "summary": "Word reaches Rome that Free State deputies who sell their badge to vampire clients no longer hear the Messengers; the faithful there call them hollowed.",
    "region": "EU",
    "place": "Rome",
    "tags": [

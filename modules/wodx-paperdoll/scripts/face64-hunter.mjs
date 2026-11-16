@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Hunter faces (13 November 2026, B3047). Ben: 50 for any hunter, 15 per creed and order. Hunters are
+ * WoDX Paperdoll: Hunter faces (13 November 2026, B3047). The owner: 50 for any hunter, 15 per creed and order. Hunters are
  * people, so these are the marks of the hunt: wear, scars, gear and faith, in our own words, with the rest invented to
  * fit. Creeds follow Hunter: the Reckoning (from 1999); inquisitors, the Society of Leopold and the Arcanum cover the
  * earlier eras.

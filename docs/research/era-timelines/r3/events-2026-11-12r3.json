@@ -50548,6 +50548,34 @@
 {
 "id": "r3-dark-ages-229",
 "era": "dark-ages",
+"year": 1335,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "The German lands",
+"tags": [
+"uprising"
+],
+"title": "Tyler strikes at Hardestadt",
+"text": "The anarch Tyler attacks the Ventrue elder Hardestadt, the first dated blow of the Anarch Revolt.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "dav-fiefs-black-cross",
+"title": "The Fiefs of the Black Cross"
+},
+{
+"id": "daeu-holy-roman-empire",
+"title": "The Holy Roman Empire in 1230"
+}
+]
+},
+{
+"id": "r3-dark-ages-230",
+"era": "dark-ages",
 "year": 1336,
 "month": null,
 "kind": "history",
@@ -50566,7 +50594,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-230",
+"id": "r3-dark-ages-231",
 "era": "dark-ages",
 "year": 1336,
 "month": null,
@@ -50586,7 +50614,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-231",
+"id": "r3-dark-ages-232",
 "era": "dark-ages",
 "year": 1337,
 "month": 5,
@@ -50606,7 +50634,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-232",
+"id": "r3-dark-ages-233",
 "era": "dark-ages",
 "year": 1337,
 "month": null,
@@ -50626,7 +50654,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-233",
+"id": "r3-dark-ages-234",
 "era": "dark-ages",
 "year": 1338,
 "month": null,
@@ -50645,7 +50673,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-234",
+"id": "r3-dark-ages-235",
 "era": "dark-ages",
 "year": 1338,
 "month": null,
@@ -50665,7 +50693,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-235",
+"id": "r3-dark-ages-236",
 "era": "dark-ages",
 "year": 1339,
 "month": null,
@@ -50684,7 +50712,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-236",
+"id": "r3-dark-ages-237",
 "era": "dark-ages",
 "year": 1340,
 "month": 6,
@@ -50704,7 +50732,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-237",
+"id": "r3-dark-ages-238",
 "era": "dark-ages",
 "year": 1340,
 "month": 10,
@@ -50724,7 +50752,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-238",
+"id": "r3-dark-ages-239",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -50757,7 +50785,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-239",
+"id": "r3-dark-ages-240",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -50776,7 +50804,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-240",
+"id": "r3-dark-ages-241",
 "era": "dark-ages",
 "year": 1342,
 "month": null,
@@ -50796,7 +50824,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-241",
+"id": "r3-dark-ages-242",
 "era": "dark-ages",
 "year": 1343,
 "month": null,
@@ -50816,7 +50844,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-242",
+"id": "r3-dark-ages-243",
 "era": "dark-ages",
 "year": 1343,
 "month": null,
@@ -50836,7 +50864,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-243",
+"id": "r3-dark-ages-244",
 "era": "dark-ages",
 "year": 1344,
 "month": null,
@@ -50856,7 +50884,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-244",
+"id": "r3-dark-ages-245",
 "era": "dark-ages",
 "year": 1345,
 "month": null,
@@ -50876,7 +50904,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-245",
+"id": "r3-dark-ages-246",
 "era": "dark-ages",
 "year": 1345,
 "month": null,
@@ -50895,7 +50923,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-246",
+"id": "r3-dark-ages-247",
 "era": "dark-ages",
 "year": 1346,
 "month": 8,
@@ -50914,7 +50942,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-247",
+"id": "r3-dark-ages-248",
 "era": "dark-ages",
 "year": 1346,
 "month": 10,
@@ -50934,7 +50962,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-248",
+"id": "r3-dark-ages-249",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -50954,7 +50982,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-249",
+"id": "r3-dark-ages-250",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -50973,7 +51001,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-250",
+"id": "r3-dark-ages-251",
 "era": "dark-ages",
 "year": 1197,
 "month": null,
@@ -50992,7 +51020,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-251",
+"id": "r3-dark-ages-252",
 "era": "dark-ages",
 "year": 1199,
 "month": null,
@@ -51012,7 +51040,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-252",
+"id": "r3-dark-ages-253",
 "era": "dark-ages",
 "year": 1203,
 "month": null,
@@ -51031,7 +51059,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-253",
+"id": "r3-dark-ages-254",
 "era": "dark-ages",
 "year": 1205,
 "month": null,
@@ -51063,7 +51091,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-254",
+"id": "r3-dark-ages-255",
 "era": "dark-ages",
 "year": 1206,
 "month": null,
@@ -51083,7 +51111,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-255",
+"id": "r3-dark-ages-256",
 "era": "dark-ages",
 "year": 1209,
 "month": null,
@@ -51103,7 +51131,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-256",
+"id": "r3-dark-ages-257",
 "era": "dark-ages",
 "year": 1210,
 "month": null,
@@ -51122,7 +51150,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-257",
+"id": "r3-dark-ages-258",
 "era": "dark-ages",
 "year": 1213,
 "month": null,
@@ -51147,7 +51175,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-258",
+"id": "r3-dark-ages-259",
 "era": "dark-ages",
 "year": 1216,
 "month": null,
@@ -51180,7 +51208,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-259",
+"id": "r3-dark-ages-260",
 "era": "dark-ages",
 "year": 1219,
 "month": null,
@@ -51199,7 +51227,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-260",
+"id": "r3-dark-ages-261",
 "era": "dark-ages",
 "year": 1220,
 "month": null,
@@ -51231,7 +51259,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-261",
+"id": "r3-dark-ages-262",
 "era": "dark-ages",
 "year": 1220,
 "month": null,
@@ -51256,7 +51284,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-262",
+"id": "r3-dark-ages-263",
 "era": "dark-ages",
 "year": 1223,
 "month": null,
@@ -51288,7 +51316,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-263",
+"id": "r3-dark-ages-264",
 "era": "dark-ages",
 "year": 1224,
 "month": null,
@@ -51307,7 +51335,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-264",
+"id": "r3-dark-ages-265",
 "era": "dark-ages",
 "year": 1225,
 "month": null,
@@ -51326,7 +51354,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-265",
+"id": "r3-dark-ages-266",
 "era": "dark-ages",
 "year": 1226,
 "month": null,
@@ -51346,7 +51374,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-266",
+"id": "r3-dark-ages-267",
 "era": "dark-ages",
 "year": 1227,
 "month": null,
@@ -51378,7 +51406,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-267",
+"id": "r3-dark-ages-268",
 "era": "dark-ages",
 "year": 1228,
 "month": null,
@@ -51397,7 +51425,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-268",
+"id": "r3-dark-ages-269",
 "era": "dark-ages",
 "year": 1231,
 "month": null,
@@ -51416,7 +51444,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-269",
+"id": "r3-dark-ages-270",
 "era": "dark-ages",
 "year": 1232,
 "month": null,
@@ -51436,7 +51464,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-270",
+"id": "r3-dark-ages-271",
 "era": "dark-ages",
 "year": 1232,
 "month": null,
@@ -51457,7 +51485,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-271",
+"id": "r3-dark-ages-272",
 "era": "dark-ages",
 "year": 1236,
 "month": null,
@@ -51476,7 +51504,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-272",
+"id": "r3-dark-ages-273",
 "era": "dark-ages",
 "year": 1237,
 "month": null,
@@ -51500,7 +51528,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-273",
+"id": "r3-dark-ages-274",
 "era": "dark-ages",
 "year": 1237,
 "month": null,
@@ -51519,7 +51547,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-274",
+"id": "r3-dark-ages-275",
 "era": "dark-ages",
 "year": 1238,
 "month": null,
@@ -51538,7 +51566,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-275",
+"id": "r3-dark-ages-276",
 "era": "dark-ages",
 "year": 1239,
 "month": null,
@@ -51557,7 +51585,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-276",
+"id": "r3-dark-ages-277",
 "era": "dark-ages",
 "year": 1240,
 "month": null,
@@ -51577,7 +51605,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-277",
+"id": "r3-dark-ages-278",
 "era": "dark-ages",
 "year": 1241,
 "month": null,
@@ -51602,7 +51630,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-278",
+"id": "r3-dark-ages-279",
 "era": "dark-ages",
 "year": 1241,
 "month": null,
@@ -51621,7 +51649,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-279",
+"id": "r3-dark-ages-280",
 "era": "dark-ages",
 "year": 1242,
 "month": null,
@@ -51640,7 +51668,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-280",
+"id": "r3-dark-ages-281",
 "era": "dark-ages",
 "year": 1243,
 "month": null,
@@ -51672,7 +51700,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-281",
+"id": "r3-dark-ages-282",
 "era": "dark-ages",
 "year": 1245,
 "month": null,
@@ -51691,7 +51719,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-282",
+"id": "r3-dark-ages-283",
 "era": "dark-ages",
 "year": 1246,
 "month": null,
@@ -51711,7 +51739,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-283",
+"id": "r3-dark-ages-284",
 "era": "dark-ages",
 "year": 1247,
 "month": null,
@@ -51731,7 +51759,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-284",
+"id": "r3-dark-ages-285",
 "era": "dark-ages",
 "year": 1248,
 "month": null,
@@ -51750,7 +51778,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-285",
+"id": "r3-dark-ages-286",
 "era": "dark-ages",
 "year": 1249,
 "month": null,
@@ -51770,7 +51798,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-286",
+"id": "r3-dark-ages-287",
 "era": "dark-ages",
 "year": 1250,
 "month": null,
@@ -51794,7 +51822,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-287",
+"id": "r3-dark-ages-288",
 "era": "dark-ages",
 "year": 1251,
 "month": null,
@@ -51813,7 +51841,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-288",
+"id": "r3-dark-ages-289",
 "era": "dark-ages",
 "year": 1252,
 "month": null,
@@ -51837,7 +51865,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-289",
+"id": "r3-dark-ages-290",
 "era": "dark-ages",
 "year": 1253,
 "month": null,
@@ -51856,7 +51884,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-290",
+"id": "r3-dark-ages-291",
 "era": "dark-ages",
 "year": 1254,
 "month": null,
@@ -51876,7 +51904,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-291",
+"id": "r3-dark-ages-292",
 "era": "dark-ages",
 "year": 1255,
 "month": null,
@@ -51895,7 +51923,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-292",
+"id": "r3-dark-ages-293",
 "era": "dark-ages",
 "year": 1257,
 "month": null,
@@ -51914,7 +51942,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-293",
+"id": "r3-dark-ages-294",
 "era": "dark-ages",
 "year": 1258,
 "month": null,
@@ -51934,7 +51962,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-294",
+"id": "r3-dark-ages-295",
 "era": "dark-ages",
 "year": 1259,
 "month": null,
@@ -51954,7 +51982,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-295",
+"id": "r3-dark-ages-296",
 "era": "dark-ages",
 "year": 1259,
 "month": null,
@@ -51973,7 +52001,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-296",
+"id": "r3-dark-ages-297",
 "era": "dark-ages",
 "year": 1261,
 "month": null,
@@ -51993,7 +52021,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-297",
+"id": "r3-dark-ages-298",
 "era": "dark-ages",
 "year": 1263,
 "month": null,
@@ -52013,7 +52041,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-298",
+"id": "r3-dark-ages-299",
 "era": "dark-ages",
 "year": 1265,
 "month": null,
@@ -52032,7 +52060,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-299",
+"id": "r3-dark-ages-300",
 "era": "dark-ages",
 "year": 1266,
 "month": null,
@@ -52051,7 +52079,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-300",
+"id": "r3-dark-ages-301",
 "era": "dark-ages",
 "year": 1269,
 "month": null,
@@ -52070,7 +52098,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-301",
+"id": "r3-dark-ages-302",
 "era": "dark-ages",
 "year": 1271,
 "month": null,
@@ -52089,7 +52117,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-302",
+"id": "r3-dark-ages-303",
 "era": "dark-ages",
 "year": 1273,
 "month": null,
@@ -52109,7 +52137,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-303",
+"id": "r3-dark-ages-304",
 "era": "dark-ages",
 "year": 1274,
 "month": null,
@@ -52129,7 +52157,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-304",
+"id": "r3-dark-ages-305",
 "era": "dark-ages",
 "year": 1276,
 "month": null,
@@ -52148,7 +52176,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-305",
+"id": "r3-dark-ages-306",
 "era": "dark-ages",
 "year": 1279,
 "month": null,
@@ -52167,7 +52195,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-306",
+"id": "r3-dark-ages-307",
 "era": "dark-ages",
 "year": 1280,
 "month": null,
@@ -52186,7 +52214,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-307",
+"id": "r3-dark-ages-308",
 "era": "dark-ages",
 "year": 1281,
 "month": null,
@@ -52205,7 +52233,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-308",
+"id": "r3-dark-ages-309",
 "era": "dark-ages",
 "year": 1283,
 "month": null,
@@ -52224,7 +52252,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-309",
+"id": "r3-dark-ages-310",
 "era": "dark-ages",
 "year": 1285,
 "month": null,
@@ -52243,7 +52271,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-310",
+"id": "r3-dark-ages-311",
 "era": "dark-ages",
 "year": 1286,
 "month": null,
@@ -52263,7 +52291,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-311",
+"id": "r3-dark-ages-312",
 "era": "dark-ages",
 "year": 1287,
 "month": null,
@@ -52296,7 +52324,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-312",
+"id": "r3-dark-ages-313",
 "era": "dark-ages",
 "year": 1288,
 "month": null,
@@ -52316,7 +52344,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-313",
+"id": "r3-dark-ages-314",
 "era": "dark-ages",
 "year": 1290,
 "month": null,
@@ -52336,7 +52364,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-314",
+"id": "r3-dark-ages-315",
 "era": "dark-ages",
 "year": 1292,
 "month": null,
@@ -52360,7 +52388,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-315",
+"id": "r3-dark-ages-316",
 "era": "dark-ages",
 "year": 1293,
 "month": null,
@@ -52380,7 +52408,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-316",
+"id": "r3-dark-ages-317",
 "era": "dark-ages",
 "year": 1296,
 "month": null,
@@ -52399,7 +52427,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-317",
+"id": "r3-dark-ages-318",
 "era": "dark-ages",
 "year": 1297,
 "month": null,
@@ -52418,7 +52446,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-318",
+"id": "r3-dark-ages-319",
 "era": "dark-ages",
 "year": 1299,
 "month": null,
@@ -52438,7 +52466,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-319",
+"id": "r3-dark-ages-320",
 "era": "dark-ages",
 "year": 1301,
 "month": null,
@@ -52463,7 +52491,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-320",
+"id": "r3-dark-ages-321",
 "era": "dark-ages",
 "year": 1303,
 "month": null,
@@ -52482,7 +52510,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-321",
+"id": "r3-dark-ages-322",
 "era": "dark-ages",
 "year": 1305,
 "month": null,
@@ -52501,7 +52529,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-322",
+"id": "r3-dark-ages-323",
 "era": "dark-ages",
 "year": 1308,
 "month": null,
@@ -52521,7 +52549,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-323",
+"id": "r3-dark-ages-324",
 "era": "dark-ages",
 "year": 1310,
 "month": null,
@@ -52540,7 +52568,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-324",
+"id": "r3-dark-ages-325",
 "era": "dark-ages",
 "year": 1312,
 "month": null,
@@ -52559,7 +52587,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-325",
+"id": "r3-dark-ages-326",
 "era": "dark-ages",
 "year": 1314,
 "month": null,
@@ -52579,7 +52607,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-326",
+"id": "r3-dark-ages-327",
 "era": "dark-ages",
 "year": 1316,
 "month": null,
@@ -52599,7 +52627,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-327",
+"id": "r3-dark-ages-328",
 "era": "dark-ages",
 "year": 1319,
 "month": null,
@@ -52618,7 +52646,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-328",
+"id": "r3-dark-ages-329",
 "era": "dark-ages",
 "year": 1320,
 "month": null,
@@ -52637,7 +52665,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-329",
+"id": "r3-dark-ages-330",
 "era": "dark-ages",
 "year": 1320,
 "month": null,
@@ -52656,7 +52684,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-330",
+"id": "r3-dark-ages-331",
 "era": "dark-ages",
 "year": 1323,
 "month": null,
@@ -52680,7 +52708,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-331",
+"id": "r3-dark-ages-332",
 "era": "dark-ages",
 "year": 1326,
 "month": null,
@@ -52700,7 +52728,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-332",
+"id": "r3-dark-ages-333",
 "era": "dark-ages",
 "year": 1327,
 "month": null,
@@ -52728,7 +52756,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-333",
+"id": "r3-dark-ages-334",
 "era": "dark-ages",
 "year": 1328,
 "month": null,
@@ -52748,7 +52776,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-334",
+"id": "r3-dark-ages-335",
 "era": "dark-ages",
 "year": 1330,
 "month": null,
@@ -52767,7 +52795,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-335",
+"id": "r3-dark-ages-336",
 "era": "dark-ages",
 "year": 1331,
 "month": null,
@@ -52786,7 +52814,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-336",
+"id": "r3-dark-ages-337",
 "era": "dark-ages",
 "year": 1333,
 "month": null,
@@ -52805,7 +52833,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-337",
+"id": "r3-dark-ages-338",
 "era": "dark-ages",
 "year": 1334,
 "month": null,
@@ -52824,7 +52852,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-338",
+"id": "r3-dark-ages-339",
 "era": "dark-ages",
 "year": 1335,
 "month": null,
@@ -52843,7 +52871,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-339",
+"id": "r3-dark-ages-340",
 "era": "dark-ages",
 "year": 1338,
 "month": null,
@@ -52863,7 +52891,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-340",
+"id": "r3-dark-ages-341",
 "era": "dark-ages",
 "year": 1340,
 "month": null,
@@ -52882,7 +52910,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-341",
+"id": "r3-dark-ages-342",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -52901,7 +52929,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-342",
+"id": "r3-dark-ages-343",
 "era": "dark-ages",
 "year": 1343,
 "month": null,
@@ -52934,7 +52962,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-343",
+"id": "r3-dark-ages-344",
 "era": "dark-ages",
 "year": 1344,
 "month": null,
@@ -52963,7 +52991,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-344",
+"id": "r3-dark-ages-345",
 "era": "dark-ages",
 "year": 1345,
 "month": null,
@@ -52983,7 +53011,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-345",
+"id": "r3-dark-ages-346",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -53002,7 +53030,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-346",
+"id": "r3-dark-ages-347",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -53021,7 +53049,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-347",
+"id": "r3-dark-ages-348",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53041,7 +53069,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-348",
+"id": "r3-dark-ages-349",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53061,7 +53089,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-349",
+"id": "r3-dark-ages-350",
 "era": "dark-ages",
 "year": 1221,
 "month": null,
@@ -53081,7 +53109,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-350",
+"id": "r3-dark-ages-351",
 "era": "dark-ages",
 "year": 1250,
 "month": null,
@@ -53101,7 +53129,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-351",
+"id": "r3-dark-ages-352",
 "era": "dark-ages",
 "year": 1263,
 "month": null,
@@ -53121,7 +53149,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-352",
+"id": "r3-dark-ages-353",
 "era": "dark-ages",
 "year": 1276,
 "month": null,
@@ -53142,7 +53170,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-353",
+"id": "r3-dark-ages-354",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53161,7 +53189,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-354",
+"id": "r3-dark-ages-355",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53181,7 +53209,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-355",
+"id": "r3-dark-ages-356",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53201,7 +53229,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-356",
+"id": "r3-dark-ages-357",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53220,7 +53248,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-357",
+"id": "r3-dark-ages-358",
 "era": "dark-ages",
 "year": 1325,
 "month": null,
@@ -53239,7 +53267,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-358",
+"id": "r3-dark-ages-359",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -53259,7 +53287,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-359",
+"id": "r3-dark-ages-360",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53279,7 +53307,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-360",
+"id": "r3-dark-ages-361",
 "era": "dark-ages",
 "year": 1203,
 "month": null,
@@ -53299,7 +53327,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-361",
+"id": "r3-dark-ages-362",
 "era": "dark-ages",
 "year": 1210,
 "month": null,
@@ -53319,7 +53347,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-362",
+"id": "r3-dark-ages-363",
 "era": "dark-ages",
 "year": 1220,
 "month": null,
@@ -53339,7 +53367,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-363",
+"id": "r3-dark-ages-364",
 "era": "dark-ages",
 "year": 1221,
 "month": null,
@@ -53360,7 +53388,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-364",
+"id": "r3-dark-ages-365",
 "era": "dark-ages",
 "year": 1235,
 "month": null,
@@ -53380,7 +53408,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-365",
+"id": "r3-dark-ages-366",
 "era": "dark-ages",
 "year": 1236,
 "month": null,
@@ -53400,7 +53428,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-366",
+"id": "r3-dark-ages-367",
 "era": "dark-ages",
 "year": 1270,
 "month": null,
@@ -53420,7 +53448,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-367",
+"id": "r3-dark-ages-368",
 "era": "dark-ages",
 "year": 1277,
 "month": null,
@@ -53440,7 +53468,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-368",
+"id": "r3-dark-ages-369",
 "era": "dark-ages",
 "year": 1290,
 "month": null,
@@ -53460,7 +53488,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-369",
+"id": "r3-dark-ages-370",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53480,7 +53508,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-370",
+"id": "r3-dark-ages-371",
 "era": "dark-ages",
 "year": 1312,
 "month": null,
@@ -53500,7 +53528,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-371",
+"id": "r3-dark-ages-372",
 "era": "dark-ages",
 "year": 1317,
 "month": null,
@@ -53520,7 +53548,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-372",
+"id": "r3-dark-ages-373",
 "era": "dark-ages",
 "year": 1325,
 "month": null,
@@ -53540,7 +53568,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-373",
+"id": "r3-dark-ages-374",
 "era": "dark-ages",
 "year": 1327,
 "month": null,
@@ -53561,7 +53589,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-374",
+"id": "r3-dark-ages-375",
 "era": "dark-ages",
 "year": 1331,
 "month": null,
@@ -53581,7 +53609,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-375",
+"id": "r3-dark-ages-376",
 "era": "dark-ages",
 "year": 1332,
 "month": null,
@@ -53601,7 +53629,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-376",
+"id": "r3-dark-ages-377",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53622,7 +53650,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-377",
+"id": "r3-dark-ages-378",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53642,7 +53670,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-378",
+"id": "r3-dark-ages-379",
 "era": "dark-ages",
 "year": 1250,
 "month": null,
@@ -53663,7 +53691,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-379",
+"id": "r3-dark-ages-380",
 "era": "dark-ages",
 "year": 1280,
 "month": null,
@@ -53683,7 +53711,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-380",
+"id": "r3-dark-ages-381",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53704,7 +53732,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-381",
+"id": "r3-dark-ages-382",
 "era": "dark-ages",
 "year": 1314,
 "month": null,
@@ -54676,25 +54704,6 @@
 {
 "id": "r3-long-night-046",
 "era": "long-night",
-"year": 1359,
-"month": null,
-"kind": "history",
-"lines": [
-"Mortals"
-],
-"region": "Europe",
-"place": "Prague",
-"tags": [
-"building"
-],
-"title": "Charles Bridge planned",
-"text": "Charles IV plans a new stone bridge across the Vltava; it is begun in 1357.",
-"ref": "Real history",
-"links": []
-},
-{
-"id": "r3-long-night-047",
-"era": "long-night",
 "year": 1360,
 "month": null,
 "kind": "history",
@@ -54712,7 +54721,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-048",
+"id": "r3-long-night-047",
 "era": "long-night",
 "year": 1360,
 "month": null,
@@ -54731,7 +54740,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-049",
+"id": "r3-long-night-048",
 "era": "long-night",
 "year": 1361,
 "month": null,
@@ -54763,7 +54772,7 @@
 ]
 },
 {
-"id": "r3-long-night-050",
+"id": "r3-long-night-049",
 "era": "long-night",
 "year": 1361,
 "month": null,
@@ -54782,7 +54791,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-051",
+"id": "r3-long-night-050",
 "era": "long-night",
 "year": 1363,
 "month": null,
@@ -54801,7 +54810,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-052",
+"id": "r3-long-night-051",
 "era": "long-night",
 "year": 1364,
 "month": null,
@@ -54821,7 +54830,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-053",
+"id": "r3-long-night-052",
 "era": "long-night",
 "year": 1365,
 "month": null,
@@ -54841,7 +54850,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-054",
+"id": "r3-long-night-053",
 "era": "long-night",
 "year": 1365,
 "month": null,
@@ -54861,7 +54870,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-055",
+"id": "r3-long-night-054",
 "era": "long-night",
 "year": 1366,
 "month": null,
@@ -54880,7 +54889,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-056",
+"id": "r3-long-night-055",
 "era": "long-night",
 "year": 1367,
 "month": null,
@@ -54899,7 +54908,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-057",
+"id": "r3-long-night-056",
 "era": "long-night",
 "year": 1368,
 "month": null,
@@ -54919,7 +54928,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-058",
+"id": "r3-long-night-057",
 "era": "long-night",
 "year": 1368,
 "month": null,
@@ -54938,7 +54947,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-059",
+"id": "r3-long-night-058",
 "era": "long-night",
 "year": 1369,
 "month": null,
@@ -54953,12 +54962,12 @@
 "death"
 ],
 "title": "Pedro the Cruel killed",
-"text": "Pedro of Castile is stabbed by a half-brother, Henry,, who takes the throne.",
+"text": "Pedro of Castile is stabbed by a half-brother, Henry, who takes the throne.",
 "ref": "Real history",
 "links": []
 },
 {
-"id": "r3-long-night-060",
+"id": "r3-long-night-059",
 "era": "long-night",
 "year": 1370,
 "month": null,
@@ -54977,7 +54986,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-061",
+"id": "r3-long-night-060",
 "era": "long-night",
 "year": 1370,
 "month": null,
@@ -54997,7 +55006,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-062",
+"id": "r3-long-night-061",
 "era": "long-night",
 "year": 1370,
 "month": null,
@@ -55017,7 +55026,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-063",
+"id": "r3-long-night-062",
 "era": "long-night",
 "year": 1371,
 "month": null,
@@ -55036,7 +55045,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-064",
+"id": "r3-long-night-063",
 "era": "long-night",
 "year": 1371,
 "month": null,
@@ -55055,7 +55064,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-065",
+"id": "r3-long-night-064",
 "era": "long-night",
 "year": 1372,
 "month": null,
@@ -55075,7 +55084,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-066",
+"id": "r3-long-night-065",
 "era": "long-night",
 "year": 1374,
 "month": null,
@@ -55095,7 +55104,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-067",
+"id": "r3-long-night-066",
 "era": "long-night",
 "year": 1374,
 "month": null,
@@ -55115,7 +55124,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-068",
+"id": "r3-long-night-067",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -55135,7 +55144,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-069",
+"id": "r3-long-night-068",
 "era": "long-night",
 "year": 1376,
 "month": null,
@@ -55155,7 +55164,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-070",
+"id": "r3-long-night-069",
 "era": "long-night",
 "year": 1376,
 "month": null,
@@ -55174,7 +55183,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-071",
+"id": "r3-long-night-070",
 "era": "long-night",
 "year": 1377,
 "month": null,
@@ -55193,7 +55202,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-072",
+"id": "r3-long-night-071",
 "era": "long-night",
 "year": 1377,
 "month": null,
@@ -55213,7 +55222,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-073",
+"id": "r3-long-night-072",
 "era": "long-night",
 "year": 1377,
 "month": null,
@@ -55233,7 +55242,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-074",
+"id": "r3-long-night-073",
 "era": "long-night",
 "year": 1378,
 "month": null,
@@ -55252,7 +55261,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-075",
+"id": "r3-long-night-074",
 "era": "long-night",
 "year": 1378,
 "month": null,
@@ -55271,7 +55280,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-076",
+"id": "r3-long-night-075",
 "era": "long-night",
 "year": 1378,
 "month": null,
@@ -55291,7 +55300,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-077",
+"id": "r3-long-night-076",
 "era": "long-night",
 "year": 1379,
 "month": null,
@@ -55311,7 +55320,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-078",
+"id": "r3-long-night-077",
 "era": "long-night",
 "year": 1380,
 "month": null,
@@ -55330,7 +55339,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-079",
+"id": "r3-long-night-078",
 "era": "long-night",
 "year": 1380,
 "month": null,
@@ -55350,7 +55359,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-080",
+"id": "r3-long-night-079",
 "era": "long-night",
 "year": 1380,
 "month": null,
@@ -55370,7 +55379,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-081",
+"id": "r3-long-night-080",
 "era": "long-night",
 "year": 1381,
 "month": 6,
@@ -55385,7 +55394,7 @@
 "revolution"
 ],
 "title": "The Peasants' Revolt",
-"text": "Wat Tyler's rebels take London; that same year young Kindred across the west rise against their elders, and the Anarch Revolt begins.",
+"text": "Wat Tyler's rebels take London; the Anarch Revolt, decades old by now, flares among England's young Kindred.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -55403,7 +55412,7 @@
 ]
 },
 {
-"id": "r3-long-night-082",
+"id": "r3-long-night-081",
 "era": "long-night",
 "year": 1381,
 "month": null,
@@ -55423,7 +55432,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-083",
+"id": "r3-long-night-082",
 "era": "long-night",
 "year": 1382,
 "month": null,
@@ -55443,7 +55452,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-084",
+"id": "r3-long-night-083",
 "era": "long-night",
 "year": 1382,
 "month": null,
@@ -55462,7 +55471,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-085",
+"id": "r3-long-night-084",
 "era": "long-night",
 "year": 1384,
 "month": null,
@@ -55482,7 +55491,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-086",
+"id": "r3-long-night-085",
 "era": "long-night",
 "year": 1385,
 "month": null,
@@ -55501,7 +55510,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-087",
+"id": "r3-long-night-086",
 "era": "long-night",
 "year": 1385,
 "month": null,
@@ -55521,7 +55530,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-088",
+"id": "r3-long-night-087",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -55540,7 +55549,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-089",
+"id": "r3-long-night-088",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -55560,7 +55569,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-090",
+"id": "r3-long-night-089",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -55580,7 +55589,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-091",
+"id": "r3-long-night-090",
 "era": "long-night",
 "year": 1387,
 "month": null,
@@ -55599,7 +55608,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-092",
+"id": "r3-long-night-091",
 "era": "long-night",
 "year": 1387,
 "month": null,
@@ -55623,7 +55632,7 @@
 ]
 },
 {
-"id": "r3-long-night-093",
+"id": "r3-long-night-092",
 "era": "long-night",
 "year": 1388,
 "month": null,
@@ -55642,7 +55651,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-094",
+"id": "r3-long-night-093",
 "era": "long-night",
 "year": 1389,
 "month": 6,
@@ -55662,7 +55671,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-095",
+"id": "r3-long-night-094",
 "era": "long-night",
 "year": 1389,
 "month": null,
@@ -55682,7 +55691,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-096",
+"id": "r3-long-night-095",
 "era": "long-night",
 "year": 1390,
 "month": null,
@@ -55702,7 +55711,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-097",
+"id": "r3-long-night-096",
 "era": "long-night",
 "year": 1391,
 "month": null,
@@ -55722,7 +55731,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-098",
+"id": "r3-long-night-097",
 "era": "long-night",
 "year": 1392,
 "month": null,
@@ -55742,7 +55751,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-099",
+"id": "r3-long-night-098",
 "era": "long-night",
 "year": 1392,
 "month": null,
@@ -55762,7 +55771,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-100",
+"id": "r3-long-night-099",
 "era": "long-night",
 "year": 1392,
 "month": null,
@@ -55781,7 +55790,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-101",
+"id": "r3-long-night-100",
 "era": "long-night",
 "year": 1393,
 "month": null,
@@ -55801,7 +55810,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-102",
+"id": "r3-long-night-101",
 "era": "long-night",
 "year": 1393,
 "month": null,
@@ -55821,7 +55830,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-103",
+"id": "r3-long-night-102",
 "era": "long-night",
 "year": 1394,
 "month": null,
@@ -55840,7 +55849,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-104",
+"id": "r3-long-night-103",
 "era": "long-night",
 "year": 1394,
 "month": null,
@@ -55859,7 +55868,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-105",
+"id": "r3-long-night-104",
 "era": "long-night",
 "year": 1395,
 "month": null,
@@ -55878,7 +55887,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-106",
+"id": "r3-long-night-105",
 "era": "long-night",
 "year": 1395,
 "month": null,
@@ -55897,7 +55906,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-107",
+"id": "r3-long-night-106",
 "era": "long-night",
 "year": 1396,
 "month": null,
@@ -55917,7 +55926,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-108",
+"id": "r3-long-night-107",
 "era": "long-night",
 "year": 1397,
 "month": null,
@@ -55937,7 +55946,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-109",
+"id": "r3-long-night-108",
 "era": "long-night",
 "year": 1397,
 "month": null,
@@ -55957,7 +55966,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-110",
+"id": "r3-long-night-109",
 "era": "long-night",
 "year": 1398,
 "month": 12,
@@ -55977,7 +55986,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-111",
+"id": "r3-long-night-110",
 "era": "long-night",
 "year": 1398,
 "month": null,
@@ -55997,7 +56006,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-112",
+"id": "r3-long-night-111",
 "era": "long-night",
 "year": 1399,
 "month": null,
@@ -56017,7 +56026,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-113",
+"id": "r3-long-night-112",
 "era": "long-night",
 "year": 1399,
 "month": null,
@@ -56036,7 +56045,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-114",
+"id": "r3-long-night-113",
 "era": "long-night",
 "year": 1399,
 "month": null,
@@ -56056,7 +56065,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-115",
+"id": "r3-long-night-114",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -56076,7 +56085,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-116",
+"id": "r3-long-night-115",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -56095,7 +56104,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-117",
+"id": "r3-long-night-116",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -56114,7 +56123,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-118",
+"id": "r3-long-night-117",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -56134,7 +56143,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-119",
+"id": "r3-long-night-118",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -56166,7 +56175,7 @@
 ]
 },
 {
-"id": "r3-long-night-120",
+"id": "r3-long-night-119",
 "era": "long-night",
 "year": 1401,
 "month": null,
@@ -56186,7 +56195,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-121",
+"id": "r3-long-night-120",
 "era": "long-night",
 "year": 1401,
 "month": null,
@@ -56206,7 +56215,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-122",
+"id": "r3-long-night-121",
 "era": "long-night",
 "year": 1402,
 "month": 7,
@@ -56226,7 +56235,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-123",
+"id": "r3-long-night-122",
 "era": "long-night",
 "year": 1402,
 "month": null,
@@ -56245,7 +56254,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-124",
+"id": "r3-long-night-123",
 "era": "long-night",
 "year": 1402,
 "month": null,
@@ -56265,7 +56274,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-125",
+"id": "r3-long-night-124",
 "era": "long-night",
 "year": 1403,
 "month": null,
@@ -56285,7 +56294,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-126",
+"id": "r3-long-night-125",
 "era": "long-night",
 "year": 1404,
 "month": null,
@@ -56304,7 +56313,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-127",
+"id": "r3-long-night-126",
 "era": "long-night",
 "year": 1405,
 "month": 2,
@@ -56324,7 +56333,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-128",
+"id": "r3-long-night-127",
 "era": "long-night",
 "year": 1405,
 "month": null,
@@ -56344,7 +56353,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-129",
+"id": "r3-long-night-128",
 "era": "long-night",
 "year": 1406,
 "month": null,
@@ -56376,7 +56385,7 @@
 ]
 },
 {
-"id": "r3-long-night-130",
+"id": "r3-long-night-129",
 "era": "long-night",
 "year": 1406,
 "month": null,
@@ -56395,7 +56404,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-131",
+"id": "r3-long-night-130",
 "era": "long-night",
 "year": 1406,
 "month": null,
@@ -56415,7 +56424,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-132",
+"id": "r3-long-night-131",
 "era": "long-night",
 "year": 1407,
 "month": null,
@@ -56435,7 +56444,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-133",
+"id": "r3-long-night-132",
 "era": "long-night",
 "year": 1409,
 "month": null,
@@ -56454,7 +56463,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-134",
+"id": "r3-long-night-133",
 "era": "long-night",
 "year": 1409,
 "month": null,
@@ -56474,7 +56483,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-135",
+"id": "r3-long-night-134",
 "era": "long-night",
 "year": 1410,
 "month": 7,
@@ -56493,7 +56502,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-136",
+"id": "r3-long-night-135",
 "era": "long-night",
 "year": 1410,
 "month": null,
@@ -56512,7 +56521,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-137",
+"id": "r3-long-night-136",
 "era": "long-night",
 "year": 1411,
 "month": null,
@@ -56531,7 +56540,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-138",
+"id": "r3-long-night-137",
 "era": "long-night",
 "year": 1412,
 "month": null,
@@ -56550,7 +56559,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-139",
+"id": "r3-long-night-138",
 "era": "long-night",
 "year": 1413,
 "month": null,
@@ -56569,7 +56578,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-140",
+"id": "r3-long-night-139",
 "era": "long-night",
 "year": 1413,
 "month": null,
@@ -56589,7 +56598,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-141",
+"id": "r3-long-night-140",
 "era": "long-night",
 "year": 1414,
 "month": null,
@@ -56608,7 +56617,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-142",
+"id": "r3-long-night-141",
 "era": "long-night",
 "year": 1414,
 "month": null,
@@ -56628,7 +56637,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-143",
+"id": "r3-long-night-142",
 "era": "long-night",
 "year": 1415,
 "month": 7,
@@ -56649,7 +56658,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-144",
+"id": "r3-long-night-143",
 "era": "long-night",
 "year": 1415,
 "month": 8,
@@ -56669,7 +56678,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-145",
+"id": "r3-long-night-144",
 "era": "long-night",
 "year": 1415,
 "month": 10,
@@ -56688,7 +56697,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-146",
+"id": "r3-long-night-145",
 "era": "long-night",
 "year": 1416,
 "month": null,
@@ -56708,7 +56717,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-147",
+"id": "r3-long-night-146",
 "era": "long-night",
 "year": 1417,
 "month": null,
@@ -56727,7 +56736,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-148",
+"id": "r3-long-night-147",
 "era": "long-night",
 "year": 1419,
 "month": 7,
@@ -56760,7 +56769,7 @@
 ]
 },
 {
-"id": "r3-long-night-149",
+"id": "r3-long-night-148",
 "era": "long-night",
 "year": 1419,
 "month": 9,
@@ -56780,7 +56789,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-150",
+"id": "r3-long-night-149",
 "era": "long-night",
 "year": 1419,
 "month": null,
@@ -56799,7 +56808,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-151",
+"id": "r3-long-night-150",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -56819,7 +56828,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-152",
+"id": "r3-long-night-151",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -56838,7 +56847,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-153",
+"id": "r3-long-night-152",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -56858,7 +56867,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-154",
+"id": "r3-long-night-153",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -56878,7 +56887,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-155",
+"id": "r3-long-night-154",
 "era": "long-night",
 "year": 1421,
 "month": null,
@@ -56897,7 +56906,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-156",
+"id": "r3-long-night-155",
 "era": "long-night",
 "year": 1422,
 "month": null,
@@ -56917,7 +56926,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-157",
+"id": "r3-long-night-156",
 "era": "long-night",
 "year": 1422,
 "month": null,
@@ -56936,7 +56945,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-158",
+"id": "r3-long-night-157",
 "era": "long-night",
 "year": 1423,
 "month": null,
@@ -56955,7 +56964,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-159",
+"id": "r3-long-night-158",
 "era": "long-night",
 "year": 1424,
 "month": null,
@@ -56974,7 +56983,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-160",
+"id": "r3-long-night-159",
 "era": "long-night",
 "year": 1424,
 "month": null,
@@ -56994,7 +57003,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-161",
+"id": "r3-long-night-160",
 "era": "long-night",
 "year": 1426,
 "month": null,
@@ -57013,7 +57022,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-162",
+"id": "r3-long-night-161",
 "era": "long-night",
 "year": 1427,
 "month": null,
@@ -57033,7 +57042,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-163",
+"id": "r3-long-night-162",
 "era": "long-night",
 "year": 1428,
 "month": null,
@@ -57053,7 +57062,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-164",
+"id": "r3-long-night-163",
 "era": "long-night",
 "year": 1429,
 "month": 5,
@@ -57073,7 +57082,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-165",
+"id": "r3-long-night-164",
 "era": "long-night",
 "year": 1429,
 "month": 7,
@@ -57092,7 +57101,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-166",
+"id": "r3-long-night-165",
 "era": "long-night",
 "year": 1430,
 "month": null,
@@ -57111,7 +57120,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-167",
+"id": "r3-long-night-166",
 "era": "long-night",
 "year": 1430,
 "month": null,
@@ -57130,7 +57139,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-168",
+"id": "r3-long-night-167",
 "era": "long-night",
 "year": 1431,
 "month": 5,
@@ -57150,7 +57159,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-169",
+"id": "r3-long-night-168",
 "era": "long-night",
 "year": 1431,
 "month": null,
@@ -57170,7 +57179,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-170",
+"id": "r3-long-night-169",
 "era": "long-night",
 "year": 1431,
 "month": null,
@@ -57189,7 +57198,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-171",
+"id": "r3-long-night-170",
 "era": "long-night",
 "year": 1432,
 "month": null,
@@ -57208,7 +57217,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-172",
+"id": "r3-long-night-171",
 "era": "long-night",
 "year": 1433,
 "month": null,
@@ -57228,7 +57237,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-173",
+"id": "r3-long-night-172",
 "era": "long-night",
 "year": 1434,
 "month": 5,
@@ -57247,7 +57256,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-174",
+"id": "r3-long-night-173",
 "era": "long-night",
 "year": 1434,
 "month": null,
@@ -57267,7 +57276,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-175",
+"id": "r3-long-night-174",
 "era": "long-night",
 "year": 1434,
 "month": null,
@@ -57287,7 +57296,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-176",
+"id": "r3-long-night-175",
 "era": "long-night",
 "year": 1435,
 "month": null,
@@ -57319,7 +57328,7 @@
 ]
 },
 {
-"id": "r3-long-night-177",
+"id": "r3-long-night-176",
 "era": "long-night",
 "year": 1435,
 "month": null,
@@ -57338,7 +57347,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-178",
+"id": "r3-long-night-177",
 "era": "long-night",
 "year": 1436,
 "month": null,
@@ -57358,7 +57367,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-179",
+"id": "r3-long-night-178",
 "era": "long-night",
 "year": 1436,
 "month": null,
@@ -57377,7 +57386,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-180",
+"id": "r3-long-night-179",
 "era": "long-night",
 "year": 1436,
 "month": null,
@@ -57396,7 +57405,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-181",
+"id": "r3-long-night-180",
 "era": "long-night",
 "year": 1437,
 "month": null,
@@ -57416,7 +57425,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-182",
+"id": "r3-long-night-181",
 "era": "long-night",
 "year": 1438,
 "month": null,
@@ -57435,7 +57444,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-183",
+"id": "r3-long-night-182",
 "era": "long-night",
 "year": 1439,
 "month": null,
@@ -57455,7 +57464,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-184",
+"id": "r3-long-night-183",
 "era": "long-night",
 "year": 1439,
 "month": null,
@@ -57474,7 +57483,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-185",
+"id": "r3-long-night-184",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -57494,7 +57503,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-186",
+"id": "r3-long-night-185",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -57527,7 +57536,7 @@
 ]
 },
 {
-"id": "r3-long-night-187",
+"id": "r3-long-night-186",
 "era": "long-night",
 "year": 1441,
 "month": null,
@@ -57547,7 +57556,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-188",
+"id": "r3-long-night-187",
 "era": "long-night",
 "year": 1443,
 "month": null,
@@ -57566,7 +57575,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-189",
+"id": "r3-long-night-188",
 "era": "long-night",
 "year": 1443,
 "month": null,
@@ -57585,7 +57594,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-190",
+"id": "r3-long-night-189",
 "era": "long-night",
 "year": 1444,
 "month": 11,
@@ -57606,7 +57615,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-191",
+"id": "r3-long-night-190",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -57639,7 +57648,7 @@
 ]
 },
 {
-"id": "r3-long-night-192",
+"id": "r3-long-night-191",
 "era": "long-night",
 "year": 1445,
 "month": null,
@@ -57658,7 +57667,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-193",
+"id": "r3-long-night-192",
 "era": "long-night",
 "year": 1446,
 "month": null,
@@ -57677,7 +57686,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-194",
+"id": "r3-long-night-193",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -57696,7 +57705,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-195",
+"id": "r3-long-night-194",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -57716,7 +57725,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-196",
+"id": "r3-long-night-195",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -57736,7 +57745,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-197",
+"id": "r3-long-night-196",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -57755,7 +57764,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-198",
+"id": "r3-long-night-197",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -57788,7 +57797,7 @@
 ]
 },
 {
-"id": "r3-long-night-199",
+"id": "r3-long-night-198",
 "era": "long-night",
 "year": 1347,
 "month": null,
@@ -57807,7 +57816,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-200",
+"id": "r3-long-night-199",
 "era": "long-night",
 "year": 1347,
 "month": null,
@@ -57827,7 +57836,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-201",
+"id": "r3-long-night-200",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -57859,7 +57868,7 @@
 ]
 },
 {
-"id": "r3-long-night-202",
+"id": "r3-long-night-201",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -57878,7 +57887,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-203",
+"id": "r3-long-night-202",
 "era": "long-night",
 "year": 1349,
 "month": null,
@@ -57898,7 +57907,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-204",
+"id": "r3-long-night-203",
 "era": "long-night",
 "year": 1350,
 "month": null,
@@ -57917,7 +57926,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-205",
+"id": "r3-long-night-204",
 "era": "long-night",
 "year": 1351,
 "month": null,
@@ -57936,7 +57945,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-206",
+"id": "r3-long-night-205",
 "era": "long-night",
 "year": 1352,
 "month": null,
@@ -57956,7 +57965,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-207",
+"id": "r3-long-night-206",
 "era": "long-night",
 "year": 1353,
 "month": null,
@@ -57975,7 +57984,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-208",
+"id": "r3-long-night-207",
 "era": "long-night",
 "year": 1355,
 "month": null,
@@ -57995,7 +58004,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-209",
+"id": "r3-long-night-208",
 "era": "long-night",
 "year": 1356,
 "month": null,
@@ -58014,7 +58023,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-210",
+"id": "r3-long-night-209",
 "era": "long-night",
 "year": 1357,
 "month": null,
@@ -58033,7 +58042,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-211",
+"id": "r3-long-night-210",
 "era": "long-night",
 "year": 1359,
 "month": null,
@@ -58052,7 +58061,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-212",
+"id": "r3-long-night-211",
 "era": "long-night",
 "year": 1360,
 "month": null,
@@ -58071,7 +58080,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-213",
+"id": "r3-long-night-212",
 "era": "long-night",
 "year": 1362,
 "month": null,
@@ -58090,7 +58099,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-214",
+"id": "r3-long-night-213",
 "era": "long-night",
 "year": 1363,
 "month": null,
@@ -58109,7 +58118,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-215",
+"id": "r3-long-night-214",
 "era": "long-night",
 "year": 1364,
 "month": null,
@@ -58129,7 +58138,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-216",
+"id": "r3-long-night-215",
 "era": "long-night",
 "year": 1366,
 "month": null,
@@ -58148,7 +58157,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-217",
+"id": "r3-long-night-216",
 "era": "long-night",
 "year": 1368,
 "month": null,
@@ -58167,7 +58176,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-218",
+"id": "r3-long-night-217",
 "era": "long-night",
 "year": 1369,
 "month": null,
@@ -58186,7 +58195,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-219",
+"id": "r3-long-night-218",
 "era": "long-night",
 "year": 1372,
 "month": null,
@@ -58205,7 +58214,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-220",
+"id": "r3-long-night-219",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -58225,7 +58234,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-221",
+"id": "r3-long-night-220",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -58245,7 +58254,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-222",
+"id": "r3-long-night-221",
 "era": "long-night",
 "year": 1377,
 "month": null,
@@ -58265,7 +58274,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-223",
+"id": "r3-long-night-222",
 "era": "long-night",
 "year": 1378,
 "month": null,
@@ -58284,7 +58293,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-224",
+"id": "r3-long-night-223",
 "era": "long-night",
 "year": 1380,
 "month": null,
@@ -58303,7 +58312,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-225",
+"id": "r3-long-night-224",
 "era": "long-night",
 "year": 1381,
 "month": null,
@@ -58322,7 +58331,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-226",
+"id": "r3-long-night-225",
 "era": "long-night",
 "year": 1382,
 "month": null,
@@ -58341,7 +58350,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-227",
+"id": "r3-long-night-226",
 "era": "long-night",
 "year": 1383,
 "month": null,
@@ -58361,7 +58370,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-228",
+"id": "r3-long-night-227",
 "era": "long-night",
 "year": 1385,
 "month": null,
@@ -58380,7 +58389,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-229",
+"id": "r3-long-night-228",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -58399,7 +58408,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-230",
+"id": "r3-long-night-229",
 "era": "long-night",
 "year": 1387,
 "month": null,
@@ -58418,7 +58427,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-231",
+"id": "r3-long-night-230",
 "era": "long-night",
 "year": 1388,
 "month": null,
@@ -58437,7 +58446,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-232",
+"id": "r3-long-night-231",
 "era": "long-night",
 "year": 1390,
 "month": null,
@@ -58456,7 +58465,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-233",
+"id": "r3-long-night-232",
 "era": "long-night",
 "year": 1391,
 "month": null,
@@ -58476,7 +58485,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-234",
+"id": "r3-long-night-233",
 "era": "long-night",
 "year": 1392,
 "month": null,
@@ -58501,7 +58510,7 @@
 ]
 },
 {
-"id": "r3-long-night-235",
+"id": "r3-long-night-234",
 "era": "long-night",
 "year": 1394,
 "month": null,
@@ -58520,7 +58529,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-236",
+"id": "r3-long-night-235",
 "era": "long-night",
 "year": 1395,
 "month": null,
@@ -58539,7 +58548,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-237",
+"id": "r3-long-night-236",
 "era": "long-night",
 "year": 1396,
 "month": null,
@@ -58558,7 +58567,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-238",
+"id": "r3-long-night-237",
 "era": "long-night",
 "year": 1397,
 "month": null,
@@ -58577,7 +58586,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-239",
+"id": "r3-long-night-238",
 "era": "long-night",
 "year": 1399,
 "month": null,
@@ -58597,7 +58606,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-240",
+"id": "r3-long-night-239",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -58616,7 +58625,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-241",
+"id": "r3-long-night-240",
 "era": "long-night",
 "year": 1401,
 "month": null,
@@ -58635,7 +58644,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-242",
+"id": "r3-long-night-241",
 "era": "long-night",
 "year": 1402,
 "month": null,
@@ -58654,7 +58663,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-243",
+"id": "r3-long-night-242",
 "era": "long-night",
 "year": 1403,
 "month": null,
@@ -58673,7 +58682,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-244",
+"id": "r3-long-night-243",
 "era": "long-night",
 "year": 1404,
 "month": null,
@@ -58693,7 +58702,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-245",
+"id": "r3-long-night-244",
 "era": "long-night",
 "year": 1405,
 "month": null,
@@ -58712,7 +58721,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-246",
+"id": "r3-long-night-245",
 "era": "long-night",
 "year": 1406,
 "month": null,
@@ -58731,7 +58740,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-247",
+"id": "r3-long-night-246",
 "era": "long-night",
 "year": 1407,
 "month": null,
@@ -58750,7 +58759,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-248",
+"id": "r3-long-night-247",
 "era": "long-night",
 "year": 1408,
 "month": null,
@@ -58782,7 +58791,7 @@
 ]
 },
 {
-"id": "r3-long-night-249",
+"id": "r3-long-night-248",
 "era": "long-night",
 "year": 1409,
 "month": null,
@@ -58802,7 +58811,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-250",
+"id": "r3-long-night-249",
 "era": "long-night",
 "year": 1410,
 "month": null,
@@ -58822,7 +58831,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-251",
+"id": "r3-long-night-250",
 "era": "long-night",
 "year": 1411,
 "month": null,
@@ -58841,7 +58850,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-252",
+"id": "r3-long-night-251",
 "era": "long-night",
 "year": 1411,
 "month": null,
@@ -58861,7 +58870,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-253",
+"id": "r3-long-night-252",
 "era": "long-night",
 "year": 1412,
 "month": null,
@@ -58881,7 +58890,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-254",
+"id": "r3-long-night-253",
 "era": "long-night",
 "year": 1414,
 "month": null,
@@ -58900,7 +58909,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-255",
+"id": "r3-long-night-254",
 "era": "long-night",
 "year": 1415,
 "month": null,
@@ -58919,7 +58928,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-256",
+"id": "r3-long-night-255",
 "era": "long-night",
 "year": 1416,
 "month": null,
@@ -58939,7 +58948,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-257",
+"id": "r3-long-night-256",
 "era": "long-night",
 "year": 1417,
 "month": null,
@@ -58959,7 +58968,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-258",
+"id": "r3-long-night-257",
 "era": "long-night",
 "year": 1418,
 "month": null,
@@ -58978,7 +58987,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-259",
+"id": "r3-long-night-258",
 "era": "long-night",
 "year": 1419,
 "month": null,
@@ -59011,7 +59020,7 @@
 ]
 },
 {
-"id": "r3-long-night-260",
+"id": "r3-long-night-259",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -59030,7 +59039,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-261",
+"id": "r3-long-night-260",
 "era": "long-night",
 "year": 1421,
 "month": null,
@@ -59049,7 +59058,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-262",
+"id": "r3-long-night-261",
 "era": "long-night",
 "year": 1421,
 "month": null,
@@ -59069,7 +59078,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-263",
+"id": "r3-long-night-262",
 "era": "long-night",
 "year": 1422,
 "month": null,
@@ -59088,7 +59097,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-264",
+"id": "r3-long-night-263",
 "era": "long-night",
 "year": 1423,
 "month": null,
@@ -59107,7 +59116,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-265",
+"id": "r3-long-night-264",
 "era": "long-night",
 "year": 1424,
 "month": null,
@@ -59126,7 +59135,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-266",
+"id": "r3-long-night-265",
 "era": "long-night",
 "year": 1425,
 "month": null,
@@ -59146,7 +59155,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-267",
+"id": "r3-long-night-266",
 "era": "long-night",
 "year": 1425,
 "month": null,
@@ -59166,7 +59175,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-268",
+"id": "r3-long-night-267",
 "era": "long-night",
 "year": 1426,
 "month": null,
@@ -59185,7 +59194,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-269",
+"id": "r3-long-night-268",
 "era": "long-night",
 "year": 1428,
 "month": null,
@@ -59204,7 +59213,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-270",
+"id": "r3-long-night-269",
 "era": "long-night",
 "year": 1429,
 "month": null,
@@ -59223,7 +59232,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-271",
+"id": "r3-long-night-270",
 "era": "long-night",
 "year": 1430,
 "month": null,
@@ -59242,7 +59251,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-272",
+"id": "r3-long-night-271",
 "era": "long-night",
 "year": 1431,
 "month": null,
@@ -59261,7 +59270,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-273",
+"id": "r3-long-night-272",
 "era": "long-night",
 "year": 1432,
 "month": null,
@@ -59280,7 +59289,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-274",
+"id": "r3-long-night-273",
 "era": "long-night",
 "year": 1433,
 "month": null,
@@ -59299,7 +59308,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-275",
+"id": "r3-long-night-274",
 "era": "long-night",
 "year": 1434,
 "month": null,
@@ -59318,7 +59327,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-276",
+"id": "r3-long-night-275",
 "era": "long-night",
 "year": 1435,
 "month": null,
@@ -59337,7 +59346,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-277",
+"id": "r3-long-night-276",
 "era": "long-night",
 "year": 1436,
 "month": null,
@@ -59356,7 +59365,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-278",
+"id": "r3-long-night-277",
 "era": "long-night",
 "year": 1437,
 "month": null,
@@ -59375,7 +59384,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-279",
+"id": "r3-long-night-278",
 "era": "long-night",
 "year": 1439,
 "month": null,
@@ -59394,7 +59403,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-280",
+"id": "r3-long-night-279",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -59413,7 +59422,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-281",
+"id": "r3-long-night-280",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -59432,7 +59441,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-282",
+"id": "r3-long-night-281",
 "era": "long-night",
 "year": 1441,
 "month": null,
@@ -59451,7 +59460,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-283",
+"id": "r3-long-night-282",
 "era": "long-night",
 "year": 1442,
 "month": null,
@@ -59471,7 +59480,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-284",
+"id": "r3-long-night-283",
 "era": "long-night",
 "year": 1442,
 "month": null,
@@ -59490,7 +59499,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-285",
+"id": "r3-long-night-284",
 "era": "long-night",
 "year": 1443,
 "month": null,
@@ -59510,7 +59519,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-286",
+"id": "r3-long-night-285",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -59529,7 +59538,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-287",
+"id": "r3-long-night-286",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -59548,7 +59557,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-288",
+"id": "r3-long-night-287",
 "era": "long-night",
 "year": 1445,
 "month": null,
@@ -59567,7 +59576,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-289",
+"id": "r3-long-night-288",
 "era": "long-night",
 "year": 1446,
 "month": null,
@@ -59586,7 +59595,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-290",
+"id": "r3-long-night-289",
 "era": "long-night",
 "year": 1447,
 "month": null,
@@ -59606,7 +59615,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-291",
+"id": "r3-long-night-290",
 "era": "long-night",
 "year": 1447,
 "month": null,
@@ -59626,7 +59635,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-292",
+"id": "r3-long-night-291",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -59645,7 +59654,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-293",
+"id": "r3-long-night-292",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -59664,7 +59673,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-294",
+"id": "r3-long-night-293",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -59692,7 +59701,7 @@
 ]
 },
 {
-"id": "r3-long-night-295",
+"id": "r3-long-night-294",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -59711,7 +59720,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-296",
+"id": "r3-long-night-295",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -59730,7 +59739,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-297",
+"id": "r3-long-night-296",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -59750,7 +59759,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-298",
+"id": "r3-long-night-297",
 "era": "long-night",
 "year": 1350,
 "month": null,
@@ -59778,7 +59787,7 @@
 ]
 },
 {
-"id": "r3-long-night-299",
+"id": "r3-long-night-298",
 "era": "long-night",
 "year": 1363,
 "month": null,
@@ -59798,7 +59807,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-300",
+"id": "r3-long-night-299",
 "era": "long-night",
 "year": 1371,
 "month": null,
@@ -59818,7 +59827,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-301",
+"id": "r3-long-night-300",
 "era": "long-night",
 "year": 1383,
 "month": null,
@@ -59837,7 +59846,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-302",
+"id": "r3-long-night-301",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -59856,7 +59865,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-303",
+"id": "r3-long-night-302",
 "era": "long-night",
 "year": 1388,
 "month": null,
@@ -59875,7 +59884,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-304",
+"id": "r3-long-night-303",
 "era": "long-night",
 "year": 1407,
 "month": null,
@@ -59908,7 +59917,7 @@
 ]
 },
 {
-"id": "r3-long-night-305",
+"id": "r3-long-night-304",
 "era": "long-night",
 "year": 1413,
 "month": null,
@@ -59927,7 +59936,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-306",
+"id": "r3-long-night-305",
 "era": "long-night",
 "year": 1432,
 "month": null,
@@ -59947,7 +59956,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-307",
+"id": "r3-long-night-306",
 "era": "long-night",
 "year": 1350,
 "month": null,
@@ -59966,7 +59975,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-308",
+"id": "r3-long-night-307",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -59985,7 +59994,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-309",
+"id": "r3-long-night-308",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -60005,7 +60014,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-310",
+"id": "r3-long-night-309",
 "era": "long-night",
 "year": 1408,
 "month": null,
@@ -60024,7 +60033,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-311",
+"id": "r3-long-night-310",
 "era": "long-night",
 "year": 1418,
 "month": null,
@@ -60044,7 +60053,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-312",
+"id": "r3-long-night-311",
 "era": "long-night",
 "year": 1428,
 "month": null,
@@ -60065,7 +60074,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-313",
+"id": "r3-long-night-312",
 "era": "long-night",
 "year": 1431,
 "month": null,
@@ -60086,7 +60095,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-314",
+"id": "r3-long-night-313",
 "era": "long-night",
 "year": 1438,
 "month": null,
@@ -60107,7 +60116,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-315",
+"id": "r3-long-night-314",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -60127,7 +60136,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-316",
+"id": "r3-long-night-315",
 "era": "long-night",
 "year": 1441,
 "month": null,
@@ -60147,7 +60156,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-317",
+"id": "r3-long-night-316",
 "era": "long-night",
 "year": 1446,
 "month": null,
@@ -60166,7 +60175,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-318",
+"id": "r3-long-night-317",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -60186,7 +60195,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-319",
+"id": "r3-long-night-318",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -60206,7 +60215,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-320",
+"id": "r3-long-night-319",
 "era": "long-night",
 "year": 1352,
 "month": null,
@@ -60226,7 +60235,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-321",
+"id": "r3-long-night-320",
 "era": "long-night",
 "year": 1380,
 "month": null,
@@ -60246,7 +60255,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-322",
+"id": "r3-long-night-321",
 "era": "long-night",
 "year": 1390,
 "month": null,
@@ -60266,7 +60275,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-323",
+"id": "r3-long-night-322",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -60286,7 +60295,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-324",
+"id": "r3-long-night-323",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -60306,7 +60315,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-325",
+"id": "r3-long-night-324",
 "era": "long-night",
 "year": 1415,
 "month": null,
@@ -60327,7 +60336,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-326",
+"id": "r3-long-night-325",
 "era": "long-night",
 "year": 1430,
 "month": null,
@@ -60347,7 +60356,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-327",
+"id": "r3-long-night-326",
 "era": "long-night",
 "year": 1433,
 "month": null,
@@ -60366,7 +60375,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-328",
+"id": "r3-long-night-327",
 "era": "long-night",
 "year": 1435,
 "month": null,
@@ -60386,7 +60395,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-329",
+"id": "r3-long-night-328",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -60407,7 +60416,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-330",
+"id": "r3-long-night-329",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -60427,7 +60436,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-331",
+"id": "r3-long-night-330",
 "era": "long-night",
 "year": 1445,
 "month": null,
@@ -60447,7 +60456,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-332",
+"id": "r3-long-night-331",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -60467,7 +60476,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-333",
+"id": "r3-long-night-332",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -60487,7 +60496,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-334",
+"id": "r3-long-night-333",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -60507,7 +60516,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-335",
+"id": "r3-long-night-334",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -60599,7 +60608,7 @@
 "occult"
 ],
 "title": "Horizon is raised",
-"text": "Mages of nine traditions build the Horizon realm; the Grand Convocation begins.",
+"text": "Mages of nine traditions build the Horizon realm, where the Grand Convocation will later meet.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -62769,6 +62778,30 @@
 {
 "id": "r3-renaissance-112",
 "era": "renaissance",
+"year": 1504,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown"
+],
+"title": "First justicars elected",
+"text": "At a secret conclave near Vienna the Camarilla elects seven justicars, one for each clan, and the Founders become the Inner Circle.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-renaissance-113",
+"era": "renaissance",
 "year": 1505,
 "month": null,
 "kind": "history",
@@ -62786,7 +62819,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-113",
+"id": "r3-renaissance-114",
 "era": "renaissance",
 "year": 1506,
 "month": null,
@@ -62805,7 +62838,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-114",
+"id": "r3-renaissance-115",
 "era": "renaissance",
 "year": 1506,
 "month": null,
@@ -62824,7 +62857,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-115",
+"id": "r3-renaissance-116",
 "era": "renaissance",
 "year": 1507,
 "month": null,
@@ -62843,7 +62876,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-116",
+"id": "r3-renaissance-117",
 "era": "renaissance",
 "year": 1508,
 "month": null,
@@ -62863,7 +62896,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-117",
+"id": "r3-renaissance-118",
 "era": "renaissance",
 "year": 1508,
 "month": null,
@@ -62882,7 +62915,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-118",
+"id": "r3-renaissance-119",
 "era": "renaissance",
 "year": 1509,
 "month": null,
@@ -62901,7 +62934,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-119",
+"id": "r3-renaissance-120",
 "era": "renaissance",
 "year": 1509,
 "month": null,
@@ -62921,7 +62954,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-120",
+"id": "r3-renaissance-121",
 "era": "renaissance",
 "year": 1509,
 "month": null,
@@ -62941,7 +62974,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-121",
+"id": "r3-renaissance-122",
 "era": "renaissance",
 "year": 1510,
 "month": null,
@@ -62961,7 +62994,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-122",
+"id": "r3-renaissance-123",
 "era": "renaissance",
 "year": 1511,
 "month": null,
@@ -62981,7 +63014,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-123",
+"id": "r3-renaissance-124",
 "era": "renaissance",
 "year": 1512,
 "month": null,
@@ -63000,7 +63033,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-124",
+"id": "r3-renaissance-125",
 "era": "renaissance",
 "year": 1512,
 "month": null,
@@ -63019,7 +63052,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-125",
+"id": "r3-renaissance-126",
 "era": "renaissance",
 "year": 1513,
 "month": null,
@@ -63039,7 +63072,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-126",
+"id": "r3-renaissance-127",
 "era": "renaissance",
 "year": 1513,
 "month": null,
@@ -63058,7 +63091,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-127",
+"id": "r3-renaissance-128",
 "era": "renaissance",
 "year": 1514,
 "month": null,
@@ -63077,7 +63110,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-128",
+"id": "r3-renaissance-129",
 "era": "renaissance",
 "year": 1514,
 "month": null,
@@ -63096,7 +63129,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-129",
+"id": "r3-renaissance-130",
 "era": "renaissance",
 "year": 1515,
 "month": null,
@@ -63115,7 +63148,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-130",
+"id": "r3-renaissance-131",
 "era": "renaissance",
 "year": 1515,
 "month": null,
@@ -63135,7 +63168,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-131",
+"id": "r3-renaissance-132",
 "era": "renaissance",
 "year": 1516,
 "month": null,
@@ -63154,7 +63187,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-132",
+"id": "r3-renaissance-133",
 "era": "renaissance",
 "year": 1516,
 "month": null,
@@ -63173,7 +63206,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-133",
+"id": "r3-renaissance-134",
 "era": "renaissance",
 "year": 1516,
 "month": null,
@@ -63192,7 +63225,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-134",
+"id": "r3-renaissance-135",
 "era": "renaissance",
 "year": 1517,
 "month": 1,
@@ -63225,7 +63258,7 @@
 ]
 },
 {
-"id": "r3-renaissance-135",
+"id": "r3-renaissance-136",
 "era": "renaissance",
 "year": 1517,
 "month": 10,
@@ -63244,7 +63277,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-136",
+"id": "r3-renaissance-137",
 "era": "renaissance",
 "year": 1518,
 "month": null,
@@ -63263,7 +63296,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-137",
+"id": "r3-renaissance-138",
 "era": "renaissance",
 "year": 1519,
 "month": null,
@@ -63282,7 +63315,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-138",
+"id": "r3-renaissance-139",
 "era": "renaissance",
 "year": 1519,
 "month": null,
@@ -63302,7 +63335,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-139",
+"id": "r3-renaissance-140",
 "era": "renaissance",
 "year": 1519,
 "month": null,
@@ -63322,7 +63355,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-140",
+"id": "r3-renaissance-141",
 "era": "renaissance",
 "year": 1520,
 "month": null,
@@ -63341,7 +63374,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-141",
+"id": "r3-renaissance-142",
 "era": "renaissance",
 "year": 1520,
 "month": null,
@@ -63360,7 +63393,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-142",
+"id": "r3-renaissance-143",
 "era": "renaissance",
 "year": 1520,
 "month": null,
@@ -63379,7 +63412,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-143",
+"id": "r3-renaissance-144",
 "era": "renaissance",
 "year": 1521,
 "month": null,
@@ -63399,7 +63432,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-144",
+"id": "r3-renaissance-145",
 "era": "renaissance",
 "year": 1521,
 "month": null,
@@ -63418,7 +63451,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-145",
+"id": "r3-renaissance-146",
 "era": "renaissance",
 "year": 1521,
 "month": null,
@@ -63438,7 +63471,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-146",
+"id": "r3-renaissance-147",
 "era": "renaissance",
 "year": 1522,
 "month": null,
@@ -63457,7 +63490,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-147",
+"id": "r3-renaissance-148",
 "era": "renaissance",
 "year": 1522,
 "month": null,
@@ -63476,7 +63509,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-148",
+"id": "r3-renaissance-149",
 "era": "renaissance",
 "year": 1523,
 "month": null,
@@ -63495,7 +63528,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-149",
+"id": "r3-renaissance-150",
 "era": "renaissance",
 "year": 1524,
 "month": null,
@@ -63514,7 +63547,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-150",
+"id": "r3-renaissance-151",
 "era": "renaissance",
 "year": 1525,
 "month": null,
@@ -63534,7 +63567,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-151",
+"id": "r3-renaissance-152",
 "era": "renaissance",
 "year": 1525,
 "month": null,
@@ -63554,7 +63587,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-152",
+"id": "r3-renaissance-153",
 "era": "renaissance",
 "year": 1525,
 "month": null,
@@ -63574,7 +63607,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-153",
+"id": "r3-renaissance-154",
 "era": "renaissance",
 "year": 1526,
 "month": 4,
@@ -63594,7 +63627,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-154",
+"id": "r3-renaissance-155",
 "era": "renaissance",
 "year": 1526,
 "month": 8,
@@ -63615,7 +63648,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-155",
+"id": "r3-renaissance-156",
 "era": "renaissance",
 "year": 1526,
 "month": null,
@@ -63634,7 +63667,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-156",
+"id": "r3-renaissance-157",
 "era": "renaissance",
 "year": 1527,
 "month": null,
@@ -63654,7 +63687,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-157",
+"id": "r3-renaissance-158",
 "era": "renaissance",
 "year": 1528,
 "month": null,
@@ -63674,7 +63707,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-158",
+"id": "r3-renaissance-159",
 "era": "renaissance",
 "year": 1528,
 "month": null,
@@ -63706,7 +63739,7 @@
 ]
 },
 {
-"id": "r3-renaissance-159",
+"id": "r3-renaissance-160",
 "era": "renaissance",
 "year": 1529,
 "month": null,
@@ -63725,7 +63758,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-160",
+"id": "r3-renaissance-161",
 "era": "renaissance",
 "year": 1529,
 "month": null,
@@ -63744,7 +63777,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-161",
+"id": "r3-renaissance-162",
 "era": "renaissance",
 "year": 1530,
 "month": null,
@@ -63763,7 +63796,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-162",
+"id": "r3-renaissance-163",
 "era": "renaissance",
 "year": 1530,
 "month": null,
@@ -63782,7 +63815,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-163",
+"id": "r3-renaissance-164",
 "era": "renaissance",
 "year": 1530,
 "month": null,
@@ -63802,7 +63835,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-164",
+"id": "r3-renaissance-165",
 "era": "renaissance",
 "year": 1531,
 "month": null,
@@ -63822,7 +63855,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-165",
+"id": "r3-renaissance-166",
 "era": "renaissance",
 "year": 1531,
 "month": null,
@@ -63841,7 +63874,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-166",
+"id": "r3-renaissance-167",
 "era": "renaissance",
 "year": 1532,
 "month": null,
@@ -63860,7 +63893,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-167",
+"id": "r3-renaissance-168",
 "era": "renaissance",
 "year": 1533,
 "month": null,
@@ -63880,7 +63913,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-168",
+"id": "r3-renaissance-169",
 "era": "renaissance",
 "year": 1534,
 "month": null,
@@ -63900,7 +63933,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-169",
+"id": "r3-renaissance-170",
 "era": "renaissance",
 "year": 1534,
 "month": null,
@@ -63920,7 +63953,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-170",
+"id": "r3-renaissance-171",
 "era": "renaissance",
 "year": 1534,
 "month": null,
@@ -63939,7 +63972,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-171",
+"id": "r3-renaissance-172",
 "era": "renaissance",
 "year": 1535,
 "month": null,
@@ -63958,7 +63991,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-172",
+"id": "r3-renaissance-173",
 "era": "renaissance",
 "year": 1535,
 "month": null,
@@ -63977,7 +64010,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-173",
+"id": "r3-renaissance-174",
 "era": "renaissance",
 "year": 1535,
 "month": null,
@@ -63997,7 +64030,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-174",
+"id": "r3-renaissance-175",
 "era": "renaissance",
 "year": 1536,
 "month": null,
@@ -64017,7 +64050,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-175",
+"id": "r3-renaissance-176",
 "era": "renaissance",
 "year": 1536,
 "month": null,
@@ -64042,7 +64075,7 @@
 ]
 },
 {
-"id": "r3-renaissance-176",
+"id": "r3-renaissance-177",
 "era": "renaissance",
 "year": 1536,
 "month": null,
@@ -64061,7 +64094,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-177",
+"id": "r3-renaissance-178",
 "era": "renaissance",
 "year": 1537,
 "month": null,
@@ -64085,7 +64118,7 @@
 ]
 },
 {
-"id": "r3-renaissance-178",
+"id": "r3-renaissance-179",
 "era": "renaissance",
 "year": 1538,
 "month": null,
@@ -64105,7 +64138,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-179",
+"id": "r3-renaissance-180",
 "era": "renaissance",
 "year": 1540,
 "month": null,
@@ -64124,7 +64157,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-180",
+"id": "r3-renaissance-181",
 "era": "renaissance",
 "year": 1541,
 "month": null,
@@ -64143,7 +64176,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-181",
+"id": "r3-renaissance-182",
 "era": "renaissance",
 "year": 1542,
 "month": null,
@@ -64163,7 +64196,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-182",
+"id": "r3-renaissance-183",
 "era": "renaissance",
 "year": 1543,
 "month": null,
@@ -64182,7 +64215,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-183",
+"id": "r3-renaissance-184",
 "era": "renaissance",
 "year": 1543,
 "month": null,
@@ -64201,7 +64234,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-184",
+"id": "r3-renaissance-185",
 "era": "renaissance",
 "year": 1543,
 "month": null,
@@ -64221,7 +64254,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-185",
+"id": "r3-renaissance-186",
 "era": "renaissance",
 "year": 1545,
 "month": null,
@@ -64240,7 +64273,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-186",
+"id": "r3-renaissance-187",
 "era": "renaissance",
 "year": 1545,
 "month": null,
@@ -64259,7 +64292,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-187",
+"id": "r3-renaissance-188",
 "era": "renaissance",
 "year": 1546,
 "month": null,
@@ -64279,7 +64312,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-188",
+"id": "r3-renaissance-189",
 "era": "renaissance",
 "year": 1547,
 "month": null,
@@ -64298,7 +64331,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-189",
+"id": "r3-renaissance-190",
 "era": "renaissance",
 "year": 1547,
 "month": null,
@@ -64317,7 +64350,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-190",
+"id": "r3-renaissance-191",
 "era": "renaissance",
 "year": 1547,
 "month": null,
@@ -64336,7 +64369,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-191",
+"id": "r3-renaissance-192",
 "era": "renaissance",
 "year": 1549,
 "month": null,
@@ -64355,7 +64388,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-192",
+"id": "r3-renaissance-193",
 "era": "renaissance",
 "year": 1550,
 "month": null,
@@ -64375,7 +64408,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-193",
+"id": "r3-renaissance-194",
 "era": "renaissance",
 "year": 1550,
 "month": null,
@@ -64407,7 +64440,7 @@
 ]
 },
 {
-"id": "r3-renaissance-194",
+"id": "r3-renaissance-195",
 "era": "renaissance",
 "year": 1551,
 "month": null,
@@ -64426,7 +64459,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-195",
+"id": "r3-renaissance-196",
 "era": "renaissance",
 "year": 1552,
 "month": null,
@@ -64445,7 +64478,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-196",
+"id": "r3-renaissance-197",
 "era": "renaissance",
 "year": 1553,
 "month": null,
@@ -64464,7 +64497,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-197",
+"id": "r3-renaissance-198",
 "era": "renaissance",
 "year": 1553,
 "month": null,
@@ -64484,7 +64517,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-198",
+"id": "r3-renaissance-199",
 "era": "renaissance",
 "year": 1555,
 "month": null,
@@ -64504,7 +64537,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-199",
+"id": "r3-renaissance-200",
 "era": "renaissance",
 "year": 1555,
 "month": null,
@@ -64524,7 +64557,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-200",
+"id": "r3-renaissance-201",
 "era": "renaissance",
 "year": 1556,
 "month": null,
@@ -64544,7 +64577,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-201",
+"id": "r3-renaissance-202",
 "era": "renaissance",
 "year": 1556,
 "month": null,
@@ -64563,7 +64596,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-202",
+"id": "r3-renaissance-203",
 "era": "renaissance",
 "year": 1556,
 "month": null,
@@ -64582,7 +64615,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-203",
+"id": "r3-renaissance-204",
 "era": "renaissance",
 "year": 1558,
 "month": null,
@@ -64601,7 +64634,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-204",
+"id": "r3-renaissance-205",
 "era": "renaissance",
 "year": 1558,
 "month": null,
@@ -64620,7 +64653,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-205",
+"id": "r3-renaissance-206",
 "era": "renaissance",
 "year": 1558,
 "month": null,
@@ -64639,7 +64672,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-206",
+"id": "r3-renaissance-207",
 "era": "renaissance",
 "year": 1559,
 "month": null,
@@ -64658,7 +64691,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-207",
+"id": "r3-renaissance-208",
 "era": "renaissance",
 "year": 1559,
 "month": null,
@@ -64678,7 +64711,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-208",
+"id": "r3-renaissance-209",
 "era": "renaissance",
 "year": 1560,
 "month": null,
@@ -64697,7 +64730,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-209",
+"id": "r3-renaissance-210",
 "era": "renaissance",
 "year": 1560,
 "month": null,
@@ -64716,7 +64749,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-210",
+"id": "r3-renaissance-211",
 "era": "renaissance",
 "year": 1561,
 "month": null,
@@ -64735,7 +64768,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-211",
+"id": "r3-renaissance-212",
 "era": "renaissance",
 "year": 1562,
 "month": null,
@@ -64755,7 +64788,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-212",
+"id": "r3-renaissance-213",
 "era": "renaissance",
 "year": 1563,
 "month": null,
@@ -64774,7 +64807,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-213",
+"id": "r3-renaissance-214",
 "era": "renaissance",
 "year": 1564,
 "month": null,
@@ -64793,7 +64826,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-214",
+"id": "r3-renaissance-215",
 "era": "renaissance",
 "year": 1564,
 "month": null,
@@ -64812,7 +64845,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-215",
+"id": "r3-renaissance-216",
 "era": "renaissance",
 "year": 1565,
 "month": null,
@@ -64831,7 +64864,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-216",
+"id": "r3-renaissance-217",
 "era": "renaissance",
 "year": 1565,
 "month": null,
@@ -64850,7 +64883,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-217",
+"id": "r3-renaissance-218",
 "era": "renaissance",
 "year": 1565,
 "month": null,
@@ -64869,7 +64902,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-218",
+"id": "r3-renaissance-219",
 "era": "renaissance",
 "year": 1566,
 "month": null,
@@ -64889,7 +64922,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-219",
+"id": "r3-renaissance-220",
 "era": "renaissance",
 "year": 1566,
 "month": null,
@@ -64909,7 +64942,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-220",
+"id": "r3-renaissance-221",
 "era": "renaissance",
 "year": 1567,
 "month": null,
@@ -64928,7 +64961,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-221",
+"id": "r3-renaissance-222",
 "era": "renaissance",
 "year": 1568,
 "month": null,
@@ -64947,7 +64980,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-222",
+"id": "r3-renaissance-223",
 "era": "renaissance",
 "year": 1569,
 "month": null,
@@ -64967,7 +65000,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-223",
+"id": "r3-renaissance-224",
 "era": "renaissance",
 "year": 1569,
 "month": null,
@@ -64986,7 +65019,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-224",
+"id": "r3-renaissance-225",
 "era": "renaissance",
 "year": 1570,
 "month": null,
@@ -65005,7 +65038,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-225",
+"id": "r3-renaissance-226",
 "era": "renaissance",
 "year": 1570,
 "month": null,
@@ -65024,7 +65057,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-226",
+"id": "r3-renaissance-227",
 "era": "renaissance",
 "year": 1571,
 "month": null,
@@ -65044,7 +65077,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-227",
+"id": "r3-renaissance-228",
 "era": "renaissance",
 "year": 1571,
 "month": null,
@@ -65064,7 +65097,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-228",
+"id": "r3-renaissance-229",
 "era": "renaissance",
 "year": 1571,
 "month": null,
@@ -65083,7 +65116,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-229",
+"id": "r3-renaissance-230",
 "era": "renaissance",
 "year": 1572,
 "month": null,
@@ -65103,7 +65136,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-230",
+"id": "r3-renaissance-231",
 "era": "renaissance",
 "year": 1572,
 "month": null,
@@ -65122,7 +65155,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-231",
+"id": "r3-renaissance-232",
 "era": "renaissance",
 "year": 1572,
 "month": null,
@@ -65141,7 +65174,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-232",
+"id": "r3-renaissance-233",
 "era": "renaissance",
 "year": 1573,
 "month": null,
@@ -65160,7 +65193,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-233",
+"id": "r3-renaissance-234",
 "era": "renaissance",
 "year": 1574,
 "month": null,
@@ -65180,7 +65213,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-234",
+"id": "r3-renaissance-235",
 "era": "renaissance",
 "year": 1575,
 "month": null,
@@ -65199,7 +65232,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-235",
+"id": "r3-renaissance-236",
 "era": "renaissance",
 "year": 1576,
 "month": null,
@@ -65218,7 +65251,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-236",
+"id": "r3-renaissance-237",
 "era": "renaissance",
 "year": 1576,
 "month": null,
@@ -65237,7 +65270,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-237",
+"id": "r3-renaissance-238",
 "era": "renaissance",
 "year": 1576,
 "month": null,
@@ -65257,7 +65290,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-238",
+"id": "r3-renaissance-239",
 "era": "renaissance",
 "year": 1577,
 "month": null,
@@ -65277,7 +65310,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-239",
+"id": "r3-renaissance-240",
 "era": "renaissance",
 "year": 1578,
 "month": null,
@@ -65297,7 +65330,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-240",
+"id": "r3-renaissance-241",
 "era": "renaissance",
 "year": 1579,
 "month": null,
@@ -65316,7 +65349,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-241",
+"id": "r3-renaissance-242",
 "era": "renaissance",
 "year": 1580,
 "month": null,
@@ -65335,7 +65368,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-242",
+"id": "r3-renaissance-243",
 "era": "renaissance",
 "year": 1581,
 "month": null,
@@ -65354,7 +65387,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-243",
+"id": "r3-renaissance-244",
 "era": "renaissance",
 "year": 1582,
 "month": null,
@@ -65374,7 +65407,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-244",
+"id": "r3-renaissance-245",
 "era": "renaissance",
 "year": 1582,
 "month": null,
@@ -65393,7 +65426,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-245",
+"id": "r3-renaissance-246",
 "era": "renaissance",
 "year": 1583,
 "month": null,
@@ -65412,7 +65445,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-246",
+"id": "r3-renaissance-247",
 "era": "renaissance",
 "year": 1584,
 "month": null,
@@ -65431,7 +65464,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-247",
+"id": "r3-renaissance-248",
 "era": "renaissance",
 "year": 1584,
 "month": null,
@@ -65451,7 +65484,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-248",
+"id": "r3-renaissance-249",
 "era": "renaissance",
 "year": 1585,
 "month": null,
@@ -65470,7 +65503,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-249",
+"id": "r3-renaissance-250",
 "era": "renaissance",
 "year": 1586,
 "month": null,
@@ -65489,7 +65522,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-250",
+"id": "r3-renaissance-251",
 "era": "renaissance",
 "year": 1587,
 "month": null,
@@ -65509,7 +65542,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-251",
+"id": "r3-renaissance-252",
 "era": "renaissance",
 "year": 1587,
 "month": null,
@@ -65528,7 +65561,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-252",
+"id": "r3-renaissance-253",
 "era": "renaissance",
 "year": 1588,
 "month": null,
@@ -65549,7 +65582,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-253",
+"id": "r3-renaissance-254",
 "era": "renaissance",
 "year": 1589,
 "month": null,
@@ -65569,7 +65602,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-254",
+"id": "r3-renaissance-255",
 "era": "renaissance",
 "year": 1590,
 "month": null,
@@ -65588,7 +65621,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-255",
+"id": "r3-renaissance-256",
 "era": "renaissance",
 "year": 1590,
 "month": null,
@@ -65607,7 +65640,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-256",
+"id": "r3-renaissance-257",
 "era": "renaissance",
 "year": 1592,
 "month": null,
@@ -65626,7 +65659,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-257",
+"id": "r3-renaissance-258",
 "era": "renaissance",
 "year": 1592,
 "month": null,
@@ -65646,7 +65679,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-258",
+"id": "r3-renaissance-259",
 "era": "renaissance",
 "year": 1593,
 "month": null,
@@ -65666,7 +65699,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-259",
+"id": "r3-renaissance-260",
 "era": "renaissance",
 "year": 1593,
 "month": null,
@@ -65685,7 +65718,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-260",
+"id": "r3-renaissance-261",
 "era": "renaissance",
 "year": 1594,
 "month": null,
@@ -65704,7 +65737,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-261",
+"id": "r3-renaissance-262",
 "era": "renaissance",
 "year": 1595,
 "month": null,
@@ -65728,7 +65761,7 @@
 ]
 },
 {
-"id": "r3-renaissance-262",
+"id": "r3-renaissance-263",
 "era": "renaissance",
 "year": 1596,
 "month": null,
@@ -65747,7 +65780,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-263",
+"id": "r3-renaissance-264",
 "era": "renaissance",
 "year": 1597,
 "month": null,
@@ -65767,7 +65800,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-264",
+"id": "r3-renaissance-265",
 "era": "renaissance",
 "year": 1598,
 "month": null,
@@ -65788,7 +65821,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-265",
+"id": "r3-renaissance-266",
 "era": "renaissance",
 "year": 1598,
 "month": null,
@@ -65808,7 +65841,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-266",
+"id": "r3-renaissance-267",
 "era": "renaissance",
 "year": 1598,
 "month": null,
@@ -65827,7 +65860,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-267",
+"id": "r3-renaissance-268",
 "era": "renaissance",
 "year": 1598,
 "month": null,
@@ -65847,7 +65880,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-268",
+"id": "r3-renaissance-269",
 "era": "renaissance",
 "year": 1599,
 "month": null,
@@ -65867,7 +65900,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-269",
+"id": "r3-renaissance-270",
 "era": "renaissance",
 "year": 1600,
 "month": null,
@@ -65887,7 +65920,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-270",
+"id": "r3-renaissance-271",
 "era": "renaissance",
 "year": 1600,
 "month": null,
@@ -65906,7 +65939,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-271",
+"id": "r3-renaissance-272",
 "era": "renaissance",
 "year": 1600,
 "month": null,
@@ -65926,7 +65959,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-272",
+"id": "r3-renaissance-273",
 "era": "renaissance",
 "year": 1600,
 "month": null,
@@ -65954,7 +65987,7 @@
 ]
 },
 {
-"id": "r3-renaissance-273",
+"id": "r3-renaissance-274",
 "era": "renaissance",
 "year": 1600,
 "month": null,
@@ -65973,7 +66006,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-274",
+"id": "r3-renaissance-275",
 "era": "renaissance",
 "year": 1450,
 "month": null,
@@ -65997,7 +66030,7 @@
 ]
 },
 {
-"id": "r3-renaissance-275",
+"id": "r3-renaissance-276",
 "era": "renaissance",
 "year": 1451,
 "month": null,
@@ -66016,7 +66049,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-276",
+"id": "r3-renaissance-277",
 "era": "renaissance",
 "year": 1455,
 "month": null,
@@ -66035,7 +66068,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-277",
+"id": "r3-renaissance-278",
 "era": "renaissance",
 "year": 1457,
 "month": null,
@@ -66055,7 +66088,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-278",
+"id": "r3-renaissance-279",
 "era": "renaissance",
 "year": 1460,
 "month": null,
@@ -66074,7 +66107,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-279",
+"id": "r3-renaissance-280",
 "era": "renaissance",
 "year": 1465,
 "month": null,
@@ -66094,7 +66127,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-280",
+"id": "r3-renaissance-281",
 "era": "renaissance",
 "year": 1469,
 "month": null,
@@ -66113,7 +66146,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-281",
+"id": "r3-renaissance-282",
 "era": "renaissance",
 "year": 1472,
 "month": null,
@@ -66132,7 +66165,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-282",
+"id": "r3-renaissance-283",
 "era": "renaissance",
 "year": 1474,
 "month": null,
@@ -66152,7 +66185,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-283",
+"id": "r3-renaissance-284",
 "era": "renaissance",
 "year": 1475,
 "month": null,
@@ -66172,7 +66205,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-284",
+"id": "r3-renaissance-285",
 "era": "renaissance",
 "year": 1482,
 "month": null,
@@ -66191,7 +66224,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-285",
+"id": "r3-renaissance-286",
 "era": "renaissance",
 "year": 1485,
 "month": null,
@@ -66210,7 +66243,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-286",
+"id": "r3-renaissance-287",
 "era": "renaissance",
 "year": 1486,
 "month": null,
@@ -66235,7 +66268,7 @@
 ]
 },
 {
-"id": "r3-renaissance-287",
+"id": "r3-renaissance-288",
 "era": "renaissance",
 "year": 1489,
 "month": null,
@@ -66254,7 +66287,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-288",
+"id": "r3-renaissance-289",
 "era": "renaissance",
 "year": 1495,
 "month": null,
@@ -66273,7 +66306,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-289",
+"id": "r3-renaissance-290",
 "era": "renaissance",
 "year": 1497,
 "month": null,
@@ -66292,7 +66325,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-290",
+"id": "r3-renaissance-291",
 "era": "renaissance",
 "year": 1499,
 "month": null,
@@ -66312,7 +66345,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-291",
+"id": "r3-renaissance-292",
 "era": "renaissance",
 "year": 1500,
 "month": null,
@@ -66344,7 +66377,7 @@
 ]
 },
 {
-"id": "r3-renaissance-292",
+"id": "r3-renaissance-293",
 "era": "renaissance",
 "year": 1502,
 "month": null,
@@ -66364,7 +66397,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-293",
+"id": "r3-renaissance-294",
 "era": "renaissance",
 "year": 1505,
 "month": null,
@@ -66384,7 +66417,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-294",
+"id": "r3-renaissance-295",
 "era": "renaissance",
 "year": 1507,
 "month": null,
@@ -66403,7 +66436,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-295",
+"id": "r3-renaissance-296",
 "era": "renaissance",
 "year": 1509,
 "month": null,
@@ -66422,7 +66455,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-296",
+"id": "r3-renaissance-297",
 "era": "renaissance",
 "year": 1510,
 "month": null,
@@ -66442,7 +66475,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-297",
+"id": "r3-renaissance-298",
 "era": "renaissance",
 "year": 1514,
 "month": null,
@@ -66461,7 +66494,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-298",
+"id": "r3-renaissance-299",
 "era": "renaissance",
 "year": 1515,
 "month": null,
@@ -66481,7 +66514,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-299",
+"id": "r3-renaissance-300",
 "era": "renaissance",
 "year": 1517,
 "month": null,
@@ -66500,7 +66533,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-300",
+"id": "r3-renaissance-301",
 "era": "renaissance",
 "year": 1520,
 "month": null,
@@ -66533,7 +66566,7 @@
 ]
 },
 {
-"id": "r3-renaissance-301",
+"id": "r3-renaissance-302",
 "era": "renaissance",
 "year": 1522,
 "month": null,
@@ -66552,7 +66585,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-302",
+"id": "r3-renaissance-303",
 "era": "renaissance",
 "year": 1523,
 "month": null,
@@ -66571,7 +66604,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-303",
+"id": "r3-renaissance-304",
 "era": "renaissance",
 "year": 1527,
 "month": null,
@@ -66591,7 +66624,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-304",
+"id": "r3-renaissance-305",
 "era": "renaissance",
 "year": 1530,
 "month": null,
@@ -66611,7 +66644,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-305",
+"id": "r3-renaissance-306",
 "era": "renaissance",
 "year": 1531,
 "month": null,
@@ -66630,7 +66663,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-306",
+"id": "r3-renaissance-307",
 "era": "renaissance",
 "year": 1535,
 "month": null,
@@ -66650,7 +66683,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-307",
+"id": "r3-renaissance-308",
 "era": "renaissance",
 "year": 1540,
 "month": null,
@@ -66669,9 +66702,9 @@
 "links": []
 },
 {
-"id": "r3-renaissance-308",
+"id": "r3-renaissance-309",
 "era": "renaissance",
-"year": 1542,
+"year": 1541,
 "month": null,
 "kind": "history",
 "lines": [
@@ -66688,7 +66721,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-309",
+"id": "r3-renaissance-310",
 "era": "renaissance",
 "year": 1545,
 "month": null,
@@ -66708,7 +66741,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-310",
+"id": "r3-renaissance-311",
 "era": "renaissance",
 "year": 1550,
 "month": null,
@@ -66727,7 +66760,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-311",
+"id": "r3-renaissance-312",
 "era": "renaissance",
 "year": 1555,
 "month": null,
@@ -66746,7 +66779,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-312",
+"id": "r3-renaissance-313",
 "era": "renaissance",
 "year": 1557,
 "month": null,
@@ -66765,7 +66798,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-313",
+"id": "r3-renaissance-314",
 "era": "renaissance",
 "year": 1560,
 "month": null,
@@ -66798,7 +66831,7 @@
 ]
 },
 {
-"id": "r3-renaissance-314",
+"id": "r3-renaissance-315",
 "era": "renaissance",
 "year": 1564,
 "month": null,
@@ -66817,7 +66850,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-315",
+"id": "r3-renaissance-316",
 "era": "renaissance",
 "year": 1569,
 "month": null,
@@ -66836,7 +66869,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-316",
+"id": "r3-renaissance-317",
 "era": "renaissance",
 "year": 1571,
 "month": null,
@@ -66856,7 +66889,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-317",
+"id": "r3-renaissance-318",
 "era": "renaissance",
 "year": 1575,
 "month": null,
@@ -66876,7 +66909,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-318",
+"id": "r3-renaissance-319",
 "era": "renaissance",
 "year": 1579,
 "month": null,
@@ -66895,7 +66928,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-319",
+"id": "r3-renaissance-320",
 "era": "renaissance",
 "year": 1580,
 "month": null,
@@ -66927,7 +66960,7 @@
 ]
 },
 {
-"id": "r3-renaissance-320",
+"id": "r3-renaissance-321",
 "era": "renaissance",
 "year": 1583,
 "month": null,
@@ -66946,7 +66979,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-321",
+"id": "r3-renaissance-322",
 "era": "renaissance",
 "year": 1587,
 "month": null,
@@ -66966,7 +66999,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-322",
+"id": "r3-renaissance-323",
 "era": "renaissance",
 "year": 1589,
 "month": null,
@@ -66985,7 +67018,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-323",
+"id": "r3-renaissance-324",
 "era": "renaissance",
 "year": 1591,
 "month": null,
@@ -67004,7 +67037,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-324",
+"id": "r3-renaissance-325",
 "era": "renaissance",
 "year": 1595,
 "month": null,
@@ -67024,7 +67057,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-325",
+"id": "r3-renaissance-326",
 "era": "renaissance",
 "year": 1597,
 "month": null,
@@ -67044,7 +67077,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-326",
+"id": "r3-renaissance-327",
 "era": "renaissance",
 "year": 1599,
 "month": null,
@@ -67063,7 +67096,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-327",
+"id": "r3-renaissance-328",
 "era": "renaissance",
 "year": 1450,
 "month": null,
@@ -67084,7 +67117,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-328",
+"id": "r3-renaissance-329",
 "era": "renaissance",
 "year": 1450,
 "month": null,
@@ -67104,7 +67137,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-329",
+"id": "r3-renaissance-330",
 "era": "renaissance",
 "year": 1454,
 "month": null,
@@ -67137,7 +67170,7 @@
 ]
 },
 {
-"id": "r3-renaissance-330",
+"id": "r3-renaissance-331",
 "era": "renaissance",
 "year": 1470,
 "month": null,
@@ -67157,7 +67190,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-331",
+"id": "r3-renaissance-332",
 "era": "renaissance",
 "year": 1487,
 "month": null,
@@ -67191,7 +67224,7 @@
 ]
 },
 {
-"id": "r3-renaissance-332",
+"id": "r3-renaissance-333",
 "era": "renaissance",
 "year": 1493,
 "month": null,
@@ -67212,7 +67245,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-333",
+"id": "r3-renaissance-334",
 "era": "renaissance",
 "year": 1496,
 "month": null,
@@ -67231,7 +67264,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-334",
+"id": "r3-renaissance-335",
 "era": "renaissance",
 "year": 1502,
 "month": null,
@@ -67263,7 +67296,7 @@
 ]
 },
 {
-"id": "r3-renaissance-335",
+"id": "r3-renaissance-336",
 "era": "renaissance",
 "year": 1502,
 "month": null,
@@ -67283,7 +67316,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-336",
+"id": "r3-renaissance-337",
 "era": "renaissance",
 "year": 1511,
 "month": null,
@@ -67303,7 +67336,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-337",
+"id": "r3-renaissance-338",
 "era": "renaissance",
 "year": 1513,
 "month": null,
@@ -67323,7 +67356,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-338",
+"id": "r3-renaissance-339",
 "era": "renaissance",
 "year": 1519,
 "month": null,
@@ -67344,7 +67377,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-339",
+"id": "r3-renaissance-340",
 "era": "renaissance",
 "year": 1520,
 "month": null,
@@ -67378,7 +67411,7 @@
 ]
 },
 {
-"id": "r3-renaissance-340",
+"id": "r3-renaissance-341",
 "era": "renaissance",
 "year": 1521,
 "month": null,
@@ -67412,7 +67445,7 @@
 ]
 },
 {
-"id": "r3-renaissance-341",
+"id": "r3-renaissance-342",
 "era": "renaissance",
 "year": 1521,
 "month": null,
@@ -67445,7 +67478,7 @@
 ]
 },
 {
-"id": "r3-renaissance-342",
+"id": "r3-renaissance-343",
 "era": "renaissance",
 "year": 1527,
 "month": null,
@@ -67466,7 +67499,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-343",
+"id": "r3-renaissance-344",
 "era": "renaissance",
 "year": 1531,
 "month": null,
@@ -67485,7 +67518,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-344",
+"id": "r3-renaissance-345",
 "era": "renaissance",
 "year": 1532,
 "month": null,
@@ -67506,7 +67539,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-345",
+"id": "r3-renaissance-346",
 "era": "renaissance",
 "year": 1533,
 "month": null,
@@ -67527,7 +67560,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-346",
+"id": "r3-renaissance-347",
 "era": "renaissance",
 "year": 1535,
 "month": null,
@@ -67546,7 +67579,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-347",
+"id": "r3-renaissance-348",
 "era": "renaissance",
 "year": 1535,
 "month": null,
@@ -67565,7 +67598,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-348",
+"id": "r3-renaissance-349",
 "era": "renaissance",
 "year": 1540,
 "month": null,
@@ -67585,7 +67618,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-349",
+"id": "r3-renaissance-350",
 "era": "renaissance",
 "year": 1542,
 "month": null,
@@ -67609,7 +67642,7 @@
 ]
 },
 {
-"id": "r3-renaissance-350",
+"id": "r3-renaissance-351",
 "era": "renaissance",
 "year": 1545,
 "month": null,
@@ -67634,7 +67667,7 @@
 ]
 },
 {
-"id": "r3-renaissance-351",
+"id": "r3-renaissance-352",
 "era": "renaissance",
 "year": 1545,
 "month": null,
@@ -67654,7 +67687,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-352",
+"id": "r3-renaissance-353",
 "era": "renaissance",
 "year": 1549,
 "month": null,
@@ -67674,7 +67707,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-353",
+"id": "r3-renaissance-354",
 "era": "renaissance",
 "year": 1562,
 "month": null,
@@ -67695,7 +67728,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-354",
+"id": "r3-renaissance-355",
 "era": "renaissance",
 "year": 1565,
 "month": null,
@@ -67715,7 +67748,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-355",
+"id": "r3-renaissance-356",
 "era": "renaissance",
 "year": 1565,
 "month": null,
@@ -67735,7 +67768,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-356",
+"id": "r3-renaissance-357",
 "era": "renaissance",
 "year": 1570,
 "month": null,
@@ -67756,7 +67789,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-357",
+"id": "r3-renaissance-358",
 "era": "renaissance",
 "year": 1572,
 "month": null,
@@ -67777,7 +67810,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-358",
+"id": "r3-renaissance-359",
 "era": "renaissance",
 "year": 1576,
 "month": null,
@@ -67801,7 +67834,7 @@
 ]
 },
 {
-"id": "r3-renaissance-359",
+"id": "r3-renaissance-360",
 "era": "renaissance",
 "year": 1585,
 "month": null,
@@ -67821,7 +67854,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-360",
+"id": "r3-renaissance-361",
 "era": "renaissance",
 "year": 1590,
 "month": null,
@@ -67841,7 +67874,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-361",
+"id": "r3-renaissance-362",
 "era": "renaissance",
 "year": 1589,
 "month": null,
@@ -67861,7 +67894,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-362",
+"id": "r3-renaissance-363",
 "era": "renaissance",
 "year": 1600,
 "month": null,
@@ -67881,7 +67914,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-363",
+"id": "r3-renaissance-364",
 "era": "renaissance",
 "year": 1456,
 "month": null,
@@ -67901,7 +67934,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-364",
+"id": "r3-renaissance-365",
 "era": "renaissance",
 "year": 1464,
 "month": null,
@@ -67921,7 +67954,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-365",
+"id": "r3-renaissance-366",
 "era": "renaissance",
 "year": 1468,
 "month": null,
@@ -67947,7 +67980,7 @@
 ]
 },
 {
-"id": "r3-renaissance-366",
+"id": "r3-renaissance-367",
 "era": "renaissance",
 "year": 1482,
 "month": null,
@@ -67968,7 +68001,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-367",
+"id": "r3-renaissance-368",
 "era": "renaissance",
 "year": 1483,
 "month": null,
@@ -67988,7 +68021,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-368",
+"id": "r3-renaissance-369",
 "era": "renaissance",
 "year": 1488,
 "month": null,
@@ -68008,7 +68041,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-369",
+"id": "r3-renaissance-370",
 "era": "renaissance",
 "year": 1491,
 "month": null,
@@ -68028,7 +68061,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-370",
+"id": "r3-renaissance-371",
 "era": "renaissance",
 "year": 1493,
 "month": null,
@@ -68049,7 +68082,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-371",
+"id": "r3-renaissance-372",
 "era": "renaissance",
 "year": 1498,
 "month": null,
@@ -68070,7 +68103,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-372",
+"id": "r3-renaissance-373",
 "era": "renaissance",
 "year": 1505,
 "month": null,
@@ -68091,7 +68124,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-373",
+"id": "r3-renaissance-374",
 "era": "renaissance",
 "year": 1509,
 "month": null,
@@ -68111,7 +68144,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-374",
+"id": "r3-renaissance-375",
 "era": "renaissance",
 "year": 1510,
 "month": null,
@@ -68136,7 +68169,7 @@
 ]
 },
 {
-"id": "r3-renaissance-375",
+"id": "r3-renaissance-376",
 "era": "renaissance",
 "year": 1526,
 "month": null,
@@ -68157,7 +68190,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-376",
+"id": "r3-renaissance-377",
 "era": "renaissance",
 "year": 1529,
 "month": null,
@@ -68178,7 +68211,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-377",
+"id": "r3-renaissance-378",
 "era": "renaissance",
 "year": 1543,
 "month": null,
@@ -68198,7 +68231,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-378",
+"id": "r3-renaissance-379",
 "era": "renaissance",
 "year": 1562,
 "month": null,
@@ -68219,7 +68252,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-379",
+"id": "r3-renaissance-380",
 "era": "renaissance",
 "year": 1568,
 "month": null,
@@ -68238,7 +68271,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-380",
+"id": "r3-renaissance-381",
 "era": "renaissance",
 "year": 1571,
 "month": null,
@@ -68258,7 +68291,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-381",
+"id": "r3-renaissance-382",
 "era": "renaissance",
 "year": 1575,
 "month": null,
@@ -68279,7 +68312,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-382",
+"id": "r3-renaissance-383",
 "era": "renaissance",
 "year": 1591,
 "month": null,
@@ -68299,7 +68332,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-383",
+"id": "r3-renaissance-384",
 "era": "renaissance",
 "year": 1593,
 "month": null,
@@ -68319,7 +68352,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-384",
+"id": "r3-renaissance-385",
 "era": "renaissance",
 "year": 1594,
 "month": null,
@@ -68344,7 +68377,7 @@
 ]
 },
 {
-"id": "r3-renaissance-385",
+"id": "r3-renaissance-386",
 "era": "renaissance",
 "year": 1470,
 "month": null,
@@ -68364,7 +68397,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-386",
+"id": "r3-renaissance-387",
 "era": "renaissance",
 "year": 1500,
 "month": null,
@@ -68384,7 +68417,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-387",
+"id": "r3-renaissance-388",
 "era": "renaissance",
 "year": 1500,
 "month": null,
@@ -68404,7 +68437,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-388",
+"id": "r3-renaissance-389",
 "era": "renaissance",
 "year": 1521,
 "month": null,
@@ -68424,7 +68457,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-389",
+"id": "r3-renaissance-390",
 "era": "renaissance",
 "year": 1526,
 "month": null,
@@ -68444,7 +68477,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-390",
+"id": "r3-renaissance-391",
 "era": "renaissance",
 "year": 1568,
 "month": null,
@@ -68464,7 +68497,7 @@
 "links": []
 },
 {
-"id": "r3-renaissance-391",
+"id": "r3-renaissance-392",
 "era": "renaissance",
 "year": 1595,
 "month": null,
@@ -74765,38 +74798,6 @@
 {
 "id": "r3-age-of-reason-320",
 "era": "age-of-reason",
-"year": 1690,
-"month": null,
-"kind": "tied",
-"lines": [
-"Vampire"
-],
-"region": "Europe",
-"place": "Europe",
-"tags": [
-"faith"
-],
-"title": "Justicars named",
-"text": "The title of justicar comes into use in the Camarilla in the late 1600s.",
-"ref": "Real history; the World of Darkness reading is a house rule",
-"links": [
-{
-"id": "dav-midnight-crescent",
-"title": "The Midnight Crescent"
-},
-{
-"id": "dc1-laibon",
-"title": "The Laibon"
-},
-{
-"id": "vac-royal-web",
-"title": "Victoria's Royal Web"
-}
-]
-},
-{
-"id": "r3-age-of-reason-321",
-"era": "age-of-reason",
 "year": 1666,
 "month": null,
 "kind": "tied",
@@ -74814,7 +74815,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-322",
+"id": "r3-age-of-reason-321",
 "era": "age-of-reason",
 "year": 1683,
 "month": null,
@@ -74838,7 +74839,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-323",
+"id": "r3-age-of-reason-322",
 "era": "age-of-reason",
 "year": 1727,
 "month": null,
@@ -74858,7 +74859,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-324",
+"id": "r3-age-of-reason-323",
 "era": "age-of-reason",
 "year": 1732,
 "month": null,
@@ -74878,7 +74879,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-325",
+"id": "r3-age-of-reason-324",
 "era": "age-of-reason",
 "year": 1740,
 "month": null,
@@ -74897,7 +74898,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-326",
+"id": "r3-age-of-reason-325",
 "era": "age-of-reason",
 "year": 1755,
 "month": null,
@@ -74916,7 +74917,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-327",
+"id": "r3-age-of-reason-326",
 "era": "age-of-reason",
 "year": 1770,
 "month": null,
@@ -74935,7 +74936,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-328",
+"id": "r3-age-of-reason-327",
 "era": "age-of-reason",
 "year": 1776,
 "month": null,
@@ -74955,7 +74956,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-329",
+"id": "r3-age-of-reason-328",
 "era": "age-of-reason",
 "year": 1785,
 "month": null,
@@ -74975,7 +74976,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-330",
+"id": "r3-age-of-reason-329",
 "era": "age-of-reason",
 "year": 1789,
 "month": null,
@@ -75007,7 +75008,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-331",
+"id": "r3-age-of-reason-330",
 "era": "age-of-reason",
 "year": 1794,
 "month": null,
@@ -75039,7 +75040,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-332",
+"id": "r3-age-of-reason-331",
 "era": "age-of-reason",
 "year": 1798,
 "month": null,
@@ -75063,7 +75064,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-333",
+"id": "r3-age-of-reason-332",
 "era": "age-of-reason",
 "year": 1812,
 "month": null,
@@ -75083,7 +75084,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-334",
+"id": "r3-age-of-reason-333",
 "era": "age-of-reason",
 "year": 1815,
 "month": null,
@@ -75107,7 +75108,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-335",
+"id": "r3-age-of-reason-334",
 "era": "age-of-reason",
 "year": 1816,
 "month": null,
@@ -75127,7 +75128,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-336",
+"id": "r3-age-of-reason-335",
 "era": "age-of-reason",
 "year": 1822,
 "month": null,
@@ -75151,7 +75152,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-337",
+"id": "r3-age-of-reason-336",
 "era": "age-of-reason",
 "year": 1830,
 "month": null,
@@ -75183,7 +75184,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-338",
+"id": "r3-age-of-reason-337",
 "era": "age-of-reason",
 "year": 1831,
 "month": null,
@@ -75202,7 +75203,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-339",
+"id": "r3-age-of-reason-338",
 "era": "age-of-reason",
 "year": 1607,
 "month": null,
@@ -75222,7 +75223,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-340",
+"id": "r3-age-of-reason-339",
 "era": "age-of-reason",
 "year": 1608,
 "month": null,
@@ -75242,7 +75243,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-341",
+"id": "r3-age-of-reason-340",
 "era": "age-of-reason",
 "year": 1610,
 "month": null,
@@ -75262,7 +75263,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-342",
+"id": "r3-age-of-reason-341",
 "era": "age-of-reason",
 "year": 1616,
 "month": null,
@@ -75282,7 +75283,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-343",
+"id": "r3-age-of-reason-342",
 "era": "age-of-reason",
 "year": 1619,
 "month": null,
@@ -75303,7 +75304,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-344",
+"id": "r3-age-of-reason-343",
 "era": "age-of-reason",
 "year": 1620,
 "month": null,
@@ -75323,7 +75324,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-345",
+"id": "r3-age-of-reason-344",
 "era": "age-of-reason",
 "year": 1626,
 "month": null,
@@ -75343,7 +75344,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-346",
+"id": "r3-age-of-reason-345",
 "era": "age-of-reason",
 "year": 1630,
 "month": null,
@@ -75364,7 +75365,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-347",
+"id": "r3-age-of-reason-346",
 "era": "age-of-reason",
 "year": 1636,
 "month": null,
@@ -75385,7 +75386,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-348",
+"id": "r3-age-of-reason-347",
 "era": "age-of-reason",
 "year": 1637,
 "month": null,
@@ -75405,7 +75406,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-349",
+"id": "r3-age-of-reason-348",
 "era": "age-of-reason",
 "year": 1642,
 "month": null,
@@ -75425,7 +75426,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-350",
+"id": "r3-age-of-reason-349",
 "era": "age-of-reason",
 "year": 1649,
 "month": null,
@@ -75446,7 +75447,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-351",
+"id": "r3-age-of-reason-350",
 "era": "age-of-reason",
 "year": 1655,
 "month": null,
@@ -75467,7 +75468,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-352",
+"id": "r3-age-of-reason-351",
 "era": "age-of-reason",
 "year": 1664,
 "month": null,
@@ -75487,7 +75488,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-353",
+"id": "r3-age-of-reason-352",
 "era": "age-of-reason",
 "year": 1675,
 "month": null,
@@ -75507,7 +75508,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-354",
+"id": "r3-age-of-reason-353",
 "era": "age-of-reason",
 "year": 1680,
 "month": null,
@@ -75527,7 +75528,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-355",
+"id": "r3-age-of-reason-354",
 "era": "age-of-reason",
 "year": 1682,
 "month": null,
@@ -75547,7 +75548,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-356",
+"id": "r3-age-of-reason-355",
 "era": "age-of-reason",
 "year": 1692,
 "month": null,
@@ -75568,7 +75569,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-357",
+"id": "r3-age-of-reason-356",
 "era": "age-of-reason",
 "year": 1692,
 "month": null,
@@ -75589,7 +75590,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-358",
+"id": "r3-age-of-reason-357",
 "era": "age-of-reason",
 "year": 1692,
 "month": null,
@@ -75610,7 +75611,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-359",
+"id": "r3-age-of-reason-358",
 "era": "age-of-reason",
 "year": 1693,
 "month": null,
@@ -75631,7 +75632,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-360",
+"id": "r3-age-of-reason-359",
 "era": "age-of-reason",
 "year": 1695,
 "month": null,
@@ -75652,7 +75653,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-361",
+"id": "r3-age-of-reason-360",
 "era": "age-of-reason",
 "year": 1697,
 "month": null,
@@ -75672,7 +75673,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-362",
+"id": "r3-age-of-reason-361",
 "era": "age-of-reason",
 "year": 1712,
 "month": null,
@@ -75692,7 +75693,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-363",
+"id": "r3-age-of-reason-362",
 "era": "age-of-reason",
 "year": 1718,
 "month": null,
@@ -75711,7 +75712,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-364",
+"id": "r3-age-of-reason-363",
 "era": "age-of-reason",
 "year": 1718,
 "month": null,
@@ -75732,7 +75733,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-365",
+"id": "r3-age-of-reason-364",
 "era": "age-of-reason",
 "year": 1739,
 "month": null,
@@ -75752,7 +75753,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-366",
+"id": "r3-age-of-reason-365",
 "era": "age-of-reason",
 "year": 1746,
 "month": null,
@@ -75773,7 +75774,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-367",
+"id": "r3-age-of-reason-366",
 "era": "age-of-reason",
 "year": 1759,
 "month": null,
@@ -75793,7 +75794,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-368",
+"id": "r3-age-of-reason-367",
 "era": "age-of-reason",
 "year": 1763,
 "month": null,
@@ -75813,7 +75814,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-369",
+"id": "r3-age-of-reason-368",
 "era": "age-of-reason",
 "year": 1767,
 "month": null,
@@ -75833,7 +75834,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-370",
+"id": "r3-age-of-reason-369",
 "era": "age-of-reason",
 "year": 1769,
 "month": null,
@@ -75854,7 +75855,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-371",
+"id": "r3-age-of-reason-370",
 "era": "age-of-reason",
 "year": 1773,
 "month": null,
@@ -75874,7 +75875,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-372",
+"id": "r3-age-of-reason-371",
 "era": "age-of-reason",
 "year": 1775,
 "month": null,
@@ -75895,7 +75896,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-373",
+"id": "r3-age-of-reason-372",
 "era": "age-of-reason",
 "year": 1776,
 "month": null,
@@ -75916,7 +75917,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-374",
+"id": "r3-age-of-reason-373",
 "era": "age-of-reason",
 "year": 1780,
 "month": null,
@@ -75937,7 +75938,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-375",
+"id": "r3-age-of-reason-374",
 "era": "age-of-reason",
 "year": 1781,
 "month": null,
@@ -75957,7 +75958,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-376",
+"id": "r3-age-of-reason-375",
 "era": "age-of-reason",
 "year": 1787,
 "month": null,
@@ -75977,7 +75978,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-377",
+"id": "r3-age-of-reason-376",
 "era": "age-of-reason",
 "year": 1791,
 "month": null,
@@ -75998,7 +75999,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-378",
+"id": "r3-age-of-reason-377",
 "era": "age-of-reason",
 "year": 1791,
 "month": null,
@@ -76019,7 +76020,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-379",
+"id": "r3-age-of-reason-378",
 "era": "age-of-reason",
 "year": 1803,
 "month": null,
@@ -76040,7 +76041,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-380",
+"id": "r3-age-of-reason-379",
 "era": "age-of-reason",
 "year": 1804,
 "month": null,
@@ -76061,7 +76062,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-381",
+"id": "r3-age-of-reason-380",
 "era": "age-of-reason",
 "year": 1804,
 "month": null,
@@ -76081,7 +76082,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-382",
+"id": "r3-age-of-reason-381",
 "era": "age-of-reason",
 "year": 1808,
 "month": null,
@@ -76101,7 +76102,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-383",
+"id": "r3-age-of-reason-382",
 "era": "age-of-reason",
 "year": 1810,
 "month": null,
@@ -76122,7 +76123,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-384",
+"id": "r3-age-of-reason-383",
 "era": "age-of-reason",
 "year": 1811,
 "month": null,
@@ -76142,7 +76143,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-385",
+"id": "r3-age-of-reason-384",
 "era": "age-of-reason",
 "year": 1811,
 "month": null,
@@ -76163,7 +76164,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-386",
+"id": "r3-age-of-reason-385",
 "era": "age-of-reason",
 "year": 1814,
 "month": null,
@@ -76183,7 +76184,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-387",
+"id": "r3-age-of-reason-386",
 "era": "age-of-reason",
 "year": 1819,
 "month": null,
@@ -76203,7 +76204,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-388",
+"id": "r3-age-of-reason-387",
 "era": "age-of-reason",
 "year": 1821,
 "month": null,
@@ -76223,7 +76224,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-389",
+"id": "r3-age-of-reason-388",
 "era": "age-of-reason",
 "year": 1822,
 "month": null,
@@ -76244,7 +76245,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-390",
+"id": "r3-age-of-reason-389",
 "era": "age-of-reason",
 "year": 1823,
 "month": null,
@@ -76264,7 +76265,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-391",
+"id": "r3-age-of-reason-390",
 "era": "age-of-reason",
 "year": 1824,
 "month": null,
@@ -76284,7 +76285,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-392",
+"id": "r3-age-of-reason-391",
 "era": "age-of-reason",
 "year": 1825,
 "month": null,
@@ -76305,7 +76306,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-393",
+"id": "r3-age-of-reason-392",
 "era": "age-of-reason",
 "year": 1830,
 "month": null,
@@ -76326,7 +76327,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-394",
+"id": "r3-age-of-reason-393",
 "era": "age-of-reason",
 "year": 1831,
 "month": null,
@@ -76347,7 +76348,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-395",
+"id": "r3-age-of-reason-394",
 "era": "age-of-reason",
 "year": 1835,
 "month": null,
@@ -76367,7 +76368,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-396",
+"id": "r3-age-of-reason-395",
 "era": "age-of-reason",
 "year": 1836,
 "month": null,
@@ -76388,7 +76389,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-397",
+"id": "r3-age-of-reason-396",
 "era": "age-of-reason",
 "year": 1624,
 "month": null,
@@ -76408,7 +76409,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-398",
+"id": "r3-age-of-reason-397",
 "era": "age-of-reason",
 "year": 1632,
 "month": null,
@@ -76428,7 +76429,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-399",
+"id": "r3-age-of-reason-398",
 "era": "age-of-reason",
 "year": 1636,
 "month": null,
@@ -76449,7 +76450,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-400",
+"id": "r3-age-of-reason-399",
 "era": "age-of-reason",
 "year": 1652,
 "month": null,
@@ -76470,7 +76471,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-401",
+"id": "r3-age-of-reason-400",
 "era": "age-of-reason",
 "year": 1659,
 "month": null,
@@ -76490,7 +76491,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-402",
+"id": "r3-age-of-reason-401",
 "era": "age-of-reason",
 "year": 1665,
 "month": null,
@@ -76511,7 +76512,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-403",
+"id": "r3-age-of-reason-402",
 "era": "age-of-reason",
 "year": 1672,
 "month": null,
@@ -76532,7 +76533,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-404",
+"id": "r3-age-of-reason-403",
 "era": "age-of-reason",
 "year": 1693,
 "month": null,
@@ -76552,7 +76553,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-405",
+"id": "r3-age-of-reason-404",
 "era": "age-of-reason",
 "year": 1698,
 "month": null,
@@ -76573,7 +76574,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-406",
+"id": "r3-age-of-reason-405",
 "era": "age-of-reason",
 "year": 1701,
 "month": null,
@@ -76594,7 +76595,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-407",
+"id": "r3-age-of-reason-406",
 "era": "age-of-reason",
 "year": 1706,
 "month": null,
@@ -76615,7 +76616,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-408",
+"id": "r3-age-of-reason-407",
 "era": "age-of-reason",
 "year": 1727,
 "month": null,
@@ -76636,7 +76637,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-409",
+"id": "r3-age-of-reason-408",
 "era": "age-of-reason",
 "year": 1725,
 "month": null,
@@ -76657,7 +76658,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-410",
+"id": "r3-age-of-reason-409",
 "era": "age-of-reason",
 "year": 1769,
 "month": null,
@@ -76677,7 +76678,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-411",
+"id": "r3-age-of-reason-410",
 "era": "age-of-reason",
 "year": 1779,
 "month": null,
@@ -76697,7 +76698,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-412",
+"id": "r3-age-of-reason-411",
 "era": "age-of-reason",
 "year": 1787,
 "month": null,
@@ -76717,7 +76718,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-413",
+"id": "r3-age-of-reason-412",
 "era": "age-of-reason",
 "year": 1795,
 "month": null,
@@ -76737,7 +76738,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-414",
+"id": "r3-age-of-reason-413",
 "era": "age-of-reason",
 "year": 1796,
 "month": null,
@@ -76757,7 +76758,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-415",
+"id": "r3-age-of-reason-414",
 "era": "age-of-reason",
 "year": 1804,
 "month": null,
@@ -76778,7 +76779,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-416",
+"id": "r3-age-of-reason-415",
 "era": "age-of-reason",
 "year": 1816,
 "month": null,
@@ -76798,7 +76799,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-417",
+"id": "r3-age-of-reason-416",
 "era": "age-of-reason",
 "year": 1822,
 "month": null,
@@ -76818,7 +76819,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-418",
+"id": "r3-age-of-reason-417",
 "era": "age-of-reason",
 "year": 1824,
 "month": null,
@@ -76839,7 +76840,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-419",
+"id": "r3-age-of-reason-418",
 "era": "age-of-reason",
 "year": 1828,
 "month": null,
@@ -76859,7 +76860,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-420",
+"id": "r3-age-of-reason-419",
 "era": "age-of-reason",
 "year": 1828,
 "month": null,
@@ -76880,7 +76881,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-421",
+"id": "r3-age-of-reason-420",
 "era": "age-of-reason",
 "year": 1830,
 "month": null,
@@ -76900,7 +76901,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-422",
+"id": "r3-age-of-reason-421",
 "era": "age-of-reason",
 "year": 1832,
 "month": null,
@@ -76920,7 +76921,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-423",
+"id": "r3-age-of-reason-422",
 "era": "age-of-reason",
 "year": 1835,
 "month": null,
@@ -76940,7 +76941,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-424",
+"id": "r3-age-of-reason-423",
 "era": "age-of-reason",
 "year": 1606,
 "month": null,
@@ -76960,7 +76961,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-425",
+"id": "r3-age-of-reason-424",
 "era": "age-of-reason",
 "year": 1606,
 "month": null,
@@ -76980,7 +76981,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-426",
+"id": "r3-age-of-reason-425",
 "era": "age-of-reason",
 "year": 1616,
 "month": null,
@@ -77000,7 +77001,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-427",
+"id": "r3-age-of-reason-426",
 "era": "age-of-reason",
 "year": 1629,
 "month": null,
@@ -77021,7 +77022,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-428",
+"id": "r3-age-of-reason-427",
 "era": "age-of-reason",
 "year": 1642,
 "month": null,
@@ -77041,7 +77042,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-429",
+"id": "r3-age-of-reason-428",
 "era": "age-of-reason",
 "year": 1688,
 "month": null,
@@ -77061,7 +77062,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-430",
+"id": "r3-age-of-reason-429",
 "era": "age-of-reason",
 "year": 1722,
 "month": null,
@@ -77082,7 +77083,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-431",
+"id": "r3-age-of-reason-430",
 "era": "age-of-reason",
 "year": 1767,
 "month": null,
@@ -77102,7 +77103,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-432",
+"id": "r3-age-of-reason-431",
 "era": "age-of-reason",
 "year": 1769,
 "month": null,
@@ -77122,7 +77123,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-433",
+"id": "r3-age-of-reason-432",
 "era": "age-of-reason",
 "year": 1770,
 "month": null,
@@ -77142,7 +77143,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-434",
+"id": "r3-age-of-reason-433",
 "era": "age-of-reason",
 "year": 1778,
 "month": null,
@@ -77162,7 +77163,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-435",
+"id": "r3-age-of-reason-434",
 "era": "age-of-reason",
 "year": 1779,
 "month": null,
@@ -77182,7 +77183,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-436",
+"id": "r3-age-of-reason-435",
 "era": "age-of-reason",
 "year": 1788,
 "month": null,
@@ -77203,7 +77204,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-437",
+"id": "r3-age-of-reason-436",
 "era": "age-of-reason",
 "year": 1789,
 "month": null,
@@ -77223,7 +77224,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-438",
+"id": "r3-age-of-reason-437",
 "era": "age-of-reason",
 "year": 1789,
 "month": null,
@@ -77244,7 +77245,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-439",
+"id": "r3-age-of-reason-438",
 "era": "age-of-reason",
 "year": 1795,
 "month": null,
@@ -77265,7 +77266,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-440",
+"id": "r3-age-of-reason-439",
 "era": "age-of-reason",
 "year": 1797,
 "month": null,
@@ -77285,7 +77286,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-441",
+"id": "r3-age-of-reason-440",
 "era": "age-of-reason",
 "year": 1804,
 "month": null,
@@ -77305,7 +77306,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-442",
+"id": "r3-age-of-reason-441",
 "era": "age-of-reason",
 "year": 1808,
 "month": null,
@@ -77326,7 +77327,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-443",
+"id": "r3-age-of-reason-442",
 "era": "age-of-reason",
 "year": 1810,
 "month": null,
@@ -77347,7 +77348,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-444",
+"id": "r3-age-of-reason-443",
 "era": "age-of-reason",
 "year": 1818,
 "month": null,
@@ -77368,7 +77369,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-445",
+"id": "r3-age-of-reason-444",
 "era": "age-of-reason",
 "year": 1819,
 "month": null,
@@ -77389,7 +77390,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-446",
+"id": "r3-age-of-reason-445",
 "era": "age-of-reason",
 "year": 1830,
 "month": null,
@@ -77410,7 +77411,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-447",
+"id": "r3-age-of-reason-446",
 "era": "age-of-reason",
 "year": 1830,
 "month": null,
@@ -77443,7 +77444,7 @@
 ]
 },
 {
-"id": "r3-age-of-reason-448",
+"id": "r3-age-of-reason-447",
 "era": "age-of-reason",
 "year": 1835,
 "month": null,
@@ -77463,7 +77464,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-449",
+"id": "r3-age-of-reason-448",
 "era": "age-of-reason",
 "year": 1835,
 "month": null,
@@ -77483,7 +77484,7 @@
 "links": []
 },
 {
-"id": "r3-age-of-reason-450",
+"id": "r3-age-of-reason-449",
 "era": "age-of-reason",
 "year": 1836,
 "month": null,
@@ -77515,7 +77516,7 @@
 "tags": [
 "crown"
 ],
-"title": "Victoria crowned",
+"title": "Victoria takes the throne",
 "text": "Victoria becomes queen of Britain at eighteen and gives the coming age its name.",
 "ref": "Real history",
 "links": [
@@ -77662,7 +77663,7 @@
 {
 "id": "r3-victorian-007",
 "era": "victorian",
-"year": 1838,
+"year": 1839,
 "month": null,
 "kind": "history",
 "lines": [
@@ -79356,7 +79357,7 @@
 "occult"
 ],
 "title": "The Electrodyne and evolution",
-"text": "The house reading has the Union's men of science seize on Darwin as proof that the world runs by law, not spirit.",
+"text": "The house reading has the Order of Reason's men of science seize on Darwin as proof that the world runs by law, not spirit.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -79911,7 +79912,7 @@
 "occult"
 ],
 "title": "The abbot's garden",
-"text": "The house reading has a Technocrat visitor to the Brno monastery mark Mendel's work as a future paradigm and leave it unknown.",
+"text": "The house reading has an Order of Reason visitor to the Brno monastery mark Mendel's work as a future paradigm and leave it unknown.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
 },
@@ -81082,7 +81083,7 @@
 {
 "id": "r3-victorian-159",
 "era": "victorian",
-"year": 1880,
+"year": 1869,
 "month": null,
 "kind": "history",
 "lines": [
@@ -81292,7 +81293,7 @@
 {
 "id": "r3-victorian-169",
 "era": "victorian",
-"year": 1883,
+"year": 1881,
 "month": null,
 "kind": "history",
 "lines": [
@@ -83206,7 +83207,7 @@
 {
 "id": "r3-victorian-253",
 "era": "victorian",
-"year": 1901,
+"year": 1899,
 "month": null,
 "kind": "history",
 "lines": [
@@ -95159,7 +95160,7 @@
 {
 "id": "r3-mid-century-098",
 "era": "mid-century",
-"year": 1936,
+"year": 1930,
 "month": null,
 "kind": "history",
 "lines": [
@@ -102225,7 +102226,7 @@
 "treaty"
 ],
 "title": "Maastricht",
-"text": "The European Community becomes the European Union.",
+"text": "The European Community signs the treaty that makes it the European Union; the Union comes into force in November 1993.",
 "ref": "Real history",
 "branch": "classic",
 "links": []
@@ -104940,7 +104941,7 @@
 {
 "id": "r3-modern-162",
 "era": "modern",
-"year": 1999,
+"year": 2000,
 "month": null,
 "kind": "history",
 "lines": [
@@ -114606,7 +114607,7 @@
 "law"
 ],
 "title": "The hollowed deputies",
-"text": "The crusade's deputies in Rome who take bribes from vampire clients stop hearing their Messengers, and the faithful call them hollowed.",
+"text": "Word reaches Rome that Free State deputies who sell their badge to vampire clients no longer hear the Messengers; the faithful there call them hollowed.",
 "ref": "Future Darkness branch history, a house reading",
 "branch": "future",
 "links": []

@@ -1443,69 +1443,6 @@
    }
   },
   {
-   "name": "Parry with Dagger",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
-   "system": {
-    "reference": "V20 Dark Ages, pdf 351 / printed 350",
-    "description": "<p><b>Difficulty:</b> parry diff 5<br><b>Effect:</b> attack ±0</p><p><b>With that weapon in hand:</b> parry at difficulty 5.</p>",
-    "isequipped": false
-   },
-   "flags": {
-    "wodx-library": {
-     "source": "v20-dark-ages",
-     "page": "pdf 351 / printed 350",
-     "eras": [
-      "dark-ages",
-      "long-night"
-     ],
-     "kind": "(parry)",
-     "notes": [],
-     "parryWith": {
-      "weapon": "dagger",
-      "parry": 5,
-      "attack": 0,
-      "closeOnly": false
-     }
-    }
-   }
-  },
-  {
-   "name": "Parry with Sword",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
-   "system": {
-    "reference": "V20 Dark Ages, pdf 351 / printed 350",
-    "description": "<p><b>Difficulty:</b> parry diff 6<br><b>Effect:</b> attack +1, hand-to-hand only</p><p><b>With that weapon in hand:</b> parry at difficulty 6; +1 to the difficulty of attacks against the bearer in close combat.</p>",
-    "isequipped": false
-   },
-   "flags": {
-    "wodx-library": {
-     "source": "v20-dark-ages",
-     "page": "pdf 351 / printed 350",
-     "eras": [
-      "dark-ages",
-      "long-night"
-     ],
-     "kind": "(parry)",
-     "notes": [],
-     "ways": {
-      "*": null,
-      "mesoamerican": false,
-      "andean": false,
-      "polynesian": false,
-      "northern": false
-     },
-     "parryWith": {
-      "weapon": "sword",
-      "parry": 6,
-      "attack": 1,
-      "closeOnly": true
-     }
-    }
-   }
-  },
-  {
    "name": "Class One",
    "type": "Armor",
    "img": "icons/svg/shield.svg",

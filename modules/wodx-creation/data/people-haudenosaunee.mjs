@@ -1,6 +1,6 @@
 /**
  * Haudenosaunee names for the People generator (Creation, B3120 to B3122). WoDX's own lists of recorded names; no book
- * text. Ben's desk picks, 2026-11-13: recorded names (famous ones included), the clan passed from the mother, names
+ * text. The owner's desk picks, 2026-11-13: recorded names (famous ones included), the clan passed from the mother, names
  * staged by age (own names alone at first, then church names beside them, then a church given name and a family
  * name), and the people both before the colonies and as a share after.
  *

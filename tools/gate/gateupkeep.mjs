@@ -76,7 +76,7 @@ export async function run() {
     scene = await Scene.create({name: "WoDX gate: alley", width: 1000, height: 1000, flags: {"wodx-storyteller": {hunt: {area: "slums", heat: 0, since: t}}}});
     for ( let i = 0; i < 3; i++ ) await T.upkeep.addHeat(scene, "botch");
     const h = T.upkeep.huntHere(scene);
-    ok("7. heat and ground", h.area === "slums" && h.heat === 6 && h.band.name === "Watched" && h.extra === 2, {here: {area: h.area, heat: h.heat, band: h.band.name}});
+    ok("7. heat and ground", h.area === "slums" && h.heat === 6 && h.band.name === "Watched" && h.extra === 2, {here: {area: h.area, heat: h.heat, band: h.band.name, extra: h.extra, herd: h.herd ?? null}});
 
     await T.upkeep.addHeat(scene, "botch");
     await sleep(300);

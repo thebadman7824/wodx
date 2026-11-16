@@ -18,7 +18,7 @@ test("every Discipline has five levels and every power a page and a known keywor
     // B5161: a power from another book (Kindred of the East Companion) names its book and plays itself in kote.js
     if ( p.book ) { assert.ok(p.p > 0 && p.stoke, `${p.name}: page and own handling`); continue; }
     assert.ok(p.p >= 100 && p.p <= 127, `${p.name}: page`);
-    assert.ok(E.KEYWORDS[p.spec.kw], `${p.name}: keyword ${p.spec.kw}`);
+    for ( const sp of [p.spec].flat() ) assert.ok(E.KEYWORDS[sp.kw], `${p.name}: keyword ${sp.kw}`); // B6857: Master Flow moves two pools
     const res = KA.artResults(p.id, 2);
     assert.ok(res.length, `${p.name}: results`);
     for ( const r of res ) assert.ok(E.KEYWORDS[r.key], `${p.name}: result keyword ${r.key}`);

@@ -66,7 +66,7 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.102.5";
+const VERSION = "0.103.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -196,7 +196,7 @@ function fearSources(actor) {
   }
   if ( num(actor?.system?.advantages?.faith?.permanent) > 0 ) out.add("faith");
   if ( [...(actor?.effects ?? [])].some(e => /crinos|hispo/i.test(e.name ?? "")) ) out.add("crinos");
-  // NPC 0.21.0: animals shy from the restless dead (Ben, 2026-11-12), not from Kindred
+  // NPC 0.21.0: animals shy from the restless dead (the owner, 2026-11-12), not from Kindred
   if ( C()?.getKind?.(actor) === "wraith" ) out.add("wraith");
   return [...out];
 }
@@ -315,7 +315,7 @@ export function readFight(tok, combat = game.combat) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  The fallen (B5077, Ben's Carry Bodies Desk c8)                     */
+/*  The fallen (B5077, the owner's Carry Bodies Desk c8)                     */
 /* ------------------------------------------------------------------ */
 
 const HAUL = () => IXA()?.haul ?? null;
@@ -607,7 +607,7 @@ async function undo(snap) {
 
 /**
  * B5056: an animal ghoul's frenzy check: Willpower at difficulty 6 (an animal has no Self-Control, B5046; no easier
- * difficulty for animals, Ben's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
+ * difficulty for animals, the owner's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
  */
 async function animalFrenzy(tok) {
   const actor = tok.actor;
@@ -1036,9 +1036,12 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   handled.add(key);
   const cond = chron()?.conditions;
   const stuck = NO_ACTION.find(id => cond?.hasCondition?.(tok.actor, id)) ?? (wounds(tok.actor) >= 7 ? "incapacitated" : null);
-  if ( stuck ) report(combat.id, c.id, {cannotAct: true});
-  if ( stuck ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
-    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(cond?.getCondition?.(stuck)?.name ?? stuck)}).</div></div>`});
+  // B6945: a failed stand-up or a derangement's bout spends this turn's action (WoDX Combat's lostAction flag)
+  const lost = tok.actor.getFlag?.("wodx-combat", "lostAction");
+  const lostWhy = !stuck && C()?.rules?.lostActionNow?.(lost, combat) ? (lost.why ? `in the grip of ${lost.why}` : "failed to stand up") : "";
+  if ( stuck || lostWhy ) report(combat.id, c.id, {cannotAct: true});
+  if ( stuck || lostWhy ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(lostWhy || (cond?.getCondition?.(stuck)?.name ?? stuck))}).</div></div>`});
   // B4966: a beast with someone in its saddle goes where its rider takes it (its dodge and its blows go with the rider's)
   const ridden = IXA()?.riddenBy?.(tok.document);
   if ( ridden?.driver ) {
@@ -1288,6 +1291,7 @@ Hooks.once("init", () => {
   HEARTS.listen();
   FAMILY.listen();
   STANDING.registerSettings();
+  STANDING.listenDeeds();
   cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
@@ -1413,14 +1417,16 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.token;
   if ( !tokens?.tools ) return;
+  // B6765: a player's button shows only while the world has its feature on (a switched-off one only said so)
+  const isOn = k => { try { return game.settings.get(MOD, k) !== false; } catch (e) { return false; } };
   tokens.tools.wodxTalk = {name: "wodxTalk", title: "Talk to the person you target, or the nearest one in reach", icon: "fa-solid fa-comments", order: 108,
-    button: true, visible: true, onChange: () => talk.openTalk()};
+    button: true, visible: game.user.isGM || isOn("talkMenu"), onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
-    button: true, visible: true, onChange: () => orders.openOrders()};
+    button: true, visible: game.user.isGM || isOn("followerOrders"), onChange: () => orders.openOrders()};
   tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
     button: true, visible: true, onChange: () => followers.openFollowers()};
   tokens.tools.wodxRemembered = {name: "wodxRemembered", title: "Who remembers you (people who have not forgotten what you did)", icon: "fa-solid fa-brain", order: 109.6,
-    button: true, visible: !game.user.isGM, onChange: () => MEMORY.rememberedDialog()};
+    button: true, visible: !game.user.isGM && isOn("memory"), onChange: () => MEMORY.rememberedDialog()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,

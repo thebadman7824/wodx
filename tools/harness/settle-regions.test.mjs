@@ -88,7 +88,7 @@ test("settle: the Settlements window says whose trades a record follows", async 
   assert.match(SR.regionWords(SR.readRecord(base).data), /Moravia and the Bohemian crown lands/);
 });
 
-/* Ben's picks on the Town Households desk (B3295 to B3299) */
+/* The owner's picks on the Town Households desk (B3295 to B3299) */
 test("settle: every region has its own turning years, with a colonial age where a foreign power ruled", { skip: !py }, () => {
   const got = run(`import json, settle, regiontrades as RT
 print(json.dumps({"keys": sorted(RT.YEARS), "y1980": {r: settle.trade_age(1980, r) for r in RT.YEARS}, "at": {r: [settle.trade_age(y, r) for y in (1700, 1800, 1900, 1925, 1970, 1995, 2040)] for r in RT.YEARS}}))`);

@@ -337,7 +337,7 @@ export function lovedFailed(roll, successes = 0) {
 export const LOVED_FAIL_WORD = {frenzy: "Frenzy", thrall: "Thrall of the Wyrm", fire: "Fire soul", angst: "+1 Angst", willpower: "-1 Willpower"};
 
 /* ------------------------------------------------------------------ */
-/*  Adoption of children and adults (B3213, Ben 2026-11-13)        */
+/*  Adoption of children and adults (B3213, the owner 2026-11-13)        */
 /* ------------------------------------------------------------------ */
 
 /**

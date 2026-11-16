@@ -48,12 +48,12 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
     selfcontrol: "Self-Control", bodycrafts: "Body Crafts", willpower: "Willpower", road: "Road" };
 const lab = k => LABEL[k] ?? cap(k);
 
-export const DATA = { disc: null, roads: null, v20: null };
+export const DATA = { disc: null, roads: null, v20: null, paths: null };
 /** The place line for a card (3.42.0), from the witness rules. */
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    [DATA.disc, DATA.roads, DATA.v20] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json")]);
+    [DATA.disc, DATA.roads, DATA.v20, DATA.paths] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json")]);
     return DATA;
 }
 
@@ -81,6 +81,9 @@ export function roadOf(actor) {
         return { key: f.key, road, path: road.paths.find(p => p.name === f.path) ?? null };
     }
     const p = actor?.system?.advantages?.path ?? {};
+    // B6724: a V20 Path of Enlightenment from the system sheet's choice
+    const v20 = K.v20PathFor(DATA.paths, p.label, p.custom);
+    if (v20) return v20;
     const name = p.custom || game.i18n?.localize?.(p.label || "") || "";
     return K.roadFor(DATA.roads, name.startsWith("wod.") ? "" : name);
 }
@@ -256,7 +259,8 @@ export function build(ctx) {
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
-            if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
+            // B6855: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
+            if ((PE.isPath(p.d) || PE.PATH_EFFECTS[p.id]) && successes > 0 && (p.r || PE.PATH_EFFECTS[p.id]) && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
                 await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}`,
@@ -275,7 +279,8 @@ export function build(ctx) {
             if (/beckoning/i.test(p.n) && successes > 0) { const came = await beckonOwn(actor); if (came.length) body += `<div class="vta-note">First to come: ${came.map(esc).join(", ")}.</div>`; }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
-            if (!fx && !p.passive && successes > 0 && EF.isOn()) {
+            // B6853: a passive power picked here turns on for its time
+            if (!fx && successes > 0 && EF.isOn()) {
                 const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: p.book === "V20" ? "Vampire (V20)" : "Vampire (Dark Ages)" });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }

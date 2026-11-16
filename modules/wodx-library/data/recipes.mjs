@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.10.0: recipes for the things that are eaten, drunk or taken (Ben asked 2026-11-12, after the way
+ * WoDX Library 0.10.0: recipes for the things that are eaten, drunk or taken (the owner asked 2026-11-12, after the way
  * Cataclysm: Dark Days Ahead builds its recipes; mechanics only, WoDX's own methods and words). Rules that use these
  * tables are in scripts/recipe-rules.mjs; Storyteller runs the work as long tasks.
  *
@@ -307,7 +307,7 @@ export const FACTORY_PRINTER = 2040;
 
 /**
  * Library 0.13.0: taking a thing apart for parts (Cataclysm's reversible recipes; the item-links study, approved by
- * Ben 2026-11-12). Each rule: a name pattern (and categories it applies to), the parts it gives, and the Ability.
+ * The owner 2026-11-12). Each rule: a name pattern (and categories it applies to), the parts it gives, and the Ability.
  * A part is a list of goods, first one in use in the year wins ("metal" gives steel bar stock after 1850, a bar of
  * iron before). Things that are eaten, drunk, taken, burned, written on or struck as coin are not taken apart.
  * House rules (B953).

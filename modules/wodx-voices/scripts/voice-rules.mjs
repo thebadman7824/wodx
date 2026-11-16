@@ -249,7 +249,7 @@ export function langTries(lang) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Plot NPCs and prewritten lines (Ben, 12 November 2026)               */
+/* Plot NPCs and prewritten lines (the owner, 12 November 2026)               */
 /* ------------------------------------------------------------------ */
 
 /** Whether an NPC speaks aloud at all: plot NPCs only, unless the world says every NPC. */

@@ -661,3 +661,22 @@ export function darknessFor({altitude, moon = 0, sky = "clear", night = 0.9, day
 export function weatherKey(d) {
   return d ? hash128(JSON.stringify([d.sky, d.precip, d.intensity, d.fog, d.wind, d.snowLying, d.effect])).slice(0, 1)[0].toString(36) : "";
 }
+
+/**
+ * B6796: the night's modifiers that WoDX rolls read through WoDX Chronicle's roll effects (the tags its rollTags
+ * gives): ranged attacks (Firearms, Archery) in fog or heavy rain; a tracking roll (Perception + Survival) on lying
+ * snow; running, riding and driving (Dexterity + Athletics, Ride, Drive) on ice or snow. Perception by sight, hearing
+ * and smell stay with WoDX Senses, and the Shroud with WoDX Otherworlds. The fog's step counts on every ranged
+ * attack: the roll's tags carry no range (house reading, PENDING-REVIEW). -> [{key, name, dice, diff, note}]
+ */
+export function rollEffects(d, tags = []) {
+  const t = new Set([...(tags ?? [])].map(x => String(x).toLowerCase()));
+  const out = [];
+  for ( const m of modifiers(d) ) {
+    const fits = (m.id === "sight" && t.has("ranged") && /ranged/.test(m.applies))
+      || (m.id === "tracks" && t.has("survival") && t.has("perception"))
+      || (m.id === "footing" && (t.has("ride") || t.has("drive") || (t.has("athletics") && t.has("dexterity"))));
+    if ( fits ) out.push({key: `weather-${m.id}`, name: `${m.label} (tonight's weather)`, dice: 0, diff: m.n, note: "house rule"});
+  }
+  return out;
+}

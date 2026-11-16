@@ -155,7 +155,7 @@ test("each stance changes rolls, not only speed", () => {
     assert.ok(Object.keys(s.own).length || Object.keys(s.vs).length || s.cannot, `${k} changes something`);
     assert.ok(s.note, `${k} says why`);
   }
-  // Ben's example: prone helps Stealth, and makes the prone one harder to notice
+  // The owner's example: prone helps Stealth, and makes the prone one harder to notice
   assert.equal(MV.rollStance("prone", ["stealth"]).diff, -2);
   assert.equal(MV.spotStance("prone"), 1);
   assert.equal(MV.rollStance("flying", ["perception"]).diff, -1);

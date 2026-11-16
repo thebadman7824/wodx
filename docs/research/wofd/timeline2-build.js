@@ -43,7 +43,7 @@ const O={
 'o2|2045':'One Free State recognises ghosts as legal persons and keeps projection legal, becoming the capital of death tourism (y11).',
 'o2|2089':'The firm collapses when the last state that tolerated it turns on it after a Spectral attack on its own projectors (y11).',
 };
-// Ben's date moves, run h (2026-11-10 16:54Z)
+// The owner's date moves, run h (2026-11-10 16:54Z)
 let MOVE={'d3|2068':'2079','d1|2079':'2068'};
 const EXTRA=[
 ['2027','Hunter · Night City','The registry, the Hunter Act and its deputies share one city: deputies police unregistered Kindred (y02).'],
@@ -51,7 +51,7 @@ const EXTRA=[
 ['2047','Demon · Mummy','The Alexandria school and the Reconcilers become uneasy allies, both working to undo the harm of the 2025 flood (y18).'],
 ];
 
-// Last check (run i) verdicts, 2026-11-10 17:03Z: z01-z05, z07, z08 OK; z06 fixed by Ben to 2059.
+// Last check (run i) verdicts, 2026-11-10 17:03Z: z01-z05, z07, z08 OK; z06 fixed by the owner to 2059.
 Object.assign(O,{
 'mu2|2039':'The first copies walk out of the labs: bodies that come back breathing with no mind, no memory and no Ba. Biotechnica sells them quietly as organ stock and soldiers (z01).',
 'mu2|2057':'The corps start hunting true mummies for their Ba. Mummies hide their rebirths where no scanner reaches, deep in the glass and in tombs below the arcologies (z01).',

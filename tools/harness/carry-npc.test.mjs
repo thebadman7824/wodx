@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* NPCs and companions pick up the fallen (B5077, B5079, Ben's Carry Bodies Desk c8 and c10). */
+/* NPCs and companions pick up the fallen (B5077, B5079, the owner's Carry Bodies Desk c8 and c10). */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");

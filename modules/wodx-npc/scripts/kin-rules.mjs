@@ -9,10 +9,11 @@
  *
  * Every figure here is a house reading of history, rounded for play (B2771). The books give no such table.
  */
+import {sexFromDraw} from "../../wodx-chronicle/scripts/gender-rules.mjs";
 
 /** Ages of life by period: marrying age, children born to a couple, the share who live to grow up, adult death age. */
 export const LIFE = [
-  {from: -9999, key: "medieval", marry: [16, 24], children: 5, survive: 0.5, dies: [32, 72]},
+  {from: -9999, key: "medieval", marry: [18, 24], children: 5, survive: 0.5, dies: [32, 72]},
   {from: 1500, key: "early-modern", marry: [18, 27], children: 5, survive: 0.55, dies: [34, 76]},
   {from: 1800, key: "industrial", marry: [20, 28], children: 5, survive: 0.65, dies: [38, 80]},
   {from: 1900, key: "c20", marry: [21, 29], children: 3, survive: 0.9, dies: [52, 88]},
@@ -96,6 +97,19 @@ export function descendantsOf(line, memberId = "m0") {
 }
 
 /** How one member is related to the founder, in words. */
+/**
+ * B6764: the gender a member brought into play has on the sheet: the sex the line kept for the name, except one in a
+ * hundred who is nonbinary (the owner, 2026-11-13, B3503), drawn steadily from the line and member, so it never changes.
+ * A child born in the line already has its gender from its birth draw (B6768) and keeps it.
+ */
+export function genderFor(m, lineId = "", share = 0.01) {
+  if ( ["female", "male", "nonbinary"].includes(m?.gender) ) return m.gender;
+  const sex = m?.sex === "female" || m?.sex === "male" ? m.sex : "";
+  let h = 2166136261;
+  for ( const c of `${lineId}:${m?.id ?? ""}` ) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
+  return (h % 10000) / 10000 < share ? "nonbinary" : sex;
+}
+
 export function relationWord(m) {
   if ( !m ) return "";
   if ( m.founder ) return "the founder";
@@ -162,8 +176,9 @@ export function grow(line, toYear, {rand = seeded(`${line?.seed}:${toYear}`), sp
       if ( m.spouse && age <= 42 && (m.kids ?? 0) < life.children && rand() < 0.35 ) {
         m.kids = (m.kids ?? 0) + 1;
         if ( rand() > life.survive ) continue; // born, but did not live to be counted
-        const sex = rand() < 0.5 ? "female" : "male";
-        const kid = {id: `m${next++}`, name: nameFor?.({sex, year: y, parent: m}) ?? "", sex, born: y, died: null, parent: m.id, gen: (m.gen ?? 0) + 1, actorId: null, spouse: null, direct: !!m.direct};
+        // B6768: the People generator's rule, from the same draw as before: one child in a hundred is nonbinary
+        const {sex: gender, nameSex: sex} = sexFromDraw(rand());
+        const kid = {id: `m${next++}`, name: nameFor?.({sex, year: y, parent: m}) ?? "", sex, gender, born: y, died: null, parent: m.id, gen: (m.gen ?? 0) + 1, actorId: null, spouse: null, direct: !!m.direct};
         if ( L.family && kid.name && !kid.name.includes(" ") ) kid.name = `${kid.name} ${L.family}`;
         L.members.push(kid);
         events.push({year: y, kind: "birth", who: kid.id, detail: `${kid.name || "A child"} born to ${m.name || "a member"}`});

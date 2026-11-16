@@ -333,10 +333,28 @@ export function giftDuration(code, successes = 1) {
 }
 
 /** XP cost of a Gift (DA:W p. 107): level × 3 for the breed's, auspice's or tribe's own; level × 5 otherwise. */
+/** B6729: Skin Dancers (W20 p. 199, read with the Ronin rule there): every Gift costs level x 7, and none above level one. */
+export const isSkinDancer = tribe => /^skin-?dancers?$/.test(norm(tribe).replace(/ /g, "-"));
+export function giftTerms(level, own, { tribe = "", rank = 1 } = {}) {
+    if (isSkinDancer(tribe)) return { xp: n(level) * 7, cap: 1, own: false, note: "Skin Dancer: level x 7, level one only (W20 p. 199)" };
+    return { xp: giftXP(level, own), cap: Math.max(1, n(rank)), own, note: "" };
+}
 export function giftXP(level, own) {
     return n(level) * (own ? 3 : 5);
 }
 /** Is a Gift one of the werewolf's own groups? */
 export function giftIsOwn(gift, { breed, auspice, tribe }) {
     return (gift.g ?? []).some(g => g === breed || g === auspice || g === tribe);
+}
+
+/**
+ * B6725: the Bastet tribes (W20 Changing Breeds; the system sheet's wod.bio.tribename.*). A Bastet's own tribe's Gifts
+ * are its own; another tribe's are not (bought at the outsider's cost). Other Fera Gift groups stay as they were.
+ */
+export const BASTET_TRIBES = ["bagheera", "balam", "bubasti", "ceilican", "khan", "pumonca", "qualmi", "simba", "swara"];
+export function feraGiftIsOwn(gift, { feraKey, tribe } = {}) {
+    if (!gift?.breed || gift.breed !== feraKey) return false;
+    const sub = norm(gift.sub);
+    if (gift.breed === "Bastet" && BASTET_TRIBES.includes(sub)) return norm(tribe) === sub;
+    return true;
 }

@@ -245,7 +245,7 @@ export function cardLines(r, {caster = "the summoner"} = {}) {
 }
 
 /**
- * B4928 (Ben's Power Limits Desk pick d1): a resisted or contested roll shown in full. parts: [{name, value}];
+ * B4928 (the owner's Power Limits Desk pick d1): a resisted or contested roll shown in full. parts: [{name, value}];
  * faces: the dice; against: the power's own successes, when known. Returns {pool, faces: [{v, mark}], result}.
  */
 export function breakdown({parts = [], dice = 0, diff = 6, faces = [], successes = 0, botch = false, against = null} = {}) {

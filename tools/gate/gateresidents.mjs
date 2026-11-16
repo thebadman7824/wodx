@@ -20,12 +20,15 @@
  * Result: Data/wodx-gate/gateresidents-result.json.
  */
 const MOD = "wodx-npc";
-const N = 10;
+// B6957: the steps the gate takes (2b and 5b counted), so a run that stops early still shows as short
+const N = 11;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function save(R) {
   R.finished = new Date().toISOString();
-  R.summary = `${R.steps.filter(s => s.pass).length}/${N} passed${R.errors.length ? `, ${R.errors.length} error(s)` : ""}`;
+  R.summary = `${R.steps.filter(s => s.pass).length}/${Math.max(N, R.steps.length)} passed${R.errors.length ? `, ${R.errors.length} error(s)` : ""}`;
+  const bad = R.steps.filter(s => !s.pass).map(s => s.name);
+  if ( bad.length ) R.summary += `; failed: ${bad.join("; ")}`;
   const file = new File([JSON.stringify(R, null, 1)], "gateresidents-result.json", {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;

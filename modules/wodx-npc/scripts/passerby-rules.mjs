@@ -379,7 +379,7 @@ export function keepIf(flag, {bloodLost = false, hurt = false, following = false
 }
 
 /* ------------------------------------------------------------------ */
-/*  Animals (Ben 2026-11-11)                                           */
+/*  Animals (the owner 2026-11-11)                                           */
 /* ------------------------------------------------------------------ */
 
 /*
@@ -446,7 +446,7 @@ export function makeAnimal({year, hour, area = "market", place = "street", rng =
 export const VESSEL_POOL = {human: 10, cow: 5, dog: 2, cat: 1, bird: 0.5, rat: 0.25};
 
 /* ------------------------------------------------------------------ */
-/*  Kinds of place (Ben 2026-11-11)                                    */
+/*  Kinds of place (the owner 2026-11-11)                                    */
 /* ------------------------------------------------------------------ */
 
 /** What kind of person each is, for where they are found. */

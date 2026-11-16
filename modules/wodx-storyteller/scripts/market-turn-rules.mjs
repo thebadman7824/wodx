@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.48.0: the weekly market turn (the living economy, steps 3 to 5 of the study Ben approved on
+ * WoDX Storyteller 0.48.0: the weekly market turn (the living economy, steps 3 to 5 of the study the owner approved on
  * 2026-11-11). Pure rules, no Foundry.
  *
  * Once a week of game time every market that is not cut off takes one turn, in this order:

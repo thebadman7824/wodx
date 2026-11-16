@@ -6,7 +6,7 @@
  * (mage-da-effects.js helpers). chk: the scan of that heading is damaged, so the name is the power's use; check the
  * page. Pure: no Foundry calls.
  */
-import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, outcomesOf, P as PT } from "./mage-da-effects.js";
 
 const P = (art, l, name, p, roll, diff, cost, fx, spec, o = {}) => ({ art, l, name, p, roll, diff, cost, fx, spec, ...o });
 const sc = "scene";
@@ -18,26 +18,26 @@ export const ART_LABEL = {
 };
 
 export const POWERS = [
-    P("equilibrium", 1, "Master Flow", 102, "intelligence+meditation", 8, { wp: 1 }, "Three turns of contemplation: each success turns one Chi into its opposite, and both kinds may flow in one turn.", N("charge")),
+    P("equilibrium", 1, "Master Flow", 102, "intelligence+meditation", 8, { wp: 1 }, "Three turns of contemplation: each success turns one Chi into its opposite, and both kinds may flow in one turn.", [PT("yangchi", 1), PT("yinchi", -1)]),
     P("equilibrium", 2, "Adjust Balance", 102, "perception+medicine", 8, {}, "A touch shifts a victim's Chi: one point per success to its opposite (Kuei-jin), or a mortal or Kindred tilted to Yang (manic, +1 to resist frenzy), Yin (gloom, Willpower rolls +1) or Balance.", T("sway", "Chi adjusted", "night", "one")),
     P("equilibrium", 3, "Shift the Balance", 102, "stamina+meditation", 8, { wp: 1 }, "Each success raises a Chi Virtue by one and lowers the other, for the scene.", T("boost", "Shifted balance", sc, "self")),
     P("equilibrium", 4, "Chi Interrupt", 103, "dexterity+medicine", "var", {}, "A touch: −1 die per success for as many turns; four successes paralyse for the scene; mortals also take a level (difficulty is the foe's Stamina + 3).", C("hold", "immobilized", "Chi interrupted", { turns: 1 })),
     P("equilibrium", 5, "Chi Mastery", 103, "dexterity+equilibrium", 6, {}, "A touch bleeds one Chi a success out of the victim (Kindred lose as much blood).", T("charge", "Chi bled away", sc, "one")),
-    P("tapestry", 1, "Spirit Caul", 103, "intelligence+yang", "wall", {}, "Draws a Yin- or Yang-spirit to come and see; three successes call one by name.", N("summon")),
+    P("tapestry", 1, "Spirit Caul", 103, "intelligence+yang", "wall", {}, "Draws a Yin- or Yang-spirit to come and see; three successes call one by name.", S("summon")),
     P("tapestry", 2, "Chi Ward", 103, "willpower", "wall", {}, "Raises or lowers the local Wall by one for the scene; at 10, no Chi powers work and spirits flee.", T("ward", "Chi Ward", sc, "self")),
     P("tapestry", 3, "Chi-shaping", 103, "perception+crafts", "wall", { chi: 1 }, "Three turns: weaves the area's dragon lines into nets, walls, traps or bad joss for the scene.", T("place", "Chi-shaping", sc, "self"), { chk: true }),
     P("tapestry", 4, "Riding the dragon lines", 104, "", 6, { chi: 1 }, "Taps a dragon line and rides its flow from place to place along it.", MV(), { chk: true }),
-    P("tapestry", 5, "Opening a spirit gate", 105, "intelligence+rituals", "wall", { chi: 3 }, "Three turns and three Chi tear open a way to the Yang World (a typhoon of spirits) or the Yin World.", N("sideways"), { chk: true }),
+    P("tapestry", 5, "Opening a spirit gate", 105, "intelligence+rituals", "wall", { chi: 3 }, "Three turns and three Chi tear open a way to the Yang World (a typhoon of spirits) or the Yin World.", S("sideways"), { chk: true }),
     P("yangprana", 1, "Yang's quickening", 105, "", 6, { yang: 1 }, "Each Yang spent gives three initiative dice or an extra action next turn, up to the Discipline's dots.", T("hasten", "Yang quickening", { turns: 1 }, "self"), { chk: true }),
     P("yangprana", 2, "Yang Mantle", 105, "", 6, { yang: 1 }, "A scarlet aura: mortals and animals warm to the vampire, and a wooden weapon channels it in a fight.", T("boost", "Yang Mantle", sc, "self")),
     P("yangprana", 3, "Dragon Dance", 105, "", 6, { yang: 1 }, "A battle trance: no wound penalties, mind control +1 difficulty, attack successes add to damage.", T("boost", "Dragon Dance", sc, "self")),
     P("yangprana", 4, "Eightfold Yang Mantle", 106, "", 6, { yang: 1 }, "Two turns: the aura, drawn in, gives a soak die a Yang point against Yang, wood and fire; spread out, it touches all nearby.", T("ward", "Eightfold Yang Mantle", sc, "self")),
-    P("yangprana", 5, "Semblance of the Scarlet Queen", 106, "yang+rituals", "wall", { yang: 3 }, "The body becomes Yang-spirit and passes into the Yang World, unseen and untouchable by the material.", N("sideways")),
+    P("yangprana", 5, "Semblance of the Scarlet Queen", 106, "yang+rituals", "wall", { yang: 3 }, "The body becomes Yang-spirit and passes into the Yang World, unseen and untouchable by the material.", S("sideways")),
     P("yinprana", 1, "Shrouded Moon", 106, "", 6, { yin: 1 }, "Still or slow in shadow, the vampire is unseen and unheard; only supernatural senses at the vampire's Stealth + 4 find it.", T("veil", "Shrouded Moon", sc, "self")),
     P("yinprana", 2, "Yin Mantle", 106, "", 6, { yin: 1 }, "A dark aura: ghosts warm to the vampire, and a metal weapon channels it in a fight.", T("boost", "Yin Mantle", sc, "self")),
     P("yinprana", 3, "Bone Dance", 107, "stamina+athletics", 7, { yin: 1 }, "Slow dance, a Yin a turn: all around grow sluggish, then open to suggestion.", T("sway", "Bone Dance", sc, "each")),
     P("yinprana", 4, "Eightfold Yin Mantle", 107, "", 6, { yin: 1 }, "Black ice made solid: tools for one Yin, weapons of Strength aggravated (+1 damage a Yin more).", T("make", "Eightfold Yin Mantle", sc, "self")),
-    P("yinprana", 5, "Semblance of the Ebon Dragon", 107, "yin+rituals", "wall", { yin: 3 }, "The body becomes Yin and walks the roads of the dead into the Yin World.", N("sideways")),
+    P("yinprana", 5, "Semblance of the Ebon Dragon", 107, "yin+rituals", "wall", { yin: 3 }, "The body becomes Yin and walks the roads of the dead into the Yin World.", S("sideways")),
     ...[1, 2, 3, 4, 5].map(l => P("blackwind", l, `Black Wind ${"•".repeat(l)}`, 107, "", 6, { demon: 1 }, `A Demon Chi a turn: up to ${l} extra action${l === 1 ? "" : "s"}, more speed or automatic Brawl and Melee successes, in any mix.`, T("hasten", "Black Wind", { turns: 1 }, "self"))),
     ...[1, 2, 3, 4, 5].map(l => P("demonshintai", l, `Demon form ${"•".repeat(l)}`, 108, "", 6, { demon: 3 }, `Three turns and three Demon Chi: a demon shape. Charisma and Appearance fall to 0; Physical gains build by level (${["+1 Strength, Dexterity and Stamina", "+1 Strength more", "+1 Stamina more", "+1 Strength more", "+1 Dexterity more"].slice(0, l).join("; ")}).`, T("shape", "Demon form", sc, "self"), { chk: l > 1 })),
     P("bloodshintai", 1, "Permeate", 110, "", 6, { chi: 1 }, "Swells or shrinks the body: soak at difficulty 5, slips through cracks and out of bonds.", T("shape", "Permeate", sc, "self")),
@@ -66,14 +66,14 @@ export const POWERS = [
     P("ghostflameshintai", 4, "Goblin Scorch", 118, "dexterity+athletics", 6, { chi: 1 }, "A breath of flame: three dice of aggravated damage a Chi spent (Yin-flame burns the soul).", H("harm", 3, "aggravated", { fixed: true })),
     P("ghostflameshintai", 5, "The burning sphere", 118, "", 6, { chi: 3, wp: 1 }, "Three turns: the body becomes a ball of Chi-fire; blows are aggravated and touching it burns.", T("harm", "Chi-fire aura", sc, "self"), { chk: true }),
     P("cultivation", 1, "Sensing the P'o", 119, "perception+hun", 7, {}, "Three turns: reads the dark urges in someone, or quiets one's own P'o (the next soul roll is a point harder for it).", N("know"), { chk: true }),
-    P("cultivation", 2, "Cleave the Demon", 120, "willpower", 8, { chi: 1 }, "Hun and P'o separate and act side by side; the P'o works against the vampire.", S("free"), { chk: true }),
+    P("cultivation", 2, "Cleave the Demon", 120, "willpower", 8, { chi: 1 }, "Hun and P'o separate and act side by side; the P'o works against the vampire.", S("summon"), { chk: true }),
     P("cultivation", 3, "Lash the Demon", 120, "manipulation+hun", 6, { wp: 1 }, "Eye contact splits a victim's Hun and P'o; the stronger soul takes over.", T("sway", "Souls split", sc, "one")),
-    P("cultivation", 4, "Yoke the Demon", 120, "dexterity+empathy", 8, { wp: 1 }, "Two turns: binds the P'o to serve, watching and frightening lesser things.", S("free"), { chk: true }),
+    P("cultivation", 4, "Yoke the Demon", 120, "dexterity+empathy", 8, { wp: 1 }, "Two turns: binds the P'o to serve, watching and frightening lesser things.", S("sense"), { chk: true }),
     P("cultivation", 5, "Become One", 121, "charisma+empathy", 8, { wp: 1 }, "Hun and P'o merge for the scene: no fire, wave or shadow soul; Demon Arts with no backlash; mind powers must beat both minds.", T("ward", "Become One", sc, "self")),
     P("dragontear", 1, "Prophetic dreams", 122, "intelligence+portents", "var", {}, "Dreams of what is to come most days; senses those who matter to the Great Cycle.", N("know"), { chk: true }),
     P("dragontear", 2, "Chi Sight", 122, "", 6, { yin: 1, yang: 1 }, "The Dragon Tear opens: Ghostsight, Lifesight and sharpened senses at once, and every spirit near is plain.", T("sight", "Chi Sight", sc, "self")),
     P("dragontear", 3, "Dragon Ward", 122, "willpower", "wall", { wp: 1 }, "No one beyond ten feet may come closer without beating the vampire in a contest of Willpower.", T("ward", "Dragon Ward", sc, "self")),
-    P("hun", 2, "Meditation of the still blood", 124, "perception+hun", 6, { chi: 1 }, "An hour or more of meditation regains a Willpower, two on three successes.", N("charge"), { chk: true }),
+    P("hun", 2, "Meditation of the still blood", 124, "perception+hun", 6, { chi: 1 }, "An hour or more of meditation regains a Willpower, two on three successes.", PT("willpower", 1, "self", {steps: [1, 1, 2]}), { chk: true }),
     P("hun", 3, "Distant Death Kata", 124, "dexterity+martialarts", 6, { wp: 1 }, "A perfect strike at empty air lands on a foe far away; it needs three successes.", H("harm", 1, "bashing"), { chk: true }),
     P("hun", 4, "Iron Soul", 124, "hun", 9, {}, "Three turns: each success makes the next Willpower spent give one more automatic success.", T("boost", "Iron Soul", { turns: 1 }, "self")),
     P("hun", 5, "Beyond the Middle Kingdom", 124, "dharma", 8, { wp: 2 }, "Attuned to the Great Cycle for the scene: no botches and no situational penalties; a weapon in each hand.", T("fortune", "Attuned to the Cycle", sc, "self"), { chk: true }),
@@ -101,7 +101,7 @@ export function artResults(id, successes, { source = "" } = {}) {
     if (!p?.spec) return [];
     const s = p.roll ? Number(successes) || 0 : Math.max(1, Number(successes) || 0);
     if (s < 1) return [];
-    return outcomesOf(p.spec, { key: p.spec.kw, label: p.name, source: source || `Kindred of the East p. ${p.p}` }, s, p.fx);
+    return outcomesOf(p.spec, { key: [p.spec].flat()[0]?.kw, label: p.name, source: source || `Kindred of the East p. ${p.p}` }, s, p.fx);
 }
 
 const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];

@@ -1,4 +1,4 @@
-// Cascades draft n: each Cascade holds most of every line's endings (Ben 17:47Z).
+// Cascades draft n: each Cascade holds most of every line's endings (the owner 17:47Z).
 const fs=require('fs');
 const L={vg:'Vampire',wa:'Werewolf',ma:'Mage',wj:'Wraith',cj:'Changeling',dj:'Demon',hj:'Hunter',kj:'Kindred of the East',mj:'Mummy',oj:'Orpheus'};
 const TOTAL={vg:4,wa:4,ma:5,wj:2,cj:5,dj:3,hj:3,kj:3,mj:4,oj:2};

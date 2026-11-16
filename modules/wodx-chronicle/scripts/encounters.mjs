@@ -12,7 +12,7 @@
  *
  * State in podState.saga.encounters. Storyteller only; the saga window holds the list.
  */
-import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
+import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
 import * as E from "./encounter-rules.mjs";
 import * as F from "./front-rules.mjs";
 import * as S from "./saga-rules.mjs";
@@ -41,14 +41,17 @@ const ctxOf = (s, extra = {}) => ({now: now(), played: played(s), month: monthNo
 export const encounterState = (s = pod()) => E.normState(sagaOf(s).encounters ?? {}, now());
 /** The encounters played, for the twists (twist-rules ctx.met). */
 export const metOf = s => E.met(E.normState(sagaOf(s).encounters ?? {}, now()));
-async function change(fn) {
+/* B6740 meets Rothenstein's encounters: every write of the encounter state waits its turn on the story-chain state
+ * (util podTurn), as the fronts and the saga do, so the clock's tick never writes an older copy over it. The cards,
+ * front moves and people come after the turn: Fronts' own changes take turns too, and a turn must not wait on one. */
+const change = fn => podTurn(async () => {
   const s = pod(), x = sagaOf(s);
   const st = E.normState(x.encounters ?? {}, now());
   const r = await fn(st, s);
   x.encounters = r;
   await savePod(s);
   return r;
-}
+});
 async function card(title, body, flags = null) {
   return ChatMessage.create({content: `<div class="wodx-card wct-pod wct-encounter"><h3>${esc(title)}</h3>${body}</div>`,
     speaker: {alias: "Chronicle"}, whisper: gmIds(), ...(flags ? {flags: {[MODULE_ID]: flags}} : {})});
@@ -78,8 +81,9 @@ async function offerCard(n) {
 /** The tick: months seen, windows closed (what happens off the map), and new offers where the company stands. */
 export async function encounterTick({offers = true} = {}) {
   if ( !isActiveGM() ) return [];
+  const r = await podTurn(async () => {
   const s = pod();
-  if ( !running(s) ) return [];
+  if ( !running(s) ) return null;
   const ctx = ctxOf(s);
   let st = E.see(E.normState(sagaOf(s).encounters ?? {}, ctx.now), ctx.month);
   const closing = E.closing(st, ctx);
@@ -87,9 +91,13 @@ export async function encounterTick({offers = true} = {}) {
   const due = offers ? E.due(st, ctx).slice(0, 2) : [];
   st = E.offer(st, due, ctx.now);
   const fresh = !sagaOf(s).encounters;
-  if ( !fresh && !closing.length && !due.length && JSON.stringify(st.seen) === JSON.stringify(E.normState(sagaOf(s).encounters).seen) ) return [];
+  if ( !fresh && !closing.length && !due.length && JSON.stringify(st.seen) === JSON.stringify(E.normState(sagaOf(s).encounters).seen) ) return null;
   sagaOf(s).encounters = st;
   await savePod(s);
+  return {closing, due};
+  });
+  if ( !r ) return [];
+  const {closing, due} = r;
   for ( const n of closing ) await closeOut(n);
   for ( const n of due ) await offerCard(n);
   return due;
@@ -142,10 +150,7 @@ export async function bring(p, n, scene, k) {
 export async function playEncounter(n, {force = true} = {}) {
   if ( !game.user.isGM ) return null;
   n = Number(n);
-  const s = pod(), ctx = ctxOf(s, {force});
-  let st = E.play(E.normState(sagaOf(s).encounters ?? {}, ctx.now), n, ctx);
-  sagaOf(s).encounters = st;
-  await savePod(s);
+  await change((st, s) => E.play(st, n, ctxOf(s, {force})));
   const e = E.encounterOf(n), scene = Fronts.sceneFor("@company");
   const brought = [];
   for ( const [k, p] of e.people.entries() ) {
@@ -180,9 +185,7 @@ async function applyTies(t, n) {
     if ( !Fronts.frontState().judged?.[k] ) { await Fronts.judge(k, choice); out.push(`${F.judgementOf(k).label}: ${F.judgementOf(k).choices[choice].label.toLowerCase()}.`); }
   }
   if ( t.moves ) {
-    const s2 = pod(), x = sagaOf(s2);
-    x.clocks = S.moveClocks(x.clocks, t.moves);
-    await savePod(s2);
+    const x = await podTurn(async () => { const s2 = pod(), x2 = sagaOf(s2); x2.clocks = S.moveClocks(x2.clocks, t.moves); await savePod(s2); return x2; });
     out.push(`The long clocks: ${S.SAGA_CLOCKS.filter(c => t.moves[c.key]).map(c => `${c.label} ${x.clocks[c.key]} of ${c.size}`).join("; ")}.`);
   }
   return out;
