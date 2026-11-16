@@ -853,7 +853,7 @@
    "modules/wodx-library/scripts/shelves.mjs:12",
    "modules/wodx-npc/scripts/main.mjs:121",
    "modules/wodx-otherworlds/scripts/ratings.mjs:64",
-   "modules/wodx-senses/scripts/perception.mjs:199",
+   "modules/wodx-senses/scripts/perception.mjs:200",
    "modules/wodx-sheets/scripts/anachronism.mjs:30",
    "modules/wodx-sheets/scripts/extras.mjs:25",
    "modules/wodx-sheets/scripts/main.mjs:40",
@@ -899,6 +899,7 @@
    "modules/wodx-otherworlds/scripts/corruption.mjs:31",
    "modules/wodx-otherworlds/scripts/corruption.mjs:234",
    "modules/wodx-otherworlds/scripts/journey.mjs:40",
+   "modules/wodx-otherworlds/scripts/net.mjs:32",
    "modules/wodx-otherworlds/scripts/realm-maps.mjs:17",
    "modules/wodx-otherworlds/scripts/realm-worlds.mjs:27",
    "modules/wodx-otherworlds/scripts/realms.mjs:17",
@@ -1221,7 +1222,7 @@
    "modules/wodx-npc/scripts/servant-world.mjs:241",
    "modules/wodx-otherworlds/scripts/corruption.mjs:29",
    "modules/wodx-otherworlds/scripts/fading.mjs:76",
-   "modules/wodx-otherworlds/scripts/main.mjs:117",
+   "modules/wodx-otherworlds/scripts/main.mjs:126",
    "modules/wodx-otherworlds/scripts/realms.mjs:408",
    "modules/wodx-sheets/scripts/anachronism.mjs:35",
    "modules/wodx-storyteller/scripts/caravans.mjs:209",
@@ -1298,6 +1299,8 @@
   ],
   "uses": [
    "modules/wodx-npc/scripts/trust.mjs:185",
+   "modules/wodx-otherworlds/scripts/net.mjs:483",
+   "modules/wodx-otherworlds/scripts/net.mjs:633",
    "modules/wodx-storyteller/scripts/hunters.mjs:131"
   ]
  },
@@ -1609,6 +1612,7 @@
    "modules/wodx-actions/scripts/voice.js:132",
    "modules/wodx-actions/scripts/voice.js:150",
    "modules/wodx-combat/scripts/start.js:78",
+   "modules/wodx-otherworlds/scripts/net.mjs:33",
    "modules/wodx-otherworlds/scripts/realm-maps.mjs:18",
    "modules/wodx-otherworlds/scripts/realm-worlds.mjs:28",
    "modules/wodx-otherworlds/scripts/reflect.mjs:15",
@@ -2576,7 +2580,7 @@
    "wizard"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/arrival.mjs:157"
+   "modules/wodx-solo/scripts/arrival.mjs:171"
   ]
  },
  {
@@ -2883,6 +2887,15 @@
   ],
   "uses": [
    "modules/wodx-interactables/scripts/main.mjs:2139"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "mapEvent"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/net.mjs:403"
   ]
  },
  {
@@ -3781,7 +3794,8 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/acts.js:217",
-   "modules/wodx-chronicle/scripts/when.mjs:189"
+   "modules/wodx-chronicle/scripts/when.mjs:189",
+   "modules/wodx-otherworlds/scripts/net.mjs:486"
   ]
  },
  {
@@ -4396,6 +4410,15 @@
   "uses": [
    "modules/wodx-solo/scripts/panel.mjs:176",
    "modules/wodx-solo/scripts/panel.mjs:177"
+  ]
+ },
+ {
+  "target": "wodx-solo",
+  "path": [
+   "isOn"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/net.mjs:74"
   ]
  },
  {
@@ -5177,6 +5200,7 @@
    "modules/wodx-library/scripts/examine.mjs:74",
    "modules/wodx-library/scripts/gamble-use.mjs:11",
    "modules/wodx-npc/scripts/hearts.mjs:217",
+   "modules/wodx-otherworlds/scripts/net.mjs:478",
    "modules/wodx-storyteller/scripts/core.mjs:399"
   ]
  },
