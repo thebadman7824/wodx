@@ -44,6 +44,7 @@ export function registerArchiveSettings() {
 }
 
 const yearOf = time => { try { return describeTime(Number(time) || 0).year ?? null; } catch { return null; } };
+const quiet = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isQuiet?.(); } catch { return false; } };
 const autoYears = () => { try { return Number(game.settings.get(MODULE_ID, "autoArchive")) || 0; } catch { return 0; } };
 
 /** Who the clock sends to the archive now: the candidates dead or kept as a copy for the setting's years. */
@@ -64,6 +65,8 @@ let lastLook = null, looking = false;
 /** One look a day at most, on the active Storyteller's client. Returns the archive's result, or null. */
 export async function autoTick(now = game.time?.worldTime ?? 0, {force = false} = {}) {
   if ( !game.user?.isGM || game.users?.activeGM?.id !== game.user.id || looking ) return null;
+  // B6750: a time skip, a hold or Light-touch mode waits, as every per-tick job does; the skip's end looks once
+  if ( !force && quiet() ) return null;
   if ( !force && lastLook !== null && !AR.newDay(lastLook, now) ) return null;
   lastLook = now;
   if ( !(autoYears() > 0) ) return null;
@@ -74,6 +77,7 @@ export async function autoTick(now = game.time?.worldTime ?? 0, {force = false} 
 }
 export function setupAutoArchive() {
   Hooks.on("updateWorldTime", t => { autoTick(t).catch(e => console.warn("WoDX Creation | archive", e)); });
+  for ( const h of ["wodxSkipEnd", "wodxLightTouchEnd"] ) Hooks.on(h, () => { autoTick().catch(e => console.warn("WoDX Creation | archive", e)); });
 }
 
 /** B6414: journal links to these actors follow them into the archive (toArchive) or back. */
