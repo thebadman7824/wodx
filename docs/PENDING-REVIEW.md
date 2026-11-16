@@ -1713,6 +1713,14 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 | 2026-11-15 | When does a Charm-cantrip Treasure fade? | At its Dominion's next hour (noon, midnight, sunrise or sunset) if unused; a Dominion Writ at the next noon, a success less for another Dominion's cantrip (B6561) | toJuncture and IMBUE in fae-treasures.js |
 | 2026-11-15 | Excalibur's Scabbard: how much it turns | Dark Ages: lethal and aggravated harm from blades and points put back, bashing held at Injured; Changeling 20th: all lethal and aggravated but fire, cold and drowning put back, held at Injured (B6562) | scabbardKeeps in fae-treasures.js |
 
+## Approved by Ben, 16 November 2026, 02:14 UTC (House Events Desk)
+
+Ben: "I approve everything on this desk." That covers every card on the House Events Desk (https://claude.ai/artifact/8iWVsS3gBzQFzeNb67Xojv, run 2026-11-12h3, as published at version 11) and the dated section at its top.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | Timeline check: when are the Bunyip gone, 1899 (WoDX's War of Tears) or 1937 (Past Lives pdf 70)? **Approved by Ben 2026-11-16 02:14Z** (House Events Desk, "I approve everything on this desk") | The War of Tears stays at 1899 and breaks the tribe; new event bunyip-last-stand (1937) ends it. Signature features and lifepath to 1937 (they were 1890 and 1920), era advancement gone by 1938, NPC faction ends moved to the last stand with a survivors faction offered at the war | Remove bunyip-last-stand from wodx-chronicle data/events.mjs, set Bunyip until 1899 in signatures.mjs, lifepath span to 1899, goneBy 1900 in advance.mjs, and put "war-of-tears" back in EVENT_ENDS in wodx-npc faction-rules.mjs |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

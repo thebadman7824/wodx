@@ -96,14 +96,7 @@ export function build(ctx) {
             if (act === "charm") {
                 npcTok.setTarget?.(true, { releaseOthers: true });
                 const shift = at ? npcApi().attitude.rules.difficultyShift(at.step) : 0;
-                return seduction({ actor, target: npc, shift, onDone: async res => {
-                    await after(actor, npc, name, { key: "charm", sway: "charmed", moves: { win: 1, lose: 0, botch: -1 } }, { result: res });
-                    // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
-                    if (res === "win" && feed && kindOf?.(actor) === "kindred") {
-                        const go = await dialog("Feed?", `<p>${esc(viewName(npcTok))} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
-                        if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
-                    }
-                } });
+                return seduction({ actor, target: npc, shift, onDone: res => charmDone(actor, npcTok, res) });
             }
             if (act === "power") { npcTok.setTarget?.(true, { releaseOthers: true }); return menu({ actor }); }
             if (act === "lift" || act === "plant") return lift(actor, npcTok, act);
@@ -189,6 +182,21 @@ export function build(ctx) {
                 + `${rankShift ? `<p class="vta-note">Rank between them: difficulty ${rankShift > 0 ? "+" : ""}${rankShift}.</p>` : ""}${bondShift ? `<p class="vta-note">Bound by blood to ${esc(actor.name)}: difficulty ${bondShift}.</p>` : ""}${at ? `<p class="vta-note">Attitude ${esc(at.word)}: difficulty ${shift > 0 ? "+" : ""}${shift}.${move ? ` It moves ${move > 0 ? "up" : "down"} ${Math.abs(move)}${game.user.isGM ? "" : " (in the approval queue)"}.` : ""}</p>` : ""}</div></div>`
         });
         await after(actor, npc, name, act, res, why);
+        return res;
+    }
+
+    /** What a seduction leaves behind (B6580): the charmed sway and the attitude move on the person, and for a vampire
+     *  the Siren's feeding. The Seduction menu entry and Charm in "With this person" both end here. */
+    async function charmDone(actor, npcTok, res) {
+        const npc = npcTok?.actor ?? npcTok;
+        if (!actor || !npc) return null;
+        const name = npcTok?.actor ? viewName(npcTok) : (npc.name ?? "them");
+        await after(actor, npc, name, { key: "charm", sway: "charmed", moves: { win: 1, lose: 0, botch: -1 } }, { result: res });
+        // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
+        if (res === "win" && feed && kindOf?.(actor) === "kindred") {
+            const go = await dialog("Feed?", `<p>${esc(name)} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
+            if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
+        }
         return res;
     }
 
@@ -422,5 +430,5 @@ export function build(ctx) {
         attitudeOf, nameFor, viewName, npcApi, gmIds, proposeOrApply, moveItem });
     const trade = (actor, npcTok, key, given) => tradeX().trade(actor, npcTok, key, given);
 
-    return { withPerson, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };
+    return { withPerson, charmDone, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };
 }

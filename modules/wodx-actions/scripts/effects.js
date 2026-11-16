@@ -714,6 +714,17 @@ function possessFor(item, a, o) {
   for ( const u of players ) now[u.id] = 3;
   return {was, now};
 }
+/** B6584: the illusion tiles a viewer's own characters have seen through (flag seenThrough: tile ids) are drawn faint for that viewer. */
+export function seesThrough(tileId, user = game.user) {
+  if ( !tileId || user?.isGM ) return false;
+  const mine = game.actors?.filter?.(a => a.testUserPermission?.(user, "OWNER")) ?? [];
+  return mine.some(a => (a.getFlag?.(MOD, "seenThrough") ?? []).includes(tileId));
+}
+function seenThroughLook(tile) {
+  const d = tile?.document;
+  if ( !d?.flags?.[MOD]?.illusion || !tile.mesh ) return;
+  if ( seesThrough(d.id) ) tile.mesh.alpha = 0.15;
+}
 /** B6013: the figure an Illusion puts on the map (a Tile), by the target or where the Storyteller clicks. Its uuid. */
 async function illusionTile(item, tok, casterName) {
   const scene = tok?.parent ?? canvas?.scene;
@@ -1133,6 +1144,9 @@ export function setup() {
   Hooks.on("createChatMessage", msg => { onCard(msg).catch(e => console.error("WoDX | effects", e)); });
   Hooks.on("updateToken", (tok, change) => { onMove(tok, change).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); expireMade().catch(e => console.error("WoDX | made things", e)); });
+  // B6584: an illusion a character has seen through shows to that character's player as a faint outline
+  Hooks.on("refreshTile", tile => { try { seenThroughLook(tile); } catch (e) { /* drawing only */ } });
+  Hooks.on("updateActor", (a, change) => { if ( change?.flags?.[MOD]?.seenThrough !== undefined || change?.flags?.[MOD]?.["-=seenThrough"] !== undefined ) for ( const t of canvas?.tiles?.placeables ?? [] ) if ( t.document.flags?.[MOD]?.illusion ) t.renderFlags?.set?.({refresh: true}); });
   Hooks.on("deleteRegion", region => { dropGroundDrawing(region).catch(e => console.error("WoDX | ground drawing", e)); });
   Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); expireMade({sceneEnd: true}).catch(e => console.error("WoDX | made things", e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {

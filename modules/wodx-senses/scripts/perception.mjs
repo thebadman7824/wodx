@@ -60,7 +60,8 @@ export function stateOf(a) {
     blood: r("blood").value, selfcontrol: n(a.system?.advantages?.virtues?.selfcontrol?.permanent),
     woundPenalty: n(dmg.woundpenalty), incapacitated: /incap/i.test(String(dmg.woundlevel ?? "")),
     rage: rage.value, ragePerm: rage.perm || rage.max, angst: r("angst").value, paradox: r("paradox").value, banality: r("banality").value,
-    willpower: wp.value, willpowerPerm: wp.perm || n(a.system?.advantages?.willpower?.permanent)};
+    willpower: wp.value, willpowerPerm: wp.perm || n(a.system?.advantages?.willpower?.permanent),
+    building: !!foundry.applications.instances?.get?.(`wodx-wizard-${a.id}`)?.rendered};
 }
 
 export function refreshScreen() {
@@ -298,6 +299,9 @@ export function setupPerception(helpers) {
   Hooks.once("ready", () => { try { installVisibility(); refreshScreen(); } catch (e) { console.warn(`${MOD} | perception`, e); } });
   for ( const h of ["updateActor", "updateItem", "createActiveEffect", "deleteActiveEffect", "updateActiveEffect", "controlToken", "canvasReady"] )
     Hooks.on(h, () => { refreshScreen(); if ( h === "controlToken" || h === "canvasReady" ) drawTrails(); });
+  // B6710: the hunger line waits while the character wizard is open, and shows once it closes
+  for ( const h of ["renderApplicationV2", "closeApplicationV2"] )
+    Hooks.on(h, app => { if ( String(app?.id ?? "").startsWith("wodx-wizard-") ) refreshScreen(); });
   Hooks.on("updateToken", (doc, changes) => {
     if ( "x" in (changes ?? {}) || "y" in (changes ?? {}) ) setTimeout(() => autoNotice(doc).catch(e => console.warn(`${MOD} | noticing`, e)), 300);
     record(doc, changes);
