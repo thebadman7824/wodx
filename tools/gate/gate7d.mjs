@@ -169,7 +169,8 @@ export async function run() {
     const witnesses = ["Jitka the Herbwife", "Tomas", "Mikhal the Tinker"].map(n => game.actors.getName(n)).filter(Boolean);
     const b0 = new Set(FX().state().breaches.map(b => b.id));
     await game.wodxActions.recordBreach({by: konrad, event: "seen feeding behind the tavern", witnesses});
-    for ( let i = 0; i < 20 && FX().state().breaches.every(b => b0.has(b.id)); i++ ) await sleep(200);
+    // The rumour is made in two writes (the breach, then who and which ledger entry): wait for the second
+    for ( let i = 0; i < 40 && !FX().state().breaches.some(b => !b0.has(b.id) && b.masq); i++ ) await sleep(200);
     const b = FX().state().breaches.find(x => !b0.has(x.id));
     breachId = b?.id;
     ok("7. the breach is followed as a rumour, blamed on Konrad's cult, its severity from the witnesses", !!b && b.faction === cult.id && b.severity === FX().rules.severityFor(witnesses.length)
@@ -205,7 +206,8 @@ export async function run() {
     if ( !witnesses.length ) throw new Error("no witnesses");
     const b0 = new Set(FX().state().breaches.map(b => b.id));
     await game.wodxActions.recordBreach({by: konrad, event: "seen walking through the wall of the Adit", witnesses});
-    for ( let i = 0; i < 20 && FX().state().breaches.every(b => b0.has(b.id)); i++ ) await sleep(200);
+    // The rumour is made in two writes (the breach, then who and which ledger entry): wait for the second
+    for ( let i = 0; i < 40 && !FX().state().breaches.some(b => !b0.has(b.id) && b.masq); i++ ) await sleep(200);
     const b = FX().state().breaches.find(x => !b0.has(x.id));
     for ( const w of witnesses ) await game.wodxActions.setWitnessState(w, "forgot", "gate 7d");
     await sleep(300);
