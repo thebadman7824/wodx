@@ -861,5 +861,5 @@ export function mergeBody(a, b) {
     if (!a) return b;
     if (!b) return a;
     const n = v => Number(v) || 0;
-    return { bruised: n(a.bruised) + n(b.bruised), fewer: n(a.fewer) + n(b.fewer), shift: Math.max(n(a.shift), n(b.shift)), ease: Math.max(n(a.ease), n(b.ease)), silver: !!(a.silver || b.silver), names: [...(a.names ?? []), ...(b.names ?? [])] };
+    return { bruised: n(a.bruised) + n(b.bruised), ...(n(a.fewer) + n(b.fewer) ? { fewer: n(a.fewer) + n(b.fewer) } : {}), shift: Math.max(n(a.shift), n(b.shift)), ease: Math.max(n(a.ease), n(b.ease)), silver: !!(a.silver || b.silver), names: [...(a.names ?? []), ...(b.names ?? [])] };
 }
