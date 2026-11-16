@@ -44,7 +44,9 @@ export function build() {
   // Library 0.21.0 (B3020, B3021): where each piece is at home, and the weapons of other lands
   for ( const it of items ) if ( GEAR_WAYS[it.name] ) it.flags[G.MOD].ways = GEAR_WAYS[it.name];
   items.push(...G.localGear(items, LOCAL_GEAR));
-  return items.map(withFx).map(withArms);
+  // B6779d: the book's two parrying rows (V20 Dark Ages p. 350) are what a dagger or sword in hand does, which WoDX
+  // Combat reads from the weapon's own name (rules.js PARRY_WEAPONS); as items they did nothing, so they are left out
+  return items.filter(it => it.flags?.[G.MOD]?.kind !== "(parry)").map(withFx).map(withArms);
 }
 
 /** B3795: what a piece of cyberware does once it is in the body, on the item itself. */
@@ -71,12 +73,11 @@ export function withArms(it) {
   const text = String(it.system?.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   const n = re => { const m = text.match(re); return m ? Number(m[1]) : null; };
   let add = null, line = "";
-  if ( f.kind === "armor (shield)" || f.kind === "(parry)" ) {
+  if ( f.kind === "armor (shield)" ) {
     const parry = n(/parry diff (\d+)/i);
     const attack = n(/attack \+(\d+)/i) ?? n(/\+(\d+) to attacker's difficulty/i) ?? 0;
     const closeOnly = /hand-to-hand only/i.test(text);
-    if ( f.kind === "armor (shield)" ) { add = {shield: {parry, attack, closeOnly}}; line = "Carried (equipped):"; }
-    else { add = {parryWith: {weapon: /dagger/i.test(it.name) ? "dagger" : "sword", parry, attack, closeOnly}}; line = "With that weapon in hand:"; }
+    add = {shield: {parry, attack, closeOnly}}; line = "Carried (equipped):";
     const bits = [parry ? `parry at difficulty ${parry}` : "", attack ? `+${attack} to the difficulty of attacks against the bearer${closeOnly ? " in close combat" : ""}` : ""].filter(Boolean);
     line = bits.length ? `<b>${line}</b> ${bits.join("; ")}.` : "";
   } else if ( /\(heavy\)/.test(f.kind) && /^ranged/.test(f.kind) ) {
