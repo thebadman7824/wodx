@@ -6,7 +6,8 @@
  * deletes every actor, folder and journal it made. Every character already in the world is fingerprinted before and
  * after, so the gate fails if any of them changed.
  *   1-n. the skip test's own checks (clock and era at each step, nothing lost, deaths by age, the ghoul, the bond, the elder's sheet)
- *   last. put back, and no existing character changed
+ *   last. put back, and no existing character changed (and WoDX Creation's autoArchive back as it was)
+ * WoDX Creation's autoArchive is set to never for the run (B6793), so the cast's dead stay in the world to be checked.
  * Result: Data/wodx-gate/gateskip-result.json.
  */
 const C = "wodx-creation", CH = "wodx-chronicle";
@@ -26,6 +27,10 @@ export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(); }
 
   const start = {time: game.time.worldTime, era: game.settings.get(CH, "activeEra"), lock: game.settings.get(CH, "eraLock"), held: chron().isHeld()};
+  // B6793: WoDX Creation's autoArchive (ten years by default) files the cast's long dead into the archive and deletes
+  // them from the world as the clock moves; the skip test checks that nobody is lost, so it is held off for the run.
+  const archive = game.settings.settings.has(`${C}.autoArchive`) ? game.settings.get(C, "autoArchive") : null;
+  if ( archive ) await game.settings.set(C, "autoArchive", 0);
   const actorsBefore = new Map([...game.actors].map(a => [a.id, print(a)]));
   const foldersBefore = new Set(game.folders.map(f => f.id));
   const journalsBefore = new Set(game.journal.map(j => j.id));
@@ -56,6 +61,7 @@ export async function run() {
       if ( game.time.worldTime !== start.time ) await game.time.set(start.time);
       if ( game.settings.get(CH, "activeEra") !== start.era ) await game.settings.set(CH, "activeEra", start.era);
       if ( game.settings.get(CH, "eraLock") !== start.lock ) await game.settings.set(CH, "eraLock", start.lock);
+      if ( archive ) await game.settings.set(C, "autoArchive", archive);
       await new Promise(r => setTimeout(r, 800));
       const mine = game.messages.filter(m => !msgsBefore.has(m.id)).map(m => m.id);
       if ( mine.length ) await ChatMessage.deleteDocuments(mine);
@@ -64,7 +70,7 @@ export async function run() {
       const changed = [...game.actors].filter(a => actorsBefore.get(a.id) !== print(a)).map(a => a.name);
       const gone = [...actorsBefore.keys()].filter(id => !game.actors.get(id));
       ok(`${R.steps.length + 1}. put back, and no existing character changed`, game.time.worldTime === start.time && game.settings.get(CH, "activeEra") === start.era
-        && chron().isHeld() === start.held && !changed.length && !gone.length && !game.actors.some(a => !actorsBefore.has(a.id)),
+        && chron().isHeld() === start.held && (archive === null || game.settings.get(C, "autoArchive") === archive) && !changed.length && !gone.length && !game.actors.some(a => !actorsBefore.has(a.id)),
         {worldTime: game.time.worldTime, startTime: start.time, era: game.settings.get(CH, "activeEra"), startEra: start.era, changed, gone, removedCards: mine.length, removedActors: newActors.length});
     } catch (err) { ok("put back", false, {error: err.message}); }
   }
