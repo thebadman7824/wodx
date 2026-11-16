@@ -820,6 +820,15 @@ async function onSocket(msg) {
 /*  Setup                                                              */
 /* ------------------------------------------------------------------ */
 
+/** B6789: the bodies laid on this furniture tile (their restsOn flag names it). */
+export function restingOn(tile) {
+  return tokensOf(tile?.parent).filter(t => t.flags?.[MOD]?.restsOn === tile.id);
+}
+/** B6789: the bodies laid on a furniture tile are put back on its middle after it moves. */
+export async function bodiesFollow(tile) {
+  const mid = {x: SX(tile) + num(tile.width) / 2, y: SY(tile) + num(tile.height) / 2};
+  for ( const t of restingOn(tile) ) await place(t, topLeft(t, mid));
+}
 export function setupHaul(d = {}) {
   deps = d;
   game.settings.register(MOD, "haul", {
@@ -838,6 +847,11 @@ export function setupHaul(d = {}) {
   Hooks.on("createActiveEffect", e => { if ( e.parent?.documentName === "Actor" ) watch(e.parent); });
   Hooks.on("deleteActiveEffect", e => { if ( e.parent?.documentName === "Actor" ) watch(e.parent); });
   Hooks.on("updateActor", (actor, ch) => { if ( foundry.utils.hasProperty(ch, "system.health") || foundry.utils.hasProperty(ch, "flags.wodx-npc.where") ) watch(actor); });
+  // B6789: a body laid on a bed, a table or a bier goes where the furniture is moved, and is set down when it goes
+  Hooks.on("updateTile", (tile, ch) => { if ( isActiveGM() && ("x" in (ch ?? {}) || "y" in (ch ?? {})) ) bodiesFollow(tile).catch(e => console.error(`${MOD} | haul`, e)); });
+  Hooks.on("deleteTile", tile => {
+    if ( isActiveGM() ) for ( const t of restingOn(tile) ) t.update(unset(`flags.${MOD}.restsOn`), {...MOVE}).catch(() => null);
+  });
   Hooks.on("deleteTile", tile => {
     if ( !isActiveGM() ) return;
     const bar = tile.flags?.[MOD]?.barricade;
