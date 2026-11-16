@@ -12,6 +12,7 @@
  */
 import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as M from "./mummy-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -103,6 +104,9 @@ export function build(ctx) {
             const lim = await LIM.gate(actor, { name: ns?.name ?? sp?.name ?? `${M.HEKAU[fd.path]?.label ?? fd.path} ${level}`, disc: M.HEKAU[fd.path]?.label ?? fd.path, level });
             if (!lim) return null;
             plan.difficulty += lim.diff;
+            // B6662: the target's ward or Magic Resistance makes Hekau on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.difficulty = Math.min(10, plan.difficulty + n(rm.diff));
             if (plan.spend && !(await sekhem(actor, -plan.spend))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const label = `${M.HEKAU[fd.path].label} ${n(i.hekau[fd.path])} + ${esc(traits.find(t => t.key === fd.tr)?.label ?? fd.tr)}`;
@@ -111,7 +115,7 @@ export function build(ctx) {
             let body = "", got = 0;
             if (!fd.rit) {
                 const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp, autoSuccesses: plan.autoSuccesses }); rolls.push(r.roll);
-                body = rollBlock(label, r, [`${plan.spend} Sekhem`, ...(plan.autoSuccesses ? [`${plan.autoSuccesses} bought successes`] : []), ...(plan.capped ? ["bought successes capped at the path's rating"] : []), ...(wp ? ["Willpower"] : [])]);
+                body = rollBlock(label, r, [`${plan.spend} Sekhem`, ...rm.parts,...(plan.autoSuccesses ? [`${plan.autoSuccesses} bought successes`] : []), ...(plan.capped ? ["bought successes capped at the path's rating"] : []), ...(wp ? ["Willpower"] : [])]);
                 got = r.botch ? 0 : r.successes;
                 body += r.botch ? `<div class="vta-big bad">${title}: a calamity, and the Storyteller decides its shape.</div>` : r.successes ? `<div class="vta-big good">${title}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div>` : `<div class="vta-big">${title}: it fails (the Sekhem is spent).</div>`;
             } else {
@@ -122,7 +126,7 @@ export function build(ctx) {
                     st = M.ritualStep(st, r.successes, Math.max(1, n(fd.c)), r.botch);
                     rows.push(`Roll ${k}: ${r.botch ? "botch" : `${r.successes} (total ${st.got})`}`);
                 }
-                body = `<div class="vta-sec"><b>${label}</b>: ${plan.dice} dice, diff ${plan.difficulty}<br>${rows.join("<br>")}</div>`;
+                body = `<div class="vta-sec"><b>${label}</b>: ${plan.dice} dice, diff ${plan.difficulty}${rm.parts.length ? ` (${rm.parts.map(esc).join(", ")})` : ""}<br>${rows.join("<br>")}</div>`;
                 got = st.done && !st.failed ? Math.min(5, st.got) : 0;
                 body += st.failed ? `<div class="vta-big bad">${title}: botched: all the Sekhem put in is lost; it must start over.</div>` : st.done ? `<div class="vta-big good">${title}: complete in ${k} ${k === 1 ? "stretch" : "stretches"} of the path's ritual time.</div>` : `<div class="vta-big">${title}: unfinished after ten tries.</div>`;
             }

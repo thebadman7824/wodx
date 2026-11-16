@@ -1713,6 +1713,36 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 | 2026-11-15 | When does a Charm-cantrip Treasure fade? | At its Dominion's next hour (noon, midnight, sunrise or sunset) if unused; a Dominion Writ at the next noon, a success less for another Dominion's cantrip (B6561) | toJuncture and IMBUE in fae-treasures.js |
 | 2026-11-15 | Excalibur's Scabbard: how much it turns | Dark Ages: lethal and aggravated harm from blades and points put back, bashing held at Injured; Changeling 20th: all lethal and aggravated but fire, cold and drowning put back, held at Injured (B6562) | scabbardKeeps in fae-treasures.js |
 
+## Approved by Ben, 16 November 2026, 01:43 UTC (Net Review Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | Which Net in which years (B6590) | The Digital Web from 1990; on the Future Darkness branch cyberdecks from 2005 | Make netKind in wodx-otherworlds net-rules.mjs return web always |
+| 2026-11-16 | Deck interfaces (B6591) | Interface plugs no penalty, 'trodes +1 difficulty, keyboard +2 and out of reach of black ICE but Firestarter | Edit ACCESS in net-rules.mjs |
+| 2026-11-16 | Cyberpunk strengths into dots (B6592) | Halved, rounded up; deck speed gives an extra action per 2 dots | Edit dots() and deckActions() |
+| 2026-11-16 | Data fortresses (B6594) | Rolled from the Fast Fortress tables, seeded, drawn as a scene; placeholder grid art | Edit fortress() and svg() |
+| 2026-11-16 | ICE on its own (B6596) | Only when a lone player plays (setting ICE acts on its own) | Change the setting |
+| 2026-11-16 | Black ICE (B6597) | Sword bashing on the icon, Hellbolt lethal and Hellhound aggravated on the body; Brainwipe Intelligence healing as lethal, Zombie and Liche as aggravated; statuses for the book's rolled turns; Firestarter a real fire beside the body | Edit iceHit() and applyHit() |
+| 2026-11-16 | Files (B6598) | Transfers a die times half a month's wage with law heat for theft; paydata a die times a quarter; grey and black ops a secret of the owner, made if none | Edit fileGives() |
+| 2026-11-16 | Remotes (B6599) | Tied automatically to the building's doors, lights, cameras and alarm | Draw the fortress with no building |
+| 2026-11-16 | Trace (B6600) | Traced status and named law heat for a break-in; Pit Bull cuts the line | Edit traceRunner() |
+| 2026-11-16 | Whiteout (B6601) | The M20 tables as written, with a white flash | Do not call whiteout() |
+| 2026-11-16 | Cyberpunks bloodline and Technica | Build next, tied into the Net | Built: see the Technica table below |
+
+## Approved by Ben, 16 November 2026, 02:17 UTC (Technica Review Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | When the Cyberpunks are open (B6604) | Future Darkness branch only, from 2016; signature line Machines over blood | Drop cyberpunksOpen and the signature row |
+| 2026-11-16 | Technica 1, Interface (B6605) | Jack in by touch with no penalty, contact must hold | Delete ACCESS.touch |
+| 2026-11-16 | Technica 2, Technical Touch (B6606) | With no Computer the successes stand in for Computer on program rolls | Drop touch from the run state |
+| 2026-11-16 | Technica 3, Empower Device (B6607) | A Willpower point clears Deck down and Deck dead | Remove the Empower Device button |
+| 2026-11-16 | Technica 4, Remote Touch (B6608) | 100 feet, no roll | Remove the Remote Touch button |
+| 2026-11-16 | Technica 5, Spiritus ex Machina (B6609) | 3 successes: ICE passes the speaker by while the alarm is quiet; 4 names files; 5 names ICE too | Drop parley from iceRound |
+| 2026-11-16 | Technica 6, Ghost in the Machine (B6610) | No deck, the mind carries a standard deck's load, remotes obey with no roll | Delete ACCESS.ghost |
+| 2026-11-16 | The Cyberpunks' weakness (B6611) | Each night every use of another Discipline beyond the machine uses (programs and Technica powers) costs a Willpower point | Remove the wodxPowerShown hook in technica.mjs |
+| 2026-11-16 | Cyberpunks in character creation (B6612) | Yes, next: a Future-branch clan choice from 2016 that adds Technica | Drop the CLANS row and the lifepath scene |
+
 ## Approved by Ben, 16 November 2026, 02:14 UTC (House Events Desk)
 
 Ben: "I approve everything on this desk." That covers every card on the House Events Desk (https://claude.ai/artifact/8iWVsS3gBzQFzeNb67Xojv, run 2026-11-12h3, as published at version 11) and the dated section at its top.
@@ -1720,6 +1750,21 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-16 | Timeline check: when are the Bunyip gone, 1899 (WoDX's War of Tears) or 1937 (Past Lives pdf 70)? **Approved by Ben 2026-11-16 02:14Z** (House Events Desk, "I approve everything on this desk") | The War of Tears stays at 1899 and breaks the tribe; new event bunyip-last-stand (1937) ends it. Signature features and lifepath to 1937 (they were 1890 and 1920), era advancement gone by 1938, NPC faction ends moved to the last stand with a survivors faction offered at the war | Remove bunyip-last-stand from wodx-chronicle data/events.mjs, set Bunyip until 1899 in signatures.mjs, lifepath span to 1899, goneBy 1900 in advance.mjs, and put "war-of-tears" back in EVENT_ENDS in wodx-npc faction-rules.mjs |
+
+## Approved by Ben, 16 November 2026, 02:21 UTC (Cyberpunks Creation Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | The Cyberpunks' lifepath scene (B6612) | You run the Net (Computer, Contacts, a fixer) or you ride the chrome (Technology, Streetwise, a ripperdoc) | Edit the cyberpunks row in lifepaths-splats.mjs |
+| 2026-11-16 | Technica on the Embrace (B6612) | 0 dots, like every other clan's Disciplines | Give the CLANS row a starting dot |
+| 2026-11-16 | Technica bought with freebies (B6612) | Only in the years the Cyberpunks exist (Future branch, 2016 on) | Drop opens from the CLANS row |
+
+## Approved by Ben, 16 November 2026, 01:58 UTC (all waiting entries)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | How long the medieval gaol sentence runs (Latin Christendom, until prison in 1780; Mage: The Dark Ages pdf p. 219 has serfs jailed but gives no term) | 1 to 2 years, a house figure, in the middle tier of punishments (B6669) | Change the gaol time mark in modules/wodx-chronicle/scripts/law-punish-rules.mjs |
+| 2026-11-16 | Ravenous counted one harder twice on a social roll (ownDiff and socialDiff) | Ravenous keeps only ownDiff 1: one harder on every roll until the Garou eats, social rolls included (B6663) | Give Ravenous socialDiff 1 again in modules/wodx-actions/scripts/after-cost-rules.js |
 
 ## Waiting for review
 

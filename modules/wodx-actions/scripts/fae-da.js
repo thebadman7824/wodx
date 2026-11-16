@@ -17,6 +17,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: fae-da-rules.js.
  */
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as F from "./fae-da-rules.js";
 import * as DC from "./fae-da-cantrips.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -294,7 +295,10 @@ export function build(ctx) {
             if (ed) plan.notes.push(`an Echo this scene +${ed}`);
             if (fd.cloak && !(await spend(actor, "mists", 1))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed), { willpower: wp });
+            // B6662: the target's ward or Magic Resistance makes a cantrip on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.notes.push(...rm.parts);
+            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed + n(rm.diff)), { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const name = c?.name ?? `a level-${level} ${F.DOMINIONS[dominion].label} cantrip`;
             let body = rollBlock(`${F.DOMINIONS[dominion].label} + ${esc(t.label)}`, r, [...plan.notes, ...(fd.cloak ? ["cloaked: Perception + Kenning (8) to see it"] : []), ...(wp ? ["Willpower"] : [])]);

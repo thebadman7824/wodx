@@ -69,7 +69,7 @@ export async function applyTimed(actor, o) {
   const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [{
     name: o.name, img: o.img ?? cond?.img ?? "icons/svg/clockwork.svg",
     description: `${o.description ?? cond?.summary ?? ""}${timed.source ? ` (${timed.source})` : ""}`,
-    statuses: cond ? [STATUS_PREFIX + cond.id] : [],
+    statuses: cond ? [STATUS_PREFIX + cond.id, ...(cond.also ?? [])] : [],
     changes: o.changes ?? [], duration, transfer: false,
     // B6023: a mark that lasts the scene or the night has no rounds or seconds, so Foundry would not draw it on the
     // token; WoDX marks always show there, so players see the fever, the night's penalty or the lying-in

@@ -54,7 +54,8 @@ const isFallen = actor => F.fallen(plainDead(actor));
 const wp = actor => num(actor?.system?.advantages?.willpower?.temporary);
 /** The players whose character this is: the one assigned, or the one panel.mjs takes for them. */
 const playersOf = actor => all(game.users).filter(u => !u.isGM && actor?.testUserPermission?.(u, "OWNER") && characterOf(u)?.id === actor.id);
-const yearNow = () => { try { return chron()?.calendar?.yearOf?.(game.time.worldTime) ?? new Date(game.time.worldTime * 1000).getUTCFullYear(); } catch (e) { return null; } };
+// B6669 follow-up: the year through api.eras.currentYear (there is no api.calendar.yearOf)
+const yearNow = () => { try { return chron()?.eras?.currentYear?.() ?? new Date(game.time.worldTime * 1000).getUTCFullYear(); } catch (e) { return null; } };
 const fightOn = sceneId => all(game.combats).filter(c => c.started && c.scene?.id === sceneId);
 const combatOf = tokenDoc => all(game.combats).find(c => c.started && all(c.combatants).some(x => x.tokenId === tokenDoc?.id)) ?? null;
 

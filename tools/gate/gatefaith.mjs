@@ -11,6 +11,9 @@
  *      ward down and up; the casting card's difficulty is one higher with the ward up (WoDX Actions' m20 cast)
  *   6. the ward on a Gift (B6411): a Garou uses a Gift at the seeker the same way; difficulty 6, then 7 with the
  *      ward named on the card (cantrips, evocations and Arcanoi read it the same way)
+ *   7. the ward on a Kuei-jin power (B6662): a Kuei-jin spends Chi and rolls at the seeker the same way; 6, then 7
+ *   8. the ward on a Hunter edge (B6662): an imbued uses Insinuate at the seeker the same way; 6, then 7 (Dark Ages
+ *      Mage, Fae cantrips, Hekau, Horrors, Numina, hedge magic and fomor powers read it the same way)
  * Result: Data/wodx-gate/gatefaith-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -142,6 +145,65 @@ export async function run() {
         await lib.faith.ward(a, a.items.get(charm.id));
       } finally { Hooks.off("renderDialogV2", hook); seen.object?.setTarget?.(false, {releaseOthers: true}); }
       G.ok("6. the ward on a Gift", off?.diff === 6 && on?.diff === 7 && on?.named && !off?.named, {off, on});
+    });
+
+    /**
+     * B6662: one power used at the seeker, targeted on the map, ward down and up: the window is found by sel, its
+     * fields set from vals, and the card (named by who) read for its difficulty and whether the ward is named.
+     */
+    const wardRun = async ({user, x, sel, vals, use, who}) => {
+      const scene = await G.scene();
+      const [, seen] = await G.tokens(scene, [{actor: user, x, y: 6, actorLink: true}, {actor: a, x: x + 1, y: 6, actorLink: true}]);
+      await settle(() => !!seen?.object, 5000);
+      seen.object?.setTarget?.(true, {releaseOthers: true});
+      const hook = Hooks.on("renderDialogV2", async (app, el) => {
+        const root = el instanceof HTMLElement ? el : el?.[0];
+        if ( !root?.querySelector?.(sel) ) return;
+        await wait(200);
+        for ( const [k, v] of Object.entries(vals) ) {
+          const f = root.querySelector(`[name="${k}"]`);
+          if ( f ) { f.value = String(v); f.dispatchEvent(new Event("change", {bubbles: true})); }
+        }
+        // the window's own change handlers may refill a field: the wanted values go back on last
+        for ( const [k, v] of Object.entries(vals) ) { const f = root.querySelector(`[name="${k}"]`); if ( f ) f.value = String(v); }
+        root.querySelector('button[data-action="ok"]')?.click();
+      });
+      const diffOf = async () => {
+        const t0 = Date.now();
+        await use();
+        let m = null;
+        await settle(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && (x.content ?? "").includes(who) && /dice, diff \d+/.test(x.content ?? "")).at(-1)), 8000);
+        const t = String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+        return {diff: Number(t.match(/\d+ dice, diff (\d+)/)?.[1] ?? NaN), named: /Ward/.test(t)};
+      };
+      let off, on;
+      try {
+        if ( a.items.get(charm.id)?.flags?.[LIB]?.ward?.on ) await lib.faith.ward(a, a.items.get(charm.id));
+        off = await diffOf();
+        await lib.faith.ward(a, a.items.get(charm.id));
+        await settle(() => !!a.items.get(charm.id)?.flags?.[LIB]?.ward?.on);
+        on = await diffOf();
+        await lib.faith.ward(a, a.items.get(charm.id));
+      } finally { Hooks.off("renderDialogV2", hook); seen.object?.setTarget?.(false, {releaseOthers: true}); }
+      return {off, on};
+    };
+
+    await G.step("7. the ward on a Kuei-jin power", async () => {
+      // B6662: a Kuei-jin spends a Yang Chi and rolls 4 dice at 6 at the seeker; 7 with the ward up, named on the card
+      const [kj] = await G.make(Actor, [{name: "Gate Faith Kuei-jin", type: "Vampire", system: {settings: {variant: "kindredeast"},
+        advantages: {dharma: {permanent: 3}, yangchi: {temporary: 6}, yinchi: {temporary: 2}}}}]);
+      await kj.update({"system.settings.variant": "kindredeast", "system.advantages.dharma.permanent": 3, "system.advantages.yangchi.temporary": 6});
+      const r = await wardRun({user: kj, x: 2, sel: 'select[name="art"]', vals: {kind: "yang", k: 1, dice: 4, diff: 6}, use: () => game.wodxActions.kotSpend(kj), who: kj.name});
+      G.ok("7. the ward on a Kuei-jin power", r.off?.diff === 6 && r.on?.diff === 7 && r.on?.named && !r.off?.named, r);
+    });
+
+    await G.step("8. the ward on a Hunter edge", async () => {
+      // B6662: an imbued uses Insinuate (Manipulation + Mercy at 6) at the seeker; 7 with the ward up, named on the card
+      const [hunter] = await G.make(Actor, [{name: "Gate Faith Hunter", type: "Hunter", system: {attributes: {manipulation: {value: 3, total: 3}},
+        advantages: {virtues: {mercy: {permanent: 3}}}}}]);
+      await hunter.update({"system.advantages.virtues.mercy.permanent": 3});
+      const r = await wardRun({user: hunter, x: 5, sel: 'select[name="edge"]', vals: {edge: "insinuate", diff: 6, risk: 0}, use: () => game.wodxActions.useEdge(hunter), who: hunter.name});
+      G.ok("8. the ward on a Hunter edge", r.off?.diff === 6 && r.on?.diff === 7 && r.on?.named && !r.off?.named, r);
     });
   } finally { return G.finish(); }
 }

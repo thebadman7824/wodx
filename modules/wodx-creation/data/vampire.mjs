@@ -50,6 +50,9 @@ export const CLANS = [
   {id: "salubri-warrior", name: "Salubri (Warrior)", disciplines: ["Auspex", "Fortitude", "Valeren"], darkAges: "V20DA p. 102",
     aliases: ["salubri warrior", "salubri"]},
   {id: "baali", name: "Baali", disciplines: ["Daimonion", "Obfuscate", "Presence"], darkAges: "V20DA p. 74"},
+  // B6612: the Cyberpunks bloodline, open on the Future Darkness branch from 2016 only (World of Future Darkness p. 19, pdf 6)
+  {id: "cyberpunks", name: "Cyberpunks", disciplines: ["Celerity", "Potence", "Technica"], darkAges: "World of Future Darkness p. 19 (pdf 6)",
+    aliases: ["cyberpunk"], opens: {from: 2016, futureBranch: true}},
   {id: "caitiff", name: "Caitiff", disciplines: [], darkAges: "V20 p. 124 (no clan Disciplines)", aliases: ["clanless"]}
 ];
 

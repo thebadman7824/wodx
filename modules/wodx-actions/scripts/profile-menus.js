@@ -650,7 +650,8 @@ export function build(ctx) {
     // B6156: a sleeping or out-cold character may still be woken, rest in torpor, or read the rules; nothing else
     const IDLE_OK = new Set(["api:daytime", "api:torpor", "api:sunAndHaven", "api:help"]);
     async function run(spec, actor) {
-        if (!IDLE_OK.has(spec) && !spec.startsWith("rules") && LIM.refuseIdle(actor)) return null;
+        // B6660: a Dazed Garou may still spend Rage to ignore being stunned (W20 p. 144), so Rage reads only out cold
+        if (!IDLE_OK.has(spec) && !spec.startsWith("rules") && LIM.refuseIdle(actor, { outCold: spec === "uses:rage" })) return null;
         const [type, arg] = spec.includes(":") ? [spec.slice(0, spec.indexOf(":")), spec.slice(spec.indexOf(":") + 1)] : [spec, ""];
         switch (type) {
             case "action": return action({ actor });

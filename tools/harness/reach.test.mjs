@@ -154,3 +154,43 @@ test("the hunters' proof: npc().orderCarry and the uuid the carry hook sends (B6
   assert.match(s, /typeof ref === "string" \? await fromUuid\(ref\)/);
   assert.match(src("modules/wodx-npc/scripts/main.mjs"), /orderCarry, carryGoals/, "WoDX NPC's api has orderCarry at its top");
 });
+
+/* B6667: a death sentence on a culprit the watch holds (hidden, lawTaken) is carried out where they are held. Mocked
+ * Foundry: one scene with a gallows region and a watch-house, the culprit's taken token. */
+test("B6667: the condemned in the watch's hands is brought out at the gallows, else the watch-house, with no second arrest", async () => {
+  const deep = () => new Proxy(class {}, {get: (t, k) => (k in t ? t[k] : deep()), apply: () => deep()});
+  globalThis.foundry ??= deep();
+  globalThis.Hooks ??= {on() {}, once() {}, callAll() {}};
+  const RE = await load("modules/wodx-storyteller/scripts/reach.mjs");
+  const setPath = (o, path, v) => { const ks = path.split("."); let x = o; for ( const k of ks.slice(0, -1) ) x = (x[k] ??= {}); x[ks.at(-1)] = v; };
+  const rect = (name, x, y, place = null) => ({name, shapes: [{type: "rectangle", x, y, width: 300, height: 300}], flags: place ? {"wodx-npc": {place: {kind: place}}} : {}});
+  const make = regions => {
+    const scene = {id: "s1", name: "Town", grid: {size: 100}, regions, tokens: []};
+    const t = {id: "t1", actorId: "c", x: 0, y: 0, hidden: true, flags: {"wodx-storyteller": {lawTaken: {at: 1, region: "moravia", mode: "arrest"}}}, parent: scene,
+      async update(u) { for ( const [k, v] of Object.entries(u) ) setPath(this, k, v); }};
+    scene.tokens.push(t);
+    Object.assign(scene.tokens, {get: id => scene.tokens.find(x => x.id === id)});
+    globalThis.game = {time: {worldTime: 9}, user: {id: "gm", isGM: true}, users: [{id: "gm", isGM: true}], scenes: [scene], actors: {get: () => null}, modules: {get: () => null}};
+    globalThis.CONFIG = {Token: {}};
+    return {scene, t};
+  };
+  let w = make([rect("Watch", 1000, 0, "gate"), rect("The gallows", 600, 900)]);
+  assert.equal(RE.whereIs("c"), null, "in custody, not on the map");
+  assert.equal(RE.heldWhere("c").token.id, "t1");
+  assert.equal(RE.sentencePlace(w.scene).name, "The gallows");
+  const out = await RE.bringOut("c");
+  assert.equal(out.place.name, "The gallows");
+  assert.deepEqual({x: w.t.x, y: w.t.y, hidden: w.t.hidden, taken: w.t.flags["wodx-storyteller"].lawTaken}, {x: 700, y: 1000, hidden: false, taken: null});
+  assert.equal(RE.whereIs("c").token.id, "t1", "on the map again, where the sentence is carried out");
+  // no gallows: the watch-house
+  w = make([rect("Market", 0, 600, "market"), rect("Watch", 1000, 0, "gate")]);
+  assert.equal((await RE.bringOut("c")).place.name, "Watch");
+  assert.equal(w.t.x, 1100);
+  // nobody held: nothing to bring out
+  assert.equal(await RE.bringOut("c"), null);
+  // the condemned yields to the sentence: no second arrest and no hiding again
+  const s = src("modules/wodx-storyteller/scripts/reach.mjs");
+  assert.match(s, /if \( !w && custody \) \{ w = await bringOut\(actorId\); if \( w \) mode = "sentence"; \}/);
+  assert.match(s, /if \( d\.mode === "sentence" \) \{[^\n]*return "yield"; \}/);
+  assert.match(src("modules/wodx-chronicle/scripts/law-punish.mjs"), /why: "a death sentence", custody: true/);
+});

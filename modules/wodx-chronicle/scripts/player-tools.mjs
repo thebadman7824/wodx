@@ -20,6 +20,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxSpirits", label: "Standing with the spirits", module: "WoDX Otherworlds"},
   {name: "wodxOtherRolls", label: "Otherworld rolls", module: "WoDX Otherworlds"},
   {name: "wodxJack", label: "Jack into the Net", module: "WoDX Otherworlds"},
+  {name: "wodxNet", label: "The Net: data fortresses", module: "WoDX Otherworlds"},
   {name: "wodxCreation", label: "Spend experience", module: "WoDX Creation"},
   {name: "wodxFindMe", label: "Find my character", module: "WoDX Chronicle"},
   {name: "wodxLegends", label: "Legends of the Chronicle", module: "WoDX Chronicle"},
