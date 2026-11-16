@@ -307,7 +307,7 @@ async function runContest(actor, program, defence, label) {
  * Run a program. actor: the runner; program: an id they carry; target: a gate id, an ICE token, a file id, a remote id,
  * or nothing (stealth, detection). Returns what happened.
  */
-export async function runProgram(actor, program, target = null, {text = ""} = {}) {
+export async function runProgram(actor, program, target = null, {text = "", drive = null} = {}) {
   const s = stateOf(actor);
   if ( !s ) throw new Error(`${actor?.name ?? "That character"} is not in the Net.`);
   const can = N.canAct(statusIds(actor));
@@ -386,11 +386,11 @@ export async function runProgram(actor, program, target = null, {text = ""} = {}
     const r = m.remotes.find(x => x.id === target);
     if ( !r ) throw new Error("Pick a remote.");
     if ( !P.works.includes(r.kind) && !(r.kind === "lights" && pid === "genie") && !(r.kind === "alarm" && ["genie", "opensesame"].includes(pid)) ) throw new Error(`${P.label} cannot work a ${r.label.toLowerCase()}.`);
-    if ( s.way === "ghost" ) { out.lines.push("The machine obeys the ghost inside it."); out.lines.push(await workRemote(actor, r, scene, text)); }
+    if ( s.way === "ghost" ) { out.lines.push("The machine obeys the ghost inside it."); out.lines.push(await workRemote(actor, r, scene, text, drive)); }
     else {
       const {c, rolls, line} = await runContest(actor, pid, 0, r.label);
       out.rolls.push(...rolls); out.lines.push(line);
-      if ( c.win ) out.lines.push(await workRemote(actor, r, scene, text));
+      if ( c.win ) out.lines.push(await workRemote(actor, r, scene, text, drive));
       else out.lines.push("It does not answer.");
     }
   }
@@ -421,7 +421,7 @@ async function raiseAlarm(scene, actor, why) {
 }
 
 /** A remote obeys (B6599): the thing it is tied to changes on the Realspace scene. Returns the line for the card. */
-async function workRemote(actor, r, scene, text = "") {
+async function workRemote(actor, r, scene, text = "", drive = null) {
   const real = r.link?.scene ? game.scenes.get(r.link.scene) : null;
   const where = real ? ` in ${esc(real.name)}` : "";
   const does = N.REMOTES[r.kind]?.does;
@@ -466,7 +466,9 @@ async function workRemote(actor, r, scene, text = "") {
   }
   if ( does === "vehicle" && real ) {
     const v = real.tiles.filter(t => t.flags?.["wodx-interactables"]?.mount);
-    return v.length ? `<b>${esc(actor.name)} has the controls of ${esc(v.map(t => t.flags["wodx-interactables"].title || "a vehicle").join(", "))}${where}</b>: the Storyteller moves it at the runner's word.` : "No vehicle answers.";
+    // B6799: the runner drives it: the vehicle moves on the building's map
+    if ( !v.length ) return "No vehicle answers.";
+    return `<b>${esc(actor.name)} has the controls of ${esc(v[0].flags["wodx-interactables"].title || "a vehicle")}${where}</b>: ${esc(await T.steerVehicle(v[0], drive ?? {}))}`;
   }
   return `The ${esc(r.label.toLowerCase())}${where} obeys.`;
 }
@@ -770,9 +772,11 @@ export async function netWindow() {
   const scenes = game.scenes.filter(x => !isFortress(x)).map(x => [x.id, x.name]);
   const gm = game.user.isGM;
   const tech = T.technica(runner);
+  // B6799: where a vehicle worked by remote goes
+  const driveRows = `<div class="form-group"><label>A vehicle drives</label><select name="drivedir" data-fixed>${opts([...(tgt ? [["toward", "toward the targeted token"]] : []), ...Object.entries(N.DRIVE_DIRS).map(([k, v]) => [k, v[2]])])}</select><input type="number" name="drivesq" value="3" min="1" max="${N.DRIVE_MAX}" aria-label="Squares"></div>`;
   const techRows = tech && kind === "deck" ? `<fieldset><legend>Technica ${tech}</legend>
       <p class="hint">${esc(Object.entries(N.TECHNICA).filter(([lv]) => Number(lv) <= tech).map(([, t]) => `${t.label}: ${t.gives}`).join(" "))}</p>
-      ${!s && tech >= 4 ? `<div class="form-group"><label>Remote Touch works</label><select name="touchwhat" data-fixed>${opts([["door", "the nearest keypad door"], ["lights", "the lights"], ["vehicle", "a vehicle"]])}</select></div>` : ""}
+      ${!s && tech >= 4 ? `<div class="form-group"><label>Remote Touch works</label><select name="touchwhat" data-fixed>${opts([["door", "the nearest keypad door"], ["lights", "the lights"], ["vehicle", "a vehicle"]])}</select></div>${driveRows}` : ""}
     </fieldset>` : "";
   const content = `<p class="wodx-quiet">${kind === "deck" ? "The Net (Future Darkness): cyberdecks and data fortresses." : "The Digital Web."} ${runner ? `Runner: ${esc(runner.name)}${s ? `, in ${esc(here?.name)}` : ""}.` : "Select the runner's token."}${tgt ? ` Targeted: ${esc(tgt.name)}.` : ""}</p>
     ${!s ? `<fieldset><legend>Jack in</legend>
@@ -786,6 +790,7 @@ export async function netWindow() {
       <div class="form-group"><label>At a file</label>${searchBox("select[name=file]")}<select name="file"><option value="">-</option>${opts(files)}</select></div>
       <div class="form-group"><label>At a remote</label><select name="remote" data-fixed><option value="">-</option>${opts(remotes)}</select></div>
       <div class="form-group"><label>A videoboard shows</label><input type="text" name="text" maxlength="80"></div>
+      ${driveRows}
       <p class="hint">Run the program at the targeted ICE, the gate, the file or the remote picked; with none picked, a stealth or detection program runs on its own.</p>
     </fieldset>`}
     ${gm ? `<fieldset><legend>Storyteller</legend>
@@ -812,8 +817,9 @@ export async function netWindow() {
     if ( r.act === "out" ) return await call("out", {actor: runner.id});
     if ( r.act === "empower" ) return await call("empower", {actor: runner.id});
     if ( r.act === "speak" ) return await call("speak", {actor: runner.id});
-    if ( r.act === "remote" ) return await call("remote", {actor: runner.id, token: tok.uuid, what: r.touchwhat});
-    if ( r.act === "run" ) return await call("run", {actor: runner.id, program: r.prog, target: r.gate || r.file || r.remote || tgt?.id || null, text: r.text});
+    const drive = {dir: r.drivedir || "n", squares: num(r.drivesq) || 1, target: tgt?.uuid ?? null};
+    if ( r.act === "remote" ) return await call("remote", {actor: runner.id, token: tok.uuid, what: r.touchwhat, drive});
+    if ( r.act === "run" ) return await call("run", {actor: runner.id, program: r.prog, target: r.gate || r.file || r.remote || tgt?.id || null, text: r.text, drive});
     if ( r.act === "read" || r.act === "copy" ) return await call("file", {actor: runner.id, file: r.file, copy: r.act === "copy"});
     if ( r.act === "draw" ) { const sc = await drawFortress({seed: r.seed, cpus: r.cpus, link: r.link || null, owner: r.owner || null}); await sc.view(); return sc; }
     if ( r.act === "ice" ) return await iceRound(here ?? canvas?.scene);
@@ -839,11 +845,11 @@ async function perform(op, d, userId) {
     return !!icon;
   }
   if ( op === "out" ) return jackOut(actor);
-  if ( op === "run" ) return runProgram(actor, d.program, d.target, {text: d.text});
+  if ( op === "run" ) return runProgram(actor, d.program, d.target, {text: d.text, drive: d.drive ?? null});
   if ( op === "file" ) return takeFile(actor, d.file, {copy: d.copy});
   if ( op === "empower" ) return T.empower(actor);
   if ( op === "speak" ) { const sc = game.scenes.get(stateOf(actor)?.fortress); return T.speak(actor, sc, modelOf(sc), mm => sc.setFlag(MODULE_ID, "netFortress", mm)); }
-  if ( op === "remote" ) { const t = await fromUuid(d.token); if ( t?.actor?.id !== actor?.id ) throw new Error("Not that character's token."); return T.remoteTouch(t, d.what); }
+  if ( op === "remote" ) { const t = await fromUuid(d.token); if ( t?.actor?.id !== actor?.id ) throw new Error("Not that character's token."); return T.remoteTouch(t, d.what, d.drive ?? {}); }
   return null;
 }
 /** Run an action here when this is the active Storyteller, else ask that client to. */

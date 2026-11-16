@@ -672,3 +672,23 @@ export function burnWhen(seconds) {
   const d = Math.max(1, Math.ceil(n(seconds) / 86400));
   return d === 1 ? "a day" : d < 14 ? `${d} days` : d < 60 ? `${Math.round(d / 7)} weeks` : `${Math.round(d / 30)} months`;
 }
+
+/* ---- A vehicle driven by remote (B6799) ---- */
+export const DRIVE_DIRS = {n: [0, -1, "north"], ne: [1, -1, "north-east"], e: [1, 0, "east"], se: [1, 1, "south-east"], s: [0, 1, "south"], sw: [-1, 1, "south-west"], w: [-1, 0, "west"], nw: [-1, -1, "north-west"]};
+export const DRIVE_MAX = 12;
+/**
+ * Where a remote drive takes a vehicle: {dir (a compass key, or "toward"), squares (1 to 12), toward: {dx, dy} in
+ * pixels from the vehicle to the target}, grid (pixels a square) -> {dx, dy, words} in pixels, or null for no move.
+ */
+export function driveStep({dir = "n", squares = 1, toward = null} = {}, grid = 100) {
+  const k = Math.max(1, Math.min(DRIVE_MAX, Math.round(Number(squares) || 1))), g = Number(grid) || 100;
+  if ( dir === "toward" ) {
+    const tx = Number(toward?.dx) || 0, ty = Number(toward?.dy) || 0, len = Math.hypot(tx, ty);
+    if ( !len ) return null;
+    const go = Math.min(len - g, k * g);
+    if ( go <= 0 ) return null;
+    return {dx: Math.round(tx / len * go / g) * g, dy: Math.round(ty / len * go / g) * g, words: `${Math.round(go / g)} square${Math.round(go / g) === 1 ? "" : "s"} toward the target`};
+  }
+  const d = DRIVE_DIRS[dir] ?? DRIVE_DIRS.n;
+  return {dx: d[0] * k * g, dy: d[1] * k * g, words: `${k} square${k === 1 ? "" : "s"} ${d[2]}`};
+}
