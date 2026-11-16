@@ -31,9 +31,11 @@ export function verdictsByFile(items, files) {
   }
   return by;
 }
-/** The files with no verdict but not-checked. */
+/** Verdicts that leave a file open: not looked at, or flagged by a script for a reading that has not happened yet. */
+export const OPEN = new Set(["", "not-checked", "unreferenced"]);
+/** The files with no verdict but an open one. */
 export function openFiles(by) {
-  return [...by].filter(([, v]) => !v.some(x => x && x !== "not-checked")).map(([f, v]) => ({file: f, why: v.length ? "not-checked" : "no item"}));
+  return [...by].filter(([, v]) => !v.some(x => !OPEN.has(x ?? ""))).map(([f, v]) => ({file: f, why: v.length ? v.find(Boolean) ?? "not-checked" : "no item"}));
 }
 export function readItems(dir) {
   const found = [];
