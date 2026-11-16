@@ -2,7 +2,8 @@
 # after an update (exit 75) or a crash. Put a file named runner-off in D:\WoDX\pcq to stop it once it is idle.
 # Started by start-runner.ps1, never by hand in a window that may close.
 $ErrorActionPreference = 'Continue'
-$base = 'D:\WoDX\pcq'; $repo = "$base\repo"; $logs = "$base\logs"
+# B6880: the second PC has no D: drive; its runner lives in C:\WoDX\pcq.
+$base = if (Test-Path 'D:\WoDX\pcq') { 'D:\WoDX\pcq' } elseif ($env:WODX_PCQ_HOME) { $env:WODX_PCQ_HOME } else { 'C:\WoDX\pcq' }; $repo = "$base\repo"; $logs = "$base\logs"
 New-Item -ItemType Directory -Force $logs | Out-Null
 $env:PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1'
 while ($true) {
