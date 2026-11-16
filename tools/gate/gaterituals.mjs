@@ -92,7 +92,9 @@ export async function run() {
       try {
         for ( let k = 0; k < 8 && soakDice === null; k++ ) {
           const before = new Set(game.messages.map(m => m.id));
-          await C.attack({attacker: ct.object ?? atk, target: wt.object ?? who, weaponId: knife.id});
+          const res = await C.attack({attacker: ct.object ?? atk, target: wt.object ?? who, weaponId: knife.id});
+          // WoDX Combat's attack returns the soak it rolled; the card is the fallback
+          if ( Number.isFinite(res?.soak?.pool?.dice) ) { soakDice = res.soak.pool.dice; card = String(res?.message?.content ?? ""); break; }
           await waitFor(() => game.messages.some(m => !before.has(m.id)), 6000);
           await new Promise(r => setTimeout(r, 800));
           // the attack card is found by its soak line among this blow's cards: a streak or other card can come after it
