@@ -702,7 +702,8 @@ test("initiative rolls itself when a fight starts and each new turn (setting)", 
   await Hooks.callAll("combatStart", combat);
   await new Promise(r => setTimeout(r, 30));
   assert.equal(updates.length, 2, "both combatants rolled");
-  assert.match(msgs.at(-1).content, /Initiative, turn 1/);
+  // B6904: find the initiative card by what it says; under load another listener's card can come after it
+  assert.ok(msgs.some(m => /Initiative, turn 1/.test(m.content ?? "")), msgs.map(m => m.content).join(" | "));
   combat.round = 2;
   await Hooks.callAll("updateCombat", combat, {round: 2});
   await new Promise(r => setTimeout(r, 30));
