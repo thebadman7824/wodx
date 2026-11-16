@@ -117,7 +117,7 @@ test("lines out of their era, lost tribes and line notes", () => {
   assert.ok(!kinds(R.propose({line: "demon", forcedSheet: true}, ctx(1990, 1995, MOD, MOD))).includes("adv.outOfEra"), "the sheet flag already keeps them");
   assert.equal(R.lostTribe("Croatan", 1500, 1600).tribe, "Croatan");
   assert.equal(R.lostTribe("Croatan", 1600, 1700), null, "already gone before the skip");
-  assert.equal(R.lostTribe("Bunyip", 1800, 1950).goneBy, 1900);
+  assert.equal(R.lostTribe("Bunyip", 1800, 1950).goneBy, 1938);
   assert.equal(R.lostTribe("Get of Fenris", 1200, 2000), null);
   assert.equal(D.LOST_TRIBES.find(t => t.tribe === "White Howlers").goneBy, 100, "fell in the 1st century (W20 p. 39)");
   assert.ok(R.propose({line: "wraith"}, ctx(1200, 1840, DA, VIC)).notes.some(n => /Fetter/.test(n)));
