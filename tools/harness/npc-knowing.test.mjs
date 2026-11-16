@@ -119,7 +119,7 @@ test("wiring: Actions sends wodxFed with the vessel; NPC hears it; nameFor in th
   const am = readFileSync(new URL("../../modules/wodx-actions/scripts/main.js", import.meta.url), "utf8");
   assert.match(am, /Hooks\.callAll\("wodxFed", \{ by: \{ uuid: actor\.uuid/);
   const rv = readFileSync(new URL("../../modules/wodx-npc/scripts/rivalry.mjs", import.meta.url), "utf8");
-  assert.match(rv, /Hooks\.on\("wodxFed"/);
+  assert.match(rv, /(Hooks\.on|onPlayerHook)\("wodxFed"/); // B6760
   const main = readFileSync(new URL("../../modules/wodx-npc/scripts/main.mjs", import.meta.url), "utf8");
   assert.match(main, /nameFor: Faces\.nameFor, knowledgeOf:/);
   const so = readFileSync(new URL("../../modules/wodx-actions/scripts/social.js", import.meta.url), "utf8");

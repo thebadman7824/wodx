@@ -53,7 +53,7 @@ test("orders: wiring; the Storyteller's client acts; hard orders queue; a fight 
   assert.match(s, /reason: "order"/);
   const m = src("modules/wodx-npc/scripts/main.mjs");
   assert.match(m, /orders\.registerSettings\(\)/);
-  assert.match(m, /tools\.wodxOrders = \{[^}]*visible: true/);
+  assert.match(m, /tools\.wodxOrders = \{[^}]*visible: (true|game\.user\.isGM \|\| isOn\("followerOrders"\))/);
   const j = JSON.parse(src("modules/wodx-npc/module.json"));
   assert.equal(j.socket, true);
 });
@@ -202,7 +202,7 @@ test("interactables: a follower joins a running chase level with the slowest pur
 
 test("followers: the hooks other modules call are wired", () => {
   const s = src("modules/wodx-npc/scripts/orders.mjs");
-  for ( const h of ["wodxTaskDone", "wodxChase", "wodxFed", "wodxGhoulFix", "wodxBreach"] ) assert.match(s, new RegExp(`Hooks\\.on\\("${h}"`));
+  for ( const h of ["wodxTaskDone", "wodxChase", "wodxFed", "wodxGhoulFix", "wodxBreach"] ) assert.match(s, new RegExp(`(Hooks\\.on|onPlayerHook)\\("${h}"`)); // B6760
   assert.match(src("modules/wodx-actions/scripts/main.js"), /Hooks\.callAll\("wodxFed"/);
   assert.match(src("modules/wodx-chronicle/scripts/signatures.mjs"), /Hooks\.callAll\("wodxGhoulFix", \{actor: a, drank: true/);
 });
