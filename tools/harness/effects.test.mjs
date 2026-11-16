@@ -219,7 +219,7 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.deepEqual([heal.kind, heal.levels, heal.aggravated], ["heal", 3, true]);
   assert.deepEqual(PE.numinaOutcomes("telekinesis", 2, 4, H.NUMINA.telekinesis).map(o => [o.out.levels, o.out.type, o.ask]), [[2, "bashing", true]]);
   assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
-  assert.equal(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses)[0].st, true);
+  assert.deepEqual(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses).map(o => [o.out.shift, o.out.duration]), [[2, "one scene"]]); // B6838: a standing curse
   assert.equal(Object.keys(PE.PATH_EFFECTS).length, 73); // B6835: three Discipline powers outside the paths
   assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 11); // B6738, B6835: the rest now apply or are story (PATH_STORY)
   const by = id => paths.find(p => p.id.endsWith(id));

@@ -175,13 +175,14 @@ for ( const e of R.EDGES ) {
 /* -- Hunters Hunted II Numina and hedge sorcery, True Faith (hunter.js) */
 for ( const [key, d] of Object.entries(H.NUMINA) ) for ( let l = 1; l <= (d.levels?.length ?? 5); l++ ) {
   const s = PE.NUMINA_EFFECTS[`${key}:${l}`];
-  add("Hunter (HH2)", `Numina: ${d.label}`, `${d.label} ${l}`, { src: [d.levels?.[l - 1], s], status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `HH2 p. ${d.p}`, how: s ? `Numen effect spec (${s.kind})` : "level text shown" });
+  add("Hunter (HH2)", `Numina: ${d.label}`, `${d.label} ${l}`, { src: [d.levels?.[l - 1], s], status: applyingSpec(s) ? "applies" : "card", story: applyingSpec(s) ? undefined : PE.NUMINA_STORY?.[`${key}:${l}`], kw: [s ?? []].flat().map(x => x.kw).filter(Boolean), page: `HH2 p. ${d.p}`, how: s ? `Numen effect spec (${s.kind})` : "level text shown" });
 }
 for ( const [key, d] of Object.entries(H.SORCERY) )
   add("Hunter (HH2/DA)", "Hedge sorcery", d.label, { src: d, status: H.sorceryResults(key, { top: 2, successes: 2, need: 1, rating: 2 }).some(r => r.out.kind !== "note") ? "applies" : "card", kw: H.sorceryResults(key, { successes: 1 }).map(r => r.key), page: `Sorcerer p. ${d.p}`, how: "hedge magic roll and casting time; a working spell puts its effect on the card" });
 for ( const [book, list] of Object.entries(H.FAITH_POWERS) ) for ( const [lvl, t] of list )
-  add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { src: t, status: lvl === 1 && H.repelResults(book, 2).length ? "applies" : "card", kw: lvl === 1 ? ["banish"] : [], page: book,
-    how: lvl === 1 ? "True Faith window: Repel puts Repelled on the creature's token" : "True Faith window shows the line" });
+  add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { src: t, status: (lvl === 1 && H.repelResults(book, 2).length) || lvl === 0 || ((lvl === 2 || lvl === 5) && H.faithPresence(book, lvl).length) || ((lvl === 3 || (lvl === 4 && book === "da20")) && ["sway", "fear"].some(k => H.faithStops(book, lvl, k))) ? "applies" : "card",
+    story: lvl === 4 && book === "hh2" ? "HH2 p. 84: cannot be ghouled, blood bound or raised; WoDX keeps no ghouling or blood bond to refuse" : undefined, kw: lvl === 1 ? ["banish"] : lvl === 2 ? ["sense"] : lvl === 5 ? ["fear"] : [], page: book,
+    how: lvl === 1 ? "True Faith window: Repel puts Repelled on the creature's token" : lvl === 0 ? "True Faith window: Resist a power works out the successes the power keeps (faithResist)" : lvl === 2 || lvl === 5 ? "True Faith window: Their presence puts the Sense (and at 5 the Rötschreck Fear) on the effects card (B6838)" : "an immunity: a power on the effects card that clouds or bends the faithful's mind is stopped when applied (effects.js faithShields, B6838)" });
 /* -- Mummy: Hekau spells and rituals, named in the Hekau window (mummy.js cast, mummy-hekau.js) */
 for ( const [id, sp] of Object.entries(MH.SPELLS) ) {
   const pk = PK.LINE_KEYWORDS.mummy[id];
@@ -213,22 +214,23 @@ for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) for ( const r of b.lis
 for ( const [id, m] of Object.entries({ ...CB.MANEUVERS, ...CB.CLASSIC }) ) {
   const mods = m.diff || m.dmg || m.dice || m.defDiff || m.noDamage || m.noDefense;
   const fo = CB.followOn?.(id, { hit: true, damageSuccesses: 3, profile: "vampire" }) ?? [];
-  add("Combat", id.startsWith("c_") ? "WoD: Combat maneuvers" : "Close combat maneuvers", m.label.replace(/ \(.*$/, ""), { src: m, status: mods || fo.length ? "applies" : "card", page: "VtDA20 pp. 346-349",
+  add("Combat", id.startsWith("c_") ? "WoD: Combat maneuvers" : "Close combat maneuvers", m.label.replace(/ \(.*$/, ""), { src: m, status: mods || fo.length || id === "normal" ? "applies" : "card", story: mods || fo.length ? undefined : m.story, page: "VtDA20 pp. 346-349",
     how: fo.length ? `roll modifiers applied; a hit marks ${fo.map(f => f.name).join(", ")} on the target's token (B3754)` : m.note ? `roll modifiers applied; the extra effect is a note: ${m.note.slice(0, 120)}` : "roll modifiers applied" });
 }
 for ( const [id, u] of Object.entries(CB.UNARMED) ) add("Combat", "Unarmed attacks", u.name, { src: u, status: "applies", page: "VtDA20 pp. 346-347", how: "attack and damage pools" });
 
 /* -- Lists WoDX does not hold yet: one row each, so the gap shows */
-for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, { src: g, status: "card", page: "DtF", how: "Thralls window lists the gift and its Faith; nothing is applied" });
+for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, { src: g, status: g.k === "offering" ? "applies" : "card", story: g.story, page: "DtF p. 253",
+  how: g.k === "offering" ? "Thralls window: each thrall's offering reaches the demon's Faith at dawn (demon.js daily)" : "Thralls window lists the gift and its Faith" });
 const IB = await import(A("scripts/inq-blessings.js"));
 for ( const b of IB.BLESSINGS ) {
   const st = applyingSpec(b.spec) && !INFO.has(b.spec.kw) && E.KEYWORDS[b.spec.kw]?.tier !== "st" && b.spec.kw !== "free" ? "applies" : "card";
-  add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { src: b, status: st, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
+  add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { src: b, status: st, story: st === "card" ? b.story : undefined, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
     how: `Blessing window: the book list sets the roll, difficulty and Conviction${st === "applies" ? `; effects card ${b.spec.kind}` : "; the card says what it does"}` });
 }
 for ( const g of J("gifts-fera.json").gifts ) {
   const st = applyingSpec(g.spec) && !INFO.has(g.spec.kw) && E.KEYWORDS[g.spec.kw]?.tier !== "st" && g.spec.kw !== "free" ? "applies" : "card";
-  add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { src: g, status: st, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
+  add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { src: g, status: st, story: st === "card" ? g.story : undefined, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
     how: `Use a Gift: the breed's own library entry sets the pool, cost and difficulty${st === "applies" ? `; effects card ${g.spec.kind}` : "; the card says what it does"}` });
 }
 /* B6832: a power whose name reaches the ground or a town (world-effects.js WORLD_POWERS) applies by that alone */

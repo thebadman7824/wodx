@@ -14,6 +14,9 @@ import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
  */
 const K = "koldunic-sorcery-the-", NE = "necromancy-the-", TH = "thaumaturgy-potestas-";
 // B6738: Corrupt Body's and Acedia's time by successes (V20 Dark Ages p. 301)
+/** B6838: a hedge curse's length by successes (HH2 p. 73): the next action, a scene, a day, a week, a month, a year. */
+const HH_CURSE = [["the next action", {kind: "rounds", rounds: 1}], ["one scene", {kind: "scene"}], ["one day", {kind: "time", seconds: DAY}],
+  ["one week", {kind: "time", seconds: 7 * DAY}], ["one month", {kind: "time", seconds: 30 * DAY}], ["up to a year", {kind: "time", seconds: 365 * DAY}]];
 const CURSE_LADDER = [["one night", DAY], ["one week", 7 * DAY], ["one month", 30 * DAY], ["one season", 91 * DAY], ["one year", 365 * DAY]];
 export const PATH_EFFECTS = {
   // Koldunic Sorcery (pp. 275-278)
@@ -80,8 +83,16 @@ export const PATH_EFFECTS = {
 export const NUMINA_EFFECTS = {
   "divination:1": N(), "divination:2": N(), "divination:3": N(), "divination:4": N(), "divination:5": N(),
   "healing:1": N(), "healing:4": HL(1), "healing:5": HL(1, {aggravated: true}),
-  "astral:1": N("sight"), "psychometry:1": N(), "psychometry:2": N(), "psychometry:3": N(), "psychometry:4": N(), "psychometry:5": N(),
-  "cyberkinesis:1": N(),
+  // B6838: read again on HH2 pp. 72-79. A curse is a standing harder roll for its ladder (on all the victim's rolls: the
+  // book leaves the situation to the Storyteller), with dice lost at four and five; Healing 2 takes away the pain of
+  // wounds for 10 minutes a success; astral travel crosses over; Cyberkinesis reads or works the device
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`curses:${l}`, [T("fortune", `Curse (${l})`, {ladder: HH_CURSE}, "one", {curse: true, shift: [1, 2, 3, 3, 4][l - 1], once: false}),
+    ...(l >= 4 ? [T("boost", `Curse (${l}): dice`, {ladder: HH_CURSE}, "one", {on: "all", dice: l - 3, sap: true})] : [])]])),
+  "healing:2": T("boost", "Pain eased", {turns: 200}, "one", {painless: true}),
+  "astral:1": N("sense"), "astral:2": S("sideways"), "astral:3": S("manifest"), "astral:4": S("sideways"), "astral:5": S("veil"),
+  "cyberkinesis:2": S("work"), "cyberkinesis:3": N("know"), "cyberkinesis:4": S("work"), "cyberkinesis:5": S("work"),
+  "psychometry:1": N(), "psychometry:2": N(), "psychometry:3": N(), "psychometry:4": N(), "psychometry:5": N(),
+  "cyberkinesis:1": N("know"),
   // The flame's damage is set by the level, not the successes; the target may dodge, so it waits for the Storyteller
   "pyrokinesis:1": H("harm", 1, "aggravated", {fixed: true, ask: true}), "pyrokinesis:2": H("harm", 1, "aggravated", {fixed: true, ask: true}),
   "pyrokinesis:3": H("harm", 2, "aggravated", {fixed: true, ask: true}), "pyrokinesis:4": H("harm", 2, "aggravated", {fixed: true, ask: true}),
@@ -97,6 +108,11 @@ export function isPath(heading) {
 
 /** What a path power does with its successes: [{key, who, ask?, st?, out}]. Unknown powers come back as one st line. */
 /** B6835: the Dark Ages powers with no effect to put on the card, each read on its page, and why. */
+/** B6838: Numina levels with no table effect, with the page (read). */
+export const NUMINA_STORY = {
+  "healing:3": "HH2 p. 76: bones set and wounds heal twice as fast; WoDX keeps no natural healing rate to double"
+};
+
 export const PATH_STORY = {
   "daimoinon-spew-wide-the-pit": "V20 Dark Ages p. 212: the book gives it no system; the creature is a plot device",
   "temporis-clios-kiss": "V20 Dark Ages p. 259: a journey into the past, the Storyteller's story",

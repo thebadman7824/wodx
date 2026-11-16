@@ -96,7 +96,7 @@ export function lastsFor(lasts, successes) {
   if ( lasts?.turns ) { const t = lasts.turns * s; return {label: `${t} turn${t === 1 ? "" : "s"}`, timed: {kind: "rounds", rounds: t}}; }
   if ( lasts?.days ) { const d = lasts.days * s; return {label: `${d} day${d === 1 ? "" : "s"}`, timed: {kind: "time", seconds: d * DAY}}; }
   // B6738: a ladder by successes, [[label, seconds], ...]; past its end the last step holds (a Tremere curse's night to year)
-  if ( Array.isArray(lasts?.ladder) && lasts.ladder.length ) { const [label, sec] = lasts.ladder[Math.min(s, lasts.ladder.length) - 1]; return {label, timed: {kind: "time", seconds: sec}}; }
+  if ( Array.isArray(lasts?.ladder) && lasts.ladder.length ) { const [label, sec] = lasts.ladder[Math.min(s, lasts.ladder.length) - 1]; return {label, timed: typeof sec === "object" ? sec : {kind: "time", seconds: sec}}; }
   if ( lasts?.weeks ) { const w = lasts.weeks * s; return {label: `${w} week${w === 1 ? "" : "s"}`, timed: {kind: "time", seconds: w * 7 * DAY}}; }
   return {label: "the scene", timed: {kind: "scene"}};
 }
@@ -198,6 +198,8 @@ export function timedNumbers(spec = {}, s = 1) {
   const k = spec.kw, x = Math.max(1, n(s));
   if ( k === "ward" ) return {dice: n(spec.dice) || Math.min(5, x), ...(spec.against ? {against: spec.against} : {})};
   // B6738: max holds a Boost or Sap to the book's cap (Malady's three dice)
+  // B6838: painless: no Boost dice; the effect sets the sheet's ignoring-pain flag while it lasts (effects.js)
+  if ( k === "boost" && spec.painless ) return {dice: 0, on: "all", painless: true};
   if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(n(spec.max) || 5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
   // B6553: a spec's own shift (Will of Fire's two) wins over the successes
   // B6830: tags and once ride along (a standing, scoped shift)

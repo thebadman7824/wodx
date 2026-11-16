@@ -243,3 +243,24 @@ test("B6837: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and To
   const SS = await imp("modules/wodx-actions/scripts/summon-specs.js");
   for ( const k of ["werewolf-dark-ages|totem-gift", "mage-dark-ages|horse-bringer", "kuei-jin-kote|cleave-the-demon"] ) assert.ok(SS.SPECS[k], k);
 });
+
+test("B6838: hedge magic, Numina, True Faith, Changing Breeds Gifts and pact gifts that only told now apply, or say why not", async () => {
+  const PE = await imp("modules/wodx-actions/scripts/path-effects.js");
+  const H = await imp("modules/wodx-actions/scripts/hunter-rules.js");
+  const c5 = PE.numinaOutcomes("curses", 5, 4, H.NUMINA.curses);
+  assert.deepEqual(c5.map(o => [o.key, o.out.shift ?? o.out.dice, o.out.duration]), [["fortune", 4, "one week"], ["boost", -2, "one week"]]);
+  assert.equal(PE.numinaOutcomes("healing", 2, 3, H.NUMINA.healing)[0].out.painless, true);
+  assert.match(src("modules/wodx-actions/scripts/effects.js"), /system\.conditions\.isignoringpain/);
+  assert.equal(PE.numinaOutcomes("cyberkinesis", 2, 3, H.NUMINA.cyberkinesis)[0].out.kind, "work");
+  assert.ok(PE.NUMINA_STORY["healing:3"]);
+  for ( const k of ["alchemy", "conjuration", "divination", "enchantment", "mana", "oneiromancy"] )
+    assert.ok(H.sorceryResults(k, {top: 2, successes: 2, need: 1, rating: 2}).every(r => r.out.kind !== "note"), k);
+  assert.deepEqual(H.faithPresence("da20", 5).map(r => [r.key, r.out.difficulty ?? null]), [["sense", null], ["fear", 9]]);
+  assert.deepEqual([H.faithStops("da20", 3, "sway"), H.faithStops("da20", 3, "fear"), H.faithStops("da20", 4, "fear"), H.faithStops("hh2", 3, "fear"), H.faithStops("hh2", 2, "sway")], [true, false, true, true, false]);
+  assert.match(src("modules/wodx-actions/scripts/effects.js"), /faithShields\(a, o\.key\)/);
+  const fera = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/gifts-fera.json"), "utf8")).gifts;
+  const read = ["ghost-caress", "skys-beneficence", "mynahs-touch", "waken", "umekochis-mouth", "blessings-of-the-nest", "emperors-clothes", "hyperattenuation", "gulp", "enter-seas-soul", "hathors-blessing", "uproot"];
+  for ( const g of fera.filter(g => read.includes(g.kw)) ) assert.ok(/W20 CB p\. \d+/.test(g.story ?? "") || (g.spec.kw !== "free" && g.spec.kind === "st"), `${g.n} applies or says why not`);
+  const D = await imp("modules/wodx-actions/scripts/demon-rules.js");
+  for ( const g of D.GIFTS ) assert.ok(g.k === "offering" || /p\. 253/.test(g.story), g.k);
+});

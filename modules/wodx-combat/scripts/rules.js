@@ -314,7 +314,7 @@ export function attackPool(p) {
  */
 export const CLASSIC = {
     c_heavystrike: { label: "[Combat] Heavy Strike (+1 dmg, Init +0)", diff: 0, dmg: 1, dice: 0 },
-    c_quickstrike: { label: "[Combat] Quick Strike (Init +3, Move +1)", diff: 0, dmg: 0, dice: 0, note: "Quick Strike: +3 Initiative, +1 Move this action." },
+    c_quickstrike: { label: "[Combat] Quick Strike (Init +3, Move +1)", diff: 0, dmg: 0, dice: 0, note: "Quick Strike: +3 Initiative, +1 Move this action.", story: "WoD: Combat p. 34: Initiative is rolled before the maneuver is picked, so the +3 and +1 Move stand as a reminder" },
     c_heavykick: { label: "[Combat] Heavy Kick (-1 die, +2 dmg, Init -1)", diff: 0, dmg: 2, dice: -1, note: "Heavy Kick: -1 Initiative, -1 Move." },
     c_quickkick: { label: "[Combat] Quick Kick (+1 dmg, Init +1)", diff: 0, dmg: 1, dice: 0 },
     c_grapple: { label: "[Combat] Grapple (Init -1, sustained hold)", diff: 0, dmg: 0, dice: 0, note: "Grapple: a sustained hold. Following turns the grappler may squeeze for Strength damage or the victim breaks free with a resisted Strength roll." }

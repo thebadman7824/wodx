@@ -226,11 +226,12 @@ export function dawnOffering(thralls = []) {
 }
 /** Gifts bought with a thrall's potential (p. 253). */
 export const GIFTS = [
-    { k: "heal", label: "Mend a chronic injury or impairment", cost: 1 },
-    { k: "freebies", label: "Ten freebie points (not Backgrounds)", cost: 1 },
-    { k: "innate", label: "One of the demon's innate powers (Willpower at 7 to use)", cost: 1 },
-    { k: "enhancement", label: "One apocalyptic enhancement (Willpower at 6, a scene)", cost: 1 },
-    { k: "evocation", label: "A lesser evocation (its level in points; Willpower at 8)", cost: "level" },
+    // B6838: story names why a gift puts nothing on the table: it changes the thrall's own sheet, kept by hand (p. 253)
+    { k: "heal", label: "Mend a chronic injury or impairment", cost: 1, story: "DtF p. 253: WoDX keeps no chronic injuries; the thrall's sheet loses the Flaw by hand" },
+    { k: "freebies", label: "Ten freebie points (not Backgrounds)", cost: 1, story: "DtF p. 253: freebie points spent on the thrall's sheet by hand" },
+    { k: "innate", label: "One of the demon's innate powers (Willpower at 7 to use)", cost: 1, story: "DtF p. 253: the power goes on the thrall's sheet by hand" },
+    { k: "enhancement", label: "One apocalyptic enhancement (Willpower at 6, a scene)", cost: 1, story: "DtF p. 253: the enhancement goes on the thrall's sheet by hand" },
+    { k: "evocation", label: "A lesser evocation (its level in points; Willpower at 8)", cost: "level", story: "DtF p. 253: the evocation goes on the thrall's sheet by hand" },
     { k: "offering", label: "A daily Faith offering (up to half the potential)", cost: "half" }
 ];
 export function giftsCost(potential, picks = []) {

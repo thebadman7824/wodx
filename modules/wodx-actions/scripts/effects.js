@@ -18,6 +18,7 @@ import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
 import * as TR from "./turn-rules.js";
 import * as TURN from "./turns.js";
+import * as HR from "./hunter-rules.js";
 import * as LIM from "./limits.js";
 import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
@@ -495,6 +496,18 @@ async function moodAfter(item, casterName) {
   return {npc: npc.id, char: caster.id, before, met};
 }
 
+/** B6838: does this actor's True Faith stop a power with this keyword? */
+function faithShields(a, key) {
+  try {
+    if ( detectProfile(a) === "demon" ) return false;
+    const f = a.system?.advantages?.faith;
+    const rating = Number(a.getFlag?.(MOD, "trueFaith")) || (a.type === "Mortal" || detectProfile(a) === "hunter" ? Number(f?.permanent ?? f?.value) || 0 : 0);
+    if ( rating < 3 ) return false;
+    let era = null;
+    try { era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { era = null; }
+    return HR.faithStops(HR.faithRules(era), rating, key);
+  } catch (e) { return false; }
+}
 async function applyCore(item, casterName = "the caster") {
   // item is reassigned when the Storyteller picks a spot (Summon, Move)
   const d = docOf(item.target), a = actorOf(d), o = item.out;
@@ -502,6 +515,8 @@ async function applyCore(item, casterName = "the caster") {
   if ( ACT.KINDS.has(o?.kind) ) return ACT.apply(item, casterName, {docOf, actorOf, tokenOf, pickPoint, choose});
   if ( !a && !["summon", "weather"].includes(o?.kind) ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
+  // B6838: True Faith 3 and 4 stop the powers that cloud or bend the faithful's mind (a demon's Faith is not True Faith)
+  if ( a && o?.key && faithShields(a, o.key) ) return {note: `${a.name}: their True Faith stops ${o.label ?? "the power"}`};
   const health = foundry.utils.deepClone(a?.system?.health?.damage ?? {});
   switch ( o.kind ) {
     case "damage":
@@ -534,7 +549,8 @@ async function applyCore(item, casterName = "the caster") {
     }
     case "timed": case "condition": {
       if ( !T?.applyTimed || !o.timed ) return {note: "WoDX Chronicle is off: note the effect by hand"};
-      const changes = [];
+      // B6838: a power that takes the pain of wounds away sets the sheet's ignoring-pain flag while it lasts (V20 p. 282)
+      const changes = o.painless ? [{key: "system.conditions.isignoringpain", mode: 5, value: "true"}] : [];
       const tok = tokenOf(d);
       const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, movementAction: tok.movementAction ?? null, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
       // B6000: the numbers a Ward, Boost, Blessing or Calm needs ride in the effect, so the dice read them (power-mods.js)
