@@ -853,7 +853,7 @@
    "modules/wodx-library/scripts/shelves.mjs:12",
    "modules/wodx-npc/scripts/main.mjs:121",
    "modules/wodx-otherworlds/scripts/ratings.mjs:64",
-   "modules/wodx-senses/scripts/perception.mjs:199",
+   "modules/wodx-senses/scripts/perception.mjs:200",
    "modules/wodx-sheets/scripts/anachronism.mjs:30",
    "modules/wodx-sheets/scripts/extras.mjs:25",
    "modules/wodx-sheets/scripts/main.mjs:40",
@@ -2576,7 +2576,7 @@
    "wizard"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/arrival.mjs:157"
+   "modules/wodx-solo/scripts/arrival.mjs:171"
   ]
  },
  {
