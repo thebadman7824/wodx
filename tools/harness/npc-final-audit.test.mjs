@@ -75,3 +75,45 @@ test("B6766: every faction card's Undo button is wired: its card flag passes the
   const gate = /if \( (!fl\?\.\w+(?: && !fl\?\.\w+)*) \) return;\n\s*el\.querySelectorAll\("button\.wnpc-f-mapbreach"\)/.exec(src("modules/wodx-npc/scripts/factions.mjs"))?.[1] ?? "";
   for ( const k of keys ) assert.match(gate, new RegExp(`!fl\\?\\.${k}\\b`), `the Undo on a ${k} card`);
 });
+
+test("B6768: kin children, Fates brood sheets and residents' partners keep the NPC gender rule: one in a hundred nonbinary", async () => {
+  const GR = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/gender-rules.mjs")));
+  const N = 100000;
+  let nb = 0;
+  for ( let i = 0; i < N; i++ ) { const d = GR.sexFromDraw((i + 0.5) / N); if ( d.sex === "nonbinary" ) nb++; else assert.equal(d.sex, d.nameSex); }
+  assert.equal(nb, N / 100, "exactly one in a hundred of an even spread");
+  assert.deepEqual(GR.sexFromDraw(0.2), {nameSex: "female", sex: "female"});
+  assert.deepEqual(GR.sexFromDraw(0.7), {nameSex: "male", sex: "male"});
+  assert.match(src("modules/wodx-creation/scripts/people-rules.mjs"), /if \( sex === "any" \) \(\{sex: s, nameSex\} = sexFromDraw\(rand\(\), NONBINARY_HALF \* 2\)\)/, "the generator residents use is the same rule");
+  // Kin children
+  let kids = 0, kidsNb = 0;
+  for ( let i = 0; i < 400; i++ ) {
+    const line = K.newLine({id: `g${i}`, founder: {id: "a", name: "Jan"}, family: "Novák", year: 1700, founderBorn: 1680, seed: `g${i}`,
+      members: [{name: "Eliška", sex: "female", born: 1698}, {name: "Petr", sex: "male", born: 1696}]});
+    const grown = K.grow(line, 1800).line;
+    for ( const m of grown.members.filter(x => x.gender) ) {
+      kids++; if ( m.gender === "nonbinary" ) kidsNb++;
+      assert.ok(["female", "male"].includes(m.sex), "the name side is kept for names and family name forms");
+      assert.equal(K.genderFor(m, line.id), m.gender, "brought into play with the gender drawn at birth");
+    }
+  }
+  assert.ok(kids > 1000, `children born (${kids})`);
+  assert.ok(kidsNb / kids > 0.003 && kidsNb / kids < 0.025, `about 1 in 100 (${kidsNb} of ${kids})`);
+  // Fates brood sheets
+  const FT = src("modules/wodx-npc/scripts/fates.mjs");
+  assert.match(FT, /flags: \{"wodx-creation": \{sex: b\.sex \?\? drawnFor\(b\)\.sex, chronology/, "the sheet gets a sex");
+  assert.match(FT, /s\.records\[b\.id\] = \{\.\.\.b, \.\.\.drawnFor\(b\)\}/, "the record keeps the sex that goes with its name");
+  const sexOfSrc = FT.slice(FT.indexOf("export function sexOf"), FT.indexOf("const SHEET"));
+  const sexOf = new Function("sexFromDraw", `${sexOfSrc.replace("export ", "")}; return sexOf;`)(GR.sexFromDraw);
+  assert.equal(sexOf({id: "x", sex: "male"}), "male");
+  let bnb = 0;
+  for ( let i = 0; i < 20000; i++ ) { const s = sexOf({id: `b${i}`}); assert.ok(["female", "male", "nonbinary"].includes(s)); if ( s === "nonbinary" ) bnb++; }
+  assert.ok(bnb > 120 && bnb < 290, `brood: about 1 in 100 (${bnb} of 20000)`);
+  // Residents' partners
+  const RR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/resident-rules.mjs")));
+  const c = {same: 0, other: 0, nb: 0};
+  for ( let i = 0; i < N; i++ ) { const s = RR.partnerSex("female", (i + 0.5) / N); if ( s === "nonbinary" ) c.nb++; else if ( s === "female" ) c.same++; else c.other++; }
+  assert.equal(c.nb, N / 100);
+  assert.ok(Math.abs(c.same / N - RR.SAME_SEX_PARTNER) < 0.002, `same-sex partners ${c.same / N}`);
+  assert.ok(["female", "male"].includes(RR.partnerSex("nonbinary", 0.3)));
+});

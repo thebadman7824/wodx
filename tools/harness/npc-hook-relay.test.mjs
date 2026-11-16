@@ -78,3 +78,69 @@ test("WoDX NPC's listeners for player-fired hooks use the relay", () => {
   for ( const h of ["wodxFed", "wodxSocial", "wodxPowerShown"] ) assert.match(s("cults.mjs"), new RegExp(`onPlayerHook\\("${h}"`), `cult deeds: ${h}`);
   for ( const f of ["aftercare.mjs", "rivalry.mjs", "orders.mjs", "cults.mjs"] ) assert.doesNotMatch(s(f), /Hooks\.on\("(wodxFed|wodxSocial|wodxPowerShown)"/, f);
 });
+
+/* B6767: exactly once per event, however many ways it arrives */
+test("exactly once: a player's feeding relayed here and again by another module runs each listener once; the GM's own runs once", async () => {
+  const pc = doc("Actor.pc5", ["p1"]), vessel = doc("Actor.v5");
+  let a = 0, b = 0;
+  R.onPlayerHook("wodxFed", () => { if ( game.user.isGM ) a++; });
+  R.onPlayerHook("wodxFed", () => { if ( game.user.isGM ) b++; });
+  const ev = {by: {uuid: pc.uuid, name: "Kai"}, vessel: {uuid: vessel.uuid, name: "A carter"}, drunk: 3, willing: false, fought: false};
+  mock.log.socket.length = 0;
+  mock.asPlayer();
+  await Hooks.callAll("wodxFed", structuredClone(ev));
+  const msgs = mock.log.socket.splice(0); mock.asGM();
+  for ( const m of msgs ) assert.equal(await R.receive(m.data), 4, "all four wodxFed listeners in this file, once each");
+  assert.deepEqual([a, b], [1, 1], "the relay ran each listener once");
+  // another module (say, a future WoDX Actions relay) fires the same event again on the Storyteller's client
+  await Hooks.callAll("wodxFed", {...structuredClone(ev), relayed: true});
+  assert.deepEqual([a, b], [1, 1], "the second relay of the same event is skipped");
+  // and the other order: the other module's relay first, then ours
+  const ev2 = {...ev, drunk: 1};
+  await Hooks.callAll("wodxFed", {...structuredClone(ev2), relayed: true});
+  mock.asPlayer(); await Hooks.callAll("wodxFed", structuredClone(ev2)); mock.asGM();
+  for ( const m of mock.log.socket.splice(0) ) assert.equal(await R.receive(m.data), 0, "every listener had this event from the other relay already");
+  assert.deepEqual([a, b], [2, 2]);
+  // the Storyteller's own feeding is not relayed: it runs once, and twice for two feedings
+  await Hooks.callAll("wodxFed", structuredClone(ev)); await Hooks.callAll("wodxFed", structuredClone(ev));
+  assert.deepEqual([a, b], [4, 4]);
+  assert.equal(mock.log.socket.length, 0, "nothing sent from the active Storyteller");
+});
+
+test("a second Storyteller who is not the active one sends too; the active one runs it once", async () => {
+  const pc = doc("Actor.pc6", ["p1"]), npc = doc("Actor.npc6");
+  let ran = 0;
+  R.onPlayerHook("wodxSocial", p => { if ( game.user.id === "gm" && p.act === "intimidate" ) ran++; });
+  const gm2 = {id: "gm2", name: "Second", isGM: true};
+  game.users.set("gm2", gm2);
+  const prev = game.user; game.user = gm2;
+  mock.log.socket.length = 0;
+  await Hooks.callAll("wodxSocial", {actor: pc, npc, act: "intimidate", result: "win"});
+  game.user = prev;
+  assert.equal(mock.log.socket.filter(m => m.data?.type === R.TYPE).length, 1);
+  for ( const m of mock.log.socket.splice(0) ) await R.receive(m.data);
+  assert.equal(ran, 1);
+});
+
+test("no other module relays wodxFed, wodxSocial or wodxPowerShown: they fire only where they happen", async () => {
+  const {readdirSync, statSync} = await import("node:fs");
+  const files = [];
+  const walk = d => { for ( const f of readdirSync(d) ) { const p = join(d, f); if ( statSync(p).isDirectory() ) { if ( f !== "node_modules" && f !== "data" ) walk(p); } else if ( /\.(m?js)$/.test(f) ) files.push(p); } };
+  walk(join(root, "modules"));
+  const fires = [];
+  for ( const f of files ) {
+    const s = readFileSync(f, "utf8").replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    for ( const m of s.matchAll(/Hooks\.call(?:All)?\(\s*([^,)]+)/g) ) {
+      const arg = m[1].trim();
+      if ( /^["'`](wodxFed|wodxSocial|wodxPowerShown)["'`]$/.test(arg) ) fires.push(f.slice(root.length + 1).replace(/\\/g, "/"));
+      else if ( !/^["'`]/.test(arg) && /RELAYED|hook/i.test(arg) && !f.includes("wodx-npc/scripts/hook-relay") ) {
+        // a generic relay (e.g. WoDX Combat's relayHook) must not list these hooks
+        const list = /const RELAYED = \[([^\]]*)\]/.exec(s)?.[1] ?? "";
+        assert.doesNotMatch(list, /wodxFed|wodxSocial|wodxPowerShown/, `${f}: relays one of these hooks; WoDX NPC's relay would run its listeners twice (B6767)`);
+      }
+    }
+  }
+  assert.deepEqual([...new Set(fires)].sort(), ["modules/wodx-actions/scripts/charms.js", "modules/wodx-actions/scripts/fomor.js", "modules/wodx-actions/scripts/main.js",
+    "modules/wodx-actions/scripts/social.js", "modules/wodx-library/scripts/wonder-use.mjs", "modules/wodx-npc/scripts/carry-aftercare.mjs"],
+    "a new place fires one of these hooks: check it is where the event happens, not a relay");
+});

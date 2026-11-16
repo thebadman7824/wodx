@@ -7,7 +7,13 @@
  * cult), so a player's feeding, social win or power did nothing there. A listener added with onPlayerHook still runs
  * where the hook fires; on a player's client the hook is also sent by socket, and the Storyteller's client runs this
  * module's listeners for it once (documents travel as uuids). Other modules' listeners are not fired again, so
- * nothing they do happens twice. The sender must own the actor the event is about.
+ * nothing they do happens twice. The sender must own the actor the event is about. A second Storyteller who is not the
+ * active one sends too.
+ *
+ * Exactly once: no other module relays these three hooks today (WoDX Combat relays only its own two, B6150; WoDX
+ * Storyteller's herds sends its own request). Should one start to fire them again on the Storyteller's client with
+ * relayed: true, each listener here still runs once per event: a relayed delivery (from this socket or from another
+ * module) is skipped when the same event reached that listener in the last few seconds (B6767).
  */
 const MOD = "wodx-npc";
 const SOCKET = `module.${MOD}`;
@@ -17,6 +23,9 @@ export const RELAYED = ["wodxFed", "wodxSocial", "wodxPowerShown"];
 
 const handlers = new Map();
 let listening = false;
+/** How long a relayed event is remembered, in milliseconds, so a second relay of it is skipped. */
+export const SAME_EVENT_MS = 5000;
+const seen = new Map();
 
 const isDoc = v => !!v && typeof v === "object" && typeof v.uuid === "string" && typeof v.documentName === "string";
 const isActiveGM = () => !!game.user?.isGM && (!game.users?.activeGM || game.users.activeGM.id === game.user.id);
@@ -45,10 +54,39 @@ export function subjectOf(args = []) {
   return a?.__uuid ?? a?.actor?.__uuid ?? a?.by?.uuid ?? null;
 }
 
-/** Send a hook on from a player's client. Returns whether it was sent. */
+const relayedArgs = args => args.some(a => a && typeof a === "object" && !isDoc(a) && a.relayed);
+/** What makes two deliveries the same event: the hook, the actor it is about, and the plain values and uuids of
+ * its arguments, leaving out relayed and anything a relay may drop (functions, nested objects). */
+export function eventKey(name, args = []) {
+  const flat = v => {
+    if ( isDoc(v) ) return v.uuid;
+    if ( v && typeof v === "object" && typeof v.__uuid === "string" ) return v.__uuid;
+    if ( v === null || typeof v !== "object" ) return v;
+    const o = {};
+    for ( const k of Object.keys(v).sort() ) {
+      if ( k === "relayed" ) continue;
+      const x = v[k];
+      if ( isDoc(x) ) o[k] = x.uuid;
+      else if ( x && typeof x === "object" && (typeof x.uuid === "string" || typeof x.__uuid === "string") ) o[k] = x.uuid ?? x.__uuid;
+      else if ( x === null || ["string", "number", "boolean"].includes(typeof x) ) o[k] = x;
+    }
+    return o;
+  };
+  return `${name}|${JSON.stringify(args.map(flat))}`;
+}
+/** True the first time a listener sees an event; false for a repeat within SAME_EVENT_MS. */
+function firstTime(fnId, key, now = Date.now()) {
+  for ( const [k, t] of seen ) if ( now - t > SAME_EVENT_MS ) seen.delete(k);
+  const k = `${fnId}|${key}`;
+  if ( seen.has(k) ) return false;
+  seen.set(k, now);
+  return true;
+}
+
+/** Send a hook on from a player's client (or a Storyteller's who is not the active one). Returns whether it was sent. */
 export function send(name, args) {
-  if ( !RELAYED.includes(name) || game.user?.isGM || !game.users?.activeGM ) return false;
-  if ( args.some(a => a && typeof a === "object" && !isDoc(a) && a.relayed) ) return false;
+  if ( !RELAYED.includes(name) || isActiveGM() || !game.users?.activeGM ) return false;
+  if ( relayedArgs(args) ) return false;
   game.socket?.emit?.(SOCKET, {type: TYPE, hook: name, userId: game.user.id, args: args.map(a => encode(a) ?? null)});
   return true;
 }
@@ -63,9 +101,11 @@ export async function receive(m) {
   const args = (m.args ?? []).map(a => decode(a, find));
   const last = args.length - 1;
   if ( last >= 0 && args[last] && typeof args[last] === "object" && !isDoc(args[last]) ) args[last] = {...args[last], relayed: true};
+  const key = eventKey(m.hook, args);
   let n = 0;
-  for ( const fn of handlers.get(m.hook) ) {
-    try { await fn(...args); n++; } catch (e) { console.error(`${MOD} | ${m.hook} from a player`, e); }
+  for ( const h of handlers.get(m.hook) ) {
+    if ( !firstTime(h.id, key) ) continue;
+    try { await h.fn(...args); n++; } catch (e) { console.error(`${MOD} | ${m.hook} from a player`, e); }
   }
   return n;
 }
@@ -83,7 +123,12 @@ export function onPlayerHook(name, fn) {
     handlers.set(name, []);
     Hooks.on(name, (...args) => { try { send(name, args); } catch (e) { console.warn(`${MOD} | relay ${name}`, e); } });
   }
-  handlers.get(name).push(fn);
-  Hooks.on(name, fn);
+  const h = {id: `${name}#${handlers.get(name).length}`, fn};
+  handlers.get(name).push(h);
+  // a delivery another module relayed (relayed: true) runs only if this listener has not had the event already
+  Hooks.on(name, (...args) => {
+    if ( relayedArgs(args) && isActiveGM() && !firstTime(h.id, eventKey(name, args)) ) return;
+    return fn(...args);
+  });
   listen();
 }

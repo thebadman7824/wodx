@@ -222,10 +222,24 @@ export function kinFamily(house, p) {
  * Name a household's people. plans: planHousehold(); draw(index, {sex, trade}) returns a People generator person
  * ({sex, origin, given, family, name, ...}); index HOUSE_ROW is the household's own draw. rand: a seeded number
  * source for the partner's sex. The household's family name comes from a man's draw, so its male form is known and
- * each member takes the form for their sex; a partner is of the other sex nine times in ten (house reading).
+ * each member takes the form for their sex; a partner is of the other sex nine times in ten (house reading), nonbinary one time in a hundred (B6768).
  * Returns the people in order, each the drawn person with name and family set, plus its plan.
  */
 export const HOUSE_ROW = 31;
+/** How often a partner is of the same sex as the one they live with (house reading, kept by B6768). */
+export const SAME_SEX_PARTNER = 0.1;
+/**
+ * A partner's sex from one draw r (B6768): one in a hundred nonbinary, as the People generator draws anyone (B3503);
+ * of the rest, the same sex as the head of the house SAME_SEX_PARTNER of the time, else the other. A nonbinary head's
+ * partner is female or male, half and half. The draw is the one used before, so households drawn before keep theirs
+ * except in that one slice in a hundred.
+ */
+export function partnerSex(firstSex, r) {
+  if ( Math.abs(r - 0.45) < 0.005 ) return "nonbinary";
+  if ( firstSex !== "female" && firstSex !== "male" ) return r < 0.45 ? "female" : "male";
+  const other = firstSex === "female" ? "male" : "female";
+  return r < 1 - SAME_SEX_PARTNER ? other : firstSex;
+}
 /** Rows a retry steps by, so a retried draw never lands on another member's row. */
 export const RETRY_STEP = 100, RETRIES = 8;
 
@@ -280,7 +294,7 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0, region
   plans.forEach((plan, i) => {
     let p = first;
     if ( i > 0 ) {
-      const sex = plan.role === "partner" ? (rand() < 0.9 ? (first.sex === "female" ? "male" : "female") : first.sex) : "any";
+      const sex = plan.role === "partner" ? partnerSex(first.sex, rand()) : "any";
       // Kin of a Jewish household are Jewish, and kin of a Christian one are not (house reading of the Middle Ages to 1945)
       const sameFaith = o => !first.origin || !o || (o === "jewish") === (first.origin === "jewish") || (Number(year) >= 1946);
       // Before 1946 kin of a Jewish household are asked for by origin, since the generator draws few Jewish people
