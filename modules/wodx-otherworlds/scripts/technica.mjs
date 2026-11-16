@@ -5,6 +5,7 @@
  */
 import {MODULE_ID} from "./ratings.mjs";
 import * as N from "./net-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const num = v => Number(v) || 0;
@@ -110,7 +111,7 @@ export async function speak(actor, scene, model, save) {
 }
 
 /* ---- the weakness: a night's Discipline uses against its machine uses ---- */
-const night = () => Math.floor((game.time.worldTime ?? 0) / 86400);
+const night = () => Math.floor((game.time.worldTime ?? 0) / DAY);
 function tallyOf(actor) {
   const t = actor?.flags?.[MODULE_ID]?.cyberTally;
   return t?.night === night() ? t : {night: night(), disc: 0, tech: 0, paid: 0};
