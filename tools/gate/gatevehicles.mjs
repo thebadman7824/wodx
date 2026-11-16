@@ -141,7 +141,8 @@ export async function run() {
       const dodge = p.plans.find(x => x.type === "dodge");
       const m = V().vehicleFor(driver, td)?.maneuver ?? 10;
       G.ok("9. swerve and sat inside", d.best?.type === "swerve" && d.best.dice === Math.min(10, m) && dodge && !dodge.valid && /Sat in/.test(dodge.invalid ?? ""),
-        {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, pass: dodge?.invalid});
+        {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, pass: dodge?.invalid, dodge: dodge ? {valid: dodge.valid} : null,
+          aboard: (scene.tiles.get(car.id)?.flags?.[IX]?.riders ?? []).map(r => r.n ?? r.t), passAt: {x: tp.x, y: tp.y}});
     });
 
     await G.step("10. an NPC takes a horse", async () => {
