@@ -55,3 +55,16 @@ test("a War Wolf on a Creature sheet takes silver as aggravated (W20 Book of the
   assert.equal(mockeryOf({ type: "Mortal", system: { settings: { variant: "warwolves" } } }), "");
   assert.match(src, /mockeryOf\(actor\) === "warwolves" && !b\.silver \) \{ b\.silver = true/);
 });
+
+test("a switched-on form Trait grows its natural weapons on the body (Demon: the Fallen; Shintai aspects)", async () => {
+  const B = await load("modules/wodx-combat/scripts/body-rules.js");
+  const w = name => B.bodyOf({ effects: [{ name, description: "The character manifests something." }] }).weapons;
+  assert.deepEqual([w("Claws").claw.type, w("Claws").claw.bonus], ["aggravated", 2]);
+  assert.equal(w("Claws/Teeth").bite.bonus, 2);
+  assert.equal(w("Gaping Maw").bite.bonus, 4);
+  assert.equal(w("Bonesmasher").claw.type, "bashing");
+  assert.equal(w("Casts No Reflection").claw, undefined);
+  assert.equal(B.bodyOf({ effects: [{ name: "Night Sight", description: "sees claws in the dark" }] }).weapons.claw, undefined, "a name, not a word in the text");
+  const src = readFileSync(join(root, "modules/wodx-combat/scripts/movement.js"), "utf8");
+  assert.match(src, /\.\.\.formTraitsOf\(actor\)\]/);
+});

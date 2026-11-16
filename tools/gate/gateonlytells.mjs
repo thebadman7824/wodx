@@ -6,6 +6,7 @@
  *   2. a Rock Giant changeling has one more Bruised level in the toughness WoDX Combat reads (C20 p. 402)
  *   3. a Demon's apocalyptic form Trait Chimerical Aura, made on the actor, carries its Dodge bonus (system B6729)
  *   4. WoDX Combat: a switched-on Mirage makes a ranged attack on the bearer two harder, a close one one harder
+ *   6. WoDX Combat: a switched-on Claws form Trait gives the demon aggravated claws (Strength + 2) on its body
  *   5. (B6727) a line werewolf's form change puts the Crinos icon on the actor and Homid takes it off
  * Makes its own actors and removes them; puts the setting back. Result: Data/wodx-gate/gateonlytells-result.json.
  */
@@ -48,6 +49,11 @@ export async function run() {
       await demon.items.get(m.id)?.update({"system.isactive": false});
       const off = sh(false);
       G.ok("4. a switched-on Mirage makes attacks on the bearer harder", ranged === 2 && close === 1 && off === 0, {ranged, close, off});
+    });
+    await G.step("6. a switched-on Claws Trait grows aggravated claws", async () => {
+      await demon.createEmbeddedDocuments("Item", [{name: "Claws", type: "Trait", system: {type: "wod.types.apocalypticform", isactive: true, description: "<p>Claws.</p>"}}]);
+      const w = game.wodxCombat?.body?.of?.(game.actors.get(demon.id))?.weapons?.claw ?? null;
+      G.ok("6. a switched-on Claws Trait grows aggravated claws", w?.type === "aggravated" && Number(w?.bonus) === 2, {claw: w});
     });
     await G.step("5. a werewolf's form shows on its tokens", async () => {
       const TH = (await import("/systems/worldofdarkness/module/scripts/token-helpers.js")).default;

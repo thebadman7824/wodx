@@ -106,7 +106,13 @@ export const SHAPE_POWERS = /shape of the beast|mist form|lurking mists|body of 
 
 /** Effects that grow natural weapons on the body the character already has. */
 export const GROW_PATTERNS = [
-  ["claw", /feral (claws|weapons)/, {type: "aggravated", bonus: 1, ref: "Feral Claws, V20 p. 199; Feral Weapons, VtDA20 p. 240"}]
+  ["claw", /feral (claws|weapons)/, {type: "aggravated", bonus: 1, ref: "Feral Claws, V20 p. 199; Feral Weapons, VtDA20 p. 240"}],
+  // B6729: the Demon apocalyptic form and Shintai aspect Traits, by the Trait's name (the start of the text)
+  ["claw", /^(claws|claws\/teeth|blades)\b/, {type: "aggravated", bonus: 2, ref: "Apocalyptic form, Demon: the Fallen"}],
+  ["bite", /^(teeth|claws\/teeth)\b/, {type: "aggravated", bonus: 2, ref: "Apocalyptic form, Demon: the Fallen"}],
+  ["bite", /^gaping maw\b/, {type: "aggravated", bonus: 4, ref: "Gaping Maw, Demon: the Fallen"}],
+  ["claw", /^(demon weapons|natural weapons)\b/, {type: "lethal", bonus: 2, ref: "Shintai aspect"}],
+  ["claw", /^bonesmasher\b/, {type: "bashing", bonus: 3, ref: "Bonesmasher, Shintai aspect"}]
 ];
 
 /** Lasting features from the Storyteller's record (wodx-storyteller body), by key. */
