@@ -544,3 +544,25 @@ def helicopters():
     ]
 def balloons():
     return _balloons0() + [(2023, 'liner', 'Airship liner', dict(adds=True, style='ship', L=268, r=38, cy=176, ribs=10, fins=True, rigid=True, gw=120, gx=10, drop=2, blunt=.55, stripe=True), 'airline')]
+
+
+# ---- B6623: aerodynes and armoured AVs for the World of Future Darkness (from 2023). Placeholder looks on the
+# ducted-fan drawer, kept simple while the art may be redrawn: a closed car body lifted on four fans (a personal or
+# hire aerodyne), a heavier armoured body for police and military AVs, and a tilt-rotor gunship. ----
+def aerodyne(p, ph=0):
+    return helicopter(p, ph)
+def aerodynes():
+    return [
+        (2023, 'personal', 'Personal aerodyne', dict(L=150, bl=96, bh=38, style='quad', nose=30, glass=.5, windows=1, seats=4, w=50), 'modern'),
+        (2023, 'saloon', 'Aerodyne saloon', dict(L=180, bl=124, bh=44, style='quad', nose=12, glass=.3, windows=2, stripe=True, seats=5, w=58), 'modern'),
+        (2023, 'cab', 'Aerocab', dict(L=176, bl=116, bh=42, style='quad', nose=20, glass=.4, windows=2, stripe=True, seats=5, w=56), 'bright'),
+        (2040, 'quad', 'Four-fan air taxi', dict(L=170, bl=110, bh=42, style='quad', nose=24, glass=.5, windows=1, seats=5, w=54), 'future'),
+        (2040, 'sport', 'Sporting aerodyne', dict(L=160, bl=100, bh=34, style='quad', nose=36, glass=.55, windows=1, seats=2, w=48), 'future'),
+        (2040, 'executive', 'Executive aerodyne', dict(L=186, bl=128, bh=44, style='quad', nose=20, glass=.3, windows=3, stripe=True, seats=5, w=60), 'future'),
+    ]
+def assaultavs():
+    return [
+        (2023, 'assault', 'Assault AV', dict(L=184, bl=124, bh=54, style='quad', nose=12, glass=.2, windows=0, seats=5, w=66), 'army'),
+        (2023, 'patrol', 'Police AV', dict(L=180, bl=120, bh=46, style='quad', nose=16, glass=.3, windows=2, stripe=True, seats=5, w=62), 'police'),
+        (2023, 'gunship', 'Tilt-rotor gunship', dict(winged=True, L=230, d=30, span=150, chord=30, gear='wheels', nosewheel=True, noprop=True, nose='round', seats=5, cab='cabin', windows=2, cl=80, cx0=130, wx=126, wy=62, ay=44, rotor=(126,), ttail=True, fin=30, finsweep=8, fat=1.1), 'warbird'),
+    ]

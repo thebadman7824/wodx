@@ -64,6 +64,7 @@ import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
 import {setupChase} from "./chase.mjs";
+import {setupFlight} from "./flight.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
@@ -1972,7 +1973,7 @@ export function tileConfigHtml(doc) {
     ${field("Kind of watch point", `<select name="${p}.watchKind" data-fixed>${opt(R.WATCHES, wch.watchKind)}</select>`, "A telephone from about 1890, a radio from about 1930.")}
     ${field("Tied to", `<input type="text" name="${p}.target" value="${esc(wch.target)}" placeholder="A tile's id on this scene, or its UUID on another">`, "The area a window or mirror shows, or the phone a call reaches.")}
     <h4 class="wix-sub">Mount or vehicle</h4>
-    <p class="hint">A horse, a mule, a cart, a carriage, a rowing boat, a car, a motorcycle, a motorboat, a lorry, an armoured car, a tank, a balloon, an aeroplane, a helicopter or a jet. One character takes the reins and others ride along; moving the token at the reins moves the tile and everyone aboard.</p>
+    <p class="hint">A horse, a mule, a cart, a carriage, a rowing boat, a car, a motorcycle, a motorboat, a lorry, an armoured car, a tank, a balloon, an aeroplane, a helicopter, a jet, or on the Future Darkness branch an aerodyne, an armoured AV or a hover bike. One character takes the reins and others ride along; moving the token at the reins moves the tile and everyone aboard; setting that token's elevation flies a flying one up or down.</p>
     ${field("Mount or vehicle", `<input type="checkbox" name="${p}.mount"${mnt.mount ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
     ${field("Kind of mount or vehicle", `<select name="${p}.mountKind" data-fixed>${opt(R.MOUNTS, mnt.mountKind)}</select>`, "A car or lorry from about 1900, a motorcycle or motorboat from about 1910, an armoured car from 1914, a tank from 1916, a balloon from 1783, an aeroplane from 1909, a jet from 1944, a helicopter from 1945, a bicycle from 1885. Aircraft need Pilot. A fleshcrafted steed and a gryphon need Ride 3; only the fae ride a chimerical steed and only the dead a Stygian steed.")}
     ${field("Seats", `<input type="number" name="${p}.seats" value="${esc(mnt.seats)}" min="1" max="40" placeholder="${R.MOUNTS[mnt.mountKind].seats}">`, "With the one at the reins. Blank: as the kind suggests.")}
@@ -2142,6 +2143,8 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
   game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
+  // B6620-B6629: flight: height for anything that flies, set by the one at the controls
+  game.modules.get(MOD).api.flight = setupFlight({describeObj, mountsOf, mapEvent, beastOf, yearNow: () => eraNow().year});
   game.modules.get(MOD).api.caseBoard = setupCase({characterFor});
 });
 Hooks.once("ready", () => {

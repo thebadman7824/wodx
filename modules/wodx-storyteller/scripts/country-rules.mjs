@@ -158,13 +158,18 @@ function dirOf(dx, dy) {
 /*  Going by one's own means                                           */
 /* ------------------------------------------------------------------ */
 
-export const OWN = ["foot", "horse", "coach", "car"];
-/** The ways of one's own open in a year: [{id, label}], fastest first on a country road. */
-export function ownModes(year) {
+export const OWN = ["foot", "horse", "coach", "car", "aerodyne"];
+/** The ways of one's own open in a year: [{id, label}], fastest first on a country road. future: the Future Darkness branch. */
+export function ownModes(year, {future = false} = {}) {
   const y = Number(year) || 0;
-  return OWN.filter(id => y >= Road.MODES[id].from && y <= Road.MODES[id].to)
+  return OWN.filter(id => y >= Road.MODES[id].from && y <= Road.MODES[id].to && (!Road.MODES[id].future || future))
     .map(id => ({id, label: Road.MODES[id].label, speed: Road.MODES[id].speed("road", y)}))
     .sort((a, b) => b.speed - a.speed);
+}
+/** B6628: a square crossed in the air: straight over, nothing on the ground slows it. */
+function airStep(on, kind, diag, mode, year) {
+  const km = CELL * (diag ? 1.414 : 1);
+  return {min: (km / Road.MODES[mode].speed(kind, year)) * 60, kind: on ? kind : "path", km};
 }
 const ON_ROAD_SLOW = [1, 1, 1.1, 1.25, 1.5], MOTORWAY_SLOW = [1, 1, 1, 1.1, 1.2], OFF_ROAD_SLOW = [1, 1.3, 1.3, 1.7, 2.6];
 /** Minutes to cross into a square, and what was underfoot. Infinity when this way cannot go there. */
@@ -172,6 +177,7 @@ function step(g, roads, i, j, diag, mode, year) {
   const ri = roads[i], rj = roads[j], on = ri && rj, code = on ? Math.min(ri, rj) : 0;
   let kind = on ? ROAD_CODES[code] : "path";
   const m = Road.MODES[mode];
+  if ( m.air ) return airStep(on, kind, diag, mode, year);
   let speed = m.speed(kind, year);
   if ( !speed && kind === "motorway" ) { kind = "highway"; speed = m.speed(kind, year); }
   if ( !speed ) return {min: Infinity, kind};
@@ -380,7 +386,7 @@ export function countryTrip(from, to, ctx = {}) {
       modeLabel: id.startsWith("hire:") ? HIRED[id].label : Road.MODES[id].label, road: Object.entries(byRoad).sort((p, q) => q[1] - p[1])[0][0], why, by: "map", legs,
       hired: !!ride, fare: ride ? fareOf(id, ride.km, y, ctx.wage) : 0, stop: ride ? ride.from : null};
   };
-  const ids = [...ownModes(y).map(m => m.id), ...hiredModes(y, {future: !!ctx.future}).map(m => m.id)];
+  const ids = [...ownModes(y, {future: !!ctx.future}).map(m => m.id), ...hiredModes(y, {future: !!ctx.future}).map(m => m.id)];
   const want = WANT[ctx.want] ?? ctx.want;
   if ( want && ids.includes(want) ) { const t = build(want); if ( t ) return t; }
   let best = null;
@@ -390,6 +396,7 @@ export function countryTrip(from, to, ctx = {}) {
     if ( !t ) continue;
     options.push({id, label: t.modeLabel, minutes: t.minutes, fare: t.fare});
     if ( id === "hire:air" && t.km < 300 ) continue;   // nobody flies a short hop unless they ask to
+    if ( Road.MODES[id]?.asked ) continue;             // B6628: an aerodyne only when asked for
     if ( !best || t.minutes < best.minutes ) best = t;
   }
   return best ? {...best, options: options.sort((p, q) => p.minutes - q.minutes)} : null;

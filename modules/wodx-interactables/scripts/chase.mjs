@@ -8,6 +8,7 @@
  * caught, a button that starts a fight through WoDX Combat. The chase lives in a scene flag, so it survives a reload.
  */
 import * as C from "./chase-rules.mjs";
+import {altOf} from "./flight.mjs";
 import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
 import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -76,7 +77,8 @@ export function rideOf(tokDoc) {
     const sf = scene.flags?.[MOD] ?? {};
     // B4968: a vehicle on its own sheet goes by the year it was built
     const year = o?.vehicle && o.built ? o.built : yearNow();
-    const r = C.rideInFight(kind, year, sf[FLAG]?.ground ?? sf.ground ?? "streets");
+    // B6622: its height above the ground (a hover bike in the air flies as an aerodyne)
+    const r = C.rideInFight(kind, year, sf[FLAG]?.ground ?? sf.ground ?? "streets", altOf(t));
     if ( !r ) return null;
     // B4791: the damage it has taken (Structure lost), and whether that wrecked it
     const lost = Math.max(0, Number(isBeast ? o?.hull?.lost : f.hull?.lost) || 0);
@@ -94,7 +96,7 @@ export function rideOf(tokDoc) {
   return null;
 }
 const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat",
-  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon", camel: "Camel"};
+  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon", camel: "Camel", aerodyne: "Aerodyne", assaultav: "Armoured AV", hoverbike: "Hover bike"};
 
 /** B4966: a beast's traits for WoDX Combat's mounted rules, off its own sheet. */
 function beastTraits(actor) {
@@ -115,7 +117,7 @@ const runOf = actor => {
   return C.formRun(run, formOf(actor));
 };
 const racerOf = (tokDoc, year) => ({id: tokDoc.id, uuid: tokDoc.uuid, actorId: tokDoc.actor?.id ?? "", name: tokDoc.name,
-  npc: !tokDoc.actor?.hasPlayerOwner, way: C.wayFromMount(mountOf(tokDoc), year), run: runOf(tokDoc.actor)});
+  npc: !tokDoc.actor?.hasPlayerOwner, way: C.wayFromMount(mountOf(tokDoc), year), run: runOf(tokDoc.actor), alt: altOf(tokDoc)});
 
 const stateOf = (scene = canvas?.scene) => scene?.getFlag?.(MOD, FLAG) ?? null;
 const unsetChase = () => {
@@ -246,6 +248,9 @@ export async function rollTurn(scene, st = stateOf(scene), {dialog = false} = {}
   for ( const x of racers ) {
     const actor = scene.tokens.get(x.id)?.actor ?? game.actors.get(x.actorId);
     if ( !actor ) { rolls[x.id] = {successes: 0, botch: false}; continue; }
+    // B6622: how high each racer is now (a flier low among the rooftops weaves through them)
+    const td = scene.tokens.get(x.id);
+    if ( td ) x.alt = altOf(td);
     const p = C.rollFor(x, st.ground, {night: st.night, year: st.year});
     // B3907: the rider's tack (WoDX Library's road kit)
     let kit = null;
