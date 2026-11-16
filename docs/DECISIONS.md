@@ -364,7 +364,7 @@ Next free block: B6580
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC; gates that failed on main (used B6520-B6523) | tools (pcq, vision, gate), NPC |
+| B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main (used B6520-B6525) | tools (pcq, vision, gate), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
@@ -12225,6 +12225,16 @@ tools/gate.
 - gatefollow plays at 12:20 on the calendar. The lanes' clock stood nine minutes past an hour, and on the hour the watch rests at its post, so the beat step never moved. Its step 5 now waits for the hostage's memory, which is written after the hold is lifted.
 - gate7d waits for the rumour's second write: who started it and which ledger entry. It had read the rumour between the two writes.
 - gatevehicles step 12 and gategadgets step 3 passed on a lane in the order that had failed. They now report what they saw when they fail, so the next failure names its cause.
+
+Reverse: revert the gate edits.
+
+## B6524. A ridden beast does not take fright at its own rider (2026-11-16)
+WoDX NPC. Mounting a beast that has its own sheet makes a map noise. In Auto mode the beast heard it, reacted to the rider as a stranger, and fled to the edge of the map, carrying no one. The beast now leaves out the noises its own rider makes. The same goes for anyone aboard a vehicle or beast that makes a noise: a passenger in a rammed car no longer walks out of it to flee. They still hear everyone else. Found by gatevehicles step 12.
+
+Reverse: drop the ridden test from the hearers in onMapEvent (routines.mjs).
+
+## B6525. Vehicle and mount gates match the tiles they make by title (2026-11-16)
+tools/gate. gatevehicles and gatemounts took the tiles from a batch create in the order they were asked for. Foundry does not promise that order (kit rule 1), so a chimera was sometimes tested as a gryphon, or a train as a snow machine. They now match each tile to its data by title. Two more changes: gatevehicles runs with fight turns not acting on their own, and gatemounts step 12 has 150 seconds for its four looks.
 
 Reverse: revert the gate edits.
 
