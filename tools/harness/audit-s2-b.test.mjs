@@ -42,3 +42,23 @@ test("B6817: a face reads the sheet's picked clan, tribe or Tradition by its nam
   const rolled = FF.rollFeatures("x1", "mage", mage).map(id => FF.FEATURES[id]);
   assert.ok(rolled.some(f => f.group === "Order of Hermes"), "a Hermetic face rolls Hermetic features");
 });
+
+test("B6818: a metis Ratkin's Crinos gets the metis table when the sheet stores the breed's key", async () => {
+  globalThis.FormApplication ??= class {}; globalThis.Application ??= class {};
+  globalThis.foundry ??= {applications: {api: {HandlebarsApplicationMixin: c => c, ApplicationV2: class {}, DialogV2: class {}}}};
+  globalThis.CONFIG ??= {};
+  CONFIG.worldofdarkness = {...(CONFIG.worldofdarkness ?? {}), sheettype: {changingbreed: "Changing Breed", werewolf: "Werewolf", mortal: "Mortal", changeling: "Changeling", wraith: "Wraith"},
+    damageTypes: {bashing: "", lethal: "", aggravated: ""}, woundLevels: {bruised: ""}, wererwolfrageSettings: false};
+  globalThis.game = {...(globalThis.game ?? {}), actors: {get: () => undefined}};
+  const {calculateTotals} = await imp("system/worldofdarkness/module/scripts/totals.js");
+  const mk = breed => ({_id: "x", type: "Changing Breed", items: [], system: {changingbreed: "Ratkin", breed,
+    shapes: {homid: {isactive: false, label: "wod.shapes.homid"}, crinos: {isactive: true, label: "wod.shapes.crinos"}},
+    attributes: Object.fromEntries(["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"].map(a => [a, {value: 2, bonus: 0, total: 2, label: `wod.attributes.${a}`}])),
+    settings: {soak: {bashing: {isrollable: true}, lethal: {isrollable: false}, aggravated: {isrollable: false}}, variant: "general"},
+    soak: {}, health: {damage: {woundpenalty: 0}, bruised: {value: 1}}, initiative: {bonus: 0}, conditions: {}, advantages: {}}});
+  const metis = await calculateTotals(mk("wod.bio.breedname.metis"));
+  assert.equal(metis.system.attributes.strength.total, 5, "Strength +3");
+  assert.equal(metis.system.attributes.stamina.total, 3, "Stamina +1");
+  const homid = await calculateTotals(mk("wod.bio.breedname.homid"));
+  assert.equal(homid.system.attributes.strength.total, 3, "the other breeds keep Strength +1");
+});
