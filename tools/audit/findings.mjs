@@ -62,6 +62,15 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
   const items = readItems(dir), all = items.filter(x => FINDING.has(x.verdict));
   const open = openFindings(items, {...gitCtx(opt("--ref") ?? "origin/main"), rulings});
   console.log(`${all.length - open.length} of ${all.length} findings are closed; ${open.length} open.`);
+  // How each closed finding was closed, so a deferral by the owner's ruling is never counted as a fix
+  const ctx = {...gitCtx(opt("--ref") ?? "origin/main"), rulings}, how = {};
+  const later = new Set(items.filter(x => x.closes && x.test && ctx.inRef(String(x.commit ?? ""))).map(x => x.closes));
+  for ( const x of all ) {
+    const by = later.has(x.id ?? x.file ?? "") ? "re-checked" : closedBy(x, ctx);
+    const k = !by ? "open" : by.startsWith("ruling: deferred") ? "deferred by ruling" : by.startsWith("ruling") ? "kept by ruling" : by.startsWith("fix") ? "fixed" : by;
+    how[k] = (how[k] ?? 0) + 1;
+  }
+  console.log(Object.entries(how).map(([k, v]) => `${k} ${v}`).join(", "));
   if ( open.length && (a.includes("--list") || open.length <= 50) ) for ( const o of open ) console.log(`  ${o.verdict}: ${o.id ?? o.file} ${o.where ?? ""}`.trimEnd());
   process.exit(open.length ? 1 : 0);
 }

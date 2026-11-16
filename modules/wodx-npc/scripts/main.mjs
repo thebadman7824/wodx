@@ -1036,9 +1036,12 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   handled.add(key);
   const cond = chron()?.conditions;
   const stuck = NO_ACTION.find(id => cond?.hasCondition?.(tok.actor, id)) ?? (wounds(tok.actor) >= 7 ? "incapacitated" : null);
-  if ( stuck ) report(combat.id, c.id, {cannotAct: true});
-  if ( stuck ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
-    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(cond?.getCondition?.(stuck)?.name ?? stuck)}).</div></div>`});
+  // B6945: a failed stand-up or a derangement's bout spends this turn's action (WoDX Combat's lostAction flag)
+  const lost = tok.actor.getFlag?.("wodx-combat", "lostAction");
+  const lostWhy = !stuck && C()?.rules?.lostActionNow?.(lost, combat) ? (lost.why ? `in the grip of ${lost.why}` : "failed to stand up") : "";
+  if ( stuck || lostWhy ) report(combat.id, c.id, {cannotAct: true});
+  if ( stuck || lostWhy ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(lostWhy || (cond?.getCondition?.(stuck)?.name ?? stuck))}).</div></div>`});
   // B4966: a beast with someone in its saddle goes where its rider takes it (its dodge and its blows go with the rider's)
   const ridden = IXA()?.riddenBy?.(tok.document);
   if ( ridden?.driver ) {

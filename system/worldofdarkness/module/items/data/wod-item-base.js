@@ -49,7 +49,8 @@ export class WoDItem extends Item {
 
 			const imgUrl = _getImage(data);
 
-			if (imgUrl != "") {
+			// B6944: an item made with its own picture keeps it; only an item with no picture or Foundry's bag gets the type icon
+			if (imgUrl != "" && (!data.img || data.img === "icons/svg/item-bag.svg")) {
 				updates.img = imgUrl;
 			}
 
