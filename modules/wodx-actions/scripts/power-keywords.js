@@ -163,7 +163,7 @@ export const POWER_KEYWORDS = {
     "obedience": [["sway"]], "paws-of-the-newborn-cub": [["banish"]], "reach-the-umbra": [["sideways"],1],
     "shadow-pack": [["summon"]], "share-the-wolfs-skin": [["shape"]], "song-of-the-great-beast": [["summon"]],
     "strength-of-will": [["charge"]], "the-living-wood": [["summon","work"]], "thieving-talons-of-the-magpie": [["banish"]],
-    "totem-gift": [["free"]], "wyld-warp": [["summon"]]
+    "totem-gift": [["summon"]], "wyld-warp": [["summon"]]
   },
   wraith: {
     "argos-weather-eye": [["sense"],1], "argos-enshroud": [["veil","boost"]], "argos-phantom-wings": [["rise"]],

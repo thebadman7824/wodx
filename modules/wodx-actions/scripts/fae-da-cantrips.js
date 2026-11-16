@@ -15,6 +15,9 @@ import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "./mage-da-effects.js
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Fae";
+/** B6837: a silenced tongue: every roll by voice is at difficulty 10 for an hour a success (house figure; the book says it will not work). */
+const HOURS = [1, 2, 3, 4, 5].map(h => [`${h} hour${h === 1 ? "" : "s"}`, h * 3600]);
+const HUSH = who => T("fortune", "Hushed", {ladder: HOURS}, who, {shift: 10, curse: true, tags: ["voice"], once: false});
 const X = (name, dominion, level, trait, fx, spec, page, extra = {}) => ({ name, dominion, level, trait, fx, spec, page, ...extra });
 const DOMS = ["day", "night", "dawn", "dusk"];
 
@@ -134,7 +137,7 @@ const NIGHTL = [
     ["blight-garden", X("Blight Garden", "night", 1, "wits", "A sudden frost kills a garden plot about ten feet square.", K("place", "self"), 140)],
     ["embrace-the-nights-chill", X("Embrace the Night's Chill", "night", 1, "stamina", "The caster stops caring about the cold for the scene: one success with plain clothes, three with none. The skin goes cold to the touch.", S("free"), 140)],
     ["gloom", X("Gloom", "night", 1, "wits", "A patch of darkness the size of a cart, for the scene.", K("light", "self", { dark: true }), 141)],
-    ["hush", X("Hush", "night", 1, "manipulation", "Silences one person or beast: the tongue and throat will not work for a while by the successes.", S("free"), 141)],
+    ["hush", X("Hush", "night", 1, "manipulation", "Silences one person or beast: the tongue and throat will not work for an hour a success.", HUSH("one"), 141)],
     ["mindveil", X("Mindveil", "night", 1, "wits", "Shields the caster's thoughts: each success takes one from a mind-reader's roll, who hears only the surf.", T("ward", "Mindveil", "scene", "self", { against: "mind" }), 141)],
     ["night-sounds", X("Night Sounds", "night", 1, "survival", "The creaks and cries of night grow loud for one person within hail: Perception one higher for the scene.", T("boost", "Night Sounds", "scene", "one", { on: "mental", dice: 1 }), 141)],
     ["owl-eyes", X("Owl Eyes", "night", 1, "perception", "The caster sees in the dark as by day for the scene; the eyes glow pale silver.", T("sight", "Owl Eyes", "scene", "self"), 141)],
@@ -158,7 +161,7 @@ const NIGHTL = [
     ["freeze-death", X("Freeze Death", "night", 3, "stamina", "Halts dying a night a success: bleeding, poison and sickness stop, wound penalties go, but wounds stay open.", T("boost", "Freeze Death", { days: 1 }, "one", { on: "all", dice: 1 }), 143, { does: "freezedeath" })],
     ["midnights-domain", X("Midnight's Domain", "night", 3, "wits", "In the caster's own holding: one change to gravity, motion or cold a roll (walk on walls, freeze the hall), held as long as wished.", K("place", "self"), 143)],
     ["shriek", X("Shriek", "night", 3, "stamina", "A scream at up to three foes in earshot: a lethal level a success each; unsoaked harm deafens for the scene.", H("harm", 1, "lethal", { who: "each" }), 143)],
-    ["silent-brethren", X("Silent Brethren", "night", 3, "manipulation", "As Hush on one target a success, the hours shared among them.", S("free"), 143, { diff: 7 })],
+    ["silent-brethren", X("Silent Brethren", "night", 3, "manipulation", "As Hush on one target a success, the hours shared among them.", HUSH("each"), 143, { diff: 7 })],
     ["true-apathy", X("True Apathy", "night", 3, "charisma", "The target falls out of love with one person and is cool toward them. Three successes; it undoes True Ardor.", T("bind", "True Apathy", "scene", "one"), 144, { diff: "willpower", need: 3 })],
     ["winters-shadows", X("Winter's Shadows", "night", 3, "wits", "As Nightshade over a small keep, about 2,000 square feet; all inside are blind.", K("light", "self", { dark: true }), 144)],
     ["blindness", X("Blindness", "night", 4, "wits", "One target goes blind for good, until magical healing undoes it.", C("hold", "blinded", "Blinded by Night", "scene", "one"), 144, { diff: 7 })],
@@ -253,6 +256,13 @@ const DUSKL = [
 
 export const CANTRIPS = Object.fromEntries([...COMMON, ...DAYL, ...NIGHTL, ...DAWNL, ...DUSKL]);
 export const IDS = Object.keys(CANTRIPS);
+
+/** B6837: cantrips with no table effect, with the page (read): WoDX keeps no cold or drowning track; the Storyteller rolls them. */
+export const CANTRIP_STORY = {
+  "cow-the-bitter-wind": "DA:Fae p. 133: the cold does no harm for the scene; WoDX keeps no exposure track",
+  "embrace-the-nights-chill": "DA:Fae p. 140: the cold does no harm for the scene; WoDX keeps no exposure track",
+  "salmons-breath": "DA:Fae p. 142: breathes water for the scene; WoDX keeps no drowning track"
+};
 
 const slug = s => String(s ?? "").toLowerCase().replace(/[’']/g, "").replace(/\(.*?\)/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const BY = {};

@@ -5,6 +5,7 @@
  * Pure: no Foundry calls.
  */
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {outcomesOf, N} from "./mage-da-effects.js";
 const n = v => Number(v) || 0;
 const turns = k => ({ label: `${k + 1} turn${k ? "s" : ""}`, timed: { kind: "rounds", rounds: k + 1 } });
 const scene = () => ({ label: "the scene", timed: { kind: "scene" } });
@@ -30,13 +31,15 @@ export const HORROR_FX = {
         page: "pp. 101-102", attr: "perception", ability: "empathy", diff: 6, lasts: turns,
         levels: ["Sees up to an hour into the past or future of this place, for one turn.", "Up to a day either way, for two turns.", "Up to a week either way, for three turns.",
             "Up to a month either way, for four turns.", "Up to a year either way, for five turns.", "Up to ten years either way, for six turns."],
-        results(k, s, base) { return [{ key: "know", who: "self", out: { ...base, kind: "note", text: `${s} success${s === 1 ? "" : "es"}: the clearer the vision (${["an hour", "a day", "a week", "a month", "a year", "ten years"][k]} either way)` } }]; }
+        // B6837: the vision is the Know keyword's own result, a question put to the Storyteller
+        results(k, s, base) { return outcomesOf(N("know"), { ...base, timed: turns(k).timed, duration: turns(k).label }, s, `the clearer the vision (${["an hour", "a day", "a week", "a month", "a year", "ten years"][k]} either way)`); }
     },
     inhabit: {
         page: "pp. 103-104", attr: "", ability: "", diff: 6, lasts: scene,
         levels: ["Enters a small hand-held thing such as a phone or a pistol.", "Anything up to two feet across, such as a microwave or computer.", "Anything about human size, from a motorbike to a bookcase.",
             "Anything up to a large car or a generator.", "A tank or a small house.", "A mansion or an airliner."],
-        results(k, s, base) { return [{ key: "possess", who: "self", out: { ...base, kind: "note", text: `Inside and working a thing up to ${["hand size", "two feet across", "human size", "car size", "house size", "airliner size"][k]}; another spook takes it only with a resisted Willpower roll` } }]; }
+        // B6837: the thing taken is the Possess keyword's own result on it, for the scene
+        results(k, s, base) { return outcomesOf({ kw: "possess", kind: "st", who: "one" }, { ...base, timed: { kind: "scene" }, duration: "the scene" }, s, `inside and working a thing up to ${["hand size", "two feet across", "human size", "car size", "house size", "airliner size"][k]}; another spook takes it only with a resisted Willpower roll`); }
     },
     witchsnimbus: {
         page: "pp. 104-105", attr: "dexterity", ability: "athletics", diff: 6, lasts: scene,

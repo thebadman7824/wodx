@@ -28,7 +28,8 @@ export const MV = () => ({kw: "move", kind: "move", who: "self"});
 /** B5791: any keyword's own outcome (effects-rules), with its flavour: K("weather", "self", {weather: "fog"}). */
 export const K = (kw, who = "self", ctx = {}) => ({kw, kind: "kw", who, ctx});
 /** B5791: points into a pool (Sekhem, Willpower): per a success, or per once when fixed. */
-export const P = (pool, per = 1, who = "self", o = {}) => ({kw: "charge", kind: "pool", pool, per, who, fixed: !!o.fixed});
+/** B6837: steps, points by successes ([1, 1, 2]: one point, two on three successes); past its end the last step holds. */
+export const P = (pool, per = 1, who = "self", o = {}) => ({kw: "charge", kind: "pool", pool, per, who, fixed: !!o.fixed, ...(o.steps ? {steps: o.steps} : {})});
 export const A = (kw, act, o = {}) => ({kw, kind: "act", act, who: o.who ?? "one", lasts: o.lasts ?? "scene", ...o});
 export const HL = (per, o = {}) => ({kw: "mend", kind: "heal", per, aggravated: !!o.aggravated, who: o.who ?? "one", ask: !!o.ask});
 
@@ -48,19 +49,19 @@ export const DA_EFFECTS = {
   dwarfhoard: N(), unsleeping: T("summon", "Unsleeping Swords", "reach", "self"), emptyroads: T("sway", "Curse of Empty and Endless Roads", "reach"),
   // Ahl-i-Batin (Grimoire)
   "g-dhikr": N(), "g-closetdance": MV(), "g-tearsallah": H("harm", 1, "lethal", {also: {per: 1, type: "bashing"}}),
-  "g-summoning": S("summon"), "g-binding": S("bind"), "g-commanding": S(),
+  "g-summoning": S("summon"), "g-binding": S("bind"), "g-commanding": S("sway"),
   // Messianic Voices (Grimoire)
   "g-comeforsouls": T("fear", "Terror of the Souls", {turns: 20}, "each"), "g-plowshares": T("sway", "Swords into Plowshares", "scene", "each"), "g-revokeadam": T("sway", "Speech taken", "reach"),
   "g-72names": T("summon", "Golem of the 72 Names", "reach", "self"),
   // Old Faith (Grimoire)
   "g-glamour": T("ward", "Bewitching Glamour", "night", "self"), "g-bitterfruit": H("harm", 1, "lethal", {soak: false, ask: true}), "g-circe": T("shape", "Circe's Enchantment", "reach"), "g-dowsing": N(),
-  "g-slumber": S(), "g-eyehunter": T("sight", "Eye of the Hunter", "reach", "self"), "g-faeriegate": S("sideways"), "g-giantsdance": T("summon", "Stone giant", "scene", "self"),
+  "g-slumber": C("hold", "incapacitated", "Eternal Slumber", {ladder: [["until the waking condition", 3155760000]]}), "g-eyehunter": T("sight", "Eye of the Hunter", "reach", "self"), "g-faeriegate": S("sideways"), "g-giantsdance": T("summon", "Stone giant", "scene", "self"),
   "g-healsight-s": N(), "g-healsight-w": N(), "g-hollowhill": S(), "g-magicmirror": N(), "g-merlinsride": S("move"), "g-bounty": S(),
   "g-oracularhead": S("know"), "g-stormbrew": S("weather"), "g-straysod": T("fortune", "Led astray", "reach", "each"), "g-witchwind": T("weather", "Witch's Wind", "scene", "self"),
   "g-withering": T("harm", "Withering Curse", {days: 1}, "one"), "g-flyingoint": T("sideways", "Flying Ointment", "night", "self"), "g-fourthieves": T("ward", "Four Thieves Vinegar", {seconds: 14400}, "self"), "g-lovephilter": T("sway", "Love Philter", "scene"),
   // Spirit-Talkers (Grimoire)
-  "g-animalspeech": N(), "g-animalorders": T("sway", "Animal orders", "scene", "each"), "g-banishwar": T("sway", "Spirits of War banished", "scene", "each"), "g-bindspirit": S("bind"), "g-curseshift": S(), "g-deadwords": N(),
-  "g-denycharm": T("ward", "Deny the Charm of Death", "reach", "self"), "g-exorcism-w": T("banish", "Exorcised", "scene"), "g-exorcism-c": T("banish", "Exorcised", "scene"), "g-horsebringer": S(),
+  "g-animalspeech": N(), "g-animalorders": T("sway", "Animal orders", "scene", "each"), "g-banishwar": T("sway", "Spirits of War banished", "scene", "each"), "g-bindspirit": S("bind"), "g-curseshift": S("banish"), "g-deadwords": N(),
+  "g-denycharm": T("ward", "Deny the Charm of Death", "reach", "self"), "g-exorcism-w": T("banish", "Exorcised", "scene"), "g-exorcism-c": T("banish", "Exorcised", "scene"), "g-horsebringer": S("summon"),
   "g-ironglare": T("ward", "Iron Glare", "scene", "self"), "g-summons": T("sway", "Irresistible Summons", {days: 1}), "g-lordsbane": T("fortune", "Lords' Bane", "scene"),
   "g-otherskin": T("shape", "Otherskin", "night", "self"), "g-antics": T("hasten", "Sacred Antics", {turns: 2}, "self"),
   "g-selfpossess": T("ward", "Self Possession", "scene", "self"), "g-shelterwinds": T("ward", "Sheltering Winds", "scene", "self"),
@@ -72,7 +73,7 @@ export const DA_EFFECTS = {
   "g-berserk": T("hasten", "Berserkgangr", {turns: 1}, "one"), "g-gungnir": T("ward", "Borrowing Gungnir", "scene", "self"), "g-bridgewill": T("move", "Bridge of Will", "scene", "each"),
   "g-cunningsight": N(), "g-firekiller": S("light"), "g-findinghere": N(), "g-tracking": N(), "g-frostbite": T("hold", "Frostbite", "scene"), "g-fylgja": T("ward", "Fylgja", "reach", "self"),
   "g-lovemagic": T("sway", "Love Magic", "reach"), "g-mimir": N(), "g-hlidskialf": N(), "g-scornpole": T("fortune", "Scorn Pole", {days: 1}, "one", {curse: true}),
-  "g-skald": T("fortune", "Skald's Curse or Blessing", "reach", "each"), "g-skogarmathur": T("sway", "Outlawed", {weeks: 1}, "one"), "g-snowglide": T("hasten", "Snow Glide", "scene", "self"), "g-summonpack": T("summon", "The Pack", "scene", "self"), "g-switch": S(),
+  "g-skald": T("fortune", "Skald's Curse or Blessing", "reach", "each"), "g-skogarmathur": T("sway", "Outlawed", {weeks: 1}, "one"), "g-snowglide": T("hasten", "Snow Glide", "scene", "self"), "g-summonpack": T("summon", "The Pack", "scene", "self"), "g-switch": S("move"),
   "g-wavecalmer": T("weather", "Wave Calmer", {seconds: 3600}, "self")
 };
 
@@ -129,7 +130,7 @@ export function outcomesOf(spec, base, successes, text = "") {
       return [{key: spec.kw, who: spec.who, out: {...base, ...r.out, label: base.label ?? r.out.label, source: base.source ?? r.out.source, text: `${s} success${s === 1 ? "" : "es"}: ${r.out.text}`}}];
     }
     case "pool": {
-      const pts = spec.fixed ? spec.per : spec.per * s;
+      const pts = spec.steps ? spec.steps[Math.min(s, spec.steps.length) - 1] : spec.fixed ? spec.per : spec.per * s;
       return [{key: "charge", who: spec.who, out: {...base, kind: "pool", pool: spec.pool, points: pts, text: `${pts} ${spec.pool} point${pts === 1 ? "" : "s"}`}}];
     }
     case "harm": {
@@ -207,6 +208,12 @@ export function timedNumbers(spec = {}, s = 1) {
   if ( k === "rise" ) return {feet: n(spec.feet) || 5 * x};
   return {};
 }
+
+/** B6837: rotes with no table effect in the book, with the page (read): WoDX keeps no age and no room size. */
+export const DA_STORY = {
+  incorruptible: "Mage: the Dark Ages p. 124: years without ageing; WoDX keeps no age",
+  "g-hollowhill": "DA Grimoire p. 72: the inside of a hill grows; WoDX keeps no room size"
+};
 
 /** B6834: a note spec on these keywords gives the keyword's own result. */
 const LEARN = new Set(["know", "sense", "speak"]);

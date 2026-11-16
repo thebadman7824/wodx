@@ -115,12 +115,12 @@ for ( const s of M20.SPHERES ) for ( let l = 1; l <= 5; l++ )
 /* -- Mage: Dark Ages rotes (mage-da.js) */
 for ( const r of MD.ROTES ) {
   const s = DAE.DA_EFFECTS[r.id];
-  add("Mage (Dark Ages)", r.f, r.name, { src: [r, s], status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `p. ${r.page}`, how: s ? `rote effect spec (${s.kind})` : "rote text only" });
+  add("Mage (Dark Ages)", r.f, r.name, { src: [r, s], status: applyingSpec(s) ? "applies" : "card", story: applyingSpec(s) ? undefined : DAE.DA_STORY?.[r.id], kw: s?.kw ? [s.kw] : [], page: `p. ${r.page}`, how: s ? `rote effect spec (${s.kind})` : "rote text only" });
 }
 /* -- Changeling: C20 Arts (cantrip roll by Art and level; no power names, no effect text) */
 for ( const [id, c] of Object.entries(CA.CANTRIPS) ) {
   const st = c.dice || (applyingSpec(c.spec) && !INFO.has(c.spec.kw) && E.KEYWORDS[c.spec.kw]?.tier !== "st") ? "applies" : "card";
-  add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { src: c, status: st, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
+  add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { src: c, status: st, story: st === "card" ? CA.ART_STORY?.[id] : undefined, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
     how: `named in Cast a cantrip: card (effect, duration, type)${st === "applies" ? `; effects card ${c.dice ? "damage dice" : c.spec.kind}` : ""}` });
 }
 /* -- Changeling: Dark Ages Fae (cantrips by Dominion and level; B6550: every named cantrip of the four Dominions) */
@@ -131,7 +131,7 @@ for ( const [id, d] of Object.entries(F.DOMINIONS) ) for ( let l = 1; l <= 5; l+
 const DC = await import(A("scripts/fae-da-cantrips.js"));
 for ( const [id, c] of Object.entries(DC.CANTRIPS) ) {
   const st = c.does || c.imbue || anyApplying(c.spec) ? "applies" : "card";
-  add("Fae (Dark Ages)", `Dominion of ${F.DOMINIONS[c.dominion].label}`, `${"•".repeat(c.level)} ${c.name}`, { src: c.does || c.imbue ? { does: c.does ?? c.imbue } : c.spec, status: st, kw: DC.keywordsOf(c), page: `DA:Fae p. ${c.page}`,
+  add("Fae (Dark Ages)", `Dominion of ${F.DOMINIONS[c.dominion].label}`, `${"•".repeat(c.level)} ${c.name}`, { src: c.does || c.imbue ? { does: c.does ?? c.imbue } : c.spec, status: st, story: st === "card" ? DC.CANTRIP_STORY?.[id] : undefined, kw: DC.keywordsOf(c), page: `DA:Fae p. ${c.page}`,
     how: `book cantrip: its difficulty, needed successes and costs in Cast a cantrip${c.does ? `; ${c.does} (fae-da.js presetDoes)` : c.imbue ? "; makes a Treasure holding a known cantrip (treasures.js)" : st === "applies" ? "; effects card" : "; the card says what it does"}` });
 }
 /* -- Fae sprites: the Charms of Dark Ages: Fae p. 97 (charms.js) */
@@ -202,7 +202,7 @@ for ( const p of KA.POWERS ) {
   // B5161: a power that plays itself (Strengthening the Demon) has no effects spec: it changes the Demon Chi directly
   if ( p.stoke ) { add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: "applies", kw: ["boost"], page: `${p.book} p. ${p.p}`,
     how: "Spend Chi: the roll raises Demon Chi for a turn a success, then the stoked points fade and the Hun roll follows" }); continue; }
-  add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec.kw],
+  add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec].flat().map(x => x.kw),
     page: `KotE p. ${p.p}`, how: "Spend Chi: the named power fills the Chi, pool and difficulty, and the effects card carries the result" });
 }
 /* -- Book rituals and rites: the caster's own window pulls them (B3753) */

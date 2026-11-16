@@ -662,6 +662,15 @@ export const SPECS = {
   "page": "DA:W p. 122",
   "note": "Must know the spirit's name. One command, then it departs. Or 2 Gnosis calls every Gaian spirit within a mile. Abusers may be refused."
  },
+ "werewolf-dark-ages|totem-gift": {
+  "what": "spirit",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "none"},
+  "page": "DA:W p. 115",
+  "note": "B6837: the tribal totem, or a servant it sends, acts by its nature on one general wish; one success a distraction, five the totem itself attacking a foe."
+ },
  "werewolf-dark-ages|faerie-aid": {
   "what": "faerie",
   "profile": "called",
@@ -998,6 +1007,15 @@ export const SPECS = {
   },
   "page": "DA Mage p. 135",
   "note": "Battle slain only. One Quintessence per body, up to the successes. Extra successes and Quintessence on one body raise traits. Raised to fight."
+ },
+ "mage-dark-ages|horse-bringer": {
+  "what": "animal",
+  "profile": "servant",
+  "count": {"by": "successes"},
+  "lasts": {"kind": "hours", "n": 24},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DA Grimoire p. 86",
+  "note": "B6837: one wild horse (or other beast) a success comes within a day and obeys; rare beasts obey a day a success."
  },
  "mage-dark-ages|solomonic-summoning": {
   "what": "spirit",
@@ -1559,6 +1577,15 @@ export const SPECS = {
   "persist": true,
   "page": "MtR p. 122",
   "note": "Cast over a dying person, who passes in peace while their shadow-soul stays there as a strong spirit harming the living. Necromancy binds it."
+ },
+ "kuei-jin-kote|cleave-the-demon": {
+  "what": "spirit",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1, "max": 1},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct"},
+  "page": "KotE p. 120",
+  "note": "B6837: the soul that loses the Hun-P'o contest leaves the body as a Yin- or Yang-spirit in the Mirror Lands, within 500 feet, with the vampire's Chi and Willpower (Hun as Gnosis or P'o as Rage); at zero Chi it goes to Yomi and the body falls into torpor."
  },
  "kuei-jin-kote|spirit-caul": {
   "what": "spirit",

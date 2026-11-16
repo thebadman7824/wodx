@@ -219,3 +219,27 @@ test("B6836: a Storyteller's spec that names a working keyword gives that keywor
   const [f] = D.outcomesOf({kw: "free", kind: "st"}, {label: "Gate Free"}, 2, "anything");
   assert.equal(f.st, true);
 });
+
+test("B6837: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and Totem Gift that only told now apply, or say why not", async () => {
+  const M = await imp("modules/wodx-actions/scripts/mage-da-rules.js");
+  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const rote = id => D.daOutcomes(M.ROTES.find(r => r.id === id), 3)[0];
+  assert.equal(rote("g-slumber").out.condition, "incapacitated");
+  assert.equal(rote("g-horsebringer").out.kind, "summon");
+  for ( const id of Object.keys(D.DA_STORY) ) assert.ok(M.ROTES.some(r => r.id === id) && /p\. \d+/.test(D.DA_STORY[id]), id);
+  const DC = await imp("modules/wodx-actions/scripts/fae-da-cantrips.js");
+  const [h] = DC.presetResults("hush", 2);
+  assert.deepEqual([h.out.kind, h.out.tags, h.out.once, h.out.duration], ["timed", ["voice"], false, "2 hours"]);
+  for ( const id of Object.keys(DC.CANTRIP_STORY) ) assert.ok(DC.CANTRIPS[id], id);
+  const KA = await imp("modules/wodx-actions/scripts/kote-arts.js");
+  const art = name => KA.artResults(KA.POWERS.find(p => p.name === name).id, 3);
+  assert.deepEqual(art("Master Flow").map(r => [r.out.pool, r.out.points]), [["yangchi", 3], ["yinchi", -3]]);
+  assert.deepEqual(art("Meditation of the still blood").map(r => [r.out.pool, r.out.points]), [["willpower", 2]]);
+  assert.equal(art("Semblance of the Ebon Dragon")[0].out.kind, "cross");
+  const OH = await imp("modules/wodx-actions/scripts/orpheus-horrors.js");
+  assert.equal(OH.horrorResults("inhabit", 3, 2, {name: "Inhabit"})[0].out.kind, "timed");
+  const PK = await imp("modules/wodx-actions/scripts/power-keywords.js");
+  assert.deepEqual(PK.keywordsOf("gift", "totem-gift").keywords, ["summon"]);
+  const SS = await imp("modules/wodx-actions/scripts/summon-specs.js");
+  for ( const k of ["werewolf-dark-ages|totem-gift", "mage-dark-ages|horse-bringer", "kuei-jin-kote|cleave-the-demon"] ) assert.ok(SS.SPECS[k], k);
+});
