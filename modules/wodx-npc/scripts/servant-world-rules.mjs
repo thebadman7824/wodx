@@ -1,12 +1,13 @@
 /**
  * WoDX NPC (Servants and Bonds Desk, B5120-B5127): the pure rules for servants that the world makes by itself.
  *   Fomori: one to three of the powers WoDX Actions plays (W20 pp. 430-439), put on the sheet as Power items.
- *   Masters of the Wyrm: a Black Spiral hive or a Wyrm cult, or from 1900 Pentex.
+ *   Masters of the Wyrm: a Black Spiral hive or a Wyrm cult, or from 1916 Pentex (antagonist table, B6697).
  *   Mummy cults (Mummy: The Resurrection): at the mummy's death the cult guards the body; neglect thins the cult.
  *   NPC keepers (desk x4): what to recruit, from whom, with an undo record.
  * Nothing here copies book text.
  */
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {PENTEX_FROM} from "../../wodx-chronicle/data/antagonists.mjs";
 const num = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
 export const PAGE = "W20 pp. 430-439";
@@ -32,10 +33,10 @@ export function powerItems(powers = []) {
 }
 /**
  * Who a new fomor serves: candidates [{id, kind: "spiral" | "cult" | "pentex", sceneId, name}]. The one on the fomor's own
- * scene first, then any; Pentex only from 1900. Null when none fits.
+ * scene first, then any; Pentex only from 1916. Null when none fits.
  */
 export function wyrmMaster(cands = [], {year = 1197, sceneId = null} = {}) {
-  const ok = cands.filter(c => c?.id && (c.kind !== "pentex" || num(year) >= 1900));
+  const ok = cands.filter(c => c?.id && (c.kind !== "pentex" || num(year) >= PENTEX_FROM));
   const rank = c => (c.sceneId && c.sceneId === sceneId ? 0 : 10) + ({spiral: 0, cult: 1, pentex: 2}[c.kind] ?? 3);
   return ok.sort((a, b) => rank(a) - rank(b))[0] ?? null;
 }

@@ -4,6 +4,7 @@ import {currentYear} from "./eras.mjs";
 import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
+import * as AR from "./antagonist-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
 import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";
@@ -40,6 +41,11 @@ const sigOf = a => foundry.utils.deepClone(a?.flags?.[MODULE_ID]?.[FLAG] ?? {}) 
 const clanNames = a => { const s = a?.system ?? {}; return [a?.flags?.["wodx-actions"]?.bloodline, s.clan === "custom" ? s.custom?.clan : s.clan, s.custom?.clan].filter(Boolean); };
 
 export function registerSignatureSettings() {
+  // Antagonist desk G1 (B6670): the antagonist groups' own powers run on NPC sheets; this lets a player sheet use them
+  game.settings.register(MODULE_ID, "antagonistPlayers", {
+    name: "Antagonists playable by players", hint: "The Nephandi, Baali, Black Spiral Dancers, Earthbound and Bane mummies work their Fall ledger only from NPC sheets. On: a player's sheet of one of them can corrupt NPCs too, each move through the approval queue. Off by default.",
+    scope: "world", config: true, type: Boolean, default: false
+  });
   game.settings.register(MODULE_ID, "sigVampire", {
     name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts, the Giovanni's bound dead, the bloodlines and Laibon legacies, ghouls and revenant families. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
@@ -334,25 +340,65 @@ function onActorUpdate(actor, change) {
 
 export const corruption = npc => foundry.utils.deepClone(toActor(npc)?.flags?.[MODULE_ID]?.[CFLAG] ?? {});
 
-/** Apply a move to a victim's track (Storyteller's client). */
-async function applyCorrupt({npc: npcId, by, byName, delta, why, vice = ""}) {
+/** B6698: the Fall ledger a corrupter works (Setite, Nephandi, Wyrm, infernal, Apophis, Defiler), from its row. */
+/** The groups whose powers only NPCs use unless the Storyteller allows players (G1, B6670). */
+export const NPC_ONLY = new Set(["baali", "bsd", "nephandi", "earthbound", "banemummy"]);
+const mayCorrupt = a => {
+  const r = rowWith(a, "corruption");
+  if ( !r ) return false;
+  if ( !a.hasPlayerOwner || !NPC_ONLY.has(r.key) ) return true;
+  try { return !!game.settings.get(MODULE_ID, "antagonistPlayers"); } catch (e) { return false; }
+};
+export function fallKindOf(actor) {
+  const r = rowWith(actor, "corruption");
+  if ( !r ) return null;
+  return r.fall ?? (r.key === "defilers" ? "lammasu" : "setite");
+}
+const T_FALL_BIND = `${MODULE_ID}.fallBind`;
+/** Apply a move to a victim's track (Storyteller's client). Crossing 3 and 5 does something in play (B6698). */
+async function applyCorrupt({npc: npcId, by, byName, delta, why, vice = "", kind = "setite"}) {
   const npc = toActor(npcId);
   if ( !npc ) return null;
   const all = corruption(npc), before = foundry.utils.deepClone(all);
-  const rec = all[by] ?? S.newCorruption({by, byName, vice, now: now()});
+  const rec = all[by] ?? {...S.newCorruption({by, byName, vice, now: now()}), kind};
+  if ( !rec.kind ) rec.kind = kind;
   const r = S.corrupt(rec, delta, why, now());
   all[by] = r.rec;
+  const steps = AR.thresholds(r.rec.kind, r.crossed);
+  if ( steps.some(t => t.compromised) ) all[by] = {...all[by], compromised: true};
   await npc.update({[`flags.${MODULE_ID}.${CFLAG}`]: all});
-  const marks = r.crossed.map(t => t === 3 ? "They will now do small wrongs for the Setite." : "They now belong to the Setite: take them as a retainer or ghoul, or use them as leverage.").join(" ");
-  await card(`${npc.name}: Corruption ${r.after} of ${S.CORRUPTION_MAX}`, `<p>${esc(byName)}: ${esc(why)}. ${esc(S.stepText(r.after))}.${marks ? ` <b>${esc(marks)}</b>` : ""}</p>${rec.vice ? "" : `<p class="vta-note">No vice named yet: set one with api.signatures.setVice.</p>`}`,
+  const fall = AR.FALLS[r.rec.kind] ?? AR.FALLS.setite;
+  const marks = steps.map(t => `${npc.name} ${t.words}.`).join(" ");
+  const hard = AR.resistShift(r.rec);
+  await card(`${npc.name}: ${fall.label} ${r.after} of ${S.CORRUPTION_MAX}`, `<p>${esc(byName)}: ${esc(why)}. ${esc(S.stepText(r.after))}.${marks ? ` <b>${esc(marks)}</b>` : ""}</p>`
+    + (hard ? `<p class="vta-note">${esc(npc.name)} resists ${esc(byName)} at +${hard} difficulty from now on.</p>` : "")
+    + `${rec.vice || r.rec.kind !== "setite" ? "" : `<p class="vta-note">No vice named yet: set one with api.signatures.setVice.</p>`}`,
     {undo: {uuid: npc.uuid, path: CFLAG, before}});
+  // What the steps do: the victim warms to the corrupter, and at the last step falls into the group's bond
+  const master = toActor(by);
+  for ( const t of steps ) {
+    if ( t.attitude && master ) { try { await actorsApi("wodx-npc")?.attitude?.propose?.(npc, master, {delta: t.attitude, why: `${fall.label}: step ${t.step}`}); } catch (e) { console.warn("WoDX | fall attitude", e); } }
+    if ( t.bind && master ) await propose({type: T_FALL_BIND, key: `fallbind:${npc.id}:${by}`, title: `${npc.name} falls to ${byName}`, detail: `${npc.name} ${t.words}.`, data: {npc: npc.id, by, kind: t.bind, fall: r.rec.kind}});
+  }
+  Hooks.callAll("wodxFall", {npc: npc.id, by, kind: r.rec.kind, before: r.before, after: r.after, crossed: r.crossed});
   return r.rec;
 }
+/** The last step: the victim is bound to the corrupter as the group's servant kind (a cultist, a fomor, a pact). */
+async function applyFallBind({npc: npcId, by, kind, fall}) {
+  const npc = toActor(npcId), master = toActor(by);
+  if ( !npc || !master ) return null;
+  const sv = actorsApi("wodx-npc")?.servants;
+  if ( !sv?.bind ) { ui.notifications?.warn?.("WoDX NPC is needed to bind the fallen."); return null; }
+  const out = await sv.bind(npc, master, kind, {step: 3, data: {fall}});
+  // A fomor takes real powers: one to three of the ones WoDX Actions plays (W20 pdf 430-439)
+  if ( kind === "fomor" ) { try { await sv.fomorise?.(npc, {master}); } catch (e) { console.warn("WoDX | fall fomor", e); } }
+  return out;
+}
 /** Move a track from any client: the Storyteller applies it at once, a player's move goes to the queue. */
-export async function work(npc, setite, delta, why) {
-  const n = toActor(npc), s = toActor(setite);
+export async function work(npc, corrupter, delta, why) {
+  const n = toActor(npc), s = toActor(corrupter);
   if ( !n || !s || !delta ) return null;
-  const data = {npc: n.id, by: s.id, byName: s.name, delta, why};
+  const data = {npc: n.id, by: s.id, byName: s.name, delta, why, kind: fallKindOf(s) ?? "setite"};
   if ( game.user.isGM ) return applyCorrupt(data);
   return propose({type: T_CORRUPT, key: `corrupt:${n.id}:${s.id}:${Math.floor(now())}`, title: `${s.name} works on ${n.name}`, detail: why, data});
 }
@@ -368,7 +414,7 @@ function onSocial(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
   if ( a?.isOwner && on() && isFeature(a, "vice") ) ravnosChance(a, p.act, npc);
   if ( a?.isOwner && npc && on() && rowsOf(a).some(r => r.feature === "secrets" || r.face) ) trueFace(a, npc);
-  if ( !a || !npc || !isFeature(a, "corruption") ) return;
+  if ( !a || !npc || !isFeature(a, "corruption") || !mayCorrupt(a) ) return;
   const d = S.stepFromSocial(p.act, p.result);
   if ( d ) work(npc, a, d, `${p.act}, ${p.result}`);
 }
@@ -386,7 +432,7 @@ function onTrade(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
   if ( a?.isOwner && on() && isFeature(a, "vice") ) ravnosChance(a, p.mode, npc);
   if ( a?.isOwner && npc && on() && isFeature(a, "secrets") && S.isSecretPage(p.give) ) secretSold(a, npc, p.give);
-  if ( !a || !npc || !isFeature(a, "corruption") ) return;
+  if ( !a || !npc || !isFeature(a, "corruption") || !mayCorrupt(a) ) return;
   const rec = corruption(npc)[a.id];
   const good = goodNamed(p.give);
   const d = S.stepFromTrade(rec, {mode: p.mode, give: good, want: p.want});
@@ -1275,7 +1321,8 @@ export async function open(actorOrId) {
 
 export function registerSignatureHooks() {
   registerHandler(T_AWARD, {label: "A feature's point (Willpower, Rage, Glamour, Renown, Chi, a boon)", approve: e => runSnap(e.data ?? {})});
-  registerHandler(T_CORRUPT, {label: "A Setite works on a victim (Corruption ledger)", approve: e => applyCorrupt(e.data ?? {})});
+  registerHandler(T_CORRUPT, {label: "A corrupter works on a victim (the Fall ledger)", approve: e => applyCorrupt(e.data ?? {})});
+  registerHandler(T_FALL_BIND, {label: "A victim falls to the one who corrupted them", approve: e => applyFallBind(e.data ?? {})});
   registerHandler(T_CAUSE, {label: "A Brujah's Cause of their own", approve: async e => {
     const a = game.actors.get(e.data?.actor), sig = sigOf(a);
     if ( a && sig.cause ) { sig.cause.approved = true; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); }

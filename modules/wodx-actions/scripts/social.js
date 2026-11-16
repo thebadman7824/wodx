@@ -3,6 +3,10 @@ import { curseDice } from "./garou-rules.js";
 import { socialDiff, socialDice } from "./after-costs.js";
 import * as TH from "./trait-hooks.js";
 import * as TRD from "./trade.js";
+import { resistShift } from "../../wodx-chronicle/scripts/antagonist-rules.mjs";
+
+/** B6698: the Fall ledger the speaker holds on this NPC makes the NPC's resisting roll harder, one a step. */
+const fallShift = (npc, actor) => { try { return resistShift(npc?.flags?.["wodx-chronicle"]?.corruption?.[actor?.id]); } catch (e) { return 0; } };
 
 /**
  * WoDX Actions 3.20.0: "With this person". A player picks one NPC (the target, the token given, or the nearest in
@@ -146,7 +150,9 @@ export function build(ctx) {
         // Merits and flaws on both sides: the speaker's (read against the NPC's kind), and the NPC's Weak-Willed on its resisting roll
         const tags = [...TH.tagsFor(`social-${act.key}`, pick.attr, pool.abilityKey), ...(at && !at.met ? ["first-meeting"] : [])];
         const tm = TH.traitMods(actor, tags, { target: npc });
-        const nm = TH.traitMods(npc, ["resist-social"], { target: actor });
+        const nm0 = TH.traitMods(npc, ["resist-social"], { target: actor });
+        const fall = fallShift(npc, actor);
+        const nm = fall ? { ...nm0, diff: (Number(nm0.diff) || 0) + fall, parts: [...(nm0.parts ?? []), `corrupted by ${actor.name} +${fall}`] } : nm0;
         // B5754: the Curse (DA:W p. 91; W20 p. 263): a Garou's Rage over a human's Willpower costs Social dice with them
         const curse = kindOf?.(actor) === "lupine" && ["mortal", "hunter", "ghoul"].includes(kindOf?.(npc))
             ? curseDice(Number(actor.system?.advantages?.rage?.temporary) || 0, Number(npc.system?.advantages?.willpower?.permanent) || 3) : 0;

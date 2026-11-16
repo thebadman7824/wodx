@@ -21,7 +21,7 @@ export const BLOODLINES = [
   {key:  "koldun", label:  "Old Clan Tzimisce", match:  ["old clan", "koldun", "koldunic"], feature:  "line", title:  "Earth, wind, fire and water", page:  "Koldunic sorcery book pdf 2; Lore of the Clans pdf 6", text:  "No Vicissitude; Koldunic sorcery works the elements of the domain. Native soil matters as for any Tzimisce, but the old blood holds out one night longer before pools halve (house reading).", also:  ["soil"], grace:  1, house:  true},
   {key:  "vizier", label:  "Assamite viziers", match:  ["vizier", "viziers"], feature:  "line", title:  "The vizier's obsession", page:  "V20 Dark Ages pdf 44 (p. 43); Lore of the Clans pdf 14-15", text:  "A vizier is obsessed with their best mental or creative field. It works as a Muse: a work, a study or a place of learning whose Obsession rises a point a week away from it.", also:  ["muse"]},
   {key:  "assamitesorcerer", label:  "Assamite sorcerers", match:  ["assamite sorcerer", "assamite sorcerers"], feature:  "line", title:  "Contracts of the mind", page:  "Lore of the Clans pdf 14-15", text:  "Sorcerers keep the clan's contracts (as the warrior caste) and their rituals as long tasks.", also:  ["contracts"]},
-  {key:  "baali", label:  "Baali", match:  ["baali"], feature:  "line", title:  "The pact", page:  "V20 pdf 403 (p. 395)", text:  "Objects of faith burn a Baali to look at or touch. The pact with the patron is kept as contracts: each promise has a payment due on the clock, and missing one lowers the patron's favour. From 1999 a Baali can meet the Earthbound and the Fallen through the crossover referee.", also:  ["contracts"]},
+  {key:  "baali", label:  "Baali", match:  ["baali"], feature:  "line", also: ["corruption"], fall: "infernal", title:  "The pact", page:  "V20 pdf 403 (p. 395)", text:  "Objects of faith burn a Baali to look at or touch. The pact with the patron is kept as contracts: each promise has a payment due on the clock, and missing one lowers the patron's favour. From 1999 a Baali can meet the Earthbound and the Fallen through the crossover referee.", also:  ["contracts"]},
   {key:  "daughters", label:  "Daughters of Cacophony", match:  ["daughters of cacophony", "daughter of cacophony", "cacophony"], feature:  "line", title:  "The endless music", page:  "V20 pdf 406 (p. 398)", text:  "They hear music all the time: Perception rolls are one harder. A song can carry Melpominee over a crowd of passers-by.", effects:  [{tags:  ["perception"], difficulty:  1}]},
   {key:  "gargoyle", label:  "Gargoyles", match:  ["gargoyle", "gargoyles"], feature:  "line", title:  "Stone and the master's voice", page:  "V20 pdf 409 (p. 401)", text:  "Appearance 0, so a mortal who sees one sees a monster: a breach. Highly open to mind control: rolls to resist Dominate are two harder. They fly and roost on high places.", face:  true, faceText:  "saw a Gargoyle", effects:  [{tags:  ["resist-dominate"], difficulty:  2}]},
   {key:  "kiasyd", label:  "Kiasyd", match:  ["kiasyd"], feature:  "line", title:  "Cold iron", page:  "V20 pdf 413 (p. 405)", text:  "Touching iron calls for a frenzy roll, and cold iron does aggravated harm. They hoard knowledge: books from the Library are their trade goods, and they meet changelings easily."},
@@ -430,7 +430,7 @@ export const TRIBES = [
     text: "For stories in Australia before the War of Tears ended the tribe (1890 here). A Garou who meets a Bunyip spirit or relic feels the old shame: a Willpower roll is made for them, and a failure costs a point."},
   {key: "whitehowlers", label: "White Howlers", match: ["white howlers", "white howler"], feature: "line", until: 0, title: "Fallen kin", page: "W20, the fall of the White Howlers",
     text: "Gone long before 1197: they walked the Spiral and became the Black Spiral Dancers. They appear only in old stories and dreams. A Garou who learns the story gains a lore page that opens Spiral lore."},
-  {key: "bsd", label: "Black Spiral Dancers", match: ["black spiral dancers", "black spiral dancer", "black spiral", "spiral dancer", "spiral dancers"], feature: "line", wyrm: true, title: "Hive and taint", page: "W20 pdf 42",
+  {key: "bsd", label: "Black Spiral Dancers", match: ["black spiral dancers", "black spiral dancer", "black spiral", "spiral dancer", "spiral dancers"], feature: "line", wyrm: true, also: ["corruption"], fall: "wyrm", title: "Hive and taint", page: "W20 pdf 42",
     text: "NPCs of the Wyrm. A Hive taints the land around it, and those with the senses for it smell the Wyrm there. A Garou who walks the Spiral in a dream rite risks a derangement. An Ahroun goes first against them."},
 ];
 
@@ -602,7 +602,7 @@ export const MAGE = [
     text: "A building they raise goes up a stage faster. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
   {key: "ksirafai", label: "Ksirafai", match: ["ksirafai", "ksirafa"], feature: "line", title: "Spies", page: "Sorcerers Crusade pdf 29",
     text: "NPC agents of the Order: what they learn reaches the Order at the speed news travels in the age."},
-  {key: "nephandi", label: "Nephandi", match: ["nephandi", "nephandus"], feature: "line", also: ["corruption"], title: "The inverted Avatar", page: "M20, the Nephandi",
+  {key: "nephandi", label: "Nephandi", match: ["nephandi", "nephandus"], feature: "line", also: ["corruption"], fall: "nephandi", title: "The inverted Avatar", page: "M20, the Nephandi",
     text: "NPCs. A Nephandus corrupts as a Follower of Set does, with the same hidden ledger on the victim. Their magick is not vulgar to their own kind; a lore page reveals the cabal."},
   {key: "marauder", label: "Marauders", match: ["marauder", "marauders"], feature: "line", title: "Living madness", page: "M20, the Marauders",
     text: "NPCs. Paradox spirits shy from a Marauder, so its magick draws no Paradox, and the world bends around it: its token shimmers and flickers."},
@@ -826,7 +826,7 @@ export const MUMMY = [
   row("udjasen", "Udja-sen", ["udja sen", "judged ones"], "The judged", "Mummy: the Resurrection, the Amenti", "One feature of another Amenti, picked by the Storyteller, and a mark of the judgement on the body."),
   row("ishmaelites", "Ishmaelites", ["ishmaelite", "ishmaelites"], "Outcasts of the Amenti", "Mummy: the Resurrection", "The Amenti hunt them; an Ishmaelite trades secrets for safety, written as pages of secrets.", {also: ["secrets"]}),
   row("cabiri", "Cabiri", ["cabiri"], "The last ones", "Mummy: the Resurrection pdf 13, 29", "Few remain: one is met once in a chronicle, and a lore page opens with them."),
-  row("banemummy", "Bane mummies", ["bane mummy", "bane mummies"], "The cursed spell", "Mummy: the Resurrection", "NPCs. They curse as they die, and rise again."),
+  row("banemummy", "Bane mummies", ["bane mummy", "bane mummies"], "The cursed spell", "Mummy: the Resurrection", "NPCs. They curse as they die, and rise again.", {also: ["corruption"], fall: "apophis"}),
 ];
 export const DEMON = [
   row("devils", "Devils", ["devil", "devils", "namaru"], "A following", "Demon: the Fallen, the Houses", "The demon draws passers-by into a following that grows with each scene of worship. Leadership gains a die.", {effects: [{tags: ["leadership"], dice: 1}]}),
@@ -841,7 +841,7 @@ export const DEMON = [
   row("cryptics", "Cryptics", ["cryptic", "cryptics"], "The question", "Demon: the Fallen, the factions", "They search old records for why the Fall happened. Investigation gains a die.", {effects: [{tags: ["investigation"], dice: 1}]}),
   row("reconcilers", "Reconcilers", ["reconciler", "reconcilers"], "The way home", "Demon: the Fallen, the factions", "They seek to mend the world and find a way home; they deal gently with mortals."),
   row("raveners", "Raveners", ["ravener", "raveners"], "Ruin", "Demon: the Fallen, the factions", "They want an end to everything; other factions treat them as foes on sight."),
-  row("earthbound", "Earthbound", ["earthbound"], "The idol", "Demon: the Fallen, the Earthbound", "NPCs. An Earthbound's reliquary is a thing or a building, and its cult is a faction with an income of faith."),
+  row("earthbound", "Earthbound", ["earthbound"], "The idol", "Demon: the Fallen, the Earthbound", "NPCs. An Earthbound's reliquary is a thing or a building, and its cult is a faction with an income of faith.", {also: ["corruption"], fall: "infernal"}),
 ];
 export const KUEIJIN = [
   row("devilTiger", "Howl of the Devil-Tiger", ["devil tiger", "devil-tiger"], "Hunting the servants of the Yama Kings", "Kindred of the East, the Dharmas", "They track demons and corrupt spirits, and a fight against one restores a point of Yang Chi. Their P'o is stronger: rolls to resist it are one harder.", {effects: [{tags: ["frenzy"], difficulty: 1}]}),

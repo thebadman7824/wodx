@@ -278,7 +278,7 @@ export const KEEPERS = {
   ],
   mage: [{kind: "social", count: [0, 3], step: 3, from: 1325, need: {group: /technocra|union|order of reason|daedal|nephand/i}, note: "Organisations condition their agents and captives (M20 pdf p. 606)."}],
   werewolf: [{kind: "kinfolk", count: [1, 4], step: 1, from: 1197, note: "Kinfolk stand by their Garou kin (W20 pdf p. 140)."}],
-  wyrm: [{kind: "fomor", count: [1, 4], step: 1, from: 1197, note: "Black Spiral hives and Wyrm cults keep fomori; Pentex from 1900 (W20 pdf p. 431)."}],
+  wyrm: [{kind: "fomor", count: [1, 4], step: 1, from: 1197, note: "Black Spiral hives and Wyrm cults keep fomori; Pentex from 1916 (W20 pdf p. 431, 463)."}],
   demon: [{kind: "pact", count: [1, 3], step: 1, from: 1197, note: "The Fallen keep thralls by pact (Demon pdf p. 157)."}],
   wraith: [{kind: "thrall", count: [0, 2], step: 3, from: 1197, need: {group: /hierarch|legion|stygia/i}, note: "The Hierarchy keeps Thralls in chains (Wraith 20th pdf p. 99)."}],
   mummy: [{kind: "cult", count: [2, 6], step: 1, from: 1197, note: "A mummy's cult keeps the vessel between lives."}],

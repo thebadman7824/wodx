@@ -19,6 +19,7 @@ import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as FOES from "../../wodx-chronicle/scripts/antagonist-rules.mjs";
 
 const MOD = "wodx-senses", SOCKET = `module.${MOD}`;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -293,6 +294,20 @@ export function drawOther(layer, sight, a) {
       ring(layer, t, O.WRAITH_COLOUR, 0.6, "a wraith");
     }
   }
+  // Antagonist desk G4 (B6673): the foe's own mark, and the mark on a victim two steps or more down a Fall ledger
+  const foes = new Set();
+  for ( const t of toks ) {
+    if ( !t.actor || t.actor === a || !t.isVisible ) continue;
+    let m = null;
+    try {
+      const fall = FOES.deepestFall(t.actor.flags?.["wodx-chronicle"]?.corruption);
+      m = FOES.markFor(sight, {group: FOES.groupOfActor(t.actor), fallKind: fall?.kind ?? null, step: fall?.step ?? 0});
+    } catch (e) { m = null; }
+    if ( !m ) continue;
+    ring(layer, t, m.colour, 0.85, m.words, {scale: 0.66});
+    foes.add(m.words);
+  }
+  for ( const w of foes ) lines.push(`Someone here: ${w}.`);
   return lines;
 }
 

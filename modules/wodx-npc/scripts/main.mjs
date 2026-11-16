@@ -48,6 +48,7 @@ import {build as buildDayJobs} from "./day-jobs.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import {build as buildCults} from "./cults.mjs";
+import {build as buildSchemes} from "./schemes.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
 import * as FATES from "./fates.mjs";
@@ -1256,6 +1257,11 @@ settlements.hooks();
 const cults = buildCults({MOD, esc, gmIds, isActiveGM, chron});
 cults.hooks();
 Hooks.on("wodxChronicleReady", () => cults.registerHandler());
+/* Antagonist desk G5 (B6674): each antagonist faction's scheme clock, a step a week */
+const schemes = buildSchemes({MOD, esc, gmIds, isActiveGM, chron, factions});
+schemes.hooks();
+Hooks.once("init", () => schemes.registerSettings());
+Hooks.on("wodxChronicleReady", () => schemes.registerHandler());
 
 Hooks.once("init", () => {
   registerSettings();
@@ -1304,7 +1310,7 @@ Hooks.once("init", () => {
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, dayJobs, openDayJobs: dayJobs.openDayJobs, residents, openResidents: residents.open,
     settlements, openSettlements: settlements.open,
     fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, onSkipEnd: FATES.onSkipEnd, rules: FATES.rules},
-    cults, openCults: cults.open,
+    cults, openCults: cults.open, schemes,
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, payFamiliar: BONDS.payFamiliar, rules: BONDS.rules},
     servants: {records: SERVANTS.records, mastersOf: SERVANTS.mastersOf, servantsOf: SERVANTS.servantsOf, bind: SERVANTS.bind, unbind: SERVANTS.unbind,
@@ -1342,7 +1348,7 @@ Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
   carryGoals.registerHandler();
   carryAftercare.registerHandlers();
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); schemes.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
   FactionLooks.setupFactionLooks(); // B4631: who holds a place, on its scene
 });

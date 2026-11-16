@@ -1717,3 +1717,8 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-16 | Antagonist desk D1 (the Earthbound) was not answered | Built at the recommendation: reliquary, cult Faith income and thralls that work, Earthbound as pact patrons with a scheme clock (B6696) | Pick another option on the Antagonist Lines Desk, item D1 |
+| 2026-11-16 | Which years Pentex goes by Endron Oil and by Pentex (the books give no years) | Premium Oil 1916, Endron Oil from 1918, Pentex from 1929 (B6697) | Change PENTEX_NAMES in modules/wodx-chronicle/data/antagonists.mjs |
+| 2026-11-16 | How strongly a fallen victim is bound at the last Fall step | A full bond at once (the servant ledger's top step), after the Storyteller approves (B6698) | Lower the step in applyFallBind in modules/wodx-chronicle/scripts/signatures.mjs |
+| 2026-11-16 | Which antagonist groups only NPCs play unless the Storyteller allows it | Nephandi, Baali, Black Spiral Dancers, Earthbound, Bane mummies; Setites and Defilers stay playable (B6700) | Change NPC_ONLY in modules/wodx-chronicle/scripts/signatures.mjs |
+| 2026-11-16 | What each antagonist group's scheme aims at, and what its finished plan gives | The plans and signs in modules/wodx-npc/scripts/scheme-rules.mjs: four steps, then a Background dot, a new goal, and a corruption source for the Wyrm (B6699) | Edit PLANS there |

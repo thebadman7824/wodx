@@ -45,14 +45,16 @@ function wyrmCandidates() {
   for ( const c of setting("cults") ?? [] ) if ( c?.kind === "wyrm" && c.founder?.id && game.actors.get(c.founder.id) ) out.push({id: c.founder.id, kind: "cult", sceneId: sceneOf(game.actors.get(c.founder.id)), name: c.name});
   return out;
 }
-export async function fomorise(actorLike, {powers = null} = {}) {
+export async function fomorise(actorLike, {powers = null, master = null} = {}) {
   const a = game.actors.get(actorLike?.id ?? actorLike);
   if ( !a || !game.user.isGM || a.flags?.[MOD]?.fomori ) return null;
   const picks = powers ?? W.pickPowers(game.wodxActions?.fomor?.rules?.POWERS ?? []);
   if ( picks.length ) await a.createEmbeddedDocuments("Item", W.powerItems(picks));
   await a.update({[`flags.${MOD}.fomori`]: {at: now(), powers: picks.map(p => p.key)}});
-  const m = W.wyrmMaster(wyrmCandidates(), {year: yearNow(), sceneId: sceneOf(a)});
-  if ( m ) await SV.bind(a, m.id, "fomor", {step: 1, quiet: true});
+  // Antagonist desk B6698: a victim who fell to a corrupter serves that corrupter, already bound
+  const given = master ? game.actors.get(master?.id ?? master) : null;
+  const m = given ?? W.wyrmMaster(wyrmCandidates(), {year: yearNow(), sceneId: sceneOf(a)});
+  if ( m && !given ) await SV.bind(a, m.id, "fomor", {step: 1, quiet: true});
   else { const t = tokenOf(a); if ( t ) SV.flash("fomor", t, t); }
   await card(`${a.name} is fomor`, `<p>Powers: ${(picks.map(p => esc(p.name)).join(", ") || "none yet (WoDX Actions gives the list)")} (on the sheet).</p><p>${m ? `Serves ${esc(m.name)}.` : "No Wyrm master is known yet: bind one from the followers window."}</p><p class="wodx-quiet">${W.PAGE}</p>`);
   return {powers: picks, master: m};

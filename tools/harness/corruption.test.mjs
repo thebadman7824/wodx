@@ -26,9 +26,10 @@ test("the Wyrm grows stronger with the centuries", () => {
   assert.ok(R.eraFactor(2010) < R.eraFactor(2040));
 });
 
-test("Pentex exists only from 1913; every other source in every era", () => {
+test("Pentex exists only from 1916; every other source in every era", () => {
   assert.equal(R.sourceAllowed("pentex", 1600), false);
-  assert.equal(R.sourceAllowed("pentex", 1913), true);
+  assert.equal(R.sourceAllowed("pentex", 1915), false);
+  assert.equal(R.sourceAllowed("pentex", 1916), true);
   for ( const k of ["nest", "cult", "hive", "works", "suffering"] ) assert.equal(R.sourceAllowed(k, 1197), true, k);
   assert.equal(R.sourceAllowed("nonsense", 2000), false);
 });
@@ -143,7 +144,7 @@ test("the Rite of Cleansing on a person, and Sense Wyrm", () => {
   assert.equal(R.registersAsWyrm({innate: true}), true);
 });
 
-test("Pentex grows down its links through the 20th century, never before 1913", () => {
+test("Pentex grows down its links through the 20th century, never before 1916", () => {
   const places = {a: {place: {sources: [{kind: "pentex"}], links: ["b", "c"]}}, b: {place: {}}, c: {place: {sources: [{kind: "pentex"}]}}};
   assert.deepEqual(R.pentexYear(places, {year: 1900, rng: always}), []);
   const g = R.pentexYear(places, {year: 1960, rng: always});
