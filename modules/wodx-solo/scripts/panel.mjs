@@ -31,6 +31,9 @@ export const setStUi = ui => Object.assign(ST_UI, ui);
 /** What arrival.mjs draws on the panel for a player with no character (B5143): {html, open}. */
 const ARRIVE_UI = {};
 export const setArriveUi = ui => Object.assign(ARRIVE_UI, ui);
+/** What fate.mjs draws at the top of the panel when frenzy, torpor or death has the character (B6530): {html}. */
+const FATE_UI = {};
+export const setFateUi = ui => Object.assign(FATE_UI, ui);
 
 /* ------------------------------------------------------------------ */
 /*  Who and where                                                      */
@@ -317,9 +320,9 @@ export class SoloPanel extends ApplicationV2 {
       return `<button type="button" data-action="act" data-id="${b.id}"><i class="${icon}"></i> ${esc(label)}</button>`;
     }).join("");
     // One main button; the rest under More, open once the player has opened it (B2831)
-    div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
+    div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}${FATE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, sleep through the years, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }
