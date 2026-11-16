@@ -4,6 +4,7 @@ import {currentYear} from "./eras.mjs";
 import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
+import * as Encounters from "./encounters.mjs";
 import {watched} from "./signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
@@ -386,7 +387,7 @@ export const twistState = () => sagaOf(state()).twists ?? {revealed: {}};
 export async function revealTwist(n, {variant = "", force = false} = {}) {
   if ( !game.user.isGM ) return null;
   const s = state(), x = sagaOf(s);
-  const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force});
+  const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force, met: Encounters.metOf(s)});
   x.twists = r.state;
   await saveState(s);
   const t = TW.twistOf(n), chains = TW.chainsOf(n).map(k => TW.CHAINS.find(c => c.key === k)?.label).filter(Boolean);
@@ -408,14 +409,14 @@ export async function unrevealTwist(n) {
 }
 /** The twist web in the saga window: each chain's knots, the next by the quick order, and every twist with why not. */
 function twistSection(s) {
-  const tw = sagaOf(s).twists ?? {revealed: {}}, played = bookOnePlayed(s), ctx = {now: now(), played};
+  const tw = sagaOf(s).twists ?? {revealed: {}}, played = bookOnePlayed(s), ctx = {now: now(), played, met: Encounters.metOf(s)};
   const sug = TW.suggest(tw, ctx), ch = TW.chapterNow(played);
   const tally = TW.chainTally(tw, played).map(c => `<li>${esc(c.label)}: ${c.found} of ${c.of}${c.due.length ? `, pays off ${c.due.map(k => `in chapter ${TW.CHAPTERS.indexOf(k) + 1}`).join(" and ")}` : ""}</li>`).join("");
   const rows = TW.TWISTS.map(t => {
     const r = tw.revealed?.[t.n], why = TW.whyNot(t.n, tw, ctx), notes = TW.heartNotes(t.n, tw);
     const hearts = t.variants && !r ? `<select data-fixed>${Object.entries(t.variants).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("")}</select>` : "";
     const act = r ? `revealed${r.variant ? ` (${esc(t.variants?.[r.variant] ?? r.variant)})` : ""} <button type="button" data-action="untwist" data-n="${t.n}">Take back</button>`
-      : why ? `<span class="vta-note">${esc(why)}</span>${/week|fits from/.test(why) ? ` <button type="button" data-action="twist" data-n="${t.n}" data-force="1" title="The company found it by its own hand">Reveal anyway</button>` : ""}`
+      : why ? `<span class="vta-note">${esc(why)}</span>${/week|fits from|encounter/.test(why) ? ` <button type="button" data-action="twist" data-n="${t.n}" data-force="1" title="The company found it by its own hand">Reveal anyway</button>` : ""}`
       : `<button type="button" data-action="twist" data-n="${t.n}">Reveal</button>`;
     return `<tr data-twist><td>${t.n}</td><td>${esc(t.label)}${t.free ? " (quiet)" : ""}${notes.length ? `<br><span class="vta-note">Another heart: ${esc(notes.join(" "))}</span>` : ""}</td><td>${hearts} ${act}</td></tr>`;
   }).join("");
@@ -584,6 +585,7 @@ export class PodApp extends ApplicationV2 {
         try { await revealTwist(el.dataset.n, {variant: v, force: el.dataset.force === "1"}); } catch (err) { ui.notifications.warn(err.message); } this.render(); },
       untwist: async function(e, el) { await unrevealTwist(el.dataset.n); this.render(); },
       ...Fronts.ACTIONS,
+      ...Encounters.ACTIONS,
       sagaClocks: async function() { for ( const i of this.element.querySelectorAll("[data-clock]") ) await setSagaClock(i.dataset.clock, i.value); this.render(); },
       thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
@@ -631,6 +633,7 @@ export class PodApp extends ApplicationV2 {
         <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
       if ( x.books[P.saga.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
       if ( x.books[P.saga.FIRST_BOOK] === "running" || x.fronts ) parts.push(Fronts.section(s));
+      if ( x.books[P.saga.FIRST_BOOK] === "running" || x.encounters ) parts.push(Encounters.section(s));
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
@@ -669,11 +672,14 @@ export function registerPodHooks() {
   // B6162: story chains, the saga, fronts and Golconda teaching wait through a time skip or a hold; the skip's end
   // runs them once (settle)
   const tick = ({settle = false} = {}) => { if ( !isActiveGM() || (!settle && isQuiet()) || (!settle && Date.now() - last < 2000) ) return; last = Date.now();
-    dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
+    dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).then(() => Encounters.encounterTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick({settle: true}));
   Hooks.on("wodxLightTouchEnd", () => tick({settle: true}));
+  // B6641: an encounter is offered when the company arrives on one of its maps, and its card's buttons work
+  Hooks.on("canvasReady", () => { if ( isActiveGM() && !isQuiet() ) Encounters.encounterTick().catch(e => console.error(`${MODULE_ID} | encounters`, e)); });
+  Hooks.on("renderChatMessageHTML", (message, el) => Encounters.onRenderCard(message, el));
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el;
     const a = root?.querySelector?.("[data-wct-pod-act]");
@@ -685,4 +691,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor, golcondaReadiness: readiness, atThreshold,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};

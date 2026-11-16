@@ -47,6 +47,8 @@ export function whyNot(n, state = {}, ctx = {}) {
   if ( played.includes(LAST_CHAPTER) ) return "No new twists after the choosing; the company pulls the last threads itself.";
   const now = chapterNow(played);
   if ( !ctx.force && now && idx(t.from) > idx(now) ) return `It fits from chapter ${idx(t.from) + 1}; the company is in chapter ${idx(now) + 1}.`;
+  // B6645: a twist waits for its encounter (Volume Two pick v5); ctx.met lists the encounters played
+  if ( !ctx.force && Array.isArray(ctx.met) && !ctx.met.map(Number).includes(t.n) ) return `Its encounter (${t.n}) has not been played yet.`;
   const last = state.last === undefined || state.last === null ? NaN : Number(state.last), at = Number(ctx.now) || 0;
   if ( !ctx.force && Number.isFinite(last) && at - last < WEEK ) {
     const days = Math.ceil((WEEK - (at - last)) / DAY);
@@ -64,8 +66,8 @@ export function suggest(state = {}, ctx = {}) {
 }
 
 /** Reveal twist n: a new state, and the changes it makes to others. Throws with the reason when it cannot be. */
-export function reveal(state = {}, n, {variant = "", now = 0, played = [], force = false} = {}) {
-  const why = whyNot(n, state, {now, played, force});
+export function reveal(state = {}, n, {variant = "", now = 0, played = [], force = false, met} = {}) {
+  const why = whyNot(n, state, {now, played, force, met});
   if ( why ) throw new Error(why);
   const t = twistOf(n);
   if ( t.variants && !t.variants[variant] ) throw new Error(`Choose its heart: ${Object.keys(t.variants).join(" or ")}.`);

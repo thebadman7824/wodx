@@ -8,6 +8,7 @@
  *      comes without asking
  *   4. a twist with two hearts asks for one; a twist of a later chapter waits for it
  *   5. taking a twist back clears it
+ * Step 2 first shows a twist waiting for its encounter (B6645), then marks encounters 1, 5, 10, 16 and 22 played.
  * Result: Data/wodx-gate/gatetwists-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -46,6 +47,13 @@ export async function run() {
       ok("1 api", typeof tw()?.reveal === "function" && shown && rows === 24 && !tw().rules.validate().length && tw().rules.CHAINS.length === 6, {shown, rows});
     });
     await step("2 reveal", async () => {
+      let waits = "";
+      try { await tw().reveal(1); } catch (e) { waits = e.message; }
+      const s = foundry.utils.deepClone(game.settings.get(C, "podState"));
+      s.saga.encounters = {...(s.saga.encounters ?? {}), played: {1: 0, 5: 0, 10: 0, 16: 0, 22: 0}};
+      await game.settings.set(C, "podState", s);
+      R.notes.push(`Before its encounter: ${waits}`);
+      if ( !/has not been played/.test(waits) ) throw new Error(`Twist 1 did not wait for its encounter: ${waits || "revealed"}`);
       const n0 = cards().length;
       await tw().reveal(1);
       await sleep(400);

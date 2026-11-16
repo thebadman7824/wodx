@@ -1,0 +1,125 @@
+/**
+ * Book one's encounters (Rothenstein Rebuilt, Volume Two picks v1-v7, B6640-B6649). The Storyteller's second volume
+ * holds twenty-four encounters; this file keeps only what the game needs to run them: where and when each fits, who
+ * is in it, what it moves, and what happens off the map if the company never meets it. Labels and lines are short
+ * handles in our own words; the encounters' own words stay in the Storyteller's volumes.
+ *
+ * n: the encounter's number (its twist has the same number). scenes: map-name hints, matched against the company's
+ * scene (front-rules pickScene). months: the months of the year it fits (1-12), or none for any time. from: the
+ * earliest chapter. best: the chapters it fits best, from the placement table; the window closes once the last of them
+ * is played (the default is chapter 9, the choosing). needs: earlier encounters, any one of which must be played
+ * first. days: days of the book before it can come.
+ * people: who it puts on the map, each with a ready routine (WoDX NPC presets) and a home map hint.
+ * ties: what playing it moves. front: a front step that lands if it is that front's next step; push: fronts pushed
+ * past a twist's week; lean: a name leaned on for a role; clues: carriers the Storyteller can mark found from the card.
+ * offmap: what happens when the window closes unmet: street talk, saga clocks, a sight on a map, fronts that step or
+ * are pushed, people gone, a judgement set if it is still open.
+ * Pure data: encounter-rules.mjs reads it.
+ */
+
+export const KINDS = {wild: "Wilderness", village: "Village and town", social: "Social", strange: "Strange and supernatural"};
+
+export const ENCOUNTERS = [
+  {n: 1, label: "The hunt that failed", kind: "wild", scenes: ["The High Woods", "The Forest Road", "The Ford"], from: "c1", best: ["c1", "c2", "c3"],
+    people: [{name: "Stanek Kovar", preset: "hunter", home: "Dolany"}, {name: "Wenzel", type: "vampire", preset: "neonate", home: "The Ford"}],
+    ties: {},
+    offmap: {talk: "The huntsman went back at dawn with torches, and something was burned out of the old mill.", gone: ["Wenzel"],
+      sight: {scene: "The Ford", looks: [{kind: "fire", spots: 3, r: 0.04, mark: "torch"}, {kind: "rubble", spots: 1, r: 0.06}]}}},
+  {n: 2, label: "The harvest game", kind: "village", scenes: ["Lower Town · West Gate and the Common", "Dolany"], months: [9, 10], from: "c1", best: ["c1", "c2", "c3", "c4"],
+    people: [{name: "Gerhard", preset: "labourer", home: "Lower Town"}, {name: "Milos", preset: "labourer", home: "Dolany"}],
+    ties: {},
+    offmap: {talk: "Two houses burned on the market after the harvest game, a man is dead, and the council says the voivode's people started it.",
+      sight: {scene: "Lower Town · Market Square", looks: [{kind: "fire", spots: 2, r: 0.05}, {kind: "rubble", spots: 2, r: 0.06}]}}},
+  {n: 3, label: "A heart too open", kind: "social", scenes: ["Lower Town"], from: "c2", best: ["c2", "c3", "c6"], days: 7,
+    people: [{name: "Lenka", preset: "labourer", home: "Lower Town"}, {name: "Hynek", preset: "labourer", home: "Lower Town"}, {name: "Jan Dvorak", preset: "clerk", home: "Lower Town"}],
+    ties: {},
+    offmap: {talk: "A clerk has been telling the council what the newcomers do at night.", push: ["council"]}},
+  {n: 4, label: "The black grain", kind: "village", scenes: ["Dolany"], months: [9, 10, 11], from: "c2", best: ["c2", "c3"],
+    people: [{name: "Bohumil", preset: "labourer", home: "Dolany"}, {name: "Dorota", preset: "labourer", home: "Dolany"}],
+    ties: {},
+    offmap: {talk: "In Dolany the bad bread has killed three, and a house was burned to put out a fire nobody else could see.", moves: {ashfield: 1},
+      sight: {scene: "Dolany", looks: [{kind: "fire", spots: 1, r: 0.05}, {kind: "taint", spots: 1, r: 0.08}]}}},
+  {n: 5, label: "Toll of the ridge road", kind: "wild", scenes: ["The Mountain Trail"], from: "c1", best: ["c1", "c2"],
+    people: [{name: "Radek", preset: "labourer", home: "The Mountain Trail"}],
+    ties: {clues: [["sire", 0], ["sire", 1]]},
+    offmap: {talk: "Bandits took their toll from a merchant train on the ridge road, and salt and iron cost more this week."}},
+  {n: 6, label: "The apothecary's debt", kind: "strange", scenes: ["Master Voss's Laboratory", "Lower Town"], months: [9, 10, 11, 12], from: "c2", best: ["c2", "c3", "c4", "c5", "c6"],
+    people: [{name: "Master Eckhart", preset: "merchant", home: "Lower Town"}],
+    ties: {front: [["council", "complaint"]]},
+    offmap: {talk: "The apothecary's shop is shut and barred, and they say the apothecary is dead.", gone: ["Master Eckhart"]}},
+  {n: 7, label: "Smoke in the Lower Town", kind: "village", scenes: ["Lower Town · Craftsmen's Lane", "Lower Town"], months: [12, 1, 2], from: "c3", best: ["c6", "c7", "c8"],
+    people: [{name: "Jakub", preset: "labourer", home: "Lower Town"}, {name: "Sergeant Volker", preset: "police", home: "Lower Town · West Gate"}],
+    ties: {clues: [["ledger", 2]]},
+    offmap: {talk: "The council hanged a man for the fires. Not everyone thinks it was the right man.",
+      sight: {scene: "Lower Town · Craftsmen's Lane", looks: [{kind: "rubble", spots: 3, r: 0.06}, {kind: "fire", spots: 1, r: 0.04}]}}},
+  {n: 8, label: "The hermit of the north wood", kind: "wild", scenes: ["The Forest Road", "The Forest Cottage"], from: "c1", best: ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"],
+    people: [{name: "Egon", preset: "recluse", home: "The Forest Cottage"}],
+    ties: {},
+    offmap: {talk: "A pedlar who took the forest road last week never reached the ferry."}},
+  {n: 9, label: "The ruins of Altenhof", kind: "strange", scenes: ["Ruins of Altenhof"], from: "c3", best: ["c4", "c5"],
+    people: [],
+    ties: {clues: [["price", 1]]},
+    offmap: {talk: "Nobody goes near Altenhof after dark, and nobody says why."}},
+  {n: 10, label: "The winter pack", kind: "wild", scenes: ["The High Woods", "The Mountain Trail"], months: [11, 12, 1, 2, 3], from: "c2", best: ["c8", "c9", "c10"],
+    people: [{name: "The shepherd's widow", preset: "recluse", home: "The High Woods"}],
+    ties: {},
+    offmap: {talk: "Wolves took a whole flock on the high pasture, and the shepherd's widow weeps in Dolany."}},
+  {n: 11, label: "The player-king's farce", kind: "social", scenes: ["Lower Town · Market Square"], from: "c2", best: ["c2", "c6"],
+    people: [{name: "Kilian", preset: "innkeeper", home: "Lower Town · Market Square"}],
+    ties: {push: ["court"]},
+    offmap: {talk: "The players mocked a lord from the east twice over, and the voivode's men drove them out of the valley.", push: ["court"]}},
+  {n: 12, label: "The boy who took the wrong purse", kind: "village", scenes: ["Lower Town · Market Square"], from: "c1", best: ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"],
+    people: [{name: "Pavlik", preset: "labourer", home: "Lower Town · Market Square"}, {name: "Jan Dvorak", preset: "clerk", home: "Lower Town"}],
+    ties: {},
+    offmap: {talk: "Something lost on the market found its way to a clerk's desk, and the clerk is asking whose it is."}},
+  {n: 13, label: "A stranger at the toll-post", kind: "social", scenes: ["Ivo's Ferry", "Toll-post"], from: "c1", best: ["c1", "c2", "c3"],
+    people: [{name: "Ilja", type: "vampire", preset: "neonate", home: "The High Woods"}],
+    ties: {},
+    offmap: {talk: "A traveller was found dead at the ferry, and Ivo will not speak of it.", moves: {charter: -1}}},
+  {n: 14, label: "The fever at the ferry", kind: "village", scenes: ["Ivo's Ferry"], months: [10, 11], from: "c1", best: ["c1", "c2", "c3", "c4", "c5", "c6"],
+    people: [{name: "Jitka", preset: "labourer", home: "Lower Town"}, {name: "Hildegard", preset: "recluse", home: "Ivo's Ferry"}],
+    ties: {lean: ["Jitka"]},
+    offmap: {talk: "The crowd sent a sick pilgrim back over the river, and the landing is shut for a week.",
+      sight: {scene: "Ivo's Ferry", looks: [{kind: "calm", spots: 2, r: 0.04, text: "✖", color: "#7a5a2a"}]}}},
+  {n: 15, label: "The wedding without a bride", kind: "village", scenes: ["Dolany"], months: [9, 10, 3, 4, 5], from: "c4", best: ["c5", "c6"],
+    people: [{name: "Bohuslav", preset: "labourer", home: "Dolany"}, {name: "Marketa", preset: "labourer", home: "Dolany"}],
+    ties: {},
+    offmap: {talk: "There was a wedding in Dolany with no joy in it: the bride was found and married by force."}},
+  {n: 16, label: "The dam at the lower mill", kind: "village", scenes: ["The Water Mill", "The Ford"], months: [3, 4, 5, 10, 11], from: "c2", best: ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"],
+    people: [{name: "Otto the miller", preset: "labourer", home: "The Water Mill"}],
+    ties: {front: [["council", "dam"]]},
+    offmap: {talk: "The lower mill's dam burst in the night. Three houses are gone, and people are asking who was at the sluice.", front: [["council", "dam"]],
+      sight: {scene: "The Water Mill", looks: [{kind: "flood", spots: 1, r: 0.2}, {kind: "rubble", spots: 3, r: 0.05}]}}},
+  {n: 17, label: "The missing child", kind: "wild", scenes: ["Dolany", "Lower Town"], from: "c2", needs: [8, 10], best: ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"],
+    people: [{name: "Anezka", preset: "recluse", home: "Dolany"}, {name: "Anezka's mother", preset: "labourer", home: "Dolany"}],
+    ties: {},
+    offmap: {talk: "A child of Dolany was never found, and the village mourns."}},
+  {n: 18, label: "The silver that was not struck here", kind: "social", scenes: ["Lower Town · West Gate", "Richter Graff's House"], from: "c2", best: ["c2", "c3", "c6"],
+    people: [{name: "Sergeant Volker", preset: "police", home: "Lower Town · West Gate"}, {name: "Ludwig", preset: "merchant", home: "Lower Town"}],
+    ties: {},
+    offmap: {talk: "A merchant's odd silver was waved through the gate, and someone at the council grew richer.", push: ["council"]}},
+  {n: 19, label: "The girl who saw the lady", kind: "strange", scenes: ["Lower Town · West Gate and the Common"], from: "c3", best: ["c4", "c5", "c6", "c7", "c8"],
+    people: [{name: "Zofie", preset: "labourer", home: "Lower Town · West Gate and the Common"}, {name: "Jindrich", preset: "merchant", home: "Lower Town · West Gate and the Common"}],
+    ties: {front: [["church", "message"]]},
+    offmap: {talk: "Pilgrims crowd the shrine on the Common, the girl's father sells candles by the cartload, and the bishop has heard.", moves: {church: 1}, front: [["church", "message"]]}},
+  {n: 20, label: "The knight who wanted a duel", kind: "social", scenes: ["The Tavern", "Kranzfels · The Outer Bailey"], from: "c1", best: ["c1", "c2", "c3", "c4", "c5", "c6"],
+    people: [{name: "Reinhold", preset: "innkeeper", home: "The Tavern"}],
+    ties: {},
+    offmap: {talk: "A knight from the west fought a duel with someone else, won it, and is still asking after a cousin."}},
+  {n: 21, label: "The witch of Dolany", kind: "village", scenes: ["Dolany"], from: "c3", needs: [4, 10, 17], best: ["c5", "c6"],
+    people: [{name: "Old Vlasta", preset: "recluse", home: "Dolany"}],
+    ties: {},
+    offmap: {talk: "The crowd burned old Vlasta in Dolany, and the Moravian families will not forget the night.", gone: ["Old Vlasta"], judge: ["yaroslava", "refuse"]}},
+  {n: 22, label: "The blind man at the cross", kind: "strange", scenes: ["Lower Town · Market Square"], from: "c2", best: ["c2", "c3", "c4", "c5", "c6", "c7", "c8"],
+    people: [{name: "Havel", preset: "recluse", home: "Lower Town · Market Square"}],
+    ties: {},
+    offmap: {talk: "The blind man at the cross told a stranger's fortune, and it came true."}},
+  {n: 23, label: "The thing in the high woods", kind: "wild", scenes: ["The High Woods"], from: "c1", best: ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"],
+    people: [{name: "Stanek Kovar", preset: "hunter", home: "Dolany"}],
+    ties: {clues: [["price", 2]]},
+    offmap: {talk: "The great boar of the high woods killed a shepherd, and nobody hunts there now."}},
+  {n: 24, label: "The margrave's auditor", kind: "social", scenes: ["The Inn", "Kranzfels"], months: [10, 11, 12, 1, 2, 3], from: "c4", best: ["c4", "c5", "c6", "c7"],
+    people: [{name: "Ctibor", preset: "clerk", home: "The Inn"}],
+    ties: {clues: [["ledger", 0]]},
+    offmap: {talk: "The margrave's auditor has finished the count, and the report has gone to Olomouc. Graff has not slept since.", push: ["council"]}}
+];
