@@ -1240,7 +1240,7 @@ export function trapsOnPath(scene, a, b, {npc = false} = {}) {
 }
 const springing = new Set();
 /** Active GM: a token moved. Any trap on its way goes off, with a card and an Undo. */
-export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = false} = {}) {
+export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = false, carried = false} = {}) {
   const scene = tokDoc.parent, actor = tokDoc.actor;
   // Where the move ends: Foundry 14 can call the hook before the document shows the new place, so the change wins
   const pos = {x: num(changes?.x ?? tokDoc.x), y: num(changes?.y ?? tokDoc.y)};
@@ -1250,7 +1250,7 @@ export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = 
   // WoDX Chronicle 0.22.0: a flaw set off by something on the way (running water, garlic, a cross, what a Phobia names)
   const tr = await traitTriggers(tokDoc, actor, scene, from, to, pos, userId);
   if ( tr?.hold ) return [tr.msg];
-  await carryAboard(tokDoc, scene, from, to, pos);
+  await carryAboard(tokDoc, scene, from, to, pos, {carried});
   // B5176: a player character breaking away from a fight is chased
   try { await game.modules.get(MOD)?.api?.chase?.pcMoved?.(tokDoc, from, to); } catch (e) { console.warn(`${MOD} | chase`, e); }
   // Walking out of a hiding place ends the hiding
@@ -1787,9 +1787,10 @@ const carrying = new Map();
  * Active GM: a token moved. At the reins: the mount or vehicle and everyone aboard move with it. A passenger who
  * moves on their own gets off. Returns what happened: "carried", "drove", "off" or null.
  */
-export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.x), y: num(tokDoc.y)}) {
-  // Our own move of a passenger (Foundry may snap it to the grid, so where it lands is not checked)
-  if ( carrying.delete(tokDoc.uuid) ) return "carried";
+export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.x), y: num(tokDoc.y)}, {carried = false} = {}) {
+  // Our own move of a passenger (Foundry may snap it to the grid, so where it lands is not checked); B6799: or another
+  // module's, marked {wodxCarried: true} on the update (a vehicle driven by remote carries its passengers)
+  if ( carrying.delete(tokDoc.uuid) || carried ) return "carried";
   const dx = to.x - from.x, dy = to.y - from.y, moved = !!(dx || dy);
   const fixed = p => Number.isFinite(p?.dx) && Number.isFinite(p?.dy);
   let what = null;
@@ -2165,7 +2166,7 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
     b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
   });
 });
-Hooks.on("updateToken", (doc, changes, options, userId) => { if ( !doc?.flags?.["wodx-npc"]?.passerby && ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld}).catch(e => console.error(`${MOD} |`, e)); });
+Hooks.on("updateToken", (doc, changes, options, userId) => { if ( !doc?.flags?.["wodx-npc"]?.passerby && ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld, carried: !!options?.wodxCarried}).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("updateCombat", (combat, changes) => { if ( ("turn" in (changes ?? {}) || "round" in (changes ?? {})) && combat?.started && isActiveGM() ) onTurnStart(combat).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("canvasReady", () => { lastSeen.clear(); for ( const t of canvas.scene?.tokens?.contents ?? [] ) lastSeen.set(t.uuid, centerOf(t, canvas.scene)); });
 Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent)));

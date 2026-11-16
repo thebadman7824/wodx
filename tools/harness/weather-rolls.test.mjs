@@ -52,7 +52,11 @@ test("lying snow: a tracking roll is 1 easier, and running, riding and driving 1
   assert.deepEqual(A.weatherRollSource(on(street), roll(["stamina", "athletics"])), [], "swimming is not footing");
 });
 
-test("the source is given to WoDX Chronicle's roll effects when the world is ready", () => {
-  const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
-  assert.ok(src.includes("chron()?.traits?.addSource?.(weatherRollSource)"));
+test("the source reaches WoDX Chronicle's roll effects even when Chronicle's api comes after Atmosphere's ready", async () => {
+  game.modules.set("wodx-chronicle", {active: true});
+  const got = [];
+  await Hooks.callAll("ready");
+  await new Promise(r => setTimeout(r, 50));
+  await Hooks.callAll("wodxChronicleReady", {traits: {addSource: fn => got.push(fn)}});
+  assert.ok(got.includes(A.weatherRollSource), "registered once Chronicle is ready");
 });

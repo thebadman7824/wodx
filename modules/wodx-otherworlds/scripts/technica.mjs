@@ -91,7 +91,7 @@ export async function steerVehicle(tile, drive = {}) {
     await tile.update({x: clamp(tile.x + step.dx, W - (tile.width ?? g)), y: clamp(tile.y + step.dy, H - (tile.height ?? g))});
     for ( const r of riders ) {
       const td = await fromUuid(r.t).catch(() => null);
-      if ( td && td.parent?.id === scene.id ) await td.update({x: clamp(td.x + step.dx, W - g), y: clamp(td.y + step.dy, H - g)}, {wodxMove: false});
+      if ( td && td.parent?.id === scene.id ) await td.update({x: clamp(td.x + step.dx, W - g), y: clamp(td.y + step.dy, H - g)}, {wodxMove: false, wodxCarried: true});
     }
     // A passenger who moves on their own gets off in WoDX Interactables; these were carried, so they stay aboard
     if ( riders.length ) await tile.update({[`flags.${IX}.riders`]: riders});

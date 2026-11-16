@@ -1245,7 +1245,9 @@ export function weatherRollSource(actor, ctx = {}) {
 Hooks.once("ready", async () => {
   if ( !active ) return;
   const api = await prime();
-  try { chron()?.traits?.addSource?.(weatherRollSource); } catch (e) { console.warn(`${MOD} | weather on rolls`, e); }
+  // B6796: WoDX Chronicle sets its api late in its own ready; wait for it when it is not there yet
+  const giveRolls = c => { try { c?.traits?.addSource?.(weatherRollSource); } catch (e) { console.warn(`${MOD} | weather on rolls`, e); } };
+  if ( chron()?.traits?.addSource ) giveRolls(chron()); else Hooks.once("wodxChronicleReady", giveRolls);
   applyGrade();
   applyDread();
   if ( isActiveGM() ) {
