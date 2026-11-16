@@ -28,6 +28,9 @@
  */
 import {gate, waitFor} from "./kit.mjs";
 
+/** The window's element: jQuery on the old engine, the element itself on ApplicationV2 (whose <form>[0] is its first control). */
+const elOf = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
+
 const SH = "wodx-sheets", CR = "wodx-creation", LIB = "wodx-library", CB = "wodx-combat", ACT = "wodx-actions", CH = "wodx-chronicle";
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
@@ -89,14 +92,14 @@ export async function run() {
       await wait(800);
       const sheet = eater.sheet;
       await sheet.render(true);
-      const label = () => (sheet.element?.[0] ?? sheet.element)?.querySelector?.("label.vrollable[data-attribute='true'][data-key='dexterity']");
+      const label = () => elOf(sheet)?.querySelector?.("label.vrollable[data-attribute='true'][data-key='dexterity']");
       await waitFor(() => sheet.rendered && label(), 6000);
       const rollOnce = async () => {
         const t0 = Date.now();
         label()?.click();
         let dlg = null;
         await waitFor(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogGeneralRoll" && w.actor?.id === eater.id && w.rendered)), 6000);
-        (dlg?.element?.[0] ?? dlg?.element)?.querySelector?.(".actionbutton")?.click();
+        elOf(dlg)?.querySelector?.(".actionbutton")?.click();
         let m = null;
         await waitFor(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === eater.id && (x.rolls?.length ?? 0) > 0).at(-1)), 8000);
         await dlg?.close?.();
@@ -120,7 +123,7 @@ export async function run() {
       await plain.update({"system.nature": "Survivor", "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 3});
       const sheet = plain.sheet;
       await sheet.render(true);
-      const el = () => sheet.element?.[0] ?? sheet.element;
+      const el = () => elOf(sheet);
       await waitFor(() => sheet.rendered && el()?.querySelector?.("[data-roll='nature']"), 6000);
       const button = el()?.querySelector?.("[data-roll='nature']"), setOff = !!el()?.querySelector?.("[data-roll='derangement']");
       const stop = answer(root => /Did they act to their Nature/.test(root.textContent ?? ""), "yes");

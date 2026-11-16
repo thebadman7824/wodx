@@ -543,7 +543,7 @@ Hooks.on("renderActorSheet", sheetToolsButton);
 // layout too (a plain mortal, a Hunter outside the Reckoning, a Changing Breed, a Creature): the WoDX layouts carry
 // them in their buttons row and Derangements block already
 function natureRow(app, html) {
-  const el = html?.[0] ?? html ?? app?.element?.[0], actor = app?.actor ?? app?.document;
+  const el = rootOf(html, app), actor = app?.actor ?? app?.document;
   if (!actor || !el?.querySelector || !game.wodxActions?.nature) return;
   if (!actor.system || !("nature" in actor.system)) return;
   if (el.querySelector("[data-roll='nature']")) return;

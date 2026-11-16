@@ -34,6 +34,9 @@
  */
 import {gate, waitFor, newestMessage} from "./kit.mjs";
 
+/** The window's element: jQuery on the old engine, the element itself on ApplicationV2 (whose <form>[0] is its first control). */
+const elOf = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
+
 const C_ID = "wodx-chronicle";
 const SIGS = ["sigVampire", "sigWerewolf", "sigMage", "sigChangeling", "sigWraith"];
 const KEEP = [[C_ID, "hold"], [C_ID, "lawHeatOn"], [C_ID, "lawHeat"], ...SIGS.map(k => [C_ID, k]), [C_ID, "ghoulNeed"], [C_ID, "autoApprove"],
@@ -84,13 +87,13 @@ export async function run() {
   async function sheetRoll(actor, selector) {
     const sheet = actor.sheet;
     await sheet.render(true);
-    const label = () => (sheet.element?.[0] ?? sheet.element)?.querySelector?.(selector);
+    const label = () => elOf(sheet)?.querySelector?.(selector);
     await waitFor(() => sheet.rendered && label(), 8000);
     const t0 = Date.now();
     label()?.click();
     let dlg = null;
     await waitFor(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogGeneralRoll" && w.actor?.id === actor.id && w.rendered)), 8000);
-    (dlg?.element?.[0] ?? dlg?.element)?.querySelector?.(".actionbutton")?.click();
+    elOf(dlg)?.querySelector?.(".actionbutton")?.click();
     let m = null;
     await waitFor(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === actor.id && (x.rolls?.length ?? 0) > 0).at(-1)), 8000);
     try { await dlg?.close?.(); } catch (e) { /* closed */ }

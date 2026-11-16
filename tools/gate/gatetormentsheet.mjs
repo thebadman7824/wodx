@@ -10,13 +10,16 @@
  */
 import {gate, waitFor} from "./kit.mjs";
 
+/** The window's element: jQuery on the old engine, the element itself on ApplicationV2 (whose <form>[0] is its first control). */
+const elOf = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
+
 const n = v => Number(v) || 0;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 
 /** What the open sheet draws for Torment: the data-value of its permanent row and its temporary row. */
 function drawn(app) {
-  const el = app?.element?.[0] ?? app?.element ?? null;
+  const el = elOf(app);
   const perm = el?.querySelector?.('[data-name$="torment.permanent"]');
   const temp = el?.querySelector?.('[data-name$="torment.temporary"]');
   return {perm: perm ? n(perm.dataset.value) : null, temp: temp ? n(temp.dataset.value) : null};
@@ -24,7 +27,7 @@ function drawn(app) {
 
 /** When the rows are not found: what the open sheet holds instead, so the cause shows in the result. */
 function look(app) {
-  const el = app?.element?.[0] ?? app?.element ?? null;
+  const el = elOf(app);
   const names = [...(el?.querySelectorAll?.("[data-name]") ?? [])].map(e => e.dataset.name);
   return {tag: el?.tagName ?? null, cls: String(el?.className ?? "").slice(0, 160), rendered: app?.rendered ?? null, v2: !!app?.constructor?.DEFAULT_OPTIONS,
     named: names.length, torment: names.filter(x => /torment/i.test(x)).slice(0, 6),
