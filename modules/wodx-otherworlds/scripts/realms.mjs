@@ -6,6 +6,7 @@ import {MODULE_ID} from "./ratings.mjs";
 import {STATUS, applyLocally} from "./crossing.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
 import * as RR from "./realms-rules.mjs";
+import {makeWay} from "./ways.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -282,6 +283,56 @@ export async function netContest({a, b, programA = 0, programB = 0, protectA = 0
   return x;
 }
 
+/**
+ * B6798: a crossing that worked is drawn on the map as the other ways are (WoDX ways: a region at each end that carries
+ * a token across). The Storyteller names the far scene; with no scene named nothing is made. Returns the regions, or null.
+ */
+export async function wayOnSuccess(kind, here, title, question) {
+  if ( !game.user.isGM || !here ) return null;
+  const others = [...game.scenes].filter(sc => sc.id !== here.id).sort((a, b) => a.name.localeCompare(b.name));
+  if ( !others.length ) return null;
+  const pick = await foundry.applications.api.DialogV2.wait({classes: ["wodx", "wodx-dialog"], window: {title}, rejectClose: false, position: {width: 460},
+    content: `<p>${esc(question)}</p><div class="form-group"><label>The far end</label><select name="to" data-fixed>${others.map(sc => `<option value="${sc.id}">${esc(sc.navName || sc.name)}</option>`).join("")}</select></div>`,
+    buttons: [{action: "make", label: "Make the way", default: true, callback: (e, b) => b.form.elements.to.value}, {action: "none", label: "Not on the map"}]});
+  const to = typeof pick === "string" ? game.scenes.get(pick) : null;
+  if ( !to ) return null;
+  try {
+    const way = await makeWay(kind, here, to);
+    ui.notifications.info(`The way to ${to.name} stands on ${here.name}.`);
+    return way;
+  } catch (e) { ui.notifications.warn(`The way could not be drawn: ${e.message}`); return null; }
+}
+
+/**
+ * B6797: a Maelstrom's turn in the open strikes the selected tokens: its dice by bells (Wraith 20th pdf 361 / p. 296)
+ * rolled at 6 as lethal harm, soaked as WoDX Combat soaks any blow of that kind (the book gives no kind of harm; a house
+ * reading, in PENDING-REVIEW). A Haunt shelters them fully while its rating holds the bells off; once the storm breaks
+ * through, the Haunt's rating adds to soak. Each token struck flashes storm-blue, and the levels float up from it.
+ */
+export async function maelstromStrike(tokens = [], {bells = 3, haunt = 0} = {}) {
+  const m = RR.maelstromDice(bells, {haunt});
+  const C = game.wodxCombat, hit = [];
+  if ( !m.sheltered ) for ( const doc of tokens ) {
+    if ( !doc?.actor ) continue;
+    let res = null;
+    try { res = C?.soakAndApply ? await C.soakAndApply(doc, {mode: "pool", amount: m.dice, type: "lethal", soak: true, soakBonus: num(haunt), of: "maelstrom"}) : null; }
+    catch (e) { console.warn("WoDX Otherworlds | Maelstrom", e); }
+    await stormFlash(doc);
+    const t = doc.object;
+    if ( t && canvas?.ready ) {
+      try { canvas.ping?.(t.center, {color: "#7f9cff"}); canvas.interface?.createScrollingText?.(t.center, res?.levels ? `-${res.levels} lethal` : "soaked", {fill: "#9fb4ff", stroke: 0x000000, strokeThickness: 4, anchor: 0}); } catch (e) { /* no canvas */ }
+    }
+    hit.push({name: doc.name, levels: res?.levels ?? null});
+  }
+  const b = Math.min(5, Math.max(1, num(bells) || 1));
+  await ChatMessage.create({whisper: gmIds(), speaker: {alias: "The Tempest"}, content: card("The Maelstrom",
+    `<p>${b} bell${b === 1 ? "" : "s"}: ${m.dice} damage dice each turn in the open, lethal, soaked as usual${num(haunt) && !m.sheltered ? ` with the Haunt's ${num(haunt)} added` : ""}.</p>
+     ${num(haunt) ? `<p>${m.sheltered ? "The Haunt shelters them fully." : `The Haunt holds for ${m.breaksAfterHours} hour${m.breaksAfterHours === 1 ? "" : "s"}, then the storm breaks through.`}</p>` : ""}
+     ${hit.length ? `<p>${hit.map(h => `${esc(h.name)}: ${h.levels === null ? "no WoDX Combat to soak" : h.levels ? `${h.levels} lethal` : "all soaked"}`).join("; ")}.</p>` : m.sheltered ? "" : "<p>No token was selected: select those caught in the open and roll again.</p>"}
+     <p class="wodx-quiet">Wraith 20th pdf 351, 355, 361 / pp. 286, 290, 296. Spectres take no harm.</p>`)});
+  return {...m, hit};
+}
+
 /* -------------------------------------------- */
 /*  The Otherworld rolls window                  */
 /* -------------------------------------------- */
@@ -322,6 +373,8 @@ export async function rollsDialog() {
       `<p>Wits + Enigmas${r.totem ? " + 3 (the totem)" : ""}: ${plan.pool} dice at ${plan.diff} ${diceLine(roll.dice)}, ${res.successes} of ${plan.need} needed.</p>
        <p><b>${res.open ? `The bridge opens: travel takes ${res.speed}; renew it ${res.renew}.` : res.botch ? "A botch." : "It does not open; the next try is at +1 difficulty."}</b></p>
        <p class="wodx-quiet">A Pathstone at each caern, both performing it at a moot. W20 pdf 209 / p. 207. A Moon Bridge from a level ${r.caern} caern reaches ${RR.bridgeReach(r.caern).toLocaleString()} miles (pdf 313 / p. 311).</p>`)});
+    // B6798: the bridge stands on the map, a Moon Path between the two caerns' Penumbra levels
+    if ( res.open ) res.way = await wayOnSuccess("moonpath", sel.parent, "The Moon Bridge: the far caern", "Which scene holds the far caern?");
     return res;
   }
   if ( r.kind === "wayfare" ) {
@@ -337,16 +390,11 @@ export async function rollsDialog() {
     await ChatMessage.create({speaker: {alias: sel.name}, rolls: roll.roll ? [roll.roll] : [], content: card("Wayfare: a portal onto a trod",
       `<p>Wayfare + Fae, ${pool} dice at 8 ${diceLine(roll.dice)}.</p><p><b>${res.danger ? "A botch: the portal opens somewhere dangerous." : res.chosen ? "The caster chooses the trod." : res.open ? "A portal opens onto a Near Dreaming trod, the Storyteller's pick." : "No portal."}</b></p>
        <p class="wodx-quiet">Wayfare 3 with the Fae Realm at 5; an extended action of 5 successes picks the trod. C20 pdf 309 / p. 308. The difficulty is the Storyteller's; 8 is used here.</p>`)});
+    // B6798: the portal stands on the map, a trod between the two scenes' Near Dreaming levels
+    if ( res.open ) res.way = await wayOnSuccess("trod", sel.parent, res.danger ? "Wayfare: where the portal opens (somewhere dangerous)" : "Wayfare: where the trod leads", res.chosen ? "Where does the caster send the trod?" : "Which trod does it open onto (the Storyteller's pick)?");
     return res;
   }
-  if ( r.kind === "maelstrom" ) {
-    const m = RR.maelstromDice(r.bells, {haunt: r.haunt});
-    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "The Tempest"}, content: card("The Maelstrom",
-      `<p>${r.bells} bell${num(r.bells) === 1 ? "" : "s"}: ${m.dice} damage dice each turn in the open.</p>
-       ${num(r.haunt) ? `<p>${m.sheltered ? "The Haunt shelters them fully." : `The Haunt holds for ${m.breaksAfterHours} hour${m.breaksAfterHours === 1 ? "" : "s"}, then the storm breaks through; its rating adds to soak.`}</p>` : ""}
-       <p class="wodx-quiet">Wraith 20th pdf 351, 355, 361 / pp. 286, 290, 296. Spectres take no harm.</p>`)});
-    return m;
-  }
+  if ( r.kind === "maelstrom" ) return maelstromStrike((canvas?.tokens?.controlled ?? []).map(t => t.document), {bells: r.bells, haunt: r.haunt});
   if ( r.kind === "net" ) {
     if ( !sel ) { ui.notifications.warn("Select the netrunner first."); return null; }
     const cpus = num(r.cpus);
