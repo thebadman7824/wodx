@@ -64,8 +64,10 @@ export async function run() {
         await due();
         await S.tasks.tick({force: true});
       }
-      await settle(() => Number(learner.system.abilities.occult.value) === 1 && !studying());
-      const card = game.messages.contents.slice(-12).some(m => /has learned/.test(m.content ?? "") && m.content.includes(learner.name));
+      // The card is posted last, after the rise and the mark: wait for it too
+      const learned = () => game.messages.contents.slice(-40).some(m => /has learned/.test(m.content ?? "") && m.content.includes(learner.name));
+      await settle(() => Number(learner.system.abilities.occult.value) === 1 && !studying() && learned());
+      const card = learned();
       G.ok("3. the study ends and the trait rises", Number(learner.system.abilities.occult.value) === 1 && !studying() && card,
         {occult: learner.system.abilities.occult.value, mark: studying(), card, status: learner.flags?.[ST]?.tasks?.[rec.taskId]?.status});
     });
