@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.13.0 (An objective that a map event finishes now counts as the night's success for solo experience, the same as one marked kept by hand (B6896); The Lone Chronicle now has a way to three parts of WoDX Storyteller (final audit, B6757). Threads of Fate, hardship and bodies left behind are off by default and in no preset, and Game Settings belongs to the Storyteller, so a player alone could never reach them)
 - 0.12.4 (A lone fate card read the year through an api path WoDX Chronicle never had (calendar.yearOf), so when its calendar import failed the year fell to the computer clock; it now reads api.eras.currentYear)
 - 0.12.3 (Arrival closes Foundry's own User Configuration window, which Foundry opens for a player with no character at login and which covered the arrival; the walk script answers Yes when turning the Storyteller tools on (B6711, B6712))
 - 0.12.2 (Arrival fixes from the first walk in the solo world (B5146-B5148): an actor every player owns by default (an old test actor) is no longer taken for the player's character, so the arrival window shows; Foundry's welcome scene gives way to the landing; the player is taken to the scene with Foundry 14's pullUsers)

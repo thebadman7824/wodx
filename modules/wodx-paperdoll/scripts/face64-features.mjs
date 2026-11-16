@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: extra features for the talking faces, by line and kind (drafts for Ben's face-feature desk, 13 November
+ * WoDX Paperdoll: extra features for the talking faces, by line and kind (drafts for the owner's face-feature desk, 13 November
  * 2026). Each feature is drawn in one or more stages of a face: tone (colours before drawing), back (behind the head),
  * skin (on the skin, under the eyes and hair), face (after the features, under the hair), ears (over the hair, joined to
  * the head's outline; skipped under a hood or veil) and top (over everything,
@@ -250,7 +250,7 @@ function take(r, list, n, used, out) {
 }
 /**
  * The features a face shows when the Storyteller has ticked none: rolled from the seed, so that two faces seldom look
- * alike (Ben, 13 November 2026). A kith's or breed's whole look (and a Gargoyle's stone, a Samedi's rot) always shows
+ * alike (the owner, 13 November 2026). A kith's or breed's whole look (and a Gargoyle's stone, a Samedi's rot) always shows
  * when the sheet names it; then two or three of the named group's own features (a clan, tribe, kith, house), one or two
  * of the line's own, and up to two everyday marks; never two in one slot (two things on one cheek); a wraith always bears one deathmark and a metis one
  * deformity; one headwear at most, now and then. Form and state features of a named or general group are listed and

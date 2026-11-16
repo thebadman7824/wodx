@@ -166,6 +166,11 @@ test("B6452: looking someone over rolls the viewer's line's sense for a hidden l
   assert.equal(T.senseDifficulty(vYes, {willpower: 7}), 7);
   assert.equal(T.senseDifficulty(T.LOYALTY_SENSES.find(s => s.line === "mortal"), {manipulation: 3, subterfuge: 2}), 5);
   assert.deepEqual(T.senseParts(wr), ["perception", "empathy"]);
+  // B6890: a mage with the Mind Sphere reads thoughts (the caller keeps the Sphere as powers.mind), at the Effect's rank plus 3
+  const mg = T.pickSense(T.sensesFor("mage"), {powers: {mind: 3}});
+  assert.equal(mg.power, "Mind 1 (sense thoughts and moods)");
+  assert.equal(T.senseDifficulty(mg, {}, {powers: {mind: 3}}), 4);
+  assert.equal(T.pickSense(T.sensesFor("mage"), {powers: {}}).power, "Empathy", "no Mind: only Empathy");
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/trust.mjs"), "utf8");
   assert.match(src, /Hooks\.on\("wodxLookOver"/); assert.match(src, /type: "trust\.found"/);
 });

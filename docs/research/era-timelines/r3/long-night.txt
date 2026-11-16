@@ -44,7 +44,6 @@
 1357|H|mor|EU|Paris|uprising|Etienne Marcel|The provost of Paris merchants forces reforms on the dauphin.
 1358-5|H|mor|EU|Beauvaisis|uprising,massacre|The Jacquerie|The peasants of northern France rise against the nobles and are crushed within weeks.
 1358-7|H|mor|EU|Paris|death,uprising|Etienne Marcel killed|The Paris leader is killed while trying to open the city to Charles of Navarre.
-1359|H|mor|EU|Prague|building|Charles Bridge planned|Charles IV plans a new stone bridge across the Vltava; it is begun in 1357.
 1360|H|mor|EU|Bretigny|treaty|The Treaty of Bretigny|England gives up its claim to France in return for Aquitaine and Calais.
 1360|W|mag|AS|Tibet|war|The Brotherhood withdraws|The Screaming Ghost Purge ends; the Akashics withdraw into Tibet.
 1361|H|all|EU|England|plague|The second pestilence|The plague returns, killing many children born since 1348.
@@ -57,7 +56,7 @@
 1367|H|mor|EU|Najera|battle|Najera|The Black Prince wins for Pedro the Cruel in Castile.
 1368|H|all|AS|Khanbaliq|crown,founding|The Ming|Zhu Yuanzhang founds the Ming and drives the Mongols out of Khanbaliq.
 1368|W|kue|AS|Nanjing|crown|The courts and the Ming|The courts of the Middle Kingdom hold that the Quincunx kept their quarrels from spoiling the change of dynasty.
-1369|H|mor|EU|Montiel|crown,death|Pedro the Cruel killed|Pedro of Castile is stabbed by a half-brother, Henry,, who takes the throne.
+1369|H|mor|EU|Montiel|crown,death|Pedro the Cruel killed|Pedro of Castile is stabbed by a half-brother, Henry, who takes the throne.
 1370|H|all|AS|Samarkand|crown|Timur|Timur becomes master of Transoxiana.
 1370|H|mor|EU|Limoges|massacre,siege|Limoges sacked|The Black Prince storms Limoges; chroniclers tell of thousands killed.
 1370|H|mor|EU|Stralsund|treaty,trade|The Peace of Stralsund|The Hanseatic towns force Denmark to yield; the League is at its height.
@@ -79,7 +78,7 @@
 1380|H|mor|EU|Kulikovo|battle|Kulikovo|Dmitry Donskoy of Moscow beats the Horde's general Mamai on the Don.
 1380|H|mor|EU|Chioggia|siege,sea|Chioggia|Venice breaks a Genoese siege of the lagoon and wins its long war.
 1380|H|mor|EU|France|crown,death|Charles V dies|The wise king of France dies; Charles VI, eleven, follows.
-1381-6|W|vam|EU|London|uprising,revolution|The Peasants' Revolt|Wat Tyler's rebels take London; that same year young Kindred across the west rise against their elders, and the Anarch Revolt begins.
+1381-6|W|vam|EU|London|uprising,revolution|The Peasants' Revolt|Wat Tyler's rebels take London; the Anarch Revolt, decades old by now, flares among England's young Kindred.
 1381|H|mor|EU|London|uprising,death|Wat Tyler killed|The rebel leader is killed at Smithfield in front of the king.
 1382|H|mor|EU|Moscow|siege,fire|Tokhtamysh burns Moscow|The khan of the Horde sacks and burns Moscow.
 1382|H|mor|EU|Roosebeke|battle|Roosebeke|The French crush the Flemish towns.

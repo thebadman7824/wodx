@@ -65,6 +65,16 @@ test("once a turn follows the fight's round", () => {
   assert.equal(L.check(u, p, r2).ok, true);
 });
 
+test("B6812: a once-a-turn use in a fight survives pruning whatever letter the fight's id starts with", () => {
+  const p = {name: "Samiel's Vengeance", level: 6};
+  for ( const id of ["sAbc", "nAbc", "dAbc", "wAbc", "mAbc", "lAbc", "tAbc", "xAbc"] ) {
+    const r1 = {combat: {id, round: 1}, scene: 3};
+    const u = L.prune(L.record({}, p, r1), r1);
+    assert.equal(L.check(L.prune(u, r1), p, r1).ok, false, id);
+    assert.equal(L.check(L.prune(u, {combat: {id, round: 2}, scene: 3}), p, {combat: {id, round: 2}, scene: 3}).ok, true, id);
+  }
+});
+
 test("old uses are pruned; story uses and tonight's family bars stay", () => {
   const thor = {name: "Might of Thor"}, cs = {name: "Compel Soul", disc: "Necromancy: the Path of the Sepulchre"};
   let u = L.record({}, thor, {scene: 1});

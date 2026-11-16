@@ -318,7 +318,6 @@
 1626|W|wer|EU|Germany|war,famine|The wolves of the war|Packs of wolves, and worse, return to the empty villages of Germany; the Get of Fenris hunt the Wyrm's creatures in the ruins.
 1631|W|wra|EU|Magdeburg|massacre|The Magdeburg dead|The twenty thousand dead of Magdeburg cross in a night; the Hierarchy names the place a Haunt.
 1648|W|vam|EU|Munster|treaty|A peace for the living|The Peace of Westphalia settles the mortal borders; elders of both sects redraw their own.
-1690|W|vam|EU|Europe|faith|Justicars named|The title of justicar comes into use in the Camarilla in the late 1600s.
 1666|W|mag|EU|London|science|The Royal Society and the Order|The Order of Reason sends members into the new Royal Society.
 1683|W|vam|EU|Vienna|siege|The Kindred of Vienna hold|The Ottoman siege brings Assamite and Setite agents to the walls; Vienna's Tremere hold their chantry.
 1727|W|mag|EU|London|science,death|The Order mourns Newton|Newton's death leaves the Order of Reason without its greatest Sleeper ally; some of its members think Newton was more than a Sleeper.

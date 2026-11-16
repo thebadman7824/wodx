@@ -15,6 +15,7 @@
  */
 import * as XR from "./extras-rules.mjs";
 import * as XH from "./extras-html.mjs";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import { bodyHtml } from "./body-html.mjs";
 import * as Doll from "./doll-draw.mjs";
 
@@ -736,7 +737,7 @@ async function addCoins(actor) {
     window: { title: "Add coins" },
     content: `<label>Coin <select name="denom" data-fixed>${coins.map(c => `<option>${XH.esc(c)}</option>`).join("")}</select></label>
       <label>How many <input type="number" name="n" min="1" value="10"></label>
-      <label>Carried in <select name="box">${["<option value=''>Loose</option>", ...boxes.map(b => `<option value="${b.id}">${XH.esc(b.name)}</option>`)].join("")}</select></label>`,
+      <label>Carried in ${searchBox("select[name=box]", "Search containers…", "Search containers")}<select name="box">${["<option value=''>Loose</option>", ...boxes.map(b => `<option value="${b.id}">${XH.esc(b.name)}</option>`)].join("")}</select></label>`,
     ok: { label: "Add", callback: (ev, b) => ({ denom: b.form.elements.denom.value, n: Math.max(1, Number(b.form.elements.n.value) || 1), box: b.form.elements.box.value || null }) }, rejectClose: false
   });
   if ( !r ) return;

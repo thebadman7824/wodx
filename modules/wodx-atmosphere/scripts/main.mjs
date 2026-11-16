@@ -27,7 +27,7 @@ import * as Mood from "./mood.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.18.3";
+const VERSION = "0.18.4";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -862,7 +862,7 @@ export async function writeCredits() {
     <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues, the birdsong and the cock-crow in the module's sounds folder were made for this project by sound synthesis, with no outside source. They play only where a kit folder has no recording of its own; the recordings are credited above, with what was done to each (cut short, faded and levelled).</p>
     <p>The fonts and their licences are listed in WoDX Chronicle's fonts/licenses folder.</p>`;
   let j = all(game.journal).find(x => x.flags?.[MOD]?.credits);
-  // Everyone at the table may read the credits (Ben, B2432); the Storyteller alone edits them
+  // Everyone at the table may read the credits (the owner, B2432); the Storyteller alone edits them
   const observer = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
   j ??= await JournalEntry.create({name: "WoDX · Asset credits", ownership: {default: observer}, flags: {[MOD]: {credits: true}}});
   if ( (j.ownership?.default ?? 0) < observer ) await j.update({"ownership.default": observer});
@@ -1217,7 +1217,7 @@ Hooks.once("init", () => {
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
-    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor, followsClock,
+    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), rollEffects: weatherRollSource, climate, isOutdoor, followsClock,
       moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, cueSrc, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
@@ -1232,9 +1232,22 @@ export async function prime() {
   return api;
 }
 
+/** B6796: the weather where the roller stands, on the rolls it names, through WoDX Chronicle's roll effects. */
+export function weatherRollSource(actor, ctx = {}) {
+  if ( !active || ctx?.channel !== "roll" || setting("weather") === "off" ) return [];
+  let scene = null;
+  try { scene = actor?.getActiveTokens?.()?.[0]?.document?.parent ?? viewed(); } catch (e) { scene = viewed(); }
+  if ( !scene || !isOutdoor(scene) ) return [];
+  const day = now(scene);
+  return day ? W.rollEffects(day, ctx.tags ?? []) : [];
+}
+
 Hooks.once("ready", async () => {
   if ( !active ) return;
   const api = await prime();
+  // B6796: WoDX Chronicle sets its api late in its own ready; wait for it when it is not there yet
+  const giveRolls = c => { try { c?.traits?.addSource?.(weatherRollSource); } catch (e) { console.warn(`${MOD} | weather on rolls`, e); } };
+  if ( chron()?.traits?.addSource ) giveRolls(chron()); else Hooks.once("wodxChronicleReady", giveRolls);
   applyGrade();
   applyDread();
   if ( isActiveGM() ) {
@@ -1306,7 +1319,8 @@ function openingCard(scene) {
   setTimeout(() => el.remove(), 6500);
 }
 Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); ageEverything(); } });
-Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); ageEverything(); } });
+// B6759: faces age with the era, but not while the world is held (a gate or a flashback moves the clock and puts it back)
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); if ( !chron()?.isHeld?.() ) ageEverything(); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;

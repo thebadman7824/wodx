@@ -2,7 +2,7 @@
  * WoDX Library: what the Reborn make (B3706-B3711). Data only; the kit is scripts/wonders-mummy.mjs. Every row is WoDX's
  * own short summary with a page reference, never book text.
  *
- * Ben's Item Crafting Desk (2026-11-13): mu1 full. The finished Hekau ritual makes the item: an amulet's Attribute bonus
+ * The owner's Item Crafting Desk (2026-11-13): mu1 full. The finished Hekau ritual makes the item: an amulet's Attribute bonus
  * while worn, a Sekhem Vessel's store, an ushabti (a Servitor effigy) as an NPC servant, and each counts against the
  * limit on active amulets and effigies.
  *

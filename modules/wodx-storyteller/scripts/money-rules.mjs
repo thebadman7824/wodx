@@ -283,19 +283,19 @@ export const monthsBetween = (from, to) => Math.max(0, Math.floor(((Number(to) |
 
 /* ------------------------------------------------------------------------------------------------------------ */
 /*
- * Storyteller 0.26.0: real money (Ben, 2026-11-11). Resources pays a monthly allowance in the money of the place
+ * Storyteller 0.26.0: real money (the owner, 2026-11-11). Resources pays a monthly allowance in the money of the place
  * and year, and goods have prices worked out from their value tiers.
  *
  * Books (pdf pages): V20 Dark Ages pdf 182 makes Resources a monthly allowance; V20 The Wild West pdf 86 gives
  * monthly pay by dot in the 1880s ($40-50, $100-200, $300-400, $800-1,000, $2,000); Sorcerers Crusade Companion
  * pdf 36 gives English incomes and prices for 1630; the World of Future Darkness article (pdf 9, printed p. 22)
- * gives starting cash in eurobucks by dot, and Ben set income at a tenth of that (2026-11-10). Ben raised every
+ * gives starting cash in eurobucks by dot, and the owner set income at a tenth of that (2026-11-10). The owner raised every
  * allowance by half (2026-11-11). Every other wage and money below is history, approximate, and a house rule.
  */
 
 /** Allowance per Resources dot, as a multiple of the era's monthly wage (the Wild West table's shape). */
 export const LADDER = [0.4, 1, 2.5, 7, 20, 50];
-/** Ben's raise: every allowance is half again what the ladder gives (2026-11-11). */
+/** the owner's raise: every allowance is half again what the ladder gives (2026-11-11). */
 export const ALLOWANCE_BOOST = 1.5;
 /** World of Future Darkness: a tenth of the article's starting cash by dot, eurobucks; 0 dots a house rule. */
 export const EB_LADDER = [80, 200, 500, 1000, 2000, 5000];
@@ -680,7 +680,7 @@ export function convertSavings(amount, fromYear, toYear, region = "moravian") {
 /* ---------------------------------------------------------------- money changers (0.56.0) */
 
 /**
- * Money changers (Ben's pick on the Global World Desk, 2026-11-13; house figures, the books give none). A purse
+ * Money changers (the owner's pick on the Global World Desk, 2026-11-13; house figures, the books give none). A purse
  * keeps the coin of home. Far from home a price is still charged to that purse, with a changer's cut on top:
  * the share by age (the last year each share holds to), more where the land is troubled, never above `most`.
  */

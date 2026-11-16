@@ -52,8 +52,59 @@ export async function install(scene, key) {
   const security = H.capSecurity(h.security + num(u.sec), Havens.ratingOf(h));
   await scene.update({[`flags.${MOD}.haven`]: H.normHaven({...h, ...w, security})});
   const owner = game.actors.get(h.owners[0]);
-  await log({kind: "haven", actor: isPC(owner) ? owner.id : null, name: owner?.name ?? null, text: `${h.name || scene.name}: ${u.name.toLowerCase()} put in. ${u.gives}`});
+  const did = await applyEffect(scene, key, h).catch(e => { console.warn(`${MOD} | haven upgrade effect`, e); return ""; });
+  await log({kind: "haven", actor: isPC(owner) ? owner.id : null, name: owner?.name ?? null, text: `${h.name || scene.name}: ${u.name.toLowerCase()} put in. ${u.gives}${did ? ` ${did}` : ""}`});
   return Havens.havenOf(scene);
+}
+
+const ACT = "wodx-actions", SUN = `${ACT}.sunlight`;
+/** A small region at the middle of the haven's map, two squares across, for a room the works made. */
+async function roomRegion(scene, name, key, {shade = false} = {}) {
+  const have = (scene.regions?.contents ?? [...(scene.regions ?? [])]).find(r => r.flags?.[MOD]?.havenWork === key);
+  if ( have ) return have;
+  const g = scene.grid?.size ?? 100, w = 2 * g;
+  const cx = (scene.width ?? 4000) / 2, cy = (scene.height ?? 3000) / 2;
+  const sunType = shade && CONFIG.RegionBehavior?.dataModels?.[SUN];
+  const [r] = await scene.createEmbeddedDocuments("Region", [{name, color: shade ? "#3a3a5a" : "#a08040",
+    shapes: [{type: "rectangle", x: Math.round(cx - w / 2), y: Math.round(cy - w / 2), width: w, height: w, rotation: 0, hole: false}],
+    behaviors: sunType ? [{type: SUN, name: "No daylight", system: {light: "shade", exposure: 3, ignoreSky: false}}] : [],
+    flags: {[MOD]: {havenWork: key}}}]);
+  return r ?? null;
+}
+
+/**
+ * What an upgrade with no security does (B6755, haven-works-rules EFFECTS): the cellar is a shade region and the
+ * owners' day haven, shutters make the rooms indoors for the sun, a show room raises each owner's standing.
+ * Returns the words for the log.
+ */
+export async function applyEffect(scene, key, h) {
+  const fx = W.effectOf(key);
+  if ( !fx || !scene ) return "";
+  if ( fx.kind === "dayproof" ) {
+    const r = await roomRegion(scene, fx.region, key, {shade: true});
+    let set = 0;
+    for ( const id of h.owners ) {
+      const a = game.actors.get(id);
+      if ( !a || a.flags?.[ACT]?.haven?.sceneId ) continue;
+      await a.setFlag(ACT, "haven", {sceneId: scene.id, sceneName: scene.name, regionId: r?.id ?? null, regionName: r?.name ?? null});
+      set++;
+    }
+    return `${fx.does}${set ? " It is now the day haven of whoever had none." : ""}`;
+  }
+  if ( fx.kind === "shutters" ) {
+    if ( scene.flags?.[ACT]?.light !== "outdoors" ) await scene.update({[`flags.${ACT}.light`]: "indoors"});
+    return fx.does;
+  }
+  if ( fx.kind === "show" ) {
+    await roomRegion(scene, fx.region, key);
+    const st = npc()?.standing;
+    for ( const id of h.owners ) {
+      const a = game.actors.get(id);
+      if ( a ) await st?.deed?.(a, {community: "town", delta: 1, text: `keeps ${W.upgrade(key)?.name.toLowerCase() ?? "a room fit for guests"}`});
+    }
+    return fx.does;
+  }
+  return "";
 }
 
 export async function setStaff(scene, staff) {
@@ -71,7 +122,7 @@ async function onUpgradeDone(actor, task) {
   const scene = game.scenes.get(task.haven), u = W.upgrade(task.upgrade);
   if ( !scene || !u ) return;
   await chron()?.propose?.({type: T_UP, key: `upgrade:${scene.id}:${u.key}`, title: `${actor?.name ?? "Someone"}: ${u.name.toLowerCase()} at ${Havens.havenOf(scene)?.name || scene.name}`,
-    detail: `${u.gives} Leaves: ${(u.traces ?? []).map(k => W.TRACES[k].label.toLowerCase()).join(", ") || "nothing"}.`, data: {scene: scene.id, key: u.key}});
+    detail: `${u.gives}${W.effectOf(u.key) ? ` ${W.effectOf(u.key).does}` : ""} Leaves: ${(u.traces ?? []).map(k => W.TRACES[k].label.toLowerCase()).join(", ") || "nothing"}.`, data: {scene: scene.id, key: u.key}});
 }
 async function approveUpgrade(e) { const {scene, key} = e?.data ?? {}; await install(game.scenes.get(scene), key); }
 

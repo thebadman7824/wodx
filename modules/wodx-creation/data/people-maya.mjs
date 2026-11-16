@@ -1,7 +1,7 @@
 /**
  * The Maya for the People generator (Creation, B3830 to B3833): the Yucatec lowlands, the Itza of the Petén and the
  * K'iche' and Kaqchikel highlands. WoDX's own lists of recorded names; no book text. Picks logged in
- * docs/PENDING-REVIEW.md for Ben.
+ * docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings in the modern alphabets where they are settled, apostrophes kept): the ruling lines of Mayapan,
  * Mani and Sotuta in the Yucatec chronicles and the Relaciones de Yucatán (1579 to 1581); the lords of the K'iche' and

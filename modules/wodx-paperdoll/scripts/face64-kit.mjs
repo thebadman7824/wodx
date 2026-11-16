@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: a small drawing kit for face features (13 November 2026). Ben asked for many more features (100 for
+ * WoDX Paperdoll: a small drawing kit for face features (13 November 2026). The owner asked for many more features (100 for
  * anyone, 50 per line, 15 per clan, tribe, kith and the like) so that two faces seldom look alike. Each feature is a few
  * calls to these helpers, placed by named spots on the 64 pixel face that follow the face's own head shape.
  *

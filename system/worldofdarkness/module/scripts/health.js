@@ -1,6 +1,5 @@
-let bashing = 0;
-let lethal = 0;
-let aggravated = 0;
+// WoDX fork (B6815): the damage still to place is kept per call, not in module-level counters, so two sheets drawing
+// their health boxes at the same time no longer take each other's damage.
 
 /**
  * Returns the Corpus Advantage item on an actor, if any.
@@ -82,6 +81,13 @@ export async function calculateHealth(actor, type) {
 
     const healthLevels = [];
     let woundPenalty = 0;
+    let bashing = 0, lethal = 0, aggravated = 0;
+    const calculateStatus = async () => {
+        if (aggravated > 0) { aggravated -= 1; return "*"; }
+        if (lethal > 0) { lethal -= 1; return "x"; }
+        if (bashing > 0) { bashing -= 1; return "/"; }
+        return "";
+    };
     
     if (type == CONFIG.worldofdarkness.sheettype.mortal) {
         bashing = actor.system.health.damage.bashing;
@@ -242,24 +248,4 @@ export async function calculateHealth(actor, type) {
     healthLevels.woundPenalty = woundPenalty;
 
     return healthLevels;
-}
-
-async function calculateStatus() {
-    if (aggravated > 0) {
-        aggravated -= 1;
-
-        return "*";
-    }
-    if (lethal > 0) {
-        lethal -= 1;
-
-        return "x";
-    }
-    if (bashing > 0) {
-        bashing -= 1;
-
-        return "/";
-    }
-
-    return "";
 }

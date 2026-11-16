@@ -104,7 +104,6 @@ The Clock's buttons:
 | Safety | Players may sign their lines and veils | off |
 | Timeline | Time of Judgment (2004) | off |
 | Timeline | Future Darkness branch (2010 onward) | off |
-| Rules | Ghouls use V20 Dark Ages rules in every era | on |
 | Passing the years | Thick blood | off |
 | Passing the years | Mortal decline | on |
 | Passing the years | Morality drift | off |

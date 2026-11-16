@@ -57,6 +57,8 @@ export function registerSettings(hooks) {
   game.settings.register(MODULE_ID, "skipping", {scope: "world", config: false, type: Object, default: null});
   game.settings.register(MODULE_ID, "declinedFixes", {scope: "world", config: false, type: Object, default: {}});
   game.settings.register(MODULE_ID, "openingSet", {scope: "world", config: false, type: Boolean, default: false});
+  // B6948: the chronicle's opening year, saved even when the clock is left alone, for rules that need a year before one is set
+  game.settings.register(MODULE_ID, "openingYear", {scope: "world", config: false, type: Number, default: 0});
   game.settings.register(MODULE_ID, "approvals", {
     scope: "world", config: false, type: Object, default: {pending: [], history: []},
     onChange: () => hooks.onApprovalsChange()

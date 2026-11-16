@@ -2089,7 +2089,7 @@ export default {
     "hunter"
    ],
    "name": "Hunter: Catholic Europe",
-   "summary": "Zealot imbued join the crusade. The Merciful walk out after the burning of a changeling freehold in Lyon, which turns out to have held mortal children.",
+   "summary": "Zealot imbued join the crusade. The burning of a changeling freehold in Lyon, which turns out to have held mortal children, splits the imbued, and the Merciful walk out of the crusade.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {
@@ -2101,17 +2101,6 @@ export default {
    ],
    "name": "Mummy",
    "summary": "The first copies walk out of the labs: bodies that come back breathing with no mind, no memory and no Ba. Biotechnica sells them quietly as organ stock and soldiers.",
-   "source": "House metaplot: the Future Darkness timeline"
-  },
-  {
-   "id": "wofd-2039-5",
-   "year": 2039,
-   "branch": "future",
-   "lines": [
-    "hunter"
-   ],
-   "name": "Hunter: Lyon",
-   "summary": "The burning of a changeling freehold in Lyon splits the imbued; the Merciful walk out of the crusade.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {

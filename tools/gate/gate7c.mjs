@@ -1,5 +1,5 @@
 /**
- * Phase 7c gate (routines on the clock and region reactions), in Foundry, in rothenstein-wodx (Ben's testing world,
+ * Phase 7c gate (routines on the clock and region reactions), in Foundry, in rothenstein-wodx (the owner's testing world,
  * 2026-11-08), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate7c.mjs?${Date.now()}`)).run()
  * Back the world up first: the gate moves the clock, and other WoDX modules act on the clock for every character.

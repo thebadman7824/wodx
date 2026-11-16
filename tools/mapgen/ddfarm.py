@@ -1,6 +1,6 @@
 """WoDX farmstead generator, Dungeondraft edition.
 
-Writes a .dungeondraft_map (Dungeondraft 1.0 JSON) for a small farmstead in the woods, placed from Ben's
+Writes a .dungeondraft_map (Dungeondraft 1.0 JSON) for a small farmstead in the woods, placed from the owner's
 Forgotten Adventures packs, plus a plan-view SVG that shows every footprint so the logic can be checked by eye.
 
 How it decides where things go

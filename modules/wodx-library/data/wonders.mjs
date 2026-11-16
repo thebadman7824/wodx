@@ -3,7 +3,7 @@
  * scripts/wonder-rules.mjs and Storyteller's long tasks run the work.
  *
  * Every row is WoDX's own short summary with a page reference, never book text. `pdf` is the page-file number in the
- * book-text store; `page` a printed page where known. Werewolf first (Ben's Item Crafting Desk, 2026-11-13); the
+ * book-text store; `page` a printed page where known. Werewolf first (the owner's Item Crafting Desk, 2026-11-13); the
  * other lines add rows here with their own `line` and `make` keys.
  *
  * Row: {key, name, line, kind, level, gnosis, spirit (what must be bound, in words), court (spirit court key in
@@ -34,7 +34,7 @@ export const TALEN_EXTRA = {gaffling: 0, jaggling: 2, greater: 3};
 /**
  * Who may use these rites (W20 core). Kinfolk: the book check (B3680) found W20 Kinfolk (pdf 61: no Rites Background,
  * only Kinfolk Rites; pdf 75: Kin hold fetishes only by story) and Hammer and Klaive (pdf 45: Kinfolk cannot create
- * fetishes at all), so Kinfolk making is off unless the world setting craftKinfolk keeps Ben's house reading (B3634).
+ * fetishes at all), so Kinfolk making is off unless the world setting craftKinfolk keeps the owner's house reading (B3634).
  * Black Spiral Dancers bind Banes and see only the Bane fetishes (B3681).
  */
 export const MAKERS = {

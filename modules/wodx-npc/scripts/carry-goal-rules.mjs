@@ -1,5 +1,5 @@
 /**
- * WoDX NPC: where an NPC takes the fallen it carries (B5087 to B5089, Ben's choice on the Carry Bodies Desk follow-up,
+ * WoDX NPC: where an NPC takes the fallen it carries (B5087 to B5089, the owner's choice on the Carry Bodies Desk follow-up,
  * 2026-11-15). Pure: no Foundry.
  *
  *   rescue   a living ally goes to the carrier's haven or home (a Cainite's haven first); a dead mortal ally to their
@@ -103,7 +103,7 @@ export function freePrisoner(list = [], captive, at = 0) {
 export const heldNow = (list = []) => (list ?? []).filter(x => !x.freed);
 
 /**
- * The walk to a place on another map, carrying someone (Ben's pick 2026-11-15: travel time, then arrive). There is no
+ * The walk to a place on another map, carrying someone (the owner's pick 2026-11-15: travel time, then arrive). There is no
  * map of how far one scene lies from another, so: within the same region (the same town and its lands) an hour on foot
  * with a body carried, three hours to another region; dragging doubles it, a wheeled load (a cart) halves it. House
  * figures. -> seconds of game time

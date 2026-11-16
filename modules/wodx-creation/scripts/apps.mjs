@@ -11,6 +11,7 @@ import {openLearning} from "./learn-rules.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
 import * as LX from "./lines-xp-rules.mjs";
+import * as CP from "./change-points-rules.mjs";
 import {splatOf, labelOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
@@ -297,7 +298,9 @@ export class SpendApp extends ApplicationV2 {
       buyNewAbility: SpendApp.#onNewAbility,
       buyNewPower: SpendApp.#onNewPower,
       learnGift: SpendApp.#onGift,
-      waive: SpendApp.#onWaive
+      waive: SpendApp.#onWaive,
+      buyChange: SpendApp.#onBuyChange,
+      changeByHand: SpendApp.#onChangeByHand
     }
   };
 
@@ -329,6 +332,13 @@ export class SpendApp extends ApplicationV2 {
     const t = xpTotals(payer);
     const verb = game.user.isGM ? "Buy" : "Ask";
     const opts = purchaseOptions(actor);
+    // B6779f: the dots a change left to spend, and which rows they pay for
+    const cflags = actor.flags?.[MODULE_ID] ?? {};
+    const pools = CP.changePools(cflags);
+    const freeOf = o => CP.asChangeDot(o, cflags);
+    const poolBlock = !pools.length ? "" : `<h3>Dots left from the change</h3><table class="wodx-table wodx-change" data-fixed><tbody>${pools.map(p => `
+      <tr><td>${esc(p.label)}</td><td>${p.left} from ${esc(p.from)}</td><td>${p.byHand ? (game.user.isGM ? `<button type="button" data-action="changeByHand" data-change="${p.change}" data-pool="${p.pool}">One set on the sheet</button>` : "set on the sheet with the Storyteller") : "a Free button on the rows below"}</td></tr>`).join("")}
+      </tbody></table>`;
     // B6271: each line's own ratings, then its powers by kind (Spheres, Arts, Realms, Arcanoi, Lores, Hekau, Paths)
     const powerCats = Object.entries(chart.powers ?? {}).filter(([c]) => c !== "gift");
     const sections = [...["attribute", "ability", "discipline", "virtue", "road", "willpower", "stat"].map(k => [k, o => o.kind === k,
@@ -340,13 +350,13 @@ export class SpendApp extends ApplicationV2 {
       return `<h3>${esc(title)}</h3><table class="wodx-table wodx-traits"><tbody>${list.map(o => `
         <tr class="${o.ok ? "" : "wodx-muted"}" data-search-text="${esc(o.label)}"><td>${esc(o.label)}${o.discipline === "clan" ? ' <span class="wodx-tag">clan</span>' : ""}${o.kind === "power" && o.own ? ` <span class="wodx-tag">${esc(o.cat === "sphere" ? "affinity" : "own")}</span>` : ""}</td>
           <td>${o.current} → ${o.next}</td><td>${o.cost ?? "–"} xp</td>
-          <td><button type="button" data-action="buy" data-kind="${o.kind}" data-key="${esc(o.key)}" ${o.ok ? "" : "disabled"} title="${esc(o.reason)}">${verb}</button></td></tr>`).join("")}
+          <td><button type="button" data-action="buy" data-kind="${o.kind}" data-key="${esc(o.key)}" ${o.ok ? "" : "disabled"} title="${esc(o.reason)}">${verb}</button>${(f => f ? ` <button type="button" data-action="buyChange" data-kind="${o.kind}" data-key="${esc(o.key)}" ${f.ok ? "" : "disabled"} title="${esc(f.reason || `A dot from ${CP.POOLS[f.fromChange.change].label}`)}">Free</button>` : "")(freeOf(o))}</td></tr>`).join("")}
         </tbody></table>`;
     }).join("");
     const discBlock = !chart.newDiscipline ? "" : `
       <div class="form-group"><label>New Discipline (${chart.newDiscipline} xp)</label>
         <input type="text" name="newDiscipline" placeholder="Name, e.g. Celerity">
-        <button type="button" data-action="buyNewDiscipline">${verb}</button></div>`;
+        <button type="button" data-action="buyNewDiscipline">${verb}</button>${CP.poolFor({kind: "newDiscipline"}, cflags) ? ' <label><input type="checkbox" name="newDisciplineFree" checked> a dot from the change</label>' : ""}</div>`;
     // B6271: a new rated power, with the own-or-other choice where the book prices them apart
     const newCats = LX.newPowerCats(line).filter(([c]) => c !== "sphere");
     const ownCats = newCats.filter(([c]) => LX.hasOwnPrice(line, c));
@@ -355,7 +365,7 @@ export class SpendApp extends ApplicationV2 {
         <select name="newPowerCat" data-fixed>${newCats.map(([c, l]) => `<option value="${c}">${esc(l)} (${LX.lineCost({line, kind: "newPower", cat: c, own: true})}${LX.hasOwnPrice(line, c) ? ` or ${LX.lineCost({line, kind: "newPower", cat: c, own: false})}` : ""} xp)</option>`).join("")}</select>
         <input type="text" name="newPower" placeholder="Name">
         ${ownCats.length ? `<label><input type="checkbox" name="newPowerOwn" checked> ${esc(ownCats.map(([c]) => LX.ownWord(c)).join("; "))}</label>` : ""}
-        <button type="button" data-action="buyNewPower">${verb}</button></div>`;
+        <button type="button" data-action="buyNewPower">${verb}</button>${newCats.some(([c]) => CP.poolFor({kind: "newPower", cat: c}, cflags)) ? ' <label><input type="checkbox" name="newPowerFree" checked> a dot from the change, where one is left for it</label>' : ""}</div>`;
     const giftBlock = chart.powers?.gift && game.modules.get("wodx-actions")?.api?.learnGift ? `
       <div class="form-group"><label>Gifts (${chart.powers.gift.newFlat ? `${chart.powers.gift.newFlat} xp, ${chart.powers.gift.newFlatOther} outside the breed or tribe` : `level × ${chart.powers.gift.newByLevel}, × ${chart.powers.gift.newByLevelOther} outside`})</label>
         <button type="button" data-action="learnGift">Learn a Gift…</button></div>` : "";
@@ -380,6 +390,7 @@ export class SpendApp extends ApplicationV2 {
         ${searchBox("table.wodx-traits", "Search traits…", "Search traits")}</div>
       <div class="wodx-scroll">
         ${studying}
+        ${poolBlock}
         ${groups}
         <h3>Something new</h3>
         ${discBlock}${powerBlock}${giftBlock}
@@ -406,6 +417,26 @@ export class SpendApp extends ApplicationV2 {
     this.render();
   }
 
+  static #onBuyChange(event, target) {
+    const o = purchaseOptions(this.actor).find(x => x.kind === target.dataset.kind && x.key === target.dataset.key);
+    const dot = o ? CP.asChangeDot(o, this.actor.flags?.[MODULE_ID] ?? {}) : null;
+    if ( !dot ) return ui.notifications.warn("No dots are left from the change for that.");
+    return this.#spend(dot);
+  }
+
+  static async #onChangeByHand(event, target) {
+    if ( !game.user.isGM ) return;
+    const take = CP.takeOne(this.actor.flags?.[MODULE_ID] ?? {}, {change: target.dataset.change, pool: target.dataset.pool});
+    if ( take ) await this.actor.update({[`flags.${MODULE_ID}.${take[0]}`]: take[1]});
+    this.render();
+  }
+
+  /** A new power or Discipline as a free dot when the box is ticked and a pool pays for it. */
+  #free(option, box) {
+    if ( !option || !this.element.querySelector(`input[name=${box}]`)?.checked ) return option;
+    return CP.asChangeDot({...option, ok: true, reason: ""}, this.actor.flags?.[MODULE_ID] ?? {}) ?? option;
+  }
+
   static #onBuy(event, target) {
     const option = purchaseOptions(this.actor).find(o => o.kind === target.dataset.kind && o.key === target.dataset.key);
     return this.#spend(option);
@@ -413,7 +444,7 @@ export class SpendApp extends ApplicationV2 {
 
   static #onNewDiscipline() {
     const name = this.element.querySelector("input[name=newDiscipline]")?.value;
-    const option = newDisciplineOption(this.actor, name);
+    const option = this.#free(newDisciplineOption(this.actor, name), "newDisciplineFree");
     if ( !option ) return ui.notifications.warn("Type the Discipline's name.");
     return this.#spend(option);
   }
@@ -423,7 +454,7 @@ export class SpendApp extends ApplicationV2 {
     const cat = this.element.querySelector("select[name=newPowerCat]")?.value;
     const box = this.element.querySelector("input[name=newPowerOwn]");
     const own = LX.hasOwnPrice(spendLine(this.actor), cat) ? !!box?.checked : true;
-    const option = newPowerOption(this.actor, cat, name, {own});
+    const option = this.#free(newPowerOption(this.actor, cat, name, {own}), "newPowerFree");
     if ( !option ) return ui.notifications.warn("Type the power's name.");
     return this.#spend(option);
   }

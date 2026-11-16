@@ -25,6 +25,13 @@ export const DIFFICULTIES = {
  *      traitDice, traitDiff, traitParts (merits and flaws, from trait-hooks.js) }
  * Returns { dice, difficulty, parts[], blocked: string|null, autoSuccessAllowed }
  */
+/** B6925: a pool halved k times, rounded down, never under one die (a Tzimisce without native soil, V20 p. 71); 0 stays 0. */
+export function halvePool(dice, k = 0) {
+    const d = Math.max(0, Math.floor(Number(dice) || 0)), t = Math.max(0, Math.floor(Number(k) || 0));
+    if (!d || !t) return d;
+    return Math.max(1, Math.floor(d / 2 ** t));
+}
+
 export function actionPool(p) {
     const parts = [];
     let dice = 0, diff = p.baseDifficulty ?? 6, blocked = null;

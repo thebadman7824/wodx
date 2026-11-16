@@ -28,6 +28,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
 | wodxBond | npc | npc (a player character's new servant becomes their ally in WoDX Creation, so the master's experience can raise it, B5127) |
+| wodxInteractablesTrap | interactables | interactables (a word floats over the token, and a snare that catches someone marks them Held until it lets go, B6923) |
+| wodxInteractablesHazard | interactables | interactables (a word floats over the token, and a live wire that holds someone marks them Held until they pull free or the power is cut, B6923) |
+| wodxStockDrawn | interactables | interactables (a run of stock draws whispers the Storyteller one card naming each container and what came in, B6923) |
 | wodxEffectApplied | actions | actions (a Puppeteer's rides on one mortal make a consort, B5118) |
 | wodxAttackRolled | combat | actions (an attack on someone an oath binds you to asks to break the oath, B5114), paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
 | wodxMagickWorked | actions | senses (vulgar magick strains the place for Prime sight; every working leaves an echo for Time sight) |
@@ -119,7 +122,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
 | wodxCaptive | npc | an NPC has taken someone prisoner: {actor, name, faction, factionName, place, placeName, by, text} (B5089); the Storyteller's signal board makes it a rumour |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
-| wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
-| wodxInteractablesHazard | interactables | a hazard went off |
-| wodxInteractablesTrap | interactables | a trap went off |
 | wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |

@@ -6,6 +6,7 @@
  * own words; the page refs are each line's creation pages in creation-totals.mjs. No Foundry here.
  */
 import {TOTALS} from "../data/creation-totals.mjs";
+import {startingTempers} from "../../wodx-actions/scripts/c20-rules.js";
 
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 const prop = (o, p) => String(p).split(".").reduce((x, k) => x?.[k], o);
@@ -21,8 +22,12 @@ export const RAGE_BY_AUSPICE = {ragabash: 1, theurge: 2, philodox: 3, galliard: 
 export const GNOSIS_BY_BREED = {homid: 1, metis: 3, lupus: 5};
 /** W20 core, each tribe's starting Willpower. The Dark Ages names map onto them (B3002; book check passed 2026-11-13). */
 export const WILLPOWER_BY_TRIBE = {"black furies": 3, "bone gnawers": 4, "children of gaia": 4, fianna: 3, "get of fenris": 3, "glass walkers": 3,
-  "red talons": 3, "shadow lords": 3, "silent striders": 3, "silver fangs": 3, stargazers: 4, uktena: 3, wendigo: 4};
-const TRIBE_ALIAS = {fenrir: "get of fenris", "warders of men": "glass walkers"};
+  "red talons": 3, "shadow lords": 3, "silent striders": 3, "silver fangs": 3, stargazers: 4, uktena: 3, wendigo: 4,
+  // B6779e: the lost tribes (W20 pp. 389, 391, 393) and the Black Spiral Dancers (W20 p. 425)
+  bunyip: 4, croatan: 4, "white howlers": 3, "black spiral dancers": 3};
+// B6779e: the Hakken have no row of their own (W20 pp. 506-507 call them a group apart, with loose ties to the Shadow
+// Lords); house rule: their starting Willpower is the Shadow Lords' 3
+const TRIBE_ALIAS = {fenrir: "get of fenris", "warders of men": "glass walkers", hakken: "shadow lords", "black spiral": "black spiral dancers"};
 /** Demon: the Fallen's starting Torment by House (B3003, corrected after the book check, B3005). */
 export const TORMENT_BY_HOUSE = {devils: 4, namaru: 4, scourges: 3, asharu: 3, malefactors: 3, annunaki: 3, fiends: 3, neberu: 3,
   defilers: 3, lammasu: 3, devourers: 4, rabisu: 4, slayers: 4, halaku: 4};
@@ -128,9 +133,11 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       // B5024: a wilder's point goes where the wizard's pick says (Glamour unless Willpower is picked)
       const own = sb.choice ? (wilder === "willpower" ? {willpower: 1} : {glamour: 1}) : sb;
       const tag = what => seem && own[what] ? `Starts at 4, plus ${own[what]} as a ${seem}${sb.choice ? " (the player's pick)" : ""}` : "Starts at 4";
-      wp(4 + n(own.willpower), tag("willpower"));
-      add("glamour", "Glamour", "system.advantages.glamour", 4 + n(own.glamour), tag("glamour"), {extra: "glamour"});
-      add("banality", "Banality", "system.advantages.banality", 3, "Starts at 3");
+      // B6935: the Tempers are WoDX Actions' C20 rule (startingTempers, C20 pp. 85-87, 144-145); no seeming yet, the base
+      const t = startingTempers(seem ?? "", wilder === "willpower" ? "willpower" : "glamour");
+      wp(t.willpower, tag("willpower"));
+      add("glamour", "Glamour", "system.advantages.glamour", t.glamour, tag("glamour"), {extra: "glamour"});
+      add("banality", "Banality", "system.advantages.banality", t.banality, "Starts at 3");
       if ( sb.choice ) notes.push(`A wilder adds 1 to Glamour or to Willpower: now ${wilder === "willpower" ? "Willpower" : "Glamour"}; change the pick below.`);
       else if ( !seem ) notes.push("Write the seeming on the sheet: a childling starts with 1 more Glamour, a grump with 1 more Willpower, and a wilder picks one.");
     }

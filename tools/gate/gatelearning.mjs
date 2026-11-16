@@ -91,6 +91,9 @@ export async function run() {
       await api.learn.setWaived(learner, false);
       G.ok("5. waived, it rises at once", r.ok && !r.learning && Number(learner.system.attributes.strength.value) === p.next, {ok: r.ok, reason: r.reason, strength: learner.system.attributes.strength.value});
     });
+  } catch (e) {
+    // B6956: a failure before the first step (no WoDX Creation api) is a failed step, not "0/0 passed"
+    G.ok("0. set up", false, {error: e?.message ?? String(e), creation: !!game.modules.get(C)?.api});
   } finally {
     for ( const [m, k, v] of keep ) { try { await game.settings.set(m, k, v); } catch (e) { /* kept */ } }
     return G.finish();

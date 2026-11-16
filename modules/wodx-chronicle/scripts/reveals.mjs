@@ -13,7 +13,7 @@
  *
  * State in podState.saga.reveals. Storyteller only.
  */
-import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
+import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
 import * as RR from "./reveal-rules.mjs";
 import * as F from "./front-rules.mjs";
 import * as S from "./saga-rules.mjs";
@@ -36,13 +36,15 @@ function played(s) {
   return [...(run?.played ?? [])];
 }
 export const revealState = (s = pod()) => RR.normState(sagaOf(s).reveals ?? {});
-async function change(fn) {
+/* B6740: a reveal write waits its turn on the story-chain state (util podTurn), so the clock's tick never writes an
+ * older copy over it */
+const change = fn => podTurn(async () => {
   const s = pod(), x = sagaOf(s);
   const r = await fn(RR.normState(x.reveals ?? {}), s);
   x.reveals = r?.state ?? r;
   await savePod(s);
   return r;
-}
+});
 async function card(title, body, flags = null) {
   return ChatMessage.create({content: `<div class="wodx-card wct-pod wct-reveal"><h3>${esc(title)}</h3>${body}</div>`,
     speaker: {alias: "Chronicle"}, whisper: gmIds(), ...(flags ? {flags: {[MODULE_ID]: flags}} : {})});

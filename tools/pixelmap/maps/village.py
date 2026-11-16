@@ -3,7 +3,7 @@ cottages with their gardens, a timber chapel, a well on the green, open-field st
 
     python3 tools/pixelmap/maps/village.py OUTDIR
 
-One of the sample maps for Ben's review before the larger map work (the Whole World desk, p1: generic villages per
+One of the sample maps for the owner's review before the larger map work (the Whole World desk, p1: generic villages per
 building style and age)."""
 import math, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.dirname(HERE))

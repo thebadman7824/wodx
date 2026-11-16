@@ -117,6 +117,13 @@ export function groundUnder(tokenDoc) {
     const marks = rs.map(r => r.flags?.[MODULE_ID]?.reflection).filter(k => typeof k === "string");
     const mood = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.mood?.ruleAt?.(tokenDoc) : null;
     const moods = mood && mood.names.length ? [{name: mood.names.join(", "), rule: mood}] : [];
+    // B6792: the night's weather out of doors (WoDX Atmosphere): fog thins the Shroud, as its weather card says
+    try {
+      const A = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+      const scene = tokenDoc?.parent, day = A?.isOutdoor?.(scene) ? A.now?.(scene) : null;
+      const step = day ? (A.modifiers?.(day) ?? []).filter(m => m?.id === "shroud").reduce((s, m) => s + (Number(m.n) || 0), 0) : 0;
+      if ( step ) moods.push({name: "Fog tonight", rule: {shroud: step}});
+    } catch (e) { /* no weather */ }
     return groundShift(marks, moods);
   } catch (e) { return {gauntlet: 0, shroud: 0, notes: []}; }
 }

@@ -577,13 +577,13 @@ export function build(ctx) {
     async function learnGift(actor) {
         const i = info(actor);
         const known = new Set(giftItems(actor).map(it => it.name.toLowerCase()));
-        const rankCap = Math.max(1, i.rank);
+        const rankCap = G.giftTerms(1, false, i).cap; // B6729: a Skin Dancer learns level one only
         // A Fera learns its own breed's Gifts as well as the shared list (B3756)
         const pool = i.feraKey && i.feraKey !== "Garou" ? [...feraGifts().filter(g => g.breed === i.feraKey), ...gifts()] : gifts();
-        const ownOf = g => g.breed ? g.breed === i.feraKey : G.giftIsOwn(g, i);
+        const ownOf = g => g.breed ? G.feraGiftIsOwn(g, i) : G.giftIsOwn(g, i);
         const rows = pool.filter(g => !known.has(g.n.toLowerCase())).map(g => {
-            const own = ownOf(g);
-            return { g, own, ok: g.l <= rankCap, xp: G.giftXP(g.l, own) };
+            const t = G.giftTerms(g.l, ownOf(g), i);
+            return { g, own: t.own, ok: g.l <= rankCap, xp: t.xp };
         }).sort((a, b) => (b.own - a.own) || (a.g.l - b.g.l) || a.g.n.localeCompare(b.g.n));
         const groupsTxt = g => g.breed ? [g.breed, g.sub].filter(Boolean).join(", ") : (g.g ?? []).map(cap).join(", ").replace(/-/g, " ");
         const content = `<form class="wodx-learn"><p><b>${esc(actor.name)}</b>: ${esc(cap(i.breed))}, ${esc(cap(i.auspice) || "no auspice")}, ${esc(cap(i.tribe).replace(/-/g, " ") || "no tribe")}; Rank ${i.rank} (Gifts up to level ${rankCap}, DA:W p. 111).</p>
@@ -591,10 +591,10 @@ export function build(ctx) {
           <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}): ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
           <div class="form-group"><label>Spend experience through the log</label><input type="checkbox" name="xp" checked/></div>
           ${spiritApi() ? `<p class="vta-note">The spirits: ${esc((spiritApi().rules.summary(spiritApi().of(actor)).join("; ")) || "no court knows this one yet")}. Standing changes the difficulty to summon the teacher; a scorned court may refuse to teach.</p>` : ""}
-          <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).</p></form>`;
+          <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).${G.isSkinDancer(i.tribe) ? " A Skin Dancer pays level × 7 for every Gift and learns level one only (W20 p. 199)." : ""}</p></form>`;
         return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
             const g = pool.find(x => x.id === fd.gift); if (!g) return null;
-            const own = ownOf(g), xp = G.giftXP(g.l, own);
+            const { own, xp } = G.giftTerms(g.l, ownOf(g), i); // B6729: Skin Dancers pay level x 7
             // B6274: with WoDX Creation, a Gift is bought like any other trait: the chart of the line, a spirit or a
             // Garou to teach it, and it is known when the study is done (or at once when the Storyteller waives it)
             const cr = game.modules.get("wodx-creation")?.api;
@@ -728,7 +728,7 @@ export function build(ctx) {
             const gn = Math.max(2, Math.min(10, n(it.system?.gnosis) || 6));
             const talen = fd.talen || !!it.getFlag?.(MOD, "talen") || it.system?.type === "wod.types.talen";
             if (it.getFlag?.(MOD, "spent")) { ctx.notify(`${it.name} is spent: its spirit has gone.`); return null; }
-            let body = "", rolls = [], woke = false;
+            let body = "", rolls = [], woke = false, lastHits = 0;
             if (fd.how === "spend") {
                 const note = await pay(actor, "gnosis", 1); if (note === false) return null;
                 woke = true;
@@ -738,10 +738,19 @@ export function build(ctx) {
                 const rr = await rollPool(effectiveGnosis(actor), gn);
                 rolls.push(rr.roll);
                 body += rollBlock("Gnosis", rr, [`difficulty ${gn}`, ...(sp ? [`${sp} less for silver carried`] : [])]);
+                lastHits = rr.successes;
                 if (rr.successes > 0) {
                     if (fd.how === "attune") { await it.setFlag?.(MOD, "attuned", true); body += `<div class="vta-big good">Attuned (and dedicated).</div>`; }
                     else { woke = true; body += `<div class="vta-big good">It wakes.</div>`; }
                 } else body += `<div class="vta-note">${fd.how === "attune" ? "Rejected: no new attempt until the Garou makes peace with the spirit." : "It stays silent."}</div>`;
+            }
+            // B6737: a woken fetish puts its keywords on the effects card, as a Gift does; the spend counts one success (B3751)
+            let fxItems = [];
+            const wk = it.getFlag?.("wodx-library", "wonder")?.key || it.name;
+            if (woke && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "fetish", id: wk, name: it.name, successes: fd.how === "spend" ? 1 : lastHits, source: it.system?.reference || "", noRoll: fd.how === "spend", world: "Werewolf (fetish)" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             body += await markTurn(actor, "gnosis");
             if (talen && woke) {
@@ -749,7 +758,7 @@ export function build(ctx) {
                 await it.setFlag?.(MOD, "spent", true);
                 body += `<div class="vta-note">The talen is spent; its spirit goes free. It stays on the sheet marked spent until someone removes it.</div>`;
             }
-            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean));
+            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         });
     }
 

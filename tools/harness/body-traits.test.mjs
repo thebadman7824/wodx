@@ -40,7 +40,7 @@ test("Combat reads the body traits for the track, the penalty and silver", () =>
   assert.match(src, /toughness\(target\)\?\.silver/);
 });
 
-test("only Extreme Kink is left without an effect, on purpose", () => {
+test("no merit or flaw is left without an effect or a card (Extreme Kink has its card, B6779a)", () => {
   const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).map(e => e.key);
-  assert.deepEqual(none, ["extreme-kink"]);
+  assert.deepEqual(none, []);
 });

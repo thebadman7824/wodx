@@ -314,10 +314,11 @@ test("creatures of the Wyrm, first into battle, and the Stargazer's sky", () => 
 test("signature effects in the trait shape, with tag aliases", () => {
   const fx = [{tags: ["resist-frenzy"], difficulty: 1, why: "Osebo"}, {tags: ["survival"], dice: 1, why: "Red Talons"}, {tags: ["resist-dominate"], difficulty: 2, why: "Gargoyles"},
     {tags: ["animal ken"], dice: 1, why: "Bratovitch"}, {tags: ["all"], halve: true, why: "soil"}];
-  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["frenzy"]}).map(e => [e.name, e.diff]), [["Osebo", 1]]);
-  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["survival"]}).map(e => [e.name, e.dice]), [["Red Talons", 1]]);
+  // B6925: the soil's halving now reaches every roll as a count (it was left out while it was only told)
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["frenzy"]}).map(e => [e.name, e.diff, e.halve ?? 0]), [["Osebo", 1, 0], ["soil", 0, 1]]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["survival"]}).filter(e => !e.halve).map(e => [e.name, e.dice]), [["Red Talons", 1]]);
   assert.deepEqual(S.sigRollEffects(fx, {channel: "resist", tags: ["mind"]}).map(e => e.name), ["Gargoyles"]);
-  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).map(e => e.name), ["Bratovitch"]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).filter(e => !e.halve).map(e => e.name), ["Bratovitch"]);
   assert.equal(S.deformityByKey("hairless").effects[0].tags[0], "social");
 });
 
@@ -359,8 +360,9 @@ test("dawn meditation once a day, and Willpower kept in bounds", () => {
 
 test("a changeling stacks kith, seeming, court and House, from the system's kith keys", () => {
   assert.deepEqual(S.faeRows({kith: ["wod.bio.changeling.satyrs"], seeming: ["Wilder"], court: ["Unseelie"], house: ["Fiona"]}).map(r => r.key), ["satyr", "wilder", "unseelie", "fiona"]);
-  for ( const [k, want] of [["wod.bio.changeling.nighthags", "thallain"], ["wod.bio.changeling.glomes", "inanimae"], ["wod.bio.changeling.kachinas", "nunnehi"],
-    ["wod.bio.changeling.firbholg", "darkkin"], ["wod.bio.changeling.merrow", "merfolk"], ["wod.bio.changeling.dauntain", "dauntain"], ["wod.bio.changeling.redcap", "redcap"],
+  // B6729: one row per kith; the group rows only for a name that gives the group
+  for ( const [k, want] of [["wod.bio.changeling.nighthags", "nighthags"], ["wod.bio.changeling.glomes", "glomes"], ["wod.bio.changeling.kachinas", "kachinas"],
+    ["wod.bio.changeling.firbholg", "firbholg"], ["wod.bio.changeling.merrow", "merrow"], ["Thallain", "thallain"], ["Merfolk", "merfolk"], ["wod.bio.changeling.dauntain", "dauntain"], ["wod.bio.changeling.redcap", "redcap"],
     ["Hsien: Komuko", "komuko"], ["Hsien", "hirayanu"], ["wod.bio.changeling.sidhe", "sidhe"]] )
     assert.equal(S.faeRows({kith: [k]})[0]?.key, want, k);
   assert.equal(S.faeRows({court: ["Seelie"]})[0].key, "seelie", "Seelie is not read inside Unseelie");

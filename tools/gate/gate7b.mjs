@@ -303,6 +303,21 @@ export async function run() {
     ok("a player's character is never moved; Off means off", pc === null && off === null && !cards.some(m => [T.hero.document.uuid, T.fighter.document.uuid].includes(m.getFlag(MOD, "plan").token)),
       {cardsSince: cards.length});
   });
+  // B6945: a failed stand-up spends the NPC's action this turn, so WoDX NPC says it cannot act and plans nothing
+  await step("a lost action: the fighter that failed to stand does not act", async () => {
+    const t0 = Date.now();
+    await sc.setFlag(MOD, "mode", "off");
+    await turnTo(combat, T.fighter);
+    await T.fighter.actor.setFlag("wodx-combat", "lostAction", {combat: combat.id, round: combat.round});
+    await sc.setFlag(MOD, "mode", "auto");
+    const msg = await npc().takeTurn(combat, {force: true});
+    await sleep(800);
+    await T.fighter.actor.unsetFlag("wodx-combat", "lostAction");
+    const card = msg ? game.messages.get(msg.id) : null;
+    const plans = game.messages.contents.filter(m => m.timestamp >= t0 && m.getFlag(MOD, "plan")?.token === T.fighter.document.uuid);
+    ok("a lost action: the fighter that failed to stand does not act", /cannot act \(failed to stand up\)/.test(card?.content ?? "") && !plans.length,
+      {card: card?.content?.replace(/<[^>]+>/g, " ").trim().slice(0, 160) ?? null, plans: plans.length});
+  });
   await sc?.unsetFlag(MOD, "mode");
   if ( startScene && startScene.id !== canvas.scene?.id ) await startScene.view();
   // B6050: the arena and its fight go, so the next run starts fresh

@@ -8,7 +8,7 @@ import {execFileSync} from "node:child_process";
 import {fileURLToPath, pathToFileURL} from "node:url";
 
 /*
- * B6000-B6016 (Ben 2026-11-15): a power or ritual must DO what its card says, not leave a marker nothing reads. Before
+ * B6000-B6016 (the owner 2026-11-15): a power or ritual must DO what its card says, not leave a marker nothing reads. Before
  * this guard, a Ward put "Warded" on the sheet and no soak read it; a Curse put "Cursed" there and no roll read it; a
  * talisman, a banishing or a Gauntlet rite was a line of text. The powers inventory counted all of them as applying.
  * This test fails when any applying power's result is a marker no system reads, or when a reader goes away.

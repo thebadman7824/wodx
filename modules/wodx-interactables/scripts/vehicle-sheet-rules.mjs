@@ -13,7 +13,7 @@ export const VEHICLE_TYPE = "wodx-interactables.vehicle";
 /** The kinds a vehicle sheet can be: the mount kinds that are not beasts. */
 export const VEHICLE_KINDS = Object.keys(MOUNTS).filter(k => !MOUNTS[k].beast && !["horse", "mule"].includes(k));
 
-/** Paint and finish, for the sheet and the sprite (B4969: different colours and styles, Ben 2026-11-14). */
+/** Paint and finish, for the sheet and the sprite (B4969: different colours and styles, the owner 2026-11-14). */
 export const COLOURS = {
   "": "As it comes", black: "Black", white: "White", grey: "Grey", silver: "Silver", red: "Red", maroon: "Maroon", blue: "Blue",
   navy: "Navy", green: "Green", olive: "Olive drab", brown: "Brown", tan: "Tan", cream: "Cream", yellow: "Yellow", orange: "Orange",

@@ -6,6 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
+import {EFFECTS_W6, EXTRA_PROMPTS} from "./trait-effects-w6.mjs";
 import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6, MORE_ATTITUDE_3, MORE_PROMPTS_7} from "./trait-effects-more.mjs";
 
 export const PATTERNS = {
@@ -93,7 +94,7 @@ export const MERITS_FLAWS = [
   {"key": "flesh-of-the-corpse", "name": "Flesh of the Corpse", "kind": "flaw", "cost": "5", "book": "V20", "page": 483, "pdf": 491, "type": "physical", "patterns": ["P14"], "holders": ["kindred"], "against": ["any"], "aliases": [], "effects": []},
   {"key": "infertile-vitae", "name": "Infertile Vitae", "kind": "flaw", "cost": "5", "book": "V20", "page": 484, "pdf": 492, "type": "physical", "patterns": ["P17"], "holders": ["kindred"], "against": ["any"], "aliases": [], "effects": []},
   {"key": "blind", "name": "Blind", "kind": "flaw", "cost": "6", "book": "V20", "page": 484, "pdf": 492, "type": "physical", "patterns": ["P2", "P1"], "holders": ["any"], "against": ["any"], "aliases": [], "effects": [{"ch": "roll", "tags": ["dexterity"], "diff": 2, "note": "+2 difficulty on Dexterity rolls"}]},
-  {"key": "coldly-logical", "name": "Coldly Logical", "kind": "merit", "cost": "1", "book": "V20", "page": 484, "pdf": 492, "type": "mental", "patterns": ["P1"], "holders": ["any"], "against": ["any"], "aliases": [], "effects": [{"ch": "roll", "tags": ["logic"], "diff": -1, "note": "-1 difficulty to sort fact from feeling"}]},
+  {"key": "coldly-logical", "name": "Coldly Logical", "kind": "merit", "cost": "1", "book": "V20", "page": 484, "pdf": 492, "type": "mental", "patterns": ["P1"], "holders": ["any"], "against": ["any"], "aliases": [], "effects": [{"ch": "roll", "tags": ["logic"], "tick": "The roll sorts the facts from what others feel about them", "diff": -1, "note": "-1 difficulty to sort fact from feeling (V20 p. 484)"}]},
   {"key": "common-sense", "name": "Common Sense", "kind": "merit", "cost": "1", "book": "V20", "page": 484, "pdf": 492, "type": "mental", "patterns": ["P11"], "holders": ["any"], "against": ["any"], "aliases": [], "effects": []},
   {"key": "concentration", "name": "Concentration", "kind": "merit", "cost": "1", "book": "V20", "page": 484, "pdf": 492, "type": "mental", "patterns": ["P1"], "holders": ["any"], "against": ["any"], "aliases": [], "effects": []},
   {"key": "introspection", "name": "Introspection", "kind": "merit", "cost": "1", "book": "V20", "page": 484, "pdf": 492, "type": "mental", "patterns": ["P1"], "holders": ["any"], "against": ["any"], "aliases": [], "effects": []},
@@ -303,6 +304,7 @@ for ( const e of MERITS_FLAWS ) {
   if ( MORE_EFFECTS_3[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_3[e.key]];
   if ( MORE_EFFECTS_4[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_4[e.key]];
   if ( MORE_EFFECTS_5[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_5[e.key]];
+  if ( EFFECTS_W6[e.key] ) e.effects = [...(e.effects ?? []), ...EFFECTS_W6[e.key]];
   if ( RENAMES[e.key] && RENAMES[e.key] !== e.name ) { e.aliases = [...new Set([...(e.aliases ?? []), e.name])]; e.name = RENAMES[e.key]; }
 }
 
@@ -435,7 +437,7 @@ export const PROMPTS = {
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
 // B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
-for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7}) ) PROMPTS[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7, ...EXTRA_PROMPTS}) ) PROMPTS[k] ??= v;
 // B3920: the backgrounds that now have a card or an attitude seed say so in the Trait effects window
 for ( const b of BACKGROUNDS ) {
   if ( b.hook === "story" && MORE_PROMPTS_7[b.key] ) b.hook = "prompt";

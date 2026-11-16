@@ -51,9 +51,14 @@ export function specOf(actor, tokDoc = null) {
 }
 /** What the sheet names that can bring features: its type and kind, clan, kith, tribe, breed, tradition, house and the like. */
 const GROUP_KEYS = ["clan", "tribe", "breed", "auspice", "tradition", "affiliation", "faction", "kith", "seeming", "legacy", "house", "creed", "guild", "lineage", "dynasty", "dharma", "variant"];
+/** B6817: the sheet keeps a list pick as its key (wod.bio.mage.hermes); the features know groups by name (Order of Hermes). */
+const named = v => {
+  if ( !/^wod\./.test(v) ) return v;
+  try { const t = game.i18n?.localize?.(v); return t && t !== v ? t : v; } catch (e) { return v; }
+};
 export function groupText(actor) {
   const s = actor?.system ?? {}, out = [actor?.type ?? "", kindText(actor), s.settings?.variant ?? ""];
-  for ( const k of GROUP_KEYS ) for ( const v of [s[k], s.custom?.[k], s[k]?.value, s.settings?.[k]] ) if ( typeof v === "string" && v ) out.push(v);
+  for ( const k of GROUP_KEYS ) for ( const v of [s[k], s.custom?.[k], s[k]?.value, s.settings?.[k]] ) if ( typeof v === "string" && v ) out.push(named(v));
   return out.join(" ");
 }
 /** States that bring form and power features: frenzy, Glabro, a demon's risen apocalyptic form, and those ticked by hand. */

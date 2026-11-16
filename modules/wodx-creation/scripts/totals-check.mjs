@@ -57,7 +57,7 @@ export function totalsView(actor, lineId) {
 }
 
 const COST_LABEL = {road: "Humanity or Road", po: "P'o", hun: "Hun", chi: "Chi Virtues", martialArts: "Martial Arts", bloodPath: "Blood Sorcery path",
-  otherHorror: "Another Shade's Horror", horror: "The Shade's Horrors"};
+  otherHorror: "Another Shade's Horror", horror: "The Shade's Horrors", holyArt: "The Holy Art"};
 /** The costed Traits the check does not count (Willpower, Rage, Arete and the like). */
 function extras(L) {
   const counted = new Set(["attribute", "ability", "background", "virtue", ...(L.powers ?? []).map(p => p.key)]);

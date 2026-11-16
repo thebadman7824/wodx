@@ -158,23 +158,33 @@ export async function run() {
       await medic.update({"system.attributes.intelligence.value": 5, "system.abilities.medicine.value": 5});
       await patient.update({"system.health.damage.lethal": 4});
       const [, pt] = await G.tokens(scene, [{actor: medic, x: 2, y: 4, actorLink: true}, {actor: patient, x: 3, y: 4, actorLink: true}]);
-      await waitFor(() => !!pt?.object, 5000);
-      pt.object?.setTarget?.(true, {releaseOthers: true});
+      // B6779g: the patient must be the target before first aid rolls, or treat() falls back to the medic. In lane order
+      // the canvas can still be on another scene or slow to draw the token, and a target left over from an earlier gate
+      // can sit in game.user.targets; so the gate views its scene again, waits for the token, sets the one target with
+      // the layer's own call and waits until the user's targets are exactly the patient.
+      if ( canvas.scene?.id !== scene.id ) { await scene.view(); await waitFor(() => canvas?.ready && canvas.scene?.id === scene.id, 20000); }
+      await waitFor(() => !!pt?.object, 20000);
+      const aim = () => { if ( canvas.tokens?.setTargets ) canvas.tokens.setTargets([pt.id], {mode: "replace"}); else pt.object?.setTarget?.(true, {releaseOthers: true}); };
+      aim();
+      const onPatient = () => game.user.targets.size === 1 && [...game.user.targets][0]?.actor?.id === patient.id;
+      if ( !(await waitFor(onPatient, 3000)) ) { aim(); await waitFor(onPatient, 5000); }
+      const aimed = {drawn: !!pt?.object, onScene: canvas.scene?.id === scene.id, targets: [...game.user.targets].map(t => t.actor?.name ?? t.name)};
       const before = game.wodxActions.healPlan(patient, 30 * 86400);
       const [kit] = await medic.createEmbeddedDocuments("Item", [{name: "a roll of clean linen bandage", type: "Item", flags: {"wodx-sheets": {qty: 5}}}]);
       let tries = 0;
       while ( !patient.getFlag(ACT, "treated") && tries < 3 ) {
         tries++;
         const stop = answer(root => !!root.querySelector("select[name=check]"), "ok");
+        if ( !onPatient() ) aim();
         await lib.use.run(medic.items.get(kit.id) ?? kit, "treat", medic);
         stop();
         await waitFor(() => !!patient.getFlag(ACT, "treated"), 3000);
       }
-      pt.object?.setTarget?.(false, {releaseOthers: true});
+      if ( canvas.tokens?.setTargets ) canvas.tokens.setTargets([], {mode: "replace"}); else pt.object?.setTarget?.(false, {releaseOthers: true});
       const after = game.wodxActions.healPlan(patient, 30 * 86400);
       G.ok("5. first aid puts the patient under care", !!patient.getFlag(ACT, "treated") && before?.needsCare === true && num(before?.healed?.lethal) === 0
         && after?.needsCare === false && num(after?.healed?.lethal) > 0 && lethalOf(patient) === 4,
-        {tries, treated: !!patient.getFlag(ACT, "treated"), before: before ? {needsCare: before.needsCare, healed: before.healed} : null, after: after ? {needsCare: after.needsCare, healed: after.healed} : null});
+        {tries, aimed, treated: !!patient.getFlag(ACT, "treated"), before: before ? {needsCare: before.needsCare, healed: before.healed} : null, after: after ? {needsCare: after.needsCare, healed: after.healed} : null});
     });
 
     await G.step("6. an item named in free text, in a fight", async () => {

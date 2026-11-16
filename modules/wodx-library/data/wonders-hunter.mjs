@@ -2,12 +2,12 @@
  * WoDX Library: what inquisitors make (B3717-B3719). Data only; the kit is scripts/wonders-hunter.mjs. WoDX's own words
  * with page references, never book text.
  *
- * Ben's Item Crafting Desk (2026-11-13): h1 full. Inquisitors bless water, salt or a weapon for the scene through item
+ * The owner's Item Crafting Desk (2026-11-13): h1 full. Inquisitors bless water, salt or a weapon for the scene through item
  * uses, and the orders can enshrine a relic (a saint's remains, the proper rites).
  *
  * The books: V20 Dark Ages says Holy Artifacts arise on their own and cannot be made (pdf 396); Dark Ages: Inquisitor
  * has relics only as a Background (p. 156) and gives each stage a True Faith equivalent (p. 158). So blessing and
- * enshrining are house rules from Ben's pick, always approved by the Storyteller (B3717). Only inquisitors (the Dark
+ * enshrining are house rules from the owner's pick, always approved by the Storyteller (B3717). Only inquisitors (the Dark
  * Ages and before, WoDX years before 1500) make them; mortal hunters later and the imbued make nothing (B3718).
  */
 

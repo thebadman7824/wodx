@@ -194,8 +194,8 @@ export async function firstChangeDialog() {
       <p>A mortal's Garou blood wakes (DA:W pp. 79–85). A Werewolf sheet is made from the mortal's; the mortal sheet is kept,
         in the folder "${BEFORE_FOLDER}". Kinfolk start with their tribe chosen.</p>
       <div class="form-group"><label>Mortal</label>${searchBox("select[name=mortal]", "Search mortals…", "Search mortals")}<select name="mortal">${opts(mortals.map(a => [a.id, `${a.name}${kin(a) ? " (Kinfolk)" : ""}`]), pick.id)}</select></div>
-      <div class="form-group"><label>Breed</label><select name="breed">${opts(Object.entries(D.breeds).map(([k, v]) => [k, v.label]), "homid")}</select></div>
-      <div class="form-group"><label>Auspice</label><select name="auspice">${opts(Object.entries(D.auspices).map(([k, v]) => [k, v.label]), "ragabash")}</select></div>
+      <div class="form-group"><label>Breed</label><select name="breed" data-fixed>${opts(Object.entries(D.breeds).map(([k, v]) => [k, v.label]), "homid")}</select></div>
+      <div class="form-group"><label>Auspice</label><select name="auspice" data-fixed>${opts(Object.entries(D.auspices).map(([k, v]) => [k, v.label]), "ragabash")}</select></div>
       <div class="form-group"><label>Tribe</label>${searchBox("select[name=tribe]", "Search tribes…", "Search tribes")}<select name="tribe">${opts(Object.entries(D.tribes).map(([k, v]) => [k, v.label]), tribeOf(pick))}</select></div>
       <div class="form-group"><label>Rage · Gnosis · Willpower</label><input type="number" name="rage" min="1" max="10"><input type="number" name="gnosis" min="1" max="10"><input type="number" name="willpower" min="1" max="10"></div>
       <div class="form-group"><label>Glory · Honor · Wisdom</label><input type="number" name="glory" min="0" max="10"><input type="number" name="honor" min="0" max="10"><input type="number" name="wisdom" min="0" max="10"></div>

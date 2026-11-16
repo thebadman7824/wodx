@@ -86,6 +86,11 @@ test("experience: what the log shows, by the line's own list, at most 5", () => 
   const deeds = D.nightDeeds({entries, me, ledger, night: 100, seenBefore: ["Olomouc"]});
   assert.deepEqual([deeds.there, deeds.danger, deeds.learning, deeds.success], [true, true, true, true]);
   assert.equal(deeds.why.learning, "saw Brno for the first time");
+  // B6896: an objective a map event finished counts as a success too
+  const mapDone = [{id: "m", kind: "objective", status: "kept", from: me, what: "reach the abbey", history: [{at: at(100, 5), what: "Done: reach the abbey."}]}];
+  assert.equal(D.nightDeeds({entries, me, ledger: mapDone, night: 100, seenBefore: ["Olomouc"]}).success, true);
+  const mapStep = [{...mapDone[0], status: "open", history: [{at: at(100, 5), what: "Step done: the gate."}]}];
+  assert.equal(D.nightDeeds({entries, me, ledger: mapStep, night: 100, seenBefore: ["Olomouc"]}).success, false);
   const reasons = WR.reasonsFor("vampire", {story: true});
   const ticks = D.xpTicks(deeds, reasons);
   assert.ok(ticks.includes("there") && ticks.includes("danger") && ticks.includes("success"));

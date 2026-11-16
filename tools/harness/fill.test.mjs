@@ -199,7 +199,7 @@ test("goods are single things that stack, never piles", async () => {
   assert.equal(grain.container, "a sack");
   assert.equal(grain.former, "a sack of grain");
   assert.equal(grain.id, "a-sack-of-grain", "the id stays the same, so old marks and items still match");
-  // Nothing starts in a container (Ben, 2026-11-12): "grain (3)", never "grain (in 3 sacks)".
+  // Nothing starts in a container (the owner, 2026-11-12): "grain (3)", never "grain (in 3 sacks)".
   assert.equal(G.stackLine(grain, 1), "grain");
   assert.equal(G.stackLine(grain, 3), "grain (3)");
   assert.equal(F.goodsLine(grain, () => 0.999), `grain (${grain.stack.max})`);

@@ -148,7 +148,7 @@ export function nightDeeds({entries = [], me = {}, asked = [], ledger = [], nigh
   if ( oracle ) why.learning = `asked: ${oracle.q}`;
   else if ( newPlace ) why.learning = `saw ${newPlace.place} for the first time`;
   const mine = x => !!x && ((me.id && x.id === me.id) || (!x.id && me.name && String(x.name ?? "").trim().toLowerCase() === String(me.name).trim().toLowerCase()));
-  const closed = (ledger ?? []).find(e => e && e.status === "kept" && (mine(e.from) || mine(e.to)) && (e.history ?? []).some(h => inNight(h.at) && /^Marked/.test(String(h.what ?? ""))));
+  const closed = (ledger ?? []).find(e => e && e.status === "kept" && (mine(e.from) || mine(e.to)) && (e.history ?? []).some(h => inNight(h.at) && /^(Marked|Done:)/.test(String(h.what ?? ""))));
   if ( closed ) why.success = `${closed.kind} settled${closed.what ? `: ${closed.what}` : ""}`;
   return {there: !!why.there, danger: !!why.danger, learning: !!why.learning, success: !!why.success, why};
 }

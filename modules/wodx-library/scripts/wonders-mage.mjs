@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the Mage kit for the wonders registry (B3684-B3688). No Foundry calls here.
  *
- * Ben's Item Crafting Desk picks, all full: m1 Wonders (a Talisman, or a Device for the Technocracy) built from the
+ * The owner's Item Crafting Desk picks, all full: m1 Wonders (a Talisman, or a Device for the Technocracy) built from the
  * Effect keywords WoDX Actions already knows, m2 charms and periapts, m3 mage fetishes from the Garou list. The Book
  * of Secrets steps (pdf 152-162) run as one extended Arete roll: the energy and the investment each want three
  * successes a dot, at the highest Sphere + 4 (+ 3 in a Sanctum), less up to 3 for purification. The foundation (an
