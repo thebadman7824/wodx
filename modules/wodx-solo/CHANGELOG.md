@@ -2,7 +2,6 @@
 
 Newest first.
 
-- 0.11.2 (Arrival fixes from the first walk in the solo world (B5146-B5148): an actor every player owns by default (an old test actor) is no longer taken for the player's character, so the arrival window shows; Foundry's welcome scene gives way to the landing; the player is taken to the scene with Foundry 14's pullUsers)
 - 0.11.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.11.0 (The night's work in the Lone Chronicle (B6225-B6226): every button or window choice the seat makes for the absent Storyteller is written down as a piece of the Hand's work, and the Storyteller tools have a new tool, The night's work, which shows the list from the seat and takes back what the player ticks)
 - 0.10.0 (Step 4 of The Lone Chronicle (B6045 to B6049). The director (world setting "The director brings the night's trouble", on) looks once a night at dusk: a rest after a hard night or three hard of four, pressure after two quiet ones, steady between; one thing, two under pressure, one fewer on a Quiet dial and one more on Often. I am stuck's lead now comes from the director. Experience (world setting "Experience at the end of each night", on): before noon after a night, ticked from the log (took part, real danger, learned something, a goal reached) on the line's own list, through WoDX Creation's award. The recap: on login, once a night. Gate gatesolodirector)
