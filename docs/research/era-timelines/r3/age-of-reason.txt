@@ -446,7 +446,7 @@
 1818|H|mor|OC|Aotearoa|war,massacre,migration|The Musket Wars|Northern Maori armed with muskets raid the length of Aotearoa; tens of thousands die or are enslaved in twenty years.
 1819|H|mor|OC|Hawaii|faith,law,crown|The kapu broken|After Kamehameha's death the royal women eat with the young king in public, and the old religious law ends.
 1830|H|mor|OC|Tasmania|war,persecution,migration|The Black Line|Two thousand settlers and soldiers sweep across Tasmania to drive its Aboriginal people into a peninsula; the survivors are later exiled to an island.
-1830|W|wer|OC|Australia|occult,empire|The Squattocracy|The house reading has servants of the Wyrm among the richest graziers form a Squatters' Council to push into the interior; the Bunyip and the land's peoples withdraw before them, and the Garou who came with the settlers grow bitter at a tribe that will not speak to them.
+1830|W|wer|OC|Australia|occult,empire|The Squattocracy|The house reading has a few servants of the Wyrm among the richest graziers form a Squatters' Council to push the herds into the interior; the land's peoples are driven back, the Bunyip turn drought, flood and fire on the newcomers, and the Garou who came with the settlers find a tribe that will not speak to them.
 1835|H|mor|OC|Melbourne|founding,treaty|Batman's treaty|A grazier from Tasmania claims to buy the land where Melbourne stands from Kulin elders; the governor voids the deal.
 1835|H|mor|OC|Waitangi|founding,law|The United Tribes|Northern Maori chiefs sign a declaration of the independence of New Zealand.
 1836|H|mor|OC|Adelaide|founding|South Australia|A colony without convicts is proclaimed at Adelaide.

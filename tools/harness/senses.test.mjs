@@ -80,7 +80,7 @@ test("light: a lit spot is bright; outdoors at night the moon and the clouds dec
   assert.equal(R.lightLevel({part: "night", indoor: true}), "pitch");
 });
 
-test("difficulty: dark and noise add steps, powers take them off, never below 3; pitch dark is blind without dark sight", () => {
+test("difficulty: dark and noise add steps, powers take them off, never below 2 (V20 pdf 257); pitch dark is blind without dark sight", () => {
   assert.deepEqual(R.difficulty("sight", {light: "bright"}).diff, 6);
   assert.equal(R.difficulty("sight", {light: "dark"}).diff, 8);
   assert.equal(R.difficulty("sight", {light: "pitch"}).blind, true);
@@ -90,14 +90,19 @@ test("difficulty: dark and noise add steps, powers take them off, never below 3;
   assert.equal(R.difficulty("sound", {crowd: true, sky: "storm", indoor: false}).diff, 8);
   assert.equal(R.difficulty("sound", {crowd: true, sky: "storm", indoor: true}).diff, 7);
   const auspex = R.powersFor({auspex: 4});
-  assert.equal(R.difficulty("smell", {}, auspex).diff, 3);
-  assert.ok(R.difficulty("smell", {}, auspex).parts.some(p => /no lower/.test(p)));
+  assert.equal(R.difficulty("smell", {}, auspex).diff, 2);
+  assert.ok(!R.difficulty("smell", {}, auspex).parts.some(p => /no lower/.test(p)));
+  const auspex5 = R.powersFor({auspex: 5});
+  assert.equal(R.difficulty("smell", {}, auspex5).diff, 2);
+  assert.ok(R.difficulty("smell", {}, auspex5).parts.some(p => /no lower than 2/.test(p)));
   assert.equal(R.difficulty("smell", {}, R.powersFor({auspex: 4, useAuspex: false})).diff, 6);
 });
 
 test("powers: the Gift is -2 in human forms and -3 in the wolf forms; wolf forms put smell first; channels by power", () => {
   assert.equal(R.powersFor({heightened: true, form: "homid"}).mods[0].n, 2);
   assert.equal(R.powersFor({heightened: true, form: "lupus"}).mods[0].n, 3);
+  assert.equal(R.powersFor({heightened: true, form: "crinos"}).mods[0].n, 3); // W20 pdf 161 (B6571)
+  assert.equal(R.powersFor({heightened: true, form: "glabro"}).mods[0].n, 2);
   assert.equal(R.powersFor({form: "hispo"}).smellFirst, true);
   assert.equal(R.powersFor({form: "homid"}).smellFirst, false);
   assert.deepEqual(R.powersFor({senseWyrm: true, awareness: 2, spheres: {life: 1}}).channels.sort(), ["sphere-life", "taint", "uncanny"]);
@@ -471,7 +476,8 @@ import * as QR from "../../modules/wodx-senses/scripts/quiet-rules.mjs";
 import {readFileSync as readQ} from "node:fs";
 test("difficulties in words, from V20's table, and only the difficulty changes", () => {
   assert.equal(QR.difficultyWord(6), "standard");
-  assert.equal(QR.difficultyWord(3), "easy");
+  assert.equal(QR.difficultyWord(3), "trivial");
+  assert.equal(QR.difficultyWord(4), "easy"); // V20 pdf 257 (B6570)
   assert.equal(QR.difficultyWord(9), "extremely difficult");
   assert.equal(QR.difficultyWord(2), "trivial");
   assert.equal(QR.difficultyWord(10), "all but impossible");

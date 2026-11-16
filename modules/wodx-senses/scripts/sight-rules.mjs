@@ -118,9 +118,10 @@ function ringBase(sight, profile, {safe = false, needsRead = false, read = null}
 export const css = n => `#${(Number(n) >>> 0).toString(16).padStart(6, "0").slice(-6)}`;
 
 /**
- * 0.10.0 (B2901): Heightened Senses can be overwhelmed. V20 warns that a sudden loud noise or bright flash can stun a
- * character whose senses are heightened (page to pin in the book check). House reading: a loud noise heard, or a gun
- * fired near them, calls for Willpower at difficulty 6; a failure leaves them stunned and deafened for one turn.
+ * 0.10.0 (B2901): Heightened Senses can be overwhelmed. V20 core pdf 142 / printed 134 (B6572): a sudden or dynamic
+ * event calls for a Willpower roll at difficulty 4 or more, higher for a stronger source, and a failure leaves the
+ * character oblivious to the surroundings for a turn or two. House reading: a loud noise heard, or a gun fired near
+ * them, is a strong source at difficulty 6; a failure dazes them for one turn.
  */
 /** near: how far a gunshot overwhelms, in the scene's own units (yards or metres on most maps). */
 export const OVERLOAD = {difficulty: 6, turns: 1, near: 30};
@@ -130,4 +131,4 @@ export function overwhelms(ev = {}) {
   if ( ev.noise === "loud" ) return true;
   return !!(ev.ranged && GUN.test(String(ev.weapon ?? "")));
 }
-export const overloadText = name => `${name}'s heightened senses are hit by the noise. Willpower at difficulty ${OVERLOAD.difficulty}: on a failure ${name} is stunned and deafened for ${OVERLOAD.turns} turn (the senses stay heightened).`;
+export const overloadText = name => `${name}'s heightened senses are hit by the noise. Willpower at difficulty ${OVERLOAD.difficulty}: on a failure ${name} is overwhelmed and takes in nothing around them for ${OVERLOAD.turns} turn (the senses stay heightened).`;
