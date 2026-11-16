@@ -58,3 +58,15 @@ test("a blood-bound animal ghoul holds to its master unless mistreated (B5055)",
   assert.equal(O.drift("unfed", {step: 0, months: 1, animal: true, bound: true}), null, "already under the floor: never raised, never lowered by a month");
   assert.equal(O.drift("unfed", {step: 1, months: 1}).delta, -1, "a person drifts as before");
 });
+
+test("B6747: a player's \"Drank from the domitor\" starts the ghoul's month again, not only the Storyteller's", async () => {
+  const {readFileSync} = await import("node:fs");
+  const f = readFileSync(new URL("../../modules/wodx-chronicle/scripts/ghoul-need.mjs", import.meta.url), "utf8");
+  const sig = readFileSync(new URL("../../modules/wodx-chronicle/scripts/signatures.mjs", import.meta.url), "utf8");
+  // the sheet button is offered to whoever opens the window, and ghoulFed calls the hook on that client only
+  assert.match(sig, /has\("ghoul"\) && on\(\) && !rowWith\(a, "ghoul"\)\?\.revenant \) buttons\.unshift\(\{action: "drank"/);
+  assert.match(sig, /Hooks\.callAll\("wodxGhoulFix", \{actor: a, drank: true/);
+  const line = f.split("\n").find(l => l.includes('Hooks.on("wodxGhoulFix"'));
+  assert.doesNotMatch(line, /isActiveGM\(\)/);
+  assert.match(line, /e\.actor\?\.isOwner/);
+});

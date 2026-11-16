@@ -379,17 +379,18 @@ export class ApprovalsApp extends ApplicationV2 {
     });
   }
 
-  static #except(target) {
+  /** B6748: the ticked boxes on screen; a proposal that came in after the list was drawn is not among them. */
+  static #ticked(target) {
     const root = target.closest(".wodx-body") ?? document;
-    return [...root.querySelectorAll("input.wodx-tick")].filter(b => !b.checked).map(b => b.dataset.id);
+    return [...root.querySelectorAll("input.wodx-tick")].filter(b => b.checked).map(b => b.dataset.id);
   }
 
   static async #onApproveTicked(event, target) {
-    await decideMany("approve", {except: ApprovalsApp.#except(target)});
+    await decideMany("approve", {ids: ApprovalsApp.#ticked(target)});
   }
 
   static async #onRejectTicked(event, target) {
-    await decideMany("reject", {except: ApprovalsApp.#except(target)});
+    await decideMany("reject", {ids: ApprovalsApp.#ticked(target)});
   }
 
   static #onTickAll(event, target) {
