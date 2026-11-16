@@ -59,7 +59,9 @@ const characters = () => game.actors.filter(isCharacter);
 
 /** A character on the company's map to hand a thing to: the first player character's token there. */
 function handFor(scene) {
-  return scene?.tokens.find(t => isCharacter(t.actor))?.actor ?? characters()[0] ?? null;
+  // The world actor behind the token, so the thing stays on the character's sheet (an unlinked token's copy is lost)
+  const t = scene?.tokens.find(x => isCharacter(x.actor));
+  return (t ? game.actors.get(t.actorId) ?? t.actor : null) ?? characters()[0] ?? null;
 }
 /** Show twist n and set its people moving. Returns the lines for the Storyteller's card. */
 export async function onReveal(n, variant = "") {
