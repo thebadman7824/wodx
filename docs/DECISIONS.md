@@ -354,6 +354,7 @@ Next free block: B6580
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
 | B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC (used B6520-B6521) | tools (pcq, vision) |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
+| B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 <!-- decision-index:end -->
 
@@ -10989,6 +10990,31 @@ Reverse: drop passHoldings.
 tools/gate/gatesolofate.mjs, seven steps, run with force for a player of the gate's own; the sleep steps touch only the gate's actors.
 
 Reverse: delete the gate.
+
+## B6540. More peoples dated, each from a source read (2026-11-15)
+WoDX Creation, data/name-customs.mjs. Polish (nobles from 1250, settling 1300 to 1850), Russian (1861, census 1897, passports of the 1930s), Greek (Byzantine houses; patronymic surnames of the 1800s), Serbian (nobles from 1400; standardised 1851), Sámi (1901, 1921, 1923), Khmer (one name until the French law of 1910), Amharic (father's name, no family name), Zulu and Mande (clan names inherited), Amazigh (Algeria's law of 23 March 1882), Mizrahi (family names early among Arabic-speaking Jews; Iran 1925), Malay (bin or binti). Each entry names the page or law it came from.
+
+Reverse: delete the entry; the people keeps its tables as before.
+
+## B6541. The Plains and the West: one name until the circular of 1890 (2026-11-15)
+Lakota, Cheyenne, Comanche, Kiowa, Apache, Arikara, Pawnee, Mandan, Hidatsa, Crow, Arapaho, Shoshone, Ute and Diné: given name alone until Commissioner Morgan's circular of 19 March 1890 (reissued 1 December 1902), then settling to 1930 (house reading in PENDING-REVIEW). Canadian peoples, the eastern woodlands and the Pueblos are not included.
+
+Reverse: remove the MORGAN loop.
+
+## B6542. Peoples still without a date (2026-11-15)
+Hungarian, Arabic beyond Algeria, Moroccan Amazigh, Yoruba, Akan, Swahili, Banyarwanda, Kongo, Luba, Ganda, Tuareg, Nahua, Quechua, Maya and the Inuit: no source read gave a date, so they keep their tables (listed in PENDING-REVIEW).
+
+Reverse: none needed.
+
+## B6545. Ottoman women "daughter of" (2026-11-15)
+data/people-world.mjs: before 1934 a Turkish woman's second name is "X kızı", not "Xoğlu"; a household's daughters take "X kızı" after the father. House reading, logged.
+
+Reverse: set the turkish fam back to "{names.male.turkish}oğlu".
+
+## B6546. Sámi and Khmer lists to 300 recorded names (2026-11-15)
+Sámi from the List of Sámi people (Wikipedia), Khmer from Cambodian name and List of monarchs of Cambodia (Wikipedia), read 15 November 2026: 304 and 300 distinct names. Their old-age lists are still under 50 each, so they sit in RAISED_SHORT_OLD, held to 300 by the harness. Amazigh, Moro and Banyarwanda gained the rulers of the Zayyanid, Almohad, Marinid, Sulu and Maguindanao lists and the Rwandan king list, but stay under 300.
+
+Reverse: remove the added names; drop RAISED_SHORT_OLD.
 
 ## B6570. The lowest difficulty is 2, and the difficulty words are V20's (2026-11-15)
 WoDX Senses. V20 core pdf 257 / printed 249 says a difficulty is always between 2 and 10, so a sense roll's difficulty stops at 2, not 3 (the earlier page note said V20 gave no floor, which was wrong). The quiet interface's words follow the same chart, so 3 is now trivial and 4 easy (they were easy and a house word, routine); 2 shares the word for 3 and 10 stays "all but impossible".
