@@ -152,7 +152,8 @@ export async function herdsDialog() {
 
 /** WoDX Actions fed a vampire on a vessel (wodxFed); a player's feeding comes by socket. */
 export function onFed(p) {
-  if ( !p?.vessel?.uuid ) return;
+  // a player's feeding fired again on the Storyteller's computer (WoDX Combat's relay): the player's own request already came
+  if ( !p?.vessel?.uuid || p.relayed ) return;
   if ( !isActiveGM() ) {
     if ( !game.user.isGM ) game.socket.emit(SOCKET, {type: "req.fed", payload: {userId: game.user.id, by: p.by ?? null, vessel: p.vessel}});
     return;

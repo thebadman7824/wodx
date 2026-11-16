@@ -2129,7 +2129,12 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const hasUndo = !!(undo && setting("applyChanges") && (harm || undo.statuses.length || drunk > 0));
     if (hasUndo) html += `<button type="button" class="vta-btn" data-action="feedUndo">Undo the harm to ${esc(vesselActor.name)}</button>`;
     // 3.47.0: who was fed on, for WoDX NPC's memory of it (the vessel knows something happened)
-    if (drunk > 0 && vesselActor) Hooks.callAll("wodxFed", { by: { uuid: actor.uuid, name: actor.name }, vessel: { uuid: vesselActor.uuid, name: vesselActor.name }, drunk, willing: !!willing, fought: !!fought });
+    if (drunk > 0 && vesselActor) {
+        const fed = { by: { uuid: actor.uuid, name: actor.name }, vessel: { uuid: vesselActor.uuid, name: vesselActor.name }, drunk, willing: !!willing, fought: !!fought };
+        Hooks.callAll("wodxFed", fed);
+        // B6787: and again on the active Storyteller's computer when a player fed, where the listeners act (WoDX Combat's relay)
+        try { game.wodxCombat?.relayHook?.("wodxFed", actor, fed); } catch (e) { /* Combat off */ }
+    }
     return { html, drunk, undo: hasUndo ? undo : null };
 }
 
