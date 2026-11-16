@@ -6,6 +6,7 @@
  * own words; the page refs are each line's creation pages in creation-totals.mjs. No Foundry here.
  */
 import {TOTALS} from "../data/creation-totals.mjs";
+import {startingTempers} from "../../wodx-actions/scripts/c20-rules.js";
 
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 const prop = (o, p) => String(p).split(".").reduce((x, k) => x?.[k], o);
@@ -132,9 +133,11 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       // B5024: a wilder's point goes where the wizard's pick says (Glamour unless Willpower is picked)
       const own = sb.choice ? (wilder === "willpower" ? {willpower: 1} : {glamour: 1}) : sb;
       const tag = what => seem && own[what] ? `Starts at 4, plus ${own[what]} as a ${seem}${sb.choice ? " (the player's pick)" : ""}` : "Starts at 4";
-      wp(4 + n(own.willpower), tag("willpower"));
-      add("glamour", "Glamour", "system.advantages.glamour", 4 + n(own.glamour), tag("glamour"), {extra: "glamour"});
-      add("banality", "Banality", "system.advantages.banality", 3, "Starts at 3");
+      // B6935: the Tempers are WoDX Actions' C20 rule (startingTempers, C20 pp. 85-87, 144-145); no seeming yet, the base
+      const t = startingTempers(seem ?? "", wilder === "willpower" ? "willpower" : "glamour");
+      wp(t.willpower, tag("willpower"));
+      add("glamour", "Glamour", "system.advantages.glamour", t.glamour, tag("glamour"), {extra: "glamour"});
+      add("banality", "Banality", "system.advantages.banality", t.banality, "Starts at 3");
       if ( sb.choice ) notes.push(`A wilder adds 1 to Glamour or to Willpower: now ${wilder === "willpower" ? "Willpower" : "Glamour"}; change the pick below.`);
       else if ( !seem ) notes.push("Write the seeming on the sheet: a childling starts with 1 more Glamour, a grump with 1 more Willpower, and a wilder picks one.");
     }

@@ -7,6 +7,7 @@
  *   1. the api and settings are there (api.world, the Homeland setting, 44 regions, each whole)
  *   2. at home nothing has changed: the homeland is Moravia, people are Bohemia's, the climate Central Europe's
  *   3. a scene given Egypt: region, latitude, an hour ahead, Arabic names, the hot desert's weather
+ *   3b. B6931: the same scene in 500 keeps a count of its own (Islam is not founded yet), in 700 the Muslim year
  *   4. a scene given Japan: the family name comes first; a scene given Mexico in 1197: a Nahua has no family name, a Maya has the lineage name last
  *   5. clearing the scene's place brings home back
  *   6. the homeland set to India and back: latitude, part of the world, culture and climate follow, money does not
@@ -80,6 +81,14 @@ export async function run() {
       const own = !atmo || !wx || (wx.region === "egypt" && wx.climate === "hot-desert" && (!wxHome || (!wxHome.region && wxHome.climate !== "hot-desert")));
       ok("a scene in Egypt", own && holy?.faith === "islamic" && holy.calendar === "The Muslim year" && !!homeHoly?.faith && Array.isArray(holy.others) && here.id === "egypt" && W.isAbroad() && d.latitude === 30 && d.ownPlace && ctx.culture === "egypt" && arabic >= 9 && made.every(p => p.name && !/[{}]/.test(p.name)) && (!atmo || clim === "hot-desert"),
         {here: here.id, latitude: d.latitude, offset: d.offset, culture: ctx.culture, climate: clim, holy: holy ? {faith: holy.faith, label: holy.label} : null, homeHoly: homeHoly?.faith, weather: wx ? {region: wx.region, climate: wx.climate, label: wx.label} : null, home: wxHome ? {region: wxHome.region ?? null, climate: wxHome.climate} : null, names: made.slice(0, 4).map(p => p.name)});
+    });
+
+    // B6931: a faith is not kept before its founding year; Egypt in 500 keeps a count of its own, in 700 the Muslim year
+    await step("no faith before its founding", async () => {
+      const d = chron.place.describeAt(scene);
+      const early = chron.church.on({...d, year: 500}, {scene}), later = chron.church.on({...d, year: 700}, {scene});
+      ok("no faith before its founding", early?.faith === "own" && early.calendar === "Holy days" && later?.faith === "islamic" && later.calendar === "The Muslim year",
+        {early: early ? {faith: early.faith, calendar: early.calendar, label: early.label} : null, later: later ? {faith: later.faith, calendar: later.calendar} : null});
     });
 
     await step("names in their own order", async () => {

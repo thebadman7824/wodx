@@ -2,7 +2,7 @@
  * Builds modules/wodx-chronicle/data/future-events.mjs from the approved Future Darkness drafts in docs/research/wofd:
  * the 1990-2025 timeline (draft c), the 2026-2098 timeline (draft k), and the five Cascades of 2099 (draft n),
  * with ending titles and book pages from the Time of Future Judgement desk (draft l).
- * Run: node tools/wofd/build-future-events.mjs
+ * Run: node tools/wofd/build-future-events.mjs   (--out <file> writes elsewhere, for the harness's up-to-date check)
  */
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
@@ -98,5 +98,6 @@ const body = `/**
  */
 export default ${JSON.stringify({version: 1, cascades: CASCADES, events}, null, 1)};
 `;
-fs.writeFileSync(join(root, "modules/wodx-chronicle/data/future-events.mjs"), body);
+const outAt = process.argv.indexOf("--out");
+fs.writeFileSync(outAt > 0 ? process.argv[outAt + 1] : join(root, "modules/wodx-chronicle/data/future-events.mjs"), body);
 console.log(`${events.length} events, ${CASCADES.length} cascades`);

@@ -10,7 +10,7 @@ import {searchBox} from "./search.mjs";
 import * as church from "./church.mjs";
 import {reckon} from "./reckoning-rules.mjs";
 import {countOf, OWN_COUNTS} from "./local-reckoning-rules.mjs";
-import {FAITHS} from "./faith-rules.mjs";
+import {FAITHS, faithFounded} from "./faith-rules.mjs";
 import * as place from "./place.mjs";
 import {offsetWords} from "./place-rules.mjs";
 import {paceLine} from "./pace.mjs";
@@ -88,13 +88,13 @@ export class ClockApp extends ApplicationV2 {
     const heard = rule("eraReckoning") ? reckon(now, {church: ch, eraId: p?.id ?? "", latitude: setting("latitude")}) : null;
     // B5875: a player's character may count the days by its own people's year rather than the land's
     const mine = !gm ? game.user.character ?? null : null;
-    const count = mine ? countOf(mine.flags?.[MODULE_ID] ?? {}, mine.flags?.["wodx-creation"]?.lifepath ?? null, ch.faith ?? "western") : null;
+    const count = mine ? countOf(mine.flags?.[MODULE_ID] ?? {}, mine.flags?.["wodx-creation"]?.lifepath ?? null, ch.faith ?? "western", now.year) : null;
     const told = !gm && heard ? (count && count.faith !== (ch.faith ?? "western")
       ? reckon(now, {church: {...ch, day: null}, faith: count.faith, region: ch.region, eraId: p?.id ?? "", latitude: setting("latitude")}) : heard) : null;
     const pickNow = mine?.flags?.[MODULE_ID]?.reckonFaith || "land";
     const countPick = mine && rule("eraReckoning") ? `<div class="form-group wodx-own-count" data-fixed><label>${esc(mine.name)} counts the days</label>
           <select name="reckonFaith" data-fixed><option value="land" ${pickNow === "land" ? "selected" : ""}>As the land does${count?.why === "people" ? " (or as their people do)" : ""}</option>
-          ${OWN_COUNTS.map(f => `<option value="${f}" ${pickNow === f ? "selected" : ""}>${esc(FAITHS[f]?.label ?? f)}</option>`).join("")}</select></div>` : "";
+          ${OWN_COUNTS.filter(f => faithFounded(f, now.year)).map(f => `<option value="${f}" ${pickNow === f ? "selected" : ""}>${esc(FAITHS[f]?.label ?? f)}</option>`).join("")}</select></div>` : "";
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `

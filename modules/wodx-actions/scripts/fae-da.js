@@ -596,10 +596,12 @@ export function build(ctx) {
             const actor = h ? await fromUuid(h.actor) : null;
             if (!actor) return null;
             if (!actor.isOwner) return notify("Only the fae's player or the Storyteller spends the Weaving.");
-            if (h.step <= 1) return notify("The havoc is at its first step: it cannot go lower.");
-            if (!(await spend(actor, "weaving", 2))) return null;
-            await msg.setFlag(MOD, "daFaeHavoc", { ...h, step: h.step - 1, lowered: h.lowered + 1 });
-            return post(actor, `${actor.name} reins in the havoc`, `<div class="vta-res">2 Weaving: the havoc is ${h.lowered + 1} step${h.lowered ? "s" : ""} lower (step ${h.step - 1} of 5).</div><div class="wodx-quiet">${REF} p. 102</div>`);
+            // B6935: havocStep is the rule: 2 Weaving a step, never below the first (p. 102)
+            const hs = F.havocStep(h.step, 2);
+            if (!hs.cost) return notify("The havoc is at its first step: it cannot go lower.");
+            if (!(await spend(actor, "weaving", hs.cost))) return null;
+            await msg.setFlag(MOD, "daFaeHavoc", { ...h, step: hs.step, lowered: h.lowered + 1 });
+            return post(actor, `${actor.name} reins in the havoc`, `<div class="vta-res">${hs.cost} Weaving: the havoc is ${h.lowered + 1} step${h.lowered ? "s" : ""} lower (step ${hs.step} of 5).</div><div class="wodx-quiet">${REF} p. 102</div>`);
         }
         if (what === "echo3" || what === "echo4") {
             if (!game.user.isGM) return null;
