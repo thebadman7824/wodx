@@ -68,6 +68,28 @@ export const UPGRADES = [
   {key: "show-room", name: "Rooms done by a designer", from: 1900, goal: 6, sec: 0, show: true, traces: ["deliveries"], gives: "Guests see wealth and taste."}
 ];
 
+/**
+ * What the upgrades with no security do in play (B6755). The books give no Haven rules for these (V20 sets the sun's
+ * harm, pp. 262-263 day sleep; Domain V20 pp. 112-113 has no works); the effects are house figures:
+ *   dayproof  a sealed place to sleep through the day: a shade region on the haven's map that the sun never reaches
+ *             (WoDX Actions' sunlight reads it), and the owners' day haven where none is set (the dawn warnings check it)
+ *   shutters  the haven's rooms count as indoors for the sun, and a rival scouting the works has half the chance
+ *   show      a room fit for guests: each owner's standing in the town rises by one (a public deed, WoDX NPC), and a
+ *             region on the map marks the room
+ */
+export const EFFECTS = {
+  cellar: {kind: "dayproof", region: "Sealed cellar (shade, no daylight)", does: "The sun never reaches it: a Cainite sleeping there takes no harm by day."},
+  shutters: {kind: "shutters", does: "The rooms count as indoors for the sun, and a rival following the talk of the works has half the chance."},
+  steel: {kind: "shutters", does: "The rooms count as indoors for the sun, and a rival following the talk of the works has half the chance."},
+  "show-hall": {kind: "show", region: "Hall for guests", does: "Guests talk of it: each owner's standing in the town rises by one."},
+  "show-salon": {kind: "show", region: "Salon for guests", does: "Guests talk of it: each owner's standing in the town rises by one."},
+  "show-room": {kind: "show", region: "Rooms for guests", does: "Guests talk of it: each owner's standing in the town rises by one."}
+};
+export const effectOf = key => EFFECTS[key] ?? null;
+/** Shutters (or steel shutters) halve the chance of a scout probe. */
+export const SHUTTER_SCOUT = 0.5;
+export const shuttered = works => normWorks(works).upgrades.some(u => effectOf(u.key)?.kind === "shutters");
+
 /** Staff posts (B3361), by year. Every post leaves a standing trace: people can be bought. */
 export const POSTS = [
   {key: "porter", name: "Doorkeeper or porter", to: 1950},
@@ -180,7 +202,7 @@ export function probeMonth({works, security = 0, rival = {}, now = 0, year = 0, 
   const tr = tracesNow(w, now);
   const p = pickProbe(tr, rival, year);
   if ( !p ) return null;
-  const chance = p.knows ? 0.1 : probeChance(tr, security);
+  const chance = p.knows ? 0.1 : probeChance(tr, security) * (p.key === "scout" && shuttered(w) ? SHUTTER_SCOUT : 1);
   if ( !(rand() < chance) ) return null;
   return {probe: p, chance};
 }
