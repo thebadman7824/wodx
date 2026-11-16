@@ -8,6 +8,8 @@
  *      Grieving rolls 4 dice, and the card names Grieving
  *   3. the same power with the world setting wodx-sheets.sheetRollMods off rolls the full 5
  *   4. a Strength + Brawl power (not social) under Grieving rolls its full pool
+ *   5. (B6722) a rule setting changed in the menus counts at once: lowestDifficulty set to 3 shows in CONFIG without a
+ *      reload, and set back
  * Makes its own actors and removes them; puts the setting back. Result: Data/wodx-gate/gatesystemrolls-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -73,6 +75,15 @@ export async function run() {
       await Ch.conditions.setCondition(vamp, "grieving", false)?.catch?.(() => null);
       if ( keep !== undefined ) await game.settings.set(SH, "sheetRollMods", keep);
     }
+    await G.step("5. a rule setting counts without a reload", async () => {
+      const was = game.settings.get("worldofdarkness", "lowestDifficulty");
+      const want = String(was) === "3" ? "4" : "3";
+      try {
+        await game.settings.set("worldofdarkness", "lowestDifficulty", Number(want));
+        await waitFor(() => String(CONFIG.worldofdarkness.lowestDifficulty) === want, 4000).catch(() => null);
+        G.ok("5. a rule setting counts without a reload", String(CONFIG.worldofdarkness.lowestDifficulty) === want, {want, config: CONFIG.worldofdarkness.lowestDifficulty});
+      } finally { await game.settings.set("worldofdarkness", "lowestDifficulty", was); }
+    });
   } catch (e) { G.ok("no error", false, {error: e.message}); }
   return G.finish();
 }
