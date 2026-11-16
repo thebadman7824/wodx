@@ -74,7 +74,8 @@ test("lane faults are retried, gate failures are not", () => {
 
 test("the runner's lanes are clean: no lane 1, no shared port or folder, all reset nightly, no Live world", () => {
   assert.deepEqual(laneClashes(lanesCfg, runnerCfg.lanes), []);
-  assert.ok(runnerCfg.lanes.length >= 5, "at least lanes 2 to 6");
+  assert.ok(runnerCfg.lanes.length >= 4, "at least lanes 2 to 5");
+  assert.ok(!runnerCfg.lanes.includes(6), "lane 6 is kept for the local agents (B6527)");
   assert.ok(!runnerCfg.lanes.includes(1));
   const clash = {world: "rothenstein-wodx", lanes: [{id: 1, port: 30000, dataPath: "a"}, {id: 2, port: 30020, dataPath: "b", autoReset: true}, {id: 3, port: 30020, dataPath: "B", autoReset: false}]};
   const out = laneClashes(clash, [1, 2, 3, 9]).join("\n");

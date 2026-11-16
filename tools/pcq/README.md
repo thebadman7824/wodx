@@ -27,7 +27,7 @@ that needs judgment) still goes to the PC helper thread.
 
 ## The runner
 
-`tools/pcq/runner.mjs`, settings in `runner.json`: lanes 2 to 6, two light slots, holds below 15 GB free on C:, 50 GB
+`tools/pcq/runner.mjs`, settings in `runner.json`: lanes 2 to 5 (lane 6 is kept for the local agents, B6527), two light slots, holds below 15 GB free on C:, 50 GB
 on D: or 3 GB of free memory. It runs from its own clone (`D:\WoDX\pcq\repo`, worktrees per lane in `D:\WoDX\pcq\wt`),
 never from the lanes clone, and updates itself when main changes it. The issue labelled `pc-status` shows every lane,
 the queue and the last results, updated every 2 minutes; an issue labelled `pc-alert` opens when a lane stays down or
