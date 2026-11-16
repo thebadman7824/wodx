@@ -67,6 +67,11 @@ export async function run() {
       const r = await S.restrain(thr, reg);
       const card = newestMessage(since, m => m.flags?.["wodx-npc"]?.restraint !== undefined);
       const shown = card && /raises a hand against/.test(card.content) && (r.stop ? /not struck/.test(card.content) : /strikes/.test(card.content));
+      // B6761: the thrall is an NPC, so its Willpower dice go to the Storyteller only; the card everyone sees has no dice
+      const rolled = newestMessage(since, m => !!m.flags?.["wodx-npc"]?.restraint?.roll);
+      const gmOnly = !!rolled && rolled.rolls?.length > 0 && rolled.whisper?.length > 0 && rolled.whisper.every(id => game.users.get(id)?.isGM);
+      G.ok("4. the NPC's resisting roll is whispered to the Storyteller; the open card shows no dice", gmOnly && !!card && !card.whisper?.length && !card.rolls?.length,
+        {rolled: !!rolled, whisper: rolled?.whisper ?? null, openRolls: card?.rolls?.length ?? null});
       // Forced: no Willpower left to spend, so even a won roll cannot pay for the blow
       await thr.update({"system.advantages.willpower.temporary": 0});
       const msgs = game.messages.size;

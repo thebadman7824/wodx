@@ -191,10 +191,17 @@ export async function restrain(attackerLike, targetLike) {
   const dice = res.faces.map(f => `<span class="${f >= r.difficulty ? "vta-hit" : f === 1 ? "vta-one" : ""}">${f}</span>`).join(" ");
   const why = `${r.why} (${r.page}).`;
   const text = won ? `${a.name} fights the bond and strikes${r.spend ? ", spending a point of Willpower" : ""}.` : `${a.name} cannot bring themselves to strike ${t.name}: the blow is not struck.`;
-  await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), rolls: [res.roll], flags: {[MOD]: {restraint: {stop: !won, kind: r.kind}}},
-    content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(a.name)} raises a hand against ${esc(t.name)}</b></p>
+  // B6761: an NPC's resisting roll is the Storyteller's (standing rule 19, B672): the dice go to the Storyteller only,
+  // and everyone sees what came of it. A player's character's own roll stays open to all.
+  const npcRoll = !a.hasPlayerOwner;
+  const head = `<p><b>${esc(a.name)} raises a hand against ${esc(t.name)}</b></p>`;
+  await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), rolls: [res.roll], flags: {[MOD]: {restraint: {stop: !won, kind: r.kind, roll: true}}},
+    ...(npcRoll ? {whisper: game.users.filter(u => u.isGM).map(u => u.id)} : {}),
+    content: `<div class="vta-card wodx-x wnpc"><div class="vta-body">${head}
       <p>Willpower ${wpPerm} at difficulty ${r.difficulty}: ${dice} (${res.successes} success${res.successes === 1 ? "" : "es"}).${!won && res.successes > 0 && r.spend && wpNow <= 0 ? " No Willpower left to spend." : ""}</p>
       <p><b>${esc(text)}</b></p><p class="wodx-quiet">${esc(why)}</p></div></div>`});
+  if ( npcRoll ) await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), flags: {[MOD]: {restraint: {stop: !won, kind: r.kind}}},
+    content: `<div class="vta-card wodx-x wnpc"><div class="vta-body">${head}<p><b>${esc(text)}</b></p><p class="wodx-quiet">${esc(why)}</p></div></div>`});
   if ( !won ) {
     const ta = canvas?.tokens?.placeables?.find(x => x.actor?.id === a.id), tt = canvas?.tokens?.placeables?.find(x => x.actor?.id === t.id);
     if ( ta && tt ) flash(r.kind, ta.document, tt.document);

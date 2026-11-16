@@ -12,7 +12,7 @@
 
 /** Ages of life by period: marrying age, children born to a couple, the share who live to grow up, adult death age. */
 export const LIFE = [
-  {from: -9999, key: "medieval", marry: [16, 24], children: 5, survive: 0.5, dies: [32, 72]},
+  {from: -9999, key: "medieval", marry: [18, 24], children: 5, survive: 0.5, dies: [32, 72]},
   {from: 1500, key: "early-modern", marry: [18, 27], children: 5, survive: 0.55, dies: [34, 76]},
   {from: 1800, key: "industrial", marry: [20, 28], children: 5, survive: 0.65, dies: [38, 80]},
   {from: 1900, key: "c20", marry: [21, 29], children: 3, survive: 0.9, dies: [52, 88]},
@@ -96,6 +96,17 @@ export function descendantsOf(line, memberId = "m0") {
 }
 
 /** How one member is related to the founder, in words. */
+/**
+ * B6764: the gender a member brought into play has on the sheet: the sex the line kept for the name, except one in a
+ * hundred who is nonbinary (Ben, 2026-11-13, B3503), drawn steadily from the line and member, so it never changes.
+ */
+export function genderFor(m, lineId = "", share = 0.01) {
+  const sex = m?.sex === "female" || m?.sex === "male" ? m.sex : "";
+  let h = 2166136261;
+  for ( const c of `${lineId}:${m?.id ?? ""}` ) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
+  return (h % 10000) / 10000 < share ? "nonbinary" : sex;
+}
+
 export function relationWord(m) {
   if ( !m ) return "";
   if ( m.founder ) return "the founder";

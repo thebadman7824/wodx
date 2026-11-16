@@ -1204,7 +1204,8 @@ export function build(ctx) {
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const fl = msg.flags?.[MOD];
-      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach && !fl?.factionYears && !fl?.factionEnd ) return;
+      // B6766: the Undo on a settled boon's card (factionBoon) is wired too; it was a dead button
+      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach && !fl?.factionYears && !fl?.factionEnd && !fl?.factionBoon ) return;
       el.querySelectorAll("button.wnpc-f-mapbreach").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; startMapBreach(msg).catch(e => console.error(`${MOD} |`, e)); });

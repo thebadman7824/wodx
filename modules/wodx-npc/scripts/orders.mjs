@@ -17,6 +17,7 @@ import * as O from "./order-rules.mjs";
 import * as SV from "./servants.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {onPlayerHook} from "./hook-relay.mjs";
 
 export const T_ORDER = "wodx-npc.order";
 
@@ -76,7 +77,10 @@ export function build(ctx) {
     try { step = Number(attitude?.()?.of?.(npc, master)?.step) || 0; } catch (e) { step = 0; }
     const leaves = !!flag(npc, "wavers")?.[masterId] || step <= -2;
     if ( leaves ) await leaveService(npc, masterId);
-    return note(`<p><b>${esc(npc.name)}</b> refuses ${esc(master?.name ?? "its master")}'s order (Willpower ${r.L.pool} at ${r.L.diff}: ${r.faces.join(", ")}).${leaves ? " It leaves their service." : ""}</p>`, tellMaster(masterId), "Loyalty");
+    // B6761: the follower's resisting roll is the Storyteller's (standing rule 19, B672); the master's player sees the refusal only
+    const gm = gmIds(), rest = tellMaster(masterId).filter(id => !gm.includes(id)), left = leaves ? " It leaves their service." : "";
+    if ( rest.length ) await note(`<p><b>${esc(npc.name)}</b> refuses ${esc(master?.name ?? "its master")}'s order.${left}</p>`, rest, "Loyalty");
+    return note(`<p><b>${esc(npc.name)}</b> refuses ${esc(master?.name ?? "its master")}'s order (Willpower ${r.L.pool} at ${r.L.diff}: ${r.faces.join(", ")}).${left}</p>`, gm, "Loyalty");
   }
   async function leaveService(npc, masterId) {
     const cur = Array.isArray(flag(npc, "serves")) ? flag(npc, "serves") : [];
@@ -513,7 +517,7 @@ export function build(ctx) {
     // NPC 0.38.0: errands come back, followers join chases, loyalty drifts, breaches are traced to masters
     Hooks.on("wodxTaskDone", e => onTaskDone(e).catch(err => console.error(`${MOD} | errand`, err)));
     Hooks.on("wodxChase", e => onChase(e).catch(err => console.error(`${MOD} | chase`, err)));
-    Hooks.on("wodxFed", e => { if ( !isActiveGM() ) return; const v = worldActor(fromUuidSync?.(e?.vessel?.uuid)), m = worldActor(fromUuidSync?.(e?.by?.uuid));
+    onPlayerHook("wodxFed", e => { if ( !isActiveGM() ) return; const v = worldActor(fromUuidSync?.(e?.vessel?.uuid)), m = worldActor(fromUuidSync?.(e?.by?.uuid));
       if ( v && m && servesOf(v).includes(m.id) ) driftFor(v, m.id, "fedOn").catch(err => console.error(`${MOD} | loyalty`, err)); });
     Hooks.on("wodxGhoulFix", e => { if ( !isActiveGM() ) return; const g = worldActor(e?.actor);
       const dom = O.servesFrom({"wodx-creation": {lineage: g?.flags?.["wodx-creation"]?.lineage}})[0];

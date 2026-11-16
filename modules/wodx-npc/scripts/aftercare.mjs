@@ -16,6 +16,7 @@ import * as AC from "./aftercare-rules.mjs";
 import * as LM from "./line-mend.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {onPlayerHook} from "./hook-relay.mjs";
 
 export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
   const now = () => game.time?.worldTime ?? 0;
@@ -318,7 +319,7 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     Hooks.on("wodxVerdict", p => { onVerdict(p).catch(e => console.error(`${MOD} | verdict`, e)); });
     Hooks.on("wodxSentence", p => { onSentence(p).catch(e => console.error(`${MOD} | sentence`, e)); });
     Hooks.on("deleteCombat", c => { afterFight(c).catch(e => console.error(`${MOD} | after the fight`, e)); });
-    Hooks.on("wodxFed", p => { onFed(p).catch(e => console.error(`${MOD} | the Kiss`, e)); });
+    onPlayerHook("wodxFed", p => onFed(p).catch(e => console.error(`${MOD} | the Kiss`, e))); // B6760: a player's feeding too
     Hooks.on("wodxMarried", p => { onMarried(p).catch(e => console.error(`${MOD} | married`, e)); });
     Hooks.on("wodxDivorced", p => { onDivorced(p).catch(e => console.error(`${MOD} | divorced`, e)); });
     let wait = null;

@@ -29,7 +29,7 @@ export const KINDS = {
   blood: {label: "Blood bond", line: "vampire", page: "V20 Dark Ages pdf p. 343",
     restrain: s => (s >= 2 ? {difficulty: 8, spend: true, why: "the blood bond: a Willpower roll to raise a hand against the regnant"} : null),
     obey: s => (s >= 3 ? "free" : s >= 2 ? -1 : 0), floor: 3},
-  vinculum: {label: "Vinculum", line: "vampire", page: "V20 p. 297 (WoDX reading B2841)",
+  vinculum: {label: "Vinculum", line: "vampire", page: "V20 p. 297 (a WoDX reading)",
     restrain: s => (s >= 2 ? {difficulty: 8, spend: true, why: "the Vinculum: a Willpower roll to strike a packmate it binds"} : null),
     obey: s => (s >= 3 ? -2 : s >= 2 ? -1 : 0), floor: 3},
   guanxi: {label: "Guanxi", line: "kuei-jin", page: "Kindred of the East pdf p. 69 (guanxi acts as a Vaulderie score)",

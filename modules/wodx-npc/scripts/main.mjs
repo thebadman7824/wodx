@@ -1413,14 +1413,16 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.token;
   if ( !tokens?.tools ) return;
+  // B6765: a player's button shows only while the world has its feature on (a switched-off one only said so)
+  const isOn = k => { try { return game.settings.get(MOD, k) !== false; } catch (e) { return false; } };
   tokens.tools.wodxTalk = {name: "wodxTalk", title: "Talk to the person you target, or the nearest one in reach", icon: "fa-solid fa-comments", order: 108,
-    button: true, visible: true, onChange: () => talk.openTalk()};
+    button: true, visible: game.user.isGM || isOn("talkMenu"), onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
-    button: true, visible: true, onChange: () => orders.openOrders()};
+    button: true, visible: game.user.isGM || isOn("followerOrders"), onChange: () => orders.openOrders()};
   tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
     button: true, visible: true, onChange: () => followers.openFollowers()};
   tokens.tools.wodxRemembered = {name: "wodxRemembered", title: "Who remembers you (people who have not forgotten what you did)", icon: "fa-solid fa-brain", order: 109.6,
-    button: true, visible: !game.user.isGM, onChange: () => MEMORY.rememberedDialog()};
+    button: true, visible: !game.user.isGM && isOn("memory"), onChange: () => MEMORY.rememberedDialog()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,

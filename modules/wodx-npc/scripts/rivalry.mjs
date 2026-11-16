@@ -4,6 +4,7 @@ import * as FR from "./fight-rules.mjs";
 import * as AC from "./aftercare-rules.mjs";
 import * as Faces from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {onPlayerHook} from "./hook-relay.mjs";
 
 /**
  * WoDX NPC 0.18.0 (B820 to B825): natural rivalries on the map. rivalry-rules.mjs has the rules. When an NPC moves,
@@ -299,7 +300,7 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
   }
   function hooks() {
     Hooks.on("updateToken", onTokenMoved);
-    Hooks.on("wodxFed", p => { onFed(p).catch(e => console.warn(`${MOD} | fed`, e)); });
+    onPlayerHook("wodxFed", p => onFed(p).catch(e => console.warn(`${MOD} | fed`, e))); // B6760: a player's feeding too
     Hooks.on("wodxSecretSeen", p => { onSecretSeen(p).catch(e => console.warn(`${MOD} | secret seen`, e)); });
   }
 

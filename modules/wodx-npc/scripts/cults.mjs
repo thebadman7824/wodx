@@ -21,6 +21,7 @@ import * as C from "./cult-rules.mjs";
 import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {onPlayerHook} from "./hook-relay.mjs";
 
 export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, chron} = ctx;
@@ -445,7 +446,8 @@ export function build(ctx) {
 
   function hooks() {
     Hooks.on("createChatMessage", msg => { onChat(msg).catch(e => console.error(`${MOD} | cults words`, e)); });
-    Hooks.on("wodxPowerShown", (actor, info = {}) => {
+    // B6760: a player's power, feeding or social win reaches the Storyteller's client too
+    onPlayerHook("wodxPowerShown", (actor, info = {}) => {
       if ( !isActiveGM() ) return;
       addDeed(actor, {kind: "power", themes: {[C.powerTheme(info.power ?? "", info.group ?? "")]: 2}, text: info.power ?? ""}).catch(e => console.error(`${MOD} | cults`, e));
     });
@@ -454,11 +456,11 @@ export function build(ctx) {
       const n = Number(p.entry?.witnesses?.length ?? p.entry?.seen?.length) || 1;
       addDeed(actorFromUuid(p.by.uuid), {kind: "breach", heard: n, themes: {doom: 1, power: 1}, text: String(p.entry?.event ?? p.entry?.text ?? "")}).catch(e => console.error(`${MOD} | cults`, e));
     });
-    Hooks.on("wodxFed", p => {
+    onPlayerHook("wodxFed", p => {
       if ( !isActiveGM() || !p?.willing || !p?.by?.uuid ) return;
       addDeed(actorFromUuid(p.by.uuid), {kind: "fed", heard: 1, text: `fed on ${p.vessel?.name ?? "someone"}`}).catch(e => console.error(`${MOD} | cults`, e));
     });
-    Hooks.on("wodxSocial", p => {
+    onPlayerHook("wodxSocial", p => {
       if ( !isActiveGM() || p?.result !== "win" || !p?.actor ) return;
       const theme = C.SOCIAL_THEMES[p.act];
       addDeed(p.actor, {kind: "social", heard: 1, themes: theme ? {[theme]: 1} : {}, text: p.act}).catch(e => console.error(`${MOD} | cults`, e));
