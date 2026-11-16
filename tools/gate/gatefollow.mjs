@@ -112,6 +112,8 @@ export async function run() {
       await combat.delete();
       await waitFor(() => !sc.tokens.get(tt.id)?.getFlag(MOD, "hostage"), 8000);
       G.ok("5. the hold is gone", !sc.tokens.get(tt.id)?.getFlag(MOD, "hostage"));
+      // The hold is lifted first and the memory written after it: wait for both
+      await waitFor(() => (victim.getFlag(MOD, "memory")?.[taker.id] ?? []).some(n => n.kind === "harm"), 8000);
       const notes = victim.getFlag(MOD, "memory")?.[taker.id] ?? [];
       G.ok("5. the hostage remembers who seized them", notes.some(n => n.kind === "harm"), {notes});
     });
