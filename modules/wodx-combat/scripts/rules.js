@@ -650,7 +650,7 @@ export function followOn(key, { hit = false, damageSuccesses = 0, profile = "", 
     if (key === "sweep") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
     // B6782: after a Tackle both fighters roll Dexterity + Athletics (difficulty 7) or fall (V20 Dark Ages p. 348)
     if (key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn", resist: 7, both: true }];
-    if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "turn" }];
+    if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "grip" }];
     if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire" && kueiJinStaked(key, chi, metal)) return [{ condition: "staked", name: "Staked", lasts: "staked" }];
     return [];
 }
@@ -718,6 +718,46 @@ export function stoodInitiativeStep({ stood = null, restore = null, combat = nul
     if (restore && restore.combat === combat.id && Number(combat.round) > Number(restore.round)) out.restore = Number(restore.by) || 2;
     if (!reroll && stoodPenalty(stood, combat)) out.lower = 2;
     return out;
+}
+
+/* ---- B6787: holds, clinches and tackles that go on past the blow (V20 Dark Ages pp. 346-348) ---- */
+/** The grip on a victim {by, kind: "hold" | "grapple" | "clinch" | "tackle", combat, round} still counts in this fight. */
+export function gripActive(grip, combat) {
+    if (!grip?.by) return false;
+    if (grip.kind === "tackle") return !!combat && grip.combat === combat.id && Number(combat.round) <= Number(grip.round) + 1;
+    return !grip.combat || !combat || grip.combat === combat.id;
+}
+/** A bite is allowed once this attacker has the target in a clinch, a hold or a grapple, or tackled them this turn or last (V20 Dark Ages p. 347). */
+export function biteReady(grip, attackerUuid, combat) {
+    return gripActive(grip, combat) && grip.by === attackerUuid;
+}
+/** A grip a victim may struggle out of at their action: hold, grapple, clinch (a tackle holds nobody). */
+export const GRIP_HOLDS = ["hold", "grapple", "clinch"];
+/** The resisted Strength + Brawl roll: the victim breaks free only by rolling more successes (V20 Dark Ages pp. 346-347). */
+export function breaksFree(victimSuccesses, holderSuccesses) {
+    return (Number(victimSuccesses) || 0) > Math.max(0, Number(holderSuccesses) || 0);
+}
+/**
+ * Clinch: neither fighter takes any other physical action until it is broken (V20 Dark Ages p. 347). clinch: the
+ * actor's flag {with: uuid, combat}. Returns why an attack is refused, or "".
+ */
+export function clinchLimit(clinch, combat, targetUuid, weaponId) {
+    if (!clinch?.with || (combat && clinch.combat && clinch.combat !== combat.id)) return "";
+    if (targetUuid !== clinch.with) return "locked in a clinch: no other physical actions until it is broken";
+    if (!["unarmed:clinch", "unarmed:bite"].includes(String(weaponId ?? ""))) return "locked in a clinch: only Strength damage (or a bite) on the one held";
+    return "";
+}
+/** Tackle: +1 difficulty to all actions on the turn after (V20 Dark Ages p. 348). flag {combat, round}. */
+export function offBalanceNow(flag, combat) {
+    return !!flag && !!combat && flag.combat === combat.id && Number(combat.round) === Number(flag.round) + 1 ? 1 : 0;
+}
+/** Riposte needs a defense rolled with success earlier this turn (V20 Dark Ages p. 347): defended cards {target, defOk}. */
+export function riposteReady(cardsThisTurn, uuid) {
+    return (cardsThisTurn ?? []).some(d => d?.target === uuid && d.defOk);
+}
+/** A heart pierced: three damage successes from a stake kill a human (mortal or ghoul) outright (V20 Dark Ages p. 347). */
+export function stakeKills(key, { hit = false, damageSuccesses = 0, profile = "" } = {}) {
+    return hit && ["stake", "impale"].includes(key) && Number(damageSuccesses) >= 3 && ["mortal", "ghoul"].includes(profile);
 }
 
 /** B6152: the token is on full defence this turn: WoDX NPC's flag "<combatId>:<round>" for the fight's turn now. */
