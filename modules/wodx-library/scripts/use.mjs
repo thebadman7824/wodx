@@ -83,9 +83,11 @@ async function tellPrivately(actor, title, text) {
 /* ---------------------------------------------------------------- the Storyteller's side */
 
 async function gmDo(op) {
-  if ( game.user.isGM ) return onSocket(op);
+  // B6779g: an owner (a Storyteller too) marks the patient itself; a second Storyteller who is not the active one
+  // was sent to onSocket, which only the active Storyteller answers, and the mark was lost
   const own = op?.op === "treated" ? game.actors.get(op.actor) : null;
   if ( own?.isOwner ) return own.setFlag("wodx-actions", "treated", true);
+  if ( game.user.isGM && game.users.activeGM?.id === game.user.id ) return onSocket(op);
   if ( !game.users.some(u => u.isGM && u.active) ) { ui.notifications.warn("The Storyteller is not here to note it."); return null; }
   game.socket.emit(SOCKET, op);
   return null;
