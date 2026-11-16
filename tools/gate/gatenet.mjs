@@ -145,7 +145,7 @@ export async function run() {
     });
     await step("12. Technica: the Ghost in the Machine", async () => {
       await game.settings.set(CH, "rule.futureBranch", true);
-      await setTime(cr().time.addYears(game.time.worldTime, 2030 - cr().time.yearOf(game.time.worldTime)));
+      await toYear(2030);
       await actor.createEmbeddedDocuments("Item", [{name: "Technica", type: "Power", system: {type: "wod.types.discipline", value: 6}}]);
       const ways = api().rules.waysFor(api().kind(), api().technica.dots(actor));
       const icon = await api().jackInto(body, fort, {way: "ghost"});
