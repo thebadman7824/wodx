@@ -15,6 +15,6 @@
     {"id": 3, "port": 30030, "dataPath": "D:/WoDX/FoundryData-lane3", "autoReset": true},
     {"id": 4, "port": 30040, "dataPath": "D:/WoDX/FoundryData-lane4", "autoReset": true},
     {"id": 5, "port": 30050, "dataPath": "D:/WoDX/FoundryData-lane5", "autoReset": true},
-    {"id": 6, "port": 30060, "dataPath": "D:/WoDX/FoundryData-lane6", "autoReset": true}
+    {"id": 6, "port": 30060, "dataPath": "D:/WoDX/FoundryData-lane6", "autoReset": false, "reserved": "local-agents"}
   ]
 }

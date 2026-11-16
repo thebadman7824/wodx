@@ -17,7 +17,7 @@ UPnP off, no router forward, never a link to players.
 
 ## Running gates
 
-Threads queue gate runs through the PC job queue (tools/pcq/README.md); the runner there drives lanes 2 to 6.
+Threads queue gate runs through the PC job queue (tools/pcq/README.md); the runner there drives lanes 2 to 5. Lane 6 is reserved for the local agents (B6527): run-gate takes it only with --lane 6, and the nightly reset leaves it alone.
 The commands below are what it runs, and still work by hand.
 
     node tools/lanes/run-gate.mjs gate6b gatebattle [--lane 2] [--wait 30]
