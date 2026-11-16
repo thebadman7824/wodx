@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.36.0 (Technica, the Cyberpunks' Discipline, tied into the Net (B6604 to B6611), on the Future Darkness branch from 2016)
 - 0.35.0 (Running the Net (B6590 to B6603): the classic Digital Web from 1990 and the Future Darkness branch's Cyberpunk Net from 2005, with data fortresses from the Fast Fortress tables, the core book's programs halved into dots, ICE that acts on its own, and what the run does to the body, the building and the chronicle)
 - 0.34.0 (Sight across the walls (B6307): the veil looks read the Kuei-jin's Ghostsight and the bodhisattva's communion with the spirit worlds)
 - 0.33.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
