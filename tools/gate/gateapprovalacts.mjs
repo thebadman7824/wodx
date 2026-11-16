@@ -34,6 +34,17 @@ export async function run() {
     const scene = await G.scene();
     await G.tokens(scene, [{actor: anna, x: 3, y: 3}]);
     const mine = type => Q().pending().filter(p => p.type === type && p.data?.actorId === anna.id);
+    // An entry may pass on sight (a standing rule put back by the level or the Lone Chronicle while the gate runs):
+    // then it is in the history as decided, which is the same approval; the gate says which way it went
+    const decided = (type, t0) => (Q().history?.() ?? []).filter(h => h.type === type && h.data?.actorId === anna.id && (h.createdAt ?? 0) >= t0);
+    const route = async (type, t0) => {
+      await until(() => mine(type).length || decided(type, t0).length, 4000);
+      const p = mine(type)[0];
+      if ( p ) return {queued: true, clicked: await approve(p), passed: false, rule: null};
+      const h = decided(type, t0)[0];
+      return {queued: false, clicked: false, passed: !!h && h.verdict !== "reject" && h.status !== "rejected", rule: (game.settings.get(CH, "autoApprove") ?? {})[type] ?? null, entry: h ? {verdict: h.verdict ?? h.status ?? null, auto: h.auto ?? null} : null};
+    };
+    const through = r => r.clicked || r.passed;
     const approve = async entry => {
       Q().ApprovalsApp.open(); await sleep(700);
       const b = document.querySelector(`#wodx-approvals [data-action=approve][data-id="${entry.id}"]`);
@@ -44,28 +55,29 @@ export async function run() {
     };
 
     await G.step("1. a solo result that changes the world, approved: a tale goes round", async () => {
-      const r = await api().solo({actorId: anna.id, kind: "other", hours: 1, note: "Gate: burned the tithe barn at the crossroads", changesWorld: true});
-      const p = mine(`${ST}.solo`);
+      const t0 = Date.now();
       const before = api().rumours.list().filter(x => x.about === anna.id).length;
-      const clicked = p[0] ? await approve(p[0]) : false;
+      const r = await api().solo({actorId: anna.id, kind: "other", hours: 1, note: "Gate: burned the tithe barn at the crossroads", changesWorld: true});
+      const how = await route(`${ST}.solo`, t0);
+      await until(() => api().rumours.list().filter(x => x.about === anna.id).length > before, 4000);
       const tales = api().rumours.list().filter(x => x.about === anna.id);
-      G.ok("1. a solo result that changes the world, approved: a tale goes round", r?.waiting && p.length === 1 && tales.length === before + 1 && /tithe barn/.test(tales.at(-1)?.text ?? ""),
-        {queued: p.length, clicked, tales: tales.map(t => t.text)});
+      G.ok("1. a solo result that changes the world, approved: a tale goes round", r?.waiting && through(how) && tales.length === before + 1 && /tithe barn/.test(tales.at(-1)?.text ?? ""),
+        {...how, tales: tales.map(t => t.text)});
     });
 
     await G.step("2. downtime to study, approved: a long task on the sheet", async () => {
+      const t0 = Date.now();
       await api().between.downtime({actorId: anna.id, kind: "study", nights: 3, what: "Gate Latin with the parish priest"});
-      const p = mine(`${ST}.downtime`);
-      const clicked = p[0] ? await approve(p[0]) : false;
+      const how = await route(`${ST}.downtime`, t0);
+      await until(() => Object.values(api().tasks.of(game.actors.get(anna.id)) ?? {}).some(x => x.kind === "train"), 4000);
       const t = Object.values(api().tasks.of(game.actors.get(anna.id)) ?? {}).find(x => x.kind === "train");
-      G.ok("2. downtime to study, approved: a long task on the sheet", p.length === 1 && t?.status === "open" && /Latin/.test(t?.name ?? ""), {clicked, task: t ? {name: t.name, kind: t.kind, goal: t.goal} : null});
+      G.ok("2. downtime to study, approved: a long task on the sheet", through(how) && t?.status === "open" && /Latin/.test(t?.name ?? ""), {...how, task: t ? {name: t.name, kind: t.kind, goal: t.goal, status: t.status} : null});
     });
 
     await G.step("3. downtime to hunt, approved: the card's Hunt button opens the hunt", async () => {
       const t0 = Date.now();
       await api().between.downtime({actorId: anna.id, kind: "feed", nights: 1, what: "Gate hunts the docks"});
-      const p = mine(`${ST}.downtime`);
-      if ( p[0] ) await approve(p[0]);
+      await route(`${ST}.downtime`, t0);
       const card = game.messages.contents.find(m => m.timestamp >= t0 && m.flags?.[ST]?.downtimeGo?.actorId === anna.id);
       await ui.chat?.render?.(); await sleep(500);
       const el = document.querySelector(`#chat [data-message-id="${card?.id}"] [data-action=wst-downtime-go], .chat-log [data-message-id="${card?.id}"] [data-action=wst-downtime-go]`);
