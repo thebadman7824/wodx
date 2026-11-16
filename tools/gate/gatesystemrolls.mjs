@@ -3,8 +3,8 @@
  * window does. In rothenstein-wodx as a Gamemaster:
  *   await (await import(`/wodx-gate/gatesystemrolls.mjs?${Date.now()}`)).run()
  *   1. modules: WoDX Sheets' sheetRollMods api and setting, Chronicle's conditions
- *   2. a Discipline power (Manipulation + Intimidation, 5 dice) rolled through the system's own power window (the path a
- *      click on the power takes: ActionHelper.RollDialog, then the window's Roll button) by a vampire carrying WoDX NPC's
+ *   2. a Discipline power (Manipulation + Intimidation, 5 dice) rolled through the system's own power window (its
+ *      DialogPower object, getData then the Roll button's handler _rollPower) by a vampire carrying WoDX NPC's
  *      Grieving rolls 4 dice, and the card names Grieving
  *   3. the same power with the world setting wodx-sheets.sheetRollMods off rolls the full 5
  *   4. a Strength + Brawl power (not social) under Grieving rolls its full pool
@@ -16,7 +16,6 @@ import {gate, waitFor} from "./kit.mjs";
 
 const SH = "wodx-sheets", CH = "wodx-chronicle";
 const num = v => Number(v) || 0;
-const elOf = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
 
 export async function run() {
   const G = gate("gatesystemrolls");
@@ -26,7 +25,6 @@ export async function run() {
   try {
     await waitFor(() => !!game.modules.get(SH)?.api && !!game.modules.get(CH)?.api, 30000);
     const Ch = game.modules.get(CH)?.api;
-    const AH = (await import("/systems/worldofdarkness/module/scripts/action-helpers.js")).default;
     await G.step("1. modules", async () => G.ok("1. modules", typeof game.modules.get(SH)?.api?.sheetRollMods === "function" && keep !== undefined && !!Ch?.conditions?.setCondition,
       {api: !!game.modules.get(SH)?.api?.sheetRollMods, setting: keep}));
 
@@ -40,19 +38,28 @@ export async function run() {
     await Ch.conditions.setCondition(vamp, "grieving", true);
     await waitFor(() => (Ch.conditions.conditionsOf?.(vamp) ?? []).some(c => c.id === "grieving"), 4000);
 
-    /** Click the power as the sheet does, press Roll in the system window, and read the card. */
+    /**
+     * B6720 gate fix: the run on #1748 never reached a roll through a click on the rendered window. The gate now builds the
+     * system's own power window object and calls its Roll handler (_rollPower, the code the Roll button runs), so the
+     * roll goes through DiceRoller exactly as a click does, and reports any error and whether the window rendered.
+     */
+    const PD = await import("/systems/worldofdarkness/module/dialogs/dialog-power.js");
     const rollPower = async item => {
-      const t0 = Date.now();
-      await AH.RollDialog({rollitem: "true", itemid: item.id, object: "wod.types.disciplinepower"}, vamp);
-      let dlg = null;
-      await waitFor(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogPower" && w.actor?.id === vamp.id && w.rendered)), 6000);
-      elOf(dlg)?.querySelector?.(".actionbutton")?.click();
+      const t0 = Date.now(), info = {};
+      const errs = [], onErr = e => errs.push(String(e?.reason?.message ?? e?.message ?? e));
+      globalThis.addEventListener?.("unhandledrejection", onErr);
+      try {
+        const dlg = new PD.DialogPower(vamp, new PD.DisciplinePower(foundry.utils.duplicate(vamp.items.get(item.id))));
+        await dlg.getData();
+        info.attributeValue = dlg.object.attributeValue; info.abilityValue = dlg.object.abilityValue;
+        await dlg._rollPower({preventDefault() {}, currentTarget: null});
+      } catch (e) { errs.push(e.message); }
       let m = null;
-      await waitFor(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === vamp.id && (x.rolls?.length ?? 0) > 0).at(-1)), 8000);
-      await dlg?.close?.();
+      await waitFor(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && (x.speaker?.actor === vamp.id || x.speaker?.alias === vamp.name) && (x.rolls?.length ?? 0) > 0).at(-1)), 8000);
+      globalThis.removeEventListener?.("unhandledrejection", onErr);
       const W = CONFIG.worldofdarkness, explodes = W?.useexplodingDice && ["always", "nospeciality"].includes(W?.explodingDice);
       const faces = (m?.rolls ?? []).map(r => num(r.total));
-      return {rolled: faces.length - (explodes ? faces.filter(f => f === 10).length : 0), named: /Grieving/.test(m?.content ?? ""), card: !!m};
+      return {rolled: faces.length - (explodes ? faces.filter(f => f === 10).length : 0), named: /Grieving/.test(m?.content ?? ""), card: !!m, ...info, errors: errs.slice(0, 3)};
     };
     const pool = num(vamp.system.attributes.manipulation.total) + num(vamp.system.abilities.intimidation.value);
     try {
