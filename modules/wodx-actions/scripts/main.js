@@ -2771,6 +2771,10 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor(t);
+    // B6580: a seduction is of someone. With no one targeted there is nothing for it to change, so ask for a target;
+    // from the menu, the result lands on that person the same way Charm in "With this person" does.
+    if (!target) { ui.notifications.warn("Target the person to seduce first."); return null; }
+    if (!onDone) onDone = res => sox().charmDone(actor, t?.actor ? t : ([...(game.user.targets ?? [])][0] ?? target), res);
     // B3212: never with anyone under 18, in any era (WoDX Chronicle's age floor)
     if (target) {
         const age = game.modules.get("wodx-chronicle")?.api?.age?.romance?.(actor, target) ?? { ok: false, why: "The age check is not available (a WoDX Chronicle with the age floor is needed)." };
@@ -2778,7 +2782,7 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
     }
     const g = k => target ? attr(target, k) : 2;
     const content = `<form>
-      <p>${esc(actor.name)} seduces ${target ? `<b>${esc(target.name)}</b>` : "a mortal (no target: Attributes 2)"}.</p>
+      <p>${esc(actor.name)} seduces <b>${esc(target.name)}</b>.</p>
       <div class="form-group"><label>Target's Wits / Intelligence / Perception</label>
         <input type="number" name="wits" value="${g("wits")}" style="width:3.5em"/> <input type="number" name="int" value="${g("intelligence")}" style="width:3.5em"/> <input type="number" name="per" value="${g("perception")}" style="width:3.5em"/></div>
       <div class="form-group"><label><input type="checkbox" name="aura" checked/> Apply Road aura</label></div>

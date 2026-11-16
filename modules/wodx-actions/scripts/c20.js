@@ -351,6 +351,14 @@ export function build(ctx) {
     }
 
     async function mists(actor) {
+        // B6583: targeted mortals keep or lose what they saw by their own Banality through the witness step (6 or more
+        // forgets, as a changeling seen in plain sight); with no one targeted, the table answers for one Banality
+        const toks = [...(game.user.targets ?? [])].filter(t => t.actor && t.actor !== actor);
+        if (toks.length) {
+            if (!game.user.isGM) return notify("The Storyteller works the Mists on the witnesses.");
+            const r = await game.modules.get(MOD)?.api?.witnessStep?.({ actor, tokens: toks, secret: "fae", event: "the Dreaming" });
+            return r ?? post(actor, "The Mists", `<div class="vta-res">${toks.map(t => esc(t.name)).join(", ")}: nothing to record.</div>`);
+        }
         const content = `<form><div class="form-group"><label>The mortal's Banality</label><input type="number" name="b" min="0" max="10" value="6"/></div>
           <div class="form-group"><label><input type="checkbox" name="kithain"/> Other changelings were there (two steps lower, for a changeling's own memory)</label></div></form>`;
         return dialog("The Mists", content, "Read", async fd => {

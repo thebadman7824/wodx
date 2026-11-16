@@ -232,7 +232,7 @@ export const SHARED_FOR = {
     kote: ["downtime", "newNight", "endStory", "witnesses", "sky"],
     mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
     orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    exalted: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    exalted: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
     spirit: ["newNight", "endStory", "witnesses", "sky"],
     beast: ["newNight", "endStory", "witnesses", "sky"]
 };
@@ -248,10 +248,13 @@ for (const [k, keys] of Object.entries(SHARED_FOR)) {
 }
 
 /* The inner voice (Phase 6d): the voiced lines get its panel; everyone gets the list of voices they play. */
+export const VOICED = ["kindred", "ghoul", "lupine", "wraith", "hunter", "kote", "mage", "mageDA", "fae", "faeDA", "demon", "orpheus"];
 for (const [k, m] of Object.entries(MENUS)) {
     const scene = m.sections.find(([t]) => t === "Scene");
     if (!scene) continue;
-    if (["kindred", "ghoul", "lupine", "wraith", "hunter"].includes(k)) scene[1].unshift(["api:innerVoice", "The inner voice", "fa-comment-dots"]);
+    // B6582: every line with a voice in voice-rules.js KINDS gets the panel (the P'o for Kuei-jin, the Avatar for mages,
+    // the Mists for fae, Spite for Orpheus, Torment for demons), not only the first five
+    if (VOICED.includes(k)) scene[1].unshift(["api:innerVoice", "The inner voice", "fa-comment-dots"]);
     scene[1].push(["api:voices", "Voices I play", "fa-theater-masks"]);
 }
 

@@ -848,7 +848,9 @@ export function build(ctx) {
         if (!(n(dmg.bashing) + n(dmg.lethal) + n(dmg.aggravated))) return null;
         const carry = n(a.getFlag(MOD, "healCarry"));
         const treated = !!a.getFlag(MOD, "treated");
-        if (["mortal", "hunter", "mage", "beast", "ghoul", "fae"].includes(kind)) return K.mortalHealing(dmg, seconds, { carry, treated });
+        // B6581: demons and mummies wear mortal flesh and heal on the mortal chart (Demon: The Fallen p. 248, aggravated at the
+        // lethal rate; Mummy 2nd ed. p. 77, and the Resurrection's Slow Healing flaw halves "a normal person's" rate)
+        if (["mortal", "hunter", "mage", "beast", "ghoul", "fae", "demon", "mummy"].includes(kind)) return K.mortalHealing(dmg, seconds, { carry, treated });
         if (kind === "lupine") {
             const i = GX.info(a);
             const reg = G.regeneration({ breed: i.breed, form: i.form, fera: i.fera });
