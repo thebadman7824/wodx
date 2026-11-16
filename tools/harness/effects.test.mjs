@@ -220,7 +220,7 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
   assert.equal(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses)[0].st, true);
   assert.equal(Object.keys(PE.PATH_EFFECTS).length, 70);
-  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 38);
+  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 35); // B6738: Summon Wisp, Malady and Corrupt Body now apply
   const by = id => paths.find(p => p.id.endsWith(id));
   assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3)[0].st, true);
   assert.deepEqual(PE.pathOutcomes(by("dust-to-dust"), 3).map(o => [o.out.levels, o.out.type, o.out.soak]), [[3, "aggravated", false]]);

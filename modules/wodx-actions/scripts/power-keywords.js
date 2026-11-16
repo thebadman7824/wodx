@@ -269,11 +269,13 @@ export function keywordsOf(set, id) {
   const line = LINE_KEYWORDS[set];
   if ( line ) {
     const l = line[id] ?? line[slugOf(id)];
-    return l ? {keywords: l.k.filter(k => KEYWORDS[k]), passive: l.p === 1, name: l.n} : null;
+    // B6737: a keyword may carry its flavour ("fear:calm"), as powerOutcomes reads it
+    return l ? {keywords: l.k.filter(k => KEYWORDS[String(k).split(":")[0]]), passive: l.p === 1, name: l.n} : null;
   }
   const e = POWER_KEYWORDS[set]?.[id];
   if ( e ) return {keywords: e[0].filter(k => KEYWORDS[k]), passive: e[1] === 1};
-  if ( set === "disc" && PATH_EFFECTS[id] ) return {keywords: [PATH_EFFECTS[id].kw].filter(k => KEYWORDS[k]), passive: false};
+  // B6738: a path power's spec may be a chain of results (Summon Wisp's light and trance)
+  if ( set === "disc" && PATH_EFFECTS[id] ) return {keywords: [PATH_EFFECTS[id]].flat().map(x => x.kw).filter(k => KEYWORDS[k]), passive: false};
   return null;
 }
 

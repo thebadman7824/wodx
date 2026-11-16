@@ -10,6 +10,9 @@ import {readFileSync} from "node:fs";
  *   B6730  a plain Charge or Drain on a sheet with no Quintessence moves the line's own pool, not a Quintessence field
  *   B6731  a Wraith Arcanos with no roll still puts its keywords on the effects card
  *   B6732  a Ward from a power stands against a weapon blow's soak, not only a power's harm
+ *   B6737  a woken fetish or a used talen puts its keywords on the effects card
+ *   B6739  a Dark Ages cantrip's or fae treasure's timed result carries its keyword, so power-mods files it
+ *   B6738  Summon Wisp, Malady, Corrupt Body and A Taste for Blood do what their pages say on the effects card
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
@@ -86,4 +89,54 @@ test("B6734: a wraith whose Shadow won Catharsis has each move go to the Storyte
   assert.equal(held[0].rule, "ask");
   assert.equal(B.judgeMove(held, {from: {x: 0, y: 0}, to: {x: 100, y: 0}}).ask, true);
   assert.deepEqual(B.bindingsOn({effects: [], flags: {"wodx-actions": {shadowDominant: null}}}), []);
+});
+
+test("B6737: a woken fetish puts its keywords on the effects card", async () => {
+  const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
+  const PK = await imp("modules/wodx-actions/scripts/power-keywords.js");
+  const {KEYWORDS} = await imp("modules/wodx-actions/scripts/effects-rules.js");
+  const lib = await imp("modules/wodx-library/data/wonders.mjs");
+  const all = Object.values(lib).find(v => Array.isArray(v) && v[0]?.key);
+  const keys = new Set(all.filter(w => w.line === "garou").map(w => w.key));
+  for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.fetish) ) {
+    assert.ok(keys.has(id), `${id} is a Garou wonder`);
+    assert.ok(e.k.every(k => KEYWORDS[String(k).split(":")[0]]), `${id} uses known keywords`);
+  }
+  const ward = PW.powerOutcomes(PW.powerKeywords("fetish", "wyrmflesh"), 3, {label: "Wyrmflesh"}).results;
+  assert.deepEqual(ward.map(r => [r.key, r.who, r.out.kind]), [["ward", "self", "timed"]]);
+  const calm = PW.powerOutcomes(PW.powerKeywords("fetish", "harmony-flute"), 1, {}).results;
+  assert.deepEqual(calm.map(r => [r.key, r.out.name]), [["fear", "Calmed"]]);
+  const g = src("modules/wodx-actions/scripts/garou.js");
+  const body = g.slice(g.indexOf("async function useFetish("), g.indexOf("Renown, Rank, Battle Scars"));
+  assert.match(body, /EF\.powerPlan\(actor, \{ set: "fetish", id: wk/);
+  assert.match(body, /kind: "effects", caster: actor\.name, items: fxItems/);
+  // an NPC power is not read by a fetish's name
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /Object\.keys\(PK\.LINE_KEYWORDS\)\.filter\(s => s !== "fetish"\)/);
+});
+
+test("B6738: four Dark Ages path powers that were card only now apply", async () => {
+  const PE = await imp("modules/wodx-actions/scripts/path-effects.js");
+  const of = (id, s) => PE.pathOutcomes({id, n: id, p: 300}, s);
+  const wisp = of("necromancy-the-path-of-haunting-summon-wisp", 2);
+  assert.deepEqual(wisp.map(r => [r.key, r.out.kind]), [["light", "light"], ["fortune", "timed"]]);
+  assert.equal(wisp[1].out.shift, 1);
+  const mal = of("thaumaturgy-potestas-exsecrabilis-malady", 5)[0];
+  assert.deepEqual([mal.key, mal.who, mal.out.dice, mal.out.on], ["boost", "one", -3, "physical"]);
+  const cb1 = of("thaumaturgy-potestas-exsecrabilis-corrupt-body", 1)[0], cb3 = of("thaumaturgy-potestas-exsecrabilis-corrupt-body", 3)[0];
+  assert.deepEqual([cb1.out.dice, cb1.out.on, cb1.out.duration, cb3.out.duration], [-1, "all", "one night", "one month"]);
+  const t = of("thaumaturgy-potestas-vitae-a-taste-for-blood", 1)[0];
+  assert.equal(t.key, "know");
+  for ( const r of [...wisp, mal, cb1, t] ) assert.ok(!r.st, `${r.key} is not left to the Storyteller`);
+});
+
+test("B6739: a cantrip's timed result carries its keyword where power-mods reads it", async () => {
+  const C = await imp("modules/wodx-actions/scripts/fae-da-cantrips.js");
+  const PM = await imp("modules/wodx-actions/scripts/power-mods.js");
+  const [r] = C.presetResults("rain-strike", 3);
+  assert.equal(r.out.key, "boost");
+  assert.equal(PM.keyFor(r.out), "wodx-effect-boost");
+  assert.deepEqual(PM.timedData(r.out), {dice: -3, on: "all"});
+  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const chain = D.outcomesOf([D.T("light", "L", "scene", "self"), D.T("fortune", "F", "scene", "one", {curse: true})], {label: "x"}, 2, "");
+  assert.deepEqual(chain.map(x => x.out.key), ["light", "fortune"]);
 });

@@ -94,6 +94,8 @@ export function lastsFor(lasts, successes) {
   if ( lasts?.seconds ) return {label: `${Math.round(lasts.seconds / 3600)} hours`, timed: {kind: "time", seconds: lasts.seconds}};
   if ( lasts?.turns ) { const t = lasts.turns * s; return {label: `${t} turn${t === 1 ? "" : "s"}`, timed: {kind: "rounds", rounds: t}}; }
   if ( lasts?.days ) { const d = lasts.days * s; return {label: `${d} day${d === 1 ? "" : "s"}`, timed: {kind: "time", seconds: d * DAY}}; }
+  // B6738: a ladder by successes, [[label, seconds], ...]; past its end the last step holds (a Tremere curse's night to year)
+  if ( Array.isArray(lasts?.ladder) && lasts.ladder.length ) { const [label, sec] = lasts.ladder[Math.min(s, lasts.ladder.length) - 1]; return {label, timed: {kind: "time", seconds: sec}}; }
   if ( lasts?.weeks ) { const w = lasts.weeks * s; return {label: `${w} week${w === 1 ? "" : "s"}`, timed: {kind: "time", seconds: w * 7 * DAY}}; }
   return {label: "the scene", timed: {kind: "scene"}};
 }
@@ -111,7 +113,10 @@ export function outcomesOf(spec, base, successes, text = "") {
   const s = n(successes);
   if ( !spec || s < 1 ) return [];
   // B5780: a chain of keywords: each part lands in turn
-  if ( Array.isArray(spec) ) return spec.flatMap(x => outcomesOf(x, base, s, text));
+  // B6739: each part, and a spec whose caller named no key (a Dark Ages cantrip), carries its keyword as out.key, which
+  // power-mods.js reads to file a Ward, Boost or Blessing where the dice find it
+  if ( Array.isArray(spec) ) return spec.flatMap(x => outcomesOf(x, {...base, key: x.kw}, s, text));
+  if ( base.key == null ) base = {...base, key: spec.kw};
   switch ( spec.kind ) {
     case "act": {
       const d = lastsFor(spec.lasts, s);
@@ -174,7 +179,8 @@ export function outcomesOf(spec, base, successes, text = "") {
 export function timedNumbers(spec = {}, s = 1) {
   const k = spec.kw, x = Math.max(1, n(s));
   if ( k === "ward" ) return {dice: n(spec.dice) || Math.min(5, x), ...(spec.against ? {against: spec.against} : {})};
-  if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
+  // B6738: max holds a Boost or Sap to the book's cap (Malady's three dice)
+  if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(n(spec.max) || 5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
   // B6553: a spec's own shift (Will of Fire's two) wins over the successes
   if ( k === "fortune" ) { const sh = Math.abs(n(spec.shift)) || Math.min(3, x); return {shift: spec.curse ? sh : -sh}; }
   // B6553: Hasten's extra actions (one for every two successes, as effects-rules), or the spec's own; a Slow loses them

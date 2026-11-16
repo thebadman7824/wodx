@@ -5,7 +5,7 @@
  * rotes (mage-da-effects.js). A power with no entry, or whose result is a summoned being, a vision, a long ritual or a
  * judgement, stays the Storyteller's call and is only listed on the card.
  */
-import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, K as KW, MV, HL, outcomesOf } from "./mage-da-effects.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**
@@ -13,6 +13,8 @@ import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
  * blood moved between bodies, contested rolls and rolled damage dice stay the Storyteller's call.
  */
 const K = "koldunic-sorcery-the-", NE = "necromancy-the-", TH = "thaumaturgy-potestas-";
+// B6738: Corrupt Body's and Acedia's time by successes (V20 Dark Ages p. 301)
+const CURSE_LADDER = [["one night", DAY], ["one week", 7 * DAY], ["one month", 30 * DAY], ["one season", 91 * DAY], ["one year", 365 * DAY]];
 export const PATH_EFFECTS = {
   // Koldunic Sorcery (pp. 275-278)
   [`${K}transylvanian-kraina-burebistas-throne`]: N(),
@@ -39,7 +41,7 @@ export const PATH_EFFECTS = {
   [`${NE}graves-decay-ashen-ladys-embrace`]: H("harm", 2, "aggravated", {fixed: true, ask: true}),
   [`${NE}graves-decay-gift-of-melancholia`]: S("harm"), [`${NE}graves-decay-dust-to-dust`]: H("harm", 1, "aggravated", {soak: false}),
   // Path of Haunting (pp. 285-286)
-  [`${NE}path-of-haunting-song-of-the-dead`]: T("fortune", "Song of the Dead", {days: 1}, "one"), [`${NE}path-of-haunting-summon-wisp`]: S("light"),
+  [`${NE}path-of-haunting-song-of-the-dead`]: T("fortune", "Song of the Dead", {days: 1}, "one"), [`${NE}path-of-haunting-summon-wisp`]: [T("light", "Summon Wisp", "scene", "self"), T("fortune", "Entranced by the wisp", "scene", "one", {curse: true, shift: 1})],
   [`${NE}path-of-haunting-harrowing`]: T("fortune", "Harrowing", "night", "one"), [`${NE}path-of-haunting-phantasms`]: S(),
   [`${NE}path-of-haunting-spectral-menacing`]: S(),
   // Path of the Sepulchre (pp. 287-288)
@@ -63,10 +65,10 @@ export const PATH_EFFECTS = {
   [`${TH}elementorum-strength-of-the-earth`]: T("shape", "Strength of the Earth", {turns: 1}, "self"), [`${TH}elementorum-wooden-tongues`]: N(),
   [`${TH}elementorum-animate-the-unmoving`]: S(), [`${TH}elementorum-elemental-form`]: T("shape", "Elemental Form", "night", "self"),
   [`${TH}elementorum-summon-elemental`]: S("summon"),
-  [`${TH}exsecrabilis-stigma`]: T("fortune", "Stigma", {seconds: DAY}, "one"), [`${TH}exsecrabilis-malady`]: S("harm"),
-  [`${TH}exsecrabilis-scapegoat`]: T("sway", "Scapegoat", {days: 1}, "one"), [`${TH}exsecrabilis-corrupt-body`]: S("shape"),
+  [`${TH}exsecrabilis-stigma`]: T("fortune", "Stigma", {seconds: DAY}, "one"), [`${TH}exsecrabilis-malady`]: T("boost", "Malady", {ladder: [["a night (the book: nights equal to the caster's Willpower)", DAY]]}, "one", {sap: true, on: "physical", max: 3}),
+  [`${TH}exsecrabilis-scapegoat`]: T("sway", "Scapegoat", {days: 1}, "one"), [`${TH}exsecrabilis-corrupt-body`]: T("boost", "Corrupt Body", {ladder: CURSE_LADDER}, "one", {sap: true, on: "all", dice: 1}),
   [`${TH}exsecrabilis-acedia`]: S("fortune"),
-  [`${TH}vitae-a-taste-for-blood`]: N(), [`${TH}vitae-blood-awakening`]: S(), [`${TH}vitae-inner-vessel`]: S(), [`${TH}vitae-theft-of-vitae`]: S("charge"),
+  [`${TH}vitae-a-taste-for-blood`]: KW("know", "one"), [`${TH}vitae-blood-awakening`]: S(), [`${TH}vitae-inner-vessel`]: S(), [`${TH}vitae-theft-of-vitae`]: S("charge"),
   [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true})
 };
 

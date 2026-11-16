@@ -728,7 +728,7 @@ export function build(ctx) {
             const gn = Math.max(2, Math.min(10, n(it.system?.gnosis) || 6));
             const talen = fd.talen || !!it.getFlag?.(MOD, "talen") || it.system?.type === "wod.types.talen";
             if (it.getFlag?.(MOD, "spent")) { ctx.notify(`${it.name} is spent: its spirit has gone.`); return null; }
-            let body = "", rolls = [], woke = false;
+            let body = "", rolls = [], woke = false, lastHits = 0;
             if (fd.how === "spend") {
                 const note = await pay(actor, "gnosis", 1); if (note === false) return null;
                 woke = true;
@@ -738,10 +738,19 @@ export function build(ctx) {
                 const rr = await rollPool(effectiveGnosis(actor), gn);
                 rolls.push(rr.roll);
                 body += rollBlock("Gnosis", rr, [`difficulty ${gn}`, ...(sp ? [`${sp} less for silver carried`] : [])]);
+                lastHits = rr.successes;
                 if (rr.successes > 0) {
                     if (fd.how === "attune") { await it.setFlag?.(MOD, "attuned", true); body += `<div class="vta-big good">Attuned (and dedicated).</div>`; }
                     else { woke = true; body += `<div class="vta-big good">It wakes.</div>`; }
                 } else body += `<div class="vta-note">${fd.how === "attune" ? "Rejected: no new attempt until the Garou makes peace with the spirit." : "It stays silent."}</div>`;
+            }
+            // B6737: a woken fetish puts its keywords on the effects card, as a Gift does; the spend counts one success (B3751)
+            let fxItems = [];
+            const wk = it.getFlag?.("wodx-library", "wonder")?.key || it.name;
+            if (woke && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "fetish", id: wk, name: it.name, successes: fd.how === "spend" ? 1 : lastHits, source: it.system?.reference || "", noRoll: fd.how === "spend", world: "Werewolf (fetish)" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             body += await markTurn(actor, "gnosis");
             if (talen && woke) {
@@ -749,7 +758,7 @@ export function build(ctx) {
                 await it.setFlag?.(MOD, "spent", true);
                 body += `<div class="vta-note">The talen is spent; its spirit goes free. It stays on the sheet marked spent until someone removes it.</div>`;
             }
-            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean));
+            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         });
     }
 

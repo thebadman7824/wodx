@@ -596,7 +596,7 @@ function npcPowers(actor) {
     line(() => KXD.isKotE(actor), () => qx().powersFor(actor));
     line(() => OXD.isOrpheus(actor), () => ox().powersFor(actor));
     line(() => true, () => hx().powersFor(actor));
-    const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS)) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
+    const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS).filter(s => s !== "fetish")) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
     return from.map(p => {
         const kw = (p.keywords?.length ? { keywords: p.keywords } : null) || (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
         const t = NPW.tagsOf(kw.keywords ?? []);
