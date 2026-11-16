@@ -74,9 +74,11 @@ export async function run() {
       const cond = actor => !!game.modules.get("wodx-chronicle")?.api?.conditions?.hasCondition?.(actor, "blinded");
       for ( let i = 0; i < 3 && !cond(b); i++ ) await attackWith(C, ta, tb, spray.id);
       await settle(() => cond(b));
-      // the mask card is found by its time, not its place in the list (gate rule 1); a miss is tried again
-      const since = Date.now() - 1000;
-      const maskCard = () => !!newestMessage(since, x => /gas mask keeps the spray out/i.test(x.content ?? ""));
+      // B6772: read the cards this step made, not the last few in the log. Each blow brings its attack card, the
+      // spray's card and (fire and forget) the fight-start card, and after other gates more cards can land between,
+      // so a fixed window of six once missed the gas mask's card although the mask had kept the spray out.
+      const seen = new Set(game.messages.map(x => x.id));
+      const maskCard = () => game.messages.some(x => !seen.has(x.id) && /gas mask keeps the spray out/i.test(x.content ?? ""));
       for ( let i = 0; i < 3 && !maskCard(); i++ ) { await attackWith(C, ta, tm, spray.id); await settle(maskCard, 1500); }
       const mask = maskCard();
       G.ok("4. pepper spray and a gas mask", cond(b) && !cond(m) && mask, {victim: cond(b), masked: cond(m), maskCard: mask});
@@ -91,6 +93,7 @@ export async function run() {
 
     await G.step("6. a bear trap", async () => {
       const [trap] = await a.createEmbeddedDocuments("Item", [{name: "a bear trap", type: "Item"}]);
+      const seen = new Set(game.messages.map(x => x.id));
       const imm = () => !!game.modules.get("wodx-chronicle")?.api?.conditions?.hasCondition?.(b, "immobilized");
       let caught = false, sets = 0;
       for ( let i = 0; i < 6 && !caught; i++ ) {
@@ -100,7 +103,7 @@ export async function run() {
         caught = !!r?.caught;
       }
       await settle(() => imm());
-      const card = [...game.messages].slice(-8).some(x => /takes damage/i.test(x.content) && /Gate Arms Victim/.test(x.content));
+      const card = game.messages.some(x => !seen.has(x.id) && /takes damage/i.test(x.content ?? "") && /Gate Arms Victim/.test(x.content ?? ""));
       G.ok("6. a bear trap", caught && imm() && card, {caught, sets, immobilized: imm(), damageCard: card});
     });
     await G.step("7. reloading from Possessions", async () => {
