@@ -1751,6 +1751,14 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 |---|---|---|---|
 | 2026-11-16 | Timeline check: when are the Bunyip gone, 1899 (WoDX's War of Tears) or 1937 (Past Lives pdf 70)? **Approved by Ben 2026-11-16 02:14Z** (House Events Desk, "I approve everything on this desk") | The War of Tears stays at 1899 and breaks the tribe; new event bunyip-last-stand (1937) ends it. Signature features and lifepath to 1937 (they were 1890 and 1920), era advancement gone by 1938, NPC faction ends moved to the last stand with a survivors faction offered at the war | Remove bunyip-last-stand from wodx-chronicle data/events.mjs, set Bunyip until 1899 in signatures.mjs, lifepath span to 1899, goneBy 1900 in advance.mjs, and put "war-of-tears" back in EVENT_ENDS in wodx-npc faction-rules.mjs |
 
+## Approved by Ben, 16 November 2026, 02:21 UTC (Cyberpunks Creation Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | The Cyberpunks' lifepath scene (B6612) | You run the Net (Computer, Contacts, a fixer) or you ride the chrome (Technology, Streetwise, a ripperdoc) | Edit the cyberpunks row in lifepaths-splats.mjs |
+| 2026-11-16 | Technica on the Embrace (B6612) | 0 dots, like every other clan's Disciplines | Give the CLANS row a starting dot |
+| 2026-11-16 | Technica bought with freebies (B6612) | Only in the years the Cyberpunks exist (Future branch, 2016 on) | Drop opens from the CLANS row |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
