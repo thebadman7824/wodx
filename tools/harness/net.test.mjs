@@ -60,7 +60,7 @@ test("black ICE lands on the body, the mind, the deck or Realspace; a keyboard i
   assert.equal(N.iceHit("hellbolt", {levels: 1}).type, "lethal");
   const h = N.iceHit("hellhound", {levels: 3});
   assert.equal(h.type, "aggravated"); assert.equal(h.hound, true); assert.equal(h.trace, true);
-  assert.deepEqual(N.iceHit("zombie", {levels: 0}), {kind: "mind", points: 1, heals: "aggravated"});
+  assert.deepEqual(N.iceHit("zombie", {levels: 0}), {kind: "mind", points: 1, permanent: true}); // B6934: lost INT never returns
   assert.equal(N.iceHit("stun", {turns: 4}).status, "net-frozen");
   assert.equal(N.iceHit("krash", {turns: 3}).kind, "deck");
   assert.equal(N.iceHit("stun", {access: "keyboard"}).why, "keyboard");

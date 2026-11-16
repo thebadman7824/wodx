@@ -165,9 +165,9 @@ export const PROGRAMS = {
   stun:         {label: "Stun", cls: "antipersonnel", str: 3, mu: 3, hit: "status", status: "net-frozen", turns: "1d6", ice: true},
   hellbolt:     {label: "Hellbolt", cls: "antipersonnel", str: 4, mu: 4, hit: "body", damage: "lethal", ice: true},
   sword:        {label: "Sword", cls: "antipersonnel", str: 3, mu: 4, hit: "persona", ice: true},
-  brainwipe:    {label: "Brainwipe", cls: "antipersonnel", str: 3, mu: 4, hit: "mind", heals: "lethal", ice: true},
-  zombie:       {label: "Zombie", cls: "antipersonnel", str: 5, mu: 4, hit: "mind", heals: "aggravated", ice: true},
-  liche:        {label: "Liche", cls: "antipersonnel", str: 4, mu: 4, hit: "mind", heals: "aggravated", ice: true},
+  brainwipe:    {label: "Brainwipe", cls: "antipersonnel", str: 3, mu: 4, hit: "mind", permanent: true, ice: true},
+  zombie:       {label: "Zombie", cls: "antipersonnel", str: 5, mu: 4, hit: "mind", permanent: true, ice: true},
+  liche:        {label: "Liche", cls: "antipersonnel", str: 4, mu: 4, hit: "mind", permanent: true, ice: true},
   firestarter:  {label: "Firestarter", cls: "antipersonnel", str: 4, mu: 4, hit: "fire", ice: true, reachesKeyboard: true},
   hellhound:    {label: "Hellhound", cls: "antipersonnel", str: 6, mu: 6, hit: "body", damage: "aggravated", hound: true, trace: true, ice: true, mobile: true},
   spazz:        {label: "Spazz", cls: "antipersonnel", str: 4, mu: 3, hit: "status", status: "net-spazzed", turns: "1d6", ice: true},
@@ -251,7 +251,8 @@ export function iceHit(id, {levels = 0, turns = 0, access = "plugs", reflected =
   switch ( P.hit ) {
     case "persona": return {kind: "persona", type: "bashing", levels: n(levels)};
     case "body": return {kind: "body", type: P.damage, levels: n(levels), hound: !!P.hound, trace: !!P.trace};
-    case "mind": return {kind: "mind", points: Math.max(1, n(levels)), heals: P.heals};
+    // B6934: Intelligence a black program burns away never returns (Cyberpunk 2020 core pdf p. 143)
+    case "mind": return {kind: "mind", points: Math.max(1, n(levels)), permanent: true};
     case "status": return {kind: "status", status: P.status, turns: n(turns), hours: P.hours ? n(turns) : 0, traceAfter: P.traceAfter ?? 0};
     case "fire": return {kind: "fire", size: n(levels) >= 3 ? "large" : "small"};
     case "deck": return {kind: "deck", status: P.status, turns: n(turns)};
@@ -649,13 +650,13 @@ export function machineTalk(successes) {
  */
 export function leansOnBlood({disc = 0, tech = 0} = {}) { return n(disc) > n(tech); }
 
-/* ---- Net burn and Net shock heal (B6795) ---- */
+/* ---- Net shock heals (B6795); Net burn does not (B6934) ---- */
 /**
- * Intelligence a black program or a hard de-rez took comes back as the damage it is named for heals: one point at a
- * time, each after the time a mortal's wound of that weight takes (V20's mortal healing times, Bruised to
+ * Intelligence a hard de-rez took (Net shock, M20 printed p. 474: it heals like lethal damage) comes back one point at
+ * a time, each after the time a mortal's wound of that weight takes (V20's mortal healing times, Bruised to
  * Incapacitated: a day, three days, a week, a month, two months, three months). The more points still lost, the
- * longer the next one takes. Aggravated heals on the same times (a house reading: the mortal chart has no row of its
- * own for it). The Cyberpunk 2020 core says lost INT never comes back; WoDX keeps its own reading (PENDING-REVIEW).
+ * longer the next one takes. Net burn, the Intelligence a black program takes, never comes back: the Cyberpunk 2020
+ * core says lost INT cannot be regained (pdf p. 143), and the owner ruled to follow the book (B6934).
  */
 export const BURN_HEAL_DAYS = [1, 3, 7, 30, 60, 90, 90];
 export const burnHealSeconds = points => BURN_HEAL_DAYS[Math.max(1, Math.min(BURN_HEAL_DAYS.length, Math.round(n(points)) || 1)) - 1] * DAY;

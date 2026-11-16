@@ -71,8 +71,8 @@ export function registerNetStatuses() {
   for ( const [id, s] of Object.entries(N.STATUSES) ) {
     if ( !CONFIG.statusEffects.find(e => e.id === id) ) CONFIG.statusEffects.push({id, name: s.label, img: s.img, hud: true});
   }
-  // B6795: a burned mind shows on the token until it heals
-  if ( !CONFIG.statusEffects.find(e => e.id === "wodx-net-burn") ) CONFIG.statusEffects.push({id: "wodx-net-burn", name: "Net burn (Intelligence lost)", img: "icons/svg/degen.svg", hud: false});
+  // B6795: a burned mind shows on the token (Net shock until it heals; Net burn for good, B6934)
+  if ( !CONFIG.statusEffects.find(e => e.id === "wodx-net-burn") ) CONFIG.statusEffects.push({id: "wodx-net-burn", name: "Net burn or shock (Intelligence lost)", img: "icons/svg/degen.svg", hud: false});
 }
 const iceAuto = () => { const m = setting("netIce") ?? "solo"; return m === "always" || (m === "solo" && !!solo()?.isOn?.()); };
 
@@ -603,8 +603,8 @@ export async function applyHit(a, hit, {scene, ice, m} = {}) {
       if ( hit.trace ) await traceRunner(a, m, ice);
       return `${hit.levels ? `<b>${hit.levels} ${hit.type}</b> through the jack to the body` : "the body holds"}${hit.hound ? "; the Hellhound has the scent and will strike again at the next log-on" : ""}.`;
     case "mind": {
-      await a.createEmbeddedDocuments("ActiveEffect", [burnEffect("Net burn", hit.points, hit.heals, "icons/svg/degen.svg")]);
-      return `<b>${hit.points} Intelligence</b> burned away, healing as ${hit.heals} damage does.`;
+      await a.createEmbeddedDocuments("ActiveEffect", [burnEffect("Net burn", hit.points, null, "icons/svg/degen.svg")]);
+      return `<b>${hit.points} Intelligence</b> burned away for good: a black program's burn never heals.`;
     }
     case "status":
       await addStatus(a, hit.status, hit.turns);
@@ -629,23 +629,35 @@ export async function applyHit(a, hit, {scene, ice, m} = {}) {
   }
 }
 
-/* ---- Net burn and Net shock heal (B6795) ---- */
+/* ---- Net shock heals (B6795); Net burn is for good (B6934) ---- */
 export const BURN_STATUS = "wodx-net-burn";
 const burnName = (what, points, heals, next) => `${what}: ${points} Intelligence lost, heals as ${heals || "lethal"}${next ? ` (the next point in ${next})` : ""}`;
-/** The effect a burn leaves: on the sheet's effects and, through its status, as an icon on the token. */
+const burnForGood = points => `Net burn: ${points} Intelligence lost for good`;
+/**
+ * The effect a burn leaves: on the sheet's effects and, through its status, as an icon on the token. heals null: a
+ * black program's Net burn, which never heals (Cyberpunk 2020 core pdf p. 143).
+ */
 function burnEffect(what, points, heals = "lethal", img = "icons/svg/degen.svg", now = game.time.worldTime) {
-  return {name: burnName(what, points, heals, N.burnWhen(N.burnHealSeconds(points))), img, statuses: [BURN_STATUS],
+  const permanent = heals === null;
+  return {name: permanent ? burnForGood(points) : burnName(what, points, heals, N.burnWhen(N.burnHealSeconds(points))), img, statuses: [BURN_STATUS],
     changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-points)}],
-    flags: {[MODULE_ID]: {netBurn: true, heals: heals || "lethal", what, points, last: now}}};
+    flags: {[MODULE_ID]: permanent ? {netBurn: true, permanent: true, what, points, at: now} : {netBurn: true, heals: heals || "lethal", what, points, last: now}}};
 }
-/** Active Storyteller: every burn the clock has healed gives its points back; the token shows the healed points. */
+/**
+ * Active Storyteller: every Net shock the clock has healed gives its points back; the token shows the healed points.
+ * A Net burn never heals (B6934); one saved while B6795 healed it is marked permanent the first time it is seen.
+ */
 export async function healBurns(now = game.time.worldTime, actors = game.actors) {
   if ( !isActiveGM() ) return [];
   const out = [];
   for ( const a of actors ?? [] ) for ( const e of [...(a.effects ?? [])] ) {
     const f = e.flags?.[MODULE_ID];
-    if ( !f?.netBurn ) continue;
+    if ( !f?.netBurn || f.permanent ) continue;
     const points = Number(f.points) || Math.abs(Number(e.changes?.[0]?.value)) || 0;
+    if ( (f.what || (/shock/i.test(e.name) ? "Net shock" : "Net burn")) === "Net burn" ) {
+      await e.update({name: burnForGood(points), [`flags.${MODULE_ID}.permanent`]: true, [`flags.${MODULE_ID}.points`]: points, statuses: [BURN_STATUS]});
+      continue;
+    }
     // A burn made before B6795 starts its clock now
     if ( !Number.isFinite(Number(f.last)) ) { await e.update({[`flags.${MODULE_ID}.last`]: now, [`flags.${MODULE_ID}.points`]: points, statuses: [BURN_STATUS]}); continue; }
     const r = N.burnHeal({points, last: f.last}, now);
@@ -871,7 +883,7 @@ export async function onNetMessage(msg) {
 /* ------------------------------------------------------------------ */
 
 export function setupNet() {
-  // B6795: the clock heals Net burn and Net shock
+  // B6795: the clock heals Net shock (Net burn is for good, B6934)
   let burnTimer = null;
   Hooks.on("updateWorldTime", () => { if ( !isActiveGM() ) return; clearTimeout(burnTimer); burnTimer = setTimeout(() => healBurns().catch(e => console.error("WoDX | Net burn", e)), 500); });
   // A runner's icon moving in a fortress gives the ICE its turn (when the ICE acts on its own)

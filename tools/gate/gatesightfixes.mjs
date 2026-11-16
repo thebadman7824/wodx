@@ -8,7 +8,9 @@
  *      names the scene it leads to, and the label has a plain outline (not colour alone)
  *   3. Fog out of doors: with a hand-set night of thick fog, the Shroud where the token stands is one lower, and the
  *      note says why; indoors it stays the place's own
- *   4. Net burn heals: a gate runner's burn of 2, three and a half days old, gives a point back (3 days a point at 2), and the effect (the token's icon) shrinks
+ *   4. Net burn is for good, Net shock heals (B6934): a gate runner's Net burn of 2, three and a half days old, gives
+ *      nothing back and is marked for good; a Net shock of 2 as old gives a point back (3 days a point at 2), and its
+ *      effect (the token's icon) shrinks
  *   5. The Maelstrom: one bell strikes a selected gate token through WoDX Combat's soak, and a card says how much
  *   6. Wayfare on the map: a portal that opened makes a trod between two gate scenes' Near Dreaming levels
  *   7. A remote vehicle: an empty gate car driven 2 squares east moves on the map with its passenger aboard
@@ -79,15 +81,18 @@ export async function run() {
         {outdoors: out.ratings, notes: out.notes, indoors: inside.ratings, day: atm.weather.now(scene)?.label});
     });
 
-    await G.step("4. Net burn heals with the clock", async () => {
+    await G.step("4. Net burn is for good, Net shock heals", async () => {
       const [runner] = await G.make(Actor, [{name: "WoDX gate: Jacks", type: "Mortal"}]);
       const now = game.time.worldTime;
-      await runner.createEmbeddedDocuments("ActiveEffect", [{name: "Net burn: 2 Intelligence lost", img: "icons/svg/degen.svg", statuses: ["wodx-net-burn"],
-        changes: [{key: "system.attributes.intelligence.value", mode: 2, value: "-2"}], flags: {[OW]: {netBurn: true, heals: "lethal", what: "Net burn", points: 2, last: now - 3.5 * 86400}}}]);
+      const mk = what => ({name: `${what}: 2 Intelligence lost`, img: "icons/svg/degen.svg", statuses: ["wodx-net-burn"],
+        changes: [{key: "system.attributes.intelligence.value", mode: 2, value: "-2"}], flags: {[OW]: {netBurn: true, heals: "lethal", what, points: 2, last: now - 3.5 * 86400}}});
+      await runner.createEmbeddedDocuments("ActiveEffect", [mk("Net burn"), mk("Net shock")]);
       const r = await ow.net.healBurns(now, [runner]);
-      const e = runner.effects.find(x => x.flags?.[OW]?.netBurn);
-      G.ok("4. Net burn heals with the clock", r[0]?.healed === 1 && String(e?.changes?.[0]?.value) === "-1" && e?.statuses?.has?.("wodx-net-burn") && /1 Intelligence lost/.test(e?.name ?? ""),
-        {r, effect: e?.name, change: e?.changes?.[0]?.value, statuses: [...(e?.statuses ?? [])]});
+      const burn = runner.effects.find(x => x.flags?.[OW]?.what === "Net burn"), shock = runner.effects.find(x => x.flags?.[OW]?.what === "Net shock");
+      G.ok("4. Net burn is for good, Net shock heals", r.length === 1 && r[0]?.healed === 1
+        && String(burn?.changes?.[0]?.value) === "-2" && burn?.flags?.[OW]?.permanent === true && /for good/.test(burn?.name ?? "") && burn?.statuses?.has?.("wodx-net-burn")
+        && String(shock?.changes?.[0]?.value) === "-1" && shock?.statuses?.has?.("wodx-net-burn") && /1 Intelligence lost/.test(shock?.name ?? ""),
+        {r, burn: burn?.name, burnChange: burn?.changes?.[0]?.value, shock: shock?.name, shockChange: shock?.changes?.[0]?.value});
     });
 
     await G.step("5. The Maelstrom strikes", async () => {
