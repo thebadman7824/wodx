@@ -505,6 +505,27 @@ export function sheetBonus(items, type, setting = null) {
     return n;
 }
 
+/**
+ * B6729: Demon apocalyptic form features that make attacks on the bearer harder (the system's pack Traits, whose effect
+ * was only in their text). By the Trait's name; they count while the Trait is switched on, as its bonuses do.
+ */
+export const FORM_DEFENCES = [
+    { re: /^shroud of flames$/i, ranged: 1, close: 1, page: "DtF p. 178" },
+    { re: /^radiant aura$/i, ranged: 1, close: 0, page: "DtF p. 180" },
+    { re: /^mirage$/i, ranged: 2, close: 1, page: "DtF p. 190" },
+    { re: /^alter size$/i, ranged: 2, close: 2, page: "DtF p. 190" }
+];
+/** The shield-shaped entries a defender's switched-on form Traits give (items: the actor's items). */
+export function formDefences(items = []) {
+    const out = [];
+    for (const i of items ?? []) {
+        if (i?.type !== "Trait" || !i.system?.isactive) continue;
+        const d = FORM_DEFENCES.find(f => f.re.test(String(i.name ?? "").trim()));
+        if (d) out.push({ name: i.name, parry: null, attackRanged: d.ranged, attackClose: d.close, closeOnly: false });
+    }
+    return out;
+}
+
 /** Parrying weapons (V20 Dark Ages p. 350): a dagger parries at 5, a sword at 6 and adds 1 to close attacks. */
 export const PARRY_WEAPONS = [
     { re: /\b(dagger|knife|dirk|stiletto|main-gauche|poniard|kris|tanto)\b/i, parry: 5, attack: 0, closeOnly: false, label: "parrying dagger" },
@@ -524,7 +545,9 @@ export function shieldFor({ shields = [], weapon = "", close = true } = {}) {
     for (const s of all) {
         let used = false;
         if (s.parry && (parryDiff === null || s.parry < parryDiff)) { parryDiff = s.parry; used = true; }
-        if (s.attack && (!s.closeOnly || close) && s.attack > attackDiff) { attackDiff = s.attack; used = true; }
+        // B6729: a form feature can make ranged and close attacks harder by different steps
+        const att = s.attackRanged != null || s.attackClose != null ? (close ? Number(s.attackClose) || 0 : Number(s.attackRanged) || 0) : s.attack;
+        if (att && (!s.closeOnly || close) && att > attackDiff) { attackDiff = att; used = true; }
         if (used) names.push(s.name);
     }
     return { parryDiff, attackDiff, names };

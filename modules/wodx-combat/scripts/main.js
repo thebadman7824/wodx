@@ -227,11 +227,12 @@ function shieldsOf(actor) {
         const s = i.flags?.["wodx-library"]?.shield;
         if (s && i.system?.isequipped) shields.push({ name: i.name, parry: num(s.parry) || null, attack: num(s.attack), closeOnly: !!s.closeOnly });
     }
+    shields.push(...R.formDefences(actor?.items)); // B6729: Shroud of Flames, Radiant Aura, Mirage, Alter Size
     const mw = (actor?.items ?? []).filter(i => i.type === "Melee Weapon" && !i.system?.isnatural);
     const weapon = (mw.find(i => i.system?.isequipped) ?? null)?.name ?? "";
     // B5073: a shield needs a hand of its own; a burden may leave none for it
     const hb = MVJ.haulOfActor(actor), HR = game.modules.get("wodx-interactables")?.api?.haul?.rules;
-    if (hb && !hb.carried && HR && !HR.shieldHeld({ free: hb.free, weaponHands: weapon ? 1 : 0 })) return { shields: [], weapon: hb.free ? weapon : "" };
+    if (hb && !hb.carried && HR && !HR.shieldHeld({ free: hb.free, weaponHands: weapon ? 1 : 0 })) return { shields: shields.filter(s => s.attackRanged != null), weapon: hb.free ? weapon : "" };
     return { shields, weapon };
 }
 
