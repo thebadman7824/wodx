@@ -15,8 +15,12 @@ export async function run() {
   const G = gate("gatecreationload");
   try {
     await G.step("1. api", async () => {
-      const m = game.modules.get("wodx-creation"), api = m?.api;
-      G.ok("1. api", !!m?.active && !!api?.archive && !!api?.time && !!api?.animals && !(api?.startErrors?.length), {active: !!m?.active, version: m?.version, startErrors: api?.startErrors ?? null, keys: Object.keys(api ?? {}).slice(0, 12), chronicle: !!game.modules.get("wodx-chronicle")?.api});
+      // Creation starts after WoDX Chronicle finishes its own ready work, which on a fresh lane can take a while, so the
+      // gate waits up to 90 s for the api and says how long it took (run #1745 looked too early; gatearchive then passed)
+      const t0 = Date.now();
+      while ( !game.modules.get("wodx-creation")?.api && Date.now() - t0 < 90000 ) await new Promise(r => setTimeout(r, 500));
+      const m = game.modules.get("wodx-creation"), api = m?.api, waitedMs = Date.now() - t0;
+      G.ok("1. api", !!m?.active && !!api?.archive && !!api?.time && !!api?.animals && !(api?.startErrors?.length), {active: !!m?.active, version: m?.version, startErrors: api?.startErrors ?? null, keys: Object.keys(api ?? {}).slice(0, 12), chronicle: !!game.modules.get("wodx-chronicle")?.api, waitedMs});
     });
     await G.step("2. imports", async () => {
       const bad = [];
