@@ -13,6 +13,7 @@
 import {MODULE_ID} from "./ratings.mjs";
 import {STATUS} from "./crossing.mjs";
 import * as N from "./net-rules.mjs";
+import * as T from "./technica.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
@@ -208,7 +209,8 @@ export async function jackInto(token, scene, {way = null, deck = "standard", pro
   if ( !isFortress(scene) ) throw new Error("Pick a data fortress.");
   const kind = netKindNow();
   if ( !kind ) throw new Error(`There is no Net to enter before ${N.WEB_FROM}.`);
-  const ways = N.accessFor(kind);
+  const tech = T.technica(a);
+  const ways = N.waysFor(kind, tech);
   const w = ways.includes(way) ? way : ways[0];
   if ( a.flags?.[MODULE_ID]?.netRun?.fortress ) throw new Error(`${a.name} is already in the Net.`);
   const spheres = Object.fromEntries((a.items?.contents ?? []).filter(i => /sphere/i.test(i.type) || i.system?.sphere).map(i => [String(i.name).toLowerCase(), num(i.system?.value)]));
@@ -231,11 +233,17 @@ export async function jackInto(token, scene, {way = null, deck = "standard", pro
       return null;
     }
   }
+  // Technica (B6604-B6611): Ghost in the Machine needs no deck (the mind holds what a standard deck would);
+  // Technical Touch rolls Perception + Computer, and with no Computer its successes stand in.
+  const ghost = !!N.ACCESS[w].ghost;
+  if ( ghost ) deck = "standard";
   const D = N.DECKS[deck] ?? N.DECKS.standard;
   const load = kind === "deck" ? N.loadOut(deck, programs) : {loaded: programs.filter(p => N.PROGRAMS[p]), over: [], used: 0};
+  const touch = kind === "deck" ? await T.touchRoll(a) : 0;
+  if ( tech >= 2 && kind === "deck" ) lines.push(`Technical Touch: ${touch} success${touch === 1 ? "" : "es"}${!ab(a, "computer") && touch ? `, standing in for Computer ${touch}` : ""}.`);
   const m = modelOf(scene);
   const hounded = a.statuses?.has("net-hounded");
-  await a.setFlag(MODULE_ID, "netRun", {fortress: scene.id, way: w, deck: kind === "deck" ? deck : null, programs: load.loaded, body: token.uuid ?? token.document?.uuid, at: game.time.worldTime, hidden: 0});
+  await a.setFlag(MODULE_ID, "netRun", {fortress: scene.id, way: w, deck: kind === "deck" && !ghost ? deck : null, programs: load.loaded, touch, tech, body: token.uuid ?? token.document?.uuid, at: game.time.worldTime, hidden: 0});
   if ( !a.statuses?.has(STATUS.net.id) ) await a.toggleStatusEffect(STATUS.net.id, {active: true});
   // the icon: the character's own token, lit in the Net's phosphor (B2992), at the long distance link
   const src = (token.document ?? token).toObject();
@@ -247,7 +255,8 @@ export async function jackInto(token, scene, {way = null, deck = "standard", pro
   const [icon] = await scene.createEmbeddedDocuments("Token", [src]);
   await ChatMessage.create({speaker: {alias: "The Net"}, whisper: whisperFor(a), content: card(`${a.name} jacks in`,
     `${lines.length ? `<p>${lines.join("<br>")}</p>` : ""}<p>${esc(N.ACCESS[w].label)} into <b>${esc(scene.name)}</b>.${N.ACCESS[w].diff ? ` Every roll in the Net is +${N.ACCESS[w].diff} difficulty.` : ""}${N.ACCESS[w].mental ? " Intelligence stands for Strength and Wits for Dexterity." : ""}</p>
-     ${kind === "deck" ? `<p>${esc(D.label)}: speed ${D.speed} (${N.deckActions(D.speed)} action${N.deckActions(D.speed) === 1 ? "" : "s"} a turn), ${D.mu} MU, walls ${D.walls}. Loaded: ${esc(load.loaded.map(p => N.PROGRAMS[p]?.label).join(", ")) || "nothing"}${load.over.length ? `; no room for ${esc(load.over.map(p => N.PROGRAMS[p]?.label).join(", "))}` : ""}.</p>` : ""}
+     ${ghost ? "<p>No deck: the mind itself is the icon, and the system's machines obey it without a roll.</p>" : ""}
+     ${kind === "deck" && !ghost ? `<p>${esc(D.label)}: speed ${D.speed} (${N.deckActions(D.speed)} action${N.deckActions(D.speed) === 1 ? "" : "s"} a turn), ${D.mu} MU, walls ${D.walls}. Loaded: ${esc(load.loaded.map(p => N.PROGRAMS[p]?.label).join(", ")) || "nothing"}${load.over.length ? `; no room for ${esc(load.over.map(p => N.PROGRAMS[p]?.label).join(", "))}` : ""}.</p>` : ""}
      <p class="wodx-quiet">The body lies still where it was, the icon walks the fortress. ${kind === "deck" ? "Cyberpunk 2020 pdf 131-178 by World of Future Darkness." : "Mage 20th printed pp. 466-474."}</p>`)});
   if ( icon && scene.id === canvas?.scene?.id ) canvas.ping?.({x: icon.x + GRID / 2, y: icon.y + GRID / 2}, {color: PH});
   if ( hounded ) await houndStrikes(a, scene, icon);
@@ -286,7 +295,7 @@ async function runContest(actor, program, defence, label) {
   const m = modelOf(game.scenes.get(stateOf(actor)?.fortress));
   const {access, extra} = runnerParts(actor);
   const pd = N.programDots(program);
-  const runner = {computer: ab(actor, "computer"), program: pd, access, extra};
+  const runner = {computer: N.touchComputer(ab(actor, "computer"), stateOf(actor)?.touch), program: pd, access, extra};
   const ra = await d10(runner.computer + runner.program), sa = await d10((m?.intelligence ?? 3) + num(defence));
   const c = N.contest(runner, {intelligence: m?.intelligence ?? 3, defence}, ra.dice, sa.dice);
   return {c, rolls: [ra.roll, sa.roll].filter(Boolean), line: `${esc(N.PROGRAMS[program]?.label ?? program)}: Computer + ${pd} = ${c.runnerPool} dice at ${c.runnerDiff} ${diceLine(ra.dice)}, ${c.runner}; the system's Intelligence + ${num(defence)} = ${c.systemPool} at 6 ${diceLine(sa.dice)}, ${c.system} (${esc(label)}).`};
@@ -301,7 +310,8 @@ export async function runProgram(actor, program, target = null, {text = ""} = {}
   if ( !s ) throw new Error(`${actor?.name ?? "That character"} is not in the Net.`);
   const can = N.canAct(statusIds(actor));
   if ( !can.act ) throw new Error(`${actor.name} cannot act.`);
-  if ( !can.programs && netKindNow() === "deck" ) throw new Error(`${actor.name}'s deck is down.`);
+  // A ghost (Technica 6) has no deck to crash: deck statuses do not stop its programs
+  if ( !can.programs && netKindNow() === "deck" && s.way !== "ghost" ) throw new Error(`${actor.name}'s deck is down.`);
   let pid = program;
   if ( actor.statuses?.has("net-deck-murphy") ) pid = s.programs[Math.floor(Math.random() * s.programs.length)] ?? program;
   if ( !s.programs.includes(pid) && netKindNow() === "deck" ) throw new Error(`${actor.name} does not carry ${N.PROGRAMS[pid]?.label ?? pid}.`);
@@ -374,14 +384,18 @@ export async function runProgram(actor, program, target = null, {text = ""} = {}
     const r = m.remotes.find(x => x.id === target);
     if ( !r ) throw new Error("Pick a remote.");
     if ( !P.works.includes(r.kind) && !(r.kind === "lights" && pid === "genie") && !(r.kind === "alarm" && ["genie", "opensesame"].includes(pid)) ) throw new Error(`${P.label} cannot work a ${r.label.toLowerCase()}.`);
-    const {c, rolls, line} = await runContest(actor, pid, 0, r.label);
-    out.rolls.push(...rolls); out.lines.push(line);
-    if ( c.win ) out.lines.push(await workRemote(actor, r, scene, text));
-    else out.lines.push("It does not answer.");
+    if ( s.way === "ghost" ) { out.lines.push("The machine obeys the ghost inside it."); out.lines.push(await workRemote(actor, r, scene, text)); }
+    else {
+      const {c, rolls, line} = await runContest(actor, pid, 0, r.label);
+      out.rolls.push(...rolls); out.lines.push(line);
+      if ( c.win ) out.lines.push(await workRemote(actor, r, scene, text));
+      else out.lines.push("It does not answer.");
+    }
   }
   else out.lines.push(`${esc(P.label)} runs.`);
   // acting openly ends hiding
   if ( s.hidden && P.hit !== "hide" ) { await actor.setFlag(MODULE_ID, "netRun", {...stateOf(actor), hidden: 0}); if ( icon ) await icon.update({alpha: 1}); }
+  await T.machineUsed(actor);
   await ChatMessage.create({speaker: {alias: actor.name}, rolls: out.rolls, whisper: whisperFor(actor), content: card(`${actor.name} runs ${P.label}`, `<p>${out.lines.join("</p><p>")}</p>`)});
   if ( iceAuto() ) await iceRound(scene);
   return out;
@@ -523,7 +537,8 @@ export async function iceRound(scene = canvas?.scene) {
   for ( const ice of m.ice ) {
     if ( !ice.up ) continue;
     const tok = scene.tokens.find(t => t.flags?.[MODULE_ID]?.netIceId === ice.id);
-    const live = runnersIn(scene);
+    // Spiritus ex Machina: a runner the system has made peace with goes unseen while the alarm is quiet
+    const live = runnersIn(scene).map(r => !m.alarm && (m.parley ?? []).includes(r.id) ? {...r, hidden: true} : r);
     const plan = N.iceTurn(ice, live, {alarm: m.alarm, reaction: m.alarm ? "kill" : reaction});
     const target = live.find(r => r.id === plan.target);
     if ( plan.act === "move" && tok ) {
@@ -721,10 +736,15 @@ export async function netWindow() {
   const gates = m ? m.gates.map(g => [g.id, `${g.id} on the ${g.side} side: ${g.open ? "open" : `strength ${g.strength}`}`]) : [];
   const scenes = game.scenes.filter(x => !isFortress(x)).map(x => [x.id, x.name]);
   const gm = game.user.isGM;
+  const tech = T.technica(runner);
+  const techRows = tech && kind === "deck" ? `<fieldset><legend>Technica ${tech}</legend>
+      <p class="hint">${esc(Object.entries(N.TECHNICA).filter(([lv]) => Number(lv) <= tech).map(([, t]) => `${t.label}: ${t.gives}`).join(" "))}</p>
+      ${!s && tech >= 4 ? `<div class="form-group"><label>Remote Touch works</label><select name="touchwhat" data-fixed>${opts([["door", "the nearest keypad door"], ["lights", "the lights"], ["vehicle", "a vehicle"]])}</select></div>` : ""}
+    </fieldset>` : "";
   const content = `<p class="wodx-quiet">${kind === "deck" ? "The Net (Future Darkness): cyberdecks and data fortresses." : "The Digital Web."} ${runner ? `Runner: ${esc(runner.name)}${s ? `, in ${esc(here?.name)}` : ""}.` : "Select the runner's token."}${tgt ? ` Targeted: ${esc(tgt.name)}.` : ""}</p>
     ${!s ? `<fieldset><legend>Jack in</legend>
       <div class="form-group"><label>Data fortress</label>${searchBox("select[name=fort]")}<select name="fort">${opts(forts.map(f => [f.id, f.name]), canvas?.scene?.id)}</select></div>
-      <div class="form-group"><label>Way in</label><select name="way" data-fixed>${opts(N.accessFor(kind).map(k => [k, N.ACCESS[k].label]))}</select></div>
+      <div class="form-group"><label>Way in</label><select name="way" data-fixed>${opts(N.waysFor(kind, tech).map(k => [k, N.ACCESS[k].label]))}</select></div>
       ${kind === "deck" ? `<div class="form-group"><label>Deck</label><select name="deck" data-fixed>${opts(Object.entries(N.DECKS).map(([k, d]) => [k, `${d.label} (speed ${d.speed}, ${d.mu} MU)`]))}</select></div>
       <div class="form-group"><label>Programs</label>${searchBox("select[name=progs]")}<select name="progs" multiple size="8">${opts(Object.entries(N.PROGRAMS).filter(([, p]) => !p.ice || p.cls === "antiice" || p.cls === "antipersonnel").map(([k, p]) => [k, `${p.label} (${N.programDots(k)}, ${p.mu} MU)`]))}</select></div>` : ""}
     </fieldset>` : `<fieldset><legend>In the Net</legend>
@@ -740,10 +760,13 @@ export async function netWindow() {
       <div class="form-group"><label>Its building</label>${searchBox("select[name=link]")}<select name="link"><option value="">none</option>${opts(scenes, canvas?.scene && !isFortress(canvas.scene) ? canvas.scene.id : "")}</select></div>
       <div class="form-group"><label>Its owner</label>${searchBox("select[name=owner]")}<select name="owner"><option value="">nobody named</option>${opts(game.actors.filter(x => !x.flags?.[MODULE_ID]?.netIce).map(x => [x.id, x.name]))}</select></div>
       <div class="form-group"><label>Whiteout: Paradox pool</label><input type="number" name="paradox" value="5" min="1" max="30"><label><input type="checkbox" name="heavy"> Forces or Prime</label></div>
-    </fieldset>` : ""}`;
+    </fieldset>` : ""}${techRows}`;
   const buttons = [];
   if ( !s && runner ) buttons.push({action: "jack", label: "Jack in", default: true});
   if ( s ) buttons.push({action: "run", label: "Run program", default: true}, {action: "read", label: "Read file"}, {action: "copy", label: "Copy file"}, {action: "out", label: "Jack out"});
+  if ( kind === "deck" && s && tech >= 3 && ["net-deck-dead", "net-deck-down"].some(x => runner.statuses?.has(x)) ) buttons.push({action: "empower", label: "Empower Device"});
+  if ( kind === "deck" && s && tech >= 5 ) buttons.push({action: "speak", label: "Speak with the machine"});
+  if ( kind === "deck" && !s && tech >= 4 && tok ) buttons.push({action: "remote", label: "Remote Touch"});
   if ( gm ) buttons.push({action: "draw", label: "Draw a fortress"}, {action: "ice", label: "ICE acts"});
   if ( gm && s && kind === "web" ) buttons.push({action: "white", label: "Whiteout"});
   buttons.push({action: "close", label: "Close"});
@@ -754,6 +777,9 @@ export async function netWindow() {
   try {
     if ( r.act === "jack" ) return await call("jack", {token: tok.uuid, scene: r.fort, way: r.way, deck: r.deck, programs: r.progs ?? []});
     if ( r.act === "out" ) return await call("out", {actor: runner.id});
+    if ( r.act === "empower" ) return await call("empower", {actor: runner.id});
+    if ( r.act === "speak" ) return await call("speak", {actor: runner.id});
+    if ( r.act === "remote" ) return await call("remote", {actor: runner.id, token: tok.uuid, what: r.touchwhat});
     if ( r.act === "run" ) return await call("run", {actor: runner.id, program: r.prog, target: r.gate || r.file || r.remote || tgt?.id || null, text: r.text});
     if ( r.act === "read" || r.act === "copy" ) return await call("file", {actor: runner.id, file: r.file, copy: r.act === "copy"});
     if ( r.act === "draw" ) { const sc = await drawFortress({seed: r.seed, cpus: r.cpus, link: r.link || null, owner: r.owner || null}); await sc.view(); return sc; }
@@ -782,6 +808,9 @@ async function perform(op, d, userId) {
   if ( op === "out" ) return jackOut(actor);
   if ( op === "run" ) return runProgram(actor, d.program, d.target, {text: d.text});
   if ( op === "file" ) return takeFile(actor, d.file, {copy: d.copy});
+  if ( op === "empower" ) return T.empower(actor);
+  if ( op === "speak" ) { const sc = game.scenes.get(stateOf(actor)?.fortress); return T.speak(actor, sc, modelOf(sc), mm => sc.setFlag(MODULE_ID, "netFortress", mm)); }
+  if ( op === "remote" ) { const t = await fromUuid(d.token); if ( t?.actor?.id !== actor?.id ) throw new Error("Not that character's token."); return T.remoteTouch(t, d.what); }
   return null;
 }
 /** Run an action here when this is the active Storyteller, else ask that client to. */

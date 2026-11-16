@@ -1,4 +1,4 @@
-// WoDX Otherworlds: running the Net (B6590 to B6606), pure rules.
+// WoDX Otherworlds: running the Net (B6590 to B6611), pure rules and Technica.
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
@@ -159,4 +159,31 @@ test("the Foundry side reads every hit kind the rules give, and the window is re
   for ( const d of new Set(Object.values(N.REMOTES).map(r => r.does)) ) assert.ok(src.includes(`does === "${d}"`) || ["terminal", "print", "machine"].includes(d), d);
   const main = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/main.mjs", import.meta.url), "utf8");
   assert.ok(main.includes("net.netWindow()")); assert.ok(main.includes("net.onNetMessage"));
+});
+
+test("Technica (B6604-B6611): the Cyberpunks from 2016 on the Future branch, ways in by level, touch, reach, talk, weakness", () => {
+  assert.equal(N.cyberpunksOpen(2015, true), false);
+  assert.equal(N.cyberpunksOpen(2016, true), true);
+  assert.equal(N.cyberpunksOpen(2030, false), false);
+  assert.deepEqual(N.accessFor("deck"), ["plugs", "trodes", "keyboard"], "the Technica ways are not everyone's");
+  assert.deepEqual(N.waysFor("deck", 0), ["plugs", "trodes", "keyboard"]);
+  assert.deepEqual(N.waysFor("deck", 1), ["plugs", "trodes", "keyboard", "touch"]);
+  assert.deepEqual(N.waysFor("deck", 6), ["plugs", "trodes", "keyboard", "touch", "ghost"]);
+  assert.deepEqual(N.waysFor("web", 6), ["sensory", "astral", "holistic"], "no Cyberpunks in the classic Web");
+  assert.equal(N.ACCESS.touch.diff, 0, "no penalty by touch");
+  assert.equal(N.touchComputer(0, 3), 3); assert.equal(N.touchComputer(2, 4), 2);
+  assert.equal(N.remoteReach(5, "ft"), 20); assert.equal(N.remoteReach(1.5, "m"), 20); assert.equal(N.remoteReach(10, "ft"), 10);
+  assert.equal(N.machineTalk(2).parley, false); assert.equal(N.machineTalk(3).parley, true);
+  assert.equal(N.machineTalk(4).files, true); assert.equal(N.machineTalk(4).ice, false); assert.equal(N.machineTalk(9).ice, true);
+  assert.equal(N.leansOnBlood({disc: 2, tech: 2}), false); assert.equal(N.leansOnBlood({disc: 3, tech: 2}), true);
+  assert.deepEqual(Object.keys(N.TECHNICA).map(Number), [1, 2, 3, 4, 5, 6]);
+});
+
+test("Technica in Foundry: the Net reads every level, and the weakness hears Disciplines", () => {
+  const net = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/net.mjs", import.meta.url), "utf8");
+  const tech = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/technica.mjs", import.meta.url), "utf8");
+  const main = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/main.mjs", import.meta.url), "utf8");
+  for ( const s of ["N.waysFor(kind, tech)", "T.touchRoll(a)", "N.touchComputer(", "T.empower(actor)", "T.remoteTouch(t, d.what)", "T.speak(actor", "s.way === \"ghost\"", "m.parley", "T.machineUsed(actor)"] ) assert.ok(net.includes(s), s);
+  for ( const s of ["technica(actor) < 3", "technica(a) < 4", "technica(actor) < 5", "N.remoteReach(", "N.machineTalk(", "N.leansOnBlood(", "Hooks.on(\"wodxPowerShown\"", "info.kind !== \"disc\""] ) assert.ok(tech.includes(s), s);
+  assert.ok(main.includes("technica.setupTechnica()"));
 });

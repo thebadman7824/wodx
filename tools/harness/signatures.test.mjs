@@ -226,7 +226,7 @@ test("bloodlines find their own row before their parent clan's", () => {
   assert.equal(S.vampireRow("Assamite vizier")?.key, "vizier");
   assert.equal(S.vampireRow("Daughters of Cacophony")?.key, "daughters");
   for ( const k of ["baali", "gargoyle", "kiasyd", "samedi", "ahrimanes", "anda", "lhiannan", "noiad", "bloodbrothers", "lamia", "nagaraja",
-    "akunanse", "guruhi", "ishtarri", "kinyonyi", "naglopers", "osebo", "shango"] ) assert.ok(S.VAMPIRE.some(r => r.key === k), k);
+    "akunanse", "guruhi", "ishtarri", "kinyonyi", "naglopers", "osebo", "shango", "cyberpunks"] ) assert.ok(S.VAMPIRE.some(r => r.key === k), k);
   for ( const r of S.BLOODLINES ) {
     assert.equal(r.feature, "line", r.key);
     for ( const e of r.effects ?? [] ) assert.ok(e.tags?.length && (e.dice || e.difficulty), r.key);

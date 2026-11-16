@@ -14,6 +14,8 @@
  *   9. the ICE takes its turn without an error
  *  10. on the Future Darkness branch the year has cyberdecks, and a deck's memory limits the load
  *  11. jacking out takes the icon away and the status off
+ *  12. Technica 6 on the Future branch in 2030: Ghost in the Machine gets in with no deck, a remote obeys with no roll
+ *  13. Remote Touch from the home scene opens the keypad door within 100 feet; a Cyberpunk's Discipline use costs Willpower
  * Then puts back the clock and the branch, and deletes what it made. Result: Data/wodx-gate/gatenet-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -140,6 +142,34 @@ export async function run() {
     await step("11. jacking out", async () => {
       await api().jackOut(actor, {force: true});
       ok("11. jacking out", !fort.tokens.some(t => t.flags?.[M]?.netIcon === actor.id) && !actor.statuses.has("wodx-net") && !actor.flags[M]?.netRun);
+    });
+    await step("12. Technica: the Ghost in the Machine", async () => {
+      await game.settings.set(CH, "rule.futureBranch", true);
+      await toYear(2030);
+      await actor.createEmbeddedDocuments("Item", [{name: "Technica", type: "Power", system: {type: "wod.types.discipline", value: 6}}]);
+      const ways = api().rules.waysFor(api().kind(), api().technica.dots(actor));
+      const icon = await api().jackInto(body, fort, {way: "ghost"});
+      const run = actor.flags[M]?.netRun ?? {};
+      const m = api().modelOf(fort);
+      const door = home.walls.contents[0];
+      await door.update({ds: 0});
+      const dr = m.remotes.find(r => r.kind === "door" && r.link?.wall);
+      if ( dr ) { run.programs.includes("genie") || await actor.setFlag(M, "netRun", {...run, programs: [...run.programs, "genie"]}); await api().run(actor, "genie", dr.id); }
+      ok("12. Technica: the Ghost in the Machine", ways.includes("ghost") && !!icon && run.way === "ghost" && run.deck === null && !!dr && home.walls.get(door.id).ds === 1, {ways, deck: run.deck});
+      await api().jackOut(actor, {force: true});
+    });
+    await step("13. Remote Touch and the weakness", async () => {
+      const door = home.walls.contents[0];
+      await door.update({ds: 0, "flags.wodx-interactables.locked": true});
+      await body.update({x: 900, y: 200});
+      const line = await api().technica.remoteTouch(body, "door");
+      const opened = home.walls.get(door.id).ds === 1;
+      await actor.update({"flags.wodx-actions.bloodline": "Cyberpunks", "system.advantages.willpower.temporary": 5});
+      await actor.unsetFlag(M, "cyberTally");
+      await api().technica.powerShown(actor, {power: "Dominate", group: "Dominate", kind: "disc"});
+      await api().technica.powerShown(actor, {power: "Dominate", group: "Dominate", kind: "disc"});
+      const wp = actor.system.advantages.willpower.temporary;
+      ok("13. Remote Touch and the weakness", opened && wp < 5, {line, wp, tally: actor.flags[M]?.cyberTally});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

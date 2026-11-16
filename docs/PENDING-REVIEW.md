@@ -1727,7 +1727,21 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 | 2026-11-16 | Remotes (B6599) | Tied automatically to the building's doors, lights, cameras and alarm | Draw the fortress with no building |
 | 2026-11-16 | Trace (B6600) | Traced status and named law heat for a break-in; Pit Bull cuts the line | Edit traceRunner() |
 | 2026-11-16 | Whiteout (B6601) | The M20 tables as written, with a white flash | Do not call whiteout() |
-| 2026-11-16 | Cyberpunks bloodline and Technica | Build next, tied into the Net | Not built yet |
+| 2026-11-16 | Cyberpunks bloodline and Technica | Build next, tied into the Net | Built: see the Technica table below |
+
+## Approved by Ben, 16 November 2026, 02:17 UTC (Technica Review Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | When the Cyberpunks are open (B6604) | Future Darkness branch only, from 2016; signature line Machines over blood | Drop cyberpunksOpen and the signature row |
+| 2026-11-16 | Technica 1, Interface (B6605) | Jack in by touch with no penalty, contact must hold | Delete ACCESS.touch |
+| 2026-11-16 | Technica 2, Technical Touch (B6606) | With no Computer the successes stand in for Computer on program rolls | Drop touch from the run state |
+| 2026-11-16 | Technica 3, Empower Device (B6607) | A Willpower point clears Deck down and Deck dead | Remove the Empower Device button |
+| 2026-11-16 | Technica 4, Remote Touch (B6608) | 100 feet, no roll | Remove the Remote Touch button |
+| 2026-11-16 | Technica 5, Spiritus ex Machina (B6609) | 3 successes: ICE passes the speaker by while the alarm is quiet; 4 names files; 5 names ICE too | Drop parley from iceRound |
+| 2026-11-16 | Technica 6, Ghost in the Machine (B6610) | No deck, the mind carries a standard deck's load, remotes obey with no roll | Delete ACCESS.ghost |
+| 2026-11-16 | The Cyberpunks' weakness (B6611) | Each night every use of another Discipline beyond the machine uses (programs and Technica powers) costs a Willpower point | Remove the wodxPowerShown hook in technica.mjs |
+| 2026-11-16 | Cyberpunks in character creation (B6612) | Yes, next: a Future-branch clan choice from 2016 that adds Technica | Drop the CLANS row and the lifepath scene |
 
 ## Approved by Ben, 16 November 2026, 02:14 UTC (House Events Desk)
 
@@ -1736,6 +1750,14 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-16 | Timeline check: when are the Bunyip gone, 1899 (WoDX's War of Tears) or 1937 (Past Lives pdf 70)? **Approved by Ben 2026-11-16 02:14Z** (House Events Desk, "I approve everything on this desk") | The War of Tears stays at 1899 and breaks the tribe; new event bunyip-last-stand (1937) ends it. Signature features and lifepath to 1937 (they were 1890 and 1920), era advancement gone by 1938, NPC faction ends moved to the last stand with a survivors faction offered at the war | Remove bunyip-last-stand from wodx-chronicle data/events.mjs, set Bunyip until 1899 in signatures.mjs, lifepath span to 1899, goneBy 1900 in advance.mjs, and put "war-of-tears" back in EVENT_ENDS in wodx-npc faction-rules.mjs |
+
+## Approved by Ben, 16 November 2026, 02:21 UTC (Cyberpunks Creation Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | The Cyberpunks' lifepath scene (B6612) | You run the Net (Computer, Contacts, a fixer) or you ride the chrome (Technology, Streetwise, a ripperdoc) | Edit the cyberpunks row in lifepaths-splats.mjs |
+| 2026-11-16 | Technica on the Embrace (B6612) | 0 dots, like every other clan's Disciplines | Give the CLANS row a starting dot |
+| 2026-11-16 | Technica bought with freebies (B6612) | Only in the years the Cyberpunks exist (Future branch, 2016 on) | Drop opens from the CLANS row |
 
 ## Approved by Ben, 16 November 2026, 01:58 UTC (all waiting entries)
 

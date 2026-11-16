@@ -135,3 +135,12 @@ export function traitMax({line, kind, generation, domitorGeneration, golconda = 
   if ( kind === "discipline" || kind === "newDiscipline" ) return line === "ghoul" ? ghoulDisciplineCap(domitorGeneration) : 0;
   return 5;
 }
+
+/** Whether a clan is open in a year (B6612): a clan with opens is only there from its year, on the Future branch if it says so. */
+export function clanOpen(c, {year = null, futureBranch = false} = {}) {
+  if ( !c?.opens ) return true;
+  if ( c.opens.futureBranch && !futureBranch ) return false;
+  return Number(year) >= c.opens.from;
+}
+/** The clans open in a year, in table order. */
+export const clansOpen = (when = {}) => CLANS.filter(c => clanOpen(c, when));
