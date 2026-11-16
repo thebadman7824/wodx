@@ -172,7 +172,7 @@ export async function run() {
       // Every move of the beast's token from here, with who made it (a beast once landed at x 0)
       const trail = [];
       const hk = Hooks.on("preUpdateToken", (doc, ch, opt) => { if ( doc.id === ts.id && ("x" in ch || "y" in ch) ) trail.push({x: ch.x ?? null, y: ch.y ?? null, from: [doc.x, doc.y], opt: Object.keys(opt ?? {}).filter(k => !["diff", "recursive", "render", "modifiedTime"].includes(k)),
-        by: (new Error().stack ?? "").split("\n").slice(2, 7).map(l => l.trim().replace(/^at /, "").replace(/https?:\/\/[^/]+/, "")).join(" < ")}); });
+        by: (new Error().stack ?? "").split("\n").slice(2).filter(l => !/foundry\.mjs|gatevehicles/.test(l)).slice(0, 6).map(l => l.trim().replace(/^at /, "").replace(/https?:\/\/[^/]+/, "")).join(" < ")}); });
       await ix.attempt(tr.object, ts.id, "mount", {fd: {bonus: 0}});
       const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
       const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(ts.id).x;
@@ -180,7 +180,7 @@ export async function run() {
       const r0 = tr.x, drv = foundry.utils.deepClone(scene.tokens.get(ts.id)?.flags?.[IX]?.driver ?? null);
       const carried = await waitFor(() => scene.tokens.get(ts.id).x === x0 + g * 2, 8000);
       Hooks.off("preUpdateToken", hk);
-      seen.carry = {trail: trail.slice(0, 8), y: scene.tokens.get(ts.id).y, inCombat: !!game.combat?.combatants?.some?.(c => c.tokenId === ts.id), x0, want: x0 + g * 2, beastNow: scene.tokens.get(ts.id).x, riderFrom: r0, riderNow: scene.tokens.get(tr.id)?.x, driver: drv, combat: !!game.combat?.started};
+      seen.carry = {trail: trail.slice(0, 3), y: scene.tokens.get(ts.id).y, inCombat: !!game.combat?.combatants?.some?.(c => c.tokenId === ts.id), x0, want: x0 + g * 2, beastNow: scene.tokens.get(ts.id).x, riderFrom: r0, riderNow: scene.tokens.get(tr.id)?.x, driver: drv, combat: !!game.combat?.started};
       const ride = ix.rideOf(tr);
       const own = ride?.beast?.dexterity === 4;
       await steed.update({"system.health.damage.lethal": 7});
