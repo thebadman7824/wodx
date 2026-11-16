@@ -191,3 +191,28 @@ test("gpu alert only after the heat holds, clears after it cools", () => {
   const w2 = gpu.watcher(); w2(hot, 0); w2(ok, m); assert.equal(w2(hot, 2 * m), null); assert.equal(w2(hot, 6 * m), null);
   const w3 = gpu.watcher(); w3({core: 70, memory: 104}, 0); assert.equal(w3({core: 70, memory: 104}, 5 * m), "hot");
 });
+
+// B6526: the shared gate queue.
+test("gates jobs on a shared queue: every gate taken once, gates of a lane that died go back", async () => {
+  const {takeQueued, putBack, readQueue} = await import("../lanes/gate-queue.mjs");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gq-")), f = path.join(dir, "q.json");
+  fs.writeFileSync(f, JSON.stringify(["ga", "gb", "gc", "gd"]));
+  assert.equal(takeQueued(f, "2"), "ga"); assert.equal(takeQueued(f, "3"), "gb"); assert.equal(takeQueued(f, "2"), "gc");
+  assert.deepEqual(putBack(f, "2", "==== x 4 gate(s)\nga: PASS 3/3\n"), ["gc"]);
+  assert.deepEqual(readQueue(f), ["gc", "gd"]);
+  assert.deepEqual(putBack(f, "2", ""), [], "takes already settled are not looked at again");
+  assert.deepEqual(putBack(f, "3", ""), ["gb"]); assert.deepEqual(readQueue(f), ["gb", "gc", "gd"]);
+  // Several processes taking at once: no gate twice, none lost
+  fs.writeFileSync(f, JSON.stringify(Array.from({length: 60}, (_, i) => `g${i}`))); fs.rmSync(`${f}.taken`, {force: true});
+  const mod = new URL("../lanes/gate-queue.mjs", import.meta.url).href;
+  const kid = l => `import {takeQueued} from ${JSON.stringify(mod)}; const out = []; let g; while ( (g = takeQueued(${JSON.stringify(f)}, "${l}")) ) out.push(g); console.log(JSON.stringify(out));`;
+  const {spawn} = await import("node:child_process");
+  const runs = await Promise.all(["2", "3", "4"].map(l => new Promise(res => { let o = ""; const p = spawn(process.execPath, ["--input-type=module", "-e", kid(l)]); p.stdout.on("data", d => o += d); p.on("close", () => res(JSON.parse(o))); })));
+  const all = runs.flat();
+  assert.equal(all.length, 60); assert.equal(new Set(all).size, 60);
+  fs.rmSync(dir, {recursive: true, force: true});
+});
+test("gateArgs in queue mode hands run-gate the shared list", () => {
+  assert.deepEqual(gateArgs({kind: "gates", gates: ["x"], queue: "q.json", maxMinutes: 60}, "5", 0, 1, "r"),
+    ["--queue", "q.json", "--lane", "5", "--wait", "10", "--report", "r", "--max-minutes", "60"]);
+});
