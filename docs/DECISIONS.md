@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6580
+Next free block: B6720
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -364,11 +364,13 @@ Next free block: B6580
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC; gates that failed on main (used B6520-B6523) | tools (pcq, vision, gate), NPC |
+| B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main (used B6520-B6525) | tools (pcq, vision, gate), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
+| B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6586) | Actions |
+| B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -12228,6 +12230,16 @@ tools/gate.
 
 Reverse: revert the gate edits.
 
+## B6524. A ridden beast does not take fright at its own rider (2026-11-16)
+WoDX NPC. Mounting a beast that has its own sheet makes a map noise. In Auto mode the beast heard it, reacted to the rider as a stranger, and fled to the edge of the map, carrying no one. The beast now leaves out the noises its own rider makes. The same goes for anyone aboard a vehicle or beast that makes a noise: a passenger in a rammed car no longer walks out of it to flee. They still hear everyone else. Found by gatevehicles step 12.
+
+Reverse: drop the ridden test from the hearers in onMapEvent (routines.mjs).
+
+## B6525. Vehicle and mount gates match the tiles they make by title (2026-11-16)
+tools/gate. gatevehicles and gatemounts took the tiles from a batch create in the order they were asked for. Foundry does not promise that order (kit rule 1), so a chimera was sometimes tested as a gryphon, or a train as a snow machine. They now match each tile to its data by title. Two more changes: gatevehicles runs with fight turns not acting on their own, and gatemounts step 12 has 150 seconds for its four looks.
+
+Reverse: revert the gate edits.
+
 ## B6530. The Beast played by the game (2026-11-15)
 WoDX Solo. When the lone player's character falls into frenzy (WoDX Actions rolls the check by itself), the seat sets flags.wodx-storyteller.standIn on it, the same flag the Storyteller's absent players use, so WoDX NPC plays its turns. With no fight on the scene it goes for its prey: an enemy in sight (a hostile token), else the nearest living being, within 40 yards (house reading of "anyone near"), and a fight starts with the frenzied on a side of their own. V20 pdf 307: the Storyteller decides how long a frenzy lasts, one scene typically; WoDX ends it when the fight is over, as the scene's end. A botched frenzy is left to WoDX Actions, which rolls it out (B4872). Willpower for control is offered to the Kindred and their ghouls only; the other lines' frenzy runs until it ends.
 
@@ -12381,3 +12393,53 @@ Reverse: Put the old wording back in r3 renaissance.txt, age-of-reason.txt, vict
 WoDX Chronicle. The 1692 Salem card rests on Verbena (Revised) pdf 43, read on the PC on 13 November 2026. That book, and the other Mage Revised tradition books, are not in the cloud book text, and no other book there says more about Salem than naming the trials as a model witch-hunt (Archons and Templars). The card stays as it is; a books-find job can confirm the page.
 
 Reverse: Nothing to reverse.
+
+## B6580. Seduction from the menu needs a target and lands on them (2026-11-16)
+WoDX Actions. The three-roll seduction (V20 p. 266) from any line's menu now asks for a target and ends as Charm in "With this person" does (social.js charmDone): a win adds the charmed sway and moves the person's attitude up, a botch moves it down, and a vampire may feed (V20 pp. 259-260). With no one targeted it was a card that changed nothing.
+
+Reverse: give seduction() in modules/wodx-actions/scripts/main.js back its "no target: Attributes 2" path and drop the default onDone.
+
+## B6581. Demons and mummies heal with the clock (2026-11-16)
+WoDX Actions. Demon: The Fallen p. 248: demons heal at the human rate, aggravated at the lethal rate. Mummy (2nd edition) p. 77 gives mummies the mortal chart, and Mummy: The Resurrection's Slow Healing flaw halves "a normal person's" rate. Both lines had the healing window from B6300 but the clock never healed them.
+
+Reverse: take "demon" and "mummy" out of healPlan in modules/wodx-actions/scripts/kindred.js.
+
+## B6582. The inner voice on every line that has one (2026-11-16)
+WoDX Actions. voice-rules.js already gives the P'o (Kuei-jin, read through the beast voice), the Avatar (mages of both eras), the Mists and the Weave (fae of both eras), Spite (Orpheus) and the Torment (demons); only five menus showed the panel. profile-menus VOICED lists them all. Mummies, mortals, the Exalted, spirits and beasts have no inner adversary in their books and get none.
+
+Reverse: shorten VOICED in modules/wodx-actions/scripts/profile-menus.js.
+
+## B6583. The Veil and the Mists act on targeted witnesses (2026-11-16)
+WoDX Actions. With witnesses targeted, the Veil (Mummy: The Resurrection p. 140) and the Mists (C20 pp. 269-270) run the same witness step as a mummy or changeling seen in plain sight: reactions on the map, and who keeps it now knows. With no one targeted the table still answers for one Willpower or Banality.
+
+Reverse: drop the targeted branch at the top of veil() in mummy.js and mists() in c20.js.
+
+## B6584. Seen through, an illusion turns faint for that player (2026-11-16)
+WoDX Actions. A demon who sees through illusion (Demon: The Fallen p. 171) marks the illusion tiles on the map as seen through (flag seenThrough); those tiles draw faint for the demon's player and stay whole for everyone else, the Storyteller included.
+
+Reverse: remove the refreshTile hook and seenThroughLook in modules/wodx-actions/scripts/effects.js.
+
+## B6585. A spoken name shows its speaker (2026-11-16)
+WoDX Actions. Demon: The Fallen p. 171: one success gives a picture of the speaker, two the speaker's surroundings. With the speaker's token targeted, one success opens the speaker's picture on the demon's screen and two pan the view to them when they are on the scene shown.
+
+Reverse: remove showSpeaker from named() in modules/wodx-actions/scripts/demon.js.
+
+## B6586. An Echo holds for the scene (2026-11-16)
+WoDX Actions. Dark Ages: Fae pp. 110-111 gives each Echo level its harm as examples; the WoDX reading: levels 1 to 4 hold for the scene with the Echo condition (+1 difficulty on attacks), +1 difficulty on the fae's cantrips and Unleashing at level 1 and +2 from level 2, no Unleashing at level 4, and the Storyteller's button for 3 bashing (soaked) at level 3 and 4 lethal at level 4. Level 5 was already applied.
+
+Reverse: remove echoHold and echoDiff in modules/wodx-actions/scripts/fae-da.js.
+
+## B6710. The hunger line waits for the character wizard (2026-11-16)
+WoDX Senses. A Kindred made by arrival starts with an empty blood pool, and the wizard rolls the starting blood (V20: one die) on its last page. The on-screen state line showed "Ravenous: no blood left" over the wizard on the player's first screen. stateEdges now skips the hunger line while the wizard window is open on that character (stateOf reads `building`), and the screen refreshes when the wizard opens or closes, so a character who finishes the wizard with no blood still shows it.
+
+Reverse: drop `building` from stateOf and the check in stateEdges.
+
+## B6711. Arrival closes Foundry's User Configuration (2026-11-16)
+WoDX Solo. Foundry opens its User Configuration window at login for a player with no character. In solo play arrival makes and assigns the character, so the window only covered the arrival window and stayed open behind the panel. Arrival closes it for the player's own user when the arrival window opens and when the token is ready. gatesolo 9f checks it.
+
+Reverse: remove closeUserConfig from arrival.mjs.
+
+## B6712. The solo walk answers the Storyteller tools question (2026-11-16)
+tools/solo/walk.mjs step 08 clicked "Storyteller tools: off" and then waited for the tools, but turning them on asks Yes or No first. The walk now answers Yes, as a player would.
+
+Reverse: remove the Yes click in step 08.

@@ -124,11 +124,24 @@ export async function make(userId, {name, line} = {}) {
 /*  The player's side                                                  */
 /* ------------------------------------------------------------------ */
 
+/**
+ * B6711: Foundry opens its own User Configuration for a player with no character at login. In solo play arrival picks
+ * and assigns the character, so that window only covers the arrival; it closes when the arrival window opens and again
+ * once the token is there.
+ */
+function closeUserConfig() {
+  for ( const app of foundry.applications.instances?.values?.() ?? [] ) {
+    const doc = app?.document;
+    if ( doc?.documentName === "User" && doc.id === game.user.id && /UserConfig/.test(app.constructor?.name ?? "") ) app.close().catch(() => null);
+  }
+}
+
 let picking = false;
 /** Ask for a name and a line; the seat makes the character. */
 export async function pick() {
   if ( picking || game.user.isGM ) return null;
   picking = true;
+  closeUserConfig();
   try {
     const opts = R.ARRIVAL_LINES.map((l, i) => `<label class="wsolo-choice"><input type="radio" name="line" value="${l.id}"${i === 0 ? " checked" : ""}> ${esc(l.label)}<span class="wodx-quiet"> ${esc(l.hint)}</span></label>`).join("");
     const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog", "wsolo-arrive"], window: {title: "Who comes to Rothenstein?"},
@@ -148,6 +161,7 @@ async function ready({actorId, sceneId, tokenId, made} = {}) {
   if ( canvas?.scene?.id !== sceneId ) {
     await new Promise(res => { const t = setTimeout(res, 15000); Hooks.once("canvasReady", () => { clearTimeout(t); res(); }); });
   }
+  closeUserConfig();
   const token = canvas?.tokens?.get?.(tokenId);
   if ( token ) {
     token.control({releaseOthers: true});

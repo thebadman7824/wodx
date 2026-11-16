@@ -91,7 +91,8 @@ export function stateEdges(s = {}) {
   const pen = Math.abs(n(s.woundPenalty));
   if ( s.incapacitated ) out.push({id: "incap", words: "Incapacitated"});
   else if ( pen >= 5 ) out.push({id: "wound3", words: "Crippled (−5)"});
-  if ( s.kindred && n(s.blood) < 7 - n(s.selfcontrol) ) out.push({id: "hunger", words: n(s.blood) <= 0 ? "Ravenous: no blood left" : "The Beast stirs: blood below the hunger line"});
+  // B6710: not while the character wizard is still building the sheet (its blood is rolled on the wizard's last page)
+  if ( s.kindred && !s.building && n(s.blood) < 7 - n(s.selfcontrol) ) out.push({id: "hunger", words: n(s.blood) <= 0 ? "Ravenous: no blood left" : "The Beast stirs: blood below the hunger line"});
   if ( s.garou && n(s.ragePerm) >= 5 && n(s.rage) >= n(s.ragePerm) ) out.push({id: "rage", words: "Rage runs high"});
   if ( s.wraith && n(s.angst) > n(s.willpower) ) out.push({id: "shadow", words: "The Shadow presses: Angst above Willpower"});
   if ( s.mage && n(s.paradox) >= 5 ) out.push({id: "paradox", words: "Paradox builds"});

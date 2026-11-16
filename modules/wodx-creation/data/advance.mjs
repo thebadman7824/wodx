@@ -92,7 +92,7 @@ export const LINE_YEARS = {
 export const LOST_TRIBES = [
   {tribe: "White Howlers", goneBy: 100, became: "Black Spiral Dancers", why: "Fell to the Wyrm in the 1st century (W20 p. 39)"},
   {tribe: "Croatan", goneBy: 1590, why: "Gave themselves at Roanoke (W20 p. 40)"},
-  {tribe: "Bunyip", goneBy: 1900, why: "Hunted out in the War of Tears as Europeans settled Australia (W20 pp. 40–41)"}
+  {tribe: "Bunyip", goneBy: 1938, why: "Broken in the War of Tears (1899) as Europeans settled Australia, and the last fall in 1937 (W20 pp. 40–41; Past Lives pdf 70)"}
 ];
 
 /** Dark Ages fae across the Shattering: the Storyteller picks per character (B83), Rebirth by default. */

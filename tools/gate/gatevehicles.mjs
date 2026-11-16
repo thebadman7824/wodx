@@ -22,6 +22,8 @@
  *      off its Structure on the sheet, its mounted gun is on the driver's attack menu, its headlights light the token
  * Result: Data/wodx-gate/gatevehicles-result.json.
  */
+/** A batch create does not keep its order (kit rule 1): match each made tile to its data by title. */
+const byTitle = (docs, data) => data.map(d => docs.find(x => x.flags?.["wodx-interactables"]?.title === d.flags?.["wodx-interactables"]?.title));
 import {gate, waitFor} from "./kit.mjs";
 
 const IX = "wodx-interactables";
@@ -37,7 +39,9 @@ export async function run() {
   if ( G.notLive() ) return "Not on the Live world.";
   try {
     const C = game.wodxCombat, V = () => C?.vehicles, ix = game.modules.get(IX)?.api, npc = game.modules.get("wodx-npc")?.api;
-    const scene = await G.scene({flags: {[IX]: {ground: "road"}}});
+    // A fight a step starts must not run its own turns: an NPC at the reins walked the horse to the map edge mid-step (run-gate puts settings back)
+    try { await game.settings.set("wodx-combat", "turnConductor", "off"); } catch (e) { G.R.notes.push("no turn conductor setting"); }
+    const scene = await G.scene({flags: {[IX]: {ground: "road"}, "wodx-npc": {mode: "suggest"}}});
     // B6210: cars, aeroplanes and rams need a year that has them (the kit puts the clock back after)
     await G.yearAtLeast(1950);
     const [driver, pass, foe, nopilot, runner] = await G.make(Actor, [
@@ -49,11 +53,16 @@ export async function run() {
     const [td, tp, tf, tn, tr] = await G.tokens(scene, [{actor: driver, x: 2, y: 2, actorLink: true}, {actor: pass, x: 3, y: 2, actorLink: true},
       {actor: foe, x: 5, y: 2, actorLink: true}, {actor: nopilot, x: 10, y: 10, actorLink: true}, {actor: runner, x: 14, y: 4, actorLink: true}]);
     await waitFor(() => td?.object && tp?.object && tf?.object && tn?.object && tr?.object);
-    const [car, car2, plane, horse] = await scene.createEmbeddedDocuments("Tile", [
+    const tileData = [
       {x: 200, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate motor car"}}},
       {x: 500, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate second car"}}},
       {x: 1000, y: 1000, width: 200, height: 200, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "plane", title: "Gate aeroplane"}, "wodx-sheets": {keepOutOfEra: true}}},
-      {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}]);
+      {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}];
+    const [car, car2, plane, horse] = byTitle(await scene.createEmbeddedDocuments("Tile", tileData), tileData);
+    // Every move of the passenger, with the module code that made it (a passenger once left the car mid-fight)
+    const passTrail = [];
+    const passHook = Hooks.on("preUpdateToken", (doc, ch) => { if ( doc.id === tp.id && ("x" in ch || "y" in ch) && passTrail.length < 6 ) passTrail.push({x: ch.x ?? null, y: ch.y ?? null,
+      by: (new Error().stack ?? "").split("\n").slice(2).filter(l => !/foundry\.mjs|gatevehicles/.test(l)).slice(0, 5).map(l => l.trim().replace(/^at /, "").replace(/https?:\/\/[^/]+/, "")).join(" < ")}); });
     await car.update({[`flags.${IX}.driver`]: seat(td, car), [`flags.${IX}.riders`]: [rider(tp, car)]});
     await car2.update({[`flags.${IX}.driver`]: seat(tf, car2)});
     await foe.createEmbeddedDocuments("Item", [{name: "Gate pistol", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 20,
@@ -116,6 +125,18 @@ export async function run() {
       G.ok("7. the ram on the menu", !!p?.valid && p.atkDice === Math.min(10, ride.maneuver) && new RegExp(`${dice} dice`).test(p.w.name) && new RegExp(`Durability ${ride.body.durability}`).test(p.w.name), {plan: p ? {valid: p.valid, dice: p.atkDice, name: p.w.name, why: p.why} : null, all: plans.map(x => x.w?.name)});
     });
 
+    await G.step("9. swerve and sat inside", async () => {
+      const d = C.bestDefense(driver, {}, pistol, {});
+      const p = C.bestDefense(pass, {}, pistol, {});
+      const dodge = p.plans.find(x => x.type === "dodge");
+      const m = V().vehicleFor(driver, td)?.maneuver ?? 10;
+      // run before the ram (step 8), whose blows can hurt the driver and the car and change these dice
+      G.ok("9. swerve and sat inside", d.best?.type === "swerve" && d.best.dice === Math.min(10, m) && dodge && !dodge.valid && /Sat in/.test(dodge.invalid ?? ""),
+        {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, maneuver: m, pass: dodge?.invalid, dodge: dodge ? {valid: dodge.valid} : null,
+          aboard: (scene.tiles.get(car.id)?.flags?.[IX]?.riders ?? []).map(r => r.n ?? r.t), passAt: {x: tp.x, y: tp.y}, passTrail: passTrail.filter(m => !/carryAboard/.test(m.by))});
+      Hooks.off("preUpdateToken", passHook);
+    });
+
     await G.step("8. a real ram", async () => {
       // the second car sits beside the first: ram it until a blow lands
       await car2.update({x: 300, y: 200});
@@ -130,15 +151,6 @@ export async function run() {
       G.ok("8. a real ram", /Ram with the/.test(card) && /second car takes it/i.test(card) && /that rammed/.test(card), {card: card.slice(0, 700)});
     });
 
-    await G.step("9. swerve and sat inside", async () => {
-      const d = C.bestDefense(driver, {}, pistol, {});
-      const p = C.bestDefense(pass, {}, pistol, {});
-      const dodge = p.plans.find(x => x.type === "dodge");
-      const m = V().vehicleFor(driver, td)?.maneuver ?? 10;
-      G.ok("9. swerve and sat inside", d.best?.type === "swerve" && d.best.dice === Math.min(10, m) && dodge && !dodge.valid && /Sat in/.test(dodge.invalid ?? ""),
-        {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, pass: dodge?.invalid});
-    });
-
     await G.step("10. an NPC takes a horse", async () => {
       const list = npc.readFight(tr.object).state.vehicles ?? [];
       const h = list.find(v => v.id === horse.id);
@@ -148,16 +160,17 @@ export async function run() {
     });
 
     await G.step("11. bicycles and beasts", async () => {
-      const [bike, fae, gry, gh] = await scene.createEmbeddedDocuments("Tile", ["bicycle", "chimera", "gryphon", "ghoulhorse"].map((k, i) => ({x: 2000 + i * 150, y: 1500, width: 100, height: 100,
-        texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}})));
+      const beastData = ["bicycle", "chimera", "gryphon", "ghoulhorse"].map((k, i) => ({x: 2000 + i * 150, y: 1500, width: 100, height: 100,
+        texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}}));
+      const [bike, fae, gry, gh] = byTitle(await scene.createEmbeddedDocuments("Tile", beastData), beastData);
       const c = ix.characterFor(nopilot, tn.object.center, bike);
       const o = t => ix.rules.optionsFor(ix.describeObj(t), {...c, kept: false});
       const bikeOk = ix.rules.optionsFor(ix.describeObj(bike), c).some(x => x.id === "mount");
-      const faeNo = o(fae)[0]?.id === "onlyNote", gryNo = !!o(gry).find(x => x.id === "skillNote")?.disabled;
+      const faeOpts = o(fae), faeNo = faeOpts.some(x => x.id === "onlyNote") && !faeOpts.some(x => x.id === "mount" || x.id === "board"), gryNo = !!o(gry).find(x => x.id === "skillNote")?.disabled;
       const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
       const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
-      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {faeOpts: o(fae).map(x => x.id).slice(0, 4), gryOpts: o(gry).map(x => `${x.id}${x.disabled ? "(off)" : ""}`).slice(0, 4), bikeOk, faeNo, gryNo, kind: c.kind, year: c.year, dodge});
+      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {fae: faeOpts.map(x => x.id), gryOpts: o(gry).map(x => `${x.id}${x.disabled ? "(off)" : ""}`).slice(0, 4), bikeOk, faeNo, gryNo, kind: c.kind, year: c.year, dodge});
     });
 
     await G.step("12. riding the beast itself", async () => {
@@ -169,13 +182,18 @@ export async function run() {
       await waitFor(() => ts?.object && tr?.object && Math.abs(tr.object.center.x - (tr.x + (scene.grid?.size ?? 100) / 2)) < 2, 6000);
       const near = ix.interactablesFor(tr.object), listed = near.some(x => x.doc?.id === ts.id);
       const seen = {near: near.map(x => [x.doc?.documentName, x.doc?.name, Math.round(x.distance)]), rider: tr.object?.center, beast: ts.object?.center, beastOf: ix.beastOf(ts)};
+      // Every move of the beast's token from here, with who made it (a beast once landed at x 0)
+      const trail = [];
+      const hk = Hooks.on("preUpdateToken", (doc, ch, opt) => { if ( doc.id === ts.id && ("x" in ch || "y" in ch) ) trail.push({x: ch.x ?? null, y: ch.y ?? null, from: [doc.x, doc.y], opt: Object.keys(opt ?? {}).filter(k => !["diff", "recursive", "render", "modifiedTime"].includes(k)),
+        by: (new Error().stack ?? "").split("\n").slice(2).filter(l => !/foundry\.mjs|gatevehicles/.test(l)).slice(0, 6).map(l => l.trim().replace(/^at /, "").replace(/https?:\/\/[^/]+/, "")).join(" < ")}); });
       await ix.attempt(tr.object, ts.id, "mount", {fd: {bonus: 0}});
       const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
       const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(ts.id).x;
       await tr.update({x: tr.x + g * 2, y: tr.y});
       const r0 = tr.x, drv = foundry.utils.deepClone(scene.tokens.get(ts.id)?.flags?.[IX]?.driver ?? null);
       const carried = await waitFor(() => scene.tokens.get(ts.id).x === x0 + g * 2, 8000);
-      seen.carry = {x0, want: x0 + g * 2, beastNow: scene.tokens.get(ts.id).x, riderFrom: r0, riderNow: scene.tokens.get(tr.id)?.x, driver: drv, combat: !!game.combat?.started};
+      Hooks.off("preUpdateToken", hk);
+      seen.carry = {trail: trail.slice(0, 3), y: scene.tokens.get(ts.id).y, inCombat: !!game.combat?.combatants?.some?.(c => c.tokenId === ts.id), x0, want: x0 + g * 2, beastNow: scene.tokens.get(ts.id).x, riderFrom: r0, riderNow: scene.tokens.get(tr.id)?.x, driver: drv, combat: !!game.combat?.started};
       const ride = ix.rideOf(tr);
       const own = ride?.beast?.dexterity === 4;
       await steed.update({"system.health.damage.lethal": 7});
