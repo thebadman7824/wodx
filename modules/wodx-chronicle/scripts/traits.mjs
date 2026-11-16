@@ -5,7 +5,7 @@ import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
 import * as TB from "./trait-bite-rules.mjs";
 import {applyTimed} from "./timed.mjs";
-import {rollEffects as sigRollEffects} from "./signatures.mjs";
+import {rollEffects as sigRollEffects, bruisedFor} from "./signatures.mjs";
 import {conditionsOf, senseEffectsOf} from "./conditions.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
 
@@ -77,7 +77,12 @@ export const shows = actor => T.showsOf(view(actor));
 /** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
 export const ticks = actor => T.ticksOf(view(actor));
 /** For WoDX Combat (B3793): extra health levels, softer wound penalties, silver. */
-export const toughness = actor => T.bodyOf(view(actor));
+// B6729: a changeling's kith adds Bruised levels (Rock Giants, Glomes, a troll's oaths)
+export function toughness(actor) {
+  const b = T.bodyOf(view(actor)), k = bruisedFor(actor);
+  if ( k.n > 0 ) { b.bruised += k.n; b.names.push(...k.names); }
+  return b;
+}
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */
 export const attitudeSeed = (actor, npc, extra = {}) => T.attitudeSeed(view(actor), npc ? {
   kind: kindOf(npc),

@@ -359,8 +359,9 @@ test("dawn meditation once a day, and Willpower kept in bounds", () => {
 
 test("a changeling stacks kith, seeming, court and House, from the system's kith keys", () => {
   assert.deepEqual(S.faeRows({kith: ["wod.bio.changeling.satyrs"], seeming: ["Wilder"], court: ["Unseelie"], house: ["Fiona"]}).map(r => r.key), ["satyr", "wilder", "unseelie", "fiona"]);
-  for ( const [k, want] of [["wod.bio.changeling.nighthags", "thallain"], ["wod.bio.changeling.glomes", "inanimae"], ["wod.bio.changeling.kachinas", "nunnehi"],
-    ["wod.bio.changeling.firbholg", "darkkin"], ["wod.bio.changeling.merrow", "merfolk"], ["wod.bio.changeling.dauntain", "dauntain"], ["wod.bio.changeling.redcap", "redcap"],
+  // B6729: one row per kith; the group rows only for a name that gives the group
+  for ( const [k, want] of [["wod.bio.changeling.nighthags", "nighthags"], ["wod.bio.changeling.glomes", "glomes"], ["wod.bio.changeling.kachinas", "kachinas"],
+    ["wod.bio.changeling.firbholg", "firbholg"], ["wod.bio.changeling.merrow", "merrow"], ["Thallain", "thallain"], ["Merfolk", "merfolk"], ["wod.bio.changeling.dauntain", "dauntain"], ["wod.bio.changeling.redcap", "redcap"],
     ["Hsien: Komuko", "komuko"], ["Hsien", "hirayanu"], ["wod.bio.changeling.sidhe", "sidhe"]] )
     assert.equal(S.faeRows({kith: [k]})[0]?.key, want, k);
   assert.equal(S.faeRows({court: ["Seelie"]})[0].key, "seelie", "Seelie is not read inside Unseelie");

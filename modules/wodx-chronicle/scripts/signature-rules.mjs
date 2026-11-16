@@ -393,6 +393,8 @@ export function sigRollEffects(list = [], ctx = {}) {
       const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
       if ( tc === ch && (tt.includes("all") || tt.some(x => want.has(x))) ) hit = true;
     }
+    // B6729: "not" leaves a roll out (a Redcap's Social rolls are harder, Intimidation aside)
+    if ( hit && (e.not ?? []).some(t => want.has(tagKey(t))) ) hit = false;
     if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
   }
   return out;
@@ -525,9 +527,20 @@ export const isMonsterKind = k => !!k && !/mortal|human|kinfolk|ghoul|hunter/.te
 export function sigSoak({ahroun = false, crinos = false, wyrmFoe = false, troll = false, oathHeld = false, defender = false, beside = false, monsterFoe = false} = {}) {
   const names = [];
   if ( ahroun && crinos && wyrmFoe ) names.push("First into battle");
-  if ( troll && oathHeld ) names.push("A troll's oath");
+  // B6729: a troll's oath gives Strength and Bruised levels (trollOath below), not soak (C20 p. 113)
   if ( defender && beside && monsterFoe ) names.push("The shield");
   return {dice: names.length, names};
+}
+/** B6729: Titan's Power (C20 p. 113): one held oath gives a Strength dot and a Bruised level, two or more give two of each. */
+export const trollOath = held => Math.min(2, Math.max(0, Math.floor(n(held))));
+/** The extra Bruised levels a changeling's rows give (Rock Giants, Glomes; a troll's held oaths). {n, names} */
+export function faeBruised(rows = [], {oathsHeld = 0} = {}) {
+  const names = []; let total = 0;
+  for ( const r of rows ) {
+    const b = n(r?.bruised) + (r?.key === "troll" ? trollOath(oathsHeld) : 0);
+    if ( b > 0 ) { total += b; names.push(r.label); }
+  }
+  return {n: total, names};
 }
 /** The servants of the Yama Kings a Devil-Tiger hunts. */
 export const YAMA_WORDS = ["yama", "akuma", "oni", "demon", "kumo", "bakemono", "ogre"];
