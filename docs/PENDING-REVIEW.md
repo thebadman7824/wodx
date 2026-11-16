@@ -1770,3 +1770,4 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-16 | B6730: which Chi does a plain Charge or Drain move on a Kuei-jin (Chi Mastery, Master Flow, Meditation of the still blood)? | Yang Chi (house reading); every other line takes its own pool | CHARGE_POOL / chargePoolFor in modules/wodx-actions/scripts/effects-rules.js |

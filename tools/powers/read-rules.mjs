@@ -26,6 +26,10 @@ export const READ_TIMED = {
 /** The file and words that do the reading, checked by the guard test. */
 export const READERS = [
   ["modules/wodx-combat/scripts/main.js", "powerModsOf(actor, { soak: true"],
+  // B6732: a Ward stands against a weapon blow as well (soakPoolFor), not only against a power's harm
+  ["modules/wodx-combat/scripts/main.js", "powerModsOf(target, { soak: true"],
+  // B6730: a plain Charge on a sheet with no Quintessence moves the line's own pool
+  ["modules/wodx-actions/scripts/effects.js", "chargeOut(a,"],
   ["modules/wodx-combat/scripts/main.js", "powerModsOf(attacker, { tags:"],
   ["modules/wodx-combat/scripts/main.js", "powerModsOf(a, { initiative: true })"],
   ["modules/wodx-combat/scripts/conductor.js", "hastenExtra(c.actor)"],

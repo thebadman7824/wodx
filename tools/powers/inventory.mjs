@@ -100,8 +100,9 @@ for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.w20) ) {
 for ( const [file, set, line] of [["arcanoi-w20.json", "wraith", "Wraith (W20)"], ["arcanoi-gw.json", "greatwar", "Wraith (Great War)"]] ) {
   for ( const a of Object.values(J(file).arts) ) {
     const kw = PK.keywordsOf(set, a.id);
-    const st = a.r && kw && !kw.passive && applyingKw(kw.keywords) ? "applies" : a.e ? "card" : "roll";
-    add(line, a.d, a.n, { src: a, status: st, kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `p. ${a.p}`, how: "Arcanos roll and cost, effect line, keywords on the effects card (B3740)" });
+    // B6731: an art with no roll counts one success (its Harm readies the user), as a Discipline with none does
+    const st = kw && !kw.passive && (a.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : a.e ? "card" : "roll";
+    add(line, a.d, a.n, { src: a, status: st, kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `p. ${a.p}`, how: a.r ? "Arcanos roll and cost, effect line, keywords on the effects card (B3740)" : "no roll: one success, keywords on the effects card (B6731)" });
   }
 }
 /* -- Mage: M20 Spheres (Cast window with keywords) */

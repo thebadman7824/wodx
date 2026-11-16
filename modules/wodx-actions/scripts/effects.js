@@ -19,7 +19,7 @@ import * as SR from "./summon-rules.js";
 import * as TR from "./turn-rules.js";
 import * as TURN from "./turns.js";
 import * as LIM from "./limits.js";
-import { ask } from "./profiles.js";
+import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -366,7 +366,7 @@ export function planOf(actor, results, successes, power = null) {
       // plain being of the book's kind comes beside the NPC, and the Storyteller can dismiss it or Undo the card
       if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
       const rs = !self && r.key !== "summon" ? (r.out?.resist === null ? null : E.resistOf(r.key, r.out?.resist ? {resist: r.out.resist} : null)) : null;
-      const out = rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out;
+      const out = chargeOut(a, rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out);
       items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {}),
         // B4925, B4928: the power and its user, for a won resistance's bar (Compel Soul) and the resist card's breakdown
         ...(power?.name ? {power: power.name, by: actor?.uuid ?? null, successes: n(successes)} : {})});
@@ -378,6 +378,15 @@ export function planOf(actor, results, successes, power = null) {
   const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">${i.golconda ? "It does not take hold." : `It ${word[i.route]}.`}</span></li>`).join("")}</ul></div>`;
   return {items, html};
+}
+
+/** B6730: the pool a plain Charge or Drain moves on this target, said on the card: Quintessence for a mage, else the line's own. */
+export function chargeOut(a, out) {
+  if ( out?.kind !== "quint" || !a ) return out;
+  const pk = E.chargePoolFor(detectProfile(a), a.system, {kote: a.type === "Vampire" && a.system?.settings?.variant === "kindredeast"});
+  if ( pk === "quintessence" ) return out;
+  const p = n(out.points), P = E.poolOf(pk);
+  return {...out, kind: "pool", pool: pk, text: `${Math.abs(p)} ${P.label} ${p < 0 ? "drawn out" : "given"}`};
 }
 
 /** The card's list, written from its flags (so countermagick can change it). */
@@ -516,6 +525,9 @@ async function applyCore(item, casterName = "the caster") {
       return {uuid: a.uuid, health};
     }
     case "quint": {
+      // B6730: a sheet with no Quintessence takes the Charge in its own line's pool (blood, Gnosis, Pathos...)
+      const co = chargeOut(a, o);
+      if ( co !== o ) return applyCore({...item, out: co}, casterName);
       const q = n(a.system?.quintessence?.temporary);
       await a.update({"system.quintessence.temporary": Math.max(0, q + o.points)});
       return {uuid: a.uuid, quint: q};

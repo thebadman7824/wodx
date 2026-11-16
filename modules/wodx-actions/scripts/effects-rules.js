@@ -228,9 +228,24 @@ export const POOLS = {
   sekhem:    {label: "Sekhem", path: "system.advantages.sekhem.temporary", cap: "system.advantages.sekhem.permanent"},
   yinchi:    {label: "Yin Chi", path: "system.advantages.yinchi.temporary"},
   yangchi:   {label: "Yang Chi", path: "system.advantages.yangchi.temporary"},
-  conviction:{label: "Conviction", path: "system.advantages.conviction.temporary", cap: "system.advantages.conviction.permanent"}
+  conviction:{label: "Conviction", path: "system.advantages.conviction.temporary", cap: "system.advantages.conviction.permanent"},
+  essence:   {label: "Essence", path: "system.advantages.essence.temporary", cap: "system.advantages.essence.max"}
 };
 export const poolOf = k => POOLS[k] ?? POOLS.quintessence;
+
+/**
+ * B6730: the pool a plain Charge or Drain moves on a character with no Quintessence on the sheet: the character's own
+ * line's pool (blood, Gnosis, Pathos...), and Willpower for anyone else. Before this, a vampire's Theft of Vitae or a
+ * wraith's Pathos Conduit wrote Quintessence onto a sheet that has none, and nothing changed.
+ * profile: the WoDX actor profile (profiles.js); kote: a Kuei-jin (Yang Chi, house reading).
+ */
+export const CHARGE_POOL = {kindred: "blood", ghoul: "blood", lupine: "gnosis", fae: "glamour", wraith: "pathos", demon: "faith", mummy: "sekhem",
+  hunter: "conviction", spirit: "essence", exalted: "essence"};
+export function chargePoolFor(profile, system = {}, {kote = false} = {}) {
+  if ( system && system.quintessence !== undefined && system.quintessence !== null ) return "quintessence";
+  if ( kote ) return "yangchi";
+  return CHARGE_POOL[profile] ?? "willpower";
+}
 
 /** The kinds of roll a Boost or Sap works on (house rule, B781). */
 export const BOOSTS = {physical: "Physical rolls", social: "Social rolls", mental: "Mental rolls", soak: "soak", initiative: "Initiative"};

@@ -3,7 +3,7 @@
  * While a binding effect runs on a character a player moves:
  *   still  Hold and Possess: the player cannot move the token (the one who possesses moves the body)
  *   away   Fear: the token cannot be moved closer to the one feared
- *   ask    Sway and Bind (a command, an oath), and a Kuei-jin's shadow soul: each move goes to the Storyteller, who allows or refuses it
+ *   ask    Sway and Bind (a command, an oath), a Kuei-jin's shadow soul, and a wraith whose Shadow won Catharsis: each move goes to the Storyteller, who allows or refuses it
  * The Storyteller moves any token freely. With no Storyteller on (a Lone Chronicle), a command's move stands with a reminder. The world setting "Bindings hold the token" turns it off.
  */
 import { cannotAct } from "./limits.js";
@@ -19,6 +19,8 @@ const KEY_RE = /^wodx-effect-(hold|possess|fear|sway|bind)$/;
 /** The bindings an actor is under: [{key, rule, name, by}]. Pure over a plain {effects: [...]} too. */
 export function bindingsOn(actor) {
   const out = [];
+  // B6734: a wraith whose Shadow won Catharsis (Wraith 20th p. 236) is played by the Shadow: each move goes to the Storyteller
+  if ( actor?.flags?.[MOD]?.shadowDominant ) out.push({key: "shadow", rule: "ask", name: "The Shadow has control", by: null, id: null});
   for ( const e of actor?.effects ?? [] ) {
     if ( e.disabled ) continue;
     const tk = String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "");
