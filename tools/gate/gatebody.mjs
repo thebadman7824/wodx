@@ -91,7 +91,7 @@ export async function run() {
       ok("Feral Claws gives natural claws", w?.type === "aggravated" && w?.bonus === 1, {w});
     });
     await step("Mist Form", async () => {
-      const [fx] = await A.createEmbeddedDocuments("ActiveEffect", [{name: "Mist Form", img: "icons/svg/fog.svg"}]);
+      const [fx] = await A.createEmbeddedDocuments("ActiveEffect", [{name: "Mist Form", img: "icons/svg/aura.svg"}]);
       const body = B().of(A), table = B().rules.hitTable(body), ab = C().movement?.abilitiesOf?.(A) ?? null;
       await A.deleteEmbeddedDocuments("ActiveEffect", [fx.id]);
       ok("Mist Form", body.intangible && table.length === 0 && (ab === null || ab.fly === true), {fly: ab?.fly ?? "not exposed"});

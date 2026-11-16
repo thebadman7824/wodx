@@ -52,7 +52,7 @@ export async function run() {
     await scene.createEmbeddedDocuments("Token", [{name: "rider", actorId: actors[0].id, actorLink: true, x: G * 2, y: G * 2}, {name: "squire", actorId: actors[1].id, actorLink: false, x: G * 3, y: G * 2}]);
     a = scene.tokens.find(t => t.actorId === actors[0].id); b = scene.tokens.find(t => t.actorId === actors[1].id);
     await until(() => a.object && b.object);
-    [horse] = await scene.createEmbeddedDocuments("Tile", [{x: G * 2, y: G * 2, width: G, height: G, texture: {src: "icons/svg/horse.svg"},
+    [horse] = await scene.createEmbeddedDocuments("Tile", [{x: G * 2, y: G * 2, width: G, height: G, texture: {src: "icons/svg/pawprint.svg"},
       flags: {[MOD]: {mount: true, mountKind: "horse", title: "Gate horse"}}}]);
     const cards = () => game.messages.filter(m => !startMsgs.has(m.id) && m.getFlag("wodx-combat", "movement"));
     const seat = (tok, tile) => ({a: tok.actorId, t: tok.uuid, n: tok.name, dx: tile.x - tok.x, dy: tile.y - tok.y});

@@ -57,7 +57,7 @@ export async function run() {
       {x: 200, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate motor car"}}},
       {x: 500, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate second car"}}},
       {x: 1000, y: 1000, width: 200, height: 200, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "plane", title: "Gate aeroplane"}, "wodx-sheets": {keepOutOfEra: true}}},
-      {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}];
+      {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}];
     const [car, car2, plane, horse] = byTitle(await scene.createEmbeddedDocuments("Tile", tileData), tileData);
     // Every move of the passenger, with the module code that made it (a passenger once left the car mid-fight)
     const passTrail = [];
@@ -161,7 +161,7 @@ export async function run() {
 
     await G.step("11. bicycles and beasts", async () => {
       const beastData = ["bicycle", "chimera", "gryphon", "ghoulhorse"].map((k, i) => ({x: 2000 + i * 150, y: 1500, width: 100, height: 100,
-        texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}}));
+        texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}}));
       const [bike, fae, gry, gh] = byTitle(await scene.createEmbeddedDocuments("Tile", beastData), beastData);
       const c = ix.characterFor(nopilot, tn.object.center, bike);
       const o = t => ix.rules.optionsFor(ix.describeObj(t), {...c, kept: false});

@@ -36,8 +36,8 @@ export async function run() {
     const [ta, tb, tc] = await G.tokens(scene, [{actor: rider, x: 2, y: 2, actorLink: true}, {actor: foe, x: 3, y: 2, actorLink: true}, {actor: weak, x: 6, y: 6, actorLink: true}]);
     await waitFor(() => ta?.object && tb?.object && tc?.object);
     const [horse, nag] = await scene.createEmbeddedDocuments("Tile", [
-      {x: 200, y: 200, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate warhorse"}}},
-      {x: 600, y: 600, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate nag"}}}]);
+      {x: 200, y: 200, width: 100, height: 100, texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate warhorse"}}},
+      {x: 600, y: 600, width: 100, height: 100, texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate nag"}}}]);
     await horse.update({[`flags.${IX}.driver`]: seat(ta, horse)});
     await nag.update({[`flags.${IX}.driver`]: seat(tc, nag)});
     await rider.createEmbeddedDocuments("Item", [{name: "Gate lance", type: "Melee Weapon", system: {isequipped: true, difficulty: 6,

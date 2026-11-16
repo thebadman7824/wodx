@@ -40,7 +40,7 @@ export async function run() {
   let scene = null;
   const {getEngine} = await import(`/modules/wodx-chronicle/scripts/calendar.mjs`);
   const at = (y, m, d, h) => getEngine().dateToTime({year: y, month: m, day: d, hour: h});
-  const BASE = "icons/svg/mill.svg", REPAINT = "icons/svg/fire.svg";
+  const BASE = "icons/svg/windmill.svg", REPAINT = "icons/svg/fire.svg";
   const tile = name => scene.tiles.find(t => t.getFlag(MOD, "gate") === name);
   const look = async (time, fired) => {
     await game.time.set(time); await sleep(300);

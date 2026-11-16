@@ -12,7 +12,7 @@
  */
 const MOD = "wodx-atmosphere";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const BASE = "icons/svg/mystery-man.svg", A1 = "icons/svg/door-closed.svg", A2 = "icons/svg/door-open.svg";
+const BASE = "icons/svg/mystery-man.svg", A1 = "icons/svg/door-closed.svg", A2 = "icons/svg/door-exit.svg";
 
 async function save(R) {
   R.finished = new Date().toISOString();
