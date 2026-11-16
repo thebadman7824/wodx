@@ -36,7 +36,7 @@
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
-  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
+  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
 import {openGM, waitApis} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
@@ -157,7 +157,7 @@ try {
 
   // World drift: the running world against its clean fingerprint.
   await signIn();
-  const now = worldFingerprint(await within(page.evaluate(WORLD_PROBE), 120000, "the world check"), cfg.ignoreSettings);
+  const now = await within(settledFingerprint(page, cfg.ignoreSettings), 150000, "the world check");
   const clean = readJson(path.join(laneDir(lane), "clean.json"));
   const world = clean ? diffWorld(clean, now, {versions: false}) : {strict: [{where: "clean fingerprint", what: "none yet: reset the lane or run lanes.mjs accept"}], warn: []};
   world.strict.push(...diffRunning(expected, now));
