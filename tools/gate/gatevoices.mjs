@@ -6,7 +6,7 @@
  * The engine steps are gone: Kokoro rendering and caching (7), the Kokoro talk card (8), the browser's speech of a
  * line (2, 3, 6, 9) and the voice server (10) tested a feature that is not in play, and no engine sits in
  * Data/wodx-voices-engine.
- * Makes a scene and an NPC of its own and deletes them at the end; the viewed scene is put back. It never moves the clock.
+ * Makes a scene of its own (never viewed) and two NPCs, and deletes them at the end. It never moves the clock.
  *   1. the module is active, Voices is off in this world, and the switch needs a reload (B6763)
  *   2. no settings show: every WoDX Voices setting but the switch is out of the settings window
  *   3. no menu: the voice cache button is not registered
@@ -29,7 +29,6 @@ export async function run() {
   const R = {started: new Date().toISOString(), steps: [], errors: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message}); } };
-  const viewed = canvas.scene?.id;
   const made = {msgs: [], actors: []};
   // Watch what Voices could do while the card goes by: speech, sound, files, socket, errors
   const S = globalThis.speechSynthesis, AH = foundry.audio?.AudioHelper, FPI = foundry.applications?.apps?.FilePicker?.implementation;
@@ -113,7 +112,6 @@ export async function run() {
   await step("7 clean up", async () => {
     for ( const m of made.msgs ) await m?.delete?.();
     for ( const a of made.actors ) await a?.delete?.();
-    if ( viewed ) await game.scenes.get(viewed)?.view?.();
     await made.scene?.delete?.();
     ok("7 clean up", !game.scenes.getName("WoDX gate: voices") && !game.actors.getName("Gate voices plot NPC") && !game.actors.getName("Gate voices passer-by"));
   });
