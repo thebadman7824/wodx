@@ -62,3 +62,12 @@ test("B6818: a metis Ratkin's Crinos gets the metis table when the sheet stores 
   const homid = await calculateTotals(mk("wod.bio.breedname.homid"));
   assert.equal(homid.system.attributes.strength.total, 3, "the other breeds keep Strength +1");
 });
+
+test("B6819: a wraith sheet with a ritual item sorts it without a rejected promise", async () => {
+  globalThis.game = {...(globalThis.game ?? {}), i18n: {localize: k => k}};
+  const {default: ItemHelper} = await imp("system/worldofdarkness/module/scripts/item-helpers.js");
+  const actor = {system: {listdata: {powers: {}}}};
+  ItemHelper._createArcanoiStructure(actor);
+  await ItemHelper._sortArcanois({type: "Power", name: "Rite", system: {type: "wod.types.ritual"}}, actor);
+  assert.equal(actor.system.listdata.powers.arcanois.rituallist.length, 1);
+});
