@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6970
+Next free block: B6980
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -400,6 +400,7 @@ Next free block: B6970
 | B6940-B6949 | Final Audit Desk rulings (lead part) | system, all modules (comments only), tools, docs |
 | B6950-B6959 | Gate run 1774 fixes | wodx-sheets, wodx-chronicle, tools |
 | B6960-B6969 | Gate run 1779 fixes | tools |
+| B6970-B6979 | Gate diagnostics: console and full failing steps in PC job reports | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13848,3 +13849,7 @@ visible: none, the lane report only.
 B6961. gate6k step "semektet" counts only a Hekau card ("works Hekau") as a cast, not every chat message posted in the 1.5 s it waits: another module's card in that moment (a stock card, a turn card) failed the step although no spell was worked.
 effect: none, gate only.
 visible: none, gate only.
+
+B6970. A PC job can ask for diagnostics with `"diag": true`. run-gate.mjs --diag writes, under each failing gate in the job's report, the browser console errors and warnings since the last gate (since sign-in for the first, so a module that failed to start shows its error) and every failing step in full (up to 12,000 characters each, where the runner's comment shows 700). gate-two.mjs --diag prints both browsers' console errors and warnings from page load on, and the full failing steps, as [diag] lines the runner adds to its comment. Asked for by the owner on 16 Nov to find why eight gates fail on main (gate7a, gatehandworlds, gatestates2, gateresidents, gate7d, gateplayerload, gateplayerblows, gatetruthrelay). Without the flag nothing changes.
+effect: none, tooling only; game code and gates are unchanged.
+visible: none, only the PC job reports gain lines.
