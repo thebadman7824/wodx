@@ -21,8 +21,8 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 
 | Module | Version | What it does | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.134.1 | The night's work: everything the Storyteller's Hand did by itself (approvals carried out, what the clock set going, the seat's choices), listed since a chosen time and taken back in one Undo, newest first, with a warning where someone changed the same thing since. | rothenstein-wodx |
-| wodx-otherworlds | 0.35.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
+| wodx-chronicle | 0.134.0 | The night's work: everything the Storyteller's Hand did by itself (approvals carried out, what the clock set going, the seat's choices), listed since a chosen time and taken back in one Undo, newest first, with a warning where someone changed the same thing since. | rothenstein-wodx |
+| wodx-otherworlds | 0.34.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-creation | 0.82.0 | Character and NPC creation, era advancement, the archive of the dead, changes of state, and learning: experience spent from a named teacher, book, school or practice, as a long task | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.109.0 | Fomor powers: all 73 from Werewolf 20th pp. 430-439. Always-on ones work from the sheet; the rest roll from the Fomor power window with effects on the map. NPC fomor pick their own. | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-combat | 3.46.0 | Fighting in and around vehicles: a closed vehicle shields those inside, its Durability turns damage aside and the rest wrecks it, ramming on the attack menu, swerving at the wheel, and a fuel tank that goes up | rothenstein-wodx (needs wodx-chronicle) |
