@@ -27,7 +27,9 @@ const COLLECTIONS = ["actors", "items", "scenes", "journal", "tables", "macros",
 export function inOrder(docs, data) {
   const left = [...docs];
   return data.map(d => {
-    const i = left.findIndex(x => x.name === d.name);
+    let i = left.findIndex(x => x.name === d.name);
+    // A document with no name of its own (a Combat) is matched by its place among the nameless (B6202)
+    if ( i < 0 && (d.name ?? "") === "" ) i = left.findIndex(x => (x.name ?? "") === "" || x.documentName === "Combat");
     return i >= 0 ? left.splice(i, 1)[0] : undefined;
   });
 }
@@ -77,7 +79,7 @@ export function gate(name, {stepTimeout = 30000} = {}) {
 
   /** A scratch scene of its own, viewed (and activated when asked), with a plain square grid. */
   async function scene({name: sceneName = `WoDX gate: ${name}`, width = 2000, height = 1500, grid = 100, activate = false, ...rest} = {}) {
-    const s = await make(Scene, {name: sceneName, width, height, grid: {size: grid, type: 1}, padding: 0, tokenVision: false, fog: {exploration: false}, ...rest});
+    const s = await make(Scene, {name: sceneName, width, height, grid: (grid && typeof grid === "object") ? {type: 1, ...grid} : {size: grid, type: 1}, padding: 0, tokenVision: false, fog: {exploration: false}, ...rest});
     if ( activate ) await s.activate(); else await s.view();
     await waitFor(() => canvas?.ready && canvas.scene?.id === s.id, 20000);
     return s;
@@ -144,12 +146,27 @@ export function gate(name, {stepTimeout = 30000} = {}) {
     return R.summary;
   }
 
+  /**
+   * B6350: a gate that needs a year with cars, guns or planes calls this. A clock an earlier gate left early (or a
+   * world that starts in 1197) moves to the year given; cleanup puts the clock back. Returns the year it plays in.
+   */
+  async function yearAtLeast(min, to = 1995) {
+    const eras = game.modules.get("wodx-chronicle")?.api?.eras, y = Number(eras?.currentYear?.()) || 0;
+    if ( !y || y >= min ) return y;
+    const {getEngine} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+    await game.time.advance(getEngine().dateToTime({year: to, month: 6, day: 15, hour: 21}) - game.time.worldTime);
+    await new Promise(r => setTimeout(r, 500));
+    const now = Number(eras.currentYear()) || 0;
+    R.notes.push(`the clock stood in ${y}; this run plays in ${now}`);
+    return now;
+  }
+
   async function finish() {
     try { await cleanup(); } catch (e) { R.errors.push(`cleanup: ${e?.message ?? e}`); }
     return save();
   }
 
-  return {name, run, R, ok, step, make, scene, tokens, fixture, fixtureScene, cleanup, save, finish,
+  return {name, run, R, ok, step, make, scene, tokens, fixture, fixtureScene, cleanup, save, finish, yearAtLeast,
     named: (docs, n) => docs.find(d => d?.name === n), byFlag: (col, k, v) => byFlag(col, k, v ?? run), byName, inOrder,
     notLive: () => game.world.id === "rothenstein-live"};
 }

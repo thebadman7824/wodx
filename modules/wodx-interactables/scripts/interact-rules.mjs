@@ -11,10 +11,12 @@
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
 import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 import * as Cover from "./cover-rules.mjs";
+import {DAY, MINUTE, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {MINUTE};
 export {COVERS, COVER_LEVELS, describeCover, cleanCover, coverOnShot} from "./cover-rules.mjs";
 
-export const TURN = 3; // seconds in a turn (V20 Dark Ages printed p. 324)
-export const MINUTE = 60;
+export const TURN = TURN_SECONDS; // seconds in a turn (V20 Dark Ages printed p. 324)
 
 export const KINDS = {door: "Door", gate: "Gate", window: "Window", shutter: "Shutter", hatch: "Hatch"};
 
@@ -507,8 +509,8 @@ export function bringForward(f = {}, {wall = false, year = 0, keys = null} = {})
 /** Eras with keypads, card readers and alarms. */
 const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0, kept = false} = {}) { return MODERN_ERAS.has(eraId) || year >= ELECTRONIC_FROM || !!kept; }
-const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods", "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy"]);
-export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }
+/** B6192: Dark Ages rules as the era profile has them (terms.darkAgesRules); with no era named, before 1450. */
+export function isDarkAge({eraId = "", year = 0} = {}) { return TERMS.eraById(eraId) ? TERMS.darkAgesRules(eraId) : ["classical", "living-gods"].includes(eraId) || (year > 0 && year <= TERMS.MEDIEVAL_YEAR_END); }
 
 /**
  * The Ability a character picks a lock with. The name differs by line and era: Larceny (V20, W20, C20), Legerdemain
@@ -740,12 +742,39 @@ export function describeSacred(f = {}) {
   const rating = Math.max(1, Math.min(top, Math.round(Number(f.rating) || (kind === "fetish" ? 5 : 1))));
   return {
     sacred: true, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
-    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken,
+    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken, faith: FAITHS.includes(f.faith) ? f.faith : null,
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", progress: {}, tries: f.tries ?? {}
   };
 }
 /** Whether a sacred tile is holy ground now. */
 export const holyGround = o => !!o?.sacred && SACRED[o.kind].ground && !o.desecrated;
+/** B6362: the faiths a house of worship or an altar can be kept for (WoDX Chronicle's faith-rules.mjs keys). */
+export const FAITHS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
+const FAITH_FAMILY = {western: "christian", orthodox: "christian", theravada: "buddhist", tibetan: "buddhist"};
+/** The places a region can be tagged as that are houses of worship (adopt-rules worshipFor). */
+export const WORSHIP_PLACES = ["church", "mosque", "synagogue", "temple"];
+/**
+ * B6362: a region tagged as a house of worship (flags.wodx-npc.place {kind, faith, holy}) is holy ground, as an
+ * altar tile is: rating place.holy (1 to 5), 1 when not set (house rule: a parish church or a town mosque). faith:
+ * the place's own, else the scene's. -> a describeSacred-shaped object, or null for any other place.
+ */
+export function worshipGround(place, label = "", faith = null) {
+  if ( !place || !WORSHIP_PLACES.includes(place.kind) ) return null;
+  const f = FAITHS.includes(place.faith) ? place.faith : (FAITHS.includes(faith) ? faith : null);
+  const o = describeSacred({sacredKind: "altar", rating: Number(place.holy) || 1, desecrated: !!place.desecrated, title: label || place.kind, faith: f});
+  return {...o, house: place.kind};
+}
+/**
+ * B6362: whether holy ground of placeFaith is a believer's own (believerFaith). Christians share their churches,
+ * as do the Buddhists of the south and of Tibet; a ground or a believer of no named faith counts as anyone's.
+ */
+export function sameFaith(placeFaith, believerFaith) {
+  if ( !placeFaith || !believerFaith ) return true;
+  return placeFaith === believerFaith || (!!FAITH_FAMILY[placeFaith] && FAITH_FAMILY[placeFaith] === FAITH_FAMILY[believerFaith]);
+}
+/** The faith's name for a card. */
+export const FAITH_WORDS = {western: "the Western church", orthodox: "the Orthodox church", islamic: "Islam", jewish: "the Jewish faith", hindu: "the Hindu faith",
+  theravada: "the Buddhist faith", tibetan: "the Tibetan Buddhist faith", chinese: "the Chinese temples", own: "the people's own faith"};
 /**
  * What holy ground does to a demon (WoDX Actions' reading of Demon: The Fallen pp. 254-255): torment 3 or less, nothing;
  * otherwise lethal levels equal to the rating, and a Willpower roll each turn to stay. Null for anyone else.
@@ -1674,9 +1703,9 @@ export function hears(noise, {yards = 0, walls = 0, asleep = false, perception =
   if ( noise === "loud" && !asleep ) return {inRange: true, hears: true};
   const diff = asleep ? 8 : 7;
   const dice = Math.max(1, perception + alertness);
-  let hits = 0, ones = 0;
-  for ( let k = 0; k < dice; k++ ) { const f = 1 + Math.floor(rng() * 10); if ( f >= diff ) hits++; if ( f === 1 ) ones++; }
-  return {inRange: true, hears: hits - ones > 0, roll: {dice, diff, successes: Math.max(0, hits - ones)}};
+  const faces = Array.from({length: dice}, () => 1 + Math.floor(rng() * 10));
+  const r = TERMS.successes(faces, diff);
+  return {inRange: true, hears: r.successes > 0, roll: {dice, diff, successes: r.successes}};
 }
 
 /** Clean a wall's WoDX settings from the config form. */
@@ -1714,7 +1743,7 @@ export function restockFor(f = {}, {title = "", kinds = []} = {}) {
   for ( const k of kinds ?? [] ) if ( RESTOCK_BY_PLACE[k] ) return RESTOCK_BY_PLACE[k];
   return "";
 }
-export const RESTOCK_SECONDS = {dawn: 86400, week: 7 * 86400, month: 30 * 86400, season: 91 * 86400};
+export const RESTOCK_SECONDS = {dawn: DAY, week: 7 * DAY, month: 30 * DAY, season: 91 * DAY};
 
 /**
  * A stock list (Interactables 0.23.0), the Storyteller's own table for a container: one entry a line,
@@ -1760,7 +1789,7 @@ export function restockDue(restock, last = 0, now = 0) {
   const s = RESTOCK_SECONDS[restock];
   if ( !s ) return false;
   if ( !last ) return true;
-  if ( restock === "dawn" ) return Math.floor(now / 86400) > Math.floor(last / 86400);
+  if ( restock === "dawn" ) return Math.floor(now / DAY) > Math.floor(last / DAY);
   return now - last >= s;
 }
 

@@ -1,7 +1,8 @@
 /**
  * WoDX Actions (B3555, B3556): Banality from everyday life, the Foundry part. Rules: banal-life-rules.js.
  *
- *   End of a scene     changelings on the scene count a banal place (the WoDX NPC place tag) and any Autumn People
+ *   End of a scene     changelings on the scene count a banal place (the WoDX NPC place tag on the scene, or on a
+ *                      region the changeling's token stands in, B6174) and any Autumn People
  *   A long task done   each week of it worked on a scene tagged as a banal place counts
  *   The card           when enough has gathered the Storyteller gets a card suggesting the point (Give it, or Not
  *                      this time); one short of it, the player hears that the grey is close
@@ -11,10 +12,10 @@
  */
 import * as B from "./banal-life-rules.js";
 import * as P from "./profiles.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const DAY = 86400;
 
 export function build(ctx) {
     const { setFlag, notify, banality, seemingOf } = ctx;
@@ -22,6 +23,11 @@ export function build(ctx) {
     const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
     const playersOf = a => game.users.filter(u => !u.isGM && a.testUserPermission(u, "OWNER")).map(u => u.id);
     const kindOf = scene => String(scene?.flags?.["wodx-npc"]?.place?.kind ?? "");
+    // B6174: a building is usually a tagged region inside a bigger scene, so the regions a token stands in count too
+    const kindsAt = tokDoc => [...(tokDoc?.regions ?? [])].map(r => String(r?.flags?.["wodx-npc"]?.place?.kind ?? "")).filter(Boolean);
+    /** The banal place kind for a changeling's token: the scene's own tag, else the first banal region it stands in. */
+    const kindFor = (scene, tokDoc) => [kindOf(scene), ...kindsAt(tokDoc)].find(B.isBanalKind) ?? kindOf(scene);
+    const tokenOf = (scene, actor) => [...(scene?.tokens ?? [])].find(t => t.actor === actor || (t.actorLink && t.actorId === actor?.id)) ?? null;
     const isFae = a => !!a && P.detectProfile(a) === "fae";
     const tallyOf = a => Math.max(0, Number(a?.getFlag?.(MOD, "banalLife")?.tally) || 0);
     const changelingsOn = scene => [...(scene?.tokens ?? [])].map(t => t.actor).filter(a => isFae(a) && a.hasPlayerOwner);
@@ -45,9 +51,11 @@ export function build(ctx) {
     /** End of a scene (GM): every changeling on it. */
     async function endScene(scene = canvas?.scene) {
         if (!game.user?.isGM || !scene) return;
-        const e = B.sceneExposure({ kind: kindOf(scene), autumn: autumnOn(scene) });
-        if (!e.count) return;
-        for (const a of changelingsOn(scene)) await expose(a, e.count, e.why);
+        const autumn = autumnOn(scene);
+        for (const a of changelingsOn(scene)) {
+            const e = B.sceneExposure({ kind: kindFor(scene, tokenOf(scene, a)), autumn });
+            if (e.count) await expose(a, e.count, e.why);
+        }
     }
 
     /** A long task has ended (wodxTaskDone): weeks of it in a banal place. */
@@ -55,8 +63,9 @@ export function build(ctx) {
         if (!game.user?.isGM || !isFae(actor) || !task) return null;
         const scene = game.scenes?.get?.(task.scene || task.haven) ?? null;
         const days = Math.max(0, (Number(task.next) || 0) - (Number(task.started) || 0)) / DAY;
-        const count = B.taskExposure({ kind: kindOf(scene), days });
-        return count ? expose(actor, count, [`${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? "" : "s"} of ${task.name} in ${B.BANAL_KINDS[kindOf(scene)]}`]) : null;
+        const kind = kindFor(scene, tokenOf(scene, actor));
+        const count = B.taskExposure({ kind, days });
+        return count ? expose(actor, count, [`${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? "" : "s"} of ${task.name} in ${B.BANAL_KINDS[kind]}`]) : null;
     }
 
     /** The card's buttons (Storyteller). */

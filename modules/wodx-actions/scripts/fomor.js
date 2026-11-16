@@ -17,6 +17,7 @@
 import * as LIM from "./limits.js";
 import * as FP from "./fomor-powers.js";
 import * as EF from "./effects.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -227,7 +228,7 @@ export function build(ctx) {
     const { post, rollPool, rollBlock, attr, findAbility, spendWillpower, notify } = ctx;
     const dialog = ctx.dialog;
 
-    const stamp = () => ({ scene: LIM.sceneNo(), day: Math.floor((game.time?.worldTime ?? 0) / 86400), round: n(game.combat?.round) });
+    const stamp = () => ({ scene: LIM.sceneNo(), day: Math.floor((game.time?.worldTime ?? 0) / DAY), round: n(game.combat?.round) });
     const get = actor => (kind, k) => kind === "willpower" ? n(actor.system?.willpower?.permanent ?? actor.system?.advantages?.willpower?.permanent)
         : kind === "attr" ? n(attr(actor, k)) : n(findAbility(actor, k)?.value ?? (k === "primalurge" ? findAbility(actor, "primal-urge")?.value : 0));
 
@@ -318,7 +319,7 @@ export function build(ctx) {
             const r = await rollPool(dice, n(p.diff) + n(lim.diff));
             rolls.push(r.roll);
             got = r.botch ? 0 : n(r.successes);
-            body += rollBlock(FP.rollLabel(p.roll), r, lim.diff ? [`Drained +${lim.diff}`] : []);
+            body += rollBlock(FP.rollLabel(p.roll), r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
         }
         await actor.setFlag(MOD, "fomorUsed", FP.usedAfter(p, actor.getFlag(MOD, "fomorUsed") ?? {}, stamp()));
         let fx = [];
@@ -401,7 +402,7 @@ export function build(ctx) {
                 const upd = {};
                 for (const k of attrs) { const a = t.system?.attributes?.[k]; if (a) { upd[`system.attributes.${k}.bonus`] = n(a.bonus) - p.drain.by; upd[`system.attributes.${k}.total`] = Math.max(0, n(a.total ?? a.value) - p.drain.by); } }
                 if (Object.keys(upd).length) await t.update(upd);
-                await chron()?.timed?.applyTimed?.(t, { name: p.name, img: "icons/svg/degen.svg", duration: p.drain.days ? { kind: "time", seconds: p.drain.days * 86400 } : { kind: "scene" },
+                await chron()?.timed?.applyTimed?.(t, { name: p.name, img: "icons/svg/degen.svg", duration: p.drain.days ? { kind: "time", seconds: p.drain.days * DAY } : { kind: "scene" },
                     key: `wodx-fomor-drain-${p.key}`, revert: { key: "wodx-actions.fomorDrainEnd", data: { attrs, by: p.drain.by } }, source: FP.pageOf(p), description: p.fx });
                 out.push(`${t.name}: ${attrs.join(", ")} one lower for ${p.drain.days ? "a day" : "the scene"}`);
             }
@@ -446,7 +447,7 @@ export function build(ctx) {
         if (!(await spendWillpower(actor, 1))) return null;
         const dice = n(attr(actor, "stamina")) + n(findAbility(actor, "medicine")?.value);
         const r = await rollPool(dice, 6 + n(lim.diff));
-        let body = rollBlock("Stamina + Medicine", r, lim.diff ? [`Drained +${lim.diff}`] : []);
+        let body = rollBlock("Stamina + Medicine", r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
         const got = r.botch ? 0 : n(r.successes);
         if (got > 0) {
             await actor.setFlag(MOD, "numbTrack", n(actor.system?.traits?.health?.totalhealthlevels?.max) || 7);

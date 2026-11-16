@@ -11,6 +11,7 @@
  * House readings (docs/PENDING-REVIEW.md): the feelings each kind of place and person carries, the spark by age and
  * kind of person, the once-a-scene and once-a-night limits, and reading a Passion's feeling from its name.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The feelings a crowd carries. The words a Passion's name may use for each are in FEELING_WORDS. */
 export const FEELINGS = {
@@ -130,7 +131,7 @@ export const SPARK_LABEL = ["no spark left", "a dull ember", "a Dreamer", "a bri
 /* ------------------------------------------------------------------ */
 
 /** The night a world time falls in: noon to noon, so a night is not split at midnight. */
-export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 12 * 3600) / 86400);
+export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 12 * 3600) / DAY);
 
 /**
  * Mortals in sight a wraith's Passion can draw on. mortals: [{id, name, feeling, used}] where used is the

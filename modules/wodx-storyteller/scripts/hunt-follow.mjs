@@ -19,6 +19,7 @@ import * as HF from "./hunt-follow-rules.mjs";
 import * as H from "./hunters-rules.mjs";
 import * as Between from "./between.mjs";
 import {MOD, esc, isActiveGM, chron, npc, gmIds, log} from "./core.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const all = c => (c ? [...(c.contents ?? c)] : []);
@@ -86,9 +87,21 @@ export async function proof(body, by = null, {region = null} = {}) {
     await card(`${name} is burned where it lies`, `${by?.name ?? "The hunters"} set the body alight. ${H_?.bodiesAt?.(region)?.[0]?.label ?? "The hunters"} have their proof; their file on that kind rises.`, {proof: {token: body.uuid}});
     return p;
   }
-  const carry = npc()?.carry?.orderCarry ?? npc()?.orders?.orderCarry ?? null;
+  // B6167: WoDX NPC's api is npc().orderCarry, and it answers {ok, later, text}: only a carry that took hold (or waits
+  // for the hunter's turn in a fight) skips the walk-and-hide below
+  const carry = npc()?.orderCarry ?? null;
   if ( carry && by?.object && body.object ) {
-    try { const r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); if ( r ) return p; } catch (e) { console.warn(`${MOD} | proof carry`, e); }
+    let r = null;
+    try { r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); } catch (e) { console.warn(`${MOD} | proof carry`, e); }
+    // B6426: the hunter still leaves the map. Off the map's edge WoDX NPC hides the carrier and fires wodxBodyTaken (the
+    // proof's effects come from onBodyTaken); set down at its goal on this map, the carrier goes; a carry that stalled
+    // on the map lets go, and the walk-and-hide below takes the body
+    if ( r?.ok ) {
+      const t = scene.tokens.get(by.id);
+      if ( r.later || !t || t.hidden ) return p;
+      if ( r.arrived ) { await leave(scene, [t]); return p; }
+      try { await game.modules.get("wodx-interactables")?.api?.haul?.release?.(t, {quiet: true}); } catch (e) { /* nothing held */ }
+    }
   }
   // No carrying here: the hunter goes to the body, then leaves with it
   if ( onView(scene) && by?.object && body.object ) { try { await routines()?.goTo?.(by.object, body.object, null); } catch (e) { /* no way */ } }
@@ -102,7 +115,9 @@ export async function proof(body, by = null, {region = null} = {}) {
 /** WoDX NPC's carrying: a body carried off as proof. */
 async function onBodyTaken(p = {}) {
   if ( !isActiveGM() || p.intent !== "proof" ) return;
-  const body = p.body?.document ?? p.body ?? null;
+  // B6167: the hook's body is the token's uuid (WoDX NPC carry-goals.mjs), not the document
+  const ref = p.body?.document ?? p.body ?? null;
+  const body = typeof ref === "string" ? await fromUuid(ref).catch(() => null) : ref;
   await proofEffects({region: hunters()?.regionAt?.(body?.parent ?? canvas?.scene), kind: String(baseOf(body?.actor)?.type ?? "") || null, name: body?.name ?? "a body"});
 }
 
@@ -237,8 +252,7 @@ async function dailyRoll(scene, d, r, today) {
   const a = d.actor, s = a?.system ?? {};
   const pool = Math.max(1, Number(s.attributes?.perception?.value || 3) + Number(s.abilities?.investigation?.value || 3));
   const roll = await new Roll(`${pool}d10cs>=${HF.INVESTIGATE_DIFF}`).evaluate();
-  const ones = roll.dice[0]?.results?.filter(x => x.result === 1).length ?? 0;
-  const net = Math.max(0, roll.total - ones);
+  const net = TERMS.successes((roll.dice[0]?.results ?? []).map(x => x.result), HF.INVESTIGATE_DIFF).successes;
   const told = new Set((npc()?.wanted?.list?.() ?? []).filter(x => !x.dropped && x.of).map(x => x.of));
   let names = [];
   if ( net ) await hunters()?.mutate?.(r.region, x0 => {

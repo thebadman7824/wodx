@@ -26,7 +26,8 @@ const newer = (a, b) => {
 const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 // The browser keeps pitch and rate as 32-bit floats, so 1.12 reads back as 1.1200000047683716.
 const near = (a, b) => Math.abs(Number(a) - Number(b)) < 0.005;
-const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p>${text}</p></div></div>`;
+// B6171: the card as WoDX NPC's talk.mjs deliver() writes it: the answer is in <p class="wnpc-said">, a note after it
+const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p class="wnpc-said">${text}</p><p class="wodx-quiet">Now you can ask about the toll.</p></div></div>`;
 
 export async function run({server = false} = {}) {
   const R = {started: new Date().toISOString(), steps: [], errors: []};
@@ -59,6 +60,26 @@ export async function run({server = false} = {}) {
       await post(t1, "Coin first, traveller &amp; quickly.");
       const p = api().profileOf(t1);
       ok("2 spoken", spoken.length === 1 && spoken[0].text === "Coin first, traveller & quickly." && near(spoken[0].pitch, p.pitch) && near(spoken[0].rate, p.rate), {spoken, profile: p});
+    });
+    await step("2b a real talk answer", async () => {
+      const npcApi = game.modules.get("wodx-npc")?.api;
+      if ( !npcApi?.talk?.serve ) return ok("2b a real talk answer", false, {error: "WoDX NPC's talk api is missing"});
+      const [asker] = await createActors([{name: "Gate voices asker", type: "Mortal"}]);
+      made.actors.push(asker);
+      await a2.setFlag("wodx-npc", "behavior", {talk: "[work] The toll rises at dusk, and nobody asks why.", noStock: true});
+      const [ta] = await made.scene.createEmbeddedDocuments("Token", [{name: asker.name, actorId: asker.id, actorLink: true, x: 400, y: 100}]);
+      const keepMenu = game.settings.settings.has("wodx-npc.talkMenu") ? game.settings.get("wodx-npc", "talkMenu") : null;
+      if ( keepMenu !== null ) await game.settings.set("wodx-npc", "talkMenu", true);
+      const n = spoken.length, since = Date.now();
+      try {
+        await npcApi.talk.serve("ask", {sceneId: made.scene.id, meTokenId: ta.id, npcTokenId: t2.id, topic: "work"}, game.user.id);
+        await sleep(1200);
+      } finally { if ( keepMenu !== null ) await game.settings.set("wodx-npc", "talkMenu", keepMenu); }
+      const card = [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.flags?.["wodx-npc"]?.talk).at(-1);
+      if ( card ) made.msgs.push(card);
+      const said = spoken.slice(n).map(x => x.text);
+      ok("2b a real talk answer", /The toll rises at dusk/.test(card?.content ?? "") && said.length === 1 && said[0] === "The toll rises at dusk, and nobody asks why.", {said, card: !!card});
+      spoken.splice(n);
     });
     await step("3 steady", async () => {
       await post(t1, "Again."); await post(t2, "And you.");

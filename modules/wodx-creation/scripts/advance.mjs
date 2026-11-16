@@ -9,6 +9,7 @@ import {propose, PATH_LABEL} from "./advance-rules.mjs";
 import {SWITCHES, DRIFT} from "../data/advance.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {writeLogPage} from "./xp.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;");
 
 const ACT = "wodx-actions";
@@ -72,7 +73,8 @@ export function awakeBefore(actor, now = game.time.worldTime) {
 /** A plain view of the character for the advancers. */
 function townsForFetters() {
   try {
-    const S = game.modules.get("wodx-storyteller")?.api;
+    // B6176: the towns and markets sit under Storyteller's upkeep api
+    const S = game.modules.get("wodx-storyteller")?.api?.upkeep;
     const towns = S?.towns?.state?.()?.towns ?? {}, markets = S?.markets?.state?.()?.markets ?? [];
     const nameOf = id => (Array.isArray(markets) ? markets : Object.values(markets)).find(m => m?.id === id)?.name ?? "";
     return Object.values(towns).map(t => ({name: nameOf(t.id), scars: t.scars ?? [], history: t.history ?? []})).filter(t => t.name);
@@ -136,7 +138,7 @@ async function driftRolls(actor, rolls) {
   for ( let k = 0; k < rolls; k++ ) {
     const r = await new Roll(`${dice}d10`).evaluate();
     const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
-    const net = faces.filter(f => f >= DRIFT.difficulty).length - faces.filter(f => f === 1).length;
+    const net = TERMS.margin(faces, DRIFT.difficulty);
     if ( net <= 0 ) lost++;
   }
   return lost;

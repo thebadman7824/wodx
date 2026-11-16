@@ -9,4 +9,4 @@
 - [x] Gender-neutral text (B48); search box on long cantrip lists (B24); UI fit (B17) for the eight dialogs
 - [x] Harness: phase6g.test.mjs (11); all 259 tests pass
 - [x] Gate 6g in Foundry (tools/gate/gate6g.mjs): 18/18, 2026-11-08
-- [ ] Later: the Dominions' full cantrip lists as presets; sprites' Charms; treasures; Changeling 20th for the later eras (Arts, Realms, Glamour, Banality, Nightmare, Bedlam)
+- [x] Later: the Dominions' full cantrip lists as presets (B6550-B6553); sprites' Charms (B6555); treasures for every era (B6560-B6566); Changeling 20th for the later eras (Arts, Realms, Glamour, Banality, Nightmare, Bedlam)

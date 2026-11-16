@@ -14,13 +14,14 @@
  */
 import * as K from "../data/wonders-kuei-jin.mjs";
 import {registerLine} from "./wonder-registry.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const low = s => String(s ?? "").toLowerCase();
 const WILL = "system.advantages.willpower.temporary";
 const CHI = {yin: "system.advantages.yinchi.temporary", yang: "system.advantages.yangchi.temporary"};
 const KIND = {yin: "Yin", yang: "Yang"};
-const NIGHT = 86400;
+const NIGHT = DAY;
 const ADVANCED = 6;
 const para = s => `<p>${String(s ?? "").replace(/[<>&]/g, c => ({"<": "&lt;", ">": "&gt;", "&": "&amp;"})[c])}</p>`;
 const NOT_THINGS = ["Power", "Ability", "Advantage", "Sphere", "Realm", "Bonus", "Experience", "Feature", "Splat", "Trait"];

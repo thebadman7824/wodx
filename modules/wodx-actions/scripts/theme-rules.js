@@ -94,16 +94,17 @@ export const MENU_PLAN = {
     },
     /** Dark Ages: Fae (3.8.0): the Dominions, the Mists and Weaving in place of Glamour. */
     faeDA: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:treasureUse", "api:seduction"],
         resist: ["api:daEcho", "api:daColdIron", "api:hazard"],
-        recover: ["api:daOath", "api:daRest", "uses:willpower"],
+        recover: ["api:daOath", "api:daRest", "api:treasureOath", "uses:willpower"],
+        st: ["api:treasureGive"],
         scene: ["api:endScene", "api:voices", "rules:faeDA"]
     },
     fae: {
-        act: ["action", "api:quickCheck", "api:withPerson", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:withPerson", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:treasureUse", "api:seduction"],
         resist: ["api:c20Trigger", "api:c20Bedlam", "api:c20ColdIron", "uses:banality", "api:hazard"],
-        recover: ["api:c20Epiphany", "uses:willpower"],
-        st: ["api:c20Mists", "api:c20Everyday"],
+        recover: ["api:c20Epiphany", "api:treasureOath", "uses:willpower"],
+        st: ["api:c20Mists", "api:c20Everyday", "api:treasureGive"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
     spirit: { act: ["action", "api:quickCheck", "api:withPerson", "api:spiritCharm", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
@@ -169,7 +170,7 @@ export const DESC = {
     "api:bloodHunt": "Call or lift a Blood Hunt: hunters, rumour, Status (Storyteller)",
     "api:diablerieMarks": "The black veins and the taint a diablerist bears, and who feels it",
     "api:oaths": "Swear an oath, or break one and pay its price",
-    "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade",
+    "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade, the Veil or the Delirium",
     "api:skyAndSun": "Set the sky and the light on this scene (cloud, shade, indoors)",
     "api:m20Draw": "Mark the mage to meditate each day and draw the Avatar's or the Node's Quintessence by itself",
     "api:c20Place": "Mark this scene a freehold or glade, or in the Dreaming, for how fast chimerical wounds heal",
@@ -182,7 +183,7 @@ export const DESC = {
     "api:knownNames": "The demons' names you know: mundane, Celestial or True",
     "api:pressName": "Speak a demon's True Name to call it to you and press it to obey",
     "api:endStory": "End the story: what lasts a story is restored or reset for every character",
-    "api:newNight": "Start a new night for every Kindred: blood to rise, Willpower, the watch",
+    "api:newNight": "Start a new night for every character: Willpower, healing rested, frenzy over, and blood to rise for the Kindred",
     "api:endScene": "End the scene: once-a-scene powers and limits reset",
     "api:innerVoice": "The character's inner voice: whisper, propose a check, assign who plays it",
     "api:voices": "The inner voices you play for other characters",
@@ -255,6 +256,9 @@ export const DESC = {
     "api:m20Quiet": "Mage 20th: the Quiet as a state, its form and level; visions, tokens and lines only the player sees; rising out of it",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
+    "api:treasureUse": "A faerie Treasure: dust thrown, a charmed object's cantrip, a Changeling 20th Treasure's Art (its Glamour first)",
+    "api:treasureOath": "An oathcrafted Treasure's bargain kept, so its bound essence stays",
+    "api:treasureGive": "The Storyteller hands out a Treasure from the books, or one holding an Art's cantrip",
     "api:daCantrip": "Dark Ages: a cantrip, Dominion + the trait it names, with the Court's Dominion, its hour and its season",
     "api:daUnleash": "Dark Ages: raw power of a Dominion, Mists + Dominion against the Unleashing dice; Weaving tames it",
     "api:daCounter": "Dark Ages: absorb or scatter a cantrip, or unravel an Unleashing",
@@ -350,6 +354,7 @@ export function groupMenu(kind, sections, { isGM = false } = {}) {
         for (const id of ["act", "resist", "recover", "st", "scene"]) if ((plan[id] ?? []).includes(b.spec)) return id;
         if (/\(GM\)/.test(b.label)) return "st";
         if (b.section === "Scene") return "scene";
+        if (b.section === "Between stories") return "recover"; // B6300: the shared tools (profile-menus SHARED_TOOLS)
         if (/Danger|Beast|Shadow|Rage|Frenzy/i.test(b.section)) return "resist";
         if (/heal|rest|regain/i.test(b.label)) return "recover";
         return "act";

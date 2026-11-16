@@ -9,8 +9,9 @@
  *              was, how and when they died, and what they make of a body drained of blood. It grows with the centuries,
  *              from the priest and the neighbours to DNA and the scanners of the Future Darkness.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
-export const DAY = 86400;
 export const MAX_DAYS = 400;
 
 export const STAGES = [
@@ -71,6 +72,19 @@ export function normRemains(r = {}, now = 0) {
   return {since: Number.isFinite(Number(o.since)) && o.since !== null ? Number(o.since) : now, place: PLACES[o.place] ? o.place : "open",
     cause: CAUSES[o.cause] ? o.cause : "unknown", found: Array.isArray(o.found) ? o.found.filter(x => typeof x === "string").slice(0, 50) : [],
     heated: !!o.heated, shown: STAGES.some(s => s.id === o.shown) ? o.shown : null, note: String(o.note ?? "").slice(0, 400)};
+}
+
+/**
+ * B6390: how a body died, read from what WoDX Actions leaves on the vessel. The Kiss writes the vessel's blood
+ * (flags wodx-actions.vesselBlood {value, at}) before the dead mark, and a botched Stamina roll marks it dying of the
+ * drinking (dying.why "drained"). Blood at 1 or less, taken within the day, or dying of it: drained; else not known.
+ */
+export function causeAtDeath(actionsFlags = {}, now = 0) {
+  const f = actionsFlags && typeof actionsFlags === "object" ? actionsFlags : {};
+  if ( f.dying?.why === "drained" ) return "drained";
+  const vb = f.vesselBlood;
+  if ( vb && Number.isFinite(Number(vb.value)) && Number(vb.value) <= 1 && num(now) - num(vb.at) <= DAY ) return "drained";
+  return "unknown";
 }
 
 /** Who looks into a death found, by the year, and what they can do. Bands end before the next one's year. */

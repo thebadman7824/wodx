@@ -6,11 +6,10 @@
  * an interval of game time passes. Successes add up until the goal is reached; a botch loses them all, and in a
  * delicate task it ruins the work.
  */
+import {DAY, HOUR, MONTH, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, HOUR, MONTH, WEEK};
 
-export const HOUR = 3600;
-export const DAY = 24 * HOUR;
-export const WEEK = 7 * DAY;
-export const MONTH = 30 * DAY;
 export const INTERVALS = {hour: {label: "Each hour", s: HOUR}, day: {label: "Each night or day", s: DAY},
   week: {label: "Each week", s: WEEK}, month: {label: "Each month", s: MONTH}};
 /** Rolls made in one clock change; more wait for the next change. */
@@ -238,9 +237,8 @@ export function recipeCheck(task, {year = 0, carried = []} = {}) {
 
 /** Count one roll (V20 Dark Ages pp. 322-323; the same in V20): 10s count twice with a specialty, each 1 cancels a success, a botch is no successes with a 1. */
 export function countFaces(faces, diff, {specialty = false} = {}) {
-  let raw = 0, ones = 0;
-  for ( const f of faces ) { if ( f === 1 ) ones++; if ( f >= diff ) raw += (specialty && f === 10) ? 2 : 1; }
-  return {successes: Math.max(0, raw - ones), botch: raw === 0 && ones > 0};
+  const r = TERMS.successes(faces, diff, {specialty});
+  return {successes: r.successes, botch: r.botch};
 }
 
 /** How many rolls are due by `now`: one per whole interval passed since `next` came due. */

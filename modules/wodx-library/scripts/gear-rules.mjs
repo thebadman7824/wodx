@@ -3,6 +3,7 @@
  * item data, and picks what an era's characters can carry. No Foundry in here, so the build script and the tests
  * use it too.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const MOD = "wodx-library";
 
@@ -20,7 +21,7 @@ export const SOURCES = {
 export const V20_FIREARM_ERAS = ["great-war", "modern", "time-of-judgment", "future-darkness"];
 
 /** An era that carries another's gear and books: the Time of Future Judgement (2099) is Future Darkness's last year. */
-export const ERA_LIKE = {"time-of-future-judgement": "future-darkness", "age-of-reason": "renaissance", "mid-century": "great-war"};
+export const ERA_LIKE = TERMS.ERA_LIKE;
 export const ERA_ORDER = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 const BLUNT = /\b(sap|club|mace|staff|quarterstaff|hammer|warhammer|war hammer|rock|sling|flail|chair|table|tankard|candlestick|branch|knucks|whip|cat-o)/i;
@@ -188,6 +189,20 @@ export function forEra(items, eraId, where = null) {
   const id = ERA_LIKE[eraId] ?? eraId;
   return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id)).filter(i => !where || gearAt(i, where))
     .sort((a, b) => (order[a.type] - order[b.type]) || a.name.localeCompare(b.name));
+}
+
+/**
+ * B6177: the book item a free-text name means ("Battle-Ax", "a battle-axe", "Pistol, Hvy."), for a long task that
+ * makes one: the same name with or without a leading article and in any case, the era's own first. null if none.
+ */
+const bareName = s => String(s ?? "").toLowerCase().replace(/\s*\((?:fine|masterwork|poor|crude|plain)\)\s*$/, "").replace(/^(?:a|an|the)\s+/, "").replace(/axe\b/g, "ax").replace(/\s+/g, " ").trim();
+export function byName(items = [], name = "", eraId = null) {
+  const want = bareName(name);
+  if ( !want ) return null;
+  const hits = items.filter(i => bareName(i.name) === want);
+  if ( !hits.length ) return null;
+  const id = ERA_LIKE[eraId] ?? eraId;
+  return hits.find(i => (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id)) ?? hits[0];
 }
 
 /** A one-line summary as the sheet's Combat box shows it. */

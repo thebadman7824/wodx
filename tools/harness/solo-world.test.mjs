@@ -134,3 +134,9 @@ test("the seat's side: wired to the panel, the socket and the clock", () => {
   assert.match(main, /installWorld\(/);
   assert.match(main, /world: worldApi/);
 });
+
+test("the seat hears every move of the clock, queued, not throttled (B6169)", () => {
+  const s = readFileSync(join(root, "modules/wodx-solo/scripts/world.mjs"), "utf8");
+  assert.doesNotMatch(s, /t - last < 500/);
+  assert.match(s, /chain = chain\.then\(\(\) => \{ queued = false; return nightTick\(\); \}\)/);
+});

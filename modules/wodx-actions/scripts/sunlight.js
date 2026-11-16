@@ -75,8 +75,12 @@ export function build(ctx) {
             const t = cal.describeTime(time, lat);
             const g = cm.jdnToGregorian(t.jdn);
             const doy = t.jdn - cm.gregorianToJDN(g.year, 1, 1) + 1;
-            const pos = S.sunPosition(lat, S.declination(doy), t.hour + t.minute / 60);
-            return { ...pos, phase: S.phaseOfSun(pos.altitude), dateLabel: t.dateLabel, timeLabel: t.timeLabel, toDawn: cal.secondsToNextDawn(time, lat), isNight: t.isNight };
+            const pos = S.sunPosition(lat, S.declination(doy), t.hour + t.minute / 60 + (t.second ?? 0) / 3600);
+            // B6381: one line between night and day: the clock's isNight (the sun's altitude against -0.833 degrees, to
+            // the second) decides night; the sun's height then sets twilight or full day
+            const own = S.phaseOfSun(pos.altitude);
+            const phase = t.isNight === true ? "night" : t.isNight === false && own === "night" ? "twilight" : own;
+            return { ...pos, phase, dateLabel: t.dateLabel, timeLabel: t.timeLabel, toDawn: cal.secondsToNextDawn(time, lat), isNight: t.isNight };
         } catch (e) {
             return { altitude: -90, azimuth: 0, phase: "night", dateLabel: "", timeLabel: "", toDawn: null, isNight: true, unknown: true };
         }
@@ -102,7 +106,10 @@ export function build(ctx) {
         const pxPerUnit = (scene.grid?.size ?? 100) / (scene.grid?.distance ?? 5);
         const len = Math.min(S.shadowLength(wallHeight(scene), sun.altitude) * pxPerUnit, Math.hypot(scene.width ?? 4000, scene.height ?? 4000));
         const v = S.sunVector(sun.azimuth, sceneNorth(scene));
-        const dest = { x: tok.center.x + v.x * len, y: tok.center.y + v.y * len };
+        // B6424: the ray stops inside the scene, so the map's own edge does not count as a wall
+        const rect = globalThis.canvas?.dimensions?.sceneRect ?? null;
+        const dest = S.rayInScene(tok.center, v, len, rect);
+        if (Math.hypot(dest.x - tok.center.x, dest.y - tok.center.y) < 1) return false;
         try {
             const be = CONFIG.Canvas.polygonBackends.light ?? CONFIG.Canvas.polygonBackends.sight;
             return !!be.testCollision(tok.center, dest, { type: "light", mode: "any" });

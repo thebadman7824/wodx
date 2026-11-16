@@ -38,18 +38,8 @@ export async function run() {
   try {
     const C = game.wodxCombat, V = () => C?.vehicles, ix = game.modules.get(IX)?.api, npc = game.modules.get("wodx-npc")?.api;
     const scene = await G.scene({flags: {[IX]: {ground: "road"}}});
-    // B6210: cars, aeroplanes and rams need a year that has them. A clock left early by an earlier gate (or a world
-    // that starts in 1197) gave "No motor car yet"; the run moves to 1995 when the year is before 1950, and the kit
-    // puts the clock back after
-    {
-      const CH = game.modules.get("wodx-chronicle")?.api, y = Number(CH?.eras?.currentYear?.()) || 0;
-      if ( y && y < 1950 ) {
-        const {getEngine} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
-        await game.time.advance(getEngine().dateToTime({year: 1995, month: 6, day: 15, hour: 21}) - game.time.worldTime);
-        await sleep(500);
-        G.R.notes.push(`the clock stood in ${y}; this run plays in ${CH.eras.currentYear()}`);
-      }
-    }
+    // B6210: cars, aeroplanes and rams need a year that has them (the kit puts the clock back after)
+    await G.yearAtLeast(1950);
     const [driver, pass, foe, nopilot, runner] = await G.make(Actor, [
       body("Gate Vehicles Driver", {dex: 5, drive: 5, sta: 3}),
       body("Gate Vehicles Passenger", {dex: 3, athletics: 3}),
@@ -170,7 +160,7 @@ export async function run() {
       const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
       const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
-      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, fae: faeOpts.map(x => x.id), gryNo, dodge, kind: c.kind});
+      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {fae: faeOpts.map(x => x.id), gryOpts: o(gry).map(x => `${x.id}${x.disabled ? "(off)" : ""}`).slice(0, 4), bikeOk, faeNo, gryNo, kind: c.kind, year: c.year, dodge});
     });
 
     await G.step("12. riding the beast itself", async () => {
@@ -186,7 +176,9 @@ export async function run() {
       const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
       const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(ts.id).x;
       await tr.update({x: tr.x + g * 2, y: tr.y});
+      const r0 = tr.x, drv = foundry.utils.deepClone(scene.tokens.get(ts.id)?.flags?.[IX]?.driver ?? null);
       const carried = await waitFor(() => scene.tokens.get(ts.id).x === x0 + g * 2, 8000);
+      seen.carry = {x0, want: x0 + g * 2, beastNow: scene.tokens.get(ts.id).x, riderFrom: r0, riderNow: scene.tokens.get(tr.id)?.x, driver: drv, combat: !!game.combat?.started};
       const ride = ix.rideOf(tr);
       const own = ride?.beast?.dexterity === 4;
       await steed.update({"system.health.damage.lethal": 7});

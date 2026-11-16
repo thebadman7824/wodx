@@ -3,8 +3,8 @@
  * the tracker, the ledger, the beats, the dreams and the clock: how the party stands, what runs out or comes next,
  * what is still open, and which debts and grudges come due. It changes nothing. No Foundry here.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const DAY = 86400;
 const num = v => (v === null || v === undefined || v === "" ? NaN : Number(v));
 
 /** "in 3 h", "in 4 days", "2 days ago", "now". */
@@ -28,17 +28,58 @@ export function partyRow({id, name, type, system = {}, statuses = [], where = nu
   const taken = b + l + ag;
   const wp = system?.advantages?.willpower ?? system?.willpower;
   const bp = system?.advantages?.bloodpool ?? system?.bloodpool;
-  const hasBlood = /vampire/i.test(String(type ?? "")) || !!system?.settings?.hasbloodpool;
+  const variant = String(system?.settings?.variant ?? "").toLowerCase();
+  const hasBlood = /vampire/i.test(String(type ?? "")) || !!system?.settings?.hasbloodpool || variant === "ghoul";
   return {
     id: String(id ?? ""), name: String(name ?? ""),
     wounds: {bashing: b, lethal: l, aggravated: ag, taken, levels, down: taken >= levels},
     willpower: wp && Number.isFinite(Number(wp.permanent)) ? {now: Number(wp.temporary) || 0, of: Number(wp.permanent) || 0} : null,
-    blood: hasBlood && bp ? {now: Number(bp.temporary) || 0, of: Number(bp.max) || 10} : null,
+    blood: hasBlood && bp && variant !== "kindredeast" ? {now: Number(bp.temporary) || 0, of: Number(bp.max) || 10} : null,
+    pools: linePools(type, system),
     statuses: [...new Set((statuses ?? []).map(String))].sort(),
     where: where ? String(where) : null,
     ahead: Number(ahead) || 0
   };
 }
+
+/**
+ * B6320: each line's own pools on the party row, as the Kindred's blood was: [{key, label, now, of}], the one that
+ * runs out first leading. A trait the sheet does not carry is left out, never shown as zero.
+ *   Kuei-jin  Yang Chi, Yin Chi (Kindred of the East)     Garou, Fera  Rage, Gnosis (W20)
+ *   mage      Quintessence, Paradox (M20)                 changeling   Glamour, Banality (C20)
+ *   wraith    Pathos, Corpus, Angst (Wraith 20th)         hunter       Conviction (Hunter: the Reckoning)
+ *   mummy     Sekhem (Mummy: the Resurrection)            demon        Faith, Torment (Demon: the Fallen)
+ */
+export const LINE_POOLS = {
+  "kuei-jin": [["yangchi", "Yang Chi"], ["yinchi", "Yin Chi"]],
+  werewolf: [["rage", "Rage"], ["gnosis", "Gnosis"]],
+  "changing breed": [["rage", "Rage"], ["gnosis", "Gnosis"]],
+  mage: [["quintessence", "Quintessence", "top"], ["paradox", "Paradox", "top", true]],
+  changeling: [["glamour", "Glamour"], ["banality", "Banality", null, true]],
+  wraith: [["pathos", "Pathos"], ["corpus", "Corpus"], ["angst", "Angst", null, true]],
+  hunter: [["conviction", "Conviction"]],
+  mummy: [["sekhem", "Sekhem"]],
+  demon: [["faith", "Faith"], ["torment", "Torment", null, true]]
+};
+export function poolLineOf(type, system = {}) {
+  const t = String(type ?? "").toLowerCase();
+  if ( t === "vampire" ) return String(system?.settings?.variant ?? "").toLowerCase() === "kindredeast" ? "kuei-jin" : "vampire";
+  return t.startsWith("changel") && t !== "changing breed" ? "changeling" : t;
+}
+export function linePools(type, system = {}) {
+  const rows = LINE_POOLS[poolLineOf(type, system)] ?? [];
+  const out = [];
+  for ( const [key, label, where, rising] of rows ) {
+    const v = where === "top" ? system?.[key] : system?.advantages?.[key];
+    if ( !v || typeof v !== "object" ) continue;
+    const of = Number(v.permanent ?? v.max), now = Number(v.temporary ?? v.permanent);
+    if ( !Number.isFinite(now) ) continue;
+    out.push({key, label, now, of: Number.isFinite(of) && of > 0 ? of : 10, rising: !!rising});
+  }
+  return out;
+}
+/** Words for the pools: "Yang Chi 4/6; Yin Chi 3/3". */
+export const poolWords = pools => (pools ?? []).map(p => `${p.label} ${p.now}/${p.of}`).join("; ");
 
 /** Wounds in words. */
 export function woundWords(w) {
@@ -49,7 +90,8 @@ export function woundWords(w) {
 
 /** Who most needs a look first: down, then the most hurt, then low blood, then by name. */
 export function sortParty(rows) {
-  const lowBlood = r => (r.blood && r.blood.of ? r.blood.now / r.blood.of : 1);
+  // B6320: the lowest of the blood or the line's own spending pools (not the ones that rise, as Paradox or Angst)
+  const lowBlood = r => Math.min(r.blood && r.blood.of ? r.blood.now / r.blood.of : 1, ...(r.pools ?? []).filter(p => !p.rising && p.of).map(p => p.now / p.of));
   return [...rows].sort((a, b) => (b.wounds.down - a.wounds.down) || (b.wounds.taken - a.wounds.taken) || (lowBlood(a) - lowBlood(b)) || a.name.localeCompare(b.name));
 }
 

@@ -23,3 +23,9 @@ test("merging a condition with the traits' body adds the levels and keeps the st
   assert.deepEqual(m, {bruised: 4, shift: 1, ease: 99, silver: true, names: ["Huge Size", "Numbing"]});
   assert.equal(R.mergeBody(null, m), m);
 });
+
+test("B6153: ending a body condition asks the system for fresh totals", async () => {
+  const {readFileSync} = await import("node:fs");
+  const m = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
+  assert.match(m, /Hooks\.on\("deleteActiveEffect"[\s\S]{0,600}bodyBruised[\s\S]{0,300}"system\.settings\.isupdated": false/);
+});

@@ -12,6 +12,7 @@ import * as H from "./hardship-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -46,9 +47,7 @@ async function rollStamina(a, diff, dice = stamina(a)) {
   const r = new Roll(`${dice}d10`);
   await r.evaluate();
   const faces = r.dice.flatMap(d => d.results.map(x => x.result));
-  let s = 0, ones = 0;
-  for ( const f of faces ) { if ( f === 1 ) ones++; if ( f >= diff ) s++; }
-  return {successes: Math.max(0, s - ones), faces};
+  return {successes: TERMS.successes(faces, diff).successes, faces};
 }
 
 /** Check one character up to now. Returns {lines, bashing, before} or null when nothing came due. */
@@ -214,6 +213,10 @@ export async function hardshipDialog() {
 }
 
 export function registerHardshipHooks() {
+  // B6169: the card's "dice off every roll" reaches the rolls: a WoDX Chronicle traits source reads needs.tired
+  const source = (a, ctx = {}) => (setting("hardship") ? H.tiredEffects(a?.flags?.[MOD]?.needs, ctx) : []);
+  const add = () => { try { chron()?.traits?.addSource?.(source); } catch (e) { console.warn(`${MOD} | tired rolls`, e); } };
+  if ( chron()?.traits ) add(); else Hooks.once("wodxChronicleReady", add);
   Hooks.on("wodxSkipEnd", () => { tick().catch(e => console.error(`${MOD} | hardship`, e)); });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } tick().catch(e => console.error(`${MOD} | hardship`, e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {

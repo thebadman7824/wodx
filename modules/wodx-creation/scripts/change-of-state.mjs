@@ -4,10 +4,11 @@ import {CLANS, EMBRACE, GHOUL} from "../data/vampire.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 import {setAlly} from "./apps.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {setLineage, setChronology, recordDrink, writeLineageJournal, dateLabel, ordinal} from "./lineage.mjs";
+import {setLineage, setChronology, recordDrink, writeLineageJournal, dateLabel, ordinal, handOver} from "./lineage.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const BEFORE_FOLDER = "WoDX · Before the Embrace";
-const NIGHT = 86400;
+const NIGHT = DAY;
 
 /* -------------------------------------------- */
 /*  The Embrace                                 */
@@ -90,6 +91,7 @@ export async function embrace(mortal, {sire = null, clanName, generation, startB
   const folder = game.folders.find(f => f.type === "Actor" && f.name === BEFORE_FOLDER)
     ?? await Folder.create({name: BEFORE_FOLDER, type: "Actor", flags: {[MODULE_ID]: {kind: "before-embrace"}}});
   await mortal.update({folder: folder.id});
+  await handOver(mortal, vampire);
 
   let moved = 0;
   if ( moveTokens ) {

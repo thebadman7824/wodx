@@ -7,6 +7,7 @@
  *   the watcher  a card, window or queue entry that waits for a Storyteller is answered after a short wait, or logged
  *   the log      what the seat decided, kept from the player until asked for
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 export const NAME = "The Lone Chronicle";
 /** Worlds the mode never acts in, whatever the setting says. */
 export const NEVER_WORLDS = ["rothenstein-live"];
@@ -117,6 +118,8 @@ export const PANEL = [
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
   // B6040: towns with no map drawn, as card scenes
   {id: "places", label: "Places with no map", icon: "fa-solid fa-map-location-dot"},
+  // B6533: step 5, the years slept through
+  {id: "years", label: "Sleep through the years", icon: "fa-solid fa-bed"},
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
@@ -224,7 +227,7 @@ export function wayIn(scene = {}, tokenSize = 1) {
 export function nightStart(now, toNextDusk) {
   const n = Number(now) || 0, d = Number(toNextDusk);
   if ( !Number.isFinite(d) || d <= 0 ) return n;
-  return Math.max(0, n + d - 86400);
+  return Math.max(0, n + d - DAY);
 }
 
 /** The log as the curtain shows it: tonight's entries, oldest first, in plain words. */
@@ -419,7 +422,9 @@ export function pickLanding(scenes = [], chosen = "") {
 
 /**
  * The plain scene made when the world has no map at all: a dark square of night with a grid, token vision on so the
- * night shows. A map can be set on it later; the flag keeps it the landing.
+ * night shows. A map can be set on it later; the flag keeps it the landing. Only this scene is dark by itself: an
+ * existing map the player lands on shows the light the clock gives it (WoDX Atmosphere's light from the clock, on by
+ * default out of doors, B6168), so the arrival is "at night" only when the clock says night (B6169).
  */
 export const LANDING_BLANK = {
   name: "Rothenstein by night: the way in",

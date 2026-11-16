@@ -38,6 +38,7 @@ import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
 import {normAftermath} from "./battle-aftermath.mjs";
 import {normCampaign} from "./siege-works-rules.mjs";
 import * as WL from "./war-lands-rules.mjs";
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const BATTLES_VERSION = 1;
 export const BATTLES_CAP = 200;
@@ -45,7 +46,6 @@ export const BATTLES_CAP = 200;
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const str = (v, max = 120) => String(v ?? "").trim().slice(0, max);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-const HOUR = 3600, DAY = 86400;
 
 /**
  * How war is fought in each age. `phase` is the game time one phase of a battle takes; `kill` the share of the
@@ -689,6 +689,16 @@ export function hazardFor(age, stance, attention = false) {
  * What a counterattack roll does: damage dice twice its successes, aggravated every third phase (fire, oil, blessed
  * weapons), and five or more successes a stake through a Cainite's heart (others take the damage, Spoils of War p. 44).
  */
+/**
+ * B6324: who a blow in the press can pin like a stake. A Kindred, always; a Kuei-jin only when aspected to Yin or Yang
+ * (wood paralyses the Yin, a foot of metal the Yang: Kindred of the East pdf 73); a Balanced one (Yin and Yang within a
+ * point, as Yang 4, Yin 3: pdf 72) is not pinned.
+ */
+export function stakeable(type = "", {variant = "", yin = 0, yang = 0} = {}) {
+  if ( !/vampire/i.test(String(type)) ) return false;
+  if ( String(variant ?? "").toLowerCase() !== "kindredeast" ) return true;
+  return Math.abs((Number(yin) || 0) - (Number(yang) || 0)) >= 2;
+}
 export function counterResult(successes, phaseNo, {cainite = false} = {}) {
   const k = Math.max(0, n(successes));
   return {dice: 2 * k, type: n(phaseNo) > 0 && n(phaseNo) % 3 === 0 ? "aggravated" : "lethal", staked: cainite && k >= 5};

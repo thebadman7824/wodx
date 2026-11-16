@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
 import * as NPW from "./npc-power-rules.js";
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -21,6 +22,7 @@ import { aim } from "./aim.js";
 import * as DE from "./demon-evocations.js";
 import * as EF from "./effects.js";
 import * as P from "./profiles.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -67,7 +69,7 @@ export function build(ctx) {
     // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
     const sceneKey = () => `s${LIM.sceneNo()}`;
     const flag = a => a.getFlag(MOD, "demon") ?? {};
-    const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400);
+    const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / DAY);
     const saveFlag = (a, patch) => ctx.setFlag(a, "demon", { ...flag(a), ...patch });
     // Evocations still running (p. 171: as many at once as the permanent Faith); each ends at its time
     const running = a => (flag(a).running ?? []).filter(x => n(x.until) > (game.time?.worldTime ?? 0));
@@ -118,8 +120,16 @@ export function build(ctx) {
             await updateActor(actor, { "system.advantages.torment.temporary": Math.max(0, i.torment.temp + k) });
             return i.torment.temp ? `−1 temporary Torment (${Math.max(0, i.torment.temp + k)}).` : "No temporary Torment to lose.";
         }
+        // B6308: a redeemed demon who gains Torment falls from grace again (WoDX Chronicle roads.mjs)
+        let fell = "";
+        if (actor.getFlag?.(MOD, "redeemed")) {
+            await actor.unsetFlag(MOD, "redeemed");
+            for (const t of actor.getActiveTokens?.(false, true) ?? []) { try { await (t.document ?? t).update({ light: { dim: 0, bright: 0 } }, {}); } catch (e) { /* no token */ } }
+            fell = "Grace is lost: the demon falls again. ";
+        }
         const r = D.addTorment(i.torment, k);
         await updateActor(actor, { "system.advantages.torment.temporary": r.temp, "system.advantages.torment.permanent": r.perm });
+        if (fell) return `${fell}+${k} temporary Torment (${r.temp}).`;
         if (r.gained) return `Ten Torment points become a permanent point: Torment ${r.perm}.${r.lost ? " Torment 10: consumed, the character leaves play." : r.perm >= 7 && r.perm <= 10 ? ` A high-Torment power of the form may be added (${D.highSlots(r.perm)}).` : ""}`;
         return `+${k} temporary Torment (${r.temp}).`;
     }
@@ -230,8 +240,11 @@ export function build(ctx) {
             if (fromPool && !(await faith(actor, -fromPool))) return null;
             if (plan.cost > fromPool) plan.notes.push(`${plan.cost - fromPool} Faith drawn from the ravaged thralls`);
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp, autoSuccesses: plan.autoSuccesses });
-            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
+            // B6411: the target's ward or Magic Resistance makes an evocation on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.notes.push(...rm.parts);
+            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + (Number(rm.diff) || 0)), { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const out = D.evocationOutcome(r, { torment: i.torment.perm, chooseHigh: !!fd.dark, rule: i.rule });
             const notes = [];
             if (out.faithLoss) { await faith(actor, -1); notes.push("The botch costs a Faith point."); }
@@ -490,7 +503,8 @@ export function build(ctx) {
         const content = `<form><div class="form-group"><label>What</label><select name="k" data-fixed><option value="g">Holy ground</option><option value="o">A sacred object against the skin</option></select></div>
           <div class="form-group"><label>Its Faith potential (1–5)</label><input type="number" name="p" min="1" max="5" value="1"/></div></form>`;
         return dialog(`The holy: ${actor.name}`, content, "Apply", async fd => {
-            const h = D.holy(i.torment.perm, n(fd.p), { ground: fd.k === "g" });
+            // B6308: the redeemed are angels again; holy ground and holy things do not burn them (Demon: The Fallen p. 160)
+            const h = actor.getFlag?.(MOD, "redeemed") ? { harmed: false, why: "Redeemed: the holy welcomes an angel" } : D.holy(i.torment.perm, n(fd.p), { ground: fd.k === "g" });
             let body = `<div class="vta-sec">Torment ${i.torment.perm}; potential ${n(fd.p)}.</div>`, rolls = [];
             if (!h.harmed) body += `<div class="vta-res good">${esc(h.why)}.</div>`;
             else {

@@ -7,6 +7,7 @@
  */
 import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
@@ -19,6 +20,7 @@ import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
 import { outcomesOf } from "./mage-da-effects.js";
 import * as FOM from "./fomor.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -433,7 +435,7 @@ export function build(ctx) {
      */
     async function meditateDaily() {
         if (!isActiveGM()) return [];
-        const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
+        const today = Math.floor(game.time.worldTime / DAY), week = Math.floor(today / 7);
         const out = [];
         for (const actor of game.actors ?? []) {
             const plan = actor.getFlag?.(MOD, "meditates");
@@ -457,7 +459,7 @@ export function build(ctx) {
 
     async function meditate(actor) {
         const i = info(actor);
-        const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
+        const today = Math.floor(game.time.worldTime / DAY), week = Math.floor(today / 7);
         const log = actor.getFlag?.(MOD, "meditation") ?? {};
         if (log.day === today) return ctx.notify("Once a day.");
         const earlier = log.week === week ? n(log.count) : 0;
@@ -495,12 +497,13 @@ export function build(ctx) {
         if (!list.length) return ctx.notify(`${actor.name} knows no Gifts. Use "Learn a Gift" first.`);
         let tgt = targetActorOf();
         const rows = list.map(it => { const g = giftData(it); return [it.id, `${it.name}${g ? ` (${g.l})` : ""}`]; });
-        const content = `<form class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
+        // B6448: a div, not a form: the dialog wraps the content in its own form, and a form inside a form is dropped
+        const content = `<div class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
           <div class="form-group"><label>Gift</label>${rows.length > 5 ? searchBox("select[name=gift]", "Search Gifts…", "Search Gifts") : ""}<select name="gift" data-fixed>${rows.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-gift-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6"/></div>
           <div class="form-group"><label>Extra points (variable costs)</label><input type="number" name="extra" value="0" min="0"/></div>
-          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></form>`;
+          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></div>`;
         const i = info(actor);
         let gauntlet = null;
         try {
@@ -539,10 +542,12 @@ export function build(ctx) {
             const code = g?.r ?? (it.system?.dice1 ? `${it.system.dice1}${it.system.dice2 ? `+${it.system.dice2}` : ""}` : null);
             if (code) {
                 const pool = poolOf(actor, code, i);
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + lim.diff);
+                // B6411: the target's ward or Magic Resistance makes a Gift on them harder
+                const rm = TH.targetResist(actor, ["magic"]);
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
@@ -590,6 +595,15 @@ export function build(ctx) {
         return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
             const g = pool.find(x => x.id === fd.gift); if (!g) return null;
             const own = ownOf(g), xp = G.giftXP(g.l, own);
+            // B6274: with WoDX Creation, a Gift is bought like any other trait: the chart of the line, a spirit or a
+            // Garou to teach it, and it is known when the study is done (or at once when the Storyteller waives it)
+            const cr = game.modules.get("wodx-creation")?.api;
+            if (fd.xp && cr?.data?.newPowerOption && cr?.xp?.requestSpend) {
+                const option = cr.data.newPowerOption(actor, "gift", g.n, { own, level: g.l, item: giftItem(g) });
+                if (!option) return null;
+                if (!option.ok) { ui.notifications.warn(option.reason); return null; }
+                return cr.xp.requestSpend(actor, option);
+            }
             await actor.createEmbeddedDocuments("Item", [giftItem(g)]);
             let xpNote = "";
             if (fd.xp) {
@@ -942,6 +956,21 @@ export function build(ctx) {
         return lines;
     }
 
+    /**
+     * A new story (B6303): each shapechanger's Rage is rolled afresh on one die, up to the permanent rating
+     * (DA:W p. 91; W20 p. 145). Fera whose Rage does not come from the moon, or who have none, are left alone.
+     * Returns a line for the end-of-story card, or "".
+     */
+    async function newStory(a) {
+        if (!a || !isShifter(a) || !setting("moonRage")) return "";
+        const i = info(a);
+        if (i.fera?.rage === false || (i.fera?.rageAt && i.fera.rageAt !== "moon") || i.rage.perm <= 0) return "";
+        const r = await new Roll("1d10").evaluate();
+        const to = G.newStoryRage(r.total, i.rage.perm);
+        if (to !== i.rage.temp) await a.update({ "system.advantages.rage.temporary": to });
+        return `${a.name}: Rage rolled for the new story (${r.total}): ${i.rage.temp} → ${to} (${basis() === "daw" ? "DA:W p. 91" : "W20 p. 145"})`;
+    }
+
     /** Each new round (active GM): shapechangers in the fight regenerate. */
     async function regenRound(combat) {
         if (!isActiveGM() || !setting("autoRegen")) return [];
@@ -994,7 +1023,7 @@ export function build(ctx) {
             set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
     }
     return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
-        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, regenRound, embracePain, onChatButton, setForm, info };
+        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
 }
 
 /** Settings this part adds (registered by main.js). */

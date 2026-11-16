@@ -1,3 +1,5 @@
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 /**
  * WoDX Actions (B5780-B5791): effects WoDX works out itself, for powers whose book effect is more than a keyword's
  * plain result. Each runs on the active Storyteller's client from the effects card (effects.js applyCore), and returns
@@ -26,10 +28,13 @@ const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.use
 
 export const KINDS = new Set(["memory", "vision", "seize", "mark", "cleanse", "remote", "path", "detect", "question"]);
 const PATH_FLAG = "demonPath";
+/** B6379: the mark a sent vision leaves on the token while it plays (Demon: The Fallen, Lore of the Celestials). */
+export const VISION = {id: "vision", name: "Seeing a vision", img: "icons/svg/eye.svg", source: "Demon: The Fallen p. 175",
+  summary: "A vision sent into the mind plays out before their eyes.", mods: {}};
 
 /** The mark's span by successes (DtF Lore of Radiance): a day, a week, a month, a year. */
-export const markSpan = s => (n(s) >= 4 ? {label: "a year", seconds: 365 * 86400} : n(s) === 3 ? {label: "a month", seconds: 30 * 86400}
-  : n(s) === 2 ? {label: "a week", seconds: 7 * 86400} : {label: "a day", seconds: 86400});
+export const markSpan = s => (n(s) >= 4 ? {label: "a year", seconds: 365 * DAY} : n(s) === 3 ? {label: "a month", seconds: 30 * DAY}
+  : n(s) === 2 ? {label: "a week", seconds: 7 * DAY} : {label: "a day", seconds: DAY});
 /** Who the mark moves: an NPC whose Wits is below the successes acts on it; the rest roll Willpower 7 and resist on a success. */
 export const markTakes = (wits, successes, resisted = 0) => n(wits) < n(successes) || n(resisted) < 1;
 /** The ailments Cleanse purges, by an effect's name or status. */
@@ -42,8 +47,7 @@ async function rollPool(dice, diff) {
   if ( !d ) return {successes: 0, faces: []};
   const r = await new Roll(`${d}d10`).evaluate();
   const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
-  return {successes: Math.max(0, hits - ones), faces};
+  return {successes: TERMS.successes(faces, diff).successes, faces};
 }
 
 /** A hidden roll card, for the Storyteller only (standing rule 19). */
@@ -90,7 +94,9 @@ export async function apply(item, casterName, h) {
       if ( !a ) return {note: `${o.label}: no one to reach`};
       const said = String(o.say || "a vision that the Storyteller describes").slice(0, 500);
       await tell(a, `A vision comes to ${a.name}`, `<p>${esc(said)}</p><p class="wodx-quiet">${esc(o.label)}, sent by ${esc(casterName)}.</p>`);
-      const eff = await timed(a, {name: "Sees a vision", img: "icons/svg/eye.svg", description: `${said} (${casterName})`, key: "wodx-act-vision"});
+      // B6379: the vision shows on the target's token while it plays (a status the map draws), not only on a card
+      try { chron()?.registerCondition?.(VISION); } catch (e) { /* Chronicle off: the effect alone */ }
+      const eff = await timed(a, {name: "Sees a vision", img: "icons/svg/eye.svg", description: `${said} (${casterName})`, key: "wodx-act-vision", condition: VISION.id});
       return {uuid: a.uuid, effect: eff?.uuid ?? null};
     }
     case "seize": {
@@ -232,6 +238,30 @@ async function questionAct(item, casterName, h, caster, a) {
 /* ---- Lore of Paths ---- */
 
 const pathRegions = scene => [...(scene?.regions ?? [])].filter(r => r.flags?.[MOD]?.[PATH_FLAG]);
+/** A teleport behaviour's destinations as an array (Foundry keeps them in a Set). */
+/** B6445: a destination kept relative ("..", "..<id>", ".Region.<id>") is read as the whole uuid of the region it names. */
+export function absDest(d, b) {
+  const s = String(d ?? "");
+  if ( !s.startsWith(".") ) return s;
+  for ( const rel of [b, b?.parent, b?.parent?.parent] ) {
+    if ( !rel ) continue;
+    try { const doc = globalThis.fromUuidSync?.(s, {relative: rel}); if ( doc?.documentName === "Region" ) return doc.uuid; } catch (e) { /* try the next */ }
+  }
+  return s;
+}
+export const destsOf = b => [...(b?.system?.destinations ?? [])].map(d => absDest(d, b));
+/**
+ * B6445: does a destination name this region? Foundry may keep it whole ("Scene.<id>.Region.<id>") or relative to its
+ * scene (".Region.<id>", as WoDX Otherworlds' resolveRegion reads it), so the region is matched by its ids.
+ */
+export function namesRegion(uuid, region) {
+  if ( !region ) return false;
+  if ( uuid === region.uuid ) return true;
+  const m = String(uuid ?? "").match(/^(?:Scene\.([^.]+))?\.?Region\.([^.]+)$/);
+  return !!m && m[2] === region.id && (!m[1] || !region.parent?.id || m[1] === region.parent.id);
+}
+/** Does this teleport behaviour lead into the region? */
+export const leadsTo = (b, region) => destsOf(b).some(d => namesRegion(d, region));
 
 async function pathAct(item, casterName, h, caster) {
   const o = item.out ?? {}, scene = canvas?.scene;
@@ -261,7 +291,9 @@ async function pathAct(item, casterName, h, caster) {
   if ( !all.length ) return {note: `${o.label}: no path on this scene to work on`};
   const pick = all.length === 1 ? all[0] : h.docOf(await h.choose(`Which path does ${casterName} ${o.op}?`, all.map(r => [r.uuid, r.name])));
   if ( !pick ) return {note: `${o.label}: no path chosen`};
-  const twin = all.find(r => r.id !== pick.id && r.behaviors?.some?.(b => (b.system?.destinations ?? []).includes?.(pick.uuid)));
+  // B6445: a teleport behaviour's destinations are a Set (no includes), whole or relative uuids, so they are spread
+  // and matched by the region's ids
+  const twin = all.find(r => r.id !== pick.id && r.behaviors?.some?.(b => leadsTo(b, pick)));
   const both = [pick, twin].filter(Boolean);
   if ( o.op === "conceal" ) {
     const prev = both.map(r => ({uuid: r.uuid, visibility: r.visibility}));
@@ -281,10 +313,14 @@ async function pathAct(item, casterName, h, caster) {
     if ( !to ) return {note: `${o.label}: the path is left as it was`};
     const b = pick.behaviors.find(x => x.type === "teleportToken");
     if ( !b ) return {note: `${o.label}: that region carries no one`};
-    const prev = [{uuid: b.uuid, destinations: [...(b.system?.destinations ?? [])]}];
-    await b.update({"system.destinations": [to === "loop" ? pick.uuid : to]});
+    const prev = [{uuid: b.uuid, destinations: destsOf(b)}];
+    const dest = to === "loop" ? pick.uuid : to;
+    await b.update({"system.destinations": [dest]});
+    // B6445: what Foundry kept, for the record (a gate reads it when the warp does not show)
+    const kept = destsOf(pick.behaviors.get?.(b.id) ?? b);
+    if ( !kept.some(d => d === dest || namesRegion(d, h.docOf(dest))) ) console.warn(`WoDX | ${o.label}: the path was not warped`, {dest, kept});
     const eff = await ends({op: "warp", prev});
-    return {pathPrev: prev, effect: eff?.uuid ?? null};
+    return {pathPrev: prev, effect: eff?.uuid ?? null, warp: {to: dest, kept}};
   }
   return {note: `${o.label}: ${o.text}`};
 }

@@ -13,6 +13,7 @@
  */
 import * as M from "./memory-rules.mjs";
 import * as GR from "./grudge-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const TYPE = `${MOD}.grudge`;
@@ -22,7 +23,7 @@ const chron = () => game.modules.get("wodx-chronicle")?.api;
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
 const actorOf = x => (x?.actor ?? (typeof x === "string" ? game.actors.get(x) : x?.id ? game.actors.get(x.id) ?? x : null));
 const now = () => Number(game.time?.worldTime) || 0;
-const isNpc = a => !!a && !a.hasPlayerOwner;
+const isNpc = TERMS.isNPC;
 const temperFor = a => M.temperOf(a?.system?.nature);
 const memOf = a => M.normMemory(a?.flags?.[MOD]?.memory);
 

@@ -9,6 +9,7 @@
  */
 import {MODULE_ID} from "./util.mjs";
 import * as R from "./scars-rules.mjs";
+import {isLightTouch, holdScar, holdHeal} from "./quiet.mjs";
 
 const FLAG = "scars";
 const IX = "wodx-interactables";
@@ -80,6 +81,8 @@ export async function scar({scene, kind, severity = 1, at = null, source = "", s
   if ( !game.user.isGM ) return null;
   const sc = sceneOf(scene), K = R.KINDS[R.SCAR_OF[kind] ?? kind];
   if ( !sc || !K ) return null;
+  // B6380: in Light-touch mode the map is left as it stands; the scar is made when the mode ends
+  if ( isLightTouch() ) { await holdScar({scene: sc.id, kind, severity, at, source, seed: seed || `${sc.id}:${now()}:${source}`, label}); return null; }
   const k = R.SCAR_OF[kind] ?? kind;
   const area = at && Number.isFinite(Number(at.x)) ? {x: Number(at.x), y: Number(at.y), radius: Math.max(20, Number(at.radius) || 150)} : null;
   const inv = inventory(sc);
@@ -167,6 +170,8 @@ export async function undoFor({source, since = 0} = {}) {
 export async function heal({scene, share = 0.2} = {}) {
   if ( !game.user.isGM ) return 0;
   const sc = sceneOf(scene);
+  // B6380: the week's rebuilding waits in Light-touch mode and is done in one go when the mode ends
+  if ( isLightTouch() ) { await holdHeal(sc?.id, share); return 0; }
   let done = 0;
   for ( const rec of list(sc) ) {
     const r = foundry.utils.deepClone(rec);

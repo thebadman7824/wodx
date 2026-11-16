@@ -24,3 +24,20 @@ Not used: Ivan Duch's free set (its terms ban the files in Foundry modules or pa
 5. In Foundry, open the Atmosphere window, build the kit's playlists, and press Credits journal.
 
 The sorter refuses any source that isn't on the list above, a Freesound or Free Music Archive file without an accepted licence, and anything that isn't an audio file. It never trims, loops or mixes a file.
+
+## Recorded cues (B6260 to B6264)
+
+Ben asked on 15 November 2026 for every generated sound to be swapped for a real recording where one can be had. The
+cues (dawn, sunset, notice, birdsong, cock-crow) and the Beast's heartbeat now come from Freesound recordings under CC0
+or CC BY only, listed slot by slot in `tools/atmosphere/real-cues.json` with spares in order. On Ben's PC:
+
+    node tools/atmosphere/fetch-cues.mjs --to "<Data>/wodx-kits" --ffmpeg "%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe" --report cues-report.md
+
+It reads each Freesound page, refuses anything that is not CC0 or CC BY, downloads Freesound's preview, cuts it to the
+slot's length from its first sound, fades it, levels it and writes `<kit>/sounds/<cue>.ogg` (or `<cue>-<faith>.ogg`)
+with a credits.json entry that says what was changed, as CC BY asks. Birdsong, cock-crow and the heartbeat go to
+`wodx-kits/common/sounds/`. Then press Build playlists in the Atmosphere window and Credits journal.
+
+Where the scene's land keeps another faith, its own dawn and sunset sound plays: the call to prayer, the semantron,
+the conch, the temple bell and gong, the long monastery horns. The generated cues stay in the module and play wherever
+no kit folder has a recording, so a world without the kit folders still has every cue.

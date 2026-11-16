@@ -17,6 +17,7 @@ import * as GR from "./grudge-rules.mjs";
 import * as FW from "./follow-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude, servesOf, isPasserby, isAnimal = () => false} = ctx;
@@ -256,7 +257,7 @@ export function build(ctx) {
   async function knowAndAct(tok, iTok, a, culprit, desc, roll, tpl) {
     const pool = Math.max(1, attr(a, "perception") + abil(a, "alertness"));
     const r = await new Roll(`${pool}d10cs>=${roll.difficulty}`).evaluate();
-    const ones = r.dice[0]?.results?.filter(x => x.result === 1).length ?? 0, net = r.total - ones;
+    const net = TERMS.successes((r.dice[0]?.results ?? []).map(x => x.result), roll.difficulty).net;
     await r.toMessage({speaker: {alias: tok.name}, flavor: `${roll.text}: does ${tok.name} know them?`}, {rollMode: "gmroll"});
     if ( net <= 0 ) return "no";
     const prof = (() => { try { return profileFor?.(a, {phases: false}) ?? {}; } catch (e) { return {}; } })();

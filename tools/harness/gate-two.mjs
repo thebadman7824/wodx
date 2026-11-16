@@ -19,6 +19,8 @@ if ( !gate || !/^[\w-]+$/.test(gate) ) { console.error("Usage: node tools/harnes
 
 async function join(browser, name, password = "") {
   const ctx = await browser.newContext({ignoreHTTPSErrors: true, viewport: {width: 1600, height: 1000}});
+  // A large timing buffer, so a gate can see every file the game fetched (the browser keeps 250 by default)
+  await ctx.addInitScript(() => { try { performance.setResourceTimingBufferSize(100000); } catch {} });
   const page = await ctx.newPage();
   page.on("pageerror", e => console.log(`[${name}] page error: ${e.message}`));
   await page.goto(`${url}/join`, {waitUntil: "domcontentloaded"});

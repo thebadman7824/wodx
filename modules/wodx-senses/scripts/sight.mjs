@@ -7,6 +7,7 @@ import * as S from "./sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import * as O from "./otherworld-sight-rules.mjs";
 import * as OW from "./otherworld-sight.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
@@ -140,7 +141,7 @@ async function overload(tokens, why) {
   if ( !hit.length ) return;
   const gms = game.users.filter(u => u.isGM).map(u => u.id);
   const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;");
-  // B5822: the Willpower roll is made and a failure stuns (Dazed) and deafens for the turn, on the token
+  // B5822, B6572: the Willpower roll is made and a failure leaves the character Dazed for the turn, on the token
   const T = game.modules.get("wodx-chronicle")?.api;
   const rows = [], rolls = [];
   for ( const t of hit ) {
@@ -150,17 +151,17 @@ async function overload(tokens, why) {
     if ( w ) {
       const r = await new Roll(`${w}d10cs>=${S.OVERLOAD.difficulty}`).evaluate();
       const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
-      const succ = Math.max(0, faces.filter(x => x >= S.OVERLOAD.difficulty).length - faces.filter(x => x === 1).length);
+      const succ = TERMS.successes(faces, S.OVERLOAD.difficulty).net;
       ok = succ > 0; rolls.push(r);
       line = `Willpower ${w} at ${S.OVERLOAD.difficulty} (${faces.join(", ")}): ${succ} success${succ === 1 ? "" : "es"}.`;
     } else line = "No Willpower to roll.";
     if ( !ok ) {
       if ( T?.applyTimed ) {
-        await T.applyTimed(t.actor, {name: "Senses overwhelmed", description: "Stunned and deafened by the noise", duration: {kind: "rounds", rounds: S.OVERLOAD.turns},
+        await T.applyTimed(t.actor, {name: "Senses overwhelmed", description: "Overwhelmed by the noise: takes in nothing around them", duration: {kind: "rounds", rounds: S.OVERLOAD.turns},
           condition: "dazed", key: "wodx-senses-overload", source: "WoDX Senses"});
       }
     }
-    rows.push(`<p>${esc(S.overloadText(t.name))}</p><p>${esc(line)} <b>${ok ? "Holds steady." : "Stunned and deafened."}</b></p>`);
+    rows.push(`<p>${esc(S.overloadText(t.name))}</p><p>${esc(line)} <b>${ok ? "Holds steady." : "Overwhelmed."}</b></p>`);
   }
   if ( !rows.length ) return;
   await ChatMessage.create({whisper: gms, speaker: {alias: "WoDX Senses"}, rolls,

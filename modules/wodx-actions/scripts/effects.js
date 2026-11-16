@@ -543,7 +543,7 @@ async function applyCore(item, casterName = "the caster") {
       // Rise: the token takes the Fly way of moving first, then goes up (Actions 3.42.1: Foundry 14 lifts a flier)
       if ( tok && o.feet ) {
         if ( "movementAction" in tok && tok.movementAction !== "fly" ) await tok.update({movementAction: "fly"});
-        await tok.update({elevation: n(tok.elevation) + o.feet});
+        await tok.update({elevation: n(tok.elevation) + o.feet}, {animate: false});
       }
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       if ( o.everyTurn && effect?.uuid ) await TURN.attach(a, o.everyTurn, {effect: effect.uuid, label: o.label ?? o.name, by: casterName});
@@ -1222,7 +1222,9 @@ export async function resistItem(msg, i) {
   const a = actorOf(docOf(item?.target));
   if ( !R || !a ) return null;
   const pool = RESIST_POOL[R.pool] ?? R.pool;
-  const dice = Math.max(1, SUM.poolDice(a, pool));
+  // B6553: a mind shield (Mindveil, Heart's Rest) adds its dice against a power that reaches into the mind
+  const shield = PM.mindShieldDice(PM.effectsOf(a), item.key);
+  const dice = Math.max(1, SUM.poolDice(a, pool) + shield);
   const roll = new Roll(`${dice}d10`);
   await roll.evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
@@ -1235,7 +1237,7 @@ export async function resistItem(msg, i) {
   const bd = SR.breakdown({parts: SUM.poolParts(a, pool), dice, diff: n(R.diff), faces, successes: res.successes, botch: res.botch, against: item.successes ?? null});
   await ChatMessage.create({speaker: {alias: a.name}, rolls: [roll], ...(a.hasPlayerOwner ? {} : {whisper: game.users.filter(u => u.isGM).map(u => u.id), blind: true}),
     content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> rolls against ${esc(data.caster ?? "the caster")}'s ${esc(item.out.label)}, and ${esc(what)}.</p>
-      <p class="wodx-quiet">${esc(bd.pool)}</p><p>${bd.faces.map(f => `<span class="vta-die ${f.mark}">${f.v}</span>`).join(" ")}</p><p>${esc(bd.result)}</p></div>`});
+      <p class="wodx-quiet">${esc(bd.pool)}${shield ? ` + ${shield} (mind shield)` : ""}</p><p>${bd.faces.map(f => `<span class="vta-die ${f.mark}">${f.v}</span>`).join(" ")}</p><p>${esc(bd.result)}</p></div>`});
   if ( game.user.isGM ) return resolveResist(msg, i, won);
   game.socket.emit(`module.${MOD}`, {action: "effectResisted", msg: msg.id, i, won, user: game.user.id});
   return won;

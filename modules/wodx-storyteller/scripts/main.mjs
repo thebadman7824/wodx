@@ -320,7 +320,8 @@ Hooks.on("updateSetting", s => {
 });
 Hooks.on("updateWorldTime", () => { if ( active && !skipping() ) { safe(C.onClock()); safe(Night.maybeDrawNight()); } });
 Hooks.on("wodxSkipEnd", () => { if ( active ) safe(C.onClock()); });
-Hooks.on("wodxEndScene", () => { if ( active ) safe(C.release()); });
+// A convened scene is play together, which can cross maps: only the Storyteller's own End scene releases it (B6190)
+Hooks.on("wodxEndScene", (o = {}) => { if ( active && !o?.map ) safe(C.release()); });
 Hooks.on("wodxMapEvent", ev => { if ( active ) safe(C.onMapEvent(ev)); });
 // 0.20.0: open objectives in the Ledger tick their steps from map events
 Hooks.on("wodxMapEvent", ev => { if ( active ) safe(Led.onMapEventObjectives(ev)); });

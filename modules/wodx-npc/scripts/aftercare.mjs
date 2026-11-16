@@ -13,18 +13,35 @@
  *   Flags: wodx-npc.mend {last}, kissed {until}, standoffs {otherId: at}, gone {why, at}, diedBy [ids], homeBefore.
  */
 import * as AC from "./aftercare-rules.mjs";
+import * as LM from "./line-mend.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
   const now = () => game.time?.worldTime ?? 0;
   const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 1197; } catch (e) { return 1197; } };
   const base = a => (a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a);
-  const isNpc = a => !!a && !a.hasPlayerOwner;
+  const isNpc = TERMS.isNPC;
   const mem = () => game.modules.get(MOD)?.api?.memory ?? null;
   const flag = (a, k) => a?.getFlag?.(MOD, k);
   const dmg = a => { const ct = C()?.corpusTrack?.(a); const d = ct?.damage ?? a?.system?.health?.damage ?? {}; return {bashing: Number(d.bashing) || 0, lethal: Number(d.lethal) || 0, aggravated: Number(d.aggravated) || 0}; };
   const card = (title, text) => ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(title)}</b></p><p>${esc(text)}</p></div></div>`});
   const homeOf = a => routines.routineOf(a)?.roles?.home ?? routines.routineOf(a)?.roles?.haven ?? null;
+  /**
+   * B6173: who a duty goes on. A linked NPC keeps its own; an unlinked token's NPC shares the routine of its world actor
+   * (routines move tokens by actor id), so the duty goes there when that actor keeps a routine and this is its only
+   * token on the scene (a shared "Thug" with five tokens is left alone, so the routine does not clear the others).
+   */
+  const dutyHolder = (a, tok = null) => {
+    const w = base(a);
+    if ( !w || !a?.isToken ) return w;
+    if ( routines.routineOf(w)?.on !== true ) return null;
+    const sc = tok?.parent ?? a.token?.parent ?? null;
+    const same = sc ? [...sc.tokens].filter(d => d.actorId === w.id).length : 0;
+    return same === 1 ? w : null;
+  };
+  /** Unlinked token actors on every scene that carry a flag of this module (their deltas are not in game.actors). */
+  const unlinkedWith = k => [...game.scenes].flatMap(s => [...s.tokens].filter(d => !d.actorLink && d.actor?.flags?.[MOD]?.[k]).map(d => d.actor));
   /** The first tagged place of these kinds: on the actor's scene if it has one there, else anywhere. */
   function placeOf(kinds, a = null) {
     const P = routines.listPlaces().filter(p => kinds.includes(p.kind));
@@ -87,29 +104,23 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
   }
 
   /* ---- n2: wounds ---- */
-  async function bloodMend(a) {
-    if ( String(a.type) !== "Vampire" ) return 0;
-    const pool = a.system?.advantages?.bloodpool;
-    const h = AC.bloodHeal(dmg(a), Number(pool?.temporary) || 0);
-    if ( !h.spent ) return 0;
-    if ( h.bashing ) await C()?.healDamage?.(a, "bashing", h.bashing);
-    if ( h.lethal ) await C()?.healDamage?.(a, "lethal", h.lethal);
-    await a.update({"system.advantages.bloodpool.temporary": (Number(pool.temporary) || 0) - h.spent});
-    return h.spent;
-  }
-  /** After a fight: each hurt NPC heals with blood (Kindred), then goes to be tended if laid up, and mends on the clock. */
+  /** Each line mends with its own power: blood, Chi, Pathos or Faith (line-mend.mjs, B6315). Returns what was spent. */
+  const lineMend = a => LM.mendOwn(a, {damage: dmg(a), heal: (x, type, n) => C()?.healDamage?.(x, type, n)});
+  const lineKey = a => LM.keyOf(a);
+  const floatOver = LM.floatOver;
+  /** After a fight: each hurt NPC heals with its line's own power (blood, Chi, Pathos, Faith), then goes to be tended if laid up, and mends on the clock. */
   async function afterFight(combat) {
     if ( !isActiveGM() ) return [];
     const out = [];
     for ( const c of combat?.combatants ?? [] ) {
       const a = c.actor;
       if ( !isNpc(a) || a.statuses?.has?.("dead") ) continue;
-      await bloodMend(a);
+      await lineMend(a);
       const d = dmg(a);
       if ( !AC.nextHeal(d) ) continue;
       await a.setFlag(MOD, "mend", {last: now()});
-      const w = base(a);
-      if ( AC.laidUp(d) && w && !a.isToken && routines.routineOf(w)?.on !== false ) {
+      const w = dutyHolder(a, c.token);
+      if ( AC.laidUp(d) && w && routines.routineOf(w)?.on !== false ) {
         const place = (AC.needsCare(d) ? placeOf(AC.HEALERS, w) : null) ?? homeOf(w);
         if ( place ) { await routines.setDuty(w, "tend", AC.tendDuty(place)); out.push(`${a.name} goes to be tended`); }
       }
@@ -129,12 +140,20 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     if ( !isActiveGM() ) return 0;
     const t = now();
     let n = 0;
-    const actors = [...game.actors, ...[...game.scenes].flatMap(s => [...s.tokens].filter(d => !d.actorLink && d.actor?.flags?.[MOD]?.mend).map(d => d.actor))];
+    const actors = [...game.actors, ...unlinkedWith("mend")];
     for ( const a of actors ) {
       const m = a?.flags?.[MOD]?.mend;
       if ( !m ) continue;
       let last = Number(m.last) || t, guard = 0;
-      await bloodMend(a);
+      await lineMend(a);
+      // B6316: a Garou or Fera regenerates (WoDX Actions healPlan: every bashing and lethal level within minutes), not at a mortal's pace
+      if ( ["werewolf", "fera"].includes(lineKey(a)) ) {
+        const plan = (() => { try { return game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api?.healPlan?.(a, Math.max(0, t - last)) : null; } catch (e) { return null; } })();
+        if ( plan ) {
+          const got = Object.values(plan.healed ?? {}).reduce((x, v) => x + (Number(v) || 0), 0);
+          if ( got ) { await C()?.setDamage?.(a, plan.damage); floatOver(a, `+${got} ${got === 1 ? "wound" : "wounds"} (regenerates)`, "#7fbf5a"); n += got; last = t - (Number(plan.carry) || 0); }
+        }
+      }
       let nh = AC.nextHeal(dmg(a));
       while ( nh && t - last >= nh.seconds && guard++ < 12 ) { await C()?.healDamage?.(a, nh.type, 1); last += nh.seconds; n++; nh = AC.nextHeal(dmg(a)); }
       const d = dmg(a), w = base(a);
@@ -154,13 +173,14 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     try { await chron()?.conditions?.setCondition?.(v, "dazed", true); } catch (e) { /* no conditions */ }
     const weak = (Number(p.drunk) || 0) >= AC.WEAK_FROM;
     await v.setFlag(MOD, "kissed", {until: weak ? AC.nextMorning(now()) : now() + AC.DAZE_SECONDS, by: base(fromUuidSync(p.by?.uuid))?.id ?? null});
-    const home = homeOf(w);
-    if ( home && !v.isToken ) await routines.setDuty(w, "kissed", AC.restDuty(home, now()));
+    const h = dutyHolder(v), home = h ? homeOf(h) : null;
+    if ( home ) await routines.setDuty(h, "kissed", AC.restDuty(home, now()));
     return {weak, home: !!home};
   }
+  /** B6173: the Daze lifts on world actors and on unlinked tokens alike (a passer-by fed on is a token's own actor). */
   async function kissTick() {
     const t = now();
-    for ( const a of game.actors ) {
+    for ( const a of [...game.actors, ...unlinkedWith("kissed")] ) {
       const k = flag(a, "kissed");
       if ( !k || t < k.until ) continue;
       try { await chron()?.conditions?.setCondition?.(a, "dazed", false); } catch (e) { /* none */ }

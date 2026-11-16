@@ -17,6 +17,8 @@
 import * as O from "./otherworld-sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-senses", SOCKET = `module.${MOD}`;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -74,7 +76,7 @@ export async function rollFor(a, sight) {
   if ( !ok ) return false;
   const roll = await new Roll(`${plan.dice}d10`).evaluate();
   const faces = roll.dice[0]?.results.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= plan.difficulty).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, plan.difficulty);
   const net = Math.max(0, hits - ones), botch = !hits && ones > 0;
   const hold = O.holdFor(net, plan.system);
   if ( net ) await a.update({[`flags.${MOD}.hold`]: {sight, until: now() + hold.seconds, successes: net}, [`flags.${MOD}.sight`]: sight});
@@ -101,7 +103,7 @@ export function filterFor(sight, a) {
   return null;
 }
 
-const powerHere = () => { try { return (st()?.power?.state?.()?.list ?? []).filter(p => p.scene && p.scene === canvas?.scene?.id); } catch (e) { return []; } };
+const powerHere = () => { try { return (st()?.upkeep?.power?.state?.()?.list ?? []).filter(p => p.scene && p.scene === canvas?.scene?.id); } catch (e) { return []; } };
 function dressed(a) {
   const fh = powerHere().find(p => p.kind === "freehold" && !p.destroyed);
   let dream = false; try { const id = ow()?.STATUS?.dreaming?.id; dream = !!id && !!a?.statuses?.has?.(id); } catch (e) { dream = false; }
@@ -222,7 +224,7 @@ export function drawOther(layer, sight, a) {
     const dots = Math.max(num(a?.system?.spheres?.time?.value), 1);
     const seen = O.echoesSeen(scene.flags?.[MOD]?.echoes, now(), dots).slice(0, 25);
     for ( const e of seen ) {
-      const age = Math.min(1, (now() - e.at) / (30 * 86400));
+      const age = Math.min(1, (now() - e.at) / (30 * DAY));
       layer.beginFill(0xd8c8ff, 0.3 - age * 0.18); layer.drawCircle(e.x, e.y, 40); layer.endFill();
       label(layer, `${e.text}, ${O.ago(now() - e.at)}`, e.x, e.y + 42, 0xe0d4ff, 13);
       lines.push(`${e.text}, ${O.ago(now() - e.at)}.`);

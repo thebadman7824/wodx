@@ -215,9 +215,11 @@ export async function hazard(id, actorId, {attention = false} = {}) {
   if ( !dice ) return null;
   const r = await roll(dice, 6);
   const phaseNo = b.phases.filter(p => p.kind === "phase").length;
-  const res = B.counterResult(r.successes, phaseNo, {cainite: /vampire/i.test(String(a.type ?? ""))});
+  const res = B.counterResult(r.successes, phaseNo, {cainite: B.stakeable(a.type, {variant: a.system?.settings?.variant, yin: a.system?.advantages?.yin?.permanent, yang: a.system?.advantages?.yang?.permanent})});
   await ChatMessage.create({whisper: gmIds(), speaker: {alias: "Battles"}, content: `<div class="wodx-card wst-battle-card"><p>The battle turns on ${esc(a.name)}: ${dice} dice at 6, ${r.successes} success${r.successes === 1 ? "" : "es"} [${r.faces.join(", ")}].
-    ${res.dice ? `${res.dice} dice of ${res.type} damage, not dodged.` : "Nothing gets through."}${res.staked ? ` <strong>A stake through the heart: ${esc(a.name)} falls into torpor.</strong>` : ""}</p></div>`});
+    ${res.dice ? `${res.dice} dice of ${res.type} damage, not dodged.` : "Nothing gets through."}${res.staked ? ` <strong>${String(a.system?.settings?.variant ?? "").toLowerCase() === "kindredeast" ? `A blow through the heart breaks ${esc(a.name)}'s Chi balance: paralysed until it is pulled out.` : `A stake through the heart: ${esc(a.name)} is paralysed until it is pulled out.`}</strong>` : ""}</p></div>`});
+  // B6324: the stake holds: the Staked condition on the sheet and the token (WoDX Chronicle), so nothing acts until it is pulled
+  if ( res.staked ) { try { await C.chron()?.conditions?.setCondition?.(a, "staked", true); } catch (e) { console.warn("wodx-storyteller | battles: the stake was not marked", e); } }
   if ( !res.dice ) return res;
   if ( !game.wodxCombat?.soakAndApply ) { ui.notifications.warn(`WoDX Combat is off: ${res.dice} dice of ${res.type} damage to ${a.name}; roll soak and apply it by hand.`); return res; }
   const tok = a.getActiveTokens?.()?.[0];
@@ -305,6 +307,7 @@ export async function setupDialog({kind = "field", id = null} = {}) {
   const b = id ? get(id) : B.normBattle({kind});
   const {year, age, land} = contextOf(b);
   let evs = [];
+  try { await C.chron()?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
   try { evs = B.warEvents(C.chron()?.events?.list?.() ?? [], year, 5, {part: partOf(land)}); } catch (e) { evs = []; }
   const lands = C.landChoices();
   let factions = [];

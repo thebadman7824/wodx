@@ -4,7 +4,7 @@
  */
 import {draw, between, pick, shuffled, stream, drawResult, expand} from "../../wodx-chronicle/scripts/gen-core.mjs";
 import {TRADE_SHEETS} from "../data/people.mjs";
-import {FAMILY_FIRST} from "../data/people-world.mjs";
+import {FAMILY_FIRST} from "../data/people-order.mjs";
 import {customFor, NOBLE_TRADE, PATTERN, suffixPatrons} from "../data/name-customs.mjs";
 
 export const ATTRS = {physical: ["strength", "dexterity", "stamina"], social: ["charisma", "manipulation", "appearance"], mental: ["perception", "intelligence", "wits"]};

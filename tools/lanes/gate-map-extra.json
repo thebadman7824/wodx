@@ -30,12 +30,81 @@
       "wodx-actions",
       "wodx-chronicle"
     ],
+    "gateapipaths": [
+      "wodx-actions",
+      "wodx-atmosphere",
+      "wodx-chronicle",
+      "wodx-combat",
+      "wodx-creation",
+      "wodx-interactables",
+      "wodx-library",
+      "wodx-npc",
+      "wodx-otherworlds",
+      "wodx-paperdoll",
+      "wodx-senses",
+      "wodx-sheets",
+      "wodx-solo",
+      "wodx-storyteller",
+      "wodx-targeting",
+      "wodx-voices"
+    ],
+    "gatetruthcombat": [
+      "wodx-combat",
+      "wodx-chronicle",
+      "wodx-npc",
+      "wodx-actions"
+    ],
+    "gatetruthactions": [
+      "wodx-actions",
+      "wodx-chronicle",
+      "wodx-combat"
+    ],
+    "gatetruthstoryteller": [
+      "wodx-storyteller",
+      "wodx-atmosphere",
+      "wodx-solo",
+      "wodx-chronicle",
+      "wodx-npc",
+      "wodx-library"
+    ],
+    "gatetruthnpc": [
+      "wodx-npc",
+      "wodx-voices",
+      "wodx-actions",
+      "wodx-chronicle"
+    ],
+    "gatetruthsheets": [
+      "wodx-sheets",
+      "wodx-creation",
+      "wodx-library",
+      "wodx-actions",
+      "wodx-chronicle",
+      "wodx-combat"
+    ],
+    "gatetruthchronicle": [
+      "wodx-chronicle",
+      "wodx-storyteller",
+      "wodx-actions",
+      "wodx-npc"
+    ],
+    "gatefaith": [
+      "wodx-library",
+      "wodx-actions"
+    ],
+    "gatewonders": [
+      "wodx-library",
+      "wodx-storyteller"
+    ],
     "gatestillmarks": [
       "wodx-combat",
       "wodx-chronicle",
       "wodx-actions",
       "wodx-storyteller",
       "wodx-library"
+    ],
+    "gatetormentsheet": [
+      "wodx-actions",
+      "wodx-sheets"
     ]
   },
   "remove": {},

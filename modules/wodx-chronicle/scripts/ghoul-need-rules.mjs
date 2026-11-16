@@ -9,8 +9,9 @@
  *   B5052 an animal ghoul with no vitae left ages a year a week until it has caught up; past its natural span it
  *         dies, past twice its span it turns to dust (house pace; V20 Dark Ages p. 400 says only "quickly").
  */
-export const DAY = 86400;
-export const WEEK = 7 * DAY;
+import {DAY, WEEK} from "./terms.mjs";
+import * as TERMS from "./terms.mjs";
+export {DAY, WEEK};
 export const CRAVING_DIFF = 7;
 
 const n = v => Number(v) || 0;
@@ -40,7 +41,7 @@ export function drain({months = 0, warned = 0, monthly = 1, pool = 0, discipline
  * a botch is no success and at least one 1.
  */
 export function craving(faces = [], diff = CRAVING_DIFF) {
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   const net = hits - ones;
   if ( hits === 0 && ones > 0 ) return {result: "botch", net};
   return {result: net > 0 ? "held" : "craves", net};

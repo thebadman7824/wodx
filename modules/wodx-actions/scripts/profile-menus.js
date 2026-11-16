@@ -17,6 +17,7 @@ import * as P from "./profiles.js";
 import * as GX from "./garou.js";
 import * as GR from "./garou-rules.js";
 import * as TR from "./theme-rules.js";
+import * as LIM from "./limits.js";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -107,6 +108,7 @@ export const MENUS = {
                 ["api:daCounter", "Counter a cantrip or Unleashing", "fa-shield-alt"], ["api:daFae", "Origin and Court", "fa-scroll"]]],
             ["The Mists", [["api:daMists", "The Mists (hide, cloak, Kenning)", "fa-smog"], ["api:daMien", "Take or drop the mien", "fa-mask"],
                 ["api:daOath", "Keep an oath (Weaving)", "fa-handshake"], ["api:oaths", "An oath is broken", "fa-unlink"], ["api:daRest", "Rest in a faerie realm", "fa-tree"]]],
+            ["Treasures", [["api:treasureUse", "Use a Treasure", "fa-gem"], ["api:treasureOath", "Keep a Treasure's oath", "fa-handshake"], ["api:treasureGive", "Give a Treasure (GM)", "fa-gift"]]],
             ["Danger", [["api:daEcho", "Face an Echo", "fa-bell"], ["api:daColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:faeDA", "Fae rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -117,6 +119,7 @@ export const MENUS = {
             ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
                 ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["api:c20Place", "This place: freehold, glade or the Dreaming (GM)", "fa-tree"], ["api:enchant", "Enchant a mortal", "fa-wand-sparkles"], ["api:partedMists", "The Parted Mists", "fa-cloud-sun"], ["uses:glamour", "Glamour", "fa-coins"]]],
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["api:c20Everyday", "Everyday Banality (GM)", "fa-building"], ["api:oaths", "Oaths sworn and broken", "fa-handshake"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
+            ["Treasures", [["api:treasureUse", "Use a Treasure", "fa-gem"], ["api:treasureOath", "Keep a Treasure's oath", "fa-handshake"], ["api:treasureGive", "Give a Treasure (GM)", "fa-gift"]]],
             ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -198,6 +201,51 @@ for (const [k, res] of [
     ["exalted", [["uses:essence", "Essence", "fa-sun"]]]]) {
     MENUS[k] = { sections: [["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"]]], ["Traits", res],
         ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]] };
+}
+
+/*
+ * B6300: what every line shares with the Kindred (15 November 2026: every line has the same access to the line-agnostic
+ * tools). Downtime on Backgrounds, healing with time, seduction, and the Storyteller's tools for the night, the story,
+ * the witnesses and the sky. Each button runs the same function as on the Kindred menu; those functions already read
+ * the actor's line (witness secrets, Rage at a new story, Willpower by night or story).
+ */
+export const SHARED_TOOLS = {
+    downtime: ["api:downtime", "Downtime and Backgrounds", "fa-hourglass-half"],
+    healing: ["api:healing", "Healing with time", "fa-band-aid"],
+    seduction: ["api:seduction", "Seduction", "fa-heart"],
+    newNight: ["api:newNight", "New night (GM)", "fa-moon"],
+    endStory: ["api:endStory", "End of story (GM)", "fa-book"],
+    witnesses: ["api:masquerade", "Witnesses (GM)", "fa-mask"],
+    sky: ["api:skyAndSun", "Sky and sun (GM)", "fa-cloud-sun"]
+};
+/** Which shared tools each line gets: the living and the bodied get all; spirits, beasts and ghosts get what fits. */
+export const SHARED_FOR = {
+    ghoul: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    mortal: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    hunter: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    lupine: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    mage: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    mageDA: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    fae: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    faeDA: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    wraith: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    demon: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    kote: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    exalted: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    spirit: ["newNight", "endStory", "witnesses", "sky"],
+    beast: ["newNight", "endStory", "witnesses", "sky"]
+};
+for (const [k, keys] of Object.entries(SHARED_FOR)) {
+    const m = MENUS[k];
+    if (!m) continue;
+    const have = new Set(m.sections.flatMap(([, b]) => b.map(([spec]) => spec)));
+    const add = keys.map(x => SHARED_TOOLS[x]).filter(b => b && !have.has(b[0]));
+    if (!add.length) continue;
+    const gm = add.filter(b => /\(GM\)/.test(b[1])), own = add.filter(b => !/\(GM\)/.test(b[1]));
+    if (own.length) m.sections.splice(Math.max(0, m.sections.findIndex(([t]) => t === "Scene")), 0, ["Between stories", own]);
+    if (gm.length) m.sections.splice(Math.max(0, m.sections.findIndex(([t]) => t === "Scene")), 0, ["Chronicle (GM)", gm]);
 }
 
 /* The inner voice (Phase 6d): the voiced lines get its panel; everyone gets the list of voices they play. */
@@ -596,7 +644,10 @@ export function build(ctx) {
         return { kind, html };
     }
 
+    // B6156: a sleeping or out-cold character may still be woken, rest in torpor, or read the rules; nothing else
+    const IDLE_OK = new Set(["api:daytime", "api:torpor", "api:sunAndHaven", "api:help"]);
     async function run(spec, actor) {
+        if (!IDLE_OK.has(spec) && !spec.startsWith("rules") && LIM.refuseIdle(actor)) return null;
         const [type, arg] = spec.includes(":") ? [spec.slice(0, spec.indexOf(":")), spec.slice(spec.indexOf(":") + 1)] : [spec, ""];
         switch (type) {
             case "action": return action({ actor });

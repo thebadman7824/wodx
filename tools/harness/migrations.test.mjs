@@ -62,7 +62,8 @@ test("first load stamps every WoDX module; nothing is backed up or changed", asy
   mock.setupTime();
   await Hooks.callAll("ready");
   await mock.settle();
-  assert.deepEqual(game.settings.get(M, "dataVersions"), {"wodx-chronicle": 1, "wodx-npc": 1, "wodx-combat": 1});
+  // B6384: Chronicle's own code is at data version 2 (bouts name their scene); a new world is stamped there
+  assert.deepEqual(game.settings.get(M, "dataVersions"), {"wodx-chronicle": 2, "wodx-npc": 1, "wodx-combat": 1});
   assert.equal(uploads.filter(u => u.name).length, 0);
   assert.ok(!mock.log.chat.some(c => /WoDX data updated/.test(c.content)));
 });
@@ -113,4 +114,23 @@ test("a failing step stops that module where it is and says where the backup is"
   assert.match(card.content, /wodx-backups\/migrations\/.*wodx-combat-v1/);
   assert.ok(mock.log.notifications.some(([kind, m]) => kind === "error" && /did not finish/.test(m)));
   assert.deepEqual(api.migrations.status().find(s => s.module === "wodx-combat"), {module: "wodx-combat", data: 2, code: 3});
+});
+
+test("Chronicle's real step 2 (B6384): an old bout gets its scene, after the backup, and the version is raised", async () => {
+  const api = game.modules.get(M).api;
+  const a = await Actor.create({name: "Old Bout", type: "Mortal"});
+  a.flags[M] = {...(a.flags[M] ?? {}), bout: {keys: ["paranoia"], at: 0}};
+  const was = game.scenes;
+  const scene = {id: "scene-b6384", tokens: [], toObject: () => ({name: "Scene", flags: {}})};
+  game.scenes = Object.assign([scene], {active: scene, get: id => (id === scene.id ? scene : undefined)});
+  await game.settings.set(M, "dataVersions", {...game.settings.get(M, "dataVersions"), [M]: 1});
+  const before = uploads.filter(u => u.name).length;
+  const r = await api.migrations.run({quiet: true});
+  const file = uploads.filter(u => u.name).slice(before).find(u => u.name.includes(`${M}-v1`));
+  assert.ok(file, "a backup of Chronicle's data was written");
+  assert.equal(JSON.parse(file.text).documents.actors.find(x => x.name === "Old Bout").flags[M].bout.sceneId, undefined, "the backup holds the old shape");
+  assert.equal(game.settings.get(M, "dataVersions")[M], 2);
+  assert.ok(r.done.some(j => j.module === M && j.to === 2));
+  assert.equal(game.actors.get(a.id).flags[M].bout.sceneId, "scene-b6384");
+  game.scenes = was;
 });

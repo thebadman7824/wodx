@@ -13,6 +13,7 @@
 import * as LIM from "./limits.js";
 import * as V from "./voice-rules.js";
 import * as P from "./profiles.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -82,11 +83,11 @@ export function build(ctx) {
             const f = actor.getFlag?.(MOD, "daFae");
             const da = f?.system === "da" || (f?.system !== "c20" && (f?.origin || ["dark-ages", "long-night"].includes(eraNow())));
             if (da) {
-                const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+                const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
                 const spends = f?.weavingDay?.day === day ? n(f.weavingDay.n) : 0;
                 const wp = n(actor.system?.advantages?.willpower?.permanent);
                 d = { era: "da", mists: n(f?.mists?.perm), weaving: n(f?.weaving?.perm), willpower: wp, overSpend: spends > n(f?.mists?.perm),
-                    lockedRisk: n(f?.weavingStreak) > wp && wp > 0, hiddenDays: f?.hiddenSince != null ? Math.floor(((game.time?.worldTime ?? 0) - n(f.hiddenSince)) / 86400) : null };
+                    lockedRisk: n(f?.weavingStreak) > wp && wp > 0, hiddenDays: f?.hiddenSince != null ? Math.floor(((game.time?.worldTime ?? 0) - n(f.hiddenSince)) / DAY) : null };
             } else {
                 const adv = actor.system?.advantages ?? {};
                 d = { era: "c20", banality: n(adv.banality?.permanent), banalityPoints: n(adv.banality?.temporary), glamour: n(adv.glamour?.permanent),
@@ -206,11 +207,19 @@ export function build(ctx) {
 
     /* ---------------- prompts when the pressure rises ---------------- */
 
+    // B6159: the level before the change rides in the update's options, so the Storyteller's client sees it when a
+    // player changes their own sheet (the map only covers changes made on this client, such as an item update)
     const before = new Map();
-    function onPreUpdate(actor) { if (kindOf(actor)) before.set(actor.id, pressureOf(actor)?.level); }
-    async function onUpdate(actor) {
-        if (!isActiveGM() || !before.has(actor.id)) return;
-        const was = before.get(actor.id); before.delete(actor.id);
+    function onPreUpdate(actor, options) {
+        if (!kindOf(actor)) return;
+        const lvl = pressureOf(actor)?.level;
+        before.set(actor.id, lvl);
+        if (options && typeof options === "object" && lvl !== undefined) options.wodxVoiceBefore = lvl;
+    }
+    async function onUpdate(actor, options) {
+        const sent = options?.wodxVoiceBefore;
+        if (!isActiveGM() || (sent === undefined && !before.has(actor.id))) return;
+        const was = sent !== undefined ? sent : before.get(actor.id); before.delete(actor.id);
         if (!live(actor)) return;
         const p = pressureOf(actor);
         if (!p || !V.rose(was, p.level) || p.level === "calm") return;

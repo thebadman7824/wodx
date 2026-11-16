@@ -92,7 +92,7 @@ test("local reckoning: the clock and the opening card hear it", () => {
   const clock = src("modules/wodx-chronicle/scripts/clock-app.mjs");
   assert.ok(clock.includes("Players hear:"));
   assert.ok(clock.includes("reckon(now, {church: ch"));
-  assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("{church, eraId, latitude: lat}"));
+  assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("{church, eraId, latitude: here.lat}"));
   assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("church?.on?.(t, {scene})"));
 });
 

@@ -13,6 +13,7 @@
  *             when the Storyteller presses Undo). The active Storyteller's client sends it; nothing here acts on it.
  */
 import * as S from "./state-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SOCKET = `module.${MOD}`;
@@ -259,7 +260,7 @@ export function play({ev, src} = {}) {
     if ( fb.flash ) flash(p);
     if ( fb.sound ) {
       const d = canvas.scene?.grid?.distance ?? canvas.dimensions?.distance ?? 5, units = canvas.scene?.grid?.units ?? "ft";
-      const perYard = /m|meter|metre|yd|yard/i.test(units) ? 1 : 3;
+      const perYard = TERMS.unitsPerYard(units);
       const radius = fb.sound.yards * perYard / d * (canvas.grid?.size ?? 100);
       const layerS = canvas.sounds;
       if ( layerS?.playAtPosition ) layerS.playAtPosition(fb.sound.src, p, radius, {walls: true, easing: true, volume: 0.8});

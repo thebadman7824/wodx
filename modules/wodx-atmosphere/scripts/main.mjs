@@ -24,9 +24,10 @@ import {countOf} from "../../wodx-chronicle/scripts/local-reckoning-rules.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.17.0";
+const VERSION = "0.18.2";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -56,7 +57,7 @@ function registerSettings() {
     type: String, default: "auto", choices: {auto: "Make and apply it", off: "Off"}, onChange: () => { AtmosphereApp.refresh(); if ( isActiveGM() ) applyWeather({force: true}); }});
   world("sceneEffects", {name: "Rain, snow and fog on outdoor scenes", hint: "Uses Foundry's own weather effects. A scene the Storyteller gave its own weather is left alone.", type: Boolean, default: true});
   world("tellPlayers", {name: "Tell the players the weather each night", hint: "Post the night's weather in chat for everyone when the night turns.", type: Boolean, default: false});
-  world("lightFromClock", {name: "Light from the clock", hint: "Scenes marked \"Follow the clock\" in the Atmosphere window get their darkness from the sun, the moon and the clouds.", type: Boolean, default: true});
+  world("lightFromClock", {name: "Light from the clock", hint: "Out-of-doors scenes, and any scene ticked \"Follow the clock\" in the Atmosphere window, get their darkness from the sun, the moon and the clouds. Untick it on a scene to keep its own light.", type: Boolean, default: true});
   world("music", {name: "Era music", hint: "When the era changes, stop the old era's music and start the new era's calm playlist; play the combat playlist while a fight runs. Only playlists set in the Atmosphere window are touched.",
     type: Boolean, default: true});
   world("ambience", {name: "Ambience for each scene", hint: "When a scene is shown to the players, play the era kit's loop for its kind of place and, out of doors, for the weather.", type: Boolean, default: true});
@@ -95,6 +96,13 @@ function registerSettings() {
 /* ------------------------------------------------------------------ */
 
 const latitude = () => { try { return Number(game.settings.get("wodx-chronicle", "latitude")) || 50.1; } catch (e) { return 50.1; } };
+/** B6196: the sun where a scene stands (its place's latitude and hour), the home sun when the scene has no place. */
+function sunHere(time, scene = globalThis.canvas?.scene ?? null) {
+  try { const p = chron()?.terms?.placeNow?.(scene, time); if ( p && Number.isFinite(Number(p.time)) ) return {time: Number(p.time), lat: Number.isFinite(Number(p.latitude)) ? Number(p.latitude) : latitude()}; } catch (e) { /* older Chronicle */ }
+  return {time, lat: latitude()};
+}
+const toDawnAt = (time, scene) => { const p = sunHere(time, scene); return CAL.secondsToNextDawn(p.time, p.lat); };
+const toDuskAt = (time, scene) => { const p = sunHere(time, scene); return CAL.secondsToNextDusk(p.time, p.lat); };
 const hoursOf = s => { const m = String(s ?? "").match(/(\d+):(\d+)/); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
 function timeAt(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
   // A scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
@@ -195,13 +203,23 @@ async function applySceneEffect(scene, day) {
   await scene.update({weather: want, [`flags.${MOD}.effectSet`]: want});
 }
 
+/**
+ * B6168: does a scene's light follow the clock? The Storyteller's tick (or untick) in the window wins; a scene nobody
+ * ticked follows it when it is out of doors, so built, solo and setup scenes get dusk and dawn too.
+ */
+export function followsClock(scene) {
+  const f = scene?.flags?.[MOD]?.followClock;
+  if ( f === true || f === false ) return f;
+  return isOutdoor(scene);
+}
+
 async function applyLight(scene, day, time = game.time.worldTime) {
-  if ( !scene || !setting("lightFromClock") || !scene.flags?.[MOD]?.followClock ) return;
+  if ( !scene || !setting("lightFromClock") || !followsClock(scene) ) return;
   // The scene's own hour and latitude when it stands far from home
   const t = timeAt(time, scene);
   if ( !t ) return;
   const alt = W.sunAltitude(t.jdn, t.hour + t.minute / 60, Number.isFinite(Number(t.latitude)) ? Number(t.latitude) : latitude());
-  const night = Number(scene.flags[MOD].night);
+  const night = Number(scene.flags?.[MOD]?.night);
   const v = W.darknessFor({altitude: alt, moon: Number(t.moon?.illumination) || 0, sky: day?.sky ?? "clear", night: Number.isFinite(night) ? night : 0.9});
   const cur = Number(scene.environment?.darknessLevel ?? scene.darkness ?? 0);
   if ( Math.abs(cur - v) < 0.049 ) return;
@@ -367,7 +385,17 @@ export async function adapt({force = false} = {}) {
 let adaptTimer = null;
 function adaptSoon(opts = {}) { clearTimeout(adaptTimer); adaptTimer = setTimeout(() => adapt(opts).catch(e => console.warn(`${MOD} | adaptive`, e)), 300); }
 
-const heart = {timer: null, ctx: null, cur: null};
+const heart = {timer: null, ctx: null, cur: null, buf: null, bufSrc: null};
+/** A recorded heartbeat from wodx-kits/common/sounds/heart.ogg (B6263), decoded once; the generated thump stays the fallback. */
+async function heartBuffer(ctx) {
+  const src = (setting("index") ?? {})[K.COMMON_KIT]?.cues?.heart ?? null;
+  if ( !src ) { heart.buf = null; heart.bufSrc = null; return null; }
+  if ( heart.bufSrc === src ) return heart.buf;
+  heart.bufSrc = src;
+  try { heart.buf = await ctx.decodeAudioData(await (await fetch(src)).arrayBuffer()); }
+  catch (e) { heart.buf = null; }
+  return heart.buf;
+}
 function thump(ctx, volume, at) {
   const osc = ctx.createOscillator(), gain = ctx.createGain();
   osc.type = "sine";
@@ -387,8 +415,18 @@ function beat(volume) {
     heart.ctx ??= new AC();
     if ( heart.ctx.state === "suspended" ) heart.ctx.resume?.();
     const t = heart.ctx.currentTime + 0.02;
-    thump(heart.ctx, volume, t);
-    thump(heart.ctx, volume * 0.7, t + 0.15);
+    const buf = heart.bufSrc === ((setting("index") ?? {})[K.COMMON_KIT]?.cues?.heart ?? null) ? heart.buf : null;
+    if ( buf ) {
+      // The recording holds one whole beat (both sounds of it)
+      const s = heart.ctx.createBufferSource(), g = heart.ctx.createGain();
+      s.buffer = buf; g.gain.value = Math.min(1, volume);
+      s.connect(g).connect(heart.ctx.destination);
+      s.start(t);
+    } else {
+      heartBuffer(heart.ctx).catch(() => null);
+      thump(heart.ctx, volume, t);
+      thump(heart.ctx, volume * 0.7, t + 0.15);
+    }
   } catch (e) { /* no sound on this computer */ }
 }
 /** The heartbeat for this player's own character, now. Returns {bpm, volume} or null. */
@@ -409,11 +447,18 @@ export function updateHeart() {
   return hb;
 }
 
-/** The file for a cue: the kit folder's own first, else the sound shipped with the module. */
-function cueSrc(cue) {
-  const idx = setting("index") ?? {};
-  for ( const k of K.kitChain(currentKit()) ) if ( idx[k]?.cues?.[cue] ) return idx[k].cues[cue];
-  const shipped = K.kitChain(currentKit()).find(k => SHIPPED.includes(k)) ?? (currentKit() === "time-of-judgment" ? "modern" : "dark-ages");
+/** The faith of the land the viewed scene stands in, for its cues (B6261); null without WoDX Chronicle. */
+function cueFaith(scene = viewed()) {
+  try { return chron()?.church?.faithOf?.(scene, yearNow() ?? 0)?.faith ?? null; } catch (e) { return null; }
+}
+/**
+ * The file for a cue: a recorded one from the kit folders (the land's faith first, then the kit's own, then the common
+ * folder; B6260-B6262), else the generated sound shipped with the module.
+ */
+export function cueSrc(cue, {kit = currentKit(), faith = cueFaith(), index = setting("index") ?? {}} = {}) {
+  const rec = K.cueFile(index, K.kitChain(kit), cue, faith);
+  if ( rec ) return rec;
+  const shipped = K.kitChain(kit).find(k => SHIPPED.includes(k)) ?? (kit === "time-of-judgment" ? "modern" : "dark-ages");
   if ( K.COMMON_CUES.includes(cue) ) return `modules/${MOD}/sounds/common/${cue}.ogg`;
   return `modules/${MOD}/sounds/${shipped}/${cue}.ogg`;
 }
@@ -424,13 +469,13 @@ export function playCue(cue) {
 }
 function cuesForTime(time, delta) {
   if ( !CAL || !(delta > 0) || delta > 6 * 3600 || chron()?.isSkipping?.() ) return;
-  const prev = time - delta, lat = latitude();
+  const prev = time - delta;
   try {
-    const toDawn = CAL.secondsToNextDawn(prev, lat) - 1800;
+    const toDawn = toDawnAt(prev) - 1800;
     if ( toDawn > 0 && toDawn <= delta ) playCue("dawn");
-    const toDusk = CAL.secondsToNextDusk(prev, lat);
+    const toDusk = toDuskAt(prev);
     if ( toDusk > 0 && toDusk <= delta ) playCue("dusk");
-    if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(CAL.secondsToNextDawn(time, lat), delta) ) playCue(c);
+    if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(toDawnAt(time), delta) ) playCue(c);
   } catch (e) { /* no cue */ }
 }
 
@@ -650,7 +695,7 @@ export async function muffleScene(scene, on = true) {
 /** The dread now: {strength, minutes, birds, cock, rotschreck} in the last half hour before sunrise, else null. */
 export function dread(time = game.time.worldTime) {
   if ( !active || !CAL ) return null;
-  try { return K.dawnDread(CAL.secondsToNextDawn(time, latitude())); } catch (e) { return null; }
+  try { return K.dawnDread(toDawnAt(time)); } catch (e) { return null; }
 }
 /** The Rötschreck difficulty step dawn adds now (0 or 1); WoDX Actions reads it for its Rötschreck window. */
 export function dreadRotschreck(time) { return setting("dawnPressure") === false ? 0 : (dread(time)?.rotschreck ?? 0); }
@@ -674,9 +719,9 @@ export function dreadTick(time, delta) {
 let dreadCarded = null;
 async function dreadCard(time, delta) {
   if ( !isActiveGM() || setting("dawnPressure") === false || !CAL || chron()?.isSkipping?.() ) return;
-  const toDawn = CAL.secondsToNextDawn(time, latitude());
+  const toDawn = toDawnAt(time, game.scenes?.active ?? globalThis.canvas?.scene ?? null);
   if ( !K.dreadCuesCrossed(toDawn, delta).includes("cock") ) return;
-  const night = Math.floor((time + toDawn) / 86400);
+  const night = Math.floor((time + toDawn) / DAY);
   if ( dreadCarded === night ) return;
   dreadCarded = night;
   await ChatMessage.create({speaker: {alias: "The dawn"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
@@ -778,6 +823,9 @@ export async function buildPlaylists(kit = currentKit(), {apply = false} = {}) {
     await setSetting("playlists", map);
     const idx = foundry.utils.deepClone(setting("index") ?? {});
     idx[kit] = {cues: Object.fromEntries(Object.entries(sorted.cues).map(([k, v]) => [k, v])), at: Date.now()};
+    // B6262: the common folder (birdsong, cock-crow, heartbeat) is read with every kit
+    const common = await browseAll(K.kitFolder(K.COMMON_KIT, root));
+    if ( common !== null ) idx[K.COMMON_KIT] = {cues: K.sortFiles(K.COMMON_KIT, common, root).cues, at: Date.now()};
     await setSetting("index", idx);
     AtmosphereApp.refresh();
   }
@@ -792,7 +840,7 @@ export async function writeCredits() {
   if ( !game.user.isGM ) return null;
   const root = setting("kitRoot") || "wodx-kits";
   const rows = [];
-  for ( const kit of Object.keys(K.KITS) ) {
+  for ( const kit of [...Object.keys(K.KITS), K.COMMON_KIT] ) {
     let credits = null;
     try { const r = await fetch(`${root}/${kit}/credits.json`); credits = r.ok ? await r.json() : null; } catch (e) { credits = null; }
     const ps = all(game.playlists).filter(p => Object.values(playlistMap()[kit] ?? {}).includes(p.id));
@@ -801,17 +849,17 @@ export async function writeCredits() {
       const file = decodeURIComponent(String(s.path).split("/").pop());
       listed.add(file);
       const c = credits?.[file];
-      rows.push(`<tr><td>${esc(K.KITS[kit].name)}</td><td>${esc(p.name)}</td><td>${esc(file)}</td><td>${c ? esc(c.source ?? "") : "<em>No credit recorded</em>"}</td><td>${esc(c?.license ?? "")}</td><td>${esc(c?.credit ?? "")}</td></tr>`);
+      rows.push(`<tr><td>${esc(K.KITS[kit]?.name ?? "Every era")}</td><td>${esc(p.name)}</td><td>${esc(file)}</td><td>${c ? esc(c.source ?? "") : "<em>No credit recorded</em>"}</td><td>${esc(c?.license ?? "")}</td><td>${esc(c?.credit ?? "")}</td></tr>`);
     }
     // Files the kit credits but no playlist holds: music heard in the scene, placed on maps, and spare loops
     for ( const [file, c] of Object.entries(credits ?? {}) ) {
       if ( listed.has(file) || !c || typeof c !== "object" ) continue;
-      rows.push(`<tr><td>${esc(K.KITS[kit].name)}</td><td><em>In the kit folder</em></td><td>${esc(file)}</td><td>${esc(c.source ?? "")}</td><td>${esc(c.license ?? "")}</td><td>${esc(c.credit ?? "")}</td></tr>`);
+      rows.push(`<tr><td>${esc(K.KITS[kit]?.name ?? "Every era")}</td><td><em>In the kit folder</em></td><td>${esc(file)}</td><td>${esc(c.source ?? "")}</td><td>${esc(c.license ?? "")}</td><td>${esc(c.credit ?? "")}</td></tr>`);
     }
   }
   const html = `<p>Every sound and picture an era kit uses, with where it came from. Add a credits.json to a kit folder to fill in a row.</p>
     <table><thead><tr><th>Kit</th><th>Playlist</th><th>File</th><th>Source</th><th>Licence</th><th>Credit</th></tr></thead><tbody>${rows.join("") || `<tr><td colspan="6">No kit playlists yet.</td></tr>`}</tbody></table>
-    <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues, the birdsong and the cock-crow in the module's sounds folder were made for this project by sound synthesis, with no outside source.</p>
+    <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues, the birdsong and the cock-crow in the module's sounds folder were made for this project by sound synthesis, with no outside source. They play only where a kit folder has no recording of its own; the recordings are credited above, with what was done to each (cut short, faded and levelled).</p>
     <p>The fonts and their licences are listed in WoDX Chronicle's fonts/licenses folder.</p>`;
   let j = all(game.journal).find(x => x.flags?.[MOD]?.credits);
   // Everyone at the table may read the credits (Ben, B2432); the Storyteller alone edits them
@@ -1070,7 +1118,7 @@ export function AtmosphereClass() {
         <section><h3>This scene${sc ? `: ${esc(sc.navName || sc.name)}` : ""}</h3>
           ${sc ? `<div class="form-group"><label>Weather here</label><select name="outdoors" data-fixed>${opt({auto: `Decide for me (now ${isOutdoor(sc) ? "out of doors" : "indoors"})`, on: "Out of doors: weather shows", off: "Indoors: no weather"}, f.outdoors ?? "auto")}</select></div>
           <div class="form-group"><label>Opening card</label><select name="noCard" data-fixed>${opt({show: "Show the place's card to players", hide: "No card for this scene"}, f.noCard ? "hide" : "show")}</select></div>
-          <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${f.followClock ? " checked" : ""}></div>
+          <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${followsClock(sc) ? " checked" : ""}></div>
           <div class="form-group"><label>Darkness at night (0 to 1)</label><input type="number" name="night" min="0" max="1" step="0.05" value="${Number.isFinite(Number(f.night)) && f.night !== undefined ? f.night : 0.9}"></div>
           ${(() => { const all = [...(sc.sounds ?? [])]; const n = all.filter(x => K.isMuffled(x)).length;
             return `<div class="form-group"><label>Sounds through walls</label><span>${n} of ${all.length} placed sounds are stopped by walls and heard muffled through them.</span></div>
@@ -1169,9 +1217,9 @@ Hooks.once("init", () => {
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
-    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
+    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor, followsClock,
       moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},
-    kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
+    kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, cueSrc, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
     themes: {play: playTheme, set: setTheme},
     ages: {set: setAge, apply: applyAges, picture: (scene, year) => K.ageFor(scene?.flags?.[MOD]?.ages ?? {}, year)},
@@ -1220,9 +1268,9 @@ function openingCard(scene) {
   try { on = game.settings.get(MOD, "openingCard") !== false; } catch (e) { on = true; }
   if ( !OR.wantsCard(scene, {last: lastCard, on}) ) return;
   lastCard = scene.id;
-  let told = null, dateLabel = "", lat = 50;
-  try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { lat = 50; }
-  const t = describeTime(game.time.worldTime, lat);
+  let told = null, dateLabel = "";
+  const here = sunHere(game.time.worldTime, scene);
+  const t = describeTime(here.time, here.lat);
   dateLabel = `${t.dateLabel}, ${t.timeLabel}`;
   let reck = true;
   try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
@@ -1236,7 +1284,7 @@ function openingCard(scene) {
       const mine = !game.user.isGM ? game.user.character : null;
       if ( mine && church ) { const c = countOf(mine.flags?.["wodx-chronicle"] ?? {}, mine.flags?.["wodx-creation"]?.lifepath ?? null, church.faith ?? "western"); if ( c.faith !== church.faith ) faith = c.faith; }
     } catch (e) { faith = null; }
-    told = reckon(t, faith ? {church: {...church, day: null}, faith, region: church?.region, eraId, latitude: lat} : {church, eraId, latitude: lat});
+    told = reckon(t, faith ? {church: {...church, day: null}, faith, region: church?.region, eraId, latitude: here.lat} : {church, eraId, latitude: here.lat});
   }
   let weather = "";
   try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }

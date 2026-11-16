@@ -46,6 +46,7 @@ import * as VX from "./voice.js";
 import * as TR from "./theme-rules.js";
 import * as MXD from "./mage-da.js";
 import * as FXD from "./fae-da.js";
+import * as TRS from "./treasures.js";
 import * as CXD from "./c20.js";
 import * as DXD from "./demon.js";
 import * as DR from "./demon-rules.js";
@@ -69,6 +70,7 @@ import * as SUM from "./summons.js";
 import * as TURN from "./turns.js";
 import * as LIM from "./limits.js";
 import * as AFC from "./after-costs.js";
+import * as ACR from "./after-cost-rules.js";
 import * as NPW from "./npc-power-rules.js";
 import * as PK from "./power-keywords.js";
 import * as BR from "./book-rituals.js";
@@ -93,6 +95,7 @@ import * as SVA from "./servant-actions.js";
 import * as DR_DEBTS from "./debts-rules.js";
 import * as DR_BEAST from "./beast-marks-rules.js";
 import * as NAT from "./nature-rules.js";
+import {DAY, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -384,8 +387,23 @@ async function rollPool(dice, difficulty, opts = {}) {
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
     }
-    const res = R.countSuccesses(faces, diff, opts);
-    return { ...res, roll, faces, dice, difficulty: diff };
+    let res = R.countSuccesses(faces, diff, opts);
+    // B6371: a power window's gate (or the caller, opts.fortune) armed Lucky, Destiny or Fate: a failed roll is rolled
+    // again before anything is done with it, so the effect follows the roll that stands
+    const fa = opts.fortune ?? LIM.takeFortune();
+    let fortune = null;
+    if (fa && dice > 0 && (res.botch || !res.successes)) {
+        const lk = await TH.useLucky(fa);
+        if (lk) {
+            const first = faces;
+            roll = new Roll(`${dice}d10`);
+            if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
+            faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+            res = R.countSuccesses(faces, diff, opts);
+            fortune = { first, name: TH.fortuneName(fa), left: lk.left };
+        }
+    }
+    return { ...res, roll, faces, dice, difficulty: diff, fortune };
 }
 function diceHtml(r, specialty = false) {
     if (!setting("showDice") || !r?.faces?.length) return "";
@@ -397,7 +415,8 @@ function resultLine(r, { degreeText = true } = {}) {
     return `<div class="vta-res good">${r.successes} success${r.successes === 1 ? "" : "es"}${degreeText ? `: ${R.degree(r.successes)}` : ""}</div>`;
 }
 function rollBlock(title, r, parts = [], specialty = false) {
-    return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
+    const again = r?.fortune ? `<div class="vta-note wodx-fortune">${esc(r.fortune.name)}: the first roll failed${setting("showDice") && r.fortune.first?.length ? ` (${r.fortune.first.join(", ")})` : ""} and is rolled again (${r.fortune.left} left this story).</div>` : "";
+    return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${again}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
 }
 /**
  * 3.67.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
@@ -746,8 +765,8 @@ function pickPool(actor, pools) {
 export async function action({ actor: a, preset = "" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
-    // B4890: asleep for the day, a Cainite does nothing until woken (Awaken by day) or the sun sets
-    if (flag(actor, "daySleep") && !game.user.isGM) return ui.notifications.warn(`${actor.name} is asleep for the day. Use Awaken by day if something rouses them.`);
+    // B4890, B6156: asleep for the day (or out cold), a Cainite does nothing until woken (Awaken by day) or the sun sets
+    if (LIM.refuseIdle(actor)) return;
     const target = targetActor();
     const rd = road(actor);
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
@@ -901,6 +920,7 @@ function checkPoolText(actor, c) {
 export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "", direct = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    if (LIM.refuseIdle(actor)) return; // B6156
     const target = targetActor();
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
     const first = CK.byKey(check) ?? CK.CHECKS[0];
@@ -1010,6 +1030,11 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const bm = dm().bearingMods(actor, target, fd, PRESETS[fd.preset]);
         if (bm) tm = { ...tm, diff: (tm.diff ?? 0) + bm.diff, parts: [...(tm.parts ?? []), ...bm.parts] };
     } catch (e) { console.warn("WoDX Actions | bearing", e); }
+    // B6157: the registered conditions on the roller (Drained, Blurred sight on a sight roll, Blinded...)
+    try {
+        const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
+        if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
+    } catch (e) { console.warn("WoDX Actions | conditions", e); }
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -1025,6 +1050,7 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
 }
 
 async function resolveAction(actor, target, fd) {
+    LIM.takeFortune(); // B6371: this window spends Lucky itself (fd.lucky); no power window's leftover ticket
     const preset = PRESETS[fd.preset] ?? {};
     const pool = readPool(actor, fd.attr, fd.ability);
     const rd = road(actor);
@@ -1219,6 +1245,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="${difficulty ?? 6}"/></div>
       <div class="form-group"><label>Difficulty modifier (drugs –1, Intimidation powers +n…)</label><input type="number" name="mod" value="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      ${TH.luckyHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog(`${v.selfcontrol.isInstinct ? "Instinct" : "Frenzy"} check`, content, "Roll", async fd => {
@@ -1233,7 +1260,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         const fire = DH.fireStep(actor);
         diff = R.clampDifficulty(diff + fd.mod + tm.diff + fire);
         try { await TH.spendOnce(actor, tm); } catch (e) { /* nothing spent */ }
-        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
+        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
     });
 }
 
@@ -1250,6 +1277,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="6"/></div>
       <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="${dawn}"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      ${TH.luckyHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog("Rötschreck check", content, "Roll", async fd => {
@@ -1259,7 +1287,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
             return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
         const p = R.ROTSCHRECK_PROVOCATIONS[fd.prov];
         const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod + DH.fireStep(actor));  // B3132
-        return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, total: 0 });
+        return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, lucky: !!fd.lucky, total: 0 });
     });
 }
 
@@ -1284,7 +1312,8 @@ async function beastRoll(actor, d, msg = null) {
     const virtueVal = fear ? v.courage.value : v.selfcontrol.value;
     const vp = R.virtuePool(virtueVal, { road: rd.value || 10, blood: b.value, bloodLimited: !fear && isVampire(actor) });
     if (d.wp && !(await spendWillpower(actor, 1))) d.wp = false;
-    const r = await rollPool(Math.max(0, vp.dice + (d.traitDice || 0)), d.diff, { willpower: d.wp });
+    // B6371: a check rolled from its window may take Lucky, Destiny or Fate (ticked there); one rolled by itself does not
+    const r = await rollPool(Math.max(0, vp.dice + (d.traitDice || 0)), d.diff, { willpower: d.wp, fortune: d.lucky ? actor : (LIM.takeFortune(), null) });
     const vLabel = fear ? "Courage" : v.selfcontrol.label;
     let body = `<div class="vta-sub">${esc(d.prov)}</div>` + rollBlock(vLabel, r, [...(vp.caps.length ? [`capped by ${vp.caps.join(" and ")}`] : []), ...(d.traitParts || [])]);
     let state = null, enter = false, data = null;
@@ -1300,7 +1329,7 @@ async function beastRoll(actor, d, msg = null) {
         if (state.outcome === "resisted") body += `<div class="vta-big good">${state.total} successes accumulated: the ${fear ? "fear" : "Beast"} subsides.</div>`;
         else if (state.outcome === "holding") {
             body += `<div class="vta-big">Held off for ${state.turns} turn${state.turns === 1 ? "" : "s"} (${state.total}/5 successes). Roll again before then to keep resisting.</div>`;
-            data = { kind: "beast", actor: actor.uuid, d: { ...d, total: state.total, wp: false } };
+            data = { kind: "beast", actor: actor.uuid, d: { ...d, total: state.total, wp: false }, turns: state.turns };
             body += btn("beast", "Keep resisting");
         } else {
             enter = true;
@@ -1379,13 +1408,47 @@ export async function autoBeast({ actor: a, kind = "frenzy", provocation = null,
     if (hide) AUTO_HIDE.add(actor.id);
     try {
         let d = { kind: fear ? "fear" : v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: `${prov} (rolled by itself)`, wp: !!flag(actor, "beastWillpower") && willpower(actor).temp > 0, total: 0, traitDice, traitParts };
+        // B6158: in a fight the Beast is held off turn by turn (V20 p. 297): each success holds it a turn, and the next
+        // roll comes on the bearer's own turn once those turns are spent (beastTurn). Outside a fight, the rolls follow at once.
+        const fight = fightOf(actor);
         let msg = null;
         for (let i = 0; i < 8; i++) {
             msg = await beastRoll(actor, d);
             const f = msg?.flags?.[MOD];
             if (f?.kind !== "beast") break;
             d = { ...f.d, wp: false };
+            if (fight) { await setFlag(actor, "beastHold", { combatId: fight.id, d, left: Math.max(1, n0(f.turns) || 1) }); break; }
         }
+        return msg;
+    } finally { AUTO_HIDE.delete(actor.id); }
+}
+/** The started fight the actor is in, or null. */
+function fightOf(actor) {
+    return game.combats?.find?.(c => c.started && c.combatants.some(cb => cb.actor === actor || (cb.actor?.id === actor.id && cb.token?.actorLink))) ?? null;
+}
+/**
+ * B6158: the bearer's turn in a fight while the Beast is held off: one turn of the hold is spent, and when none are
+ * left the check is rolled once more (the running total carries on). Active GM only.
+ */
+const BEAST_TURN = new Map();
+export async function beastTurn(combat) {
+    const actor = combat?.combatant?.actor;
+    const hold = actor ? flag(actor, "beastHold") : null;
+    if (!hold) return null;
+    const key = `${combat.round}:${combat.turn}`;
+    if (BEAST_TURN.get(combat.id) === key) return null;
+    BEAST_TURN.set(combat.id, key);
+    const fear = hold.d?.kind === "fear";
+    if (hold.combatId !== combat.id || flag(actor, "torpor") || flag(actor, "golconda") || (actor.system?.conditions?.isfrenzy && !fear)) { await setFlag(actor, "beastHold", null); return null; }
+    const left = n0(hold.left) - 1;
+    if (left > 0) { await setFlag(actor, "beastHold", { ...hold, left }); return null; }
+    const hide = !actor.hasPlayerOwner;
+    if (hide) AUTO_HIDE.add(actor.id);
+    try {
+        const msg = await beastRoll(actor, { ...hold.d, wp: false });
+        const f = msg?.flags?.[MOD];
+        if (f?.kind === "beast") await setFlag(actor, "beastHold", { combatId: combat.id, d: { ...f.d, wp: false }, left: Math.max(1, n0(f.turns) || 1) });
+        else await setFlag(actor, "beastHold", null);
         return msg;
     } finally { AUTO_HIDE.delete(actor.id); }
 }
@@ -1404,7 +1467,7 @@ export async function autoTorporRise({ actor: a } = {}) {
     if (hide) AUTO_HIDE.add(actor.id);
     try {
         if (b.value < 1) {
-            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + DAY });
             return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">No blood in the body: no rising until someone feeds them.</div>`);
         }
         await changeBlood(actor, -1);
@@ -1416,7 +1479,7 @@ export async function autoTorporRise({ actor: a } = {}) {
             await dm().wake(actor, t?.since);
             html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt at once.</div>`;
         } else {
-            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + DAY });
             html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. The next night brings another try.</div>`;
         }
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
@@ -1440,7 +1503,7 @@ export async function endFrenzy({ actor: a } = {}) {
  * The Thrall of the Wyrm ends when the Garou is Incapacitated or the fight is over (the Wyrm creature gone).
  * Ending a frenzy by hand stays. House reading of V20 p. 298 and W20 p. 262. */
 const knockedOut = a => { const d = a?.system?.health?.damage ?? {}; return /incapac/i.test(String(d.woundlevel ?? "")) || (num(d.bashing) + num(d.lethal) + num(d.aggravated)) >= 7; };
-const FRENZY_TURN = 3;
+const FRENZY_TURN = TURN_SECONDS;
 async function markBotch(actor, fear, diff) {
     await setFlag(actor, "frenzyBotch", { scene: actor.getActiveTokens?.()[0]?.document?.parent?.id ?? canvas?.scene?.id ?? null, combat: game.combat?.id ?? null, fear: !!fear, diff: R.clampDifficulty(num(diff) || 6), over: false, last: 0 });
 }
@@ -1520,6 +1583,7 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
       <div class="form-group"><label>On failure, lose</label><select name="lose">${opts([["road", "A Road dot"], ["conscience", `A ${v.conscience.label} dot`], ["selfcontrol", `A ${v.selfcontrol.label} dot`], ["courage", "A Courage dot"]], "road")}</select></div>
       <div class="form-group"><label><input type="checkbox" name="automatic"/> Automatic loss (e.g. murder on a Road that forbids it, diablerie)</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      ${TH.luckyHtml(actor, esc)}
     </form>`;
     return dialog("Sin against the Road", content, "Roll", async fd => {
         fd.level = num(fd.level);
@@ -1531,9 +1595,10 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
         else {
             if (fd.wp && !(await spendWillpower(actor, 1))) fd.wp = false;
             const vp = R.virtuePool(v.conscience.value, { road: rd.value || 10 });
-            const r = await rollPool(vp.dice, chk.difficulty, { willpower: fd.wp });
+            const pen = POWMOD.penaltyOf(actor); // B6370: a night's penalty reaches the sin's roll too
+            const r = await rollPool(Math.max(0, vp.dice + pen.dice), chk.difficulty, { willpower: fd.wp, fortune: fd.lucky ? actor : (LIM.takeFortune(), null) });
             rolls.push(r.roll);
-            body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(chk.rawDifficulty > 10 ? ["capped at 10"] : []));
+            body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(chk.rawDifficulty > 10 ? ["capped at 10"] : [], pen.parts));
             fail = r.successes === 0;
             if (r.botch) { body += `<div class="vta-note">Botch: a Derangement tied to the sin, drawn from those a sin leaves and written into the box.</div>`; await gainDerangement(actor, "sin", fd.desc ? `from the sin: ${String(fd.desc).slice(0, 60)}` : "from a sin botch"); }
         }
@@ -1786,6 +1851,7 @@ async function savePalate(actor, rule, fd) {
 export async function feed({ actor: a, vessel: t, willing = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    if (LIM.refuseIdle(actor)) return; // B6156
     const vessel = targetActor(t);
     const tokDoc = vessel ? vesselTokenDoc(t, vessel) : null;
     const pbVessel = tokDoc?.flags?.["wodx-npc"]?.passerby?.vessel;
@@ -1878,13 +1944,9 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
     }
     if (nightPenalty && setting("applyChanges") && actor.isOwner) {
-        // B6024: a roll effect every roll reads (WoDX Chronicle traits), not only a mark: -2 dice until dawn
-        try {
-            const C = chronicle();
-            if (C?.traits?.addBite) await C.traits.addBite(actor, { key: "feed-law", name: `${rule.label}: -2 dice tonight`, tags: ["all"], dice: -2, duration: { kind: "night" }, source: rule.page });
-            else await C?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
-                description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page });
-        } catch (e) { console.warn("WoDX | feed penalty", e); }
+        // B6370: the penalty is read by every roll (power-mods penalty: Any roll, Common checks, social, frenzy, powers, attacks, the sheet)
+        try { await chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: POWMOD.KEYS.penalty, data: { dice: -2 },
+            description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page }); } catch (e) { console.warn("WoDX | feed penalty", e); }
     }
     let gorge = false;
     if (isVampire(actor) && R.isHungry(b.value, v.selfcontrol.value) && !flag(actor, "golconda")) {
@@ -2110,6 +2172,7 @@ async function feedUndo(msg, d) {
 export async function spendBlood({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    if (LIM.refuseIdle(actor)) return; // B6156
     const b = blood(actor), dmg = healthTrack(actor).damage, rd = road(actor);
     const quick = flag(actor, "quickening") ?? {};
     const content = `<form>
@@ -2375,7 +2438,7 @@ export async function torpor({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const rd = road(actor), t = flag(actor, "torpor"), tl = R.torporLength(rd.value), b = blood(actor);
-    const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / 86400) : 0;
+    const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / DAY) : 0;
     const content = `<form>
       <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}: torpor lasts <b>${tl.text}</b>. Blood ${b.value}.</p>
       ${t ? `<p>In ${t.voluntary ? "voluntary " : ""}torpor since ${elapsed} day(s) of game time ago (minimum ${t.voluntary ? Math.ceil(t.days / 2) : t.days} days).</p>` : ""}
@@ -2456,7 +2519,14 @@ async function natureCard(list) {
         [], { kind: "natureScene", natures: rows.map(a => a.uuid) });
 }
 
-export async function endScene({ actors, fromChronicle = false } = {}) {
+export async function endScene({ actors, fromChronicle = false, map = false } = {}) {
+    // B6190: the Storyteller's End scene is the Chronicle's, so every module's scene ends at once (the scene count,
+    // effect areas, banality, Delirium); the Chronicle then calls back here for the characters
+    if (!fromChronicle && game.user.isGM && chronicle()?.endScene) {
+        await chronicle().endScene();
+        if (actors || canvas.tokens.controlled.length) return endScene({ actors: actors ?? canvas.tokens.controlled.map(t => t.actor), fromChronicle: true });
+        return null;
+    }
     const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner && a.isOwner));
     if (!fromChronicle && game.user.isGM) await wx().newScene({ quiet: true }); // Passions can be tapped again; Hysteria ends
     const lines = [];
@@ -2481,7 +2551,8 @@ export async function endScene({ actors, fromChronicle = false } = {}) {
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
-    await natureCard(list);
+    // A new map is a new scene too, but the Nature card waits for the Storyteller's own End scene (no card per map)
+    if (!map) await natureCard(list);
     if (fromChronicle && !lines.length) return null;
     return post(null, "End of scene", lines.length ? `<ul>${lines.join("")}</ul>` : "<p>Nothing to clear.</p>");
 }
@@ -2525,7 +2596,8 @@ async function condition(actor, id, active) {
 export async function newNight({ actors } = {}) {
     if (!game.user.isGM && !actors) return ui.notifications.warn("New Night is for the GM (or pass your own actors).");
     await endScene({ actors });
-    const list = actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)));
+    // B6305: those who left the chronicle (Transcendence, an arhat) are not part of a new night
+    const list = (actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)))).filter(a => !a?.flags?.["wodx-chronicle"]?.departed);
     const lines = [];
     for (const actor of list) {
         if (!actor?.isOwner) continue;
@@ -2582,7 +2654,7 @@ const untrainedBeast = actor => actor?.flags?.["wodx-creation"]?.animal?.trainin
 /** The end of a story: Willpower returns in full (unless the setting is off). */
 export async function endStory({ actors } = {}) {
     if (!game.user.isGM) return ui.notifications.warn("End of story is for the GM.");
-    const list = actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner);
+    const list = (actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)).filter(a => !a?.flags?.["wodx-chronicle"]?.departed);
     const lines = [];
     for (const actor of list) {
         if (untrainedBeast(actor)) { lines.push(`<li><b>${esc(actor.name)}</b>: untrained, so it wins back no Willpower (V20 Dark Ages p. 396)</li>`); continue; }
@@ -2591,6 +2663,8 @@ export async function endStory({ actors } = {}) {
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }
         const c = await hx().newStory(actor);
         if (c) lines.push(`<li>${esc(c)} (a new story, Dark Ages: Inquisitor p. 160)</li>`);
+        // B6303: shapechangers roll their Rage afresh for the new story
+        try { const g = await gx().newStory(actor); if (g) lines.push(`<li>${esc(g)}</li>`); } catch (e) { console.warn("WoDX Actions | new story Rage", e); }
         // B4997: any imbued with a creed (a Hunter sheet or another type marked in Hunter traits) goes back to the creed's level
         if ((actor.type === "Hunter" || rx().info(actor).creed) && HX.lineNow() === "reckoning") {
             const ri = rx().info(actor), start = ri.creedDef?.conviction;
@@ -2840,9 +2914,15 @@ function mx() {
 let FXE = null;
 /** Dark Ages fae (3.8.0, Phase 6g). */
 function fx() {
-    return FXE ??= FXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, spendWillpower, notify: m => ui.notifications.warn(m),
+    return FXE ??= FXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, spendWillpower, notify: m => ui.notifications.warn(m), imbue: (a, o) => trx().imbue(a, o),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
+}
+
+let TRE = null;
+/** B6560: faerie Treasures, every era. */
+function trx() {
+    return TRE ??= TRS.build({ post, rollPool, rollBlock, dialog, attr, findAbility, notify: m => ui.notifications.warn(m) });
 }
 
 let SOE = null;
@@ -2933,12 +3013,14 @@ function gx() {
         api: () => API, notify: m => ui.notifications.warn(m) });
 }
 /** Find the actor, and dress the dialogs it opens in its line's look (6e) while the action runs. */
+// B6448: a bare Actor counts as {actor} (WoDX Library's prayer beads, a fomor's Gift and the gates call it so)
 const withActor = f => async (o = {}) => {
-    const a = needActor(o.actor);
+    const bare = typeof Actor !== "undefined" && o instanceof Actor;
+    const a = needActor(bare ? o : o?.actor);
     if (!a) return null;
     const prev = P.setLine(P.detectProfile(a));
     LEDGER.delete(a.id); // "what changed" counts from here
-    try { return await f(a, o); } finally { P.setLine(prev); }
+    try { return await f(a, bare ? {} : (o ?? {})); } finally { P.setLine(prev); }
 };
 
 let SXE = null;
@@ -3258,7 +3340,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.105.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.109.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3267,6 +3349,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
     daMageInfo: a => mx().info(resolveActor(a)), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
     // Dark Ages fae (3.8.0)
+    treasureUse: withActor(a => trx().use(a)), treasureGive: withActor(a => trx().give(a)), treasureOath: withActor(a => trx().keepOath(a)), treasuresOf: a => TRS.treasuresOf(resolveActor(a)), treasureDaily: () => trx().daily(),
     daFae: withActor(a => fx().sheet(a)), daCantrip: withActor(a => fx().cast(a)), daUnleash: withActor(a => fx().unleash(a)),
     daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daMists: withActor(a => fx().mists(a)),
     daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
@@ -3280,7 +3363,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Place: () => cx().placeDialog(), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
-    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
+    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)), demonTorment: (a, k) => dx().torment(resolveActor(a), k),
     conditioning: withActor(a => svx().condition(a)), enchant: withActor(a => svx().enchant(a)), partedMists: withActor(a => svx().partedMists(a)),
     demonPact: withActor(a => svx().pact(a)), pactGift: withActor(a => svx().useGift(a)), knownNames: withActor(a => svx().names(a)), pressName: withActor(a => svx().pressName(a)),
     chainThrall: withActor(a => svx().chainThrall(a)), servantActions: () => svx(),
@@ -3410,7 +3493,7 @@ Hooks.once("ready", async () => {
         SUM.connect(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // B4920-B4923: the one scene count, power use limits and Drained
         try { LIM.setup();
-        FOM.setup(); CHM.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
+        FOM.setup(); CHM.setup(); TRS.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // B5783: when a fight ends, an NPC demon with Alter Memory makes the mortals who saw it forget
         Hooks.on("deleteCombat", c => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) coverUp(c).catch(e => console.warn("WoDX | cover up", e)); });
         // Lifted and planted items, and being caught at it (3.21.0)
@@ -3423,9 +3506,11 @@ Hooks.once("ready", async () => {
     Hooks.on("wodxAttackRolled", (attacker, d) => { svx().onAttack(attacker, d ?? {}).catch(e => console.error("WoDX | oaths", e)); });
     Hooks.on("wodxEffectApplied", (item, rec, by) => { svx().onEffect(item, rec, by).catch(e => console.error("WoDX | consorts", e)); });
     // B3556: the end of a scene counts everyday Banality for the changelings on it
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(canvas?.scene).catch(e => console.error("WoDX | banality", e)); });
-    Hooks.on("wodxEndScene", () => {
-        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true }).catch(e => console.error("WoDX |", e));
+    // B6190: the scene that ended (a new map passes the old one), not just the map the Storyteller is looking at
+    const endedScene = o => game.scenes?.get?.(o?.sceneId) ?? canvas?.scene ?? null;
+    Hooks.on("wodxEndScene", (o = {}) => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(endedScene(o)).catch(e => console.error("WoDX | banality", e)); });
+    Hooks.on("wodxEndScene", (o = {}) => {
+        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true, map: !!o?.map }).catch(e => console.error("WoDX |", e));
     });
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, onSocket);
@@ -3449,9 +3534,13 @@ Hooks.once("ready", async () => {
 async function golcondaCaps(actor, on) {
     if (!isVampire(actor)) return;
     const max = KR.golcondaTraitMax(on, R.generation(generationOf(actor)).maxTrait);
+    // B6155: the sheet reads system.settings.*.defaultmaxvalue (the system fork keeps 10 while the golconda flag is set);
+    // an older build wrote a stray number into the abilities map, which broke the sheet's ability loop, so it goes
     const upd = {};
-    if (num(actor.system?.abilities?.defaultmaxvalue) !== max) upd["system.abilities.defaultmaxvalue"] = max;
-    if (num(actor.system?.powers?.defaultmaxvalue) !== max) upd["system.powers.defaultmaxvalue"] = max;
+    for (const k of ["attributes", "abilities", "powers"])
+        if (num(actor.system?.settings?.[k]?.defaultmaxvalue) !== max) upd[`system.settings.${k}.defaultmaxvalue`] = max;
+    if (actor.system?.abilities && "defaultmaxvalue" in actor.system.abilities) upd["system.abilities.-=defaultmaxvalue"] = null;
+    if (actor.system?.powers && typeof actor.system.powers === "object" && "defaultmaxvalue" in actor.system.powers && typeof actor.system.powers.defaultmaxvalue !== "object") upd["system.powers.-=defaultmaxvalue"] = null;
     if (Object.keys(upd).length) await actor.update(upd, { wodxGolconda: true });
 }
 export async function golcondaCheck(actor) {
@@ -3520,11 +3609,13 @@ async function autoDayOnce() {
 
 /** Kindred and general hooks (3.2.0): the clock (healing, dawn, dusk, torpor), wounds, blood, Combat's damage, the Delirium. */
 function kindredHooks() {
-    let busy = false;
+    // B6159: a clock change that lands while onClock runs is not dropped: one more run follows (a dusk crossed then counts)
+    let busy = false, again = false;
     const tick = () => {
-        if (busy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
-        busy = true;
-        kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; });
+        if (!game.user.isGM || chronicle()?.isSkipping?.()) return;
+        if (busy) { again = true; return; }
+        busy = true; again = false;
+        kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; if (again) { again = false; tick(); } });
     };
     Hooks.on("updateWorldTime", tick);
     Hooks.on("updateWorldTime", (wt, dt) => {
@@ -3535,7 +3626,7 @@ function kindredHooks() {
     // One run at a time; a move of the clock during a run gets one more run after it, so the newest time is never dropped.
     // Each routine runs on its own, so one that fails does not stop the rest.
     let fadeBusy = false, fadeAgain = false;
-    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
+    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => trx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
         () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical(), () => svx().enchantDaily()];
     async function fadeRun() {
         fadeBusy = true;
@@ -3563,6 +3654,7 @@ function kindredHooks() {
     Hooks.on("updateCombat", (combat, changed) => {
         if (!game.user.isGM || !(("turn" in (changed ?? {})) || ("round" in (changed ?? {})))) return;
         dm().onTurn(combat).catch(e => console.error("WoDX |", e));
+        if (isResponsibleGM()) beastTurn(combat).catch(e => console.error("WoDX | Beast held off", e));
     });
     Hooks.on("wodxSkipEnd", () => { busy = false; tick(); });
     Hooks.on("preUpdateActor", (actor, changes, options) => {
@@ -3575,14 +3667,15 @@ function kindredHooks() {
         if (options?.wodxBloodBefore !== undefined) kx().onBlood(actor, options.wodxBloodBefore, num(actor.system?.advantages?.bloodpool?.temporary)).catch(e => console.error("WoDX |", e));
     });
     // A new scene: the Delirium can strike the same witnesses again
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
+    const sceneEnded = o => game.scenes?.get?.(o?.sceneId) ?? canvas.scene ?? null;
+    Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "delirium")) s.unsetFlag(MOD, "delirium").catch(() => {}); });
     // and a Kindred's marks can be seen again (3.67.0)
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "marksSeen")) canvas.scene.unsetFlag(MOD, "marksSeen").catch(() => {}); });
+    Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "marksSeen")) s.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {
         try {
-            if (!info?.attacker || !actor?.isOwner) return;
+            if (!info?.attacker || !actor?.isOwner || info.relayed) return; // B6150: the applying client already marked it
             const d = await fromUuid(info.attacker);
             const by = d?.actor ?? d;
             if (!by || !isVampire(by) || by.id === actor.id) return;
@@ -3601,10 +3694,10 @@ function kindredHooks() {
     Hooks.on("canvasReady", () => { setTimeout(() => wx().autoStorm().catch(e => console.error("WoDX | Maelstrom", e)), 1500); });
     wx().onReady().catch(e => console.error("WoDX |", e));
     // The inner voice (3.5.0): prompts when the pressure rises, the X-card, the scene's end, the approval queue
-    Hooks.on("preUpdateActor", actor => { try { vx().onPreUpdate(actor); } catch (e) { /* not a voiced line */ } });
-    Hooks.on("updateActor", actor => { vx().onUpdate(actor)?.catch?.(e => console.error("WoDX |", e)); });
-    Hooks.on("preUpdateItem", item => { if (item.parent instanceof Actor) try { vx().onPreUpdate(item.parent); } catch (e) { /* not voiced */ } });
-    Hooks.on("updateItem", item => { if (item.parent instanceof Actor) vx().onUpdate(item.parent)?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("preUpdateActor", (actor, changes, options) => { try { vx().onPreUpdate(actor, options); } catch (e) { /* not a voiced line */ } });
+    Hooks.on("updateActor", (actor, changes, options) => { vx().onUpdate(actor, options)?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("preUpdateItem", (item, changes, options) => { if (item.parent instanceof Actor) try { vx().onPreUpdate(item.parent, options); } catch (e) { /* not voiced */ } });
+    Hooks.on("updateItem", (item, changes, options) => { if (item.parent instanceof Actor) vx().onUpdate(item.parent, options)?.catch?.(e => console.error("WoDX |", e)); });
     Hooks.on("wodxXCard", () => { vx().onXCard()?.catch?.(e => console.error("WoDX |", e)); });
     Hooks.on("wodxEndScene", () => { vx().onEndScene()?.catch?.(e => console.error("WoDX |", e)); });
 

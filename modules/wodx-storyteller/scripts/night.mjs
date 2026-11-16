@@ -9,6 +9,7 @@ import * as Pace from "./pacing-rules.mjs";
 export {N};
 import {NIGHT_TABLES} from "../data/night-tables.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const TN = {night: `${MOD}.night`, aid: `${MOD}.aid`};
 const all = c => (c ? [...(c.contents ?? c)] : []);
@@ -65,7 +66,7 @@ const latitude = () => { try { return Number(game.settings.get("wodx-chronicle",
 export async function nightNow(time = game.time.worldTime) {
   const C = await cal();
   const t = C?.describeTime?.(time, latitude());
-  if ( !t ) return {jdn: Math.floor(time / 86400), part: "early", label: ""};
+  if ( !t ) return {jdn: Math.floor(time / DAY), part: "early", label: ""};
   const hours = t.hour + t.minute / 60;
   return {jdn: hours < 12 ? t.jdn - 1 : t.jdn, part: N.partOfNight(hours), label: t.dateLabel, hours};
 }

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.4.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.4.0 (Automatic for everyone: players get automatic targets too, for the Hands off level)
 - 0.3.0 (missed connections, 12 November 2026: range bands and area shapes count height (token elevation), so a flyer high above is out of reach)
 - 0.2.1 (no area preview where the canvas has no drawing library)

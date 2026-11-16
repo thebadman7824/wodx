@@ -67,10 +67,11 @@ import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.53.0";
+const VERSION = "0.54.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -321,7 +322,7 @@ export function weaponsOf(actor) {
 export function yardsOn(scene, a, b) {
   const g = scene?.grid ?? canvas?.scene?.grid ?? {};
   const size = num(g.size) || 100, dist = num(g.distance) || 5, units = String(g.units ?? "ft");
-  const per = /m|meter|metre|yd|yard/i.test(units) ? dist : dist / 3;
+  const per = TERMS.toYards(dist, units);
   return Math.hypot(num(a?.x) - num(b?.x), num(a?.y) - num(b?.y)) / size * per;
 }
 const reachPx = scene => (num(scene?.grid?.size) || canvas?.grid?.size || 100) * (0.5 + (num(setting("reach")) || 1));
@@ -419,6 +420,10 @@ const NOISE_WORD = {silent: "silent", quiet: "quiet", loud: "loud"};
  * they are apart from the group (B1961). Returns {advanced (clock seconds), personal (for Undo), line}.
  */
 async function passTime(actor, seconds) {
+  // B6198: an attempt counted in turns (under a minute, whole turns of three seconds) takes the table's turn length
+  // (WoDX Combat's "Seconds a turn takes", through api.terms.turnSeconds)
+  const per = Number(game.modules.get("wodx-chronicle")?.api?.terms?.turnSeconds?.()) || TERMS.TURN_SECONDS;
+  if ( seconds > 0 && seconds < TERMS.MINUTE && seconds % TERMS.TURN_SECONDS === 0 ) seconds = (seconds / TERMS.TURN_SECONDS) * per;
   const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;
   if ( time?.spend && actor?.hasPlayerOwner ) {
     try {
@@ -892,7 +897,7 @@ const yardsBetween = (a, b) => {
   try {
     const units = canvas.scene?.grid?.units ?? "ft";
     const d = canvas.grid.measurePath([a, b]).distance;
-    return /m|meter|metre|yd|yard/i.test(units) ? d : d / 3;
+    return TERMS.toYards(d, units);
   } catch (e) { return Math.hypot(a.x - b.x, a.y - b.y) / (canvas.grid?.size ?? 100) * 1.67; }
 };
 const soundWalls = (a, b) => {
@@ -1418,16 +1423,37 @@ async function fearOfFire(scene, tokDoc, actor, p) {
     await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: R.FEAR_OF_FIRE[o.size] ?? "torch", why: `Close to ${o.title || "a fire"}`});
   }
 }
-/** B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null. */
+/** B6362: the house of worship (a region tagged church, mosque, synagogue or temple) a point is in, as holy ground, or null. */
+function worshipAt(scene, p) {
+  const sceneFaith = scene?.flags?.["wodx-chronicle"]?.place?.faith ?? null;
+  for ( const r of scene?.regions?.contents ?? [...(scene?.regions?.values?.() ?? [])] ) {
+    const place = r.flags?.["wodx-npc"]?.place;
+    if ( !place || !R.WORSHIP_PLACES.includes(place.kind) ) continue;
+    const el = Number.isFinite(r.elevation?.bottom) ? r.elevation.bottom : 0;
+    let inside = false;
+    try { inside = !!r.testPoint?.({x: p.x, y: p.y, elevation: el}, el) || !!r.object?.testPoint?.({x: p.x, y: p.y}, el); } catch (e) { inside = false; }
+    if ( !inside ) continue;
+    const o = R.worshipGround(place, r.name, sceneFaith);
+    if ( o ) return {doc: r, o};
+  }
+  return null;
+}
+/**
+ * B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null.
+ * B6362: a house of worship's region is holy ground too, and the ground keeps a faith: the tile's own, else the
+ * house it stands in, else the scene's. -> {doc, o} with o.faith
+ */
 export function holyUnder(tokDoc) {
   const scene = tokDoc?.parent;
   if ( !scene ) return null;
   const p = centerOf(tokDoc, scene);
+  const house = worshipAt(scene, p);
   for ( const doc of tilesOf(scene) ) {
     const o = describeTile(doc);
-    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) ) return {doc, o};
+    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) )
+      return {doc, o: {...o, faith: o.faith ?? house?.o.faith ?? scene.flags?.["wodx-chronicle"]?.place?.faith ?? null}};
   }
-  return null;
+  return house && R.holyGround(house.o) ? house : null;
 }
 /** Active GM: a card for a hazard hurting a character, with Undo. why: "enters" or "turn". */
 export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
@@ -1465,10 +1491,14 @@ export async function onTurnStart(combat) {
   }
   if ( isDemonActor(actor) ) {
     const p = centerOf(tokDoc, scene);
+    let any = false;
     for ( const doc of tilesOf(scene) ) {
       const o = describeTile(doc);
-      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) cards.push(await holyCard(tokDoc, actor, doc, o, "turn"));
+      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) { any = true; cards.push(await holyCard(tokDoc, actor, doc, o, "turn")); }
     }
+    // B6362: a church, mosque, synagogue or temple sears as an altar does, whatever its faith (Demon: The Fallen p. 254)
+    const house = any ? null : worshipAt(scene, p);
+    if ( house && R.holyGround(house.o) ) cards.push(await holyCard(tokDoc, actor, house.doc, house.o, "turn"));
   }
   return cards.filter(Boolean);
 }
@@ -1491,7 +1521,8 @@ export async function holyCard(tokDoc, actor, doc, o, why = "enters") {
   try {
     const scene = doc.parent;
     const h = R.holyHarm(o, {kind: "demon", torment: tormentOf(actor)});
-    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground.` : `${actor.name} steps onto holy ground (rating ${o.rating}).`];
+    const where = o.house ? ` (${o.title || o.house}${o.faith ? `, kept for ${R.FAITH_WORDS[o.faith]}` : ""}, rating ${o.rating})` : ` (rating ${o.rating})`;
+    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground${o.house ? where : ""}.` : `${actor.name} steps onto holy ground${where}.`];
     let hurt = 0, faces = [];
     if ( !h?.harmed ) lines.push(`${h?.why ?? "Nothing happens"}.`);
     else {

@@ -2,7 +2,7 @@
 /**
  * The PC job runner (B4100-B4109). Runs on Ben's PC, takes PC jobs straight from GitHub issues (label pc-job, opened
  * by the owner's account; format in jobs.mjs) and runs them on the testbed lanes side by side, one job per lane, in
- * priority order, with no thread or coordinator passing them along. Results go back to the issue as a comment and the
+ * priority order (a waiting job gains a step each hour, B6490), with no thread or coordinator passing them along. Results go back to the issue as a comment and the
  * issue is closed with pc-done or pc-failed.
  *
  *   node tools/pcq/runner.mjs [--once] [--dry] [--no-update]         (started by run-runner.ps1, which restarts it after updates)
@@ -22,7 +22,7 @@
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
- * Every hour it also sweeps stale pull requests (sweep.mjs, B4110).
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every minute it logs the graphics card heat (gpu.mjs).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -33,6 +33,7 @@ import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
 import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
+import * as gpu from "./gpu.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -344,12 +345,17 @@ async function status(queue) {
 const MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
 // A busy runner stops taking new jobs once an update is due ("draining") and exits when the last job ends, so an update
 // never waits for a quiet moment that may not come.
-let draining = false;
+let draining = false, drainSince = 0, deferUntilIdle = false;
+// B6353: a drain waits at most DRAIN_MIN minutes. A 100-gate touched run once held 19 queued jobs (four of them p1) for
+// most of an hour behind it; past the limit the runner takes jobs again and updates the next time it is idle (and at
+// the nightly lane reset, which restarts it anyway).
+const DRAIN_MIN = Number(conf.drainMinutes ?? 10);
 async function updateDue() {
   if ( args.includes("--no-update") ) return false;
+  if ( deferUntilIdle ) return !active.size;
   const d = await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq", "tools/lanes", "tools/harness/gate-two.mjs"]);
   if ( d.status !== 1 ) return false;
-  if ( !draining ) log("main changed the runner; taking no new jobs until the running ones end");
+  if ( !draining ) { log(`main changed the runner; taking no new jobs until the running ones end (at most ${DRAIN_MIN} min)`); drainSince = Date.now(); }
   draining = true;
   return !active.size;
 }
@@ -364,9 +370,22 @@ for ( const i of await openIssues(LABEL.running) ) {
   await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
 let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false;
+let lastGpu = 0; const gpuWatch = gpu.watcher();
+function gpuCheck() {
+  if ( Date.now() - lastGpu < 60000 ) return null;
+  lastGpu = Date.now();
+  const g = gpu.read(); if ( !g?.reading ) return null;
+  fs.appendFileSync(path.join(LOGS, `gpu-${new Date().toISOString().slice(0, 10)}.csv`), g.raw + "\n");
+  return {r: g.reading, change: gpuWatch(g.reading)};
+}
 for ( ;; ) {
   try {
     if ( draining && !active.size ) { log("exiting for an update"); process.exit(75); }
+    if ( draining && Date.now() - drainSince > DRAIN_MIN * 60000 ) {
+      log(`the update has waited ${DRAIN_MIN} min on ${active.size} running job(s); taking jobs again, updating when idle`);
+      draining = false; deferUntilIdle = true;
+    }
+    if ( deferUntilIdle && !active.size ) { log("idle: exiting for the update"); process.exit(75); }
     if ( !draining && Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
@@ -379,6 +398,11 @@ for ( ;; ) {
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
         .catch(e => log(`sweep failed: ${e.message}`)).finally(() => { sweeping = false; });
     }
+    // Graphics card heat (B6520): log each minute, alert when it stays hot.
+    const g = gpuCheck();
+    if ( g?.change === "hot" ) await alert("gpu", `graphics card running hot (core ${g.r.core} C${g.r.memory !== null ? `, memory ${g.r.memory} C` : ""})`,
+      `Over ${gpu.GPU_LIMITS.core} C core${g.r.memory !== null ? ` or ${gpu.GPU_LIMITS.memory} C memory` : ""} for ${gpu.GPU_LIMITS.hotMinutes} minutes. Power ${g.r.watts} W, fan ${g.r.fan}%, load ${g.r.util}%. Log: logs/gpu-*.csv in the runner folder.`);
+    else if ( g?.change === "cool" ) await recovered("gpu");
     for ( const id of LANES ) await healthCheck(id);
     const issues = await openIssues(LABEL.job);
     const openNums = new Set(issues.map(i => i.number));

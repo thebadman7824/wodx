@@ -1,4 +1,5 @@
 import {MODULE_ID, SOCKET, isActiveGM, rule, setting, log} from "./util.mjs";
+import {termsApi} from "./terms-live.mjs";
 import {registerSettings} from "./settings.mjs";
 import * as tokenLooks from "./token-looks.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
@@ -14,6 +15,7 @@ import {runEraTest} from "./era-test.mjs";
 import * as contentFixes from "./content-fixes.mjs";
 import {installSearch} from "./search.mjs";
 import * as skip from "./skip.mjs";
+import * as quiet from "./quiet.mjs";
 import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
@@ -56,6 +58,7 @@ import * as placeRules from "./place-rules.mjs";
 import * as worldRules from "./world-rules.mjs";
 import * as pace from "./pace.mjs";
 import * as pod from "./pod.mjs";
+import * as roads from "./roads.mjs";
 import * as legends from "./legends.mjs";
 import * as automation from "./automation.mjs";
 import * as automationRules from "./automation-rules.mjs";
@@ -75,6 +78,11 @@ Hooks.once("init", () => {
     return;
   }
   active = true;
+  // B6240: the Storyteller's client starts loading the world timeline now; a player's client never needs it at start
+  try {
+    const me = game.data?.users?.find?.(u => u._id === game.userId);
+    if ( (me?.role ?? 0) >= (CONST.USER_ROLES?.ASSISTANT ?? 3) ) events.load().catch(err => console.error("WoDX | the world timeline did not load", err));
+  } catch (err) { /* the ready hook loads it */ }
   installSearch();
   // Conditions are token statuses, so they are registered before the canvas is drawn
   conditions.registerCoreConditions();
@@ -91,8 +99,13 @@ Hooks.once("init", () => {
       if ( isActiveGM() && !skip.isHeld() ) { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); }
     },
     onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); waiting.WaitingApp.soon(); },
-    onRuleChange: async () => { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
+    onRuleChange: async id => {
+      // B6380: Light-touch mode on notes when; off, the held ticks, law stages and scars settle once
+      if ( id === "lightTouch" ) await quiet.onLightTouchChange({law: lawHeat.playHeld, scar: scars.scar, heal: scars.heal});
+      await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh();
+    }
   });
+  quiet.registerQuietSettings();
   // 0.46.0: how much runs by itself, and the Waiting tray (B2450-B2452)
   automation.registerAutomationSettings();
   // B6220: the night's work, everything the Hand did, with one Undo
@@ -138,6 +151,8 @@ Hooks.once("init", () => {
   events.registerEventSettings(async () => { await events.checkEvents(); await eras.refreshRulesJournal(); });
   // Data versions for every WoDX module
   migrations.registerMigrationSettings();
+  // B6384: Chronicle's data version 2, the first real step: bouts from before B6161 name their scene
+  Hooks.on("wodxRegisterMigrations", reg => reg.register(MODULE_ID, {version: 2, steps: {2: derangements.boutSceneStep}}));
   // Languages in chat
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
@@ -150,7 +165,9 @@ Hooks.once("init", () => {
   ghoulNeed.registerGhoulNeedSettings();
   ghoulNeed.registerGhoulNeedHooks();
   pod.registerPodSettings();
+  roads.registerRoadSettings();
   pod.registerPodHooks();
+  roads.registerRoadHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();
 
@@ -228,6 +245,8 @@ Hooks.once("ready", async () => {
 
   age.listen();
   const api = {
+    // B6180-B6199: one meaning for the words every module uses (time, dice, health, distance, eras, who is who)
+    terms: termsApi(),
     // B3210: the age floor of 18 for anything romantic or sexual
     age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
     // B3500: one gender for every module; forRules is "" for every player character
@@ -250,6 +269,9 @@ Hooks.once("ready", async () => {
     contentFixes,
     timeSkip: skip.timeSkip,
     isSkipping: skip.isSkipping,
+    // B6380: a skip, a hold or Light-touch mode; ticking work in other modules waits on this and settles on wodxLightTouchEnd
+    isQuiet: quiet.isQuiet,
+    quiet: quiet.quietApi,
     isHeld: skip.isHeld,
     hold: skip.setHold,
     conditions, timed,
@@ -273,7 +295,9 @@ Hooks.once("ready", async () => {
     law: {regime: {turn: lawRegime.turn, check: lawRegime.checkTurns, elections: lawRegime.checkElections, rules: lawRegime.rules}, tax: {here: lawTax.taxHere, month: lawTax.onMonth, dodging: lawTax.dodging, rules: lawTax.rules}, standing: {of: lawStanding.standingFor, officeCap: lawStanding.officeCap, mode: lawStanding.mode, rules: lawStanding.rules}, papers: {project: lawPapers.project, selvesOf: lawPapers.selvesOf, addSelf: lawPapers.addSelf, check: lawPapers.checkSelves, rules: lawPapers.rules}, sentence: {card: lawPunish.sentenceCard, pass: lawPunish.sentence, pardon: lawPunish.pardon, marksOf: lawPunish.marksOf, rules: lawPunish.rules}, trial: {card: lawTrial.trialCard, hold: lawTrial.hold, rules: lawTrial.rules}, heat: {of: lawHeat.of, add: lawHeat.addDeed, arrest: lawHeat.arrest, lower: lawHeat.lowerHeat, amnesty: lawHeat.amnesty, state: lawHeat.state, rules: lawHeat.rules}, here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: era => events.EventsApp.open(era),
-      heard: (ev, codes) => events.heard(ev, codes), hereCodes: scene => events.hereCodes(scene), worldEra: year => events.worldEra(year), eras: events.WORLD_ERAS},
+      heard: (ev, codes) => events.heard(ev, codes), hereCodes: scene => events.hereCodes(scene), worldEra: year => events.worldEra(year),
+      // B6240: the world timeline loads on the Storyteller's client at start, elsewhere when load() is awaited
+      load: () => events.load(), loaded: () => events.loaded(), get eras() { return events.worldEras(); }},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
     playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, prefs: () => playerHelp.PrefsApp.open(), help: playerHelp.openHelp, glossary: playerHelp.openGlossary, windows: playerHelp.WINDOWS, tour: (o = {}) => playerGuide.GuideApp.open(o), openDrawer: playerView.openDrawer, drawers: playerView.drawerTools, rules: playerViewRules},
     tours: {start: tours.startTour},
@@ -283,6 +307,7 @@ Hooks.once("ready", async () => {
     signatures: signatures.signaturesApi,
     ghoulNeed: ghoulNeed.ghoulNeedApi,
     pod: pod.podApi,
+    roads: roads.roadsApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
@@ -298,6 +323,8 @@ Hooks.once("ready", async () => {
     try { await migrations.runMigrations(); }
     catch (err) { console.error("WoDX | Data versions could not be checked", err); }
   }
+  // B6240: on the Storyteller's client the world timeline is in before the other modules start on it
+  if ( game.user.isGM ) { try { await events.load(); } catch (err) { console.error("WoDX | the world timeline did not load", err); } }
   // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
   Hooks.callAll("wodxChronicleReady", api);
   // The crossover referee sits in the Storyteller's hand when WoDX Storyteller is on
@@ -408,6 +435,10 @@ async function onSocket(message) {
       break;
     case "roster.play":
       await roster.onPlaySocket(payload ?? {});
+      break;
+    case "looks.show":
+      // B6163: a player's look on the map, placed by the active Storyteller
+      await looks.onShowSocket(payload ?? {});
       break;
     case "approval.propose":
       // Players may only send free-form requests; automation proposals come from the GM's own client

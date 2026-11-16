@@ -14,7 +14,11 @@
  *             setting "Cards for loved ones", on by default
  */
 import * as H from "./hearts-rules.mjs";
+import * as LR from "./lines-rules.mjs";
+import * as LM from "./line-mend.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
@@ -36,15 +40,15 @@ function ageCheck(...people) {
   return out;
 }
 
-/** The line a sheet belongs to. */
+/** The line a sheet belongs to (B6310: the all-lines key, so a Kuei-jin is not read as Kindred nor a Fera as a mortal). */
 export function lineOf(actorLike) {
-  const a = actorOf(actorLike);
-  const t = String(a?.type ?? "").toLowerCase();
-  if ( t === "mortal" ) return a?.flags?.["wodx-creation"]?.lineage?.kinfolk || a?.flags?.[MOD]?.kinfolk ? "kinfolk" : a?.flags?.["wodx-creation"]?.ghoul || a?.flags?.[MOD]?.ghoul ? "ghoul" : "mortal";
-  if ( t.startsWith("changel") ) return "changeling";
-  if ( /kuei|cathayan/.test(t) ) return "kueijin";
-  return ["vampire", "werewolf", "mage", "wraith", "hunter", "mummy", "demon"].includes(t) ? t : "mortal";
+  // B6187: the shared reading (a ghoul by the sheet's own variant too, a Kuei-jin by the Kindred of the East variant)
+  const l = TERMS.lineOf(actorOf(actorLike));
+  return ["spirit", "creature", "exalted"].includes(l) ? "mortal" : l;
 }
+/** The all-lines key itself (lines-rules.mjs KEYS). */
+export const lineKeyOf = actorLike => LR.lineKey(actorOf(actorLike), linesApi());
+const linesApi = () => { try { return game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.lines ?? null : null; } catch (e) { return null; } };
 const pathOf = a => { const c = String(a?.system?.advantages?.path?.custom ?? "").trim(); return c && !/humanit/i.test(c) ? c : ""; };
 const humanityOf = a => Number(a?.system?.advantages?.path?.permanent ?? a?.system?.advantages?.humanity?.permanent) || 0;
 const regionNow = () => { try { return chron()?.world?.homeland?.() || "moravia"; } catch (e) { return "moravia"; } };
@@ -60,7 +64,9 @@ const on = () => { try { return !!game.settings.get(MOD, "heartCards"); } catch 
 export const warmthOf = (lover, loved) => { const a = actorOf(lover), b = actorOf(loved); return H.normWarmth(a?.flags?.[MOD]?.warmth)[b?.id ?? loved]?.value ?? 0; };
 export function hindranceFor(lover, loved) {
   const a = actorOf(lover), b = actorOf(loved);
-  return H.hindrance({line: lineOf(b), path: pathOf(b), humanity: humanityOf(b), rage: Number(b?.system?.advantages?.rage?.permanent) || 0}, {line: lineOf(a)});
+  const lb = lineOf(b);
+  return H.hindrance({line: lb, path: pathOf(b), humanity: lb === "kueijin" ? Number(b?.system?.advantages?.dharma?.permanent) || 0 : humanityOf(b),
+    rage: Number(b?.system?.advantages?.rage?.permanent) || 0, torment: Number(b?.system?.advantages?.torment?.permanent ?? b?.system?.advantages?.torment?.temporary) || 0}, {line: lineOf(a)});
 }
 export async function court(lover, loved, event, {successes = 0, botch = false, why = ""} = {}) {
   const a = actorOf(lover), b = actorOf(loved);
@@ -212,7 +218,7 @@ export function upkeepOf(aLike, months = 1) {
   const m = money?.money?.();
   const wage = m && money.rules?.wageAt ? money.rules.wageAt(yearNow(), m.region) : 0;
   const cost = H.householdCost(householdOf(a), wage, months);
-  return {...cost, risk: H.masqueradeRisk(lineOf(a), householdOf(a)), text: m ? money.format(cost.total) : String(cost.total)};
+  return {...cost, risk: H.masqueradeRisk(lineOf(a), householdOf(a), {kinfolk: householdOf(a).filter(x => x.id && lineOf(x.id) === "kinfolk").map(x => x.id)}), line: lineOf(a), text: m ? money.format(cost.total) : String(cost.total)};
 }
 async function onMonth({months = {}} = {}) {
   if ( !isActiveGM() ) return;
@@ -223,7 +229,15 @@ async function onMonth({months = {}} = {}) {
     const u = upkeepOf(a, n);
     if ( !u.total ) continue;
     try { await st().upkeep.money.pay(a, u.total, {note: "Household"}); } catch (e) { continue; }
-    lines.push(`${a.name}: ${u.rows.length} under the roof, ${u.text}.${u.risk === 2 ? " Many mortals in a Kindred's haven: the Masquerade is at great risk." : u.risk ? " Mortals in a Kindred's haven: a risk to the Masquerade." : ""}`);
+    let talk = "";
+    if ( u.risk > 0 ) {
+      const face = Math.ceil(Math.random() * 10);
+      if ( H.householdTalks(u.risk, face) ) {
+        const tellers = householdOf(a).map(x => x.id).filter(id => id && game.actors.get(id));
+        try { await st()?.rumours?.start?.({text: H.householdRumour(a.name, u.line), tellers, source: tellers[0] ?? null, about: a.id, truth: "true"}); talk = " Someone in the house talked: a rumour has started."; } catch (e) { console.warn(`${MOD} | household rumour`, e); }
+      }
+    }
+    lines.push(`${a.name}: ${u.rows.length} under the roof, ${u.text}.${H.riskWords(u.line, u.risk)}${talk}`);
   }
   if ( lines.length ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"}, flags: {[MOD]: {household: true}}, content: card("The month's household keep", lines)});
 }
@@ -242,7 +256,7 @@ async function grieve(who, kind) {
   const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   const res = H.griefResult({successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0}, great);
   let line = `Grief, Willpower ${dice} dice at ${diff}: ${faces.join(", ")}. `;
   if ( res.held ) line += "They hold together.";
@@ -259,7 +273,7 @@ async function heartbreak(who, other) {
   const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= H.HEARTBREAK_DIFF).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, H.HEARTBREAK_DIFF);
   const botch = hits === 0 && ones > 0;
   let line = `Willpower ${dice} dice at ${H.HEARTBREAK_DIFF}: ${faces.join(", ")}. `, key = null;
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
@@ -267,9 +281,8 @@ async function heartbreak(who, other) {
   else {
     // B5826, B5991: it shows for a week: Grieving, one die fewer on social rolls (Actions reads socialDice), a mark on the token
     const T = game.modules.get("wodx-chronicle")?.api;
-    if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition({id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
-      source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}});
-    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
+    if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition(GRIEVING); // B6170: main.mjs registers it at setup; this is a fallback
+    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * DAY},
       condition: "grieving", key: "wodx-npc-grieving", source: "WoDX NPC hearts"});
     line += "It hurts, and it shows: grieving for a week (one die fewer on social rolls).";
   }
@@ -277,23 +290,125 @@ async function heartbreak(who, other) {
     content: card(`${who.name}'s heart breaks over ${other.name}`, [line])});
   return {botch, derangement: key};
 }
-async function tellLoved(victim, ev) {
+export async function tellLoved(victim, ev) {
   if ( !isActiveGM() || !on() || !victim?.id ) return [];
   const out = [];
   for ( const e of closeTo(victim.id) ) {
     const who = game.actors.get(e.from);
     if ( !who ) continue;
-    const checks = H.weakSpotChecks(lineOf(who), e.kind, ev, {name: victim.name});
+    const checks = H.weakSpotChecks(lineOf(who), e.kind, ev, {name: victim.name, po: Number(who.system?.advantages?.po?.permanent) || 0});
     if ( !checks.length ) continue;
-    const lines = checks.map(c => c.text), rolls = [];
+    const lines = checks.map(c => c.text), rolls = [], rolled = [];
+    // B6450: the checks are rolled for them, and a failure lands on the sheet
+    for ( const c of checks.filter(x => x.roll) ) {
+      let error = null;
+      const r = await lovedRoll(who, c.roll).catch(err => { console.warn(`${MOD} | loved-one check`, err); error = String(err?.message ?? err); return null; });
+      if ( r?.line ) lines.push(r.line);
+      if ( r?.roll ) rolls.push(r.roll);
+      rolled.push({fail: c.roll.fail ?? null, failed: !!r?.failed, made: !!r, ...(error ? {error} : {})});
+    }
     if ( ev === "death" ) { const g = await grieve(who, e.kind); if ( g ) { lines.push(g.line); rolls.push(g.roll); } }
     // B5804 (n5): an NPC mourns on the map by its faith
     if ( ev === "death" && !who.hasPlayerOwner ) { try { const m = await api()?.aftercare?.mourn?.(who, victim); if ( m ) lines.push(`In mourning: ${m.words}, ${m.days} days.`); } catch (err) { console.warn(`${MOD} | mourning`, err); } }
     await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls,
       content: card(`${victim.name} ${ev === "death" ? "is dead" : ev === "taken" ? "is taken" : "is hurt"}`, lines)});
-    out.push({to: who.id, checks});
+    out.push({to: who.id, checks, rolled});
   }
   return out;
+}
+/* B6450: the roll a loved-one check names, made and applied. */
+const actApi = () => (game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null);
+function lovedPool(a, pool) {
+  const adv = a?.system?.advantages ?? {};
+  if ( pool === "willpower" ) return Number(adv.willpower?.permanent) || 0;
+  return Number(adv[pool]?.permanent) || 0;
+}
+async function bump(a, id, delta) {
+  const P = actApi()?.profiles;
+  if ( P?.adjust && P.resource?.(a, id)?.ok ) return P.adjust(a, id, delta, {note: false});
+  const cur = Number(a.system?.advantages?.[id]?.temporary) || 0;
+  return a.update({[`system.advantages.${id}.temporary`]: Math.max(0, Math.min(10, cur + delta))});
+}
+async function lovedRoll(who, spec) {
+  if ( spec.via === "beast" ) {
+    const r = await actApi()?.autoBeast?.({actor: who, provocation: "loved"});
+    return {line: r ? "" : "The Beast stays quiet."};
+  }
+  if ( spec.via === "rage" ) return rageRoll(who);
+  if ( spec.via === "fire" ) return fireSoulRoll(who);
+  const dice = lovedPool(who, spec.pool);
+  if ( dice <= 0 ) return null;
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice?.[0]?.results?.map(x => x.result) ?? [];
+  const succ = TERMS.successes(faces, spec.diff).successes;
+  const failed = H.lovedFailed(spec, succ);
+  const label = {rage: "Rage", hun: "Hun", willpower: "Willpower"}[spec.pool] ?? spec.pool;
+  if ( failed ) {
+    if ( spec.fail === "frenzy" ) await markFrenzy(who, "berserk");
+    else if ( spec.fail === "willpower" ) await bump(who, "willpower", -1);
+    else await bump(who, spec.fail, 1);
+    LM.floatOver(who, H.LOVED_FAIL_WORD[spec.fail] ?? "", "#ff8a80");
+  }
+  return {roll, failed, line: `${label} ${dice} at ${spec.diff}: ${succ} ${succ === 1 ? "success" : "successes"}. ${failed ? `${H.LOVED_FAIL_WORD[spec.fail]}.` : "It holds."}`};
+}
+async function d10s(n) { const r = await new Roll(`${Math.max(1, n)}d10`).evaluate(); return {roll: r, faces: r.dice?.[0]?.results?.map(x => x.result) ?? []}; }
+const hitsAt = (faces, diff) => TERMS.successes(faces, diff).successes;
+/** Mark a frenzy the way WoDX Actions does: the sheet's box, the frenzy kind and the Chronicle condition. */
+async function markFrenzy(who, kind = "berserk", {thrall = false} = {}) {
+  await who.update({"system.conditions.isfrenzy": true});
+  try { await who.setFlag("wodx-actions", "frenzyType", kind); } catch (e) { /* Actions off */ }
+  const C = game.modules.get("wodx-chronicle")?.api;
+  try { await C?.conditions?.setCondition?.(who, "frenzy", true); } catch (e) { /* Chronicle off */ }
+  if ( thrall ) try { await C?.timed?.applyTimed?.(who, {name: "Thrall of the Wyrm", img: "icons/svg/terror.svg", duration: {kind: "scene"}, key: "wodx-charm-thrall", source: "W20 p. 262",
+    description: "The frenzy of the Wyrm's thrall: it attacks friend and foe and does the Wyrm's work."}); } catch (e) { /* Chronicle off */ }
+}
+/**
+ * B6453: the Garou's Rage roll for a loved one hurt, taken or killed, by WoDX Actions' own rules: permanent Rage at the
+ * moon's difficulty (one less for the auspice's moon or in Crinos), the rank's frenzy need, six successes the Thrall of
+ * the Wyrm (W20 pdf 263-264).
+ */
+async function rageRoll(who) {
+  const A = actApi(), GX = A?.garouRules;
+  if ( !GX?.info || !GX.moonNow ) return null;
+  const G = await import("../../wodx-actions/scripts/garou-rules.js");
+  const i = GX.info(who), D = GX.data?.()?.garou ?? {}, b = GX.basis?.() ?? "w20";
+  if ( i.fera && i.fera.rage === false ) return null;
+  const dice = i.rage.perm;
+  if ( dice <= 0 ) return null;
+  const moon = await GX.moonNow();
+  const diff = Math.min(10, G.rageDifficulty({b, phaseIndex: moon.index, auspice: i.auspice, form: i.form, table: D.rageDifficulty?.w20}) + G.rankFrenzyDiff(i.rank, D.frenzyByRank));
+  const {roll, faces} = await d10s(dice);
+  const succ = hitsAt(faces, diff);
+  const fc = G.frenzyCheck(succ, {rank: i.rank, need: i.fera?.frenzy ?? 4, thrall: i.fera?.thrall ?? 6, byRank: D.frenzyByRank});
+  const failed = fc.result !== "none", thrall = fc.result === "thrall";
+  if ( failed ) { await markFrenzy(who, "berserk", {thrall}); LM.floatOver(who, thrall ? H.LOVED_FAIL_WORD.thrall : H.LOVED_FAIL_WORD.frenzy, "#ff8a80"); }
+  return {roll, failed, line: `Rage ${dice} at ${diff} (${moon.name} moon): ${succ} ${succ === 1 ? "success" : "successes"}, ${fc.needed} for a frenzy. ${thrall ? "Thrall of the Wyrm." : failed ? "Frenzy." : "It holds."}`};
+}
+/**
+ * B6453: the Kuei-jin's fire soul, by WoDX Actions' own rules: Yin against the P'o, both at 6, extended up to five
+ * turns; the P'o's need of two successes (one when ravenous, shifted by a Yin or Yang imbalance) brings the lapse,
+ * which is frenzy for the scene (Kindred of the East pdf 138).
+ */
+async function fireSoulRoll(who) {
+  const A = actApi(), K = A?.kotRules;
+  const i = A?.kotInfo?.(who);
+  if ( !K?.natureStep || !i ) return null;
+  const need = K.natureNeed("fire", {ravenous: i.hunger === "ravenous" || i.hunger === "uncontrollable", imbalance: i.perm});
+  let st = {virtue: 0, po: 0, turn: 0}, turns = [], last = null;
+  while ( !st.done ) {
+    const a = await d10s(i.v.yin), p = await d10s(i.v.po);
+    const ys = i.v.yin > 0 ? hitsAt(a.faces, 6) : 0, ps = i.v.po > 0 ? hitsAt(p.faces, 6) : 0;
+    st = K.natureStep(st, ys, ps, need); last = a.roll;
+    turns.push(`${ys}/${ps}`);
+  }
+  const failed = st.result === "lapses";
+  if ( failed ) {
+    await markFrenzy(who, "berserk");
+    try { await game.modules.get("wodx-chronicle")?.api?.timed?.applyTimed?.(who, {name: "Fire soul", duration: {kind: "scene"}, condition: "frenzy", key: "wodx-kote-soul", source: "Kindred of the East pp. 150-151",
+      description: "Fire soul: frenzy, as the Kindred know it."}); } catch (e) { /* Chronicle off */ }
+    LM.floatOver(who, H.LOVED_FAIL_WORD.fire, "#ff8a80");
+  }
+  return {roll: last, failed, line: `Yin ${i.v.yin} against P'o ${i.v.po} at 6, turn by turn (Yin/P'o): ${turns.join(", ")}. ${failed ? "Fire soul." : st.result === "resists" ? "The Yin holds." : "The urge passes after five turns."}`};
 }
 /** Someone close is taken: the captor's demands go in the Ledger, and the ones who love them are told. */
 export async function takeHostage(captorLike, victimLike, {demand = ""} = {}) {
@@ -303,7 +418,7 @@ export async function takeHostage(captorLike, victimLike, {demand = ""} = {}) {
   const told = await tellLoved(v, "taken");
   for ( const t of told ) {
     const who = game.actors.get(t.to);
-    try { await st()?.ledger?.save?.({kind: "consequence", what: `${c.name} holds ${v.name}${demand ? ` and demands ${demand}` : ""}`, from: {id: who.id, name: who.name}, to: {id: c.id, name: c.name}, due: game.time.worldTime + 3 * 86400}); } catch (e) { /* Ledger off */ }
+    try { await st()?.ledger?.save?.({kind: "consequence", what: `${c.name} holds ${v.name}${demand ? ` and demands ${demand}` : ""}`, from: {id: who.id, name: who.name}, to: {id: c.id, name: c.name}, due: game.time.worldTime + 3 * DAY}); } catch (e) { /* Ledger off */ }
   }
   return told;
 }
@@ -315,3 +430,6 @@ export function listen() {
   Hooks.on("updateActor", (a, change) => { const d = change?.flags?.["wodx-creation"]?.chronology?.died; if ( d !== undefined && d !== null ) tellLoved(a, "death").catch(e => console.error(`${MOD} | hearts`, e)); });
 }
 export const rules = H;
+/** B5991, B6170: the Grieving condition; WoDX NPC registers it at setup on every client so it counts after a reload. */
+export const GRIEVING = {id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
+  source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}};

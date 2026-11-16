@@ -6,6 +6,8 @@
  *   4. one who runs remembers who frightened them (m5)
  *   5. a hostage is let go when the fight ends, and remembers who held them (c1)
  *   6. a guard on watch walks its beat to another tagged place (r3)
+ * Step 2's intruder is placed in the yard and never moves; step 6 walks the beat at a quarter past the hour or later, since
+ * the watch stands at its post for the first quarter of every hour (follow-rules atPostNow; B6487).
  */
 import {gate, waitFor} from "./kit.mjs";
 
@@ -20,6 +22,13 @@ export async function run() {
   const G = gate("gatefollow");
   const memWas = (() => { try { return game.settings.get(MOD, "memory"); } catch (e) { return null; } })();
   try {
+    // The beats rest on the hour (B5686) and sight is shorter at night: play at twenty past noon. Cleanup puts the clock back.
+    const {getEngine} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+    const eng = getEngine(), d0 = eng.timeToDate(game.time.worldTime);
+    let at = eng.dateToTime({year: d0.year, month: d0.month, day: d0.day, hour: 12, minute: 20});
+    if ( at <= game.time.worldTime ) at += 86400;
+    await game.time.advance(at - game.time.worldTime);
+    G.R.notes.push(`clock moved from ${d0.hour}:${String(d0.minute ?? 0).padStart(2, "0")} to 12:20`);
     const sc = await G.scene({width: 2400, height: 1600});
     const S = sc.grid.size;
     await sc.setFlag(MOD, "routineMode", "auto");
@@ -63,11 +72,15 @@ export async function run() {
       G.ok("2. the challenge is recorded", !!c && c.region === yard.uuid, {c});
       await guard.unsetFlag(MOD, "paused");
       await sc.setFlag(MOD, "challenges", [{...c, at: game.time.worldTime - 11 * 60}]);
-      const since = Date.now();
+      const had = new Set(game.messages.map(x => x.id));
       await RT().checkChallenges(sc, game.time.worldTime);
       await sleep(800);
-      const m = [...game.messages].filter(x => x.timestamp >= since && x.getFlag(MOD, "reaction")).at(-1)?.getFlag(MOD, "reaction");
-      G.ok("2. a second reaction leads with a firmer step", !!m && ["alarm", "fight", "send"].includes(m.options?.[0]?.action) && /told to go/.test(m.why ?? ""), {options: m?.options?.map(o => o.action), why: m?.why});
+      const posted = game.messages.filter(x => !had.has(x.id));
+      const m = posted.filter(x => x.getFlag(MOD, "reaction")).at(-1)?.getFlag(MOD, "reaction");
+      G.ok("2. a second reaction leads with a firmer step", !!m && ["alarm", "fight", "send"].includes(m.options?.[0]?.action) && /told to go/.test(m.why ?? ""), {options: m?.options?.map(o => o.action), why: m?.why,
+        posted: posted.map(x => String(x.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)), challenges: sc.getFlag(MOD, "challenges"),
+        guard: pos(sc.tokens.get(tg.id)), intruder: pos(sc.tokens.get(th.id)), inYard: !!sc.tokens.get(th.id)?.regions?.has(yard), paused: guard.getFlag(MOD, "paused") ?? null,
+        level: RT().alertLevel(sc), dayTime: game.time.worldTime % 86400});
       G.ok("2. it is acted on once", (sc.getFlag(MOD, "challenges") ?? []).every(x => x.acted));
       await sc.unsetFlag(MOD, "alert");
     });
@@ -101,6 +114,8 @@ export async function run() {
       await combat.delete();
       await waitFor(() => !sc.tokens.get(tt.id)?.getFlag(MOD, "hostage"), 8000);
       G.ok("5. the hold is gone", !sc.tokens.get(tt.id)?.getFlag(MOD, "hostage"));
+      // The hold is lifted first and the memory written after it: wait for both
+      await waitFor(() => (victim.getFlag(MOD, "memory")?.[taker.id] ?? []).some(n => n.kind === "harm"), 8000);
       const notes = victim.getFlag(MOD, "memory")?.[taker.id] ?? [];
       G.ok("5. the hostage remembers who seized them", notes.some(n => n.kind === "harm"), {notes});
     });
@@ -110,11 +125,14 @@ export async function run() {
         [`flags.${MOD}.where`]: {place: house.uuid, index: 0, activity: "patrol", label: "", since: 0}});
       const [tw] = await G.tokens(sc, [{actor: walker, x: 19, y: 3}]);
       await sleep(400);
-      const moved = await RT().walkBeats(sc, game.time.worldTime);
+      // the first quarter of each hour the watch is at its post: read the beat at a quarter past or later (the clock is not moved)
+      const t0 = game.time.worldTime, q = ((Math.floor(t0) % 3600) + 3600) % 3600;
+      const t = q < 15 * 60 ? t0 - q + 15 * 60 : t0;
+      const moved = await RT().walkBeats(sc, t);
       await sleep(1200);
       const d = sc.tokens.get(tw.id);
-      G.ok("6. the guard left the watch-house for another place", !d.regions.has(house) && (d.regions.has(market) || d.regions.has(yard)), {moved, at: pos(d)});
-      G.ok("6. the next stop waits a quarter hour", (await RT().walkBeats(sc, game.time.worldTime)).length === 0);
+      G.ok("6. the guard left the watch-house for another place", !d.regions.has(house) && (d.regions.has(market) || d.regions.has(yard)), {moved, at: pos(d), t});
+      G.ok("6. the next stop waits a quarter hour", (await RT().walkBeats(sc, t)).length === 0);
     });
   } finally {
     try { if ( memWas !== null ) await game.settings.set(MOD, "memory", memWas); } catch (e) { /* none */ }

@@ -140,3 +140,16 @@ test("tasks: Crafts tasks read the system's craft key", () => {
   assert.equal(R.abilityKey("crafts"), "craft");
   assert.match(src("modules/wodx-storyteller/scripts/tasks.mjs"), /R\.abilityKey\(t\.ability\)/);
 });
+
+test("tasks: a complication's delay stops a catch-up tick's rolls (B6167)", async () => {
+  const P = await imp("modules/wodx-storyteller/scripts/projects-rules.mjs");
+  // a week-a-roll task four weeks behind after a time skip
+  const t0 = 100 + 4 * WEEK;
+  let t = R.normTask({id: "a", kind: "wonder", started: 0, next: 100});
+  assert.ok(R.dueRolls(t, t0) >= 4);
+  t = R.stepTask(t, {successes: 1, botch: false}, t.next);
+  // a complication pushes the next roll past now: nothing more is due in this tick
+  const late = P.troubleTask({...t, next: t0 - DAY}, {delay: 7}, DAY);
+  assert.equal(R.dueRolls(late, t0), 0);
+  assert.match(src("modules/wodx-storyteller/scripts/tasks.mjs"), /while \( due-- > 0 && t\.status === "open" && R\.dueRolls\(t, t0\) > 0 \)/);
+});

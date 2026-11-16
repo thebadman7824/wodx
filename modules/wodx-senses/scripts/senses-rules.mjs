@@ -10,6 +10,7 @@
  * The draw is seeded, so the same question in the same hour and place gives the same answer.
  */
 import {stream, shuffled, expand} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const SENSES = {
   sight: {label: "Sight", verb: "Looking", cmd: "look"},
@@ -21,11 +22,14 @@ export const SENSE_KEYS = Object.keys(SENSES);
 
 /** Era bands for the place lines. The lines that carry no band fit every era. */
 export const ERA_BANDS = {
-  medieval: "Before 1450", early: "1450 to 1849", industrial: "1850 to 1949", modern: "1950 to 2009", future: "2010 on"
+  medieval: "Before 1450", early: "1450 to 1836", industrial: "1837 to 1949", modern: "1950 to 2009", future: "2010 on"
 };
+/** B6192: the bands follow the era profiles' years (terms.eraGroup); the mid-century turns modern in 1950. */
 export function eraBand(year) {
   const y = Number(year) || 1197;
-  return y < 1450 ? "medieval" : y < 1850 ? "early" : y < 1950 ? "industrial" : y < 2010 ? "modern" : "future";
+  const g = TERMS.eraGroup(y);
+  return g === "ancient" || g === "medieval" ? "medieval" : g === "early-modern" ? "early" : g === "industrial" ? "industrial"
+    : g === "mid-century" ? (y < 1950 ? "industrial" : "modern") : g === "modern" ? "modern" : "future";
 }
 
 /** Place kinds (as WoDX NPC tags them) that are indoors unless the Storyteller says otherwise. */
@@ -72,7 +76,8 @@ export const STEPS = {
   dim: 1, dark: 2, crowd: 1, storm: 1, door: 1, wind: 1, masked: 1, fog: 2, mist: 1
 };
 export const BASE_DIFFICULTY = 6;
-export const FLOOR = 3;
+/** V20 core pdf 257 / printed 249: a difficulty is always between 2 and 10 (B6570). */
+export const FLOOR = 2;
 
 /**
  * The difficulty for one sense, and why. ctx: {light, crowd, sky, indoor, door, masked, wx (weather tags), heavy}. powers: see powersFor().
@@ -131,7 +136,8 @@ export function powersFor(t = {}) {
   // A vampire's beast shape (Shape of the Beast): wolf Perception -2 difficulty, bat hearing -3 (V20 p. 200; VtDA20 p. 241)
   if ( t.body === "wolf" && !wolf ) mods.push({label: "Wolf's senses (Shape of the Beast)", n: 2});
   if ( t.body === "bat" ) mods.push({label: "Bat's hearing (Shape of the Beast)", n: 3, senses: ["sound"]});
-  if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: wolf ? 3 : 2});
+  // W20 pdf 160-161 / printed 158-159: -2 in Homid and Glabro, -3 in Crinos, Hispo and Lupus (B6571)
+  if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: (wolf || t.form === "crinos") ? 3 : 2});
   if ( t.eyesOfCat ) darkSight = "Eyes of the Cat";
   // B3799: cyberware (WoDX Library api.cyber.installedFx): {dark, mods: [{label, n, senses}]}
   if ( t.gear?.dark && !darkSight ) darkSight = t.gear.dark;

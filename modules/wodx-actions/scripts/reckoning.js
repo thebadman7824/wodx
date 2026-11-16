@@ -154,7 +154,7 @@ export function build(ctx) {
             const stat = k => (ATTR.includes(k) ? attr(actor, k) : K.VIRTUES.includes(k) ? i.virtues[k] : (findAbility(actor, k)?.value ?? 0));
             const dice = (a ? stat(a) : 0) + stat(v) + risk + n(fd.bonus);
             const r = await rollPool(dice, n(fd.diff) + lim.diff);
-            let body = rollBlock(`${a ? `${cap(a)} + ` : ""}${cap(v)}${risk ? ` + ${risk} risked` : ""}`, r, [e.conviction ? `${e.conviction} Conviction` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
+            let body = rollBlock(`${a ? `${cap(a)} + ` : ""}${cap(v)}${risk ? ` + ${risk} risked` : ""}`, r, [e.conviction ? `${e.conviction} Conviction` : "", lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             if (risk) {
                 await actor.setFlag(MOD, "riskScene", sceneKey());
                 const ok = !r.botch && r.successes > 0 && (!fd.resisted || fd.won);

@@ -33,6 +33,7 @@ import * as BR from "./book-rituals.js";
 import * as DSX from "./daysleep.js";
 import * as DSR from "./daysleep-rules.js";
 import * as FOM from "./fomor.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -175,6 +176,7 @@ export function build(ctx) {
     }
 
     async function useDiscipline(actor) {
+        if (LIM.refuseIdle(actor)) return null; // B6156: asleep for the day or out cold
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
         const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
@@ -248,7 +250,7 @@ export function build(ctx) {
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [`Drained +${lim.diff}`] : [])], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
@@ -475,7 +477,7 @@ export function build(ctx) {
         }
         if ((kind === "domain" || kind === "huntinggrounds") && !total) {
             const h = actor.getFlag(MOD, "haven"), scene = h?.sceneId ? game.scenes?.get?.(h.sceneId) : canvas?.scene;
-            const herds = ST?.herds;
+            const herds = ST?.upkeep?.herds; // B6204: herds live under Storyteller api.upkeep
             if (herds?.feed && scene) { for (let w = 0; w < weeks; w++) await herds.feed({ scene, who: "a rival" }); out.push(`A rival hunts ${scene.name} while the domain slips: its herd thins.`); }
         }
         if (botched) {
@@ -526,7 +528,7 @@ export function build(ctx) {
             }
             // B5758: the other Backgrounds do what their note says
             try { body += await downtimeDoes(actor, r.k, total, dots, Math.max(1, n(fd.weeks)), body.includes("Botch")); } catch (e) { console.warn("WoDX | downtime", e); }
-            if (fd.advance) body += await spendTime(actor, 7 * 86400 * Math.max(1, n(fd.weeks)), "downtime");
+            if (fd.advance) body += await spendTime(actor, 7 * DAY * Math.max(1, n(fd.weeks)), "downtime");
             await logEvent(actor, `Downtime: ${r.d.label.toLowerCase()}, ${total} success${total === 1 ? "" : "es"}.`, "downtime");
             return post(actor, `${actor.name}: ${esc(r.d.label)}`, body, rolls);
         }, { render: root => { sync(root); root.querySelector("[name=kind]").addEventListener("change", () => sync(root)); } });
@@ -575,7 +577,9 @@ export function build(ctx) {
     }
 
     async function masquerade(actor = null) {
-        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the Masquerade records.");
+        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the records of who saw what.");
+        // B6301: the same records serve every line; the window is named for the secret of the one who was seen
+        const title = !actor || P.detectProfile(actor) === "kindred" ? "Masquerade" : "Witnesses";
         const list = MASQJ.entries();
         const targets = [...(game.user.targets ?? [])].map(t => t.actor).filter(Boolean);
         const open = [];
@@ -583,14 +587,14 @@ export function build(ctx) {
         const content = `<form>
           <fieldset><legend>Record what was seen</legend>
             <div class="form-group"><label>Who was seen</label><input type="text" name="by" value="${esc(actor?.name ?? "")}"/></div>
-            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="fed in the open, used a Discipline, walked away from a killing blow…"/></div>
+            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="used a power in the open, changed shape, walked away from a killing blow…"/></div>
             <p class="vta-note">Witnesses: the targeted tokens (${targets.length ? targets.map(t => esc(t.name)).join(", ") : "none targeted"}).</p></fieldset>
           <fieldset><legend>Or update a witness (${open.length} still remember)</legend>
             ${open.length > 5 ? searchBox("select[name=w]", "Search witnesses…", "Search witnesses") : ""}
             <div class="form-group"><select name="w"><option value="">— none —</option>${open.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Now</label><select name="state">${Object.entries(K.WITNESS_STATES).filter(([k]) => k !== "saw").map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Note</label><input type="text" name="note"/></div></fieldset></form>`;
-        return dialog("Masquerade", content, "Record", async fd => {
+        return dialog(title, content, "Record", async fd => {
             if (fd.w) {
                 const [i, j] = String(fd.w).split(":").map(Number);
                 const L = MASQJ.entries();
@@ -924,8 +928,9 @@ export function build(ctx) {
             if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
             return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
         }
-        await ctx.setDamage(actor, { ...plan.after });
+        // B6441: the blood goes first and the wounds close after it, so a sheet that reads healed has paid already
         const ch = await ctx.changeBlood(actor, -plan.spent);
+        await ctx.setDamage(actor, { ...plan.after });
         const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
         if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
@@ -1038,7 +1043,7 @@ export function build(ctx) {
             if (keep) kept.push(a);
             rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${w}): ${esc(reaction || "takes it in")}${act ? ` (${act === "freeze" ? "falls still" : act === "flee" ? "flees" : "attacks"})` : ""}; ${keep ? "remembers" : "forgets"}.</li>`);
         }
-        if (rule === "hysteria" && rows.length) { try { await game.modules.get(MOD)?.api?.wraith?.hysteria?.(); } catch (e) { /* no wraith tools */ } }
+        if (rule === "hysteria" && rows.length) { try { const A = game.modules.get(MOD)?.api; await (A?.hysteria ?? A?.wraith?.hysteria)?.(); /* B6201: the api has hysteria at its top, not under wraith (found by gateapipaths) */ } catch (e) { /* no wraith tools */ } }
         if (fighters.length && by) {
             const ids = [...fighters.map(t => t.document?.id ?? t.id), by.document?.id ?? by.id];
             const sides = Object.fromEntries([...fighters.map(t => [t.document?.id ?? t.id, "a"]), [by.document?.id ?? by.id, "b"]]);
@@ -1113,7 +1118,7 @@ export function build(ctx) {
 
     /** Healing menu: mark a mortal's wounds as treated, see the plan, heal now. */
     async function healing(actor) {
-        const plan = healPlan(actor, 86400);
+        const plan = healPlan(actor, DAY);
         const treated = !!actor.getFlag(MOD, "treated");
         const content = `<form><p><b>${esc(actor.name)}</b>: ${ctx.healthText(actor, ctx.healthTrack(actor).damage)}.</p>
           <p class="vta-note">${plan ? `In a day: ${Object.entries(plan.healed).filter(([, v]) => v).map(([k, v]) => `${v} ${k}`).join(", ") || "nothing yet"}${plan.next ? `; the next level in ${Math.ceil(plan.next / 3600)} hours` : ""}.` : "This character doesn't heal with time (Cainites heal with blood)."} The clock heals automatically as it advances.</p>

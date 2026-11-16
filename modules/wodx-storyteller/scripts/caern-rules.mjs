@@ -23,9 +23,10 @@
  * The books give no clock for a caern losing or gaining levels, no raid odds and no rules for a caern war. WoDX
  * fills those in (house rules, B3471-B3475): missed moots, a year of full moots, raids by era, a contest of septs.
  */
+import {DAY, MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, MONTH};
 
-export const DAY = 86400;
-export const MONTH = 30 * DAY;
 export const LOG_CAP = 30;
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -131,12 +132,9 @@ export function normCaern(c = {}) {
 /* ------------------------------------------------------------------ */
 
 export function successes(pool, diff, rand = Math.random) {
-  let s = 0;
-  for ( let i = 0; i < clamp(int(pool), 0, 40); i++ ) {
-    const d = 1 + Math.floor(rand() * 10);
-    if ( d === 1 ) s -= 1; else if ( d >= diff ) s += 1;
-  }
-  return s;
+  const faces = Array.from({length: clamp(int(pool), 0, 40)}, () => 1 + Math.floor(rand() * 10));
+  const r = TERMS.successes(faces, diff);
+  return r.raw - r.ones;
 }
 
 /* ------------------------------------------------------------------ */

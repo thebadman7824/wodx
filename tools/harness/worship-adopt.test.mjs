@@ -50,3 +50,31 @@ test("worship: the generator takes --faith, the adopter reads the scene's faith"
   assert.match(src("tools/mapgen/ddtown.py"), /add_argument\("--faith"/);
   assert.match(src("modules/wodx-interactables/scripts/adopt.mjs"), /faith: await faithOf\(scene\)/);
 });
+
+/* B6362: the tagged house is holy ground, and its faith is read by prayer, True Faith and the demon's burn */
+const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
+test("worship: a house of worship is holy ground kept for its faith", () => {
+  for ( const f of Object.keys(F.FAITHS) ) assert.ok(IR.FAITHS.includes(f), f);
+  const o = IR.worshipGround({kind: "mosque", faith: "islamic"}, "The mosque");
+  assert.ok(IR.holyGround(o));
+  assert.equal(o.rating, 1);
+  assert.equal(o.faith, "islamic");
+  assert.equal(o.house, "mosque");
+  assert.equal(IR.worshipGround({kind: "church"}, "Chapel", "orthodox").faith, "orthodox", "the scene's faith when the place has none");
+  assert.equal(IR.worshipGround({kind: "temple", holy: 3}).rating, 3);
+  assert.equal(IR.worshipGround({kind: "tavern", faith: "islamic"}), null);
+  assert.equal(IR.holyGround(IR.worshipGround({kind: "church", desecrated: true})), false);
+  assert.equal(IR.holyHarm(o, {kind: "demon", torment: 5}).lethal, 1, "a demon is seared by any faith's house");
+});
+test("worship: whose holy ground it is", () => {
+  assert.ok(IR.sameFaith("islamic", "islamic"));
+  assert.ok(!IR.sameFaith("islamic", "western"));
+  assert.ok(IR.sameFaith("orthodox", "western"), "Christians share their churches");
+  assert.ok(IR.sameFaith("tibetan", "theravada"));
+  assert.ok(!IR.sameFaith("chinese", "theravada"));
+  assert.ok(IR.sameFaith(null, "jewish") && IR.sameFaith("jewish", null), "no faith named on either side counts as anyone's");
+  for ( const f of IR.FAITHS ) assert.ok(IR.FAITH_WORDS[f], f);
+  const hunter = src("modules/wodx-actions/scripts/hunter.js");
+  assert.match(hunter, /onHoly\(actor\)\?\.own/, "True Faith reads whether the ground is their own");
+  assert.match(hunter, /fd\.src === "ground" && gRating !== null \? gRating/, "prayer reads the ground on the map");
+});

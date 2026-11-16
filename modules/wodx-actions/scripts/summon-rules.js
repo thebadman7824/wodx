@@ -18,6 +18,7 @@
  * resolve() turns a spec and a casting into the numbers WoDX applies. Everything a summoning makes ends somehow:
  * resolve() never returns a being with no timer, no task, no upkeep and no way to dismiss it.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : s);
@@ -41,8 +42,8 @@ export const CONTROL = {
 };
 
 /** Kinds of time a summoning can last, in WoDX Chronicle's timed-effect terms. */
-const SECONDS = {hours: 3600, days: 86400, weeks: 7 * 86400};
-const PERIOD = {day: 86400, week: 7 * 86400, month: 30 * 86400};
+const SECONDS = {hours: 3600, days: DAY, weeks: 7 * DAY};
+const PERIOD = {day: DAY, week: 7 * DAY, month: 30 * DAY};
 /** The most tokens one summoning places (more make one swarm token). */
 export const MAX_TOKENS = 12;
 
@@ -88,7 +89,7 @@ export function timedOf(lasts = {}, ctx = {}) {
   switch ( L.kind ) {
     case "rounds": return {kind: "rounds", rounds: times};
     case "scene": return {kind: "scene"};
-    case "night": return L.perSuccess && times > 1 ? {kind: "time", seconds: times * 86400} : {kind: "night"};
+    case "night": return L.perSuccess && times > 1 ? {kind: "time", seconds: times * DAY} : {kind: "night"};
     case "hours": case "days": case "weeks": return {kind: "time", seconds: times * SECONDS[L.kind]};
     case "ladder": return ctx.ladder ?? {kind: "scene"};
     default: return null;

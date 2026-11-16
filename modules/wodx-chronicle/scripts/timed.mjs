@@ -1,5 +1,7 @@
 import {MODULE_ID, isActiveGM, setting} from "./util.mjs";
 import {secondsToNextDawn} from "./calendar.mjs";
+import {placeOf} from "./place.mjs";
+import {placeTime} from "./place-rules.mjs";
 import {getCondition, STATUS_PREFIX} from "./conditions.mjs";
 
 /**
@@ -49,10 +51,14 @@ export async function applyTimed(actor, o) {
   } else if ( d.kind === "scene" ) {
     timed.sceneId = globalThis.canvas?.scene?.id ?? game.scenes?.active?.id ?? null;
   } else if ( d.kind === "night" ) {
-    timed.until = now + secondsToNextDawn(now, setting("latitude"));
+    // B6185: the dawn where the actor is (a scene's own latitude and hour), not always the chronicle's home
+    const scene = actor.token?.parent ?? actor.getActiveTokens?.()?.[0]?.document?.parent ?? globalThis.canvas?.scene ?? null;
+    const pt = placeTime(placeOf(scene), now, setting("latitude"));
+    timed.until = now + secondsToNextDawn(pt.time, pt.latitude);
   } else if ( d.kind === "time" ) {
+    // B6432: WoDX keeps the time (timed.until) and ends it, as for the night: a core duration in seconds lets Foundry
+    // run the effect out by itself, past a hold, a skip or Light-touch mode and without the reverter
     timed.until = now + Math.max(1, Number(d.seconds) || 1);
-    duration.seconds = Math.max(1, Number(d.seconds) || 1);
   } else throw new Error(`Unknown duration ${d.kind}`);
 
   if ( timed.key ) {
@@ -142,27 +148,43 @@ export async function sweepRounds(combat, {ended = false} = {}) {
     || (ended && !x.timed.combatId))), ended ? "The fight is over" : `Round ${combat?.round}`);
 }
 
-/** End the scene: every "scene" effect ends (or only those begun on one scene). */
+/**
+ * End the scene: every "scene" effect ends (or only those begun on one scene).
+ * A scene ends two ways, the same for every module (B6190): the Storyteller ends it (this, from the clock, the
+ * Storyteller's hand or WoDX Actions' End scene), or another map becomes active (a scene is play in one place, V20
+ * pdf 262). Either way "wodxEndScene" fires once with {sceneId, next, map}: map is true for a new map.
+ */
 export async function endScene({sceneId = null, quiet = false} = {}) {
   if ( !isActiveGM() ) return 0;
   const n = await end(allTimed().filter(x => x.timed.kind === "scene" && (!sceneId || x.timed.sceneId === sceneId)), "The scene ends");
-  // Other modules end their own scene-long state (WoDX Actions: ignoring pain, daytime activity)
-  if ( !quiet ) Hooks.callAll("wodxEndScene", {sceneId});
+  // Other modules end their own scene-long state (WoDX Actions: ignoring pain, daytime activity, the scene count)
+  if ( !quiet ) Hooks.callAll("wodxEndScene", {sceneId: sceneId ?? globalThis.canvas?.scene?.id ?? game.scenes?.active?.id ?? null, next: null, map: false});
   return n;
 }
 
-/** When another scene becomes active, the scene effects begun elsewhere end. */
+let lastActive = null;
+
+/** When another scene becomes active, the scene effects begun elsewhere end, and the scene ends for every module. */
 export async function onSceneChange(newSceneId) {
   if ( !isActiveGM() ) return 0;
-  return end(allTimed().filter(x => x.timed.kind === "scene" && x.timed.sceneId && x.timed.sceneId !== newSceneId), "A new scene");
+  const prev = lastActive;
+  lastActive = newSceneId;
+  if ( prev === newSceneId ) return 0;
+  const n = await end(allTimed().filter(x => x.timed.kind === "scene" && x.timed.sceneId && x.timed.sceneId !== newSceneId), "A new scene");
+  if ( prev ) Hooks.callAll("wodxEndScene", {sceneId: prev, next: newSceneId, map: true});
+  return n;
 }
 
 export function registerTimedHooks() {
+  Hooks.once("ready", () => { lastActive = game.scenes?.active?.id ?? null; });
   Hooks.on("updateWorldTime", () => {
-    if ( game.modules.get(MODULE_ID)?.api?.isSkipping?.() ) return;
+    // B6380: a time skip, a hold or Light-touch mode: the sweep waits and runs once at the end
+    const api = game.modules.get(MODULE_ID)?.api;
+    if ( api?.isQuiet?.() ?? api?.isSkipping?.() ) return;
     sweepTime().catch(err => console.error("WoDX |", err));
   });
   Hooks.on("wodxSkipEnd", () => sweepTime().catch(err => console.error("WoDX |", err)));
+  Hooks.on("wodxLightTouchEnd", () => sweepTime().catch(err => console.error("WoDX |", err)));
   Hooks.on("updateCombat", (combat, changes) => {
     if ( "round" in (changes ?? {}) ) sweepRounds(combat).catch(err => console.error("WoDX |", err));
   });

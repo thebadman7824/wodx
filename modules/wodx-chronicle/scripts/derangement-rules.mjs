@@ -9,9 +9,10 @@
  * into the sheet's Derangements box. The difficulties and roll effects are house readings of the books' prose.
  */
 import {DERANGEMENTS} from "../data/signatures.mjs";
+import {SCENE_SECONDS} from "./terms.mjs";
+export {SCENE_SECONDS};
 
 /** How long one bout lasts: a scene, read as an hour of game time. */
-export const SCENE_SECONDS = 3600;
 
 /** key → {label, trigger, hold (Willpower difficulty), mods: [{tags, diff, note}], held, grip}. tags [] = every roll. */
 export const TABLE = {
@@ -73,6 +74,42 @@ export function boutEffects(keys = [], ctx = {}) {
 
 /** A bout still running at this world time. */
 export const boutLive = (bout, now) => !!bout?.keys?.length && Number(now) - Number(bout.at ?? -Infinity) < SCENE_SECONDS && Number(now) >= Number(bout.at);
+
+/**
+ * B6161: does the end of a scene end this bout? ended: the scene that ended (null: the scene, whichever it is);
+ * active: a scene just made active, which ends a bout begun on another one. A bout from before B6161 has no
+ * sceneId: any scene's end, or any change of scene, ends it.
+ */
+/**
+ * B6386: a bout's held move at the start of the bearer's turn in a fight (Phobia: flee or freeze). bout: the bout
+ * flag; turnKey: the fight, round and combatant; courage: the roll {successes, botch} or null. Returns null when the
+ * bout has no held move or this turn was already read, else {lose, line}: lose the turn's action unless Courage
+ * succeeds.
+ */
+export function heldMoveTurn(bout, turnKey, courage = null) {
+  const key = (bout?.keys ?? []).find(k => TABLE[k]?.held);
+  if ( !key || !turnKey || bout?.heldTurn === turnKey ) return null;
+  const ok = !!courage && Number(courage.successes) > 0 && !courage.botch;
+  return {key, lose: !ok, line: ok ? "Courage holds: they stand their ground this turn." : "They flee or freeze, and lose this turn's action."};
+}
+
+/**
+ * B6384, data version 2 of WoDX Chronicle: a bout flag written before B6161 has no sceneId, so any scene's end or any
+ * other scene made active ended it. The step gives it the scene the character's token stands on (sceneOfToken), else
+ * the active scene. Returns the new flag, or null when nothing changes (no bout, or a scene already named).
+ */
+export function boutWithScene(bout, {sceneOfToken = null, active = null} = {}) {
+  if ( !bout || typeof bout !== "object" || bout.sceneId ) return null;
+  const sceneId = sceneOfToken ?? active ?? null;
+  return sceneId ? {...bout, sceneId} : null;
+}
+
+export function boutEndsWithScene(bout = {}, {ended, active} = {}) {
+  const at = bout?.sceneId ?? null;
+  if ( active !== undefined ) return !at || at !== active;
+  if ( ended !== undefined ) return !ended || !at || at === ended;
+  return false;
+}
 
 /** The Willpower roll's outcome: {held, line}. botch: they lose the scene to it and the bout is worse. */
 export function holdResult(key, roll = {}) {

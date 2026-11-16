@@ -14,6 +14,7 @@ import {FAITHS} from "./faith-rules.mjs";
 import * as place from "./place.mjs";
 import {offsetWords} from "./place-rules.mjs";
 import {paceLine} from "./pace.mjs";
+import * as TERMS from "./terms.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 
@@ -118,7 +119,7 @@ export class ClockApp extends ApplicationV2 {
         <h3>${esc(p?.name ?? "No era")} ${a.interlude ? `<span class="wodx-tag">between eras</span>` : ""} ${lockId ? `<span class="wodx-tag">locked</span>` : ""}</h3>
         ${p ? `<p>${esc(p.switches)}</p><p class="wodx-quiet">Books: ${esc(p.basis)}</p>` : ""}
         ${gm && target.profile && p && target.profile.id !== p.id ? `<p class="wodx-notice">The date calls for ${esc(target.profile.name)}. ${waiting ? "A change is waiting in the approval queue." : ""}</p>` : ""}
-        ${rule("lightTouch") ? `<p class="wodx-notice">Light-touch mode is on: proposals are held back tonight.</p>` : ""}
+        ${rule("lightTouch") ? `<p class="wodx-notice">Light-touch mode is on: proposals and the world's own ticking wait until it is turned off.</p>` : ""}
         ${held ? `<p class="wodx-notice">The world is held: the clock moves, but nothing reacts to it.</p>` : ""}
         ${gm && paceLine() ? `<p class="wodx-quiet">${esc(paceLine())}</p>` : ""}
       </section>
@@ -131,8 +132,8 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="advance" data-seconds="3600">+1 hour</button>
           <button type="button" data-action="dusk"><i class="fa-solid fa-moon"></i> Next dusk</button>
           <button type="button" data-action="dawn"><i class="fa-solid fa-sun"></i> Next dawn</button>
-          <button type="button" data-action="advance" data-seconds="86400">+1 day</button>
-          <button type="button" data-action="advance" data-seconds="604800">+1 week</button>
+          <button type="button" data-action="advance" data-seconds="${TERMS.DAY}">+1 day</button>
+          <button type="button" data-action="advance" data-seconds="${TERMS.WEEK}">+1 week</button>
           <button type="button" data-action="setDate"><i class="fa-solid fa-calendar-day"></i> Set date</button>
           <button type="button" data-action="endScene" title="Every effect that lasts a scene ends now"><i class="fa-solid fa-clapperboard"></i> End the scene</button>
           <button type="button" data-action="passYears" title="A time skip: years pass, and each character's changes are proposed"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>

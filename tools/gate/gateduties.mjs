@@ -6,6 +6,8 @@
  *   4. a master's bound servant keeps hours at the master's place (g3)
  *   5. a follower sent to fetch someone who does not mind brings them back (g4)
  *   6. a faction on guard posts one of its people at its place (g6)
+ *   7. on the map (Auto routines on this scene): the clock moves and the sentry's token walks into the chapel, its
+ *      guard duty's place (a guard duty holds all day, so the hour of the lane does not matter)
  */
 import {gate} from "./kit.mjs";
 
@@ -93,6 +95,22 @@ export async function run() {
       const who = await npc().factions.postGuard({op: "guard", faction: facId, until: 1});
       const d = sentry.getFlag(MOD, "duties")?.[`guard-${facId}`];
       G.ok("6. the sentry keeps watch at the faction's place", who?.id === sentry.id && d?.place === chapel.uuid && d.until > game.time.worldTime, {d});
+    });
+
+    await G.step("7. the duty moves the token on the clock", async () => {
+      const [ts] = await G.tokens(sc, [{actor: sentry, x: 20, y: 13, actorLink: true}]);
+      const from = {x: ts.x, y: ts.y};
+      await sleep(400);
+      await game.time.advance(15 * 60);
+      await npc().routines.idle();
+      // a guard duty is a watch (patrol): on Auto the guard may already be walking its beat on to the next tagged place
+      const stop = () => sentry.getFlag(MOD, "beat")?.to ?? null;
+      const inPlace = id => !!id && [...(sc.tokens.get(ts.id)?.regions ?? [])].some(r => r.uuid === id);
+      const there = () => inPlace(chapel.uuid) || inPlace(stop());
+      for ( let i = 0; i < 40 && !there(); i++ ) await sleep(250);
+      const at = d => ({x: sc.tokens.get(d.id)?.x, y: sc.tokens.get(d.id)?.y});
+      G.ok("7. the sentry walked to its post (or on along its beat)", there() && (at(ts).x !== from.x || at(ts).y !== from.y),
+        {at: at(ts), from, inChapel: inPlace(chapel.uuid), beat: stop(), where: sentry.getFlag(MOD, "where") ?? null});
     });
   } finally {
     try { if ( cultsWas !== null ) await game.settings.set(MOD, "cults", cultsWas); } catch (e) { /* none */ }

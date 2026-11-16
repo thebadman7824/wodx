@@ -17,6 +17,7 @@ import * as R from "./servant-actions-rules.js";
 import * as EF from "./effects.js";
 import * as DE from "./demon-evocations.js";
 import { stOutcomes } from "./effects-rules.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -162,7 +163,7 @@ export function build(ctx) {
     const entry = R.thrallEntry({name: t.name, actorId: t.id, potential: d.potential, offered: d.offered, willpower: n(wp(t).permanent) || 3, terms: d.terms, gifts: d.picks});
     const i = linked.findIndex(x => x.actorId === t.id);
     if ( i >= 0 ) linked[i] = {...linked[i], ...entry}; else linked.push(entry);
-    await demon.setFlag(MOD, "demon", {...f, thralls: linked, lastDawn: f.lastDawn ?? Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400)});
+    await demon.setFlag(MOD, "demon", {...f, thralls: linked, lastDawn: f.lastDawn ?? Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / DAY)});
     const items = R.giftItems(d.picks, {demon: demon.name, demonId: demon.id});
     if ( items.length ) await t.createEmbeddedDocuments("Item", items);
     await t.setFlag(MOD, "faithPotential", d.potential);

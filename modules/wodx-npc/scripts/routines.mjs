@@ -211,6 +211,20 @@ export function build(ctx) {
   }
   const regionEl = r => { const e = r?.elevation?.bottom; return Number.isFinite(e) ? e : 0; };
   const inRegion = (r, p) => { try { return !!r.testPoint({x: p.x, y: p.y, elevation: regionEl(r)}, regionEl(r)); } catch (e) { return false; } };
+  /**
+   * B6487: is a token in a region? Foundry's own list (TokenDocument#regions), else the region's shape at the middle of
+   * the token where its document stands. A token made inside a region that has not moved since may not be on Foundry's
+   * list yet, so a guard placed at its post, or someone dropped in a watched yard, still counts as there.
+   */
+  function tokenIn(doc, region) {
+    if ( !doc || !region ) return false;
+    if ( doc.regions?.has?.(region) ) return true;
+    if ( doc.parent && region.parent && doc.parent.id !== region.parent.id ) return false;
+    const s = doc.parent?.grid?.size ?? canvas?.grid?.size ?? 100;
+    const x = Number(doc.x), y = Number(doc.y);
+    if ( !Number.isFinite(x) || !Number.isFinite(y) ) return false;
+    return inRegion(region, {x: x + ((Number(doc.width) || 1) * s / 2), y: y + ((Number(doc.height) || 1) * s / 2)});
+  }
   function regionBounds(r) {
     const b = r.object?.bounds;
     if ( b ) return {x: b.x, y: b.y, w: b.width, h: b.height};
@@ -310,7 +324,7 @@ export function build(ctx) {
       const p = here.get(target);
       if ( p ) {
         if ( !toks.length ) items.push({type: "place", actorId: actor.id, place: target, walkIn: how === "walk"});
-        else if ( p.region && !toks[0].regions?.has?.(p.region) ) items.push({type: how, actorId: actor.id, tokenId: toks[0].id, place: target});
+        else if ( p.region && !tokenIn(toks[0], p.region) ) items.push({type: how, actorId: actor.id, tokenId: toks[0].id, place: target});
         for ( const extra of toks.slice(1) ) items.push({type: "remove", actorId: actor.id, tokenId: extra.id, place: target, hand: !flag(extra, "placed"), duplicate: true});
       } else for ( const d of toks ) items.push({type: "remove", actorId: actor.id, tokenId: d.id, place: target, hand: !flag(d, "placed"), walkOut: how === "walk"});
     }
@@ -321,7 +335,7 @@ export function build(ctx) {
     const a = game.actors.get(it.actorId), w = whereOf(a);
     const what = w?.label || R.ACTIVITIES[w?.activity] || "";
     const dest = placeName(places, it.place);
-    const tail = it.duplicate ? " (a second token of the same NPC)" : it.hand ? " (placed by hand: needs the Storyteller)" : "";
+    const tail = it.beat ? " (the next stop on the beat)" : it.duplicate ? " (a second token of the same NPC)" : it.hand ? " (placed by hand: needs the Storyteller)" : "";
     return `${a?.name ?? "Someone"} ${VERB[it.type]} ${dest}${what ? `, ${what.toLowerCase()}` : ""}${tail}`;
   }
 
@@ -521,6 +535,11 @@ export function build(ctx) {
       content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">Routines need you</h3></header><div class="vta-body"><ul>${reports.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>`});
     if ( !scene || !canvas?.ready || canvas.scene?.id !== scene.id ) return {updates, items: [], fed};
     const items = planScene(scene, places, how === "walk" || how === "resume" ? "walk" : "jump", t);
+    // B6173: a guard's beat in Suggest mode is listed on the card (Auto walks it below)
+    if ( how === "walk" && post && NR.modeOf({scene: flag(scene, "routineMode"), world: setting("routineMode")}) === "suggest" ) {
+      const taken = new Set(items.map(i => i.tokenId).filter(Boolean));
+      items.push(...(await beatItems(scene, t).catch(e => { console.error(`${MOD} | beats`, e); return []; })).filter(i => !taken.has(i.tokenId)));
+    }
     const card = post ? await postRoutineCard(scene, items, how, t) : null;
     if ( how === "walk" || how === "resume" ) await checkStays(scene, t);
     // B5686 (r3): the watch walks its beat
@@ -672,7 +691,7 @@ export function build(ctx) {
     for ( const region of scene.regions ?? [] ) for ( const b of region.behaviors ?? [] ) {
       if ( b.type !== type || b.disabled || !listOf(b.system.triggers).includes("stay") ) continue;
       for ( const d of scene.tokens ) {
-        if ( !d.regions?.has?.(region) ) continue;
+        if ( !tokenIn(d, region) ) continue;
         const k = `${region.id}:${d.id}`;
         if ( !entered.has(k) ) { entered.set(k, t); continue; }
         if ( t - entered.get(k) >= num(b.system.stayMinutes || 10) * 60 ) { entered.set(k, t); await react(b.system, region, d, "stay"); }
@@ -728,7 +747,7 @@ export function build(ctx) {
     const tokNow = canvas.tokens.get(doc.id);
     const range = (d.isNight ? SIGHT_YARDS.night : SIGHT_YARDS.day);
     const watchers = canvas.tokens.placeables.filter(w => w.actor && w.id !== doc.id && !w.actor.hasPlayerOwner && !w.document.hidden && !downState(w.actor)
-      && (system.watchers !== "inside" || w.document.regions?.has?.(region)) && (system.watchers !== "listed" || nameIn(listed, w.actor)));
+      && (system.watchers !== "inside" || tokenIn(w.document, region)) && (system.watchers !== "listed" || nameIn(listed, w.actor)));
     if ( !watchers.length || !tokNow ) return null;
     const base = a => a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a;
     const ob = ctx.hiddenByObfuscate(tokNow) ? Math.max(1, disc(intruder, "obfuscate")) : 0;
@@ -1096,7 +1115,7 @@ export function build(ctx) {
     for ( const c of due ) {
       const region = fromUuidSync(c.region), doc = scene.tokens.get(c.intruder);
       const b = region?.behaviors?.find?.(x => x.type === type && !x.disabled);
-      if ( b && doc && doc.regions?.has?.(region) ) await react(b.system, region, doc, "stay");
+      if ( b && doc && tokenIn(doc, region) ) await react(b.system, region, doc, "stay");
     }
   }
   /** The NPC's home region on this scene, if it has one there. */
@@ -1118,7 +1137,7 @@ export function build(ctx) {
   async function goAway(tok, from, snap) {
     if ( !onGrid() ) return "";
     const home = homeHere(tok);
-    if ( home && !tok.document.regions?.has?.(home) && await walkToRegion(tok, home, snap) ) return "home";
+    if ( home && !tokenIn(tok.document, home) && await walkToRegion(tok, home, snap) ) return "home";
     snap?.moved?.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
     const run = C()?.movementFor?.(tok.actor)?.run ?? 20;
     const map = NR.reachable(ctx.cellOf(tok), ctx.passableFor(tok), ctx.cellsFor(run * 3), {neighbors: ctx.stepsFor()});
@@ -1160,24 +1179,50 @@ export function build(ctx) {
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(out.join("; "))}. They will remember who held them.</p></div></div>`});
     return out;
   }
-  /** r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour; on the hour they are back at the post. Auto mode only. */
-  async function walkBeats(scene, t) {
+  /**
+   * r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour; on the
+   * hour they are back at the post. The next stop of each guard whose beat is due, with the mode it is in.
+   */
+  async function beatsDue(scene, t) {
     if ( !scene || canvas.scene?.id !== scene.id || !onGrid() ) return [];
     const here = listPlaces().filter(p => p.region && p.scene?.id === scene.id);
     if ( here.length < 2 || FW.atPostNow(t) ) return [];
-    const moved = [];
+    const due = [];
     for ( const tok of canvas.tokens.placeables ) {
       const a = tok.actor?.isToken ? (tok.actor.baseActor ?? game.actors.get(tok.actor.id)) : tok.actor;
-      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || modeOf(a, scene) !== "auto" || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
+      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
+      const mode = modeOf(a, scene);
+      if ( mode === "off" ) continue;
       const w = whereOf(a);
       if ( w?.activity !== "patrol" || !FW.beatDue(flag(a, "beat")?.at ?? null, t) ) continue;
-      const at = here.find(p => tok.document.regions?.has?.(p.region))?.id ?? null;
+      const at = here.find(p => tokenIn(tok.document, p.region))?.id ?? null;
       const next = FW.nextBeat(here.map(p => p.id), w.place, at, Math.floor(t / FW.BEAT_SECONDS));
-      const p = here.find(x => x.id === next);
+      due.push({tok, a, mode, p: here.find(x => x.id === next) ?? null, next});
+    }
+    return due;
+  }
+  /** Auto mode: the guards walk their beat now. */
+  async function walkBeats(scene, t) {
+    const moved = [];
+    for ( const {tok, a, mode, p, next} of await beatsDue(scene, t) ) {
+      if ( mode !== "auto" ) continue;
       await a.setFlag(MOD, "beat", {at: t, to: next ?? null});
       if ( p && await walkToRegion(tok, p.region, null) ) moved.push(`${tok.name} walks the beat to ${p.name}`);
     }
     return moved;
+  }
+  /**
+   * B6173: in Suggest mode the beat goes on the routine card as a walk the Storyteller can accept, so a guard's round is
+   * seen and not lost (the walk itself still waits for Accept, as every routine move does in Suggest).
+   */
+  async function beatItems(scene, t) {
+    const items = [];
+    for ( const {tok, a, mode, p, next} of await beatsDue(scene, t) ) {
+      if ( mode !== "suggest" || !p ) continue;
+      await a.setFlag(MOD, "beat", {at: t, to: next ?? null});
+      items.push({type: "walk", actorId: a.id, tokenId: tok.id, place: p.id, beat: true});
+    }
+    return items;
   }
 
   /* r1 (B5687): the night's hunt, rolled when the hunting block ends */
@@ -1264,7 +1309,8 @@ export function build(ctx) {
         return {text: `${w.name} challenges ${i?.name ?? "them"}${moved}.${i && data.region ? " If they are still here in ten minutes, it goes further." : ""}`, snap};
       }
       case "alarm": {
-        const heard = canvas.tokens.placeables.filter(t2 => t2.id !== w.id && t2.actor && !t2.actor.hasPlayerOwner && (ctx.yardsBetween(w, t2) ?? 999) <= VOICE_YARDS);
+        // B6522: the one the alarm is about does not answer it (an NPC intruder used to run off before the guard could act)
+        const heard = canvas.tokens.placeables.filter(t2 => t2.id !== w.id && t2.id !== i?.id && t2.actor && !t2.actor.hasPlayerOwner && (ctx.yardsBetween(w, t2) ?? 999) <= VOICE_YARDS);
         await pause([w.actor, ...heard.map(h => h.actor)]);
         const sc = canvas.scene;
         snap.alert = {scene: sc.uuid, prev: flag(sc, "alert") ?? null};
@@ -1314,7 +1360,7 @@ export function build(ctx) {
         await sc.setFlag(MOD, "reports", [...prev, {at, by: w.name, byId: base(w.actor)?.id ?? null, about: i?.name ?? "someone", aboutId: i?.actor?.id ?? null}]);
         // B5683 (m4): they slip off to tell, where players can see them go (and stop them)
         const to = watchHouseHere();
-        const went = to && !w.document.regions?.has?.(to) ? await walkToRegion(w, to, snap) : (await goAway(w, i, snap)) !== "";
+        const went = to && !tokenIn(w.document, to) ? await walkToRegion(w, to, snap) : (await goAway(w, i, snap)) !== "";
         return {text: `${w.name} says nothing now${went ? " and slips away" : ""}, and will tell someone what they saw about ${i?.name ?? "them"} within ${MR.REPORT_HOURS} hours, unless they are stopped first.`, snap};
       }
       case "flee": {
@@ -1721,7 +1767,7 @@ export function build(ctx) {
     });
   }
 
-  return {setDuty, goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
+  return {setDuty, goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, beatItems, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }

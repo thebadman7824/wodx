@@ -13,6 +13,7 @@
  */
 import * as M from "./mage-da-rules.js";
 import { stOutcomes } from "./effects-rules.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
@@ -79,8 +80,8 @@ export const DA_EFFECTS = {
 export function daDuration(successes) {
   const s = Math.max(1, Math.min(6, n(successes)));
   const label = s <= 5 ? M.DURATION[s - 1][1] : "as the Storyteller sets";
-  const timed = s === 1 ? {kind: "rounds", rounds: 1} : s === 2 ? {kind: "scene"} : s === 3 ? {kind: "time", seconds: 86400}
-    : s === 4 ? {kind: "time", seconds: 30 * 86400} : s === 5 ? {kind: "time", seconds: 182 * 86400} : null;
+  const timed = s === 1 ? {kind: "rounds", rounds: 1} : s === 2 ? {kind: "scene"} : s === 3 ? {kind: "time", seconds: DAY}
+    : s === 4 ? {kind: "time", seconds: 30 * DAY} : s === 5 ? {kind: "time", seconds: 182 * DAY} : null;
   return {label, timed};
 }
 
@@ -92,8 +93,8 @@ export function lastsFor(lasts, successes) {
   if ( lasts === "night" ) return {label: "until dawn", timed: {kind: "night"}};
   if ( lasts?.seconds ) return {label: `${Math.round(lasts.seconds / 3600)} hours`, timed: {kind: "time", seconds: lasts.seconds}};
   if ( lasts?.turns ) { const t = lasts.turns * s; return {label: `${t} turn${t === 1 ? "" : "s"}`, timed: {kind: "rounds", rounds: t}}; }
-  if ( lasts?.days ) { const d = lasts.days * s; return {label: `${d} day${d === 1 ? "" : "s"}`, timed: {kind: "time", seconds: d * 86400}}; }
-  if ( lasts?.weeks ) { const w = lasts.weeks * s; return {label: `${w} week${w === 1 ? "" : "s"}`, timed: {kind: "time", seconds: w * 7 * 86400}}; }
+  if ( lasts?.days ) { const d = lasts.days * s; return {label: `${d} day${d === 1 ? "" : "s"}`, timed: {kind: "time", seconds: d * DAY}}; }
+  if ( lasts?.weeks ) { const w = lasts.weeks * s; return {label: `${w} week${w === 1 ? "" : "s"}`, timed: {kind: "time", seconds: w * 7 * DAY}}; }
   return {label: "the scene", timed: {kind: "scene"}};
 }
 
@@ -174,7 +175,10 @@ export function timedNumbers(spec = {}, s = 1) {
   const k = spec.kw, x = Math.max(1, n(s));
   if ( k === "ward" ) return {dice: n(spec.dice) || Math.min(5, x), ...(spec.against ? {against: spec.against} : {})};
   if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
-  if ( k === "fortune" ) { const sh = Math.min(3, x); return {shift: spec.curse ? sh : -sh}; }
+  // B6553: a spec's own shift (Will of Fire's two) wins over the successes
+  if ( k === "fortune" ) { const sh = Math.abs(n(spec.shift)) || Math.min(3, x); return {shift: spec.curse ? sh : -sh}; }
+  // B6553: Hasten's extra actions (one for every two successes, as effects-rules), or the spec's own; a Slow loses them
+  if ( k === "hasten" ) return {actions: n(spec.actions) || Math.max(1, Math.floor(x / 2)), ...(spec.slow ? {slow: true} : {}), ...(spec.speed ? {speed: n(spec.speed)} : {})};
   if ( k === "sight" ) return {vision: true};
   if ( k === "rise" ) return {feet: n(spec.feet) || 5 * x};
   return {};
