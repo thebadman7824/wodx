@@ -250,7 +250,7 @@ Next free block: B6580
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
-| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5144) | Solo, Chronicle |
+| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5148) | Solo |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
@@ -364,7 +364,7 @@ Next free block: B6580
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC; gates that failed on main (used B6520-B6523) | tools (pcq, vision, gate), NPC |
+| B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main (used B6520-B6525) | tools (pcq, vision, gate), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
@@ -8690,6 +8690,21 @@ WoDX Chronicle. The tour is offered once, on the first join, and was used up on 
 
 Reverse: remove soloWaits from player-guide.mjs.
 
+## B5146. An actor every player owns by default is nobody's character (2026-11-15)
+WoDX Solo. The first walk in the solo world found the new player handed an old gate-test actor that every player owns by default, so the arrival window never showed. The player's character is now the assigned one (unless it is owned only by default) or one the player is named owner of. The panel, I am stuck and arrival all read it this way. Nothing is deleted: the old test actors stay for Ben to clear.
+
+Reverse: drop ownsByName from characterOf in panel.mjs.
+
+## B5147. Foundry's welcome scene gives way to the landing (2026-11-15)
+WoDX Solo. The landing is made active when nothing is active, the active scene has no map or it is Foundry's own welcome scene; a map the Storyteller made active stays. The welcome scene is never picked as the landing.
+
+Reverse: edit mayReplaceActive and isCoreScene in solo-rules.mjs.
+
+## B5148. The first-login walk fails a hung step instead of hanging (2026-11-15)
+Tools. tools/solo/walk.mjs gives each step 90 seconds and notes who the player is right after the join, so a window nobody answers shows up as a failed step with a screenshot.
+
+Reverse: remove the limit in walk.mjs step().
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -12210,6 +12225,16 @@ tools/gate.
 - gatefollow plays at 12:20 on the calendar. The lanes' clock stood nine minutes past an hour, and on the hour the watch rests at its post, so the beat step never moved. Its step 5 now waits for the hostage's memory, which is written after the hold is lifted.
 - gate7d waits for the rumour's second write: who started it and which ledger entry. It had read the rumour between the two writes.
 - gatevehicles step 12 and gategadgets step 3 passed on a lane in the order that had failed. They now report what they saw when they fail, so the next failure names its cause.
+
+Reverse: revert the gate edits.
+
+## B6524. A ridden beast does not take fright at its own rider (2026-11-16)
+WoDX NPC. Mounting a beast that has its own sheet makes a map noise. In Auto mode the beast heard it, reacted to the rider as a stranger, and fled to the edge of the map, carrying no one. The beast now leaves out the noises its own rider makes. The same goes for anyone aboard a vehicle or beast that makes a noise: a passenger in a rammed car no longer walks out of it to flee. They still hear everyone else. Found by gatevehicles step 12.
+
+Reverse: drop the ridden test from the hearers in onMapEvent (routines.mjs).
+
+## B6525. Vehicle and mount gates match the tiles they make by title (2026-11-16)
+tools/gate. gatevehicles and gatemounts took the tiles from a batch create in the order they were asked for. Foundry does not promise that order (kit rule 1), so a chimera was sometimes tested as a gryphon, or a train as a snow machine. They now match each tile to its data by title. Two more changes: gatevehicles runs with fight turns not acting on their own, and gatemounts step 12 has 150 seconds for its four looks.
 
 Reverse: revert the gate edits.
 
