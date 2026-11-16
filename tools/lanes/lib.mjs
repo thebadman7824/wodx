@@ -316,6 +316,8 @@ export async function pickLane(cfg, {only = null, up = isUp, state = l => lockSt
   for ( const lane of cfg.lanes ) {
     if ( only && !only.includes(String(lane.id)) ) continue;
     if ( lane.disabled ) continue;
+    // B6527: a reserved lane (lane 6, the local agents') is used only when named
+    if ( lane.reserved && !only?.includes(String(lane.id)) ) continue;
     if ( state(lane).held ) continue;
     if ( await up(lane) ) free.push(lane);
   }

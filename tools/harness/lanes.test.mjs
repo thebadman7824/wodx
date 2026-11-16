@@ -187,6 +187,10 @@ test("the picker takes the first lane that is up and free", async () => {
   assert.equal(await pick([1, 2, 3], [1, 2, 3]), null);
   assert.equal(await pick([4], []), null, "a disabled lane is never picked");
   assert.equal((await pick([1, 2, 3], [], ["3"])).id, 3);
+  // B6527: a reserved lane is taken only when named
+  lanes.push({id: 6, reserved: "local-agents"});
+  assert.equal(await pick([6], []), null, "a reserved lane is not picked unasked");
+  assert.equal((await pick([6], [], ["6"])).id, 6);
 });
 
 test("lane tools never name the Live world and keep backups", () => {
