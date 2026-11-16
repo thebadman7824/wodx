@@ -40,3 +40,22 @@ test("raised peoples: lists kept in the core People tables (German in Bohemia be
     assert.equal(new Set(texts).size, texts.length, `${x.name} repeats a name`);
   }
 });
+
+test("the release notes' counts and examples hold (B6410)", () => {
+  assert.equal(PW.namesOf("english").size, 501);
+  assert.equal(PW.namesOf("spanish").size, 437);
+  assert.ok(PW.namesOf("zulu").size >= 402);
+  for ( const n of ["Ntshingwayo", "Khoza", "Dabulamanzi", "Nandi"] ) assert.ok(PW.namesOf("zulu").has(n), n);
+  for ( const n of ["Kang", "Gam-chan"] ) assert.ok(PW.namesOf("korean").has(n), n);
+});
+
+test("B6546: Sámi and Khmer hold 300 distinct names (old lists still short)", () => {
+  for ( const o of PW.RAISED_SHORT_OLD ) {
+    assert.ok(PW.namesOf(o).size >= 300, `${o}: ${PW.namesOf(o).size}`);
+    for ( const n of PW.namesOf(o) ) assert.doesNotMatch(n, /\b(he|she|her|hers|him|his)\b/i, `${o}: ${n}`);
+    for ( const t of PW.WORLD_PEOPLE_TABLES.filter(x => x.id.endsWith(`.${o}`)) ) {
+      const texts = t.results.map(r => r.text);
+      assert.equal(new Set(texts).size, texts.length, `${t.name} repeats a name`);
+    }
+  }
+});

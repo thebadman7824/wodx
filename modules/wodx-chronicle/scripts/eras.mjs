@@ -1,5 +1,5 @@
 import {MODULE_ID, fetchJSON, isActiveGM, rule, setting, setSetting, log, esc} from "./util.mjs";
-import {mergeProfiles, resolveEra, interludeSpans, LINES} from "./era-resolve.mjs";
+import {mergeProfiles, resolveEra, interludeSpans, LINES, eraAbilitiesOf, eraAbilityList, followAbilities} from "./era-resolve.mjs";
 import {getEngine, describeTime} from "./calendar.mjs";
 import {writeChronicleRules} from "./journals.mjs";
 import * as approvals from "./approvals.mjs";
@@ -75,6 +75,8 @@ export function applyProfile(profile) {
     cfg.defaultVampireEra = profile.system.vampire;
     cfg.defaultWerewolfEra = profile.system.werewolf;
     cfg.defaultMageEra = profile.system.mage;
+    // B6382: the abilities this era adds to or hides from the system's lists, read by the fork when a sheet is made
+    cfg.wodxEraAbilities = eraAbilitiesOf(profile);
   }
   document.body.dataset.wodxEra = profile.id;
   document.body.dataset.wodxKit = profile.kit ?? profile.id;
@@ -140,7 +142,7 @@ export async function checkEra() {
 
   // The Storyteller's lock is a decision already made, and so is lifting it from a prologue, which no date reaches
   if ( target.locked || !rule("eraProposals") || getProfile(activeId)?.prologue ) {
-    await setSetting("activeEra", target.profile.id);
+    await setActiveEra(target.profile.id);
     return;
   }
   if ( rule("lightTouch") ) return;
@@ -156,13 +158,62 @@ export async function checkEra() {
   });
 }
 
+/**
+ * Put an era in force from the clock (the date, the Storyteller's lock, an approved change) and bring the sheets in
+ * step (B6383). Pass the Years sets the era itself and translates each sheet the Storyteller ticked, so it does not
+ * come through here.
+ */
+export async function setActiveEra(id) {
+  const from = getProfile(setting("activeEra"));
+  await setSetting("activeEra", id);
+  try { await followSheets(from, getProfile(id)); } catch (e) { console.error("WoDX | sheets follow the era", e); }
+}
+
+const SHEET_LINE = {Mortal: "mortal", Vampire: "vampire", Werewolf: "werewolf", "Changing Breed": "werewolf", Mage: "mage"};
+/**
+ * B6383: when the profile says so ("sheets": "follow", the default; "keep" leaves them), every character sheet that
+ * stood on the old era's ability list for its line moves to the new one: its era is the new era's, the new era's
+ * abilities show (with the profile's own additions), abilities with dots always stay, and those with no dots that the
+ * new era lacks are hidden. A sheet set to another era by hand stays as it is. The Storyteller gets one card.
+ */
+export async function followSheets(from, to) {
+  if ( !isActiveGM() || !from || !to || from.id === to.id || (to.sheets ?? "follow") !== "follow" ) return [];
+  const ERA = CONFIG.worldofdarkness?.era, lists = game.worldofdarkness?.abilities;
+  if ( !ERA || !lists ) return [];
+  const oldBlock = eraAbilitiesOf(from), newBlock = eraAbilitiesOf(to);
+  const moved = [];
+  for ( const a of game.actors ?? [] ) {
+    const line = SHEET_LINE[a.type];
+    const oldKey = from.system?.[line], newKey = to.system?.[line];
+    if ( !line || !ERA[oldKey] || !ERA[newKey] || a.system?.settings?.era !== ERA[oldKey] ) continue;
+    // another module (or a test) may keep a sheet where it is: Hooks.on("wodxSheetFollowsEra", (actor, from, to) => false)
+    if ( Hooks.call("wodxSheetFollowsEra", a, from, to) === false ) continue;
+    const before = eraAbilityList(lists[line]?.[oldKey], oldBlock, line, oldKey);
+    const after = eraAbilityList(lists[line]?.[newKey], newBlock, line, newKey);
+    if ( oldKey === newKey && JSON.stringify(before) === JSON.stringify(after) ) continue;
+    const shown = [...after.talents, ...after.skills, ...after.knowledges];
+    const update = {};
+    if ( oldKey !== newKey ) update["system.settings.era"] = ERA[newKey];
+    for ( const [k, vis] of Object.entries(followAbilities(a.system?.abilities, shown)) ) update[`system.abilities.${k}.isvisible`] = vis;
+    if ( !Object.keys(update).length ) continue;
+    await a.update(update);
+    moved.push(a.name);
+  }
+  if ( moved.length ) {
+    log(`Sheets follow ${to.name}: ${moved.join(", ")}`);
+    await ChatMessage.create({speaker: {alias: "Chronicle"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
+      content: `<div class="wodx-card"><h3>The sheets follow the era</h3><p>${moved.length} character${moved.length === 1 ? "" : "s"} now use the abilities of <strong>${esc(to.name)}</strong>: ${esc(moved.slice(0, 12).join(", "))}${moved.length > 12 ? ", and more" : ""}. Every ability with dots stays on the sheet.</p></div>`});
+  }
+  return moved;
+}
+
 /** Approval handler for era changes. */
 export function registerEraHandler() {
   approvals.registerHandler("era-change", {
     label: "Era change",
     approve: async req => {
       await setSetting("declinedEra", "");
-      await setSetting("activeEra", req.data.to);
+      await setActiveEra(req.data.to);
     },
     reject: async req => {
       await setSetting("declinedEra", req.data.to);

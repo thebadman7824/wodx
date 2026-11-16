@@ -126,3 +126,36 @@ test("B5795: a pact gift does what it gives", async () => {
   assert.match(src, /data = \{kind: "effects", caster: actor\.name, items\}/);
   assert.doesNotMatch(src, /"it answers" : "nothing comes"/);
 });
+
+test("B6445: a path's other end is found through a Set of destinations", () => {
+  const b = {system: {destinations: new Set(["Scene.s.Region.a"])}};
+  assert.deepEqual(ACT.destsOf(b), ["Scene.s.Region.a"]);
+  assert.equal(ACT.destsOf(b).includes("Scene.s.Region.a"), true);
+  assert.deepEqual(ACT.destsOf({system: {destinations: ["x"]}}), ["x"]);
+  assert.deepEqual(ACT.destsOf(null), []);
+});
+
+test("B6445: a path's end is matched whole or relative to its scene", async () => {
+  const region = {id: "a", uuid: "Scene.s.Region.a", parent: {id: "s"}};
+  assert.equal(ACT.namesRegion("Scene.s.Region.a", region), true);
+  assert.equal(ACT.namesRegion(".Region.a", region), true);
+  assert.equal(ACT.namesRegion("Region.a", region), true);
+  assert.equal(ACT.namesRegion("Scene.t.Region.a", region), false);
+  assert.equal(ACT.namesRegion(".Region.b", region), false);
+  assert.equal(ACT.leadsTo({system: {destinations: new Set([".Region.a"])}}, region), true);
+  assert.equal(ACT.leadsTo({system: {destinations: new Set(["Scene.s.Region.b"])}}, region), false);
+  const src = (await import("node:fs")).readFileSync(new URL("../../modules/wodx-actions/scripts/acts.js", import.meta.url), "utf8");
+  assert.match(src, /r\.behaviors\?\.some\?\.\(b => leadsTo\(b, pick\)\)/);
+  assert.match(src, /warp: \{to: dest, kept\}/);
+});
+
+test("B6445: a relative teleport destination is read as the region's whole uuid", () => {
+  const region = {documentName: "Region", uuid: "Scene.s.Region.g", id: "g"};
+  const b = {parent: region, system: {destinations: new Set(["..", "Scene.s.Region.o"])}};
+  const was = globalThis.fromUuidSync;
+  globalThis.fromUuidSync = (u, {relative} = {}) => (u === ".." && relative === b) ? region : null;
+  try {
+    assert.deepEqual(ACT.destsOf(b), ["Scene.s.Region.g", "Scene.s.Region.o"]);
+    assert.equal(ACT.absDest(".x", null), ".x");
+  } finally { globalThis.fromUuidSync = was; }
+});

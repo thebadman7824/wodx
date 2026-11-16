@@ -23,7 +23,8 @@
  *  17. an Assamite contract kept raises standing; an overdue one fails at the tick
  *  18. a Giovanni binds and calls a wraith
  *  20. a ghoul unfed for two months gets a card; a Grimaldi revenant finds its family row; a family founded by the Storyteller is kept (the list is put back)
- *  21. a ghoul and the domitor on the active scene: an approval, and once approved a blood point passes (B4983)
+ *  21. a ghoul and the domitor on the active scene, at the world's default settings (Clan features off, Ghouls need
+ *      vitae on): the ghoul's monthly check offers the feeding, and once approved a blood point passes (B4983, B6160)
  *  19. bloodlines: a True Brujah finds its own row and roll effects; a Gargoyle talking to a mortal gets a breach card
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
@@ -239,12 +240,20 @@ async function runGate(K) {
       await gh.update({"flags.wodx-creation.lineage": {domitor: dom.id}, "system.advantages.bloodpool.temporary": 0, [`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 31 * 86400, warned: 0}}});
       await dom.update({"system.advantages.bloodpool.temporary": 6});
       await scene.createEmbeddedDocuments("Token", [{actorId: gh.id, name: gh.name, x: 200, y: 200}, {actorId: dom.id, name: dom.name, x: 400, y: 200}]);
-      await api().tick({force: true});
+      // B6160: at the defaults: Clan features off, the monthly need on, and the ghoul a ghoul on its sheet
+      const needWas = game.settings.get(C, "ghoulNeed");
+      await game.settings.set(C, "sigVampire", false);
+      await game.settings.set(C, "ghoulNeed", true);
+      await gh.update({"system.settings.variant": "ghoul"});
+      await game.modules.get(C).api.ghoulNeed.check(game.actors.get(gh.id));
+      await game.settings.set(C, "ghoulNeed", needWas);
+      await game.settings.set(C, "sigVampire", true);
       await until(() => AP.pending().some(p => String(p.key ?? "").startsWith(`ghoulfeed:${gh.id}`)) || AP.history().some(p => String(p.key ?? "").startsWith(`ghoulfeed:${gh.id}`)));
       const p = AP.pending().find(x => String(x.key ?? "").startsWith(`ghoulfeed:${gh.id}`));
       if ( p ) await AP.decide(p.id, "approve");
       await until(() => Number(dom.system.advantages.bloodpool.temporary) === 5);
-      ok("21 the domitor feeds", Number(dom.system.advantages.bloodpool.temporary) === 5 && sig(gh).ghoul?.warned === 0, {domBlood: dom.system.advantages.bloodpool.temporary, ghoul: sig(gh).ghoul, queued: !!p});
+      const ghBlood = Number(game.actors.get(gh.id)?.system.advantages.bloodpool.temporary);
+      ok("21 the domitor feeds", Number(dom.system.advantages.bloodpool.temporary) === 5 && ghBlood === 1 && sig(gh).ghoul?.warned === 0, {domBlood: dom.system.advantages.bloodpool.temporary, ghBlood, ghoul: sig(gh).ghoul, queued: !!p});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

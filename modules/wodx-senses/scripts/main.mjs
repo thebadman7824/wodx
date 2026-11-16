@@ -30,7 +30,7 @@ import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.15.1";
+const VERSION = "0.15.3";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -361,6 +361,16 @@ function lightsNear(tile, scene) {
 /*  Putting an answer together (on the active Storyteller's client)    */
 /* ------------------------------------------------------------------ */
 
+/** B6373: what WoDX Actions says the looker's own state does to a sense roll: {dice, diff, parts}; nothing with Actions off. */
+function ownRollMods(actor, sense) {
+  const out = {dice: 0, diff: 0, parts: []};
+  const A = game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null;
+  if ( !A || !actor ) return out;
+  try { const cm = A.conditionMods?.(actor, {sight: sense === "sight"}); if ( cm ) { out.diff += num(cm.diff); out.parts.push(...(cm.parts ?? [])); } } catch (e) { /* no conditions */ }
+  try { const pen = A.powerMods?.rules?.penaltyOf?.(actor); if ( pen?.dice ) { out.dice += num(pen.dice); out.parts.push(...(pen.parts ?? [])); } } catch (e) { /* no penalty */ }
+  return out;
+}
+
 async function rollPool(dice, diff) {
   const roll = new Roll(`${Math.max(0, dice)}d10`);
   await roll.evaluate();
@@ -484,7 +494,11 @@ export async function answer(req) {
     const live = src.filter(l => !l.held);
     const crowd = gathered.sources.some(s => s.key === "activity.drink") || ["tavern", "market"].includes(ctx.place.kind) && ctx.part !== "night";
     const masked = gathered.sources.some(s => (s.key === "fire" || s.key === "brazier") && yardsBetween(me, s.at, scene) <= 10);
-    const D = R.difficulty(sense, {light: ctx.light, crowd, sky: ctx.sky, indoor: ctx.indoor, masked, wx: ctx.wx, heavy: ctx.heavy}, pw);
+    let D = R.difficulty(sense, {light: ctx.light, crowd, sky: ctx.sky, indoor: ctx.indoor, masked, wx: ctx.wx, heavy: ctx.heavy}, pw);
+    // B6373: the looker's own registered conditions (Drained, Blurred sight on a look, Blinded...) and a night's penalty
+    // on every roll (WoDX Actions) reach the closer look's roll
+    const own = ownRollMods(actor, sense);
+    if ( own.diff || own.parts.length ) D = {...D, diff: Math.min(10, num(D.diff) + own.diff), parts: [...(D.parts ?? []), ...own.parts]};
     if ( D.lost ) { live.length = 0; heldOut.length = 0; }
     // what is there and how hard each is to catch: a new wall or light changes the answer
     const fp = R.fingerprint([...live.map(l => `${l.id}:${l.n}`), ...(sense === "sight" ? [`light:${ctx.light}`] : [])]);
@@ -493,7 +507,7 @@ export async function answer(req) {
     let successes = 0, botch = false, roll = null, rolled = false;
     const sameAsBefore = memo && memo.fp === fp;
     if ( req.closer && R.canRoll(memo, fp) && !D.blind ) {
-      const dice = ctx.traits.perception + ctx.traits.alertness + ctx.traits.woundPenalty;
+      const dice = ctx.traits.perception + ctx.traits.alertness + ctx.traits.woundPenalty + own.dice;
       roll = await rollPool(dice, D.diff);
       rolls.push(roll.roll);
       successes = roll.successes; botch = roll.botch; rolled = true;

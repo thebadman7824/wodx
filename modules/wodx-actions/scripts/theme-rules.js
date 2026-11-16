@@ -94,16 +94,17 @@ export const MENU_PLAN = {
     },
     /** Dark Ages: Fae (3.8.0): the Dominions, the Mists and Weaving in place of Glamour. */
     faeDA: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:treasureUse", "api:seduction"],
         resist: ["api:daEcho", "api:daColdIron", "api:hazard"],
-        recover: ["api:daOath", "api:daRest", "uses:willpower"],
+        recover: ["api:daOath", "api:daRest", "api:treasureOath", "uses:willpower"],
+        st: ["api:treasureGive"],
         scene: ["api:endScene", "api:voices", "rules:faeDA"]
     },
     fae: {
-        act: ["action", "api:quickCheck", "api:withPerson", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:withPerson", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:treasureUse", "api:seduction"],
         resist: ["api:c20Trigger", "api:c20Bedlam", "api:c20ColdIron", "uses:banality", "api:hazard"],
-        recover: ["api:c20Epiphany", "uses:willpower"],
-        st: ["api:c20Mists", "api:c20Everyday"],
+        recover: ["api:c20Epiphany", "api:treasureOath", "uses:willpower"],
+        st: ["api:c20Mists", "api:c20Everyday", "api:treasureGive"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
     spirit: { act: ["action", "api:quickCheck", "api:withPerson", "api:spiritCharm", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
@@ -255,6 +256,9 @@ export const DESC = {
     "api:m20Quiet": "Mage 20th: the Quiet as a state, its form and level; visions, tokens and lines only the player sees; rising out of it",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
+    "api:treasureUse": "A faerie Treasure: dust thrown, a charmed object's cantrip, a Changeling 20th Treasure's Art (its Glamour first)",
+    "api:treasureOath": "An oathcrafted Treasure's bargain kept, so its bound essence stays",
+    "api:treasureGive": "The Storyteller hands out a Treasure from the books, or one holding an Art's cantrip",
     "api:daCantrip": "Dark Ages: a cantrip, Dominion + the trait it names, with the Court's Dominion, its hour and its season",
     "api:daUnleash": "Dark Ages: raw power of a Dominion, Mists + Dominion against the Unleashing dice; Weaving tames it",
     "api:daCounter": "Dark Ages: absorb or scatter a cantrip, or unravel an Unleashing",

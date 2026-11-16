@@ -2,15 +2,18 @@
  * The Lone Chronicle, step 3 (B5980 to B5985): the oracle, the Leads page and night encounters, in rothenstein-wodx
  * (the testing world), as Gamemaster Test in one browser:
  *   await (await import(`/wodx-gate/gatesoloworld.mjs?${Date.now()}`)).run()
- * The switch stays as it is: the seat's parts are called straight, as the seat would call them, and the night's
- * encounter is forced (no chance roll, no night needed). The clock does not move.
+ * Steps 2 to 4 call the seat's parts straight, as the seat would call them. Step 5 plays the night itself (B6169): the
+ * switch goes on for the step (and off again, which puts every automation back), a player plays the gate's character,
+ * and the clock moves an hour at a time as the panel's wait moves it; the chance roll is the real one, so it runs up
+ * to four nights until someone comes. The world is held while the clock moves (nothing else reacts) and the kit puts
+ * the clock back. A testbed with the switch already on skips step 5.
  *   1. the module and its new parts
  *   2. the oracle: a d10 is rolled on a card for the asker and the Storyteller, its answer follows the odds, and the
  *      question goes in the oracle's record
  *   3. the Leads page: the character's open oath and the oracle's answer are on it, and the window shows them
  *   4. Let it go takes a lead off the page
- *   5. a night encounter: the people of one of the night's encounters stand on the character's scene, in plain sight,
- *      four to eight squares from the character, and the seat's log says so
+ *   5. a night encounter from the clock (no force): the people of one of the night's encounters stand on the
+ *      character's scene, in plain sight, four to ten squares from the character, and the seat's log says so
  *   6. with the switch off the clock brings nobody
  * Result: Data/wodx-gate/gatesoloworld-result.json.
  */
@@ -63,16 +66,47 @@ export async function run() {
       G.ok("4. let it go", Array.isArray(after) && !after.some(r => r.id === `ledger:${oathId}`) && after.length === rows.length - 1, {left: after?.length});
       await foundry.applications.instances?.get?.("wodx-solo-leads")?.close?.();
     });
-    await G.step("5. a night encounter", async () => {
+    await G.step("5. a night encounter from the clock", async () => {
+      if ( game.settings.get(MOD, "on") === true ) return G.ok("5. a night encounter from the clock", true, {skipped: "the switch is already on in this world"});
+      const sleep = ms => new Promise(r => setTimeout(r, ms));
+      // the lone player: the seat's own pick (an active player, else one with a character), playing the gate's actor
+      let user = game.users.find(u => !u.isGM && u.active) ?? game.users.find(u => !u.isGM && u.character) ?? game.users.find(u => !u.isGM) ?? null;
+      let madeUser = null;
+      if ( !user ) user = madeUser = await User.create({name: "WoDX gate: solo world player", role: CONST.USER_ROLES.PLAYER});
+      const charWas = user.character?.id ?? null, holdWas = game.settings.get("wodx-chronicle", "hold");
+      const drawWas = game.settings.settings.has(`${ST}.nightDraw`) ? game.settings.get(ST, "nightDraw") : null;
+      await actor.update({[`ownership.${user.id}`]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER});
+      await user.update({character: actor.id});
+      // the scene's name says "gate", so the place is named a town by its flag
+      await scene.update({[`flags.${MOD}.encounters`]: "town"});
       const before = new Set(scene.tokens.map(t => t.id));
       const t0 = Date.now();
-      const out = await W.nightTick({force: true, actorId: actor.id, sceneId: scene.id, kind: "town"});
-      const fresh = game.scenes.get(scene.id).tokens.filter(t => !before.has(t.id));
+      let fresh = [], hours = 0;
+      try {
+        await game.settings.set(MOD, "on", true);
+        await waitFor(() => !!game.settings.get(MOD, "before")?.at, 8000);
+        await game.settings.set("wodx-chronicle", "hold", true);
+        if ( drawWas !== null ) await game.settings.set(ST, "nightDraw", false);
+        await game.settings.set(MOD, "rolled", []);
+        // the panel's wait: the clock moves on and the seat hears every move (world.mjs's updateWorldTime hook)
+        for ( ; hours < 96 && !fresh.length; hours++ ) {
+          await game.time.advance(3600);
+          await sleep(300);
+          fresh = game.scenes.get(scene.id).tokens.filter(t => !before.has(t.id) && t.actorId !== actor.id);
+        }
+        await waitFor(() => (S.log?.entries?.() ?? []).some(e => e.at >= t0 && e.title === "The night brought someone"), 4000);
+      } finally {
+        await game.settings.set(MOD, "on", false);
+        await sleep(2500);
+        await game.settings.set("wodx-chronicle", "hold", holdWas);
+        if ( drawWas !== null ) await game.settings.set(ST, "nightDraw", drawWas);
+        if ( madeUser ) await madeUser.delete(); else await user.update({character: charWas});
+      }
       const g = scene.grid.size;
       const squares = fresh.map(t => Math.max(Math.abs(t.x - tok.x), Math.abs(t.y - tok.y)) / g);
       const logged = (S.log?.entries?.() ?? []).some(e => e.at >= t0 && e.title === "The night brought someone");
-      G.ok("5. a night encounter", !!out?.text && fresh.length > 0 && fresh.every(t => !t.hidden) && squares.every(n => n >= 4 && n <= 10) && logged,
-        {text: out?.text, made: fresh.map(t => t.name), squares});
+      G.ok("5. a night encounter from the clock", fresh.length > 0 && fresh.every(t => !t.hidden) && squares.every(n => n >= 4 && n <= 10) && logged,
+        {hours, made: fresh.map(t => t.name), squares, logged});
     });
     await G.step("6. off means off", async () => {
       const on = game.settings.get(MOD, "on") === true;

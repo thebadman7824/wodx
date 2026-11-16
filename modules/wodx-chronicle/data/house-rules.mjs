@@ -28,7 +28,7 @@ export default {
       "id": "lightTouch",
       "group": "automation",
       "name": "Light-touch mode",
-      "hint": "Holds back every WoDX proposal for tonight's session, quietly, and skips the era check. Players' own requests still come through. The held ones wait in the approvals window until you put them in the queue. The clock still runs.",
+      "hint": "A quiet session. Every WoDX proposal is held back and the era check is skipped; players' own requests still come through, and the held ones wait in the approvals window until you put them in the queue. What happens by itself waits too, as through a time skip: timed effects ending, a ghoul's monthly need, time served, a derangement bout running out, the Clan features and the Cities, the watch's patrols. Crimes still raise the law's heat, but the warrant and the watch wait, and so do a power's scars on the ground and the town's rebuilding. Turn it off and all of it catches up once.",
       "default": false,
       "source": "WoDX plan: Light-touch mode"
     },

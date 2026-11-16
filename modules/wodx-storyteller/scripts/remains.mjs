@@ -98,14 +98,22 @@ export async function onMoved(tok, changes) {
   // B5703 (h5): townsfolk find bodies too: a mortal NPC (not a passer-by or the hunters' own) is the first to come upon one
   const townsfolk = !pc.hasPlayerOwner && pc.type === "Mortal" && !tok.flags?.["wodx-npc"]?.passerby && !tok.flags?.[MOD]?.reach;
   if ( !pc.hasPlayerOwner && !townsfolk ) return [];
+  // B6434: where the move ends. Foundry 14 can call the hook before the document shows the new place, so the change
+  // (or moveToken's destination) wins over the token's own x and y, as WoDX Interactables reads a move
+  const at = {x: Number(changes.x ?? tok.x) || 0, y: Number(changes.y ?? tok.y) || 0, width: tok.width, height: tok.height};
   const out = [];
   for ( const body of tok.parent?.tokens ?? [] ) {
     const r = remainsOf(body);
-    if ( !r || body.hidden || body.id === tok.id || r.found.includes(pc.id) || (townsfolk && r.found.length) || squares(tok, body, tok.parent) > reach() ) continue;
-    out.push(await found(body, pc));
+    if ( !r || body.hidden || body.id === tok.id || r.found.includes(pc.id) || (townsfolk && r.found.length) || squares(at, body, tok.parent) > reach() ) continue;
+    // B6439: a move is heard twice (updateToken and moveToken); one finding a body and finder, and one townsman a body
+    const key = townsfolk ? `${body.uuid}|town` : `${body.uuid}|${pc.id}`;
+    if ( finding.has(key) ) continue;
+    finding.add(key);
+    try { out.push(await found(body, pc)); } finally { finding.delete(key); }
   }
   return out;
 }
+const finding = new Set();
 
 /** A character comes upon a body: the Storyteller's card, and heat for a fresh one. */
 export async function found(body, pc) {
@@ -133,12 +141,21 @@ function onDead(effect) {
   const actor = effect.parent;
   if ( !actor || actor.documentName !== "Actor" || actor.hasPlayerOwner ) return;
   const toks = actor.isToken ? [actor.token] : (canvas?.scene?.tokens?.contents ?? []).filter(t => t.actorId === actor.id && t.actorLink);
-  for ( const t of toks ) if ( t && !t.flags?.[MOD]?.remains ) mark(t).catch(e => console.error(`${MOD} | remains`, e));
+  // B6390: a vessel drained by the Kiss is a body drained of blood, which the hunters and the coroner care about
+  const cause = R.causeAtDeath(actor.flags?.["wodx-actions"], now());
+  for ( const t of toks ) if ( t && !t.flags?.[MOD]?.remains ) mark(t, cause === "unknown" ? {} : {cause}).catch(e => console.error(`${MOD} | remains`, e));
 }
 
 export function registerRemainsHooks() {
   Hooks.on("createActiveEffect", effect => { try { onDead(effect); } catch (e) { console.error(`${MOD} | remains`, e); } });
   Hooks.on("updateToken", (doc, changes) => { onMoved(doc, changes).catch(e => console.error(`${MOD} | remains`, e)); });
+  // B6439: from Foundry 13 a move ends in moveToken, after the update's workflow (a move paused or carried on by a
+  // region, or sent through TokenDocument#move, reaches its end there); the finding is the same, once
+  // B6434: the movement's destination is where it ends; the document may not show it yet
+  Hooks.on("moveToken", (doc, movement) => {
+    const to = movement?.destination ?? {};
+    onMoved(doc, {x: to.x ?? doc.x, y: to.y ?? doc.y}).catch(e => console.error(`${MOD} | remains`, e));
+  });
   Hooks.on("wodxSkipEnd", () => { tick().catch(e => console.error(`${MOD} | remains`, e)); });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } tick().catch(e => console.error(`${MOD} | remains`, e)); });
 }

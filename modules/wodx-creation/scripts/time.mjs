@@ -1,3 +1,4 @@
+import {splatOf} from "./lines.mjs";
 import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf, isAnimal, animalKindOf} from "./actor-data.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 import {ghoulBloodMax, bondStage} from "./rules.mjs";
@@ -6,6 +7,10 @@ import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {viewOf, switches as advanceSwitches, applyAdvance, snapshot, recordYears} from "./advance.mjs";
 import {propose} from "./advance-rules.mjs";
+
+/** Lines in mortal bodies, who age as mortals (B6275): Kinfolk, sorcerers, kinain, hunters, the Garou and Fera, mages,
+ * changelings in their mortal seeming, and the Fallen's hosts. */
+const AGING_LINES = ["kinfolk", "sorcerer", "kinain", "hunter", "werewolf", "fera", "mage", "changeling", "demon"];
 
 /**
  * Pass the Years (Phase 4). A plan lists, for each character, what the years do to them; the Storyteller ticks
@@ -115,7 +120,9 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       ...(choices ? {choices} : {})});
     const born = Number.isFinite(Number(c.bornYear)) && c.bornYear !== null && c.bornYear !== undefined ? Number(c.bornYear) : null;
 
-    if ( line === "mortal" ) {
+    // B6275: every line that lives in a mortal body ages as a mortal does; the dead and the undead do not
+    const splat = splatOf(actor);
+    if ( line === "mortal" || AGING_LINES.includes(splat) ) {
       const town = townsfolk(actor);
       const assumed = assumedAgeOf(actor, town);
       const ageEnd = born !== null ? toYear - born : assumed + years;
@@ -160,6 +167,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       add("bondFades", `Bond to ${b.name} fades`, `${bondStage(stage).label} → ${bondStage(toStage).label}: no drink for ${Math.floor(months)} months, one step per ${period} (p. 341)`, true, {regnantId: rid, toStage});
     }
 
+    if ( splat === "wraith" ) notes.push("Does not age: one of the restless dead");
     if ( line === "vampire" ) {
       notes.push("Does not age");
       const road = Math.max(0, Math.min(10, Number(actor.system?.advantages?.path?.permanent) || 0));
@@ -195,7 +203,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
     notes.push(...adv.notes);
 
     if ( !changes.length && !notes.length ) continue;
-    rows.push({actorId: actor.id, name: actor.name, line: line ?? actor.type, born, needsBorn: born === null && ["mortal", "ghoul"].includes(line), notes, changes,
+    rows.push({actorId: actor.id, name: actor.name, line: line ?? actor.type, born, needsBorn: born === null && (["mortal", "ghoul"].includes(line) || AGING_LINES.includes(splatOf(actor))), notes, changes,
       ally: allyOf(actor)?.patron?.name ?? null, pc: !!actor.hasPlayerOwner});
   }
   rows.sort((a, b) => (Number(b.pc) - Number(a.pc)) || a.name.localeCompare(b.name));

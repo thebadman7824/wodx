@@ -17,6 +17,7 @@ import * as P from "./profiles.js";
 import * as GX from "./garou.js";
 import * as GR from "./garou-rules.js";
 import * as TR from "./theme-rules.js";
+import * as LIM from "./limits.js";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -107,6 +108,7 @@ export const MENUS = {
                 ["api:daCounter", "Counter a cantrip or Unleashing", "fa-shield-alt"], ["api:daFae", "Origin and Court", "fa-scroll"]]],
             ["The Mists", [["api:daMists", "The Mists (hide, cloak, Kenning)", "fa-smog"], ["api:daMien", "Take or drop the mien", "fa-mask"],
                 ["api:daOath", "Keep an oath (Weaving)", "fa-handshake"], ["api:oaths", "An oath is broken", "fa-unlink"], ["api:daRest", "Rest in a faerie realm", "fa-tree"]]],
+            ["Treasures", [["api:treasureUse", "Use a Treasure", "fa-gem"], ["api:treasureOath", "Keep a Treasure's oath", "fa-handshake"], ["api:treasureGive", "Give a Treasure (GM)", "fa-gift"]]],
             ["Danger", [["api:daEcho", "Face an Echo", "fa-bell"], ["api:daColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:faeDA", "Fae rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -117,6 +119,7 @@ export const MENUS = {
             ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
                 ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["api:c20Place", "This place: freehold, glade or the Dreaming (GM)", "fa-tree"], ["api:enchant", "Enchant a mortal", "fa-wand-sparkles"], ["api:partedMists", "The Parted Mists", "fa-cloud-sun"], ["uses:glamour", "Glamour", "fa-coins"]]],
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["api:c20Everyday", "Everyday Banality (GM)", "fa-building"], ["api:oaths", "Oaths sworn and broken", "fa-handshake"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
+            ["Treasures", [["api:treasureUse", "Use a Treasure", "fa-gem"], ["api:treasureOath", "Keep a Treasure's oath", "fa-handshake"], ["api:treasureGive", "Give a Treasure (GM)", "fa-gift"]]],
             ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -641,7 +644,10 @@ export function build(ctx) {
         return { kind, html };
     }
 
+    // B6156: a sleeping or out-cold character may still be woken, rest in torpor, or read the rules; nothing else
+    const IDLE_OK = new Set(["api:daytime", "api:torpor", "api:sunAndHaven", "api:help"]);
     async function run(spec, actor) {
+        if (!IDLE_OK.has(spec) && !spec.startsWith("rules") && LIM.refuseIdle(actor)) return null;
         const [type, arg] = spec.includes(":") ? [spec.slice(0, spec.indexOf(":")), spec.slice(spec.indexOf(":") + 1)] : [spec, ""];
         switch (type) {
             case "action": return action({ actor });

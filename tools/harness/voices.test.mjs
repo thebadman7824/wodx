@@ -1,13 +1,26 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 import * as V from "../../modules/wodx-voices/scripts/voice-rules.mjs";
 
-const CARD = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Mira asks about the bridge.</p><p>Coin first, traveller &amp; quickly.</p><p class="wodx-quiet wnpc-heard"><i>The water laughs.</i></p></div></div>`;
+// B6171: the real talk card markup, as WoDX NPC's talk.mjs deliver() writes it (the answer in <p class="wnpc-said">)
+const CARD = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Mira asks about the bridge.</p><p class="wodx-quiet wnpc-gate">[Streetwise 2]</p><p class="wnpc-said">Coin first, traveller &amp; quickly.</p><p class="wodx-quiet wnpc-heard"><i>The water laughs.</i></p><p class="wodx-quiet">Now you can ask about the toll.</p></div></div>`;
+const NOTHING = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Mira asks about the bridge.</p><p class="wnpc-said"><i>They have nothing to say about that.</i></p></div></div>`;
+const FAREWELL = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Mira takes their leave.</p><p class="wnpc-said">Go <b>well</b>.</p></div></div>`;
 
-test("the spoken words are the first plain paragraph of a talk card", () => {
+test("the talk card markup in these tests is the one talk.mjs writes", () => {
+  const src = readFileSync(new URL("../../modules/wodx-npc/scripts/talk.mjs", import.meta.url), "utf8");
+  assert.ok(src.includes(`<p class="wnpc-said">\${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>`), "deliver() answer paragraph");
+  assert.ok(src.includes(`<p class="wnpc-said">\${esc(line.say)}</p>`), "farewell() paragraph");
+  assert.ok(src.includes(`<p class="wodx-quiet">\${esc(r.me.name)} asks about`), "deliver() stage line");
+});
+
+test("the spoken words are a real talk card's wnpc-said line, else the first plain paragraph", () => {
   assert.equal(V.spokenLine(CARD), "Coin first, traveller & quickly.");
-  assert.equal(V.spokenLine(`<p class="wodx-quiet">x</p><p><i>They have nothing to say about that.</i></p>`), "");
+  assert.equal(V.spokenLine(NOTHING), "");
+  assert.equal(V.spokenLine(FAREWELL), "Go well.");
   assert.equal(V.spokenLine(""), "");
+  assert.equal(V.spokenLine(`<p class="wodx-quiet">x</p><p><i>They have nothing to say about that.</i></p>`), "");
   assert.equal(V.spokenLine(`<p class="wodx-quiet">Mira takes their leave.</p><p>Go <b>well</b>.</p>`), "Go well.");
 });
 

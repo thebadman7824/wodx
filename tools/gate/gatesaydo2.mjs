@@ -8,7 +8,8 @@
  *   3. an outlaw sentence puts the character at Wanted in that land
  *   4. a patron who raises a building pays for it
  *   5. a loud noise stuns a heightened-senses character with no Willpower to hold (Dazed)
- *   6. a betrayal that breaks a heart leaves the lover Grieving (one die fewer on social rolls)
+ *   6. Grieving is known before any heart breaks this session (B6170): a character carrying it rolls a real Persuade
+ *      with one die fewer; and a betrayal that breaks a heart leaves the lover Grieving
  *   7. a prison sentence takes the character's token off the map, and a pardon brings it back
  *   8. a brand shows on the token, and a pardon takes it off
  * Result: Data/wodx-gate/gatesaydo2-result.json.
@@ -81,6 +82,26 @@ export async function run() {
 
     await G.step("6 grieving", async () => {
       const H = game.modules.get("wodx-npc")?.api?.hearts;
+      // B6170: Grieving is known on this client before any heart breaks (WoDX NPC registers it at setup), so an actor
+      // that carries the status from an earlier session loses the die too. Checked first, before this step's heartbreak.
+      const known = !!C()?.conditions?.getCondition?.("grieving") && (CONFIG.statusEffects ?? []).some(e => e.id === "wodx-grieving");
+      const [mourner, friend] = await G.make(Actor, [
+        {name: "Gate SayDo Mourner", type: "Mortal", prototypeToken: {actorLink: true}, system: {attributes: {charisma: {value: 3}, manipulation: {value: 3}}}},
+        {name: "Gate SayDo Friend", type: "Mortal", prototypeToken: {actorLink: true}}]);
+      const [, tf] = await G.tokens(scene, [{actor: mourner, x: 10, y: 6}, {actor: friend, x: 11, y: 6}]);
+      // a real Persuade roll from WoDX Actions' social window (the form given, so no dialog): its dice, from the card
+      const persuade = async () => {
+        const since = Date.now();
+        await game.wodxActions?.social?.(mourner, canvas.tokens.get(tf.id), "persuade", {bonus: 0, extraDiff: 0, specialty: false, wp: false, aura: false});
+        await new Promise(r => setTimeout(r, 300));
+        const m = [...game.messages].filter(x => (x.timestamp ?? 0) >= since && String(x.content ?? "").includes(`${mourner.name}: persuade`)).at(-1);
+        const hit = String(m?.content ?? "").match(/(\d+) dice, diff (\d+)/);
+        return hit ? Number(hit[1]) : null;
+      };
+      const plain = await persuade();
+      // the status as a reloaded world has it: on the actor, put there by no heartbreak this session
+      await mourner.toggleStatusEffect("wodx-grieving", {active: true});
+      const carried = await persuade();
       await lover.update({"system.advantages.willpower.permanent": 1, "system.advantages.willpower.temporary": 1});
       let sick = false, tries = 0, last = null;
       // one Willpower die at 7: it may be borne or botched; try a few times, each a fresh betrayal
@@ -89,10 +110,8 @@ export async function run() {
         last = await H?.court?.(lover, beloved, "betrayal", {why: "the gate"});
         sick = lover.statuses?.has?.("wodx-grieving");
       }
-      // what WoDX Actions' social rolls read off the conditions: one die fewer
       const dice = (C()?.conditions?.conditionsOf?.(lover) ?? []).reduce((t, c) => t + (Number(c.mods?.socialDice) || 0), 0);
-      const actions = !!game.modules.get("wodx-actions")?.active;
-      G.ok("6 grieving", sick && dice === -1, {tries, dice, actions, last: last?.heartbreak ?? last?.why ?? null});
+      G.ok("6 grieving", known && plain !== null && carried === plain - 1 && sick && dice === -1, {known, persuadeDice: [plain, carried], tries, dice, last: last?.heartbreak ?? last?.why ?? null});
     });
 
     await G.step("7 time served", async () => {
