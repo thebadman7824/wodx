@@ -1713,6 +1713,22 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 | 2026-11-15 | When does a Charm-cantrip Treasure fade? | At its Dominion's next hour (noon, midnight, sunrise or sunset) if unused; a Dominion Writ at the next noon, a success less for another Dominion's cantrip (B6561) | toJuncture and IMBUE in fae-treasures.js |
 | 2026-11-15 | Excalibur's Scabbard: how much it turns | Dark Ages: lethal and aggravated harm from blades and points put back, bashing held at Injured; Changeling 20th: all lethal and aggravated but fire, cold and drowning put back, held at Injured (B6562) | scabbardKeeps in fae-treasures.js |
 
+## Approved by Ben, 16 November 2026, 01:43 UTC (Net Review Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | Which Net in which years (B6590) | The Digital Web from 1990; on the Future Darkness branch cyberdecks from 2005 | Make netKind in wodx-otherworlds net-rules.mjs return web always |
+| 2026-11-16 | Deck interfaces (B6591) | Interface plugs no penalty, 'trodes +1 difficulty, keyboard +2 and out of reach of black ICE but Firestarter | Edit ACCESS in net-rules.mjs |
+| 2026-11-16 | Cyberpunk strengths into dots (B6592) | Halved, rounded up; deck speed gives an extra action per 2 dots | Edit dots() and deckActions() |
+| 2026-11-16 | Data fortresses (B6594) | Rolled from the Fast Fortress tables, seeded, drawn as a scene; placeholder grid art | Edit fortress() and svg() |
+| 2026-11-16 | ICE on its own (B6596) | Only when a lone player plays (setting ICE acts on its own) | Change the setting |
+| 2026-11-16 | Black ICE (B6597) | Sword bashing on the icon, Hellbolt lethal and Hellhound aggravated on the body; Brainwipe Intelligence healing as lethal, Zombie and Liche as aggravated; statuses for the book's rolled turns; Firestarter a real fire beside the body | Edit iceHit() and applyHit() |
+| 2026-11-16 | Files (B6598) | Transfers a die times half a month's wage with law heat for theft; paydata a die times a quarter; grey and black ops a secret of the owner, made if none | Edit fileGives() |
+| 2026-11-16 | Remotes (B6599) | Tied automatically to the building's doors, lights, cameras and alarm | Draw the fortress with no building |
+| 2026-11-16 | Trace (B6600) | Traced status and named law heat for a break-in; Pit Bull cuts the line | Edit traceRunner() |
+| 2026-11-16 | Whiteout (B6601) | The M20 tables as written, with a white flash | Do not call whiteout() |
+| 2026-11-16 | Cyberpunks bloodline and Technica | Build next, tied into the Net | Not built yet |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
