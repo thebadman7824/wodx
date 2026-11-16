@@ -173,7 +173,9 @@ export async function run() {
       const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
       const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(ts.id).x;
       await tr.update({x: tr.x + g * 2, y: tr.y});
+      const r0 = tr.x, drv = foundry.utils.deepClone(scene.tokens.get(ts.id)?.flags?.[IX]?.driver ?? null);
       const carried = await waitFor(() => scene.tokens.get(ts.id).x === x0 + g * 2, 8000);
+      seen.carry = {x0, want: x0 + g * 2, beastNow: scene.tokens.get(ts.id).x, riderFrom: r0, riderNow: scene.tokens.get(tr.id)?.x, driver: drv, combat: !!game.combat?.started};
       const ride = ix.rideOf(tr);
       const own = ride?.beast?.dexterity === 4;
       await steed.update({"system.health.damage.lethal": 7});

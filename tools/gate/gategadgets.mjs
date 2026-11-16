@@ -44,10 +44,15 @@ export async function run() {
 
     await G.step("3. a wristwatch tells the time", async () => {
       const t0 = Date.now();
-      await lib.use.run(watch, "time", a);
+      const back = await Promise.race([lib.use.run(watch, "time", a), wait(5000).then(() => "no answer in 5 s (a dialog waiting?)")]);
       await wait(300);
-      const m = game.messages.contents.filter(x => x.timestamp >= t0).find(x => /looks at a wristwatch/.test(x.content));
-      G.ok("3. a wristwatch tells the time", !!m && /It is \d\d:\d\d/.test(m.content) && (m.whisper?.length ?? 0) > 0, {card: !!m});
+      const posted = game.messages.contents.filter(x => x.timestamp >= t0);
+      const m = posted.find(x => /looks at a wristwatch/.test(x.content));
+      const dialogs = [...(foundry.applications.instances?.values?.() ?? [])].filter(d => d.element?.classList?.contains("wlib-use")).map(d => d.element.textContent.replace(/\s+/g, " ").trim().slice(0, 200));
+      for ( const d of [...(foundry.applications.instances?.values?.() ?? [])].filter(d => d.element?.classList?.contains("wlib-use")) ) await d.close();
+      G.ok("3. a wristwatch tells the time", !!m && /It is \d\d:\d\d/.test(m.content) && (m.whisper?.length ?? 0) > 0, {card: !!m, line: m?.content?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160),
+        whisper: m?.whisper?.length ?? null, back: typeof back === "string" ? back : back?.id ?? typeof back, dialogs,
+        posted: posted.map(x => x.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 120)), item: !!a.items.get(watch.id)});
     });
   } finally { return G.finish(); }
 }
