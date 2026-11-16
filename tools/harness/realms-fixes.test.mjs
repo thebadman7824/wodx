@@ -93,3 +93,21 @@ test("a Wayfare portal makes a trod between the Near Dreaming levels; Not on the
   assert.equal(r2.way, null);
   assert.equal(lone.regions.length, 0);
 });
+
+test("a world with no loop file says so once instead of a sound switch that seems dead (B6793)", async () => {
+  const seen = new Map(), reg = game.settings.register;
+  game.settings.register = (ns, key, data) => { seen.set(`${ns}.${key}`, data); return reg.call(game.settings, ns, key, data); };
+  R.registerRealmSettings();
+  game.settings.register = reg;
+  const hint = seen.get("wodx-otherworlds.layerSound")?.hint ?? "";
+  assert.match(hint, /ships no loops yet: nothing plays until/);
+  const lv = {id: "pen", flags: {[M]: {layer: "penumbra"}}, getFlag(s, k) { return this.flags?.[s]?.[k]; }};
+  const scene = {levels: new Map([["pen", lv]])};
+  canvas.tokens.controlled = [{document: {parent: scene, _source: {level: "pen"}, actor: {statuses: new Set()}}}];
+  globalThis.fetch = async () => ({ok: false});
+  const before = mock.log.notifications.length;
+  assert.equal(await R.applyLayerSound(), null);
+  await R.applyLayerSound();
+  const told = mock.log.notifications.slice(before).filter(([, m]) => /No sound for this world yet: wodx-kits\/layers\/penumbra\.ogg/.test(m));
+  assert.equal(told.length, 1);
+});

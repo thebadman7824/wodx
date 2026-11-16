@@ -32,7 +32,7 @@ const diceLine = d => d.length ? `<span class="wodx-quiet">(${d.join(", ")})</sp
 export function registerRealmSettings() {
   game.settings.register(MODULE_ID, "avatarStorm", {name: "The Avatar Storm", hint: "By the date follows the chronicle's dated events (the Avatar Storm fires in 1999 on the classic branch). M20 calls the Storm optional.",
     scope: "world", config: true, type: String, choices: RR.STORM_MODES, default: "auto"});
-  game.settings.register(MODULE_ID, "layerSound", {name: "Sound of the other worlds", hint: "When your token stands in the Penumbra, the Shadowlands, the Near Dreaming or the Net, play that world's loop on this computer.",
+  game.settings.register(MODULE_ID, "layerSound", {name: "Sound of the other worlds", hint: "When your token stands in the Penumbra, the Shadowlands, the Near Dreaming or the Net, play that world's loop on this computer, from the folder of the other worlds' loops. WoDX ships no loops yet: nothing plays until penumbra.ogg, shadowlands.ogg, dreaming.ogg or net.ogg is put in that folder.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => layerSoundSoon()});
   game.settings.register(MODULE_ID, "layerVolume", {name: "Volume of the other worlds", scope: "client", config: true, type: Number, range: {min: 0, max: 1, step: 0.05}, default: 0.4, onChange: () => layerSoundSoon(true)});
   game.settings.register(MODULE_ID, "layerRoot", {name: "Folder of the other worlds' loops", hint: "In the Data folder: penumbra.ogg, shadowlands.ogg, dreaming.ogg and net.ogg. A missing file plays nothing.",
@@ -428,11 +428,17 @@ export function wantedLayerSound() {
   if ( !t ) return null;
   return RR.layerSoundFor({layer: tokenLayer(t), inNet: !!t.actor?.statuses?.has(STATUS.net.id)}, setting("layerRoot") || "wodx-kits/layers");
 }
+const missingTold = new Set();
 export async function applyLayerSound() {
   const src = wantedLayerSound();
   if ( src === playingSrc ) return src;
   if ( playing ) { try { playing.stop(); } catch (e) { /* */ } playing = null; playingSrc = null; }
-  if ( !src || !(await fileThere(src)) ) return null;
+  if ( !src ) return null;
+  if ( !(await fileThere(src)) ) {
+    // B6793: say so once, rather than a sound switch that seems dead
+    if ( !missingTold.has(src) ) { missingTold.add(src); ui.notifications?.info?.(`No sound for this world yet: ${src} is not in the Data folder, so nothing plays.`); }
+    return null;
+  }
   const AH = foundry.audio?.AudioHelper ?? globalThis.AudioHelper;
   playing = await AH?.play?.({src, volume: num(setting("layerVolume") ?? 0.4), loop: true}, false);
   playingSrc = src;
