@@ -39,7 +39,7 @@ export function traitMods(actor, tags = [], { target = null, moon = null } = {})
         const against = target ? T.kindOf(target) : null;
         const list = T.effects(actor, { channel: "roll", tags, against, moon: moon ?? (tags.includes("frenzy") ? moonNow() : "") });
         const s = T.rules.sumEffects(list);
-        return pw ? { dice: s.dice + pw.dice, diff: s.diff + pw.diff, parts: [...s.parts, ...pw.parts], once: pw.once, ...(s.noBotch ? { noBotch: true } : {}) } : s;
+        return pw ? { dice: s.dice + pw.dice, diff: s.diff + pw.diff, parts: [...s.parts, ...pw.parts], once: pw.once, ...(s.noBotch ? { noBotch: true } : {}), ...(s.halve ? { halve: s.halve } : {}) } : s;
     } catch (e) { console.warn("WoDX Actions | trait effects", e); return pw ?? NONE; }
 }
 

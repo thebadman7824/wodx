@@ -1,6 +1,6 @@
 import BonusHelper from "./bonus-helpers.js";
 import CombatHelper from "./combat-helpers.js";
-import { applyWodxRollMods, wodxRollSources, wodxNoBotch } from "./wodx-roll-mods.js";
+import { applyWodxRollMods, wodxRollSources, wodxNoBotch, wodxHalveRoll } from "./wodx-roll-mods.js";
 
 let _diceColor;
 let _specialDiceType = "";
@@ -288,6 +288,8 @@ export async function DiceRoller(diceRoll) {
 	// WoDX fork (B6720): a power, attack, casting or item roll from the system's own windows counts WoDX's modifiers
 	const wodxSrc = wodxRollSources();
 	const wodxMods = applyWodxRollMods(diceRoll, wodxSrc);
+	// WoDX fork (B6925): a pool WoDX halves (a Tzimisce without native soil, V20 p. 71)
+	wodxHalveRoll(diceRoll, wodxSrc);
 	if (wodxMods?.once?.length) game.wodxActions?.powerMods?.spend?.(actor, wodxMods.once)?.catch?.(() => {});
 	let difficulty = diceRoll.difficulty;
 	let specialityText = diceRoll.specialityText;

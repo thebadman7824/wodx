@@ -39,6 +39,8 @@ export function applyWodxRollMods(diceRoll, {modsFor = null, on = true, lowest =
 	diceRoll.wodxApplied = true;
 	// B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89): the roller reads it through wodxNoBotch
 	diceRoll.wodxNoBotch = !!mods?.noBotch;
+	// B6925: a halving count (a Tzimisce without native soil): wodxHalveRoll halves the pool once the dice are in
+	diceRoll.wodxHalve = Math.max(0, Math.floor(n(mods?.halve)));
 	if (!dice && !diff && !parts.length) return null;
 	diceRoll.numDices = Math.max(0, n(diceRoll.numDices) + dice);
 	for (const t of diceRoll.targetlist ?? []) t.numDices = Math.max(0, n(t.numDices) + dice);
@@ -61,6 +63,35 @@ export function wodxNoBotch(diceRoll, {modsFor = null, on = true} = {}) {
 	try { diceRoll.wodxNoBotch = !!modsFor(diceRoll.actor, { attributeKey: diceRoll.attribute, abilityKey: diceRoll.ability })?.noBotch; }
 	catch (e) { diceRoll.wodxNoBotch = false; }
 	return diceRoll.wodxNoBotch;
+}
+
+/** B6925: a pool halved k times, rounded down, never under one die; 0 stays 0. */
+export function halvePool(dice, k = 0) {
+	const d = Math.max(0, Math.floor(n(dice))), t = Math.max(0, Math.floor(n(k)));
+	if (!d || !t) return d;
+	return Math.max(1, Math.floor(d / 2 ** t));
+}
+
+/**
+ * B6925: halve the pool when WoDX says so (a Tzimisce's nights without native soil, V20 p. 71). The count comes from
+ * the mods applyWodxRollMods took, else (the general window) is asked of sheetRollMods here. Runs once per container,
+ * after the WoDX dice are on. Soak and damage are left alone. Returns the count used.
+ */
+export function wodxHalveRoll(diceRoll, {modsFor = null, on = true} = {}) {
+	if (!diceRoll?.actor || !on || typeof modsFor !== "function" || diceRoll.wodxHalved) return 0;
+	if (["soak", "damage"].includes(diceRoll.origin)) return 0;
+	let k = diceRoll.wodxHalve;
+	if (k === undefined) {
+		try { k = Math.max(0, Math.floor(n(modsFor(diceRoll.actor, { attributeKey: diceRoll.attribute, abilityKey: diceRoll.ability })?.halve))); }
+		catch (e) { k = 0; }
+	}
+	diceRoll.wodxHalved = true;
+	if (!k) return 0;
+	const before = n(diceRoll.numDices);
+	diceRoll.numDices = halvePool(before, k);
+	for (const t of diceRoll.targetlist ?? []) t.numDices = halvePool(t.numDices, k);
+	diceRoll.extraInfo = [...(diceRoll.extraInfo ?? []), `WoDX: pool halved${k === 1 ? "" : ` ${k} times`}, ${before} to ${diceRoll.numDices} dice`];
+	return k;
 }
 
 /** The live sources: WoDX Sheets' api and its world setting (on when WoDX Sheets does not say otherwise). */

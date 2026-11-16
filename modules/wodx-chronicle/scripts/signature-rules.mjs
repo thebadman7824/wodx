@@ -229,6 +229,8 @@ export const mayGlimpse = (last, now) => last == null || Math.floor((n(now) - 43
 /* ---------------- Tzimisce: native soil ---------------- */
 
 const night = t => Math.floor((n(t) - 43200) / DAY);
+/** B6925: how many times the pools are halved: one for each night in a row without the soil past the grace (V20 p. 71: cumulative). */
+export const soilHalvings = (short, grace = 0) => Math.max(0, Math.floor(n(short)) - Math.max(0, Math.floor(n(grace))));
 /** Is an item native soil? Its flag, or a name that says so. */
 export const isSoil = item => !!item && (item.soil === true || /\b(native|grave|home)?\s*(soil|earth)\b/i.test(String(item.name ?? "")));
 
@@ -385,7 +387,6 @@ const ALIAS = {resistfrenzy: {ch: "roll", tags: ["frenzy"]}, resistdominate: {ch
 export function sigRollEffects(list = [], ctx = {}) {
   const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
   for ( const e of list ) {
-    if ( e.halve ) continue;
     // "monster": only against a target that is not mortal (the roll's other side, when Actions knows it)
     if ( e.when === "monster" && !(ctx.against && !/mortal|human|kinfolk|ghoul/.test(String(ctx.against))) ) continue;
     let hit = false;
@@ -396,7 +397,9 @@ export function sigRollEffects(list = [], ctx = {}) {
     // B6729: "not" leaves a roll out (a Redcap's Social rolls are harder, Intimidation aside)
     if ( hit && (e.not ?? []).some(t => want.has(tagKey(t))) ) hit = false;
     // B6924: noBotch: the roll cannot botch (a Boggan's Crafts, C20 p. 89)
-    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: "", ...(e.noBotch ? {noBotch: true} : {})});
+    // B6925: halve, the number of halvings (a Tzimisce's nights without native soil); true counts as one
+    const halve = e.halve === true ? 1 : Math.max(0, Math.floor(n(e.halve)));
+    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: "", ...(e.noBotch ? {noBotch: true} : {}), ...(halve ? {halve} : {})});
   }
   return out;
 }

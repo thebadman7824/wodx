@@ -1047,6 +1047,8 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
     });
     // B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89) goes with the pool to the roll
     if (tm.noBotch) built.noBotch = true;
+    // B6925: a pool halved for each night a Tzimisce rested without native soil (V20 p. 71), after every other die
+    if (tm.halve && built.dice > 0) { const was = built.dice; built.dice = R.halvePool(built.dice, tm.halve); built.parts = [...(built.parts ?? []), `pool halved, ${was} to ${built.dice} dice`]; }
     // B6002: the Blessing or Curse this roll would use, spent once the dice are thrown
     return tm.once?.length ? { ...built, once: tm.once } : built;
 }
