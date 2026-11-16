@@ -607,13 +607,34 @@ export function penetrationResult(successes) {
  * Extra Bruised levels go into the stored total, marked wodxBody so the health track does not add them twice; the
  * wound level, penalty and health-level counts are worked out again from those totals.
  */
+/**
+ * B6922: which levels a body with fewer health levels loses (a Bodach's Deadly Exposure, C20 p. 373, which names no
+ * level): the two -1 levels first (Hurt, Injured), then Wounded and Mauled, keeping Bruised, Crippled and
+ * Incapacitated while it can. totals {level: count}; returns {level: cut}.
+ */
+export const FEWER_ORDER = ["hurt", "injured", "wounded", "mauled", "bruised", "crippled"];
+export function fewerCuts(totals = {}, fewer = 0) {
+    let left = Math.max(0, Math.floor(Number(fewer) || 0));
+    const out = {};
+    for (const k of FEWER_ORDER) {
+        if (left <= 0) break;
+        const cut = Math.min(left, Math.max(0, Number(totals[k]) || 0));
+        if (cut) { out[k] = cut; left -= cut; }
+    }
+    return out;
+}
 export function applyBodyTotals(data, body) {
     const h = data?.system?.health;
     if (!h?.bruised) return data;
     const n = v => Number(v) || 0;
     delete h.bruised.wodxBody;
+    for (const k of FEWER_ORDER) if (h[k]) delete h[k].wodxFewer;
     if (!body) return data;
     if (n(body.bruised)) { h.bruised.total = n(h.bruised.total ?? h.bruised.value) + n(body.bruised); h.bruised.wodxBody = n(body.bruised); }
+    if (n(body.fewer)) {
+        const now = Object.fromEntries(FEWER_ORDER.map(k => [k, n(h[k]?.total ?? h[k]?.value ?? 1)]));
+        for (const [k, cut] of Object.entries(fewerCuts(now, body.fewer))) { h[k].total = now[k] - cut; h[k].wodxFewer = cut; }
+    }
     const totals = {}, penalties = {}, labels = {};
     for (const k of WOUND_LEVELS) { totals[k] = n(h[k]?.total ?? h[k]?.value ?? 1); penalties[k] = n(h[k]?.penalty); labels[k] = h[k]?.label ?? `wod.health.${k}`; }
     const d = h.damage ?? (h.damage = {});
@@ -641,7 +662,13 @@ export function applyBodyDerived(data, body) {
         h.bruised.total = Math.max(n(h.bruised.total ?? h.bruised.value), n(h.bruised.value) + extra);
         h.bruised.wodxBody = extra;
     }
-    if (!extra && !n(body.shift) && !n(body.ease)) return data;
+    // B6922: fewer levels, once: a level already marked (the totals hook stored it) is left as it is
+    const fewer = n(body.fewer);
+    if (fewer && !FEWER_ORDER.some(k => h[k]?.wodxFewer)) {
+        const now = Object.fromEntries(FEWER_ORDER.map(k => [k, n(h[k]?.total ?? h[k]?.value ?? 1)]));
+        for (const [k, cut] of Object.entries(fewerCuts(now, fewer))) { h[k].total = now[k] - cut; h[k].wodxFewer = cut; }
+    }
+    if (!extra && !fewer && !n(body.shift) && !n(body.ease)) return data;
     const totals = {}, penalties = {}, labels = {};
     for (const k of WOUND_LEVELS) { totals[k] = n(h[k]?.total ?? h[k]?.value ?? 1); penalties[k] = n(h[k]?.penalty); labels[k] = h[k]?.label ?? `wod.health.${k}`; }
     const d = h.damage ?? (h.damage = {});
@@ -834,5 +861,5 @@ export function mergeBody(a, b) {
     if (!a) return b;
     if (!b) return a;
     const n = v => Number(v) || 0;
-    return { bruised: n(a.bruised) + n(b.bruised), shift: Math.max(n(a.shift), n(b.shift)), ease: Math.max(n(a.ease), n(b.ease)), silver: !!(a.silver || b.silver), names: [...(a.names ?? []), ...(b.names ?? [])] };
+    return { bruised: n(a.bruised) + n(b.bruised), fewer: n(a.fewer) + n(b.fewer), shift: Math.max(n(a.shift), n(b.shift)), ease: Math.max(n(a.ease), n(b.ease)), silver: !!(a.silver || b.silver), names: [...(a.names ?? []), ...(b.names ?? [])] };
 }

@@ -291,6 +291,8 @@ function healthTrack(actor) {
     // recompute has run through bodyTotals; added here only when it has not)
     const body = toughness(actor);
     if (body?.bruised && !h.bruised?.wodxBody) totals.bruised += num(body.bruised);
+    // B6922: a Bodach's two fewer levels (C20 p. 373), when the stored totals do not carry them yet
+    if (body?.fewer && !R.FEWER_ORDER.some(k => h[k]?.wodxFewer)) for (const [k, cut] of Object.entries(R.fewerCuts(totals, body.fewer))) totals[k] -= cut;
     const d = h.damage ?? {};
     const damage = { bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated) };
     const max = R.WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);

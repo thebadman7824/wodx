@@ -1144,6 +1144,12 @@ export function bruisedFor(actorOrId) {
   if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
   try { return S.faeBruised(rowsOf(a), {oathsHeld: (sigOf(a).oaths ?? []).filter(o => !o.broken).length}); } catch (e) { return {n: 0, names: []}; }
 }
+/** B6922: the health levels a character's kith takes away, for WoDX Combat's health track (through traits.toughness). {n, names} */
+export function fewerFor(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
+  try { return S.faeFewer(rowsOf(a)); } catch (e) { return {n: 0, names: []}; }
+}
 /** Signature effects for one roll, in the trait-effect shape (WoDX Chronicle's traits api adds them to its own). */
 export function rollEffects(actor, ctx = {}) {
   try { return S.sigRollEffects(effects(actor), ctx); } catch (e) { return []; }
@@ -1470,7 +1476,7 @@ async function piskie({actor, mode, give, owe} = {}) {
   await cardFor(actor, "line", `${actor.name} leaves a gift`, `<p>${esc(give)} left in the trade, freely.</p>`, {whisper: [...new Set([...ownerIds(actor), ...gmIds()])], act: {key: "glamour", label: "A point of Glamour", who: "gm", data: {ids: [actor.id], one: true}}});
 }
 
-export const signaturesApi = {soakFor, bruisedFor, rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+export const signaturesApi = {soakFor, bruisedFor, fewerFor, rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
   setSplat, setWraith, luck,

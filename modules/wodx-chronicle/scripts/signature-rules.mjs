@@ -542,6 +542,12 @@ export function faeBruised(rows = [], {oathsHeld = 0} = {}) {
   }
   return {n: total, names};
 }
+/** B6922: the health levels a changeling's rows take away (a Bodach's Deadly Exposure, C20 p. 373). {n, names} */
+export function faeFewer(rows = []) {
+  const names = []; let total = 0;
+  for ( const r of rows ) if ( n(r?.fewer) > 0 ) { total += n(r.fewer); names.push(r.label); }
+  return {n: total, names};
+}
 /** The servants of the Yama Kings a Devil-Tiger hunts. */
 export const YAMA_WORDS = ["yama", "akuma", "oni", "demon", "kumo", "bakemono", "ogre"];
 export const isYamaServant = (...names) => names.flat().some(x => String(x ?? "").toLowerCase().split(/[^a-z]+/).some(w => YAMA_WORDS.includes(w)));
