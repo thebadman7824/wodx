@@ -267,10 +267,13 @@ export async function run() {
       aim2(true);
       await tens();
       try { await K.use(body(), "createfires", {size: "bonfire"}); } finally { CONFIG.Dice.randomUniform = dice0; }
-      await waitFor(() => !!areaOf("blaze"), 6000);
+      // B6735: the bonfire is placed from the effects card after the Charm's card posts, and its drawing is made just
+      // after its region (effects.js placeArea), so the step waits for both, not for the region alone
+      const drawnFor = r => !!r && !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r.id);
+      await waitFor(() => drawnFor(areaOf("blaze")), 8000);
       const r = areaOf("blaze");
       aim2(false);
-      const drawn = !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r?.id);
+      const drawn = drawnFor(r);
       G.ok("18. Create Fires: a bonfire burns on the target's square", !!r && onSquare(r) && drawn && Number(r.flags?.[MOD]?.effectArea?.item?.out?.dice) >= 2,
         {region: !!r, onSquare: onSquare(r), drawn, dice: r?.flags?.[MOD]?.effectArea?.item?.out?.dice ?? null});
     });
