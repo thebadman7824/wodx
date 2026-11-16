@@ -97,14 +97,6 @@ export default {
       "source": "Era table: Future Darkness"
     },
     {
-      "id": "ghoulsDarkAges",
-      "group": "rules",
-      "name": "Ghouls use V20 Dark Ages rules in every era",
-      "hint": "WoDX always does this: Creation gives every ghoul the Dark Ages blood pool, Discipline cap and costs in every era, so the switch only records the rule in the Chronicle Rules journal. Off changes nothing.",
-      "default": true,
-      "source": "House rule"
-    },
-    {
       "id": "yearsThickBlood",
       "group": "years",
       "name": "Thick blood",
