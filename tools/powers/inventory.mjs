@@ -118,9 +118,27 @@ for ( const [id, c] of Object.entries(CA.CANTRIPS) ) {
   add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { src: c, status: st, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
     how: `named in Cast a cantrip: card (effect, duration, type)${st === "applies" ? `; effects card ${c.dice ? "damage dice" : c.spec.kind}` : ""}` });
 }
-/* -- Changeling: Dark Ages Fae (cantrips by Dominion and level) */
+/* -- Changeling: Dark Ages Fae (cantrips by Dominion and level; B6550: every named cantrip of the four Dominions) */
+const specList = sp => (Array.isArray(sp) ? sp : sp ? [sp] : []);
+const anyApplying = sp => specList(sp).some(x => applyingSpec(x) && E.KEYWORDS[x.kw]?.tier !== "st" && x.kw !== "free");
 for ( const [id, d] of Object.entries(F.DOMINIONS) ) for ( let l = 1; l <= 5; l++ )
-  add("Fae (Dark Ages)", `Dominion of ${d.label}`, `${d.label} ${l}`, { src: d, status: "applies", page: `DA:Fae p. ${d.page ?? "?"}`, how: "cantrip roll and reach; the keywords on the cantrip's sheet line, or picked in the cast window, go on the effects card" });
+  add("Fae (Dark Ages)", `Dominion of ${d.label}`, `${d.label} ${l} (by hand)`, { src: d, status: "applies", page: `DA:Fae p. ${d.page ?? "?"}`, how: "a cantrip of the Storyteller's own: roll and reach; the keywords on the sheet line, or picked in the cast window, go on the effects card" });
+const DC = await import(A("scripts/fae-da-cantrips.js"));
+for ( const [id, c] of Object.entries(DC.CANTRIPS) ) {
+  const st = c.does || c.imbue || anyApplying(c.spec) ? "applies" : "card";
+  add("Fae (Dark Ages)", `Dominion of ${F.DOMINIONS[c.dominion].label}`, `${"•".repeat(c.level)} ${c.name}`, { src: c.does || c.imbue ? { does: c.does ?? c.imbue } : c.spec, status: st, kw: DC.keywordsOf(c), page: `DA:Fae p. ${c.page}`,
+    how: `book cantrip: its difficulty, needed successes and costs in Cast a cantrip${c.does ? `; ${c.does} (fae-da.js presetDoes)` : c.imbue ? "; makes a Treasure holding a known cantrip (treasures.js)" : st === "applies" ? "; effects card" : "; the card says what it does"}` });
+}
+/* -- Fae sprites: the Charms of Dark Ages: Fae p. 97 (charms.js) */
+const SCH = await import(A("scripts/spirit-charms.js"));
+for ( const c of SCH.CHARMS.filter(x => x.group === "sprite") )
+  add("Fae (Dark Ages)", "Sprite Charms", c.name, { src: c.spec ?? { does: c.does }, status: "applies", kw: c.keywords ?? [], page: `DA:Fae p. ${c.p}`, how: `Spirit Charm window: Essence${c.roll ? `, ${c.roll} roll` : ", no roll"}; ${c.does ? `${c.does} (charms.js)` : "effects card"}` });
+/* -- Faerie Treasures, every era (treasures.js) */
+const TRZ = await import(A("scripts/fae-treasures.js"));
+for ( const [k, t] of Object.entries(TRZ.TREASURES) )
+  add(t.book === "c20" ? "Changeling (C20)" : "Fae (Dark Ages)", "Treasures", t.name, { src: t.spec ?? { does: t.does }, status: t.does || anyApplying(t.spec) ? "applies" : "card", kw: specList(t.spec).map(x => x.kw), page: TRZ.pageOf(t),
+    how: `Use a Treasure (${t.use})${t.does ? `; ${t.does} (treasures.js)` : "; effects card"}${t.oath ? "; its oath checked by the clock" : ""}` });
+add("Changeling (C20)", "Treasures", "A Treasure of any Art", { src: null, status: "applies", kw: [], page: "C20 pp. 324-325", how: "Use a Treasure: a Glamour point (the Treasure's store first), Intelligence + Gremayre or Glamour, then the Art's cantrip on the effects card" });
 /* -- Demon: Lores and evocations (demon.js Evoke) */
 const dtfNames = new Set();
 for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ?? []).entries() ) {

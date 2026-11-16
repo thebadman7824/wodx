@@ -113,7 +113,7 @@ test("oaths, cold iron, experience, fae blood, mind shields (pp. 88, 107–110, 
 
 test("cantrip lists: the sheet's lines, and the caps by Weaving and Dominion (pp. 89, 120)", () => {
   const c = FX.parseCantrips("Night 1: Hush (manipulation)\nDusk 2 - Evening Mantle\nnonsense");
-  assert.equal(c.length, 2); assert.deepEqual(c[0], {dominion: "night", level: 1, name: "Hush", trait: "manipulation"});
+  assert.equal(c.length, 2); assert.deepEqual(c[0], {dominion: "night", level: 1, name: "Hush", trait: "manipulation", preset: "hush"}, "a cantrip the book names takes its preset (B6551)");
   assert.equal(FX.cantripLine(c[0]), "Night 1: Hush (manipulation)");
   const o = FX.parseOaths("Iron 2: keeps the miller's roof (inactive)\nStone 3: the reeve's household");
   assert.equal(o[0].active, false); assert.equal(o[1].kind, "stone");

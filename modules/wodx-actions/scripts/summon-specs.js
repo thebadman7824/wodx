@@ -10,6 +10,25 @@ export const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-
 export const specKey = (line, name) => `${slug(line)}|${slug(String(name ?? "").replace(/^[•\s]+/, ""))}`;
 
 export const SPECS = {
+ "fae-dark-ages|lesser-hounds-of-hell": {
+  "what": "beast",
+  "profile": "servant",
+  "count": {"by": "successes", "mult": 2},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DA:Fae p. 142",
+  "note": "B6550: two black hounds a success bay at one foe and harry them for the scene, never biting."
+ },
+ "fae-dark-ages|greater-hounds-of-hell": {
+  "what": "beast",
+  "profile": "servant",
+  "count": {"by": "successes", "mult": 2},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "stats": {"attack": "six dice to hit, five lethal dice of harm"},
+  "page": "DA:Fae p. 144",
+  "note": "B6550: two hounds a success that bite (six dice to hit, five lethal dice of harm) for the scene."
+ },
  "fomor|animal-control": {
   "what": "animal",
   "profile": "servant",
