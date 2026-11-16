@@ -198,3 +198,19 @@ test("lane tools never name the Live world and keep backups", () => {
   assert.match(m, /case "reset":[\s\S]*backup\(worldDir\(lane\)/, "reset backs the world up before copying");
   assert.match(m, /allow-lane-1/, "lane 1 reset needs an explicit flag");
 });
+
+test("lanes on the second PC are seen only there, with its own paths (B6880)", () => {
+  const was = process.env.WODX_HOST;
+  try {
+    process.env.WODX_HOST = "desktop-s6nv3q9";
+    const two = L.loadConfig();
+    assert.deepEqual(two.lanes.map(l => l.id), [7]);
+    assert.equal(two.foundryMain, "C:/WoDX/Foundry/resources/app/main.js");
+    assert.ok(two.allLaneIds.includes("7") && two.allLaneIds.includes("2"));
+    process.env.WODX_HOST = "desktop-mrkcmrg";
+    const main = L.loadConfig();
+    assert.ok(!main.lanes.some(l => l.host));
+    assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
+    assert.match(main.foundryMain, /^G:/);
+  } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
+});
