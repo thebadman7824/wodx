@@ -1306,7 +1306,8 @@ function openingCard(scene) {
   setTimeout(() => el.remove(), 6500);
 }
 Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); ageEverything(); } });
-Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); ageEverything(); } });
+// B6759: faces age with the era, but not while the world is held (a gate or a flashback moves the clock and puts it back)
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); if ( !chron()?.isHeld?.() ) ageEverything(); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;

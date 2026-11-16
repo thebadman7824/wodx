@@ -1186,7 +1186,8 @@ export function build(ctx) {
   function hooks() {
     Hooks.on("wodxChronicleReady", () => { registerHandler(); PO.setHomeRegion(homeNow()); });
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
-    Hooks.on("wodxEraApplied", () => { if ( isActiveGM() ) yearSweep({force: true}).catch(e => console.error(`${MOD} |`, e)); });
+    // B6759: not while the world is held or skipping; the year's sweep runs when the clock is free again
+    Hooks.on("wodxEraApplied", () => { if ( isActiveGM() && !skipping() ) yearSweep({force: true}).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxEventFired", ev => { onEventFired(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateWorldTime", now => {
       if ( !isActiveGM() || skipping() ) return;
