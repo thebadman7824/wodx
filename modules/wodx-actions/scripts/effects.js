@@ -532,9 +532,11 @@ async function applyCore(item, casterName = "the caster") {
       if ( !C ) return {note: "WoDX Combat is off: heal by hand"};
       let left = o.levels;
       for ( const type of o.aggravated ? ["aggravated"] : ["lethal", "bashing"] ) {
+        // B6942: a heal that mends more bashing than lethal (Weep: two bashing a success) spends a success per bashingPer levels
+        const per = type === "bashing" ? Math.max(1, n(o.bashingPer) || 1) : 1;
         const has = n(a.system?.health?.damage?.[type]);
-        const take = Math.min(has, left);
-        if ( take > 0 ) { await C.healDamage(a, type, take); left -= take; }
+        const take = Math.min(has, left * per);
+        if ( take > 0 ) { await C.healDamage(a, type, take); left -= Math.ceil(take / per); }
       }
       await TURN.onHealed(a);
       return {uuid: a.uuid, health};

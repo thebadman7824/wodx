@@ -317,8 +317,11 @@ export function presetResults(id, successes, { source = "" } = {}) {
     const s = Number(successes) || 0;
     if (!c || !meets(c, s).ok) return [];
     let res = outcomesOf(c.spec, { label: c.name, source: source || `${REF} p. ${c.page}` }, s, c.fx);
-    // Immortal Tears: an aggravated level for every two successes, not one a success
-    if (c.halfAggravated) res = res.map(r => r.out?.kind === "heal" ? { ...r, out: { ...r.out, levels: Math.floor(s / 2), text: `heals ${Math.floor(s / 2)} aggravated level${Math.floor(s / 2) === 1 ? "" : "s"}` } } : r);
+    // B6942: Weep heals two bashing or one lethal level a success (Dark Ages: Fae p. 150, PDF); Immortal Tears is Weep and
+    // also an aggravated level for every two successes, so it keeps Weep's heal and adds the aggravated one
+    const weep = r => ({ ...r, out: { ...r.out, aggravated: false, levels: s, bashingPer: 2, text: `heals ${s} lethal level${s === 1 ? "" : "s"}, or two bashing a success` } });
+    if (id === "weep") res = res.map(r => r.out?.kind === "heal" ? weep(r) : r);
+    if (c.halfAggravated) res = res.flatMap(r => r.out?.kind !== "heal" ? [r] : [weep(r), ...(Math.floor(s / 2) ? [{ ...r, out: { ...r.out, aggravated: true, levels: Math.floor(s / 2), text: `heals ${Math.floor(s / 2)} aggravated level${Math.floor(s / 2) === 1 ? "" : "s"}` } }] : [])]);
     return res;
 }
 
