@@ -50548,6 +50548,34 @@
 {
 "id": "r3-dark-ages-229",
 "era": "dark-ages",
+"year": 1335,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "The German lands",
+"tags": [
+"uprising"
+],
+"title": "Tyler strikes at Hardestadt",
+"text": "The anarch Tyler attacks the Ventrue elder Hardestadt, the first dated blow of the Anarch Revolt.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "dav-fiefs-black-cross",
+"title": "The Fiefs of the Black Cross"
+},
+{
+"id": "daeu-holy-roman-empire",
+"title": "The Holy Roman Empire in 1230"
+}
+]
+},
+{
+"id": "r3-dark-ages-230",
+"era": "dark-ages",
 "year": 1336,
 "month": null,
 "kind": "history",
@@ -50566,7 +50594,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-230",
+"id": "r3-dark-ages-231",
 "era": "dark-ages",
 "year": 1336,
 "month": null,
@@ -50586,7 +50614,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-231",
+"id": "r3-dark-ages-232",
 "era": "dark-ages",
 "year": 1337,
 "month": 5,
@@ -50606,7 +50634,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-232",
+"id": "r3-dark-ages-233",
 "era": "dark-ages",
 "year": 1337,
 "month": null,
@@ -50626,7 +50654,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-233",
+"id": "r3-dark-ages-234",
 "era": "dark-ages",
 "year": 1338,
 "month": null,
@@ -50645,7 +50673,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-234",
+"id": "r3-dark-ages-235",
 "era": "dark-ages",
 "year": 1338,
 "month": null,
@@ -50665,7 +50693,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-235",
+"id": "r3-dark-ages-236",
 "era": "dark-ages",
 "year": 1339,
 "month": null,
@@ -50684,7 +50712,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-236",
+"id": "r3-dark-ages-237",
 "era": "dark-ages",
 "year": 1340,
 "month": 6,
@@ -50704,7 +50732,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-237",
+"id": "r3-dark-ages-238",
 "era": "dark-ages",
 "year": 1340,
 "month": 10,
@@ -50724,7 +50752,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-238",
+"id": "r3-dark-ages-239",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -50757,7 +50785,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-239",
+"id": "r3-dark-ages-240",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -50776,7 +50804,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-240",
+"id": "r3-dark-ages-241",
 "era": "dark-ages",
 "year": 1342,
 "month": null,
@@ -50796,7 +50824,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-241",
+"id": "r3-dark-ages-242",
 "era": "dark-ages",
 "year": 1343,
 "month": null,
@@ -50816,7 +50844,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-242",
+"id": "r3-dark-ages-243",
 "era": "dark-ages",
 "year": 1343,
 "month": null,
@@ -50836,7 +50864,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-243",
+"id": "r3-dark-ages-244",
 "era": "dark-ages",
 "year": 1344,
 "month": null,
@@ -50856,7 +50884,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-244",
+"id": "r3-dark-ages-245",
 "era": "dark-ages",
 "year": 1345,
 "month": null,
@@ -50876,7 +50904,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-245",
+"id": "r3-dark-ages-246",
 "era": "dark-ages",
 "year": 1345,
 "month": null,
@@ -50895,7 +50923,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-246",
+"id": "r3-dark-ages-247",
 "era": "dark-ages",
 "year": 1346,
 "month": 8,
@@ -50914,7 +50942,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-247",
+"id": "r3-dark-ages-248",
 "era": "dark-ages",
 "year": 1346,
 "month": 10,
@@ -50934,7 +50962,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-248",
+"id": "r3-dark-ages-249",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -50954,7 +50982,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-249",
+"id": "r3-dark-ages-250",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -50973,7 +51001,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-250",
+"id": "r3-dark-ages-251",
 "era": "dark-ages",
 "year": 1197,
 "month": null,
@@ -50992,7 +51020,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-251",
+"id": "r3-dark-ages-252",
 "era": "dark-ages",
 "year": 1199,
 "month": null,
@@ -51012,7 +51040,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-252",
+"id": "r3-dark-ages-253",
 "era": "dark-ages",
 "year": 1203,
 "month": null,
@@ -51031,7 +51059,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-253",
+"id": "r3-dark-ages-254",
 "era": "dark-ages",
 "year": 1205,
 "month": null,
@@ -51063,7 +51091,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-254",
+"id": "r3-dark-ages-255",
 "era": "dark-ages",
 "year": 1206,
 "month": null,
@@ -51083,7 +51111,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-255",
+"id": "r3-dark-ages-256",
 "era": "dark-ages",
 "year": 1209,
 "month": null,
@@ -51103,7 +51131,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-256",
+"id": "r3-dark-ages-257",
 "era": "dark-ages",
 "year": 1210,
 "month": null,
@@ -51122,7 +51150,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-257",
+"id": "r3-dark-ages-258",
 "era": "dark-ages",
 "year": 1213,
 "month": null,
@@ -51147,7 +51175,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-258",
+"id": "r3-dark-ages-259",
 "era": "dark-ages",
 "year": 1216,
 "month": null,
@@ -51180,7 +51208,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-259",
+"id": "r3-dark-ages-260",
 "era": "dark-ages",
 "year": 1219,
 "month": null,
@@ -51199,7 +51227,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-260",
+"id": "r3-dark-ages-261",
 "era": "dark-ages",
 "year": 1220,
 "month": null,
@@ -51231,7 +51259,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-261",
+"id": "r3-dark-ages-262",
 "era": "dark-ages",
 "year": 1220,
 "month": null,
@@ -51256,7 +51284,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-262",
+"id": "r3-dark-ages-263",
 "era": "dark-ages",
 "year": 1223,
 "month": null,
@@ -51288,7 +51316,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-263",
+"id": "r3-dark-ages-264",
 "era": "dark-ages",
 "year": 1224,
 "month": null,
@@ -51307,7 +51335,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-264",
+"id": "r3-dark-ages-265",
 "era": "dark-ages",
 "year": 1225,
 "month": null,
@@ -51326,7 +51354,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-265",
+"id": "r3-dark-ages-266",
 "era": "dark-ages",
 "year": 1226,
 "month": null,
@@ -51346,7 +51374,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-266",
+"id": "r3-dark-ages-267",
 "era": "dark-ages",
 "year": 1227,
 "month": null,
@@ -51378,7 +51406,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-267",
+"id": "r3-dark-ages-268",
 "era": "dark-ages",
 "year": 1228,
 "month": null,
@@ -51397,7 +51425,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-268",
+"id": "r3-dark-ages-269",
 "era": "dark-ages",
 "year": 1231,
 "month": null,
@@ -51416,7 +51444,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-269",
+"id": "r3-dark-ages-270",
 "era": "dark-ages",
 "year": 1232,
 "month": null,
@@ -51436,7 +51464,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-270",
+"id": "r3-dark-ages-271",
 "era": "dark-ages",
 "year": 1232,
 "month": null,
@@ -51457,7 +51485,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-271",
+"id": "r3-dark-ages-272",
 "era": "dark-ages",
 "year": 1236,
 "month": null,
@@ -51476,7 +51504,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-272",
+"id": "r3-dark-ages-273",
 "era": "dark-ages",
 "year": 1237,
 "month": null,
@@ -51500,7 +51528,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-273",
+"id": "r3-dark-ages-274",
 "era": "dark-ages",
 "year": 1237,
 "month": null,
@@ -51519,7 +51547,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-274",
+"id": "r3-dark-ages-275",
 "era": "dark-ages",
 "year": 1238,
 "month": null,
@@ -51538,7 +51566,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-275",
+"id": "r3-dark-ages-276",
 "era": "dark-ages",
 "year": 1239,
 "month": null,
@@ -51557,7 +51585,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-276",
+"id": "r3-dark-ages-277",
 "era": "dark-ages",
 "year": 1240,
 "month": null,
@@ -51577,7 +51605,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-277",
+"id": "r3-dark-ages-278",
 "era": "dark-ages",
 "year": 1241,
 "month": null,
@@ -51602,7 +51630,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-278",
+"id": "r3-dark-ages-279",
 "era": "dark-ages",
 "year": 1241,
 "month": null,
@@ -51621,7 +51649,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-279",
+"id": "r3-dark-ages-280",
 "era": "dark-ages",
 "year": 1242,
 "month": null,
@@ -51640,7 +51668,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-280",
+"id": "r3-dark-ages-281",
 "era": "dark-ages",
 "year": 1243,
 "month": null,
@@ -51672,7 +51700,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-281",
+"id": "r3-dark-ages-282",
 "era": "dark-ages",
 "year": 1245,
 "month": null,
@@ -51691,7 +51719,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-282",
+"id": "r3-dark-ages-283",
 "era": "dark-ages",
 "year": 1246,
 "month": null,
@@ -51711,7 +51739,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-283",
+"id": "r3-dark-ages-284",
 "era": "dark-ages",
 "year": 1247,
 "month": null,
@@ -51731,7 +51759,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-284",
+"id": "r3-dark-ages-285",
 "era": "dark-ages",
 "year": 1248,
 "month": null,
@@ -51750,7 +51778,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-285",
+"id": "r3-dark-ages-286",
 "era": "dark-ages",
 "year": 1249,
 "month": null,
@@ -51770,7 +51798,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-286",
+"id": "r3-dark-ages-287",
 "era": "dark-ages",
 "year": 1250,
 "month": null,
@@ -51794,7 +51822,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-287",
+"id": "r3-dark-ages-288",
 "era": "dark-ages",
 "year": 1251,
 "month": null,
@@ -51813,7 +51841,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-288",
+"id": "r3-dark-ages-289",
 "era": "dark-ages",
 "year": 1252,
 "month": null,
@@ -51837,7 +51865,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-289",
+"id": "r3-dark-ages-290",
 "era": "dark-ages",
 "year": 1253,
 "month": null,
@@ -51856,7 +51884,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-290",
+"id": "r3-dark-ages-291",
 "era": "dark-ages",
 "year": 1254,
 "month": null,
@@ -51876,7 +51904,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-291",
+"id": "r3-dark-ages-292",
 "era": "dark-ages",
 "year": 1255,
 "month": null,
@@ -51895,7 +51923,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-292",
+"id": "r3-dark-ages-293",
 "era": "dark-ages",
 "year": 1257,
 "month": null,
@@ -51914,7 +51942,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-293",
+"id": "r3-dark-ages-294",
 "era": "dark-ages",
 "year": 1258,
 "month": null,
@@ -51934,7 +51962,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-294",
+"id": "r3-dark-ages-295",
 "era": "dark-ages",
 "year": 1259,
 "month": null,
@@ -51954,7 +51982,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-295",
+"id": "r3-dark-ages-296",
 "era": "dark-ages",
 "year": 1259,
 "month": null,
@@ -51973,7 +52001,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-296",
+"id": "r3-dark-ages-297",
 "era": "dark-ages",
 "year": 1261,
 "month": null,
@@ -51993,7 +52021,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-297",
+"id": "r3-dark-ages-298",
 "era": "dark-ages",
 "year": 1263,
 "month": null,
@@ -52013,7 +52041,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-298",
+"id": "r3-dark-ages-299",
 "era": "dark-ages",
 "year": 1265,
 "month": null,
@@ -52032,7 +52060,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-299",
+"id": "r3-dark-ages-300",
 "era": "dark-ages",
 "year": 1266,
 "month": null,
@@ -52051,7 +52079,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-300",
+"id": "r3-dark-ages-301",
 "era": "dark-ages",
 "year": 1269,
 "month": null,
@@ -52070,7 +52098,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-301",
+"id": "r3-dark-ages-302",
 "era": "dark-ages",
 "year": 1271,
 "month": null,
@@ -52089,7 +52117,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-302",
+"id": "r3-dark-ages-303",
 "era": "dark-ages",
 "year": 1273,
 "month": null,
@@ -52109,7 +52137,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-303",
+"id": "r3-dark-ages-304",
 "era": "dark-ages",
 "year": 1274,
 "month": null,
@@ -52129,7 +52157,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-304",
+"id": "r3-dark-ages-305",
 "era": "dark-ages",
 "year": 1276,
 "month": null,
@@ -52148,7 +52176,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-305",
+"id": "r3-dark-ages-306",
 "era": "dark-ages",
 "year": 1279,
 "month": null,
@@ -52167,7 +52195,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-306",
+"id": "r3-dark-ages-307",
 "era": "dark-ages",
 "year": 1280,
 "month": null,
@@ -52186,7 +52214,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-307",
+"id": "r3-dark-ages-308",
 "era": "dark-ages",
 "year": 1281,
 "month": null,
@@ -52205,7 +52233,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-308",
+"id": "r3-dark-ages-309",
 "era": "dark-ages",
 "year": 1283,
 "month": null,
@@ -52224,7 +52252,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-309",
+"id": "r3-dark-ages-310",
 "era": "dark-ages",
 "year": 1285,
 "month": null,
@@ -52243,7 +52271,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-310",
+"id": "r3-dark-ages-311",
 "era": "dark-ages",
 "year": 1286,
 "month": null,
@@ -52263,7 +52291,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-311",
+"id": "r3-dark-ages-312",
 "era": "dark-ages",
 "year": 1287,
 "month": null,
@@ -52296,7 +52324,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-312",
+"id": "r3-dark-ages-313",
 "era": "dark-ages",
 "year": 1288,
 "month": null,
@@ -52316,7 +52344,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-313",
+"id": "r3-dark-ages-314",
 "era": "dark-ages",
 "year": 1290,
 "month": null,
@@ -52336,7 +52364,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-314",
+"id": "r3-dark-ages-315",
 "era": "dark-ages",
 "year": 1292,
 "month": null,
@@ -52360,7 +52388,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-315",
+"id": "r3-dark-ages-316",
 "era": "dark-ages",
 "year": 1293,
 "month": null,
@@ -52380,7 +52408,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-316",
+"id": "r3-dark-ages-317",
 "era": "dark-ages",
 "year": 1296,
 "month": null,
@@ -52399,7 +52427,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-317",
+"id": "r3-dark-ages-318",
 "era": "dark-ages",
 "year": 1297,
 "month": null,
@@ -52418,7 +52446,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-318",
+"id": "r3-dark-ages-319",
 "era": "dark-ages",
 "year": 1299,
 "month": null,
@@ -52438,7 +52466,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-319",
+"id": "r3-dark-ages-320",
 "era": "dark-ages",
 "year": 1301,
 "month": null,
@@ -52463,7 +52491,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-320",
+"id": "r3-dark-ages-321",
 "era": "dark-ages",
 "year": 1303,
 "month": null,
@@ -52482,7 +52510,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-321",
+"id": "r3-dark-ages-322",
 "era": "dark-ages",
 "year": 1305,
 "month": null,
@@ -52501,7 +52529,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-322",
+"id": "r3-dark-ages-323",
 "era": "dark-ages",
 "year": 1308,
 "month": null,
@@ -52521,7 +52549,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-323",
+"id": "r3-dark-ages-324",
 "era": "dark-ages",
 "year": 1310,
 "month": null,
@@ -52540,7 +52568,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-324",
+"id": "r3-dark-ages-325",
 "era": "dark-ages",
 "year": 1312,
 "month": null,
@@ -52559,7 +52587,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-325",
+"id": "r3-dark-ages-326",
 "era": "dark-ages",
 "year": 1314,
 "month": null,
@@ -52579,7 +52607,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-326",
+"id": "r3-dark-ages-327",
 "era": "dark-ages",
 "year": 1316,
 "month": null,
@@ -52599,7 +52627,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-327",
+"id": "r3-dark-ages-328",
 "era": "dark-ages",
 "year": 1319,
 "month": null,
@@ -52618,7 +52646,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-328",
+"id": "r3-dark-ages-329",
 "era": "dark-ages",
 "year": 1320,
 "month": null,
@@ -52637,7 +52665,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-329",
+"id": "r3-dark-ages-330",
 "era": "dark-ages",
 "year": 1320,
 "month": null,
@@ -52656,7 +52684,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-330",
+"id": "r3-dark-ages-331",
 "era": "dark-ages",
 "year": 1323,
 "month": null,
@@ -52680,7 +52708,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-331",
+"id": "r3-dark-ages-332",
 "era": "dark-ages",
 "year": 1326,
 "month": null,
@@ -52700,7 +52728,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-332",
+"id": "r3-dark-ages-333",
 "era": "dark-ages",
 "year": 1327,
 "month": null,
@@ -52728,7 +52756,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-333",
+"id": "r3-dark-ages-334",
 "era": "dark-ages",
 "year": 1328,
 "month": null,
@@ -52748,7 +52776,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-334",
+"id": "r3-dark-ages-335",
 "era": "dark-ages",
 "year": 1330,
 "month": null,
@@ -52767,7 +52795,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-335",
+"id": "r3-dark-ages-336",
 "era": "dark-ages",
 "year": 1331,
 "month": null,
@@ -52786,7 +52814,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-336",
+"id": "r3-dark-ages-337",
 "era": "dark-ages",
 "year": 1333,
 "month": null,
@@ -52805,7 +52833,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-337",
+"id": "r3-dark-ages-338",
 "era": "dark-ages",
 "year": 1334,
 "month": null,
@@ -52824,7 +52852,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-338",
+"id": "r3-dark-ages-339",
 "era": "dark-ages",
 "year": 1335,
 "month": null,
@@ -52843,7 +52871,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-339",
+"id": "r3-dark-ages-340",
 "era": "dark-ages",
 "year": 1338,
 "month": null,
@@ -52863,7 +52891,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-340",
+"id": "r3-dark-ages-341",
 "era": "dark-ages",
 "year": 1340,
 "month": null,
@@ -52882,7 +52910,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-341",
+"id": "r3-dark-ages-342",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -52901,7 +52929,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-342",
+"id": "r3-dark-ages-343",
 "era": "dark-ages",
 "year": 1343,
 "month": null,
@@ -52934,7 +52962,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-343",
+"id": "r3-dark-ages-344",
 "era": "dark-ages",
 "year": 1344,
 "month": null,
@@ -52963,7 +52991,7 @@
 ]
 },
 {
-"id": "r3-dark-ages-344",
+"id": "r3-dark-ages-345",
 "era": "dark-ages",
 "year": 1345,
 "month": null,
@@ -52983,7 +53011,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-345",
+"id": "r3-dark-ages-346",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -53002,7 +53030,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-346",
+"id": "r3-dark-ages-347",
 "era": "dark-ages",
 "year": 1346,
 "month": null,
@@ -53021,7 +53049,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-347",
+"id": "r3-dark-ages-348",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53041,7 +53069,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-348",
+"id": "r3-dark-ages-349",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53061,7 +53089,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-349",
+"id": "r3-dark-ages-350",
 "era": "dark-ages",
 "year": 1221,
 "month": null,
@@ -53081,7 +53109,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-350",
+"id": "r3-dark-ages-351",
 "era": "dark-ages",
 "year": 1250,
 "month": null,
@@ -53101,7 +53129,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-351",
+"id": "r3-dark-ages-352",
 "era": "dark-ages",
 "year": 1263,
 "month": null,
@@ -53121,7 +53149,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-352",
+"id": "r3-dark-ages-353",
 "era": "dark-ages",
 "year": 1276,
 "month": null,
@@ -53142,7 +53170,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-353",
+"id": "r3-dark-ages-354",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53161,7 +53189,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-354",
+"id": "r3-dark-ages-355",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53181,7 +53209,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-355",
+"id": "r3-dark-ages-356",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53201,7 +53229,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-356",
+"id": "r3-dark-ages-357",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53220,7 +53248,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-357",
+"id": "r3-dark-ages-358",
 "era": "dark-ages",
 "year": 1325,
 "month": null,
@@ -53239,7 +53267,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-358",
+"id": "r3-dark-ages-359",
 "era": "dark-ages",
 "year": 1341,
 "month": null,
@@ -53259,7 +53287,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-359",
+"id": "r3-dark-ages-360",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53279,7 +53307,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-360",
+"id": "r3-dark-ages-361",
 "era": "dark-ages",
 "year": 1203,
 "month": null,
@@ -53299,7 +53327,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-361",
+"id": "r3-dark-ages-362",
 "era": "dark-ages",
 "year": 1210,
 "month": null,
@@ -53319,7 +53347,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-362",
+"id": "r3-dark-ages-363",
 "era": "dark-ages",
 "year": 1220,
 "month": null,
@@ -53339,7 +53367,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-363",
+"id": "r3-dark-ages-364",
 "era": "dark-ages",
 "year": 1221,
 "month": null,
@@ -53360,7 +53388,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-364",
+"id": "r3-dark-ages-365",
 "era": "dark-ages",
 "year": 1235,
 "month": null,
@@ -53380,7 +53408,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-365",
+"id": "r3-dark-ages-366",
 "era": "dark-ages",
 "year": 1236,
 "month": null,
@@ -53400,7 +53428,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-366",
+"id": "r3-dark-ages-367",
 "era": "dark-ages",
 "year": 1270,
 "month": null,
@@ -53420,7 +53448,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-367",
+"id": "r3-dark-ages-368",
 "era": "dark-ages",
 "year": 1277,
 "month": null,
@@ -53440,7 +53468,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-368",
+"id": "r3-dark-ages-369",
 "era": "dark-ages",
 "year": 1290,
 "month": null,
@@ -53460,7 +53488,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-369",
+"id": "r3-dark-ages-370",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53480,7 +53508,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-370",
+"id": "r3-dark-ages-371",
 "era": "dark-ages",
 "year": 1312,
 "month": null,
@@ -53500,7 +53528,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-371",
+"id": "r3-dark-ages-372",
 "era": "dark-ages",
 "year": 1317,
 "month": null,
@@ -53520,7 +53548,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-372",
+"id": "r3-dark-ages-373",
 "era": "dark-ages",
 "year": 1325,
 "month": null,
@@ -53540,7 +53568,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-373",
+"id": "r3-dark-ages-374",
 "era": "dark-ages",
 "year": 1327,
 "month": null,
@@ -53561,7 +53589,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-374",
+"id": "r3-dark-ages-375",
 "era": "dark-ages",
 "year": 1331,
 "month": null,
@@ -53581,7 +53609,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-375",
+"id": "r3-dark-ages-376",
 "era": "dark-ages",
 "year": 1332,
 "month": null,
@@ -53601,7 +53629,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-376",
+"id": "r3-dark-ages-377",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53622,7 +53650,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-377",
+"id": "r3-dark-ages-378",
 "era": "dark-ages",
 "year": 1200,
 "month": null,
@@ -53642,7 +53670,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-378",
+"id": "r3-dark-ages-379",
 "era": "dark-ages",
 "year": 1250,
 "month": null,
@@ -53663,7 +53691,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-379",
+"id": "r3-dark-ages-380",
 "era": "dark-ages",
 "year": 1280,
 "month": null,
@@ -53683,7 +53711,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-380",
+"id": "r3-dark-ages-381",
 "era": "dark-ages",
 "year": 1300,
 "month": null,
@@ -53704,7 +53732,7 @@
 "links": []
 },
 {
-"id": "r3-dark-ages-381",
+"id": "r3-dark-ages-382",
 "era": "dark-ages",
 "year": 1314,
 "month": null,
@@ -55366,7 +55394,7 @@
 "revolution"
 ],
 "title": "The Peasants' Revolt",
-"text": "Wat Tyler's rebels take London; that same year young Kindred across the west rise against their elders, and the Anarch Revolt begins.",
+"text": "Wat Tyler's rebels take London; the Anarch Revolt, decades old by now, flares among England's young Kindred.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {

@@ -78,7 +78,7 @@
 1380|H|mor|EU|Kulikovo|battle|Kulikovo|Dmitry Donskoy of Moscow beats the Horde's general Mamai on the Don.
 1380|H|mor|EU|Chioggia|siege,sea|Chioggia|Venice breaks a Genoese siege of the lagoon and wins its long war.
 1380|H|mor|EU|France|crown,death|Charles V dies|The wise king of France dies; Charles VI, eleven, follows.
-1381-6|W|vam|EU|London|uprising,revolution|The Peasants' Revolt|Wat Tyler's rebels take London; that same year young Kindred across the west rise against their elders, and the Anarch Revolt begins.
+1381-6|W|vam|EU|London|uprising,revolution|The Peasants' Revolt|Wat Tyler's rebels take London; the Anarch Revolt, decades old by now, flares among England's young Kindred.
 1381|H|mor|EU|London|uprising,death|Wat Tyler killed|The rebel leader is killed at Smithfield in front of the king.
 1382|H|mor|EU|Moscow|siege,fire|Tokhtamysh burns Moscow|The khan of the Horde sacks and burns Moscow.
 1382|H|mor|EU|Roosebeke|battle|Roosebeke|The French crush the Flemish towns.
