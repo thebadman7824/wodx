@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.12.4 (A lone fate card read the year through an api path WoDX Chronicle never had (calendar.yearOf), so when its calendar import failed the year fell to the computer clock; it now reads api.eras.currentYear)
 - 0.12.3 (Arrival closes Foundry's own User Configuration window, which Foundry opens for a player with no character at login and which covered the arrival; the walk script answers Yes when turning the Storyteller tools on (B6711, B6712))
 - 0.12.2 (Arrival fixes from the first walk in the solo world (B5146-B5148): an actor every player owns by default (an old test actor) is no longer taken for the player's character, so the arrival window shows; Foundry's welcome scene gives way to the landing; the player is taken to the scene with Foundry 14's pullUsers)
 - 0.12.1 (The seat now looks at the night on every move of the clock, one after another, instead of dropping moves that came within half a second, so a long wait from the panel no longer skips parts of the night's encounter rolls. A correction to the arrival note: only the plain scene made for a world with no map is dark by itself; an existing landing map shows the light the clock gives it (out of doors it now follows the clock by default), so the player arrives "at night" only when the clock says night (B6169))
