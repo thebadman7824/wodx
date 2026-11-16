@@ -7,6 +7,7 @@
  * Actions' fetish window attunes and wakes, talens marked as one use, a weapon for war fetishes, and the silver the
  * carrier pays in Gnosis. Werewolf and the Changing Breeds come first; other lines add a LINES entry and rows.
  */
+import {FETISH_POWERS} from "../data/wonder-fetish-powers.mjs";
 import {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey} from "../data/wonders.mjs";
 
 export {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey};
@@ -131,7 +132,7 @@ export function itemsFor(w, {successes = 1, strength = "gaffling", spirit = "", 
   const talen = w.kind === "talen";
   const bound = String(spirit || w.spirit);
   const flag = {key: w.key, line: w.line, kind: w.kind, spirit: bound, silver: n(w.silver), maker: String(maker), at: n(at),
-    ref: `${w.book}, pdf ${w.pdf}`, does: w.does};
+    ref: `${w.book}, pdf ${w.pdf}`, does: w.does, ...(FETISH_POWERS[w.key] ? {powers: structuredClone(FETISH_POWERS[w.key])} : {})};
   const desc = para(w.does) + para(`Spirit bound: ${bound}.`) + (w.silver ? para(`Silver: the bearer's effective Gnosis is ${w.silver} lower while carrying it.`) : "")
     + (w.weapon?.note ? para(w.weapon.note) : "") + para(`${w.book}, pdf ${w.pdf}.`);
   const fetish = {name: w.name, type: "Fetish", img: "icons/svg/item-bag.svg",
