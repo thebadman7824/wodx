@@ -181,7 +181,7 @@ export function build(ctx) {
             await showBurn(actor, true, r?.rot ? `Rots: ${r.rot}` : "Endures the sun");
             return r;
         }
-        // B5096: Golconda's grace, one step weaker on the ladder (Ben's pick, a house rule)
+        // B5096: Golconda's grace, one step weaker on the ladder (the owner's pick, a house rule)
         let graced = false;
         if (actor?.getFlag?.(MOD, "golconda") && (() => { try { return setting("golcondaRules") !== false; } catch (e) { return true; } })()) {
             const weaker = KRG.golcondaSun(light);

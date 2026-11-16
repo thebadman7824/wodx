@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {installMock} from "./foundry-mock.mjs";
 
-/* WoDX Actions, B4980-B4999: the Automation Desk's picks for the other lines (Ben, 14 November 2026) */
+/* WoDX Actions, B4980-B4999: the Automation Desk's picks for the other lines (the owner, 14 November 2026) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mock = installMock({dataRoot: root});

@@ -114,7 +114,7 @@ export const NONBINARY_HALF = 0.005;
  * Returns everything the sheet needs and the cards show.
  */
 export function person({rand, tables, era, culture, kind = "mortal", sex = "any", trade = "any", origin: asked = null, year = null, later = null}) {
-  // "any": one in a hundred is nonbinary (Ben, 2026-11-13; B3503), read from the same draw so that every person
+  // "any": one in a hundred is nonbinary (the owner, 2026-11-13; B3503), read from the same draw so that every person
   // generated before keeps their name and the rest of their draws. Names follow the lists of the draw's side.
   let s = sex, nameSex = sex;
   if ( sex === "any" ) ({sex: s, nameSex} = sexFromDraw(rand(), NONBINARY_HALF * 2)); // the shared rule (B6768)

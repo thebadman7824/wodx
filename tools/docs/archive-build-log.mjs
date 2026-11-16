@@ -1,5 +1,5 @@
 /**
- * The weekly move of old build log entries (B2722, stale design review item e3, Ben 2026-11-13).
+ * The weekly move of old build log entries (B2722, stale design review item e3, the owner 2026-11-13).
  *
  * Every Monday, the entries of docs/BUILD-LOG.md more than a month old move to docs/archive/build-log-<year>-<month>.md,
  * by the month of each entry, beside the PENDING-REVIEW archive. Nothing is deleted: an entry is written to its archive

@@ -5,13 +5,13 @@
  * look), and the modules that care each read only one of them. This reads them all in one order, the newest record
  * first. The value is "female", "male", "nonbinary", text of the player's own, or "" when nothing is known.
  *
- * Ben's ruling (2026-11-13): for player characters gender is a description only and has no bearing on play; any of
+ * The owner's ruling (2026-11-13): for player characters gender is a description only and has no bearing on play; any of
  * them may do anything. So forRules gives "" for a player character, which every rule reads as "not known". Characters
  * the Storyteller runs keep the rules that follow their sex (marriage law, who carries a child, inheritance, the Seed of
  * Lilith), and gender stays out of in-game text unless it is known.
  */
 export const GENDERS = {female: "Female", male: "Male", nonbinary: "Nonbinary"};
-/** How often the People generator makes someone nonbinary (Ben, 2026-11-13: 1 in 100). */
+/** How often the People generator makes someone nonbinary (the owner, 2026-11-13: 1 in 100). */
 export const NONBINARY_SHARE = 0.01;
 /**
  * The People generator's rule for "anyone" (B3503), for every module that draws an NPC: one draw r in [0, 1) gives the

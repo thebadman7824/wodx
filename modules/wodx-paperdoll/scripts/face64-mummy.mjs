@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Mummy and Kuei-jin faces (13 November 2026, B3049). Ben: 50 for the line, 15 per sub-splat. Mummies:
+ * WoDX Paperdoll: Mummy and Kuei-jin faces (13 November 2026, B3049). The owner: 50 for the line, 15 per sub-splat. Mummies:
  * the Shemsu-heru, the Amenti and the undying of other lands, and the Children of Apophis; Kuei-jin: the five Dharmas.
  * In our own words, with the rest invented to fit.
  */

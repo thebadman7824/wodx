@@ -356,7 +356,7 @@ export function healedParts(crippled = [], byPart = {}) {
  * What comes off when a body changes shape. items: [{id, kind: "weapon"|"armor", equipped, dedicated}].
  * Dedicated items (Rite of Talisman Dedication) stay with a shapechanger. A vampire's beast, mist or earth shape
  * carries worn clothes, armor, jewellery and what is in pockets and pouches along, to come back with the change back;
- * held things drop (B1210, approved by Ben 2026-11-12). Returns the ids to unequip, with reasons.
+ * held things drop (B1210, approved by the owner 2026-11-12). Returns the ids to unequip, with reasons.
  */
 export function gearToDrop(body, items = []) {
   const out = [];

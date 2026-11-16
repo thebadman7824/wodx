@@ -52,7 +52,7 @@ test("Dark Ages powers with no roll and the always-on combat Disciplines take ef
   assert.ok(hit.results.some(r => r.key === "harm"), "a rolled use still harms");
 });
 
-/* Final audit (Ben 2026-11-16: why did card-only powers survive several passes?): earlier checks asked whether a
+/* Final audit (the owner 2026-11-16: why did card-only powers survive several passes?): earlier checks asked whether a
  * power had a card or a keyword, not whether anything applied it. A power that only shows its card now fails here
  * unless it names, from its book page, why there is nothing to apply (story). The few left with no story are pinned
  * by name, so the list can only shrink. */

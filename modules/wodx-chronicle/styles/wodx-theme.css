@@ -346,7 +346,7 @@ body.wodx-look[data-wodx-tone="light"] .wodx-line-wraith { --wx-accent: #135a5b;
 body.wodx-look[data-wodx-tone="dark"] .wodx-line-wraith { --wx-accent: #4cc9be; --wx-on-accent: #061615; --wx-ash: #a9a9a1; }
 body.wodx-look[data-wodx-tone="light"] .wodx-line-hunter { --wx-accent: #27384a; --wx-on-accent: #ffffff; --wx-glare: 0 0 0 transparent; }
 body.wodx-look[data-wodx-tone="dark"] .wodx-line-hunter { --wx-accent: #f4f8fc; --wx-on-accent: #0b0f14; --wx-glow: 0 0 8px rgba(255, 255, 255, 0.75), 0 0 2px #fff; }
-/* The other lines (rolled out after Ben approved the look, 8 November 2026). Mortals wear the era's accent. */
+/* The other lines (rolled out after the owner approved the look, 8 November 2026). Mortals wear the era's accent. */
 body.wodx-look[data-wodx-tone="light"] .wodx-line-ghoul { --wx-accent: #7a1d3a; --wx-on-accent: #fff5f8; }
 body.wodx-look[data-wodx-tone="dark"] .wodx-line-ghoul { --wx-accent: #e8789a; --wx-on-accent: #1a0710; }
 body.wodx-look[data-wodx-tone="light"] .wodx-line-spirit { --wx-accent: #2b4a78; --wx-on-accent: #f4f8ff; }

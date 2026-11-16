@@ -1,5 +1,5 @@
 /**
- * Display-only desk t7 (B3180): dated marks before 1197 for elders, drawn from the prologue timeline Ben approved
+ * Display-only desk t7 (B3180): dated marks before 1197 for elders, drawn from the prologue timeline the owner approved
  * (docs/research/era-timelines/r3/living-gods.txt and classical.txt). Same shape as the marks of
  * lifepath-local-events.mjs: [label, gives, spans [[from, to]], tone "+", "-" or "0", person "role|note" or null].
  * They are added to each region's marks, so an elder's own life and the ages after the change both draw them.

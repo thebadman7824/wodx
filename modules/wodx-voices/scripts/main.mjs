@@ -1,7 +1,7 @@
 /**
  * WoDX Voices (the version is in module.json): NPCs speak aloud.
  *
- * Who and what is spoken (Ben, 12 November 2026, as in Fallout and Baldur's Gate): only NPCs marked as plot NPCs, and
+ * Who and what is spoken (the owner, 12 November 2026, as in Fallout and Baldur's Gate): only NPCs marked as plot NPCs, and
  * only the lines the Storyteller wrote for them beforehand (their WoDX NPC talk sheet). Stock and generated lines,
  * barks and everyone else stay text. The Storyteller's improvised chat in character can be read too, off by default.
  * Each voiced NPC keeps one steady voice (voice-rules.mjs). Only the people who see a line hear it.

@@ -212,7 +212,7 @@ export async function golcondaStep(actorOrId, delta, why) {
   return rec;
 }
 /**
- * B5097 (Ben's Golconda Desk, go4): who may be granted Golconda. On the Road of Humanity the Grant button needs
+ * B5097 (the owner's Golconda Desk, go4): who may be granted Golconda. On the Road of Humanity the Grant button needs
  * Humanity 7 and Conscience 4 (V20 Dark Ages p. 359; V20 p. 300). On another Road or a Path the Storyteller approves
  * the grant in the queue, since each Road teaches its own Golconda (V20 Dark Ages p. 115) and the books doubt Paths
  * reach it; once approved it is granted.

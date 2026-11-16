@@ -1,7 +1,7 @@
 /**
  * Sprite tokens (WoDX Paperdoll 0.7.0, B2560 to B2562), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesprites.mjs?${Date.now()}`)).run()
- * It makes up to six tokens named "Sprite test: ..." on the scene being viewed and LEAVES them there for Ben to
+ * It makes up to six tokens named "Sprite test: ..." on the scene being viewed and LEAVES them there for the owner to
  * walk about; run it again and it uses the same tokens. Nothing else is made, changed or deleted, and the clock is
  * not touched. To clear up: delete the tokens whose names begin "Sprite test:".
  *   1. the module: Paperdoll 0.9.0 or later with api.sprites

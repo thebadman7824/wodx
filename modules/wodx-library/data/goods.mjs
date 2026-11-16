@@ -3,7 +3,7 @@
  * by era. Currency, food, drink, drugs, tools, clothes, papers, light, fuel, faith, occult curios, medicine, keys,
  * containers, materials and the rest, from the prologue ages through 1197 to the World of Future Darkness.
  *
- * Top-level categories only (Ben, 2026-11-10): the 21 WoDX began with and 10 adapted from Cataclysm: DDA's item
+ * Top-level categories only (the owner, 2026-11-10): the 21 WoDX began with and 10 adapted from Cataclysm: DDA's item
  * categories, approved on the Item Review Desk. Gear by era adds four more for the book-stat items (GEAR_CATEGORIES).
  *
  * Every good carries backend tags (good.tags): category, era (the Chronicle eras it belongs to, worked out from the
@@ -26,7 +26,7 @@ export const ERAS = ["mythic-age", "bronze-kings", "iron-dawn", "greece-republic
 
 /**
  * The years of each era, as Chronicle's data/eras.json gives them (a test keeps the two in step). The seven prologue
- * eras (split from Living Gods and Classical, Ben 2026-11-12) carry their years there too.
+ * eras (split from Living Gods and Classical, the owner 2026-11-12) carry their years there too.
  */
 export const ERA_YEARS = {
   "mythic-age": [-10000, -3101], "bronze-kings": [-3100, -1178], "iron-dawn": [-1177, -801],
@@ -331,7 +331,7 @@ export const PLACE_WEIGHTS = {
 const END = 2099;
 /* [name, category, first year, last year, conceal, value, source?] */
 /**
- * One good per thing, never a pile (Ben, 2026-11-11): a coin, a candle or a cartridge is one item, and the stack
+ * One good per thing, never a pile (the owner, 2026-11-11): a coin, a candle or a cartridge is one item, and the stack
  * gives the amount. STACK_SIZES: name -> [plural, fewest, most] that a find usually holds. A good named by its
  * measure ("a sack of grain", "a bottle of gin") stacks one to three of that measure unless listed here.
  */
@@ -468,7 +468,7 @@ export function measurePlural(name) {
 
 /**
  * The line for n of a good: "a bronze coin", "7 bronze coins", "claret", "claret (3)". Nothing starts in a container
- * (Ben, 2026-11-12): a good once written "a bottle of claret" is just claret, and a bottle is a good of its own.
+ * (the owner, 2026-11-12): a good once written "a bottle of claret" is just claret, and a bottle is a good of its own.
  */
 export function stackLine(g, n = 1) {
   if ( g?.container ) return n > 1 ? `${g.name} (${n})` : g.name;
@@ -1322,7 +1322,7 @@ export const ROWS = [
   ["a cheap drone with one rotor missing", "tech", 2015, END, "T", 1, "future"],
   ["a pocket holo-projector", "tech", 2050, END, "J", 2, "future"],
   ["a personal assistant pin that still talks", "tech", 2025, END, "J", 2, "future"],
-  // ADDED FROM THE NEW ITEMS DESK (Ben approved 2026-11-11)
+  // ADDED FROM THE NEW ITEMS DESK (the owner approved 2026-11-11)
   ["a yule wreath", "house", 1197, END, "T", 0, "cdda"],
   ["a pair of pom poms", "toys", 1935, END, "P", 0, "cdda"],
   ["a tic-tac-toe set", "toys", 1197, END, "J", 0, "cdda"],
@@ -2501,7 +2501,7 @@ const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, 
  * backend tagging, gathered in good.tags.
  */
 /**
- * Goods renamed 2026-11-11 (Ben: names say plainly what a thing is; origin and hidden features come out on a closer
+ * Goods renamed 2026-11-11 (the owner: names say plainly what a thing is; origin and hidden features come out on a closer
  * look). new name: old name. The id stays the old one, so marks, stock lists and items made before still find them.
  */
 export const RENAMED = {
@@ -2600,9 +2600,9 @@ export const RENAMED = {
 export const OLD_NAMES = Object.fromEntries(Object.entries(RENAMED).map(([n, o]) => [o, n]));
 
 /**
- * Containers stay out of a good's name (Ben, 2026-11-11): "claret", not "a bottle of claret". A row may still be
+ * Containers stay out of a good's name (the owner, 2026-11-11): "claret", not "a bottle of claret". A row may still be
  * written "a bottle of claret": the name becomes "claret", good.container "a bottle" (what it is usually kept in,
- * never added to a line or an item: Ben, 2026-11-12), and good.former keeps the written form, which the tables
+ * never added to a line or an item: The owner, 2026-11-12), and good.former keeps the written form, which the tables
  * above (stack sizes, overrides, descriptions) and older items use.
  * A row whose measure is the thing itself (a pack of playing cards, a can of pepper spray, a sack of coarse cloth)
  * is left as written. Reverse by emptying CONTAINER_WORDS.

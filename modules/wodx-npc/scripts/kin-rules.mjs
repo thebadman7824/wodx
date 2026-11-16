@@ -99,7 +99,7 @@ export function descendantsOf(line, memberId = "m0") {
 /** How one member is related to the founder, in words. */
 /**
  * B6764: the gender a member brought into play has on the sheet: the sex the line kept for the name, except one in a
- * hundred who is nonbinary (Ben, 2026-11-13, B3503), drawn steadily from the line and member, so it never changes.
+ * hundred who is nonbinary (the owner, 2026-11-13, B3503), drawn steadily from the line and member, so it never changes.
  * A child born in the line already has its gender from its birth draw (B6768) and keeps it.
  */
 export function genderFor(m, lineId = "", share = 0.01) {

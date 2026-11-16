@@ -7,7 +7,7 @@
  *                 roll window offers when the roll cannot tell the situation itself ("the other side shares your
  *                 Nature"); `need` limits it to rolls of those kinds (any one of them).
  *   MORE_PROMPTS  key -> a card to the Storyteller at the moment the trait matters, as PROMPTS (pattern P11).
- *   RENAMES       key -> the book's own spelling, for names the OCR spoiled (B3782, Ben 2026-11-14). The old spelling
+ *   RENAMES       key -> the book's own spelling, for names the OCR spoiled (B3782, the owner 2026-11-14). The old spelling
  *                 stays an alias, so sheets written with it still match.
  */
 

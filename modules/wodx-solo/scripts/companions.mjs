@@ -1,5 +1,5 @@
 /**
- * WoDX Solo: companions carry the fallen (B5079, Ben's Carry Bodies Desk, c10).
+ * WoDX Solo: companions carry the fallen (B5079, the owner's Carry Bodies Desk, c10).
  *
  * In a Lone Chronicle nobody else is at the table to pick the player's character up. When that character goes down
  * (incapacitated, unconscious, asleep, staked, in torpor or dead, as WoDX Interactables reads it), the seat has the

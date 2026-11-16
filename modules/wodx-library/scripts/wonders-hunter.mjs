@@ -24,7 +24,7 @@ const STAGE_FAITH = {servant: 1, acolyte: 2, advocate: 3, judge: 4};
 const stageOf = f => { const t = n(f.faith) + n(f.wisdom) + n(f.zeal); return t >= 10 ? "judge" : t >= 5 ? "advocate" : t >= 1 ? "acolyte" : "servant"; };
 const WEAPONS = ["Melee Weapon", "Ranged Weapon"];
 /**
- * B5390: Ben's pick (15 November 2026): whether remains are truly holy is rolled once, the order's Faith rating against
+ * B5390: The owner's pick (15 November 2026): whether remains are truly holy is rolled once, the order's Faith rating against
  * difficulty 8, when the remains are picked. The dice are seeded by the thing and the maker, so picking again gives the
  * same answer. Holy on a success; then the rites go on with no Storyteller judgement.
  */

@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Peoples raised to 300 names (Ben 2026-11-13, B3310 on) */
+/* Peoples raised to 300 names (the owner 2026-11-13, B3310 on) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const PW = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));

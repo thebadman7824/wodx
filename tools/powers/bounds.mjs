@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * What keeps each power's effect in bounds (Ben, 14 November 2026: every effect a power creates must be bound by rules
+ * What keeps each power's effect in bounds (the owner, 14 November 2026: every effect a power creates must be bound by rules
  * that regulate its behaviour). B4835.
  *
  *   node tools/powers/bounds.mjs [--out file.json] [--list]

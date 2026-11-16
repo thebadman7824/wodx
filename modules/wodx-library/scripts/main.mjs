@@ -181,7 +181,7 @@ export class GearApp extends ApplicationV2 {
 Hooks.once("init", () => {
   game.settings.register(MOD, "installed", {scope: "world", config: false, type: Number, default: 0});
   game.settings.register(MOD, "shelves", {scope: "world", config: false, type: Number, default: 0});
-  // B3635: making each line's supernatural items, one switch per line (on in the testbed; Live waits for Ben)
+  // B3635: making each line's supernatural items, one switch per line (on in the testbed; Live waits for the owner)
   // B3683: each registered line's kit names its own switch (wonder-lines.mjs)
   for ( const k of Reg.lines() ) if ( k.setting ) game.settings.register(MOD, k.setting, {name: k.settingName || `Making items (${k.title})`,
     hint: k.settingHint || "", scope: "world", config: true, type: Boolean, default: k.settingDefault !== false});

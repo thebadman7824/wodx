@@ -3541,7 +3541,7 @@ Hooks.once("ready", async () => {
 });
 
 /**
- * Golconda (Ben's Golconda Desk, B5090-B5092): while it is held, Traits may reach 10 whatever the Generation; it ends
+ * Golconda (the owner's Golconda Desk, B5090-B5092): while it is held, Traits may reach 10 whatever the Generation; it ends
  * by itself when the Road falls below 7 or Conscience below 4 (V20 Dark Ages p. 359), with a card and a word over the
  * token, and the Generation's limits come back.
  */
@@ -3608,7 +3608,7 @@ function garouHooks() {
 }
 
 /**
- * B4895: once per world, dawn and dusk and the sun's burns move from buttons to happening by themselves (Ben,
+ * B4895: once per world, dawn and dusk and the sun's burns move from buttons to happening by themselves (the owner,
  * 14 November 2026). A world that chose "Off" keeps it; the Storyteller can set the buttons back in the settings.
  */
 async function autoDayOnce() {

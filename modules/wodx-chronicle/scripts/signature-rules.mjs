@@ -162,7 +162,7 @@ export function newMark(key, now) {
   return markByKey(key) ? {key, at: n(now), until: n(now) + MARK_LASTS} : null;
 }
 
-/** Marks still showing at a time; the others have healed (house rule, Ben 2026-11-12). */
+/** Marks still showing at a time; the others have healed (house rule, the owner 2026-11-12). */
 export const activeMarks = (list = [], now = 0) => list.filter(m => markByKey(m.key) && n(m.until) > n(now));
 
 /** The roll effects the showing marks give, in the trait effect shape {tags, dice, why}. */
@@ -348,7 +348,7 @@ export function familyRow(names = [], founded = []) {
   }
   return null;
 }
-/** A family founded in play (Ben's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
+/** A family founded in play (the owner's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
 export function newFamily({name = "", founder = "", trait = "craft", disciplines = [], flaw = "", year = 1197, text = ""} = {}) {
   const label = String(name).trim();
   if ( !label || !FAMILY_TRAITS[trait] ) return null;

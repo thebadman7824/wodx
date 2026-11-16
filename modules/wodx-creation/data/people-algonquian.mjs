@@ -1,6 +1,6 @@
 /**
  * The Algonquian peoples of the east coast for the People generator (Creation, B3510 to B3512). WoDX's own lists of
- * recorded names; no book text. Ben's desk picks, 2026-11-13: three peoples (the Lenape, the New England Algonquian,
+ * recorded names; no book text. The owner's desk picks, 2026-11-13: three peoples (the Lenape, the New England Algonquian,
  * the Powhatan towns), recorded names with the famous included, the Lenape clan from the mother and nothing for the
  * others, names staged by age as for the Haudenosaunee, women as for the Haudenosaunee, and eastern North America
  * shared with the Haudenosaunee before contact.

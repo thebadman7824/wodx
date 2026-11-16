@@ -150,7 +150,7 @@ export function optionChange(key, value) {
 }
 
 /**
- * B5079 (Ben's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
+ * B5079 (the owner's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
  * scene, [{id, name, distance (yards to the fallen one), serves (serves the player's character), friendly, down, holding,
  * hands (any to take hold with), player (a player owns it)}]. One who serves the character goes first, then a friendly
  * one; the nearest of them, within maxYards. -> the chosen entry, or null
@@ -273,7 +273,7 @@ export function markSeen(seen = [], key) {
 
 /**
  * The lone player may switch on Storyteller tools from the panel, to check that the world works and to hand their
- * character things to try out (Ben, 14 November 2026). The player stays a player: every tool asks the seat, and the
+ * character things to try out (the owner, 14 November 2026). The player stays a player: every tool asks the seat, and the
  * seat answers only that one player. Off unless switched on.
  */
 export const ST_TOOLS = [

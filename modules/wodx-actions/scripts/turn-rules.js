@@ -19,7 +19,7 @@ export const EVERY_TURN = {
   "lost in the mists": {on: "target", roll: {pool: "willpower", diff: 8, onWin: {end: true}}, page: "C20 p. 200", text: "Willpower at 8 each turn to find the way out"},
   "scry": {on: "target", roll: {pool: "willpower", diff: 6, onFail: {damage: {levels: 1, type: "bashing", soak: true}}}, page: "DtF p. 182", line: "Demon (DtF)", text: "the watched one rolls Willpower at 6 each turn or takes a bashing level"},
   "animal form": {roll: {pool: "willpower", diff: "torment", onFail: {condition: "frenzy", end: false}}, page: "DtF p. 204", text: "Willpower at Torment each turn, or the beast takes over"},
-  // B4838-B4849: the fourteen from the Powers Bounds Desk, built as Ben picked on 14 November 2026
+  // B4838-B4849: the fourteen from the Powers Bounds Desk, built as the owner picked on 14 November 2026
   "summon the simple form": {line: "Vampire (V20)", each: {pool: {key: "willpower", points: -1, endIfEmpty: true}}, page: "V20 p. 222", text: "a Willpower point each turn keeps the object; with none left it is gone"},
   "clenched jaw": {on: "target", each: {damage: {pool: "caster:strength+1", type: "aggravated", soak: true, diff: 3}}, onBreak: {damage: {levels: 1, type: "lethal", soak: false}}, page: "W20 p. 172", text: "the jaws bite again each turn at difficulty 3; tearing free costs a lethal level"},
   "scabwalker curse": {on: "target", each: {damage: {levels: 1, type: "bashing", soak: true}}, skip: "Not touching anything made by people this turn", page: "W20 p. 187", text: "a bashing level each turn it touches anything made by people"},

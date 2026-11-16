@@ -1,7 +1,7 @@
 /**
  * The night's work (B6220-B6229): everything the Storyteller's Hand did, listed, and taken back in one Undo.
  *
- * Ben picked hd1 on the Improvement Desk (15 November 2026): now that approved things happen by themselves in many
+ * The owner picked hd1 on the Improvement Desk (15 November 2026): now that approved things happen by themselves in many
  * systems, one bad approval can spread, and each card's own Undo is slow after a long night. So every piece of the
  * Hand's work is written down as it happens, on the Storyteller's client:
  *   an approval carried out   decide() runs the kind's approve inside record() (approved on its own or by the Storyteller)

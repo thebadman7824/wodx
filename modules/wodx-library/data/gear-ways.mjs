@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.21.0: gear by region (the global rule, Ben 2026-11-12; B3070 to B3073).
+ * WoDX Library 0.21.0: gear by region (the global rule, the owner 2026-11-12; B3070 to B3073).
  *
  * Gear by era came from the books of Europe and North America, so a Dark Ages draw in Tenochtitlan could turn up a
  * crossbow and plate, and one in Kyoto never a katana. Here each piece of gear can say where it is at home, in the

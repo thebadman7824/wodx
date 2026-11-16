@@ -7,8 +7,8 @@
  * rules, not book rules (PENDING-REVIEW). No Foundry calls, so the harness can test it.
  *
  *   from / to   years (null: always). spans: several [from, to] pairs where a kind leaves and comes back.
- *   eras        Chronicle era ids it is limited to (Orpheus crews: the World of Future Darkness only, Ben 2026-11-12).
- *   regions     regions it is limited to (Kuei-jin: Asia only, Ben 2026-11-12). A scene's region is its
+ *   eras        Chronicle era ids it is limited to (Orpheus crews: the World of Future Darkness only, the owner 2026-11-12).
+ *   regions     regions it is limited to (Kuei-jin: Asia only, the owner 2026-11-12). A scene's region is its
  *               flags.wodx-npc.region, else WoDX Storyteller's money region; Moravia when neither says.
  *   pick        a test on an NPC's sides (rivalry-rules sidesOf) that chooses this archetype by line.
  */

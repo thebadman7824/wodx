@@ -4,7 +4,7 @@
  * Adapted from the way Cataclysm: Dark Days Ahead runs its recipes (mechanics only): a recipe names what it uses up
  * by group, the heat and tools by what they do, who can know it, how long the work takes and how long the result must
  * stand. In WoDX the work is a V20 extended action (V20 pp. 251-252; V20 Dark Ages p. 324) run by Storyteller's long
- * tasks; everyday dishes need no roll when the cook's pool is at least the difficulty (Ben, 2026-11-12). Goals, waits,
+ * tasks; everyday dishes need no roll when the cook's pool is at least the difficulty (the owner, 2026-11-12). Goals, waits,
  * batches, dots and strength are house rules (B947-B952).
  */
 import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER, PART_CHOICES, SALVAGE, NOT_APART, APART_TOOLS, APART_QUALITIES} from "../data/recipes.mjs";
@@ -31,7 +31,7 @@ export function strengthFor(extra) {
 /** A batch's goal grows by half the base for each one past the first (house rule, after Cataclysm's batch savings). */
 export const batchGoal = (goal, n = 1) => Math.max(1, Math.ceil((Number(goal) || 1) * (1 + (Math.max(1, Math.round(n)) - 1) / 2)));
 
-/** Kindred can taste food, though they cannot eat it, so they cook as well as anyone (Ben, B951). Set diff above 0 to bring a penalty back. */
+/** Kindred can taste food, though they cannot eat it, so they cook as well as anyone (the owner, B951). Set diff above 0 to bring a penalty back. */
 export const KINDRED_TASTE = {diff: 0, unless: 3};
 
 /** The thing a carried item is, as a name: "3 claret (in a bottle) (good work)" -> "claret". */
@@ -183,7 +183,7 @@ export function diffFor(recipe, {line = "mortal", abilityValue = 0, old = false}
   return Math.max(2, Math.min(10, d + (old ? 1 : 0)));
 }
 
-/** Everyday food and drink is made at once, with no roll, when the pool is at least the difficulty (Ben, 2026-11-12). */
+/** Everyday food and drink is made at once, with no roll, when the pool is at least the difficulty (the owner, 2026-11-12). */
 export const noRoll = (recipe, pool, diff) => !!recipe.everyday && (Number(pool) || 0) >= (Number(diff) || recipe.diff);
 
 /** The long task for Storyteller (tasks-rules normTask reads these fields). */

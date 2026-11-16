@@ -196,7 +196,7 @@ function fearSources(actor) {
   }
   if ( num(actor?.system?.advantages?.faith?.permanent) > 0 ) out.add("faith");
   if ( [...(actor?.effects ?? [])].some(e => /crinos|hispo/i.test(e.name ?? "")) ) out.add("crinos");
-  // NPC 0.21.0: animals shy from the restless dead (Ben, 2026-11-12), not from Kindred
+  // NPC 0.21.0: animals shy from the restless dead (the owner, 2026-11-12), not from Kindred
   if ( C()?.getKind?.(actor) === "wraith" ) out.add("wraith");
   return [...out];
 }
@@ -315,7 +315,7 @@ export function readFight(tok, combat = game.combat) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  The fallen (B5077, Ben's Carry Bodies Desk c8)                     */
+/*  The fallen (B5077, the owner's Carry Bodies Desk c8)                     */
 /* ------------------------------------------------------------------ */
 
 const HAUL = () => IXA()?.haul ?? null;
@@ -607,7 +607,7 @@ async function undo(snap) {
 
 /**
  * B5056: an animal ghoul's frenzy check: Willpower at difficulty 6 (an animal has no Self-Control, B5046; no easier
- * difficulty for animals, Ben's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
+ * difficulty for animals, the owner's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
  */
 async function animalFrenzy(tok) {
   const actor = tok.actor;

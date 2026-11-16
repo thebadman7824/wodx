@@ -1,7 +1,7 @@
 /**
  * Filipinos for the People generator (Creation, B4750 to B4753): the Tagalog, Visayan and Ilocano peoples of the
  * islands, from the barangays of Tondo, Maynila and Sugbu to the Spanish towns and the Republic. WoDX's own lists of
- * recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the Spanish chroniclers and the modern records write them): the datus, rajahs and their
  * households in Pigafetta's account of 1521, Legazpi's letters and the chronicles of the conquest of Manila (1570 to

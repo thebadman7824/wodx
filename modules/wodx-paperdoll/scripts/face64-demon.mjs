@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Demon faces (13 November 2026, B3048). Ben: 50 for any of the Fallen, 15 per house and faction.
+ * WoDX Paperdoll: Demon faces (13 November 2026, B3048). The owner: 50 for any of the Fallen, 15 per house and faction.
  * These are marks on the host's own face (the apocalyptic form keeps its visage features); signs of the angel inside
  * and the life the host had, in our own words, with the rest invented to fit.
  */

@@ -93,7 +93,7 @@ export const CLANS = [
 
 /**
  * Experience costs. "cur" is the current rating. Vampires: V20DA p. 183 and V20 p. 124 (Caitiff: V20 p. 124).
- * Ghouls: V20DA p. 399 for Disciplines in every era (Ben's choice); G&R p. 139 for the rest, since V20DA is silent.
+ * Ghouls: V20DA p. 399 for Disciplines in every era (the owner's choice); G&R p. 139 for the rest, since V20DA is silent.
  * Mortals: WoDX choice, the ghoul table without Disciplines.
  */
 export const XP = {

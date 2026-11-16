@@ -1,4 +1,4 @@
-"""Deconflict the approved era timelines (Ben approved all 291 cards of run 2026-11-10t1 on 2026-11-11).
+"""Deconflict the approved era timelines (the owner approved all 291 cards of run 2026-11-10t1 on 2026-11-11).
 Reads desk-data-2026-11-10t1.json, applies the rulings below, writes timeline-approved-2026-11-11.json.
 Each ruling: drop (the card cannot stand beside another), edit (year or text changed so both can stand), or note.
 Precedence: 20th-anniversary books (V20, M20, Wr20, C20, W20) over Revised, Revised over 2nd edition."""

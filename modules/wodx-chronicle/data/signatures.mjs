@@ -1,9 +1,9 @@
 /**
  * WoDX Chronicle 0.25.0: the signature features of each clan, bloodline, tribe and the like (the Splat Features Desk,
- * approved by Ben 2026-11-12). One table per line; the rules that read it are in scripts/signature-rules.mjs.
+ * approved by the owner 2026-11-12). One table per line; the rules that read it are in scripts/signature-rules.mjs.
  *
  * Mechanics only, in our own words. Page refs: "pdf" pages unless marked printed. V20 first, then V20 Dark Ages.
- * Rows marked house: true go past what the books say (Ben's notes on the desk, or a gap the book check found).
+ * Rows marked house: true go past what the books say (the owner's notes on the desk, or a gap the book check found).
  */
 import {DAY, LUNAR_MONTH_DAYS, WEEK} from "../scripts/terms.mjs";
 export {DAY, WEEK};
@@ -112,11 +112,11 @@ export const SECRET_FRESH = {word: 60, print: 30, papers: 14, radio: 7, televisi
 export const STANDING_MAX = 5;
 export const TITHE = 0.1;
 
-/** Ghouls (V20 Dark Ages ghoul rules in every era, Ben's standing rule). */
+/** Ghouls (V20 Dark Ages ghoul rules in every era, the owner's standing rule). */
 export const GHOUL = {key: "ghoul", label: "Ghoul", match: [], feature: "ghoul", title: "The fix", page: "V20 Dark Ages pdf 38",
   text: "A ghoul lives on a domitor's vitae. A month without a drink drains a blood point; with none left, the years they have held off begin to come back. The craving pulls at them when Kindred blood is spilled close by: a Self-Control roll, made for them, or a Willpower point goes."};
 
-/** Revenant family traits (Ben 2026-11-12: new families pick one). effects: roll effects; also: a borrowed engine. */
+/** Revenant family traits (the owner 2026-11-12: new families pick one). effects: roll effects; also: a borrowed engine. */
 export const FAMILY_TRAITS = {
   beasts: {label: "Beasts and kennels", effects: [{tags: ["animal ken"], dice: 1}]},
   money: {label: "Money, banks and courts", effects: [{tags: ["finance"], dice: 1}]},
@@ -161,7 +161,7 @@ export const ODD_GIFTS = [
 ];
 export const ODD_GIFT_CHANCE = 0.1;
 
-/** Brujah causes (Ben 2026-11-12: a list to pick from, NPCs draw from it too). from/to: years the cause makes sense. */
+/** Brujah causes (the owner 2026-11-12: a list to pick from, NPCs draw from it too). from/to: years the cause makes sense. */
 export const CAUSES = [
   {key: "city", label: "The freedom of a city from its lord or Prince"},
   {key: "faith", label: "A faith, or a fight against one"},
@@ -219,7 +219,7 @@ export const CORRUPTION_MAX = 5;
 
 /**
  * How a Malkavian hears what NPCs tell them, by derangement (V20 pdf 69: one derangement that never goes away). The
- * true reply always shows too. match: words in the sheet's derangement field. Ben asked for many varied lines for
+ * true reply always shows too. match: words in the sheet's derangement field. The owner asked for many varied lines for
  * each kind (2026-11-12). {name} is who spoke, {topic} what was asked about.
  */
 export const DERANGEMENTS = [

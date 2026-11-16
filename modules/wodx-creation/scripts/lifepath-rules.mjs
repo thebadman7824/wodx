@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.11.0: lifepaths, the pure rules (Improvement Desk cr1, approved by Ben 2026-11-12). No Foundry here,
+ * WoDX Creation 0.11.0: lifepaths, the pure rules (Improvement Desk cr1, approved by the owner 2026-11-12). No Foundry here,
  * so the harness can test them.
  *
  * A lifepath is a short chain of scenes before points are spent: where and when the character was born, a youth, an

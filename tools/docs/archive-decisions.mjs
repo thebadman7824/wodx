@@ -1,5 +1,5 @@
 /**
- * The weekly move of old decision text (B6243, stale design desk item 2026-11-15 f2, Ben 2026-11-15).
+ * The weekly move of old decision text (B6243, stale design desk item 2026-11-15 f2, the owner 2026-11-15).
  *
  * Every Monday, with the build log, the decisions in docs/DECISIONS.md more than a month old move to
  * docs/archive/decisions-<year>-<month>.md, by the month of each decision. The index of blocks stays at the top of

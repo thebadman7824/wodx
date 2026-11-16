@@ -862,7 +862,7 @@ export async function writeCredits() {
     <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues, the birdsong and the cock-crow in the module's sounds folder were made for this project by sound synthesis, with no outside source. They play only where a kit folder has no recording of its own; the recordings are credited above, with what was done to each (cut short, faded and levelled).</p>
     <p>The fonts and their licences are listed in WoDX Chronicle's fonts/licenses folder.</p>`;
   let j = all(game.journal).find(x => x.flags?.[MOD]?.credits);
-  // Everyone at the table may read the credits (Ben, B2432); the Storyteller alone edits them
+  // Everyone at the table may read the credits (the owner, B2432); the Storyteller alone edits them
   const observer = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
   j ??= await JournalEntry.create({name: "WoDX · Asset credits", ownership: {default: observer}, flags: {[MOD]: {credits: true}}});
   if ( (j.ownership?.default ?? 0) < observer ) await j.update({"ownership.default": observer});

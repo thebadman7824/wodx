@@ -117,7 +117,7 @@ export const WORLD_REGIONS = {
     "early-modern": "french 55, haudenosaunee 12, cree 13, anishinaabe 12, haida 4, tlingit 4, inuit 2",
     industrial: "english 52, french 34, irish 9, haudenosaunee 5, cree 3, anishinaabe 3, haida 1, tlingit 1, inuit 1",
     modern: "english 59, french 27, chinese 6, hindi 6, haudenosaunee 2, cree 2, anishinaabe 2"}),
-  // The Haudenosaunee and the Algonquian coast before the colonies, then a share (Ben's desks, B3120, B3510); the West borrows none of it (lend: false)
+  // The Haudenosaunee and the Algonquian coast before the colonies, then a share (the owner's desks, B3120, B3510); the West borrows none of it (lend: false)
   "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", {
     medieval: "haudenosaunee 40, lenape 25, new-england-algonquian 25, powhatan 10",
     "early-modern": "english 48, haudenosaunee 20, lenape 8, new-england-algonquian 8, powhatan 4, dutch 8, french 4",

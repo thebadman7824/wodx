@@ -1,7 +1,7 @@
 /**
  * The peoples of the Southwest for the People generator (Creation, B3930 to B3934): the Pueblos (the Hopi mesas,
  * Zuni and the Rio Grande towns), the Diné and the Apache. WoDX's own lists of recorded names; no book text. Picks
- * logged in docs/PENDING-REVIEW.md for Ben.
+ * logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as printed, hyphens dropped): the leaders of the Pueblo Revolt of 1680 in the Spanish
  * depositions; the Hopi and Zuni leaders in the agency and Bureau of Ethnology records; the Diné signers of the

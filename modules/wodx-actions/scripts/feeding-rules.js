@@ -2,7 +2,7 @@
  * WoDX Actions 3.41.0: what feeding does to the vessel, and the feeding limits of clans and bloodlines.
  * Pure rules, no Foundry calls (tools/harness/feeding.test.mjs).
  *
- * The vessel (B960, Ben 2026-11-12): each blood point a living vessel loses is one level of lethal damage (V20 printed
+ * The vessel (B960, the owner 2026-11-12): each blood point a living vessel loses is one level of lethal damage (V20 printed
  * p. 57 says a Giovanni Kiss does twice "the damage of another vampire's", one point costing two levels). A living
  * vessel has the lower of its blood and (full blood - damage), the book's wounds rule turned both ways (V20 printed
  * p. 269). Lost blood comes back at one point a day (p. 270); the damage heals by the healing chart.

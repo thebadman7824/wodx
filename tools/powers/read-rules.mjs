@@ -1,5 +1,5 @@
 /**
- * Is a power's effect READ by the game? (B6015, Ben 2026-11-15: rituals that only said they worked.)
+ * Is a power's effect READ by the game? (B6015, the owner 2026-11-15: rituals that only said they worked.)
  *
  * The powers inventory counted a power as applying when its effect landed on the effects card. A Ward or a Curse did
  * land: it put an effect named "Warded" or "Cursed" on the sheet. But no roll, soak, token or map system read it, so

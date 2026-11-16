@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.11.0: how things work together (Ben approved 2026-11-12, after Cataclysm DDA's items). No Foundry
+ * WoDX Library 0.11.0: how things work together (the owner approved 2026-11-12, after Cataclysm DDA's items). No Foundry
  * calls here; use.mjs does the Foundry side.
  *
  *   Qualities: what a thing can do (cuts, sews, boils, lights a fire, writes...), read from its name, so a Gear
@@ -66,7 +66,7 @@ export function qualitiesOf(nameOrGood) {
 const LOOSE_SMOKE = R("pipe tobacco", "opium", "lump of opium", "hashish", "marijuana", "crack cocaine", "rock of crack cocaine", "tobacco leaves", "cannabis distillate");
 const NO_FLAME = R("electronic cigarette", "e-cig", "vape");
 const INJECTED = R("heroin", "morphine");
-/** Powders that are cooked in a spoon over a flame before the syringe draws them up (Ben, 2026-11-12). */
+/** Powders that are cooked in a spoon over a flame before the syringe draws them up (the owner, 2026-11-12). */
 const COOKED_DOSE = R("heroin");
 /** What a syringe can be used to inject, when it is held. */
 export const INJECTABLE = R("heroin", "morphine", "ketamine", "penicillin", "insulin", "antibiotics", "steroids?", "adrenaline", "epinephrine", "methamphetamine", "cocaine");

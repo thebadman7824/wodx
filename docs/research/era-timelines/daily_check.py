@@ -1,4 +1,4 @@
-"""Daily deconfliction check for every approved timeline event (Ben, 2026-11-12 03:13Z: run each day at 02:00 UTC).
+"""Daily deconfliction check for every approved timeline event (the owner, 2026-11-12 03:13Z: run each day at 02:00 UTC).
 
 Sources, all approved:
   timeline-approved-2026-11-11.json   stage 1 book cards, already deconflicted (PR 586)

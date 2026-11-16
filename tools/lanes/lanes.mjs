@@ -11,7 +11,7 @@
  *   node tools/lanes/lanes.mjs reset    --lane 2 [--if-free]   backs the lane's world up, puts known-good back, restarts, accepts
  *   node tools/lanes/lanes.mjs accept   --lane 2          records the running world as the lane's clean fingerprint
  *   node tools/lanes/lanes.mjs compare                    differences between lanes (packages and clean worlds)
- * Lane 1 is the testbed Ben also plays in: reset and snapshot-over-it refuse lane 1 unless --allow-lane-1 is given.
+ * Lane 1 is the testbed the owner also plays in: reset and snapshot-over-it refuse lane 1 unless --allow-lane-1 is given.
  * Every overwrite is preceded by a dated copy in the backups folder; nothing in the backups folder is ever removed.
  * Runs at below-normal priority.
  */

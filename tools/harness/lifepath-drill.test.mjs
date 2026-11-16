@@ -7,7 +7,7 @@ import {buildScenes} from "../../modules/wodx-creation/scripts/first-night-prelu
 import {WORLD_REGIONS} from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../modules/wodx-chronicle/data/trait-effects.mjs";
 
-/* WoDX Creation: the drill-down lifepath (Ben, 13 November 2026): continent, region, origin, childhood, teens, adult chapters. */
+/* WoDX Creation: the drill-down lifepath (the owner, 13 November 2026): continent, region, origin, childhood, teens, adult chapters. */
 
 const YEARS = [1150, 1197, 1348, 1499, 1500, 1620, 1788, 1789, 1850, 1945, 1946, 1990, 2022, 2023, 2100, 2300];
 /** Walk a drill to its end, always taking option n (wrapped) of each step. */

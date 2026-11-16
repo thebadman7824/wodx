@@ -262,7 +262,7 @@ export const KINDS = ["any", "fire", "sunlight", "silver", "faith", "spirits", "
 /**
  * B3528: a binding card for a player character. The keywords that bind a mind or a body (Dominate's commands, Presence's
  * awe and dread, Mind's sway, a hold). Returns null for anything else. The card only tells the player; nothing holds
- * the token (Ben's pick on the Notes Gaps Desk, g3: the binding card only).
+ * the token (the owner's pick on the Notes Gaps Desk, g3: the binding card only).
  */
 export const BINDING_KEYS = ["fear", "sway", "possess", "bind", "hold"];
 /** B5793: what each binding does to the bound character's token (binds.js), for the binding card. */

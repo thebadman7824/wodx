@@ -1,5 +1,5 @@
 /**
- * WoDX NPC and WoDX Solo gate: NPCs and companions pick up the fallen (B5077, B5079, Ben's Carry Bodies Desk c8 and
+ * WoDX NPC and WoDX Solo gate: NPCs and companions pick up the fallen (B5077, B5079, the owner's Carry Bodies Desk c8 and
  * c10), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatecarrynpc.mjs?${Date.now()}`)).run()
  * Makes its own scratch scene, actors and tokens through WoDX Interactables' carrying, and removes them; never moves

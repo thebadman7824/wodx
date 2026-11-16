@@ -221,7 +221,7 @@ export function propose(v, ctx) {
     const who = (v.deadNames ?? []).find(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase()));
     if ( who ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${who} has died: the Fetter goes, and a Harrowing follows (Wraith 20th p. 308).`, true, {itemId: f.id, who});
   }
-  // B5391: Ben's pick (15 November 2026): a Fetter that names a town is checked against the town over time; a town
+  // B5391: The owner's pick (15 November 2026): a Fetter that names a town is checked against the town over time; a town
   // sacked, thrown down by a quake or left in ruin across the years takes the place with it, and a Harrowing follows
   // B6104: a sealed Fetterguard keeps the first Fetters it holds likenesses of from that harm (Wraith 20th p. 428)
   if ( v.line === "wraith" ) for ( const [i, f] of (v.fetters ?? []).entries() ) {

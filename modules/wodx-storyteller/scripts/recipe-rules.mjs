@@ -136,7 +136,7 @@ const NEVER_CARRY = ["ChatMessage", "Combat", "User", "Setting", "FogExploration
  * Sort one document. entry: {type, name, folder (a folder path such as "WoDX residents/Market"), playerOwned, flags}.
  * Returns {verdict: "carry" | "rebuild" | "leave", reason}.
  *  - leave: gate fixtures and anything a gate made, chat, fights, users, and player characters (they come from a Live
- *    backup only on Ben's word, desk p3).
+ *    backup only on the owner's word, desk p3).
  *  - rebuild: what the builder makes again from the recipe (residents, passers-by, the wizard's own journals, the
  *    Legends book).
  *  - carry: the rest, the authored chronicle.

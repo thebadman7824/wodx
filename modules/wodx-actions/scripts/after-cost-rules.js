@@ -1,5 +1,5 @@
 /**
- * What a power costs when it ends, from its own page (B4924, Ben's After-Cost Desk). Pure: no Foundry calls.
+ * What a power costs when it ends, from its own page (B4924, the owner's After-Cost Desk). Pure: no Foundry calls.
  *
  * on: who pays: "self" (the user), "target" (those it was used on) or "area" (whoever was caught in it).
  * cost: what happens when the power's lasting effect ends (or, with no lasting effect, when the scene ends).
