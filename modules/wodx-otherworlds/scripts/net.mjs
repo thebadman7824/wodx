@@ -639,10 +639,10 @@ function burnEffect(what, points, heals = "lethal", img = "icons/svg/degen.svg",
     flags: {[MODULE_ID]: {netBurn: true, heals: heals || "lethal", what, points, last: now}}};
 }
 /** Active Storyteller: every burn the clock has healed gives its points back; the token shows the healed points. */
-export async function healBurns(now = game.time.worldTime) {
+export async function healBurns(now = game.time.worldTime, actors = game.actors) {
   if ( !isActiveGM() ) return [];
   const out = [];
-  for ( const a of game.actors ?? [] ) for ( const e of [...(a.effects ?? [])] ) {
+  for ( const a of actors ?? [] ) for ( const e of [...(a.effects ?? [])] ) {
     const f = e.flags?.[MODULE_ID];
     if ( !f?.netBurn ) continue;
     const points = Number(f.points) || Math.abs(Number(e.changes?.[0]?.value)) || 0;

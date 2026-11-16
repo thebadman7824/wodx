@@ -78,7 +78,7 @@ Hooks.once("ready", () => {
     journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
-      netContest: realms.netContest, maelstrom: realms.maelstromStrike, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
+      netContest: realms.netContest, maelstrom: realms.maelstromStrike, wayOnSuccess: realms.wayOnSuccess, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
     // B3270-B3276: Wyrm corruption that spreads between places and into people
     corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
       plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules,
@@ -96,8 +96,8 @@ Hooks.once("ready", () => {
     spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
       courtOptions: spirits.courtOptions, rules: spiritRules},
     net: {window: net.netWindow, draw: net.drawFortress, jackInto: net.jackInto, jackOut: net.jackOut, run: net.runProgram, file: net.takeFile, iceRound: net.iceRound,
-      hit: net.applyHit, whiteout: net.whiteout, derez: net.derezNow, isFortress: net.isFortress, modelOf: net.modelOf, kind: net.netKindNow, rules: netRules,
-      technica: {dots: technica.technica, isCyberpunk: technica.isCyberpunk, empower: technica.empower, remoteTouch: technica.remoteTouch, speak: technica.speak, powerShown: technica.onPowerShown}},
+      hit: net.applyHit, healBurns: net.healBurns, whiteout: net.whiteout, derez: net.derezNow, isFortress: net.isFortress, modelOf: net.modelOf, kind: net.netKindNow, rules: netRules,
+      technica: {dots: technica.technica, isCyberpunk: technica.isCyberpunk, empower: technica.empower, remoteTouch: technica.remoteTouch, steer: technica.steerVehicle, speak: technica.speak, powerShown: technica.onPowerShown}},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
   };
   game.modules.get(MODULE_ID).api = api;
