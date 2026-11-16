@@ -14,7 +14,7 @@ import * as R from "./herd-rules.mjs";
 import * as U from "./upkeep-rules.mjs";
 import * as Towns from "./towns.mjs";
 import * as Hunters from "./hunters.mjs";
-import {MOD, SOCKET, esc, chron, isActiveGM, gmIds, setting} from "./core.mjs";
+import {MOD, SOCKET, esc, chron, npc, isPC, isActiveGM, gmIds, setting} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -72,17 +72,48 @@ function sceneOfActor(uuid) {
  * One feeding in a district (the active Storyteller). cls: the vessel's class key, "animal" to skip.
  * Returns the rules' result, or null when nothing was counted.
  */
-export async function onFeeding({scene = null, cls = null, who = ""} = {}) {
+export async function onFeeding({scene = null, cls = null, who = "", vessel = null} = {}) {
   if ( !isActiveGM() || !on() || held() || !scene || cls === "animal" ) return null;
   const pool = poolOf(scene), r = R.feed(herdOf(scene), pool, {t: now(), cls, who});
-  await scene.update({[`flags.${MOD}.herd`]: r.herd});
-  if ( r.crossed ) await crossedCard(scene, r, pool, who);
+  // B6756: the month's fed-on vessels, so the dead of an overfed month are people who were fed on
+  const vessels = R.addVessel(scene.flags?.[MOD]?.herdVessels, R.monthOf(now()), vessel);
+  await scene.update({[`flags.${MOD}.herd`]: r.herd, [`flags.${MOD}.herdVessels`]: vessels});
+  if ( r.crossed ) await crossedCard(scene, r, pool, who, vessels.list);
   return r;
 }
 
-async function crossedCard(scene, r, pool, who = "") {
+/**
+ * B6756: the dead of an overfed month, drawn from the vessels fed on there. A named NPC is filed among the dead
+ * (WoDX NPC fates: chronology.died, "WoDX · The Dead"); a passer-by's token is marked dead on the map. Returns names.
+ */
+export async function buryDead(n, vessels = []) {
+  const out = [];
+  for ( const v of R.pickDead(vessels, n) ) {
+    let a = null;
+    try { a = fromUuidSync(v.uuid); } catch (e) { a = null; }
+    if ( !a || isPC(a) ) continue;
+    if ( a.isToken ) {
+      try { await a.toggleStatusEffect?.("dead", {active: true, overlay: true}); } catch (e) { console.warn(`${MOD} | herd death`, e); }
+      out.push(a.name || v.name);
+      continue;
+    }
+    const y = yearNow(), t = now();
+    const done = await npc()?.fates?.apply?.({changes: {[a.id]: {dead: y}}, from: t, to: t, fromYear: y, toYear: y}).catch(e => { console.warn(`${MOD} | herd death`, e); return null; });
+    if ( !done ) { try { await a.toggleStatusEffect?.("dead", {active: true, overlay: true}); } catch (e) { /* no status */ } }
+    out.push(a.name || v.name);
+  }
+  return out;
+}
+
+async function crossedCard(scene, r, pool, who = "", vessels = []) {
   const place = sceneName(scene), harm = R.harmFor(r.crossed.key), year = yearNow(), lines = [];
-  if ( harm.deaths ) lines.push(`${harm.deaths === 1 ? "A vessel" : `${harm.deaths} vessels`} here die${harm.deaths === 1 ? "s" : ""} of it this month: the Storyteller says who.`);
+  if ( harm.deaths ) {
+    const dead = await buryDead(harm.deaths, vessels);
+    const rest = harm.deaths - dead.length;
+    const named = dead.length ? `${dead.join(" and ")} ${dead.length === 1 ? "dies" : "die"} of it` : "";
+    const strangers = rest > 0 ? `${rest === 1 ? "a stranger" : `${rest} strangers`} ${rest === 1 ? "dies" : "die"} of it` : "";
+    lines.push(`${[named, strangers].filter(Boolean).join("; ")} this month.`.replace(/^./, c => c.toUpperCase()));
+  }
   const up = game.modules.get(MOD)?.api?.upkeep;
   if ( harm.heat ) { try { await up?.addHeat?.(scene, harm.heat, {who: who || null}); lines.push("The hunting ground grows hotter."); } catch (e) { console.error(`${MOD} | herd heat`, e); } }
   if ( harm.rumour ) { try { await game.modules.get(MOD)?.api?.rumours?.start?.({text: R.rumourFor(r.crossed.key, place, year), big: r.crossed.key === "stripped"}); lines.push("A rumour starts in the town."); } catch (e) { console.error(`${MOD} | herd rumour`, e); } }
@@ -134,9 +165,11 @@ export async function feedFrom(p, {userId = null} = {}) {
     if ( !(user && by?.testUserPermission?.(user, "OWNER")) ) return null;
   }
   const scene = sceneOfActor(p?.vessel?.uuid) ?? sceneOfActor(p?.by?.uuid) ?? canvas?.scene;
-  return onFeeding({scene, cls: classOfVessel(p?.vessel?.uuid), who: p?.by?.name ?? ""});
+  let pc = false;
+  try { pc = isPC(fromUuidSync(p?.vessel?.uuid)); } catch (e) { pc = false; }
+  return onFeeding({scene, cls: classOfVessel(p?.vessel?.uuid), who: p?.by?.name ?? "", vessel: p?.vessel?.uuid ? {uuid: p.vessel.uuid, name: p.vessel.name ?? "", pc} : null});
 }
 
 export function setupHerds() { Hooks.on("wodxFed", onFed); }
 
-export const api = () => ({open: herdsDialog, of: hereOf, pool: poolOf, huntDiff, feed: onFeeding, on, rules: R});
+export const api = () => ({open: herdsDialog, of: hereOf, pool: poolOf, huntDiff, feed: onFeeding, buryDead, on, rules: R});

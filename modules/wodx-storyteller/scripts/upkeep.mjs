@@ -385,9 +385,12 @@ async function approveLapse(entry) {
   await saveTie(a, d.key, {last: now(), warned: null});
   const harrow = d.how === "neglect" && before > 0 && after === 0;
   const owners = game.users.filter(u => a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  // B6756: the Harrowing the card promises is a button for the wraith's player (or the Storyteller): WoDX Actions' Harrowing
+  const canHarrow = harrow && !!game.modules.get("wodx-actions")?.api?.harrowing;
   await ChatMessage.create({whisper: [...new Set([...owners, ...gmIds()])], speaker: {alias: a.name}, rolls,
-    content: `<div class="wodx-card wst-ties"><h3>${esc(d.name)} untended</h3><p>${esc(line)}${drop && after !== before ? `${esc(it.name)} ${before} to ${after}.` : "It holds."}${harrow ? " The last hold on it breaks: a Harrowing follows (Wraith 20th pdf 371, 374)." : ""}</p></div>`});
-  return {ok: true, before, after};
+    flags: canHarrow ? {[MOD]: {harrow: {actorId: a.id, itemId: it.id}}} : {},
+    content: `<div class="wodx-card wst-ties"><h3>${esc(d.name)} untended</h3><p>${esc(line)}${drop && after !== before ? `${esc(it.name)} ${before} to ${after}.` : "It holds."}${harrow ? " The last hold on it breaks: a Harrowing follows (Wraith 20th pdf 371, 374)." : ""}</p>${canHarrow ? `<p><button type="button" data-action="wst-harrow">Face the Harrowing</button></p>` : ""}</div>`});
+  return {ok: true, before, after, harrow};
 }
 
 /* ---------------- Wiring ---------------- */
@@ -409,7 +412,18 @@ export function onHunted(p, {userId = null} = {}) {
   return addHeat(scene, p?.botch ? "botch" : "hunt", {who: p?.actorId ?? null}).catch(e => console.error(`${MOD} |`, e));
 }
 
+/** B6756: the Face the Harrowing button on a lapsed Fetter's card opens WoDX Actions' Harrowing (a Fetter's) for its owner. */
+export function bindHarrowCard(message, el) {
+  const f = message?.flags?.[MOD]?.harrow, root = el?.[0] ?? el;
+  const b = root?.querySelector?.("[data-action=wst-harrow]");
+  if ( !f || !b ) return;
+  const a = game.actors.get(f.actorId);
+  if ( !(a?.isOwner || game.user.isGM) ) { b.remove(); return; }
+  b.addEventListener("click", () => game.modules.get("wodx-actions")?.api?.harrowing?.({actor: a, kind: "fetter"}));
+}
+
 export function registerUpkeepHooks() {
+  Hooks.on("renderChatMessageHTML", bindHarrowCard);
   Hooks.on("wodxSkipEnd", info => { onSkip(info).catch(e => console.error(`${MOD} |`, e)); checkTies({force: true}).catch(e => console.error(`${MOD} |`, e)); });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } checkTies().catch(e => console.error(`${MOD} |`, e)); });
   Hooks.on("wodxHunted", p => {
