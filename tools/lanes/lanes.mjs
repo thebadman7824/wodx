@@ -171,7 +171,8 @@ try {
       writeJson(path.join(lane.dataPath, "Config", "options.json"), o);
       // Packages that are not WoDX's come from lane 1 as they are; WoDX's come from the repo.
       const wodx = new Set(fs.readdirSync(path.join(repo, "modules")));
-      for ( const kind of ["modules", "systems"] ) for ( const d of fs.readdirSync(path.join(src.dataPath, "Data", kind), {withFileTypes: true}) ) {
+      // B6883: a source with no packages of a kind (the second PC's lane1-copy has no other systems) is skipped.
+      for ( const kind of ["modules", "systems"] ) for ( const d of (fs.existsSync(path.join(src.dataPath, "Data", kind)) ? fs.readdirSync(path.join(src.dataPath, "Data", kind), {withFileTypes: true}) : []) ) {
         if ( !d.isDirectory() || wodx.has(d.name) || d.name === "worldofdarkness" ) continue;
         copyTree(path.join(src.dataPath, "Data", kind, d.name), path.join(lane.dataPath, "Data", kind, d.name), {mirror: true});
       }
