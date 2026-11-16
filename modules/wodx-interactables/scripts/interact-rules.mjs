@@ -895,6 +895,13 @@ export function kgPart(o) {
   return `${c}, ${kg <= 0 ? "weighing nothing to speak of" : kg < 1 ? "under a kilo" : `about ${kg >= 10 ? Math.round(kg) : Math.round(kg * 10) / 10} kg`}`;
 }
 
+/**
+ * Is it an era of bows, not guns? B6668: the era profile's firearms switch says (false: yes, true: no); "early"
+ * firearms or no switch fall back to the Dark Ages rules or a year before 1600.
+ */
+export const archeryEra = (era = {}) => era.firearms === false
+  || (era.firearms !== true && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && !TERMS.gunsOnSheet(era.firearms, era.year))));
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
   if ( o.cover ) return Cover.coverTitle(o);
@@ -902,7 +909,7 @@ export function nameOf(o, era = {}) {
     const T = TARGETS[o.kind];
     let t = o.title || T.label;
     // In the early eras a target with rings is an archery butt
-    if ( !o.title && o.kind === "mark" && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && era.year < 1600)) ) t = "Archery butt";
+    if ( !o.title && o.kind === "mark" && archeryEra(era) ) t = "Archery butt";
     if ( o.kind === "bottles" ) return `${t}${o.left ? `, ${o.left} standing` : ", all knocked down"}`;
     if ( o.kind === "object" ) return `${t}${o.broken ? ", broken" : ""}`;
     return t;

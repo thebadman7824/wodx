@@ -18,6 +18,17 @@ import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
+/**
+ * B6668: who a mortal sends to strike back: bandits while guns are not on the sheet, thugs once they are (the era
+ * profile's firearms switch, else the year: from 1600).
+ */
+const strikerKey = () => {
+  const e = game.modules.get("wodx-chronicle")?.api?.eras;
+  let year = 1197, firearms;
+  try { year = Number(e?.currentYear?.()) || 1197; firearms = e?.eraSwitch?.("firearms"); } catch (err) { /* the year stands */ }
+  return TERMS.gunsOnSheet(firearms, year) ? "thug" : "bandit";
+};
+
 const MOD = "wodx-npc";
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
 const api = () => game.modules.get(MOD).api;
@@ -170,7 +181,7 @@ export async function strikeBacks() {
     try {
       if ( means === "attack" ) {
         const w = S?.reach?.whereIs?.(by.id);
-        if ( w?.scene ) did = !!(await S.reach.send({extras: [{key: (Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 1197) < 1600 ? "bandit" : "thug", n: 2}], scene: w.scene, near: w.token, hostile: true, why: `${of.name} strikes back`, flag: {strike: of.id}}))?.length;
+        if ( w?.scene ) did = !!(await S.reach.send({extras: [{key: strikerKey(), n: 2}], scene: w.scene, near: w.token, hostile: true, why: `${of.name} strikes back`, flag: {strike: of.id}}))?.length;
         if ( !did ) { await S?.ledger?.save?.({kind: "consequence", what: `${of.name}'s people are waiting for ${by.name}`, from: {id: of.id, name: of.name}, to: {id: by.id, name: by.name}, due: game.time.worldTime + DAY}); did = true; }
       } else if ( means === "hunters" ) {
         const reg = game.modules.get("wodx-chronicle")?.api?.world?.here?.(S?.reach?.whereIs?.(by.id)?.scene)?.id ?? "moravia";

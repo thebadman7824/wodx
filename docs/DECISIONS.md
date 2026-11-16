@@ -369,8 +369,9 @@ Next free block: B6720
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
-| B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6586) | Actions |
+| B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
 | B6590-B6619 | Running the Net: the Digital Web and the Future Darkness Net, data fortresses, ICE and what they do to the world (used B6590-B6603) | Otherworlds |
+| B6660-B6669 | Audit recheck: the last partly-working claims (Dazed and a failed stand-up hold the turn, ward and conditions on every roll, aftercare for every NPC, hunters and bodies, death sentence in custody, era switches, wording, medieval gaol) (used B6660-B6669) | Combat, Actions, Sheets, NPC, Storyteller, Chronicle, Atmosphere, Interactables |
 | B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
 <!-- decision-index:end -->
 
@@ -12430,6 +12431,11 @@ WoDX Actions. Dark Ages: Fae pp. 110-111 gives each Echo level its harm as examp
 
 Reverse: remove echoHold and echoDiff in modules/wodx-actions/scripts/fae-da.js.
 
+## B6587. Resisting Mind magick takes the successes off the Effect (2026-11-16)
+WoDX Actions. Mage: The Ascension 20th p. 330: a mage resists Mind magick with Willpower at 6, and each success takes one away. The countermagick window's Resist Mind mode now finds the newest casting card whose Effect uses Mind and is aimed at that mage, or the card being answered, and takes its successes off that card the way countermagick does, so the Effect is worked out again on what is left. Before this it only posted the roll.
+
+Reverse: drop mindCardOn and the counter flags from the "mind" mode of counter() in modules/wodx-actions/scripts/m20.js.
+
 ## B6590. Two Nets under one status (2026-11-16)
 WoDX Otherworlds net-rules.mjs netKind. The classic timeline has the Digital Web from 1990 (Mage 20th printed pp. 466-474); the Future Darkness branch has the Cyberpunk Net from 2005, the year the cybermodem is invented (Cyberpunk 2020 pdf 182), read through World of Future Darkness. Before 2005 the branch has the Web too. Both use the Jacked in status the Net already had (B265).
 
@@ -12499,6 +12505,56 @@ Reverse: edit derez().
 net.mjs call, onNetMessage. A player jacks in, runs programs and takes files from the Net window; the active Storyteller's client does the work, checks the player owns the character, and pulls the player to the fortress.
 
 Reverse: none needed.
+
+## B6660. Dazed loses the whole turn in a fight (2026-11-16)
+WoDX Combat. A Dazed character spends the next turn shaking it off (V20 Dark Ages p. 348), so in a running fight Dazed now counts in WoDX Actions' cannotActWhy beside being asleep or out cold. A player's attack is refused (through api.cannotAct, and through Chronicle's Dazed mark when WoDX Actions is off). Every WoDX Actions window refuses with the reason, as the B6156 and B6372 idle refusal does. The token does not move, because movement is part of the turn in a fight (VtDA20 p. 333) and the lost turn takes the move with it. The Storyteller may still attack and move. Rage's Ignore being stunned (W20 p. 144) still opens, since it is how a Garou shakes off the daze. Outside a fight there are no turns, so Dazed stays a note on the roll. A fomor's gas or liquid form, which only takes the attack away, is not refused.
+
+Reverse: drop "dazed" from LOSES_TURN in after-cost-rules.js and remove the Dazed fallback in noAttackWhy (wodx-combat main.js).
+
+## B6661. A failed stand-up holds the token for the turn (2026-11-16)
+WoDX Combat. A failed stand-up roll spends the turn's action (B6151) and leaves the character on the ground, so a player's token move is now refused for that turn in a running fight. A preUpdateToken hook (lostMoveBlock) reads the lostAction flag through rules.lostMoveWhy. It runs before the yards count and whatever the movement settings are. The Storyteller and forced moves (wodxMove false) are exempt. A Phobia bout's lost action (the flag names it in why, B6386) does not hold the move, since fleeing the thing feared is what the bout is.
+
+Reverse: remove the lostMoveBlock hook in wodx-combat main.js.
+
+## B6662. A ward stands against every line's power (2026-11-16)
+WoDX Actions. A carried ward or Magic Resistance makes magic on its bearer one harder. Magick, Gifts, cantrips, evocations and Arcanoi already read it (B6177, B6411). Now Kuei-jin Chi powers, Dark Ages Mage spells, Dark Ages Fae cantrips, Mummy Hekau, Orpheus Horrors, Hunter edges, Numina, hedge magic and Inquisitor Blessings read the same TH.targetResist(actor, ["magic"]), and the card names it. Fomor powers count it only when aimed at someone (FP.aimedAtOther: harm, a hold, sway or fear, or a drain, dull, sickness or Gnosis drain on the target). The fomor's own body, senses, summonings and movement do not. No target, or the user targeting themself, changes nothing. Countermagic, Unleashing and True Faith are not powers on a character and are left out.
+
+Reverse: remove the targetResist line and its rm.diff and rm.parts from each window (and FP.aimedAtOther); the ward then counts only for the B6177 and B6411 lines.
+
+## B6663. Conditions count on social and feeding rolls (2026-11-16)
+WoDX Actions. The registered conditions (Drained, Ravenous, Blurred sight on a sight roll...) that buildPool adds since B6157 are now added the same way to the rolls of "With this person" (social acts, Look them over and Ask about them, Lift and Plant) and to the feeder's own rolls in feedResolve (spotting and resisting a sickness, a clan's feeding law, Hunger, Kindred-blood addiction). Each is named on the card. A sight-only condition counts only when the roll needs sight (needsSight: a Perception roll). The vessel's rolls are the vessel's and are not touched. Ravenous carried both ownDiff 1 and socialDiff 1, which would now count twice on a social roll, so it keeps only ownDiff 1: one harder on every roll the waking Garou makes, social ones included, as its summary says (B6028).
+
+Reverse: drop condMods from social.js's three actionPool calls and ownRoll/cm from feedResolve, and give Ravenous socialDiff 1 again; those rolls then read only the traits and the social condition mods.
+
+## B6664. Social condition mods on rolls from the sheet (2026-11-16)
+WoDX Sheets. A roll clicked on the sheet (B6175) is social when the trait table tags it "social", which covers the Social Attributes and the social Abilities and is how WoDX Actions' social rolls tag theirs. Such a roll now adds each condition's socialDice and socialDiff (WoDX NPC's Grieving: one die fewer), with a named part on the card such as "Grieving -1 dice". Other sheet rolls are not touched by them.
+
+Reverse: drop the social flag from RR.combine (and isSocial); sheet rolls then count only ownDiff and ownDiffVision.
+
+## B6665. Aftercare reaches unlinked NPCs with no duty holder (2026-11-16)
+WoDX NPC. After a fight, an unlinked NPC whose world actor keeps no routine, or whose actor is shared by several tokens on the scene, had no one to carry the tend duty, so passers-by and placed generic NPCs got no aftercare. Now the token itself is the one tended. When its scene is in view it walks to a hospital or house of worship on that scene, as routines walk linked NPCs. With no such place there, it walks out by the scene's way in (if there is one) and is hidden while away. It comes back on the healing clock once it is no longer laid up. A passer-by fed on goes off the same way after the Daze to rest, and is back in the morning. The flag is wodx-npc.tokenAway on the token's actor. Linked NPCs and lone unlinked tokens with a routine keep their duties as before (B6173).
+
+Reverse: drop the else branches in afterFight and onFed, the comeBack call in mendTick, and awayTick from the clock hooks. Unlinked tokens with no duty holder are then left alone after a fight again.
+
+## B6666. The hunters read a left body with remains off (2026-11-16)
+WoDX Storyteller. The hunters' pressure from a found body only ran through the "Bodies left behind" house rule, which is off by default. Turning remains on with the hunters' option would also turn on that house rule's tints, stage cards and heat, and turning remains off later would break the hunters again, so hunt-follow keeps its own watch, but only while remains is off and the hunters' pressure is on. An NPC marked dead with the Kiss's drain on it becomes a left body (flag leftBody), with no tint and no stage card. The first player's character or townsman within talking distance calls bodyFound, which adds the pressure and, from 1840, sends the body to the morgue as before. While remains is on, remains.mjs alone does the finding, so nothing is counted twice. Both modules read the same finder and distance rule from remains-rules.mjs.
+
+Reverse: remove bodyLeft, bodyNear and their three hooks from hunt-follow.mjs. The hunters then learn of bodies only through the remains house rule.
+
+## B6667. A death sentence is carried out where the watch holds the culprit (2026-11-16)
+WoDX Storyteller, WoDX Chronicle. A death sentence after the watch's arrest called lawCome, but whereIs skips tokens the law took (hidden, lawTaken), so the law "did not find them" and nothing was shown. Chronicle's sentence now calls lawCome with custody. When the culprit is on no map but the watch holds them, the token is moved straight to the place of execution on its scene: a region named for the gallows or scaffold, else a place tagged as a watch-house, else a court of law, else the market. The token is shown again and loses its lawTaken mark, and the watch come to the culprit there in a "sentence" mode. An NPC yields, and a player's character gets the same Go with them or Resist card. Yielding makes no second arrest and does not hide the token again. The watch stay by the condemned until the Storyteller's Send them away, and the sentence then applies as for a found culprit.
+
+Reverse: drop custody from law-punish.mjs and lawCome. A held culprit's death sentence then finds nobody again.
+
+## B6668. Era profile switches decide in play (2026-11-16)
+WoDX Chronicle. An era profile's switches are its "rules" in data/eras.json: firearms, morality, gauntletChart and cyberware. Modules read the switch in force through api.eras.eraSwitch(key) and decide with terms.gunsOnSheet, walksRoads and cyberwareOn. Each module's own year check is kept only as the fallback, for a world without WoDX Chronicle or a profile that leaves the switch out. Quick extras, the strike-back, the archery butt, the Road of Humanity help line and cyberware in a clinic's draw follow the switch; the Gauntlet chart and Roads in the factions already did. Four of four switches are read. The card text stays as the summary.
+
+Reverse: drop eraSwitch and pass the year alone again; the helpers fall back to the old checks (guns from 1600, Humanity from 1450, cyberware by the gear's era list).
+
+## B6669. What the code does, said plainly, and a medieval gaol (2026-11-16)
+WoDX Chronicle. WoDX Atmosphere's description no longer says maps change with the year as if WoDX drew them: places that age switch a scene to later pictures the Storyteller supplies, and no map is generated in play (tools/mapgen runs outside the game). WoDX Sheets' 0.20.2 changelog line carries a correction: Show all on a dark sheet has had its own dark ground since 0.23.2. Latin Christendom's law gains a time sentence, the lord's or the town's gaol (Mage: The Dark Ages pdf p. 219: serfs jailed). It runs from the start of the Dark Medieval until prison takes over in 1780, for 1 to 2 years (a house figure, logged for review).
+
+Reverse: restore the old description and changelog line, and take "gaol" out of PUNISH, the middle tier, MARKS and the Latin row.
 
 ## B6710. The hunger line waits for the character wizard (2026-11-16)
 WoDX Senses. A Kindred made by arrival starts with an empty blood pool, and the wizard rolls the starting blood (V20: one die) on its last page. The on-screen state line showed "Ravenous: no blood left" over the wizard on the player's first screen. stateEdges now skips the hunger line while the wizard window is open on that character (stateOf reads `building`), and the screen refreshes when the wizard opens or closes, so a character who finishes the wizard with no blood still shows it.

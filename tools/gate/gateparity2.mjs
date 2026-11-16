@@ -9,6 +9,7 @@
  *   5. a demon who sees through illusion has the illusion tiles on the map marked as seen through
  *   6. a demon who hears a spoken name, with the speaker targeted, sees the speaker's picture
  *   7. an Echo of levels 1 to 4 holds for the scene: the fae's flag and the Echo condition are set
+ *   8. a mage resisting Mind magick takes the successes off the Mind Effect's card aimed at them (B6587)
  * Covers WoDX Actions.
  * Result: Data/wodx-gate/gateparity2-result.json.
  */
@@ -48,14 +49,15 @@ export async function run() {
     const scene = await G.scene({activate: true});
     const five = {value: 5};
     const sharp = {strength: five, dexterity: five, stamina: five, charisma: five, manipulation: five, appearance: five, perception: five, intelligence: five, wits: five};
-    const [dem, mum, vamp, mort, mort2, fae, speaker] = await G.make(Actor, [
+    const [dem, mum, vamp, mort, mort2, fae, speaker, mage] = await G.make(Actor, [
       {name: "Gate Parity Demon", type: "Demon", system: {settings: {hastorment: true}, attributes: sharp}},
       {name: "Gate Parity Mummy", type: "Mummy"},
       {name: "Gate Parity Vampire", type: "Vampire", system: {attributes: sharp}},
       {name: "Gate Parity Mortal", type: "Mortal", system: {attributes: {wits: {value: 1}, intelligence: {value: 1}, perception: {value: 1}}}},
       {name: "Gate Parity Mortal Two", type: "Mortal"},
       {name: "Gate Parity Fae", type: "Changeling"},
-      {name: "Gate Parity Speaker", type: "Mortal"}
+      {name: "Gate Parity Speaker", type: "Mortal"},
+      {name: "Gate Parity Mage", type: "Mage"}
     ]);
     // Willpower, Faith and damage after creation (the system's create step zeroes Willpower)
     await dem.update({"system.advantages.faith.permanent": 5, "system.advantages.faith.temporary": 5, "system.health.damage.bashing": 1});
@@ -63,6 +65,8 @@ export async function run() {
     await mort.update({"system.advantages.willpower.permanent": 8, "system.advantages.willpower.temporary": 8});
     await mort2.update({"system.advantages.willpower.permanent": 3, "system.advantages.willpower.temporary": 3});
     await fae.setFlag(ACT, "daFae", {system: "da", origin: "changeling"});
+    await mage.update({"system.advantages.willpower.permanent": 10, "system.advantages.willpower.temporary": 10});
+    await mage.setFlag(ACT, "daMage", {system: "m20"});
     await sleep(300);
     // linked tokens, so healing and what a witness keeps land on the actors this gate reads (an unlinked token heals itself)
     const toks = await G.tokens(scene, [{actor: dem, x: 2, y: 2}, {actor: mum, x: 4, y: 2}, {actor: vamp, x: 6, y: 2}, {actor: mort, x: 8, y: 2}, {actor: mort2, x: 10, y: 2}, {actor: fae, x: 12, y: 2}, {actor: speaker, x: 14, y: 2}]
@@ -161,6 +165,19 @@ export async function run() {
         }
       }
       G.ok("7. an Echo of levels 1 to 4 holds for the scene", level >= 1 && level <= 4 && flag?.level === level && cond, {level, flag, cond});
+    });
+    await G.step("8. resisting Mind magick takes successes off the Mind Effect's card", async () => {
+      const recipe = {successes: 5, form: {keywords: ["charge"], plan: {targets: 0, duration: 0, area: false}, ctx: {}}, used: [{sphere: "mind", level: 3}], witnessed: false, feat: 0, targets: [mage.uuid], actor: dem.uuid};
+      const [card] = await G.make(ChatMessage, [{content: "<div class='vta-res wodx-effects'><ul><li>Gate Parity Mind Effect</li></ul></div>", whisper: [game.user.id],
+        flags: {[ACT]: {kind: "effects", caster: dem.name, recipe, hold: true, items: []}}}]);
+      let c = null;
+      for ( let k = 0; k < 4 && !(c?.total > 0); k++ ) {
+        answer(root => { set(root, "mode", "mind"); return "ok"; });
+        await A().m20Counter({actor: mage});
+        await sleep(1500);
+        c = game.messages.get(card.id)?.getFlag(ACT, "countered") ?? null;
+      }
+      G.ok("8. resisting Mind magick takes successes off the Mind Effect's card", c?.total > 0 && c?.by === mage.name && c?.left === Math.max(0, 5 - c.total), {countered: c});
     });
   } finally {
     Hooks.off("renderDialogV2", hook);

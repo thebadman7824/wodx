@@ -102,7 +102,7 @@ test("submit's preflight catches a missing gate, a two-browser gate in a gates j
 test("every real two-browser gate is caught by the preflight's pattern, and run-gate's map leaves them out", async () => {
   const {gateMap} = await import("../lanes/gate-map.mjs");
   const map = gateMap();
-  for ( const g of ["gatelookhand", "gatesolo", "gatedisplayb", "gatedisplayd"] ) {
+  for ( const g of ["gatelookhand", "gatesolo", "gatedisplayb", "gatedisplayd", "gatetruthlooks"] ) {
     assert.deepEqual(await preflight({kind: "gate-two", gate: g}), [], g);
     assert.ok(!(g in map), `${g} should not be in the gate map`);
   }

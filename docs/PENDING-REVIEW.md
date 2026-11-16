@@ -1759,6 +1759,13 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 | 2026-11-16 | Technica on the Embrace (B6612) | 0 dots, like every other clan's Disciplines | Give the CLANS row a starting dot |
 | 2026-11-16 | Technica bought with freebies (B6612) | Only in the years the Cyberpunks exist (Future branch, 2016 on) | Drop opens from the CLANS row |
 
+## Approved by Ben, 16 November 2026, 01:58 UTC (all waiting entries)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | How long the medieval gaol sentence runs (Latin Christendom, until prison in 1780; Mage: The Dark Ages pdf p. 219 has serfs jailed but gives no term) | 1 to 2 years, a house figure, in the middle tier of punishments (B6669) | Change the gaol time mark in modules/wodx-chronicle/scripts/law-punish-rules.mjs |
+| 2026-11-16 | Ravenous counted one harder twice on a social roll (ownDiff and socialDiff) | Ravenous keeps only ownDiff 1: one harder on every roll until the Garou eats, social rolls included (B6663) | Give Ravenous socialDiff 1 again in modules/wodx-actions/scripts/after-cost-rules.js |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

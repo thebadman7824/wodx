@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.18.3 (The module description no longer says maps change with the year as if WoDX drew them: places that age switch a scene to later pictures of its map that the Storyteller supplies, by the chronicle's year, and no map is generated in play (the map generators in tools/mapgen run outside the game) (B6669))
 - 0.18.2 (Light from the clock now reaches scenes nobody ticked by hand: an out-of-doors scene (a built street, a solo landing, a setup scene) follows the clock unless the Storyteller unticks "Follow the clock's light" in the Atmosphere window, and the window's box shows that default (B6168))
 - 0.18.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own. Dawn and dusk sounds, the pale edge before sunrise, the cock-crow card and the scene's opening card follow the sun where the scene stands, not the home town's)
 - 0.18.0 (Recorded cues (B6260-B6264): kit folders may hold a cue for the faith of the scene's land (`dawn-islamic.ogg`), a `common` folder holds birdsong, cock-crow and the heartbeat, and `tools/atmosphere/fetch-cues.mjs` fills them from Freesound (CC0 and CC BY only) with credits. The generated cues stay as the fallback)
