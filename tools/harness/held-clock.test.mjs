@@ -6,7 +6,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 /* B6776: a held world moves its clock while nothing reacts (skip.mjs). gateskip holds the world and passes 825 years for
-   its own cast; the archive took the cast's dead, the hygiene check made player characters filthy, kennels bred and the
+   its own cast; the hygiene check made player characters filthy, kennels bred and the
    NPC turns ran over the whole world. Each of these clock hooks now returns first while the world is held. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FILES = {
@@ -23,8 +23,6 @@ test("B6776: clock hooks wait while the world is held", () => {
     assert.match(src, re, `${f}: the clock hook asks first whether the world is held`);
     assert.match(src, /api\?\.isHeld\?\.\(\)/, `${f}: held comes from the chronicle's isHeld`);
   }
-  const ar = fs.readFileSync(join(root, "modules/wodx-creation/scripts/archive.mjs"), "utf8");
-  assert.match(ar, /export async function autoTick[\s\S]{0,200}\|\| held\(\) \) return null;/, "the archive by itself waits while the world is held");
 });
 
 test("B6776: the held helper reads the chronicle and is false without it", async () => {

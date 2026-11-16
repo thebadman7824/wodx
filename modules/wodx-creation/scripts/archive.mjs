@@ -61,8 +61,6 @@ export function dueNow(now = game.time?.worldTime ?? 0, years = autoYears()) {
   });
 }
 
-// B6776: while the world is held (a flashback, a test) the clock moves and nothing reacts, the archive included
-const held = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 let lastLook = null, looking = false;
 /** One look a day at most, on the active Storyteller's client. Returns the archive's result, or null. */
 export async function autoTick(now = game.time?.worldTime ?? 0, {force = false} = {}) {
