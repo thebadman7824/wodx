@@ -1264,7 +1264,8 @@ export function build(ctx) {
         return {text: `${w.name} challenges ${i?.name ?? "them"}${moved}.${i && data.region ? " If they are still here in ten minutes, it goes further." : ""}`, snap};
       }
       case "alarm": {
-        const heard = canvas.tokens.placeables.filter(t2 => t2.id !== w.id && t2.actor && !t2.actor.hasPlayerOwner && (ctx.yardsBetween(w, t2) ?? 999) <= VOICE_YARDS);
+        // B6522: the one the alarm is about does not answer it (an NPC intruder used to run off before the guard could act)
+        const heard = canvas.tokens.placeables.filter(t2 => t2.id !== w.id && t2.id !== i?.id && t2.actor && !t2.actor.hasPlayerOwner && (ctx.yardsBetween(w, t2) ?? 999) <= VOICE_YARDS);
         await pause([w.actor, ...heard.map(h => h.actor)]);
         const sc = canvas.scene;
         snap.alert = {scene: sc.uuid, prev: flag(sc, "alert") ?? null};
