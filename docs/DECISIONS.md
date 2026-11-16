@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6590
+Next free block: B6720
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -370,6 +370,7 @@ Next free block: B6590
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 | B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6586) | Actions |
+| B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -12427,3 +12428,18 @@ Reverse: remove showSpeaker from named() in modules/wodx-actions/scripts/demon.j
 WoDX Actions. Dark Ages: Fae pp. 110-111 gives each Echo level its harm as examples; the WoDX reading: levels 1 to 4 hold for the scene with the Echo condition (+1 difficulty on attacks), +1 difficulty on the fae's cantrips and Unleashing at level 1 and +2 from level 2, no Unleashing at level 4, and the Storyteller's button for 3 bashing (soaked) at level 3 and 4 lethal at level 4. Level 5 was already applied.
 
 Reverse: remove echoHold and echoDiff in modules/wodx-actions/scripts/fae-da.js.
+
+## B6710. The hunger line waits for the character wizard (2026-11-16)
+WoDX Senses. A Kindred made by arrival starts with an empty blood pool, and the wizard rolls the starting blood (V20: one die) on its last page. The on-screen state line showed "Ravenous: no blood left" over the wizard on the player's first screen. stateEdges now skips the hunger line while the wizard window is open on that character (stateOf reads `building`), and the screen refreshes when the wizard opens or closes, so a character who finishes the wizard with no blood still shows it.
+
+Reverse: drop `building` from stateOf and the check in stateEdges.
+
+## B6711. Arrival closes Foundry's User Configuration (2026-11-16)
+WoDX Solo. Foundry opens its User Configuration window at login for a player with no character. In solo play arrival makes and assigns the character, so the window only covered the arrival window and stayed open behind the panel. Arrival closes it for the player's own user when the arrival window opens and when the token is ready. gatesolo 9f checks it.
+
+Reverse: remove closeUserConfig from arrival.mjs.
+
+## B6712. The solo walk answers the Storyteller tools question (2026-11-16)
+tools/solo/walk.mjs step 08 clicked "Storyteller tools: off" and then waited for the tools, but turning them on asks Yes or No first. The walk now answers Yes, as a player would.
+
+Reverse: remove the Yes click in step 08.
