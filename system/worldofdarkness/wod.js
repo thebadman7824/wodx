@@ -28,6 +28,7 @@ import IconHelper from "./module/ui/icons.js";
 import MigrationWizard from "./module/ui/migration-wizard-helper.js";
 
 import { registerHooks } from "./module/hooks.js";
+import { registerPackBonuses } from "./module/scripts/wodx-pack-bonuses.js"; // WoDX fork (B6729)
 
 const SheetTypes = [
 	"PC",
@@ -292,6 +293,7 @@ Hooks.once("init", async function() {
 		EquipmentItemTypes
 	};
 	registerHooks(hooksConstants, isTablet);
+	registerPackBonuses(); // WoDX fork (B6729): pack Traits whose effect was only in the text
 	console.log("WoD | Added Hooks");
 
 	// Initialize the alterations to the settings sidebar
