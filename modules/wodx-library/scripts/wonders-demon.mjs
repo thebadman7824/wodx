@@ -147,7 +147,7 @@ export const demonKit = {
     if ( !r || task.opts?.target ) return [];
     const flag = demonKit.flagFor(r, {maker, at, task, successes});
     const name = r.kind === "imbue" ? `Soul vessel: ${task.opts?.soul || "a bound soul"}` : `${task.opts?.evoName || "Enchanted"} object`;
-    return [{name, type: "Item", img: r.kind === "imbue" ? "icons/svg/jar.svg" : "icons/svg/item-bag.svg",
+    return [{name, type: "Item", img: r.kind === "imbue" ? "icons/svg/aura.svg" : "icons/svg/item-bag.svg",
       system: {description: para(flag.does) + para(`${flag.ref}.`), reference: flag.ref}, flags: {"wodx-library": {wonder: flag}}}];
   },
   marks: (r, t = {}) => !!t.opts?.target,

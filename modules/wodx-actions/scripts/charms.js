@@ -67,7 +67,7 @@ export function setup() {
     try {
         C?.registerCondition?.({ id: "blighted", name: "Blighted", img: "icons/svg/poison.svg", source: "W20 p. 367 (Blighted Touch)",
             summary: "The worst of their nature rules: +1 difficulty on social rolls (WoDX house reading, B6038).", mods: { socialDiff: 1 } });
-        C?.registerCondition?.({ id: "possessed", name: "Possessed", img: "icons/svg/possession.svg", source: "W20 p. 367 (Possession)",
+        C?.registerCondition?.({ id: "possessed", name: "Possessed", img: "icons/svg/statue.svg", source: "W20 p. 367 (Possession)",
             summary: "A spirit rides the body: the player cannot move the token; the one who possesses it moves it (B6038).", mods: {} });
     } catch (e) { console.warn("WoDX | charm conditions", e); }
     // Blighted Touch: whoever the spirit harms resists or is blighted
@@ -264,10 +264,10 @@ export function build(ctx) {
             case "animate": {
                 // B6555: the tools fight as a hand weapon of the sprite's for the hour, their harm bashing
                 const k = Math.max(1, n(o.size) || 1);
-                const [w] = await actor.createEmbeddedDocuments("Item", [{ name: `Animated tools (${k})`, type: "Melee Weapon", img: "icons/svg/hammer.svg",
+                const [w] = await actor.createEmbeddedDocuments("Item", [{ name: `Animated tools (${k})`, type: "Melee Weapon", img: "icons/svg/sword.svg",
                     system: { damage: { attribute: "strength", bonus: 1, type: "bashing", isrollable: true }, attack: { attribute: "dexterity", ability: "melee", accuracy: 0, isrollable: true }, difficulty: 6, isweapon: true,
                         description: `<p>${k} household tool${k === 1 ? "" : "s"} or light weapon${k === 1 ? "" : "s"} brought to life by ${esc(actor.name)}; their harm is halved to bashing before soak (${SC.pageOf(c)}).</p>` } }]);
-                await mark(actor, c, { drop: w?.id ?? null }, { name: `Animate Tools (${k})`, img: "icons/svg/hammer.svg", duration: { kind: "time", seconds: 3600 } });
+                await mark(actor, c, { drop: w?.id ?? null }, { name: `Animate Tools (${k})`, img: "icons/svg/sword.svg", duration: { kind: "time", seconds: 3600 } });
                 return { html: note(`${k} tool${k === 1 ? "" : "s"} rise and fight for an hour (the Animated tools weapon on the sheet; harm halved to bashing).`) };
             }
             case "spriteblast": {
@@ -432,7 +432,7 @@ export function build(ctx) {
             case "possess": {
                 if (!first && !o.object) { notify(`${c.name}: target the one to possess first.`); return false; }
                 const when = SC.possessionTime(got);
-                if (first) await first.createEmbeddedDocuments("ActiveEffect", [{ name: `Possessed by ${actor.name}`, img: "icons/svg/possession.svg", statuses: ["wodx-possessed"],
+                if (first) await first.createEmbeddedDocuments("ActiveEffect", [{ name: `Possessed by ${actor.name}`, img: "icons/svg/statue.svg", statuses: ["wodx-possessed"],
                     description: `${actor.name} rides this body until it is driven out; it takes hold ${when.label}. A spirit inside a person can warp it into a fomor.`, flags: { [MOD]: { charm: "possession", by: actor.uuid } } }]);
                 const doc = tok?.document ?? tok;
                 if (doc) await doc.update({ hidden: true });

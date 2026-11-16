@@ -85,7 +85,7 @@ export async function run() {
       await until(() => B().of(A).shape === "person", 3000);
     });
     await step("Feral Claws gives natural claws", async () => {
-      const [fx] = await A.createEmbeddedDocuments("ActiveEffect", [{name: "Feral Claws", img: "icons/svg/claw.svg"}]);
+      const [fx] = await A.createEmbeddedDocuments("ActiveEffect", [{name: "Feral Claws", img: "icons/svg/pawprint.svg"}]);
       const w = B().of(A).weapons.claw;
       await A.deleteEmbeddedDocuments("ActiveEffect", [fx.id]);
       ok("Feral Claws gives natural claws", w?.type === "aggravated" && w?.bonus === 1, {w});

@@ -985,7 +985,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (w?.grow) {
         if (blood(attacker) < 1 && setting("spendResources")) throw new Error(`${attacker.name} has no blood to grow claws.`);
         spendNotes.push(...await spend(attacker, 0, 1));
-        await attacker.createEmbeddedDocuments("ActiveEffect", [{ name: "Feral Claws", img: "icons/svg/claw.svg", description: "Protean: claws grown for the scene (aggravated, Strength + 1).", flags: { [MOD]: { grown: true } } }]);
+        await attacker.createEmbeddedDocuments("ActiveEffect", [{ name: "Feral Claws", img: "icons/svg/pawprint.svg", description: "Protean: claws grown for the scene (aggravated, Strength + 1).", flags: { [MOD]: { grown: true } } }]);
         w = weaponList(attacker).find(x => x.id === "unarmed:claw" && x.natural) ?? { ...w, grow: false, natural: true, type: "aggravated", dmgBonus: 1, name: "Claws (Feral Claws, aggravated)" };
         log.push(`${esc(attacker.name)} grows claws (Feral Claws).`);
     }

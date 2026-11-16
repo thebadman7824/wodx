@@ -264,7 +264,7 @@ export async function run() {
     const BI = await import("/modules/wodx-actions/scripts/binds.js");
     await G.step("16. Possessed holds the body; Blighted is on the token and the rolls", async () => {
       // the marks the spirit Charms put on (charms.js): Possession raw, Blighted Touch for three hours
-      await tda.createEmbeddedDocuments("ActiveEffect", [{name: "Possessed by Gate Bane", img: "icons/svg/possession.svg", statuses: ["wodx-possessed"], flags: {"wodx-actions": {charm: "possession"}}}]);
+      await tda.createEmbeddedDocuments("ActiveEffect", [{name: "Possessed by Gate Bane", img: "icons/svg/statue.svg", statuses: ["wodx-possessed"], flags: {"wodx-actions": {charm: "possession"}}}]);
       const binds = BI.bindingsOn(tda), move = BI.judgeMove(binds, {from: {x: 0, y: 0}, to: {x: 100, y: 0}});
       await X.applyTimed(tda, {name: "Blighted", img: "icons/svg/poison.svg", condition: "blighted", duration: {kind: "time", seconds: 3 * 3600}, key: "wodx-charm-blight", source: "gate"});
       const blighted = !!tda.statuses?.has?.("wodx-blighted") && !!K.hasCondition(tda, "blighted");

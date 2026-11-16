@@ -125,7 +125,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
       const x = s ? num(s.x) + num(s.width) / 2 : num(d.sceneX) + num(d.sceneWidth || scene.width) / 2;
       const y = s ? num(s.y) + num(s.height) / 2 : num(d.sceneY) + num(d.sceneHeight || scene.height) / 2;
       try { pin = (await scene.createEmbeddedDocuments("Note", [{x: Math.round(x), y: Math.round(y), text: `${A.RITE_WORDS[rite.rite] ?? "Grave of"} ${actor.name}`, fontSize: 24,
-        texture: {src: "icons/svg/tombstone.svg"}, flags: {[MOD]: {grave: actor.id}}}]))[0]; } catch (e) { pin = null; }
+        texture: {src: "icons/svg/skull.svg"}, flags: {[MOD]: {grave: actor.id}}}]))[0]; } catch (e) { pin = null; }
     }
     await actor.setFlag(MOD, "funeral", {rite: rite.rite, at: placeName, worldTime: now(), note: pin?.uuid ?? null});
     // the family learns, and holds it against whoever hurt them last
