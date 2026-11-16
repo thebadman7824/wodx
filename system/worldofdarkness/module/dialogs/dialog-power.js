@@ -320,7 +320,8 @@ export class DialogPower extends FormApplication {
                                 .sort((a, b) => game.i18n.localize(a.system.label).localeCompare(game.i18n.localize(b.system.label)));
         }
         else {
-            data.config.powerAbilities = this.actor.system.listdata.powerAbilities; 
+            // WoDX: listdata is built when the sheet renders; a power rolled before that (a macro, a gate, a fresh NPC) had none
+            data.config.powerAbilities = this.actor.system.listdata?.powerAbilities ?? [];
         }        
         
         const actortype = this._getActorType();

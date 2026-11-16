@@ -91,10 +91,13 @@ export async function run() {
       let soakDice = null, card = "";
       try {
         for ( let k = 0; k < 8 && soakDice === null; k++ ) {
-          const since = game.messages.size;
+          const before = new Set(game.messages.map(m => m.id));
           await C.attack({attacker: ct.object ?? atk, target: wt.object ?? who, weaponId: knife.id});
-          await waitFor(() => game.messages.size > since, 6000);
-          card = String(newestMessage()?.content ?? "");
+          await waitFor(() => game.messages.some(m => !before.has(m.id)), 6000);
+          await new Promise(r => setTimeout(r, 800));
+          // the attack card is found by its soak line among this blow's cards: a streak or other card can come after it
+          const fresh = game.messages.filter(m => !before.has(m.id)).map(m => String(m.content ?? ""));
+          card = fresh.find(c => /Soak \(/.test(c)) ?? fresh.find(c => /Attack/.test(c)) ?? fresh.at(-1) ?? "";
           const m = card.replace(/<[^>]+>/g, " ").match(/Soak \([^)]*\):\s*(\d+)\s*dice/);
           if ( m ) soakDice = Number(m[1]);
         }
