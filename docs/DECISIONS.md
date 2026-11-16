@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6580
+Next free block: B6620
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -369,6 +369,7 @@ Next free block: B6580
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
+| B6590-B6619 | Running the Net: the Digital Web and the Future Darkness Net, data fortresses, ICE and what they do to the world (used B6590-B6603) | Otherworlds |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -12366,3 +12367,73 @@ Reverse: Put the old wording back in r3 renaissance.txt, age-of-reason.txt, vict
 WoDX Chronicle. The 1692 Salem card rests on Verbena (Revised) pdf 43, read on the PC on 13 November 2026. That book, and the other Mage Revised tradition books, are not in the cloud book text, and no other book there says more about Salem than naming the trials as a model witch-hunt (Archons and Templars). The card stays as it is; a books-find job can confirm the page.
 
 Reverse: Nothing to reverse.
+
+## B6590. Two Nets under one status (2026-11-16)
+WoDX Otherworlds net-rules.mjs netKind. The classic timeline has the Digital Web from 1990 (Mage 20th printed pp. 466-474); the Future Darkness branch has the Cyberpunk Net from 2005, the year the cybermodem is invented (Cyberpunk 2020 pdf 182), read through World of Future Darkness. Before 2005 the branch has the Web too. Both use the Jacked in status the Net already had (B265).
+
+Reverse: make netKind return "web" always.
+
+## B6591. The ways in (2026-11-16)
+net-rules ACCESS. Web: sensory with VR gear (+1 to every difficulty, Intelligence for Strength and Wits for Dexterity), astral (Correspondence 2, Intelligence + Computer at 7, three successes; 6 with the Data Sphere), holistic (Life 4, Correspondence 2, Forces 2, extended Intelligence + Computer at 7, five successes, the body goes in), all from the M20 Web Systems chart. Deck: interface plugs (no penalty), 'trodes +1 difficulty, keyboard and screen +2 difficulty but out of reach of every anti-personnel program except Firestarter (pdf 138; the penalties are house readings of the book's -2 and -4 REF).
+
+Reverse: edit ACCESS.
+
+## B6592. Cyberpunk numbers into dots (2026-11-16)
+Program strengths, data walls and code gates halve, rounded up, into dots, as World of Future Darkness halves a system's Intelligence (3 dots for 2 CPUs). A deck's speed halves the same way and gives one extra action for each two dots. Net initiative is Wits + Computer + deck speed + a die (WoFD).
+
+Reverse: change dots() and deckActions() in net-rules.mjs.
+
+## B6593. The program list (2026-11-16)
+net-rules PROGRAMS: the core book's programs (pdf 141-145) with their memory units, each with what it does when it gets through. Controllers work the remotes they name; utilities carry no roll.
+
+Reverse: edit PROGRAMS.
+
+## B6594. Data fortresses are drawn scenes (2026-11-16)
+net.mjs drawFortress, net-rules fortress. The Fast Fortress tables (pdf 168-169), seeded: 1d6 CPUs, walls and gates d6/2 + CPUs, two file rolls a memory, 1d6 + CPUs defences, 1d6 remotes, a virtual on 5 or 6, an AI from 4 CPUs (its personality, reaction and icon rolled). The scene (folder WoDX Net) has a placeholder SVG grid, the data wall as walls, each code gate as a locked door, each piece of ICE as a token. The art is placeholder only and will be redrawn.
+
+Reverse: delete the scene; the rules stay.
+
+## B6595. Breaking in (2026-11-16)
+A program against the system is Computer + the program's dots against the system's Intelligence + the defence's dots, both at 6 plus the way in's difficulty (WoFD program test). The margin wears a gate down; at 0 its door opens on the map. Intrusion programs may set off the alarm (Hammer always, Jackhammer on 8 to 10, Worm on 9 or 10). Stealth hides the icon (shown faded) until it acts openly.
+
+Reverse: edit contest() and runProgram().
+
+## B6596. ICE acts on its own (2026-11-16)
+net-rules iceTurn, net.mjs iceRound. Each Net turn (a combat round in the fortress, or after a runner acts) every piece of ICE looks 20 squares: watchdogs raise the alarm, hounds and killers move up to five squares toward a runner and strike, the rest strike from their posts once the alarm is up. An AI follows its rolled reaction. The setting "ICE acts on its own" (default: when a lone player plays) decides whether it runs by itself; the Storyteller can always press ICE acts.
+
+Reverse: set the setting to Never.
+
+## B6597. Black ICE reaches the body (2026-11-16)
+net-rules iceHit, net.mjs applyHit. An ICE attack is Net combat (WoFD): its damage dice less Wits plus protection. Sword hurts the icon (bashing, B5821). Hellbolt is lethal and Hellhound aggravated on the body (M20: feedback programs). Brainwipe burns Intelligence that heals as lethal; Zombie and Liche as aggravated (M20 hard de-rez precedent). Stun and Glue freeze, Spazz scrambles reflexes, Jack Attack bars jacking out, Knockout knocks out, each for its rolled turns. Krash and DecKrash crash the deck, Murphy runs programs at random, Virizz slows it, Viral 15 wipes it, Flatline burns it out. Firestarter starts an Interactables fire at the body's feet. Killers de-rez a program in the deck. A Hellhound that hits waits for the next log-on.
+
+Reverse: edit iceHit() and applyHit().
+
+## B6598. What files give (2026-11-16)
+net-rules fileGives, net.mjs takeFile. Sums are months' wages of the year and land (WoDX Storyteller), so they fit any era: a transactions file moves a die times half a month's wage into the purse and gives law heat for theft; business records sell to a fence for a die times a quarter of a month's wage; grey and black operations give a secret of the fortress's owner (made if the owner has none), a database or the office mail an existing secret of someone the system knows. Each secret found is a Ledger hook, which the Lone Chronicle turns into a lead.
+
+Reverse: edit fileGives().
+
+## B6599. Remotes work the building (2026-11-16)
+net.mjs tieRemotes, workRemote. A fortress drawn for a Realspace scene ties its remotes to that scene: doors and elevators to its doors (keypad doors first), the cameras to the scene's camera mark (WoDX Chronicle: nothing is recorded while they are off), the alarm to an Interactables alarm event, the lights to its lights (every system can work its building's lights), the videoboard to a lit sign on the map, the microphone to who is there. An alarm raised in the fortress sounds in the building.
+
+Reverse: draw the fortress without a building.
+
+## B6600. Trace and the law (2026-11-16)
+Bloodhound, Pit Bull, Hellhound and a long Glue trace: the program's dots + a die against the route's trace (the regions crossed, house values) + a die. Traced, the runner takes the Traced status and WoDX Chronicle law heat for a break-in, named; Pit Bull also cuts the line. Crossing a long distance link: a die at or above its security, else cut off, Netwatch takes the code, or a bust attempt (pdf 150-151).
+
+Reverse: edit traceRunner().
+
+## B6601. Whiteout (2026-11-16)
+net.mjs whiteout. In the Web a mage's Paradox pool of 5 or more brings a Whiteout: the pool's dice at 6 (4 when Forces or Prime were thrown about, not in a war sector), the M20 severity table, the sector down for the pool's time, the lag above 10 points. The scene flashes white.
+
+Reverse: do not call it.
+
+## B6602. De-rez and icon death (2026-11-16)
+net-rules derez, iconDeath (M20 printed pp. 472-473). Soft: 1 to 3 bashing unsoaked, the icon back at the link (holistic 1 to 4 soaked and +2 difficulty for an hour or two). Hard: 2 lethal soaked at 7 (not holistic), Stamina at 7 or lose 2 Intelligence, and the runner is thrown out.
+
+Reverse: edit derez().
+
+## B6603. Players' actions run on the Storyteller's client (2026-11-16)
+net.mjs call, onNetMessage. A player jacks in, runs programs and takes files from the Net window; the active Storyteller's client does the work, checks the player owns the character, and pulls the player to the fortress.
+
+Reverse: none needed.
