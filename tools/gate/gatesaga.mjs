@@ -77,7 +77,10 @@ export async function run() {
       await game.time.advance(8 * DAY);
       await until(() => (saga().state().clocks.ashfield ?? 0) >= 1, 8000);
       const st = saga().state(), sig = heard.find(h => h.step === "c3");
-      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step)});
+      // B6750: when the vigil is not dealt, say why (a hold or Light-touch left by an earlier gate, or the run's place)
+      const run = game.settings.get(C, "podState").chains?.find(r => r.saga?.book === "red-stone");
+      const why = {quiet: !!game.modules.get(C).api?.isQuiet?.(), held: !!game.modules.get(C).api?.isHeld?.(), at: run?.at ?? null, current: saga().current?.()?.step?.key ?? null};
+      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step), why});
     });
 
     await step("4 ending", async () => {
@@ -103,8 +106,11 @@ export async function run() {
       await game.settings.set(C, "podState", {cities: {}, chains: []});
       const n0 = cards().length;
       await saga().start("patriarch");
-      await until(() => cards().length > n0);
-      const c = cards().at(-1)?.content ?? "";
+      // B6750: book one's fronts post their own wct-pod cards on the same ticks, so the sequel's card is found by its
+      // chapter, never as the last card (gate rule 1)
+      const mine = () => cards().slice(n0).find(m => /Chapter I: The envoy/.test(m.content));
+      await until(() => !!mine());
+      const c = mine()?.content ?? "";
       ok("6 sequel notes", /Chapter I: The envoy/.test(c) && (!e || /Session 1/.test(c)), {journal: !!e, card: c.slice(0, 300)});
     });
 
