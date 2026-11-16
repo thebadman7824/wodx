@@ -2,6 +2,9 @@ import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLe
 import {XP} from "../data/vampire.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 import * as AS from "./animal-stock-rules.mjs";
+import {learningFor} from "./learn-rules.mjs";
+import {splatOf} from "./lines.mjs";
+import * as LX from "./lines-xp-rules.mjs";
 
 export const MODULE_ID = "wodx-creation";
 export const DISCIPLINE = "wod.types.discipline";
@@ -37,6 +40,29 @@ export function lineOf(actor) {
   // B5040: an animal on a Creature sheet that has drunk vitae is a ghoul; one that has not is no line of ours
   if ( actor?.type === (types.creature ?? "Creature") && actor.getFlag?.(MODULE_ID, "animalGhoul") ) return "ghoul";
   return null;
+}
+
+/**
+ * The chart a character spends experience by (B6271): vampire, ghoul or mortal as before, and every other line by its
+ * own book (data/lines-xp.mjs). Kuei-jin share the Vampire sheet but spend by Kindred of the East.
+ */
+export function spendLine(actor) {
+  const splat = splatOf(actor);
+  // Kinfolk, sorcerers and kinain share the Mortal sheet but have their own charts
+  if ( LX.hasChart(splat) ) return splat;
+  return lineOf(actor);
+}
+const legacy = line => !!XP[line];
+
+/** Every rated power of a cat on this actor: [{id, key, name, value, own}]. Spheres are fields, not items. */
+export function powersOf(actor, cat) {
+  if ( cat === "sphere" ) {
+    const aff = String(actor?.system?.affinity ?? "").toLowerCase();
+    return Object.entries(actor?.system?.spheres ?? {}).map(([k, v]) => ({id: "", key: `sphere:${k}`, name: loc(v?.label) || k, value: Number(v?.value) || 0,
+      own: !!aff && (aff === k || aff.includes(k) || String(loc(v?.label)).toLowerCase() === aff)}));
+  }
+  return items(actor).filter(i => LX.itemIsCat(i, cat)).map(i => ({id: i.id, key: `item:${i.id}`, name: i.name, value: Number(i.system?.value) || 0,
+    own: !!i.flags?.[MODULE_ID]?.favored}));
 }
 
 /* -------------------------------------------- */
@@ -160,7 +186,7 @@ export function canSpendFor(actor, user = game.user) {
 
 /** The actors this user may spend for: their own characters, then their allies. */
 export function spendableFor(user = game.user) {
-  return [...(game.actors ?? [])].filter(a => lineOf(a) && !lineage(a).became && (a.testUserPermission?.(user, "OWNER") || canSpendFor(a, user)))
+  return [...(game.actors ?? [])].filter(a => spendLine(a) && !lineage(a).became && (a.testUserPermission?.(user, "OWNER") || canSpendFor(a, user)))
     .sort((a, b) => (Number(!!allyOf(a)) - Number(!!allyOf(b))) || a.name.localeCompare(b.name));
 }
 
@@ -180,7 +206,7 @@ export function xpTotals(actor) {
 
 /** Every trait this actor could raise by one dot, with its cost and whether it is allowed. */
 export function purchaseOptions(actor) {
-  const line = lineOf(actor);
+  const line = spendLine(actor);
   if ( !line ) return [];
   const sys = actor.system ?? {};
   const gen = generationOf(actor);
@@ -192,13 +218,20 @@ export function purchaseOptions(actor) {
   const caitiff = line === "vampire" && ownClan?.id === "caitiff";
   const {available} = xpTotals(payerOf(actor));
   const out = [];
+  const learning = actor?.flags?.[MODULE_ID]?.learning ?? {};
   const add = (kind, key, label, current, extra = {}) => {
-    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda});
-    const cost = xpCost({line, kind, current, discipline: extra.discipline});
+    const old = legacy(line);
+    const max = old ? traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda})
+      : LX.lineMax({line, kind, key, cat: extra.cat, arete: Number(sys.advantages?.arete?.permanent) || 0});
+    const cost = old ? xpCost({line, kind, current, discipline: extra.discipline}) : LX.lineCost({line, kind, key, current, cat: extra.cat, own: extra.own});
+    // B6271: a line that does not buy this with experience does not show it at all
+    if ( !old && cost === null ) return;
     let reason = "";
     if ( cost === null ) reason = "Not available to this character";
     else if ( current >= max ) reason = `Already at the most this character can have (${max})`;
     else if ( extra.blocked ) reason = extra.blocked;
+    // B6230: one study at a time for each trait
+    else if ( learningFor(learning, kind, key) ) reason = "Being learned now: it rises when the study is done";
     else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
     out.push({kind, key, label, current, next: current + 1, cost, max, ok: !reason, reason, ...extra});
   };
@@ -217,7 +250,9 @@ export function purchaseOptions(actor) {
   for ( const i of items(actor).filter(i => i.type === "Trait" && SECOND_ABILITY.test(i.system?.type ?? "")) ) {
     add("ability", `item:${i.id}`, i.name, Number(i.system.value) || 0);
   }
-  if ( line !== "mortal" ) {
+  if ( line === "kuei-jin" ) {
+    for ( const d of disciplinesOf(actor) ) add("discipline", `item:${d.id}`, d.name, d.value, {discipline: "other"});
+  } else if ( legacy(line) && line !== "mortal" ) {
     for ( const d of disciplinesOf(actor) ) {
       const inClan = clanList.includes(d.name.toLowerCase());
       const blocked = beast && !AG.animalCanLearn(d.name) ? "An animal can only learn Celerity, Fortitude and Potence"
@@ -235,6 +270,18 @@ export function purchaseOptions(actor) {
     add("road", "path", label, Number(p.permanent) || 0);
   }
   if ( sys.advantages?.willpower ) add("willpower", "willpower", "Willpower", Number(sys.advantages.willpower.permanent) || 0);
+  // B6271: each line's own ratings and powers
+  const chart = LX.LINE_XP[line];
+  for ( const [k, st] of Object.entries(chart?.stats ?? {}) ) {
+    if ( !sys.advantages?.[k] ) continue;
+    add("stat", k, st.label, Number(sys.advantages[k].permanent) || 0);
+  }
+  for ( const cat of Object.keys(chart?.powers ?? {}) ) {
+    if ( cat === "gift" ) continue;
+    for ( const pw of powersOf(actor, cat) ) {
+      add("power", pw.key, pw.name, pw.value, {cat, own: pw.own});
+    }
+  }
   // B5060: an animal ghoul's next step of training, at the house costs
   if ( beast ) { const t = trainingOption(actor, available); if ( t ) out.push(t); }
   return out;
@@ -262,15 +309,16 @@ export async function applyTraining(actor, level) {
 
 /** Cost and checks for a Discipline the character does not have yet. */
 export function newDisciplineOption(actor, name) {
-  const line = lineOf(actor);
+  const line = spendLine(actor);
   const clean = String(name ?? "").trim();
-  if ( !line || line === "mortal" || !clean ) return null;
+  if ( !line || !clean || !(line === "kuei-jin" || (legacy(line) && line !== "mortal")) ) return null;
   const domitor = line === "ghoul" ? domitorOf(actor) : null;
   const domitorDisciplines = domitor ? disciplinesOf(domitor).filter(d => d.value > 0).map(d => d.name) : [];
   const {available} = xpTotals(payerOf(actor));
-  const cost = XP[line].newDiscipline;
+  const cost = legacy(line) ? XP[line].newDiscipline : LX.lineCost({line, kind: "newDiscipline"});
   let reason = "";
   if ( disciplinesOf(actor).some(d => d.name.toLowerCase() === clean.toLowerCase()) ) reason = "Already known; raise it instead";
+  else if ( learningFor(actor?.flags?.[MODULE_ID]?.learning, "newDiscipline", `new:${clean}`, clean) ) reason = "Being learned now: it rises when the study is done";
   else if ( line === "ghoul" && isAnimal(actor) && !AG.animalCanLearn(clean) ) reason = "An animal can only learn Celerity, Fortitude and Potence";
   else if ( line === "ghoul" && !ghoulCanLearn(clean, domitorDisciplines) ) reason = "The domitor does not know this Discipline";
   else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
@@ -279,17 +327,39 @@ export function newDisciplineOption(actor, name) {
 
 /** Cost and checks for a new secondary Ability (a Talent, Skill or Knowledge the sheet does not list). */
 export function newAbilityOption(actor, name, group = "skill") {
-  const line = lineOf(actor);
+  const line = spendLine(actor);
   const clean = String(name ?? "").trim();
   if ( !line || !clean ) return null;
   const {available} = xpTotals(payerOf(actor));
-  const cost = XP[line].newAbility;
+  const cost = legacy(line) ? XP[line].newAbility : LX.lineCost({line, kind: "newAbility"});
   let reason = "";
   const exists = items(actor).some(i => i.type === "Trait" && i.name.toLowerCase() === clean.toLowerCase())
     || Object.values(actor.system?.abilities ?? {}).some(a => loc(a.altlabel || a.label)?.toLowerCase?.() === clean.toLowerCase());
   if ( exists ) reason = "Already on the sheet; raise it instead";
+  else if ( learningFor(actor?.flags?.[MODULE_ID]?.learning, "newAbility", `newab:${group}:${clean}`, clean) ) reason = "Being learned now: it rises when the study is done";
   else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
   return {kind: "newAbility", key: `newab:${group}:${clean}`, label: clean, current: 0, next: 1, cost, max: 1, ok: !reason, reason, group};
+}
+
+/**
+ * The first dot of a rated power (B6271): an Art, a Realm, an Arcanos, a Lore, a Hekau path, a Path of sorcery, or a
+ * Gift (cat "gift", bought whole at its level; WoDX Actions' Gift list sends it here with its item). own: the
+ * character's own (favoured Hekau, a Lore of their House, a Gift of their breed, auspice or tribe).
+ */
+export function newPowerOption(actor, cat, name, {own = false, level = 1, item = null} = {}) {
+  const line = spendLine(actor);
+  const clean = String(name ?? "").trim();
+  if ( !line || !clean || !LX.LINE_XP[line]?.powers?.[cat] || cat === "sphere" ) return null;
+  const {available} = xpTotals(payerOf(actor));
+  const cost = LX.lineCost({line, kind: "newPower", cat, own: !!own, level});
+  const key = `newpw:${cat}:${clean}`;
+  let reason = "";
+  const known = cat === "gift" ? items(actor).filter(i => LX.itemIsCat(i, "gift")) : powersOf(actor, cat);
+  if ( cost === null ) reason = "Not available to this character";
+  else if ( known.some(k => String(k.name).toLowerCase() === clean.toLowerCase()) ) reason = cat === "gift" ? "Already known" : "Already known; raise it instead";
+  else if ( learningFor(actor?.flags?.[MODULE_ID]?.learning, "newPower", key, clean) ) reason = "Being learned now: it rises when the study is done";
+  else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
+  return {kind: "newPower", key, label: clean, cat, own: !!own, level: Math.max(1, Math.trunc(Number(level) || 1)), item, current: 0, next: 1, cost, max: 1, ok: !reason, reason};
 }
 
 /** Re-check a purchase against the actor as it is now. Returns the option or null. */
@@ -297,6 +367,7 @@ export function recheck(actor, purchase) {
   if ( purchase.kind === "training" ) { const t = trainingOption(actor); return t && t.key === purchase.key ? t : null; }
   if ( purchase.kind === "newDiscipline" ) return newDisciplineOption(actor, purchase.label);
   if ( purchase.kind === "newAbility" ) return newAbilityOption(actor, purchase.label, purchase.group);
+  if ( purchase.kind === "newPower" ) return newPowerOption(actor, purchase.cat, purchase.label, {own: purchase.own, level: purchase.level, item: purchase.item});
   return purchaseOptions(actor).find(o => o.kind === purchase.kind && o.key === purchase.key) ?? null;
 }
 
@@ -322,6 +393,17 @@ export async function applyPurchase(actor, option) {
       return actor.update({"system.advantages.path.permanent": next, "system.advantages.path.value": next});
     case "training":
       return applyTraining(actor, option.key);
+    case "stat":
+      return actor.update({[`system.advantages.${option.key}.permanent`]: next,
+        ...(actor.system?.advantages?.[option.key]?.temporary !== undefined ? {[`system.advantages.${option.key}.temporary`]: Math.min(next, (Number(actor.system.advantages[option.key].temporary) || 0) + 1)} : {})});
+    case "power":
+      if ( option.key.startsWith("sphere:") ) return actor.update({[`system.spheres.${option.key.slice(7)}.value`]: next});
+      return actor.items.get(option.key.slice(5))?.update({"system.value": next, "system.level": next});
+    case "newPower": {
+      const made = option.cat === "gift" && option.item ? foundry.utils.mergeObject(option.item, {flags: {[MODULE_ID]: {favored: !!option.own}}}, {inplace: false})
+        : LX.powerItem(option.cat, option.label, 1, {own: option.own});
+      return made ? actor.createEmbeddedDocuments("Item", [made]) : null;
+    }
     case "willpower":
       return actor.update({"system.advantages.willpower.permanent": next,
         "system.advantages.willpower.temporary": Math.min(next, (Number(actor.system.advantages.willpower.temporary) || 0) + 1)});
@@ -334,7 +416,7 @@ export function disciplineItem(name, value = 0) {
 }
 
 export function kindLabel(kind) {
-  return KINDS[kind] ?? kind;
+  return KINDS[kind] ?? LX.NEW_KINDS[kind] ?? kind;
 }
 
 export {generationRow, ghoulDisciplineCap};

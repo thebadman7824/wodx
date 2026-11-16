@@ -341,9 +341,11 @@ Next free block: B6580
 | B6180-B6199 | Shared terms: one meaning for time, dice, health, distance, eras and who is who across every module (used B6180-B6199) | Chronicle, Actions, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller, Targeting, Atmosphere |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
+| B6230-B6239 | Learning from teachers, books and practice: experience spends run as long tasks (used B6230-B6236) | Creation, Storyteller |
 | B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6244) | tools |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
+| B6270-B6299 | Every line gets the spend window and the learning rule; one key for every line (used B6270-B6275) | Creation, Actions |
 | B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
 | B6310-B6319 | Every line equal in WoDX NPC (parity with the Kindred-only tools) (used B6310-B6319) | NPC |
 | B6320-B6329 | Every line equal in WoDX Storyteller (parity with the Kindred-only tools) (used B6320-B6328) | Storyteller |
@@ -10621,6 +10623,77 @@ WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks 
 
 Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
 
+## B6230. A spend names where it is learned, and the trait rises at the end of a long task (2026-11-15)
+WoDX Creation. Ben picked the full version of Improvement Desk item lb1 (2026-11-15). When experience is spent in the
+Spend window, a dialog asks where the trait is learned: a teacher (any character in the world who has it at the new
+rating or higher, those on the scene first), a book the character carries, a school or course of the year, practice
+alone, or a teacher the Storyteller finds. The experience is recorded as spent at once (the log line starts
+"Learning:"), and a WoDX Storyteller long task of kind "train" is opened on the learner. When that task is finished,
+the trait rises by one dot; the log line is renamed to "learned from ...". One study at a time for each trait: while
+it runs the trait shows "Being learned now". A player's request carries the source, which the Storyteller's side checks
+again before it reaches the queue and again on approval. A study removed from Long tasks before it ends gives the
+experience back. Animal training keeps its own trainer task (B5060) and is not changed.
+
+Reverse: turn off the world setting "Learning needs a source" (wodx-creation.learning); spends raise traits at once.
+
+## B6231. Which sources may teach what (2026-11-15)
+WoDX Creation learn-rules.mjs sourcesFor. Attributes, Willpower, Virtues and the Road: a teacher or practice (V20 pdf
+131: raised by use and practice). Abilities: a teacher, a book, a school or practice. Occult and any Lore: a teacher, a
+book or a school, never practice alone. A new Ability: a teacher, a book or a school (V20 pdf 131: a new Ability needs
+tutoring and study). Disciplines: physical (Celerity, Fortitude, Potence) and the clan's own (any for a Caitiff, and a
+ghoul's) by practice or a teacher (V20 Dark Ages pdf 189); any other only from a teacher who has it at the level wanted
+(V20 Dark Ages pdf 189). Blood sorcery (Thaumaturgy, Necromancy, paths, Koldunic, Dur-An-Ki, Abyss mysticism): a
+teacher or a book. A new Discipline: a teacher; a new out-of-clan Discipline for a vampire needs a Kindred teacher, who
+loses a blood point when the study begins (V20 pdf 136).
+
+Reverse: edit sourcesFor and needsBlood in learn-rules.mjs.
+
+## B6232. How long a study takes, and why a better source is faster (2026-11-15)
+House figures, logged in docs/PENDING-REVIEW.md. The goal is twice the new rating in successes, four times for Occult,
+the Lores, blood sorcery and any Discipline out of clan or new. The learner rolls the Attribute itself (an Attribute),
+Intelligence and the Ability (an Ability) or permanent Willpower (a Discipline, Virtue, Road or Willpower). A teacher:
+one roll a week at difficulty 6, or 5 when the teacher is two dots past the new rating, with a die for each dot the
+teacher has above the learner (at most 3). A book or school: one roll a week, fine 5 (+2 dice), good 6 (+1), poor 7.
+Practice: one roll a month at difficulty 7. A teacher the Storyteller finds is resolved on the Storyteller's side to
+the best teacher in the chronicle, or the request is refused when nobody knows it that well. The dialog shows each
+source's rough time before the player chooses.
+
+Reverse: edit QUALITY, planFor and goalOf in learn-rules.mjs.
+
+## B6233. Books that teach (2026-11-15)
+WoDX Library's manuals, grimoires and a few papers teach by their subject up to a depth: a Latin grammar Linguistics
+and Academics to 3, a herbal Medicine to 2, a treatise on falconry Animal Ken to 3, a guild's book Crafts to 3 (fine),
+a fencing manual Melee to 3, an army field manual Firearms and Survival to 2, a programming book Computer to 3, a
+handwritten grimoire Occult to 3, a printed chapbook grimoire Occult to 2, and so on (BOOKS). Names are matched by a
+pattern, so the Library's clearer names still match. Any item can teach instead: flags["wodx-creation"].teaches =
+{traits, max, quality} (a Thaumaturgy text, the Book of Nod).
+
+Reverse: edit BOOKS in learn-rules.mjs.
+
+## B6234. Schools and courses follow the year, everywhere (2026-11-15)
+An apprenticeship with a master (Crafts, Animal Ken, Ride, Drive) in every age; a monastery or cathedral school 600 to
+1850; a fencing school 1300 to 1950; a university from 1200 (Bologna and Paris; Prague from 1348); a printed book bought
+for the purpose from 1450; a public library or evening school from 1850; correspondence, radio and film courses 1920 to
+2005; courses on the net from 1995; an uploaded skill from 2030, at fine quality, a roll each night, but only with
+Resources 3 to pay for it. Global, not tied to Moravia.
+
+Reverse: edit COURSES in learn-rules.mjs.
+
+## B6235. The Storyteller can waive it (2026-11-15)
+In the Spend window the Storyteller has "Waive learning for this story" for each character (flag
+wodx-creation.learnWaived), shown on the window while it holds, and a "Waive it this time" tick in the source dialog.
+Waived spends raise the trait at once.
+
+Reverse: remove the button in apps.mjs SpendApp.
+
+## B6236. The study shows on the map (2026-11-15)
+While a study runs the learner carries an Active Effect "Studying <trait>" with the book icon and status
+wodx-studying, so the token shows it to everyone who sees the token; it comes off when the study ends or stops. The
+start and the end float a line over the token, and a card goes to the owners and the Storyteller. The Spend window
+lists "Learning now" with the long task's successes so far.
+
+Reverse: drop the ActiveEffect in learn.mjs begin.
+
 ## B6240. The world timeline loads on the Storyteller's client only (2026-11-15)
 WoDX Chronicle. The world timeline (data/world-history.mjs), the future events and the future world (about 1.2 MB together) are no longer imported when the world starts. The Storyteller's client starts loading them at init and waits for them before WoDX Chronicle tells the other modules it is ready, so everything that runs there sees the whole list as before. A player's client reads has() and fired() from the fired list the Storyteller's client keeps in a world setting, and reads the Dated events page and the news cards the Storyteller's client writes, so it loses nothing it shows. The few things that can run on a player's client and read the list itself (a Malkavian's glimpse, a long torpor's wake report, a blood hunt's date, the first night forecast) await events.load() first, so on that client the timeline loads the first time one of them is used. Until it loads, list() holds the book events alone. Ben picked this on the stale design desk (2026-11-15 f1).
 
@@ -10693,6 +10766,64 @@ WoDX Atmosphere. common/sounds/heart.ogg holds one whole beat; it plays once per
 generated thump plays until the file is decoded and wherever there is none.
 
 Reverse: delete heart.ogg.
+
+## B6270. One key for every line (2026-11-15)
+WoDX Creation lines.mjs. Ben asked to bring every line up to what vampires have (2026-11-15). A pure helper answers
+for any actor with one key: vampire, kuei-jin (Vampire sheet, variant kindredeast), ghoul, revenant, werewolf, fera
+(Changing Breed sheet), kinfolk, mage, sorcerer, changeling, kinain, wraith, hunter, mummy, demon, mortal, creature,
+exalted, each with a family (vampire, werewolf, mage, changeling and the rest alone). Game API:
+api.lines.{of, info, family, label, keys}, for every WoDX module. lineOf in actor-data.mjs is not changed.
+
+Reverse: remove lines.mjs and api.lines.
+
+## B6271. Every line spends experience in the Spend window, by its own book (2026-11-15)
+WoDX Creation. The Spend window, the Award dialog, the ally dialog and the Storyteller window now take every line, not
+only vampires, ghouls and mortals. Each line's chart is in data/lines-xp.mjs: Garou and Fera W20 pdf 246 (Rage,
+Gnosis, Gifts at level x 3, or x 5 outside breed, auspice and tribe), Kinfolk W20 Kinfolk pdf 66 (Gifts 15, 20
+outside), Mage M20 pdf 337 (Arete x 8, affinity Sphere x 7, other Sphere x 8, new Sphere 10, no Sphere above Arete),
+sorcerers Sorcerer Revised pdf 46 (by the new rating; Paths x 7, new Path 7), Changeling C20 pdf 177 (Arts x 4, new 7;
+Realms x 3, new 5; Glamour x 3; Willpower x 2), Wraith 20th pdf 367 (Arcanoi x 3, new 7), Hunter: The Reckoning pdf
+141 (no Virtues: Edges come from the Virtue points the Storyteller awards, pdf 130), Mummy: The Resurrection pdf 140
+(favoured Hekau x 4, other x 6, new 7; Balance x 7), Demon: The Fallen pdf 165 (Lores x 5, new 7, 10 for another
+House's; Faith x 7; Virtues x 2), Kuei-jin Kindred of the East pdf 130 (Disciplines x 8; Yin, Yang and Hun x 3; P'o
+x 1). A line that does not buy a trait with experience does not show it. New purchase kinds: stat (a single rating),
+power (a rated power the sheet has; Mage Spheres are fields), newPower (a first dot, or a whole Gift).
+
+Reverse: remove the line from LINE_XP; spendLine then gives null and the window says to use the sheet.
+
+## B6272. House figures where the books are silent or the scan is unreadable (2026-11-15)
+Kuei-jin new Ability 3 and new Discipline 10 (the scan of Kindred of the East pdf 130 is unreadable there; V20's
+figures). Dharma is not bought with experience. Kinain: Arts and Realms at C20's costs, to 3 at most, the rest as
+mortals. Creatures: the mortal chart. Exalted: the Kindred chart without Disciplines. A Kinfolk's extra 5 when a Garou
+teaches instead of a spirit is not charged yet. Logged in docs/PENDING-REVIEW.md.
+
+Reverse: edit data/lines-xp.mjs.
+
+## B6273. Each line's sources for the learning rule (2026-11-15)
+WoDX Creation learn-rules.mjs. A new source kind, a spirit. Gifts: a spirit (a roll a night, W20 pdf 153) or a Garou
+who knows the Gift (weekly rolls, twice the successes: a lunar month at least, W20 pdf 154). Gnosis: the spirits, a
+teacher or practice. Arete: a mentor or the mage's own seeking. Faith: the Fallen's own deeds. Spheres: a mentor who
+knows it better, or a book; never practice alone; a mentor of another Tradition or sect takes three times the
+successes (M20 pdf 338 says two to five times). A first dot of an Art, Realm or Arcanos needs a teacher, raising one
+may be practised. Lores: remembered alone or with another of the Fallen. Hekau and Paths of sorcery: a master or a
+text, practice to raise. Rated powers take four times the new rating in successes, as the esoteric traits do.
+
+Reverse: edit sourcesFor, statSources, powerSources and planFor in learn-rules.mjs.
+
+## B6274. Learn a Gift goes through the Spend window's rule (2026-11-15)
+WoDX Actions garou.js. With WoDX Creation on, "Learn a Gift" with "Spend experience through the log" ticked sends the
+Gift as a purchase: the line's cost (Kinfolk pay 15 or 20), a source (a spirit or a Garou), a long task, and the Gift
+is on the sheet when the study is done, linked back to the Gift library. Without Creation, or with the box unticked,
+it is added at once as before. The Spend window of a Garou, Fera or Kinfolk has a "Learn a Gift" button for it.
+
+Reverse: remove the B6274 block in learnGift.
+
+## B6275. Pass the years ages every line in a mortal body (2026-11-15)
+WoDX Creation time.mjs. Kinfolk, sorcerers, kinain, hunters, Garou and Fera, mages, changelings and the Fallen's
+hosts age as mortals do over a skip (they may die of age, and an heir can inherit); wraiths are noted as not ageing.
+The archive records each actor's line by the new key.
+
+Reverse: empty AGING_LINES in time.mjs.
 
 ## B6300. The Kindred menu's line-agnostic tools go on every line's menu (2026-11-15)
 WoDX Actions. Downtime on Backgrounds, healing with time (lines that heal as the living do and lacked it: Changeling, Fae of the Dark Ages, Demon, Mummy, Orpheus), Seduction (Werewolf, Mage, Dark Ages Mage) and the Storyteller's New night, End of story, Witnesses and Sky and sun are added to each line's menu from one table (profile-menus SHARED_TOOLS and SHARED_FOR). Spirits and beasts get only the Storyteller's tools. Kept Kindred-only: Hunt, Feed, Spend blood, Blood Oath, Prestation, Blood Hunt, Golconda, sun and haven, torpor, diablerie, the Road, daytime pool caps.
