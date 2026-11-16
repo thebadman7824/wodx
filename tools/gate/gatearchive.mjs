@@ -14,6 +14,8 @@
  *   6. archived the test dead: gone from the world, in the compendium under their ids, listed in the index journal
  *   7. a test player character with a linked token stays
  *   8. bring back: one test character returns with its id
+ *   8b. B6770: a living test character's notes and an item's description that link one of the dead point at its
+ *       archive entry once it is archived, and back at the world when it is brought back
  *   9. put back: test characters, their archive entries and chat cards deleted; hold and clock as they were
  * Result: Data/wodx-gate/gatearchive-result.json.
  */
@@ -84,6 +86,13 @@ export async function run({count = 500} = {}) {
     ok("5. archive window", !!app && R.timings.window < 5000 && !!app.element.querySelector("input.wodx-search"), {ms: R.timings.window});
     await app?.close();
 
+    // B6770: a living witness whose notes and a keepsake's description link the first dead villager
+    const linkId = mine[0]?.id;
+    const witness = await Actor.create({name: "Gate archive witness", type: "Mortal", folder: folder.id,
+      system: {notes: `<p>Owes @UUID[Actor.${linkId}]{a villager} a debt</p>`}, flags: {[C]: {chronology: {bornYear: 1170}}}});
+    made.add(witness.id);
+    const [keepsake] = await witness.createEmbeddedDocuments("Item", [{name: "Gate archive keepsake", type: "Item", system: {description: `<p>From @UUID[Actor.${linkId}]{a villager}</p>`}}]);
+
     // A dead player character with a linked token stays
     const pc = await Actor.create({name: "Gate player's dead", type: "Mortal", folder: folder.id,
       ownership: {default: 0, [game.users.find(u => !u.isGM)?.id ?? "none"]: 3}, flags: {[C]: {chronology: {died: now}}}});
@@ -103,9 +112,14 @@ export async function run({count = 500} = {}) {
     const pcKept = res.kept.find(k => k.id === pc.id);
     ok("7. player character stays", !!game.actors.get(pc.id) && !!pcKept, {why: pcKept?.why});
 
-    const back = res.archived[0];
+    const toPack = `@UUID[Compendium.world.wodx-archive.Actor.${linkId}]`;
+    const noteThere = String(game.actors.get(witness.id)?.system?.notes ?? ""), itemThere = String(game.actors.get(witness.id)?.items.get(keepsake?.id)?.system?.description ?? "");
+    const back = res.archived.find(a => a.id === linkId) ?? res.archived[0];
     const r2 = await api.archive.restore([back.id]);
     ok("8. bring back", r2.restored.length === 1 && !!game.actors.get(back.id) && !(await pack.getIndex()).get(back.id), {id: back.id});
+    const noteBack = String(game.actors.get(witness.id)?.system?.notes ?? ""), itemBack = String(game.actors.get(witness.id)?.items.get(keepsake?.id)?.system?.description ?? "");
+    ok("8b. links in notes and item text follow", noteThere.includes(toPack) && itemThere.includes(toPack) && noteBack.includes(`@UUID[Actor.${linkId}]`) && itemBack.includes(`@UUID[Actor.${linkId}]`),
+      {noteThere, itemThere, noteBack, itemBack});
   } catch (err) {
     R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`);
   } finally {

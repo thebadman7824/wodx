@@ -1162,7 +1162,7 @@ function gather(f, key, ctx, add, lines, step, sofar) {
         if ( room <= 0 ) break;
         const eldest = members.filter(id => bloc(info, id, key) === k).sort((a, b) => rankOf(f, b, info, key) - rankOf(f, a, info, key) || name(a).localeCompare(name(b)))[0];
         step(); add({op: "pol-office", office: o.key, actor: eldest}); room--;
-        lines(o.key === "primogen" ? `${name(eldest)} takes the ${cap(k)} seat among the ${o.title}.` : `${name(eldest)} becomes ${o.title.replace(/ a \w+$/, " the " + cap(k))}.`);
+        lines(o.key === "primogen" ? `${name(eldest)} takes the ${cap(k)} seat among the ${o.title}.` : `${name(eldest)} becomes ${o.title.replace(/ an? \w+$/, " the " + cap(k))}.`);
       }
       continue;
     }

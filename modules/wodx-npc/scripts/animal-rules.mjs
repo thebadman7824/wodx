@@ -10,7 +10,7 @@
  *   pigeon 1/4; crow 1/2; cat 1; dog 2; wolf 2; large horse 4; large pig or boar 4; bear 5. V20 lists no cattle,
  *   sheep, goats or geese, so these are house rules: cattle 5 (between horse 4 and camel 6), sheep and goats 3
  *   (as a small pig), geese and hens 1/2 (as a large bird).
- *   Animals keep no unease before Kindred (Ben, 2026-11-12) but shy from wraiths: every one fears "wraith".
+ *   Animals keep no unease before Kindred (the owner, 2026-11-12) but shy from wraiths: every one fears "wraith".
  *   crowd names the passers-by animal kind (passerby-rules ANIMALS) this archetype stands behind.
  */
 

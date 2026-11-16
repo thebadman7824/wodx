@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables: carrying and dragging the fallen, and moving large things (B5070 to B5086, Ben's Carry Bodies
+ * WoDX Interactables: carrying and dragging the fallen, and moving large things (B5070 to B5086, the owner's Carry Bodies
  * Desk, 14 November 2026). Pure rules, no Foundry calls; haul.mjs does the Foundry side.
  *
  *   Who       Anyone in reach of a character who is Incapacitated, unconscious, asleep, staked, in torpor or dead can

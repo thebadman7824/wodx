@@ -2,7 +2,7 @@
  * WoDX Library: what the Fallen make (B3712-B3716). Data only; the kit is scripts/wonders-demon.mjs. WoDX's own short
  * summaries with page references, never book text.
  *
- * Ben's Item Crafting Desk (2026-11-13): d1 full. Enchant Object and Imbue Object (the Lore of the Forge) make an item
+ * The owner's Item Crafting Desk (2026-11-13): d1 full. Enchant Object and Imbue Object (the Lore of the Forge) make an item
  * that holds an evocation, with its Faith, its uses and its high-Torment version.
  *
  * Demon: The Fallen is the only book for the line, every era (Revised). Page numbers are the PDF's (pdf 192, book p. 191).

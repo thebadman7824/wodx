@@ -82,7 +82,9 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "path", "amulets"); set(root, "c", 0); });
             A().mummyCast({ actor: mu }); await sleep(1500);
-            ok("semektet: no Sekhem outside the Web of Faith, no Hekau", game.messages.size === n0, {});
+            // B6961: only a Hekau card counts; another module's card in the same moment (a stock card, a turn card) is not a cast
+            const cast = [...game.messages].slice(n0).filter(m => /works Hekau/.test(text(m)));
+            ok("semektet: no Sekhem outside the Web of Faith, no Hekau", cast.length === 0, { cast: cast.map(m => text(m).slice(0, 120)), other: game.messages.size - n0 - cast.length });
         });
         await step("Osiris's Blessing within the Web: Balance at the Shroud", async () => {
             const n0 = game.messages.size;

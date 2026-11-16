@@ -9,6 +9,33 @@ import {HERE} from "./lib.mjs";
 
 const require = createRequire(path.join(HERE, "../harness/package.json"));
 
+/**
+ * B6775: game.ready comes before the WoDX modules that start on wodxChronicleReady (the chronicle loads its era profiles
+ * first) have put their api in place. A gate run first after a fresh sign-in (the first gate, and the first after each
+ * browser recycle) read game.modules.get("wodx-creation").api as undefined. The sign-in now also waits for these.
+ */
+export const API_WAIT_MS = 180000;
+export const LATE_APIS = ["wodx-chronicle", "wodx-creation", "wodx-npc", "wodx-storyteller", "wodx-otherworlds", "wodx-interactables"];
+/** Runs in the page: true once every active module in ids has its api. */
+export function apisReady(ids) {
+  return ids.every(id => { const m = globalThis.game?.modules?.get?.(id); return !m?.active || !!m.api; });
+}
+
+/** Runs in the page: the active modules in ids that have no api yet. */
+export function apisMissing(ids) {
+  return ids.filter(id => { const m = globalThis.game?.modules?.get?.(id); return !!m?.active && !m.api; });
+}
+
+/**
+ * B6960: in run 1779 gates well inside a lane (gate7a, gate7b1, gatehandworlds, gateresidents) found WoDX Creation
+ * with no api long after the sign-in had waited for it. Before each gate the runner waits up to ms for the apis again
+ * and returns the modules still without one, so the lane report says the world had lost them, not the gate.
+ */
+export async function waitApis(page, ids = LATE_APIS, ms = 120000) {
+  const ready = await page.waitForFunction(apisReady, ids, {timeout: ms}).then(() => true, () => false);
+  return ready ? [] : await page.evaluate(apisMissing, ids).catch(() => ids);
+}
+
 export async function openGM(url, {channel = process.platform === "win32" ? "msedge" : undefined, user = "Gamemaster Test"} = {}) {
   const {chromium} = require("playwright");
   const browser = await chromium.launch({headless: true, channel});
@@ -26,5 +53,13 @@ export async function openGM(url, {channel = process.platform === "win32" ? "mse
   if ( pw ) await page.fill("input[name=password]", pw);
   await Promise.all([page.waitForURL(/\/game/, {timeout: 90000}), page.click("button[name=join], button[type=submit][name=join], form button[type=submit]")]);
   await page.waitForFunction(() => window.game?.ready === true, null, {timeout: 180000});
-  return {browser, page};
+  // A module that never starts must not hold the lane: after the wait the gates run and report what is missing.
+  // B6952: on a PC running four lanes a fresh sign-in has taken more than 60 s to start WoDX Creation, and the first
+  // gate after each new browser then failed on a missing api, so the wait is 180 s and what is missing is returned.
+  let late = [];
+  await page.waitForFunction(apisReady, LATE_APIS, {timeout: API_WAIT_MS}).catch(async () => {
+    late = await page.evaluate(apisMissing, LATE_APIS).catch(() => []);
+    console.log(`Some WoDX modules had no api ${API_WAIT_MS / 1000} s after sign-in: ${late.join(", ")}`);
+  });
+  return {browser, page, late};
 }

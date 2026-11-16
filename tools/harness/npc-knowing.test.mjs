@@ -117,9 +117,10 @@ test("fedMemory and noteFed: what a fed-on vessel keeps (B1384)", () => {
 
 test("wiring: Actions sends wodxFed with the vessel; NPC hears it; nameFor in the API and the windows", () => {
   const am = readFileSync(new URL("../../modules/wodx-actions/scripts/main.js", import.meta.url), "utf8");
-  assert.match(am, /Hooks\.callAll\("wodxFed", \{ by: \{ uuid: actor\.uuid/);
+  assert.match(am, /const fed = \{ by: \{ uuid: actor\.uuid[^\n]*\n\s*Hooks\.callAll\("wodxFed", fed\)/);
+  assert.match(am, /relayHook\?\.\("wodxFed", actor, fed\)/);
   const rv = readFileSync(new URL("../../modules/wodx-npc/scripts/rivalry.mjs", import.meta.url), "utf8");
-  assert.match(rv, /Hooks\.on\("wodxFed"/);
+  assert.match(rv, /(Hooks\.on|onPlayerHook)\("wodxFed"/); // B6760
   const main = readFileSync(new URL("../../modules/wodx-npc/scripts/main.mjs", import.meta.url), "utf8");
   assert.match(main, /nameFor: Faces\.nameFor, knowledgeOf:/);
   const so = readFileSync(new URL("../../modules/wodx-actions/scripts/social.js", import.meta.url), "utf8");

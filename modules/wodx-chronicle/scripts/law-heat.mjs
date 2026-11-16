@@ -47,16 +47,18 @@ export function of(actorId, region = regionOf(globalThis.canvas?.scene)) {
 }
 
 /** Add a deed for a culprit at a scene. Returns the addDeed result. */
-export async function addDeed(actor, deed, {scene = globalThis.canvas?.scene, named = false, witnesses = 1} = {}) {
+export async function addDeed(actor, deed, {scene = globalThis.canvas?.scene, named = false, witnesses = 1, region = null, where = null} = {}) {
   if ( !isActiveGM() || !on() || !actor?.id ) return null;
-  const region = regionOf(scene), law = L.lawOf(region, yearNow());
+  // B6933: a deed told by its region (a rising put down in a town) rather than by the scene it happened in
+  region ||= regionOf(scene);
+  const law = L.lawOf(region, yearNow());
   // B3920: with an Alternate Identity, the name a witness knows is the other self's, so the deed counts as unnamed
   let other = false;
   try { other = named && traitHas(actor, "alternate-identity") > 0; } catch (e) { other = false; }
   if ( other ) named = false;
   const s = state();
   s.regions[region] ??= {};
-  const res = H.addDeed(s.regions[region][actor.id] ?? {}, {deed, law, now: now(), named, witnesses, where: scene?.name ?? "", id: actor.id, name: actor.name, line: actorLine(actor)});
+  const res = H.addDeed(s.regions[region][actor.id] ?? {}, {deed, law, now: now(), named, witnesses, where: where ?? scene?.name ?? "", id: actor.id, name: actor.name, line: actorLine(actor)});
   s.regions[region][actor.id] = res.entry;
   await save(s);
   // B4865: WoDX Storyteller sends the watch at Wanted and a manhunt (reach.mjs); the card's buttons stay
@@ -159,8 +161,9 @@ export function registerHeatHooks() {
     addDeed(actor, p?.cause === "crime" ? "theft" : String(p?.cause ?? "theft"), {scene, named: !!p?.named, witnesses: Number(p?.witnesses) || 1}).catch(e => console.error("WoDX | law heat", e));
   });
   Hooks.on("renderChatMessageHTML", (message, el) => {
-    if ( !game.user.isGM ) return;
-    for ( const b of el.querySelectorAll?.("[data-action^='wodx-law-']") ?? [] ) b.addEventListener("click", async () => {
+    // B6741: only the heat card's own two buttons; the trial, sentence, regime and tax cards' law buttons have their own
+    if ( !game.user.isGM || !message.flags?.[MODULE_ID]?.lawHeat ) return;
+    for ( const b of el.querySelectorAll?.("[data-action='wodx-law-arrest'], [data-action='wodx-law-drop']") ?? [] ) b.addEventListener("click", async () => {
       b.disabled = true;
       if ( b.dataset.action === "wodx-law-arrest" ) await arrest(b.dataset.actor, b.dataset.region);
       else await lowerHeat(b.dataset.actor, b.dataset.region, 0);

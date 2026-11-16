@@ -114,7 +114,7 @@ export const CORE_CONDITIONS = [
     summary: "Attacks against them gain two dice; they are at +2 difficulty on anything needing sight, defence included, and the token sees nothing (B6037).",
     mods: {attackDiceVs: 2, ownDiffVision: 2}, also: ["blind"], cannotSee: true},
   {id: "crippled", name: "Crippled limb", img: "icons/svg/bones.svg", source: `${VDA} p. 348`,
-    summary: "+2 difficulty on actions using that limb while the damage that caused it remains; WoDX Combat counts it on attacks and defence (B6027).",
+    summary: "+2 difficulty on actions using that limb while the damage that caused it remains; WoDX Combat counts it on attacks and defence.",
     mods: {ownDiff: 2}},
   {id: "dazed", name: "Dazed", img: "icons/svg/daze.svg", source: `${VDA} p. 348`,
     summary: "A single attack did more damage after soak than Stamina (Stamina + 2 for the supernatural): they spend their next turn shaking it off.",

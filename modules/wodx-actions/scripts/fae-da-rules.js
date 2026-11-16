@@ -80,9 +80,10 @@ export function cantripProblems(cantrips = [], { weaving = 0, dominions = {} } =
     const out = [];
     for (const d of DOMINION_IDS) {
         const mine = cantrips.filter(c => c.dominion === d);
-        const r = n(dominions[d]);
+        // B6935: the caps come from cantripCap
+        const cap = cantripCap(weaving, dominions[d]), r = cap.maxLevel;
         if (mine.length && !r) out.push({ dominion: d, problem: `no ${DOMINIONS[d].label} dots` });
-        if (mine.length > n(weaving)) out.push({ dominion: d, problem: `${mine.length} cantrips; Weaving ${n(weaving)} allows ${n(weaving)}` });
+        if (mine.length > cap.count) out.push({ dominion: d, problem: `${mine.length} cantrips; Weaving ${n(weaving)} allows ${cap.count}` });
         for (const c of mine) if (n(c.level) > r) out.push({ dominion: d, problem: `${c.name} is level ${c.level}; ${DOMINIONS[d].label} is ${r}` });
     }
     return out;

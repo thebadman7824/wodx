@@ -1,5 +1,5 @@
 /**
- * Book one's fronts, roles and clue carriers (Rothenstein Rebuilt, spine part two, B4910-B4919), as Ben picked them on
+ * Book one's fronts, roles and clue carriers (Rothenstein Rebuilt, spine part two, B4910-B4919), as the owner picked them on
  * the spine desk (2026-11-14). The words are our own short handles; the Storyteller's volumes keep the scenes' own words.
  * Pure data: front-rules.mjs reads it, pod.mjs keeps the state and shows the window.
  *

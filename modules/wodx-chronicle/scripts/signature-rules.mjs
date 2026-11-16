@@ -162,7 +162,7 @@ export function newMark(key, now) {
   return markByKey(key) ? {key, at: n(now), until: n(now) + MARK_LASTS} : null;
 }
 
-/** Marks still showing at a time; the others have healed (house rule, Ben 2026-11-12). */
+/** Marks still showing at a time; the others have healed (house rule, the owner 2026-11-12). */
 export const activeMarks = (list = [], now = 0) => list.filter(m => markByKey(m.key) && n(m.until) > n(now));
 
 /** The roll effects the showing marks give, in the trait effect shape {tags, dice, why}. */
@@ -229,6 +229,8 @@ export const mayGlimpse = (last, now) => last == null || Math.floor((n(now) - 43
 /* ---------------- Tzimisce: native soil ---------------- */
 
 const night = t => Math.floor((n(t) - 43200) / DAY);
+/** B6925: how many times the pools are halved: one for each night in a row without the soil past the grace (V20 p. 71: cumulative). */
+export const soilHalvings = (short, grace = 0) => Math.max(0, Math.floor(n(short)) - Math.max(0, Math.floor(n(grace))));
 /** Is an item native soil? Its flag, or a name that says so. */
 export const isSoil = item => !!item && (item.soil === true || /\b(native|grave|home)?\s*(soil|earth)\b/i.test(String(item.name ?? "")));
 
@@ -348,7 +350,7 @@ export function familyRow(names = [], founded = []) {
   }
   return null;
 }
-/** A family founded in play (Ben's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
+/** A family founded in play (the owner's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
 export function newFamily({name = "", founder = "", trait = "craft", disciplines = [], flaw = "", year = 1197, text = ""} = {}) {
   const label = String(name).trim();
   if ( !label || !FAMILY_TRAITS[trait] ) return null;
@@ -385,7 +387,6 @@ const ALIAS = {resistfrenzy: {ch: "roll", tags: ["frenzy"]}, resistdominate: {ch
 export function sigRollEffects(list = [], ctx = {}) {
   const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
   for ( const e of list ) {
-    if ( e.halve ) continue;
     // "monster": only against a target that is not mortal (the roll's other side, when Actions knows it)
     if ( e.when === "monster" && !(ctx.against && !/mortal|human|kinfolk|ghoul/.test(String(ctx.against))) ) continue;
     let hit = false;
@@ -393,7 +394,12 @@ export function sigRollEffects(list = [], ctx = {}) {
       const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
       if ( tc === ch && (tt.includes("all") || tt.some(x => want.has(x))) ) hit = true;
     }
-    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
+    // B6729: "not" leaves a roll out (a Redcap's Social rolls are harder, Intimidation aside)
+    if ( hit && (e.not ?? []).some(t => want.has(tagKey(t))) ) hit = false;
+    // B6924: noBotch: the roll cannot botch (a Boggan's Crafts, C20 p. 89)
+    // B6925: halve, the number of halvings (a Tzimisce's nights without native soil); true counts as one
+    const halve = e.halve === true ? 1 : Math.max(0, Math.floor(n(e.halve)));
+    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: "", ...(e.noBotch ? {noBotch: true} : {}), ...(halve ? {halve} : {})});
   }
   return out;
 }
@@ -525,9 +531,26 @@ export const isMonsterKind = k => !!k && !/mortal|human|kinfolk|ghoul|hunter/.te
 export function sigSoak({ahroun = false, crinos = false, wyrmFoe = false, troll = false, oathHeld = false, defender = false, beside = false, monsterFoe = false} = {}) {
   const names = [];
   if ( ahroun && crinos && wyrmFoe ) names.push("First into battle");
-  if ( troll && oathHeld ) names.push("A troll's oath");
+  // B6729: a troll's oath gives Strength and Bruised levels (trollOath below), not soak (C20 p. 113)
   if ( defender && beside && monsterFoe ) names.push("The shield");
   return {dice: names.length, names};
+}
+/** B6729: Titan's Power (C20 p. 113): one held oath gives a Strength dot and a Bruised level, two or more give two of each. */
+export const trollOath = held => Math.min(2, Math.max(0, Math.floor(n(held))));
+/** The extra Bruised levels a changeling's rows give (Rock Giants, Glomes; a troll's held oaths). {n, names} */
+export function faeBruised(rows = [], {oathsHeld = 0} = {}) {
+  const names = []; let total = 0;
+  for ( const r of rows ) {
+    const b = n(r?.bruised) + (r?.key === "troll" ? trollOath(oathsHeld) : 0);
+    if ( b > 0 ) { total += b; names.push(r.label); }
+  }
+  return {n: total, names};
+}
+/** B6922: the health levels a changeling's rows take away (a Bodach's Deadly Exposure, C20 p. 373). {n, names} */
+export function faeFewer(rows = []) {
+  const names = []; let total = 0;
+  for ( const r of rows ) if ( n(r?.fewer) > 0 ) { total += n(r.fewer); names.push(r.label); }
+  return {n: total, names};
 }
 /** The servants of the Yama Kings a Devil-Tiger hunts. */
 export const YAMA_WORDS = ["yama", "akuma", "oni", "demon", "kumo", "bakemono", "ogre"];

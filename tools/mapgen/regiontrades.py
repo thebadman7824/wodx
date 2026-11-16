@@ -1,5 +1,5 @@
 """The trades, the turning years and the building names of a generated town outside the Bohemian lands (B3295 to
-B3299, Ben's picks on the Town Households desk, 13 November 2026).
+B3299, the owner's picks on the Town Households desk, 13 November 2026).
 
   YEARS       each region's own turning points from 1781: when its trades become those of the industrial age, the
               years between the wars, a colonial age under a foreign power, the socialist years, the post-war years,

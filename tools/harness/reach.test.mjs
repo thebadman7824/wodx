@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* The world's own hand (B4860-B4868): what is approved happens (Ben, 14 November 2026). */
+/* The world's own hand (B4860-B4868): what is approved happens (the owner, 14 November 2026). */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));

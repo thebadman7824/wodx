@@ -159,6 +159,25 @@ export function roadFor(data, name) {
     return null;
 }
 
+/**
+ * A V20 Path of Enlightenment picked on the system sheet (B6724): the sheet's choice key (label
+ * "wod.advantages.path.caine"), or with the choice "custom", a name spelled as the Path's own ("Path of Caine"). Exact only,
+ * so a Dark Ages Road never falls into it, and "Path of Blood" is no longer read as the Road of Yasa. Humanity stays
+ * with the Roads data. Returns a found Road shape: {key: "v20-<key>", road: <the Path>, path: null}.
+ */
+export function v20PathFor(data, label = "", custom = "") {
+    const P = data?.paths;
+    if (!P) return null;
+    const m = /^wod\.advantages\.path\.(\w+)$/.exec(String(label ?? ""));
+    // The sheet shows the custom name only when the choice is "custom"
+    let k = m && P[m[1]] ? m[1] : null;
+    if (!k && custom && (!label || label === "custom")) {
+        const c = String(custom).trim().toLowerCase().replace(/^the\s+/, "");
+        k = Object.keys(P).find(x => P[x].name.toLowerCase() === c) ?? null;
+    }
+    return k ? { key: `v20-${k}`, road: { ...P[k], book: data.book ?? "V20" }, path: null } : null;
+}
+
 /** The sin at a rating on a Road or Path (rating 10 → index 0). */
 export function sinAt(hier, rating) {
     if (!Array.isArray(hier) || hier.length !== 10) return null;
@@ -186,12 +205,27 @@ export const SIN_EVENTS = {
     metamorphosis: { notRidden: 10 },
     sin: { notRidden: 8 }, "Path of Pleasure": { notRidden: 8 }, "Path of Rebellion": { notRidden: 8 }, "Path of Damnation": { notRidden: 8 },
     bones: { frenzy: 6, killFrenzy: 6 },
-    yasa: { killFrenzy: 4 }
+    yasa: { killFrenzy: 4 },
+    // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
+    // Path has no row for it, kill counts. A null is no sin. Instinct Paths sin on notRidden, Self-Control ones on frenzy.
+    "v20-blood": { killFeed: 10, kill: null, frenzy: 6, killFrenzy: 6 },
+    "v20-bones": { killFeed: 8, kill: null, frenzy: 6, killFrenzy: 6 },
+    "v20-caine": { notRidden: 6 },
+    "v20-cathari": { kill: 5, killFrenzy: 5, notRidden: 7 },
+    "v20-feralheart": { killFeed: null, kill: 4, killFrenzy: 4 },
+    "v20-accord": { kill: 2, killFrenzy: 2 },
+    "v20-lilith": { kill: 4, killFrenzy: 4, diablerie: 4 },
+    "v20-metamorphosis": { notRidden: 5 },
+    "v20-night": { killFeed: 10, kill: 4, killFrenzy: 4 },
+    "v20-paradox": { killFeed: 7, kill: 5, killFrenzy: 5 },
+    "v20-innervoice": {},
+    "v20-typhon": {}
 };
 export function sinForEvent(found, event) {
     if (!found) return null;
     const byPath = found.path ? SIN_EVENTS[found.path.name] : null;
     const t = byPath ?? SIN_EVENTS[found.key] ?? {};
+    if (event === "killFeed" && !("killFeed" in t)) return t.kill ?? null;
     return t[event] ?? null;
 }
 
@@ -385,7 +419,7 @@ export const WITNESS_PROFILES = ["mortal", "hunter", "mage", "beast"];
 export const WITNESS_STATES = { saw: "Saw it", forgot: "Made to forget (Dominate)", convinced: "Talked round", silenced: "Silenced", told: "Told others", ghoul: "Bound as a ghoul", dream: "Remembers it as a dream (Enchantment ran out)" };
 
 /* ------------------------------------------------------------------ */
-/*  Golconda (Ben's Golconda Desk, B5090-B5099)                         */
+/*  Golconda (the owner's Golconda Desk, B5090-B5099)                         */
 /* ------------------------------------------------------------------ */
 
 /** Golconda holds while Humanity (the Road) stays at 7 or more and Conscience (or Conviction) at 4 or more (V20 Dark Ages p. 359). */
@@ -395,6 +429,6 @@ export const golcondaTraitMax = (golconda, genMax) => (golconda ? 10 : n(genMax)
 /** Powers that cannot reach a vampire in Golconda (V20 pp. 158, 161, 177; V20 Dark Ages p. 220), by name. */
 export const GOLCONDA_BEYOND = ["speak through the blood", "summon soul", "insight"];
 export const beyondGolconda = name => GOLCONDA_BEYOND.includes(String(name ?? "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, " ").trim());
-/** B5096: the sun counts one step weaker on the ladder for a vampire in Golconda (Ben's pick, a house rule). */
+/** B5096: the sun counts one step weaker on the ladder for a vampire in Golconda (the owner's pick, a house rule). */
 export const GOLCONDA_SUN_LADDER = ["faint", "covered", "indirect", "cloudy", "direct"];
 export const golcondaSun = light => { const i = GOLCONDA_SUN_LADDER.indexOf(light); return i > 0 ? GOLCONDA_SUN_LADDER[i - 1] : light; };

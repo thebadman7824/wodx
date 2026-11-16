@@ -142,7 +142,7 @@ const nightOf = time => Math.floor(((Number(time) || 0) - (NIGHT / 2)) / NIGHT);
 export async function makeGhoul(mortal, {domitor = null, points = 1, time = game.time.worldTime} = {}) {
   // B5040, B5041: an animal keeps its own sheet; its pool is set by its size, not the human 10
   const kind = isAnimal(mortal) ? animalKindOf(mortal) : null;
-  const max = kind ? AG.animalBloodMax(kind, 0) : ghoulBloodMax(0);
+  const max = kind ? AG.animalBloodMax(kind, 0) : ghoulBloodMax(0, {era: vampireEra()});
   const creature = mortal.type === (CONFIG.worldofdarkness?.sheettype?.creature ?? "Creature");
   // Keep what the sheet already knows of the beast (its breed and training, B5059, B5061)
   const mark = {...(mortal.getFlag?.(MODULE_ID, "animal") || {}), kind};

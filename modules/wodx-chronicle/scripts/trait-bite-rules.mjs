@@ -17,9 +17,11 @@
  *         {infect}       (B5175) the chance the vessel just fed on falls sick: it carries the disease, and is weak for a week
  *         {consume}      (B5175) the vessel is eaten as well as drunk: a mortal vessel dies
  *         {berserk}      (B5175) the player gets a button to go berserk: a frenzy, which ignores wound penalties
+ *         {tell}         (B6779) what the failure means, whispered to the player and the Storyteller
  */
 import * as TERMS from "./terms.mjs";
 import {DAY} from "./terms.mjs";
+import {BITES_W6} from "../data/trait-effects-w6.mjs";
 export const BITES = {
   "eat-food": {fail: {diff: 1, tags: ["strength", "dexterity", "stamina"], lasts: "night", name: "Food sits heavy"}},
   "common-sense": {fail: {hint: true}},
@@ -49,6 +51,7 @@ export const BITES = {
   "berserker": {fail: {berserk: true}},
   "newflaws-anachronism": {roll: ["intelligence", 7], fail: {diff: 1, tags: ["computer", "science", "drive", "academics"], lasts: "scene", name: "Out of time"}}
 };
+for ( const [k, v] of Object.entries(BITES_W6) ) BITES[k] ??= v;
 export const biteOf = key => BITES[key] ?? null;
 /** The sickness an infected bite leaves on a mortal vessel: a die off every roll for a week (house reading). */
 export const FEVER = {name: "A fevered bite", dice: -1, tags: ["all"], seconds: 7 * DAY};

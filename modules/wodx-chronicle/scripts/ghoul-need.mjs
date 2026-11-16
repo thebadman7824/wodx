@@ -1,5 +1,5 @@
 /**
- * A ghoul's monthly need, carried out by itself (B5050 to B5054; Ben's rule that what the rules say happens, happens).
+ * A ghoul's monthly need, carried out by itself (B5050 to B5054; The owner's rule that what the rules say happens, happens).
  * Every ghoul, human or animal, player's or Storyteller's: the active Storyteller's client checks once a game day.
  *   - each month unfed takes the month's vitae off the sheet, then Discipline dots, Potence last (B5050)
  *   - a craving roll each month unfed; a botch means it must drink at once (B5051, hook wodxGhoulCraving)
@@ -195,7 +195,8 @@ export function registerGhoulNeedHooks() {
   // B6380: Light-touch mode held the month's need; it is read once when the mode ends
   Hooks.on("wodxLightTouchEnd", () => { tick({force: true}).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
   Hooks.on("wodxSkipEnd", info => { if ( isActiveGM() ) noteSkip(info).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
-  Hooks.on("wodxGhoulFix", e => { if ( e?.drank && isActiveGM() ) fed(e.actor).catch(err => console.error(`${MODULE_ID} | ghoul need`, err)); });
+  // B6747: the hook is heard only where it was called, and the sheet's "Drank from the domitor" is a player's button too
+  Hooks.on("wodxGhoulFix", e => { if ( e?.drank && e.actor?.isOwner ) fed(e.actor).catch(err => console.error(`${MODULE_ID} | ghoul need`, err)); });
 }
 
 export const ghoulNeedApi = {check, fed, tick, isGhoul, on, rules: R};

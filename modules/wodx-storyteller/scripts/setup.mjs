@@ -97,6 +97,8 @@ export async function runSetup(opts = {}) {
   }
   let dateLabel = "";
   calMod ??= await import("../../wodx-chronicle/scripts/calendar.mjs").catch(() => null);
+  // B6948: the opening year is kept even when the clock is not set, so feud law and the like read the chronicle's year
+  if ( Number(year) ) { try { await game.settings.set("wodx-chronicle", "openingYear", Number(year)); } catch (e) { /* Chronicle off */ } }
   if ( opts.setDate !== false ) {
     const engine = calMod.getEngine();
     const d = {year, month: Number(opts.month) || 1, day: Number(opts.day) || 1, hour: Number(opts.hour) || 21, minute: 0};

@@ -1,5 +1,6 @@
 import BonusHelper from "./bonus-helpers.js";
 import CombatHelper from "./combat-helpers.js";
+import { applyWodxRollMods, wodxRollSources, wodxNoBotch, wodxHalveRoll } from "./wodx-roll-mods.js";
 
 let _diceColor;
 let _specialDiceType = "";
@@ -284,6 +285,12 @@ async function _spendTemporaryWillpower(actor) {
 // Function to roll dice
 export async function DiceRoller(diceRoll) {
 	const actor = diceRoll.actor;
+	// WoDX fork (B6720): a power, attack, casting or item roll from the system's own windows counts WoDX's modifiers
+	const wodxSrc = wodxRollSources();
+	const wodxMods = applyWodxRollMods(diceRoll, wodxSrc);
+	// WoDX fork (B6925): a pool WoDX halves (a Tzimisce without native soil, V20 p. 71)
+	wodxHalveRoll(diceRoll, wodxSrc);
+	if (wodxMods?.once?.length) game.wodxActions?.powerMods?.spend?.(actor, wodxMods.once)?.catch?.(() => {});
 	let difficulty = diceRoll.difficulty;
 	let specialityText = diceRoll.specialityText;
 	const systemText = diceRoll.systemText;
@@ -345,6 +352,9 @@ export async function DiceRoller(diceRoll) {
 	if ((diceRoll.origin == "damage") && (!CONFIG.worldofdarkness.useOnesDamage)) {
 		canBotch = false;
 	}
+
+	// WoDX fork (B6924): a roll WoDX says cannot botch (a Boggan's Crafts, C20 p. 89)
+	if (wodxNoBotch(diceRoll, wodxSrc)) canBotch = false;
 
 	// set correct dice colors
 	_GetDiceColors(actor);
@@ -617,7 +627,7 @@ export async function InitiativeRoll(diceRoll) {
 	let init = 0;
 	let initAttribute;
 
-	let token = await canvas.tokens.placeables.find(t => t.document.actor._id === actor._id);
+	let token = canvas.tokens?.placeables?.find(t => t.document.actor?._id === actor._id);	// WoDX fork (B6722): a token whose actor is gone has none
 
 	if(token) foundToken = true;
 

@@ -2,7 +2,7 @@
  * WoDX Library: what a made supernatural item does when used (B3690-B3692). Pure rules, no Foundry calls; the Foundry
  * side is scripts/wonder-use.mjs and the Use window (use.mjs) shows one button per power.
  *
- * Ben's Item Crafting Desk (2026-11-13, g2): powers become Use buttons, charges and pools are counted, drawbacks apply
+ * The owner's Item Crafting Desk (2026-11-13, g2): powers become Use buttons, charges and pools are counted, drawbacks apply
  * on their own, each with a card and Undo. Every line's kit fills the same flag, so a Thaumaturge's vitae bauble, a
  * Treasure, a Mummy's amulet, a Fallen's enchanted object and a Mage's Wonder all behave alike.
  *

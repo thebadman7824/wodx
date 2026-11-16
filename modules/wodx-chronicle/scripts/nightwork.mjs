@@ -1,7 +1,7 @@
 /**
  * The night's work (B6220-B6229): everything the Storyteller's Hand did, listed, and taken back in one Undo.
  *
- * Ben picked hd1 on the Improvement Desk (15 November 2026): now that approved things happen by themselves in many
+ * The owner picked hd1 on the Improvement Desk (15 November 2026): now that approved things happen by themselves in many
  * systems, one bad approval can spread, and each card's own Undo is slow after a long night. So every piece of the
  * Hand's work is written down as it happens, on the Storyteller's client:
  *   an approval carried out   decide() runs the kind's approve inside record() (approved on its own or by the Storyteller)
@@ -24,6 +24,7 @@ import {MODULE_ID, esc, setting, setSetting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import * as R from "./nightwork-rules.mjs";
 import {currentYear} from "./eras.mjs";
+import {addHandTool} from "./hand-tool.mjs";
 
 const QUIET = {hand: 800, approved: 800, auto: 800, seat: 2500, clock: 4000};
 const MAX = {hand: 30000, approved: 30000, auto: 30000, seat: 30000, clock: 90000};
@@ -443,13 +444,7 @@ export class NightApp extends Base {
 export function start(approvalsApi) {
   approvals = approvalsApi;
   if ( !game.user.isGM ) return;
-  const add = () => {
-    const hand = game.wodx?.storyteller?.hand;
-    if ( !hand?.addTool ) return false;
-    hand.addTool({key: "nightWork", label: "The night's work", icon: "fa-clock-rotate-left", run: () => NightApp.open()});
-    return true;
-  };
-  if ( !add() ) setTimeout(add, 2000);
+  addHandTool({key: "nightWork", label: "The night's work", icon: "fa-clock-rotate-left", run: () => NightApp.open()});
 }
 
 export const api = () => ({begin, end, record, settle, undo, list, look, journal, open: () => NightApp.open(), rules: R});

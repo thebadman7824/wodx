@@ -1,7 +1,7 @@
 import {splatOf} from "./lines.mjs";
 import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf, isAnimal, animalKindOf} from "./actor-data.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
-import {ghoulBloodMax, bondStage} from "./rules.mjs";
+import {ghoulBloodMax, ghoulBloodSource, ghoulRuleEra, V20_ERAS, bondStage} from "./rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
 import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
@@ -143,11 +143,13 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       const kind = isAnimal(actor) ? animalKindOf(actor) : null;
       const span = kind ? AG.lifespan(kind) : null;
       const realEnd = born !== null ? toYear - born : (kind ? Math.ceil(span / 2) : MORTAL.assumedAge) + (toYear - ghouledYear);
-      const newMax = kind ? AG.animalBloodMax(kind, toYear - ghouledYear) : ghoulBloodMax(toYear - ghouledYear);
+      // B6779e: by the book of the era it became a ghoul in; a revenant counts its whole life (V20 p. 501), any other ghoul its years as one
+      const rev = !!actor.flags?.[MODULE_ID]?.revenant, era = ghoulRuleEra(rev && born !== null ? born : ghouledYear);
+      const newMax = kind ? AG.animalBloodMax(kind, toYear - ghouledYear) : ghoulBloodMax(rev && born !== null ? toYear - born : toYear - ghouledYear, {era, revenant: rev});
       const dustAt = kind ? span * 2 : GHOUL_AGING.dustAt;
       const oldMax = Number(actor.system?.advantages?.bloodpool?.max) || 10;
       add("ghoulFed", `Fed each month by ${domitor?.name ?? l.domitor?.name ?? "the domitor"}`,
-        `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (+1 a century)` : ""} (V20 Dark Ages p. 399)`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
+        `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (${V20_ERAS.has(era) && !rev ? "+1 every two centuries" : "+1 a century"})` : ""} (${ghoulBloodSource(era)})`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
       add("vitaeLapses", "The vitae lapses",
         `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= dustAt ? " and turns to dust" : (kind && realEnd >= span ? ", past its natural span, and dies" : "")}; the Disciplines go dark (V20 Dark Ages p. 399)`, gone, {dust: realEnd >= dustAt});
     }

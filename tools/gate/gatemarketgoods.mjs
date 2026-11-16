@@ -42,6 +42,8 @@ export async function run() {
       return money().price(name, {scene});
     };
 
+    // B6958: where the price thinks it is, so an order-dependent miss on a shared lane says why
+    const whereNow = sc => { try { return {here: ch().world.here(sc)?.id ?? null, homeland: ch().world.homeland?.()?.id ?? ch().world.homeland?.() ?? null, abroad: !!ch().world.isAbroad?.(sc), moneyRegion: game.settings.get(ST, "moneyRegion")}; } catch (e) { return {whereError: e.message}; } };
     await G.step("1. the rules and the setting", async () => {
       G.ok("1. the rules and the setting", typeof GP.placeOf === "function" && game.settings.settings.has(`${ST}.goodsByPlace`) && Object.keys(GP.LAND_TRADE).length === 16);
     });
@@ -51,14 +53,14 @@ export async function run() {
       const on = g ? await price(g.name, kyoto, true) : null, off = g ? await price(g.name, kyoto, false) : null;
       const ratio = on && off ? on.each / off.each : 0;
       G.ok("2. Kyoto: brought from far off", !!g && on.origin === "far" && /brought from far off/.test(on.text) && ratio > 2.3 && ratio < 3.8,
-        {good: g?.name, ratio, text: on?.text, year});
+        {good: g?.name, ratio, text: on?.text, year, ...whereNow(kyoto)});
     });
     await G.step("3. Moravia: the land's own", async () => {
       const mo = {region: "moravia", way: wayOf("moravia")};
       const g = byValue.find(x => x.ways && x.kind !== "coin" && x.from <= year && (x.to ?? 9999) >= year && GP.placeOf(x, year, inUse("moravia", mo.way), mo).why === "own");
       const on = g ? await price(g.name, brno, true) : null, off = g ? await price(g.name, brno, false) : null;
       const ratio = on && off ? on.each / off.each : 0;
-      G.ok("3. Moravia: the land's own", !!g && on.origin === "own" && /the land's own/.test(on.text) && ratio > 0.55 && ratio < 0.95, {good: g?.name, ratio, text: on?.text});
+      G.ok("3. Moravia: the land's own", !!g && on.origin === "own" && /the land's own/.test(on.text) && ratio > 0.55 && ratio < 0.95, {good: g?.name, ratio, text: on?.text, ...whereNow(brno)});
       await game.settings.set(ST, "goodsByPlace", true);
     });
     const kinds = Object.keys((await import(`/modules/wodx-library/data/goods.mjs`)).KINDS ?? {});

@@ -113,7 +113,7 @@ export function reading(actor, successes, {botch = false, random = Math.random} 
   let diablerist = !!aura.diablerist;
   let confused = !!aura.confused;
   let shift = MOODS[aura.shift] ? aura.shift : null;
-  // B5095: Golconda stills the aura: no frenzy ripples and no shift beneath it (house reading, Ben's Golconda Desk)
+  // B5095: Golconda stills the aura: no frenzy ripples and no shift beneath it (house reading, the owner's Golconda Desk)
   const golconda = !botch && nature === "vampire" && !!actor?.flags?.["wodx-actions"]?.golconda;
   if ( golconda ) { frenzied = false; shift = null; }
   if ( botch ) {

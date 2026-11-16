@@ -165,9 +165,9 @@ export const PROGRAMS = {
   stun:         {label: "Stun", cls: "antipersonnel", str: 3, mu: 3, hit: "status", status: "net-frozen", turns: "1d6", ice: true},
   hellbolt:     {label: "Hellbolt", cls: "antipersonnel", str: 4, mu: 4, hit: "body", damage: "lethal", ice: true},
   sword:        {label: "Sword", cls: "antipersonnel", str: 3, mu: 4, hit: "persona", ice: true},
-  brainwipe:    {label: "Brainwipe", cls: "antipersonnel", str: 3, mu: 4, hit: "mind", heals: "lethal", ice: true},
-  zombie:       {label: "Zombie", cls: "antipersonnel", str: 5, mu: 4, hit: "mind", heals: "aggravated", ice: true},
-  liche:        {label: "Liche", cls: "antipersonnel", str: 4, mu: 4, hit: "mind", heals: "aggravated", ice: true},
+  brainwipe:    {label: "Brainwipe", cls: "antipersonnel", str: 3, mu: 4, hit: "mind", permanent: true, ice: true},
+  zombie:       {label: "Zombie", cls: "antipersonnel", str: 5, mu: 4, hit: "mind", permanent: true, ice: true},
+  liche:        {label: "Liche", cls: "antipersonnel", str: 4, mu: 4, hit: "mind", permanent: true, ice: true},
   firestarter:  {label: "Firestarter", cls: "antipersonnel", str: 4, mu: 4, hit: "fire", ice: true, reachesKeyboard: true},
   hellhound:    {label: "Hellhound", cls: "antipersonnel", str: 6, mu: 6, hit: "body", damage: "aggravated", hound: true, trace: true, ice: true, mobile: true},
   spazz:        {label: "Spazz", cls: "antipersonnel", str: 4, mu: 3, hit: "status", status: "net-spazzed", turns: "1d6", ice: true},
@@ -251,7 +251,8 @@ export function iceHit(id, {levels = 0, turns = 0, access = "plugs", reflected =
   switch ( P.hit ) {
     case "persona": return {kind: "persona", type: "bashing", levels: n(levels)};
     case "body": return {kind: "body", type: P.damage, levels: n(levels), hound: !!P.hound, trace: !!P.trace};
-    case "mind": return {kind: "mind", points: Math.max(1, n(levels)), heals: P.heals};
+    // B6934: Intelligence a black program burns away never returns (Cyberpunk 2020 core pdf p. 143)
+    case "mind": return {kind: "mind", points: Math.max(1, n(levels)), permanent: true};
     case "status": return {kind: "status", status: P.status, turns: n(turns), hours: P.hours ? n(turns) : 0, traceAfter: P.traceAfter ?? 0};
     case "fire": return {kind: "fire", size: n(levels) >= 3 ? "large" : "small"};
     case "deck": return {kind: "deck", status: P.status, turns: n(turns)};
@@ -648,3 +649,47 @@ export function machineTalk(successes) {
  * machines pays Willpower. WoDX counts each night's uses: when the Discipline uses pass the machine uses, a point.
  */
 export function leansOnBlood({disc = 0, tech = 0} = {}) { return n(disc) > n(tech); }
+
+/* ---- Net shock heals (B6795); Net burn does not (B6934) ---- */
+/**
+ * Intelligence a hard de-rez took (Net shock, M20 printed p. 474: it heals like lethal damage) comes back one point at
+ * a time, each after the time a mortal's wound of that weight takes (V20's mortal healing times, Bruised to
+ * Incapacitated: a day, three days, a week, a month, two months, three months). The more points still lost, the
+ * longer the next one takes. Net burn, the Intelligence a black program takes, never comes back: the Cyberpunk 2020
+ * core says lost INT cannot be regained (pdf p. 143), and the owner ruled to follow the book (B6934).
+ */
+export const BURN_HEAL_DAYS = [1, 3, 7, 30, 60, 90, 90];
+export const burnHealSeconds = points => BURN_HEAL_DAYS[Math.max(1, Math.min(BURN_HEAL_DAYS.length, Math.round(n(points)) || 1)) - 1] * DAY;
+/** {points, last (world time of the last heal or the burn)} at now -> {points, last, healed, next (seconds to the next point, or null)}. */
+export function burnHeal({points = 0, last = 0} = {}, now = 0) {
+  const at = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+  let p = Math.max(0, Math.round(n(points))), t = at(last), healed = 0;
+  while ( p > 0 && at(now) - t >= burnHealSeconds(p) ) { t += burnHealSeconds(p); p -= 1; healed += 1; }
+  return {points: p, last: t, healed, next: p > 0 ? burnHealSeconds(p) - (at(now) - t) : null};
+}
+/** The words for the time to the next point. */
+export function burnWhen(seconds) {
+  if ( seconds === null || seconds === undefined ) return "";
+  const d = Math.max(1, Math.ceil(n(seconds) / DAY));
+  return d === 1 ? "a day" : d < 14 ? `${d} days` : d < 60 ? `${Math.round(d / 7)} weeks` : `${Math.round(d / 30)} months`;
+}
+
+/* ---- A vehicle driven by remote (B6799) ---- */
+export const DRIVE_DIRS = {n: [0, -1, "north"], ne: [1, -1, "north-east"], e: [1, 0, "east"], se: [1, 1, "south-east"], s: [0, 1, "south"], sw: [-1, 1, "south-west"], w: [-1, 0, "west"], nw: [-1, -1, "north-west"]};
+export const DRIVE_MAX = 12;
+/**
+ * Where a remote drive takes a vehicle: {dir (a compass key, or "toward"), squares (1 to 12), toward: {dx, dy} in
+ * pixels from the vehicle to the target}, grid (pixels a square) -> {dx, dy, words} in pixels, or null for no move.
+ */
+export function driveStep({dir = "n", squares = 1, toward = null} = {}, grid = 100) {
+  const k = Math.max(1, Math.min(DRIVE_MAX, Math.round(Number(squares) || 1))), g = Number(grid) || 100;
+  if ( dir === "toward" ) {
+    const tx = Number(toward?.dx) || 0, ty = Number(toward?.dy) || 0, len = Math.hypot(tx, ty);
+    if ( !len ) return null;
+    const go = Math.min(len - g, k * g);
+    if ( go <= 0 ) return null;
+    return {dx: Math.round(tx / len * go / g) * g, dy: Math.round(ty / len * go / g) * g, words: `${Math.round(go / g)} square${Math.round(go / g) === 1 ? "" : "s"} toward the target`};
+  }
+  const d = DRIVE_DIRS[dir] ?? DRIVE_DIRS.n;
+  return {dx: d[0] * k * g, dy: d[1] * k * g, words: `${k} square${k === 1 ? "" : "s"} ${d[2]}`};
+}

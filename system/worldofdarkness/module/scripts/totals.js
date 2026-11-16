@@ -1564,7 +1564,7 @@ function handleRatkinShiftAttributeData(breed, attribute, presentForm) {
 	
 	if (presentForm == "wod.shapes.crinos")
 	{
-		if (breed == "Metis") {
+		if ((breed == "Metis") || (breed == "wod.bio.breedname.metis")) {	// WoDX fork (B6818): the sheet stores the list key
 			if (attribute == "wod.attributes.strength") {
 				data = 3;
 			}

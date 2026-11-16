@@ -103,7 +103,8 @@ export async function bring(lineId, memberId) {
   const blood = carriesBlood(founder);
   const [actor] = await Actor.createDocuments([{name, type: "Mortal",
     flags: {[MOD]: {kin: {line: l.id, member: m.id, founder: {id: l.founder.id, name: l.founder.name}, relation: K.relationWord(m), story}},
-      "wodx-creation": {chronology: {bornYear: m.born}}, ...(blood ? {world: {wodx: {kinfolk: true}}} : {})}}]);
+      // B6764: the sheet keeps the member's gender (the line's record of their sex, one in a hundred nonbinary)
+      "wodx-creation": {chronology: {bornYear: m.born}, ...(K.genderFor(m, l.id) ? {sex: K.genderFor(m, l.id)} : {})}, ...(blood ? {world: {wodx: {kinfolk: true}}} : {})}}]);
   m.actorId = actor.id; if ( !m.name ) m.name = name;
   await save(s);
   return actor;

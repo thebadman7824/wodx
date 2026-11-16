@@ -24,11 +24,15 @@ export const MAX_DIFF = 10;
  * Returns {dice, diff, parts}.
  */
 export function combine({traits = null, powers = null, conditions = [], sight = false, social = false} = {}) {
-  let dice = 0, diff = 0;
+  let dice = 0, diff = 0, noBotch = false, halve = 0;
   const parts = [];
   for ( const src of [traits, powers] ) {
     if ( !src ) continue;
     dice += n(src.dice); diff += n(src.diff);
+    // B6924: a no-botch effect (the system's roller reads it through wodxNoBotch)
+    if ( src.noBotch ) noBotch = true;
+    // B6925: a halving count (the system's roller halves the pool through wodxHalveRoll)
+    if ( n(src.halve) > halve ) halve = n(src.halve);
     parts.push(...(src.parts ?? []));
   }
   const sign = v => `${v > 0 ? "+" : ""}${v}`;
@@ -39,7 +43,7 @@ export function combine({traits = null, powers = null, conditions = [], sight = 
     diff += d; dice += k;
     parts.push(`${c.name} ${[k ? `${sign(k)} dice` : "", d ? `${sign(d)} diff` : ""].filter(Boolean).join(", ")}`);
   }
-  return {dice, diff, parts};
+  return {dice, diff, parts, ...(noBotch ? {noBotch} : {}), ...(halve ? {halve} : {})};
 }
 
 /** B6664: a roll is social when its trait-table roll tags name it so (Charisma, Manipulation, Appearance, Persuasion...). */

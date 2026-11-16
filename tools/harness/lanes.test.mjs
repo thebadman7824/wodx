@@ -203,6 +203,21 @@ test("lane tools never name the Live world and keep backups", () => {
   assert.match(m, /allow-lane-1/, "lane 1 reset needs an explicit flag");
 });
 
+test("B6775: sign-in waits for the WoDX apis that start after game.ready", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  assert.ok(B.LATE_APIS.includes("wodx-creation"), "creation is waited for");
+  const mods = new Map([["wodx-chronicle", {active: true, api: {}}], ["wodx-creation", {active: true}], ["wodx-npc", {active: false}]]);
+  const had = globalThis.game;
+  globalThis.game = {modules: mods};
+  try {
+    assert.equal(B.apisReady(B.LATE_APIS), false, "creation without its api is not ready");
+    mods.get("wodx-creation").api = {people: {}};
+    assert.equal(B.apisReady(B.LATE_APIS), true, "an inactive module is not waited for");
+  } finally { globalThis.game = had; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8");
+  assert.match(src, /waitForFunction\(apisReady, LATE_APIS/, "openGM waits for them");
+});
+
 test("lanes on the second PC are seen only there, with its own paths (B6880)", () => {
   const was = process.env.WODX_HOST;
   try {
@@ -217,4 +232,20 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
     assert.match(main.foundryMain, /^G:/);
   } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
+});
+
+test("before each gate the runner looks for the WoDX apis again and names the missing ones (B6960)", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  const mods = new Map([["wodx-chronicle", {active: true, api: {}}], ["wodx-creation", {active: true}], ["wodx-npc", {active: false}]]);
+  const was = globalThis.game;
+  globalThis.game = {modules: {get: id => mods.get(id)}};
+  try {
+    assert.deepEqual(B.apisMissing(["wodx-chronicle", "wodx-creation", "wodx-npc"]), ["wodx-creation"], "an active module without its api; an inactive one is not waited for");
+    const page = {waitForFunction: async (fn, ids) => { if ( !fn(ids) ) throw new Error("timeout"); }, evaluate: async (fn, ids) => fn(ids)};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 10), ["wodx-creation"]);
+    mods.get("wodx-creation").api = {};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 10), []);
+  } finally { globalThis.game = was; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
 });

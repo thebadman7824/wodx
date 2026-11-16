@@ -21,6 +21,9 @@ import * as C from "./cult-rules.mjs";
 import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {onPlayerHook} from "./hook-relay.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, chron} = ctx;
@@ -358,6 +361,8 @@ export function build(ctx) {
     const r = await rollPool(poolOf(a, pool), 6);
     const pts = r.botch ? 0 : Math.max(0, r.net) * 2;
     const res = await addDeed(a, {kind: "sermon", token: tok, place, heard: Math.max(heard, r.net > 0 ? 1 : 0), pts, themes: C.themesOf(text), text: String(text).slice(0, 160)});
+    // B6758: a sermon that moves its hearers is a public deed: standing in the town rises by one
+    if ( r.net > 0 && !r.botch ) { try { await game.modules.get(MOD)?.api?.standing?.deed?.(a, {community: "town", delta: 1, text: `preached at ${place.name}`}); } catch (e) { console.warn(`${MOD} | sermon deed`, e); } }
     const mine = byFounder(a.id).find(c => c.place?.key === place.key);
     if ( r.botch && mine ) await mutate(cur => cur.map(c => (c.id === mine.id ? {...c, exposure: Math.min(C.MAX_EXPOSURE, c.exposure + 2), log: [...c.log, {at: now(), text: "A sermon went wrong in front of outsiders."}]} : c)));
     await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), whisper: [...gmIds(), ...(userId ? [userId] : [])],
@@ -445,7 +450,8 @@ export function build(ctx) {
 
   function hooks() {
     Hooks.on("createChatMessage", msg => { onChat(msg).catch(e => console.error(`${MOD} | cults words`, e)); });
-    Hooks.on("wodxPowerShown", (actor, info = {}) => {
+    // B6760: a player's power, feeding or social win reaches the Storyteller's client too
+    onPlayerHook("wodxPowerShown", (actor, info = {}) => {
       if ( !isActiveGM() ) return;
       addDeed(actor, {kind: "power", themes: {[C.powerTheme(info.power ?? "", info.group ?? "")]: 2}, text: info.power ?? ""}).catch(e => console.error(`${MOD} | cults`, e));
     });
@@ -454,11 +460,11 @@ export function build(ctx) {
       const n = Number(p.entry?.witnesses?.length ?? p.entry?.seen?.length) || 1;
       addDeed(actorFromUuid(p.by.uuid), {kind: "breach", heard: n, themes: {doom: 1, power: 1}, text: String(p.entry?.event ?? p.entry?.text ?? "")}).catch(e => console.error(`${MOD} | cults`, e));
     });
-    Hooks.on("wodxFed", p => {
+    onPlayerHook("wodxFed", p => {
       if ( !isActiveGM() || !p?.willing || !p?.by?.uuid ) return;
       addDeed(actorFromUuid(p.by.uuid), {kind: "fed", heard: 1, text: `fed on ${p.vessel?.name ?? "someone"}`}).catch(e => console.error(`${MOD} | cults`, e));
     });
-    Hooks.on("wodxSocial", p => {
+    onPlayerHook("wodxSocial", p => {
       if ( !isActiveGM() || p?.result !== "win" || !p?.actor ) return;
       const theme = C.SOCIAL_THEMES[p.act];
       addDeed(p.actor, {kind: "social", heard: 1, themes: theme ? {[theme]: 1} : {}, text: p.act}).catch(e => console.error(`${MOD} | cults`, e));
@@ -466,6 +472,7 @@ export function build(ctx) {
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) runTurns().catch(e => console.error(`${MOD} | cults`, e)); });
     let wait = null;
     Hooks.on("updateWorldTime", () => {
+      if ( heldClock() ) return;
       if ( !isActiveGM() || !on() ) return;
       clearTimeout(wait);
       wait = setTimeout(() => runTurns().catch(e => console.error(`${MOD} | cults`, e)), 1500);

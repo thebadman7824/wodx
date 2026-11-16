@@ -1,7 +1,7 @@
 /**
  * The Taíno for the People generator (Creation, B4660 to B4663): the island Arawak people of Quisqueya (Hispaniola),
  * Borikén (Puerto Rico), Cuba and Xaymaca (Jamaica), the people Columbus met in 1492. WoDX's own lists of recorded
- * names; no book text. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * names; no book text. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the Spanish chroniclers wrote them, accents kept): the caciques and cacicas in Columbus's
  * journal, Pané's account of the Taíno beliefs (1498), Las Casas, Oviedo and Peter Martyr; the encomienda and

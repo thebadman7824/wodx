@@ -862,5 +862,41 @@ export const LINE_KEYWORDS = {
     "juggernaut": {"n": "Juggernaut", "k": ["boost", "ward"]},
     "unearthly-repose": {"n": "Unearthly Repose", "k": ["sway"]},
     "storm-wending": {"n": "Storm-Wending", "k": ["move"]}
+  },
+  // B6737: a woken fetish or a used talen (WoDX Library wonders.mjs, keyed by the wonder key). House readings of each
+  // item's line; one not listed (a weapon, a bag, a disguise of nature) stays the card's text, its weapon item does the rest.
+  fetish: {
+    "harmony-flute": {"n": "Harmony Flute", "k": ["fear:calm"]},
+    "mirrorshades": {"n": "Mirrorshades", "k": ["sideways"]},
+    "nyxs-bangle": {"n": "Nyx's Bangle", "k": ["veil"]},
+    "truth-earring": {"n": "Truth Earring", "k": ["know"]},
+    "chameleon-skin": {"n": "Chameleon Skin", "k": ["veil"]},
+    "dagger-of-retribution": {"n": "Dagger of Retribution", "k": ["know"]},
+    "dream-stealer": {"n": "Dream Stealer", "k": ["know"]},
+    "spirit-tracer": {"n": "Spirit Tracer", "k": ["know"]},
+    "beast-mask": {"n": "Beast Mask", "k": ["shape"]},
+    "partridge-wing": {"n": "Partridge Wing", "k": ["fear:calm"]},
+    "phoebes-veil": {"n": "Phoebe's Veil", "k": ["veil"]},
+    "wind-whistle": {"n": "Wind Whistle", "k": ["weather"]},
+    "feathered-cloak": {"n": "Feathered Cloak", "k": ["rise"]},
+    "labrys-of-isthmene": {"n": "Labrys of Isthmene", "k": ["boost"]},
+    "spirit-whistle": {"n": "Spirit Whistle", "k": ["fear"]},
+    "runestones": {"n": "Runestones", "k": ["know"]},
+    "death-dust": {"n": "Death Dust", "k": ["speak"]},
+    "gaias-breath": {"n": "Gaia's Breath", "k": ["mend"]},
+    "moon-glow": {"n": "Moon Glow", "k": ["fortune"]},
+    "nightshade": {"n": "Nightshade", "k": ["veil"]},
+    "devils-deck": {"n": "Devil's Deck", "k": ["fortune"]},
+    "sliver-of-helios": {"n": "Sliver of Helios", "k": ["light"]},
+    "dragon-crystal": {"n": "Dragon Crystal", "k": ["know"]},
+    "yantra": {"n": "Yantra", "k": ["know"]},
+    "pipes-of-the-swarm": {"n": "Pipes of the Swarm", "k": ["summon"]},
+    "net-of-vengeance": {"n": "Net of Vengeance", "k": ["hold"]},
+    "brush-of-the-ancients": {"n": "Brush of the Ancients", "k": ["know"]},
+    "stolen-eye": {"n": "Stolen Eye", "k": ["know"]},
+    "bane-lantern": {"n": "Bane Lantern", "k": ["light"]},
+    "devilwhip": {"n": "Devilwhip", "k": ["sway"]},
+    "wyrmflesh": {"n": "Wyrmflesh", "k": ["ward"]},
+    "baneklaive": {"n": "Baneklaive", "k": ["boost"]}
   }
 };

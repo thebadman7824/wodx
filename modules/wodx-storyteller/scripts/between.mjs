@@ -47,6 +47,7 @@ export function registerBetweenTools() {
 export function registerBetweenHandlers() {
   // Small (B2453): one of the listed kinds of downtime, a week or less
   C.chron()?.approvals?.registerHandler?.(T_DOWNTIME, {label: "A downtime request", small: e => K.smallDowntime(e.data), approve: approveDowntime, reject: rejectDowntime});
+  Hooks.on("renderChatMessageHTML", bindDowntimeCard);
 }
 
 async function journal(name, {players = false} = {}) {
@@ -387,20 +388,52 @@ export async function requestDowntime(req) {
   return d;
 }
 
+/**
+ * B6752: an accepted downtime request sets its work going. Study and making become a long task (it rolls as the nights
+ * pass, in the Long tasks window); hunting, letters and travel get a button on the player's card that opens the
+ * window that does them; the rest is noted in the tracker.
+ */
+export const DOWNTIME_TASK = {study: "train", craft: "craft"};
+export const DOWNTIME_GO = {feed: {label: "Hunt", icon: "fa-droplet"}, letters: {label: "Write the letters", icon: "fa-envelope"}, travel: {label: "Out on your own", icon: "fa-person-walking-luggage"}};
 async function approveDowntime(entry) {
   const d = K.normDowntime(entry?.data), a = game.actors.get(d.actorId);
-  if ( !a ) return;
+  if ( !a ) return null;
   await C.log({kind: "solo", actor: a.id, name: a.name, user: d.userId, hours: d.nights * 8, text: `Downtime, ${K.DOWNTIME_KINDS[d.kind].toLowerCase()}: ${d.what.slice(0, 300)}`});
-  await tellDowntime(a, d, true);
+  let task = null;
+  if ( DOWNTIME_TASK[d.kind] ) {
+    try { task = await Tasks.saveTask(a, {kind: DOWNTIME_TASK[d.kind], name: d.what.split(/[.\n]/)[0].slice(0, 60), note: d.what}); }
+    catch (e) { console.error(`${MOD} | downtime task`, e); }
+  }
+  await tellDowntime(a, d, true, {task});
+  return task;
 }
 async function rejectDowntime(entry) {
   const d = K.normDowntime(entry?.data), a = game.actors.get(d.actorId);
   if ( a ) await tellDowntime(a, d, false);
 }
-async function tellDowntime(a, d, ok) {
+async function tellDowntime(a, d, ok, {task = null} = {}) {
   const owners = all(game.users).filter(u => !u.isGM && a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  const go = ok ? DOWNTIME_GO[d.kind] : null;
+  const what = !ok ? "not taken this time. The Storyteller will say why"
+    : task ? `accepted: "${task.name}" is under way in the Long tasks window (the hourglass) and rolls as the nights pass`
+    : go ? "accepted: start it with the button below" : "accepted and noted in the Storyteller's tracker";
   await ChatMessage.create({speaker: {alias: "Storyteller"}, whisper: [...owners, ...C.gmIds()],
-    content: `<div class="wodx-card"><p>${esc(a.name)}'s downtime (${esc(K.DOWNTIME_KINDS[d.kind].toLowerCase())}) is ${ok ? "accepted. The Storyteller tells you what came of it" : "not taken this time. The Storyteller will say why"}.</p></div>`});
+    flags: go ? {[MOD]: {downtimeGo: {kind: d.kind, actorId: a.id}}} : {},
+    content: `<div class="wodx-card"><p>${esc(a.name)}'s downtime (${esc(K.DOWNTIME_KINDS[d.kind].toLowerCase())}) is ${esc(what)}.</p>${go ? `<button type="button" data-action="wst-downtime-go"><i class="fa-solid ${go.icon}"></i> ${esc(go.label)}</button>` : ""}</div>`});
+}
+/** The button on an accepted downtime card: the owner opens the window that does the work. */
+export function bindDowntimeCard(message, el) {
+  const f = message?.flags?.[MOD]?.downtimeGo, root = el?.[0] ?? el;
+  const b = root?.querySelector?.("[data-action=wst-downtime-go]");
+  if ( !f || !b ) return;
+  const a = game.actors.get(f.actorId);
+  if ( !(a?.isOwner || game.user.isGM) ) { b.remove(); return; }
+  b.addEventListener("click", () => {
+    if ( f.kind === "feed" ) return api("wodx-actions")?.hunt?.({actor: a});
+    if ( f.kind === "letters" ) return api(MOD)?.letters?.open?.();
+    if ( f.kind === "travel" ) return api(MOD)?.openOnYourOwn?.();
+    return null;
+  });
 }
 
 export async function downtimeDialog() {
