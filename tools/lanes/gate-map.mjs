@@ -24,6 +24,8 @@ import {fileURLToPath} from "node:url";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const GATES = path.join(ROOT, "tools/gate");
+/** A gate driven in two browsers by tools/harness/gate-two.mjs: its run() takes a "player" phase. */
+export const TWO_BROWSER = /phase\s*===\s*["']player["']/;
 
 export function moduleIds(root = ROOT) {
   return fs.readdirSync(path.join(root, "modules")).filter(d => fs.existsSync(path.join(root, "modules", d, "module.json"))).sort();
@@ -57,6 +59,9 @@ export function gateMap(root = ROOT) {
     if ( !/^gate[\w-]*\.mjs$/.test(f) || not.has(name) ) continue;
     const src = fs.readFileSync(path.join(root, "tools/gate", f), "utf8");
     if ( !/export\s+(?:(?:async\s+)?function\s+run\b|const\s+run\s*=)/.test(src) ) continue;
+    // B6951: a two-browser gate (a "player" phase run by tools/harness/gate-two.mjs) cannot run on a lane: run() alone
+    // is only its setup, which prints the setup's ids and passes nothing
+    if ( TWO_BROWSER.test(src) ) continue;
     const set = coveredBy(src, ids);
     for ( const m of extra.add?.[name] ?? [] ) set.add(m);
     for ( const m of extra.remove?.[name] ?? [] ) set.delete(m);

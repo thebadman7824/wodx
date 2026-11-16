@@ -9,6 +9,7 @@ import {searchBox} from "./search.mjs";
 import * as R from "./referee-rules.mjs";
 import CLASHES from "../data/rules-clashes.mjs";
 import * as eras from "./eras.mjs";
+import {addHandTool} from "./hand-tool.mjs";
 
 const {ApplicationV2} = foundry.applications?.api ?? {ApplicationV2: class {}};
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -170,13 +171,7 @@ export class RefereeApp extends ApplicationV2 {
 
 /** Put the referee into the Storyteller's hand when WoDX Storyteller is on. */
 export function addToHand() {
-  const add = () => {
-    const hand = game.wodx?.storyteller?.hand;
-    if ( !hand?.addTool ) return false;
-    hand.addTool({key: "referee", label: "The crossover referee", icon: "fa-scale-balanced", run: () => RefereeApp.open()});
-    return true;
-  };
-  if ( !add() ) setTimeout(add, 2000);
+  addHandTool({key: "referee", label: "The crossover referee", icon: "fa-scale-balanced", run: () => RefereeApp.open()});
 }
 
 export function registerRefereeKey() {

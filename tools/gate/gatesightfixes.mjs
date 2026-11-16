@@ -117,7 +117,8 @@ export async function run() {
 
     await G.step("7. A remote vehicle drives", async () => {
       const [kat] = await G.make(Actor, [{name: "WoDX gate: Kat", type: "Mortal"}]);
-      const [tk] = await G.tokens(scene, [{actor: kat, x: 1000, y: 1000}]);
+      // B6954: the kit places tokens in squares; 10 squares is the car's own corner (1000 px)
+      const [tk] = await G.tokens(scene, [{actor: kat, x: 10, y: 10}]);
       const x0 = Number((tk.document ?? tk).x);
       const [car] = await scene.createEmbeddedDocuments("Tile", [{x: 1000, y: 1000, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"},
         flags: {"wodx-interactables": {mount: true, title: "WoDX gate: sedan", driver: null, riders: [{t: tk.document?.uuid ?? tk.uuid}]}}}]);
