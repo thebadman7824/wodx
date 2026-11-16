@@ -195,7 +195,7 @@ export function targetsOf(actor, uuids = null) {
 export function plan(actor, form, successes, {used = [], witnessed = false, feat = 0, targets = null, age = "ascension"} = {}) {
   const t = targetsOf(actor, targets);
   const base = E.needFor(form.keywords, {self: t.self, feat});
-  const got = E.spend(successes, base, form.plan);
+  const got = E.spend(successes, base, form.plan, form.keywords);
   const spheres = used.map(x => x.sphere);
   const items = [];
   const docs = t.docs.slice(0, 1 + got.targets);

@@ -92,3 +92,9 @@ test("Combat reads the powder before the shot and after the roll, and reloading 
   assert.match(s, /s\("blackPowder"/);
   assert.match(s, /name: "WoDX: Light the match"/);
 });
+
+test("B6902: a tanegashima is a matchlock, not a hand cannon", () => {
+  assert.equal(gun("Tanegashima", 1560).lock, "matchlock");
+  assert.equal(gun("Tanegashima", 1560).label, "matchlock");
+  assert.equal(gun("Hand cannon", 1400).lock, "handgonne");
+});
