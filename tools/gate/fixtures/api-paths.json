@@ -1417,7 +1417,7 @@
   ],
   "uses": [
    "modules/wodx-npc/scripts/family.mjs:38",
-   "modules/wodx-solo/scripts/panel.mjs:70",
+   "modules/wodx-solo/scripts/panel.mjs:73",
    "modules/wodx-solo/scripts/world.mjs:191"
   ]
  },
@@ -2566,7 +2566,7 @@
    "wizard"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/arrival.mjs:149"
+   "modules/wodx-solo/scripts/arrival.mjs:157"
   ]
  },
  {
@@ -2779,7 +2779,7 @@
   "uses": [
    "modules/wodx-interactables/scripts/main.mjs:2137",
    "modules/wodx-solo/scripts/companions.mjs:18",
-   "modules/wodx-solo/scripts/panel.mjs:275"
+   "modules/wodx-solo/scripts/panel.mjs:278"
   ]
  },
  {
@@ -2791,7 +2791,7 @@
   "uses": [
    "modules/wodx-solo/scripts/companions.mjs:87",
    "modules/wodx-solo/scripts/companions.mjs:106",
-   "modules/wodx-solo/scripts/panel.mjs:277"
+   "modules/wodx-solo/scripts/panel.mjs:280"
   ]
  },
  {
@@ -4374,7 +4374,7 @@
    "director"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:172"
+   "modules/wodx-solo/scripts/panel.mjs:175"
   ]
  },
  {
@@ -4384,8 +4384,8 @@
    "direct"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:173",
-   "modules/wodx-solo/scripts/panel.mjs:174"
+   "modules/wodx-solo/scripts/panel.mjs:176",
+   "modules/wodx-solo/scripts/panel.mjs:177"
   ]
  },
  {
@@ -4394,7 +4394,7 @@
    "aid"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:181",
+   "modules/wodx-solo/scripts/panel.mjs:184",
    "modules/wodx-solo/scripts/world.mjs:43"
   ]
  },
@@ -4405,8 +4405,8 @@
    "draw"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:182",
-   "modules/wodx-solo/scripts/panel.mjs:182"
+   "modules/wodx-solo/scripts/panel.mjs:185",
+   "modules/wodx-solo/scripts/panel.mjs:185"
   ]
  },
  {
@@ -4416,7 +4416,7 @@
    "propose"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:184"
+   "modules/wodx-solo/scripts/panel.mjs:187"
   ]
  },
  {
@@ -4709,7 +4709,7 @@
    "openOnYourOwn"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:262"
+   "modules/wodx-solo/scripts/panel.mjs:265"
   ]
  },
  {
