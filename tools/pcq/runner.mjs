@@ -339,7 +339,8 @@ function growJobs(waiting) {
   for ( const g of growing.values() ) {
     if ( g.job.lane !== undefined ) continue; // pinned to one lane
     const cap = waiting ? g.job.lanes ?? 1 : LANES.length;
-    while ( g.used.length < cap && queueLeft(g.job.queue) >= 2 ) {
+    // No more lanes than gates left for the lanes still starting up to take
+    while ( g.used.length < cap && queueLeft(g.job.queue) >= 2 && queueLeft(g.job.queue) > g.used.length - g.parts.length ) {
       const l = LANES.find(laneFree);
       if ( !l ) return;
       log(`#${g.issue.number} takes lane ${l} too (${queueLeft(g.job.queue)} gate(s) left on its queue)`);
