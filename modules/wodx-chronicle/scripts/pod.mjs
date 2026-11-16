@@ -399,13 +399,17 @@ function bookOnePlayed(s = state()) {
 }
 export const twistState = () => sagaOf(state()).twists ?? {revealed: {}};
 /** Reveal a twist of book one: its partners keep another heart, and the Storyteller gets the card. */
-export const revealTwist = (n, o = {}) => podTurn(() => revealTwistNow(n, o));
-async function revealTwistNow(n, {variant = "", force = false} = {}) {
+// The state change takes its turn; what the reveal shows and the card come after it, because the reveal's own writes
+// (Reveals, Fronts) take turns too and a turn must not wait on another (the twists gate hung on that)
+export async function revealTwist(n, {variant = "", force = false} = {}) {
   if ( !game.user.isGM ) return null;
-  const s = state(), x = sagaOf(s);
-  const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force, met: Encounters.metOf(s)});
-  x.twists = r.state;
-  await saveState(s);
+  const r = await podTurn(async () => {
+    const s = state(), x = sagaOf(s);
+    const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force, met: Encounters.metOf(s)});
+    x.twists = r.state;
+    await saveState(s);
+    return r;
+  });
   const t = TW.twistOf(n), chains = TW.chainsOf(n).map(k => TW.CHAINS.find(c => c.key === k)?.label).filter(Boolean);
   const lines = r.changes.filter(c => !c.variant).map(c => `<li>Twist ${c.n}, ${esc(TW.twistOf(c.n)?.label ?? "")}: ${esc(c.note)}</li>`);
   // B6650-B6652: the reveal shows on the table, and the people who know act
