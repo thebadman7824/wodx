@@ -980,7 +980,10 @@ export function build(ctx) {
     }
     const intr = ev.who ? await fromUuid(ev.who) : null;
     const tokNow = intr ? canvas.tokens.get(intr.id) : null;
-    const hearers = (ev.heard ?? []).map(u => canvas.tokens.placeables.find(t => t.document.uuid === u)).filter(t => t?.actor && !t.actor.hasPlayerOwner);
+    // B6524: the beast a rider is on does not take fright at its own rider (it bolted to the map edge when mounted)
+    const ridden = t => t.document.uuid === ev.who || t.document.flags?.["wodx-interactables"]?.driver?.t === ev.who
+      || (ev.objectType === "Token" && ev.object === t.document.id && /^mount|ride/.test(String(ev.kind)));
+    const hearers = (ev.heard ?? []).map(u => canvas.tokens.placeables.find(t => t.document.uuid === u)).filter(t => t?.actor && !t.actor.hasPlayerOwner && !ridden(t));
     const base = a => a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a;
     const sorted = AR.sortHearers(hearers.map(t => ({uuid: t.document.uuid, asleep: whereOf(base(t.actor))?.activity === "sleep" && !!routineOf(base(t.actor))?.on && !flag(base(t.actor), "paused"), down: !!downState(t.actor)})));
     // The sleepers wake: their routine pauses, so the next noise finds them awake

@@ -22,6 +22,8 @@
  *      off its Structure on the sheet, its mounted gun is on the driver's attack menu, its headlights light the token
  * Result: Data/wodx-gate/gatevehicles-result.json.
  */
+/** A batch create does not keep its order (kit rule 1): match each made tile to its data by title. */
+const byTitle = (docs, data) => data.map(d => docs.find(x => x.flags?.["wodx-interactables"]?.title === d.flags?.["wodx-interactables"]?.title));
 import {gate, waitFor} from "./kit.mjs";
 
 const IX = "wodx-interactables";
@@ -51,11 +53,12 @@ export async function run() {
     const [td, tp, tf, tn, tr] = await G.tokens(scene, [{actor: driver, x: 2, y: 2, actorLink: true}, {actor: pass, x: 3, y: 2, actorLink: true},
       {actor: foe, x: 5, y: 2, actorLink: true}, {actor: nopilot, x: 10, y: 10, actorLink: true}, {actor: runner, x: 14, y: 4, actorLink: true}]);
     await waitFor(() => td?.object && tp?.object && tf?.object && tn?.object && tr?.object);
-    const [car, car2, plane, horse] = await scene.createEmbeddedDocuments("Tile", [
+    const tileData = [
       {x: 200, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate motor car"}}},
       {x: 500, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate second car"}}},
       {x: 1000, y: 1000, width: 200, height: 200, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "plane", title: "Gate aeroplane"}, "wodx-sheets": {keepOutOfEra: true}}},
-      {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}]);
+      {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}];
+    const [car, car2, plane, horse] = byTitle(await scene.createEmbeddedDocuments("Tile", tileData), tileData);
     await car.update({[`flags.${IX}.driver`]: seat(td, car), [`flags.${IX}.riders`]: [rider(tp, car)]});
     await car2.update({[`flags.${IX}.driver`]: seat(tf, car2)});
     await foe.createEmbeddedDocuments("Item", [{name: "Gate pistol", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 20,
@@ -150,8 +153,9 @@ export async function run() {
     });
 
     await G.step("11. bicycles and beasts", async () => {
-      const [bike, fae, gry, gh] = await scene.createEmbeddedDocuments("Tile", ["bicycle", "chimera", "gryphon", "ghoulhorse"].map((k, i) => ({x: 2000 + i * 150, y: 1500, width: 100, height: 100,
-        texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}})));
+      const beastData = ["bicycle", "chimera", "gryphon", "ghoulhorse"].map((k, i) => ({x: 2000 + i * 150, y: 1500, width: 100, height: 100,
+        texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}}));
+      const [bike, fae, gry, gh] = byTitle(await scene.createEmbeddedDocuments("Tile", beastData), beastData);
       const c = ix.characterFor(nopilot, tn.object.center, bike);
       const o = t => ix.rules.optionsFor(ix.describeObj(t), {...c, kept: false});
       const bikeOk = ix.rules.optionsFor(ix.describeObj(bike), c).some(x => x.id === "mount");
