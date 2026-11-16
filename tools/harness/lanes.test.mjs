@@ -233,3 +233,19 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.match(main.foundryMain, /^G:/);
   } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
 });
+
+test("before each gate the runner looks for the WoDX apis again and names the missing ones (B6960)", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  const mods = new Map([["wodx-chronicle", {active: true, api: {}}], ["wodx-creation", {active: true}], ["wodx-npc", {active: false}]]);
+  const was = globalThis.game;
+  globalThis.game = {modules: {get: id => mods.get(id)}};
+  try {
+    assert.deepEqual(B.apisMissing(["wodx-chronicle", "wodx-creation", "wodx-npc"]), ["wodx-creation"], "an active module without its api; an inactive one is not waited for");
+    const page = {waitForFunction: async (fn, ids) => { if ( !fn(ids) ) throw new Error("timeout"); }, evaluate: async (fn, ids) => fn(ids)};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 10), ["wodx-creation"]);
+    mods.get("wodx-creation").api = {};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 10), []);
+  } finally { globalThis.game = was; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
+});

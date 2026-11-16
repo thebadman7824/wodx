@@ -37,7 +37,7 @@
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
-import {openGM} from "./browser.mjs";
+import {openGM, waitApis} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
@@ -181,6 +181,9 @@ try {
         try { await signIn(); await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {}); }
         catch (e) { report(`${gate}: ERROR could not sign in again: ${e.message}`); code = 1; break; }
       }
+      // B6960: the WoDX apis are looked for again before each gate (a world that lost them mid-lane is named, not the gate)
+      const lostApis = await waitApis(page).catch(() => []);
+      if ( lostApis.length ) console.log(`Lane ${lane.id}: no api before ${gate} after 120 s: ${lostApis.join(", ")}`);
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
@@ -272,7 +275,9 @@ try {
         out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;
+      const signInNote = lateApis.length > 0;
       if ( lateApis.length ) { const note = ` [no api after sign-in: ${lateApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; lateApis = []; }
+      if ( lostApis.length && !signInNote ) { const note = ` [no api before this gate: ${lostApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; }
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);
