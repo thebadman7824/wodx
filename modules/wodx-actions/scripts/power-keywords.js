@@ -51,7 +51,7 @@ export const POWER_KEYWORDS = {
     "valeren-healer-unburden-the-bestial-soul": [["mend"]], "valeren-warrior-sense-death": [["sense"]], "valeren-warrior-morphean-blow": [["boost","hold"]],
     "valeren-warrior-burning-touch": [["harm"]], "valeren-warrior-armor-of-caines-fury": [["ward","light"]], "valeren-warrior-ending-the-watch": [["harm"]],
     "valeren-watcher-sense-cycle": [["know"]], "valeren-watcher-peaceful-touch": [["fortune"]], "valeren-watcher-pariahs-caress": [["sway"]],
-    "valeren-watcher-peacemaker": [["place","fear"]], "valeren-watcher-souls-breath": [["free"]], "vicissitude-malleable-visage": [["shape"]],
+    "valeren-watcher-peacemaker": [["place","fear"]], "valeren-watcher-souls-breath": [["charge","harm"]], "vicissitude-malleable-visage": [["shape"]],
     "vicissitude-transmogrify-the-mortal-clay": [["shape"]], "vicissitude-rend-the-osseous-frame": [["harm","shape"]], "vicissitude-awaken-the-zulo-shape": [["shape","boost"]],
     "vicissitude-the-body-impolitic": [["summon"]], "abyss-mysticism-pierce-the-veil": [["know"]], "abyss-mysticism-eyes-of-the-abyss": [["sight"]],
     "abyss-mysticism-subsume-the-darkness": [["shape","ward"]], "abyss-mysticism-calling-the-hungry-shade": [["summon"]], "abyss-mysticism-the-third-eye-of-abyssal-sight": [["sight","sense"]],
@@ -97,11 +97,11 @@ export const POWER_KEYWORDS = {
     "temporis-kiss-of-lachesis": [["time","harm"]], "temporis-cheat-the-fates": [["fortune"]], "temporis-clios-kiss": [["time"]],
     "valeren-healer-fathers-judgment": [["bind"]], "valeren-healer-blissful-gaze": [["mend"]], "valeren-healer-rayzeels-song": [["fear"]],
     "valeren-healer-heavens-gate": [["mend"]], "valeren-warrior-samiels-vengeance": [["boost","harm"]], "valeren-warrior-dream-combat": [["sideways","harm"]],
-    "valeren-warrior-fiery-agony": [["harm"]], "valeren-warrior-song-of-the-blooded": [["free"]], "valeren-watcher-safe-passage": [["ward","fortune"],1],
+    "valeren-warrior-fiery-agony": [["harm"]], "valeren-warrior-song-of-the-blooded": [["boost"]], "valeren-watcher-safe-passage": [["ward","fortune"],1],
     "valeren-watcher-aversion": [["sway","fortune"]], "valeren-watcher-purification": [["banish"]], "valeren-watcher-soul-exchange": [["possess"]],
     "vicissitude-chiropteran-marauder": [["shape","rise"]], "vicissitude-blood-of-the-earth": [["ward"],1], "vicissitude-sublimation-of": [["harm"]],
     "vicissitude-the-last-dracul": [["shape","boost"]], "abyss-mysticism-into-the-chasm": [["sideways","summon"]], "abyss-mysticism-evocation-of-the-oubliette": [["harm"]],
-    "abyss-mysticism-cry-that-slays-the-light": [["free"]]
+    "abyss-mysticism-cry-that-slays-the-light": [["light"]]
   },
   gift: {
     "artisans-command": [["work"]], "aura-of-confidence": [["veil"]], "beast-speech": [["speak"]],

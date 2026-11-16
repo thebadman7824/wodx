@@ -259,7 +259,8 @@ export function build(ctx) {
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
-            if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
+            // B6835: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
+            if ((PE.isPath(p.d) || PE.PATH_EFFECTS[p.id]) && successes > 0 && (p.r || PE.PATH_EFFECTS[p.id]) && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
                 await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}`,

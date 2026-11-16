@@ -47,7 +47,10 @@ const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scrip
 const INFO = new Set([]);
 const applyingKw = (ks = []) => ks.map(k => String(k).split(":")[0]).some(k => E.KEYWORDS[k] && E.KEYWORDS[k].tier !== "st" && !INFO.has(k));
 /** B4820: a Summon applies whatever its spec kind, since the effects card turns it into a summoning with its own rules. */
-const applyingSpec = s => !!s && (!["note", "st"].includes(s.kind) || s.kw === "summon");
+// B6834: a note on Know, Sense or Speak gives that keyword's own result (mage-da-effects outcomesOf)
+// B6836: a Storyteller's spec on a working keyword gives that keyword's result too
+const applyingSpec = s => !!s && (Array.isArray(s) ? s.some(x => applyingSpec(x)) : (!["note", "st"].includes(s.kind) || s.kw === "summon" || (s.kind === "note" && ["know", "sense", "speak"].includes(s.kw))
+  || (s.kind === "st" && E.KEYWORDS[s.kw] && E.KEYWORDS[s.kw].tier !== "st" && !["free", "time"].includes(s.kw))));
 /** Keywords a power used with no roll applies (its Harm readies the user; the attack roll deals it, B3751). */
 const noRollKw = (ks = []) => applyingKw(ks.map(k => k === "harm" ? "boost" : k));
 /** Always-on Disciplines WoDX Combat reads by rating: soak, damage dice and extra actions or speed. */
@@ -59,7 +62,8 @@ const rows = [];
 const WANT_TEXT = process.argv.includes("--text");
 const textOf = (v, depth = 0) => v == null || depth > 4 ? "" : typeof v === "string" ? v : Array.isArray(v) ? v.map(x => textOf(x, depth + 1)).join(" ")
   : typeof v === "object" ? Object.values(v).map(x => textOf(x, depth + 1)).join(" ") : "";
-const add = (line, group, name, o = {}) => rows.push({ line, group, name, status: o.status ?? "none", kw: o.kw ?? [], page: o.page ?? "", how: o.how ?? "", passive: !!o.passive,
+// B6835: story names why a power puts nothing on the card (read on its page): no system, or the Storyteller's alone
+const add = (line, group, name, o = {}) => rows.push({ line, group, name, status: o.status ?? "none", kw: o.kw ?? [], page: o.page ?? "", how: o.how ?? "", passive: !!o.passive, ...(o.story ? { story: o.story } : {}),
   ...(WANT_TEXT ? { text: textOf(o.src).replace(/\s+/g, " ").trim() } : {}) }) && Object.defineProperty(rows.at(-1), "src", { value: o.src, enumerable: false });
 
 /* -- Vampire: V20 Dark Ages Disciplines (kindred.js Use a Discipline) */
@@ -70,9 +74,9 @@ for ( const p of disc ) {
   const kw = PK.keywordsOf("disc", p.id);
   const path = PE.PATH_EFFECTS[p.id];
   const passive = !!kw?.passive || !!p.passive, combat = passive && COMBAT_READS.has(p.d);
-  let status = combat ? "applies" : path && p.r ? (applyingSpec(path) ? "applies" : "card")
+  let status = combat ? "applies" : path ? (applyingSpec(path) ? "applies" : "card")
     : (kw && (passive || !p.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : "card");
-  add("Vampire (Dark Ages)", p.d, p.n, { src: p, status, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive,
+  add("Vampire (Dark Ages)", p.d, p.n, { src: p, status, story: status === "card" ? PE.PATH_STORY?.[p.id] : undefined, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive,
     how: combat ? "WoDX Combat reads the rating (soak, damage dice, actions and speed)" : path && p.r ? "path magic effect spec" : p.r ? "Discipline roll, keywords, timed effect on the token" : "no roll: one success, keywords and timed effect on the token" });
 }
 /* -- Vampire: V20 (modern) Disciplines: the same window when a Dark Ages power has the name, else the system roll */
@@ -160,7 +164,7 @@ for ( const l of Object.values(D.LORES) ) for ( const nm of [...(l.form ?? []), 
   // B6831: the form's own effects card (FORM_SPECS) and its natural weapons (FORM_WEAPONS)
   const v = String(l.visage).split(",")[0].trim(), fs = DE.FORM_SPECS[`${nm}@${v}`] ?? DE.FORM_SPECS[nm], fw = DE.FORM_WEAPONS[nm];
   const story = !sheet && !fs && !fw ? DE.FORM_STORY[nm] : null;
-  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { src: fs ? [fs] : fp, status: !fp ? "roll" : sheet || fs || fw ? "applies" : "card", page: `DtF p. ${l.formPage}`,
+  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { story: story ?? undefined, src: fs ? [fs] : fp, status: !fp ? "roll" : sheet || fs || fw ? "applies" : "card", page: `DtF p. ${l.formPage}`,
     how: !fp ? "name only" : sheet ? "form puts it on the sheet for the scene" : fs ? "form's effects card for the scene" : fw ? "a natural weapon on the sheet for the scene" : `form card text${story ? `: ${story}` : ""}` });
 }
 /* -- Hunter: the Reckoning edges (reckoning.js) */
@@ -249,6 +253,7 @@ for ( const r of rows ) {
 }
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 if ( arg("--out") ) fs.writeFileSync(arg("--out"), JSON.stringify(out, null, 1));
-console.log(`${rows.length} powers:`, out.counts, "applying, read by the game:", out.reads);
+out.story = rows.filter(r => r.status !== "applies" && r.story).length;
+console.log(`${rows.length} powers:`, out.counts, "applying, read by the game:", out.reads, "story (no effect to apply, page read):", out.story);
 if ( process.argv.includes("--unread") ) for ( const r of rows ) if ( ["unread", "partly"].includes(r.read) ) console.log(r.read.padEnd(7), r.line.padEnd(26), r.name, JSON.stringify(r.kw));
 if ( process.argv.includes("--summary") ) for ( const [l, b] of Object.entries(out.byLine) ) console.log(l.padEnd(26), JSON.stringify(b));

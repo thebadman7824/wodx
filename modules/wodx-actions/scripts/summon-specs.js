@@ -1145,6 +1145,26 @@ export const SPECS = {
   "note": "Wild places only, one large wolf per success. Willpower 3, Survival 5. Control and duration are not legible in the scan.",
   "unsure": "unsure"
  },
+ "vampire-dark-ages|minions-of-deep-marmora": {
+  "what": "beast", "profile": "servant", "count": {"by": "successes"}, "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"}, "page": "V20 Dark Ages p. 278",
+  "note": "B6835: one minion of the deep a success, up to the blood spent."
+ },
+ "vampire-dark-ages|seal-of-abamixtra": {
+  "what": "corpse", "profile": "servant", "count": {"by": "successes"}, "lasts": {"kind": "until-dismissed"},
+  "control": {"mode": "orders", "orders": "simple"}, "page": "V20 Dark Ages p. 279",
+  "note": "B6835: one corpse a success, one literal command; they do not defend themselves and work until the task is done or they rot."
+ },
+ "vampire-dark-ages|curse-of-the-maelstrom": {
+  "what": "ghost", "profile": "wild", "count": {"by": "successes"}, "lasts": {"kind": "scene"},
+  "control": {"mode": "none"}, "page": "V20 Dark Ages p. 291",
+  "note": "B6835: one Spectre a success, wreaking havoc around the necromancer; they ignore the caller."
+ },
+ "vampire-dark-ages|animate-the-unmoving": {
+  "what": "object", "profile": "servant", "count": {"by": "fixed", "fixed": 1}, "lasts": {"kind": "hours", "n": 1},
+  "control": {"mode": "direct", "range": "sight"}, "page": "V20 Dark Ages p. 299",
+  "note": "B6835: one object for up to an hour, in sight; no more at once than the caster's Intelligence."
+ },
  "demon-dtf|coherent-light": {
   "what": "construct",
   "profile": "servant",

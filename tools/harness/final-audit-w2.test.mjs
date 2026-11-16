@@ -192,3 +192,30 @@ test("B6833: a passive power picked from the menu turns on", async () => {
   assert.deepEqual(r.map(x => [x.key, x.who]), [["ward", "self"]]);
   assert.doesNotMatch(src("modules/wodx-actions/scripts/kindred.js"), /if \(!fx && !p\.passive && successes > 0/);
 });
+
+test("B6834: a spell that tells the caster something gives the Know, Sense or Speak result", async () => {
+  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const [r] = D.outcomesOf({kw: "know", kind: "note", who: "self"}, {label: "Gate Know"}, 3, "a secret");
+  assert.notEqual(r.out.kind, "note");
+  assert.equal(r.st, undefined);
+});
+
+test("B6835: the Dark Ages paths and Disciplines that only told now apply, or say why not", async () => {
+  const PE = await imp("modules/wodx-actions/scripts/path-effects.js");
+  const disc = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8")).powers;
+  const by = id => disc.find(p => p.id.endsWith(id));
+  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3).map(o => [o.who, o.out.pool]), [["self", "blood"], ["one", "blood"]]);
+  assert.equal(PE.pathOutcomes(by("valeren-warrior-song-of-the-blooded"), 2)[0].out.kind, "timed");
+  for ( const id of Object.keys(PE.PATH_STORY) ) assert.ok(disc.some(p => p.id === id) && /p\. \d+/.test(PE.PATH_STORY[id]), id);
+  assert.match(src("modules/wodx-actions/scripts/kindred.js"), /PE\.isPath\(p\.d\) \|\| PE\.PATH_EFFECTS\[p\.id\]/);
+});
+
+test("B6836: a Storyteller's spec that names a working keyword gives that keyword's result", async () => {
+  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const [m] = D.outcomesOf({kw: "move", kind: "st"}, {label: "Gate Move"}, 2, "away");
+  assert.equal(m.out.kind, "move");
+  const [b] = D.outcomesOf({kw: "bind", kind: "st"}, {label: "Gate Bind"}, 2, "held");
+  assert.equal(b.who, "one");
+  const [f] = D.outcomesOf({kw: "free", kind: "st"}, {label: "Gate Free"}, 2, "anything");
+  assert.equal(f.st, true);
+});

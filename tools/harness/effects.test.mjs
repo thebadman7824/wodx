@@ -189,7 +189,7 @@ test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it 
   assert.deepEqual(D.daOutcomes(by("g-antics"), 3)[0].out.timed, {kind: "rounds", rounds: 6});
   assert.equal(D.daOutcomes(by("g-skogarmathur"), 2)[0].out.timed.seconds, 14 * 86400);
   assert.equal(D.daOutcomes(by("g-battlesmite"), 2)[0].out.condition, "blinded");
-  assert.equal(D.daOutcomes(by("g-summoning"), 4)[0].st, true);
+  assert.equal(D.daOutcomes(by("g-summoning"), 4)[0].out.kind, "summon", "the djinn is called onto the map (B6836)");
   assert.equal(D.daOutcomes(by("g-72names"), 4)[0].out.kind, "summon", "the golem is called onto the map (B6016)");
   assert.deepEqual(D.daOutcomes(by("verdantslumber"), 0), []);
   assert.deepEqual([D.targetCount("self", 3, 2), D.targetCount("one", 3, 2), D.targetCount("each", 3, 5), D.targetCount("each", 3, 2), D.targetCount("all", 1, 4)], [0, 1, 3, 2, 4]);
@@ -202,7 +202,8 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   const disc = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8")).powers;
   const paths = disc.filter(p => PE.isPath(p.d));
   assert.equal(paths.length, 70);
-  for ( const id of Object.keys(PE.PATH_EFFECTS) ) assert.ok(paths.some(p => p.id === id), `no path power ${id}`);
+  // B6835: a few Dark Ages Discipline powers outside the paths take a spec here too
+  for ( const id of Object.keys(PE.PATH_EFFECTS) ) assert.ok(disc.some(p => p.id === id), `no power ${id}`);
   for ( const p of paths ) {
     const o = PE.pathOutcomes(p, 2);
     assert.ok(o.length >= 1, p.id);
@@ -219,10 +220,10 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.deepEqual(PE.numinaOutcomes("telekinesis", 2, 4, H.NUMINA.telekinesis).map(o => [o.out.levels, o.out.type, o.ask]), [[2, "bashing", true]]);
   assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
   assert.equal(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses)[0].st, true);
-  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 70);
-  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 35); // B6738: Summon Wisp, Malady and Corrupt Body now apply
+  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 73); // B6835: three Discipline powers outside the paths
+  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 11); // B6738, B6835: the rest now apply or are story (PATH_STORY)
   const by = id => paths.find(p => p.id.endsWith(id));
-  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3)[0].st, true);
+  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3).map(o => o.out.pool), ["blood", "blood"]); // B6835
   assert.deepEqual(PE.pathOutcomes(by("dust-to-dust"), 3).map(o => [o.out.levels, o.out.type, o.out.soak]), [[3, "aggravated", false]]);
   assert.deepEqual(PE.pathOutcomes(by("ashen-ladys-embrace"), 4).map(o => [o.out.levels, o.ask]), [[2, true]]);
   assert.deepEqual(PE.pathOutcomes(by("benedictio-mortem"), 3)[0].out.timed, {kind: "rounds", rounds: 3});

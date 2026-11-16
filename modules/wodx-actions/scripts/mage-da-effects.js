@@ -12,7 +12,7 @@
  *                  success (per), or seconds
  */
 import * as M from "./mage-da-rules.js";
-import { stOutcomes } from "./effects-rules.js";
+import { stOutcomes, KEYWORDS } from "./effects-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -164,10 +164,27 @@ export function outcomesOf(spec, base, successes, text = "") {
     }
     case "move":
       return [{key: "move", who: "self", out: {...base, kind: "move", text: `${s} jump${s === 1 ? "" : "s"}: ${text}`}}];
-    case "note":
+    case "note": {
+      // B6834: what the caster learns is the Know or Sense keyword's own result (a secret found, a clue pinned, a
+      // detection sense on the token: B5788-B5790), not only a line of text
+      if ( LEARN.has(spec.kw) ) {
+        const [r] = stOutcomes([spec.kw], {strength: s, step: 2, ctx: spec.ctx ?? {}});
+        if ( r?.out ) return [{key: spec.kw, who: spec.who === "one" ? "one" : "self", out: {...base, ...r.out, label: base.label ?? r.out.label, source: base.source ?? r.out.source, text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
+      }
       return [{key: spec.kw, who: "self", out: {...base, kind: "note", text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
-    default:
+    }
+    default: {
+      // B6836: a Storyteller's spec that names a working keyword gives that keyword's own result (a Move moves the
+      // token, a Bind marks the target, a crossing crosses), routed by the keyword's own tier: a queue keyword still
+      // waits for the Storyteller's yes. Free Effects and Time stay the Storyteller's.
+      const K = KEYWORDS[spec.kw];
+      if ( K && K.tier !== "st" && !["free", "time"].includes(spec.kw) ) {
+        const [r] = stOutcomes([spec.kw], {strength: s, step: 2, ctx: spec.ctx ?? {}});
+        if ( r?.out ) return [{key: spec.kw, who: spec.who && spec.who !== "self" ? spec.who : AIMED.has(spec.kw) ? "one" : "self",
+          out: {...base, ...r.out, label: base.label ?? r.out.label, source: base.source ?? r.out.source, text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
+      }
       return [{key: spec.kw, who: "self", st: true, out: {...base, kind: "note", text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
+    }
   }
 }
 
@@ -190,6 +207,11 @@ export function timedNumbers(spec = {}, s = 1) {
   if ( k === "rise" ) return {feet: n(spec.feet) || 5 * x};
   return {};
 }
+
+/** B6834: a note spec on these keywords gives the keyword's own result. */
+const LEARN = new Set(["know", "sense", "speak"]);
+/** B6836: keywords that land on someone else when a spec names no one. */
+const AIMED = new Set(["harm", "hold", "fear", "trip", "sway", "possess", "bind", "banish"]);
 
 /** Keywords whose own result is not a timed effect (B6016). */
 const OWN_KIND = new Set(["summon", "make", "weather", "light", "move", "sideways", "banish", "place", "work", "charge", "know", "sense", "harm", "trip", "imbue", "mend", "hold"]);
