@@ -114,7 +114,7 @@ function homeFor(hint) {
  * Find or make an encounter's person, give them a home and a ready routine, and stand them on the company's map.
  * Returns {actor, token, made}.
  */
-async function bring(p, n, scene, k) {
+export async function bring(p, n, scene, k) {
   let actor = game.actors.find(a => a.name === p.name && a.flags?.[MODULE_ID]?.encounterPerson) ?? game.actors.getName(p.name);
   let made = false;
   if ( !actor ) {

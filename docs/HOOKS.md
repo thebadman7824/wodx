@@ -93,6 +93,10 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxTwist | chronicle | a twist of book one was revealed: {n, variant, chains, changes} (B4850) |
 | wodxFront | chronicle | a front of book one stepped or was struck, a clue carrier was found, or a judgement came due: {front, step, at, title, scene, people, moves, struck} or {clue, carrier, whole} or {judgement, choice} (B4910) |
 | wodxEncounter | chronicle | an encounter of book one was played, put off, struck or passed unmet: {n, action: "play" \| "later" \| "never" \| "closed", scene, people, moved, talk} (B6640) |
+| wodxTwistShown | chronicle | a revealed twist of book one was shown on the table and its people acted: {n, variant, lines} (B6650) |
+| wodxFavour | chronicle | a favour owed to the company was called in: {who, what, scene, actor} (B6653) |
+| wodxMurder | chronicle | one of book one's three murders was counted: {name, count} (B6654) |
+| wodxColdTown | chronicle | the third murder turned the Lower Town cold: {scenes, cooled} (B6654) |
 | wodxThreadOpened | storyteller | a Threads of Fate storyline opened: {story} (B3650) |
 | wodxThreadEnded | storyteller | a Threads of Fate storyline ended: {story, ending} (B3654) |
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |

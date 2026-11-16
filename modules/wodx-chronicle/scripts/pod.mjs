@@ -5,6 +5,7 @@ import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import * as Encounters from "./encounters.mjs";
+import * as Reveals from "./reveals.mjs";
 import {watched} from "./signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
@@ -392,7 +393,10 @@ export async function revealTwist(n, {variant = "", force = false} = {}) {
   await saveState(s);
   const t = TW.twistOf(n), chains = TW.chainsOf(n).map(k => TW.CHAINS.find(c => c.key === k)?.label).filter(Boolean);
   const lines = r.changes.filter(c => !c.variant).map(c => `<li>Twist ${c.n}, ${esc(TW.twistOf(c.n)?.label ?? "")}: ${esc(c.note)}</li>`);
-  await card(`Twist ${t.n} revealed: ${t.label}`, `<p>${chains.length ? `On ${esc(chains.join(" and "))}. ` : "A quiet twist. "}${variant && t.variants ? `Its heart: ${esc(t.variants[variant])}. ` : ""}The next twist can come in a week of game time.</p>${lines.length ? `<p>It changes:</p><ul>${lines.join("")}</ul>` : ""}<p class="vta-note">The twist's own words are in the Storyteller's third volume.</p>`);
+  // B6650-B6652: the reveal shows on the table, and the people who know act
+  let shown = [];
+  try { shown = await Reveals.onReveal(t.n, variant); } catch (e) { console.error(`${MODULE_ID} | twist ${t.n} shown`, e); }
+  await card(`Twist ${t.n} revealed: ${t.label}`, `<p>${chains.length ? `On ${esc(chains.join(" and "))}. ` : "A quiet twist. "}${variant && t.variants ? `Its heart: ${esc(t.variants[variant])}. ` : ""}The next twist can come in a week of game time.</p>${lines.length ? `<p>It changes:</p><ul>${lines.join("")}</ul>` : ""}${shown.length ? `<p>On the table:</p><ul>${shown.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}<p class="vta-note">The twist's own words are in the Storyteller's third volume.</p>`);
   Hooks.callAll("wodxTwist", {n: t.n, variant, chains: TW.chainsOf(n), changes: r.changes});
   return r;
 }
@@ -586,6 +590,7 @@ export class PodApp extends ApplicationV2 {
       untwist: async function(e, el) { await unrevealTwist(el.dataset.n); this.render(); },
       ...Fronts.ACTIONS,
       ...Encounters.ACTIONS,
+      ...Reveals.ACTIONS,
       sagaClocks: async function() { for ( const i of this.element.querySelectorAll("[data-clock]") ) await setSagaClock(i.dataset.clock, i.value); this.render(); },
       thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
@@ -634,6 +639,7 @@ export class PodApp extends ApplicationV2 {
       if ( x.books[P.saga.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
       if ( x.books[P.saga.FIRST_BOOK] === "running" || x.fronts ) parts.push(Fronts.section(s));
       if ( x.books[P.saga.FIRST_BOOK] === "running" || x.encounters ) parts.push(Encounters.section(s));
+      if ( x.books[P.saga.FIRST_BOOK] === "running" || x.reveals ) parts.push(Reveals.section(s));
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
@@ -680,6 +686,11 @@ export function registerPodHooks() {
   // B6641: an encounter is offered when the company arrives on one of its maps, and its card's buttons work
   Hooks.on("canvasReady", () => { if ( isActiveGM() && !isQuiet() ) Encounters.encounterTick().catch(e => console.error(`${MODULE_ID} | encounters`, e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => Encounters.onRenderCard(message, el));
+  // B6653-B6656: reveal sounds on the map, favours from judgements, and the three murders
+  Hooks.on("renderChatMessageHTML", (message, el) => Reveals.onRenderCard(message, el));
+  Hooks.on("wodxSensesGather", p => Reveals.onSenses(p));
+  Hooks.on("wodxFront", p => { Reveals.onFront(p).catch(e => console.error(`${MODULE_ID} | favour`, e)); });
+  Hooks.on("createActiveEffect", e => { Reveals.onDeath(e).catch(err => console.error(`${MODULE_ID} | murder`, err)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el;
     const a = root?.querySelector?.("[data-wct-pod-act]");
@@ -691,4 +702,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor, golcondaReadiness: readiness, atThreshold,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), reveals: Reveals.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};

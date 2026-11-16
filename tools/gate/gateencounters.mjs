@@ -86,8 +86,8 @@ export async function run() {
       const n0 = cards().length;
       await click(offer, `[data-wct-enc="play"]`);
       played = cards().slice(n0).find(m => m.flags?.[C]?.encounter?.played);
-      const radek = game.actors.find(a => a.name === "Radek" && !actors0.has(a.id)) ?? game.actors.getName("Radek");
-      const tok = trail.tokens.find(t => t.actorId === radek?.id);
+      const tok = trail.tokens.find(t => t.actor?.name === "Radek" && t.flags?.[C]?.encounter === 5);
+      const radek = tok ? game.actors.get(tok.actorId) : null;
       const routine = radek?.flags?.["wodx-npc"]?.routine;
       const tw1 = saga().twists.rules.whyNot(5, saga().twists.state(), {played: [], met: en().met()});
       let again = ""; try { await en().play(5); } catch (e) { again = e.message; }

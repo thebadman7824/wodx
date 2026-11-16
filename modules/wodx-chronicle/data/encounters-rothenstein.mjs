@@ -119,7 +119,7 @@ export const ENCOUNTERS = [
     ties: {clues: [["price", 2]]},
     offmap: {talk: "The great boar of the high woods killed a shepherd, and nobody hunts there now."}},
   {n: 24, label: "The margrave's auditor", kind: "social", scenes: ["The Inn", "Kranzfels"], months: [10, 11, 12, 1, 2, 3], from: "c4", best: ["c4", "c5", "c6", "c7"],
-    people: [{name: "Ctibor", preset: "clerk", home: "The Inn"}],
+    people: [{name: "Ctibor", preset: "clerk", home: "The Inn"}, {name: "Ctibor's clerk", preset: "clerk", home: "The Inn"}],
     ties: {clues: [["ledger", 0]]},
     offmap: {talk: "The margrave's auditor has finished the count, and the report has gone to Olomouc. Graff has not slept since.", push: ["council"]}}
 ];
