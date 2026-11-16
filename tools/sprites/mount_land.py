@@ -576,3 +576,15 @@ def motorbike(p, ph=0):
 def motorbikes():
     out = _motorbikes0(); base = next(l for l in out if l[0] == 2040 and l[1] == 'street')
     return out + [(2023, 'hoverbike', 'Hover bike', dict(base[3], adds=True, fans=True), 'bright')]
+
+
+# ---- B6623: hover bikes on their own (from 2023): on the ground a bike, its fans folded along the wheels
+# (Cyberpunk 2020 Concrete Jungle pdf p. 40); placeholders drawn on the motorcycle drawer with the fans out ----
+def hoverbikes():
+    out = _motorbikes0()
+    base = lambda s: dict(next(l for l in out if l[0] == 2040 and l[1] == s)[3], fans=True)
+    return [
+        (2023, 'street', 'Hover bike', base('street'), 'bright'),
+        (2023, 'shell', 'Enclosed hover bike', base('shell'), 'future'),
+        (2023, 'courier', 'Hover scooter', base('courier'), 'police'),
+    ]

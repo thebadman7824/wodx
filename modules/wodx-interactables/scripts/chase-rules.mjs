@@ -26,6 +26,7 @@
  * bicycles from 1885, motor cars from 1900, motorcycles and motorboats from 1910, faster ones on the Future Darkness branch.
  */
 import {TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+import {lowFlight} from "./flight-rules.mjs";
 export {TURN_SECONDS};
 
 export const FLAT_OUT = 3;
@@ -94,8 +95,38 @@ export const WAYS = {
   train:      {label: "By train", pool: ["dexterity", "drive"], rails: true, motor: true, mounted: true, mount: "train", from: 1825,
     chart: [[1825, 15, 30, 1], [1850, 30, 50, 1], [1900, 45, 75, 1], [1935, 60, 100, 1], [1960, 70, 100, 1], [1990, 100, 180, 1], [2040, 150, 300, 1]]},
   tram:       {label: "By tram", pool: ["dexterity", "drive"], rails: true, streets: true, motor: true, mounted: true, mount: "tram", from: 1860,
-    chart: [[1860, 5, 8, 1], [1895, 10, 20, 1], [1930, 15, 30, 1], [1960, 20, 40, 1], [2040, 25, 45, 1]]}
+    chart: [[1860, 5, 8, 1], [1895, 10, 20, 1], [1930, 15, 30, 1], [1960, 20, 40, 1], [2040, 25, 45, 1]]},
+  // B6620, B6621 (desk 2026-11-16): flying cars on the World of Future Darkness branch (from 2023, past the main
+  // timeline's last year). Their figures are Storyteller figures, as every other row here: each kind sits on the Mage
+  // 20th chart row (pp. 460-462) of the aircraft that does its job, and the Cyberpunk 2020 books only say what the
+  // kind is and does (who flies it, how many it carries, that a hover bike rides on the ground and flies low). From
+  // 2040 they go a quarter faster and handle one better (the desk's pick, house reading):
+  //   aerodyne   a private flying car: the News Copter's row, 140 / 220, Maneuver 6;
+  //   aerocab    a hired air taxi, a pilot and four fares: the Large Helicopter's row, 150 / 250, Maneuver 6;
+  //   assaultav  an armoured police, corporate or army AV, a crew of three and ten aboard: the Military Utility
+  //              Helicopter's row, 180 / 280, Maneuver 7;
+  //   hoverbike  on the ground the ATV's row, 30 / 70, Maneuver 5 (it rides low and slow on its skirts); in the air
+  //              the aerodyne's speed, nimbler by one (Maneuver 7). hover: the way it goes while its fans hold it up.
+  aerodyne:   {label: "By aerodyne", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "aerodyne", from: 2023,
+    chart: [[2023, 140, 220, 6], [2040, 175, 275, 7]]},
+  aerocab:    {label: "By aerocab", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "aerocab", from: 2023,
+    chart: [[2023, 150, 250, 6], [2040, 190, 310, 7]]},
+  assaultav:  {label: "By armoured AV", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "assaultav", from: 2023, radar: true,
+    chart: [[2023, 180, 280, 7], [2040, 225, 350, 8]]},
+  hoverbike:  {label: "By hover bike", pool: ["dexterity", "drive"], wheels: true, light: true, motor: true, mounted: true, mount: "hoverbike", from: 2023, thrown: true,
+    chart: [[2023, 30, 70, 5], [2040, 40, 90, 6]],
+    hover: {label: "By hover bike, in the air", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "hoverbike", thrown: true, like: "aerodyne",
+      chart: [[2023, 140, 220, 7], [2040, 175, 275, 8]]}}
 };
+
+/**
+ * B6622: the way a racer goes at its height. alt: feet above the ground under it (undefined: not known, as before
+ * B6622). A hover bike off the ground is an aerodyne; everything else is what it is.
+ */
+export function wayAt(way, alt) {
+  const W = WAYS[way] ?? WAYS.foot;
+  return W.hover && Number(alt) > 0 ? W.hover : W;
+}
 
 /**
  * B4791: a vehicle's body (Mage 20th pp. 459-463). durability: health levels of damage it takes to get through the body
@@ -124,7 +155,15 @@ export const BODIES = {
   sled:       {rows: [[0, 1, 3]]},
   snowmobile: {rows: [[1910, 2, 4], [1935, 3, 5], [1960, 2, 3], [1990, 3, 4]], mass: 1},
   train:      {rows: [[1825, 6, 10], [1900, 10, 20], [1960, 12, 25]], mass: 8, guard: 3, shelter: true},
-  tram:       {rows: [[1860, 3, 6], [1895, 5, 10], [1960, 6, 12]], mass: 5, guard: 2, shelter: true}
+  tram:       {rows: [[1860, 3, 6], [1895, 5, 10], [1960, 6, 12]], mass: 5, guard: 2, shelter: true},
+  // B6621 (desk 2026-11-16): the same Mage 20th rows as their charts (p. 462): the News Copter 4 / 6, the Large
+  // Helicopter 5 / 6, the Military Utility Helicopter 8 / 10 (a crew of three, mass as a lorry, aircraft cover those
+  // inside fully). A hover bike is a motorcycle's frame, the Light Motorcycle's 2 / 3, and like any cycle (p. 460) its
+  // body does not cover the rider.
+  aerodyne:   {rows: [[2023, 4, 6]], mass: 1, shelter: true, full: true},
+  aerocab:    {rows: [[2023, 5, 6]], mass: 1, shelter: true, full: true},
+  assaultav:  {rows: [[2023, 8, 10]], mass: 3, guard: 2, shelter: true, full: true},
+  hoverbike:  {rows: [[2023, 2, 3]]}
 };
 /** A way's body in a year: {durability, structure, mass, guard, shelter, full}, or null (on foot, a beast). */
 export function bodyOf(way, year) {
@@ -147,8 +186,8 @@ export const GROUNDS = {
   streets: {label: "Town streets", diff: 0, cap: {hooves: 30, wheels: 40}, shuts: ["boat", "motorboat"], cover: true},
   crowd:   {label: "A crowd or a market", diff: 1, wheelDiff: 2, cap: {hooves: 10, wheels: 10}, shuts: ["boat", "motorboat"], cover: true},
   rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15, wheels: 20}, shuts: ["cart", "carriage", "car", "truck", "boat", "motorboat"], cover: true},
-  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel"], cover: true},
-  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian", "camel"], cover: false},
+  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel", "aerodyne", "aerocab", "assaultav", "hoverbike"], cover: true},
+  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian", "camel", "hoverbike"], cover: false},
   // B6071, B6072: deep snow or ice, where runners and tracks go best and wheels and hooves labour; a railway line
   snow:    {label: "Deep snow or ice", diff: 1, wheelDiff: 2, cap: {hooves: 20, light: 8, wheels: 15}, shuts: ["boat", "motorboat", "bicycle"], cover: false},
   rails:   {label: "A railway line", diff: 0, cap: {hooves: 30, wheels: 20}, shuts: ["boat", "motorboat"], cover: false}
@@ -172,8 +211,9 @@ export function waysIn(year) {
   return Object.entries(WAYS).filter(([id]) => wayOpen(id, year)).map(([id, W]) => ({id, label: W.label}));
 }
 /** A motor vehicle's chart row in a year: {safe, top (mph), maneuver}, or null for a way without one. */
-export function chartOf(way, year) {
-  const c = WAYS[way]?.chart;
+export function chartOf(way, year, alt) {
+  // B6622: a hover bike in the air goes by its aerodyne figures
+  const c = (WAYS[way] ? wayAt(way, alt) : null)?.chart;
   if ( !c ) return null;
   const y = Number(year) || 2000;
   let row = c[0];
@@ -201,8 +241,8 @@ export function wayFromMount(kind, year) {
  * Returns {yards, capped} (capped: the ground held it down).
  */
 export function speedOf(r, ground, year) {
-  const W = WAYS[r.way] ?? WAYS.foot, G = GROUNDS[groundKind(ground)];
-  const ch = chartOf(r.way, year);
+  const W = wayAt(r.way, r.alt), G = GROUNDS[groundKind(ground)];
+  const ch = chartOf(r.way, year, r.alt);
   let yards;
   if ( ch ) yards = Math.round(Math.min(ch.top, ch.safe + (r.flatOut ? OVER_SAFE : 0)) * YD_PER_MPH);
   else {
@@ -219,7 +259,12 @@ export function speedOf(r, ground, year) {
 }
 
 /** Whether a way can go on that ground. */
-export const canGo = (way, ground) => ONLY_ON[way] ? ONLY_ON[way].includes(groundKind(ground)) : !GROUNDS[groundKind(ground)].shuts.includes(way);
+export const canGo = (way, ground, alt) => {
+  // B6622: a hover bike in the air goes where an aerodyne goes
+  const W = WAYS[way];
+  if ( W?.hover && Number(alt) > 0 ) way = W.hover.like;
+  return ONLY_ON[way] ? ONLY_ON[way].includes(groundKind(ground)) : !GROUNDS[groundKind(ground)].shuts.includes(way);
+};
 
 /**
  * 0.35.0: a mount or vehicle in a fight, outside any chase (for WoDX Combat's movement). kind: the Interactables mount
@@ -227,16 +272,17 @@ export const canGo = (way, ground) => ONLY_ON[way] ? ONLY_ON[way].includes(groun
  * ground's caps; 0 where it cannot go at all. saddle: sat astride (a fall is a throw); skill: the Ability that
  * keeps control. Null for a kind with no way to run.
  */
-export function rideInFight(kind, year, ground = "streets") {
+export function rideInFight(kind, year, ground = "streets", alt) {
   const way = Object.keys(WAYS).find(k => WAYS[k].mount && WAYS[k].mount === kind);
   if ( !way ) return null;
   // a boat is always on the water; a sled on snow and a train on its line (B6071, B6072): the token stands where it can go
-  const g0 = groundKind(ground), W = WAYS[way];
+  // B6622: a hover bike in the air is flown as an aerodyne (Pilot, its air figures); alt: feet above the ground
+  const g0 = groundKind(ground), W = wayAt(way, alt);
   const g = W.water ? "water" : ONLY_ON[way] && !ONLY_ON[way].includes(g0) ? ONLY_ON[way][0] : g0;
-  const sp = canGo(way, g) ? speedOf({way}, g, year) : {yards: 0, capped: true};
-  const ch = chartOf(way, year), body = bodyOf(way, year);
+  const sp = canGo(way, g, alt) ? speedOf({way, alt}, g, year) : {yards: 0, capped: true};
+  const ch = chartOf(way, year, alt), body = bodyOf(way, year);
   return {way, ground: g, yards: sp.yards, capped: sp.capped, saddle: !!W.thrown, hooves: !!W.hooves, motor: !!W.motor, water: !!W.water, air: !!W.air,
-    skill: W.pool[1], maneuver: ch ? ch.maneuver : null, body};
+    skill: W.pool[1], maneuver: ch ? ch.maneuver : null, body, alt: Number.isFinite(Number(alt)) ? Number(alt) : null};
 }
 
 /** Free successes for the faster of two racers: one per 10 yards a turn, three at most. Returns {to: "a"|"b"|null, n}. */
@@ -257,7 +303,7 @@ export function headStart(yards, way = "foot") {
  * motor vehicle's Maneuver; null for none). night: a dark night; year: for the lamps and the chart.
  */
 export function rollFor(r, ground, {night = false, year = 0} = {}) {
-  const W = WAYS[r.way] ?? WAYS.foot, G = GROUNDS[groundKind(ground)];
+  const W = wayAt(r.way, r.alt), G = GROUNDS[groundKind(ground)];
   const parts = [];
   let diff = 6;
   // B4790: aircraft are above the ground: it adds nothing to their rolls
@@ -265,10 +311,15 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
   const own = ONLY_ON[r.way]?.includes(groundKind(ground));
   const g = W.air || own ? 0 : (W.wheels || W.motor) && G.wheelDiff !== undefined ? G.wheelDiff : G.diff;
   if ( g ) { diff += g; parts.push(`${G.label.toLowerCase()} +${g}`); }
+  // B6626: a flier low among the rooftops takes the ground as a car would, and more flat out
+  if ( W.air ) {
+    const lf = lowFlight(r.way, r.alt, {groundDiff: G.wheelDiff ?? G.diff, groundLabel: G.label, cover: G.cover, flatOut: r.flatOut});
+    diff += lf.diff; parts.push(...lf.parts);
+  }
   if ( r.flatOut ) { diff += FLAT_OUT; parts.push(`flat out +${FLAT_OUT}`); }
   const dark = night && (W.hooves || W.wheels || W.snow) && (Number(year) || 0) < LIT_FROM;
   if ( dark ) { diff += 1; parts.push("unlit at night +1"); }
-  const ch = chartOf(r.way, year);
+  const ch = chartOf(r.way, year, r.alt);
   return {attr: W.pool[0], ability: W.pool[1], diff: Math.min(10, diff), parts, cap: ch ? ch.maneuver : null};
 }
 
@@ -313,7 +364,9 @@ export function joinChase(st, racer) {
 export const leadOver = (st, p) => st.quarry.total - p.total;
 /** The difficulty of a pursuer's Perception roll to keep sight, from the lead as the turn starts: 6, +1 for each success
  *  the quarry leads by (V20 core printed p. 262), +1 more where there is cover about (house rule, B914); 10 at most. */
-export const sightDiff = (st, p) => Math.min(10, 6 + Math.max(0, leadOver(st, p)) + (GROUNDS[groundKind(st.ground)].cover ? 1 : 0));
+// B6626: a quarry flying above the rooftops has nothing to hide behind: the ground's cover counts only below them
+export const sightDiff = (st, p) => Math.min(10, 6 + Math.max(0, leadOver(st, p)) + (GROUNDS[groundKind(st.ground)].cover && !aloftOver(st.quarry) ? 1 : 0));
+const aloftOver = r => !!wayAt(r?.way, r?.alt).air && Number.isFinite(Number(r?.alt)) && Number(r.alt) >= 50;
 const live = st => st.pursuers.filter(p => !p.out);
 
 /**
@@ -327,7 +380,7 @@ export function playTurn(st0, rolls = {}) {
   if ( st.status !== "running" ) return {state: st, events: ev};
   st.turn += 1;
   const qSpeed = speedOf(q, st.ground, year).yards;
-  const qGo = canGo(q.way, st.ground);
+  const qGo = canGo(q.way, st.ground, q.alt);
   // The quarry's roll
   const qr = rolls[q.id] ?? {successes: 0, botch: false};
   let qBotch = false;
@@ -340,7 +393,7 @@ export function playTurn(st0, rolls = {}) {
   // Each pursuer
   for ( const p of live(st) ) {
     const pr = rolls[p.id] ?? {successes: 0, botch: false};
-    if ( !canGo(p.way, st.ground) ) {
+    if ( !canGo(p.way, st.ground, p.alt) ) {
       p.out = "stuck";
       ev.push({kind: "stuck", who: p.id, text: `${p.name} cannot follow ${WAYS[p.way].label.toLowerCase()} onto ${GROUNDS[st.ground].label.toLowerCase()}.`});
       continue;
@@ -399,7 +452,7 @@ export function playTurn(st0, rolls = {}) {
 
 /** A botch: on foot a stumble or a dead end; thrown from a mount or a bicycle; a crash in a vehicle. */
 function botchEvent(r, yards, year, quarry = false) {
-  const W = WAYS[r.way] ?? WAYS.foot, d = crashDice(yards), type = crashType(yards);
+  const W = wayAt(r.way, r.alt), d = crashDice(yards), type = crashType(yards);
   const dice = `${d} ${d === 1 ? "die" : "dice"} of ${type} damage, rolled as a fall`;
   if ( W.motor && !W.thrown ) return {kind: "crash", who: r.id, dice: d, type, text: `${r.name} crashes ${W.label.toLowerCase()}: ${dice}, and the chase ends for them.`};
   if ( W.thrown || W.hooves ) return {kind: "thrown", who: r.id, dice: d, type, text: `${r.name} is thrown: ${dice}, and the chase ends for them.`};

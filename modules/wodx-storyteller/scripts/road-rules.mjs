@@ -47,8 +47,29 @@ export const MODES = {
     speed: (r, y) => ({path: 12, road: y < 1930 ? 25 : y < 1960 ? 40 : 55, highway: y < 1930 ? 30 : y < 1960 ? 50 : 70, motorway: 100,
       street: y < 1950 ? 15 : 20, rail: null, water: null})[r] ?? null},
   transit: {label: "By transit pod", from: 2040, to: 9999, future: true,
-    speed: r => ({path: null, road: 70, highway: 110, motorway: 180, street: 30, rail: 300, water: null})[r] ?? null}
+    speed: r => ({path: null, road: 70, highway: 110, motorway: 180, street: 30, rail: 300, water: null})[r] ?? null},
+  // B6628 (desk 2026-11-16): by aerodyne on the World of Future Darkness branch. It flies over every road, river and
+  // hill alike, door to door. Its speeds are its Storyteller chart's (WoDX Interactables chase-rules: the News Copter's
+  // safe 140 and top 220 mph, a quarter more from 2040), less a tenth for lifting off, landing and the air lanes:
+  // cruise "safe" at its safe speed, "flat" flat out at its top speed. air: weather, not the road, slows it; asked:
+  // taken only when asked for or when the traveller has one of their own (ctx.owns), as an aerodyne is a rich
+  // person's car.
+  aerodyne: {label: "By aerodyne", from: 2023, to: 9999, future: true, air: true, asked: true, speed: (r, y, cruise = "safe") => airKmh(y, cruise)}
 };
+
+/** B6628: an aerodyne's km an hour over a whole flight: its chart's safe or top mph, in km, less a tenth. */
+const MPH_KM = 1.609;
+export function airKmh(year, cruise = "safe") {
+  const [safe, top] = (Number(year) || 0) >= 2040 ? [175, 275] : [140, 220];
+  return Math.round((cruise === "flat" ? top : safe) * MPH_KM * 0.9);
+}
+/** B6628: how fast a flight goes, for the travel window. */
+export const CRUISES = {
+  safe: {label: "At a safe speed", hint: "Its safe speed, in the air lanes with the rest.", enc: 1},
+  flat: {label: "Flat out", hint: "Its top speed, about half again as fast; seen and heard from far off, so trouble on the way is half again as likely.", enc: 1.5}
+};
+/** Does a way count for the traveller: open to all, or asked-only and asked for or owned (B6628). */
+export const counts = (id, {want = null, owns = []} = {}) => !MODES[id]?.asked || id === want || (owns ?? []).includes(id);
 
 export const roadKind = k => (ROADS[k] ? k : "road");
 
@@ -134,22 +155,23 @@ export function roadIn(kind, year, region = null) {
 }
 
 /** The ways open in a year on a road: [{id, label, speed}], fastest first. region: where the trip starts. */
-export function modesFor(kind, year, {future = false, region = null} = {}) {
+export function modesFor(kind, year, {future = false, region = null, cruise = "safe"} = {}) {
   const y = Number(year) || 0;
   const r = roadIn(kind, y, region);
   // A main road counts as a post road from the region's own year (the speed rules read 1750)
   const sy = r === "highway" ? (y >= yearOf("highway", region) ? Math.max(y, 1750) : Math.min(y, 1749)) : y;
   return Object.entries(MODES)
     .filter(([id, m]) => y >= modeFrom(id, region) && y <= m.to && (!m.future || future))
-    .map(([id, m]) => ({id, label: m.label, speed: m.speed(r, sy)}))
+    .map(([id, m]) => ({id, label: m.label, speed: m.speed(r, sy, cruise)}))
     .filter(m => m.speed)
     .sort((a, b) => b.speed - a.speed || a.id.localeCompare(b.id));
 }
 
-/** The way a trip goes: the one asked for when the year and road allow it, else the fastest open. */
+/** The way a trip goes: the one asked for when the year and road allow it, else the fastest open (an aerodyne only
+ *  when the traveller owns one, B6628). opts: {future, region, owns, cruise}. */
 export function pickMode(kind, year, want = null, opts = {}) {
   const list = modesFor(kind, year, opts);
-  return list.find(m => m.id === want) ?? list[0] ?? null;
+  return list.find(m => m.id === want) ?? list.find(m => counts(m.id, {owns: opts.owns})) ?? null;
 }
 
 /** Is this road paved in this year? Country roads and main roads by the region's years; streets from 1800. */
@@ -167,6 +189,13 @@ export function weatherFactor(weather, kind, mode, year, region = null) {
   const w = weather, paved = isPaved(kind, year, region), why = [];
   let f = 1;
   const add = (x, word) => { if ( x > 1 ) { f *= x; why.push(word); } };
+  // B6628: in the air only the sky slows it: wind, fog and falling snow
+  if ( MODES[mode]?.air ) {
+    if ( w.wind === "gale" ) add(1.5, "a gale aloft");
+    if ( w.fog === "thick" ) add(1.3, "thick fog");
+    if ( w.precip === "snow" || (w.intensity === "heavy" && ["rain", "sleet", "hail"].includes(w.precip)) ) add(1.2, "a storm");
+    return {factor: Math.min(2.5, Math.round(f * 100) / 100), why};
+  }
   const wheels = ["coach", "car"].includes(mode);
   if ( kind === "water" ) {
     if ( w.wind === "gale" ) add(1.5, "a gale on the water");
@@ -204,18 +233,18 @@ export function nightFactor(kind, mode, year, night, region = null) {
  *   km, road: the place's; year; want: the way asked for; weather; night: the trip starts at night; future: the branch;
  *   region: the world region the trip starts in (Moravia's years when left out).
  */
-export function tripByDistance({km, road, year, want = null, weather = null, night = false, future = false, region = null} = {}) {
+export function tripByDistance({km, road, year, want = null, weather = null, night = false, future = false, region = null, owns = [], cruise = "safe"} = {}) {
   const d = Number(km);
   if ( !(d > 0) ) return null;
   const y = Number(year) || 0;
   const r = roadIn(road, y, region);
-  const m = pickMode(r, y, want, {future, region});
+  const m = pickMode(r, y, want, {future, region, owns, cruise});
   if ( !m ) return null;
   const wf = weatherFactor(weather, r, m.id, y, region);
   const nf = nightFactor(r, m.id, y, night, region);
   const why = [...wf.why, ...(nf > 1 ? ["the dark"] : [])];
   const minutes = Math.max(1, Math.min(24 * 60 * 7, Math.round((d / m.speed) * 60 * wf.factor * nf)));
-  return {minutes, mode: m.id, modeLabel: m.label, road: r, why};
+  return {minutes, mode: m.id, modeLabel: m.label, road: r, why, flight: MODES[m.id]?.air ? {cruise, via: []} : null};
 }
 
 /** The encounter chance for each hour on this road: the base scaled by the road, and by a quarter more in the dark. */

@@ -41,6 +41,9 @@ KINDS = {
     'snowmobile': (MS.snowmobiles, _motor(MS.snow_side, MS.snow_end, 256, 112), 2, 9, 'Snow machines'),
     'train': (MR.trains, lambda look, f: MR.train(look[3], f * math.pi / 4), 2, 12, 'Trains'),
     'tram': (MR.trams, lambda look, f: MR.tram(look[3], f), 2, 12, 'Trams'),
+    # B6623: flying cars on the Future Darkness branch
+    'aerodyne': (MA.aerodynes, _of(MA.aerodyne), 2, 10, 'Aerodynes'), 'aerocab': (MA.aerocabs, _of(MA.aerodyne), 2, 10, 'Aerocabs'), 'assaultav': (MA.assaultavs, _of(MA.aerodyne), 2, 10, 'Armoured AVs'),
+    'hoverbike': (ML.hoverbikes, _of(ML.motorbike), 2, 9, 'Hover bikes'),
 }
 
 # ---- colour schemes: paint or coat (a), trim or mane (b), cloth or stripe (c) ----
@@ -276,7 +279,7 @@ SAMPLES = [
     ('03-carts', ['cart']), ('04-carriages', ['carriage']), ('05-bicycles-motorcycles', ['bicycle', 'motorbike']), ('06-motor-cars', ['car']), ('07-lorries', ['truck']),
     ('08-armoured-cars', ['armoured']), ('09-tanks', ['tank']), ('10-boats', ['boat', 'motorboat']), ('11-balloons-airships', ['balloon']), ('12-aeroplanes', ['plane']),
     ('13-helicopters', ['helicopter']), ('14-jets', ['jet']),
-    ('15-sleds-sleighs', ['sled']), ('16-snow-machines', ['snowmobile']), ('17-trains', ['train']), ('18-trams', ['tram']),
+    ('15-sleds-sleighs', ['sled']), ('16-snow-machines', ['snowmobile']), ('17-trains', ['train']), ('18-trams', ['tram']), ('19-flying-cars', ['aerodyne', 'aerocab', 'assaultav', 'hoverbike']),
 ]
 
 if __name__ == '__main__':

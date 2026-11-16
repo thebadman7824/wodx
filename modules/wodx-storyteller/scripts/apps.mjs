@@ -149,7 +149,10 @@ export async function openOnYourOwn(actorId = null) {
   for ( const k of Object.keys(Road.ROADS) ) for ( const m of Road.modesFor(k, at.year, {future: at.future}) ) ways.set(m.id, m.label);
   // Paid rides the older list does not name (they run only between places set on the country map).
   const onMap = places.some(p => W.normPlace(p.travel).at);
-  if ( onMap ) for ( const m of Country.hiredModes(at.year, {future: at.future}) ) if ( ["hire:coach", "hire:bus", "hire:air"].includes(m.id) ) ways.set(m.id, m.label);
+  if ( onMap ) for ( const m of Country.hiredModes(at.year, {future: at.future}) ) if ( ["hire:coach", "hire:bus", "hire:air", "hire:aerocab"].includes(m.id) ) ways.set(m.id, m.label);
+  // B6628: a flight (an aerodyne of one's own, or an aerocab) can go flat out and set down anywhere on the way
+  const flies = onMap && Country.FLIES.some(id => ways.has(id));
+  const mapped = places.filter(p => W.normPlace(p.travel).at);
   const pick = (name, list, def) => `<select name="${name}" data-fixed>${Object.entries(list).map(([k, v]) => `<option value="${k}"${k === def ? " selected" : ""}>${esc(v.label)}: ${esc(v.hint)}</option>`).join("")}</select>`;
   const content = `<form class="wstory-own">
     <div class="wodx-field"><label>Character</label><span>${list.length > 5 ? searchBox("select[name=actor]", "Search…", "Search characters") : ""}<select name="actor" ${list.length > 5 ? "" : "data-fixed"}>${opt(Object.fromEntries(list.map(a => [a.id, a.name])), actor.id)}</select></span></div>
@@ -159,7 +162,10 @@ export async function openOnYourOwn(actorId = null) {
       <div class="wodx-field"><label>How</label><select name="mode" data-fixed><option value="">The fastest way open</option>${[...ways].map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("")}</select></div>
       ${onMap ? `<div class="wodx-field"><label>Pace</label>${pick("pace", Country.PACES, "steady")}</div>
       <div class="wodx-field"><label>Nights</label>${pick("lodging", Country.LODGINGS, "inn")}</div>` : ""}
-      <p class="wodx-quiet">A place marked "asks first" waits for the Storyteller. Each hour on the road may turn up an encounter. A way the road cannot take (a train with no line) goes by the fastest way open instead.${onMap ? " Between places set on the country map, a long trip stops for the night, or for the day for those the sun burns; a paid ride leaves from its stop in the nearest town that has one, and the fare and any inn come out of the purse." : ""}</p>
+      ${flies ? `<div class="wodx-field"><label>Flying</label>${pick("cruise", Road.CRUISES, "safe")}</div>
+      <div class="wodx-field"><label>Set down on the way at</label><span>${searchBox("select[name=via1]", "Search places…", "Search places")}<select name="via1"><option value="">Nowhere: straight there</option>${mapped.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")}</select></span></div>
+      <div class="wodx-field"><label>Then at</label><span>${searchBox("select[name=via2]", "Search places…", "Search places")}<select name="via2"><option value="">Nowhere more</option>${mapped.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")}</select></span></div>` : ""}
+      <p class="wodx-quiet">A place marked "asks first" waits for the Storyteller. Each hour on the road may turn up an encounter. A way the road cannot take (a train with no line) goes by the fastest way open instead.${flies ? " An aerodyne goes by itself only when you have one of your own; flying, by aerodyne or aerocab, goes door to door and may set down at up to two places on the way." : ""}${onMap ? " Between places set on the country map, a long trip stops for the night, or for the day for those the sun burns; a paid ride leaves from its stop in the nearest town that has one, and the fare and any inn come out of the purse." : ""}</p>
     </fieldset>
     <fieldset><legend>Act on your own</legend>
       <div class="wodx-field"><label>What</label><select name="kind" data-fixed><option value="">Nothing now</option>${opt(Object.fromEntries(Object.entries(W.SOLO_KINDS).map(([k, v]) => [k, v.label])), "")}</select></div>
@@ -173,7 +179,8 @@ export async function openOnYourOwn(actorId = null) {
   if ( !data || data === "cancel" ) return null;
   const who = game.actors.get(data.actor) ?? actor;
   const out = {};
-  if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest, mode: data.mode || null, pace: data.pace || null, lodging: data.lodging || null});
+  if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest, mode: data.mode || null, pace: data.pace || null, lodging: data.lodging || null,
+    cruise: data.cruise || null, via: [data.via1, data.via2].filter(Boolean)});
   if ( data.kind ) out.solo = await request("solo", {actorId: who.id, kind: data.kind, hours: Number(data.hours) || null, note: data.note ?? "", changesWorld: !!data.world});
   return out;
 }

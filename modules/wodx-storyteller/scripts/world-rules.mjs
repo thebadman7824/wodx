@@ -181,7 +181,7 @@ export function travelMinutes(from, to, fallback = 30) {
 /**
  * A trip's plan (0.22.0): hand-typed minutes on the route, then on the place, win; else, when both places sit on the
  * country map (0.46.0), the way across it (country-rules.mjs); else the place's distance by the way the year allows
- * (road-rules.mjs); else the default. ctx: {fallback, year, want, weather, night, future, wage}.
+ * (road-rules.mjs); else the default. ctx: {fallback, year, want, weather, night, future, wage, owns, cruise, via}.
  * Returns {minutes, by: "route"|"place"|"map"|"distance"|"default", mode, modeLabel, road, why} and, by the map, legs,
  * km, hired, fare and options.
  */
@@ -196,7 +196,7 @@ export function tripPlan(from, to, ctx = {}) {
     if ( t ) return t;
   }
   if ( b.km ) {
-    const t = Road.tripByDistance({km: b.km, road: b.road ?? "road", year: ctx.year, want: ctx.want, weather: ctx.weather, night: ctx.night, future: ctx.future, region: ctx.region ?? null});
+    const t = Road.tripByDistance({km: b.km, road: b.road ?? "road", year: ctx.year, want: ctx.want, weather: ctx.weather, night: ctx.night, future: ctx.future, region: ctx.region ?? null, owns: ctx.owns ?? [], cruise: ctx.cruise ?? "safe"});
     if ( t ) return {...t, by: "distance"};
   }
   return {...none, minutes: Math.max(1, Math.round(Number(ctx.fallback) || 30)), by: "default"};

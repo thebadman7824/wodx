@@ -1713,6 +1713,16 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 | 2026-11-15 | When does a Charm-cantrip Treasure fade? | At its Dominion's next hour (noon, midnight, sunrise or sunset) if unused; a Dominion Writ at the next noon, a success less for another Dominion's cantrip (B6561) | toJuncture and IMBUE in fae-treasures.js |
 | 2026-11-15 | Excalibur's Scabbard: how much it turns | Dark Ages: lethal and aggravated harm from blades and points put back, bashing held at Injured; Changeling 20th: all lethal and aggravated but fire, cold and drowning put back, held at Injured (B6562) | scabbardKeeps in fae-treasures.js |
 
+## Approved by Ben, 16 November 2026, 01:42 UTC (Flying Cars Desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | Which flying vehicles there are (B6620). | Aerodyne, aerocab (its own hired kind), armoured AV and hover bike, from 2023 on the Future Darkness branch. **Approved by Ben at the desk.** | MOUNTS, WAYS and BODIES in wodx-interactables chase-rules and interact-rules. |
+| 2026-11-16 | Their speed, handling and toughness (B6621). | Storyteller figures on the Mage 20th chart rows of the vehicles that do their jobs (News Copter, Large Helicopter, Military Utility Helicopter, ATV and Light Motorcycle), not the Cyberpunk 2020 numbers; a quarter faster and one Maneuver better from 2040. **Approved by Ben at the desk, with that note.** | The chart and body rows in chase-rules.mjs. |
+| 2026-11-16 | Height, ceilings, bands, crashes, nobody at the controls, stepping off, flying low, height in a fight, showing height, placeholder pictures (B6622-B6627). | As built. **Approved by Ben at the desk.** | flight-rules.mjs, flight.mjs and Paperdoll mounts.mjs. |
+| 2026-11-16 | Travelling by aerodyne (B6628). | Both: when asked for, and as the fastest way when the character owns one; flat out or safe; may set down at up to two places on the way; the aerocab as a door-to-door hire. **Approved by Ben at the desk, with that note.** | MODES.aerodyne and CRUISES in road-rules.mjs, HIRED and countryTrip in country-rules.mjs, the travel window in apps.mjs. |
+| 2026-11-16 | What was left out (B6629). | The hover bike lifts no load; the E-Van body, fuel and range left out. **Approved by Ben at the desk.** | climb() in flight-rules.mjs. |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

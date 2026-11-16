@@ -7,11 +7,28 @@
 import * as MR from "./mount-rules.mjs";
 import * as SR from "./sprite-rules.mjs";
 import {seated} from "./sprites.mjs";
+import {liftOf} from "../../wodx-interactables/scripts/flight-rules.mjs";
 const MOD = "wodx-paperdoll", IX = "wodx-interactables", VEHICLE = "wodx-interactables.vehicle";
 const states = new Map(), sheets = new Map(), frames = new Map(), cuts = new Map(), held = new Map(), shown = new Map();
 let started = false, ready = false;
 const on = () => { try { return game.settings.get(MOD, "mountLooks") !== false && game.settings.get(MOD, "sprites") !== false; } catch (e) { return true; } };
 const crisp = tex => { const b = tex?.baseTexture ?? tex?.source; if ( b ) b.scaleMode = globalThis.PIXI?.SCALE_MODES?.NEAREST ?? "nearest"; return tex; };
+/* B6627: what flies is drawn lifted off the map, its shadow left on the ground, and dust blows out as it leaves or
+   reaches the ground. The height is the token's or tile's elevation above the ground under it (WoDX Interactables). */
+let fly = null;
+const puffs = [], lastAlt = new Map();
+const altOf = doc => {
+  try { const a = game.modules.get(IX)?.api?.flight?.altOf; if ( a ) return a(doc); } catch (e) { /* not yet */ }
+  return Math.max(0, Number(doc?.elevation) || 0);
+};
+function flyLayer() {
+  if ( fly && !fly.destroyed && fly.parent ) return fly;
+  fly = new PIXI.Graphics(); fly.name = "wodxFlightShadows"; fly.eventMode = "none";
+  const SL = foundry.canvas?.groups?.PrimaryCanvasGroup?.SORT_LAYERS ?? globalThis.PrimaryCanvasGroup?.SORT_LAYERS ?? {};
+  Object.assign(fly, {elevation: 0, sortLayer: (Number(SL.TILES) || 500) + 2, sort: 0});
+  try { (canvas.primary ?? canvas.interface).addChild(fly); } catch (e) { canvas.interface?.addChild?.(fly); }
+  return fly;
+}
 const yearNow = () => { try { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? y : 0; } catch (e) { return 0; } };
 
 export function registerMountSettings() {
@@ -110,6 +127,8 @@ function tick() {
   if ( !globalThis.canvas?.ready || !ready ) return;
   if ( !on() ) { if ( held.size ) releaseAll(); return; }
   const grid = canvas.grid?.size || 100, k = MR.pixel(grid), now = performance.now(), seen = new Set();
+  const sh = flyLayer(), units = Number(canvas.scene?.grid?.distance) || 5;
+  sh.clear();
   for ( const obj of [...(canvas.tiles?.placeables ?? []), ...(canvas.tokens?.placeables ?? [])] ) {
     const doc = obj.document, m = obj.mesh;
     if ( !m || m.destroyed ) continue;
@@ -118,12 +137,20 @@ function tick() {
     const key = doc.uuid, c = centreOf(obj);
     const st = SR.step(states.get(key) ?? SR.start(c, doc.documentName === "Tile" ? "right" : "down"), c, grid, now, 220);
     states.set(key, st); seen.add(key);
-    let ground;
+    let ground, lift = 0, shadow = false;
     if ( L.own ) {
       // a beast that wears its own figure keeps it; its riders sit by the kind's first look
       ground = {x: m.position.x, y: m.position.y + (SR.FEET - (m.anchor?.y ?? SR.TOKEN.anchorY)) * Math.abs(m.height)};
     } else {
       ground = {x: c.x, y: c.y + c.h / 2 - grid * 0.15};
+      // B6627: aloft, the picture rises and its shadow stays below; leaving or reaching the ground blows dust out
+      const feet = altOf(doc), fl = liftOf(feet, grid, units), was = lastAlt.get(key);
+      lastAlt.set(key, feet);
+      if ( was !== undefined && (was < 1) !== (feet < 1) ) puffs.push({x: ground.x, y: ground.y, t0: now, r: Math.max(c.w, grid) * 0.6});
+      if ( fl.shadow ) {
+        sh.beginFill(0x000000, fl.shadow.alpha); sh.drawEllipse(ground.x, ground.y, Math.max(c.w, grid) * 0.42 * fl.shadow.scale, grid * 0.16 * fl.shadow.scale); sh.endFill();
+        ground = {x: ground.x, y: ground.y - fl.lift}; lift = fl.lift; shadow = true;
+      }
       const col = MR.spins(L.kind) ? Math.floor(now / 90) % (MR.kindOf(L.kind)?.frames ?? 1) : MR.colOf(L.kind, st, grid);
       const tex = frame(L.kind, L.look, L.scheme, st.facing, col) ?? frame(L.kind, L.look, L.scheme, st.facing, 0);
       if ( tex ) {
@@ -131,7 +158,7 @@ function tick() {
         m.anchor.set(0.5, L.look.ground / L.look.h);
         m.width = L.look.w * k; m.height = L.look.h * k;
         m.position.set(ground.x, ground.y);
-        held.set(key, obj); shown.set(key, {kind: L.kind, look: L.look.id, scheme: L.scheme?.id ?? "", facing: st.facing, col, x: ground.x, y: ground.y, width: m.width, height: m.height});
+        held.set(key, obj); shown.set(key, {kind: L.kind, look: L.look.id, scheme: L.scheme?.id ?? "", facing: st.facing, col, x: ground.x, y: ground.y, width: m.width, height: m.height, lift, shadow});
       } else sheet(L.kind, L.look, L.scheme);
     }
     // everyone aboard, in a seat, facing as the mount faces
@@ -155,6 +182,12 @@ function tick() {
     }
   }
   for ( const [key, obj] of held ) if ( !seen.has(key) ) { release(obj); held.delete(key); shown.delete(key); states.delete(key); }
+  // the dust: a ring blown out from under it, gone in a second and a half
+  for ( let i = puffs.length - 1; i >= 0; i-- ) {
+    const p = puffs[i], t = (now - p.t0) / 1500;
+    if ( t >= 1 ) { puffs.splice(i, 1); continue; }
+    sh.lineStyle(Math.max(2, grid * 0.06 * (1 - t)), 0xc8b89a, 0.6 * (1 - t)); sh.drawEllipse(p.x, p.y, p.r * (0.5 + t), p.r * (0.5 + t) * 0.4); sh.lineStyle(0);
+  }
 }
 
 /** The Storyteller picks a mount's shape and colours (its own button on the token or the tile). */
@@ -207,7 +240,7 @@ export function startMounts() {
   // after the map has put every picture in its place, before it is drawn
   const add = () => { canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick, undefined, (globalThis.PIXI?.UPDATE_PRIORITY?.LOW ?? -25) + 1); };
   Hooks.on("canvasReady", () => { states.clear(); held.clear(); shown.clear(); seated.clear(); add(); });
-  Hooks.on("canvasTearDown", () => { held.clear(); shown.clear(); seated.clear(); });
+  Hooks.on("canvasTearDown", () => { held.clear(); shown.clear(); seated.clear(); lastAlt.clear(); puffs.length = 0; fly = null; });
   loadMounts().then(() => { if ( globalThis.canvas?.ready ) add(); });
 }
 
@@ -224,6 +257,6 @@ export function seats(doc, facing = null) {
   return (L.look.seats?.[f] ?? []).map((_, i) => { const s = MR.seatOf(L.look, f, i), p = MR.seatPoint(L.look, s, ground, k); return {x: p.x, y: p.y, hidden: s.cut <= 0, pose: s.pose}; });
 }
 
-export const mountApi = {rules: MR, mountOf, lookOf, seats, pick, setLook, load: loadMounts, ready: () => ready,
+export const mountApi = {rules: MR, mountOf, lookOf, seats, pick, setLook, load: loadMounts, ready: () => ready, puffs: () => puffs.length,
   showing: doc => shown.get((doc?.document ?? doc)?.uuid) ?? null, facing: doc => states.get((doc?.document ?? doc)?.uuid)?.facing ?? null,
   sheetReady: doc => { const L = lookOf(doc?.document ?? doc); return !!(L && sheet(L.kind, L.look, L.scheme)); }};

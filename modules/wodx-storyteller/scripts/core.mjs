@@ -229,8 +229,31 @@ export async function setTravel(scene, data) {
   return scene.update({[`flags.${MOD}.travel`]: W.normPlace(data)});
 }
 
-/** What a trip would be: minutes, arrival, dawn, and whether it waits for the Storyteller. */
-export function planTrip(actor, destId, {mode = null, pace = null, lodging = null, way = null} = {}) {
+/**
+ * B6628: the ways of their own a character has: the kinds of the vehicles (WoDX Interactables vehicle sheets) that a
+ * player who owns the character also owns, or that name the character on their sheet. An aerodyne among them counts
+ * as the fastest way to go.
+ */
+export function ownsOf(actor) {
+  const users = all(game.users).filter(u => !u.isGM && actor?.testUserPermission?.(u, "OWNER"));
+  const out = new Set();
+  for ( const v of all(game.actors) ) {
+    if ( v.type !== "wodx-interactables.vehicle" ) continue;
+    const mine = v.flags?.["wodx-interactables"]?.owner === actor?.id || users.some(u => v.testUserPermission?.(u, "OWNER"));
+    if ( mine && v.system?.kind ) out.add(v.system.kind);
+  }
+  return [...out];
+}
+/** B6628: places a flight sets down at on the way: travel place ids to {at, name}, those on the country map only. */
+function viaOf(ids = []) {
+  const places = travelPlaces();
+  return (Array.isArray(ids) ? ids : [ids]).filter(Boolean).map(id => places.find(p => p.id === id)).filter(Boolean)
+    .map(p => ({at: W.normPlace(p.travel).at, name: p.name})).filter(p => p.at);
+}
+
+/** What a trip would be: minutes, arrival, dawn, and whether it waits for the Storyteller. cruise: "safe" or "flat";
+ *  via: travel place ids a flight sets down at on the way (B6628). */
+export function planTrip(actor, destId, {mode = null, pace = null, lodging = null, way = null, cruise = null, via = []} = {}) {
   // B4781: a Way leads to its scene even when the scene is not set out for the travel window
   const dest = travelPlaces().find(p => p.id === destId) ?? (way ? (s => s ? {id: s.id, uuid: s.uuid, name: sceneName(s), travel: s.flags?.[MOD]?.travel ?? {}, scene: s} : null)(game.scenes.get(destId)) : null);
   if ( !dest ) return null;
@@ -242,7 +265,7 @@ export function planTrip(actor, destId, {mode = null, pace = null, lodging = nul
   const burns = sunBurns(actor);
   const trip = from?.id === dest.id ? {minutes: 0, by: "here", mode: null, modeLabel: null, road: null, why: []}
     : Number.isFinite(way?.minutes) ? {minutes: way.minutes, by: "way", mode: null, modeLabel: null, road: null, why: []}
-    : W.tripPlan(fromPlace, dest, {fallback: setting("travelMinutes") ?? 30, want: mode, ...at, night: at.night || burns, wage});
+    : W.tripPlan(fromPlace, dest, {fallback: setting("travelMinutes") ?? 30, want: mode, ...at, night: at.night || burns, wage, owns: ownsOf(actor), cruise: cruise ?? "safe", via: viaOf(via)});
   // A trip across the country map is laid over the nights and days: rests, day shelter, inns and fares.
   const sched = trip.by === "map" ? Country.schedule(trip, {start, nextDawn: dawnAfter, nextDusk: duskAfter, sunBurns: burns, pace: pace ?? "steady", lodging: lodging ?? "inn", wage}) : null;
   const minutes = sched ? sched.minutes : trip.minutes;
@@ -292,6 +315,8 @@ export function tripWords(plan) {
   if ( s?.nights ) extra.push(`${s.nights} ${s.nights === 1 ? "stop" : "stops"} on the way`);
   if ( s && (s.cost + s.fare) > 0 ) extra.push(`costs ${moneyWords(s.cost + s.fare, plan.year)}`);
   if ( s?.exposed ) extra.push("no shelter by day");
+  if ( t?.flight?.cruise === "flat" ) extra.push("flat out");
+  if ( t?.flight?.via?.length ) extra.push(`setting down at ${t.flight.via.join(", ")}`);
   return `${how}${W.spanLabel(plan.minutes * 60)}${extra.length ? `, ${extra.join(", ")}` : ""}${t?.why?.length ? ` (${t.why.join(", ")})` : ""}`;
 }
 
@@ -375,7 +400,7 @@ async function drawEncounter(dest) {
  * A trip, on the active Storyteller's client. A place that asks first, or a trip into the dawn for a character the sun
  * burns, goes to the approval queue unless approved is set.
  */
-export async function travel({actorId, destId, userId = null, approved = false, mode = null, pace = null, lodging = null, way = null} = {}) {
+export async function travel({actorId, destId, userId = null, approved = false, mode = null, pace = null, lodging = null, way = null, cruise = null, via = []} = {}) {
   if ( !isActiveGM() ) return {ok: false, why: "Only the Storyteller's client moves tokens."};
   const actor = game.actors.get(actorId);
   if ( !actor ) return {ok: false, why: "That character is gone."};
@@ -383,13 +408,13 @@ export async function travel({actorId, destId, userId = null, approved = false, 
   // only a trip by the travel window waits until the scene ends
   const called = convenedMap()[actorId];
   if ( called && !approved && !way ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
-  const plan = planTrip(actor, destId, {mode, pace, lodging, way});
+  const plan = planTrip(actor, destId, {mode, pace, lodging, way, cruise, via});
   if ( !plan ) return {ok: false, why: "That place is not open for travel."};
   const sched = plan.sched, owed = sched ? sched.cost + sched.fare : 0;
   const user = userId ?? ownerOf(actor)?.id ?? null;
   if ( plan.ask && !approved ) {
     await chron()?.propose?.({type: T.travel, key: `travel:${actorId}:${destId}`, title: `${actor.name} wants to go to ${plan.dest.name}`,
-      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode, pace, lodging, way}});
+      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode, pace, lodging, way, cruise, via}});
     await log({kind: "ask", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, text: `Asked to go to ${plan.dest.name}: ${plan.ask}`});
     return {ok: true, waiting: true, why: plan.ask};
   }
@@ -420,7 +445,9 @@ export async function travel({actorId, destId, userId = null, approved = false, 
   if ( setting("encounters") !== false && plan.minutes > 0 ) {
     const base = setting("encounterChance") ?? 10;
     const byRoad = plan.trip?.road ? Road.encounterChance(base, plan.trip.road, plan.year, plan.night, plan.region) : base;
-    const chance = Math.max(0, Math.min(100, byRoad * (sched?.enc ?? 1)));
+    // B6628: a flight flat out is seen and heard from far off
+    const flat = Road.CRUISES[plan.trip?.flight?.cruise]?.enc ?? 1;
+    const chance = Math.max(0, Math.min(100, byRoad * (sched?.enc ?? 1) * flat));
     const hit = W.rollRoad(sched ? sched.travel : plan.minutes, chance, roadRand(`${actorId}:${plan.start}`));
     const spot = hit >= 0 && sched ? Country.spotAt(plan.trip, hit) : null;
     if ( hit >= 0 ) {

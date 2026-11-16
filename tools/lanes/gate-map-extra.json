@@ -105,6 +105,11 @@
     "gatetormentsheet": [
       "wodx-actions",
       "wodx-sheets"
+    ],
+    "gateflight": [
+      "wodx-interactables",
+      "wodx-paperdoll",
+      "wodx-storyteller"
     ]
   },
   "remove": {},

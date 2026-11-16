@@ -23,7 +23,8 @@ test("travel: the ways open by year and road", () => {
   assert.ok(ids("street", 1870).includes("tram"));
   assert.deepEqual(ids("water", 1300), ["boat"]);
   assert.ok(!ids("highway", 2060).includes("transit"), "transit pods only on the Future Darkness branch");
-  assert.equal(ids("highway", 2060, {future: true})[0], "transit");
+  // an aerodyne (B6628) is faster but goes only when asked for or owned: the fastest way for anyone is the pod
+  assert.equal(ids("highway", 2060, {future: true}).filter(id => !Road.MODES[id].asked)[0], "transit");
   assert.ok(!ids("road", 1950).includes("coach"), "carts and coaches end after 1945");
   for ( const y of [1197, 1500, 1750, 1839, 1900, 1950, 2000, 2025, 2099] ) for ( const k of Object.keys(Road.ROADS) ) {
     for ( const m of Road.modesFor(k, y, {future: true}) ) assert.ok(m.speed > 0 && m.speed <= 300, `${k} ${y} ${m.id}`);
