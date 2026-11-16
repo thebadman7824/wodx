@@ -207,7 +207,7 @@ export const systemSettings = function() {
 		hint: game.i18n.localize('wod.settings.explodingdicehint'),
 		scope: "world",
 		config: false,
-		default: false,
+		default: "never",	// WoDX fork (B6722): was false, which no choice matches (the menu showed nothing picked)
 		type: String,
         choices: {
 			"never": game.i18n.localize('wod.settings.nonotuse'),

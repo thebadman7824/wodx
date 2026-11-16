@@ -7,7 +7,7 @@ import SelectHelper from "../../scripts/select-helpers.js";
 import { OnSquareCounterChange } from "../../scripts/action-helpers.js";
 import { OnSquareCounterClear } from "../../scripts/action-helpers.js";
 import { OnDotCounterChange } from "../../scripts/action-helpers.js";
-import { OnActorSwitch } from "../../scripts/action-helpers.js";
+import { OnActorSwitch, OnActorDelete } from "../../scripts/action-helpers.js";
 import { OnUseMacro } from "../../scripts/action-helpers.js";
 
 import { OnItemCreate, 
@@ -87,6 +87,7 @@ export default class PCActorSheet extends HandlebarsApplicationMixin(foundry.app
 
 			editAttribute: null,
 			actorSwitch: OnActorSwitch,
+			actorDelete: OnActorDelete,						// WoDX fork (B6721): the trash on a removable bio field had no handler
 			editHealth: OnSquareCounterChange,				// Health
 			editDot: OnDotCounterChange, 					// Permanent / temporary dots
 			useMacro: OnUseMacro,

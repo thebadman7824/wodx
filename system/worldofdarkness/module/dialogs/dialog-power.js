@@ -1134,7 +1134,7 @@ export class DialogPower extends FormApplication {
         const powerRoll = new DiceRollContainer(this.actor);
         powerRoll.action = this.object.name;
         powerRoll.attribute = this.object.dice1;     
-        powerRoll.ability = this.object.abilityKey;   
+        powerRoll.ability = this.object.abilityKey ?? this.object.dice2; // WoDX fork (B6720): the object has no abilityKey, so the Ability was never passed
         powerRoll.origin = "power";
         powerRoll.powerType = this.object.type;
         powerRoll.numDices = numDices;

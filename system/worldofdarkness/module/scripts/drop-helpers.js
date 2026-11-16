@@ -1730,8 +1730,9 @@ export default class DropHelper {
                 orderB = orderB?.[key];
             }
             
-            const numA = Number(orderA) ?? 999;
-            const numB = Number(orderB) ?? 999;
+            // WoDX fork (B6722): Number(undefined) is NaN, never nullish, so an item with no order broke the sort
+            const numA = Number.isFinite(Number(orderA)) && orderA !== null && orderA !== "" ? Number(orderA) : 999;
+            const numB = Number.isFinite(Number(orderB)) && orderB !== null && orderB !== "" ? Number(orderB) : 999;
             return numA - numB;
         });
         

@@ -1,5 +1,6 @@
 import BonusHelper from "./bonus-helpers.js";
 import CombatHelper from "./combat-helpers.js";
+import { applyWodxRollMods, wodxRollSources } from "./wodx-roll-mods.js";
 
 let _diceColor;
 let _specialDiceType = "";
@@ -284,6 +285,9 @@ async function _spendTemporaryWillpower(actor) {
 // Function to roll dice
 export async function DiceRoller(diceRoll) {
 	const actor = diceRoll.actor;
+	// WoDX fork (B6720): a power, attack, casting or item roll from the system's own windows counts WoDX's modifiers
+	const wodxMods = applyWodxRollMods(diceRoll, wodxRollSources());
+	if (wodxMods?.once?.length) game.wodxActions?.powerMods?.spend?.(actor, wodxMods.once)?.catch?.(() => {});
 	let difficulty = diceRoll.difficulty;
 	let specialityText = diceRoll.specialityText;
 	const systemText = diceRoll.systemText;
@@ -617,7 +621,7 @@ export async function InitiativeRoll(diceRoll) {
 	let init = 0;
 	let initAttribute;
 
-	let token = await canvas.tokens.placeables.find(t => t.document.actor._id === actor._id);
+	let token = canvas.tokens?.placeables?.find(t => t.document.actor?._id === actor._id);	// WoDX fork (B6722): a token whose actor is gone has none
 
 	if(token) foundToken = true;
 

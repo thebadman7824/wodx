@@ -79,119 +79,12 @@ Hooks.once("init", async function() {
 	CONFIG.worldofdarkness.sheetv2 = {};
 	CONFIG.worldofdarkness.sheetv2 = Object.assign(CONFIG.worldofdarkness.sheetv2, templates.SetupBioTab());
 	CONFIG.worldofdarkness.sheetv2 = Object.assign(CONFIG.worldofdarkness.sheetv2, templates.SetupPowerTab());
-	CONFIG.worldofdarkness.attributeSettings = game.settings.get("worldofdarkness", "attributeSettings");
-	CONFIG.worldofdarkness.fifthEditionWillpowerSetting = game.settings.get("worldofdarkness", "fifthEditionWillpowerSetting");
-	CONFIG.worldofdarkness.willpowerBonusDice = game.settings.get("worldofdarkness", "willpowerBonusDice"); 
-	CONFIG.worldofdarkness.rollSettings = game.settings.get('worldofdarkness', 'advantageRolls');
-	CONFIG.worldofdarkness.successesToDamageRolls = game.settings.get('worldofdarkness', 'successesToDamageRolls');
-	CONFIG.worldofdarkness.specialityLevel = game.settings.get('worldofdarkness', 'specialityLevel');
-	CONFIG.worldofdarkness.demonSystemSettings = game.settings.get('worldofdarkness', 'demonSystemSettings');
-	CONFIG.worldofdarkness.demonEvocationTorment = game.settings.get('worldofdarkness', 'demonEvocationTorment');
-	CONFIG.worldofdarkness.hunteredgeSettings = game.settings.get('worldofdarkness', 'hunteredgeSettings');
-	CONFIG.worldofdarkness.wererwolfrageSettings = game.settings.get('worldofdarkness', 'wererwolfrageSettings');
-	CONFIG.worldofdarkness.virtuesLimit = game.settings.get('worldofdarkness', 'virtuesLimit');
-	
-
-	// Roll settings
-	try {
-		CONFIG.worldofdarkness.handleOnes = game.settings.get('worldofdarkness', 'theRollofOne');
-		CONFIG.worldofdarkness.usehandleOnes = parseInt(game.settings.get('worldofdarkness', 'theRollofOne')) > 0;
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.handleOnes = 1;
-		CONFIG.worldofdarkness.usehandleOnes = true;
-	}
-
-	try {
-		CONFIG.worldofdarkness.useOnesDamage = game.settings.get('worldofdarkness', 'useOnesDamage');
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.useOnesDamage = false;
-	}
-
-	try {
-		CONFIG.worldofdarkness.usePenaltyDamage = game.settings.get('worldofdarkness', 'usePenaltyDamage');
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.usePenaltyDamage = false;
-	}
-
-	try {
-		CONFIG.worldofdarkness.useOnesSoak = game.settings.get('worldofdarkness', 'useOnesSoak');
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.useOnesSoak = false;
-	}
-
-	try {
-		CONFIG.worldofdarkness.lowestDifficulty = parseInt(game.settings.get('worldofdarkness', 'lowestDifficulty'));
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.lowestDifficulty = 2;
-	}
-
-	try {
-		CONFIG.worldofdarkness.specialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess'));
-		CONFIG.worldofdarkness.usespecialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess')) > 0;
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.specialityAddSuccess = 2;
-		CONFIG.worldofdarkness.usespecialityAddSuccess = true;
-	}
-
-	try {
-		CONFIG.worldofdarkness.specialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff'));
-		CONFIG.worldofdarkness.usespecialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff')) > 0;
-		CONFIG.worldofdarkness.specialityAllowBotch = game.settings.get('worldofdarkness', 'specialityAllowBotch');
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.specialityReduceDiff = 0;
-		CONFIG.worldofdarkness.usespecialityReduceDiff = false;
-		CONFIG.worldofdarkness.specialityAllowBotch = true;
-	}
-
-	try {
-		CONFIG.worldofdarkness.tenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess'));
-		CONFIG.worldofdarkness.usetenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess')) > 0;
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.tenAddSuccess = 0;
-		CONFIG.worldofdarkness.usetenAddSuccess = false;
-	}	
-
-	try {
-		CONFIG.worldofdarkness.explodingDice = game.settings.get('worldofdarkness', 'explodingDice');
-		CONFIG.worldofdarkness.useexplodingDice = game.settings.get('worldofdarkness', 'explodingDice') != "never";
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.explodingDice = "never";
-		CONFIG.worldofdarkness.useexplodingDice = false;
-	}
-
-	// Era settings
-	try {
-		CONFIG.worldofdarkness.defaultMortalEra = game.settings.get('worldofdarkness', 'eraMortal');
-		CONFIG.worldofdarkness.defaultMageEra = game.settings.get('worldofdarkness', 'eraMage');
-		CONFIG.worldofdarkness.defaultVampireEra = game.settings.get('worldofdarkness', 'eraVampire');
-		CONFIG.worldofdarkness.defaultWerewolfEra = game.settings.get('worldofdarkness', 'eraWerewolf');
-	} 
-	catch (e) {
-		CONFIG.worldofdarkness.defaultMortalEra = "modern";
-		CONFIG.worldofdarkness.defaultMageEra = "modern";
-		CONFIG.worldofdarkness.defaultVampireEra = "modern";
-		CONFIG.worldofdarkness.defaultWerewolfEra = "modern";
-	}
-
-	// Combat settings
-	try {
-		CONFIG.worldofdarkness.defaultAutoAmmo = game.settings.get('worldofdarkness', 'autoAmmo');
-	}
-	catch (e) {
-		CONFIG.worldofdarkness.defaultAutoAmmo = false;
-	}
-
-	CONFIG.worldofdarkness.observersSeeFullActor = game.settings.get('worldofdarkness', 'observersFullActorViewPermission');
-	CONFIG.worldofdarkness.limitedSeeFullActor = game.settings.get('worldofdarkness', 'limitedFullActorViewPermission');
+	// WoDX fork (B6722): the rule settings are read into CONFIG here and again whenever one changes, so a rule changed in
+	// the settings menus counts on every client at once instead of after a reload
+	readSettingsIntoConfig();
+	const reread = setting => { if (String(setting?.key ?? "").startsWith("worldofdarkness.")) readSettingsIntoConfig(); };
+	Hooks.on("updateSetting", reread);
+	Hooks.on("createSetting", reread);
 
 	// Register datamodels
 	CONFIG.Actor.dataModels.PC = actorModels.PCDataModel;
@@ -645,4 +538,122 @@ function isIpadViewport() {
   return ipadSizes.some(([pw, ph]) =>
     (w === pw && h === ph) || (w === ph && h === pw)
   );
+}
+
+/** WoDX fork (B6722): the world's rule settings as CONFIG.worldofdarkness reads them (init, and on every change). */
+function readSettingsIntoConfig() {
+	CONFIG.worldofdarkness.attributeSettings = game.settings.get("worldofdarkness", "attributeSettings");
+	CONFIG.worldofdarkness.fifthEditionWillpowerSetting = game.settings.get("worldofdarkness", "fifthEditionWillpowerSetting");
+	CONFIG.worldofdarkness.willpowerBonusDice = game.settings.get("worldofdarkness", "willpowerBonusDice"); 
+	CONFIG.worldofdarkness.rollSettings = game.settings.get('worldofdarkness', 'advantageRolls');
+	CONFIG.worldofdarkness.successesToDamageRolls = game.settings.get('worldofdarkness', 'successesToDamageRolls');
+	CONFIG.worldofdarkness.specialityLevel = game.settings.get('worldofdarkness', 'specialityLevel');
+	CONFIG.worldofdarkness.demonSystemSettings = game.settings.get('worldofdarkness', 'demonSystemSettings');
+	CONFIG.worldofdarkness.demonEvocationTorment = game.settings.get('worldofdarkness', 'demonEvocationTorment');
+	CONFIG.worldofdarkness.hunteredgeSettings = game.settings.get('worldofdarkness', 'hunteredgeSettings');
+	CONFIG.worldofdarkness.wererwolfrageSettings = game.settings.get('worldofdarkness', 'wererwolfrageSettings');
+	CONFIG.worldofdarkness.virtuesLimit = game.settings.get('worldofdarkness', 'virtuesLimit');
+	
+
+	// Roll settings
+	try {
+		CONFIG.worldofdarkness.handleOnes = game.settings.get('worldofdarkness', 'theRollofOne');
+		CONFIG.worldofdarkness.usehandleOnes = parseInt(game.settings.get('worldofdarkness', 'theRollofOne')) > 0;
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.handleOnes = 1;
+		CONFIG.worldofdarkness.usehandleOnes = true;
+	}
+
+	try {
+		CONFIG.worldofdarkness.useOnesDamage = game.settings.get('worldofdarkness', 'useOnesDamage');
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.useOnesDamage = false;
+	}
+
+	try {
+		CONFIG.worldofdarkness.usePenaltyDamage = game.settings.get('worldofdarkness', 'usePenaltyDamage');
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.usePenaltyDamage = false;
+	}
+
+	try {
+		CONFIG.worldofdarkness.useOnesSoak = game.settings.get('worldofdarkness', 'useOnesSoak');
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.useOnesSoak = false;
+	}
+
+	try {
+		CONFIG.worldofdarkness.lowestDifficulty = parseInt(game.settings.get('worldofdarkness', 'lowestDifficulty'));
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.lowestDifficulty = 2;
+	}
+
+	try {
+		CONFIG.worldofdarkness.specialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess'));
+		CONFIG.worldofdarkness.usespecialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess')) > 0;
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.specialityAddSuccess = 2;
+		CONFIG.worldofdarkness.usespecialityAddSuccess = true;
+	}
+
+	try {
+		CONFIG.worldofdarkness.specialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff'));
+		CONFIG.worldofdarkness.usespecialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff')) > 0;
+		CONFIG.worldofdarkness.specialityAllowBotch = game.settings.get('worldofdarkness', 'specialityAllowBotch');
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.specialityReduceDiff = 0;
+		CONFIG.worldofdarkness.usespecialityReduceDiff = false;
+		CONFIG.worldofdarkness.specialityAllowBotch = true;
+	}
+
+	try {
+		CONFIG.worldofdarkness.tenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess'));
+		CONFIG.worldofdarkness.usetenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess')) > 0;
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.tenAddSuccess = 0;
+		CONFIG.worldofdarkness.usetenAddSuccess = false;
+	}	
+
+	try {
+		CONFIG.worldofdarkness.explodingDice = game.settings.get('worldofdarkness', 'explodingDice');
+		// WoDX fork (B6722): an old world may hold false (the old default), which means never too
+		CONFIG.worldofdarkness.useexplodingDice = ["speciality", "nospeciality", "always"].includes(game.settings.get('worldofdarkness', 'explodingDice'));
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.explodingDice = "never";
+		CONFIG.worldofdarkness.useexplodingDice = false;
+	}
+
+	// Era settings
+	try {
+		CONFIG.worldofdarkness.defaultMortalEra = game.settings.get('worldofdarkness', 'eraMortal');
+		CONFIG.worldofdarkness.defaultMageEra = game.settings.get('worldofdarkness', 'eraMage');
+		CONFIG.worldofdarkness.defaultVampireEra = game.settings.get('worldofdarkness', 'eraVampire');
+		CONFIG.worldofdarkness.defaultWerewolfEra = game.settings.get('worldofdarkness', 'eraWerewolf');
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.defaultMortalEra = "modern";
+		CONFIG.worldofdarkness.defaultMageEra = "modern";
+		CONFIG.worldofdarkness.defaultVampireEra = "modern";
+		CONFIG.worldofdarkness.defaultWerewolfEra = "modern";
+	}
+
+	// Combat settings
+	try {
+		CONFIG.worldofdarkness.defaultAutoAmmo = game.settings.get('worldofdarkness', 'autoAmmo');
+	}
+	catch (e) {
+		CONFIG.worldofdarkness.defaultAutoAmmo = false;
+	}
+
+	CONFIG.worldofdarkness.observersSeeFullActor = game.settings.get('worldofdarkness', 'observersFullActorViewPermission');
+	CONFIG.worldofdarkness.limitedSeeFullActor = game.settings.get('worldofdarkness', 'limitedFullActorViewPermission');
 }
