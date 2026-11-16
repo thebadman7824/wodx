@@ -1,6 +1,11 @@
-import {MODULE_ID, esc, lineOf, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
+import {MODULE_ID, esc, spendLine, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
 import {byTheBook} from "./rules.mjs";
 import {dateLabel} from "./lineage.mjs";
+import * as Learn from "./learn.mjs";
+import {SOURCE_KINDS} from "./learn-rules.mjs";
+import {LINE_XP} from "./lines-xp-rules.mjs";
+import {XP} from "../data/vampire.mjs";
+import {labelOf} from "./lines.mjs";
 
 /**
  * The experience log. Awards and spends are upstream Experience items (so the sheet's totals stay right), each
@@ -13,7 +18,7 @@ const SOCKET = `module.${MODULE_ID}`;
 const chronicle = () => game.modules.get("wodx-chronicle")?.api;
 const isActiveGM = () => !!game.user?.isGM && game.users.activeGM?.id === game.user.id;
 
-const describe = p => (p.kind === "newDiscipline" || p.kind === "newAbility")
+const describe = p => (p.kind === "newDiscipline" || p.kind === "newAbility" || p.kind === "newPower")
   ? `${kindLabel(p.kind)}: ${p.label}` : `${p.label} ${p.current} → ${p.next}`;
 
 /** GM: give experience to characters. */
@@ -36,11 +41,18 @@ export async function award(actors, amount, note = "", time = game.time.worldTim
 }
 
 /** Record a spend and raise the trait. Re-checks the cost first. Returns false if it no longer holds. */
-export async function spend(actor, purchase, {by = game.user.name, time = game.time.worldTime} = {}) {
+export async function spend(actor, purchase, {by = game.user.name, time = game.time.worldTime, waive = false} = {}) {
   const now = recheck(actor, purchase);
   if ( !now || !now.ok ) return {ok: false, reason: now?.reason ?? "That trait is no longer on the sheet"};
   if ( now.cost !== purchase.cost || now.current !== purchase.current ) {
     return {ok: false, reason: `The sheet changed since the request (now ${now.current} dots, ${now.cost} experience). Ask again.`};
+  }
+  // B6230: the spend names where it is learned; the trait rises when the study (a long task) is done
+  if ( !waive && Learn.needsSource(actor, now) ) {
+    if ( !purchase.source?.kind ) return {ok: false, reason: "Name where it is learned: a teacher, a book, a school or practice."};
+    const r = await Learn.begin(actor, now, purchase.source, {by, time});
+    if ( r.ok ) await writeLogPage(payerOf(actor));
+    return r.ok ? {ok: true, option: now, learning: r.learning, source: r.source} : {ok: false, reason: r.reason};
   }
   const payer = payerOf(actor);
   await applyPurchase(actor, now);
@@ -56,9 +68,17 @@ export async function spend(actor, purchase, {by = game.user.name, time = game.t
 export async function requestSpend(actor, purchase) {
   const refuse = reason => { ui.notifications.warn(reason); return {ok: false, reason}; };
   if ( !purchase?.ok ) return refuse(purchase?.reason ?? "That cannot be bought.");
+  // B6230: ask where it is learned first
+  let waive = false;
+  if ( Learn.needsSource(actor, purchase) && !purchase.source?.kind ) {
+    const src = await Learn.chooseSource(actor, purchase);
+    if ( !src ) return {ok: false, reason: "cancelled"};
+    if ( src.waive && game.user.isGM ) waive = true;
+    else purchase = {...purchase, source: src};
+  }
   if ( game.user.isGM ) {
-    const r = await spend(actor, purchase);
-    if ( r.ok ) ui.notifications.info(`${actor.name}: ${describe(r.option)} for ${r.option.cost} experience.`);
+    const r = await spend(actor, purchase, {waive});
+    if ( r.ok ) ui.notifications.info(r.learning ? `${actor.name} begins to learn ${r.option.label} (${r.option.cost} experience).` : `${actor.name}: ${describe(r.option)} for ${r.option.cost} experience.`);
     else ui.notifications.warn(r.reason);
     return r;
   }
@@ -69,7 +89,11 @@ export async function requestSpend(actor, purchase) {
   return {ok: true, sent: true};
 }
 
-const slim = p => ({kind: p.kind, key: p.key, label: p.label, current: p.current, next: p.next, cost: p.cost, group: p.group});
+const slimSource = s => (s?.kind ? {kind: String(s.kind), id: String(s.id ?? ""), name: String(s.name ?? "").slice(0, 120), rating: Number(s.rating) || 0, quality: String(s.quality ?? ""), interval: String(s.interval ?? "")} : null);
+const slimItem = it => (it && typeof it === "object" ? {name: String(it.name ?? "").slice(0, 120), type: String(it.type ?? "Power"), img: it.img ? String(it.img) : undefined,
+  system: foundry.utils.deepClone(it.system ?? {}), flags: foundry.utils.deepClone(it.flags ?? {})} : null);
+const slim = p => ({kind: p.kind, key: p.key, label: p.label, current: p.current, next: p.next, cost: p.cost, group: p.group,
+  ...(p.kind === "newPower" || p.kind === "power" ? {cat: p.cat, own: !!p.own, level: p.level, item: slimItem(p.item)} : {}), ...(p.source?.kind ? {source: slimSource(p.source)} : {})});
 
 /** Active GM: a player's request arrives. Check it, then queue it. */
 export async function onRequest(payload) {
@@ -84,13 +108,30 @@ export async function onRequest(payload) {
       whisper: [user.id], speaker: {alias: "Storyteller"}});
     return;
   }
+  // B6230: the source is checked now too, so a request that cannot be taught never reaches the queue
+  let srcLine = "";
+  if ( Learn.needsSource(actor, now) ) {
+    const r = Learn.resolveSource(actor, now, payload.purchase.source);
+    if ( !r.ok ) {
+      await ChatMessage.create({content: `<div class="wodx-card"><p>The request for ${esc(actor.name)} could not be queued: ${esc(r.why)}</p></div>`, whisper: [user.id], speaker: {alias: "Storyteller"}});
+      return;
+    }
+    srcLine = ` Learned from ${r.src.kind === "practice" ? "practice" : r.src.name} (${SOURCE_KINDS[payload.purchase.source.kind]}), as a long task of ${r.plan.goal} successes at difficulty ${r.plan.diff}; the trait rises when it is done.`;
+  }
   const api = chronicle();
   await api.approvals.addToQueue({
     id: foundry.utils.randomID(), type: XP_TYPE, key: `xp:${actor.id}:${now.kind}:${now.key}`,
     title: `${actor.name}: ${describe(now)} for ${now.cost} experience`,
-    detail: `${kindLabel(now.kind)}. ${payerOf(actor) === actor ? actor.name : `Paid by ${payerOf(actor).name}, who`} has ${xpTotals(payerOf(actor)).available} experience to spend. Cost by ${lineOf(actor)} rules.`,
-    data: {actorId: actor.id, purchase: slim(now)}, from: user.id, createdAt: Date.now(), worldTime: game.time.worldTime
+    detail: `${kindLabel(now.kind)}. ${payerOf(actor) === actor ? actor.name : `Paid by ${payerOf(actor).name}, who`} has ${xpTotals(payerOf(actor)).available} experience to spend. Cost by ${chartName(actor)}.${srcLine}`,
+    data: {actorId: actor.id, purchase: slim({...now, source: payload.purchase.source})}, from: user.id, createdAt: Date.now(), worldTime: game.time.worldTime
   });
+}
+
+/** Which chart priced it, for the Storyteller's queue (B6271). */
+function chartName(actor) {
+  const line = spendLine(actor);
+  const src = XP[line]?.source ?? LINE_XP[line]?.source ?? "";
+  return `${labelOf(line) || line} rules${src ? ` (${src})` : ""}`;
 }
 
 /** Approval handler: re-check and spend. A failed check is reported to the GM and the player. */

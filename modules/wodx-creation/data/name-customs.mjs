@@ -91,8 +91,66 @@ export const NAME_CUSTOMS = {
   sephardi: {stages: [st(1197, "family")], source: "A. Faiguenboim, P. Valadares and A. Campagnano, Dicionário Sefaradi de Sobrenomes (2003)"},
   // The Philippines: Governor-General Clavería's decree of 21 November 1849 gave every family without one a family
   // name from the catalogue.
-  filipino: {noble: null, stages: [st(1197, "given"), st(1849, "family")], source: "Clavería decree of 21 November 1849 (Catálogo alfabético de apellidos)"}
+  filipino: {noble: null, stages: [st(1197, "given"), st(1849, "family")], source: "Clavería decree of 21 November 1849 (Catálogo alfabético de apellidos)"},
+
+  // B6540 to B6544: more peoples, each from a source read on 15 November 2026. Where a source gives no end year for a
+  // spread, the settling speed is a house reading, listed in docs/PENDING-REVIEW.md.
+  // Poland: family names from about the 1200s for the upper classes, the burghers by the end of the 1600s, then the
+  // peasants; the spread ended in the mid-1800s.
+  polish: {noble: 1250, stages: [st(1197, "byname"), st(1300, "settling", {to: 1850, a: 0.1, b: 1}), st(1850, "family")],
+    source: "Polish name (Wikipedia, read 15 November 2026): upper classes from the 13th century, burghers by the end of the 17th, ended mid-19th"},
+  // Russia: father's names and bynames; most peasants of central Russia were given an official family name only
+  // after serfdom ended in 1861, about three in four people still had none at the census of 1897, and every Soviet
+  // citizen had one with the passports of the 1930s. The Senate decree of 1888 made bearing one a duty.
+  russian: {stages: [st(1197, "byname"), st(1861, "settling", {to: 1897, a: 0.1, b: 0.25}), st(1897, "settling", {to: 1935, a: 0.25, b: 1}), st(1935, "family")],
+    source: "Русская фамилия (Russian Wikipedia, read 15 November 2026): serfdom's end 1861, Senate decree 1888, census of 1897 (about 75% without), passports of the 1930s"},
+  // Greece: family names among the Byzantine great houses by the 1000s and 1100s; for most people father's names and
+  // nicknames, which became the patronymic family names of the 1800s, set down by the modern state.
+  greek: {noble: 1197, stages: [st(1197, "byname"), st(1800, "settling", {to: 1900, a: 0.3, b: 1}), st(1900, "family")],
+    source: "Greek name (Wikipedia, read 15 November 2026): elite family names by the 11th and 12th centuries, patronymic surnames common in the 19th, codified by the modern state"},
+  // Serbia: -ić father's names were the rule by the late 1300s; family names among nobles in the 1400s but never for
+  // ordinary people, until the Principality standardised them in 1851 (first census by family name 1854; the lands
+  // freed 1912 to 1918 first in the census of 1921).
+  serbian: {noble: 1400, stages: [st(1197, "byname"), st(1851, "family")],
+    source: "Serbian name (Wikipedia, read 15 November 2026): -ić the norm by the late 14th century, standardised in the Principality of Serbia 1851, census 1854"},
+  // The Sámi: father's names and bynames, then the Nordic laws: the Swedish Name Ordinance of 1901, the Finnish Name
+  // Act of 1921 and the Norwegian Personal Names Act of 1923, which gave every family a fixed name.
+  sami: {stages: [st(1197, "byname"), st(1901, "settling", {to: 1923, a: 0.4, b: 1}), st(1923, "family")],
+    source: "Name Ordinance of 5 December 1901 (Sweden); Finnish name (Wikipedia: surnames compulsory 1921); Personal Names Act 1923 (sciencenorway.no, read 15 November 2026)"},
+  // Cambodia: one name until the French made family names law in 1910, usually the father's given name, which then
+  // passed to the children.
+  khmer: {stages: [st(1197, "given"), st(1910, "family")],
+    source: "Cambodian name (Wikipedia, read 15 November 2026): surnames mandated by French law in 1910, usually the father's given name"},
+  // Ethiopia: a given name and the father's given name; no family name in any age.
+  amharic: {stages: [st(1197, "byname")], source: "Ethiopian name (Wikipedia, read 15 November 2026): given name and father's given name, no family name"},
+  // The Zulu: the isibongo, the clan or family name, passes to the children; the Zulu clan itself was founded about
+  // 1574, and the other clan names of the lists are older.
+  zulu: {stages: [st(1197, "family")], source: "Zulu people (Wikipedia, read 15 November 2026): isibongo is the clan or family name"},
+  // The Mande: clan names (Keita, Traoré) held since the Mali of the 1200s and before.
+  mande: {stages: [st(1197, "family")], source: "Mandinka people (Wikipedia, read 15 November 2026): the Keita clan held its chiefship before Sundiata Keita in the 13th century"},
+  // Algeria: the civil status law of 23 March 1882 gave each Muslim family one name for all its members (the Kabyles
+  // among them). Morocco's own date is still open.
+  amazigh: {stages: [st(1197, "byname"), st(1882, "family")],
+    source: "Law on civil status in Algeria, 23 March 1882 (O. Yermeche, État civil et anthroponymie en Algérie, CRASC 2005)"},
+  // Jews of the Arab lands and Iran: family names known among Arabic-speaking Jews from the 900s and 1000s, side by
+  // side with "ben" or "bat" the father's name; most of Iran's Jews had none before Reza Shah's law (1925, as persian).
+  // The speed of the spread is a house reading.
+  mizrahi: {stages: [st(1197, "settling", {to: 1925, a: 0.3, b: 1}), st(1925, "family")],
+    source: "Jewish surname (Wikipedia, read 15 November 2026): first Jewish family names 10th to 11th century, common early among Arabic-speaking Jews; Iran before Reza Shah"},
+  // The Malays: no family name; bin or binti and the father's personal name.
+  malay: {stages: [st(1197, "byname")], source: "Malaysian names (Wikipedia, read 15 November 2026): most Malays use no family name, bin or binti and the father's name"},
+  // Ottoman Turks before the law of 1934: a man was "son of" his father (-oğlu), a woman "daughter of" (kızı).
+  // (the stages are those of turkish above; the women's form lives in the turkish tables)
 };
+
+/**
+ * The peoples of the American West and the Plains: one name until Commissioner T. J. Morgan's circular of 19 March
+ * 1890 told the agents to give each family one family name; little came of it at first, and Commissioner Garland
+ * issued it again on 1 December 1902. The speed after that is a house reading (docs/PENDING-REVIEW.md).
+ */
+const MORGAN = {stages: [st(1197, "given"), st(1890, "settling", {to: 1930, a: 0.1, b: 1}), st(1930, "family")],
+  source: "Circular on Indian names, Commissioner of Indian Affairs, 19 March 1890, reissued 1 December 1902 (American Studies 1980s, journals.ku.edu/amsj)"};
+for ( const o of ["lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "crow", "arapaho", "shoshone", "ute", "dine"] ) NAME_CUSTOMS[o] = MORGAN;
 
 /** Trades that bear an inherited name before commoners do. */
 export const NOBLE_TRADE = /\b(knight|noble|lord|lady|baron|count|duke|prince|samurai|daimyo|courtier|kuge|yangban|grandee|hidalgo|patrician|steward)\b/i;

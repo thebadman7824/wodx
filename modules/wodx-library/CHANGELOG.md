@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.48.3 (The manual's Your character page says how learning from a teacher, a book, a school or practice works when experience is spent (B6230))
 - 0.48.2 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own. The Encyclopaedia shows Future Darkness entries from 2010, when that era begins, not 2023)
 - 0.48.1 (Filthy and Bloody are a step colder (B6029): the summary said so; now social rolls read it; Filthy now comes from play (B6033))
 - 0.48.0 (Wraith Artifacts on the crafting table (B6100-B6103): the named Artifacts of Wraith 20th pp. 425-431 (thirteen of the forges, five Skin Artifacts, three Spectre Artifacts and the souled relic) join the soulforged Artifact and reworked relic. The forge's goal follows the level (2 + 2 a level), Skin Artifacts must be fed 2 Pathos a day and add Angst on a botch, Spectre Artifacts are made only by Spectres, who pay the soulfire in Angst, and the eMap is made only from 1970. Item powers gain extra costs, a botch that adds, the figure's look, the token's look and a light the Storyteller's computer places)
