@@ -278,7 +278,15 @@ export function build(ctx) {
         });
     }
     async function veil(actor) {
-        const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (Mummy: The Resurrection p. 140).</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
+        // B6583: targeted mortals react on the map and keep or lose the sight through the witness step (the same one a
+        // mummy seen in plain sight goes through); with no one targeted, the Willpower line is read off the table
+        const toks = [...(game.user.targets ?? [])].filter(t => t.actor && t.actor !== actor);
+        if (toks.length) {
+            if (!game.user.isGM) return notify("The Storyteller works the Veil on the witnesses.");
+            const r = await game.modules.get(MOD)?.api?.witnessStep?.({ actor, tokens: toks, secret: "mummy", event: "the Veil" });
+            return r ?? post(actor, "The Veil", `<div class="vta-res">${toks.map(t => esc(t.name)).join(", ")}: nothing to record.</div>`);
+        }
+        const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (Mummy: The Resurrection p. 140). Target the witnesses' tokens to have them react on the map.</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
         return dialog(`The Veil: ${actor.name}`, content, "Show", async fd => post(actor, "The Veil", `<div class="vta-res">Willpower ${n(fd.w)}: ${esc(M.veil(n(fd.w)))}.</div><div class="wodx-quiet">${REF} p. 140</div>`));
     }
     async function setup(actor) {

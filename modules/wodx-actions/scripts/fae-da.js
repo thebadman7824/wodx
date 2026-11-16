@@ -103,6 +103,10 @@ export function build(ctx) {
             gramarye: n(actor.system?.abilities?.gramarye?.value) || n(ctx.findAbility?.(actor, "gramarye")?.value) };
     }
     const save = (actor, patch) => setFlag(actor, "daFae", { ...(actor.getFlag(MOD, "daFae") ?? {}), ...patch });
+    // B6586: an Echo met this scene weighs on the fae's own magic: +1 difficulty at level 1, +2 from level 2; at level 4
+    // no Unleashing while it lasts (Dark Ages: Fae pp. 110-111). It ends with the scene.
+    const echoHold = actor => { const h = actor?.getFlag?.(MOD, "daFae")?.echoHold; return h && n(h.scene) === LIM.sceneNo() ? n(h.level) : 0; };
+    const echoDiff = actor => { const l = echoHold(actor); return l >= 2 ? 2 : l ? 1 : 0; };
     async function spend(actor, which, k) {
         const i = info(actor);
         const have = i[which].temp;
@@ -287,12 +291,14 @@ export function build(ctx) {
             const lim = await LIM.gate(actor, { name: c?.name ?? `${F.DOMINIONS[dominion]?.label ?? dominion} ${level}`, disc: F.DOMINIONS[dominion]?.label ?? dominion, level });
             if (!lim) return null;
             if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
+            const ed = echoDiff(actor);
+            if (ed) plan.notes.push(`an Echo this scene +${ed}`);
             if (fd.cloak && !(await spend(actor, "mists", 1))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             // B6662: the target's ward or Magic Resistance makes a cantrip on them harder
             const rm = TH.targetResist(actor, ["magic"]);
             plan.notes.push(...rm.parts);
-            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + n(rm.diff)), { willpower: wp });
+            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed + n(rm.diff)), { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const name = c?.name ?? `a level-${level} ${F.DOMINIONS[dominion].label} cantrip`;
             let body = rollBlock(`${F.DOMINIONS[dominion].label} + ${esc(t.label)}`, r, [...plan.notes, ...(fd.cloak ? ["cloaked: Perception + Kenning (8) to see it"] : []), ...(wp ? ["Willpower"] : [])]);
@@ -358,8 +364,9 @@ export function build(ctx) {
             const plan = F.unleashPlan({ dominion: d, rating: i.dominions[d], origin: i.origin, court: i.court, mists: i.mists.perm, weaving: i.weaving.perm, mien: i.mien },
                 { time, holding: fd.holding ? 1 : 0, holdingCalm: !!fd.calm, weavingSpent: Math.min(n(fd.weave), i.weaving.temp), base: n(fd.base) || 6 });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            if (echoHold(actor) >= 4) { notify(`${actor.name} met an Echo of the fourth level this scene: no Unleashing while it lasts.`); return null; }
             if (plan.weavingSpent && !(await spend(actor, "weaving", plan.weavingSpent))) return null;
-            const base = await rollPool(plan.dice, plan.difficulty);
+            const base = await rollPool(plan.dice, Math.min(10, plan.difficulty + echoDiff(actor)));
             const wild = await rollPool(plan.wildDice, plan.wildDifficulty);
             const out = F.unleashOutcome(base, plan.wildDice ? wild : { successes: 0, botch: false });
             const back = await gain(actor, "mists", out.mistsBack);
@@ -454,6 +461,20 @@ export function build(ctx) {
             body += `<div class="vta-big ${level ? "bad" : "good"}">${level ? `Echo, level ${level}` : "The Echo fails"}${e ? `: ${esc(e.trigger)}` : ""}.</div><div class="vta-res">${esc(F.ECHO_LEVELS[level])}</div>`;
             if (weave) body += `<div class="vta-note">${weave} Weaving spent: −${weave / 2}.</div>`;
             if (level >= 1 && level <= 5) body += `<div class="vta-note">For instance: ${F.ECHO_PICKS[level].map(esc).join("; ")}.</div>`;
+            // B6586: levels 1 to 4 take hold for the scene: the fae's own rolls (and attacks, through the Echo condition) are harder,
+            // level 4 stops Unleashing, and the harm of levels 3 and 4 is a button the Storyteller presses
+            if (level >= 1 && level <= 4) {
+                await save(actor, { echoHold: { level, scene: LIM.sceneNo() } });
+                const C = game.modules.get("wodx-chronicle")?.api;
+                try {
+                    C?.registerCondition?.({ id: "fae-echo", name: "An Echo", img: "icons/svg/sound.svg", source: `${REF} pp. 110–111`, lines: ["changeling", "fae"],
+                        summary: "An Echo weighs on the fae for the scene: harder magic and harder blows.", mods: { ownDiff: 1 } });
+                    await C?.timed?.applyTimed?.(actor, { name: `An Echo (level ${level})`, duration: { kind: "scene" }, condition: "fae-echo", key: "wodx-fae-echo", source: `${REF} pp. 110–111` });
+                } catch (e) { console.warn("WoDX | Echo", e); }
+                body += `<div class="vta-res">For the scene: +${level >= 2 ? 2 : 1} difficulty on ${esc(actor.name)}'s cantrips and Unleashing${level >= 4 ? ", and no Unleashing at all" : ""}.</div>`;
+                if (level === 3) body += `<button type="button" class="vta-btn" data-fx="echo3" data-actor="${esc(actor.uuid)}" data-gm>Apply 3 bashing (soakable)</button>`;
+                if (level === 4) body += `<button type="button" class="vta-btn" data-fx="echo4" data-actor="${esc(actor.uuid)}" data-gm>Apply 4 lethal</button>`;
+            }
             if (level === 5) {
                 const h = F.echoFive(i.origin);
                 body += `<div class="vta-note">${h.aggravated ? `${h.aggravated} aggravated levels, then ${h.lethalPerTwoTurns} lethal per two turns near it` : esc(h.note)}${h.aggravated && h.note ? ` ${esc(h.note)}` : ""}.</div>`;
@@ -579,6 +600,20 @@ export function build(ctx) {
             if (!(await spend(actor, "weaving", 2))) return null;
             await msg.setFlag(MOD, "daFaeHavoc", { ...h, step: h.step - 1, lowered: h.lowered + 1 });
             return post(actor, `${actor.name} reins in the havoc`, `<div class="vta-res">2 Weaving: the havoc is ${h.lowered + 1} step${h.lowered ? "s" : ""} lower (step ${h.step - 1} of 5).</div><div class="wodx-quiet">${REF} p. 102</div>`);
+        }
+        if (what === "echo3" || what === "echo4") {
+            if (!game.user.isGM) return null;
+            const e = msg.getFlag(MOD, "daFaeEcho");
+            const a = e?.actor ? await fromUuid(e.actor) : null;
+            if (!a || e.level !== (what === "echo3" ? 3 : 4)) return null;
+            if (e.done) return notify("That Echo's harm is already applied.");
+            await msg.setFlag(MOD, "daFaeEcho", { ...e, done: true });
+            const type = what === "echo3" ? "bashing" : "lethal", k = what === "echo3" ? 3 : 4;
+            // Level 3 is soakable bashing (Dark Ages: Fae p. 111): WoDX Combat rolls the soak and posts its own card
+            const C = game.modules.get("wodx-combat")?.api;
+            if (what === "echo3" && C?.soakAndApply) return C.soakAndApply(a.getActiveTokens?.()[0] ?? a, { mode: "levels", amount: 3, type: "bashing", soak: true });
+            const r = await game.wodxCombat?.applyDamage?.(a, type, k);
+            return post(a, `Echo: ${a.name}`, `<div class="vta-big bad">${k} ${type} levels.</div>${r?.woundLabel ? `<div class="vta-res">Now ${esc(r.woundLabel)}.</div>` : ""}`);
         }
         if (what === "echo5") {
             if (!game.user.isGM) return null;
