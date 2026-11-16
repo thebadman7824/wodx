@@ -364,7 +364,7 @@ Next free block: B6720
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main; gates jobs share one list over the lanes (used B6520-B6526) | tools (pcq, vision, gate, lanes), NPC |
+| B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main; gates jobs share one list over the lanes; lane 6 kept for the local agents (used B6520-B6527) | tools (pcq, vision, gate, lanes), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
@@ -12267,6 +12267,11 @@ Reverse: revert the gate edits.
 tools/pcq, tools/lanes. A gates job took the lanes that were free when it started and split its gates into fixed shards, one per lane. Job 1704 asked for 3 lanes, found 1 free and ran about 295 gates on that one lane for hours while the other lanes sat idle once they freed. Now the runner asks run-gate for the job's gate list (run-gate --list) and writes it to logs/job<N>-queue.json. Every lane's run-gate takes the next gate from that file (--queue, tools/lanes/gate-queue.mjs, a lock file so no gate is taken twice). On each pass the runner adds free lanes to a running gates job while its list holds 2 or more gates: up to the lanes the job asked for, or every lane when no other lane job is waiting. When a lane stops on a fault, the gates it took that have no result in its report go back to the front of the list for any lane. The result comment lists each lane's part. Jobs pinned to one lane, and other kinds of job, run as before. Covered by tools/harness/pcq.test.mjs (three processes take 60 gates, each taken once).
 
 Reverse: drop the makeQueue call in start() in tools/pcq/runner.mjs; gateArgs then falls back to the shards.
+
+## B6527. Testbed lane 6 is kept for the local agents (2026-11-16)
+tools/lanes, tools/pcq. The Storyteller set lane 6 (port 30060) aside for the local agents on the PC, whose runner deploys to it and runs `run-gate --touched --lane 6` for each task. The PC runner now drives lanes 2 to 5 only (runner.json). Lane 6 carries `"reserved": "local-agents"` in lanes.json: run-gate's free-lane pick skips a reserved lane unless `--lane 6` names it, and it has autoReset off, so the nightly reset and full run leave it alone. Covered by tools/harness/lanes.test.mjs and pcq.test.mjs.
+
+Reverse: put 6 back in runner.json's lanes, and drop "reserved" and set autoReset true on lane 6 in lanes.json.
 
 ## B6530. The Beast played by the game (2026-11-15)
 WoDX Solo. When the lone player's character falls into frenzy (WoDX Actions rolls the check by itself), the seat sets flags.wodx-storyteller.standIn on it, the same flag the Storyteller's absent players use, so WoDX NPC plays its turns. With no fight on the scene it goes for its prey: an enemy in sight (a hostile token), else the nearest living being, within 40 yards (house reading of "anyone near"), and a fight starts with the frenzied on a side of their own. V20 pdf 307: the Storyteller decides how long a frenzy lasts, one scene typically; WoDX ends it when the fight is over, as the scene's end. A botched frenzy is left to WoDX Actions, which rolls it out (B4872). Willpower for control is offered to the Kindred and their ghouls only; the other lines' frenzy runs until it ends.
