@@ -5,8 +5,8 @@
  * A finding is an item whose verdict is broken, only-tells or dead. It is closed when:
  *   - its `fix` names a commit (7 to 40 hex digits) that is in --ref (default origin/main), or a B number that a
  *     commit message in --ref names (alone or in a range such as B6740-B6748), or
- *   - it is dead and its file is no longer tracked at --ref, or
- *   - a later item closes it: {"closes": "<item id>", "commit": "<sha in --ref>", "test": "<what proves it>"}, written
+ *   - its file is no longer tracked at --ref (deleted when dead, removed otherwise), or
+ *   - a later item closes it: {"closes": "<item id, or the file of an item with none>", "commit": "<sha in --ref>", "test": "<what proves it>"}, written
  *     by a re-check on --ref (worker commits rebased after the audit no longer match their recorded sha), or
  *   - the rulings file (picks exported from the review desk: {"<item id>": {pick}}, with "group-<g>" picks
  *     covering a group's items unless "item-<id>" overrides) holds a ruling for it.
@@ -25,7 +25,7 @@ const SHA = /\b[0-9a-f]{7,40}\b/g, BNUM = /\bB(\d{2,5})\b/g;
 export function closedBy(item, {inRef, tracked, rulings, landed}) {
   for ( const sha of String(item.fix ?? "").match(SHA) ?? [] ) if ( inRef(sha) ) return `fix ${sha}`;
   for ( const [, n] of String(item.fix ?? "").matchAll(BNUM) ) if ( landed?.(Number(n)) ) return `fix B${n}`;
-  if ( item.verdict === "dead" && item.file && !tracked(item.file) ) return "deleted";
+  if ( item.file && !tracked(item.file) ) return item.verdict === "dead" ? "deleted" : "file removed";
   const id = item.id ?? "";
   const r = rulings[`item-${id}`]?.pick || rulings[id]?.pick || (item.group ? rulings[`group-${item.group}`]?.pick : "");
   return r ? `ruling: ${r}` : "";
@@ -33,7 +33,7 @@ export function closedBy(item, {inRef, tracked, rulings, landed}) {
 
 export function openFindings(items, ctx) {
   const later = new Map(items.filter(x => x.closes && x.test && ctx.inRef(String(x.commit ?? ""))).map(x => [x.closes, x]));
-  return items.filter(x => !(x.id && later.has(x.id))).filter(x => FINDING.has(x.verdict)).map(x => ({x, by: closedBy(x, ctx)})).filter(o => !o.by).map(o => o.x);
+  return items.filter(x => !later.has(x.id ?? x.file ?? "")).filter(x => FINDING.has(x.verdict)).map(x => ({x, by: closedBy(x, ctx)})).filter(o => !o.by).map(o => o.x);
 }
 
 function gitCtx(ref, root = ROOT) {

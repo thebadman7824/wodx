@@ -14,6 +14,7 @@ test("a fix note with no commit on main leaves the finding open", () => {
 test("a dead file closes only once it is gone", () => {
   assert.equal(closedBy({verdict: "dead", file: "kept.png"}, ctx), "");
   assert.equal(closedBy({verdict: "dead", file: "gone.png"}, ctx), "deleted");
+  assert.equal(closedBy({verdict: "broken", file: "gone.png"}, ctx), "file removed");
 });
 test("a desk ruling closes an item or its group", () => {
   assert.match(closedBy({verdict: "only-tells", id: "w1-2"}, ctx), /ruling/);

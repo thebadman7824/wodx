@@ -134,7 +134,7 @@
 ### Task 7: Sample maps, Ben's review desk and the PC check
 
 **Files:**
-- Create: `tools/mapgen/review_desk.py` (writes `desk.json`: assets used by palettes, with tags, plus side-by-side preview PNGs)
+- Create (never built): `tools/mapgen/review_desk.py` (writes `desk.json`: assets used by palettes, with tags, plus side-by-side preview PNGs)
 - Output: `/mnt/project-files/map-furnishing/` (catalogue.json, burgher palace at 1197, 1650, 1890, 1995, 2050, the 16 building-level maps, previews)
 - PC job: `/mnt/project-files/pc-job-map-furnishing-2026-11-13.md`
 
