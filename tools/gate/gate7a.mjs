@@ -28,6 +28,8 @@ function harness() {
 export async function run() {
   const {R, ok, step} = harness();
   await step("versions", async () => {
+    // B6242: the People tables load on first use; wait for them rather than race the first draw (B6546)
+    await people()?.load?.();
     ok("versions", !!chron()?.gen?.draw && !!people()?.generate, {chronicle: game.modules.get(CH).version, creation: game.modules.get(CR).version, theme: chron()?.theme?.VERSION});
   });
   await step("the tables are in the world, editable", async () => {
