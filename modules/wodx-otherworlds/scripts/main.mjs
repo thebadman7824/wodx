@@ -28,6 +28,7 @@ import * as reflectRules from "./reflect-rules.mjs";
 import * as spirits from "./spirits.mjs";
 import * as net from "./net.mjs";
 import * as netRules from "./net-rules.mjs";
+import * as technica from "./technica.mjs";
 import * as spiritRules from "./spirit-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -57,6 +58,7 @@ Hooks.once("init", () => {
   net.registerNetSettings();
   net.registerNetStatuses();
   net.setupNet();
+  technica.setupTechnica();
 });
 
 Hooks.once("ready", () => {
@@ -94,7 +96,8 @@ Hooks.once("ready", () => {
     spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
       courtOptions: spirits.courtOptions, rules: spiritRules},
     net: {window: net.netWindow, draw: net.drawFortress, jackInto: net.jackInto, jackOut: net.jackOut, run: net.runProgram, file: net.takeFile, iceRound: net.iceRound,
-      hit: net.applyHit, whiteout: net.whiteout, derez: net.derezNow, isFortress: net.isFortress, modelOf: net.modelOf, kind: net.netKindNow, rules: netRules},
+      hit: net.applyHit, whiteout: net.whiteout, derez: net.derezNow, isFortress: net.isFortress, modelOf: net.modelOf, kind: net.netKindNow, rules: netRules,
+      technica: {dots: technica.technica, isCyberpunk: technica.isCyberpunk, empower: technica.empower, remoteTouch: technica.remoteTouch, speak: technica.speak, powerShown: technica.onPowerShown}},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
   };
   game.modules.get(MODULE_ID).api = api;

@@ -53,7 +53,7 @@ export const ACCESS = {
   keyboard: {label: "Cyberdeck, keyboard and screen", net: "deck", diff: 2, keyboard: true, roll: null, body: "awake"}
 };
 /** The ways in open in a Net. */
-export const accessFor = kind => Object.keys(ACCESS).filter(k => ACCESS[k].net === kind);
+export const accessFor = kind => Object.keys(ACCESS).filter(k => ACCESS[k].net === kind && !ACCESS[k].technica);
 /** Whether a character has the spheres for a way in. spheres: {name: dots}. */
 export function hasSpheres(way, spheres = {}) {
   const need = ACCESS[way]?.spheres ?? {};
@@ -598,3 +598,53 @@ export function iceTurn(ice, runners = [], {alarm = false, reaction = "kill"} = 
   const dx = Math.sign(t.x - ice.x), dy = Math.sign(t.y - ice.y);
   return {act: "move", target: t.id, to: {x: ice.x + dx * Math.min(step, Math.abs(t.x - ice.x)), y: ice.y + dy * Math.min(step, Math.abs(t.y - ice.y))}};
 }
+
+/* ------------------------------------------------------------------ */
+/*  Technica, the Cyberpunks' Discipline (WoFD pdf 6-7), B6604-B6611   */
+/* ------------------------------------------------------------------ */
+
+/** The Cyberpunks bloodline: made in Night City in 2016, so from 2016 on the Future Darkness branch only (WoFD pdf 6). */
+export const CYBERPUNKS_FROM = 2016;
+export const cyberpunksOpen = (year, future) => !!future && n(year) >= CYBERPUNKS_FROM;
+export const CYBERPUNK_DISCIPLINES = ["celerity", "potence", "technica"];
+/** What each level of Technica gives in WoDX (the article's six levels, read into the Net and the map). */
+export const TECHNICA = {
+  1: {key: "interface", label: "Interface", gives: "Jack in by touch: no plugs, no 'trodes, no penalty. Contact must hold."},
+  2: {key: "touch", label: "Technical Touch", gives: "Perception + Computer at 6 on jacking in; with no Computer, that many dice stand in for it."},
+  3: {key: "empower", label: "Empower Device", gives: "A Willpower point powers a dead or crashed deck again."},
+  4: {key: "remote", label: "Remote Touch", gives: "Work a keypad door, lights or a vehicle within 100 feet without touching it."},
+  5: {key: "spirit", label: "Spiritus ex Machina", gives: "Charisma + Computer at 6 to talk with the system or an AI."},
+  6: {key: "ghost", label: "Ghost in the Machine", gives: "Enter a system with no deck at all; its remotes obey without a roll; the body lies still."}
+};
+/** The way in by touch (Technica 1): plugs without the plugs. */
+ACCESS.touch = {label: "Technica: by touch", net: "deck", diff: 0, roll: null, body: "still", technica: 1};
+ACCESS.ghost = {label: "Technica: Ghost in the Machine", net: "deck", diff: 0, roll: null, body: "still", technica: 6, ghost: true};
+/** The ways in open to a character: the Net's own, and on the Future Net the Technica ways for its level. */
+export function waysFor(kind, technica = 0) {
+  const base = Object.keys(ACCESS).filter(k => ACCESS[k].net === kind && !ACCESS[k].technica);
+  const t = Object.keys(ACCESS).filter(k => ACCESS[k].technica && n(technica) >= ACCESS[k].technica);
+  return [...base, ...(kind === "deck" ? t : [])];
+}
+/** Technical Touch: with no Computer the touch roll's successes stand in for it; with Computer, Computer stands. */
+export const touchComputer = (computer, touch) => (n(computer) > 0 ? n(computer) : n(touch));
+/** Remote Touch reaches 100 feet (WoFD), in squares of a scene's grid distance (feet or metres). */
+export function remoteReach(gridDistance = 5, units = "ft") {
+  const d = Math.max(0, Number(gridDistance) || 0);
+  const ft = /m\b|meter|metre/i.test(String(units)) ? d * 3.28 : d || 5;
+  return Math.floor(100 / (ft || 5));
+}
+/**
+ * Spiritus ex Machina (WoFD pdf 7): what the machine gives by successes. 1 general ideas, 2 simple sentences,
+ * 3 answers to plain questions, 4 full talk, 5 full talk and no lies. WoDX: from 3 the system stands its ICE down
+ * against the speaker while the alarm is quiet; from 4 it names its files; at 5 it also names its ICE.
+ */
+export function machineTalk(successes) {
+  const s = n(successes);
+  return {level: Math.min(5, s), parley: s >= 3, files: s >= 4, ice: s >= 5, truthful: s >= 5,
+    text: ["Nothing comes through.", "General ideas come across.", "Simple sentences.", "Plain answers to plain questions.", "Full conversation.", "Full conversation, and it will not mislead."][Math.min(5, s)]};
+}
+/**
+ * The weakness (WoFD pdf 6): a Cyberpunk who leans on Disciplines (other than Celerity, Potence, Technica) more than on
+ * machines pays Willpower. WoDX counts each night's uses: when the Discipline uses pass the machine uses, a point.
+ */
+export function leansOnBlood({disc = 0, tech = 0} = {}) { return n(disc) > n(tech); }
