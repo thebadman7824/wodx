@@ -371,6 +371,7 @@ Next free block: B6720
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 | B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
 | B6590-B6619 | Technica, the Cyberpunks' Discipline, tied into the Net (used B6590-B6612) | Otherworlds, Chronicle, Creation |
+| B6640-B6659 | Rothenstein encounters in play (Volume Two picks v1-v6) and twists on the map (Volume Three picks x1-x5) (used B6640-B6654) | Chronicle |
 | B6660-B6669 | Audit recheck: the last partly-working claims (Dazed and a failed stand-up hold the turn, ward and conditions on every roll, aftercare for every NPC, hunters and bodies, death sentence in custody, era switches, wording, medieval gaol) (used B6660-B6669) | Combat, Actions, Sheets, NPC, Storyteller, Chronicle, Atmosphere, Interactables |
 | B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
 <!-- decision-index:end -->
@@ -12575,6 +12576,66 @@ Reverse: remove the wodxPowerShown hook in technica.mjs.
 WoDX Creation data/vampire.mjs CLANS gains Cyberpunks (Celerity, Potence, Technica) with opens {from 2016, Future branch}; rules.mjs clanOpen and clansOpen. The Embrace window lists the clan only when it is open, and the childe gets Technica at 0 dots with the other clan Disciplines. The wizard's Discipline list puts Technica first for a Cyberpunk and leaves it out of the freebie list before then. A lifepath scene, Made in the Net, offers Computer and Contacts or Technology and Streetwise; splatsFor reads the branch.
 
 Reverse: drop the CLANS row and the lifepath scene.
+
+## B6640. Encounter cards tied to places and season (2026-11-16)
+WoDX Chronicle. Each of book one's 24 encounters keeps its map hints, months, first chapter, best chapters and the encounters it follows (data/encounters-rothenstein.mjs, from the Storyteller's placement table). While book one runs, the saga's tick offers the Storyteller a card for each one that fits where the company stands: Play, Not tonight, Never. Volume Two desk pick v1.
+
+Reverse: drop Encounters.encounterTick from the tick chain; the section and the api stay.
+
+## B6641. Offered on arrival (2026-11-16)
+WoDX Chronicle. canvasReady runs the encounters' tick too, so stepping onto a map offers what fits there. An offer is not repeated for a day while the company stays.
+
+Reverse: remove the canvasReady hook in pod.mjs.
+
+## B6642. Once only; Not tonight comes back (2026-11-16)
+WoDX Chronicle. Each encounter plays once. Not tonight puts it off a day; Never strikes it. Both can be taken back from the saga window. Volume Two desk pick v2.
+
+Reverse: none needed; the rules are in encounter-rules.mjs.
+
+## B6643. Unmet, it happens off the map (2026-11-16)
+WoDX Chronicle. An encounter's window closes when the last chapter it fits best is played (chapter 9 for those that fit any time), or when its months came round and passed. Unmet or struck, its off-map outcome happens: street talk on the signal board, saga clocks, a sight on its map through the town looks, fronts stepped or pushed, people gone from the roles, a judgement set if still open. The Storyteller can close one by hand (Passed). Volume Two desk pick v3.
+
+Reverse: drop closeOut from the tick.
+
+## B6644. The people are real NPCs (2026-11-16)
+WoDX Chronicle. Play finds the encounter's people by name or makes them (Mortal, or Vampire for Wenzel and Ilja) in the folder Rothenstein encounters, switches on a WoDX NPC ready routine (labourer, hunter, recluse and so on) with a home from the tagged places when one matches, and stands them on the company's map. Volume Two desk pick v4.
+
+Reverse: leave the people unmade; the card still names them.
+
+## B6645. A twist waits for its encounter (2026-11-16)
+WoDX Chronicle. twist-rules whyNot takes ctx.met (the encounters played) and refuses a twist whose encounter is not yet played, unless forced (Reveal anyway). Callers that do not pass the list keep the old rules. Volume Two desk pick v5.
+
+Reverse: stop passing met in pod.mjs.
+
+## B6646. Ties move the game (2026-11-16)
+WoDX Chronicle. Playing an encounter lands a front step when it is that front's next (the dam, the Church's message, the council's complaint), pushes fronts past a twist's week (the farce pushes the court), leans on a name for the contact role (Jitka), and puts Found buttons on its card for the clue carriers it holds (the courier and the ridge road, the ash, the ring, the arrow, the auditor). Volume Two desk pick v6. Pick v7 (other lines, lone player) is text in the Storyteller's volume only.
+
+Reverse: empty the ties in the data.
+
+## B6650. The reveal shows on the table (2026-11-16)
+WoDX Chronicle. Each of the 24 twists has a sight (data/twist-reveals-rothenstein.mjs): a thing given to a character on the company's map as an Item, marks on a map through the town looks, or a line heard on a map through WoDX Senses for three days of game time. The reveal card lists what happened under On the table. Volume Three desk pick x1.
+
+Reverse: stop calling Reveals.onReveal in revealTwist.
+
+## B6651. The people who know act (2026-11-16)
+WoDX Chronicle. A twist's who-knows act after its reveal: come to the company's map (made or found, with a ready routine), leave the valley (tokens off every map, routine off, gone from the roles), push or step a front, lean on a name, or start street talk. A twist with two hearts acts by the heart chosen. Volume Three desk pick x2.
+
+Reverse: empty the after lists.
+
+## B6652. No twist after chapter 9 (2026-11-16)
+WoDX Chronicle. Already a rule (twist-rules LAST_CHAPTER); recorded here for pick x3. Pick x4 (the other heart written in full) is text in the Storyteller's volume; the reveal card already names the partner twist it changes.
+
+Reverse: none.
+
+## B6653. Favours are debts (2026-11-16)
+WoDX Chronicle. Revealing twist 21 makes Vlasta owe the company, twist 23 makes Baba Yaroslava owe it, and the Reinhold judgement told as the truth makes Reinhold owe it. Each debt can be called in once, from chapter 8, from the saga window; the one who owes comes to the company's map. Hook wodxFavour. Volume Three desk pick x5.
+
+Reverse: drop the favour entries.
+
+## B6654. The three murders turn the Lower Town cold (2026-11-16)
+WoDX Chronicle. Havel, Old Vlasta and Ctibor's clerk (added to encounter 24's people) are the three murders. When one of them gets the dead status, the Storyteller gets a card asking whether it was the company's hand; the window can mark them too. At the third, every Lower Town map gets closed shutters through the town looks, every NPC with a token on one is a step cooler toward each player character (WoDX NPC attitudes), and the street talks. Hooks wodxMurder and wodxColdTown. Volume Three desk pick x5.
+
+Reverse: drop turnCold from markMurder.
 
 ## B6660. Dazed loses the whole turn in a fight (2026-11-16)
 WoDX Combat. A Dazed character spends the next turn shaking it off (V20 Dark Ages p. 348), so in a running fight Dazed now counts in WoDX Actions' cannotActWhy beside being asleep or out cold. A player's attack is refused (through api.cannotAct, and through Chronicle's Dazed mark when WoDX Actions is off). Every WoDX Actions window refuses with the reason, as the B6156 and B6372 idle refusal does. The token does not move, because movement is part of the turn in a fight (VtDA20 p. 333) and the lost turn takes the move with it. The Storyteller may still attack and move. Rage's Ignore being stunned (W20 p. 144) still opens, since it is how a Garou shakes off the daze. Outside a fight there are no turns, so Dazed stays a note on the roll. A fomor's gas or liquid form, which only takes the attack away, is not refused.
