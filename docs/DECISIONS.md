@@ -369,7 +369,7 @@ Next free block: B6720
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
-| B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6586) | Actions |
+| B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
 | B6590-B6619 | Running the Net: the Digital Web and the Future Darkness Net, data fortresses, ICE and what they do to the world (used B6590-B6603) | Otherworlds |
 | B6660-B6669 | Audit recheck: the last partly-working claims (Dazed and a failed stand-up hold the turn, ward and conditions on every roll, aftercare for every NPC, hunters and bodies, death sentence in custody, era switches, wording, medieval gaol) (used B6660-B6669) | Combat, Actions, Sheets, NPC, Storyteller, Chronicle, Atmosphere, Interactables |
 | B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
@@ -12430,6 +12430,11 @@ Reverse: remove showSpeaker from named() in modules/wodx-actions/scripts/demon.j
 WoDX Actions. Dark Ages: Fae pp. 110-111 gives each Echo level its harm as examples; the WoDX reading: levels 1 to 4 hold for the scene with the Echo condition (+1 difficulty on attacks), +1 difficulty on the fae's cantrips and Unleashing at level 1 and +2 from level 2, no Unleashing at level 4, and the Storyteller's button for 3 bashing (soaked) at level 3 and 4 lethal at level 4. Level 5 was already applied.
 
 Reverse: remove echoHold and echoDiff in modules/wodx-actions/scripts/fae-da.js.
+
+## B6587. Resisting Mind magick takes the successes off the Effect (2026-11-16)
+WoDX Actions. Mage: The Ascension 20th p. 330: a mage resists Mind magick with Willpower at 6, and each success takes one away. The countermagick window's Resist Mind mode now finds the newest casting card whose Effect uses Mind and is aimed at that mage, or the card being answered, and takes its successes off that card the way countermagick does, so the Effect is worked out again on what is left. Before this it only posted the roll.
+
+Reverse: drop mindCardOn and the counter flags from the "mind" mode of counter() in modules/wodx-actions/scripts/m20.js.
 
 ## B6590. Two Nets under one status (2026-11-16)
 WoDX Otherworlds net-rules.mjs netKind. The classic timeline has the Digital Web from 1990 (Mage 20th printed pp. 466-474); the Future Darkness branch has the Cyberpunk Net from 2005, the year the cybermodem is invented (Cyberpunk 2020 pdf 182), read through World of Future Darkness. Before 2005 the branch has the Web too. Both use the Jacked in status the Net already had (B265).
