@@ -274,10 +274,13 @@ class FreshCache extends AppBase {
 }
 
 Hooks.once("init", () => {
-  const reg = (k, o) => game.settings.register(MOD, k, o);
-  reg("enabled", {name: "Voices", scope: "world", config: true, type: Boolean, default: false,
-    hint: "NPCs speak their talk answers, greetings and farewells aloud, and the Storyteller's lines when chatting in character as an NPC. Each NPC keeps a voice of its own. Only the people who see a line hear it.",
+  // B6763: while Voices is off (the default; voices are shelved), only this switch shows: the other settings, the cache
+  // button and the actor menu's Voiced entries do nothing then, so they stay out of sight. Turning it on reloads.
+  game.settings.register(MOD, "enabled", {name: "Voices", scope: "world", config: true, type: Boolean, default: false, requiresReload: true,
+    hint: "NPCs speak their talk answers, greetings and farewells aloud, and the Storyteller's lines when chatting in character as an NPC. Each NPC keeps a voice of its own. Only the people who see a line hear it. Turning it on shows the voice settings.",
     onChange: () => loadEngine()});
+  const on = !!setting("enabled");
+  const reg = (k, o) => game.settings.register(MOD, k, o.config ? {...o, config: on} : o);
   reg("engine", {name: "Voice engine", scope: "world", config: true, type: String, default: "chatterbox",
     choices: {chatterbox: "Voice server on the Storyteller's PC (most natural, needs the server running)",
       kokoro: "Kokoro (made once on the Storyteller's computer, played to everyone)", browser: "Each browser's own speech"},
@@ -309,13 +312,13 @@ Hooks.once("init", () => {
   reg("cacheBytes", {scope: "world", config: false, type: Number, default: 0});
   reg("volume", {name: "Voice volume", scope: "client", config: true, type: Number, default: 0.8, range: {min: 0, max: 1, step: 0.05}});
   reg("mute", {name: "Mute NPC voices", scope: "client", config: true, type: Boolean, default: false});
-  game.settings.registerMenu?.(MOD, "fresh", {name: "Voice cache", label: "Start a fresh cache", icon: "fas fa-broom", type: FreshCache, restricted: true});
+  if ( on ) game.settings.registerMenu?.(MOD, "fresh", {name: "Voice cache", label: "Start a fresh cache", icon: "fas fa-broom", type: FreshCache, restricted: true});
 });
 
 Hooks.once("ready", () => {
   try { synth()?.getVoices?.(); } catch (e) { /* no speech here */ }
   game.socket?.on?.(SOCKET, data => { try { onSocket(data); } catch (e) { console.error(`${MOD} | socket`, e); } });
-  if ( game.user?.isGM ) { fillKnown(); if ( setting("enabled") ) loadEngine(); }
+  if ( game.user?.isGM && setting("enabled") ) { fillKnown(); loadEngine(); }
   game.modules.get(MOD).api = {
     profileOf, speak, fileFor, freshCache, isPlot, setPlot, rules: V, engine: E.status, server: C.status, stats,
     load: loadEngine,
@@ -337,11 +340,11 @@ function plotOption(options) {
   const actorOf = li => game.actors?.get((li?.dataset ?? li?.[0]?.dataset)?.entryId ?? (li?.dataset ?? li?.[0]?.dataset)?.documentId);
   options.push({
     name: "Voiced (plot NPC)", icon: '<i class="fas fa-microphone"></i>',
-    condition: li => game.user?.isGM && !!actorOf(li) && !isPlot(actorOf(li)),
+    condition: li => !!setting("enabled") && game.user?.isGM && !!actorOf(li) && !isPlot(actorOf(li)),
     callback: li => setPlot(actorOf(li), true)
   }, {
     name: "Not voiced", icon: '<i class="fas fa-microphone-slash"></i>',
-    condition: li => game.user?.isGM && isPlot(actorOf(li)),
+    condition: li => !!setting("enabled") && game.user?.isGM && isPlot(actorOf(li)),
     callback: li => setPlot(actorOf(li), false)
   });
 }
