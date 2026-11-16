@@ -125,7 +125,9 @@ const INGREDIENT = /^(an? )?(grain|barley|dried peas|oats|rice|salt|pepper|whole
 /* Which carried light a thing is (Interactables carry-rules CARRIED). */
 const LIGHTS = [
   ["electric", R("flashlight", "headlamp", "led lantern", "reading light", "electric torch")],
-  ["candle", R("candle", "rushlight")],
+  // B6779c: a stone lamp of animal fat is a small open flame, as a candle; a glow stick is WoDX Interactables' glow
+  ["candle", R("candle", "rushlight", "stone lamp")],
+  ["glow", R("glow stick", "glowstick")],
   ["torch", R("pitch torch", "torch\\b")],
   ["lantern", R("lantern", "oil lamp", "whale-oil", "argand", "paraffin lamp", "carbide lamp")]
 ];
@@ -242,7 +244,6 @@ export function abilitiesOf(good) {
   if ( k === "papers" && /sealing wax/i.test(n) ) out.add("seal");
   if ( /floppy|usb stick|data chip|hard drive|blank cds/i.test(n) ) out.add("record");
   if ( k === "toys" && !out.size && /doll|horse|soldier|bear|figure|plush|figurine|balloon|pom poms|toy/i.test(n) ) out.add("game");
-  if ( k === "light" && /glow ?stick/i.test(n) ) out.add("switchon");
   if ( k === "accessories" && /scope|laser sight|flashlight/i.test(n) ) out.add("search");
   // B3805 to B3807: arms fight, fittings fit, traps catch (arms-rules.mjs)
   if ( k === "arms" && AR.armOf(n) ) out.add("ready");
