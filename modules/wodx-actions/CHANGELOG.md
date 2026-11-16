@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.107.2 (Learn a Gift goes through WoDX Creation's learning rule (B6274))
 - 3.107.1 (Keeping a window on screen measures an ApplicationV2 window itself, not its first control (B6114))
 - 3.107.0 (Every line level with the Kindred (B6300, B6301, B6303): the shared tools the Kindred menu had (downtime, the night, the story, witnesses, the sky) are on every line's menu, and a new story rolls Garou and Fera Rage on one die (DA:W p. 91; W20 p. 145); Readers for the long roads (B6305, B6307, B6308))
 - 3.106.1 (A blood hunt's date and a long torpor's wake report await the world timeline before reading it, so they still see the whole list on a player's client (B6240))
