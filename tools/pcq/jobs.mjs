@@ -10,7 +10,9 @@
  *
  * Kinds (nothing else runs; every command is spawned with an argument list, never through a shell):
  *   gates       run-gate.mjs on testbed lanes: "gates" (names), or "touched": true, or "all": true; "lanes": how many
- *               lanes to split over (default 1); "reset": true resets each lane first
+ *               lanes to split over (default 1); "reset": true resets each lane first. Lanes share one list of the
+ *               gates (B6526) and lanes that free up later join while it holds work: up to "lanes", or every lane
+ *               when no other lane job is waiting
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
  *   deploy      deploy the ref to "lanes" lanes (or "lane": N), nothing else
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
@@ -117,6 +119,8 @@ export function order(jobs, openNumbers = new Set(), now = Date.now()) {
  * Two-browser gates are not in the gate map and are left to gate-two jobs.
  */
 export function gateArgs(job, lane, i, n, report) {
+  // B6526: a shared queue: every lane takes the next gate from the same list until it is empty
+  if ( job.queue ) return ["--queue", job.queue, "--lane", String(lane), "--wait", "10", "--report", report, ...(job.maxMinutes ? ["--max-minutes", String(job.maxMinutes)] : [])];
   const a = [...job.gates];
   if ( job.touched ) a.push("--touched");
   if ( job.all ) a.push("--all");
