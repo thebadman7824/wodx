@@ -30,7 +30,7 @@ export async function run() {
   const KEYS = ["podChains", "podSaga", "podState"];
   const t0 = Date.now(), time0 = game.time.worldTime, was = Object.fromEntries(KEYS.map(k => [k, foundry.utils.deepClone(game.settings.get(C, k))]));
   // B6650: a reveal hands things to characters, brings people and posts street talk; all of it is put back after
-  const items0 = new Set(game.actors.flatMap(a => a.items.map(i => i.uuid))), actors0 = new Set(game.actors.map(a => a.id)), folders0 = new Set(game.folders.map(f => f.id));
+  const items0 = new Set(game.actors.contents.flatMap(a => a.items.map(i => i.uuid))), actors0 = new Set(game.actors.map(a => a.id)), folders0 = new Set(game.folders.map(f => f.id));
   const board0 = foundry.utils.deepClone(game.settings.get("wodx-storyteller", "signalBoard"));
   const cards = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-pod"));
   const heard = [];

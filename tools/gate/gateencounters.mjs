@@ -42,6 +42,8 @@ export async function run() {
   const hook = Hooks.on("wodxEncounter", p => heard.push(p));
   const shook = Hooks.on("wodxSignal", p => signals.push(p));
   const made = {scenes: []};
+  /** Wait until fn() is truthy (the click handlers run async: people made, cards posted, maps marked). */
+  const waitFor = async (fn, ms = 20000) => { const end = Date.now() + ms; let v; while ( !(v = fn()) && Date.now() < end ) await sleep(250); return v; };
   /** Click a card's button through the real render hook. */
   const click = async (m, sel) => {
     let b = document.querySelector(`[data-message-id="${m.id}"] ${sel}`);
@@ -85,7 +87,8 @@ export async function run() {
       const tw0 = saga().twists.rules.whyNot(5, saga().twists.state(), {played: [], met: en().met()});
       const n0 = cards().length;
       await click(offer, `[data-wct-enc="play"]`);
-      played = cards().slice(n0).find(m => m.flags?.[C]?.encounter?.played);
+      played = await waitFor(() => cards().slice(n0).find(m => m.flags?.[C]?.encounter?.played));
+      if ( !played ) throw new Error("No played card came");
       const tok = trail.tokens.find(t => t.actor?.name === "Radek" && t.flags?.[C]?.encounter === 5);
       const radek = tok ? game.actors.get(tok.actorId) : null;
       const routine = radek?.flags?.["wodx-npc"]?.routine;
@@ -98,6 +101,7 @@ export async function run() {
     });
     await step("4 a clue found from the card", async () => {
       await click(played, `[data-wct-enc="clue"][data-clue="sire"][data-i="0"]`);
+      await waitFor(() => fr().state().clues.sire.includes(0));
       ok("4 a clue found from the card", fr().state().clues.sire.includes(0), {sire: fr().state().clues.sire});
     });
     await step("5 Not tonight and Never", async () => {
@@ -112,7 +116,8 @@ export async function run() {
       const run = s.chains.find(r => r.saga?.book === "red-stone"); run.played = ["c1", "c2", "c3"];
       await game.settings.set(C, "podState", s);
       const n0 = cards().length;
-      await en().tick({offers: false}); await sleep(1200);
+      await en().tick({offers: false});
+      await waitFor(() => heard.some(p => p.n === 13 && p.action === "closed")); await sleep(500);
       const closed = cards().slice(n0).find(m => m.flags?.[C]?.encounter?.n === 1 && m.flags[C].encounter.closed);
       const h = heard.find(p => p.n === 1 && p.action === "closed");
       const sc = game.scenes.getName(h?.scene ?? "");

@@ -183,7 +183,9 @@ export async function markMurder(name) {
 export async function unmarkMurder(name) { if ( game.user.isGM ) await change(st => RR.unmurder(st, name)); }
 /** The Lower Town turns cold: shutters on its maps, its people a step cooler toward every character, the talk. */
 export async function turnCold() {
-  const C = RR.COLD, scenes = game.scenes.filter(sc => sc.name.includes(C.scenes)), marked = [];
+  // The company's own map first, so the cold shows where they stand before it spreads
+  const C = RR.COLD, here = Fronts.sceneFor("@company"), marked = [];
+  const scenes = game.scenes.filter(sc => sc.name.includes(C.scenes)).sort((a, b) => Number(b === here) - Number(a === here));
   const TL = mod("wodx-storyteller")?.upkeep?.townLooks ?? mod("wodx-storyteller")?.townLooks;
   for ( const sc of scenes ) {
     if ( !TL?.setLooks ) break;

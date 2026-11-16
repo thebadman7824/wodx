@@ -38,6 +38,8 @@ export async function run() {
   const hooks = [["wodxFavour", p => heard.favour.push(p)], ["wodxColdTown", p => heard.cold.push(p)], ["wodxSignal", p => heard.signal.push(p)]].map(([k, f]) => [k, Hooks.on(k, f)]);
   const made = {scenes: [], items: []};
   const setState = async fn => { const s = foundry.utils.deepClone(game.settings.get(C, "podState")); fn(s); await game.settings.set(C, "podState", s); };
+  /** Wait until fn() is truthy (the click handlers run async: people made, cards posted, maps marked). */
+  const waitFor = async (fn, ms = 20000) => { const end = Date.now() + ms; let v; while ( !(v = fn()) && Date.now() < end ) await sleep(250); return v; };
   const click = async (m, sel) => {
     let b = document.querySelector(`[data-message-id="${m.id}"] ${sel}`);
     if ( !b ) { const el = await m.renderHTML(); Hooks.callAll("renderChatMessageHTML", m, el); b = el.querySelector(sel); }
@@ -70,10 +72,11 @@ export async function run() {
       await setState(s => { s.saga.encounters = {played: {1: 0, 3: 0, 21: 0}}; });
       const pushed0 = !!fr().state().fronts.court.pushed;
       await tw().reveal(1); await sleep(800);
+      if ( !pc ) R.notes.push("No player character in this world: nothing to hand the letter to.");
       const item = pc?.items.find(i => i.name === "A letter in cheap red wax" && !pcItems0.has(i.id));
       const card = cards().find(m => /Twist 1 revealed/.test(m.content));
       ok("1 the reveal in a character's hands", /has not been played/.test(waits) && !!item && !pushed0 && fr().state().fronts.court.pushed && heard.signal.some(p => String(p.key).startsWith("twist:1")) && /On the table/.test(card?.content ?? ""),
-        {waits, item: item?.id, pushed: fr().state().fronts.court.pushed, card: card?.content?.slice(0, 300)});
+        {waits, pc: pc?.name ?? null, item: item?.id, pushed: fr().state().fronts.court.pushed, talked: heard.signal.map(p => p.key), onTable: (card?.content ?? "").split("On the table")[1]?.slice(0, 300) ?? null});
     });
     await step("2 a sound on the map, and someone comes", async () => {
       await tw().reveal(3, {force: true}); await sleep(800);
@@ -99,10 +102,11 @@ export async function run() {
       await rv().murder("Havel"); await rv().murder("Old Vlasta");
       const clerk = await Actor.create({name: "Ctibor's clerk", type: "Mortal"});
       const n0 = cards().length;
-      await clerk.toggleStatusEffect("dead", {active: true}); await sleep(1200);
-      const ask = cards().slice(n0).find(m => m.flags?.[C]?.murder?.name === "Ctibor's clerk");
+      await clerk.toggleStatusEffect("dead", {active: true});
+      const ask = await waitFor(() => cards().slice(n0).find(m => m.flags?.[C]?.murder?.name === "Ctibor's clerk"));
       if ( !ask ) throw new Error("No card asked about the clerk's death");
-      await click(ask, `[data-wct-murder="yes"]`); await sleep(1500);
+      await click(ask, `[data-wct-murder="yes"]`);
+      await waitFor(() => heard.cold.length); await sleep(500);
       const marks = TL()?.marksOf?.(town, "front:cold"), n = marks ? marks.layer.length + marks.own.length : 0;
       const after = pc && AT ? AT.of(npc, pc).step : null;
       ok("4 the third murder turns the Lower Town cold", !!rv().state().cold && n > 0 && heard.cold.length === 1 && (before === null || after < before), {marks: n, before, after, cold: heard.cold[0]});
