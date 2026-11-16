@@ -981,9 +981,15 @@ export function build(ctx) {
     const intr = ev.who ? await fromUuid(ev.who) : null;
     const tokNow = intr ? canvas.tokens.get(intr.id) : null;
     // B6524: the beast a rider is on does not take fright at its own rider (it bolted to the map edge when mounted)
-    // and those aboard the vehicle or beast that made the noise ride on with it
-    const evObj = ev.object ? (ev.objectType === "Token" ? scene.tokens.get(ev.object) : scene.tiles?.get?.(ev.object)) : null;
-    const aboard = new Set((evObj?.flags?.["wodx-interactables"]?.riders ?? []).map(r => r?.t).filter(Boolean));
+    // and those aboard a vehicle or beast ride on with it: they do not walk off it to answer a noise (the one at the reins
+    // decides where it goes); a passenger in a rammed car used to step out mid-fight and was left behind
+    const aboard = new Set();
+    for ( const d of [...(scene.tiles ?? []), ...(scene.tokens ?? [])] ) {
+      const f = d.flags?.["wodx-interactables"];
+      if ( !f?.driver && !f?.riders?.length ) continue;
+      if ( f.driver?.t ) aboard.add(f.driver.t);
+      for ( const r of f.riders ?? [] ) if ( r?.t ) aboard.add(r.t);
+    }
     const ridden = t => t.document.uuid === ev.who || t.document.flags?.["wodx-interactables"]?.driver?.t === ev.who || aboard.has(t.document.uuid)
       || (ev.objectType === "Token" && ev.object === t.document.id && /^mount|ride/.test(String(ev.kind)));
     const hearers = (ev.heard ?? []).map(u => canvas.tokens.placeables.find(t => t.document.uuid === u)).filter(t => t?.actor && !t.actor.hasPlayerOwner && !ridden(t));

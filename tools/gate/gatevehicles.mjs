@@ -59,6 +59,10 @@ export async function run() {
       {x: 1000, y: 1000, width: 200, height: 200, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "plane", title: "Gate aeroplane"}, "wodx-sheets": {keepOutOfEra: true}}},
       {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}];
     const [car, car2, plane, horse] = byTitle(await scene.createEmbeddedDocuments("Tile", tileData), tileData);
+    // Every move of the passenger, with the module code that made it (a passenger once left the car mid-fight)
+    const passTrail = [];
+    const passHook = Hooks.on("preUpdateToken", (doc, ch) => { if ( doc.id === tp.id && ("x" in ch || "y" in ch) && passTrail.length < 6 ) passTrail.push({x: ch.x ?? null, y: ch.y ?? null,
+      by: (new Error().stack ?? "").split("\n").slice(2).filter(l => !/foundry\.mjs|gatevehicles/.test(l)).slice(0, 5).map(l => l.trim().replace(/^at /, "").replace(/https?:\/\/[^/]+/, "")).join(" < ")}); });
     await car.update({[`flags.${IX}.driver`]: seat(td, car), [`flags.${IX}.riders`]: [rider(tp, car)]});
     await car2.update({[`flags.${IX}.driver`]: seat(tf, car2)});
     await foe.createEmbeddedDocuments("Item", [{name: "Gate pistol", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 20,
@@ -142,7 +146,8 @@ export async function run() {
       const m = V().vehicleFor(driver, td)?.maneuver ?? 10;
       G.ok("9. swerve and sat inside", d.best?.type === "swerve" && d.best.dice === Math.min(10, m) && dodge && !dodge.valid && /Sat in/.test(dodge.invalid ?? ""),
         {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, pass: dodge?.invalid, dodge: dodge ? {valid: dodge.valid} : null,
-          aboard: (scene.tiles.get(car.id)?.flags?.[IX]?.riders ?? []).map(r => r.n ?? r.t), passAt: {x: tp.x, y: tp.y}});
+          aboard: (scene.tiles.get(car.id)?.flags?.[IX]?.riders ?? []).map(r => r.n ?? r.t), passAt: {x: tp.x, y: tp.y}, passTrail: passTrail.filter(m => !/carryAboard/.test(m.by))});
+      Hooks.off("preUpdateToken", passHook);
     });
 
     await G.step("10. an NPC takes a horse", async () => {
