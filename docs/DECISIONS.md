@@ -370,7 +370,7 @@ Next free block: B6720
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 | B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
-| B6590-B6619 | Running the Net: the Digital Web and the Future Darkness Net, data fortresses, ICE and what they do to the world (used B6590-B6603) | Otherworlds |
+| B6590-B6619 | Technica, the Cyberpunks' Discipline, tied into the Net (used B6590-B6612) | Otherworlds, Chronicle, Creation |
 | B6660-B6669 | Audit recheck: the last partly-working claims (Dazed and a failed stand-up hold the turn, ward and conditions on every roll, aftercare for every NPC, hunters and bodies, death sentence in custody, era switches, wording, medieval gaol) (used B6660-B6669) | Combat, Actions, Sheets, NPC, Storyteller, Chronicle, Atmosphere, Interactables |
 | B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
 <!-- decision-index:end -->
@@ -12505,6 +12505,51 @@ Reverse: edit derez().
 net.mjs call, onNetMessage. A player jacks in, runs programs and takes files from the Net window; the active Storyteller's client does the work, checks the player owns the character, and pulls the player to the fortress.
 
 Reverse: none needed.
+
+## B6604. The Cyberpunks bloodline: Future branch from 2016 (2026-11-16)
+net-rules CYBERPUNKS_FROM, cyberpunksOpen. The bloodline is made in Night City in 2016 (World of Future Darkness p. 19, pdf 6), so it is open on the Future Darkness branch from that year only. Disciplines: Celerity, Potence, Technica. A character is a Cyberpunk when the sheet's clan or bloodline names it.
+
+Reverse: drop cyberpunksOpen and the bloodline check in technica.mjs.
+
+## B6605. Technica 1, Interface (2026-11-16)
+net-rules ACCESS.touch. A new way in on the Future Net: by touch, no plugs, no penalty. Only characters with Technica on the sheet see it (waysFor); accessFor keeps the ways everyone has.
+
+Reverse: delete ACCESS.touch.
+
+## B6606. Technica 2, Technical Touch (2026-11-16)
+technica.mjs touchRoll. On jacking in, Perception + Computer at 6; the successes are kept on the run. With no Computer, that many dice stand in for Computer on every program roll (touchComputer). House reading of the article's sense for machines.
+
+Reverse: drop touch from the run state.
+
+## B6607. Technica 3, Empower Device (2026-11-16)
+technica.mjs empower. A Willpower point clears Deck down and Deck dead: the deck runs again with no power source.
+
+Reverse: remove the Empower Device button.
+
+## B6608. Technica 4, Remote Touch (2026-11-16)
+technica.mjs remoteTouch. From Realspace, the character works the nearest keypad door, the lights, or a vehicle within 100 feet (squares worked out from the scene's grid, feet or metres). The door opens or shuts on the map, lights go out or on.
+
+Reverse: remove the Remote Touch button.
+
+## B6609. Technica 5, Spiritus ex Machina (2026-11-16)
+technica.mjs speak, net-rules machineTalk. Charisma + Computer at 6 inside a fortress. 3 successes: the system makes peace and its ICE passes the speaker by while the alarm is quiet (house reading); 4: it names its files; 5: it names its ICE as well and does not mislead.
+
+Reverse: drop parley from iceRound.
+
+## B6610. Technica 6, Ghost in the Machine (2026-11-16)
+net-rules ACCESS.ghost. A way in with no deck: the mind holds what a standard deck would, and the system's remotes obey without a roll. The body lies still.
+
+Reverse: delete ACCESS.ghost.
+
+## B6611. The Cyberpunks' weakness (2026-11-16)
+technica.mjs onPowerShown, machineUsed. Each night counts Discipline uses other than Celerity, Potence and Technica against machine uses (programs run, Technica powers). When the Discipline uses pass the machine uses, each extra use costs a Willpower point, shown on a chat card (WoFD pdf 6, counted per night as a house reading).
+
+Reverse: remove the wodxPowerShown hook in technica.mjs.
+
+## B6612. The Cyberpunks in character creation (2026-11-16)
+WoDX Creation data/vampire.mjs CLANS gains Cyberpunks (Celerity, Potence, Technica) with opens {from 2016, Future branch}; rules.mjs clanOpen and clansOpen. The Embrace window lists the clan only when it is open, and the childe gets Technica at 0 dots with the other clan Disciplines. The wizard's Discipline list puts Technica first for a Cyberpunk and leaves it out of the freebie list before then. A lifepath scene, Made in the Net, offers Computer and Contacts or Technology and Streetwise; splatsFor reads the branch.
+
+Reverse: drop the CLANS row and the lifepath scene.
 
 ## B6660. Dazed loses the whole turn in a fight (2026-11-16)
 WoDX Combat. A Dazed character spends the next turn shaking it off (V20 Dark Ages p. 348), so in a running fight Dazed now counts in WoDX Actions' cannotActWhy beside being asleep or out cold. A player's attack is refused (through api.cannotAct, and through Chronicle's Dazed mark when WoDX Actions is off). Every WoDX Actions window refuses with the reason, as the B6156 and B6372 idle refusal does. The token does not move, because movement is part of the turn in a fight (VtDA20 p. 333) and the lost turn takes the move with it. The Storyteller may still attack and move. Rage's Ignore being stunned (W20 p. 144) still opens, since it is how a Garou shakes off the daze. Outside a fight there are no turns, so Dazed stays a note on the roll. A fomor's gas or liquid form, which only takes the attack away, is not refused.

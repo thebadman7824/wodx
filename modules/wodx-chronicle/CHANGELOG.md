@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.134.5 (The Cyberpunks bloodline's signature line (B6604))
 - 0.134.4 (A death sentence passed on someone the watch already holds asks WoDX Storyteller to bring them out of custody for the sentence, so it is carried out on the map where they are held (B6667); Era profile switches are read in play, not only shown on the era card: api.eras.eraSwitch(key) gives the profile's firearms, morality, gauntletChart or cyberware switch, and terms.gunsOnSheet, walksRoads and cyberwareOn decide from it, with the old year checks only as the fallback (B6668); Latin Christendom's law has a medieval time sentence: a court may send a character to the lord's or the town's gaol for a year or two (a house figure), from the start of the Dark Medieval until prison takes its place in 1780, as Mage: The Dark Ages has serfs jailed (B6669))
 - 0.134.3 (The Net button (B6590) joins the player buttons list)
 - 0.134.2 (The Bunyip, as Ben picked on the House Events Desk: the War of Tears (1899) breaks the tribe and a new event, The last stand of the Bunyip (1937, Past Lives pdf 70), ends it; the tribe's signature features run to 1937 (they said 1890). The Lyon card of the 2086 Accord murders now names Night City among the three cities, as the approved Future Darkness timeline has it (timeline check, 16 November))
