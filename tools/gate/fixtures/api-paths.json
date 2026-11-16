@@ -2345,7 +2345,7 @@
   ],
   "uses": [
    "modules/wodx-chronicle/scripts/legends.mjs:51",
-   "modules/wodx-chronicle/scripts/pod.mjs:51",
+   "modules/wodx-chronicle/scripts/pod.mjs:53",
    "modules/wodx-chronicle/scripts/signatures.mjs:81",
    "modules/wodx-chronicle/scripts/signatures.mjs:547",
    "modules/wodx-chronicle/scripts/traits.mjs:27",
@@ -2525,7 +2525,7 @@
    "lifepathThreads"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:469",
+   "modules/wodx-chronicle/scripts/pod.mjs:474",
    "modules/wodx-storyteller/scripts/threads.mjs:87"
   ]
  },
@@ -3230,6 +3230,7 @@
    "modules/wodx-actions/scripts/effects.js:1012",
    "modules/wodx-actions/scripts/effects.js:1024",
    "modules/wodx-chronicle/scripts/bg-world.mjs:51",
+   "modules/wodx-chronicle/scripts/reveals.mjs:198",
    "modules/wodx-interactables/scripts/chase.mjs:335",
    "modules/wodx-interactables/scripts/chase.mjs:355",
    "modules/wodx-storyteller/scripts/inherit.mjs:78",
@@ -3245,6 +3246,8 @@
   "uses": [
    "modules/wodx-actions/scripts/social.js:99",
    "modules/wodx-chronicle/scripts/bg-world.mjs:54",
+   "modules/wodx-chronicle/scripts/reveals.mjs:200",
+   "modules/wodx-chronicle/scripts/reveals.mjs:203",
    "modules/wodx-creation/scripts/first-night-prelude.mjs:196",
    "modules/wodx-interactables/scripts/chase.mjs:280",
    "modules/wodx-npc/scripts/trust.mjs:69"
@@ -3782,6 +3785,16 @@
    "modules/wodx-npc/scripts/servant-world.mjs:187",
    "modules/wodx-npc/scripts/servant-world.mjs:193",
    "modules/wodx-storyteller/scripts/hunt-follow.mjs:34"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routines",
+   "listPlaces"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/encounters.mjs:109"
   ]
  },
  {
@@ -4653,7 +4666,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/social.js:226",
-   "modules/wodx-chronicle/scripts/pod.mjs:181",
+   "modules/wodx-chronicle/scripts/pod.mjs:183",
    "modules/wodx-chronicle/scripts/signatures.mjs:581",
    "modules/wodx-chronicle/scripts/signatures.mjs:600",
    "modules/wodx-npc/scripts/hearts.mjs:421",
@@ -4901,7 +4914,7 @@
   "uses": [
    "modules/wodx-actions/scripts/debts-marks.js:119",
    "modules/wodx-actions/scripts/kindred.js:484",
-   "modules/wodx-chronicle/scripts/pod.mjs:118",
+   "modules/wodx-chronicle/scripts/pod.mjs:120",
    "modules/wodx-combat/scripts/aftermath.js:138",
    "modules/wodx-npc/scripts/aftercare.mjs:288",
    "modules/wodx-npc/scripts/cults.mjs:303",
@@ -4936,7 +4949,9 @@
    "post"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/fronts.mjs:94"
+   "modules/wodx-chronicle/scripts/encounters.mjs:58",
+   "modules/wodx-chronicle/scripts/fronts.mjs:94",
+   "modules/wodx-chronicle/scripts/reveals.mjs:52"
   ]
  },
  {
@@ -5066,7 +5081,8 @@
    "townLooks"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/fronts.mjs:80"
+   "modules/wodx-chronicle/scripts/fronts.mjs:80",
+   "modules/wodx-chronicle/scripts/reveals.mjs:191"
   ]
  },
  {
@@ -5075,7 +5091,7 @@
    "towns"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:175"
+   "modules/wodx-chronicle/scripts/pod.mjs:177"
   ]
  },
  {
@@ -5203,7 +5219,7 @@
    "modules/wodx-actions/scripts/trade.js:14",
    "modules/wodx-chronicle/scripts/law-punish.mjs:65",
    "modules/wodx-chronicle/scripts/law-tax.mjs:47",
-   "modules/wodx-chronicle/scripts/pod.mjs:167",
+   "modules/wodx-chronicle/scripts/pod.mjs:169",
    "modules/wodx-library/scripts/examine.mjs:74",
    "modules/wodx-library/scripts/gamble-use.mjs:11",
    "modules/wodx-npc/scripts/hearts.mjs:217",
@@ -5321,7 +5337,20 @@
   ],
   "uses": [
    "modules/wodx-chronicle/scripts/fronts.mjs:80",
+   "modules/wodx-chronicle/scripts/reveals.mjs:191",
    "modules/wodx-npc/scripts/faction-looks.mjs:13"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "townLooks",
+   "setLooks"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/reveals.mjs:193",
+   "modules/wodx-chronicle/scripts/reveals.mjs:195"
   ]
  },
  {
@@ -5331,7 +5360,7 @@
    "towns"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:175"
+   "modules/wodx-chronicle/scripts/pod.mjs:177"
   ]
  },
  {
