@@ -200,8 +200,10 @@ export async function run() {
       const h = Hooks.on("wodxAttackRolled", (att, r) => { if ( att?.id === tca.id || att === tca ) rolled = r; });
       try { await C.quickAttack({attacker: tc.object, target: td.object}); } finally { Hooks.off("wodxAttackRolled", h); }
       await wait(400);
-      const msg = [...game.messages].filter(m => (m.timestamp ?? 0) >= t0 && m.flags?.["wodx-combat"]).pop();
-      return {rolled, text: String(msg?.content ?? ""), rolls: msg?.rolls?.length ?? 0};
+      // every card the swing made (a fight-start card can come after the attack card in a busy world)
+      const msgs = [...game.messages].filter(m => (m.timestamp ?? 0) >= t0 && m.flags?.["wodx-combat"]);
+      const card = msgs.find(m => rolled?.messageId && m.id === rolled.messageId) ?? msgs.find(m => /attacks/.test(String(m.content ?? ""))) ?? msgs.pop();
+      return {rolled, text: String(card?.content ?? ""), rolls: card?.rolls?.length ?? 0};
     };
 
     await G.step("12. no defence for the Incapacitated", async () => {
