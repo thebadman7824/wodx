@@ -59,20 +59,28 @@ Hooks.once("init", () => {
 let started = false;
 let waiting = null;
 
+/** B6811: one failing part no longer leaves the whole module without its api; what failed is kept in api.startErrors. */
+const startErrors = [];
+function guard(name, fn) {
+  try { fn(); } catch (e) { startErrors.push(`${name}: ${e?.message ?? e}`); console.error(`WoDX Creation | ${name}`, e); }
+}
+
 function start() {
-  if ( started || !active ) return;
+  if ( started ) return;
+  // B6811: a Chronicle that finishes its ready work after the 20-second wait still starts Creation
+  if ( !active ) { if ( !isWoDXWorld() ) return; active = true; }
   started = true;
   clearTimeout(waiting);
-  xp.registerXPHandler();
-  learn.registerLearning();
-  people.registerPeople();
-  lifepath.registerLifepath();
-  firstNight.registerFirstNight();
-  feedVitae.registerFeedVitae();
-  animalStock.registerAnimalStock();
-  animalBlood.registerAnimalBlood();
-  animalKeepers.registerAnimalKeepers();
-  archive.setupAutoArchive();
+  guard("xp.registerXPHandler", () => xp.registerXPHandler());
+  guard("learn.registerLearning", () => learn.registerLearning());
+  guard("people.registerPeople", () => people.registerPeople());
+  guard("lifepath.registerLifepath", () => lifepath.registerLifepath());
+  guard("firstNight.registerFirstNight", () => firstNight.registerFirstNight());
+  guard("feedVitae.registerFeedVitae", () => feedVitae.registerFeedVitae());
+  guard("animalStock.registerAnimalStock", () => animalStock.registerAnimalStock());
+  guard("animalBlood.registerAnimalBlood", () => animalBlood.registerAnimalBlood());
+  guard("animalKeepers.registerAnimalKeepers", () => animalKeepers.registerAnimalKeepers());
+  guard("archive.setupAutoArchive", () => archive.setupAutoArchive());
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
     if ( message?.type === "vitae.request" ) await feedVitae.onRequest(message.payload);
@@ -112,6 +120,7 @@ function start() {
       // B6242: the People tables load on first use; load() resolves when they are in
       load: () => people.load(), loaded: () => !!people.loaded(), feminine: people.feminine}
   };
+  api.startErrors = startErrors;
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {creation: api});
   console.log("WoDX | Creation ready");

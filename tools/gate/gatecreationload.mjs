@@ -16,7 +16,7 @@ export async function run() {
   try {
     await G.step("1. api", async () => {
       const m = game.modules.get("wodx-creation"), api = m?.api;
-      G.ok("1. api", !!m?.active && !!api?.archive && !!api?.time && !!api?.animals, {active: !!m?.active, version: m?.version, keys: Object.keys(api ?? {}).slice(0, 12), chronicle: !!game.modules.get("wodx-chronicle")?.api});
+      G.ok("1. api", !!m?.active && !!api?.archive && !!api?.time && !!api?.animals && !(api?.startErrors?.length), {active: !!m?.active, version: m?.version, startErrors: api?.startErrors ?? null, keys: Object.keys(api ?? {}).slice(0, 12), chronicle: !!game.modules.get("wodx-chronicle")?.api});
     });
     await G.step("2. imports", async () => {
       const bad = [];
