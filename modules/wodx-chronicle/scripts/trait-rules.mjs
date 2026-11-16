@@ -183,7 +183,9 @@ const TAG_MAP = {
 const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
   "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing",
   // B3780: the Attributes and a few more Abilities, for merits and flaws that name them (Charisma rolls, the Art Talent)
-  "strength", "stamina", "charisma", "manipulation", "appearance", "intelligence", "wits", "art", "firearms", "archery", "kenning", "awareness", "willpower"]);
+  "strength", "stamina", "charisma", "manipulation", "appearance", "intelligence", "wits", "art", "firearms", "archery", "kenning", "awareness", "willpower",
+  // B6851: Demon: the Fallen's Intuition, for a form power that eases it
+  "intuition"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {

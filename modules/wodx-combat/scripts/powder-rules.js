@@ -30,7 +30,7 @@ export const LOCKS = {
 };
 
 const NAMED = [
-  [/\b(hand ?cannon|handgonne|handgun of the|culverin|petronel|pot-de-fer|fire ?lance|hu dun pao|tanegashima(?! flint))\b/i, "handgonne"],
+  [/\b(hand ?cannon|handgonne|handgun of the|culverin|petronel|pot-de-fer|fire ?lance|hu dun pao)\b/i, "handgonne"],
   [/\b(match ?lock|arquebus|harquebus|hackbut|caliver|tanegashima|teppo|toradar|jezail of the match|musket of the match)\b/i, "matchlock"],
   [/\b(wheel ?lock|wheel-lock|puffer|dag)\b/i, "wheellock"],
   [/\b(flint ?lock|flint-lock|snaphance|snaphaunce|snaplock|miquelet|brown bess|charleville|blunderbuss|fusil|jezail|kentucky|pennsylvania rifle|baker rifle)\b/i, "flintlock"],

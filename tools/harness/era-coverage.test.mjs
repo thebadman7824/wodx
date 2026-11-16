@@ -53,6 +53,10 @@ test("the night's draw and the people have mid-century and future tables of thei
   }
 });
 
+test("B6814: a mage before 1197 works the Dark Ages fellowships, not the Spheres", () => {
+  for ( const id of ["mythic-age", "roman-empire", "migration-age", "premyslid-duchy"] ) assert.ok(mageDA(id), id);
+});
+
 test("the Long Night keeps the Dark Ages books for Mage and the fae", () => {
   for ( const f of [faeDA, mageDA] ) {
     assert.ok(f("dark-ages")); assert.ok(f("long-night")); assert.ok(!f("renaissance")); assert.ok(!f("modern"));

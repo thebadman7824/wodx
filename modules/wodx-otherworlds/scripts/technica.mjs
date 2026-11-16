@@ -64,7 +64,43 @@ export async function empower(actor) {
  * Remote Touch (Technica 4), in Realspace: the nearest keypad door, the lights, or a vehicle within 100 feet of the
  * token obeys. what: "door", "lights" or "vehicle". Returns the line.
  */
-export async function remoteTouch(token, what = "door") {
+/**
+ * B6799: a vehicle (a WoDX Interactables mount tile) driven from afar. With someone at the wheel, their token moves and
+ * WoDX Interactables carries the vehicle and everyone aboard, as when they drive it; with nobody at the wheel the
+ * vehicle moves and its passengers go with it. drive: {dir, squares, target (a token uuid for "toward")}. Returns the words.
+ */
+export async function steerVehicle(tile, drive = {}) {
+  const scene = tile?.parent;
+  if ( !scene ) return null;
+  const g = scene.grid?.size ?? 100, IX = "wodx-interactables", f = tile.flags?.[IX] ?? {};
+  let toward = null;
+  if ( drive?.dir === "toward" && drive.target ) {
+    const t = await fromUuid(drive.target).catch(() => null);
+    if ( t && t.parent?.id === scene.id ) toward = {dx: (t.x + (t.width ?? 1) * g / 2) - (tile.x + (tile.width ?? g) / 2), dy: (t.y + (t.height ?? 1) * g / 2) - (tile.y + (tile.height ?? g) / 2)};
+  }
+  const step = N.driveStep({dir: drive?.dir ?? "n", squares: drive?.squares ?? 1, toward}, g);
+  const name = f.title || "The vehicle";
+  if ( !step ) return `${name} stays where it is.`;
+  const clamp = (v, max) => Math.max(0, Math.min(max, v));
+  const W = scene.dimensions?.width ?? scene.width ?? 4000, H = scene.dimensions?.height ?? scene.height ?? 4000;
+  const driver = f.driver?.t ? await fromUuid(f.driver.t).catch(() => null) : null;
+  if ( driver && driver.parent?.id === scene.id ) {
+    await driver.update({x: clamp(driver.x + step.dx, W - g), y: clamp(driver.y + step.dy, H - g)});
+  } else {
+    const riders = Array.isArray(f.riders) ? f.riders : [];
+    await tile.update({x: clamp(tile.x + step.dx, W - (tile.width ?? g)), y: clamp(tile.y + step.dy, H - (tile.height ?? g))});
+    for ( const r of riders ) {
+      const td = await fromUuid(r.t).catch(() => null);
+      if ( td && td.parent?.id === scene.id ) await td.update({x: clamp(td.x + step.dx, W - g), y: clamp(td.y + step.dy, H - g)}, {wodxMove: false, wodxCarried: true});
+    }
+    // A passenger who moves on their own gets off in WoDX Interactables; these were carried, so they stay aboard
+    if ( riders.length ) await tile.update({[`flags.${IX}.riders`]: riders});
+  }
+  if ( scene.id === canvas?.scene?.id ) try { canvas.ping?.({x: tile.x + step.dx + (tile.width ?? g) / 2, y: tile.y + step.dy + (tile.height ?? g) / 2}, {color: "#5fffe6"}); } catch (e) { /* no canvas */ }
+  return `${name} drives itself ${step.words}${driver ? `, the wheel turning under ${driver.name}'s hands` : ""}.`;
+}
+
+export async function remoteTouch(token, what = "door", drive = {}) {
   const a = token?.actor, scene = token?.parent;
   if ( technica(a) < 4 ) throw new Error(`${a?.name ?? "That character"} needs Technica 4.`);
   const reach = N.remoteReach(scene.grid?.distance, scene.grid?.units) * (scene.grid?.size ?? 100);
@@ -81,7 +117,8 @@ export async function remoteTouch(token, what = "door") {
     if ( ls.length ) { const off = ls.some(l => !l.hidden); await scene.updateEmbeddedDocuments("AmbientLight", ls.map(l => ({_id: l.id, hidden: off}))); line = `The lights within 100 feet go ${off ? "out" : "on"}.`; }
   } else if ( what === "vehicle" ) {
     const v = scene.tiles.filter(t => t.flags?.["wodx-interactables"]?.mount && d(t.x + t.width / 2, t.y + t.height / 2) <= reach);
-    if ( v.length ) line = `${esc(v[0].flags["wodx-interactables"].title || "A vehicle")} answers ${esc(a.name)}'s touch from afar: it moves at the character's word.`;
+    v.sort((p, q) => d(p.x + p.width / 2, p.y + p.height / 2) - d(q.x + q.width / 2, q.y + q.height / 2));
+    if ( v.length ) line = `${esc(v[0].flags["wodx-interactables"].title || "A vehicle")} answers ${esc(a.name)}'s touch from afar: ${esc(await steerVehicle(v[0], drive))}`;
   }
   if ( !/^Nothing/.test(line) ) await machineUsed(a);
   if ( scene.id === canvas?.scene?.id && token.object ) canvas.ping?.(token.object.center, {color: "#5fffe6"});

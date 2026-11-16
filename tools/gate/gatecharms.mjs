@@ -78,16 +78,19 @@ export async function run() {
 
     await G.step("4. Blast: Rage in aggravated dice on the target", async () => {
       aim(true);
-      const agg = () => Number(v()?.system?.health?.damage?.aggravated) || 0;
-      const e0 = ess();
-      for ( let k = 0; k < 4 && !agg(); k++ ) {
+      // B6733: WoDX Combat marks aggravated harm on a mortal as lethal (VtDA20 p. 346: mortals treat it as lethal), so the
+      // victim's wounds are read as the two together; the card names the aggravated harm the Blast dealt
+      const dmg = () => v()?.system?.health?.damage ?? {};
+      const hurtNow = () => (Number(dmg().aggravated) || 0) + (Number(dmg().lethal) || 0);
+      const h0 = hurtNow(), e0 = ess();
+      for ( let k = 0; k < 4 && hurtNow() <= h0; k++ ) {
         await A.limits?.clear?.(body());
         await K.use(body(), "blast");
-        await waitFor(() => agg() > 0, 3000);
+        await waitFor(() => hurtNow() > h0, 3000);
       }
-      const hurt = agg();
+      const hurt = hurtNow() - h0;
       aim(false);
-      G.ok("4. Blast: Rage in aggravated dice on the target", hurt > 0 && ess() < e0, {hurt, essence: [e0, ess()]});
+      G.ok("4. Blast: Rage in aggravated dice on the target", hurt > 0 && ess() < e0, {hurt, damage: dmg(), essence: [e0, ess()]});
     });
 
     await G.step("5. Illuminate: the token sheds light", async () => {
@@ -99,7 +102,7 @@ export async function run() {
     });
 
     await G.step("6. Freeze: Rage one lower for its time; the one near is hurt", async () => {
-      await v().update({"system.health.damage.aggravated": 0});
+      await v().update({"system.health.damage.aggravated": 0, "system.health.damage.lethal": 0});
       await A.limits?.clear?.(body());
       await K.use(body(), "freeze");
       const rage = () => Number(body().system?.advantages?.rage?.permanent);
@@ -264,10 +267,13 @@ export async function run() {
       aim2(true);
       await tens();
       try { await K.use(body(), "createfires", {size: "bonfire"}); } finally { CONFIG.Dice.randomUniform = dice0; }
-      await waitFor(() => !!areaOf("blaze"), 6000);
+      // B6735: the bonfire is placed from the effects card after the Charm's card posts, and its drawing is made just
+      // after its region (effects.js placeArea), so the step waits for both, not for the region alone
+      const drawnFor = r => !!r && !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r.id);
+      await waitFor(() => drawnFor(areaOf("blaze")), 8000);
       const r = areaOf("blaze");
       aim2(false);
-      const drawn = !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r?.id);
+      const drawn = drawnFor(r);
       G.ok("18. Create Fires: a bonfire burns on the target's square", !!r && onSquare(r) && drawn && Number(r.flags?.[MOD]?.effectArea?.item?.out?.dice) >= 2,
         {region: !!r, onSquare: onSquare(r), drawn, dice: r?.flags?.[MOD]?.effectArea?.item?.out?.dice ?? null});
     });

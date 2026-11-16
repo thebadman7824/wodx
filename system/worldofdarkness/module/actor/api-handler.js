@@ -91,7 +91,7 @@ export default class PCActorAPI {
         let difficulty = 6;
 
         if (options.difficulty !== undefined) {
-            difficulty = this._validateDifficulty(options.difficulty);
+            difficulty = this._validateDifficulty(options.difficulty) ?? 6;
         }
 
         const useWillpower = options.useWillpower ?? false;
@@ -127,6 +127,7 @@ export default class PCActorAPI {
         diceRoll.dicetext = [`${attributeName} (${attributeValue})`];
         diceRoll.bonus = bonus;
         diceRoll.origin = "general";
+        diceRoll.wodxDirect = true; // B6728: a macro roll skips the general window, so WoDX's modifiers are counted here
         diceRoll.numDices = numDices;
         diceRoll.woundpenalty = woundPenalty;
         diceRoll.difficulty = difficulty;
@@ -173,7 +174,7 @@ export default class PCActorAPI {
         // Validate and get difficulty
         let difficulty = 6;
         if (options.difficulty !== undefined) {
-            difficulty = this._validateDifficulty(options.difficulty);
+            difficulty = this._validateDifficulty(options.difficulty) ?? 6;
         }
         const useWillpower = options.useWillpower ?? false;
         const bonus = options.bonus ?? 0;
@@ -224,17 +225,18 @@ export default class PCActorAPI {
         diceText.push(`${abilityName} (${abilityValue})`);
 
         // Check for speciality
-        const hasSpeciality = ability.system.value >= 4 && ability.system.speciality;
+        const hasSpeciality = ability.system.value >= (parseInt(CONFIG.worldofdarkness.specialityLevel) || 4) && ability.system.speciality; // B6728: the world's specialty level
         const specialityText = hasSpeciality ? ability.system.speciality : "";
 
         // Create dice roll container
         const diceRoll = new DiceRollContainer(this.actor);
         diceRoll.action = abilityName;
         diceRoll.attribute = attributeKeyFinal;
-        diceRoll.ability = abilityId;
+        diceRoll.ability = ability.system?.id || abilityId; // B6728: the Ability's key, as the windows pass it
         diceRoll.dicetext = diceText;
         diceRoll.bonus = bonus;
         diceRoll.origin = "general";
+        diceRoll.wodxDirect = true; // B6728: a macro roll skips the general window, so WoDX's modifiers are counted here
         diceRoll.numDices = numDices;
         diceRoll.woundpenalty = woundPenalty;
         diceRoll.difficulty = difficulty;
@@ -287,7 +289,7 @@ export default class PCActorAPI {
         // Validate and get difficulty
         let difficulty = 6;
         if (options.difficulty !== undefined) {
-            difficulty = this._validateDifficulty(options.difficulty);
+            difficulty = this._validateDifficulty(options.difficulty) ?? 6;
         }
         const useWillpower = options.useWillpower ?? false;
         const bonus = options.bonus ?? 0;
@@ -321,6 +323,7 @@ export default class PCActorAPI {
         diceRoll.dicetext = [`${advantageName} (${advantageRollValue})`];
         diceRoll.bonus = bonus;
         diceRoll.origin = "general";
+        diceRoll.wodxDirect = true; // B6728: a macro roll skips the general window, so WoDX's modifiers are counted here
         diceRoll.numDices = numDices;
         diceRoll.woundpenalty = woundPenalty;
         diceRoll.difficulty = difficulty;

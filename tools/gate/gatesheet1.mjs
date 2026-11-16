@@ -79,12 +79,14 @@ export async function run() {
       await roller.update({ "system.attributes.dexterity.value": 4 });
       await T.addBite(roller, { key: "gate-sheet1", name: "Gate shakes", tags: ["dexterity"], dice: -1, duration: { kind: "time", seconds: 3600 }, source: "gatesheet1" });
       const rs = roller.sheet; await rs.render(true);
-      await until(() => rs.rendered && rs.element?.[0]?.querySelector("label.vrollable[data-attribute='true'][data-key='dexterity']"));
+      // B6771: a Mortal sheet runs on ApplicationV2, where the element is the window's <form> and element[0] its first control
+      const rsEl = () => (rs.element instanceof HTMLElement ? rs.element : rs.element?.[0]);
+      await until(() => rs.rendered && rsEl()?.querySelector("label.vrollable[data-attribute='true'][data-key='dexterity']"));
       const t0 = Date.now();
-      rs.element[0].querySelector("label.vrollable[data-attribute='true'][data-key='dexterity']").click();
+      rsEl().querySelector("label.vrollable[data-attribute='true'][data-key='dexterity']").click();
       let dlg = null;
       await until(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogGeneralRoll" && w.actor?.id === roller.id && w.rendered)));
-      (dlg?.element?.[0] ?? dlg?.element)?.querySelector(".actionbutton")?.click();
+      (dlg?.element instanceof HTMLElement ? dlg.element : dlg?.element?.[0])?.querySelector(".actionbutton")?.click();
       let m = null;
       await until(() => (m = game.messages.contents.filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === roller.id).at(-1)), 8000);
       const mods = m?.flags?.["wodx-sheets"]?.rollMods ?? null;

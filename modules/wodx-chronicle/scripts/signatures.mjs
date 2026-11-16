@@ -1117,6 +1117,9 @@ export function effects(actorOrId) {
   const out = S.markEffects(sig.marks ?? [], now());
   const rows = rowsOf(a), when = whenNow(a);
   for ( const row of rows ) for ( const e of row.effects ?? [] ) if ( !e.when || e.when === "monster" || when.has(e.when) ) out.push({...e, why: row.label});
+  // B6729: Titan's Power, a troll's held oaths as Strength dice (C20 p. 113)
+  const troll = S.trollOath((sig.oaths ?? []).filter(o => !o.broken).length);
+  if ( troll && rows.some(r => r.key === "troll") ) out.push({tags: ["strength"], dice: troll, why: "Trolls: Titan's Power"});
   const dfm = rowWith(a, "deformity") ? S.deformityByKey(sig.deformity) : null;
   for ( const e of dfm?.effects ?? [] ) out.push({...e, why: `Metis: ${dfm.label.toLowerCase()}`});
   const pen = S.beautyPenalty(sig.muses ?? []);
@@ -1134,6 +1137,12 @@ function whenNow(a) {
   try { const c = rowsOf(a).find(r => r.feature === "court"); if ( c && S.courtInPower(describeTime(now(), 49.5).month) === c.key ) out.add("court"); } catch (e) { /* no clock */ }
   try { for ( const t of game.modules.get("wodx-atmosphere")?.api?.weather?.now?.()?.tags ?? [] ) out.add(t); } catch (e) { /* no weather */ }
   return out;
+}
+/** B6729: the extra Bruised levels a character's kith gives, for WoDX Combat's health track (through traits.toughness). {n, names} */
+export function bruisedFor(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
+  try { return S.faeBruised(rowsOf(a), {oathsHeld: (sigOf(a).oaths ?? []).filter(o => !o.broken).length}); } catch (e) { return {n: 0, names: []}; }
 }
 /** Signature effects for one roll, in the trait-effect shape (WoDX Chronicle's traits api adds them to its own). */
 export function rollEffects(actor, ctx = {}) {
@@ -1461,7 +1470,7 @@ async function piskie({actor, mode, give, owe} = {}) {
   await cardFor(actor, "line", `${actor.name} leaves a gift`, `<p>${esc(give)} left in the trade, freely.</p>`, {whisper: [...new Set([...ownerIds(actor), ...gmIds()])], act: {key: "glamour", label: "A point of Glamour", who: "gm", data: {ids: [actor.id], one: true}}});
 }
 
-export const signaturesApi = {soakFor,rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+export const signaturesApi = {soakFor, bruisedFor, rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
   setSplat, setWraith, luck,

@@ -59,7 +59,7 @@ export const BLESSINGS = [
     B("res-f", "Resurrection (Faith)", "Investiture", "Faith", "advocate", "conscience+faith", 6, 1, 182, "Each Conviction point spent heals the living one lethal or two bashing levels.", HL(1)),
     B("res-w", "Resurrection (Wisdom)", "Investiture", "Wisdom", "advocate", "perception+wisdom", 7, 1, 182, "A touch: a fact about the target per success.", N("know")),
     B("auto-z", "Auto da Fe (Zeal)", "Investiture", "Zeal", "judge", "perception+zeal", 6, 1, 182, "The next attack adds Zeal to its damage dice, all aggravated.", T("boost", "Auto da Fe: holy fire", { turns: 1 }, "self", { boost: "physical" })),
-    B("auto-f", "Auto da Fe (Faith)", "Investiture", "Faith", "judge", "charisma+faith", "var", 3, 182, "A miracle of help, as the Storyteller decides (difficulty 10 less the points, 4 at best); the user can do nothing else this scene.", N("free")),
+    B("auto-f", "Auto da Fe (Faith)", "Investiture", "Faith", "judge", "charisma+faith", "var", 3, 182, "A miracle of help, as the Storyteller decides (difficulty 10 less the points, 4 at best); the user can do nothing else this scene.", N("free"), { story: "DA:Inquisitor p. 182: the miracle is whatever the Storyteller decides; the book gives no effect to apply" }),
     B("auto-w", "Auto da Fe (Wisdom)", "Investiture", "Wisdom", "judge", "perception+wisdom", 7, 1, 182, "Knows the field and every foe on it; successes add to initiative for the battle.", T("boost", "Auto da Fe: the field known", sc, "self", { boost: "initiative" })),
     // Legacies, House Murnau (p. 183-185)
     B("fw-f", "Forbidden Wisdom (Faith)", "Legacy", "Faith", "acolyte", "", 6, 0, 183, "Always on: smells the supernatural, ghouls too.", N("sense")),

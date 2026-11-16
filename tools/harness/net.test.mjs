@@ -183,7 +183,7 @@ test("Technica in Foundry: the Net reads every level, and the weakness hears Dis
   const net = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/net.mjs", import.meta.url), "utf8");
   const tech = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/technica.mjs", import.meta.url), "utf8");
   const main = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/main.mjs", import.meta.url), "utf8");
-  for ( const s of ["N.waysFor(kind, tech)", "T.touchRoll(a)", "N.touchComputer(", "T.empower(actor)", "T.remoteTouch(t, d.what)", "T.speak(actor", "s.way === \"ghost\"", "m.parley", "T.machineUsed(actor)"] ) assert.ok(net.includes(s), s);
+  for ( const s of ["N.waysFor(kind, tech)", "T.touchRoll(a)", "N.touchComputer(", "T.empower(actor)", "T.remoteTouch(t, d.what, d.drive", "T.speak(actor", "s.way === \"ghost\"", "m.parley", "T.machineUsed(actor)"] ) assert.ok(net.includes(s), s);
   for ( const s of ["technica(actor) < 3", "technica(a) < 4", "technica(actor) < 5", "N.remoteReach(", "N.machineTalk(", "N.leansOnBlood(", "Hooks.on(\"wodxPowerShown\"", "info.kind !== \"disc\""] ) assert.ok(tech.includes(s), s);
   assert.ok(main.includes("technica.setupTechnica()"));
 });

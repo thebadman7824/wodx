@@ -215,7 +215,7 @@ function virtues(actor) {
     let conscienceLabel = lab(v.conscience, "Conscience");
     let controlLabel = lab(v.selfcontrol, "Self-Control");
     let isConviction = (v.conscience?.label || "").includes("conviction"), isInstinct = (v.selfcontrol?.label || "").includes("instinct");
-    // A recognized Dark Ages Road decides its own Virtues (VtDA20 pp. 110–145)
+    // A recognized Dark Ages Road (VtDA20 pp. 110–145) or V20 Path (V20 pp. 316-340, B6724) decides its own Virtues
     const found = KX.DATA.roads ? KX.roadOf(actor) : null;
     if (found) {
         const rv = KR.roadVirtues(found);
@@ -596,7 +596,7 @@ function npcPowers(actor) {
     line(() => KXD.isKotE(actor), () => qx().powersFor(actor));
     line(() => OXD.isOrpheus(actor), () => ox().powersFor(actor));
     line(() => true, () => hx().powersFor(actor));
-    const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS)) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
+    const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS).filter(s => s !== "fetish")) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
     return from.map(p => {
         const kw = (p.keywords?.length ? { keywords: p.keywords } : null) || (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
         const t = NPW.tagsOf(kw.keywords ?? []);
@@ -1577,7 +1577,7 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
         ? `<select name="level" data-fixed>${opts(hier.map((x, i) => [10 - i, `${10 - i}: ${x}${10 - i > rd.value ? " (beyond the rating: no roll)" : ""}`]), lv)}</select>`
         : `<input type="number" name="level" value="${lv}" min="1" max="10"/>`;
     const content = `<form>
-      <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}, ${v.conscience.label} ${v.conscience.value}${rd.found ? ` <span class="wodx-quiet">(VtDA20 p. ${rd.found.path?.p ?? rd.found.road.hp ?? rd.found.road.p})</span>` : ""}</p>
+      <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}, ${v.conscience.label} ${v.conscience.value}${rd.found ? ` <span class="wodx-quiet">(${rd.found.road.book ?? "VtDA20"} p. ${rd.found.path?.p ?? rd.found.road.hp ?? rd.found.road.p})</span>` : ""}</p>
       <div class="form-group"><label>Sin (the Road's hierarchy${hier ? ", WoDX summaries" : ""})</label>${levelField}</div>
       <div class="form-group"><label>The sin</label><input type="text" name="desc" value="${esc(desc)}"/></div>
       <div class="form-group"><label>On failure, lose</label><select name="lose">${opts([["road", "A Road dot"], ["conscience", `A ${v.conscience.label} dot`], ["selfcontrol", `A ${v.selfcontrol.label} dot`], ["courage", "A Courage dot"]], "road")}</select></div>
@@ -2064,7 +2064,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (vRemaining <= 0) {
             html += `<div class="vta-warn">The vessel is drained dry and dies.</div>`;
             await kx().logEvent(actor, `Drains ${vesselActor?.name ?? "a vessel"} to death.`, "kill");
-            const sp = await kx().sinPrompt(actor, actor.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${vesselActor?.name ?? "The vessel"} is drained to death`);
+            const sp = await kx().sinPrompt(actor, actor.system?.conditions?.isfrenzy ? "killFrenzy" : "killFeed", `${vesselActor?.name ?? "The vessel"} is drained to death`);
             if (sp?.html) html += sp.html;
             else if (!sp) html += `<div class="vta-note">The Road doesn't count this killing as a sin, or names no level: the Storyteller decides.</div>`;
         } else if (!vesselActor) html += `<div class="vta-note">The vessel is left ${esc(out.text)}.</div>`;
@@ -2129,7 +2129,12 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const hasUndo = !!(undo && setting("applyChanges") && (harm || undo.statuses.length || drunk > 0));
     if (hasUndo) html += `<button type="button" class="vta-btn" data-action="feedUndo">Undo the harm to ${esc(vesselActor.name)}</button>`;
     // 3.47.0: who was fed on, for WoDX NPC's memory of it (the vessel knows something happened)
-    if (drunk > 0 && vesselActor) Hooks.callAll("wodxFed", { by: { uuid: actor.uuid, name: actor.name }, vessel: { uuid: vesselActor.uuid, name: vesselActor.name }, drunk, willing: !!willing, fought: !!fought });
+    if (drunk > 0 && vesselActor) {
+        const fed = { by: { uuid: actor.uuid, name: actor.name }, vessel: { uuid: vesselActor.uuid, name: vesselActor.name }, drunk, willing: !!willing, fought: !!fought };
+        Hooks.callAll("wodxFed", fed);
+        // B6787: and again on the active Storyteller's computer when a player fed, where the listeners act (WoDX Combat's relay)
+        try { game.wodxCombat?.relayHook?.("wodxFed", actor, fed); } catch (e) { /* Combat off */ }
+    }
     return { html, drunk, undo: hasUndo ? undo : null };
 }
 
@@ -3349,7 +3354,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.110.3", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.110.3", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

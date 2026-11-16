@@ -10,6 +10,8 @@
  * counts nothing, as before.
  */
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
+/** B6850: a Blessing or Curse key, the plain one or a standing scoped one ("wodx-effect-fortune:<name>:<tags>"). */
+const isFortune = k => k === "wodx-effect-fortune" || String(k ?? "").startsWith("wodx-effect-fortune:");
 
 /** The keys, as WoDX Chronicle's timed effects carry them. */
 export const KEYS = {ward: "wodx-effect-ward", boost: "wodx-effect-boost", fortune: "wodx-effect-fortune", calm: "wodx-effect-calm", hasten: "wodx-effect-hasten",
@@ -50,7 +52,9 @@ export function timedData(out = {}) {
   if ( out.difficulty ) d.difficulty = n(out.difficulty);
   if ( out.key === "ward" ) { d.dice = n(out.dice); if ( out.against ) d.against = String(out.against); }
   if ( out.key === "boost" ) { d.dice = n(out.dice); d.on = String(out.on ?? "physical"); }
-  if ( out.key === "fortune" ) { d.shift = n(out.shift); d.once = true; }
+  // B6850: a standing shift (a demon's Lordly Mien: Charisma and Manipulation 2 easier while the form lasts) is not spent,
+  // and tags hold it to the rolls it names; "defend", "defend-ranged" and "defend-close" are attacks against the bearer
+  if ( out.key === "fortune" ) { d.shift = n(out.shift); d.once = out.once !== false; if ( Array.isArray(out.tags) && out.tags.length ) d.tags = out.tags.map(String); }
   if ( out.key === "fear" && Number.isFinite(out.shift) ) d.shift = n(out.shift);
   if ( out.key === "hasten" ) { d.actions = n(out.actions); if ( out.name === "Slowed" || out.slow ) d.slow = true; }
   return Object.keys(d).length ? d : null;
@@ -59,6 +63,8 @@ export function timedData(out = {}) {
 /** The timed key a result goes under: a Calm or a Rousing is not a Fear, so it never holds the token away (binds.js). */
 export function keyFor(out = {}) {
   if ( out.key === "fear" && (out.name === "Calmed" || out.name === "Roused") ) return KEYS.calm;
+  // B6850: a standing, scoped shift keeps its own key, so two of them (Lordly Mien, Enhanced Senses) and a plain Blessing stand together
+  if ( out.key === "fortune" && Array.isArray(out.tags) && out.tags.length ) return `${KEYS.fortune}:${String(out.name ?? out.label ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-")}:${out.tags.join("-")}`;
   return `wodx-effect-${out.key}`;
 }
 
@@ -94,7 +100,8 @@ export function modsFrom(effects = [], ctx = {}) {
       const hit = (on === "soak" && ctx.soak) || (on === "initiative" && ctx.initiative) || (on === "all" && tags.size > 0 && !ctx.soak && !ctx.initiative)
         || ((BOOST_TAGS[on] ?? []).some(t => tags.has(t)) && !ctx.soak && !ctx.initiative);
       if ( hit ) { dice += n(d.dice); parts.push(`${e.name} ${n(d.dice) > 0 ? "+" : ""}${n(d.dice)}`); }
-    } else if ( e.key === KEYS.fortune && n(d.shift) && roll && !ctx.soak && !ctx.initiative ) {
+    } else if ( isFortune(e.key) && n(d.shift) && roll && !ctx.soak && !ctx.initiative
+      && (!Array.isArray(d.tags) || (!d.tags.some(t => DEFEND.has(t)) && d.tags.some(t => tags.has(String(t).toLowerCase())))) ) {
       diff += n(d.shift);
       parts.push(`${e.name} ${n(d.shift) > 0 ? "+" : ""}${n(d.shift)} diff`);
       if ( d.once && e.id ) once.push(e.id);
@@ -111,6 +118,21 @@ export function modsFrom(effects = [], ctx = {}) {
   const pen = penaltyFrom(effects, ctx);
   if ( pen.dice ) { dice += pen.dice; parts.push(...pen.parts); }
   return {dice, diff, parts, once};
+}
+
+/** B6850: the tags of a shift that stands on attacks against its bearer, not on the bearer's own rolls. */
+export const DEFEND = new Set(["defend", "defend-ranged", "defend-close"]);
+/** What the bearer's powers do to an attack against them: {diff, parts} (Shroud of Flames, Radiant Aura, Mirage). */
+export function defendFrom(effects = [], {ranged = false} = {}) {
+  let diff = 0;
+  const parts = [], want = new Set(["defend", ranged ? "defend-ranged" : "defend-close"]);
+  for ( const e of effects ) {
+    const d = e?.data ?? {};
+    if ( !e || e.disabled || !isFortune(e.key) || !n(d.shift) || !Array.isArray(d.tags) || !d.tags.some(t => want.has(t)) ) continue;
+    diff += n(d.shift);
+    parts.push(`${e.name} ${n(d.shift) > 0 ? "+" : ""}${n(d.shift)} diff`);
+  }
+  return {diff, parts};
 }
 
 /** B6553: powers that reach into the mind, and the shield a Ward against "mind" gives when its target resists one
@@ -151,7 +173,7 @@ export function looksFrom(effects = []) {
     const named = lookFor(e.name);
     const byKey = BY_KEY[e.key] ? LOOKS[BY_KEY[e.key]] : null;
     const l = named ?? byKey ?? (e.key === KEYS.boost ? LOOKS[n(e.data?.dice) < 0 ? "Sapped" : "Boosted"] : null)
-      ?? (e.key === KEYS.fortune ? LOOKS[n(e.data?.shift) > 0 ? "Cursed" : "Blessed"] : null);
+      ?? (isFortune(e.key) ? LOOKS[n(e.data?.shift) > 0 ? "Cursed" : "Blessed"] : null);
     if ( l ) out.push(l);
   }
   return out;
@@ -170,6 +192,8 @@ export function effectsOf(actor) {
 }
 /** What the powers on a character do to one roll (see modsFrom). */
 export const powerMods = (actor, ctx = {}) => modsFrom(effectsOf(actor), ctx);
+/** B6850: what the target's powers do to an attack against them (see defendFrom). */
+export const defendMods = (actor, ctx = {}) => defendFrom(effectsOf(actor), ctx);
 /** B6370: the penalty dice alone (for a roll that reads no other power effect: a power window, a sin). */
 export const penaltyOf = (actor, ctx = {any: true}) => penaltyFrom(effectsOf(actor), ctx);
 /** After a roll: the Blessings and Curses it used are spent. Owners and the Storyteller only; others leave it to them. */

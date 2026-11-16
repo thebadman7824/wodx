@@ -648,3 +648,47 @@ export function machineTalk(successes) {
  * machines pays Willpower. WoDX counts each night's uses: when the Discipline uses pass the machine uses, a point.
  */
 export function leansOnBlood({disc = 0, tech = 0} = {}) { return n(disc) > n(tech); }
+
+/* ---- Net burn and Net shock heal (B6795) ---- */
+/**
+ * Intelligence a black program or a hard de-rez took comes back as the damage it is named for heals: one point at a
+ * time, each after the time a mortal's wound of that weight takes (V20's mortal healing times, Bruised to
+ * Incapacitated: a day, three days, a week, a month, two months, three months). The more points still lost, the
+ * longer the next one takes. Aggravated heals on the same times (a house reading: the mortal chart has no row of its
+ * own for it). The Cyberpunk 2020 core says lost INT never comes back; WoDX keeps its own reading (PENDING-REVIEW).
+ */
+export const BURN_HEAL_DAYS = [1, 3, 7, 30, 60, 90, 90];
+export const burnHealSeconds = points => BURN_HEAL_DAYS[Math.max(1, Math.min(BURN_HEAL_DAYS.length, Math.round(n(points)) || 1)) - 1] * DAY;
+/** {points, last (world time of the last heal or the burn)} at now -> {points, last, healed, next (seconds to the next point, or null)}. */
+export function burnHeal({points = 0, last = 0} = {}, now = 0) {
+  const at = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+  let p = Math.max(0, Math.round(n(points))), t = at(last), healed = 0;
+  while ( p > 0 && at(now) - t >= burnHealSeconds(p) ) { t += burnHealSeconds(p); p -= 1; healed += 1; }
+  return {points: p, last: t, healed, next: p > 0 ? burnHealSeconds(p) - (at(now) - t) : null};
+}
+/** The words for the time to the next point. */
+export function burnWhen(seconds) {
+  if ( seconds === null || seconds === undefined ) return "";
+  const d = Math.max(1, Math.ceil(n(seconds) / DAY));
+  return d === 1 ? "a day" : d < 14 ? `${d} days` : d < 60 ? `${Math.round(d / 7)} weeks` : `${Math.round(d / 30)} months`;
+}
+
+/* ---- A vehicle driven by remote (B6799) ---- */
+export const DRIVE_DIRS = {n: [0, -1, "north"], ne: [1, -1, "north-east"], e: [1, 0, "east"], se: [1, 1, "south-east"], s: [0, 1, "south"], sw: [-1, 1, "south-west"], w: [-1, 0, "west"], nw: [-1, -1, "north-west"]};
+export const DRIVE_MAX = 12;
+/**
+ * Where a remote drive takes a vehicle: {dir (a compass key, or "toward"), squares (1 to 12), toward: {dx, dy} in
+ * pixels from the vehicle to the target}, grid (pixels a square) -> {dx, dy, words} in pixels, or null for no move.
+ */
+export function driveStep({dir = "n", squares = 1, toward = null} = {}, grid = 100) {
+  const k = Math.max(1, Math.min(DRIVE_MAX, Math.round(Number(squares) || 1))), g = Number(grid) || 100;
+  if ( dir === "toward" ) {
+    const tx = Number(toward?.dx) || 0, ty = Number(toward?.dy) || 0, len = Math.hypot(tx, ty);
+    if ( !len ) return null;
+    const go = Math.min(len - g, k * g);
+    if ( go <= 0 ) return null;
+    return {dx: Math.round(tx / len * go / g) * g, dy: Math.round(ty / len * go / g) * g, words: `${Math.round(go / g)} square${Math.round(go / g) === 1 ? "" : "s"} toward the target`};
+  }
+  const d = DRIVE_DIRS[dir] ?? DRIVE_DIRS.n;
+  return {dx: d[0] * k * g, dy: d[1] * k * g, words: `${k} square${k === 1 ? "" : "s"} ${d[2]}`};
+}

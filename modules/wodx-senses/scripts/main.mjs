@@ -333,7 +333,7 @@ export function gatherSources(scene, td, actor) {
   const presences = [];
   for ( const t of scene?.tokens ?? [] ) {
     if ( t.id === td.id || !t.actor ) continue;
-    presences.push({at: centerOf(t, scene), kind: kindOf(t.actor), wyrm: !!t.actor.flags?.[MOD]?.wyrm && !game.wodxActions?.fomor?.taintHidden?.(t.actor), hurt: num(t.actor.system?.health?.damage?.woundlevel) > 0 || num(t.actor.system?.health?.damage?.woundpenalty) < 0, name: t.name});
+    presences.push({at: centerOf(t, scene), kind: kindOf(t.actor), wyrm: (!!t.actor.flags?.[MOD]?.wyrm || wyrmTainted(t.actor)) && !game.wodxActions?.fomor?.taintHidden?.(t.actor), hurt: num(t.actor.system?.health?.damage?.woundlevel) > 0 || num(t.actor.system?.health?.damage?.woundpenalty) < 0, name: t.name});
   }
   const extra = [];
   try { Hooks.callAll("wodxSensesGather", {scene, token: td, actor, sources: extra}); } catch (e) { console.error(`${MOD} |`, e); }
@@ -341,6 +341,14 @@ export function gatherSources(scene, td, actor) {
   return {sources: out, presences, me};
 }
 const invisible = t => !!t.actor?.statuses?.has?.("invisible");
+/** B6790: the taint WoDX Otherworlds' Wyrm corruption leaves on people (and a Bane riding them) registers to Sense Wyrm too. */
+function wyrmTainted(actor) {
+  try {
+    const C = game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds").api?.corruption : null;
+    const t = C?.taintOf?.(actor);
+    return !!(t && C.rules?.registersAsWyrm?.(t));
+  } catch (e) { return false; }
+}
 /** A Veil keyword on the token's actor (WoDX Actions): the difficulty to notice them, or 0. */
 const veiledBy = t => {
   const e = (t.actor?.effects ?? []).find?.(x => !x.disabled && x.flags?.["wodx-chronicle"]?.timed?.key === "wodx-effect-veil");

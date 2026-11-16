@@ -195,7 +195,8 @@ export function registerGhoulNeedHooks() {
   // B6380: Light-touch mode held the month's need; it is read once when the mode ends
   Hooks.on("wodxLightTouchEnd", () => { tick({force: true}).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
   Hooks.on("wodxSkipEnd", info => { if ( isActiveGM() ) noteSkip(info).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
-  Hooks.on("wodxGhoulFix", e => { if ( e?.drank && isActiveGM() ) fed(e.actor).catch(err => console.error(`${MODULE_ID} | ghoul need`, err)); });
+  // B6747: the hook is heard only where it was called, and the sheet's "Drank from the domitor" is a player's button too
+  Hooks.on("wodxGhoulFix", e => { if ( e?.drank && e.actor?.isOwner ) fed(e.actor).catch(err => console.error(`${MODULE_ID} | ghoul need`, err)); });
 }
 
 export const ghoulNeedApi = {check, fed, tick, isGhoul, on, rules: R};

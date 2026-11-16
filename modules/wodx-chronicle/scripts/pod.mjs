@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, isActiveGM, rule} from "./util.mjs";
+import {MODULE_ID, esc, isActiveGM, rule, podTurn} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
 import * as P from "./pod-rules.mjs";
@@ -90,7 +90,7 @@ async function runAct(message) {
 async function runUndo(message) {
   const u = message?.flags?.[MODULE_ID]?.podUndo;
   if ( !u || !game.user.isGM ) return;
-  if ( u.city ) { const s = state(); s.cities ??= {}; if ( u.before ) s.cities[u.city] = u.before; else delete s.cities[u.city]; await saveState(s); }
+  if ( u.city ) await podTurn(() => { const s = state(); s.cities ??= {}; if ( u.before ) s.cities[u.city] = u.before; else delete s.cities[u.city]; return saveState(s); });
   else { const doc = await fromUuid(u.uuid); if ( doc ) await doc.update({[`flags.${MODULE_ID}.${u.path}`]: u.before ?? null}); }
   await message.update({content: `${message.content}<p class="vta-note">Undone by the Storyteller.</p>`, [`flags.${MODULE_ID}.podUndo`]: null});
 }
@@ -105,11 +105,16 @@ export function exposure(city) {
 /** Raise a city's exposure. Returns the rule result, or null when the setting is off. */
 export async function expose(city, points, {why = "A breach of the Masquerade", by = null} = {}) {
   if ( !lineOn("podExposure") || !isActiveGM() || !points ) return null;
-  const s = state(); s.cities ??= {};
-  const before = s.cities[city] ? {...s.cities[city]} : null, yr = currentYear();
-  const r = P.raise(before ?? {}, points, now(), yr);
-  s.cities[city] = r.rec;
-  await saveState(s);
+  const yr = currentYear();
+  let before = null;
+  const r = await podTurn(async () => {
+    const s = state(); s.cities ??= {};
+    before = s.cities[city] ? {...s.cities[city]} : null;
+    const x = P.raise(before ?? {}, points, now(), yr);
+    s.cities[city] = x.rec;
+    await saveState(s);
+    return x;
+  });
   if ( r.crossed ) await card(`${city}: ${r.band.label}`, `<p>${esc(why)} raises the city's exposure from ${r.before} to ${r.value}. ${esc(r.band.note)}</p>`, {undo: {city, before}});
   if ( r.court ) {
     const law = P.lawOf(r.rec, yr);
@@ -122,10 +127,13 @@ export async function expose(city, points, {why = "A breach of the Masquerade", 
   return r;
 }
 ACTS.heel = async ({city, by}) => {
-  const s = state(); s.cities ??= {};
-  const rec = s.cities[city] ?? {}, v = Math.max(0, P.exposureNow(rec, now()) - P.HEEL_DROP);
-  s.cities[city] = {...rec, value: v, at: now()};
-  await saveState(s);
+  const v = await podTurn(async () => {
+    const s = state(); s.cities ??= {};
+    const rec = s.cities[city] ?? {}, x = Math.max(0, P.exposureNow(rec, now()) - P.HEEL_DROP);
+    s.cities[city] = {...rec, value: x, at: now()};
+    await saveState(s);
+    return x;
+  });
   await card(`${city}: the court has acted`, `<p>${by ? `${esc(by.name)} is brought to heel` : "The court makes an example"}. Exposure falls to ${v}.</p>`);
 };
 async function onBreach(p = {}) {
@@ -136,11 +144,11 @@ async function onBreach(p = {}) {
   const pts = P.breachPoints({witnesses: w, year: p?.entry?.spread === false ? 0 : yr, camera: watched(yr, scene?.flags?.[MODULE_ID]?.camera)});
   await expose(cityOf(scene), pts, {why: `A breach (${p?.entry?.event ?? "seen"})`, by: a ? {id: a.id, name: a.name} : null});
 }
-export async function setSect(city, sect) {
+export const setSect = (city, sect) => podTurn(() => {
   const s = state(); s.cities ??= {};
   s.cities[city] = {...(s.cities[city] ?? {value: 0, at: now()}), sect: P.SECT_LAW[sect] ? sect : null};
   return saveState(s);
-}
+});
 
 /* ---------------- great cities ---------------- */
 
@@ -250,15 +258,17 @@ function onActorUpdate(a, change) {
   if ( !lineOn("podGolconda") || !isActiveGM() || change?.system?.conditions?.isfrenzy !== true || !golOf(a) ) return;
   setback(a, "frenzy");
 }
+// B6747: wodxSocial and wodxFed are heard only on the client that rolled (a player's, as often as not), so these two
+// answer on the client that owns the seeker, not only on the Storyteller's; golcondaStep lets an owner write it.
 function onSocial({actor, act, result} = {}) {
-  if ( !lineOn("podGolconda") || !isActiveGM() || act !== "lift" || result !== "win" || !golOf(actor) ) return;
+  if ( !lineOn("podGolconda") || !actor?.isOwner || act !== "lift" || result !== "win" || !golOf(actor) ) return;
   setback(actor, "theft");
 }
 function onFed(p = {}) {
-  if ( !lineOn("podGolconda") || !isActiveGM() || !P.harmfulFeed(p) ) return;
+  if ( !lineOn("podGolconda") || !P.harmfulFeed(p) ) return;
   let a = null;
   try { a = fromUuidSync(p.by?.uuid); a = a?.actor ?? a; } catch (e) { a = null; }
-  if ( golOf(a) ) setback(a, "harm");
+  if ( a?.isOwner && golOf(a) ) setback(a, "harm");
 }
 async function teachTick() {
   for ( const a of seekers() ) {
@@ -270,19 +280,21 @@ async function teachTick() {
 
 /* ---------------- story chains and goals ---------------- */
 
-export async function startChain(key, where = "") {
+export const startChain = (key, where = "") => podTurn(() => startChainNow(key, where));
+async function startChainNow(key, where) {
   const c = P.chainByKey(key);
   if ( !c || !lineOn("podChains") || !game.user.isGM ) return null;
   const s = state(); s.chains ??= [];
   const run = {id: foundry.utils.randomID(), key, where: where || cityOf(canvas?.scene), at: 0, last: now()};
   s.chains.push(run);
   await saveState(s);
-  await dealChains();
+  await dealDue();
   return run;
 }
-export async function stopChain(id) { const s = state(); s.chains = (s.chains ?? []).filter(r => r.id !== id); return saveState(s); }
+export const stopChain = id => podTurn(() => { const s = state(); s.chains = (s.chains ?? []).filter(r => r.id !== id); return saveState(s); });
 /** Post every step that has fallen due. */
-export async function dealChains() {
+export const dealChains = () => podTurn(dealDue);
+async function dealDue() {
   if ( !(lineOn("podChains") || lineOn("podSaga")) || !isActiveGM() ) return;
   const s = state(), t = now(), yr = currentYear();
   let changed = false;
@@ -349,7 +361,8 @@ export function sagaCurrent() {
     next: n ? {...pick(n), due: n.due} : null};
 }
 /** Start a book of the saga now (approval, or the window). */
-export async function startSaga(book, where = "") {
+export const startSaga = (book, where = "") => podTurn(() => startSagaNow(book, where));
+async function startSagaNow(book, where) {
   const b = P.saga.bookByKey(book);
   if ( !b || !lineOn("podSaga") || !game.user.isGM ) return null;
   const s = state(), x = sagaOf(s);
@@ -360,11 +373,12 @@ export async function startSaga(book, where = "") {
   s.chains.push(run);
   x.books[b.key] = "running";
   await saveState(s);
-  await dealChains();
+  await dealDue();
   return run;
 }
 /** Mark the chapter a book waits on as played; the next step's gap counts from now (B4761). */
-export async function sagaPlayed(book) {
+export const sagaPlayed = book => podTurn(() => sagaPlayedNow(book));
+async function sagaPlayedNow(book) {
   if ( !game.user.isGM ) return null;
   const s = state(), run = (s.chains ?? []).find(r => r.saga?.book === book);
   if ( !run ) return null;
@@ -373,7 +387,7 @@ export async function sagaPlayed(book) {
   (run.played ??= []).push(w.key);
   run.last = Math.max(Number(run.last) || 0, now());
   await saveState(s);
-  await dealChains();
+  await dealDue();
   return w.key;
 }
 /* ---- Book one's twist web (B4850-B4853) ---- */
@@ -385,12 +399,17 @@ function bookOnePlayed(s = state()) {
 }
 export const twistState = () => sagaOf(state()).twists ?? {revealed: {}};
 /** Reveal a twist of book one: its partners keep another heart, and the Storyteller gets the card. */
+// The state change takes its turn; what the reveal shows and the card come after it, because the reveal's own writes
+// (Reveals, Fronts) take turns too and a turn must not wait on another (the twists gate hung on that)
 export async function revealTwist(n, {variant = "", force = false} = {}) {
   if ( !game.user.isGM ) return null;
-  const s = state(), x = sagaOf(s);
-  const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force, met: Encounters.metOf(s)});
-  x.twists = r.state;
-  await saveState(s);
+  const r = await podTurn(async () => {
+    const s = state(), x = sagaOf(s);
+    const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force, met: Encounters.metOf(s)});
+    x.twists = r.state;
+    await saveState(s);
+    return r;
+  });
   const t = TW.twistOf(n), chains = TW.chainsOf(n).map(k => TW.CHAINS.find(c => c.key === k)?.label).filter(Boolean);
   const lines = r.changes.filter(c => !c.variant).map(c => `<li>Twist ${c.n}, ${esc(TW.twistOf(c.n)?.label ?? "")}: ${esc(c.note)}</li>`);
   // B6650-B6652: the reveal shows on the table, and the people who know act
@@ -401,7 +420,8 @@ export async function revealTwist(n, {variant = "", force = false} = {}) {
   return r;
 }
 /** Take a reveal back (a slip of the hand). The week counts from the reveal before it. */
-export async function unrevealTwist(n) {
+export const unrevealTwist = n => podTurn(() => unrevealTwistNow(n));
+async function unrevealTwistNow(n) {
   if ( !game.user.isGM ) return;
   const s = state(), x = sagaOf(s), tw = x.twists ?? {revealed: {}};
   if ( !tw.revealed?.[n] ) return;
@@ -428,7 +448,8 @@ function twistSection(s) {
     <ul>${tally}</ul><table class="wodx-check"><tbody>${rows}</tbody></table>
     <p class="vta-note">Each twist sits under the encounter of the same number. The twists' words are in the Storyteller's third volume; a revealed twist gives its partner another heart.</p>`;
 }
-export async function skipSaga(book) {
+export const skipSaga = book => podTurn(() => skipSagaNow(book));
+async function skipSagaNow(book) {
   if ( !P.saga.bookByKey(book) || !game.user.isGM ) return;
   const s = state(), x = sagaOf(s);
   s.chains = (s.chains ?? []).filter(r => r.saga?.book !== book);
@@ -436,22 +457,29 @@ export async function skipSaga(book) {
   await saveState(s);
 }
 /** Record a book's ending; running books pick up the first book's ending for their later words. */
-export async function setEnding(book, ending) {
+export const setEnding = (book, ending) => podTurn(() => setEndingNow(book, ending));
+async function setEndingNow(book, ending) {
   if ( !P.saga.bookByKey(book) || (ending && !P.saga.SAGA_ENDINGS[ending]) || !game.user.isGM ) return;
   const s = state(), x = sagaOf(s);
   if ( ending ) x.endings[book] = ending; else delete x.endings[book];
   for ( const r of s.chains ?? [] ) if ( r.saga ) r.saga.endings = {...x.endings};
   await saveState(s);
 }
-export async function setSagaClock(key, value) {
+export const setSagaClock = (key, value) => podTurn(() => setSagaClockNow(key, value));
+async function setSagaClockNow(key, value) {
   if ( !P.saga.SAGA_CLOCKS.some(c => c.key === key) || !game.user.isGM ) return;
   const s = state(), x = sagaOf(s);
   x.clocks = P.saga.moveClocks({...x.clocks, [key]: Number(value) || 0});
   await saveState(s);
 }
-/** Put the next book that fits the year to the Storyteller, once. */
-export async function sagaTick() {
-  if ( !lineOn("podSaga") || !isActiveGM() ) return;
+/** Put the next book that fits the year to the Storyteller, once. The proposal goes out after the turn (B6740). */
+export async function sagaTick() { await askAll(await podTurn(sagaTickNow)); }
+/** Run proposals made in a turn, after it: a standing rule may approve one on sight, and that change takes its own turn. */
+async function askAll(asks = []) {
+  for ( const a of asks ?? [] ) { try { await propose(a); } catch (e) { console.error(`${MODULE_ID} | proposal`, e); } }
+}
+async function sagaTickNow() {
+  if ( !lineOn("podSaga") || !isActiveGM() ) return [];
   const s = state(), x = sagaOf(s), yr = currentYear();
   const gone = P.saga.passedBooks(x, yr, {future: futureOn()});
   if ( gone.length ) {
@@ -462,11 +490,11 @@ export async function sagaTick() {
     await card("The Rothenstein saga: years gone by", `<p>The clock passed ${gone.map(g => esc(g.title)).join(", ")} without play. What the wider world did in those years still happened.</p>${moved.length ? `<p>The long clocks: ${moved.join("; ")}.</p>` : ""}<p class="vta-note">Any of them can still be started from the saga window.</p>`);
   }
   const b = P.saga.dueBook(x, yr, {future: futureOn()});
-  if ( !b ) return;
+  if ( !b ) return [];
   x.books[b.key] = "offered";
   await saveState(s);
-  await propose({type: T_SAGA, key: `saga:${b.key}`, title: `The Rothenstein saga, book ${b.n}: ${b.title}`,
-    detail: `${b.from} to ${b.to}. ${b.text} Approve to start it; reject to skip this book.`, data: {book: b.key}});
+  return [{type: T_SAGA, key: `saga:${b.key}`, title: `The Rothenstein saga, book ${b.n}: ${b.title}`,
+    detail: `${b.from} to ${b.to}. ${b.text} Approve to start it; reject to skip this book.`, data: {book: b.key}}];
 }
 
 /* ---------------- lifepath threads (cr2) ---------------- */
@@ -475,9 +503,10 @@ const threadsOf = a => { try { return api("wodx-creation")?.lifepathThreads?.(a)
 const pcs = () => [...(game.actors ?? [])].filter(a => a.hasPlayerOwner && !/group|spirit|creature/i.test(String(a.type)));
 
 /** Put each character's next due thread to the Storyteller (one per character per call). */
-export async function lifepathTick() {
-  if ( !lineOn("podChains") || !isActiveGM() ) return;
-  const s = state(), t = now();
+export async function lifepathTick() { await askAll(await podTurn(lifepathTickNow)); }
+async function lifepathTickNow() {
+  if ( !lineOn("podChains") || !isActiveGM() ) return [];
+  const s = state(), t = now(), asks = [];
   s.lp ??= {};
   let changed = false;
   for ( const a of pcs() ) {
@@ -487,15 +516,17 @@ export async function lifepathTick() {
     const st = s.lp[a.id], x = P.lpNext(st, threads, t);
     if ( !x ) continue;
     st.seen[x.id] = "put"; st.last = t; changed = true;
-    await propose({type: T_LP, key: `lp:${a.id}:${x.id}`, title: `From ${a.name}'s past: ${x.label.toLowerCase()}`,
+    asks.push({type: T_LP, key: `lp:${a.id}:${x.id}`, title: `From ${a.name}'s past: ${x.label.toLowerCase()}`,
       detail: `${x.year}, ${x.scene}: ${x.name ? `${x.name}, ` : ""}${P.third(x.role, a.name)}${x.note ? `, ${P.third(x.note, a.name)}` : ""}. Approve to run it as a story chain; reject to leave it in the past.`,
       data: {actor: a.id, thread: x}});
   }
   if ( changed ) await saveState(s);
+  return asks;
 }
 
 /** Start a thread's chain now (approval, or the Storyteller's window). */
-export async function startThread(actorId, thread, where = "") {
+export const startThread = (actorId, thread, where = "") => podTurn(() => startThreadNow(actorId, thread, where));
+async function startThreadNow(actorId, thread, where) {
   if ( !game.user.isGM || !thread?.kind ) return null;
   const a = game.actors.get(actorId), s = state();
   s.chains ??= []; s.lp ??= {};
@@ -507,15 +538,15 @@ export async function startThread(actorId, thread, where = "") {
   if ( thread.actorId ) { const n = game.actors.get(thread.actorId); if ( n ) run.lp.name = n.name; }
   s.chains.push(run);
   await saveState(s);
-  await dealChains();
+  await dealDue();
   return run;
 }
-async function dismissThread(actorId, id) {
+const dismissThread = (actorId, id) => podTurn(async () => {
   if ( !actorId || !id ) return;
   const s = state(); s.lp ??= {};
   (s.lp[actorId] ??= {since: now(), last: now(), seen: {}}).seen[id] = "dismissed";
   await saveState(s);
-}
+});
 const lineOf = a => { const t = a?.type ?? "", k = kindName(a);
   if ( t === "Vampire" || /vampire/.test(k) ) return "vampire";
   if ( ["Werewolf", "Changing Breed"].includes(t) || /garou|werewolf|fera/.test(k) ) return "werewolf";
@@ -678,7 +709,10 @@ export function registerPodHooks() {
   // B6162: story chains, the saga, fronts and Golconda teaching wait through a time skip or a hold; the skip's end
   // runs them once (settle)
   const tick = ({settle = false} = {}) => { if ( !isActiveGM() || (!settle && isQuiet()) || (!settle && Date.now() - last < 2000) ) return; last = Date.now();
-    dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).then(() => Encounters.encounterTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
+    // B6740: the whole tick is one turn on the story-chain state; its proposals go out after it. Rothenstein's
+    // encounters come after the turn: each of their state writes takes its own turn (encounters.mjs)
+    podTurn(async () => { await dealDue(); const asks = await lifepathTickNow(); asks.push(...await sagaTickNow()); await Fronts.frontTickNow(); return asks; })
+      .then(askAll).then(() => Encounters.encounterTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick({settle: true}));
@@ -702,4 +736,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor, golcondaReadiness: readiness, atThreshold,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), reveals: Reveals.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), reveals: Reveals.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, settled: () => podTurn(() => null), rules: P.saga}, open: () => new PodApp().render(true), rules: P};

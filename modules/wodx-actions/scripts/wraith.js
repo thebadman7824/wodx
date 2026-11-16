@@ -208,10 +208,11 @@ export function build(ctx) {
             if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled outside the Shadowlands, p. 204"}).</div>`; }
             body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(${bookOf(lib)} p. ${a.p})</span></div>`;
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
-            // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id
+            // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id.
+            // B6731: an art with no roll counts one success, as a Discipline or Gift with none does (B3751)
             let fxItems = [];
-            if (a.r && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}`, world: String(a.id).startsWith("gw-") ? "Wraith (Great War)" : "Wraith (W20)" });
+            if (successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}`, noRoll: !a.r, world: String(a.id).startsWith("gw-") ? "Wraith (Great War)" : "Wraith (W20)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }

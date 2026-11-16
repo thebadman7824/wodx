@@ -6,6 +6,8 @@
 import * as PW from "./prowl-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 export function build({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileFor, yardsBetween}) {
   const SOCKET = `module.${MOD}`;
@@ -122,6 +124,7 @@ export function build({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileF
   function hooks() {
     let wait = null;
     Hooks.on("updateWorldTime", () => {
+      if ( heldClock() ) return;
       if ( !isActiveGM() || !on() ) return;
       clearTimeout(wait);
       wait = setTimeout(() => routines.idle().then(() => check()).catch(e => console.error(`${MOD} | prowl`, e)), 900);

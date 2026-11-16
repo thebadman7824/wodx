@@ -203,6 +203,21 @@ test("lane tools never name the Live world and keep backups", () => {
   assert.match(m, /allow-lane-1/, "lane 1 reset needs an explicit flag");
 });
 
+test("B6775: sign-in waits for the WoDX apis that start after game.ready", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  assert.ok(B.LATE_APIS.includes("wodx-creation"), "creation is waited for");
+  const mods = new Map([["wodx-chronicle", {active: true, api: {}}], ["wodx-creation", {active: true}], ["wodx-npc", {active: false}]]);
+  const had = globalThis.game;
+  globalThis.game = {modules: mods};
+  try {
+    assert.equal(B.apisReady(B.LATE_APIS), false, "creation without its api is not ready");
+    mods.get("wodx-creation").api = {people: {}};
+    assert.equal(B.apisReady(B.LATE_APIS), true, "an inactive module is not waited for");
+  } finally { globalThis.game = had; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8");
+  assert.match(src, /waitForFunction\(apisReady, LATE_APIS/, "openGM waits for them");
+});
+
 test("lanes on the second PC are seen only there, with its own paths (B6880)", () => {
   const was = process.env.WODX_HOST;
   try {

@@ -83,9 +83,11 @@ async function tellPrivately(actor, title, text) {
 /* ---------------------------------------------------------------- the Storyteller's side */
 
 async function gmDo(op) {
-  if ( game.user.isGM ) return onSocket(op);
+  // B6779g: an owner (a Storyteller too) marks the patient itself; a second Storyteller who is not the active one
+  // was sent to onSocket, which only the active Storyteller answers, and the mark was lost
   const own = op?.op === "treated" ? game.actors.get(op.actor) : null;
   if ( own?.isOwner ) return own.setFlag("wodx-actions", "treated", true);
+  if ( game.user.isGM && game.users.activeGM?.id === game.user.id ) return onSocket(op);
   if ( !game.users.some(u => u.isGM && u.active) ) { ui.notifications.warn("The Storyteller is not here to note it."); return null; }
   game.socket.emit(SOCKET, op);
   return null;
@@ -109,6 +111,8 @@ async function spendOne(item) {
 
 /* ---------------------------------------------------------------- what an ability does */
 
+// B6776: a drug's crash and a crop's harvest wait while the world is held
+const held = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 const chronTraits = () => game.modules.get("wodx-chronicle")?.api?.traits ?? null;
 const statOf = (a, k) => Number(a?.system?.attributes?.[k]?.total ?? a?.system?.attributes?.[k]?.value) || 0;
 const skillOf = (a, k) => Number(a?.system?.abilities?.[k]?.value) || 0;
@@ -496,7 +500,7 @@ export async function sleptOff(a) {
   return ids.length;
 }
 export async function setupUse() {
-  Hooks.on("updateWorldTime", t => { crashTick(t).catch(e => console.error(`${MOD} | crash`, e)); DU.ripenTick(t).catch(e => console.error(`${MOD} | harvest`, e)); });
+  Hooks.on("updateWorldTime", t => { if ( held() ) return; crashTick(t).catch(e => console.error(`${MOD} | crash`, e)); DU.ripenTick(t).catch(e => console.error(`${MOD} | harvest`, e)); });
   await load();
   game.socket?.on(SOCKET, onSocket);
   game.socket?.on(SOCKET, AU.onArmsSocket);

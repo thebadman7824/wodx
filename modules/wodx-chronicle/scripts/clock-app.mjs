@@ -103,7 +103,7 @@ export class ClockApp extends ApplicationV2 {
         <div class="wodx-time">${esc(told?.time ?? now.timeLabel)} <span class="wodx-tag">${night}</span></div>
         <div class="wodx-quiet">${esc(now.calendarLabel)} calendar</div>
         ${countPick}
-        ${gm && heard ? `<div class="wodx-quiet wodx-heard" title="How the players' clocks tell it, by the year kept where the scene stands (B5870)">Players hear: ${esc(heard.date)}, ${esc(heard.time)}</div>` : ""}
+        ${gm && heard ? `<div class="wodx-quiet wodx-heard" title="How the players' clocks tell it, by the year kept where the scene stands">Players hear: ${esc(heard.date)}, ${esc(heard.time)}</div>` : ""}
         <dl class="wodx-facts">
           <dt>Sunset</dt><dd>${esc(now.sunset)}</dd>
           <dt>Sunrise</dt><dd>${esc(now.sunrise)}</dd>

@@ -160,7 +160,7 @@
 1999|W|wer|AS|Bangladesh|occult|The Garou's losses|The house reading has the Garou of India count their dead after the Week of Nightmares; whole septs are gone.
 1999|W|cha|EU|Europe|occult|The Dreaming's storm|The house reading has the Maelstrom's echo shake the Dreaming, and the Kithain dream of a red star.
 1999|W|wer|EU|Europe|occult|The Red Star|The house reading follows Werewolf canon: a red star appears in the Umbral sky, and the Garou fear the Apocalypse is near.
-1999|H|mor|MO|Olomouc|building,faith|The Holy Trinity Column|The baroque plague column of Olomouc is added to the World Heritage list.
+2000|H|mor|MO|Olomouc|building,faith|The Holy Trinity Column|The baroque plague column of Olomouc is added to the World Heritage list.
 2000-1|H|mor|EU|Baia Mare|disaster,flood|The cyanide spill|A dam at a gold mine in Romania breaks, and cyanide kills the fish of the Tisza and the Danube.
 2000-7|H|mor|EU|Paris|travel,disaster|The Concorde crash|A Concorde crashes on take-off at Paris and kills a hundred and thirteen.
 2000-8|H|mor|EU|Barents Sea|sea,disaster|The Kursk|The Russian submarine Kursk sinks after an explosion; all a hundred and eighteen die.

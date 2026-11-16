@@ -598,8 +598,12 @@ test("runtime: picking the lock, rolled on the player's side, applied by the Sto
   me = player;
   faces = [8, 9, 3, 2, 7];          // 3 successes at 6
   const t0 = worldTime;
+  const worked = [];
+  Hooks.on("wodxInteractableWorked", w => { if ( worked ) worked.push(w); });
   const msg = await api.attempt(tokPc, "door1", "pick", {fd: {bonus: 0, extraDiff: 0}});
   me = gm;
+  // the Storyteller's client says what was worked, for the sprite's move (WoDX Paperdoll)
+  assert.deepEqual(worked.map(w => [w.token, w.action, w.result]), [[tokPc.document.uuid, "pick", "done"]]);
   assert.equal(msg.flags[MOD].ask.dice, 5);
   assert.equal(msg.flags[MOD].ask.diff, 6);
   assert.equal(msg.flags[MOD].done.result, "done");
@@ -1962,4 +1966,29 @@ test("runtime: walking onto a live wire holds the character until pulling free; 
     await api.undoCard(cards[0]);
     assert.ok(!wire.document.flags[MOD].caught?.pc1);
   } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: a ridden beast that goes down throws its rider Knocked down as WoDX Combat knows it (the stand-up roll follows)", async () => {
+  const marked = [], prone = [];
+  const prev = game.wodxCombat.markFollow;
+  game.wodxCombat.markFollow = async (a, f) => { marked.push([a.id, f.condition, f.lasts]); };
+  const horse = actor("hrs1", "Horse", {player: false});
+  const rider = actor("rid1", "Thrown Rider");
+  const tr = token("trid", rider, 1200, 1200);
+  tr.document.toggleStatusEffect = async id => { prone.push(id); };
+  const th = token("thrs", horse, 1200, 1200, "gm");
+  th.document.documentName = "Token";
+  th.document.name = "Horse";
+  th.document.actorId = horse.id;
+  th.document.flags = {[MOD]: {driver: {a: rider.id, t: tr.document.uuid, n: rider.name, dx: 0, dy: 0}}};
+  horse.system.health.damage = {bashing: 0, lethal: 7, aggravated: 0};
+  scene.active = true;
+  me = gm;
+  try {
+    const down = await api.beastDown(horse);
+    assert.deepEqual(down, ["thrs"], "the horse goes down");
+    assert.deepEqual(marked, [["rid1", "knockdown", "turn"]], "the rider is Knocked down, which Combat reads for the stand-up roll");
+    assert.deepEqual(prone, [], "not the core prone status Combat does not read");
+    assert.equal(th.document.flags[MOD].driver, null);
+  } finally { game.wodxCombat.markFollow = prev; scene.tokens.delete("thrs"); scene.tokens.delete("trid"); }
 });

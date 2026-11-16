@@ -1217,7 +1217,7 @@ Hooks.once("init", () => {
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
-    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor, followsClock,
+    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), rollEffects: weatherRollSource, climate, isOutdoor, followsClock,
       moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, cueSrc, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
@@ -1232,9 +1232,22 @@ export async function prime() {
   return api;
 }
 
+/** B6796: the weather where the roller stands, on the rolls it names, through WoDX Chronicle's roll effects. */
+export function weatherRollSource(actor, ctx = {}) {
+  if ( !active || ctx?.channel !== "roll" || setting("weather") === "off" ) return [];
+  let scene = null;
+  try { scene = actor?.getActiveTokens?.()?.[0]?.document?.parent ?? viewed(); } catch (e) { scene = viewed(); }
+  if ( !scene || !isOutdoor(scene) ) return [];
+  const day = now(scene);
+  return day ? W.rollEffects(day, ctx.tags ?? []) : [];
+}
+
 Hooks.once("ready", async () => {
   if ( !active ) return;
   const api = await prime();
+  // B6796: WoDX Chronicle sets its api late in its own ready; wait for it when it is not there yet
+  const giveRolls = c => { try { c?.traits?.addSource?.(weatherRollSource); } catch (e) { console.warn(`${MOD} | weather on rolls`, e); } };
+  if ( chron()?.traits?.addSource ) giveRolls(chron()); else Hooks.once("wodxChronicleReady", giveRolls);
   applyGrade();
   applyDread();
   if ( isActiveGM() ) {
@@ -1306,7 +1319,8 @@ function openingCard(scene) {
   setTimeout(() => el.remove(), 6500);
 }
 Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); ageEverything(); } });
-Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); ageEverything(); } });
+// B6759: faces age with the era, but not while the world is held (a gate or a flashback moves the clock and puts it back)
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); if ( !chron()?.isHeld?.() ) ageEverything(); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;

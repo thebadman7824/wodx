@@ -73,6 +73,10 @@ test("B5934: plague and famine at home move the markets; far news, old news and 
   assert.equal(N.worldNewsFor(ev({hidden: true}), {homePart: "EU", year: 1347}), null);
   assert.equal(N.worldNewsFor(ev({tags: ["war"]}), {homePart: "EU", year: 1347}), null);
   assert.equal(N.worldNewsFor(ev({tags: ["war"], region: "MO"}), {homePart: "MO", year: 1347}), "war");
+  assert.equal(N.worldNewsFor(ev(), {homePart: "MO", year: 1347}), "plague", "B6897: a Moravian home feels a European plague");
+  assert.equal(N.worldNewsFor(ev({tags: ["famine"]}), {homePart: "MO", year: 1347}), "famine");
+  assert.equal(N.worldNewsFor(ev({tags: ["war"]}), {homePart: "MO", year: 1347}), null, "a European war is not a Moravian one");
+  assert.equal(N.worldNewsFor(ev({region: "MO"}), {homePart: "EU", year: 1347}), null);
   assert.equal(N.worldNewsFor({id: "black-death", region: "EU", tags: ["plague"]}, {homePart: "EU"}), null, "book events keep their own table");
   assert.ok(N.tooSoon(0, 30 * 86400) && !N.tooSoon(0, 100 * 86400) && !N.tooSoon(100, 0) && !N.tooSoon(-Infinity, 0));
 });

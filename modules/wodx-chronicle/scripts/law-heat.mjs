@@ -159,8 +159,9 @@ export function registerHeatHooks() {
     addDeed(actor, p?.cause === "crime" ? "theft" : String(p?.cause ?? "theft"), {scene, named: !!p?.named, witnesses: Number(p?.witnesses) || 1}).catch(e => console.error("WoDX | law heat", e));
   });
   Hooks.on("renderChatMessageHTML", (message, el) => {
-    if ( !game.user.isGM ) return;
-    for ( const b of el.querySelectorAll?.("[data-action^='wodx-law-']") ?? [] ) b.addEventListener("click", async () => {
+    // B6741: only the heat card's own two buttons; the trial, sentence, regime and tax cards' law buttons have their own
+    if ( !game.user.isGM || !message.flags?.[MODULE_ID]?.lawHeat ) return;
+    for ( const b of el.querySelectorAll?.("[data-action='wodx-law-arrest'], [data-action='wodx-law-drop']") ?? [] ) b.addEventListener("click", async () => {
       b.disabled = true;
       if ( b.dataset.action === "wodx-law-arrest" ) await arrest(b.dataset.actor, b.dataset.region);
       else await lowerHeat(b.dataset.actor, b.dataset.region, 0);

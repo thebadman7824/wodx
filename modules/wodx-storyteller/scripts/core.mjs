@@ -460,7 +460,8 @@ export async function solo({actorId, kind = "other", hours = null, note = "", ch
   await log({kind: "solo", actor: actorId, name: actor.name, user, scene: where?.uuid ?? null, place: where ? sceneName(where) : null, hours: h, night, text,
     attention: changesWorld ? "A result that changes the world" : (pastDawn && sunBurns(actor) ? "Acting past dawn" : W.attentionOf(note))});
   if ( changesWorld ) {
-    await chron()?.propose?.({type: T.solo, title: `${actor.name}: ${label}`, detail: `${note || "No details given."} The player says this changes the world.`, data: {actorId, userId: user}});
+    await chron()?.propose?.({type: T.solo, title: `${actor.name}: ${label}`, detail: `${note || "No details given."} The player says this changes the world.`,
+      data: {actorId, userId: user, kind, label, note: String(note).slice(0, 300), place: where ? sceneName(where) : ""}});
   }
   return {ok: true, hours: h, end, pastDawn, waiting: !!changesWorld};
 }
@@ -599,9 +600,36 @@ export function registerHandlers() {
     // B4862: approved, the encounter is put on the map by the traveller (reach.mjs road)
     approve: async e => { const made = await game.modules.get(MOD)?.api?.reach?.road?.({actorId: e.data?.actorId, text: e.data?.text ?? ""}); if ( !made?.length ) { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: `On the road: ${e.data?.text ?? ""}`}); } },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The road was quiet after all."}); }});
-  c.registerApprovalHandler(T.solo, {label: "Solo result"});
+  // B6751: a solo result that changes the world stands as a deed: on the character's standing (WoDX NPC) and as a tale
+  // that goes round, which the player sees in What they say about you. Turned down, it stays a private act.
+  c.registerApprovalHandler(T.solo, {label: "Solo result", approve: e => soloStands(e, true), reject: e => soloStands(e, false)});
   c.registerApprovalHandler(T.beat, {label: "Beat",
     approve: async e => { const d = e.data ?? {}; const r = await convene({actorIds: d.actorIds ?? [], sceneId: d.sceneId, reason: d.reason ?? "", by: "a beat"}); if ( !r.ok ) ui.notifications.warn(r.why); }});
+}
+
+/** A solo result that changes the world, decided: approved, a deed and a tale; turned down, a private act. */
+export async function soloStands(e, ok) {
+  const d = e?.data ?? {}, actor = game.actors.get(d.actorId);
+  if ( !actor ) return null;
+  const did = W.plain(d.note || String(e?.detail ?? "").replace(/ The player says this changes the world\.$/, "") || d.label || "").slice(0, 200);
+  const user = d.userId ?? ownerOf(actor)?.id ?? null;
+  if ( !ok ) {
+    await log({kind: "note", actor: actor.id, name: actor.name, user, text: `The Storyteller kept it a private act: ${did || d.label || "a solo act"}.`});
+    await tell(user, `<p><strong>${esc(actor.name)}</strong>: ${esc(did || "the act")} stays between you and the night; the world does not hear of it.</p>`, {alsoGM: true});
+    return null;
+  }
+  let tale = null;
+  if ( did ) {
+    const standing = npc()?.standing?.deed;
+    try {
+      // WoDX NPC keeps the deed on the character's standing and starts the tale; without it, the tale alone
+      if ( typeof standing === "function" ) await standing(actor, {community: "town", delta: 0, text: did});
+      else tale = await game.modules.get(MOD)?.api?.rumours?.tale?.({about: actor.id, did, where: d.place ?? "", tone: 0});
+    } catch (err) { console.error(`${MOD} | solo deed`, err); }
+  }
+  await log({kind: "note", actor: actor.id, name: actor.name, user, text: `The Storyteller let it stand: ${did || d.label || "a solo act"}. Word of it goes round.`});
+  await tell(user, `<p><strong>${esc(actor.name)}</strong>: ${esc(did || "the act")} stands. Word of it goes round; see What they say about you.</p>`, {alsoGM: true});
+  return tale;
 }
 
 /* ------------------------------------------------------------------ */

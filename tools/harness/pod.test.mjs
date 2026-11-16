@@ -104,3 +104,19 @@ test("pod: a patron pays with Great cities off, the town is found under upkeep.t
   assert.match(f, /\(!settle && isQuiet\(\)\)/);
   assert.match(f, /Hooks\.on\("wodxSkipEnd", \(\) => tick\(\{settle: true\}\)\)/);
 });
+
+test("B6747: the Golconda lift and harmful-feeding setbacks answer on the client that rolled, which owns the seeker", () => {
+  const f = readFileSync(new URL("../../modules/wodx-chronicle/scripts/pod.mjs", import.meta.url), "utf8");
+  const body = name => f.slice(f.indexOf(`function ${name}(`), f.indexOf("\n}", f.indexOf(`function ${name}(`)));
+  // WoDX Actions calls wodxSocial and wodxFed with Hooks.callAll on the roller's client only (social.js, main.js feed)
+  for ( const [file, hook] of [["wodx-actions/scripts/social.js", "wodxSocial"], ["wodx-actions/scripts/main.js", "wodxFed"]] ) {
+    const src = readFileSync(new URL(`../../modules/${file}`, import.meta.url), "utf8");
+    assert.match(src, new RegExp(`Hooks\\.callAll\\("${hook}"`));
+    assert.doesNotMatch(src, new RegExp(`socket[^\\n]*${hook}`), `${hook} is not relayed to the Storyteller`);
+  }
+  for ( const fn of ["onSocial", "onFed"] ) {
+    assert.doesNotMatch(body(fn), /isActiveGM\(\)/, `${fn} does not wait for the Storyteller's client`);
+    assert.match(body(fn), /isOwner/, `${fn} answers where the seeker is owned`);
+  }
+  assert.match(f, /if \( !game\.user\.isGM && !a\.isOwner \) return null;/, "golcondaStep lets the owner write");
+});

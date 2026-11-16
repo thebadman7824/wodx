@@ -92,10 +92,16 @@ export async function run() {
         {blood: [before, bp(k)], lethal: lethal(va), vesselBlood: va.flags?.[M]?.vesselBlood, worldActor: lethal(by("Vessel"))});
     });
     await step("3 undo", async () => {
-      await A().feedUndo(lastMsg());
+      // B6779h: Undo is on the feeding card, which is not always the last one: a listener of the feeding (herds, the
+      // Kiss, a trait's moment) can post after it, and feedUndo given another card does nothing. The step undoes the
+      // newest card that carries the feeding's undo, and names the cards that came after it.
+      const since = game.messages.contents.filter(m => m.timestamp >= t0);
+      const card = since.filter(m => m.flags?.[M]?.undo?.uuid).at(-1) ?? null;
+      const after = card ? since.slice(since.indexOf(card) + 1).map(m => m.speaker?.alias ? `${m.speaker.alias}: ${String(m.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 80)}` : String(m.content ?? "").replace(/<[^>]+>/g, " ").trim().slice(0, 80)) : [];
+      if ( card ) await A().feedUndo(card);
       await sleep(400);
       const va = tok("vessel").actor;
-      ok("3 undo", lethal(va) === 0 && !va.flags?.[M]?.vesselBlood, {lethal: lethal(va), vesselBlood: va.flags?.[M]?.vesselBlood ?? null});
+      ok("3 undo", !!card && lethal(va) === 0 && !va.flags?.[M]?.vesselBlood, {card: !!card, cardsAfter: after, lethal: lethal(va), vesselBlood: va.flags?.[M]?.vesselBlood ?? null});
     });
     await step("4 Ventrue palate", async () => {
       const v = by("Ventrue");

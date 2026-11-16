@@ -71,6 +71,8 @@ export function registerNetStatuses() {
   for ( const [id, s] of Object.entries(N.STATUSES) ) {
     if ( !CONFIG.statusEffects.find(e => e.id === id) ) CONFIG.statusEffects.push({id, name: s.label, img: s.img, hud: true});
   }
+  // B6795: a burned mind shows on the token until it heals
+  if ( !CONFIG.statusEffects.find(e => e.id === "wodx-net-burn") ) CONFIG.statusEffects.push({id: "wodx-net-burn", name: "Net burn (Intelligence lost)", img: "icons/svg/degen.svg", hud: false});
 }
 const iceAuto = () => { const m = setting("netIce") ?? "solo"; return m === "always" || (m === "solo" && !!solo()?.isOn?.()); };
 
@@ -305,7 +307,7 @@ async function runContest(actor, program, defence, label) {
  * Run a program. actor: the runner; program: an id they carry; target: a gate id, an ICE token, a file id, a remote id,
  * or nothing (stealth, detection). Returns what happened.
  */
-export async function runProgram(actor, program, target = null, {text = ""} = {}) {
+export async function runProgram(actor, program, target = null, {text = "", drive = null} = {}) {
   const s = stateOf(actor);
   if ( !s ) throw new Error(`${actor?.name ?? "That character"} is not in the Net.`);
   const can = N.canAct(statusIds(actor));
@@ -384,11 +386,11 @@ export async function runProgram(actor, program, target = null, {text = ""} = {}
     const r = m.remotes.find(x => x.id === target);
     if ( !r ) throw new Error("Pick a remote.");
     if ( !P.works.includes(r.kind) && !(r.kind === "lights" && pid === "genie") && !(r.kind === "alarm" && ["genie", "opensesame"].includes(pid)) ) throw new Error(`${P.label} cannot work a ${r.label.toLowerCase()}.`);
-    if ( s.way === "ghost" ) { out.lines.push("The machine obeys the ghost inside it."); out.lines.push(await workRemote(actor, r, scene, text)); }
+    if ( s.way === "ghost" ) { out.lines.push("The machine obeys the ghost inside it."); out.lines.push(await workRemote(actor, r, scene, text, drive)); }
     else {
       const {c, rolls, line} = await runContest(actor, pid, 0, r.label);
       out.rolls.push(...rolls); out.lines.push(line);
-      if ( c.win ) out.lines.push(await workRemote(actor, r, scene, text));
+      if ( c.win ) out.lines.push(await workRemote(actor, r, scene, text, drive));
       else out.lines.push("It does not answer.");
     }
   }
@@ -419,7 +421,7 @@ async function raiseAlarm(scene, actor, why) {
 }
 
 /** A remote obeys (B6599): the thing it is tied to changes on the Realspace scene. Returns the line for the card. */
-async function workRemote(actor, r, scene, text = "") {
+async function workRemote(actor, r, scene, text = "", drive = null) {
   const real = r.link?.scene ? game.scenes.get(r.link.scene) : null;
   const where = real ? ` in ${esc(real.name)}` : "";
   const does = N.REMOTES[r.kind]?.does;
@@ -464,7 +466,9 @@ async function workRemote(actor, r, scene, text = "") {
   }
   if ( does === "vehicle" && real ) {
     const v = real.tiles.filter(t => t.flags?.["wodx-interactables"]?.mount);
-    return v.length ? `<b>${esc(actor.name)} has the controls of ${esc(v.map(t => t.flags["wodx-interactables"].title || "a vehicle").join(", "))}${where}</b>: the Storyteller moves it at the runner's word.` : "No vehicle answers.";
+    // B6799: the runner drives it: the vehicle moves on the building's map
+    if ( !v.length ) return "No vehicle answers.";
+    return `<b>${esc(actor.name)} has the controls of ${esc(v[0].flags["wodx-interactables"].title || "a vehicle")}${where}</b>: ${esc(await T.steerVehicle(v[0], drive ?? {}))}`;
   }
   return `The ${esc(r.label.toLowerCase())}${where} obeys.`;
 }
@@ -599,9 +603,7 @@ export async function applyHit(a, hit, {scene, ice, m} = {}) {
       if ( hit.trace ) await traceRunner(a, m, ice);
       return `${hit.levels ? `<b>${hit.levels} ${hit.type}</b> through the jack to the body` : "the body holds"}${hit.hound ? "; the Hellhound has the scent and will strike again at the next log-on" : ""}.`;
     case "mind": {
-      await a.createEmbeddedDocuments("ActiveEffect", [{name: `Net burn: ${hit.points} Intelligence lost`, img: "icons/svg/degen.svg",
-        changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-hit.points)}],
-        flags: {[MODULE_ID]: {netBurn: true, heals: hit.heals}}}]);
+      await a.createEmbeddedDocuments("ActiveEffect", [burnEffect("Net burn", hit.points, hit.heals, "icons/svg/degen.svg")]);
       return `<b>${hit.points} Intelligence</b> burned away, healing as ${hit.heals} damage does.`;
     }
     case "status":
@@ -625,6 +627,40 @@ export async function applyHit(a, hit, {scene, ice, m} = {}) {
     }
     default: return "nothing.";
   }
+}
+
+/* ---- Net burn and Net shock heal (B6795) ---- */
+export const BURN_STATUS = "wodx-net-burn";
+const burnName = (what, points, heals, next) => `${what}: ${points} Intelligence lost, heals as ${heals || "lethal"}${next ? ` (the next point in ${next})` : ""}`;
+/** The effect a burn leaves: on the sheet's effects and, through its status, as an icon on the token. */
+function burnEffect(what, points, heals = "lethal", img = "icons/svg/degen.svg", now = game.time.worldTime) {
+  return {name: burnName(what, points, heals, N.burnWhen(N.burnHealSeconds(points))), img, statuses: [BURN_STATUS],
+    changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-points)}],
+    flags: {[MODULE_ID]: {netBurn: true, heals: heals || "lethal", what, points, last: now}}};
+}
+/** Active Storyteller: every burn the clock has healed gives its points back; the token shows the healed points. */
+export async function healBurns(now = game.time.worldTime, actors = game.actors) {
+  if ( !isActiveGM() ) return [];
+  const out = [];
+  for ( const a of actors ?? [] ) for ( const e of [...(a.effects ?? [])] ) {
+    const f = e.flags?.[MODULE_ID];
+    if ( !f?.netBurn ) continue;
+    const points = Number(f.points) || Math.abs(Number(e.changes?.[0]?.value)) || 0;
+    // A burn made before B6795 starts its clock now
+    if ( !Number.isFinite(Number(f.last)) ) { await e.update({[`flags.${MODULE_ID}.last`]: now, [`flags.${MODULE_ID}.points`]: points, statuses: [BURN_STATUS]}); continue; }
+    const r = N.burnHeal({points, last: f.last}, now);
+    if ( !r.healed ) continue;
+    const what = f.what || (/shock/i.test(e.name) ? "Net shock" : "Net burn");
+    if ( r.points <= 0 ) await e.delete();
+    else await e.update({name: burnName(what, r.points, f.heals, N.burnWhen(r.next)), changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-r.points)}],
+      [`flags.${MODULE_ID}.points`]: r.points, [`flags.${MODULE_ID}.last`]: r.last});
+    for ( const t of a.getActiveTokens?.() ?? [] ) {
+      try { canvas.interface?.createScrollingText?.(t.center, `+${r.healed} Intelligence`, {fill: "#5fffe6", stroke: 0x000000, strokeThickness: 4, anchor: 0}); } catch (err) { /* no canvas */ }
+    }
+    await ChatMessage.create({speaker: {alias: a.name}, whisper: whisperFor(a), content: card(`${what} heals`, `<p>${esc(a.name)} has ${r.healed} Intelligence back${r.points ? `; ${r.points} still lost, the next in ${N.burnWhen(r.next)}` : ", all of it"}.</p>`)});
+    out.push({actor: a.id, healed: r.healed, left: r.points});
+  }
+  return out;
 }
 
 /** Firestarter (pdf 145): an electrical fire bursts from the gear at the body's feet, as an Interactables fire. */
@@ -703,8 +739,7 @@ export async function derezNow(actor, kind = "soft") {
   const res = N.derez(kind, {access, severity: sev, soakDice: soak.dice, staminaDice: sta.dice});
   if ( res.levels && C?.applyDamage ) await C.applyDamage(actor, res.type, res.levels);
   if ( res.dazed ) await addStatus(actor, "net-dazed", 1200);
-  if ( res.mind ) await actor.createEmbeddedDocuments("ActiveEffect", [{name: `Net shock: ${res.mind} Intelligence`, img: "icons/svg/stoned.svg",
-    changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-res.mind)}], flags: {[MODULE_ID]: {netBurn: true, heals: res.mindHeals}}}]);
+  if ( res.mind ) await actor.createEmbeddedDocuments("ActiveEffect", [burnEffect("Net shock", res.mind, res.mindHeals, "icons/svg/stoned.svg")]);
   if ( res.out ) await jackOut(actor, {force: true, why: "Thrown out of the Net (a hard de-rez)."});
   else if ( s ) {
     const scene = game.scenes.get(s.fortress), icon = iconOf(actor, scene), m = modelOf(scene);
@@ -737,9 +772,11 @@ export async function netWindow() {
   const scenes = game.scenes.filter(x => !isFortress(x)).map(x => [x.id, x.name]);
   const gm = game.user.isGM;
   const tech = T.technica(runner);
+  // B6799: where a vehicle worked by remote goes
+  const driveRows = `<div class="form-group"><label>A vehicle drives</label><select name="drivedir" data-fixed>${opts([...(tgt ? [["toward", "toward the targeted token"]] : []), ...Object.entries(N.DRIVE_DIRS).map(([k, v]) => [k, v[2]])])}</select><input type="number" name="drivesq" value="3" min="1" max="${N.DRIVE_MAX}" aria-label="Squares"></div>`;
   const techRows = tech && kind === "deck" ? `<fieldset><legend>Technica ${tech}</legend>
       <p class="hint">${esc(Object.entries(N.TECHNICA).filter(([lv]) => Number(lv) <= tech).map(([, t]) => `${t.label}: ${t.gives}`).join(" "))}</p>
-      ${!s && tech >= 4 ? `<div class="form-group"><label>Remote Touch works</label><select name="touchwhat" data-fixed>${opts([["door", "the nearest keypad door"], ["lights", "the lights"], ["vehicle", "a vehicle"]])}</select></div>` : ""}
+      ${!s && tech >= 4 ? `<div class="form-group"><label>Remote Touch works</label><select name="touchwhat" data-fixed>${opts([["door", "the nearest keypad door"], ["lights", "the lights"], ["vehicle", "a vehicle"]])}</select></div>${driveRows}` : ""}
     </fieldset>` : "";
   const content = `<p class="wodx-quiet">${kind === "deck" ? "The Net (Future Darkness): cyberdecks and data fortresses." : "The Digital Web."} ${runner ? `Runner: ${esc(runner.name)}${s ? `, in ${esc(here?.name)}` : ""}.` : "Select the runner's token."}${tgt ? ` Targeted: ${esc(tgt.name)}.` : ""}</p>
     ${!s ? `<fieldset><legend>Jack in</legend>
@@ -753,6 +790,7 @@ export async function netWindow() {
       <div class="form-group"><label>At a file</label>${searchBox("select[name=file]")}<select name="file"><option value="">-</option>${opts(files)}</select></div>
       <div class="form-group"><label>At a remote</label><select name="remote" data-fixed><option value="">-</option>${opts(remotes)}</select></div>
       <div class="form-group"><label>A videoboard shows</label><input type="text" name="text" maxlength="80"></div>
+      ${driveRows}
       <p class="hint">Run the program at the targeted ICE, the gate, the file or the remote picked; with none picked, a stealth or detection program runs on its own.</p>
     </fieldset>`}
     ${gm ? `<fieldset><legend>Storyteller</legend>
@@ -779,8 +817,9 @@ export async function netWindow() {
     if ( r.act === "out" ) return await call("out", {actor: runner.id});
     if ( r.act === "empower" ) return await call("empower", {actor: runner.id});
     if ( r.act === "speak" ) return await call("speak", {actor: runner.id});
-    if ( r.act === "remote" ) return await call("remote", {actor: runner.id, token: tok.uuid, what: r.touchwhat});
-    if ( r.act === "run" ) return await call("run", {actor: runner.id, program: r.prog, target: r.gate || r.file || r.remote || tgt?.id || null, text: r.text});
+    const drive = {dir: r.drivedir || "n", squares: num(r.drivesq) || 1, target: tgt?.uuid ?? null};
+    if ( r.act === "remote" ) return await call("remote", {actor: runner.id, token: tok.uuid, what: r.touchwhat, drive});
+    if ( r.act === "run" ) return await call("run", {actor: runner.id, program: r.prog, target: r.gate || r.file || r.remote || tgt?.id || null, text: r.text, drive});
     if ( r.act === "read" || r.act === "copy" ) return await call("file", {actor: runner.id, file: r.file, copy: r.act === "copy"});
     if ( r.act === "draw" ) { const sc = await drawFortress({seed: r.seed, cpus: r.cpus, link: r.link || null, owner: r.owner || null}); await sc.view(); return sc; }
     if ( r.act === "ice" ) return await iceRound(here ?? canvas?.scene);
@@ -806,11 +845,11 @@ async function perform(op, d, userId) {
     return !!icon;
   }
   if ( op === "out" ) return jackOut(actor);
-  if ( op === "run" ) return runProgram(actor, d.program, d.target, {text: d.text});
+  if ( op === "run" ) return runProgram(actor, d.program, d.target, {text: d.text, drive: d.drive ?? null});
   if ( op === "file" ) return takeFile(actor, d.file, {copy: d.copy});
   if ( op === "empower" ) return T.empower(actor);
   if ( op === "speak" ) { const sc = game.scenes.get(stateOf(actor)?.fortress); return T.speak(actor, sc, modelOf(sc), mm => sc.setFlag(MODULE_ID, "netFortress", mm)); }
-  if ( op === "remote" ) { const t = await fromUuid(d.token); if ( t?.actor?.id !== actor?.id ) throw new Error("Not that character's token."); return T.remoteTouch(t, d.what); }
+  if ( op === "remote" ) { const t = await fromUuid(d.token); if ( t?.actor?.id !== actor?.id ) throw new Error("Not that character's token."); return T.remoteTouch(t, d.what, d.drive ?? {}); }
   return null;
 }
 /** Run an action here when this is the active Storyteller, else ask that client to. */
@@ -832,6 +871,9 @@ export async function onNetMessage(msg) {
 /* ------------------------------------------------------------------ */
 
 export function setupNet() {
+  // B6795: the clock heals Net burn and Net shock
+  let burnTimer = null;
+  Hooks.on("updateWorldTime", () => { if ( !isActiveGM() ) return; clearTimeout(burnTimer); burnTimer = setTimeout(() => healBurns().catch(e => console.error("WoDX | Net burn", e)), 500); });
   // A runner's icon moving in a fortress gives the ICE its turn (when the ICE acts on its own)
   const soon = (() => { const t = new Map(); return scene => { clearTimeout(t.get(scene.id)); t.set(scene.id, setTimeout(() => iceRound(scene).catch(e => console.error("WoDX | ICE", e)), 400)); }; })();
   Hooks.on("updateToken", (doc, change) => {

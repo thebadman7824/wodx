@@ -269,6 +269,39 @@ test("queue relief in the queue: bulk approve with an exception, approve on its 
   await game.settings.set(M, "npcCap", 0);
 });
 
+test("B6748: Approve the ticked decides only the ticked proposals on screen, not one that came in after", async () => {
+  const A = game.modules.get(M).api.approvals;
+  const {ApprovalsApp} = await import(join(root, "modules/wodx-chronicle/scripts/approvals.mjs"));
+  const done = [];
+  A.registerHandler("test-tick", {label: "Test tick", approve: e => done.push(e.title)});
+  for ( const t of ["seen one", "seen two"] ) await A.propose({type: "test-tick", title: t});
+  const app = new ApprovalsApp();
+  await app.render({force: true});
+  // a proposal arrives after the window drew its list (this window is not the one refresh() redraws)
+  await A.propose({type: "test-tick", title: "came later"});
+  await app.click('[data-action="approveTicked"]');
+  assert.deepEqual(done.sort(), ["seen one", "seen two"]);
+  assert.ok(A.pending().some(p => p.title === "came later"), "the unseen proposal still waits");
+  await A.decideMany("reject", {ids: A.pending().filter(p => p.type === "test-tick").map(p => p.id)});
+  app.close();
+});
+
+test("B6748: Take the recommended for all takes only the rows the Waiting tray showed", async () => {
+  const A = game.modules.get(M).api.approvals;
+  const {WaitingApp} = await import(join(root, "modules/wodx-chronicle/scripts/waiting.mjs"));
+  const done = [];
+  A.registerHandler("test-wait", {label: "Test wait", approve: e => done.push(e.title)});
+  for ( const t of ["shown one", "shown two"] ) await A.propose({type: "test-wait", title: t});
+  const app = new WaitingApp();
+  await app.render({force: true});
+  await A.propose({type: "test-wait", title: "came later"});
+  await app.click('[data-action="takeAll"]');
+  assert.deepEqual(done.sort(), ["shown one", "shown two"]);
+  assert.ok(A.pending().some(p => p.title === "came later"), "the unseen row still waits");
+  await A.decideMany("reject", {ids: A.pending().filter(p => p.type === "test-wait").map(p => p.id)});
+  app.close();
+});
+
 test("knowledge-gated handouts: needs, readers, and what each sees", async () => {
   const KR = await import(join(root, "modules/wodx-chronicle/scripts/know-rules.mjs"));
   assert.deepEqual(KR.parseNeeds("Latin or Occult 3"), [{name: "Latin", key: "latin", dots: 0}, {name: "Occult", key: "occult", dots: 3}]);

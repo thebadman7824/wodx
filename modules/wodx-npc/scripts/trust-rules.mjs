@@ -168,7 +168,8 @@ export const STRIKE_WORDS = {attack: "sends people to hurt them", hunters: "tips
  * points to whom it serves), and on one or two shows only that something is hidden.
  * have: {powers: {name lower case: dots}}; target: {willpower, manipulation, subterfuge}.
  */
-const POWER_OF = s => String(s.power ?? "").split(" (")[0].toLowerCase();
+// B6890: "Mind 1 (...)" reads as the Mind Sphere, the key the caller keeps a mage's Sphere under
+const POWER_OF = s => String(s.power ?? "").split(" (")[0].replace(/\s+\d+$/, "").toLowerCase();
 export function senseHeld(s, have = {}) {
   if ( !Number(s.dots) ) return true;
   return (Number(have.powers?.[POWER_OF(s)]) || 0) >= Number(s.dots);
@@ -187,7 +188,8 @@ export function senseDifficulty(s, target = {}, have = {}) {
   if ( Number.isFinite(Number(d)) ) v = Number(d);
   else if ( /willpower/i.test(d) ) v = Number(target.willpower) || 6;
   else if ( /manipulation \+ subterfuge/i.test(d) ) v = (Number(target.manipulation) || 0) + (Number(target.subterfuge) || 0) || 6;
-  else if ( /sphere rating \+ 3/i.test(d) ) v = (Number(have.powers?.[POWER_OF(s)]) || 1) + 3;
+  // B6890: the Effect's own rank plus 3 (M20 coincidental magick), not the mage's whole Sphere
+  else if ( /sphere rating \+ 3/i.test(d) ) v = (Number(s.dots) || 1) + 3;
   return Math.max(2, Math.min(10, v));
 }
 /** "found", "hint" or "none". */

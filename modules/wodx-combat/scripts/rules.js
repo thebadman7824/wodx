@@ -231,10 +231,10 @@ export const TARGETING = {
 /** Close combat maneuvers that modify a weapon attack (VtDA20 p. 346-347). */
 export const MANEUVERS = {
     normal: { label: "Normal attack", diff: 0, dmg: 0, dice: 0 },
-    greatblow: { label: "Great Blow (+1 diff, +2 dmg, no defense this turn)", diff: 1, dmg: 2, dice: 0 },
+    greatblow: { label: "Great Blow (+1 diff, +2 dmg, no defense this turn)", diff: 1, dmg: 2, dice: 0, noDefense: true },
     riposte: { label: "Riposte (+1 diff, +1 dmg, defender +2 diff; needs a successful defense this turn)", diff: 1, dmg: 1, dice: 0, defDiff: 2 },
     // ---- VtDA20 p. 346-348 (maneuvers that change the roll; unarmed forms are in UNARMED)
-    disarm: { label: "Disarm (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Disarm: roll damage normally; if it beats the victim's Strength dots, the weapon flies a number of yards equal to the extra successes (VtDA20 p. 346)." },
+    disarm: { label: "Disarm (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, disarm: true, note: "Disarm: roll damage normally; if it beats the victim's Strength dots, the weapon flies a number of yards equal to the extra successes (VtDA20 p. 346)." },
     sweep: { label: "Sweep (+1 diff, knockdown)", diff: 1, dmg: 0, dice: 0, note: "Sweep: the victim is knocked down. Standing needs Dexterity + Athletics diff 6; failing loses the action, success costs -2 Initiative (V20 Dark Ages p. 348)." },
     tackle: { label: "Tackle (+1 diff, +1 dmg, knockdown)", diff: 1, dmg: 1, dice: 0, note: "Tackle: both fighters roll Dexterity + Athletics diff 7 or fall; all actions next turn are at +1 difficulty (V20 Dark Ages p. 347)." },
     hold: { label: "Hold (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Hold: the victim is immobilized until their next action, when both roll resisted Strength + Brawl (V20 Dark Ages p. 346)." },
@@ -314,7 +314,7 @@ export function attackPool(p) {
  */
 export const CLASSIC = {
     c_heavystrike: { label: "[Combat] Heavy Strike (+1 dmg, Init +0)", diff: 0, dmg: 1, dice: 0 },
-    c_quickstrike: { label: "[Combat] Quick Strike (Init +3, Move +1)", diff: 0, dmg: 0, dice: 0, note: "Quick Strike: +3 Initiative, +1 Move this action." },
+    c_quickstrike: { label: "[Combat] Quick Strike (Init +3, Move +1)", diff: 0, dmg: 0, dice: 0, note: "Quick Strike: +3 Initiative, +1 Move this action.", story: "WoD: Combat p. 34: Initiative is rolled before the maneuver is picked, so the +3 and +1 Move stand as a reminder" },
     c_heavykick: { label: "[Combat] Heavy Kick (-1 die, +2 dmg, Init -1)", diff: 0, dmg: 2, dice: -1, note: "Heavy Kick: -1 Initiative, -1 Move." },
     c_quickkick: { label: "[Combat] Quick Kick (+1 dmg, Init +1)", diff: 0, dmg: 1, dice: 0 },
     c_grapple: { label: "[Combat] Grapple (Init -1, sustained hold)", diff: 0, dmg: 0, dice: 0, note: "Grapple: a sustained hold. Following turns the grappler may squeeze for Strength damage or the victim breaks free with a resisted Strength roll." }
@@ -505,6 +505,27 @@ export function sheetBonus(items, type, setting = null) {
     return n;
 }
 
+/**
+ * B6729: Demon apocalyptic form features that make attacks on the bearer harder (the system's pack Traits, whose effect
+ * was only in their text). By the Trait's name; they count while the Trait is switched on, as its bonuses do.
+ */
+export const FORM_DEFENCES = [
+    { re: /^shroud of flames$/i, ranged: 1, close: 1, page: "DtF p. 178" },
+    { re: /^radiant aura$/i, ranged: 1, close: 0, page: "DtF p. 180" },
+    { re: /^mirage$/i, ranged: 2, close: 1, page: "DtF p. 190" },
+    { re: /^alter size$/i, ranged: 2, close: 2, page: "DtF p. 190" }
+];
+/** The shield-shaped entries a defender's switched-on form Traits give (items: the actor's items). */
+export function formDefences(items = []) {
+    const out = [];
+    for (const i of items ?? []) {
+        if (i?.type !== "Trait" || !i.system?.isactive) continue;
+        const d = FORM_DEFENCES.find(f => f.re.test(String(i.name ?? "").trim()));
+        if (d) out.push({ name: i.name, parry: null, attackRanged: d.ranged, attackClose: d.close, closeOnly: false });
+    }
+    return out;
+}
+
 /** Parrying weapons (V20 Dark Ages p. 350): a dagger parries at 5, a sword at 6 and adds 1 to close attacks. */
 export const PARRY_WEAPONS = [
     { re: /\b(dagger|knife|dirk|stiletto|main-gauche|poniard|kris|tanto)\b/i, parry: 5, attack: 0, closeOnly: false, label: "parrying dagger" },
@@ -524,7 +545,9 @@ export function shieldFor({ shields = [], weapon = "", close = true } = {}) {
     for (const s of all) {
         let used = false;
         if (s.parry && (parryDiff === null || s.parry < parryDiff)) { parryDiff = s.parry; used = true; }
-        if (s.attack && (!s.closeOnly || close) && s.attack > attackDiff) { attackDiff = s.attack; used = true; }
+        // B6729: a form feature can make ranged and close attacks harder by different steps
+        const att = s.attackRanged != null || s.attackClose != null ? (close ? Number(s.attackClose) || 0 : Number(s.attackRanged) || 0) : s.attack;
+        if (att && (!s.closeOnly || close) && att > attackDiff) { attackDiff = att; used = true; }
         if (used) names.push(s.name);
     }
     return { parryDiff, attackDiff, names };
@@ -632,14 +655,25 @@ export function applyBodyDerived(data, body) {
 }
 
 /**
+ * B6781: a Disarm that hits rolls damage; successes beyond the victim's Strength send the weapon flying that many
+ * yards, and the victim takes no damage either way (V20 Dark Ages p. 347). {flies, yards}
+ */
+export function disarmResult(damageSuccesses, strength) {
+    const extra = Math.max(0, Number(damageSuccesses || 0) - Math.max(0, Number(strength || 0)));
+    return { flies: extra > 0, yards: extra };
+}
+
+/**
  * The state a maneuver leaves on its target after a hit (B3754): Sweep and Tackle knock down (V20 Dark Ages pp. 347-348),
  * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
  * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.
  */
 export function followOn(key, { hit = false, damageSuccesses = 0, profile = "", chi = null, metal = false } = {}) {
     if (!hit) return [];
-    if (key === "sweep" || key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
-    if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "turn" }];
+    if (key === "sweep") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
+    // B6782: after a Tackle both fighters roll Dexterity + Athletics (difficulty 7) or fall (V20 Dark Ages p. 348)
+    if (key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn", resist: 7, both: true }];
+    if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "grip" }];
     if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire" && kueiJinStaked(key, chi, metal)) return [{ condition: "staked", name: "Staked", lasts: "staked" }];
     return [];
 }
@@ -707,6 +741,46 @@ export function stoodInitiativeStep({ stood = null, restore = null, combat = nul
     if (restore && restore.combat === combat.id && Number(combat.round) > Number(restore.round)) out.restore = Number(restore.by) || 2;
     if (!reroll && stoodPenalty(stood, combat)) out.lower = 2;
     return out;
+}
+
+/* ---- B6787: holds, clinches and tackles that go on past the blow (V20 Dark Ages pp. 346-348) ---- */
+/** The grip on a victim {by, kind: "hold" | "grapple" | "clinch" | "tackle", combat, round} still counts in this fight. */
+export function gripActive(grip, combat) {
+    if (!grip?.by) return false;
+    if (grip.kind === "tackle") return !!combat && grip.combat === combat.id && Number(combat.round) <= Number(grip.round) + 1;
+    return !grip.combat || !combat || grip.combat === combat.id;
+}
+/** A bite is allowed once this attacker has the target in a clinch, a hold or a grapple, or tackled them this turn or last (V20 Dark Ages p. 347). */
+export function biteReady(grip, attackerUuid, combat) {
+    return gripActive(grip, combat) && grip.by === attackerUuid;
+}
+/** A grip a victim may struggle out of at their action: hold, grapple, clinch (a tackle holds nobody). */
+export const GRIP_HOLDS = ["hold", "grapple", "clinch"];
+/** The resisted Strength + Brawl roll: the victim breaks free only by rolling more successes (V20 Dark Ages pp. 346-347). */
+export function breaksFree(victimSuccesses, holderSuccesses) {
+    return (Number(victimSuccesses) || 0) > Math.max(0, Number(holderSuccesses) || 0);
+}
+/**
+ * Clinch: neither fighter takes any other physical action until it is broken (V20 Dark Ages p. 347). clinch: the
+ * actor's flag {with: uuid, combat}. Returns why an attack is refused, or "".
+ */
+export function clinchLimit(clinch, combat, targetUuid, weaponId) {
+    if (!clinch?.with || (combat && clinch.combat && clinch.combat !== combat.id)) return "";
+    if (targetUuid !== clinch.with) return "locked in a clinch: no other physical actions until it is broken";
+    if (!["unarmed:clinch", "unarmed:bite"].includes(String(weaponId ?? ""))) return "locked in a clinch: only Strength damage (or a bite) on the one held";
+    return "";
+}
+/** Tackle: +1 difficulty to all actions on the turn after (V20 Dark Ages p. 348). flag {combat, round}. */
+export function offBalanceNow(flag, combat) {
+    return !!flag && !!combat && flag.combat === combat.id && Number(combat.round) === Number(flag.round) + 1 ? 1 : 0;
+}
+/** Riposte needs a defense rolled with success earlier this turn (V20 Dark Ages p. 347): defended cards {target, defOk}. */
+export function riposteReady(cardsThisTurn, uuid) {
+    return (cardsThisTurn ?? []).some(d => d?.target === uuid && d.defOk);
+}
+/** A heart pierced: three damage successes from a stake kill a human (mortal or ghoul) outright (V20 Dark Ages p. 347). */
+export function stakeKills(key, { hit = false, damageSuccesses = 0, profile = "" } = {}) {
+    return hit && ["stake", "impale"].includes(key) && Number(damageSuccesses) >= 3 && ["mortal", "ghoul"].includes(profile);
 }
 
 /** B6152: the token is on full defence this turn: WoDX NPC's flag "<combatId>:<round>" for the fight's turn now. */

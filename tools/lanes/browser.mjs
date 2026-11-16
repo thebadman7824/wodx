@@ -9,6 +9,17 @@ import {HERE} from "./lib.mjs";
 
 const require = createRequire(path.join(HERE, "../harness/package.json"));
 
+/**
+ * B6775: game.ready comes before the WoDX modules that start on wodxChronicleReady (the chronicle loads its era profiles
+ * first) have put their api in place. A gate run first after a fresh sign-in (the first gate, and the first after each
+ * browser recycle) read game.modules.get("wodx-creation").api as undefined. The sign-in now also waits for these.
+ */
+export const LATE_APIS = ["wodx-chronicle", "wodx-creation", "wodx-npc", "wodx-storyteller", "wodx-otherworlds", "wodx-interactables"];
+/** Runs in the page: true once every active module in ids has its api. */
+export function apisReady(ids) {
+  return ids.every(id => { const m = globalThis.game?.modules?.get?.(id); return !m?.active || !!m.api; });
+}
+
 export async function openGM(url, {channel = process.platform === "win32" ? "msedge" : undefined, user = "Gamemaster Test"} = {}) {
   const {chromium} = require("playwright");
   const browser = await chromium.launch({headless: true, channel});
@@ -26,5 +37,7 @@ export async function openGM(url, {channel = process.platform === "win32" ? "mse
   if ( pw ) await page.fill("input[name=password]", pw);
   await Promise.all([page.waitForURL(/\/game/, {timeout: 90000}), page.click("button[name=join], button[type=submit][name=join], form button[type=submit]")]);
   await page.waitForFunction(() => window.game?.ready === true, null, {timeout: 180000});
+  // A module that never starts must not hold the lane: after 60 s the gates run and report what is missing.
+  await page.waitForFunction(apisReady, LATE_APIS, {timeout: 60000}).catch(() => console.log("Some WoDX modules had no api 60 s after sign-in."));
   return {browser, page};
 }

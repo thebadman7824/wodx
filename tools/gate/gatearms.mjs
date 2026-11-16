@@ -12,12 +12,12 @@
  *   7. ammunition (B3900): an empty cartridge revolver (named so, since the testbed year gives an unnamed gun an old lock) reloads from the two cartridges in Possessions (2 of 6), and they are gone
  * Result: Data/wodx-gate/gatearms-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, newestMessage} from "./kit.mjs";
 
 const LIB = "wodx-library";
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const settle = async (fn, ms = 5000) => { const t = Date.now(); while ( Date.now() - t < ms ) { if ( await fn() ) return true; await wait(150); } return !!(await fn()); };
-const strong = name => ({name, type: "Mortal", system: {attributes: {dexterity: {value: 5}, strength: {value: 3}, wits: {value: 5}, perception: {value: 1}},
+const strong = name => ({name, type: "Mortal", system: {attributes: {dexterity: {value: 5, total: 5}, strength: {value: 3, total: 3}, wits: {value: 5, total: 5}, perception: {value: 1, total: 1}},
   abilities: {athletics: {value: 5}, firearms: {value: 3}, survival: {value: 5}, alertness: {value: 0}}}});
 
 /** Start a WoDX Combat attack with this weapon and press Attack with no defense. */
@@ -74,9 +74,13 @@ export async function run() {
       const cond = actor => !!game.modules.get("wodx-chronicle")?.api?.conditions?.hasCondition?.(actor, "blinded");
       for ( let i = 0; i < 3 && !cond(b); i++ ) await attackWith(C, ta, tb, spray.id);
       await settle(() => cond(b));
-      for ( let i = 0; i < 2; i++ ) await attackWith(C, ta, tm, spray.id);
-      await wait(600);
-      const mask = [...game.messages].slice(-6).some(x => /gas mask keeps the spray out/i.test(x.content));
+      // B6772: read the cards this step made, not the last few in the log. Each blow brings its attack card, the
+      // spray's card and (fire and forget) the fight-start card, and after other gates more cards can land between,
+      // so a fixed window of six once missed the gas mask's card although the mask had kept the spray out.
+      const seen = new Set(game.messages.map(x => x.id));
+      const maskCard = () => game.messages.some(x => !seen.has(x.id) && /gas mask keeps the spray out/i.test(x.content ?? ""));
+      for ( let i = 0; i < 3 && !maskCard(); i++ ) { await attackWith(C, ta, tm, spray.id); await settle(maskCard, 1500); }
+      const mask = maskCard();
       G.ok("4. pepper spray and a gas mask", cond(b) && !cond(m) && mask, {victim: cond(b), masked: cond(m), maskCard: mask});
     });
 
@@ -89,6 +93,7 @@ export async function run() {
 
     await G.step("6. a bear trap", async () => {
       const [trap] = await a.createEmbeddedDocuments("Item", [{name: "a bear trap", type: "Item"}]);
+      const seen = new Set(game.messages.map(x => x.id));
       const imm = () => !!game.modules.get("wodx-chronicle")?.api?.conditions?.hasCondition?.(b, "immobilized");
       let caught = false, sets = 0;
       for ( let i = 0; i < 6 && !caught; i++ ) {
@@ -98,7 +103,7 @@ export async function run() {
         caught = !!r?.caught;
       }
       await settle(() => imm());
-      const card = [...game.messages].slice(-8).some(x => /takes damage/i.test(x.content) && /Gate Arms Victim/.test(x.content));
+      const card = game.messages.some(x => !seen.has(x.id) && /takes damage/i.test(x.content ?? "") && /Gate Arms Victim/.test(x.content ?? ""));
       G.ok("6. a bear trap", caught && imm() && card, {caught, sets, immobilized: imm(), damageCard: card});
     });
     await G.step("7. reloading from Possessions", async () => {

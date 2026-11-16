@@ -13,6 +13,15 @@
 export const GENDERS = {female: "Female", male: "Male", nonbinary: "Nonbinary"};
 /** How often the People generator makes someone nonbinary (Ben, 2026-11-13: 1 in 100). */
 export const NONBINARY_SHARE = 0.01;
+/**
+ * The People generator's rule for "anyone" (B3503), for every module that draws an NPC: one draw r in [0, 1) gives the
+ * side whose names the person takes (female under 0.5, else male) and, one time in a hundred, nonbinary, read from the
+ * same draw so that everyone drawn before keeps their sex. Returns {sex, nameSex} (B6768).
+ */
+export function sexFromDraw(r, share = NONBINARY_SHARE) {
+  const nameSex = r < 0.5 ? "female" : "male";
+  return {nameSex, sex: Math.abs(r - 0.5) < share / 2 ? "nonbinary" : nameSex};
+}
 
 /** A written gender made plain: one of the GENDERS keys, the writer's own words (trimmed, at most 40 letters), or "". */
 export function normalize(v) {
