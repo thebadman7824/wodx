@@ -111,6 +111,11 @@ test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
   assert.equal(a.area, true); assert.equal(a.strength, 4);
   const short = E.spend(4, 3, {area: true});
   assert.equal(short.area, false); assert.deepEqual(short.dropped, ["the area"]);
+  // B6901: a ticked area with no keyword that can be one costs nothing, as needFor counts it
+  const mend = E.spend(4, 2, {area: true}, ["mend"]);
+  assert.equal(mend.area, false); assert.equal(mend.strength, 4); assert.deepEqual(mend.dropped, []);
+  assert.equal(E.spend(6, 3, {area: true}, ["harm"]).area, true);
+  assert.match(src("modules/wodx-actions/scripts/effects.js"), /E\.spend\(successes, base, form\.plan, form\.keywords\)/);
   assert.equal(E.outcome("harm", a, {spheres: ["forces"]}).area, E.AREA.feet);
   assert.equal(E.outcome("mend", a).area, undefined);
   assert.equal(E.areaRadius({size: 100, distance: 5}), 300);
@@ -347,6 +352,11 @@ test("Actions 3.31.0: the Storyteller's effect and saved rituals", () => {
   assert.equal(r.takes, "one hour");
   const list = E.keepRitual(E.keepRitual([], r), {...r, strength: 5});
   assert.equal(list.length, 1); assert.equal(list[0].strength, 5);
+  // B6900: rituals are kept to RITUALS_MAX, not cut to the rotes' 40 first
+  let many = [];
+  for ( let i = 0; i < 50; i++ ) many = E.keepRitual(many, {...r, name: `Rite ${String(i).padStart(2, "0")}`});
+  assert.equal(many.length, 50); assert.ok(E.RITUALS_MAX > E.ROTES_MAX);
+  assert.equal(E.keepRote(many, {...r, name: "Zzz"}).length, E.ROTES_MAX);
   // The window, its toolbar button, Summon and Make on the sheet, and Undo for what they made
   const fx = src("modules/wodx-actions/scripts/effects.js");
   assert.match(fx, /export async function storytellerEffect\(/); assert.match(fx, /tokens\.tools\.wodxStEffect/);

@@ -161,13 +161,15 @@ export const areaRadius = ({size = 100, distance = 5, feet = null} = {}) => Math
  * with no strength). If the roll is short, the extras drop from the end of the plan.
  * Returns {ok, targets, duration, strength, dropped}.
  */
-export function spend(successes, base, plan = {}) {
+export function spend(successes, base, plan = {}, keywords = null) {
   const s = n(successes), b = Math.max(1, n(base));
+  // B6901: the area costs only when a keyword can take one, as needFor counts it (keywords left out: as before)
+  const areaOk = !keywords || [].concat(keywords).some(k => AREA.keys.includes(k));
   if ( s < b ) return {ok: false, area: false, targets: 0, duration: 0, strength: 0, dropped: ["the Effect"]};
   let left = s - b;
   const dropped = [];
-  const area = !!plan.area && left >= AREA.cost;
-  if ( area ) left -= AREA.cost; else if ( plan.area ) dropped.push("the area");
+  const area = !!plan.area && areaOk && left >= AREA.cost;
+  if ( area ) left -= AREA.cost; else if ( plan.area && areaOk ) dropped.push("the area");
   const targets = Math.min(left, Math.max(0, n(plan.targets))); left -= targets;
   if ( targets < n(plan.targets) ) dropped.push(`${n(plan.targets) - targets} extra target${n(plan.targets) - targets === 1 ? "" : "s"}`);
   const duration = Math.min(left, Math.max(0, n(plan.duration))); left -= duration;
@@ -477,11 +479,11 @@ export function roteFrom(name, {keywords = [], used = [], plan = {}, ctx = {}, k
 }
 
 /** Keep a rote: one per name (a new one with the same name replaces it), the list sorted by name, at most ROTES_MAX. */
-export function keepRote(list = [], rote) {
+export function keepRote(list = [], rote, max = ROTES_MAX) {
   if ( !rote ) return list;
   const key = rote.name.toLowerCase();
   const out = [...list.filter(r => String(r?.name ?? "").toLowerCase() !== key), rote].sort((a, b) => a.name.localeCompare(b.name));
-  return out.slice(0, ROTES_MAX);
+  return out.slice(0, max);
 }
 
 const SPHERE_KEYS = ["correspondence", "entropy", "forces", "life", "matter", "mind", "prime", "spirit", "time"];
@@ -556,7 +558,8 @@ export function ritualFrom(name, {keywords = [], strength = 1, step = 2, ctx = {
     area: !!area, note: String(note ?? "").trim().slice(0, 300), takes: String(takes ?? "").trim().slice(0, 60)};
 }
 /** Keep a ritual: one per name, sorted, at most RITUALS_MAX. */
-export const keepRitual = (list = [], r) => (r ? keepRote(list, r).slice(0, RITUALS_MAX) : list);
+// B6900: pass the ritual cap, so keepRote's 40 for rotes does not cut the Storyteller's rituals short
+export const keepRitual = (list = [], r) => (r ? keepRote(list, r, RITUALS_MAX) : list);
 
 /**
  * B5174: the powers an Untamable Garou or Kinfolk shrugs off (W20 p. 476): vampiric Domination, and the Gifts Roll Over,
