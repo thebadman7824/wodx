@@ -28,6 +28,21 @@ export function registerSettings() {
   game.settings.register(MOD, "feuds", {scope: "world", config: false, type: Array, default: []});
 }
 
+/**
+ * B6758 (final audit): deeds done in public count, not only a rescue. A threat made openly and won (WoDX Actions'
+ * "Threaten openly") is a public deed that lowers standing by one; a sermon that moved its hearers is in cults.mjs.
+ * The acts and their weights are house figures.
+ */
+export const PUBLIC_ACTS = {threaten: {delta: -1, text: name => `threatened ${name} openly`}};
+export function listenDeeds() {
+  Hooks.on("wodxSocial", p => {
+    const act = PUBLIC_ACTS[p?.act];
+    if ( !act || p?.result !== "win" || !game.user.isGM || game.users.activeGM?.id !== game.user.id ) return;
+    const a = actorOf(p.actor), who = p.npc?.name ?? actorOf(p.npc)?.name ?? "someone";
+    if ( a ) deed(a, {community: "town", delta: act.delta, text: act.text(who)}).catch(e => console.error(`${MOD} | standing`, e));
+  });
+}
+
 /* ---- Standing ---- */
 export async function deed(actorLike, {community = "town", delta = 1, text = "", region = null} = {}) {
   const a = actorOf(actorLike);

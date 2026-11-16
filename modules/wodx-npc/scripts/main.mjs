@@ -1288,6 +1288,7 @@ Hooks.once("init", () => {
   HEARTS.listen();
   FAMILY.listen();
   STANDING.registerSettings();
+  STANDING.listenDeeds();
   cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();

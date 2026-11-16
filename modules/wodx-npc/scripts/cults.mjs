@@ -361,6 +361,8 @@ export function build(ctx) {
     const r = await rollPool(poolOf(a, pool), 6);
     const pts = r.botch ? 0 : Math.max(0, r.net) * 2;
     const res = await addDeed(a, {kind: "sermon", token: tok, place, heard: Math.max(heard, r.net > 0 ? 1 : 0), pts, themes: C.themesOf(text), text: String(text).slice(0, 160)});
+    // B6758: a sermon that moves its hearers is a public deed: standing in the town rises by one
+    if ( r.net > 0 && !r.botch ) { try { await game.modules.get(MOD)?.api?.standing?.deed?.(a, {community: "town", delta: 1, text: `preached at ${place.name}`}); } catch (e) { console.warn(`${MOD} | sermon deed`, e); } }
     const mine = byFounder(a.id).find(c => c.place?.key === place.key);
     if ( r.botch && mine ) await mutate(cur => cur.map(c => (c.id === mine.id ? {...c, exposure: Math.min(C.MAX_EXPOSURE, c.exposure + 2), log: [...c.log, {at: now(), text: "A sermon went wrong in front of outsiders."}]} : c)));
     await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), whisper: [...gmIds(), ...(userId ? [userId] : [])],
