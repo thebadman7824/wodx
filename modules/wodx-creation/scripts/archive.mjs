@@ -1,4 +1,5 @@
 import {MODULE_ID, esc, lineOf, chronology} from "./actor-data.mjs";
+import {splatOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import * as AR from "./archive-rules.mjs";
@@ -123,7 +124,7 @@ export function candidates() {
     const snapshot = !!a.getFlag?.(MODULE_ID, "snapshotOf");
     if ( !(folder === DEAD_FOLDER || dead || snapshot || folder === SNAPSHOT_FOLDER) ) continue;
     out.push({id: a.id, name: a.name, kind: snapshot || folder === SNAPSHOT_FOLDER ? "copy" : "dead",
-      line: lineOf(a) ?? a.type, born: c.bornYear ?? null, died: dead ? c.died : null, cause: c.cause ?? "", stay: mustStay(a)});
+      line: splatOf(a) ?? lineOf(a) ?? a.type, born: c.bornYear ?? null, died: dead ? c.died : null, cause: c.cause ?? "", stay: mustStay(a)});
   }
   return out.sort((x, y) => x.kind.localeCompare(y.kind) || x.name.localeCompare(y.name));
 }
@@ -157,7 +158,7 @@ export async function archive(ids) {
   const at = game.time.worldTime;
   for ( const a of safe ) {
     const c = chronology(a);
-    record[a.id] = {name: a.name, type: a.type, line: lineOf(a) ?? a.type, born: c.bornYear ?? null, died: c.died ?? null, cause: c.cause ?? "",
+    record[a.id] = {name: a.name, type: a.type, line: splatOf(a) ?? lineOf(a) ?? a.type, born: c.bornYear ?? null, died: c.died ?? null, cause: c.cause ?? "",
       kind: a.getFlag?.(MODULE_ID, "snapshotOf") || a.folder?.name === SNAPSHOT_FOLDER ? "copy" : "dead", at};
   }
   await game.settings.set(MODULE_ID, "archived", record);

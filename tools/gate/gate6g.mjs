@@ -190,6 +190,73 @@ export async function run() {
             ok("hidden by the Mists longer than Willpower: the new day warns the Storyteller", !!m && !!m.whisper?.length, { found: !!m });
             await lord.setFlag(MOD, "daFae", { ...fl(lord), hiddenSince: null });
         });
+        // B6550-B6553: a cantrip the book names, picked from the sheet, cast at the book's own terms
+        await step("the sheet adds a book cantrip, and casting it puts its effect on the card", async () => {
+            await lord.setFlag(MOD, "daFae", { ...fl(lord), dominions: { ...fl(lord).dominions, dawn: 2 } });
+            answer(root => { const sel = root.querySelector("select[name=book]"); const o = [...(sel?.options ?? [])].find(x => x.value === "earths-armor"); if (o) o.selected = true; });
+            await A().daFae({ actor: lord }); await sleep(800);
+            const known = fl(lord).cantrips ?? [];
+            const k = known.findIndex(c => c.preset === "earths-armor");
+            await lord.update({ "system.attributes.stamina.value": 3, "system.attributes.stamina.total": 3 });
+            const n0 = game.messages.size;
+            answer(root => { set(root, "c", k); set(root, "clock", false); });
+            A().daCantrip({ actor: lord });
+            const m = await untilMsg(n0, 8000);
+            const t = text(m), took = /Earth's Armor: \d+ success/.test(t);
+            ok("the sheet adds a book cantrip, and casting it puts its effect on the card", k >= 0 && /Earth's Armor/.test(t) && /Dark Ages: Fae p\. 149/.test(t) && (!took || JSON.stringify(m.flags ?? {}).includes("ward")),
+                { k, took, card: t.slice(0, 300) });
+        });
+        await step("a book cantrip used once a scene is refused the second time", async () => {
+            const k = (fl(lord).cantrips ?? []).findIndex(c => c.preset === "earths-armor");
+            const n0 = game.messages.size;
+            answer(root => { set(root, "c", k); set(root, "clock", false); });
+            A().daCantrip({ actor: lord }); await sleep(2500);
+            const m = game.messages.contents.slice(n0).find(x => /Earth's Armor/.test(x.content ?? ""));
+            ok("a book cantrip used once a scene is refused the second time", !m, {});
+            await lord.unsetFlag(MOD, "daFaeOnce");
+        });
+        // B6560-B6566: Treasures
+        await step("the Storyteller gives a Treasure, and faerie dust is used up when thrown", async () => {
+            for (const i of lord.items.filter(x => x.getFlag(MOD, "treasure"))) await i.delete();
+            answer(root => { set(root, "key", "dust-bliss"); });
+            await A().treasureGive({ actor: lord }); await sleep(800);
+            const dust = lord.items.find(i => i.getFlag(MOD, "treasure")?.key === "dust-bliss");
+            const n0 = game.messages.size;
+            answer(root => { set(root, "t", dust?.id ?? ""); });
+            A().treasureUse({ actor: lord });
+            const m = await untilMsg(n0, 8000);
+            ok("the Storyteller gives a Treasure, and faerie dust is used up when thrown", !!dust && /Faerie dust of Bliss/.test(text(m)) && /Dexterity \+ Athletics/.test(text(m)) && !lord.items.get(dust.id),
+                { had: !!dust, card: text(m).slice(0, 240) });
+        });
+        await step("Excalibur's Scabbard: a sword's lethal harm draws no blood", async () => {
+            answer(root => { set(root, "key", "excalibur-scabbard"); });
+            await A().treasureGive({ actor: wren }); await sleep(800);
+            await wren.update(zero);
+            const WC = game.modules.get("wodx-combat").api;
+            const id = `gate6g-${Date.now()}`;
+            Hooks.callAll("wodxAttackRolled", lord, { target: wren, weapon: "Longsword", hit: true, messageId: id });
+            const r = await WC.applyDamage(wren, "lethal", 3);
+            Hooks.callAll("wodxDamageApplied", wren, { type: "lethal", levels: 3, before: r.before, after: r.after, attacker: lord.uuid, messageId: id });
+            await sleep(1500);
+            const lethal = Number(wren.system.health.damage.lethal) || 0;
+            ok("Excalibur's Scabbard: a sword's lethal harm draws no blood", lethal === 0, { lethal });
+            for (const i of wren.items.filter(x => x.getFlag(MOD, "treasure"))) await i.delete();
+            await wren.update(zero);
+        });
+        await step("a Changeling 20th Treasure spends its own Glamour first", async () => {
+            for (const i of lord.items.filter(x => x.getFlag(MOD, "treasure"))) await i.delete();
+            answer(root => { set(root, "key", ""); set(root, "art", "trick-of-the-light"); set(root, "glamour", 2); set(root, "object", "a silver comb"); });
+            await A().treasureGive({ actor: lord }); await sleep(800);
+            const it = lord.items.find(i => i.getFlag(MOD, "treasure")?.key === "c20art");
+            const n0 = game.messages.size;
+            answer(root => { set(root, "t", it?.id ?? ""); });
+            answer(root => { set(root, "pool", "gremayre"); });
+            A().treasureUse({ actor: lord });
+            await untilMsg(n0, 8000);
+            const left = lord.items.get(it?.id)?.getFlag(MOD, "treasure")?.glamour;
+            ok("a Changeling 20th Treasure spends its own Glamour first", !!it && left === 1, { left });
+            if (it) await lord.items.get(it.id)?.delete();
+        });
         await step("the inner voice: the Mists and the Weave follow imbalance", async () => {
             const keep = fl(lord);
             await lord.setFlag(MOD, "daFae", { ...keep, mists: { perm: 6, temp: 6 }, weaving: { perm: 2, temp: 2 } });

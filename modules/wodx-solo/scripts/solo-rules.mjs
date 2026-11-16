@@ -118,6 +118,8 @@ export const PANEL = [
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
   // B6040: towns with no map drawn, as card scenes
   {id: "places", label: "Places with no map", icon: "fa-solid fa-map-location-dot"},
+  // B6533: step 5, the years slept through
+  {id: "years", label: "Sleep through the years", icon: "fa-solid fa-bed"},
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},

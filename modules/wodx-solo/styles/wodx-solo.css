@@ -43,3 +43,7 @@
 .wsolo-dialog .wsolo-pick { display: flex; align-items: center; gap: 6px; }
 /* B6049: the recap */
 .wsolo-recap { margin: 4px 0 0; padding-left: 18px; }
+/* B6530: frenzy, torpor or death at the top of the panel */
+.wsolo-panel .wsolo-fate { border: 1px solid var(--color-border-dark, #6b1e1e); border-radius: 4px; padding: 4px 6px; margin-bottom: 6px; background: rgba(110, 20, 20, 0.12); }
+.wsolo-panel .wsolo-fate p { margin: 0 0 4px; }
+.wsolo-panel .wsolo-beast { background: rgba(160, 20, 20, 0.22); }

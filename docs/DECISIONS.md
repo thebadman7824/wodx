@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6530
+Next free block: B6580
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -341,9 +341,11 @@ Next free block: B6530
 | B6180-B6199 | Shared terms: one meaning for time, dice, health, distance, eras and who is who across every module (used B6180-B6199) | Chronicle, Actions, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller, Targeting, Atmosphere |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
+| B6230-B6239 | Learning from teachers, books and practice: experience spends run as long tasks (used B6230-B6236) | Creation, Storyteller |
 | B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6244) | tools |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
+| B6270-B6299 | Every line gets the spend window and the learning rule; one key for every line (used B6270-B6275) | Creation, Actions |
 | B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
 | B6310-B6319 | Every line equal in WoDX NPC (parity with the Kindred-only tools) (used B6310-B6319) | NPC |
 | B6320-B6329 | Every line equal in WoDX Storyteller (parity with the Kindred-only tools) (used B6320-B6328) | Storyteller |
@@ -352,7 +354,11 @@ Next free block: B6530
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner (used B6520) | tools (pcq) |
+| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC (used B6520-B6521) | tools (pcq, vision) |
+| B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
+| B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
+| B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
+| B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10618,6 +10624,77 @@ WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks 
 
 Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
 
+## B6230. A spend names where it is learned, and the trait rises at the end of a long task (2026-11-15)
+WoDX Creation. Ben picked the full version of Improvement Desk item lb1 (2026-11-15). When experience is spent in the
+Spend window, a dialog asks where the trait is learned: a teacher (any character in the world who has it at the new
+rating or higher, those on the scene first), a book the character carries, a school or course of the year, practice
+alone, or a teacher the Storyteller finds. The experience is recorded as spent at once (the log line starts
+"Learning:"), and a WoDX Storyteller long task of kind "train" is opened on the learner. When that task is finished,
+the trait rises by one dot; the log line is renamed to "learned from ...". One study at a time for each trait: while
+it runs the trait shows "Being learned now". A player's request carries the source, which the Storyteller's side checks
+again before it reaches the queue and again on approval. A study removed from Long tasks before it ends gives the
+experience back. Animal training keeps its own trainer task (B5060) and is not changed.
+
+Reverse: turn off the world setting "Learning needs a source" (wodx-creation.learning); spends raise traits at once.
+
+## B6231. Which sources may teach what (2026-11-15)
+WoDX Creation learn-rules.mjs sourcesFor. Attributes, Willpower, Virtues and the Road: a teacher or practice (V20 pdf
+131: raised by use and practice). Abilities: a teacher, a book, a school or practice. Occult and any Lore: a teacher, a
+book or a school, never practice alone. A new Ability: a teacher, a book or a school (V20 pdf 131: a new Ability needs
+tutoring and study). Disciplines: physical (Celerity, Fortitude, Potence) and the clan's own (any for a Caitiff, and a
+ghoul's) by practice or a teacher (V20 Dark Ages pdf 189); any other only from a teacher who has it at the level wanted
+(V20 Dark Ages pdf 189). Blood sorcery (Thaumaturgy, Necromancy, paths, Koldunic, Dur-An-Ki, Abyss mysticism): a
+teacher or a book. A new Discipline: a teacher; a new out-of-clan Discipline for a vampire needs a Kindred teacher, who
+loses a blood point when the study begins (V20 pdf 136).
+
+Reverse: edit sourcesFor and needsBlood in learn-rules.mjs.
+
+## B6232. How long a study takes, and why a better source is faster (2026-11-15)
+House figures, logged in docs/PENDING-REVIEW.md. The goal is twice the new rating in successes, four times for Occult,
+the Lores, blood sorcery and any Discipline out of clan or new. The learner rolls the Attribute itself (an Attribute),
+Intelligence and the Ability (an Ability) or permanent Willpower (a Discipline, Virtue, Road or Willpower). A teacher:
+one roll a week at difficulty 6, or 5 when the teacher is two dots past the new rating, with a die for each dot the
+teacher has above the learner (at most 3). A book or school: one roll a week, fine 5 (+2 dice), good 6 (+1), poor 7.
+Practice: one roll a month at difficulty 7. A teacher the Storyteller finds is resolved on the Storyteller's side to
+the best teacher in the chronicle, or the request is refused when nobody knows it that well. The dialog shows each
+source's rough time before the player chooses.
+
+Reverse: edit QUALITY, planFor and goalOf in learn-rules.mjs.
+
+## B6233. Books that teach (2026-11-15)
+WoDX Library's manuals, grimoires and a few papers teach by their subject up to a depth: a Latin grammar Linguistics
+and Academics to 3, a herbal Medicine to 2, a treatise on falconry Animal Ken to 3, a guild's book Crafts to 3 (fine),
+a fencing manual Melee to 3, an army field manual Firearms and Survival to 2, a programming book Computer to 3, a
+handwritten grimoire Occult to 3, a printed chapbook grimoire Occult to 2, and so on (BOOKS). Names are matched by a
+pattern, so the Library's clearer names still match. Any item can teach instead: flags["wodx-creation"].teaches =
+{traits, max, quality} (a Thaumaturgy text, the Book of Nod).
+
+Reverse: edit BOOKS in learn-rules.mjs.
+
+## B6234. Schools and courses follow the year, everywhere (2026-11-15)
+An apprenticeship with a master (Crafts, Animal Ken, Ride, Drive) in every age; a monastery or cathedral school 600 to
+1850; a fencing school 1300 to 1950; a university from 1200 (Bologna and Paris; Prague from 1348); a printed book bought
+for the purpose from 1450; a public library or evening school from 1850; correspondence, radio and film courses 1920 to
+2005; courses on the net from 1995; an uploaded skill from 2030, at fine quality, a roll each night, but only with
+Resources 3 to pay for it. Global, not tied to Moravia.
+
+Reverse: edit COURSES in learn-rules.mjs.
+
+## B6235. The Storyteller can waive it (2026-11-15)
+In the Spend window the Storyteller has "Waive learning for this story" for each character (flag
+wodx-creation.learnWaived), shown on the window while it holds, and a "Waive it this time" tick in the source dialog.
+Waived spends raise the trait at once.
+
+Reverse: remove the button in apps.mjs SpendApp.
+
+## B6236. The study shows on the map (2026-11-15)
+While a study runs the learner carries an Active Effect "Studying <trait>" with the book icon and status
+wodx-studying, so the token shows it to everyone who sees the token; it comes off when the study ends or stops. The
+start and the end float a line over the token, and a card goes to the owners and the Storyteller. The Spend window
+lists "Learning now" with the long task's successes so far.
+
+Reverse: drop the ActiveEffect in learn.mjs begin.
+
 ## B6240. The world timeline loads on the Storyteller's client only (2026-11-15)
 WoDX Chronicle. The world timeline (data/world-history.mjs), the future events and the future world (about 1.2 MB together) are no longer imported when the world starts. The Storyteller's client starts loading them at init and waits for them before WoDX Chronicle tells the other modules it is ready, so everything that runs there sees the whole list as before. A player's client reads has() and fired() from the fired list the Storyteller's client keeps in a world setting, and reads the Dated events page and the news cards the Storyteller's client writes, so it loses nothing it shows. The few things that can run on a player's client and read the list itself (a Malkavian's glimpse, a long torpor's wake report, a blood hunt's date, the first night forecast) await events.load() first, so on that client the timeline loads the first time one of them is used. Until it loads, list() holds the book events alone. Ben picked this on the stale design desk (2026-11-15 f1).
 
@@ -10690,6 +10767,64 @@ WoDX Atmosphere. common/sounds/heart.ogg holds one whole beat; it plays once per
 generated thump plays until the file is decoded and wherever there is none.
 
 Reverse: delete heart.ogg.
+
+## B6270. One key for every line (2026-11-15)
+WoDX Creation lines.mjs. Ben asked to bring every line up to what vampires have (2026-11-15). A pure helper answers
+for any actor with one key: vampire, kuei-jin (Vampire sheet, variant kindredeast), ghoul, revenant, werewolf, fera
+(Changing Breed sheet), kinfolk, mage, sorcerer, changeling, kinain, wraith, hunter, mummy, demon, mortal, creature,
+exalted, each with a family (vampire, werewolf, mage, changeling and the rest alone). Game API:
+api.lines.{of, info, family, label, keys}, for every WoDX module. lineOf in actor-data.mjs is not changed.
+
+Reverse: remove lines.mjs and api.lines.
+
+## B6271. Every line spends experience in the Spend window, by its own book (2026-11-15)
+WoDX Creation. The Spend window, the Award dialog, the ally dialog and the Storyteller window now take every line, not
+only vampires, ghouls and mortals. Each line's chart is in data/lines-xp.mjs: Garou and Fera W20 pdf 246 (Rage,
+Gnosis, Gifts at level x 3, or x 5 outside breed, auspice and tribe), Kinfolk W20 Kinfolk pdf 66 (Gifts 15, 20
+outside), Mage M20 pdf 337 (Arete x 8, affinity Sphere x 7, other Sphere x 8, new Sphere 10, no Sphere above Arete),
+sorcerers Sorcerer Revised pdf 46 (by the new rating; Paths x 7, new Path 7), Changeling C20 pdf 177 (Arts x 4, new 7;
+Realms x 3, new 5; Glamour x 3; Willpower x 2), Wraith 20th pdf 367 (Arcanoi x 3, new 7), Hunter: The Reckoning pdf
+141 (no Virtues: Edges come from the Virtue points the Storyteller awards, pdf 130), Mummy: The Resurrection pdf 140
+(favoured Hekau x 4, other x 6, new 7; Balance x 7), Demon: The Fallen pdf 165 (Lores x 5, new 7, 10 for another
+House's; Faith x 7; Virtues x 2), Kuei-jin Kindred of the East pdf 130 (Disciplines x 8; Yin, Yang and Hun x 3; P'o
+x 1). A line that does not buy a trait with experience does not show it. New purchase kinds: stat (a single rating),
+power (a rated power the sheet has; Mage Spheres are fields), newPower (a first dot, or a whole Gift).
+
+Reverse: remove the line from LINE_XP; spendLine then gives null and the window says to use the sheet.
+
+## B6272. House figures where the books are silent or the scan is unreadable (2026-11-15)
+Kuei-jin new Ability 3 and new Discipline 10 (the scan of Kindred of the East pdf 130 is unreadable there; V20's
+figures). Dharma is not bought with experience. Kinain: Arts and Realms at C20's costs, to 3 at most, the rest as
+mortals. Creatures: the mortal chart. Exalted: the Kindred chart without Disciplines. A Kinfolk's extra 5 when a Garou
+teaches instead of a spirit is not charged yet. Logged in docs/PENDING-REVIEW.md.
+
+Reverse: edit data/lines-xp.mjs.
+
+## B6273. Each line's sources for the learning rule (2026-11-15)
+WoDX Creation learn-rules.mjs. A new source kind, a spirit. Gifts: a spirit (a roll a night, W20 pdf 153) or a Garou
+who knows the Gift (weekly rolls, twice the successes: a lunar month at least, W20 pdf 154). Gnosis: the spirits, a
+teacher or practice. Arete: a mentor or the mage's own seeking. Faith: the Fallen's own deeds. Spheres: a mentor who
+knows it better, or a book; never practice alone; a mentor of another Tradition or sect takes three times the
+successes (M20 pdf 338 says two to five times). A first dot of an Art, Realm or Arcanos needs a teacher, raising one
+may be practised. Lores: remembered alone or with another of the Fallen. Hekau and Paths of sorcery: a master or a
+text, practice to raise. Rated powers take four times the new rating in successes, as the esoteric traits do.
+
+Reverse: edit sourcesFor, statSources, powerSources and planFor in learn-rules.mjs.
+
+## B6274. Learn a Gift goes through the Spend window's rule (2026-11-15)
+WoDX Actions garou.js. With WoDX Creation on, "Learn a Gift" with "Spend experience through the log" ticked sends the
+Gift as a purchase: the line's cost (Kinfolk pay 15 or 20), a source (a spirit or a Garou), a long task, and the Gift
+is on the sheet when the study is done, linked back to the Gift library. Without Creation, or with the box unticked,
+it is added at once as before. The Spend window of a Garou, Fera or Kinfolk has a "Learn a Gift" button for it.
+
+Reverse: remove the B6274 block in learnGift.
+
+## B6275. Pass the years ages every line in a mortal body (2026-11-15)
+WoDX Creation time.mjs. Kinfolk, sorcerers, kinain, hunters, Garou and Fera, mages, changelings and the Fallen's
+hosts age as mortals do over a skip (they may die of age, and an heir can inherit); wraiths are noted as not ageing.
+The archive records each actor's line by the new key.
+
+Reverse: empty AGING_LINES in time.mjs.
 
 ## B6300. The Kindred menu's line-agnostic tools go on every line's menu (2026-11-15)
 WoDX Actions. Downtime on Backgrounds, healing with time (lines that heal as the living do and lacked it: Changeling, Fae of the Dark Ages, Demon, Mummy, Orpheus), Seduction (Werewolf, Mage, Dark Ages Mage) and the Storyteller's New night, End of story, Witnesses and Sky and sun are added to each line's menu from one table (profile-menus SHARED_TOOLS and SHARED_FOR). Spirits and beasts get only the Storyteller's tools. Kept Kindred-only: Hunt, Feed, Spend blood, Blood Oath, Prestation, Blood Hunt, Golconda, sun and haven, torpor, diablerie, the Road, daytime pool caps.
@@ -10947,3 +11082,162 @@ Reverse: none needed; the label follows the source's licence. If the layout is e
 tools/pcq. The image model keeps the graphics card busy for hours, with no power cap. The runner reads nvidia-smi once a minute and writes one line to logs/gpu-YYYY-MM-DD.csv in its folder. That line holds the core heat, the memory heat where the card reports it, the power, the fan, the load and the memory in use. If the core stays above 83 C for 5 minutes, or the memory stays above 100 C, it opens a pc-alert issue so the Storyteller hears of it. The alert closes after 10 minutes under 78 C core and 95 C memory. The limits are in tools/pcq/gpu.mjs and covered by tools/harness/pcq.test.mjs.
 
 Reverse: remove the gpuCheck call from the runner loop.
+
+## B6521. The blind naming test runs on the PC (2026-11-15)
+tools/vision/blind.py. A local picture model (Ollama with qwen2.5vl 7B, on the graphics card) is shown each drawing with no name and asked what it is, how sure it is, and why. This is the same test the cloud checker runs for map objects. A picture passes when the model gives a true name and is sure 4 or 5. It is unsure on a true name at sure 3, and fails on anything else. A true name is matched on its naming part: "cauldron on a tripod" is named by "cauldron", and "beehive or skep" takes either word. A names file can list other accepted names. One picture takes about 1.5 seconds. Before each picture the script waits up to 30 seconds for a gap in the image model's queue; past that the two share the card. The model is unloaded at the end. Its "sure" is not reliable (it says 5 when wrong), so a PC pass is a first screen. Pictures it fails or is unsure of still go to the cloud checker before a desk. The first run judged the 160 trial drawings from the image model: 33 pass, 127 fail. A spot check by eye agreed with its fails. Most of the rest were other names for the right thing ("barrel" for cask, "bookshelf" for bookcase), which a names file fixes.
+
+Reverse: stop using tools/vision/blind.py; Ollama can be removed from the PC.
+
+## B6530. The Beast played by the game (2026-11-15)
+WoDX Solo. When the lone player's character falls into frenzy (WoDX Actions rolls the check by itself), the seat sets flags.wodx-storyteller.standIn on it, the same flag the Storyteller's absent players use, so WoDX NPC plays its turns. With no fight on the scene it goes for its prey: an enemy in sight (a hostile token), else the nearest living being, within 40 yards (house reading of "anyone near"), and a fight starts with the frenzied on a side of their own. V20 pdf 307: the Storyteller decides how long a frenzy lasts, one scene typically; WoDX ends it when the fight is over, as the scene's end. A botched frenzy is left to WoDX Actions, which rolls it out (B4872). Willpower for control is offered to the Kindred and their ghouls only; the other lines' frenzy runs until it ends.
+
+Reverse: remove installFate from main.mjs; the standIn flags the seat set carry beast.standIn and can be cleared.
+
+## B6531. A Willpower point buys one turn (2026-11-15)
+V20 pdf 307: in frenzy, a point of Willpower lets the player steer one action for a turn; it does not end the frenzy. Fight the Beast on the panel spends the point and lifts the stand-in for the round; the next round the seat has them again. Only in a fight, once a round.
+
+Reverse: drop the beast action in fate.mjs.
+
+## B6532. Torpor slept away (2026-11-15)
+A Cainite in torpor has Sleep the torpor away at the top of the panel: the clock runs to the night WoDX Actions set for rising (V20 Dark Ages p. 351); a year or more goes through WoDX Creation's Pass the Years, so the world ages with them. Then the rising is rolled (a blood point and the Road at 8, B4982). The seat's ask is refused while a fight runs.
+
+Reverse: drop the torpor action.
+
+## B6533. Sleep through the years (2026-11-15)
+The panel offers 1, 5, 10, 25, 50 or 100 years. A Cainite goes into voluntary torpor first (WoDX Actions keeps voluntary torpor at half the Road's time, an older house reading) and sleeps at least that long; anyone else lives the years. Pass the Years runs over the whole world with each change at its default tick, the sleeper's torpor ticked. The main timeline ends in 2022 and the Future Darkness branch at 2099, so a sleep stops there.
+
+Reverse: drop the years entry from PANEL in solo-rules.mjs.
+
+## B6534. Who carries on (2026-11-15)
+House rule: when the lone player's character dies (the dead status, a death date in the chronology or Final Death), those who could carry the chronicle on are, closest first: a childe (sire is the dead), a ghoul (domitor), an heir from Pass the Years (heirOf), the family (the same family key), a tie on the sheet, then the player's own other characters. The dead and groups never. A new character through arrival is always offered.
+
+Reverse: heirsOf in fate-rules.mjs.
+
+## B6535. What the heir takes up (2026-11-15)
+The player becomes the heir's owner and plays them; the dead stay readable to the player (Observer). An heir with no token gets one beside the body. Every WoDX Storyteller owner record naming the dead (scenes, regions, tiles, items) passes to the heir, with the year and "Inherited from"; things carried stay on the body, and become the heir's when picked up because the record already names them. Owning adds no Background dots (B850). Courts challenging the claim (law papers) are left out for now.
+
+Reverse: drop passHoldings.
+
+## B6536. The gate (2026-11-15)
+tools/gate/gatesolofate.mjs, seven steps, run with force for a player of the gate's own; the sleep steps touch only the gate's actors.
+
+Reverse: delete the gate.
+
+## B6540. More peoples dated, each from a source read (2026-11-15)
+WoDX Creation, data/name-customs.mjs. Polish (nobles from 1250, settling 1300 to 1850), Russian (1861, census 1897, passports of the 1930s), Greek (Byzantine houses; patronymic surnames of the 1800s), Serbian (nobles from 1400; standardised 1851), Sámi (1901, 1921, 1923), Khmer (one name until the French law of 1910), Amharic (father's name, no family name), Zulu and Mande (clan names inherited), Amazigh (Algeria's law of 23 March 1882), Mizrahi (family names early among Arabic-speaking Jews; Iran 1925), Malay (bin or binti). Each entry names the page or law it came from.
+
+Reverse: delete the entry; the people keeps its tables as before.
+
+## B6541. The Plains and the West: one name until the circular of 1890 (2026-11-15)
+Lakota, Cheyenne, Comanche, Kiowa, Apache, Arikara, Pawnee, Mandan, Hidatsa, Crow, Arapaho, Shoshone, Ute and Diné: given name alone until Commissioner Morgan's circular of 19 March 1890 (reissued 1 December 1902), then settling to 1930 (house reading in PENDING-REVIEW). Canadian peoples, the eastern woodlands and the Pueblos are not included.
+
+Reverse: remove the MORGAN loop.
+
+## B6542. Peoples still without a date (2026-11-15)
+Hungarian, Arabic beyond Algeria, Moroccan Amazigh, Yoruba, Akan, Swahili, Banyarwanda, Kongo, Luba, Ganda, Tuareg, Nahua, Quechua, Maya and the Inuit: no source read gave a date, so they keep their tables (listed in PENDING-REVIEW).
+
+Reverse: none needed.
+
+## B6545. Ottoman women "daughter of" (2026-11-15)
+data/people-world.mjs: before 1934 a Turkish woman's second name is "X kızı", not "Xoğlu"; a household's daughters take "X kızı" after the father. House reading, logged.
+
+Reverse: set the turkish fam back to "{names.male.turkish}oğlu".
+
+## B6546. Sámi and Khmer lists to 300 recorded names (2026-11-15)
+Sámi from the List of Sámi people (Wikipedia), Khmer from Cambodian name and List of monarchs of Cambodia (Wikipedia), read 15 November 2026: 304 and 300 distinct names. Their old-age lists are still under 50 each, so they sit in RAISED_SHORT_OLD, held to 300 by the harness. Amazigh, Moro and Banyarwanda gained the rulers of the Zayyanid, Almohad, Marinid, Sulu and Maguindanao lists and the Rwandan king list, but stay under 300.
+
+Reverse: remove the added names; drop RAISED_SHORT_OLD.
+
+## B6550. The Dominions' named cantrips are presets (2026-11-15)
+WoDX Actions. fae-da-cantrips.js holds every named cantrip of the four Dominions (Dark Ages: Fae pp. 123-162) in WoDX's own words with its page, trait, level, difficulty, successes needed and costs, and an effects-card spec that a game system reads. The common cantrips (Call the element, Sword, Mantle, Charm and the rest) are one entry per Dominion. Cantrips no system can show (cold, drowning and silence, which WoDX has no system for) are card-only and logged for review.
+
+Reverse: delete fae-da-cantrips.js and the preset lines in fae-da.js parseCantrips; sheet lines fall back to their bracketed keywords.
+
+## B6551. The fae sheet picks cantrips from the book (2026-11-15)
+WoDX Actions. "Add from the book" lists the presets up to the sheet's Dominion dots, with a search box; a sheet line that names a book cantrip takes its level, trait and effect. A multiple select in a WoDX dialog gives every picked value (profiles.js readForm).
+
+Reverse: drop bookPicks and the book select in fae-da.js; readForm's multiple branch.
+
+## B6552. Casting a book cantrip follows the book (2026-11-15)
+WoDX Actions. Cast a cantrip takes the preset's difficulty (a number, the target's Willpower, Stamina + 3, or 5 + the people), refuses too few successes, spends Weaving or Willpower where the book asks, keeps once-a-day and once-a-scene cantrips to that, checks the age floor (standing rule 29) for the romantic ones, refuses a changeling Fostering, and runs the special handlers: the Sword turns a hand weapon aggravated for the scene, Freeze Death's dice match the wound penalty, Pure Form's match the Mists, and the making cantrips open the Treasure maker.
+
+Reverse: remove preCheck, presetDoes and the pre branch in fae-da.js cast.
+
+## B6553. Fortune shifts, Hasten actions, boosts to all rolls, mind shields (2026-11-15)
+WoDX Actions. A Fortune spec's own shift wins over the successes; a Hasten spec carries its extra actions (one for every two successes by default), so the Dark Ages rotes Antics, Slowdream, Berserk and Snowglide now give actions too; a Boost on "all" reaches every roll but soak and Initiative, and on "willpower" only Willpower rolls; a Ward against "mind" adds its dice to the target's resisting roll against a power that knows, sways, binds, possesses or frightens (Mindveil, Heart's Rest).
+
+Reverse: timedNumbers in mage-da-effects.js, BOOST_TAGS and mindShieldDice in power-mods.js, the shield in effects.js resistItem.
+
+## B6555. Sprite Charms (2026-11-15)
+WoDX Actions. The seven Charms of Dark Ages: Fae p. 97 join the Spirit Charm window as their own group. A sprite (the faeSprite flag, "sprite" in its name, or a sprite-only Charm on the sheet) gets the book's Blast (harm bought by the level, Willpower to hit), Healing (twice the price, no roll, as the book names none), Reform (15 Essence, no roll) and Swift Flight (1 Essence) under those names; Animate Tools puts a bashing weapon on its sheet for an hour, up to its Gnosis; Paralyzing Stare holds the target a turn a success at Stamina + 3 (a spirit's Rage), costing 1, 2 or 3 Essence by the victim. Exclamation is named on p. 97 but not described there and is left out.
+
+Reverse: drop the sprite group from spirit-charms.js and the sprite cases in charms.js.
+
+## B6560. Faerie Treasures for every era (2026-11-15)
+WoDX Actions. fae-treasures.js and treasures.js: faerie dust (thrown, the target's Willpower at 5 + its level), the invested Treasures and the oathcrafted ones of Dark Ages: Fae pp. 187-191, Changeling 20th Treasures that hold an Art's cantrip (a Glamour point, from the Treasure's own store first; Intelligence + Gremayre or Glamour to activate, pp. 324-325), Excalibur's Scabbard and Vulcan's Hammer by both books, the Lightning gun, the Friar's Cross and the Gray Sword (p. 368). Use a Treasure, Keep a Treasure's oath and Give a Treasure (GM) sit on both fae menus.
+
+Reverse: delete both files, the trx() wiring in main.js and the Treasures sections in profile-menus.js.
+
+## B6561. Treasures made by cantrips (2026-11-15)
+WoDX Actions. Charm puts a known cantrip of its Dominion into an object for one use that fades at the Dominion's next hour (noon, midnight, sunrise, sunset); Persisting Charm keeps it until used; True Enchantment uses it again and again; Dominion Writ holds any Dominion's cantrip until the next noon, a success less for another Dominion's (the book's one harder). The held successes are the casting's.
+
+Reverse: imbuedItem and IMBUE in fae-treasures.js; the imbue branch in fae-da.js presetDoes.
+
+## B6562. Excalibur's Scabbard takes back the harm (2026-11-15)
+WoDX Actions. After harm lands on the keeper, the Dark Ages scabbard puts back lethal and aggravated harm from blades and points and holds bashing at Injured; the Changeling 20th one puts back all lethal and aggravated harm but fire, cold and drowning and holds the keeper at Injured. The blow's weapon is read from the attack.
+
+Reverse: the scabbard part of afterBlow in treasures.js.
+
+## B6563. The striking swords (2026-11-15)
+WoDX Actions. When a wounding blow lands: Shatterhammer adds two aggravated levels; the Sword of Drowning takes the turn and rolls the target's Willpower (6) for each turn after, three failures or a botch drowning them; the Gray Sword gives a Banality point that fades a day after the one before it.
+
+Reverse: the sword part of afterBlow in treasures.js.
+
+## B6564. Oaths of oathcrafted Treasures (2026-11-15)
+WoDX Actions. Shatterhammer (buried a week each month), the Sword of Drowning (sea water each night) and the Cauldron of Nightmares (cleansed after each use) go dead when their oath lapses, checked by the clock; Keep a Treasure's oath records it. Castor's Star's oath (never roofed) is the Storyteller's to watch.
+
+Reverse: daily and keepOath in treasures.js.
+
+## B6565. The Gale Flute and the Lightning gun (2026-11-15)
+WoDX Actions. The Gale Flute's Charisma + Performance (8) successes pick from the book's table: the wind's way, the wind on chosen people (two harder), still air, then tornadoes of 10 or 12 lethal dice. The Lightning gun takes five charges for each Glamour past the first, ten at most, and fires five dice of lethal harm.
+
+Reverse: galeOf and lightningCharges in fae-treasures.js.
+
+## B6566. Treasures in the read guard (2026-11-15)
+WoDX Actions. The powers inventory lists every book cantrip, sprite Charm and Treasure, so the guard test fails when one puts a marker on the card that nothing reads.
+
+Reverse: the three loops in tools/powers/inventory.mjs.
+## B6570. The lowest difficulty is 2, and the difficulty words are V20's (2026-11-15)
+WoDX Senses. V20 core pdf 257 / printed 249 says a difficulty is always between 2 and 10, so a sense roll's difficulty stops at 2, not 3 (the earlier page note said V20 gave no floor, which was wrong). The quiet interface's words follow the same chart, so 3 is now trivial and 4 easy (they were easy and a house word, routine); 2 shares the word for 3 and 10 stays "all but impossible".
+
+Reverse: Set FLOOR in wodx-senses/scripts/senses-rules.mjs to 3 and edit DIFFICULTY_WORDS in quiet-rules.mjs.
+
+## B6571. The Gift Heightened Senses in Crinos (2026-11-15)
+WoDX Senses. W20 pdf 160-161 / printed 158-159 gives -3 to Perception difficulties in Crinos, Hispo and Lupus and -2 in Homid and Glabro. Crinos was counted at -2; it is now -3.
+
+Reverse: Drop the crinos test from the Gift line in powersFor (senses-rules.mjs).
+
+## B6572. Overwhelmed senses daze, they do not deafen (2026-11-15)
+WoDX Senses. V20 pdf 142 / printed 134: a sudden event calls for Willpower at 4 or more, higher for a stronger source, and a failure leaves the character oblivious to the surroundings for a turn or two. The house numbers of B2901 stay (difficulty 6 for a loud noise or a gun nearby, one turn), and the card and the timed effect now say the character is overwhelmed rather than deafened. The book's separate hour of blindness or deafness from a very strong stimulus is not built (B6573).
+
+Reverse: Edit overloadText in sight-rules.mjs and the applyTimed description in sight.mjs.
+
+## B6573. What the Senses book check left open (2026-11-15)
+WoDX Senses. Not built yet, logged in docs/PENDING-REVIEW.md: the Gift Heightened Senses needs a Gnosis point for a scene (W20 pdf 161) but is counted whenever the werewolf has it; heightening one sense alone (V20 pdf 143); Heightened Senses lowering the pitch-darkness penalty from +2 to +1 (V20 pdf 143, a WoDX Combat change); a very strong stimulus blinding or deafening for an hour (V20 pdf 142); a Deathsight weak spot giving -1 to hit (Wraith 20 pdf 191). Page refs for all of it are in docs/research/senses-refs.md.
+
+Reverse: Nothing to reverse; these are notes.
+
+## B6574. The eight World of Darkness timeline cards, checked again from the cloud book text (2026-11-15)
+WoDX Chronicle. Every book in the cloud text that names a card's subject was searched and the hits read. Five cards stand as they were: 1521 Tenochtitlan (Wraith 20 pdf 101, 514-515), 1791 Saint-Domingue (Wraith 20 pdf 520-521; Sorcerers Crusade Revised pdf 34), 1885 the Congo (Wraith 20 pdf 517-518; Kindred of the Ebony Kingdom pdf 15-16, 161), 1994 Rwanda (Kindred of the Ebony Kingdom pdf 168; the Wyrm's part now has books too: A World of Rage pdf 95-96, the Corax breedbook pdf 46) and 1692 Salem, which could not be checked here (see B6576). Three are reworded to the books (B6575).
+
+Reverse: Nothing to reverse; this is the record of the check.
+
+## B6575. Three cards follow the books more closely (2026-11-15)
+WoDX Chronicle. 1890, the Ghost Dance: the Wendigo tribebook (Revised, pdf 28-29) has the Garou arrive too late at Wounded Knee and fight the soldiers in the blizzard after, and the Garou camp of the Ghost Dance forms only after 1890 (pdf 50), so the card no longer has Garou dying among the dancers. 1830, the Squattocracy: Rage Across Australia (pdf 21-22) has only a few of the graziers knowingly serve the Wyrm, and the Bunyip fight back with drought, flood and fire rather than only withdraw. 1589, the Croatan (left out of the game in favour of the book event, B6131): the rite banishes the Eater-of-Souls (W20 pdf 42; Werewolf: The Wild West pdf 60; Past Lives pdf 66) rather than binding it.
+
+Reverse: Put the old wording back in r3 renaissance.txt, age-of-reason.txt, victorian.txt and events-2026-11-12r3.json, then run node tools/timeline/build-world-history.mjs.
+
+## B6576. Salem waits on a book the cloud does not have (2026-11-15)
+WoDX Chronicle. The 1692 Salem card rests on Verbena (Revised) pdf 43, read on the PC on 13 November 2026. That book, and the other Mage Revised tradition books, are not in the cloud book text, and no other book there says more about Salem than naming the trials as a model witch-hunt (Archons and Templars). The card stays as it is; a books-find job can confirm the page.
+
+Reverse: Nothing to reverse.

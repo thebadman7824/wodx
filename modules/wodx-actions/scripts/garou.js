@@ -595,6 +595,15 @@ export function build(ctx) {
         return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
             const g = pool.find(x => x.id === fd.gift); if (!g) return null;
             const own = ownOf(g), xp = G.giftXP(g.l, own);
+            // B6274: with WoDX Creation, a Gift is bought like any other trait: the chart of the line, a spirit or a
+            // Garou to teach it, and it is known when the study is done (or at once when the Storyteller waives it)
+            const cr = game.modules.get("wodx-creation")?.api;
+            if (fd.xp && cr?.data?.newPowerOption && cr?.xp?.requestSpend) {
+                const option = cr.data.newPowerOption(actor, "gift", g.n, { own, level: g.l, item: giftItem(g) });
+                if (!option) return null;
+                if (!option.ok) { ui.notifications.warn(option.reason); return null; }
+                return cr.xp.requestSpend(actor, option);
+            }
             await actor.createEmbeddedDocuments("Item", [giftItem(g)]);
             let xpNote = "";
             if (fd.xp) {

@@ -39,7 +39,9 @@ export function penaltyFrom(effects = [], ctx = {any: true}) {
 export const BOOST_TAGS = {
   physical: ["physical", "strength", "dexterity", "stamina", "athletics", "brawl", "melee", "dodge", "ranged", "firearms", "archery", "lift", "balance"],
   social: ["social", "charisma", "manipulation", "appearance", "intimidation", "leadership", "voice", "seduce", "con", "fasttalk", "empathy", "etiquette", "subterfuge", "performance"],
-  mental: ["mental", "perception", "intelligence", "wits", "awareness", "occult", "investigation", "academics", "science", "medicine", "computer", "linguistics", "sight", "hearing"]
+  mental: ["mental", "perception", "intelligence", "wits", "awareness", "occult", "investigation", "academics", "science", "medicine", "computer", "linguistics", "sight", "hearing"],
+  // B6553: Willpower rolls alone (Brew and Bread)
+  willpower: ["willpower"]
 };
 
 /** What a timed result keeps for the dice: only the numbers its key reads. out: an effects-rules outcome. */
@@ -50,7 +52,7 @@ export function timedData(out = {}) {
   if ( out.key === "boost" ) { d.dice = n(out.dice); d.on = String(out.on ?? "physical"); }
   if ( out.key === "fortune" ) { d.shift = n(out.shift); d.once = true; }
   if ( out.key === "fear" && Number.isFinite(out.shift) ) d.shift = n(out.shift);
-  if ( out.key === "hasten" ) { d.actions = n(out.actions); if ( out.name === "Slowed" ) d.slow = true; }
+  if ( out.key === "hasten" ) { d.actions = n(out.actions); if ( out.name === "Slowed" || out.slow ) d.slow = true; }
   return Object.keys(d).length ? d : null;
 }
 
@@ -88,7 +90,8 @@ export function modsFrom(effects = [], ctx = {}) {
       if ( n(d.dice) > ward ) { ward = n(d.dice); wardName = e.name; }
     } else if ( e.key === KEYS.boost && n(d.dice) ) {
       const on = d.on ?? "physical";
-      const hit = (on === "soak" && ctx.soak) || (on === "initiative" && ctx.initiative)
+      // B6553: "all" reaches every roll but soak and Initiative (Rain-Strike, Nightmares: dice off every pool)
+      const hit = (on === "soak" && ctx.soak) || (on === "initiative" && ctx.initiative) || (on === "all" && tags.size > 0 && !ctx.soak && !ctx.initiative)
         || ((BOOST_TAGS[on] ?? []).some(t => tags.has(t)) && !ctx.soak && !ctx.initiative);
       if ( hit ) { dice += n(d.dice); parts.push(`${e.name} ${n(d.dice) > 0 ? "+" : ""}${n(d.dice)}`); }
     } else if ( e.key === KEYS.fortune && n(d.shift) && roll && !ctx.soak && !ctx.initiative ) {
@@ -108,6 +111,16 @@ export function modsFrom(effects = [], ctx = {}) {
   const pen = penaltyFrom(effects, ctx);
   if ( pen.dice ) { dice += pen.dice; parts.push(...pen.parts); }
   return {dice, diff, parts, once};
+}
+
+/** B6553: powers that reach into the mind, and the shield a Ward against "mind" gives when its target resists one
+ * (Mindveil, Heart's Rest: the shield's dice join the resisting roll; house reading of "a success off the attacker"). */
+export const MIND_KEYS = new Set(["know", "sway", "bind", "possess", "fear"]);
+export function mindShieldDice(effects = [], key = "") {
+  if ( !MIND_KEYS.has(key) ) return 0;
+  let best = 0;
+  for ( const e of effects ) if ( e && !e.disabled && e.key === KEYS.ward && e.data?.against === "mind" ) best = Math.max(best, n(e.data.dice));
+  return best;
 }
 
 /** The token looks (WoDX Chronicle token looks): what a power on a character shows on the map. */
