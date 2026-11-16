@@ -10,7 +10,7 @@
     "wodx-actions.sessionId", "wodx-actions.dawnDusk", "wodx-actions.sunDamage", "wodx-actions.autoDayV1",
     "fxmaster.legacyCleanupVersion", "fxmaster.releaseMessage", "sequencer.update-notice-shown-version", "tokenmagic.presets"],
   "_hosts": "B6880: the second PC (DESKTOP-S6NV3Q9) runs lane 7 with its own runner. Paths there replace the ones above; lanes with a host are seen only on that PC.",
-  "hosts": {"desktop-s6nv3q9": {"foundryMain": "C:/WoDX/Foundry/resources/app/main.js", "knownGood": "C:/WoDX/testbed-known-good", "backups": "C:/WoDX/Backups"}},
+  "hosts": {"desktop-s6nv3q9": {"foundryMain": "C:/WoDX/Foundry/resources/app/main.js", "knownGood": "C:/WoDX/testbed-known-good", "backups": "C:/WoDX/Backups", "setupFrom": "C:/WoDX/lane1-copy"}},
   "lanes": [
     {"id": 1, "port": 30000, "dataPath": "%LOCALAPPDATA%/FoundryVTT", "autoReset": false},
     {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
