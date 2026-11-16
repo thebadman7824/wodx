@@ -20,6 +20,9 @@ R = {
  'en-whier-anacreon-revolts-0': ('note', None, None, 'Kept: the 1931 resignation comes before Charon is lost in 1945 (ev-fifth-great-maelstrom); the Necropoli drift away after that. The Encyclopaedia date now says so.'),
  'en-wr20bo-bhuvar-0': ('note', None, None, 'The tsunami of December 2004 falls after the Time of Judgment year. It stands only when the Storyteller skips the Time of Judgment endings, like every classic event after 2004.'),
  'ev-technocracy': ('note', None, None, 'Kept at 1897 (M20 p. 27), the date the other Mage cards are fitted to.'),
+ 'ev-croatan': ('edit', 1589, None, 'Daily check 2026-11-14: the book check (Past Lives pdf 66 to 70, Werewolf: The Wild West pdf 60, Croatan Song pdf 30) puts the Croatan\'s end in 1589. The lost colony card stays at 1590, the year the relief ship found Roanoke empty.'),
+ 'ev-war-of-tears': ('edit', None, 'The Bunyip are hunted out as Europeans settle Australia. The tribe is broken; a few hold out in the far country.',
+     'Daily check 2026-11-16 (House Events Desk): the War of Tears breaks the tribe in 1899, and the last stand of the Bunyip in 1937 (Past Lives pdf 70) ends it.'),
  'ev-camarilla': ('note', None, None, 'Kept at 1435 (V20 Lore of the Clans). A Guide to the Anarchs counts the Camarilla from 1486, the first Conclave (ev-first-conclave); V20 reads 1435 as the founding and 1486 as the first Conclave, so both cards stand.'),
 }
 d = json.load(open('desk-data-2026-11-10t1.json'))
