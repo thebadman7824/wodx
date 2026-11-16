@@ -59,3 +59,24 @@ test("world profiles replace or add, invalid ones are rejected", () => {
   assert.equal(m.rejected.length, 1);
   assert.ok(validateProfile({id: "x", name: "x", start: 1, end: 2, system: {mortal: "modern", vampire: "modern", werewolf: "modern", mage: "darkages"}}).length);
 });
+
+// B6382, B6383: the abilities block and sheets following the era
+test("an era's abilities block adds and hides; sheets follow without losing dots", async () => {
+  const R = await import("../scripts/era-resolve.mjs");
+  const fs = await import("node:fs");
+  const data = JSON.parse(fs.readFileSync(new URL("../data/eras.json", import.meta.url)));
+  for ( const p of data.profiles ) assert.deepEqual(R.validateProfile(p), [], p.id);
+  const ren = data.profiles.find(p => p.id === "renaissance");
+  const base = {talents: ["alertness"], skills: ["melee"], knowledges: ["occult"]};
+  const block = R.eraAbilitiesOf(ren);
+  assert.deepEqual(R.eraAbilityList(base, block, "mortal", "darkages").skills, ["melee", "firearms"]);
+  assert.deepEqual(R.eraAbilityList(base, block, "mortal", "victorian").skills, ["melee"], "another era's list is untouched");
+  assert.deepEqual(R.eraAbilityList(base, {eras: {mortal: "darkages"}, hide: ["occult"]}, "mortal", "darkages").knowledges, []);
+  assert.deepEqual(R.eraAbilityList(base, {eras: {}, lines: {hunter: {add: {talents: ["empathy"]}}}}, "hunter", "modern").talents, ["alertness", "empathy"]);
+  assert.equal(R.eraAbilitiesOf({id: "x", system: {}}), null);
+  assert.ok(R.validateProfile({...ren, abilities: {add: {spells: ["x"]}}}).length > 0);
+  assert.ok(R.validateProfile({...ren, sheets: "maybe"}).length > 0);
+  const changes = R.followAbilities({firearms: {value: 0, isvisible: false}, melee: {value: 3, isvisible: true}, computer: {value: 0, isvisible: true}, archery: {value: 2, isvisible: true}, x: 4},
+    ["firearms", "melee"]);
+  assert.deepEqual(changes, {firearms: true, computer: false});
+});

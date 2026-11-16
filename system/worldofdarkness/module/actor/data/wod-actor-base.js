@@ -979,6 +979,7 @@ export class WoDActor extends Actor {
         try {
             if (actorData.type !== "PC") {
                 for (const i in actorData.system.abilities) {
+                    if (typeof actorData.system.abilities[i] !== "object" || actorData.system.abilities[i] === null) continue; // WoDX fork (B6155): skip a stray number key
                     if (actorData.system.abilities[i].max !== actorData.system.settings.abilities.defaultmaxvalue) {
                         actorData.system.abilities[i].max = actorData.system.settings.abilities.defaultmaxvalue;
                     }                
@@ -987,7 +988,7 @@ export class WoDActor extends Actor {
             else {
                 for (const bio in actorData.system.bio.splatfields) {
                     if (actorData.system.bio.splatfields[bio].label == "wod.bio.vampire.generation") {                    
-                        const traitMax = await this._calculteMaxTrait(parseInt(actorData.system.bio.splatfields.generation.value) - parseInt(actorData.system.bio.splatfields.generation.mod));
+                        const traitMax = this._golcondaTraitMax(actorData, await this._calculteMaxTrait(parseInt(actorData.system.bio.splatfields.generation.value) - parseInt(actorData.system.bio.splatfields.generation.mod)));
 
                         actorData.system.settings.attributes.defaultmaxvalue = traitMax;
                         actorData.system.settings.abilities.defaultmaxvalue = traitMax;
@@ -1093,8 +1094,9 @@ export class WoDActor extends Actor {
             else {
                 const bloodpoolMax = this._calculteMaxBlood(actorData.system.generation - actorData.system.generationmod);
                 const bloodSpending = this._calculteMaxBloodSpend(actorData.system.generation - actorData.system.generationmod);
-                const traitMax = this._calculteMaxTrait(actorData.system.generation - actorData.system.generationmod);
+                const traitMax = this._golcondaTraitMax(actorData, this._calculteMaxTrait(actorData.system.generation - actorData.system.generationmod));
                 actorData.system.settings.abilities.defaultmaxvalue = traitMax;
+                if (actorData.system.settings.attributes) actorData.system.settings.attributes.defaultmaxvalue = traitMax;
                 actorData.system.settings.powers.defaultmaxvalue = traitMax;
 
                 // attributes max
@@ -1107,6 +1109,7 @@ export class WoDActor extends Actor {
                 }
 
                 for (const i in actorData.system.abilities) {
+                    if (typeof actorData.system.abilities[i] !== "object" || actorData.system.abilities[i] === null) continue; // WoDX fork (B6155): skip a stray number key
                     actorData.system.abilities[i].max = traitMax;
 
                     if (actorData.system.abilities[i].value > traitMax) {
@@ -1202,6 +1205,12 @@ export class WoDActor extends Actor {
         }
     
         return bloodSpending;
+    }
+
+    /** WoDX fork (B6155): a Cainite in Golconda (WoDX Actions' golconda flag) may raise Traits to 10 whatever the Generation. */
+    _golcondaTraitMax(actorData, traitMax) {
+        const held = actorData?.flags?.["wodx-actions"]?.golconda;
+        return held ? Math.max(10, Number(traitMax) || 5) : traitMax;
     }
 
     _calculteMaxTrait(selectedGeneration) {

@@ -203,7 +203,8 @@ const spriteTokenOf = (actor, uuid = null) => {
 
 /** Every attack rolled in a fight, hit or miss, plays the move that fits the weapon. The computer that rolled it sends it. */
 function onAttack(attacker, info = {}) {
-  if ( !on() ) return;
+  // B6150: WoDX Combat fires the attack again on the Storyteller's client for a player's roll; the roller's own client sent the move
+  if ( !on() || info.relayed ) return;
   const from = spriteTokenOf(attacker, info.attackerToken), name = from?.document.flags?.[MOD]?.sprite;
   const move = name ? SR.moveFor(name, info) : null;
   if ( !move || !may(from) ) return;

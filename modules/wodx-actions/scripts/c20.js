@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: c20-rules.js.
  */
 import * as NPW from "./npc-power-rules.js";
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import * as C from "./c20-rules.js";
 import { floatOver } from "./daysleep.js";
@@ -151,8 +152,11 @@ export function build(ctx) {
             if (!lim) return null;
             if (plan.cost && !(await glamour(actor, -plan.cost))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
-            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
+            // B6411: the target's ward or Magic Resistance makes a cantrip on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.notes.push(...rm.parts);
+            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + (Number(rm.diff) || 0)), { willpower: wp });
+            if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const nmK = C.nightmareFrom(r.faces, plan.nightmareDice, r.botch);
             const nmNote = await nightmare(actor, nmK);
             const art = C.ARTS[fd.art];

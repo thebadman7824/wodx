@@ -128,3 +128,16 @@ test("a Forbiddance keeps the being off the mummy; shadow soul sends the body's 
   const combat = fs.readFileSync(path.join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
   assert.equal((combat.match(/if \(forbiddenFrom\(attacker, target\)\)/g) ?? []).length, 2, "both the player's and the NPC's attack check a Forbiddance");
 });
+
+test("B6370: a night's penalty (a broken feeding law) takes 2 dice from every action roll, not from soak or Initiative", () => {
+  const fx = [{id: "p", name: "Feeding law: -2 dice tonight", key: PM.KEYS.penalty, data: {dice: -2}}];
+  assert.equal(PM.modsFrom(fx, {tags: ["dexterity", "melee", "physical"]}).dice, -2, "an attack");
+  assert.equal(PM.modsFrom(fx, {tags: ["charisma", "social"]}).dice, -2, "a social roll");
+  assert.equal(PM.modsFrom(fx, {frenzy: true, tags: ["frenzy"]}).dice, -2, "a frenzy check");
+  assert.equal(PM.modsFrom(fx, {soak: true}).dice, 0, "soak keeps its dice");
+  assert.equal(PM.modsFrom(fx, {initiative: true}).dice, 0, "Initiative keeps its dice");
+  assert.equal(PM.modsFrom(fx, {actions: true}).dice, 0, "the count of actions is not a roll");
+  assert.equal(PM.penaltyFrom(fx).dice, -2, "a power window (any roll)");
+  assert.equal(PM.penaltyFrom([{...fx[0], disabled: true}]).dice, 0, "ended");
+  assert.ok(PM.modsFrom(fx, {tags: ["wits"]}).parts.some(p => /-2/.test(p)), "named on the card");
+});

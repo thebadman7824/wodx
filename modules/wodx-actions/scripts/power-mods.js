@@ -12,7 +12,28 @@
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
 /** The keys, as WoDX Chronicle's timed effects carry them. */
-export const KEYS = {ward: "wodx-effect-ward", boost: "wodx-effect-boost", fortune: "wodx-effect-fortune", calm: "wodx-effect-calm", hasten: "wodx-effect-hasten"};
+export const KEYS = {ward: "wodx-effect-ward", boost: "wodx-effect-boost", fortune: "wodx-effect-fortune", calm: "wodx-effect-calm", hasten: "wodx-effect-hasten",
+  penalty: "wodx-effect-penalty"};
+
+/**
+ * B6370: a penalty on every roll for a while (a clan's feeding law broken: -2 dice until dawn, V20 p. 395 and the
+ * clan pages). It reaches every action roll: Attribute and Ability pools, Virtue checks, attacks, powers. Soak,
+ * damage and Initiative are not actions, so they keep their dice.
+ */
+export const penaltyHits = (ctx = {}) => !ctx.soak && !ctx.initiative && !ctx.actions && !ctx.damage
+  && (ctx.frenzy || (ctx.tags ?? []).length > 0 || !!ctx.any);
+/** The dice the penalties on a character take from one action roll (a negative number), with their parts. */
+export function penaltyFrom(effects = [], ctx = {any: true}) {
+  let dice = 0;
+  const parts = [];
+  if ( !penaltyHits(ctx) ) return {dice, parts};
+  for ( const e of effects ) {
+    if ( !e || e.disabled || e.key !== KEYS.penalty || !n(e.data?.dice) ) continue;
+    dice += n(e.data.dice);
+    parts.push(`${e.name} ${n(e.data.dice) > 0 ? "+" : ""}${n(e.data.dice)}`);
+  }
+  return {dice, parts};
+}
 
 /** The roll tags each kind of Boost reaches (WoDX Chronicle rollTags words). */
 export const BOOST_TAGS = {
@@ -87,6 +108,8 @@ export function modsFrom(effects = [], ctx = {}) {
     }
   }
   if ( ward ) { dice += ward; parts.push(`${wardName} +${ward} armour`); }
+  const pen = penaltyFrom(effects, ctx);
+  if ( pen.dice ) { dice += pen.dice; parts.push(...pen.parts); }
   return {dice, diff, parts, once};
 }
 
@@ -147,6 +170,8 @@ export function effectsOf(actor) {
 }
 /** What the powers on a character do to one roll (see modsFrom). */
 export const powerMods = (actor, ctx = {}) => modsFrom(effectsOf(actor), ctx);
+/** B6370: the penalty dice alone (for a roll that reads no other power effect: a power window, a sin). */
+export const penaltyOf = (actor, ctx = {any: true}) => penaltyFrom(effectsOf(actor), ctx);
 /** After a roll: the Blessings and Curses it used are spent. Owners and the Storyteller only; others leave it to them. */
 export async function consumeOnce(actor, ids = []) {
   if ( !actor || !ids?.length ) return 0;

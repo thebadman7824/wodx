@@ -2,6 +2,7 @@ import {MODULE_ID, esc, lineOf, chronology} from "./actor-data.mjs";
 import {splatOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as AR from "./archive-rules.mjs";
 
 /**
  * The archive of the dead. A long chronicle piles up the dead (filed in "WoDX · The Dead" by Pass the Years and
@@ -12,6 +13,10 @@ import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
  *
  * Nothing is lost: each actor is written to the compendium and found there before it leaves the world.
  * Left in the world: player characters, and anyone with a linked token on a scene (the token would break).
+ *
+ * B6414: with the world setting autoArchive at a number of years (ten by default), the clock moving on archives the
+ * candidates dead or kept as a copy that long, once a day on the active Storyteller's client. Journal links to an
+ * actor that goes (@UUID[Actor.id], @Actor[id]) are pointed at its archive entry, and back when it returns.
  */
 
 export const PACK_NAME = "wodx-archive";
@@ -31,6 +36,63 @@ export function registerArchiveSettings() {
     type: ArchiveApp,
     restricted: true
   });
+  game.settings.register(MODULE_ID, "autoArchive", {
+    name: "Archive the long dead by itself",
+    hint: "When the clock moves on, the dead and Pass the Years' old copies who have been dead (or kept) this long go to the archive of the dead by themselves, unless a player has them or a linked token stands on a scene. Links in journals follow them.",
+    scope: "world", config: true, type: Number, choices: AR.AUTO_YEARS, default: AR.AUTO_DEFAULT
+  });
+}
+
+const yearOf = time => { try { return describeTime(Number(time) || 0).year ?? null; } catch { return null; } };
+const autoYears = () => { try { return Number(game.settings.get(MODULE_ID, "autoArchive")) || 0; } catch { return 0; } };
+
+/** Who the clock sends to the archive now: the candidates dead or kept as a copy for the setting's years. */
+export function dueNow(now = game.time?.worldTime ?? 0, years = autoYears()) {
+  const nowYear = yearOf(now);
+  // by itself, nobody with any token on a scene goes (an unlinked token would lose the actor it reads)
+  const onMap = new Set();
+  for ( const sc of game.scenes ?? [] ) for ( const t of sc.tokens ?? [] ) if ( t.actorId ) onMap.add(t.actorId);
+  return candidates().filter(c => {
+    if ( onMap.has(c.id) ) return false;
+    const a = game.actors.get(c.id);
+    const copyYear = Number(a?.getFlag?.(MODULE_ID, "snapshotOf")?.toYear);
+    return AR.due(c, {diedYear: c.died !== null ? yearOf(c.died) : null, copyYear: Number.isFinite(copyYear) ? copyYear : null, nowYear, years});
+  });
+}
+
+let lastLook = null, looking = false;
+/** One look a day at most, on the active Storyteller's client. Returns the archive's result, or null. */
+export async function autoTick(now = game.time?.worldTime ?? 0, {force = false} = {}) {
+  if ( !game.user?.isGM || game.users?.activeGM?.id !== game.user.id || looking ) return null;
+  if ( !force && lastLook !== null && !AR.newDay(lastLook, now) ) return null;
+  lastLook = now;
+  if ( !(autoYears() > 0) ) return null;
+  const ids = dueNow(now).map(c => c.id);
+  if ( !ids.length ) return null;
+  looking = true;
+  try { return await archive(ids); } catch (e) { console.warn("WoDX Creation | archive by itself", e); return null; } finally { looking = false; }
+}
+export function setupAutoArchive() {
+  Hooks.on("updateWorldTime", t => { autoTick(t).catch(e => console.warn("WoDX Creation | archive", e)); });
+}
+
+/** B6414: journal links to these actors follow them into the archive (toArchive) or back. */
+async function relinkJournals(ids, toArchive) {
+  if ( !ids.length ) return 0;
+  let n = 0;
+  for ( const j of game.journal ?? [] ) {
+    const kind = j.getFlag?.(MODULE_ID, "kind");
+    if ( kind === "archive" || kind === "lineage" ) continue; // written again from scratch
+    const ups = [];
+    for ( const p of j.pages ?? [] ) {
+      const was = p.text?.content;
+      if ( typeof was !== "string" || !was ) continue;
+      const now = AR.relink(was, ids, toArchive);
+      if ( now !== was ) ups.push({_id: p.id, "text.content": now});
+    }
+    if ( ups.length ) { await j.updateEmbeddedDocuments("JournalEntryPage", ups); n += ups.length; }
+  }
+  return n;
 }
 
 const year = time => { try { return describeTime(Number(time) || 0).dateLabel; } catch { return ""; } };
@@ -102,6 +164,8 @@ export async function archive(ids) {
   await game.settings.set(MODULE_ID, "archived", record);
   if ( safe.length ) await DocClass.deleteDocuments(safe.map(a => a.id));
   await writeIndex(pack);
+  await relinkLineage();
+  try { await relinkJournals(safe.map(a => a.id), true); } catch (e) { console.warn("WoDX Creation | archive links", e); }
   return {archived: safe.map(a => ({id: a.id, name: a.name})), kept};
 }
 
@@ -125,7 +189,15 @@ export async function restore(ids) {
   }
   await game.settings.set(MODULE_ID, "archived", record);
   await writeIndex(pack);
+  await relinkLineage();
+  try { await relinkJournals(restored.map(r => r.id), false); } catch (e) { console.warn("WoDX Creation | archive links", e); }
   return {restored};
+}
+
+/** B6179: the lineage journal is written again, so its links follow an actor into the archive and back. */
+async function relinkLineage() {
+  if ( !game.journal?.find?.(j => j.getFlag?.(MODULE_ID, "kind") === "lineage") ) return;
+  try { await (await import("./lineage.mjs")).writeLineageJournal(); } catch (e) { console.warn("WoDX Creation | lineage links", e); }
 }
 
 /** Look up an id that may have gone to the archive: the world actor, else the archive's entry. */

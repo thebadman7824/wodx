@@ -276,6 +276,12 @@ async function main() {
     put("docs/DECISIONS.md", stampDecisions(get("docs/DECISIONS.md"), x.frag));
     console.log(`decisions: ${x.frag.meta.block}, ${sectionNumbers(x.frag.body).length} section(s)`);
   }
+  // B6200: the list of cross-module api paths that gateapipaths walks on the testbed follows the code at every merge
+  try {
+    const {collect} = await import("../audit/api-paths.mjs");
+    const f = "tools/gate/fixtures/api-paths.json", next = JSON.stringify(collect(), null, 1) + "\n";
+    if ( !fs.existsSync(path.join(ROOT, f)) || read(f) !== next ) put(f, next);
+  } catch (e) { console.log(`  api paths not refreshed: ${e.message}`); }
   if ( dry ) { console.log(`--dry: ${writes.size} file(s) would change, ${mf.length + df.length} fragment(s) would go.`); process.exit(0); }
   for ( const [p, s] of writes ) fs.writeFileSync(path.join(ROOT, p), s);
   for ( const x of [...mf, ...df] ) fs.rmSync(path.join(ROOT, x.file));

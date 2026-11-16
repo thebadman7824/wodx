@@ -502,3 +502,18 @@ test("arrival.mjs: the seat makes the character, assigns it, places its token an
   const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
   assert.ok(panel.includes("ARRIVE_UI.html?.()") && panel.includes("arrive: () => ARRIVE_UI.open?.()"), "the panel offers Make my character");
 });
+
+test("arrival: Foundry's welcome scene is never the landing and always gives way; a default owner is nobody's (B5146, B5147)", () => {
+  const core = {id: "NUEDEFAULTSCENE0", name: "Foundry Virtual Tabletop", img: "nue/defaultscene/fvtt-background.webp", active: true};
+  const ferry = {id: "f", name: "Toll-post and Ivo's Ferry", img: "ferry.webp"};
+  assert.equal(R.isCoreScene(core), true);
+  assert.equal(R.pickLanding([core]), null);
+  assert.equal(R.pickLanding([core, ferry], "f"), "f");
+  assert.equal(R.mayReplaceActive(core), true);
+  assert.equal(R.mayReplaceActive(null), true);
+  assert.equal(R.mayReplaceActive({id: "x", img: ""}), true);
+  assert.equal(R.mayReplaceActive(ferry), false, "a map made active by the Storyteller stays");
+  assert.equal(R.ownsByName({default: 3}, "p1"), false);
+  assert.equal(R.ownsByName({default: 0, p1: 3}, "p1"), true);
+  assert.equal(R.ownsByName({p1: 2}, "p1"), false);
+});

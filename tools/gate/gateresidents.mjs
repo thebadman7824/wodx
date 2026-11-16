@@ -4,13 +4,15 @@
  *   await (await import(`/wodx-gate/gateresidents.mjs?${Date.now()}`)).run()
  * It makes a scene of its own with three buildings carrying households as an adopted town map leaves them (a smithy,
  * a cottage, a chapel), seeds them, checks the sheets, routines and records, removes them, and deletes the scene,
- * the folder and the test Cainite at the end. It does not switch the Storyteller's view or change the clock.
+ * the folder and the test Cainite at the end. It views its own scene for step 5b and goes back; it does not change the clock.
  *   1. the modules: NPC 0.46.0 or later with api.residents; WoDX Creation's People generator on
  *   2. the plan: 3 households, 9 people, every one named, kin of one sex sharing one family name, routines that exist,
  *      the chapel's priest a Christian man (NPC 0.47.1)
  *   3. seeded: 9 sheets in the residents folder, each with its routine on, its building as home or work, its household
  *   4. the records: each region lists its residents; the smithy's owner is the smith
  *   5. the routines read the places: a resident's home block resolves to its building
+ *  5b. on the map: with the scene viewed and its routines on Auto, the routine tick puts each resident whose hour is
+ *      in one of the buildings there as a token inside that building (the view goes back afterwards)
  *   6. the Scenes sidebar menu has Seed the residents and Remove the residents
  *   7. Remove the residents deletes the 9 sheets and clears the records and the owner it filled in
  *   8. a household made the ghouls of a Cainite: its sheets are ghouls, then removed
@@ -101,6 +103,25 @@ export async function run() {
     const homeOf = a => RRr.resolvePlace({place: "home"}, {places: scene.regions.contents.map(r => ({id: r.uuid, kind: r.flags[MOD].place.kind})), roles: a.flags[MOD].routine.roles, seed: a.id}).place;
     const blocks = a => RRr.blocksOf(a.flags[MOD].routine, a.flags[MOD].behavior.template, game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.());
     ok("5. routines read the places", made.filter(a => a.flags[MOD].routine.roles.home).every(a => homeOf(a) === a.flags[MOD].resident.region) && made.every(a => blocks(a).length > 0));
+
+    // 5b: the effect in play: the routine tick places the residents' tokens in their buildings
+    const viewed = canvas?.scene?.id ?? null;
+    try {
+      await scene.view();
+      for ( let i = 0; i < 100 && !(canvas?.ready && canvas.scene?.id === scene.id); i++ ) await sleep(200);
+      await scene.setFlag(MOD, "routineMode", "auto");
+      await M.api.routines.tick("jump", {scene});
+      await sleep(1500);
+      const here = new Set(scene.regions.contents.map(r => r.uuid));
+      const due = made.filter(a => here.has(game.actors.get(a.id)?.flags?.[MOD]?.where?.place));
+      const inside = due.filter(a => scene.tokens.contents.some(t => t.actorId === a.id && [...(t.regions ?? [])].some(r => r.uuid === game.actors.get(a.id).flags[MOD].where.place)));
+      ok("5b. residents stand in their buildings", due.length > 0 && inside.length === due.length,
+        {due: due.map(a => a.name), inside: inside.map(a => a.name), tokens: scene.tokens.size});
+    } finally {
+      for ( const t of scene.tokens.contents ) await t.delete().catch(() => null);
+      await scene.unsetFlag(MOD, "routineMode").catch(() => null);
+      if ( viewed && game.scenes.get(viewed) ) await game.scenes.get(viewed).view();
+    }
 
     const opts = [];
     Hooks.callAll("getSceneContextOptions", ui.scenes, opts);

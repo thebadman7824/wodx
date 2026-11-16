@@ -65,3 +65,40 @@ export function fomorEnd(damageTotal, levels = 3, track = 7) {
 
 /** Nights of Animal habits: one per success, at least one. */
 export const habitNights = successes => Math.max(1, Math.round(Number(successes) || 1));
+
+/**
+ * B6156: what keeps a character from acting at all, read by every WoDX Actions window (Any roll, Common checks, the
+ * power windows, Feed, Spend Blood, the Actions menu). Asleep for the day (the daySleep flag) or a registered condition
+ * that leaves the bearer out cold: no action and no defence (Asleep, Torpor, Incapacitated), or staked. A condition
+ * that only takes an action away (Dazed, a fomor's gas form) is shown on the roll, not refused.
+ * conds: the actor's registered conditions ({id, name, mods}). Returns the reason, or "" when the character may act.
+ */
+export const OUT_COLD = ["asleep", "torpor", "incapacitated", "staked"];
+export function cannotActWhy({name = "The character", daySleep = false, conds = []} = {}) {
+  if ( daySleep ) return `${name} is asleep for the day. Use Awaken by day if something rouses them.`;
+  const c = (conds ?? []).find(x => OUT_COLD.includes(x?.id) || (x?.mods?.noAction && x?.mods?.noDefense));
+  return c ? `${name} cannot act: ${c.name}${c.summary ? ` (${c.summary})` : ""}.` : "";
+}
+
+/** B6156: the WoDX Actions conditions whose bearer loses the turn, for WoDX Combat's turn conductor to read (api.noActionIds). */
+export const NO_ACTION_IDS = ["asleep"];
+
+/**
+ * B6157: what the bearer's registered conditions do to its own roll: ownDiff always, ownDiffVision only when the roll
+ * needs sight (Blurred sight, Blinded), and a note for a condition that takes an action away. Returns {diff, parts}.
+ */
+export function conditionRollMods(conds = [], {sight = false} = {}) {
+  let diff = 0;
+  const parts = [];
+  for ( const c of conds ?? [] ) {
+    const m = c?.mods ?? {};
+    const own = Number(m.ownDiff) || 0, vis = sight ? Number(m.ownDiffVision) || 0 : 0;
+    if ( own ) { diff += own; parts.push(`${c.name} +${own} difficulty${c.source ? ` (${c.source})` : ""}`); }
+    if ( vis ) { diff += vis; parts.push(`${c.name} +${vis} difficulty on sight${c.source ? ` (${c.source})` : ""}`); }
+    if ( m.noAction && !OUT_COLD.includes(c.id) && !m.noDefense ) parts.push(`${c.name}: ${c.summary ?? "loses the action"}`);
+  }
+  return {diff, parts};
+}
+
+/** B6157: a roll needs sight when the player ticked "Uses sight", or it is a Perception roll not marked hearing or smell. */
+export const needsSight = (fd = {}) => !!fd["tag-sight"] || (fd.attr === "perception" && !fd["tag-hearing"] && !fd["tag-smell"]);

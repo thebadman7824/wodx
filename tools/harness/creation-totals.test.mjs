@@ -45,6 +45,40 @@ test("every book's totals are whole and carry page refs", () => {
   assert.equal(defaultLine("Werewolf", {eraId: "modern"}), "w20");
 });
 
+// B6443: the book check of 15 November 2026 pins every line's figures, read again on the cited pages
+const BOOK = {
+  v20: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], v: 7, f: 15, c: {attribute: 5, ability: 2, discipline: 7, background: 1, virtue: 2, road: 2, willpower: 1}},
+  vtda20: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [4], v: 7, f: 15, c: {discipline: 7, bloodPath: 4, virtue: 2, road: 2, willpower: 1}},
+  w20: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], f: 15, c: {gift: 7, rage: 1, gnosis: 2, willpower: 1}},
+  daw: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], f: 15, c: {gift: 7, rage: 1, gnosis: 2, willpower: 1}},
+  m20: {a: [7, 5, 3], b: [13, 9, 5], bg: 7, p: [6], f: 15, c: {sphere: 7, arete: 4, willpower: 1, quintessence: 0.25}},
+  dam: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], f: 15, c: {foundation: 5, pillar: 3, willpower: 1}},
+  wr20: {a: [7, 5, 3], b: [13, 9, 5], bg: 7, p: [5, 10, 10], f: 15, c: {arcanoi: 5, passion: 2, fetter: 1, willpower: 2, pathos: 0.5}},
+  c20: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3, 5], f: 15, c: {art: 5, realm: 2, glamour: 3, willpower: 1}},
+  dafae: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [2], f: 15, c: {dominion: 7, willpower: 2, weaving: 4}},
+  htr: {a: [6, 4, 3], b: [11, 7, 4], bg: 5, p: [3], f: 21, c: {willpower: 1, conviction: 1}},
+  demon: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], v: 3, f: 15, c: {lore: 7, faith: 6, virtue: 2, willpower: 1}},
+  kote: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], f: 15, c: {martialArts: 3, discipline: 10, chi: 3, hun: 3, po: 1, willpower: 1}},
+  mummy: {a: [6, 4, 3], b: [11, 7, 4], bg: 3, p: [3], f: 5, c: {hekau: 5, balance: 4, sekhem: 1, spell: 1, ritual: 1, willpower: 1}},
+  orpheus: {a: [6, 4, 3], b: [11, 7, 4], bg: 4, p: [], f: 15, c: {horror: 7, otherHorror: 10, vitality: 5, willpower: 3}}
+};
+
+test("each book's totals and costs match the book check", () => {
+  for ( const [k, e] of Object.entries(BOOK) ) {
+    const t = R.TOTALS[k];
+    assert.deepEqual([t.attributes, t.abilities, t.backgrounds, t.freebies], [e.a, e.b, e.bg, e.f], k);
+    assert.deepEqual(t.powers.map(p => p.dots), e.p, `${k} powers`);
+    assert.equal(t.virtues, e.v, `${k} virtues`);
+    assert.equal(t.abilityCap, 3, k);
+    assert.equal(t.costs.background, 1, k);
+    for ( const [c, v] of Object.entries(e.c) ) assert.equal(t.costs[c], v, `${k} ${c}`);
+  }
+  assert.deepEqual(R.TOTALS.mummy.rebirth, {attributes: 2, abilities: 5, backgrounds: 2, freebies: 10}, "the Rebirth adds 2, 5, 2 and 10 freebies");
+  assert.match(R.TOTALS.kote.costRef, /pdf 71 \/ printed 79/);
+  assert.match(R.TOTALS.mummy.costRef, /pdf 52 \/ printed 56/);
+  assert.match(R.TOTALS.orpheus.costRef, /pdf 125 \/ printed 124/);
+});
+
 test("assign gives the largest allotment to the fullest group", () => {
   const rows = R.assign({physical: 3, social: 8, mental: 5}, [7, 5, 3]);
   assert.deepEqual(rows.map(r => [r.group, r.allowed, r.over]), [["social", 7, 1], ["mental", 5, 0], ["physical", 3, 0]]);

@@ -92,6 +92,15 @@ export function weatherRolls(exposedAt, now, severity) {
 
 /** The penalty in dice for being tired. */
 export const tiredPenalty = tired => -Math.max(0, Math.min(MAX_TIRED, Math.round(n(tired))));
+/**
+ * B6169: tiredness as a roll effect for WoDX Chronicle's traits.effects (every roll, until they sleep). needs: the
+ * actor's raw needs flag; off: the character is not checked. Only the roll channel (not soak or resistance).
+ */
+export function tiredEffects(needs, {channel = "roll"} = {}) {
+  const d = tiredPenalty(needs?.tired);
+  if ( !d || needs?.off || (channel ?? "roll") !== "roll" ) return [];
+  return [{key: "tired", name: `Tired (no sleep): ${-d} ${d === -1 ? "die" : "dice"} off`, dice: d, diff: 0, note: "until they sleep"}];
+}
 
 /**
  * Storyteller 0.30.0 (Traits With Teeth step 9): the weather roll is Stamina + Survival (house reading of M20 p. 435:
