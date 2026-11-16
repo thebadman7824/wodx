@@ -205,7 +205,7 @@ export function build(ctx) {
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
             const angst = W.realmAngst(a.d, fd.realm, faces);
-            if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled outside the Shadowlands, p. 204"}).</div>`; }
+            if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled in the Tempest or Stygia, p. 204"}).</div>`; }
             body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(${bookOf(lib)} p. ${a.p})</span></div>`;
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
             // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id.

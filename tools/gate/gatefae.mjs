@@ -6,6 +6,7 @@
  *   1. the api and the setting
  *   2. rows stack: a Satyr wilder of the Unseelie Court in House Fiona has four; a Night-Hag and a Glome get their own kith rows (C20 pp. 380, 440)
  *   3. roll effects reach the traits api: a Piskie's Dexterity die (C20 p. 97); a Boggan gains no Crafts die (C20 p. 89 gives none)
+ *      but its Crafts roll cannot botch (B6924), and an Athletics roll can
  *   4. a Satyr's revel: the button gives the Satyr two Glamour and a Pooka one
  *   5. a Pooka tells the plain truth: a Willpower point lost
  *   6. a Selkie takes the seal coat; losing it sends a card
@@ -60,7 +61,11 @@ export async function run() {
     await step("3 roll effects", async () => {
       const T = game.modules.get(C).api.traits, fx = T.effects(by("Piskie"), {channel: "roll", tags: T.rules.rollTags("dexterity")});
       const bog = T.effects(by("Boggan"), {channel: "roll", tags: T.rules.rollTags("crafts")}).filter(e => e.name === "Boggans");
-      ok("3 roll effects", fx.some(e => e.name === "Piskies" && e.dice === 1) && !bog.length, {n: fx.length, boggan: bog.length});
+      // B6924: the Boggan's Crafts roll cannot botch (C20 p. 89): a no-botch effect, no dice, and it reaches the roll's sum
+      const sum = T.rules.sumEffects(bog), athl = T.rules.sumEffects(T.effects(by("Boggan"), {channel: "roll", tags: T.rules.rollTags("athletics")}));
+      const noDie = bog.every(e => !e.dice && !e.diff);
+      ok("3 roll effects", fx.some(e => e.name === "Piskies" && e.dice === 1) && bog.length === 1 && bog[0].noBotch === true && noDie && sum.noBotch === true && !athl.noBotch,
+        {n: fx.length, boggan: bog, sum, athletics: athl.noBotch ?? false});
     });
     await step("4 revel", async () => {
       const s = by("Satyr"), p = by("Pooka");

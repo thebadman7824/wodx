@@ -456,7 +456,7 @@ async function soilTick(a, t) {
   const before = foundry.utils.deepClone(sig);
   sig.soil = r.soil;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  if ( r.halved ) await cardFor(a, "soil", `${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved tonight (rounded down) until they rest on it again.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  if ( r.halved ) await cardFor(a, "soil", `${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved (rounded down, never under one die), once more for each night in a row without it, until they rest on it again; the rolls do it.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
 }
 /** Put two handfuls of native soil in a Tzimisce's pack. */
 export async function giveSoil(actorOrId, where = "") {
@@ -1125,7 +1125,9 @@ export function effects(actorOrId) {
   const pen = S.beautyPenalty(sig.muses ?? []);
   if ( pen ) out.push({tags: ["beauty"], difficulty: pen, why: "Obsession with a Muse"});
   try { out.push(...countEffects(a)); } catch (e) { /* no canvas */ }
-  if ( sig.soil?.short > (rowWith(a, "soil")?.grace ?? 0) && isFeature(a, "soil") ) out.push({tags: ["all"], halve: true, why: "Rested without native soil"});
+  // B6925: the pools halve once for each night in a row without it (V20 p. 71), read by the roll pipeline
+  const soilGrace = rowWith(a, "soil")?.grace ?? 0;
+  if ( sig.soil?.short > soilGrace && isFeature(a, "soil") ) out.push({tags: ["all"], halve: S.soilHalvings(sig.soil.short, soilGrace), why: "Rested without native soil"});
   return out;
 }
 
@@ -1143,6 +1145,12 @@ export function bruisedFor(actorOrId) {
   const a = toActor(actorOrId);
   if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
   try { return S.faeBruised(rowsOf(a), {oathsHeld: (sigOf(a).oaths ?? []).filter(o => !o.broken).length}); } catch (e) { return {n: 0, names: []}; }
+}
+/** B6922: the health levels a character's kith takes away, for WoDX Combat's health track (through traits.toughness). {n, names} */
+export function fewerFor(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
+  try { return S.faeFewer(rowsOf(a)); } catch (e) { return {n: 0, names: []}; }
 }
 /** Signature effects for one roll, in the trait-effect shape (WoDX Chronicle's traits api adds them to its own). */
 export function rollEffects(actor, ctx = {}) {
@@ -1470,7 +1478,7 @@ async function piskie({actor, mode, give, owe} = {}) {
   await cardFor(actor, "line", `${actor.name} leaves a gift`, `<p>${esc(give)} left in the trade, freely.</p>`, {whisper: [...new Set([...ownerIds(actor), ...gmIds()])], act: {key: "glamour", label: "A point of Glamour", who: "gm", data: {ids: [actor.id], one: true}}});
 }
 
-export const signaturesApi = {soakFor, bruisedFor, rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+export const signaturesApi = {soakFor, bruisedFor, fewerFor, rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
   setSplat, setWraith, luck,

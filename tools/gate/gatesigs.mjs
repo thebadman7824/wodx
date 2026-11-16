@@ -13,7 +13,8 @@
  *   7. a Gangrel's frenzy leaves a mark that heals in 30 days, and its roll effects show
  *   8. a Malkavian with Paranoia: a glimpse a night (the second is refused) and a heard line for a talk card
  *   9. every other WoDX module still answers
- *  10. a Tzimisce carrying soil rests; without it the next night halves every pool
+ *  10. a Tzimisce carrying soil rests; without it the next night halves every pool, and the roll pipeline does it
+ *      (B6925): the traits sum carries one halving and the system's roller takes a six-die general roll to three
  *  11. a Lasombra in a scene marked watched: an empty frame card, if the year has cameras (the scene mark is put back)
  *  12. a Ravnos with a vice of lying: a persuasion is a chance (prompt), a deceit feeds the vice
  *  13. a thin-blooded Caitiff is rolled for this year's odd gift
@@ -135,7 +136,14 @@ async function runGate(K) {
       await api().tick({force: true});
       await until(() => sig(z).soil?.short === 1);
       const fx = api().effects(z);
-      ok("10 Tzimisce soil", rested && sig(z).soil?.short === 1 && fx.some(e => e.halve), {soil: sig(z).soil});
+      // B6925: the halving reaches the rolls (V20 p. 71)
+      const T = game.modules.get(C).api.traits;
+      const sum = T.rules.sumEffects(T.effects(z, {channel: "roll", tags: T.rules.rollTags("dexterity", "melee")}));
+      const RM = await import(`/systems/worldofdarkness/module/scripts/wodx-roll-mods.js?${Date.now()}`);
+      const dr = {actor: z, origin: "general", numDices: 6, difficulty: 6, targetlist: [], attribute: "dexterity", ability: "melee"};
+      const halved = RM.wodxHalveRoll(dr, {modsFor: game.modules.get("wodx-sheets")?.api?.sheetRollMods, on: true});
+      ok("10 Tzimisce soil", rested && sig(z).soil?.short === 1 && fx.some(e => e.halve) && sum.halve === 1 && halved === 1 && dr.numDices === 3,
+        {soil: sig(z).soil, sum: sum.halve, halved, dice: dr.numDices});
     });
     await step("11 Lasombra frame", async () => {
       const l = by("Lasombra"), scene = canvas.scene, had = scene?.flags?.[C]?.camera ?? null;

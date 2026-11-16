@@ -314,10 +314,11 @@ test("creatures of the Wyrm, first into battle, and the Stargazer's sky", () => 
 test("signature effects in the trait shape, with tag aliases", () => {
   const fx = [{tags: ["resist-frenzy"], difficulty: 1, why: "Osebo"}, {tags: ["survival"], dice: 1, why: "Red Talons"}, {tags: ["resist-dominate"], difficulty: 2, why: "Gargoyles"},
     {tags: ["animal ken"], dice: 1, why: "Bratovitch"}, {tags: ["all"], halve: true, why: "soil"}];
-  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["frenzy"]}).map(e => [e.name, e.diff]), [["Osebo", 1]]);
-  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["survival"]}).map(e => [e.name, e.dice]), [["Red Talons", 1]]);
+  // B6925: the soil's halving now reaches every roll as a count (it was left out while it was only told)
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["frenzy"]}).map(e => [e.name, e.diff, e.halve ?? 0]), [["Osebo", 1, 0], ["soil", 0, 1]]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["survival"]}).filter(e => !e.halve).map(e => [e.name, e.dice]), [["Red Talons", 1]]);
   assert.deepEqual(S.sigRollEffects(fx, {channel: "resist", tags: ["mind"]}).map(e => e.name), ["Gargoyles"]);
-  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).map(e => e.name), ["Bratovitch"]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).filter(e => !e.halve).map(e => e.name), ["Bratovitch"]);
   assert.equal(S.deformityByKey("hairless").effects[0].tags[0], "social");
 });
 

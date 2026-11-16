@@ -1045,6 +1045,10 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura ? R.auraModifier(rd.value) : 0,
         daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
     });
+    // B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89) goes with the pool to the roll
+    if (tm.noBotch) built.noBotch = true;
+    // B6925: a pool halved for each night a Tzimisce rested without native soil (V20 p. 71), after every other die
+    if (tm.halve && built.dice > 0) { const was = built.dice; built.dice = R.halvePool(built.dice, tm.halve); built.parts = [...(built.parts ?? []), `pool halved, ${was} to ${built.dice} dice`]; }
     // B6002: the Blessing or Curse this roll would use, spent once the dice are thrown
     return tm.once?.length ? { ...built, once: tm.once } : built;
 }
@@ -1097,7 +1101,7 @@ async function resolveAction(actor, target, fd) {
     if (fd.auto && built.autoSuccessAllowed && fd.mode === "simple") {
         return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (V20 Dark Ages p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
     }
-    let r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
+    let r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp, canBotch: !built.noBotch });
     const rolls = [...helperRolls, r.roll];
     try { await DH.afterRoll(actor, fd, pool); } catch (e) { console.warn("WoDX Actions | research", e); }
     try { await TH.spendOnce(actor, built); } catch (e) { console.warn("WoDX Actions | blessing spent", e); }
@@ -1107,7 +1111,7 @@ async function resolveAction(actor, target, fd) {
         const lk = await TH.useLucky(actor);
         if (lk) {
             body += rollBlock(`${label || "Pool"} (first roll)`, r, [], fd.specialty) + `<div class="vta-note">${TH.fortuneName(actor)}: rolled again (${lk.left} left this story).</div>`;
-            r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
+            r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp, canBotch: !built.noBotch });
             rolls.push(r.roll);
         }
     }

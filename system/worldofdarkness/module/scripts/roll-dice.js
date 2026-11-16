@@ -1,6 +1,6 @@
 import BonusHelper from "./bonus-helpers.js";
 import CombatHelper from "./combat-helpers.js";
-import { applyWodxRollMods, wodxRollSources } from "./wodx-roll-mods.js";
+import { applyWodxRollMods, wodxRollSources, wodxNoBotch, wodxHalveRoll } from "./wodx-roll-mods.js";
 
 let _diceColor;
 let _specialDiceType = "";
@@ -286,7 +286,10 @@ async function _spendTemporaryWillpower(actor) {
 export async function DiceRoller(diceRoll) {
 	const actor = diceRoll.actor;
 	// WoDX fork (B6720): a power, attack, casting or item roll from the system's own windows counts WoDX's modifiers
-	const wodxMods = applyWodxRollMods(diceRoll, wodxRollSources());
+	const wodxSrc = wodxRollSources();
+	const wodxMods = applyWodxRollMods(diceRoll, wodxSrc);
+	// WoDX fork (B6925): a pool WoDX halves (a Tzimisce without native soil, V20 p. 71)
+	wodxHalveRoll(diceRoll, wodxSrc);
 	if (wodxMods?.once?.length) game.wodxActions?.powerMods?.spend?.(actor, wodxMods.once)?.catch?.(() => {});
 	let difficulty = diceRoll.difficulty;
 	let specialityText = diceRoll.specialityText;
@@ -349,6 +352,9 @@ export async function DiceRoller(diceRoll) {
 	if ((diceRoll.origin == "damage") && (!CONFIG.worldofdarkness.useOnesDamage)) {
 		canBotch = false;
 	}
+
+	// WoDX fork (B6924): a roll WoDX says cannot botch (a Boggan's Crafts, C20 p. 89)
+	if (wodxNoBotch(diceRoll, wodxSrc)) canBotch = false;
 
 	// set correct dice colors
 	_GetDiceColors(actor);

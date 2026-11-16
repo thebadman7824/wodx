@@ -5,7 +5,7 @@ import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
 import * as TB from "./trait-bite-rules.mjs";
 import {applyTimed} from "./timed.mjs";
-import {rollEffects as sigRollEffects, bruisedFor} from "./signatures.mjs";
+import {rollEffects as sigRollEffects, bruisedFor, fewerFor} from "./signatures.mjs";
 import {conditionsOf, senseEffectsOf} from "./conditions.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
 
@@ -86,6 +86,9 @@ export const mockeryOf = actor => {
 export function toughness(actor) {
   const b = T.bodyOf(view(actor)), k = bruisedFor(actor);
   if ( k.n > 0 ) { b.bruised += k.n; b.names.push(...k.names); }
+  // B6922: a Bodach's Deadly Exposure takes two health levels away (C20 p. 373)
+  const f = fewerFor(actor);
+  if ( f.n > 0 ) { b.fewer = (b.fewer ?? 0) + f.n; b.names.push(...f.names.map(x => `${x}: Deadly Exposure`)); }
   // B6729: a War Wolf (a Mockery Breed on a Creature sheet) shares the Garou's weakness to silver (W20 Book of the Wyrm p. 168)
   if ( mockeryOf(actor) === "warwolves" && !b.silver ) { b.silver = true; b.names.push("War Wolf: silver"); }
   return b;

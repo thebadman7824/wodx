@@ -8,9 +8,11 @@
  *   4. WoDX Combat: a switched-on Mirage makes a ranged attack on the bearer two harder, a close one one harder
  *   6. WoDX Combat: a switched-on Claws form Trait gives the demon aggravated claws (Strength + 2) on its body
  *   5. (B6727) a line werewolf's form change puts the Crinos icon on the actor and Homid takes it off
+ *   7. (B6922) a Bodach changeling has two fewer health levels: in the toughness WoDX Combat reads and, after the
+ *      system's recompute, on the sheet's health track (C20 p. 373)
  * Makes its own actors and removes them; puts the setting back. Result: Data/wodx-gate/gateonlytells-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 
 const CH = "wodx-chronicle";
 
@@ -62,6 +64,16 @@ export async function run() {
       const crinos = has("crinos");
       await TH.formShift(wolf, "wod.shapes.crinos", "wod.shapes.homid");
       G.ok("5. a werewolf's form shows on its tokens", crinos && !has("crinos"), {crinos, after: has("crinos")});
+    });
+    await G.step("7. a Bodach has two fewer health levels", async () => {
+      const [bod] = await G.make(Actor, [fae("Gate OnlyTells Bodach", "bodachs")]);
+      const b = T?.toughness?.(bod) ?? null;
+      const levels = () => Number(game.actors.get(bod.id)?.system?.traits?.health?.totalhealthlevels?.max) || 0;
+      const base = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"].reduce((s, k) => s + (Number(bod.system?.health?.[k]?.value) || 1), 0);
+      await bod.update({"system.settings.isupdated": false});
+      await waitFor(() => levels() === base - 2, 6000);
+      G.ok("7. a Bodach has two fewer health levels", (b?.fewer ?? 0) === 2 && levels() === base - 2 && (b?.names ?? []).some(x => /Deadly Exposure/.test(x)),
+        {fewer: b?.fewer, base, levels: levels(), hurt: game.actors.get(bod.id)?.system?.health?.hurt?.total, names: b?.names});
     });
   } catch (e) { G.ok("no error", false, {error: e.message}); }
   finally { if ( keep !== undefined ) await game.settings.set(CH, "sigChangeling", keep).catch(() => null); }
