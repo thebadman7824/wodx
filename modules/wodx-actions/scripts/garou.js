@@ -580,7 +580,7 @@ export function build(ctx) {
         const rankCap = Math.max(1, i.rank);
         // A Fera learns its own breed's Gifts as well as the shared list (B3756)
         const pool = i.feraKey && i.feraKey !== "Garou" ? [...feraGifts().filter(g => g.breed === i.feraKey), ...gifts()] : gifts();
-        const ownOf = g => g.breed ? g.breed === i.feraKey : G.giftIsOwn(g, i);
+        const ownOf = g => g.breed ? G.feraGiftIsOwn(g, i) : G.giftIsOwn(g, i);
         const rows = pool.filter(g => !known.has(g.n.toLowerCase())).map(g => {
             const own = ownOf(g);
             return { g, own, ok: g.l <= rankCap, xp: G.giftXP(g.l, own) };

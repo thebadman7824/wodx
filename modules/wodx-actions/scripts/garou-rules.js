@@ -340,3 +340,15 @@ export function giftXP(level, own) {
 export function giftIsOwn(gift, { breed, auspice, tribe }) {
     return (gift.g ?? []).some(g => g === breed || g === auspice || g === tribe);
 }
+
+/**
+ * B6725: the Bastet tribes (W20 Changing Breeds; the system sheet's wod.bio.tribename.*). A Bastet's own tribe's Gifts
+ * are its own; another tribe's are not (bought at the outsider's cost). Other Fera Gift groups stay as they were.
+ */
+export const BASTET_TRIBES = ["bagheera", "balam", "bubasti", "ceilican", "khan", "pumonca", "qualmi", "simba", "swara"];
+export function feraGiftIsOwn(gift, { feraKey, tribe } = {}) {
+    if (!gift?.breed || gift.breed !== feraKey) return false;
+    const sub = norm(gift.sub);
+    if (gift.breed === "Bastet" && BASTET_TRIBES.includes(sub)) return norm(tribe) === sub;
+    return true;
+}

@@ -72,3 +72,21 @@ test("B6724: roadOf reads the V20 Path first, and a vessel drained while feeding
   assert.match(kx, /get\("paths-v20\.json"\)/);
   assert.match(read("modules/wodx-actions/scripts/main.js"), /isfrenzy \? "killFrenzy" : "killFeed", `\$\{vesselActor/);
 });
+
+test("B6725: a Bastet's own tribe's Gifts are its own; another tribe's are not; other Fera groups unchanged", async () => {
+  const G = await import("../../modules/wodx-actions/scripts/garou-rules.js");
+  const FERA = JSON.parse(read("modules/wodx-actions/data/gifts-fera.json")).gifts;
+  const bagheera = FERA.find(g => g.breed === "Bastet" && g.sub === "Bagheera");
+  const simba = FERA.find(g => g.breed === "Bastet" && g.sub === "Simba");
+  const feline = FERA.find(g => g.breed === "Bastet" && g.sub === "Feline");
+  const i = { feraKey: "Bastet", tribe: G.tribeKey("wod.bio.tribename.bagheera") };
+  assert.equal(i.tribe, "bagheera");
+  assert.equal(G.feraGiftIsOwn(bagheera, i), true);
+  assert.equal(G.feraGiftIsOwn(simba, i), false);
+  assert.equal(G.feraGiftIsOwn(feline, i), true);
+  assert.equal(G.feraGiftIsOwn(FERA.find(g => g.breed === "Gurahl"), { feraKey: "Gurahl", tribe: "forest-walkers" }), true);
+  assert.equal(G.feraGiftIsOwn(simba, { feraKey: "Gurahl" }), false);
+  for (const t of ["bagheera", "balam", "bubasti", "ceilican", "pumonca", "qualmi", "simba", "swara"])
+    assert.match(read("system/worldofdarkness/lang/en.json"), new RegExp(`"${t}": "`), t);
+  assert.match(read("modules/wodx-actions/scripts/garou.js"), /g\.breed \? G\.feraGiftIsOwn\(g, i\)/);
+});
