@@ -87,3 +87,11 @@ test("a twist waits for its encounter, unless forced", () => {
   // without the list (older callers), the twist rules are unchanged
   assert.equal(TW.whyNot(1, {revealed: {}}, {played: []}), "");
 });
+
+test("B6813: every Rothenstein person keeps a daily round that exists in 1200", async () => {
+  const R = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
+  const RR = await import(join(root, "modules/wodx-chronicle/scripts/reveal-rules.mjs"));
+  const ok = R.presetsFor(1200);
+  for ( const e of E.ENCOUNTERS ) for ( const p of e.people ) assert.ok(ok[p.preset], `encounter ${e.n}: ${p.name} (${p.preset})`);
+  for ( const [n, r] of Object.entries(RR.REVEALS) ) for ( const a of r.after ?? [] ) if ( a.preset ) assert.ok(ok[a.preset], `twist ${n}: ${a.who} (${a.preset})`);
+});
