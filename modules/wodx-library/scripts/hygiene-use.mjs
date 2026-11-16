@@ -6,6 +6,8 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-library";
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+// B6776: no one gets filthy while the world is held (a flashback, a test that moves the clock)
+const held = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 const conds = () => game.modules.get("wodx-chronicle")?.api?.conditions ?? null;
 const marksOf = actor => H.MARKS.filter(m => !!conds()?.hasCondition?.(actor, m));
 
@@ -23,10 +25,11 @@ export async function wash(actor, item) {
 /** The marks as token statuses, and Bloody marked by a new lethal or aggravated wound. */
 export function setupHygiene() {
   try {
-    registerCondition({id: "filthy", name: "Filthy", img: "icons/svg/degen.svg", source: "WoDX house rule (B3909)",
-      summary: "Mud, grime or worse on them: anyone of standing meets them a step colder until they wash (+1 difficulty on social rolls, B6029).", mods: {socialDiff: 1}});
-    registerCondition({id: "bloody", name: "Bloody", img: "icons/svg/blood.svg", source: "WoDX house rule (B3909)",
-      summary: "Blood on them: a mortal meets them a step colder, and the town remembers it, until they wash (+1 difficulty on social rolls, B6029).", mods: {socialDiff: 1}});
+    // B3909, B6029; B6773: no decision numbers in the text players read
+    registerCondition({id: "filthy", name: "Filthy", img: "icons/svg/degen.svg", source: "WoDX house rule",
+      summary: "Mud, grime or worse on them: anyone of standing meets them a step colder until they wash (+1 difficulty on social rolls).", mods: {socialDiff: 1}});
+    registerCondition({id: "bloody", name: "Bloody", img: "icons/svg/blood.svg", source: "WoDX house rule",
+      summary: "Blood on them: a mortal meets them a step colder, and the town remembers it, until they wash (+1 difficulty on social rolls).", mods: {socialDiff: 1}});
   } catch (e) { console.warn("WoDX Library | could not register Filthy and Bloody", e); }
   Hooks.on("preUpdateActor", (actor, change, opts) => {
     const d = change?.system?.health?.damage;
@@ -49,7 +52,7 @@ export function setupHygiene() {
   });
   Hooks.on("updateWorldTime", worldTime => {
     const gm = game.users?.activeGM;
-    if ( !game.user.isGM || (gm && gm.id !== game.user.id) ) return;
+    if ( !game.user.isGM || (gm && gm.id !== game.user.id) || held() ) return;
     // Checked on every move of the clock (a few player characters, two flag reads each), so a skip or a short wait both count
     const night = H.nightOf(worldTime);
     for ( const a of game.actors ?? [] ) {
