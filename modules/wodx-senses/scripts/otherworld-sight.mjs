@@ -243,7 +243,8 @@ export function drawOther(layer, sight, a) {
     const links = [];
     for ( const r of scene.regions ?? [] ) for ( const b of r.behaviors ?? [] ) {
       if ( b.type !== "teleportToken" || b.disabled ) continue;
-      let to = null; try { const dest = fromUuidSync(b.system?.destination); to = dest?.parent?.name ?? dest?.name ?? null; } catch (e) { to = null; }
+      // B6791: Foundry 14's Teleport Token keeps a set of destinations (WoDX's ways write system.destinations)
+      let to = null; try { const d = b.system?.destinations, uuid = d ? [...d][0] : b.system?.destination; const dest = uuid ? fromUuidSync(uuid) : null; to = dest?.parent?.navName || dest?.parent?.name || dest?.name || null; } catch (e) { to = null; }
       const s = r.shapes?.[0]; if ( !to || !s ) continue;
       links.push({x: num(s.x) + num(s.width) / 2 || num(s.points?.[0]), y: num(s.y) + num(s.height) / 2 || num(s.points?.[1]), to});
     }
