@@ -45,10 +45,27 @@ export function ghoulDisciplineCap(domitorGeneration) {
   return GHOUL.disciplineCap[g];
 }
 
-/** A ghoul's blood pool grows by one each century as a ghoul (V20DA p. 399). */
-export function ghoulBloodMax(yearsAsGhoul = 0) {
-  return GHOUL.bloodMax + (GHOUL.bloodMaxPerCentury * Math.max(0, Math.floor((Number(yearsAsGhoul) || 0) / 100)));
+/**
+ * A ghoul's blood pool by the era's book (B6779e). The Dark Ages, classical and living-gods eras read V20 Dark Ages
+ * (p. 399): 10, and one more each century as a ghoul. The Victorian and modern eras read V20 (p. 501): 2, and one more
+ * each century of life for a revenant, or each two centuries for any other ghoul.
+ * era: the era profile's system.vampire ("darkages", "modern" ...); left out, the Dark Ages rule as before.
+ */
+export const V20_ERAS = new Set(["modern", "victorian"]);
+export const GHOUL_V20 = {source: "V20 p. 501", bloodMax: 2, revenantYears: 100, ghoulYears: 200};
+export function ghoulBloodMax(yearsAsGhoul = 0, {era = null, revenant = false} = {}) {
+  const y = Math.max(0, Number(yearsAsGhoul) || 0);
+  if ( V20_ERAS.has(era) ) return GHOUL_V20.bloodMax + Math.floor(y / (revenant ? GHOUL_V20.revenantYears : GHOUL_V20.ghoulYears));
+  return GHOUL.bloodMax + (GHOUL.bloodMaxPerCentury * Math.floor(y / 100));
 }
+/**
+ * B6779e: a ghoul keeps the rule of the era it became one in, so a Dark Ages ghoul alive in 2025 still grows by
+ * V20 Dark Ages and no pool shrinks when the era changes. The Victorian era starts in 1837 (wodx-chronicle eras.json).
+ */
+export const V20_FROM = 1837;
+export const ghoulRuleEra = year => (Number(year) >= V20_FROM ? "victorian" : "darkages");
+/** The book line for a ghoul's pool in this era. */
+export const ghoulBloodSource = era => (V20_ERAS.has(era) ? GHOUL_V20.source : GHOUL.source);
 
 /** May a ghoul learn this Discipline? Celerity, Fortitude and Potence always; others only if the domitor knows them. */
 export function ghoulCanLearn(discipline, domitorDisciplines = []) {

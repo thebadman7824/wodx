@@ -82,6 +82,11 @@ export const CLANS = [
   {id: "xi-dundu", name: "Xi Dundu", disciplines: ["Dominate", "Obtenebration", "Potence"], darkAges: "Kindred of the Ebony Kingdom pdf p. 64"},
   {id: "telyavelic-tremere", name: "Telyavelic Tremere", disciplines: ["Auspex", "Presence", "Thaumaturgy"], darkAges: "V20 p. 438", aliases: ["telyavelic", "telyav"]},
   {id: "serpents-of-the-light", name: "Serpents of the Light", disciplines: ["Obfuscate", "Presence", "Serpentis"], darkAges: "V20 p. 432 (the Cobras)"},
+  // B6779e: three more lines the factions name. Maeghar is in none of the shared books and gets no row (it reads as
+  // its clan, if its name holds one, or as no clan)
+  {id: "tlacique", name: "Tlacique", disciplines: ["Obfuscate", "Presence", "Protean"], darkAges: "Clanbook: Followers of Set (Revised) pdf p. 54; V20 p. 435", aliases: ["tlacique setites"]},
+  {id: "mla-watu", name: "Mla Watu", disciplines: ["Auspex", "Fortitude", "Necromancy"], darkAges: "Kindred of the Ebony Kingdom pdf p. 200", aliases: ["mlawatu"]},
+  {id: "nkulu-zao", name: "Nkulu Zao", disciplines: ["Auspex", "Fortitude", "Obeah"], darkAges: "Kindred of the Ebony Kingdom pdf p. 202", aliases: ["nkulu"]},
   {id: "niktuku", name: "Nictuku", disciplines: ["Auspex", "Celerity", "Potence"], darkAges: "V20DA p. 97", aliases: ["niktuku"]},
   {id: "caitiff", name: "Caitiff", disciplines: [], darkAges: "V20 p. 124 (no clan Disciplines)", aliases: ["clanless"]}
 ];

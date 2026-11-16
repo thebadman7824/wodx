@@ -49,7 +49,7 @@ export const DISC_LABEL = k => k === "dhabi" ? "D'Habi" : k[0].toUpperCase() + k
  *   way "standard": Potence 1 and one dot in a family Discipline; "alternate": no free Potence, two family Disciplines.
  *   picks: the family Disciplines chosen (one or two). Returns {disciplines: {key: dots}, blood, errors}.
  */
-export function revenantStart({family, way = "standard", picks = []} = {}) {
+export function revenantStart({family, way = "standard", picks = [], era = null} = {}) {
   const F = FAMILIES[family];
   const errors = [];
   if ( !F ) return {disciplines: {}, blood: null, errors: ["Pick a family."]};
@@ -63,8 +63,10 @@ export function revenantStart({family, way = "standard", picks = []} = {}) {
   if ( way !== "alternate" ) disciplines.potence = 1;
   for ( const d of chosen ) disciplines[d] = (disciplines[d] ?? 0) + 1;
   if ( own.length < picks.length ) errors.push("Only the family's own Disciplines can be taken at birth.");
-  // The sample revenant: a pool of 10, starting at 1, made back at 1 a night (G&R pdf 141 / printed 140)
-  return {disciplines, blood: {max: 10, start: 1, perNight: 1}, errors, family: F};
+  // The sample revenant: a pool of 10, starting at 1, made back at 1 a night (G&R pdf 141 / printed 140). B6779e: in
+  // the Victorian and modern eras V20 p. 501 gives a revenant's starting limit as 2 points
+  const max = era === "modern" || era === "victorian" ? 2 : 10;
+  return {disciplines, blood: {max, start: 1, perNight: 1}, errors, family: F};
 }
 
 /* ------------------------------------------------------------------ */
