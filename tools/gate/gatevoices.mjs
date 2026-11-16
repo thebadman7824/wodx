@@ -1,169 +1,121 @@
 /**
- * WoDX Voices gate (0.2.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * WoDX Voices gate (B6763: off means off), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatevoices.mjs?${Date.now()}`)).run()
- * Makes a scene and an NPC of its own and deletes them at the end; the viewed scene and the Voices settings are put
- * back. It never moves the clock. The browser's speech is watched, not heard: speak() is wrapped for the run.
- *   1. the module: WoDX Voices 0.2.0 or later, its api, the browser's speech present
- *   2. a talk card whispered to this user is spoken once, the NPC's words only, in its profile's pitch and speed
- *   3. the same NPC speaks in the same voice again; another NPC differs
- *   4. silent: a card whispered to someone else, not a talk card, a stock line, an NPC not marked as a plot NPC, muted, Voices off
- *   (5 was clean up in 0.1.0; it is now 10)
- *   6. the Storyteller chatting in character as the NPC is read; out of character is not
- *   7. Kokoro (needs the engine in Data/wodx-voices-engine): loads, renders a line to the cache, the same line again is a cache hit
- *   8. a talk card with Kokoro on: the file plays, the browser does not speak
- *   9. an NPC given Czech is read by the browser's speech even with Kokoro on
- *  10. clean up (cache files stay; Foundry can't delete files from the browser)
+ * Voices are dropped for good and stay switched off (the world setting wodx-voices.enabled, default off, needs a
+ * reload). This gate checks the off state only. It needs the world loaded with Voices off and never changes a setting.
+ * The engine steps are gone: Kokoro rendering and caching (7), the Kokoro talk card (8), the browser's speech of a
+ * line (2, 3, 6, 9) and the voice server (10) tested a feature that is not in play, and no engine sits in
+ * Data/wodx-voices-engine.
+ * Makes a scene and an NPC of its own and deletes them at the end; the viewed scene is put back. It never moves the clock.
+ *   1. the module is active, Voices is off in this world, and the switch needs a reload (B6763)
+ *   2. no settings show: every WoDX Voices setting but the switch is out of the settings window
+ *   3. no menu: the voice cache button is not registered
+ *   4. no actor-menu entries: Voiced (plot NPC) and Not voiced stay hidden, on an NPC marked as a plot NPC and on one not
+ *   5. nothing touched the voice folders: no engine loaded at start, no line rendered or played, no cache browsed or
+ *      written while a talk card is posted
+ *   6. a talk card from a plot NPC, whispered to this user, plays no audio (no browser speech, no sound file, no socket
+ *      message) and throws nothing
+ *   7. clean up
  * Result: Data/wodx-gate/gatevoices-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-voices";
 const api = () => game.modules.get(MOD)?.api;
-const newer = (a, b) => {
-  const pa = String(a).split(".").map(Number), pb = String(b).split(".").map(Number);
-  for ( let i = 0; i < 3; i++ ) if ( (pa[i] ?? 0) !== (pb[i] ?? 0) ) return (pa[i] ?? 0) > (pb[i] ?? 0);
-  return true;
-};
 const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
-// The browser keeps pitch and rate as 32-bit floats, so 1.12 reads back as 1.1200000047683716.
-const near = (a, b) => Math.abs(Number(a) - Number(b)) < 0.005;
-// B6171: the card as WoDX NPC's talk.mjs deliver() writes it: the answer is in <p class="wnpc-said">, a note after it
-const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p class="wnpc-said">${text}</p><p class="wodx-quiet">Now you can ask about the toll.</p></div></div>`;
+// The card as WoDX NPC's talk.mjs deliver() writes it: the answer is in <p class="wnpc-said">
+const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p class="wnpc-said">${text}</p></div></div>`;
 
-export async function run({server = false} = {}) {
+export async function run() {
   const R = {started: new Date().toISOString(), steps: [], errors: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message}); } };
-  const keep = Object.fromEntries(["enabled", "mute", "gmHears", "engine", "stLines", "fromToken", "who"].map(k => [k, game.settings.get(MOD, k)]));
   const viewed = canvas.scene?.id;
-  const S = globalThis.speechSynthesis;
-  const spoken = [];
-  const realSpeak = S?.speak?.bind(S);
-  const made = {msgs: []};
+  const made = {msgs: [], actors: []};
+  // Watch what Voices could do while the card goes by: speech, sound, files, socket, errors
+  const S = globalThis.speechSynthesis, AH = foundry.audio?.AudioHelper, FPI = foundry.applications?.apps?.FilePicker?.implementation;
+  const seen = {spoken: [], played: [], browsed: [], uploaded: [], made: [], socket: [], errors: []};
+  const real = {speak: S?.speak, play: AH?.play, browse: FPI?.browse, upload: FPI?.upload, mkdir: FPI?.createDirectory, emit: game.socket?.emit, error: console.error};
+  const voicesError = (...a) => a.some(x => /wodx-voices/i.test(String(x?.stack ?? x?.message ?? x)));
+  const onError = ev => { if ( voicesError(ev?.error ?? ev?.message, ev?.filename) ) seen.errors.push(String(ev?.error?.message ?? ev?.message)); };
+  const onReject = ev => { if ( voicesError(ev?.reason) ) seen.errors.push(String(ev?.reason?.message ?? ev?.reason)); };
+  const watch = () => {
+    if ( S ) S.speak = u => { seen.spoken.push(u?.text ?? ""); };
+    if ( AH ) AH.play = (o, ...rest) => { seen.played.push(o?.src ?? ""); return null; };
+    if ( FPI ) {
+      FPI.browse = (src, target, ...rest) => { seen.browsed.push(String(target)); return real.browse.call(FPI, src, target, ...rest); };
+      FPI.upload = (src, path, file, ...rest) => { seen.uploaded.push(`${path}/${file?.name ?? ""}`); return real.upload.call(FPI, src, path, file, ...rest); };
+      FPI.createDirectory = (src, target, ...rest) => { seen.made.push(String(target)); return real.mkdir.call(FPI, src, target, ...rest); };
+    }
+    if ( game.socket ) game.socket.emit = (name, ...rest) => { if ( name === `module.${MOD}` ) seen.socket.push(rest[0]); return real.emit.call(game.socket, name, ...rest); };
+    console.error = (...a) => { if ( voicesError(...a) ) seen.errors.push(a.map(String).join(" ")); return real.error.apply(console, a); };
+    globalThis.addEventListener?.("error", onError); globalThis.addEventListener?.("unhandledrejection", onReject);
+  };
+  const unwatch = () => {
+    if ( S && real.speak ) S.speak = real.speak;
+    if ( AH && real.play ) AH.play = real.play;
+    if ( FPI ) { FPI.browse = real.browse; FPI.upload = real.upload; FPI.createDirectory = real.mkdir; }
+    if ( game.socket && real.emit ) game.socket.emit = real.emit;
+    console.error = real.error;
+    globalThis.removeEventListener?.("error", onError); globalThis.removeEventListener?.("unhandledrejection", onReject);
+  };
   try {
-    await step("1 module", async () => {
-      const m = game.modules.get(MOD);
-      ok("1 module", m?.active && newer(m.version, "0.2.0") && typeof api()?.preview === "function" && !!S, {version: m?.version, speech: !!S});
+    await step("1 Voices is off", async () => {
+      const m = game.modules.get(MOD), sw = game.settings.settings.get(`${MOD}.enabled`);
+      const on = (() => { try { return game.settings.get(MOD, "enabled"); } catch (e) { return null; } })();
+      ok("1 Voices is off", !!m?.active && on === false && sw?.requiresReload === true && sw?.config === true,
+        {version: m?.version, enabled: on, requiresReload: sw?.requiresReload ?? null,
+          ...(on ? {error: "Voices is on in this world: turn it off in the settings, reload, and run the gate again"} : {})});
     });
-    if ( S ) S.speak = u => spoken.push({text: u.text, pitch: u.pitch, rate: u.rate, voice: u.voice?.name ?? null});
-    await game.settings.set(MOD, "enabled", true); await game.settings.set(MOD, "mute", false); await game.settings.set(MOD, "gmHears", true);
-    await game.settings.set(MOD, "engine", "browser"); await game.settings.set(MOD, "stLines", true); await game.settings.set(MOD, "who", "plot"); await game.settings.set(MOD, "fromToken", false);
+    await step("2 no settings show", async () => {
+      const shown = [...game.settings.settings.values()].filter(s => s.namespace === MOD && s.config && s.key !== "enabled").map(s => s.key);
+      const all = [...game.settings.settings.values()].filter(s => s.namespace === MOD).length;
+      ok("2 no settings show", shown.length === 0 && all > 5, {shown, registered: all});
+    });
+    await step("3 no menu", async () => {
+      const menus = [...(game.settings.menus?.keys?.() ?? [])].filter(k => k.startsWith(`${MOD}.`));
+      ok("3 no menu", menus.length === 0, {menus});
+    });
+    const [plot, plain] = await createActors([{name: "Gate voices plot NPC", type: "Mortal", flags: {[MOD]: {plot: true}}}, {name: "Gate voices passer-by", type: "Mortal"}]);
+    made.actors.push(plot, plain);
+    await step("4 no actor-menu entries", async () => {
+      const options = [];
+      Hooks.callAll("getActorContextOptions", ui.actors, options);
+      const ours = options.filter(o => /voiced/i.test(String(o.name ?? o.label ?? "")));
+      const li = a => { const el = document.createElement("li"); el.dataset.entryId = a.id; el.dataset.documentId = a.id; return el; };
+      const visible = [];
+      for ( const o of ours ) for ( const a of [plot, plain] ) {
+        let v; try { v = typeof o.condition === "function" ? !!o.condition(li(a)) : o.condition !== false; } catch (e) { v = `threw: ${e.message}`; }
+        if ( v ) visible.push({entry: o.name ?? o.label, actor: a.name, v});
+      }
+      ok("4 no actor-menu entries", ours.length === 2 && visible.length === 0, {entries: ours.map(o => o.name ?? o.label), visible});
+    });
     made.scene = await Scene.create({name: "WoDX gate: voices", width: 1000, height: 1000});
-    const [a1, a2, a3] = await createActors([{name: "Gate toll keeper", type: "Mortal", flags: {"wodx-npc": {behavior: {voice: "peasant"}}, [MOD]: {plot: true}}}, {name: "Gate prince", type: "Mortal", flags: {[MOD]: {plot: true}}}, {name: "Gate passer-by", type: "Mortal"}]);
-    made.actors = [a1, a2, a3];
-    const toks = await made.scene.createEmbeddedDocuments("Token", [{name: a1.name, actorId: a1.id, actorLink: true, x: 100, y: 100}, {name: a2.name, actorId: a2.id, actorLink: true, x: 300, y: 100}, {name: a3.name, actorId: a3.id, actorLink: true, x: 500, y: 100}]);
-    const t1 = toks.find(t => t.actorId === a1.id), t2 = toks.find(t => t.actorId === a2.id), t3 = toks.find(t => t.actorId === a3.id);
-    const post = async (tok, text, extra = {}) => {
-      const m = await ChatMessage.create({speaker: {alias: tok.name, scene: made.scene.id, token: tok.id}, content: CARD(text), whisper: [game.user.id], flags: {"wodx-npc": {talk: {actor: null, stock: false}}}, ...extra});
-      made.msgs.push(m); await sleep(300); return m;
-    };
-    await step("2 spoken", async () => {
-      await post(t1, "Coin first, traveller &amp; quickly.");
-      const p = api().profileOf(t1);
-      ok("2 spoken", spoken.length === 1 && spoken[0].text === "Coin first, traveller & quickly." && near(spoken[0].pitch, p.pitch) && near(spoken[0].rate, p.rate), {spoken, profile: p});
+    const [tok] = await made.scene.createEmbeddedDocuments("Token", [{name: plot.name, actorId: plot.id, actorLink: true, x: 100, y: 100}]);
+    watch();
+    try {
+      const m = await ChatMessage.create({speaker: {alias: tok.name, scene: made.scene.id, token: tok.id}, content: CARD("Coin first, traveller."),
+        whisper: [game.user.id], flags: {"wodx-npc": {talk: {actor: null, stock: false}}}});
+      made.msgs.push(m);
+      await sleep(2500);
+    } finally { unwatch(); }
+    await step("5 nothing touched the voice folders", async () => {
+      const A = api(), st = A?.stats ?? {};
+      const engine = A?.engine?.state ?? null, server = A?.server?.state ?? null;
+      const folders = [...seen.browsed, ...seen.uploaded, ...seen.made].filter(p => /wodx-voices/.test(p));
+      ok("5 nothing touched the voice folders", folders.length === 0 && engine === "off" && server === "off" && !st.renders && !st.hits && !st.plays,
+        {folders, engine, server, stats: {...st}});
     });
-    await step("2b a real talk answer", async () => {
-      const npcApi = game.modules.get("wodx-npc")?.api;
-      if ( !npcApi?.talk?.serve ) return ok("2b a real talk answer", false, {error: "WoDX NPC's talk api is missing"});
-      const [asker] = await createActors([{name: "Gate voices asker", type: "Mortal"}]);
-      made.actors.push(asker);
-      await a2.setFlag("wodx-npc", "behavior", {talk: "[work] The toll rises at dusk, and nobody asks why.", noStock: true});
-      const [ta] = await made.scene.createEmbeddedDocuments("Token", [{name: asker.name, actorId: asker.id, actorLink: true, x: 400, y: 100}]);
-      const keepMenu = game.settings.settings.has("wodx-npc.talkMenu") ? game.settings.get("wodx-npc", "talkMenu") : null;
-      if ( keepMenu !== null ) await game.settings.set("wodx-npc", "talkMenu", true);
-      const n = spoken.length, since = Date.now();
-      try {
-        await npcApi.talk.serve("ask", {sceneId: made.scene.id, meTokenId: ta.id, npcTokenId: t2.id, topic: "work"}, game.user.id);
-        await sleep(1200);
-      } finally { if ( keepMenu !== null ) await game.settings.set("wodx-npc", "talkMenu", keepMenu); }
-      const card = [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.flags?.["wodx-npc"]?.talk).at(-1);
-      if ( card ) made.msgs.push(card);
-      const said = spoken.slice(n).map(x => x.text);
-      ok("2b a real talk answer", /The toll rises at dusk/.test(card?.content ?? "") && said.length === 1 && said[0] === "The toll rises at dusk, and nobody asks why.", {said, card: !!card});
-      spoken.splice(n);
+    await step("6 a talk card plays nothing and throws nothing", async () => {
+      ok("6 a talk card plays nothing and throws nothing", !seen.spoken.length && !seen.played.length && !seen.socket.length && !seen.errors.length,
+        {spoken: seen.spoken, played: seen.played, socket: seen.socket, errors: seen.errors});
     });
-    await step("3 steady", async () => {
-      await post(t1, "Again."); await post(t2, "And you.");
-      const [x, y, z] = spoken.slice(-3);
-      ok("3 steady", spoken.length === 3 && x.pitch === y.pitch && x.rate === y.rate && x.voice === y.voice && (z.pitch !== x.pitch || z.rate !== x.rate || z.voice !== x.voice), {spoken});
-    });
-    await step("4 silent", async () => {
-      const n = spoken.length;
-      const other = game.users.find(u => u.id !== game.user.id);
-      if ( other ) await post(t1, "Not for you.", {whisper: [other.id]});
-      await post(t1, "Plain chat.", {flags: {}});
-      await post(t1, "A stock line.", {flags: {"wodx-npc": {talk: {actor: null, stock: true}}}});
-      await post(t3, "Not a plot NPC.");
-      await game.settings.set(MOD, "mute", true); await post(t1, "Muted."); await game.settings.set(MOD, "mute", false);
-      await game.settings.set(MOD, "enabled", false); await post(t1, "Off.");
-      ok("4 silent", spoken.length === n, {extra: spoken.slice(n), otherUser: !!other});
-    });
-    await game.settings.set(MOD, "enabled", true);
-    await step("6 Storyteller's lines", async () => {
-      const n = spoken.length;
-      const IC = CONST.CHAT_MESSAGE_STYLES.IC, OOC = CONST.CHAT_MESSAGE_STYLES.OOC;
-      const say = async (style, text) => { const m = await ChatMessage.create({speaker: {alias: t1.name, scene: made.scene.id, token: t1.id}, content: text, style}); made.msgs.push(m); await sleep(300); };
-      await say(IC, "The gate stays shut tonight.");
-      const heard = spoken.length === n + 1 && spoken.at(-1).text === "The gate stays shut tonight.";
-      await say(OOC, "Out of character.");
-      ok("6 Storyteller's lines", heard && spoken.length === n + 1, {spoken: spoken.slice(n)});
-    });
-    await step("7 Kokoro renders and caches", async () => {
-      await game.settings.set(MOD, "engine", "kokoro");
-      const st = await api().load();
-      if ( st.state !== "ready" ) return ok("7 Kokoro renders and caches", false, {engine: {...st}});
-      const p = api().profileOf(t1);
-      const text = `The bridge closes at dusk. (${Date.now() % 100000})`;
-      const t0 = performance.now(); const a = await api().fileFor(text, p); const first = Math.round(performance.now() - t0);
-      const b = await api().fileFor(text, p);
-      const r = await fetch(foundry.utils.getRoute(a.src), {cache: "no-store"});
-      const size = Number(r.headers.get("content-length")) || (await r.arrayBuffer()).byteLength;
-      ok("7 Kokoro renders and caches", a.rendered && !b.rendered && b.src === a.src && r.ok && size > 10000, {src: a.src, size, firstMs: first, engine: {...st}, voice: api().rules.kokoroVoiceFor(p, p.kokoro).id});
-    });
-    await step("8 Kokoro talk card played", async () => {
-      if ( api().engine.state !== "ready" ) return ok("8 Kokoro talk card played", false, {engine: api().engine.state});
-      const AH = foundry.audio.AudioHelper, realPlay = AH.play;
-      const plays = [];
-      AH.play = (o, push) => { plays.push(o.src); return null; };
-      try {
-        const n = spoken.length;
-        await post(t2, "Kneel, or leave.");
-        for ( let i = 0; i < 150 && !plays.length; i++ ) await sleep(200);
-        ok("8 Kokoro talk card played", plays.length === 1 && String(plays[0]).startsWith(`${game.settings.get(MOD, "cacheDir") || "wodx-voices-cache"}/`) && spoken.length === n, {plays, spokenAfter: spoken.length - n});
-      } finally { AH.play = realPlay; }
-    });
-    await step("9 a tongue of its own", async () => {
-      await a1.setFlag(MOD, "override", {lang: "cs"});
-      const n = spoken.length;
-      await post(t1, "Dobrý večer.");
-      await a1.unsetFlag(MOD, "override");
-      const has = (S?.getVoices?.() ?? []).some(v => String(v.lang).toLowerCase().startsWith("cs"));
-      ok("9 a tongue of its own", spoken.length === n + 1 && (!has || String(spoken.at(-1).voice ?? "") !== ""), {spoken: spoken.slice(n), czechVoiceHere: has});
-    });
-    // The voice server on this PC (0.3.0), only when asked for: run({server: true}) with the server running and its key set.
-    if ( server ) await step("10 voice server renders, with the mood", async () => {
-      await game.settings.set(MOD, "engine", "chatterbox");
-      const st = await api().load();
-      if ( st?.state !== "ready" ) return ok("10 voice server renders, with the mood", false, {server: {state: st?.state, error: st?.error}});
-      const p = api().profileOf(t2);
-      const text = `Kneel! Now! (${Date.now() % 100000})`;
-      const t0 = performance.now(); const a = await api().fileFor(text, p, {step: -2, wounds: 0}, "chatterbox"); const first = Math.round(performance.now() - t0);
-      const b = await api().fileFor(text, p, {step: -2, wounds: 0}, "chatterbox");
-      const c = await api().fileFor(text, p, {step: 0, wounds: 6}, "chatterbox");
-      const r = await fetch(foundry.utils.getRoute(a.src), {cache: "no-store"});
-      const size = Number(r.headers.get("content-length")) || (await r.arrayBuffer()).byteLength;
-      ok("10 voice server renders, with the mood", a.rendered && !b.rendered && c.rendered && c.src !== a.src && r.ok && size > 10000,
-        {src: a.src, size, firstMs: first, voices: st.voices.length, device: st.device, voice: api().rules.serverVoiceFor(p, st.voices, p.chatterbox),
-          delivery: api().rules.deliveryFor({text, step: -2})});
-    });
-  } catch (e) { R.errors.push(e.message); }
-  await step("11 clean up", async () => {
-    if ( S && realSpeak ) S.speak = realSpeak;
-    for ( const [k, v] of Object.entries(keep) ) await game.settings.set(MOD, k, v);
+  } catch (e) { R.errors.push(e.message); unwatch(); }
+  await step("7 clean up", async () => {
     for ( const m of made.msgs ) await m?.delete?.();
-    for ( const a of made.actors ?? [] ) await a.delete();
+    for ( const a of made.actors ) await a?.delete?.();
     if ( viewed ) await game.scenes.get(viewed)?.view?.();
     await made.scene?.delete?.();
-    ok("11 clean up", !game.scenes.getName("WoDX gate: voices") && !game.actors.getName("Gate toll keeper"));
+    ok("7 clean up", !game.scenes.getName("WoDX gate: voices") && !game.actors.getName("Gate voices plot NPC") && !game.actors.getName("Gate voices passer-by"));
   });
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
