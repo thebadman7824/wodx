@@ -37,6 +37,7 @@ async function runGate(K) {
   const fx = () => game.modules.get(MOD)?.api?.effects;
   const E = await import(`/modules/${MOD}/scripts/effects-rules.js?${Date.now()}`);
   const dmg = a => ({...(a.system?.health?.damage ?? {})});
+  const wp = a => Number(a.system?.advantages?.willpower?.temporary) || 0;
   const sum = d => (Number(d.bashing) || 0) + (Number(d.lethal) || 0) + (Number(d.aggravated) || 0);
   let caster, target, msgs = [], queued = [];
   const item = (key, got, ctx = {}, route = "auto") => ({key, out: E.outcome(key, got, ctx), target: target.uuid, name: target.name, route});
@@ -61,13 +62,15 @@ async function runGate(K) {
     await step("3 Mend, Charge and Undo", async () => {
       const C = game.modules.get("wodx-combat").api;
       await C.setDamage(target, {bashing: 0, lethal: 2, aggravated: 0});
-      const q0 = Number(target.system?.quintessence?.temporary) || 0;
+      // B6730: a plain Charge moves a mortal's Willpower (the line's own pool), not a Quintessence field mortals lack
+      await target.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 1});
+      const q0 = wp(target);
       const r1 = await fx().apply(item("mend", E.spend(2, 2, {})), caster.name);
       const healed = Number(dmg(target).lethal) || 0;
       const r2 = await fx().apply(item("charge", E.spend(2, 2, {})), caster.name);
-      const q1 = Number(target.system?.quintessence?.temporary) || 0;
+      const q1 = wp(target);
       await fx().undo([r1, r2]);
-      ok("3 Mend, Charge and Undo", healed < 2 && q1 > q0 && Number(dmg(target).lethal) === 2 && (Number(target.system?.quintessence?.temporary) || 0) === q0, {healed, q0, q1});
+      ok("3 Mend, Charge and Undo", healed < 2 && q1 > q0 && Number(dmg(target).lethal) === 2 && wp(target) === q0, {healed, q0, q1});
       await C.setDamage(target, {bashing: 0, lethal: 0, aggravated: 0});
     });
 
@@ -83,14 +86,15 @@ async function runGate(K) {
 
     await step("5 the card applies once", async () => {
       const before = dmg(target);
+      await target.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 1});
       const m = await ChatMessage.create({content: "<div class='wodx-effects'>WoDX gate keyword card</div>", whisper: [game.user.id],
         flags: {[MOD]: {kind: "effects", caster: caster.name, items: [item("charge", E.spend(2, 2, {}))]}}});
       msgs.push(m);
       for ( let i = 0; i < 20 && !m.flags?.[MOD]?.done; i++ ) await new Promise(r => setTimeout(r, 150));
       const undo = m.flags?.[MOD]?.undo ?? [];
-      const q = Number(target.system?.quintessence?.temporary) || 0;
+      const q = wp(target);
       await fx().undo(undo);
-      ok("5 the card applies once", !!m.flags?.[MOD]?.done && undo.length === 1 && q > 0, {q, health: before});
+      ok("5 the card applies once", !!m.flags?.[MOD]?.done && undo.length === 1 && q > 1, {q, health: before});
     });
 
     await step("6 queued item", async () => {

@@ -81,6 +81,9 @@ export async function run() {
         if ( !root?.querySelector?.("[name=weapon]") ) return;
         setTimeout(() => {
           const d = root.querySelector("[name=defense]"); if ( d ) { d.value = "none"; d.dispatchEvent(new Event("change", {bubbles: true})); }
+          // the gate needs a hit to read the soak: ten more dice at difficulty 3 make a miss all but impossible
+          const x = root.querySelector("[name=extraDice]"); if ( x ) { x.value = "10"; x.dispatchEvent(new Event("change", {bubbles: true})); }
+          const xd = root.querySelector("[name=extraDiff]"); if ( xd ) { xd.value = "-3"; xd.dispatchEvent(new Event("change", {bubbles: true})); }
           root.querySelector("button[data-action=attack]")?.click();
         }, 150);
       };
