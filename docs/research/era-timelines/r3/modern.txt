@@ -40,7 +40,7 @@
 1991|H|mor|AS|Phnom Penh|treaty|The Paris accords for Cambodia|The Cambodian factions sign a peace, and the UN takes over the country for an election.
 1991|W|kue|AS|Phnom Penh|treaty,occult|The Kuei-jin return to Cambodia|The house reading has the Kuei-jin courts send envoys back into Cambodia to reckon with what fed on the killing fields.
 1992-1|H|mor|ME|Nagorno-Karabakh|war|The Nagorno-Karabakh war|Armenia and Azerbaijan fight openly over Nagorno-Karabakh.
-1992-2|H|mor|EU|Maastricht|treaty|Maastricht|The European Community becomes the European Union.
+1992-2|H|mor|EU|Maastricht|treaty|Maastricht|The European Community signs the treaty that makes it the European Union; the Union comes into force in November 1993.
 1992-4|H|mor|EU|Sarajevo|siege,war|The siege of Sarajevo|Bosnian Serb forces besiege Sarajevo; the siege lasts nearly four years.
 1992-6|H|mor|MO|Brno|law|The split agreed|Election results set Klaus's Czech right against Meciar's Slovak nationalists, and the two agree to divide the country.
 1992-8|H|mor|EU|Rostock|persecution,fire|Rostock-Lichtenhagen|Rioters set fire to a hostel for asylum seekers in Rostock while crowds cheer.

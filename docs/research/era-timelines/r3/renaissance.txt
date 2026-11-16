@@ -110,6 +110,7 @@
 1503|H|mor|EU|Florence|art|The Mona Lisa begun|Leonardo begins the portrait of Lisa Gherardini.
 1504|H|mor|EU|Florence|art|Michelangelo's David|The David is set up before the Palazzo Vecchio.
 1504|H|mor|AS|Kabul|crown|Babur takes Kabul|Babur, driven from Fergana, takes Kabul.
+1504|W|vam|EU|Vienna|crown|First justicars elected|At a secret conclave near Vienna the Camarilla elects seven justicars, one for each clan, and the Founders become the Inner Circle.
 1505|H|mor|AS|Goa|empire|Portugal's viceroy of India|Francisco de Almeida becomes first viceroy of Portuguese India.
 1506|H|mor|EU|Rome|building|New St. Peter's|Julius II lays the first stone of the new St. Peter's.
 1506|H|mor|EU|Lisbon|massacre|The Lisbon massacre|Mobs kill hundreds of converted Jews in Lisbon.
