@@ -20,6 +20,8 @@ import * as SR from "./servant-rules.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 const MOD = "wodx-npc";
 const SOCKET = `module.${MOD}`;
@@ -434,7 +436,7 @@ export function listen() {
   try { chron()?.tokenLooks?.register?.("wodx-npc.servants", ringLook); } catch (e) { /* no token looks */ }
   Hooks.on("updateActor", a => { if ( a?.flags?.[MOD]?.held ) chron()?.tokenLooks?.refresh?.(); });
   // Conditioning wears off with time apart; sharing a scene with the master keeps it
-  Hooks.on("updateWorldTime", () => { if ( isActiveGM() ) fadeConditioning().catch(e => console.error(`${MOD} | conditioning`, e)); });
+  Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; if ( isActiveGM() ) fadeConditioning().catch(e => console.error(`${MOD} | conditioning`, e)); });
   Hooks.on("canvasReady", () => {
     if ( !isActiveGM() ) return;
     const here = new Set((canvas.scene?.tokens?.contents ?? []).map(t => t.actorId));

@@ -18,6 +18,8 @@ import * as SV from "./servants.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 export const T_ORDER = "wodx-npc.order";
 
@@ -503,7 +505,7 @@ export function build(ctx) {
   }
 
   function hooks() {
-    Hooks.on("updateWorldTime", () => { fetchedHome().catch(e => console.error(`${MOD} | fetched`, e)); });
+    Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; fetchedHome().catch(e => console.error(`${MOD} | fetched`, e)); });
     Hooks.on("wodxAttitude", p => { onAttitude(p).catch(e => console.error(`${MOD} | loyalty`, e)); });
     Hooks.once("ready", () => {
       game.socket.on(SOCKET, async m => {

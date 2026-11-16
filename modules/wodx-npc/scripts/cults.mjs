@@ -22,6 +22,8 @@ import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, chron} = ctx;
@@ -468,6 +470,7 @@ export function build(ctx) {
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) runTurns().catch(e => console.error(`${MOD} | cults`, e)); });
     let wait = null;
     Hooks.on("updateWorldTime", () => {
+      if ( heldClock() ) return;
       if ( !isActiveGM() || !on() ) return;
       clearTimeout(wait);
       wait = setTimeout(() => runTurns().catch(e => console.error(`${MOD} | cults`, e)), 1500);

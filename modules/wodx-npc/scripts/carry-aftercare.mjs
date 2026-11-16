@@ -23,6 +23,8 @@ import * as LM from "./line-mend.mjs";
 import * as A from "./carry-aftercare-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 const IX = "wodx-interactables", ACT = "wodx-actions";
 // WoDX Interactables' container kinds (interact-rules.mjs CONTAINERS), named here so NPC runs without it
 const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}, pile: {label: "Gear on the ground"}};
@@ -489,7 +491,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   }
   function hooks() {
     Hooks.on("wodxBodyTaken", d => { onTaken(d).catch(e => console.error(`${MOD} | aftercare`, e)); });
-    Hooks.on("updateWorldTime", () => { onClock().catch(e => console.error(`${MOD} | aftercare clock`, e)); });
+    Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; onClock().catch(e => console.error(`${MOD} | aftercare clock`, e)); });
     Hooks.on("wodxFactionTurn", () => { onFactionTurn().catch(e => console.error(`${MOD} | rescue`, e)); });
     // who hurt them last, for the family's grudge
     Hooks.on("wodxDamageApplied", (actor, d = {}) => {

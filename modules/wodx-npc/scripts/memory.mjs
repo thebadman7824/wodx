@@ -14,6 +14,8 @@
 import * as M from "./memory-rules.mjs";
 import * as GR from "./grudge-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 const MOD = "wodx-npc";
 const TYPE = `${MOD}.grudge`;
@@ -237,7 +239,7 @@ export function listen() {
     const x = M.noteFromAttitude(change, now());
     if ( x ) remember(npc, character, x).catch(e => console.error(`${MOD} | memory`, e));
   });
-  Hooks.on("updateWorldTime", () => { turn().catch(e => console.error(`${MOD} | memory`, e)); harmCheck().catch(e => console.error(`${MOD} | harm`, e)); });
+  Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; turn().catch(e => console.error(`${MOD} | memory`, e)); harmCheck().catch(e => console.error(`${MOD} | harm`, e)); });
   Hooks.on("wodxSkipEnd", () => { turn().catch(e => console.error(`${MOD} | memory`, e)); });
   Hooks.on("updateActor", (actor, change) => {
     const d = change?.flags?.[CREATION]?.chronology?.died;

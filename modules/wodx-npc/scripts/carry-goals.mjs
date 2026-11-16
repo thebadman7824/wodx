@@ -15,6 +15,8 @@
  */
 import * as G from "./carry-goal-rules.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 const IX = "wodx-interactables";
 const TYPE = "npc-capture";
@@ -273,7 +275,7 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
   }
   function hooks() {
     Hooks.on("updateToken", onMoved);
-    Hooks.on("updateWorldTime", () => { onClock().catch(e => console.error(`${MOD} | carry trips`, e)); });
+    Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; onClock().catch(e => console.error(`${MOD} | carry trips`, e)); });
     Hooks.on("renderChatMessageHTML", onRender);
     Hooks.once("ready", () => game.socket?.on?.(`module.${MOD}`, m => { if ( m?.type === "carry.free" && isActiveGM() ) { const td = fromUuidSync(m.token); if ( td ) { const r = m.rescuer ? fromUuidSync(m.rescuer) : null, u = game.users.get(m.userId); freePrisoner(td, m.by, r && u && (r.actor ?? r).testUserPermission?.(u, "OWNER") ? m.rescuer : null); } } }));
   }

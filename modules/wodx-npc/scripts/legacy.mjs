@@ -17,6 +17,8 @@ import * as SR from "./standing-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 
 const MOD = "wodx-npc";
 const T = {ideas: `${MOD}.scene-ideas`};
@@ -217,7 +219,7 @@ export function registerHandlers() {
 }
 
 export function listen() {
-  Hooks.on("updateWorldTime", () => { weekly().catch(e => console.error(`${MOD} | scene ideas`, e)); });
+  Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; weekly().catch(e => console.error(`${MOD} | scene ideas`, e)); });
   Hooks.on("updateActor", (a, change) => { const d = change?.flags?.["wodx-creation"]?.chronology?.died; if ( d !== undefined && d !== null ) onDeath(a).catch(e => console.error(`${MOD} | teaching`, e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     const root = el?.[0] ?? el;
