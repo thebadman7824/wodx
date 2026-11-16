@@ -63,7 +63,9 @@ async function shot(label) {
   return path.basename(file);
 }
 async function step(name, fn) {
-  try { const r = await fn(); steps.push({name, pass: !!r?.pass, ...r}); }
+  // A step that hangs (a window nobody answers) fails after 90 s instead of holding the walk (B5148)
+  const limit = new Promise((_, no) => setTimeout(() => no(new Error("timed out after 90 s")), 90000));
+  try { const r = await Promise.race([fn(), limit]); steps.push({name, pass: !!r?.pass, ...r}); }
   catch (e) { steps.push({name, pass: false, error: e.message}); try { await shot(`${name}-error`); } catch { /* the page is gone */ } }
 }
 const evalIn = (fn, a) => page.evaluate(fn, a);
@@ -88,6 +90,10 @@ try {
       return {pass: true, shot: await shot("join")};
     });
     await join(WALKER);
+    await step("01b who the player is", async () => {
+      const s = await evalIn(() => ({character: game.user.character?.name ?? null, windows: [...foundry.applications.instances.values()].filter(a => a.rendered).map(a => a.title)}));
+      return {pass: !s.character, ...s, shot: await shot("after-join")};
+    });
     await step("02 the first screen", async () => {
       await sleep(2500);
       const s = await evalIn(() => ({scene: canvas.scene?.name ?? null, map: !!(canvas.scene?.background?.src), dark: canvas.scene?.environment?.darknessLevel ?? null, seat: !!game.users.activeGM}));
@@ -152,6 +158,9 @@ try {
     await step("08 the Storyteller tools", async () => {
       await evalIn(() => { const d = document.querySelector("#wodx-solo-panel details.wsolo-more"); if ( d ) d.open = true; });
       await page.locator("#wodx-solo-panel [data-action=sttoggle]").click();
+      // Turning them on asks first (a Yes/No window): answer Yes as the player would
+      const yes = page.locator(".application.dialog button[data-action=yes]").last();
+      await yes.waitFor({state: "visible", timeout: 10000}).then(() => yes.click()).catch(() => null);
       await page.waitForSelector("#wodx-solo-panel [data-action=st]", {timeout: 10000});
       const ids = await evalIn(() => [...document.querySelectorAll("#wodx-solo-panel [data-action=st]")].map(b => b.dataset.id));
       const seen = [];

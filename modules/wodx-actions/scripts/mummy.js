@@ -12,6 +12,7 @@
  */
 import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as M from "./mummy-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -103,6 +104,9 @@ export function build(ctx) {
             const lim = await LIM.gate(actor, { name: ns?.name ?? sp?.name ?? `${M.HEKAU[fd.path]?.label ?? fd.path} ${level}`, disc: M.HEKAU[fd.path]?.label ?? fd.path, level });
             if (!lim) return null;
             plan.difficulty += lim.diff;
+            // B6662: the target's ward or Magic Resistance makes Hekau on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.difficulty = Math.min(10, plan.difficulty + n(rm.diff));
             if (plan.spend && !(await sekhem(actor, -plan.spend))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const label = `${M.HEKAU[fd.path].label} ${n(i.hekau[fd.path])} + ${esc(traits.find(t => t.key === fd.tr)?.label ?? fd.tr)}`;
@@ -111,7 +115,7 @@ export function build(ctx) {
             let body = "", got = 0;
             if (!fd.rit) {
                 const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp, autoSuccesses: plan.autoSuccesses }); rolls.push(r.roll);
-                body = rollBlock(label, r, [`${plan.spend} Sekhem`, ...(plan.autoSuccesses ? [`${plan.autoSuccesses} bought successes`] : []), ...(plan.capped ? ["bought successes capped at the path's rating"] : []), ...(wp ? ["Willpower"] : [])]);
+                body = rollBlock(label, r, [`${plan.spend} Sekhem`, ...rm.parts,...(plan.autoSuccesses ? [`${plan.autoSuccesses} bought successes`] : []), ...(plan.capped ? ["bought successes capped at the path's rating"] : []), ...(wp ? ["Willpower"] : [])]);
                 got = r.botch ? 0 : r.successes;
                 body += r.botch ? `<div class="vta-big bad">${title}: a calamity, and the Storyteller decides its shape.</div>` : r.successes ? `<div class="vta-big good">${title}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div>` : `<div class="vta-big">${title}: it fails (the Sekhem is spent).</div>`;
             } else {
@@ -122,7 +126,7 @@ export function build(ctx) {
                     st = M.ritualStep(st, r.successes, Math.max(1, n(fd.c)), r.botch);
                     rows.push(`Roll ${k}: ${r.botch ? "botch" : `${r.successes} (total ${st.got})`}`);
                 }
-                body = `<div class="vta-sec"><b>${label}</b>: ${plan.dice} dice, diff ${plan.difficulty}<br>${rows.join("<br>")}</div>`;
+                body = `<div class="vta-sec"><b>${label}</b>: ${plan.dice} dice, diff ${plan.difficulty}${rm.parts.length ? ` (${rm.parts.map(esc).join(", ")})` : ""}<br>${rows.join("<br>")}</div>`;
                 got = st.done && !st.failed ? Math.min(5, st.got) : 0;
                 body += st.failed ? `<div class="vta-big bad">${title}: botched: all the Sekhem put in is lost; it must start over.</div>` : st.done ? `<div class="vta-big good">${title}: complete in ${k} ${k === 1 ? "stretch" : "stretches"} of the path's ritual time.</div>` : `<div class="vta-big">${title}: unfinished after ten tries.</div>`;
             }
@@ -274,7 +278,15 @@ export function build(ctx) {
         });
     }
     async function veil(actor) {
-        const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (Mummy: The Resurrection p. 140).</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
+        // B6583: targeted mortals react on the map and keep or lose the sight through the witness step (the same one a
+        // mummy seen in plain sight goes through); with no one targeted, the Willpower line is read off the table
+        const toks = [...(game.user.targets ?? [])].filter(t => t.actor && t.actor !== actor);
+        if (toks.length) {
+            if (!game.user.isGM) return notify("The Storyteller works the Veil on the witnesses.");
+            const r = await game.modules.get(MOD)?.api?.witnessStep?.({ actor, tokens: toks, secret: "mummy", event: "the Veil" });
+            return r ?? post(actor, "The Veil", `<div class="vta-res">${toks.map(t => esc(t.name)).join(", ")}: nothing to record.</div>`);
+        }
+        const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (Mummy: The Resurrection p. 140). Target the witnesses' tokens to have them react on the map.</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
         return dialog(`The Veil: ${actor.name}`, content, "Show", async fd => post(actor, "The Veil", `<div class="vta-res">Willpower ${n(fd.w)}: ${esc(M.veil(n(fd.w)))}.</div><div class="wodx-quiet">${REF} p. 140</div>`));
     }
     async function setup(actor) {

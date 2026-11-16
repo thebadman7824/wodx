@@ -220,12 +220,24 @@ export function setup() {
 /** The registered conditions the actor has (WoDX Chronicle's registry); none when Chronicle is off. */
 export const condsOf = actor => { try { return chronicle()?.conditions?.conditionsOf?.(actor) ?? []; } catch (e) { return []; } };
 
-/** B6156: why the character cannot act now (asleep for the day, Asleep, Torpor, Incapacitated, staked), or "". */
-export const cannotAct = actor => !actor ? "" : ACR.cannotActWhy({name: actor.name, daySleep: !!actor.getFlag?.(MOD, "daySleep"), conds: condsOf(actor)});
+/** B6660: whether the actor has a combatant in a running fight. */
+export function inFight(actor) {
+  if ( !actor ) return false;
+  try {
+    return !!game.combats?.find?.(c => c.started && c.combatants.some(cb => cb.actor === actor || (cb.actor?.id === actor.id && cb.token?.actorLink)));
+  } catch (e) { return false; }
+}
+
+/**
+ * B6156, B6660: why the character cannot act now (asleep for the day, Asleep, Torpor, Incapacitated, staked; Dazed in
+ * a fight), or "". outCold: true reads only the first group, for a use that shakes off the daze itself.
+ */
+export const cannotAct = (actor, {outCold = false} = {}) => !actor ? "" : ACR.cannotActWhy({name: actor.name,
+  daySleep: !!actor.getFlag?.(MOD, "daySleep"), conds: condsOf(actor), inFight: !outCold && inFight(actor)});
 
 /** B6156: the one guard every WoDX Actions window calls. A player is refused with the reason; the Storyteller is not. */
-export function refuseIdle(actor) {
-  const why = cannotAct(actor);
+export function refuseIdle(actor, opts = {}) {
+  const why = cannotAct(actor, opts);
   if ( !why || game.user?.isGM ) return false;
   ui.notifications?.warn(why);
   return true;

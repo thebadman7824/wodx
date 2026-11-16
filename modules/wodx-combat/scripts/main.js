@@ -798,9 +798,11 @@ function resolveTokens(attackerArg, targetArg) {
  * since B6360). With the limit only shown, and always for the GM, that last one is a warning (pastWalk), not a refusal.
  */
 function noAttackWhy(attacker, attackerTok) {
-    // B6372: asleep for the day or out cold (WoDX Actions api.cannotAct): a player makes no attack; the Storyteller still may
+    // B6372: asleep for the day or out cold (WoDX Actions api.cannotAct): a player makes no attack; the Storyteller still may.
+    // B6660: Dazed in a fight is one of those reasons; with WoDX Actions off, the Dazed mark is read here
     try { const idle = game.modules.get("wodx-actions")?.api?.cannotAct?.(attacker); if (idle && !game.user.isGM) return { why: String(idle).replace(/\.$/, "") }; } catch (e) { /* Actions off */ }
-    // B6036: a condition that takes the turn away (Dazed, a fomor's gas or liquid form) stops a player's attack too; the Storyteller still may
+    try { if (!game.user.isGM && game.combat?.started && chronicle()?.conditions?.hasCondition?.(attacker, "dazed")) return { why: `${attacker.name} is Dazed and loses this turn's action (V20 Dark Ages p. 348)` }; } catch (e) { /* Chronicle off */ }
+    // B6036: a condition that takes the turn away (a fomor's gas or liquid form, Dazed outside a fight) stops a player's attack too; the Storyteller still may
     const gone = cannotActWhy(attacker);
     if (gone && !game.user.isGM) return { why: `${attacker.name} cannot attack this turn: ${gone}` };
     const lost = attacker?.getFlag?.(MOD, "lostAction");
@@ -2106,7 +2108,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.46.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.46.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -2188,6 +2190,17 @@ function fightOf(doc) {
     }
     return null;
 }
+/* B6661: a player's token stays put on the turn a failed stand-up spent; the Storyteller may still move it. Registered
+ * before the yards count, so a refused move is not counted. */
+export function lostMoveBlock(doc, changes, options) {
+    if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return true;
+    const f = fightOf(doc);
+    const why = f ? R.lostMoveWhy(doc.actor?.getFlag?.(MOD, "lostAction"), f.combat, doc.name) : "";
+    if (!why) return true;
+    ui.notifications.warn(`${why}.`);
+    return false;
+}
+Hooks.on("preUpdateToken", (doc, changes, options) => lostMoveBlock(doc, changes, options) === false ? false : undefined);
 // Out of turn, a player's token stays put (3.8.1). Registered before the yards count, so a refused move is not counted.
 Hooks.on("preUpdateToken", (doc, changes, options) => {
     if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;

@@ -293,7 +293,7 @@
 2083|F|mor|AS|Tokyo|money,art|The dream market bottled|Tokyo's corporations bottle dreams and sell them, and the street dream markets close.
 2084|F|mor|EU|Hamburg|crime|The Hamburg dead count|Hamburg's census counts more ghosts than living in some districts.
 2085|F|mor|EU|Hamburg|occult,building|Spirits in the walls|Glass Walkers on arcology security find wild spirits sealed in Hamburg's walls, still calling.
-2086|F|mor|EU|Lyon|crime,terror|The Accord murders|A string of murders in Lyon, Tokyo and Seoul breaks the Accord in three cities at once.
+2086|F|mor|EU|Lyon|crime,terror|The Accord murders|Lyon watches the feeds as murders break the Accord in Night City and two other cities, and its own Kindred and Garou double their guards.
 2087|F|mor|ME|Iraq|war,occult|The deep glass stirs|Things climb out of the deep glass at the Meltdown's heart, and the waste septs fall back.
 2087|F|mor|ME|Alexandria|faith,occult|The Duat darkens|The Alexandria school's priests report that the Underworld darkens at its western edge.
 2088|F|mor|EU|Marseille|art,faith|Stories in the wastes|Wandering storytellers in the southern wastes keep the old tales alive for children no one else visits.

@@ -29,6 +29,10 @@
  *   10. the same in WoDX Combat's attack window (B6378): a mortal with Destiny 2 punches from the window with the box
  *      ticked; the first attack roll comes up 1s, it is rolled again at once (10s) before the defence and damage, the
  *      blow lands (the target is hurt) and one reroll of the story is spent
+ *   11. Drained on a social roll (B6663): a mortal persuades an NPC from "With this person", Drained off then on; the
+ *      card's difficulty is one higher with Drained named (the attitude is put back between the two)
+ *   12. Drained on a feeding roll (B6663): a hungry vampire feeds, Drained off then on; the Hunger roll is at 6, then 7
+ *      with Drained named
  * Result: Data/wodx-gate/gatetruthactions-result.json.
  */
 import {gate, waitFor, newestMessage} from "./kit.mjs";
@@ -367,6 +371,64 @@ export async function run() {
       G.ok("10. Destiny rolls a failed attack again in WoDX Combat's window", offered === true && !!card && num(res?.attack?.successes) > 0 && used === 1 && hurt() > hurt0,
         {offered, card: !!card, atk: res?.attack?.successes ?? null, used, hurt: [hurt0, hurt()]});
       for ( const c of game.combats.filter(c => c.combatants.some(x => x.tokenId === tH.id)) ) { try { await c.delete(); } catch (e) { /* gone */ } }
+    });
+    await G.step("11. Drained reaches a social roll", async () => {
+      // B6663: the same Persuade from "With this person", Drained off then on: the card's difficulty is one higher, named
+      const N = game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api : null;
+      const [talker, mark] = await G.make(Actor, [{name: "Gate TA Talker", type: "Mortal", ownership: {default: 3}, prototypeToken: {actorLink: true}},
+        {name: "Gate TA Mark", type: "Mortal", prototypeToken: {actorLink: true}}]);
+      await talker.update({"system.attributes.charisma.value": 3, "system.attributes.charisma.total": 3, "system.abilities.expression.value": 2});
+      const [, tMark] = await G.tokens(scene, [{actor: talker, x: 14, y: 6}, {actor: mark, x: 15, y: 6}]);
+      await waitFor(() => !!tMark?.object, 6000);
+      const fd = {bonus: 0, extraDiff: 0, specialty: false, wp: false, aura: false, offer: "fair", offerText: ""};
+      const roll = async () => {
+        // the attitude is put back before each roll, so only the condition moves the difficulty
+        try { await N?.attitude?.apply?.(mark, talker, {to: 0, why: "gate"}); } catch (e) { /* no NPC api: the shift stays 0 */ }
+        const since = Date.now();
+        await A.social(talker, tMark.object, "persuade", fd);
+        const test = m => !m.blind && m.speaker?.actor === talker.id && /dice, diff/.test(m.content ?? "");
+        await waitFor(() => newestMessage(since, test), 6000);
+        const m = newestMessage(since, test);
+        return {diff: diffOn(m), named: /Drained/.test(m?.content ?? "")};
+      };
+      let off, on;
+      try {
+        await fixDice(10);
+        off = await roll();
+        await C.conditions.setCondition(talker, "drained", true);
+        await waitFor(() => talker.statuses?.has?.("wodx-drained"), 4000);
+        on = await roll();
+      } finally { CONFIG.Dice.randomUniform = dice; await C.conditions.setCondition(talker, "drained", false).catch(() => null); }
+      G.ok("11. Drained reaches a social roll", off?.diff > 0 && on?.diff === Math.min(10, off.diff + 1) && on.named && !off.named, {off, on});
+    });
+
+    await G.step("12. Drained reaches a feeding roll", async () => {
+      // B6663: a hungry vampire's Hunger roll when feeding (Self-Control at 6), Drained off then on: 6, then 7 and named
+      const [hungry, donor] = await G.make(Actor, [vamp("Gate TA Hungry"), {name: "Gate TA Donor", type: "Mortal"}]);
+      await hungry.update({...base});
+      const [, tDonor] = await G.tokens(scene, [{actor: hungry, x: 14, y: 8}, {actor: donor, x: 15, y: 8}]);
+      await waitFor(() => !!tDonor?.object, 6000);
+      const hunger = async () => {
+        await hungry.update({"system.advantages.bloodpool.temporary": 2}); // under 7 - Self-Control 2: hungry
+        const since = Date.now();
+        const p = answer({take: 1, willing: true});
+        await A.feed({actor: hungry, vessel: tDonor.object});
+        await p;
+        const test = m => /Hunger:/.test(m.content ?? "") && (m.speaker?.actor === hungry.id || (m.content ?? "").includes(hungry.name));
+        await waitFor(() => newestMessage(since, test), 8000);
+        const m = newestMessage(since, test);
+        const hit = /Hunger:[\s\S]*?(\d+) dice, diff (\d+)([\s\S]*?)<\/div>/.exec(m?.content ?? "");
+        return {diff: num(hit?.[2]), named: /Drained/.test(hit?.[3] ?? "")};
+      };
+      let off, on;
+      try {
+        await fixDice(10); // the Hunger roll holds: no gorging
+        off = await hunger();
+        await C.conditions.setCondition(hungry, "drained", true);
+        await waitFor(() => hungry.statuses?.has?.("wodx-drained"), 4000);
+        on = await hunger();
+      } finally { CONFIG.Dice.randomUniform = dice; await C.conditions.setCondition(hungry, "drained", false).catch(() => null); }
+      G.ok("12. Drained reaches a feeding roll", off?.diff === 6 && on?.diff === 7 && on.named && !off.named, {off, on});
     });
     G.R.notes.push(`ran ${Math.round((Date.now() - t0) / 1000)} s`);
   } catch (e) {

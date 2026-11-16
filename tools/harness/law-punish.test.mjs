@@ -65,3 +65,13 @@ test("ghouls: the domitor's feeding is offered from the monthly need, once (B616
   assert.match(s, /if \( ghoulNeedOn\(\) \) \{\n    if \( needIsGhoul\(a\) \) return;/, "the Clan features tick stands aside for a ghoul the need reads");
   assert.match(s, /if \( !on\(\) \|\| !isActiveGM\(\) \|\| \(!settle && isQuiet\(\)\) \) return;/);
 });
+
+test("B6669: medieval Moravia has a time sentence in the gaol, until prison takes over in 1780", () => {
+  const mid = [{deed: "theft"}, {deed: "fire"}];
+  const at = y => P.sentencesFor(L.lawOf("moravia", y), mid).list;
+  assert.ok(at(1300).includes("gaol"), "the lord's gaol in the Dark Medieval (Mage: The Dark Ages pdf p. 219)");
+  assert.ok(!at(1300).includes("prison"));
+  assert.ok(at(1790).includes("prison") && !at(1790).includes("gaol"));
+  assert.equal(P.markFor("gaol", {year: 1300, region: "moravia", weight: 4}).kind, "time");
+  assert.match(src("modules/wodx-chronicle/scripts/law-rules.mjs"), /B6669: a medieval time sentence\. Mage: The Dark Ages \(pdf p\. 219\)/);
+});

@@ -7,6 +7,7 @@
     "gatedisplayd",
     "gatelookhand",
     "gatesolo",
+    "gatetruthlooks",
     "gatevoices"
   ],
   "add": {
@@ -108,7 +109,7 @@
     ]
   },
   "remove": {},
-  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd: run them by name on their own; gatesolo turns solo mode on), and gatevoices (Voices is shelved and its engine is not on the lanes; run it by name).",
+  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks: run them by name on their own; gatesolo turns solo mode on), and gatevoices (Voices is shelved and its engine is not on the lanes; run it by name).",
   "timeouts": {},
   "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}."
 }

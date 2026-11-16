@@ -46,13 +46,21 @@ export async function landing() {
   }
   if ( H.get("landing") !== scene.id ) await game.settings.set(MOD, "landing", scene.id);
   const active = game.scenes.active;
-  if ( !active || !(active.background?.src ?? active.img) ) {
+  // Nothing active, a scene with no map, or Foundry's welcome scene gives way (B5147)
+  if ( R.mayReplaceActive(active ? sceneRow(active) : null) ) {
     if ( active?.id !== scene.id ) {
       await scene.activate();
       await H.log({kind: "scene", source: MOD, title: scene.name, note: "made the active scene, to land on"});
     }
   }
   return scene;
+}
+
+/** Take a player to a scene, at the token's level where the scene has levels (Foundry 14). */
+function pull(scene, user, token) {
+  const lv = token?.level ?? null;
+  if ( typeof scene.pullUsers === "function" ) return scene.pullUsers([user], lv ? {level: lv} : {});
+  return game.socket.emit("pullToScene", scene.id, user.id);
 }
 
 /** Put a token for the actor at the landing's way in. */
@@ -85,7 +93,7 @@ async function bringIn(user) {
   if ( step === "make" ) { reply(userId, "arrive.pick", {lines: R.ARRIVAL_LINES}); return step; }
   if ( step === "place" ) { token = await placeToken(actor, scene); at = scene; }
   if ( !user.character && actor ) await user.update({character: actor.id});
-  if ( user.viewedScene !== at.id ) game.socket.emit("pullToScene", at.id, userId);
+  if ( user.viewedScene !== at.id ) pull(at, user, token);
   reply(userId, "arrive.ready", {actorId: actor.id, sceneId: at.id, tokenId: token.id});
   return step;
 }
@@ -105,7 +113,7 @@ export async function make(userId, {name, line} = {}) {
     await H.log({kind: "note", source: MOD, title: "A character was made for the player", note: `${actor.name}, ${R.arrivalLine(line)?.label ?? "Mortal"}, for ${user.name}`});
     const scene = await landing();
     const token = await placeToken(actor, scene);
-    if ( user.viewedScene !== scene.id ) game.socket.emit("pullToScene", scene.id, userId);
+    if ( user.viewedScene !== scene.id ) pull(scene, user, token);
     reply(userId, "arrive.ready", {actorId: actor.id, sceneId: scene.id, tokenId: token.id, made: true});
     await tell(userId, `<p><b>${esc(actor.name)}</b> stands at the way in. The character wizard is open to build the sheet; drag the token to move.</p>`);
     return actor;
@@ -116,11 +124,24 @@ export async function make(userId, {name, line} = {}) {
 /*  The player's side                                                  */
 /* ------------------------------------------------------------------ */
 
+/**
+ * B6711: Foundry opens its own User Configuration for a player with no character at login. In solo play arrival picks
+ * and assigns the character, so that window only covers the arrival; it closes when the arrival window opens and again
+ * once the token is there.
+ */
+function closeUserConfig() {
+  for ( const app of foundry.applications.instances?.values?.() ?? [] ) {
+    const doc = app?.document;
+    if ( doc?.documentName === "User" && doc.id === game.user.id && /UserConfig/.test(app.constructor?.name ?? "") ) app.close().catch(() => null);
+  }
+}
+
 let picking = false;
 /** Ask for a name and a line; the seat makes the character. */
 export async function pick() {
   if ( picking || game.user.isGM ) return null;
   picking = true;
+  closeUserConfig();
   try {
     const opts = R.ARRIVAL_LINES.map((l, i) => `<label class="wsolo-choice"><input type="radio" name="line" value="${l.id}"${i === 0 ? " checked" : ""}> ${esc(l.label)}<span class="wodx-quiet"> ${esc(l.hint)}</span></label>`).join("");
     const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog", "wsolo-arrive"], window: {title: "Who comes to Rothenstein?"},
@@ -140,6 +161,7 @@ async function ready({actorId, sceneId, tokenId, made} = {}) {
   if ( canvas?.scene?.id !== sceneId ) {
     await new Promise(res => { const t = setTimeout(res, 15000); Hooks.once("canvasReady", () => { clearTimeout(t); res(); }); });
   }
+  closeUserConfig();
   const token = canvas?.tokens?.get?.(tokenId);
   if ( token ) {
     token.control({releaseOthers: true});

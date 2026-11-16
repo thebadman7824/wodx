@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6580
+Next free block: B6720
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -250,7 +250,7 @@ Next free block: B6580
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
-| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5144) | Solo, Chronicle |
+| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5148) | Solo |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
@@ -364,11 +364,15 @@ Next free block: B6580
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC; gates that failed on main (used B6520-B6523) | tools (pcq, vision, gate), NPC |
+| B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main (used B6520-B6525) | tools (pcq, vision, gate), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
+| B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
+| B6590-B6619 | Technica, the Cyberpunks' Discipline, tied into the Net (used B6590-B6612) | Otherworlds, Chronicle, Creation |
+| B6660-B6669 | Audit recheck: the last partly-working claims (Dazed and a failed stand-up hold the turn, ward and conditions on every roll, aftercare for every NPC, hunters and bodies, death sentence in custody, era switches, wording, medieval gaol) (used B6660-B6669) | Combat, Actions, Sheets, NPC, Storyteller, Chronicle, Atmosphere, Interactables |
+| B6710-B6719 | Solo second walk fixes: hunger banner waits for the wizard, Foundry's User Configuration closes on arrival, walk confirms the Storyteller tools (used B6710-B6712) | Senses, Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8690,6 +8694,21 @@ WoDX Chronicle. The tour is offered once, on the first join, and was used up on 
 
 Reverse: remove soloWaits from player-guide.mjs.
 
+## B5146. An actor every player owns by default is nobody's character (2026-11-15)
+WoDX Solo. The first walk in the solo world found the new player handed an old gate-test actor that every player owns by default, so the arrival window never showed. The player's character is now the assigned one (unless it is owned only by default) or one the player is named owner of. The panel, I am stuck and arrival all read it this way. Nothing is deleted: the old test actors stay for Ben to clear.
+
+Reverse: drop ownsByName from characterOf in panel.mjs.
+
+## B5147. Foundry's welcome scene gives way to the landing (2026-11-15)
+WoDX Solo. The landing is made active when nothing is active, the active scene has no map or it is Foundry's own welcome scene; a map the Storyteller made active stays. The welcome scene is never picked as the landing.
+
+Reverse: edit mayReplaceActive and isCoreScene in solo-rules.mjs.
+
+## B5148. The first-login walk fails a hung step instead of hanging (2026-11-15)
+Tools. tools/solo/walk.mjs gives each step 90 seconds and notes who the player is right after the join, so a window nobody answers shows up as a failed step with a screenshot.
+
+Reverse: remove the limit in walk.mjs step().
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -12213,6 +12232,16 @@ tools/gate.
 
 Reverse: revert the gate edits.
 
+## B6524. A ridden beast does not take fright at its own rider (2026-11-16)
+WoDX NPC. Mounting a beast that has its own sheet makes a map noise. In Auto mode the beast heard it, reacted to the rider as a stranger, and fled to the edge of the map, carrying no one. The beast now leaves out the noises its own rider makes. The same goes for anyone aboard a vehicle or beast that makes a noise: a passenger in a rammed car no longer walks out of it to flee. They still hear everyone else. Found by gatevehicles step 12.
+
+Reverse: drop the ridden test from the hearers in onMapEvent (routines.mjs).
+
+## B6525. Vehicle and mount gates match the tiles they make by title (2026-11-16)
+tools/gate. gatevehicles and gatemounts took the tiles from a batch create in the order they were asked for. Foundry does not promise that order (kit rule 1), so a chimera was sometimes tested as a gryphon, or a train as a snow machine. They now match each tile to its data by title. Two more changes: gatevehicles runs with fight turns not acting on their own, and gatemounts step 12 has 150 seconds for its four looks.
+
+Reverse: revert the gate edits.
+
 ## B6530. The Beast played by the game (2026-11-15)
 WoDX Solo. When the lone player's character falls into frenzy (WoDX Actions rolls the check by itself), the seat sets flags.wodx-storyteller.standIn on it, the same flag the Storyteller's absent players use, so WoDX NPC plays its turns. With no fight on the scene it goes for its prey: an enemy in sight (a hostile token), else the nearest living being, within 40 yards (house reading of "anyone near"), and a fight starts with the frenzied on a side of their own. V20 pdf 307: the Storyteller decides how long a frenzy lasts, one scene typically; WoDX ends it when the fight is over, as the scene's end. A botched frenzy is left to WoDX Actions, which rolls it out (B4872). Willpower for control is offered to the Kindred and their ghouls only; the other lines' frenzy runs until it ends.
 
@@ -12366,3 +12395,223 @@ Reverse: Put the old wording back in r3 renaissance.txt, age-of-reason.txt, vict
 WoDX Chronicle. The 1692 Salem card rests on Verbena (Revised) pdf 43, read on the PC on 13 November 2026. That book, and the other Mage Revised tradition books, are not in the cloud book text, and no other book there says more about Salem than naming the trials as a model witch-hunt (Archons and Templars). The card stays as it is; a books-find job can confirm the page.
 
 Reverse: Nothing to reverse.
+
+## B6580. Seduction from the menu needs a target and lands on them (2026-11-16)
+WoDX Actions. The three-roll seduction (V20 p. 266) from any line's menu now asks for a target and ends as Charm in "With this person" does (social.js charmDone): a win adds the charmed sway and moves the person's attitude up, a botch moves it down, and a vampire may feed (V20 pp. 259-260). With no one targeted it was a card that changed nothing.
+
+Reverse: give seduction() in modules/wodx-actions/scripts/main.js back its "no target: Attributes 2" path and drop the default onDone.
+
+## B6581. Demons and mummies heal with the clock (2026-11-16)
+WoDX Actions. Demon: The Fallen p. 248: demons heal at the human rate, aggravated at the lethal rate. Mummy (2nd edition) p. 77 gives mummies the mortal chart, and Mummy: The Resurrection's Slow Healing flaw halves "a normal person's" rate. Both lines had the healing window from B6300 but the clock never healed them.
+
+Reverse: take "demon" and "mummy" out of healPlan in modules/wodx-actions/scripts/kindred.js.
+
+## B6582. The inner voice on every line that has one (2026-11-16)
+WoDX Actions. voice-rules.js already gives the P'o (Kuei-jin, read through the beast voice), the Avatar (mages of both eras), the Mists and the Weave (fae of both eras), Spite (Orpheus) and the Torment (demons); only five menus showed the panel. profile-menus VOICED lists them all. Mummies, mortals, the Exalted, spirits and beasts have no inner adversary in their books and get none.
+
+Reverse: shorten VOICED in modules/wodx-actions/scripts/profile-menus.js.
+
+## B6583. The Veil and the Mists act on targeted witnesses (2026-11-16)
+WoDX Actions. With witnesses targeted, the Veil (Mummy: The Resurrection p. 140) and the Mists (C20 pp. 269-270) run the same witness step as a mummy or changeling seen in plain sight: reactions on the map, and who keeps it now knows. With no one targeted the table still answers for one Willpower or Banality.
+
+Reverse: drop the targeted branch at the top of veil() in mummy.js and mists() in c20.js.
+
+## B6584. Seen through, an illusion turns faint for that player (2026-11-16)
+WoDX Actions. A demon who sees through illusion (Demon: The Fallen p. 171) marks the illusion tiles on the map as seen through (flag seenThrough); those tiles draw faint for the demon's player and stay whole for everyone else, the Storyteller included.
+
+Reverse: remove the refreshTile hook and seenThroughLook in modules/wodx-actions/scripts/effects.js.
+
+## B6585. A spoken name shows its speaker (2026-11-16)
+WoDX Actions. Demon: The Fallen p. 171: one success gives a picture of the speaker, two the speaker's surroundings. With the speaker's token targeted, one success opens the speaker's picture on the demon's screen and two pan the view to them when they are on the scene shown.
+
+Reverse: remove showSpeaker from named() in modules/wodx-actions/scripts/demon.js.
+
+## B6586. An Echo holds for the scene (2026-11-16)
+WoDX Actions. Dark Ages: Fae pp. 110-111 gives each Echo level its harm as examples; the WoDX reading: levels 1 to 4 hold for the scene with the Echo condition (+1 difficulty on attacks), +1 difficulty on the fae's cantrips and Unleashing at level 1 and +2 from level 2, no Unleashing at level 4, and the Storyteller's button for 3 bashing (soaked) at level 3 and 4 lethal at level 4. Level 5 was already applied.
+
+Reverse: remove echoHold and echoDiff in modules/wodx-actions/scripts/fae-da.js.
+
+## B6587. Resisting Mind magick takes the successes off the Effect (2026-11-16)
+WoDX Actions. Mage: The Ascension 20th p. 330: a mage resists Mind magick with Willpower at 6, and each success takes one away. The countermagick window's Resist Mind mode now finds the newest casting card whose Effect uses Mind and is aimed at that mage, or the card being answered, and takes its successes off that card the way countermagick does, so the Effect is worked out again on what is left. Before this it only posted the roll.
+
+Reverse: drop mindCardOn and the counter flags from the "mind" mode of counter() in modules/wodx-actions/scripts/m20.js.
+
+## B6590. Two Nets under one status (2026-11-16)
+WoDX Otherworlds net-rules.mjs netKind. The classic timeline has the Digital Web from 1990 (Mage 20th printed pp. 466-474); the Future Darkness branch has the Cyberpunk Net from 2005, the year the cybermodem is invented (Cyberpunk 2020 pdf 182), read through World of Future Darkness. Before 2005 the branch has the Web too. Both use the Jacked in status the Net already had (B265).
+
+Reverse: make netKind return "web" always.
+
+## B6591. The ways in (2026-11-16)
+net-rules ACCESS. Web: sensory with VR gear (+1 to every difficulty, Intelligence for Strength and Wits for Dexterity), astral (Correspondence 2, Intelligence + Computer at 7, three successes; 6 with the Data Sphere), holistic (Life 4, Correspondence 2, Forces 2, extended Intelligence + Computer at 7, five successes, the body goes in), all from the M20 Web Systems chart. Deck: interface plugs (no penalty), 'trodes +1 difficulty, keyboard and screen +2 difficulty but out of reach of every anti-personnel program except Firestarter (pdf 138; the penalties are house readings of the book's -2 and -4 REF).
+
+Reverse: edit ACCESS.
+
+## B6592. Cyberpunk numbers into dots (2026-11-16)
+Program strengths, data walls and code gates halve, rounded up, into dots, as World of Future Darkness halves a system's Intelligence (3 dots for 2 CPUs). A deck's speed halves the same way and gives one extra action for each two dots. Net initiative is Wits + Computer + deck speed + a die (WoFD).
+
+Reverse: change dots() and deckActions() in net-rules.mjs.
+
+## B6593. The program list (2026-11-16)
+net-rules PROGRAMS: the core book's programs (pdf 141-145) with their memory units, each with what it does when it gets through. Controllers work the remotes they name; utilities carry no roll.
+
+Reverse: edit PROGRAMS.
+
+## B6594. Data fortresses are drawn scenes (2026-11-16)
+net.mjs drawFortress, net-rules fortress. The Fast Fortress tables (pdf 168-169), seeded: 1d6 CPUs, walls and gates d6/2 + CPUs, two file rolls a memory, 1d6 + CPUs defences, 1d6 remotes, a virtual on 5 or 6, an AI from 4 CPUs (its personality, reaction and icon rolled). The scene (folder WoDX Net) has a placeholder SVG grid, the data wall as walls, each code gate as a locked door, each piece of ICE as a token. The art is placeholder only and will be redrawn.
+
+Reverse: delete the scene; the rules stay.
+
+## B6595. Breaking in (2026-11-16)
+A program against the system is Computer + the program's dots against the system's Intelligence + the defence's dots, both at 6 plus the way in's difficulty (WoFD program test). The margin wears a gate down; at 0 its door opens on the map. Intrusion programs may set off the alarm (Hammer always, Jackhammer on 8 to 10, Worm on 9 or 10). Stealth hides the icon (shown faded) until it acts openly.
+
+Reverse: edit contest() and runProgram().
+
+## B6596. ICE acts on its own (2026-11-16)
+net-rules iceTurn, net.mjs iceRound. Each Net turn (a combat round in the fortress, or after a runner acts) every piece of ICE looks 20 squares: watchdogs raise the alarm, hounds and killers move up to five squares toward a runner and strike, the rest strike from their posts once the alarm is up. An AI follows its rolled reaction. The setting "ICE acts on its own" (default: when a lone player plays) decides whether it runs by itself; the Storyteller can always press ICE acts.
+
+Reverse: set the setting to Never.
+
+## B6597. Black ICE reaches the body (2026-11-16)
+net-rules iceHit, net.mjs applyHit. An ICE attack is Net combat (WoFD): its damage dice less Wits plus protection. Sword hurts the icon (bashing, B5821). Hellbolt is lethal and Hellhound aggravated on the body (M20: feedback programs). Brainwipe burns Intelligence that heals as lethal; Zombie and Liche as aggravated (M20 hard de-rez precedent). Stun and Glue freeze, Spazz scrambles reflexes, Jack Attack bars jacking out, Knockout knocks out, each for its rolled turns. Krash and DecKrash crash the deck, Murphy runs programs at random, Virizz slows it, Viral 15 wipes it, Flatline burns it out. Firestarter starts an Interactables fire at the body's feet. Killers de-rez a program in the deck. A Hellhound that hits waits for the next log-on.
+
+Reverse: edit iceHit() and applyHit().
+
+## B6598. What files give (2026-11-16)
+net-rules fileGives, net.mjs takeFile. Sums are months' wages of the year and land (WoDX Storyteller), so they fit any era: a transactions file moves a die times half a month's wage into the purse and gives law heat for theft; business records sell to a fence for a die times a quarter of a month's wage; grey and black operations give a secret of the fortress's owner (made if the owner has none), a database or the office mail an existing secret of someone the system knows. Each secret found is a Ledger hook, which the Lone Chronicle turns into a lead.
+
+Reverse: edit fileGives().
+
+## B6599. Remotes work the building (2026-11-16)
+net.mjs tieRemotes, workRemote. A fortress drawn for a Realspace scene ties its remotes to that scene: doors and elevators to its doors (keypad doors first), the cameras to the scene's camera mark (WoDX Chronicle: nothing is recorded while they are off), the alarm to an Interactables alarm event, the lights to its lights (every system can work its building's lights), the videoboard to a lit sign on the map, the microphone to who is there. An alarm raised in the fortress sounds in the building.
+
+Reverse: draw the fortress without a building.
+
+## B6600. Trace and the law (2026-11-16)
+Bloodhound, Pit Bull, Hellhound and a long Glue trace: the program's dots + a die against the route's trace (the regions crossed, house values) + a die. Traced, the runner takes the Traced status and WoDX Chronicle law heat for a break-in, named; Pit Bull also cuts the line. Crossing a long distance link: a die at or above its security, else cut off, Netwatch takes the code, or a bust attempt (pdf 150-151).
+
+Reverse: edit traceRunner().
+
+## B6601. Whiteout (2026-11-16)
+net.mjs whiteout. In the Web a mage's Paradox pool of 5 or more brings a Whiteout: the pool's dice at 6 (4 when Forces or Prime were thrown about, not in a war sector), the M20 severity table, the sector down for the pool's time, the lag above 10 points. The scene flashes white.
+
+Reverse: do not call it.
+
+## B6602. De-rez and icon death (2026-11-16)
+net-rules derez, iconDeath (M20 printed pp. 472-473). Soft: 1 to 3 bashing unsoaked, the icon back at the link (holistic 1 to 4 soaked and +2 difficulty for an hour or two). Hard: 2 lethal soaked at 7 (not holistic), Stamina at 7 or lose 2 Intelligence, and the runner is thrown out.
+
+Reverse: edit derez().
+
+## B6603. Players' actions run on the Storyteller's client (2026-11-16)
+net.mjs call, onNetMessage. A player jacks in, runs programs and takes files from the Net window; the active Storyteller's client does the work, checks the player owns the character, and pulls the player to the fortress.
+
+Reverse: none needed.
+
+## B6604. The Cyberpunks bloodline: Future branch from 2016 (2026-11-16)
+net-rules CYBERPUNKS_FROM, cyberpunksOpen. The bloodline is made in Night City in 2016 (World of Future Darkness p. 19, pdf 6), so it is open on the Future Darkness branch from that year only. Disciplines: Celerity, Potence, Technica. A character is a Cyberpunk when the sheet's clan or bloodline names it.
+
+Reverse: drop cyberpunksOpen and the bloodline check in technica.mjs.
+
+## B6605. Technica 1, Interface (2026-11-16)
+net-rules ACCESS.touch. A new way in on the Future Net: by touch, no plugs, no penalty. Only characters with Technica on the sheet see it (waysFor); accessFor keeps the ways everyone has.
+
+Reverse: delete ACCESS.touch.
+
+## B6606. Technica 2, Technical Touch (2026-11-16)
+technica.mjs touchRoll. On jacking in, Perception + Computer at 6; the successes are kept on the run. With no Computer, that many dice stand in for Computer on every program roll (touchComputer). House reading of the article's sense for machines.
+
+Reverse: drop touch from the run state.
+
+## B6607. Technica 3, Empower Device (2026-11-16)
+technica.mjs empower. A Willpower point clears Deck down and Deck dead: the deck runs again with no power source.
+
+Reverse: remove the Empower Device button.
+
+## B6608. Technica 4, Remote Touch (2026-11-16)
+technica.mjs remoteTouch. From Realspace, the character works the nearest keypad door, the lights, or a vehicle within 100 feet (squares worked out from the scene's grid, feet or metres). The door opens or shuts on the map, lights go out or on.
+
+Reverse: remove the Remote Touch button.
+
+## B6609. Technica 5, Spiritus ex Machina (2026-11-16)
+technica.mjs speak, net-rules machineTalk. Charisma + Computer at 6 inside a fortress. 3 successes: the system makes peace and its ICE passes the speaker by while the alarm is quiet (house reading); 4: it names its files; 5: it names its ICE as well and does not mislead.
+
+Reverse: drop parley from iceRound.
+
+## B6610. Technica 6, Ghost in the Machine (2026-11-16)
+net-rules ACCESS.ghost. A way in with no deck: the mind holds what a standard deck would, and the system's remotes obey without a roll. The body lies still.
+
+Reverse: delete ACCESS.ghost.
+
+## B6611. The Cyberpunks' weakness (2026-11-16)
+technica.mjs onPowerShown, machineUsed. Each night counts Discipline uses other than Celerity, Potence and Technica against machine uses (programs run, Technica powers). When the Discipline uses pass the machine uses, each extra use costs a Willpower point, shown on a chat card (WoFD pdf 6, counted per night as a house reading).
+
+Reverse: remove the wodxPowerShown hook in technica.mjs.
+
+## B6612. The Cyberpunks in character creation (2026-11-16)
+WoDX Creation data/vampire.mjs CLANS gains Cyberpunks (Celerity, Potence, Technica) with opens {from 2016, Future branch}; rules.mjs clanOpen and clansOpen. The Embrace window lists the clan only when it is open, and the childe gets Technica at 0 dots with the other clan Disciplines. The wizard's Discipline list puts Technica first for a Cyberpunk and leaves it out of the freebie list before then. A lifepath scene, Made in the Net, offers Computer and Contacts or Technology and Streetwise; splatsFor reads the branch.
+
+Reverse: drop the CLANS row and the lifepath scene.
+
+## B6660. Dazed loses the whole turn in a fight (2026-11-16)
+WoDX Combat. A Dazed character spends the next turn shaking it off (V20 Dark Ages p. 348), so in a running fight Dazed now counts in WoDX Actions' cannotActWhy beside being asleep or out cold. A player's attack is refused (through api.cannotAct, and through Chronicle's Dazed mark when WoDX Actions is off). Every WoDX Actions window refuses with the reason, as the B6156 and B6372 idle refusal does. The token does not move, because movement is part of the turn in a fight (VtDA20 p. 333) and the lost turn takes the move with it. The Storyteller may still attack and move. Rage's Ignore being stunned (W20 p. 144) still opens, since it is how a Garou shakes off the daze. Outside a fight there are no turns, so Dazed stays a note on the roll. A fomor's gas or liquid form, which only takes the attack away, is not refused.
+
+Reverse: drop "dazed" from LOSES_TURN in after-cost-rules.js and remove the Dazed fallback in noAttackWhy (wodx-combat main.js).
+
+## B6661. A failed stand-up holds the token for the turn (2026-11-16)
+WoDX Combat. A failed stand-up roll spends the turn's action (B6151) and leaves the character on the ground, so a player's token move is now refused for that turn in a running fight. A preUpdateToken hook (lostMoveBlock) reads the lostAction flag through rules.lostMoveWhy. It runs before the yards count and whatever the movement settings are. The Storyteller and forced moves (wodxMove false) are exempt. A Phobia bout's lost action (the flag names it in why, B6386) does not hold the move, since fleeing the thing feared is what the bout is.
+
+Reverse: remove the lostMoveBlock hook in wodx-combat main.js.
+
+## B6662. A ward stands against every line's power (2026-11-16)
+WoDX Actions. A carried ward or Magic Resistance makes magic on its bearer one harder. Magick, Gifts, cantrips, evocations and Arcanoi already read it (B6177, B6411). Now Kuei-jin Chi powers, Dark Ages Mage spells, Dark Ages Fae cantrips, Mummy Hekau, Orpheus Horrors, Hunter edges, Numina, hedge magic and Inquisitor Blessings read the same TH.targetResist(actor, ["magic"]), and the card names it. Fomor powers count it only when aimed at someone (FP.aimedAtOther: harm, a hold, sway or fear, or a drain, dull, sickness or Gnosis drain on the target). The fomor's own body, senses, summonings and movement do not. No target, or the user targeting themself, changes nothing. Countermagic, Unleashing and True Faith are not powers on a character and are left out.
+
+Reverse: remove the targetResist line and its rm.diff and rm.parts from each window (and FP.aimedAtOther); the ward then counts only for the B6177 and B6411 lines.
+
+## B6663. Conditions count on social and feeding rolls (2026-11-16)
+WoDX Actions. The registered conditions (Drained, Ravenous, Blurred sight on a sight roll...) that buildPool adds since B6157 are now added the same way to the rolls of "With this person" (social acts, Look them over and Ask about them, Lift and Plant) and to the feeder's own rolls in feedResolve (spotting and resisting a sickness, a clan's feeding law, Hunger, Kindred-blood addiction). Each is named on the card. A sight-only condition counts only when the roll needs sight (needsSight: a Perception roll). The vessel's rolls are the vessel's and are not touched. Ravenous carried both ownDiff 1 and socialDiff 1, which would now count twice on a social roll, so it keeps only ownDiff 1: one harder on every roll the waking Garou makes, social ones included, as its summary says (B6028).
+
+Reverse: drop condMods from social.js's three actionPool calls and ownRoll/cm from feedResolve, and give Ravenous socialDiff 1 again; those rolls then read only the traits and the social condition mods.
+
+## B6664. Social condition mods on rolls from the sheet (2026-11-16)
+WoDX Sheets. A roll clicked on the sheet (B6175) is social when the trait table tags it "social", which covers the Social Attributes and the social Abilities and is how WoDX Actions' social rolls tag theirs. Such a roll now adds each condition's socialDice and socialDiff (WoDX NPC's Grieving: one die fewer), with a named part on the card such as "Grieving -1 dice". Other sheet rolls are not touched by them.
+
+Reverse: drop the social flag from RR.combine (and isSocial); sheet rolls then count only ownDiff and ownDiffVision.
+
+## B6665. Aftercare reaches unlinked NPCs with no duty holder (2026-11-16)
+WoDX NPC. After a fight, an unlinked NPC whose world actor keeps no routine, or whose actor is shared by several tokens on the scene, had no one to carry the tend duty, so passers-by and placed generic NPCs got no aftercare. Now the token itself is the one tended. When its scene is in view it walks to a hospital or house of worship on that scene, as routines walk linked NPCs. With no such place there, it walks out by the scene's way in (if there is one) and is hidden while away. It comes back on the healing clock once it is no longer laid up. A passer-by fed on goes off the same way after the Daze to rest, and is back in the morning. The flag is wodx-npc.tokenAway on the token's actor. Linked NPCs and lone unlinked tokens with a routine keep their duties as before (B6173).
+
+Reverse: drop the else branches in afterFight and onFed, the comeBack call in mendTick, and awayTick from the clock hooks. Unlinked tokens with no duty holder are then left alone after a fight again.
+
+## B6666. The hunters read a left body with remains off (2026-11-16)
+WoDX Storyteller. The hunters' pressure from a found body only ran through the "Bodies left behind" house rule, which is off by default. Turning remains on with the hunters' option would also turn on that house rule's tints, stage cards and heat, and turning remains off later would break the hunters again, so hunt-follow keeps its own watch, but only while remains is off and the hunters' pressure is on. An NPC marked dead with the Kiss's drain on it becomes a left body (flag leftBody), with no tint and no stage card. The first player's character or townsman within talking distance calls bodyFound, which adds the pressure and, from 1840, sends the body to the morgue as before. While remains is on, remains.mjs alone does the finding, so nothing is counted twice. Both modules read the same finder and distance rule from remains-rules.mjs.
+
+Reverse: remove bodyLeft, bodyNear and their three hooks from hunt-follow.mjs. The hunters then learn of bodies only through the remains house rule.
+
+## B6667. A death sentence is carried out where the watch holds the culprit (2026-11-16)
+WoDX Storyteller, WoDX Chronicle. A death sentence after the watch's arrest called lawCome, but whereIs skips tokens the law took (hidden, lawTaken), so the law "did not find them" and nothing was shown. Chronicle's sentence now calls lawCome with custody. When the culprit is on no map but the watch holds them, the token is moved straight to the place of execution on its scene: a region named for the gallows or scaffold, else a place tagged as a watch-house, else a court of law, else the market. The token is shown again and loses its lawTaken mark, and the watch come to the culprit there in a "sentence" mode. An NPC yields, and a player's character gets the same Go with them or Resist card. Yielding makes no second arrest and does not hide the token again. The watch stay by the condemned until the Storyteller's Send them away, and the sentence then applies as for a found culprit.
+
+Reverse: drop custody from law-punish.mjs and lawCome. A held culprit's death sentence then finds nobody again.
+
+## B6668. Era profile switches decide in play (2026-11-16)
+WoDX Chronicle. An era profile's switches are its "rules" in data/eras.json: firearms, morality, gauntletChart and cyberware. Modules read the switch in force through api.eras.eraSwitch(key) and decide with terms.gunsOnSheet, walksRoads and cyberwareOn. Each module's own year check is kept only as the fallback, for a world without WoDX Chronicle or a profile that leaves the switch out. Quick extras, the strike-back, the archery butt, the Road of Humanity help line and cyberware in a clinic's draw follow the switch; the Gauntlet chart and Roads in the factions already did. Four of four switches are read. The card text stays as the summary.
+
+Reverse: drop eraSwitch and pass the year alone again; the helpers fall back to the old checks (guns from 1600, Humanity from 1450, cyberware by the gear's era list).
+
+## B6669. What the code does, said plainly, and a medieval gaol (2026-11-16)
+WoDX Chronicle. WoDX Atmosphere's description no longer says maps change with the year as if WoDX drew them: places that age switch a scene to later pictures the Storyteller supplies, and no map is generated in play (tools/mapgen runs outside the game). WoDX Sheets' 0.20.2 changelog line carries a correction: Show all on a dark sheet has had its own dark ground since 0.23.2. Latin Christendom's law gains a time sentence, the lord's or the town's gaol (Mage: The Dark Ages pdf p. 219: serfs jailed). It runs from the start of the Dark Medieval until prison takes over in 1780, for 1 to 2 years (a house figure, logged for review).
+
+Reverse: restore the old description and changelog line, and take "gaol" out of PUNISH, the middle tier, MARKS and the Latin row.
+
+## B6710. The hunger line waits for the character wizard (2026-11-16)
+WoDX Senses. A Kindred made by arrival starts with an empty blood pool, and the wizard rolls the starting blood (V20: one die) on its last page. The on-screen state line showed "Ravenous: no blood left" over the wizard on the player's first screen. stateEdges now skips the hunger line while the wizard window is open on that character (stateOf reads `building`), and the screen refreshes when the wizard opens or closes, so a character who finishes the wizard with no blood still shows it.
+
+Reverse: drop `building` from stateOf and the check in stateEdges.
+
+## B6711. Arrival closes Foundry's User Configuration (2026-11-16)
+WoDX Solo. Foundry opens its User Configuration window at login for a player with no character. In solo play arrival makes and assigns the character, so the window only covered the arrival window and stayed open behind the panel. Arrival closes it for the player's own user when the arrival window opens and when the token is ready. gatesolo 9f checks it.
+
+Reverse: remove closeUserConfig from arrival.mjs.
+
+## B6712. The solo walk answers the Storyteller tools question (2026-11-16)
+tools/solo/walk.mjs step 08 clicked "Storyteller tools: off" and then waited for the tools, but turning them on asks Yes or No first. The walk now answers Yes, as a player would.
+
+Reverse: remove the Yes click in step 08.
