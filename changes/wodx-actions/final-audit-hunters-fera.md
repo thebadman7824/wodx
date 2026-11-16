@@ -1,6 +1,0 @@
----
-bump: minor
-effect: more powers that only told now apply from their page: a hedge curse makes the victim's rolls harder for its length (the next action to a year), with dice lost at four and five; Healing 2 takes away wound penalties for ten minutes a success; Astral Projection crosses over, manifests or hides; Cyberkinesis reads or works the device; Alchemy, Conjuration, Divination, Enchantment, Mana Manipulation and Oneiromancy give their keyword's result; True Faith 3 and 4 stop the powers that cloud or bend the faithful's mind, and the True Faith window's new Their presence puts the sense of the unnatural and, at Faith 5, the vampires' Rötschreck on the card; Waken, Emperor's Clothes, Hyperattenuation, Enter Sea's Soul and Uproot apply; a thrall's dawn offering counts; the gifts and powers with no table effect say so with their page
-visible: the Numen and hedge spell cards gain Apply buttons where they had only text; a Sway, Possess, Illusion or Fear applied to someone with True Faith 3 or more comes back as stopped by their faith; the True Faith window has a Their presence choice
----
-Second final-audit pass (B6858): Hunters Hunted II, Sorcerer, True Faith, Changing Breeds and the Fallen's pact gifts.
