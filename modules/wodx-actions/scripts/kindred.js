@@ -48,12 +48,12 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
     selfcontrol: "Self-Control", bodycrafts: "Body Crafts", willpower: "Willpower", road: "Road" };
 const lab = k => LABEL[k] ?? cap(k);
 
-export const DATA = { disc: null, roads: null, v20: null };
+export const DATA = { disc: null, roads: null, v20: null, paths: null };
 /** The place line for a card (3.42.0), from the witness rules. */
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    [DATA.disc, DATA.roads, DATA.v20] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json")]);
+    [DATA.disc, DATA.roads, DATA.v20, DATA.paths] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json")]);
     return DATA;
 }
 
@@ -81,6 +81,9 @@ export function roadOf(actor) {
         return { key: f.key, road, path: road.paths.find(p => p.name === f.path) ?? null };
     }
     const p = actor?.system?.advantages?.path ?? {};
+    // B6724: a V20 Path of Enlightenment from the system sheet's choice
+    const v20 = K.v20PathFor(DATA.paths, p.label, p.custom);
+    if (v20) return v20;
     const name = p.custom || game.i18n?.localize?.(p.label || "") || "";
     return K.roadFor(DATA.roads, name.startsWith("wod.") ? "" : name);
 }

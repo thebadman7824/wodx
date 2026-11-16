@@ -215,7 +215,7 @@ function virtues(actor) {
     let conscienceLabel = lab(v.conscience, "Conscience");
     let controlLabel = lab(v.selfcontrol, "Self-Control");
     let isConviction = (v.conscience?.label || "").includes("conviction"), isInstinct = (v.selfcontrol?.label || "").includes("instinct");
-    // A recognized Dark Ages Road decides its own Virtues (VtDA20 pp. 110–145)
+    // A recognized Dark Ages Road (VtDA20 pp. 110–145) or V20 Path (V20 pp. 316-340, B6724) decides its own Virtues
     const found = KX.DATA.roads ? KX.roadOf(actor) : null;
     if (found) {
         const rv = KR.roadVirtues(found);
@@ -1577,7 +1577,7 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
         ? `<select name="level" data-fixed>${opts(hier.map((x, i) => [10 - i, `${10 - i}: ${x}${10 - i > rd.value ? " (beyond the rating: no roll)" : ""}`]), lv)}</select>`
         : `<input type="number" name="level" value="${lv}" min="1" max="10"/>`;
     const content = `<form>
-      <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}, ${v.conscience.label} ${v.conscience.value}${rd.found ? ` <span class="wodx-quiet">(VtDA20 p. ${rd.found.path?.p ?? rd.found.road.hp ?? rd.found.road.p})</span>` : ""}</p>
+      <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}, ${v.conscience.label} ${v.conscience.value}${rd.found ? ` <span class="wodx-quiet">(${rd.found.road.book ?? "VtDA20"} p. ${rd.found.path?.p ?? rd.found.road.hp ?? rd.found.road.p})</span>` : ""}</p>
       <div class="form-group"><label>Sin (the Road's hierarchy${hier ? ", WoDX summaries" : ""})</label>${levelField}</div>
       <div class="form-group"><label>The sin</label><input type="text" name="desc" value="${esc(desc)}"/></div>
       <div class="form-group"><label>On failure, lose</label><select name="lose">${opts([["road", "A Road dot"], ["conscience", `A ${v.conscience.label} dot`], ["selfcontrol", `A ${v.selfcontrol.label} dot`], ["courage", "A Courage dot"]], "road")}</select></div>
@@ -2064,7 +2064,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (vRemaining <= 0) {
             html += `<div class="vta-warn">The vessel is drained dry and dies.</div>`;
             await kx().logEvent(actor, `Drains ${vesselActor?.name ?? "a vessel"} to death.`, "kill");
-            const sp = await kx().sinPrompt(actor, actor.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${vesselActor?.name ?? "The vessel"} is drained to death`);
+            const sp = await kx().sinPrompt(actor, actor.system?.conditions?.isfrenzy ? "killFrenzy" : "killFeed", `${vesselActor?.name ?? "The vessel"} is drained to death`);
             if (sp?.html) html += sp.html;
             else if (!sp) html += `<div class="vta-note">The Road doesn't count this killing as a sin, or names no level: the Storyteller decides.</div>`;
         } else if (!vesselActor) html += `<div class="vta-note">The vessel is left ${esc(out.text)}.</div>`;
