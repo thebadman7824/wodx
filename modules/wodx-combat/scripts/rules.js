@@ -242,10 +242,10 @@ export const MANEUVERS = {
     impale: { label: "Impale (+3 diff, archery)", diff: 3, dmg: 0, dice: 0, note: "Impale: as a stake, with a shaft through the heart (V20 Dark Ages p. 349)." },
     suppress: { label: "Suppressive fire (-2 diff, defender +2)", diff: -2, dmg: 0, dice: 0, defDiff: 2, note: "Suppressive Fire (3+ Archery): a target who advances defends at +2 difficulty (V20 Dark Ages p. 349)." },
     // ---- House maneuvers (not from the book): Storyteller's option, added in v1.1.0 for the Rothenstein armory.
-    lunge: { label: "Lunge [house] (+1 diff, +1 dmg, defender +1 diff; you are overextended)", diff: 1, dmg: 1, dice: 0, defDiff: 1, note: "Lunge: {name} is overextended and suffers +1 difficulty on defense until the next turn." },
+    lunge: { label: "Lunge [house] (+1 diff, +1 dmg, defender +1 diff; you are overextended)", diff: 1, dmg: 1, dice: 0, defDiff: 1, note: "Lunge: {name} is overextended: +1 difficulty on defense for the rest of this turn and the next (marked, B6921)." },
     cleave: { label: "Overhead Cleave [house] (+2 diff, +3 dmg, no defense this turn)", diff: 2, dmg: 3, dice: 0, noDefense: true, note: "Overhead Cleave: {name} may not defend for the rest of the turn." },
     hurried: { label: "Hurried Strike [house] (-1 diff, -1 dmg)", diff: -1, dmg: -1, dice: 0 },
-    hook: { label: "Hook and Pull [house] (+2 diff, +1 dmg, defender +1 diff; target is dragged off balance)", diff: 2, dmg: 1, dice: 0, defDiff: 1, note: "Hook and Pull: if damage is dealt, the target is dragged off balance and loses their next move or suffers +1 difficulty on their next action (Storyteller's choice)." }
+    hook: { label: "Hook and Pull [house] (+2 diff, +1 dmg, defender +1 diff; target is dragged off balance)", diff: 2, dmg: 1, dice: 0, defDiff: 1, note: "Hook and Pull: if damage is dealt, the target is dragged off balance and loses their move next turn (marked, B6921)." }
 };
 
 /** Built-in unarmed attacks (VtDA20 p. 346-347). */
@@ -773,6 +773,29 @@ export function clinchLimit(clinch, combat, targetUuid, weaponId) {
 /** Tackle: +1 difficulty to all actions on the turn after (V20 Dark Ages p. 348). flag {combat, round}. */
 export function offBalanceNow(flag, combat) {
     return !!flag && !!combat && flag.combat === combat.id && Number(combat.round) === Number(flag.round) + 1 ? 1 : 0;
+}
+/**
+ * B6921: what the house maneuvers leave after the blow, in a started fight (now {combat, round}). Lunge always leaves
+ * the attacker overextended; Hook and Pull leaves the target hooked when damage got through (levels after soak).
+ * Returns [[who ("attacker" | "target"), flag key, value]].
+ */
+export function houseAfter(key, { hit = false, levels = 0, now = {} } = {}) {
+    if (!now?.combat) return [];
+    const at = { combat: now.combat, round: Number(now.round) || 0 };
+    if (key === "lunge") return [["attacker", "overextended", at]];
+    if (key === "hook" && hit && Number(levels) > 0) return [["target", "hooked", at]];
+    return [];
+}
+/** B6921: Lunge [house]: +1 difficulty on defence for the rest of the lunging turn and the next. flag {combat, round}. */
+export function overextendedNow(flag, combat) {
+    if (!flag || !combat || flag.combat !== combat.id) return 0;
+    const d = Number(combat.round) - Number(flag.round);
+    return d === 0 || d === 1 ? 1 : 0;
+}
+/** B6921: Hook and Pull [house]: the target loses its move on the turn after the hook. flag {combat, round}. */
+export const hookedNow = (flag, combat) => offBalanceNow(flag, combat);
+export function hookedMoveWhy(flag, combat, name = "The character") {
+    return hookedNow(flag, combat) ? `${name} was dragged off balance by a Hook and Pull and loses this turn's move (house rule)` : "";
 }
 /** Riposte needs a defense rolled with success earlier this turn (V20 Dark Ages p. 347): defended cards {target, defOk}. */
 export function riposteReady(cardsThisTurn, uuid) {

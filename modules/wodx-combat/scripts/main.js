@@ -1263,6 +1263,17 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
             log.push(`Both fighters are off balance: +1 difficulty to all their actions next turn (V20 Dark Ages p. 348).`);
         }
     }
+    // B6921: the house Lunge and Hook and Pull leave marks that this module reads on the turn after
+    if (game.combat?.started) {
+        const now = { combat: game.combat.id, round: game.combat.round };
+        for (const [who, key, value] of R.houseAfter(mkey, { hit: !!hit && !atk.botch, levels: outcome?.levels ?? 0, now })) {
+            const doc = who === "attacker" ? attacker : target;
+            if (!doc) continue;
+            grips.push([doc, key, value]);
+            log.push(key === "overextended" ? `${esc(attacker.name)} is marked overextended: defence rolls are at +1 difficulty for the rest of this turn and the next.`
+                : `${esc(target.name)} is marked hooked: their token cannot move next turn.`);
+        }
+    }
     // B4772, B4773: the lance and keeping the saddle when struck
     let saddle = { lines: [], rolls: [], apply: async () => {} };
     try {
@@ -1668,6 +1679,8 @@ function planDefense(target, type, fd, w, maneuver) {
     if (maneuver.defDiff) notes.push(`${maneuver.label.split(" ")[0].toLowerCase()} +${maneuver.defDiff} diff`);
     // B6787: unbalanced by a Tackle last turn: +1 difficulty to all actions (V20 Dark Ages p. 348)
     if (R.offBalanceNow(target.getFlag?.(MOD, "offBalance"), game.combat)) { diff += 1; notes.push("off balance after a tackle +1 diff"); }
+    // B6921: overextended by their own Lunge (house rule)
+    if (R.overextendedNow(target.getFlag?.(MOD, "overextended"), game.combat)) { diff += 1; notes.push("overextended after a lunge +1 diff"); }
     if (num(fd.defIndex)) notes.push(`full defense: -${num(fd.defIndex)} dice`);
     let weapon = null;
     if (type === "parry") {
@@ -2284,9 +2297,11 @@ function fightOf(doc) {
 export function lostMoveBlock(doc, changes, options) {
     if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return true;
     const f = fightOf(doc);
-    const why = f ? R.lostMoveWhy(doc.actor?.getFlag?.(MOD, "lostAction"), f.combat, doc.name) : "";
+    // B6921: hooked by a Hook and Pull last turn: the move is lost (house rule)
+    const why = f ? (R.lostMoveWhy(doc.actor?.getFlag?.(MOD, "lostAction"), f.combat, doc.name) || R.hookedMoveWhy(doc.actor?.getFlag?.(MOD, "hooked"), f.combat, doc.name)) : "";
     if (!why) return true;
     ui.notifications.warn(`${why}.`);
+    try { canvas.interface?.createScrollingText?.(doc.object?.center ?? { x: doc.x, y: doc.y }, "Cannot move", { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: "#ff6060", stroke: 0x000000, strokeThickness: 4, duration: 2500 }); } catch (e) { /* no canvas */ }
     return false;
 }
 Hooks.on("preUpdateToken", (doc, changes, options) => lostMoveBlock(doc, changes, options) === false ? false : undefined);
@@ -2436,6 +2451,22 @@ Hooks.on("updateCombat", (combat, changed) => {
     if (gripSeen.has(key)) return;
     gripSeen.add(key);
     breakFree(c.actor, combat).catch(e => console.error("WoDX | break free", e));
+});
+/* B6921: a hooked fighter's turn opens with a card and a mark over the token: no move this turn (the move block
+ * above refuses a player's drag; the Storyteller moving an NPC is told the same). */
+const hookSeen = new Set();
+Hooks.on("updateCombat", (combat, changed) => {
+    if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
+    const c = combat.combatant, a = c?.actor;
+    const why = a ? R.hookedMoveWhy(a.getFlag?.(MOD, "hooked"), combat, a.name) : "";
+    if (!why) return;
+    const key = `${combat.id}:${combat.round}:${a.id}`;
+    if (hookSeen.has(key)) return;
+    hookSeen.add(key);
+    const tok = c.token?.object ?? a.getActiveTokens?.()?.[0];
+    try { if (tok) canvas.interface?.createScrollingText?.(tok.center, "Hooked: no move", { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 24, fill: "#ff9040", stroke: 0x000000, strokeThickness: 4, duration: 3000 }); } catch (e) { /* no canvas */ }
+    ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: a }), flags: { [MOD]: { hooked: { actor: a.uuid, combat: combat.id, round: combat.round } } },
+        content: `<div class="vtc-card"><h3>${esc(a.name)} is off balance</h3><p>${esc(why)}.</p></div>` }).catch(e => console.error("WoDX | hooked", e));
 });
 /* B6151: with Initiative not rolled again each turn, standing up still costs 2 on the next turn: the combatant's
  * Initiative drops by 2 when that turn starts and comes back when the one after starts. The turn stays on whoever
