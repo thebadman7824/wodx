@@ -162,6 +162,18 @@ export function build(ctx) {
             return post(actor, `${actor.name}: Paradox backlash`, body, [r.roll].filter(Boolean));
         });
     }
+    /** The newest casting card still standing whose Effect uses Mind and is aimed at this mage (B6587). */
+    function mindCardOn(actor) {
+        const mine = new Set([actor.uuid, ...(actor.getActiveTokens?.() ?? []).map(t => t.document?.uuid ?? t.uuid)].filter(Boolean));
+        const msgs = game.messages?.contents ?? [];
+        for (let k = msgs.length - 1, seen = 0; k >= 0 && seen < 50; k--, seen++) {
+            const d = msgs[k].flags?.[MOD];
+            if (d?.kind !== "effects" || d.undone || !d.recipe) continue;
+            const mind = (d.recipe.used ?? []).some(u => String(u?.sphere ?? u).toLowerCase() === "mind");
+            if (mind && (d.recipe.targets ?? []).some(t => mine.has(t))) return msgs[k];
+        }
+        return null;
+    }
     async function counter(actor, o = {}) {
         // Answering a WoDX keyword card: the successes come off that card (3.25.0)
         const card = o.card ? game.messages?.get(o.card) : null;
@@ -171,8 +183,11 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="share" checked/> Knows at least one of the attacking Spheres</label></div></form>`;
         return dialog(`Countermagick: ${actor.name}`, content, "Roll", async fd => {
             if (fd.mode === "mind") {
+                // B6587: each success comes off the Mind Effect's card aimed at this mage, which is worked out again on what is left
+                const mind = card ?? mindCardOn(actor);
                 const r = await rollPool(i.willpower.perm, M.resistMind.difficulty);
-                return post(actor, `${actor.name} resists the mind`, rollBlock("Willpower", r) + `<div class="vta-res">${r.successes} taken from the Mind Effect.${r.botch ? " A botch may cost a permanent Willpower point." : ""}</div><div class="wodx-quiet">${REF} p. 330</div>`, [r.roll].filter(Boolean));
+                return post(actor, `${actor.name} resists the mind`, rollBlock("Willpower", r) + `<div class="vta-res">${r.successes} taken from the Mind Effect.${mind ? " The casting's card is worked out again." : " No Mind Effect card aimed at this mage was found to take them from."}${r.botch ? " A botch may cost a permanent Willpower point." : ""}</div><div class="wodx-quiet">${REF} p. 330</div>`, [r.roll].filter(Boolean),
+                    mind && r.successes ? { kind: "counter", card: mind.id, successes: r.successes, mode: "self", by: actor.name } : undefined);
             }
             if (fd.mode === "quiet") {
                 // B3551: rising out of Quiet by the book (three successes in one roll; p. 556)
