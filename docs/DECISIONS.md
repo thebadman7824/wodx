@@ -329,7 +329,7 @@ Next free block: B6720
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
-| B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
+| B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6038) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 | B6060-B6069 | Split the line skins stylesheet: each line's skin loads only when needed (used B6060-B6063) | Sheets |
@@ -10260,6 +10260,26 @@ Reverse: remove the knockdown and night hooks in hygiene-use.mjs.
 WoDX Actions. Senses, targeting and Combat read the Obfuscated condition, but Obfuscate powers only set the Veiled effect. An Obfuscate Discipline use with a duration, and an Obfuscate veil on the effects card, now also set Obfuscated while it lasts.
 
 Reverse: remove the condition line from kindred.js and the isObfuscate map in effects.js powerPlan.
+
+## B6035. No defence for a body that cannot defend; a body held still is hit automatically (2026-11-16)
+WoDX Combat. The conditions' rules said Incapacitated, Torpor, Asleep, Staked and Completely immobilized leave no defence, and that Staked or Completely immobilized are hit automatically (V20 Dark Ages pp. 348, 350), but Combat only listed them as notes and still rolled the best defence. A real attack now rolls no defence against them (the card says why), and against Staked or Completely immobilized a failed attack roll still hits with one success.
+
+Reverse: remove the tcm lines in resolveAttack (wodx-combat main.js).
+
+## B6036. A body that has lost the turn makes no attack (2026-11-16)
+WoDX Combat. B6372 stops a player's attack for a character out cold and B6660 for one Dazed in a fight; a condition that only takes the turn away (a fomor's gas or liquid form, Dazed outside a fight) still let the player attack. A player's attack is now refused with the reason while such a condition is on; the Storyteller still may.
+
+Reverse: remove the cannotActWhy lines in noAttackWhy (wodx-combat main.js).
+
+## B6037. Blinded takes the token's sight (2026-11-16)
+WoDX Chronicle. Blinded put +2 difficulty on sight but the token went on seeing the map. The status now brings Foundry's own Blind status, so the token's vision goes dark until it ends, and WoDX Senses counts sight as gone for the looker. Blurred sight keeps only its +2 (B6373).
+
+Reverse: drop also and cannotSee from the blinded condition (conditions.mjs) and the senseEffectsOf lines in traits.mjs senses.
+
+## B6038. A spirit's Possession holds the body; Blighted marks the token (2026-11-16)
+WoDX Actions. The Possession Charm's mark and Blighted Touch's mark were read by nothing. Possessed now holds a player's token as a Possess power does (the spirit moves the body). Blighted is a WoDX condition: it shows on the token and gives +1 difficulty on social rolls while it lasts (house reading of "the worst of their nature rules").
+
+Reverse: remove the wodx-possessed lines in binds.js bindingsOn, and the blighted and possessed registerCondition calls and condition: "blighted" in charms.js.
 
 ## B6040. Places with no map are the country map's towns (2026-11-15)
 WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
