@@ -10,9 +10,9 @@
  * nothing they do happens twice. The sender must own the actor the event is about. A second Storyteller who is not the
  * active one sends too.
  *
- * Exactly once: no other module relays these three hooks today (WoDX Combat relays only its own two, B6150; WoDX
- * Storyteller's herds sends its own request). Should one start to fire them again on the Storyteller's client with
- * relayed: true, each listener here still runs once per event: a relayed delivery (from this socket or from another
+ * Exactly once: WoDX Combat's relay also fires a player's wodxFed again on the Storyteller's client, relayed: true,
+ * for the other modules' listeners (B6789); WoDX Storyteller's herds sends its own request and skips it. When that or
+ * any other relay fires these hooks again with relayed: true, each listener here still runs once per event: a relayed delivery (from this socket or from another
  * module) is skipped when the same event reached that listener in the last few seconds (B6767).
  */
 const MOD = "wodx-npc";

@@ -135,7 +135,10 @@ test("no other module relays wodxFed, wodxSocial or wodxPowerShown: they fire on
       if ( /^["'`](wodxFed|wodxSocial|wodxPowerShown)["'`]$/.test(arg) ) fires.push(f.slice(root.length + 1).replace(/\\/g, "/"));
       else if ( !/^["'`]/.test(arg) && /RELAYED|hook/i.test(arg) && !f.includes("wodx-npc/scripts/hook-relay") ) {
         // a generic relay (e.g. WoDX Combat's relayHook) must not list these hooks
-        const list = /const RELAYED = \[([^\]]*)\]/.exec(s)?.[1] ?? "";
+        // WoDX Combat's relayHook sends a player's wodxFed on for the other modules' Storyteller-side listeners (B6789);
+        // WoDX NPC's listeners skip the second relayed delivery of the same event (B6767, checked above), so that one is
+        // allowed. Any other relay of these hooks is not.
+        const list = (/const RELAYED = \[([^\]]*)\]/.exec(s)?.[1] ?? "").replace(f.includes("wodx-combat/") ? /"wodxFed"/g : /$^/, "");
         assert.doesNotMatch(list, /wodxFed|wodxSocial|wodxPowerShown/, `${f}: relays one of these hooks; WoDX NPC's relay would run its listeners twice (B6767)`);
       }
     }
