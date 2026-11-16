@@ -19,7 +19,7 @@ import {gate, waitFor} from "./kit.mjs";
 
 const IX = "wodx-interactables";
 const body = (name, {str = 2, dex = 3, sta = 2, ride = 0, melee = 0, athletics = 0, archery = 0} = {}) => ({name, type: "Mortal",
-  system: {attributes: {strength: {value: str}, dexterity: {value: dex}, stamina: {value: sta}}, abilities: {ride: {value: ride}, melee: {value: melee}, athletics: {value: athletics}, archery: {value: archery}}}});
+  system: {attributes: {strength: {value: str, total: str}, dexterity: {value: dex, total: dex}, stamina: {value: sta, total: sta}}, abilities: {ride: {value: ride}, melee: {value: melee}, athletics: {value: athletics}, archery: {value: archery}}}});
 const seat = (tok, tile) => ({a: tok.actorId, t: tok.uuid, n: tok.name, dx: tile.x - tok.x, dy: tile.y - tok.y});
 const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
@@ -35,9 +35,13 @@ export async function run() {
       body("Gate Mounted Weak", {str: 1, dex: 1, sta: 1, ride: 0})]);
     const [ta, tb, tc] = await G.tokens(scene, [{actor: rider, x: 2, y: 2, actorLink: true}, {actor: foe, x: 3, y: 2, actorLink: true}, {actor: weak, x: 6, y: 6, actorLink: true}]);
     await waitFor(() => ta?.object && tb?.object && tc?.object);
-    const [horse, nag] = await scene.createEmbeddedDocuments("Tile", [
+    // the system recomputes attribute totals only now and then, so each body gives its total too; and one batch of
+    // tiles comes back in any order, so each is found by its title (gate rule 1)
+    const tileData = [
       {x: 200, y: 200, width: 100, height: 100, texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate warhorse"}}},
-      {x: 600, y: 600, width: 100, height: 100, texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate nag"}}}]);
+      {x: 600, y: 600, width: 100, height: 100, texture: {src: "icons/svg/pawprint.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate nag"}}}];
+    const made = await scene.createEmbeddedDocuments("Tile", tileData);
+    const [horse, nag] = tileData.map(d => made.find(x => x.flags?.[IX]?.title === d.flags[IX].title));
     await horse.update({[`flags.${IX}.driver`]: seat(ta, horse)});
     await nag.update({[`flags.${IX}.driver`]: seat(tc, nag)});
     await rider.createEmbeddedDocuments("Item", [{name: "Gate lance", type: "Melee Weapon", system: {isequipped: true, difficulty: 6,

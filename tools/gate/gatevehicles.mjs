@@ -28,7 +28,7 @@ import {gate, waitFor} from "./kit.mjs";
 
 const IX = "wodx-interactables";
 const body = (name, {str = 2, dex = 3, sta = 2, drive = 0, ride = 0, firearms = 0, athletics = 0} = {}) => ({name, type: "Mortal",
-  system: {attributes: {strength: {value: str}, dexterity: {value: dex}, stamina: {value: sta}}, abilities: {drive: {value: drive}, ride: {value: ride}, firearms: {value: firearms}, athletics: {value: athletics}}}});
+  system: {attributes: {strength: {value: str, total: str}, dexterity: {value: dex, total: dex}, stamina: {value: sta, total: sta}}, abilities: {drive: {value: drive}, ride: {value: ride}, firearms: {value: firearms}, athletics: {value: athletics}}}});
 const seat = (tok, tile) => ({a: tok.actorId, t: tok.uuid, n: tok.name, dx: tile.x - tok.x, dy: tile.y - tok.y});
 const rider = (tok, tile) => ({a: tok.actorId, t: tok.uuid, n: tok.name, dx: tok.x - tile.x, dy: tok.y - tile.y});
 const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
