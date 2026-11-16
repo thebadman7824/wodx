@@ -34,6 +34,7 @@ export async function run() {
   const back = canvas.scene;
   const api = () => game.modules.get(M)?.api?.net;
   const ch = () => game.modules.get(CH)?.api;
+  const cr = () => game.modules.get("wodx-creation")?.api;
   const startTime = game.time.worldTime;
   const startBranch = game.settings.get(CH, "rule.futureBranch");
   const startIce = game.settings.get(M, "netIce");
@@ -43,7 +44,7 @@ export async function run() {
   try {
     await game.settings.set(M, "netIce", "off");
     if ( startBranch ) await game.settings.set(CH, "rule.futureBranch", false);
-    const T = ch().time;
+    const T = cr().time;
     await setTime(T.addYears(game.time.worldTime, 2010 - T.yearOf(game.time.worldTime)));
     R.notes.push(`year ${ch().eras.currentYear()}`);
     home = await Scene.create({name: "WoDX gate: Net home", width: 2000, height: 1500, padding: 0, grid: {type: 1, size: 100}, tokenVision: false});
