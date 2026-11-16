@@ -4,11 +4,11 @@ import { socialDiff, socialDice } from "./after-costs.js";
 import * as TH from "./trait-hooks.js";
 import * as TRD from "./trade.js";
 import { resistShift } from "../../wodx-chronicle/scripts/antagonist-rules.mjs";
+import { conditionMods } from "./limits.js";
+import { needsSight } from "./after-cost-rules.js";
 
 /** B6698: the Fall ledger the speaker holds on this NPC makes the NPC's resisting roll harder, one a step. */
 const fallShift = (npc, actor) => { try { return resistShift(npc?.flags?.["wodx-chronicle"]?.corruption?.[actor?.id]); } catch (e) { return 0; } };
-import { conditionMods } from "./limits.js";
-import { needsSight } from "./after-cost-rules.js";
 
 /**
  * B6663: the roller's registered conditions (Drained, Ravenous, Blurred sight on a sight roll...) on a roll made here,
