@@ -352,7 +352,8 @@ Next free block: B6580
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner (used B6520) | tools (pcq) |
+| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC (used B6520-B6521) | tools (pcq, vision) |
+| B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 <!-- decision-index:end -->
 
@@ -10948,6 +10949,46 @@ Reverse: none needed; the label follows the source's licence. If the layout is e
 tools/pcq. The image model keeps the graphics card busy for hours, with no power cap. The runner reads nvidia-smi once a minute and writes one line to logs/gpu-YYYY-MM-DD.csv in its folder. That line holds the core heat, the memory heat where the card reports it, the power, the fan, the load and the memory in use. If the core stays above 83 C for 5 minutes, or the memory stays above 100 C, it opens a pc-alert issue so the Storyteller hears of it. The alert closes after 10 minutes under 78 C core and 95 C memory. The limits are in tools/pcq/gpu.mjs and covered by tools/harness/pcq.test.mjs.
 
 Reverse: remove the gpuCheck call from the runner loop.
+
+## B6521. The blind naming test runs on the PC (2026-11-15)
+tools/vision/blind.py. A local picture model (Ollama with qwen2.5vl 7B, on the graphics card) is shown each drawing with no name and asked what it is, how sure it is, and why. This is the same test the cloud checker runs for map objects. A picture passes when the model gives a true name and is sure 4 or 5. It is unsure on a true name at sure 3, and fails on anything else. A true name is matched on its naming part: "cauldron on a tripod" is named by "cauldron", and "beehive or skep" takes either word. A names file can list other accepted names. One picture takes about 1.5 seconds. Before each picture the script waits up to 30 seconds for a gap in the image model's queue; past that the two share the card. The model is unloaded at the end. Its "sure" is not reliable (it says 5 when wrong), so a PC pass is a first screen. Pictures it fails or is unsure of still go to the cloud checker before a desk. The first run judged the 160 trial drawings from the image model: 33 pass, 127 fail. A spot check by eye agreed with its fails. Most of the rest were other names for the right thing ("barrel" for cask, "bookshelf" for bookcase), which a names file fixes.
+
+Reverse: stop using tools/vision/blind.py; Ollama can be removed from the PC.
+
+## B6530. The Beast played by the game (2026-11-15)
+WoDX Solo. When the lone player's character falls into frenzy (WoDX Actions rolls the check by itself), the seat sets flags.wodx-storyteller.standIn on it, the same flag the Storyteller's absent players use, so WoDX NPC plays its turns. With no fight on the scene it goes for its prey: an enemy in sight (a hostile token), else the nearest living being, within 40 yards (house reading of "anyone near"), and a fight starts with the frenzied on a side of their own. V20 pdf 307: the Storyteller decides how long a frenzy lasts, one scene typically; WoDX ends it when the fight is over, as the scene's end. A botched frenzy is left to WoDX Actions, which rolls it out (B4872). Willpower for control is offered to the Kindred and their ghouls only; the other lines' frenzy runs until it ends.
+
+Reverse: remove installFate from main.mjs; the standIn flags the seat set carry beast.standIn and can be cleared.
+
+## B6531. A Willpower point buys one turn (2026-11-15)
+V20 pdf 307: in frenzy, a point of Willpower lets the player steer one action for a turn; it does not end the frenzy. Fight the Beast on the panel spends the point and lifts the stand-in for the round; the next round the seat has them again. Only in a fight, once a round.
+
+Reverse: drop the beast action in fate.mjs.
+
+## B6532. Torpor slept away (2026-11-15)
+A Cainite in torpor has Sleep the torpor away at the top of the panel: the clock runs to the night WoDX Actions set for rising (V20 Dark Ages p. 351); a year or more goes through WoDX Creation's Pass the Years, so the world ages with them. Then the rising is rolled (a blood point and the Road at 8, B4982). The seat's ask is refused while a fight runs.
+
+Reverse: drop the torpor action.
+
+## B6533. Sleep through the years (2026-11-15)
+The panel offers 1, 5, 10, 25, 50 or 100 years. A Cainite goes into voluntary torpor first (WoDX Actions keeps voluntary torpor at half the Road's time, an older house reading) and sleeps at least that long; anyone else lives the years. Pass the Years runs over the whole world with each change at its default tick, the sleeper's torpor ticked. The main timeline ends in 2022 and the Future Darkness branch at 2099, so a sleep stops there.
+
+Reverse: drop the years entry from PANEL in solo-rules.mjs.
+
+## B6534. Who carries on (2026-11-15)
+House rule: when the lone player's character dies (the dead status, a death date in the chronology or Final Death), those who could carry the chronicle on are, closest first: a childe (sire is the dead), a ghoul (domitor), an heir from Pass the Years (heirOf), the family (the same family key), a tie on the sheet, then the player's own other characters. The dead and groups never. A new character through arrival is always offered.
+
+Reverse: heirsOf in fate-rules.mjs.
+
+## B6535. What the heir takes up (2026-11-15)
+The player becomes the heir's owner and plays them; the dead stay readable to the player (Observer). An heir with no token gets one beside the body. Every WoDX Storyteller owner record naming the dead (scenes, regions, tiles, items) passes to the heir, with the year and "Inherited from"; things carried stay on the body, and become the heir's when picked up because the record already names them. Owning adds no Background dots (B850). Courts challenging the claim (law papers) are left out for now.
+
+Reverse: drop passHoldings.
+
+## B6536. The gate (2026-11-15)
+tools/gate/gatesolofate.mjs, seven steps, run with force for a player of the gate's own; the sleep steps touch only the gate's actors.
+
+Reverse: delete the gate.
 
 ## B6570. The lowest difficulty is 2, and the difficulty words are V20's (2026-11-15)
 WoDX Senses. V20 core pdf 257 / printed 249 says a difficulty is always between 2 and 10, so a sense roll's difficulty stops at 2, not 3 (the earlier page note said V20 gave no floor, which was wrong). The quiet interface's words follow the same chart, so 3 is now trivial and 4 easy (they were easy and a house word, routine); 2 shares the word for 3 and 10 stays "all but impossible".
