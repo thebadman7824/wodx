@@ -310,7 +310,8 @@ export async function runProgram(actor, program, target = null, {text = ""} = {}
   if ( !s ) throw new Error(`${actor?.name ?? "That character"} is not in the Net.`);
   const can = N.canAct(statusIds(actor));
   if ( !can.act ) throw new Error(`${actor.name} cannot act.`);
-  if ( !can.programs && netKindNow() === "deck" ) throw new Error(`${actor.name}'s deck is down.`);
+  // A ghost (Technica 6) has no deck to crash: deck statuses do not stop its programs
+  if ( !can.programs && netKindNow() === "deck" && s.way !== "ghost" ) throw new Error(`${actor.name}'s deck is down.`);
   let pid = program;
   if ( actor.statuses?.has("net-deck-murphy") ) pid = s.programs[Math.floor(Math.random() * s.programs.length)] ?? program;
   if ( !s.programs.includes(pid) && netKindNow() === "deck" ) throw new Error(`${actor.name} does not carry ${N.PROGRAMS[pid]?.label ?? pid}.`);
