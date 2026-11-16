@@ -422,7 +422,9 @@ export function pickLanding(scenes = [], chosen = "") {
 
 /**
  * The plain scene made when the world has no map at all: a dark square of night with a grid, token vision on so the
- * night shows. A map can be set on it later; the flag keeps it the landing.
+ * night shows. A map can be set on it later; the flag keeps it the landing. Only this scene is dark by itself: an
+ * existing map the player lands on shows the light the clock gives it (WoDX Atmosphere's light from the clock, on by
+ * default out of doors, B6168), so the arrival is "at night" only when the clock says night (B6169).
  */
 export const LANDING_BLANK = {
   name: "Rothenstein by night: the way in",

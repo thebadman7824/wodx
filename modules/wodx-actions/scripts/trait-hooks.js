@@ -69,6 +69,15 @@ export function resistMods(target, tags = [], actor = null) {
     } catch (e) { console.warn("WoDX Actions | trait effects", e); return NONE; }
 }
 
+/**
+ * B6411: the resist effects of the first targeted token's character on a power used by actor (a Gift, a cantrip, an
+ * evocation, an Arcanos): a carried ward, Magic Resistance. Nothing when no one else is targeted.
+ */
+export function targetResist(actor, tags = ["magic"]) {
+    const target = [...(game.user?.targets ?? [])][0]?.actor ?? null;
+    return target && target !== actor ? resistMods(target, tags, actor) : NONE;
+}
+
 /** Disciplines whose powers count as mind powers or magic for Iron Will and Magic Resistance (V20 p. 485, 493). */
 export function powerTags(discipline = "") {
     const d = String(discipline).toLowerCase();
@@ -134,7 +143,11 @@ export function holds(actor, key) {
 /** Lucky: three rerolls of a failed roll in a story. The count is kept on the actor against the story's id. */
 export const LUCKY_PER_STORY = 3;
 const storyNow = () => { try { return game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { return "first"; } };
-/** B3919: Destiny and Fate (backgrounds) bank rerolls too: one a story for each dot, on the same count as Lucky. */
+/** B3919: Destiny and Fate (backgrounds) bank rerolls too: one a story for each dot, on the same count as Lucky.
+ *  B6371: the reroll is offered in the Any roll and Common checks windows, every power window (limits.js decorate and
+ *  gate) and the frenzy, Rötschreck and sin windows. It is rolled inside the dice roller before the roll's effect is
+ *  worked out (blood, Gnosis, the frenzy state, a Road dot), so nothing has to be undone. Checks rolled by themselves
+ *  do not spend it. */
 export const FORTUNE_BACKGROUNDS = ["destiny", "fate"];
 const rating = (actor, key) => { const T = traits(); try { return Math.max(0, Number(T?.has?.(actor, key)) || 0); } catch (e) { return 0; } };
 export function rerollsPerStory(actor) {

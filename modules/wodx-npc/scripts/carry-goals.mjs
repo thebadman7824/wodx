@@ -222,15 +222,24 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
 
   /* ---------------- setting free ---------------- */
 
-  async function freePrisoner(tokDoc, by = "") {
+  async function freePrisoner(tokDoc, by = "", rescuer = null) {
     tokDoc = docOf(tokDoc);
     if ( !tokDoc?.actor ) return false;
-    if ( !isActiveGM() ) { game.socket.emit(`module.${MOD}`, {type: "carry.free", token: tokDoc.uuid, by, userId: game.user.id}); return true; }
+    if ( !isActiveGM() ) { game.socket.emit(`module.${MOD}`, {type: "carry.free", token: tokDoc.uuid, by, rescuer, userId: game.user.id}); return true; }
     try { await chron()?.conditions?.setCondition?.(tokDoc.actor, "immobilized", false); } catch (e) { /* none */ }
     await game.settings.set(MOD, "prisoners", G.freePrisoner(game.settings.get(MOD, "prisoners") ?? [], baseOf(tokDoc.actor).id, game.time.worldTime || 1));
     await tokDoc.unsetFlag(MOD, "prisoner").catch(() => null);
     await tokDoc.unsetFlag(MOD, "captureAsked").catch(() => null);
     ChatMessage.create({speaker: {alias: "WoDX NPC"}, content: `<p>${esc(by || "Someone")} unties <b>${esc(tokDoc.name)}</b>: free.</p>`}).catch(() => null);
+    // B6170: freeing a prisoner is a deed: a player's character who unties them gains standing in the town and a tale
+    // starts in WoDX Storyteller's rumour mill (standing.deed)
+    let saver = null;
+    try { saver = rescuer ? fromUuidSync(rescuer) : null; } catch (e) { saver = null; }
+    const who = saver?.actor ?? (saver?.documentName === "Actor" ? saver : null);
+    if ( who?.hasPlayerOwner ) {
+      try { await game.modules.get(MOD)?.api?.standing?.deed?.(who.isToken ? (who.baseActor ?? game.actors.get(who.id)) : who, {community: "town", delta: 1, text: `freed ${tokDoc.name}, held prisoner`}); }
+      catch (e) { console.warn(`${MOD} | rescue deed`, e); }
+    }
     return true;
   }
   /** A player's character steps next to a prisoner: a card offers to untie them. */
@@ -247,14 +256,14 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
       offered.add(k);
       const users = game.users.filter(u => !u.isGM && doc.actor.testUserPermission(u, "OWNER")).map(u => u.id);
       ChatMessage.create({speaker: {alias: "WoDX NPC"}, whisper: [...users, ...gmIds()],
-        content: `<p><b>${esc(t.name)}</b> lies tied here, a prisoner. <button type="button" data-wnpc-untie="${esc(t.uuid)}" data-by="${esc(doc.name)}">Untie them</button></p>`}).catch(() => null);
+        content: `<p><b>${esc(t.name)}</b> lies tied here, a prisoner. <button type="button" data-wnpc-untie="${esc(t.uuid)}" data-by="${esc(doc.name)}" data-rescuer="${esc(doc.uuid)}">Untie them</button></p>`}).catch(() => null);
     }
   }
   function onRender(msg, el) {
     for ( const b of el.querySelectorAll?.("[data-wnpc-untie]") ?? [] ) b.addEventListener("click", ev => {
       ev.preventDefault();
       const td = fromUuidSync(b.dataset.wnpcUntie);
-      if ( td ) freePrisoner(td, b.dataset.by).then(() => { b.disabled = true; });
+      if ( td ) freePrisoner(td, b.dataset.by, b.dataset.rescuer || null).then(() => { b.disabled = true; });
     });
   }
 
@@ -266,7 +275,7 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
     Hooks.on("updateToken", onMoved);
     Hooks.on("updateWorldTime", () => { onClock().catch(e => console.error(`${MOD} | carry trips`, e)); });
     Hooks.on("renderChatMessageHTML", onRender);
-    Hooks.once("ready", () => game.socket?.on?.(`module.${MOD}`, m => { if ( m?.type === "carry.free" && isActiveGM() ) { const td = fromUuidSync(m.token); if ( td ) freePrisoner(td, m.by); } }));
+    Hooks.once("ready", () => game.socket?.on?.(`module.${MOD}`, m => { if ( m?.type === "carry.free" && isActiveGM() ) { const td = fromUuidSync(m.token); if ( td ) { const r = m.rescuer ? fromUuidSync(m.rescuer) : null, u = game.users.get(m.userId); freePrisoner(td, m.by, r && u && (r.actor ?? r).testUserPermission?.(u, "OWNER") ? m.rescuer : null); } } }));
   }
 
   return {goalOf, pointOf, arrive, askCapture, approveCapture, freePrisoner, prisoners: () => G.heldNow(game.settings.get(MOD, "prisoners") ?? []), trips: () => trips(), onClock,

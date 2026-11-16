@@ -22,15 +22,20 @@ const ENTITIES = {"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": "\"", "&#39;
 const decode = s => s.replace(/&(?:amp|lt|gt|quot|#39|#x27|nbsp);/g, m => ENTITIES[m]);
 
 /**
- * The words an NPC speaks on a WoDX NPC talk card: the first paragraph with no class (the quiet lines are the
- * stage directions, a Malkavian's other hearing and notes). "" when the NPC has nothing to say.
+ * The words an NPC speaks on a WoDX NPC talk card. WoDX NPC puts the answer in <p class="wnpc-said"> (talk.mjs
+ * deliver and farewell), so that paragraph comes first (B6171). A card without one falls back to the first paragraph
+ * with no class; the other classed lines are stage directions, a Malkavian's other hearing and notes. A line that is
+ * only italics ("They have nothing to say about that.") is not spoken. "" when the NPC has nothing to say.
  */
+const textOf = inner => /^\s*<i>[\s\S]*<\/i>\s*$/.test(inner) ? "" : decode(inner.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
 export function spokenLine(html) {
-  for ( const m of String(html ?? "").matchAll(/<p(\s[^>]*)?>([\s\S]*?)<\/p>/gi) ) {
+  const paras = [...String(html ?? "").matchAll(/<p(\s[^>]*)?>([\s\S]*?)<\/p>/gi)];
+  const said = paras.find(m => /\bclass\s*=\s*["'][^"']*\bwnpc-said\b/.test(m[1] ?? ""));
+  if ( said ) return textOf(said[2]);
+  for ( const m of paras ) {
     if ( /\bclass\s*=/.test(m[1] ?? "") ) continue;
-    const inner = m[2];
-    if ( /^\s*<i>[\s\S]*<\/i>\s*$/.test(inner) ) return "";
-    const text = decode(inner.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
+    if ( /^\s*<i>[\s\S]*<\/i>\s*$/.test(m[2]) ) return "";
+    const text = textOf(m[2]);
     if ( text ) return text;
   }
   return "";

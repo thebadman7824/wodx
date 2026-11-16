@@ -35,6 +35,13 @@ export function build(ctx) {
         if (!get("consensusEra", true)) return C.AGES[2];
         let y = null;
         try { y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { /* no chronicle */ }
+        // B6438: the era the Storyteller set wins when the clock's year lies outside it (a chronicle set in the Burning
+        // Times keeps the Crusade's rules, as WoDX's hunters keep their era's line)
+        try {
+            const p = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile;
+            const from = Number(p?.start ?? NaN), to = Number(p?.end ?? NaN), yy = Number(y);
+            if (p && y !== null && Number.isFinite(from) && Number.isFinite(yy)) y = Math.min(Math.max(yy, from), Number.isFinite(to) ? to : Infinity);
+        } catch (e) { /* the year alone */ }
         return C.ageFor(y);
     }
     const placeOf = scene => String(scene?.flags?.[MOD]?.consensus?.styles ?? "");
@@ -93,14 +100,17 @@ export function build(ctx) {
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             // B4921: an Effect of the fifth level or higher is once a scene (house rule), refused before Quintessence is spent
-            const lim = await LIM.gate(actor, { name: `Effect: ${used.map(x => `${x.sphere} ${x.level}`).join(", ")}`, level: Math.max(0, ...used.map(x => x.level)) });
+            const lim = await LIM.gate(actor, { name: `Effect: ${used.map(x => `${x.sphere} ${x.level}`).join(", ")}`, level: Math.max(0, ...used.map(x => x.level)) }, { penalty: false });
             if (!lim) return null;
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             // B4874: the caster's features on a casting (a House's fire, a choir's voices): magick, each Sphere, and fire for Forces that harms
             const tm = TH.traitMods(actor, ["magick", ...used.map(x => x.sphere), ...(fd.dmg && used.some(x => x.sphere === "forces") ? ["fire"] : [])]);
             plan.dice = Math.max(1, plan.dice + (tm.dice || 0));
-            plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
+            // B6177: a target's ward, Magic Resistance or (for Mind) Iron Will makes magick on them harder, as it does a Discipline
+            const target = [...(game.user?.targets ?? [])][0]?.actor ?? null;
+            const rm = target && target !== actor ? TH.resistMods(target, ["magic", ...(used.some(x => x.sphere === "mind") ? ["mind"] : [])], actor) : { diff: 0, parts: [] };
+            plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0) + (rm.diff || 0)));
             const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const d = M.degree(r, plan.need);
@@ -113,7 +123,7 @@ export function build(ctx) {
             const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
             const label = used.map(x => `${cap(x.sphere)} ${x.level}`).join(" / ");
             let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
-                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : []), ...(tm.parts ?? [])]);
+                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : []), ...(tm.parts ?? []), ...(rm.parts ?? [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
             const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             if (fx?.got?.ok || fx?.items?.length) body += fx.html;

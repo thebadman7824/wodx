@@ -6,6 +6,8 @@
  *   ask    Sway and Bind (a command, an oath), and a Kuei-jin's shadow soul: each move goes to the Storyteller, who allows or refuses it
  * The Storyteller moves any token freely. With no Storyteller on (a Lone Chronicle), a command's move stands with a reminder. The world setting "Bindings hold the token" turns it off.
  */
+import { cannotAct } from "./limits.js";
+
 const MOD = "wodx-actions";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -49,6 +51,8 @@ const tokenOfActorId = (scene, id) => (id ? [...(scene?.tokens ?? [])].find(t =>
 function onPreUpdate(tok, change, options, userId) {
   if ( options?.wodxBindAllowed || game.user.id !== userId || game.user.isGM ) return true;
   if ( !("x" in change || "y" in change) ) return true;
+  // B6372: a character asleep for the day or out cold (Asleep, torpor, staked...) does not walk; the Storyteller may move it
+  try { const idle = cannotAct(tok.actor); if ( idle ) { ui.notifications?.warn?.(idle); return false; } } catch (e) { /* no rule */ }
   try { if ( game.settings.get(MOD, "bindingsHold") === false ) return true; } catch (e) { return true; }
   const a = tok.actor;
   if ( !a?.hasPlayerOwner ) return true;

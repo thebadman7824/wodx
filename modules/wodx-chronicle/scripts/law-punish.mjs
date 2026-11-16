@@ -14,6 +14,7 @@ import * as P from "./law-punish-rules.mjs";
 import {standingFor} from "./law-standing.mjs";
 import {declareWanted} from "./law-heat.mjs";
 import {applyTimed} from "./timed.mjs";
+import {isQuiet} from "./quiet.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -89,10 +90,17 @@ async function carryOut(actor, mark, info) {
 async function sendAway(actor, mark) {
   const hidden = [];
   for ( const sc of game.scenes ) {
-    const ids = sc.tokens.filter(t => t.actorId === actor.id && !t.hidden).map(t => t.id);
-    if ( ids.length ) { await sc.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, hidden: true}))); hidden.push({scene: sc.id, ids}); }
+    // B6165: a token WoDX Storyteller's watch already took (hidden, lawTaken) counts too, so comeBack shows it again
+    const ids = sc.tokens.filter(t => t.actorId === actor.id && (!t.hidden || t.flags?.["wodx-storyteller"]?.lawTaken)).map(t => t.id);
+    if ( ids.length ) hidden.push({scene: sc.id, ids});
   }
+  // B6429: the term first, then the tokens: a token seen leaving the map always has its term on the character, and a
+  // token a failed step left hidden is still shown again when the term is up
   await actor.setFlag(MODULE_ID, "lawAway", {until: mark.until, mark: mark.id, region: mark.region, hidden});
+  for ( const h of hidden ) {
+    try { await game.scenes.get(h.scene)?.updateEmbeddedDocuments("Token", h.ids.map(_id => ({_id, hidden: true}))); }
+    catch (e) { console.error(`WoDX | sentence: hiding ${actor.name}`, e); }
+  }
   return true;
 }
 async function comeBack(actor, why = "The sentence is served") {
@@ -108,10 +116,16 @@ async function comeBack(actor, why = "The sentence is served") {
   return true;
 }
 /** B5990: at each move of the clock, those whose time is up come back. */
-export async function releaseServed(year = yearNow()) {
-  if ( !isActiveGM() ) return [];
+export async function releaseServed(year = yearNow(), {settle = false} = {}) {
+  // B6162: a time skip or a hold waits; the skip's end lets them out once (settle)
+  if ( !isActiveGM() || (!settle && isQuiet()) ) return [];
   const out = [];
-  for ( const a of game.actors ) { const w = a.getFlag?.(MODULE_ID, "lawAway"); if ( w && P.servedBy(w, year) && await comeBack(a) ) out.push(a.id); }
+  // B6427: one prisoner whose return fails (a scene or token gone wrong) does not keep the others in
+  for ( const a of game.actors ) {
+    const w = a.getFlag?.(MODULE_ID, "lawAway");
+    if ( !w || !P.servedBy(w, year) ) continue;
+    try { if ( await comeBack(a) ) out.push(a.id); } catch (e) { console.error(`WoDX | sentence served: ${a.name}`, e); }
+  }
   return out;
 }
 
@@ -152,7 +166,12 @@ export function playerMarks(actor, region, year = yearNow()) {
 export function registerPunishHooks() {
   Hooks.on("wodxVerdict", p => { if ( p?.guilty ) sentenceCard(p).catch(e => console.error("WoDX | sentence", e)); });
   Hooks.on("updateWorldTime", () => { releaseServed().catch(e => console.error("WoDX | sentence served", e)); });
-  Hooks.once("ready", () => { ensureBrand(); releaseServed().catch(() => null); });
+  Hooks.on("wodxSkipEnd", () => { releaseServed(yearNow(), {settle: true}).catch(e => console.error("WoDX | sentence served", e)); });
+  Hooks.on("wodxLightTouchEnd", () => { releaseServed(yearNow(), {settle: true}).catch(e => console.error("WoDX | sentence served", e)); });
+  Hooks.once("ready", () => { releaseServed().catch(() => null); });
+  // B6163: Branded is a token status from the start, not only after the first brand. At ready the Chronicle api is
+  // not set yet, so it is registered when Chronicle says it is ready.
+  Hooks.once("wodxChronicleReady", () => { try { ensureBrand(); } catch (e) { console.warn("WoDX | brand", e); } });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     if ( !game.user.isGM ) return;
     const info = message.flags?.[MODULE_ID]?.lawSentence;

@@ -74,6 +74,19 @@ export function normRemains(r = {}, now = 0) {
     heated: !!o.heated, shown: STAGES.some(s => s.id === o.shown) ? o.shown : null, note: String(o.note ?? "").slice(0, 400)};
 }
 
+/**
+ * B6390: how a body died, read from what WoDX Actions leaves on the vessel. The Kiss writes the vessel's blood
+ * (flags wodx-actions.vesselBlood {value, at}) before the dead mark, and a botched Stamina roll marks it dying of the
+ * drinking (dying.why "drained"). Blood at 1 or less, taken within the day, or dying of it: drained; else not known.
+ */
+export function causeAtDeath(actionsFlags = {}, now = 0) {
+  const f = actionsFlags && typeof actionsFlags === "object" ? actionsFlags : {};
+  if ( f.dying?.why === "drained" ) return "drained";
+  const vb = f.vesselBlood;
+  if ( vb && Number.isFinite(Number(vb.value)) && Number(vb.value) <= 1 && num(now) - num(vb.at) <= DAY ) return "drained";
+  return "unknown";
+}
+
 /** Who looks into a death found, by the year, and what they can do. Bands end before the next one's year. */
 /** The book roll for examining a body: HH2 p. 94 (pdf p. 95) gives an autopsy as Intelligence + Medicine. */
 export const EXAMINE = "Whoever examines the body rolls Intelligence + Medicine (HH2 p. 94); more successes, more of the above.";

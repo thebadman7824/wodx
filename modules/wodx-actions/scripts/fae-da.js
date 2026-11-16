@@ -285,7 +285,7 @@ export function build(ctx) {
             // B4921: a cantrip used up for its time (the house rule for the fifth level and up) is refused before Mists are spent
             const lim = await LIM.gate(actor, { name: c?.name ?? `${F.DOMINIONS[dominion]?.label ?? dominion} ${level}`, disc: F.DOMINIONS[dominion]?.label ?? dominion, level });
             if (!lim) return null;
-            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
+            if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             if (fd.cloak && !(await spend(actor, "mists", 1))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });

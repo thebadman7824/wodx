@@ -51,9 +51,13 @@ export async function divine(actor, item) {
 }
 
 /** Chronicle's trait effects read a carried ward (resist channel). */
+// B6177: Chronicle sets its api only at the end of its own ready, which may come after this one; then the ward is
+// added when Chronicle says it is ready. addSource keeps one copy of the function, so a second call adds nothing.
+const wardSource = (actor, ctx) => F.wardEffects([...(actor?.items ?? [])], ctx);
 export function setupFaith() {
   const T = game.modules.get("wodx-chronicle")?.api?.traits;
-  T?.addSource?.((actor, ctx) => F.wardEffects([...(actor?.items ?? [])], ctx));
+  if ( T?.addSource ) return T.addSource(wardSource);
+  Hooks.once("wodxChronicleReady", () => game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.(wardSource));
 }
 
 export const faithApi = () => ({rules: F, pray, ward, divine});

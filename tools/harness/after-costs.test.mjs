@@ -46,3 +46,29 @@ test("the conditions carry what the rolls read", () => {
   assert.equal(AC.CONDITIONS.blurred.mods.ownDiffVision, 2);
   assert.equal(AC.CONDITIONS.asleep.mods.noAction, true);
 });
+
+test("B6156: asleep for the day, Asleep, Torpor and staked stop a character; Dazed does not", () => {
+  const C = id => ({id, name: id, summary: "s", mods: {}});
+  assert.match(AC.cannotActWhy({name: "Anna", daySleep: true}), /Anna is asleep for the day/);
+  assert.match(AC.cannotActWhy({name: "Anna", conds: [AC.CONDITIONS.asleep]}), /cannot act: Asleep/);
+  assert.match(AC.cannotActWhy({conds: [C("torpor")]}), /Torpor|torpor/);
+  assert.match(AC.cannotActWhy({conds: [C("staked")]}), /staked/);
+  assert.equal(AC.cannotActWhy({conds: [{id: "dazed", name: "Dazed", mods: {noAction: true}}]}), "");
+  assert.equal(AC.cannotActWhy({}), "");
+  assert.ok(AC.NO_ACTION_IDS.includes("asleep"));
+});
+
+test("B6157: conditions on the roller's own roll: ownDiff always, ownDiffVision on sight only", () => {
+  const drained = {id: "drained", name: "Drained", source: "WoDX house rule", mods: {ownDiff: 1}};
+  const blurred = AC.CONDITIONS.blurred;
+  assert.equal(AC.conditionRollMods([drained, blurred], {sight: false}).diff, 1);
+  const s = AC.conditionRollMods([drained, blurred], {sight: true});
+  assert.equal(s.diff, 3);
+  assert.equal(s.parts.length, 2);
+  assert.match(AC.conditionRollMods([{id: "dazed", name: "Dazed", summary: "loses a turn", mods: {noAction: true}}]).parts[0], /Dazed/);
+  assert.equal(AC.conditionRollMods([]).diff, 0);
+  assert.equal(AC.needsSight({attr: "perception"}), true);
+  assert.equal(AC.needsSight({attr: "perception", "tag-hearing": true}), false);
+  assert.equal(AC.needsSight({attr: "wits", "tag-sight": true}), true);
+  assert.equal(AC.needsSight({attr: "strength"}), false);
+});

@@ -176,6 +176,7 @@ export function build(ctx) {
     }
 
     async function useDiscipline(actor) {
+        if (LIM.refuseIdle(actor)) return null; // B6156: asleep for the day or out cold
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
         const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
@@ -249,7 +250,7 @@ export function build(ctx) {
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [`Drained +${lim.diff}`] : [])], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
@@ -476,7 +477,7 @@ export function build(ctx) {
         }
         if ((kind === "domain" || kind === "huntinggrounds") && !total) {
             const h = actor.getFlag(MOD, "haven"), scene = h?.sceneId ? game.scenes?.get?.(h.sceneId) : canvas?.scene;
-            const herds = ST?.herds;
+            const herds = ST?.upkeep?.herds; // B6204: herds live under Storyteller api.upkeep
             if (herds?.feed && scene) { for (let w = 0; w < weeks; w++) await herds.feed({ scene, who: "a rival" }); out.push(`A rival hunts ${scene.name} while the domain slips: its herd thins.`); }
         }
         if (botched) {
@@ -927,8 +928,9 @@ export function build(ctx) {
             if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
             return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
         }
-        await ctx.setDamage(actor, { ...plan.after });
+        // B6441: the blood goes first and the wounds close after it, so a sheet that reads healed has paid already
         const ch = await ctx.changeBlood(actor, -plan.spent);
+        await ctx.setDamage(actor, { ...plan.after });
         const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
         if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
@@ -1041,7 +1043,7 @@ export function build(ctx) {
             if (keep) kept.push(a);
             rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${w}): ${esc(reaction || "takes it in")}${act ? ` (${act === "freeze" ? "falls still" : act === "flee" ? "flees" : "attacks"})` : ""}; ${keep ? "remembers" : "forgets"}.</li>`);
         }
-        if (rule === "hysteria" && rows.length) { try { await game.modules.get(MOD)?.api?.wraith?.hysteria?.(); } catch (e) { /* no wraith tools */ } }
+        if (rule === "hysteria" && rows.length) { try { const A = game.modules.get(MOD)?.api; await (A?.hysteria ?? A?.wraith?.hysteria)?.(); /* B6201: the api has hysteria at its top, not under wraith (found by gateapipaths) */ } catch (e) { /* no wraith tools */ } }
         if (fighters.length && by) {
             const ids = [...fighters.map(t => t.document?.id ?? t.id), by.document?.id ?? by.id];
             const sides = Object.fromEntries([...fighters.map(t => [t.document?.id ?? t.id, "a"]), [by.document?.id ?? by.id, "b"]]);

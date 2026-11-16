@@ -1,4 +1,4 @@
-import {DateEngine, REFORMS, moonPhase, sunTimes, formatHours} from "./calendar-math.mjs";
+import {DateEngine, REFORMS, moonPhase, sunTimes, formatHours, sunAltitude, isNightAt} from "./calendar-math.mjs";
 
 /** Year shown for worldTime 0. The Dark Ages profile starts here (decision: 1197). */
 export const EPOCH_YEAR = 1197;
@@ -106,11 +106,11 @@ const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 export function describeTime(time, latitude) {
   const d = engine.timeToDate(time);
   const sun = sunTimes(d.jdn, latitude);
-  const nowHours = d.hour + (d.minute / 60);
+  const nowHours = d.hour + (d.minute / 60) + ((d.second ?? 0) / 3600);
   const moon = moonPhase(d.jdn - 0.5 + (nowHours / 24));
-  let isNight = true;
-  if ( sun.polar === "day" ) isNight = false;
-  else if ( sun.polar === null ) isNight = (nowHours < sun.sunrise) || (nowHours >= sun.sunset);
+  // B6381: night and day from the sun's altitude now, the same test WoDX Actions' sunlight makes (SUN_UP), to the second
+  const sunAlt = sunAltitude(d.jdn, latitude, nowHours);
+  const isNight = isNightAt(sunAlt);
   return {
     ...d,
     monthName: MONTHS[d.month - 1],
@@ -121,6 +121,7 @@ export function describeTime(time, latitude) {
     sunrise: formatHours(sun.sunrise),
     sunset: formatHours(sun.sunset),
     darkHours: sun.darkHours,
+    sunAltitude: sunAlt,
     isNight,
     moon
   };
@@ -135,7 +136,8 @@ export function secondsToNextDusk(time, latitude) {
     const sun = sunTimes(d.jdn, latitude);
     if ( sun.sunset === null ) continue;
     const dayStart = time + (dayOffset * 86400) - ((d.hour * 3600) + (d.minute * 60) + d.second);
-    const dusk = dayStart + Math.round(sun.sunset * 3600);
+    // B6381: at or past the moment itself, so the clock moved to dusk or dawn reads night or day there
+    const dusk = dayStart + Math.ceil(sun.sunset * 3600);
     if ( dusk - time >= 60 ) return dusk - time;
   }
   return 86400;
@@ -148,7 +150,7 @@ export function secondsToNextDawn(time, latitude) {
     const sun = sunTimes(d.jdn, latitude);
     if ( sun.sunrise === null ) continue;
     const dayStart = time + (dayOffset * 86400) - ((d.hour * 3600) + (d.minute * 60) + d.second);
-    const dawn = dayStart + Math.round(sun.sunrise * 3600);
+    const dawn = dayStart + Math.ceil(sun.sunrise * 3600);
     if ( dawn - time >= 60 ) return dawn - time;
   }
   return 86400;

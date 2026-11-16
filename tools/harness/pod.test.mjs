@@ -95,3 +95,12 @@ test("the Followers of Set keep their name and nothing comes from the mod's 5th 
   const src = readFileSync(new URL("../../modules/wodx-chronicle/data/pod.mjs", import.meta.url), "utf8");
   assert.ok(!/Ministry|Banu Haqim|Hecata|Thin-blood|Second Inquisition/i.test(src));
 });
+
+test("pod: a patron pays with Great cities off, the town is found under upkeep.towns, and the tick waits through a skip (B6162, B6164)", () => {
+  const f = readFileSync(new URL("../../modules/wodx-chronicle/scripts/pod.mjs", import.meta.url), "utf8");
+  const raise = f.slice(f.indexOf("export async function raiseBuilding"), f.indexOf("ACTS.boon"));
+  assert.doesNotMatch(raise, /!lineOn\("podCities"\) \|\|/, "the payment is not behind Great cities");
+  assert.match(raise, /ST\?\.upkeep\?\.towns/);
+  assert.match(f, /\(!settle && isQuiet\(\)\)/);
+  assert.match(f, /Hooks\.on\("wodxSkipEnd", \(\) => tick\(\{settle: true\}\)\)/);
+});

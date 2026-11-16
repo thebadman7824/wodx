@@ -483,6 +483,31 @@ export function impureOutcome(d10) { const n = Math.max(1, Math.min(10, Number(d
 /** Common check difficulty change for first aid with supplies: −1 with something to treat with (house rule). */
 export const CARE_DIFF = -1;
 
+/**
+ * B6177: what a first aid roll's card says: {successes, botch}, read from WoDX Actions' result line (the last one on
+ * the card, so a Lucky reroll counts). null when the card has none (the roll was not made).
+ */
+export function careResult(html = "") {
+  const re = /class="vta-res(?: good| bad)?">\s*(BOTCH|Failure|(\d+) success)/g;
+  let m, last = null;
+  while ( (m = re.exec(String(html ?? ""))) ) last = m;
+  if ( !last ) return null;
+  if ( last[1] === "BOTCH" ) return {successes: 0, botch: true};
+  return {successes: Number(last[2]) || 0, botch: false};
+}
+
+/**
+ * B6177: first aid by the book. It heals no level at once (V20 p. 286, pdf 294; V20 Dark Ages pdf p. 353): it is the medical
+ * attention that lets lethal wounds past Hurt, and a Crippled or Incapacitated mortal, heal with time. A success puts
+ * the patient under care (WoDX Actions' healing reads flags.wodx-actions.treated). Returns {treated, line}.
+ */
+export function careOutcome(res) {
+  if ( !res ) return {treated: false, line: ""};
+  if ( res.botch ) return {treated: false, line: "A botch: the wound is no better for it."};
+  if ( !res.successes ) return {treated: false, line: "No successes: the wound is not yet tended."};
+  return {treated: true, line: "Tended: under care now, so lethal wounds past Hurt can heal with time (V20 p. 286, pdf 294; V20 Dark Ages pdf p. 353)."};
+}
+
 /** The line for the table: "Ana drinks claret." */
 export function useLine(who, ability, thing) {
   const a = ABILITIES[ability];

@@ -15,6 +15,7 @@ import {runEraTest} from "./era-test.mjs";
 import * as contentFixes from "./content-fixes.mjs";
 import {installSearch} from "./search.mjs";
 import * as skip from "./skip.mjs";
+import * as quiet from "./quiet.mjs";
 import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
@@ -98,8 +99,13 @@ Hooks.once("init", () => {
       if ( isActiveGM() && !skip.isHeld() ) { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); }
     },
     onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); waiting.WaitingApp.soon(); },
-    onRuleChange: async () => { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
+    onRuleChange: async id => {
+      // B6380: Light-touch mode on notes when; off, the held ticks, law stages and scars settle once
+      if ( id === "lightTouch" ) await quiet.onLightTouchChange({law: lawHeat.playHeld, scar: scars.scar, heal: scars.heal});
+      await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh();
+    }
   });
+  quiet.registerQuietSettings();
   // 0.46.0: how much runs by itself, and the Waiting tray (B2450-B2452)
   automation.registerAutomationSettings();
   // B6220: the night's work, everything the Hand did, with one Undo
@@ -145,6 +151,8 @@ Hooks.once("init", () => {
   events.registerEventSettings(async () => { await events.checkEvents(); await eras.refreshRulesJournal(); });
   // Data versions for every WoDX module
   migrations.registerMigrationSettings();
+  // B6384: Chronicle's data version 2, the first real step: bouts from before B6161 name their scene
+  Hooks.on("wodxRegisterMigrations", reg => reg.register(MODULE_ID, {version: 2, steps: {2: derangements.boutSceneStep}}));
   // Languages in chat
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
@@ -261,6 +269,9 @@ Hooks.once("ready", async () => {
     contentFixes,
     timeSkip: skip.timeSkip,
     isSkipping: skip.isSkipping,
+    // B6380: a skip, a hold or Light-touch mode; ticking work in other modules waits on this and settles on wodxLightTouchEnd
+    isQuiet: quiet.isQuiet,
+    quiet: quiet.quietApi,
     isHeld: skip.isHeld,
     hold: skip.setHold,
     conditions, timed,
@@ -424,6 +435,10 @@ async function onSocket(message) {
       break;
     case "roster.play":
       await roster.onPlaySocket(payload ?? {});
+      break;
+    case "looks.show":
+      // B6163: a player's look on the map, placed by the active Storyteller
+      await looks.onShowSocket(payload ?? {});
       break;
     case "approval.propose":
       // Players may only send free-form requests; automation proposals come from the GM's own client

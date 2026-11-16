@@ -6,7 +6,7 @@
  * over by house rule, keeps the old sheet as a record and links the two, as the Embrace and the First Change do.
  */
 import {MODULE_ID, esc, lineOf, lineage, disciplineItem, disciplinesOf, keepLifepath} from "./actor-data.mjs";
-import {setLineage, setChronology, writeLineageJournal, dateLabel} from "./lineage.mjs";
+import {setLineage, setChronology, writeLineageJournal, dateLabel, handOver} from "./lineage.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "./totals-rules.mjs";
 import * as SR from "./states-rules.mjs";
@@ -70,6 +70,7 @@ async function rebuild(old, {type, updates, extraItems = [], chronologyKey, fold
   const folder = game.folders.find(f => f.type === "Actor" && f.name === folderName)
     ?? await Folder.create({name: folderName, type: "Actor", flags: {[MODULE_ID]: {kind: folderKind}}});
   await old.update({folder: folder.id});
+  await handOver(old, made);
   let moved = 0;
   if ( moveTokens ) {
     for ( const scene of game.scenes ?? [] ) {

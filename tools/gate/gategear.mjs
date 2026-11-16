@@ -7,6 +7,8 @@
  *   3. Future Darkness lists the cyberware
  *   4. giving a Battle-Ax and Subdermal Armor puts both on the character as the book has them
  *   5. Combat counts the implant's soak though it was never ticked as worn
+ *   5b. the Battle-Ax in WoDX Combat's attack plan (the one the attack window uses): Dexterity + Melee dice at the
+ *      item's difficulty, Strength + 4 lethal
  *   6. put back
  * Result: Data/wodx-gate/gategear-result.json.
  */
@@ -27,7 +29,7 @@ export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
-  let actor;
+  let actor, foe;
   try {
     const api = game.modules.get(L)?.api;
     const data = await api.gear();
@@ -53,10 +55,24 @@ export async function run() {
     await sub?.update({"system.isequipped": false});
     const arm = game.modules.get(CB)?.api?.armor?.(actor) ?? game.wodxCombat?.armor?.(actor);
     ok("5. implant soak in Combat", arm?.lethal === 4 && arm?.names?.includes("Subdermal Armor"), {armor: arm});
+
+    // The audit (B6177): read the pool the attack would roll, not only that the item is there
+    // the totals too: the system and Combat read the stored total, which a script's update of the value leaves at 1.
+    // Strength 4 meets the Battle-Ax's minimum, so the plan's difficulty is the axe's own
+    await actor.update({"system.attributes.dexterity.value": 3, "system.attributes.dexterity.total": 3,
+      "system.attributes.strength.value": 4, "system.attributes.strength.total": 4, "system.abilities.melee.value": 2});
+    foe = await Actor.create({name: "Gate gear foe", type: "Mortal"});
+    await sleep(300);
+    const C = game.modules.get(CB)?.api ?? game.wodxCombat;
+    const plan = C?.bestAttack?.(actor, foe, {}, {ignoreDistance: true})?.plans?.find(p => p.w?.name === "Battle-Ax");
+    const dex = Number(actor.system.attributes.dexterity.total ?? actor.system.attributes.dexterity.value) || 0;
+    const want = {dice: dex + 2, diff: Number(ax?.system?.difficulty)};
+    ok("5b. the Battle-Ax's attack pool", !!plan?.valid && plan.atkDice === want.dice && plan.atkDiff === want.diff && plan.w.dmgAttr === "strength" && plan.w.dmgBonus === 4 && plan.dmgType === "lethal",
+      {want, got: plan ? {valid: plan.valid, dice: plan.atkDice, diff: plan.atkDiff, dmgAttr: plan.w.dmgAttr, dmgBonus: plan.w.dmgBonus, type: plan.dmgType, why: plan.why} : null});
   } catch (err) {
     R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`);
   } finally {
-    try { await win()?.close(); await actor?.delete(); ok("6. put back", !game.actors.get(actor?.id)); }
+    try { await win()?.close(); await actor?.delete(); await foe?.delete(); ok("6. put back", !game.actors.get(actor?.id) && !game.actors.get(foe?.id)); }
     catch (err) { ok("6. put back", false, {error: err.message}); }
   }
   return save(R);
