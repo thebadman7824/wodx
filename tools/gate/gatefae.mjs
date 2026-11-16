@@ -4,8 +4,9 @@
  * Makes its own changelings, turns "Kith, seeming and court features (Changeling)" on, and puts the setting, actors and
  * chat cards back afterwards. The clock is not moved.
  *   1. the api and the setting
- *   2. rows stack: a Satyr wilder of the Unseelie Court in House Fiona has four; a Night-Hag is a Thallain; a Glome an Inanimae
- *   3. roll effects reach the traits api: a Boggan's Crafts die
+ *   2. rows stack: a Satyr wilder of the Unseelie Court in House Fiona has four; a Night-Hag and a Glome get their own kith rows (C20 pp. 380, 440)
+ *   3. roll effects reach the traits api: a Piskie's Dexterity die (C20 p. 97); a Boggan gains no Crafts die (C20 p. 89 gives none)
+ *      but its Crafts roll cannot botch (B6924), and an Athletics roll can
  *   4. a Satyr's revel: the button gives the Satyr two Glamour and a Pooka one
  *   5. a Pooka tells the plain truth: a Willpower point lost
  *   6. a Selkie takes the seal coat; losing it sends a card
@@ -46,7 +47,7 @@ export async function run() {
     autoWas = game.settings.get(C, "sigAuto"); await game.settings.set(C, "sigAuto", false);
     actors = await Actor.create([fae("WoDX gate: Satyr", "wod.bio.changeling.satyrs", {court: "Unseelie", house: "Fiona"}), fae("WoDX gate: Pooka", "wod.bio.changeling.pooka"),
       fae("WoDX gate: Selkie", "wod.bio.changeling.selkies"), fae("WoDX gate: Troll", "wod.bio.changeling.troll"), fae("WoDX gate: Boggan", "wod.bio.changeling.boggans"),
-      fae("WoDX gate: Hag", "wod.bio.changeling.nighthags"), fae("WoDX gate: Glome", "wod.bio.changeling.glomes")]);
+      fae("WoDX gate: Hag", "wod.bio.changeling.nighthags"), fae("WoDX gate: Glome", "wod.bio.changeling.glomes"), fae("WoDX gate: Piskie", "wod.bio.changeling.piskies")]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     // the system drops permanent ratings given on create (testbed probe, step 12): set them after
     for ( const a of actors ) await a.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 3, "system.advantages.glamour.permanent": 6, "system.advantages.glamour.temporary": 2});
@@ -55,11 +56,16 @@ export async function run() {
     });
     await step("2 rows", async () => {
       const st = api().rowsOf(by("Satyr")).map(r => r.key), hag = api().rowOf(by("Hag"))?.key, gl = api().rowOf(by("Glome"))?.key;
-      ok("2 rows", JSON.stringify(st) === JSON.stringify(["satyr", "wilder", "unseelie", "fiona"]) && hag === "thallain" && gl === "inanimae", {st, hag, gl});
+      ok("2 rows", JSON.stringify(st) === JSON.stringify(["satyr", "wilder", "unseelie", "fiona"]) && hag === "nighthags" && gl === "glomes", {st, hag, gl});
     });
     await step("3 roll effects", async () => {
-      const T = game.modules.get(C).api.traits, fx = T.effects(by("Boggan"), {channel: "roll", tags: T.rules.rollTags("crafts")});
-      ok("3 roll effects", fx.some(e => e.name === "Boggans" && e.dice === 1), {n: fx.length});
+      const T = game.modules.get(C).api.traits, fx = T.effects(by("Piskie"), {channel: "roll", tags: T.rules.rollTags("dexterity")});
+      const bog = T.effects(by("Boggan"), {channel: "roll", tags: T.rules.rollTags("crafts")}).filter(e => e.name === "Boggans");
+      // B6924: the Boggan's Crafts roll cannot botch (C20 p. 89): a no-botch effect, no dice, and it reaches the roll's sum
+      const sum = T.rules.sumEffects(bog), athl = T.rules.sumEffects(T.effects(by("Boggan"), {channel: "roll", tags: T.rules.rollTags("athletics")}));
+      const noDie = bog.every(e => !e.dice && !e.diff);
+      ok("3 roll effects", fx.some(e => e.name === "Piskies" && e.dice === 1) && bog.length === 1 && bog[0].noBotch === true && noDie && sum.noBotch === true && !athl.noBotch,
+        {n: fx.length, boggan: bog, sum, athletics: athl.noBotch ?? false});
     });
     await step("4 revel", async () => {
       const s = by("Satyr"), p = by("Pooka");

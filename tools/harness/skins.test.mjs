@@ -110,3 +110,31 @@ test("each rule is a well-formed SVG with nothing outside its box", () => {
     assert.equal(opens, closes, `${L.id}: tags balance`);
   }
 });
+
+test("B6950: a line file slower than the wait still counts once it lands, and is not put in twice", async () => {
+  const {mock} = await import("node:test");
+  const nodes = [];
+  const had = {document: globalThis.document, CSSImportRule: globalThis.CSSImportRule};
+  globalThis.CSSImportRule = class {};
+  globalThis.document = {
+    styleSheets: [], head: {append: n => nodes.push(n)}, querySelectorAll: () => nodes,
+    createElement: () => { const on = {}; return {dataset: {}, addEventListener: (k, f) => { on[k] = f; }, fire: k => on[k]?.()}; }
+  };
+  mock.timers.enable({apis: ["setTimeout"]});
+  try {
+    const Sk = await import(pathToFileURL(join(sheets, "scripts/skins.mjs")).href + "?late");
+    const first = Sk.load("creature");
+    mock.timers.tick(4001);
+    assert.equal(await first, false, "the page stops waiting after the wait");
+    assert.deepEqual(Sk.report().failed, ["creature"]);
+    assert.equal(nodes.length, 1);
+    await Sk.load("creature");
+    assert.equal(nodes.length, 1, "a second sheet does not put the file in again");
+    nodes[0].fire("load");
+    assert.ok(Sk.loaded().includes("creature"), "the late file counts as loaded");
+    assert.deepEqual(Sk.report().failed, [], "and is no longer reported as failed");
+  } finally {
+    mock.timers.reset();
+    globalThis.document = had.document; globalThis.CSSImportRule = had.CSSImportRule;
+  }
+});

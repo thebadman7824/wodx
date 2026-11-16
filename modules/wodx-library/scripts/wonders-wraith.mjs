@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the Wraith kit for the wonders registry (B3720-B3723). No Foundry calls here.
  *
- * Ben's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build (notes gap g22,
+ * The owner's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build (notes gap g22,
  * B3553) but are made through this shared engine. Anything that comes out of a forge is an Artifact, and so is a relic
  * reworked to serve the dead (Wraith 20th book p. 44, pdf 109). Arms, armour and oboli are gear and money, so they
  * stay in WoDX Actions' soulforge window, which hands Artifacts and relics on to this kit.

@@ -174,13 +174,24 @@ export async function openOnYourOwn(actorId = null) {
   const who = game.actors.get(data.actor) ?? actor;
   const out = {};
   if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest, mode: data.mode || null, pace: data.pace || null, lodging: data.lodging || null});
+  // B6754: a hunt on your own opens the hunt itself (WoDX Actions) once the act is recorded
   if ( data.kind ) out.solo = await request("solo", {actorId: who.id, kind: data.kind, hours: Number(data.hours) || null, note: data.note ?? "", changesWorld: !!data.world});
   return out;
+}
+let huntNext = null;
+/** The hunt window for the character who just went hunting on their own (WoDX Actions' hunt roll), on this client. */
+function openHunt() {
+  const a = huntNext ? game.actors.get(huntNext) : null;
+  huntNext = null;
+  const hunt = game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api?.hunt : null;
+  if ( a && typeof hunt === "function" ) { try { return hunt({actor: a}); } catch (e) { console.error(`${C.MOD} | hunt`, e); } }
+  return null;
 }
 
 /** Ask the active Storyteller's client to do something: at once on that client, else by socket. */
 export async function request(type, payload) {
   const body = {...payload, userId: game.user.id};
+  if ( type === "solo" ) huntNext = body.kind === "hunt" ? body.actorId : null;
   if ( C.isActiveGM() ) {
     const r = type === "travel" ? await C.travel(body) : await C.solo(body);
     answer(r, type);
@@ -194,8 +205,9 @@ export async function request(type, payload) {
 /** Say how a request went. */
 export function answer(r, type) {
   if ( !r ) return;
-  if ( !r.ok ) return ui.notifications.warn(r.why ?? "That could not be done.");
+  if ( !r.ok ) { if ( type === "solo" ) huntNext = null; return ui.notifications.warn(r.why ?? "That could not be done."); }
   if ( r.waiting ) return ui.notifications.info(type === "travel" ? `Waiting for the Storyteller: ${r.why}` : "Recorded; the Storyteller will decide what it changes.");
+  if ( type === "solo" && huntNext && !r.waiting ) openHunt();
   if ( type === "solo" && r.pastDawn ) return ui.notifications.warn("That runs past dawn.");
   if ( type === "venture" ) return ui.notifications.info("Done at the Storyteller's table.");
   ui.notifications.info(type === "travel" ? "On your way." : "Recorded.");

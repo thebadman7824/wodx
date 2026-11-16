@@ -5,7 +5,7 @@ import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
 import * as TB from "./trait-bite-rules.mjs";
 import {applyTimed} from "./timed.mjs";
-import {rollEffects as sigRollEffects} from "./signatures.mjs";
+import {rollEffects as sigRollEffects, bruisedFor, fewerFor} from "./signatures.mjs";
 import {conditionsOf, senseEffectsOf} from "./conditions.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
 
@@ -77,7 +77,22 @@ export const shows = actor => T.showsOf(view(actor));
 /** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
 export const ticks = actor => T.ticksOf(view(actor));
 /** For WoDX Combat (B3793): extra health levels, softer wound penalties, silver. */
-export const toughness = actor => T.bodyOf(view(actor));
+/** The Mockery Breed a Creature sheet is set to (system variant warwolves, anurana, samsa, kerasi, yeren), or "". */
+export const mockeryOf = actor => {
+  const v = String(actor?.system?.settings?.variant ?? "").toLowerCase();
+  return actor?.type === "Creature" && ["warwolves", "anurana", "samsa", "kerasi", "yeren"].includes(v) ? v : "";
+};
+// B6729: a changeling's kith adds Bruised levels (Rock Giants, Glomes, a troll's oaths)
+export function toughness(actor) {
+  const b = T.bodyOf(view(actor)), k = bruisedFor(actor);
+  if ( k.n > 0 ) { b.bruised += k.n; b.names.push(...k.names); }
+  // B6922: a Bodach's Deadly Exposure takes two health levels away (C20 p. 373)
+  const f = fewerFor(actor);
+  if ( f.n > 0 ) { b.fewer = (b.fewer ?? 0) + f.n; b.names.push(...f.names.map(x => `${x}: Deadly Exposure`)); }
+  // B6729: a War Wolf (a Mockery Breed on a Creature sheet) shares the Garou's weakness to silver (W20 Book of the Wyrm p. 168)
+  if ( mockeryOf(actor) === "warwolves" && !b.silver ) { b.silver = true; b.names.push("War Wolf: silver"); }
+  return b;
+}
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */
 export const attitudeSeed = (actor, npc, extra = {}) => T.attitudeSeed(view(actor), npc ? {
   kind: kindOf(npc),
@@ -187,6 +202,10 @@ async function bite(a, x, d) {
   if ( f.hint ) {
     await ChatMessage.create({content: `<div class="wodx-card"><p><b>Common Sense</b>: before ${esc(d.on === "fight" ? "this fight" : "this step")}, ${esc(a.name)} has a feeling it may be a mistake. Think it over once more.</p></div>`, speaker: {alias: a.name}, whisper: game.users.filter(u => !u.isGM && a.testUserPermission(u, "OWNER")).map(u => u.id).concat(game.users.filter(u => u.isGM).map(u => u.id))});
     return "a word of warning went to the player.";
+  }
+  if ( f.tell ) {
+    await ChatMessage.create({content: `<div class="wodx-card"><p><b>${esc(x.name)}</b>: ${esc(said)}${esc(a.name)} ${esc(f.tell)}.</p></div>`, speaker: {alias: a.name}, whisper: game.users.filter(u => u.isGM || a.testUserPermission(u, "OWNER")).map(u => u.id)});
+    return `${said}${f.tell}.`;
   }
   if ( f.wp ) { const wp = a.system?.advantages?.willpower ?? {}; await a.update({"system.advantages.willpower.temporary": Math.max(0, (Number(wp.temporary) || 0) + f.wp)}); return `${said}a Willpower point goes.`; }
   if ( f.spendWp ) {

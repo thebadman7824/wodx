@@ -320,7 +320,8 @@ export class DialogPower extends FormApplication {
                                 .sort((a, b) => game.i18n.localize(a.system.label).localeCompare(game.i18n.localize(b.system.label)));
         }
         else {
-            data.config.powerAbilities = this.actor.system.listdata.powerAbilities; 
+            // WoDX: listdata is built when the sheet renders; a power rolled before that (a macro, a gate, a fresh NPC) had none
+            data.config.powerAbilities = this.actor.system.listdata?.powerAbilities ?? [];
         }        
         
         const actortype = this._getActorType();
@@ -1134,7 +1135,7 @@ export class DialogPower extends FormApplication {
         const powerRoll = new DiceRollContainer(this.actor);
         powerRoll.action = this.object.name;
         powerRoll.attribute = this.object.dice1;     
-        powerRoll.ability = this.object.abilityKey;   
+        powerRoll.ability = this.object.abilityKey ?? this.object.dice2; // WoDX fork (B6720): the object has no abilityKey, so the Ability was never passed
         powerRoll.origin = "power";
         powerRoll.powerType = this.object.type;
         powerRoll.numDices = numDices;

@@ -406,6 +406,291 @@ test("quick attack: one click, automatic everything; the second attack and defen
   ChatMessage.create = origCreate;
 });
 
+test("a Great Blow or Overhead Cleave leaves its striker no defense for the rest of the turn (V20 Dark Ages p. 347)", async () => {
+  const C = game.wodxCombat;
+  assert.equal(C.rules.MANEUVERS.greatblow.noDefense, true, "Great Blow: no defensive actions in the turn");
+  assert.equal(C.rules.MANEUVERS.cleave.noDefense, true);
+  const faces = [];
+  globalThis.Roll = class { constructor(f) { this.formula = f; } async evaluate() {
+    const n = Number(/^(\d+)d10/.exec(this.formula)?.[1] ?? 1); const res = Array.from({length: n}, () => ({result: faces.shift() ?? 10}));
+    this.dice = [{results: res, total: res.reduce((a, r) => a + r.result, 0)}]; this.total = this.dice[0].total; return this; } };
+  const msgs = [];
+  const prevMsgs = game.messages;
+  game.messages = {get contents() { return msgs; }, get size() { return msgs.length; }, get: id => msgs.find(m => m.id === id)};
+  const origCreate = ChatMessage.create;
+  ChatMessage.create = async data => { const m = {...data, id: `m${msgs.length}`, getFlag(s, k) { return this.flags?.[s]?.[k]; }, async update() { return this; }}; msgs.push(m); return m; };
+  ChatMessage.getSpeaker ??= () => ({alias: "test"});
+  CONFIG.sounds ??= {dice: ""};
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const prevCombat = game.combat;
+  game.combat = {id: "c9", started: true, round: 2};
+  const sys = (ab) => ({attributes: Object.fromEntries(Object.entries({dexterity: 3, strength: 3, stamina: 2, wits: 2}).map(([k, v]) => [k, {value: v, total: v}])),
+    abilities: Object.fromEntries(Object.entries(ab).map(([k, v]) => [k, {value: v}])), health: {damage: {woundpenalty: 0}}});
+  const atk = makeActor("Blow Answerer", "Mortal", {system: sys({melee: 3})});
+  atk.items = [{id: "sw9", type: "Melee Weapon", name: "Falchion", system: {isequipped: true, damage: {attribute: "strength", bonus: 2, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+  const striker = makeActor("Great Striker", "Mortal", {system: sys({athletics: 3, melee: 3})});
+  // Fresh turn: the striker dodges
+  const [r0] = await C.quickAttack({attacker: {actor: atk}, target: {actor: striker}});
+  assert.equal(r0.message.flags["wodx-combat"].data.defended, true, "no committed blow yet: a defense");
+  assert.equal(r0.message.flags["wodx-combat"].data.noDefense, false, "a normal attack leaves the defense open");
+  // The striker's Great Blow card this turn (the card the attack writes: noDefense from the maneuver)
+  msgs.push({id: "gb", flags: {"wodx-combat": {data: {attacker: striker.uuid, target: atk.uuid, combatId: "c9", round: 2, noDefense: true}}}, getFlag(s, k) { return this.flags?.[s]?.[k]; }});
+  const [r1] = await C.quickAttack({attacker: {actor: atk}, target: {actor: striker}});
+  assert.equal(r1.message.flags["wodx-combat"].data.defended, false, "after a Great Blow: no defense this turn");
+  assert.match(r1.message.content, /committed blow this turn: no defense/);
+  // Next turn the defense is back
+  game.combat = {id: "c9", started: true, round: 3};
+  const [r2] = await C.quickAttack({attacker: {actor: atk}, target: {actor: striker}});
+  assert.equal(r2.message.flags["wodx-combat"].data.defended, true, "a new turn: the defense is back");
+  game.combat = prevCombat;
+  game.messages = prevMsgs;
+  ChatMessage.create = origCreate;
+});
+
+/** Drives the real attack window: picks the given fields and presses Attack. */
+async function dialogAttack(C, atk, def, picks) {
+  const api = foundry.applications.api, Prev = api.DialogV2;
+  api.DialogV2 = class {
+    constructor(o) { this.o = o; this.element = document.createElement("div"); this.element.innerHTML = o.content; }
+    addEventListener() {}
+    async render() {
+      for ( const [k, v] of Object.entries(picks) ) { const el = this.element.querySelector(`[name="${k}"]`); assert.ok(el, `field ${k}`); if ( el.tagName === "SELECT" && ![...el.options].some(o => o.value === v) ) el.insertAdjacentHTML("beforeend", `<option value="${v}">${v}</option>`); el.value = v; }
+      this.o.buttons.find(b => b.action === "attack").callback(null, null, this);
+    }
+    close() {}
+  };
+  try { return await C.attack({attacker: {actor: atk}, target: {actor: def}}); } finally { api.DialogV2 = Prev; }
+}
+function fightKit(combat) {
+  const faces = [];
+  globalThis.Roll = class { constructor(f) { this.formula = f; } async evaluate() {
+    const n = Number(/^(\d+)d10/.exec(this.formula)?.[1] ?? 1); const res = Array.from({length: n}, () => ({result: faces.shift() ?? 10}));
+    this.dice = [{results: res, total: res.reduce((a, r) => a + r.result, 0)}]; this.total = this.dice[0].total; return this; } };
+  const msgs = [], prev = {messages: game.messages, create: ChatMessage.create, combat: game.combat};
+  game.messages = {get contents() { return msgs; }, get size() { return msgs.length; }, get: id => msgs.find(m => m.id === id)};
+  ChatMessage.create = async data => { const m = {...data, id: `m${msgs.length}`, getFlag(s, k) { return this.flags?.[s]?.[k]; }, async update() { return this; }}; msgs.push(m); return m; };
+  ChatMessage.getSpeaker ??= () => ({alias: "test"});
+  CONFIG.sounds ??= {dice: ""};
+  game.combat = combat;
+  return {faces, msgs, restore() { game.messages = prev.messages; ChatMessage.create = prev.create; game.combat = prev.combat; }};
+}
+const fighterSys = (ab, attrs = {}) => ({attributes: Object.fromEntries(Object.entries({dexterity: 3, strength: 3, stamina: 2, wits: 2, ...attrs}).map(([k, v]) => [k, {value: v, total: v}])),
+  abilities: Object.fromEntries(Object.entries(ab).map(([k, v]) => [k, {value: v}])), health: {damage: {woundpenalty: 0}}});
+
+test("a Tackle: both fighters roll Dexterity + Athletics at 7, and only a failure falls (V20 Dark Ages p. 348)", async () => {
+  const C = game.wodxCombat;
+  assert.deepEqual(C.rules.followOn("tackle", {hit: true}).map(f => [f.condition, f.resist, f.both]), [["knockdown", 7, true]]);
+  const kit = fightKit({id: "c7", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  await game.settings.set("wodx-combat", "statusEffects", true);
+  try {
+    const rusher = makeActor("Tackle Rusher", "Mortal", {system: fighterSys({brawl: 3, athletics: 2})});
+    const clumsy = makeActor("Tackle Clumsy", "Mortal", {system: fighterSys({}, {dexterity: 0})});
+    const r = await dialogAttack(C, rusher, clumsy, {weapon: "unarmed:punch", maneuver: "tackle", defense: "none"});
+    assert.ok(r?.message, "an attack card");
+    const html = r.message.content;
+    assert.match(html, /Tackle Clumsy keeps their feet\? Dexterity \+ Athletics, 0 dice at 7: 0 successes, knocked down/);
+    assert.match(html, /Tackle Rusher keeps their feet\? Dexterity \+ Athletics, 5 dice at 7: 5 successes, still standing/);
+    assert.match(html, /Knocked down: Tackle Clumsy is marked/);
+    assert.doesNotMatch(html, /Knocked down: Tackle Rusher/);
+  } finally { kit.restore(); }
+});
+
+test("a Disarm rolls damage against Strength: beyond it the weapon flies and leaves the hand, and nobody is hurt (V20 Dark Ages p. 347)", async () => {
+  const C = game.wodxCombat;
+  assert.deepEqual(C.rules.disarmResult(5, 3), {flies: true, yards: 2});
+  assert.deepEqual(C.rules.disarmResult(3, 3), {flies: false, yards: 0});
+  const kit = fightKit({id: "c8", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  try {
+    const fencer = makeActor("Disarm Fencer", "Mortal", {system: fighterSys({melee: 3})});
+    fencer.items = [{id: "sw8", type: "Melee Weapon", name: "Rapier", system: {isequipped: true, damage: {attribute: "strength", bonus: 1, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+    const guard = makeActor("Disarm Guard", "Mortal", {system: fighterSys({melee: 1}, {strength: 2})});
+    const mace = {id: "mc8", type: "Melee Weapon", name: "Mace", system: {isequipped: true, damage: {attribute: "strength", bonus: 2, type: "bashing"}}, async update(ch) { for ( const [k, v] of Object.entries(ch) ) setPath(this, k, v); return this; }};
+    guard.items = [mace];
+    guard.items.get = id => guard.items.find(i => i.id === id);
+    const r = await dialogAttack(C, fencer, guard, {weapon: "sw8", maneuver: "disarm", defense: "none"});
+    assert.ok(r?.message, "an attack card");
+    const html = r.message.content;
+    assert.match(html, /Disarm:<\/b> damage \d+ dice at 6: \d+ successes against Strength 2\. Mace flies \d+ yards from Disarm Guard's hand/);
+    assert.match(html, /no damage/);
+    assert.equal(mace.system.isequipped, false, "the mace is out of the guard's hand");
+    assert.equal(r.message.flags["wodx-combat"].data.levels, 0, "no damage from a disarm");
+  } finally { kit.restore(); }
+});
+
+test("after a Tackle both fighters are off balance next turn: +1 difficulty to attack and defense (V20 Dark Ages p. 348)", async () => {
+  const C = game.wodxCombat;
+  const kit = fightKit({id: "c10", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  try {
+    const rusher = makeActor("Unbalanced Rusher", "Mortal", {system: fighterSys({brawl: 3, athletics: 2})});
+    const other = makeActor("Unbalanced Other", "Mortal", {system: fighterSys({athletics: 2})});
+    const r = await dialogAttack(C, rusher, other, {weapon: "unarmed:punch", maneuver: "tackle", defense: "none"});
+    assert.match(r.message.content, /off balance: \+1 difficulty to all their actions next turn/);
+    assert.deepEqual(rusher.flags["wodx-combat"].offBalance, {combat: "c10", round: 1});
+    assert.deepEqual(other.flags["wodx-combat"].offBalance, {combat: "c10", round: 1});
+    assert.equal(C.conditionMods(rusher, other).attackerDiff, 0, "the same turn: no penalty yet");
+    game.combat = {id: "c10", started: true, round: 2};
+    const cm = C.conditionMods(rusher, other);
+    assert.equal(cm.attackerDiff, 1, "the next turn: +1 to the attack");
+    assert.ok(cm.notes.some(n => /off balance after a tackle/.test(n)));
+    const d = C.bestDefense(other, {defIndex: 0, defDice: 0, defDiff: 0}, {ranged: false, type: "bashing"});
+    assert.ok(d.best.notes.some(n => /off balance after a tackle \+1 diff/.test(n)), "and +1 to the defense");
+    game.combat = {id: "c10", started: true, round: 3};
+    assert.equal(C.conditionMods(rusher, other).attackerDiff, 0, "gone the turn after");
+  } finally { kit.restore(); }
+});
+
+test("Riposte needs a successful defense earlier in the turn; a player is stopped, the Storyteller warned (V20 Dark Ages p. 347)", async () => {
+  const C = game.wodxCombat;
+  const kit = fightKit({id: "c11", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const gm = game.user;
+  try {
+    const fencer = makeActor("Riposte Fencer", "Mortal", {system: fighterSys({melee: 3, athletics: 3})});
+    fencer.items = [{id: "sw11", type: "Melee Weapon", name: "Sabre", system: {isequipped: true, damage: {attribute: "strength", bonus: 2, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+    const foe = makeActor("Riposte Foe", "Mortal", {system: fighterSys({melee: 2})});
+    game.user = {id: "p1", name: "Anna", isGM: false};
+    const notes = mock.log.notifications.length;
+    const r0 = await dialogAttack(C, fencer, foe, {weapon: "sw11", maneuver: "riposte", defense: "none"});
+    assert.equal(r0, null, "no successful defense yet: refused");
+    assert.ok(mock.log.notifications.slice(notes).some(([, m]) => /a riposte needs a successful defense earlier this turn/.test(m)));
+    game.user = gm;
+    const rg = await dialogAttack(C, fencer, foe, {weapon: "sw11", maneuver: "riposte", defense: "none"});
+    assert.match(rg.message.content, /Storyteller's call: a riposte needs a successful defense/);
+    // The foe attacks, the fencer dodges with success: the card says so, and now the riposte goes
+    const [blow] = await C.quickAttack({attacker: {actor: foe}, target: {actor: fencer}});
+    assert.equal(blow.message.flags["wodx-combat"].data.defOk, true);
+    game.user = {id: "p1", name: "Anna", isGM: false};
+    const r1 = await dialogAttack(C, fencer, foe, {weapon: "sw11", maneuver: "riposte", defense: "none"});
+    assert.ok(r1?.message, "after a successful defense: the riposte is rolled");
+  } finally { game.user = gm; kit.restore(); }
+});
+
+test("a Hold lasts until the victim breaks free: resisted Strength + Brawl at their turn; the holder may then bite (V20 Dark Ages pp. 346-347)", async () => {
+  const C = game.wodxCombat;
+  const kit = fightKit({id: "c12", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  await game.settings.set("wodx-combat", "statusEffects", true);
+  const gm = game.user;
+  try {
+    const holder = makeActor("Grip Holder", "Mortal", {system: fighterSys({brawl: 3})});
+    const victim = makeActor("Grip Victim", "Mortal", {system: fighterSys({brawl: 1})});
+    const prevFrom = globalThis.fromUuid;
+    globalThis.fromUuid = async u => [holder, victim].find(a => a.uuid === u) ?? (prevFrom ? prevFrom(u) : null);
+    const fd = {defense: "auto", defIndex: 0};
+    assert.equal(C.bestAttack(holder, victim, fd).plans.find(p => p.w.id === "unarmed:bite").valid, false, "no bite before a hold");
+    const r = await dialogAttack(C, holder, victim, {weapon: "unarmed:punch", maneuver: "hold", defense: "none"});
+    assert.match(r.message.content, /until they break free/);
+    const grip = victim.flags["wodx-combat"].grip;
+    assert.equal(grip.by, holder.uuid); assert.equal(grip.kind, "hold");
+    assert.equal(C.bestAttack(holder, victim, fd).plans.find(p => p.w.id === "unarmed:bite").valid, true, "after the hold: the bite is allowed");
+    // The held player cannot attack
+    game.user = {id: "p1", name: "Anna", isGM: false};
+    const notes = mock.log.notifications.length;
+    const [none] = await C.quickAttack({attacker: {actor: victim}, target: {actor: holder}});
+    assert.equal(none, undefined);
+    assert.ok(mock.log.notifications.slice(notes).some(([, m]) => /is held by Grip Holder/.test(m)));
+    game.user = gm;
+    // The struggle: the victim rolls 4 dice (Str 3 + Brawl 1) all failing, the holder 6 dice of 10s: still held
+    kit.faces.push(2, 2, 2, 2);
+    const stay = await C.breakFree(victim);
+    assert.equal(stay.free, false);
+    assert.ok(victim.flags["wodx-combat"].grip, "still held");
+    // The victim rolls four 10s, the holder six failures: free
+    kit.faces.push(10, 10, 10, 10, 2, 2, 2, 2, 2, 2);
+    const out = await C.breakFree(victim);
+    assert.equal(out.free, true, "more successes than the holder: free");
+    assert.equal(victim.flags["wodx-combat"].grip, undefined);
+  } finally { game.user = gm; kit.restore(); }
+});
+
+test("a Clinch locks both fighters: no attack on anyone else, nor with anything but Strength damage or a bite (V20 Dark Ages p. 347)", async () => {
+  const C = game.wodxCombat;
+  const kit = fightKit({id: "c13", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const gm = game.user;
+  try {
+    const a = makeActor("Clinch A", "Mortal", {system: fighterSys({brawl: 3})});
+    const b = makeActor("Clinch B", "Mortal", {system: fighterSys({brawl: 1})});
+    const c = makeActor("Clinch Bystander", "Mortal", {system: fighterSys({})});
+    const r = await dialogAttack(C, a, b, {weapon: "unarmed:clinch", maneuver: "normal", defense: "none"});
+    assert.match(r.message.content, /locked together/);
+    assert.equal(a.flags["wodx-combat"].clinch.with, b.uuid);
+    assert.equal(b.flags["wodx-combat"].clinch.with, a.uuid);
+    game.user = {id: "p1", name: "Anna", isGM: false};
+    assert.equal(await dialogAttack(C, a, c, {weapon: "unarmed:punch", maneuver: "normal", defense: "none"}), null, "not someone else");
+    assert.equal(await dialogAttack(C, a, b, {weapon: "unarmed:punch", maneuver: "normal", defense: "none"}), null, "not a punch");
+    assert.ok((await dialogAttack(C, a, b, {weapon: "unarmed:clinch", maneuver: "normal", defense: "none"}))?.message, "Strength damage on the one held");
+  } finally { game.user = gm; kit.restore(); }
+});
+
+test("a stake with three damage successes kills a mortal outright (V20 Dark Ages p. 347)", async () => {
+  const C = game.wodxCombat;
+  assert.equal(C.rules.stakeKills("stake", {hit: true, damageSuccesses: 3, profile: "mortal"}), true);
+  assert.equal(C.rules.stakeKills("stake", {hit: true, damageSuccesses: 2, profile: "mortal"}), false);
+  assert.equal(C.rules.stakeKills("stake", {hit: true, damageSuccesses: 5, profile: "vampire"}), false, "a vampire is staked, not killed");
+  const kit = fightKit({id: "c14", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  try {
+    const hunter = makeActor("Stake Hunter", "Mortal", {system: fighterSys({melee: 4})});
+    hunter.items = [{id: "st14", type: "Melee Weapon", name: "Wooden stake", system: {isequipped: true, damage: {attribute: "strength", bonus: 1, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+    const man = makeActor("Stake Victim", "Mortal", {system: fighterSys({})});
+    const r = await dialogAttack(C, hunter, man, {weapon: "st14", maneuver: "stake", defense: "none"});
+    assert.match(r.message.content, /Heart pierced/);
+    const d = r.message.flags["wodx-combat"].data;
+    assert.equal(d.type, "lethal");
+    assert.ok(d.levels >= 7, "the whole track in lethal");
+  } finally { kit.restore(); }
+});
+
+test("with WoDX Interactables a disarmed weapon lands on the map as loose gear, the extra successes away from the attacker", async () => {
+  const C = game.wodxCombat;
+  const kit = fightKit({id: "c15", started: true, round: 1});
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const calls = [];
+  const prevIx = game.modules.get("wodx-interactables");
+  game.modules.set("wodx-interactables", {active: true, api: {loose: {setDown: async (tok, ids, opt) => { calls.push({tok: tok.id, ids, ...opt}); return {id: "pile"}; }}}});
+  try {
+    const fencer = makeActor("Pile Fencer", "Mortal", {system: fighterSys({melee: 3})});
+    fencer.items = [{id: "sw15", type: "Melee Weapon", name: "Rapier", system: {isequipped: true, damage: {attribute: "strength", bonus: 1, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+    const guard = makeActor("Pile Guard", "Mortal", {system: fighterSys({melee: 1}, {strength: 2})});
+    const mace = {id: "mc15", type: "Melee Weapon", name: "Mace", system: {isequipped: true}, async update() { throw new Error("not unequipped in place: it goes to the ground"); }};
+    guard.items = [mace]; guard.items.get = id => guard.items.find(i => i.id === id);
+    const tdoc = {id: "tg15", x: 500, y: 100, width: 1, height: 1, parent: {grid: {size: 100, distance: 1, units: "yd"}}};
+    guard.getActiveTokens = () => [{document: tdoc}];
+    const r = await dialogAttack(C, fencer, guard, {weapon: "sw15", maneuver: "disarm", defense: "none"});
+    assert.ok(r?.message);
+    assert.equal(calls.length, 1, "set down through Interactables");
+    const c = calls[0];
+    assert.deepEqual(c.ids, ["mc15"]);
+    const yards = Number(/lands (\d+) yard/.exec(c.how)?.[1]);
+    assert.ok(yards >= 1);
+    assert.ok(c.at.y === 150 && c.at.x > 550, "sent on along the line from the attacker (no attacker token: to the east)");
+  } finally { if ( prevIx ) game.modules.set("wodx-interactables", prevIx); else game.modules.delete("wodx-interactables"); kit.restore(); }
+});
+
+test("a player's feeding (wodxFed) is fired again on the Storyteller's computer, marked relayed, where the listeners act", async () => {
+  const C = game.wodxCombat;
+  const kindred = makeActor("Relay Kindred", "Vampire");
+  const prevFrom = globalThis.fromUuid;
+  globalThis.fromUuid = async u => (u === kindred.uuid ? kindred : prevFrom ? prevFrom(u) : null);
+  const heard = [];
+  Hooks.on("wodxFed", p => { if ( p?.by?.uuid === kindred.uuid ) heard.push({user: game.user.id, relayed: !!p.relayed, drunk: p.drunk}); });
+  const fed = {by: {uuid: kindred.uuid, name: kindred.name}, vessel: {uuid: "Actor.v", name: "Vessel"}, drunk: 2, willing: false, fought: false};
+  mock.log.socket.length = 0;
+  mock.asPlayer();
+  try {
+    assert.equal(C.relayHook("wodxFed", kindred, fed), true, "sent from the player's computer");
+    // the Storyteller's side takes the message (the mock keeps one socket handler per name, so it is handed over here)
+    const sent = mock.log.socket.splice(0).map(m => m.data);
+    mock.asGM();
+    for ( const d of sent ) await C._onSocket(d);
+    assert.deepEqual(heard, [{user: "gm", relayed: true, drunk: 2}], "heard once on the Storyteller's side, with the payload as the one argument");
+  } finally { mock.asGM(); globalThis.fromUuid = prevFrom; }
+});
+
 test("initiative rolls itself when a fight starts and each new turn (setting)", async () => {
   const msgs = [];
   const origCreate = ChatMessage.create;
@@ -417,7 +702,8 @@ test("initiative rolls itself when a fight starts and each new turn (setting)", 
   await Hooks.callAll("combatStart", combat);
   await new Promise(r => setTimeout(r, 30));
   assert.equal(updates.length, 2, "both combatants rolled");
-  assert.match(msgs.at(-1).content, /Initiative, turn 1/);
+  // B6904: find the initiative card by what it says; under load another listener's card can come after it
+  assert.ok(msgs.some(m => /Initiative, turn 1/.test(m.content ?? "")), msgs.map(m => m.content).join(" | "));
   combat.round = 2;
   await Hooks.callAll("updateCombat", combat, {round: 2});
   await new Promise(r => setTimeout(r, 30));
@@ -429,5 +715,7 @@ test("initiative rolls itself when a fight starts and each new turn (setting)", 
 });
 
 test("no error notifications", () => {
-  assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
+  // the refusals the grip, clinch and riposte tests ask for on purpose are not errors of the code
+  const meant = /is held by Grip Holder|locked in a clinch|a riposte needs a successful defense/;
+  assert.deepEqual(mock.log.notifications.filter(([l, m]) => l === "error" && !meant.test(m)), []);
 });

@@ -82,7 +82,7 @@ SET_PIECES = [
     SP("bench-wall", ["hall", "kitchen", "tavern", "passage", "work"], "wall", (2, 1), [("seat", 0, 0, 2, 1, "base")]),
     SP("chest-wall", ["sleep", "hall", "store", "study", "work"], "wall", (1, 1), [("chest", 0, 0, 1, 1, "base")]),
     SP("kitchen-worktable", ["kitchen", "work"], "wall", (2, 1), [("table", 0, 0, 2, 1, "base"), *on("clutter", 3)]),
-    # from Ben's interior packs (14 November 2026): a chopping block in every kitchen, a forge's working corner,
+    # from the owner's interior packs (14 November 2026): a chopping block in every kitchen, a forge's working corner,
     # each craft's own bench, a shop's L-shaped counter. Every piece comes from the age's and region's palette.
     SP("chopping-block", ["kitchen"], "wall", (1, 1), [("block", 0, 0, 1, 1, "base")], bands=EARLY + ["republic"]),   # a cutting board on the worktop after
     SP("forge-corner", ["work"], "wall", (4, 3), [("hearth", 1, 0, 2, 1, "base"), ("bellows", 0, 0, 1, 1, "back"), ("quench", 3, 0, 1, 1, "back"),

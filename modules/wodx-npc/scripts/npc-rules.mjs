@@ -407,7 +407,7 @@ export function boardOption(state = {}, options = [], p = {}) {
 const TIMID_BELOW = 0.5;
 
 /**
- * B5077 (Ben's Carry Bodies Desk, c8): an NPC takes up the fallen by itself. state.fallen: the characters down near it,
+ * B5077 (the owner's Carry Bodies Desk, c8): an NPC takes up the fallen by itself. state.fallen: the characters down near it,
  * [{id, name, ally, foe, rival, hostile (a player character against it), dead, distance (yards), canMove (the lifting chart
  * lets this NPC shift them), mode ("carry" or "drag")}]; state.self.holding: {id, name, intent} for one it already holds;
  * state.noCarry: the Behaviour window's "Leaves the fallen where they lie"; state.carryOrder: the token id of one it was asked

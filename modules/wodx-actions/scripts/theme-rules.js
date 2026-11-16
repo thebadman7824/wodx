@@ -12,7 +12,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 /* ------------------------------------------------------------------ */
 
 /**
- * The lines in the WoDX look. Kindred, wraith and hunter came first (the 6e gate, approved by Ben on 8 November 2026);
+ * The lines in the WoDX look. Kindred, wraith and hunter came first (the 6e gate, approved by the owner on 8 November 2026);
  * the rest followed. A line with no accent in the stylesheet (mortals) wears the era's own.
  */
 export const LINE_LOOK = ["kindred", "ghoul", "mortal", "hunter", "lupine", "mage", "fae", "wraith", "spirit", "beast", "demon", "mummy", "exalted"];

@@ -6,7 +6,7 @@
  *
  *   Pick a fetish or talen from the book list. WoDX checks the maker has the rite and the Rituals, works out the
  *   difficulty (Gnosis spent, persuasion, the spirit court's regard), and sets up the task: three nights of cleansing,
- *   then one roll. A player's task waits paused for the Storyteller's go-ahead on an approval card (Ben's desk, g3).
+ *   then one roll. A player's task waits paused for the Storyteller's go-ahead on an approval card (the owner's desk, g3).
  *   When it ends (hook wodxTaskDone) the Gnosis spent is paid, and a success makes the real items: a Fetish item the
  *   WoDX Actions fetish window can attune and wake, a weapon beside a war fetish, or one talen a success. A botch
  *   loses the vessel and sours the spirit's court.

@@ -84,7 +84,7 @@ export function pruneReads(reads = {}, now, max = 40) {
  * needsRead (0.10.0): Aura Perception shows only what `read` (from readFor) showed; false gives every ring as before.
  */
 /**
- * B5094, B5095: a vampire in Golconda (Ben's Golconda Desk, house readings: the books leave it unsaid). Its aura is
+ * B5094, B5095: a vampire in Golconda (the owner's Golconda Desk, house readings: the books leave it unsaid). Its aura is
  * still, pale without the Beast's flickers, and a soft halo shows to anyone using a sight that reads auras or senses,
  * and to the Storyteller always.
  */

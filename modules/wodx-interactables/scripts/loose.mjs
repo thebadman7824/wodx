@@ -72,7 +72,7 @@ export function pileAt(scene, p) {
  * Active Storyteller: put things from a character's sheet down where their token stands. ids: item ids. Returns the
  * pile tile, or null.
  */
-export async function setDown(tokDoc, ids = []) {
+export async function setDown(tokDoc, ids = [], {at = null, how = ""} = {}) {
   tokDoc = docOf(tokDoc);
   const actor = tokDoc?.actor, scene = tokDoc?.parent;
   if ( !actor || !scene || !ids.length ) return null;
@@ -82,7 +82,9 @@ export async function setDown(tokDoc, ids = []) {
   if ( !items.length ) return null;
   const loose = items.map(i => { const o = i.toObject(); delete o._id; if ( o.system?.isequipped ) o.system.isequipped = false; return {name: i.name, data: o}; });
   const g = num(scene.grid?.size) || 100;
-  const centre = {x: num(tokDoc.x) + num(tokDoc.width || 1) * g / 2, y: num(tokDoc.y) + num(tokDoc.height || 1) * g / 2};
+  // B6788: a thing knocked away lands where it was sent (at: a point on the map), else at the character's feet
+  const centre = at && Number.isFinite(Number(at.x)) && Number.isFinite(Number(at.y)) ? {x: num(at.x), y: num(at.y)}
+    : {x: num(tokDoc.x) + num(tokDoc.width || 1) * g / 2, y: num(tokDoc.y) + num(tokDoc.height || 1) * g / 2};
   let tile = pileAt(scene, centre);
   if ( tile ) await tile.update({[`flags.${MOD}`]: L.addToPile(tile.flags?.[MOD] ?? {}, loose), hidden: false});
   else {
@@ -94,9 +96,9 @@ export async function setDown(tokDoc, ids = []) {
   const names = items.map(i => i.name);
   const kg = contentsKg(tile.flags?.[MOD] ?? {});
   await ChatMessage.create({speaker: {alias: tokDoc.name, scene: scene.id, token: tokDoc.id},
-    content: `<div class="vta-card wodx-x wix-loose"><header class="vta-head"><h3 style="background:none!important;border:0!important;box-shadow:none!important;color:inherit!important">Sets gear down</h3></header><div class="vta-body"><p><b>${esc(tokDoc.name)}</b> puts ${esc(listWords(names))} on the ground. The pile there: ${esc(L.pileLabel("", kg).replace(/^Gear on the ground, /, "")) || "light"}.</p></div></div>`,
+    content: `<div class="vta-card wodx-x wix-loose"><header class="vta-head"><h3 style="background:none!important;border:0!important;box-shadow:none!important;color:inherit!important">${how ? "Knocked away" : "Sets gear down"}</h3></header><div class="vta-body"><p><b>${esc(tokDoc.name)}</b> ${how ? esc(how) : `puts ${esc(listWords(names))} on the ground.`} The pile there: ${esc(L.pileLabel("", kg).replace(/^Gear on the ground, /, "")) || "light"}.</p></div></div>`,
     flags: {[MOD]: {looseCard: true}}});
-  try { deps.mapEvent?.("setdown", {scene, doc: tile, tokDoc, noise: "quiet", object: "gear on the ground", extra: {items: names}}); } catch (e) { /* no map events */ }
+  try { deps.mapEvent?.("setdown", {scene, doc: tile, tokDoc, noise: how ? "loud" : "quiet", object: "gear on the ground", extra: {items: names}}); } catch (e) { /* no map events */ }
   draw();
   return tile;
 }

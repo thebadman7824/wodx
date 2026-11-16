@@ -2,7 +2,7 @@
  * The Armenians for the People generator (Creation, B3940 to B3943): Greater Armenia, Cilicia (1198 to 1375), the
  * cities of the Ottoman and Safavid lands, New Julfa and Constantinople. WoDX's own lists of names as Armenians bore
  * them; no book text. Before 1800 a byname of the home town (Narekatsi, "of Narek"), as the chroniclers and scribes
- * signed; from 1800 a family name in -ian or -yan. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * signed; from 1800 a family name in -ian or -yan. Picks logged in docs/PENDING-REVIEW.md for the owner.
  */
 const MEN_OLD = `
   Grigor, Hovhannes, Smbat, Ashot, Gagik, Vardan, Levon, Hetum, Toros, Oshin, Kostandin, Mkhitar, Vahram, Tigran,

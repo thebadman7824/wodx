@@ -15,7 +15,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.32.2";
+export const VERSION = "0.32.3";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -30,7 +30,7 @@ function registerSettings() {
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return undefined; } };
 const enabled = () => active && setting("on") !== false;
 /**
- * The drawn paperdoll portrait faces are retired for good (Ben, 13 November 2026, B2990): the pixel faces replace them.
+ * The drawn paperdoll portrait faces are retired for good (the owner, 13 November 2026, B2990): the pixel faces replace them.
  * Their code and every baked picture stay as they are; nothing is deleted. The Figure builder for sprite tokens stays on.
  */
 export const DRAWN_FACES_RETIRED = true;

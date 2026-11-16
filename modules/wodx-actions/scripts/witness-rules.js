@@ -8,7 +8,7 @@
  *     startled   a creature of another kind, or an animal: no mortal rumour, but they have seen something they did not know.
  *     calm       their own kind, or one who already knows this kind (a ghoul of the Kindred, Kinfolk of the Garou,
  *                herd or retainers the Storyteller has ticked). Spirits, wraiths, demons and mummies are never startled:
- *                they have seen too much of the world to be (Ben's ruling, 2026-11-12).
+ *                they have seen too much of the world to be (the owner's ruling, 2026-11-12).
  *   Mage: only Sleepers make vulgar magick "witnessed" (M20, Paradox), so animals are not breach witnesses there.
  *
  *   The place    open, guarded or closed. A scene or region may set it; otherwise its kind of place decides:
@@ -100,7 +100,7 @@ export function placeNote(mode, secret, event = "") {
   return "";
 }
 
-/* ---- The witness step (B4869-B4870, Ben's Storyteller's Hand picks x1 and x2, 14 November 2026) ---- */
+/* ---- The witness step (B4869-B4870, the owner's Storyteller's Hand picks x1 and x2, 14 November 2026) ---- */
 
 /**
  * What a mortal witness does, by the reaction its line's book rule gives (the Delirium, W20 p. 263 and DA:W p. 97;

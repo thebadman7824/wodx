@@ -183,7 +183,7 @@ test("the wiring: approvals carried out, the clock, the seat's choices, the hand
   assert.match(ap, /export async function markTakenBack/);
   const nw = src("modules/wodx-chronicle/scripts/nightwork.mjs");
   for ( const h of ["preUpdate${type}", "preCreate${type}", "preDelete${type}", "updateWorldTime", "createChatMessage"] ) assert.ok(nw.includes(h), h);
-  assert.match(nw, /hand\.addTool\(\{key: "nightWork"/);
+  assert.match(nw, /addHandTool\(\{key: "nightWork"/);
   assert.match(nw, /wodxNightUndo: true/, "the Undo's own changes are never written down as the Hand's");
   const main = src("modules/wodx-chronicle/scripts/main.mjs");
   assert.match(main, /nightwork: nightwork\.api\(\)/);

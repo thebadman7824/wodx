@@ -88,7 +88,9 @@ export function build(ctx) {
         const scene = canvas?.scene, kind = kindOf(scene), fae = changelingsOn(scene), sel = [...(canvas?.tokens?.controlled ?? [])].filter(t => t.actor);
         const need = B.needFor(year());
         const content = `<form><p>${esc(scene?.name ?? "No scene")}: ${B.isBanalKind(kind) ? `tagged as ${esc(B.BANAL_KINDS[kind])}` : "not a banal place (tag it as an office, a court of law or a Technocracy site in Places)"}. ${esc(B.WEIGHT_WORDS[B.weightOf(year())])}.</p>
-          <ul>${fae.map(a => `<li>${esc(a.name)}: ${tallyOf(a)} of ${need}${B.spared(seemingOf(a)) ? " (a Grump: spared)" : ""}</li>`).join("") || "<li>No changeling on this scene.</li>"}</ul>
+          <ul>${fae.map(a => { const k = kindFor(scene, tokenOf(scene, a)), at = B.isBanalKind(k) && k !== kind ? `, standing in ${esc(B.BANAL_KINDS[k])}` : "";
+            // B6753: a tagged region (an office inside a town scene) counts too, so each changeling shows the place that counts for them
+            return `<li>${esc(a.name)}: ${tallyOf(a)} of ${need}${at}${B.spared(seemingOf(a)) ? " (a Grump: spared)" : ""}</li>`; }).join("") || "<li>No changeling on this scene.</li>"}</ul>
           <p>Autumn People here: ${esc(autumnOn(scene).join(", ") || "none")}.</p>
           <div class="form-group"><label>Do</label><select name="mode" data-fixed><option value="count">Count this scene now</option><option value="mark">Mark the selected tokens (${sel.length}) as Autumn People</option><option value="unmark">Unmark the selected tokens</option></select></div>
           <p class="hint">Scenes count by themselves when the scene ends. ${B.REF}.</p></form>`;

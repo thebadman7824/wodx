@@ -29,6 +29,9 @@ const createActors = async data => { const made = await Actor.create(data); retu
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
 export async function run() {
+  // WoDX Creation starts after WoDX Chronicle's own ready work, which on a fresh lane can take a while (as
+  // gatecreationload found): wait up to 90 s for its api before the first step
+  for ( const t0 = Date.now(); !game.modules.get("wodx-creation")?.api && Date.now() - t0 < 90000; ) await new Promise(r => setTimeout(r, 500));
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };

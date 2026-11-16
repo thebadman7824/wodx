@@ -283,5 +283,10 @@ export const CREATION = { attributes: [7, 5, 3], abilities: [13, 9, 5], abilityC
     bonusCosts: { attribute: 5, ability: 2, specialty: 1, background: 1, foundation: 5, pillar: 3, willpower: 1 },
     quintessence: (fount, cray) => Math.max(5, fount + cray) };
 
-/** Is this a Dark Ages mage chronicle? The era profile, unless the actor says otherwise. */
-export const isDarkAgesEra = eraId => eraId === "dark-ages" || eraId === "long-night";
+/**
+ * Is this a Dark Ages mage chronicle? The era profile, unless the actor says otherwise. B6814: the seven prologue eras
+ * before 1197 (Living Gods and Classical) have no Mage book of their own; they take the Dark Ages fellowships, as the
+ * hunters take Dark Ages: Inquisitor there (hunter-rules hunterLine) and Consensus already reads them as the Dark Ages.
+ */
+const PROLOGUE = ["mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy", "classical", "living-gods"];
+export const isDarkAgesEra = eraId => eraId === "dark-ages" || eraId === "long-night" || PROLOGUE.includes(eraId);

@@ -127,7 +127,8 @@ test("threads fall due one at a time: two weeks in, then a month apart", () => {
 test("the Chronicle wiring: approval type, Undo-free reject, the window and the api", () => {
   const src = readFileSync(new URL("../../modules/wodx-chronicle/scripts/pod.mjs", import.meta.url), "utf8");
   assert.match(src, /registerHandler\(T_LP, \{label: [^}]*approve: e => startThread\(e\.data\?\.actor, e\.data\?\.thread\), reject: e => dismissThread/s);
-  assert.match(src, /dealChains\(\)\.then\(\(\) => lifepathTick\(\)\)/);
+  // B6740: the tick deals chains, then puts lifepath threads, in one turn on the story-chain state
+  assert.match(src, /await dealDue\(\); const asks = await lifepathTickNow\(\)/);
   assert.match(src, /Threads from the past/);
   assert.match(src, /lifepathTick, startThread, threads: threadsOf/);
   assert.match(src, /lifepathThreads\?\.\(a\)/);

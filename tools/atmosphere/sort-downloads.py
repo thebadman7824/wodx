@@ -1,6 +1,6 @@
 """File downloaded music and ambience into WoDX Atmosphere's era kit folders, with a credits.json entry for each file.
 
-Ben chose free sources only (12 November 2026, B2430). This tool knows those sources and their licences, refuses any
+The owner chose free sources only (12 November 2026, B2430). This tool knows those sources and their licences, refuses any
 other, and never fetches anything: it only sorts files already downloaded by hand.
 
 Usage, from the repo root:
@@ -34,7 +34,7 @@ KITS = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", 
         "modern", "time-of-judgment", "future-darkness", "classical", "living-gods"]
 AUDIO = re.compile(r"\.(ogg|oga|mp3|wav|flac|webm|m4a|opus)$", re.I)
 
-# The free sources Ben accepted, with the licence each one uses and its credit line.
+# The free sources the owner accepted, with the licence each one uses and its credit line.
 SOURCES = {
     "scott-buckley": {"name": "Scott Buckley", "site": "scottbuckley.com.au", "license": "CC BY 4.0",
                       "credit": '"{title}" by Scott Buckley (scottbuckley.com.au), CC BY 4.0'},
@@ -54,7 +54,7 @@ SOURCES = {
             "credit": '"{title}" by {author} (freemusicarchive.org), {license}'},
     "own": {"name": "Made for WoDX", "site": "", "license": "WoDX's own", "credit": '"{title}", made for WoDX'},
 }
-# Per-file licences we accept from Freesound and the Free Music Archive (Ben: CC0, CC BY and CC BY-NC; the game is
+# Per-file licences we accept from Freesound and the Free Music Archive (the owner: CC0, CC BY and CC BY-NC; the game is
 # non-commercial). FMA-Limited and the share-alike or no-derivatives variants from those two sites are refused.
 OPEN_LICENSES = re.compile(r"^(CC0( 1\.0)?|CC BY( [34]\.0)?|CC BY-NC( [34]\.0)?)$", re.I)
 

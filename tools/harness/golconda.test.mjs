@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Ben's Golconda Desk (B5090-B5099): losing it, trait caps, powers beyond it, the road, the aura, the sun, the Jyhad */
+/* The owner's Golconda Desk (B5090-B5099): losing it, trait caps, powers beyond it, the road, the aura, the sun, the Jyhad */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const KR = await import(join(root, "modules/wodx-actions/scripts/kindred-rules.js"));

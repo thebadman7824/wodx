@@ -1,6 +1,6 @@
 /**
  * Threads of Fate (B3650-B3656), the pure part: hook cards, and the weave that makes storylines from them. No Foundry
- * here, so the harness can test it. Ben's picks on the Threads of Fate Desk, 2026-11-14.
+ * here, so the harness can test it. The owner's picks on the Threads of Fate Desk, 2026-11-14.
  *
  * A hook card is shaped like the authored Rothenstein session and encounter pages: an opening line to read out, a
  * mood, who (a slot filled from the world), what they want, a kind of place, the surface (what mortals see), what lies

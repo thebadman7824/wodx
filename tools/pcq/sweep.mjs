@@ -10,7 +10,7 @@
  *     (workflow_dispatch of checks.yml on the branch). Still no run at the next sweep: stuck
  * The stuck ones are listed in one issue labelled pc-alert ("Stale pull requests"), updated each sweep and closed when
  * none are left. CI that ran and failed is listed there too, for the thread to fix; the sweeper changes nothing for it.
- * It runs with Ben's GitHub sign-in on the PC, because a push made with the workflow token starts no CI.
+ * It runs with the owner's GitHub sign-in on the PC, because a push made with the workflow token starts no CI.
  *
  *   node tools/pcq/sweep.mjs            what it would do
  *   node tools/pcq/sweep.mjs --apply    do it (the runner does this every hour)

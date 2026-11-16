@@ -3,7 +3,7 @@
  * and the Arikara of the upper Missouri, and the Pawnee of the Platte and the Loup. Earth-lodge farmers of corn,
  * beans and squash who hunted the buffalo each winter. WoDX's own lists of recorded names; no book text. The WoD
  * books hold no names for these peoples (one Mandan chief, Four Bears), so the lists come from the historical
- * record. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * record. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the clerks and painters wrote them in English, hyphens dropped): the signers of the treaties
  * of 1825 with the Mandan, the Minitari (Hidatsa) and the Arikara and of 1833, 1848 and 1857 with the Pawnee (Kappler,

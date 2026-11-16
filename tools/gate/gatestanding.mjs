@@ -81,6 +81,21 @@ export async function run() {
       ok("5. a family feud takes in a member by name and is a rivalry row", sides.includes(`feud:${feud.id}a`) && rows.some(r => r.id === `feud-${feud.id}`)
         && RV.rowsBetween([`feud:${feud.id}a`], [`feud:${feud.id}b`], 1300, rows).length === 1, {sides, rows: rows.length});
       R.notes.push({law: npc().standing.feudLaw()});
+      // B6948: before the clock is set, feud law reads the chronicle's saved opening year (the clock is put back after)
+      await step("5b. feud law before the clock is set reads the opening year", async () => {
+        const CH = "wodx-chronicle", was = {t: game.time.worldTime, set: game.settings.get(CH, "openingSet"), year: game.settings.get(CH, "openingYear")};
+        const read = {};
+        try {
+          await game.settings.set(CH, "openingSet", false);
+          await game.time.set(0);
+          for ( const y of [1300, 1600] ) { await game.settings.set(CH, "openingYear", y); read[y] = npc().standing.feudLaw({region: "moravia"}).key; }
+        } finally {
+          await game.time.set(was.t);
+          await game.settings.set(CH, "openingYear", was.year);
+          await game.settings.set(CH, "openingSet", was.set);
+        }
+        ok("5b. feud law before the clock is set reads the opening year", read[1300] === "lawful" && read[1600] === "outlawed" && game.time.worldTime === was.t, read);
+      });
       await step("6. tree", async () => {
         await npc().standing.setRank(heir, 2);
         const dlg = await npc().openTree(heir);

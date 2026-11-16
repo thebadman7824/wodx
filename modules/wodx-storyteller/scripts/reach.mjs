@@ -3,7 +3,7 @@
  *
  * When a system decides, or the Storyteller approves, that the world acts on someone, this makes it happen on the
  * map: people come to the scene in plain sight, and a fight starts through WoDX Combat's fight starter when they mean
- * harm (its own Auto or Suggest setting still applies). Ben, 14 November 2026: an approval may stay, but once it is
+ * harm (its own Auto or Suggest setting still applies). The owner, 14 November 2026: an approval may stay, but once it is
  * approved something must happen.
  *
  *   road     an approved road encounter puts its people or beasts by the traveller (w3)

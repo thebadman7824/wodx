@@ -26,7 +26,7 @@ def init(seed, asset_list):
     global R, ASSETS, SEED
     R, SEED = random.Random(seed), seed
     files = [f for f in str(asset_list).split(",") if f]
-    # Ben's own region packs (Tom Cartos' Feudal Japan town, castle, inn, gardens and culture) ride along with any list:
+    # The owner's own region packs (Tom Cartos' Feudal Japan town, castle, inn, gardens and culture) ride along with any list:
     # their pictures carry their region, so only a town in that region draws them
     files += [f for f in REGION_LISTS if os.path.exists(f) and f not in files]
     ASSETS = list(dict.fromkeys(l.strip() for f in files for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
@@ -49,7 +49,7 @@ def asset(name, kind="objects"):
 
 def pack_info(pid):
     """(name, version, author) of a pack: Forgotten Adventures' from PACKS, the rest from the PC's pack table (the
-    newest copy where Ben has several)."""
+    newest copy where the owner has several)."""
     if pid in PACKS: return PACKS[pid] + ("Forgotten Adventures",)
     try:
         rows = [l.rstrip("\n").split("\t") for l in open(PACK_TABLE, encoding="utf-8-sig")][1:]
@@ -86,12 +86,12 @@ def bracket_turn(name, side):
     return want - e
 
 STORE_PIECE = re.compile(r"Chest|Barrel|Keg|Crate|Box_|Sack|Coffer", re.I)   # kept from under windows
-DOOR_CLEAR = 1.5                    # clear floor inside a door, in squares (Ben 2026-11-14)
+DOOR_CLEAR = 1.5                    # clear floor inside a door, in squares (the owner 2026-11-14)
 DOOR_CLEAR_SMALL = 1.1              # in a room less than SMALL_ROOM squares across the door, which 1.5 would leave unusable
 SMALL_ROOM = 4
 BED = re.compile(r"Bed(?!ding)|Cot_|Bunk|Pallet_Straw", re.I)
 FIRE = re.compile(r"Cooking_Pit|Fire_?Pit|Brazier|Oven|Fireplace|Hearth|Campfire", re.I)
-BED_FIRE_GAP = 2.0                  # a bed stands at least this far from an open fire pit or cooking pit (Ben 2026-11-14)
+BED_FIRE_GAP = 2.0                  # a bed stands at least this far from an open fire pit or cooking pit (the owner 2026-11-14)
 OPEN_FIRE = re.compile(r"Cooking_Pit|Fire_?Pit|Campfire|Hearth|Fireplace", re.I)
 BED_STOVE_GAP = 1.5                 # and this far from an enclosed oven or stove, or a brazier
 def bed_fire_gap(fire_name):
@@ -258,7 +258,7 @@ class Room:
         if kind == "corner": s += 6 * (walls >= 2) + 3 * (walls == 1)
         placing = "" if getattr(self, "no_foot", False) else getattr(self, "placing", "")   # a crowded room drops the niceties
         if kind in ("wall", "corner") and STORE_PIECE.search(placing):
-            # stored goods go in touching clusters, corner first (Ben's reference maps)
+            # stored goods go in touching clusters, corner first (the owner's reference maps)
             stores = [i for i in self.items if STORE_PIECE.search(i["asset"])]
             if stores: s += 5 * any(gap_between((x, y, w, h), (i["x"], i["y"], i["w"], i["h"])) < .05 for i in stores)
             else: s += 3 * (walls >= 2)
@@ -416,13 +416,13 @@ class Room:
                 continue                                       # a spot that will not take it is left empty
             for _ in range(count):
                 if rule == "beside:table" and SEAT.search(name) and not getattr(self, "no_foot", False):
-                    # chairs go all round a table, one to a side, facing pairs down a long one (Ben 2026-11-14)
+                    # chairs go all round a table, one to a side, facing pairs down a long one (the owner 2026-11-14)
                     r = self.seat_at_table(fw, fh)
                     if r:
                         self.items.append({"asset": name, "x": r[0], "y": r[1], "w": r[2], "h": r[3], "rot": 0, "scale": sc})
                         continue
                 if (rule == "beside:bar" or rule == "front:bar") and getattr(self, "bar", None):
-                    # kegs and shelves behind the bar, stools in a row in front of it (Ben 2026-11-14)
+                    # kegs and shelves behind the bar, stools in a row in front of it (the owner 2026-11-14)
                     slots = self.bar_slots(fw, fh, "behind" if rule == "beside:bar" else "front")
                     if STORE_PIECE.search(name): slots = [k for k in slots if not self.under_window(k)]
                     r = self.free_slot(slots)
@@ -446,7 +446,7 @@ class Room:
                             break
                     if getattr(self, "bar", None) and self.items and self.items[-1]["asset"] == name: continue
                 if CHEST.search(name) and not getattr(self, "no_foot", False) and any(BED.search(i["asset"]) for i in self.items):
-                    # a chest goes at the foot of a bed while a bed's foot is free (Ben 2026-11-14), else by its own rule
+                    # a chest goes at the foot of a bed while a bed's foot is free (the owner 2026-11-14), else by its own rule
                     foot = [k for k in self.candidates(fw, fh, "foot") if self.at_foot(k[1:5])]
                     if foot: c = foot
                 if c and (BED.search(name) or FIRE.search(name)):
@@ -595,7 +595,7 @@ def dress(room):
         elif kind != "store" or area >= 9:
             room.lights.append((room.ix + room.iw / 2, room.iy + room.ih / 2, 5))
         if kind == "kitchen" and not modern:                   # pots, pans and herbs hung on the wall, off the floor
-            import furnishing as F                              # (Ben's interior packs, 14 November 2026)
+            import furnishing as F                              # (the owner's interior packs, 14 November 2026)
             hung = [a for a in WALL_HUNG if have(a)]
             for cx, cy, side in F._light_spots(room, R):
                 if not hung or sum(1 for d in room.dressing if d.get("piece") == "hanging") >= 2: break

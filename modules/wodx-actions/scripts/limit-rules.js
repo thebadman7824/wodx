@@ -68,7 +68,7 @@ export function familyOf(power = {}) {
   return d || null;
 }
 
-/** The level from which a power is a great one: the house cooldown and Drained (Ben's Power Limits Desk picks). */
+/** The level from which a power is a great one: the house cooldown and Drained (the Power Limits Desk picks). */
 export const GREAT_LEVEL = 5;
 
 /** House rule (B4922): a power of level 5 or more with no limit of its own works once a scene. */
@@ -151,7 +151,10 @@ export function prune(uses = {}, ctx = {}) {
   for ( const [k, list] of Object.entries(uses) ) {
     const keep = (list ?? []).filter(u => {
       if ( u.p === "story" ) return true;
-      const per = {t: "turn", s: "scene", n: "night", d: "day", w: "week", m: "month", l: "lunar"}[String(u.p)[0]];
+      // B6812: a fight's turn key is "<combat id>:<round>"; its first letter is the id's, not a period's
+      const p = String(u.p), per = /^t-?\d+:-?\d+$/.test(p) ? "turn"
+        : {s: "scene", n: "night", d: "day", w: "week", m: "month", l: "lunar"}[/^([sndwml])-?\d+$/.exec(p)?.[1]]
+        ?? (ctx.combat && p.includes(":") ? "turn" : undefined);
       if ( u.fam ) return u.p === periodKey("night", ctx);
       return per ? u.p === periodKey(per, ctx) : true;
     });

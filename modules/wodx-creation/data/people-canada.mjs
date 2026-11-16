@@ -1,7 +1,7 @@
 /**
  * Canada's first nations for the People generator (Creation, B4160 to B4163): the Cree (Nehiyawak) of the plains,
  * woods and bay, the Anishinaabe (Ojibwe and Odawa) of the Great Lakes, and the Haida and Tlingit of the Northwest
- * coast. WoDX's own lists of recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * coast. WoDX's own lists of recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the clerks and missions wrote them in English, hyphens dropped): the signers of Treaties 1 to
  * 9 (1871 to 1906), the Robinson treaties of 1850 and the Great Lakes treaties in Kappler, vol. II; the chiefs of the

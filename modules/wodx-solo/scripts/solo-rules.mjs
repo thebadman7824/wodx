@@ -124,11 +124,33 @@ export const PANEL = [
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
   // B5079: ask a companion to carry someone who is down
-  {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"}
+  {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"},
+  // B6757: the chronicle's own options the lone player may turn on (OPTIONS)
+  {id: "options", label: "Chronicle options", icon: "fa-solid fa-sliders"}
 ];
 
 /**
- * B5079 (Ben's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
+ * B6757: WoDX Storyteller's options that are off by default and in no preset, which the lone player may set from the
+ * panel (Game Settings is the Storyteller's, and the player is not one). The seat checks each ask against this list.
+ */
+export const OPTIONS = [
+  {mod: "wodx-storyteller", key: "threads", label: "Threads of Fate", hint: "Storylines woven from what happens in play.",
+    choices: {off: "Off", auto: "On: a storyline opens by itself"}},
+  {mod: "wodx-storyteller", key: "hardship", label: "Hardship on the road", hint: "Harsh weather, thirst, hunger and lost sleep for living characters as time passes.",
+    choices: {false: "Off", true: "On"}},
+  {mod: "wodx-storyteller", key: "remains", label: "Bodies left behind", hint: "The dead stay as bodies that rot, and the era's authorities may find them.",
+    choices: {false: "Off", true: "On"}}
+];
+/** One ask from the panel: the setting and the value to write, or null when it is not on the list. */
+export function optionChange(key, value) {
+  const o = OPTIONS.find(x => x.key === key);
+  const v = String(value);
+  if ( !o || !Object.hasOwn(o.choices, v) ) return null;
+  return {mod: o.mod, key: o.key, to: v === "true" ? true : v === "false" ? false : v, label: o.label, word: o.choices[v]};
+}
+
+/**
+ * B5079 (the owner's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
  * scene, [{id, name, distance (yards to the fallen one), serves (serves the player's character), friendly, down, holding,
  * hands (any to take hold with), player (a player owns it)}]. One who serves the character goes first, then a friendly
  * one; the nearest of them, within maxYards. -> the chosen entry, or null
@@ -251,7 +273,7 @@ export function markSeen(seen = [], key) {
 
 /**
  * The lone player may switch on Storyteller tools from the panel, to check that the world works and to hand their
- * character things to try out (Ben, 14 November 2026). The player stays a player: every tool asks the seat, and the
+ * character things to try out (the owner, 14 November 2026). The player stays a player: every tool asks the seat, and the
  * seat answers only that one player. Off unless switched on.
  */
 export const ST_TOOLS = [

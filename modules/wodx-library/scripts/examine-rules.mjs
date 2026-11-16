@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.7.0: examining an item (Ben asked 2026-11-11, after Cataclysm DDA's item descriptions). Pure rules.
+ * WoDX Library 0.7.0: examining an item (the owner asked 2026-11-11, after Cataclysm DDA's item descriptions). Pure rules.
  *
  *   Examine: the good's description for the year, and the facts WoDX already keeps (category, uses, how well it hides,
  *   what it is worth here and now, how it stacks). No weight, volume or wear: those Cataclysm parts were ruled out.

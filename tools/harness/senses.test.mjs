@@ -423,6 +423,25 @@ test("runtime: Sense Wyrm smells the dead; a wraith in the Shadowlands gets that
   canvas.effects.lightSources = [];
 });
 
+test("runtime: Sense Wyrm finds a person tainted by WoDX Otherworlds' Wyrm corruption, and not a clean one (B6790)", async () => {
+  const CR = await import(join(root, "modules/wodx-otherworlds/scripts/corruption-rules.mjs"));
+  const taintOf = a => CR.normTaint(a?.flags?.["wodx-otherworlds"]?.taint ?? {});
+  game.modules.set("wodx-otherworlds", {active: true, api: {corruption: {taintOf, rules: CR}}});
+  const garou = actor("pc6", "Sees-the-Rot", {items: [{type: "Power", name: "Sense Wyrm", system: {value: 1}}], kind: "lupine"});
+  const tg = token("tg6", garou, 420, 400);
+  const villager = actor("npc6", "Marta", {flags: {"wodx-otherworlds": {taint: {level: 0}}}});
+  token("tm6", villager, 460, 400);
+  faces = [9, 9, 9, 3, 3];
+  const clean = await api.answer({user: "pl", token: tg.uuid, sense: "smell", closer: true});
+  assert.ok(!clean.sections[0].lines.some(l => /Wyrm-taint/.test(l)), clean.sections[0].lines.join(" / "));
+  villager.flags["wodx-otherworlds"].taint = {level: 2, weeks: 0, where: "the tannery"};
+  garou.flags["wodx-senses"] = {};
+  const res = await api.answer({user: "pl", token: tg.uuid, sense: "smell", closer: true});
+  assert.ok(res.sections[0].lines.some(l => /Wyrm-taint/.test(l)), res.sections[0].lines.join(" / "));
+  for ( const id of ["tg6", "tm6"] ) scene.tokens.delete(id);
+  game.modules.delete("wodx-otherworlds");
+});
+
 test("runtime: Storyteller reviews first holds the player's card; the copy has Send to the player", async () => {
   settings.set(`${MOD}.mode`, "review");
   chat.length = 0;

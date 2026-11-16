@@ -128,7 +128,7 @@ export const NET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height
  */
 export const REALM_TIME = {
   tempest: {rule: "same"}, umbra: {rule: "same"}, moonpath: {rule: "same"},
-  // B5179: Ben's pick (15 November 2026): the Labyrinth's time is drawn each journey, as the Far Dreaming's is, from its own table
+  // B5179: The owner's pick (15 November 2026): the Labyrinth's time is drawn each journey, as the Far Dreaming's is, from its own table
   labyrinth: {rule: "random", table: "labyrinth", ref: "WR20 pdf 307", note: "Time in the Labyrinth runs strangely against the world's, drawn once for each journey."},
   moonbridge: {rule: "thousandth", ref: "W20 pdf 209 / p. 207"},
   "trod-silver": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-balor": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-twilight": {rule: "trod", ref: "C20 pdf 53 / p. 52"},

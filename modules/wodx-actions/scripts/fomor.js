@@ -146,7 +146,7 @@ export async function settle(actor) {
 }
 
 async function makeWeapon(actor, p, w, always, extra = {}) {
-    const data = { name: w.name, type: "Melee Weapon", img: "icons/svg/claw.svg",
+    const data = { name: w.name, type: "Melee Weapon", img: "icons/svg/pawprint.svg",
         system: { isnatural: true, isequipped: true, attack: { attribute: "dexterity", ability: w.ability ?? "brawl", secondaryabilityid: "", accuracy: 0, isrollable: true },
             damage: { attribute: "strength", bonus: n(w.bonus), type: w.type, isrollable: true }, difficulty: n(w.diff) || 6,
             description: `${p.fx} (${FP.pageOf(p)})${w.noSoak ? " The poison that follows a wounding bite cannot be soaked." : ""}` },

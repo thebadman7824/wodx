@@ -151,7 +151,7 @@ export function goodsLine(g, rng = Math.random, coin = null) {
   const n = lo + Math.floor(rng() * (hi - lo + 1));
   // 0.36.0: the coin of the place is named in the local money when WoDX Storyteller knows it ("7 dirhams")
   if ( g?.localCoin && typeof coin === "function" ) { const line = coin(n); if ( line ) return line; }
-  // Nothing starts in a container (Ben, 2026-11-12): "claret (3)", never "claret (in 3 bottles)".
+  // Nothing starts in a container (the owner, 2026-11-12): "claret (3)", never "claret (in 3 bottles)".
   if ( g?.container ) return n > 1 ? `${g.name} (${n})` : g.name;
   return n > 1 && g.stack?.plural ? `${n} ${g.stack.plural}` : g.name;
 }
