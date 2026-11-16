@@ -190,7 +190,9 @@ export function build(ctx) {
             const age = chron()?.age?.romance?.(actor, tg[0].actor) ?? { ok: false, why: "The age check is not available." };
             if (!age.ok) return notify(age.why);
         }
-        if (t.kind === "dust" || t.uses) await spendUse(item);
+        // faerie dust is one dose (DA:Fae p. 187); an arrow or a charged thing counts its uses
+        if (t.kind === "dust") await item.delete();
+        else if (t.uses) await spendUse(item);
         if (s < 1) return post(actor, `${actor.name} uses ${item.name}`, body + `<div class="vta-big">${t.kind === "dust" ? "The dust misses." : "Nothing comes of it."}</div><div class="wodx-quiet">${esc(TR.pageOf(t))}</div>`, [r?.roll].filter(Boolean));
         // Faerie dust: the target's Willpower against it
         const rd = TR.dustResist(t);
