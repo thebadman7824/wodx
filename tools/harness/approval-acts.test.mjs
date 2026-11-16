@@ -87,3 +87,15 @@ test("downtime to make something, approved: a craft task; to hunt: a card with t
   assert.match(card.content, /data-action="wst-downtime-go"/);
   assert.ok(card.whisper.includes("p1"), "whispered to the player");
 });
+
+test("hunting on your own opens WoDX Actions' hunt for that character once the act is recorded (B6754)", async () => {
+  const A = await import(join(root, "modules/wodx-storyteller/scripts/apps.mjs"));
+  const asked = [];
+  game.modules.set("wodx-actions", {active: true, api: {hunt: ({actor}) => { asked.push(actor?.id); return true; }}});
+  const r = await A.request("solo", {actorId: anna.id, kind: "hunt", hours: 1, note: "The docks"});
+  assert.equal(r.ok, true);
+  assert.deepEqual(asked, [anna.id]);
+  await A.request("solo", {actorId: anna.id, kind: "talk", hours: 1, note: "The ferryman"});
+  assert.deepEqual(asked, [anna.id], "other acts open no hunt");
+  game.modules.delete("wodx-actions");
+});
