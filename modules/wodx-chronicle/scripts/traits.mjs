@@ -77,10 +77,17 @@ export const shows = actor => T.showsOf(view(actor));
 /** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
 export const ticks = actor => T.ticksOf(view(actor));
 /** For WoDX Combat (B3793): extra health levels, softer wound penalties, silver. */
+/** The Mockery Breed a Creature sheet is set to (system variant warwolves, anurana, samsa, kerasi, yeren), or "". */
+export const mockeryOf = actor => {
+  const v = String(actor?.system?.settings?.variant ?? "").toLowerCase();
+  return actor?.type === "Creature" && ["warwolves", "anurana", "samsa", "kerasi", "yeren"].includes(v) ? v : "";
+};
 // B6729: a changeling's kith adds Bruised levels (Rock Giants, Glomes, a troll's oaths)
 export function toughness(actor) {
   const b = T.bodyOf(view(actor)), k = bruisedFor(actor);
   if ( k.n > 0 ) { b.bruised += k.n; b.names.push(...k.names); }
+  // B6729: a War Wolf (a Mockery Breed on a Creature sheet) shares the Garou's weakness to silver (W20 Book of the Wyrm p. 168)
+  if ( mockeryOf(actor) === "warwolves" && !b.silver ) { b.silver = true; b.names.push("War Wolf: silver"); }
   return b;
 }
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */
