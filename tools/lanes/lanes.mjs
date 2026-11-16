@@ -155,7 +155,8 @@ try {
     }
     case "setup": {
       if ( String(lane.id) === "1" ) die("Lane 1 is the existing testbed; nothing to set up.");
-      const src = getLane(cfg, 1);
+      // B6880: a PC with no lane 1 (the second PC) sets lanes up from a copy of lane 1's Config and packages.
+      const src = cfg.setupFrom ? {dataPath: cfg.setupFrom} : getLane(cfg, 1);
       if ( fs.existsSync(worldDir(lane)) && !flag("again") ) die(`Lane ${lane.id} already has a world at ${worldDir(lane)}. Use reset, or --again.`);
       if ( !fs.existsSync(path.join(cfg.knownGood, cfg.world)) ) die(`No known-good copy at ${cfg.knownGood}. Stop lane 1 and run: lanes.mjs snapshot --from 1`);
       // --again on a lane in use: stop its Foundry first, or the world copy lands on an open database

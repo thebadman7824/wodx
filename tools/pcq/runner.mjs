@@ -39,7 +39,10 @@ import {readQueue, putBack} from "../lanes/gate-queue.mjs";
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
 const expand = s => String(s).replace(/%(\w+)%/g, (_, k) => process.env[k] ?? "");
-const conf = readJson(path.join(HERE, "runner.json"));
+// B6880: a PC with its own runner.<hostname>.json (the second PC) takes those keys over runner.json's.
+const HOST = (process.env.WODX_HOST ?? os.hostname()).toLowerCase();
+const conf = {...readJson(path.join(HERE, "runner.json")), ...readJson(path.join(HERE, `runner.${HOST}.json`), {})};
+const NAME = conf.name ?? "PC runner", STATUS_TITLE = conf.statusTitle ?? "PC runner status", ALERT_PREFIX = conf.alertPrefix ?? "PC runner alert";
 const HOME = expand(conf.home), LOGS = path.join(HOME, "logs"), WT = path.join(HOME, "wt");
 fs.mkdirSync(LOGS, {recursive: true}); fs.mkdirSync(WT, {recursive: true});
 const logFile = path.join(LOGS, `runner-${new Date().toISOString().slice(0, 10)}.log`);
@@ -153,7 +156,7 @@ async function alert(key, title, detail = "") {
   const s = state[key] ?? (state[`_${key}`] ??= {});
   if ( s.alert || DRY ) return;
   try {
-    const i = await gh("POST", "/issues", {title: `PC runner alert: ${title}`, labels: [LABEL.alert],
+    const i = await gh("POST", "/issues", {title: `${ALERT_PREFIX}: ${title}`, labels: [LABEL.alert],
       body: `${title}\n\n\`\`\`\n${detail.slice(-3000)}\n\`\`\`\n\nThe runner closes this issue when it clears. Jobs keep running on the other lanes.`});
     s.alert = i.number; log(`alert #${i.number}: ${title}`);
   } catch (e) { log(`could not open alert: ${e.message}`); }
@@ -357,7 +360,7 @@ async function start(issue, job, lanes) {
   const g = {issue, job, tag, used: [], parts: [], pending: new Set()};
   try {
     await setLabels(issue.number, [LABEL.running]);
-    await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}).`);
+    await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}) by the ${NAME} [host:${HOST}].`);
     if ( lanes.length ) {
       const q = await makeQueue(job, lanes[0], tag);
       if ( q ) {
@@ -396,7 +399,7 @@ async function status(queue) {
     const what = s.busy ? `job #${s.busy}` : s.down ? `DOWN${s.why ? `: ${s.why}` : ""}` : lk.held ? `in use outside the runner (${(lk.lock?.gates ?? []).join(" ").slice(0, 60)})` : "free";
     return `| ${id} | ${l.port} | ${what} |`;
   }));
-  const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the PC runner at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
+  const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the ${NAME} (${HOST}) at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
     "", "| Lane | Port | State |", "|---|---|---|", ...lanes, "",
     `Queue (${queue.length}): ${queue.map(q => `#${q.number} ${q.job.kind} p${q.job.prio}`).join(", ") || "empty"}`,
     `Last results: ${recent.join(", ") || "none yet"}`,
@@ -405,7 +408,7 @@ async function status(queue) {
   const changed = body.replace(/^Updated.*$/m, "") !== lastStatus.replace(/^Updated.*$/m, "");
   if ( DRY || (!changed && Date.now() - lastStatusAt < 10 * 60000) ) return;
   try {
-    statusIssue ??= (await openIssues(LABEL.status))[0]?.number ?? (await gh("POST", "/issues", {title: "PC runner status", labels: [LABEL.status], body})).number;
+    statusIssue ??= (await openIssues(LABEL.status)).find(i => i.title === STATUS_TITLE)?.number ?? (await gh("POST", "/issues", {title: STATUS_TITLE, labels: [LABEL.status], body})).number;
     await gh("PATCH", `/issues/${statusIssue}`, {body});
     lastStatus = body; lastStatusAt = Date.now();
   } catch (e) { log(`status update failed: ${e.message}`); statusIssue = null; }
@@ -430,16 +433,63 @@ async function updateDue() {
   return !active.size;
 }
 
+// ---- two PCs (B6880) ----
+// Both runners read the same queue. Before starting a job each posts a claim comment; the earliest claim since the
+// job was last queued again wins and the other runner leaves the job alone for ten minutes.
+const skipUntil = new Map();
+const comments = async n => gh("GET", `/issues/${n}/comments?per_page=100`);
+async function claim(n) {
+  if ( DRY ) return true;
+  try {
+    await comment(n, `Claim [host:${HOST}]`);
+    await sleep(4000);
+    const cs = await comments(n);
+    const reset = cs.reduce((k, c, i) => /will run again/.test(c.body) ? i : k, -1);
+    const first = cs.slice(reset + 1).find(c => /^Claim \[host:/.test(c.body));
+    if ( first && first.body.includes(`[host:${HOST}]`) ) return true;
+    log(`#${n} claimed by another runner; leaving it`); skipUntil.set(n, Date.now() + 10 * 60000); return false;
+  } catch (e) { log(`claim #${n} failed: ${e.message}`); return false; }
+}
+/** True when the last start of this job was on this PC (a start with no host tag predates B6880 and is the main PC's). */
+async function startedHere(n) {
+  try {
+    const s = (await comments(n)).filter(c => /^Started /.test(c.body)).at(-1);
+    if ( !s ) return !conf.host && !readJson(path.join(HERE, `runner.${HOST}.json`));
+    const m = /\[host:([^\]]+)\]/.exec(s.body);
+    return m ? m[1] === HOST : !readJson(path.join(HERE, `runner.${HOST}.json`));
+  } catch { return false; }
+}
+// Watchdog duties: the live site answers, and the other runner's status issue keeps moving.
+const watchFails = {};
+async function watch() {
+  for ( const url of conf.watch.urls ?? [] ) {
+    let ok = false;
+    try { const r = await fetch(url, {signal: AbortSignal.timeout(20000), redirect: "follow"}); ok = r.status < 500; } catch {}
+    watchFails[url] = ok ? 0 : (watchFails[url] ?? 0) + 1;
+    if ( ok ) await recovered(`site ${url}`);
+    else if ( watchFails[url] >= (conf.watch.failsBeforeAlert ?? 3) ) await alert(`site ${url}`, `${url} is not answering`, `${watchFails[url]} checks in a row failed, ${conf.watch.everyMinutes ?? 5} minutes apart.`);
+  }
+  if ( conf.watch.peerStatusTitle ) {
+    try {
+      const peer = (await openIssues(LABEL.status)).find(i => i.title === conf.watch.peerStatusTitle);
+      const mins = peer ? Math.round((Date.now() - Date.parse(peer.updated_at)) / 60000) : null;
+      if ( mins !== null && mins > (conf.watch.peerSilentMinutes ?? 20) ) await alert("peer", `the main PC runner has been silent for ${mins} minutes`, `Its status issue #${peer.number} has not moved. The main PC may be off, asleep or its runner stopped (D:\\WoDX\\pcq\\logs).`);
+      else if ( mins !== null ) await recovered("peer");
+    } catch (e) { log(`peer check failed: ${e.message}`); }
+  }
+}
+
 // ---- main loop ----
 const clashes = laneClashes(cfg, LANES);
 if ( clashes.length ) { log(`Lane clash check failed; not starting:\n  ${clashes.join("\n  ")}`); process.exit(2); }
 log(`runner ${short(MY_SHA)} up; lanes ${LANES.join(", ")}; light slots ${conf.light}${DRY ? " (dry run)" : ""}`);
 for ( const i of await openIssues(LABEL.running) ) {
+  if ( !(await startedHere(i.number)) ) continue;
   log(`#${i.number} was running when the runner stopped; queued again`);
   await setLabels(i.number, [], [LABEL.running]);
   await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
-let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false;
+let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, lastWatch = 0;
 let lastGpu = 0; const gpuWatch = gpu.watcher();
 function gpuCheck() {
   if ( Date.now() - lastGpu < 60000 ) return null;
@@ -462,7 +512,7 @@ for ( ;; ) {
       await sleep(30000); continue;
     }
     // Stale pull requests, every hour, beside the jobs (B4110).
-    if ( !sweeping && Date.now() - lastSweep > HOUR ) {
+    if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
       sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json")})
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
@@ -474,12 +524,17 @@ for ( ;; ) {
       `Over ${gpu.GPU_LIMITS.core} C core${g.r.memory !== null ? ` or ${gpu.GPU_LIMITS.memory} C memory` : ""} for ${gpu.GPU_LIMITS.hotMinutes} minutes. Power ${g.r.watts} W, fan ${g.r.fan}%, load ${g.r.util}%. Log: logs/gpu-*.csv in the runner folder.`);
     else if ( g?.change === "cool" ) await recovered("gpu");
     for ( const id of LANES ) await healthCheck(id);
+    if ( conf.watch && Date.now() - lastWatch > (conf.watch.everyMinutes ?? 5) * 60000 ) { lastWatch = Date.now(); await watch(); }
     const issues = await openIssues(LABEL.job);
     const openNums = new Set(issues.map(i => i.number));
     const queue = [];
     for ( const i of issues ) {
       if ( active.has(i.number) || recentlyFinished(i.number) || i.labels.some(l => l.name === LABEL.running) ) continue;
-      const p = parseBody(i.body), v = p.error ? p : validate(p.job, LANES);
+      if ( (skipUntil.get(i.number) ?? 0) > Date.now() ) continue;
+      const p = parseBody(i.body);
+      // B6880: a job that names a lane on the other PC is that PC's runner's to take.
+      if ( !p.error && p.job?.lane !== undefined && !LANES.includes(String(p.job.lane)) && cfg.allLaneIds.includes(String(p.job.lane)) && String(p.job.lane) !== "1" ) continue;
+      const v = p.error ? p : validate(p.job, LANES);
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
     }
@@ -498,8 +553,10 @@ for ( ;; ) {
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
         for ( const l of want ) state[l].busy = q.number;
+        if ( !(await claim(q.number)) ) { for ( const l of want ) state[l].busy = null; continue; }
         start(q.issue, q.job, want);
       } else if ( light < conf.light ) {
+        if ( !(await claim(q.number)) ) continue;
         light++;
         start(q.issue, q.job, []).finally(() => light--);
       }

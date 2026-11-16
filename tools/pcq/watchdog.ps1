@@ -3,12 +3,13 @@
 # for run-runner.ps1 and, when it is gone and no runner-off file is set, starts it again with start-runner.ps1.
 # GitHub runs the pc-heartbeat schedule only now and then, so this is the check that brings the runner back.
 $ErrorActionPreference = 'Continue'
-$base = 'D:\WoDX\pcq'; $logs = "$base\logs"
+# B6880: the second PC has no D: drive; its runner lives in C:\WoDX\pcq.
+$base = if (Test-Path 'D:\WoDX\pcq') { 'D:\WoDX\pcq' } elseif ($env:WODX_PCQ_HOME) { $env:WODX_PCQ_HOME } else { 'C:\WoDX\pcq' }; $logs = "$base\logs"
 while ($true) {
   Start-Sleep 120
   if (Test-Path "$base\watchdog-off") { "$(Get-Date -Format o) watchdog-off found; watchdog stopping" | Add-Content "$logs\runner-console.log"; break }
   if (Test-Path "$base\runner-off") { continue }
-  $running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*-File D:\WoDX\pcq\run-runner.ps1*' }
+  $running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like "*-File $base\run-runner.ps1*" }
   if ($running) { continue }
   "$(Get-Date -Format o) watchdog: the runner is not running; starting it again" | Add-Content "$logs\runner-console.log"
   & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$base\start-runner.ps1" 2>&1 | Add-Content "$logs\runner-console.log"
