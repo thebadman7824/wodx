@@ -139,7 +139,10 @@ let sinceSignIn = 0;
 const signIn = async () => {
   const session = await within(openGM(laneUrl(lane), {channel: opt("channel") ?? undefined}), 7 * 60000, "signing in");
   browser = session.browser; page = session.page; sinceSignIn = 0;
+  // B6952: modules still without an api after the wait are named on the next gate's line
+  lateApis = session.late ?? [];
 };
+let lateApis = [];
 try {
   // Code drift: the repo checkout against the lane's deployed files.
   const cache = path.join(laneDir(lane), "cache");
@@ -208,7 +211,8 @@ try {
         }, 5000);
         let timer;
         try {
-          const mod = await import(`/wodx-gate/${gate}.mjs?${Date.now()}`);
+          // B6952: a busy server can drop the fetch of the gate file itself; one more try after a pause
+          const mod = await import(`/wodx-gate/${gate}.mjs?${Date.now()}`).catch(async () => { await new Promise(r => setTimeout(r, 5000)); return import(`/wodx-gate/${gate}.mjs?${Date.now()}`); });
           summary = await Promise.race([mod.run(), new Promise((_, no) => { timer = setTimeout(() => no(new Error(`timed out after ${Math.round(limit / 60000)} min`)), limit); })]);
         }
         catch (e) { error = e?.message ?? String(e); }
@@ -268,12 +272,14 @@ try {
         out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;
+      if ( lateApis.length ) { const note = ` [no api after sign-in: ${lateApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; lateApis = []; }
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);
       report(`${gate}: ${out.summary}${clock}`);
       const m = /(\d+)\s*\/\s*(\d+)\s+passed/.exec(out.summary);
-      if ( (m && m[1] !== m[2]) || !out.back ) code = 1;
+      // B6952: a gate that ran no step at all (0/0) or did not say how it did (no tally, and no "pass": true) has not passed
+      if ( (m ? m[1] !== m[2] || m[2] === "0" : !/^\{"pass":true\b/.test(out.summary)) || !out.back ) code = 1;
     }
     extendLock(lane, Date.now() + 10 * 60000);
     if ( !page ) await signIn();

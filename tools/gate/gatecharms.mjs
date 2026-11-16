@@ -255,10 +255,13 @@ export async function run() {
       const e0 = ess();
       aim2(true);
       await K.use(body(), "flood", {size: "block"});
-      await waitFor(() => !!areaOf("water"), 6000);
+      // B6953: the water's drawing is made just after its region (effects.js placeArea), so the step waits for both,
+      // as step 18 does for the bonfire
+      const drawnOf = r => !!r && !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r.id);
+      await waitFor(() => drawnOf(areaOf("water")), 8000);
       const r = areaOf("water");
       aim2(false);
-      const drawn = !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r?.id);
+      const drawn = drawnOf(r);
       G.ok("17. Flood: deep water lands on the target's square", !!r && r.flags?.["wodx-combat"]?.water === "deep" && onSquare(r) && drawn && e0 - ess() === 1,
         {region: !!r, water: r?.flags?.["wodx-combat"]?.water ?? null, onSquare: onSquare(r), drawn, paid: e0 - ess()});
     });

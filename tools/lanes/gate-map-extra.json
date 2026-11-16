@@ -5,9 +5,15 @@
     "gatecssprobe",
     "gatedisplayb",
     "gatedisplayd",
+    "gatedebtsmarks",
     "gatelookhand",
+    "gatenpcrelay",
+    "gateplayerblows",
+    "gateplayerload",
     "gatesolo",
-    "gatetruthlooks"
+    "gatetruthlooks",
+    "gatetruthrelay",
+    "gatetruthwalk"
   ],
   "add": {
     "gatepowers": [

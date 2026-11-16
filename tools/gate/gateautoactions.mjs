@@ -183,7 +183,8 @@ export async function run() {
         await purer.setFlag(MOD, "m20", {purifying: {since: game.time.worldTime, days: 1}});
         const scourge = () => Number(purer.system?.paradox?.temporary) || 0;
         await game.time.advance(86400 + 60);
-        await waitFor(() => scourge() === 0, 10000);
+        // B6953: the Scourge is cleared first and the purifying mark after it, so the step waits for both
+        await waitFor(() => scourge() === 0 && !purer.getFlag(MOD, "m20")?.purifying, 10000);
         G.ok("9. the Crusade's Scourge clears by meditation on the clock", ageKey === "crusade" && scourge() === 0 && !purer.getFlag(MOD, "m20")?.purifying,
           {age: ageKey, scourge: scourge(), purifying: purer.getFlag(MOD, "m20")?.purifying ?? null});
       });
