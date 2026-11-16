@@ -31,6 +31,19 @@ test("relink: world links go to the archive and come back", () => {
   assert.equal(AR.relink("nothing here", [id], true), "nothing here");
 });
 
+test("B6770: links in a character's bio boxes and an item's text follow the actor too", () => {
+  const id = "abcdefghijklmnop";
+  const actor = {system: {notes: `<p>Owes @UUID[Actor.${id}]{Old Hans} a debt</p>`, appearance: "plain", bio: {background: `@Actor[${id}]`}}};
+  const up = AR.relinkFields(actor, AR.ACTOR_TEXT, [id], true);
+  assert.equal(up["system.notes"], `<p>Owes @UUID[Compendium.world.wodx-archive.Actor.${id}]{Old Hans} a debt</p>`);
+  assert.equal(up["system.bio.background"], `@UUID[Compendium.world.wodx-archive.Actor.${id}]`);
+  assert.equal("system.appearance" in up, false);
+  const item = {system: {description: `<p>A ring from @UUID[Compendium.world.wodx-archive.Actor.${id}]{Old Hans}</p>`}};
+  assert.equal(AR.relinkFields(item, AR.ITEM_TEXT, [id], false)["system.description"], `<p>A ring from @UUID[Actor.${id}]{Old Hans}</p>`);
+  assert.equal(AR.relinkFields({system: {notes: "nothing"}}, AR.ACTOR_TEXT, [id], true), null);
+  assert.ok(AR.ACTOR_TEXT.includes("system.notes") && AR.ITEM_TEXT.includes("system.description"));
+});
+
 test("one look a day", () => {
   assert.equal(AR.newDay(0, 3600), false);
   assert.equal(AR.newDay(0, 86400), true);

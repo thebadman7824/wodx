@@ -21,7 +21,9 @@ export function findClan(name) {
   const n = norm(name);
   if ( !n ) return null;
   return CLANS.find(c => c.id === n || norm(c.name) === n || (c.aliases ?? []).includes(n))
-    ?? CLANS.find(c => n.includes(norm(c.name)) || (c.aliases ?? []).some(a => n.includes(a)))
+    // B6777: the longest name inside wins, so "True Brujah antitribu" is a True Brujah, not a Brujah
+    ?? CLANS.filter(c => n.includes(norm(c.name)) || (c.aliases ?? []).some(a => n.includes(a)))
+      .sort((a, b) => norm(b.name).length - norm(a.name).length)[0]
     ?? null;
 }
 

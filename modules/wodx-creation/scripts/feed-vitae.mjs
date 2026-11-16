@@ -6,6 +6,7 @@
  */
 import {MODULE_ID, esc, lineOf, lineage, isAnimal} from "./actor-data.mjs";
 import {giveVitae} from "./change-of-state.mjs";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const VITAE_TYPE = "wodx-vitae";
 const SOCKET = `module.${MODULE_ID}`;
@@ -88,7 +89,7 @@ export function registerFeedVitae() {
       let feeder = near[0];
       if ( near.length > 1 ) {
         const id = await foundry.applications.api.DialogV2.prompt({classes: ["wodx", "wodx-dialog"], window: {title: "Feed vitae"}, rejectClose: false,
-          content: `<div class="form-group"><label>Whose blood</label><select name="who">${near.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join("")}</select></div>`,
+          content: `<div class="form-group"><label>Whose blood</label>${searchBox("select[name=who]", "Search…", "Search who gives the blood")}<select name="who">${near.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join("")}</select></div>`,
           ok: {label: "Feed", callback: (e, button) => button.form.elements.who.value}});
         feeder = near.find(t => t.id === id);
       }

@@ -56,7 +56,7 @@ export const LINE_XP = {
     powers: {art: {label: "Art", per: 4, newCost: 7, max: 5}, realm: {label: "Realm", per: 3, newCost: 5, max: 5}}
   },
   "kinain": {
-    source: "C20 pdf 177 for Arts and Realms; the rest as mortals (house, B6272)",
+    source: "C20 pdf 177 for Arts and Realms; the rest as mortals (house rule)",
     newAbility: 3, attribute: 5, ability: 2, virtue: 2, road: 2, willpower: 1,
     powers: {art: {label: "Art", per: 4, newCost: 7, max: 3}, realm: {label: "Realm", per: 3, newCost: 5, max: 3}}
   },
@@ -83,11 +83,11 @@ export const LINE_XP = {
     powers: {lore: {label: "Lore", per: 5, newCost: 7, newOther: 10, max: 5}}
   },
   "creature": {
-    source: "House: the mortal chart (B6272)",
+    source: "House rule: the mortal chart",
     newAbility: 3, attribute: 5, ability: 2, virtue: null, road: null, willpower: 1
   },
   "exalted": {
-    source: "House: the Kindred chart without Disciplines (B6272)",
+    source: "House rule: the Kindred chart without Disciplines",
     newAbility: 3, attribute: 4, ability: 2, virtue: null, road: null, willpower: 1
   }
 };

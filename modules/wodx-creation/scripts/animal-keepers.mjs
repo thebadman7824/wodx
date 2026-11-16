@@ -187,9 +187,12 @@ const crafterNear = (tok, user = game.user) => {
 };
 
 let lastDay = -1;
+// B6776: no litters while the world is held
+const held = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 export function registerAnimalKeepers() {
   Hooks.on("wodxTaskDone", e => { onTaskDone(e).catch(err => console.error(`${MODULE_ID} | fleshcraft`, err)); });
   Hooks.on("updateWorldTime", () => {
+    if ( held() ) return;
     const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
     if ( day === lastDay ) return;
     lastDay = day;

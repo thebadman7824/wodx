@@ -40,7 +40,7 @@ export class PassYearsApp extends ApplicationV2 {
           ${r.needsBorn ? `<br><label class="wodx-quiet">Born <input type="number" name="born.${r.actorId}" step="1" placeholder="year" style="width:5.5em"></label>` : ""}</td>
         <td>${r.notes.map(n => `<div class="wodx-quiet">${esc(n)}</div>`).join("")}
           ${r.changes.map(c => `<div><label title="${esc(c.detail)}"><input type="checkbox" name="accept.${r.actorId}.${c.id}" ${c.checked ? "checked" : ""}> ${esc(c.label)}</label>
-            ${c.choices ? `<div class="wodx-indent"><select name="choice.${r.actorId}.${c.id}" aria-label="${esc(c.label)}: choose">${c.choices.map(o =>
+            ${c.choices ? `<div class="wodx-indent"><select name="choice.${r.actorId}.${c.id}" aria-label="${esc(c.label)}: choose" data-fixed>${c.choices.map(o =>
               `<option value="${esc(o.value)}" ${o.value === c.data?.choice ? "selected" : ""}>${esc(o.label)}</option>`).join("")}</select></div>` : ""}
             <div class="wodx-quiet wodx-indent">${esc(c.detail)}</div></div>`).join("")}</td>
       </tr>`).join("") : "";

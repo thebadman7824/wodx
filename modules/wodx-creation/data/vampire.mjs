@@ -53,6 +53,36 @@ export const CLANS = [
   // B6612: the Cyberpunks bloodline, open on the Future Darkness branch from 2016 only (World of Future Darkness p. 19, pdf 6)
   {id: "cyberpunks", name: "Cyberpunks", disciplines: ["Celerity", "Potence", "Technica"], darkAges: "World of Future Darkness p. 19 (pdf 6)",
     aliases: ["cyberpunk"], opens: {from: 2016, futureBranch: true}},
+  // B6777: the clan and bloodlines the lifepath offers that had no row, so their in-clan Disciplines cost as in-clan.
+  // V20 pages are printed pages (chapter 10 for the bloodlines); Kindred of the Ebony Kingdom (Revised) for the legacies.
+  {id: "giovanni", name: "Giovanni", disciplines: ["Auspex", "Fortitude", "Necromancy"], darkAges: "V20DA p. 85 (Giovani)",
+    modern: ["Dominate", "Necromancy", "Potence"], modernSource: "V20 p. 57", aliases: ["giovani", "rossellini"]},
+  {id: "blood-brothers", name: "Blood Brothers", disciplines: ["Fortitude", "Potence", "Sanguinus"], darkAges: "V20 p. 397"},
+  {id: "daughters-of-cacophony", name: "Daughters of Cacophony", disciplines: ["Fortitude", "Melpominee", "Presence"], darkAges: "V20 p. 398"},
+  {id: "gargoyle", name: "Gargoyle", disciplines: ["Flight", "Fortitude", "Potence"], darkAges: "V20DA p. 83",
+    modern: ["Flight", "Fortitude", "Potence", "Visceratika"], modernSource: "V20 p. 401", aliases: ["gargoyles"]},
+  {id: "harbingers-of-skulls", name: "Harbingers of Skulls", disciplines: ["Auspex", "Fortitude", "Necromancy"], darkAges: "V20 p. 403",
+    aliases: ["harbinger of skulls", "harbingers"]},
+  {id: "kiasyd", name: "Kiasyd", disciplines: ["Dominate", "Mytherceria", "Obtenebration"], darkAges: "V20 p. 405; V20DA p. 89 (Mytherceria and two of the Lasombra's)"},
+  {id: "samedi", name: "Samedi", disciplines: ["Fortitude", "Obfuscate", "Thanatosis"], darkAges: "V20 p. 411"},
+  {id: "true-brujah", name: "True Brujah", disciplines: ["Potence", "Presence", "Temporis"], darkAges: "V20 p. 413"},
+  {id: "ahrimanes", name: "Ahrimanes", disciplines: ["Animalism", "Presence", "Spiritus"], darkAges: "V20 p. 415"},
+  {id: "anda", name: "Anda", disciplines: ["Animalism", "Fortitude", "Protean"], darkAges: "V20 p. 417"},
+  {id: "lamia", name: "Lamia", disciplines: ["Fortitude", "Necromancy", "Potence"], darkAges: "V20DA p. 91; V20 p. 423", aliases: ["lamiae"]},
+  {id: "lhiannan", name: "Lhiannan", disciplines: ["Animalism", "Ogham", "Presence"], darkAges: "V20 p. 425"},
+  {id: "noiad", name: "Noiad", disciplines: ["Animalism", "Auspex", "Protean"], darkAges: "V20 p. 427"},
+  {id: "nagaraja", name: "Nagaraja", disciplines: ["Auspex", "Dominate", "Necromancy"], darkAges: "V20DA p. 95"},
+  {id: "akunanse", name: "Akunanse", disciplines: ["Abombwe", "Animalism", "Fortitude"], darkAges: "Kindred of the Ebony Kingdom pdf p. 48"},
+  {id: "guruhi", name: "Guruhi", disciplines: ["Animalism", "Potence", "Presence"], darkAges: "Kindred of the Ebony Kingdom pdf p. 52"},
+  {id: "ishtarri", name: "Ishtarri", disciplines: ["Celerity", "Fortitude", "Presence"], darkAges: "Kindred of the Ebony Kingdom pdf p. 54"},
+  {id: "nagloper", name: "Nagloper", disciplines: ["Animalism", "Auspex", "Vicissitude"], darkAges: "Kindred of the Ebony Kingdom pdf p. 58",
+    aliases: ["naglopers"]},
+  {id: "osebo", name: "Osebo", disciplines: ["Auspex", "Celerity", "Potence"], darkAges: "Kindred of the Ebony Kingdom pdf p. 59"},
+  {id: "shango", name: "Shango", disciplines: ["Celerity", "Dur-An-Ki", "Obfuscate"], darkAges: "Kindred of the Ebony Kingdom pdf p. 62"},
+  {id: "xi-dundu", name: "Xi Dundu", disciplines: ["Dominate", "Obtenebration", "Potence"], darkAges: "Kindred of the Ebony Kingdom pdf p. 64"},
+  {id: "telyavelic-tremere", name: "Telyavelic Tremere", disciplines: ["Auspex", "Presence", "Thaumaturgy"], darkAges: "V20 p. 438", aliases: ["telyavelic", "telyav"]},
+  {id: "serpents-of-the-light", name: "Serpents of the Light", disciplines: ["Obfuscate", "Presence", "Serpentis"], darkAges: "V20 p. 432 (the Cobras)"},
+  {id: "niktuku", name: "Nictuku", disciplines: ["Auspex", "Celerity", "Potence"], darkAges: "V20DA p. 97", aliases: ["niktuku"]},
   {id: "caitiff", name: "Caitiff", disciplines: [], darkAges: "V20 p. 124 (no clan Disciplines)", aliases: ["clanless"]}
 ];
 
