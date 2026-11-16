@@ -1217,7 +1217,7 @@ Hooks.once("init", () => {
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
-    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor, followsClock,
+    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), rollEffects: weatherRollSource, climate, isOutdoor, followsClock,
       moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, cueSrc, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
@@ -1232,9 +1232,20 @@ export async function prime() {
   return api;
 }
 
+/** B6796: the weather where the roller stands, on the rolls it names, through WoDX Chronicle's roll effects. */
+export function weatherRollSource(actor, ctx = {}) {
+  if ( !active || ctx?.channel !== "roll" || setting("weather") === "off" ) return [];
+  let scene = null;
+  try { scene = actor?.getActiveTokens?.()?.[0]?.document?.parent ?? viewed(); } catch (e) { scene = viewed(); }
+  if ( !scene || !isOutdoor(scene) ) return [];
+  const day = now(scene);
+  return day ? W.rollEffects(day, ctx.tags ?? []) : [];
+}
+
 Hooks.once("ready", async () => {
   if ( !active ) return;
   const api = await prime();
+  try { chron()?.traits?.addSource?.(weatherRollSource); } catch (e) { console.warn(`${MOD} | weather on rolls`, e); }
   applyGrade();
   applyDread();
   if ( isActiveGM() ) {
