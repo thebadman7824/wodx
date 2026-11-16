@@ -648,3 +648,27 @@ export function machineTalk(successes) {
  * machines pays Willpower. WoDX counts each night's uses: when the Discipline uses pass the machine uses, a point.
  */
 export function leansOnBlood({disc = 0, tech = 0} = {}) { return n(disc) > n(tech); }
+
+/* ---- Net burn and Net shock heal (B6795) ---- */
+/**
+ * Intelligence a black program or a hard de-rez took comes back as the damage it is named for heals: one point at a
+ * time, each after the time a mortal's wound of that weight takes (V20's mortal healing times, Bruised to
+ * Incapacitated: a day, three days, a week, a month, two months, three months). The more points still lost, the
+ * longer the next one takes. Aggravated heals on the same times (a house reading: the mortal chart has no row of its
+ * own for it). The Cyberpunk 2020 core says lost INT never comes back; WoDX keeps its own reading (PENDING-REVIEW).
+ */
+export const BURN_HEAL_DAYS = [1, 3, 7, 30, 60, 90, 90];
+export const burnHealSeconds = points => BURN_HEAL_DAYS[Math.max(1, Math.min(BURN_HEAL_DAYS.length, Math.round(n(points)) || 1)) - 1] * 86400;
+/** {points, last (world time of the last heal or the burn)} at now -> {points, last, healed, next (seconds to the next point, or null)}. */
+export function burnHeal({points = 0, last = 0} = {}, now = 0) {
+  const at = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+  let p = Math.max(0, Math.round(n(points))), t = at(last), healed = 0;
+  while ( p > 0 && at(now) - t >= burnHealSeconds(p) ) { t += burnHealSeconds(p); p -= 1; healed += 1; }
+  return {points: p, last: t, healed, next: p > 0 ? burnHealSeconds(p) - (at(now) - t) : null};
+}
+/** The words for the time to the next point. */
+export function burnWhen(seconds) {
+  if ( seconds === null || seconds === undefined ) return "";
+  const d = Math.max(1, Math.ceil(n(seconds) / 86400));
+  return d === 1 ? "a day" : d < 14 ? `${d} days` : d < 60 ? `${Math.round(d / 7)} weeks` : `${Math.round(d / 30)} months`;
+}

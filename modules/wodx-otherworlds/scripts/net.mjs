@@ -71,6 +71,8 @@ export function registerNetStatuses() {
   for ( const [id, s] of Object.entries(N.STATUSES) ) {
     if ( !CONFIG.statusEffects.find(e => e.id === id) ) CONFIG.statusEffects.push({id, name: s.label, img: s.img, hud: true});
   }
+  // B6795: a burned mind shows on the token until it heals
+  if ( !CONFIG.statusEffects.find(e => e.id === "wodx-net-burn") ) CONFIG.statusEffects.push({id: "wodx-net-burn", name: "Net burn (Intelligence lost)", img: "icons/svg/degen.svg", hud: false});
 }
 const iceAuto = () => { const m = setting("netIce") ?? "solo"; return m === "always" || (m === "solo" && !!solo()?.isOn?.()); };
 
@@ -599,9 +601,7 @@ export async function applyHit(a, hit, {scene, ice, m} = {}) {
       if ( hit.trace ) await traceRunner(a, m, ice);
       return `${hit.levels ? `<b>${hit.levels} ${hit.type}</b> through the jack to the body` : "the body holds"}${hit.hound ? "; the Hellhound has the scent and will strike again at the next log-on" : ""}.`;
     case "mind": {
-      await a.createEmbeddedDocuments("ActiveEffect", [{name: `Net burn: ${hit.points} Intelligence lost`, img: "icons/svg/degen.svg",
-        changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-hit.points)}],
-        flags: {[MODULE_ID]: {netBurn: true, heals: hit.heals}}}]);
+      await a.createEmbeddedDocuments("ActiveEffect", [burnEffect("Net burn", hit.points, hit.heals, "icons/svg/degen.svg")]);
       return `<b>${hit.points} Intelligence</b> burned away, healing as ${hit.heals} damage does.`;
     }
     case "status":
@@ -625,6 +625,40 @@ export async function applyHit(a, hit, {scene, ice, m} = {}) {
     }
     default: return "nothing.";
   }
+}
+
+/* ---- Net burn and Net shock heal (B6795) ---- */
+export const BURN_STATUS = "wodx-net-burn";
+const burnName = (what, points, heals, next) => `${what}: ${points} Intelligence lost, heals as ${heals || "lethal"}${next ? ` (the next point in ${next})` : ""}`;
+/** The effect a burn leaves: on the sheet's effects and, through its status, as an icon on the token. */
+function burnEffect(what, points, heals = "lethal", img = "icons/svg/degen.svg", now = game.time.worldTime) {
+  return {name: burnName(what, points, heals, N.burnWhen(N.burnHealSeconds(points))), img, statuses: [BURN_STATUS],
+    changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-points)}],
+    flags: {[MODULE_ID]: {netBurn: true, heals: heals || "lethal", what, points, last: now}}};
+}
+/** Active Storyteller: every burn the clock has healed gives its points back; the token shows the healed points. */
+export async function healBurns(now = game.time.worldTime) {
+  if ( !isActiveGM() ) return [];
+  const out = [];
+  for ( const a of game.actors ?? [] ) for ( const e of [...(a.effects ?? [])] ) {
+    const f = e.flags?.[MODULE_ID];
+    if ( !f?.netBurn ) continue;
+    const points = Number(f.points) || Math.abs(Number(e.changes?.[0]?.value)) || 0;
+    // A burn made before B6795 starts its clock now
+    if ( !Number.isFinite(Number(f.last)) ) { await e.update({[`flags.${MODULE_ID}.last`]: now, [`flags.${MODULE_ID}.points`]: points, statuses: [BURN_STATUS]}); continue; }
+    const r = N.burnHeal({points, last: f.last}, now);
+    if ( !r.healed ) continue;
+    const what = f.what || (/shock/i.test(e.name) ? "Net shock" : "Net burn");
+    if ( r.points <= 0 ) await e.delete();
+    else await e.update({name: burnName(what, r.points, f.heals, N.burnWhen(r.next)), changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-r.points)}],
+      [`flags.${MODULE_ID}.points`]: r.points, [`flags.${MODULE_ID}.last`]: r.last});
+    for ( const t of a.getActiveTokens?.() ?? [] ) {
+      try { canvas.interface?.createScrollingText?.(t.center, `+${r.healed} Intelligence`, {fill: "#5fffe6", stroke: 0x000000, strokeThickness: 4, anchor: 0}); } catch (err) { /* no canvas */ }
+    }
+    await ChatMessage.create({speaker: {alias: a.name}, whisper: whisperFor(a), content: card(`${what} heals`, `<p>${esc(a.name)} has ${r.healed} Intelligence back${r.points ? `; ${r.points} still lost, the next in ${N.burnWhen(r.next)}` : ", all of it"}.</p>`)});
+    out.push({actor: a.id, healed: r.healed, left: r.points});
+  }
+  return out;
 }
 
 /** Firestarter (pdf 145): an electrical fire bursts from the gear at the body's feet, as an Interactables fire. */
@@ -703,8 +737,7 @@ export async function derezNow(actor, kind = "soft") {
   const res = N.derez(kind, {access, severity: sev, soakDice: soak.dice, staminaDice: sta.dice});
   if ( res.levels && C?.applyDamage ) await C.applyDamage(actor, res.type, res.levels);
   if ( res.dazed ) await addStatus(actor, "net-dazed", 1200);
-  if ( res.mind ) await actor.createEmbeddedDocuments("ActiveEffect", [{name: `Net shock: ${res.mind} Intelligence`, img: "icons/svg/stoned.svg",
-    changes: [{key: "system.attributes.intelligence.value", mode: 2, value: String(-res.mind)}], flags: {[MODULE_ID]: {netBurn: true, heals: res.mindHeals}}}]);
+  if ( res.mind ) await actor.createEmbeddedDocuments("ActiveEffect", [burnEffect("Net shock", res.mind, res.mindHeals, "icons/svg/stoned.svg")]);
   if ( res.out ) await jackOut(actor, {force: true, why: "Thrown out of the Net (a hard de-rez)."});
   else if ( s ) {
     const scene = game.scenes.get(s.fortress), icon = iconOf(actor, scene), m = modelOf(scene);
@@ -832,6 +865,9 @@ export async function onNetMessage(msg) {
 /* ------------------------------------------------------------------ */
 
 export function setupNet() {
+  // B6795: the clock heals Net burn and Net shock
+  let burnTimer = null;
+  Hooks.on("updateWorldTime", () => { if ( !isActiveGM() ) return; clearTimeout(burnTimer); burnTimer = setTimeout(() => healBurns().catch(e => console.error("WoDX | Net burn", e)), 500); });
   // A runner's icon moving in a fortress gives the ICE its turn (when the ICE acts on its own)
   const soon = (() => { const t = new Map(); return scene => { clearTimeout(t.get(scene.id)); t.set(scene.id, setTimeout(() => iceRound(scene).catch(e => console.error("WoDX | ICE", e)), 400)); }; })();
   Hooks.on("updateToken", (doc, change) => {
