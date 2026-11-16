@@ -78,16 +78,19 @@ export async function run() {
 
     await G.step("4. Blast: Rage in aggravated dice on the target", async () => {
       aim(true);
-      const agg = () => Number(v()?.system?.health?.damage?.aggravated) || 0;
-      const e0 = ess();
-      for ( let k = 0; k < 4 && !agg(); k++ ) {
+      // B6733: WoDX Combat marks aggravated harm on a mortal as lethal (VtDA20 p. 346: mortals treat it as lethal), so the
+      // victim's wounds are read as the two together; the card names the aggravated harm the Blast dealt
+      const dmg = () => v()?.system?.health?.damage ?? {};
+      const hurtNow = () => (Number(dmg().aggravated) || 0) + (Number(dmg().lethal) || 0);
+      const h0 = hurtNow(), e0 = ess();
+      for ( let k = 0; k < 4 && hurtNow() <= h0; k++ ) {
         await A.limits?.clear?.(body());
         await K.use(body(), "blast");
-        await waitFor(() => agg() > 0, 3000);
+        await waitFor(() => hurtNow() > h0, 3000);
       }
-      const hurt = agg();
+      const hurt = hurtNow() - h0;
       aim(false);
-      G.ok("4. Blast: Rage in aggravated dice on the target", hurt > 0 && ess() < e0, {hurt, essence: [e0, ess()]});
+      G.ok("4. Blast: Rage in aggravated dice on the target", hurt > 0 && ess() < e0, {hurt, damage: dmg(), essence: [e0, ess()]});
     });
 
     await G.step("5. Illuminate: the token sheds light", async () => {
@@ -99,7 +102,7 @@ export async function run() {
     });
 
     await G.step("6. Freeze: Rage one lower for its time; the one near is hurt", async () => {
-      await v().update({"system.health.damage.aggravated": 0});
+      await v().update({"system.health.damage.aggravated": 0, "system.health.damage.lethal": 0});
       await A.limits?.clear?.(body());
       await K.use(body(), "freeze");
       const rage = () => Number(body().system?.advantages?.rage?.permanent);
