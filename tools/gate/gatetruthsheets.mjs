@@ -21,6 +21,8 @@
  *   8. the long dead go by themselves: with "Archive the long dead by itself" at ten years, someone dead eleven years
  *      leaves the world when the clock moves a day (the kit puts the clock back), the compendium entry is there, and a
  *      journal's link points at it; brought back, the link points at the world again
+ *  9b. Grieving (B6664): with WoDX NPC's Grieving on a mortal, Charisma clicked on the sheet rolls one die fewer and the
+ *      card names Grieving; Dexterity, not a social roll, rolls its full pool
  *   9. Show all and the Nature row on a system sheet wear the same frame, shade and text colour as the other WoDX
  *      buttons, on light and dark sheets
  *  10. clean up (the kit)
@@ -255,6 +257,46 @@ export async function run() {
         if ( game.actors.get(id) ) await game.actors.get(id).delete();
       }
       G.ok("8. the long dead go to the archive by themselves", gone && inPack && linked && back && unlinked, {gone, inPack, linked, back, unlinked, nowYear});
+    });
+
+    await G.step("9b. Grieving takes a die from a social roll on the sheet", async () => {
+      // B6664: WoDX NPC's Grieving (socialDice -1) on a mortal; Charisma clicked on the sheet rolls one die fewer and the
+      // card names Grieving; Dexterity, not a social roll, keeps its full pool
+      const Ch = game.modules.get(CH)?.api;
+      const [mourner] = await G.make(Actor, [mortal("Gate TruthSheets Mourner", {system: {attributes: {charisma: {value: 4, total: 4}, dexterity: {value: 3}}}})]);
+      await game.settings.set(SH, "sheetRollMods", true);
+      await Ch?.conditions?.setCondition?.(mourner, "grieving", true);
+      await waitFor(() => mourner.statuses?.has?.("wodx-grieving") || (Ch?.conditions?.conditionsOf?.(mourner) ?? []).some(c => c.id === "grieving"), 4000);
+      const sheet = mourner.sheet;
+      await sheet.render(true);
+      const label = key => elOf(sheet)?.querySelector?.(`label.vrollable[data-attribute='true'][data-key='${key}']`);
+      await waitFor(() => sheet.rendered && label("charisma") && label("dexterity"), 6000);
+      const rollOnce = async key => {
+        const t0 = Date.now();
+        label(key)?.click();
+        let dlg = null;
+        await waitFor(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogGeneralRoll" && w.actor?.id === mourner.id && w.rendered)), 6000);
+        elOf(dlg)?.querySelector?.(".actionbutton")?.click();
+        let m = null;
+        await waitFor(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === mourner.id && (x.rolls?.length ?? 0) > 0).at(-1)), 8000);
+        await dlg?.close?.();
+        const W = CONFIG.worldofdarkness, explodes = W?.useexplodingDice && ["always", "nospeciality"].includes(W?.explodingDice);
+        const faces = (m?.rolls ?? []).map(r => num(r.total));
+        return {rolled: faces.length - (explodes ? faces.filter(f => f === 10).length : 0), mods: m?.flags?.[SH]?.rollMods ?? null, named: /Grieving/.test(m?.content ?? ""), card: !!m};
+      };
+      let social, plain;
+      try {
+        social = await rollOnce("charisma");
+        plain = await rollOnce("dexterity");
+      } finally {
+        await sheet.close();
+        await Ch?.conditions?.setCondition?.(mourner, "grieving", false)?.catch?.(() => null);
+        await game.settings.set(SH, "sheetRollMods", keepRollMods);
+      }
+      const cha = num(mourner.system.attributes.charisma.total ?? mourner.system.attributes.charisma.value);
+      const dex = num(mourner.system.attributes.dexterity.total ?? mourner.system.attributes.dexterity.value);
+      G.ok("9b. Grieving takes a die from a social roll on the sheet", social.card && social.rolled === cha - 1 && social.mods?.dice === -1 && social.named
+        && plain.card && plain.rolled === dex && !plain.named, {cha, dex, social, plain});
     });
 
     await G.step("9. Show all wears the WoDX button's frame and colours", async () => {
