@@ -9,7 +9,7 @@
 import * as R from "./contagion-rules.mjs";
 import {MOD, chron, isActiveGM, setting} from "./core.mjs";
 
-export const SICK = {id: "sick", name: "Sick", img: "icons/svg/poison.svg", source: "WoDX house rule (sickness in the towns, B3430)",
+export const SICK = {id: "sick", name: "Sick", img: "icons/svg/poison.svg", source: "WoDX house rule (sickness in the towns)",
   summary: "Ill with a town's sickness: the Stamina rolls come each week until it passes. Pale and feverish to anyone who looks.", mods: {}};
 /** The pale cast of the sick (a token look: a colour the token is washed with). */
 export const PALLOR = {tint: 0xd4dcc4};
