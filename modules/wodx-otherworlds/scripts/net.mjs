@@ -14,6 +14,7 @@ import {MODULE_ID} from "./ratings.mjs";
 import {STATUS} from "./crossing.mjs";
 import * as N from "./net-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const FOLDER = "WoDX Net";
 const ICE_FOLDER = "WoDX Net ICE";
@@ -672,7 +673,7 @@ export async function whiteout(actor, {pool = 5, heavy = false} = {}) {
   if ( N.lagWarns(pool) && others.length ) lines.push("The sector lags first: everyone else nearby has one action to drop out (Wits + Computer at 8).");
   if ( sev.self ) lines.push(`${esc(actor.name)}: ${await derezNow(actor, sev.self === "soft" ? "soft" : "hard")}`);
   if ( sev.others ) for ( const o of hitOthers ) lines.push(`${esc(o.actor.name)}: ${await derezNow(o.actor, sev.others)}`);
-  if ( sev.down ) { await scene.setFlag(MODULE_ID, "netDown", {until: lasts === null ? null : game.time.worldTime + lasts}); lines.push(lasts === null ? "<b>The sector is trashed for good.</b>" : `<b>The sector goes down</b> for ${lasts < 3600 ? `${Math.round(lasts / 60) || 1} minute(s)` : lasts < 86400 ? `${Math.round(lasts / 3600)} hours` : `${Math.round(lasts / 86400)} days`}.`); }
+  if ( sev.down ) { await scene.setFlag(MODULE_ID, "netDown", {until: lasts === null ? null : game.time.worldTime + lasts}); lines.push(lasts === null ? "<b>The sector is trashed for good.</b>" : `<b>The sector goes down</b> for ${lasts < 3600 ? `${Math.round(lasts / 60) || 1} minute(s)` : lasts < DAY ? `${Math.round(lasts / HOUR)} hours` : `${Math.round(lasts / DAY)} days`}.`); }
   await ChatMessage.create({speaker: {alias: "The Web"}, rolls: r.roll ? [r.roll] : [], content: card("A Whiteout", `<p>${lines.join("</p><p>")}</p><p class="wodx-quiet">Mage 20th printed pp. 470-473.</p>`)});
   return sev;
 }

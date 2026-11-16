@@ -11,15 +11,14 @@
  * Every effect names what reads it: a status, damage through WoDX Combat, a Realspace door or light, a secret, money.
  */
 
+import {successes, DAY, WEEK, MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 /** CP2020 strength to WoD dots (B6592): half, rounded up, never below 1 for a real program. */
 export const dots = cp => (n(cp) ? Math.max(1, Math.ceil(n(cp) / 2)) : 0);
-const succ = (dice, diff = 6) => (dice ?? []).filter(d => d >= diff).length;
-const ones = dice => (dice ?? []).filter(d => d === 1).length;
-/** Successes less 1s (V20 core: 1s cancel), and whether it botched. */
+/** Successes less 1s (V20 core: 1s cancel), and whether it botched: the shared count (terms.mjs). */
 export function tally(dice, diff = 6) {
-  const s = succ(dice, diff), o = ones(dice);
-  return {successes: Math.max(0, s - o), botch: s === 0 && o > 0};
+  const r = successes(dice ?? [], diff);
+  return {successes: r.successes, botch: r.botch};
 }
 
 /* ------------------------------------------------------------------ */
@@ -499,9 +498,9 @@ export function whiteoutLasts(pool) {
   if ( p <= 3 ) return 50;
   if ( p <= 6 ) return 3 * 60;
   if ( p <= 10 ) return 3 * 3600;
-  if ( p <= 13 ) return 86400;
-  if ( p <= 16 ) return 7 * 86400;
-  if ( p <= 20 ) return 30 * 86400;
+  if ( p <= 13 ) return DAY;
+  if ( p <= 16 ) return WEEK;
+  if ( p <= 20 ) return MONTH;
   return null;
 }
 /** Above 10 points the lag warns everyone near: Wits + Computer at 8 to drop out; a failure takes half, a botch all. */
