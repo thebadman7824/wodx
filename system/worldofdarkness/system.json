@@ -786,7 +786,7 @@
     "bugs": "https://github.com/JohanFalt/Foundry_WoD20/issues",
     "changelog": "https://github.com/JohanFalt/Foundry_WoD20/wiki/Changelog",
     "background": "systems/worldofdarkness/assets/img/graphics/wod.png",
-    "license": "LICENSE.txt",
+    "license": "LICENSE",
     "flags": {
         "wodx": {
             "upstreamVersion": "7.3.2",
