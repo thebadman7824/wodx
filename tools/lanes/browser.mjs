@@ -43,6 +43,10 @@ export async function openGM(url, {channel = process.platform === "win32" ? "mse
   const ctx = await browser.newContext({ignoreHTTPSErrors: true, viewport: {width: 1600, height: 1000}});
   const page = await ctx.newPage();
   page.on("pageerror", e => console.log(`[page] ${e.message}`));
+  // B6970: console errors and warnings from page load on, read by run-gate --diag (Chronicle's start-up is in here)
+  const diag = [];
+  page.on("console", m => { if ( ["error", "warning"].includes(m.type()) && diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} ${m.type()}: ${m.text().slice(0, 600)}`); });
+  page.on("pageerror", e => { if ( diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} pageerror: ${String(e.stack ?? e.message).slice(0, 900)}`); });
   await page.goto(`${url}/join`, {waitUntil: "domcontentloaded"});
   const SEL = "select[name=userId], select[name=userid]";
   await page.waitForSelector(SEL, {timeout: 90000});
@@ -61,5 +65,5 @@ export async function openGM(url, {channel = process.platform === "win32" ? "mse
     late = await page.evaluate(apisMissing, LATE_APIS).catch(() => []);
     console.log(`Some WoDX modules had no api ${API_WAIT_MS / 1000} s after sign-in: ${late.join(", ")}`);
   });
-  return {browser, page, late};
+  return {browser, page, late, diag};
 }

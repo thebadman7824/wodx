@@ -217,13 +217,15 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   if ( job.kind === "gate-two" ) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${job.gate}-result.json`);
     fs.rmSync(f, {force: true});
-    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`], {logTo: L, minutes: 30});
+    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`, ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
     // The failing steps are read before the reset, which may put the lane's data back
     const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
     const detail = failDetail(lane, line);
     await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
     if ( r.code === null ) return faultRetry("gate-two ran past its time limit", r.out);
-    return {code: r.code, text: `${line}\n${detail}`.trim()};
+    // B6970: with diag the [diag] lines (both browsers' console, full failing steps) follow
+    const diag = job.diag ? r.out.split("\n").filter(x => x.startsWith("[diag]")).slice(-300).join("\n") : "";
+    return {code: r.code, text: `${line}\n${detail}${diag ? `\n\n${diag}` : ""}`.trim()};
   }
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});

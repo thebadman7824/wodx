@@ -62,6 +62,8 @@ export function validate(raw, laneIds = []) {
     return null;
   };
   const e = oneLane(); if ( e ) return err(e);
+  // B6970: diag: true asks run-gate and gate-two for console lines and full failing steps in the job's report
+  if ( j.diag !== undefined && typeof j.diag !== "boolean" ) return err("diag must be true or false.");
   switch ( j.kind ) {
     case "gates": {
       const list = j.gates ?? [];
@@ -120,13 +122,14 @@ export function order(jobs, openNumbers = new Set(), now = Date.now()) {
  */
 export function gateArgs(job, lane, i, n, report) {
   // B6526: a shared queue: every lane takes the next gate from the same list until it is empty
-  if ( job.queue ) return ["--queue", job.queue, "--lane", String(lane), "--wait", "10", "--report", report, ...(job.maxMinutes ? ["--max-minutes", String(job.maxMinutes)] : [])];
+  if ( job.queue ) return ["--queue", job.queue, "--lane", String(lane), "--wait", "10", "--report", report, ...(job.maxMinutes ? ["--max-minutes", String(job.maxMinutes)] : []), ...(job.diag ? ["--diag"] : [])];
   const a = [...job.gates];
   if ( job.touched ) a.push("--touched");
   if ( job.all ) a.push("--all");
   a.push("--lane", String(lane));
   if ( n > 1 ) a.push("--shard", `${i + 1}/${n}`);
   a.push("--wait", "10", "--report", report);
+  if ( job.diag ) a.push("--diag");
   return a;
 }
 
