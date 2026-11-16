@@ -200,6 +200,10 @@ async function bite(a, x, d) {
     await ChatMessage.create({content: `<div class="wodx-card"><p><b>Common Sense</b>: before ${esc(d.on === "fight" ? "this fight" : "this step")}, ${esc(a.name)} has a feeling it may be a mistake. Think it over once more.</p></div>`, speaker: {alias: a.name}, whisper: game.users.filter(u => !u.isGM && a.testUserPermission(u, "OWNER")).map(u => u.id).concat(game.users.filter(u => u.isGM).map(u => u.id))});
     return "a word of warning went to the player.";
   }
+  if ( f.tell ) {
+    await ChatMessage.create({content: `<div class="wodx-card"><p><b>${esc(x.name)}</b>: ${esc(said)}${esc(a.name)} ${esc(f.tell)}.</p></div>`, speaker: {alias: a.name}, whisper: game.users.filter(u => u.isGM || a.testUserPermission(u, "OWNER")).map(u => u.id)});
+    return `${said}${f.tell}.`;
+  }
   if ( f.wp ) { const wp = a.system?.advantages?.willpower ?? {}; await a.update({"system.advantages.willpower.temporary": Math.max(0, (Number(wp.temporary) || 0) + f.wp)}); return `${said}a Willpower point goes.`; }
   if ( f.spendWp ) {
     const wp = Number(a.system?.advantages?.willpower?.temporary) || 0;

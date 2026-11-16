@@ -6,6 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
+import {EFFECTS_W6, EXTRA_PROMPTS} from "./trait-effects-w6.mjs";
 import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6, MORE_ATTITUDE_3, MORE_PROMPTS_7} from "./trait-effects-more.mjs";
 
 export const PATTERNS = {
@@ -303,6 +304,7 @@ for ( const e of MERITS_FLAWS ) {
   if ( MORE_EFFECTS_3[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_3[e.key]];
   if ( MORE_EFFECTS_4[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_4[e.key]];
   if ( MORE_EFFECTS_5[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_5[e.key]];
+  if ( EFFECTS_W6[e.key] ) e.effects = [...(e.effects ?? []), ...EFFECTS_W6[e.key]];
   if ( RENAMES[e.key] && RENAMES[e.key] !== e.name ) { e.aliases = [...new Set([...(e.aliases ?? []), e.name])]; e.name = RENAMES[e.key]; }
 }
 
@@ -435,7 +437,7 @@ export const PROMPTS = {
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
 // B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
-for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7}) ) PROMPTS[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7, ...EXTRA_PROMPTS}) ) PROMPTS[k] ??= v;
 // B3920: the backgrounds that now have a card or an attitude seed say so in the Trait effects window
 for ( const b of BACKGROUNDS ) {
   if ( b.hook === "story" && MORE_PROMPTS_7[b.key] ) b.hook = "prompt";
