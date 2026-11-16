@@ -86,6 +86,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxFall | chronicle | a victim moved on a Fall ledger: {npc, by, kind, before, after, crossed} (B6698) |
+| wodxScheme | npc | an antagonist faction's scheme took a step: {faction, group, step, finished} (B6699) |
 | wodxNightUndone | chronicle | pieces of the Hand's work taken back with the night's work: {ids, plan} (B6222) |
 | wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
