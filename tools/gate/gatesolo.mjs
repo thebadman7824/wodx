@@ -287,7 +287,13 @@ async function player(ids) {
     const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
     const offersMake = !!el?.querySelector?.("[data-action=arrive]");
     ok("9f. arrival", came && got?.tokenId === ids.tokens?.[0] && got?.sceneId === ids.scene && !offersMake,
-      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake});
+      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake,
+        // Why, when it does not match: the gate's own ids and what the answer points at
+        want: {sceneId: ids.scene, tokenId: ids.tokens?.[0]},
+        gotScene: got ? game.scenes.get(got.sceneId)?.name ?? null : null,
+        gotToken: got ? (game.scenes.get(got.sceneId)?.tokens?.get?.(got.tokenId)?.name ?? null) : null,
+        character: game.user.character?.name ?? null,
+        gateTokens: (ids.tokens ?? []).map(id => game.scenes.get(ids.scene)?.tokens?.get?.(id)?.name ?? null)});
   });
   return steps;
 }
@@ -379,6 +385,9 @@ async function finish(ids, playerSteps) {
     if ( !ar ) return ok("10f. arrival makes a character", false, {error: "no arrival in this version"});
     const second = await User.create({name: `${TAG} newcomer`, role: CONST.USER_ROLES.PLAYER});
     ids.users = [second.id];
+    // An actor every player owns by default (an old test actor) is not the newcomer's character (B5146)
+    const shared = await Actor.create({name: `${TAG} everyone's`, type: "Mortal", ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}});
+    (ids.actors ??= []).push(shared.id);
     const actor = await ar.make(second.id, {name: `${TAG} newcomer's character`, line: "vampire"});
     if ( actor?.id ) (ids.actors ??= []).push(actor.id);
     const scene = game.scenes.get(ids.scene);
