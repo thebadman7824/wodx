@@ -3,6 +3,17 @@ import { curseDice } from "./garou-rules.js";
 import { socialDiff, socialDice } from "./after-costs.js";
 import * as TH from "./trait-hooks.js";
 import * as TRD from "./trade.js";
+import { conditionMods } from "./limits.js";
+import { needsSight } from "./after-cost-rules.js";
+
+/**
+ * B6663: the roller's registered conditions (Drained, Ravenous, Blurred sight on a sight roll...) on a roll made here,
+ * the same as buildPool counts them (B6157). {diff, parts}.
+ */
+function condMods(actor, attr) {
+    try { return conditionMods(actor, { sight: needsSight({ attr }) }); }
+    catch (e) { console.warn("WoDX Actions | conditions", e); return { diff: 0, parts: [] }; }
+}
 
 /**
  * WoDX Actions 3.20.0: "With this person". A player picks one NPC (the target, the token given, or the nearest in
@@ -143,8 +154,10 @@ export function build(ctx) {
         // B5754: the Curse (DA:W p. 91; W20 p. 263): a Garou's Rage over a human's Willpower costs Social dice with them
         const curse = kindOf?.(actor) === "lupine" && ["mortal", "hunter", "ghoul"].includes(kindOf?.(npc))
             ? curseDice(Number(actor.system?.advantages?.rage?.temporary) || 0, Number(npc.system?.advantages?.willpower?.permanent) || 3) : 0;
+        // B6663: Drained and the other conditions on the speaker
+        const cm = condMods(actor, pick.attr);
         const built = R.actionPool({
-            traitDice: tm.dice - curse, traitDiff: tm.diff, traitParts: curse ? [...(tm.parts ?? []), `The Curse −${curse}`] : tm.parts,
+            traitDice: tm.dice - curse, traitDiff: (tm.diff ?? 0) + cm.diff, traitParts: [...(tm.parts ?? []), ...(curse ? [`The Curse −${curse}`] : []), ...cm.parts],
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
             bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + shift + bondShift + rankShift + socialDiff(actor),
@@ -251,8 +264,10 @@ export function build(ctx) {
         if (!pick) { ui.notifications.warn("No pool fits."); return null; }
         const pool = readPool(actor, pick.attr, pick.abilityId);
         const contacts = key === "askabout" ? Math.max(0, Number([...(actor.items ?? [])].find(i => i.type === "Feature" && /^contacts\b/i.test(i.name ?? ""))?.system?.value ?? actor.system?.backgrounds?.contacts?.value) || 0) : 0;
+        // B6663: Drained and the other conditions on the one looking (a sight-only one when the look uses Perception)
+        const cm = condMods(actor, pick.attr);
         const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
-            abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: contacts, extraDiff: 0,
+            abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: contacts, extraDiff: 0, traitDiff: cm.diff, traitParts: cm.parts,
             baseDifficulty: def.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0 });
         if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
         const me = await rollPool(built.dice, built.difficulty);
@@ -370,7 +385,10 @@ export function build(ctx) {
         if (!pick) return null;
         if (fd.wp && !(await spendWillpower(actor, 1))) return null;
         const pool = readPool(actor, pick.attr, pick.abilityId);
+        // B6663: Drained and the other conditions on the hand in the pocket
+        const cm = condMods(actor, pick.attr);
         const built = R.actionPool({
+            traitDiff: cm.diff, traitParts: cm.parts,
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
             bonusDice: (Number(fd.bonus) || 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + socialDiff(actor), baseDifficulty: preset.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0

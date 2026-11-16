@@ -8,6 +8,8 @@
  *   6. a vessel the Kiss drained dry is marked dead; a townsman walks up to the body; the hunters' pressure rises (h5, B6390)
  *   7. a body WoDX NPC's carrying took as proof (wodxBodyTaken with the token's uuid, as carry-goals.mjs sends it)
  *      eases the region's pressure by two (B6167)
+ *   8. with the remains house rule OFF, a vessel the Kiss drained dry is marked dead and a townsman walks up to it: the
+ *      hunters' own watch marks the left body and their pressure still rises (B6666)
  * Steps 1 and 7 read the region's pressure itself, not only a flag on the body.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -34,11 +36,12 @@ export async function run() {
     ]);
     const region = st().hunters.regionAt(sc);
     const fol = st().hunters.follow;
-    const [kin, kin2, h1, h2, h3, h4, h5, finder, victim] = await G.make(Actor, [
+    const [kin, kin2, h1, h2, h3, h4, h5, finder, victim, finder2, victim2] = await G.make(Actor, [
       {name: "Gate HF Kindred", type: "Vampire"}, {name: "Gate HF Elder", type: "Vampire"},
       {name: "Gate HF Hunter A", type: "Mortal"}, {name: "Gate HF Hunter B", type: "Mortal"}, {name: "Gate HF Hunter C", type: "Mortal"},
       {name: "Gate HF Hunter D", type: "Mortal"}, {name: "Gate HF Hunter E", type: "Mortal"},
-      {name: "Gate HF Washerwoman", type: "Mortal"}, {name: "Gate HF Victim", type: "Mortal"}
+      {name: "Gate HF Washerwoman", type: "Mortal"}, {name: "Gate HF Victim", type: "Mortal"},
+      {name: "Gate HF Carter", type: "Mortal"}, {name: "Gate HF Second Victim", type: "Mortal"}
     ]);
     const fight = async toks => {
       const c = await Combat.create({scene: sc.id});
@@ -143,6 +146,24 @@ export async function run() {
       let p1 = p0;
       for ( let i = 0; i < 20 && p1 >= p0; i++ ) { await sleep(150); p1 = st().hunters.state().regions[region]?.pressure ?? 0; }
       G.ok("7. the region's pressure eases by two", p1 === Math.max(0, p0 - 2), {p0, p1});
+    });
+
+    await G.step("8. remains off: the hunters still read a body left drained", async () => {
+      // B6666: the remains house rule is off (its default); the hunters' pressure is on
+      await game.settings.set(ST, "remains", false);
+      const [tv, tf] = await G.tokens(sc, [{actor: victim2, x: 4, y: 8}, {actor: finder2, x: 22, y: 14}]);
+      const vic = () => sc.tokens.get(tv.id);
+      await vic().actor.setFlag("wodx-actions", "vesselBlood", {value: 0, at: game.time.worldTime});
+      await vic().actor.toggleStatusEffect("dead", {active: true});
+      const marked = await waitFor(() => vic()?.flags?.[ST]?.leftBody?.cause === "drained", 5000);
+      const p0 = st().hunters.state().regions[region]?.pressure ?? 0;
+      // a townsman walks up to it (the real updateToken hook)
+      await sc.tokens.get(tf.id).update({x: 5 * S, y: 8 * S});
+      const rose = await waitFor(() => (st().hunters.state().regions[region]?.pressure ?? 0) > p0, 8000);
+      const p1 = st().hunters.state().regions[region]?.pressure ?? 0;
+      G.ok("8. the left body is marked without the remains rule", marked && !vic()?.flags?.[ST]?.remains,
+        {leftBody: vic()?.flags?.[ST]?.leftBody ?? null, remains: vic()?.flags?.[ST]?.remains ?? null});
+      G.ok("8. pressure rose with remains off", rose && vic()?.flags?.[ST]?.leftBody?.found === finder2.id, {p0, p1, leftBody: vic()?.flags?.[ST]?.leftBody ?? null});
     });
   } finally {
     for ( const id of combats ) { try { await game.combats.get(id)?.delete(); } catch (e) { /* gone */ } }

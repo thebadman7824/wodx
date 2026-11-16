@@ -1888,19 +1888,24 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
 /** Shared feeding: hunger check, amount, the clan's rule, vessel harm, blood pool, Blood Oath. */
 async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls, state = "clean", drinks = 0, rule = null, fits = true, willing = true, fought = false, offering = true, flesh = 0, tags = [] }) {
     let html = "";
+    // B6663: the feeder's registered conditions (Drained, Ravenous...) count on the feeder's own rolls here, as buildPool
+    // counts them (B6157); no feeding roll here uses sight, so a sight-only condition does not
+    let cm = { diff: 0, parts: [] };
+    try { cm = LIM.conditionMods(actor, { sight: false }); } catch (e) { console.warn("WoDX Actions | conditions", e); }
+    const ownRoll = (dice, diff, o) => rollPool(dice, Math.min(10, diff + cm.diff), o);
     // What is in the vessel's blood (V20 pp. 295, 301-302): a blood-borne disease may be spotted before drinking
     const taint = R.VESSEL_STATES[state] && state !== "clean" ? state : null;
     if (taint === "disease" && isVampire(actor)) {
         const med = findAbility(actor, "medicine");
-        const spot = await rollPool(attr(actor, "intelligence") + num(med?.value), 7);
+        const spot = await ownRoll(attr(actor, "intelligence") + num(med?.value), 7);
         rolls.push(spot.roll);
-        html += rollBlock("Spotting the sickness: Intelligence + Medicine (7)", spot);
+        html += rollBlock("Spotting the sickness: Intelligence + Medicine (7)", spot, cm.parts);
         let out = R.diseaseOutcome(spot);
         if (out.spotted) return { html: html + `<div class="vta-res good">${esc(actor.name)} tastes the sickness in time and does not drink. ${esc(R.VESSEL_STATES.disease.note)}</div>`, drunk: 0 };
         if (out.carrier === null) {
-            const res = await rollPool(attr(actor, "stamina"), 6);
+            const res = await ownRoll(attr(actor, "stamina"), 6);
             rolls.push(res.roll);
-            html += rollBlock("Resisting it: Stamina (6)", res);
+            html += rollBlock("Resisting it: Stamina (6)", res, cm.parts);
             out = R.diseaseOutcome(spot, res);
         }
         if (out.carrier) {
@@ -1931,16 +1936,16 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             const ok = await spendWillpower(actor, 1);
             html += `<div class="vta-note">${esc(rule.label)}: feeding on the unwilling ${ok ? "costs a Willpower point" : "would cost a Willpower point (none left)"} (${esc(rule.page)}).</div>`;
         } else {
-            const r = await rollPool(willpower(actor).perm, 6);
+            const r = await ownRoll(willpower(actor).perm, 6);
             rolls.push(r.roll);
-            html += rollBlock(`${rule.label}: feeding on the unwilling, Willpower (6)`, r);
+            html += rollBlock(`${rule.label}: feeding on the unwilling, Willpower (6)`, r, cm.parts);
             if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
         }
     }
     if (rule?.mustFight === "wpRoll" && !fought && !vampireVessel) {
-        const r = await rollPool(willpower(actor).perm, 6);
+        const r = await ownRoll(willpower(actor).perm, 6);
         rolls.push(r.roll);
-        html += rollBlock(`${rule.label}: feeding on someone not beaten in a fight, Willpower (6)`, r);
+        html += rollBlock(`${rule.label}: feeding on someone not beaten in a fight, Willpower (6)`, r, cm.parts);
         if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
     }
     if (nightPenalty && setting("applyChanges") && actor.isOwner) {
@@ -1951,9 +1956,9 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     let gorge = false;
     if (isVampire(actor) && R.isHungry(b.value, v.selfcontrol.value) && !flag(actor, "golconda")) {
         const vp = R.virtuePool(v.selfcontrol.value, { road: road(actor).value || 10, blood: b.value, bloodLimited: true });
-        const r = await rollPool(vp.dice, 6);
+        const r = await ownRoll(vp.dice, 6);
         rolls.push(r.roll);
-        html += rollBlock(`Hunger: ${v.selfcontrol.label} (blood ${b.value} &lt; ${7 - v.selfcontrol.value})`, r, vp.caps.length ? [`capped by ${vp.caps.join(", ")}`] : []);
+        html += rollBlock(`Hunger: ${v.selfcontrol.label} (blood ${b.value} &lt; ${7 - v.selfcontrol.value})`, r, [...(vp.caps.length ? [`capped by ${vp.caps.join(", ")}`] : []), ...cm.parts]);
         if (v.selfcontrol.isInstinct) {
             if (r.successes === 0) gorge = true;
             html += `<div class="vta-res">${gorge ? "The Beast cannot be steered: the vampire gorges." : "The vampire rides the hunger and stops when they choose."}</div>`;
@@ -2109,9 +2114,9 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             if (flag(actor, "addicted")) html += `<div class="vta-warn">${esc(actor.name)} is addicted to Kindred blood: Self-Control or Instinct (6) to pass up the next chance (${esc(rule.page)}).</div>`;
             else {
                 const d = KF.addictionDifficulty(drunk);
-                const r = await rollPool(v.selfcontrol.value, d);
+                const r = await ownRoll(v.selfcontrol.value, d);
                 rolls.push(r.roll);
-                html += rollBlock(`${rule.label}: ${v.selfcontrol.label} (${d}) against addiction`, r);
+                html += rollBlock(`${rule.label}: ${v.selfcontrol.label} (${d}) against addiction`, r, cm.parts);
                 if (!r.successes) {
                     html += `<div class="vta-warn">${esc(actor.name)} is addicted to Kindred blood.</div>`;
                     if (setting("applyChanges")) await setFlag(actor, "addicted", { since: game.time?.worldTime ?? 0 });
@@ -3344,7 +3349,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.110.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.110.1", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

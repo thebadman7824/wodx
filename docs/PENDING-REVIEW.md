@@ -1737,6 +1737,13 @@ Ben: "I approve everything on this desk." That covers every card on the House Ev
 |---|---|---|---|
 | 2026-11-16 | Timeline check: when are the Bunyip gone, 1899 (WoDX's War of Tears) or 1937 (Past Lives pdf 70)? **Approved by Ben 2026-11-16 02:14Z** (House Events Desk, "I approve everything on this desk") | The War of Tears stays at 1899 and breaks the tribe; new event bunyip-last-stand (1937) ends it. Signature features and lifepath to 1937 (they were 1890 and 1920), era advancement gone by 1938, NPC faction ends moved to the last stand with a survivors faction offered at the war | Remove bunyip-last-stand from wodx-chronicle data/events.mjs, set Bunyip until 1899 in signatures.mjs, lifepath span to 1899, goneBy 1900 in advance.mjs, and put "war-of-tears" back in EVENT_ENDS in wodx-npc faction-rules.mjs |
 
+## Approved by Ben, 16 November 2026, 01:58 UTC (all waiting entries)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | How long the medieval gaol sentence runs (Latin Christendom, until prison in 1780; Mage: The Dark Ages pdf p. 219 has serfs jailed but gives no term) | 1 to 2 years, a house figure, in the middle tier of punishments (B6669) | Change the gaol time mark in modules/wodx-chronicle/scripts/law-punish-rules.mjs |
+| 2026-11-16 | Ravenous counted one harder twice on a social roll (ownDiff and socialDiff) | Ravenous keeps only ownDiff 1: one harder on every roll until the Garou eats, social rolls included (B6663) | Give Ravenous socialDiff 1 again in modules/wodx-actions/scripts/after-cost-rules.js |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

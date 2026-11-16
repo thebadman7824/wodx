@@ -45,7 +45,8 @@ export function modsFor(actor, roll = {}) {
     if ( pm && tags.length ) powers = pm(actor, {tags: [...tags, ...(tags.some(t => PHYSICAL.includes(t)) ? ["physical"] : [])], frenzy: false });
   } catch (e) { console.warn("WoDX Sheets | power effects", e); }
   try { conditions = api("wodx-chronicle")?.conditions?.conditionsOf?.(actor) ?? []; } catch (e) { conditions = []; }
-  const sum = RR.combine({traits, powers, conditions, sight: attrKey === "perception"});
+  // B6664: a Social Attribute or a social Ability also counts the conditions' socialDice and socialDiff (Grieving...)
+  const sum = RR.combine({traits, powers, conditions, sight: attrKey === "perception", social: RR.isSocial(tags)});
   return {...sum, once: powers?.once ?? [], tags};
 }
 

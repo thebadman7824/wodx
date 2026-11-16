@@ -15,6 +15,8 @@ import * as F from "./fill-rules.mjs";
 const MOD = "wodx-interactables";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const eraNow = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+/** B6668: the era profile's cyberware switch, or undefined (then the gear's own era list decides). */
+const cyberNow = () => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.eraSwitch?.("cyberware"); } catch (e) { return undefined; } };
 const eraName = id => game.modules.get("wodx-chronicle")?.api?.eras?.getProfile?.(id)?.name ?? id ?? "any era";
 const opt = (obj, sel) => Object.entries(obj).map(([k, v]) => `<option value="${k}"${k === sel ? " selected" : ""}>${esc(v.label ?? v)}</option>`).join("");
 
@@ -94,7 +96,7 @@ export async function drawFor(opts = {}) {
   const items = opts.items ?? await gearIndex();
   const where = opts.where ?? whereFor(opts.scene ?? globalThis.canvas?.scene);
   return F.draw(items, {era: opts.era === undefined ? eraNow() : opts.era, place: opts.place, container: opts.container, count: opts.count, rng: opts.rng,
-    year: where?.year ?? null, way: where?.way ?? null, region: where?.region ?? null});
+    year: where?.year ?? null, way: where?.way ?? null, region: where?.region ?? null, cyberware: opts.era === undefined ? cyberNow() : opts.cyberware});
 }
 
 /**
@@ -126,7 +128,7 @@ export async function fillDialog(tile, field = null) {
   if ( !ask || ask === "cancel" ) return null;
   for ( let tries = 0; tries < 20; tries++ ) {
     const got = F.drawMixed({items, goods, weights, what: ask.what ?? whatSel, era, place: ask.place, container, count: Number(ask.count) || 3,
-      year: where.year, way: where.way, region: where.region, inUse, coin});
+      year: where.year, way: where.way, region: where.region, inUse, coin, cyberware: cyberNow()});
     if ( !got.length ) { ui.notifications.info("Nothing fits that place and era."); return null; }
     const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: "The draw"}, classes: ["wodx-dialog", "wix-fill-review"],
       content: `<p>Untick what doesn't belong here.</p><ul class="wix-fill-list" data-fixed>${got.map((g, i) => `<li><label><input type="checkbox" name="k${i}" checked> ${esc(g.name)}${g.goods ? "" : " <span class=\"hint\">(gear)</span>"}</label></li>`).join("")}</ul>`,

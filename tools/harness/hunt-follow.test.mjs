@@ -52,3 +52,68 @@ test("h5: a found body feeds the hunters by cause and year, and the morgue from 
   assert.equal(HF.toMorgue(1850, "drained"), true);
   assert.equal(HF.toMorgue(1850, "sickness"), false);
 });
+
+const RR = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/remains-rules.mjs")));
+test("B6666: who comes upon a body, and how far, read the same by remains and the hunters' own watch", () => {
+  assert.equal(RR.finderOf({pc: true}), "pc");
+  assert.equal(RR.finderOf({type: "Mortal"}), "town");
+  assert.equal(RR.finderOf({type: "Mortal", passerby: true}), null);
+  assert.equal(RR.finderOf({type: "Mortal", hunter: true}), null);
+  assert.equal(RR.finderOf({type: "Vampire"}), null);
+  assert.equal(RR.finderOf({pc: true, hidden: true}), null);
+  assert.equal(RR.squares({x: 0, y: 0}, {x: 100, y: 0}, 100), 1);
+  assert.equal(RR.squares({x: 0, y: 0}, {x: 400, y: 100}, 100), 4);
+});
+
+/* B6666: with the remains house rule OFF (its default) and the hunters' pressure on, a body left drained still feeds
+ * the hunters: hunt-follow marks it itself on the dead mark and finds it when a townsman walks up. Mocked Foundry. */
+const deep = () => new Proxy(class {}, {get: (t, k) => (k in t ? t[k] : deep()), apply: () => deep()});
+globalThis.foundry ??= deep();
+globalThis.Hooks ??= {on() {}, once() {}, callAll() {}};
+const FOL = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/hunt-follow.mjs")));
+function huntWorld({remains = false, pressure = true} = {}) {
+  const setPath = (o, path, v) => { const ks = path.split("."); let x = o; for ( const k of ks.slice(0, -1) ) x = (x[k] ??= {}); x[ks.at(-1)] = v; };
+  const scene = {id: "s1", uuid: "Scene.s1", grid: {size: 100}, tokens: []};
+  const tok = (id, actor, x, y, more = {}) => {
+    const t = {id, uuid: `Scene.s1.Token.${id}`, name: actor.name, actorId: actor.id, actorLink: true, actor, x, y, width: 1, height: 1, hidden: false, parent: scene, flags: {}, ...more,
+      async update(u) { for ( const [k, v] of Object.entries(u) ) setPath(this, k, v); }};
+    scene.tokens.push(t);
+    return t;
+  };
+  const added = [];
+  const settings = {"wodx-storyteller.remains": remains, "wodx-storyteller.hunterPressure": pressure};
+  globalThis.game = {time: {worldTime: 5000}, user: {id: "gm", isGM: true}, users: [{id: "gm", isGM: true}], scenes: [scene],
+    settings: {get: (m, k) => { const v = settings[`${m}.${k}`]; if ( v === undefined ) throw new Error("no setting"); return v; }},
+    modules: {get: id => (id === "wodx-storyteller" ? {api: {hunters: {regionAt: () => "moravia", add: async (r, why, o) => { added.push({r, ...o}); }}}} : null)}};
+  globalThis.ChatMessage = {create: async () => null};
+  return {scene, tok, added};
+}
+const victimActor = () => ({id: "v", name: "Victim", type: "Mortal", documentName: "Actor", hasPlayerOwner: false, isToken: false, flags: {"wodx-actions": {vesselBlood: {value: 0, at: 5000}}}});
+
+test("B6666: remains off, the hunters' own watch marks a drained body and the first townsman to come upon it feeds them", async () => {
+  const w = huntWorld();
+  const body = w.tok("b", victimActor(), 0, 0);
+  const finder = w.tok("f", {id: "f", name: "Carter", type: "Mortal", hasPlayerOwner: false}, 800, 0);
+  const marked = await FOL.bodyLeft({statuses: new Set(["dead"]), parent: body.actor});
+  assert.equal(marked.length, 1);
+  assert.equal(body.flags["wodx-storyteller"].leftBody.cause, "drained");
+  assert.deepEqual(await FOL.bodyNear(finder, {x: 800, y: 0}), [], "too far");
+  const r = await FOL.bodyNear(finder, {x: 100, y: 0});
+  assert.equal(r.length, 1);
+  assert.ok(w.added[0].n > 0 && w.added[0].r === "moravia");
+  assert.equal(body.flags["wodx-storyteller"].leftBody.found, "f");
+  assert.deepEqual(await FOL.bodyNear(finder, {x: 100, y: 100}), [], "found once");
+});
+
+test("B6666: with remains on the remains module does the finding, so the hunters' own watch stands aside", async () => {
+  const w = huntWorld({remains: true});
+  const body = w.tok("b", victimActor(), 0, 0);
+  assert.deepEqual(await FOL.bodyLeft({statuses: new Set(["dead"]), parent: body.actor}), []);
+  const w2 = huntWorld({pressure: false});
+  const b2 = w2.tok("b", victimActor(), 0, 0);
+  assert.deepEqual(await FOL.bodyLeft({statuses: new Set(["dead"]), parent: b2.actor}), [], "no hunters' pressure: nothing to feed");
+  // a death that is not the Kiss's drain adds no pressure, so it is not marked
+  const w3 = huntWorld();
+  const b3 = w3.tok("b", {...victimActor(), flags: {}}, 0, 0);
+  assert.deepEqual(await FOL.bodyLeft({statuses: new Set(["dead"]), parent: b3.actor}), []);
+});

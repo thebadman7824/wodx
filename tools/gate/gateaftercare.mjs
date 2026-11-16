@@ -2,9 +2,10 @@
  * Gate: WoDX NPC Aftercare Desk (n1, n2, n4-n7; B5800-B5806). n3 (rivals who back down) is rules and wiring only (the harness).
  *   1. an NPC taken by the law is held at the watch-house, serves its sentence off the maps, and goes home when let go (n1)
  *   2. a hurt NPC goes to be tended when the fight is deleted (the real deleteCombat hook) and mends on the healing clock;
- *      an NPC on an UNLINKED token too (B6173), and a token whose NPC shares its actor with other tokens is left alone (n2)
+ *      an NPC on an UNLINKED token too (B6173); a token whose NPC shares its actor with other tokens, and a routine-less
+ *      passer-by, walk into the hospital as themselves and come back off the healing clock (B6665) (n2)
  *   3. a mortal fed on (wodxFed, as WoDX Actions fires it) is Dazed and rests at home; an UNLINKED passer-by's Daze
- *      lifts once the clock passes its end (B6173) (n4)
+ *      lifts once the clock passes its end (B6173), and then it goes off to rest as itself (B6665) (n4)
  *   4. an NPC who loses someone close mourns by faith (n5)
  *   5. a robber who got money spends the night at the tavern (n6)
  *   6. married NPCs share a home (n7)
@@ -25,7 +26,7 @@ export async function run() {
     const kinds = [["Watch", "gate"], ["Hospital", "hospital"], ["Church", "church"], ["Tavern", "tavern"], ["Home A", "home"], ["Home B", "home"]];
     await sc.createEmbeddedDocuments("Region", kinds.map(([n, k], i) => ({name: `Gate AC ${n}`, color: "#557799", shapes: [rect(S, 1 + (i % 3) * 7, 1 + Math.floor(i / 3) * 7, 5, 5)], flags: {[MOD]: {place: {kind: k, owner: "", private: false}}}})));
     const R = n => sc.regions.find(r => r.name === `Gate AC ${n}`).uuid;
-    const [crook, hurt, vessel, mourner, dead, robber, groom, bride, hurtU, crowd, vesselU] = await G.make(Actor, [
+    const [crook, hurt, vessel, mourner, dead, robber, groom, bride, hurtU, crowd, vesselU, stranger] = await G.make(Actor, [
       {name: "Gate AC Crook", type: "Mortal", flags: {[MOD]: {routine: ROUT(R("Home A"))}}},
       {name: "Gate AC Hurt", type: "Mortal", flags: {[MOD]: {routine: ROUT(R("Home A"))}}},
       {name: "Gate AC Vessel", type: "Mortal", flags: {[MOD]: {routine: ROUT(R("Home B"))}}},
@@ -36,10 +37,12 @@ export async function run() {
       {name: "Gate AC Bride", type: "Mortal", flags: {[MOD]: {routine: ROUT(R("Home B"))}, "wodx-creation": {sex: "female"}}},
       {name: "Gate AC Hurt Unlinked", type: "Mortal", flags: {[MOD]: {routine: ROUT(R("Home B"))}}},
       {name: "Gate AC Crowd", type: "Mortal", flags: {[MOD]: {routine: ROUT(R("Home B"))}}},
-      {name: "Gate AC Passer-by", type: "Mortal"}
+      {name: "Gate AC Passer-by", type: "Mortal"},
+      {name: "Gate AC Stranger", type: "Mortal"}
     ]);
     const [tHurtU, tCrowd1, , tVesselU] = await G.tokens(sc, [{actor: hurtU, x: 9, y: 10, actorLink: false}, {actor: crowd, x: 10, y: 10, actorLink: false},
       {actor: crowd, x: 11, y: 10, actorLink: false}, {actor: vesselU, x: 12, y: 10, actorLink: false}]);
+    const [tStranger] = await G.tokens(sc, [{actor: stranger, x: 13, y: 10, actorLink: false}]);
     await G.tokens(sc, [{actor: crook, x: 2, y: 2}, {actor: hurt, x: 3, y: 2}, {actor: vessel, x: 4, y: 2}, {actor: mourner, x: 2, y: 10}, {actor: robber, x: 3, y: 10}].map(o => ({...o, actorLink: true})));
     const AC = () => npc().aftercare;
     const t0 = game.time.worldTime;
@@ -67,15 +70,24 @@ export async function run() {
       await game.wodxCombat.setDamage(ta.actor, {bashing: 0, lethal: 3, aggravated: 0});
       await game.wodxCombat.setDamage(sc.tokens.get(tHurtU.id).actor, {bashing: 0, lethal: 3, aggravated: 0});
       await game.wodxCombat.setDamage(sc.tokens.get(tCrowd1.id).actor, {bashing: 0, lethal: 3, aggravated: 0});
-      await fightEnds([ta, sc.tokens.get(tHurtU.id), sc.tokens.get(tCrowd1.id)]);
-      await waitFor(() => !!hurt.getFlag(MOD, "duties")?.tend && !!hurtU.getFlag(MOD, "duties")?.tend, 6000);
+      await game.wodxCombat.setDamage(sc.tokens.get(tStranger.id).actor, {bashing: 0, lethal: 3, aggravated: 0});
+      await fightEnds([ta, sc.tokens.get(tHurtU.id), sc.tokens.get(tCrowd1.id), sc.tokens.get(tStranger.id)]);
+      const away = id => sc.tokens.get(id)?.actor?.getFlag(MOD, "tokenAway") ?? null;
+      await waitFor(() => !!hurt.getFlag(MOD, "duties")?.tend && !!hurtU.getFlag(MOD, "duties")?.tend && away(tCrowd1.id)?.place && away(tStranger.id)?.place, 12000);
       G.ok("2. goes to the hospital when the fight ends", hurt.getFlag(MOD, "duties")?.tend?.place === R("Hospital"), {d: hurt.getFlag(MOD, "duties")});
       G.ok("2. an unlinked NPC goes to be tended too", hurtU.getFlag(MOD, "duties")?.tend?.place === R("Hospital"), {d: hurtU.getFlag(MOD, "duties") ?? null});
       G.ok("2. an NPC sharing its actor with other tokens keeps its routine", !crowd.getFlag(MOD, "duties")?.tend, {d: crowd.getFlag(MOD, "duties") ?? null});
+      // B6665: the shared token and the routine-less stranger walk into the hospital as themselves
+      const inHospital = id => { const t = sc.tokens.get(id); return !!t && !t.hidden && t.x >= 8 * S && t.x < 13 * S && t.y >= 1 * S && t.y < 6 * S; };
+      const at = id => { const t = sc.tokens.get(id); return t ? {x: t.x / S, y: t.y / S, hidden: t.hidden, away: away(id)} : null; };
+      G.ok("2. a shared NPC's token is tended as itself", away(tCrowd1.id)?.place === R("Hospital") && inHospital(tCrowd1.id), {t: at(tCrowd1.id)});
+      G.ok("2. a routine-less passer-by is tended as itself", away(tStranger.id)?.place === R("Hospital") && inHospital(tStranger.id), {t: at(tStranger.id)});
       const a = sc.tokens.get(ta.id).actor, au = sc.tokens.get(tHurtU.id).actor;
       await a.setFlag(MOD, "mend", {last: game.time.worldTime - 12 * 86400});
       await au.setFlag(MOD, "mend", {last: game.time.worldTime - 12 * 86400});
+      for ( const id of [tCrowd1.id, tStranger.id] ) await sc.tokens.get(id).actor.setFlag(MOD, "mend", {last: game.time.worldTime - 12 * 86400});
       await AC().mendTick();
+      G.ok("2. mended, the tokens tended as themselves are back to their day", !away(tCrowd1.id) && !away(tStranger.id), {crowd: at(tCrowd1.id), stranger: at(tStranger.id)});
       const d = a.system.health.damage, du = sc.tokens.get(tHurtU.id).actor.system.health.damage;
       G.ok("2. mends on the clock (linked and unlinked)", (Number(d.lethal) || 0) < 3 && (Number(du.lethal) || 0) < 3, {d, du});
     });
@@ -96,6 +108,10 @@ export async function run() {
       await waitFor(() => !dazed(pb()) && !pb().getFlag(MOD, "kissed"), 6000);
       G.ok("3. an unlinked passer-by's Daze lifts on the clock", !dazed(pb()) && !pb().getFlag(MOD, "kissed"),
         {stillDazed: dazed(pb()), kissed: pb().getFlag(MOD, "kissed") ?? null, now: game.time.worldTime});
+      // B6665: with no routine to carry the rest, the passer-by goes off to rest as itself (this scene has no way in: hidden)
+      await waitFor(() => sc.tokens.get(tVesselU.id)?.hidden && pb().getFlag(MOD, "tokenAway")?.pending === false, 6000);
+      G.ok("3. the passer-by goes off to rest until morning", sc.tokens.get(tVesselU.id)?.hidden === true && pb().getFlag(MOD, "tokenAway")?.why === "rest",
+        {away: pb().getFlag(MOD, "tokenAway") ?? null, hidden: sc.tokens.get(tVesselU.id)?.hidden});
     });
 
     await G.step("4. mourning", async () => {

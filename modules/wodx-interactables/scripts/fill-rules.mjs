@@ -86,13 +86,18 @@ export function gearAtHome(it, {year = null, way = null, region = null} = {}) {
   return Array.isArray(r) ? y >= r[0] && y <= r[1] : y >= Number(r);
 }
 
-export function candidates(items, {era = null, place = "home", container = "chest", year = null, way = null, region = null} = {}) {
+/**
+ * B6668: cyberware is the era profile's cyberware switch (true: drawn whatever era the piece's book is listed for,
+ * false: never); with no switch the piece's own era list decides, as for any other gear.
+ */
+export function candidates(items, {era = null, place = "home", container = "chest", year = null, way = null, region = null, cyberware} = {}) {
   const w = (PLACES[place] ?? PLACES.home).w;
   const out = [];
   for ( const it of items ?? [] ) {
     const cat = categoryOf(it);
     if ( !cat || !w[cat] ) continue;
-    if ( era && !(it.flags?.["wodx-library"]?.eras ?? []).some(e => e === era || e === ERA_LIKE[era]) ) continue;
+    const listed = !era || (it.flags?.["wodx-library"]?.eras ?? []).some(e => e === era || e === ERA_LIKE[era]);
+    if ( cat === "cyber" ? !TERMS.cyberwareOn(cyberware, listed) : !listed ) continue;
     if ( !gearAtHome(it, {year, way, region}) ) continue;
     if ( !fits(it, container) ) continue;
     out.push({item: it, weight: w[cat], cat});
@@ -114,8 +119,8 @@ function pick(pool, n, rng) {
 const howMany = count => Math.max(0, Math.min(12, Math.round(Number(count) || 0)));
 
 /** Draw up to count different items, by weight. rng returns [0, 1). */
-export function draw(items, {era = null, place = "home", container = "chest", count = 3, rng = Math.random, year = null, way = null, region = null} = {}) {
-  return pick(candidates(items, {era, place, container, year, way, region}), howMany(count), rng).map(p => p.item);
+export function draw(items, {era = null, place = "home", container = "chest", count = 3, rng = Math.random, year = null, way = null, region = null, cyberware} = {}) {
+  return pick(candidates(items, {era, place, container, year, way, region, cyberware}), howMany(count), rng).map(p => p.item);
 }
 
 /**
@@ -159,9 +164,9 @@ export const WHAT = {both: {label: "Gear and everyday goods"}, goods: {label: "E
  * (a gear item's link, or a good's name as plain text).
  */
 export function drawMixed({items = [], goods = [], weights = null, what = "both", era = null, place = "home", container = "chest", count = 3, rng = Math.random,
-  year = null, way = null, region = null, inUse = null, coin = null} = {}) {
+  year = null, way = null, region = null, inUse = null, coin = null, cyberware} = {}) {
   const pool = [
-    ...(what === "goods" ? [] : candidates(items, {era, place, container, year, way, region})),
+    ...(what === "goods" ? [] : candidates(items, {era, place, container, year, way, region, cyberware})),
     ...(what === "gear" ? [] : goodsCandidates(goods, weights, {era, place, container, year, way, region, inUse}))
   ];
   const goodsOut = g => { const line = goodsLine(g, rng, coin); return {name: g.localCoin ? line : g.name, line, goods: true}; };

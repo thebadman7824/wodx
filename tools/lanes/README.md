@@ -36,7 +36,7 @@ The nightly task resets every lane marked autoReset (2 to 6) and then runs `nigh
 A long list (`--touched` often gives 80 or more gates) goes faster and cleaner split over lanes 2 and 3:
 `run-gate.mjs --touched --lanes 2,3`. After each gate the runner puts back the world settings it changed and removes
 ones it added; on lanes 2 and 3 it also deletes documents the gate left behind, so one gate's leftovers cannot fail
-the next (B3086). The two-browser gates (gatesolo, gatelookhand) are not in the map: run them by name, alone.
+the next (B3086). The two-browser gates (gatesolo, gatelookhand, gatetruthlooks and the others in gate-map-extra.json's notGates) are not in the map: run them with `node tools/harness/gate-two.mjs <name>`, alone.
 
 No run can hang a lane (B3089). A dialog or other window a gate opened that waits more than 45 seconds is closed
 (`--step-timeout`), so the step waiting on it goes on; document sheets are left open. A gate gets 15 minutes
