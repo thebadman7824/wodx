@@ -333,6 +333,12 @@ export function giftDuration(code, successes = 1) {
 }
 
 /** XP cost of a Gift (DA:W p. 107): level × 3 for the breed's, auspice's or tribe's own; level × 5 otherwise. */
+/** B6729: Skin Dancers (W20 p. 199, read with the Ronin rule there): every Gift costs level x 7, and none above level one. */
+export const isSkinDancer = tribe => /^skin-?dancers?$/.test(norm(tribe).replace(/ /g, "-"));
+export function giftTerms(level, own, { tribe = "", rank = 1 } = {}) {
+    if (isSkinDancer(tribe)) return { xp: n(level) * 7, cap: 1, own: false, note: "Skin Dancer: level x 7, level one only (W20 p. 199)" };
+    return { xp: giftXP(level, own), cap: Math.max(1, n(rank)), own, note: "" };
+}
 export function giftXP(level, own) {
     return n(level) * (own ? 3 : 5);
 }
