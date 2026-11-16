@@ -64,14 +64,21 @@ export async function run() {
     });
 
     await G.step("3. a Shadow-led wraith's moves go to the Storyteller (B6734)", async () => {
+      // its own state: no binding left on this wraith by an earlier gate, and the flag read back before judging
       const who = st.actor ?? shade;
+      const old = B.bindingsOn(who).map(b => b.id).filter(Boolean);
+      if ( old.length ) await who.deleteEmbeddedDocuments("ActiveEffect", old);
       await who.setFlag(MOD, "shadowDominant", true);
+      await waitFor(() => who.getFlag(MOD, "shadowDominant") === true, 4000);
       const held = B.bindingsOn(who);
       const g = scene.grid.size;
       const j = B.judgeMove(held, {from: {x: st.x, y: st.y}, to: {x: st.x + g * 2, y: st.y}});
       await who.unsetFlag(MOD, "shadowDominant");
-      const free = B.bindingsOn(who);
-      G.ok("3. a Shadow-led wraith's moves go to the Storyteller (B6734)", held.some(b => b.key === "shadow") && j.ask === true && !free.length, {held: held.map(b => b.key), judged: j});
+      await waitFor(() => !who.getFlag(MOD, "shadowDominant"), 4000);
+      const free = B.bindingsOn(who).filter(b => b.key === "shadow");
+      // the real answer: the move is not made (ok false) and goes to the Storyteller (ask), naming the Shadow
+      G.ok("3. a Shadow-led wraith's moves go to the Storyteller (B6734)", held.some(b => b.key === "shadow") && j.ask === true && j.ok !== true && !free.length,
+        {held: held.map(b => b.key), judged: j, cleared: old.length, after: free.map(b => b.key)});
     });
 
     await G.step("4. Wyrmflesh woken from Use a fetish wards its wearer (B6737)", async () => {
