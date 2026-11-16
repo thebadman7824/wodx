@@ -20,7 +20,7 @@ import path from "node:path";
 import os from "node:os";
 import {spawn, spawnSync} from "node:child_process";
 import {loadConfig, getLane, laneDir, laneUrl, isUp, acquireLock, releaseLock, lockState, readJson, writeJson,
-  codeFingerprint, expectedCode, diffCode, diffPackages, hashTree, treeDigest, WORLD_PROBE, worldFingerprint, diffWorld,
+  codeFingerprint, expectedCode, diffCode, diffPackages, hashTree, treeDigest, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld,
   printDiffs, pidAlive, REPO} from "./lib.mjs";
 
 try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch { }
@@ -92,7 +92,7 @@ async function accept(lane) {
   const {openGM} = await import("./browser.mjs");
   const {browser, page} = await openGM(laneUrl(lane));
   try {
-    const now = worldFingerprint(await page.evaluate(WORLD_PROBE), cfg.ignoreSettings);
+    const now = await settledFingerprint(page, cfg.ignoreSettings);
     const old = readJson(path.join(laneDir(lane), "clean.json"));
     if ( old ) {
       const d = diffWorld(old, now);

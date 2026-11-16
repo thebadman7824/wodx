@@ -385,7 +385,7 @@ Next free block: B6980
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: lane 7 and watchdog on DESKTOP-S6NV3Q9 (used B6880-B6882) | tools (PC job queue, testbed lanes) |
+| B6880-B6889 | Second PC runner: lane setup without other systems (used B6880-B6883) | tools (testbed lanes) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -400,7 +400,7 @@ Next free block: B6980
 | B6940-B6949 | Final Audit Desk rulings (lead part) | system, all modules (comments only), tools, docs |
 | B6950-B6959 | Gate run 1774 fixes | wodx-sheets, wodx-chronicle, tools |
 | B6960-B6969 | Gate run 1779 fixes | tools |
-| B6970-B6979 | Gate diagnostics: console and full failing steps in PC job reports | tools |
+| B6970-B6979 | Gate diagnostics; the lane snapshot waits for start-up (used B6970-B6971) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13547,6 +13547,11 @@ PC job queue. Every five minutes the second PC's runner checks that https://wodx
 
 Reverse: remove "watch" from runner.desktop-s6nv3q9.json.
 
+## B6883. Lane setup skips a package kind the source does not have (2026-11-16)
+Testbed lanes. `lanes.mjs setup` copied Data/modules and Data/systems from lane 1 and stopped with ENOENT when the source had no Data/systems folder. The second PC's lane1-copy carries no systems (worldofdarkness comes from the repo), so lane 7's first setup (job #1806) failed there. A missing folder is now treated as empty.
+
+Reverse: restore the plain readdirSync; then create the empty folder on the source instead.
+
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
 
@@ -13853,3 +13858,7 @@ visible: none, gate only.
 B6970. A PC job can ask for diagnostics with `"diag": true`. run-gate.mjs --diag writes, under each failing gate in the job's report, the browser console errors and warnings since the last gate (since sign-in for the first, so a module that failed to start shows its error) and every failing step in full (up to 12,000 characters each, where the runner's comment shows 700). gate-two.mjs --diag prints both browsers' console errors and warnings from page load on, and the full failing steps, as [diag] lines the runner adds to its comment. Asked for by the owner on 16 Nov to find why eight gates fail on main (gate7a, gatehandworlds, gatestates2, gateresidents, gate7d, gateplayerload, gateplayerblows, gatetruthrelay). Without the flag nothing changes.
 effect: none, tooling only; game code and gates are unchanged.
 visible: none, only the PC job reports gain lines.
+
+B6971. lanes.mjs accept and run-gate's first world check now read the world once start-up has stopped saving settings: tools/lanes/lib.mjs settledFingerprint probes every 2 seconds and returns once the settings digest has held for 10 seconds (at most 90). A GM sign-in keeps writing world settings for some seconds after ready (the Chronicle start level 1.5 s after ready, events fired, the Storyteller signal board, Token Magic and FXMaster migrations). A snapshot taken at once caught some of them, so the next sign-in read them as drift and no gate ran: jobs 1801 and 1809 on 16 Nov stopped on every lane, even after a reset (drift files: wodx-chronicle autoApprove, automationBase, automationLevel, eventsFired; wodx-storyteller signalBoard; tokenmagic migration).
+effect: none, tooling only; the game is unchanged.
+visible: none, gates jobs on a fresh lane run instead of stopping on drift.

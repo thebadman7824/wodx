@@ -193,6 +193,26 @@ export function worldFingerprint(raw, ignore = []) {
 }
 
 /**
+ * B6971: the world's fingerprint once start-up has stopped saving settings. A GM sign-in keeps writing world settings
+ * for some seconds after the game is ready (WoDX Chronicle's start level 1.5 s after ready, events fired, the
+ * Storyteller's signal board, Token Magic and FXMaster migrations). A fingerprint taken at once caught some of them, so
+ * the next sign-in saw them as drift and no gate ran (jobs 1801 and 1809, 16 Nov). This probes every 2 s and returns
+ * once the settings digest has not changed for quietMs, or after maxMs with the last probe.
+ */
+export async function settledFingerprint(page, ignore = [], {quietMs = 10000, maxMs = 90000, everyMs = 2000} = {}) {
+  const t0 = Date.now();
+  let last = worldFingerprint(await page.evaluate(WORLD_PROBE), ignore), since = Date.now();
+  while ( Date.now() - t0 < maxMs ) {
+    await new Promise(r => setTimeout(r, everyMs));
+    const now = worldFingerprint(await page.evaluate(WORLD_PROBE), ignore);
+    if ( now.settingsDigest !== last.settingsDigest ) { last = now; since = Date.now(); continue; }
+    last = now;
+    if ( Date.now() - since >= quietMs ) break;
+  }
+  return last;
+}
+
+/**
  * World drift between the clean fingerprint and now. "strict" entries stop a gate run: core, system and module
  * versions, the active module list, world settings and the clock. Document changes are warnings (test data a
  * gate forgot to clear), listed so they can be cleaned up.
