@@ -26,7 +26,7 @@ test("the successes are the strength; failed rolls do nothing, a passive power t
   assert.equal(results.length, 1);
   assert.equal(results[0].who, "self");
   assert.match(results[0].out.label, /^Shield: /);
-  // B6833: a passive power picked from the menu turns on, with no roll, one success
+  // B6853: a passive power picked from the menu turns on, with no roll, one success
   assert.deepEqual(PW.powerOutcomes({keywords: ["ward"], passive: true}, 0).results.map(r => r.key), ["ward"]);
   assert.deepEqual(PW.powerOutcomes({keywords: ["ward"]}, 0).results, []);
 });

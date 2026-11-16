@@ -226,7 +226,7 @@ export function dawnOffering(thralls = []) {
 }
 /** Gifts bought with a thrall's potential (p. 253). */
 export const GIFTS = [
-    // B6838: story names why a gift puts nothing on the table: it changes the thrall's own sheet, kept by hand (p. 253)
+    // B6858: story names why a gift puts nothing on the table: it changes the thrall's own sheet, kept by hand (p. 253)
     { k: "heal", label: "Mend a chronic injury or impairment", cost: 1, story: "DtF p. 253: WoDX keeps no chronic injuries; the thrall's sheet loses the Flaw by hand" },
     { k: "freebies", label: "Ten freebie points (not Backgrounds)", cost: 1, story: "DtF p. 253: freebie points spent on the thrall's sheet by hand" },
     { k: "innate", label: "One of the demon's innate powers (Willpower at 7 to use)", cost: 1, story: "DtF p. 253: the power goes on the thrall's sheet by hand" },

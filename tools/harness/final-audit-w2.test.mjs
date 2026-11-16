@@ -141,8 +141,8 @@ test("B6739: a cantrip's timed result carries its keyword where power-mods reads
   assert.deepEqual(chain.map(x => x.out.key), ["light", "fortune"]);
 });
 
-/* Second pass (B6830-B6849): nothing only tells. */
-test("B6830: a standing, scoped Blessing eases only its rolls, is not spent, and keeps its own key", async () => {
+/* Second pass (B6850-B6869): nothing only tells. */
+test("B6850: a standing, scoped Blessing eases only its rolls, is not spent, and keeps its own key", async () => {
   const PM = await imp("modules/wodx-actions/scripts/power-mods.js");
   const out = {key: "fortune", name: "Lordly Mien", shift: -2, tags: ["charisma", "manipulation"], once: false};
   const key = PM.keyFor(out), data = PM.timedData(out);
@@ -158,7 +158,7 @@ test("B6830: a standing, scoped Blessing eases only its rolls, is not spent, and
   assert.match(src("modules/wodx-combat/scripts/main.js"), /powerMods\?\.defend\?\.\(target, \{ ranged: !!w\.ranged \}\)/);
 });
 
-test("B6831: the apocalyptic form's powers go on the effects card and its claws on the sheet", async () => {
+test("B6851: the apocalyptic form's powers go on the effects card and its claws on the sheet", async () => {
   const DE = await imp("modules/wodx-actions/scripts/demon-evocations.js");
   const r = DE.formResults(["Lordly Mien", "Immune to Fire", "Night Sight", "Casts No Reflection"], "Bel");
   assert.deepEqual(r.map(x => [x.key, x.out.kind]), [["fortune", "timed"], ["ward", "timed"], ["sight", "timed"]]);
@@ -175,7 +175,7 @@ test("B6831: the apocalyptic form's powers go on the effects card and its claws 
   assert.match(d, /weaponIds/);
 });
 
-test("B6832: the evocations that were card or Storyteller only now apply", async () => {
+test("B6852: the evocations that were card or Storyteller only now apply", async () => {
   const DE = await imp("modules/wodx-actions/scripts/demon-evocations.js");
   const D = await imp("modules/wodx-actions/scripts/demon-rules.js");
   const WE = await imp("modules/wodx-actions/scripts/world-effects.js");
@@ -186,21 +186,21 @@ test("B6832: the evocations that were card or Storyteller only now apply", async
   }
 });
 
-test("B6833: a passive power picked from the menu turns on", async () => {
+test("B6853: a passive power picked from the menu turns on", async () => {
   const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
   const r = PW.powerOutcomes({keywords: ["ward"], passive: true}, 0, {label: "Survivor"}).results;
   assert.deepEqual(r.map(x => [x.key, x.who]), [["ward", "self"]]);
   assert.doesNotMatch(src("modules/wodx-actions/scripts/kindred.js"), /if \(!fx && !p\.passive && successes > 0/);
 });
 
-test("B6834: a spell that tells the caster something gives the Know, Sense or Speak result", async () => {
+test("B6854: a spell that tells the caster something gives the Know, Sense or Speak result", async () => {
   const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
   const [r] = D.outcomesOf({kw: "know", kind: "note", who: "self"}, {label: "Gate Know"}, 3, "a secret");
   assert.notEqual(r.out.kind, "note");
   assert.equal(r.st, undefined);
 });
 
-test("B6835: the Dark Ages paths and Disciplines that only told now apply, or say why not", async () => {
+test("B6855: the Dark Ages paths and Disciplines that only told now apply, or say why not", async () => {
   const PE = await imp("modules/wodx-actions/scripts/path-effects.js");
   const disc = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8")).powers;
   const by = id => disc.find(p => p.id.endsWith(id));
@@ -210,7 +210,7 @@ test("B6835: the Dark Ages paths and Disciplines that only told now apply, or sa
   assert.match(src("modules/wodx-actions/scripts/kindred.js"), /PE\.isPath\(p\.d\) \|\| PE\.PATH_EFFECTS\[p\.id\]/);
 });
 
-test("B6836: a Storyteller's spec that names a working keyword gives that keyword's result", async () => {
+test("B6856: a Storyteller's spec that names a working keyword gives that keyword's result", async () => {
   const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
   const [m] = D.outcomesOf({kw: "move", kind: "st"}, {label: "Gate Move"}, 2, "away");
   assert.equal(m.out.kind, "move");
@@ -220,7 +220,7 @@ test("B6836: a Storyteller's spec that names a working keyword gives that keywor
   assert.equal(f.st, true);
 });
 
-test("B6837: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and Totem Gift that only told now apply, or say why not", async () => {
+test("B6857: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and Totem Gift that only told now apply, or say why not", async () => {
   const M = await imp("modules/wodx-actions/scripts/mage-da-rules.js");
   const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
   const rote = id => D.daOutcomes(M.ROTES.find(r => r.id === id), 3)[0];
@@ -244,7 +244,7 @@ test("B6837: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and To
   for ( const k of ["werewolf-dark-ages|totem-gift", "mage-dark-ages|horse-bringer", "kuei-jin-kote|cleave-the-demon"] ) assert.ok(SS.SPECS[k], k);
 });
 
-test("B6838: hedge magic, Numina, True Faith, Changing Breeds Gifts and pact gifts that only told now apply, or say why not", async () => {
+test("B6858: hedge magic, Numina, True Faith, Changing Breeds Gifts and pact gifts that only told now apply, or say why not", async () => {
   const PE = await imp("modules/wodx-actions/scripts/path-effects.js");
   const H = await imp("modules/wodx-actions/scripts/hunter-rules.js");
   const c5 = PE.numinaOutcomes("curses", 5, 4, H.NUMINA.curses);

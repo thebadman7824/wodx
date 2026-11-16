@@ -150,7 +150,7 @@ export const FAITH_POWERS = {
 };
 export const faithPowers = (rules, rating) => (FAITH_POWERS[rules] ?? FAITH_POWERS.hh2).filter(([k]) => k <= n(rating));
 /**
- * B6838: what the faithful's presence does on the table (V20 Dark Ages p. 394, HH2 p. 84): from Faith 2 a sense of the
+ * B6858: what the faithful's presence does on the table (V20 Dark Ages p. 394, HH2 p. 84): from Faith 2 a sense of the
  * unnatural near them (the Sense keyword's own result), from Faith 5 every vampire who hears their prayer or is touched
  * rolls against Rötschreck at difficulty 9 (a Fear that rouses the Beast at strength 3).
  */
@@ -161,7 +161,7 @@ export function faithPresence(rules, rating, { source = "" } = {}) {
     return out;
 }
 /**
- * B6838: the powers True Faith stops on the faithful themselves (V20 Dark Ages p. 394: Faith 3 the mind-clouding
+ * B6858: the powers True Faith stops on the faithful themselves (V20 Dark Ages p. 394: Faith 3 the mind-clouding
  * Disciplines, Faith 4 Presence and the emotions; HH2 p. 84: Faith 3 every mind power). By effect keyword.
  */
 export function faithStops(rules, rating, key) {
@@ -291,7 +291,7 @@ export const WITHDRAWAL = { difficulty: 7, weeks: stamina => Math.max(1, 6 - n(s
  * from the highest aspect level, the successes and the Path rating. s below need: nothing.
  */
 const sx = (key, who, out) => ({ key, who, out });
-/** B6838: the keyword's own result at the aspect level (a brew made, an object worked, a vision asked), not a line of text. */
+/** B6858: the keyword's own result at the aspect level (a brew made, an object worked, a vision asked), not a line of text. */
 const KR = (kw, who, lv, b, text, learn = false) => outcomesOf(learn ? { kw, kind: "note", who } : { kw, kind: "st", who }, b, lv, text);
 export const SORCERY_FX = {
     alchemy: (lv, s, rt, b) => KR("make", "self", lv, b, `A brew of level ${lv} is ready: drunk or used, it works as the formula says`),

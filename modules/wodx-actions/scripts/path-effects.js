@@ -14,7 +14,7 @@ import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
  */
 const K = "koldunic-sorcery-the-", NE = "necromancy-the-", TH = "thaumaturgy-potestas-";
 // B6738: Corrupt Body's and Acedia's time by successes (V20 Dark Ages p. 301)
-/** B6838: a hedge curse's length by successes (HH2 p. 73): the next action, a scene, a day, a week, a month, a year. */
+/** B6858: a hedge curse's length by successes (HH2 p. 73): the next action, a scene, a day, a week, a month, a year. */
 const HH_CURSE = [["the next action", {kind: "rounds", rounds: 1}], ["one scene", {kind: "scene"}], ["one day", {kind: "time", seconds: DAY}],
   ["one week", {kind: "time", seconds: 7 * DAY}], ["one month", {kind: "time", seconds: 30 * DAY}], ["up to a year", {kind: "time", seconds: 365 * DAY}]];
 const CURSE_LADDER = [["one night", DAY], ["one week", 7 * DAY], ["one month", 30 * DAY], ["one season", 91 * DAY], ["one year", 365 * DAY]];
@@ -72,7 +72,7 @@ export const PATH_EFFECTS = {
   [`${TH}exsecrabilis-scapegoat`]: T("sway", "Scapegoat", {days: 1}, "one"), [`${TH}exsecrabilis-corrupt-body`]: T("boost", "Corrupt Body", {ladder: CURSE_LADDER}, "one", {sap: true, on: "all", dice: 1}),
   [`${TH}exsecrabilis-acedia`]: T("fortune", "Acedia", {ladder: CURSE_LADDER}, "one", {curse: true, shift: 2, once: false}),
   [`${TH}vitae-a-taste-for-blood`]: KW("know", "one"), [`${TH}vitae-blood-awakening`]: [P("blood", -1, "one"), KW("fear", "one", {frenzy: true})], [`${TH}vitae-inner-vessel`]: S(), [`${TH}vitae-theft-of-vitae`]: [P("blood", 1, "self"), P("blood", -1, "one")],
-  // B6835: Disciplines that are not paths, read again on their pages (V20 Dark Ages pp. 266, 266, 275)
+  // B6855: Disciplines that are not paths, read again on their pages (V20 Dark Ages pp. 266, 266, 275)
   "valeren-watcher-souls-breath": [P("blood", 1, "self"), H("harm", 1, "lethal")],
   "valeren-warrior-song-of-the-blooded": T("boost", "Song of the Blooded", "scene", "self", {on: "physical", dice: 3}),
   "abyss-mysticism-cry-that-slays-the-light": KW("light", "self", {dark: true}),
@@ -83,7 +83,7 @@ export const PATH_EFFECTS = {
 export const NUMINA_EFFECTS = {
   "divination:1": N(), "divination:2": N(), "divination:3": N(), "divination:4": N(), "divination:5": N(),
   "healing:1": N(), "healing:4": HL(1), "healing:5": HL(1, {aggravated: true}),
-  // B6838: read again on HH2 pp. 72-79. A curse is a standing harder roll for its ladder (on all the victim's rolls: the
+  // B6858: read again on HH2 pp. 72-79. A curse is a standing harder roll for its ladder (on all the victim's rolls: the
   // book leaves the situation to the Storyteller), with dice lost at four and five; Healing 2 takes away the pain of
   // wounds for 10 minutes a success; astral travel crosses over; Cyberkinesis reads or works the device
   ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`curses:${l}`, [T("fortune", `Curse (${l})`, {ladder: HH_CURSE}, "one", {curse: true, shift: [1, 2, 3, 3, 4][l - 1], once: false}),
@@ -107,8 +107,8 @@ export function isPath(heading) {
 }
 
 /** What a path power does with its successes: [{key, who, ask?, st?, out}]. Unknown powers come back as one st line. */
-/** B6835: the Dark Ages powers with no effect to put on the card, each read on its page, and why. */
-/** B6838: Numina levels with no table effect, with the page (read). */
+/** B6855: the Dark Ages powers with no effect to put on the card, each read on its page, and why. */
+/** B6858: Numina levels with no table effect, with the page (read). */
 export const NUMINA_STORY = {
   "healing:3": "HH2 p. 76: bones set and wounds heal twice as fast; WoDX keeps no natural healing rate to double"
 };

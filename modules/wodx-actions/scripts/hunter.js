@@ -397,7 +397,7 @@ export function build(ctx) {
                 if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": base - 1 }); else await ctx.setFlag(actor, "trueFaith", base - 1); }
                 return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${base} → ${base - 1}.` : "The faith holds."}</div>`, [r.roll]);
             }
-            // B6838: the passive lines of the faith on the effects card: a sense of the unnatural, and holy dread at Faith 5
+            // B6858: the passive lines of the faith on the effects card: a sense of the unnatural, and holy dread at Faith 5
             if (fd.k === "presence") {
                 const res = H.faithPresence(rules, rating);
                 if (!res.length) return ctx.notify(`True Faith ${rating}: nothing to put on the table below Faith 2.`);

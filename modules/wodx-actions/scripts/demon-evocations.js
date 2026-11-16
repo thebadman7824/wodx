@@ -244,7 +244,7 @@ export const EVOCATIONS = {
 };
 
 /**
- * B6832: the evocations that were the card or the Storyteller's alone, each read again on its page (DtF pp. 176-213), now
+ * B6852: the evocations that were the card or the Storyteller's alone, each read again on its page (DtF pp. 176-213), now
  * do what their keyword does on the effects card. Fuel and Roil the Earth reach the ground by name (world-effects.js), as
  * Earthquake, Summon Water and the storm evocations also do.
  */
@@ -431,7 +431,7 @@ export const FORM_POWERS = {
     "Voice of the Grave": P("Intimidation rolls are 2 easier."),
 };
 /**
- * B6831: what each form power does while the form lasts, on the effects card (mage-da-effects.js helpers), read from its
+ * B6851: what each form power does while the form lasts, on the effects card (mage-da-effects.js helpers), read from its
  * line above (DtF pp. 175-216). Easier rolls are a standing Blessing held to those rolls; harder blows at the demon a
  * standing shift on attacks against them (WoDX Combat reads it); immunities a Ward against that harm (ten dice, house);
  * natural weapons go on the sheet as weapons (FORM_WEAPONS). A power not listed has no keyword its words fit and is listed
@@ -476,13 +476,13 @@ export const FORM_SPECS = {
     "Aura of Vitality": HL(1, { who: "all" }),
     "Extra Actions": T("hasten", "Extra Actions", { turns: 1 }, "self", { actions: 1 })
 };
-/** B6831: natural weapons the form grows, put on the sheet while it lasts: {attr, bonus, type, ranged?}. */
+/** B6851: natural weapons the form grows, put on the sheet while it lasts: {attr, bonus, type, ranged?}. */
 export const FORM_WEAPONS = {
     "Claws/Teeth": { bonus: 2 }, "Claws": { bonus: 2 }, "Teeth": { bonus: 2 }, "Blades": { bonus: 2 },
     "Lashing Tail": { bonus: -1 }, "Horns": { bonus: -1 }, "Gaping Maw": { bonus: 4, diff: 4 }, "Spikes": { bonus: 2, brawl: true },
     "Spines": { bonus: 1, brawl: true }, "Corrosive Spit": { bonus: 1, name: "Corrosive bite" }, "Caustic Bile": { bonus: -1, ranged: true }
 };
-/** B6831: the form powers with no keyword to put on the card, and why (each read on its page). */
+/** B6851: the form powers with no keyword to put on the card, and why (each read on its page). */
 export const FORM_STORY = {
     "Casts No Reflection": "story: no mirror or camera shows them (no roll reads it)",
     "Dead Reckoning": "story: never lost", "Weather Sense": "story: the Storyteller tells what weather comes",
@@ -499,7 +499,7 @@ export const FORM_STORY = {
     "Improved Initiative": "on the sheet (Initiative)", "Scales": "on the sheet (hide armour)", "Shark Hide": "on the sheet (hide armour)",
     "Iron Skin": "on the sheet (hide armour)", "Thick Hide": "on the sheet (hide armour)", "Armor": "on the sheet (hide armour)"
 };
-/** B6831: the effects-card results for the chosen form powers: [{key, who, out}]. */
+/** B6851: the effects-card results for the chosen form powers: [{key, who, out}]. */
 export function formResults(names = [], visage = "", { source = "DtF pp. 175-216" } = {}) {
     const out = [];
     for (const nm of names) {
@@ -509,7 +509,7 @@ export function formResults(names = [], visage = "", { source = "DtF pp. 175-216
     }
     return out;
 }
-/** B6831: the natural weapons for the chosen form powers, as Melee Weapon item data. */
+/** B6851: the natural weapons for the chosen form powers, as Melee Weapon item data. */
 export function formWeapons(names = [], visage = "") {
     return names.filter(nm => FORM_WEAPONS[nm]).map(nm => {
         const w = FORM_WEAPONS[nm];

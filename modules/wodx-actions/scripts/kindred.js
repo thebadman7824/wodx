@@ -259,7 +259,7 @@ export function build(ctx) {
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
-            // B6835: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
+            // B6855: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
             if ((PE.isPath(p.d) || PE.PATH_EFFECTS[p.id]) && successes > 0 && (p.r || PE.PATH_EFFECTS[p.id]) && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
@@ -279,7 +279,7 @@ export function build(ctx) {
             if (/beckoning/i.test(p.n) && successes > 0) { const came = await beckonOwn(actor); if (came.length) body += `<div class="vta-note">First to come: ${came.map(esc).join(", ")}.</div>`; }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
-            // B6833: a passive power picked here turns on for its time
+            // B6853: a passive power picked here turns on for its time
             if (!fx && successes > 0 && EF.isOn()) {
                 const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: p.book === "V20" ? "Vampire (V20)" : "Vampire (Dark Ages)" });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }

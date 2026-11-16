@@ -112,7 +112,7 @@ CANTRIPS["holly-strike"].dice = (c, s) => Math.max(0, (c.willpower || 0) + (c.gl
 CANTRIPS["lord-of-levin"].dice = (c, s) => 5 + Math.max(0, s - 1);
 
 /** The cantrips of an Art at or below a level, in order. */
-/** B6837: cantrips with no table effect, with the page (read). */
+/** B6857: cantrips with no table effect, with the page (read). */
 export const ART_STORY = {
   "time-dilation": "C20 p. 201: years pass for the subject in a moment; WoDX keeps no age or wear"
 };

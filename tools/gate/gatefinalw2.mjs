@@ -1,5 +1,5 @@
 /**
- * Gate: the final audit's worker w2 fixes (B6730-B6738, B6831), on a testbed lane. Each step goes through the path the
+ * Gate: the final audit's worker w2 fixes (B6730-B6738, B6851), on a testbed lane. Each step goes through the path the
  * menu or the effects card's Apply button takes and reads the game number the fix changes.
  *   1. a Charge on a vampire fills the blood pool, not a Quintessence field (B6730)
  *   2. a Wraith Arcanos with no roll (Smith's Tenacity) puts its Ward on the effects card, and it soaks (B6731)
@@ -7,9 +7,9 @@
  *   4. Wyrmflesh, woken from Use a fetish, puts a Ward on its wearer that the soak reads (B6737)
  *   5. Malady takes dice from the target's Strength roll, not their Wits roll (B6738)
  *   6. a Dark Ages Rain-Strike takes three dice from the target's next roll (B6739)
- *   7. the apocalyptic form's Lordly Mien eases Charisma rolls and stands after a roll (B6830, B6831)
- *   8. Healing 2 (HH2) takes the wound penalty away while it lasts (B6838)
- *   9. True Faith 3 stops a Sway put on the faithful (B6838)
+ *   7. the apocalyptic form's Lordly Mien eases Charisma rolls and stands after a roll (B6850, B6851)
+ *   8. Healing 2 (HH2) takes the wound penalty away while it lasts (B6858)
+ *   9. True Faith 3 stops a Sway put on the faithful (B6858)
  * Result: Data/wodx-gate/gatefinalw2-result.json.
  */
 import {gate, newestMessage, waitFor} from "./kit.mjs";
@@ -117,7 +117,7 @@ export async function run() {
       G.ok("6. Rain-Strike takes three dice from the target's next roll (B6739)", dice === -3, {dice, key: r?.out?.key});
     });
 
-    await G.step("7. Lordly Mien eases Charisma rolls and stands after a roll (B6831)", async () => {
+    await G.step("7. Lordly Mien eases Charisma rolls and stands after a roll (B6851)", async () => {
       const who = dt.actor ?? demon;
       const [r] = DE.formResults(["Lordly Mien"], "Bel");
       await apply(r, who);
@@ -126,25 +126,25 @@ export async function run() {
       const str = A.powerMods.of(who, {tags: ["physical", "strength"]}).diff;
       await A.powerMods.spend(who, cha.once);
       const stays = has(who, PM.KEYS.fortune);
-      G.ok("7. Lordly Mien eases Charisma rolls and stands after a roll (B6831)", cha.diff === -2 && str === 0 && stays, {cha: cha.diff, str, stays});
+      G.ok("7. Lordly Mien eases Charisma rolls and stands after a roll (B6851)", cha.diff === -2 && str === 0 && stays, {cha: cha.diff, str, stays});
     });
 
-    await G.step("8. Healing 2 takes the wound penalty away (B6838)", async () => {
+    await G.step("8. Healing 2 takes the wound penalty away (B6858)", async () => {
       const who = xt.actor ?? victim;
       const [r] = PE.numinaOutcomes("healing", 2, 2, H.NUMINA.healing);
       await apply(r, who);
       const off = await waitFor(() => who.system?.conditions?.isignoringpain === true, 4000);
-      G.ok("8. Healing 2 takes the wound penalty away (B6838)", !!off && r?.out?.painless === true, {flag: who.system?.conditions?.isignoringpain});
+      G.ok("8. Healing 2 takes the wound penalty away (B6858)", !!off && r?.out?.painless === true, {flag: who.system?.conditions?.isignoringpain});
     });
 
-    await G.step("9. True Faith 3 stops a Sway on the faithful (B6838)", async () => {
+    await G.step("9. True Faith 3 stops a Sway on the faithful (B6858)", async () => {
       const who = ct.actor ?? caster;
       await who.setFlag(MOD, "trueFaith", 3);
       const r = PW.powerOutcomes({keywords: ["sway"]}, 3, {label: "Gate Sway", hasTarget: true}).results.find(x => x.key === "sway");
       const res = r ? await A.effects.apply({key: r.key, target: who.uuid, by: vamp.uuid, caster: vamp.uuid, out: r.out, name: who.name}, "Gate W2 Vampire") : null;
       const held = who.effects.some(e => keyOf(e).startsWith(PM.KEYS.sway ?? "wodx-effect-sway"));
       await who.unsetFlag(MOD, "trueFaith");
-      G.ok("9. True Faith 3 stops a Sway on the faithful (B6838)", !!r && !held, {note: res?.note ?? res, held});
+      G.ok("9. True Faith 3 stops a Sway on the faithful (B6858)", !!r && !held, {note: res?.note ?? res, held});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

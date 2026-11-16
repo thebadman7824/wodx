@@ -60,7 +60,7 @@ export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null
     if (lethalWas !== null && actor.system?.settings?.soak?.lethal) upd["system.settings.soak.lethal.isrollable"] = !!lethalWas;
     if (Object.keys(upd).length) await actor.update(upd);
     if (armorId && actor.items?.get?.(armorId)) await actor.deleteEmbeddedDocuments("Item", [armorId]);
-    // B6831: the form's natural weapons go with it
+    // B6851: the form's natural weapons go with it
     const gone = (weaponIds ?? []).filter(id => actor.items?.get?.(id));
     if (gone.length) await actor.deleteEmbeddedDocuments("Item", gone);
     const f = actor.getFlag?.(MOD, "demon");
@@ -350,7 +350,7 @@ export function build(ctx) {
             armorId = it?.id ?? null;
             bits.push(`${tot.armor} soak dice from the hide`);
         }
-        // B6831: claws, horns, a maw: weapons on the sheet while the form lasts
+        // B6851: claws, horns, a maw: weapons on the sheet while the form lasts
         let weaponIds = [];
         const wd = DE.formWeapons(tot.names ?? [], tot.visage ?? "");
         if (wd.length) {
@@ -397,7 +397,7 @@ export function build(ctx) {
                 if (tot.lines.length) body += `<div class="vta-sec">${tot.lines.map(x => `<div><b>${esc(x.name)}:</b> ${esc(x.fx)}</div>`).join("")}</div>`;
                 const applied = await applyForm(actor, tot);
                 if (applied) body += `<div class="vta-note">${esc(applied)}</div>`;
-                // B6831: the rest of the form's powers on the effects card, for the scene
+                // B6851: the rest of the form's powers on the effects card, for the scene
                 if (EF.isOn()) {
                     const pp = EF.planOf(actor, DE.formResults(tot.names, i.visage), 1, { name: i.visage || "The apocalyptic form", line: "Demon (DtF)" });
                     body += pp.html;

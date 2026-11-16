@@ -15,7 +15,7 @@ import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "./mage-da-effects.js
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Fae";
-/** B6837: a silenced tongue: every roll by voice is at difficulty 10 for an hour a success (house figure; the book says it will not work). */
+/** B6857: a silenced tongue: every roll by voice is at difficulty 10 for an hour a success (house figure; the book says it will not work). */
 const HOURS = [1, 2, 3, 4, 5].map(h => [`${h} hour${h === 1 ? "" : "s"}`, h * 3600]);
 const HUSH = who => T("fortune", "Hushed", {ladder: HOURS}, who, {shift: 10, curse: true, tags: ["voice"], once: false});
 const X = (name, dominion, level, trait, fx, spec, page, extra = {}) => ({ name, dominion, level, trait, fx, spec, page, ...extra });
@@ -257,7 +257,7 @@ const DUSKL = [
 export const CANTRIPS = Object.fromEntries([...COMMON, ...DAYL, ...NIGHTL, ...DAWNL, ...DUSKL]);
 export const IDS = Object.keys(CANTRIPS);
 
-/** B6837: cantrips with no table effect, with the page (read): WoDX keeps no cold or drowning track; the Storyteller rolls them. */
+/** B6857: cantrips with no table effect, with the page (read): WoDX keeps no cold or drowning track; the Storyteller rolls them. */
 export const CANTRIP_STORY = {
   "cow-the-bitter-wind": "DA:Fae p. 133: the cold does no harm for the scene; WoDX keeps no exposure track",
   "embrace-the-nights-chill": "DA:Fae p. 140: the cold does no harm for the scene; WoDX keeps no exposure track",

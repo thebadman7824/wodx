@@ -28,7 +28,7 @@ export const MV = () => ({kw: "move", kind: "move", who: "self"});
 /** B5791: any keyword's own outcome (effects-rules), with its flavour: K("weather", "self", {weather: "fog"}). */
 export const K = (kw, who = "self", ctx = {}) => ({kw, kind: "kw", who, ctx});
 /** B5791: points into a pool (Sekhem, Willpower): per a success, or per once when fixed. */
-/** B6837: steps, points by successes ([1, 1, 2]: one point, two on three successes); past its end the last step holds. */
+/** B6857: steps, points by successes ([1, 1, 2]: one point, two on three successes); past its end the last step holds. */
 export const P = (pool, per = 1, who = "self", o = {}) => ({kw: "charge", kind: "pool", pool, per, who, fixed: !!o.fixed, ...(o.steps ? {steps: o.steps} : {})});
 export const A = (kw, act, o = {}) => ({kw, kind: "act", act, who: o.who ?? "one", lasts: o.lasts ?? "scene", ...o});
 export const HL = (per, o = {}) => ({kw: "mend", kind: "heal", per, aggravated: !!o.aggravated, who: o.who ?? "one", ask: !!o.ask});
@@ -166,7 +166,7 @@ export function outcomesOf(spec, base, successes, text = "") {
     case "move":
       return [{key: "move", who: "self", out: {...base, kind: "move", text: `${s} jump${s === 1 ? "" : "s"}: ${text}`}}];
     case "note": {
-      // B6834: what the caster learns is the Know or Sense keyword's own result (a secret found, a clue pinned, a
+      // B6854: what the caster learns is the Know or Sense keyword's own result (a secret found, a clue pinned, a
       // detection sense on the token: B5788-B5790), not only a line of text
       if ( LEARN.has(spec.kw) ) {
         const [r] = stOutcomes([spec.kw], {strength: s, step: 2, ctx: spec.ctx ?? {}});
@@ -175,7 +175,7 @@ export function outcomesOf(spec, base, successes, text = "") {
       return [{key: spec.kw, who: "self", out: {...base, kind: "note", text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
     }
     default: {
-      // B6836: a Storyteller's spec that names a working keyword gives that keyword's own result (a Move moves the
+      // B6856: a Storyteller's spec that names a working keyword gives that keyword's own result (a Move moves the
       // token, a Bind marks the target, a crossing crosses), routed by the keyword's own tier: a queue keyword still
       // waits for the Storyteller's yes. Free Effects and Time stay the Storyteller's.
       const K = KEYWORDS[spec.kw];
@@ -198,11 +198,11 @@ export function timedNumbers(spec = {}, s = 1) {
   const k = spec.kw, x = Math.max(1, n(s));
   if ( k === "ward" ) return {dice: n(spec.dice) || Math.min(5, x), ...(spec.against ? {against: spec.against} : {})};
   // B6738: max holds a Boost or Sap to the book's cap (Malady's three dice)
-  // B6838: painless: no Boost dice; the effect sets the sheet's ignoring-pain flag while it lasts (effects.js)
+  // B6858: painless: no Boost dice; the effect sets the sheet's ignoring-pain flag while it lasts (effects.js)
   if ( k === "boost" && spec.painless ) return {dice: 0, on: "all", painless: true};
   if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(n(spec.max) || 5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
   // B6553: a spec's own shift (Will of Fire's two) wins over the successes
-  // B6830: tags and once ride along (a standing, scoped shift)
+  // B6850: tags and once ride along (a standing, scoped shift)
   if ( k === "fortune" ) { const sh = Math.abs(n(spec.shift)) || Math.min(3, x); return {shift: spec.curse ? sh : -sh, ...(spec.tags ? {tags: spec.tags} : {}), ...(spec.once === false ? {once: false} : {})}; }
   // B6553: Hasten's extra actions (one for every two successes, as effects-rules), or the spec's own; a Slow loses them
   if ( k === "hasten" ) return {actions: n(spec.actions) || Math.max(1, Math.floor(x / 2)), ...(spec.slow ? {slow: true} : {}), ...(spec.speed ? {speed: n(spec.speed)} : {})};
@@ -211,15 +211,15 @@ export function timedNumbers(spec = {}, s = 1) {
   return {};
 }
 
-/** B6837: rotes with no table effect in the book, with the page (read): WoDX keeps no age and no room size. */
+/** B6857: rotes with no table effect in the book, with the page (read): WoDX keeps no age and no room size. */
 export const DA_STORY = {
   incorruptible: "Mage: the Dark Ages p. 124: years without ageing; WoDX keeps no age",
   "g-hollowhill": "DA Grimoire p. 72: the inside of a hill grows; WoDX keeps no room size"
 };
 
-/** B6834: a note spec on these keywords gives the keyword's own result. */
+/** B6854: a note spec on these keywords gives the keyword's own result. */
 const LEARN = new Set(["know", "sense", "speak"]);
-/** B6836: keywords that land on someone else when a spec names no one. */
+/** B6856: keywords that land on someone else when a spec names no one. */
 const AIMED = new Set(["harm", "hold", "fear", "trip", "sway", "possess", "bind", "banish"]);
 
 /** Keywords whose own result is not a timed effect (B6016). */
