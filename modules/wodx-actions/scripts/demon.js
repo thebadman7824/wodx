@@ -44,7 +44,7 @@ export function isDemon(actor) {
  * Take back what the apocalyptic form put on the sheet (its reverter, run when the scene's timed effect ends): the Attribute
  * and initiative bonuses still recorded, Stamina's lethal soak as it was, and the hide's soak.
  */
-export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null, armorId = null } = {}) {
+export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null, armorId = null, weaponIds = [] } = {}) {
     if (!actor?.isOwner) return;
     const upd = {};
     for (const [k, v] of Object.entries(attrs)) {
@@ -60,6 +60,9 @@ export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null
     if (lethalWas !== null && actor.system?.settings?.soak?.lethal) upd["system.settings.soak.lethal.isrollable"] = !!lethalWas;
     if (Object.keys(upd).length) await actor.update(upd);
     if (armorId && actor.items?.get?.(armorId)) await actor.deleteEmbeddedDocuments("Item", [armorId]);
+    // B6831: the form's natural weapons go with it
+    const gone = (weaponIds ?? []).filter(id => actor.items?.get?.(id));
+    if (gone.length) await actor.deleteEmbeddedDocuments("Item", gone);
     const f = actor.getFlag?.(MOD, "demon");
     if (f?.formApplied) await actor.setFlag(MOD, "demon", { ...f, formApplied: null });
 }
@@ -347,7 +350,15 @@ export function build(ctx) {
             armorId = it?.id ?? null;
             bits.push(`${tot.armor} soak dice from the hide`);
         }
-        const data = { attrs: tot.attrs, init: tot.init, lethalWas, armorId };
+        // B6831: claws, horns, a maw: weapons on the sheet while the form lasts
+        let weaponIds = [];
+        const wd = DE.formWeapons(tot.names ?? [], tot.visage ?? "");
+        if (wd.length) {
+            const made = await actor.createEmbeddedDocuments("Item", wd);
+            weaponIds = made.map(x => x.id);
+            bits.push(`${wd.map(x => x.name).join(", ")} on the sheet`);
+        }
+        const data = { attrs: tot.attrs, init: tot.init, lethalWas, armorId, weaponIds };
         await saveFlag(actor, { formApplied: data });
         await api.applyTimed(actor, { name: "Apocalyptic form", img: "icons/svg/fire.svg", description: bits.join(", ") || "The true form", duration: { kind: "scene" },
             revert: { key: "wodx-actions.demonForm", data }, source: `${REF} pp. 170-171`, key: "wodx-demon-form" });
@@ -378,20 +389,27 @@ export function build(ctx) {
             const peril = i.forms.high.filter((_, k) => k >= slots && fd[`peril${k}`]);
             if (out.ok && peril.length) notes.push(await torment(actor, peril.length));
             let body = r ? rollBlock("Faith pool", r) : `<div class="vta-sec">A Faith point is spent: the change is certain.</div>`;
+            let formFx = [];
             if (out.ok) {
                 await saveFlag(actor, { formScene: sceneKey(), form: [...chosen, ...peril] });
                 body += `<div class="vta-big good">${esc(i.visage || "The apocalyptic form")} rises for the scene.</div>`;
-                const tot = DE.formTotals([...chosen, ...peril], i.visage);
+                const tot = { ...DE.formTotals([...chosen, ...peril], i.visage), names: [...chosen, ...peril], visage: i.visage };
                 if (tot.lines.length) body += `<div class="vta-sec">${tot.lines.map(x => `<div><b>${esc(x.name)}:</b> ${esc(x.fx)}</div>`).join("")}</div>`;
                 const applied = await applyForm(actor, tot);
                 if (applied) body += `<div class="vta-note">${esc(applied)}</div>`;
+                // B6831: the rest of the form's powers on the effects card, for the scene
+                if (EF.isOn()) {
+                    const pp = EF.planOf(actor, DE.formResults(tot.names, i.visage), 1, { name: i.visage || "The apocalyptic form", line: "Demon (DtF)" });
+                    body += pp.html;
+                    formFx = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
                 body += `<div class="vta-note">${look === "glorious" ? "Witnesses see a glorious, awe-inspiring being." : look === "nightmarish" ? "Witnesses see a living nightmare." : "Witnesses see awe or terror, as their own minds take it."} Every mortal present suffers Revelation (Willpower against Faith ${i.faith.perm}).</div>`;
                 // Who sees it (3.42.0): mortals breach, other kinds are startled
                 ctx.revealed?.(actor, { secret: "demon", event: "the apocalyptic form" })?.catch?.(e => console.error("WoDX |", e));
             } else body += `<div class="vta-big">The mortal shell holds; no change.</div>`;
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 162, 170–171, 254</div>`;
-            return post(actor, `${actor.name}: the apocalyptic form`, body, [r?.roll].filter(Boolean));
+            return post(actor, `${actor.name}: the apocalyptic form`, body, [r?.roll].filter(Boolean), formFx.length ? { kind: "effects", caster: actor.name, items: formFx } : undefined);
         });
     }
 

@@ -278,7 +278,8 @@ export function build(ctx) {
             if (/beckoning/i.test(p.n) && successes > 0) { const came = await beckonOwn(actor); if (came.length) body += `<div class="vta-note">First to come: ${came.map(esc).join(", ")}.</div>`; }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
-            if (!fx && !p.passive && successes > 0 && EF.isOn()) {
+            // B6833: a passive power picked here turns on for its time
+            if (!fx && successes > 0 && EF.isOn()) {
                 const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: p.book === "V20" ? "Vampire (V20)" : "Vampire (Dark Ages)" });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }

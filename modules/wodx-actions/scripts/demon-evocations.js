@@ -5,7 +5,7 @@
  * Durations "FT" and "FD" run the demon's permanent Faith in turns or days; "T1" is a single turn.
  * Pure: no Foundry calls. Also the apocalyptic form's powers by name (FORM_POWERS).
  */
-import { H, T, C, N, S, MV, HL, A, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, A, K, outcomesOf } from "./mage-da-effects.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const E = (fx, lasts, range, high, spec = null, highSpec = null) => ({ fx, lasts, range, high, spec, highSpec });
@@ -243,6 +243,29 @@ export const EVOCATIONS = {
       "The spirit storm rages around the door for Torment days, drawing ghosts.", S("sideways"))
 };
 
+/**
+ * B6832: the evocations that were the card or the Storyteller's alone, each read again on its page (DtF pp. 176-213), now
+ * do what their keyword does on the effects card. Fuel and Roil the Earth reach the ground by name (world-effects.js), as
+ * Earthquake, Summon Water and the storm evocations also do.
+ */
+const SPEC_FIX = {
+    "flame:1": null, "earth:2": null,
+    "firmament:3": K("possess", "one"), "firmament:5": K("possess", "each"),
+    "earth:5": T("fortune", "Earthquake", { turns: 1 }, "all", { curse: true }),
+    "paths:1": K("know", "self"), "forge:3": K("make", "self", { thing: "a shaped item" }), "forge:4": K("imbue", "self"),
+    "forge:5": K("bind", "one"), "patterns:1": K("know", "self"), "patterns:2": K("know", "self"), "patterns:4": K("know", "one"),
+    "patterns:5": T("hasten", "Twist Time", { turns: 1 }, "self"),
+    "portals:3": K("move", "self"), "portals:4": K("move", "self"), "portals:5": K("sideways", "self", { shroud: true }),
+    "light:5": K("summon", "self"), "storms:1": K("weather", "self", { weather: "fog" }), "storms:3": K("weather", "self", { weather: "rain" }),
+    "storms:4": K("weather", "self", { weather: "storm" }), "beast:3": K("possess", "each"), "beast:5": K("shape", "one"),
+    "wild:1": K("sense", "self"), "wild:2": K("hold", "one"), "wild:3": K("hold", "one"), "wild:4": K("summon", "self"),
+    "wild:5": K("make", "self", { thing: "a changed plant" }), "death:1": K("know", "self"), "death:5": K("summon", "self"),
+    "spirit:1": K("speak", "self"), "spirit:3": K("sway", "one"), "spirit:4": K("bind", "one"), "spirit:5": K("mend", "one"),
+    "realms:1": K("sense", "self"), "realms:2": K("sideways", "self", { shroud: true }),
+    "realms:4": K("make", "self", { thing: "an item from the shadow lands" }), "realms:5": K("sideways", "self", { shroud: true })
+};
+for (const [k, sp] of Object.entries(SPEC_FIX)) if (EVOCATIONS[k]) EVOCATIONS[k].spec = sp;
+
 /** The card for lore:level, or null. */
 export const evocationCard = (lore, level) => EVOCATIONS[`${lore}:${level}`] ?? null;
 
@@ -407,6 +430,96 @@ export const FORM_POWERS = {
     "Aura of Dread": P("Within Faith yards, Willpower at their Torment each turn or act last."),
     "Voice of the Grave": P("Intimidation rolls are 2 easier."),
 };
+/**
+ * B6831: what each form power does while the form lasts, on the effects card (mage-da-effects.js helpers), read from its
+ * line above (DtF pp. 175-216). Easier rolls are a standing Blessing held to those rolls; harder blows at the demon a
+ * standing shift on attacks against them (WoDX Combat reads it); immunities a Ward against that harm (ten dice, house);
+ * natural weapons go on the sheet as weapons (FORM_WEAPONS). A power not listed has no keyword its words fit and is listed
+ * in FORM_STORY with why.
+ */
+const EZ = (name, tags, shift = 2) => T("fortune", name, "scene", "self", { shift, tags, once: false });
+const DF = (name, shift, on = "defend") => T("fortune", name, "scene", "self", { shift, curse: true, tags: [on], once: false });
+const IM = (name, against) => T("ward", name, "scene", "self", { dice: 10, against });
+export const FORM_SPECS = {
+    "Wings": T("rise", "Wings", "scene", "self", { feet: 30 }),
+    "Lordly Mien": EZ("Lordly Mien", ["charisma", "manipulation"]),
+    "Enhanced Senses": EZ("Enhanced Senses", ["perception"]), "Multiple Eyes": EZ("Multiple Eyes", ["perception"]),
+    "Enhanced Perception": EZ("Enhanced Perception", ["perception"]), "Sense the Hidden": EZ("Sense the Hidden", ["perception"]),
+    "Increased Awareness": EZ("Increased Awareness", ["awareness"]),
+    "Shroud of Flames": DF("Shroud of Flames", 1), "Radiant Aura": DF("Radiant Aura", 1, "defend-ranged"),
+    "Alter Size": DF("Alter Size", 2), "Mirage": [DF("Mirage", 2, "defend-ranged"), DF("Mirage", 1, "defend-close")],
+    "Immunity to Fire": IM("Immunity to Fire", "fire"), "Immune to Fire": IM("Immune to Fire", "fire"),
+    "Immune to Bashing Damage": IM("Immune to Bashing Damage", "bashing"),
+    "Voice of the Damned": EZ("Voice of the Damned", ["intimidation"]), "Howl of the Damned": EZ("Howl of the Damned", ["intimidation"]),
+    "Voice of the Grave": EZ("Voice of the Grave", ["intimidation"]), "Dread Mien": EZ("Dread Mien", ["leadership", "intimidation"]),
+    "Pass Without Trace": EZ("Pass Without Trace", ["stealth"]), "Cloak of Shadows": EZ("Cloak of Shadows", ["stealth"]),
+    "Chameleon Skin": EZ("Chameleon Skin", ["stealth"], 1),
+    "Enhanced Intuition": EZ("Enhanced Intuition", ["intuition"]), "Enhanced Dodge": EZ("Enhanced Dodge", ["dodge"]),
+    "Chimerical Aura": EZ("Chimerical Aura", ["dodge"]), "Perfect Balance": EZ("Perfect Balance", ["athletics"]),
+    "Irresistible Force": EZ("Irresistible Force", ["lift"]), "Master Artisan": EZ("Master Artisan", ["crafts"]),
+    "Sibilant Whispers": EZ("Sibilant Whispers", ["subterfuge"]), "Unearthly Glamour": EZ("Unearthly Glamour", ["manipulation"]),
+    "Lyrical Voice": EZ("Lyrical Voice", ["leadership", "subterfuge"]), "Enhanced Empathy": EZ("Enhanced Empathy", ["empathy"]),
+    "Supernatural Vision": [EZ("Supernatural Vision", ["sight"]), T("sight", "Supernatural Vision", "scene", "self")],
+    "Night Vision": T("sight", "Night Vision", "scene", "self"), "Night Sight": T("sight", "Night Sight", "scene", "self"),
+    "Ghost Sight": T("sight", "Ghost Sight", "scene", "self"),
+    "Regeneration": HL(1, { who: "self" }),
+    "Aura of Entropy": T("boost", "Aura of Entropy", "scene", "all", { sap: true, on: "all", dice: 1 }),
+    "Aura of Misfortune": T("fortune", "Aura of Misfortune", "scene", "all", { curse: true, shift: 1, once: false }),
+    "Thunderous Voice": H("harm", 4, "bashing", { fixed: true, who: "all", ask: true }),
+    "Shocking Touch": H("harm", 1, "bashing", { ask: true }),
+    "Chimerical Attack": H("harm", 4, "aggravated", { fixed: true, ask: true }),
+    "Ink Cloud": C("hold", "blinded", "Blinded by ink", { turns: 1 }, "all"),
+    "Dread Gaze": C("hold", "stunned", "Held by the gaze", { turns: 1 }, "one"),
+    "Miasma": C("hold", "stunned", "Choking on miasma", { turns: 1 }, "all"),
+    "Hypnotic Visions": T("fortune", "Hypnotic Visions", "scene", "all", { curse: true, shift: 2, once: true }),
+    "Aura of Dread": C("fear", "frightened", "Dread", "scene", "all"),
+    "Aura of Vitality": HL(1, { who: "all" }),
+    "Extra Actions": T("hasten", "Extra Actions", { turns: 1 }, "self", { actions: 1 })
+};
+/** B6831: natural weapons the form grows, put on the sheet while it lasts: {attr, bonus, type, ranged?}. */
+export const FORM_WEAPONS = {
+    "Claws/Teeth": { bonus: 2 }, "Claws": { bonus: 2 }, "Teeth": { bonus: 2 }, "Blades": { bonus: 2 },
+    "Lashing Tail": { bonus: -1 }, "Horns": { bonus: -1 }, "Gaping Maw": { bonus: 4, diff: 4 }, "Spikes": { bonus: 2, brawl: true },
+    "Spines": { bonus: 1, brawl: true }, "Corrosive Spit": { bonus: 1, name: "Corrosive bite" }, "Caustic Bile": { bonus: -1, ranged: true }
+};
+/** B6831: the form powers with no keyword to put on the card, and why (each read on its page). */
+export const FORM_STORY = {
+    "Casts No Reflection": "story: no mirror or camera shows them (no roll reads it)",
+    "Dead Reckoning": "story: never lost", "Weather Sense": "story: the Storyteller tells what weather comes",
+    "Relentless": "story: needs no rest while moving", "Magnetic Field": "story: electronics fail near them",
+    "Flashing Fingers": "a Dexterity + Athletics roll the player makes", "Conjure from Nothing": "a Dexterity + Athletics roll the player makes",
+    "Immune to Poisons": "WoDX has no poison track to block", "Immune to Electricity": "a Ward against electrical harm needs a harm kind WoDX Combat does not tag",
+    "Immune to Falling Damage": "falls are rolled by hand", "Extra Health Levels": "needs extra health boxes on the sheet: the Storyteller adds them",
+    "Deathgrip": "a rule at eight levels the Storyteller applies", "Damage Resistance": "wound penalties are the system sheet's; the Storyteller ignores them",
+    "Fiery Blood": "a reaction to being hurt in close combat", "Quills": "a reaction to being hit", "Thorns": "a reaction to being struck",
+    "Viscous Flesh": "grappling has no difficulty hook in WoDX Combat", "Ichor": "grappling has no difficulty hook in WoDX Combat",
+    "Extra Limbs": "multiple actions are declared in WoDX Combat", "Venom": "a bite's poison the Storyteller rolls",
+    "Increased Size": "on the sheet (Attributes)", "Inhuman Allure": "on the sheet (Attributes)", "Improved Physical Capabilities": "on the sheet (Attributes)",
+    "Enhanced Mental Acuity": "on the sheet (Attributes)", "Enhanced Social Traits": "on the sheet (Attributes)", "Improved Dexterity": "on the sheet (Attributes)",
+    "Improved Initiative": "on the sheet (Initiative)", "Scales": "on the sheet (hide armour)", "Shark Hide": "on the sheet (hide armour)",
+    "Iron Skin": "on the sheet (hide armour)", "Thick Hide": "on the sheet (hide armour)", "Armor": "on the sheet (hide armour)"
+};
+/** B6831: the effects-card results for the chosen form powers: [{key, who, out}]. */
+export function formResults(names = [], visage = "", { source = "DtF pp. 175-216" } = {}) {
+    const out = [];
+    for (const nm of names) {
+        const v = String(visage).split(",")[0].trim();
+        const spec = FORM_SPECS[`${nm}@${v}`] ?? FORM_SPECS[nm];
+        if (spec) out.push(...outcomesOf(spec, { label: nm, source }, 1, formPower(nm, visage)?.fx ?? ""));
+    }
+    return out;
+}
+/** B6831: the natural weapons for the chosen form powers, as Melee Weapon item data. */
+export function formWeapons(names = [], visage = "") {
+    return names.filter(nm => FORM_WEAPONS[nm]).map(nm => {
+        const w = FORM_WEAPONS[nm];
+        return { name: w.name ?? `${nm} (apocalyptic form)`, type: w.ranged ? "Ranged Weapon" : "Melee Weapon", img: "icons/svg/sword.svg",
+            system: { difficulty: w.diff ?? 6, damage: { attribute: "strength", bonus: w.bonus, type: "aggravated", isrollable: true },
+                attack: { attribute: "dexterity", ability: w.ranged ? "athletics" : w.brawl ? "brawl" : "brawl", accuracy: 0, isrollable: true },
+                description: `<p>${formPower(nm, visage)?.fx ?? nm}</p>` },
+            flags: { "wodx-library": { implant: true }, "wodx-actions": { demonWeapon: true } } };
+    });
+}
 /** The entry for a form power, by visage name ("Bel", or "Bel, the Visage of..."). */
 export function formPower(name, visage = "") {
     const v = String(visage).split(",")[0].trim();

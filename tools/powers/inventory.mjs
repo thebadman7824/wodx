@@ -71,21 +71,21 @@ for ( const p of disc ) {
   const path = PE.PATH_EFFECTS[p.id];
   const passive = !!kw?.passive || !!p.passive, combat = passive && COMBAT_READS.has(p.d);
   let status = combat ? "applies" : path && p.r ? (applyingSpec(path) ? "applies" : "card")
-    : (kw && !passive && (p.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : "card");
+    : (kw && (passive || !p.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : "card");
   add("Vampire (Dark Ages)", p.d, p.n, { src: p, status, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive,
     how: combat ? "WoDX Combat reads the rating (soak, damage dice, actions and speed)" : path && p.r ? "path magic effect spec" : p.r ? "Discipline roll, keywords, timed effect on the token" : "no roll: one success, keywords and timed effect on the token" });
 }
 /* -- Vampire: V20 (modern) Disciplines: the same window when a Dark Ages power has the name, else the system roll */
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.v20) ) {
   const da = daNames.get(id), v = v20Lib.get(id);
-  const kwA = applyingKw(e.k) && !e.p;
+  const kwA = e.p ? noRollKw(e.k) : applyingKw(e.k); // B6833: a passive power picked from the menu turns on
   add("Vampire (V20)", v ? v.d : "Disciplines", e.n, { src: [e, v, da], status: da || v ? (kwA ? "applies" : "card") : "roll", kw: e.k, passive: !!e.p, page: v ? `V20 p. ${v.p}` : "V20",
     how: v ? "V20 library entry (data/disciplines-v20.json): Use a Discipline card, roll and keywords" : da ? "matches a Dark Ages power by name: same window" : "system roll only: no V20 entry in the Discipline library" });
 }
 /* -- Werewolf: Dark Ages Gifts (garou.js) */
 for ( const g of J("gifts-daw.json").gifts ) {
   const kw = PK.keywordsOf("gift", g.id);
-  add("Werewolf (Dark Ages)", "Gifts", g.n, { src: g, status: kw && !kw.passive && (g.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
+  add("Werewolf (Dark Ages)", "Gifts", g.n, { src: g, status: kw && (kw.passive || !g.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
 }
 const daGift = new Set(J("gifts-daw.json").gifts.map(g => slug(g.n)));
 /* -- Werewolf: W20 Gifts (garou.js reads data/gifts-w20.json by name: pool, cost, duration, effect and page) */
@@ -93,7 +93,7 @@ const w20Lib = new Map(J("gifts-w20.json").gifts.map(g => [g.kw, g]));
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.w20) ) {
   if ( daGift.has(id) ) continue;
   const g = w20Lib.get(id);
-  add("Werewolf (W20)", "Gifts", e.n, { src: [e, g], status: applyingKw(e.k) && !e.p ? "applies" : g ? "card" : "roll", kw: e.k, passive: !!e.p, page: g ? `W20 p. ${g.p}` : "W20",
+  add("Werewolf (W20)", "Gifts", e.n, { src: [e, g], status: (e.p ? noRollKw(e.k) : applyingKw(e.k)) ? "applies" : g ? "card" : "roll", kw: e.k, passive: !!e.p, page: g ? `W20 p. ${g.p}` : "W20",
     how: g ? "W20 library entry (data/gifts-w20.json): Use a Gift card, pool, cost, duration and keywords" : "Gift roll from the item's dice; keywords by name; no effect text" });
 }
 /* -- Wraith: W20 and The Great War Arcanoi (wraith.js shows the effect line; keywords not wired) */
@@ -101,7 +101,7 @@ for ( const [file, set, line] of [["arcanoi-w20.json", "wraith", "Wraith (W20)"]
   for ( const a of Object.values(J(file).arts) ) {
     const kw = PK.keywordsOf(set, a.id);
     // B6731: an art with no roll counts one success (its Harm readies the user), as a Discipline with none does
-    const st = kw && !kw.passive && (a.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : a.e ? "card" : "roll";
+    const st = kw && (kw.passive || !a.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : a.e ? "card" : "roll";
     add(line, a.d, a.n, { src: a, status: st, kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `p. ${a.p}`, how: a.r ? "Arcanos roll and cost, effect line, keywords on the effects card (B3740)" : "no roll: one success, keywords on the effects card (B6731)" });
   }
 }
@@ -157,12 +157,16 @@ for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.dtf) ) if ( !dtfNames.has
 for ( const l of Object.values(D.LORES) ) for ( const nm of [...(l.form ?? []), ...(l.high ?? [])] ) {
   const fp = DE.formPower(nm, l.visage);
   const sheet = fp && (fp.attrs || fp.init || fp.armor);
-  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { src: fp, status: !fp ? "roll" : sheet ? "applies" : "card", page: `DtF p. ${l.formPage}`, how: !fp ? "name only" : sheet ? "form puts it on the sheet for the scene" : "form card text" });
+  // B6831: the form's own effects card (FORM_SPECS) and its natural weapons (FORM_WEAPONS)
+  const v = String(l.visage).split(",")[0].trim(), fs = DE.FORM_SPECS[`${nm}@${v}`] ?? DE.FORM_SPECS[nm], fw = DE.FORM_WEAPONS[nm];
+  const story = !sheet && !fs && !fw ? DE.FORM_STORY[nm] : null;
+  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { src: fs ? [fs] : fp, status: !fp ? "roll" : sheet || fs || fw ? "applies" : "card", page: `DtF p. ${l.formPage}`,
+    how: !fp ? "name only" : sheet ? "form puts it on the sheet for the scene" : fs ? "form's effects card for the scene" : fw ? "a natural weapon on the sheet for the scene" : `form card text${story ? `: ${story}` : ""}` });
 }
 /* -- Hunter: the Reckoning edges (reckoning.js) */
 for ( const e of R.EDGES ) {
   const kw = PK.keywordsOf("htr", `${e.path}-${e.id}`);
-  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { src: e, status: kw && !kw.passive && applyingKw(kw.keywords) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
+  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { src: e, status: kw && (kw.passive ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
 }
 /* -- Hunters Hunted II Numina and hedge sorcery, True Faith (hunter.js) */
 for ( const [key, d] of Object.entries(H.NUMINA) ) for ( let l = 1; l <= (d.levels?.length ?? 5); l++ ) {
@@ -223,11 +227,19 @@ for ( const g of J("gifts-fera.json").gifts ) {
   add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { src: g, status: st, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
     how: `Use a Gift: the breed's own library entry sets the pool, cost and difficulty${st === "applies" ? `; effects card ${g.spec.kind}` : "; the card says what it does"}` });
 }
+/* B6832: a power whose name reaches the ground or a town (world-effects.js WORLD_POWERS) applies by that alone */
+const WE = await import(A("scripts/world-effects.js"));
+for ( const r of rows ) {
+  if ( r.status !== "card" ) continue;
+  const nm = String(r.name).replace(/^[•\s]+/, "");
+  if ( WE.worldKinds(nm, r.line).length ) { r.status = "applies"; r.how += "; reaches the ground or the town by name (world-effects.js)"; r.world = true; }
+}
 /* B6015: is what each applying power puts on the card read by any system, or only a marker? (read-rules.mjs) */
 const RR = await import(pathToFileURL(path.join(ROOT, "tools/powers/read-rules.mjs")).href);
+const specsHave = r => { const s = r.src; const l = Array.isArray(s) ? s : [s]; return l.some(x => x && (x.kind || x.spec)); };
 const kwOutcome = (k, ctx = {}) => (E.KEYWORDS[k] ? E.outcome(k, { ok: true, strength: 3, duration: 1, targets: 0 }, ctx) : null);
 const specOutcomes = sp => { try { return DAE.outcomesOf(sp, { label: "x", source: "" }, 3, ""); } catch (e) { return null; } };
-for ( const r of rows ) r.read = r.status === "applies" ? RR.powerRead(r, kwOutcome, specOutcomes) : null;
+for ( const r of rows ) r.read = r.status === "applies" ? (r.world ? "direct" : RR.powerRead(r, kwOutcome, specOutcomes)) : null;
 const out = { made: new Date().toISOString(), counts: {}, reads: {}, byLine: {}, rows };
 for ( const r of rows ) if ( r.read ) out.reads[r.read] = (out.reads[r.read] ?? 0) + 1;
 for ( const r of rows ) {

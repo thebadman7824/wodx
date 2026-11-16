@@ -21,12 +21,13 @@ test("a power's keywords come from the data set, then the line list by name", ()
   assert.equal(PW.powerKeywords("gift", "not-in-the-library", "Nothing by this name", "w20"), null);
 });
 
-test("the successes are the strength; passive powers and failed rolls do nothing", () => {
+test("the successes are the strength; failed rolls do nothing, a passive power turns on", () => {
   const {results} = PW.powerOutcomes({keywords: ["ward"], passive: false}, 3, {label: "Shield", hasTarget: false});
   assert.equal(results.length, 1);
   assert.equal(results[0].who, "self");
   assert.match(results[0].out.label, /^Shield: /);
-  assert.deepEqual(PW.powerOutcomes({keywords: ["ward"], passive: true}, 3).results, []);
+  // B6833: a passive power picked from the menu turns on, with no roll, one success
+  assert.deepEqual(PW.powerOutcomes({keywords: ["ward"], passive: true}, 0).results.map(r => r.key), ["ward"]);
   assert.deepEqual(PW.powerOutcomes({keywords: ["ward"]}, 0).results, []);
 });
 

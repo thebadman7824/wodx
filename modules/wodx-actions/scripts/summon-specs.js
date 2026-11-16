@@ -1145,6 +1145,35 @@ export const SPECS = {
   "note": "Wild places only, one large wolf per success. Willpower 3, Survival 5. Control and duration are not legible in the scan.",
   "unsure": "unsure"
  },
+ "demon-dtf|coherent-light": {
+  "what": "construct",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": "faith"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct", "range": "sight"},
+  "roll": {"when": "each-turn", "who": "summoner", "pool": "willpower", "diff": "torment", "fail": "attack-nearest"},
+  "page": "DtF p. 196",
+  "note": "B6832: solid light that acts on the successes as a pool; one level of harm dispels it. The each-turn Willpower roll is the high-Torment form's."
+ },
+ "demon-dtf|possess-plant": {
+  "what": "plant",
+  "profile": "servant",
+  "count": {"by": "successes"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct", "range": "sight"},
+  "page": "DtF p. 206",
+  "note": "B6832: rooted; strikes with the demon's Willpower as Strength, attack and bashing dice."
+ },
+ "demon-dtf|unlife": {
+  "what": "corpse",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": "faith"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "roll": {"when": "each-turn", "who": "summoner", "pool": "willpower", "diff": 8, "fail": "attack-nearest"},
+  "page": "DtF p. 209",
+  "note": "B6832: mindless servants, Physical 1 each, no wound penalties, 10 levels to destroy; Willpower 7 a command. The each-turn Willpower 8 is the high-Torment form's, against frenzy."
+ },
  "demon-dtf|animate": {
   "what": "object",
   "profile": "servant",

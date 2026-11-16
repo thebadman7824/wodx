@@ -140,3 +140,55 @@ test("B6739: a cantrip's timed result carries its keyword where power-mods reads
   const chain = D.outcomesOf([D.T("light", "L", "scene", "self"), D.T("fortune", "F", "scene", "one", {curse: true})], {label: "x"}, 2, "");
   assert.deepEqual(chain.map(x => x.out.key), ["light", "fortune"]);
 });
+
+/* Second pass (B6830-B6849): nothing only tells. */
+test("B6830: a standing, scoped Blessing eases only its rolls, is not spent, and keeps its own key", async () => {
+  const PM = await imp("modules/wodx-actions/scripts/power-mods.js");
+  const out = {key: "fortune", name: "Lordly Mien", shift: -2, tags: ["charisma", "manipulation"], once: false};
+  const key = PM.keyFor(out), data = PM.timedData(out);
+  assert.notEqual(key, PM.KEYS.fortune);
+  assert.deepEqual(data, {shift: -2, once: false, tags: ["charisma", "manipulation"]});
+  const fx = [{id: "a", name: "Lordly Mien", key, data}];
+  assert.deepEqual([PM.modsFrom(fx, {tags: ["social", "charisma"]}).diff, PM.modsFrom(fx, {tags: ["physical", "strength"]}).diff], [-2, 0]);
+  assert.deepEqual(PM.modsFrom(fx, {tags: ["charisma"]}).once, []);
+  // a shift on attacks against the bearer stays off the bearer's own rolls
+  const df = [{id: "b", name: "Mirage", key: PM.keyFor({key: "fortune", name: "Mirage", tags: ["defend-ranged"]}), data: {shift: 2, once: false, tags: ["defend-ranged"]}}];
+  assert.equal(PM.modsFrom(df, {tags: ["ranged", "dexterity"]}).diff, 0);
+  assert.deepEqual([PM.defendFrom(df, {ranged: true}).diff, PM.defendFrom(df, {ranged: false}).diff], [2, 0]);
+  assert.match(src("modules/wodx-combat/scripts/main.js"), /powerMods\?\.defend\?\.\(target, \{ ranged: !!w\.ranged \}\)/);
+});
+
+test("B6831: the apocalyptic form's powers go on the effects card and its claws on the sheet", async () => {
+  const DE = await imp("modules/wodx-actions/scripts/demon-evocations.js");
+  const r = DE.formResults(["Lordly Mien", "Immune to Fire", "Night Sight", "Casts No Reflection"], "Bel");
+  assert.deepEqual(r.map(x => [x.key, x.out.kind]), [["fortune", "timed"], ["ward", "timed"], ["sight", "timed"]]);
+  assert.deepEqual([r[1].out.dice, r[1].out.against], [10, "fire"]);
+  const w = DE.formWeapons(["Claws", "Wings"]);
+  assert.equal(w.length, 1);
+  assert.deepEqual([w[0].type, w[0].system.damage.bonus, w[0].system.damage.type], ["Melee Weapon", 2, "aggravated"]);
+  for ( const nm of Object.keys(DE.FORM_POWERS) ) {
+    const base = nm.split("@")[0], fp = DE.FORM_POWERS[nm];
+    assert.ok(fp.attrs || fp.init || fp.armor || DE.FORM_SPECS[base] || DE.FORM_SPECS[nm] || DE.FORM_WEAPONS[base] || DE.FORM_STORY[base], `${nm} applies or says why not`);
+  }
+  const d = src("modules/wodx-actions/scripts/demon.js");
+  assert.match(d, /DE\.formResults\(tot\.names, i\.visage\)/);
+  assert.match(d, /weaponIds/);
+});
+
+test("B6832: the evocations that were card or Storyteller only now apply", async () => {
+  const DE = await imp("modules/wodx-actions/scripts/demon-evocations.js");
+  const D = await imp("modules/wodx-actions/scripts/demon-rules.js");
+  const WE = await imp("modules/wodx-actions/scripts/world-effects.js");
+  for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ?? []).entries() ) {
+    const res = DE.evocationResults(id, k + 1, 3, {faith: 3, name: e.name});
+    const world = WE.worldResults({name: e.name, line: "Demon (DtF)"}, 3);
+    assert.ok(res.some(x => !x.st || x.key === "summon") || world.length, `${e.name} does something`); // planOf makes a summoning of any summon result
+  }
+});
+
+test("B6833: a passive power picked from the menu turns on", async () => {
+  const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
+  const r = PW.powerOutcomes({keywords: ["ward"], passive: true}, 0, {label: "Survivor"}).results;
+  assert.deepEqual(r.map(x => [x.key, x.who]), [["ward", "self"]]);
+  assert.doesNotMatch(src("modules/wodx-actions/scripts/kindred.js"), /if \(!fx && !p\.passive && successes > 0/);
+});
