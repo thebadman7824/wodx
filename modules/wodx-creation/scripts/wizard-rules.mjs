@@ -11,6 +11,8 @@
  */
 import {TOTALS, checkCreation} from "./totals-rules.mjs";
 import {CLANS} from "../data/vampire.mjs";
+import {clanOpen, clansOpen} from "./rules.mjs";
+export {clanOpen, clansOpen};
 
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 export const ATTR_GROUPS = ["physical", "social", "mental"];
@@ -244,16 +246,17 @@ export function clanDisciplines(clan, {dark = true} = {}) {
   return [...(!dark && c.modern ? c.modern : c.disciplines)];
 }
 
-/** Every Discipline the clan table names, for one bought with freebies. */
-export const allDisciplines = () => [...new Set(CLANS.flatMap(c => [...c.disciplines, ...(c.modern ?? [])]))].sort();
+/** Every Discipline the clans open then name, for one bought with freebies (no year: the clans with no opening year). */
+export const allDisciplines = (when = {}) => [...new Set(clansOpen(when).flatMap(c => [...c.disciplines, ...(c.modern ?? [])]))].sort();
 
 /** Suggested names for a power on a line: {first: [...], more: [...]} (first: the clan's, the ghoul's Potence ...). */
-export function powerSuggestions(key, lineId, {clan = "", dark = true} = {}) {
+export function powerSuggestions(key, lineId, {clan = "", dark = true, year = null, futureBranch = false} = {}) {
   if ( key === "discipline" ) {
-    if ( lineId === "ghoul" || lineId === "revenant" ) return {first: ["Potence"], more: allDisciplines().filter(d => d !== "Potence")};
+    const when = {year, futureBranch};
+    if ( lineId === "ghoul" || lineId === "revenant" ) return {first: ["Potence"], more: allDisciplines(when).filter(d => d !== "Potence")};
     if ( lineId === "kote" ) return {first: [], more: []};
     const first = clanDisciplines(clan, {dark});
-    return {first, more: allDisciplines().filter(d => !first.includes(d))};
+    return {first, more: allDisciplines(when).filter(d => !first.includes(d))};
   }
   return {first: POWER_NAMES[key] ?? [], more: []};
 }

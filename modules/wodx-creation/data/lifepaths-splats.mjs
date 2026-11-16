@@ -82,6 +82,9 @@ const vampire = [
   sp("gargoyle", "Gargoyle", "Made in stone", "You were made by Tremere hands from more than one clan's blood.", [
     ["You serve the chantry", "ab Alertness|flaw Enemy", "a Tremere master|who made you"],
     ["You are free", "ab Athletics|flaw Hunted"]]),
+  sp("cyberpunks", "Cyberpunks", "Made in the Net", "Your sire was a netrunner who lived for the machines and Embraced you for the same hunger.", [
+    ["You run the Net", "ab Computer|bg Contacts", "a fixer|who sold your first paydata"],
+    ["You ride the chrome", "ab Technology|ab Streetwise", "a ripperdoc|who knew you before the Embrace"]], {spans: [[2016, 2300]], futureBranch: true}),
   sp("kiasyd", "Kiasyd", "Under the glass", "Your sire was tall, pale and fond of books, and something fae ran in the blood.", [
     ["A librarian", "bg Library|ab Academics"],
     ["A wanderer in the Dreaming", "ab Occult|ab Enigmas"]]),

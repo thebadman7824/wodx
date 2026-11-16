@@ -1727,7 +1727,21 @@ Ben approved every entry that was waiting for review ("I approve everything on t
 | 2026-11-16 | Remotes (B6599) | Tied automatically to the building's doors, lights, cameras and alarm | Draw the fortress with no building |
 | 2026-11-16 | Trace (B6600) | Traced status and named law heat for a break-in; Pit Bull cuts the line | Edit traceRunner() |
 | 2026-11-16 | Whiteout (B6601) | The M20 tables as written, with a white flash | Do not call whiteout() |
-| 2026-11-16 | Cyberpunks bloodline and Technica | Build next, tied into the Net | Not built yet |
+| 2026-11-16 | Cyberpunks bloodline and Technica | Build next, tied into the Net | Built: see the Technica table below |
+
+## Approved by Ben, 16 November 2026, 02:17 UTC (Technica Review Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-16 | When the Cyberpunks are open (B6604) | Future Darkness branch only, from 2016; signature line Machines over blood | Drop cyberpunksOpen and the signature row |
+| 2026-11-16 | Technica 1, Interface (B6605) | Jack in by touch with no penalty, contact must hold | Delete ACCESS.touch |
+| 2026-11-16 | Technica 2, Technical Touch (B6606) | With no Computer the successes stand in for Computer on program rolls | Drop touch from the run state |
+| 2026-11-16 | Technica 3, Empower Device (B6607) | A Willpower point clears Deck down and Deck dead | Remove the Empower Device button |
+| 2026-11-16 | Technica 4, Remote Touch (B6608) | 100 feet, no roll | Remove the Remote Touch button |
+| 2026-11-16 | Technica 5, Spiritus ex Machina (B6609) | 3 successes: ICE passes the speaker by while the alarm is quiet; 4 names files; 5 names ICE too | Drop parley from iceRound |
+| 2026-11-16 | Technica 6, Ghost in the Machine (B6610) | No deck, the mind carries a standard deck's load, remotes obey with no roll | Delete ACCESS.ghost |
+| 2026-11-16 | The Cyberpunks' weakness (B6611) | Each night every use of another Discipline beyond the machine uses (programs and Technica powers) costs a Willpower point | Remove the wodxPowerShown hook in technica.mjs |
+| 2026-11-16 | Cyberpunks in character creation (B6612) | Yes, next: a Future-branch clan choice from 2016 that adds Technica | Drop the CLANS row and the lifepath scene |
 
 ## Approved by Ben, 16 November 2026, 02:14 UTC (House Events Desk)
 

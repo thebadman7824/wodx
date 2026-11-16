@@ -176,3 +176,19 @@ test("the wizard window walks a vampire through the book and writes to the sheet
   assert.ok(![...a.items].some(i => i.name === "Presence"));
   await app.close?.();
 });
+
+test("the Cyberpunks (B6612): a Future-branch bloodline from 2016 that brings Technica", async () => {
+  const R = await import("../../modules/wodx-creation/scripts/rules.mjs");
+  const LR = await import("../../modules/wodx-creation/scripts/lifepath-rules.mjs");
+  const C = R.findClan("Cyberpunks");
+  assert.deepEqual(W.clanDisciplines("Cyberpunks"), ["Celerity", "Potence", "Technica"]);
+  assert.equal(R.clanOpen(C, {year: 2030, futureBranch: true}), true);
+  assert.equal(R.clanOpen(C, {year: 2015, futureBranch: true}), false);
+  assert.equal(R.clanOpen(C, {year: 2030, futureBranch: false}), false);
+  assert.ok(!R.clansOpen({year: 1300}).some(c => c.id === "cyberpunks"));
+  assert.ok(!W.allDisciplines({year: 1990}).includes("Technica"));
+  assert.ok(W.allDisciplines({year: 2020, futureBranch: true}).includes("Technica"));
+  assert.ok(!LR.splatsFor("vampire", 2030).some(s => s.key === "cyberpunks"), "classic timeline: no Cyberpunks");
+  assert.ok(LR.splatsFor("vampire", 2030, {futureBranch: true}).some(s => s.key === "cyberpunks"));
+  assert.ok(!LR.splatsFor("vampire", 2010, {futureBranch: true}).some(s => s.key === "cyberpunks"));
+});
