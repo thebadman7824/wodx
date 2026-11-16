@@ -37,7 +37,9 @@ export async function run() {
   if ( G.notLive() ) return "Not on the Live world.";
   try {
     const C = game.wodxCombat, V = () => C?.vehicles, ix = game.modules.get(IX)?.api, npc = game.modules.get("wodx-npc")?.api;
-    const scene = await G.scene({flags: {[IX]: {ground: "road"}}});
+    // A fight a step starts must not run its own turns: an NPC at the reins walked the horse to the map edge mid-step (run-gate puts settings back)
+    try { await game.settings.set("wodx-combat", "turnConductor", "off"); } catch (e) { G.R.notes.push("no turn conductor setting"); }
+    const scene = await G.scene({flags: {[IX]: {ground: "road"}, "wodx-npc": {mode: "suggest"}}});
     // B6210: cars, aeroplanes and rams need a year that has them (the kit puts the clock back after)
     await G.yearAtLeast(1950);
     const [driver, pass, foe, nopilot, runner] = await G.make(Actor, [
