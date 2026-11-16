@@ -3,6 +3,7 @@
  * keyword's result through the effects card and checks the game changed, not that a named effect appeared.
  *   1. the api: power mods for rolls, soak, Initiative and actions
  *   2. a Ward (Defense of the Sacred Haven): armour dice on a sunlight soak, none on a plain blow; the soak card names it
+ *  2b. a Ward against every harm adds its dice to the soak of a knife blow made through WoDX Combat's Attack window (B6732)
  *   3. a Curse (Voice of the Jackal): +difficulty on the next roll, then spent
  *   4. a Boost (Essence of Longing): dice on Social rolls only
  *   5. a Calm on oneself (Blood Rush): resisting frenzy is easier
@@ -16,7 +17,7 @@
  *  13. a Hekau figurine is a summoning, and a Dark Ages summoning rote calls beings
  * Result: Data/wodx-gate/gaterituals-result.json.
  */
-import {gate, waitFor} from "./kit.mjs";
+import {gate, newestMessage, waitFor} from "./kit.mjs";
 
 const MOD = "wodx-actions";
 
@@ -62,6 +63,41 @@ export async function run() {
         try { await C.setDamage?.(who, {bashing: 0, lethal: 0, aggravated: 0}); } catch (e) { /* health put back by hand */ }
       }
       G.ok("2. a Ward is armour on a sunlight soak, not on a plain blow; the soak card names it", sun > 0 && plain === 0 && named !== false, {sun, plain, named});
+    });
+
+    await G.step("2b. a Ward is armour on a weapon blow's soak too (B6732)", async () => {
+      // The Ward of step 2 stands only against sunlight; this one stands against every harm, and a knife blow is soaked with it
+      const who = wt.actor ?? warded;
+      const r = kw("ward", 3, {hasTarget: false});
+      await apply(r, who);
+      await waitFor(() => who.effects.some(e => e.flags?.["wodx-chronicle"]?.timed?.key === PM.KEYS.ward && !e.flags?.["wodx-chronicle"]?.timed?.data?.against), 4000);
+      const atk = ct.actor ?? caster;
+      const [knife] = await atk.createEmbeddedDocuments("Item", [{name: "Gate Rite knife", type: "Melee Weapon",
+        system: {damage: {attribute: "strength", bonus: 1, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6, isequipped: true}}]);
+      const stamina = Number(who.system?.attributes?.stamina?.total ?? who.system?.attributes?.stamina?.value) || 0;
+      const fort = Number(who.items.find(i => /fortitude/i.test(i.name))?.system?.value) || 0;
+      const answer = (app, el) => {
+        const root = el instanceof HTMLElement ? el : el?.[0];
+        if ( !root?.querySelector?.("[name=weapon]") ) return;
+        setTimeout(() => {
+          const d = root.querySelector("[name=defense]"); if ( d ) { d.value = "none"; d.dispatchEvent(new Event("change", {bubbles: true})); }
+          root.querySelector("button[data-action=attack]")?.click();
+        }, 150);
+      };
+      const hk = Hooks.on("renderDialogV2", answer);
+      let soakDice = null, card = "";
+      try {
+        for ( let k = 0; k < 8 && soakDice === null; k++ ) {
+          const since = game.messages.size;
+          await C.attack({attacker: ct.object ?? atk, target: wt.object ?? who, weaponId: knife.id});
+          await waitFor(() => game.messages.size > since, 6000);
+          card = String(newestMessage()?.content ?? "");
+          const m = card.replace(/<[^>]+>/g, " ").match(/Soak \([^)]*\):\s*(\d+)\s*dice/);
+          if ( m ) soakDice = Number(m[1]);
+        }
+      } finally { Hooks.off("renderDialogV2", hk); }
+      try { await C.setDamage?.(who, {bashing: 0, lethal: 0, aggravated: 0}); } catch (e) { /* health put back by hand */ }
+      G.ok("2b. a Ward is armour on a weapon blow's soak too (B6732)", soakDice === stamina + fort + 3, {soakDice, stamina, fort, card: card.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 400)});
     });
 
     await G.step("3. a Curse makes the next roll harder, and is spent on it", async () => {

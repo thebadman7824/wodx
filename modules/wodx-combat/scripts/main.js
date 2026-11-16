@@ -1428,14 +1428,18 @@ function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
     // B3802: a cyber limb or plate soaks a blow aimed at it with its own dice; B3800: the sheet's soak rows
     const limb = R.limbSoak(cyber(target)?.limbs ?? [], fd.aimType ?? fd.targeting);
     const sheetSoak = R.sheetBonus(target?.items, "soak_buff", dp.dmgType);
-    return R.soakPool({
+    // B6732: a Ward or a soak Boost from a power or ritual stands against a blow too, not only against a power's harm
+    const pw = powerModsOf(target, { soak: true, harm: { type: dp.dmgType, of: fd.fireSun ? "fire" : "", fireSun: !!fd.fireSun, bane: !!dp.bane } });
+    const sp = R.soakPool({
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice),
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice),
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
+    if (pw.parts?.length && Array.isArray(sp.notes)) sp.notes.push(...pw.parts);
+    return sp;
 }
 
 /**
