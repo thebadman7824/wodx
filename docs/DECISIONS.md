@@ -409,7 +409,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7208) | tools (PC job queue) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14143,3 +14143,8 @@ Reverse: remove the holding check and its two uses and the note argument of stat
 PC job queue. B7203 let the train wait when wodx/merge-rules failed only on the gate rule, but that wait was checked after the checks job. When the merge rules fail, so does the "merge rules" job, and with it the "checks" job that sums up every job. So at 15:34Z on 17 November the train put PR 1848 out on its fresh head while gate job 1960 was queued, with 4,123 tests run and none failed. The train now reads every job's newest run. When the only failed jobs are "checks" and "merge rules", and the merge rules say only "Not ready: gate result", it waits for the gate run, still within the three-hour limit. Any other failed job still puts the pull request out.
 
 Reverse: remove othersFailed and the otherChecksFailed field in tools/pcq/train.mjs, and move the checks failure test back above the gate wait in decide().
+
+## B7209. A gate job is dropped as stale only on a pull request read just now (2026-11-17)
+PC job queue. B7205 kept each pull request it looked up for two minutes. A gate job queued within two minutes of a push was then checked against the head from before the push, so on 17 November jobs 1967 (PR 1880), 1969 (PR 1836) and 1970 (PR 1963) were dropped as "moved on" to their own older commit, and the merge train had no gate runs. The cached pull request is still used to say a job is current, but before a job is dropped or stopped, the runner reads the pull request again and drops only on that fresh answer.
+
+Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.
