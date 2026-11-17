@@ -21,6 +21,7 @@ import path from "node:path";
 import {spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {validate, issueBody, LABEL} from "./jobs.mjs";
+import {laneRefuses} from "../lanes/lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../.."), GATES = path.join(ROOT, "tools", "gate");
 /** B6980: the lanes a job may name: the main runner's, plus each other PC's own lanes from lanes.json (lane 7 on the
@@ -30,7 +31,8 @@ export function submitLanes(runnerCfg, lanesCfg) {
   return [...new Set([...(runnerCfg?.lanes ?? []), ...host].map(Number))];
 }
 const readJson = f => JSON.parse(fs.readFileSync(f, "utf8"));
-const runnerLanes = submitLanes(readJson(path.join(HERE, "runner.json")), readJson(path.join(ROOT, "tools", "lanes", "lanes.json")));
+const lanesJson = readJson(path.join(ROOT, "tools", "lanes", "lanes.json"));
+const runnerLanes = submitLanes(readJson(path.join(HERE, "runner.json")), lanesJson);
 export const TWO_BROWSER = /phase\s*===?\s*["']player|case\s+["']player/;
 
 /** Problems with the gates a job names. */
@@ -70,6 +72,10 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
   for ( const k of Object.keys(raw) ) if ( raw[k] === undefined ) delete raw[k];
   const v = validate(raw, runnerLanes);
   if ( v.error ) { console.error(`Not queued: ${v.error}`); process.exit(1); }
+  // B6887: a small-jobs lane (lane 7) refuses touched, every-gate and large runs; the main PC's lanes take those.
+  const named = v.job.lane !== undefined ? lanesJson?.lanes?.find(l => String(l.id) === String(v.job.lane)) : null;
+  const refused = laneRefuses(named, v.job);
+  if ( refused ) { console.error(`Not queued: ${refused}. Leave out --lane so the main PC's lanes take it.`); process.exit(1); }
   const problems = await preflight(v.job);
   if ( problems.length ) { console.error(`Not queued; fix these first:\n  ${problems.join("\n  ")}`); process.exit(1); }
   const job = Object.fromEntries(Object.entries(raw).filter(([k]) => k !== "lanes" || v.job.lanes > 1));

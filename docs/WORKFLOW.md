@@ -128,8 +128,9 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
 
        node tools/pcq/submit.mjs gates --touched --ref claude/<branch> --lanes 2 --thread <thread id>
 
-   The PC runner sets the `wodx/gates` status on the commit it ran, and starts the pull request's failed checks
-   again so they pick it up. The result holds while the module, system and gate files stay as they were (a stamp
+   The PC runner sets the `wodx/gates` status on the commit it ran, and runs the pull request's merge rules job
+   again so it picks it up. Until then the `wodx/merge-rules` status (required on main, like `checks`) shows
+   "waiting for the PC gates": the pull request reads as pending, not failed, and cannot merge (B7006). The result holds while the module, system and gate files stay as they were (a stamp
    only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count, and a
    gate that the recheck finds failing on main too does not hold the pull request back.
 3. **File review.** Every changed file has a verdict made on it as it is now:
@@ -140,6 +141,11 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    It writes `docs/reviews/<branch>.jsonl`; commit it with the change. Only `working` (or `dead` for a deleted file)
    merges, `how` says what was done to check the file, and a file changed after its review needs a new one. A glob
    (`--glob "modules/wodx-x/assets/**"`) may cover images and other data, never a script.
+
+Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
+`wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force
+pushes are blocked and main cannot be deleted. Nothing lands on main except through a pull request whose checks
+pass, so routines and tools that used to push to main directly must open a pull request instead.
 
 `node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
 GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it. Then:

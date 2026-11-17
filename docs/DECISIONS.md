@@ -402,7 +402,7 @@ Next free block: B7030
 | B6960-B6969 | Gate run 1779 fixes | tools |
 | B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
-| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7005) | tools |
+| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 <!-- decision-index:end -->
@@ -13942,6 +13942,18 @@ the routes block in docs/ROUTING.md sends to a machine (name lists, images, audi
 agent. `routed-by-hand: <reason>` in a commit message or release note answers it. The owner's own work gets none.
 
 Reverse: drop routeWarnings from merge-rules.mjs.
+
+## B7006. Waiting for the PC gates shows as pending, not failed (2026-11-17)
+Repository workflow, from the owner's pick on the decisions desk. A pull request whose only unmet rule was a gate
+result still to come failed the merge rules job, which sent a failure mail on every push. The job now posts its result
+as the `wodx/merge-rules` commit status on the head: pending while only the gate result is missing (no failed gate
+on the branch), success when every rule holds (or the work is the owner's own), failure for anything else. A pending
+wait no longer fails the job; a broken rule still does. Main requires `wodx/merge-rules` as well as `checks`, so a
+pending pull request cannot merge. When its gate result lands, the PC runner runs the merge rules job again by name
+(with the checks job after it), since a passed job is not one that "rerun failed jobs" would pick up.
+
+Reverse: drop --post-status from the merge rules step in checks.yml and wodx/merge-rules from main's required
+checks; put rerun-failed-jobs back alone in rerunFor (runner.mjs).
 
 ## B7010. Gates queue themselves on every pull request (2026-11-17)
 Repository workflow. Threads queued gates by hand and then watched the issue. `.github/workflows/pc-gates.yml` now

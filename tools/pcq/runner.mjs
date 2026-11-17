@@ -31,7 +31,7 @@ import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, gateDigest, recheckVerdicts, gateStatusFor, GATE_CONTEXT} from "./jobs.mjs";
-import {loadConfig, getLane, laneDir, laneUrl, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack} from "../lanes/gate-queue.mjs";
@@ -426,9 +426,12 @@ async function rerunFor(pr, sha, tries) {
     const run = runs?.workflow_runs?.[0];
     if ( !run ) return;
     if ( run.status !== "completed" ) { if ( tries < 12 ) setTimeout(() => rerunFor(pr, sha, tries + 1), 5 * 60000); return; }
-    if ( run.conclusion !== "failure" ) return;
-    await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`);
-    log(`PR #${pr.number}: failed checks started again after the gate result`);
+    // B7006: the merge rules job passes while it waits for the gates (its wodx/merge-rules status is pending), so it
+    // is run again by name, with the checks job after it
+    const jobs = await gh("GET", `/actions/runs/${run.id}/jobs?per_page=50`);
+    const mr = jobs?.jobs?.find(j => j.name === "merge rules");
+    if ( mr ) { await gh("POST", `/actions/jobs/${mr.id}/rerun`); log(`PR #${pr.number}: merge rules run again after the gate result`); }
+    else if ( run.conclusion === "failure" ) { await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`); log(`PR #${pr.number}: failed checks started again after the gate result`); }
   } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
@@ -591,7 +594,12 @@ for ( ;; ) {
         if ( res.low.length ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
         const free = q.job.kind === "setup-lane" ? l => !state[l].busy && !lockState(laneOf(l), cfg).held : laneFree;
-        const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(laneFree).slice(0, q.job.lanes);
+        // B6887: a small-jobs lane (lane 7) never takes a touched, every-gate or large run. Named on it, the job is
+        // refused; otherwise this runner leaves it for the main PC's lanes.
+        if ( q.job.lane !== undefined && LANES.includes(String(q.job.lane)) && laneRefuses(laneOf(q.job.lane), q.job) ) {
+          await finish(q.issue, false, `Not run: ${laneRefuses(laneOf(q.job.lane), q.job)}. Queue it without a lane so the main PC's lanes take it.`); continue;
+        }
+        const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(l => laneFree(l) && !laneRefuses(laneOf(l), q.job)).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
         for ( const l of want ) state[l].busy = q.number;
