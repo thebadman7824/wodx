@@ -409,7 +409,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7206) | tools (PC job queue) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7207) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14133,3 +14133,8 @@ Reverse: remove tools/pcq/stale.mjs, staleJob, drop and stopStale and their call
 PC job queue. On 17 November job 1932 kept lane 2 busy after its issue was closed by hand: the runner never looked at the issue again, and only killing the gate process on the PC (which needs an explicit OK) freed the lane. The runner now keeps the child processes of each job, known by the job's log name, and every poll checks its running jobs. A job whose issue carries the label pc-cancel, or whose issue reads as closed when fetched on its own (the list alone can lag), is cancelled: its shared gate queue is stopped, its process trees are ended, each lane it used is reset, nothing is retried or rechecked, and the issue gets a "Cancelled" comment with no result or gate status and is closed as not planned. A waiting job labelled pc-cancel is closed without running. A job the runner is already finishing is never cancelled.
 
 Reverse: remove the cancel block (procs, halted, running, cancelJob, cancelCheck and their calls) from tools/pcq/runner.mjs, jobOfLog from tools/pcq/stale.mjs, and LABEL.cancel from tools/pcq/jobs.mjs.
+
+## B7207. runner-hold takes no new jobs and keeps everything else running (2026-11-17)
+PC job queue. On 17 November a runner-off file was put on the Main PC at about 14:35Z to keep the lanes free for an art render. While a job still ran, runner-off made the main loop sleep and skip every pass, so the status issue, the sweep, the merge train, self updates and job cancels all stopped for half an hour and the runner looked hung. A new file, runner-hold, in the runner folder only stops job pickup and stops running jobs taking more lanes; every other pass goes on, and the status issue shows a HOLD line. runner-off keeps its meaning (stop once idle) and now updates the status issue while it waits.
+
+Reverse: remove the holding check and its two uses and the note argument of status() in tools/pcq/runner.mjs, and the status call in the runner-off branch.
