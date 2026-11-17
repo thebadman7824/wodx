@@ -1832,7 +1832,9 @@ Every entry below was kept as built on the Final Audit Desk, except four ruled a
 | 2026-11-16 | B6858: Healing 2's 'negates wound penalties' | The sheet's ignoring-pain flag as an Active Effect change for 10 minutes a success | painless in mage-da-effects.js timedNumbers and effects.js |
 | 2026-11-16 | Mortals and aggravated damage in modern eras (final audit) | No change: V20 pp. 292-293 also treats a mortal's aggravated damage as lethal, as VtDA20 does, so WoDX Combat's era-blind rule stands | none needed |
 
-## Waiting for review
+## Approved by Ben, 17 November 2026, 03:17 UTC (Decisions Desk)
+
+Ben kept all eight rows as built on the Decisions Desk (https://claude.ai/artifact/QfFqMSTu9uwLUDCRp3kT3g). Each still lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1844,3 +1846,8 @@ Every entry below was kept as built on the Final Audit Desk, except four ruled a
 | 2026-11-17 | Do lane 8 gate jobs take the GPU guard's one-at-a-time lock? | No. Headless Edge needs well under 1 GB and the lock would hold lane 8 behind the book OCR for about 8 hours; the OCR, Ollama and any model job take the lock | Wrap lane 8 jobs in gpuguard.mjs run --class other |
 | 2026-11-17 | Where the Secondary PC writes its 5-minute status | D:\WoDX\pcq\status\secondary.json on the PC (task 'WoDX secondary status'); the PC has no route to the shared project folder without a tunnel, so a thread on the PC copies it to registry/pc-status/secondary.json when it is there | Add a tunnel or a sync folder and point the writer at it |
 | 2026-11-17 | HWiNFO on the Secondary PC | Not installed: every winget version of REALiX.HWiNFO fails with a 404 from its mirror. nvidia-smi already gives the core temperature the guard uses | Install HWiNFO by hand from its site, or retry winget later |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
