@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7200
+Next free block: B7210
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -409,6 +409,7 @@ Next free block: B7200
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: the runner removes what a gate placed on a shared scene (used B7190-B7193) | tools (lanes) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200) | tools (testbed lanes, PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14095,3 +14096,8 @@ Reverse: drop sheetsBefore and the sheets put-back block in run-gate.mjs.
 Finish-Line Desk w3, after B7192. Cleaning up leftover documents covered world documents only. A region, token, wall, tile, drawing, light, sound or note that a gate placed on a scene already there before it stayed for every later gate. In PR 1836's job 1922, gateduties put a cult's worship night at a chapel region on another scene, not at its own chapel. On lanes reset every night, run-gate.mjs now also records each scene's placed documents before a gate and deletes any added since (tools/lanes/lib.mjs sheetPlan dropKids). Test: tools/harness/lanes.test.mjs "B7193".
 
 Reverse: drop the kids part of READ_SHEETS and sheetPlan.
+
+## B7200. Effects-module migration markers no longer count as lane drift (2026-11-17)
+Testbed lanes. On 16 and 17 November the PC runner hit exit 4 (drift found, no gate run) 83 times, and each one cost a lane reset and a retry. The drift blocks in the lane logs show why: every one of the 34 since job 1810 was the single setting fxmaster.parameterRangeMigrationVersion "added", and the earlier ones were the same kind of marker (fxmaster.parameterRangePassiveMigrationVersion, fxmaster.directionConventionPassiveMigrationVersion, tokenmagic.migration). FXMaster and Token Magic write these once per world a little after a GM signs in, too late for the clean fingerprint the reset takes, so the next sign-in by run-gate saw them as new. The lane's known-good copy predates them, so every reset brought the problem back. The four keys join ignoreSettings in tools/lanes/lanes.json, beside fxmaster.legacyCleanupVersion, which was already there for the same reason. They are markers of a migration already done, not world state a gate reads.
+
+Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
