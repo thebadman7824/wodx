@@ -173,7 +173,7 @@ export function v20PathFor(data, label = "", custom = "") {
     let k = m && P[m[1]] ? m[1] : null;
     if (!k && custom && (!label || label === "custom")) {
         const c = String(custom).trim().toLowerCase().replace(/^the\s+/, "");
-        // B7021: another name the book gives the same Path ("Path of Death and the Soul" is the Path of the Bones, V20 p. 320)
+        // B7081: another name the book gives the same Path ("Path of Death and the Soul" is the Path of the Bones, V20 p. 320)
         k = Object.keys(P).find(x => [P[x].name, ...(P[x].aliases ?? [])].some(nm => nm.toLowerCase() === c)) ?? null;
     }
     return k ? { key: `v20-${k}`, road: { ...P[k], book: data.book ?? "V20" }, path: null } : null;
@@ -225,14 +225,14 @@ export const SIN_EVENTS = {
 export function sinForEvent(found, event) {
     if (!found) return null;
     const byPath = found.path ? SIN_EVENTS[found.path.name] : null;
-    // B7021: a variant Path (Harmony) sins as the Path it grew from
+    // B7081: a variant Path (Harmony) sins as the Path it grew from
     const t = byPath ?? SIN_EVENTS[found.key] ?? (found.road?.variantOf ? SIN_EVENTS[`v20-${found.road.variantOf}`] : null) ?? {};
     if (event === "killFeed" && !("killFeed" in t)) return t.kill ?? null;
     return t[event] ?? null;
 }
 
 /**
- * B7020: the bearing step at a Humanity or Path rating, from the table in the data (V20 p. 310): [[minimum rating, step]]
+ * B7080: the bearing step at a Humanity or Path rating, from the table in the data (V20 p. 310): [[minimum rating, step]]
  * from the top down. A + step makes the roll harder.
  */
 export function bearingStep(steps, rating) {
@@ -242,7 +242,7 @@ export function bearingStep(steps, rating) {
 }
 
 /**
- * B7020: a V20 Path's bearing on one roll (V20 p. 310; each Path's bearing with its description, pp. 316-338). Only a
+ * B7080: a V20 Path's bearing on one roll (V20 p. 310; each Path's bearing with its description, pp. 316-338). Only a
  * Path walker has one here; Humanity's bearing stays with the Road aura box and the low-Humanity rules. The bearing
  * counts on its own when the roll's tags meet the Path's (Stealth for the Bones, seduction for the Cathari) or, for
  * Lilith, when the roller carries a wound penalty; `ticked` is the player saying the roll draws on it otherwise.

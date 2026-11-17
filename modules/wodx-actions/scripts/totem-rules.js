@@ -1,5 +1,5 @@
 /**
- * WoDX Actions (B7022-B7027): Werewolf pack totems, read from data/rules/werewolf/totems-w20.json (W20 pp. 371-377,
+ * WoDX Actions (B7082-B7087): Werewolf pack totems, read from data/rules/werewolf/totems-w20.json (W20 pp. 371-377,
  * 509, 514). Pure, so the harness can test it. A row's effects use the trait table's grammar (WoDX Chronicle
  * trait-rules.mjs): {ch: "roll", tags, dice, diff, tick, note}. What each part of a row does:
  *   individual.renown      temporary Renown each packmate gains once, when the totem accepts the pack

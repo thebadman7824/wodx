@@ -91,16 +91,16 @@ test("B6725: a Bastet's own tribe's Gifts are its own; another tribe's are not; 
   assert.match(read("modules/wodx-actions/scripts/garou.js"), /g\.breed \? G\.feraGiftIsOwn\(g, i\)/);
 });
 
-// B7020-B7021: each Path's bearing (V20 p. 310 and the Path pages), and the two other names the book gives
+// B7080-B7081: each Path's bearing (V20 p. 310 and the Path pages), and the two other names the book gives
 const R = await import("../../modules/wodx-actions/scripts/rules.js");
 const path = k => K.v20PathFor(PATHS, `wod.advantages.path.${k}`);
 
-test("B7020: the bearing table in the data gives the V20 p. 310 steps, the same as the Road aura", () => {
+test("B7080: the bearing table in the data gives the V20 p. 310 steps, the same as the Road aura", () => {
   for (let r = 0; r <= 10; r++) assert.equal(K.bearingStep(PATHS.bearingSteps, r), R.auraModifier(r), `rating ${r}`);
   assert.equal(PATHS.bearingPage, 310);
 });
 
-test("B7020: every Path has a named bearing with what it covers, and the tags are roll tags", () => {
+test("B7080: every Path has a named bearing with what it covers, and the tags are roll tags", () => {
   const TAGS = new Set(["willpower", "stealth", "seduce", "intimidation", "manipulation", "leadership"]);
   for (const [k, p] of Object.entries(PATHS.paths)) {
     assert.ok(p.bearing?.name && p.bearing?.covers, k);
@@ -109,7 +109,7 @@ test("B7020: every Path has a named bearing with what it covers, and the tags ar
   }
 });
 
-test("B7020: the bearing counts by itself on the Path's own rolls and not on others", () => {
+test("B7080: the bearing counts by itself on the Path's own rolls and not on others", () => {
   const b = (k, rating, o) => K.pathBearing(PATHS, path(k), rating, o);
   // Bones 10 sneaking: 2 easier
   assert.deepEqual([b("bones", 10, { tags: ["stealth"] }).applies, b("bones", 10, { tags: ["stealth"] }).step], [true, -2]);
@@ -134,7 +134,7 @@ test("B7020: the bearing counts by itself on the Path's own rolls and not on oth
   assert.equal(K.pathBearing(PATHS, null, 8), null);
 });
 
-test("B7021: Death and the Soul is the Path of the Bones; Harmony is the Feral Heart with Conscience", () => {
+test("B7081: Death and the Soul is the Path of the Bones; Harmony is the Feral Heart with Conscience", () => {
   assert.equal(K.v20PathFor(PATHS, "custom", "Path of Death and the Soul").key, "v20-bones");
   assert.equal(K.v20PathFor(PATHS, "", "the Path of Death and the Soul").key, "v20-bones");
   const h = K.v20PathFor(PATHS, "custom", "Path of Harmony");
@@ -147,7 +147,7 @@ test("B7021: Death and the Soul is the Path of the Bones; Harmony is the Feral H
   assert.equal(K.pathBearing(PATHS, h, 10, { tags: ["intimidation"] }).step, -2);
 });
 
-test("B7020: the general roll window and the Seduction window read the Path's bearing", () => {
+test("B7080: the general roll window and the Seduction window read the Path's bearing", () => {
   const src = read("modules/wodx-actions/scripts/main.js");
   assert.match(src, /const pb = pathBearingFor\(actor, rd, fd, pool\);/);
   assert.match(src, /aura: fd\.aura && !pb \? R\.auraModifier\(rd\.value\) : 0/);

@@ -1,5 +1,5 @@
 /**
- * Gate for B7020-B7021: a V20 Path's bearing (V20 p. 310) shows on the roll window's odds line and counts only on the
+ * Gate for B7080-B7081: a V20 Path's bearing (V20 p. 310) shows on the roll window's odds line and counts only on the
  * rolls the Path names; "Path of Death and the Soul" reads as the Path of the Bones; Caine's bearing waits for the tick.
  * Run: await (await import(`/wodx-gate/gatepathbearing.mjs?${Date.now()}`)).run()
  */

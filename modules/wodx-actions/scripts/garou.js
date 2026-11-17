@@ -47,7 +47,7 @@ async function fetchData(name) {
 }
 export async function loadData() {
     for (const k of ["garou", "fera", "gifts-daw", "gifts-w20", "gifts-fera"]) if (!DATA[k]) DATA[k] = await fetchData(k);
-    // B7022: the pack totems, a rules table (W20 pp. 371-377)
+    // B7082: the pack totems, a rules table (W20 pp. 371-377)
     if (!DATA.totems) DATA.totems = await fetchData("rules/werewolf/totems-w20");
     if (!DATA.garou) console.error("WoDX | WoDX Actions could not load data/garou.json");
     return DATA;
@@ -55,7 +55,7 @@ export async function loadData() {
 export const data = () => DATA;
 
 /* ------------------------------------------------------------------ */
-/*  Pack totems (B7022-B7027)                                          */
+/*  Pack totems (B7082-B7087)                                          */
 /* ------------------------------------------------------------------ */
 
 /** A packmate's totem state: flag wodx-actions.totem = {key, accepted, choice, spent, banned, claim: {id, scene}}. */
@@ -86,7 +86,7 @@ export function totemView(actor) {
     const holds = claims.filter(c => c.actorId === actor.id && c.scene === scene).map(c => c.id);
     return { row, state: st, banned, holds, claims, pack, scene, accepted: st.accepted === row.key };
 }
-/** B7023: the totem's dice and difficulty on one roll of the general window. fd: the window's fields; pool: readPool's. */
+/** B7083: the totem's dice and difficulty on one roll of the general window. fd: the window's fields; pool: readPool's. */
 export function totemMods(actor, fd = {}, pool = {}, tags = []) {
     const v = isShifter(actor) ? totemView(actor) : null;
     if (!v || !v.accepted) return null;
@@ -94,7 +94,7 @@ export function totemMods(actor, fd = {}, pool = {}, tags = []) {
     const attrKey = String(fd.attr ?? "").startsWith("special:") ? null : fd.attr;
     return TOT.rollMods(v.row, { tags, ticked, banned: v.banned, attrKey, abilityKey: pool.abilityKey, holds: v.holds, choice: v.state.choice });
 }
-/** The Use a Gift window's box for a held giftDice Pack Trait (B7026). */
+/** The Use a Gift window's box for a held giftDice Pack Trait (B7086). */
 export function totemGiftBox(actor) {
     const v = isShifter(actor) ? totemView(actor) : null;
     const g = v?.row?.pack?.giftDice;
@@ -602,7 +602,7 @@ export function build(ctx) {
                 const pool = poolOf(actor, code, i);
                 // B6411: the target's ward or Magic Resistance makes a Gift on them harder
                 const rm = TH.targetResist(actor, ["magic"]);
-                // B7026: a held Pack Trait of the pack's totem adds its dice to a Gift of its kinds (Cockroach, Owl, Unicorn)
+                // B7086: a held Pack Trait of the pack's totem adds its dice to a Gift of its kinds (Cockroach, Owl, Unicorn)
                 const tv = totemView(actor);
                 const td = tv ? TOT.giftDice(tv.row, { holds: tv.holds, ofKind: !!fd.totemGift, banned: tv.banned }) : 0;
                 const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus) + td), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
@@ -823,7 +823,7 @@ export function build(ctx) {
         });
     }
 
-    /* ---------------- Pack totem (B7022-B7027, W20 pp. 371-377) ---------------- */
+    /* ---------------- Pack totem (B7082-B7087, W20 pp. 371-377) ---------------- */
 
     async function packTotem(actor) {
         if (!DATA.totems) return ctx.notify("The totem table did not load.");
@@ -931,7 +931,7 @@ export function build(ctx) {
             const i = info(actor);
             const upd = {};
             const parts = [];
-            // B7024: a totem that cuts this Renown's awards (Bear, Coyote, Cuckoo, Fox; W20 pp. 374-377)
+            // B7084: a totem that cuts this Renown's awards (Bear, Coyote, Cuckoo, Fox; W20 pp. 374-377)
             const tv = raw ? null : totemView(actor);
             const cutRow = tv?.accepted ? tv.row : null;
             for (const k of RENOWN) {
@@ -1128,7 +1128,7 @@ export function build(ctx) {
      */
     async function newStory(a) {
         if (!a || !isShifter(a)) return "";
-        // B7025: the totem's pool of Willpower is full again each story (W20 p. 372), whatever the Rage setting
+        // B7085: the totem's pool of Willpower is full again each story (W20 p. 372), whatever the Rage setting
         const tv = totemView(a);
         if (tv?.accepted && n(tv.state.spent) && a.isOwner) await a.setFlag(MOD, "totem", { ...tv.state, spent: 0 });
         if (!setting("moonRage")) return "";

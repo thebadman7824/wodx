@@ -826,7 +826,7 @@ export async function action({ actor: a, preset = "" } = {}) {
             if (p.diff) f.diff.value = p.diff;
             f.mode.value = p.mode || "simple";
             if (p.target) f.goal.value = p.target;
-            // B7020: a Path's bearing goes by what the Path names, not by the Humanity presets
+            // B7080: a Path's bearing goes by what the Path names, not by the Humanity presets
             f.aura.checked = !!p.aura && !pathBearingFor(actor, rd);
             root.querySelector(".vta-preset-note").textContent = p.note || "";
             sync();
@@ -1007,7 +1007,7 @@ function opponentPool(target, spec, fd, actor = null) {
     return { dice: attr(target, spec.attr) + (ab?.value ?? 0), diff: spec.diff, label: `${cap(spec.attr)} + ${ab?.name ?? cap(spec.ability)}`, specialty: false };
 }
 
-/** The roll window's bearing box: the Road aura, or a V20 Path's bearing and what it covers (B7020). */
+/** The roll window's bearing box: the Road aura, or a V20 Path's bearing and what it covers (B7080). */
 function bearingBox(rd) {
     const b = KX.DATA.paths && rd?.found ? KR.pathBearing(KX.DATA.paths, rd.found, rd.value) : null;
     const sign = v => `${v >= 0 ? "+" : ""}${v}`;
@@ -1015,7 +1015,7 @@ function bearingBox(rd) {
     return `<div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${esc(rd.name)} ${rd.value}: ${sign(R.auraModifier(rd.value))})</label></div>`;
 }
 
-/** B7020: the bearing of the V20 Path the roller walks, for one roll of the general window (null: no Path). */
+/** B7080: the bearing of the V20 Path the roller walks, for one roll of the general window (null: no Path). */
 function pathBearingFor(actor, rd, fd = {}, pool = {}) {
     if (!KX.DATA.paths || !rd?.found) return null;
     const tags = [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...(fd.attr === "special:willpower" ? ["willpower"] : [])];
@@ -1052,11 +1052,11 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
         if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
     } catch (e) { console.warn("WoDX Actions | conditions", e); }
-    // B7020: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
+    // B7080: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
     // Humanity and the Roads keep the plain aura box
     const pb = pathBearingFor(actor, rd, fd, pool);
     if (pb?.applies && pb.step) tm = { ...tm, diff: (tm.diff ?? 0) + pb.step, parts: [...(tm.parts ?? []), pb.part] };
-    // B7023: the pack totem's gifts to a packmate (W20 pp. 372-377): Attribute dots as dice, roll effects, a held Pack Trait
+    // B7083: the pack totem's gifts to a packmate (W20 pp. 372-377): Attribute dots as dice, roll effects, a held Pack Trait
     try {
         const tt = GX.totemMods(actor, fd, pool, TH.tagsFor(fd.attr, pool.abilityKey, fd.preset));
         if (tt && (tt.dice || tt.diff)) tm = { ...tm, dice: (tm.dice ?? 0) + tt.dice, diff: (tm.diff ?? 0) + tt.diff, parts: [...(tm.parts ?? []), ...tt.parts] };
@@ -2889,7 +2889,7 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
       <div class="form-group"><label><input type="checkbox" name="aura" checked/> Apply Road aura</label></div>
     </form>`;
     return dialog("Seduction", content, "Seduce", async fd => {
-        // B7020: a Path walker's bearing counts here only when the Path's bearing is seduction (the Cathari, V20 p. 323)
+        // B7080: a Path walker's bearing counts here only when the Path's bearing is seduction (the Cathari, V20 p. 323)
         const rdS = road(actor);
         const pbS = KX.DATA.paths && rdS.found ? KR.pathBearing(KX.DATA.paths, rdS.found, rdS.value, { tags: ["seduce", "social"] }) : null;
         const aura = pbS ? (fd.aura && pbS.auto ? pbS.step : 0) : fd.aura ? R.auraModifier(rdS.value) : 0;

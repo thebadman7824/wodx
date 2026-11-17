@@ -1,5 +1,5 @@
 /**
- * Gate for B7022-B7027: the W20 pack totem window (W20 pp. 371-377). Two Garou of one pack follow Falcon:
+ * Gate for B7082-B7087: the W20 pack totem window (W20 pp. 371-377). Two Garou of one pack follow Falcon:
  *   1. the totem accepts the pack: +2 temporary Honor, once
  *   2. one packmate takes Leadership 3 for the scene; the roll window's odds line shows it on a Leadership roll
  *   3. the other packmate cannot take it the same scene
