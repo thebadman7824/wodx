@@ -31,8 +31,12 @@ const set = (root, name, value) => {
   if ( el.type === "checkbox" ) el.checked = !!value; else el.value = String(value);
   el.dispatchEvent(new Event("change", {bubbles: true}));
 };
-const cardFor = (actor, t0, ms = 8000) => waitFor(() => game.messages.contents.find(m => m.timestamp >= t0 && m.speaker?.actor === actor.id), ms)
-  .then(() => game.messages.contents.filter(m => m.timestamp >= t0 && m.speaker?.actor === actor.id).pop() ?? null);
+// The card that says `re`, among the actor's cards since t0: taking the gate's damage can also post a frenzy check
+// (wodx-actions frenzyHooks), so the last card is not always the Spend Blood one
+const cardFor = (actor, t0, re, ms = 8000) => {
+  const find = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.speaker?.actor === actor.id && re.test(text(m))).pop() ?? null;
+  return waitFor(find, ms).then(find, find);
+};
 const flaw = (name, value) => ({name, type: "Feature", system: {type: "wod.types.flaw", value}});
 const merit = (name, value) => ({name, type: "Feature", system: {type: "wod.types.merit", value}});
 
@@ -66,7 +70,7 @@ export async function run() {
       queue.length = 0;
       queue.push(root => { set(root, "healL", 2); set(root, "healB", 0); set(root, "healA", 0); });
       A.spendBlood({actor: slow});
-      const m = await cardFor(slow, t0);
+      const m = await cardFor(slow, t0, /Heals/);
       await waitFor(() => blood(slow) !== b0, 4000);
       G.ok("1. Slow Healing: two blood a level", blood(slow) === b0 - 4 && n(dmg(slow).lethal) === 2 && /Slow Healing/.test(text(m)),
         {blood: [b0, blood(slow)], lethal: dmg(slow).lethal, card: text(m).slice(0, 300)});
@@ -78,7 +82,7 @@ export async function run() {
       queue.length = 0;
       queue.push(root => { set(root, "healL", 0); set(root, "healB", 0); set(root, "healA", 1); });
       A.spendBlood({actor: slow});
-      const m = await cardFor(slow, t0);
+      const m = await cardFor(slow, t0, /Aggravated:/);
       await waitFor(() => !!slow.getFlag(AX, "aggDue"), 4000);
       const due = n(slow.getFlag(AX, "aggDue"));
       G.ok("2. Slow Healing: aggravated waits five days", due >= now + 5 * 86400 - 5 && /every five days/.test(text(m)) && n(slow.getFlag(AX, "aggHealing")) === 1,
