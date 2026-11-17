@@ -415,7 +415,7 @@ export const PUT_FLAGS_BACK = async plan => {
  * In job 1914 gateadaptive found its tension already "frenzy" before it started, and gatearms found a clip empty.
  * before/after: READ_SHEETS results. Returns, for each document there both times, what to put back:
  * {uuid, system (the old system data, when it changed), dropEffects (ids added since), addEffects (sources removed
- * since), dropItems (embedded items added since)}.
+ * since), dropItems (embedded items added since), dropKids ({type: ids} placed on a scene since, B7193)}.
  */
 export function sheetPlan(before, after) {
   const out = [], same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -431,12 +431,20 @@ export function sheetPlan(before, after) {
     if ( add.length || changed.length ) row.addEffects = [...add, ...changed];
     const items = (now.items ?? []).filter(id => !(was.items ?? []).includes(id));
     if ( items.length ) row.dropItems = items;
+    // B7193: things a gate placed on a scene that was there before it (a chapel region, a token, a wall)
+    const kids = {};
+    for ( const [type, ids] of Object.entries(now.kids ?? {}) ) {
+      const fresh = ids.filter(id => !(was.kids?.[type] ?? []).includes(id));
+      if ( fresh.length ) kids[type] = fresh;
+    }
+    if ( Object.keys(kids).length ) row.dropKids = kids;
     if ( Object.keys(row).length > 1 ) out.push(row);
   }
   return out;
 }
 
-/** Runs in the page: each actor's and item's system data, each actor's effects (whole) and embedded item ids, by uuid. */
+/** Runs in the page: each actor's and item's system data, each actor's effects (whole) and embedded item ids, and each
+ * scene's placed documents by type (B7193), by uuid. */
 export const READ_SHEETS = () => {
   const out = {}, src = d => foundry.utils.deepClone(d._source ?? {});
   for ( const a of game.actors ?? [] ) {
@@ -445,17 +453,28 @@ export const READ_SHEETS = () => {
     for ( const i of a.items ?? [] ) out[i.uuid] = {system: src(i).system ?? {}};
   }
   for ( const i of game.items ?? [] ) out[i.uuid] = {system: src(i).system ?? {}};
+  for ( const sc of game.scenes ?? [] ) {
+    const kids = {};
+    for ( const [type, coll] of [["Token", "tokens"], ["Region", "regions"], ["Wall", "walls"], ["Tile", "tiles"], ["Drawing", "drawings"],
+      ["AmbientLight", "lights"], ["AmbientSound", "sounds"], ["Note", "notes"]] ) kids[type] = [...(sc[coll] ?? [])].map(d => d.id);
+    out[sc.uuid] = {kids};
+  }
   return out;
 };
 
 /** Runs in the page: puts sheets back by a sheetPlan. System data is replaced whole, so no merged leftovers stay. */
 export const PUT_SHEETS_BACK = async plan => {
   let n = 0;
-  for ( const {uuid, system, dropEffects, addEffects, dropItems} of plan ) {
+  for ( const {uuid, system, dropEffects, addEffects, dropItems, dropKids} of plan ) {
     const d = fromUuidSync(uuid);
     if ( !d ) continue;
     try {
       if ( dropItems?.length ) await d.deleteEmbeddedDocuments("Item", dropItems.filter(id => d.items?.has(id)));
+      for ( const [type, ids] of Object.entries(dropKids ?? {}) ) {
+        const coll = d.getEmbeddedCollection?.(type);
+        const here = ids.filter(id => coll?.has(id));
+        if ( here.length ) await d.deleteEmbeddedDocuments(type, here);
+      }
       if ( dropEffects?.length ) await d.deleteEmbeddedDocuments("ActiveEffect", dropEffects.filter(id => d.effects?.has(id)));
       if ( addEffects?.length ) await d.createEmbeddedDocuments("ActiveEffect", addEffects, {keepId: true});
       if ( system ) await d.update({system}, {diff: false, recursive: false, wodxGateTidy: true});

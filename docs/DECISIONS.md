@@ -408,7 +408,7 @@ Next free block: B7200
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
-| B7190-B7199 | Gate trust: the runner puts back the sheet data a gate changed on shared actors (used B7190-B7192) | tools (lanes) |
+| B7190-B7199 | Gate trust: the runner removes what a gate placed on a shared scene (used B7190-B7193) | tools (lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14090,3 +14090,8 @@ Reverse: take the madeArena lines out of gate7b1.mjs and the two exports out of 
 Finish-Line Desk w3, after B7181 (flags) and B7190 (reset first). In job 1914, gateadaptive read the tension as "frenzy" before it did anything, and gatearms found a clip already empty. The runner put back settings, flags and new world documents, but not a shared actor's own data. On lanes reset every night, run-gate.mjs now also reads each actor's and item's system data, each actor's effects and its embedded item ids before a gate. After the gate it puts back what changed: system data replaced whole, new effects and items deleted, removed or edited effects restored (tools/lanes/lib.mjs sheetPlan, READ_SHEETS, PUT_SHEETS_BACK). The gate's line says how many documents had sheets put back. Unlinked token data on scenes is not covered yet. Tests: tools/harness/lanes.test.mjs "B7192".
 
 Reverse: drop sheetsBefore and the sheets put-back block in run-gate.mjs.
+
+## B7193. Gates take back what they place on shared scenes (2026-11-17)
+Finish-Line Desk w3, after B7192. Cleaning up leftover documents covered world documents only. A region, token, wall, tile, drawing, light, sound or note that a gate placed on a scene already there before it stayed for every later gate. In PR 1836's job 1922, gateduties put a cult's worship night at a chapel region on another scene, not at its own chapel. On lanes reset every night, run-gate.mjs now also records each scene's placed documents before a gate and deletes any added since (tools/lanes/lib.mjs sheetPlan dropKids). Test: tools/harness/lanes.test.mjs "B7193".
+
+Reverse: drop the kids part of READ_SHEETS and sheetPlan.
