@@ -1,0 +1,4 @@
+{"file":"docs/ROUTING.md","verdict":"working","how":"read the full diff in each; docs wording only; ran merge-rules.test.mjs (12 of 12) and tools/quality-check.sh","hash":"cb9d9618f70b","at":"2026-11-17T11:10Z"}
+{"file":"docs/TOOLS.md","verdict":"working","how":"read the full diff in each; docs wording only; ran merge-rules.test.mjs (12 of 12) and tools/quality-check.sh","hash":"c88e9693f523","at":"2026-11-17T11:10Z"}
+{"file":"docs/WORKFLOW.md","verdict":"working","how":"read the full diff in each; docs wording only; ran merge-rules.test.mjs (12 of 12) and tools/quality-check.sh","hash":"9858eee39c46","at":"2026-11-17T11:10Z"}
+{"file":"tools/harness/merge-rules.test.mjs","verdict":"working","how":"read the full diff in each; docs wording only; ran merge-rules.test.mjs (12 of 12) and tools/quality-check.sh","hash":"f61b17eacf42","at":"2026-11-17T11:10Z"}

@@ -407,7 +407,7 @@ Next free block: B7200
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
-| B7190-B7199 | Gate trust: every gates job starts on a freshly reset lane (used B7190) | tools (pcq runner) |
+| B7190-B7199 | Gate trust: the runner puts back the sheet data a gate changed on shared actors (used B7190-B7192) | tools (lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14059,3 +14059,13 @@ Reverse: drop flagsBefore and the put-back block in run-gate.mjs.
 Finish-Line Desk w3. PR 1848's job 1910 ran 268 gates on lane 8 and failed 15. Every one passed on the recheck. gate-maps failed as the second gate of the run, so this was not order inside the run. The lane started from whatever the last job left, because the runner reset a lane before a gates job only when the job said "reset": true, and CI's pr-gates never did. The recheck always reset first, so "passes alone" mixed up a dirty lane with gate order. Gates jobs now reset each lane before they run, like gate-two jobs do (jobs.mjs resetsFirst). "reset": false, or submit.mjs --no-reset, skips the reset for a quick hand-picked run. Order effects that remain after this are real leaks between gates. Test: tools/harness/pcq.test.mjs "B7190".
 
 Reverse: in runner.mjs, use `job.reset || job.kind === "gate-two"` again.
+
+## B7191. Gate 7b1 builds its own arena (2026-11-17)
+Finish-Line Desk w3. In job 1914, with every lane reset first (B7190), gate7b passed and gate7b1 right after it failed every step ("tokens: []", then `sc` undefined). Since B6050, gate 7b deletes its arena when it ends, so 7b1, which only read 7b's arena, found nothing. It passed alone only because an old arena is still in the lane's known-good snapshot. gate7b.mjs now exports `cast` and `arena`. When no arena is there, gate 7b1 builds one the same way and deletes it, with its fights, at the end. Test: tools/harness/gate7b1-arena.test.mjs, which fails on the old gate.
+
+Reverse: take the madeArena lines out of gate7b1.mjs and the two exports out of gate7b.mjs.
+
+## B7192. Gates put back the sheets they change (2026-11-17)
+Finish-Line Desk w3, after B7181 (flags) and B7190 (reset first). In job 1914, gateadaptive read the tension as "frenzy" before it did anything, and gatearms found a clip already empty. The runner put back settings, flags and new world documents, but not a shared actor's own data. On lanes reset every night, run-gate.mjs now also reads each actor's and item's system data, each actor's effects and its embedded item ids before a gate. After the gate it puts back what changed: system data replaced whole, new effects and items deleted, removed or edited effects restored (tools/lanes/lib.mjs sheetPlan, READ_SHEETS, PUT_SHEETS_BACK). The gate's line says how many documents had sheets put back. Unlinked token data on scenes is not covered yet. Tests: tools/harness/lanes.test.mjs "B7192".
+
+Reverse: drop sheetsBefore and the sheets put-back block in run-gate.mjs.
