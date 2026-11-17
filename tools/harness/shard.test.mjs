@@ -30,5 +30,5 @@ test("the check runs the harness through shard.mjs with a set shard count", () =
   assert.ok(total >= 2 && total <= 8, "SHARDS between 2 and 8");
   assert.match(yml, /node shard\.mjs "\$SHARD" "\$SHARDS"/);
   assert.match(yml, /--test-concurrency=1/);
-  assert.match(yml, /needs: \[changes, quality, harness\]/);
+  assert.match(yml, /needs: \[changes, quality, merge-rules, harness\]/, "the one result waits for the merge rules too (B7000)");
 });

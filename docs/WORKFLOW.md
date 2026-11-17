@@ -3,6 +3,13 @@
 The rules threads follow so that work flows to main without clashes or waits (Ben's speed-up list, 13 November 2026,
 decisions B3080 to B3085).
 
+## 0. Before anything: read TOOLS.md and ROUTING.md
+
+Every thread reads [TOOLS.md](TOOLS.md) (what each machine has, how to reach it) and [ROUTING.md](ROUTING.md) (where each
+kind of work goes) before it starts (B7004). Mechanical edits go to the local-agent queue, gates to the PC runner,
+OCR and conversions to the Secondary PC, art to ComfyUI. A thread that does such work by hand says why
+(`routed-by-hand: <reason>`); the merge rules warn when it does not.
+
 ## 1. Starting a thread: claim a decision block
 
     node tools/decisions/claim.mjs --thread <thread id> --feature "what the work is"
@@ -109,6 +116,33 @@ there yet (no OCR, or not copied) goes to the PC job queue as a `books-find` job
 and Trove file name searches as `trove-find`.
 
 ## 6. Merging
+
+A pull request merges only when it meets the merge rules (B7000-B7009). CI's "merge rules" job checks them on every
+pull request, including handoff/ HOLD pull requests and local-agent drafts, and its result is part of the one required
+"checks" result. Work whose every commit is the owner's own (no Claude or agent trailer) is reported, never blocked.
+
+1. **Release note.** Every module with a changed file has a note in `changes/<module>/`, in the form of
+   changes/README.md, with `effect:` and `visible:` when it is minor or major. A missing `effect:` now blocks, as a
+   missing `visible:` already did.
+2. **Gate result.** When the change needs gates, queue the touched list on the branch once the code is final:
+
+       node tools/pcq/submit.mjs gates --touched --ref claude/<branch> --lanes 2 --thread <thread id>
+
+   The PC runner sets the `wodx/gates` status on the commit it ran, and starts the pull request's failed checks
+   again so they pick it up. The result holds while the module, system and gate files stay as they were (a stamp
+   only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count, and a
+   gate that the recheck finds failing on main too does not hold the pull request back.
+3. **File review.** Every changed file has a verdict made on it as it is now:
+
+       node tools/release/review.mjs todo
+       node tools/release/review.mjs add <file> [<file> ...] --how "read in full; ran merge-rules.test.mjs"
+
+   It writes `docs/reviews/<branch>.jsonl`; commit it with the change. Only `working` (or `dead` for a deleted file)
+   merges, `how` says what was done to check the file, and a file changed after its review needs a new one. A glob
+   (`--glob "modules/wodx-x/assets/**"`) may cover images and other data, never a script.
+
+`node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
+GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it. Then:
 
     git fetch origin main && git merge origin/main
     node tools/release/merge-stamp.mjs --commit
