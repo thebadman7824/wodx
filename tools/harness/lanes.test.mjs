@@ -323,3 +323,10 @@ test("B7192: run-gate reads sheets before each gate and puts them back before th
   assert.match(src, /const sheetsBefore = lane\.autoReset \? await page\.evaluate\(READ_SHEETS\)/);
   assert.ok(src.indexOf("PUT_SHEETS_BACK, sheetPlan") < src.indexOf("PUT_FLAGS_BACK, flagPlan"), "sheets go back before flags");
 });
+
+test("B7193: sheetPlan removes what a gate placed on a scene that was there before it", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const before = {"Scene.s": {kids: {Region: ["r1"], Token: ["t1"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}};
+  const after = {"Scene.s": {kids: {Region: ["r1", "chapel"], Token: ["t1", "t2"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}, "Scene.new": {kids: {Region: ["x"]}}};
+  assert.deepEqual(sheetPlan(before, after), [{uuid: "Scene.s", dropKids: {Region: ["chapel"], Token: ["t2"]}}]);
+});
