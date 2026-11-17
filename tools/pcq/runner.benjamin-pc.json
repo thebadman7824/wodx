@@ -5,6 +5,7 @@
   "alertPrefix": "Secondary PC alert",
   "home": "D:/WoDX/pcq",
   "lanes": [8],
+  "priority": "BelowNormal",
   "light": 0,
   "sweep": false,
   "minFreeGB": {"C": 15, "D": 50},
