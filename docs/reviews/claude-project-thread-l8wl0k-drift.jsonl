@@ -1,0 +1,2 @@
+{"file":"tools/lanes/lanes.json","verdict":"working","how":"read in full; ran tools/harness/lanes.test.mjs (27 pass), checked against 75 drift blocks from the PC lane logs of 16-17 Nov","hash":"219816faae6c","at":"2026-11-17T13:21Z"}
+{"file":"tools/harness/lanes.test.mjs","verdict":"working","how":"read in full; ran tools/harness/lanes.test.mjs (27 pass), checked against 75 drift blocks from the PC lane logs of 16-17 Nov","hash":"5ec67341be9b","at":"2026-11-17T13:21Z"}

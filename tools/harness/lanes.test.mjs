@@ -85,7 +85,9 @@ test("compendium LevelDB files are left out; other pack files still count", () =
 
 test("lanes.json ignores the settings that change on their own", () => {
   const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
-  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
+  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady",
+    // B7200: the effects modules' migration markers, the cause of every exit-4 lane reset on 16 and 17 November
+    "fxmaster.parameterRangeMigrationVersion", "fxmaster.parameterRangePassiveMigrationVersion", "fxmaster.directionConventionPassiveMigrationVersion", "tokenmagic.migration"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
 });
 
 test("the hash cache gives the same answer and sees edits", () => {
@@ -329,4 +331,24 @@ test("B7193: sheetPlan removes what a gate placed on a scene that was there befo
   const before = {"Scene.s": {kids: {Region: ["r1"], Token: ["t1"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}};
   const after = {"Scene.s": {kids: {Region: ["r1", "chapel"], Token: ["t1", "t2"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}, "Scene.new": {kids: {Region: ["x"]}}};
   assert.deepEqual(sheetPlan(before, after), [{uuid: "Scene.s", dropKids: {Region: ["chapel"], Token: ["t2"]}}]);
+});
+
+test("B7200: a migration marker written after the clean fingerprint is not drift", () => {
+  const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
+  const raw = settings => ({world: "w", core: "14.369", system: {id: "worldofdarkness", version: "1"}, modules: {fxmaster: "6"}, settings, docs: {}, worldTime: 0});
+  const clean = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "1"}), cfg.ignoreSettings);
+  const now = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "1", "fxmaster.parameterRangeMigrationVersion": "\"6.0\"", "tokenmagic.migration": "2"}), cfg.ignoreSettings);
+  assert.deepEqual(L.diffWorld(clean, now).strict, []);
+  const real = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "2"}), cfg.ignoreSettings);
+  assert.deepEqual(L.diffWorld(clean, real).strict.map(d => d.where), ["setting wodx-chronicle.automationLevel"], "a real setting change still stops the run");
+});
+
+test("B7204: stop takes over the lane's own Foundry by its port only when its command line is this lane's", () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/lanes.mjs"), "utf8");
+  const fn = src.slice(src.indexOf("function lanePidByPort"), src.indexOf("async function stop"));
+  assert.match(fn, /Get-NetTCPConnection -LocalPort \$\{Number\(lane\.port\)\} -State Listen/);
+  assert.match(fn, /pid > 0 && pidIsLane\(pid, lane\) \? pid : 0/, "a process that is not the lane's Foundry is never taken");
+  const stop = src.slice(src.indexOf("async function stop"), src.indexOf("async function accept"));
+  assert.ok(stop.indexOf("lanePidByPort(lane)") < stop.indexOf("process.kill(pid)"), "the takeover comes before any kill");
+  assert.ok(stop.includes("if ( !pidIsLane(pid, lane) ) throw"), "the stale-id guard still stands");
 });

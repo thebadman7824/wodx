@@ -74,9 +74,29 @@ function pidIsLane(pid, lane) {
   const data = String(lane.dataPath).toLowerCase().replace(/\\/g, "/").replace(/\/+$/, "");
   return /node(\.exe)?/.test(cmd) && cmd.includes(data) && cmd.includes(`--port=${lane.port}`);
 }
+/**
+ * B7204: the lane's own Foundry found by its port, for when server.pid is missing or stale (a runner restart on 17
+ * November left lanes 3 and 5 up with no usable server.pid, and every deploy there failed in 0 minutes). Only a node
+ * process listening on the lane's port whose command line names this lane's data folder and port is taken; anything
+ * else stays "not by a server this tool started". Returns the pid or 0.
+ */
+function lanePidByPort(lane) {
+  if ( process.platform !== "win32" ) return 0;
+  const r = spawnSync("powershell.exe", ["-NoProfile", "-Command",
+    `(Get-NetTCPConnection -LocalPort ${Number(lane.port)} -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1).OwningProcess`], {encoding: "utf8", windowsHide: true});
+  const pid = Number(String(r.stdout ?? "").trim());
+  return Number.isInteger(pid) && pid > 0 && pidIsLane(pid, lane) ? pid : 0;
+}
 async function stop(lane) {
-  const pid = Number(readJson(path.join(laneDir(lane), "server.pid")) ?? 0);
+  let pid = Number(readJson(path.join(laneDir(lane), "server.pid")) ?? 0);
   if ( !(await isUp(lane)) ) return false;
+  if ( !pid || !pidAlive(pid) || !pidIsLane(pid, lane) ) {
+    const found = lanePidByPort(lane);
+    if ( found ) {
+      console.log(`Lane ${lane.id}: server.pid ${pid ? `(${pid}) is stale` : "is missing"}; the lane's own Foundry is process ${found} on port ${lane.port}, taking it over.`);
+      pid = found; fs.writeFileSync(path.join(laneDir(lane), "server.pid"), String(pid));
+    }
+  }
   if ( !pid || !pidAlive(pid) ) throw new Error(`Lane ${lane.id} is up, but not by a server this tool started. Stop it by hand first.`);
   // server.pid can be stale and Windows reuses process ids: kill only a node process whose command line names this
   // lane's data folder (twice today a stale id took down the PC runner instead of the lane)

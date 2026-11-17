@@ -1,5 +1,5 @@
 {
-  "_about": "PC runner settings (B4100-B4109). lanes: the testbed lanes the runner drives, never 1, and not 6 (kept for the local agents since 2026-11-16, B6527). light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment.",
+  "_about": "PC runner settings (B4100-B4109). train: this runner drives the merge train (B7202; only the Main PC's); trainMinutes, trainMaxHours and sweepUpdates are optional. lanes: the testbed lanes the runner drives, never 1, and not 6 (kept for the local agents since 2026-11-16, B6527). light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment.",
   "home": "D:/WoDX/pcq",
   "lanes": [2, 3, 4, 5],
   "light": 2,
@@ -10,5 +10,6 @@
   "trove": "F:/TheTrove",
   "_sprites": "B6144: Foundry user data folders whose worlds may ask for sprites from inside the game (never the Live world), and the Python with numpy and Pillow that runs tools/sprites/batch.py.",
   "spriteData": ["%LOCALAPPDATA%/FoundryVTT", "D:/WoDX/FoundryData-lane2", "D:/WoDX/FoundryData-lane3", "D:/WoDX/FoundryData-lane4", "D:/WoDX/FoundryData-lane5", "D:/WoDX/FoundryData-lane6"],
-  "python": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/.venv/Scripts/python.exe"
+  "python": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/.venv/Scripts/python.exe",
+  "train": true
 }
