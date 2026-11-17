@@ -480,7 +480,7 @@ async function status(queue) {
 }
 
 // ---- self update: exit 75 when main changed the runner or lane tools and nothing is running ----
-const MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
+let MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
 // A busy runner stops taking new jobs once an update is due ("draining") and exits when the last job ends, so an update
 // never waits for a quiet moment that may not come.
 let draining = false, drainSince = 0, deferUntilIdle = false;
@@ -493,6 +493,14 @@ async function updateDue() {
   if ( deferUntilIdle ) return !active.size;
   const d = await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq", "tools/lanes", "tools/harness/gate-two.mjs"]);
   if ( d.status !== 1 ) return false;
+  // B7194: when only the lane tools changed, the runner's own code is the same, and each job spawns run-gate and
+  // lanes.mjs afresh, so the checkout moves to main in place and the next job uses the new tools. A busy runner used
+  // to wait for an idle moment that never came: on 17 Nov the Main PC ran ad006f90 for four hours after main moved on.
+  if ( (await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq"])).status === 0 ) {
+    const co = await git(["checkout", "-q", "-f", "--detach", "origin/main"]);
+    const now = (await git(["rev-parse", "HEAD"])).stdout?.trim();
+    if ( co.status === 0 && now ) { log(`lane tools updated in place: ${short(MY_SHA)} to ${short(now)}`); MY_SHA = now; return false; }
+  }
   if ( !draining ) { log(`main changed the runner; taking no new jobs until the running ones end (at most ${DRAIN_MIN} min)`); drainSince = Date.now(); }
   draining = true;
   return !active.size;

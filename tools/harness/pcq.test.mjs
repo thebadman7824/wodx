@@ -266,3 +266,12 @@ test("B7190: gates jobs start on a reset lane unless they say reset: false", () 
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
 });
+
+test("B7194: a runner whose own code is current moves to main in place when only the lane tools changed", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const due = src.slice(src.indexOf("async function updateDue"), src.indexOf("// ---- two PCs"));
+  assert.match(due, /"diff", "--quiet", MY_SHA, "origin\/main", "--", "tools\/pcq"\]/, "it checks the runner's own code first");
+  assert.match(due, /"checkout", "-q", "-f", "--detach", "origin\/main"\]/, "and moves the checkout in place");
+  assert.match(due, /MY_SHA = now; return false;/, "without exiting");
+  assert.match(src, /^let MY_SHA = /m);
+});
