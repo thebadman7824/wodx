@@ -409,7 +409,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7202) | tools (PC job queue), docs |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7204) | tools (testbed lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14111,3 +14111,8 @@ Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
 PC job queue and merging. Every merge to main left the other open pull requests behind. The hourly sweep (B4110) then merged main into each of them, each push started a full gate run again (150 to 300 gates, 50 to 80 minutes), and by the time one passed main had moved again; on 17 November 8 of 14 open pull requests had conflicts. Ben approved a merge train. A thread whose pull request meets the rules it can meet by itself labels it `merge-train` and stops pushing. The Main PC's runner (tools/pcq/train.mjs, every 3 minutes, "train": true only in runner.json) takes the front of the line, oldest label first. It marks a draft ready, merges main in and runs merge-stamp in its own worktree, and pushes with a lease on the head it saw, so a thread's own push wins. pc-gates.yml then gates the new head, and the runner takes that gate job before the rest of the queue. The runner merges when `checks` and `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out with a comment, and the line moves on. The others are not brought up to date or gated again while they wait. The sweep no longer merges main into open pull requests; it still starts CI where none ran. The train uses a merge, not a rebase, because the repository never rewrites a pushed branch.
 
 Reverse: set "train": false in tools/pcq/runner.json and "sweepUpdates": true to bring back the hourly update; threads go back to merging by hand (docs/WORKFLOW.md, section 6, keeps the old steps).
+
+## B7204. A lane's own Foundry is found by its port when server.pid is stale (2026-11-17)
+Testbed lanes. After the Main PC runner restarted at 13:44Z on 17 November, lanes 3 and 5 were up but their server.pid named no live process, so every deploy there stopped with "Lane N is up, but not by a server this tool started" and job 1943 failed in 0 minutes. lanes.mjs stop now asks Windows which process listens on the lane's port and takes it over (writing server.pid again) only when that process is node and its command line names this lane's data folder and port, the same test that already guards every kill. Any other process on the port still stops the command with the old message, so nothing but the lane's own Foundry is ever ended.
+
+Reverse: remove lanePidByPort and its call in stop() in tools/lanes/lanes.mjs.
