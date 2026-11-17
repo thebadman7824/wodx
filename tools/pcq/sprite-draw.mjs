@@ -17,9 +17,12 @@ const ID = /^[\w-]{4,64}$/;
 const readJson = f => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return null; } };
 
 /** The requests not yet answered, in the data folders given (each a Foundry user data folder holding Data/worlds). Oldest first. */
+/** Foundry's own default user data folder (%LOCALAPPDATA%/FoundryVTT) is lane 1, the owner's own: never read or written. */
+export const isLaneOne = root => /[\\/]FoundryVTT[\\/]?$/i.test(String(root));
 export function pendingRequests(dataFolders = []) {
   const out = [];
   for ( const root of dataFolders ) {
+    if ( isLaneOne(root) ) continue;
     const worlds = path.join(root, "Data", "worlds");
     let names = [];
     try { names = fs.readdirSync(worlds, {withFileTypes: true}).filter(d => d.isDirectory()).map(d => d.name); } catch { continue; }

@@ -8,8 +8,8 @@
   "minFreeRamGB": 3,
   "bookText": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/text",
   "trove": "F:/TheTrove",
-  "_sprites": "B6144: Foundry user data folders whose worlds may ask for sprites from inside the game (never the Live world), and the Python with numpy and Pillow that runs tools/sprites/batch.py.",
-  "spriteData": ["%LOCALAPPDATA%/FoundryVTT", "D:/WoDX/FoundryData-lane2", "D:/WoDX/FoundryData-lane3", "D:/WoDX/FoundryData-lane4", "D:/WoDX/FoundryData-lane5", "D:/WoDX/FoundryData-lane6"],
+  "_sprites": "B6144: Foundry user data folders whose worlds may ask for sprites from inside the game (testbed lanes 2 to 6 only: never lane 1, the owner's own data, and never the Live world), and the Python with numpy and Pillow that runs tools/sprites/batch.py.",
+  "spriteData": ["D:/WoDX/FoundryData-lane2", "D:/WoDX/FoundryData-lane3", "D:/WoDX/FoundryData-lane4", "D:/WoDX/FoundryData-lane5", "D:/WoDX/FoundryData-lane6"],
   "python": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/.venv/Scripts/python.exe",
   "train": true
 }

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import {pendingRequests, batchCounts, draw, LIVE} from "../pcq/sprite-draw.mjs";
+import {pendingRequests, batchCounts, draw, LIVE, isLaneOne} from "../pcq/sprite-draw.mjs";
 
 function world(root, name, {req = null, status = null, roster = true} = {}) {
   const dir = path.join(root, "Data", "worlds", name, "wodx-sprites");
@@ -48,4 +48,11 @@ test("draw writes drawing, then done or failed", async () => {
   const [again] = pendingRequests([root]);
   assert.equal(await draw(again, {python: "py", root: "/repo", run: async () => ({code: 1, out: "Traceback: boom"})}), false);
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, "status.json"), "utf8")).state, "failed");
+});
+
+test("lane 1 (Foundry's own default data folder) is never looked at, even when listed", () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "spr-")), root = path.join(base, "FoundryVTT");
+  world(root, "a", {req: {id: "req-1", at: "x"}});
+  assert.ok(isLaneOne(root) && isLaneOne("C:\\Users\\x\\AppData\\Local\\FoundryVTT\\") && !isLaneOne("D:/WoDX/FoundryData-lane2"));
+  assert.deepEqual(pendingRequests([root]), []);
 });

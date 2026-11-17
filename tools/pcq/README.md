@@ -62,7 +62,7 @@ running and, if not, starts it again and writes a line in `logs\runner-console.l
 
 The Storyteller's "Draw sprites now" button (WoDX Paperdoll settings) writes `roster.json` and `request.json` into
 `worlds/<world>/wodx-sprites`. Each loop the runner looks in the data folders listed in `runner.json` `spriteData`
-(never the Live world) for a request with no answer, runs `tools/sprites/batch.py` from its own clone on that roster
+(the testbed lanes 2 to 6 only; never lane 1 or the Live world) for a request with no answer, runs `tools/sprites/batch.py` from its own clone on that roster
 into the same folder at below-normal priority, and writes `status.json` (`drawing`, then `done` or `failed`). One
 world at a time, beside the jobs (none starts while `runner-hold` is set); `python` in `runner.json` is the interpreter with numpy and Pillow. The game reads
 the status and puts the new sprites on the tokens.
