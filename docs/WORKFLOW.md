@@ -142,6 +142,11 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    merges, `how` says what was done to check the file, and a file changed after its review needs a new one. A glob
    (`--glob "modules/wodx-x/assets/**"`) may cover images and other data, never a script.
 
+Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
+`wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force
+pushes are blocked and main cannot be deleted. Nothing lands on main except through a pull request whose checks
+pass, so routines and tools that used to push to main directly must open a pull request instead.
+
 `node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
 GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it. Then:
 
