@@ -402,7 +402,7 @@ Next free block: B7010
 | B6960-B6969 | Gate run 1779 fixes | tools |
 | B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
-| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7003) | tools |
+| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7005) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13919,3 +13919,19 @@ Release tooling. `merge-stamp.mjs --check` prints the merge rules' report and fa
 blocks the merge instead of warning.
 
 Reverse: remove the merge-rules block from the --check branch of merge-stamp.mjs.
+
+## B7004. A tool registry and routing rules every thread reads first (2026-11-17)
+Repository workflow. Threads did not know what each PC had, so they fell back to doing work themselves. docs/TOOLS.md
+lists each machine (Main PC, Secondary PC, Laptop, the cloud container), its tools, what each is good for and how a
+thread reaches it (PC job queue, local-agent queue, PC helper threads). docs/ROUTING.md gives each kind of work a
+default home: mechanical edits to the local-agent queue, gates to the PC runner, OCR and conversions to the PCs, art
+to ComfyUI. docs/WORKFLOW.md section 0 tells every thread to read both before it starts.
+
+Reverse: delete the two files and section 0.
+
+## B7005. A soft merge-rules warning for work done by hand (2026-11-17)
+Repository workflow. The merge rules print a note, never a failure, when a thread's pull request changes files that
+the routes block in docs/ROUTING.md sends to a machine (name lists, images, audio) and no commit came from a local
+agent. `routed-by-hand: <reason>` in a commit message or release note answers it. The owner's own work gets none.
+
+Reverse: drop routeWarnings from merge-rules.mjs.

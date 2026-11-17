@@ -159,3 +159,24 @@ test("a docs-only branch needs a review but no note and no gate; the owner's own
     assert.ok(!r.bensOwn, "a commit by an agent makes the branch not Ben's own");
   } finally { fs.rmSync(s.dir, {recursive: true, force: true}); }
 });
+
+test("B7005: a soft warning when a thread does by hand work that ROUTING.md sends to a machine", () => {
+  const routes = R.readRoutes(fs.readFileSync(path.join(R.ROOT, "docs/ROUTING.md"), "utf8"));
+  assert.ok(routes.length >= 3 && routes.every(r => r.kind && r.home && r.paths?.length), "docs/ROUTING.md has its routes block");
+  assert.deepEqual(R.readRoutes("no block here"), []);
+  const names = [{file: "modules/wodx-creation/data/people-maya.mjs"}], thread = [{author: "Claude", body: "More names"}];
+  assert.match(R.routeWarnings(names, routes, thread).join(), /name lists .*local-agent queue/);
+  assert.deepEqual(R.routeWarnings(names, routes, [...thread, {author: "openhands", body: "x"}]), [], "a local agent did it");
+  assert.deepEqual(R.routeWarnings(names, routes, [{author: "Claude", body: "x\n\nrouted-by-hand: the PC was off"}]), []);
+  assert.deepEqual(R.routeWarnings(names, routes, thread, [{frag: {body: "Names. routed-by-hand: a rules change, not data entry"}}]), []);
+  assert.deepEqual(R.routeWarnings([{file: "modules/wodx-creation/scripts/main.mjs"}], routes, thread), []);
+  assert.match(R.routeWarnings([{file: "modules/wodx-atmosphere/sounds/a/b.ogg"}], routes, thread).join(), /audio files/);
+});
+
+test("B7004: TOOLS.md and ROUTING.md exist and point at each other", () => {
+  const t = fs.readFileSync(path.join(R.ROOT, "docs/TOOLS.md"), "utf8"), r = fs.readFileSync(path.join(R.ROOT, "docs/ROUTING.md"), "utf8");
+  assert.match(t, /\(ROUTING\.md\)/);
+  assert.match(r, /\(TOOLS\.md\)/);
+  for ( const m of ["Main PC", "Secondary PC", "Laptop"] ) assert.ok(t.includes(`## ${m}`), m);
+  assert.match(fs.readFileSync(path.join(R.ROOT, "docs/WORKFLOW.md"), "utf8"), /read TOOLS\.md and ROUTING\.md/);
+});
