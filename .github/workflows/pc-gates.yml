@@ -1,0 +1,52 @@
+name: PC gates
+
+# Queues a pull request's testbed gates on the PC job queue (B7010), so threads no longer queue and watch them by hand.
+# It runs on the self-hosted runner on the Secondary PC (labels self-hosted, wodx-gate) because the PC runner only
+# takes jobs opened by the owner's account, and only the PC holds that sign-in. tools/pcq/pr-gates.mjs decides whether
+# anything needs queuing; the result comes back from the PC runner as the "wodx/gates" commit status (B7000), which
+# tools/release/merge-rules.mjs reads. This workflow never posts that status itself.
+#
+# Lock-down (the repository is public): only pull requests opened by the owner from a claude/ branch of this
+# repository, never from a fork. The runner checks the same again before every job with its own job-started hook
+# (D:\WoDX\gh-runner\job-started.ps1, outside the repository so a branch cannot change it) and refuses anything else.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to queue gates for
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: pc-gates-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  queue:
+    if: >-
+      github.repository == 'thebadman7824/wodx' && (github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.user.login == 'thebadman7824' &&
+       startsWith(github.event.pull_request.head.ref, 'claude/') &&
+       (github.event.action != 'edited' || github.event.changes.title != null)))
+    runs-on: [self-hosted, wodx-gate]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', inputs.pr) }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fetch main
+        run: git fetch --no-tags origin main:refs/remotes/origin/main
+      - name: Queue gates
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/pcq/pr-gates.mjs
