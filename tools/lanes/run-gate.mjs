@@ -38,7 +38,7 @@
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
-  flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK} from "./lib.mjs";
+  flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
 import {openGM, waitApis} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
@@ -197,7 +197,7 @@ try {
       const sheetsBefore = lane.autoReset ? await page.evaluate(READ_SHEETS).catch(() => null) : null;
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
-      const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
+      const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs, callerSrc}) => {
         const t0 = game.time.worldTime, paused = game.paused, startedAt = Date.now();
         const activeId = game.scenes.active?.id ?? null, viewedId = canvas?.scene?.id ?? null;
         const skip = k => ignore.some(p => p.endsWith("*") ? k.startsWith(p.slice(0, -1)) : k === p);
@@ -223,6 +223,42 @@ try {
             try { Promise.resolve(w.close?.()).catch(() => {}); } catch {}
           }
         }, 5000);
+        // B7230: what a gate leaves running in the page itself is put back after it too. Hooks and intervals the gate's
+        // own code registers (its file is the caller) are removed, functions it swapped (the dice, notices, chat) are
+        // restored, and a property it laid over game.user (isGM) is taken off. A module's own hooks are left alone.
+        const H = globalThis.Hooks, onWas = H.on, onceWas = H.once, ivWas = window.setInterval;
+        // the test for "the gate's own code called this" is lib.mjs gateCaller, handed in as source (harness-tested)
+        let isGate;
+        try { isGate = new Function(`return (${callerSrc});`)(); } catch (e) { isGate = st => /\/wodx-gate\//.test(String(st).split("\n").slice(3, 4).join("")); }
+        const byGate = () => isGate(new Error().stack);
+        const gateHooks = new Map(), gateIntervals = [];
+        H.on = function wodxGateOn(hook, fn, opts) { const id = onWas.call(this, hook, fn, opts); if ( byGate() ) gateHooks.set(`${hook}|${id}`, [hook, id]); return id; };
+        H.once = function wodxGateOnce(hook, fn) { const id = onceWas.call(this, hook, fn); if ( byGate() ) gateHooks.set(`${hook}|${id}`, [hook, id]); return id; };
+        window.setInterval = function wodxGateInterval(...a) { const id = ivWas.apply(this, a); if ( byGate() ) gateIntervals.push(id); return id; };
+        const refs = [[CONFIG?.Dice, "randomUniform"], [ui?.notifications, "info"], [ui?.notifications, "warn"], [ui?.notifications, "error"],
+          [ui?.notifications, "notify"], [canvas?.interface, "createScrollingText"], [globalThis.ChatMessage, "create"], [game.time, "advance"]]
+          .filter(([o]) => o).map(([o, k]) => ({o, k, own: Object.prototype.hasOwnProperty.call(o, k), v: o[k]}));
+        const userOwn = new Set(Object.getOwnPropertyNames(game.user));
+        const pageBack = () => {
+          H.on = onWas; H.once = onceWas; window.setInterval = ivWas;
+          const out = {hooks: [], intervals: 0, refs: [], user: []};
+          for ( const [hook, id] of gateHooks.values() ) {
+            const live = H.events?.[hook];
+            if ( Array.isArray(live) && !live.some(x => x?.id === id) ) continue;
+            try { H.off(hook, id); out.hooks.push(hook); } catch (e) { /* gone */ }
+          }
+          for ( const id of gateIntervals ) { clearInterval(id); out.intervals++; }
+          for ( const r of refs ) {
+            if ( r.o[r.k] === r.v ) continue;
+            if ( r.own ) r.o[r.k] = r.v; else delete r.o[r.k];
+            out.refs.push(r.k);
+          }
+          for ( const k of Object.getOwnPropertyNames(game.user) ) {
+            if ( userOwn.has(k) || !(k in Object.getPrototypeOf(game.user)) ) continue;
+            try { delete game.user[k]; out.user.push(k); } catch (e) { /* fixed */ }
+          }
+          return out;
+        };
         let timer;
         try {
           // B6952: a busy server can drop the fetch of the gate file itself; one more try after a pause
@@ -244,6 +280,8 @@ try {
         }
         // Writes a gate set off just before it ended (an approval queued by a hook) land first, then are put back.
         await new Promise(r => setTimeout(r, 1500));
+        let page0 = {hooks: [], intervals: 0, refs: [], user: []};
+        try { page0 = pageBack(); } catch (e) { error ??= `putting the page back: ${e?.message ?? e}`; }
         const moved = game.time.worldTime - t0;
         if ( moved ) await game.time.advance(-moved);
         let settingsBack = 0, docsGone = 0;
@@ -271,8 +309,8 @@ try {
         } catch (e) { error ??= `putting the scene back: ${e?.message ?? e}`; }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
         const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
-        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut};
-      }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000});
+        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut, page: page0};
+      }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000, callerSrc: gateCaller.toString()});
       let out;
       sinceSignIn++;
       try { out = await within(run, limit + 3 * 60000, gate); }
@@ -294,7 +332,8 @@ try {
       const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : "",
         out.flagsBack ? `flags put back on ${out.flagsBack} document(s)` : "",
         out.sheetsBack ? `sheets put back on ${out.sheetsBack} document(s)` : "",
-        out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
+        out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : "",
+        pageNote(out.page)].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;
       const signInNote = lateApis.length > 0;
