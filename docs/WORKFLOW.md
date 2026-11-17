@@ -224,6 +224,10 @@ Done means verified. The format is in [registry/features/README.md](../registry/
 - **Art by id.** Code that shows a portrait, sprite or object loads it by its id from the art tables
   (registry/art-assets/ in the shared folder, kept by the art thread), never by a file path, so the locked style
   swaps in without code changes. Rows list the ids they use in `art`.
+- **Dates by canon.** A date more than one module uses (a founding, a war, a plague) lives once in
+  modules/wodx-chronicle/data/canon/index.mjs with its book pages, and code reads `canon("<id>")`. tools/harness/
+  canon.test.mjs fails on a typed year that disagrees with the canon, and its list of agreeing copies only shrinks
+  (B7170).
 - **Verified by someone else.** The Monday review re-checks a sample of 20 rows that reached gated that week and sets
   verified, or drops a row back. A builder never marks its own row verified.
 
