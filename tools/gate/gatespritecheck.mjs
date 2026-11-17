@@ -74,7 +74,7 @@ export async function run() {
         return {seen: seen.map(x => [...x]), walked, pic, after: toks.map(facingShown)};
       };
       // a short move by a plain update (as a macro or a routine step does it)
-      const one = await watchWalk(() => want.forEach((w, i) => toks[i].update({x: toks[i].x + ways[w][0] * g, y: toks[i].y + ways[w][1] * g})), "1-walking");
+      const one = await watchWalk(() => want.forEach((w, i) => toks[i].object.document.update({x: toks[i].x + ways[w][0] * g, y: toks[i].y + ways[w][1] * g})), "1-walking");
       pics.push(one.pic ?? "no picture: never all mid-stride at once");
       pics.push(await shot("1-stopped", null));
       // a longer move back by Foundry's own movement, as a player's drag makes it
@@ -96,14 +96,14 @@ export async function run() {
       await waitFor(() => MA.ready?.(), 15000);
       await sleep(1200);
       const settled = () => waitFor(() => Math.abs((tr.object?.x ?? 0) - tr.x) < 1 && Math.abs((tr.object?.y ?? 0) - tr.y) < 1, 6000);
-      await tr.update({x: tr.x - 2 * g}); await settled(); await sleep(900);
+      await tr.object.document.update({x: tr.x - 2 * g}); await settled(); await sleep(900);
       const left = {horse: MA.facing(horse), rider: MA.showing(tr)?.facing ?? null, horseAt: {x: horse.x, y: horse.y}, riderAt: {x: tr.x, y: tr.y}};
       await tr.update({y: tr.y - 2 * g}); await settled(); await sleep(900);
       const up = {horse: MA.facing(horse), rider: MA.showing(tr)?.facing ?? null};
       pics.push(await shot("2-rider", {x: tr.x + g / 2, y: tr.y + g / 2}, 2));
       G.ok("2. horse and rider face left, then up", left.horse === "left" && left.rider === "left" && up.horse === "up" && up.rider === "up", {left, up, kind: MA.showing(horse)?.kind ?? null});
       // B6146: seated astride, and coming toward the viewer the rider is behind the horse's head
-      await tr.update({x: tr.x + 2 * g}); await settled(); await sleep(900);
+      await tr.object.document.update({x: tr.x + 2 * g}); await settled(); await sleep(900);
       pics.push(await shot("2-rider-side", {x: tr.x + g / 2, y: tr.y + g / 2}, 2));
       const side = {facing: MA.showing(tr)?.facing ?? null, pose: MA.showing(tr)?.pose ?? null, sheet: tr.object?.mesh?.texture?.baseTexture?.resource?.src ?? tr.object?.mesh?.texture?.source?.resource?.src ?? null};
       await tr.update({y: tr.y + 2 * g}); await settled(); await sleep(900);
@@ -173,7 +173,7 @@ export async function run() {
         await canvas.pan({x: tok.x, y: tok.y + g / 2, scale: 0.8}); await sleep(300);
         const pw = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving && f && pturned.at(-1) !== f ) pturned.push(f); }, 40);
         try {
-          await tok.update({x: tok.x - 3 * g}, {animate: true, animation: {duration: 1500}});
+          await tok.object.document.update({x: tok.x - 3 * g}, {animate: true, animation: {duration: 1500}});
           await (tok.object?.movementAnimationPromise ?? sleep(1600)); await sleep(300);
         } finally { clearInterval(pw); }
         await tok.update(back, {animate: false});

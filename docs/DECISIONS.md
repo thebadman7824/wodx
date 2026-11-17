@@ -10575,6 +10575,7 @@ Reverse: set "Tokens wear their character's drawn sprite" off, or remove onToken
 ## B6141. Interactables tells when work is done at a door or a thing (2026-11-15, bug found in a code check)
 WoDX Interactables. B2616 said Interactables would call wodxInteractableWorked; no module ever called it, so picking a lock, forcing a door or listening never played a move. applyAsk and the search now call it on the Storyteller's computer with the token, the option's id, the thing and the result.
 Reverse: remove the two Hooks.callAll("wodxInteractableWorked") lines in interactables main.mjs.
+Merged 17 Nov: main had meanwhile sent the same message from WoDX Interactables (B6784), so this branch leaves that module as main has it; sending it twice made each move play twice and broke the Interactables tests. Searching does not send it.
 
 ## B6142. More kinds of work have a move (2026-11-15)
 WoDX Paperdoll. Striking, knocking over, tearing down or desecrating a thing plays the sprite's blow; examining a thing closely and searching a hiding place play the looking-about move, as listening already did.
