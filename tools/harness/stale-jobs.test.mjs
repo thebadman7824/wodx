@@ -83,3 +83,11 @@ test("B7207: runner-hold blocks only job pickup and lane growth; runner-off stil
   const hold = src.indexOf('const holding = '), off = src.indexOf('"runner-off"))'), sweepAt = src.indexOf("sweep(gh, {apply"), cancel = src.indexOf("await cancelCheck(");
   assert.ok(off < hold && hold < sweepAt && hold < cancel);
 });
+
+test("B7209: a job is only dropped as stale on a pull request read just now, never on the cached head", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const fn = src.slice(src.indexOf("async function staleJob"), src.indexOf("async function drop("));
+  assert.match(fn, /if \( !c \|\| !staleWhy\(mark, c\.pull\) \) return null;/);
+  assert.match(fn, /if \( c\.at < Date\.now\(\) - 5000 \) c = await fetchPull\(\);/);
+  assert.match(fn, /return c \? staleWhy\(mark, c\.pull\) : null;/);
+});
