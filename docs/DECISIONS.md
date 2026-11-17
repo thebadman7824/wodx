@@ -385,7 +385,7 @@ Next free block: B7030
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: no gate jobs before lane setup finishes (used B6880-B6885) | tools (PC job queue) |
+| B6880-B6889 | Second PC runner: two-browser gates use the lane's own address (used B6880-B6886) | tools (PC job queue) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -13560,6 +13560,11 @@ Reverse: restore the plain readdirSync; then create the empty folder on the sour
 PC job queue. The runner treated a lane as healthy once its world folder existed and the server answered. Lane 7 on the second PC answered with Foundry's licence screen, so gate job #1816 was claimed there and could not run a gate. A lane that names a host now counts as not set up until `lanes.mjs accept` has written its clean fingerprint (clean.json), so only a setup-lane job can use it. The main PC's lanes have no host field and are unchanged.
 
 Reverse: drop the clean.json line from healthCheck in tools/pcq/runner.mjs.
+
+## B6886. Two-browser gate jobs use the lane's url (2026-11-17)
+PC job queue. The runner started gate-two.mjs with a fixed https://localhost:<port>. Lane 7 on the second PC serves plain http (B6884), so job #1844 stopped at once with ERR_SSL_PROTOCOL_ERROR. The runner now passes laneUrl(lane), which is the lane's url from lanes.json and falls back to https://localhost:<port> as before.
+
+Reverse: put the fixed https address back at the gate-two call in tools/pcq/runner.mjs.
 
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
