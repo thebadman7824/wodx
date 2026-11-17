@@ -30,7 +30,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
@@ -215,7 +215,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( job.reset || job.kind === "gate-two" ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
+  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
