@@ -11,7 +11,7 @@
  * WoDX turns that picture into a slow clock, like heat for Kindred. Everything below is a house reading:
  * - A place has a corruption level 0 to 10, in bands: clean, tainted (1-3), blighted (4-6), foul (7-9), hellhole (10).
  * - Sources push it up each week: a Bane nest, a cult, a Black Spiral hive, a tainted works, a place of suffering,
- *   and from 1913 a Pentex concern. Banes breed in a blighted place until culled.
+ *   and from 1916 a Pentex concern (W20 pdf 463; antagonist table B6697). Banes breed in a blighted place until culled.
  * - A blighted place with Banes in it can spread a step to the places linked to it. A warded place (a fresh Rite of
  *   Cleansing) or a tended caern holds it off.
  * - The Wyrm grows stronger as the centuries pass, so every chance scales with the year.
@@ -19,6 +19,7 @@
  *   only ever proposed to the Storyteller.
  */
 import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import {PENTEX_FROM} from "../../wodx-chronicle/data/antagonists.mjs";
 export {WEEK};
 
 export const MAX = 10;
@@ -40,7 +41,7 @@ export const SOURCES = {
   hive: {label: "A Black Spiral hive", weight: 3},
   works: {label: "A tainted works (a tannery, a mine, a mill, a plant)", weight: 1},
   suffering: {label: "A place of suffering (a massacre, a plague pit, a prison)", weight: 1, lasts: 53},
-  pentex: {label: "A Pentex concern", weight: 2, from: 1913}
+  pentex: {label: "A Pentex concern", weight: 2, from: PENTEX_FROM}
 };
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

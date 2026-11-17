@@ -12,6 +12,7 @@
  * logged in docs/PENDING-REVIEW.md. Page references wait on a book check (see docs/RIVALRIES.md).
  */
 
+import {PENTEX_FROM} from "../../wodx-chronicle/data/antagonists.mjs";
 export const STEP_WORDS = {"-3": "Hunts", "-2": "Hostile", "-1": "Tense", "0": "No quarrel"};
 export const stepWord = s => STEP_WORDS[String(Math.max(-3, Math.min(0, Math.round(Number(s) || 0))))] ?? "No quarrel";
 
@@ -73,8 +74,8 @@ export const RIVALRIES = [
     note: "The fallen tribe", book: "W20"},
   {id: "garou-fomor", a: "fomor|wyrm", b: "line:lupine", bNot: "tribe:black spiral", from: null, to: null, ab: -3, ba: -3,
     note: "The Wyrm's creatures", book: "W20"},
-  {id: "garou-pentex", a: "pentex", b: "line:lupine", bNot: "tribe:black spiral", from: 1900, to: null, ab: -2, ba: -3,
-    note: "The Wyrm's corporations", book: "W20"},
+  {id: "garou-pentex", a: "pentex", b: "line:lupine", bNot: "tribe:black spiral", from: PENTEX_FROM, to: null, ab: -2, ba: -3,
+    note: "The Wyrm's corporations", book: "W20 pdf 463-464"},
   {id: "shadowlord-silverfang", a: "tribe:shadow lord", b: "tribe:silver fang", from: null, to: null, ab: -1, ba: -1,
     note: "The old quarrel over who should lead the Nation", book: "W20"},
   {id: "fenris-fianna", a: "tribe:get of fenris|fenrir", b: "tribe:fianna", from: null, to: null, ab: -1, ba: -1,
