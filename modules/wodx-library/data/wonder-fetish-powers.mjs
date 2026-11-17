@@ -6,7 +6,7 @@
 const GNOSIS = "system.advantages.gnosis.temporary";
 export const FETISH_POWERS = {
   "harmony-flute": [{id: "play", label: "Play the tune (Dexterity + Performance)", roll: {attr: "dexterity", ability: "performance", diff: 6},
-    text: "Once it is awake: each angry listener rolls Rage or stops fighting (W20 p. 221). Difficulty 6 is a house rule."}],
+    text: "Once it is awake: each angry listener rolls Rage or stops fighting (W20 p. 221). The page names no difficulty, so it is the default 6 (W20 pdf 236); the Attribute is WoDX's pick."}],
   "bane-arrow": [{id: "strike", label: "Loose it at a Bane (three dice, aggravated)", roll: {dice: 3, diff: 6, label: "Aggravated damage"}, consume: true,
     text: "It strikes a Bane without an attack roll, seen or not (W20 p. 228); the talen is used up."}],
   "pipes-of-the-swarm": [{id: "call", label: "Call the swarm (Gnosis at 4)", roll: {path: GNOSIS, diff: 4, label: "Gnosis"},
