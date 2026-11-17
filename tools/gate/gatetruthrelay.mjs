@@ -56,7 +56,8 @@ async function setup() {
   const OWN = {default: 0, [user.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER};
   const scene = await G.scene({name: "WoDX gate: truth relay", ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER}, navigation: false});
   const [fighter, bearer] = await G.make(Actor, [
-    {name: "Gate Relay Fighter", type: "Mortal", ownership: OWN, system: {attributes: {strength: {value: 3}, dexterity: {value: 4}, stamina: {value: 3}}, abilities: {brawl: {value: 3}}}},
+    {name: "Gate Relay Fighter", type: "Mortal", ownership: OWN, system: {attributes: {strength: {value: 3}, dexterity: {value: 4}, stamina: {value: 3, total: 3}}, abilities: {brawl: {value: 3}}}},
+    // B6972: Stamina 3 with its total, which Actor.create does not work out, so a 2-level hit does not Daze it (V20 Dark Ages p. 348)
     // owned by the player too, so WoDX NPC's fight AI leaves its turn alone
     {name: "Gate Relay Bearer", type: "Mortal", ownership: OWN, system: {attributes: {dexterity: {value: 1}, stamina: {value: 1}}}}]);
   // B6377: a listener with heightened senses and no Willpower to hold, and a fomor whose tar skin catches bare hands
