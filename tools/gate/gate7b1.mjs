@@ -1,7 +1,7 @@
 /**
  * Gate 7b.1 (the turn conductor, WoDX Combat 3.7), in Foundry (rothenstein-wodx) as a Gamemaster, after gate 7b:
  *   await (await import(`/wodx-gate/gate7b1.mjs?${Date.now()}`)).run()
- * Uses gate 7b's arena. Uses gate 7b's fight if one is there; otherwise it makes its own fight on the arena and deletes
+ * Uses gate 7b's arena, or builds one the same way when 7b has removed it (B7191). Uses gate 7b's fight if one is there; otherwise it makes its own fight on the arena and deletes
  * that fight (only the one it made) at the end. Unpauses the game for the run and pauses it again after if it was
  * paused; puts the conductor setting, its countdowns and the scene's NPC mode back as they were.
  * Result: Data/wodx-gate/gate7b1-result.json.
@@ -27,7 +27,16 @@ async function runGate(K) {
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
   const before = {level: game.settings.get(MOD, "turnConductor"), grace: game.settings.get(MOD, "conductorGrace"), timer: game.settings.get(MOD, "conductorTimer"),
     pause: game.settings.get(MOD, "conductorNpcPause"), paused: game.paused, scene: canvas.scene};
-  const sc = game.scenes.find(s => s.getFlag(NPC, "gateArena"));
+  // B7191: gate 7b deletes its arena when it ends (B6050), so after 7b in a run there is none; the old one in the lane
+  // snapshot was the only reason this gate passed alone. With no arena, build one the way 7b does, and delete it after.
+  let sc = game.scenes.find(s => s.getFlag(NPC, "gateArena")), madeArena = null;
+  if ( !sc ) {
+    try {
+      const g7b = await import(`./gate7b.mjs?${Date.now()}`);
+      madeArena = sc = (await g7b.arena(g7b.cast())).sc;
+      R.notes.push(`made its own arena ${sc.id}`);
+    } catch (e) { R.notes.push(`could not make an arena: ${e.message}`); }
+  }
   let combat = game.combats.find(c => c.getFlag(NPC, "gateFight") && c.scene?.id === sc?.id), made = null;
   let T = {};
   const curName = () => combat.combatant?.name;
@@ -224,6 +233,12 @@ async function runGate(K) {
   if ( game.paused !== before.paused ) game.togglePause(before.paused, {broadcast: true});
   if ( made ) { try { await made.delete(); R.notes.push(`deleted the fight it made, ${made.id}`); } catch (e) { R.notes.push(`could not delete its fight ${made.id}: ${e.message}`); } }
   if ( before.scene && before.scene.id !== canvas.scene?.id ) await before.scene.view();
+  if ( madeArena ) {
+    try {
+      for ( const c of game.combats.filter(c => c.scene?.id === madeArena.id) ) await c.delete();
+      if ( madeArena.id !== canvas.scene?.id ) { await madeArena.delete(); R.notes.push(`deleted the arena it made, ${madeArena.id}`); }
+    } catch (e) { R.notes.push(`could not delete its arena ${madeArena.id}: ${e.message}`); }
+  }
   return save(R);
 }
 
