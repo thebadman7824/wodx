@@ -5,7 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody} from "../pcq/jobs.mjs";
+import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody, resetsFirst} from "../pcq/jobs.mjs";
 import {preflight, submitLanes} from "../pcq/submit.mjs";
 import * as gpu from "../pcq/gpu.mjs";
 
@@ -249,4 +249,13 @@ test("B7002: a touched or all gates job sets the wodx/gates status on the one co
   assert.equal(m.body.state, "success");
   assert.match(m.body.description, /failing on main too: gateb/);
   assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
+});
+
+test("B7190: gates jobs start on a reset lane unless they say reset: false", () => {
+  assert.equal(resetsFirst({kind: "gates", touched: true}), true);
+  assert.equal(resetsFirst({kind: "gates", gates: ["gate7b"], reset: false}), false);
+  assert.equal(resetsFirst({kind: "gate-two", gate: "gate7b"}), true);
+  assert.equal(resetsFirst({kind: "deploy"}), false);
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
 });
