@@ -58,3 +58,54 @@ test("V20 Dark Ages rows corrected against their pages (B7052)", () => {
   assert.equal(byId(DA, "bardo-restore-humanitas").diff, "var");
   assert.equal(K.discCost(byId(DA, "bardo-restore-humanitas").c).variable, true);
 });
+
+/* B7054: the four Book Numbers Desk picks */
+const PM = await import("../../modules/wodx-actions/scripts/power-mods.js");
+const PE = await import("../../modules/wodx-actions/scripts/path-effects.js");
+const FC = await import("../../modules/wodx-actions/scripts/fae-da-cantrips.js");
+const W = await import("../../modules/wodx-atmosphere/scripts/weather-rules.mjs");
+const fx = (outs) => outs.map((o, i) => ({id: `e${i}`, name: o.out.name ?? o.out.label, key: PM.keyFor(o.out), data: PM.timedData(o.out)}));
+
+test("Hush makes a voice roll fail outright and leaves other rolls alone (Dark Ages: Fae p. 141)", async () => {
+  const DAE = await import("../../modules/wodx-actions/scripts/mage-da-effects.js");
+  const e = fx(DAE.outcomesOf(FC.CANTRIPS["hush"].spec, {key: "fortune", label: "Hush"}, 2));
+  const voice = PM.modsFrom(e, {tags: ["charisma", "voice"]});
+  assert.match(voice.blocked, /Hushed: the voice will not work/);
+  assert.equal(voice.diff, 0);
+  assert.equal(PM.modsFrom(e, {tags: ["dexterity", "athletics"]}).blocked, undefined);
+  assert.match(FC.HUSH_BAR ?? "", /voice will not work/);
+});
+
+test("a hedge curse below level 5 reaches only the named group; level 5 reaches every roll (HH2 pp. 73-75)", () => {
+  const c3 = PE.numinaOutcomes("curses", 3, 3, null, {group: "social"});
+  const e3 = fx(c3);
+  assert.equal(PM.modsFrom(e3, {tags: ["charisma", "subterfuge"]}).diff, 3);
+  assert.equal(PM.modsFrom(e3, {tags: ["dexterity", "melee", "physical"]}).diff, 0);
+  const c4 = fx(PE.numinaOutcomes("curses", 4, 3, null, {group: "mental"}));
+  assert.deepEqual([PM.modsFrom(c4, {tags: ["perception", "awareness"]}).diff, PM.modsFrom(c4, {tags: ["perception", "awareness"]}).dice], [3, -1]);
+  assert.equal(PM.modsFrom(c4, {tags: ["strength", "brawl"]}).dice, 0);
+  const c5 = fx(PE.numinaOutcomes("curses", 5, 3, null, {group: "mental"}));
+  for ( const tags of [["strength", "brawl"], ["charisma", "etiquette"], ["wits", "occult"]] ) {
+    const m = PM.modsFrom(c5, {tags});
+    assert.deepEqual([m.diff, m.dice], [4, -2], tags.join("+"));
+  }
+});
+
+test("fog and rain take V20's Weather Control figures (V20 p. 229)", () => {
+  const fog = W.finish({sky: "storm", precip: "none", fog: "thick", wind: "calm", tempNight: 4, tempDay: 8, snowLying: false});
+  const rain = W.finish({sky: "overcast", precip: "rain", intensity: "moderate", fog: "none", wind: "breeze", tempNight: 8, tempDay: 12});
+  const f = W.modifiers(fog).find(m => m.id === "senses"), r = W.modifiers(rain).find(m => m.id === "senses");
+  assert.deepEqual([f.n, f.range, r.n, r.range], [1, 0.5, 2, 0.5]);
+  assert.deepEqual(W.rollEffects(fog, ["perception", "sight"]).map(e => e.diff), [1]);
+  assert.deepEqual(W.rollEffects(fog, ["dexterity", "ranged", "firearms"]), [], "fog shortens shots; it does not make them harder");
+  assert.deepEqual(W.rollEffects(rain, ["perception", "hearing"]).map(e => e.diff), [2]);
+  assert.deepEqual(W.rollEffects(rain, ["dexterity", "drive"]).map(e => [e.key, e.diff]), [["weather-drive", 2]]);
+});
+
+test("Invade the Mind costs a Willpower point only on a vampire (V20 Dark Ages p. 198)", () => {
+  const c = byId(DA, "auspex-invade-the-mind").c;
+  assert.equal(K.discCost(c, {t: {isVampire: true}}).willpower, 1);
+  assert.equal(K.discCost(c, {t: {isVampire: false}}).willpower, 0);
+  assert.equal(K.discCost(c).willpower, 0);
+  assert.equal(K.discCost(c).when, "vampire");
+});

@@ -28,27 +28,32 @@ const set = async over => A.setNight(A.nightJdn(game.time.worldTime, street), ov
 
 test("the rules: which modifier fits which roll's tags", () => {
   const d = W.weatherFor("seed", "central-europe", 2460000, {override: fog});
-  assert.deepEqual(W.rollEffects(d, ["dexterity", "ranged", "firearms"]).map(e => e.diff), [2]);
+  // B7054: V20 p. 229: fog shortens shots (WoDX Combat halves the reach) and makes Perception by sight or hearing 1 harder
+  assert.deepEqual(W.rollEffects(d, ["dexterity", "ranged", "firearms"]), []);
   assert.deepEqual(W.rollEffects(d, ["dexterity", "melee"]), []);
-  assert.deepEqual(W.rollEffects(d, ["perception"]), [], "sight stays with WoDX Senses");
+  assert.deepEqual(W.rollEffects(d, ["perception", "sight"]).map(e => e.diff), [1]);
+  assert.deepEqual(W.rollEffects(d, ["perception"]), [], "a Perception roll that names no sense is left alone");
 });
 
-test("fog out of doors: a firearms attack is 2 harder; indoors it is not (B6796)", async () => {
+test("fog out of doors: a Perception roll by sight is 1 harder; indoors it is not (B6796, B7054)", async () => {
   await set(fog);
-  const e = A.weatherRollSource(on(street), roll(["dexterity", "ranged", "firearms"]));
+  const e = A.weatherRollSource(on(street), roll(["perception", "sight"]));
   assert.equal(e.length, 1);
-  assert.equal(e[0].diff, 2);
-  assert.match(e[0].name, /Thick fog.*tonight's weather/);
-  assert.deepEqual(A.weatherRollSource(on(hall), roll(["dexterity", "ranged", "firearms"])), []);
+  assert.equal(e[0].diff, 1);
+  assert.match(e[0].name, /Fog.*tonight's weather/);
+  assert.equal(e[0].note, "V20 p. 229");
+  assert.deepEqual(A.weatherRollSource(on(hall), roll(["perception", "sight"])), []);
 });
 
 test("lying snow: a tracking roll is 1 easier, and running, riding and driving 1 harder", async () => {
   await set(snow);
   const track = A.weatherRollSource(on(street), roll(["perception", "survival"]));
   assert.deepEqual(track.map(e => [e.key, e.diff]), [["weather-tracks", -1]]);
-  for ( const tags of [["dexterity", "athletics"], ["dexterity", "drive"], ["dexterity", "ride"]] ) {
+  for ( const tags of [["dexterity", "athletics"], ["dexterity", "ride"]] ) {
     assert.deepEqual(A.weatherRollSource(on(street), roll(tags)).map(e => [e.key, e.diff]), [["weather-footing", 1]], tags.join("+"));
   }
+  // B7054: snow still falling adds V20's +2 to Drive (p. 229) to the ice underfoot
+  assert.deepEqual(A.weatherRollSource(on(street), roll(["dexterity", "drive"])).map(e => [e.key, e.diff]), [["weather-drive", 2], ["weather-footing", 1]]);
   assert.deepEqual(A.weatherRollSource(on(street), roll(["stamina", "athletics"])), [], "swimming is not footing");
 });
 

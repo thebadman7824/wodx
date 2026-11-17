@@ -15,9 +15,10 @@ import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "./mage-da-effects.js
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Fae";
-/** B6857: a silenced tongue: every roll by voice is at difficulty 10 for an hour a success (house figure; the book says it will not work). */
+/** B7054: a silenced tongue: every roll by voice fails outright for an hour a success (Dark Ages: Fae p. 141: the tongue and throat will not work). */
 const HOURS = [1, 2, 3, 4, 5].map(h => [`${h} hour${h === 1 ? "" : "s"}`, h * 3600]);
-const HUSH = who => T("fortune", "Hushed", {ladder: HOURS}, who, {shift: 10, curse: true, tags: ["voice"], once: false});
+export const HUSH_BAR = "the voice will not work, so the roll fails";
+const HUSH = who => T("fortune", "Hushed", {ladder: HOURS}, who, {shift: 10, curse: true, tags: ["voice"], once: false, bar: HUSH_BAR});
 const X = (name, dominion, level, trait, fx, spec, page, extra = {}) => ({ name, dominion, level, trait, fx, spec, page, ...extra });
 const DOMS = ["day", "night", "dawn", "dusk"];
 

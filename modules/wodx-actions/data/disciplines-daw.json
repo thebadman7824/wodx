@@ -180,9 +180,9 @@
 "p": 197,
 "r": "intelligence+subterfuge",
 "diff": "t:willpower",
-"c": "",
+"c": "w1:vampire",
 "t": "conc",
-"e": "Sends or reads thoughts; one success to send, more to read deeper."
+"e": "Sends or reads thoughts; one success to send, more to read deeper. Reading a vampire's mind costs a Willpower point."
 },
 {
 "id": "auspex-souls-flight",

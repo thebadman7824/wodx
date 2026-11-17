@@ -203,7 +203,7 @@ export function timedNumbers(spec = {}, s = 1) {
   if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(n(spec.max) || 5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
   // B6553: a spec's own shift (Will of Fire's two) wins over the successes
   // B6850: tags and once ride along (a standing, scoped shift)
-  if ( k === "fortune" ) { const sh = Math.abs(n(spec.shift)) || Math.min(3, x); return {shift: spec.curse ? sh : -sh, ...(spec.tags ? {tags: spec.tags} : {}), ...(spec.once === false ? {once: false} : {})}; }
+  if ( k === "fortune" ) { const sh = Math.abs(n(spec.shift)) || Math.min(3, x); return {shift: spec.curse ? sh : -sh, ...(spec.tags ? {tags: spec.tags} : {}), ...(spec.once === false ? {once: false} : {}), ...(spec.bar ? {bar: String(spec.bar)} : {})}; }
   // B6553: Hasten's extra actions (one for every two successes, as effects-rules), or the spec's own; a Slow loses them
   if ( k === "hasten" ) return {actions: n(spec.actions) || Math.max(1, Math.floor(x / 2)), ...(spec.slow ? {slow: true} : {}), ...(spec.speed ? {speed: n(spec.speed)} : {})};
   if ( k === "sight" ) return {vision: true};

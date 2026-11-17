@@ -601,21 +601,29 @@ export function forecast(seed, climate, jdn, days = 7, {year, overrides = {}} = 
 }
 
 /* ------------------------------------------------------------------ */
-/*  Weather that matters (house rules)                                 */
+/*  Weather that matters                                              */
 /* ------------------------------------------------------------------ */
 
 /**
- * Small difficulty steps the weather adds outdoors. House rules: the books leave weather to the Storyteller. Each is
- * {id, label, n (+ harder, - easier), applies}. Shown on the weather card; WoDX Senses uses the perception ones.
+ * Small difficulty steps the weather adds outdoors. Each is {id, label, n (+ harder, - easier), applies}, with
+ * range (the share of a ranged weapon's reach left) where it shortens shots, and book for a figure from a page.
+ * B7054: fog, and rain or snow falling, take V20's Weather Control figures (V20 p. 229): fog +1 to Perception by sight
+ * or hearing and ranged attacks at half range; rain or snow +2 to those Perception rolls, half range and +2 to Drive.
+ * The rest are house rules (the books leave weather to the Storyteller). Shown on the weather card; rollEffects puts
+ * them on the rolls they name.
  */
 export function modifiers(d, {indoor = false} = {}) {
   if ( indoor || !d ) return [];
   const out = [];
   const t = new Set(d.tags ?? tagsOf(d));
-  if ( t.has("fog") ) out.push({id: "sight", label: "Thick fog: seeing anything past a few yards", n: 2, applies: "Perception by sight, ranged attacks past short range"});
+  const falling = ["rain", "snow", "sleet", "hail"].includes(d.precip);
+  if ( t.has("fog") ) out.push({id: "senses", label: "Fog: sight and sound muffled", n: 1, range: 0.5, book: "V20 p. 229",
+    applies: "Perception by sight or hearing; ranged attacks reach half as far"});
+  else if ( falling ) out.push({id: "senses", label: d.precip === "snow" ? "Falling snow: sight and sound muffled" : "Rain: sight and sound muffled", n: 2, range: 0.5, book: "V20 p. 229",
+    applies: "Perception by sight or hearing; ranged attacks reach half as far"});
   else if ( t.has("mist") ) out.push({id: "sight", label: "Mist: seeing far", n: 1, applies: "Perception by sight past 20 yards"});
-  if ( !t.has("fog") && (t.has("snow") && d.intensity === "heavy" || t.has("downpour") || d.sky === "storm") ) out.push({id: "sight", label: "Heavy rain or snow: seeing far", n: 1, applies: "Perception by sight, ranged attacks"});
-  if ( t.has("gale") || t.has("thunder") || t.has("downpour") ) out.push({id: "hearing", label: "Storm noise", n: 1, applies: "Perception by hearing"});
+  if ( falling ) out.push({id: "drive", label: d.precip === "snow" ? "Falling snow on the road" : "Rain on the road", n: 2, book: "V20 p. 229", applies: "Drive rolls"});
+  if ( !falling && (t.has("gale") || t.has("thunder")) ) out.push({id: "hearing", label: "Storm noise", n: 1, applies: "Perception by hearing"});
   if ( t.has("rain") ) out.push({id: "scent", label: d.intensity === "heavy" ? "Heavy rain washes scent away" : "Rain masks scent", n: d.intensity === "heavy" ? 2 : 1, applies: "Tracking or perceiving by smell"});
   if ( t.has("snow-lying") ) out.push({id: "tracks", label: "Snow keeps tracks", n: -1, applies: "Tracking by sight on the ground"});
   if ( t.has("snow-lying") || t.has("sleet") || (t.has("cold") && t.has("rain")) ) out.push({id: "footing", label: "Ice or snow underfoot", n: 1, applies: "Running, riding and driving"});
@@ -673,10 +681,12 @@ export function rollEffects(d, tags = []) {
   const t = new Set([...(tags ?? [])].map(x => String(x).toLowerCase()));
   const out = [];
   for ( const m of modifiers(d) ) {
-    const fits = (m.id === "sight" && t.has("ranged") && /ranged/.test(m.applies))
+    // B7054: the V20 senses figure reaches a Perception roll by sight or hearing; the range cut is WoDX Combat's
+    const fits = (m.id === "senses" && t.has("perception") && (t.has("sight") || t.has("hearing")))
+      || (m.id === "drive" && t.has("drive"))
       || (m.id === "tracks" && t.has("survival") && t.has("perception"))
       || (m.id === "footing" && (t.has("ride") || t.has("drive") || (t.has("athletics") && t.has("dexterity"))));
-    if ( fits ) out.push({key: `weather-${m.id}`, name: `${m.label} (tonight's weather)`, dice: 0, diff: m.n, note: "house rule"});
+    if ( fits ) out.push({key: `weather-${m.id}`, name: `${m.label} (tonight's weather)`, dice: 0, diff: m.n, note: m.book ?? "house rule"});
   }
   return out;
 }

@@ -201,7 +201,7 @@ export function build(ctx) {
             const p = list.find(x => x.id === root.querySelector("[name=power]").value);
             const box = root.querySelector(".wodx-disc-info");
             if (!p) { box.textContent = ""; return; }
-            const c = K.discCost(p.c);
+            const c = K.discCost(p.c, { t: targetTraits(tgt) });
             let d = K.discDifficulty(p.diff, { t: targetTraits(tgt), own: { willpower: traitValue(actor, "willpower") } });
             // B5132: Animalism on one's own animal ghoul is one easier
             const own = beastLink(actor, tgt, p);
@@ -211,8 +211,10 @@ export function build(ctx) {
             root.querySelector("[name=wp]").value = c.willpower;
             root.querySelector(".wodx-disc-attr").style.display = /attr/.test(p.r ?? "") ? "" : "none";
             const costTxt = [c.blood && `${c.blood} blood${c.optional ? " (optional)" : ""}`, c.willpower && `${c.willpower} Willpower`, c.variable && "blood as needed"].filter(Boolean).join(", ") || "none";
+            // B7054: a cost paid only on a vampire says so, and why it is or is not charged
+            const whenTxt = c.when === "vampire" ? (targetTraits(tgt)?.isVampire ? " (the target is a vampire)" : " (Willpower too if the target is a vampire)") : "";
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
-            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
+            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt + whenTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "")
                 + (own ? `<br><i>${esc(tgt.name)} is ${esc(actor.name)}'s own ghoul: one easier${SUBSUME.test(p.n) ? ", and no roll is needed to share its senses" : ""}.</i>` : "")

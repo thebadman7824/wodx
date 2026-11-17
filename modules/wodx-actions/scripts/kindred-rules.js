@@ -75,13 +75,17 @@ export function powersFor(powers, sheet) {
 }
 
 /** Cost code → {blood, willpower, variable, optional}. "b1", "w1", "b1w1", "bX" (variable), "b1opt" (optional). */
-export function discCost(code) {
+export function discCost(code, { t = null } = {}) {
     const out = { blood: 0, willpower: 0, variable: false, optional: false };
     const s = String(code ?? "");
     if (!s) return out;
     if (/X/.test(s)) out.variable = true;
     if (/opt$/.test(s)) out.optional = true;
-    for (const m of s.matchAll(/([bw])(\d+)/g)) out[m[1] === "b" ? "blood" : "willpower"] += Number(m[2]);
+    // B7054: "w1:vampire" is paid only on a vampire target (Invade the Mind, V20 Dark Ages p. 198); with no target, not yet
+    for (const m of s.matchAll(/([bw])(\d+)(?::(vampire))?/g)) {
+        if (m[3]) { out.when = m[3]; if (!t?.isVampire) continue; }
+        out[m[1] === "b" ? "blood" : "willpower"] += Number(m[2]);
+    }
     return out;
 }
 

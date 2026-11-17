@@ -39,7 +39,7 @@ export function traitMods(actor, tags = [], { target = null, moon = null } = {})
         const against = target ? T.kindOf(target) : null;
         const list = T.effects(actor, { channel: "roll", tags, against, moon: moon ?? (tags.includes("frenzy") ? moonNow() : "") });
         const s = T.rules.sumEffects(list);
-        return pw ? { dice: s.dice + pw.dice, diff: s.diff + pw.diff, parts: [...s.parts, ...pw.parts], once: pw.once, ...(s.noBotch ? { noBotch: true } : {}), ...(s.halve ? { halve: s.halve } : {}) } : s;
+        return pw ? { dice: s.dice + pw.dice, diff: s.diff + pw.diff, parts: [...s.parts, ...pw.parts], once: pw.once, ...(s.noBotch ? { noBotch: true } : {}), ...(s.halve ? { halve: s.halve } : {}), ...(pw.blocked ? { blocked: pw.blocked } : {}) } : s;
     } catch (e) { console.warn("WoDX Actions | trait effects", e); return pw ?? NONE; }
 }
 
@@ -48,7 +48,7 @@ function powerPart(actor, tags = []) {
     if (!actor || !tags.length) return null;
     try {
         const r = PM.powerMods(actor, { tags: [...tags, ...physicalOf(tags)], frenzy: tags.includes("frenzy") });
-        return r.dice || r.diff ? r : null;
+        return r.dice || r.diff || r.blocked ? r : null;
     } catch (e) { console.warn("WoDX Actions | power effects on the roll", e); return null; }
 }
 /** A Dexterity or Stamina roll counts as Physical for a Boost; Strength too. */
