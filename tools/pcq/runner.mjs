@@ -410,22 +410,25 @@ async function gateStatus(issue, job, parts, ok) {
   if ( !st || DRY ) return;
   await gh("POST", `/statuses/${st.sha}`, st.body);
   log(`#${issue.number}: ${GATE_CONTEXT} ${st.body.state} on ${short(st.sha)}`);
-  if ( job.ref.startsWith("claude/") || job.ref.startsWith("handoff/") ) rerunChecks(job.ref, 0);
+  rerunChecks(st.sha, 0);
 }
-/** Runs the failed jobs of the branch's pull request checks again; waits for a run still going (up to an hour). */
-async function rerunChecks(branch, tries) {
+/** Runs the failed checks again of each open pull request holding the gated commit (the job's ref may be a branch or
+ *  a sha); waits for a run still going (up to an hour). */
+async function rerunChecks(sha, tries) {
   try {
-    const prs = await gh("GET", `/pulls?state=open&head=${OWNER}:${encodeURIComponent(branch)}&per_page=5`);
-    const pr = prs?.[0];
-    if ( !pr ) return;
+    for ( const pr of (await gh("GET", `/commits/${sha}/pulls`)) ?? [] ) if ( pr.state === "open" ) await rerunFor(pr, sha, tries);
+  } catch (e) { log(`checks rerun for ${short(sha)}: ${e.message}`); }
+}
+async function rerunFor(pr, sha, tries) {
+  try {
     const runs = await gh("GET", `/actions/workflows/checks.yml/runs?head_sha=${pr.head.sha}&event=pull_request&per_page=5`);
     const run = runs?.workflow_runs?.[0];
     if ( !run ) return;
-    if ( run.status !== "completed" ) { if ( tries < 12 ) setTimeout(() => rerunChecks(branch, tries + 1), 5 * 60000); return; }
+    if ( run.status !== "completed" ) { if ( tries < 12 ) setTimeout(() => rerunFor(pr, sha, tries + 1), 5 * 60000); return; }
     if ( run.conclusion !== "failure" ) return;
     await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`);
     log(`PR #${pr.number}: failed checks started again after the gate result`);
-  } catch (e) { log(`checks rerun for ${branch}: ${e.message}`); }
+  } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
 // ---- status issue ----

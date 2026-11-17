@@ -19,9 +19,9 @@ test("a version stamp is no change; any other edit is", () => {
 });
 
 test("stamped files and notes need no review of their own", () => {
-  for ( const f of ["changes/wodx-npc/x.md", "docs/reviews/b.jsonl", "modules/wodx-npc/CHANGELOG.md", "docs/MODULES.md", "docs/DECISIONS.md", "tools/gate/fixtures/api-paths.json"] )
+  for ( const f of ["changes/wodx-npc/x.md", "changes/decisions/B1.md", "docs/reviews/b.jsonl", "modules/wodx-npc/CHANGELOG.md", "docs/MODULES.md", "docs/DECISIONS.md", "tools/gate/fixtures/api-paths.json"] )
     assert.ok(R.isStamped(f), f);
-  for ( const f of ["modules/wodx-npc/scripts/main.mjs", "docs/WORKFLOW.md", "tools/pcq/runner.mjs"] ) assert.ok(!R.isStamped(f), f);
+  for ( const f of ["changes/README.md", "docs/reviews/README.md", "modules/wodx-npc/scripts/main.mjs", "docs/WORKFLOW.md", "tools/pcq/runner.mjs"] ) assert.ok(!R.isStamped(f), f);
 });
 
 test("The owner's own work: every commit by the owner's account with no agent trailer", () => {

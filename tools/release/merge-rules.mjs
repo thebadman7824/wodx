@@ -41,7 +41,7 @@ export const GATE_CONTEXT = "wodx/gates";
 export const REVIEW_DIR = "docs/reviews";
 
 /** Files merge-stamp writes, or that hold the notes and reviews themselves: never need their own review. */
-export const STAMPED = [/^changes\//, /^docs\/reviews\//, /^modules\/[\w-]+\/CHANGELOG\.md$/, /^docs\/MODULES\.md$/,
+export const STAMPED = [/^changes\/[^/]+\//, /^docs\/reviews\/[^/]+\.jsonl$/, /^modules\/[\w-]+\/CHANGELOG\.md$/, /^docs\/MODULES\.md$/,
   /^docs\/DECISIONS\.md$/, /^tools\/gate\/fixtures\/api-paths\.json$/];
 export const isStamped = f => STAMPED.some(r => r.test(f));
 /** Files whose change can change a gate result (the inputs of gate-map's touched()). */
