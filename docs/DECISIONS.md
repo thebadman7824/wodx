@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7200
+Next free block: B7210
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -408,7 +408,8 @@ Next free block: B7200
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
-| B7190-B7199 | Gate trust: the runner removes what a gate placed on a shared scene (used B7190-B7193) | tools (lanes) |
+| B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14095,3 +14096,55 @@ Reverse: drop sheetsBefore and the sheets put-back block in run-gate.mjs.
 Finish-Line Desk w3, after B7192. Cleaning up leftover documents covered world documents only. A region, token, wall, tile, drawing, light, sound or note that a gate placed on a scene already there before it stayed for every later gate. In PR 1836's job 1922, gateduties put a cult's worship night at a chapel region on another scene, not at its own chapel. On lanes reset every night, run-gate.mjs now also records each scene's placed documents before a gate and deletes any added since (tools/lanes/lib.mjs sheetPlan dropKids). Test: tools/harness/lanes.test.mjs "B7193".
 
 Reverse: drop the kids part of READ_SHEETS and sheetPlan.
+
+## B7194. Lane tools update in place (2026-11-17)
+Finish-Line Desk w3. The runner updated only by exiting, and only when no job was running. After waiting 10 minutes to drain (B6353), it took jobs again and waited for an idle moment. On 17 Nov the Main PC ran ad006f90 from 09:26 to past 13:30 UTC, so job 1926 ran without B7192 (no "sheets put back") and B7193. When main changes only tools/lanes or tools/harness/gate-two.mjs, and not the runner's own code in tools/pcq, the runner now moves its checkout to main in place. Each job spawns run-gate.mjs and lanes.mjs afresh, so the next job uses the new tools. A change to tools/pcq still exits and restarts as before. Test: tools/harness/pcq.test.mjs "B7194".
+
+Reverse: drop the in-place block in updateDue and make MY_SHA const again.
+
+## B7200. Effects-module migration markers no longer count as lane drift (2026-11-17)
+Testbed lanes. On 16 and 17 November the PC runner hit exit 4 (drift found, no gate run) 83 times, and each one cost a lane reset and a retry. The drift blocks in the lane logs show why: every one of the 34 since job 1810 was the single setting fxmaster.parameterRangeMigrationVersion "added", and the earlier ones were the same kind of marker (fxmaster.parameterRangePassiveMigrationVersion, fxmaster.directionConventionPassiveMigrationVersion, tokenmagic.migration). FXMaster and Token Magic write these once per world a little after a GM signs in, too late for the clean fingerprint the reset takes, so the next sign-in by run-gate saw them as new. The lane's known-good copy predates them, so every reset brought the problem back. The four keys join ignoreSettings in tools/lanes/lanes.json, beside fxmaster.legacyCleanupVersion, which was already there for the same reason. They are markers of a migration already done, not world state a gate reads.
+
+Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
+
+## B7202. The merge train: pull requests merge one at a time (2026-11-17)
+PC job queue and merging. Every merge to main left the other open pull requests behind. The hourly sweep (B4110) then merged main into each of them, each push started a full gate run again (150 to 300 gates, 50 to 80 minutes), and by the time one passed main had moved again; on 17 November 8 of 14 open pull requests had conflicts. Ben approved a merge train. A thread whose pull request meets the rules it can meet by itself labels it `merge-train` and stops pushing. The Main PC's runner (tools/pcq/train.mjs, every 3 minutes, "train": true only in runner.json) takes the front of the line, oldest label first. It marks a draft ready, merges main in and runs merge-stamp in its own worktree, and pushes with a lease on the head it saw, so a thread's own push wins. pc-gates.yml then gates the new head, and the runner takes that gate job before the rest of the queue. The runner merges when `checks` and `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out with a comment, and the line moves on. The others are not brought up to date or gated again while they wait. The sweep no longer merges main into open pull requests; it still starts CI where none ran. The train uses a merge, not a rebase, because the repository never rewrites a pushed branch.
+
+Reverse: set "train": false in tools/pcq/runner.json and "sweepUpdates": true to bring back the hourly update; threads go back to merging by hand (docs/WORKFLOW.md, section 6, keeps the old steps).
+
+## B7203. The merge train waits for the fresh gate run (2026-11-17)
+PC job queue. The train's first run put PR 1880 out two minutes after it pushed: the merge rules on the new head failed only on the gate rule, because an earlier gate failure on the branch still counts until the fresh run (job 1943) reports. When the merge rules say exactly "Not ready: gate result" and the head's own wodx/gates is not a failure, the train now waits; the runner reruns the merge rules job when the gate result lands. A failed fresh run, another broken rule, or no gate result within trainMaxHours still puts the pull request out.
+
+The same first runs showed a second gap: merging main in changes the files the branch shares with main, so their review hashes stop matching and the merge rules fail "file review" (PR 1836), though the branch's own change is untouched. After the merge the train now compares, for each file whose verdict matched the old head, what the branch adds and removes before and after; when that is the same it writes the verdict again for the file as it is now, saying it was carried over by the train and keeping the earlier "how" (carryReviews). A file whose own change differs, as after a conflict resolved by hand, keeps its stale verdict and goes back to its thread.
+
+Reverse: remove the B7203 branch in decide() and the carryReviews call in prepare() in tools/pcq/train.mjs.
+
+## B7204. A lane's own Foundry is found by its port when server.pid is stale (2026-11-17)
+Testbed lanes. After the Main PC runner restarted at 13:44Z on 17 November, lanes 3 and 5 were up but their server.pid named no live process, so every deploy there stopped with "Lane N is up, but not by a server this tool started" and job 1943 failed in 0 minutes. lanes.mjs stop now asks Windows which process listens on the lane's port and takes it over (writing server.pid again) only when that process is node and its command line names this lane's data folder and port, the same test that already guards every kill. Any other process on the port still stops the command with the old message, so nothing but the lane's own Foundry is ever ended.
+
+Reverse: remove lanePidByPort and its call in stop() in tools/lanes/lanes.mjs.
+
+## B7205. Gate runs for an old commit of a pull request are dropped or stopped (2026-11-17)
+PC job queue. pr-gates.mjs already closed a queued gates job when a newer commit of its pull request arrived, but skipped one that was running. On 17 November job 1932 ran on lane 2 for more than an hour for an old head of PR 1848, after the runner restart queued it again, while job 1949 gated the new head; its result could not be used and it kept the runner from updating. The runner now looks up the pull request named in a gates job title ("[PR #n sha]") before it starts the job and every three minutes while it runs. When the pull request has moved on to another commit, merged or closed, a waiting job is closed as not planned without running, and a running one has its shared gate queue emptied, so each lane ends after the gate it is on; the job is then closed as stopped with no gate status posted. A failed lookup never drops a job. Gates are never killed mid-run, so no lane is left in a broken state.
+
+Reverse: remove tools/pcq/stale.mjs, staleJob, drop and stopStale and their calls in tools/pcq/runner.mjs, and stop() with its check in putBack in tools/lanes/gate-queue.mjs.
+
+## B7206. A running PC job can be cancelled from its issue (2026-11-17)
+PC job queue. On 17 November job 1932 kept lane 2 busy after its issue was closed by hand: the runner never looked at the issue again, and only killing the gate process on the PC (which needs an explicit OK) freed the lane. The runner now keeps the child processes of each job, known by the job's log name, and every poll checks its running jobs. A job whose issue carries the label pc-cancel, or whose issue reads as closed when fetched on its own (the list alone can lag), is cancelled: its shared gate queue is stopped, its process trees are ended, each lane it used is reset, nothing is retried or rechecked, and the issue gets a "Cancelled" comment with no result or gate status and is closed as not planned. A waiting job labelled pc-cancel is closed without running. A job the runner is already finishing is never cancelled.
+
+Reverse: remove the cancel block (procs, halted, running, cancelJob, cancelCheck and their calls) from tools/pcq/runner.mjs, jobOfLog from tools/pcq/stale.mjs, and LABEL.cancel from tools/pcq/jobs.mjs.
+
+## B7207. runner-hold takes no new jobs and keeps everything else running (2026-11-17)
+PC job queue. On 17 November a runner-off file was put on the Main PC at about 14:35Z to keep the lanes free for an art render. While a job still ran, runner-off made the main loop sleep and skip every pass, so the status issue, the sweep, the merge train, self updates and job cancels all stopped for half an hour and the runner looked hung. A new file, runner-hold, in the runner folder only stops job pickup and stops running jobs taking more lanes; every other pass goes on, and the status issue shows a HOLD line. runner-off keeps its meaning (stop once idle) and now updates the status issue while it waits.
+
+Reverse: remove the holding check and its two uses and the note argument of status() in tools/pcq/runner.mjs, and the status call in the runner-off branch.
+
+## B7208. The merge train reads a red checks job that waits only on the gate result as pending (2026-11-17)
+PC job queue. B7203 let the train wait when wodx/merge-rules failed only on the gate rule, but that wait was checked after the checks job. When the merge rules fail, so does the "merge rules" job, and with it the "checks" job that sums up every job. So at 15:34Z on 17 November the train put PR 1848 out on its fresh head while gate job 1960 was queued, with 4,123 tests run and none failed. The train now reads every job's newest run. When the only failed jobs are "checks" and "merge rules", and the merge rules say only "Not ready: gate result", it waits for the gate run, still within the three-hour limit. Any other failed job still puts the pull request out.
+
+Reverse: remove othersFailed and the otherChecksFailed field in tools/pcq/train.mjs, and move the checks failure test back above the gate wait in decide().
+
+## B7209. A gate job is dropped as stale only on a pull request read just now (2026-11-17)
+PC job queue. B7205 kept each pull request it looked up for two minutes. A gate job queued within two minutes of a push was then checked against the head from before the push, so on 17 November jobs 1967 (PR 1880), 1969 (PR 1836) and 1970 (PR 1963) were dropped as "moved on" to their own older commit, and the merge train had no gate runs. The cached pull request is still used to say a job is current, but before a job is dropped or stopped, the runner reads the pull request again and drops only on that fresh answer.
+
+Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.

@@ -10,5 +10,6 @@
   "sweep": false,
   "minFreeGB": {"C": 15, "D": 50},
   "minFreeRamGB": 3,
-  "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20}
+  "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20},
+  "train": false
 }

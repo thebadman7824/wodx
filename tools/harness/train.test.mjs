@@ -1,0 +1,199 @@
+/* B7202: the merge train. Pull requests labelled merge-train merge one at a time, the front one brought up to date
+   with main, stamped and gated fresh, the rest left alone. */
+import assert from "node:assert/strict";
+import {test} from "node:test";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {spawnSync} from "node:child_process";
+import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, TRAIN_LABEL} from "../pcq/train.mjs";
+
+const H = 3600e3;
+const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
+
+test("decide: conflict leaves, draft is marked ready, behind or unstamped is prepared, green merges", () => {
+  assert.equal(decide(ready).action, "merge");
+  assert.equal(decide({...ready, mergeable: false}).action, "leave");
+  assert.equal(decide({...ready, ownBranch: false}).action, "leave");
+  assert.equal(decide({...ready, draft: true}).action, "ready");
+  assert.equal(decide({...ready, mergeable: null}).action, "wait");
+  assert.equal(decide({...ready, behind: 2}).action, "prepare");
+  assert.equal(decide({...ready, fragments: 3}).action, "prepare");
+  assert.match(decide({...ready, behind: 2, fragments: 1}).why, /behind main by 2, 1 release note/);
+  assert.equal(decide({...ready, checks: "failure"}).action, "leave");
+  assert.equal(decide({...ready, mergeRules: "pending", gates: "failure"}).action, "leave", "failed gates leave even while the merge rules wait");
+  assert.equal(decide({...ready, mergeRules: "pending", gates: "pending"}).action, "wait");
+  assert.equal(decide({...ready, mergeRules: "pending", gates: null, frontFor: 4 * H}).action, "leave", "no result in 3 hours lets the line move");
+  assert.equal(decide({...ready, mergeRules: "pending", frontFor: 4 * H}, {maxHours: 6}).action, "wait");
+  // B7203: merge rules red only on the gate rule while the head's fresh gate run has not reported is a wait (PR 1880)
+  const gateOnly = {...ready, mergeRules: "failure", mergeRulesWhy: "Not ready: gate result", gates: null};
+  assert.equal(decide(gateOnly).action, "wait");
+  assert.equal(decide({...gateOnly, gates: "pending"}).action, "wait");
+  assert.equal(decide({...gateOnly, gates: "failure"}).action, "leave", "the fresh run failed: out");
+  assert.equal(decide({...gateOnly, frontFor: 4 * H}).action, "leave", "no gate result in 3 hours: out");
+  assert.equal(decide({...gateOnly, mergeRulesWhy: "Not ready: gate result, file review"}).action, "leave", "another rule broken: out");
+  assert.equal(decide({...ready, gates: null}).action, "merge", "a change that needs no gate merges on checks and merge rules alone");
+});
+
+test("B7208: checks red only because the merge rules job waits on the gate result is a wait (PR 1848, 15:34Z)", () => {
+  const gateOnly = {...ready, mergeRules: "failure", mergeRulesWhy: "Not ready: gate result", gates: null, checks: "failure"};
+  assert.equal(decide({...gateOnly, otherChecksFailed: false}).action, "wait");
+  assert.equal(decide({...gateOnly, otherChecksFailed: true}).action, "leave", "a real job failed: out");
+  assert.equal(decide({...gateOnly}).action, "leave", "unknown other jobs with red checks: out, as before");
+  assert.equal(decide({...gateOnly, otherChecksFailed: false, frontFor: 4 * H}).action, "leave");
+  assert.equal(decide({...ready, checks: "failure", otherChecksFailed: false}).action, "leave", "no gate wait: red checks still put it out");
+  const run = (name, conclusion, at = "2026-11-17T15:00:00Z") => ({name, status: "completed", conclusion, started_at: at});
+  assert.equal(othersFailed([run("checks", "failure"), run("merge rules", "failure"), run("harness 1", "success"), run("quality", "success"), run("reject", "skipped")]), false);
+  assert.equal(othersFailed([run("checks", "failure"), run("merge rules", "failure"), run("harness 2", "failure")]), true);
+  assert.equal(othersFailed([run("harness 2", "failure", "2026-11-17T14:00:00Z"), run("harness 2", "success", "2026-11-17T15:00:00Z")]), false, "a rerun that passed counts");
+});
+
+test("the line is oldest label first; statuses and check runs read the newest", () => {
+  assert.deepEqual(line([{number: 9, labelledAt: 30}, {number: 4, labelledAt: 50}, {number: 7, labelledAt: 30}]).map(p => p.number), [7, 9, 4]);
+  assert.equal(statusOf([{context: "wodx/gates", state: "failure"}, {context: "wodx/gates", state: "success"}], "wodx/gates"), "failure");
+  assert.equal(statusOf([{context: "wodx/gates", state: "error"}], "wodx/gates"), "failure");
+  assert.equal(statusOf([], "wodx/gates"), null);
+  const runs = [{name: "checks", status: "completed", conclusion: "failure", started_at: "2026-11-17T10:00:00Z"}, {name: "checks", status: "in_progress", started_at: "2026-11-17T11:00:00Z"}];
+  assert.equal(checkOf(runs, "checks"), "pending", "the rerun counts, not the old failure");
+  assert.equal(checkOf([{name: "checks", status: "completed", conclusion: "success"}], "checks"), "success");
+  assert.ok(isFrontJob("PC job: gates touched [PR #1597 f698174c38e8]", 1597));
+  assert.ok(!isFrontJob("PC job: gates touched [PR #15970 f698174c38e8]", 1597));
+  assert.ok(!isFrontJob("PC job: gates touched [PR #1597 f698]", null));
+});
+
+/** A mock GitHub with two labelled pull requests; #20 was labelled first. */
+function mockGh(over = {}) {
+  const calls = [];
+  const pr = n => ({number: n, draft: false, mergeable: true, node_id: `N${n}`, user: {login: "thebadman7824"},
+    head: {sha: `h${n}`, ref: `claude/b${n}`, repo: {full_name: "thebadman7824/wodx"}}, base: {ref: "main", repo: {full_name: "thebadman7824/wodx"}}, ...(over[n] ?? {})});
+  const gh = async (method, url, body) => {
+    calls.push(`${method} ${url}`);
+    let m;
+    if ( url.startsWith("/issues?") ) return [{number: 21, pull_request: {}, created_at: "2026-11-17T09:00:00Z"}, {number: 20, pull_request: {}, created_at: "2026-11-17T10:00:00Z"}, {number: 5}];
+    if ( (m = /^\/issues\/(\d+)\/events/.exec(url)) ) return [{event: "labeled", label: {name: TRAIN_LABEL}, created_at: m[1] === "20" ? "2026-11-17T11:00:00Z" : "2026-11-17T12:00:00Z"}];
+    if ( (m = /^\/pulls\/(\d+)$/.exec(url)) ) return pr(+m[1]);
+    if ( url.startsWith("/compare/") ) return {behind_by: over.behind ?? 0};
+    if ( url.includes("/statuses") ) return over.statuses ?? [{context: "wodx/merge-rules", state: "success"}, {context: "wodx/gates", state: "success"}];
+    if ( url.includes("/check-runs") ) return {check_runs: over.runs ?? [{name: "checks", status: "completed", conclusion: "success"}]};
+    if ( url.startsWith("/contents/changes?") ) return [{type: "file", name: "README.md"}];
+    return {};
+  };
+  return {gh, calls};
+}
+
+test("step merges the front when it is green and leaves the rest alone", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const {gh, calls} = mockGh();
+  const r = await step({gh, home, apply: true});
+  assert.equal(r.front, 20, "the oldest label is the front");
+  assert.deepEqual(r.line, [20, 21]);
+  assert.equal(r.action, "merge");
+  assert.ok(calls.includes("PUT /pulls/20/merge"));
+  assert.ok(!calls.some(c => /pulls\/21\/merge|update-branch/.test(c)), "the second in line is not touched");
+});
+
+test("step waits on a head whose merge rules fail only for its pending gate run (PR 1880)", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const m = mockGh({statuses: [{context: "wodx/merge-rules", state: "failure", description: "Not ready: gate result"}]});
+  const r = await step({gh: m.gh, home, apply: true});
+  assert.equal(r.action, "wait");
+  assert.ok(!m.calls.some(c => /^(PUT|POST|DELETE)/.test(c)), "nothing posted, label kept");
+});
+
+test("step takes a red front out of the train and marks a draft ready", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const red = mockGh({runs: [{name: "checks", status: "completed", conclusion: "failure"}]});
+  const r = await step({gh: red.gh, home, apply: true});
+  assert.equal(r.action, "leave");
+  assert.ok(red.calls.includes(`DELETE /issues/20/labels/${TRAIN_LABEL}`));
+  assert.ok(red.calls.includes("POST /issues/20/comments"));
+  assert.ok(!red.calls.includes("PUT /pulls/20/merge"));
+  const draft = mockGh({20: {draft: true}});
+  let asked = null;
+  const d = await step({gh: draft.gh, home, apply: true, graphql: async (q, v) => { asked = v; return {}; }});
+  assert.equal(d.action, "ready");
+  assert.deepEqual(asked, {id: "N20"});
+  const dry = mockGh();
+  await step({gh: dry.gh, home, apply: false});
+  assert.ok(!dry.calls.some(c => /^(PUT|POST|DELETE)/.test(c)), "without apply it changes nothing");
+});
+
+test("prepare merges main into the branch, stamps, and pushes with a lease", async () => {
+  const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-git-"));
+  const sh = (cwd, ...a) => { const r = spawnSync("git", a, {cwd, encoding: "utf8"}); if ( r.status ) throw new Error(`git ${a.join(" ")}: ${r.stderr}`); return r.stdout.trim(); };
+  const origin = path.join(t, "origin.git"), work = path.join(t, "work"), clone = path.join(t, "runner"), home = path.join(t, "home");
+  fs.mkdirSync(home);
+  sh(t, "init", "-q", "--bare", "-b", "main", origin);
+  sh(t, "clone", "-q", origin, work);
+  for ( const c of [work] ) { sh(c, "config", "user.email", "t@example.com"); sh(c, "config", "user.name", "t"); }
+  fs.mkdirSync(path.join(work, "tools", "release"), {recursive: true});
+  // a stand-in for merge-stamp: commits a stamp file when a note waits under changes/
+  fs.writeFileSync(path.join(work, "tools", "release", "merge-stamp.mjs"), `import fs from "node:fs"; import {execSync} from "node:child_process";
+if ( fs.existsSync("changes/m/note.md") ) { fs.rmSync("changes/m/note.md"); fs.writeFileSync("stamped.txt", "1"); execSync("git add -A && git commit -q -m stamp"); console.log("Committed. Push"); }`);
+  fs.writeFileSync(path.join(work, "a.txt"), "a");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "base"); sh(work, "push", "-q", "origin", "main");
+  sh(work, "checkout", "-q", "-b", "claude/x");
+  fs.mkdirSync(path.join(work, "changes", "m"), {recursive: true});
+  fs.writeFileSync(path.join(work, "changes", "m", "note.md"), "---\nbump: patch\n---\nx");
+  fs.writeFileSync(path.join(work, "b.txt"), "b");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "branch work"); sh(work, "push", "-q", "origin", "claude/x");
+  const head = sh(work, "rev-parse", "HEAD");
+  sh(work, "checkout", "-q", "main"); fs.writeFileSync(path.join(work, "m.txt"), "main moved"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "main moves"); sh(work, "push", "-q", "origin", "main");
+  sh(t, "clone", "-q", origin, clone);
+  sh(clone, "config", "user.email", "t@example.com"); sh(clone, "config", "user.name", "t");
+  const git = async (argv, cwd) => spawnSync("git", argv, {cwd, encoding: "utf8"});
+  const r = await prepare({git, home, repoRoot: clone}, "claude/x", head);
+  assert.equal(r.error, undefined, r.error);
+  assert.equal(r.did, "main merged in and release notes stamped");
+  const tip = sh(origin, "rev-parse", "refs/heads/claude/x");
+  assert.equal(tip, r.sha, "pushed");
+  assert.equal(spawnSync("git", ["merge-base", "--is-ancestor", "main", tip], {cwd: origin}).status, 0, "the branch now holds main");
+  assert.equal(sh(origin, "show", `${tip}:stamped.txt`), "1");
+  // a thread that pushed meanwhile wins: the lease refuses the train's push
+  sh(work, "checkout", "-q", "claude/x"); sh(work, "pull", "-q", "--no-rebase", "origin", "claude/x"); fs.writeFileSync(path.join(work, "c.txt"), "c"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "more"); sh(work, "push", "-q", "origin", "claude/x");
+  sh(work, "checkout", "-q", "main"); fs.writeFileSync(path.join(work, "m2.txt"), "again"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "main again"); sh(work, "push", "-q", "origin", "main");
+  const stale = await prepare({git, home, repoRoot: clone}, "claude/x", tip);
+  assert.match(stale.error ?? "", /push to claude\/x was refused/);
+  // a conflict with main is named, and the worktree is left clean
+  sh(work, "checkout", "-q", "claude/x"); sh(work, "pull", "-q", "--no-rebase", "origin", "claude/x"); fs.writeFileSync(path.join(work, "a.txt"), "branch side"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "edit a"); sh(work, "push", "-q", "origin", "claude/x");
+  const h2 = sh(work, "rev-parse", "HEAD");
+  sh(work, "checkout", "-q", "main"); fs.writeFileSync(path.join(work, "a.txt"), "main side"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "edit a on main"); sh(work, "push", "-q", "origin", "main");
+  const clash = await prepare({git, home, repoRoot: clone}, "claude/x", h2);
+  assert.match(clash.error ?? "", /does not merge in cleanly/);
+  assert.equal(spawnSync("git", ["status", "--porcelain"], {cwd: path.join(home, "train"), encoding: "utf8"}).stdout.trim(), "");
+});
+
+test("B7203: a file review is carried over a merge with main when the branch's own change is the same", async () => {
+  const {hashOf} = await import("../release/merge-rules.mjs");
+  const real = new URL("../release/merge-rules.mjs", import.meta.url).href;
+  const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-rev-"));
+  const sh = (cwd, ...a) => { const r = spawnSync("git", a, {cwd, encoding: "utf8"}); if ( r.status ) throw new Error(`git ${a.join(" ")}: ${r.stderr}`); return r.stdout.trim(); };
+  const origin = path.join(t, "o.git"), work = path.join(t, "w"), clone = path.join(t, "r"), home = path.join(t, "h");
+  fs.mkdirSync(home);
+  sh(t, "init", "-q", "--bare", "-b", "main", origin); sh(t, "clone", "-q", origin, work);
+  sh(work, "config", "user.email", "t@example.com"); sh(work, "config", "user.name", "t");
+  const put = (f, s) => { fs.mkdirSync(path.dirname(path.join(work, f)), {recursive: true}); fs.writeFileSync(path.join(work, f), s); };
+  put("tools/release/merge-stamp.mjs", "");
+  put("tools/release/merge-rules.mjs", `export {gitIn, branchReviews, hashOf, REVIEW_DIR} from ${JSON.stringify(real)};\n`);
+  put("shared.txt", "one\ntwo\nthree\n"); put("other.txt", "x\n");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "base"); sh(work, "push", "-q", "origin", "main");
+  sh(work, "checkout", "-q", "-b", "claude/r");
+  put("shared.txt", "one\ntwo\nthree\nbranch line\n"); put("other.txt", "x\nbranch\n");
+  const review = [{file: "shared.txt", verdict: "working", how: "read in full; ran the tests", hash: hashOf("one\ntwo\nthree\nbranch line\n")},
+    {file: "other.txt", verdict: "working", how: "read in full; ran the tests", hash: "stale0000000"}];
+  put("docs/reviews/claude-r.jsonl", review.map(r => JSON.stringify(r)).join("\n") + "\n");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "branch"); sh(work, "push", "-q", "origin", "claude/r");
+  const head = sh(work, "rev-parse", "HEAD");
+  sh(work, "checkout", "-q", "main"); put("shared.txt", "zero\none\ntwo\nthree\n"); put("other.txt", "main\nx\n");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "main edits the shared files"); sh(work, "push", "-q", "origin", "main");
+  sh(t, "clone", "-q", origin, clone); sh(clone, "config", "user.email", "t@example.com"); sh(clone, "config", "user.name", "t");
+  const r = await prepare({git: async (argv, cwd) => spawnSync("git", argv, {cwd, encoding: "utf8"}), home, repoRoot: clone}, "claude/r", head);
+  assert.equal(r.error, undefined, r.error);
+  assert.match(r.did, /main merged in and 1 file review\(s\) carried over/);
+  const lines = sh(origin, "show", `${r.sha}:docs/reviews/claude-r.jsonl`).split("\n").map(l => JSON.parse(l));
+  const added = lines.slice(2);
+  assert.equal(added.length, 1, "only the file whose verdict was current before the merge");
+  assert.equal(added[0].file, "shared.txt");
+  assert.equal(added[0].hash, hashOf("zero\none\ntwo\nthree\nbranch line\n"));
+  assert.match(added[0].how, /^carried over by the merge train after main merged in: .*earlier check: read in full; ran the tests$/);
+});

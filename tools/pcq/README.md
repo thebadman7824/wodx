@@ -48,6 +48,7 @@ merge past it. "recheck": false in the job turns this off.
 
     powershell -ExecutionPolicy Bypass -File tools\pcq\start-runner.ps1     start it if it is not running
     D:\WoDX\pcq\runner-off                                                  a file there stops it once idle
+    D:\WoDX\pcq\runner-hold                                                 a file there: no new jobs, all else runs
     D:\WoDX\pcq\logs                                                        its logs (14 days kept)
 
 `lane-reset.cmd` runs `start-runner.ps1` every night, so the runner is back by morning after a reboot.
@@ -56,6 +57,12 @@ A watchdog (`watchdog.ps1`, B5210-B5212) runs apart from the runner, started thr
 the runner's wrapper starts it again whenever it is missing. Every two minutes it checks that `run-runner.ps1` is
 running and, if not, starts it again and writes a line in `logs\runner-console.log`. A file named `runner-off` in
 `D:\WoDX\pcq` keeps it from restarting the runner; a file named `watchdog-off` stops the watchdog itself.
+
+Hold (B7207): to keep the lanes free for other work (an art render, say) without stopping the runner, put a file
+named `runner-hold` in `D:\WoDX\pcq`. Running jobs finish, no new job starts and no running job takes more lanes,
+while the status issue, the stale-pull-request sweep, the merge train, self updates and cancels go on. The status
+issue shows a HOLD line. Delete the file to take jobs again. `runner-off` is for stopping the runner; while it waits
+for running jobs it now still updates the status issue.
 
 ## The second PC (B6880-B6882)
 
@@ -84,6 +91,17 @@ merge-rules.mjs reads. Nothing is queued for HOLD or handoff pull requests, chan
 inputs match a commit that already passed, or a commit already queued. Queue again by hand from the Actions tab
 (PC gates, Run workflow, the pull request number).
 
+Old commits (B7205): a waiting job for an older commit is closed when a newer one is queued. The runner also checks
+the pull request named in the title before it starts a job and every three minutes while it runs. When the pull
+request has moved on, merged or closed, a waiting job is closed as not planned, and a running one has its shared gate
+queue emptied: each lane ends after the gate it is on, nothing is retried or rechecked, and no `wodx/gates` status is
+posted. A failed lookup never drops a job.
+
+Cancel (B7206): close a running job's issue, or add the label `pc-cancel`, and within about 30 seconds the runner ends
+that job's processes (run-gate, lanes.mjs and what they started), resets each
+lane it used, posts "Cancelled" with no result or `wodx/gates` status, and closes the issue as not planned. Nothing is
+retried. A waiting job labelled `pc-cancel` is closed without running. No hand kill on the PC is needed.
+
 Lock-down (B7011): the workflow's `if:`, the job-started hook `D:\WoDX\gh-runner\job-started.ps1` (outside the
 repository; copy and installer in `tools/pcq/gh-runner/`), and the setting that holds outside contributors' runs
 for approval. Reinstall with `powershell -ExecutionPolicy Bypass -File tools\pcq\gh-runner\install.ps1`.
@@ -92,3 +110,15 @@ Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC star
 05:00 UTC. It waits for the GPU guard (gives up at 13:00 UTC), queues every gate on lane 8 for main's commit, and opens
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
 touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
+
+## The merge train (B7202)
+
+Pull requests labelled `merge-train` merge one at a time, oldest label first. Every few minutes the Main PC's runner
+(`"train": true` in runner.json; the other PCs' runners have it off) takes the front one: a draft is marked ready, main
+is merged in and the release notes stamped in its own worktree (`<home>/train`), the push is made with a lease on the
+head it saw, pc-gates.yml gates the new head and that gate job goes ahead of the rest of the queue, and it merges when
+`checks` and `wodx/merge-rules` are green. A conflict, a red result or nothing within `trainMaxHours` (3) takes it out
+with a comment. The rest of the line is left alone. The status issue shows the line; `node tools/pcq/train.mjs`
+prints what it would do now. The hourly sweep no longer merges main into open pull requests (`"sweepUpdates": true`
+brings that back). docs/WORKFLOW.md, section 6, is the thread's side.
+
