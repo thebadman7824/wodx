@@ -181,7 +181,7 @@ test("B7004: TOOLS.md and ROUTING.md exist and point at each other", () => {
   assert.match(fs.readFileSync(path.join(R.ROOT, "docs/WORKFLOW.md"), "utf8"), /read TOOLS\.md and ROUTING\.md/);
 });
 
-test("rule 4 (B7067): decision numbers come only from a block this branch claimed", () => {
+test("rule 5 (B7067): decision numbers come only from a block this branch claimed", () => {
   const frag = (lo, hi, numbers, thread = "") => ({file: `changes/decisions/B${lo}.md`, block: {lo, hi}, thread, numbers});
   const claims = [{lo: 7020, hi: 7049, thread: "line-rules"}, {lo: 7060, hi: 7079, thread: "improve"}];
   // a clean block: inside its claim, nothing on main
@@ -204,4 +204,51 @@ test("rule 4 (B7067): decision numbers come only from a block this branch claime
   assert.match(R.decisionProblems([frag(7060, 7079, [7061], "improve")], [], onMain, claims).join(), /B7061 is already written on main/);
   // the taken list reads index rows and headings
   assert.deepEqual(R.decisionsTaken("| B7000-B7009 | Merge rules | tools |\n## B7001. x\n"), [{lo: 7000, hi: 7009}, {lo: 7001, hi: 7001}]);
+});
+
+test("B7006: a pull request waiting only for its PC gates is pending, not failed; anything else broken fails", async () => {
+  const s = scratch();
+  try {
+    s.put("modules/wodx-foo/scripts/main.mjs", 'export const VERSION = "1.0.0";\nexport const n = 5;\n');
+    s.put("changes/wodx-foo/five.md", "---\nbump: patch\n---\nFoo counts to five.\n");
+    const text = fs.readFileSync(path.join(s.dir, "modules/wodx-foo/scripts/main.mjs"), "utf8");
+    s.put("docs/reviews/claude-x.jsonl", JSON.stringify({file: "modules/wodx-foo/scripts/main.mjs", verdict: "working", how: "read in full, ran the foo test", hash: R.hashOf(text)}) + "\n");
+    const code = s.commit(`Five${trailer}`);
+    const ev = statuses => R.evaluate({root: s.dir, base: "main", head: "HEAD", statuses});
+    const gate = state => async shas => shas.map(sha => ({sha, statuses: sha === code ? [{context: R.GATE_CONTEXT, state, description: "x"}] : []}));
+
+    // No gate result yet: pending, and the job does not fail
+    let r = await ev(async shas => shas.map(sha => ({sha, statuses: []})));
+    assert.equal(R.outcome(r), "pending");
+    const pend = R.statusBody(r, "https://github.com/o/r/actions/runs/1");
+    assert.equal(pend.context, R.RULES_CONTEXT);
+    assert.match(pend.description, /Waiting for the PC gates \(1 needed\)/);
+    assert.ok(pend.description.length <= 140);
+    assert.match(R.report(r), /Waiting for the PC gates/);
+
+    // The gates passed: success
+    r = await ev(gate("success"));
+    assert.equal(R.outcome(r), "success");
+    assert.equal(R.statusBody(r).description, "Every merge rule is met");
+
+    // The gates failed: a real failure
+    r = await ev(gate("failure"));
+    assert.equal(R.outcome(r), "failure");
+    assert.match(R.statusBody(r).description, /Not ready: gate result/);
+
+    // Waiting for gates but a file has no review: a real failure, not pending
+    s.put("modules/wodx-foo/scripts/main.mjs", 'export const VERSION = "1.0.0";\nexport const n = 6;\n');
+    s.commit(`Six${trailer}`);
+    r = await ev(async shas => shas.map(sha => ({sha, statuses: []})));
+    assert.equal(R.outcome(r), "failure");
+    assert.match(R.statusBody(r).description, /file review/);
+  } finally { fs.rmSync(s.dir, {recursive: true, force: true}); }
+});
+
+test("B7006: the owner's own work and a branch needing no gate are success", () => {
+  const base = {ok: false, bensOwn: true, gateWaiting: true, gatesNeeded: 2, rules: {note: [], gates: ["x"], review: ["y"]}};
+  assert.equal(R.outcome(base), "success");
+  assert.equal(R.outcome({...base, bensOwn: false, ok: true, rules: {note: [], gates: [], review: []}}), "success");
+  assert.equal(R.outcome({...base, bensOwn: false, rules: {note: [], gates: ["x"], review: []}}), "pending");
+  assert.equal(R.outcome({...base, bensOwn: false, gateWaiting: false, rules: {note: [], gates: ["x"], review: []}}), "failure");
 });

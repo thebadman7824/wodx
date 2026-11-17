@@ -78,7 +78,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      statuses: read
+      statuses: write
     name: merge rules
     steps:
       - uses: actions/checkout@v4
@@ -92,7 +92,10 @@ jobs:
       - name: Merge rules
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node tools/release/merge-rules.mjs --github --base origin/main --summary "$GITHUB_STEP_SUMMARY"
+        # B7006: the result is also the wodx/merge-rules commit status (required on main). While only the PC gates are
+        # still to come it is pending, so the pull request shows as waiting, not failed; the PC runner runs this job
+        # again when its result lands.
+        run: node tools/release/merge-rules.mjs --github --post-status --base origin/main --summary "$GITHUB_STEP_SUMMARY"
 
   harness:
     needs: changes
