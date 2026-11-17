@@ -358,3 +358,53 @@ export function printDiffs(title, list) {
   for ( const d of list.slice(0, 60) ) console.log(`  - ${d.where}: ${d.what}`);
   if ( list.length > 60 ) console.log(`  ... and ${list.length - 60} more (full list in the lane's drift file)`);
 }
+
+/**
+ * B7181 (Finish-Line Desk w3): document flags a gate changed. Gates share the testbed's actors and scenes, and flags a
+ * gate set on them (a haven, a domain, a learned tactic) used to stay for every later gate, so a gate could pass alone
+ * and fail late in a long run. before/after: {uuid: flags} read before and after the gate. Returns, for each document
+ * there both times whose flags differ, the keys to unset and the [scope, key, value] to set again.
+ */
+export function flagPlan(before, after) {
+  const out = [];
+  for ( const [uuid, was] of Object.entries(before ?? {}) ) {
+    const now = after?.[uuid];
+    if ( now === undefined || JSON.stringify(was) === JSON.stringify(now) ) continue;
+    const unset = [], set = [];
+    for ( const scope of new Set([...Object.keys(was ?? {}), ...Object.keys(now ?? {})]) ) {
+      const w = was?.[scope] ?? {}, n = now?.[scope] ?? {};
+      for ( const key of new Set([...Object.keys(w), ...Object.keys(n)]) ) {
+        if ( JSON.stringify(w[key]) === JSON.stringify(n[key]) ) continue;
+        if ( key in n ) unset.push([scope, key]);
+        if ( key in w ) set.push([scope, key, w[key]]);
+      }
+    }
+    if ( unset.length || set.length ) out.push({uuid, unset, set});
+  }
+  return out;
+}
+
+/** Runs in the page: every actor, scene, scene token, journal entry, item and user's flags, by uuid. */
+export const READ_FLAGS = () => {
+  const out = {};
+  for ( const c of ["actors", "scenes", "journal", "items", "users"] ) for ( const d of game[c] ?? [] ) {
+    out[d.uuid] = d._source?.flags ?? {};
+    if ( c === "scenes" ) for ( const t of d.tokens ?? [] ) out[t.uuid] = t._source?.flags ?? {};
+  }
+  return out;
+};
+
+/** Runs in the page: puts flags back by a flagPlan. A key that changed is unset first, so no merged leftovers stay. */
+export const PUT_FLAGS_BACK = async plan => {
+  let n = 0;
+  for ( const {uuid, unset, set} of plan ) {
+    const d = fromUuidSync(uuid);
+    if ( !d ) continue;
+    try {
+      for ( const [scope, key] of unset ) await d.unsetFlag(scope, key);
+      for ( const [scope, key, value] of set ) await d.setFlag(scope, key, value);
+      n++;
+    } catch (e) { /* a scope with no module behind it: leave it, the next reset takes it */ }
+  }
+  return n;
+};

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7170
+Next free block: B7200
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -407,6 +407,8 @@ Next free block: B7170
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
+| B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
+| B7190-B7199 | Gate trust: every gates job starts on a freshly reset lane (used B7190) | tools (pcq runner) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14063,3 +14065,18 @@ Reverse: drop the --reports option and reports.mjs; the journal entries stay.
 No new routine. The PC helper copies the seat's report files to /mnt/project-files/solo-reports/ (or runs reports.mjs export), and a thread files them on a branch with reports.mjs file and opens a pull request. The digest line goes into the morning digest.
 
 Reverse: stop collecting; reports stay in the world's journal.
+
+## B7180. A renamed decision fragment no longer clashes with itself (2026-11-17)
+Fix to B7145. branchDecisions() read every fragment ever added on a branch, including ones renamed away, so PR 1836's B7010.md (renumbered to B7110.md after PR 1835 took B7010) still claimed B7010. A fragment gone by the head now counts only when the commit that removed it also wrote docs/DECISIONS.md, which is what merge-stamp does. Regression test in tools/harness/registry.test.mjs.
+
+Reverse: drop the stamped check in branchDecisions().
+
+## B7181. Gates put back the flags they change (2026-11-17)
+Finish-Line Desk w3. PR 1896's gate run (job 1898) had three gates that pass alone and fail late in a long run (gate7b, gatehunters, gatetowns). The runner put settings back and deleted new documents, but flags a gate set on the shared actors, scenes, tokens, journal entries, items and users stayed for every later gate (gate7b's NPC weighs its own ground and territory before it flees). On lanes reset every night, run-gate.mjs now reads those flags before each gate and puts back what changed (tools/lanes/lib.mjs flagPlan; a changed key is unset, then set back whole). The gate's line says how many documents had flags put back. Failures still block; nothing is skipped. The PC runner runs tools from its own main checkout, so this lands before the gates of PR 1896 run again.
+
+Reverse: drop flagsBefore and the put-back block in run-gate.mjs.
+
+## B7190. Gates jobs reset the lane first (2026-11-17)
+Finish-Line Desk w3. PR 1848's job 1910 ran 268 gates on lane 8 and failed 15. Every one passed on the recheck. gate-maps failed as the second gate of the run, so this was not order inside the run. The lane started from whatever the last job left, because the runner reset a lane before a gates job only when the job said "reset": true, and CI's pr-gates never did. The recheck always reset first, so "passes alone" mixed up a dirty lane with gate order. Gates jobs now reset each lane before they run, like gate-two jobs do (jobs.mjs resetsFirst). "reset": false, or submit.mjs --no-reset, skips the reset for a quick hand-picked run. Order effects that remain after this are real leaks between gates. Test: tools/harness/pcq.test.mjs "B7190".
+
+Reverse: in runner.mjs, use `job.reset || job.kind === "gate-two"` again.

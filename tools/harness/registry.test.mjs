@@ -5,7 +5,9 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 import * as REG from "../registry/registry.mjs";
 import * as ST from "../registry/strength.mjs";
-import {registryRule, decisionClashes, upkeepWarnings} from "../release/merge-rules.mjs";
+import {registryRule, decisionClashes, upkeepWarnings, branchDecisions, gitIn} from "../release/merge-rules.mjs";
+import os from "node:os";
+import {execFileSync} from "node:child_process";
 
 /* Feature registry, gate strength and merge rule 4 (B7140-B7149, the Finish-Line Desk, 17 November 2026) */
 
@@ -172,4 +174,22 @@ test("gate strength baseline only shrinks: every other gate has an effect step (
   assert.deepEqual(added, [], "a new gate needs at least one step that drives a real trigger and checks the effect (tools/registry/strength.mjs); fix the gate, do not add it to the baseline");
   const better = Object.keys(base).filter(f => !(f in now));
   assert.deepEqual(better, [], "these gates now have an effect step or are gone: remove them from tools/registry/strength-baseline.json");
+});
+
+test("branchDecisions: a renamed fragment drops its old numbers; a stamped one keeps them (B7145, PR 1836)", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wodx-frag-"));
+  const git = (...a) => execFileSync("git", ["-c", "user.email=t@t", "-c", "user.name=t", ...a], {cwd: dir, encoding: "utf8"});
+  const put = (f, t) => { fs.mkdirSync(path.dirname(path.join(dir, f)), {recursive: true}); fs.writeFileSync(path.join(dir, f), t); };
+  git("init", "-q");
+  put("docs/DECISIONS.md", "# Decisions\n"); git("add", "-A"); git("commit", "-qm", "base");
+  const base = git("rev-parse", "HEAD").trim();
+  put("changes/decisions/B7010.md", "## B7010. A\n\n## B7011. B\n"); git("add", "-A"); git("commit", "-qm", "fragment");
+  git("mv", "changes/decisions/B7010.md", "changes/decisions/B7110.md");
+  put("changes/decisions/B7110.md", "## B7110. A\n\n## B7111. B\n"); git("add", "-A"); git("commit", "-qm", "renumber");
+  put("changes/decisions/B7120.md", "## B7120. C\n"); git("add", "-A"); git("commit", "-qm", "second fragment");
+  fs.rmSync(path.join(dir, "changes/decisions/B7120.md")); put("docs/DECISIONS.md", "# Decisions\n\n## B7120. C\n"); git("add", "-A"); git("commit", "-qm", "stamp");
+  const frags = branchDecisions(gitIn(dir), base, "HEAD");
+  fs.rmSync(dir, {recursive: true, force: true});
+  assert.deepEqual(frags.map(f => [f.file, f.numbers]), [["changes/decisions/B7110.md", ["B7110", "B7111"]], ["changes/decisions/B7120.md", ["B7120"]]]);
+  assert.deepEqual(decisionClashes(frags, "# Decisions\n\n## B7010. Taken by PR 1835\n"), [], "B7010 was renamed away, so no clash");
 });
