@@ -400,7 +400,7 @@ Next free block: B6990
 | B6940-B6949 | Final Audit Desk rulings (lead part) | system, all modules (comments only), tools, docs |
 | B6950-B6959 | Gate run 1774 fixes | wodx-sheets, wodx-chronicle, tools |
 | B6960-B6969 | Gate run 1779 fixes | tools |
-| B6970-B6979 | gatetruthrelay fighter that a 2-level hit does not Daze | tools |
+| B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
 <!-- decision-index:end -->
 
