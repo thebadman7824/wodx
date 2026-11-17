@@ -26,7 +26,7 @@
  * the Master Plan order; "after" an issue number this job waits for; "thread" the thread to tell.
  */
 export const OWNER = "thebadman7824", REPO_NAME = "wodx";
-export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", failed: "pc-failed", alert: "pc-alert", status: "pc-status"};
+export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", failed: "pc-failed", alert: "pc-alert", status: "pc-status", cancel: "pc-cancel"};
 export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
 export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane"]);
 const NAME = /^[\w-]{1,64}$/;

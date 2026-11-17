@@ -410,7 +410,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7204) | tools (PC job queue, testbed lanes) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7207) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14225,3 +14225,18 @@ Reverse: remove the B7203 branch in decide() and the carryReviews call in prepar
 Testbed lanes. After the Main PC runner restarted at 13:44Z on 17 November, lanes 3 and 5 were up but their server.pid named no live process, so every deploy there stopped with "Lane N is up, but not by a server this tool started" and job 1943 failed in 0 minutes. lanes.mjs stop now asks Windows which process listens on the lane's port and takes it over (writing server.pid again) only when that process is node and its command line names this lane's data folder and port, the same test that already guards every kill. Any other process on the port still stops the command with the old message, so nothing but the lane's own Foundry is ever ended.
 
 Reverse: remove lanePidByPort and its call in stop() in tools/lanes/lanes.mjs.
+
+## B7205. Gate runs for an old commit of a pull request are dropped or stopped (2026-11-17)
+PC job queue. pr-gates.mjs already closed a queued gates job when a newer commit of its pull request arrived, but skipped one that was running. On 17 November job 1932 ran on lane 2 for more than an hour for an old head of PR 1848, after the runner restart queued it again, while job 1949 gated the new head; its result could not be used and it kept the runner from updating. The runner now looks up the pull request named in a gates job title ("[PR #n sha]") before it starts the job and every three minutes while it runs. When the pull request has moved on to another commit, merged or closed, a waiting job is closed as not planned without running, and a running one has its shared gate queue emptied, so each lane ends after the gate it is on; the job is then closed as stopped with no gate status posted. A failed lookup never drops a job. Gates are never killed mid-run, so no lane is left in a broken state.
+
+Reverse: remove tools/pcq/stale.mjs, staleJob, drop and stopStale and their calls in tools/pcq/runner.mjs, and stop() with its check in putBack in tools/lanes/gate-queue.mjs.
+
+## B7206. A running PC job can be cancelled from its issue (2026-11-17)
+PC job queue. On 17 November job 1932 kept lane 2 busy after its issue was closed by hand: the runner never looked at the issue again, and only killing the gate process on the PC (which needs an explicit OK) freed the lane. The runner now keeps the child processes of each job, known by the job's log name, and every poll checks its running jobs. A job whose issue carries the label pc-cancel, or whose issue reads as closed when fetched on its own (the list alone can lag), is cancelled: its shared gate queue is stopped, its process trees are ended, each lane it used is reset, nothing is retried or rechecked, and the issue gets a "Cancelled" comment with no result or gate status and is closed as not planned. A waiting job labelled pc-cancel is closed without running. A job the runner is already finishing is never cancelled.
+
+Reverse: remove the cancel block (procs, halted, running, cancelJob, cancelCheck and their calls) from tools/pcq/runner.mjs, jobOfLog from tools/pcq/stale.mjs, and LABEL.cancel from tools/pcq/jobs.mjs.
+
+## B7207. runner-hold takes no new jobs and keeps everything else running (2026-11-17)
+PC job queue. On 17 November a runner-off file was put on the Main PC at about 14:35Z to keep the lanes free for an art render. While a job still ran, runner-off made the main loop sleep and skip every pass, so the status issue, the sweep, the merge train, self updates and job cancels all stopped for half an hour and the runner looked hung. A new file, runner-hold, in the runner folder only stops job pickup and stops running jobs taking more lanes; every other pass goes on, and the status issue shows a HOLD line. runner-off keeps its meaning (stop once idle) and now updates the status issue while it waits.
+
+Reverse: remove the holding check and its two uses and the note argument of status() in tools/pcq/runner.mjs, and the status call in the runner-off branch.
