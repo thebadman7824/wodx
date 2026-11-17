@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7030
+Next free block: B7170
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -385,7 +385,7 @@ Next free block: B7030
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: two-browser gates use the lane's own address (used B6880-B6886) | tools (PC job queue) |
+| B6880-B6889 | Second PC runner: lane 7 takes only small named-gate jobs (used B6880-B6887) | tools (PC job queue, testbed lanes) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -405,6 +405,7 @@ Next free block: B7030
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
+| B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13566,6 +13567,11 @@ PC job queue. The runner started gate-two.mjs with a fixed https://localhost:<po
 
 Reverse: put the fixed https address back at the gate-two call in tools/pcq/runner.mjs.
 
+## B6887. Lane 7 takes only small named-gate jobs (2026-11-17)
+PC job queue. The Laptop (2 cores, no graphics card) took touched-gates job #1849 on lane 7 alone. At about 16 minutes a gate on one lane that is a run of many hours, and it held every job queued behind it. Lane 7 now has "maxGates": 10 in lanes.json, and `laneRefuses` in tools/lanes/lib.mjs says why a job does not fit. A gates job that is touched, every-gate, queue-based or longer than 10 gates is refused. submit.mjs stops such a job named on lane 7. The Laptop runner fails such a job if it names lane 7, and otherwise leaves it for the Main PC's lanes. Two-browser, setup and reset jobs are unchanged. docs/ROUTING.md says so.
+
+Reverse: drop "maxGates" from lane 7 in tools/lanes/lanes.json (the checks then do nothing), or remove the laneRefuses calls.
+
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
 
@@ -13986,3 +13992,23 @@ on main's commit as for any all-gates job, and a gate failing there reads as a f
 `run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
 runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
 (BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
+
+## B7160. Report a problem, in the solo world (2026-11-17)
+WoDX Solo. Finish-Line Desk w1, with the owner's note: testing goes through the solo world, where the owner plays most nights. While The Lone Chronicle is on, the player's panel (under More) and the Storyteller's Settings sidebar have Report a problem. A short form asks what happened, what was expected and the kind of problem (broke, rule wrong, looks wrong, missing, other). The report adds what the client saw: the build label and commit, the scene, the character, the game date, the last 20 console errors (caught from the moment the module loads), the last five chat card titles and the open windows. The form is a tool window, so its wording is plain and out of the fiction.
+
+Reverse: remove report.mjs and report-rules.mjs, the PANEL entry and installReport.
+
+## B7161. Frozen test builds (release candidates) for the solo world (2026-11-17)
+tools/release/rc.mjs. A release candidate is one commit of main named rc-YYYY-MM-DD. `rc.mjs deploy` refuses while anything listens on the world's port, refuses the Live world and any commit not on main, backs up the world, the WoDX modules and the system, copies the system and every wodx- module from the commit (git archive), stamps release.json with the label (stamp.mjs --label), and checks each copied file's MD5 against the commit. Live is unchanged: its releases still follow LIVE-RELEASE-CHECKLIST.md and need the owner's go-ahead. docs/SOLO-TESTING.md describes the flow.
+
+Reverse: delete rc.mjs and SOLO-TESTING.md; stamps without a label read as before.
+
+## B7162. Where reports go: a journal entry, a file on the PC, a fault in the registry (2026-11-17)
+WoDX Solo, tools/solo. The seat saves each report as a journal entry in the Reported problems folder, readable by the reporter, with the whole report on flags.wodx-solo.report, and sends Hooks "wodxSoloReported". A player's report made with no Storyteller connected waits on the player's own user flag (wodx-solo.pending), and the next Storyteller to connect saves it. tools/solo/seat.mjs --reports <folder> writes each saved report to <folder>/<id>.json and marks the entry exported. tools/solo/reports.mjs export does the same for a running world, and reports.mjs file files them in the feature registry in the registry thread's format: a fault on the row whose files the errors come from (the registry's ownerOf; the row named by most errors), else in registry/features/_inbox.json with a module guess. Errors, cards, windows and module versions stay in the exported file. It also prints the morning digest's line.
+
+Reverse: drop the --reports option and reports.mjs; the journal entries stay.
+
+## B7163. Collecting once a day, inside the morning routine (2026-11-17)
+No new routine. The PC helper copies the seat's report files to /mnt/project-files/solo-reports/ (or runs reports.mjs export), and a thread files them on a branch with reports.mjs file and opens a pull request. The digest line goes into the morning digest.
+
+Reverse: stop collecting; reports stay in the world's journal.
