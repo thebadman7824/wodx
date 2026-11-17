@@ -1,0 +1,2 @@
+{"file":"tools/lanes/lanes.mjs","verdict":"working","how":"read in full; lanes.test.mjs passes; takeover reuses the existing pidIsLane guard (node, lane data folder and port on the command line)","hash":"5a4e929fa096","at":"2026-11-17T14:04Z"}
+{"file":"tools/harness/lanes.test.mjs","verdict":"working","how":"read in full; lanes.test.mjs passes; takeover reuses the existing pidIsLane guard (node, lane data folder and port on the command line)","hash":"d1c863191cb9","at":"2026-11-17T14:04Z"}
