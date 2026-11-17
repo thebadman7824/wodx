@@ -250,3 +250,13 @@ test("B7002: a touched or all gates job sets the wodx/gates status on the one co
   assert.match(m.body.description, /failing on main too: gateb/);
   assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
 });
+
+test("B6993: the job comment starts with every gate's line, failures first-hand, so the size cap never hides results", async () => {
+  const J = await import("../pcq/jobs.mjs");
+  const d = J.gateDigest([{lane: 8, text: "==== start\ngatea: 3/3 passed [1 setting(s) put back]\n  DIAG console noise\ngateb: 1/2 passed; failed: 2. x\ngatec: ERROR boom\ngated: 0/0 passed"}]);
+  assert.match(d, /^1 of 4 gate\(s\) passed\./);
+  assert.match(d, /- gateb: 1\/2 passed/); assert.match(d, /- gatec: ERROR boom/); assert.match(d, /- gated: 0\/0/);
+  assert.doesNotMatch(d, /gatea|DIAG/);
+  assert.equal(J.gateDigest([{text: "no gates here"}]), "");
+  assert.match(fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8"), /gateDigest\(parts\)/);
+});

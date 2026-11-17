@@ -217,3 +217,15 @@ export function gateStatusFor(job, parts, ok, failing = failingGates, url = unde
   else { state = "failure"; description = `${bad.length || "some"} of ${ran} gate(s) failed${bad.length ? `: ${bad.join(" ")}` : ""}`; }
   return {sha: [...shas][0], body: {state, context: GATE_CONTEXT, description: description.slice(0, 140), ...(url ? {target_url: url} : {})}};
 }
+
+/**
+ * B6993: the gate lines of every lane first (failures in full up to 400 characters, passes counted), so a diag run's
+ * console dumps cannot push the results past the comment's size cap (job 1837 lost 200 of 217 gate lines that way).
+ */
+export function gateDigest(parts = []) {
+  const lines = parts.flatMap(p => String(p.text ?? "").split("\n")).filter(l => /^[\w-]+: /.test(l) && /passed|ERROR|failed/.test(l));
+  if ( !lines.length ) return "";
+  const passed = l => { const m = /: (\d+)\/(\d+) passed/.exec(l); return !!m && m[1] === m[2] && m[2] !== "0" && !/ERROR|failed:/.test(l); };
+  const bad = lines.filter(l => !passed(l));
+  return `${lines.length - bad.length} of ${lines.length} gate(s) passed.${bad.length ? `\n\nNot passed:\n${bad.map(l => `- ${l.slice(0, 400)}`).join("\n")}` : ""}\n\n`;
+}

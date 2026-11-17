@@ -11,3 +11,6 @@
 {"file":"tools/lanes/browser.mjs","verdict":"working","how":"read waitApis, openGM listeners and the per-gate notes in full; lanes.test 22 pass incl. the new B6992 reload test","hash":"dbfc6919ef96","at":"2026-11-17T02:00Z"}
 {"file":"tools/lanes/run-gate.mjs","verdict":"working","how":"read waitApis, openGM listeners and the per-gate notes in full; lanes.test 22 pass incl. the new B6992 reload test","hash":"9a910ee119d7","at":"2026-11-17T02:00Z"}
 {"file":"tools/harness/lanes.test.mjs","verdict":"working","how":"read waitApis, openGM listeners and the per-gate notes in full; lanes.test 22 pass incl. the new B6992 reload test","hash":"2237efde55ab","at":"2026-11-17T02:00Z"}
+{"file":"tools/pcq/runner.mjs","verdict":"working","how":"read gateDigest and its one caller; pcq.test 23 pass incl. the new B6993 test","hash":"474602ed6328","at":"2026-11-17T02:50Z"}
+{"file":"tools/pcq/jobs.mjs","verdict":"working","how":"read gateDigest and its one caller; pcq.test 23 pass incl. the new B6993 test","hash":"23073d8109be","at":"2026-11-17T02:50Z"}
+{"file":"tools/harness/pcq.test.mjs","verdict":"working","how":"read gateDigest and its one caller; pcq.test 23 pass incl. the new B6993 test","hash":"6119a9c4a6de","at":"2026-11-17T02:50Z"}
