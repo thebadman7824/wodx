@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {decide, line, statusOf, checkOf, isFrontJob, step, prepare, TRAIN_LABEL} from "../pcq/train.mjs";
+import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, TRAIN_LABEL} from "../pcq/train.mjs";
 
 const H = 3600e3;
 const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
@@ -33,6 +33,19 @@ test("decide: conflict leaves, draft is marked ready, behind or unstamped is pre
   assert.equal(decide({...gateOnly, frontFor: 4 * H}).action, "leave", "no gate result in 3 hours: out");
   assert.equal(decide({...gateOnly, mergeRulesWhy: "Not ready: gate result, file review"}).action, "leave", "another rule broken: out");
   assert.equal(decide({...ready, gates: null}).action, "merge", "a change that needs no gate merges on checks and merge rules alone");
+});
+
+test("B7208: checks red only because the merge rules job waits on the gate result is a wait (PR 1848, 15:34Z)", () => {
+  const gateOnly = {...ready, mergeRules: "failure", mergeRulesWhy: "Not ready: gate result", gates: null, checks: "failure"};
+  assert.equal(decide({...gateOnly, otherChecksFailed: false}).action, "wait");
+  assert.equal(decide({...gateOnly, otherChecksFailed: true}).action, "leave", "a real job failed: out");
+  assert.equal(decide({...gateOnly}).action, "leave", "unknown other jobs with red checks: out, as before");
+  assert.equal(decide({...gateOnly, otherChecksFailed: false, frontFor: 4 * H}).action, "leave");
+  assert.equal(decide({...ready, checks: "failure", otherChecksFailed: false}).action, "leave", "no gate wait: red checks still put it out");
+  const run = (name, conclusion, at = "2026-11-17T15:00:00Z") => ({name, status: "completed", conclusion, started_at: at});
+  assert.equal(othersFailed([run("checks", "failure"), run("merge rules", "failure"), run("harness 1", "success"), run("quality", "success"), run("reject", "skipped")]), false);
+  assert.equal(othersFailed([run("checks", "failure"), run("merge rules", "failure"), run("harness 2", "failure")]), true);
+  assert.equal(othersFailed([run("harness 2", "failure", "2026-11-17T14:00:00Z"), run("harness 2", "success", "2026-11-17T15:00:00Z")]), false, "a rerun that passed counts");
 });
 
 test("the line is oldest label first; statuses and check runs read the newest", () => {
