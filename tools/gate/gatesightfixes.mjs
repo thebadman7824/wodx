@@ -15,8 +15,8 @@
  *   6. Wayfare on the map: a portal that opened makes a trod between two gate scenes' Near Dreaming levels
  *   7. A remote vehicle: an empty gate car driven 2 squares east moves on the map with its passenger aboard
  *   8. The other worlds' sound switch says nothing plays until the loops are put in
- *   9. Weather in the rolls: with the fog night set, a firearms roll out of doors is 2 harder in WoDX Chronicle's roll
- *      effects, and a melee roll is not
+ *   9. Weather in the rolls (B7054, V20 p. 229): with the fog night set, a Perception roll by sight out of doors is 1 harder in WoDX Chronicle's roll
+ *      effects, a firearms or melee roll is not, and the weather halves a ranged weapon's reach
  * Only the gate's own actors are healed, and the dialog that names the far scene is answered by the gate.
  * Result: Data/wodx-gate/gatesightfixes-result.json.
  */
@@ -137,11 +137,15 @@ export async function run() {
     });
 
     await G.step("9. Weather reaches the rolls", async () => {
+      // B7054: V20 p. 229: fog makes Perception by sight or hearing 1 harder and halves a ranged weapon's reach; a shot is no harder
       const C = game.modules.get("wodx-chronicle")?.api?.traits;
+      const sight = C?.effects?.(garou, {channel: "roll", tags: ["perception", "sight"]}) ?? [];
       const ranged = C?.effects?.(garou, {channel: "roll", tags: ["dexterity", "ranged", "firearms"]}) ?? [];
       const melee = C?.effects?.(garou, {channel: "roll", tags: ["dexterity", "melee"]}) ?? [];
-      const w = ranged.find(e => e.key === "weather-sight");
-      G.ok("9. Weather reaches the rolls", w?.diff === 2 && !melee.some(e => /^weather-/.test(e.key ?? "")), {ranged: ranged.map(e => [e.key, e.diff]), melee: melee.map(e => e.key)});
+      const w = sight.find(e => e.key === "weather-senses");
+      const reach = (atm.weather.modifiers(atm.weather.now(fogScene)) ?? []).find(m => m.id === "senses")?.range;
+      G.ok("9. Weather reaches the rolls", w?.diff === 1 && reach === 0.5 && !ranged.some(e => /^weather-/.test(e.key ?? "")) && !melee.some(e => /^weather-/.test(e.key ?? "")),
+        {sight: sight.map(e => [e.key, e.diff]), reach, ranged: ranged.map(e => e.key), melee: melee.map(e => e.key)});
     });
   } catch (e) {
     G.R.errors.push(String(e?.stack ?? e));
