@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6990
+Next free block: B7010
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -402,6 +402,7 @@ Next free block: B6990
 | B6960-B6969 | Gate run 1779 fixes | tools |
 | B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
+| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7003) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13880,3 +13881,41 @@ Reverse: read only runner.json's lanes again in submit.mjs.
 B6972. gatetruthrelay's fighter now has Stamina 3 with its total set too (issue 1815; the Stamina change came from an outside agent on handoff/cline-1815, PR 1829). Since B6660 a Dazed player loses the turn in a started fight, and the fighter (Stamina 1) was Dazed by the 2-level burn of the bearer's sheath, so its pistol shot and punch were refused and steps c, d, 4 and 5 failed. Raising only the value was not enough: Actor.create does not work out an attribute's total, and WoDX Combat reads the total for the Dazed threshold, so the total is set as well.
 effect: none, a gate change only; play is unchanged.
 visible: none, only the gate's test fighter changes.
+
+## B7000. CI enforces the merge rules (2026-11-17)
+Repository workflow. The checking rules lived only in thread instructions, so a pull request could merge without
+them and nobody would know. `tools/release/merge-rules.mjs` now checks three of them on every pull request, in a
+"merge rules" job whose result feeds the required "checks" result: a release note for every changed module (with
+effect: and visible: for minor and major notes), a passing gate result for the touched gates on the code as it is,
+and a review verdict for every changed file. Changes are measured from the merge base with main, with version
+stamps and the files merge-stamp writes left out. Notes are read from the branch's history, because merge-stamp
+removes them before the merge. Pull requests whose every commit is the owner's own (authored by the owner's
+account, no Claude or agent trailer) are reported and never blocked.
+
+Reverse: drop the merge-rules job from .github/workflows/checks.yml and from the needs of the checks job.
+
+## B7001. Per-file review records (2026-11-17)
+Repository workflow. A branch records a verdict for each changed file in docs/reviews/<branch>.jsonl with
+`tools/release/review.mjs`, with a hash of the file as reviewed (version strings ignored) and a line on how it was
+checked. Only lines the pull request adds count. A file changed after its review shows as unreviewed again. A glob
+may cover data and images, never a script. Only working (or dead, for a deleted file) can merge.
+
+Reverse: drop rule 3 from merge-rules.mjs.
+
+## B7002. The PC runner sets the wodx/gates status (2026-11-17)
+PC job queue. A gates job with touched: true or all: true sets the `wodx/gates` commit status on the one commit its
+lanes ran (none when lanes ran different commits, the shared queue was listed from another commit, or a lane fault
+left no result), linking the job issue, then starts the branch's failed pull request checks again (waiting up to an
+hour for a run still going). A gate the recheck finds failing on main too passes the status and is named in it, so
+an old fault on main does not hold every pull request. Jobs may now name handoff/ branches, so HOLD pull requests
+can be gated. A gate result counts for the merge rules while the branch's module, system and gate files are the same
+as on the gated commit.
+
+Reverse: drop gateStatus from runner.mjs and gateStatusFor from jobs.mjs.
+
+## B7003. merge-stamp --check runs the merge rules (2026-11-17)
+Release tooling. `merge-stamp.mjs --check` prints the merge rules' report and fails on a broken note or review rule
+(and on the gate rule when a GITHUB_TOKEN lets it read the result). A minor or major note with no effect: line now
+blocks the merge instead of warning.
+
+Reverse: remove the merge-rules block from the --check branch of merge-stamp.mjs.
