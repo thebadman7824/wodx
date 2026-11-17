@@ -121,8 +121,11 @@ test("the stale pull request sweep moves on what it can and lists what is stuck 
   const base = {mergeable: true, behind: 0, checks: 8, running: false, failed: "", headAge: 5 * HOUR, tried: false};
   assert.equal(classify(base).action, "ok");
   assert.equal(classify({...base, mergeable: false}).action, "stuck");
-  assert.equal(classify({...base, behind: 1368}).action, "update");
-  assert.equal(classify({...base, behind: 3, headAge: HOUR}).action, "wait", "a branch a thread pushed to in the last 2 hours is left alone");
+  // B7202: a branch behind main is left for the merge train; the hourly update comes back only when asked for
+  assert.equal(classify({...base, behind: 1368}).action, "ok");
+  assert.equal(classify({...base, behind: 1368, checks: 0}).action, "dispatch", "behind with no CI still gets CI started");
+  assert.equal(classify({...base, behind: 1368}, {update: true}).action, "update");
+  assert.equal(classify({...base, behind: 3, headAge: HOUR}, {update: true}).action, "wait", "a branch a thread pushed to in the last 2 hours is left alone");
   assert.equal(classify({...base, checks: 0}).action, "dispatch");
   assert.equal(classify({...base, checks: 0, headAge: 10 * 60e3}).action, "wait");
   assert.equal(classify({...base, checks: 0, tried: true}).action, "stuck");
@@ -151,7 +154,11 @@ test("the sweep runs on a mock GitHub: updates the one behind, starts CI on the 
     if ( url.startsWith("/issues?") ) return [];
     return {};
   };
-  const r = await sweep(gh, {apply: true, log: () => {}});
+  const quiet = await sweep(gh, {apply: true, log: () => {}});
+  assert.deepEqual(quiet.rows.map(x => x.action), ["ok", "dispatch", "stuck"], "B7202: the one behind is left for the merge train");
+  assert.ok(!calls.includes("PUT /pulls/1/update-branch"));
+  calls.length = 0;
+  const r = await sweep(gh, {apply: true, log: () => {}, update: true});
   assert.equal(r.rows.length, 3, "only the owner's pull requests");
   assert.deepEqual(r.rows.map(x => x.action), ["update", "dispatch", "stuck"]);
   assert.ok(calls.includes("PUT /pulls/1/update-branch"));
@@ -268,4 +275,13 @@ test("B7190: gates jobs start on a reset lane unless they say reset: false", () 
   assert.equal(resetsFirst({kind: "deploy"}), false);
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
+});
+
+test("B7194: a runner whose own code is current moves to main in place when only the lane tools changed", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const due = src.slice(src.indexOf("async function updateDue"), src.indexOf("// ---- two PCs"));
+  assert.match(due, /"diff", "--quiet", MY_SHA, "origin\/main", "--", "tools\/pcq"\]/, "it checks the runner's own code first");
+  assert.match(due, /"checkout", "-q", "-f", "--detach", "origin\/main"\]/, "and moves the checkout in place");
+  assert.match(due, /MY_SHA = now; return false;/, "without exiting");
+  assert.match(src, /^let MY_SHA = /m);
 });

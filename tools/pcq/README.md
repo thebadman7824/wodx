@@ -92,3 +92,15 @@ Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC star
 05:00 UTC. It waits for the GPU guard (gives up at 13:00 UTC), queues every gate on lane 8 for main's commit, and opens
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
 touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
+
+## The merge train (B7202)
+
+Pull requests labelled `merge-train` merge one at a time, oldest label first. Every few minutes the Main PC's runner
+(`"train": true` in runner.json; the other PCs' runners have it off) takes the front one: a draft is marked ready, main
+is merged in and the release notes stamped in its own worktree (`<home>/train`), the push is made with a lease on the
+head it saw, pc-gates.yml gates the new head and that gate job goes ahead of the rest of the queue, and it merges when
+`checks` and `wodx/merge-rules` are green. A conflict, a red result or nothing within `trainMaxHours` (3) takes it out
+with a comment. The rest of the line is left alone. The status issue shows the line; `node tools/pcq/train.mjs`
+prints what it would do now. The hourly sweep no longer merges main into open pull requests (`"sweepUpdates": true`
+brings that back). docs/WORKFLOW.md, section 6, is the thread's side.
+
