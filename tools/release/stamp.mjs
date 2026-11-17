@@ -2,7 +2,9 @@
 // Foundry Data folder). Writes {"commit", "date"} into release.json in the system and
 // every wodx- module found under the target folder.
 //
-//   node tools/release/stamp.mjs <folder> [--commit <sha>] [--date <iso>]
+//   node tools/release/stamp.mjs <folder> [--commit <sha>] [--date <iso>] [--label rc-YYYY-MM-DD]
+//
+// --label names a frozen test build (B7161); the Settings line and Report a problem show it.
 //
 // <folder> is a Foundry Data folder (systems/worldofdarkness, modules/wodx-*) or a repo
 // copy (system/worldofdarkness, modules/wodx-*). Without --commit the commit checked out
@@ -29,10 +31,12 @@ export function packageFolders(target) {
   return out;
 }
 
-export function stamp(target, commit, date) {
+export function stamp(target, commit, date, label = null) {
   if (!/^[0-9a-f]{40}$/i.test(commit)) throw new Error(`not a full commit hash: ${commit}`);
+  if (label !== null && !/^[\w.-]{1,40}$/.test(label)) throw new Error(`not a build label: ${label}`);
   const folders = packageFolders(target);
-  for (const f of folders) writeFileSync(join(f, 'release.json'), JSON.stringify({ commit: commit.toLowerCase(), date }) + '\n');
+  const body = label ? { commit: commit.toLowerCase(), date, label } : { commit: commit.toLowerCase(), date };
+  for (const f of folders) writeFileSync(join(f, 'release.json'), JSON.stringify(body) + '\n');
   return folders;
 }
 
@@ -45,8 +49,9 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const opt = k => { const i = args.indexOf(k); return i >= 0 ? args.splice(i, 2)[1] : undefined; };
   let commit = opt('--commit');
   let date = opt('--date');
+  const label = opt('--label') ?? null;
   const target = args[0];
-  if (!target) { console.error('usage: node tools/release/stamp.mjs <folder> [--commit <sha>] [--date <iso>]'); process.exit(2); }
+  if (!target) { console.error('usage: node tools/release/stamp.mjs <folder> [--commit <sha>] [--date <iso>] [--label rc-YYYY-MM-DD]'); process.exit(2); }
   if (!commit) {
     if (git('status', '--porcelain', '--untracked-files=no')) { console.error('this repo has uncommitted changes; commit them or pass --commit'); process.exit(1); }
     commit = git('rev-parse', 'HEAD');
@@ -54,7 +59,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     commit = git('rev-parse', commit);
   }
   if (!date) date = git('show', '-s', '--format=%cI', commit);
-  const done = stamp(resolve(target), commit, date);
+  const done = stamp(resolve(target), commit, date, label);
   if (!done.length) { console.error(`no WoDX system or modules under ${target}`); process.exit(1); }
-  console.log(`stamped ${done.length} packages with ${commit.slice(0, 7)} (${date})`);
+  console.log(`stamped ${done.length} packages with ${label ? `${label}, ` : ''}${commit.slice(0, 7)} (${date})`);
 }

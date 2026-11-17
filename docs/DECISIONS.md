@@ -406,8 +406,9 @@ Next free block: B7200
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
+| B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
-| B7190-B7199 | Gate trust: every gates job starts on a freshly reset lane (used B7190) | tools (pcq runner) |
+| B7190-B7199 | Gate trust: the runner removes what a gate placed on a shared scene (used B7190-B7193) | tools (lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14045,6 +14046,26 @@ Pick w4. docs/ROUTING.md: no new machines, lanes, runners, status pushes or PC t
 
 Reverse: remove upkeepWarnings from merge-rules.mjs and the section in ROUTING.md.
 
+## B7160. Report a problem, in the solo world (2026-11-17)
+WoDX Solo. Finish-Line Desk w1, with the owner's note: testing goes through the solo world, where the owner plays most nights. While The Lone Chronicle is on, the player's panel (under More) and the Storyteller's Settings sidebar have Report a problem. A short form asks what happened, what was expected and the kind of problem (broke, rule wrong, looks wrong, missing, other). The report adds what the client saw: the build label and commit, the scene, the character, the game date, the last 20 console errors (caught from the moment the module loads), the last five chat card titles and the open windows. The form is a tool window, so its wording is plain and out of the fiction.
+
+Reverse: remove report.mjs and report-rules.mjs, the PANEL entry and installReport.
+
+## B7161. Frozen test builds (release candidates) for the solo world (2026-11-17)
+tools/release/rc.mjs. A release candidate is one commit of main named rc-YYYY-MM-DD. `rc.mjs deploy` refuses while anything listens on the world's port, refuses the Live world and any commit not on main, backs up the world, the WoDX modules and the system, copies the system and every wodx- module from the commit (git archive), stamps release.json with the label (stamp.mjs --label), and checks each copied file's MD5 against the commit. Live is unchanged: its releases still follow LIVE-RELEASE-CHECKLIST.md and need the owner's go-ahead. docs/SOLO-TESTING.md describes the flow.
+
+Reverse: delete rc.mjs and SOLO-TESTING.md; stamps without a label read as before.
+
+## B7162. Where reports go: a journal entry, a file on the PC, a fault in the registry (2026-11-17)
+WoDX Solo, tools/solo. The seat saves each report as a journal entry in the Reported problems folder, readable by the reporter, with the whole report on flags.wodx-solo.report, and sends Hooks "wodxSoloReported". A player's report made with no Storyteller connected waits on the player's own user flag (wodx-solo.pending), and the next Storyteller to connect saves it. tools/solo/seat.mjs --reports <folder> writes each saved report to <folder>/<id>.json and marks the entry exported. tools/solo/reports.mjs export does the same for a running world, and reports.mjs file files them in the feature registry in the registry thread's format: a fault on the row whose files the errors come from (the registry's ownerOf; the row named by most errors), else in registry/features/_inbox.json with a module guess. Errors, cards, windows and module versions stay in the exported file. It also prints the morning digest's line.
+
+Reverse: drop the --reports option and reports.mjs; the journal entries stay.
+
+## B7163. Collecting once a day, inside the morning routine (2026-11-17)
+No new routine. The PC helper copies the seat's report files to /mnt/project-files/solo-reports/ (or runs reports.mjs export), and a thread files them on a branch with reports.mjs file and opens a pull request. The digest line goes into the morning digest.
+
+Reverse: stop collecting; reports stay in the world's journal.
+
 ## B7180. A renamed decision fragment no longer clashes with itself (2026-11-17)
 Fix to B7145. branchDecisions() read every fragment ever added on a branch, including ones renamed away, so PR 1836's B7010.md (renumbered to B7110.md after PR 1835 took B7010) still claimed B7010. A fragment gone by the head now counts only when the commit that removed it also wrote docs/DECISIONS.md, which is what merge-stamp does. Regression test in tools/harness/registry.test.mjs.
 
@@ -14059,3 +14080,18 @@ Reverse: drop flagsBefore and the put-back block in run-gate.mjs.
 Finish-Line Desk w3. PR 1848's job 1910 ran 268 gates on lane 8 and failed 15. Every one passed on the recheck. gate-maps failed as the second gate of the run, so this was not order inside the run. The lane started from whatever the last job left, because the runner reset a lane before a gates job only when the job said "reset": true, and CI's pr-gates never did. The recheck always reset first, so "passes alone" mixed up a dirty lane with gate order. Gates jobs now reset each lane before they run, like gate-two jobs do (jobs.mjs resetsFirst). "reset": false, or submit.mjs --no-reset, skips the reset for a quick hand-picked run. Order effects that remain after this are real leaks between gates. Test: tools/harness/pcq.test.mjs "B7190".
 
 Reverse: in runner.mjs, use `job.reset || job.kind === "gate-two"` again.
+
+## B7191. Gate 7b1 builds its own arena (2026-11-17)
+Finish-Line Desk w3. In job 1914, with every lane reset first (B7190), gate7b passed and gate7b1 right after it failed every step ("tokens: []", then `sc` undefined). Since B6050, gate 7b deletes its arena when it ends, so 7b1, which only read 7b's arena, found nothing. It passed alone only because an old arena is still in the lane's known-good snapshot. gate7b.mjs now exports `cast` and `arena`. When no arena is there, gate 7b1 builds one the same way and deletes it, with its fights, at the end. Test: tools/harness/gate7b1-arena.test.mjs, which fails on the old gate.
+
+Reverse: take the madeArena lines out of gate7b1.mjs and the two exports out of gate7b.mjs.
+
+## B7192. Gates put back the sheets they change (2026-11-17)
+Finish-Line Desk w3, after B7181 (flags) and B7190 (reset first). In job 1914, gateadaptive read the tension as "frenzy" before it did anything, and gatearms found a clip already empty. The runner put back settings, flags and new world documents, but not a shared actor's own data. On lanes reset every night, run-gate.mjs now also reads each actor's and item's system data, each actor's effects and its embedded item ids before a gate. After the gate it puts back what changed: system data replaced whole, new effects and items deleted, removed or edited effects restored (tools/lanes/lib.mjs sheetPlan, READ_SHEETS, PUT_SHEETS_BACK). The gate's line says how many documents had sheets put back. Unlinked token data on scenes is not covered yet. Tests: tools/harness/lanes.test.mjs "B7192".
+
+Reverse: drop sheetsBefore and the sheets put-back block in run-gate.mjs.
+
+## B7193. Gates take back what they place on shared scenes (2026-11-17)
+Finish-Line Desk w3, after B7192. Cleaning up leftover documents covered world documents only. A region, token, wall, tile, drawing, light, sound or note that a gate placed on a scene already there before it stayed for every later gate. In PR 1836's job 1922, gateduties put a cult's worship night at a chapel region on another scene, not at its own chapel. On lanes reset every night, run-gate.mjs now also records each scene's placed documents before a gate and deletes any added since (tools/lanes/lib.mjs sheetPlan dropKids). Test: tools/harness/lanes.test.mjs "B7193".
+
+Reverse: drop the kids part of READ_SHEETS and sheetPlan.
