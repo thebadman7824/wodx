@@ -37,7 +37,7 @@ import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
-import {prMark, staleWhy} from "./stale.mjs";
+import {prMark, staleWhy, jobOfLog} from "./stale.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -87,11 +87,16 @@ const openIssues = async label => (await gh("GET", `/issues?state=open&labels=${
 
 // ---- processes ----
 /** Runs a command with a time limit; past it the whole process tree is ended. Returns {code, out}. */
+const procs = new Map(); // job tag -> its running child processes (B7206)
+const endTree = p => { if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL"); };
 function run(cmd, argv, {cwd = ROOT, minutes = 30, logTo} = {}) {
   return new Promise(done => {
     if ( DRY ) { log(`[dry] ${cmd} ${argv.join(" ")}`); return done({code: 0, out: ""}); }
     const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"}});
     try { os.setPriority(p.pid, os.constants.priority.PRIORITY_BELOW_NORMAL); } catch {}
+    // B7206: each job's processes are known by its log name (jobN-...), so a cancelled job can end them
+    const owner = jobOfLog(logTo);
+    if ( owner ) { (procs.get(owner) ?? procs.set(owner, new Set()).get(owner)).add(p); p.on("exit", () => procs.get(owner)?.delete(p)); }
     let out = "", timedOut = false;
     const keep = d => { out += d; if ( out.length > 400000 ) out = out.slice(-300000); if ( logTo ) fs.appendFileSync(logTo, d); };
     p.stdout.on("data", keep); p.stderr.on("data", keep);
@@ -217,6 +222,30 @@ async function stopStale() {
     g.staleLeft = left;
   }
 }
+// ---- cancel (B7206): close a running job's issue, or label it pc-cancel, and the runner ends it ----
+const halted = new Set(); // job tags whose lanes neither retry nor recheck
+const running = new Map(); // issue number -> job record, while start() runs it
+async function cancelJob(g, why) {
+  if ( g.cancelled || g.finishing ) return;
+  g.cancelled = why;
+  halted.add(g.tag);
+  if ( g.job.queue ) { try { stopQueue(g.job.queue); } catch (e) { log(`#${g.issue.number}: could not stop its queue: ${e.message}`); } }
+  const ps = [...(procs.get(g.tag) ?? [])];
+  log(`#${g.issue.number}: ${why}; ending ${ps.length} process tree(s) and freeing its lanes`);
+  for ( const p of ps ) { try { endTree(p); } catch (e) { log(`#${g.issue.number}: could not end ${p.pid}: ${e.message}`); } }
+}
+/** Running jobs whose issue was closed by hand or labelled pc-cancel. openNums: the open job issues just listed. */
+async function cancelCheck(issues, openNums) {
+  for ( const g of running.values() ) {
+    if ( g.cancelled || g.finishing ) continue;
+    const listed = issues.find(i => i.number === g.issue.number);
+    if ( listed?.labels?.some(l => l.name === LABEL.cancel) ) { await cancelJob(g, "labelled pc-cancel"); continue; }
+    if ( openNums.has(g.issue.number) ) continue;
+    // The list can lag; only a closed state read from the issue itself cancels
+    let st = null; try { st = (await gh("GET", `/issues/${g.issue.number}`)).state; } catch (e) { continue; }
+    if ( st === "closed" && !g.finishing ) await cancelJob(g, "its issue was closed");
+  }
+}
 /** The failing steps of the gates in a report, from each lane's result files. */
 function failDetail(lane, report) {
   const out = [];
@@ -235,7 +264,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
   // B7205: a job stopped as stale neither retries a lane nor reruns failing gates
-  const stopped = () => !!job.queue && fs.existsSync(`${job.queue}.stop`);
+  const stopped = () => halted.has(tag) || (!!job.queue && fs.existsSync(`${job.queue}.stop`));
   const faultRetry = async (why, out = "") => {
     // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
@@ -405,6 +434,7 @@ async function start(issue, job, lanes) {
   for ( const l of lanes ) state[l].busy = issue.number;
   log(`#${issue.number} ${job.kind} starting${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""}`);
   const g = {issue, job, tag, used: [], parts: [], pending: new Set()};
+  running.set(issue.number, g);
   try {
     await setLabels(issue.number, [LABEL.running]);
     await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}) by the ${NAME} [host:${HOST}].`);
@@ -419,6 +449,18 @@ async function start(issue, job, lanes) {
       while ( g.pending.size ) await Promise.race([...g.pending]);
       growing.delete(issue.number);
     } else g.parts.push({lane: null, ...(await runLight(job, tag))});
+    if ( g.cancelled ) {
+      for ( const l of new Set([...lanes, ...g.used]) ) await lanesCmd(["reset", "--lane", l], {logTo: path.join(LOGS, `${tag}-l${l}.log`)}).catch(() => {});
+      halted.delete(tag);
+      const mins = Math.round((Date.now() - t0) / 60000);
+      await comment(issue.number, `**Cancelled** after ${mins} min (${g.cancelled}). Its processes were ended and its lanes reset; no result or gate status was posted.`).catch(() => {});
+      await setLabels(issue.number, [], [LABEL.running, LABEL.cancel]).catch(() => {});
+      if ( !DRY ) await gh("PATCH", `/issues/${issue.number}`, {state: "closed", state_reason: "not_planned"}).catch(() => {});
+      recent.unshift(`#${issue.number} cancelled ${new Date().toISOString().slice(11, 16)}Z`); recent.length = Math.min(recent.length, 12);
+      log(`#${issue.number} cancelled`);
+      return;
+    }
+    g.finishing = true;
     if ( g.stale ) {
       const mins = Math.round((Date.now() - t0) / 60000);
       await drop(issue, `**Stopped** after ${mins} min: ${g.stale}. ${g.staleLeft ?? 0} gate(s) were not run; the run for the newer commit gives the result.`);
@@ -436,8 +478,9 @@ async function start(issue, job, lanes) {
     await gateStatus(issue, g.job, parts, ok).catch(e => log(`#${issue.number}: gate status not posted: ${e.message}`));
   } catch (e) {
     log(`#${issue.number} runner error: ${e.stack ?? e.message}`);
-    await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
+    if ( !g.cancelled ) await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
   } finally {
+    running.delete(issue.number); halted.delete(tag);
     growing.delete(issue.number);
     for ( const l of new Set([...lanes, ...g.used]) ) if ( state[l].busy === issue.number ) state[l].busy = null;
     finished.set(issue.number, Date.now()); active.delete(issue.number);
@@ -652,11 +695,13 @@ for ( ;; ) {
       if ( !p.error && p.job?.lane !== undefined && !LANES.includes(String(p.job.lane)) && cfg.allLaneIds.includes(String(p.job.lane)) && String(p.job.lane) !== "1" ) continue;
       const v = p.error ? p : validate(p.job, LANES);
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
+      if ( i.labels.some(l => l.name === LABEL.cancel) ) { await drop(i, "Not run: labelled pc-cancel."); continue; }
       const why = await staleJob(i);
       if ( why ) { log(`#${i.number}: ${why}; not run`); await drop(i, `Not run: ${why}, so this commit's result would not be used.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
     }
     await stopStale();
+    await cancelCheck(issues, openNums);
     trainTick();
     const ready = trainFirst(order(queue, openNums));
     const res = resources();

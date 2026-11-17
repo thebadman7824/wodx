@@ -90,6 +90,11 @@ request has moved on, merged or closed, a waiting job is closed as not planned, 
 queue emptied: each lane ends after the gate it is on, nothing is retried or rechecked, and no `wodx/gates` status is
 posted. A failed lookup never drops a job.
 
+Cancel (B7206): close a running job's issue, or add the label `pc-cancel`, and within about 30 seconds the runner ends
+that job's processes (run-gate, lanes.mjs and what they started), resets each
+lane it used, posts "Cancelled" with no result or `wodx/gates` status, and closes the issue as not planned. Nothing is
+retried. A waiting job labelled `pc-cancel` is closed without running. No hand kill on the PC is needed.
+
 Lock-down (B7011): the workflow's `if:`, the job-started hook `D:\WoDX\gh-runner\job-started.ps1` (outside the
 repository; copy and installer in `tools/pcq/gh-runner/`), and the setting that holds outside contributors' runs
 for approval. Reinstall with `powershell -ExecutionPolicy Bypass -File tools\pcq\gh-runner\install.ps1`.
