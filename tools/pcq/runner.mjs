@@ -36,7 +36,8 @@ import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, rea
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
-import {readQueue, putBack} from "../lanes/gate-queue.mjs";
+import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
+import {prMark, staleWhy} from "./stale.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -182,6 +183,40 @@ async function finish(issue, ok, text) {
   await close(issue.number);
   recent.unshift(`#${issue.number} ${ok ? "done" : "FAILED"} ${new Date().toISOString().slice(11, 16)}Z`); recent.length = Math.min(recent.length, 12);
 }
+// ---- stale pull request jobs (B7205) ----
+// A gates job for an old commit of a pull request is not run, and one that is running stops after its current gates.
+const pullCache = new Map();
+async function staleJob(issue) {
+  const mark = prMark(issue.title);
+  if ( !mark ) return null;
+  let c = pullCache.get(mark.pr);
+  if ( !c || Date.now() - c.at > 2 * 60000 ) {
+    try { c = {at: Date.now(), pull: await gh("GET", `/pulls/${mark.pr}`)}; } catch (e) { return null; } // unknown: never drop on a lookup failure
+    pullCache.set(mark.pr, c);
+  }
+  return staleWhy(mark, c.pull);
+}
+async function drop(issue, text) {
+  await comment(issue.number, text);
+  await setLabels(issue.number, [], [LABEL.running]).catch(() => {});
+  if ( !DRY ) await gh("PATCH", `/issues/${issue.number}`, {state: "closed", state_reason: "not_planned"});
+  finished.set(issue.number, Date.now());
+  recent.unshift(`#${issue.number} dropped ${new Date().toISOString().slice(11, 16)}Z`); recent.length = Math.min(recent.length, 12);
+}
+let lastStale = 0;
+async function stopStale() {
+  if ( Date.now() - lastStale < 3 * 60000 ) return;
+  lastStale = Date.now();
+  for ( const g of growing.values() ) {
+    if ( g.stale || !g.job.queue ) continue;
+    const why = await staleJob(g.issue);
+    if ( !why ) continue;
+    g.stale = why;
+    let left = 0; try { left = stopQueue(g.job.queue); } catch (e) { log(`#${g.issue.number}: could not stop its queue: ${e.message}`); }
+    log(`#${g.issue.number}: ${why}; stopping after the running gates (${left} not run)`);
+    g.staleLeft = left;
+  }
+}
 /** The failing steps of the gates in a report, from each lane's result files. */
 function failDetail(lane, report) {
   const out = [];
@@ -199,10 +234,12 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   if ( wt.error ) return {code: null, text: wt.error};
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
+  // B7205: a job stopped as stale neither retries a lane nor reruns failing gates
+  const stopped = () => !!job.queue && fs.existsSync(`${job.queue}.stop`);
   const faultRetry = async (why, out = "") => {
     // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
-    if ( retried ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
+    if ( retried || stopped() ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
     await lanesCmd(["reset", "--lane", lane], {logTo: L});
     return laneWork(job, lane, i, n, tag, true);
@@ -243,7 +280,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
-  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text, sha: wt.sha};
+  if ( r.code !== 1 || job.recheck === false || stopped() ) return {code: r.code, text, sha: wt.sha};
   return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`, sha: wt.sha};
 }
 
@@ -331,7 +368,7 @@ async function makeQueue(job, lane, tag) {
   if ( !list || list.length < 2 ) return null;
   const file = path.join(LOGS, `${tag}-queue.json`);
   fs.writeFileSync(file, JSON.stringify(list));
-  fs.rmSync(`${file}.taken`, {force: true});
+  fs.rmSync(`${file}.taken`, {force: true}); fs.rmSync(`${file}.stop`, {force: true});
   return {file, size: list.length, sha: wt.sha};
 }
 const queueLeft = file => readQueue(file).length;
@@ -382,6 +419,12 @@ async function start(issue, job, lanes) {
       while ( g.pending.size ) await Promise.race([...g.pending]);
       growing.delete(issue.number);
     } else g.parts.push({lane: null, ...(await runLight(job, tag))});
+    if ( g.stale ) {
+      const mins = Math.round((Date.now() - t0) / 60000);
+      await drop(issue, `**Stopped** after ${mins} min: ${g.stale}. ${g.staleLeft ?? 0} gate(s) were not run; the run for the newer commit gives the result.`);
+      log(`#${issue.number} stopped (${g.stale})`);
+      return;
+    }
     const parts = g.parts.sort((a, b) => g.used.indexOf(a.lane) - g.used.indexOf(b.lane));
     const ok = parts.every(p => p.code === 0);
     const mins = Math.round((Date.now() - t0) / 60000);
@@ -609,8 +652,11 @@ for ( ;; ) {
       if ( !p.error && p.job?.lane !== undefined && !LANES.includes(String(p.job.lane)) && cfg.allLaneIds.includes(String(p.job.lane)) && String(p.job.lane) !== "1" ) continue;
       const v = p.error ? p : validate(p.job, LANES);
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
+      const why = await staleJob(i);
+      if ( why ) { log(`#${i.number}: ${why}; not run`); await drop(i, `Not run: ${why}, so this commit's result would not be used.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
     }
+    await stopStale();
     trainTick();
     const ready = trainFirst(order(queue, openNums));
     const res = resources();

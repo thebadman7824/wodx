@@ -409,7 +409,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7204) | tools (PC job queue, testbed lanes) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7205) | tools (PC job queue, testbed lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14123,3 +14123,8 @@ Reverse: remove the B7203 branch in decide() and the carryReviews call in prepar
 Testbed lanes. After the Main PC runner restarted at 13:44Z on 17 November, lanes 3 and 5 were up but their server.pid named no live process, so every deploy there stopped with "Lane N is up, but not by a server this tool started" and job 1943 failed in 0 minutes. lanes.mjs stop now asks Windows which process listens on the lane's port and takes it over (writing server.pid again) only when that process is node and its command line names this lane's data folder and port, the same test that already guards every kill. Any other process on the port still stops the command with the old message, so nothing but the lane's own Foundry is ever ended.
 
 Reverse: remove lanePidByPort and its call in stop() in tools/lanes/lanes.mjs.
+
+## B7205. Gate runs for an old commit of a pull request are dropped or stopped (2026-11-17)
+PC job queue. pr-gates.mjs already closed a queued gates job when a newer commit of its pull request arrived, but skipped one that was running. On 17 November job 1932 ran on lane 2 for more than an hour for an old head of PR 1848, after the runner restart queued it again, while job 1949 gated the new head; its result could not be used and it kept the runner from updating. The runner now looks up the pull request named in a gates job title ("[PR #n sha]") before it starts the job and every three minutes while it runs. When the pull request has moved on to another commit, merged or closed, a waiting job is closed as not planned without running, and a running one has its shared gate queue emptied, so each lane ends after the gate it is on; the job is then closed as stopped with no gate status posted. A failed lookup never drops a job. Gates are never killed mid-run, so no lane is left in a broken state.
+
+Reverse: remove tools/pcq/stale.mjs, staleJob, drop and stopStale and their calls in tools/pcq/runner.mjs, and stop() with its check in putBack in tools/lanes/gate-queue.mjs.
