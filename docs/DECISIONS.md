@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7020
+Next free block: B7030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -404,6 +404,7 @@ Next free block: B7020
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7003) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
+| B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13939,3 +13940,16 @@ The repository is public, so the runner refuses anything but its own workflow. T
 another workflow file, a fork, pull_request_target or any other event before a step runs; and the repository setting
 that holds every outside contributor's workflow run for approval. Outside pull requests are also closed by
 outside-guard.yml (B3030). A harness test fails if any other workflow names the self-hosted labels.
+
+## B7020. Nightly full gate run on the Secondary PC (2026-11-17)
+Repository workflow. Gates now run in two tiers: each pull request gets only its touched gates (B7010), and every
+night at 05:00 UTC `tools/pcq/nightly-gates.mjs` queues every gate on lane 8 for main's current commit. It takes the
+GPU guard first, so it waits while the book OCR or a model job holds the card, and skips the night (with a summary
+issue saying so) if it has not got the card by 13:00 UTC. When the job ends it opens a summary issue labelled
+nightly-gates with the result. The run is a health signal for main, not a merge pass: the PC runner posts wodx/gates
+on main's commit as for any all-gates job, and a gate failing there reads as a failure, which the summary flags.
+
+## B7021. The Secondary PC's runner runs below normal priority (2026-11-17)
+`run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
+runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
+(BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
