@@ -10,6 +10,7 @@
  *   node tools/pcq/submit.mjs gate-two gatelookhand
  *   node tools/pcq/submit.mjs deploy [--lanes 5]
  *   node tools/pcq/submit.mjs reset --lane 4
+ *   --lane / --lanes may name the other PCs' lanes too (7, 8; from tools/lanes/lanes.json, B6980), never 1 or 6
  *   node tools/pcq/submit.mjs books-find "Four Bears" "Mato-Tope" [--book v20]
  *   node tools/pcq/submit.mjs trove-find "Catlin" [--under "The Ultimate Trove - Books (C-D)"]
  *   --after <issue>   wait for that job first      --json   print only the job's json
@@ -22,7 +23,14 @@ import {fileURLToPath} from "node:url";
 import {validate, issueBody, LABEL} from "./jobs.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../.."), GATES = path.join(ROOT, "tools", "gate");
-const runnerLanes = JSON.parse(fs.readFileSync(path.join(HERE, "runner.json"), "utf8")).lanes;
+/** B6980: the lanes a job may name: the main runner's, plus each other PC's own lanes from lanes.json (lane 7 on the
+ *  Laptop, lane 8 on the Secondary PC). A reserved lane (lane 6, the local agents') and lane 1 never count. */
+export function submitLanes(runnerCfg, lanesCfg) {
+  const host = (lanesCfg?.lanes ?? []).filter(l => l.host && !l.reserved && String(l.id) !== "1").map(l => l.id);
+  return [...new Set([...(runnerCfg?.lanes ?? []), ...host].map(Number))];
+}
+const readJson = f => JSON.parse(fs.readFileSync(f, "utf8"));
+const runnerLanes = submitLanes(readJson(path.join(HERE, "runner.json")), readJson(path.join(ROOT, "tools", "lanes", "lanes.json")));
 export const TWO_BROWSER = /phase\s*===?\s*["']player|case\s+["']player/;
 
 /** Problems with the gates a job names. */

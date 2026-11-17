@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6980
+Next free block: B6990
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -385,7 +385,7 @@ Next free block: B6980
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: lane setup without other systems (used B6880-B6883) | tools (testbed lanes) |
+| B6880-B6889 | Second PC runner: no gate jobs before lane setup finishes (used B6880-B6885) | tools (PC job queue) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -401,6 +401,7 @@ Next free block: B6980
 | B6950-B6959 | Gate run 1774 fixes | wodx-sheets, wodx-chronicle, tools |
 | B6960-B6969 | Gate run 1779 fixes | tools |
 | B6970-B6979 | Gate diagnostics; the lane snapshot waits for start-up (used B6970-B6971) | tools |
+| B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13552,6 +13553,11 @@ Testbed lanes. `lanes.mjs setup` copied Data/modules and Data/systems from lane 
 
 Reverse: restore the plain readdirSync; then create the empty folder on the source instead.
 
+## B6885. A lane on another PC takes no gate jobs until its setup finishes (2026-11-17)
+PC job queue. The runner treated a lane as healthy once its world folder existed and the server answered. Lane 7 on the second PC answered with Foundry's licence screen, so gate job #1816 was claimed there and could not run a gate. A lane that names a host now counts as not set up until `lanes.mjs accept` has written its clean fingerprint (clean.json), so only a setup-lane job can use it. The main PC's lanes have no host field and are unchanged.
+
+Reverse: drop the clean.json line from healthCheck in tools/pcq/runner.mjs.
+
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
 
@@ -13862,3 +13868,11 @@ visible: none, only the PC job reports gain lines.
 B6971. lanes.mjs accept and run-gate's first world check now read the world once start-up has stopped saving settings: tools/lanes/lib.mjs settledFingerprint probes every 2 seconds and returns once the settings digest has held for 10 seconds (at most 90). A GM sign-in keeps writing world settings for some seconds after ready (the Chronicle start level 1.5 s after ready, events fired, the Storyteller signal board, Token Magic and FXMaster migrations). A snapshot taken at once caught some of them, so the next sign-in read them as drift and no gate ran: jobs 1801 and 1809 on 16 Nov stopped on every lane, even after a reset (drift files: wodx-chronicle autoApprove, automationBase, automationLevel, eventsFired; wodx-storyteller signalBoard; tokenmagic migration).
 effect: none, tooling only; the game is unchanged.
 visible: none, gates jobs on a fresh lane run instead of stopping on drift.
+
+## B6980. submit.mjs takes the host lanes from lanes.json (2026-11-17)
+PC job queue. `tools/pcq/submit.mjs` used to accept only the main runner's lanes (2 to 5) from runner.json, so a job
+for lane 7 (the Laptop) or lane 8 (the Secondary PC) had to be written by hand. It now also accepts every lane in
+tools/lanes/lanes.json that has a `host`. A reserved lane (lane 6, the local agents') and lane 1 are never accepted.
+Each runner still claims only the jobs for its own lanes.
+
+Reverse: read only runner.json's lanes again in submit.mjs.
