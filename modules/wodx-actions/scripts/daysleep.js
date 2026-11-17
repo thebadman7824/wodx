@@ -54,6 +54,8 @@ export function build(ctx) {
         if (a?.system?.settings?.variant === "kindredeast") return Math.max(n(adv.hun?.permanent), n(adv.dharma?.permanent), n(adv.path?.permanent));
         return n(adv.path?.permanent);
     };
+    // B7066: Early Riser keeps the waking hour of Humanity 10; the daytime pool cap still reads the real rating
+    const riseRating = a => TH.riseRating(a, rating(a));
     const isKindred = a => !!a && P.detectProfile(a) === "kindred";
     const asleep = a => a?.getFlag?.(MOD, "daySleep") ?? null;
 
@@ -82,7 +84,7 @@ export function build(ctx) {
     async function fallAsleep(a, sun, { deep = false } = {}) {
         if (asleep(a) && !deep) return null;
         const now = game.time.worldTime;
-        await setFlag(a, "daySleep", { since: now, wakeAt: DS.wakeAt(now, sun.toDusk, rating(a)), deep: !!deep });
+        await setFlag(a, "daySleep", { since: now, wakeAt: DS.wakeAt(now, sun.toDusk, riseRating(a)), deep: !!deep });
         if (a.getFlag?.(MOD, "daytime")) await setFlag(a, "daytime", null);
         await ctx.statusEffect(a, "sleep", true);
         float(a, deep ? "Deep in the day's sleep" : "Asleep", "#9fb4ff");
@@ -100,6 +102,21 @@ export function build(ctx) {
             try { await ctx.api?.()?.kotRiseAuto?.(a); } catch (e) { console.warn("WoDX | Kuei-jin rising", e); }
             return "rises, and the evening's Chi is spent";
         }
+        // B7066: Permanent Wound rises at Wounded every night; Disease Carrier pays a blood point to keep the disease down (V20 p. 483)
+        let marks = "";
+        if (rising && TH.risesWounded(a)) {
+            const d = ctx.healthTrack ? ctx.healthTrack(a).damage : (a.system?.health?.damage ?? {});
+            const total = n(d.bashing) + n(d.lethal) + n(d.aggravated);
+            if (total < TH.RISE_WOUNDED && ctx.setDamage) {
+                await ctx.setDamage(a, { bashing: n(d.bashing), lethal: n(d.lethal) + TH.RISE_WOUNDED - total, aggravated: n(d.aggravated) });
+                marks += "; the old wound opens again: Wounded (Permanent Wound)";
+            }
+        }
+        if (rising && TH.diseaseCarrier(a) && ctx.changeBlood) {
+            const b = ctx.blood?.(a);
+            if (!b || n(b.value) > 0) { const ch = await ctx.changeBlood(a, -1); marks += `; one blood point holds the disease down (Disease Carrier, ${ch?.before ?? "?"} to ${ch?.after ?? "?"})`; }
+            else marks += "; no blood to hold the disease down: its signs show tonight (Disease Carrier)";
+        }
         if (rising && setting("riseHeal") !== false) {
             const d = a.system?.health?.damage ?? {};
             if (n(d.bashing) + n(d.lethal)) {
@@ -107,7 +124,7 @@ export function build(ctx) {
                 if (r?.text) healed = `; ${r.text}`;
             }
         }
-        return `rises${healed}`;
+        return `rises${marks}${healed}`;
     }
 
     /** Roll to wake by day (the Awakening roll, V20 pp. 262-263). Returns {res, html, rolls}. */
@@ -172,7 +189,7 @@ export function build(ctx) {
             if (s) {
                 const due = s.wakeAt === null || s.wakeAt === undefined ? sun.isNight : now >= n(s.wakeAt);
                 if (due) { const t = await wake(a); if (t) rows.push({ actor: a, text: t }); }
-                if (due && DS.wantsSleep({ ...sun, rating: rating(a) })) { const t = await fallAsleep(a, sun); if (t) rows.push({ actor: a, text: t }); }
+                if (due && DS.wantsSleep({ ...sun, rating: riseRating(a) })) { const t = await fallAsleep(a, sun); if (t) rows.push({ actor: a, text: t }); }
                 continue;
             }
             const day = a.getFlag?.(MOD, "daytime");
@@ -181,7 +198,7 @@ export function build(ctx) {
                 if (!DS.daytimeSpent(day, now)) continue;
                 await setFlag(a, "daytime", null);
             }
-            if (!DS.wantsSleep({ ...sun, rating: rating(a) })) continue;
+            if (!DS.wantsSleep({ ...sun, rating: riseRating(a) })) continue;
             const vig = !!a.getFlag?.(MOD, "dawnVigil") && a.getFlag?.(MOD, "vigilDay") !== DS.dayKey(now, sun.toDusk);
             const t = vig ? await vigil(a, sun) : await fallAsleep(a, sun);
             if (t) rows.push({ actor: a, text: t });
@@ -239,7 +256,7 @@ export function build(ctx) {
             if (left > 0) { await setFlag(a, "daytime", { ...day, turns: left }); continue; }
             await setFlag(a, "daytime", null);
             sun ??= await sunClock();
-            if (DS.wantsSleep({ ...sun, rating: rating(a) })) { const t = await fallAsleep(a, sun); if (t) out.push({ actor: a, text: t }); }
+            if (DS.wantsSleep({ ...sun, rating: riseRating(a) })) { const t = await fallAsleep(a, sun); if (t) out.push({ actor: a, text: t }); }
         }
         if (out.length) await report(out, null, sun);
         return out;

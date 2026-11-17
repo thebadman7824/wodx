@@ -2188,11 +2188,12 @@ export async function spendBlood({ actor: a } = {}) {
     if (!actor) return;
     if (LIM.refuseIdle(actor)) return; // B6156
     const b = blood(actor), dmg = healthTrack(actor).damage, rd = road(actor);
+    const slowLvl = TH.healCostPerLevel(actor); // B7066
     const quick = flag(actor, "quickening") ?? {};
     const content = `<form>
       <p>${esc(actor.name)}: blood ${b.value}/${b.max}, ${b.perTurn} per turn (Generation ${generationOf(actor)}). Health: ${healthText(actor, dmg)}</p>
       <fieldset><legend>Healing</legend>
-        <div class="form-group"><label>Lethal / bashing levels to heal (1 blood each)</label><input type="number" name="healL" value="${Math.min(dmg.lethal, b.value)}" style="width:4em"/> <input type="number" name="healB" value="${Math.min(dmg.bashing, Math.max(0, b.value - dmg.lethal))}" style="width:4em"/></div>
+        <div class="form-group"><label>Lethal / bashing levels to heal (${slowLvl > 1 ? "2 blood each: Slow Healing" : "1 blood each"})</label><input type="number" name="healL" value="${Math.min(dmg.lethal, Math.floor(b.value / slowLvl))}" style="width:4em"/> <input type="number" name="healB" value="${Math.min(dmg.bashing, Math.max(0, Math.floor(b.value / slowLvl) - dmg.lethal))}" style="width:4em"/></div>
         <div class="form-group"><label><input type="checkbox" name="acting"/> Heal while doing something else (Stamina + Survival, diff 8)</label></div>
         <div class="form-group"><label>Aggravated levels (5 blood + a day's rest each)</label><input type="number" name="healA" value="0" min="0"/></div>
       </fieldset>
@@ -2220,7 +2221,9 @@ async function resolveSpend(actor, fd) {
     const imitate = fd.imitate ? R.imitateLifeCost(rd.value) : 0;
     // Thin Blood (V20 p. 483 printed): every cost doubled; blood given away is not a cost
     const mult = TH.bloodCostMult(actor);
-    const total = (lethal + bashing + agg * 5 + qTotal + imitate + Math.max(0, fd.disc)) * mult + Math.max(0, fd.give);
+    // B7066: Slow Healing (V20 p. 483): two blood a level of bashing or lethal
+    const slow = TH.healCostPerLevel(actor);
+    const total = ((lethal + bashing) * slow + agg * 5 + qTotal + imitate + Math.max(0, fd.disc)) * mult + Math.max(0, fd.give);
     if (total > b.value) { ui.notifications.warn(`${actor.name} has only ${b.value} blood (needs ${total}).`); return null; }
     if (!total) return null;
 
@@ -2238,16 +2241,21 @@ async function resolveSpend(actor, fd) {
             if (r.botch) { spent += 1; await applyDamage(actor, "lethal", 1); }
         }
     }
-    spent += healL + healB;
+    spent += (healL + healB) * slow;
     if (healL + healB && healOK) {
         const after = { ...dmg, lethal: dmg.lethal - healL, bashing: dmg.bashing - healB };
         if (setting("applyChanges")) await setDamage(actor, after);
-        html += `<div class="vta-sec"><b>Heals</b> ${healL} lethal and ${healB} bashing (${healL + healB} blood). Now ${healthText(actor, after)}.</div>`;
+        html += `<div class="vta-sec"><b>Heals</b> ${healL} lethal and ${healB} bashing (${(healL + healB) * slow} blood${slow > 1 ? ", two a level for Slow Healing, V20 p. 483" : ""}). Now ${healthText(actor, after)}.</div>`;
     }
     if (healA) {
         spent += healA * 5;
         const pend = flag(actor, "aggHealing") ?? 0;
         await setFlag(actor, "aggHealing", pend + healA);
+        // B7066: with Slow Healing one committed level heals every five days, not all after a day's rest
+        if (slow > 1) {
+            if (!flag(actor, "aggDue")) await setFlag(actor, "aggDue", num(game.time.worldTime) + TH.SLOW_AGG_SECONDS);
+            html += `<div class="vta-sec"><b>Aggravated:</b> ${healA * 5} blood committed; with Slow Healing one level heals every five days, at each New Night once the five days are past (V20 p. 483).</div>`;
+        } else
         html += `<div class="vta-sec"><b>Aggravated:</b> ${healA * 5} blood committed; ${healA} level${healA === 1 ? "" : "s"} heal after a full day's rest. They will be removed at the next New Night.</div>`;
         // V20: each level past the first in the same day also costs a Willpower point (V20 pdf 293 / p. 285)
         const extraWp = healA > 1 && !FXD.isDA(null) ? healA - 1 : 0;
@@ -2643,7 +2651,19 @@ export async function newNight({ actors } = {}) {
             if (to > w.temp) { upd["system.advantages.willpower.temporary"] = to; bits.push(`Willpower ${w.temp} → ${to}`); }
         }
         const agg = flag(actor, "aggHealing");
-        if (agg) {
+        if (agg && TH.healCostPerLevel(actor) > 1) {
+            // B7066: Slow Healing: one committed level each five days (V20 p. 483)
+            const due = num(flag(actor, "aggDue")), now = num(game.time.worldTime);
+            const d = healthTrack(actor).damage;
+            if (!d.aggravated) { await actor.unsetFlag(MOD, "aggHealing"); await actor.unsetFlag(MOD, "aggDue"); }
+            else if (now < due) bits.push(`Slow Healing: the next aggravated level heals in ${Math.ceil((due - now) / 86400)} day${Math.ceil((due - now) / 86400) === 1 ? "" : "s"}`);
+            else {
+                Object.assign(upd, healthUpdate(actor, { ...d, aggravated: d.aggravated - 1 }));
+                bits.push("1 aggravated level heals (Slow Healing)");
+                if (agg > 1 && d.aggravated > 1) { await setFlag(actor, "aggHealing", agg - 1); await setFlag(actor, "aggDue", now + TH.SLOW_AGG_SECONDS); }
+                else { await actor.unsetFlag(MOD, "aggHealing"); await actor.unsetFlag(MOD, "aggDue"); }
+            }
+        } else if (agg) {
             const d = healthTrack(actor).damage;
             const healed = Math.min(agg, d.aggravated);
             Object.assign(upd, healthUpdate(actor, { ...d, aggravated: d.aggravated - healed }));
@@ -2654,7 +2674,7 @@ export async function newNight({ actors } = {}) {
         if (Object.keys(upd).length) await actor.update(upd);
         if (vamp) {
             const rd = road(actor).value;
-            bits.push(rd >= 7 ? "rises just before sunset" : rd <= 4 ? "rises up to an hour after sunset" : "rises at sunset");
+            bits.push(rd >= 7 || TH.riseRating(actor, rd) >= 7 ? "rises just before sunset" : rd <= 4 ? "rises up to an hour after sunset" : "rises at sunset");
         }
         if (inTorpor) bits.push("in torpor");
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);

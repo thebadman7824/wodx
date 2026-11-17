@@ -187,6 +187,20 @@ export function digestionBonus(actor, drunk, room) {
 export const bloodCostMult = actor => (holds(actor, "thin-blood") ? 2 : 1);
 
 /** Waking by day: Deep Sleeper +2 difficulty; Light Sleeper wakes at once and acts without the Road cap. */
+/** B7066: Early Riser (V20 p. 480): rises each evening as though Humanity or the Road were 10. */
+export const riseRating = (actor, rating) => (holds(actor, "early-riser") ? 10 : rating);
+/** B7066: Slow Healing (V20 p. 483): two blood points heal one level of bashing or lethal. */
+export const healCostPerLevel = actor => (holds(actor, "slow-healing") ? 2 : 1);
+/** B7066: Slow Healing: a committed aggravated level heals only every five days. */
+export const SLOW_AGG_SECONDS = 5 * 86400;
+/** B7066: Permanent Wound (V20 p. 483): rises each night at the Wounded health level (four levels marked). */
+export const RISE_WOUNDED = 4;
+export const risesWounded = actor => holds(actor, "permanent-wound");
+/** B7066: Disease Carrier (V20 p. 483): one more blood point on waking each night, or the disease shows. */
+export const diseaseCarrier = actor => holds(actor, "disease-carrier");
+/** B7066: Deceptive Aura and Hidden Diablerie (V20 p. 493): what Aura Perception reads on a Kindred. */
+export const auraHides = actor => ({ kind: holds(actor, "deceptive-aura"), veins: holds(actor, "hidden-diablerie") });
+
 export function sleepMods(actor) {
     return { diff: holds(actor, "deep-sleeper") ? 2 : 0, light: holds(actor, "light-sleeper") };
 }

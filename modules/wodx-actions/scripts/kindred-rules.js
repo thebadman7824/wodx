@@ -293,9 +293,9 @@ export function shifterHealing(damage, seconds, { regen = true, carry = 0, treat
 }
 
 /** Kindred rising: heal bashing and lethal with blood, keeping blood at the hunger line [WoDX policy]. */
-export function risingHeal(damage, blood, selfcontrol, planHealing) {
+export function risingHeal(damage, blood, selfcontrol, planHealing, { perLevel = 1 } = {}) {
     const keep = Math.max(0, 7 - n(selfcontrol));
-    return planHealing(damage, blood, { maxSpend: Math.max(0, n(blood) - keep) });
+    return planHealing(damage, blood, { maxSpend: Math.max(0, n(blood) - keep), perLevel });
 }
 
 /* ------------------------------------------------------------------ */
