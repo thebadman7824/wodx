@@ -41,6 +41,7 @@ Claim the block first: `node tools/decisions/claim.mjs --thread <thread id> --fe
 
     ---
     block: B3070-B3079
+    thread: <thread id that claimed the block>
     feature: Gear by region: local weapons for the land of the scene
     modules: Library, Interactables
     ---
