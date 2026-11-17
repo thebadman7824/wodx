@@ -66,9 +66,26 @@ export function librarySet(da = [], v20 = [], { darkAges = false, v20Names = new
  * The powers a character can use: sheet = [{name, value}] (Disciplines and paths). For each library power, the
  * rating of the best-matching sheet entry must reach the power's level. Elder powers need the level too.
  */
+/** B7092: does a sheet entry give the Discipline a combination power needs? A sorcery ("Necromancy", "Thaumaturgy")
+ *  is met by the sorcery itself or by any of its paths; its rating is the primary (best) path's. */
+export function needMatches(need, sheetName, pathHeads = []) {
+    const N = normName(need), S = normName(sheetName);
+    if (!N || !S) return false;
+    if (!["necromancy", "thaumaturgy", "koldunic"].includes(N)) return discMatches(need, sheetName);
+    if (S === N || S.startsWith(N + " ")) return true;
+    return pathHeads.some(h => normName(h).startsWith(N + " ") && discMatches(h, sheetName));
+}
+
 export function powersFor(powers, sheet) {
     const out = [];
+    const heads = [...new Set((powers ?? []).map(p => p.d).filter(Boolean))];
     for (const p of powers ?? []) {
+        // B7092: a combination power (V20 Lore of the Clans) needs every Discipline it names at its level
+        if (Array.isArray(p.needs) && p.needs.length) {
+            const met = p.needs.map(nd => (sheet ?? []).filter(s => needMatches(nd.d, s.name, heads)).reduce((m, s) => Math.max(m, n(s.value)), 0) >= n(nd.l));
+            if (met.every(Boolean)) out.push({ ...p, rating: Math.min(...p.needs.map(nd => n(nd.l))), item: null, sheetName: p.needs.map(nd => nd.d).join(" + ") });
+            continue;
+        }
         let best = null;
         for (const s of sheet ?? []) if (discMatches(p.d, s.name) && (!best || n(s.value) > n(best.value))) best = s;
         if (best && n(best.value) >= n(p.l)) out.push({ ...p, rating: n(best.value), item: best.id ?? null, sheetName: best.name });

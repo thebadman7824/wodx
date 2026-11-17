@@ -46,5 +46,5 @@ test("later eras use the V20 powers in place of the Dark Ages ones at the same l
   assert.equal(thaum.length, 5, "a Thaumaturgy path on the sheet reaches its five powers");
   const kin = fs.readFileSync(path.join(root, "modules/wodx-actions/scripts/kindred.js"), "utf8");
   assert.match(kin, /disciplines-v20\.json/);
-  assert.match(kin, /set: p\.book === "V20" \? "v20" : "disc"/);
+  assert.match(kin, /set: \/\^V20\/\.test\(p\.book \?\? ""\) \? "v20" : "disc"/);
 });
