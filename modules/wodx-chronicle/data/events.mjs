@@ -44,7 +44,7 @@ export default {
     {
       id: "first-conclave", year: 1486, branch: "both", lines: ["vampire"],
       name: "The first Camarilla Conclave",
-      summary: "The sect holds its first Conclave and names its first Justicars.",
+      summary: "The sect holds its first Conclave. Its first justicars are elected later, in 1504 (Archons and Templars).",
       source: "V20 Lore of the Clans pdf 251"
     },
     {

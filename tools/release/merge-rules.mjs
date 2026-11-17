@@ -19,6 +19,8 @@
  *      tools/release/review.mjs, made on the file as it is at the head (its hash matches). The verdict must be
  *      "working" ("dead" for a deleted file), and "how" says what was done to check it.
  *
+ * It also warns, never blocking, when a thread did by hand work that docs/ROUTING.md sends to a machine (B7005).
+ *
  * The owner's own work (every commit on the branch authored by thebadman7824 with no Claude or agent trailer) is
  * reported but never blocked. Pull requests from outside accounts never reach this (outside-guard.yml).
  *
@@ -183,6 +185,30 @@ export function gateVerdict(need, candidates, sameAt) {
   return {ok: false, by: "", problems: [`${need.length} gate(s) needed and no passing ${GATE_CONTEXT} result on the branch for the code as it is now; queue them: ${queue} (the check runs again by itself when the result comes)`]};
 }
 
+/**
+ * B7005: the routes in docs/ROUTING.md (its ```json routes block): [{kind, home, paths}], or [] when there are none.
+ */
+export function readRoutes(text) {
+  const m = /```json routes\s*\n([\s\S]*?)\n```/.exec(String(text ?? ""));
+  try { return m ? JSON.parse(m[1]) : []; } catch { return []; }
+}
+const LOCAL_AGENT = /^(openhands|local agent|la-runner)$/i;
+/**
+ * B7005: warnings (never blocking) for work a thread did by hand that docs/ROUTING.md sends to a machine. None when a
+ * commit came from a local agent, or a commit message or release note says `routed-by-hand: <reason>`.
+ */
+export function routeWarnings(files, routes, commits, notes = []) {
+  if ( commits.some(c => LOCAL_AGENT.test(c.author)) ) return [];
+  const said = [...commits.map(c => c.body), ...notes.map(n => n.frag?.body ?? "")].some(t => /routed-by-hand:\s*\S/i.test(t));
+  if ( said ) return [];
+  const out = [];
+  for ( const r of routes ) {
+    const res = (r.paths ?? []).map(globRe), hit = files.filter(f => res.some(re => re.test(f.file)));
+    if ( hit.length ) out.push(`${hit.length} file(s) of ${r.kind} (${hit.slice(0, 3).map(f => f.file).join(", ")}${hit.length > 3 ? ", ..." : ""}) were changed by hand; docs/ROUTING.md sends this work to ${r.home}. If that was right, say why with routed-by-hand: <reason> in a commit message or the release note`);
+  }
+  return out;
+}
+
 /* ---- the run ---- */
 
 async function githubStatuses(shas) {
@@ -206,7 +232,9 @@ export async function evaluate({root = ROOT, base = "origin/main", head = "HEAD"
   const modules = [...new Set(own.map(f => /^modules\/([\w-]+)\//.exec(f.file)?.[1]).filter(m => m && fs.existsSync(path.join(root, "modules", m, "module.json"))))].sort();
   const result = {base: mb, head: headSha, files: own.length, modules, bensOwn: bensOwn(commits), rules: {}};
 
-  result.rules.note = noteProblems(modules, branchNotes(g, mb, headSha));
+  const notes = branchNotes(g, mb, headSha);
+  result.rules.note = noteProblems(modules, notes);
+  result.warnings = result.bensOwn ? [] : routeWarnings(own, readRoutes(g.show(headSha, "docs/ROUTING.md")), commits, notes);
 
   const {items, bad} = branchReviews(g, mb, headSha);
   result.rules.review = [...bad, ...reviewProblems(own, items)];
@@ -244,6 +272,7 @@ export function report(r) {
     for ( const x of p.slice(0, 60) ) lines.push(`       ${x}`);
     if ( p.length > 60 ) lines.push(`       ... and ${p.length - 60} more`);
   }
+  for ( const w of r.warnings ?? [] ) lines.push(`note ${w}`);
   if ( r.ok ) lines.push("Every merge rule is met.");
   else if ( r.bensOwn ) lines.push("The owner's own work: reported, not blocked.");
   else lines.push("Not ready to merge: fix the lines marked FAIL (docs/WORKFLOW.md, section 6).");

@@ -31,7 +31,7 @@ import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT} from "./jobs.mjs";
-import {loadConfig, getLane, laneDir, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {loadConfig, getLane, laneDir, laneUrl, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack} from "../lanes/gate-queue.mjs";
@@ -222,7 +222,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   if ( job.kind === "gate-two" ) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${job.gate}-result.json`);
     fs.rmSync(f, {force: true});
-    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`, ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
+    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", laneUrl(laneOf(lane)), ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
     // The failing steps are read before the reset, which may put the lane's data back
     const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
     const detail = failDetail(lane, line);
