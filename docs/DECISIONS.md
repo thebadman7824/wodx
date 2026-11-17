@@ -405,6 +405,7 @@ Next free block: B7210
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
+| B7120-B7129 | Weekly review picks st1 and ac1 (17 November): difficulty past 10, trying again (used B7120-B7121) | Chronicle, NPC, Otherworlds, Combat, Actions, Sheets, system fork |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
@@ -13996,6 +13997,16 @@ on main's commit as for any all-gates job, and a gate failing there reads as a f
 `run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
 runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
 (BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
+
+## B7120. A difficulty past 10 needs one more success a point (2026-11-17)
+WoDX Chronicle's shared count (terms.mjs successes) rolls a difficulty past 10 at 10 and takes one success off for each point past it: three hits at difficulty 12 make one success, and one hit makes a failure, never a botch. M20 pdf 504 puts it this way for magick, and V20 pdf 166 does the same for Dominate; no V20 page found gives a general ceiling, so this is the house reading for every roll. Before, every roll was cut to 10 without a word, so stacked conditions, weather and wounds stopped counting there. Rollers that hold the difficulty at 10 themselves pass the count on (`over`), and the card says "2 more successes needed (difficulty 12, past 10)". WoDX Combat's attack log cited VtDA20 p. 323 for "above 10 the action is impossible", which is the trying-again rule; it now says how many more successes are needed. Ben's pick st1 on the weekly review desk.
+
+Reverse: make overTen in terms.mjs return 0.
+
+## B7121. Trying again after a failure gets harder (2026-11-17)
+WoDX Actions remembers a failed simple or teamwork roll per character, task (the preset, or the Attribute and Ability) and target, for the scene. The next try at the same thing is +1 difficulty a failure, named on the card ("Retry (third try) +2 diff"), and once that brings the difficulty to 10 the Action window says it cannot be attempted now (V20 Dark Ages pdf 324; Demon: The Fallen pdf 223; Hunter: The Reckoning pdf 172). Extended rolls (which already allow repeated attempts) and resisted rolls (won or lost outright) are left out, as the books say. A success, a new scene, or the Storyteller's Clear failed tries button (the Scene row of every line's menu) starts it again. The Retries box in the window still works, and the higher of the two counts. World setting "Trying again gets harder" (on). Ben's pick ac1.
+
+Reverse: switch the setting off.
 
 ## B7140. One feature registry in the repo (2026-11-17)
 Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
