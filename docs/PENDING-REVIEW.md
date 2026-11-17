@@ -6,6 +6,12 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
 
+Tiers (Finish-Line Desk, item w5, 17 November 2026). Classify each question before logging it:
+- Low: reversible and inside a design Ben already approved. Take the recommendation and log a row here. It never goes on the daily decisions desk; the Monday review lists these rows for Ben to skim.
+- Medium: changes a design or the goal. Log a row here and raise it for the daily decisions desk (at most five items a day, most important first).
+- High: Live, deletes, money, or anything Ben must do at his PCs (BIOS, reboots, security settings, running a script). Wait for Ben's go-ahead. It goes on the weekly "needs your hands" list (/mnt/project-files/decisions-desk/needs-your-hands.md), or on the daily desk only when it blocks work now.
+Rows in the Waiting table are settled by auto-approval at 06:00 UTC and do not appear on the daily desk.
+
 ## Approved by Ben, 10 November 2026
 
 Ben approved every entry below, which had been waiting for review, at 04:03 UTC on 10 November 2026. Each still lists how to reverse it. Where a row says a choice was left for Ben (the KotE shelf label, Live keeping moves out of turn Off), the approval keeps it as it stands; Live settings still change only when Ben says.
