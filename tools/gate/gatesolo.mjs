@@ -23,6 +23,8 @@
  *    9f. arrival (B5140): the player asks to be brought in, and the seat answers with the character's token; the panel
  *        offers no Make my character to a player who has one, and Foundry's User Configuration is closed (B6711)
  *    9g. the hunger line waits while the character wizard is open on the character (B6710)
+ *    9h. Report a problem (B7160): the player's report reaches the seat and is saved as a journal entry in the
+ *        "Reported problems" folder that the player can read
  *    9h. Chronicle options (B6757): the player turns on Threads of Fate, Hardship and Bodies left behind from the panel,
  *        the seat writes them and refuses a key not on its list, and each is put back
  *   "finish" (Gamemaster Test):
@@ -125,6 +127,7 @@ async function setup() {
   ids.userCharacter = user.character?.id ?? null;
   await user.update({character: pc.id});
   // Arrival lands on the gate's scene for the run (B5140), never on a testbed map
+  ids.reportFolder = game.folders.some(f => f.type === "JournalEntry" && f.name === "Reported problems");
   ids.landingBefore = read(MOD, "landing");
   if ( ids.landingBefore !== undefined ) await game.settings.set(MOD, "landing", scene.id);
   await game.settings.set(MOD, "wait", 2);
@@ -335,6 +338,23 @@ async function player(ids) {
     const closed = await until(() => !P.stateOf(me).building, 8000);
     ok("9g. the hunger line waits for the wizard", !before && open && closed, {before, open, closed});
   });
+  await step("9h. report a problem", async () => {
+    // B7160 to B7162: the player's report reaches the seat and comes back as a journal entry the player may read
+    const rep = S()?.report;
+    if ( !rep?.rules ) return ok("9h. report a problem", false, {error: "no Report a problem in this version"});
+    const PR = rep.rules;
+    const r = PR.buildReport({what: `${TAG} report: the gate checks the report button`, expected: "a journal entry", kind: "broken"},
+      {at: Date.now(), world: game.world.id, by: game.user.name, isGM: false, build: {label: "gate"}, scene: {id: canvas.scene?.id, name: canvas.scene?.name},
+        actor: {id: game.user.character?.id, name: game.user.character?.name, type: game.user.character?.type}, gameDate: "", worldTime: game.time.worldTime,
+        errors: rep.caught(), cards: [], windows: [], modules: {}});
+    S().panel.ask("ask.report", {report: r});
+    const seen = await until(() => game.journal.some(j => j.getFlag?.(MOD, "report")?.id === r.id), 10000);
+    const entry = game.journal.find(j => j.getFlag?.(MOD, "report")?.id === r.id);
+    const inFolder = entry?.folder?.name === PR.FOLDER;
+    const page = entry?.pages?.contents?.[0]?.text?.content ?? "";
+    ok("9h. report a problem", seen && inFolder && /the gate checks the report button/.test(page) && /What happened/.test(page),
+      {id: r.id, seen, inFolder, folder: entry?.folder?.name ?? null, pageStart: page.slice(0, 120)});
+  });
   return steps;
 }
 
@@ -483,6 +503,11 @@ async function cleanup(ids, R) {
     for ( const id of ids?.users ?? [] ) await game.users.get(id)?.delete();
     if ( ids?.landingBefore !== undefined ) await game.settings.set(MOD, "landing", ids.landingBefore ?? "");
     for ( const id of ids?.items ?? [] ) await game.items.get(id)?.delete();
+    // 9h: the gate's own reports, and the folder when the run made it
+    const reps = game.journal.filter(j => String(j.getFlag?.(MOD, "report")?.what ?? "").startsWith(TAG)).map(j => j.id);
+    if ( reps.length ) await JournalEntry.deleteDocuments(reps);
+    const rf = game.folders.find(f => f.type === "JournalEntry" && f.name === "Reported problems");
+    if ( rf && ids && !ids.reportFolder && !game.journal.some(j => j.folder?.id === rf.id) ) await rf.delete();
     if ( ids && "stBefore" in ids && game.settings.settings.has(`${MOD}.st`) ) await game.settings.set(MOD, "st", ids.stBefore ?? {on: false, userId: null, at: 0});
     const since = ids?.since ?? Date.now();
     const mine = game.messages.filter(m => m.timestamp >= since - 1000 && (m.speaker?.alias === TAG || m.speaker?.alias === "The Lone Chronicle" || String(m.content ?? "").includes(TAG))).map(m => m.id);
@@ -490,7 +515,7 @@ async function cleanup(ids, R) {
     const q = Q()?.pending?.().filter(p => String(p.title ?? "").startsWith(TAG)) ?? [];
     for ( const p of q ) await Q().decide(p.id, "reject");
     if ( ids && game.time.worldTime !== ids.t0 ) { R.notes.push(`the clock had moved by ${game.time.worldTime - ids.t0} s; put back`); await game.time.advance(ids.t0 - game.time.worldTime); }
-    const left = game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length + game.users.filter(u => u.name.startsWith(TAG)).length;
+    const left = game.journal.filter(j => String(j.getFlag?.(MOD, "report")?.what ?? "").startsWith(TAG)).length + game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length + game.users.filter(u => u.name.startsWith(TAG)).length;
     ok("13. clean up", left === 0 && (!ids || game.time.worldTime === ids.t0) && !read(MOD, "on"), {left, clock: ids ? game.time.worldTime - ids.t0 : null});
   } catch (e) { ok("13. clean up", false, {error: e.message}); }
 }
