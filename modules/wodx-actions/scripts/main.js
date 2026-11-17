@@ -2656,7 +2656,7 @@ export async function newNight({ actors } = {}) {
             const due = num(flag(actor, "aggDue")), now = num(game.time.worldTime);
             const d = healthTrack(actor).damage;
             if (!d.aggravated) { await actor.unsetFlag(MOD, "aggHealing"); await actor.unsetFlag(MOD, "aggDue"); }
-            else if (now < due) bits.push(`Slow Healing: the next aggravated level heals in ${Math.ceil((due - now) / 86400)} day${Math.ceil((due - now) / 86400) === 1 ? "" : "s"}`);
+            else if (now < due) bits.push(`Slow Healing: the next aggravated level heals in ${Math.ceil((due - now) / DAY)} day${Math.ceil((due - now) / DAY) === 1 ? "" : "s"}`);
             else {
                 Object.assign(upd, healthUpdate(actor, { ...d, aggravated: d.aggravated - 1 }));
                 bits.push("1 aggravated level heals (Slow Healing)");

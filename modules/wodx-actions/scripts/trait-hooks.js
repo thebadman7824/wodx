@@ -11,6 +11,7 @@
  * Player characters and NPCs are read the same way.
  */
 import * as PM from "./power-mods.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const NONE = Object.freeze({ dice: 0, diff: 0, parts: [] });
 
@@ -192,7 +193,7 @@ export const riseRating = (actor, rating) => (holds(actor, "early-riser") ? 10 :
 /** B7066: Slow Healing (V20 p. 483): two blood points heal one level of bashing or lethal. */
 export const healCostPerLevel = actor => (holds(actor, "slow-healing") ? 2 : 1);
 /** B7066: Slow Healing: a committed aggravated level heals only every five days. */
-export const SLOW_AGG_SECONDS = 5 * 86400;
+export const SLOW_AGG_SECONDS = 5 * DAY;
 /** B7066: Permanent Wound (V20 p. 483): rises each night at the Wounded health level (four levels marked). */
 export const RISE_WOUNDED = 4;
 export const risesWounded = actor => holds(actor, "permanent-wound");
