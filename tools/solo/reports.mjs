@@ -72,7 +72,12 @@ async function fileThem() {
   const tool = path.join(repo, "tools/registry/registry.mjs");
   if ( fs.existsSync(tool) ) {
     const mod = await import(pathToFileURL(tool).href);
-    if ( typeof mod.ownerOf === "function" ) ownerOf = file => mod.ownerOf(file);
+    if ( typeof mod.ownerOf === "function" && typeof mod.load === "function" ) {
+      // ownerOf(reg, file) on the registry as load() reads it; each row's module is the file it sits in
+      const loaded = mod.load(path.dirname(path.dirname(reg)));
+      const home = new Map(Object.entries(loaded.modules).flatMap(([m, x]) => x.rows.map(r => [r, m])));
+      ownerOf = file => mod.ownerOf(loaded, file).map(r => ({id: r.id, module: r.module || home.get(r)}));
+    }
   }
   const res = fileReports(reports, docs, {ownerOf, refOf: r => r.entry || `${r.id}.json`});
   if ( !args.includes("--dry") ) {

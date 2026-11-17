@@ -142,6 +142,14 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    merges, `how` says what was done to check the file, and a file changed after its review needs a new one. A glob
    (`--glob "modules/wodx-x/assets/**"`) may cover images and other data, never a script.
 
+4. **Feature registry.** In a module whose `registry/features/<module>.json` says `"seeded": true`, every changed
+   script file is owned by a row, and one of its rows changes on the branch (its steps, open list, faults or prs), or
+   a commit says `registry: no change <reason>`. Changed registry rows pass `node tools/registry/registry.mjs check`,
+   and the module's half-built count does not grow (the ratchet) unless a commit cites Ben's go-ahead with
+   `ratchet-override: <link>`. Modules not seeded yet get a warning only, until each is seeded (Ben, Finish-Line
+   Desk, 17 November 2026; B7144, B7146). A decision fragment may not reuse a number main's docs/DECISIONS.md has
+   (B7145).
+
 Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
 `wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force
 pushes are blocked and main cannot be deleted. Nothing lands on main except through a pull request whose checks
@@ -191,3 +199,31 @@ For maps and picture packs in particular (Ben, 14 November 2026, after the map t
   (`maps-sheets/`, one sheet for each subfolder) and pulls single pictures only for detail. Generated maps, previews and
   check images go to the thread's own scratch space. Only the deliverable (a sample map, one preview) goes to the
   shared folder.
+
+## 8. The feature registry: what exists and how far along it is (Ben, 17 November 2026)
+
+Every feature a player or the Storyteller uses has one row in `registry/features/<module>.json`, with proof for each
+step it has reached: built, wired (the code that reads it in play), shown, gated (a gate step that drives the real
+trigger and checks the effect), book (the page, V20 first), verified (confirmed by a session other than the builder).
+Done means verified. The format is in [registry/features/README.md](../registry/features/README.md), and
+[FEATURES.md](FEATURES.md) is the generated view (B7140-B7149, the Finish-Line Desk).
+
+- **Status lives here and nowhere else.** Audits, the Monday review, handoff notes and memory point to row ids and
+  start from `node tools/registry/registry.mjs changed --since <last check>`. The Master Plan keeps the design and links
+  FEATURES.md for status.
+- **Change the row with the code**, in the same pull request. A fault from the solo world's Report a problem button or
+  an audit goes in the row's `faults`; deferred work in its `open` or `deferred` list, never only in a desk or a shared
+  JSON file.
+- **Finish before starting (the ratchet).** A module's half-built count (built but not gated, or an open fault) may not
+  grow. New work in a module starts by finishing a row there; bug fixes are exempt; Ben can override.
+- **The core first.** Rows with `"core": true` (V20 Dark Ages Vampire in Rothenstein, 1197, with mortals and ghouls)
+  go first in seeding and fixes.
+- **Gate strength.** `node tools/registry/strength.mjs <gate>` grades each step effect, marker, direct-call or none.
+  A row is gated only through an effect step. Gates without one are listed in tools/registry/strength-baseline.json,
+  which may only shrink: a new gate needs at least one step that drives the real trigger.
+- **Art by id.** Code that shows a portrait, sprite or object loads it by its id from the art tables
+  (registry/art-assets/ in the shared folder, kept by the art thread), never by a file path, so the locked style
+  swaps in without code changes. Rows list the ids they use in `art`.
+- **Verified by someone else.** The Monday review re-checks a sample of 20 rows that reached gated that week and sets
+  verified, or drops a row back. A builder never marks its own row verified.
+
