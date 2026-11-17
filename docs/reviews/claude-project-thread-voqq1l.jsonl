@@ -1,0 +1,9 @@
+{"file":"tools/pcq/jobs.mjs","verdict":"working","how":"read in full; ran pcq.test.mjs (23 pass)","hash":"8588ad742e60","at":"2026-11-17T02:39Z"}
+{"file":"tools/pcq/known-faults.json","verdict":"working","how":"read in full; ran pcq.test.mjs (23 pass)","hash":"2393a3519789","at":"2026-11-17T02:39Z"}
+{"file":"tools/harness/pcq.test.mjs","verdict":"working","how":"read in full; ran pcq.test.mjs (23 pass)","hash":"7b107a7b9a5b","at":"2026-11-17T02:39Z"}
+{"file":"tools/powers/inventory.mjs","verdict":"working","how":"read the changed match; ran powers-inventory.test.mjs and inventory --summary (none 0)","hash":"00209c3fea41","at":"2026-11-17T02:39Z"}
+{"file":"tools/harness/powers-inventory.test.mjs","verdict":"working","how":"read the changed match; ran powers-inventory.test.mjs and inventory --summary (none 0)","hash":"5e5f47d93cef","at":"2026-11-17T02:39Z"}
+{"file":"tools/harness/test-gaps.mjs","verdict":"working","how":"read in full; the empty-report check runs before any write","hash":"d23a5713a880","at":"2026-11-17T02:39Z"}
+{"file":"tools/gate/gateplayerload.mjs","verdict":"working","how":"read in full; node --check; gate-rules.test.mjs pass; settings names checked against events.mjs:59 and settings.mjs:54","hash":"5ab96dcf6166","at":"2026-11-17T02:39Z"}
+{"file":"docs/WORKFLOW.md","verdict":"working","how":"read in full against the code change","hash":"54bc87d80027","at":"2026-11-17T02:40Z"}
+{"file":"changes/decisions/B7060.md","verdict":"working","how":"read in full against the code change","hash":"5f9dc45c4341","at":"2026-11-17T02:40Z"}

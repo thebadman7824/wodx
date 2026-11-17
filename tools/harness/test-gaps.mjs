@@ -16,6 +16,11 @@ for (const l of report.split("\n")) {
   const d = m[1].length; while (stack.length && stack.at(-1)[0] >= d) stack.pop(); stack.push([d, m[2]]);
   if (/\.m?js$/.test(m[2]) && m[3]) rows.push({path: stack.map(s => s[1]).filter(s => s !== "..").join("/"), lines: +m[3], funcs: +m[5]});
 }
+// B7061: a run that dies, times out or prints no coverage report used to write 0% for every module. Refuse instead.
+if ( !rows.length ) {
+  console.error(`No coverage report (exit ${run.status}, signal ${run.signal ?? "none"}${run.error ? `, ${run.error.message}` : ""}); docs/TEST-GAPS.md left as it was.`);
+  process.exit(1);
+}
 const mods = readdirSync(join(root, "modules")).filter(m => statSync(join(root, "modules", m)).isDirectory()).sort();
 const gateDir = join(root, "tools/gate");
 const gates = readdirSync(gateDir).filter(f => f.endsWith(".mjs")).map(f => [f, readFileSync(join(gateDir, f), "utf8")]);

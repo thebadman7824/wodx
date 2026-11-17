@@ -25,6 +25,7 @@
  * Common: "ref" is main (default), a claude/... branch or a commit sha; "prio" 1 (first) to 5 (default 3), matching
  * the Master Plan order; "after" an issue number this job waits for; "thread" the thread to tell.
  */
+import {readFileSync} from "node:fs";
 export const OWNER = "thebadman7824", REPO_NAME = "wodx";
 export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", failed: "pc-failed", alert: "pc-alert", status: "pc-status"};
 export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
@@ -197,10 +198,16 @@ export const issueBody = (job, note = "") => `${note ? note + "\n\n" : ""}\`\`\`
  * or null when the job says nothing about a whole branch: not a gates job, not touched or all (a hand-picked list may
  * miss gates the change needs), a lane fault with no result, or lanes that ran different commits.
  * parts: [{code, text, sha}] per lane. A failing gate that the recheck found failing on main too is not this change's
- * fault: the status passes and names it, so the pull request is not held for a fault main already has.
+ * fault: the status passes and names it, so the pull request is not held for a fault main already has, but only while
+ * the gate is on the known-faults list with an open issue (B7060, Ben 17 Nov 2026: listed known faults only).
  */
 export const GATE_CONTEXT = "wodx/gates";
-export function gateStatusFor(job, parts, ok, failing = failingGates, url = undefined) {
+/** B7060: the gates listed in tools/pcq/known-faults.json, each with its issue. */
+export function knownFaults(file = new URL("./known-faults.json", import.meta.url)) {
+  try { return new Map((JSON.parse(readFileSync(file, "utf8")).faults ?? []).filter(f => f?.gate && f.issue).map(f => [f.gate, f.issue])); }
+  catch { return new Map(); }
+}
+export function gateStatusFor(job, parts, ok, failing = failingGates, url = undefined, known = knownFaults()) {
   if ( job?.kind !== "gates" || !(job.touched || job.all) || !parts?.length ) return null;
   if ( parts.some(p => p.code === null || p.code === undefined || !p.sha) ) return null;
   const shas = new Set(parts.map(p => p.sha));
@@ -213,7 +220,12 @@ export function gateStatusFor(job, parts, ok, failing = failingGates, url = unde
   const mainToo = new Set([...text.matchAll(/^- (gate[\w-]*): fails on main too/gm)].map(m => m[1]));
   let state, description;
   if ( ok ) { state = "success"; description = `${ran} gate(s) passed (${job.all ? "all" : "touched"})`; }
-  else if ( bad.length && bad.every(g => mainToo.has(g)) ) { state = "success"; description = `passed; failing on main too: ${bad.join(" ")}`; }
+  else if ( bad.length && bad.every(g => mainToo.has(g) && known.has(g)) ) {
+    state = "success"; description = `passed; known faults on main: ${bad.map(g => `${g} #${known.get(g)}`).join(" ")}`;
+  }
+  else if ( bad.length && bad.every(g => mainToo.has(g)) ) {
+    state = "failure"; description = `fails on main too, not on the known-faults list: ${bad.filter(g => !known.has(g)).join(" ")}`;
+  }
   else { state = "failure"; description = `${bad.length || "some"} of ${ran} gate(s) failed${bad.length ? `: ${bad.join(" ")}` : ""}`; }
   return {sha: [...shas][0], body: {state, context: GATE_CONTEXT, description: description.slice(0, 140), ...(url ? {target_url: url} : {})}};
 }

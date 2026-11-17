@@ -154,7 +154,9 @@ for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ??
   add("Demon (DtF)", `Lore of ${l.label.replace(/^the /, "")}`, `${"•".repeat(k + 1)} ${e.name}`, { src: [e, c], status: st, kw: c?.spec?.kw ? [c.spec.kw] : kw?.keywords ?? [], page: `DtF p. ${l.page}`,
     how: c ? `evocation card (effect, duration, range, high Torment)${st === "applies" ? `; effects card ${c.spec.kind}` : ""}; running count against permanent Faith` : "Evoke rolls only" });
 }
-const dtfFull = Object.values(D.LORES).flatMap(l => (l.evo ?? []).map(e => e.name.toLowerCase()));
+// B7062: the keyword list also names apocalyptic form powers by a short name ("Chameleon" for Chameleon Skin, "Conjure"
+// for Conjure from Nothing, DtF pp. 207, 215); those are counted with the forms below, not as powers with no rules
+const dtfFull = Object.values(D.LORES).flatMap(l => [...(l.evo ?? []).map(e => e.name), ...(l.form ?? []), ...(l.high ?? [])].map(x => String(x).toLowerCase()));
 // A short name in the keyword list ("Manipulate", "Reach Across") is one of the Lore table's evocations, already counted
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.dtf) ) if ( !dtfNames.has(id) && !dtfFull.some(f => f.startsWith(String(e.n).toLowerCase())) )
   add("Demon (DtF)", "Lores (keyword list only)", e.n, { src: e, status: "none", kw: e.k, page: "DtF", how: "named in the keyword list, not in the Lore table" });

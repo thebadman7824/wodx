@@ -130,8 +130,10 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
 
    The PC runner sets the `wodx/gates` status on the commit it ran, and starts the pull request's failed checks
    again so they pick it up. The result holds while the module, system and gate files stay as they were (a stamp
-   only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count, and a
-   gate that the recheck finds failing on main too does not hold the pull request back.
+   only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count. A gate
+   that the recheck finds failing on main too does not hold the pull request back only while it is listed in
+   `tools/pcq/known-faults.json` with an open issue (B7060, Ben 17 November 2026). That list may only shrink: fix the
+   gate, then remove its entry.
 3. **File review.** Every changed file has a verdict made on it as it is now:
 
        node tools/release/review.mjs todo
