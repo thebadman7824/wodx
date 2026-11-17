@@ -36,7 +36,7 @@
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
-  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
+  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
 import {openGM, waitApis} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
@@ -141,7 +141,12 @@ const signIn = async () => {
   browser = session.browser; page = session.page; sinceSignIn = 0;
   // B6952: modules still without an api after the wait are named on the next gate's line
   lateApis = session.late ?? [];
+  diagLog = session.diag ?? []; diagFrom = 0;
 };
+// B6970: --diag writes, under each failing gate, the console errors and warnings since the last gate (since sign-in for
+// the first) and every failing step in full, so a lane failure can be read from the job's report.
+const DIAG = args.includes("--diag");
+let diagLog = [], diagFrom = 0;
 let lateApis = [];
 try {
   // Code drift: the repo checkout against the lane's deployed files.
@@ -152,7 +157,7 @@ try {
 
   // World drift: the running world against its clean fingerprint.
   await signIn();
-  const now = worldFingerprint(await within(page.evaluate(WORLD_PROBE), 120000, "the world check"), cfg.ignoreSettings);
+  const now = await within(settledFingerprint(page, cfg.ignoreSettings), 150000, "the world check");
   const clean = readJson(path.join(laneDir(lane), "clean.json"));
   const world = clean ? diffWorld(clean, now, {versions: false}) : {strict: [{where: "clean fingerprint", what: "none yet: reset the lane or run lanes.mjs accept"}], warn: []};
   world.strict.push(...diffRunning(expected, now));
@@ -183,6 +188,7 @@ try {
       }
       // B6960: the WoDX apis are looked for again before each gate (a world that lost them mid-lane is named, not the gate)
       const lostApis = await waitApis(page).catch(() => []);
+      const diagStart = diagFrom;
       if ( lostApis.length ) console.log(`Lane ${lane.id}: no api before ${gate} after 120 s: ${lostApis.join(", ")}`);
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
@@ -279,12 +285,24 @@ try {
       if ( lateApis.length ) { const note = ` [no api after sign-in: ${lateApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; lateApis = []; }
       if ( lostApis.length && !signInNote ) { const note = ` [no api before this gate: ${lostApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; }
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
-      if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
+      const diagDump = async () => {
+        if ( !DIAG ) return;
+        const lines = diagLog.slice(diagStart);
+        report(`  DIAG console since ${diagStart ? "the last gate" : "sign-in"} (${lines.length} line(s)):`);
+        for ( const l of lines.slice(-150) ) report(`    ${l}`);
+        const res = await page.evaluate(async g => { try { return await (await fetch(`/wodx-gate/${g}-result.json?${Date.now()}`, {cache: "no-store"})).json(); } catch (e) { return {fetchError: e.message}; } }, gate).catch(e => ({fetchError: e.message}));
+        for ( const st of (res?.steps ?? []).filter(x => !x.pass) ) report(`  DIAG step ${JSON.stringify(st).slice(0, 12000)}`);
+        for ( const e of (res?.errors ?? []) ) report(`  DIAG error ${String(e).slice(0, 4000)}`);
+        if ( res?.fetchError ) report(`  DIAG no result file: ${res.fetchError}`);
+      };
+      if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; await diagDump(); diagFrom = diagLog.length; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);
       report(`${gate}: ${out.summary}${clock}`);
       const m = /(\d+)\s*\/\s*(\d+)\s+passed/.exec(out.summary);
       // B6952: a gate that ran no step at all (0/0) or did not say how it did (no tally, and no "pass": true) has not passed
-      if ( (m ? m[1] !== m[2] || m[2] === "0" : !/^\{"pass":true\b/.test(out.summary)) || !out.back ) code = 1;
+      const failed = (m ? m[1] !== m[2] || m[2] === "0" : !/^\{"pass":true\b/.test(out.summary)) || !out.back;
+      if ( failed ) { code = 1; await diagDump(); }
+      diagFrom = diagLog.length;
     }
     extendLock(lane, Date.now() + 10 * 60000);
     if ( !page ) await signIn();
