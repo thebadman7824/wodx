@@ -226,6 +226,11 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.deepEqual(two.lanes.map(l => l.id), [7]);
     assert.equal(two.foundryMain, "C:/WoDX/Foundry/resources/app/main.js");
     assert.ok(two.allLaneIds.includes("7") && two.allLaneIds.includes("2"));
+    process.env.WODX_HOST = "benjamin-pc";
+    const three = L.loadConfig();
+    assert.deepEqual(three.lanes.map(l => l.id), [8], "the Secondary PC sees lane 8 only (B6990)");
+    assert.equal(three.foundryMain, "D:/WoDX/Foundry/resources/app/main.js");
+    assert.ok(three.allLaneIds.includes("8") && three.allLaneIds.includes("7"));
     process.env.WODX_HOST = "desktop-mrkcmrg";
     const main = L.loadConfig();
     assert.ok(!main.lanes.some(l => l.host));
