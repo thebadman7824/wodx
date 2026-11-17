@@ -195,11 +195,11 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
 /* WoDX Solo 0.2.0: the player's panel (B2640 to B2644) */
 
 test("the panel holds the steps' buttons and nothing of the Storyteller's", () => {
-  assert.deepEqual(R.PANEL.map(b => b.id), ["oracle", "leads", "time", "travel", "places", "years", "pause", "stuck", "curtain", "carry", "options"]);
+  assert.deepEqual(R.PANEL.map(b => b.id), ["oracle", "leads", "time", "travel", "places", "years", "pause", "stuck", "curtain", "report", "carry", "options"]);
   // B5980, B5982: the oracle's and the Leads page's actions live in world.mjs
   // B6040: places with no map live in card.mjs
-  // B6533: sleep through the years lives in fate.mjs
-  const src = ["panel.mjs", "world.mjs", "card.mjs", "fate.mjs"].map(f => readFileSync(join(root, "modules/wodx-solo/scripts", f), "utf8")).join("\n");
+  // B6533: sleep through the years lives in fate.mjs; B7160: report a problem in report.mjs
+  const src = ["panel.mjs", "world.mjs", "card.mjs", "fate.mjs", "report.mjs"].map(f => readFileSync(join(root, "modules/wodx-solo/scripts", f), "utf8")).join("\n");
   for ( const b of R.PANEL ) assert.ok(new RegExp(`\\b${b.id}\\(\\)`).test(src), `no action for ${b.id}`);
 });
 

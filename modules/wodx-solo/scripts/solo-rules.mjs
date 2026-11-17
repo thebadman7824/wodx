@@ -123,6 +123,8 @@ export const PANEL = [
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
+  // B7160: a fault met in play, written down with the build, the scene and the recent errors
+  {id: "report", label: "Report a problem", icon: "fa-solid fa-bug"},
   // B5079: ask a companion to carry someone who is down
   {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"},
   // B6757: the chronicle's own options the lone player may turn on (OPTIONS)
