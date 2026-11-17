@@ -34,7 +34,7 @@ the queue and the last results, updated every 2 minutes; an issue labelled `pc-a
 jobs are held for disk or memory, and closes when that clears.
 
 Error checking: lane clash check before it starts (no lane 1, no shared port or folder, no Live world, every lane reset
-nightly), a health probe of each idle lane every 5 minutes with one restart, a time limit on every step (the process
+nightly), each gates job starting on a freshly reset lane (B7190; `"reset": false` or `submit.mjs --no-reset` skips it), a health probe of each idle lane every 5 minutes with one restart, a time limit on every step (the process
 tree is ended past it), one retry after a lane reset on a lane fault (no free lane, drift, watchdog, failed deploy or
 start; a failing gate is a result and is not retried), and jobs that were running when it stopped are run again.
 
