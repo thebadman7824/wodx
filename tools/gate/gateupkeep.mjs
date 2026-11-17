@@ -81,7 +81,7 @@ async function body() {
     for ( let i = 0; i < 3; i++ ) await T.upkeep.addHeat(scene, "botch");
     const h = T.upkeep.huntHere(scene);
     // B7211: the region's hunters add their stage's difficulty on top, capped at 3 (hunters.mjs rulesHuntExtra); the
-    // testbed's region can already be watched (job 1926: extra 3 where the heat alone gives 2)
+    // testbed region can be watched (job 1926: extra 3 where the heat alone gives 2)
     const hunted = Number(T.hunters?.stageDiff?.(scene)) || 0;
     ok("7. heat and ground", h.area === "slums" && h.heat === 6 && h.band.name === "Watched" && h.extra === Math.min(3, 2 + hunted),
       {here: {area: h.area, heat: h.heat, band: h.band.name, extra: h.extra, herd: h.herd ?? null}, hunted});
