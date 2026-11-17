@@ -17,6 +17,13 @@ follows the token-thrift rule: Opus threads plan, review and do the hard rules w
 | Light helper jobs: file counts, backups, relays | A Sonnet or Haiku helper thread | Through the coordinator |
 | Anything while the weekly limit is hit | Cline (paid key) | Only then |
 
+## PC upkeep is frozen (Ben, 17 November 2026)
+
+No new machines, lanes, runners, status pushes or PC tools until the feature registry is seeded and the core (V20
+Dark Ages Vampire) is verified; fixes to what exists are fine. One Sonnet PC helper owns upkeep on all three PCs, and
+game threads do not edit `tools/pcq/` or `tools/lanes/`. The merge rules warn when a branch does, unless a commit says
+`upkeep: <reason>` (B7149).
+
 ## Merge rules warning
 
 CI's merge rules print a warning (they never block on it) when a pull request written by a thread changes files

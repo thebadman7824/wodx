@@ -1,0 +1,21 @@
+{
+ "module": "wodx-combat",
+ "seeded": false,
+ "rows": [
+  {
+   "id": "combat.knockdown-stand",
+   "name": "Standing up from a knockdown",
+   "module": "wodx-combat",
+   "core": true,
+   "files": ["modules/wodx-combat/scripts/main.js"],
+   "steps": {
+    "built": {"pr": 1125, "decisions": "B3921"},
+    "wired": {"reader": "modules/wodx-combat/scripts/main.js:standUp(c.actor, combat)"},
+    "shown": {"what": "a 'tries to stand' card with the dice at the start of the turn, and the Knocked down status leaving the token on a success"},
+    "gated": {"gate": "tools/gate/gateknockdown.mjs", "step": "4"}
+   },
+   "open": ["book: B3921 cites V20 Dark Ages p. 348 (Maneuver Complications); the OCR text names that page but the Knockdown rule itself was not found in it, so the page is not confirmed yet"],
+   "prs": [1125, 1638]
+  }
+ ]
+}
