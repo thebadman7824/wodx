@@ -22,7 +22,8 @@
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
- * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every minute it logs the graphics card heat (gpu.mjs).
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every few minutes the Main PC's runner moves the
+ * merge train on (train.mjs, B7202), and the gate job of the pull request at its front runs before other gate jobs. Every minute it logs the graphics card heat (gpu.mjs).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -33,6 +34,7 @@ import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
+import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack} from "../lanes/gate-queue.mjs";
 
@@ -434,6 +436,24 @@ async function rerunFor(pr, sha, tries) {
   } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
+// ---- merge train (B7202): only the runner with "train" on (the Main PC's) drives it ----
+const graphql = async (query, variables) => {
+  const r = await fetch("https://api.github.com/graphql", {method: "POST", body: JSON.stringify({query, variables}),
+    headers: {Authorization: `bearer ${TOKEN}`, "User-Agent": "wodx-pcq", "Content-Type": "application/json"}});
+  const j = await r.json();
+  if ( !r.ok || j.errors?.length ) throw new Error(`GraphQL ${r.status} ${JSON.stringify(j.errors ?? j).slice(0, 200)}`);
+  return j.data;
+};
+let trainNow = null, trainBusy = false, lastTrain = 0;
+function trainTick() {
+  if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
+  lastTrain = Date.now(); trainBusy = true;
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3})
+    .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
+}
+/** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */
+const trainFirst = jobs => trainNow?.front ? [...jobs.filter(j => isFrontJob(j.issue?.title, trainNow.front)), ...jobs.filter(j => !isFrontJob(j.issue?.title, trainNow.front))] : jobs;
+
 // ---- status issue ----
 let statusIssue = null, lastStatus = "", lastStatusAt = 0, heldSince = null;
 async function status(queue) {
@@ -447,6 +467,7 @@ async function status(queue) {
     "", "| Lane | Port | State |", "|---|---|---|", ...lanes, "",
     `Queue (${queue.length}): ${queue.map(q => `#${q.number} ${q.job.kind} p${q.job.prio}`).join(", ") || "empty"}`,
     `Last results: ${recent.join(", ") || "none yet"}`,
+    ...(conf.train ? [`Merge train: ${trainNow?.front ? `front #${trainNow.front}, ${trainNow.action} (${trainNow.why}); line ${trainNow.line.map(n => `#${n}`).join(", ")}` : "empty (label a ready pull request merge-train)"}`] : []),
     `Free: ${Object.entries(res.free).map(([d, v]) => `${d}: ${v.gb} GB`).join(", ")}, memory ${res.ram} GB${res.low.length ? ` (HOLDING: ${res.low.join("; ")})` : ""}`,
     "", "How to queue a job: tools/pcq/README.md."].join("\n");
   const changed = body.replace(/^Updated.*$/m, "") !== lastStatus.replace(/^Updated.*$/m, "");
@@ -558,7 +579,7 @@ for ( ;; ) {
     // Stale pull requests, every hour, beside the jobs (B4110).
     if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
-      sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json")})
+      sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json"), update: !!conf.sweepUpdates})
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
         .catch(e => log(`sweep failed: ${e.message}`)).finally(() => { sweeping = false; });
     }
@@ -582,7 +603,8 @@ for ( ;; ) {
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
     }
-    const ready = order(queue, openNums);
+    trainTick();
+    const ready = trainFirst(order(queue, openNums));
     const res = resources();
     if ( res.low.length ) {
       heldSince ??= Date.now();
