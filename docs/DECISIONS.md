@@ -407,6 +407,7 @@ Next free block: B7210
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
+| B7170-B7179 | Chronicle canon: shared dates in one checked file, with a guard test (used B7170-B7177) | Chronicle, NPC, Storyteller, Creation, tools (harness) |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7202) | tools (PC job queue), docs |
@@ -14066,6 +14067,36 @@ Reverse: drop the --reports option and reports.mjs; the journal entries stay.
 No new routine. The PC helper copies the seat's report files to /mnt/project-files/solo-reports/ (or runs reports.mjs export), and a thread files them on a branch with reports.mjs file and opens a pull request. The digest line goes into the morning digest.
 
 Reverse: stop collecting; reports stay in the world's journal.
+
+## B7170. Chronicle canon (2026-11-17)
+Finish-Line Desk o6 (Ben: canon in Chronicle, with the guard). modules/wodx-chronicle/data/canon/index.mjs holds each shared date once, with the book pages it was checked against, and canon("<id>") reads it (an unknown id throws). tools/harness/canon.test.mjs scans modules/ and system/ (not the Encyclopaedia's book index or language files): a hand-typed year in the same clause as a canon name fails when it lies outside the canon span, and the copies that agree sit on tools/harness/canon-copies.json, which may only shrink. First batch, six facts: camarilla-founded 1435, first-conclave 1486, convention-of-thorns 1493, anarch-revolt 1335 to 1493, second-anarch-revolt 1944, black-death 1347 to 1351. The Sabbat has no single founding night in the books (Lore of the Clans pdf 232: it formed some time after Thorns), so it waits.
+
+Reverse: delete data/canon/, the test and its list, and put the typed years back.
+
+## B7171. The Anarch Revolt runs 1335 to 1493 (2026-11-17)
+WoDX had three spans: 1381 to 1493 (story chain), 1394 to 1493 (NPC fates danger) and 1381 to 1492 (rivalries). No book gives 1381 or 1394. The V20 books give no starting year (Anarchs Unbound pdf 13: the stage is set by the 14th century, the war consumes the 15th); Revised Archons pdf 32 dates Tyler's first blow against Hardestadt to about 1335. The Revolt runs until the Convention of Thorns in October 1493, so 1493 is still a Revolt year for rivalries.
+
+Reverse: set anarch-revolt's from to 1381 in the canon file.
+
+## B7172. The Camarilla was founded in 1435, not 1486 (2026-11-17)
+The Storyteller's Renaissance primer said the Camarilla forms in 1486. Lore of the Clans pdf 251 (V20) and Archons pdf 32 give 1435; 1486 is the first Conclave. Fixed, and the primer reads both dates from the canon.
+
+Reverse: none needed (a fix).
+
+## B7173. The Black Death is 1347 to 1351 everywhere (2026-11-17)
+Changeling 2nd edition pdf 55 and Wraith 20th pdf 99. The Chronicle story chain ran to 1353 and the Creation lifepath band ran 1348 to 1352; both read the canon now, and the bands either side move with it. Local dates inside the span (Rothenstein's 1348 arrival) stay as they are.
+
+Reverse: set black-death's span in the canon file.
+
+## B7174. The Second Anarch Revolt is 1944 (2026-11-17)
+V20 pdf 52 says 1944; Anarchs Unbound pdf 20 says 1943. V20 comes first.
+
+Reverse: set second-anarch-revolt to 1943.
+
+## B7177. A battle or saga step lands on a town once (2026-11-17)
+WoDX Storyteller. Found by gatetowns failing late in job 1898. onBattle and onSaga saved the "seen" mark only after landing the change, so a second call during the landing sacked the town again (600, 522, 455 people). Both now hold the town and key in a landing set from the check until the save.
+
+Reverse: none needed (a fix).
 
 ## B7180. A renamed decision fragment no longer clashes with itself (2026-11-17)
 Fix to B7145. branchDecisions() read every fragment ever added on a branch, including ones renamed away, so PR 1836's B7010.md (renumbered to B7110.md after PR 1835 took B7010) still claimed B7010. A fragment gone by the head now counts only when the commit that removed it also wrote docs/DECISIONS.md, which is what merge-stamp does. Regression test in tools/harness/registry.test.mjs.

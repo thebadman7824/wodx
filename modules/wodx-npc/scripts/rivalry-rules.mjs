@@ -11,6 +11,7 @@
  * with real history for the mortal powers of the Czech lands. Steps, years and odds are WoDX readings, house rules,
  * logged in docs/PENDING-REVIEW.md. Page references wait on a book check (see docs/RIVALRIES.md).
  */
+import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 
 export const STEP_WORDS = {"-3": "Hunts", "-2": "Hostile", "-1": "Tense", "0": "No quarrel"};
 export const stepWord = s => STEP_WORDS[String(Math.max(-3, Math.min(0, Math.round(Number(s) || 0))))] ?? "No quarrel";
@@ -49,8 +50,8 @@ export const RIVALRIES = [
     note: "Eastern domains disputed with the Ventrue of the Empire", book: "V20 Dark Ages"},
   {id: "giovanni-cappadocian", a: "clan:giovanni", b: "cappadocian|lamia|harbinger", from: 1444, to: null, ab: -3, ba: -3,
     note: "The Giovanni destroyed their own clan's founder and hunt what remains of the line", book: "V20 Dark Ages; V20"},
-  {id: "anarch-revolt", a: "sect:anarch", b: "sect:camarilla|prince|elder", from: 1381, to: 1492, ab: -2, ba: -2,
-    note: "The Anarch Revolt against the elders", book: "Guide to the Anarchs p. 19 (pdf 20); Anarchs Unbound pdf 12-14 (the 14th century, the 15th consumed by it)"},
+  {id: "anarch-revolt", a: "sect:anarch", b: "sect:camarilla|prince|elder", from: canon("anarch-revolt").from, to: canon("anarch-revolt").to, ab: -2, ba: -2,
+    note: "The Anarch Revolt against the elders", book: "Chronicle canon: anarch-revolt"},
   {id: "anarch-camarilla", a: "sect:anarch", b: "sect:camarilla", from: 1493, to: null, ab: -1, ba: -1,
     note: "Rebels kept on sufferance after the Convention of Thorns", book: "Anarchs pdf 14-15"},
   {id: "sabbat-camarilla", a: "sect:sabbat", b: "sect:camarilla", from: 1493, to: null, ab: -2, ba: -2,

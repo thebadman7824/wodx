@@ -5,6 +5,7 @@
  * start switched off. `dateNote` says where a book gives no exact date and WoDX picked one (a house rule).
  * Pages: "pdf" is the PDF page, "p." the printed page.
  */
+import {canon} from "./canon/index.mjs";
 export default {
   version: 1,
   events: [
@@ -48,7 +49,7 @@ export default {
       source: "V20 Lore of the Clans pdf 251"
     },
     {
-      id: "thorns", year: 1493, branch: "both", lines: ["vampire"],
+      id: "thorns", year: canon("convention-of-thorns").from, branch: "both", lines: ["vampire"],
       name: "The Convention of Thorns",
       summary: "The Anarch Revolt ends at Thorns. The anarchs who refuse the treaty go on to found the Sabbat; the Assamites are cursed.",
       source: "V20 Lore of the Clans pdf 251"
@@ -93,7 +94,7 @@ export default {
       source: "Wraith 20th p. 39 (pdf 104); Wraith: The Great War pdf 34, 206"
     },
     {
-      id: "second-anarch-revolt", year: 1944, branch: "both", lines: ["vampire"],
+      id: "second-anarch-revolt", year: canon("second-anarch-revolt").from, branch: "both", lines: ["vampire"],
       name: "The Second Anarch Revolt",
       summary: "Anarchs drive the Camarilla out of California and declare the Anarch Free State.",
       source: "V20 p. 44 (pdf 52)"
