@@ -19,7 +19,16 @@
  *      tools/release/review.mjs, made on the file as it is at the head (its hash matches). The verdict must be
  *      "working" ("dead" for a deleted file), and "how" says what was done to check it.
  *
- * It also warns, never blocking, when a thread did by hand work that docs/ROUTING.md sends to a machine (B7005).
+ *   4. Registry (B7144, the Finish-Line Desk): in a module whose registry file says "seeded": true, every changed
+ *      script file is owned by a row in registry/features/, and an owning row changed on the branch (or a commit or
+ *      release note says `registry: no change <reason>`); every row of a changed registry file passes
+ *      tools/registry/registry.mjs check; and the module's half-built count does not grow (the ratchet, B7146) unless
+ *      a commit says `ratchet-override: <link to Ben's message>`. Modules not seeded yet get a warning instead.
+ *   Decision numbers (B7145): a decision fragment added on the branch may not use a number main's docs/DECISIONS.md
+ *      already has (part of rule 1).
+ *
+ * It also warns, never blocking, when a thread did by hand work that docs/ROUTING.md sends to a machine (B7005), and
+ * when a thread changes the PC tools that one helper owns while upkeep is frozen (B7149; `upkeep: <reason>` answers it).
  *
  * The owner's own work (every commit on the branch authored by thebadman7824 with no Claude or agent trailer) is
  * reported but never blocked. Pull requests from outside accounts never reach this (outside-guard.yml).
@@ -39,6 +48,8 @@ import crypto from "node:crypto";
 import {execFileSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {parseFragment, checkModuleFragment, effectWarnings, visibleWarnings} from "./merge-stamp.mjs";
+import * as REG from "../registry/registry.mjs";
+import {gradeStep} from "../registry/strength.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 export const GATE_CONTEXT = "wodx/gates";
@@ -123,6 +134,83 @@ export function branchReviews(g, base, head) {
 export function branchCommits(g, base, head) {
   const raw = g.run("log", "--no-merges", "--format=%H%x1f%an%x1f%B%x1e", `${base}..${head}`);
   return raw.split("\x1e").map(s => s.trim()).filter(Boolean).map(s => { const [sha, author, body] = s.split("\x1f"); return {sha, author, body: body ?? ""}; });
+}
+
+/** Decision fragments added on the branch: [{file, numbers}], the B numbers of their "## B1234." sections. */
+export function branchDecisions(g, base, head) {
+  const added = g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean);
+  const out = [];
+  for ( const file of [...new Set(added)].sort() ) {
+    if ( !/^changes\/decisions\/B\d+\.md$/.test(file) ) continue;
+    let text = g.show(head, file);
+    if ( text === null ) {
+      // Gone by the head. A stamp removes a fragment in the same commit that writes docs/DECISIONS.md, so its numbers
+      // still count; a fragment renamed or deleted any other way (B7010.md renumbered to B7110.md) no longer holds them.
+      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
+      const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
+      if ( !stamped ) continue;
+      text = g.show(`${last}^1`, file);
+    }
+    out.push({file, numbers: [...String(text ?? "").matchAll(/^## (B\d+)\./gm)].map(m => m[1])});
+  }
+  return out;
+}
+/** B7145: numbers a branch's fragments share with main's decision log (or with each other). */
+export function decisionClashes(frags, decisionsText) {
+  const used = new Set([...String(decisionsText ?? "").matchAll(/^## (B\d+)\./gm)].map(m => m[1]));
+  const seen = new Map(), out = [];
+  for ( const f of frags ) for ( const n of f.numbers ) {
+    if ( used.has(n) ) out.push(`${f.file}: ${n} is already in docs/DECISIONS.md on main; claim a fresh block (node tools/decisions/claim.mjs) and renumber`);
+    if ( seen.has(n) ) out.push(`${f.file}: ${n} is also used in ${seen.get(n)}`);
+    else seen.set(n, f.file);
+  }
+  return out;
+}
+
+/** B7149: PC tools one helper owns while upkeep is frozen (Finish-Line Desk w4). */
+export const UPKEEP = [/^tools\/pcq\//, /^tools\/lanes\//];
+export function upkeepWarnings(files, commits, notes = []) {
+  const hit = files.filter(f => UPKEEP.some(r => r.test(f.file)));
+  if ( !hit.length ) return [];
+  const said = [...commits.map(c => c.body), ...notes.map(n => n.frag?.body ?? "")].some(t => /\bupkeep:\s*\S/i.test(t));
+  return said ? [] : [`${hit.length} PC tool file(s) changed (${hit.slice(0, 3).map(f => f.file).join(", ")}${hit.length > 3 ? ", ..." : ""}). PC upkeep is frozen and owned by one helper (docs/ROUTING.md); if this change is a fix that had to happen here, say why with upkeep: <reason> in a commit message`];
+}
+
+/**
+ * Rule 4 (B7144, B7146), pure. files: the branch's changed files; head, base: loaded registries ({modules, problems});
+ * rowProblems: registry.mjs check problems at the head; texts: commit bodies and note bodies.
+ * Returns {problems, warnings}.
+ */
+export function registryRule({files, head, base, rowProblems = [], texts = []}) {
+  const problems = [], warnings = [];
+  const noChange = texts.some(t => /\bregistry:\s*no change\b\s*\S/i.test(t));
+  const override = texts.some(t => /\bratchet-override:\s*\S/i.test(t));
+  const before = new Map(REG.allRows(base).map(r => [r.id, JSON.stringify(r)]));
+  const changedRow = r => before.get(r.id) !== JSON.stringify(r);
+  const moduleOf = f => /^modules\/([\w-]+)\//.exec(f)?.[1] ?? (/^system\//.test(f) ? "system" : null);
+  const unseeded = new Map();
+  for ( const f of files ) {
+    if ( f.deleted || !REG.SCOPE.test(f.file) ) continue;
+    const m = moduleOf(f.file);
+    if ( !head.modules[m]?.seeded ) { unseeded.set(m, (unseeded.get(m) ?? 0) + 1); continue; }
+    const owners = REG.ownerOf(head, f.file);
+    if ( !owners.length ) problems.push(`${f.file}: no row in registry/features/${m}.json owns this file; add it to the row it belongs to (or a new row)`);
+    else if ( !owners.some(changedRow) && !noChange ) problems.push(`${f.file}: changed, but none of its rows (${owners.map(r => r.id).join(", ")}) changed; update the row's steps, open list or prs, or write registry: no change <reason> in a commit message`);
+  }
+  // rows of changed registry files in seeded modules must pass the check
+  const regFiles = new Set(files.filter(f => /^registry\/features\/[^/]+\.json$/.test(f.file)).map(f => f.file.replace(/^registry\/features\/|\.json$/g, "")));
+  for ( const p of rowProblems ) {
+    const m = /^([\w-]+)[/:]/.exec(p)?.[1];
+    if ( m && regFiles.has(m) ) (head.modules[m]?.seeded ? problems : warnings).push(`registry ${p}`);
+  }
+  // the ratchet
+  const now = REG.wip(head), was = REG.wip(base);
+  for ( const [m, n] of Object.entries(now) ) {
+    if ( !head.modules[m]?.seeded || !base.modules[m]?.seeded ) continue;
+    if ( n > (was[m] ?? 0) ) (override ? warnings : problems).push(`${m}: half-built rows went from ${was[m] ?? 0} to ${n}; finish one there first (the ratchet, B7146)${override ? " (overridden)" : ", or cite Ben's go-ahead with ratchet-override: <link>"}`);
+  }
+  if ( unseeded.size ) warnings.push(`registry: ${[...unseeded.values()].reduce((a, b) => a + b, 0)} changed script file(s) in modules not seeded yet (${[...unseeded.keys()].join(", ")}); once a module is seeded, its rows must follow its code (registry/features/README.md)`);
+  return {problems, warnings};
 }
 
 /* ---- the rules, pure so the harness can test them ---- */
@@ -235,8 +323,15 @@ export async function evaluate({root = ROOT, base = "origin/main", head = "HEAD"
   const result = {base: mb, head: headSha, files: own.length, modules, bensOwn: bensOwn(commits), rules: {}};
 
   const notes = branchNotes(g, mb, headSha);
-  result.rules.note = noteProblems(modules, notes);
-  result.warnings = result.bensOwn ? [] : routeWarnings(own, readRoutes(g.show(headSha, "docs/ROUTING.md")), commits, notes);
+  result.rules.note = [...noteProblems(modules, notes), ...decisionClashes(branchDecisions(g, mb, headSha), g.show(mb, "docs/DECISIONS.md"))];
+  result.warnings = result.bensOwn ? [] : [...routeWarnings(own, readRoutes(g.show(headSha, "docs/ROUTING.md")), commits, notes), ...upkeepWarnings(own, commits, notes)];
+
+  // B7144: the feature registry, read from git at the head and at the merge base
+  const regHead = REG.load(root, REG.registryAt(root, headSha)), regBase = REG.load(root, REG.registryAt(root, mb));
+  const rowP = REG.rowProblems(regHead, {root, files: g.run("ls-tree", "-r", "--name-only", headSha).split("\n").filter(Boolean), art: null, strength: (gf, st) => gradeStep(root, gf, st)});
+  const reg = registryRule({files: own, head: regHead, base: regBase, rowProblems: rowP, texts: [...commits.map(c => c.body), ...notes.map(n => n.frag?.body ?? "")]});
+  result.rules.registry = reg.problems;
+  if ( !result.bensOwn ) result.warnings.push(...reg.warnings);
 
   const {items, bad} = branchReviews(g, mb, headSha);
   result.rules.review = [...bad, ...reviewProblems(own, items)];
@@ -279,7 +374,7 @@ export function outcome(r) {
 }
 export function statusBody(r, url) {
   const state = outcome(r);
-  const broken = Object.entries(r.rules).filter(([, p]) => p.length).map(([k]) => ({note: "release note", gates: "gate result", review: "file review"})[k]);
+  const broken = Object.entries(r.rules).filter(([, p]) => p.length).map(([k]) => ({note: "release note", gates: "gate result", review: "file review", registry: "feature registry"})[k]);
   const description = state === "success" ? (r.ok ? "Every merge rule is met" : "The owner's own work: reported, not blocked")
     : state === "pending" ? `Waiting for the PC gates (${r.gatesNeeded} needed); merging stays blocked until they pass`
     : `Not ready: ${broken.join(", ")}`;
@@ -296,7 +391,7 @@ async function postStatus(sha, body) {
 
 export function report(r) {
   const lines = [`Merge rules for ${r.head.slice(0, 8)} (base ${r.base.slice(0, 8)}): ${r.files} changed file(s), modules ${r.modules.join(", ") || "none"}, ${r.gatesNeeded} gate(s) needed.`];
-  const names = {note: "1. Release note", gates: "2. Gate result", review: "3. File review"};
+  const names = {note: "1. Release note", gates: "2. Gate result", review: "3. File review", registry: "4. Feature registry"};
   for ( const [k, label] of Object.entries(names) ) {
     const p = r.rules[k];
     lines.push(`${p.length ? "FAIL" : "ok  "} ${label}${k === "gates" && r.gateBy ? `: ${r.gateBy}` : ""}`);
