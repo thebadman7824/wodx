@@ -29,10 +29,13 @@ for ($i = 1; $i -le $Count; $i++) {
     & (Join-Path $dir "config.cmd") --unattended --url https://github.com/thebadman7824/wodx --token $reg.token --name $name --labels wodx-gate --work _work --replace | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "config.cmd failed for $name" }
   }
-  # The hook runs before every job; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD keeps Edge as the gates' browser
+  # The hook runs before every job; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD keeps Edge as the gates' browser.
+  # PSExecutionPolicyPreference lets the hook and the workflow's PowerShell run on a PC whose policy is Restricted,
+  # for this runner's processes only (the machine policy is not changed)
   Set-Content -Encoding ascii -Path (Join-Path $dir ".env") -Value @(
     "ACTIONS_RUNNER_HOOK_JOB_STARTED=$root\job-started.ps1",
-    "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1")
+    "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
+    "PSExecutionPolicyPreference=Bypass")
   $lines += "start `"WoDX gh runner $i`" /belownormal /min `"$dir\run.cmd`""
   Write-Output "runner $name ready in $dir"
 }

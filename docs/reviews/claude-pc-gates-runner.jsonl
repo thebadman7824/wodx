@@ -15,3 +15,4 @@
 {"file":"tools/harness/nightly-gates.test.mjs","verdict":"working","how":"read in full; ran node --test on the Secondary PC with pr-gates.test.mjs, 11/11 pass","hash":"333828b5340a","at":"2026-11-17T02:27Z"}
 {"file":"tools/pcq/run-runner.ps1","verdict":"working","how":"read in full; parsed with the PowerShell parser (0 errors); priority is set before runner.mjs starts and only when runner.<host>.json has the key","hash":"d913830872c8","at":"2026-11-17T02:27Z"}
 {"file":"tools/pcq/README.md","verdict":"working","how":"read in full against nightly-gates.mjs and the run-runner.ps1 change","hash":"48dc458c36e1","at":"2026-11-17T02:27Z"}
+{"file":"tools/pcq/gh-runner/install.ps1","verdict":"working","how":"read in full; parsed (0 errors); the PSExecutionPolicyPreference line fixed the first job after a restart, which the hook had failed under the Restricted machine policy; .env on both installed runners matches","hash":"d78df02d6650","at":"2026-11-17T02:46Z"}
