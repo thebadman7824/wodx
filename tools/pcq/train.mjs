@@ -23,7 +23,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {fileURLToPath} from "node:url";
+import {fileURLToPath, pathToFileURL} from "node:url";
 import {OWNER} from "./jobs.mjs";
 
 export const TRAIN_LABEL = "merge-train";
@@ -174,6 +174,9 @@ export async function prepare(ctx, ref, head) {
     const m = await git(["merge", "--no-edit", "-m", `Merge main into ${ref} (merge train)`, "origin/main"], dir);
     if ( !ok(m) ) { await git(["merge", "--abort"], dir); return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"}; }
     did.push("main merged in");
+    const carried = await carryReviews(dir, head);
+    if ( carried.error ) { await git(["reset", "-q", "--hard", head], dir); return {error: carried.error}; }
+    if ( carried.n ) did.push(`${carried.n} file review(s) carried over`);
   }
   const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
   if ( st.status !== 0 ) { await git(["reset", "-q", "--hard", head], dir); return {error: `merge-stamp refused: ${(st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400)}`}; }
@@ -183,6 +186,49 @@ export async function prepare(ctx, ref, head) {
   const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${ref}`, `--force-with-lease=refs/heads/${ref}:${head}`], dir);
   if ( !ok(p) ) return {error: `the push to ${ref} was refused (${String(p.stderr ?? "").trim().slice(0, 200)}); if the thread pushed meanwhile, add the label again`};
   return {sha, did: did.join(" and ")};
+}
+
+/** The lines a diff adds and removes, without positions: what the branch itself did to a file. */
+export const ownChange = diff => String(diff ?? "").split("\n").filter(l => /^[+-]/.test(l) && !/^(\+\+\+|---) /.test(l)).join("\n");
+
+/**
+ * B7203: merging main in changes the files the branch shares with main, so their review hashes stop matching and the
+ * merge rules fail "file review" (PR 1836 after the train's first merge), though nobody changed what the branch did.
+ * For each file whose verdict matched it at the old head and no longer does, the branch's own change (what the old
+ * head adds and removes against its merge base, and what the new head adds and removes against main) is compared;
+ * when it is the same, the verdict is written again for the file as it is now, saying it was carried over and keeping
+ * the earlier "how". A file whose own change differs (a conflict resolved by hand) keeps its stale verdict, and the
+ * merge rules send it back to its thread. Commits the new lines; returns {n} or {error}.
+ */
+export async function carryReviews(dir, oldHead) {
+  const MR = await import(`${pathToFileURL(path.join(dir, "tools", "release", "merge-rules.mjs")).href}?${Date.now()}`).catch(() => null);
+  if ( !MR?.branchReviews || !MR?.hashOf ) return {n: 0};
+  const g = MR.gitIn(dir);
+  const before = g.tryRun("merge-base", oldHead, "HEAD^2");
+  if ( !before ) return {n: 0};
+  const latest = new Map();
+  for ( const it of MR.branchReviews(g, before, oldHead).items ) latest.set(it.file, it);
+  const files = (g.tryRun("diff", "--name-only", "--no-renames", "HEAD^2", "HEAD") ?? "").split("\n").filter(Boolean);
+  const lines = [];
+  for ( const file of files ) {
+    const v = latest.get(file);
+    if ( !v || !["working", "dead"].includes(v.verdict) ) continue;
+    const was = g.show(oldHead, file), now = g.show("HEAD", file);
+    if ( MR.hashOf(was) !== v.hash || MR.hashOf(now) === v.hash ) continue; // stale before, or still current
+    const mine = ownChange(g.tryRun("diff", "-U0", "--no-renames", before, oldHead, "--", file));
+    if ( !mine || mine !== ownChange(g.tryRun("diff", "-U0", "--no-renames", "HEAD^2", "HEAD", "--", file)) ) continue;
+    lines.push({file, verdict: v.verdict, how: `carried over by the merge train after main merged in: the branch's own change to this file is the same; earlier check: ${v.how}`.slice(0, 900),
+      hash: MR.hashOf(now), at: new Date().toISOString().slice(0, 16) + "Z"});
+  }
+  if ( !lines.length ) return {n: 0};
+  const reviewFiles = (g.tryRun("diff", "--name-only", before, oldHead, "--", `${MR.REVIEW_DIR}/`) ?? "").split("\n").filter(f => f.endsWith(".jsonl"));
+  const target = reviewFiles[0];
+  if ( !target ) return {n: 0};
+  fs.appendFileSync(path.join(dir, target), lines.map(l => JSON.stringify(l)).join("\n") + "\n");
+  const add = spawnSync("git", ["add", "--", target], {cwd: dir, encoding: "utf8"});
+  const c = spawnSync("git", ["commit", "-q", "-m", `Merge train: carry ${lines.length} file review(s) over the merge with main`], {cwd: dir, encoding: "utf8"});
+  if ( add.status || c.status ) return {error: `the train could not commit the carried reviews (${(c.stderr || add.stderr || "").trim().slice(0, 160)})`};
+  return {n: lines.length};
 }
 
 if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url) ) {

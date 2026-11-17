@@ -14115,4 +14115,6 @@ Reverse: set "train": false in tools/pcq/runner.json and "sweepUpdates": true to
 ## B7203. The merge train waits for the fresh gate run (2026-11-17)
 PC job queue. The train's first run put PR 1880 out two minutes after it pushed: the merge rules on the new head failed only on the gate rule, because an earlier gate failure on the branch still counts until the fresh run (job 1943) reports. When the merge rules say exactly "Not ready: gate result" and the head's own wodx/gates is not a failure, the train now waits; the runner reruns the merge rules job when the gate result lands. A failed fresh run, another broken rule, or no gate result within trainMaxHours still puts the pull request out.
 
-Reverse: remove the B7203 branch in decide() in tools/pcq/train.mjs.
+The same first runs showed a second gap: merging main in changes the files the branch shares with main, so their review hashes stop matching and the merge rules fail "file review" (PR 1836), though the branch's own change is untouched. After the merge the train now compares, for each file whose verdict matched the old head, what the branch adds and removes before and after; when that is the same it writes the verdict again for the file as it is now, saying it was carried over by the train and keeping the earlier "how" (carryReviews). A file whose own change differs, as after a conflict resolved by hand, keeps its stale verdict and goes back to its thread.
+
+Reverse: remove the B7203 branch in decide() and the carryReviews call in prepare() in tools/pcq/train.mjs.
