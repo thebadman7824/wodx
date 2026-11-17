@@ -1836,3 +1836,6 @@ Every entry below was kept as built on the Final Audit Desk, except four ruled a
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-17 | B7002: a gate that fails on the branch and on main too (the recheck's "fails on main too") | The gate status passes and names the gate, so an old fault on main does not hold back every pull request that touches its module; the fault still has to be fixed on main | In gateStatusFor (tools/pcq/jobs.mjs), drop the mainToo branch so such a run fails |
+| 2026-11-17 | B7000: what counts as the owner's own work, which the merge rules report but never block | Every commit on the branch authored by the owner's account (as GitHub web edits are) with no Claude, Claude-Session or agent trailer; anything a thread, Cline or a local agent wrote is checked in full | bensOwn in tools/release/merge-rules.mjs |
+| 2026-11-17 | B7001: does a docs-only or tools-only pull request need file reviews too? | Yes: every changed file needs a verdict (one command per file); it needs no note (no module changed) and no gate (gate-map finds none) | Limit reviewProblems to gate inputs in merge-rules.mjs |

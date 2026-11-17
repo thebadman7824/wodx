@@ -24,7 +24,7 @@ Whatever happens in the game world must be seen happening on the map or screen, 
 demon who floods a town brings rain over the scene and water rising through the streets, not a card that says the
 town floods. Say what players see: a map or token change, weather, lighting, an animation, a sound with a picture. Where
 nothing can be shown, write `visible: none, ` and why.
-`merge-stamp.mjs --check` warns when it is missing.
+`merge-stamp.mjs --check` and CI's merge rules block a minor or major note without `effect:` or `visible:`.
 
 `bump` is `patch` (fixes), `minor` (new features) or `major`. Write the note as one paragraph and leave the version
 out: the stamp writes `- 0.21.0 (your note)` at the top of the module's CHANGELOG.md, bumps module.json and the
@@ -53,6 +53,10 @@ The stamp adds the index row (with "used B3070-B3073" worked out from the sectio
 order in docs/DECISIONS.md and moves "Next free block" up.
 
 ## Before merging
+
+The merge rules (docs/WORKFLOW.md, section 6) must hold first: a note here for every module the branch changes, a
+passing `wodx/gates` result from a `gates --touched` PC job, and a review verdict for every changed file
+(`node tools/release/review.mjs`). CI reads the notes from the branch's history, so stamping them away is fine.
 
     git fetch origin main && git merge origin/main
     node tools/release/merge-stamp.mjs --commit
