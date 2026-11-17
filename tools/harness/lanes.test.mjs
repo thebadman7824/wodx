@@ -293,3 +293,40 @@ test("B7181: flagPlan puts back the flags a gate changed on documents that were 
   assert.deepEqual(deep, [{uuid: "A.b", unset: [["m", "o"]], set: [["m", "o", {x: 1}]]}], "an object value is replaced whole, so no merged key stays");
   assert.deepEqual(flagPlan({}, {}), []);
 });
+
+test("B7192: sheetPlan puts back the sheet data, effects and items a gate changed on shared actors", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const frenzy = {_id: "e1", name: "Frenzy", statuses: ["frenzy"]}, old = {_id: "e0", name: "Blessed", statuses: []};
+  const before = {
+    "Actor.a": {system: {conditions: {isfrenzy: false}, blood: 10}, effects: {e0: old}, items: ["i1"]},
+    "Actor.a.Item.i1": {system: {clip: 6}},
+    "Actor.same": {system: {blood: 3}, effects: {}, items: []},
+    "Actor.gone": {system: {}, effects: {}, items: []}
+  };
+  const after = {
+    "Actor.a": {system: {conditions: {isfrenzy: true}, blood: 7}, effects: {e1: frenzy}, items: ["i1", "i2"]},
+    "Actor.a.Item.i1": {system: {clip: 0}},
+    "Actor.same": {system: {blood: 3}, effects: {}, items: []},
+    "Actor.new": {system: {blood: 1}, effects: {}, items: []}
+  };
+  assert.deepEqual(sheetPlan(before, after), [
+    {uuid: "Actor.a", system: {conditions: {isfrenzy: false}, blood: 10}, dropEffects: ["e1"], addEffects: [old], dropItems: ["i2"]},
+    {uuid: "Actor.a.Item.i1", system: {clip: 6}}
+  ], "changed system data comes back whole, added effects and items go, removed effects return; unchanged, deleted and new documents are left alone");
+  const edited = sheetPlan({"Actor.b": {system: {}, effects: {e0: old}, items: []}}, {"Actor.b": {system: {}, effects: {e0: {...old, name: "x"}}, items: []}});
+  assert.deepEqual(edited, [{uuid: "Actor.b", dropEffects: ["e0"], addEffects: [old]}], "an edited effect is replaced by its old self");
+  assert.deepEqual(sheetPlan({}, {}), []);
+});
+
+test("B7192: run-gate reads sheets before each gate and puts them back before the flags", () => {
+  const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
+  assert.match(src, /const sheetsBefore = lane\.autoReset \? await page\.evaluate\(READ_SHEETS\)/);
+  assert.ok(src.indexOf("PUT_SHEETS_BACK, sheetPlan") < src.indexOf("PUT_FLAGS_BACK, flagPlan"), "sheets go back before flags");
+});
+
+test("B7193: sheetPlan removes what a gate placed on a scene that was there before it", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const before = {"Scene.s": {kids: {Region: ["r1"], Token: ["t1"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}};
+  const after = {"Scene.s": {kids: {Region: ["r1", "chapel"], Token: ["t1", "t2"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}, "Scene.new": {kids: {Region: ["x"]}}};
+  assert.deepEqual(sheetPlan(before, after), [{uuid: "Scene.s", dropKids: {Region: ["chapel"], Token: ["t2"]}}]);
+});
