@@ -51,3 +51,23 @@ test("a stopped job does not retry a lane or recheck, and a fresh queue clears t
   assert.match(src, /job\.recheck === false \|\| stopped\(\) \) return/);
   assert.match(src, /fs\.rmSync\(`\$\{file\}\.stop`, \{force: true\}\);/);
 });
+
+test("B7206: jobOfLog names the job a log belongs to, on either path style", async () => {
+  const {jobOfLog} = await import("../pcq/stale.mjs");
+  assert.equal(jobOfLog("D:\\WoDX\\pcq\\logs\\job1932-l2.log"), "job1932");
+  assert.equal(jobOfLog("/x/logs/job1949-l3-report.txt"), "job1949");
+  assert.equal(jobOfLog("/x/logs/train.log"), null);
+  assert.equal(jobOfLog(undefined), null);
+});
+
+test("B7206: a closed or pc-cancel job is cancelled: processes ended, lanes reset, no result posted", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /await cancelCheck\(issues, openNums\);/);
+  assert.match(src, /only a closed state read from the issue itself cancels/);
+  assert.match(src, /for \( const p of ps \) \{ try \{ endTree\(p\);/);
+  assert.match(src, /if \( g\.cancelled \) \{\n\s+for \( const l of new Set\(\[\.\.\.lanes, \.\.\.g\.used\]\) \) await lanesCmd\(\["reset"/);
+  assert.match(src, /g\.finishing = true;/);
+  assert.match(src, /halted\.has\(tag\)/);
+  assert.match(src, /if \( !g\.cancelled \) await finish\(issue, false, `Runner error/);
+  assert.match(src, /Not run: labelled pc-cancel\./);
+});

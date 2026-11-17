@@ -18,3 +18,9 @@ export function staleWhy(mark, pull) {
   if ( !head ) return null;
   return head.startsWith(mark.sha) ? null : `PR #${mark.pr} moved on to ${head.slice(0, 8)}`;
 }
+
+/** B7206: the job a runner log file belongs to ("job1932" for logs/job1932-l2.log), or null. */
+export function jobOfLog(file) {
+  if ( !file ) return null;
+  return /^(job\d+)-/.exec(String(file).split(/[\\/]/).pop())?.[1] ?? null;
+}
