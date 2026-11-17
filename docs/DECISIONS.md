@@ -400,7 +400,7 @@ Next free block: B6990
 | B6940-B6949 | Final Audit Desk rulings (lead part) | system, all modules (comments only), tools, docs |
 | B6950-B6959 | Gate run 1774 fixes | wodx-sheets, wodx-chronicle, tools |
 | B6960-B6969 | Gate run 1779 fixes | tools |
-| B6970-B6979 | Gate diagnostics; the lane snapshot waits for start-up (used B6970-B6971) | tools |
+| B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
 <!-- decision-index:end -->
 
@@ -13876,3 +13876,7 @@ tools/lanes/lanes.json that has a `host`. A reserved lane (lane 6, the local age
 Each runner still claims only the jobs for its own lanes.
 
 Reverse: read only runner.json's lanes again in submit.mjs.
+
+B6972. gatetruthrelay's fighter now has Stamina 3 with its total set too (issue 1815; the Stamina change came from an outside agent on handoff/cline-1815, PR 1829). Since B6660 a Dazed player loses the turn in a started fight, and the fighter (Stamina 1) was Dazed by the 2-level burn of the bearer's sheath, so its pistol shot and punch were refused and steps c, d, 4 and 5 failed. Raising only the value was not enough: Actor.create does not work out an attribute's total, and WoDX Combat reads the total for the Dazed threshold, so the total is set as well.
+effect: none, a gate change only; play is unchanged.
+visible: none, only the gate's test fighter changes.
