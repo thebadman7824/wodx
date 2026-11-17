@@ -425,9 +425,12 @@ async function rerunFor(pr, sha, tries) {
     const run = runs?.workflow_runs?.[0];
     if ( !run ) return;
     if ( run.status !== "completed" ) { if ( tries < 12 ) setTimeout(() => rerunFor(pr, sha, tries + 1), 5 * 60000); return; }
-    if ( run.conclusion !== "failure" ) return;
-    await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`);
-    log(`PR #${pr.number}: failed checks started again after the gate result`);
+    // B7006: the merge rules job passes while it waits for the gates (its wodx/merge-rules status is pending), so it
+    // is run again by name, with the checks job after it
+    const jobs = await gh("GET", `/actions/runs/${run.id}/jobs?per_page=50`);
+    const mr = jobs?.jobs?.find(j => j.name === "merge rules");
+    if ( mr ) { await gh("POST", `/actions/jobs/${mr.id}/rerun`); log(`PR #${pr.number}: merge rules run again after the gate result`); }
+    else if ( run.conclusion === "failure" ) { await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`); log(`PR #${pr.number}: failed checks started again after the gate result`); }
   } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
