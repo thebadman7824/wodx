@@ -51,6 +51,14 @@ export function getLane(cfg, id) {
 }
 export const laneDir = lane => path.join(lane.dataPath, "wodx-lane");
 export const laneUrl = lane => lane.url ?? `https://localhost:${lane.port}`;
+/** B6887: a lane with "maxGates" (lane 7 on the slow Laptop) takes only small jobs that name their gates: no touched,
+ *  every-gate or shared-queue runs, and at most maxGates gates. Returns why the lane refuses the job, or null. */
+export function laneRefuses(lane, job) {
+  if ( !lane?.maxGates || job?.kind !== "gates" ) return null;
+  if ( job.touched || job.all || job.queue ) return `lane ${lane.id} takes only named gates (no touched, every-gate or queue runs)`;
+  if ( (job.gates?.length ?? 0) > lane.maxGates ) return `lane ${lane.id} takes at most ${lane.maxGates} gates per job (${job.gates.length} asked)`;
+  return null;
+}
 export function readJson(file, fallback = null) {
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch { return fallback; }
 }
