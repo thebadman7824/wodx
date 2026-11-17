@@ -156,7 +156,19 @@ pushes are blocked and main cannot be deleted. Nothing lands on main except thro
 pass, so routines and tools that used to push to main directly must open a pull request instead.
 
 `node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
-GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it. Then:
+GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it.
+
+**The merge train (B7202, Ben, 17 November 2026).** Pull requests merge one at a time. When rules 1, 3 and 4 hold
+(notes, reviews, registry) and the code is final, add the label `merge-train` to the pull request and stop pushing to
+it. Do not merge main in, stamp or merge it yourself: the Main PC's runner works on the pull request at the front of
+the line (oldest label first). It marks a draft ready, merges main in (a merge, never a rebase), runs merge-stamp,
+pushes, lets pc-gates.yml gate the new head (that gate job runs before other gate jobs) and merges when `checks` and
+`wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out of the
+train with a comment saying why; fix it, push, and add the label again. Pull requests further back are not brought up
+to date or gated again while they wait, and the hourly sweep no longer merges main into open pull requests. The
+runner's status issue shows the line. `node tools/pcq/train.mjs` prints what the train would do now.
+
+Without the train (the owner, or the train is off), the old way still works:
 
     git fetch origin main && git merge origin/main
     node tools/release/merge-stamp.mjs --commit
