@@ -19,7 +19,7 @@
     {"id": 4, "port": 30040, "dataPath": "D:/WoDX/FoundryData-lane4", "autoReset": true},
     {"id": 5, "port": 30050, "dataPath": "D:/WoDX/FoundryData-lane5", "autoReset": true},
     {"id": 6, "port": 30060, "dataPath": "D:/WoDX/FoundryData-lane6", "autoReset": false, "reserved": "local-agents"},
-    {"id": 7, "port": 30070, "url": "http://localhost:30070", "dataPath": "C:/WoDX/FoundryData-lane7", "autoReset": true, "host": "desktop-s6nv3q9"},
+    {"id": 7, "port": 30070, "url": "http://localhost:30070", "dataPath": "C:/WoDX/FoundryData-lane7", "autoReset": true, "host": "desktop-s6nv3q9", "maxGates": 10},
     {"id": 8, "port": 30080, "url": "http://localhost:30080", "dataPath": "D:/WoDX/FoundryData-lane8", "autoReset": true, "host": "benjamin-pc"}
   ]
 }

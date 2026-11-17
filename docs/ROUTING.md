@@ -8,7 +8,7 @@ follows the token-thrift rule: Opus threads plan, review and do the hard rules w
 | Kind of work | Default home | How |
 |---|---|---|
 | Mechanical edits: name lists, data entry, renames, simple test fixes, format clean-up | Local-agent queue (Main PC, lane 6) | `local-agent` issue sized by handoff/tasks/SIZING.md. A thread reviews the HOLD pull request, adds the note and review records, and merges |
-| Gates of any size | PC runner | `node tools/pcq/submit.mjs gates --touched --ref <branch> --lanes 2 --thread <id>`. The runner posts `wodx/gates` for the merge rules |
+| Gates of any size | PC runner | `node tools/pcq/submit.mjs gates --touched --ref <branch> --lanes 2 --thread <id>`. The runner posts `wodx/gates` for the merge rules. Lane 7 (the Laptop) takes only small jobs that name their gates (at most 10, plus two-browser gates): touched and every-gate runs go to the Main PC's lanes, so leave out `--lane` for them (B6887) |
 | OCR, PDF text layers, file conversions (audio, image, document) | Secondary PC (OCR), Main PC (conversions) | Ask the PC helper thread through the coordinator. Book text stays in the private book-text folder |
 | Book and Trove lookups | Cloud book tools first, then the PC job queue | `tools/books/books.mjs find`, then `books-find` or `trove-find` jobs (book and page only) |
 | AI art: faces, hair, splat looks, objects | ComfyUI on the Main PC | The art thread. Every result goes on a review desk before it is used |

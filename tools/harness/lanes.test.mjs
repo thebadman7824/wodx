@@ -254,3 +254,18 @@ test("before each gate the runner looks for the WoDX apis again and names the mi
   const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
   assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
 });
+
+test("lane 7 on the Laptop takes only small named-gate jobs (B6887)", () => {
+  const cfg = JSON.parse(fs.readFileSync(path.join(root, "tools/lanes/lanes.json"), "utf8"));
+  const seven = cfg.lanes.find(l => String(l.id) === "7"), two = cfg.lanes.find(l => String(l.id) === "2");
+  assert.ok(seven.maxGates > 0, "lane 7 has a gate limit");
+  assert.ok(L.laneRefuses(seven, {kind: "gates", touched: true, gates: []}), "touched run refused");
+  assert.ok(L.laneRefuses(seven, {kind: "gates", all: true, gates: []}), "every-gate run refused");
+  assert.ok(L.laneRefuses(seven, {kind: "gates", gates: Array.from({length: seven.maxGates + 1}, (_, i) => `gate${i}`)}), "too many gates refused");
+  assert.equal(L.laneRefuses(seven, {kind: "gates", gates: ["gateplains", "gatelifepath"]}), null);
+  assert.equal(L.laneRefuses(seven, {kind: "gate-two", gate: "gateplayerload"}), null);
+  assert.equal(L.laneRefuses(seven, {kind: "setup-lane", lane: 7}), null);
+  assert.equal(L.laneRefuses(two, {kind: "gates", touched: true, gates: []}), null, "main PC lanes keep taking any run");
+  const runner = fs.readFileSync(path.join(root, "tools/pcq/runner.mjs"), "utf8"), submit = fs.readFileSync(path.join(root, "tools/pcq/submit.mjs"), "utf8");
+  assert.ok(runner.includes("!laneRefuses(laneOf(l), q.job)") && submit.includes("laneRefuses(named, v.job)"), "runner and submit both check it");
+});
