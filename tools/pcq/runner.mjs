@@ -31,7 +31,7 @@ import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
-import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {loadConfig, getLane, laneDir, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack} from "../lanes/gate-queue.mjs";
@@ -145,6 +145,10 @@ async function healthCheck(id, force = false) {
   s.checked = Date.now();
   if ( lockState(laneOf(id), cfg).held ) return; // someone else is using it (a helper, the nightly run)
   if ( !fs.existsSync(path.join(laneOf(id).dataPath, "Data", "worlds", cfg.world)) ) { s.down = true; s.why = "not set up (queue a setup-lane job)"; return; }
+  // B6885: a lane on another PC whose setup never finished (no clean fingerprint, e.g. stopped at Foundry's licence
+  // screen) takes no jobs but setup-lane, or a gate job fails there without running a gate (job #1816 on lane 7).
+  // Only lanes with a host: the main PC's older lanes may predate clean.json and must keep working.
+  if ( laneOf(id).host && !fs.existsSync(path.join(laneDir(laneOf(id)), "clean.json")) ) { s.down = true; s.why = "setup not finished (no clean fingerprint; queue a setup-lane job)"; return; }
   if ( await isUp(laneOf(id)) ) { if ( s.down ) await recovered(id); return; }
   log(`lane ${id} is down; starting it`);
   const r = await lanesCmd(["start", "--lane", id], {minutes: 6});
