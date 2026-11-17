@@ -4,6 +4,9 @@
  * It makes a vampire of its own (owned by a player when there is one), sets this user's character to it for the
  * heartbeat steps, and puts everything back at the end. Era music is turned off while it runs, so nothing plays;
  * the heartbeat is synthesised and never awaited.
+ * The tension reads every player's character, so a player's character already in frenzy or hiding in the world would
+ * decide steps 2 to 4 before the gate's own vampire does. Those conditions are switched off for the run and put back
+ * at the end (B7210; the testbed has one, seen in job 1926: "before":"frenzy" with no gate status on yet).
  *   1. the module: Atmosphere 0.8.0 or later, api.adaptive, the settings, the frenzy mood
  *   2. hiding: the vampire turns invisible and the tension is the hunt (unless a fight runs: then combat)
  *   3. frenzy: frenzy beats the hunt
@@ -31,11 +34,21 @@ export async function run() {
   const M = game.modules.get(MOD), A = M?.api?.adaptive;
   const keep = {music: game.settings.get(MOD, "music"), tension: game.settings.get(MOD, "tension"), character: game.user.character?.id ?? null};
   let actor = null;
+  const aside = [];
   try {
     ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.8.0", M.version) && typeof A?.tension === "function" && game.settings.settings.has(`${MOD}.heartbeat`)
       && !!M.api.rules.K.MOODS.frenzy, {version: M?.version});
     await game.settings.set(MOD, "music", false);
     await game.settings.set(MOD, "tension", "auto");
+    // B7210: set aside other player characters' frenzy and hiding conditions, so only the gate's vampire counts
+    const AR = A.rules, watch = [...(AR?.FRENZY_STATUSES ?? []), ...(AR?.HUNT_STATUSES ?? [])];
+    const counts = e => [...(e.statuses ?? [])].some(s => watch.includes(String(s).toLowerCase().replace(/^wodx-/, "")));
+    for ( const a of game.actors ) {
+      if ( !a.hasPlayerOwner || /group/i.test(String(a.type ?? "")) ) continue;
+      for ( const e of a.allApplicableEffects() ) if ( !e.disabled && counts(e) ) aside.push(e);
+    }
+    for ( const e of aside ) await e.update({disabled: true});
+    if ( aside.length ) R.notes.push(`set aside ${aside.length} frenzy or hiding condition(s) on other player characters`);
     const fight = game.combats.some(c => c.started);
     if ( fight ) R.notes.push("a fight is running in this world: the hunt reads as combat");
     const player = game.users.find(u => !u.isGM);
@@ -67,11 +80,12 @@ export async function run() {
       await game.user.update({character: keep.character});
       await game.settings.set(MOD, "tension", keep.tension);
       if ( actor ) await game.actors.get(actor.id)?.delete();
+      for ( const e of aside ) await e.update({disabled: false});
       await sleep(400);
       A?.update?.();
       await game.settings.set(MOD, "music", keep.music);
       ok("7. clean up", (!actor || !game.actors.get(actor.id)) && (game.user.character?.id ?? null) === keep.character && game.settings.get(MOD, "music") === keep.music
-        && game.settings.get(MOD, "tension") === keep.tension && !A?.playing?.());
+        && game.settings.get(MOD, "tension") === keep.tension && !A?.playing?.() && aside.every(e => !e.disabled), {putBack: aside.length});
     } catch (err) { ok("7. clean up", false, {error: err.message}); }
   }
   return save(R);
