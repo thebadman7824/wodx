@@ -796,7 +796,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
       ${TH.ticksHtml(actor, esc)}${DH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
-      ${bearingBox(rd)}
+      ${bearingBox(rd)}${GX.totemTicksHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
@@ -1056,6 +1056,11 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
     // Humanity and the Roads keep the plain aura box
     const pb = pathBearingFor(actor, rd, fd, pool);
     if (pb?.applies && pb.step) tm = { ...tm, diff: (tm.diff ?? 0) + pb.step, parts: [...(tm.parts ?? []), pb.part] };
+    // B7023: the pack totem's gifts to a packmate (W20 pp. 372-377): Attribute dots as dice, roll effects, a held Pack Trait
+    try {
+        const tt = GX.totemMods(actor, fd, pool, TH.tagsFor(fd.attr, pool.abilityKey, fd.preset));
+        if (tt && (tt.dice || tt.diff)) tm = { ...tm, dice: (tm.dice ?? 0) + tt.dice, diff: (tm.diff ?? 0) + tt.diff, parts: [...(tm.parts ?? []), ...tt.parts] };
+    } catch (e) { console.warn("WoDX Actions | totem", e); }
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -3425,7 +3430,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     useGift: withActor(a => gx().useGift(a)), learnGift: withActor(a => gx().learnGift(a)), performRite: withActor(a => gx().performRite(a)),
     summonSpirit: withActor(a => gx().summonSpirit(a)), useFetish: withActor(a => gx().useFetish(a)), accomplishment: withActor(a => gx().accomplishment(a)),
     battleScar: withActor(a => gx().battleScar(a)), curse: withActor(a => gx().curse(a)), kinfolk: withActor(a => gx().kinfolk(a)),
-    chiminage: withActor(a => gx().chiminage(a)),
+    chiminage: withActor(a => gx().chiminage(a)), packTotem: withActor(a => gx().packTotem(a)),
     awardRenown: () => gx().awardRenown(), delirium: (o = {}) => gx().deliriumCheck(o), moonRise: (o = {}) => gx().moonRise(o),
     applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
     garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g),

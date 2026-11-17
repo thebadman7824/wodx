@@ -19,6 +19,9 @@
     "gatepathbearing": [
       "wodx-actions"
     ],
+    "gatetotem": [
+      "wodx-actions"
+    ],
     "gatepowers": [
       "wodx-actions",
       "wodx-combat"

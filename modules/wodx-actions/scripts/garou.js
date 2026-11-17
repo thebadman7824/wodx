@@ -13,6 +13,7 @@ import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
+import * as TOT from "./totem-rules.js";
 export { bringsDelirium } from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -46,10 +47,67 @@ async function fetchData(name) {
 }
 export async function loadData() {
     for (const k of ["garou", "fera", "gifts-daw", "gifts-w20", "gifts-fera"]) if (!DATA[k]) DATA[k] = await fetchData(k);
+    // B7022: the pack totems, a rules table (W20 pp. 371-377)
+    if (!DATA.totems) DATA.totems = await fetchData("rules/werewolf/totems-w20");
     if (!DATA.garou) console.error("WoDX | WoDX Actions could not load data/garou.json");
     return DATA;
 }
 export const data = () => DATA;
+
+/* ------------------------------------------------------------------ */
+/*  Pack totems (B7022-B7027)                                          */
+/* ------------------------------------------------------------------ */
+
+/** A packmate's totem state: flag wodx-actions.totem = {key, accepted, choice, spent, banned, claim: {id, scene}}. */
+export const totemState = actor => actor?.getFlag?.(MOD, "totem") ?? {};
+/** The totem row the character's pack follows: the flag override (wodx-actions.rules.totem) first, else the Pack Totem field. */
+export function totemOf(actor) {
+    if (!DATA.totems || !actor) return null;
+    return TOT.totemFor(DATA.totems, actor.system?.packtotem ?? "", actor.getFlag?.(MOD, "rules")?.totem ?? "");
+}
+/** The character's packmates (the same Pack Name), the character first. */
+export function packOf(actor) {
+    const name = TOT.norm(actor?.system?.packname);
+    if (!name) return actor ? [actor] : [];
+    const mates = (game.actors?.contents ?? []).filter(a => a.id !== actor.id && isShifter(a) && TOT.norm(a.system?.packname) === name);
+    return [actor, ...mates];
+}
+/** The scene key a Pack Trait claim is held for (the scene on the canvas). */
+export const totemScene = () => `s${canvas?.scene?.id ?? ""}`;
+/** Everything the rules need about a character's totem: {row, state, banned, holds, claims, pack}. */
+export function totemView(actor) {
+    const row = totemOf(actor);
+    if (!row) return null;
+    const pack = packOf(actor);
+    const st = totemState(actor);
+    const banned = pack.some(a => totemState(a).banned && totemState(a).key === row.key);
+    const claims = pack.map(a => ({ actorId: a.id, ...(totemState(a).claim ?? {}) })).filter(c => c.id);
+    const scene = totemScene();
+    const holds = claims.filter(c => c.actorId === actor.id && c.scene === scene).map(c => c.id);
+    return { row, state: st, banned, holds, claims, pack, scene, accepted: st.accepted === row.key };
+}
+/** B7023: the totem's dice and difficulty on one roll of the general window. fd: the window's fields; pool: readPool's. */
+export function totemMods(actor, fd = {}, pool = {}, tags = []) {
+    const v = isShifter(actor) ? totemView(actor) : null;
+    if (!v || !v.accepted) return null;
+    const ticked = TOT.ticksOf(v.row, v.banned).map((t, i) => (fd[`totem-tick-${i}`] ? t.label : null)).filter(Boolean);
+    const attrKey = String(fd.attr ?? "").startsWith("special:") ? null : fd.attr;
+    return TOT.rollMods(v.row, { tags, ticked, banned: v.banned, attrKey, abilityKey: pool.abilityKey, holds: v.holds, choice: v.state.choice });
+}
+/** The Use a Gift window's box for a held giftDice Pack Trait (B7026). */
+export function totemGiftBox(actor) {
+    const v = isShifter(actor) ? totemView(actor) : null;
+    const g = v?.row?.pack?.giftDice;
+    if (!g || !v.accepted || v.banned || !v.holds.includes("gift")) return "";
+    return `<div class="form-group"><label><input type="checkbox" name="totemGift"/> This Gift is one of ${esc(g.kinds)} (${esc(v.row.name)}: +${n(g.dice)} dice, W20 p. ${v.row.page})</label></div>`;
+}
+/** The roll window's totem ticks (Thunder's name invoked, a Garou of another tribe...). */
+export function totemTicksHtml(actor, escF = esc) {
+    const v = isShifter(actor) ? totemView(actor) : null;
+    if (!v || !v.accepted) return "";
+    const t = TOT.ticksOf(v.row, v.banned);
+    return t.length ? `<fieldset class="vta-ticks"><legend>${escF(v.row.name)}</legend>${t.map((x, i) => `<label><input type="checkbox" name="totem-tick-${i}"/> ${escF(x.label)} (${escF(x.note)})</label>`).join(" ")}</fieldset>` : "";
+}
 export function gifts() { return DATA["gifts-daw"]?.gifts ?? []; }
 export function findGift(name) {
     const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
@@ -503,7 +561,7 @@ export function build(ctx) {
           <div class="wodx-gift-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6"/></div>
           <div class="form-group"><label>Extra points (variable costs)</label><input type="number" name="extra" value="0" min="0"/></div>
-          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></div>`;
+          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div>${totemGiftBox(actor)}</div>`;
         const i = info(actor);
         let gauntlet = null;
         try {
@@ -544,10 +602,13 @@ export function build(ctx) {
                 const pool = poolOf(actor, code, i);
                 // B6411: the target's ward or Magic Resistance makes a Gift on them harder
                 const rm = TH.targetResist(actor, ["magic"]);
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
+                // B7026: a held Pack Trait of the pack's totem adds its dice to a Gift of its kinds (Cockroach, Owl, Unicorn)
+                const tv = totemView(actor);
+                const td = tv ? TOT.giftDice(tv.row, { holds: tv.holds, ofKind: !!fd.totemGift, banned: tv.banned }) : 0;
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus) + td), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", td ? `${tv.row.name}: +${td} (Pack Trait)` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
@@ -762,6 +823,95 @@ export function build(ctx) {
         });
     }
 
+    /* ---------------- Pack totem (B7022-B7027, W20 pp. 371-377) ---------------- */
+
+    async function packTotem(actor) {
+        if (!DATA.totems) return ctx.notify("The totem table did not load.");
+        const tv = totemView(actor);
+        if (!tv) return ctx.notify(`${actor.name}'s sheet names no totem WoDX knows (Pack Totem field: "${actor.system?.packtotem ?? ""}").`);
+        const { row, state, banned, claims, pack, scene, accepted } = tv;
+        const I = row.individual ?? {};
+        const held = TOT.holders(claims, scene);
+        const nameOf = id => pack.find(a => a.id === id)?.name ?? "another packmate";
+        const left = TOT.poolLeft(row, pack.map(a => (totemState(a).key === row.key ? n(totemState(a).spent) : 0)));
+        const gm = game.user.isGM;
+        const opts = [];
+        if (!accepted) opts.push(["accept", `The totem accepts ${actor.name}'s pack`]);
+        if (accepted && !banned) {
+            for (const c of TOT.claimable(row)) {
+                const h = held[c.id];
+                if (h === actor.id) opts.push([`release:${c.id}`, `Let go of ${c.label}`]);
+                else if (!h) opts.push([`claim:${c.id}`, `Take ${c.label} for this scene`]);
+            }
+            if (n(row.pack?.willpower)) opts.push(["draw", `Draw 1 Willpower from the totem (${left} of ${n(row.pack.willpower)} left this story)`]);
+        }
+        if (gm && accepted) opts.push(banned ? ["contrition", "Rite of Contrition done: the totem's gifts come back"] : ["ban", "The pack broke the ban: every gift stops"]);
+        const ind = [
+            ...Object.entries(I.renown ?? {}).map(([k, d]) => `${TOT.label(k)} ${d > 0 ? "+" : ""}${d} once`),
+            ...Object.entries(I.renownOnce ?? {}).map(([k, d]) => `${TOT.label(k)} ${d} once`),
+            ...Object.entries(I.awards ?? {}).map(([k, d]) => `every ${TOT.label(k)} award ${d}`),
+            ...Object.entries(I.attrs ?? {}).map(([k, d]) => `${TOT.label(k)} +${d}`),
+            ...(I.attrChoice ? [`one of ${I.attrChoice.map(TOT.label).join(", ")} +1`] : []),
+            ...Object.entries(I.traits ?? {}).map(([k, d]) => `${TOT.label(k)} +${d}`),
+            ...(I.effects ?? []).map(e => e.note || ""),
+            ...(I.rageAtStory ? [`+${I.rageAtStory} Rage at the start of each story`] : []),
+            ...(I.notes ?? [])
+        ].filter(Boolean);
+        const packTraits = TOT.claimable(row).map(c => `${esc(c.label)}${held[c.id] ? ` (held by ${esc(nameOf(held[c.id]))})` : ""}`);
+        const content = `<form><p><b>${esc(row.name)}</b> (W20 p. ${row.page}, ${n(row.cost)} Background points)${banned ? ` <b>· ban broken: no gifts until a Rite of Contrition</b>` : ""}${accepted ? "" : " · not yet accepted"}</p>
+          ${ind.length ? `<p><b>Each packmate:</b> ${ind.map(esc).join("; ")}</p>` : ""}
+          ${packTraits.length || n(row.pack?.willpower) ? `<p><b>Pack:</b> ${[...packTraits, n(row.pack?.willpower) ? `${n(row.pack.willpower)} Willpower a story, ${left} left` : ""].filter(Boolean).join("; ")}. One packmate holds a Pack Trait at a time, until the scene ends (p. 372).</p>` : ""}
+          ${(row.pack?.notes ?? []).length ? `<p class="vta-note">${row.pack.notes.map(esc).join(" ")}</p>` : ""}
+          <p class="vta-note"><b>Ban:</b> ${esc(row.ban)}</p>
+          ${row.friends ? `<p class="vta-note">Favored by ${esc(row.friends)}.${row.refuses ? ` Will not take ${esc(row.refuses)}.` : ""}</p>` : ""}
+          <p class="vta-note">Packmates: ${pack.map(a => esc(a.name)).join(", ")} (the same Pack Name).</p>
+          ${opts.length ? `<div class="form-group"><label>Do</label><select name="how" data-fixed>${opts.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>` : `<p class="vta-note">Nothing to do now.</p>`}
+          ${!accepted && I.attrChoice ? `<div class="form-group"><label>Attribute the totem raises</label><select name="choice" data-fixed>${I.attrChoice.map(k => `<option value="${k}">${TOT.label(k)}</option>`).join("")}</select></div>` : ""}</form>`;
+        if (!opts.length) return dialog(`Pack totem: ${actor.name}`, content, "Close", async () => null);
+        return dialog(`Pack totem: ${actor.name}`, content, "Do it", async fd => {
+            const how = String(fd.how ?? "");
+            const save = patch => actor.setFlag(MOD, "totem", { ...totemState(actor), key: row.key, ...patch });
+            let body = "";
+            if (how === "accept") {
+                const i = info(actor);
+                const temp = Object.fromEntries(RENOWN.map(k => [k, n(i.renown?.[k]?.temp)]));
+                const d = TOT.acceptRenown(row, temp);
+                await save({ accepted: row.key, choice: I.attrChoice ? (I.attrChoice.includes(fd.choice) ? fd.choice : I.attrChoice[0]) : null, spent: 0, banned: false, claim: null });
+                if (Object.keys(d).length) await applyRenown([actor], d, `${row.name} accepts the pack`, { raw: true });
+                body = `<div class="vta-big good">${esc(row.name)} accepts the pack.</div>${Object.keys(d).length ? `<div class="vta-parts">${Object.entries(d).map(([k, v]) => `${TOT.label(k)} ${v > 0 ? "+" : ""}${v}`).join(", ")} temporary Renown</div>` : ""}`;
+            } else if (how.startsWith("claim:") || how.startsWith("release:")) {
+                const id = how.split(":")[1];
+                if (how.startsWith("claim:")) {
+                    const ok = TOT.canClaim(row, id, actor.id, totemView(actor).claims, scene);
+                    if (!ok.ok) { ctx.notify(`${actor.name} cannot: ${ok.why}.`); return null; }
+                    await save({ claim: { id, scene } });
+                    const c = TOT.claimable(row).find(x => x.id === id);
+                    body = `<div class="vta-big good">${esc(actor.name)} takes ${esc(c.label)} from ${esc(row.name)} for this scene.</div>`;
+                    try { await chronicle()?.applyTimed?.(actor, { name: `${row.name}: ${c.label}`, img: "icons/svg/aura.svg", duration: { kind: "scene" }, key: "wodx-totem-trait",
+                        description: `${c.label}, held from ${row.name} until the scene ends`, source: `W20 p. 372` }); } catch {}
+                } else {
+                    await save({ claim: null });
+                    body = `<div class="vta-note">${esc(actor.name)} lets the Pack Trait go; another packmate may take it.</div>`;
+                }
+            } else if (how === "draw") {
+                const now = totemView(actor);
+                const spentNow = Math.max(0, ...now.pack.map(a => (totemState(a).key === row.key ? n(totemState(a).spent) : 0)));
+                if (TOT.poolLeft(row, [spentNow]) <= 0) { ctx.notify(`${row.name} has no Willpower left to give this story.`); return null; }
+                const i = info(actor);
+                if (i.willpower.temp >= i.willpower.perm) { ctx.notify(`${actor.name}'s Willpower is already full.`); return null; }
+                await save({ spent: spentNow + 1 });
+                await actor.update({ "system.advantages.willpower.temporary": i.willpower.temp + 1 });
+                body = `<div class="vta-parts">${esc(actor.name)} draws 1 Willpower from ${esc(row.name)}: ${i.willpower.temp} → ${i.willpower.temp + 1}. ${TOT.poolLeft(row, [spentNow + 1])} left this story.</div>`;
+            } else if (how === "ban" || how === "contrition") {
+                const banned2 = how === "ban";
+                for (const a of pack) if (a.isOwner) await a.setFlag(MOD, "totem", { ...totemState(a), key: row.key, banned: banned2, ...(banned2 ? { claim: null } : {}) });
+                body = banned2 ? `<div class="vta-big bad">The pack broke ${esc(row.name)}'s ban. Every gift of the totem stops until a Rite of Contrition (W20 p. 372).</div>`
+                    : `<div class="vta-big good">The Rite of Contrition is done; ${esc(row.name)}'s gifts come back.</div>`;
+            } else return null;
+            return post(actor, `${actor.name}: ${esc(row.name)}`, body, []);
+        });
+    }
+
     /* ---------------- Renown, Rank, Battle Scars ---------------- */
 
     async function writeRenownLog(lines) {
@@ -774,15 +924,21 @@ export function build(ctx) {
     }
 
     /** Change Renown on actors. deltas = {glory, honor, wisdom}. Returns the lines written. */
-    async function applyRenown(actors, deltas, reason = "") {
+    async function applyRenown(actors, deltas, reason = "", { raw = false } = {}) {
         const b = basis(), D = DATA.garou ?? {};
         const lines = [];
         for (const actor of actors) {
             const i = info(actor);
             const upd = {};
             const parts = [];
+            // B7024: a totem that cuts this Renown's awards (Bear, Coyote, Cuckoo, Fox; W20 pp. 374-377)
+            const tv = raw ? null : totemView(actor);
+            const cutRow = tv?.accepted ? tv.row : null;
             for (const k of RENOWN) {
-                const d = n(deltas[k]); if (!d) continue;
+                const asked = n(deltas[k]);
+                const d = cutRow ? TOT.award(cutRow, k, asked, tv.banned) : asked;
+                if (asked && d !== asked) parts.push(`${renownLabel(i.fera, k)} award ${asked} cut to ${d} by ${cutRow.name}`);
+                if (!d) continue;
                 const r = G.renownChange(i.renown[k], d);
                 upd[`system.renown.${k}.permanent`] = r.permanent;
                 upd[`system.renown.${k}.temporary`] = r.temporary;
@@ -971,13 +1127,23 @@ export function build(ctx) {
      * Returns a line for the end-of-story card, or "".
      */
     async function newStory(a) {
-        if (!a || !isShifter(a) || !setting("moonRage")) return "";
+        if (!a || !isShifter(a)) return "";
+        // B7025: the totem's pool of Willpower is full again each story (W20 p. 372), whatever the Rage setting
+        const tv = totemView(a);
+        if (tv?.accepted && n(tv.state.spent) && a.isOwner) await a.setFlag(MOD, "totem", { ...tv.state, spent: 0 });
+        if (!setting("moonRage")) return "";
         const i = info(a);
         if (i.fera?.rage === false || (i.fera?.rageAt && i.fera.rageAt !== "moon") || i.rage.perm <= 0) return "";
         const r = await new Roll("1d10").evaluate();
-        const to = G.newStoryRage(r.total, i.rage.perm);
+        let to = G.newStoryRage(r.total, i.rage.perm);
+        // and Wendigo's children start the story with five more Rage (W20 p. 374)
+        let extra = "";
+        if (tv?.accepted) {
+            const withTotem = TOT.rageAtStory(tv.row, to, tv.banned);
+            if (withTotem !== to) { extra = `, +${withTotem - to} from ${tv.row.name} (W20 p. ${tv.row.page})`; to = withTotem; }
+        }
         if (to !== i.rage.temp) await a.update({ "system.advantages.rage.temporary": to });
-        return `${a.name}: Rage rolled for the new story (${r.total}): ${i.rage.temp} → ${to} (${basis() === "daw" ? "DA:W p. 91" : "W20 p. 145"})`;
+        return `${a.name}: Rage rolled for the new story (${r.total}): ${i.rage.temp} → ${to}${extra} (${basis() === "daw" ? "DA:W p. 91" : "W20 p. 145"})`;
     }
 
     /** Each new round (active GM): shapechangers in the fight regenerate. */
@@ -1032,7 +1198,7 @@ export function build(ctx) {
             set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
     }
     return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
-        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
+        awardRenown, applyRenown, packTotem, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
 }
 
 /** Settings this part adds (registered by main.js). */

@@ -1,0 +1,6 @@
+---
+bump: minor
+effect: a Garou whose sheet names a W20 pack totem (Pack Totem field) gets what the totem gives: the Renown it grants once when it accepts the pack, smaller awards for Bear, Coyote, Cuckoo and Fox, Attribute dots as dice, roll effects (Rat on stealth, Unicorn on healing), Wendigo's five extra Rage each story, a Pack Trait one packmate at a time holds for the scene, the totem's Willpower any packmate may draw once a story, and Gift dice for Cockroach, Owl and Unicorn. A broken ban turns every gift off until the Storyteller marks the Rite of Contrition done.
+visible: a new "Pack totem" entry on the Werewolf menu opens the totem window (what it gives, who holds each Pack Trait, the Willpower left, its ban); the roll window's odds line and the roll card show "Falcon: Leadership (Pack Trait) +3", the Use a Gift window shows the totem's Gift box, and a taken Pack Trait shows on the token for the scene
+---
+W20 pack totems as data (B7022-B7027): the 19 totems of W20 pp. 373-377, plus Sable (p. 509) and Minotaur (p. 514), sit in data/rules/werewolf/totems-w20.json and one reader, totem-rules.js, turns each row into dice, difficulty, Renown, Rage and Willpower. Packmates are the Garou with the same Pack Name.
