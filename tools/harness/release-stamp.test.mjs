@@ -26,10 +26,7 @@ test("every package folder has an unfilled release.json marked for git archive",
 });
 
 test("parseStamp reads a filled stamp and rejects junk", () => {
-  assert.deepEqual(parseStamp({commit: SHA.toUpperCase(), date: "2026-11-09T05:15:00-05:00"}), {commit: SHA, date: "2026-11-09T05:15:00-05:00", label: null});
-  // B7161: a frozen test build carries its label; junk labels are dropped
-  assert.equal(parseStamp({commit: SHA, date: "2026-11-09", label: "rc-2026-11-17"}).label, "rc-2026-11-17");
-  assert.equal(parseStamp({commit: SHA, label: "<b>no</b>"}).label, null);
+  assert.deepEqual(parseStamp({commit: SHA.toUpperCase(), date: "2026-11-09T05:15:00-05:00"}), {commit: SHA, date: "2026-11-09T05:15:00-05:00"});
   assert.equal(parseStamp({commit: "$Format:%H$"}), null);
   assert.equal(parseStamp(null), null);
   assert.equal(parseStamp({commit: "not-a-hash"}), null);
@@ -43,9 +40,6 @@ test("summarise: one build, a mixed release, a partly stamped one, none", () => 
   const one = summarise([s("worldofdarkness", SHA), s("wodx-chronicle", SHA)]);
   assert.equal(one.state, "one");
   assert.equal(one.line, "WoDX build 3cd5b87, 9 Nov 2026");
-  const rc = summarise([{id: "wodx-solo", stamp: {commit: SHA, date: "2026-11-09T05:15:00-05:00", label: "rc-2026-11-17"}}]);
-  assert.equal(rc.line, "WoDX build rc-2026-11-17, 3cd5b87, 9 Nov 2026");
-  assert.equal(rc.label, "rc-2026-11-17");
   const mixed = summarise([s("worldofdarkness", SHA), s("wodx-chronicle", SHA), s("wodx-combat", OTHER)]);
   assert.equal(mixed.state, "mixed");
   assert.equal(mixed.line, "WoDX build: mixed, 3cd5b87 (2), 91613d4 (1)");

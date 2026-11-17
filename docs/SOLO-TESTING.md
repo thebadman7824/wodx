@@ -21,8 +21,8 @@ A release candidate is one commit of main named `rc-YYYY-MM-DD`. A night's play 
    It refuses while anything listens on 30010, because someone may be playing. It backs up the world, the WoDX
    modules and the system, copies the system and every wodx- module from that commit, stamps them with the label,
    and checks every copied file's MD5 against the commit. Don't play on a build whose check fails.
-4. Tell the owner the label in one line. The Settings sidebar shows it ("WoDX build rc-2026-11-17, 3cd5b87, ..."),
-   and every report carries it.
+4. Tell the owner the label in one line. Every report carries it (from each package's release.json),
+   so a fault names the build it was met on.
 
 A new build goes in at most every few days. Never deploy mid-week without the owner knowing, and never while the
 owner is playing (standing rule 4).

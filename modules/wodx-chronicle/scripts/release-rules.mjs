@@ -3,14 +3,12 @@
  * .gitattributes); tools/release/stamp.mjs fills it in for a copy made any other way.
  * A file still holding the $Format placeholder was copied straight from a working folder. */
 
-/** Read one release.json body. Returns {commit, date, label} or null when it is not stamped. label names a frozen
- * test build such as rc-2026-11-17 (B7161), or is null. */
+/** Read one release.json body. Returns {commit, date} or null when it is not stamped. */
 export function parseStamp(data) {
   const commit = typeof data?.commit === "string" ? data.commit.trim() : "";
   if ( !/^[0-9a-f]{7,40}$/i.test(commit) ) return null;
   const date = typeof data?.date === "string" && !data.date.includes("$Format") ? data.date : null;
-  const label = typeof data?.label === "string" && /^[\w.-]{1,40}$/.test(data.label.trim()) ? data.label.trim() : null;
-  return {commit: commit.toLowerCase(), date, label};
+  return {commit: commit.toLowerCase(), date};
 }
 
 export const short = commit => String(commit ?? "").slice(0, 7);
@@ -30,7 +28,7 @@ export function summarise(stamps) {
   const byCommit = new Map();
   for ( const s of stamps ) {
     if ( !s.stamp ) continue;
-    if ( !byCommit.has(s.stamp.commit) ) byCommit.set(s.stamp.commit, {commit: s.stamp.commit, date: s.stamp.date, label: s.stamp.label ?? null, ids: []});
+    if ( !byCommit.has(s.stamp.commit) ) byCommit.set(s.stamp.commit, {commit: s.stamp.commit, date: s.stamp.date, ids: []});
     byCommit.get(s.stamp.commit).ids.push(s.id);
   }
   const groups = [...byCommit.values()].sort((a, b) => b.ids.length - a.ids.length);
@@ -45,11 +43,10 @@ export function summarise(stamps) {
   }
   const g = groups[0];
   const when = shortDate(g.date);
-  const label = g.label ?? null;
-  const base = `WoDX build ${label ? `${label}, ` : ""}${short(g.commit)}${when ? `, ${when}` : ""}`;
+  const base = `WoDX build ${short(g.commit)}${when ? `, ${when}` : ""}`;
   if ( unstamped.length ) {
-    return {state: "partial", commit: g.commit, date: g.date, label, groups, unstamped,
+    return {state: "partial", commit: g.commit, date: g.date, groups, unstamped,
       line: `${base}; not stamped: ${unstamped.join(", ")}`};
   }
-  return {state: "one", commit: g.commit, date: g.date, label, groups, unstamped, line: base};
+  return {state: "one", commit: g.commit, date: g.date, groups, unstamped, line: base};
 }

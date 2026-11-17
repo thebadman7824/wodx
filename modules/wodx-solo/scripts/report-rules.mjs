@@ -68,6 +68,13 @@ export function guessModule({errors = [], windows = []} = {}) {
   return best;
 }
 
+/** The build from a package's release.json: {label, commit, mixed}. An unstamped file gives empty strings. */
+export function buildOf(data) {
+  const commit = typeof data?.commit === "string" && /^[0-9a-f]{7,40}$/i.test(data.commit.trim()) ? data.commit.trim().toLowerCase() : "";
+  const label = commit && typeof data?.label === "string" && /^[\w.-]{1,40}$/.test(data.label.trim()) ? data.label.trim() : "";
+  return {label, commit, mixed: false};
+}
+
 /** Check what the person typed. Returns {ok, why}. */
 export function checkInput({what = "", kind = "other"} = {}) {
   if ( clip(what, WHAT_MAX).length < 3 ) return {ok: false, why: "Say in a few words what happened."};

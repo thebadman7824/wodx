@@ -53,11 +53,15 @@ async function context() {
   const user = game.user;
   const scene = canvas?.scene ?? game.scenes?.viewed ?? null;
   const actor = user.isGM ? (canvas?.tokens?.controlled?.[0]?.actor ?? null) : (characterOf(user) ?? placeOf(user)?.actor ?? null);
+  // The build: this module's own release.json (its label names a frozen test build, B7161), and whether the
+  // packages come from one commit (WoDX Chronicle's release check)
   let build = {};
   try {
+    const r = await fetch(foundry.utils.getRoute ? foundry.utils.getRoute(`modules/${MOD}/release.json`) : `/modules/${MOD}/release.json`, {cache: "no-store"});
+    build = P.buildOf(r.ok ? await r.json() : null);
     const s = await game.modules.get("wodx-chronicle")?.api?.release?.check?.();
-    if ( s ) build = {label: s.label ?? "", commit: s.commit ?? s.groups?.[0]?.commit ?? "", mixed: s.state === "mixed"};
-  } catch (e) { build = {}; }
+    if ( s?.state === "mixed" ) build.mixed = true;
+  } catch (e) { build = build ?? {}; }
   let gameDate = "";
   try { const cal = await import("../../wodx-chronicle/scripts/calendar.mjs"); gameDate = cal.describeTime(game.time.worldTime)?.dateLabel ?? ""; } catch (e) { gameDate = ""; }
   const cards = all(game.messages).slice(-P.CARDS_KEPT).map(m => { try { return R.titleOf(m); } catch (e) { return ""; } }).filter(Boolean);

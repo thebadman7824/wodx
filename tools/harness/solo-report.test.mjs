@@ -28,6 +28,13 @@ test("a report keeps what was typed, the place, the build and who sent it", () =
   assert.equal(P.buildReport({what: "abc"}, ctx({isGM: true})).role, "storyteller");
 });
 
+test("the build comes from release.json: its label only with a real commit", () => {
+  assert.deepEqual(P.buildOf({commit: "3CD5B87AAA", date: "x", label: "rc-2026-11-17"}), {label: "rc-2026-11-17", commit: "3cd5b87aaa", mixed: false});
+  assert.deepEqual(P.buildOf({commit: "$Format:%H$", label: "rc-2026-11-17"}), {label: "", commit: "", mixed: false});
+  assert.equal(P.buildOf({commit: "3cd5b87", label: "<b>"}).label, "");
+  assert.equal(P.buildOf(null).commit, "");
+});
+
 test("the form refuses an empty report and an unknown kind", () => {
   assert.equal(P.checkInput({what: " ", kind: "broken"}).ok, false);
   assert.equal(P.checkInput({what: "the map is black", kind: "nope"}).ok, false);
