@@ -409,7 +409,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7203) | tools (PC job queue) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7204) | tools (PC job queue, testbed lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14118,3 +14118,8 @@ PC job queue. The train's first run put PR 1880 out two minutes after it pushed:
 The same first runs showed a second gap: merging main in changes the files the branch shares with main, so their review hashes stop matching and the merge rules fail "file review" (PR 1836), though the branch's own change is untouched. After the merge the train now compares, for each file whose verdict matched the old head, what the branch adds and removes before and after; when that is the same it writes the verdict again for the file as it is now, saying it was carried over by the train and keeping the earlier "how" (carryReviews). A file whose own change differs, as after a conflict resolved by hand, keeps its stale verdict and goes back to its thread.
 
 Reverse: remove the B7203 branch in decide() and the carryReviews call in prepare() in tools/pcq/train.mjs.
+
+## B7204. A lane's own Foundry is found by its port when server.pid is stale (2026-11-17)
+Testbed lanes. After the Main PC runner restarted at 13:44Z on 17 November, lanes 3 and 5 were up but their server.pid named no live process, so every deploy there stopped with "Lane N is up, but not by a server this tool started" and job 1943 failed in 0 minutes. lanes.mjs stop now asks Windows which process listens on the lane's port and takes it over (writing server.pid again) only when that process is node and its command line names this lane's data folder and port, the same test that already guards every kill. Any other process on the port still stops the command with the old message, so nothing but the lane's own Foundry is ever ended.
+
+Reverse: remove lanePidByPort and its call in stop() in tools/lanes/lanes.mjs.
