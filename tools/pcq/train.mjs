@@ -41,7 +41,7 @@ export function line(prs) {
 /**
  * What to do with the front pull request. f: {draft, mergeable (true|false|null), behind (commits), fragments (count
  * under changes/ at the head), ownBranch (a claude/ branch of this repository by the owner), checks ("success" |
- * "failure" | "pending" | null), mergeRules (same), mergeRulesWhy (that status's description), gates (same), frontFor (ms the train has worked on this head)}.
+ * "failure" | "pending" | null), mergeRules (same), mergeRulesWhy (that status's description), otherChecksFailed (a job besides checks and merge rules failed), gates (same), frontFor (ms the train has worked on this head)}.
  * Returns {action, why}; action: leave, ready, prepare, merge, wait.
  */
 export function decide(f, {maxHours = 3} = {}) {
@@ -51,14 +51,17 @@ export function decide(f, {maxHours = 3} = {}) {
   if ( f.mergeable === false ) return {action: "leave", why: "it has a merge conflict with main: merge main into the branch, fix the conflict, push, then add the label again"};
   if ( f.mergeable === null ) return {action: "wait", why: "GitHub is still working out whether it merges cleanly"};
   if ( f.behind > 0 || f.fragments > 0 ) return {action: "prepare", why: [f.behind > 0 ? `behind main by ${f.behind}` : "", f.fragments > 0 ? `${f.fragments} release note(s) to stamp` : ""].filter(Boolean).join(", ")};
-  if ( f.checks === "failure" ) return {action: "leave", why: "its checks failed on the head: fix them, push, then add the label again"};
   if ( f.gates === "failure" ) return {action: "leave", why: "its gates failed on the head: fix them, push, then add the label again"};
   // B7203: right after the train pushes, the merge rules on the new head can fail only on the gate rule, because an
   // earlier gate failure still counts until the fresh run reports (PR 1880 was put out two minutes after its gate run
   // was queued). That is a wait: the runner reruns the merge rules job when the head's gate result lands.
-  if ( f.mergeRules === "failure" && f.gates !== "failure" && /^Not ready: gate result$/.test(f.mergeRulesWhy ?? "") )
+  // B7208: the "merge rules" job then fails too, and with it the "checks" job that sums up every job, so a failed
+  // checks counts as pending here while every other job passed (PR 1848 was put out at 15:34Z with 0 tests failed).
+  const gatePending = f.mergeRules === "failure" && f.gates !== "failure" && /^Not ready: gate result$/.test(f.mergeRulesWhy ?? "");
+  if ( gatePending && (f.checks !== "failure" || f.otherChecksFailed === false) )
     return f.frontFor > maxHours * HOUR ? {action: "leave", why: `no gate result on the head ${maxHours} hours after it reached the front: look at the gate job, then add the label again`}
       : {action: "wait", why: `waiting for the gate run on the head (gates ${f.gates ?? "not reported yet"})`};
+  if ( f.checks === "failure" ) return {action: "leave", why: "its checks failed on the head: fix them, push, then add the label again"};
   if ( f.mergeRules === "failure" ) return {action: "leave", why: "its merge rules failed on the head: see the merge rules job, fix, push, then add the label again"};
   if ( f.checks === "success" && f.mergeRules === "success" ) return {action: "merge", why: "up to date with main, checks and merge rules green"};
   if ( f.frontFor > maxHours * HOUR ) return {action: "leave", why: `no green result ${maxHours} hours after it reached the front (checks ${f.checks ?? "none"}, merge rules ${f.mergeRules ?? "none"}, gates ${f.gates ?? "none"}): look at the gate job, then add the label again`};
@@ -70,6 +73,12 @@ export function statusOf(statuses, context) {
   const s = (statuses ?? []).find(x => x.context === context); // GitHub lists them newest first
   if ( !s ) return null;
   return s.state === "success" ? "success" : s.state === "pending" ? "pending" : "failure";
+}
+/** B7208: whether any job other than the summing "checks" job and the "merge rules" job failed on its newest run. */
+export const SUMMING = new Set([CHECKS, "merge rules"]);
+export function othersFailed(runs) {
+  const names = new Set((runs ?? []).map(r => r.name).filter(n => !SUMMING.has(n)));
+  return [...names].some(n => checkOf(runs, n) === "failure");
 }
 export function checkOf(runs, name) {
   const r = (runs ?? []).filter(x => x.name === name).sort((a, b) => Date.parse(b.started_at ?? 0) - Date.parse(a.started_at ?? 0))[0];
@@ -120,6 +129,7 @@ export async function step(ctx) {
     ownBranch: full.user?.login === OWNER && full.head.repo?.full_name === full.base.repo?.full_name && /^claude\//.test(full.head.ref),
     checks: checkOf(runs.check_runs, CHECKS), mergeRules: statusOf(statuses, MERGE_RULES), gates: statusOf(statuses, GATES),
     mergeRulesWhy: (statuses ?? []).find(x => x.context === MERGE_RULES)?.description ?? "",
+    otherChecksFailed: othersFailed(runs.check_runs),
     frontFor: Date.now() - state.since};
   const d = decide(f, {maxHours});
   Object.assign(out, d);
