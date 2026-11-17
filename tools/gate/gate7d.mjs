@@ -21,6 +21,7 @@
  *  10. clean up
  * Result: Data/wodx-gate/gate7d-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-npc";
 const npc = () => game.modules.get(MOD).api, FX = () => npc().factions;
@@ -54,7 +55,10 @@ const strip = s => s.factions.map(f => ({...f, guard: 0, places: [...f.places].s
 const masqJournal = () => game.journal.find(x => x.flags?.["wodx-actions"]?.kind === "masquerade");
 const historyJournal = () => game.journal.find(x => x.flags?.["wodx-actions"]?.kind === "history");
 
-export async function run() {
+// B6994 (#1824): the gate starts from Hands on, since new worlds start at Balanced (tools/gate/kit.mjs)
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const {R, ok, step} = harness();
   const start = Date.now(), t0 = game.time.worldTime;
   // What the gate will put back
