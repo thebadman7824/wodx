@@ -385,7 +385,7 @@ Next free block: B7030
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: no gate jobs before lane setup finishes (used B6880-B6885) | tools (PC job queue) |
+| B6880-B6889 | Second PC runner: two-browser gates use the lane's own address (used B6880-B6886) | tools (PC job queue) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -402,7 +402,7 @@ Next free block: B7030
 | B6960-B6969 | Gate run 1779 fixes | tools |
 | B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
-| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7005) | tools |
+| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 <!-- decision-index:end -->
@@ -13561,6 +13561,11 @@ PC job queue. The runner treated a lane as healthy once its world folder existed
 
 Reverse: drop the clean.json line from healthCheck in tools/pcq/runner.mjs.
 
+## B6886. Two-browser gate jobs use the lane's url (2026-11-17)
+PC job queue. The runner started gate-two.mjs with a fixed https://localhost:<port>. Lane 7 on the second PC serves plain http (B6884), so job #1844 stopped at once with ERR_SSL_PROTOCOL_ERROR. The runner now passes laneUrl(lane), which is the lane's url from lanes.json and falls back to https://localhost:<port> as before.
+
+Reverse: put the fixed https address back at the gate-two call in tools/pcq/runner.mjs.
+
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
 
@@ -13937,6 +13942,18 @@ the routes block in docs/ROUTING.md sends to a machine (name lists, images, audi
 agent. `routed-by-hand: <reason>` in a commit message or release note answers it. The owner's own work gets none.
 
 Reverse: drop routeWarnings from merge-rules.mjs.
+
+## B7006. Waiting for the PC gates shows as pending, not failed (2026-11-17)
+Repository workflow, from the owner's pick on the decisions desk. A pull request whose only unmet rule was a gate
+result still to come failed the merge rules job, which sent a failure mail on every push. The job now posts its result
+as the `wodx/merge-rules` commit status on the head: pending while only the gate result is missing (no failed gate
+on the branch), success when every rule holds (or the work is the owner's own), failure for anything else. A pending
+wait no longer fails the job; a broken rule still does. Main requires `wodx/merge-rules` as well as `checks`, so a
+pending pull request cannot merge. When its gate result lands, the PC runner runs the merge rules job again by name
+(with the checks job after it), since a passed job is not one that "rerun failed jobs" would pick up.
+
+Reverse: drop --post-status from the merge rules step in checks.yml and wodx/merge-rules from main's required
+checks; put rerun-failed-jobs back alone in rerunFor (runner.mjs).
 
 ## B7010. Gates queue themselves on every pull request (2026-11-17)
 Repository workflow. Threads queued gates by hand and then watched the issue. `.github/workflows/pc-gates.yml` now
