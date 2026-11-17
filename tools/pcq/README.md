@@ -65,3 +65,10 @@ Both runners read the same queue; a claim comment decides which one takes a job.
 or leave the lane out and the first free lane on either PC takes it. Book and Trove lookups stay on the main PC.
 It is slower (2 cores) and has no graphics card, so it suits short gate lists. It also watches https://wodx.online and
 the main runner's status issue and opens an alert when either goes quiet.
+
+## The Secondary PC (B6990)
+
+BENJAMIN-PC runs a third runner from `D:\WoDX\pcq` with `runner.benjamin-pc.json`: lane 8 (port 30080,
+`D:\WoDX\FoundryData-lane8`), its own status issue "PC runner status (Secondary PC)" and alerts titled
+"Secondary PC alert". It reads the same queue and claims jobs the same way; name `--lane 8` to send a job there.
+It has 8 cores and 16 GB, so it can take longer gate lists than lane 7. Book and Trove lookups stay on the main PC.
