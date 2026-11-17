@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7010
+Next free block: B7030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -403,6 +403,8 @@ Next free block: B7010
 | B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7005) | tools |
+| B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
+| B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13935,3 +13937,35 @@ the routes block in docs/ROUTING.md sends to a machine (name lists, images, audi
 agent. `routed-by-hand: <reason>` in a commit message or release note answers it. The owner's own work gets none.
 
 Reverse: drop routeWarnings from merge-rules.mjs.
+
+## B7010. Gates queue themselves on every pull request (2026-11-17)
+Repository workflow. Threads queued gates by hand and then watched the issue. `.github/workflows/pc-gates.yml` now
+runs on every owner pull request from a claude/ branch, on a self-hosted GitHub runner on the Secondary PC (labels
+self-hosted and wodx-gate, two instances at below-normal priority). `tools/pcq/pr-gates.mjs` opens the pc-job issue
+with the owner's sign-in on the PC (the PC runner only takes the owner's jobs) for the touched gates on the exact
+head commit. The PC runner posts the result as the wodx/gates status (B7000), so this workflow never writes it.
+
+It queues nothing for a hold or handoff pull request, a change that needs no gate, a head whose module, system and
+gate files match an earlier commit that already passed (version stamps ignored), or a commit already queued. A queued
+job for an older commit of the same pull request that has not started is closed as superseded.
+
+## B7011. Lock-down of the self-hosted runner (2026-11-17)
+The repository is public, so the runner refuses anything but its own workflow. Three layers: the workflow's `if:`
+(owner, this repository, claude/ branch); a job-started hook installed outside the repository
+(D:\WoDX\gh-runner\job-started.ps1, record copy in tools/pcq/gh-runner/) that fails any job from another repository,
+another workflow file, a fork, pull_request_target or any other event before a step runs; and the repository setting
+that holds every outside contributor's workflow run for approval. Outside pull requests are also closed by
+outside-guard.yml (B3030). A harness test fails if any other workflow names the self-hosted labels.
+
+## B7020. Nightly full gate run on the Secondary PC (2026-11-17)
+Repository workflow. Gates now run in two tiers: each pull request gets only its touched gates (B7010), and every
+night at 05:00 UTC `tools/pcq/nightly-gates.mjs` queues every gate on lane 8 for main's current commit. It takes the
+GPU guard first, so it waits while the book OCR or a model job holds the card, and skips the night (with a summary
+issue saying so) if it has not got the card by 13:00 UTC. When the job ends it opens a summary issue labelled
+nightly-gates with the result. The run is a health signal for main, not a merge pass: the PC runner posts wodx/gates
+on main's commit as for any all-gates job, and a gate failing there reads as a failure, which the summary flags.
+
+## B7021. The Secondary PC's runner runs below normal priority (2026-11-17)
+`run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
+runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
+(BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
