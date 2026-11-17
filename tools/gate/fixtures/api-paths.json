@@ -298,8 +298,8 @@
    "rotschreckAuto"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1411",
-   "modules/wodx-interactables/scripts/main.mjs:1430"
+   "modules/wodx-interactables/scripts/main.mjs:1408",
+   "modules/wodx-interactables/scripts/main.mjs:1427"
   ]
  },
  {
@@ -590,7 +590,7 @@
    "decide"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1055"
+   "modules/wodx-interactables/scripts/main.mjs:1053"
   ]
  },
  {
@@ -602,7 +602,7 @@
   "uses": [
    "modules/wodx-combat/scripts/conductor.js:130",
    "modules/wodx-creation/scripts/first-night.mjs:322",
-   "modules/wodx-interactables/scripts/main.mjs:1053",
+   "modules/wodx-interactables/scripts/main.mjs:1051",
    "modules/wodx-solo/scripts/main.mjs:212",
    "modules/wodx-solo/scripts/main.mjs:218",
    "modules/wodx-storyteller/scripts/core.mjs:662",
@@ -1543,7 +1543,7 @@
    "modules/wodx-creation/scripts/lifepath.mjs:451",
    "modules/wodx-creation/scripts/lifepath.mjs:462",
    "modules/wodx-creation/scripts/people.mjs:215",
-   "modules/wodx-interactables/scripts/main.mjs:762",
+   "modules/wodx-interactables/scripts/main.mjs:760",
    "modules/wodx-npc/scripts/family.mjs:185",
    "modules/wodx-npc/scripts/family.mjs:273",
    "modules/wodx-npc/scripts/family.mjs:413",
@@ -1604,8 +1604,8 @@
    "modules/wodx-creation/scripts/lifepath.mjs:102",
    "modules/wodx-creation/scripts/people.mjs:47",
    "modules/wodx-creation/scripts/xp.mjs:157",
-   "modules/wodx-interactables/scripts/main.mjs:1837",
-   "modules/wodx-interactables/scripts/main.mjs:2162",
+   "modules/wodx-interactables/scripts/main.mjs:1834",
+   "modules/wodx-interactables/scripts/main.mjs:2159",
    "modules/wodx-npc/scripts/family.mjs:455",
    "modules/wodx-npc/scripts/fates.mjs:201",
    "modules/wodx-npc/scripts/kin.mjs:174",
@@ -2063,7 +2063,7 @@
    "rules"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1341"
+   "modules/wodx-interactables/scripts/main.mjs:1338"
   ]
  },
  {
@@ -2074,7 +2074,7 @@
    "triggered"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1342"
+   "modules/wodx-interactables/scripts/main.mjs:1339"
   ]
  },
  {
@@ -2114,7 +2114,7 @@
    "triggers"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1339"
+   "modules/wodx-interactables/scripts/main.mjs:1336"
   ]
  },
  {
@@ -2145,7 +2145,7 @@
   "uses": [
    "modules/wodx-atmosphere/scripts/mood.mjs:37",
    "modules/wodx-atmosphere/scripts/mood.mjs:91",
-   "modules/wodx-interactables/scripts/main.mjs:2042",
+   "modules/wodx-interactables/scripts/main.mjs:2039",
    "modules/wodx-interactables/scripts/stock.mjs:18",
    "modules/wodx-npc/scripts/main.mjs:156",
    "modules/wodx-npc/scripts/main.mjs:1150"
@@ -2697,7 +2697,7 @@
    "adopt"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2152"
+   "modules/wodx-interactables/scripts/main.mjs:2149"
   ]
  },
  {
@@ -2715,7 +2715,7 @@
    "carry"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2147",
+   "modules/wodx-interactables/scripts/main.mjs:2144",
    "modules/wodx-library/scripts/use.mjs:237"
   ]
  },
@@ -2727,7 +2727,7 @@
   "uses": [
    "modules/wodx-actions/scripts/acts.js:227",
    "modules/wodx-chronicle/scripts/fronts.mjs:204",
-   "modules/wodx-interactables/scripts/main.mjs:2159"
+   "modules/wodx-interactables/scripts/main.mjs:2156"
   ]
  },
  {
@@ -2790,7 +2790,7 @@
    "chase"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2157"
+   "modules/wodx-interactables/scripts/main.mjs:2154"
   ]
  },
  {
@@ -2821,7 +2821,7 @@
    "pcMoved"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1259"
+   "modules/wodx-interactables/scripts/main.mjs:1256"
   ]
  },
  {
@@ -2831,7 +2831,7 @@
    "rideOf"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2158"
+   "modules/wodx-interactables/scripts/main.mjs:2155"
   ]
  },
  {
@@ -2859,7 +2859,7 @@
    "haul"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2149",
+   "modules/wodx-interactables/scripts/main.mjs:2146",
    "modules/wodx-solo/scripts/companions.mjs:18",
    "modules/wodx-solo/scripts/panel.mjs:304"
   ]
@@ -2935,7 +2935,7 @@
    "living"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2146"
+   "modules/wodx-interactables/scripts/main.mjs:2143"
   ]
  },
  {
@@ -2955,7 +2955,7 @@
   ],
   "uses": [
    "modules/wodx-combat/scripts/main.js:2558",
-   "modules/wodx-interactables/scripts/main.mjs:2151"
+   "modules/wodx-interactables/scripts/main.mjs:2148"
   ]
  },
  {
@@ -2984,7 +2984,7 @@
    "rideOf"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2158"
+   "modules/wodx-interactables/scripts/main.mjs:2155"
   ]
  },
  {
@@ -3052,7 +3052,7 @@
    "states"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2145"
+   "modules/wodx-interactables/scripts/main.mjs:2142"
   ]
  },
  {
@@ -3061,7 +3061,7 @@
    "stock"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:2156"
+   "modules/wodx-interactables/scripts/main.mjs:2153"
   ]
  },
  {
@@ -3786,7 +3786,7 @@
    "profileFor"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:936",
+   "modules/wodx-interactables/scripts/main.mjs:934",
    "modules/wodx-npc/scripts/faces.mjs:51"
   ]
  },
@@ -3845,7 +3845,7 @@
    "pickReaction"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:936"
+   "modules/wodx-interactables/scripts/main.mjs:934"
   ]
  },
  {
@@ -3855,7 +3855,7 @@
    "RESPONSES"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:937"
+   "modules/wodx-interactables/scripts/main.mjs:935"
   ]
  },
  {
@@ -4088,7 +4088,7 @@
    "openLine"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1635"
+   "modules/wodx-interactables/scripts/main.mjs:1632"
   ]
  },
  {
@@ -4924,7 +4924,7 @@
    "callHelp"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1640"
+   "modules/wodx-interactables/scripts/main.mjs:1637"
   ]
  },
  {
@@ -5168,7 +5168,7 @@
    "unspend"
   ],
   "uses": [
-   "modules/wodx-interactables/scripts/main.mjs:1051"
+   "modules/wodx-interactables/scripts/main.mjs:1049"
   ]
  },
  {
