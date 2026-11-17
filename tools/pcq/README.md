@@ -84,6 +84,12 @@ merge-rules.mjs reads. Nothing is queued for HOLD or handoff pull requests, chan
 inputs match a commit that already passed, or a commit already queued. Queue again by hand from the Actions tab
 (PC gates, Run workflow, the pull request number).
 
+Old commits (B7205): a waiting job for an older commit is closed when a newer one is queued. The runner also checks
+the pull request named in the title before it starts a job and every three minutes while it runs. When the pull
+request has moved on, merged or closed, a waiting job is closed as not planned, and a running one has its shared gate
+queue emptied: each lane ends after the gate it is on, nothing is retried or rechecked, and no `wodx/gates` status is
+posted. A failed lookup never drops a job.
+
 Lock-down (B7011): the workflow's `if:`, the job-started hook `D:\WoDX\gh-runner\job-started.ps1` (outside the
 repository; copy and installer in `tools/pcq/gh-runner/`), and the setting that holds outside contributors' runs
 for approval. Reinstall with `powershell -ExecutionPolicy Bypass -File tools\pcq\gh-runner\install.ps1`.
