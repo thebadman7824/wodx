@@ -30,8 +30,8 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
-import {loadConfig, getLane, laneDir, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT} from "./jobs.mjs";
+import {loadConfig, getLane, laneDir, laneUrl, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack} from "../lanes/gate-queue.mjs";
@@ -109,8 +109,9 @@ const git = (argv, cwd = ROOT) => (gitChain = gitChain.then(() => spawnSync("git
 /** A worktree for a lane, checked out at the job's ref. Returns {dir, sha} or {error}. */
 async function worktree(lane, ref) {
   const dir = path.join(WT, `l${lane}`);
-  const remote = ref === "main" ? "origin/main" : ref.startsWith("claude/") ? `origin/${ref}` : ref;
-  const f = await git(ref.startsWith("claude/") ? ["fetch", "-q", "origin", `+refs/heads/${ref}:refs/remotes/origin/${ref}`] : ["fetch", "-q", "origin"]);
+  const branch = /^(claude|handoff)\//.test(ref);
+  const remote = ref === "main" ? "origin/main" : branch ? `origin/${ref}` : ref;
+  const f = await git(branch ? ["fetch", "-q", "origin", `+refs/heads/${ref}:refs/remotes/origin/${ref}`] : ["fetch", "-q", "origin"]);
   if ( f.status ) return {error: `git fetch failed: ${f.stderr.trim()}`};
   const sha = (await git(["rev-parse", "--verify", `${remote}^{commit}`])).stdout.trim();
   if ( !sha ) return {error: `No commit for ref ${ref}.`};
@@ -221,7 +222,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   if ( job.kind === "gate-two" ) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${job.gate}-result.json`);
     fs.rmSync(f, {force: true});
-    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`, ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
+    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", laneUrl(laneOf(lane)), ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
     // The failing steps are read before the reset, which may put the lane's data back
     const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
     const detail = failDetail(lane, line);
@@ -239,8 +240,9 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
-  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`};
+  // B7002: the commit this lane ran, for the gate status the merge rules read
+  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text, sha: wt.sha};
+  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`, sha: wt.sha};
 }
 
 /**
@@ -328,7 +330,7 @@ async function makeQueue(job, lane, tag) {
   const file = path.join(LOGS, `${tag}-queue.json`);
   fs.writeFileSync(file, JSON.stringify(list));
   fs.rmSync(`${file}.taken`, {force: true});
-  return {file, size: list.length};
+  return {file, size: list.length, sha: wt.sha};
 }
 const queueLeft = file => readQueue(file).length;
 function requeueUnfinished(file, lane, report) {
@@ -370,7 +372,7 @@ async function start(issue, job, lanes) {
     if ( lanes.length ) {
       const q = await makeQueue(job, lanes[0], tag);
       if ( q ) {
-        g.job = {...job, queue: q.file, queueSize: q.size, maxMinutes: Math.min(16 * q.size + 20, 900)};
+        g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, 900)};
         growing.set(issue.number, g);
         log(`#${issue.number}: ${q.size} gate(s) on a shared queue`);
       }
@@ -386,6 +388,7 @@ async function start(issue, job, lanes) {
       parts.map(p => `${p.lane ? `Lane ${p.lane}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
     await finish(issue, ok, body);
     log(`#${issue.number} ${ok ? "passed" : "failed"} in ${mins} min`);
+    await gateStatus(issue, g.job, parts, ok).catch(e => log(`#${issue.number}: gate status not posted: ${e.message}`));
   } catch (e) {
     log(`#${issue.number} runner error: ${e.stack ?? e.message}`);
     await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
@@ -394,6 +397,41 @@ async function start(issue, job, lanes) {
     for ( const l of new Set([...lanes, ...g.used]) ) if ( state[l].busy === issue.number ) state[l].busy = null;
     finished.set(issue.number, Date.now()); active.delete(issue.number);
   }
+}
+
+// ---- gate status for the merge rules (B7002) ----
+/**
+ * A gates job that ran every gate the branch needs (touched or all) sets the wodx/gates commit status on the commit it
+ * ran; tools/release/merge-rules.mjs reads it. Then the branch's pull request checks are run again, so a check that
+ * failed while the gates were still running turns green by itself.
+ */
+async function gateStatus(issue, job, parts, ok) {
+  const st = gateStatusFor(job, parts, ok, failingGates, issue.html_url);
+  if ( !st || DRY ) return;
+  await gh("POST", `/statuses/${st.sha}`, st.body);
+  log(`#${issue.number}: ${GATE_CONTEXT} ${st.body.state} on ${short(st.sha)}`);
+  rerunChecks(st.sha, 0);
+}
+/** Runs the failed checks again of each open pull request holding the gated commit (the job's ref may be a branch or
+ *  a sha); waits for a run still going (up to an hour). */
+async function rerunChecks(sha, tries) {
+  try {
+    for ( const pr of (await gh("GET", `/commits/${sha}/pulls`)) ?? [] ) if ( pr.state === "open" ) await rerunFor(pr, sha, tries);
+  } catch (e) { log(`checks rerun for ${short(sha)}: ${e.message}`); }
+}
+async function rerunFor(pr, sha, tries) {
+  try {
+    const runs = await gh("GET", `/actions/workflows/checks.yml/runs?head_sha=${pr.head.sha}&event=pull_request&per_page=5`);
+    const run = runs?.workflow_runs?.[0];
+    if ( !run ) return;
+    if ( run.status !== "completed" ) { if ( tries < 12 ) setTimeout(() => rerunFor(pr, sha, tries + 1), 5 * 60000); return; }
+    // B7006: the merge rules job passes while it waits for the gates (its wodx/merge-rules status is pending), so it
+    // is run again by name, with the checks job after it
+    const jobs = await gh("GET", `/actions/runs/${run.id}/jobs?per_page=50`);
+    const mr = jobs?.jobs?.find(j => j.name === "merge rules");
+    if ( mr ) { await gh("POST", `/actions/jobs/${mr.id}/rerun`); log(`PR #${pr.number}: merge rules run again after the gate result`); }
+    else if ( run.conclusion === "failure" ) { await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`); log(`PR #${pr.number}: failed checks started again after the gate result`); }
+  } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
 // ---- status issue ----

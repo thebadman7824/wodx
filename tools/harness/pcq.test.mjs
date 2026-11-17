@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
 import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody} from "../pcq/jobs.mjs";
-import {preflight} from "../pcq/submit.mjs";
+import {preflight, submitLanes} from "../pcq/submit.mjs";
 import * as gpu from "../pcq/gpu.mjs";
 
 const LANES = [2, 3, 4, 5, 6];
@@ -216,4 +216,37 @@ test("gates jobs on a shared queue: every gate taken once, gates of a lane that 
 test("gateArgs in queue mode hands run-gate the shared list", () => {
   assert.deepEqual(gateArgs({kind: "gates", gates: ["x"], queue: "q.json", maxMinutes: 60}, "5", 0, 1, "r"),
     ["--queue", "q.json", "--lane", "5", "--wait", "10", "--report", "r", "--max-minutes", "60"]);
+});
+test("submit takes the other PCs' lanes from lanes.json, never lane 6 or lane 1 (B6980)", () => {
+  const runnerCfg = JSON.parse(fs.readFileSync(new URL("../pcq/runner.json", import.meta.url)));
+  const ids = submitLanes(runnerCfg, lanesCfg);
+  for ( const n of [2, 3, 4, 5, 7, 8] ) assert.ok(ids.includes(n), `lane ${n} can be named`);
+  assert.ok(!ids.includes(6) && !ids.includes(1), "lane 6 stays the local agents' and lane 1 stays the owner's");
+  assert.ok(validate({kind: "gates", gates: ["gatex"], lane: 8}, ids).job, "a gates job can go to lane 8");
+  assert.ok(validate({kind: "reset", lane: 7}, ids).job, "lane 7 can be reset from a thread");
+  assert.ok(validate({kind: "reset", lane: 6}, ids).error, "lane 6 is still refused");
+  assert.deepEqual(submitLanes({lanes: [2]}, {lanes: [{id: 1, host: "x"}, {id: 9, host: "y", reserved: "z"}]}), [2]);
+});
+
+test("B7002: a touched or all gates job sets the wodx/gates status on the one commit it ran", async () => {
+  const {gateStatusFor, GATE_CONTEXT} = await import("../pcq/jobs.mjs");
+  const sha = "a".repeat(40), job = {kind: "gates", touched: true, ref: "claude/x"};
+  const pass = [{code: 0, sha, text: "gatea: 5/5 passed\ngateb: 3/3 passed"}];
+  const st = gateStatusFor(job, pass, true, undefined, "https://github.com/o/r/issues/9");
+  assert.equal(st.sha, sha);
+  assert.deepEqual(st.body, {state: "success", context: GATE_CONTEXT, description: "2 gate(s) passed (touched)", target_url: "https://github.com/o/r/issues/9"});
+  assert.equal(gateStatusFor({...job, touched: undefined, gates: ["gatea"]}, pass, true), null, "a hand-picked list says nothing about the branch");
+  assert.equal(gateStatusFor({kind: "deploy"}, pass, true), null);
+  assert.equal(gateStatusFor(job, [{code: null, sha, text: ""}], false), null, "a lane fault is no result");
+  assert.equal(gateStatusFor(job, [...pass, {code: 0, sha: "b".repeat(40), text: "gatec: 1/1 passed"}], true), null, "two commits");
+  assert.equal(gateStatusFor({...job, queueSha: "c".repeat(40)}, pass, true), null, "the queue was listed from another commit");
+  const fail = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: NEW with this change: passes on main"}];
+  const f = gateStatusFor(job, fail, false);
+  assert.equal(f.body.state, "failure");
+  assert.match(f.body.description, /1 of 2 gate\(s\) failed: gateb/);
+  const mainToo = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: fails on main too: not this change's fault"}];
+  const m = gateStatusFor(job, mainToo, false);
+  assert.equal(m.body.state, "success");
+  assert.match(m.body.description, /failing on main too: gateb/);
+  assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
 });

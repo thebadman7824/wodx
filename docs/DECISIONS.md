@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6980
+Next free block: B7030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -385,7 +385,7 @@ Next free block: B6980
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: lane setup without other systems (used B6880-B6883) | tools (testbed lanes) |
+| B6880-B6889 | Second PC runner: two-browser gates use the lane's own address (used B6880-B6886) | tools (PC job queue) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -400,7 +400,11 @@ Next free block: B6980
 | B6940-B6949 | Final Audit Desk rulings (lead part) | system, all modules (comments only), tools, docs |
 | B6950-B6959 | Gate run 1774 fixes | wodx-sheets, wodx-chronicle, tools |
 | B6960-B6969 | Gate run 1779 fixes | tools |
-| B6970-B6979 | Gate diagnostics; the lane snapshot waits for start-up (used B6970-B6971) | tools |
+| B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
+| B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
+| B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
+| B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
+| B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13552,6 +13556,16 @@ Testbed lanes. `lanes.mjs setup` copied Data/modules and Data/systems from lane 
 
 Reverse: restore the plain readdirSync; then create the empty folder on the source instead.
 
+## B6885. A lane on another PC takes no gate jobs until its setup finishes (2026-11-17)
+PC job queue. The runner treated a lane as healthy once its world folder existed and the server answered. Lane 7 on the second PC answered with Foundry's licence screen, so gate job #1816 was claimed there and could not run a gate. A lane that names a host now counts as not set up until `lanes.mjs accept` has written its clean fingerprint (clean.json), so only a setup-lane job can use it. The main PC's lanes have no host field and are unchanged.
+
+Reverse: drop the clean.json line from healthCheck in tools/pcq/runner.mjs.
+
+## B6886. Two-browser gate jobs use the lane's url (2026-11-17)
+PC job queue. The runner started gate-two.mjs with a fixed https://localhost:<port>. Lane 7 on the second PC serves plain http (B6884), so job #1844 stopped at once with ERR_SSL_PROTOCOL_ERROR. The runner now passes laneUrl(lane), which is the lane's url from lanes.json and falls back to https://localhost:<port> as before.
+
+Reverse: put the fixed https address back at the gate-two call in tools/pcq/runner.mjs.
+
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
 
@@ -13862,3 +13876,113 @@ visible: none, only the PC job reports gain lines.
 B6971. lanes.mjs accept and run-gate's first world check now read the world once start-up has stopped saving settings: tools/lanes/lib.mjs settledFingerprint probes every 2 seconds and returns once the settings digest has held for 10 seconds (at most 90). A GM sign-in keeps writing world settings for some seconds after ready (the Chronicle start level 1.5 s after ready, events fired, the Storyteller signal board, Token Magic and FXMaster migrations). A snapshot taken at once caught some of them, so the next sign-in read them as drift and no gate ran: jobs 1801 and 1809 on 16 Nov stopped on every lane, even after a reset (drift files: wodx-chronicle autoApprove, automationBase, automationLevel, eventsFired; wodx-storyteller signalBoard; tokenmagic migration).
 effect: none, tooling only; the game is unchanged.
 visible: none, gates jobs on a fresh lane run instead of stopping on drift.
+
+## B6980. submit.mjs takes the host lanes from lanes.json (2026-11-17)
+PC job queue. `tools/pcq/submit.mjs` used to accept only the main runner's lanes (2 to 5) from runner.json, so a job
+for lane 7 (the Laptop) or lane 8 (the Secondary PC) had to be written by hand. It now also accepts every lane in
+tools/lanes/lanes.json that has a `host`. A reserved lane (lane 6, the local agents') and lane 1 are never accepted.
+Each runner still claims only the jobs for its own lanes.
+
+Reverse: read only runner.json's lanes again in submit.mjs.
+
+B6972. gatetruthrelay's fighter now has Stamina 3 with its total set too (issue 1815; the Stamina change came from an outside agent on handoff/cline-1815, PR 1829). Since B6660 a Dazed player loses the turn in a started fight, and the fighter (Stamina 1) was Dazed by the 2-level burn of the bearer's sheath, so its pistol shot and punch were refused and steps c, d, 4 and 5 failed. Raising only the value was not enough: Actor.create does not work out an attribute's total, and WoDX Combat reads the total for the Dazed threshold, so the total is set as well.
+effect: none, a gate change only; play is unchanged.
+visible: none, only the gate's test fighter changes.
+
+## B7000. CI enforces the merge rules (2026-11-17)
+Repository workflow. The checking rules lived only in thread instructions, so a pull request could merge without
+them and nobody would know. `tools/release/merge-rules.mjs` now checks three of them on every pull request, in a
+"merge rules" job whose result feeds the required "checks" result: a release note for every changed module (with
+effect: and visible: for minor and major notes), a passing gate result for the touched gates on the code as it is,
+and a review verdict for every changed file. Changes are measured from the merge base with main, with version
+stamps and the files merge-stamp writes left out. Notes are read from the branch's history, because merge-stamp
+removes them before the merge. Pull requests whose every commit is the owner's own (authored by the owner's
+account, no Claude or agent trailer) are reported and never blocked.
+
+Reverse: drop the merge-rules job from .github/workflows/checks.yml and from the needs of the checks job.
+
+## B7001. Per-file review records (2026-11-17)
+Repository workflow. A branch records a verdict for each changed file in docs/reviews/<branch>.jsonl with
+`tools/release/review.mjs`, with a hash of the file as reviewed (version strings ignored) and a line on how it was
+checked. Only lines the pull request adds count. A file changed after its review shows as unreviewed again. A glob
+may cover data and images, never a script. Only working (or dead, for a deleted file) can merge.
+
+Reverse: drop rule 3 from merge-rules.mjs.
+
+## B7002. The PC runner sets the wodx/gates status (2026-11-17)
+PC job queue. A gates job with touched: true or all: true sets the `wodx/gates` commit status on the one commit its
+lanes ran (none when lanes ran different commits, the shared queue was listed from another commit, or a lane fault
+left no result), linking the job issue, then starts the branch's failed pull request checks again (waiting up to an
+hour for a run still going). A gate the recheck finds failing on main too passes the status and is named in it, so
+an old fault on main does not hold every pull request. Jobs may now name handoff/ branches, so HOLD pull requests
+can be gated. A gate result counts for the merge rules while the branch's module, system and gate files are the same
+as on the gated commit.
+
+Reverse: drop gateStatus from runner.mjs and gateStatusFor from jobs.mjs.
+
+## B7003. merge-stamp --check runs the merge rules (2026-11-17)
+Release tooling. `merge-stamp.mjs --check` prints the merge rules' report and fails on a broken note or review rule
+(and on the gate rule when a GITHUB_TOKEN lets it read the result). A minor or major note with no effect: line now
+blocks the merge instead of warning.
+
+Reverse: remove the merge-rules block from the --check branch of merge-stamp.mjs.
+
+## B7004. A tool registry and routing rules every thread reads first (2026-11-17)
+Repository workflow. Threads did not know what each PC had, so they fell back to doing work themselves. docs/TOOLS.md
+lists each machine (Main PC, Secondary PC, Laptop, the cloud container), its tools, what each is good for and how a
+thread reaches it (PC job queue, local-agent queue, PC helper threads). docs/ROUTING.md gives each kind of work a
+default home: mechanical edits to the local-agent queue, gates to the PC runner, OCR and conversions to the PCs, art
+to ComfyUI. docs/WORKFLOW.md section 0 tells every thread to read both before it starts.
+
+Reverse: delete the two files and section 0.
+
+## B7005. A soft merge-rules warning for work done by hand (2026-11-17)
+Repository workflow. The merge rules print a note, never a failure, when a thread's pull request changes files that
+the routes block in docs/ROUTING.md sends to a machine (name lists, images, audio) and no commit came from a local
+agent. `routed-by-hand: <reason>` in a commit message or release note answers it. The owner's own work gets none.
+
+Reverse: drop routeWarnings from merge-rules.mjs.
+
+## B7006. Waiting for the PC gates shows as pending, not failed (2026-11-17)
+Repository workflow, from the owner's pick on the decisions desk. A pull request whose only unmet rule was a gate
+result still to come failed the merge rules job, which sent a failure mail on every push. The job now posts its result
+as the `wodx/merge-rules` commit status on the head: pending while only the gate result is missing (no failed gate
+on the branch), success when every rule holds (or the work is the owner's own), failure for anything else. A pending
+wait no longer fails the job; a broken rule still does. Main requires `wodx/merge-rules` as well as `checks`, so a
+pending pull request cannot merge. When its gate result lands, the PC runner runs the merge rules job again by name
+(with the checks job after it), since a passed job is not one that "rerun failed jobs" would pick up.
+
+Reverse: drop --post-status from the merge rules step in checks.yml and wodx/merge-rules from main's required
+checks; put rerun-failed-jobs back alone in rerunFor (runner.mjs).
+
+## B7010. Gates queue themselves on every pull request (2026-11-17)
+Repository workflow. Threads queued gates by hand and then watched the issue. `.github/workflows/pc-gates.yml` now
+runs on every owner pull request from a claude/ branch, on a self-hosted GitHub runner on the Secondary PC (labels
+self-hosted and wodx-gate, two instances at below-normal priority). `tools/pcq/pr-gates.mjs` opens the pc-job issue
+with the owner's sign-in on the PC (the PC runner only takes the owner's jobs) for the touched gates on the exact
+head commit. The PC runner posts the result as the wodx/gates status (B7000), so this workflow never writes it.
+
+It queues nothing for a hold or handoff pull request, a change that needs no gate, a head whose module, system and
+gate files match an earlier commit that already passed (version stamps ignored), or a commit already queued. A queued
+job for an older commit of the same pull request that has not started is closed as superseded.
+
+## B7011. Lock-down of the self-hosted runner (2026-11-17)
+The repository is public, so the runner refuses anything but its own workflow. Three layers: the workflow's `if:`
+(owner, this repository, claude/ branch); a job-started hook installed outside the repository
+(D:\WoDX\gh-runner\job-started.ps1, record copy in tools/pcq/gh-runner/) that fails any job from another repository,
+another workflow file, a fork, pull_request_target or any other event before a step runs; and the repository setting
+that holds every outside contributor's workflow run for approval. Outside pull requests are also closed by
+outside-guard.yml (B3030). A harness test fails if any other workflow names the self-hosted labels.
+
+## B7020. Nightly full gate run on the Secondary PC (2026-11-17)
+Repository workflow. Gates now run in two tiers: each pull request gets only its touched gates (B7010), and every
+night at 05:00 UTC `tools/pcq/nightly-gates.mjs` queues every gate on lane 8 for main's current commit. It takes the
+GPU guard first, so it waits while the book OCR or a model job holds the card, and skips the night (with a summary
+issue saying so) if it has not got the card by 13:00 UTC. When the job ends it opens a summary issue labelled
+nightly-gates with the result. The run is a health signal for main, not a merge pass: the PC runner posts wodx/gates
+on main's commit as for any all-gates job, and a gate failing there reads as a failure, which the summary flags.
+
+## B7021. The Secondary PC's runner runs below normal priority (2026-11-17)
+`run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
+runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
+(BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
