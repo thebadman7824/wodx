@@ -21,3 +21,4 @@
 {"file":"tools/pcq/runner.mjs","verdict":"working","how":"read the diff; node --check passes; rerun by job name uses GET runs/{id}/jobs and POST jobs/{id}/rerun, falls back to rerun-failed-jobs when no merge rules job is found; only runs on the PC, so not exercised here","hash":"a59adb190027","at":"2026-11-17T03:20Z"}
 {"file":".github/workflows/checks.yml","verdict":"working","how":"read the diff; parses as YAML; statuses write permission for the merge rules job only; this PR's own run is the first live test","hash":"16e8cd1e7fec","at":"2026-11-17T03:20Z"}
 {"file":"docs/WORKFLOW.md","verdict":"working","how":"read the changed paragraph against the code; no em-dashes","hash":"495d3754b608","at":"2026-11-17T03:20Z"}
+{"file":"docs/WORKFLOW.md","verdict":"working","how":"read the new paragraph against the ruleset the owner described (two required checks, no bypass, no force push, no deletion); no em-dashes","hash":"f619b9451fe5","at":"2026-11-17T03:29Z"}
