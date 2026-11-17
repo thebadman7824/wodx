@@ -29,10 +29,11 @@ const activeScene = () => { try { return game.scenes?.active ?? null; } catch (e
 export function faithOf(scene = activeScene(), year = 0) {
   try {
     const p = place.placeOf(scene);
-    if ( p.faith ) return {faith: p.faith, region: p.region ?? place.homeland()};
+    // B6931: a pick of a faith not yet founded in the year keeps a count of their own
+    if ( p.faith ) return {faith: F.faithIn(p.faith, year), region: p.region ?? place.homeland()};
     if ( p.region && p.region !== place.homeland() ) return {faith: F.faithFor(p.region, year), region: p.region};
     const own = setting("faith");
-    return {faith: F.FAITHS[own] ? own : F.faithFor(place.homeland(), year), region: place.homeland()};
+    return {faith: F.FAITHS[own] ? F.faithIn(own, year) : F.faithFor(place.homeland(), year), region: place.homeland()};
   } catch (e) { return {faith: "western", region: "moravia"}; }
 }
 

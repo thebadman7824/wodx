@@ -13,6 +13,7 @@
  */
 import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as O from "./orpheus-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -104,13 +105,15 @@ export function build(ctx) {
             const note = k ? await setVitality(actor, i.vitality.now - k) : "";
             const total = k ? await spentThisTurn(actor, k) : 0;
             const pool = (fd.a ? ctx.attr(actor, fd.a) : 0) + (fd.b ? n(ctx.findAbility?.(actor, fd.b)?.value) : 0);
-            const diff = n(fd.d) + i.state.penalty + lim.diff;
+            // B6662: the target's ward or Magic Resistance makes a Horror on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const diff = Math.min(10, n(fd.d) + i.state.penalty + lim.diff + n(rm.diff));
             const name = it ? esc(it.name) : "A Horror";
             let got = 0;
             if (pool) {
                 const wp = !!fd.wp && await spendWillpower(actor, 1);
                 const r = await rollPool(pool, diff, { willpower: wp }); rolls.push(r.roll);
-                body += rollBlock(`${fd.a ? cap(fd.a) : ""}${fd.a && fd.b ? " + " : ""}${fd.b ? esc(traits.find(t => t.key === fd.b)?.label ?? fd.b) : ""}`, r, [`${k} Vitality`, ...(i.state.penalty ? ["+1 difficulty: Spite"] : []), ...(wp ? ["Willpower"] : [])]);
+                body += rollBlock(`${fd.a ? cap(fd.a) : ""}${fd.a && fd.b ? " + " : ""}${fd.b ? esc(traits.find(t => t.key === fd.b)?.label ?? fd.b) : ""}`, r, [`${k} Vitality`, ...rm.parts, ...(i.state.penalty ? ["+1 difficulty: Spite"] : []), ...(wp ? ["Willpower"] : [])]);
                 body += `<div class="vta-big ${r.botch ? "bad" : r.successes ? "good" : ""}">${name} at ${k} Vitality: ${r.botch ? "a botch" : r.successes ? `${r.successes} success${r.successes === 1 ? "" : "es"}` : "it fails"}.</div>`;
                 got = r.botch ? 0 : r.successes;
             } else { body += `<div class="vta-big good">${name} at ${k} Vitality.</div>`; got = 1; }

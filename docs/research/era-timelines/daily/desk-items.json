@@ -1,0 +1,14 @@
+[
+ {"date": "16 November 2026", "intro": "One question the daily timeline check could not settle from the books alone. Ben approved the desk on 16 November (02:14 UTC), so the recommended option is built.",
+  "items": [
+   {"id": "2026-11-16-bunyip",
+    "title": "When are the Bunyip gone?",
+    "text": "WoDX ends the Bunyip with the War of Tears in 1899, a house year taken from era advancement. Today's check lined up the tribe's signature features (which said 1890) and the Creation lifepath (which ran to 1920) on that 1899. The books point later: Rage Across Australia (pdf 23 to 24) tells the War of Tears as a single year of killing without fixing it to 1899, and Past Lives (pdf 70) puts the Bunyip's last stand in 1937.",
+    "ref": "W20 pp. 40 to 41; Rage Across Australia pdf 21 to 24; Past Lives pdf 70; B6132",
+    "options": [
+     {"v": "split", "label": "War in 1899, last stand in 1937", "rec": true, "what": "The War of Tears stays at 1899 and breaks the tribe; a new event in 1937 tells the last stand. Signature features, the lifepath and era advancement run to 1937, so a Bunyip can still be met, rarely, until then. This fits both books."},
+     {"v": "1937", "label": "Everything at 1937", "rec": false, "what": "The War of Tears itself moves to 1937, and every part of WoDX that ends the tribe follows it."},
+     {"v": "1899", "label": "Keep 1899", "rec": false, "what": "Nothing changes: the tribe ends in 1899 everywhere, and the Past Lives year stays a note for the Storyteller."}
+    ]}
+  ]}
+]

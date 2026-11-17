@@ -8,6 +8,7 @@
  *      comes without asking
  *   4. a twist with two hearts asks for one; a twist of a later chapter waits for it
  *   5. taking a twist back clears it
+ * Step 2 first shows a twist waiting for its encounter (B6645), then marks encounters 1, 5, 10, 16 and 22 played.
  * Result: Data/wodx-gate/gatetwists-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -28,6 +29,9 @@ export async function run() {
   const C = "wodx-chronicle", saga = () => game.modules.get(C)?.api?.pod?.saga, tw = () => saga()?.twists;
   const KEYS = ["podChains", "podSaga", "podState"];
   const t0 = Date.now(), time0 = game.time.worldTime, was = Object.fromEntries(KEYS.map(k => [k, foundry.utils.deepClone(game.settings.get(C, k))]));
+  // B6650: a reveal hands things to characters, brings people and posts street talk; all of it is put back after
+  const items0 = new Set(game.actors.contents.flatMap(a => a.items.map(i => i.uuid))), actors0 = new Set(game.actors.map(a => a.id)), folders0 = new Set(game.folders.map(f => f.id));
+  const board0 = foundry.utils.deepClone(game.settings.get("wodx-storyteller", "signalBoard"));
   const cards = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-pod"));
   const heard = [];
   const hook = Hooks.on("wodxTwist", p => heard.push(p));
@@ -46,6 +50,13 @@ export async function run() {
       ok("1 api", typeof tw()?.reveal === "function" && shown && rows === 24 && !tw().rules.validate().length && tw().rules.CHAINS.length === 6, {shown, rows});
     });
     await step("2 reveal", async () => {
+      let waits = "";
+      try { await tw().reveal(1); } catch (e) { waits = e.message; }
+      const s = foundry.utils.deepClone(game.settings.get(C, "podState"));
+      s.saga.encounters = {...(s.saga.encounters ?? {}), played: {1: 0, 5: 0, 10: 0, 16: 0, 22: 0}};
+      await game.settings.set(C, "podState", s);
+      R.notes.push(`Before its encounter: ${waits}`);
+      if ( !/has not been played/.test(waits) ) throw new Error(`Twist 1 did not wait for its encounter: ${waits || "revealed"}`);
       const n0 = cards().length;
       await tw().reveal(1);
       await sleep(400);
@@ -75,6 +86,11 @@ export async function run() {
     });
   } finally {
     Hooks.off("wodxTwist", hook);
+    for ( const a of game.actors ) { const ids = a.items.filter(i => i.flags?.[C]?.twist && !items0.has(i.uuid)).map(i => i.id); if ( ids.length ) await a.deleteEmbeddedDocuments("Item", ids).catch(e => R.errors.push(`items: ${e.message}`)); }
+    for ( const a of game.actors.filter(a => !actors0.has(a.id)) ) await a.delete().catch(e => R.errors.push(`actor: ${e.message}`));
+    for ( const f of game.folders.filter(f => !folders0.has(f.id)) ) await f.delete().catch(() => {});
+    for ( const sc of game.scenes ) for ( const k of Object.keys(sc.flags?.["wodx-storyteller"]?.lookSigs ?? {}) ) if ( k.startsWith("front:twist:") ) await game.modules.get("wodx-storyteller").api.upkeep?.townLooks?.setLooks?.(sc, k, []).catch?.(() => {});
+    try { await game.settings.set("wodx-storyteller", "signalBoard", board0); } catch (e) { R.errors.push(`signals: ${e.message}`); }
     for ( const k of KEYS ) { try { await game.settings.set(C, k, was[k]); } catch (e) { R.errors.push(`${k}: ${e.message}`); } }
     for ( const m of cards() ) await m.delete().catch(() => {});
     if ( game.time.worldTime !== time0 ) await game.time.advance(time0 - game.time.worldTime);

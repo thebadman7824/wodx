@@ -1,5 +1,5 @@
 /**
- * The Golconda gate (Ben's Golconda Desk, B5090-B5099), rothenstein-wodx only, as Gamemaster Test:
+ * The Golconda gate (the owner's Golconda Desk, B5090-B5099), rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gategolconda.mjs?${Date.now()}`)).run()
  * Makes its own scene and a vampire, and puts the settings back.
  *   1. the setting and the api

@@ -12,7 +12,7 @@ import { SKINS } from "./skins-index.mjs";
 
 const CORE = "wodx-sheets/styles/wodx-skins.css";
 const loading = new Map(), ready = new Set();
-const WAIT_MS = 4000;
+const WAIT_MS = 4000, LATE_MS = 60000;
 const seen = { hooks: 0, observed: 0, how: null, layer: null, failed: [] };
 
 const rulesOf = sheet => { try { return [...sheet.cssRules]; } catch { return []; } };
@@ -44,29 +44,33 @@ function placeNode(node, order, anchor) {
   if (after?.parentNode) after.after(node); else document.head.append(node);
 }
 
-/** Wait for an @import rule's sheet to arrive. */
-function importLoaded(rule) {
+/** Wait for an @import rule's sheet to arrive. Past WAIT_MS it resolves false, but keeps watching up to LATE_MS and
+ * calls late() if the file still arrives (a busy page, B6950). */
+function importLoaded(rule, late = () => {}) {
   return new Promise(resolve => {
     const t0 = Date.now();
+    let told = false;
     const tick = () => {
       const s = rule.styleSheet;
-      if (s && rulesOf(s).length) return resolve(true);
-      if (Date.now() - t0 > WAIT_MS) return resolve(false);
-      setTimeout(tick, 40);
+      if (s && rulesOf(s).length) { if (told) late(); return resolve(true); }
+      if (!told && Date.now() - t0 > WAIT_MS) { told = true; resolve(false); }
+      if (Date.now() - t0 > LATE_MS) return;
+      setTimeout(tick, told ? 250 : 40);
     };
     tick();
   });
 }
 
 /** Put one line's file in place; resolves true once it has loaded. */
-function attach(id, order) {
+function attach(id, order, late = () => {}) {
   const core = coreSheet(), url = urlOf(id, core);
   const viaLink = () => new Promise(resolve => {
     const link = document.createElement("link");
+    let told = false;
     link.rel = "stylesheet"; link.href = url; link.dataset.wodxSkin = id; link.dataset.order = String(order);
-    link.addEventListener("load", () => resolve(true), { once: true });
+    link.addEventListener("load", () => { if (told) late(); resolve(true); }, { once: true });
     link.addEventListener("error", () => resolve(false), { once: true });
-    setTimeout(() => resolve(false), WAIT_MS);
+    setTimeout(() => { told = true; resolve(false); }, WAIT_MS);
     placeNode(link, order, core?.ownerNode ?? null);
   });
   const owner = core?.ownerRule;
@@ -81,14 +85,14 @@ function attach(id, order) {
   while (at < rules.length && rules[at] instanceof CSSImportRule && lineOrder(rules[at].href) >= 0 && lineOrder(rules[at].href) < order) at++;
   try {
     parent.insertRule(text, at);
-    return importLoaded(parent.cssRules[at]);
+    return importLoaded(parent.cssRules[at], late);
   } catch (e) {
     // A sheet that will not take a new @import: a <style> of its own just after the one that imports the core sheet
     seen.how = "style";
     const style = document.createElement("style");
     style.textContent = text; style.dataset.wodxSkin = id; style.dataset.order = String(order);
     placeNode(style, order, parent.ownerNode ?? null);
-    return importLoaded(rulesOf(style.sheet)[0] ?? {});
+    return importLoaded(rulesOf(style.sheet)[0] ?? {}, late);
   }
 }
 
@@ -96,9 +100,12 @@ function attach(id, order) {
 export function load(id) {
   const order = SKINS.findIndex(s => s.id === id);
   if (order < 0) return Promise.resolve(false);
-  if (!loading.has(id)) loading.set(id, attach(id, order).then(ok => {
+  // B6950: a file slower than WAIT_MS lets the page stop waiting, and still counts once it lands; its node stays in
+  // place, so it is not put in a second time
+  const late = () => { ready.add(id); seen.failed = seen.failed.filter(x => x !== id); seen.late = [...(seen.late ?? []), id]; };
+  if (!loading.has(id)) loading.set(id, attach(id, order, late).then(ok => {
     if (ok) ready.add(id);
-    else { seen.failed.push(id); loading.delete(id); console.warn(`WoDX Sheets | the ${id} skin did not load`); }
+    else { seen.failed.push(id); console.warn(`WoDX Sheets | the ${id} skin did not load in ${WAIT_MS / 1000} s`); }
     return ok;
   }));
   return loading.get(id);

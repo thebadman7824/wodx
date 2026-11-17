@@ -39,7 +39,7 @@ const HANDS_OFF = [
 export const SETTINGS = {handsOn: [], balanced: BALANCED, handsOff: HANDS_OFF};
 /**
  * B4860: the level a world starts at. A world that has never had a level set moves to Balanced once, at its first
- * start, so NPC turns, routines, fights and markets run on their own out of the box (Ben's pick a1, 14 November 2026).
+ * start, so NPC turns, routines, fights and markets run on their own out of the box (the owner's pick a1, 14 November 2026).
  * The Live world is never moved, and a world where someone already picked a level or the Lone Chronicle is on is left
  * alone.
  */

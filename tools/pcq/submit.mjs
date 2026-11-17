@@ -5,11 +5,12 @@
  * used to cost a PC run: a gate name with no file, a two-browser gate in a plain gates job, a gate that breaks the
  * gate rules, a gate script that does not parse.
  *
- *   node tools/pcq/submit.mjs gates gateplains gatelifepath [--lanes 2] [--ref claude/x] [--prio 1] [--thread cmsg_..] [--reset]
+ *   node tools/pcq/submit.mjs gates gateplains gatelifepath [--lanes 2] [--ref claude/x] [--prio 1] [--thread cmsg_..] [--no-reset]
  *   node tools/pcq/submit.mjs gates --touched [--lanes 3] ...     the gates the branch's changes need
  *   node tools/pcq/submit.mjs gate-two gatelookhand
  *   node tools/pcq/submit.mjs deploy [--lanes 5]
  *   node tools/pcq/submit.mjs reset --lane 4
+ *   --lane / --lanes may name the other PCs' lanes too (7, 8; from tools/lanes/lanes.json, B6980), never 1 or 6
  *   node tools/pcq/submit.mjs books-find "Four Bears" "Mato-Tope" [--book v20]
  *   node tools/pcq/submit.mjs trove-find "Catlin" [--under "The Ultimate Trove - Books (C-D)"]
  *   --after <issue>   wait for that job first      --json   print only the job's json
@@ -20,9 +21,18 @@ import path from "node:path";
 import {spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {validate, issueBody, LABEL} from "./jobs.mjs";
+import {laneRefuses} from "../lanes/lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../.."), GATES = path.join(ROOT, "tools", "gate");
-const runnerLanes = JSON.parse(fs.readFileSync(path.join(HERE, "runner.json"), "utf8")).lanes;
+/** B6980: the lanes a job may name: the main runner's, plus each other PC's own lanes from lanes.json (lane 7 on the
+ *  Laptop, lane 8 on the Secondary PC). A reserved lane (lane 6, the local agents') and lane 1 never count. */
+export function submitLanes(runnerCfg, lanesCfg) {
+  const host = (lanesCfg?.lanes ?? []).filter(l => l.host && !l.reserved && String(l.id) !== "1").map(l => l.id);
+  return [...new Set([...(runnerCfg?.lanes ?? []), ...host].map(Number))];
+}
+const readJson = f => JSON.parse(fs.readFileSync(f, "utf8"));
+const lanesJson = readJson(path.join(ROOT, "tools", "lanes", "lanes.json"));
+const runnerLanes = submitLanes(readJson(path.join(HERE, "runner.json")), lanesJson);
 export const TWO_BROWSER = /phase\s*===?\s*["']player|case\s+["']player/;
 
 /** Problems with the gates a job names. */
@@ -54,7 +64,7 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
   const pos = args.slice(1).filter((a, i, all) => !a.startsWith("--") && !(i > 0 && all[i - 1].startsWith("--") && valued.has(all[i - 1].slice(2))));
   const num = k => opt(k) === undefined ? undefined : Number(opt(k));
   const raw = {kind, ref: opt("ref"), prio: num("prio"), thread: opt("thread"), after: num("after"), lane: num("lane"), lanes: num("lanes")};
-  if ( kind === "gates" ) Object.assign(raw, {gates: pos, touched: args.includes("--touched") || undefined, all: args.includes("--all") || undefined, reset: args.includes("--reset") || undefined});
+  if ( kind === "gates" ) Object.assign(raw, {gates: pos, touched: args.includes("--touched") || undefined, all: args.includes("--all") || undefined, reset: args.includes("--no-reset") ? false : undefined});
   if ( kind === "gate-two" ) raw.gate = pos[0];
   if ( kind === "books-find" ) Object.assign(raw, {terms: pos, book: opt("book")});
   if ( kind === "setup-lane" && args.includes("--again") ) raw.again = true;
@@ -62,6 +72,10 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
   for ( const k of Object.keys(raw) ) if ( raw[k] === undefined ) delete raw[k];
   const v = validate(raw, runnerLanes);
   if ( v.error ) { console.error(`Not queued: ${v.error}`); process.exit(1); }
+  // B6887: a small-jobs lane (lane 7) refuses touched, every-gate and large runs; the main PC's lanes take those.
+  const named = v.job.lane !== undefined ? lanesJson?.lanes?.find(l => String(l.id) === String(v.job.lane)) : null;
+  const refused = laneRefuses(named, v.job);
+  if ( refused ) { console.error(`Not queued: ${refused}. Leave out --lane so the main PC's lanes take it.`); process.exit(1); }
   const problems = await preflight(v.job);
   if ( problems.length ) { console.error(`Not queued; fix these first:\n  ${problems.join("\n  ")}`); process.exit(1); }
   const job = Object.fromEntries(Object.entries(raw).filter(([k]) => k !== "lanes" || v.job.lanes > 1));

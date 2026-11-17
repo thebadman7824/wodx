@@ -19,13 +19,30 @@ const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.ge
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const api = () => game.modules.get(MOD).api;
 const actorOf = x => (x?.actor ?? (typeof x === "string" ? game.actors.get(x) : x?.id ? game.actors.get(x.id) ?? x : null));
-const yearNow = () => getEngine().timeToDate(Number(game.time.worldTime) || 0).year;
+// B6948: before the clock is set, the year is the chronicle's saved opening year, not the calendar's 1197
+const openingYear = () => { try { return !game.settings.get("wodx-chronicle", "openingSet") && !Number(game.time.worldTime) ? Number(game.settings.get("wodx-chronicle", "openingYear")) || 0 : 0; } catch (e) { return 0; } };
+const yearNow = () => openingYear() || getEngine().timeToDate(Number(game.time.worldTime) || 0).year;
 const homeland = () => { try { return chron()?.world?.homeland?.() || "moravia"; } catch (e) { return "moravia"; } };
 const sphereOf = (region, year) => { try { return chron()?.world?.rules?.sphereFor?.(region, year) ?? "latin"; } catch (e) { return "latin"; } };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 
 export function registerSettings() {
   game.settings.register(MOD, "feuds", {scope: "world", config: false, type: Array, default: []});
+}
+
+/**
+ * B6758 (final audit): deeds done in public count, not only a rescue. A threat made openly and won (WoDX Actions'
+ * "Threaten openly") is a public deed that lowers standing by one; a sermon that moved its hearers is in cults.mjs.
+ * The acts and their weights are house figures.
+ */
+export const PUBLIC_ACTS = {threaten: {delta: -1, text: name => `threatened ${name} openly`}};
+export function listenDeeds() {
+  Hooks.on("wodxSocial", p => {
+    const act = PUBLIC_ACTS[p?.act];
+    if ( !act || p?.result !== "win" || !game.user.isGM || game.users.activeGM?.id !== game.user.id ) return;
+    const a = actorOf(p.actor), who = p.npc?.name ?? actorOf(p.npc)?.name ?? "someone";
+    if ( a ) deed(a, {community: "town", delta: act.delta, text: act.text(who)}).catch(e => console.error(`${MOD} | standing`, e));
+  });
 }
 
 /* ---- Standing ---- */

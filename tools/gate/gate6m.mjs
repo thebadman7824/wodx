@@ -56,6 +56,10 @@ export async function run() {
     console.error = (...a) => { R.errors.push(a.map(x => x?.stack ? String(x.stack).split("\n").slice(0, 4).join(" | ") : String(x)).join(" ")); origErr.apply(console, a); };
     const voices = game.settings.get(MOD, "voicesOn");
     if (voices) await game.settings.set(MOD, "voicesOn", false);
+    // B6736: the steps test Mage 20th rules, so the gate sets them itself: with Consensus by era on, a clock an earlier
+    // gate left in 1450-1699 puts the mage under the Sorcerers Crusade, where Paradox is cleared by meditation, not time
+    const byEra = game.settings.get(MOD, "consensusEra");
+    if (byEra) await game.settings.set(MOD, "consensusEra", false);
     let mg;
     try {
         await step("versions; Arete, the Spheres, Quintessence, Paradox and the Avatar are read", async () => {
@@ -76,7 +80,9 @@ export async function run() {
             let opts = [];
             answer(root => { opts = [...root.querySelectorAll("select[name=s-mind] option")].map(o => o.value); return "cancel"; });
             A().m20Cast({ actor: mg }); await sleep(1500);
-            ok("a Sphere past the sheet is refused", opts.join() === "0,1" && game.messages.size === n0, { opts });
+            // B6736: no casting card from this mage (other systems may post their own cards meanwhile)
+            const cast = game.messages.contents.slice(n0).filter(m => m.speaker?.actor === mg.id && /works magick/.test(text(m)));
+            ok("a Sphere past the sheet is refused", opts.join() === "0,1" && !cast.length, { opts, newCards: game.messages.contents.slice(n0).map(m => text(m).slice(0, 80)) });
         });
         await step("the Storyteller's backlash roll of the Paradox pool", async () => {
             await mg.update({ "system.paradox.temporary": 6 });
@@ -95,7 +101,7 @@ export async function run() {
         });
         await step("Paradox under five fades a point a week without magick", async () => {
             await mg.update({ "system.paradox.temporary": 3 });
-            await mg.setFlag(MOD, "m20", { lastMagick: game.time.worldTime - 15 * 86400 });
+            await mg.setFlag(MOD, "m20", { lastMagick: game.time.worldTime - 15 * 86400, lastShed: 0 });
             await A().m20Shed();
             ok("Paradox under five fades a point a week without magick", P(mg) === 1, { paradox: P(mg) });
         });
@@ -103,6 +109,7 @@ export async function run() {
         Hooks.off("renderDialogV2", hook);
         console.error = origErr;
         if (voices) await game.settings.set(MOD, "voicesOn", true);
+        if (byEra) await game.settings.set(MOD, "consensusEra", true);
         if (mg) { await mg.update(base); await mg.unsetFlag(MOD, "m20"); }
     }
     R.finished = new Date().toISOString();

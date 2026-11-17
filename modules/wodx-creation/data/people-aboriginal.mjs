@@ -1,7 +1,7 @@
 /**
  * Aboriginal Australians for the People generator (Creation, B4680 to B4683): the many nations of the continent and
  * of Lutruwita (Tasmania), on their country long before 1197. WoDX's own lists of recorded names; no book text. Picks
- * logged in docs/PENDING-REVIEW.md for Ben.
+ * logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the colonial journals wrote them): the people of Sydney Cove and the Hawkesbury in the
  * journals of Phillip, Tench, Collins and Dawes (1788 to 1792); the leaders of the frontier wars and of the

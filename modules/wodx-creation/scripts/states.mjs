@@ -5,7 +5,7 @@
  * the East). Each makes a new sheet of the line's type from the old one, carries the Traits
  * over by house rule, keeps the old sheet as a record and links the two, as the Embrace and the First Change do.
  */
-import {MODULE_ID, esc, lineOf, lineage, disciplineItem, disciplinesOf, keepLifepath} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, lineage, disciplineItem, disciplinesOf, keepLifepath, vampireEra} from "./actor-data.mjs";
 import {setLineage, setChronology, writeLineageJournal, dateLabel, handOver} from "./lineage.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "./totals-rules.mjs";
@@ -271,7 +271,7 @@ export const canBeRevenant = actor => canChange(actor) && !actor.getFlag?.(MODUL
 export async function revenantBirth(mortal, {family, way = "standard", picks = [], time = game.time.worldTime} = {}) {
   if ( !game.user.isGM ) return null;
   if ( !canBeRevenant(mortal) ) throw new Error(`${mortal?.name} is not a mortal who can be a revenant`);
-  const st = SR.revenantStart({family, way, picks});
+  const st = SR.revenantStart({family, way, picks, era: vampireEra()});
   if ( !st.family ) throw new Error("Pick a revenant family");
   await mortal.update({
     "system.settings.variant": "ghoul",

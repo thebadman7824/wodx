@@ -22,6 +22,8 @@
  *   the fallen   a companion carries the player's character when it goes down, and anyone else the panel names
  *                (companions.mjs, B5079)
  *   the world    the oracle, the Leads page and night encounters on the map, step 3 (world.mjs, B5980 to B5985)
+ *   report       Report a problem: a fault met in play saved as a journal entry with the build, the scene and the
+ *                last console errors, for the feature registry (report.mjs, B7160 to B7163)
  *   fate         the Beast played by the game, torpor and the years slept through, death and heirs, step 5
  *                (fate.mjs, B6530 to B6536)
  *
@@ -38,6 +40,7 @@ import {registerWorldSettings, installWorld, worldApi} from "./world.mjs";
 import {installCard, cardApi} from "./card.mjs";
 import {registerDirectorSettings, installDirector, directorApi} from "./director.mjs";
 import {installFate, fateApi} from "./fate.mjs";
+import {installReport, reportApi} from "./report.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -282,7 +285,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi, carry: carryApi, world: worldApi, card: cardApi, director: directorApi, fate: fateApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi, carry: carryApi, world: worldApi, card: cardApi, director: directorApi, fate: fateApi, report: reportApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -304,6 +307,7 @@ Hooks.once("ready", () => {
   installCard({isOn, isSeat, log, get});
   installDirector({isOn, isSeat, log, get});
   installFate({isOn, isSeat, log, get});
+  installReport({isOn, isSeat, log, get});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;

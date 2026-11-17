@@ -67,4 +67,4 @@ export const ORDER = [1, 5, 2, 3, 9, 6, 7, 8, 11, 13, 15, 16, 17, 18, 19, 20, 21
 export const LAST_CHAPTER = "c9";
 /** Book one's chapters in order (saga-rothenstein.mjs). */
 export const CHAPTERS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10"];
-/** One twist a week of game time (Ben, 2026-11-14). */
+/** One twist a week of game time (the owner, 2026-11-14). */

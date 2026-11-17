@@ -11,8 +11,9 @@
  * Book check, 15 November 2026 (B6443), against the private text dumps: every total and cost below was read again on
  * the pages cited for V20, V20 Dark Ages, W20, Werewolf: The Dark Ages, M20, Mage: The Dark Ages, Wraith 20, C20,
  * Dark Ages: Fae, Hunter, Demon, Kindred of the East, Mummy and Orpheus, and all held. The check added the cost rows the
- * table had left out (see the lines marked B6443). Ghouls and Revenants and Dark Ages: Inquisitor have no usable text
- * dump, so their figures stand on the earlier research notes alone.
+ * table had left out (see the lines marked B6443). Ghouls and Revenants have no usable text dump, so their figures
+ * stand on the earlier research notes alone. B6949: Dark Ages: Inquisitor was re-read from the new OCR (pdf 148-151):
+ * every figure stood, and the Holy Art cost and starting Piety were added.
  */
 export const TOTALS = {
   v20: {
@@ -121,8 +122,8 @@ export const TOTALS = {
     label: "Dark Ages: Inquisitor", short: "Inquisitor", sheet: "Mortal", ref: "DA:I pdf 148–150 / printed 147–149",
     attributes: [6, 4, 3], abilities: [11, 7, 4], abilityCap: 3, backgrounds: 5,
     powers: [], virtues: 7, freebies: 21, flaws: 7,
-    costs: {attribute: 5, ability: 2, background: 1, virtue: 2, willpower: 1, piety: 1},
-    start: ["Theology 1 at least", "One dot of the order's Superior Virtue", "Conviction = Superior Virtue + its Virtue", "Willpower = Courage + Zeal"],
+    costs: {attribute: 5, ability: 2, background: 1, virtue: 2, willpower: 1, piety: 1, holyArt: 5},
+    start: ["Theology 1 at least", "One dot of the order's Superior Virtue", "Conviction = Superior Virtue + its Virtue", "Willpower = Courage + Zeal", "Piety = Conscience + Self-Control"],
     costRef: "pdf 148 / printed 147"
   },
   htr: {

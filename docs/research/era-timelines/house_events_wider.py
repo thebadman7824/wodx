@@ -1,4 +1,4 @@
-"""Round 2 of the house-only events (Ben, 2026-11-12 02:05Z): Europe, the Middle East and Asia beyond Moravia,
+"""Round 2 of the house-only events (the owner, 2026-11-12 02:05Z): Europe, the Middle East and Asia beyond Moravia,
 and what happened to the books' named characters, placed in those events (02:06Z).
 Same tuple as round 1, plus a region: (id, year, kind, line, title, text, ref, fits, region).
 kind 'named': the character and what happened come from the book named in ref; the year is WoDX's reading."""

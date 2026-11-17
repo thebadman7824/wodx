@@ -1,5 +1,5 @@
 /**
- * Ben's notes gaps g1, g2, g3, g5, g6 (B3520-B3539), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * The owner's notes gaps g1, g2, g3, g5, g6 (B3520-B3539), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gategaps.mjs?${Date.now()}`)).run()
  * Makes actors "WoDX gate gaps: ..." and deletes them, every chat card and queue card it made, after.
  * The clock does not move; leverState and hunterState are put back.

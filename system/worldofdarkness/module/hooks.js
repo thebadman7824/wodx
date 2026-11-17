@@ -63,15 +63,13 @@ export function registerHooks(constants, isTablet) {
 	 * Displays a notification to the receiving player when an item is shared via copyFile flag.
 	 */
 	Hooks.on('createItem', async (item, options, userId) => {
-		if (item.flags?.copyFile !== undefined) {
-			if (item.flags?.copyFile?.receivedPlayer !== game.user.id) {
-				const text = game.i18n.localize("wod.info.droprecieved");
-				text = text.replace("{1}", item.name);
-				text = text.replace("{2}", item.flags?.copyFile?.receivedName);
-				
-				ui.notifications.info(text); 
-			}
-		}
+		// WoDX fork (B6721): the text was a const reassigned (a TypeError on every other client), and the giver's user id
+		// (receivedPlayer) was read as the receiver's. The note now shows to the other owners of the actor that got it.
+		const copy = item.flags?.copyFile;
+		if (copy === undefined || copy.receivedPlayer === game.user.id) return;
+		if (!item.parent?.isOwner || (game.user.isGM && item.parent.hasPlayerOwner)) return;
+		const text = game.i18n.localize("wod.info.droprecieved").replace("{1}", item.name).replace("{2}", copy.receivedName ?? "");
+		ui.notifications.info(text);
 	});
 
 	/**
@@ -509,7 +507,8 @@ export function registerHooks(constants, isTablet) {
 	 * Applies dark mode theme class to WoD dialogs (wod-dialog, wod-create classes).
 	 */
 	Hooks.on("renderDialog", (_dialog, html, _data) => {
-		const container = html[0];
+		const container = html instanceof HTMLElement ? html : html?.[0];	// WoDX fork (B6722): jQuery or the element
+		if (!container) return;
 		CONFIG.worldofdarkness.darkmode = game.settings.get('core', 'uiConfig').colorScheme.applications === "dark";
 
 		if (container.classList.contains("dialog")) {

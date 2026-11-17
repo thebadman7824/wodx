@@ -85,7 +85,9 @@ test("compendium LevelDB files are left out; other pack files still count", () =
 
 test("lanes.json ignores the settings that change on their own", () => {
   const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
-  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
+  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady",
+    // B7200: the effects modules' migration markers, the cause of every exit-4 lane reset on 16 and 17 November
+    "fxmaster.parameterRangeMigrationVersion", "fxmaster.parameterRangePassiveMigrationVersion", "fxmaster.directionConventionPassiveMigrationVersion", "tokenmagic.migration"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
 });
 
 test("the hash cache gives the same answer and sees edits", () => {
@@ -187,6 +189,10 @@ test("the picker takes the first lane that is up and free", async () => {
   assert.equal(await pick([1, 2, 3], [1, 2, 3]), null);
   assert.equal(await pick([4], []), null, "a disabled lane is never picked");
   assert.equal((await pick([1, 2, 3], [], ["3"])).id, 3);
+  // B6527: a reserved lane is taken only when named
+  lanes.push({id: 6, reserved: "local-agents"});
+  assert.equal(await pick([6], []), null, "a reserved lane is not picked unasked");
+  assert.equal((await pick([6], [], ["6"])).id, 6);
 });
 
 test("lane tools never name the Live world and keep backups", () => {
@@ -197,4 +203,142 @@ test("lane tools never name the Live world and keep backups", () => {
   const m = fs.readFileSync(path.join(root, "tools/lanes/lanes.mjs"), "utf8");
   assert.match(m, /case "reset":[\s\S]*backup\(worldDir\(lane\)/, "reset backs the world up before copying");
   assert.match(m, /allow-lane-1/, "lane 1 reset needs an explicit flag");
+});
+
+test("B6775: sign-in waits for the WoDX apis that start after game.ready", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  assert.ok(B.LATE_APIS.includes("wodx-creation"), "creation is waited for");
+  const mods = new Map([["wodx-chronicle", {active: true, api: {}}], ["wodx-creation", {active: true}], ["wodx-npc", {active: false}]]);
+  const had = globalThis.game;
+  globalThis.game = {modules: mods};
+  try {
+    assert.equal(B.apisReady(B.LATE_APIS), false, "creation without its api is not ready");
+    mods.get("wodx-creation").api = {people: {}};
+    assert.equal(B.apisReady(B.LATE_APIS), true, "an inactive module is not waited for");
+  } finally { globalThis.game = had; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8");
+  assert.match(src, /waitForFunction\(apisReady, LATE_APIS/, "openGM waits for them");
+});
+
+test("lanes on the second PC are seen only there, with its own paths (B6880)", () => {
+  const was = process.env.WODX_HOST;
+  try {
+    process.env.WODX_HOST = "desktop-s6nv3q9";
+    const two = L.loadConfig();
+    assert.deepEqual(two.lanes.map(l => l.id), [7]);
+    assert.equal(two.foundryMain, "C:/WoDX/Foundry/resources/app/main.js");
+    assert.ok(two.allLaneIds.includes("7") && two.allLaneIds.includes("2"));
+    process.env.WODX_HOST = "benjamin-pc";
+    const three = L.loadConfig();
+    assert.deepEqual(three.lanes.map(l => l.id), [8], "the Secondary PC sees lane 8 only (B6990)");
+    assert.equal(three.foundryMain, "D:/WoDX/Foundry/resources/app/main.js");
+    assert.ok(three.allLaneIds.includes("8") && three.allLaneIds.includes("7"));
+    process.env.WODX_HOST = "desktop-mrkcmrg";
+    const main = L.loadConfig();
+    assert.ok(!main.lanes.some(l => l.host));
+    assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
+    assert.match(main.foundryMain, /^G:/);
+  } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
+});
+
+test("before each gate the runner looks for the WoDX apis again and names the missing ones (B6960)", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  const mods = new Map([["wodx-chronicle", {active: true, api: {}}], ["wodx-creation", {active: true}], ["wodx-npc", {active: false}]]);
+  const was = globalThis.game;
+  globalThis.game = {modules: {get: id => mods.get(id)}};
+  try {
+    assert.deepEqual(B.apisMissing(["wodx-chronicle", "wodx-creation", "wodx-npc"]), ["wodx-creation"], "an active module without its api; an inactive one is not waited for");
+    const page = {waitForFunction: async (fn, ids) => { if ( !fn(ids) ) throw new Error("timeout"); }, evaluate: async (fn, ids) => fn(ids)};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 10), ["wodx-creation"]);
+    mods.get("wodx-creation").api = {};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 10), []);
+  } finally { globalThis.game = was; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
+});
+
+test("lane 7 on the Laptop takes only small named-gate jobs (B6887)", () => {
+  const cfg = JSON.parse(fs.readFileSync(path.join(root, "tools/lanes/lanes.json"), "utf8"));
+  const seven = cfg.lanes.find(l => String(l.id) === "7"), two = cfg.lanes.find(l => String(l.id) === "2");
+  assert.ok(seven.maxGates > 0, "lane 7 has a gate limit");
+  assert.ok(L.laneRefuses(seven, {kind: "gates", touched: true, gates: []}), "touched run refused");
+  assert.ok(L.laneRefuses(seven, {kind: "gates", all: true, gates: []}), "every-gate run refused");
+  assert.ok(L.laneRefuses(seven, {kind: "gates", gates: Array.from({length: seven.maxGates + 1}, (_, i) => `gate${i}`)}), "too many gates refused");
+  assert.equal(L.laneRefuses(seven, {kind: "gates", gates: ["gateplains", "gatelifepath"]}), null);
+  assert.equal(L.laneRefuses(seven, {kind: "gate-two", gate: "gateplayerload"}), null);
+  assert.equal(L.laneRefuses(seven, {kind: "setup-lane", lane: 7}), null);
+  assert.equal(L.laneRefuses(two, {kind: "gates", touched: true, gates: []}), null, "main PC lanes keep taking any run");
+  const runner = fs.readFileSync(path.join(root, "tools/pcq/runner.mjs"), "utf8"), submit = fs.readFileSync(path.join(root, "tools/pcq/submit.mjs"), "utf8");
+  assert.ok(runner.includes("!laneRefuses(laneOf(l), q.job)") && submit.includes("laneRefuses(named, v.job)"), "runner and submit both check it");
+});
+
+test("B7181: flagPlan puts back the flags a gate changed on documents that were there before it", async () => {
+  const {flagPlan} = await import("../lanes/lib.mjs");
+  const before = {
+    "Actor.a": {"wodx-npc": {haven: "Scene.x", mood: 1}, core: {sheetClass: "s"}},
+    "Scene.x": {},
+    "Actor.same": {"wodx-npc": {k: 1}},
+    "Actor.gone": {"wodx-npc": {k: 1}}
+  };
+  const after = {
+    "Actor.a": {"wodx-npc": {haven: "Scene.gate", mood: 1, learned: ["dodge"]}, core: {sheetClass: "s"}},
+    "Scene.x": {"wodx-chronicle": {domain: "gate"}},
+    "Actor.same": {"wodx-npc": {k: 1}},
+    "Actor.new": {"wodx-npc": {k: 2}}
+  };
+  const plan = flagPlan(before, after);
+  assert.deepEqual(plan, [
+    {uuid: "Actor.a", unset: [["wodx-npc", "haven"], ["wodx-npc", "learned"]], set: [["wodx-npc", "haven", "Scene.x"]]},
+    {uuid: "Scene.x", unset: [["wodx-chronicle", "domain"]], set: []}
+  ], "changed keys are unset then set back, added keys unset; unchanged, deleted and new documents are left alone");
+  const deep = flagPlan({"A.b": {m: {o: {x: 1}}}}, {"A.b": {m: {o: {x: 1, y: 2}}}});
+  assert.deepEqual(deep, [{uuid: "A.b", unset: [["m", "o"]], set: [["m", "o", {x: 1}]]}], "an object value is replaced whole, so no merged key stays");
+  assert.deepEqual(flagPlan({}, {}), []);
+});
+
+test("B7192: sheetPlan puts back the sheet data, effects and items a gate changed on shared actors", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const frenzy = {_id: "e1", name: "Frenzy", statuses: ["frenzy"]}, old = {_id: "e0", name: "Blessed", statuses: []};
+  const before = {
+    "Actor.a": {system: {conditions: {isfrenzy: false}, blood: 10}, effects: {e0: old}, items: ["i1"]},
+    "Actor.a.Item.i1": {system: {clip: 6}},
+    "Actor.same": {system: {blood: 3}, effects: {}, items: []},
+    "Actor.gone": {system: {}, effects: {}, items: []}
+  };
+  const after = {
+    "Actor.a": {system: {conditions: {isfrenzy: true}, blood: 7}, effects: {e1: frenzy}, items: ["i1", "i2"]},
+    "Actor.a.Item.i1": {system: {clip: 0}},
+    "Actor.same": {system: {blood: 3}, effects: {}, items: []},
+    "Actor.new": {system: {blood: 1}, effects: {}, items: []}
+  };
+  assert.deepEqual(sheetPlan(before, after), [
+    {uuid: "Actor.a", system: {conditions: {isfrenzy: false}, blood: 10}, dropEffects: ["e1"], addEffects: [old], dropItems: ["i2"]},
+    {uuid: "Actor.a.Item.i1", system: {clip: 6}}
+  ], "changed system data comes back whole, added effects and items go, removed effects return; unchanged, deleted and new documents are left alone");
+  const edited = sheetPlan({"Actor.b": {system: {}, effects: {e0: old}, items: []}}, {"Actor.b": {system: {}, effects: {e0: {...old, name: "x"}}, items: []}});
+  assert.deepEqual(edited, [{uuid: "Actor.b", dropEffects: ["e0"], addEffects: [old]}], "an edited effect is replaced by its old self");
+  assert.deepEqual(sheetPlan({}, {}), []);
+});
+
+test("B7192: run-gate reads sheets before each gate and puts them back before the flags", () => {
+  const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
+  assert.match(src, /const sheetsBefore = lane\.autoReset \? await page\.evaluate\(READ_SHEETS\)/);
+  assert.ok(src.indexOf("PUT_SHEETS_BACK, sheetPlan") < src.indexOf("PUT_FLAGS_BACK, flagPlan"), "sheets go back before flags");
+});
+
+test("B7193: sheetPlan removes what a gate placed on a scene that was there before it", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const before = {"Scene.s": {kids: {Region: ["r1"], Token: ["t1"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}};
+  const after = {"Scene.s": {kids: {Region: ["r1", "chapel"], Token: ["t1", "t2"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}, "Scene.new": {kids: {Region: ["x"]}}};
+  assert.deepEqual(sheetPlan(before, after), [{uuid: "Scene.s", dropKids: {Region: ["chapel"], Token: ["t2"]}}]);
+});
+
+test("B7200: a migration marker written after the clean fingerprint is not drift", () => {
+  const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
+  const raw = settings => ({world: "w", core: "14.369", system: {id: "worldofdarkness", version: "1"}, modules: {fxmaster: "6"}, settings, docs: {}, worldTime: 0});
+  const clean = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "1"}), cfg.ignoreSettings);
+  const now = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "1", "fxmaster.parameterRangeMigrationVersion": "\"6.0\"", "tokenmagic.migration": "2"}), cfg.ignoreSettings);
+  assert.deepEqual(L.diffWorld(clean, now).strict, []);
+  const real = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "2"}), cfg.ignoreSettings);
+  assert.deepEqual(L.diffWorld(clean, real).strict.map(d => d.where), ["setting wodx-chronicle.automationLevel"], "a real setting change still stops the run");
 });

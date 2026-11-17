@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Changeling faces (13 November 2026, B3046). Ben: 50 for any changeling, 15 per kith and court. The
+ * WoDX Paperdoll: Changeling faces (13 November 2026, B3046). The owner: 50 for any changeling, 15 per kith and court. The
  * fae mien is what the Enchanted see; these add the small marks of a kith, a court and the Dreaming, in our own words,
  * with the rest invented to fit. Each kith's whole look (face64-features.mjs) still always shows.
  */

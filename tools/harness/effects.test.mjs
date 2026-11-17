@@ -111,6 +111,11 @@ test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
   assert.equal(a.area, true); assert.equal(a.strength, 4);
   const short = E.spend(4, 3, {area: true});
   assert.equal(short.area, false); assert.deepEqual(short.dropped, ["the area"]);
+  // B6901: a ticked area with no keyword that can be one costs nothing, as needFor counts it
+  const mend = E.spend(4, 2, {area: true}, ["mend"]);
+  assert.equal(mend.area, false); assert.equal(mend.strength, 4); assert.deepEqual(mend.dropped, []);
+  assert.equal(E.spend(6, 3, {area: true}, ["harm"]).area, true);
+  assert.match(src("modules/wodx-actions/scripts/effects.js"), /E\.spend\(successes, base, form\.plan, form\.keywords\)/);
   assert.equal(E.outcome("harm", a, {spheres: ["forces"]}).area, E.AREA.feet);
   assert.equal(E.outcome("mend", a).area, undefined);
   assert.equal(E.areaRadius({size: 100, distance: 5}), 300);
@@ -189,7 +194,7 @@ test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it 
   assert.deepEqual(D.daOutcomes(by("g-antics"), 3)[0].out.timed, {kind: "rounds", rounds: 6});
   assert.equal(D.daOutcomes(by("g-skogarmathur"), 2)[0].out.timed.seconds, 14 * 86400);
   assert.equal(D.daOutcomes(by("g-battlesmite"), 2)[0].out.condition, "blinded");
-  assert.equal(D.daOutcomes(by("g-summoning"), 4)[0].st, true);
+  assert.equal(D.daOutcomes(by("g-summoning"), 4)[0].out.kind, "summon", "the djinn is called onto the map (B6856)");
   assert.equal(D.daOutcomes(by("g-72names"), 4)[0].out.kind, "summon", "the golem is called onto the map (B6016)");
   assert.deepEqual(D.daOutcomes(by("verdantslumber"), 0), []);
   assert.deepEqual([D.targetCount("self", 3, 2), D.targetCount("one", 3, 2), D.targetCount("each", 3, 5), D.targetCount("each", 3, 2), D.targetCount("all", 1, 4)], [0, 1, 3, 2, 4]);
@@ -202,7 +207,8 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   const disc = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8")).powers;
   const paths = disc.filter(p => PE.isPath(p.d));
   assert.equal(paths.length, 70);
-  for ( const id of Object.keys(PE.PATH_EFFECTS) ) assert.ok(paths.some(p => p.id === id), `no path power ${id}`);
+  // B6855: a few Dark Ages Discipline powers outside the paths take a spec here too
+  for ( const id of Object.keys(PE.PATH_EFFECTS) ) assert.ok(disc.some(p => p.id === id), `no power ${id}`);
   for ( const p of paths ) {
     const o = PE.pathOutcomes(p, 2);
     assert.ok(o.length >= 1, p.id);
@@ -218,11 +224,11 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.deepEqual([heal.kind, heal.levels, heal.aggravated], ["heal", 3, true]);
   assert.deepEqual(PE.numinaOutcomes("telekinesis", 2, 4, H.NUMINA.telekinesis).map(o => [o.out.levels, o.out.type, o.ask]), [[2, "bashing", true]]);
   assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
-  assert.equal(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses)[0].st, true);
-  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 70);
-  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 38);
+  assert.deepEqual(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses).map(o => [o.out.shift, o.out.duration]), [[2, "one scene"]]); // B6858: a standing curse
+  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 73); // B6855: three Discipline powers outside the paths
+  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 11); // B6738, B6855: the rest now apply or are story (PATH_STORY)
   const by = id => paths.find(p => p.id.endsWith(id));
-  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3)[0].st, true);
+  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3).map(o => o.out.pool), ["blood", "blood"]); // B6855
   assert.deepEqual(PE.pathOutcomes(by("dust-to-dust"), 3).map(o => [o.out.levels, o.out.type, o.out.soak]), [[3, "aggravated", false]]);
   assert.deepEqual(PE.pathOutcomes(by("ashen-ladys-embrace"), 4).map(o => [o.out.levels, o.ask]), [[2, true]]);
   assert.deepEqual(PE.pathOutcomes(by("benedictio-mortem"), 3)[0].out.timed, {kind: "rounds", rounds: 3});
@@ -346,6 +352,11 @@ test("Actions 3.31.0: the Storyteller's effect and saved rituals", () => {
   assert.equal(r.takes, "one hour");
   const list = E.keepRitual(E.keepRitual([], r), {...r, strength: 5});
   assert.equal(list.length, 1); assert.equal(list[0].strength, 5);
+  // B6900: rituals are kept to RITUALS_MAX, not cut to the rotes' 40 first
+  let many = [];
+  for ( let i = 0; i < 50; i++ ) many = E.keepRitual(many, {...r, name: `Rite ${String(i).padStart(2, "0")}`});
+  assert.equal(many.length, 50); assert.ok(E.RITUALS_MAX > E.ROTES_MAX);
+  assert.equal(E.keepRote(many, {...r, name: "Zzz"}).length, E.ROTES_MAX);
   // The window, its toolbar button, Summon and Make on the sheet, and Undo for what they made
   const fx = src("modules/wodx-actions/scripts/effects.js");
   assert.match(fx, /export async function storytellerEffect\(/); assert.match(fx, /tokens\.tools\.wodxStEffect/);

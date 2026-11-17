@@ -18,8 +18,9 @@ import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
 import * as TR from "./turn-rules.js";
 import * as TURN from "./turns.js";
+import * as HR from "./hunter-rules.js";
 import * as LIM from "./limits.js";
-import { ask } from "./profiles.js";
+import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -194,7 +195,7 @@ export function targetsOf(actor, uuids = null) {
 export function plan(actor, form, successes, {used = [], witnessed = false, feat = 0, targets = null, age = "ascension"} = {}) {
   const t = targetsOf(actor, targets);
   const base = E.needFor(form.keywords, {self: t.self, feat});
-  const got = E.spend(successes, base, form.plan);
+  const got = E.spend(successes, base, form.plan, form.keywords);
   const spheres = used.map(x => x.sphere);
   const items = [];
   const docs = t.docs.slice(0, 1 + got.targets);
@@ -366,7 +367,7 @@ export function planOf(actor, results, successes, power = null) {
       // plain being of the book's kind comes beside the NPC, and the Storyteller can dismiss it or Undo the card
       if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
       const rs = !self && r.key !== "summon" ? (r.out?.resist === null ? null : E.resistOf(r.key, r.out?.resist ? {resist: r.out.resist} : null)) : null;
-      const out = rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out;
+      const out = chargeOut(a, rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out);
       items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {}),
         // B4925, B4928: the power and its user, for a won resistance's bar (Compel Soul) and the resist card's breakdown
         ...(power?.name ? {power: power.name, by: actor?.uuid ?? null, successes: n(successes)} : {})});
@@ -378,6 +379,15 @@ export function planOf(actor, results, successes, power = null) {
   const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">${i.golconda ? "It does not take hold." : `It ${word[i.route]}.`}</span></li>`).join("")}</ul></div>`;
   return {items, html};
+}
+
+/** B6730: the pool a plain Charge or Drain moves on this target, said on the card: Quintessence for a mage, else the line's own. */
+export function chargeOut(a, out) {
+  if ( out?.kind !== "quint" || !a ) return out;
+  const pk = E.chargePoolFor(detectProfile(a), a.system, {kote: a.type === "Vampire" && a.system?.settings?.variant === "kindredeast"});
+  if ( pk === "quintessence" ) return out;
+  const p = n(out.points), P = E.poolOf(pk);
+  return {...out, kind: "pool", pool: pk, text: `${Math.abs(p)} ${P.label} ${p < 0 ? "drawn out" : "given"}`};
 }
 
 /** The card's list, written from its flags (so countermagick can change it). */
@@ -486,6 +496,18 @@ async function moodAfter(item, casterName) {
   return {npc: npc.id, char: caster.id, before, met};
 }
 
+/** B6858: does this actor's True Faith stop a power with this keyword? */
+function faithShields(a, key) {
+  try {
+    if ( detectProfile(a) === "demon" ) return false;
+    const f = a.system?.advantages?.faith;
+    const rating = Number(a.getFlag?.(MOD, "trueFaith")) || (a.type === "Mortal" || detectProfile(a) === "hunter" ? Number(f?.permanent ?? f?.value) || 0 : 0);
+    if ( rating < 3 ) return false;
+    let era = null;
+    try { era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { era = null; }
+    return HR.faithStops(HR.faithRules(era), rating, key);
+  } catch (e) { return false; }
+}
 async function applyCore(item, casterName = "the caster") {
   // item is reassigned when the Storyteller picks a spot (Summon, Move)
   const d = docOf(item.target), a = actorOf(d), o = item.out;
@@ -493,6 +515,8 @@ async function applyCore(item, casterName = "the caster") {
   if ( ACT.KINDS.has(o?.kind) ) return ACT.apply(item, casterName, {docOf, actorOf, tokenOf, pickPoint, choose});
   if ( !a && !["summon", "weather"].includes(o?.kind) ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
+  // B6858: True Faith 3 and 4 stop the powers that cloud or bend the faithful's mind (a demon's Faith is not True Faith)
+  if ( a && o?.key && faithShields(a, o.key) ) return {note: `${a.name}: their True Faith stops ${o.label ?? "the power"}`};
   const health = foundry.utils.deepClone(a?.system?.health?.damage ?? {});
   switch ( o.kind ) {
     case "damage":
@@ -508,21 +532,27 @@ async function applyCore(item, casterName = "the caster") {
       if ( !C ) return {note: "WoDX Combat is off: heal by hand"};
       let left = o.levels;
       for ( const type of o.aggravated ? ["aggravated"] : ["lethal", "bashing"] ) {
+        // B6942: a heal that mends more bashing than lethal (Weep: two bashing a success) spends a success per bashingPer levels
+        const per = type === "bashing" ? Math.max(1, n(o.bashingPer) || 1) : 1;
         const has = n(a.system?.health?.damage?.[type]);
-        const take = Math.min(has, left);
-        if ( take > 0 ) { await C.healDamage(a, type, take); left -= take; }
+        const take = Math.min(has, left * per);
+        if ( take > 0 ) { await C.healDamage(a, type, take); left -= Math.ceil(take / per); }
       }
       await TURN.onHealed(a);
       return {uuid: a.uuid, health};
     }
     case "quint": {
+      // B6730: a sheet with no Quintessence takes the Charge in its own line's pool (blood, Gnosis, Pathos...)
+      const co = chargeOut(a, o);
+      if ( co !== o ) return applyCore({...item, out: co}, casterName);
       const q = n(a.system?.quintessence?.temporary);
       await a.update({"system.quintessence.temporary": Math.max(0, q + o.points)});
       return {uuid: a.uuid, quint: q};
     }
     case "timed": case "condition": {
       if ( !T?.applyTimed || !o.timed ) return {note: "WoDX Chronicle is off: note the effect by hand"};
-      const changes = [];
+      // B6858: a power that takes the pain of wounds away sets the sheet's ignoring-pain flag while it lasts (V20 p. 282)
+      const changes = o.painless ? [{key: "system.conditions.isignoringpain", mode: 5, value: "true"}] : [];
       const tok = tokenOf(d);
       const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, movementAction: tok.movementAction ?? null, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
       // B6000: the numbers a Ward, Boost, Blessing or Calm needs ride in the effect, so the dice read them (power-mods.js)
@@ -713,6 +743,17 @@ function possessFor(item, a, o) {
   const now = {...was};
   for ( const u of players ) now[u.id] = 3;
   return {was, now};
+}
+/** B6584: the illusion tiles a viewer's own characters have seen through (flag seenThrough: tile ids) are drawn faint for that viewer. */
+export function seesThrough(tileId, user = game.user) {
+  if ( !tileId || user?.isGM ) return false;
+  const mine = game.actors?.filter?.(a => a.testUserPermission?.(user, "OWNER")) ?? [];
+  return mine.some(a => (a.getFlag?.(MOD, "seenThrough") ?? []).includes(tileId));
+}
+function seenThroughLook(tile) {
+  const d = tile?.document;
+  if ( !d?.flags?.[MOD]?.illusion || !tile.mesh ) return;
+  if ( seesThrough(d.id) ) tile.mesh.alpha = 0.15;
 }
 /** B6013: the figure an Illusion puts on the map (a Tile), by the target or where the Storyteller clicks. Its uuid. */
 async function illusionTile(item, tok, casterName) {
@@ -1133,6 +1174,9 @@ export function setup() {
   Hooks.on("createChatMessage", msg => { onCard(msg).catch(e => console.error("WoDX | effects", e)); });
   Hooks.on("updateToken", (tok, change) => { onMove(tok, change).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); expireMade().catch(e => console.error("WoDX | made things", e)); });
+  // B6584: an illusion a character has seen through shows to that character's player as a faint outline
+  Hooks.on("refreshTile", tile => { try { seenThroughLook(tile); } catch (e) { /* drawing only */ } });
+  Hooks.on("updateActor", (a, change) => { if ( change?.flags?.[MOD]?.seenThrough !== undefined || change?.flags?.[MOD]?.["-=seenThrough"] !== undefined ) for ( const t of canvas?.tiles?.placeables ?? [] ) if ( t.document.flags?.[MOD]?.illusion ) t.renderFlags?.set?.({refresh: true}); });
   Hooks.on("deleteRegion", region => { dropGroundDrawing(region).catch(e => console.error("WoDX | ground drawing", e)); });
   Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); expireMade({sceneEnd: true}).catch(e => console.error("WoDX | made things", e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {

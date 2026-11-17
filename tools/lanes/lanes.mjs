@@ -11,7 +11,7 @@
  *   node tools/lanes/lanes.mjs reset    --lane 2 [--if-free]   backs the lane's world up, puts known-good back, restarts, accepts
  *   node tools/lanes/lanes.mjs accept   --lane 2          records the running world as the lane's clean fingerprint
  *   node tools/lanes/lanes.mjs compare                    differences between lanes (packages and clean worlds)
- * Lane 1 is the testbed Ben also plays in: reset and snapshot-over-it refuse lane 1 unless --allow-lane-1 is given.
+ * Lane 1 is the testbed the owner also plays in: reset and snapshot-over-it refuse lane 1 unless --allow-lane-1 is given.
  * Every overwrite is preceded by a dated copy in the backups folder; nothing in the backups folder is ever removed.
  * Runs at below-normal priority.
  */
@@ -20,7 +20,7 @@ import path from "node:path";
 import os from "node:os";
 import {spawn, spawnSync} from "node:child_process";
 import {loadConfig, getLane, laneDir, laneUrl, isUp, acquireLock, releaseLock, lockState, readJson, writeJson,
-  codeFingerprint, expectedCode, diffCode, diffPackages, hashTree, treeDigest, WORLD_PROBE, worldFingerprint, diffWorld,
+  codeFingerprint, expectedCode, diffCode, diffPackages, hashTree, treeDigest, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld,
   printDiffs, pidAlive, REPO} from "./lib.mjs";
 
 try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch { }
@@ -92,7 +92,7 @@ async function accept(lane) {
   const {openGM} = await import("./browser.mjs");
   const {browser, page} = await openGM(laneUrl(lane));
   try {
-    const now = worldFingerprint(await page.evaluate(WORLD_PROBE), cfg.ignoreSettings);
+    const now = await settledFingerprint(page, cfg.ignoreSettings);
     const old = readJson(path.join(laneDir(lane), "clean.json"));
     if ( old ) {
       const d = diffWorld(old, now);
@@ -155,7 +155,8 @@ try {
     }
     case "setup": {
       if ( String(lane.id) === "1" ) die("Lane 1 is the existing testbed; nothing to set up.");
-      const src = getLane(cfg, 1);
+      // B6880: a PC with no lane 1 (the second PC) sets lanes up from a copy of lane 1's Config and packages.
+      const src = cfg.setupFrom ? {dataPath: cfg.setupFrom} : getLane(cfg, 1);
       if ( fs.existsSync(worldDir(lane)) && !flag("again") ) die(`Lane ${lane.id} already has a world at ${worldDir(lane)}. Use reset, or --again.`);
       if ( !fs.existsSync(path.join(cfg.knownGood, cfg.world)) ) die(`No known-good copy at ${cfg.knownGood}. Stop lane 1 and run: lanes.mjs snapshot --from 1`);
       // --again on a lane in use: stop its Foundry first, or the world copy lands on an open database
@@ -170,7 +171,8 @@ try {
       writeJson(path.join(lane.dataPath, "Config", "options.json"), o);
       // Packages that are not WoDX's come from lane 1 as they are; WoDX's come from the repo.
       const wodx = new Set(fs.readdirSync(path.join(repo, "modules")));
-      for ( const kind of ["modules", "systems"] ) for ( const d of fs.readdirSync(path.join(src.dataPath, "Data", kind), {withFileTypes: true}) ) {
+      // B6883: a source with no packages of a kind (the second PC's lane1-copy has no other systems) is skipped.
+      for ( const kind of ["modules", "systems"] ) for ( const d of (fs.existsSync(path.join(src.dataPath, "Data", kind)) ? fs.readdirSync(path.join(src.dataPath, "Data", kind), {withFileTypes: true}) : []) ) {
         if ( !d.isDirectory() || wodx.has(d.name) || d.name === "worldofdarkness" ) continue;
         copyTree(path.join(src.dataPath, "Data", kind, d.name), path.join(lane.dataPath, "Data", kind, d.name), {mirror: true});
       }

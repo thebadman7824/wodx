@@ -30,8 +30,11 @@ export function powerKeywords(set, id, name = "", line = null) {
  * its Harm is left out.
  */
 export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget = false, noRoll = false} = {}) {
-  const s = Number(successes) || 0;
-  if ( !kw || kw.passive || s < 1 ) return {results: [], skipped: []};
+  // B6853: a passive power picked from the menu is turned on for its time with no roll, one success (Heightened Senses,
+  // Majesty, Survivor: the books have them always ready, so using one is the moment it starts counting)
+  if ( kw?.passive ) noRoll = true;
+  const s = kw?.passive ? Math.max(1, Number(successes) || 0) : Number(successes) || 0;
+  if ( !kw || s < 1 ) return {results: [], skipped: []};
   const results = [], skipped = [];
   for ( const raw of kw.keywords ?? [] ) {
     // B5787: "boost:sap", "fortune:curse", "fear:calm": a keyword with its flavour, for a chain of keywords

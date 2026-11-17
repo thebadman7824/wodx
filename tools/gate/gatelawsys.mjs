@@ -11,6 +11,8 @@
  *   6. standing before the law reads a class
  *   7. taxes: the 1630 levy in Moravia is crushing; a month's pay with the taxes kept back pays the share into the bank
  *   8. a turn of rule (no kinds, so no seats move) whispers the Storyteller its card
+ *   8b. B6933: a town's rising is put down; the card asks who led it, and a named leader gains the heat of leading a
+ *       rising in that land (Wanted)
  *   9. the Future Darkness rows lay on only when switched on, and are marked as speculation
  *  10. every other WoDX module still answers
  * Result: Data/wodx-gate/gatelawsys-result.json.
@@ -89,6 +91,28 @@ export async function run() {
       await law.regime.turn({region, year, cause: "form", kinds: [], chance: 0, note: "WoDX gate law turn", words: "A gate check."});
       const card = newCards().find(m => m.content.includes("WoDX gate law turn"));
       ok("a turn of rule whispers its card", !!card && (card.whisper ?? []).length > 0);
+    });
+
+    await step("a rising put down gives its leader heat", async () => {
+      const el = html => { const d = document.createElement("div"); d.innerHTML = html; return d; };
+      await law.heat.arrest(actor.id, region); // clear the earlier steps' heat
+      const h0 = law.heat.of(actor.id, region)?.heat ?? 0;
+      Hooks.callAll("wodxTown", {kind: "rising", town: "wodx-gate-town", region, name: "WoDX gate town", text: "A gate rising."});
+      await wait(800);
+      const ask = newCards().find(m => m.flags?.["wodx-chronicle"]?.lawRising?.name === "WoDX gate town");
+      const askEl = el(ask?.content ?? "");
+      Hooks.callAll("renderChatMessageHTML", ask, askEl);
+      askEl.querySelector("[data-won='0']")?.click();
+      await wait(800);
+      const down = newCards().find(m => m.flags?.["wodx-chronicle"]?.lawRisingLeaders?.name === "WoDX gate town");
+      // the gate's actor has no player owner, so it is named through a button of the card's own kind
+      const downEl = el(`${down?.content ?? ""}<button type="button" data-action="wodx-law-rising-leader" data-actor="${actor.id}">gate</button>`);
+      Hooks.callAll("renderChatMessageHTML", down, downEl);
+      downEl.querySelector(`[data-actor='${actor.id}']`)?.click();
+      await wait(800);
+      const h = law.heat.of(actor.id, region);
+      ok("a rising put down gives its leader heat", !!ask && !!down && /Who led it/.test(down.content) && h?.heat > h0 && ["warrant", "manhunt"].includes(h?.stage?.key) && h.entry.deeds.at(-1)?.deed === "rising",
+        {asked: !!ask, down: !!down, before: h0, heat: h?.heat, stage: h?.stage?.key, deed: h?.entry?.deeds?.at(-1)});
     });
 
     await step("the Future Darkness rows only when switched on", async () => {

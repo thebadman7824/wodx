@@ -19,6 +19,10 @@
  *   9. moving past half the running speed: the attack warns that no attack follows by the book (GM, limit shown)
  *  10. B6361 a quick attack on a vehicle on its own sheet (a cart's token): the card says the vehicle itself is struck,
  *      and the Structure it names as lost (levels less Durability) is what the sheet holds after the blow
+ *  11. B6660 Dazed in a fight, on a player's client: the quick attack does not happen (the foe's health is untouched),
+ *      WoDX Actions refuses its windows (refuseIdle) and the token does not move; the Storyteller still moves it
+ *  12. B6661 a failed stand-up (standUp, the turn-start roll): on a player's client the token does not move this
+ *      turn; the Storyteller still moves it
  * Result: Data/wodx-gate/gatetruthcombat-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -255,6 +259,61 @@ export async function run() {
       const want = m ? Math.min(n(m[5]), lost0 + Math.max(0, n(m[1]) - n(m[2]))) : null;
       G.ok("10. a quick attack on a vehicle's token comes off its sheet's Structure", !!res && struck && said && !!m && n(m[4]) === n(cart.system.lost) && n(m[4]) === want,
         {lost: cart.system.lost, card: m ? m.slice(1) : txt.slice(0, 300), said, want, levels: res?.outcome?.levels ?? null});
+    });
+
+    // A player's client for the whole call (a token's update reaches its preUpdate hooks after an await)
+    const shadow = async fn => { Object.defineProperty(game.user, "isGM", {get: () => false, configurable: true}); try { return await fn(); } finally { delete game.user.isGM; } };
+    const watchWarn = () => { const warned = [], w0 = ui.notifications.warn; ui.notifications.warn = (m, ...r) => { warned.push(String(m)); return w0.call(ui.notifications, m, ...r); }; return {warned, off: () => { ui.notifications.warn = w0; }}; };
+
+    await G.step("11. B6660 Dazed in a fight: no attack, no window, no move for a player", async () => {
+      await dice(8);
+      const A = game.modules.get("wodx-actions")?.api;
+      await K.setCondition(guard, "dazed", true);
+      const dazed = await waitFor(() => K.hasCondition(guard, "dazed"), 4000);
+      const W = watchWarn();
+      const before = hurt(foe), x0 = tG.x;
+      try {
+        const results = await shadow(() => C.quickAttack({attacker: tG.object, target: tFoe.object}).catch(() => null));
+        const refused = A?.refuseIdle ? await shadow(() => A.refuseIdle(guard)) : null;
+        await shadow(() => tG.update({x: x0 + scene.grid.size}).catch(() => null));
+        await sleep(400);
+        const stayed = tG.x === x0;
+        await tG.update({x: x0 + scene.grid.size});
+        const gmMoved = await waitFor(() => tG.x === x0 + scene.grid.size, 3000);
+        const struck = (results ?? []).filter(Boolean).length > 0;
+        const why = A?.cannotAct?.(guard) ?? "";
+        G.ok("11. B6660 Dazed in a fight: no attack, no window, no move for a player", dazed && !struck && hurt(foe) === before
+          && (A ? refused === true && /Dazed/.test(why) && stayed && W.warned.some(m => /Dazed/.test(m)) : true) && gmMoved,
+          {dazed, struck, foe: [before, hurt(foe)], refused, why, stayed, gmMoved, actions: !!A, warned: W.warned.slice(-3)});
+      } finally {
+        W.off();
+        await K.setCondition(guard, "dazed", false).catch(() => null);
+        await tG.update({x: x0}).catch(() => null);
+      }
+    });
+
+    await G.step("12. B6661 a failed stand-up: a player's token does not move this turn", async () => {
+      await dice(2);
+      if ( !K.hasCondition(fallen, "knockdown") ) await knock();
+      await fallen.unsetFlag(CMB, "lostAction").catch(() => null);
+      const res = await C.standUp(fallen, combat);
+      const lost = await waitFor(() => { const f = fallen.getFlag(CMB, "lostAction"); return !!f && f.combat === combat.id && n(f.round) === n(combat.round); }, 4000);
+      const W = watchWarn();
+      const x0 = tF.x;
+      let stayed = false, gmMoved = false;
+      try {
+        await shadow(() => tF.update({x: x0 + scene.grid.size}).catch(() => null));
+        await sleep(400);
+        stayed = tF.x === x0;
+        await tF.update({x: x0 + scene.grid.size});
+        gmMoved = await waitFor(() => tF.x === x0 + scene.grid.size, 3000);
+      } finally { W.off(); }
+      const said = W.warned.some(m => /failed to stand up/.test(m));
+      G.ok("12. B6661 a failed stand-up: a player's token does not move this turn", res?.up === false && lost && stayed && said && gmMoved,
+        {up: res?.up ?? null, lost, stayed, said, gmMoved, warned: W.warned.slice(-3)});
+      await tF.update({x: x0}).catch(() => null);
+      await K.setCondition(fallen, "knockdown", false).catch(() => null);
+      await fallen.unsetFlag(CMB, "lostAction").catch(() => null);
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {

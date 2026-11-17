@@ -58,16 +58,34 @@ $('#bulk').onclick=async()=>{
  for(const id of ids){try{await coll.doc(RUN+'__'+id).set({item:id,run:RUN,verdict:'ok',note:'',at:Date.now()});done++;}catch(e){fail++;delete V[id];}
   if(done%20===0)$('#notice').textContent=`Saving ${done} of ${ids.length}…`;}
  busy=false;$('#notice').textContent=fail?`${done} saved, ${fail} did not save. Press the button again to retry those.`:`${done} marked OK.`;render();};
+
+const DP={};
+function renderDecon(){const host=$('#decon');host.textContent='';if(typeof DECON==='undefined'||!DECON.length)return;
+ for(const sec of DECON){const h=document.createElement('div');h.innerHTML=`<h2>Timeline check, ${esc(sec.date)}</h2><p class="sub">${esc(sec.intro)}</p>`;host.append(h);
+  for(const it of sec.items){const id='decon-'+it.id;const cur=DP[id]||{};const c=document.createElement('article');c.className='card';
+   c.innerHTML=`<div class="head"><h3>${esc(it.title)}</h3><span class="state">${cur.pick?'Picked':'Waiting'}</span></div><p class="txt">${esc(it.text)}</p>${it.ref?`<p class="refs">${esc(it.ref)}</p>`:''}<div class="dopt" role="group" aria-label="Options">${it.options.map((o,n)=>`<button data-n="${n}" aria-pressed="${cur.pick===o.v}">${esc(o.label)}${o.rec?'<span class="rec">recommended</span>':''}</button>`).join('')}</div><p class="txt" id="dc-${esc(it.id)}"></p><textarea placeholder="Your own answer, or anything to add"></textarea>`;
+   const ta=c.querySelector('textarea');ta.value=cur.note||'';
+   const show=v=>{const o=it.options.find(x=>x.v===v)||it.options.find(x=>x.rec);c.querySelector('#dc-'+CSS.escape(it.id)).textContent=o?o.what:'';};show(cur.pick);
+   c.querySelectorAll('.dopt button').forEach(b=>{b.onclick=()=>{const o=it.options[+b.dataset.n];saveD(id,o.v,ta.value);};});
+   ta.onchange=()=>saveD(id,DP[id]?.pick||'',ta.value);host.append(c);}}}
+async function saveD(id,pick,note){
+ if(!coll){$('#notice').textContent='Notes cannot be saved in this view. Open the page signed in to claude.ai.';return;}
+ DP[id]={pick,note};renderDecon();
+ try{await coll.doc('decon__'+id).set({item:id,run:'decon',pick,note:note||'',at:Date.now()});$('#notice').textContent='Saved.';}
+ catch(e){$('#notice').textContent='That answer did not save ('+(e.code||'error')+'). Try again.';}
+}
 $('#bk').onclick=()=>{showBook=!showBook;$('#bk').setAttribute('aria-pressed',showBook);render();};
 addEventListener('hashchange',()=>{pick();render();scrollTo(0,0);});
-pick();render();
+pick();render();renderDecon();
 (async()=>{
  const t=setTimeout(()=>{$('#notice').textContent='Saved notes did not load. Your clicks will still try to save.';},10000);
  let db=null;try{db=window.claude?await claude.use('db'):null;}catch(e){db=null;}
  if(!db){clearTimeout(t);$('#notice').textContent='Saved notes are unavailable here. Open the page signed in to claude.ai to review.';return;}
  coll=db.collection('verdicts');
  coll.onSnapshot(snap=>{clearTimeout(t);if(busy)return;for(const k in V)delete V[k];
-  for(const d of snap.docs.map(d=>d.data()).filter(Boolean)){if(d.run===RUN)V[d.item]=d;}
+  for(const k in DP)delete DP[k];
+  for(const d of snap.docs.map(d=>d.data()).filter(Boolean)){if(d.run===RUN)V[d.item]=d;if(d.run==='decon')DP[d.item]=d;}
+  renderDecon();
   $('#notice').textContent=`Draft ${RUN}. Notes save as you click.`;render();},
   e=>{clearTimeout(t);$('#notice').textContent='Saved notes did not load ('+(e.code||'error')+').';});
 })();

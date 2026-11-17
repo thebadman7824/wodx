@@ -25,6 +25,7 @@ const BG = "wod.types.background", MERIT = "wod.types.merit", FLAW = "wod.types.
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 const prop = (o, p) => String(p).split(".").reduce((x, k) => x?.[k], o);
 const chron = () => (game.modules.get("wodx-chronicle")?.active ? game.modules.get("wodx-chronicle").api : null);
+const nowWhen = () => { let year = null, futureBranch = false; try { year = Number(chron()?.eras?.currentYear?.()) || null; futureBranch = !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { /* no chronicle */ } return {year, futureBranch}; };
 const darkEra = () => { try { return ["dark-ages", "long-night"].includes(chron()?.eras?.activeEra?.()?.profile?.id ?? ""); } catch (e) { return false; } };
 
 export const wizardOf = actor => W.normWizard(actor?.flags?.[MODULE_ID]?.[FLAG] ?? {});
@@ -273,7 +274,7 @@ export class WizardApp extends ApplicationV2 {
       return this.#row(i.name, v, kind.max ?? 5, 1, {kind: "power", key: p.key, item: i.id, value: v}, ctx, page).replace("</td></tr>", ` ${remove}</td></tr>`);
     }).join("");
     if ( page === "freebies" && !kind.dots ) return `${head}${rows ? `<table class="wodx-table">${rows}</table>` : ""}<p class="wodx-quiet">Add more on the ${esc(p.label)} page; each costs ${ctx.L.costs[p.key] ?? "?"} past the ${p.dots}.</p>`;
-    const sug = W.powerSuggestions(p.key, ctx.lineId, {clan: this.actor.system?.clan, dark: darkEra()});
+    const sug = W.powerSuggestions(p.key, ctx.lineId, {clan: this.actor.system?.clan === "custom" ? this.actor.system?.custom?.clan : this.actor.system?.clan, dark: darkEra(), ...nowWhen()});
     const have = new Set(items.map(i => i.name.toLowerCase()));
     const opt = x => have.has(x.toLowerCase()) ? "" : `<option value="${esc(x)}">${esc(x)}</option>`;
     const choices = `${sug.first.length ? `<optgroup label="${p.key === "discipline" && ctx.lineId !== "ghoul" && ctx.lineId !== "revenant" ? "The clan's" : "From the book"}">${sug.first.map(opt).join("")}</optgroup>` : ""}${sug.more.length ? `<optgroup label="Others (freebie points)">${sug.more.map(opt).join("")}</optgroup>` : ""}`;

@@ -1,7 +1,7 @@
 /**
  * The Inuit for the People generator (Creation, B4650 to B4653): the Kalaallit and Inughuit of Greenland and the Inuit
  * of the Canadian Arctic, from the Thule crossing of the 13th century on. WoDX's own lists of recorded names; no book
- * text. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * text. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings in the modern Greenlandic and Inuktitut alphabets where they are settled): the Greenlanders in the
  * Danish mission and trade records from 1721 and the accounts of the Thule expeditions; the Inuit of Baffin Island,

@@ -47,7 +47,10 @@ const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scrip
 const INFO = new Set([]);
 const applyingKw = (ks = []) => ks.map(k => String(k).split(":")[0]).some(k => E.KEYWORDS[k] && E.KEYWORDS[k].tier !== "st" && !INFO.has(k));
 /** B4820: a Summon applies whatever its spec kind, since the effects card turns it into a summoning with its own rules. */
-const applyingSpec = s => !!s && (!["note", "st"].includes(s.kind) || s.kw === "summon");
+// B6854: a note on Know, Sense or Speak gives that keyword's own result (mage-da-effects outcomesOf)
+// B6856: a Storyteller's spec on a working keyword gives that keyword's result too
+const applyingSpec = s => !!s && (Array.isArray(s) ? s.some(x => applyingSpec(x)) : (!["note", "st"].includes(s.kind) || s.kw === "summon" || (s.kind === "note" && ["know", "sense", "speak"].includes(s.kw))
+  || (s.kind === "st" && E.KEYWORDS[s.kw] && E.KEYWORDS[s.kw].tier !== "st" && !["free", "time"].includes(s.kw))));
 /** Keywords a power used with no roll applies (its Harm readies the user; the attack roll deals it, B3751). */
 const noRollKw = (ks = []) => applyingKw(ks.map(k => k === "harm" ? "boost" : k));
 /** Always-on Disciplines WoDX Combat reads by rating: soak, damage dice and extra actions or speed. */
@@ -59,7 +62,8 @@ const rows = [];
 const WANT_TEXT = process.argv.includes("--text");
 const textOf = (v, depth = 0) => v == null || depth > 4 ? "" : typeof v === "string" ? v : Array.isArray(v) ? v.map(x => textOf(x, depth + 1)).join(" ")
   : typeof v === "object" ? Object.values(v).map(x => textOf(x, depth + 1)).join(" ") : "";
-const add = (line, group, name, o = {}) => rows.push({ line, group, name, status: o.status ?? "none", kw: o.kw ?? [], page: o.page ?? "", how: o.how ?? "", passive: !!o.passive,
+// B6855: story names why a power puts nothing on the card (read on its page): no system, or the Storyteller's alone
+const add = (line, group, name, o = {}) => rows.push({ line, group, name, status: o.status ?? "none", kw: o.kw ?? [], page: o.page ?? "", how: o.how ?? "", passive: !!o.passive, ...(o.story ? { story: o.story } : {}),
   ...(WANT_TEXT ? { text: textOf(o.src).replace(/\s+/g, " ").trim() } : {}) }) && Object.defineProperty(rows.at(-1), "src", { value: o.src, enumerable: false });
 
 /* -- Vampire: V20 Dark Ages Disciplines (kindred.js Use a Discipline) */
@@ -70,22 +74,22 @@ for ( const p of disc ) {
   const kw = PK.keywordsOf("disc", p.id);
   const path = PE.PATH_EFFECTS[p.id];
   const passive = !!kw?.passive || !!p.passive, combat = passive && COMBAT_READS.has(p.d);
-  let status = combat ? "applies" : path && p.r ? (applyingSpec(path) ? "applies" : "card")
-    : (kw && !passive && (p.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : "card");
-  add("Vampire (Dark Ages)", p.d, p.n, { src: p, status, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive,
+  let status = combat ? "applies" : path ? (applyingSpec(path) ? "applies" : "card")
+    : (kw && (passive || !p.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : "card");
+  add("Vampire (Dark Ages)", p.d, p.n, { src: p, status, story: status === "card" ? PE.PATH_STORY?.[p.id] : undefined, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive,
     how: combat ? "WoDX Combat reads the rating (soak, damage dice, actions and speed)" : path && p.r ? "path magic effect spec" : p.r ? "Discipline roll, keywords, timed effect on the token" : "no roll: one success, keywords and timed effect on the token" });
 }
 /* -- Vampire: V20 (modern) Disciplines: the same window when a Dark Ages power has the name, else the system roll */
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.v20) ) {
   const da = daNames.get(id), v = v20Lib.get(id);
-  const kwA = applyingKw(e.k) && !e.p;
+  const kwA = e.p ? noRollKw(e.k) : applyingKw(e.k); // B6853: a passive power picked from the menu turns on
   add("Vampire (V20)", v ? v.d : "Disciplines", e.n, { src: [e, v, da], status: da || v ? (kwA ? "applies" : "card") : "roll", kw: e.k, passive: !!e.p, page: v ? `V20 p. ${v.p}` : "V20",
     how: v ? "V20 library entry (data/disciplines-v20.json): Use a Discipline card, roll and keywords" : da ? "matches a Dark Ages power by name: same window" : "system roll only: no V20 entry in the Discipline library" });
 }
 /* -- Werewolf: Dark Ages Gifts (garou.js) */
 for ( const g of J("gifts-daw.json").gifts ) {
   const kw = PK.keywordsOf("gift", g.id);
-  add("Werewolf (Dark Ages)", "Gifts", g.n, { src: g, status: kw && !kw.passive && (g.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
+  add("Werewolf (Dark Ages)", "Gifts", g.n, { src: g, status: kw && (kw.passive || !g.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
 }
 const daGift = new Set(J("gifts-daw.json").gifts.map(g => slug(g.n)));
 /* -- Werewolf: W20 Gifts (garou.js reads data/gifts-w20.json by name: pool, cost, duration, effect and page) */
@@ -93,15 +97,16 @@ const w20Lib = new Map(J("gifts-w20.json").gifts.map(g => [g.kw, g]));
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.w20) ) {
   if ( daGift.has(id) ) continue;
   const g = w20Lib.get(id);
-  add("Werewolf (W20)", "Gifts", e.n, { src: [e, g], status: applyingKw(e.k) && !e.p ? "applies" : g ? "card" : "roll", kw: e.k, passive: !!e.p, page: g ? `W20 p. ${g.p}` : "W20",
+  add("Werewolf (W20)", "Gifts", e.n, { src: [e, g], status: (e.p ? noRollKw(e.k) : applyingKw(e.k)) ? "applies" : g ? "card" : "roll", kw: e.k, passive: !!e.p, page: g ? `W20 p. ${g.p}` : "W20",
     how: g ? "W20 library entry (data/gifts-w20.json): Use a Gift card, pool, cost, duration and keywords" : "Gift roll from the item's dice; keywords by name; no effect text" });
 }
 /* -- Wraith: W20 and The Great War Arcanoi (wraith.js shows the effect line; keywords not wired) */
 for ( const [file, set, line] of [["arcanoi-w20.json", "wraith", "Wraith (W20)"], ["arcanoi-gw.json", "greatwar", "Wraith (Great War)"]] ) {
   for ( const a of Object.values(J(file).arts) ) {
     const kw = PK.keywordsOf(set, a.id);
-    const st = a.r && kw && !kw.passive && applyingKw(kw.keywords) ? "applies" : a.e ? "card" : "roll";
-    add(line, a.d, a.n, { src: a, status: st, kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `p. ${a.p}`, how: "Arcanos roll and cost, effect line, keywords on the effects card (B3740)" });
+    // B6731: an art with no roll counts one success (its Harm readies the user), as a Discipline with none does
+    const st = kw && (kw.passive || !a.r ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : a.e ? "card" : "roll";
+    add(line, a.d, a.n, { src: a, status: st, kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `p. ${a.p}`, how: a.r ? "Arcanos roll and cost, effect line, keywords on the effects card (B3740)" : "no roll: one success, keywords on the effects card (B6731)" });
   }
 }
 /* -- Mage: M20 Spheres (Cast window with keywords) */
@@ -110,12 +115,12 @@ for ( const s of M20.SPHERES ) for ( let l = 1; l <= 5; l++ )
 /* -- Mage: Dark Ages rotes (mage-da.js) */
 for ( const r of MD.ROTES ) {
   const s = DAE.DA_EFFECTS[r.id];
-  add("Mage (Dark Ages)", r.f, r.name, { src: [r, s], status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `p. ${r.page}`, how: s ? `rote effect spec (${s.kind})` : "rote text only" });
+  add("Mage (Dark Ages)", r.f, r.name, { src: [r, s], status: applyingSpec(s) ? "applies" : "card", story: applyingSpec(s) ? undefined : DAE.DA_STORY?.[r.id], kw: s?.kw ? [s.kw] : [], page: `p. ${r.page}`, how: s ? `rote effect spec (${s.kind})` : "rote text only" });
 }
 /* -- Changeling: C20 Arts (cantrip roll by Art and level; no power names, no effect text) */
 for ( const [id, c] of Object.entries(CA.CANTRIPS) ) {
   const st = c.dice || (applyingSpec(c.spec) && !INFO.has(c.spec.kw) && E.KEYWORDS[c.spec.kw]?.tier !== "st") ? "applies" : "card";
-  add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { src: c, status: st, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
+  add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { src: c, status: st, story: st === "card" ? CA.ART_STORY?.[id] : undefined, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
     how: `named in Cast a cantrip: card (effect, duration, type)${st === "applies" ? `; effects card ${c.dice ? "damage dice" : c.spec.kind}` : ""}` });
 }
 /* -- Changeling: Dark Ages Fae (cantrips by Dominion and level; B6550: every named cantrip of the four Dominions) */
@@ -126,7 +131,7 @@ for ( const [id, d] of Object.entries(F.DOMINIONS) ) for ( let l = 1; l <= 5; l+
 const DC = await import(A("scripts/fae-da-cantrips.js"));
 for ( const [id, c] of Object.entries(DC.CANTRIPS) ) {
   const st = c.does || c.imbue || anyApplying(c.spec) ? "applies" : "card";
-  add("Fae (Dark Ages)", `Dominion of ${F.DOMINIONS[c.dominion].label}`, `${"•".repeat(c.level)} ${c.name}`, { src: c.does || c.imbue ? { does: c.does ?? c.imbue } : c.spec, status: st, kw: DC.keywordsOf(c), page: `DA:Fae p. ${c.page}`,
+  add("Fae (Dark Ages)", `Dominion of ${F.DOMINIONS[c.dominion].label}`, `${"•".repeat(c.level)} ${c.name}`, { src: c.does || c.imbue ? { does: c.does ?? c.imbue } : c.spec, status: st, story: st === "card" ? DC.CANTRIP_STORY?.[id] : undefined, kw: DC.keywordsOf(c), page: `DA:Fae p. ${c.page}`,
     how: `book cantrip: its difficulty, needed successes and costs in Cast a cantrip${c.does ? `; ${c.does} (fae-da.js presetDoes)` : c.imbue ? "; makes a Treasure holding a known cantrip (treasures.js)" : st === "applies" ? "; effects card" : "; the card says what it does"}` });
 }
 /* -- Fae sprites: the Charms of Dark Ages: Fae p. 97 (charms.js) */
@@ -156,23 +161,28 @@ for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.dtf) ) if ( !dtfNames.has
 for ( const l of Object.values(D.LORES) ) for ( const nm of [...(l.form ?? []), ...(l.high ?? [])] ) {
   const fp = DE.formPower(nm, l.visage);
   const sheet = fp && (fp.attrs || fp.init || fp.armor);
-  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { src: fp, status: !fp ? "roll" : sheet ? "applies" : "card", page: `DtF p. ${l.formPage}`, how: !fp ? "name only" : sheet ? "form puts it on the sheet for the scene" : "form card text" });
+  // B6851: the form's own effects card (FORM_SPECS) and its natural weapons (FORM_WEAPONS)
+  const v = String(l.visage).split(",")[0].trim(), fs = DE.FORM_SPECS[`${nm}@${v}`] ?? DE.FORM_SPECS[nm], fw = DE.FORM_WEAPONS[nm];
+  const story = !sheet && !fs && !fw ? DE.FORM_STORY[nm] : null;
+  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { story: story ?? undefined, src: fs ? [fs] : fp, status: !fp ? "roll" : sheet || fs || fw ? "applies" : "card", page: `DtF p. ${l.formPage}`,
+    how: !fp ? "name only" : sheet ? "form puts it on the sheet for the scene" : fs ? "form's effects card for the scene" : fw ? "a natural weapon on the sheet for the scene" : `form card text${story ? `: ${story}` : ""}` });
 }
 /* -- Hunter: the Reckoning edges (reckoning.js) */
 for ( const e of R.EDGES ) {
   const kw = PK.keywordsOf("htr", `${e.path}-${e.id}`);
-  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { src: e, status: kw && !kw.passive && applyingKw(kw.keywords) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
+  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { src: e, status: kw && (kw.passive ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
 }
 /* -- Hunters Hunted II Numina and hedge sorcery, True Faith (hunter.js) */
 for ( const [key, d] of Object.entries(H.NUMINA) ) for ( let l = 1; l <= (d.levels?.length ?? 5); l++ ) {
   const s = PE.NUMINA_EFFECTS[`${key}:${l}`];
-  add("Hunter (HH2)", `Numina: ${d.label}`, `${d.label} ${l}`, { src: [d.levels?.[l - 1], s], status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `HH2 p. ${d.p}`, how: s ? `Numen effect spec (${s.kind})` : "level text shown" });
+  add("Hunter (HH2)", `Numina: ${d.label}`, `${d.label} ${l}`, { src: [d.levels?.[l - 1], s], status: applyingSpec(s) ? "applies" : "card", story: applyingSpec(s) ? undefined : PE.NUMINA_STORY?.[`${key}:${l}`], kw: [s ?? []].flat().map(x => x.kw).filter(Boolean), page: `HH2 p. ${d.p}`, how: s ? `Numen effect spec (${s.kind})` : "level text shown" });
 }
 for ( const [key, d] of Object.entries(H.SORCERY) )
   add("Hunter (HH2/DA)", "Hedge sorcery", d.label, { src: d, status: H.sorceryResults(key, { top: 2, successes: 2, need: 1, rating: 2 }).some(r => r.out.kind !== "note") ? "applies" : "card", kw: H.sorceryResults(key, { successes: 1 }).map(r => r.key), page: `Sorcerer p. ${d.p}`, how: "hedge magic roll and casting time; a working spell puts its effect on the card" });
 for ( const [book, list] of Object.entries(H.FAITH_POWERS) ) for ( const [lvl, t] of list )
-  add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { src: t, status: lvl === 1 && H.repelResults(book, 2).length ? "applies" : "card", kw: lvl === 1 ? ["banish"] : [], page: book,
-    how: lvl === 1 ? "True Faith window: Repel puts Repelled on the creature's token" : "True Faith window shows the line" });
+  add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { src: t, status: (lvl === 1 && H.repelResults(book, 2).length) || lvl === 0 || ((lvl === 2 || lvl === 5) && H.faithPresence(book, lvl).length) || ((lvl === 3 || (lvl === 4 && book === "da20")) && ["sway", "fear"].some(k => H.faithStops(book, lvl, k))) ? "applies" : "card",
+    story: lvl === 4 && book === "hh2" ? "HH2 p. 84: cannot be ghouled, blood bound or raised; WoDX keeps no ghouling or blood bond to refuse" : undefined, kw: lvl === 1 ? ["banish"] : lvl === 2 ? ["sense"] : lvl === 5 ? ["fear"] : [], page: book,
+    how: lvl === 1 ? "True Faith window: Repel puts Repelled on the creature's token" : lvl === 0 ? "True Faith window: Resist a power works out the successes the power keeps (faithResist)" : lvl === 2 || lvl === 5 ? "True Faith window: Their presence puts the Sense (and at 5 the Rötschreck Fear) on the effects card (B6858)" : "an immunity: a power on the effects card that clouds or bends the faithful's mind is stopped when applied (effects.js faithShields, B6858)" });
 /* -- Mummy: Hekau spells and rituals, named in the Hekau window (mummy.js cast, mummy-hekau.js) */
 for ( const [id, sp] of Object.entries(MH.SPELLS) ) {
   const pk = PK.LINE_KEYWORDS.mummy[id];
@@ -193,7 +203,7 @@ for ( const p of KA.POWERS ) {
   // B5161: a power that plays itself (Strengthening the Demon) has no effects spec: it changes the Demon Chi directly
   if ( p.stoke ) { add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: "applies", kw: ["boost"], page: `${p.book} p. ${p.p}`,
     how: "Spend Chi: the roll raises Demon Chi for a turn a success, then the stoked points fade and the Hun roll follows" }); continue; }
-  add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec.kw],
+  add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec].flat().map(x => x.kw),
     page: `KotE p. ${p.p}`, how: "Spend Chi: the named power fills the Chi, pool and difficulty, and the effects card carries the result" });
 }
 /* -- Book rituals and rites: the caster's own window pulls them (B3753) */
@@ -204,29 +214,38 @@ for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) for ( const r of b.lis
 for ( const [id, m] of Object.entries({ ...CB.MANEUVERS, ...CB.CLASSIC }) ) {
   const mods = m.diff || m.dmg || m.dice || m.defDiff || m.noDamage || m.noDefense;
   const fo = CB.followOn?.(id, { hit: true, damageSuccesses: 3, profile: "vampire" }) ?? [];
-  add("Combat", id.startsWith("c_") ? "WoD: Combat maneuvers" : "Close combat maneuvers", m.label.replace(/ \(.*$/, ""), { src: m, status: mods || fo.length ? "applies" : "card", page: "VtDA20 pp. 346-349",
+  add("Combat", id.startsWith("c_") ? "WoD: Combat maneuvers" : "Close combat maneuvers", m.label.replace(/ \(.*$/, ""), { src: m, status: mods || fo.length || id === "normal" ? "applies" : "card", story: mods || fo.length ? undefined : m.story, page: "VtDA20 pp. 346-349",
     how: fo.length ? `roll modifiers applied; a hit marks ${fo.map(f => f.name).join(", ")} on the target's token (B3754)` : m.note ? `roll modifiers applied; the extra effect is a note: ${m.note.slice(0, 120)}` : "roll modifiers applied" });
 }
 for ( const [id, u] of Object.entries(CB.UNARMED) ) add("Combat", "Unarmed attacks", u.name, { src: u, status: "applies", page: "VtDA20 pp. 346-347", how: "attack and damage pools" });
 
 /* -- Lists WoDX does not hold yet: one row each, so the gap shows */
-for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, { src: g, status: "card", page: "DtF", how: "Thralls window lists the gift and its Faith; nothing is applied" });
+for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, { src: g, status: g.k === "offering" ? "applies" : "card", story: g.story, page: "DtF p. 253",
+  how: g.k === "offering" ? "Thralls window: each thrall's offering reaches the demon's Faith at dawn (demon.js daily)" : "Thralls window lists the gift and its Faith" });
 const IB = await import(A("scripts/inq-blessings.js"));
 for ( const b of IB.BLESSINGS ) {
   const st = applyingSpec(b.spec) && !INFO.has(b.spec.kw) && E.KEYWORDS[b.spec.kw]?.tier !== "st" && b.spec.kw !== "free" ? "applies" : "card";
-  add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { src: b, status: st, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
+  add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { src: b, status: st, story: st === "card" ? b.story : undefined, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
     how: `Blessing window: the book list sets the roll, difficulty and Conviction${st === "applies" ? `; effects card ${b.spec.kind}` : "; the card says what it does"}` });
 }
 for ( const g of J("gifts-fera.json").gifts ) {
   const st = applyingSpec(g.spec) && !INFO.has(g.spec.kw) && E.KEYWORDS[g.spec.kw]?.tier !== "st" && g.spec.kw !== "free" ? "applies" : "card";
-  add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { src: g, status: st, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
+  add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { src: g, status: st, story: st === "card" ? g.story : undefined, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
     how: `Use a Gift: the breed's own library entry sets the pool, cost and difficulty${st === "applies" ? `; effects card ${g.spec.kind}` : "; the card says what it does"}` });
+}
+/* B6852: a power whose name reaches the ground or a town (world-effects.js WORLD_POWERS) applies by that alone */
+const WE = await import(A("scripts/world-effects.js"));
+for ( const r of rows ) {
+  if ( r.status !== "card" ) continue;
+  const nm = String(r.name).replace(/^[•\s]+/, "");
+  if ( WE.worldKinds(nm, r.line).length ) { r.status = "applies"; r.how += "; reaches the ground or the town by name (world-effects.js)"; r.world = true; }
 }
 /* B6015: is what each applying power puts on the card read by any system, or only a marker? (read-rules.mjs) */
 const RR = await import(pathToFileURL(path.join(ROOT, "tools/powers/read-rules.mjs")).href);
+const specsHave = r => { const s = r.src; const l = Array.isArray(s) ? s : [s]; return l.some(x => x && (x.kind || x.spec)); };
 const kwOutcome = (k, ctx = {}) => (E.KEYWORDS[k] ? E.outcome(k, { ok: true, strength: 3, duration: 1, targets: 0 }, ctx) : null);
 const specOutcomes = sp => { try { return DAE.outcomesOf(sp, { label: "x", source: "" }, 3, ""); } catch (e) { return null; } };
-for ( const r of rows ) r.read = r.status === "applies" ? RR.powerRead(r, kwOutcome, specOutcomes) : null;
+for ( const r of rows ) r.read = r.status === "applies" ? (r.world ? "direct" : RR.powerRead(r, kwOutcome, specOutcomes)) : null;
 const out = { made: new Date().toISOString(), counts: {}, reads: {}, byLine: {}, rows };
 for ( const r of rows ) if ( r.read ) out.reads[r.read] = (out.reads[r.read] ?? 0) + 1;
 for ( const r of rows ) {
@@ -236,6 +255,7 @@ for ( const r of rows ) {
 }
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 if ( arg("--out") ) fs.writeFileSync(arg("--out"), JSON.stringify(out, null, 1));
-console.log(`${rows.length} powers:`, out.counts, "applying, read by the game:", out.reads);
+out.story = rows.filter(r => r.status !== "applies" && r.story).length;
+console.log(`${rows.length} powers:`, out.counts, "applying, read by the game:", out.reads, "story (no effect to apply, page read):", out.story);
 if ( process.argv.includes("--unread") ) for ( const r of rows ) if ( ["unread", "partly"].includes(r.read) ) console.log(r.read.padEnd(7), r.line.padEnd(26), r.name, JSON.stringify(r.kw));
 if ( process.argv.includes("--summary") ) for ( const [l, b] of Object.entries(out.byLine) ) console.log(l.padEnd(26), JSON.stringify(b));

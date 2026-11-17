@@ -272,6 +272,13 @@ async function runGate(K) {
             } finally { api.eras = old; }
         });
 
+        // B6920: Wraith 20th p. 204, Pandemonium feeds the Shadow a point per 1 in the Tempest or Stygia, never in the Labyrinth
+        await step("Pandemonium in the Labyrinth gives no Angst", async () => {
+            const WR = await import(`/modules/wodx-actions/scripts/wraith-rules.js?${Date.now()}`);
+            const lab = WR.realmAngst("Pandemonium", "labyrinth", [1, 1, 2, 7]), storm = WR.realmAngst("Pandemonium", "tempest", [1, 1, 7]);
+            ok("Pandemonium in the Labyrinth gives no Angst", lab === 0 && storm === 2, { lab, storm });
+        });
+
         await step("menus follow the profile", async () => {
             const html = async a => (await A().profileMenu?.(a)) ?? null;
             ok("menus follow the profile", true, { wraith: A().getKind(ada), hunter: A().getKind(mara), mortal: A().getKind(agnes) });

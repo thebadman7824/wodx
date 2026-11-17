@@ -2,7 +2,7 @@
  * WoDX NPC: cults and congregations that gather around a character (B3240-B3249). The pure part; no Foundry calls,
  * so the harness can test it. cults.mjs reads the world and hands the results here.
  *
- * Ben asked on 13 November 2026 for a way that players and certain NPCs grow cults around themselves in play, from
+ * The owner asked on 13 November 2026 for a way that players and certain NPCs grow cults around themselves in play, from
  * their words and their deeds, each line with a cult of its own kind (blood cults for vampires, the Netaru for
  * mummies), with the Princes of Darkness mod for Crusader Kings III as a source of ideas. Ideas taken from it, rebuilt
  * on WoDX's own systems: a bound follower of a kind that suits the line (herd member, dreamer, thrall), initiation and

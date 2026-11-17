@@ -53,3 +53,17 @@ export function emit(type, payload = {}, {needsGM = false} = {}) {
 }
 
 export const log = (...args) => console.log("WoDX |", ...args);
+
+/*
+ * B6740: the story-chain state (setting podState: cities, chains, the saga, its fronts and twists) is read, changed and
+ * written whole. The clock's tick deals chains and steps fronts across many awaits, so a change the Storyteller made
+ * meanwhile (a chapter marked played, an ending, a book started) was written over by the tick's older copy. Each
+ * change now waits for the one before it, as the approval queue does (B5861). A function run in turn must not wait
+ * on another one run in turn, or both wait for ever: run proposals (whose standing rule may approve on sight) after.
+ */
+let podTail = Promise.resolve();
+export function podTurn(fn) {
+  const run = podTail.then(fn, fn);
+  podTail = run.catch(() => {});
+  return run;
+}

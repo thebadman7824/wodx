@@ -134,9 +134,11 @@ export class WaitingApp extends ApplicationV2 {
 
   static #row(target) { return rows().find(r => r.id === target.dataset.id) ?? null; }
   static async #onTake(event, target) { await take(WaitingApp.#row(target)); WaitingApp.soon(); }
-  static async #onTakeAll() {
+  static async #onTakeAll(event, target) {
+    // B6748: only the rows the window shows (the button counts them); one that came in after it was drawn waits
+    const shown = new Set([...(target?.closest?.(".wodx-body") ?? document).querySelectorAll('[data-action="take"]')].map(b => b.dataset.id));
     let n = 0;
-    for ( const r of rows() ) { if ( r.pick && await take(r) ) n++; }
+    for ( const r of rows() ) { if ( r.pick && shown.has(r.id) && await take(r) ) n++; }
     ui.notifications.info(`Took the recommended on ${n}.`);
     WaitingApp.soon();
   }

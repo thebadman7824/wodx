@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Soulforged Artifacts and relics through the shared crafting table (B3720-B3723; Ben's Item Crafting Desk) */
+/* Soulforged Artifacts and relics through the shared crafting table (B3720-B3723; The owner's Item Crafting Desk) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");

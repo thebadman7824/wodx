@@ -4,13 +4,16 @@
  * behind main, a merge conflict, or a push that started no run. Every hour the PC runner sweeps every open pull
  * request of the owner's:
  *   - conflict (GitHub says it cannot merge): stuck, its thread must merge main by hand
- *   - behind main, last commit over 2 hours old: main is merged in (GitHub's update-branch, a merge, never a rebase);
- *     the push starts CI. A refusal (a conflict) makes it stuck
+ *   - behind main: left alone (B7202). Merging main into every open pull request each hour started a full gate run
+ *     on each of them, every time main moved; the merge train (train.mjs) brings a pull request up to date when it
+ *     reaches the front. With {update: true} (runner.json "sweepUpdates": true) the old way comes back: behind main,
+ *     last commit over 2 hours old, main is merged in (update-branch, a merge, never a rebase), the push starts CI,
+ *     and a refusal (a conflict) makes it stuck
  *   - up to date but no CI run on its head, last commit over 30 minutes old and nothing queued: CI is started
  *     (workflow_dispatch of checks.yml on the branch). Still no run at the next sweep: stuck
  * The stuck ones are listed in one issue labelled pc-alert ("Stale pull requests"), updated each sweep and closed when
  * none are left. CI that ran and failed is listed there too, for the thread to fix; the sweeper changes nothing for it.
- * It runs with Ben's GitHub sign-in on the PC, because a push made with the workflow token starts no CI.
+ * It runs with the owner's GitHub sign-in on the PC, because a push made with the workflow token starts no CI.
  *
  *   node tools/pcq/sweep.mjs            what it would do
  *   node tools/pcq/sweep.mjs --apply    do it (the runner does this every hour)
@@ -28,9 +31,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
  * (tried: CI was started for this same head at an earlier sweep). Returns {action, why}; action is one of update,
  * dispatch, stuck, red, wait, ok.
  */
-export function classify(p) {
+export function classify(p, {update = false} = {}) {
   if ( p.mergeable === false ) return {action: "stuck", why: "merge conflict with main: its thread must merge main and fix the conflict"};
-  if ( p.behind > 0 ) {
+  if ( p.behind > 0 && update ) {
     if ( p.headAge < 2 * HOUR ) return {action: "wait", why: `behind main by ${p.behind}, last commit under 2 hours old`};
     return {action: "update", why: `behind main by ${p.behind} commit(s)`};
   }
@@ -45,7 +48,7 @@ export function classify(p) {
 }
 
 /** One sweep. gh(method, url, body) is the runner's GitHub call for the repository. Returns the summary text. */
-export async function sweep(gh, {apply = false, log = console.log, stateFile = null} = {}) {
+export async function sweep(gh, {apply = false, log = console.log, stateFile = null, update = false} = {}) {
   const state = stateFile && fs.existsSync(stateFile) ? JSON.parse(fs.readFileSync(stateFile, "utf8")) : {tried: {}};
   const prs = [];
   for ( let page = 1; page < 10; page++ ) {
@@ -68,7 +71,8 @@ export async function sweep(gh, {apply = false, log = console.log, stateFile = n
     const failedRuns = (runs.check_runs ?? []).filter(c => c.status === "completed" && ["failure", "timed_out"].includes(c.conclusion));
     const p = {number: pr.number, mergeable: full.mergeable, behind: cmp.behind_by, checks, running, failed: failedRuns.map(c => c.name).join(", "),
       headAge: Date.now() - Date.parse(commit.commit.committer.date), tried: state.tried?.[pr.number] === sha};
-    let {action, why} = classify(p);
+    let {action, why} = classify(p, {update});
+    if ( !update && p.behind > 0 && action === "ok" ) why = `behind main by ${p.behind}; the merge train brings it up to date when it reaches the front`;
     if ( apply && action === "update" ) {
       try { await gh("PUT", `/pulls/${pr.number}/update-branch`, {expected_head_sha: sha}); why += ": main merged in, CI starts on the push"; }
       catch (e) { action = "stuck"; why = `behind main and main could not be merged in (${String(e.message).slice(0, 120)}): its thread must merge main by hand`; }

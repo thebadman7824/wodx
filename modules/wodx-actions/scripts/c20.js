@@ -77,7 +77,9 @@ export function build(ctx) {
         const i = info(actor);
         const r = C.addBanality({ rating: i.banality.perm, points: i.banality.temp }, k);
         await setT(actor, { "system.advantages.banality.temporary": r.points, "system.advantages.banality.permanent": r.rating });
-        return r.newDot ? `Banality passes 10 points: a Banality dot (${r.rating}).${C.undone(r.rating) ? " Banality 10: Undone." : ""}` : `+${k} Banality (${r.points} points).`;
+        // B6935: more Banality points than the Glamour rating and the changeling's own Mists begin (pp. 270-271)
+        const mists = !r.newDot && C.ownMists(r.points, i.glamour.perm) ? ` More Banality points than Glamour ${i.glamour.perm}: the Mists close in; the Storyteller picks one (${C.OWN_MISTS.join(", ")}).` : "";
+        return r.newDot ? `Banality passes 10 points: a Banality dot (${r.rating}).${C.undone(r.rating) ? " Banality 10: Undone." : ""}` : `+${k} Banality (${r.points} points).${mists}`;
     }
     async function glamour(actor, delta) {
         const i = info(actor);
@@ -269,6 +271,7 @@ export function build(ctx) {
         const who = m => `${esc(m.name)}: ${m.passerby ? esc(CR.SPARK_LABEL[Math.max(0, Math.min(3, m.spark ?? 0))]) : "the Storyteller knows their spark"}${spent(m) ? ", already Ravaged tonight" : ""}`;
         const crowdRow = crowd.length ? `<div class="form-group"><label>The mortal (Reverie, Ravaging)</label>${crowd.length > 6 ? searchBox("select[name=from]", "Search the crowd…", "Search the crowd") : ""}<select name="from"><option value="">Nobody picked</option>${crowd.map(m => `<option value="${m.id}">${who(m)}</option>`).join("")}</select></div>` : "";
         const content = `<form><div class="form-group"><label>The path</label><select name="k" data-fixed>
+            <option value="study">Know the Dreamer first (Perception + Kenning, 8): how long to spend with them</option>
             <option value="reverie">Reverie: inspire a Dreamer (Manipulation + Ability, 6)</option>
             <option value="rapture">Rapture: self-inspiration (Attribute + Ability, Banality − Glamour + 6)</option>
             <option value="ravaging">Ravaging: theft (Banality dice, 6)</option>
@@ -276,7 +279,7 @@ export function build(ctx) {
             <option value="rhapsody">Rhapsody: forbidden (Manipulation + Expression + Glamour invested, 7)</option>
             <option value="sanctuary">Sanctuary: a night by a freehold's balefire</option></select></div>
           ${crowdRow}
-          <div class="form-group"><label>Dice from the Attribute and Ability (Reverie, Rapture, Rhapsody)</label><input type="number" name="dice" min="0" max="15" value="5"/></div>
+          <div class="form-group"><label>Dice from the Attribute and Ability (Know the Dreamer, Reverie, Rapture, Rhapsody)</label><input type="number" name="dice" min="0" max="15" value="5"/></div>
           <div class="form-group"><label><input type="checkbox" name="thr"/> Following the Musing or Ravaging Threshold</label></div>
           <div class="form-group"><label>Glamour invested (Rhapsody, 1–5)</label><input type="number" name="inv" min="1" max="5" value="1"/></div>
           <div class="form-group"><label>Freehold rating and sleepers (Sanctuary)</label><input type="number" name="fr" min="0" max="10" value="${i.freehold || 2}"/><input type="number" name="sl" min="1" max="12" value="1"/></div>
@@ -288,7 +291,14 @@ export function build(ctx) {
             const from = fd.from && (k === "reverie" || k === "ravaging") ? crowd.find(m => m.id === fd.from) : null;
             if (from && k === "ravaging" && spent(from)) return ctx.notify(`${from.name} was Ravaged already tonight: there is nothing left to take.`);
             if (from && k === "reverie" && from.passerby && (from.spark ?? 0) < CR.DREAMER) return ctx.notify(`${from.name} has ${CR.SPARK_LABEL[from.spark ?? 0]}: no Dreamer to inspire.`);
-            if (k === "revelry") out = C.epiphany("revelry");
+            if (k === "study") {
+                // B6935: the Musing time (C20 p. 262): the successes say how long the changeling must spend with the Dreamer
+                r = await rollPool(n(fd.dice), 8);
+                const t = C.musingTime(r.botch ? 0 : r.successes);
+                out = { glamour: 0, note: t ? `the changeling must spend ${t} with the Dreamer before a Reverie` : "what inspires the Dreamer stays hidden for now" };
+                body += rollBlock("Perception + Kenning", r);
+            }
+            else if (k === "revelry") out = C.epiphany("revelry");
             else if (k === "sanctuary") out = { glamour: C.sanctuary(n(fd.fr), n(fd.sl)) };
             else {
                 if (k === "rhapsody" && !(await glamour(actor, -Math.max(1, n(fd.inv))))) return null;
@@ -355,6 +365,14 @@ export function build(ctx) {
     }
 
     async function mists(actor) {
+        // B6583: targeted mortals keep or lose what they saw by their own Banality through the witness step (6 or more
+        // forgets, as a changeling seen in plain sight); with no one targeted, the table answers for one Banality
+        const toks = [...(game.user.targets ?? [])].filter(t => t.actor && t.actor !== actor);
+        if (toks.length) {
+            if (!game.user.isGM) return notify("The Storyteller works the Mists on the witnesses.");
+            const r = await game.modules.get(MOD)?.api?.witnessStep?.({ actor, tokens: toks, secret: "fae", event: "the Dreaming" });
+            return r ?? post(actor, "The Mists", `<div class="vta-res">${toks.map(t => esc(t.name)).join(", ")}: nothing to record.</div>`);
+        }
         const content = `<form><div class="form-group"><label>The mortal's Banality</label><input type="number" name="b" min="0" max="10" value="6"/></div>
           <div class="form-group"><label><input type="checkbox" name="kithain"/> Other changelings were there (two steps lower, for a changeling's own memory)</label></div></form>`;
         return dialog("The Mists", content, "Read", async fd => {

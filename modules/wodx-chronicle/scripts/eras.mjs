@@ -65,6 +65,15 @@ export function activeEra() {
 }
 
 /**
+ * B6668: one switch of the profile in force (its "rules": firearms, morality, gauntletChart, cyberware), or undefined
+ * when the profile leaves it out. Other modules read it as api.eras.eraSwitch(key) and keep their year check as the
+ * fallback (terms.gunsOnSheet, walksRoads, cyberwareOn).
+ */
+export function eraSwitch(key) {
+  try { return activeEra()?.profile?.rules?.[key]; } catch (e) { return undefined; }
+}
+
+/**
  * Apply a profile on this client: the upstream system reads these defaults when a character is created.
  */
 export function applyProfile(profile) {

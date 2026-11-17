@@ -242,3 +242,14 @@ export function burstDice(p, levels = 1) {
 
 /** The page line for a card. */
 export const pageOf = p => W(p.p);
+
+/**
+ * B6662: a power aimed at another character (harm, a hold, sway or fear, or a change put straight on the target's
+ * sheet), so a carried ward or Magic Resistance on that target makes its roll harder. A power on the fomor's own
+ * body, a sense, a summoning or a way of moving is not.
+ */
+const AIMED = ["harm", "hold", "sway", "fear"];
+export function aimedAtOther(p) {
+    if (!p || p.self || p.sense || p.numbing || p.feed) return false;
+    return !!(p.drain || p.dull || p.sick || p.gnosisDrain || (p.keywords ?? []).some(k => AIMED.includes(k)));
+}

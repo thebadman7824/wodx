@@ -27,7 +27,7 @@ export const MAGE_WONDERS = [
 /**
  * How a mage binds a spirit into a Fetish (M20 Crafting Wonders, pdf 509; Book of Secrets, pdf 161): Spirit 4 to force
  * an unwilling spirit (an unreliable fetish), or Prime 4 and a bargain with a willing one. The fetishes themselves are
- * the Garou list (Ben's Item Crafting Desk, m3).
+ * the Garou list (the owner's Item Crafting Desk, m3).
  */
 export const MAGE_FETISH = {needsForced: {spirit: 4}, needsWilling: {prime: 4}, goalPerLevel: 3, book: BOS, pdf: 161,
   use: "A mage asks the spirit for its power: Willpower at difficulty 7, and on a success the fetish's Gnosis is the pool (M20 pdf 653)."};

@@ -1,4 +1,4 @@
-"""Round 3 of the house-only events (Ben, 2026-11-12 02:23Z): at least 300 events per era, from real history,
+"""Round 3 of the house-only events (the owner, 2026-11-12 02:23Z): at least 300 events per era, from real history,
 tied to World of Darkness canon where possible, and tagged so other WoDX systems can use them.
 
 Each era file <era>.txt holds one event per line:
@@ -22,7 +22,7 @@ LINES = {'all': 'All lines', 'mor': 'Mortals', 'vam': 'Vampire', 'wer': 'Werewol
 REGIONS = {'MO': 'Moravia', 'EU': 'Europe', 'ME': 'Middle East', 'AS': 'Asia', 'AF': 'Africa', 'AM': 'Americas', 'OC': 'Oceania'}
 KINDS = {'H': 'history', 'W': 'tied', 'N': 'named', 'F': 'branch', 'M': 'myth'}
 PROLOGUES = {'living-gods', 'classical'}
-# The seven prologue eras (Ben picked seven real eras, 2026-11-12); ids match wodx-chronicle data/eras.json, names follow the naming desk.
+# The seven prologue eras (the owner picked seven real eras, 2026-11-12); ids match wodx-chronicle data/eras.json, names follow the naming desk.
 PERIODS = [('mythic-age', 'Before the Flood', -10000, -3101), ('bronze-kings', 'The Age of Living Gods', -3100, -1178), ('iron-dawn', 'The Age of Burning Palaces', -1177, -801),
            ('greece-republic', 'The Age of Oracles', -800, -28), ('roman-empire', 'The Age of Silk and Eagles', -27, 476),
            ('migration-age', 'The Age of Fallen Thrones', 477, 907), ('premyslid-duchy', 'The Age of Gathering Darkness', 908, 1196)]

@@ -874,7 +874,7 @@ export function clueTexts(o, successes = 0) {
  * with none, one of the stock wrong turns. others: the other clues' interactable data. House reading.
  */
 export const FALSE_LEADS = ["Marks here point the wrong way, toward the door nobody used.", "Someone has been here recently; the signs say a stranger, not anyone known.",
-  "It looks older than it is, and whatever happened here seems long over.", "It seems to have nothing to do with the matter at hand."];
+  "It looks older than it is, and whatever happened here seems long over.", "It seems unrelated to what is going on here."];
 export function falseClue(o, others = [], rand = Math.random) {
   const own = new Set((o?.texts ?? []).map(t => String(t).trim()));
   const pool = others.flatMap(x => (x?.texts ?? []).slice(1)).map(t => String(t ?? "").trim()).filter(t => t && !own.has(t));
@@ -895,6 +895,13 @@ export function kgPart(o) {
   return `${c}, ${kg <= 0 ? "weighing nothing to speak of" : kg < 1 ? "under a kilo" : `about ${kg >= 10 ? Math.round(kg) : Math.round(kg * 10) / 10} kg`}`;
 }
 
+/**
+ * Is it an era of bows, not guns? B6668: the era profile's firearms switch says (false: yes, true: no); "early"
+ * firearms or no switch fall back to the Dark Ages rules or a year before 1600.
+ */
+export const archeryEra = (era = {}) => era.firearms === false
+  || (era.firearms !== true && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && !TERMS.gunsOnSheet(era.firearms, era.year))));
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
   if ( o.cover ) return Cover.coverTitle(o);
@@ -902,7 +909,7 @@ export function nameOf(o, era = {}) {
     const T = TARGETS[o.kind];
     let t = o.title || T.label;
     // In the early eras a target with rings is an archery butt
-    if ( !o.title && o.kind === "mark" && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && era.year < 1600)) ) t = "Archery butt";
+    if ( !o.title && o.kind === "mark" && archeryEra(era) ) t = "Archery butt";
     if ( o.kind === "bottles" ) return `${t}${o.left ? `, ${o.left} standing` : ", all knocked down"}`;
     if ( o.kind === "object" ) return `${t}${o.broken ? ", broken" : ""}`;
     return t;

@@ -21,7 +21,12 @@
  *    9e. Storyteller tools (B4800): the player switches them on from the panel, sees the Storyteller's cards, gives
  *        the character the gate's item and 3 experience, opens Check the systems and What is hidden here, and switches them off
  *    9f. arrival (B5140): the player asks to be brought in, and the seat answers with the character's token; the panel
- *        offers no Make my character to a player who has one
+ *        offers no Make my character to a player who has one, and Foundry's User Configuration is closed (B6711)
+ *    9g. the hunger line waits while the character wizard is open on the character (B6710)
+ *    9h. Chronicle options (B6757): the player turns on Threads of Fate, Hardship and Bodies left behind from the panel,
+ *        the seat writes them and refuses a key not on its list, and each is put back
+ *    9i. Report a problem (B7160): the player's report reaches the seat and is saved as a journal entry in the
+ *        "Reported problems" folder that the player can read
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
@@ -122,6 +127,7 @@ async function setup() {
   ids.userCharacter = user.character?.id ?? null;
   await user.update({character: pc.id});
   // Arrival lands on the gate's scene for the run (B5140), never on a testbed map
+  ids.reportFolder = game.folders.some(f => f.type === "JournalEntry" && f.name === "Reported problems");
   ids.landingBefore = read(MOD, "landing");
   if ( ids.landingBefore !== undefined ) await game.settings.set(MOD, "landing", scene.id);
   await game.settings.set(MOD, "wait", 2);
@@ -217,6 +223,25 @@ async function player(ids) {
     const want = ["next", ...(S()?.rules?.PANEL ?? []).map(b => b.id)];
     ok("9b. the panel", opened && byItself && want.every(id => buttons.includes(id)) && buttons.length === want.length, {byItself, buttons, want, minVersion: atLeast(MOD, "0.2.0")});
   });
+  await step("9h. chronicle options from the panel", async () => {
+    // B6757: the lone player sets the Storyteller's off-by-default options from the panel; the seat writes them and
+    // refuses a key that is not on the list. Each setting is put back as it was.
+    const R0 = S()?.rules, opts = (R0?.OPTIONS ?? []).filter(o => read(o.mod, o.key) !== undefined);
+    const was = Object.fromEntries(opts.map(o => [o.key, read(o.mod, o.key)]));
+    const flip = o => { const now = String(was[o.key]); return Object.keys(o.choices).find(v => v !== now && !(o.key === "threads" && now === "suggest" && v === "auto")) ?? now; };
+    const want = Object.fromEntries(opts.map(o => [o.key, flip(o)]));
+    const asWritten = v => v === "true" ? true : v === "false" ? false : v;
+    const hasButton = (R0?.PANEL ?? []).some(b => b.id === "options");
+    S().panel.ask("ask.options", {values: {...want, notAnOption: "on"}});
+    const set = await until(() => opts.every(o => same(read(o.mod, o.key), asWritten(want[o.key]))), 8000);
+    const refused = read("wodx-storyteller", "notAnOption") === undefined && R0?.optionChange?.("notAnOption", "on") === null && R0?.optionChange?.("hardship", "maybe") === null;
+    // a value the panel does not offer (threads "suggest") is put back by the Storyteller's browser in "finish"
+    const offered = opts.filter(o => Object.hasOwn(o.choices, String(was[o.key])));
+    S().panel.ask("ask.options", {values: Object.fromEntries(offered.map(o => [o.key, String(was[o.key])]))});
+    const back = await until(() => offered.every(o => same(read(o.mod, o.key), was[o.key])), 8000);
+    ok("9h. chronicle options from the panel", hasButton && opts.length === (R0?.OPTIONS ?? []).length && opts.length > 0 && set && refused && back,
+      {hasButton, options: opts.map(o => o.key), was, want, set, refused, back});
+  });
   await step("9c. pause from the panel", async () => {
     const was = game.paused;
     S().panel.ask("ask.pause");
@@ -282,18 +307,53 @@ async function player(ids) {
     if ( !S()?.arrival ) return ok("9f. arrival", false, {error: "no arrival in this version"});
     let got = null;
     Hooks.once("wodxSoloArrived", d => { got = d; });
+    // B6711: Foundry's User Configuration, open over the arrival, is closed once the token is there
+    const UC = foundry.applications.sheets?.UserConfig ?? foundry.applications.sheets?.UserConfigSheet;
+    if ( UC ) await new UC({document: game.user}).render(true).catch(() => null);
     S().panel.ask("ask.arrive");
     const came = await until(() => !!got, 10000);
+    await sleep(500);
+    const configOpen = [...(foundry.applications.instances?.values?.() ?? [])].some(a => a.rendered && a.document?.documentName === "User" && /UserConfig/.test(a.constructor?.name ?? ""));
     const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
     const offersMake = !!el?.querySelector?.("[data-action=arrive]");
-    ok("9f. arrival", came && got?.tokenId === ids.tokens?.[0] && got?.sceneId === ids.scene && !offersMake,
-      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake,
+    ok("9f. arrival", came && got?.tokenId === ids.tokens?.[0] && got?.sceneId === ids.scene && !offersMake && !configOpen,
+      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake, configOpen, configTried: !!UC,
         // Why, when it does not match: the gate's own ids and what the answer points at
         want: {sceneId: ids.scene, tokenId: ids.tokens?.[0]},
         gotScene: got ? game.scenes.get(got.sceneId)?.name ?? null : null,
         gotToken: got ? (game.scenes.get(got.sceneId)?.tokens?.get?.(got.tokenId)?.name ?? null) : null,
         character: game.user.character?.name ?? null,
         gateTokens: (ids.tokens ?? []).map(id => game.scenes.get(ids.scene)?.tokens?.get?.(id)?.name ?? null)});
+  });
+  await step("9g. the hunger line waits for the wizard", async () => {
+    // B6710: while the character wizard is open on the character, the screen's state does not count the hunger line
+    const P = game.modules.get("wodx-senses")?.api?.perception;
+    const wiz = game.modules.get("wodx-creation")?.api?.wizard;
+    const me = game.user.character;
+    if ( !P?.stateOf || !wiz || !me ) return ok("9g. the hunger line waits for the wizard", false, {error: "no Senses state, no wizard or no character", senses: !!P?.stateOf, wizard: !!wiz, me: !!me});
+    const before = !!P.stateOf(me).building;
+    await wiz(me);
+    const open = await until(() => !!P.stateOf(me).building, 8000);
+    await foundry.applications.instances?.get?.(`wodx-wizard-${me.id}`)?.close?.();
+    const closed = await until(() => !P.stateOf(me).building, 8000);
+    ok("9g. the hunger line waits for the wizard", !before && open && closed, {before, open, closed});
+  });
+  await step("9i. report a problem", async () => {
+    // B7160 to B7162: the player's report reaches the seat and comes back as a journal entry the player may read
+    const rep = S()?.report;
+    if ( !rep?.rules ) return ok("9i. report a problem", false, {error: "no Report a problem in this version"});
+    const PR = rep.rules;
+    const r = PR.buildReport({what: `${TAG} report: the gate checks the report button`, expected: "a journal entry", kind: "broken"},
+      {at: Date.now(), world: game.world.id, by: game.user.name, isGM: false, build: {label: "gate"}, scene: {id: canvas.scene?.id, name: canvas.scene?.name},
+        actor: {id: game.user.character?.id, name: game.user.character?.name, type: game.user.character?.type}, gameDate: "", worldTime: game.time.worldTime,
+        errors: rep.caught(), cards: [], windows: [], modules: {}});
+    S().panel.ask("ask.report", {report: r});
+    const seen = await until(() => game.journal.some(j => j.getFlag?.(MOD, "report")?.id === r.id), 10000);
+    const entry = game.journal.find(j => j.getFlag?.(MOD, "report")?.id === r.id);
+    const inFolder = entry?.folder?.name === PR.FOLDER;
+    const page = entry?.pages?.contents?.[0]?.text?.content ?? "";
+    ok("9i. report a problem", seen && inFolder && /the gate checks the report button/.test(page) && /What happened/.test(page),
+      {id: r.id, seen, inFolder, folder: entry?.folder?.name ?? null, pageStart: page.slice(0, 120)});
   });
   return steps;
 }
@@ -407,6 +467,12 @@ async function finish(ids, playerSteps) {
     ok("11. the stall report", rep.total >= 4 && rep.rows.some(r => r.end === "answered by the seat") && rep.rows.some(r => r.end === "left waiting"), {total: rep.total, waiting: rep.waiting});
   });
 
+  // 9h ran in the player's browser; put back any option it could not set back from the panel
+  for ( const o of S()?.rules?.OPTIONS ?? [] ) {
+    const was = (playerSteps ?? []).find(x => x.name?.startsWith("9h."))?.was;
+    if ( was && Object.hasOwn(was, o.key) && !same(read(o.mod, o.key), was[o.key]) ) await game.settings.set(o.mod, o.key, was[o.key]);
+  }
+
   await step("12. the switch off", async () => {
     await game.settings.set(MOD, "on", false);
     await until(() => !read(MOD, "before")?.at, 8000);
@@ -437,6 +503,11 @@ async function cleanup(ids, R) {
     for ( const id of ids?.users ?? [] ) await game.users.get(id)?.delete();
     if ( ids?.landingBefore !== undefined ) await game.settings.set(MOD, "landing", ids.landingBefore ?? "");
     for ( const id of ids?.items ?? [] ) await game.items.get(id)?.delete();
+    // 9i: the gate's own reports, and the folder when the run made it
+    const reps = game.journal.filter(j => String(j.getFlag?.(MOD, "report")?.what ?? "").startsWith(TAG)).map(j => j.id);
+    if ( reps.length ) await JournalEntry.deleteDocuments(reps);
+    const rf = game.folders.find(f => f.type === "JournalEntry" && f.name === "Reported problems");
+    if ( rf && ids && !ids.reportFolder && !game.journal.some(j => j.folder?.id === rf.id) ) await rf.delete();
     if ( ids && "stBefore" in ids && game.settings.settings.has(`${MOD}.st`) ) await game.settings.set(MOD, "st", ids.stBefore ?? {on: false, userId: null, at: 0});
     const since = ids?.since ?? Date.now();
     const mine = game.messages.filter(m => m.timestamp >= since - 1000 && (m.speaker?.alias === TAG || m.speaker?.alias === "The Lone Chronicle" || String(m.content ?? "").includes(TAG))).map(m => m.id);
@@ -444,7 +515,7 @@ async function cleanup(ids, R) {
     const q = Q()?.pending?.().filter(p => String(p.title ?? "").startsWith(TAG)) ?? [];
     for ( const p of q ) await Q().decide(p.id, "reject");
     if ( ids && game.time.worldTime !== ids.t0 ) { R.notes.push(`the clock had moved by ${game.time.worldTime - ids.t0} s; put back`); await game.time.advance(ids.t0 - game.time.worldTime); }
-    const left = game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length + game.users.filter(u => u.name.startsWith(TAG)).length;
+    const left = game.journal.filter(j => String(j.getFlag?.(MOD, "report")?.what ?? "").startsWith(TAG)).length + game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length + game.users.filter(u => u.name.startsWith(TAG)).length;
     ok("13. clean up", left === 0 && (!ids || game.time.worldTime === ids.t0) && !read(MOD, "on"), {left, clock: ids ? game.time.worldTime - ids.t0 : null});
   } catch (e) { ok("13. clean up", false, {error: e.message}); }
 }

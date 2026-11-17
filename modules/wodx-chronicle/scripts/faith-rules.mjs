@@ -78,17 +78,40 @@ const weekday = jdn => ((jdn % 7) + 7) % 7; // 0 = Monday
 
 /* ------------------------------------------------------------------ the faiths ---- */
 
+/**
+ * B6931: each faith's founding year (founded) from history, with where it comes from (source). Before it a land keeps
+ * a count of its own, and a pick of that faith answers as one. Years before AD 1 are negative.
+ */
 export const FAITHS = {
-  western: {label: "The Western church", year: "Church year"},
-  orthodox: {label: "The Eastern church", year: "Church year"},
-  islamic: {label: "Islam", year: "The Muslim year"},
-  jewish: {label: "The Jewish year", year: "The Jewish year"},
-  hindu: {label: "The Hindu year", year: "The Hindu year"},
-  theravada: {label: "The Buddhist year of the south", year: "The Buddhist year"},
-  tibetan: {label: "The Buddhist year of Tibet", year: "The Tibetan year"},
-  chinese: {label: "The lunar year of China, Korea and Japan", year: "The lunar year"},
+  western: {label: "The Western church", year: "Church year", founded: 33,
+    source: "Christianity's first church in Jerusalem at Pentecost, c. AD 30 to 33 (Acts 2)"},
+  orthodox: {label: "The Eastern church", year: "Church year", founded: 33,
+    source: "the same apostolic church as the West; the Greek-speaking churches keep their year from it (the split of 1054 came later)"},
+  islamic: {label: "Islam", year: "The Muslim year", founded: 622,
+    source: "the Hijra of 622, year 1 of the Muslim count (the count was set under the caliph Umar, c. 638)"},
+  jewish: {label: "The Jewish year", year: "The Jewish year", founded: -1000,
+    source: "the kingdom of Israel and its Temple worship, c. 1000 BC (the reckoned calendar of Hillel II, 359, came later)"},
+  hindu: {label: "The Hindu year", year: "The Hindu year", founded: -1500,
+    source: "the Vedic age and the Rigveda, c. 1500 BC"},
+  theravada: {label: "The Buddhist year of the south", year: "The Buddhist year", founded: -250,
+    source: "Mahinda's mission to Sri Lanka under Ashoka, c. 250 BC, the start of the southern school"},
+  tibetan: {label: "The Buddhist year of Tibet", year: "The Tibetan year", founded: 779,
+    source: "Samye, Tibet's first monastery, consecrated c. 779 under Trisong Detsen"},
+  chinese: {label: "The lunar year of China, Korea and Japan", year: "The lunar year", founded: -104,
+    source: "the Taichu calendar of Emperor Wu of Han, 104 BC, which set the lunar new year the later counts keep"},
   own: {label: "A count of their own", year: "Holy days"}
 };
+/**
+ * Whether a faith was founded by a year. A count of their own always was. An unknown year (none, or 0, which many
+ * callers pass when the clock cannot be read) counts as founded, so those callers keep their old answer.
+ */
+export function faithFounded(faith, year) {
+  const f = FAITHS[faith]?.founded;
+  const y = Number(year);
+  return f === undefined || !Number.isFinite(y) || y === 0 || y >= f;
+}
+/** The faith itself once founded, else a count of their own. */
+export const faithIn = (faith, year) => faithFounded(faith, year) ? faith : "own";
 
 /** Which year a region keeps, by the first year it does: [[from, faith], ...]. A house reading of history. */
 const W = [[-9999, "western"]], I = [[-9999, "islamic"]], O = [[-9999, "orthodox"]];
@@ -112,7 +135,7 @@ export function faithFor(regionId, year) {
   const rows = REGION_FAITH[regionId] ?? W;
   let out = rows[0][1];
   for ( const [from, f] of rows ) if ( Number(year) >= from ) out = f;
-  return out;
+  return faithIn(out, year);
 }
 
 /** How strictly a faith's year is kept: [strict until, by custom until]; after that lightly. */
@@ -499,6 +522,7 @@ const DAYS = {orthodox: orthodoxDay, islamic: islamicDay, jewish: jewishDay, hin
  * opts: {extra, observance, region}. The Western church answers through churchDay().
  */
 export function faithDay(faith, date, opts = {}) {
+  if ( !faithFounded(faith ?? "western", date?.year) ) return ownDay(date, opts);
   if ( !DAYS[faith] ) return {faith: "western", calendar: FAITHS.western.year, ...churchDay(date, opts)};
   return DAYS[faith](date, opts);
 }
@@ -509,7 +533,7 @@ export const faithLabel = c => churchLabel(c);
 export function otherDays(date, except = "western") {
   const out = [];
   for ( const f of ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese"] ) {
-    if ( f === except ) continue;
+    if ( f === except || !faithFounded(f, date?.year) ) continue;
     let c; try { c = faithDay(f, date, {}); } catch (e) { continue; }
     const day = c.feast ?? (c.day && !/^The Sabbath$|^The observance day/.test(c.day) ? c.day : null);
     if ( day ) out.push({faith: f, label: FAITHS[f].label, day});

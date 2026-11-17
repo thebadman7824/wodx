@@ -2,16 +2,17 @@
  * WoDX Library: making the supernatural items of each line (B3630-B3636). No Foundry calls here; the data is in
  * data/wonders.mjs and Storyteller runs the work as a long task (scripts/wonders.mjs there).
  *
- * One table for every line (Ben's Item Crafting Desk, 2026-11-13, g1): a row says what it needs, the roll, the time,
+ * One table for every line (the owner's Item Crafting Desk, 2026-11-13, g1): a row says what it needs, the roll, the time,
  * the cost and the item it makes. A finished task makes a real item (g2): a Fetish item with its Gnosis that WoDX
  * Actions' fetish window attunes and wakes, talens marked as one use, a weapon for war fetishes, and the silver the
  * carrier pays in Gnosis. Werewolf and the Changing Breeds come first; other lines add a LINES entry and rows.
  */
+import {FETISH_POWERS} from "../data/wonder-fetish-powers.mjs";
 import {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey} from "../data/wonders.mjs";
 
 export {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey};
 
-/** The lines that can make things, each with its world setting (g6: on in the testbed, off on Live until Ben says). */
+/** The lines that can make things, each with its world setting (g6: on in the testbed, off on Live until the owner says). */
 export const LINES = {
   garou: {label: "Werewolf and the Changing Breeds", setting: "craftGarou", makers: ["garou", "spiral", "kinfolk"]}
 };
@@ -131,7 +132,7 @@ export function itemsFor(w, {successes = 1, strength = "gaffling", spirit = "", 
   const talen = w.kind === "talen";
   const bound = String(spirit || w.spirit);
   const flag = {key: w.key, line: w.line, kind: w.kind, spirit: bound, silver: n(w.silver), maker: String(maker), at: n(at),
-    ref: `${w.book}, pdf ${w.pdf}`, does: w.does};
+    ref: `${w.book}, pdf ${w.pdf}`, does: w.does, ...(FETISH_POWERS[w.key] ? {powers: structuredClone(FETISH_POWERS[w.key])} : {})};
   const desc = para(w.does) + para(`Spirit bound: ${bound}.`) + (w.silver ? para(`Silver: the bearer's effective Gnosis is ${w.silver} lower while carrying it.`) : "")
     + (w.weapon?.note ? para(w.weapon.note) : "") + para(`${w.book}, pdf ${w.pdf}.`);
   const fetish = {name: w.name, type: "Fetish", img: "icons/svg/item-bag.svg",

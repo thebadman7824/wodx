@@ -42,7 +42,7 @@ test("a book cantrip sets its difficulty, needed successes and effect", () => {
   assert.equal(r.key, "ward");
   assert.equal(r.out.dice, 3, "a soak die a success");
   const tears = DC.presetOf("Immortal Tears", "dawn");
-  assert.equal(DC.presetResults(tears.id, 5)[0].out.levels, 2, "an aggravated level for every two successes");
+  assert.equal(DC.presetResults(tears.id, 5).find(r => r.out?.aggravated).out.levels, 2, "an aggravated level for every two successes");
 });
 
 test("every book cantrip with an effect puts something on the effects card at five successes", () => {
@@ -147,4 +147,16 @@ test("the making cantrips leave a Treasure that holds a known cantrip", async ()
   assert.equal(tru.flags["wodx-actions"].treasure.expires, null);
   const c20 = TR.c20Item({ cantrip: Object.keys((await import("../../modules/wodx-actions/scripts/c20-arts.js")).CANTRIPS)[0], glamour: 12 });
   assert.equal(c20.flags["wodx-actions"].treasure.glamour, 10, "ten Glamour at most");
+});
+
+test("Weep mends two bashing or one lethal a success; Immortal Tears keeps that and adds an aggravated level for every two", () => {
+  const w = DC.presetResults("weep", 3).map(r => r.out).filter(o => o?.kind === "heal");
+  assert.equal(w.length, 1);
+  assert.equal(w[0].aggravated, false);
+  assert.equal(w[0].levels, 3);
+  assert.equal(w[0].bashingPer, 2);
+  const t = DC.presetResults("immortal-tears", 3).map(r => r.out).filter(o => o?.kind === "heal");
+  assert.equal(t.length, 2);
+  assert.deepEqual(t.map(o => [o.levels, !!o.aggravated]), [[3, false], [1, true]]);
+  assert.equal(DC.presetResults("immortal-tears", 1).map(r => r.out).filter(o => o?.kind === "heal").length, 1);
 });

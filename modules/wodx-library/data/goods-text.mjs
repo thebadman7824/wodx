@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.7.0: what each everyday good looks like (Ben asked 2026-11-11, after Cataclysm DDA's item descriptions).
+ * WoDX Library 0.7.0: what each everyday good looks like (the owner asked 2026-11-11, after Cataclysm DDA's item descriptions).
  * One line per good: "name | text". A line "@YEAR name | text" is the wording from that year on, where the thing itself
  * changed. WoDX's own words. Edit here; the Item Review Desk reads the same text.
  */

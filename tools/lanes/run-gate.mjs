@@ -11,12 +11,15 @@
  *   --step-timeout 45     seconds a dialog or other window the gate opened may wait for an answer before the
  *                         runner closes it, so a step waiting on a click nobody makes goes on (default 45)
  *   --max-minutes N       the whole run's limit (default 15 plus the gate limits plus 2 minutes a gate)
+ *   --list                print the gates the run would take, as "GATES [json]", and stop (B6526)
+ *   --queue <file>        take gates one at a time from a JSON list shared with runs on other lanes (B6526)
  * No run can hang a lane (B3089): a gate past its limit fails, its browser is closed and a new one signed in for the
  * next gate; past the whole run's limit the runner closes its browser, frees the lane and exits with 5. The lane lock
  * carries a deadline that moves on before each gate, so another run takes over a lane whose run has hung past it,
  * ending that process and its browser.
  * After each gate the runner puts back world settings the gate changed and removes ones it added; on lanes that are
- * reset every night it also deletes documents the gate left behind (B3086). Two-browser gates (gatesolo,
+ * reset every night it also deletes documents the gate left behind (B3086) and puts back the flags it changed on the
+ * actors, scenes, tokens, journal entries, items and users that were there before it (B7181). Two-browser gates (gatesolo,
  * gatelookhand) are left out of the map; run them by name, alone.
  *
  * 1. Picks the first lane in lanes.json that is up and not locked (or the one --lane names) and locks it.
@@ -34,15 +37,17 @@
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
-  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
-import {openGM} from "./browser.mjs";
+  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
+  flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK} from "./lib.mjs";
+import {openGM, waitApis} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
+import {readQueue, takeQueued} from "./gate-queue.mjs";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes"]);
+const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
@@ -54,6 +59,16 @@ if ( args.includes("--touched") ) {
   gates.push(...list);
 }
 gates = [...new Set(gates)];
+// B6526: --list prints the gates this run would take (after --touched/--all) as JSON and stops; the PC runner fills a
+// shared queue from it
+if ( args.includes("--list") ) { console.log(`GATES ${JSON.stringify(gates.filter(g => /^[\w-]+$/.test(g)))}`); process.exit(0); }
+// B6526: --queue FILE takes the gates one at a time from a JSON list shared with other lanes, so a lane that joins
+// late or runs quick gates takes more of the work (the list given on the line is ignored)
+const queueFile = opt("queue");
+if ( queueFile ) {
+  gates = readQueue(queueFile);
+  if ( !gates.length ) { const line = `==== ${new Date().toISOString()} 0 gate(s): the shared queue is empty`; console.log(line); if ( opt("report") ) fs.appendFileSync(opt("report"), `${line}\nexit 0\n`); process.exit(0); }
+}
 const shard = /^(\d+)\/(\d+)$/.exec(opt("shard") ?? "");
 if ( shard ) {
   const before = gates.length;
@@ -126,7 +141,15 @@ let sinceSignIn = 0;
 const signIn = async () => {
   const session = await within(openGM(laneUrl(lane), {channel: opt("channel") ?? undefined}), 7 * 60000, "signing in");
   browser = session.browser; page = session.page; sinceSignIn = 0;
+  // B6952: modules still without an api after the wait are named on the next gate's line
+  lateApis = session.late ?? [];
+  diagLog = session.diag ?? []; diagFrom = 0;
 };
+// B6970: --diag writes, under each failing gate, the console errors and warnings since the last gate (since sign-in for
+// the first) and every failing step in full, so a lane failure can be read from the job's report.
+const DIAG = args.includes("--diag");
+let diagLog = [], diagFrom = 0;
+let lateApis = [];
 try {
   // Code drift: the repo checkout against the lane's deployed files.
   const cache = path.join(laneDir(lane), "cache");
@@ -136,7 +159,7 @@ try {
 
   // World drift: the running world against its clean fingerprint.
   await signIn();
-  const now = worldFingerprint(await within(page.evaluate(WORLD_PROBE), 120000, "the world check"), cfg.ignoreSettings);
+  const now = await within(settledFingerprint(page, cfg.ignoreSettings), 150000, "the world check");
   const clean = readJson(path.join(laneDir(lane), "clean.json"));
   const world = clean ? diffWorld(clean, now, {versions: false}) : {strict: [{where: "clean fingerprint", what: "none yet: reset the lane or run lanes.mjs accept"}], warn: []};
   world.strict.push(...diffRunning(expected, now));
@@ -157,7 +180,7 @@ try {
     await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {});
     const copied = copyFixtures(repo, lane.dataPath);
     if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
-    for ( const gate of gates ) {
+    for ( let gate, k = 0; (gate = queueFile ? takeQueued(queueFile, lane.id) : gates[k++]); ) {
       const limit = limitOf(gate);
       extendLock(lane, Date.now() + limit + 5 * 60000);
       if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
@@ -165,6 +188,13 @@ try {
         try { await signIn(); await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {}); }
         catch (e) { report(`${gate}: ERROR could not sign in again: ${e.message}`); code = 1; break; }
       }
+      // B6960: the WoDX apis are looked for again before each gate (a world that lost them mid-lane is named, not the gate)
+      const lostApis = await waitApis(page).catch(() => []);
+      const diagStart = diagFrom;
+      if ( lostApis.length ) console.log(`Lane ${lane.id}: no api before ${gate} after 120 s: ${lostApis.join(", ")}`);
+      // B7181: on a lane reset every night, the flags of the shared documents are read now and put back after the gate.
+      const flagsBefore = lane.autoReset ? await page.evaluate(READ_FLAGS).catch(() => null) : null;
+      const sheetsBefore = lane.autoReset ? await page.evaluate(READ_SHEETS).catch(() => null) : null;
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
@@ -195,7 +225,8 @@ try {
         }, 5000);
         let timer;
         try {
-          const mod = await import(`/wodx-gate/${gate}.mjs?${Date.now()}`);
+          // B6952: a busy server can drop the fetch of the gate file itself; one more try after a pause
+          const mod = await import(`/wodx-gate/${gate}.mjs?${Date.now()}`).catch(async () => { await new Promise(r => setTimeout(r, 5000)); return import(`/wodx-gate/${gate}.mjs?${Date.now()}`); });
           summary = await Promise.race([mod.run(), new Promise((_, no) => { timer = setTimeout(() => no(new Error(`timed out after ${Math.round(limit / 60000)} min`)), limit); })]);
         }
         catch (e) { error = e?.message ?? String(e); }
@@ -251,16 +282,43 @@ try {
         run.catch(() => {});
         await closeBrowser(); page = null;
       }
+      // B7192: sheets first (a system update can move flags through hooks), then flags
+      if ( sheetsBefore && page ) {
+        try { out.sheetsBack = await page.evaluate(PUT_SHEETS_BACK, sheetPlan(sheetsBefore, await page.evaluate(READ_SHEETS))); }
+        catch (e) { out.sheetsBack = 0; const note = `putting sheets back: ${e?.message ?? e}`; if ( out.error ) out.error += `; ${note}`; else out.error = note; }
+      }
+      if ( flagsBefore && page ) {
+        try { out.flagsBack = await page.evaluate(PUT_FLAGS_BACK, flagPlan(flagsBefore, await page.evaluate(READ_FLAGS))); }
+        catch (e) { out.flagsBack = 0; const note = `putting flags back: ${e?.message ?? e}`; if ( out.error ) out.error += `; ${note}`; else out.error = note; }
+      }
       const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : "",
+        out.flagsBack ? `flags put back on ${out.flagsBack} document(s)` : "",
+        out.sheetsBack ? `sheets put back on ${out.sheetsBack} document(s)` : "",
         out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;
+      const signInNote = lateApis.length > 0;
+      if ( lateApis.length ) { const note = ` [no api after sign-in: ${lateApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; lateApis = []; }
+      if ( lostApis.length && !signInNote ) { const note = ` [no api before this gate: ${lostApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; }
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
-      if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
+      const diagDump = async () => {
+        if ( !DIAG ) return;
+        const lines = diagLog.slice(diagStart);
+        report(`  DIAG console since ${diagStart ? "the last gate" : "sign-in"} (${lines.length} line(s)):`);
+        for ( const l of lines.slice(-150) ) report(`    ${l}`);
+        const res = await page.evaluate(async g => { try { return await (await fetch(`/wodx-gate/${g}-result.json?${Date.now()}`, {cache: "no-store"})).json(); } catch (e) { return {fetchError: e.message}; } }, gate).catch(e => ({fetchError: e.message}));
+        for ( const st of (res?.steps ?? []).filter(x => !x.pass) ) report(`  DIAG step ${JSON.stringify(st).slice(0, 12000)}`);
+        for ( const e of (res?.errors ?? []) ) report(`  DIAG error ${String(e).slice(0, 4000)}`);
+        if ( res?.fetchError ) report(`  DIAG no result file: ${res.fetchError}`);
+      };
+      if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; await diagDump(); diagFrom = diagLog.length; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);
       report(`${gate}: ${out.summary}${clock}`);
       const m = /(\d+)\s*\/\s*(\d+)\s+passed/.exec(out.summary);
-      if ( (m && m[1] !== m[2]) || !out.back ) code = 1;
+      // B6952: a gate that ran no step at all (0/0) or did not say how it did (no tally, and no "pass": true) has not passed
+      const failed = (m ? m[1] !== m[2] || m[2] === "0" : !/^\{"pass":true\b/.test(out.summary)) || !out.back;
+      if ( failed ) { code = 1; await diagDump(); }
+      diagFrom = diagLog.length;
     }
     extendLock(lane, Date.now() + 10 * 60000);
     if ( !page ) await signIn();
@@ -303,3 +361,5 @@ function copyFixtures(repo, dataPath) {
   }
   return out;
 }
+
+/* B6526: the shared gate queue (a JSON list), taken from under a lock file so two lanes never take the same gate */

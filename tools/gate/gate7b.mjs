@@ -40,7 +40,7 @@ const zero = {bashing: 0, lethal: 0, aggravated: 0};
 const dmgOf = a => { const ct = C().corpusTrack(a), d = ct?.damage ?? a.system?.health?.damage ?? {}; return {bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated)}; };
 
 /** Rothenstein's NPCs, one per template (sheets with no player owner), and a player's character. */
-function cast() {
+export function cast() {
   const R = npc().rules;
   const npcs = game.actors.filter(a => !a.hasPlayerOwner && ["PC", "Mortal", "Vampire", "Werewolf", "Wraith", "Hunter", "Creature", "Changing Breed"].includes(a.type));
   const byTemplate = new Map();
@@ -52,7 +52,7 @@ function cast() {
   return {byTemplate, hero, fighter, runner, kindred};
 }
 
-async function arena(roles) {
+export async function arena(roles) {
   // B6050: a fresh arena every run. A kept one carried its tokens' wounds, frenzy and moves from run to run (and into
   // the lane snapshots), so the plan steps passed on one lane and failed on another
   for ( const old of game.scenes.filter(s => s.getFlag(MOD, "gateArena")) ) {
@@ -302,6 +302,21 @@ export async function run() {
     const cards = game.messages.contents.filter(m => m.timestamp >= t0 && m.getFlag(MOD, "plan"));
     ok("a player's character is never moved; Off means off", pc === null && off === null && !cards.some(m => [T.hero.document.uuid, T.fighter.document.uuid].includes(m.getFlag(MOD, "plan").token)),
       {cardsSince: cards.length});
+  });
+  // B6945: a failed stand-up spends the NPC's action this turn, so WoDX NPC says it cannot act and plans nothing
+  await step("a lost action: the fighter that failed to stand does not act", async () => {
+    const t0 = Date.now();
+    await sc.setFlag(MOD, "mode", "off");
+    await turnTo(combat, T.fighter);
+    await T.fighter.actor.setFlag("wodx-combat", "lostAction", {combat: combat.id, round: combat.round});
+    await sc.setFlag(MOD, "mode", "auto");
+    const msg = await npc().takeTurn(combat, {force: true});
+    await sleep(800);
+    await T.fighter.actor.unsetFlag("wodx-combat", "lostAction");
+    const card = msg ? game.messages.get(msg.id) : null;
+    const plans = game.messages.contents.filter(m => m.timestamp >= t0 && m.getFlag(MOD, "plan")?.token === T.fighter.document.uuid);
+    ok("a lost action: the fighter that failed to stand does not act", /cannot act \(failed to stand up\)/.test(card?.content ?? "") && !plans.length,
+      {card: card?.content?.replace(/<[^>]+>/g, " ").trim().slice(0, 160) ?? null, plans: plans.length});
   });
   await sc?.unsetFlag(MOD, "mode");
   if ( startScene && startScene.id !== canvas.scene?.id ) await startScene.view();

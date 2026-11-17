@@ -83,21 +83,19 @@ export async function tick() {
 }
 
 const reach = () => { try { return Number(game.settings.get("wodx-npc", "talkReach")) || 2; } catch (e) { return 2; } };
-function squares(a, b, scene) {
-  const g = scene?.grid?.size ?? 100;
-  const gap = (p, q, wp, wq) => Math.abs((p + wp / 2) - (q + wq / 2)) - (wp + wq) / 2;
-  const d = Math.max(gap(a.x, b.x, (a.width ?? 1) * g, (b.width ?? 1) * g), gap(a.y, b.y, (a.height ?? 1) * g, (b.height ?? 1) * g));
-  return Math.max(0, Math.round(d / g) + 1);
-}
+const squares = (a, b, scene) => R.squares(a, b, scene?.grid?.size ?? 100);
+/** B6666: who a token is as a finder of bodies ("pc", "town" or null); hunt-follow.mjs reads the same rule. */
+const finderOfToken = tok => (tok?.actor ? R.finderOf({pc: !!tok.actor.hasPlayerOwner, type: tok.actor.type, hidden: !!tok.hidden,
+  passerby: !!tok.flags?.["wodx-npc"]?.passerby, hunter: !!tok.flags?.[MOD]?.reach}) : null);
 
 /** A player's character moved: any body they come upon for the first time is found. */
 export async function onMoved(tok, changes) {
   if ( !isActiveGM() || !setting("remains") || !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return [];
   const pc = tok.actor;
-  if ( !pc || tok.hidden ) return [];
   // B5703 (h5): townsfolk find bodies too: a mortal NPC (not a passer-by or the hunters' own) is the first to come upon one
-  const townsfolk = !pc.hasPlayerOwner && pc.type === "Mortal" && !tok.flags?.["wodx-npc"]?.passerby && !tok.flags?.[MOD]?.reach;
-  if ( !pc.hasPlayerOwner && !townsfolk ) return [];
+  const who = finderOfToken(tok);
+  if ( !who ) return [];
+  const townsfolk = who === "town";
   // B6434: where the move ends. Foundry 14 can call the hook before the document shows the new place, so the change
   // (or moveToken's destination) wins over the token's own x and y, as WoDX Interactables reads a move
   const at = {x: Number(changes.x ?? tok.x) || 0, y: Number(changes.y ?? tok.y) || 0, width: tok.width, height: tok.height};

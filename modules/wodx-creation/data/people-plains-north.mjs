@@ -2,7 +2,7 @@
  * The northern Plains for the People generator (Creation, B4140 to B4143): the Crow (Apsáalooke) of the Yellowstone,
  * the Blackfoot (Niitsitapi: the Siksika, the Kainai and the Piikani) of the northern plains and the foothills, and
  * the Arapaho (Hinono'eino) between the Platte and the Arkansas. WoDX's own lists of recorded names; no book text.
- * Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the clerks wrote them in English, hyphens dropped): the signers of the Fort Laramie treaties
  * of 1851 and 1868, the Lame Bull treaty of 1855, Treaty 7 of 1877 and the Medicine Lodge treaty of 1867 (Kappler,

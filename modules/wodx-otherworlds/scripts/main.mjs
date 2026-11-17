@@ -26,6 +26,9 @@ import * as wildRules from "./wild-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
 import * as spirits from "./spirits.mjs";
+import * as net from "./net.mjs";
+import * as netRules from "./net-rules.mjs";
+import * as technica from "./technica.mjs";
 import * as spiritRules from "./spirit-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -51,12 +54,18 @@ Hooks.once("init", () => {
   corruption.registerCorruptionSettings();
   corruptionLooks.registerCorruptionLookSettings();
   realms.setupRealms();
+  // B6590-B6606: running the Net
+  net.registerNetSettings();
+  net.registerNetStatuses();
+  net.setupNet();
+  technica.setupTechnica();
 });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "applyChange" ) await onApplyChangeGM(message.payload ?? {});
+    if ( message?.type === "net" ) await net.onNetMessage(message);
   });
   const api = {
     stepSideways: () => stepSideways({mode: "cross"}),
@@ -69,7 +78,7 @@ Hooks.once("ready", () => {
     journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
-      netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
+      netContest: realms.netContest, maelstrom: realms.maelstromStrike, wayOnSuccess: realms.wayOnSuccess, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
     // B3270-B3276: Wyrm corruption that spreads between places and into people
     corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
       plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules,
@@ -86,6 +95,9 @@ Hooks.once("ready", () => {
       drawWild: realmMaps.drawWild, walkOn: realmMaps.walkOn, isWild: realmMaps.isWild, wildRules},
     spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
       courtOptions: spirits.courtOptions, rules: spiritRules},
+    net: {window: net.netWindow, draw: net.drawFortress, jackInto: net.jackInto, jackOut: net.jackOut, run: net.runProgram, file: net.takeFile, iceRound: net.iceRound,
+      hit: net.applyHit, healBurns: net.healBurns, whiteout: net.whiteout, derez: net.derezNow, isFortress: net.isFortress, modelOf: net.modelOf, kind: net.netKindNow, rules: netRules,
+      technica: {dots: technica.technica, isCyberpunk: technica.isCyberpunk, empower: technica.empower, remoteTouch: technica.remoteTouch, steer: technica.steerVehicle, speak: technica.speak, powerShown: technica.onPowerShown}},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
   };
   game.modules.get(MODULE_ID).api = api;
@@ -189,6 +201,10 @@ Hooks.on("getSceneControlButtons", controls => {
   if ( realms.netOpen() ) tokens.tools.wodxJack = {
     name: "wodxJack", title: "Jack into the Net, or out", icon: "fa-solid fa-network-wired", order: 132,
     button: true, visible: true, onChange: () => realms.jack()
+  };
+  if ( net.netKindNow() ) tokens.tools.wodxNet = {
+    name: "wodxNet", title: "The Net: jack into a data fortress, run programs, take files, work remotes", icon: "fa-solid fa-microchip", order: 133,
+    button: true, visible: true, onChange: () => net.netWindow()
   };
   tokens.tools.wodxRatings = {
     name: "wodxRatings", title: "Otherworld ratings by scene", icon: "fa-solid fa-ghost", order: 112,

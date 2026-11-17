@@ -1446,7 +1446,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 91: sensations sent through a stand-in, which cannot harm; the Storyteller plays what the target feels"
 },
 {
 "id": "cb-bastet-river-of-blood",
@@ -1636,7 +1637,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 101: the roll only aims the drop; what lands does its own harm (a grenade is a weapon)"
 },
 {
 "id": "cb-corax-swallows-return",
@@ -1742,7 +1744,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 101: a Garou Gift borrowed for one use goes on the sheet by hand"
 },
 {
 "id": "cb-corax-suns-guard",
@@ -3348,14 +3351,14 @@
 "r": "wits+rituals",
 "d": 7,
 "t": "instant",
-"e": "Awaken spirit.",
+"e": "Rouses one from supernatural sleep: the power holding the sleeper ends (a torpor from wounds is the Storyteller's).",
 "book": "W20 CB",
 "breed": "Gurahl",
 "sub": "Rishi",
 "spec": {
-"kw": "free",
-"kind": "note",
-"who": "self"
+"kw": "banish",
+"kind": "st",
+"who": "one"
 }
 },
 {
@@ -4236,7 +4239,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 136: a paper vessel holds four times its size; WoDX keeps no carried volume"
 },
 {
 "id": "cb-kitsune-attraction",
@@ -4322,7 +4326,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 149: fertility; story only"
 },
 {
 "id": "cb-mokole-reptoid-form",
@@ -5241,14 +5246,14 @@
 "r": "dexterity+larceny",
 "d": 6,
 "t": "instant",
-"e": "Snatch garment.",
+"e": "Whisks one garment off the target (Dexterity + Larceny against the target's Dexterity + Athletics); once a night per person.",
 "book": "W20 CB",
 "breed": "Nuwisha",
 "sub": "",
 "spec": {
-"kw": "free",
-"kind": "note",
-"who": "self"
+"kw": "trip",
+"kind": "st",
+"who": "one"
 }
 },
 {
@@ -6557,13 +6562,13 @@
 "r": "manipulation+expression",
 "d": 9,
 "t": "scene",
-"e": "The Storyteller rules the effect from the page.",
+"e": "One sense reaches to legendary range for the scene (seven leagues by ear, five miles by eye).",
 "book": "W20 CB",
 "breed": "Ratkin",
 "sub": "Munchmausen",
 "spec": {
-"kw": "free",
-"kind": "note",
+"kw": "sense",
+"kind": "st",
 "who": "self"
 }
 },
@@ -6721,7 +6726,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 202: one swallowed object kept for later; the sheet holds it by hand"
 },
 {
 "id": "cb-rokea-fathom-sight",
@@ -7254,13 +7260,13 @@
 "r": "",
 "d": 6,
 "t": "permanent",
-"e": "The Storyteller rules the effect from the page.",
+"e": "Swims sideways across the Gauntlet as a werewolf steps sideways; permanent.",
 "book": "W20 CB",
 "breed": "Rokea",
 "sub": "Darkwater",
 "spec": {
-"kw": "free",
-"kind": "note",
+"kw": "sideways",
+"kind": "st",
 "who": "self"
 }
 },
@@ -7454,7 +7460,8 @@
 "kw": "free",
 "kind": "note",
 "who": "self"
-}
+},
+"story": "W20 CB p. 235: a better chance of a child breeding true; story only"
 },
 {
 "id": "cb-apis-strength-of-the-brazen-bull",
@@ -7914,13 +7921,13 @@
 "r": "wits+primalurge",
 "d": 7,
 "t": "instant",
-"e": "Topples trees or foundations, more with successes.",
+"e": "A blow at a foundation: five more damage dice a success against it; the player picks where it falls.",
 "book": "W20 CB",
 "breed": "Grondr",
 "sub": "",
 "spec": {
-"kw": "free",
-"kind": "note",
+"kw": "work",
+"kind": "st",
 "who": "self"
 }
 },

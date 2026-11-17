@@ -1,4 +1,4 @@
-"""The asset catalogue: every Dungeondraft asset Ben has, tagged from its path alone with the general piece it can
+"""The asset catalogue: every Dungeondraft asset the owner has, tagged from its path alone with the general piece it can
 stand for (table, seat, bed...), the ages it fits (settle.py's), a style, a worth from 0 to 5 (the everyday goods
 scale) and whether it lasts through every age (a barrel, a sack). Palettes are built from it.
 

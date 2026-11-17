@@ -1,5 +1,5 @@
 /**
- * WoDX NPC gate: aftercare, what NPCs do once they have carried someone where they meant to (B5710 to B5721, Ben's
+ * WoDX NPC gate: aftercare, what NPCs do once they have carried someone where they meant to (B5710 to B5721, the owner's
  * Aftercare Desk a1-a12), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatecarryaftercare.mjs?${Date.now()}`)).run()
  * Makes its own scratch scene, actors, tokens and faction, and removes them; never moves the clock (it runs the

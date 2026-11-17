@@ -44,7 +44,7 @@ export function isDemon(actor) {
  * Take back what the apocalyptic form put on the sheet (its reverter, run when the scene's timed effect ends): the Attribute
  * and initiative bonuses still recorded, Stamina's lethal soak as it was, and the hide's soak.
  */
-export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null, armorId = null } = {}) {
+export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null, armorId = null, weaponIds = [] } = {}) {
     if (!actor?.isOwner) return;
     const upd = {};
     for (const [k, v] of Object.entries(attrs)) {
@@ -60,6 +60,9 @@ export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null
     if (lethalWas !== null && actor.system?.settings?.soak?.lethal) upd["system.settings.soak.lethal.isrollable"] = !!lethalWas;
     if (Object.keys(upd).length) await actor.update(upd);
     if (armorId && actor.items?.get?.(armorId)) await actor.deleteEmbeddedDocuments("Item", [armorId]);
+    // B6851: the form's natural weapons go with it
+    const gone = (weaponIds ?? []).filter(id => actor.items?.get?.(id));
+    if (gone.length) await actor.deleteEmbeddedDocuments("Item", gone);
     const f = actor.getFlag?.(MOD, "demon");
     if (f?.formApplied) await actor.setFlag(MOD, "demon", { ...f, formApplied: null });
 }
@@ -347,7 +350,15 @@ export function build(ctx) {
             armorId = it?.id ?? null;
             bits.push(`${tot.armor} soak dice from the hide`);
         }
-        const data = { attrs: tot.attrs, init: tot.init, lethalWas, armorId };
+        // B6851: claws, horns, a maw: weapons on the sheet while the form lasts
+        let weaponIds = [];
+        const wd = DE.formWeapons(tot.names ?? [], tot.visage ?? "");
+        if (wd.length) {
+            const made = await actor.createEmbeddedDocuments("Item", wd);
+            weaponIds = made.map(x => x.id);
+            bits.push(`${wd.map(x => x.name).join(", ")} on the sheet`);
+        }
+        const data = { attrs: tot.attrs, init: tot.init, lethalWas, armorId, weaponIds };
         await saveFlag(actor, { formApplied: data });
         await api.applyTimed(actor, { name: "Apocalyptic form", img: "icons/svg/fire.svg", description: bits.join(", ") || "The true form", duration: { kind: "scene" },
             revert: { key: "wodx-actions.demonForm", data }, source: `${REF} pp. 170-171`, key: "wodx-demon-form" });
@@ -378,20 +389,27 @@ export function build(ctx) {
             const peril = i.forms.high.filter((_, k) => k >= slots && fd[`peril${k}`]);
             if (out.ok && peril.length) notes.push(await torment(actor, peril.length));
             let body = r ? rollBlock("Faith pool", r) : `<div class="vta-sec">A Faith point is spent: the change is certain.</div>`;
+            let formFx = [];
             if (out.ok) {
                 await saveFlag(actor, { formScene: sceneKey(), form: [...chosen, ...peril] });
                 body += `<div class="vta-big good">${esc(i.visage || "The apocalyptic form")} rises for the scene.</div>`;
-                const tot = DE.formTotals([...chosen, ...peril], i.visage);
+                const tot = { ...DE.formTotals([...chosen, ...peril], i.visage), names: [...chosen, ...peril], visage: i.visage };
                 if (tot.lines.length) body += `<div class="vta-sec">${tot.lines.map(x => `<div><b>${esc(x.name)}:</b> ${esc(x.fx)}</div>`).join("")}</div>`;
                 const applied = await applyForm(actor, tot);
                 if (applied) body += `<div class="vta-note">${esc(applied)}</div>`;
+                // B6851: the rest of the form's powers on the effects card, for the scene
+                if (EF.isOn()) {
+                    const pp = EF.planOf(actor, DE.formResults(tot.names, i.visage), 1, { name: i.visage || "The apocalyptic form", line: "Demon (DtF)" });
+                    body += pp.html;
+                    formFx = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
                 body += `<div class="vta-note">${look === "glorious" ? "Witnesses see a glorious, awe-inspiring being." : look === "nightmarish" ? "Witnesses see a living nightmare." : "Witnesses see awe or terror, as their own minds take it."} Every mortal present suffers Revelation (Willpower against Faith ${i.faith.perm}).</div>`;
                 // Who sees it (3.42.0): mortals breach, other kinds are startled
                 ctx.revealed?.(actor, { secret: "demon", event: "the apocalyptic form" })?.catch?.(e => console.error("WoDX |", e));
             } else body += `<div class="vta-big">The mortal shell holds; no change.</div>`;
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 162, 170–171, 254</div>`;
-            return post(actor, `${actor.name}: the apocalyptic form`, body, [r?.roll].filter(Boolean));
+            return post(actor, `${actor.name}: the apocalyptic form`, body, [r?.roll].filter(Boolean), formFx.length ? { kind: "effects", caster: actor.name, items: formFx } : undefined);
         });
     }
 
@@ -519,13 +537,24 @@ export function build(ctx) {
             return post(actor, `${actor.name} meets the holy`, body + `<div class="wodx-quiet">${REF} pp. 254–255</div>`, rolls.filter(Boolean));
         });
     }
+    /** The speaker's picture on this screen; at two successes the view moves to them (their scene, if it is the one shown). */
+    async function showSpeaker(tok, successes) {
+        const src = tok.actor?.img || tok.document?.texture?.src;
+        const IP = foundry.applications?.apps?.ImagePopout ?? globalThis.ImagePopout;
+        if (src && IP) { try { new IP({ src, window: { title: tok.name } }).render(true); } catch (e) { new IP(src, { title: tok.name }).render(true); } }
+        if (successes >= 2 && tok.document?.parent?.id === canvas?.scene?.id) await canvas.animatePan({ x: tok.center?.x ?? tok.x, y: tok.center?.y ?? tok.y, scale: Math.max(1, canvas.stage?.scale?.x ?? 1) });
+    }
     async function named(actor) {
         const i = info(actor);
         const content = `<form><div class="form-group"><label>The name spoken</label><select name="k" data-fixed><option value="7">the Celestial Name (7)</option><option value="6">the True Name (6)</option></select></div></form>`;
         return dialog(`A name is spoken: ${actor.name}`, content, "Listen", async fd => {
             if (i.faith.temp < 1) { notify(`${actor.name} needs a Faith point in the pool to listen.`); return null; }
             const r = await rollPool(i.faith.perm, n(fd.k));
-            const body = rollBlock("Faith", r) + `<div class="vta-res">${r.successes ? esc(D.INVOKED[Math.min(3, r.successes)]) + (r.successes >= 3 ? "; each further turn, Willpower at 8 to keep listening" : "") : "Only the tug of the name."}</div><div class="wodx-quiet">${REF} p. 171</div>`;
+            // B6585: what is heard shows: one success puts the speaker's picture on this screen, two pan the view to the speaker
+            // and those around (when the speaker's token is targeted), three keep the line open a turn (Demon: The Fallen p. 171)
+            const spk = [...(game.user.targets ?? [])].find(t => t.actor && t.actor !== actor) ?? null;
+            if (r.successes && spk) await showSpeaker(spk, r.successes).catch(e => console.warn("WoDX | invocation", e));
+            const body = rollBlock("Faith", r) + `<div class="vta-res">${r.successes ? esc(D.INVOKED[Math.min(3, r.successes)]) + (spk ? `: ${esc(spk.name)}` : "") + (r.successes >= 3 ? "; each further turn, Willpower at 8 to keep listening" : "") : "Only the tug of the name."}</div>${r.successes && !spk ? `<div class="vta-note">Target the speaker's token to see them.</div>` : ""}<div class="wodx-quiet">${REF} p. 171</div>`;
             return post(actor, `${actor.name} hears a name`, body, [r.roll].filter(Boolean));
         });
     }
@@ -536,7 +565,12 @@ export function build(ctx) {
         return dialog(`See through illusion: ${actor.name}`, content, "Roll", async fd => {
             const diff = D.illusionDifficulty(n(fd.f), n(fd.t));
             const r = await rollPool(ctx.attr(actor, "perception") + n(ctx.findAbility?.(actor, "alertness")?.value), diff);
-            const body = rollBlock("Perception + Alertness", r) + `<div class="vta-res ${r.successes ? "good" : ""}">${r.successes ? "The artifice falls away." : "The illusion holds."}</div><div class="wodx-quiet">${REF} p. 171</div>`;
+            // B6584: seen through, the illusions on this map show to this demon's player as faint outlines (WoDX Actions
+            // draws an Illusion as a tile); they stay whole for everyone else
+            const tiles = r.successes ? (canvas?.scene?.tiles?.filter?.(t => t.flags?.[MOD]?.illusion) ?? []) : [];
+            if (tiles.length) await ctx.setFlag(actor, "seenThrough", [...new Set([...(actor.getFlag(MOD, "seenThrough") ?? []), ...tiles.map(t => t.id)])]);
+            const what = r.successes ? (tiles.length ? `The artifice falls away: ${tiles.length === 1 ? "the illusion here shows" : `${tiles.length} illusions here show`} as faint outlines to ${esc(actor.name)}.` : "The artifice falls away; nothing here is false.") : "The illusion holds.";
+            const body = rollBlock("Perception + Alertness", r) + `<div class="vta-res ${r.successes ? "good" : ""}">${what}</div><div class="wodx-quiet">${REF} p. 171</div>`;
             return post(actor, `${actor.name} looks past the veil`, body, [r.roll].filter(Boolean));
         });
     }

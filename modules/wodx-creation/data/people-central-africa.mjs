@@ -1,7 +1,7 @@
 /**
  * Central Africa for the People generator (Creation, B4690 to B4693): the Bakongo of the Kongo kingdom on the lower
  * Congo, the Luba and Lunda of the Katanga and Kasai savanna, and the Baganda of the kingdom of Buganda on Lake
- * Victoria. WoDX's own lists of recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * Victoria. WoDX's own lists of recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the modern Kikongo, Kiluba and Luganda alphabets write them): the kings, nobles and letters of
  * the Kongo court in the Portuguese and Capuchin records from 1483; the king lists and praise histories of the Luba

@@ -205,7 +205,9 @@ export class LifepathApp extends ApplicationV2 {
     const s = this.setup, L = R.LINES[s.line] ?? R.LINES.mortal;
     const rec = lifepathOf(this.actor);
     const lines = Object.entries(R.LINES).map(([k, v]) => `<option value="${k}" ${k === s.line ? "selected" : ""}>${esc(v.label)}</option>`).join("");
-    const splats = R.splatsFor(s.line, s.line === "mortal" ? s.birthYear + 20 : s.turnYear);
+    let futureBranch = false;
+    try { futureBranch = !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { /* no chronicle */ }
+    const splats = R.splatsFor(s.line, s.line === "mortal" ? s.birthYear + 20 : s.turnYear, {futureBranch});
     const open = R.lineOpen(s.line, s.turnYear);
     return `
       <div class="wodx-top"><p class="wodx-prompt">${esc(this.actor.name)}'s life before play, step by step: where in the world, which family, then childhood, the teenage years and adult life as far as the character's age reaches. Each choice offers Backgrounds, Abilities, Merits or Flaws and may name someone from the past. At the end you tick what to keep.</p></div>

@@ -2,7 +2,7 @@
  * WoDX Library: what changelings make (B3700-B3705). Data only; the kit is scripts/wonders-changeling.mjs. Every row is
  * WoDX's own short summary with a page reference, never book text.
  *
- * Ben's Item Crafting Desk (2026-11-13): c1 full (gather dreamstuff, then a craft task shapes or forges it; the item is
+ * The owner's Item Crafting Desk (2026-11-13): c1 full (gather dreamstuff, then a craft task shapes or forges it; the item is
  * chimerical; a forged chimera gets simple traits as a companion) and c2 full (a Treasure maker using an Art, with
  * Glamour costs, making an item with its Art stored and a Glamour pool).
  *

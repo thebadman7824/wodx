@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.17.0: the drill-down lifepath's rules (Ben, 13 November 2026; Lifepath Drill-down Desk). Pure: no
+ * WoDX Creation 0.17.0: the drill-down lifepath's rules (the owner, 13 November 2026; Lifepath Drill-down Desk). Pure: no
  * Foundry here.
  *
  * A drill is {v, birthYear, age, line, homeland, seed, picks {step id: pick}, place {stage id: region id}, rerolls

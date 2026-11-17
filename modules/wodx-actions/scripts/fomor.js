@@ -15,6 +15,7 @@
  * Numbing (W20 p. 436) keeps its own path: the body change is a Chronicle condition read by WoDX Combat (B5160).
  */
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as FP from "./fomor-powers.js";
 import * as EF from "./effects.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
@@ -145,7 +146,7 @@ export async function settle(actor) {
 }
 
 async function makeWeapon(actor, p, w, always, extra = {}) {
-    const data = { name: w.name, type: "Melee Weapon", img: "icons/svg/claw.svg",
+    const data = { name: w.name, type: "Melee Weapon", img: "icons/svg/pawprint.svg",
         system: { isnatural: true, isequipped: true, attack: { attribute: "dexterity", ability: w.ability ?? "brawl", secondaryabilityid: "", accuracy: 0, isrollable: true },
             damage: { attribute: "strength", bonus: n(w.bonus), type: w.type, isrollable: true }, difficulty: n(w.diff) || 6,
             description: `${p.fx} (${FP.pageOf(p)})${w.noSoak ? " The poison that follows a wounding bite cannot be soaked." : ""}` },
@@ -316,10 +317,12 @@ export function build(ctx) {
             let dice = FP.poolOf(p.roll, get(actor));
             // Umbral Passage: Gnosis (Spirit Ties) may stand in for Willpower
             if (p.key === "umbralpassage") dice = Math.max(dice, pools(actor).gnosis);
-            const r = await rollPool(dice, n(p.diff) + n(lim.diff));
+            // B6662: the target's ward or Magic Resistance makes a fomor power aimed at them harder
+            const rm = FP.aimedAtOther(p) ? TH.targetResist(actor, ["magic"]) : { diff: 0, parts: [] };
+            const r = await rollPool(dice, Math.min(10, n(p.diff) + n(lim.diff) + n(rm.diff)));
             rolls.push(r.roll);
             got = r.botch ? 0 : n(r.successes);
-            body += rollBlock(FP.rollLabel(p.roll), r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
+            body += rollBlock(FP.rollLabel(p.roll), r, [...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])]);
         }
         await actor.setFlag(MOD, "fomorUsed", FP.usedAfter(p, actor.getFlag(MOD, "fomorUsed") ?? {}, stamp()));
         let fx = [];

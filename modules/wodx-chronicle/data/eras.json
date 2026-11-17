@@ -8,7 +8,7 @@
       "start": 1197,
       "end": 1346,
       "basis": "V20 Dark Ages, Dark Ages: Werewolf, Mage: The Dark Ages, Dark Ages: Fae, Dark Ages: Inquisitor",
-      "switches": "Roads; medieval abilities; Gauntlet chart 2 to 8; Pillars; no firearms; demons as spirits",
+      "switches": "Roads; medieval abilities; Gauntlet chart 2 to 8; Pillars; no firearms",
       "system": {
         "mortal": "darkages",
         "vampire": "darkages",
@@ -31,7 +31,7 @@
       "start": 1347,
       "end": 1449,
       "basis": "Same as the Dark Ages",
-      "switches": "Banality spike and the Shattering; Cappadocians fall in 1444",
+      "switches": "The Black Death and the Shattering; the Cappadocians fall in 1444",
       "system": {
         "mortal": "darkages",
         "vampire": "darkages",
@@ -252,7 +252,7 @@
       "end": 2098,
       "requiresRule": "futureBranch",
       "basis": "V20, World of Future Darkness, Cyberpunk 2020",
-      "switches": "Masquerade erosion; cyberware and Humanity cost; the Net; Technica; the Fourth Corporate War",
+      "switches": "Cyberware and its Humanity cost; the Net; the Fourth Corporate War",
       "system": {
         "mortal": "modern",
         "vampire": "modern",

@@ -38,12 +38,13 @@ export function registerArchiveSettings() {
   });
   game.settings.register(MODULE_ID, "autoArchive", {
     name: "Archive the long dead by itself",
-    hint: "When the clock moves on, the dead and Pass the Years' old copies who have been dead (or kept) this long go to the archive of the dead by themselves, unless a player has them or a linked token stands on a scene. Links in journals follow them.",
+    hint: "When the clock moves on, the dead and Pass the Years' old copies who have been dead (or kept) this long go to the archive of the dead by themselves, unless a player has them or a linked token stands on a scene. Links in journals, character notes and item text follow them.",
     scope: "world", config: true, type: Number, choices: AR.AUTO_YEARS, default: AR.AUTO_DEFAULT
   });
 }
 
 const yearOf = time => { try { return describeTime(Number(time) || 0).year ?? null; } catch { return null; } };
+const quiet = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isQuiet?.(); } catch { return false; } };
 const autoYears = () => { try { return Number(game.settings.get(MODULE_ID, "autoArchive")) || 0; } catch { return 0; } };
 
 /** Who the clock sends to the archive now: the candidates dead or kept as a copy for the setting's years. */
@@ -64,6 +65,8 @@ let lastLook = null, looking = false;
 /** One look a day at most, on the active Storyteller's client. Returns the archive's result, or null. */
 export async function autoTick(now = game.time?.worldTime ?? 0, {force = false} = {}) {
   if ( !game.user?.isGM || game.users?.activeGM?.id !== game.user.id || looking ) return null;
+  // B6750: a time skip, a hold or Light-touch mode waits, as every per-tick job does; the skip's end looks once
+  if ( !force && quiet() ) return null;
   if ( !force && lastLook !== null && !AR.newDay(lastLook, now) ) return null;
   lastLook = now;
   if ( !(autoYears() > 0) ) return null;
@@ -74,6 +77,7 @@ export async function autoTick(now = game.time?.worldTime ?? 0, {force = false} 
 }
 export function setupAutoArchive() {
   Hooks.on("updateWorldTime", t => { autoTick(t).catch(e => console.warn("WoDX Creation | archive", e)); });
+  for ( const h of ["wodxSkipEnd", "wodxLightTouchEnd"] ) Hooks.on(h, () => { autoTick().catch(e => console.warn("WoDX Creation | archive", e)); });
 }
 
 /** B6414: journal links to these actors follow them into the archive (toArchive) or back. */
@@ -91,6 +95,20 @@ async function relinkJournals(ids, toArchive) {
       if ( now !== was ) ups.push({_id: p.id, "text.content": now});
     }
     if ( ups.length ) { await j.updateEmbeddedDocuments("JournalEntryPage", ups); n += ups.length; }
+  }
+  // B6770: the same links written in a character's bio boxes and notes, or in an item's description, follow too
+  const gone = new Set(ids);
+  for ( const a of game.actors ?? [] ) {
+    if ( gone.has(a.id) ) continue;
+    const up = AR.relinkFields(a, AR.ACTOR_TEXT, ids, toArchive);
+    if ( up ) { await a.update(up, {wodxArchive: true}); n++; }
+    const items = [];
+    for ( const i of a.items ?? [] ) { const iu = AR.relinkFields(i, AR.ITEM_TEXT, ids, toArchive); if ( iu ) items.push({_id: i.id, ...iu}); }
+    if ( items.length ) { await a.updateEmbeddedDocuments("Item", items, {wodxArchive: true}); n += items.length; }
+  }
+  for ( const i of game.items ?? [] ) {
+    const iu = AR.relinkFields(i, AR.ITEM_TEXT, ids, toArchive);
+    if ( iu ) { await i.update(iu, {wodxArchive: true}); n++; }
   }
   return n;
 }

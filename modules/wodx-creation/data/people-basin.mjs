@@ -1,7 +1,7 @@
 /**
  * The Great Basin and the Rockies for the People generator (Creation, B4150 to B4153): the Shoshone (Newe), from the
  * Wind River to the Snake and the Nevada basin, and the Ute (Nuche) of the Colorado and Utah mountains. WoDX's own
- * lists of recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * lists of recorded names; no book text. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the clerks wrote them in English, hyphens dropped): the signers of the Fort Bridger treaties of
  * 1863 and 1868, the Box Elder and Ruby Valley treaties of 1863, the Ute treaties of 1849, 1863 and 1868 and the Brunot

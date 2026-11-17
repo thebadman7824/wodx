@@ -83,6 +83,8 @@ export async function run() {
     });
     await step("5. trades of Egypt", async () => {
       const ppl = game.modules.get("wodx-creation")?.api?.people;
+      // B6956: the People tables load on first use; a fresh browser may not have them yet
+      await ppl?.load?.();
       const g = chron().gen, ctx = {...g.context(), culture: "egypt"};
       const table = g.lookup(ctx)("people.trade");
       const drawn = Array.from({length: 12}, (_, row) => ppl.generate({batch: 990001, row, culture: "egypt"}).trade);

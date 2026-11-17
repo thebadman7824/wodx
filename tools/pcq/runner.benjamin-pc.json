@@ -1,0 +1,15 @@
+{
+  "_about": "B6990: settings for the runner on the Secondary PC (BENJAMIN-PC, Ryzen 7 3800X 8 cores, 16 GB, RTX 2080 Super 8 GB). Keys here replace runner.json's. It drives lane 8 only, runs no book or Trove lookups (those files are on the Main PC), runs no stale-PR sweep (the main runner does), and watches the live site and the main runner.",
+  "name": "secondary PC runner",
+  "statusTitle": "PC runner status (Secondary PC)",
+  "alertPrefix": "Secondary PC alert",
+  "home": "D:/WoDX/pcq",
+  "lanes": [8],
+  "priority": "BelowNormal",
+  "light": 0,
+  "sweep": false,
+  "minFreeGB": {"C": 15, "D": 50},
+  "minFreeRamGB": 3,
+  "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20},
+  "train": false
+}

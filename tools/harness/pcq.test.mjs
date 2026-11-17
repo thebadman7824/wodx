@@ -5,8 +5,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody} from "../pcq/jobs.mjs";
-import {preflight} from "../pcq/submit.mjs";
+import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody, resetsFirst} from "../pcq/jobs.mjs";
+import {preflight, submitLanes} from "../pcq/submit.mjs";
 import * as gpu from "../pcq/gpu.mjs";
 
 const LANES = [2, 3, 4, 5, 6];
@@ -74,7 +74,8 @@ test("lane faults are retried, gate failures are not", () => {
 
 test("the runner's lanes are clean: no lane 1, no shared port or folder, all reset nightly, no Live world", () => {
   assert.deepEqual(laneClashes(lanesCfg, runnerCfg.lanes), []);
-  assert.ok(runnerCfg.lanes.length >= 5, "at least lanes 2 to 6");
+  assert.ok(runnerCfg.lanes.length >= 4, "at least lanes 2 to 5");
+  assert.ok(!runnerCfg.lanes.includes(6), "lane 6 is kept for the local agents (B6527)");
   assert.ok(!runnerCfg.lanes.includes(1));
   const clash = {world: "rothenstein-wodx", lanes: [{id: 1, port: 30000, dataPath: "a"}, {id: 2, port: 30020, dataPath: "b", autoReset: true}, {id: 3, port: 30020, dataPath: "B", autoReset: false}]};
   const out = laneClashes(clash, [1, 2, 3, 9]).join("\n");
@@ -102,7 +103,7 @@ test("submit's preflight catches a missing gate, a two-browser gate in a gates j
 test("every real two-browser gate is caught by the preflight's pattern, and run-gate's map leaves them out", async () => {
   const {gateMap} = await import("../lanes/gate-map.mjs");
   const map = gateMap();
-  for ( const g of ["gatelookhand", "gatesolo", "gatedisplayb", "gatedisplayd"] ) {
+  for ( const g of ["gatelookhand", "gatesolo", "gatedisplayb", "gatedisplayd", "gatetruthlooks"] ) {
     assert.deepEqual(await preflight({kind: "gate-two", gate: g}), [], g);
     assert.ok(!(g in map), `${g} should not be in the gate map`);
   }
@@ -120,8 +121,11 @@ test("the stale pull request sweep moves on what it can and lists what is stuck 
   const base = {mergeable: true, behind: 0, checks: 8, running: false, failed: "", headAge: 5 * HOUR, tried: false};
   assert.equal(classify(base).action, "ok");
   assert.equal(classify({...base, mergeable: false}).action, "stuck");
-  assert.equal(classify({...base, behind: 1368}).action, "update");
-  assert.equal(classify({...base, behind: 3, headAge: HOUR}).action, "wait", "a branch a thread pushed to in the last 2 hours is left alone");
+  // B7202: a branch behind main is left for the merge train; the hourly update comes back only when asked for
+  assert.equal(classify({...base, behind: 1368}).action, "ok");
+  assert.equal(classify({...base, behind: 1368, checks: 0}).action, "dispatch", "behind with no CI still gets CI started");
+  assert.equal(classify({...base, behind: 1368}, {update: true}).action, "update");
+  assert.equal(classify({...base, behind: 3, headAge: HOUR}, {update: true}).action, "wait", "a branch a thread pushed to in the last 2 hours is left alone");
   assert.equal(classify({...base, checks: 0}).action, "dispatch");
   assert.equal(classify({...base, checks: 0, headAge: 10 * 60e3}).action, "wait");
   assert.equal(classify({...base, checks: 0, tried: true}).action, "stuck");
@@ -150,7 +154,11 @@ test("the sweep runs on a mock GitHub: updates the one behind, starts CI on the 
     if ( url.startsWith("/issues?") ) return [];
     return {};
   };
-  const r = await sweep(gh, {apply: true, log: () => {}});
+  const quiet = await sweep(gh, {apply: true, log: () => {}});
+  assert.deepEqual(quiet.rows.map(x => x.action), ["ok", "dispatch", "stuck"], "B7202: the one behind is left for the merge train");
+  assert.ok(!calls.includes("PUT /pulls/1/update-branch"));
+  calls.length = 0;
+  const r = await sweep(gh, {apply: true, log: () => {}, update: true});
   assert.equal(r.rows.length, 3, "only the owner's pull requests");
   assert.deepEqual(r.rows.map(x => x.action), ["update", "dispatch", "stuck"]);
   assert.ok(calls.includes("PUT /pulls/1/update-branch"));
@@ -190,4 +198,80 @@ test("gpu alert only after the heat holds, clears after it cools", () => {
   assert.equal(w(hot, 6 * m), null); assert.equal(w(ok, 7 * m), null); assert.equal(w(ok, 17 * m), "cool");
   const w2 = gpu.watcher(); w2(hot, 0); w2(ok, m); assert.equal(w2(hot, 2 * m), null); assert.equal(w2(hot, 6 * m), null);
   const w3 = gpu.watcher(); w3({core: 70, memory: 104}, 0); assert.equal(w3({core: 70, memory: 104}, 5 * m), "hot");
+});
+
+// B6526: the shared gate queue.
+test("gates jobs on a shared queue: every gate taken once, gates of a lane that died go back", async () => {
+  const {takeQueued, putBack, readQueue} = await import("../lanes/gate-queue.mjs");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gq-")), f = path.join(dir, "q.json");
+  fs.writeFileSync(f, JSON.stringify(["ga", "gb", "gc", "gd"]));
+  assert.equal(takeQueued(f, "2"), "ga"); assert.equal(takeQueued(f, "3"), "gb"); assert.equal(takeQueued(f, "2"), "gc");
+  assert.deepEqual(putBack(f, "2", "==== x 4 gate(s)\nga: PASS 3/3\n"), ["gc"]);
+  assert.deepEqual(readQueue(f), ["gc", "gd"]);
+  assert.deepEqual(putBack(f, "2", ""), [], "takes already settled are not looked at again");
+  assert.deepEqual(putBack(f, "3", ""), ["gb"]); assert.deepEqual(readQueue(f), ["gb", "gc", "gd"]);
+  // Several processes taking at once: no gate twice, none lost
+  fs.writeFileSync(f, JSON.stringify(Array.from({length: 60}, (_, i) => `g${i}`))); fs.rmSync(`${f}.taken`, {force: true});
+  const mod = new URL("../lanes/gate-queue.mjs", import.meta.url).href;
+  const kid = l => `import {takeQueued} from ${JSON.stringify(mod)}; const out = []; let g; while ( (g = takeQueued(${JSON.stringify(f)}, "${l}")) ) out.push(g); console.log(JSON.stringify(out));`;
+  const {spawn} = await import("node:child_process");
+  const runs = await Promise.all(["2", "3", "4"].map(l => new Promise(res => { let o = ""; const p = spawn(process.execPath, ["--input-type=module", "-e", kid(l)]); p.stdout.on("data", d => o += d); p.on("close", () => res(JSON.parse(o))); })));
+  const all = runs.flat();
+  assert.equal(all.length, 60); assert.equal(new Set(all).size, 60);
+  fs.rmSync(dir, {recursive: true, force: true});
+});
+test("gateArgs in queue mode hands run-gate the shared list", () => {
+  assert.deepEqual(gateArgs({kind: "gates", gates: ["x"], queue: "q.json", maxMinutes: 60}, "5", 0, 1, "r"),
+    ["--queue", "q.json", "--lane", "5", "--wait", "10", "--report", "r", "--max-minutes", "60"]);
+});
+test("submit takes the other PCs' lanes from lanes.json, never lane 6 or lane 1 (B6980)", () => {
+  const runnerCfg = JSON.parse(fs.readFileSync(new URL("../pcq/runner.json", import.meta.url)));
+  const ids = submitLanes(runnerCfg, lanesCfg);
+  for ( const n of [2, 3, 4, 5, 7, 8] ) assert.ok(ids.includes(n), `lane ${n} can be named`);
+  assert.ok(!ids.includes(6) && !ids.includes(1), "lane 6 stays the local agents' and lane 1 stays the owner's");
+  assert.ok(validate({kind: "gates", gates: ["gatex"], lane: 8}, ids).job, "a gates job can go to lane 8");
+  assert.ok(validate({kind: "reset", lane: 7}, ids).job, "lane 7 can be reset from a thread");
+  assert.ok(validate({kind: "reset", lane: 6}, ids).error, "lane 6 is still refused");
+  assert.deepEqual(submitLanes({lanes: [2]}, {lanes: [{id: 1, host: "x"}, {id: 9, host: "y", reserved: "z"}]}), [2]);
+});
+
+test("B7002: a touched or all gates job sets the wodx/gates status on the one commit it ran", async () => {
+  const {gateStatusFor, GATE_CONTEXT} = await import("../pcq/jobs.mjs");
+  const sha = "a".repeat(40), job = {kind: "gates", touched: true, ref: "claude/x"};
+  const pass = [{code: 0, sha, text: "gatea: 5/5 passed\ngateb: 3/3 passed"}];
+  const st = gateStatusFor(job, pass, true, undefined, "https://github.com/o/r/issues/9");
+  assert.equal(st.sha, sha);
+  assert.deepEqual(st.body, {state: "success", context: GATE_CONTEXT, description: "2 gate(s) passed (touched)", target_url: "https://github.com/o/r/issues/9"});
+  assert.equal(gateStatusFor({...job, touched: undefined, gates: ["gatea"]}, pass, true), null, "a hand-picked list says nothing about the branch");
+  assert.equal(gateStatusFor({kind: "deploy"}, pass, true), null);
+  assert.equal(gateStatusFor(job, [{code: null, sha, text: ""}], false), null, "a lane fault is no result");
+  assert.equal(gateStatusFor(job, [...pass, {code: 0, sha: "b".repeat(40), text: "gatec: 1/1 passed"}], true), null, "two commits");
+  assert.equal(gateStatusFor({...job, queueSha: "c".repeat(40)}, pass, true), null, "the queue was listed from another commit");
+  const fail = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: NEW with this change: passes on main"}];
+  const f = gateStatusFor(job, fail, false);
+  assert.equal(f.body.state, "failure");
+  assert.match(f.body.description, /1 of 2 gate\(s\) failed: gateb/);
+  const mainToo = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: fails on main too: not this change's fault"}];
+  const m = gateStatusFor(job, mainToo, false);
+  assert.equal(m.body.state, "success");
+  assert.match(m.body.description, /failing on main too: gateb/);
+  assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
+});
+
+test("B7190: gates jobs start on a reset lane unless they say reset: false", () => {
+  assert.equal(resetsFirst({kind: "gates", touched: true}), true);
+  assert.equal(resetsFirst({kind: "gates", gates: ["gate7b"], reset: false}), false);
+  assert.equal(resetsFirst({kind: "gate-two", gate: "gate7b"}), true);
+  assert.equal(resetsFirst({kind: "deploy"}), false);
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
+});
+
+test("B7194: a runner whose own code is current moves to main in place when only the lane tools changed", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const due = src.slice(src.indexOf("async function updateDue"), src.indexOf("// ---- two PCs"));
+  assert.match(due, /"diff", "--quiet", MY_SHA, "origin\/main", "--", "tools\/pcq"\]/, "it checks the runner's own code first");
+  assert.match(due, /"checkout", "-q", "-f", "--detach", "origin\/main"\]/, "and moves the checkout in place");
+  assert.match(due, /MY_SHA = now; return false;/, "without exiting");
+  assert.match(src, /^let MY_SHA = /m);
 });

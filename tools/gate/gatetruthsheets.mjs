@@ -21,6 +21,8 @@
  *   8. the long dead go by themselves: with "Archive the long dead by itself" at ten years, someone dead eleven years
  *      leaves the world when the clock moves a day (the kit puts the clock back), the compendium entry is there, and a
  *      journal's link points at it; brought back, the link points at the world again
+ *  9b. Grieving (B6664): with WoDX NPC's Grieving on a mortal, Charisma clicked on the sheet rolls one die fewer and the
+ *      card names Grieving; Dexterity, not a social roll, rolls its full pool
  *   9. Show all and the Nature row on a system sheet wear the same frame, shade and text colour as the other WoDX
  *      buttons, on light and dark sheets
  *  10. clean up (the kit)
@@ -156,23 +158,33 @@ export async function run() {
       await medic.update({"system.attributes.intelligence.value": 5, "system.abilities.medicine.value": 5});
       await patient.update({"system.health.damage.lethal": 4});
       const [, pt] = await G.tokens(scene, [{actor: medic, x: 2, y: 4, actorLink: true}, {actor: patient, x: 3, y: 4, actorLink: true}]);
-      await waitFor(() => !!pt?.object, 5000);
-      pt.object?.setTarget?.(true, {releaseOthers: true});
+      // B6779g: the patient must be the target before first aid rolls, or treat() falls back to the medic. In lane order
+      // the canvas can still be on another scene or slow to draw the token, and a target left over from an earlier gate
+      // can sit in game.user.targets; so the gate views its scene again, waits for the token, sets the one target with
+      // the layer's own call and waits until the user's targets are exactly the patient.
+      if ( canvas.scene?.id !== scene.id ) { await scene.view(); await waitFor(() => canvas?.ready && canvas.scene?.id === scene.id, 20000); }
+      await waitFor(() => !!pt?.object, 20000);
+      const aim = () => { if ( canvas.tokens?.setTargets ) canvas.tokens.setTargets([pt.id], {mode: "replace"}); else pt.object?.setTarget?.(true, {releaseOthers: true}); };
+      aim();
+      const onPatient = () => game.user.targets.size === 1 && [...game.user.targets][0]?.actor?.id === patient.id;
+      if ( !(await waitFor(onPatient, 3000)) ) { aim(); await waitFor(onPatient, 5000); }
+      const aimed = {drawn: !!pt?.object, onScene: canvas.scene?.id === scene.id, targets: [...game.user.targets].map(t => t.actor?.name ?? t.name)};
       const before = game.wodxActions.healPlan(patient, 30 * 86400);
       const [kit] = await medic.createEmbeddedDocuments("Item", [{name: "a roll of clean linen bandage", type: "Item", flags: {"wodx-sheets": {qty: 5}}}]);
       let tries = 0;
       while ( !patient.getFlag(ACT, "treated") && tries < 3 ) {
         tries++;
         const stop = answer(root => !!root.querySelector("select[name=check]"), "ok");
+        if ( !onPatient() ) aim();
         await lib.use.run(medic.items.get(kit.id) ?? kit, "treat", medic);
         stop();
         await waitFor(() => !!patient.getFlag(ACT, "treated"), 3000);
       }
-      pt.object?.setTarget?.(false, {releaseOthers: true});
+      if ( canvas.tokens?.setTargets ) canvas.tokens.setTargets([], {mode: "replace"}); else pt.object?.setTarget?.(false, {releaseOthers: true});
       const after = game.wodxActions.healPlan(patient, 30 * 86400);
       G.ok("5. first aid puts the patient under care", !!patient.getFlag(ACT, "treated") && before?.needsCare === true && num(before?.healed?.lethal) === 0
         && after?.needsCare === false && num(after?.healed?.lethal) > 0 && lethalOf(patient) === 4,
-        {tries, treated: !!patient.getFlag(ACT, "treated"), before: before ? {needsCare: before.needsCare, healed: before.healed} : null, after: after ? {needsCare: after.needsCare, healed: after.healed} : null});
+        {tries, aimed, treated: !!patient.getFlag(ACT, "treated"), before: before ? {needsCare: before.needsCare, healed: before.healed} : null, after: after ? {needsCare: after.needsCare, healed: after.healed} : null});
     });
 
     await G.step("6. an item named in free text, in a fight", async () => {
@@ -255,6 +267,46 @@ export async function run() {
         if ( game.actors.get(id) ) await game.actors.get(id).delete();
       }
       G.ok("8. the long dead go to the archive by themselves", gone && inPack && linked && back && unlinked, {gone, inPack, linked, back, unlinked, nowYear});
+    });
+
+    await G.step("9b. Grieving takes a die from a social roll on the sheet", async () => {
+      // B6664: WoDX NPC's Grieving (socialDice -1) on a mortal; Charisma clicked on the sheet rolls one die fewer and the
+      // card names Grieving; Dexterity, not a social roll, keeps its full pool
+      const Ch = game.modules.get(CH)?.api;
+      const [mourner] = await G.make(Actor, [mortal("Gate TruthSheets Mourner", {system: {attributes: {charisma: {value: 4, total: 4}, dexterity: {value: 3}}}})]);
+      await game.settings.set(SH, "sheetRollMods", true);
+      await Ch?.conditions?.setCondition?.(mourner, "grieving", true);
+      await waitFor(() => mourner.statuses?.has?.("wodx-grieving") || (Ch?.conditions?.conditionsOf?.(mourner) ?? []).some(c => c.id === "grieving"), 4000);
+      const sheet = mourner.sheet;
+      await sheet.render(true);
+      const label = key => elOf(sheet)?.querySelector?.(`label.vrollable[data-attribute='true'][data-key='${key}']`);
+      await waitFor(() => sheet.rendered && label("charisma") && label("dexterity"), 6000);
+      const rollOnce = async key => {
+        const t0 = Date.now();
+        label(key)?.click();
+        let dlg = null;
+        await waitFor(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogGeneralRoll" && w.actor?.id === mourner.id && w.rendered)), 6000);
+        elOf(dlg)?.querySelector?.(".actionbutton")?.click();
+        let m = null;
+        await waitFor(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === mourner.id && (x.rolls?.length ?? 0) > 0).at(-1)), 8000);
+        await dlg?.close?.();
+        const W = CONFIG.worldofdarkness, explodes = W?.useexplodingDice && ["always", "nospeciality"].includes(W?.explodingDice);
+        const faces = (m?.rolls ?? []).map(r => num(r.total));
+        return {rolled: faces.length - (explodes ? faces.filter(f => f === 10).length : 0), mods: m?.flags?.[SH]?.rollMods ?? null, named: /Grieving/.test(m?.content ?? ""), card: !!m};
+      };
+      let social, plain;
+      try {
+        social = await rollOnce("charisma");
+        plain = await rollOnce("dexterity");
+      } finally {
+        await sheet.close();
+        await Ch?.conditions?.setCondition?.(mourner, "grieving", false)?.catch?.(() => null);
+        await game.settings.set(SH, "sheetRollMods", keepRollMods);
+      }
+      const cha = num(mourner.system.attributes.charisma.total ?? mourner.system.attributes.charisma.value);
+      const dex = num(mourner.system.attributes.dexterity.total ?? mourner.system.attributes.dexterity.value);
+      G.ok("9b. Grieving takes a die from a social roll on the sheet", social.card && social.rolled === cha - 1 && social.mods?.dice === -1 && social.named
+        && plain.card && plain.rolled === dex && !plain.named, {cha, dex, social, plain});
     });
 
     await G.step("9. Show all wears the WoDX button's frame and colours", async () => {

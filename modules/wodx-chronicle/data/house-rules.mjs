@@ -97,15 +97,6 @@ export default {
       "source": "Era table: Future Darkness"
     },
     {
-      "id": "ghoulsDarkAges",
-      "group": "rules",
-      "name": "Ghouls use V20 Dark Ages rules in every era",
-      "hint": "WoDX Creation applies it to every ghoul it makes or advances.",
-      "default": true,
-      "source": "House rule",
-      "laterPhase": 3
-    },
-    {
       "id": "yearsThickBlood",
       "group": "years",
       "name": "Thick blood",

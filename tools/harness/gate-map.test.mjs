@@ -43,3 +43,20 @@ test("a change runs only the gates it needs", () => {
   assert.deepEqual(G.gatesFor(gate.modules, gate.gates, map), ["gatecase"]);
   assert.deepEqual(G.touched(["modules/wodx-actions/scripts/main.js"], {direct: true}).modules.includes("wodx-sheets"), false);
 });
+
+test("B6951: two-browser gates (a player phase) are left out of the lane map", async () => {
+  const map = G.gateMap();
+  for ( const g of ["gatedebtsmarks", "gateplayerload", "gatetruthwalk", "gateplayerblows", "gatenpcrelay", "gatetruthrelay"] ) {
+    assert.ok(!(g in map), `${g} is not in the map`);
+  }
+  assert.ok(G.TWO_BROWSER.test('if ( phase === "player" ) return player(ids);'));
+  assert.ok("gatecharms" in map, "an ordinary gate stays");
+});
+
+test("B6952: the runner counts 0/0 and a summary with no tally as a failure, and names modules with no api", () => {
+  const src = fs.readFileSync(path.join(G.ROOT, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.match(src, /m\[2\] === "0"/);
+  assert.match(src, /no api after sign-in/);
+  const B = fs.readFileSync(path.join(G.ROOT, "tools/lanes/browser.mjs"), "utf8");
+  assert.match(B, /API_WAIT_MS = 180000/);
+});

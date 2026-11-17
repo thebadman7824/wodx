@@ -31,17 +31,48 @@ const PACK_UUID = "Compendium.world.wodx-archive.Actor.";
  * the old @Actor[id] form and the archive's own form. Returns the same string when nothing changed.
  */
 export function relink(text, ids = [], toArchive = true) {
-  let out = String(text ?? "");
-  for ( const id of ids ) {
-    if ( !/^[A-Za-z0-9]{16}$/.test(String(id)) ) continue;
-    if ( toArchive ) {
-      out = out.split(`@UUID[Actor.${id}]`).join(`@UUID[${PACK_UUID}${id}]`).split(`@Actor[${id}]`).join(`@UUID[${PACK_UUID}${id}]`)
-        .split(`data-uuid="Actor.${id}"`).join(`data-uuid="${PACK_UUID}${id}"`);
-    } else {
-      out = out.split(`@UUID[${PACK_UUID}${id}]`).join(`@UUID[Actor.${id}]`).split(`data-uuid="${PACK_UUID}${id}"`).join(`data-uuid="Actor.${id}"`);
-    }
+  const out = String(text ?? "");
+  // B6770: one pass over the text with a set of ids, so a world of thousands of sheets relinks quickly
+  if ( !out.includes("Actor") ) return out;
+  const set = new Set([...ids].map(String).filter(id => /^[A-Za-z0-9]{16}$/.test(id)));
+  if ( !set.size ) return out;
+  const P = PACK_UUID.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  if ( toArchive ) {
+    return out.replace(/@UUID\[Actor\.([A-Za-z0-9]{16})\]|@Actor\[([A-Za-z0-9]{16})\]|data-uuid="Actor\.([A-Za-z0-9]{16})"/g, (m, a, b, c) => {
+      const id = a ?? b ?? c;
+      if ( !set.has(id) ) return m;
+      return c ? `data-uuid="${PACK_UUID}${id}"` : `@UUID[${PACK_UUID}${id}]`;
+    });
   }
-  return out;
+  const re = new RegExp(`@UUID\\[${P}([A-Za-z0-9]{16})\\]|data-uuid="${P}([A-Za-z0-9]{16})"`, "g");
+  return out.replace(re, (m, a, c) => {
+    const id = a ?? c;
+    if ( !set.has(id) ) return m;
+    return c ? `data-uuid="Actor.${id}"` : `@UUID[Actor.${id}]`;
+  });
+}
+
+/** The text fields of a character sheet that can hold links (the system's bio boxes, and the PC sheet's bio). */
+export const ACTOR_TEXT = ["system.appearance", "system.background", "system.roleplaytip", "system.notes", "system.gear",
+  "system.bio.appearance", "system.bio.background", "system.bio.roleplaytip"];
+/** The text fields of an item that can hold links. */
+export const ITEM_TEXT = ["system.description"];
+
+const at = (o, path) => path.split(".").reduce((v, k) => (v == null ? undefined : v[k]), o);
+
+/**
+ * B6770: the update that points one document's text fields at the archive (or back), or null when nothing changes.
+ * doc: a plain object or a document (read by path); fields: the paths above.
+ */
+export function relinkFields(doc, fields = [], ids = [], toArchive = true) {
+  const up = {};
+  for ( const f of fields ) {
+    const was = at(doc, f);
+    if ( typeof was !== "string" || !was ) continue;
+    const now = relink(was, ids, toArchive);
+    if ( now !== was ) up[f] = now;
+  }
+  return Object.keys(up).length ? up : null;
 }
 
 /** Whether the clock crossed into a new day since the last look (one look a day at most). */
