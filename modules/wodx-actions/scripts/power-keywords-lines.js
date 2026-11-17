@@ -897,6 +897,23 @@ export const LINE_KEYWORDS = {
     "bane-lantern": {"n": "Bane Lantern", "k": ["light"]},
     "devilwhip": {"n": "Devilwhip", "k": ["sway"]},
     "wyrmflesh": {"n": "Wyrmflesh", "k": ["ward"]},
-    "baneklaive": {"n": "Baneklaive", "k": ["boost"]}
+    "baneklaive": {"n": "Baneklaive", "k": ["boost"]},
+    // B7088: the rest of the W20 core and Breedbook fetishes and talens whose line a keyword can carry (house readings);
+    // the weapons (Dsiah, Fang Dagger, Klaive, Grand Klaive, Ironhammer, Jarlhammer, Sun Whip, Blade of the Kings), the bag,
+    // the Puda's files and the Wind Snorkel stay the card's text, their weapon or gear item does the rest
+    "apeskin": {"n": "Apeskin", "k": ["veil"]},
+    "monkey-puzzle": {"n": "Monkey Puzzle", "k": ["veil"]},
+    "baneskin": {"n": "Baneskin", "k": ["veil"]},
+    "cup-of-the-alicorn": {"n": "Cup of the Alicorn", "k": ["ward"]},
+    "sanctuary-chimes": {"n": "Sanctuary Chimes", "k": ["banish"]},
+    "unbroken-cord": {"n": "Unbroken Cord", "k": ["boost"]},
+    "bane-arrow": {"n": "Bane Arrow", "k": ["harm"]},
+    "chiropteran-spy": {"n": "Chiropteran Spy", "k": ["summon", "sense"]},
+    "moon-sign": {"n": "Moon Sign", "k": ["shape"]},
+    "wyrm-scale": {"n": "Wyrm Scale", "k": ["shape"]},
+    "armoire-of-abiele": {"n": "Armoire of Abiele", "k": ["make"]},
+    "grandmothers-stones": {"n": "Grandmother's Stones", "k": ["charge"]},
+    "spirit-jar": {"n": "Spirit Jar", "k": ["summon"]},
+    "pipes-of-kokopelli": {"n": "Pipes of Kokopelli", "k": ["sideways", "summon"]}
   }
 };
