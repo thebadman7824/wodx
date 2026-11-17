@@ -181,6 +181,31 @@ test("B7004: TOOLS.md and ROUTING.md exist and point at each other", () => {
   assert.match(fs.readFileSync(path.join(R.ROOT, "docs/WORKFLOW.md"), "utf8"), /read TOOLS\.md and ROUTING\.md/);
 });
 
+test("rule 5 (B7067): decision numbers come only from a block this branch claimed", () => {
+  const frag = (lo, hi, numbers, thread = "") => ({file: `changes/decisions/B${lo}.md`, block: {lo, hi}, thread, numbers});
+  const claims = [{lo: 7020, hi: 7049, thread: "line-rules"}, {lo: 7060, hi: 7079, thread: "improve"}];
+  // a clean block: inside its claim, nothing on main
+  assert.deepEqual(R.decisionProblems([frag(7060, 7079, [7060, 7061], "improve")], [{lo: 7060, hi: 7061, line: "## B7060."}], [{lo: 7000, hi: 7009}], claims), []);
+  // the B7020 case: numbers written straight into DECISIONS.md with no fragment of their own
+  assert.match(R.decisionProblems([], [{lo: 7020, hi: 7029, line: "| B7020-B7029 |"}], [], claims).join(), /outside any claimed block/);
+  // a block main already has, from someone else
+  assert.match(R.decisionProblems([frag(7020, 7049, [7020])], [], [{lo: 7020, hi: 7029}], claims).join(), /already taken on main/);
+  // a section outside the block, a block not in the registry, a block claimed by another thread
+  assert.match(R.decisionProblems([frag(7060, 7079, [7085])], [], [], claims).join(), /outside its block/);
+  assert.match(R.decisionProblems([frag(7110, 7119, [7110])], [], [], claims).join(), /not a claim in the registry/);
+  assert.match(R.decisionProblems([frag(7060, 7079, [7062], "line-rules")], [], [], claims).join(), /claimed by thread improve/);
+  // with no registry (CI) only main is checked
+  assert.deepEqual(R.decisionProblems([frag(7110, 7119, [7110], "improve")], [], [], null), []);
+  // the PR 1835 case: a fragment inside another thread's claim says no thread, so it cannot pass anywhere
+  assert.match(R.decisionProblems([frag(7020, 7029, [7020])], [], [], null).join(), /no thread: line/);
+  // a block already merged once takes more decisions later; a number already written there does not come again
+  const onMain = [{lo: 7060, hi: 7079}, {lo: 7060, hi: 7060}, {lo: 7061, hi: 7061}];
+  assert.deepEqual(R.decisionProblems([frag(7060, 7079, [7062], "improve")], [], onMain, claims), []);
+  assert.match(R.decisionProblems([frag(7060, 7079, [7061], "improve")], [], onMain, claims).join(), /B7061 is already written on main/);
+  // the taken list reads index rows and headings
+  assert.deepEqual(R.decisionsTaken("| B7000-B7009 | Merge rules | tools |\n## B7001. x\n"), [{lo: 7000, hi: 7009}, {lo: 7001, hi: 7001}]);
+});
+
 test("B7006: a pull request waiting only for its PC gates is pending, not failed; anything else broken fails", async () => {
   const s = scratch();
   try {

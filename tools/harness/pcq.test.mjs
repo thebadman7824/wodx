@@ -245,8 +245,23 @@ test("B7002: a touched or all gates job sets the wodx/gates status on the one co
   assert.equal(f.body.state, "failure");
   assert.match(f.body.description, /1 of 2 gate\(s\) failed: gateb/);
   const mainToo = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: fails on main too: not this change's fault"}];
-  const m = gateStatusFor(job, mainToo, false);
-  assert.equal(m.body.state, "success");
-  assert.match(m.body.description, /failing on main too: gateb/);
+  const m = gateStatusFor(job, mainToo, false, undefined, undefined, new Map([["gateb", 99]]));
+  assert.equal(m.body.state, "success", "B7060: a known fault on main with an issue passes");
+  assert.match(m.body.description, /known faults on main: gateb #99/);
+  const u = gateStatusFor(job, mainToo, false, undefined, undefined, new Map());
+  assert.equal(u.body.state, "failure", "B7060: failing on main but not listed holds the pull request");
+  assert.match(u.body.description, /not on the known-faults list: gateb/);
   assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
+});
+
+/* B7060: the known-faults list may only shrink. To add a gate, add it here too, with Ben's say-so in the pull request. */
+const KNOWN_FAULTS_ALLOWED = ["gate7d", "gatestates2"];
+test("B7060: every known fault on main has an issue, and the list only shrinks", async () => {
+  const {knownFaults} = await import("../pcq/jobs.mjs");
+  const raw = JSON.parse((await import("node:fs")).readFileSync(new URL("../pcq/known-faults.json", import.meta.url), "utf8"));
+  for ( const f of raw.faults ) {
+    assert.ok(Number.isInteger(f.issue) && f.issue > 0, `${f.gate} names an open issue`);
+    assert.ok(KNOWN_FAULTS_ALLOWED.includes(f.gate), `${f.gate} is new on the known-faults list; the list may only shrink`);
+  }
+  assert.equal(knownFaults().size, new Set(raw.faults.map(f => f.gate)).size);
 });

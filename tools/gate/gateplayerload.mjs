@@ -38,6 +38,13 @@ function measure() {
     // The browser stops writing timings when its buffer (250 by default) is full, and then files go uncounted
     full: all.length === 250};
 }
+/** B7063: the saved fired list (null when never saved), whether the big tables are in, the world hold, and the people tables. */
+const firedSource = () => {
+  const saved = game.settings.get("wodx-chronicle", "eventsFired"), ev = C().events;
+  let hold = null; try { hold = game.settings.get("wodx-chronicle", "hold"); } catch {}
+  return {saved: saved === null || saved === undefined ? null : saved.length, loaded: typeof ev.loaded === "function" ? ev.loaded() : null,
+    listed: ev.list().length, hold, people: !!game.modules.get("wodx-creation")?.api?.people?.loaded?.()};
+};
 const pageText = () => {
   const j = game.journal.find(x => x.flags?.["wodx-chronicle"]?.kind === "chronicle-rules" || x.name === "Chronicle Rules");
   return (j?.pages?.find(p => p.name === "Dated events")?.text?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
@@ -87,14 +94,17 @@ async function setup() {
     if ( S?.loadCards ) await S.loadCards();
     if ( P?.load ) await P.load();
     const person = P?.generate?.({batch: "gate-playerload", row: 0});
-    ok("b. the cards and the People tables load on first use", (S?.cards?.length ?? 0) > 50 && !!person?.name, {cards: S?.cards?.length ?? 0, person: person?.name ?? null});
+    ok("b. the cards and the People tables load on first use", (S?.cards?.length ?? 0) > 50 && !!person?.name,
+      {cards: S?.cards?.length ?? 0, person: person?.name ?? null, keys: person ? Object.keys(person).slice(0, 12) : null, loaded: !!P?.loaded?.()});
   });
   // The measure must see what the Storyteller's client loads at start (the timeline), or a "nothing heavy" on the
   // player's side proves nothing
   const timeline = HEAVY.slice(0, 3);
   ok("c. the Storyteller's start-up measure sees the timeline", !gmMeasure.full && timeline.every(h => gmMeasure.heavy.includes(h)), {measure: gmMeasure});
   const fired = C().events.fired();
-  return {user: user.id, steps, gmMeasure, fired: fired.length, firedSample: fired.slice(-20), page: pageText().slice(0, 4000), year: C().eras?.currentYear?.() ?? null};
+  // B7063: what the fired list is made from on this client, so a mismatch on the player's side can be traced
+  const why = firedSource();
+  return {user: user.id, steps, gmMeasure, why, fired: fired.length, firedSample: fired.slice(-20), page: pageText().slice(0, 4000), year: C().eras?.currentYear?.() ?? null};
 }
 
 /* ---------------- Player side ---------------- */
@@ -109,7 +119,7 @@ async function player(ids) {
     const ev = C().events, fired = ev.fired();
     const same = fired.length === ids.fired && ids.firedSample.every(id => ev.has(id));
     const page = pageText();
-    ok("e. the fired list agrees with the Storyteller's", same, {fired: fired.length, gm: ids.fired});
+    ok("e. the fired list agrees with the Storyteller's", same, {fired: fired.length, gm: ids.fired, here: firedSource(), there: ids.why});
     ok("e2. the Dated events page reads the same", page.slice(0, 4000) === ids.page, {chars: page.length});
     ok("e3. the clock's year is shown", Number(C().eras?.currentYear?.()) === Number(ids.year), {year: C().eras?.currentYear?.()});
   });

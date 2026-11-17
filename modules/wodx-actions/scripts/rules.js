@@ -285,12 +285,14 @@ export function imitateLifeCost(road) { return Math.max(0, 8 - road); }
  * Plan healing with blood (p. 340, 345): one blood per bashing or lethal level (lethal first, worst first),
  * aggravated levels cost five blood and a day's rest each.
  */
-export function planHealing(damage, blood, { includeAggravated = false, maxSpend = Infinity } = {}) {
+export function planHealing(damage, blood, { includeAggravated = false, maxSpend = Infinity, perLevel = 1 } = {}) {
     let b = damage.bashing || 0, l = damage.lethal || 0, a = damage.aggravated || 0;
     let spent = 0, healed = { bashing: 0, lethal: 0, aggravated: 0 };
     const budget = Math.min(blood, maxSpend);
-    while (spent < budget && l > 0) { l--; spent++; healed.lethal++; }
-    while (spent < budget && b > 0) { b--; spent++; healed.bashing++; }
+    // B7066: perLevel is the blood one level of bashing or lethal costs (2 with Slow Healing, V20 p. 483)
+    const per = Math.max(1, Number(perLevel) || 1);
+    while (spent + per <= budget && l > 0) { l--; spent += per; healed.lethal++; }
+    while (spent + per <= budget && b > 0) { b--; spent += per; healed.bashing++; }
     if (includeAggravated) while (budget - spent >= 5 && a > 0) { a--; spent += 5; healed.aggravated++; }
     return { spent, healed, after: { bashing: b, lethal: l, aggravated: a } };
 }

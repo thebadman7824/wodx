@@ -18,7 +18,8 @@ It prints a block such as B3090-B3099 and records it in `/mnt/project-files/regi
 thread sees at once. A claim takes about 12 seconds: it is read back after a pause and moves up a block if another
 thread took the same one a moment earlier (B3088). Use only numbers from that block. `--size 30` claims a bigger one; `--list` shows every claim.
 The coordinator claims the block when it starts a thread and names it in the first message; a thread that finds none
-there claims its own.
+there claims its own. The fragment's front matter names the block and the thread that claimed it (`block:` and
+`thread:`, printed by the claim); the merge rules check both (rule 4 below).
 
 ## 2. While working: fragments, not hand edits
 
@@ -132,7 +133,9 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    again so it picks it up. Until then the `wodx/merge-rules` status (required on main, like `checks`) shows
    "waiting for the PC gates": the pull request reads as pending, not failed, and cannot merge (B7006). The result holds while the module, system and gate files stay as they were (a stamp
    only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count, and a
-   gate that the recheck finds failing on main too does not hold the pull request back.
+   gate that the recheck finds failing on main too does not hold the pull request back only while it is listed in
+   `tools/pcq/known-faults.json` with an open issue (B7060, Ben 17 November 2026). That list may only shrink: fix the
+   gate, then remove its entry.
 3. **File review.** Every changed file has a verdict made on it as it is now:
 
        node tools/release/review.mjs todo
@@ -149,6 +152,13 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    `ratchet-override: <link>`. Modules not seeded yet get a warning only, until each is seeded (Ben, Finish-Line
    Desk, 17 November 2026; B7144, B7146). A decision fragment may not reuse a number main's docs/DECISIONS.md has
    (B7145).
+5. **Decision numbers (B7067).** Decisions go only in a `changes/decisions/` fragment whose `block:` came from
+   `node tools/decisions/claim.mjs --thread <thread id> --feature "..."` (section 1), with a `thread:` line naming
+   that thread. CI fails a fragment with no `block:` or `thread:`, a section numbered outside its block, a block that
+   overlaps numbers already written on main, and any B number added to docs/DECISIONS.md by hand outside the
+   branch's block. CI cannot read the claim registry, so a run of `merge-rules.mjs` in a thread (which can) also
+   fails a block that is not claimed, is claimed by another thread, or overlaps another claim. Run it before asking
+   for a merge.
 
 Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
 `wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force

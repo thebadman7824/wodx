@@ -110,6 +110,20 @@ export function build(ctx) {
             .map(it => ({ id: it.id, name: it.name, value: n(it.system?.value) }));
     }
 
+    // B7065: Blessings the sheet holds, by name
+    const knows = (actor, re) => blessingsOn(actor).some(b => re.test(b.name));
+    const storyId = () => game.settings.get(MOD, "storyId") || "first";
+    /** B7065: Catechumen (Wisdom), Dark Ages: Inquisitor p. 181: a Willpower point and a Conviction point negate a botch on a roll with a Virtue, once a story. */
+    const catechumenReady = actor => knows(actor, /catechumen/i) && inq(actor).f.catechumenStory !== storyId();
+    const catechumenBox = actor => catechumenReady(actor) ? `<div class="form-group"><label><input type="checkbox" name="catechumen"/> If it botches, Catechumen (Wisdom) negates the botch: 1 Willpower and 1 Conviction, once a story</label></div>` : "";
+    async function catechumen(actor, r, ticked) {
+        if (!r.botch || !ticked || !catechumenReady(actor) || inq(actor).conviction < 1) return { r, note: "" };
+        if (!(await spendWillpower(actor, 1))) return { r, note: "" };
+        await setConviction(actor, inq(actor).conviction - 1);
+        await setInq(actor, { catechumenStory: storyId() });
+        return { r: { ...r, botch: false }, note: `<div class="vta-res good">Catechumen (Wisdom): the botch is negated, for 1 Willpower and 1 Conviction; not again this story (Dark Ages: Inquisitor p. 181).</div>` };
+    }
+
     async function blessing(actor) {
         const i = inq(actor);
         if (i.conviction < 1) return ctx.notify(`${actor.name} has no Conviction: no Blessings until it returns (Dark Ages: Inquisitor p. 161).`);
@@ -124,7 +138,7 @@ export function build(ctx) {
           <div class="form-group"><label>Attribute</label><select name="attr" data-fixed>${attrOpts("perception")}</select> <label>path or Virtue rating</label> <input type="number" name="rating" value="0" min="0" max="10" style="width:4em"/></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/> <label>Conviction to spend</label> <input type="number" name="cost" value="1" min="0" max="3" style="width:4em"/></div>
           <div class="form-group"><label>Conviction to risk (1–3, once a scene)</label><input type="number" name="risk" value="0" min="0" max="3" ${risked ? "disabled" : ""}/> ${risked ? "<i>already risked this scene</i>" : ""}</div>
-          <div class="form-group"><label><input type="checkbox" name="noroll"/> No roll (the page says so)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="noroll"/> No roll (the page says so)</label></div>${catechumenBox(actor)}</form>`;
         const fillBk = root => {
             const b = IB.blessingById(root.querySelector("[name=bk]")?.value), box = root.querySelector(".wodx-bless-info");
             if (!b) { if (box) box.textContent = ""; return; }
@@ -166,8 +180,9 @@ export function build(ctx) {
             const dice = attr(actor, fd.attr) + rating + risk;
             // B6662: the target's ward or Magic Resistance makes a Blessing on them harder
             const rm = TH.targetResist(actor, ["magic"]);
-            const r = await rollPool(dice, Math.min(10, n(fd.diff) + n(rm.diff)));
-            let body = rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
+            const C = await catechumen(actor, await rollPool(dice, Math.min(10, n(fd.diff) + n(rm.diff))), !!fd.catechumen);
+            const r = C.r;
+            let body = C.note + rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
             if (risk) {
                 const R = H.riskConviction(risk, r, after);
                 await actor.setFlag(MOD, "riskScene", sceneKey());
@@ -197,7 +212,7 @@ export function build(ctx) {
             <option value="impulse">Resist the Impulse while Callous (Conscience + Faith, 6)</option>
             <option value="victory">A victory over the enemy (primary Superior Virtue + Virtue, 7)</option></select></div>
           <div class="form-group"><label>The power's successes (opposed)</label><input type="number" name="vs" value="0" min="0"/></div>
-          <div class="form-group"><label><input type="checkbox" name="conv"/> Spend 1 Conviction for a success</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="conv"/> Spend 1 Conviction for a success</label></div>${catechumenBox(actor)}</form>`;
         return dialog(`Virtue roll: ${actor.name}`, content, "Roll", async fd => {
             const map = { danger: ["courage", "zeal"], supernatural: ["courage", "zeal"], fear: ["courage", "zeal"], thrall: ["selfcontrol", "wisdom"], memory: ["selfcontrol", "wisdom"], impulse: ["conscience", "faith"] };
             let [vk, sk] = map[fd.k] ?? [];
@@ -207,8 +222,9 @@ export function build(ctx) {
             if (need + (fd.conv ? 1 : 0) > i.conviction) return ctx.notify(need ? `Without ${H.SUPERIOR_LABEL[sk]}, the roll costs a Conviction point not on hand (Dark Ages: Inquisitor p. 162).` : "No Conviction to spend.");
             if (need + (fd.conv ? 1 : 0)) await setConviction(actor, i.conviction - need - (fd.conv ? 1 : 0));
             const diff = fd.k === "supernatural" ? H.terrorDifficulty("supernatural", i.exposure) : fd.k === "victory" ? 7 : 6;
-            const r = await rollPool(i.v[vk] + i[sk], diff, { willpower: !!fd.conv });
-            let body = rollBlock(`${cap(vk === "selfcontrol" ? "Self-Control" : vk)} + ${H.SUPERIOR_LABEL[sk]}`, r, [need ? "1 Conviction (no Superior Virtue)" : "", fd.conv ? "1 Conviction: a success" : ""].filter(Boolean));
+            const C = await catechumen(actor, await rollPool(i.v[vk] + i[sk], diff, { willpower: !!fd.conv }), !!fd.catechumen);
+            const r = C.r;
+            let body = C.note + rollBlock(`${cap(vk === "selfcontrol" ? "Self-Control" : vk)} + ${H.SUPERIOR_LABEL[sk]}`, r, [need ? "1 Conviction (no Superior Virtue)" : "", fd.conv ? "1 Conviction: a success" : ""].filter(Boolean));
             const s = r.botch ? 0 : r.successes;
             if (fd.k === "danger" || fd.k === "supernatural") {
                 const T = H.terrorResult(fd.k, r);
@@ -254,6 +270,7 @@ export function build(ctx) {
           <div class="form-group"><label>Where</label><select name="src" data-fixed><option value="ground">Holy Ground (its rating)</option><option value="relic">Over a Holy Relic</option><option value="flock">With their Flock</option></select></div>
           <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${gRating ?? (ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1)}" min="0" max="5"/></div>
           <div class="form-group"><label>Hours of prayer</label><input type="number" name="hours" value="1" min="1" max="5"/></div>
+          ${knows(actor, /wreathed in shadows/i) && ctx.background(actor, "flock") ? `<div class="form-group"><label><input type="checkbox" name="wreathed"/> With their Flock, Wreathed in Shadows (Zeal): gain the Flock's ${ctx.background(actor, "flock")} Conviction at once as well as the roll, even past Piety; the Flock is wrung out for any other inquisitor today</label></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Prayer: ${actor.name}`, content, "Pray", async fd => {
             const diff = H.prayerDifficulty(n(fd.hours), run);
@@ -261,11 +278,14 @@ export function build(ctx) {
             const rating = fd.src === "ground" && gRating !== null ? gRating : n(fd.rating);
             fd.rating = rating;
             const r = await rollPool(rating, diff);
-            const to = H.convictionGain(i.conviction, r.botch ? 0 : r.successes, i.piety);
+            // B7065: Wreathed in Shadows (Zeal), Dark Ages: Inquisitor p. 184: the Flock's rating at once, and this one may pass Piety
+            const flock = fd.wreathed && fd.src === "flock" ? ctx.background(actor, "flock") : 0;
+            const rolled = H.convictionGain(i.conviction, r.botch ? 0 : r.successes, i.piety);
+            const to = flock ? Math.min(10, i.conviction + flock + (r.botch ? 0 : r.successes)) : rolled;
             await setConviction(actor, to);
             await setInq(actor, { prayerDay: today, prayerRun: run });
             const tnote = fd.advance ? await spendTime(actor, n(fd.hours) * 3600, "prayer") : "";
-            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
+            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + (flock ? `<div class="vta-note">Wreathed in Shadows (Zeal): +${flock} from the Flock at once, on top of the roll. The Flock is wrung out: no other inquisitor draws on it today (Dark Ages: Inquisitor p. 184).</div>` : "") + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
         });
     }
 
