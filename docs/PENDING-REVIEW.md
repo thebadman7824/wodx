@@ -6,6 +6,12 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
 
+Tiers (Finish-Line Desk, item w5, 17 November 2026). Classify each question before logging it:
+- Low: reversible and inside a design Ben already approved. Take the recommendation and log a row here. It never goes on the daily decisions desk; the Monday review lists these rows for Ben to skim.
+- Medium: changes a design or the goal. Log a row here and raise it for the daily decisions desk (at most five items a day, most important first).
+- High: Live, deletes, money, or anything Ben must do at his PCs (BIOS, reboots, security settings, running a script). Wait for Ben's go-ahead. It goes on the weekly "needs your hands" list (/mnt/project-files/decisions-desk/needs-your-hands.md), or on the daily desk only when it blocks work now.
+Rows in the Waiting table are settled by auto-approval at 06:00 UTC and do not appear on the daily desk.
+
 ## Approved by Ben, 10 November 2026
 
 Ben approved every entry below, which had been waiting for review, at 04:03 UTC on 10 November 2026. Each still lists how to reverse it. Where a row says a choice was left for Ben (the KotE shelf label, Live keeping moves out of turn Off), the approval keeps it as it stands; Live settings still change only when Ben says.
@@ -1655,3 +1661,8 @@ Ben kept all eight rows as built on the Decisions Desk (https://claude.ai/artifa
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-17 | Finish-Line Desk w2: you picked "V20 Vampire plus one other line, two eras" and wrote that your players and your solo character are vampires, Dark Ages first. What is the core now? | V20 Dark Ages Vampire in Rothenstein, 1197, with the mortals and ghouls a Kindred chronicle needs. The second line and era are held until Dark Ages Vampire is verified, then put to you (B7140). | Name the second line and era now, and the seeding threads tag their rows core too. |
+| 2026-11-17 | Where does the canon folder for shared dates go first? | Its own pull request together with the first batch of dates (Anarch Revolt, Convention of Thorns, the first justicars), each book-checked, not in the Phase 0 pull request. Any new file in WoDX Chronicle makes the gates run nearly all 306 gates, so the canon folder and its first users go through one PC run instead of two (B7145 covers only the number check for now). | Add modules/wodx-chronicle/data/canon/ in any pull request. |
+| 2026-11-17 | How strict is the gate grader? | Stricter than the 15 November hand grades: a step that calls the module's own function, or fires a hook by hand, is direct-call even when it then checks a number (agrees with 65 of 84 hand grades; 9 of 11 hand-graded effect steps call the function directly). A gated row must point at an effect step (B7143). | Loosen grade() in tools/registry/strength.mjs (for example, count a weak trigger as real), and regenerate strength-baseline.json. |
+| 2026-11-17 | What answers merge rule 4 and the ratchet when a change truly needs no row update, or Ben wants a module to take on more half-built work? | A commit line `registry: no change <reason>`, and `ratchet-override: <link to Ben's message>`; the PC upkeep warning takes `upkeep: <reason>` (B7144, B7146, B7149). | Change the patterns in registryRule() and upkeepWarnings() in tools/release/merge-rules.mjs. |
+| 2026-11-17 | Where does a Report a problem fault go when no row owns the file it names? | registry/features/_inbox.json, with the solo converter's guess of the module; a person or the triage step moves it to a row. Faults never become rows of their own (B7142). | Let the converter create rows in the guessed module's file. |
