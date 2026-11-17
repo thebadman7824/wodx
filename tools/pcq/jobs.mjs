@@ -12,7 +12,11 @@
  *   gates       run-gate.mjs on testbed lanes: "gates" (names), or "touched": true, or "all": true; "lanes": how many
  *               lanes to split over (default 1); each lane is reset first (B7190), "reset": false skips it. Lanes share one list of the
  *               gates (B6526) and lanes that free up later join while it holds work: up to "lanes", or every lane
- *               when no other lane job is waiting
+ *               when no other lane job is waiting. "branchTools": true runs the branch's own run-gate.mjs (and the
+ *               lane tools it imports) instead of main's, to test a change to the gate tools before it merges (B7220).
+ *               It needs a branch or commit ref and named gates, runs on one lane with no recheck, and never sets the
+ *               wodx/gates status. Queue it at prio 1 so it takes the next free lane: a waiting job also stops
+ *               running gates jobs from taking more lanes.
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
  *   deploy      deploy the ref to "lanes" lanes (or "lane": N), nothing else
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
@@ -77,6 +81,13 @@ export function validate(raw, laneIds = []) {
       j.lanes = Math.min(j.lanes, Math.max(1, lanes.length));
       // a named list is never split over more lanes than it has gates (an empty share used to read as a failure)
       if ( list.length && !j.touched && !j.all ) j.lanes = Math.min(j.lanes, j.gates.length);
+      // B7220: a lane test of a branch's gate tools, queued like any job so the runner sees it waiting
+      if ( j.branchTools !== undefined ) {
+        if ( j.branchTools !== true ) return err("branchTools must be true.");
+        if ( j.ref === "main" ) return err("branchTools needs a claude/... or handoff/... branch or a commit sha; main's tools are the default.");
+        if ( j.touched || j.all || !list.length ) return err("branchTools runs named gates only, so it never sets the wodx/gates status.");
+        j.lanes = 1; j.recheck = false;
+      }
       break;
     }
     case "gate-two":

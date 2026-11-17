@@ -176,7 +176,7 @@ test("only a hung gate run that is still a node process is ended (B3089)", () =>
 
 test("run-gate has a gate limit, a window sweep, a whole-run watchdog and moves the lock deadline (B3089)", () => {
   const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/run-gate.mjs"), "utf8");
-  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "within(run, limit", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
+  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "limit + 3 * 60000, gate)", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
 });
 
 test("the picker takes the first lane that is up and free", async () => {
