@@ -796,7 +796,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
       ${TH.ticksHtml(actor, esc)}${DH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
-      <div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${rd.name} ${rd.value}: ${R.auraModifier(rd.value) >= 0 ? "+" : ""}${R.auraModifier(rd.value)})</label></div>
+      ${bearingBox(rd)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
@@ -826,7 +826,8 @@ export async function action({ actor: a, preset = "" } = {}) {
             if (p.diff) f.diff.value = p.diff;
             f.mode.value = p.mode || "simple";
             if (p.target) f.goal.value = p.target;
-            f.aura.checked = !!p.aura;
+            // B7020: a Path's bearing goes by what the Path names, not by the Humanity presets
+            f.aura.checked = !!p.aura && !pathBearingFor(actor, rd);
             root.querySelector(".vta-preset-note").textContent = p.note || "";
             sync();
         });
@@ -1006,6 +1007,22 @@ function opponentPool(target, spec, fd, actor = null) {
     return { dice: attr(target, spec.attr) + (ab?.value ?? 0), diff: spec.diff, label: `${cap(spec.attr)} + ${ab?.name ?? cap(spec.ability)}`, specialty: false };
 }
 
+/** The roll window's bearing box: the Road aura, or a V20 Path's bearing and what it covers (B7020). */
+function bearingBox(rd) {
+    const b = KX.DATA.paths && rd?.found ? KR.pathBearing(KX.DATA.paths, rd.found, rd.value) : null;
+    const sign = v => `${v >= 0 ? "+" : ""}${v}`;
+    if (b) return `<div class="form-group"><label><input type="checkbox" name="aura"/> ${esc(b.name)} bearing applies (${esc(b.path)} ${rd.value}: ${sign(b.step)} difficulty on ${esc(b.covers)}${b.byItself ? "; counted by itself when the roll is one of those" : "; tick it when this roll is one"})</label></div>`;
+    return `<div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${esc(rd.name)} ${rd.value}: ${sign(R.auraModifier(rd.value))})</label></div>`;
+}
+
+/** B7020: the bearing of the V20 Path the roller walks, for one roll of the general window (null: no Path). */
+function pathBearingFor(actor, rd, fd = {}, pool = {}) {
+    if (!KX.DATA.paths || !rd?.found) return null;
+    const tags = [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...(fd.attr === "special:willpower" ? ["willpower"] : [])];
+    const wounded = !pool.special && !fd.ignoreWounds && woundPenalty(actor) > 0;
+    return KR.pathBearing(KX.DATA.paths, rd.found, rd.value, { tags, wounded, ticked: !!fd.aura });
+}
+
 /** The pool and difficulty a roll window's choices give, with every modifier and where it came from (3.43.0: also the odds
  *  shown before the roll). pool: readPool()'s answer. */
 function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability), { teamDice = 0, overflow = 0 } = {}) {
@@ -1035,6 +1052,10 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
         if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
     } catch (e) { console.warn("WoDX Actions | conditions", e); }
+    // B7020: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
+    // Humanity and the Roads keep the plain aura box
+    const pb = pathBearingFor(actor, rd, fd, pool);
+    if (pb?.applies && pb.step) tm = { ...tm, diff: (tm.diff ?? 0) + pb.step, parts: [...(tm.parts ?? []), pb.part] };
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -1042,7 +1063,7 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
         bonusDice: fd.bonus, extraDiff: fd.extraDiff, baseDifficulty: fd.diff,
         woundPenalty: pool.special ? 0 : woundPenalty(actor), ignoreWounds: fd.ignoreWounds,
-        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura ? R.auraModifier(rd.value) : 0,
+        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura && !pb ? R.auraModifier(rd.value) : 0,
         daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
     });
     // B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89) goes with the pool to the roll
@@ -2863,7 +2884,10 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
       <div class="form-group"><label><input type="checkbox" name="aura" checked/> Apply Road aura</label></div>
     </form>`;
     return dialog("Seduction", content, "Seduce", async fd => {
-        const aura = fd.aura ? R.auraModifier(road(actor).value) : 0;
+        // B7020: a Path walker's bearing counts here only when the Path's bearing is seduction (the Cathari, V20 p. 323)
+        const rdS = road(actor);
+        const pbS = KX.DATA.paths && rdS.found ? KR.pathBearing(KX.DATA.paths, rdS.found, rdS.value, { tags: ["seduce", "social"] }) : null;
+        const aura = pbS ? (fd.aura && pbS.auto ? pbS.step : 0) : fd.aura ? R.auraModifier(rdS.value) : 0;
         const wpen = woundPenalty(actor);
         const steps = [
             ["Approach", "appearance", "subterfuge", fd.wits + 3, "The subject shows disinterest.", "The subject grows disgusted or angry."],

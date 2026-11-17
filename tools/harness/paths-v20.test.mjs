@@ -90,3 +90,67 @@ test("B6725: a Bastet's own tribe's Gifts are its own; another tribe's are not; 
     assert.match(read("system/worldofdarkness/lang/en.json"), new RegExp(`"${t}": "`), t);
   assert.match(read("modules/wodx-actions/scripts/garou.js"), /g\.breed \? G\.feraGiftIsOwn\(g, i\)/);
 });
+
+// B7020-B7021: each Path's bearing (V20 p. 310 and the Path pages), and the two other names the book gives
+const R = await import("../../modules/wodx-actions/scripts/rules.js");
+const path = k => K.v20PathFor(PATHS, `wod.advantages.path.${k}`);
+
+test("B7020: the bearing table in the data gives the V20 p. 310 steps, the same as the Road aura", () => {
+  for (let r = 0; r <= 10; r++) assert.equal(K.bearingStep(PATHS.bearingSteps, r), R.auraModifier(r), `rating ${r}`);
+  assert.equal(PATHS.bearingPage, 310);
+});
+
+test("B7020: every Path has a named bearing with what it covers, and the tags are roll tags", () => {
+  const TAGS = new Set(["willpower", "stealth", "seduce", "intimidation", "manipulation", "leadership"]);
+  for (const [k, p] of Object.entries(PATHS.paths)) {
+    assert.ok(p.bearing?.name && p.bearing?.covers, k);
+    assert.equal(p.bearing.name, p.aura, k);
+    for (const t of p.bearing.tags) assert.ok(TAGS.has(t), `${k}: ${t}`);
+  }
+});
+
+test("B7020: the bearing counts by itself on the Path's own rolls and not on others", () => {
+  const b = (k, rating, o) => K.pathBearing(PATHS, path(k), rating, o);
+  // Bones 10 sneaking: 2 easier
+  assert.deepEqual([b("bones", 10, { tags: ["stealth"] }).applies, b("bones", 10, { tags: ["stealth"] }).step], [true, -2]);
+  assert.match(b("bones", 10, { tags: ["stealth"] }).part, /Silence bearing \(Path of the Bones 10\) -2 diff, V20 p\. 310/);
+  // Bones on a seduction roll: nothing
+  assert.equal(b("bones", 10, { tags: ["seduce", "social"] }).applies, false);
+  assert.equal(b("bones", 10, { tags: ["seduce"] }).part, "");
+  // A low Path of Blood makes Willpower rolls harder
+  assert.equal(b("blood", 2, { tags: ["willpower"] }).step, 1);
+  assert.equal(b("blood", 2, { tags: ["willpower"] }).applies, true);
+  // Lilith: only when the roll takes a wound penalty
+  assert.equal(b("lilith", 9, { tags: ["brawl"] }).applies, false);
+  assert.equal(b("lilith", 9, { tags: ["brawl"], wounded: true }).applies, true);
+  // Caine has no roll tags: only the player's tick
+  assert.equal(b("caine", 8, { tags: ["social"] }).applies, false);
+  assert.equal(b("caine", 8, { tags: ["social"], ticked: true }).applies, true);
+  assert.equal(b("caine", 8).byItself, false);
+  // A middle rating is no step, so no card line even when it applies
+  assert.equal(b("cathari", 6, { tags: ["seduce"] }).part, "");
+  // Humanity and the Dark Ages Roads have no Path bearing here
+  assert.equal(K.pathBearing(PATHS, K.roadFor(ROADS, "Road of Kings"), 8, { tags: ["leadership"] }), null);
+  assert.equal(K.pathBearing(PATHS, null, 8), null);
+});
+
+test("B7021: Death and the Soul is the Path of the Bones; Harmony is the Feral Heart with Conscience", () => {
+  assert.equal(K.v20PathFor(PATHS, "custom", "Path of Death and the Soul").key, "v20-bones");
+  assert.equal(K.v20PathFor(PATHS, "", "the Path of Death and the Soul").key, "v20-bones");
+  const h = K.v20PathFor(PATHS, "custom", "Path of Harmony");
+  assert.equal(h.key, "v20-harmony");
+  assert.deepEqual(K.roadVirtues(h), { conviction: false, instinct: true });
+  assert.deepEqual(h.road.sins, PATHS.paths.feralheart.sins);
+  // It sins as the Feral Heart does
+  assert.equal(K.sinForEvent(h, "kill"), K.sinForEvent(path("feralheart"), "kill"));
+  assert.equal(K.sinForEvent(h, "killFeed"), null);
+  assert.equal(K.pathBearing(PATHS, h, 10, { tags: ["intimidation"] }).step, -2);
+});
+
+test("B7020: the general roll window and the Seduction window read the Path's bearing", () => {
+  const src = read("modules/wodx-actions/scripts/main.js");
+  assert.match(src, /const pb = pathBearingFor\(actor, rd, fd, pool\);/);
+  assert.match(src, /aura: fd\.aura && !pb \? R\.auraModifier\(rd\.value\) : 0/);
+  assert.match(src, /\$\{bearingBox\(rd\)\}/);
+  assert.match(src, /pbS \? \(fd\.aura && pbS\.auto \? pbS\.step : 0\)/);
+});

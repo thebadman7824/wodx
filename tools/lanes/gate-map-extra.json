@@ -16,6 +16,9 @@
     "gatetruthwalk"
   ],
   "add": {
+    "gatepathbearing": [
+      "wodx-actions"
+    ],
     "gatepowers": [
       "wodx-actions",
       "wodx-combat"
