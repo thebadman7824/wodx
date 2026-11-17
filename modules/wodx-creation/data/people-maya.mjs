@@ -20,21 +20,24 @@ const MEN_OLD = `
   Q'oqawib, Tz'ikin, Oxlajuj Tz'i', Kablajuj Tijax, Lajuj No'j, Jun Iq', Wuqub' Kame, Jun Toj, Kaji' Aq'ab'al,
   Wajxaqib' B'atz', Ob'ox Ajmaq, Waqib' Kawoq, Jun Ajpu, Kab'lajuj Kan, Beleheb' E, Oxlajuj Aj, Jun No'j, Wuqub' Kej,
   Kaji' Tz'ikin, Lajuj Q'anil, Oxib' Iq', Yuknoom, K'inich, Jasaw, K'ak' Tiliw, Yax Pasaj, Itzamnaaj B'alam,
-  Yaxuun B'alam, K'an Joy Chitam, Chan B'alam, Siyaj Chan, Yax Nuun Ayiin, Janaab Pakal, Ajaw K'uk', Kawiil`;
+  Yaxuun B'alam, K'an Joy Chitam, Chan B'alam, Siyaj Chan, Yax Nuun Ayiin, Janaab Pakal, Ajaw K'uk', Kawiil,
+  Itzam K'an Ahk, K'inich Muwaan Jol, Tajal Chan Ahk, Yajaw Te' K'inich, Tan Te' K'inich, Yat Ahk, Ukit Took, Wamaw K'awiil, Chanal Balam, Kaloomte' Bahlam, Muyal Jol, Sak Muwaan, Wak Chan K'awiil, Ete, Tabscoob, Napuc Chi, Ah Mekat, Ah Suytok, Apoxpalon, Kayb'il B'alam, Oxlahuh Tz'i', Wuqu Batz', B'alam Nehn, K'ak'upakal, Tutuum Yohl K'inich, Nuun Ujol Chaak, Bolon K'awiil, Lachan K'awiil, Chak Tok Ich'aak, Ahkal Mo' Nahb, Yo'nal Ahk, Sihyaj Chan K'awiil, Yik'in Chan K'awiil, Uaxaclajuun Ub'aah K'awiil, K'inich Yax K'uk' Mo', Yax Ehb Xook, K'an Chitam, Kan Bahlam, K'ak' Chan Yopaat, Yax Yopaat, K'awiil Chan K'inich, Itzamnaaj K'awiil, Yuknoom Yich'aak K'ahk', Yuknoom Ti' Chan, Yuknoom Took' K'awiil, Sak Tahn Waax, Wil Ohl K'inich, Te' K'ab Chaak, Tuun K'ab' Hix, Bajlaj Chan K'awiil, Ha' K'in Xook, Wat'ul Chatel, Yax Mayuy Chan Chaak, Ajen Yohl Mat, Aj Yaxjal B'aak, Jewel K'awiil, K'inich Waaw, Lamaw Ek', Nuun Ujol K'inich, Tzi B'alam, Ucha'an K'an B'alam, Yax Ahau Xoc, Chirakan, Hun Toh, Balam Ajpu`;
 /** Women's own names: the first mothers of the K'iche', the ladies of the inscriptions, and Ix with a mother's name. */
 const WOMEN_OLD = `
   Kaqa Palo Ja', Chomi Ja', Tz'ununi Ja', Kaqixa Ja', Ix K'ab'al Xook, Ix Tz'akb'u Ajaw, Ix Yohl Ik'nal, Ix Sak K'uk',
   Ix Wak Chan, Ix Kan, Ix Pech, Ix May, Ix Cupul, Ix Chel, Ix Ek', Ix Tun, Ix Chan, Ix Kauil, Ix Balam,
-  Ix Canul, Ix Puc, Ix Noh, Ix Moo`;
+  Ix Canul, Ix Puc, Ix Noh, Ix Moo,
+  Ix Ch'ak Ch'een, Ix Ek' Naah, K'abel, Xoc, Ik', Bulu', K'awiil Yopaat, Lahan Unen Mo', K'atun Ajaw, Sak Ch'een, Xquic, Ixmucane, Xbaquiyalo`;
 /** Church given names from the conquest on, as the parish rolls give them. */
-const MEN_NEW = "Juan, Pedro, Francisco, Diego, Gaspar, Andrés, Pablo, Martín, Antonio, Gregorio, Baltasar, Melchor, Lorenzo, Domingo, José, Manuel, Miguel, Marcos, Felipe, Santiago, Tomás, Sebastián, Jacinto, Luis";
-const WOMEN_NEW = "María, Ana, Catalina, Juana, Francisca, Inés, Magdalena, Isabel, Lucía, Beatriz, Petrona, Manuela, Josefa, Micaela, Teresa, Candelaria, Rosa, Guadalupe, Pascuala, Marta";
+const MEN_NEW = "Juan, Pedro, Francisco, Diego, Gaspar, Andrés, Pablo, Martín, Antonio, Gregorio, Baltasar, Melchor, Lorenzo, Domingo, José, Manuel, Miguel, Marcos, Felipe, Santiago, Tomás, Sebastián, Jacinto, Luis, Bernardo, Cecilio, Cándido, Crescencio, Edgar, Elijio, Evelio, Hilario, Humberto, Jesús, Ramiro, Román, Marcial, Alberto, Nicolás, Mikel, Aníbal, Marcelo, Víctor, Carlos, Armando";
+const WOMEN_NEW = "María, Ana, Catalina, Juana, Francisca, Inés, Magdalena, Isabel, Lucía, Beatriz, Petrona, Manuela, Josefa, Micaela, Teresa, Candelaria, Rosa, Guadalupe, Pascuala, Marta, Anastasia, Andrea, Aura, Catarina, Concepción, Cristina, Felipa, Froyla, Gladys, Irma, Jakelin, Leticia, Margarita, Marisol, Rigoberta, Rosalina, Sara, Sonia, Thelma, Vicenta, Paula, Ruperta, Claudia, Susana, Adriana, Cielo, Mercedes, Jacinta, Elena";
 /** Patronyms: the old lineage names of Yucatán and the highlands, carried on as family names after the conquest. */
 const FAMILY = `
   Cocom, Xiu, Chel, Pech, Cupul, Canul, Chan, Ek', May, Ku, Tun, Uc, Can, Che, Dzib, Euan, Itza, Balam, Cauich, Cen,
   Chi, Couoh, Dzul, Hau, Kantun, Kumul, Mis, Moo, Noh, Pat, Poot, Puc, Tec, Tuz, Uicab, Uitz, Yam, Yah, Xool, Ake, Ay,
   Batun, Cab, Caamal, Canche, Chable, Chale, Chuc, Cime, Huchim, Hoil, Keb, Matu, Mex, Nah, Tzuc, Tamay, Ucan, Uh,
-  Tzul, Cumes, Chumil, Tuyuc, Xinico, Ixcot, Tum, Batz, Coc, Quiej, Xicay, Yax, Chiyal, Tzunun, Cawek, Nijaib`;
+  Tzul, Cumes, Chumil, Tuyuc, Xinico, Ixcot, Tum, Batz, Coc, Quiej, Xicay, Yax, Chiyal, Tzunun, Cawek, Nijaib,
+  Curruchich, Xiloj, Caal, Xol, Ixcaquic, Canek, Tzeek, Naal, Tzalam, Ak'abal, Nimatuj, Tecú, Calí Tzay, Coy, Sam Colop, Ixquiac, Xicara, Mes, Ceh, Xón, Riquiac, Coroy, Telón, Nicho, Cumez, Choc, Teleguario, Raguay, Kan, Ixchíu, Calel, Santiz, Toxcón, Pale, Luna Kan, Chi Canul, Pat Chablé, Tzay, Tzul Tzul`;
 
 /** The Maya as a people of people-world.mjs: own names before the conquest, church names after; patronyms throughout. */
 export const MAYA = {
