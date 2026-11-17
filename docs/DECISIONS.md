@@ -409,7 +409,7 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7202) | tools (PC job queue), docs |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7203) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14111,3 +14111,8 @@ Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
 PC job queue and merging. Every merge to main left the other open pull requests behind. The hourly sweep (B4110) then merged main into each of them, each push started a full gate run again (150 to 300 gates, 50 to 80 minutes), and by the time one passed main had moved again; on 17 November 8 of 14 open pull requests had conflicts. Ben approved a merge train. A thread whose pull request meets the rules it can meet by itself labels it `merge-train` and stops pushing. The Main PC's runner (tools/pcq/train.mjs, every 3 minutes, "train": true only in runner.json) takes the front of the line, oldest label first. It marks a draft ready, merges main in and runs merge-stamp in its own worktree, and pushes with a lease on the head it saw, so a thread's own push wins. pc-gates.yml then gates the new head, and the runner takes that gate job before the rest of the queue. The runner merges when `checks` and `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out with a comment, and the line moves on. The others are not brought up to date or gated again while they wait. The sweep no longer merges main into open pull requests; it still starts CI where none ran. The train uses a merge, not a rebase, because the repository never rewrites a pushed branch.
 
 Reverse: set "train": false in tools/pcq/runner.json and "sweepUpdates": true to bring back the hourly update; threads go back to merging by hand (docs/WORKFLOW.md, section 6, keeps the old steps).
+
+## B7203. The merge train waits for the fresh gate run (2026-11-17)
+PC job queue. The train's first run put PR 1880 out two minutes after it pushed: the merge rules on the new head failed only on the gate rule, because an earlier gate failure on the branch still counts until the fresh run (job 1943) reports. When the merge rules say exactly "Not ready: gate result" and the head's own wodx/gates is not a failure, the train now waits; the runner reruns the merge rules job when the gate result lands. A failed fresh run, another broken rule, or no gate result within trainMaxHours still puts the pull request out.
+
+Reverse: remove the B7203 branch in decide() in tools/pcq/train.mjs.
