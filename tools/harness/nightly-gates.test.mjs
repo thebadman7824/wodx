@@ -1,4 +1,4 @@
-// B7012-B7013: the nightly full gate run on the Secondary PC and its runner's below-normal priority.
+// B7020-B7029: the nightly full gate run on the Secondary PC and its runner's below-normal priority.
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";

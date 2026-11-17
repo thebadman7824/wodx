@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Nightly full gate run on the Secondary PC (B7012), the second tier beside the touched-only runs on each pull request
+ * Nightly full gate run on the Secondary PC (B7020), the second tier beside the touched-only runs on each pull request
  * (pc-gates.yml, B7010). The "WoDX nightly gates" task starts it at 05:00 UTC. It:
  *   1. takes the GPU guard (gpuguard.mjs, class other), so it waits while the book OCR or a model job holds the card,
  *      and gives up if it has not got the card by 13:00 UTC, so a long OCR night never runs the suite into the day;
@@ -8,7 +8,7 @@
  *   3. waits for the job to finish and opens a summary issue (label nightly-gates) with the result and the counts.
  * The PC runner posts the wodx/gates status for main's commit as it does for any all-gates job (B7000).
  * It runs at below-normal priority (the task's .cmd starts it that way, and the PC runner on this PC runs below normal
- * too, B7013).
+ * too, B7021).
  *   node tools/pcq/nightly-gates.mjs [--dry] [--no-guard]
  */
 import fs from "node:fs";
@@ -84,7 +84,7 @@ async function main() {
     const job = JSON.parse(sub.stdout.slice(sub.stdout.indexOf("{")));
     const title = `PC job: nightly full gates [main ${sha.slice(0, 12)}]`;
     if ( DRY ) { log(`DRY: would open "${title}" with ${JSON.stringify(job)}`); return 0; }
-    const issue = await api(tok, "POST", "/issues", {title, labels: ["pc-job"], body: `Nightly full gate run (B7012).\n\n\`\`\`json\n${JSON.stringify(job, null, 1)}\n\`\`\`\n`});
+    const issue = await api(tok, "POST", "/issues", {title, labels: ["pc-job"], body: `Nightly full gate run (B7020).\n\n\`\`\`json\n${JSON.stringify(job, null, 1)}\n\`\`\`\n`});
     log(`queued #${issue.number} for main ${sha.slice(0, 8)}`);
     let it;
     for ( ;; ) {

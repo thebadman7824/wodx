@@ -88,7 +88,7 @@ Lock-down (B7011): the workflow's `if:`, the job-started hook `D:\WoDX\gh-runner
 repository; copy and installer in `tools/pcq/gh-runner/`), and the setting that holds outside contributors' runs
 for approval. Reinstall with `powershell -ExecutionPolicy Bypass -File tools\pcq\gh-runner\install.ps1`.
 
-Nightly full run (B7012): the "WoDX nightly gates" task on the Secondary PC starts `tools/pcq/nightly-gates.mjs` at
+Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC starts `tools/pcq/nightly-gates.mjs` at
 05:00 UTC. It waits for the GPU guard (gives up at 13:00 UTC), queues every gate on lane 8 for main's commit, and opens
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
-touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7013).
+touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
