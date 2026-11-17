@@ -2022,7 +2022,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
     const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
-    // B7010: a Dark Ages fae's blood carries its Court's gift and price (Dark Ages: Fae p. 181); the firstborn's twice over
+    // B7110: a Dark Ages fae's blood carries its Court's gift and price (Dark Ages: Fae p. 181); the firstborn's twice over
     const daFaeV = vesselActor?.getFlag?.(MOD, "daFae");
     if (drunk > 0 && isVampire(actor) && daFaeV?.origin && daFaeV.system !== "c20") {
         const fb = FDR.faeBlood(daFaeV.origin, daFaeV.court);
@@ -3381,7 +3381,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
     /** Dark Ages fae soak for WoDX Combat: in the mien Stamina soaks lethal (DA:Fae p. 104); cold iron is soakable (p. 88). */
-    // B7010: soaksLethal is the rule (Dark Ages: Fae p. 104): in the mien, or a firstborn always
+    // B7110: soaksLethal is the rule (Dark Ages: Fae p. 104): in the mien, or a firstborn always
     faeSoak: a => { if (!a || !FXD.isDA(a)) return null; const i = fx().info(a); return { lethal: FDR.soaksLethal({ mien: i.mien, origin: i.origin }), coldIron: true }; },
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),

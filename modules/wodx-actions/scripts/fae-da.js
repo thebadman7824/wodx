@@ -107,7 +107,7 @@ export function build(ctx) {
     // no Unleashing while it lasts (Dark Ages: Fae pp. 110-111). It ends with the scene.
     const echoHold = actor => { const h = actor?.getFlag?.(MOD, "daFae")?.echoHold; return h && n(h.scene) === LIM.sceneNo() ? n(h.level) : 0; };
     const echoDiff = actor => { const l = echoHold(actor); return l >= 2 ? 2 : l ? 1 : 0; };
-    // B7012: the warning signs (p. 103) from what the fae has done: an imbalance, cantrips botched this week, an Echo
+    // B7112: the warning signs (p. 103) from what the fae has done: an imbalance, cantrips botched this week, an Echo
     // that bit harder than the one before it this month (a house reading of "Echoes bite differently")
     const drift = i => {
         const now = game.time.worldTime;
@@ -309,7 +309,7 @@ export function build(ctx) {
             plan.notes.push(...rm.parts);
             const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed + n(rm.diff)), { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
-            // B7012: a botched cantrip is spoiled magic, one of the warning signs (p. 103); the last five are kept
+            // B7112: a botched cantrip is spoiled magic, one of the warning signs (p. 103); the last five are kept
             if (r.botch) await save(actor, { spoiled: [...(Array.isArray(i.f.spoiled) ? i.f.spoiled : []), game.time.worldTime].slice(-5) });
             const name = c?.name ?? `a level-${level} ${F.DOMINIONS[dominion].label} cantrip`;
             let body = rollBlock(`${F.DOMINIONS[dominion].label} + ${esc(t.label)}`, r, [...plan.notes, ...(fd.cloak ? ["cloaked: Perception + Kenning (8) to see it"] : []), ...(wp ? ["Willpower"] : [])]);
@@ -469,7 +469,7 @@ export function build(ctx) {
             const weave = Math.min(n(fd.weave) - (n(fd.weave) % 2), i.weaving.temp - (i.weaving.temp % 2));
             if (weave && !(await spend(actor, "weaving", weave))) return null;
             const level = F.echoLevel({ successes: er.botch ? 0 : er.successes, origin: i.origin, oathSuccesses: oathS, weavingSpent: weave, trueName: !!fd.name });
-            // B7012: the Echoes met, for the warning sign "Echoes bite differently" (p. 103); the last five are kept
+            // B7112: the Echoes met, for the warning sign "Echoes bite differently" (p. 103); the last five are kept
             if (level) await save(actor, { echoesMet: [...(Array.isArray(i.f.echoesMet) ? i.f.echoesMet : []), { t: game.time.worldTime, level }].slice(-5) });
             body += `<div class="vta-big ${level ? "bad" : "good"}">${level ? `Echo, level ${level}` : "The Echo fails"}${e ? `: ${esc(e.trigger)}` : ""}.</div><div class="vta-res">${esc(F.ECHO_LEVELS[level])}</div>`;
             if (weave) body += `<div class="vta-note">${weave} Weaving spent: −${weave / 2}.</div>`;
@@ -546,7 +546,7 @@ export function build(ctx) {
                 await save(actor, { enhanced: LIM.sceneNo() });
                 body += `<div class="vta-res">2 Mists: a Lesser Feature works as a Greater one for the scene. Mortals who see it may bring a new Echo.</div>`;
             } else if (u === "seen") {
-                // B7013: mortals who see the mien risk a new Echo (p. 114): 10 dice at 7, less for each thing they saw;
+                // B7113: mortals who see the mien risk a new Echo (p. 114): 10 dice at 7, less for each thing they saw;
                 // enhanced this scene, every Lesser Feature counts as a Greater one
                 const enh = i.f.enhanced != null && n(i.f.enhanced) === n(LIM.sceneNo());
                 const lesser = enh ? 0 : i.lesser.length, greater = i.greater.length + (enh ? i.lesser.length : 0);
@@ -591,7 +591,7 @@ export function build(ctx) {
         const i = await needFae(actor);
         if (!i) return null;
         const oaths = i.oaths.map((o, k) => ({ ...o, k })).filter(o => o.active !== false);
-        // B7014: the oath window also forges a new oath (forgeCheck, p. 109) and records a baptism (baptismClears, p. 108)
+        // B7114: the oath window also forges a new oath (forgeCheck, p. 109) and records a baptism (baptismClears, p. 108)
         const content = `<form><div class="form-group"><label>What happens</label><select name="op" data-fixed>
             ${oaths.length ? `<option value="keep">Keep an oath (Weaving back)</option>` : ""}<option value="forge">Forge a new oath</option>${i.oaths.length ? `<option value="baptism">Baptised: Iron and Stone Oaths wash away</option>` : ""}</select></div>
           ${oaths.length ? `<div class="form-group"><label>The oath kept</label><select name="o" data-fixed>${oaths.map(o => `<option value="${o.k}">${esc(oathLine(o))}</option>`).join("")}</select></div>

@@ -182,7 +182,7 @@ export async function run() {
             ok("an Echo at level 5: the Storyteller's button applies 3 aggravated, once", Number(lord.system.health.damage.aggravated) === 3, { agg: lord.system.health.damage.aggravated });
             await lord.update(zero);
         });
-        // B7014: the oath window forges an oath for Weaving (Gramarye at least the kind's) and a baptism keeps only Gold Oaths
+        // B7114: the oath window forges an oath for Weaving (Gramarye at least the kind's) and a baptism keeps only Gold Oaths
         await step("forging an Iron Oath: Weaving equal to its rating, the oath on the sheet; a baptism washes it away", async () => {
             const [gram] = await lord.createEmbeddedDocuments("Item", [{ name: "Gramarye", type: "Trait", system: { type: "wod.types.knowledgesecondability", value: 1 } }]);
             try {
@@ -204,7 +204,7 @@ export async function run() {
                 await lord.setFlag(MOD, "daFae", { ...fl(lord), oaths: [{ kind: "iron", rating: 2, terms: "keeps the miller's family from the wolves", active: true }], weaving: { perm: 3, temp: 3 } });
             }
         });
-        // B7013: mortals who see an enhanced mien roll to escape a new Echo; a failure adds it to the sheet
+        // B7113: mortals who see an enhanced mien roll to escape a new Echo; a failure adds it to the sheet
         await step("mortals see the enhanced mien: 10 dice at 7 less their losses, a new Echo added on a failure", async () => {
             await lord.setFlag(MOD, "daFae", { ...fl(lord), mists: { perm: 5, temp: 5 } });
             answer(root => { set(root, "use", "enhance"); });

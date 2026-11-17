@@ -242,7 +242,7 @@ export function build(ctx) {
                 body += `<div class="vta-warn">${esc(tgtNow.name)} is a vozhd: ${esc(p.d)} has no hold on it (V20 p. 502).</div>`;
                 return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
             }
-            // B7011: Dominate fails on a Dark Ages fae whose Day or Night is at least the power's level (Dark Ages: Fae p. 181)
+            // B7111: Dominate fails on a Dark Ages fae whose Day or Night is at least the power's level (Dark Ages: Fae p. 181)
             const faeT = tgtNow && tgtNow !== actor ? tgtNow.getFlag?.(MOD, "daFae") : null;
             if (/^dominate$/i.test(String(p.d ?? "").trim()) && faeT?.origin && faeT.system !== "c20" && FDR.mindShield(faeT.dominions ?? {}, p.l)) {
                 body += `<div class="vta-warn">${esc(tgtNow.name)}'s Day or Night stands at ${Math.max(n(faeT.dominions?.day), n(faeT.dominions?.night))}: Dominate ${n(p.l)} slides off the fae mind (Dark Ages: Fae p. 181).</div>`;

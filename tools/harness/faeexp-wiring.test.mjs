@@ -39,7 +39,7 @@ test("Dark Ages fae: havocStep lowers a havoc on the card, cantripCap sets the c
   assert.match(src("modules/wodx-actions/scripts/fae-da-rules.js"), /cantripCap\(weaving, dominions\[d\]\)/);
 });
 
-/* B7010-B7014: the rest of the Dark Ages fae exports reach play. */
+/* B7110-B7114: the rest of the Dark Ages fae exports reach play. */
 const F = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/fae-da-rules.js")));
 test("Dark Ages fae: new Echoes from mortal eyes, forging and baptism, the warning signs, soak, blood and the Dominate shield are read in play", () => {
   const fx = src("modules/wodx-actions/scripts/fae-da.js");
