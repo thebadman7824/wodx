@@ -361,3 +361,13 @@ test("B7200: a migration marker written after the clean fingerprint is not drift
   const real = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "2"}), cfg.ignoreSettings);
   assert.deepEqual(L.diffWorld(clean, real).strict.map(d => d.where), ["setting wodx-chronicle.automationLevel"], "a real setting change still stops the run");
 });
+
+test("B7204: stop takes over the lane's own Foundry by its port only when its command line is this lane's", () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/lanes.mjs"), "utf8");
+  const fn = src.slice(src.indexOf("function lanePidByPort"), src.indexOf("async function stop"));
+  assert.match(fn, /Get-NetTCPConnection -LocalPort \$\{Number\(lane\.port\)\} -State Listen/);
+  assert.match(fn, /pid > 0 && pidIsLane\(pid, lane\) \? pid : 0/, "a process that is not the lane's Foundry is never taken");
+  const stop = src.slice(src.indexOf("async function stop"), src.indexOf("async function accept"));
+  assert.ok(stop.indexOf("lanePidByPort(lane)") < stop.indexOf("process.kill(pid)"), "the takeover comes before any kill");
+  assert.ok(stop.includes("if ( !pidIsLane(pid, lane) ) throw"), "the stale-id guard still stands");
+});
