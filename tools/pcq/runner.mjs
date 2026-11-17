@@ -328,8 +328,12 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   fs.rmSync(report, {force: true});
   const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
   const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, CEILING);
-  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
-  const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
+  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports)
+  const r = job.branchTools
+    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir)})
+    : await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
+  const rep = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
+    (fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000));
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
@@ -410,7 +414,7 @@ const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now()
  */
 const growing = new Map();
 async function makeQueue(job, lane, tag) {
-  if ( job.kind !== "gates" ) return null;
+  if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
   const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],

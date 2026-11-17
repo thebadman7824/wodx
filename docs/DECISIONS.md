@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7210
+Next free block: B7230
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -366,7 +366,7 @@ Next free block: B7210
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
 | B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main; gates jobs share one list over the lanes; lane 6 kept for the local agents (used B6520-B6527) | tools (pcq, vision, gate, lanes), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
-| B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
+| B6540-B6549 | Names follow customs everywhere: more peoples dated, short lists to 300 (used B6540-B6547) (used B6540-B6547) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 | B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
@@ -410,6 +410,7 @@ Next free block: B7210
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (PC job queue) |
+| B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -12369,6 +12370,11 @@ Sámi from the List of Sámi people (Wikipedia), Khmer from Cambodian name and L
 
 Reverse: remove the added names; drop RAISED_SHORT_OLD.
 
+## B6547. Banyarwanda, Amazigh, Moro and Maya to 300 recorded names; Tuareg to 175 (2026-11-17)
+WoDX Creation. Names from Wikidata (2,511 Rwandan citizens; people of Amazigh ethnic groups; people named "X ag Y" or "X walet Y") and the English and French Wikipedia categories of Kabyle, Berber, Moro, Maranao, Maya and Tuareg people, fetched on the Main PC on 16 and 17 November 2026 (names only, in /mnt/project-files/names-sources/wikidata/). Given names and family names were split from the recorded full names; the Tuareg father names after "ag" count as men's given names. Banyarwanda, Amazigh, Moro and Maya join RAISED_SHORT_OLD, held to 300 by the harness. Tuareg stays under 300: the Wikidata query service was down during the birthplace search, and few women's names are recorded.
+
+Reverse: remove the added names; drop the four peoples from RAISED_SHORT_OLD.
+
 ## B6550. The Dominions' named cantrips are presets (2026-11-15)
 WoDX Actions. fae-da-cantrips.js holds every named cantrip of the four Dominions (Dark Ages: Fae pp. 123-162) in WoDX's own words with its page, trait, level, difficulty, successes needed and costs, and an effects-card spec that a game system reads. The common cantrips (Call the element, Sword, Mantle, Charm and the rest) are one entry per Dominion. Cantrips no system can show (cold, drowning and silence, which WoDX has no system for) are card-only and logged for review.
 
@@ -14148,3 +14154,8 @@ Reverse: remove othersFailed and the otherChecksFailed field in tools/pcq/train.
 PC job queue. B7205 kept each pull request it looked up for two minutes. A gate job queued within two minutes of a push was then checked against the head from before the push, so on 17 November jobs 1967 (PR 1880), 1969 (PR 1836) and 1970 (PR 1963) were dropped as "moved on" to their own older commit, and the merge train had no gate runs. The cached pull request is still used to say a job is current, but before a job is dropped or stopped, the runner reads the pull request again and drops only on that fresh answer.
 
 Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.
+
+## B7220. A lane test of a branch's gate tools is a queued job (2026-11-17)
+PC job queue, the owner's go-ahead on 17 November ("Go ahead with one"). The runner only ever ran main's gate tools, so a test of a branch that changes them (PR 1937's hang watch) was started by hand outside the queue. The runner could not see it waiting, and running gate jobs took every lane that came free (growJobs grows to every lane when no lane job waits), so the test waited from 15:37Z to 17:37Z without a lane. A gates job may now say `"branchTools": true` (`submit.mjs --branch-tools`): the runner runs that ref's own tools/lanes/run-gate.mjs from its worktree, on one lane, with no recheck. It needs a branch or commit ref and named gates, so it never sets the wodx/gates status. Queued at prio 1, it takes the next lane that frees, and while it waits the running gates jobs grow no further. Running jobs are not stopped or slowed, and no lane is kept spare (the owner did not want big runs slowed).
+
+Reverse: drop the branchTools case in tools/pcq/jobs.mjs validate, and the branchTools branches in runner.mjs makeQueue and laneWork.
