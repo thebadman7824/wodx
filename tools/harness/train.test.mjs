@@ -25,6 +25,13 @@ test("decide: conflict leaves, draft is marked ready, behind or unstamped is pre
   assert.equal(decide({...ready, mergeRules: "pending", gates: "pending"}).action, "wait");
   assert.equal(decide({...ready, mergeRules: "pending", gates: null, frontFor: 4 * H}).action, "leave", "no result in 3 hours lets the line move");
   assert.equal(decide({...ready, mergeRules: "pending", frontFor: 4 * H}, {maxHours: 6}).action, "wait");
+  // B7203: merge rules red only on the gate rule while the head's fresh gate run has not reported is a wait (PR 1880)
+  const gateOnly = {...ready, mergeRules: "failure", mergeRulesWhy: "Not ready: gate result", gates: null};
+  assert.equal(decide(gateOnly).action, "wait");
+  assert.equal(decide({...gateOnly, gates: "pending"}).action, "wait");
+  assert.equal(decide({...gateOnly, gates: "failure"}).action, "leave", "the fresh run failed: out");
+  assert.equal(decide({...gateOnly, frontFor: 4 * H}).action, "leave", "no gate result in 3 hours: out");
+  assert.equal(decide({...gateOnly, mergeRulesWhy: "Not ready: gate result, file review"}).action, "leave", "another rule broken: out");
   assert.equal(decide({...ready, gates: null}).action, "merge", "a change that needs no gate merges on checks and merge rules alone");
 });
 
@@ -70,6 +77,14 @@ test("step merges the front when it is green and leaves the rest alone", async (
   assert.equal(r.action, "merge");
   assert.ok(calls.includes("PUT /pulls/20/merge"));
   assert.ok(!calls.some(c => /pulls\/21\/merge|update-branch/.test(c)), "the second in line is not touched");
+});
+
+test("step waits on a head whose merge rules fail only for its pending gate run (PR 1880)", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const m = mockGh({statuses: [{context: "wodx/merge-rules", state: "failure", description: "Not ready: gate result"}]});
+  const r = await step({gh: m.gh, home, apply: true});
+  assert.equal(r.action, "wait");
+  assert.ok(!m.calls.some(c => /^(PUT|POST|DELETE)/.test(c)), "nothing posted, label kept");
 });
 
 test("step takes a red front out of the train and marks a draft ready", async () => {
@@ -133,4 +148,39 @@ if ( fs.existsSync("changes/m/note.md") ) { fs.rmSync("changes/m/note.md"); fs.w
   const clash = await prepare({git, home, repoRoot: clone}, "claude/x", h2);
   assert.match(clash.error ?? "", /does not merge in cleanly/);
   assert.equal(spawnSync("git", ["status", "--porcelain"], {cwd: path.join(home, "train"), encoding: "utf8"}).stdout.trim(), "");
+});
+
+test("B7203: a file review is carried over a merge with main when the branch's own change is the same", async () => {
+  const {hashOf} = await import("../release/merge-rules.mjs");
+  const real = new URL("../release/merge-rules.mjs", import.meta.url).href;
+  const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-rev-"));
+  const sh = (cwd, ...a) => { const r = spawnSync("git", a, {cwd, encoding: "utf8"}); if ( r.status ) throw new Error(`git ${a.join(" ")}: ${r.stderr}`); return r.stdout.trim(); };
+  const origin = path.join(t, "o.git"), work = path.join(t, "w"), clone = path.join(t, "r"), home = path.join(t, "h");
+  fs.mkdirSync(home);
+  sh(t, "init", "-q", "--bare", "-b", "main", origin); sh(t, "clone", "-q", origin, work);
+  sh(work, "config", "user.email", "t@example.com"); sh(work, "config", "user.name", "t");
+  const put = (f, s) => { fs.mkdirSync(path.dirname(path.join(work, f)), {recursive: true}); fs.writeFileSync(path.join(work, f), s); };
+  put("tools/release/merge-stamp.mjs", "");
+  put("tools/release/merge-rules.mjs", `export {gitIn, branchReviews, hashOf, REVIEW_DIR} from ${JSON.stringify(real)};\n`);
+  put("shared.txt", "one\ntwo\nthree\n"); put("other.txt", "x\n");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "base"); sh(work, "push", "-q", "origin", "main");
+  sh(work, "checkout", "-q", "-b", "claude/r");
+  put("shared.txt", "one\ntwo\nthree\nbranch line\n"); put("other.txt", "x\nbranch\n");
+  const review = [{file: "shared.txt", verdict: "working", how: "read in full; ran the tests", hash: hashOf("one\ntwo\nthree\nbranch line\n")},
+    {file: "other.txt", verdict: "working", how: "read in full; ran the tests", hash: "stale0000000"}];
+  put("docs/reviews/claude-r.jsonl", review.map(r => JSON.stringify(r)).join("\n") + "\n");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "branch"); sh(work, "push", "-q", "origin", "claude/r");
+  const head = sh(work, "rev-parse", "HEAD");
+  sh(work, "checkout", "-q", "main"); put("shared.txt", "zero\none\ntwo\nthree\n"); put("other.txt", "main\nx\n");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "main edits the shared files"); sh(work, "push", "-q", "origin", "main");
+  sh(t, "clone", "-q", origin, clone); sh(clone, "config", "user.email", "t@example.com"); sh(clone, "config", "user.name", "t");
+  const r = await prepare({git: async (argv, cwd) => spawnSync("git", argv, {cwd, encoding: "utf8"}), home, repoRoot: clone}, "claude/r", head);
+  assert.equal(r.error, undefined, r.error);
+  assert.match(r.did, /main merged in and 1 file review\(s\) carried over/);
+  const lines = sh(origin, "show", `${r.sha}:docs/reviews/claude-r.jsonl`).split("\n").map(l => JSON.parse(l));
+  const added = lines.slice(2);
+  assert.equal(added.length, 1, "only the file whose verdict was current before the merge");
+  assert.equal(added[0].file, "shared.txt");
+  assert.equal(added[0].hash, hashOf("zero\none\ntwo\nthree\nbranch line\n"));
+  assert.match(added[0].how, /^carried over by the merge train after main merged in: .*earlier check: read in full; ran the tests$/);
 });
