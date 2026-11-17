@@ -143,7 +143,14 @@ export function branchDecisions(g, base, head) {
   for ( const file of [...new Set(added)].sort() ) {
     if ( !/^changes\/decisions\/B\d+\.md$/.test(file) ) continue;
     let text = g.show(head, file);
-    if ( text === null ) { const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file); text = last ? g.show(`${last}^1`, file) : null; }
+    if ( text === null ) {
+      // Gone by the head. A stamp removes a fragment in the same commit that writes docs/DECISIONS.md, so its numbers
+      // still count; a fragment renamed or deleted any other way (B7010.md renumbered to B7110.md) no longer holds them.
+      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
+      const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
+      if ( !stamped ) continue;
+      text = g.show(`${last}^1`, file);
+    }
     out.push({file, numbers: [...String(text ?? "").matchAll(/^## (B\d+)\./gm)].map(m => m[1])});
   }
   return out;
