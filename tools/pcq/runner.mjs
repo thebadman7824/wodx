@@ -31,7 +31,7 @@ import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
-import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {loadConfig, getLane, laneDir, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack} from "../lanes/gate-queue.mjs";
@@ -145,6 +145,10 @@ async function healthCheck(id, force = false) {
   s.checked = Date.now();
   if ( lockState(laneOf(id), cfg).held ) return; // someone else is using it (a helper, the nightly run)
   if ( !fs.existsSync(path.join(laneOf(id).dataPath, "Data", "worlds", cfg.world)) ) { s.down = true; s.why = "not set up (queue a setup-lane job)"; return; }
+  // B6885: a lane on another PC whose setup never finished (no clean fingerprint, e.g. stopped at Foundry's licence
+  // screen) takes no jobs but setup-lane, or a gate job fails there without running a gate (job #1816 on lane 7).
+  // Only lanes with a host: the main PC's older lanes may predate clean.json and must keep working.
+  if ( laneOf(id).host && !fs.existsSync(path.join(laneDir(laneOf(id)), "clean.json")) ) { s.down = true; s.why = "setup not finished (no clean fingerprint; queue a setup-lane job)"; return; }
   if ( await isUp(laneOf(id)) ) { if ( s.down ) await recovered(id); return; }
   log(`lane ${id} is down; starting it`);
   const r = await lanesCmd(["start", "--lane", id], {minutes: 6});
@@ -217,13 +221,15 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   if ( job.kind === "gate-two" ) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${job.gate}-result.json`);
     fs.rmSync(f, {force: true});
-    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`], {logTo: L, minutes: 30});
+    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`, ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
     // The failing steps are read before the reset, which may put the lane's data back
     const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
     const detail = failDetail(lane, line);
     await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
     if ( r.code === null ) return faultRetry("gate-two ran past its time limit", r.out);
-    return {code: r.code, text: `${line}\n${detail}`.trim()};
+    // B6970: with diag the [diag] lines (both browsers' console, full failing steps) follow
+    const diag = job.diag ? r.out.split("\n").filter(x => x.startsWith("[diag]")).slice(-300).join("\n") : "";
+    return {code: r.code, text: `${line}\n${detail}${diag ? `\n\n${diag}` : ""}`.trim()};
   }
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});
