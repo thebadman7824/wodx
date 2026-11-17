@@ -8,7 +8,8 @@
  *                                                 run the version, table and decision tests
  *   node tools/release/merge-stamp.mjs --commit   the same, then commit the stamp
  *   node tools/release/merge-stamp.mjs --check    change nothing; exit 1 if fragments are waiting, the branch is
- *                                                 behind main, or a hand-made version bump is not above main's
+ *                                                 behind main, a hand-made version bump is not above main's, or a
+ *                                                 merge rule (tools/release/merge-rules.mjs) is broken
  *   --no-fetch                                    use origin/main as it is (no network)
  *   --dry                                         print what would change, write nothing
  *
@@ -248,6 +249,13 @@ async function main() {
         if ( cover.length && !cover.some(g => gatesTouched.has(g)) ) console.log(`  warning: ${mod} scripts changed but none of its ${cover.length} gates did; update the gate for the feature (docs/WORKFLOW.md, Gate rules)`);
       }
     } catch {}
+    // B7003: the merge rules CI enforces (note, gate result, file reviews), so a thread sees them before it pushes
+    try {
+      const MR = await import("./merge-rules.mjs");
+      const r = await MR.evaluate({statuses: process.env.GITHUB_TOKEN ? undefined : null});
+      console.log(MR.report(r).split("\n").map(l => `  ${l}`).join("\n"));
+      if ( !r.bensOwn ) for ( const k of ["note", "review", ...(r.gateUnread ? [] : ["gates"])] ) for ( const x of r.rules[k] ) problems.push(`merge rule: ${x}`);
+    } catch (e) { console.log(`  merge rules not checked: ${e.message}`); }
     if ( mf.length || df.length ) problems.push(`${mf.length + df.length} fragment(s) wait to be stamped: run node tools/release/merge-stamp.mjs`);
     for ( const p of problems ) console.log(`  ${p}`);
     console.log(problems.length ? `Not ready to merge: ${problems.length} problem(s).` : "Ready to merge: nothing waits to be stamped.");

@@ -30,7 +30,7 @@ export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", fai
 export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
 export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane"]);
 const NAME = /^[\w-]{1,64}$/;
-const REF = /^(main|claude\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/;
+const REF = /^(main|(?:claude|handoff)\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/; // B7002: handoff/ branches too, so HOLD pull requests can be gated
 const TERM = /^[\p{L}\p{N} '’.,()&-]{1,80}$/u;
 const PATTERN = /^[\p{L}\p{N} _.()&-]{2,80}$/u;
 const UNDER = /^[\p{L}\p{N} _.()&\[\]\\\/-]{1,200}$/u;
@@ -49,7 +49,7 @@ export function validate(raw, laneIds = []) {
   const j = {...raw};
   if ( !KINDS.includes(j.kind) ) return err(`kind must be one of ${KINDS.join(", ")}.`);
   j.ref = j.ref ?? "main";
-  if ( typeof j.ref !== "string" || !REF.test(j.ref) || j.ref.includes("..") ) return err("ref must be main, a claude/... branch or a commit sha.");
+  if ( typeof j.ref !== "string" || !REF.test(j.ref) || j.ref.includes("..") ) return err("ref must be main, a claude/... or handoff/... branch or a commit sha.");
   j.prio = j.prio ?? 3;
   if ( !Number.isInteger(j.prio) || j.prio < 1 || j.prio > 5 ) return err("prio must be a whole number from 1 to 5.");
   if ( j.after !== undefined && !(Number.isInteger(j.after) && j.after > 0) ) return err("after must be an issue number.");
@@ -191,3 +191,29 @@ export const fit = (s, max = 60000) => s.length <= max ? s : `${s.slice(0, max -
 
 /** The issue body for a job, as submit.mjs prints it and the runner reads it. */
 export const issueBody = (job, note = "") => `${note ? note + "\n\n" : ""}\`\`\`json\n${JSON.stringify(job, null, 1)}\n\`\`\`\n\nRun by the PC runner (tools/pcq). Testbed lanes only; never lane 1 or Live.`;
+
+/**
+ * B7002: the wodx/gates commit status a finished gates job sets for the merge rules (tools/release/merge-rules.mjs),
+ * or null when the job says nothing about a whole branch: not a gates job, not touched or all (a hand-picked list may
+ * miss gates the change needs), a lane fault with no result, or lanes that ran different commits.
+ * parts: [{code, text, sha}] per lane. A failing gate that the recheck found failing on main too is not this change's
+ * fault: the status passes and names it, so the pull request is not held for a fault main already has.
+ */
+export const GATE_CONTEXT = "wodx/gates";
+export function gateStatusFor(job, parts, ok, failing = failingGates, url = undefined) {
+  if ( job?.kind !== "gates" || !(job.touched || job.all) || !parts?.length ) return null;
+  if ( parts.some(p => p.code === null || p.code === undefined || !p.sha) ) return null;
+  const shas = new Set(parts.map(p => p.sha));
+  if ( shas.size !== 1 ) return null;
+  // the shared queue was listed from one commit; lanes that fetched a newer one ran a list made for other code
+  if ( job.queueSha && !shas.has(job.queueSha) ) return null;
+  const text = parts.map(p => p.text ?? "").join("\n");
+  const ran = new Set([...text.matchAll(/^(gate[\w-]*): (?:\d+\/\d+ passed|ERROR)/gm)].map(m => m[1])).size;
+  const bad = failing(text);
+  const mainToo = new Set([...text.matchAll(/^- (gate[\w-]*): fails on main too/gm)].map(m => m[1]));
+  let state, description;
+  if ( ok ) { state = "success"; description = `${ran} gate(s) passed (${job.all ? "all" : "touched"})`; }
+  else if ( bad.length && bad.every(g => mainToo.has(g)) ) { state = "success"; description = `passed; failing on main too: ${bad.join(" ")}`; }
+  else { state = "failure"; description = `${bad.length || "some"} of ${ran} gate(s) failed${bad.length ? `: ${bad.join(" ")}` : ""}`; }
+  return {sha: [...shas][0], body: {state, context: GATE_CONTEXT, description: description.slice(0, 140), ...(url ? {target_url: url} : {})}};
+}
