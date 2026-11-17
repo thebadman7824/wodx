@@ -408,8 +408,8 @@ Next free block: B7210
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
-| B7190-B7199 | Gate trust: a busy runner takes new lane tools without waiting to be idle (used B7190-B7194) | tools (pcq runner) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200) | tools (testbed lanes, PC job queue) |
+| B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7202) | tools (PC job queue), docs |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14106,3 +14106,8 @@ Reverse: drop the in-place block in updateDue and make MY_SHA const again.
 Testbed lanes. On 16 and 17 November the PC runner hit exit 4 (drift found, no gate run) 83 times, and each one cost a lane reset and a retry. The drift blocks in the lane logs show why: every one of the 34 since job 1810 was the single setting fxmaster.parameterRangeMigrationVersion "added", and the earlier ones were the same kind of marker (fxmaster.parameterRangePassiveMigrationVersion, fxmaster.directionConventionPassiveMigrationVersion, tokenmagic.migration). FXMaster and Token Magic write these once per world a little after a GM signs in, too late for the clean fingerprint the reset takes, so the next sign-in by run-gate saw them as new. The lane's known-good copy predates them, so every reset brought the problem back. The four keys join ignoreSettings in tools/lanes/lanes.json, beside fxmaster.legacyCleanupVersion, which was already there for the same reason. They are markers of a migration already done, not world state a gate reads.
 
 Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
+
+## B7202. The merge train: pull requests merge one at a time (2026-11-17)
+PC job queue and merging. Every merge to main left the other open pull requests behind. The hourly sweep (B4110) then merged main into each of them, each push started a full gate run again (150 to 300 gates, 50 to 80 minutes), and by the time one passed main had moved again; on 17 November 8 of 14 open pull requests had conflicts. Ben approved a merge train. A thread whose pull request meets the rules it can meet by itself labels it `merge-train` and stops pushing. The Main PC's runner (tools/pcq/train.mjs, every 3 minutes, "train": true only in runner.json) takes the front of the line, oldest label first. It marks a draft ready, merges main in and runs merge-stamp in its own worktree, and pushes with a lease on the head it saw, so a thread's own push wins. pc-gates.yml then gates the new head, and the runner takes that gate job before the rest of the queue. The runner merges when `checks` and `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out with a comment, and the line moves on. The others are not brought up to date or gated again while they wait. The sweep no longer merges main into open pull requests; it still starts CI where none ran. The train uses a merge, not a rebase, because the repository never rewrites a pushed branch.
+
+Reverse: set "train": false in tools/pcq/runner.json and "sweepUpdates": true to bring back the hourly update; threads go back to merging by hand (docs/WORKFLOW.md, section 6, keeps the old steps).
