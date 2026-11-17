@@ -38,7 +38,7 @@
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
-  flagPlan, READ_FLAGS, PUT_FLAGS_BACK} from "./lib.mjs";
+  flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
@@ -198,6 +198,7 @@ try {
       if ( lostApis.length ) console.log(`Lane ${lane.id}: no api before ${gate} after 120 s: ${lostApis.join(", ")}`);
       // B7181: on a lane reset every night, the flags of the shared documents are read now and put back after the gate.
       const flagsBefore = lane.autoReset ? await page.evaluate(READ_FLAGS).catch(() => null) : null;
+      const sheetsBefore = lane.autoReset ? await page.evaluate(READ_SHEETS).catch(() => null) : null;
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
@@ -285,12 +286,18 @@ try {
         run.catch(() => {});
         await closeBrowser(); page = null;
       }
+      // B7192: sheets first (a system update can move flags through hooks), then flags
+      if ( sheetsBefore && page ) {
+        try { out.sheetsBack = await page.evaluate(PUT_SHEETS_BACK, sheetPlan(sheetsBefore, await page.evaluate(READ_SHEETS))); }
+        catch (e) { out.sheetsBack = 0; const note = `putting sheets back: ${e?.message ?? e}`; if ( out.error ) out.error += `; ${note}`; else out.error = note; }
+      }
       if ( flagsBefore && page ) {
         try { out.flagsBack = await page.evaluate(PUT_FLAGS_BACK, flagPlan(flagsBefore, await page.evaluate(READ_FLAGS))); }
         catch (e) { out.flagsBack = 0; const note = `putting flags back: ${e?.message ?? e}`; if ( out.error ) out.error += `; ${note}`; else out.error = note; }
       }
       const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : "",
         out.flagsBack ? `flags put back on ${out.flagsBack} document(s)` : "",
+        out.sheetsBack ? `sheets put back on ${out.sheetsBack} document(s)` : "",
         out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;

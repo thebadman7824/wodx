@@ -564,7 +564,7 @@
    "approvals"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/main.mjs:85",
+   "modules/wodx-solo/scripts/main.mjs:88",
    "modules/wodx-storyteller/scripts/haven-works.mjs:184",
    "modules/wodx-storyteller/scripts/inherit.mjs:72",
    "modules/wodx-storyteller/scripts/institutions.mjs:230",
@@ -603,8 +603,8 @@
    "modules/wodx-combat/scripts/conductor.js:130",
    "modules/wodx-creation/scripts/first-night.mjs:322",
    "modules/wodx-interactables/scripts/main.mjs:1051",
-   "modules/wodx-solo/scripts/main.mjs:209",
-   "modules/wodx-solo/scripts/main.mjs:215",
+   "modules/wodx-solo/scripts/main.mjs:212",
+   "modules/wodx-solo/scripts/main.mjs:218",
    "modules/wodx-storyteller/scripts/core.mjs:662",
    "modules/wodx-storyteller/scripts/core.mjs:706",
    "modules/wodx-storyteller/scripts/core.mjs:709"
@@ -1464,7 +1464,7 @@
    "nightwork"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/main.mjs:155",
+   "modules/wodx-solo/scripts/main.mjs:158",
    "modules/wodx-solo/scripts/st-tools.mjs:208"
   ]
  },
@@ -1638,6 +1638,16 @@
   "uses": [
    "modules/wodx-actions/scripts/acts.js:98",
    "modules/wodx-storyteller/scripts/sick-looks.mjs:21"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "release",
+   "check"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/report.mjs:62"
   ]
  },
  {
