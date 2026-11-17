@@ -170,6 +170,8 @@ export async function run() {
       let probe = null;
       if ( !movingSeen ) {
         const back = {x: tok.x, y: tok.y}, pturned = [];
+        // it is sitting now, and a held seat stays put wherever the token is dragged until the figure gets up (B5666)
+        const rose = await A.rise?.(tok); await sleep(900);
         await canvas.pan({x: tok.x, y: tok.y + g / 2, scale: 0.8}); await sleep(300);
         const pw = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving && f && pturned.at(-1) !== f ) pturned.push(f); }, 40);
         try {
@@ -177,7 +179,7 @@ export async function run() {
           await (tok.object?.movementAnimationPromise ?? sleep(1600)); await sleep(300);
         } finally { clearInterval(pw); }
         await tok.update(back, {animate: false});
-        probe = {turned: pturned};
+        probe = {turned: pturned, rose};
       }
       const faced = turned.includes("right") || (!movingSeen && !!probe?.turned.includes("left"));
       G.ok("3. it walks to the tavern facing the way it goes", faced, {turned, movingSeen, samples, stateSeen, places: seenAt.size, probe, from, to: {x: tok.x, y: tok.y}, how});

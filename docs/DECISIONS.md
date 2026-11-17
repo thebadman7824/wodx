@@ -10603,7 +10603,7 @@ WoDX Paperdoll. A token that moved three squares or more between two looks was t
 Reverse: drop the walking argument of step() in sprite-rules.mjs and its use in sprites.mjs.
 
 ## B6148. The sprite check sees facing on a warm screen (2026-11-17, found by the sprite check gate)
-Gate only (gatespritecheck step 3). On a freshly reset lane Foundry sometimes lays an NPC routine's first walk down in one go with no animation, so the sprite never moves and has nothing to face; the check then failed although the routine arrived and the token sat. When no movement was seen, the check now moves the same token three squares left with an animated step, in view, and requires it to face left on the way, then puts it back. A walk that was animated is still judged as before (it must face right toward the tavern).
+Gate only (gatespritecheck step 3). On a freshly reset lane Foundry sometimes lays an NPC routine's first walk down in one go with no animation, so the sprite never moves and has nothing to face; the check then failed although the routine arrived and the token sat. When no movement was seen, the check now helps the seated figure up (a held seat otherwise stays put wherever the token is dragged) and moves the same token three squares left with an animated step, in view, and requires it to face left on the way, then puts it back. A walk that was animated is still judged as before (it must face right toward the tavern).
 Reverse: drop the probe block in gatespritecheck step 3 and judge turned.includes("right") alone.
 
 ## B6150. A player's attack and damage hooks fire on the Storyteller's client too (2026-11-15)
