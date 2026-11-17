@@ -18,7 +18,8 @@
  * carries a deadline that moves on before each gate, so another run takes over a lane whose run has hung past it,
  * ending that process and its browser.
  * After each gate the runner puts back world settings the gate changed and removes ones it added; on lanes that are
- * reset every night it also deletes documents the gate left behind (B3086). Two-browser gates (gatesolo,
+ * reset every night it also deletes documents the gate left behind (B3086) and puts back the flags it changed on the
+ * actors, scenes, tokens, journal entries, items and users that were there before it (B7181). Two-browser gates (gatesolo,
  * gatelookhand) are left out of the map; run them by name, alone.
  *
  * 1. Picks the first lane in lanes.json that is up and not locked (or the one --lane names) and locks it.
@@ -36,7 +37,8 @@
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
-  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
+  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
+  flagPlan, READ_FLAGS, PUT_FLAGS_BACK} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
@@ -194,6 +196,8 @@ try {
       const lostApis = await waitApis(page).catch(() => []);
       const diagStart = diagFrom;
       if ( lostApis.length ) console.log(`Lane ${lane.id}: no api before ${gate} after 120 s: ${lostApis.join(", ")}`);
+      // B7181: on a lane reset every night, the flags of the shared documents are read now and put back after the gate.
+      const flagsBefore = lane.autoReset ? await page.evaluate(READ_FLAGS).catch(() => null) : null;
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
@@ -281,7 +285,12 @@ try {
         run.catch(() => {});
         await closeBrowser(); page = null;
       }
+      if ( flagsBefore && page ) {
+        try { out.flagsBack = await page.evaluate(PUT_FLAGS_BACK, flagPlan(flagsBefore, await page.evaluate(READ_FLAGS))); }
+        catch (e) { out.flagsBack = 0; const note = `putting flags back: ${e?.message ?? e}`; if ( out.error ) out.error += `; ${note}`; else out.error = note; }
+      }
       const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : "",
+        out.flagsBack ? `flags put back on ${out.flagsBack} document(s)` : "",
         out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;

@@ -288,3 +288,27 @@ test("lane 7 on the Laptop takes only small named-gate jobs (B6887)", () => {
   const runner = fs.readFileSync(path.join(root, "tools/pcq/runner.mjs"), "utf8"), submit = fs.readFileSync(path.join(root, "tools/pcq/submit.mjs"), "utf8");
   assert.ok(runner.includes("!laneRefuses(laneOf(l), q.job)") && submit.includes("laneRefuses(named, v.job)"), "runner and submit both check it");
 });
+
+test("B7181: flagPlan puts back the flags a gate changed on documents that were there before it", async () => {
+  const {flagPlan} = await import("../lanes/lib.mjs");
+  const before = {
+    "Actor.a": {"wodx-npc": {haven: "Scene.x", mood: 1}, core: {sheetClass: "s"}},
+    "Scene.x": {},
+    "Actor.same": {"wodx-npc": {k: 1}},
+    "Actor.gone": {"wodx-npc": {k: 1}}
+  };
+  const after = {
+    "Actor.a": {"wodx-npc": {haven: "Scene.gate", mood: 1, learned: ["dodge"]}, core: {sheetClass: "s"}},
+    "Scene.x": {"wodx-chronicle": {domain: "gate"}},
+    "Actor.same": {"wodx-npc": {k: 1}},
+    "Actor.new": {"wodx-npc": {k: 2}}
+  };
+  const plan = flagPlan(before, after);
+  assert.deepEqual(plan, [
+    {uuid: "Actor.a", unset: [["wodx-npc", "haven"], ["wodx-npc", "learned"]], set: [["wodx-npc", "haven", "Scene.x"]]},
+    {uuid: "Scene.x", unset: [["wodx-chronicle", "domain"]], set: []}
+  ], "changed keys are unset then set back, added keys unset; unchanged, deleted and new documents are left alone");
+  const deep = flagPlan({"A.b": {m: {o: {x: 1}}}}, {"A.b": {m: {o: {x: 1, y: 2}}}});
+  assert.deepEqual(deep, [{uuid: "A.b", unset: [["m", "o"]], set: [["m", "o", {x: 1}]]}], "an object value is replaced whole, so no merged key stays");
+  assert.deepEqual(flagPlan({}, {}), []);
+});
