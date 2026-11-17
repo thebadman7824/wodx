@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7030
+Next free block: B7190
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -385,7 +385,7 @@ Next free block: B7030
 | B6810-B6814 | Final systems audit: lead's own fixes (used B6810-B6814) | Actions, Combat, NPC, Library, Chronicle |
 | B6815-B6819 | Final audit, second sweep (worker b): fixes in the system's health track, Library weights and Paperdoll faces (used B6815-B6819) | System, Library, Paperdoll |
 | B6850-B6879 | Final systems audit (worker w2, second pass): powers that only told now apply (used B6850-B6858) | Actions, Combat, Chronicle |
-| B6880-B6889 | Second PC runner: two-browser gates use the lane's own address (used B6880-B6886) | tools (PC job queue) |
+| B6880-B6889 | Second PC runner: lane 7 takes only small named-gate jobs (used B6880-B6887) | tools (PC job queue, testbed lanes) |
 | B6890-B6894 | Final audit, second sweep (worker c): fixes in the NPC, Otherworlds and Paperdoll rules (used B6890) | NPC |
 | B6895-B6898 | Final audit, second sweep (worker d): fixes in the rules at a glance, the solo director and the market news (used B6895-B6897) | Storyteller, Solo |
 | B6899 | Audit coverage check: every script file needs a verdict before an audit claims full coverage (used B6899) | Tools |
@@ -405,6 +405,8 @@ Next free block: B7030
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
+| B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
+| B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13566,6 +13568,11 @@ PC job queue. The runner started gate-two.mjs with a fixed https://localhost:<po
 
 Reverse: put the fixed https address back at the gate-two call in tools/pcq/runner.mjs.
 
+## B6887. Lane 7 takes only small named-gate jobs (2026-11-17)
+PC job queue. The Laptop (2 cores, no graphics card) took touched-gates job #1849 on lane 7 alone. At about 16 minutes a gate on one lane that is a run of many hours, and it held every job queued behind it. Lane 7 now has "maxGates": 10 in lanes.json, and `laneRefuses` in tools/lanes/lib.mjs says why a job does not fit. A gates job that is touched, every-gate, queue-based or longer than 10 gates is refused. submit.mjs stops such a job named on lane 7. The Laptop runner fails such a job if it names lane 7, and otherwise leaves it for the Main PC's lanes. Two-browser, setup and reset jobs are unchanged. docs/ROUTING.md says so.
+
+Reverse: drop "maxGates" from lane 7 in tools/lanes/lanes.json (the checks then do nothing), or remove the laneRefuses calls.
+
 ## B6890. A mage's Mind Sphere reads a hidden loyalty (2026-11-16)
 WoDX NPC (trust-rules.mjs). The Mind sense for a hidden loyalty is named "Mind 1 (...)", so senseHeld looked for a power called "mind 1", while trust.mjs keeps a mage's Sphere as powers.mind. No mage ever held the sense, and Look over fell back to plain Empathy. The power name now drops its rank before matching, and the difficulty is the Effect's rank plus 3 (M20, coincidental magick) instead of the mage's whole Sphere.
 
@@ -13986,3 +13993,63 @@ on main's commit as for any all-gates job, and a gate failing there reads as a f
 `run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
 runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
 (BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
+
+## B7140. One feature registry in the repo (2026-11-17)
+Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
+
+Reverse: delete registry/features/ and tools/registry/, and the registry parts of merge-rules.mjs.
+
+## B7141. Done means verified, step by step (2026-11-17)
+Pick o2. A row's status is the last step reached with every earlier step reached: built, wired (a reader, file:symbol, that must be found in the file), shown (what players see, or none with a reason), gated (a gate file and step), book (a page ref, or none with a reason), verified (by and how, set by a session other than the builder). An open fault takes a verified row back to book.
+
+Reverse: change STEPS and status() in tools/registry/registry.mjs.
+
+## B7142. Rows own files; faults and deferred work live on rows (2026-11-17)
+Picks o1 and o5. A row's files (paths, folders or globs) are what it owns; ownerOf() and `registry.mjs owner <file>` find a file's rows. The solo world's Report a problem converter files each fault on the owning row's faults list, or in registry/features/_inbox.json with a module guess when no row owns it. Deferred findings (the final audit's rulings and tells, the Master Plan's open lists) become open or deferred entries on rows during seeding.
+
+Reverse: drop faults and the inbox from the README and rowProblems().
+
+## B7143. A tool grades how strongly each gate step proves its feature (2026-11-17)
+Pick o4. tools/registry/strength.mjs reads each gate step (and the gate's own helpers it calls, one level) and grades it effect (a real trigger, a number, token, sheet or canvas checked), marker (a real trigger, only a flag, condition, card or message checked), direct-call (the module's own function called, or a hook fired by hand) or none. A gated row must point at an effect step. On 17 November: 322 gate files, 2,740 steps (429 effect, 94 marker, 2,216 direct-call, 1 none); 126 gate files have an effect step, 196 do not and form tools/registry/strength-baseline.json, which may only shrink. Against the 84 hand grades of the 15 November done-claims audit that name one gate step, the grader agrees on 65; it is stricter than the hand grades on effect (9 of 11 hand-graded effect steps call the module's function directly). It reads code, so it is a heuristic: where it is wrong about a step, fix the grader in the same pull request rather than the row.
+
+Reverse: delete strength.mjs and its baseline; drop the strength argument in registry.mjs check.
+
+## B7144. Merge rule 4: the registry follows the code (2026-11-17)
+Pick o3 (Ben: take the recommendation). In a seeded module, every changed script file must be owned by a row, an owning row must change on the branch (or a commit says registry: no change <reason>), and rows in changed registry files must pass the check. Modules not yet seeded get one warning line, so CI only warns until each module is seeded; seeding a module switches the rule on for it.
+
+Reverse: remove registryRule from evaluate() in tools/release/merge-rules.mjs.
+
+## B7145. Decision numbers may not clash (2026-11-17)
+Finish-Line Desk o6. Three clashes in one week (B7004 and B7010, B7012 renumbered to B7020, PR 1853 merged with no stamp). A decision fragment added on a branch fails rule 1 when one of its section numbers is already in main's docs/DECISIONS.md, or used twice on the branch.
+
+Reverse: drop decisionClashes from rule 1 in merge-rules.mjs.
+
+## B7146. The ratchet: half-built work may not grow (2026-11-17)
+Pick o7. Half-built is a row that is built but not gated, or has an open fault. In a module seeded at both the merge base and the head, a pull request that raises the module's half-built count fails rule 4 unless a commit cites Ben's go-ahead with ratchet-override: <link>.
+
+Reverse: remove the ratchet block from registryRule().
+
+## B7147. Art by id (2026-11-17)
+Pick w7. Code loads portraits, sprites and objects by the ids in the art thread's tables (registry/art-assets/ in the shared folder), so the locked style swaps in without code changes. Rows list the ids they use in art; registry.mjs check checks them when the tables are reachable (not in CI, which cannot see the shared folder).
+
+Reverse: drop the art field from the README and rowProblems().
+
+## B7148. Status lives in the registry; the Master Plan links it (2026-11-17)
+Pick o9. docs/FEATURES.md is generated; docs/WORKFLOW.md section 8 says audits, the Monday review and handoffs start from registry.mjs changed --since <last check> and point at row ids.
+
+Reverse: remove section 8 and docs/FEATURES.md.
+
+## B7149. PC upkeep is frozen and owned by one helper (2026-11-17)
+Pick w4. docs/ROUTING.md: no new machines, lanes, runners, status pushes or PC tools until the registry is seeded and the core verified. The merge rules warn (never block) when a branch changes tools/pcq/ or tools/lanes/ without upkeep: <reason> in a commit message.
+
+Reverse: remove upkeepWarnings from merge-rules.mjs and the section in ROUTING.md.
+
+## B7180. A renamed decision fragment no longer clashes with itself (2026-11-17)
+Fix to B7145. branchDecisions() read every fragment ever added on a branch, including ones renamed away, so PR 1836's B7010.md (renumbered to B7110.md after PR 1835 took B7010) still claimed B7010. A fragment gone by the head now counts only when the commit that removed it also wrote docs/DECISIONS.md, which is what merge-stamp does. Regression test in tools/harness/registry.test.mjs.
+
+Reverse: drop the stamped check in branchDecisions().
+
+## B7181. Gates put back the flags they change (2026-11-17)
+Finish-Line Desk w3. PR 1896's gate run (job 1898) had three gates that pass alone and fail late in a long run (gate7b, gatehunters, gatetowns). The runner put settings back and deleted new documents, but flags a gate set on the shared actors, scenes, tokens, journal entries, items and users stayed for every later gate (gate7b's NPC weighs its own ground and territory before it flees). On lanes reset every night, run-gate.mjs now reads those flags before each gate and puts back what changed (tools/lanes/lib.mjs flagPlan; a changed key is unset, then set back whole). The gate's line says how many documents had flags put back. Failures still block; nothing is skipped. The PC runner runs tools from its own main checkout, so this lands before the gates of PR 1896 run again.
+
+Reverse: drop flagsBefore and the put-back block in run-gate.mjs.
