@@ -227,3 +227,26 @@ test("submit takes the other PCs' lanes from lanes.json, never lane 6 or lane 1 
   assert.ok(validate({kind: "reset", lane: 6}, ids).error, "lane 6 is still refused");
   assert.deepEqual(submitLanes({lanes: [2]}, {lanes: [{id: 1, host: "x"}, {id: 9, host: "y", reserved: "z"}]}), [2]);
 });
+
+test("B7002: a touched or all gates job sets the wodx/gates status on the one commit it ran", async () => {
+  const {gateStatusFor, GATE_CONTEXT} = await import("../pcq/jobs.mjs");
+  const sha = "a".repeat(40), job = {kind: "gates", touched: true, ref: "claude/x"};
+  const pass = [{code: 0, sha, text: "gatea: 5/5 passed\ngateb: 3/3 passed"}];
+  const st = gateStatusFor(job, pass, true, undefined, "https://github.com/o/r/issues/9");
+  assert.equal(st.sha, sha);
+  assert.deepEqual(st.body, {state: "success", context: GATE_CONTEXT, description: "2 gate(s) passed (touched)", target_url: "https://github.com/o/r/issues/9"});
+  assert.equal(gateStatusFor({...job, touched: undefined, gates: ["gatea"]}, pass, true), null, "a hand-picked list says nothing about the branch");
+  assert.equal(gateStatusFor({kind: "deploy"}, pass, true), null);
+  assert.equal(gateStatusFor(job, [{code: null, sha, text: ""}], false), null, "a lane fault is no result");
+  assert.equal(gateStatusFor(job, [...pass, {code: 0, sha: "b".repeat(40), text: "gatec: 1/1 passed"}], true), null, "two commits");
+  assert.equal(gateStatusFor({...job, queueSha: "c".repeat(40)}, pass, true), null, "the queue was listed from another commit");
+  const fail = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: NEW with this change: passes on main"}];
+  const f = gateStatusFor(job, fail, false);
+  assert.equal(f.body.state, "failure");
+  assert.match(f.body.description, /1 of 2 gate\(s\) failed: gateb/);
+  const mainToo = [{code: 1, sha, text: "gatea: 5/5 passed\ngateb: 1/3 passed\n\nRecheck (each failing gate rerun on a fresh lane):\n- gateb: fails on main too: not this change's fault"}];
+  const m = gateStatusFor(job, mainToo, false);
+  assert.equal(m.body.state, "success");
+  assert.match(m.body.description, /failing on main too: gateb/);
+  assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
+});
