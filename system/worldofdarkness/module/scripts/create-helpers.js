@@ -5,6 +5,32 @@ import { resolveWeaponEra } from "./select/era.js";
 
 export default class CreateHelper {
 
+	/**
+	 * WoDX fork (B6382): the abilities a sheet of this type shows for this era. The hard-coded lists by era name
+	 * (assets/data/sheet/ability.js) are the base. WoDX Chronicle puts the active era profile's "abilities" in
+	 * CONFIG.worldofdarkness.wodxEraAbilities: {eras: {mortal, vampire, werewolf, mage}, add: {talents, skills,
+	 * knowledges}, hide: [keys], lines: {<type>: {add, hide}}}. Its add and hide apply where the profile's era for the
+	 * type's line is this era; lines.<type> applies to that type in any era. No profile: the base lists as they are.
+	 */
+	static EraAbilityList(type, era) {
+		const base = game.worldofdarkness?.abilities?.[type]?.[era] ?? {};
+		const out = {talents: [...(base.talents ?? [])], skills: [...(base.skills ?? [])], knowledges: [...(base.knowledges ?? [])]};
+		const p = CONFIG.worldofdarkness?.wodxEraAbilities;
+		if (!p) return out;
+		const line = {changingbreed: "werewolf"}[type] ?? type;
+		const parts = [];
+		if (p.eras?.[line] === era) parts.push(p);
+		if (p.lines?.[type]) parts.push(p.lines[type]);
+		for (const part of parts) {
+			for (const k of ["talents", "skills", "knowledges"]) {
+				for (const a of part.add?.[k] ?? []) if (!out[k].includes(a)) out[k].push(a);
+			}
+			const hide = new Set(part.hide ?? []);
+			if (hide.size) for (const k of ["talents", "skills", "knowledges"]) out[k] = out[k].filter(a => !hide.has(a));
+		}
+		return out;
+	}
+
 	static async SetAbilities(actorCopy, type, era) {
 		console.log(`WoD | Set ${type} Abilities - ${era}`);
 
@@ -22,22 +48,24 @@ export default class CreateHelper {
 				era = "modern20";
 			}
 		}
+		// WoDX fork (B6382): the active era profile may add or hide abilities; the lists by era name stay the fallback
+		const list = CreateHelper.EraAbilityList(type, era);
 
-		for (const talent in game.worldofdarkness.abilities[type][era].talents) {
-			if (actorCopy.system.abilities[game.worldofdarkness.abilities[type][era].talents[talent]] != undefined) {
-				actorCopy.system.abilities[game.worldofdarkness.abilities[type][era].talents[talent]].isvisible = true;
+		for (const key of list.talents) {
+			if (actorCopy.system.abilities[key] != undefined) {
+				actorCopy.system.abilities[key].isvisible = true;
 			}
 		}
 
-		for (const skill in game.worldofdarkness.abilities[type][era].skills) {
-			if (actorCopy.system.abilities[game.worldofdarkness.abilities[type][era].skills[skill]] != undefined) {
-				actorCopy.system.abilities[game.worldofdarkness.abilities[type][era].skills[skill]].isvisible = true;
+		for (const key of list.skills) {
+			if (actorCopy.system.abilities[key] != undefined) {
+				actorCopy.system.abilities[key].isvisible = true;
 			}
 		}
 
-		for (const knowledge in game.worldofdarkness.abilities[type][era].knowledges) {
-			if (actorCopy.system.abilities[game.worldofdarkness.abilities[type][era].knowledges[knowledge]] != undefined) {
-				actorCopy.system.abilities[game.worldofdarkness.abilities[type][era].knowledges[knowledge]].isvisible = true;
+		for (const key of list.knowledges) {
+			if (actorCopy.system.abilities[key] != undefined) {
+				actorCopy.system.abilities[key].isvisible = true;
 			}
 		}
 
@@ -82,22 +110,24 @@ export default class CreateHelper {
 				era = "modern20";
 			}
 		}
+		// WoDX fork (B6382): the active era profile may add or hide abilities; the lists by era name stay the fallback
+		const list = CreateHelper.EraAbilityList(type, era);
 
-		for (const talent in game.worldofdarkness.abilities[type][era].talents) {
-			if (actor.system.abilities[game.worldofdarkness.abilities[type][era].talents[talent]] != undefined) {
-				updates["system.abilities." + game.worldofdarkness.abilities[type][era].talents[talent] + ".isvisible"] = true;
+		for (const key of list.talents) {
+			if (actor.system.abilities[key] != undefined) {
+				updates["system.abilities." + key + ".isvisible"] = true;
 			}
 		}
 
-		for (const skill in game.worldofdarkness.abilities[type][era].skills) {
-			if (actor.system.abilities[game.worldofdarkness.abilities[type][era].skills[skill]] != undefined) {
-				updates["system.abilities." + game.worldofdarkness.abilities[type][era].skills[skill] + ".isvisible"] = true;
+		for (const key of list.skills) {
+			if (actor.system.abilities[key] != undefined) {
+				updates["system.abilities." + key + ".isvisible"] = true;
 			}
 		}
 
-		for (const knowledge in game.worldofdarkness.abilities[type][era].knowledges) {
-			if (actor.system.abilities[game.worldofdarkness.abilities[type][era].knowledges[knowledge]] != undefined) {
-				updates["system.abilities." + game.worldofdarkness.abilities[type][era].knowledges[knowledge] + ".isvisible"] = true;
+		for (const key of list.knowledges) {
+			if (actor.system.abilities[key] != undefined) {
+				updates["system.abilities." + key + ".isvisible"] = true;
 			}
 		}
 

@@ -1,7 +1,7 @@
 /**
  * The world's own hand (B4861-B4866): the rules for what the world sends and does when one of its systems acts, so
  * that a warrant, a raid, a road encounter or a lever pulled in an institution changes the map and the sheets without
- * the Storyteller staging it (Ben's Storyteller's Hand picks w2 to w5, 14 November 2026). Pure, no Foundry.
+ * the Storyteller staging it (the owner's Storyteller's Hand picks w2 to w5, 14 November 2026). Pure, no Foundry.
  *
  * The people sent are the quick extras of kits-rules.mjs (house figures, from the books' weapon charts). Which extras,
  * how many and the lever readings are house readings (docs/PENDING-REVIEW.md).

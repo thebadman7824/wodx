@@ -12,7 +12,7 @@
  * Rules and kinds: looks-rules.mjs. Every module is optional: with none on, a look is its coloured shape and Foundry's
  * own scene weather.
  */
-import {MODULE_ID} from "./util.mjs";
+import {MODULE_ID, SOCKET} from "./util.mjs";
 import * as R from "./looks-rules.mjs";
 
 const FLAG = "looks";
@@ -40,9 +40,12 @@ export function list(scene) {
 /*  The Storyteller's side: store, share, end                          */
 /* ------------------------------------------------------------------ */
 
-/** Show a look. Returns its id, or null (not the Storyteller, an unknown kind, no scene). */
+/**
+ * Show a look. Returns its id, or null (an unknown kind, no scene). B6163: on a player's computer the look goes to
+ * the active Storyteller's computer, which places it; the id is made here so the caller can end it later.
+ */
 export async function show(opts = {}) {
-  if ( !game.user.isGM ) return null;
+  if ( !game.user.isGM ) return askGM(opts);
   const sc = sceneOf(opts.scene);
   const look = R.normLook(opts, {now: now(), round: roundNow() ?? 0});
   if ( !sc || !look ) return null;
@@ -77,6 +80,22 @@ export async function show(opts = {}) {
   }
   await sc.update({[`flags.${MODULE_ID}.${FLAG}.${look.id}`]: look});
   return look.id;
+}
+
+/** A player's show(): checked here, placed by the active Storyteller (main.mjs onSocket "looks.show"). */
+function askGM(opts = {}) {
+  const sc = sceneOf(opts.scene);
+  const id = String(opts.id || `look-${foundry.utils.randomID(8)}`);
+  if ( !sc || !R.normLook({...opts, id}) || !game.users.activeGM ) return null;
+  const {kind, at = null, until = null, fade, source = "", label = "", drawing = null} = opts;
+  game.socket.emit(SOCKET, {type: "looks.show", payload: {kind, at, until, fade, source, label, drawing, id, scene: sc.id}});
+  return id;
+}
+
+/** The Storyteller's side of a player's show(). */
+export async function onShowSocket(payload = {}) {
+  if ( !game.user.isGM || game.users.activeGM?.id !== game.user.id || !payload?.scene ) return null;
+  return show({...payload});
 }
 
 /** A scene-wide look by kind (storm, rain, fog, snow, plague, calm): the weather a power or Atmosphere asks for. */

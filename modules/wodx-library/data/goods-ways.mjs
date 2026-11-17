@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.19.0: everyday goods by way of life and region (the global rule, Ben 2026-11-12; B2680).
+ * WoDX Library 0.19.0: everyday goods by way of life and region (the global rule, the owner 2026-11-12; B2680).
  *
  * The goods list began with Europe in mind, so a draw in Cairo or Kyoto could turn up a rosary, a groat or a crock of
  * salted pork. Here each good can say where it is at home. WoDX Chronicle gives every region a way of life in each

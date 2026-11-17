@@ -10,6 +10,76 @@ export const SYSTEM_CHOICES = {
   mage: ["modern", "victorian"]
 };
 
+export const ABILITY_GROUPS = ["talents", "skills", "knowledges"];
+const keyList = v => Array.isArray(v) && v.every(k => typeof k === "string" && /^[a-z0-9]+$/.test(k));
+function partProblems(part, where) {
+  const out = [];
+  if ( !part || typeof part !== "object" ) return [`${where} must be an object`];
+  if ( part.add !== undefined ) {
+    if ( !part.add || typeof part.add !== "object" ) out.push(`${where}.add must be an object of talents, skills, knowledges`);
+    else for ( const [g, v] of Object.entries(part.add) ) {
+      if ( !ABILITY_GROUPS.includes(g) ) out.push(`${where}.add.${g} is not talents, skills or knowledges`);
+      else if ( !keyList(v) ) out.push(`${where}.add.${g} must be a list of ability keys`);
+    }
+  }
+  if ( part.hide !== undefined && !keyList(part.hide) ) out.push(`${where}.hide must be a list of ability keys`);
+  return out;
+}
+/** Problems in a profile's abilities block (B6382): {add: {talents, skills, knowledges}, hide: [keys], lines: {type: {add, hide}}}. */
+export function abilityProblems(ab) {
+  if ( ab === undefined ) return [];
+  const out = partProblems(ab, "abilities");
+  if ( ab?.lines !== undefined ) {
+    if ( !ab.lines || typeof ab.lines !== "object" ) out.push("abilities.lines must be an object");
+    else for ( const [t, part] of Object.entries(ab.lines) ) out.push(...partProblems(part, `abilities.lines.${t}`));
+  }
+  return out;
+}
+
+/**
+ * The block the system fork reads (CONFIG.worldofdarkness.wodxEraAbilities, B6382), or null when the profile changes
+ * no list: the profile's era for each line, and its add, hide and per-type lines.
+ */
+export function eraAbilitiesOf(profile) {
+  const ab = profile?.abilities;
+  if ( !ab ) return null;
+  return {profile: profile.id, eras: {...(profile.system ?? {})}, add: ab.add ?? {}, hide: ab.hide ?? [], lines: ab.lines ?? {}};
+}
+
+/**
+ * The abilities a line shows in an era (B6382, the same reading as the fork's CreateHelper.EraAbilityList): the
+ * system's list by era name, with the block's add and hide where its era for the line matches, and its lines.<type>.
+ */
+export function eraAbilityList(base = {}, block = null, type = "", era = "") {
+  const out = Object.fromEntries(ABILITY_GROUPS.map(g => [g, [...(base?.[g] ?? [])]]));
+  if ( !block ) return out;
+  const line = {changingbreed: "werewolf"}[type] ?? type;
+  const parts = [];
+  if ( block.eras?.[line] === era ) parts.push(block);
+  if ( block.lines?.[type] ) parts.push(block.lines[type]);
+  for ( const part of parts ) {
+    for ( const g of ABILITY_GROUPS ) for ( const a of part.add?.[g] ?? [] ) if ( !out[g].includes(a) ) out[g].push(a);
+    const hide = new Set(part.hide ?? []);
+    if ( hide.size ) for ( const g of ABILITY_GROUPS ) out[g] = out[g].filter(a => !hide.has(a));
+  }
+  return out;
+}
+
+/**
+ * B6383: what a sheet's abilities become when the era moves on. abilities: the sheet's system.abilities; shown: the
+ * keys the new era shows. A shown ability becomes visible; one with dots always stays; one with no dots the new era
+ * lacks is hidden. Returns {key: visible} for the abilities that change.
+ */
+export function followAbilities(abilities = {}, shown = []) {
+  const want = new Set(shown), out = {};
+  for ( const [k, a] of Object.entries(abilities ?? {}) ) {
+    if ( !a || typeof a !== "object" ) continue;
+    const vis = want.has(k) || Number(a.value) > 0;
+    if ( !!a.isvisible !== vis ) out[k] = vis;
+  }
+  return out;
+}
+
 /** Check one profile; returns a list of problems (empty when valid). */
 export function validateProfile(p) {
   const problems = [];
@@ -25,6 +95,9 @@ export function validateProfile(p) {
     if ( !SYSTEM_CHOICES[line].includes(v) ) problems.push(`system.${line} must be one of ${SYSTEM_CHOICES[line].join(", ")}`);
   }
   if ( p.regions && !Array.isArray(p.regions) ) problems.push("regions must be a list");
+  // B6382: abilities the era adds to or hides from the system's lists; B6383: whether sheets follow the era
+  problems.push(...abilityProblems(p.abilities));
+  if ( p.sheets !== undefined && !["follow", "keep"].includes(p.sheets) ) problems.push("sheets must be follow or keep");
   return problems;
 }
 

@@ -7,7 +7,7 @@
  *                 roll window offers when the roll cannot tell the situation itself ("the other side shares your
  *                 Nature"); `need` limits it to rolls of those kinds (any one of them).
  *   MORE_PROMPTS  key -> a card to the Storyteller at the moment the trait matters, as PROMPTS (pattern P11).
- *   RENAMES       key -> the book's own spelling, for names the OCR spoiled (B3782, Ben 2026-11-14). The old spelling
+ *   RENAMES       key -> the book's own spelling, for names the OCR spoiled (B3782, the owner 2026-11-14). The old spelling
  *                 stays an alias, so sheets written with it still match.
  */
 
@@ -412,6 +412,10 @@ export const MORE_PROMPTS_4 = {
 
 /* Part 5 (B3791-B3792): the last merits and flaws outside combat. Combat and body traits go to WoDX Combat. */
 export const MORE_EFFECTS_5 = {
+  // B6743 (final audit w3): trait-table rows that only carried a card, where the book gives a number
+  "friend-of-the-underground": [tick("underground", "The roll is about the tunnels, sewers and ways below the city", {diff: -1, note: "-1 difficulty on rolls about the city's underground (V20 p. 489)"})],
+  "paradise-lost": [tick("faith-lost", "This scene the character failed the Willpower roll at a reminder of lost Faith", {dice: -1, note: "-1 die on every action for that scene (HH2 p. 125)"})],
+  "psychic-feedback": [tick("numina-strain", "Last turn the character failed the Stamina + Awareness roll after straining a Numina", {diff: 2, note: "+2 difficulty on every action this turn (HH2 p. 44, one-point Flaw)"})],
   "nightmares": [tick("bad-dreams", "The character woke without shaking off the nightmares", {dice: -1, note: "-1 die on everything that night"})],
   "true-faith": [{ch: "roll", tags: ["willpower"], dice: 1, note: "+1 die on Willpower rolls (one per point of Faith, and on Virtue rolls too)"}],
   "outsider": [tick("local-ways", "Local speech or customs matter", {need: ["social"], diff: 1, note: "+1 difficulty where being foreign tells"})],

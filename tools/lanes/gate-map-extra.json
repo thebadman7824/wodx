@@ -5,9 +5,15 @@
     "gatecssprobe",
     "gatedisplayb",
     "gatedisplayd",
+    "gatedebtsmarks",
     "gatelookhand",
+    "gatenpcrelay",
+    "gateplayerblows",
+    "gateplayerload",
     "gatesolo",
-    "gatevoices"
+    "gatetruthlooks",
+    "gatetruthrelay",
+    "gatetruthwalk"
   ],
   "add": {
     "gatepowers": [
@@ -30,16 +36,85 @@
       "wodx-actions",
       "wodx-chronicle"
     ],
+    "gateapipaths": [
+      "wodx-actions",
+      "wodx-atmosphere",
+      "wodx-chronicle",
+      "wodx-combat",
+      "wodx-creation",
+      "wodx-interactables",
+      "wodx-library",
+      "wodx-npc",
+      "wodx-otherworlds",
+      "wodx-paperdoll",
+      "wodx-senses",
+      "wodx-sheets",
+      "wodx-solo",
+      "wodx-storyteller",
+      "wodx-targeting",
+      "wodx-voices"
+    ],
+    "gatetruthcombat": [
+      "wodx-combat",
+      "wodx-chronicle",
+      "wodx-npc",
+      "wodx-actions"
+    ],
+    "gatetruthactions": [
+      "wodx-actions",
+      "wodx-chronicle",
+      "wodx-combat"
+    ],
+    "gatetruthstoryteller": [
+      "wodx-storyteller",
+      "wodx-atmosphere",
+      "wodx-solo",
+      "wodx-chronicle",
+      "wodx-npc",
+      "wodx-library"
+    ],
+    "gatetruthnpc": [
+      "wodx-npc",
+      "wodx-voices",
+      "wodx-actions",
+      "wodx-chronicle"
+    ],
+    "gatetruthsheets": [
+      "wodx-sheets",
+      "wodx-creation",
+      "wodx-library",
+      "wodx-actions",
+      "wodx-chronicle",
+      "wodx-combat"
+    ],
+    "gatetruthchronicle": [
+      "wodx-chronicle",
+      "wodx-storyteller",
+      "wodx-actions",
+      "wodx-npc"
+    ],
+    "gatefaith": [
+      "wodx-library",
+      "wodx-actions"
+    ],
+    "gatewonders": [
+      "wodx-library",
+      "wodx-storyteller"
+    ],
     "gatestillmarks": [
       "wodx-combat",
       "wodx-chronicle",
       "wodx-actions",
       "wodx-storyteller",
       "wodx-library"
+    ],
+    "gatetormentsheet": [
+      "wodx-actions",
+      "wodx-sheets"
     ]
   },
   "remove": {},
-  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd: run them by name on their own; gatesolo turns solo mode on), and gatevoices (Voices is shelved and its engine is not on the lanes; run it by name).",
+  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks: run them by name on their own; gatesolo turns solo mode on). gatevoices is a lane gate again: it checks Voices switched off and needs no engine (B6763).",
   "timeouts": {},
   "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}."
 }

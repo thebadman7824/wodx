@@ -101,6 +101,17 @@ export const PRELUDES = {
     after: ["The host's family, coworkers, friends: how long can the demon play the part?",
       "Other Fallen who come calling, and which faction they speak for.",
       "The first thrall offered, or demanded."]},
+  // B6326: the Kuei-jin's own prelude, not the Embrace: they die, go down to the hells and claw their way back (Kindred of the East)
+  "kuei-jin": {label: "Kuei-jin: the Second Breath", title: "The Second Breath", creation: "",
+    before: ["The life: what was left undone, and what wrong did this person carry to the grave?",
+      "The land and the ancestors they honoured, or failed to honour.",
+      "The death itself. Who mourned, and who was glad?"],
+    turn: ["The hells below: what torment did the soul suffer there, and for how long did it feel?",
+      "The climb back up into the corpse, against the judges of the dead. What did they promise to be let go?",
+      "The first breath stolen from a living mouth, and the hunger behind it."],
+    after: ["Who finds the newly returned: a wu, a court's envoy, a hunting monk?",
+      "The first Dharma offered, and the P'o that whispers against it.",
+      "The family that buried them, still living a street away."]},
   revenant: {label: "Revenant: birth into the family", title: "Born into the family", creation: "A revenant (WoDX Creation)",
     before: ["Which family, and which house or holding? What is the place like?",
       "The family's master, and what the family owes it."],
@@ -117,8 +128,10 @@ export const PRELUDES = {
 };
 
 /** Fixed order for the line list. */
-export const LINE_ORDER = ["vampire", "ghoul", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant", "mortal"];
+export const LINE_ORDER = ["vampire", "kuei-jin", "ghoul", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant", "mortal"];
 
+/** B6326: the prelude a sheet suggests: a Kuei-jin (a Vampire sheet with the variant kindredeast) gets the Second Breath, the rest as lineFor. */
+export const preludeFor = (type, variant = "") => (String(type ?? "").toLowerCase() === "vampire" && String(variant ?? "").toLowerCase() === "kindredeast" ? "kuei-jin" : lineFor(type, variant));
 /** The template a character's sheet suggests. */
 export function lineFor(type, variant = "") {
   const t = String(type ?? "").toLowerCase(), v = String(variant ?? "").toLowerCase();

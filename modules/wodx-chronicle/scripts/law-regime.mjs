@@ -4,7 +4,8 @@
  *            wodxRegimeTurn {region, year, cause, kinds, chance, note}; WoDX Storyteller's institutions sweep out
  *            holders of those kinds. A new form of government lets the old warrants and outlawries lapse.
  *   Rising   a town's rising (wodxTown kind "rising") asks the Storyteller whether it wins; if it does, the town's
- *            officers are swept out (wodxRegimeTurn with the town)
+ *            officers are swept out (wodxRegimeTurn with the town); if it is put down, the Storyteller names its
+ *            leaders on the card and each gains law heat in that land ("leading a rising", B6933)
  *   Election in an age of votes, each player character with a council seat faces the voters at each election year
  *            crossed: a roll the Storyteller calls; lost, the seat goes (wodxRegimeTurn with only that character)
  */
@@ -12,7 +13,7 @@ import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import * as L from "./law-rules.mjs";
 import * as R from "./law-regime-rules.mjs";
 import * as place from "./place.mjs";
-import {amnesty} from "./law-heat.mjs";
+import {amnesty, addDeed} from "./law-heat.mjs";
 import {marksOf} from "./law-punish.mjs";
 
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -109,6 +110,29 @@ async function risingCard({town, region, name = "", text = ""} = {}) {
       <button type="button" data-action="wodx-law-rising" data-won="1">The rising wins</button> <button type="button" data-action="wodx-law-rising" data-won="0">It is put down</button></div>`});
 }
 
+/**
+ * B6933: the rising is put down and its leaders are hunted. The card names the player characters, and the selected
+ * tokens, as possible leaders; each one pressed gains the heat of "leading a rising" in that land, as a named culprit
+ * before many witnesses (law-heat addDeed), so the warrant and the watch follow as for any crime.
+ */
+async function putDown(r) {
+  const pcs = game.actors.filter(a => a.hasPlayerOwner && a.type !== "group");
+  const btn = a => `<button type="button" data-action="wodx-law-rising-leader" data-actor="${esc(a.id)}">${esc(a.name)}</button>`;
+  return ChatMessage.create({speaker: {alias: "The new order"}, whisper: gmIds(), flags: {[MODULE_ID]: {lawRisingLeaders: {region: r.region, name: r.name}}},
+    content: `<div class="wodx-card wodx-law-regime"><p>The rising in ${esc(r.name)} is put down; its leaders are hunted.</p>
+      <p>Who led it? Each one named gains the law's heat for leading a rising.</p>${pcs.map(btn).join(" ")}
+      <button type="button" data-action="wodx-law-rising-leader" data-actor="">The selected tokens</button></div>`});
+}
+async function leaderHeat({region, name} = {}, actorId = "") {
+  const actors = actorId ? [game.actors.get(actorId)].filter(Boolean)
+    : [...new Set((globalThis.canvas?.tokens?.controlled ?? []).map(t => t.actor).filter(Boolean))];
+  if ( !actors.length ) { ui.notifications?.info?.("Select the leaders' tokens first."); return []; }
+  const out = [];
+  for ( const a of actors ) out.push(await addDeed(a, "rising", {region, named: true, witnesses: 3, where: `the rising in ${name}`}));
+  ui.notifications?.info?.(`${actors.map(a => a.name).join(", ")}: the law hunts the rising's leaders.`);
+  return out;
+}
+
 export function registerRegimeHooks() {
   Hooks.on("wodxTown", p => { if ( p?.kind === "rising" ) risingCard(p).catch(e => console.error("WoDX | rising", e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
@@ -121,7 +145,11 @@ export function registerRegimeHooks() {
       for ( const x of el.querySelectorAll("[data-action='wodx-law-rising']") ) x.disabled = true;
       const r = f.lawRising, sw = R.SWEEP.rising;
       if ( b.dataset.won === "1" ) turn({region: r.region, year: null, cause: "rising", kinds: sw.kinds, chance: sw.chance, town: r.town, note: `${r.name} rises`, words: sw.words}).catch(e => console.error("WoDX | rising", e));
-      else ChatMessage.create({speaker: {alias: "The new order"}, whisper: gmIds(), content: `<div class="wodx-card"><p>The rising in ${esc(r.name)} is put down; its leaders are hunted.</p></div>`});
+      else putDown(r).catch(e => console.error("WoDX | rising", e));
+    });
+    if ( f.lawRisingLeaders ) for ( const b of el.querySelectorAll?.("[data-action='wodx-law-rising-leader']") ?? [] ) b.addEventListener("click", () => {
+      b.disabled = true;
+      leaderHeat(f.lawRisingLeaders, b.dataset.actor).catch(e => console.error("WoDX | rising", e));
     });
   });
 }

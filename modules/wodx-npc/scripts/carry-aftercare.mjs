@@ -19,9 +19,12 @@
  *             as a world item, its line in the container), or into world setting wodx-npc.stores for a place off
  *             this map. Taking them back is the container's own Take.
  */
+import * as LM from "./line-mend.mjs";
 import * as A from "./carry-aftercare-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+// B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
+const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 const IX = "wodx-interactables", ACT = "wodx-actions";
 // WoDX Interactables' container kinds (interact-rules.mjs CONTAINERS), named here so NPC runs without it
 const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}, pile: {label: "Gear on the ground"}};
@@ -33,7 +36,8 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
   const baseOf = a => (a?.isToken ? (a.baseActor ?? a) : a);
   const kindOf = a => { try { return game.modules.get("wodx-combat")?.api?.getKind?.(a) ?? game.wodxCombat?.getKind?.(a) ?? null; } catch (e) { return null; } };
-  const kindred = a => a?.type === "Vampire" || kindOf(a) === "kindred";
+  // B6310: a Kuei-jin on a Vampire sheet is not Kindred here: no vitae from a vessel, no torpor wake with blood (it mends with Chi, line-mend.mjs)
+  const kindred = a => { const k = LM.keyOf(a); return k === "vampire" || (k !== "kuei-jin" && kindOf(a) === "kindred"); };
   const combat = () => game.wodxCombat ?? game.modules.get("wodx-combat")?.api ?? null;
   const acts = () => (game.modules.get(ACT)?.active ? game.modules.get(ACT).api : null);
   const ix = () => (game.modules.get(IX)?.active ? game.modules.get(IX).api : null);
@@ -91,6 +95,12 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
       if ( m.spent ) await combat()?.setDamage?.(actor, m.damage);
       return `${placeName}'s people bring ${actor.name} ${m.fed ? `${m.fed} blood from a vessel` : "blood"}; ${m.spent ? `${m.spent} of it mends their wounds` : "the wounds are past what blood mends tonight"}.`;
     }
+    // B6315: a ghoul, Kuei-jin, wraith or demon first mends with its own blood, Chi, Pathos or Faith, as the Kindred do with blood
+    const own = await LM.mendOwn(actor, {damage: dmg, heal: (x, type, n) => combat()?.healDamage?.(x, type, n)});
+    if ( own.spent ) {
+      const d2 = damageOf(actor);
+      if ( !(d2.bashing + d2.lethal + d2.aggravated) ) return `${actor.name} is laid down at ${placeName} and mends with ${own.what}: whole again.`;
+    }
     const healer = A.bestHealer(householdAt(place, [carrier]).map(a => ({id: a.id, name: a.name, int: stat(a, "attributes", "intelligence"), medicine: stat(a, "abilities", "medicine")})));
     if ( !healer ) return `${actor.name} is laid down at ${placeName}; no one there knows medicine, so the wounds mend slowly.`;
     const r = A.roll(healer.int + healer.medicine, A.tendDiff(dmg));
@@ -117,7 +127,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
       const x = s ? num(s.x) + num(s.width) / 2 : num(d.sceneX) + num(d.sceneWidth || scene.width) / 2;
       const y = s ? num(s.y) + num(s.height) / 2 : num(d.sceneY) + num(d.sceneHeight || scene.height) / 2;
       try { pin = (await scene.createEmbeddedDocuments("Note", [{x: Math.round(x), y: Math.round(y), text: `${A.RITE_WORDS[rite.rite] ?? "Grave of"} ${actor.name}`, fontSize: 24,
-        texture: {src: "icons/svg/tombstone.svg"}, flags: {[MOD]: {grave: actor.id}}}]))[0]; } catch (e) { pin = null; }
+        texture: {src: "icons/svg/skull.svg"}, flags: {[MOD]: {grave: actor.id}}}]))[0]; } catch (e) { pin = null; }
     }
     await actor.setFlag(MOD, "funeral", {rite: rite.rite, at: placeName, worldTime: now(), note: pin?.uuid ?? null});
     // the family learns, and holds it against whoever hurt them last
@@ -264,6 +274,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
           await a.update({"system.advantages.bloodpool.temporary": m.blood});
           if ( m.spent ) await combat()?.setDamage?.(a, m.damage);
         } else if ( !onScene.has(a.id) && !a.hasPlayerOwner ) {
+          await LM.mendOwn(a, {damage: damageOf(a), heal: (x, type, n) => combat()?.healDamage?.(x, type, n)});
           const plan = acts()?.healPlan?.(a, seconds);
           if ( plan ) { await combat()?.setDamage?.(a, plan.damage); await a.setFlag(ACT, "healCarry", plan.carry); }
         }
@@ -480,7 +491,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   }
   function hooks() {
     Hooks.on("wodxBodyTaken", d => { onTaken(d).catch(e => console.error(`${MOD} | aftercare`, e)); });
-    Hooks.on("updateWorldTime", () => { onClock().catch(e => console.error(`${MOD} | aftercare clock`, e)); });
+    Hooks.on("updateWorldTime", () => { if ( heldClock() ) return; onClock().catch(e => console.error(`${MOD} | aftercare clock`, e)); });
     Hooks.on("wodxFactionTurn", () => { onFactionTurn().catch(e => console.error(`${MOD} | rescue`, e)); });
     // who hurt them last, for the family's grudge
     Hooks.on("wodxDamageApplied", (actor, d = {}) => {

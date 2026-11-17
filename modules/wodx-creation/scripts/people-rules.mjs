@@ -3,8 +3,9 @@
  * harness can test it; the Foundry side (people.mjs) makes the sheet.
  */
 import {draw, between, pick, shuffled, stream, drawResult, expand} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import {sexFromDraw} from "../../wodx-chronicle/scripts/gender-rules.mjs";
 import {TRADE_SHEETS} from "../data/people.mjs";
-import {FAMILY_FIRST} from "../data/people-world.mjs";
+import {FAMILY_FIRST} from "../data/people-order.mjs";
 import {customFor, NOBLE_TRADE, PATTERN, suffixPatrons} from "../data/name-customs.mjs";
 
 export const ATTRS = {physical: ["strength", "dexterity", "stamina"], social: ["charisma", "manipulation", "appearance"], mental: ["perception", "intelligence", "wits"]};
@@ -113,10 +114,10 @@ export const NONBINARY_HALF = 0.005;
  * Returns everything the sheet needs and the cards show.
  */
 export function person({rand, tables, era, culture, kind = "mortal", sex = "any", trade = "any", origin: asked = null, year = null, later = null}) {
-  // "any": one in a hundred is nonbinary (Ben, 2026-11-13; B3503), read from the same draw so that every person
+  // "any": one in a hundred is nonbinary (the owner, 2026-11-13; B3503), read from the same draw so that every person
   // generated before keeps their name and the rest of their draws. Names follow the lists of the draw's side.
   let s = sex, nameSex = sex;
-  if ( sex === "any" ) { const r = rand(); nameSex = r < 0.5 ? "female" : "male"; s = Math.abs(r - 0.5) < NONBINARY_HALF ? "nonbinary" : nameSex; }
+  if ( sex === "any" ) ({sex: s, nameSex} = sexFromDraw(rand(), NONBINARY_HALF * 2)); // the shared rule (B6768)
   else if ( sex === "nonbinary" ) nameSex = rand() < 0.5 ? "female" : "male";
   const drawn = text(tables, "people.origin", rand) ?? (culture === "american" ? "anglo" : "czech");
   // An asked origin (kin of a household) is kept when the era's tables have names for it; else the drawn one stands

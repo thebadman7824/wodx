@@ -407,7 +407,7 @@ export function boardOption(state = {}, options = [], p = {}) {
 const TIMID_BELOW = 0.5;
 
 /**
- * B5077 (Ben's Carry Bodies Desk, c8): an NPC takes up the fallen by itself. state.fallen: the characters down near it,
+ * B5077 (the owner's Carry Bodies Desk, c8): an NPC takes up the fallen by itself. state.fallen: the characters down near it,
  * [{id, name, ally, foe, rival, hostile (a player character against it), dead, distance (yards), canMove (the lifting chart
  * lets this NPC shift them), mode ("carry" or "drag")}]; state.self.holding: {id, name, intent} for one it already holds;
  * state.noCarry: the Behaviour window's "Leaves the fallen where they lie"; state.carryOrder: the token id of one it was asked
@@ -478,11 +478,22 @@ export const ACTION_LABEL = {attack: "Attack", shoot: "Shoot", flee: "Flee", def
   frenzy: "Frenzy check", power: "Use a power", call: "Call for help", wait: "Wait", search: "Search for the unseen",
   surrender: "Surrender", hostage: "Take a hostage", board: "Get into a vehicle", carry: "Carry off"};
 
-/** Auto mode acts on the best option it can carry out itself; a better one that needs the Storyteller stops it. */
+/**
+ * Auto mode acts on the best option it can carry out itself; a better one that needs the Storyteller stops it.
+ * B6172: a "Use a power" option is self-acting when WoDX NPC picked the power for it (option.power, set from powerPick
+ * only with "NPCs pick their powers" on and the NPC not marked "no auto power"); without a pick it waits as before.
+ */
+export const selfActing = o => SELF_ACTING.includes(o?.action) || (o?.action === "power" && !!o.power);
 export function autoChoice(options) {
   const top = options[0];
   if ( !top ) return {act: null};
-  if ( SELF_ACTING.includes(top.action) ) return {act: top};
+  if ( selfActing(top) ) return {act: top};
+  // B6400: a power held back because mortals watch (option.held) is not a choice the Storyteller must make: the NPC
+  // does the next thing it can do by itself instead (the next self-acting option); with none it still waits
+  if ( top.action === "power" && top.held ) {
+    const next = options.slice(1).find(o => selfActing(o));
+    if ( next ) return {act: next, heldPower: top};
+  }
   return {act: null, needsStoryteller: top};
 }
 

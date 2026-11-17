@@ -21,7 +21,7 @@ async function save(R) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
-const el = app => app?.element?.[0] ?? app?.element ?? null;
+const el = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
 const appOf = pred => [...foundry.applications.instances.values()].find(pred) ?? null;
 
 export async function run() {

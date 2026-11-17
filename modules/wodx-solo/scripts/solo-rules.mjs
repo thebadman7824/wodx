@@ -118,15 +118,41 @@ export const PANEL = [
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
   // B6040: towns with no map drawn, as card scenes
   {id: "places", label: "Places with no map", icon: "fa-solid fa-map-location-dot"},
+  // B6533: step 5, the years slept through
+  {id: "years", label: "Sleep through the years", icon: "fa-solid fa-bed"},
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
+  // B7160: a fault met in play, written down with the build, the scene and the recent errors
+  {id: "report", label: "Report a problem", icon: "fa-solid fa-bug"},
   // B5079: ask a companion to carry someone who is down
-  {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"}
+  {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"},
+  // B6757: the chronicle's own options the lone player may turn on (OPTIONS)
+  {id: "options", label: "Chronicle options", icon: "fa-solid fa-sliders"}
 ];
 
 /**
- * B5079 (Ben's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
+ * B6757: WoDX Storyteller's options that are off by default and in no preset, which the lone player may set from the
+ * panel (Game Settings is the Storyteller's, and the player is not one). The seat checks each ask against this list.
+ */
+export const OPTIONS = [
+  {mod: "wodx-storyteller", key: "threads", label: "Threads of Fate", hint: "Storylines woven from what happens in play.",
+    choices: {off: "Off", auto: "On: a storyline opens by itself"}},
+  {mod: "wodx-storyteller", key: "hardship", label: "Hardship on the road", hint: "Harsh weather, thirst, hunger and lost sleep for living characters as time passes.",
+    choices: {false: "Off", true: "On"}},
+  {mod: "wodx-storyteller", key: "remains", label: "Bodies left behind", hint: "The dead stay as bodies that rot, and the era's authorities may find them.",
+    choices: {false: "Off", true: "On"}}
+];
+/** One ask from the panel: the setting and the value to write, or null when it is not on the list. */
+export function optionChange(key, value) {
+  const o = OPTIONS.find(x => x.key === key);
+  const v = String(value);
+  if ( !o || !Object.hasOwn(o.choices, v) ) return null;
+  return {mod: o.mod, key: o.key, to: v === "true" ? true : v === "false" ? false : v, label: o.label, word: o.choices[v]};
+}
+
+/**
+ * B5079 (the owner's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
  * scene, [{id, name, distance (yards to the fallen one), serves (serves the player's character), friendly, down, holding,
  * hands (any to take hold with), player (a player owns it)}]. One who serves the character goes first, then a friendly
  * one; the nearest of them, within maxYards. -> the chosen entry, or null
@@ -249,7 +275,7 @@ export function markSeen(seen = [], key) {
 
 /**
  * The lone player may switch on Storyteller tools from the panel, to check that the world works and to hand their
- * character things to try out (Ben, 14 November 2026). The player stays a player: every tool asks the seat, and the
+ * character things to try out (the owner, 14 November 2026). The player stays a player: every tool asks the seat, and the
  * seat answers only that one player. Off unless switched on.
  */
 export const ST_TOOLS = [
@@ -405,8 +431,28 @@ export const LANDING_NAMES = [/Market (Street|Square)/i, /^Rothenstein\b/i, /Low
  * chosen one, a Rothenstein scene with a map (market first), the active scene, any scene with a map. Null when none
  * fits; the seat then makes the plain night scene (LANDING_BLANK).
  */
+/** Foundry's own welcome scene, which a new world opens on; never a landing, and always given way to. */
+export const isCoreScene = s => s?.id === "NUEDEFAULTSCENE0" || /nue\/defaultscene/i.test(String(s?.img ?? ""));
+
+/**
+ * May the landing take the active scene's place? Only when nothing is active, the active scene has no map, or it is
+ * Foundry's welcome scene: a map the Storyteller made active stays (B5147).
+ */
+export function mayReplaceActive(active = null) {
+  if ( !active ) return true;
+  return !active.img || isCoreScene(active);
+}
+
+/**
+ * An actor counts as a player's own only when the player is named its owner: an actor every player owns by default
+ * (an old test actor, a shared sheet) is nobody's character (B5146).
+ */
+export function ownsByName(ownership = {}, userId = "") {
+  return Number(ownership?.[String(userId)]) >= 3;
+}
+
 export function pickLanding(scenes = [], chosen = "") {
-  const list = (scenes ?? []).filter(s => s?.id);
+  const list = (scenes ?? []).filter(s => s?.id && !isCoreScene(s));
   const flagged = list.find(s => s.landing);
   if ( flagged ) return flagged.id;
   if ( chosen && list.some(s => s.id === chosen) ) return chosen;
@@ -420,7 +466,9 @@ export function pickLanding(scenes = [], chosen = "") {
 
 /**
  * The plain scene made when the world has no map at all: a dark square of night with a grid, token vision on so the
- * night shows. A map can be set on it later; the flag keeps it the landing.
+ * night shows. A map can be set on it later; the flag keeps it the landing. Only this scene is dark by itself: an
+ * existing map the player lands on shows the light the clock gives it (WoDX Atmosphere's light from the clock, on by
+ * default out of doors, B6168), so the arrival is "at night" only when the clock says night (B6169).
  */
 export const LANDING_BLANK = {
   name: "Rothenstein by night: the way in",

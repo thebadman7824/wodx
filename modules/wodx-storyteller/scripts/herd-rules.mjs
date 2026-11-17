@@ -208,6 +208,23 @@ export function view(herd, pool, t = 0) {
 }
 
 /** What the next systems are asked to do when a district reaches a stage (house rule B3573). */
+/**
+ * B6756: who dies when a district is overfed. vessels: this month's fed-on vessels [{uuid, name, pc}]; the dead are
+ * drawn from those who are not player characters, each once, the most fed-on first and ties by chance. A month with
+ * no named vessel leaves the dead strangers (an empty list).
+ */
+export const VESSELS_CAP = 30;
+export function pickDead(vessels = [], n = 0, rand = Math.random) {
+  const count = new Map();
+  for ( const v of vessels ?? [] ) if ( v?.uuid && !v.pc ) { const c = count.get(v.uuid) ?? {uuid: v.uuid, name: str(v.name, 80), times: 0, r: rand()}; c.times++; count.set(v.uuid, c); }
+  return [...count.values()].sort((a, b) => b.times - a.times || a.r - b.r).slice(0, Math.max(0, Math.round(num(n)))).map(({uuid, name}) => ({uuid, name}));
+}
+/** This month's vessels list, with one more; a new month starts it again. */
+export function addVessel(list = {}, month, v) {
+  const l = list?.month === month ? (Array.isArray(list.list) ? list.list : []) : [];
+  return {month, list: v?.uuid ? [...l, {uuid: str(v.uuid, 120), name: str(v.name, 80), pc: !!v.pc}].slice(-VESSELS_CAP) : l};
+}
+
 export function harmFor(stageKey) {
   return {
     fine: {heat: null, rumour: false, hunters: false, deaths: 0},

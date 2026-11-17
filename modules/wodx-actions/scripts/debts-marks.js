@@ -99,6 +99,7 @@ export function build(ctx) {
     }
     async function callHunt(target, { caller = "", sect = "", ground = "other", bounty = "", pardon = false } = {}) {
         const y = year();
+        try { await api("wodx-chronicle")?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
         const camFrom = n(api("wodx-chronicle")?.events?.list?.()?.find?.(e => e.id === "camarilla")?.year) || 1435;
         const form = D.huntFormFor(y, sect, { camarillaFrom: camFrom });
         const plan = D.huntPlan({ target: target.name, caller, form, ground, bounty, pardon, year: y, status: ctx.background(target, "Status"), at: game.time.worldTime });
@@ -368,6 +369,7 @@ export function build(ctx) {
         const startY = Math.round(endY - yrs);
         const langs = (() => { try { return api("wodx-chronicle")?.languages?.of?.(actor) ?? []; } catch (e) { return []; } })();
         const abilities = (ctx.abilityList?.(actor) ?? []).map(x => ({ key: x.key, label: x.name ?? x.key, value: x.value }));
+        try { await api("wodx-chronicle")?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
         const events = (() => { try { return api("wodx-chronicle")?.events?.list?.() ?? []; } catch (e) { return []; } })();
         const r = B.wakeReport({ startYear: startY, endYear: endY, langs: Array.isArray(langs) ? langs : [], abilities, events });
         if (!r) return null;

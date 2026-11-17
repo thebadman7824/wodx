@@ -18,7 +18,7 @@
  * Umbraquake reach everyone within 10 yards; Blighted Touch resists at 6 and lasts three hours; Calcify lasts the
  * scene; Possession's time to take hold is shown and the hold itself lasts until the spirit is driven out.
  */
-import { T, N, S, outcomesOf } from "./mage-da-effects.js";
+import { T, N, S, C, outcomesOf } from "./mage-da-effects.js";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 export const BOOK = "W20";
@@ -26,7 +26,8 @@ const W = p => `${BOOK} p. ${p}`;
 
 const P = (key, name, p, group, kind, fx, o = {}) => ({ key, name, p, group, kind, fx, cost: {}, keywords: [], ...o });
 
-export const GROUPS = { common: "Common Charms", specialty: "Specialty Charms", bane: "Bane Charms", weaver: "Weaver Charms", wyld: "Wyld Charms" };
+export const GROUPS = { common: "Common Charms", specialty: "Specialty Charms", bane: "Bane Charms", weaver: "Weaver Charms", wyld: "Wyld Charms", sprite: "Sprite Charms" };
+export const SPRITE_BOOK = "Dark Ages: Fae";
 
 /** Pages are the printed pages of Werewolf: The Apocalypse 20th Anniversary Edition. */
 export const CHARMS = [
@@ -98,21 +99,54 @@ export const CHARMS = [
     P("breakreality", "Break Reality", 368, "wyld", "roll", "Changes a thing's Umbral form, one part a success: water to acid, a wall to a door. A failure costs an Essence, a botch a Gnosis too.",
         { roll: "gnosis", diff: 6, sizes: [["small", "A small change (a lock opens)", 5], ["usual", "A clear change (water to acid)", 7], ["great", "A wild change (a couch to a feast)", 9]], does: "break", spec: S("work"), keywords: ["shape"] }),
     P("disorient", "Disorient", 368, "wyld", "roll", "Moves the landmarks and the directions: Gnosis at 6 or the Gauntlet, whichever is higher.",
-        { roll: "gnosis", diff: "gauntlet", spec: T("fortune", "Disoriented", "scene", "all"), keywords: ["fortune", "veil"] })
+        { roll: "gnosis", diff: "gauntlet", spec: T("fortune", "Disoriented", "scene", "all"), keywords: ["fortune", "veil"] }),
+    // B6555: the Charms of faerie sprites (Dark Ages: Fae p. 97); a sprite's Blast, Healing, Reform and Swift Flight are these
+    P("animatetools", "Animate Tools", 97, "sprite", "free", "Brings household tools or light weapons to life (nothing that needs Strength 3), no more than its Gnosis; they fight with their harm halved to bashing before soak. Two Essence a tool for an hour.",
+        { book: SPRITE_BOOK, cost: { essence: 2 }, sizes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(k => [String(k), `${k} tool${k === 1 ? "" : "s"}`]), does: "animate", keywords: ["make"] }),
+    P("spriteblast", "Blast", 97, "sprite", "roll", "A bolt shaped by its master's Court. Harm bought first: an Essence a bashing level, three a lethal, six an aggravated; Willpower to hit, Essence gone even on a miss; soaked as usual.",
+        { book: SPRITE_BOOK, roll: "willpower", diff: 6, sizes: [["bashing:1", "1 bashing (1 Essence)"], ["bashing:2", "2 bashing (2)"], ["bashing:3", "3 bashing (3)"], ["bashing:5", "5 bashing (5)"], ["lethal:1", "1 lethal (3)"], ["lethal:2", "2 lethal (6)"], ["lethal:3", "3 lethal (9)"], ["aggravated:1", "1 aggravated (6)"], ["aggravated:2", "2 aggravated (12)"]], does: "spriteblast", keywords: ["harm"] }),
+    P("spritehealing", "Healing", 97, "sprite", "free", "Mends another's wounds, bought as Blast buys harm but twice the price: two Essence a bashing level, six a lethal, twelve an aggravated. No roll (the book names none).",
+        { book: SPRITE_BOOK, sizes: [["bashing:1", "1 bashing (2 Essence)"], ["bashing:2", "2 bashing (4)"], ["bashing:3", "3 bashing (6)"], ["lethal:1", "1 lethal (6)"], ["lethal:2", "2 lethal (12)"], ["aggravated:1", "1 aggravated (12)"], ["aggravated:2", "2 aggravated (24)"]], does: "spriteheal", keywords: ["mend"] }),
+    P("paralyzingstare", "Paralyzing Stare", 97, "sprite", "roll", "Freezes one being, unable to act, a turn a success: Gnosis against Stamina + 3 (a spirit's Rage). One Essence for a mortal, two for a spirit, three for any other supernatural.",
+        { book: SPRITE_BOOK, roll: "gnosis", diff: "stamina3", does: "stare", spec: C("hold", "immobilized", "Paralyzed (Paralyzing Stare)", { turns: 1 }, "one"), keywords: ["hold"] }),
+    P("spritereform", "Reform", 97, "sprite", "free", "Takes a turn to come apart and reappear at home, the holding's common room or its master's house. No roll; fifteen Essence.",
+        { book: SPRITE_BOOK, cost: { essence: 15 }, does: "reform", keywords: ["move"] }),
+    P("speech", "Speech", 97, "sprite", "free", "Speaks aloud in any tongue it wants, where else it talks only to its master and other sprites. Three Essence an hour.",
+        { book: SPRITE_BOOK, cost: { essence: 3 }, spec: T("speak", "Speech", { seconds: 3600 }, "self"), keywords: ["speak"] }),
+    P("spriteflight", "Swift Flight", 97, "sprite", "free", "Three times its speed, up to 60 + Willpower x 3 yards a turn: quick enough that no mortal creature catches it. One Essence.",
+        { book: SPRITE_BOOK, cost: { essence: 1 }, does: "flight", lasts: "scene", keywords: ["move"] })
 ];
 
 export const BY_KEY = Object.fromEntries(CHARMS.map(c => [c.key, c]));
 const slug = s => String(s ?? "").toLowerCase().replace(/\(.*?\)/g, "").replace(/&/g, "and").replace(/[^a-z]/g, "");
 const ALIASES = { openmoonbridge: "moonbridge", moonbridge: "moonbridge", cleansetheblight: "cleanse", controlelectricalsystems: "controlelectrical",
     solidifyreality: "solidify", reform: "reform", materialise: "materialize", armour: "armor" };
-const BY_SLUG = Object.fromEntries(CHARMS.map(c => [slug(c.name), c.key]));
+// the W20 Charm wins a shared name (Blast, Healing): a sprite's own is found through charmOf's sprite choice
+const BY_SLUG = Object.fromEntries([...CHARMS].reverse().map(c => [slug(c.name), c.key]));
 
-/** The Charm a sheet item's name stands for, or null. */
-export function charmOf(name) {
+/* A sprite's Charms that share a name with a W20 Charm (Dark Ages: Fae p. 97) */
+const SPRITE_NAMES = { blast: "spriteblast", healing: "spritehealing", reform: "spritereform", swiftflight: "spriteflight" };
+const SPRITE_ONLY = new Set(["animatetools", "paralyzingstare", "speech"]);
+
+/** The Charm a sheet item's name stands for, or null. A sprite's Blast, Healing, Reform and Swift Flight are its own. */
+export function charmOf(name, { sprite = false } = {}) {
     const s = slug(name);
+    if (sprite && SPRITE_NAMES[s]) return BY_KEY[SPRITE_NAMES[s]];
     const k = BY_SLUG[s] ?? ALIASES[s];
     return k ? BY_KEY[k] : null;
 }
+/** A faerie sprite: marked so, named so, or holding a Charm only sprites have. names: the Charm items' names. */
+export const isSpriteOf = ({ flag = false, name = "", names = [] } = {}) => !!flag || /\bsprite\b/i.test(String(name)) || names.some(x => SPRITE_ONLY.has(BY_KEY[BY_SLUG[slug(x)]]?.key));
+
+/** A sprite's Blast or Healing size: {type, levels}. */
+export function bought(size) {
+    const [type, k] = String(size ?? "bashing:1").split(":");
+    return { type: ["bashing", "lethal", "aggravated"].includes(type) ? type : "bashing", levels: Math.max(1, n(k) || 1) };
+}
+const PRICE = { spriteblast: { bashing: 1, lethal: 3, aggravated: 6 }, spritehealing: { bashing: 2, lethal: 6, aggravated: 12 } };
+
+/** Paralyzing Stare's price by the victim: 1 a mortal, 2 a spirit, 3 a vampire, werewolf, mage or fae (p. 97). */
+export const stareCost = targetKind => (targetKind === "spirit" ? 2 : !targetKind || targetKind === "mortal" ? 1 : 3);
 
 /** The spirit's traits: Rage, Gnosis, Willpower as dots, Essence as its pool (W20 p. 365). */
 export function traitsOf(sys = {}) {
@@ -123,11 +157,12 @@ export function traitsOf(sys = {}) {
 }
 
 /** The difficulty for a use: a size's difficulty, the target's Willpower, the Gauntlet, or the book's number. */
-export function diffOf(c, { size = null, targetWillpower = null, gauntlet = null, object = false } = {}) {
+export function diffOf(c, { size = null, targetWillpower = null, gauntlet = null, object = false, targetStamina = null, targetRage = null } = {}) {
     const s = c.sizes?.find(x => x[0] === size);
     let d = s && s[2] ? s[2] : c.diff;
     if (d === "willpower") d = object && c.objectDiff ? c.objectDiff : (n(targetWillpower) || 6);
     if (d === "gauntlet") d = Math.max(6, n(gauntlet));
+    if (d === "stamina3") d = targetRage !== null && targetRage !== undefined ? n(targetRage) : n(targetStamina ?? 2) + 3;
     return Math.max(2, Math.min(10, n(d) || 6));
 }
 
@@ -138,15 +173,19 @@ export function poolOf(c, traits, { static: busy = false } = {}) {
 }
 
 /** Can the spirit pay: {ok, why, cost}. Flood's streets cost three, as the book allows more Essence for more water. */
-export function costOf(c, { size = null } = {}) {
+export function costOf(c, { size = null, targetKind = null } = {}) {
     let e = n(c.cost?.essence);
     if (c.key === "flood" && size === "streets") e = 3;
+    if (c.key === "animatetools") e = 2 * Math.max(1, n(size) || 1);
+    if (PRICE[c.key]) { const b = bought(size); e = PRICE[c.key][b.type] * b.levels; }
+    if (c.key === "paralyzingstare") e = stareCost(targetKind);
     return e;
 }
 export function canPay(c, traits, opts = {}) {
     const e = costOf(c, opts);
     if (e > traits.essence) return { ok: false, why: `needs ${e} Essence, has ${traits.essence}`, essence: e };
     if (c.key === "flood" && opts.size === "streets" && traits.gnosis < 6) return { ok: false, why: "a town flood needs Gnosis 6 or more", essence: e };
+    if (c.key === "animatetools" && n(opts.size) > traits.gnosis) return { ok: false, why: `animates no more tools than its Gnosis (${traits.gnosis})`, essence: e };
     return { ok: true, why: "", essence: e };
 }
 
@@ -188,7 +227,7 @@ export function resultsOf(c, successes, { source = "" } = {}) {
     if (!c?.spec) return [];
     const s = c.kind === "free" ? Math.max(1, n(successes)) : n(successes);
     if (s < 1) return [];
-    return outcomesOf(c.spec, { key: c.spec.kw, label: c.name, source: source || W(c.p) }, s, c.fx);
+    return outcomesOf(c.spec, { key: c.spec.kw, label: c.name, source: source || pageOf(c) }, s, c.fx);
 }
 
 /** NPC choice: the Charms an NPC spirit may use by itself (always-on ones need no choosing). */
@@ -199,5 +238,5 @@ export function choosable(list = []) {
 /** A Charm that needs the modern world's wiring stays out of earlier eras (the year it is first any use). */
 export const fitsEra = (c, year) => !c.era || year === null || year === undefined || year === "" || !Number.isFinite(Number(year)) || Number(year) >= c.era;
 
-export const pageOf = c => W(c.p);
+export const pageOf = c => (c.book ? `${c.book} p. ${c.p}` : W(c.p));
 export const rollLabel = c => (c.roll ? c.roll[0].toUpperCase() + c.roll.slice(1) : "");

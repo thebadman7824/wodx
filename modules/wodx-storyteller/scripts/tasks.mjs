@@ -24,7 +24,7 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const ownerIds = a => game.users.filter(u => !u.isGM && a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
 const unset = path => { const Del = globalThis.foundry?.data?.operators?.ForcedDeletion; return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null}; };
-let busy = false;
+let busy = false, running = null;
 
 export function registerTaskSettings() {
   game.settings.register(MOD, "longTasks", {name: "Long tasks over the clock", hint: "Extended actions that take days or weeks (making things, research, training, talens, wonders) roll on their own as game time passes.",
@@ -157,10 +157,23 @@ async function rollOnce(dice, diff, specialty) {
 /** The active Storyteller: roll every task that has come due and post one card per character. */
 const ironLegion = a => { try { return (game.modules.get("wodx-chronicle")?.api?.signatures?.rowsOf?.(a) ?? []).some(r => r.key === "iron"); } catch (e) { return false; } };
 export async function tick({force = false} = {}) {
-  if ( busy || !isActiveGM() || !setting("longTasks") || (held() && !force) ) return [];
+  if ( !isActiveGM() || !setting("longTasks") || (held() && !force) ) return [];
+  // B6481: a forced tick ("Roll what is due", a gate) while the clock's own tick still runs (a long catch-up after a
+  // time skip) waits for it and then rolls, instead of answering that nothing is due; never more than a minute
+  if ( busy ) {
+    if ( !force ) return [];
+    let timer = null;
+    const ended = await Promise.race([Promise.resolve(running).then(() => true, () => true), new Promise(r => { timer = setTimeout(() => r(false), 60000); })]);
+    clearTimeout(timer);
+    return ended ? tick({force}) : [];
+  }
   busy = true;
+  running = rollDue();
+  try { return await running; } finally { busy = false; running = null; }
+}
+async function rollDue() {
   const out = [];
-  try {
+  {
     const t0 = now();
     for ( const a of game.actors ) {
       const raw = rawTasks(a);
@@ -201,7 +214,9 @@ export async function tick({force = false} = {}) {
         };
         let dice = poolFor(a, R.rollingAs(t));
         const iron = ironLegion(a);
-        if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
+        // B6167: a complication's delay pushes t.next on; in a catch-up tick after a time skip the rolls stop once the
+        // next one lies in the future, so the delay is kept and not rolled through
+        if ( await payNow() ) while ( due-- > 0 && t.status === "open" && R.dueRolls(t, t0) > 0 ) {
           // B3689: costs paid on each roll; without them the work waits
           let adds = 0;
           if ( t.perRoll.length ) {
@@ -243,7 +258,8 @@ export async function tick({force = false} = {}) {
         if ( t.status === "done" && t.makes && !t.made ) {
           try {
             const base = game.items?.getName?.(t.makes);
-            const data = base ? base.toObject() : {name: t.makes, type: "Item"};
+            // B6177: an item from WoDX Library's packs (Gear by era and the rest) when the world has none by that name
+            const data = base ? base.toObject() : (await game.modules.get("wodx-library")?.api?.itemByName?.(t.makes)) ?? {name: t.makes, type: "Item"};
             delete data._id;
             // 0.27.0: a recipe's quality and its maker as owner
             const q = t.good ? Own.finishCraft(t) : null;
@@ -277,7 +293,7 @@ export async function tick({force = false} = {}) {
       }
       out.push({actor: a.id, lines});
     }
-  } finally { busy = false; }
+  }
   return out;
 }
 

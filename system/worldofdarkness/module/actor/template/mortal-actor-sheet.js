@@ -13,7 +13,6 @@ import BonusHelper from "../../scripts/bonus-helpers.js";
 
 
 import { calculateHealth } from "../../scripts/health.js";
-import * as selectbox from "../../scripts/spec-select.js";
 
 /** The Mortal sheet's code, on either sheet engine (B6110): the old one (appv1 ActorSheet) or ApplicationV2 through LegacyActorSheetV2. */
 export const MortalSheetMixin = Base => class extends Base {
@@ -124,8 +123,7 @@ export const MortalSheetMixin = Base => class extends Base {
 	activateListeners(html) {
 		super.activateListeners(html);
 
-		//Custom select text boxes
-		selectbox.registerCustomSelectBoxes(html, this);
+		// WoDX fork (B6940): the custom select boxes (spec-select.js) were removed; no template has a data-koptions input
 
 		ActionHelper.SetupDotCounters(html);
 

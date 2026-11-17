@@ -90,8 +90,8 @@ function registerSettings() {
         "Matchlocks, wheellocks and flintlocks misfire on a botch, and on any 1 in rain or standing in water; heavy rain puts out a match and a misfire there wets the powder until the gun is reloaded. A gun that names no lock takes the lock of the year. Percussion caps and cartridges use the plain botch rule.",
         Boolean, true);
     s("movementLimit", "Movement in a fight",
-        "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. Show the pace, or also stop a move past the running speed (the GM is never stopped).",
-        String, "note", { choices: { note: "Show the pace", block: "Show it and stop moves past the running speed", off: "Off" } });
+        "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. By default a player's move past the running speed (or a carrying or dragging pace) is stopped, and a player's attack after moving more than half the running speed is refused (the GM is never stopped, and only warned). Show the pace only to make both warnings.",
+        String, "block", { choices: { block: "Show it, stop moves past the running speed and attacks after a long move", note: "Show the pace only (warnings)", off: "Off" } });
     s("turnMoves", "Moves out of turn",
         "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
         String, "off", { choices: CR.TURN_MOVES });
@@ -186,6 +186,9 @@ export function armorPenalty(actor) {
 }
 
 function willpower(actor) { return num(actor?.system?.advantages?.willpower?.temporary); }
+/** B6378: WoDX Actions' Lucky, Destiny and Fate (rerolls a story), for the attack window. */
+const fortuneApi = () => game.modules.get("wodx-actions")?.active ? (game.modules.get("wodx-actions").api?.fortune ?? null) : null;
+function fortuneHtml(actor) { try { return fortuneApi()?.html?.(actor, esc) ?? ""; } catch (e) { return ""; } }
 function blood(actor) { return num(actor?.system?.advantages?.bloodpool?.temporary); }
 
 function woundPenalty(actor) {
@@ -224,11 +227,12 @@ function shieldsOf(actor) {
         const s = i.flags?.["wodx-library"]?.shield;
         if (s && i.system?.isequipped) shields.push({ name: i.name, parry: num(s.parry) || null, attack: num(s.attack), closeOnly: !!s.closeOnly });
     }
+    shields.push(...R.formDefences(actor?.items)); // B6729: Shroud of Flames, Radiant Aura, Mirage, Alter Size
     const mw = (actor?.items ?? []).filter(i => i.type === "Melee Weapon" && !i.system?.isnatural);
     const weapon = (mw.find(i => i.system?.isequipped) ?? null)?.name ?? "";
     // B5073: a shield needs a hand of its own; a burden may leave none for it
     const hb = MVJ.haulOfActor(actor), HR = game.modules.get("wodx-interactables")?.api?.haul?.rules;
-    if (hb && !hb.carried && HR && !HR.shieldHeld({ free: hb.free, weaponHands: weapon ? 1 : 0 })) return { shields: [], weapon: hb.free ? weapon : "" };
+    if (hb && !hb.carried && HR && !HR.shieldHeld({ free: hb.free, weaponHands: weapon ? 1 : 0 })) return { shields: shields.filter(s => s.attackRanged != null), weapon: hb.free ? weapon : "" };
     return { shields, weapon };
 }
 
@@ -287,6 +291,8 @@ function healthTrack(actor) {
     // recompute has run through bodyTotals; added here only when it has not)
     const body = toughness(actor);
     if (body?.bruised && !h.bruised?.wodxBody) totals.bruised += num(body.bruised);
+    // B6922: a Bodach's two fewer levels (C20 p. 373), when the stored totals do not carry them yet
+    if (body?.fewer && !R.FEWER_ORDER.some(k => h[k]?.wodxFewer)) for (const [k, cut] of Object.entries(R.fewerCuts(totals, body.fewer))) totals[k] -= cut;
     const d = h.damage ?? {};
     const damage = { bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated) };
     const max = R.WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
@@ -343,13 +349,16 @@ function weaponList(actor) {
         list.push({
             id: i.id, name: i.name, ranged: i.type === "Ranged Weapon", natural: !!s.isnatural, twoHanded: !!s.istwohanded,
             attribute: s.attack?.attribute || "dexterity",
-            ability: s.attack?.ability || (i.type === "Ranged Weapon" ? "archery" : "melee"),
+            // B6153: a gun with no Ability on its sheet shoots with Firearms, not Archery
+            ability: s.attack?.ability || (i.type === "Ranged Weapon" ? R.rangedAbilityDefault(i.name) : "melee"),
             secondaryId: s.attack?.secondaryabilityid || "",
             accuracy: num(s.attack?.accuracy),
             dmgAttr: s.damage?.attribute || "",
             dmgBonus: num(s.damage?.bonus),
             type: s.damage?.type || "lethal",
-            diff: num(s.difficulty) || 6,
+            // B6415: fine work or a masterwork (WoDX Storyteller's diffWhenUsed, -1) is easier to strike or shoot with
+            diff: Math.max(2, (num(s.difficulty) || 6) + num(i.flags?.["wodx-storyteller"]?.diffWhenUsed)),
+            wellMade: num(i.flags?.["wodx-storyteller"]?.diffWhenUsed),
             minStr: num(s.minstrength),
             piercing: num(s.piercing),
             range: num(s.range),
@@ -599,6 +608,34 @@ function requestGM(payload) {
     return true;
 }
 
+/**
+ * B6150: the hooks other modules listen for (wodxAttackRolled, wodxDamageApplied) fire on the client that rolled or
+ * applied. Most listeners act only on the active Storyteller's client, so when a player (or a second Storyteller) fired
+ * them, they are fired again there, with relayed: true. Documents travel as uuids and are found again on that side.
+ * The Storyteller's own rolls are not sent, so nothing fires twice on one client.
+ */
+// B6787: wodxFed (WoDX Actions) too: its payload is the one argument, so it is fired again as it came, marked relayed
+const RELAYED = ["wodxAttackRolled", "wodxDamageApplied", "wodxFed"];
+const PAYLOAD_ONLY = ["wodxFed"];
+function relayHook(hook, subject, data = {}) {
+    try {
+        if (!RELAYED.includes(hook) || !subject?.uuid || isResponsibleGM() || !game.users.activeGM) return false;
+        const { target, ...rest } = data;
+        game.socket.emit(SOCKET, { action: "relayHook", hook, uuid: subject.uuid, targetUuid: target?.uuid ?? null, data: JSON.parse(JSON.stringify(rest)) });
+        return true;
+    } catch (e) { console.warn(`${MOD} | relay ${hook}`, e); return false; }
+}
+async function onRelayedHook(p, subject) {
+    if (!RELAYED.includes(p.hook)) return;
+    const data = { ...(p.data ?? {}), relayed: true };
+    if (p.hook === "wodxAttackRolled") {
+        const t = p.targetUuid ? await fromUuid(p.targetUuid).catch(() => null) : null;
+        data.target = t?.actor ?? t ?? null;
+    }
+    if (PAYLOAD_ONLY.includes(p.hook)) return Hooks.callAll(p.hook, data);
+    Hooks.callAll(p.hook, subject, data);
+}
+
 function isResponsibleGM() {
     const gm = game.users.activeGM ?? game.users.filter(u => u.isGM && u.active).sort((a, b) => a.id.localeCompare(b.id))[0];
     return gm?.id === game.user.id;
@@ -609,6 +646,7 @@ async function onSocket(p) {
     const doc = await fromUuid(p.uuid);
     const actor = doc?.actor ?? doc;
     if (!actor) return;
+    if (p.action === "relayHook") return onRelayedHook(p, actor);
     if (p.action === "applyDamage") {
         const r = await applyDamage(actor, p.type, p.levels);
         if (p.messageId) {
@@ -622,6 +660,7 @@ async function onSocket(p) {
     else if (p.action === "blinded") await chronicle()?.applyTimed?.(actor, { name: "Blinded", condition: "blinded", key: "wodx-blinded", duration: { kind: "scene" }, source: "WoDX house rule" });
     else if (p.action === "follow" && ["knockdown", "held", "staked"].includes(p.follow?.condition)) await markFollow(actor, p.follow);
     else if (p.action === "update") await actor.update(p.data);
+    else if (p.action === "disarm") { const it = actor.items?.get?.(p.itemId); if (it) await dropWeapon(actor, it, { yards: Number(p.yards) || 0, from: p.from ?? null }); }
     else if (p.action === "maim" && p.offer?.part) await BD.offerMaim(actor, p.offer, { attacker: p.by ? { name: String(p.by) } : null });
 }
 
@@ -701,6 +740,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Extra damage dice</label><input type="number" name="extraDmg" value="0"/></div>
     <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies (10s count twice)</label></div>
     <div class="form-group"><label><input type="checkbox" name="willpower"/> Spend Willpower (+1 auto success) [${willpower(attacker)}]</label></div>
+    ${fortuneHtml(attacker)}
     <div class="form-group"><label><input type="checkbox" name="bypass"/> Aim around armor (+2 diff)</label></div>
     <div class="form-group"><label><input type="checkbox" name="blind" ${blindCounted ? "disabled" : ""}/> Blind / darkness (+2 diff)${blindCounted ? " (counted above: Blinded)" : ""}</label></div>
     ${cel ? `<div class="form-group"><label><input type="checkbox" name="celDice" ${setting("celerityDice") ? "checked" : ""}/> Celerity ${cel}: add dice to Dexterity</label></div>
@@ -758,9 +798,47 @@ function resolveTokens(attackerArg, targetArg) {
     return { attacker, attackerTok, target, targetTok };
 }
 
+/**
+ * Why this character makes no attack this turn, or null (B6151, B6152): a failed stand-up spent the action (V20 Dark
+ * Ages p. 348); the token is on full defence (WoDX NPC's Defend; V20 p. 275, pdf 283: the whole turn goes to defending);
+ * a player who moved past half the running speed with the movement limit set to stop moves (VtDA20 p. 333; the default
+ * since B6360). With the limit only shown, and always for the GM, that last one is a warning (pastWalk), not a refusal.
+ */
+function noAttackWhy(attacker, attackerTok) {
+    // B6372: asleep for the day or out cold (WoDX Actions api.cannotAct): a player makes no attack; the Storyteller still may.
+    // B6660: Dazed in a fight is one of those reasons; with WoDX Actions off, the Dazed mark is read here
+    try { const idle = game.modules.get("wodx-actions")?.api?.cannotAct?.(attacker); if (idle && !game.user.isGM) return { why: String(idle).replace(/\.$/, "") }; } catch (e) { /* Actions off */ }
+    try { if (!game.user.isGM && game.combat?.started && chronicle()?.conditions?.hasCondition?.(attacker, "dazed")) return { why: `${attacker.name} is Dazed and loses this turn's action (V20 Dark Ages p. 348)` }; } catch (e) { /* Chronicle off */ }
+    // B6036: a condition that takes the turn away (a fomor's gas or liquid form, Dazed outside a fight) stops a player's attack too; the Storyteller still may
+    const gone = cannotActWhy(attacker);
+    if (gone && !game.user.isGM) return { why: `${attacker.name} cannot attack this turn: ${gone}` };
+    // B6787: held, grappled or clinched by someone: no physical action but the struggle (the Storyteller still may)
+    const grip = attacker?.getFlag?.(MOD, "grip");
+    if (!game.user.isGM && R.gripActive(grip, game.combat) && ["hold", "grapple"].includes(grip.kind)) return { why: `${attacker.name} is held by ${grip.byName ?? "someone"} and can only struggle to break free (at the start of their turn)` };
+    const lost = attacker?.getFlag?.(MOD, "lostAction");
+    // B6386: WoDX Chronicle's Phobia bout sets the same flag, naming the derangement in why
+    if (lost && R.lostActionNow(lost, game.combats?.get?.(lost.combat))) return { why: lost.why ? `${attacker.name} is in the grip of ${lost.why} and has lost this turn's action` : `${attacker.name} failed to stand up and has lost this turn's action (V20 Dark Ages p. 348)` };
+    const tok = attackerTok?.document ?? attackerTok ?? attacker?.getActiveTokens?.()?.[0]?.document ?? null;
+    let fdFlag = null;
+    try { fdFlag = tok?.getFlag?.("wodx-npc", "fullDefense") ?? null; } catch (e) { fdFlag = null; }
+    if (fdFlag && R.fullDefenseNow(fdFlag, game.combats?.get?.(String(fdFlag).split(":")[0]))) return { why: `${attacker.name} is on full defence this turn and makes no attack (V20 p. 275)` };
+    const mv = movedThisRound(tok);
+    let riding = false; // at the reins the mount does the running (3.20.0)
+    try { const rd = MTD.rideFor(attacker); riding = !!rd && !!MTD.rules.inSaddle(rd); } catch (e) { riding = false; }
+    if (mv && !riding && mv.yards > mv.limits.attackAfter) {
+        let mode = "block";
+        try { mode = game.settings.get(MOD, "movementLimit"); } catch (e) { mode = "block"; }
+        const why = `${attacker.name} moved ${Math.round(mv.yards)} yards this turn, more than half their running speed (${mv.limits.attackAfter}): by the book no attack follows (VtDA20 p. 333)`;
+        return mode === "block" && !game.user.isGM ? { why } : { why: null, pastWalk: why };
+    }
+    return null;
+}
+
 export async function attack({ attacker: a, target: t, weaponId, noAim = false } = {}) {
     let { attacker, attackerTok, target, targetTok } = resolveTokens(a, t);
     if (!attacker) return ui.notifications.warn("WoDX Combat: select your token (or assign a character) first.");
+    const barred = noAttackWhy(attacker, attackerTok);
+    if (barred?.why) { ui.notifications.warn(`WoDX Combat: ${barred.why}.`); return null; }
     // WoDX Targeting: with no target set by hand, the attack opens on the likeliest foe (the window can switch it)
     const aimApi = game.modules.get("wodx-targeting")?.active ? game.modules.get("wodx-targeting").api : null;
     let pre = null;
@@ -855,8 +933,14 @@ function openFight(attackerTok, targetTok) {
 }
 
 async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }) {
+    // B6151, B6152: the quick attack and WoDX NPC's automatic attacks come through here; the attack window asked first
+    const barred = noAttackWhy(attacker, attackerTok);
+    if (barred?.why) throw new Error(`${barred.why}.`);
+    if (barred?.pastWalk) ui.notifications.warn(`WoDX Combat: ${barred.pastWalk}.`);
     let w = weapon;
     const log = [], rolls = [], spendNotes = [];
+    // B6035: what the target's conditions do to the blow: no defence, or hit without a roll
+    const tcm = target ? conditionMods(attacker, target) : null;
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const aKind = (fd.atkKind && fd.atkKind !== "auto") ? fd.atkKind : getKind(attacker);
     // Aiming at a part sets the targeting size the book gives for it (hit locations, house rule B1203)
@@ -888,6 +972,17 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         autoAtkNote = `Automatic attack: ${w.name} (expected health levels: ${shown})${out ? `. Not used: ${out}` : ""}`
             + (ignoredDistance ? `. Nothing reaches at the tokens' distance (${Math.round(distance)}): chosen as if in reach` : distance != null ? `. Distance ${Math.round(distance)}` : "") + ".";
     }
+    // ---- B6787: what an earlier clinch, hold or defense allows (V20 Dark Ages p. 347); the Storyteller is warned, a player stopped
+    const mkey = R.maneuverKey(maneuver);
+    const gripWhy = [
+        R.clinchLimit(attacker.getFlag?.(MOD, "clinch"), game.combat, target?.uuid ?? null, w?.id),
+        w?.id === "unarmed:bite" && !w.natural && !R.biteReady(target?.getFlag?.(MOD, "grip"), attacker.uuid, game.combat) ? "a bite needs a clinch, hold or tackle on this target first" : "",
+        mkey === "riposte" && game.combat?.started && !R.riposteReady(recentCards().filter(d => AU.countThisRound([d], roundKey(), () => true)), attacker.uuid) ? "a riposte needs a successful defense earlier this turn" : ""
+    ].filter(Boolean);
+    if (gripWhy.length) {
+        if (!game.user.isGM) throw new Error(`${attacker.name}: ${gripWhy[0]}.`);
+        log.push(`Storyteller's call: ${esc(gripWhy.join("; "))}.`);
+    }
     // ---- B5073: hands full with a burden
     const handsNow = handsCheck(attacker, w);
     if (handsNow.blocked) throw new Error(`${attacker.name} cannot use ${w.name}: ${handsNow.blocked}. Letting go is free.`);
@@ -911,7 +1006,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (w?.grow) {
         if (blood(attacker) < 1 && setting("spendResources")) throw new Error(`${attacker.name} has no blood to grow claws.`);
         spendNotes.push(...await spend(attacker, 0, 1));
-        await attacker.createEmbeddedDocuments("ActiveEffect", [{ name: "Feral Claws", img: "icons/svg/claw.svg", description: "Protean: claws grown for the scene (aggravated, Strength + 1).", flags: { [MOD]: { grown: true } } }]);
+        await attacker.createEmbeddedDocuments("ActiveEffect", [{ name: "Feral Claws", img: "icons/svg/pawprint.svg", description: "Protean: claws grown for the scene (aggravated, Strength + 1).", flags: { [MOD]: { grown: true } } }]);
         w = weaponList(attacker).find(x => x.id === "unarmed:claw" && x.natural) ?? { ...w, grow: false, natural: true, type: "aggravated", dmgBonus: 1, name: "Claws (Feral Claws, aggravated)" };
         log.push(`${esc(attacker.name)} grows claws (Feral Claws).`);
     }
@@ -965,8 +1060,27 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     }
     if (rageAction) log.push(`Rage: ${attacker.name} takes ${rageAction} extra action${rageAction === 1 ? "" : "s"} this turn without multiple-action penalties.`);
 
-    const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
+    let atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
+    // B6378: Lucky, Destiny or Fate ticked in the window: a failed attack roll (no successes, or a botch) is rolled again
+    // at once, before the defence, damage and anything else follow from it; the card shows the first dice
+    if (fd.lucky && (atk.botch || !atk.successes)) {
+        let lk = null;
+        try { lk = await fortuneApi()?.use?.(attacker); } catch (e) { lk = null; }
+        if (lk) {
+            if (atk.roll) rolls.push(atk.roll);
+            const first = atk.faces ?? [];
+            atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
+            let name = "Lucky";
+            try { name = fortuneApi()?.name?.(attacker) ?? name; } catch (e) { /* the plain name */ }
+            log.push(`${esc(name)}: the first attack roll failed${setting("showDice") && first.length ? ` (${first.join(", ")})` : ""} and is rolled again (${lk.left} left this story).`);
+        }
+    }
     if (atk.roll) rolls.push(atk.roll);
+    // B6035: a Staked or completely immobilized target is hit automatically (V20 Dark Ages p. 348)
+    if (tcm?.autoHit && !(atk.successes > 0)) {
+        atk.successes = 1; atk.botch = false;
+        log.push(`<b>Hit automatically:</b> ${esc(target.name)} cannot get out of the way (${esc(autoHitWhy(target))}, VtDA20 p. 348).`);
+    }
     // B6004: the Blessing or Curse the blow used is spent
     if (pool.once?.length) { try { await game.modules.get("wodx-actions")?.api?.powerMods?.spend?.(attacker, pool.once); } catch (e) { /* nothing spent */ } }
     if (perShot?.ok) { await spendRows([perShot.spend]); log.push(`${esc(perShot.spend.item.name)}: one is shot.`); }
@@ -995,11 +1109,16 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     }
     // "Automatic": the defense with the most expected successes for this attack, from the defender's sheet
     let autoNote = "";
+    // B6035: Incapacitated, Torpor, Asleep, Staked or completely immobilized: no defence roll (V20 Dark Ages pp. 348, 350)
+    if (target && tcm?.defenderCannotDefend) {
+        fd.defense = "none";
+        autoNote = `No defense: ${target.name} cannot defend (${noDefenseWhy(target)}).`;
+    }
     if (target && (fd.defense === "auto" || !fd.defense)) {
         const { best, plans } = bestDefense(target, fd, w, maneuver);
         fd.defense = best?.type ?? "none";
         const why = plans.map(p => p.valid ? `${cap(p.type)} ${p.dice} dice at ${p.diff}${p.type === "parry" && !p.weapon ? " (no weapon)" : ""}` : `${cap(p.type)}: not possible`).join("; ");
-        autoNote = best ? `Automatic defense: ${cap(best.type)} is the best choice (${why}).` : `Automatic defense: none possible (${why}).`;
+        autoNote = best ? `Automatic defense: ${cap(best.type)} is the best choice (${why}).` : committedThisRound(target) ? `Automatic defense: none. ${plans[0].invalid}` : `Automatic defense: none possible (${why}).`;
     }
     if (target && fd.defense !== "none") {
         def = await rollDefense(target, fd, w, maneuver);
@@ -1055,6 +1174,20 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         }
     }
 
+    // ---- B6781: a Disarm rolls damage against the victim's Strength; the extra successes send the weapon flying
+    let disarmed = null, disarmYards = 0;
+    if (hit && maneuver.disarm && target) {
+        dmgPool = damagePool(attacker, w, net, maneuver, targeting, fd, pot);
+        const dr = await rollPool(dmgPool.dice, 6, { canBotch: false, autoSuccesses: dmgPool.auto });
+        if (dr.roll) rolls.push(dr.roll);
+        dmgPool = null;
+        const str = attr(target, "strength");
+        const res = R.disarmResult(dr.successes, str);
+        const held = (target.items ?? []).find(i => ["Melee Weapon", "Ranged Weapon"].includes(i.type) && !i.system?.isnatural && i.system?.isequipped);
+        if (res.flies && held) { disarmed = held; disarmYards = res.yards; }
+        log.push(`<b>Disarm:</b> damage ${dr.dice} dice at 6: ${dr.successes} success${dr.successes === 1 ? "" : "es"} against Strength ${str}. ${!res.flies ? `${esc(target.name)} keeps hold of their weapon.` : held ? `${esc(held.name)} flies ${res.yards} yard${res.yards === 1 ? "" : "s"} from ${esc(target.name)}'s hand.` : `${esc(target.name)} has no weapon in hand to lose.`}`);
+    }
+
     // ---- Where it lands (hit locations, house rule B1203)
     let location = null;
     if (tBody && hit) {
@@ -1075,16 +1208,74 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         attacker: attacker.uuid, target: target?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
         combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid && def.type !== "mount"),
         mountDodge: !!(def && !def.invalid && def.type === "mount"),
+        defOk: !!(def && !def.invalid && !def.botch && defSucc > 0),
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false, fireSun: !!fd.fireSun,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null,
         location: location ? { id: location.id, label: location.label } : null,
-        noise: R.fightNoise({ ...w, silenced: fitNow.silenced })
+        noise: R.fightNoise({ ...w, silenced: fitNow.silenced }),
+        noDefense: !!maneuver.noDefense
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
     // What the maneuver leaves on the target, shown on its token (B3754)
-    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile }) : [];
-    for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
+    // B6302: a Kuei-jin's Chi aspect decides what a stake does (wood for Yin, a long metal blade for Yang)
+    const kotE = target?.type === "Vampire" && target.system?.settings?.variant === "kindredeast";
+    const chi = kotE ? String(target.getFlag?.("wodx-actions", "kote")?.aspect ?? "") : null;
+    const metal = !w?.ranged && R.LONG_METAL.test(String(w?.name ?? ""));
+    let follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile, chi, metal }) : [];
+    if (kotE && chi && ["stake", "impale"].includes(R.maneuverKey(maneuver)) && hit && !atk.botch && (dmg?.successes ?? 0) >= 3 && !follow.some(f => f.condition === "staked"))
+        log.push(`${target.name} is a Kuei-jin aspected to ${chi === "yin" ? "Yin: only wood holds them" : chi === "yang" ? "Yang: only a long metal blade through the heart holds them" : "Balance: no stake holds them"} (Kindred of the East).`);
+    // B6782: a fall the fighter may resist (Tackle): each rolls Dexterity + Athletics, and only a failure falls
+    const selfFollow = [];
+    if (follow.some(f => f.resist)) {
+        const kept = [];
+        for (const f of follow) {
+            if (!f.resist) { kept.push(f); continue; }
+            for (const who of f.both ? [target, attacker] : [target]) {
+                const dice = Math.max(0, attr(who, "dexterity") + ability(who, "athletics").value + woundPenalty(who));
+                const r = await rollPool(dice, f.resist);
+                if (r.roll) rolls.push(r.roll);
+                const falls = r.botch || r.successes < 1;
+                log.push(`${esc(who.name)} keeps their feet? Dexterity + Athletics, ${dice} dice at ${f.resist}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}, ${falls ? "knocked down" : "still standing, off balance"}.`);
+                if (falls) (who === target ? kept : selfFollow).push({ condition: f.condition, name: f.name, lasts: f.lasts });
+            }
+        }
+        follow = kept;
+    }
+    for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : f.lasts === "grip" ? " until they break free (resisted Strength + Brawl at the start of their turn)" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
+    // ---- B6787: a heart pierced kills a human outright (V20 Dark Ages p. 347)
+    if (target && R.stakeKills(mkey, { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile })) {
+        const lethalAll = healthTrack(target).max;
+        outcome = { ...(outcome ?? {}), levels: Math.max(outcome?.levels ?? 0, lethalAll), type: "lethal", staked: true };
+        data.levels = outcome.levels; data.type = "lethal";
+        log.push(`<b>Heart pierced:</b> three damage successes drive the stake home. ${esc(target.name)} dies of it.`);
+    }
+    // ---- B6787: what the blow leaves between the two: a grip to bite through or struggle out of, a clinch, a stumble
+    const grips = [];
+    if (target && hit && !atk.botch) {
+        const now = game.combat?.started ? { combat: game.combat.id, round: game.combat.round } : { combat: null, round: null };
+        const kind = mkey === "hold" ? "hold" : mkey === "c_grapple" ? "grapple" : w?.id === "unarmed:clinch" ? "clinch" : mkey === "tackle" ? "tackle" : null;
+        if (kind) grips.push([target, "grip", { by: attacker.uuid, byName: attacker.name, kind, ...now }]);
+        if (kind === "clinch") {
+            grips.push([target, "clinch", { with: attacker.uuid, combat: now.combat }], [attacker, "clinch", { with: target.uuid, combat: now.combat }]);
+            log.push(`Clinch: ${esc(attacker.name)} and ${esc(target.name)} are locked together; neither takes any other physical action until ${esc(target.name)} breaks free (V20 Dark Ages p. 347).`);
+        }
+        if (kind === "tackle" && now.combat) {
+            grips.push([target, "offBalance", now], [attacker, "offBalance", now]);
+            log.push(`Both fighters are off balance: +1 difficulty to all their actions next turn (V20 Dark Ages p. 348).`);
+        }
+    }
+    // B6921: the house Lunge and Hook and Pull leave marks that this module reads on the turn after
+    if (game.combat?.started) {
+        const now = { combat: game.combat.id, round: game.combat.round };
+        for (const [who, key, value] of R.houseAfter(mkey, { hit: !!hit && !atk.botch, levels: outcome?.levels ?? 0, now })) {
+            const doc = who === "attacker" ? attacker : target;
+            if (!doc) continue;
+            grips.push([doc, key, value]);
+            log.push(key === "overextended" ? `${esc(attacker.name)} is marked overextended: defence rolls are at +1 difficulty for the rest of this turn and the next.`
+                : `${esc(target.name)} is marked hooked: their token cannot move next turn.`);
+        }
+    }
     // B4772, B4773: the lance and keeping the saddle when struck
     let saddle = { lines: [], rolls: [], apply: async () => {} };
     try {
@@ -1110,8 +1301,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         { style: F.attackStyle(w), group: target ? F.targetGroup(P.detectProfile(target)) : null });
     const msg = await postCard(attackerTok, attacker, html, rolls, data);
     // other modules may show the blow (sprite tokens play the attack): hit or miss, with the weapon's kind
-    Hooks.callAll("wodxAttackRolled", attacker, { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
-        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null });
+    const rolled = { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
+        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null };
+    Hooks.callAll("wodxAttackRolled", attacker, rolled);
+    relayHook("wodxAttackRolled", attacker, rolled); // B6150: and on the active Storyteller's client
 
     // ---- Apply
     if (setting("autoApply")) {
@@ -1122,6 +1315,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     await wreck.apply();
     if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
     for (const f of follow) await markFollow(target, f);
+    for (const f of selfFollow) await markFollow(attacker, f);
+    if (disarmed) { const ac = attackerTok?.center ?? attackerTok?.object?.center ?? null; await dropWeapon(target, disarmed, { yards: disarmYards, from: ac ? { x: ac.x, y: ac.y } : null }); }
+    for (const [who, key, value] of grips) await flagAny(who, key, value);
     if (special || (atk.botch && fitNow && w?.ranged && armsLib()?.rules?.kindsOf?.(w)?.has?.("bow"))) await armsAftermath({ attacker, target, w, hit, outcome, special, botch: atk.botch });
     if (target && location && outcome?.levels) {
         const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
@@ -1214,7 +1410,14 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     let at = { value: attr(attacker, attrKey), mount: false };
     if (!w.ranged) { try { at = MTD.strikeAttrOf(attacker, attrKey, at.value, { close: true }); } catch (e) { /* on foot */ } }
     // B6004: a Boost, Blessing or Curse from a power or ritual (WoDX Actions power-mods) reaches the blow
-    const pm = powerModsOf(attacker, { tags: ["physical", attrKey, w.ranged ? "ranged" : "melee"] });
+    const pm0 = powerModsOf(attacker, { tags: ["physical", attrKey, w.ranged ? "ranged" : "melee"] });
+    // B6416: the roll effects WoDX Chronicle keeps on the attacker (drink and drugs, merits and flaws, derangement
+    // bouts) for this Attribute and Ability, as WoDX Actions' rolls and the sheet's rolls count them
+    const tr = traitRollMods(attacker, attrKey, w.ability, target);
+    // B6850: the target's own powers can make blows at them harder (a demon's Shroud of Flames, Mirage)
+    let dm = { diff: 0, parts: [] };
+    try { dm = game.modules.get("wodx-actions")?.api?.powerMods?.defend?.(target, { ranged: !!w.ranged }) ?? dm; } catch (e) { /* Actions off */ }
+    const pm = { ...pm0, dice: num(pm0.dice) + tr.dice, diff: num(pm0.diff) + tr.diff + num(dm.diff), parts: [...(pm0.parts ?? []), ...tr.parts, ...(dm.parts ?? []).map(x => `target: ${x}`)] };
     const pool = R.attackPool({
         attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
@@ -1231,9 +1434,24 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
     if (pm.parts.length) { pool.parts = [...(pool.parts ?? []), ...pm.parts]; pool.once = pm.once; }
+    if (w.wellMade) pool.parts = [...(pool.parts ?? []), `${w.name}: well made (${w.wellMade} difficulty)`];
     // B4792: a ram's pool is the driving pool, held to the vehicle's Maneuver
     if (w.vehicle) { try { const c = VH.capPool(attacker, w, pool.dice); if (c.note) { pool.dice = c.dice; pool.parts.push(c.note); } } catch (e) { /* no vehicle */ } }
     return pool;
+}
+
+/** B6416: WoDX Chronicle's roll effects on the attacker for this Attribute and Ability; none with the setting off. */
+function traitRollMods(actor, attrKey, abilityKey, target = null) {
+    const none = { dice: 0, diff: 0, parts: [] };
+    try {
+        const T = chronicle()?.traits;
+        if (!T?.effects || !T.rules?.sumEffects) return none;
+        try { if (game.settings.get("wodx-actions", "traitRolls") === false) return none; } catch (e) { /* Actions off: on */ }
+        const tags = T.rules.rollTags ? T.rules.rollTags(attrKey, abilityKey) : [attrKey, abilityKey].filter(Boolean);
+        if (!tags.length) return none;
+        const s = T.rules.sumEffects(T.effects(actor, { channel: "roll", tags, against: target ? T.kindOf?.(target) ?? null : null, moon: "" }));
+        return { dice: num(s.dice), diff: num(s.diff), parts: s.parts ?? [] };
+    } catch (e) { console.warn(`${MOD} | roll effects`, e); return none; }
 }
 
 /** B6004: what powers and rituals on a character do to this roll (WoDX Actions power-mods); nothing with Actions off. */
@@ -1268,14 +1486,18 @@ function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
     // B3802: a cyber limb or plate soaks a blow aimed at it with its own dice; B3800: the sheet's soak rows
     const limb = R.limbSoak(cyber(target)?.limbs ?? [], fd.aimType ?? fd.targeting);
     const sheetSoak = R.sheetBonus(target?.items, "soak_buff", dp.dmgType);
-    return R.soakPool({
+    // B6732: a Ward or a soak Boost from a power or ritual stands against a blow too, not only against a power's harm
+    const pw = powerModsOf(target, { soak: true, harm: { type: dp.dmgType, of: fd.fireSun ? "fire" : "", fireSun: !!fd.fireSun, bane: !!dp.bane } });
+    const sp = R.soakPool({
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice),
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice),
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
+    if (pw.parts?.length && Array.isArray(sp.notes)) sp.notes.push(...pw.parts);
+    return sp;
 }
 
 /**
@@ -1297,9 +1519,10 @@ function tokenDistance(a, b, { reach = false } = {}) {
 const withHeightOf = (d, a, b) => { try { return Math.hypot(d, MVJ.heightBetween(a, b)); } catch (e) { return d; } };
 
 /** Can this attack be used at all? Bites and claws need the right body; melee needs reach; missiles need range. */
-function attackUsable(attacker, w, distance, reachD = distance) {
+function attackUsable(attacker, w, distance, reachD = distance, target = null) {
     const shifter = !!garouRules()?.isShifter?.(attacker);
-    if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
+    // B6787: after a clinch, hold or tackle on this target, a bite is allowed (V20 Dark Ages p. 347)
+    if (w.id === "unarmed:bite" && !w.natural && !R.biteReady(target?.getFlag?.(MOD, "grip"), attacker?.uuid, game.combat)) return "a bite needs a hold first (clinch, hold or tackle)";
     if (w.id === "unarmed:claw" && !w.natural && !w.grow && !shifter)
         return discipline(attacker, "Vicissitude") >= 3 ? "no claws grown (sculpt bone talons first)" : "no claws (Protean 2, a shape with claws, or bone talons)";
     if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
@@ -1366,7 +1589,7 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
     const plans = [];
     for (const w of weaponList(attacker)) {
         if (w.grow) continue; // growing claws costs blood: only when the player picks it
-        const why = attackUsable(attacker, w, distance, reachD);
+        const why = attackUsable(attacker, w, distance, reachD, target);
         if (why) { plans.push({ w, valid: false, why, score: -1 }); continue; }
         // Range band from the distance, for missiles
         let rangeBand = null;
@@ -1401,6 +1624,8 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
  * Fortitude or armor; dodging missiles is +2 difficulty unless Celerity is in play.
  */
 function planDefense(target, type, fd, w, maneuver) {
+    // B6780: a Great Blow or Overhead Cleave earlier this turn leaves no defense for the rest of it (V20 Dark Ages p. 347)
+    if (type !== "mount" && committedThisRound(target)) return { type, valid: false, invalid: `${target.name} put everything into a committed blow this turn: no defense.`, expected: 0 };
     // B4771: the mount dodges for its rider, once a turn, at no cost to the rider (V20 Dark Ages p. 399)
     if (type === "mount") {
         let m = null;
@@ -1454,6 +1679,10 @@ function planDefense(target, type, fd, w, maneuver) {
         else { diff += 2; notes.push("dodging missiles +2 diff"); }
     }
     if (maneuver.defDiff) notes.push(`${maneuver.label.split(" ")[0].toLowerCase()} +${maneuver.defDiff} diff`);
+    // B6787: unbalanced by a Tackle last turn: +1 difficulty to all actions (V20 Dark Ages p. 348)
+    if (R.offBalanceNow(target.getFlag?.(MOD, "offBalance"), game.combat)) { diff += 1; notes.push("off balance after a tackle +1 diff"); }
+    // B6921: overextended by their own Lunge (house rule)
+    if (R.overextendedNow(target.getFlag?.(MOD, "overextended"), game.combat)) { diff += 1; notes.push("overextended after a lunge +1 diff"); }
     if (num(fd.defIndex)) notes.push(`full defense: -${num(fd.defIndex)} dice`);
     let weapon = null;
     if (type === "parry") {
@@ -1693,8 +1922,10 @@ async function applyFromMessage(msg, which = "main") {
     const r = await applyDamage(actor, src.type, src.levels);
     if (!isCounter) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
     // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
-    Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
-        fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id });
+    const applied = { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
+        fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id };
+    Hooks.callAll("wodxDamageApplied", actor, applied);
+    relayHook("wodxDamageApplied", actor, applied); // B6150
     const key = isCounter ? "counterApplied" : "applied";
     const undoKey = isCounter ? "counterUndo" : "undo";
     const newData = { ...data, [key]: true, [undoKey]: { uuid: actor.uuid, damage: r.before } };
@@ -1844,8 +2075,11 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         // B3800: initiative rows on the sheet (Kerenzikov, Speedware, made wonders)
         // B3806: a worn holster, gun sling or scabbard with its weapon carried: the weapon is at hand
         // B3921: standing up from a knockdown last turn costs 2 Initiative this turn
-        const stood = R.stoodPenalty(a.getFlag?.(MOD, "stoodUp"), combat);
-        if (stood) await a.unsetFlag(MOD, "stoodUp");
+        // B6151: or the cost was already taken off at this turn's start (Initiative not rolled each turn) and a roll now replaces it
+        const rs = c.getFlag?.(MOD, "stoodRestore");
+        const stood = R.stoodPenalty(a.getFlag?.(MOD, "stoodUp"), combat)
+            || (rs && rs.combat === combat.id && Number(rs.round) === Number(combat.round) ? (Number(rs.by) || 2) : 0);
+        if (a.getFlag?.(MOD, "stoodUp") && R.stoodPenalty(a.getFlag(MOD, "stoodUp"), combat)) await a.unsetFlag(MOD, "stoodUp");
         const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood
             + powerModsOf(a, { initiative: true }).dice; // B6004: an Initiative Boost from a power
         const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
@@ -1978,9 +2212,9 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.44.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
-        conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
-        defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.47.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
+        defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;
     game.wodx ??= {};
     game.wodx.combat = api;
@@ -2060,6 +2294,19 @@ function fightOf(doc) {
     }
     return null;
 }
+/* B6661: a player's token stays put on the turn a failed stand-up spent; the Storyteller may still move it. Registered
+ * before the yards count, so a refused move is not counted. */
+export function lostMoveBlock(doc, changes, options) {
+    if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return true;
+    const f = fightOf(doc);
+    // B6921: hooked by a Hook and Pull last turn: the move is lost (house rule)
+    const why = f ? (R.lostMoveWhy(doc.actor?.getFlag?.(MOD, "lostAction"), f.combat, doc.name) || R.hookedMoveWhy(doc.actor?.getFlag?.(MOD, "hooked"), f.combat, doc.name)) : "";
+    if (!why) return true;
+    ui.notifications.warn(`${why}.`);
+    try { canvas.interface?.createScrollingText?.(doc.object?.center ?? { x: doc.x, y: doc.y }, "Cannot move", { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: "#ff6060", stroke: 0x000000, strokeThickness: 4, duration: 2500 }); } catch (e) { /* no canvas */ }
+    return false;
+}
+Hooks.on("preUpdateToken", (doc, changes, options) => lostMoveBlock(doc, changes, options) === false ? false : undefined);
 // Out of turn, a player's token stays put (3.8.1). Registered before the yards count, so a refused move is not counted.
 Hooks.on("preUpdateToken", (doc, changes, options) => {
     if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
@@ -2150,6 +2397,9 @@ export async function standUp(actor, combat = game.combat) {
     if (res.up) {
         await chronicle().conditions.setCondition(actor, "knockdown", false);
         if (combat?.started) await actor.setFlag(MOD, "stoodUp", { combat: combat.id, round: combat.round });
+    } else if (combat?.started) {
+        // B6151: the failed roll spends this turn's action: attacks refuse it and the turn conductor skips the turn
+        await actor.setFlag(MOD, "lostAction", { combat: combat.id, round: combat.round });
     }
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: r.roll ? [r.roll] : [],
         content: `<div class="vtc-card"><h3>${esc(actor.name)} tries to stand</h3><p>Dexterity + Athletics, ${dice} dice at ${R.STAND_DIFF}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}.</p>${diceHtml(r.faces, R.STAND_DIFF)}<p>${esc(res.line)}</p></div>` });
@@ -2158,10 +2408,112 @@ export async function standUp(actor, combat = game.combat) {
 Hooks.on("updateCombat", (combat, changed) => {
     if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
     try { if (!setting("standUpRoll")) return; } catch (e) { return; }
-    const c = combat.combatant, key = `${combat.id}:${combat.round}:${combat.turn}`;
-    if (!c?.actor || standSeen.has(key)) return;
+    const c = combat.combatant;
+    if (!c?.actor || !chronicle()?.conditions?.hasCondition?.(c.actor, "knockdown")) return;
+    // B6436: one roll per knockdown per turn start. The key names the knockdown itself, so a turn that came round
+    // with nobody down (the fight's first turn) or an earlier knockdown that was stood up from never blocks this one;
+    // Previous and Next turn on the same knockdown in the same turn do not roll again
+    const fx = [...(c.actor.effects ?? [])].find(e => e.statuses?.has?.("wodx-knockdown"));
+    const key = `${combat.id}:${combat.round}:${combat.turn}:${c.actor.id}:${fx?.id ?? "down"}`;
+    if (standSeen.has(key)) return;
     standSeen.add(key);
     standUp(c.actor, combat).catch(e => console.error("WoDX | stand up", e));
+});
+/* B6787: someone held, grappled or clinched struggles at the start of their turn: resisted Strength + Brawl, and only
+ * more successes than the holder's break free (V20 Dark Ages pp. 346-347). Failing, they stay held for the turn. */
+const gripSeen = new Set();
+export async function breakFree(actor, combat = game.combat) {
+    const grip = actor?.getFlag?.(MOD, "grip");
+    if (!R.gripActive(grip, combat) || !R.GRIP_HOLDS.includes(grip.kind)) return null;
+    const holderDoc = await fromUuid(grip.by).catch(() => null);
+    const holder = holderDoc?.actor ?? holderDoc;
+    const free = async () => {
+        await actor.unsetFlag(MOD, "grip");
+        if (actor.getFlag(MOD, "clinch")) await actor.unsetFlag(MOD, "clinch");
+        if (holder?.getFlag?.(MOD, "clinch")?.with === actor.uuid) await flagAny(holder, "clinch", null);
+        try { await chronicle()?.conditions?.setCondition?.(actor, "held", false); } catch (e) { /* no conditions */ }
+    };
+    // a holder who is gone, down or out of the fight holds nobody
+    if (!holder || cannotActWhy(holder) || chronicle()?.conditions?.hasCondition?.(holder, "incapacitated")) { await free(); return { free: true, line: `${actor.name} slips free: ${grip.byName ?? "the holder"} no longer holds on.` }; }
+    const pool = a => Math.max(0, attr(a, "strength") + ability(a, "brawl").value + woundPenalty(a));
+    const rv = await rollPool(pool(actor), 6), rh = await rollPool(pool(holder), 6);
+    const out = R.breaksFree(rv.botch ? 0 : rv.successes, rh.botch ? 0 : rh.successes);
+    if (out) await free();
+    const what = { hold: "the hold", grapple: "the grapple", clinch: "the clinch" }[grip.kind];
+    const line = out ? `${actor.name} breaks free of ${what}.` : `${actor.name} stays in ${what} and can take no other physical action this turn.`;
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [rv.roll, rh.roll].filter(Boolean),
+        content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>Strength + Brawl, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
+    return { free: out, line };
+}
+Hooks.on("updateCombat", (combat, changed) => {
+    if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
+    const c = combat.combatant;
+    if (!c?.actor?.getFlag?.(MOD, "grip")) return;
+    const key = `${combat.id}:${combat.round}:${combat.turn}:${c.actor.id}`;
+    if (gripSeen.has(key)) return;
+    gripSeen.add(key);
+    breakFree(c.actor, combat).catch(e => console.error("WoDX | break free", e));
+});
+/* B6921: a hooked fighter's turn opens with a card and a mark over the token: no move this turn (the move block
+ * above refuses a player's drag; the Storyteller moving an NPC is told the same). */
+const hookSeen = new Set();
+Hooks.on("updateCombat", (combat, changed) => {
+    if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
+    const c = combat.combatant, a = c?.actor;
+    const why = a ? R.hookedMoveWhy(a.getFlag?.(MOD, "hooked"), combat, a.name) : "";
+    if (!why) return;
+    const key = `${combat.id}:${combat.round}:${a.id}`;
+    if (hookSeen.has(key)) return;
+    hookSeen.add(key);
+    const tok = c.token?.object ?? a.getActiveTokens?.()?.[0];
+    try { if (tok) canvas.interface?.createScrollingText?.(tok.center, "Hooked: no move", { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 24, fill: "#ff9040", stroke: 0x000000, strokeThickness: 4, duration: 3000 }); } catch (e) { /* no canvas */ }
+    ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: a }), flags: { [MOD]: { hooked: { actor: a.uuid, combat: combat.id, round: combat.round } } },
+        content: `<div class="vtc-card"><h3>${esc(a.name)} is off balance</h3><p>${esc(why)}.</p></div>` }).catch(e => console.error("WoDX | hooked", e));
+});
+/* B6151: with Initiative not rolled again each turn, standing up still costs 2 on the next turn: the combatant's
+ * Initiative drops by 2 when that turn starts and comes back when the one after starts. The turn stays on whoever
+ * the new turn started with. */
+const stoodSeen = new Set();
+Hooks.on("updateCombat", (combat, changed) => {
+    if (!isActiveGM() || !combat.started || !("round" in (changed ?? {}))) return;
+    const key = `${combat.id}:${combat.round}`;
+    if (stoodSeen.has(key)) return;
+    stoodSeen.add(key);
+    let reroll = false;
+    try { reroll = setting("autoInitiative") === "round"; } catch (e) { reroll = false; }
+    stoodInitiative(combat, reroll).catch(e => console.error("WoDX | stood initiative", e));
+});
+async function stoodInitiative(combat, reroll) {
+    const ups = [];
+    for (const c of combat.combatants) {
+        const a = c.actor;
+        if (!a) continue;
+        const step = R.stoodInitiativeStep({ stood: a.getFlag(MOD, "stoodUp"), restore: c.getFlag(MOD, "stoodRestore"), combat, reroll });
+        let init = c.initiative;
+        if (step.restore) { await c.unsetFlag(MOD, "stoodRestore"); if (init !== null && init !== undefined) init = Number(init) + step.restore; }
+        if (step.lower && init !== null && init !== undefined) {
+            init = Number(init) - step.lower;
+            await a.unsetFlag(MOD, "stoodUp");
+            await c.setFlag(MOD, "stoodRestore", { combat: combat.id, round: combat.round, by: step.lower });
+        }
+        if (init !== c.initiative) ups.push({ _id: c.id, initiative: init });
+    }
+    if (!ups.length) return;
+    const t0 = combat.turn;
+    await combat.updateEmbeddedDocuments("Combatant", ups);
+    if (Number.isInteger(t0) && combat.turn !== t0) await combat.update({ turn: t0 });
+}
+/* B6153: when a condition that changes the body (a fomor's Numbing) ends, the stored Bruised total can still hold its
+ * extra levels from an update made while it lasted; the client that removed it asks the system to work the totals out
+ * again (isupdated false runs the system's own recompute, which the wodxActorTotals hook lays the body over). */
+Hooks.on("deleteActiveEffect", (effect, options, userId) => {
+    if (userId !== game.user.id) return;
+    const actor = effect?.parent;
+    if (!(actor instanceof Actor) || !actor.isOwner) return;
+    const K = chronicle()?.conditions;
+    const body = [...(effect.statuses ?? [])].some(id => { const c = K?.getCondition?.(id); return !!(num(c?.mods?.bodyBruised) || num(c?.mods?.bodyEase)); });
+    if (!body) return;
+    actor.update({ "system.settings.isupdated": false }).catch(e => console.warn(`${MOD} | body totals`, e));
 });
 const lastInitRound = new Map();
 Hooks.on("updateCombat", (combat, changed) => {
@@ -2190,6 +2542,41 @@ function recentCards() {
 /** B4771: whether this rider's mount has already dodged for them this turn. */
 function mountDodgedThisRound(target) {
     return target ? AU.countThisRound(recentCards(), roundKey(), d => d.mountDodge && d.target === target.uuid) > 0 : false;
+}
+/** B6787: set (or clear, with null) one of this module's flags on any actor: the Storyteller's computer writes it for a player. */
+async function flagAny(actor, key, value) {
+    if (!actor) return;
+    if (actor.isOwner) return value === null ? actor.unsetFlag(MOD, key) : actor.setFlag(MOD, key, value);
+    requestGM({ action: "update", uuid: actor.uuid, data: value === null ? { [`flags.${MOD}.-=${key}`]: null } : { [`flags.${MOD}.${key}`]: value } });
+}
+/**
+ * B6781, B6788: a disarmed weapon leaves the hand. With WoDX Interactables it lands on the map as loose gear the
+ * given number of yards away, away from the attacker, where anyone may pick it up; without it, it is only unequipped.
+ * The Storyteller's computer does it for a token the player does not own.
+ */
+async function dropWeapon(actor, item, { yards = 0, from = null } = {}) {
+    const loose = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.loose : null;
+    const tok = actor.getActiveTokens?.()[0]?.document ?? null;
+    const float = () => { try { if (tok) MTD.floatFor?.(tok, "Disarmed!", "#ffd36a"); } catch (e) { /* no float */ } };
+    if (loose?.setDown && tok) {
+        if (!game.user.isGM) return requestGM({ action: "disarm", uuid: actor.uuid, itemId: item.id, yards, from });
+        const g = Number(tok.parent?.grid?.size) || 100, unit = Number(tok.parent?.grid?.distance) || 5;
+        const perSquare = AU.toYards ? AU.toYards(unit, tok.parent?.grid?.units ?? "ft") : unit / 3;
+        const cx = Number(tok.x) + (Number(tok.width) || 1) * g / 2, cy = Number(tok.y) + (Number(tok.height) || 1) * g / 2;
+        let dx = cx - Number(from?.x ?? cx - 1), dy = cy - Number(from?.y ?? cy);
+        const len = Math.hypot(dx, dy) || 1; dx /= len; dy /= len;
+        const px = Math.max(1, Number(yards) || 0) / (perSquare || 1) * g;
+        const at = { x: cx + dx * px, y: cy + dy * px };
+        const pile = await loose.setDown(tok, [item.id], { at, how: `loses hold of ${item.name}: it lands ${yards} yard${yards === 1 ? "" : "s"} away.` });
+        if (pile) return float();
+    }
+    if (!actor.isOwner) return requestGM({ action: "disarm", uuid: actor.uuid, itemId: item.id, yards, from });
+    await item.update({ "system.isequipped": false });
+    float();
+}
+/** B6780: whether this fighter made a Great Blow or Overhead Cleave this turn (no defensive actions for the rest of it). */
+function committedThisRound(actor) {
+    return actor ? AU.countThisRound(recentCards(), roundKey(), d => d.noDefense && d.attacker === actor.uuid) > 0 : false;
 }
 /** How many times this defender has already defended this turn (each further defense is −1 die, VtDA20 p. 344). */
 export function defensesThisRound(target) {
@@ -2257,6 +2644,10 @@ function resolveAutoOptions(attacker, target, fd, { attackerTok = null, targetTo
         const k = defensesThisRound(target);
         fd.defIndex = k;
         if (k) notes.push(`${target.name}'s defense ${k + 1} this turn (−${k} ${k === 1 ? "die" : "dice"})`);
+        // B6152: WoDX NPC's Defend: the whole turn goes to defending (V20 p. 275, pdf 283): full pool, one die less each time
+        let fdFlag = null;
+        try { fdFlag = (tTok?.document ?? tTok)?.getFlag?.("wodx-npc", "fullDefense") ?? null; } catch (e) { fdFlag = null; }
+        if (fdFlag && R.fullDefenseNow(fdFlag, game.combats?.get?.(String(fdFlag).split(":")[0]))) notes.push(`${target.name} is on full defence: the full pool for the first defence, one die less for each after (V20 p. 275)`);
     }
     return notes;
 }
@@ -2529,6 +2920,14 @@ export function useRoom(tok) { return game.modules.get("wodx-interactables")?.ap
 /*  WoDX conditions (registry in WoDX Chronicle)                       */
 /* ------------------------------------------------------------------ */
 
+/** B6036: the conditions that take this turn's action away (noAction), by name, or "" when there are none. */
+export function cannotActWhy(actor) {
+    try { return (chronicle()?.conditions?.conditionsOf?.(actor) ?? []).filter(c => c.mods?.noAction).map(c => c.name).join(", "); } catch (e) { return ""; }
+}
+const condNames = (actor, test) => { try { return (chronicle()?.conditions?.conditionsOf?.(actor) ?? []).filter(test).map(c => c.name).join(", "); } catch (e) { return ""; } };
+const noDefenseWhy = actor => condNames(actor, c => c.mods?.noDefense || c.mods?.autoHit);
+const autoHitWhy = actor => condNames(actor, c => c.mods?.autoHit);
+
 /** What the conditions on attacker and defender change: {attackerDice, attackerDiff, notes}. */
 export function conditionMods(attacker, target) {
     const c = chronicle()?.conditions;
@@ -2545,6 +2944,8 @@ export function conditionMods(attacker, target) {
         const tm = traitRoll(attacker, ["attack", "combat"]);
         if (tm.dice || tm.diff) { out.attackerDice += tm.dice; out.attackerDiff += tm.diff; out.notes = [...(out.notes ?? []), ...tm.parts.map(p => `${attacker.name}: ${p}`)]; }
     } catch (e) { /* no traits */ }
+    // B6787: unbalanced by a Tackle last turn: +1 difficulty to all actions (V20 Dark Ages p. 348)
+    if (R.offBalanceNow(attacker.getFlag?.(MOD, "offBalance"), game.combat)) { out.attackerDiff += 1; out.notes = [...(out.notes ?? []), `${attacker.name} is off balance after a tackle (+1 difficulty)`]; }
     // B4885: someone held as a shield by a WoDX NPC hostage-taker makes every attack on them 2 harder (house rule)
     try {
         const sh = shieldOf(target);
@@ -2598,7 +2999,11 @@ async function markFollow(actor, f) {
     if (!actor.isOwner) return requestGM({ action: "follow", uuid: actor.uuid, follow: f });
     if (f.lasts === "staked") return api?.conditions?.setCondition?.(actor, "staked", true);
     if (!api?.applyTimed) return;
-    const duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
+    let duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
+    // B6151: a knockdown lasts until the character stands (the roll at the start of each of their turns), not one turn
+    // B6787: a hold lasts until the victim breaks free (the resisted roll at the start of each of their turns)
+    if (f.lasts === "grip") duration = { kind: "scene" };
+    if (f.condition === "knockdown") { let roll = true; try { roll = !!setting("standUpRoll"); } catch (e) { roll = true; } duration = R.knockdownDuration({ inFight: !!game.combat?.started, standRoll: roll }); }
     await api.applyTimed(actor, { name: f.name, condition: f.condition, key: `wodx-${f.condition}`, duration, source: "V20 Dark Ages pp. 347–348" });
 }
 

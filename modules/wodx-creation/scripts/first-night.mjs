@@ -216,6 +216,7 @@ export async function gather(actor) {
     const mine = RV?.sidesOf?.(actor)?.own ?? [];
     src.rivals = mine.length ? R.enemiesOf(mine, year, RV.rules?.RIVALRIES ?? [], RV.rules) : [];
   } catch (e) { src.rivals = []; }
+  try { await C?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
   try { src.events = (C?.events?.list?.() ?? []).map(e => ({id: e.id, name: e.name, year: e.year, lines: e.lines, summary: e.summary, on: e.live !== false})); } catch (e) { src.events = []; }
   src.troupeLanguages = languagesCheck(actor);
   src.gear = await gearCheck(actor);

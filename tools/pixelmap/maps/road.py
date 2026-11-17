@@ -4,7 +4,7 @@ at the verge with a sack and casks on it, a felled trunk and a woodcutter's stac
 
     python3 tools/pixelmap/maps/road.py OUTDIR
 
-One of the sample maps for Ben's review before the larger map work (the Whole World desk)."""
+One of the sample maps for the owner's review before the larger map work (the Whole World desk)."""
 import math, os, sys
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.dirname(HERE))

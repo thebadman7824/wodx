@@ -12,8 +12,14 @@
  */
 import {PRESETS, originFaith} from "./routine-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
-import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
-import {CLAN} from "../../wodx-creation/data/people-haudenosaunee.mjs";
+import {FAMILY_FIRST} from "../../wodx-creation/data/people-order.mjs";
+/*
+ * The feminine forms of family names come with WoDX Creation's name lists, which load on first use (B6242): residents.mjs
+ * hands them over with useFeminine() before naming a household.
+ */
+let FEMININE = {};
+export function useFeminine(forms) { FEMININE = forms && typeof forms === "object" ? forms : {}; }
+import {CLAN} from "../../wodx-creation/data/people-order.mjs";
 
 /** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
 const CHILD = /^(ben|bat|ibn|bint|bin|binti) /;
@@ -216,10 +222,24 @@ export function kinFamily(house, p) {
  * Name a household's people. plans: planHousehold(); draw(index, {sex, trade}) returns a People generator person
  * ({sex, origin, given, family, name, ...}); index HOUSE_ROW is the household's own draw. rand: a seeded number
  * source for the partner's sex. The household's family name comes from a man's draw, so its male form is known and
- * each member takes the form for their sex; a partner is of the other sex nine times in ten (house reading).
+ * each member takes the form for their sex; a partner is of the other sex nine times in ten (house reading), nonbinary one time in a hundred (B6768).
  * Returns the people in order, each the drawn person with name and family set, plus its plan.
  */
 export const HOUSE_ROW = 31;
+/** How often a partner is of the same sex as the one they live with (house reading, kept by B6768). */
+export const SAME_SEX_PARTNER = 0.1;
+/**
+ * A partner's sex from one draw r (B6768): one in a hundred nonbinary, as the People generator draws anyone (B3503);
+ * of the rest, the same sex as the head of the house SAME_SEX_PARTNER of the time, else the other. A nonbinary head's
+ * partner is female or male, half and half. The draw is the one used before, so households drawn before keep theirs
+ * except in that one slice in a hundred.
+ */
+export function partnerSex(firstSex, r) {
+  if ( Math.abs(r - 0.45) < 0.005 ) return "nonbinary";
+  if ( firstSex !== "female" && firstSex !== "male" ) return r < 0.45 ? "female" : "male";
+  const other = firstSex === "female" ? "male" : "female";
+  return r < 1 - SAME_SEX_PARTNER ? other : firstSex;
+}
 /** Rows a retry steps by, so a retried draw never lands on another member's row. */
 export const RETRY_STEP = 100, RETRIES = 8;
 
@@ -274,7 +294,7 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0, region
   plans.forEach((plan, i) => {
     let p = first;
     if ( i > 0 ) {
-      const sex = plan.role === "partner" ? (rand() < 0.9 ? (first.sex === "female" ? "male" : "female") : first.sex) : "any";
+      const sex = plan.role === "partner" ? partnerSex(first.sex, rand()) : "any";
       // Kin of a Jewish household are Jewish, and kin of a Christian one are not (house reading of the Middle Ages to 1945)
       const sameFaith = o => !first.origin || !o || (o === "jewish") === (first.origin === "jewish") || (Number(year) >= 1946);
       // Before 1946 kin of a Jewish household are asked for by origin, since the generator draws few Jewish people
@@ -330,3 +350,35 @@ export const countPeople = (list, {again = false} = {}) => list.filter(h => agai
 
 /** Above this many people at once the Storyteller is warned (each is a sheet in the Actors list). */
 export const LARGE = 60;
+
+/**
+ * B6317: whom a household can serve, by the master's line (lines-rules.mjs keys): the bond it is made with and the
+ * words of the choice. Kindred keep ghouls (V20 Dark Ages, through WoDX Creation); the other lines keep the people
+ * their books give them, as the servant rules do (servant-rules KEEPERS): Kinfolk for the Garou and Fera (W20 pdf
+ * 140), a blood cult for a Kuei-jin, who cannot make ghouls (Kindred of the East pdf 11), thralls by pact for the
+ * Fallen (Demon: the Fallen pdf 161), a cult for a mummy (Mummy: the Resurrection), the enchanted for a changeling
+ * (C20 pdf 461), and conditioned agents for a mage of the Technocracy (M20 pdf 606).
+ */
+export const HOUSEHOLD_SERVES = {
+  vampire: {kind: "ghoul", words: "Ghouls of"},
+  "kuei-jin": {kind: "cult", words: "Blood cult of"},
+  werewolf: {kind: "kinfolk", words: "Kinfolk of"},
+  fera: {kind: "kinfolk", words: "Kinfolk of"},
+  demon: {kind: "pact", words: "Thralls of"},
+  mummy: {kind: "cult", words: "Cult of"},
+  changeling: {kind: "enchant", words: "Enchanted by"},
+  mage: {kind: "social", words: "Conditioned agents of", group: /technocra|union|order of reason|daedal|nephand/i}
+};
+/** The choice for one master: {kind, words} or null when its line keeps no household. group: the mage's Tradition or Convention. */
+export function householdServes(line, group = "") {
+  const r = HOUSEHOLD_SERVES[line];
+  if ( !r || (r.group && !r.group.test(String(group ?? ""))) ) return null;
+  return {kind: r.kind, words: r.words};
+}
+/** The select's value for a master and its parse: "kind:actorId". */
+export const servesValue = (kind, id) => `${kind}:${id}`;
+export function parseServes(v) {
+  const m = /^([a-z-]+):(.+)$/.exec(String(v ?? ""));
+  if ( !m ) return v ? {kind: "ghoul", id: String(v)} : null;
+  return {kind: m[1], id: m[2]};
+}

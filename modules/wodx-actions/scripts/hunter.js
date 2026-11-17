@@ -13,6 +13,7 @@
 
 import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import { spendTime } from "./spend-time.js";
 import * as H from "./hunter-rules.js";
 import * as P from "./profiles.js";
@@ -27,6 +28,9 @@ const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
 const ATTR = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
+/** B6362: the faiths a believer can keep, as WoDX Chronicle and WoDX Interactables name them. */
+const FAITH_NAMES = { western: "The Western church", orthodox: "The Orthodox church", islamic: "Islam", jewish: "The Jewish faith", hindu: "The Hindu faith",
+    theravada: "Buddhist (the south)", tibetan: "Buddhist (Tibet)", chinese: "The Chinese temples", own: "The people's own faith" };
 const attrOpts = sel => ATTR.map(a => `<option value="${a}" ${a === sel ? "selected" : ""}>${cap(a)}</option>`).join("");
 
 /** The rule line the chronicle's era and year call for. */
@@ -160,8 +164,10 @@ export function build(ctx) {
             if (fd.noroll) { const E = effectsOf(1); return post(actor, `${actor.name}: ${esc(name)}`, `<div class="vta-note">${cost} Conviction.${bk ? "" : " See Dark Ages: Inquisitor, Chapter Five, for its effect."}</div>${E.html}${await gain(1)}${bk ? `<div class="wodx-quiet">${IB.REF} p. ${bk.p}</div>` : ""}`, [], fxCard(E.items)); }
             const rating = fd.sv === "path" || fd.sv === "virtue" ? n(fd.rating) : i[fd.sv];
             const dice = attr(actor, fd.attr) + rating + risk;
-            const r = await rollPool(dice, fd.diff);
-            let body = rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : ""].filter(Boolean));
+            // B6662: the target's ward or Magic Resistance makes a Blessing on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(dice, Math.min(10, n(fd.diff) + n(rm.diff)));
+            let body = rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
             if (risk) {
                 const R = H.riskConviction(risk, r, after);
                 await actor.setFlag(MOD, "riskScene", sceneKey());
@@ -240,19 +246,26 @@ export function build(ctx) {
         const f = i.f, today = Math.floor(game.time.worldTime / DAY);
         if (f.prayerDay === today) return ctx.notify("Prayer renews Conviction once a day (Dark Ages: Inquisitor p. 160).");
         const run = f.prayerDay === today - 1 ? n(f.prayerRun) + 1 : 0;
-        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety} (prayer never raises it above Piety).${run ? ` Day ${run + 1} in a row: +${run} difficulty.` : ""}</p>
+        // B6362: holy ground on the map gives its own rating, and none when it is kept for another faith
+        const g = groundUnder(actor);
+        const gRating = g ? (g.own ? g.o.rating : 0) : null;
+        const gLine = g ? (g.own ? `Praying in ${g.name}${g.words ? `, kept for ${g.words}` : ""}: Holy Ground ${g.o.rating}.` : `${g.name} is kept for ${g.words || "another faith"}: it is no holy ground to them (Holy Ground 0).`) : "";
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety} (prayer never raises it above Piety).${run ? ` Day ${run + 1} in a row: +${run} difficulty.` : ""}</p>${gLine ? `<p class="vta-note">${esc(gLine)}</p>` : ""}
           <div class="form-group"><label>Where</label><select name="src" data-fixed><option value="ground">Holy Ground (its rating)</option><option value="relic">Over a Holy Relic</option><option value="flock">With their Flock</option></select></div>
-          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1}" min="0" max="5"/></div>
+          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${gRating ?? (ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1)}" min="0" max="5"/></div>
           <div class="form-group"><label>Hours of prayer</label><input type="number" name="hours" value="1" min="1" max="5"/></div>
           <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Prayer: ${actor.name}`, content, "Pray", async fd => {
             const diff = H.prayerDifficulty(n(fd.hours), run);
-            const r = await rollPool(n(fd.rating), diff);
+            // holy ground on the map is read, not typed: its rating, or none for a house of another faith
+            const rating = fd.src === "ground" && gRating !== null ? gRating : n(fd.rating);
+            fd.rating = rating;
+            const r = await rollPool(rating, diff);
             const to = H.convictionGain(i.conviction, r.botch ? 0 : r.successes, i.piety);
             await setConviction(actor, to);
             await setInq(actor, { prayerDay: today, prayerRun: run });
             const tnote = fd.advance ? await spendTime(actor, n(fd.hours) * 3600, "prayer") : "";
-            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
+            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
         });
     }
 
@@ -311,17 +324,50 @@ export function build(ctx) {
         if (isInquisitor(actor)) return H.STAGE_FAITH[stage(inq(actor))];
         return n(actor.getFlag(MOD, "trueFaith"));
     }
-    /** B5170: on holy ground the faithful's Faith counts one higher (WoDX Chronicle's feature for Mortals with True Faith). */
+    /**
+     * B6362: the faith a believer keeps: the one set in the True Faith window, else an inquisitor's Western church
+     * (V20 Dark Ages), else none named (any house of worship counts as theirs).
+     */
+    function believerFaith(actor) {
+        const f = actor?.getFlag?.(MOD, "faith");
+        if (f) return f;
+        return isInquisitor(actor) ? "western" : null;
+    }
+    /**
+     * B6362: the holy ground under the actor's token (an altar or shrine tile, or a church, mosque, synagogue or temple
+     * on the map), with whether it is kept for their own faith. -> {o, own, words} or null
+     */
+    function groundUnder(actor) {
+        try {
+            const ix = game.modules.get("wodx-interactables")?.api;
+            const tok = actor.getActiveTokens?.()[0]?.document;
+            const h = tok ? ix?.holyUnder?.(tok) : null;
+            if (!h) return null;
+            const own = ix.rules?.sameFaith ? ix.rules.sameFaith(h.o.faith, believerFaith(actor)) : true;
+            const words = h.o.faith ? ix.rules?.FAITH_WORDS?.[h.o.faith] ?? h.o.faith : "";
+            return { o: h.o, own, words, name: h.o.title || h.o.house || "holy ground" };
+        } catch (e) { return null; }
+    }
+    /**
+     * B5170: on holy ground the faithful's Faith counts one higher (WoDX Chronicle's feature for Mortals with True Faith).
+     * B6362: only on ground kept for their own faith.
+     */
     function onHoly(actor) {
         try {
-            if (!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(r => r.key === "faithful")) return false;
-            const tok = actor.getActiveTokens?.()[0]?.document;
-            return !!(tok && game.modules.get("wodx-interactables")?.api?.holyUnder?.(tok));
-        } catch (e) { return false; }
+            if (!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(r => r.key === "faithful")) return null;
+            return groundUnder(actor);
+        } catch (e) { return null; }
     }
     function faithOf(actor) {
         const f = baseFaith(actor);
-        return f > 0 && onHoly(actor) ? Math.min(10, f + 1) : f;
+        return f > 0 && onHoly(actor)?.own ? Math.min(10, f + 1) : f;
+    }
+    /** The line on the True Faith window and card about the holy ground they stand on. */
+    function holyNote(actor) {
+        const g = onHoly(actor);
+        if (!g || !baseFaith(actor)) return "";
+        return g.own ? ` (one higher on holy ground: ${g.name}${g.words ? `, kept for ${g.words}` : ""})`
+            : ` (${g.name} is kept for ${g.words || "another faith"}, not theirs: no higher here)`;
     }
 
     async function trueFaith(actor) {
@@ -330,13 +376,19 @@ export function build(ctx) {
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const tw = tgt ? (rules === "da20" ? n(tgt.system?.advantages?.willpower?.temporary) : n(tgt.system?.advantages?.willpower?.permanent)) : 0;
         const powers = H.faithPowers(rules, rating);
-        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${rating > baseFaith(actor) ? " (one higher on holy ground)" : ""}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${esc(holyNote(actor))}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
           <ul class="wodx-quiet">${powers.map(([k, t]) => `<li>${k ? "•".repeat(k) : "Always"}: ${esc(t)}</li>`).join("")}</ul>
-          <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
+          <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="presence">Their presence (Faith 2 and 5: no cost)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
           <div class="form-group"><label>Creature's Willpower / the power's successes</label><input type="number" name="cw" value="${tw || 6}" min="1" max="10" style="width:4em"/> <input type="number" name="ps" value="0" min="0" style="width:4em"/> <label><input type="checkbox" name="daim"/> Daimoinon</label></div>
-          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${rating}" min="0" max="5"/></div></form>`;
+          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${rating}" min="0" max="5"/></div>
+          <div class="form-group"><label>Their faith (for holy ground)</label><select name="faith" data-fixed><option value="">${isInquisitor(actor) ? "The Western church (an inquisitor)" : "Not named (any house of worship)"}</option>${Object.entries(FAITH_NAMES).map(([k, v]) => `<option value="${k}"${actor.getFlag(MOD, "faith") === k ? " selected" : ""}>${esc(v)}</option>`).join("")}</select></div></form>`;
         return dialog(`True Faith: ${actor.name}`, content, "Go", async fd => {
+            if ((fd.faith ?? "") !== (actor.getFlag(MOD, "faith") ?? "")) {
+                if (fd.faith) await ctx.setFlag(actor, "faith", fd.faith); else await actor.unsetFlag(MOD, "faith");
+            }
             if (fd.k === "set") { await ctx.setFlag(actor, "trueFaith", n(fd.rating)); return post(actor, `${actor.name}`, `<div class="vta-note">True Faith ${fd.rating}: ${n(fd.rating)} extra Willpower dot${n(fd.rating) === 1 ? "" : "s"} (add them on the sheet).</div>`); }
+            const rating = faithOf(actor); // B6362: their faith may have just been set
+            const hn = holyNote(actor), hb = hn ? `<div class="vta-note">True Faith ${rating}${esc(hn)}.</div>` : "";
             if (!rating) return ctx.notify(`${actor.name} has no True Faith.`);
             if (fd.k === "loss") {
                 const r = await rollPool(virtues(actor).conscience.value, H.FAITH_LOSS_DIFFICULTY);
@@ -344,6 +396,14 @@ export function build(ctx) {
                 const base = baseFaith(actor);
                 if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": base - 1 }); else await ctx.setFlag(actor, "trueFaith", base - 1); }
                 return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${base} → ${base - 1}.` : "The faith holds."}</div>`, [r.roll]);
+            }
+            // B6858: the passive lines of the faith on the effects card: a sense of the unnatural, and holy dread at Faith 5
+            if (fd.k === "presence") {
+                const res = H.faithPresence(rules, rating);
+                if (!res.length) return ctx.notify(`True Faith ${rating}: nothing to put on the table below Faith 2.`);
+                const pp = EF.isOn() ? EF.planOf(actor, res, rating) : { html: "", items: [] };
+                const items = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                return post(actor, `${actor.name}: the presence of faith`, hb + pp.html, [], items.length ? { kind: "effects", caster: actor.name, items } : undefined);
             }
             if (!(await spendWillpower(actor, 1))) return null;
             if (fd.k === "repel") {
@@ -354,10 +414,11 @@ export function build(ctx) {
                     const pp = EF.planOf(actor, H.repelResults(rules, r.successes, { source: rules === "da20" ? "V20 Dark Ages p. 394" : "The Hunters Hunted II p. 84" }), Math.max(1, r.successes));
                     fxb = pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
-                return post(actor, `${actor.name} holds up their faith`, rollBlock(`True Faith (${rating})`, r, ["1 Willpower"]) + `<div class="vta-res ${R.held ? "good" : "bad"}">${esc(R.text)}</div>${fxb}`, [r.roll], fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+                return post(actor, `${actor.name} holds up their faith`, rollBlock(`True Faith (${rating})`, r, ["1 Willpower"]) + hb + `<div class="vta-res ${R.held ? "good" : "bad"}">${esc(R.text)}</div>${fxb}`, [r.roll], fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
             }
             let fs = 0, rolls = [], body = "";
             if (rules === "hh2") { const r = await rollPool(rating, 7); fs = r.botch ? 0 : r.successes; rolls.push(r.roll); body = rollBlock(`True Faith (${rating})`, r, ["1 Willpower"]); }
+            body += hb;
             const left = H.faithResist(rules, rating, n(fd.ps), { daimoinon: !!fd.daim, faithSuccesses: fs });
             body += `<div class="vta-res ${left ? "" : "good"}">The power keeps ${left} success${left === 1 ? "" : "es"}${left ? "" : ": it fails against them"}.</div>`;
             return post(actor, `${actor.name}: faith against the power`, body, rolls);
@@ -400,11 +461,13 @@ export function build(ctx) {
             if (!def) return post(actor, `${actor.name}: ${esc(item?.name ?? "a Numen")}`, `<div class="vta-note">Roll it by hand (not in the library).</div>`);
             const [a, b] = def.pool;
             const dice = attr(actor, a) + (findAbility(actor, b)?.value ?? 0);
-            const r = await rollPool(dice, n(fd.diff) + lim.diff);
+            // B6662: the target's ward or Magic Resistance makes a Numen or edge on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const fx = !r.botch && r.successes > 0 && EF.isOn() ? EF.numinaPlan(actor, pickV(String(fd.nm ?? "")).key, n(fd.lvl), r.successes, def) : null;
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
-            return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, n(fd.wp) ? [`${fd.wp} Willpower`] : []) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
+            return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, [...(n(fd.wp) ? [`${fd.wp} Willpower`] : []), ...rm.parts]) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
                 fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=nm]")?.addEventListener("change", () => describe(root));
             // Who it is aimed at: curses and pyrokinesis at a foe, healing at a friend, the rest by its tag (3.43.0)
@@ -456,10 +519,12 @@ export function build(ctx) {
             if (cost && !(await spendWillpower(actor, cost))) return null;
             const [a, b] = def.pool;
             if (!a) return post(actor, `${actor.name}: ${esc(def.label)}`, `<div class="vta-note">Difficulty ${S.difficulty + n(fd.mod)}, ${S.need} success${S.need === 1 ? "" : "es"} needed; the roll is on p. ${def.p}.</div>`);
-            const r = await rollPool(statOf(a) + statOf(b), S.difficulty + n(fd.mod) + lim.diff, { willpower: !!fd.wpx });
+            // B6662: the target's ward or Magic Resistance makes hedge magic on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            const r = await rollPool(statOf(a) + statOf(b), Math.min(10, S.difficulty + n(fd.mod) + lim.diff + n(rm.diff)), { willpower: !!fd.wpx });
             const s = r.botch ? 0 : r.successes, ok = s >= S.need;
             await lim.done({ successes: ok ? s : 0 });
-            let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));
+            let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", ...rm.parts,S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));
             body += `<div class="vta-res ${ok ? "good" : "bad"}">${r.botch ? "A botch: the magic slips its leash (see the page's price of failure)." : ok ? `It works (${s} of ${S.need} needed)${H.pushAspect(s, S.need) ? "; doubled: the Storyteller may let one aspect go a level higher" : ""}.` : `${s} of ${S.need} needed: not yet (an extended casting can go on).`}</div>`;
             body += `<div class="vta-note">${fd.mode === "ritual" ? `${esc(ritual?.name ?? "A ritual")}: at least 10 minutes, usually longer.` : `Casting time ${S.turns} turn${S.turns === 1 ? "" : "s"}.`}${S.overLimit ? " <b>An aspect is above the Path rating.</b>" : ""}</div><div class="wodx-quiet">Sorcerer (Revised) pp. 60–63, ${def.p}</div>`;
             let fxItems = [];

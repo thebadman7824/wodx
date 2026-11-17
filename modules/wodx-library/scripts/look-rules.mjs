@@ -168,7 +168,7 @@ export function sceneStep(look, {mortal = true} = {}) {
   return {delta: 0, names: []};
 }
 
-/** Traits and look together: each held to two steps, the two together to three (Ben, 2026-11-12). */
+/** Traits and look together: each held to two steps, the two together to three (the owner, 2026-11-12). */
 export const COMBINED_CAP = 3;
 export const combine = (traits = 0, look = 0) => Math.max(-COMBINED_CAP, Math.min(COMBINED_CAP, num(traits) + num(look)));
 

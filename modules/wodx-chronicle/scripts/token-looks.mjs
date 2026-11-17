@@ -22,7 +22,7 @@ const has = (token, id) => !!token?.actor?.statuses?.has?.(STATUS_PREFIX + id);
 /** The looks a token has now, for this viewer. */
 export function looksOf(token) {
   const out = [];
-  for ( const [id, look] of Object.entries(R.CONDITION_LOOKS) ) if ( has(token, id) ) out.push(look);
+  for ( const [id, look] of Object.entries(R.CONDITION_LOOKS) ) if ( R.conditionOn(id, {hasStatus: has(token, id), system: token?.actor?.system}) ) out.push(look);
   for ( const fn of lookers.values() ) { try { const l = fn(token); if ( l ) out.push(l); } catch (e) { /* a broken look shows nothing */ } }
   return R.combine(out, fxLevel());
 }

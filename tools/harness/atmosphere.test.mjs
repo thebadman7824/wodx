@@ -259,3 +259,14 @@ test("template: the group's name, and a plan that never makes a second copy", ()
   assert.deepEqual(again, {rules: "update", sessionZero: "keep", screen: "keep", primer: "update", group: "keep"});
   for ( const id of Setup.WODX_MODULES ) assert.ok(existsSync(join(root, "modules", id, "module.json")), id);
 });
+
+test("light from the clock: an outdoor scene nobody ticked follows it; an untick keeps its own light (B6168)", () => {
+  const s = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
+  const body = /export function followsClock\(scene\) \{([\s\S]*?)\n\}/.exec(s)[1];
+  const follows = new Function("MOD", "isOutdoor", `return scene => {${body}}`)("wodx-atmosphere", sc => sc.out === true);
+  assert.equal(follows({out: true, flags: {}}), true, "built street, never ticked");
+  assert.equal(follows({out: false, flags: {}}), false, "indoors, never ticked");
+  assert.equal(follows({out: true, flags: {"wodx-atmosphere": {followClock: false}}}), false, "the Storyteller unticked it");
+  assert.equal(follows({out: false, flags: {"wodx-atmosphere": {followClock: true}}}), true, "ticked by hand");
+  assert.match(s, /!setting\("lightFromClock"\) \|\| !followsClock\(scene\)/);
+});

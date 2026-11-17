@@ -7,6 +7,7 @@
  */
 import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
@@ -496,12 +497,13 @@ export function build(ctx) {
         if (!list.length) return ctx.notify(`${actor.name} knows no Gifts. Use "Learn a Gift" first.`);
         let tgt = targetActorOf();
         const rows = list.map(it => { const g = giftData(it); return [it.id, `${it.name}${g ? ` (${g.l})` : ""}`]; });
-        const content = `<form class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
+        // B6448: a div, not a form: the dialog wraps the content in its own form, and a form inside a form is dropped
+        const content = `<div class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
           <div class="form-group"><label>Gift</label>${rows.length > 5 ? searchBox("select[name=gift]", "Search Gifts…", "Search Gifts") : ""}<select name="gift" data-fixed>${rows.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-gift-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6"/></div>
           <div class="form-group"><label>Extra points (variable costs)</label><input type="number" name="extra" value="0" min="0"/></div>
-          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></form>`;
+          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></div>`;
         const i = info(actor);
         let gauntlet = null;
         try {
@@ -540,10 +542,12 @@ export function build(ctx) {
             const code = g?.r ?? (it.system?.dice1 ? `${it.system.dice1}${it.system.dice2 ? `+${it.system.dice2}` : ""}` : null);
             if (code) {
                 const pool = poolOf(actor, code, i);
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + lim.diff);
+                // B6411: the target's ward or Magic Resistance makes a Gift on them harder
+                const rm = TH.targetResist(actor, ["magic"]);
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
@@ -573,13 +577,13 @@ export function build(ctx) {
     async function learnGift(actor) {
         const i = info(actor);
         const known = new Set(giftItems(actor).map(it => it.name.toLowerCase()));
-        const rankCap = Math.max(1, i.rank);
+        const rankCap = G.giftTerms(1, false, i).cap; // B6729: a Skin Dancer learns level one only
         // A Fera learns its own breed's Gifts as well as the shared list (B3756)
         const pool = i.feraKey && i.feraKey !== "Garou" ? [...feraGifts().filter(g => g.breed === i.feraKey), ...gifts()] : gifts();
-        const ownOf = g => g.breed ? g.breed === i.feraKey : G.giftIsOwn(g, i);
+        const ownOf = g => g.breed ? G.feraGiftIsOwn(g, i) : G.giftIsOwn(g, i);
         const rows = pool.filter(g => !known.has(g.n.toLowerCase())).map(g => {
-            const own = ownOf(g);
-            return { g, own, ok: g.l <= rankCap, xp: G.giftXP(g.l, own) };
+            const t = G.giftTerms(g.l, ownOf(g), i);
+            return { g, own: t.own, ok: g.l <= rankCap, xp: t.xp };
         }).sort((a, b) => (b.own - a.own) || (a.g.l - b.g.l) || a.g.n.localeCompare(b.g.n));
         const groupsTxt = g => g.breed ? [g.breed, g.sub].filter(Boolean).join(", ") : (g.g ?? []).map(cap).join(", ").replace(/-/g, " ");
         const content = `<form class="wodx-learn"><p><b>${esc(actor.name)}</b>: ${esc(cap(i.breed))}, ${esc(cap(i.auspice) || "no auspice")}, ${esc(cap(i.tribe).replace(/-/g, " ") || "no tribe")}; Rank ${i.rank} (Gifts up to level ${rankCap}, DA:W p. 111).</p>
@@ -587,10 +591,19 @@ export function build(ctx) {
           <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}): ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
           <div class="form-group"><label>Spend experience through the log</label><input type="checkbox" name="xp" checked/></div>
           ${spiritApi() ? `<p class="vta-note">The spirits: ${esc((spiritApi().rules.summary(spiritApi().of(actor)).join("; ")) || "no court knows this one yet")}. Standing changes the difficulty to summon the teacher; a scorned court may refuse to teach.</p>` : ""}
-          <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).</p></form>`;
+          <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).${G.isSkinDancer(i.tribe) ? " A Skin Dancer pays level × 7 for every Gift and learns level one only (W20 p. 199)." : ""}</p></form>`;
         return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
             const g = pool.find(x => x.id === fd.gift); if (!g) return null;
-            const own = ownOf(g), xp = G.giftXP(g.l, own);
+            const { own, xp } = G.giftTerms(g.l, ownOf(g), i); // B6729: Skin Dancers pay level x 7
+            // B6274: with WoDX Creation, a Gift is bought like any other trait: the chart of the line, a spirit or a
+            // Garou to teach it, and it is known when the study is done (or at once when the Storyteller waives it)
+            const cr = game.modules.get("wodx-creation")?.api;
+            if (fd.xp && cr?.data?.newPowerOption && cr?.xp?.requestSpend) {
+                const option = cr.data.newPowerOption(actor, "gift", g.n, { own, level: g.l, item: giftItem(g) });
+                if (!option) return null;
+                if (!option.ok) { ui.notifications.warn(option.reason); return null; }
+                return cr.xp.requestSpend(actor, option);
+            }
             await actor.createEmbeddedDocuments("Item", [giftItem(g)]);
             let xpNote = "";
             if (fd.xp) {
@@ -715,7 +728,7 @@ export function build(ctx) {
             const gn = Math.max(2, Math.min(10, n(it.system?.gnosis) || 6));
             const talen = fd.talen || !!it.getFlag?.(MOD, "talen") || it.system?.type === "wod.types.talen";
             if (it.getFlag?.(MOD, "spent")) { ctx.notify(`${it.name} is spent: its spirit has gone.`); return null; }
-            let body = "", rolls = [], woke = false;
+            let body = "", rolls = [], woke = false, lastHits = 0;
             if (fd.how === "spend") {
                 const note = await pay(actor, "gnosis", 1); if (note === false) return null;
                 woke = true;
@@ -725,10 +738,19 @@ export function build(ctx) {
                 const rr = await rollPool(effectiveGnosis(actor), gn);
                 rolls.push(rr.roll);
                 body += rollBlock("Gnosis", rr, [`difficulty ${gn}`, ...(sp ? [`${sp} less for silver carried`] : [])]);
+                lastHits = rr.successes;
                 if (rr.successes > 0) {
                     if (fd.how === "attune") { await it.setFlag?.(MOD, "attuned", true); body += `<div class="vta-big good">Attuned (and dedicated).</div>`; }
                     else { woke = true; body += `<div class="vta-big good">It wakes.</div>`; }
                 } else body += `<div class="vta-note">${fd.how === "attune" ? "Rejected: no new attempt until the Garou makes peace with the spirit." : "It stays silent."}</div>`;
+            }
+            // B6737: a woken fetish puts its keywords on the effects card, as a Gift does; the spend counts one success (B3751)
+            let fxItems = [];
+            const wk = it.getFlag?.("wodx-library", "wonder")?.key || it.name;
+            if (woke && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "fetish", id: wk, name: it.name, successes: fd.how === "spend" ? 1 : lastHits, source: it.system?.reference || "", noRoll: fd.how === "spend", world: "Werewolf (fetish)" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             body += await markTurn(actor, "gnosis");
             if (talen && woke) {
@@ -736,7 +758,7 @@ export function build(ctx) {
                 await it.setFlag?.(MOD, "spent", true);
                 body += `<div class="vta-note">The talen is spent; its spirit goes free. It stays on the sheet marked spent until someone removes it.</div>`;
             }
-            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean));
+            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         });
     }
 
@@ -943,6 +965,21 @@ export function build(ctx) {
         return lines;
     }
 
+    /**
+     * A new story (B6303): each shapechanger's Rage is rolled afresh on one die, up to the permanent rating
+     * (DA:W p. 91; W20 p. 145). Fera whose Rage does not come from the moon, or who have none, are left alone.
+     * Returns a line for the end-of-story card, or "".
+     */
+    async function newStory(a) {
+        if (!a || !isShifter(a) || !setting("moonRage")) return "";
+        const i = info(a);
+        if (i.fera?.rage === false || (i.fera?.rageAt && i.fera.rageAt !== "moon") || i.rage.perm <= 0) return "";
+        const r = await new Roll("1d10").evaluate();
+        const to = G.newStoryRage(r.total, i.rage.perm);
+        if (to !== i.rage.temp) await a.update({ "system.advantages.rage.temporary": to });
+        return `${a.name}: Rage rolled for the new story (${r.total}): ${i.rage.temp} → ${to} (${basis() === "daw" ? "DA:W p. 91" : "W20 p. 145"})`;
+    }
+
     /** Each new round (active GM): shapechangers in the fight regenerate. */
     async function regenRound(combat) {
         if (!isActiveGM() || !setting("autoRegen")) return [];
@@ -995,7 +1032,7 @@ export function build(ctx) {
             set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
     }
     return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
-        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, regenRound, embracePain, onChatButton, setForm, info };
+        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
 }
 
 /** Settings this part adds (registered by main.js). */

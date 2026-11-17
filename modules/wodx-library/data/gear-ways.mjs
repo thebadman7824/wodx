@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.21.0: gear by region (the global rule, Ben 2026-11-12; B3070 to B3073).
+ * WoDX Library 0.21.0: gear by region (the global rule, the owner 2026-11-12; B3070 to B3073).
  *
  * Gear by era came from the books of Europe and North America, so a Dark Ages draw in Tenochtitlan could turn up a
  * crossbow and plate, and one in Kyoto never a katana. Here each piece of gear can say where it is at home, in the
@@ -42,7 +42,6 @@ export const GEAR_WAYS = {
   Warhammer: OLD_WORLD, "War Hammer": OLD_WORLD, Flail: OLD_WORLD, "Flail, Spiked": OLD_WORLD,
   "Pick Ax": OLD_WORLD, Mattock: OLD_WORLD, Pitchfork: OLD_WORLD, "Field Fork": OLD_WORLD, "Smith's Hammer": OLD_WORLD,
   Tankard: OLD_WORLD, Candlestick: OLD_WORLD, "Cat-o'-nine-tails": OLD_WORLD, Whip: OLD_WORLD,
-  "Parry with Sword": OLD_WORLD,
   // The swords of other lands the Sorcerers Crusade names
   Katana: {japanese: null, "*": false}, Kris: {malay: null, "*": false}, Katar: {indic: null, "*": false},
   "Tiger Claws": {indic: null, "*": false}, Scimitar: CURVED,

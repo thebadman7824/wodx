@@ -6,7 +6,8 @@
  *   1. api.law is there
  *   2. the record for a homeland scene is the rules' record for the homeland and the year
  *   3. a scene in another region reads that region's law (Cairo: the stand-in until the Islamic family is written)
- *   4. the Law here card is whispered and names who rules
+ *   4. the Law here card is whispered and names who rules, and a character with Streetwise 3 is told more of the law
+ *      (more sections, Crimes on the books among them) than one with no Law, Politics or Streetwise
  *   5. a clock jump note lists what changed (lawYear set back a century, then restored)
  *   6. the Law here button is in the token controls
  *   7. every other WoDX module still answers
@@ -26,7 +27,7 @@ export async function run() {
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
   if ( game.world.id === "rothenstein-live" ) return "Not on the Live world.";
   const ch = () => game.modules.get("wodx-chronicle")?.api;
-  const scenes = [], msgsBefore = new Set(game.messages.map(m => m.id));
+  const scenes = [], actors = [], msgsBefore = new Set(game.messages.map(m => m.id));
   const t0 = game.time.worldTime, seen0 = game.settings.get("wodx-chronicle", "lawYear");
   try {
     const made = await Scene.create([{name: "WoDX gate law: Brno", width: 1000, height: 1000, padding: 0}, {name: "WoDX gate law: Cairo", width: 1000, height: 1000, padding: 0}]);
@@ -50,10 +51,27 @@ export async function run() {
       ok("a scene abroad reads its own region", got.region === "egypt" && (got.family !== "custom" || got.guess === true), {family: got.family, guess: got.guess});
     });
     await step("the Law here card is whispered", async () => {
-      const before = game.messages.size;
+      // what the card tells, read as text: the record's ruler, and the sections a character's dots open
+      const text = m => { const d = document.createElement("div"); d.innerHTML = m?.content ?? ""; return d.textContent ?? ""; };
+      const sections = m => (String(m?.content ?? "").match(/<p><strong>/g) ?? []).length;
+      const ruler = ch().law.here(brno, year).rule.ruler;
+      let since = Date.now();
       await ch().law.card({scene: brno, full: true});
-      const m = newestMessage();
-      ok("the Law here card is whispered", game.messages.size === before + 1 && /Law here/.test(m?.content ?? "") && m?.whisper?.includes(game.user.id), {});
+      const full = newestMessage(since, m => /Law here/.test(m.content ?? ""));
+      // one at a time, so each is known by its own call
+      const plain = await Actor.create({name: "WoDX gate law: Plain", type: "Mortal"});
+      const wise = await Actor.create({name: "WoDX gate law: Streetwise", type: "Mortal"});
+      actors.push(plain, wise);
+      await wise.update({"system.abilities.streetwise.value": 3});
+      since = Date.now();
+      await ch().law.card({scene: brno, actor: plain, full: false});
+      const low = newestMessage(since, m => /Law here/.test(m.content ?? ""));
+      since = Date.now();
+      await ch().law.card({scene: brno, actor: wise, full: false});
+      const high = newestMessage(since, m => /Law here/.test(m.content ?? "") && m.id !== low?.id);
+      ok("the Law here card is whispered", !!full && full.whisper?.includes(game.user.id) && !!ruler && text(full).includes(ruler)
+        && sections(high) > sections(low) && /Crimes on the books/.test(high?.content ?? "") && !/Crimes on the books/.test(low?.content ?? ""),
+        {ruler, plain: sections(low), streetwise: sections(high), dots: ch().law.lawDots(wise)});
     });
     await step("a clock jump note lists what changed", async () => {
       await game.settings.set("wodx-chronicle", "lawYear", Math.max(1, year - 100));
@@ -78,6 +96,7 @@ export async function run() {
   } finally {
     try { const mine = game.messages.filter(m => !msgsBefore.has(m.id)).map(m => m.id); if ( mine.length ) await ChatMessage.deleteDocuments(mine); } catch (e) { R.errors.push(`cleanup messages: ${e.message}`); }
     try { await game.settings.set("wodx-chronicle", "lawYear", seen0); } catch (e) { R.errors.push(`restore lawYear: ${e.message}`); }
+    try { if ( actors.length ) await Actor.deleteDocuments(actors.filter(Boolean).map(a => a.id)); } catch (e) { R.errors.push(`cleanup actors: ${e.message}`); }
     try { if ( scenes.length ) await Scene.deleteDocuments(scenes.filter(Boolean).map(s => s.id)); } catch (e) { R.errors.push(`cleanup scenes: ${e.message}`); }
     if ( game.time.worldTime !== t0 ) R.errors.push("the clock moved");
   }

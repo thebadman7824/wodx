@@ -147,7 +147,7 @@ test("cults: the Foundry side is wired, off by default, and players act by socke
   assert.match(main, /buildCults\(/); assert.match(main, /cults\.registerSettings\(\)/); assert.match(main, /cults\.registerHandler\(\)/);
   assert.match(main, /openCults: cults\.open/); assert.match(main, /tokens\.tools\.wodxCults/);
   assert.match(cults, /"cultsOn", \{[^}]*default: false/);
-  for ( const h of ["createChatMessage", "wodxPowerShown", "wodxBreach", "wodxFed", "wodxSocial", "wodxSkipEnd", "updateWorldTime"] ) assert.match(cults, new RegExp(`Hooks\\.on\\("${h}"`), h);
+  for ( const h of ["createChatMessage", "wodxPowerShown", "wodxBreach", "wodxFed", "wodxSocial", "wodxSkipEnd", "updateWorldTime"] ) assert.match(cults, new RegExp(`(Hooks\\.on|onPlayerHook)\\("${h}"`), h); // B6760: player-fired hooks go through the relay
   for ( const t of ["cult.preach", "cult.gather", "cult.ask"] ) assert.match(cults, new RegExp(`"${t.replace(".", "\\.")}"`), t);
   assert.match(cults, /Hooks\.callAll\("wodxCultNoticed"/);
   assert.match(cults, /testUserPermission\(u, "OWNER"\)/, "a player acts only for their own character");

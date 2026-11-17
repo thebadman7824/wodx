@@ -9,6 +9,8 @@
  *   3. a drink from the domitor starts the month again and brings the colour back
  *   4. an animal long past its span with no vitae left turns to dust and fades
  *   5. WoDX NPC: a Storyteller's hound that botches its craving goes for the nearest person
+ *   6. at the world's default settings (Clan features off): a ghoul a month unfed, with its domitor on the active
+ *      scene, is offered the feeding by its monthly check; approved, a blood point passes (B4983, B6160)
  * Covers WoDX Chronicle (the need) and WoDX NPC (the craving).
  * Result: Data/wodx-gate/gateghoulneed-result.json.
  */
@@ -78,6 +80,31 @@ export async function run() {
       const near = () => Math.max(Math.abs(t2.x - tp.x), Math.abs(t2.y - tp.y)) <= g;
       for ( let i = 0; i < 40 && !near(); i++ ) await new Promise(r => setTimeout(r, 100));
       G.ok("5. a craving botch goes for the nearest person", near(), {hound: [t2.x, t2.y], prey: [tp.x, tp.y]});
+    });
+
+    await G.step("6. the domitor's feeding at the default settings", async () => {
+      const AP = game.modules.get(MOD)?.api?.approvals, T = `${MOD}.sigGhoulFeed`;
+      const SIGS = ["sigVampire", "sigWerewolf", "sigMage", "sigChangeling", "sigWraith"];
+      const was = Object.fromEntries([...SIGS, "autoApprove"].map(k => [k, foundry.utils.deepClone(game.settings.get(MOD, k))]));
+      try {
+        for ( const k of SIGS ) await game.settings.set(MOD, k, false);
+        // a standing rule would approve it on sight: set it aside so the queue is what is tested
+        const auto = foundry.utils.deepClone(was.autoApprove ?? {}); delete auto[T];
+        await game.settings.set(MOD, "autoApprove", auto);
+        const [ghoul, dom] = await G.make(Actor, [{name: "Gate Ghoul Need Fed One", type: "Mortal"}, {name: "Gate Ghoul Need Feeder", type: "Vampire"}]);
+        await C().giveVitae(ghoul, dom, {points: 2});
+        await dom.update({"system.advantages.bloodpool.temporary": 6});
+        if ( !scene.active ) await scene.activate();
+        await G.tokens(scene, [{actor: ghoul, x: 6, y: 5}, {actor: dom, x: 7, y: 5}]);
+        await setBack(ghoul, 1);
+        const blood = pool(ghoul);
+        await N().check(ghoul);
+        const p = AP?.pending?.().find(x => x.type === T && x.data?.ghoul === ghoul.id);
+        if ( p ) await AP.decide(p.id, "approve");
+        for ( let i = 0; i < 30 && Number(dom.system.advantages.bloodpool.temporary) !== 5; i++ ) await new Promise(r => setTimeout(r, 100));
+        G.ok("6. the domitor's feeding at the default settings", !!p && Number(dom.system.advantages.bloodpool.temporary) === 5 && pool(ghoul) === blood,
+          {asked: !!p, domBlood: dom.system.advantages.bloodpool.temporary, before: blood, after: pool(ghoul), lineage: ghoul.flags?.["wodx-creation"]?.lineage ?? null});
+      } finally { for ( const [k, v] of Object.entries(was) ) await game.settings.set(MOD, k, v); }
     });
   } finally {
     return G.finish();

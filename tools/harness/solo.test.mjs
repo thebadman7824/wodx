@@ -194,11 +194,12 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
 
 /* WoDX Solo 0.2.0: the player's panel (B2640 to B2644) */
 
-test("the panel holds step 2's and step 3's buttons and nothing of the Storyteller's", () => {
-  assert.deepEqual(R.PANEL.map(b => b.id), ["oracle", "leads", "time", "travel", "places", "pause", "stuck", "curtain", "carry"]);
+test("the panel holds the steps' buttons and nothing of the Storyteller's", () => {
+  assert.deepEqual(R.PANEL.map(b => b.id), ["oracle", "leads", "time", "travel", "places", "years", "pause", "stuck", "curtain", "report", "carry", "options"]);
   // B5980, B5982: the oracle's and the Leads page's actions live in world.mjs
   // B6040: places with no map live in card.mjs
-  const src = ["panel.mjs", "world.mjs", "card.mjs"].map(f => readFileSync(join(root, "modules/wodx-solo/scripts", f), "utf8")).join("\n");
+  // B6533: sleep through the years lives in fate.mjs; B7160: report a problem in report.mjs
+  const src = ["panel.mjs", "world.mjs", "card.mjs", "fate.mjs", "report.mjs"].map(f => readFileSync(join(root, "modules/wodx-solo/scripts", f), "utf8")).join("\n");
   for ( const b of R.PANEL ) assert.ok(new RegExp(`\\b${b.id}\\(\\)`).test(src), `no action for ${b.id}`);
 });
 
@@ -500,4 +501,19 @@ test("arrival.mjs: the seat makes the character, assigns it, places its token an
   assert.ok(guide.indexOf("soloWaits()") < guide.indexOf("put({offered: true})"), "the tour is not marked offered before the token is there");
   const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
   assert.ok(panel.includes("ARRIVE_UI.html?.()") && panel.includes("arrive: () => ARRIVE_UI.open?.()"), "the panel offers Make my character");
+});
+
+test("arrival: Foundry's welcome scene is never the landing and always gives way; a default owner is nobody's (B5146, B5147)", () => {
+  const core = {id: "NUEDEFAULTSCENE0", name: "Foundry Virtual Tabletop", img: "nue/defaultscene/fvtt-background.webp", active: true};
+  const ferry = {id: "f", name: "Toll-post and Ivo's Ferry", img: "ferry.webp"};
+  assert.equal(R.isCoreScene(core), true);
+  assert.equal(R.pickLanding([core]), null);
+  assert.equal(R.pickLanding([core, ferry], "f"), "f");
+  assert.equal(R.mayReplaceActive(core), true);
+  assert.equal(R.mayReplaceActive(null), true);
+  assert.equal(R.mayReplaceActive({id: "x", img: ""}), true);
+  assert.equal(R.mayReplaceActive(ferry), false, "a map made active by the Storyteller stays");
+  assert.equal(R.ownsByName({default: 3}, "p1"), false);
+  assert.equal(R.ownsByName({default: 0, p1: 3}, "p1"), true);
+  assert.equal(R.ownsByName({p1: 2}, "p1"), false);
 });

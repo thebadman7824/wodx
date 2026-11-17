@@ -2,6 +2,10 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.5 (Final audit fixes. Sense Wyrm used to read only the fomor mark, so a person tainted by Otherworlds' Wyrm corruption showed nothing, even though the corruption card says Sense Wyrm finds them. Correspondence sight read the old single destination of a Teleport Token region, so it missed every WoDX way, which keeps a set of destinations (B6790, B6791))
+- 0.15.4 (The hunger line on screen ("Ravenous: no blood left") waits while the character wizard is open on the character, whose starting blood is rolled on the wizard's last page; it shows as before once the wizard closes (B6710))
+- 0.15.3 (A closer look now counts the looker's own state from WoDX Actions: Blurred sight and Blinded make a sight roll harder, Drained and the like any sense roll, and a night's penalty from a broken feeding law takes its dice; each shows on the answer card (B6373); Otherworld sight finds the freeholds and other places of power on the scene again; it read the power map from a path that does not exist (B6204))
+- 0.15.2 (Book check of the Senses page refs (B6570-B6573): the lowest difficulty is V20's 2, not 3; the difficulty words follow V20's chart (3 trivial, 4 easy); the Gift Heightened Senses gives -3 in Crinos as in Hispo and Lupus; an overwhelmed character is dazed for the turn, no longer said to be deafened, as V20 has it)
 - 0.15.1 (Shared terms (B6180-B6199): the era bands for what a scene sounds and smells like follow the era profiles' years (the industrial band from 1837, the Victorian Age); a scene measured in miles is no longer read as yards; dice counts, distance and time units come from WoDX Chronicle's shared terms)
 - 0.15.0 (Say or Do: an overload of heightened senses is rolled and acts (B5822))
 - 0.14.1 (Sense Wyrm passes by a fomor with Triatic Sense or a Deception in force (B5616))

@@ -741,6 +741,7 @@ export function build(ctx) {
     const number = (name, v, max = 5) => `<input type="number" name="${name}" value="${v}" min="0" max="${max}">`;
     const actorOpts = list => list.map(a => `<option value="${a.id}"${a.id === f.leader ? " selected" : ""}>${esc(a.name)}</option>`).join("");
     const goals = [...f.goals, {move: ""}, {move: ""}].slice(0, Math.max(3, f.goals.length + 1));
+    try { await chron()?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
     const evs = (() => { try { return chron()?.events?.list?.() ?? []; } catch (e) { return []; } })();
     // NPC 0.25.0: the faction's politics
     const polKey = PO.polityFor(f, era.year), P = PO.POLITIES[polKey] ?? null, pol = f.politics ?? PO.normPolitics();
@@ -1185,7 +1186,8 @@ export function build(ctx) {
   function hooks() {
     Hooks.on("wodxChronicleReady", () => { registerHandler(); PO.setHomeRegion(homeNow()); });
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
-    Hooks.on("wodxEraApplied", () => { if ( isActiveGM() ) yearSweep({force: true}).catch(e => console.error(`${MOD} |`, e)); });
+    // B6759: not while the world is held or skipping; the year's sweep runs when the clock is free again
+    Hooks.on("wodxEraApplied", () => { if ( isActiveGM() && !skipping() ) yearSweep({force: true}).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxEventFired", ev => { onEventFired(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateWorldTime", now => {
       if ( !isActiveGM() || skipping() ) return;
@@ -1203,7 +1205,8 @@ export function build(ctx) {
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const fl = msg.flags?.[MOD];
-      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach && !fl?.factionYears && !fl?.factionEnd ) return;
+      // B6766: the Undo on a settled boon's card (factionBoon) is wired too; it was a dead button
+      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach && !fl?.factionYears && !fl?.factionEnd && !fl?.factionBoon ) return;
       el.querySelectorAll("button.wnpc-f-mapbreach").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; startMapBreach(msg).catch(e => console.error(`${MOD} |`, e)); });

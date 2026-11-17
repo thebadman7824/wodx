@@ -19,7 +19,7 @@ import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.110.1";
+export const VERSION = "0.112.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -303,7 +303,10 @@ function landing(scene, actor, at = null) {
   const w = (actor?.prototypeToken?.width ?? 1) * size, h = (actor?.prototypeToken?.height ?? 1) * size;
   const cx = t.x ?? ((d.sceneX ?? 0) + ((d.sceneWidth ?? scene.width ?? 1000) / 2));
   const cy = t.y ?? ((d.sceneY ?? 0) + ((d.sceneHeight ?? scene.height ?? 1000) / 2));
-  return {x: Math.round(cx - (w / 2)), y: Math.round(cy - (h / 2))};
+  // B6425: the spot stays on the map; a Way on the scene's edge offsets the company to either side of its end
+  const x0 = d.sceneX ?? 0, y0 = d.sceneY ?? 0, sw = d.sceneWidth ?? scene.width ?? 1000, sh = d.sceneHeight ?? scene.height ?? 1000;
+  const fit = (v, lo, span) => Math.max(lo, Math.min(lo + Math.max(0, span), v));
+  return {x: Math.round(fit(cx - (w / 2), x0, sw - w)), y: Math.round(fit(cy - (h / 2), y0, sh - h))};
 }
 
 /** Move a character's token to another scene (the active Storyteller). Returns the new token, or null. */
@@ -376,7 +379,10 @@ export async function travel({actorId, destId, userId = null, approved = false, 
   if ( !isActiveGM() ) return {ok: false, why: "Only the Storyteller's client moves tokens."};
   const actor = game.actors.get(actorId);
   if ( !actor ) return {ok: false, why: "That character is gone."};
-  if ( convenedMap()[actorId] && !approved ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
+  // B6166: a Way (a door, a gate, a stair) is part of the called scene's place, so a convened character may walk it;
+  // only a trip by the travel window waits until the scene ends
+  const called = convenedMap()[actorId];
+  if ( called && !approved && !way ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
   const plan = planTrip(actor, destId, {mode, pace, lodging, way});
   if ( !plan ) return {ok: false, why: "That place is not open for travel."};
   const sched = plan.sched, owed = sched ? sched.cost + sched.fare : 0;
@@ -398,6 +404,8 @@ export async function travel({actorId, destId, userId = null, approved = false, 
     else paid = ` ${moneyWords(owed, plan.year)} for the trip was not paid.`;
   }
   const tok = await moveToScene(actor, plan.dest.scene, {from: plan.from, at: way?.at ?? null});
+  // B6166: the convened record goes with them, so the call (and its release) follows the character to the new scene
+  if ( called && plan.dest.scene ) await mutate("convened", cur => (cur?.[actorId] ? {value: {...cur, [actorId]: {...cur[actorId], scene: plan.dest.scene.id}}} : null));
   if ( plan.minutes ) await advancePersonal(actorId, plan.minutes * 60);
   const route = plan.trip?.by === "map" ? ` The way: ${Country.legLines(plan.trip, x => W.spanLabel(x)).join("; ")}.` : "";
   const halts = sched?.stops?.length ? ` Stops: ${sched.stops.map(x => `${x.why} at ${x.at}`).join("; ")}.` : "";
@@ -452,7 +460,8 @@ export async function solo({actorId, kind = "other", hours = null, note = "", ch
   await log({kind: "solo", actor: actorId, name: actor.name, user, scene: where?.uuid ?? null, place: where ? sceneName(where) : null, hours: h, night, text,
     attention: changesWorld ? "A result that changes the world" : (pastDawn && sunBurns(actor) ? "Acting past dawn" : W.attentionOf(note))});
   if ( changesWorld ) {
-    await chron()?.propose?.({type: T.solo, title: `${actor.name}: ${label}`, detail: `${note || "No details given."} The player says this changes the world.`, data: {actorId, userId: user}});
+    await chron()?.propose?.({type: T.solo, title: `${actor.name}: ${label}`, detail: `${note || "No details given."} The player says this changes the world.`,
+      data: {actorId, userId: user, kind, label, note: String(note).slice(0, 300), place: where ? sceneName(where) : ""}});
   }
   return {ok: true, hours: h, end, pastDawn, waiting: !!changesWorld};
 }
@@ -591,9 +600,36 @@ export function registerHandlers() {
     // B4862: approved, the encounter is put on the map by the traveller (reach.mjs road)
     approve: async e => { const made = await game.modules.get(MOD)?.api?.reach?.road?.({actorId: e.data?.actorId, text: e.data?.text ?? ""}); if ( !made?.length ) { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: `On the road: ${e.data?.text ?? ""}`}); } },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The road was quiet after all."}); }});
-  c.registerApprovalHandler(T.solo, {label: "Solo result"});
+  // B6751: a solo result that changes the world stands as a deed: on the character's standing (WoDX NPC) and as a tale
+  // that goes round, which the player sees in What they say about you. Turned down, it stays a private act.
+  c.registerApprovalHandler(T.solo, {label: "Solo result", approve: e => soloStands(e, true), reject: e => soloStands(e, false)});
   c.registerApprovalHandler(T.beat, {label: "Beat",
     approve: async e => { const d = e.data ?? {}; const r = await convene({actorIds: d.actorIds ?? [], sceneId: d.sceneId, reason: d.reason ?? "", by: "a beat"}); if ( !r.ok ) ui.notifications.warn(r.why); }});
+}
+
+/** A solo result that changes the world, decided: approved, a deed and a tale; turned down, a private act. */
+export async function soloStands(e, ok) {
+  const d = e?.data ?? {}, actor = game.actors.get(d.actorId);
+  if ( !actor ) return null;
+  const did = W.plain(d.note || String(e?.detail ?? "").replace(/ The player says this changes the world\.$/, "") || d.label || "").slice(0, 200);
+  const user = d.userId ?? ownerOf(actor)?.id ?? null;
+  if ( !ok ) {
+    await log({kind: "note", actor: actor.id, name: actor.name, user, text: `The Storyteller kept it a private act: ${did || d.label || "a solo act"}.`});
+    await tell(user, `<p><strong>${esc(actor.name)}</strong>: ${esc(did || "the act")} stays between you and the night; the world does not hear of it.</p>`, {alsoGM: true});
+    return null;
+  }
+  let tale = null;
+  if ( did ) {
+    const standing = npc()?.standing?.deed;
+    try {
+      // WoDX NPC keeps the deed on the character's standing and starts the tale; without it, the tale alone
+      if ( typeof standing === "function" ) await standing(actor, {community: "town", delta: 0, text: did});
+      else tale = await game.modules.get(MOD)?.api?.rumours?.tale?.({about: actor.id, did, where: d.place ?? "", tone: 0});
+    } catch (err) { console.error(`${MOD} | solo deed`, err); }
+  }
+  await log({kind: "note", actor: actor.id, name: actor.name, user, text: `The Storyteller let it stand: ${did || d.label || "a solo act"}. Word of it goes round.`});
+  await tell(user, `<p><strong>${esc(actor.name)}</strong>: ${esc(did || "the act")} stands. Word of it goes round; see What they say about you.</p>`, {alsoGM: true});
+  return tale;
 }
 
 /* ------------------------------------------------------------------ */

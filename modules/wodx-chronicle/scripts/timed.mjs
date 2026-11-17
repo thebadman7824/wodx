@@ -56,8 +56,9 @@ export async function applyTimed(actor, o) {
     const pt = placeTime(placeOf(scene), now, setting("latitude"));
     timed.until = now + secondsToNextDawn(pt.time, pt.latitude);
   } else if ( d.kind === "time" ) {
+    // B6432: WoDX keeps the time (timed.until) and ends it, as for the night: a core duration in seconds lets Foundry
+    // run the effect out by itself, past a hold, a skip or Light-touch mode and without the reverter
     timed.until = now + Math.max(1, Number(d.seconds) || 1);
-    duration.seconds = Math.max(1, Number(d.seconds) || 1);
   } else throw new Error(`Unknown duration ${d.kind}`);
 
   if ( timed.key ) {
@@ -68,7 +69,7 @@ export async function applyTimed(actor, o) {
   const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [{
     name: o.name, img: o.img ?? cond?.img ?? "icons/svg/clockwork.svg",
     description: `${o.description ?? cond?.summary ?? ""}${timed.source ? ` (${timed.source})` : ""}`,
-    statuses: cond ? [STATUS_PREFIX + cond.id] : [],
+    statuses: cond ? [STATUS_PREFIX + cond.id, ...(cond.also ?? [])] : [],
     changes: o.changes ?? [], duration, transfer: false,
     // B6023: a mark that lasts the scene or the night has no rounds or seconds, so Foundry would not draw it on the
     // token; WoDX marks always show there, so players see the fever, the night's penalty or the lying-in
@@ -177,10 +178,13 @@ export async function onSceneChange(newSceneId) {
 export function registerTimedHooks() {
   Hooks.once("ready", () => { lastActive = game.scenes?.active?.id ?? null; });
   Hooks.on("updateWorldTime", () => {
-    if ( game.modules.get(MODULE_ID)?.api?.isSkipping?.() ) return;
+    // B6380: a time skip, a hold or Light-touch mode: the sweep waits and runs once at the end
+    const api = game.modules.get(MODULE_ID)?.api;
+    if ( api?.isQuiet?.() ?? api?.isSkipping?.() ) return;
     sweepTime().catch(err => console.error("WoDX |", err));
   });
   Hooks.on("wodxSkipEnd", () => sweepTime().catch(err => console.error("WoDX |", err)));
+  Hooks.on("wodxLightTouchEnd", () => sweepTime().catch(err => console.error("WoDX |", err)));
   Hooks.on("updateCombat", (combat, changes) => {
     if ( "round" in (changes ?? {}) ) sweepRounds(combat).catch(err => console.error("WoDX |", err));
   });

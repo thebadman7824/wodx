@@ -1,5 +1,5 @@
 /**
- * Is a power's effect READ by the game? (B6015, Ben 2026-11-15: rituals that only said they worked.)
+ * Is a power's effect READ by the game? (B6015, the owner 2026-11-15: rituals that only said they worked.)
  *
  * The powers inventory counted a power as applying when its effect landed on the effects card. A Ward or a Curse did
  * land: it put an effect named "Warded" or "Cursed" on the sheet. But no roll, soak, token or map system read it, so
@@ -26,13 +26,18 @@ export const READ_TIMED = {
 /** The file and words that do the reading, checked by the guard test. */
 export const READERS = [
   ["modules/wodx-combat/scripts/main.js", "powerModsOf(actor, { soak: true"],
+  // B6732: a Ward stands against a weapon blow as well (soakPoolFor), not only against a power's harm
+  ["modules/wodx-combat/scripts/main.js", "powerModsOf(target, { soak: true"],
+  // B6730: a plain Charge on a sheet with no Quintessence moves the line's own pool
+  ["modules/wodx-actions/scripts/effects.js", "chargeOut(a,"],
   ["modules/wodx-combat/scripts/main.js", "powerModsOf(attacker, { tags:"],
   ["modules/wodx-combat/scripts/main.js", "powerModsOf(a, { initiative: true })"],
   ["modules/wodx-combat/scripts/conductor.js", "hastenExtra(c.actor)"],
   ["modules/wodx-actions/scripts/trait-hooks.js", "powerPart(actor, tags)"],
   ["modules/wodx-actions/scripts/main.js", "TH.spendOnce(actor, built)"],
   ["modules/wodx-actions/scripts/power-mods.js", "e.key === KEYS.ward && ctx.soak"],
-  ["modules/wodx-actions/scripts/power-mods.js", "e.key === KEYS.fortune"],
+  ["modules/wodx-actions/scripts/power-mods.js", "isFortune(e.key) && n(d.shift) && roll"],
+  ["modules/wodx-combat/scripts/main.js", "powerMods?.defend?.(target"],
   ["modules/wodx-actions/scripts/power-mods.js", "e.key === KEYS.calm"],
   ["modules/wodx-actions/scripts/power-mods.js", "e.key === KEYS.hasten"],
   ["modules/wodx-npc/scripts/main.mjs", "\"wodx-effect-fear\""],

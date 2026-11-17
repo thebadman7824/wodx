@@ -91,7 +91,7 @@ test("loved ones: who counts as close, and the checks each line rolls", () => {
   const d = H.weakSpotChecks("mortal", "child", "death", {name: "Ana"});
   assert.match(d[0].text, /difficulty 8/); assert.ok(d.some(c => /Derangement/.test(c.text)));
   assert.ok(!H.weakSpotChecks("mortal", "friend", "death").some(c => /Derangement/.test(c.text)));
-  assert.ok(H.weakSpotChecks("changeling", "lover", "death").some(c => /Banality/.test(c.text)));
+  assert.ok(!H.weakSpotChecks("changeling", "lover", "death").some(c => /Banality/.test(c.text)), "C20: grief carries Glamour, not Banality (B6453)");
 });
 
 test("warmth shows on lover and spouse ties", () => {

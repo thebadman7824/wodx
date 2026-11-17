@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * The PC job runner (B4100-B4109). Runs on Ben's PC, takes PC jobs straight from GitHub issues (label pc-job, opened
+ * The PC job runner (B4100-B4109). Runs on the owner's PC, takes PC jobs straight from GitHub issues (label pc-job, opened
  * by the owner's account; format in jobs.mjs) and runs them on the testbed lanes side by side, one job per lane, in
  * priority order (a waiting job gains a step each hour, B6490), with no thread or coordinator passing them along. Results go back to the issue as a comment and the
  * issue is closed with pc-done or pc-failed.
@@ -22,8 +22,9 @@
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
- * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). It also draws sprites a world's Storyteller asked
- * for from inside the game (sprite-draw.mjs, B6144), one world at a time, in that world's own wodx-sprites folder.
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every minute it logs the graphics card heat (gpu.mjs).
+ * It also draws sprites a world's Storyteller asked for from inside the game (sprite-draw.mjs, B6144), one world at a
+ * time, in that world's own wodx-sprites folder.
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -31,15 +32,20 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
-import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {pendingRequests, draw as drawSprites} from "./sprite-draw.mjs";
+import * as gpu from "./gpu.mjs";
+import {readQueue, putBack} from "../lanes/gate-queue.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
 const expand = s => String(s).replace(/%(\w+)%/g, (_, k) => process.env[k] ?? "");
-const conf = readJson(path.join(HERE, "runner.json"));
+// B6880: a PC with its own runner.<hostname>.json (the second PC) takes those keys over runner.json's.
+const HOST = (process.env.WODX_HOST ?? os.hostname()).toLowerCase();
+const conf = {...readJson(path.join(HERE, "runner.json")), ...readJson(path.join(HERE, `runner.${HOST}.json`), {})};
+const NAME = conf.name ?? "PC runner", STATUS_TITLE = conf.statusTitle ?? "PC runner status", ALERT_PREFIX = conf.alertPrefix ?? "PC runner alert";
 const HOME = expand(conf.home), LOGS = path.join(HOME, "logs"), WT = path.join(HOME, "wt");
 fs.mkdirSync(LOGS, {recursive: true}); fs.mkdirSync(WT, {recursive: true});
 const logFile = path.join(LOGS, `runner-${new Date().toISOString().slice(0, 10)}.log`);
@@ -106,8 +112,9 @@ const git = (argv, cwd = ROOT) => (gitChain = gitChain.then(() => spawnSync("git
 /** A worktree for a lane, checked out at the job's ref. Returns {dir, sha} or {error}. */
 async function worktree(lane, ref) {
   const dir = path.join(WT, `l${lane}`);
-  const remote = ref === "main" ? "origin/main" : ref.startsWith("claude/") ? `origin/${ref}` : ref;
-  const f = await git(ref.startsWith("claude/") ? ["fetch", "-q", "origin", `+refs/heads/${ref}:refs/remotes/origin/${ref}`] : ["fetch", "-q", "origin"]);
+  const branch = /^(claude|handoff)\//.test(ref);
+  const remote = ref === "main" ? "origin/main" : branch ? `origin/${ref}` : ref;
+  const f = await git(branch ? ["fetch", "-q", "origin", `+refs/heads/${ref}:refs/remotes/origin/${ref}`] : ["fetch", "-q", "origin"]);
   if ( f.status ) return {error: `git fetch failed: ${f.stderr.trim()}`};
   const sha = (await git(["rev-parse", "--verify", `${remote}^{commit}`])).stdout.trim();
   if ( !sha ) return {error: `No commit for ref ${ref}.`};
@@ -142,6 +149,10 @@ async function healthCheck(id, force = false) {
   s.checked = Date.now();
   if ( lockState(laneOf(id), cfg).held ) return; // someone else is using it (a helper, the nightly run)
   if ( !fs.existsSync(path.join(laneOf(id).dataPath, "Data", "worlds", cfg.world)) ) { s.down = true; s.why = "not set up (queue a setup-lane job)"; return; }
+  // B6885: a lane on another PC whose setup never finished (no clean fingerprint, e.g. stopped at Foundry's licence
+  // screen) takes no jobs but setup-lane, or a gate job fails there without running a gate (job #1816 on lane 7).
+  // Only lanes with a host: the main PC's older lanes may predate clean.json and must keep working.
+  if ( laneOf(id).host && !fs.existsSync(path.join(laneDir(laneOf(id)), "clean.json")) ) { s.down = true; s.why = "setup not finished (no clean fingerprint; queue a setup-lane job)"; return; }
   if ( await isUp(laneOf(id)) ) { if ( s.down ) await recovered(id); return; }
   log(`lane ${id} is down; starting it`);
   const r = await lanesCmd(["start", "--lane", id], {minutes: 6});
@@ -153,7 +164,7 @@ async function alert(key, title, detail = "") {
   const s = state[key] ?? (state[`_${key}`] ??= {});
   if ( s.alert || DRY ) return;
   try {
-    const i = await gh("POST", "/issues", {title: `PC runner alert: ${title}`, labels: [LABEL.alert],
+    const i = await gh("POST", "/issues", {title: `${ALERT_PREFIX}: ${title}`, labels: [LABEL.alert],
       body: `${title}\n\n\`\`\`\n${detail.slice(-3000)}\n\`\`\`\n\nThe runner closes this issue when it clears. Jobs keep running on the other lanes.`});
     s.alert = i.number; log(`alert #${i.number}: ${title}`);
   } catch (e) { log(`could not open alert: ${e.message}`); }
@@ -190,6 +201,8 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
   const faultRetry = async (why, out = "") => {
+    // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
+    if ( job.queue ) requeueUnfinished(job.queue, lane, out);
     if ( retried ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
     await lanesCmd(["reset", "--lane", lane], {logTo: L});
@@ -205,30 +218,34 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( job.reset || job.kind === "gate-two" ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
+  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
   if ( job.kind === "gate-two" ) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${job.gate}-result.json`);
     fs.rmSync(f, {force: true});
-    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`], {logTo: L, minutes: 30});
+    const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", laneUrl(laneOf(lane)), ...(job.diag ? ["--diag"] : [])], {logTo: L, minutes: 30});
     // The failing steps are read before the reset, which may put the lane's data back
     const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
     const detail = failDetail(lane, line);
     await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
     if ( r.code === null ) return faultRetry("gate-two ran past its time limit", r.out);
-    return {code: r.code, text: `${line}\n${detail}`.trim()};
+    // B6970: with diag the [diag] lines (both browsers' console, full failing steps) follow
+    const diag = job.diag ? r.out.split("\n").filter(x => x.startsWith("[diag]")).slice(-300).join("\n") : "";
+    return {code: r.code, text: `${line}\n${detail}${diag ? `\n\n${diag}` : ""}`.trim()};
   }
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});
-  const gatesN = job.all ? 400 : job.touched ? 150 : job.gates.length;
-  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes: Math.min(16 * Math.ceil(gatesN / n) + 20, 900)});
+  const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
+  const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, 900);
+  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes});
   const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
-  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`};
+  // B7002: the commit this lane ran, for the gate status the merge rules read
+  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text, sha: wt.sha};
+  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`, sha: wt.sha};
 }
 
 /**
@@ -297,25 +314,127 @@ const active = new Set();
 // while, which ran finished jobs a second time; these are skipped.
 const finished = new Map();
 const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now() - t > 3600e3 ) finished.delete(k); return finished.has(n); };
+/**
+ * B6526: gates jobs share one queue of gates between their lanes. A job that started on fewer lanes than it asked for
+ * (they were busy) takes more as they free, up to what it asked for, or every lane when nothing else is waiting
+ * (growJobs). Before, a 294-gate touched run that found one lane free ran on it alone for hours.
+ */
+const growing = new Map();
+async function makeQueue(job, lane, tag) {
+  if ( job.kind !== "gates" ) return null;
+  const wt = await worktree(lane, job.ref);
+  if ( wt.error ) return null;
+  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
+    {logTo: path.join(LOGS, `${tag}-list.log`), minutes: 5});
+  const m = /^GATES (\[.*\])$/m.exec(r.out ?? "");
+  let list = null;
+  try { list = m ? JSON.parse(m[1]) : null; } catch (e) { list = null; }
+  if ( !list || list.length < 2 ) return null;
+  const file = path.join(LOGS, `${tag}-queue.json`);
+  fs.writeFileSync(file, JSON.stringify(list));
+  fs.rmSync(`${file}.taken`, {force: true});
+  return {file, size: list.length, sha: wt.sha};
+}
+const queueLeft = file => readQueue(file).length;
+function requeueUnfinished(file, lane, report) {
+  try { const lost = putBack(file, lane, report); if ( lost.length ) log(`lane ${lane}: ${lost.length} unfinished gate(s) back on the shared queue`); }
+  catch (e) { log(`lane ${lane}: could not give gates back: ${e.message}`); }
+}
+function addLane(g, lane, n = 1) {
+  const i = g.used.length;
+  g.used.push(lane); state[lane].busy = g.issue.number;
+  // On a shared queue there is nothing to split; otherwise lane i of n runs shard i of n, as before
+  const p = laneWork(g.job, lane, i, g.job.queue ? 1 : n, g.tag).then(r => r, e => ({code: null, text: `Runner error on lane ${lane}: ${e.message}`}))
+    .then(r => { g.parts.push({lane, ...r}); if ( state[lane].busy === g.issue.number ) state[lane].busy = null; });
+  g.pending.add(p); p.finally(() => g.pending.delete(p));
+}
+/** Free lanes join a running gates job whose queue still holds work. waiting: lane jobs still in the queue. */
+function growJobs(waiting) {
+  for ( const g of growing.values() ) {
+    if ( g.job.lane !== undefined ) continue; // pinned to one lane
+    const cap = waiting ? g.job.lanes ?? 1 : LANES.length;
+    // No more lanes than gates left for the lanes still starting up to take
+    while ( g.used.length < cap && queueLeft(g.job.queue) >= 2 && queueLeft(g.job.queue) > g.used.length - g.parts.length ) {
+      const l = LANES.find(laneFree);
+      if ( !l ) return;
+      log(`#${g.issue.number} takes lane ${l} too (${queueLeft(g.job.queue)} gate(s) left on its queue)`);
+      addLane(g, l);
+    }
+  }
+}
+
 async function start(issue, job, lanes) {
   active.add(issue.number);
   const tag = `job${issue.number}`, t0 = Date.now();
   for ( const l of lanes ) state[l].busy = issue.number;
   log(`#${issue.number} ${job.kind} starting${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""}`);
+  const g = {issue, job, tag, used: [], parts: [], pending: new Set()};
   try {
     await setLabels(issue.number, [LABEL.running]);
-    await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}).`);
-    const parts = lanes.length ? await Promise.all(lanes.map((l, i) => laneWork(job, l, i, lanes.length, tag))) : [await runLight(job, tag)];
+    await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}) by the ${NAME} [host:${HOST}].`);
+    if ( lanes.length ) {
+      const q = await makeQueue(job, lanes[0], tag);
+      if ( q ) {
+        g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, 900)};
+        growing.set(issue.number, g);
+        log(`#${issue.number}: ${q.size} gate(s) on a shared queue`);
+      }
+      for ( const l of lanes ) addLane(g, l, lanes.length);
+      while ( g.pending.size ) await Promise.race([...g.pending]);
+      growing.delete(issue.number);
+    } else g.parts.push({lane: null, ...(await runLight(job, tag))});
+    const parts = g.parts.sort((a, b) => g.used.indexOf(a.lane) - g.used.indexOf(b.lane));
     const ok = parts.every(p => p.code === 0);
     const mins = Math.round((Date.now() - t0) / 60000);
-    const body = `**${ok ? "Passed" : "Failed"}** in ${mins} min${job.thread ? ` (for thread ${job.thread})` : ""}.\n\n` +
-      parts.map((p, i) => `${lanes.length ? `Lane ${lanes[i]}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
+    const used = parts.filter(p => p.lane).map(p => p.lane);
+    const body = `**${ok ? "Passed" : "Failed"}** in ${mins} min${job.thread ? ` (for thread ${job.thread})` : ""}${g.job.queue ? `, ${g.job.queueSize} gates shared over lanes ${used.join(", ")}` : ""}.\n\n` +
+      parts.map(p => `${p.lane ? `Lane ${p.lane}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
     await finish(issue, ok, body);
     log(`#${issue.number} ${ok ? "passed" : "failed"} in ${mins} min`);
+    await gateStatus(issue, g.job, parts, ok).catch(e => log(`#${issue.number}: gate status not posted: ${e.message}`));
   } catch (e) {
     log(`#${issue.number} runner error: ${e.stack ?? e.message}`);
     await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
-  } finally { for ( const l of lanes ) state[l].busy = null; finished.set(issue.number, Date.now()); active.delete(issue.number); }
+  } finally {
+    growing.delete(issue.number);
+    for ( const l of new Set([...lanes, ...g.used]) ) if ( state[l].busy === issue.number ) state[l].busy = null;
+    finished.set(issue.number, Date.now()); active.delete(issue.number);
+  }
+}
+
+// ---- gate status for the merge rules (B7002) ----
+/**
+ * A gates job that ran every gate the branch needs (touched or all) sets the wodx/gates commit status on the commit it
+ * ran; tools/release/merge-rules.mjs reads it. Then the branch's pull request checks are run again, so a check that
+ * failed while the gates were still running turns green by itself.
+ */
+async function gateStatus(issue, job, parts, ok) {
+  const st = gateStatusFor(job, parts, ok, failingGates, issue.html_url);
+  if ( !st || DRY ) return;
+  await gh("POST", `/statuses/${st.sha}`, st.body);
+  log(`#${issue.number}: ${GATE_CONTEXT} ${st.body.state} on ${short(st.sha)}`);
+  rerunChecks(st.sha, 0);
+}
+/** Runs the failed checks again of each open pull request holding the gated commit (the job's ref may be a branch or
+ *  a sha); waits for a run still going (up to an hour). */
+async function rerunChecks(sha, tries) {
+  try {
+    for ( const pr of (await gh("GET", `/commits/${sha}/pulls`)) ?? [] ) if ( pr.state === "open" ) await rerunFor(pr, sha, tries);
+  } catch (e) { log(`checks rerun for ${short(sha)}: ${e.message}`); }
+}
+async function rerunFor(pr, sha, tries) {
+  try {
+    const runs = await gh("GET", `/actions/workflows/checks.yml/runs?head_sha=${pr.head.sha}&event=pull_request&per_page=5`);
+    const run = runs?.workflow_runs?.[0];
+    if ( !run ) return;
+    if ( run.status !== "completed" ) { if ( tries < 12 ) setTimeout(() => rerunFor(pr, sha, tries + 1), 5 * 60000); return; }
+    // B7006: the merge rules job passes while it waits for the gates (its wodx/merge-rules status is pending), so it
+    // is run again by name, with the checks job after it
+    const jobs = await gh("GET", `/actions/runs/${run.id}/jobs?per_page=50`);
+    const mr = jobs?.jobs?.find(j => j.name === "merge rules");
+    if ( mr ) { await gh("POST", `/actions/jobs/${mr.id}/rerun`); log(`PR #${pr.number}: merge rules run again after the gate result`); }
+    else if ( run.conclusion === "failure" ) { await gh("POST", `/actions/runs/${run.id}/rerun-failed-jobs`); log(`PR #${pr.number}: failed checks started again after the gate result`); }
+  } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
 // ---- status issue ----
@@ -327,7 +446,7 @@ async function status(queue) {
     const what = s.busy ? `job #${s.busy}` : s.down ? `DOWN${s.why ? `: ${s.why}` : ""}` : lk.held ? `in use outside the runner (${(lk.lock?.gates ?? []).join(" ").slice(0, 60)})` : "free";
     return `| ${id} | ${l.port} | ${what} |`;
   }));
-  const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the PC runner at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
+  const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the ${NAME} (${HOST}) at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
     "", "| Lane | Port | State |", "|---|---|---|", ...lanes, "",
     `Queue (${queue.length}): ${queue.map(q => `#${q.number} ${q.job.kind} p${q.job.prio}`).join(", ") || "empty"}`,
     `Last results: ${recent.join(", ") || "none yet"}`,
@@ -336,7 +455,7 @@ async function status(queue) {
   const changed = body.replace(/^Updated.*$/m, "") !== lastStatus.replace(/^Updated.*$/m, "");
   if ( DRY || (!changed && Date.now() - lastStatusAt < 10 * 60000) ) return;
   try {
-    statusIssue ??= (await openIssues(LABEL.status))[0]?.number ?? (await gh("POST", "/issues", {title: "PC runner status", labels: [LABEL.status], body})).number;
+    statusIssue ??= (await openIssues(LABEL.status)).find(i => i.title === STATUS_TITLE)?.number ?? (await gh("POST", "/issues", {title: STATUS_TITLE, labels: [LABEL.status], body})).number;
     await gh("PATCH", `/issues/${statusIssue}`, {body});
     lastStatus = body; lastStatusAt = Date.now();
   } catch (e) { log(`status update failed: ${e.message}`); statusIssue = null; }
@@ -361,16 +480,71 @@ async function updateDue() {
   return !active.size;
 }
 
+// ---- two PCs (B6880) ----
+// Both runners read the same queue. Before starting a job each posts a claim comment; the earliest claim since the
+// job was last queued again wins and the other runner leaves the job alone for ten minutes.
+const skipUntil = new Map();
+const comments = async n => gh("GET", `/issues/${n}/comments?per_page=100`);
+async function claim(n) {
+  if ( DRY ) return true;
+  try {
+    await comment(n, `Claim [host:${HOST}]`);
+    await sleep(4000);
+    const cs = await comments(n);
+    const reset = cs.reduce((k, c, i) => /will run again/.test(c.body) ? i : k, -1);
+    const first = cs.slice(reset + 1).find(c => /^Claim \[host:/.test(c.body));
+    if ( first && first.body.includes(`[host:${HOST}]`) ) return true;
+    log(`#${n} claimed by another runner; leaving it`); skipUntil.set(n, Date.now() + 10 * 60000); return false;
+  } catch (e) { log(`claim #${n} failed: ${e.message}`); return false; }
+}
+/** True when the last start of this job was on this PC (a start with no host tag predates B6880 and is the main PC's). */
+async function startedHere(n) {
+  try {
+    const s = (await comments(n)).filter(c => /^Started /.test(c.body)).at(-1);
+    if ( !s ) return !conf.host && !readJson(path.join(HERE, `runner.${HOST}.json`));
+    const m = /\[host:([^\]]+)\]/.exec(s.body);
+    return m ? m[1] === HOST : !readJson(path.join(HERE, `runner.${HOST}.json`));
+  } catch { return false; }
+}
+// Watchdog duties: the live site answers, and the other runner's status issue keeps moving.
+const watchFails = {};
+async function watch() {
+  for ( const url of conf.watch.urls ?? [] ) {
+    let ok = false;
+    try { const r = await fetch(url, {signal: AbortSignal.timeout(20000), redirect: "follow"}); ok = r.status < 500; } catch {}
+    watchFails[url] = ok ? 0 : (watchFails[url] ?? 0) + 1;
+    if ( ok ) await recovered(`site ${url}`);
+    else if ( watchFails[url] >= (conf.watch.failsBeforeAlert ?? 3) ) await alert(`site ${url}`, `${url} is not answering`, `${watchFails[url]} checks in a row failed, ${conf.watch.everyMinutes ?? 5} minutes apart.`);
+  }
+  if ( conf.watch.peerStatusTitle ) {
+    try {
+      const peer = (await openIssues(LABEL.status)).find(i => i.title === conf.watch.peerStatusTitle);
+      const mins = peer ? Math.round((Date.now() - Date.parse(peer.updated_at)) / 60000) : null;
+      if ( mins !== null && mins > (conf.watch.peerSilentMinutes ?? 20) ) await alert("peer", `the main PC runner has been silent for ${mins} minutes`, `Its status issue #${peer.number} has not moved. The main PC may be off, asleep or its runner stopped (D:\\WoDX\\pcq\\logs).`);
+      else if ( mins !== null ) await recovered("peer");
+    } catch (e) { log(`peer check failed: ${e.message}`); }
+  }
+}
+
 // ---- main loop ----
 const clashes = laneClashes(cfg, LANES);
 if ( clashes.length ) { log(`Lane clash check failed; not starting:\n  ${clashes.join("\n  ")}`); process.exit(2); }
 log(`runner ${short(MY_SHA)} up; lanes ${LANES.join(", ")}; light slots ${conf.light}${DRY ? " (dry run)" : ""}`);
 for ( const i of await openIssues(LABEL.running) ) {
+  if ( !(await startedHere(i.number)) ) continue;
   log(`#${i.number} was running when the runner stopped; queued again`);
   await setLabels(i.number, [], [LABEL.running]);
   await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
-let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, drawing = false;
+let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, lastWatch = 0, drawing = false;
+let lastGpu = 0; const gpuWatch = gpu.watcher();
+function gpuCheck() {
+  if ( Date.now() - lastGpu < 60000 ) return null;
+  lastGpu = Date.now();
+  const g = gpu.read(); if ( !g?.reading ) return null;
+  fs.appendFileSync(path.join(LOGS, `gpu-${new Date().toISOString().slice(0, 10)}.csv`), g.raw + "\n");
+  return {r: g.reading, change: gpuWatch(g.reading)};
+}
 for ( ;; ) {
   try {
     if ( draining && !active.size && !drawing ) { log("exiting for an update"); process.exit(75); }
@@ -385,7 +559,7 @@ for ( ;; ) {
       await sleep(30000); continue;
     }
     // Stale pull requests, every hour, beside the jobs (B4110).
-    if ( !sweeping && Date.now() - lastSweep > HOUR ) {
+    if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
       sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json")})
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
@@ -399,13 +573,23 @@ for ( ;; ) {
         drawSprites(req, {run, python: expand(conf.python), root: ROOT, log}).catch(e => log(`sprites failed: ${e.message}`)).finally(() => { drawing = false; });
       }
     }
+    // Graphics card heat (B6520): log each minute, alert when it stays hot.
+    const g = gpuCheck();
+    if ( g?.change === "hot" ) await alert("gpu", `graphics card running hot (core ${g.r.core} C${g.r.memory !== null ? `, memory ${g.r.memory} C` : ""})`,
+      `Over ${gpu.GPU_LIMITS.core} C core${g.r.memory !== null ? ` or ${gpu.GPU_LIMITS.memory} C memory` : ""} for ${gpu.GPU_LIMITS.hotMinutes} minutes. Power ${g.r.watts} W, fan ${g.r.fan}%, load ${g.r.util}%. Log: logs/gpu-*.csv in the runner folder.`);
+    else if ( g?.change === "cool" ) await recovered("gpu");
     for ( const id of LANES ) await healthCheck(id);
+    if ( conf.watch && Date.now() - lastWatch > (conf.watch.everyMinutes ?? 5) * 60000 ) { lastWatch = Date.now(); await watch(); }
     const issues = await openIssues(LABEL.job);
     const openNums = new Set(issues.map(i => i.number));
     const queue = [];
     for ( const i of issues ) {
       if ( active.has(i.number) || recentlyFinished(i.number) || i.labels.some(l => l.name === LABEL.running) ) continue;
-      const p = parseBody(i.body), v = p.error ? p : validate(p.job, LANES);
+      if ( (skipUntil.get(i.number) ?? 0) > Date.now() ) continue;
+      const p = parseBody(i.body);
+      // B6880: a job that names a lane on the other PC is that PC's runner's to take.
+      if ( !p.error && p.job?.lane !== undefined && !LANES.includes(String(p.job.lane)) && cfg.allLaneIds.includes(String(p.job.lane)) && String(p.job.lane) !== "1" ) continue;
+      const v = p.error ? p : validate(p.job, LANES);
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
     }
@@ -420,16 +604,25 @@ for ( ;; ) {
         if ( res.low.length ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
         const free = q.job.kind === "setup-lane" ? l => !state[l].busy && !lockState(laneOf(l), cfg).held : laneFree;
-        const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(laneFree).slice(0, q.job.lanes);
+        // B6887: a small-jobs lane (lane 7) never takes a touched, every-gate or large run. Named on it, the job is
+        // refused; otherwise this runner leaves it for the main PC's lanes.
+        if ( q.job.lane !== undefined && LANES.includes(String(q.job.lane)) && laneRefuses(laneOf(q.job.lane), q.job) ) {
+          await finish(q.issue, false, `Not run: ${laneRefuses(laneOf(q.job.lane), q.job)}. Queue it without a lane so the main PC's lanes take it.`); continue;
+        }
+        const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(l => laneFree(l) && !laneRefuses(laneOf(l), q.job)).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
         for ( const l of want ) state[l].busy = q.number;
+        if ( !(await claim(q.number)) ) { for ( const l of want ) state[l].busy = null; continue; }
         start(q.issue, q.job, want);
       } else if ( light < conf.light ) {
+        if ( !(await claim(q.number)) ) continue;
         light++;
         start(q.issue, q.job, []).finally(() => light--);
       }
     }
+    // B6526: lanes still free join a running gates job that has work left on its shared queue
+    if ( !draining && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number)));
     await status(queue.filter(q => !active.has(q.number)));
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;

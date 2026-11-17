@@ -33,6 +33,12 @@ export function pick(powers = [], st = {}) {
   return null;
 }
 
+/**
+ * B6400: the NPC has a power that fits, but every fitting one is obvious and mortals are watching (B4927), so it holds
+ * the power back. True only then: no pick now, and a pick were no mortal looking on.
+ */
+export const heldBack = (powers = [], st = {}) => !!st.mortalsSee && !pick(powers, st) && !!pick(powers, {...st, mortalsSee: false});
+
 const WHY = {
   heal: "badly hurt: it mends itself",
   escape: "losing: it gets away",

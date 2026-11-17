@@ -78,3 +78,37 @@ test("derangements: Actions' Virtue-loss botches write one into the box (B3915)"
   assert.match(a, /derangement: withActor\(a => game\.modules\.get\("wodx-chronicle"\)\?\.api\?\.derangements\?\.hold\?\.\(a\)\)/);
   assert.doesNotMatch(a, /a Derangement may follow/);
 });
+
+test("derangements: a bout ends with its scene, not only after an hour (B6161)", () => {
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {ended: "s1"}), true, "its own scene ends");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {ended: "s2"}), false, "another scene's end leaves it");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {ended: null}), true, "the scene ends, no scene named");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"]}, {ended: "s2"}), true, "an older bout with no scene ends with any");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {active: "s2"}), true, "another scene made active");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {active: "s1"}), false, "its own scene made active again");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}), false);
+  const f = src("modules/wodx-chronicle/scripts/derangements.mjs");
+  assert.match(f, /Hooks\.on\("wodxEndScene"/);
+  assert.match(f, /sceneId: b\?\.sceneId \?\? game\.scenes\?\.active\?\.id/);
+});
+
+// B6384: Chronicle data version 2 gives an old bout its scene
+test("an old bout gets the scene its token stands on, else the active one", async () => {
+  const D = await import("../../modules/wodx-chronicle/scripts/derangement-rules.mjs");
+  assert.deepEqual(D.boutWithScene({keys: ["paranoia"], at: 5}, {sceneOfToken: "s1", active: "s2"}), {keys: ["paranoia"], at: 5, sceneId: "s1"});
+  assert.deepEqual(D.boutWithScene({keys: ["paranoia"], at: 5}, {active: "s2"}), {keys: ["paranoia"], at: 5, sceneId: "s2"});
+  assert.equal(D.boutWithScene({keys: [], sceneId: "s3"}, {active: "s2"}), null);
+  assert.equal(D.boutWithScene(null, {active: "s2"}), null);
+  assert.equal(D.boutWithScene({keys: []}, {}), null);
+});
+
+// B6386: Phobia's held move at the start of a turn in a fight
+test("a phobia bout loses the turn's action unless Courage succeeds, once a turn", () => {
+  const b = {keys: ["phobia"], at: 0};
+  assert.equal(D.heldMoveTurn({keys: ["paranoia"]}, "c:1:x"), null, "no held move");
+  assert.equal(D.heldMoveTurn({...b, heldTurn: "c:1:x"}, "c:1:x"), null, "read once a turn");
+  assert.equal(D.heldMoveTurn(b, "c:1:x", {successes: 0, botch: false}).lose, true);
+  assert.equal(D.heldMoveTurn(b, "c:1:x", {successes: 1, botch: false}).lose, false);
+  assert.equal(D.heldMoveTurn(b, "c:1:x", {successes: 0, botch: true}).lose, true);
+  assert.equal(D.heldMoveTurn(b, "c:2:x", null).key, "phobia");
+});

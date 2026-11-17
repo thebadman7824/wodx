@@ -157,3 +157,32 @@ test("part 5: keys exist, rolls change, and only combat and body traits are left
   const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
   assert.ok(none <= 22, `${none} merits and flaws with no automatic effect`);
 });
+
+test("B6743: card-only rows with a book number now change the roll when ticked", () => {
+  const cases = [["Friend of the Underground", "merit", "underground", "diff", -1, "kindred"],
+    ["Paradise Lost", "flaw", "faith-lost", "dice", -1, "hunter"], ["Psychic Feedback", "flaw", "numina-strain", "diff", 2, "hunter"]];
+  for ( const [name, kind, tick, field, n, who] of cases ) {
+    const v = view(who, feat(name, kind));
+    assert.ok(T.ticksOf(v).some(t => t.key === tick), name);
+    assert.equal(T.sumEffects(T.effectsFor(v, {channel: "roll", tags: ["stealth", tick]}))[field], n, name);
+    assert.equal(T.sumEffects(T.effectsFor(v, {channel: "roll", tags: ["stealth"]}))[field], 0, name);
+  }
+});
+
+test("B6746: every roll effect is reachable: a tick box, or a tag some roll in the modules makes", async () => {
+  const fs = await import("node:fs");
+  const lits = new Set();
+  for ( const m of fs.readdirSync(join(root, "modules")) ) {
+    const dir = join(root, "modules", m, "scripts");
+    if ( !fs.existsSync(dir) ) continue;
+    for ( const f of fs.readdirSync(dir) ) if ( /\.m?js$/.test(f) && !/trait-effects/.test(f) )
+      for ( const x of fs.readFileSync(join(dir, f), "utf8").matchAll(/["'`]([a-z][a-z0-9-]*)["'`]/g) ) lits.add(x[1]);
+  }
+  const dead = [];
+  for ( const e of D.MERITS_FLAWS ) for ( const x of e.effects ?? [] )
+    if ( x.tags?.length && !x.tick && !x.tags.some(t => lits.has(t)) ) dead.push(`${e.key} ${x.ch}[${x.tags}]`);
+  assert.deepEqual(dead, []);
+  const v = view("mortal", feat("Coldly Logical"));
+  assert.ok(T.ticksOf(v).some(t => t.key === "logic"));
+  assert.equal(T.sumEffects(T.effectsFor(v, {channel: "roll", tags: ["perception", "logic"]})).diff, -1);
+});

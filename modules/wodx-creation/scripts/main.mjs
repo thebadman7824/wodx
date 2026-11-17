@@ -11,6 +11,9 @@ import * as animalKeepersRules from "./animal-keepers-rules.mjs";
 import * as animalStockRules from "./animal-stock-rules.mjs";
 import * as animalGhouls from "./animal-ghoul-rules.mjs";
 import * as xp from "./xp.mjs";
+import * as learn from "./learn.mjs";
+import * as learnRules from "./learn-rules.mjs";
+import * as lines from "./lines.mjs";
 import {CreationApp, SpendApp, awardDialog} from "./apps.mjs";
 import * as time from "./time.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
@@ -44,6 +47,7 @@ Hooks.once("init", () => {
   active = true;
   installSearch();
   people.registerPeopleSettings();
+  learn.registerLearnSettings();
   archive.registerArchiveSettings();
   lifepath.registerSheetButton();
   firstNight.registerFirstNightSettings();
@@ -55,18 +59,28 @@ Hooks.once("init", () => {
 let started = false;
 let waiting = null;
 
+/** B6811: one failing part no longer leaves the whole module without its api; what failed is kept in api.startErrors. */
+const startErrors = [];
+function guard(name, fn) {
+  try { fn(); } catch (e) { startErrors.push(`${name}: ${e?.message ?? e}`); console.error(`WoDX Creation | ${name}`, e); }
+}
+
 function start() {
-  if ( started || !active ) return;
+  if ( started ) return;
+  // B6811: a Chronicle that finishes its ready work after the 20-second wait still starts Creation
+  if ( !active ) { if ( !isWoDXWorld() ) return; active = true; }
   started = true;
   clearTimeout(waiting);
-  xp.registerXPHandler();
-  people.registerPeople();
-  lifepath.registerLifepath();
-  firstNight.registerFirstNight();
-  feedVitae.registerFeedVitae();
-  animalStock.registerAnimalStock();
-  animalBlood.registerAnimalBlood();
-  animalKeepers.registerAnimalKeepers();
+  guard("xp.registerXPHandler", () => xp.registerXPHandler());
+  guard("learn.registerLearning", () => learn.registerLearning());
+  guard("people.registerPeople", () => people.registerPeople());
+  guard("lifepath.registerLifepath", () => lifepath.registerLifepath());
+  guard("firstNight.registerFirstNight", () => firstNight.registerFirstNight());
+  guard("feedVitae.registerFeedVitae", () => feedVitae.registerFeedVitae());
+  guard("animalStock.registerAnimalStock", () => animalStock.registerAnimalStock());
+  guard("animalBlood.registerAnimalBlood", () => animalBlood.registerAnimalBlood());
+  guard("animalKeepers.registerAnimalKeepers", () => animalKeepers.registerAnimalKeepers());
+  guard("archive.setupAutoArchive", () => archive.setupAutoArchive());
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
     if ( message?.type === "vitae.request" ) await feedVitae.onRequest(message.payload);
@@ -75,6 +89,11 @@ function start() {
   });
   const api = {
     rules, data, lineage, change, xp, time,
+    // B6230: learning from a teacher, a book, a school or practice
+    // B6270: every line, one key each, for any WoDX module
+    lines: {of: lines.splatOf, info: lines.lineInfo, family: lines.familyOf, label: lines.labelOf, keys: lines.KEYS},
+    learn: {rules: learnRules, choices: learn.choicesFor, resolve: learn.resolveSource, begin: learn.begin, records: learn.recordsOf, needsSource: learn.needsSource,
+      waived: learn.waived, setWaived: learn.setWaived, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
     passYears: () => PassYearsApp.open(),
     runSkipTest,
     open: () => CreationApp.open(),
@@ -96,9 +115,12 @@ function start() {
     wizard: (actor, page = null) => WizardApp.openFor(actor, page), wizardLedger, wizardRules, derived: derivedFor, derivedRules,
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
-    archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},
-    people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
+    archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs, dueNow: archive.dueNow, autoTick: archive.autoTick},
+    people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople,
+      // B6242: the People tables load on first use; load() resolves when they are in
+      load: () => people.load(), loaded: () => !!people.loaded(), feminine: people.feminine}
   };
+  api.startErrors = startErrors;
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {creation: api});
   console.log("WoDX | Creation ready");
@@ -110,8 +132,12 @@ Hooks.once("wodxChronicleReady", () => start());
 Hooks.once("ready", () => {
   if ( !active ) return;
   if ( game.modules.get("wodx-chronicle")?.api ) return start();
+  // B6778: a slow Chronicle start (migrations and the world timeline on a fresh world) took longer than 20 s, and the
+  // module switched itself off, so wodxChronicleReady found it idle and the api never came. Only a Chronicle that is not
+  // enabled ends the wait; a slow one is waited for.
   waiting = setTimeout(() => {
     if ( started ) return;
+    if ( game.modules.get("wodx-chronicle")?.active ) { console.warn("WoDX | WoDX Creation is still waiting for WoDX Chronicle to finish starting."); return; }
     active = false;
     console.error("WoDX | WoDX Creation needs WoDX Chronicle; enable it in Manage Modules.");
     ui.notifications.error("WoDX Creation needs WoDX Chronicle. Enable it in Manage Modules.");

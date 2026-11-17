@@ -86,7 +86,7 @@ function shifting() {
 }
 
 function paradox() {
-  const kinds = Object.values(MAGICK_KINDS ?? {}).map(k => ({label: k.label, value: `difficulty Arete level + ${k.add}`}));
+  const kinds = Object.values(MAGICK_KINDS ?? {}).map(k => ({label: k.label, value: `difficulty highest Sphere used + ${k.add}`}));
   return {id: "paradox", title: "Magick and Paradox", for: ["mage"], ref: "M20 p. 506, 549",
     lines: [...kinds,
       {label: "Backlash", value: "one die for each Paradox point, difficulty 6"},

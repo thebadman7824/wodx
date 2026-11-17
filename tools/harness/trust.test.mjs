@@ -65,7 +65,8 @@ test("hidden loyalties: the senses by line, and a hidden tie to the leader that 
   assert.ok(TRR.sensesFor("vampire").some(s => /Auspex/.test(s.power)));
   assert.ok(TRR.sensesFor("werewolf").some(s => /Truth of Gaia/.test(s.power)));
   assert.ok(TRR.sensesFor("mage").some(s => /Mind/.test(s.power)));
-  assert.ok(TRR.sensesFor("wraith").every(s => s.line === "mortal"), "a line without its own sense falls back to Empathy");
+  assert.ok(TRR.sensesFor("mummy").every(s => s.line === "mortal"), "a line without its own sense falls back to Empathy");
+  assert.ok(TRR.sensesFor("wraith").some(s => s.power === "Lifesight"), "B6310: a wraith reads the living with Lifesight");
   assert.equal(TRR.normSide({}), null);
   const actors = [{id: "s", name: "Spy", flags: {"wodx-npc": {trueSide: {faction: "f1", name: "The Sabbat", leader: {id: "l", name: "Bishop"}}}}}, {id: "l", name: "Bishop"}];
   const e = TR.edges(actors);

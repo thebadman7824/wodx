@@ -222,6 +222,28 @@ export function sunTimes(jdn, latitude) {
   return {sunrise: 12 - h, sunset: 12 + h, darkHours: 24 - (2 * h), polar: null};
 }
 
+/**
+ * B6381: the one line between night and day for every WoDX module. The sun is up when its altitude is above
+ * SUN_UP (-0.833 degrees: the sun's upper edge on the horizon, with the air's bending), the moment of sunrise that
+ * sunTimes gives. The books have a Cainite in shelter by sunrise and asleep from dawn, so WoDX reads dawn as that
+ * same moment: the clock turns to Day, the day's sleep begins and the sun can burn, all at once.
+ */
+export const SUN_UP = -0.833;
+
+/** The sun's altitude in degrees for a JDN, a latitude and local solar hours (0 to 24), with the same declination as sunTimes. */
+export function sunAltitude(jdn, latitude, hours) {
+  const g = jdnToGregorian(jdn);
+  const n = jdn - gregorianToJDN(g.year, 1, 1) + 1;
+  const rad = Math.PI / 180;
+  const decl = -23.44 * Math.cos(rad * (360 / 365) * (n + 10));
+  const phi = latitude * rad, d = decl * rad, H = (hours - 12) * 15 * rad;
+  const s = (Math.sin(phi) * Math.sin(d)) + (Math.cos(phi) * Math.cos(d) * Math.cos(H));
+  return Math.asin(Math.max(-1, Math.min(1, s))) / rad;
+}
+
+/** Is it night at this altitude? The same test everywhere (B6381). */
+export const isNightAt = altitude => !(Number(altitude) > SUN_UP);
+
 /** Format decimal hours as HH:MM. */
 export function formatHours(hours) {
   if ( hours === null || hours === undefined ) return "none";

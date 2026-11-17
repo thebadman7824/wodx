@@ -4,11 +4,12 @@
  * scene's right-click menu, the Storyteller's hand, or api.residents.open) shows every household with the people it
  * would make: names from WoDX Creation's People generator for the year and homeland in play, a routine for each
  * role with the building as home, and the household set so its members answer one another's cry. The Storyteller
- * ticks the households, may make a household ghouls of one Cainite, draws again for other names, and makes them.
+ * ticks the households, may make a household serve one master of any line (ghouls of a Cainite, Kinfolk of a Garou...), draws again for other names, and makes them.
  * The routines then put each resident where the hour says. "Remove the residents" takes them all back.
  * The rules are in resident-rules.mjs.
  */
 import * as RS from "./resident-rules.mjs";
+import * as LM from "./line-mend.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const FOLDER = "WoDX residents";
@@ -32,6 +33,7 @@ export function build({MOD, esc, chron, settle = () => null}) {
   /** The planned people of every household on a scene. nonce: how many times the Storyteller drew again. */
   function plan(scene, {nonce = 0} = {}) {
     const ppl = creation(), y = year(), batch = hashOf(scene.uuid);
+    try { RS.useFeminine(ppl?.feminine?.()); } catch (e) { RS.useFeminine({}); }
     return listOf(scene).map((h, hi) => {
       // 0.51.0 (B2672): the land's faith names the clergy, and the clergy keep it
       const land = landOf(scene), plans = RS.planHousehold(h, {year: y, land: land.faith});
@@ -63,6 +65,9 @@ export function build({MOD, esc, chron, settle = () => null}) {
     for ( const pick of picks ) {
       const h = list.find(x => x.index === pick.index);
       if ( !h ) continue;
+      // B6317: a household may serve a master of any line; only the Kindred's are made ghouls
+      const serves = RS.parseServes(pick.serves ?? pick.ghoulOf);
+      if ( serves?.kind === "ghoul" ) pick.ghoulOf = serves.id;
       const kind = pick.ghoulOf ? "ghoul" : "mortal";
       const people = h.people.map(p => ({...p, kind, trade: p.plan.master ? p.trade : p.plan.label}));
       let actors = [];
@@ -74,6 +79,14 @@ export function build({MOD, esc, chron, settle = () => null}) {
           "prototypeToken.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL, [`flags.${MOD}.behavior`]: f.behavior, [`flags.${MOD}.routine`]: f.routine, [`flags.${MOD}.resident`]: f.resident};
       });
       if ( ups.length ) await Actor.updateDocuments(ups);
+      const master = serves && serves.kind !== "ghoul" ? game.actors.get(serves.id) : null;
+      if ( master ) {
+        const SV = game.modules.get(MOD)?.api?.servants;
+        for ( const a of actors ) {
+          try { await SV?.bind?.(a, master, serves.kind, {step: 1, quiet: true, flash: false}); } catch (e) { console.warn(`${MOD} | residents: the bond was not made`, e); }
+          if ( serves.kind === "kinfolk" ) await a.update({"flags.wodx-creation.lineage.kinfolk": {id: master.id, name: master.name}});
+        }
+      }
       // B5136 (WoDX Creation): a vampire's household keeps its beasts too, by clan, era and place
       let beasts = [];
       if ( pick.ghoulOf && beastsApi()?.householdBeasts ) {
@@ -118,20 +131,26 @@ export function build({MOD, esc, chron, settle = () => null}) {
     return actors.length;
   }
 
-  // Cainites a household can serve as ghouls (V20 Dark Ages ghoul rules in every era, through WoDX Creation)
-  const vampires = () => game.actors.filter(a => a.type === (CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire")).sort((a, b) => a.name.localeCompare(b.name));
+  // Masters a household can serve (B6317): Cainites as ghouls (V20 Dark Ages ghoul rules in every era, through WoDX
+  // Creation), and every other line's master with the people its book gives it (resident-rules HOUSEHOLD_SERVES)
+  const masters = () => game.actors.filter(a => a.type !== "Group").map(a => {
+    const s = RS.householdServes(LM.keyOf(a), a.system?.tradition ?? a.system?.affiliation ?? a.system?.custom?.tradition ?? "");
+    return s ? {id: a.id, name: a.name, ...s} : null;
+  }).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
 
   /** The Storyteller's window. Loops on Draw again with the next nonce. */
   async function open(scene = canvas?.scene) {
     if ( !game.user.isGM ) return null;
     if ( !scene ) return ui.notifications.warn("No scene in view.");
     if ( !listOf(scene).length ) return ui.notifications.info(`${scene.name} has no households. Adopt a map from the town or village generator first (the scene's right-click menu).`);
+    // B6242: the name lists load on first use
+    try { await creation()?.load?.(); } catch (e) { /* named by role */ }
     let nonce = 0;
     for ( let guard = 0; guard < 50; guard++ ) {
       const list = plan(scene, {nonce});
       const fresh = list.filter(h => !h.seeded.length);
-      const vamps = vampires();
-      const vopt = `<option value="">Mortals</option>${vamps.map(v => `<option value="${v.id}">Ghouls of ${esc(v.name)}</option>`).join("")}`;
+      const vamps = masters();
+      const vopt = `<option value="">Mortals</option>${vamps.map(v => `<option value="${esc(RS.servesValue(v.kind, v.id))}">${esc(v.words)} ${esc(v.name)}</option>`).join("")}`;
       const rows = list.map(h => {
         const done = h.seeded.length > 0;
         const who = h.people.map(p => `${esc(p.name)} <span class="wodx-quiet">(${esc(p.plan.label)})</span>`).join(", ");
@@ -153,7 +172,7 @@ export function build({MOD, esc, chron, settle = () => null}) {
           {action: "again", label: "Draw again", callback: () => ({go: "again"})}, {action: "cancel", label: "Cancel"}]});
       if ( !res || res === "cancel" ) return null;
       if ( res.go === "again" ) { nonce++; continue; }
-      const picks = fresh.filter(h => res.data[`h${h.index}`]).map(h => ({index: h.index, ghoulOf: res.data[`g${h.index}`] || null}));
+      const picks = fresh.filter(h => res.data[`h${h.index}`]).map(h => ({index: h.index, serves: res.data[`g${h.index}`] || null}));
       if ( !picks.length ) { ui.notifications.info("No household was ticked."); return null; }
       ui.notifications.info(`Making ${picks.reduce((s, p) => s + list.find(h => h.index === p.index).people.length, 0)} residents…`);
       const made = await seed(scene, list, picks);

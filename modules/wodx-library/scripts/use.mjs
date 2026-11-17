@@ -83,7 +83,11 @@ async function tellPrivately(actor, title, text) {
 /* ---------------------------------------------------------------- the Storyteller's side */
 
 async function gmDo(op) {
-  if ( game.user.isGM ) return onSocket(op);
+  // B6779g: an owner (a Storyteller too) marks the patient itself; a second Storyteller who is not the active one
+  // was sent to onSocket, which only the active Storyteller answers, and the mark was lost
+  const own = op?.op === "treated" ? game.actors.get(op.actor) : null;
+  if ( own?.isOwner ) return own.setFlag("wodx-actions", "treated", true);
+  if ( game.user.isGM && game.users.activeGM?.id === game.user.id ) return onSocket(op);
   if ( !game.users.some(u => u.isGM && u.active) ) { ui.notifications.warn("The Storyteller is not here to note it."); return null; }
   game.socket.emit(SOCKET, op);
   return null;
@@ -93,6 +97,7 @@ async function onSocket(op) {
   const a = game.actors.get(op?.actor);
   if ( !a ) return null;
   if ( op.op === "mark" ) return st()?.hardship?.mark?.(a, op.kinds ?? []);
+  if ( op.op === "treated" ) return a.setFlag("wodx-actions", "treated", true);
   return null;
 }
 
@@ -106,6 +111,8 @@ async function spendOne(item) {
 
 /* ---------------------------------------------------------------- what an ability does */
 
+// B6776: a drug's crash and a crop's harvest wait while the world is held
+const held = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 const chronTraits = () => game.modules.get("wodx-chronicle")?.api?.traits ?? null;
 const statOf = (a, k) => Number(a?.system?.attributes?.[k]?.total ?? a?.system?.attributes?.[k]?.value) || 0;
 const skillOf = (a, k) => Number(a?.system?.abilities?.[k]?.value) || 0;
@@ -217,7 +224,11 @@ async function treat(actor, item, good) {
   }
   await say(actor, `${actor.name} treats ${patient === actor ? "a wound" : patient.name} with ${item.name}.`);
   const roll = actions()?.quickCheck;
-  if ( roll ) await roll({actor, check: "firstaid", extraDiff: U.CARE_DIFF, desc: `First aid with ${item.name}`});
+  const msg = roll ? await roll({actor, check: "firstaid", extraDiff: U.CARE_DIFF, desc: `First aid with ${item.name}`}) : null;
+  // B6177: a success puts the patient under care, which is what lets their lethal wounds heal (V20 p. 286)
+  const out = U.careOutcome(U.careResult(msg?.content));
+  if ( out.treated && eff.does === "treats" ) await gmDo({op: "treated", actor: patient.id});
+  if ( out.line ) await tellPrivately(patient, `${patient.name}: first aid`, out.line);
   if ( U.spends(good, "treat") ) await spendOne(item);
 }
 
@@ -489,7 +500,7 @@ export async function sleptOff(a) {
   return ids.length;
 }
 export async function setupUse() {
-  Hooks.on("updateWorldTime", t => { crashTick(t).catch(e => console.error(`${MOD} | crash`, e)); });
+  Hooks.on("updateWorldTime", t => { if ( held() ) return; crashTick(t).catch(e => console.error(`${MOD} | crash`, e)); DU.ripenTick(t).catch(e => console.error(`${MOD} | harvest`, e)); });
   await load();
   game.socket?.on(SOCKET, onSocket);
   game.socket?.on(SOCKET, AU.onArmsSocket);
@@ -511,4 +522,4 @@ export async function setupUse() {
   });
 }
 
-export const useApi = () => ({open: openUse, run, read, abilities: abilitiesOfItem, rules: U, links: L, missing: whatIsMissing, lineOf: lineOfActor, crashTick, sleptOff});
+export const useApi = () => ({open: openUse, run, read, abilities: abilitiesOfItem, rules: U, links: L, missing: whatIsMissing, lineOf: lineOfActor, crashTick, sleptOff, ripenTick: DU.ripenTick});

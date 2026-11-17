@@ -48,12 +48,12 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
     selfcontrol: "Self-Control", bodycrafts: "Body Crafts", willpower: "Willpower", road: "Road" };
 const lab = k => LABEL[k] ?? cap(k);
 
-export const DATA = { disc: null, roads: null, v20: null };
+export const DATA = { disc: null, roads: null, v20: null, paths: null };
 /** The place line for a card (3.42.0), from the witness rules. */
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    [DATA.disc, DATA.roads, DATA.v20] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json")]);
+    [DATA.disc, DATA.roads, DATA.v20, DATA.paths] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json")]);
     return DATA;
 }
 
@@ -81,6 +81,9 @@ export function roadOf(actor) {
         return { key: f.key, road, path: road.paths.find(p => p.name === f.path) ?? null };
     }
     const p = actor?.system?.advantages?.path ?? {};
+    // B6724: a V20 Path of Enlightenment from the system sheet's choice
+    const v20 = K.v20PathFor(DATA.paths, p.label, p.custom);
+    if (v20) return v20;
     const name = p.custom || game.i18n?.localize?.(p.label || "") || "";
     return K.roadFor(DATA.roads, name.startsWith("wod.") ? "" : name);
 }
@@ -176,6 +179,7 @@ export function build(ctx) {
     }
 
     async function useDiscipline(actor) {
+        if (LIM.refuseIdle(actor)) return null; // B6156: asleep for the day or out cold
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
         const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
@@ -249,13 +253,14 @@ export function build(ctx) {
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [`Drained +${lim.diff}`] : [])], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
-            if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
+            // B6855: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
+            if ((PE.isPath(p.d) || PE.PATH_EFFECTS[p.id]) && successes > 0 && (p.r || PE.PATH_EFFECTS[p.id]) && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
                 await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}`,
@@ -274,7 +279,8 @@ export function build(ctx) {
             if (/beckoning/i.test(p.n) && successes > 0) { const came = await beckonOwn(actor); if (came.length) body += `<div class="vta-note">First to come: ${came.map(esc).join(", ")}.</div>`; }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
-            if (!fx && !p.passive && successes > 0 && EF.isOn()) {
+            // B6853: a passive power picked here turns on for its time
+            if (!fx && successes > 0 && EF.isOn()) {
                 const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: p.book === "V20" ? "Vampire (V20)" : "Vampire (Dark Ages)" });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
@@ -476,7 +482,7 @@ export function build(ctx) {
         }
         if ((kind === "domain" || kind === "huntinggrounds") && !total) {
             const h = actor.getFlag(MOD, "haven"), scene = h?.sceneId ? game.scenes?.get?.(h.sceneId) : canvas?.scene;
-            const herds = ST?.herds;
+            const herds = ST?.upkeep?.herds; // B6204: herds live under Storyteller api.upkeep
             if (herds?.feed && scene) { for (let w = 0; w < weeks; w++) await herds.feed({ scene, who: "a rival" }); out.push(`A rival hunts ${scene.name} while the domain slips: its herd thins.`); }
         }
         if (botched) {
@@ -576,7 +582,9 @@ export function build(ctx) {
     }
 
     async function masquerade(actor = null) {
-        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the Masquerade records.");
+        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the records of who saw what.");
+        // B6301: the same records serve every line; the window is named for the secret of the one who was seen
+        const title = !actor || P.detectProfile(actor) === "kindred" ? "Masquerade" : "Witnesses";
         const list = MASQJ.entries();
         const targets = [...(game.user.targets ?? [])].map(t => t.actor).filter(Boolean);
         const open = [];
@@ -584,14 +592,14 @@ export function build(ctx) {
         const content = `<form>
           <fieldset><legend>Record what was seen</legend>
             <div class="form-group"><label>Who was seen</label><input type="text" name="by" value="${esc(actor?.name ?? "")}"/></div>
-            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="fed in the open, used a Discipline, walked away from a killing blow…"/></div>
+            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="used a power in the open, changed shape, walked away from a killing blow…"/></div>
             <p class="vta-note">Witnesses: the targeted tokens (${targets.length ? targets.map(t => esc(t.name)).join(", ") : "none targeted"}).</p></fieldset>
           <fieldset><legend>Or update a witness (${open.length} still remember)</legend>
             ${open.length > 5 ? searchBox("select[name=w]", "Search witnesses…", "Search witnesses") : ""}
             <div class="form-group"><select name="w"><option value="">— none —</option>${open.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Now</label><select name="state">${Object.entries(K.WITNESS_STATES).filter(([k]) => k !== "saw").map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Note</label><input type="text" name="note"/></div></fieldset></form>`;
-        return dialog("Masquerade", content, "Record", async fd => {
+        return dialog(title, content, "Record", async fd => {
             if (fd.w) {
                 const [i, j] = String(fd.w).split(":").map(Number);
                 const L = MASQJ.entries();
@@ -846,7 +854,9 @@ export function build(ctx) {
         if (!(n(dmg.bashing) + n(dmg.lethal) + n(dmg.aggravated))) return null;
         const carry = n(a.getFlag(MOD, "healCarry"));
         const treated = !!a.getFlag(MOD, "treated");
-        if (["mortal", "hunter", "mage", "beast", "ghoul", "fae"].includes(kind)) return K.mortalHealing(dmg, seconds, { carry, treated });
+        // B6581: demons and mummies wear mortal flesh and heal on the mortal chart (Demon: The Fallen p. 248, aggravated at the
+        // lethal rate; Mummy 2nd ed. p. 77, and the Resurrection's Slow Healing flaw halves "a normal person's" rate)
+        if (["mortal", "hunter", "mage", "beast", "ghoul", "fae", "demon", "mummy"].includes(kind)) return K.mortalHealing(dmg, seconds, { carry, treated });
         if (kind === "lupine") {
             const i = GX.info(a);
             const reg = G.regeneration({ breed: i.breed, form: i.form, fera: i.fera });
@@ -925,8 +935,9 @@ export function build(ctx) {
             if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
             return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
         }
-        await ctx.setDamage(actor, { ...plan.after });
+        // B6441: the blood goes first and the wounds close after it, so a sheet that reads healed has paid already
         const ch = await ctx.changeBlood(actor, -plan.spent);
+        await ctx.setDamage(actor, { ...plan.after });
         const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
         if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
@@ -1039,7 +1050,7 @@ export function build(ctx) {
             if (keep) kept.push(a);
             rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${w}): ${esc(reaction || "takes it in")}${act ? ` (${act === "freeze" ? "falls still" : act === "flee" ? "flees" : "attacks"})` : ""}; ${keep ? "remembers" : "forgets"}.</li>`);
         }
-        if (rule === "hysteria" && rows.length) { try { await game.modules.get(MOD)?.api?.wraith?.hysteria?.(); } catch (e) { /* no wraith tools */ } }
+        if (rule === "hysteria" && rows.length) { try { const A = game.modules.get(MOD)?.api; await (A?.hysteria ?? A?.wraith?.hysteria)?.(); /* B6201: the api has hysteria at its top, not under wraith (found by gateapipaths) */ } catch (e) { /* no wraith tools */ } }
         if (fighters.length && by) {
             const ids = [...fighters.map(t => t.document?.id ?? t.id), by.document?.id ?? by.id];
             const sides = Object.fromEntries([...fighters.map(t => [t.document?.id ?? t.id, "a"]), [by.document?.id ?? by.id, "b"]]);

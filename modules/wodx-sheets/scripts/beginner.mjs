@@ -10,6 +10,7 @@
 import * as B from "./beginner-rules.mjs";
 import * as CK from "../../wodx-actions/scripts/checks-rules.js";
 import {MENU_PLAN} from "../../wodx-actions/scripts/theme-rules.js";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-sheets";
 const SHOW_ALL = new Set();   // actor ids whose zero Abilities are shown this session
@@ -21,6 +22,8 @@ export function beginner() {
 }
 const actionsApi = () => (game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null);
 const yearNow = () => { try { return Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || null; } catch (e) { return null; } };
+/** B6668: the era profile's morality switch ("roads" or "humanity-and-paths"), or undefined (then the year decides). */
+const moralityNow = () => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.eraSwitch?.("morality"); } catch (e) { return undefined; } };
 
 export function decorate(sheet, html) {
   const root = html?.[0] ?? html;
@@ -47,7 +50,8 @@ function quickRow(root, actor, editable) {
   const btns = list.map(k => CK.byKey(k)).filter(Boolean).map(c =>
     `<button type="button" class="wodx-quick" data-check="${esc(c.key)}" data-tooltip="${esc(`${c.label}. Click to roll; Shift+click to change the roll first${editable ? "; right-click to take it off this row" : ""}.`)}">${esc(short(c))}</button>`);
   if ( power && A.runSpec ) btns.push(`<button type="button" class="wodx-quick wodx-quick-power" data-spec="${esc(power)}" data-tooltip="Your powers: pick one and roll it."><i class="fa-solid fa-wand-sparkles" aria-hidden="true"></i> Your powers</button>`);
-  const add = editable ? `<select class="wodx-quick-add" aria-label="Add a quick roll"><option value="">Add a roll...</option>${
+  // B6774: the common checks are a long list (B24): a search box over it
+  const add = editable ? `${searchBox("select.wodx-quick-add", "Search rolls…", "Search the rolls to add")}<select class="wodx-quick-add" aria-label="Add a quick roll"><option value="">Add a roll...</option>${
     CK.CHECKS.filter(c => !list.includes(c.key)).map(c => `<option value="${esc(c.key)}">${esc(c.label)}</option>`).join("")}</select>` : "";
   core.insertAdjacentHTML("afterbegin", `<div class="wodx-quickrolls" role="group" aria-label="Quick rolls"><span class="wodx-quick-head">Quick rolls</span>${btns.join("")}${add}</div>`);
   const row = core.querySelector(".wodx-quickrolls");
@@ -131,10 +135,10 @@ function tuckTabs(root, actor) {
 
 /* Hover help in plain words (B2825) */
 function hoverHelp(root, actor) {
-  const year = yearNow();
+  const year = yearNow(), morality = moralityNow();
   for ( const el of root.querySelectorAll("label.vrollable, .sheet-banner-text, .headlineNormal, label") ) {
     if ( el.dataset.tooltip || el.title ) continue;
-    const h = B.helpFor(el.textContent, {year});
+    const h = B.helpFor(el.textContent, {year, morality});
     if ( h ) el.dataset.tooltip = h;
   }
   for ( const el of root.querySelectorAll(".width-namebox[data-itemid]") ) {

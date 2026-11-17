@@ -7,7 +7,7 @@
  * (V20 printed pp. 301-302, the same states a feeding vampire meets), gives first aid supplies (Common checks, First
  * aid), lights a carried light (Interactables), keeps pages written or drawn in it, rolls a common check, is put on,
  * or tells the table what the character does. What a substance does to each line is in EFFECTS; a cell marked
- * sure: false waits for Ben on the Item Uses desk and asks the Storyteller until then.
+ * sure: false waits for the owner on the Item Uses desk and asks the Storyteller until then.
  */
 import * as AR from "./arms-rules.mjs";
 import * as HY from "./hygiene-rules.mjs";
@@ -125,7 +125,9 @@ const INGREDIENT = /^(an? )?(grain|barley|dried peas|oats|rice|salt|pepper|whole
 /* Which carried light a thing is (Interactables carry-rules CARRIED). */
 const LIGHTS = [
   ["electric", R("flashlight", "headlamp", "led lantern", "reading light", "electric torch")],
-  ["candle", R("candle", "rushlight")],
+  // B6779c: a stone lamp of animal fat is a small open flame, as a candle; a glow stick is WoDX Interactables' glow
+  ["candle", R("candle", "rushlight", "stone lamp")],
+  ["glow", R("glow stick", "glowstick")],
   ["torch", R("pitch torch", "torch\\b")],
   ["lantern", R("lantern", "oil lamp", "whale-oil", "argand", "paraffin lamp", "carbide lamp")]
 ];
@@ -242,7 +244,6 @@ export function abilitiesOf(good) {
   if ( k === "papers" && /sealing wax/i.test(n) ) out.add("seal");
   if ( /floppy|usb stick|data chip|hard drive|blank cds/i.test(n) ) out.add("record");
   if ( k === "toys" && !out.size && /doll|horse|soldier|bear|figure|plush|figurine|balloon|pom poms|toy/i.test(n) ) out.add("game");
-  if ( k === "light" && /glow ?stick/i.test(n) ) out.add("switchon");
   if ( k === "accessories" && /scope|laser sight|flashlight/i.test(n) ) out.add("search");
   // B3805 to B3807: arms fight, fittings fit, traps catch (arms-rules.mjs)
   if ( k === "arms" && AR.armOf(n) ) out.add("ready");
@@ -262,7 +263,7 @@ export function abilitiesOf(good) {
 
 /**
  * What a substance does to each line. does: feeds | waters | takes (the state goes in the body) | treats | blood |
- * sleeps | none | cannot | storyteller. sure: false waits for Ben. text: what the card says. The intoxication
+ * sleeps | none | cannot | storyteller. sure: false waits for the owner. text: what the card says. The intoxication
  * effects on the living are house rules built on V20's notes for drugged blood (printed pp. 301-302).
  */
 const living = ["mortal", "ghoul", "werewolf", "mage", "changeling", "hunter", "mummy", "demon", "revenant"];
@@ -330,7 +331,7 @@ export const EFFECT_LABELS = {food: "Food", water: "Water and soft drinks", caff
   unknown: "An unknown drug", blood: "Bagged blood", holywater: "Holy water", care: "First aid supplies (the patient)", bed: "A bed"};
 
 /**
- * Ben's picks from the Item Uses desk (2026-11-12): mortal (as for a mortal), weaker, stronger, none, cannot.
+ * The owner's picks from the Item Uses desk (2026-11-12): mortal (as for a mortal), weaker, stronger, none, cannot.
  * RULINGS turns them into cells, laid over EFFECTS. Medicine for a mummy was left blank on the desk and follows
  * the other mummy picks (as for a mortal).
  */
@@ -338,7 +339,7 @@ export const PICKS = {"alcohol": {"demon": "mortal", "mummy": "mortal", "werewol
 const WEAKER = "Weaker than for a mortal: halve the dice it costs (round down) and how long it lasts (house rule).";
 const STRONGER = "Stronger than for a mortal: one more die off each pool it touches, and it lasts twice as long (house rule).";
 /**
- * Holy water against the damned (Ben, 2026-11-12; book check item-uses/holy-water-book-check.md). Baali and
+ * Holy water against the damned (the owner, 2026-11-12; book check item-uses/holy-water-book-check.md). Baali and
  * Followers of Set: one aggravated level on contact (Dark Ages: Vampire pdf 293; V20 pdf 403 has the Baali burn on
  * touch with no amount), plus +1 difficulty for the scene (house rule). Demons follow Demon: the Fallen pdf 256.
  */
@@ -366,7 +367,7 @@ function ruling(sub, line, pick) {
   return base;
 }
 export const RULINGS = Object.fromEntries(Object.entries(PICKS).map(([sub, lines]) => [sub, Object.fromEntries(Object.entries(lines).map(([l, p]) => [l, ruling(sub, l, p)]))]));
-/** Vampire clans that holy water harms as it harms a demon (Ben, 2026-11-12). */
+/** Vampire clans that holy water harms as it harms a demon (the owner, 2026-11-12). */
 export const DAMNED_CLANS = /baali|followers?\s*of\s*set|setite/i;
 /**
  * The cell for a character: as effectFor, but holy water harms Baali and Followers of Set, and a demon only at
@@ -427,7 +428,7 @@ export const ABILITY_TAGS = ["survival", "empathy", "ride", "medicine", "larceny
 /**
  * B5012: what a state in the body does to rolls, as WoDX Chronicle timed roll effects:
  * [{key, name, tags, dice, duration}]. count is the drinks in the last few hours; scale is "weaker" or "stronger"
- * from Ben's picks; strength the made batch's (weak or strong); rand for the hallucinogen's 1 to 3.
+ * from the owner's picks; strength the made batch's (weak or strong); rand for the hallucinogen's 1 to 3.
  * Drink fades by one die an hour, so it is one effect per die, each an hour longer. Wired, a smoke and caffeine
  * change no roll.
  */
@@ -482,6 +483,31 @@ export function impureOutcome(d10) { const n = Math.max(1, Math.min(10, Number(d
 
 /** Common check difficulty change for first aid with supplies: −1 with something to treat with (house rule). */
 export const CARE_DIFF = -1;
+
+/**
+ * B6177: what a first aid roll's card says: {successes, botch}, read from WoDX Actions' result line (the last one on
+ * the card, so a Lucky reroll counts). null when the card has none (the roll was not made).
+ */
+export function careResult(html = "") {
+  const re = /class="vta-res(?: good| bad)?">\s*(BOTCH|Failure|(\d+) success)/g;
+  let m, last = null;
+  while ( (m = re.exec(String(html ?? ""))) ) last = m;
+  if ( !last ) return null;
+  if ( last[1] === "BOTCH" ) return {successes: 0, botch: true};
+  return {successes: Number(last[2]) || 0, botch: false};
+}
+
+/**
+ * B6177: first aid by the book. It heals no level at once (V20 p. 286, pdf 294; V20 Dark Ages pdf p. 353): it is the medical
+ * attention that lets lethal wounds past Hurt, and a Crippled or Incapacitated mortal, heal with time. A success puts
+ * the patient under care (WoDX Actions' healing reads flags.wodx-actions.treated). Returns {treated, line}.
+ */
+export function careOutcome(res) {
+  if ( !res ) return {treated: false, line: ""};
+  if ( res.botch ) return {treated: false, line: "A botch: the wound is no better for it."};
+  if ( !res.successes ) return {treated: false, line: "No successes: the wound is not yet tended."};
+  return {treated: true, line: "Tended: under care now, so lethal wounds past Hurt can heal with time (V20 p. 286, pdf 294; V20 Dark Ages pdf p. 353)."};
+}
 
 /** The line for the table: "Ana drinks claret." */
 export function useLine(who, ability, thing) {

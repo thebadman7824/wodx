@@ -2989,7 +2989,7 @@ export default {
     "mortal"
    ],
    "name": "The hollowed deputies",
-   "summary": "The crusade's deputies in Rome who take bribes from vampire clients stop hearing their Messengers, and the faithful call them hollowed.",
+   "summary": "Word reaches Rome that Free State deputies who sell their badge to vampire clients no longer hear the Messengers; the faithful there call them hollowed.",
    "region": "EU",
    "place": "Rome",
    "tags": [
@@ -3868,7 +3868,7 @@ export default {
     "mortal"
    ],
    "name": "The Accord murders",
-   "summary": "A string of murders in Lyon, Tokyo and Seoul breaks the Accord in three cities at once.",
+   "summary": "Lyon watches the feeds as murders break the Accord in Night City and two other cities, and its own Kindred and Garou double their guards.",
    "region": "EU",
    "place": "Lyon",
    "tags": [

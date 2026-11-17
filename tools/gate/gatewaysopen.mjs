@@ -5,8 +5,9 @@
  * times and the travel log back.
  *   1. the behaviour type "WoDX: Way to", the api and the toolbar's window
  *   2. makeWay puts a region with the behaviour at each end, each pointing at the other
- *   3. walking through: the walker and the companion beside it go to the other scene, at the far end, and a stranger
- *      far off stays; each one's own time moves by the door's minute
+ *   3. walking through: the walker's token is moved into the Way's region on the viewed scene (the real path: Foundry's
+ *      tokenEnter fires the behaviour), and the walker and the companion beside it go to the other scene, at the far
+ *      end, and a stranger far off stays; each one's own time moves by the door's minute
  *   4. a gate shut for the night refuses at night and says what can be done; nobody moves
  *   5. the network check is clean for the pair and names a scene with no way in or out
  * Result: Data/wodx-gate/gatewaysopen-result.json.
@@ -57,9 +58,16 @@ export async function run() {
     const tw = await place(w, 1200, 400), tc = await place(c, 1100, 500), ts = await place(s, 100, 100);
     await step("3 walk", async () => {
       const p0 = {w: api().personalTime?.(w.id), c: api().personalTime?.(c.id)};
-      const r = await W().walk({regionUuid: way.from.uuid, behaviorId: [...way.from.behaviors][0].id, tokenId: tw.id, sceneId: a.id, userId: player?.id ?? game.user.id});
-      await sleep(800);
       const onB = id => b.tokens.some(t => t.actorId === id), onA = id => a.tokens.some(t => t.actorId === id);
+      // the token walks into the region on the viewed scene: Foundry's tokenEnter calls the Way (ways.mjs onEnter)
+      await a.view();
+      for ( let i = 0; i < 40 && canvas?.scene?.id !== a.id; i++ ) await sleep(150);
+      await sleep(500);
+      const r0 = way.from.shapes[0];
+      await a.tokens.get(tw.id).update({x: r0.x, y: r0.y});
+      for ( let i = 0; i < 80 && !(onB(w.id) && onB(c.id)); i++ ) await sleep(150);
+      await sleep(400);
+      const r = {ok: onB(w.id)};
       const end = way.to.shapes[0], tok = b.tokens.find(t => t.actorId === w.id);
       const nearEnd = tok && Math.abs(tok.x + 50 - (end.x + end.width / 2)) <= 150 && Math.abs(tok.y + 50 - (end.y + end.height / 2)) <= 150;
       const p1 = {w: api().personalTime?.(w.id), c: api().personalTime?.(c.id)};

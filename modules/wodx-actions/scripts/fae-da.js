@@ -17,7 +17,9 @@
  * Built by main.js with its helpers (ctx). Pure rules: fae-da-rules.js.
  */
 import * as LIM from "./limits.js";
+import * as TH from "./trait-hooks.js";
 import * as F from "./fae-da-rules.js";
+import * as DC from "./fae-da-cantrips.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
@@ -48,10 +50,23 @@ export function parseCantrips(text) {
         const m = l.match(/^(day|night|dawn|dusk)\s*(\d)\s*[:\-–]\s*(.+?)(?:\s*\(([^)]+)\))?(?:\s*\[([^\]]*)\])?\s*$/i);
         if (!m) return null;
         const kw = String(m[5] ?? "").toLowerCase().split(/[\s,]+/).filter(k => E.KEYWORDS[k]);
-        return { dominion: m[1].toLowerCase(), level: n(m[2]), name: m[3].trim(), trait: (m[4] ?? "").trim().toLowerCase(), ...(kw.length ? { kw } : {}) };
+        const dominion = m[1].toLowerCase(), name = m[3].trim();
+        // B6551: a cantrip the book names takes its level, trait and effect from the preset, unless the line says otherwise
+        const pre = DC.presetOf(name, dominion);
+        if (pre) {
+            const pk = DC.keywordsOf(pre);
+            return { dominion, level: pre.level, name: pre.name, trait: (m[4] ?? "").trim().toLowerCase() || pre.trait, ...(kw.length ? { kw } : pk.length ? { kw: pk } : {}), preset: pre.id };
+        }
+        return { dominion, level: n(m[2]), name, trait: (m[4] ?? "").trim().toLowerCase(), ...(kw.length ? { kw } : {}) };
     }).filter(Boolean);
 }
-export const cantripLine = c => `${F.DOMINIONS[c.dominion]?.label ?? c.dominion} ${c.level}: ${c.name}${c.trait ? ` (${c.trait})` : ""}${c.kw?.length ? ` [${c.kw.join(", ")}]` : ""}`;
+export const cantripLine = c => `${F.DOMINIONS[c.dominion]?.label ?? c.dominion} ${c.level}: ${c.name}${c.trait ? ` (${c.trait})` : ""}${c.kw?.length && (!c.preset || c.kw.join() !== DC.keywordsOf(DC.CANTRIPS[c.preset]).join()) ? ` [${c.kw.join(", ")}]` : ""}`;
+/** B6551: the book's cantrips a fae could learn now, for the sheet's picker: [{id, label, known}] by Dominion. */
+export function bookPicks(dominions = {}, known = []) {
+    const have = new Set(known.map(c => c.preset).filter(Boolean));
+    return F.DOMINION_IDS.flatMap(d => DC.presetsFor(d, Math.max(1, n(dominions[d]))).filter(c => n(dominions[d]) >= c.level)
+        .map(c => ({ id: c.id, dominion: d, label: `${F.DOMINIONS[d].label} ${c.level}: ${c.name}`, known: have.has(c.id) })));
+}
 /** What a cantrip that took does on the effects card: its keywords at its successes (B3752). */
 export const cantripResults = (kw, successes, { name = "", source = "", hasTarget = false } = {}) => PW.powerOutcomes({ keywords: kw ?? [] }, successes, { label: name, source, hasTarget }).results;
 export function parseOaths(text) {
@@ -88,6 +103,10 @@ export function build(ctx) {
             gramarye: n(actor.system?.abilities?.gramarye?.value) || n(ctx.findAbility?.(actor, "gramarye")?.value) };
     }
     const save = (actor, patch) => setFlag(actor, "daFae", { ...(actor.getFlag(MOD, "daFae") ?? {}), ...patch });
+    // B6586: an Echo met this scene weighs on the fae's own magic: +1 difficulty at level 1, +2 from level 2; at level 4
+    // no Unleashing while it lasts (Dark Ages: Fae pp. 110-111). It ends with the scene.
+    const echoHold = actor => { const h = actor?.getFlag?.(MOD, "daFae")?.echoHold; return h && n(h.scene) === LIM.sceneNo() ? n(h.level) : 0; };
+    const echoDiff = actor => { const l = echoHold(actor); return l >= 2 ? 2 : l ? 1 : 0; };
     async function spend(actor, which, k) {
         const i = info(actor);
         const have = i[which].temp;
@@ -143,7 +162,8 @@ export function build(ctx) {
             <div class="form-group"><label><input type="checkbox" name="fill"/> Start from the Origin (Mists, Weaving)</label></div>
           </fieldset>
           <fieldset><legend>Dominions</legend>${dom}</fieldset>
-          ${area("cantrips", "Cantrips", i.cantrips.map(cantripLine).join("\n"), "one a line: Night 1: Hush (manipulation) [veil]; the brackets say what it does")}
+          ${area("cantrips", "Cantrips", i.cantrips.map(cantripLine).join("\n"), "one a line: Night 1: Hush (manipulation) [veil]; the brackets say what it does; a cantrip the book names needs no brackets")}
+          ${(() => { const picks = bookPicks(i.dominions, i.cantrips).filter(p => !p.known); return picks.length ? `<div class="form-group stacked"><label>Add from the book <small>the Dominions' named cantrips up to the dots on this sheet (Dark Ages: Fae pp. 123–162); hold Ctrl to pick several</small></label>${picks.length > 5 ? searchBox("select[name=book]", "Search the book's cantrips…", "Search the book's cantrips") : ""}<select name="book" multiple size="8" data-fixed>${picks.map(p => `<option value="${p.id}" title="${esc(DC.CANTRIPS[p.id].fx)}">${esc(p.label)}</option>`).join("")}</select></div>` : ""; })()}
           ${area("lesser", "Lesser Features", i.lesser.join("\n"), "one a line")}
           ${area("greater", "Greater Features", i.greater.join("\n"), "one a line")}
           ${area("echoes", "Echoes", i.echoes.map(e => e.trigger).join("\n"), "one trigger a line")}
@@ -163,6 +183,8 @@ export function build(ctx) {
             mists.temp = Math.min(mists.temp, mists.perm); weaving.temp = Math.min(weaving.temp, weaving.perm);
             const dominions = Object.fromEntries(F.DOMINION_IDS.map(d => [d, clampT(fd[`d-${d}`], 0, 5)]));
             const cantrips = parseCantrips(fd.cantrips);
+            // B6551: the cantrips picked from the book join the list (a multiple select gives an array, or one value)
+            for (const id of [fd.book ?? []].flat().filter(Boolean)) { const c = DC.asCantrip(id); if (c && !cantrips.some(x => x.preset === id)) cantrips.push(c); }
             const echoes = lines(fd.echoes).map(t => ({ trigger: t.slice(0, 200) }));
             const oaths = parseOaths(fd.oaths);
             await save(actor, { origin, court, mists, weaving, dominions, cantrips, lesser: lines(fd.lesser), greater: lines(fd.greater), echoes, oaths,
@@ -185,6 +207,45 @@ export function build(ctx) {
     /*  Cantrips                                                       */
     /* -------------------------------------------------------------- */
 
+    /* B6552: what a book cantrip asks before it is cast: the Origin, a target, the age floor, once a day or scene */
+    const onceKey = (kind) => kind === "day" ? `d${Math.floor(game.time.worldTime / DAY)}` : `s${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    function preCheck(actor, i, pre, id, tActor) {
+        if (!pre) return "";
+        if (pre.notOrigin && i.origin === pre.notOrigin) return `${F.ORIGINS[i.origin]?.label ?? i.origin} cannot cast ${pre.name}`;
+        if (pre.notSelf && !tActor) return `${pre.name} works on another: target them first`;
+        if (pre.romance && tActor) {
+            const age = game.modules.get("wodx-chronicle")?.api?.age?.romance?.(actor, tActor) ?? { ok: false, why: "the age check is not available (a WoDX Chronicle with the age floor is needed)" };
+            if (!age.ok) return String(age.why).replace(/\.$/, "");
+        }
+        if (pre.once && (actor.getFlag(MOD, "daFaeOnce") ?? {})[id] === onceKey(pre.once)) return `${pre.name} works once a ${pre.once}, and it was cast already`;
+        return "";
+    }
+    const setOnce = (actor, id, kind) => setFlag(actor, "daFaeOnce", { ...(actor.getFlag(MOD, "daFaeOnce") ?? {}), [id]: onceKey(kind) });
+    const woundOf = a => (a?.system?.conditions?.isignoringpain || a?.system?.conditions?.isfrenzy) ? 0 : Math.abs(n(a?.system?.health?.damage?.woundpenalty));
+
+    /** B6552: a book cantrip's results, and what it does past the card: the Sword, Freeze Death, Pure Form, the making cantrips. */
+    async function presetDoes(actor, i, pre, id, successes, tActor, clock) {
+        let results = DC.presetResults(id, successes);
+        let html = "";
+        if (pre.does === "freezedeath") {
+            const wp = Math.max(1, woundOf(tActor ?? actor));
+            results = results.map(r => r.out?.kind === "timed" ? { ...r, out: { ...r.out, dice: wp, text: `${r.out.text} (wound penalties of ${wp} gone)` } } : r);
+        }
+        if (pre.does === "pureform") results = results.map(r => r.out?.kind === "timed" ? { ...r, out: { ...r.out, dice: Math.max(1, i.mists.perm) } } : r);
+        if (pre.does === "sword") {
+            const w = [...actor.items].find(x => x.type === "Melee Weapon" && x.system?.damage?.type !== "aggravated");
+            if (w) {
+                const was = { "system.damage.type": w.system?.damage?.type ?? "lethal" };
+                await w.update({ "system.damage.type": "aggravated" });
+                await game.modules.get("wodx-chronicle")?.api?.timed?.applyTimed?.(actor, { name: `${pre.name}: ${w.name}`, img: "icons/svg/sword.svg", duration: { kind: "scene" }, key: `wodx-fae-sword-${w.id}`,
+                    source: DC.pageOf(pre), description: `${w.name} does aggravated harm for the scene.`, revert: { key: "wodx-actions.faeItemOff", data: { item: w.id, was } } });
+                html += `<div class="vta-big good">${esc(w.name)} does aggravated harm for the scene.</div>`;
+            } else html += `<div class="vta-note">${esc(actor.name)} carries no hand weapon for the blade to become: give them one and cast again.</div>`;
+        }
+        if (pre.imbue && ctx.imbue) { await ctx.imbue(actor, { mode: pre.imbue, successes, known: i.cantrips, dominion: pre.dominion, clock }); html += `<div class="vta-note">${esc(actor.name)} chooses the cantrip and the object.</div>`; }
+        return { results, html };
+    }
+
     async function cast(actor) {
         const i = await needFae(actor);
         if (!i) return null;
@@ -199,7 +260,7 @@ export function build(ctx) {
             <div class="form-group"><label>Trait</label>${traitSelect(actor, "manipulation")}</div>
             <div class="form-group"><label>What it does</label><select name="kw" data-fixed><option value="">(the Storyteller rules it)</option>${Object.entries(E.KEYWORDS).filter(([, K]) => K.tier !== "st").map(([k, K]) => `<option value="${k}" title="${esc(K.does)}">${esc(K.label)}</option>`).join("")}</select></div>
           </fieldset>
-          <div class="form-group"><label>Difficulty before modifiers</label><input type="number" name="base" min="3" max="10" value="6"/></div>
+          <div class="form-group"><label>Difficulty before modifiers <small>a cantrip from the book sets its own</small></label><input type="number" name="base" min="3" max="10" value="6"/></div>
           <div class="form-group"><label>The Storyteller's modifier</label><input type="number" name="mod" min="-3" max="3" value="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="clock" checked/> Use the clock's hour and season</label></div>
           ${i.holdings ? `<div class="form-group"><label><input type="checkbox" name="holding"/> In a holding whose favoured Dominion this is (−1)</label></div>` : ""}
@@ -211,16 +272,33 @@ export function build(ctx) {
             const dominion = c?.dominion ?? fd.dominion, level = c ? c.level : n(fd.level);
             const t = traitOf(actor, c?.trait || fd.trait);
             const time = fd.clock ? F.timeBonus(dominion, clock) : {};
+            // B6552: a cantrip the book names sets its own difficulty (a number, or the target's Willpower), its costs and its limits
+            const pre = c?.preset ? DC.CANTRIPS[c.preset] : null;
+            const tgs = EF.targetsOf(actor);
+            const tActor = !tgs.self ? (tgs.docs[0]?.actor ?? null) : null;
+            const presetCheck = preCheck(actor, i, pre, c?.preset, tActor);
+            if (presetCheck) { notify(`${actor.name}: ${presetCheck}.`); return null; }
+            const base = pre ? DC.baseDifficulty(pre, { targetWillpower: tActor ? n(tActor.system?.advantages?.willpower?.permanent) : null,
+                targetStamina: tActor ? n(tActor.system?.attributes?.stamina?.value) : null, people: Math.max(1, tgs.self ? 1 : tgs.docs.length) }) : (n(fd.base) || 6);
             const plan = F.castPlan({ dominion, rating: i.dominions[dominion], trait: t.value, traitLabel: t.label, level, court: i.court, mists: i.mists.perm, weaving: i.weaving.perm },
-                { time, holding: fd.holding ? 1 : 0, base: n(fd.base) || 6, mod: n(fd.mod) });
+                { time, holding: fd.holding ? 1 : 0, base, mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            if (pre) plan.notes.push(`difficulty ${base} from the book${pre.diff === "willpower" ? " (the target's Willpower)" : ""}`);
+            if (pre?.weaving && !(await spend(actor, "weaving", n(pre.weaving)))) return null;
+            if (pre?.willpower && !(await spendWillpower(actor, n(pre.willpower)))) { notify(`${actor.name}: ${pre.name} costs a Willpower point.`); return null; }
+            if (pre?.once) await setOnce(actor, c.preset, pre.once);
             // B4921: a cantrip used up for its time (the house rule for the fifth level and up) is refused before Mists are spent
             const lim = await LIM.gate(actor, { name: c?.name ?? `${F.DOMINIONS[dominion]?.label ?? dominion} ${level}`, disc: F.DOMINIONS[dominion]?.label ?? dominion, level });
             if (!lim) return null;
-            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
+            if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
+            const ed = echoDiff(actor);
+            if (ed) plan.notes.push(`an Echo this scene +${ed}`);
             if (fd.cloak && !(await spend(actor, "mists", 1))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            // B6662: the target's ward or Magic Resistance makes a cantrip on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.notes.push(...rm.parts);
+            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed + n(rm.diff)), { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const name = c?.name ?? `a level-${level} ${F.DOMINIONS[dominion].label} cantrip`;
             let body = rollBlock(`${F.DOMINIONS[dominion].label} + ${esc(t.label)}`, r, [...plan.notes, ...(fd.cloak ? ["cloaked: Perception + Kenning (8) to see it"] : []), ...(wp ? ["Willpower"] : [])]);
@@ -229,9 +307,24 @@ export function build(ctx) {
                 : `<div class="vta-big">${esc(name)} does not take.</div>`;
             if (i.imbalance === "mists") body += `<div class="vta-note">Mists imbalance: cantrips come harder (Dark Ages: Fae p. 102).</div>`;
             if (c?.note) body += `<div class="vta-note">${esc(c.note)}</div>`;
-            // What it does: the cantrip's own keywords, else the one picked by hand, on the effects card (B3752)
             let fxItems = [];
-            const kw = c?.kw?.length ? c.kw : fd.kw ? [fd.kw] : [];
+            if (pre) {
+                body += `<div class="vta-res">${esc(pre.fx)}</div>`;
+                const ok = DC.meets(pre, r.botch ? 0 : r.successes);
+                if (!r.botch && r.successes > 0 && !ok.ok) body += `<div class="vta-big">${esc(ok.why)}: it does not take.</div>`;
+                else if (!r.botch && r.successes > 0) {
+                    const extra = await presetDoes(actor, i, pre, c.preset, r.successes, tActor, clock);
+                    body += extra.html;
+                    if (extra.results.length && EF.isOn()) {
+                        const pp = EF.planOf(actor, extra.results, r.successes, { name, line: "Fae (Dark Ages)" });
+                        body += pp.html;
+                        fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                    }
+                }
+                body += `<div class="wodx-quiet">${esc(DC.pageOf(pre))}</div>`;
+            }
+            // What it does: the cantrip's own keywords, else the one picked by hand, on the effects card (B3752)
+            const kw = pre ? [] : c?.kw?.length ? c.kw : fd.kw ? [fd.kw] : [];
             if (kw.length && !r.botch && r.successes > 0 && EF.isOn()) {
                 const t = EF.targetsOf(actor);
                 const pp = EF.planOf(actor, cantripResults(kw, r.successes, { name, source: `${REF} pp. 120–121`, hasTarget: !t.self && t.docs.length > 0 }), r.successes, { name, line: "Fae (Dark Ages)" });
@@ -271,8 +364,9 @@ export function build(ctx) {
             const plan = F.unleashPlan({ dominion: d, rating: i.dominions[d], origin: i.origin, court: i.court, mists: i.mists.perm, weaving: i.weaving.perm, mien: i.mien },
                 { time, holding: fd.holding ? 1 : 0, holdingCalm: !!fd.calm, weavingSpent: Math.min(n(fd.weave), i.weaving.temp), base: n(fd.base) || 6 });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            if (echoHold(actor) >= 4) { notify(`${actor.name} met an Echo of the fourth level this scene: no Unleashing while it lasts.`); return null; }
             if (plan.weavingSpent && !(await spend(actor, "weaving", plan.weavingSpent))) return null;
-            const base = await rollPool(plan.dice, plan.difficulty);
+            const base = await rollPool(plan.dice, Math.min(10, plan.difficulty + echoDiff(actor)));
             const wild = await rollPool(plan.wildDice, plan.wildDifficulty);
             const out = F.unleashOutcome(base, plan.wildDice ? wild : { successes: 0, botch: false });
             const back = await gain(actor, "mists", out.mistsBack);
@@ -367,6 +461,20 @@ export function build(ctx) {
             body += `<div class="vta-big ${level ? "bad" : "good"}">${level ? `Echo, level ${level}` : "The Echo fails"}${e ? `: ${esc(e.trigger)}` : ""}.</div><div class="vta-res">${esc(F.ECHO_LEVELS[level])}</div>`;
             if (weave) body += `<div class="vta-note">${weave} Weaving spent: −${weave / 2}.</div>`;
             if (level >= 1 && level <= 5) body += `<div class="vta-note">For instance: ${F.ECHO_PICKS[level].map(esc).join("; ")}.</div>`;
+            // B6586: levels 1 to 4 take hold for the scene: the fae's own rolls (and attacks, through the Echo condition) are harder,
+            // level 4 stops Unleashing, and the harm of levels 3 and 4 is a button the Storyteller presses
+            if (level >= 1 && level <= 4) {
+                await save(actor, { echoHold: { level, scene: LIM.sceneNo() } });
+                const C = game.modules.get("wodx-chronicle")?.api;
+                try {
+                    C?.registerCondition?.({ id: "fae-echo", name: "An Echo", img: "icons/svg/sound.svg", source: `${REF} pp. 110–111`, lines: ["changeling", "fae"],
+                        summary: "An Echo weighs on the fae for the scene: harder magic and harder blows.", mods: { ownDiff: 1 } });
+                    await C?.timed?.applyTimed?.(actor, { name: `An Echo (level ${level})`, duration: { kind: "scene" }, condition: "fae-echo", key: "wodx-fae-echo", source: `${REF} pp. 110–111` });
+                } catch (e) { console.warn("WoDX | Echo", e); }
+                body += `<div class="vta-res">For the scene: +${level >= 2 ? 2 : 1} difficulty on ${esc(actor.name)}'s cantrips and Unleashing${level >= 4 ? ", and no Unleashing at all" : ""}.</div>`;
+                if (level === 3) body += `<button type="button" class="vta-btn" data-fx="echo3" data-actor="${esc(actor.uuid)}" data-gm>Apply 3 bashing (soakable)</button>`;
+                if (level === 4) body += `<button type="button" class="vta-btn" data-fx="echo4" data-actor="${esc(actor.uuid)}" data-gm>Apply 4 lethal</button>`;
+            }
             if (level === 5) {
                 const h = F.echoFive(i.origin);
                 body += `<div class="vta-note">${h.aggravated ? `${h.aggravated} aggravated levels, then ${h.lethalPerTwoTurns} lethal per two turns near it` : esc(h.note)}${h.aggravated && h.note ? ` ${esc(h.note)}` : ""}.</div>`;
@@ -488,10 +596,26 @@ export function build(ctx) {
             const actor = h ? await fromUuid(h.actor) : null;
             if (!actor) return null;
             if (!actor.isOwner) return notify("Only the fae's player or the Storyteller spends the Weaving.");
-            if (h.step <= 1) return notify("The havoc is at its first step: it cannot go lower.");
-            if (!(await spend(actor, "weaving", 2))) return null;
-            await msg.setFlag(MOD, "daFaeHavoc", { ...h, step: h.step - 1, lowered: h.lowered + 1 });
-            return post(actor, `${actor.name} reins in the havoc`, `<div class="vta-res">2 Weaving: the havoc is ${h.lowered + 1} step${h.lowered ? "s" : ""} lower (step ${h.step - 1} of 5).</div><div class="wodx-quiet">${REF} p. 102</div>`);
+            // B6935: havocStep is the rule: 2 Weaving a step, never below the first (p. 102)
+            const hs = F.havocStep(h.step, 2);
+            if (!hs.cost) return notify("The havoc is at its first step: it cannot go lower.");
+            if (!(await spend(actor, "weaving", hs.cost))) return null;
+            await msg.setFlag(MOD, "daFaeHavoc", { ...h, step: hs.step, lowered: h.lowered + 1 });
+            return post(actor, `${actor.name} reins in the havoc`, `<div class="vta-res">${hs.cost} Weaving: the havoc is ${h.lowered + 1} step${h.lowered ? "s" : ""} lower (step ${hs.step} of 5).</div><div class="wodx-quiet">${REF} p. 102</div>`);
+        }
+        if (what === "echo3" || what === "echo4") {
+            if (!game.user.isGM) return null;
+            const e = msg.getFlag(MOD, "daFaeEcho");
+            const a = e?.actor ? await fromUuid(e.actor) : null;
+            if (!a || e.level !== (what === "echo3" ? 3 : 4)) return null;
+            if (e.done) return notify("That Echo's harm is already applied.");
+            await msg.setFlag(MOD, "daFaeEcho", { ...e, done: true });
+            const type = what === "echo3" ? "bashing" : "lethal", k = what === "echo3" ? 3 : 4;
+            // Level 3 is soakable bashing (Dark Ages: Fae p. 111): WoDX Combat rolls the soak and posts its own card
+            const C = game.modules.get("wodx-combat")?.api;
+            if (what === "echo3" && C?.soakAndApply) return C.soakAndApply(a.getActiveTokens?.()[0] ?? a, { mode: "levels", amount: 3, type: "bashing", soak: true });
+            const r = await game.wodxCombat?.applyDamage?.(a, type, k);
+            return post(a, `Echo: ${a.name}`, `<div class="vta-big bad">${k} ${type} levels.</div>${r?.woundLabel ? `<div class="vta-res">Now ${esc(r.woundLabel)}.</div>` : ""}`);
         }
         if (what === "echo5") {
             if (!game.user.isGM) return null;

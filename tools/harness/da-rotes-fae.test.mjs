@@ -23,7 +23,7 @@ test("a cantrip line carries what it does, and a cantrip that takes puts it on t
   assert.deepEqual(c.kw, ["veil"]); assert.equal(c.trait, "manipulation");
   assert.deepEqual(d.kw, ["light", "harm"]); assert.equal(d.trait, "");
   assert.equal(FX.cantripLine(c), "Night 1: Hush (manipulation) [veil]");
-  assert.equal(FX.parseCantrips("Night 1: Hush (manipulation)")[0].kw, undefined);
+  assert.deepEqual(FX.parseCantrips("Night 1: Hush (manipulation)")[0].kw, ["fortune"]); // B6857: the book cantrip's own keyword
   const res = FX.cantripResults(["veil"], 2, {name: "Hush"});
   assert.equal(res[0].key, "veil"); assert.equal(res[0].who, "self");
   assert.equal(FX.cantripResults(["harm"], 2, {name: "Sunflash"}).length, 0, "harm needs a target");

@@ -6,7 +6,8 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
-import {on as ghoulNeedOn} from "./ghoul-need.mjs";
+import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";
+import {isQuiet} from "./quiet.mjs";
 import * as TERMS from "./terms.mjs";
 import {DAY} from "./terms.mjs";
 
@@ -240,8 +241,9 @@ export async function museSeen(actorOrId, museId, how = "see") {
 
 /** The weekly rise of every Toreador's Obsession, and healed Gangrel marks. Run by the active Storyteller. */
 let lastTick = -1;
-export async function tick({force = false} = {}) {
-  if ( !on() || !isActiveGM() ) return;
+export async function tick({force = false, settle = false} = {}) {
+  // B6162: a time skip or a hold waits; the skip's end settles it once (settle)
+  if ( !on() || !isActiveGM() || (!settle && isQuiet()) ) return;
   const t = now(), day = Math.floor(t / DAY);
   if ( day === lastTick && !force ) return;
   lastTick = day;
@@ -374,7 +376,8 @@ function onSocial(p) {
 function goodNamed(name) {
   if ( !name ) return null;
   const lib = actorsApi("wodx-library"), key = String(name).toLowerCase();
-  const g = lib?.rules?.GOODS?.find?.(x => String(x.name).toLowerCase() === key);
+  // B6203: the goods list is Library api.look.goods(); api.rules is Gear's rules and has none
+  const g = lib?.look?.goods?.()?.find?.(x => String(x.name).toLowerCase() === key);
   let substance = null;
   try { substance = g ? lib?.use?.rules?.substanceOf?.(g) ?? null : null; } catch (e) { substance = null; }
   return {name: String(name), kind: g?.kind ?? null, substance};
@@ -413,6 +416,8 @@ export async function glimpse(actorOrId) {
 }
 /** A riddle about the next dated event, kept so that the Storyteller hears when it comes true (Malkavian, Stargazer). */
 async function giveGlimpse(a, sig, {field, title, quiet}) {
+  // B6240: on a player's client the world timeline loads the first time a glimpse is asked for
+  try { await events.load(); } catch (e) { /* the book events alone */ }
   const nx = nextEvent();
   const g = nx ? S.glimpseFor(nx.ev, nx.days, S.seedOf(a.id, nx.ev.id, Math.floor(now() / DAY))) : {theme: "none", text: quiet};
   sig[field] = now();
@@ -451,7 +456,7 @@ async function soilTick(a, t) {
   const before = foundry.utils.deepClone(sig);
   sig.soil = r.soil;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  if ( r.halved ) await cardFor(a, "soil", `${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved tonight (rounded down) until they rest on it again.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  if ( r.halved ) await cardFor(a, "soil", `${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved (rounded down, never under one die), once more for each night in a row without it, until they rest on it again; the rolls do it.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
 }
 /** Put two handfuls of native soil in a Tzimisce's pack. */
 export async function giveSoil(actorOrId, where = "") {
@@ -715,8 +720,10 @@ async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
   // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off.
-  // The domitor's feeding (B4983) is offered either way.
+  // The domitor's feeding (B4983) is offered either way. B6160: a ghoul the monthly need reads is offered it there
+  // (that tick runs at the default settings), so it is not asked twice; this offer is for the rest.
   if ( ghoulNeedOn() ) {
+    if ( needIsGhoul(a) ) return;
     const g = sigOf(a).ghoul, fedAt = g?.fedAt ?? a.flags?.[MODULE_ID]?.ghoulNeed?.fedAt;
     if ( fedAt === undefined || fedAt === null ) return;
     const m = S.monthsUnfed(fedAt, t);
@@ -735,7 +742,7 @@ async function ghoulTick(a, t) {
   await offerFeed(a, m);
 }
 /** B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens. */
-async function offerFeed(a, m) {
+export async function offerFeed(a, m) {
   const dom = domitorOf(a);
   const here = new Set((game.scenes?.active?.tokens ?? []).map(tk => tk.actorId));
   if ( !dom || !here.has(a.id) || !here.has(dom.id) || n(dom.system?.advantages?.bloodpool?.temporary) < 1 ) return;
@@ -1110,12 +1117,17 @@ export function effects(actorOrId) {
   const out = S.markEffects(sig.marks ?? [], now());
   const rows = rowsOf(a), when = whenNow(a);
   for ( const row of rows ) for ( const e of row.effects ?? [] ) if ( !e.when || e.when === "monster" || when.has(e.when) ) out.push({...e, why: row.label});
+  // B6729: Titan's Power, a troll's held oaths as Strength dice (C20 p. 113)
+  const troll = S.trollOath((sig.oaths ?? []).filter(o => !o.broken).length);
+  if ( troll && rows.some(r => r.key === "troll") ) out.push({tags: ["strength"], dice: troll, why: "Trolls: Titan's Power"});
   const dfm = rowWith(a, "deformity") ? S.deformityByKey(sig.deformity) : null;
   for ( const e of dfm?.effects ?? [] ) out.push({...e, why: `Metis: ${dfm.label.toLowerCase()}`});
   const pen = S.beautyPenalty(sig.muses ?? []);
   if ( pen ) out.push({tags: ["beauty"], difficulty: pen, why: "Obsession with a Muse"});
   try { out.push(...countEffects(a)); } catch (e) { /* no canvas */ }
-  if ( sig.soil?.short > (rowWith(a, "soil")?.grace ?? 0) && isFeature(a, "soil") ) out.push({tags: ["all"], halve: true, why: "Rested without native soil"});
+  // B6925: the pools halve once for each night in a row without it (V20 p. 71), read by the roll pipeline
+  const soilGrace = rowWith(a, "soil")?.grace ?? 0;
+  if ( sig.soil?.short > soilGrace && isFeature(a, "soil") ) out.push({tags: ["all"], halve: S.soilHalvings(sig.soil.short, soilGrace), why: "Rested without native soil"});
   return out;
 }
 
@@ -1127,6 +1139,18 @@ function whenNow(a) {
   try { const c = rowsOf(a).find(r => r.feature === "court"); if ( c && S.courtInPower(describeTime(now(), 49.5).month) === c.key ) out.add("court"); } catch (e) { /* no clock */ }
   try { for ( const t of game.modules.get("wodx-atmosphere")?.api?.weather?.now?.()?.tags ?? [] ) out.add(t); } catch (e) { /* no weather */ }
   return out;
+}
+/** B6729: the extra Bruised levels a character's kith gives, for WoDX Combat's health track (through traits.toughness). {n, names} */
+export function bruisedFor(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
+  try { return S.faeBruised(rowsOf(a), {oathsHeld: (sigOf(a).oaths ?? []).filter(o => !o.broken).length}); } catch (e) { return {n: 0, names: []}; }
+}
+/** B6922: the health levels a character's kith takes away, for WoDX Combat's health track (through traits.toughness). {n, names} */
+export function fewerFor(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !on() || !isFae(a) ) return {n: 0, names: []};
+  try { return S.faeFewer(rowsOf(a)); } catch (e) { return {n: 0, names: []}; }
 }
 /** Signature effects for one roll, in the trait-effect shape (WoDX Chronicle's traits api adds them to its own). */
 export function rollEffects(actor, ctx = {}) {
@@ -1220,7 +1244,7 @@ export async function open(actorOrId) {
   if ( has("deformity") && on() && (!sig.deformity || game.user.isGM) ) S.DEFORMITIES.forEach(d => buttons.unshift({action: `dfm:${d.key}`, label: `Deformity: ${d.label}`}));
   if ( has("camera") && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
   const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: ${isWraith(a) ? "Guild and legion" : rows.some(r => FAE_LIKE.has(r)) ? "kith, seeming and court" : rows.some(r => TRIBE_LIKE.has(r)) ? (rows.some(r => S.MAGE.includes(r) || S.HOUSES.includes(r)) ? "Tradition and House" : "tribe, auspice and breed") : "clan feature"}`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
-  if ( String(pick).startsWith("pod:") ) return POD.handle(a, pick, ask);
+  if ( String(pick).startsWith("pod:") || String(pick).startsWith("road:") ) return POD.handle(a, pick, ask);
   if ( pick === "glimpse" ) return glimpse(a);
   if ( pick === "splat" ) { const t = S.SMALL_LINES[small].table; const f = await ask("The group", [{name: "g", label: t.map(r => r.label).join(", "), value: rows[0]?.label ?? ""}]); return f ? setSplat(a, f.g) : null; }
   if ( pick === "guild" || pick === "wraith" ) { const w = wraithOf(a); const f = await ask("Guild, legion and faction", [
@@ -1297,7 +1321,8 @@ export function registerSignatureHooks() {
   Hooks.on("createToken", token => onToken(token, null));
   Hooks.on("updateToken", onToken);
   Hooks.on("updateWorldTime", () => tick());
-  Hooks.on("wodxSkipEnd", () => tick());
+  Hooks.on("wodxSkipEnd", () => tick({settle: true}));
+  Hooks.on("wodxLightTouchEnd", () => tick({settle: true}));
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el, a = root?.querySelector?.("[data-wct-sig-act]");
     if ( a ) { if ( !mayPress(message.flags?.[MODULE_ID]?.sigAct) ) a.remove(); else a.addEventListener("click", () => runAct(message)); }
@@ -1453,7 +1478,7 @@ async function piskie({actor, mode, give, owe} = {}) {
   await cardFor(actor, "line", `${actor.name} leaves a gift`, `<p>${esc(give)} left in the trade, freely.</p>`, {whisper: [...new Set([...ownerIds(actor), ...gmIds()])], act: {key: "glamour", label: "A point of Glamour", who: "gm", data: {ids: [actor.id], one: true}}});
 }
 
-export const signaturesApi = {soakFor,rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+export const signaturesApi = {soakFor, bruisedFor, fewerFor, rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
   setSplat, setWraith, luck,

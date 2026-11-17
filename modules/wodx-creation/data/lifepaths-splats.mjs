@@ -82,6 +82,9 @@ const vampire = [
   sp("gargoyle", "Gargoyle", "Made in stone", "You were made by Tremere hands from more than one clan's blood.", [
     ["You serve the chantry", "ab Alertness|flaw Enemy", "a Tremere master|who made you"],
     ["You are free", "ab Athletics|flaw Hunted"]]),
+  sp("cyberpunks", "Cyberpunks", "Made in the Net", "Your sire was a netrunner who lived for the machines and Embraced you for the same hunger.", [
+    ["You run the Net", "ab Computer|bg Contacts", "a fixer|who sold your first paydata"],
+    ["You ride the chrome", "ab Technology|ab Streetwise", "a ripperdoc|who knew you before the Embrace"]], {spans: [[2016, 2300]], futureBranch: true}),
   sp("kiasyd", "Kiasyd", "Under the glass", "Your sire was tall, pale and fond of books, and something fae ran in the blood.", [
     ["A librarian", "bg Library|ab Academics"],
     ["A wanderer in the Dreaming", "ab Occult|ab Enigmas"]]),
@@ -219,7 +222,7 @@ const werewolf = [
   tribe("uktena", "Uktena", "Secrets", "Your tribe keeps buried things buried.", ["A keeper of banes", "ab Occult|bg Fetish"], ["A seeker of lore", "ab Enigmas|ab Investigation"]),
   tribe("wendigo", "Wendigo", "The cold north", "Your tribe guards the peoples of the north of the Americas.", ["A warrior", "ab Survival|ab Brawl"], ["A spirit-talker", "ab Occult|bg Totem"]),
   tribe("croatan", "Croatan", "The east coast", "Your tribe guards the people of the eastern woods of the Americas.", ["A guardian", "ab Survival|bg Rites"], ["A spirit-talker", "ab Occult|bg Totem"], {spans: [[1100, 1589]], house: true}),
-  tribe("bunyip", "Bunyip", "The Dreamtime", "Your tribe guards the waters of the southern land.", ["A singer of the land", "ab Survival|ab Occult"], ["The last of them", "flaw Hunted|merit Iron Will"], {spans: [[1100, 1920]], house: true}),
+  tribe("bunyip", "Bunyip", "The Dreamtime", "Your tribe guards the waters of the southern land.", ["A singer of the land", "ab Survival|ab Occult"], ["The last of them", "flaw Hunted|merit Iron Will"], {spans: [[1100, 1937]], house: true}),
   tribe("bsd", "Black Spiral Dancers", "The Labyrinth", "You danced the spiral and came out the other side changed.", ["Faithful to the Wyrm", "ab Occult|flaw Dark Secret"], ["Lost in it", "note A derangement from the Labyrinth"], {match: ["black spiral", "black spiral dancers"]}),
   tribe("lost", "Ronin (lost cub)", "No tribe", "No tribe would have you, or you would have none of them.", ["Alone", "ab Survival|flaw Hunted"], ["With other outcasts", "bg Allies"], {match: ["ronin", "lost cub"]}),
   tribe("ragabash", "Ragabash", "The new moon", "Born under the new moon, you question everything.", ["A trickster", "ab Subterfuge|ab Stealth"], ["A scout", "ab Alertness|ab Larceny"]),

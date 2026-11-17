@@ -9,7 +9,9 @@
  *   4. the Storyteller's pages beside it are left alone
  *   5. with the active scene in Japan, "Where you are now" tells what everyone knows there and a card says so (B5940)
  *   6. back on a scene at home the page says the table is among its own people (B5941)
- * Steps 5 and 6 make the scene "WoDX gate: Kyoto" and activate it; the kit puts back the active scene, and the scene and cards are deleted.
+ * Steps 5 and 6 make the scenes "WoDX gate: home" and "WoDX gate: Kyoto" and activate them; the kit puts back the active scene, and the
+ * scenes and cards are deleted. Since B6166 a refresh with no scene reads the scene where most player characters stand, so the
+ * gate names the scene it means: the page starts from home, then Kyoto is activated (B6489).
  * Result: Data/wodx-gate/gateworldprimers-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -55,22 +57,28 @@ export async function run() {
       await p?.delete();
     });
     const msgs0 = new Set(game.messages.map(m => m.id));
+    const page = () => j.pages.find(p => p.name === "Where you are now")?.text?.content ?? "";
+    let home = null;
     await G.step("5. abroad in Japan: where you are now", async () => {
       const api = game.modules.get(ST)?.api?.setup;
+      // B6166: a refresh with no scene follows the company (wherever most player characters stand on this world), so
+      // the gate starts from a scene of its own at home, and the move to Japan is a change of land the card announces
+      [home] = await G.make(Scene, [{name: "WoDX gate: home", width: 1000, height: 1000, padding: 0}]);
+      await api?.refreshAbroad?.({scene: home});
+      await waitFor(() => /Among your own people/.test(page()) && !j.getFlag(ST, "abroadKey"), 10000);
+      const seen = new Set(game.messages.map(m => m.id));
       const [kyoto] = await G.make(Scene, [{name: "WoDX gate: Kyoto", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "japan"}}}}]);
       await kyoto.activate();
-      await api?.refreshAbroad?.();
-      const page = () => j.pages.find(p => p.name === "Where you are now")?.text?.content ?? "";
-      await waitFor(() => /Japan/.test(page()), 10000);
-      const card = game.messages.find(m => !msgs0.has(m.id) && /Far from home/.test(m.content ?? ""));
-      G.ok("5. abroad in Japan: where you are now", /Japan/.test(page()) && /Far from home/.test(page()) && !!card, {page: page().slice(0, 200), card: !!card});
+      await api?.refreshAbroad?.({scene: kyoto});
+      await waitFor(() => /Japan/.test(page()) && game.messages.some(m => !seen.has(m.id) && /Far from home/.test(m.content ?? "")), 10000);
+      const card = game.messages.find(m => !seen.has(m.id) && /Far from home/.test(m.content ?? ""));
+      G.ok("5. abroad in Japan: where you are now", /Japan/.test(page()) && /Far from home/.test(page()) && !!card, {page: page().slice(0, 200), card: !!card, key: j.getFlag(ST, "abroadKey") ?? null});
     });
     await G.step("6. back home: among your own people", async () => {
       const api = game.modules.get(ST)?.api?.setup;
-      const [home] = await G.make(Scene, [{name: "WoDX gate: home", width: 1000, height: 1000, padding: 0}]);
+      home ??= (await G.make(Scene, [{name: "WoDX gate: home", width: 1000, height: 1000, padding: 0}]))[0];
       await home.activate();
-      await api?.refreshAbroad?.();
-      const page = () => j.pages.find(p => p.name === "Where you are now")?.text?.content ?? "";
+      await api?.refreshAbroad?.({scene: home});
       await waitFor(() => /Among your own people/.test(page()), 10000);
       G.ok("6. back home: among your own people", /Among your own people/.test(page()), {page: page().slice(0, 200)});
     });

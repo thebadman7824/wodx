@@ -244,6 +244,34 @@ export const eraGroup = idOrYear => (typeof idOrYear === "number" ? eraAt(idOrYe
 export const darkAgesRules = id => ["darkages", "livinggods", "classical"].includes(eraById(id)?.rules);
 /** The eras before the modern world's electric light and wire: everything to the Age of Reason. */
 export const MEDIEVAL_YEAR_END = 1449;
+
+/*
+ * B6668: an era profile's switches are its "rules" in data/eras.json (firearms, morality, gauntletChart, cyberware).
+ * A module reads the active profile's switch (api.eras.eraSwitch(key) in play) and keeps its own year check only as
+ * the fallback, for a world without WoDX Chronicle or a profile that leaves the switch out.
+ */
+/** The year guns are on an ordinary sheet by default, when no switch says. */
+export const GUNS_FROM_YEAR = 1600;
+/** The first year the Road of Humanity is called Humanity, when no switch says. */
+export const HUMANITY_FROM_YEAR = 1450;
+const knownYear = year => year !== null && year !== undefined && year !== "" && Number.isFinite(Number(year));
+/**
+ * Are guns on an ordinary sheet? rules.firearms false: no; true: yes; "early" (a few guns, still rare) or no switch:
+ * the year decides (from 1600). An unknown year counts as early.
+ */
+export function gunsOnSheet(firearms, year, from = GUNS_FROM_YEAR) {
+  if ( firearms === false ) return false;
+  if ( firearms === true ) return true;
+  return knownYear(year) ? Number(year) >= from : false;
+}
+/** Does the chronicle walk the Roads? rules.morality "roads": yes; "humanity-and-paths": no; no switch: before 1450. */
+export function walksRoads(morality, year, until = HUMANITY_FROM_YEAR) {
+  if ( morality === "roads" ) return true;
+  if ( morality === "humanity-and-paths" ) return false;
+  return knownYear(year) ? Number(year) < until : false;
+}
+/** Is cyberware in the world? rules.cyberware true or false says; no switch: the fallback (the gear's own era list). */
+export const cyberwareOn = (cyberware, fallback) => (typeof cyberware === "boolean" ? cyberware : !!fallback);
 /**
  * The span of years stock speech is written for (NPC talk and its grammar), on the era profiles' years: medieval to the
  * Long Night, early modern to the Age of Reason, the nineteenth century to the Great War, the twentieth to 1989, modern

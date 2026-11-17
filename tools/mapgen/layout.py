@@ -1,5 +1,9 @@
 """WoDX map generators: an organic layout for a village, town or city. A Python port, in WoDX's own shape, of the
-layout steps of Oleg Dolya's Medieval Fantasy City Generator (released CC0; github.com/watabou/TownGeneratorOS):
+layout steps of Oleg Dolya's Medieval Fantasy City Generator (github.com/watabou/TownGeneratorOS, GPL-3.0). It follows
+the original step for step, so this file is a derivative of that code and is under GPL-3.0 too; see MFCG-CREDIT.md
+and B6510.
+
+The steps:
 
   1. Patches: points on a spiral, their Voronoi regions, the middle few smoothed. The first patch is the market;
      the next ones (as many as the size asks) are the town, the rest the countryside.

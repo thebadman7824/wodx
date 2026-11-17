@@ -1,11 +1,16 @@
+import {splatOf} from "./lines.mjs";
 import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf, isAnimal, animalKindOf} from "./actor-data.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
-import {ghoulBloodMax, bondStage} from "./rules.mjs";
+import {ghoulBloodMax, ghoulBloodSource, ghoulRuleEra, V20_ERAS, bondStage} from "./rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
 import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {viewOf, switches as advanceSwitches, applyAdvance, snapshot, recordYears} from "./advance.mjs";
 import {propose} from "./advance-rules.mjs";
+
+/** Lines in mortal bodies, who age as mortals (B6275): Kinfolk, sorcerers, kinain, hunters, the Garou and Fera, mages,
+ * changelings in their mortal seeming, and the Fallen's hosts. */
+const AGING_LINES = ["kinfolk", "sorcerer", "kinain", "hunter", "werewolf", "fera", "mage", "changeling", "demon"];
 
 /**
  * Pass the Years (Phase 4). A plan lists, for each character, what the years do to them; the Storyteller ticks
@@ -115,7 +120,9 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       ...(choices ? {choices} : {})});
     const born = Number.isFinite(Number(c.bornYear)) && c.bornYear !== null && c.bornYear !== undefined ? Number(c.bornYear) : null;
 
-    if ( line === "mortal" ) {
+    // B6275: every line that lives in a mortal body ages as a mortal does; the dead and the undead do not
+    const splat = splatOf(actor);
+    if ( line === "mortal" || AGING_LINES.includes(splat) ) {
       const town = townsfolk(actor);
       const assumed = assumedAgeOf(actor, town);
       const ageEnd = born !== null ? toYear - born : assumed + years;
@@ -136,11 +143,13 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       const kind = isAnimal(actor) ? animalKindOf(actor) : null;
       const span = kind ? AG.lifespan(kind) : null;
       const realEnd = born !== null ? toYear - born : (kind ? Math.ceil(span / 2) : MORTAL.assumedAge) + (toYear - ghouledYear);
-      const newMax = kind ? AG.animalBloodMax(kind, toYear - ghouledYear) : ghoulBloodMax(toYear - ghouledYear);
+      // B6779e: by the book of the era it became a ghoul in; a revenant counts its whole life (V20 p. 501), any other ghoul its years as one
+      const rev = !!actor.flags?.[MODULE_ID]?.revenant, era = ghoulRuleEra(rev && born !== null ? born : ghouledYear);
+      const newMax = kind ? AG.animalBloodMax(kind, toYear - ghouledYear) : ghoulBloodMax(rev && born !== null ? toYear - born : toYear - ghouledYear, {era, revenant: rev});
       const dustAt = kind ? span * 2 : GHOUL_AGING.dustAt;
       const oldMax = Number(actor.system?.advantages?.bloodpool?.max) || 10;
       add("ghoulFed", `Fed each month by ${domitor?.name ?? l.domitor?.name ?? "the domitor"}`,
-        `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (+1 a century)` : ""} (V20 Dark Ages p. 399)`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
+        `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (${V20_ERAS.has(era) && !rev ? "+1 every two centuries" : "+1 a century"})` : ""} (${ghoulBloodSource(era)})`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
       add("vitaeLapses", "The vitae lapses",
         `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= dustAt ? " and turns to dust" : (kind && realEnd >= span ? ", past its natural span, and dies" : "")}; the Disciplines go dark (V20 Dark Ages p. 399)`, gone, {dust: realEnd >= dustAt});
     }
@@ -160,6 +169,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       add("bondFades", `Bond to ${b.name} fades`, `${bondStage(stage).label} → ${bondStage(toStage).label}: no drink for ${Math.floor(months)} months, one step per ${period} (p. 341)`, true, {regnantId: rid, toStage});
     }
 
+    if ( splat === "wraith" ) notes.push("Does not age: one of the restless dead");
     if ( line === "vampire" ) {
       notes.push("Does not age");
       const road = Math.max(0, Math.min(10, Number(actor.system?.advantages?.path?.permanent) || 0));
@@ -195,7 +205,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
     notes.push(...adv.notes);
 
     if ( !changes.length && !notes.length ) continue;
-    rows.push({actorId: actor.id, name: actor.name, line: line ?? actor.type, born, needsBorn: born === null && ["mortal", "ghoul"].includes(line), notes, changes,
+    rows.push({actorId: actor.id, name: actor.name, line: line ?? actor.type, born, needsBorn: born === null && (["mortal", "ghoul"].includes(line) || AGING_LINES.includes(splatOf(actor))), notes, changes,
       ally: allyOf(actor)?.patron?.name ?? null, pc: !!actor.hasPlayerOwner});
   }
   rows.sort((a, b) => (Number(b.pc) - Number(a.pc)) || a.name.localeCompare(b.name));

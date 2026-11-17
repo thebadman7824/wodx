@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* The world's own hand (B4860-B4868): what is approved happens (Ben, 14 November 2026). */
+/* The world's own hand (B4860-B4868): what is approved happens (the owner, 14 November 2026). */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
@@ -119,4 +119,78 @@ test("an institution seat can be taken", () => {
   assert.ok(I.bestSeat(inst, "a"));
   const r = I.unseat(inst, "a");
   assert.equal(r.removed, 1); assert.equal(I.bestSeat(r.inst, "a"), null);
+});
+
+test("the watch's arrest hides the culprit's token and the court brings it back (B6165)", () => {
+  const s = src("modules/wodx-storyteller/scripts/reach.mjs");
+  // the watch's own tokens go; the culprit's is hidden and marked, not deleted
+  assert.match(s, /await sendAway\(scene\.id, d\.tokens\);\s*\n\s*if \( d\.mode !== "summon" \) await takeAway\(scene, d\.token, d\);/);
+  assert.doesNotMatch(s, /\.\.\.\(d\.mode === "summon" \? \[\] : \[d\.token\]\)/);
+  assert.match(s, /hidden: true, \[`flags\.\$\{MOD\}\.lawTaken`\]/);
+  // not guilty, mercy and sentences served on the spot let them go; time and death keep them
+  assert.match(s, /Hooks\.on\("wodxVerdict", p => \{ if \( p\?\.actor && !p\.guilty \) letGo/);
+  const freed = new Function(`return ${/export const freedBy = (\(p = \{\}\) => [^;]+);/.exec(s)[1]}`)();
+  assert.equal(freed({mercy: true}), true);
+  assert.equal(freed({mark: {kind: "fine"}}), true);
+  assert.equal(freed({mark: {kind: "brand"}}), true);
+  assert.equal(freed({mark: {kind: "time"}}), false);
+  assert.equal(freed({mark: {kind: "death"}}), false);
+  // Chronicle's time served counts the token the watch took, so comeBack shows it
+  assert.match(src("modules/wodx-chronicle/scripts/law-punish.mjs"), /!t\.hidden \|\| t\.flags\?\.\["wodx-storyteller"\]\?\.lawTaken/);
+});
+
+test("a Way lets a convened character through and the call goes along (B6166)", () => {
+  const s = src("modules/wodx-storyteller/scripts/core.mjs");
+  assert.match(s, /if \( called && !approved && !way \) return \{ok: false/);
+  assert.match(s, /mutate\("convened", cur => \(cur\?\.\[actorId\] \? \{value: \{\.\.\.cur, \[actorId\]: \{\.\.\.cur\[actorId\], scene: plan\.dest\.scene\.id\}\}\}/);
+});
+
+test("the hunters' proof: npc().orderCarry and the uuid the carry hook sends (B6167)", () => {
+  const s = src("modules/wodx-storyteller/scripts/hunt-follow.mjs");
+  assert.match(s, /const carry = npc\(\)\?\.orderCarry \?\? null;/);
+  assert.match(s, /if \( r\?\.ok \) \{/);
+  // B6426: a carrier that has the proof still leaves the map once it arrives
+  assert.match(s, /if \( r\.arrived \) \{ await leave\(scene, \[t\]\); return p; \}/);
+  assert.match(s, /typeof ref === "string" \? await fromUuid\(ref\)/);
+  assert.match(src("modules/wodx-npc/scripts/main.mjs"), /orderCarry, carryGoals/, "WoDX NPC's api has orderCarry at its top");
+});
+
+/* B6667: a death sentence on a culprit the watch holds (hidden, lawTaken) is carried out where they are held. Mocked
+ * Foundry: one scene with a gallows region and a watch-house, the culprit's taken token. */
+test("B6667: the condemned in the watch's hands is brought out at the gallows, else the watch-house, with no second arrest", async () => {
+  const deep = () => new Proxy(class {}, {get: (t, k) => (k in t ? t[k] : deep()), apply: () => deep()});
+  globalThis.foundry ??= deep();
+  globalThis.Hooks ??= {on() {}, once() {}, callAll() {}};
+  const RE = await load("modules/wodx-storyteller/scripts/reach.mjs");
+  const setPath = (o, path, v) => { const ks = path.split("."); let x = o; for ( const k of ks.slice(0, -1) ) x = (x[k] ??= {}); x[ks.at(-1)] = v; };
+  const rect = (name, x, y, place = null) => ({name, shapes: [{type: "rectangle", x, y, width: 300, height: 300}], flags: place ? {"wodx-npc": {place: {kind: place}}} : {}});
+  const make = regions => {
+    const scene = {id: "s1", name: "Town", grid: {size: 100}, regions, tokens: []};
+    const t = {id: "t1", actorId: "c", x: 0, y: 0, hidden: true, flags: {"wodx-storyteller": {lawTaken: {at: 1, region: "moravia", mode: "arrest"}}}, parent: scene,
+      async update(u) { for ( const [k, v] of Object.entries(u) ) setPath(this, k, v); }};
+    scene.tokens.push(t);
+    Object.assign(scene.tokens, {get: id => scene.tokens.find(x => x.id === id)});
+    globalThis.game = {time: {worldTime: 9}, user: {id: "gm", isGM: true}, users: [{id: "gm", isGM: true}], scenes: [scene], actors: {get: () => null}, modules: {get: () => null}};
+    globalThis.CONFIG = {Token: {}};
+    return {scene, t};
+  };
+  let w = make([rect("Watch", 1000, 0, "gate"), rect("The gallows", 600, 900)]);
+  assert.equal(RE.whereIs("c"), null, "in custody, not on the map");
+  assert.equal(RE.heldWhere("c").token.id, "t1");
+  assert.equal(RE.sentencePlace(w.scene).name, "The gallows");
+  const out = await RE.bringOut("c");
+  assert.equal(out.place.name, "The gallows");
+  assert.deepEqual({x: w.t.x, y: w.t.y, hidden: w.t.hidden, taken: w.t.flags["wodx-storyteller"].lawTaken}, {x: 700, y: 1000, hidden: false, taken: null});
+  assert.equal(RE.whereIs("c").token.id, "t1", "on the map again, where the sentence is carried out");
+  // no gallows: the watch-house
+  w = make([rect("Market", 0, 600, "market"), rect("Watch", 1000, 0, "gate")]);
+  assert.equal((await RE.bringOut("c")).place.name, "Watch");
+  assert.equal(w.t.x, 1100);
+  // nobody held: nothing to bring out
+  assert.equal(await RE.bringOut("c"), null);
+  // the condemned yields to the sentence: no second arrest and no hiding again
+  const s = src("modules/wodx-storyteller/scripts/reach.mjs");
+  assert.match(s, /if \( !w && custody \) \{ w = await bringOut\(actorId\); if \( w \) mode = "sentence"; \}/);
+  assert.match(s, /if \( d\.mode === "sentence" \) \{[^\n]*return "yield"; \}/);
+  assert.match(src("modules/wodx-chronicle/scripts/law-punish.mjs"), /why: "a death sentence", custody: true/);
 });

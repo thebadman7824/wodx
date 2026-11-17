@@ -244,13 +244,14 @@ export function installWorld(helpers) {
     "ask.letgo": p => letLeadGo(p.userId, p)
   }, {"leads.rows": showLeads});
   addActions(ACTIONS);
-  let last = 0;
+  // B6169: every move of the clock gets its look at the night, one after another. The old 500 ms throttle dropped
+  // moves while the panel's wait steps the clock every 400 ms, and parts of the night went unrolled. A move that comes
+  // while one waits to run is folded into it (nightTick reads the clock when it runs).
+  let chain = Promise.resolve(), queued = false;
   Hooks.on("updateWorldTime", () => {
-    if ( !H.isSeat() ) return;
-    const t = Date.now();
-    if ( t - last < 500 ) return;
-    last = t;
-    nightTick().catch(e => console.error(`${MOD} | night encounter`, e));
+    if ( !H.isSeat() || queued ) return;
+    queued = true;
+    chain = chain.then(() => { queued = false; return nightTick(); }).catch(e => console.error(`${MOD} | night encounter`, e));
   });
 }
 

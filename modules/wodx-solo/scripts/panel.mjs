@@ -31,6 +31,9 @@ export const setStUi = ui => Object.assign(ST_UI, ui);
 /** What arrival.mjs draws on the panel for a player with no character (B5143): {html, open}. */
 const ARRIVE_UI = {};
 export const setArriveUi = ui => Object.assign(ARRIVE_UI, ui);
+/** What fate.mjs draws at the top of the panel when frenzy, torpor or death has the character (B6530): {html}. */
+const FATE_UI = {};
+export const setFateUi = ui => Object.assign(FATE_UI, ui);
 
 /* ------------------------------------------------------------------ */
 /*  Who and where                                                      */
@@ -44,8 +47,11 @@ const ownable = a => a?.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
 const ownsAlone = (a, user) => !all(game.users).some(u => u.id !== user.id && !u.isGM && a.testUserPermission?.(u, "OWNER"));
 export function characterOf(user) {
   if ( !user ) return null;
-  if ( user.character ) return user.character;
-  const mine = all(game.actors).filter(a => ownable(a) && a.testUserPermission?.(user, "OWNER"));
+  // An actor every player owns by default is nobody's own character (B5146)
+  const named = a => (a?.ownership ? R.ownsByName(a.ownership, user.id) : !!a?.testUserPermission?.(user, "OWNER"));
+  const byDefault = a => Number(a?.ownership?.default) >= 3 && !named(a);
+  if ( user.character && !byDefault(user.character) ) return user.character;
+  const mine = all(game.actors).filter(a => ownable(a) && named(a));
   const viewed = game.scenes?.get?.(user.viewedScene) ?? all(game.scenes).find(s => s.id === user.viewedScene);
   const onView = viewed ? mine.filter(a => all(viewed.tokens).some(t => t.actorId === a.id)) : [];
   const alone = list => list.find(a => ownsAlone(a, user));
@@ -199,7 +205,22 @@ export async function curtain(userId) {
 /*  The socket                                                         */
 /* ------------------------------------------------------------------ */
 
+/**
+ * B6757: the lone player sets one of the chronicle's options (solo-rules OPTIONS). Only a listed option, only while the
+ * mode is on; the seat writes the world setting and says so.
+ */
+export async function setOption(userId, key, value) {
+  const c = R.optionChange(key, value);
+  if ( !c || !H.isOn() ) return null;
+  if ( game.settings.get(c.mod, c.key) === c.to ) return c;
+  await game.settings.set(c.mod, c.key, c.to);
+  await H.log({kind: "note", source: MOD, title: `${c.label}: ${c.word}`, note: game.users.get(userId)?.name ?? ""});
+  await tell(userId, `<p><b>${esc(c.label)}</b>: ${esc(c.word)}.</p>`);
+  return c;
+}
+
 const SEAT = {
+  "ask.options": async p => { for ( const [k, v] of Object.entries(p.values ?? {}) ) await setOption(p.userId, k, v); },
   "ask.time": p => passTime(p.userId, p.choice),
   "ask.pause": p => togglePause(p.userId),
   "ask.stuck": p => unstick(p.userId, p.fix),
@@ -261,6 +282,17 @@ const ACTIONS = {
     ui.notifications.warn("Travel needs WoDX Storyteller.");
   },
   pause() { ask("ask.pause"); },
+  /** B6757: the chronicle's options that only a Storyteller could set, for the one person playing. */
+  async options() {
+    const read = o => { try { return String(game.settings.get(o.mod, o.key)); } catch (e) { return null; } };
+    const rows = R.OPTIONS.filter(o => read(o) !== null).map(o => `<div class="form-group"><label>${esc(o.label)}</label><select name="${o.key}" data-fixed>${
+      Object.entries(o.choices).map(([v, l]) => `<option value="${v}"${read(o) === v || (v === "auto" && read(o) === "suggest") ? " selected" : ""}>${esc(l)}</option>`).join("")}</select><p class="hint">${esc(o.hint)}</p></div>`).join("");
+    if ( !rows ) { ui.notifications.warn("These options need WoDX Storyteller."); return; }
+    const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog"], window: {title: "Chronicle options"}, rejectClose: false,
+      content: `<p>Parts of the chronicle that are off until you turn them on.</p>${rows}`,
+      ok: {label: "Save", callback: (ev, b) => Object.fromEntries(R.OPTIONS.filter(o => b.form.elements[o.key]).map(o => [o.key, b.form.elements[o.key].value]))}});
+    if ( got ) ask("ask.options", {values: got});
+  },
   async stuck() {
     const pick = await choose("I am stuck", R.STUCK);
     if ( pick ) ask("ask.stuck", {fix: pick});
@@ -317,9 +349,9 @@ export class SoloPanel extends ApplicationV2 {
       return `<button type="button" data-action="act" data-id="${b.id}"><i class="${icon}"></i> ${esc(label)}</button>`;
     }).join("");
     // One main button; the rest under More, open once the player has opened it (B2831)
-    div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
+    div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}${FATE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, sleep through the years, pause, I am stuck, the curtain, carry the fallen, chronicle options, report a problem</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }
@@ -354,5 +386,5 @@ export function installPanel(helpers) {
   if ( !game.user.isGM && H.isOn() && H.get("panel") !== false ) setTimeout(() => SoloPanel.open(), 1000);
 }
 
-export const panelApi = {open: () => SoloPanel.open(), ask, passTime, togglePause, unstick, curtain, busy: () => waiting};
+export const panelApi = {open: () => SoloPanel.open(), ask, passTime, togglePause, unstick, curtain, setOption, busy: () => waiting};
 export {ask, SOCKET};

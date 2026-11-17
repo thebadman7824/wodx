@@ -58,14 +58,46 @@ test("every bundled font file exists, is woff2 and has its licence", () => {
   }
 });
 
-test("the stylesheet in wodx-sheets is the one the generator writes now", () => {
-  const css = readFileSync(join(sheets, "styles/wodx-skins.css"), "utf8");
-  assert.equal(css, B.buildCss(), "run node tools/skins/build-skins.mjs");
+const scoped = css => {
   assert.ok(!/(?<!body)\.wodx-skin/.test(css.replace(/body\.wodx-skin/g, "")), "every rule is scoped to body.wodx-skin");
   for ( const block of css.split("}").filter(b => b.includes("{") && !b.includes("@font-face")) )
     for ( const sel of block.split("{")[0].replace(/\/\*[\s\S]*?\*\//g, "").replace(/\([^()]*\)/g, "()").split(",") ) assert.match(sel.trim(), /^body\.wodx-skin /, sel);
+};
+
+test("the skin files in wodx-sheets are the ones the generator writes now (B6060)", () => {
+  const {core, lines, index} = B.buildSplit();
+  const msg = "run node tools/skins/build-skins.mjs";
+  assert.equal(readFileSync(join(sheets, "styles/wodx-skins.css"), "utf8"), core, msg);
+  assert.equal(readFileSync(join(sheets, "scripts/skins-index.mjs"), "utf8"), index, msg);
+  const files = readdirSync(join(sheets, "styles/skins")).filter(f => f.endsWith(".css")).sort();
+  assert.deepEqual(files, S.LINES.map(L => `${L.id}.css`).sort(), "one file per line, and no other");
+  for ( const L of S.LINES ) {
+    const css = readFileSync(join(sheets, `styles/skins/${L.id}.css`), "utf8");
+    assert.equal(css, lines[L.id], `${L.id}: ${msg}`);
+    scoped(css);
+    assert.ok(!css.includes("@font-face"), `${L.id}: the fonts stay in the core sheet`);
+  }
+  scoped(core);
   const mod = JSON.parse(readFileSync(join(sheets, "module.json"), "utf8"));
   assert.ok(mod.styles.includes("styles/wodx-skins.css"));
+  assert.ok(!mod.styles.some(s => s.startsWith("styles/skins/")), "line skins are loaded by scripts/skins.mjs, not on every page");
+});
+
+test("the split adds up to the single stylesheet rule for rule, in the same order (B6060)", () => {
+  const {core, lines} = B.buildSplit();
+  const body = t => t.replace(/^\/\* WoDX line skin:[\s\S]*?\*\/\n\n/, "");
+  const wait = /\/\* While a sheet's own skin file loads[\s\S]*?\n.*wodx-wait-skin.*\n\n?/;
+  assert.match(core, wait, "the loading rule is in the core sheet");
+  const whole = core.replace(wait, "") + S.LINES.map(L => body(lines[L.id])).join("\n");
+  assert.equal(whole, B.buildCss());
+});
+
+test("the loader's index names each line once, in the stylesheet's order, with a test for its sheet (B6060)", async () => {
+  const {SKINS} = await import(pathToFileURL(join(sheets, "scripts/skins-index.mjs")).href);
+  assert.deepEqual(SKINS.map(s => s.id), S.LINES.map(L => L.id));
+  for ( const s of SKINS ) assert.match(s.test, /^\.wod20\.wod-sheet/, s.id);
+  const main = readFileSync(join(sheets, "scripts/main.mjs"), "utf8");
+  assert.match(main, /SK\.setup\(\)/, "main.mjs starts the loader");
 });
 
 test("each rule is a well-formed SVG with nothing outside its box", () => {
@@ -76,5 +108,33 @@ test("each rule is a well-formed SVG with nothing outside its box", () => {
     assert.ok(!/NaN|undefined/.test(svg), `${L.id}: no NaN`);
     const opens = (svg.match(/<(?!\/)[a-z]+[^>]*[^/]>/gi) ?? []).length, closes = (svg.match(/<\/[a-z]+>/gi) ?? []).length;
     assert.equal(opens, closes, `${L.id}: tags balance`);
+  }
+});
+
+test("B6950: a line file slower than the wait still counts once it lands, and is not put in twice", async () => {
+  const {mock} = await import("node:test");
+  const nodes = [];
+  const had = {document: globalThis.document, CSSImportRule: globalThis.CSSImportRule};
+  globalThis.CSSImportRule = class {};
+  globalThis.document = {
+    styleSheets: [], head: {append: n => nodes.push(n)}, querySelectorAll: () => nodes,
+    createElement: () => { const on = {}; return {dataset: {}, addEventListener: (k, f) => { on[k] = f; }, fire: k => on[k]?.()}; }
+  };
+  mock.timers.enable({apis: ["setTimeout"]});
+  try {
+    const Sk = await import(pathToFileURL(join(sheets, "scripts/skins.mjs")).href + "?late");
+    const first = Sk.load("creature");
+    mock.timers.tick(4001);
+    assert.equal(await first, false, "the page stops waiting after the wait");
+    assert.deepEqual(Sk.report().failed, ["creature"]);
+    assert.equal(nodes.length, 1);
+    await Sk.load("creature");
+    assert.equal(nodes.length, 1, "a second sheet does not put the file in again");
+    nodes[0].fire("load");
+    assert.ok(Sk.loaded().includes("creature"), "the late file counts as loaded");
+    assert.deepEqual(Sk.report().failed, [], "and is no longer reported as failed");
+  } finally {
+    mock.timers.reset();
+    globalThis.document = had.document; globalThis.CSSImportRule = had.CSSImportRule;
   }
 });

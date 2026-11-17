@@ -68,6 +68,35 @@ jobs:
       - name: Quality checks
         run: bash tools/quality-check.sh
 
+  merge-rules:
+    # B7000-B7009: a pull request needs its release note, a passing gate result for the code as it is, and a review
+    # verdict for every changed file (tools/release/merge-rules.mjs). The owner's own commits are reported, never blocked.
+    # Not on a push to main: that is already merged.
+    needs: changes
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      statuses: write
+    name: merge rules
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # the branch's own head, not GitHub's trial merge with main
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Merge rules
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # B7006: the result is also the wodx/merge-rules commit status (required on main). While only the PC gates are
+        # still to come it is pending, so the pull request shows as waiting, not failed; the PC runner runs this job
+        # again when its result lands.
+        run: node tools/release/merge-rules.mjs --github --post-status --base origin/main --summary "$GITHUB_STEP_SUMMARY"
+
   harness:
     needs: changes
     runs-on: ubuntu-latest
@@ -121,7 +150,7 @@ jobs:
 
   checks:
     # The one result to look at (and the one to require for merging). Passes when every job that ran passed.
-    needs: [changes, quality, harness]
+    needs: [changes, quality, merge-rules, harness]
     if: always() && (github.event_name != 'pull_request' || github.event.pull_request.user.login == 'thebadman7824')
     runs-on: ubuntu-latest
     timeout-minutes: 5

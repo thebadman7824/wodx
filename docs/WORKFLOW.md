@@ -3,6 +3,13 @@
 The rules threads follow so that work flows to main without clashes or waits (Ben's speed-up list, 13 November 2026,
 decisions B3080 to B3085).
 
+## 0. Before anything: read TOOLS.md and ROUTING.md
+
+Every thread reads [TOOLS.md](TOOLS.md) (what each machine has, how to reach it) and [ROUTING.md](ROUTING.md) (where each
+kind of work goes) before it starts (B7004). Mechanical edits stay with the thread (the local coding agents are paused; see ROUTING.md), gates to the PC runner,
+OCR and conversions to the Secondary PC, art to ComfyUI. A thread that does such work by hand says why
+(`routed-by-hand: <reason>`); the merge rules warn when it does not.
+
 ## 1. Starting a thread: claim a decision block
 
     node tools/decisions/claim.mjs --thread <thread id> --feature "what the work is"
@@ -110,6 +117,47 @@ and Trove file name searches as `trove-find`.
 
 ## 6. Merging
 
+A pull request merges only when it meets the merge rules (B7000-B7009). CI's "merge rules" job checks them on every
+pull request, including handoff/ HOLD pull requests and local-agent drafts, and its result is part of the one required
+"checks" result. Work whose every commit is the owner's own (no Claude or agent trailer) is reported, never blocked.
+
+1. **Release note.** Every module with a changed file has a note in `changes/<module>/`, in the form of
+   changes/README.md, with `effect:` and `visible:` when it is minor or major. A missing `effect:` now blocks, as a
+   missing `visible:` already did.
+2. **Gate result.** When the change needs gates, queue the touched list on the branch once the code is final:
+
+       node tools/pcq/submit.mjs gates --touched --ref claude/<branch> --lanes 2 --thread <thread id>
+
+   The PC runner sets the `wodx/gates` status on the commit it ran, and runs the pull request's merge rules job
+   again so it picks it up. Until then the `wodx/merge-rules` status (required on main, like `checks`) shows
+   "waiting for the PC gates": the pull request reads as pending, not failed, and cannot merge (B7006). The result holds while the module, system and gate files stay as they were (a stamp
+   only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count, and a
+   gate that the recheck finds failing on main too does not hold the pull request back.
+3. **File review.** Every changed file has a verdict made on it as it is now:
+
+       node tools/release/review.mjs todo
+       node tools/release/review.mjs add <file> [<file> ...] --how "read in full; ran merge-rules.test.mjs"
+
+   It writes `docs/reviews/<branch>.jsonl`; commit it with the change. Only `working` (or `dead` for a deleted file)
+   merges, `how` says what was done to check the file, and a file changed after its review needs a new one. A glob
+   (`--glob "modules/wodx-x/assets/**"`) may cover images and other data, never a script.
+
+4. **Feature registry.** In a module whose `registry/features/<module>.json` says `"seeded": true`, every changed
+   script file is owned by a row, and one of its rows changes on the branch (its steps, open list, faults or prs), or
+   a commit says `registry: no change <reason>`. Changed registry rows pass `node tools/registry/registry.mjs check`,
+   and the module's half-built count does not grow (the ratchet) unless a commit cites Ben's go-ahead with
+   `ratchet-override: <link>`. Modules not seeded yet get a warning only, until each is seeded (Ben, Finish-Line
+   Desk, 17 November 2026; B7144, B7146). A decision fragment may not reuse a number main's docs/DECISIONS.md has
+   (B7145).
+
+Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
+`wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force
+pushes are blocked and main cannot be deleted. Nothing lands on main except through a pull request whose checks
+pass, so routines and tools that used to push to main directly must open a pull request instead.
+
+`node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
+GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it. Then:
+
     git fetch origin main && git merge origin/main
     node tools/release/merge-stamp.mjs --commit
     git push
@@ -151,3 +199,31 @@ For maps and picture packs in particular (Ben, 14 November 2026, after the map t
   (`maps-sheets/`, one sheet for each subfolder) and pulls single pictures only for detail. Generated maps, previews and
   check images go to the thread's own scratch space. Only the deliverable (a sample map, one preview) goes to the
   shared folder.
+
+## 8. The feature registry: what exists and how far along it is (Ben, 17 November 2026)
+
+Every feature a player or the Storyteller uses has one row in `registry/features/<module>.json`, with proof for each
+step it has reached: built, wired (the code that reads it in play), shown, gated (a gate step that drives the real
+trigger and checks the effect), book (the page, V20 first), verified (confirmed by a session other than the builder).
+Done means verified. The format is in [registry/features/README.md](../registry/features/README.md), and
+[FEATURES.md](FEATURES.md) is the generated view (B7140-B7149, the Finish-Line Desk).
+
+- **Status lives here and nowhere else.** Audits, the Monday review, handoff notes and memory point to row ids and
+  start from `node tools/registry/registry.mjs changed --since <last check>`. The Master Plan keeps the design and links
+  FEATURES.md for status.
+- **Change the row with the code**, in the same pull request. A fault from the solo world's Report a problem button or
+  an audit goes in the row's `faults`; deferred work in its `open` or `deferred` list, never only in a desk or a shared
+  JSON file.
+- **Finish before starting (the ratchet).** A module's half-built count (built but not gated, or an open fault) may not
+  grow. New work in a module starts by finishing a row there; bug fixes are exempt; Ben can override.
+- **The core first.** Rows with `"core": true` (V20 Dark Ages Vampire in Rothenstein, 1197, with mortals and ghouls)
+  go first in seeding and fixes.
+- **Gate strength.** `node tools/registry/strength.mjs <gate>` grades each step effect, marker, direct-call or none.
+  A row is gated only through an effect step. Gates without one are listed in tools/registry/strength-baseline.json,
+  which may only shrink: a new gate needs at least one step that drives the real trigger.
+- **Art by id.** Code that shows a portrait, sprite or object loads it by its id from the art tables
+  (registry/art-assets/ in the shared folder, kept by the art thread), never by a file path, so the locked style
+  swaps in without code changes. Rows list the ids they use in `art`.
+- **Verified by someone else.** The Monday review re-checks a sample of 20 rows that reached gated that week and sets
+  verified, or drops a row back. A builder never marks its own row verified.
+

@@ -57,3 +57,18 @@ test("hardship: off by default, runs on the active Storyteller, with Undo and th
   assert.match(m, /Hard\.registerHardshipHooks\(\)/);
   assert.match(m, /hardship: \{open: Hard\.hardshipDialog/);
 });
+
+test("hardship: tiredness takes dice off every roll through Chronicle's traits (B6169)", () => {
+  assert.deepEqual(H.tiredEffects({tired: 0}), []);
+  const [e] = H.tiredEffects({tired: 2});
+  assert.equal(e.dice, -2);
+  assert.equal(e.diff, 0);
+  assert.match(e.name, /Tired/);
+  assert.deepEqual(H.tiredEffects({tired: 2, off: true}), [], "a character not checked is not tired by the rules");
+  assert.deepEqual(H.tiredEffects({tired: 2}, {channel: "soak"}), [], "only rolls, not soak or resistance");
+  assert.equal(H.tiredEffects({tired: 99})[0].dice, -H.MAX_TIRED);
+  // the Foundry side registers it as a traits source, read only while hardship is on
+  const s = src("modules/wodx-storyteller/scripts/hardship.mjs");
+  assert.match(s, /traits\?\.addSource\?\.\(source\)/);
+  assert.match(s, /setting\("hardship"\) \? H\.tiredEffects/);
+});

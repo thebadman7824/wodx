@@ -96,7 +96,7 @@
 1936|H|mor|EU|Berlin|sport|The Berlin Olympics|Germany stages the Olympics as propaganda; Jesse Owens wins four gold medals.
 1936|H|mor|ME|Jaffa|uprising|The Arab revolt in Palestine|Palestinian Arabs strike and rise against British rule and Jewish immigration.
 1936|H|mor|AS|Xi'an|crime|The Xi'an Incident|Chiang Kai-shek is kidnapped by Nationalist generals until agreeing to fight Japan with the communists.
-1936|H|mor|MO|Brno|building|The Masaryk circuit|Brno opens its road racing circuit, and the Czechoslovak Grand Prix draws crowds of a hundred thousand.
+1930|H|mor|MO|Brno|building|The Masaryk circuit|Brno opens its road racing circuit, and the Czechoslovak Grand Prix draws crowds of a hundred thousand.
 1937|H|mor|AS|Marco Polo Bridge|war|The war with Japan|Fighting at the Marco Polo Bridge begins full war between China and Japan.
 1937|H|mor|AS|Nanjing|massacre|The Nanjing massacre|Japanese troops kill hundreds of thousands of civilians and prisoners in Nanjing.
 1937|W|kue|AS|Nanjing|massacre,occult|Nanjing's hungry dead|The house reading has the Yomi stir beneath Nanjing, and the Kuei-jin courts of the city fall.

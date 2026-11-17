@@ -19,12 +19,16 @@
  *  11. one actor sees only its own line in the picker
  *  12. Kuei-jin: Blade of Stone makes an aggravated stone weapon
  *  13. Kuei-jin: true jade takes in Chi (the Wall answered), gives a point back, and is tried once a night
- *  14. clean up
+ *  14. hedge magic: a lesser talisman of Strength +2 (Path of Enchantment 2) raises the bearer's Strength total by 2
+ *      while carried, and not when put away (the system's own totals)
+ *  15. Mage: a Talisman of Mend made by an Arete 3 mage rolls its own Arete (2, from Life 2) for whoever calls the
+ *      Effect, here a mortal with no Arete
+ *  16. clean up
  * Result: Data/wodx-gate/gatewonders-result.json.
  */
 const LIB = "wodx-library", ST = "wodx-storyteller";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const STEPS = 14;
+const STEPS = 16;
 
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -43,7 +47,7 @@ export async function run() {
   for ( let i = 0; i < 120 && !(game.modules.get(LIB)?.api?.wonders && game.modules.get(LIB)?.api?.wonderUse && game.modules.get(ST)?.api?.wonders); i++ ) await new Promise(r => setTimeout(r, 250));
   const W = game.modules.get(LIB)?.api?.wonders, WU = game.modules.get(LIB)?.api?.wonderUse, S = game.modules.get(ST)?.api?.wonders;
   if ( !W || !WU || !S ) { ok("0. ready", false, {error: "WoDX Library or Storyteller did not finish loading in 30 seconds", wonders: !!W, wonderUse: !!WU, storyteller: !!S}); return save(R); }
-  const SETS = ["craftKindred", "craftChangeling", "craftMummy", "craftDemon", "craftHunter", "craftKueiJin"];
+  const SETS = ["craftKindred", "craftChangeling", "craftMummy", "craftDemon", "craftHunter", "craftKueiJin", "craftHedge", "craftMage"];
   const keep = Object.fromEntries(SETS.map(k => { try { return [k, game.settings.get(LIB, k)]; } catch (e) { return [k, undefined]; } }));
   const msgsBefore = new Set(game.messages.map(m => m.id));
   const actorsBefore = new Set(game.actors.map(a => a.id));
@@ -153,6 +157,34 @@ export async function run() {
     const dr = jd ? await WU.run(jd, "wonder:draw", k) : null;
     ok("13. Kuei-jin true jade", !!ab && again === null && !!dr && Number(k.system.advantages.yangchi.temporary) === chi0 + 1 && wonderOf(jd)?.expires > (game.time?.worldTime ?? 0),
       {pool: wonderOf(jd)?.pool, nightRun: wonderOf(jd)?.nightRun, drew: dr?.lines, again: again === null ? "blocked" : "ran", chi: [chi0, k.system.advantages.yangchi.temporary], absorb: ab?.lines});
+
+    // Hedge magic (B6412): the talisman's Attribute reaches the sheet's own total while it is carried
+    const hs = await mk("Mortal", "Hedge Sorcerer", {"attributes.strength.value": 2, "attributes.strength.total": 2, "attributes.intelligence.value": 3, "attributes.intelligence.total": 3,
+      "abilities.occult.value": 3, "advantages.willpower.permanent": 5, "advantages.willpower.temporary": 5}, [{name: "Path of Enchantment", type: "Power", system: {type: "wod.types.numina", value: 2}}]);
+    const ht = (await work(hs, "hedge", "enchant-2", {power: "attr", attr: "strength", amount: 2}, 1)).items[0];
+    const strTotal = () => Number(hs.system.attributes.strength.total);
+    const strBefore = strTotal();
+    await ht?.update({"system.isequipped": true});
+    for ( let i = 0; i < 24 && strTotal() !== strBefore + 2; i++ ) await sleep(250);
+    const strOn = strTotal();
+    await ht?.update({"system.isequipped": false});
+    for ( let i = 0; i < 24 && strTotal() !== strBefore; i++ ) await sleep(250);
+    ok("14. hedge talisman carried", !!ht && wonderOf(ht)?.level === 2 && strBefore === 2 && strOn === 4 && strTotal() === 2,
+      {made: ht?.name ?? null, level: wonderOf(ht)?.level, worn: wonderOf(ht)?.worn, strength: [strBefore, strOn, strTotal()]});
+
+    // Mage (B6412): the Talisman's Effect rolls the Talisman's Arete, not its user's
+    const mg = await mk("Mage", "Verbena", {"advantages.arete.permanent": 3, "advantages.willpower.permanent": 6, "advantages.willpower.temporary": 6,
+      "spheres.prime.value": 4, "spheres.life.value": 3, "quintessence.temporary": 20});
+    const mt = (await work(mg, "mage", "talisman", {practice: "mystic", effect1: "mend"}, 12)).items[0];
+    const user = await mk("Mortal", "Talisman Bearer", {"attributes.stamina.value": 2, "attributes.stamina.total": 2});
+    const t0 = Date.now();
+    const cast = mt ? await WU.run(mt, "wonder:mend", user) : null;
+    let card = null;
+    for ( let i = 0; i < 20 && !card; i++ ) { card = game.messages.contents.filter(x => (x.timestamp ?? 0) >= t0 && /wlib-wonder-card/.test(x.content ?? "") && x.speaker?.actor === user.id).at(-1); if ( !card ) await sleep(250); }
+    const rolled = Number(String(card?.content ?? "").match(/(\d+) dice at difficulty/)?.[1] ?? NaN);
+    const arete = Number(wonderOf(mt)?.arete);
+    ok("15. Mage talisman rolls its own Arete", !!cast && arete === 2 && rolled === arete && Number(user.system?.advantages?.arete?.permanent ?? 0) === 0,
+      {made: mt?.name ?? null, arete, rolled, effects: wonderOf(mt)?.effects, lines: cast?.lines});
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   try {
     for ( const k of SETS ) if ( keep[k] !== undefined ) await game.settings.set(LIB, k, keep[k]);
@@ -161,7 +193,7 @@ export async function run() {
     if ( ids.length ) await Actor.deleteDocuments(ids);
     const mids = game.messages.filter(x => !msgsBefore.has(x.id)).map(x => x.id);
     if ( mids.length ) await ChatMessage.deleteDocuments(mids);
-    ok("14. clean up", !ids.some(id => game.actors.get(id)), {actors: ids.length, messages: mids.length});
-  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("14. clean up", false); }
+    ok("16. clean up", !ids.some(id => game.actors.get(id)), {actors: ids.length, messages: mids.length});
+  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("16. clean up", false); }
   return save(R);
 }

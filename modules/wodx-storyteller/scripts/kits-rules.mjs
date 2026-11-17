@@ -12,6 +12,7 @@
  *   people are a house rule: a trained mortal with 2 to 3 in what the role does, armed from the weapon charts.
  *   W20 prints no Kinfolk stat blocks (only Kinfolk creation, pdf 381 on), so Kinfolk extras are built as mortals.
  */
+import {gunsOnSheet} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const str = (v, n = 120) => String(v ?? "").trim().slice(0, n);
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -69,7 +70,7 @@ export const EXTRAS = [
   {key: "thug", label: "Street thug", eras: "late", attrs: A(3, 2, 3, 2, 2, 2, 2, 2, 2), abilities: {brawl: 3, melee: 2, streetwise: 2, intimidation: 2, firearms: 1}, weapon: {name: "Knife", damage: "Strength + 1", kind: "lethal"}, willpower: 3, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
   {key: "guard", label: "Security guard", eras: "late", attrs: A(3, 2, 3, 2, 2, 2, 3, 2, 2), abilities: {alertness: 3, brawl: 2, firearms: 1, security: 2}, weapon: {name: "Nightstick (as a club)", damage: "Strength + 2", kind: "bashing"}, willpower: 4, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
   {key: "soldier", label: "Soldier", eras: "late", attrs: A(3, 3, 3, 2, 2, 2, 3, 2, 3), abilities: {firearms: 3, brawl: 2, dodge: 2, alertness: 2, athletics: 2, survival: 1}, weapon: {name: "Rifle", damage: "8", kind: "lethal"}, armor: 2, willpower: 5, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
-  {key: "investigator", label: "Investigator", eras: "any", attrs: A(2, 2, 2, 3, 3, 2, 4, 3, 3), abilities: {investigation: 3, alertness: 2, occult: 2, academics: 2, empathy: 2, melee: 1}, weapon: {name: "Knife", damage: "Strength + 1", kind: "lethal"}, willpower: 6, ref: `${HOUSE}; the hunters' investigator, B5701`},
+  {key: "investigator", label: "Investigator", eras: "any", attrs: A(2, 2, 2, 3, 3, 2, 4, 3, 3), abilities: {investigation: 3, alertness: 2, occult: 2, academics: 2, empathy: 2, melee: 1}, weapon: {name: "Knife", damage: "Strength + 1", kind: "lethal"}, willpower: 6, ref: `${HOUSE}; the hunters' investigator`},
   {key: "ghoul", label: "Ghoul servant", eras: "any", attrs: A(3, 2, 3, 2, 2, 2, 2, 2, 2), abilities: {brawl: 2, melee: 2, alertness: 2, intimidation: 1}, weapon: {name: "Fists or a blade", damage: "Strength + 1", kind: "lethal"}, willpower: 4, blood: 3, soakLethal: true, ref: `${HOUSE}; ghoul rules V20 p. 497 (pdf 505), V20 Dark Ages p. 400 (pdf 401)`},
   // V20 Dark Ages animals (pp. 397-399, pdf 398-400)
   {key: "dog_small_da", label: "Small dog", eras: "early", attrs: A(2, 3, 2, 1, 1, 1, 3, 1, 3), abilities: {alertness: 3, athletics: 3, brawl: 1}, weapon: {name: "Bite", damage: "2", kind: "bashing"}, willpower: 3, animal: true, health: "OK, -1, -5, Incapacitated", ref: "V20 Dark Ages p. 397 (pdf 398)"},
@@ -82,10 +83,13 @@ export const EXTRAS = [
   {key: "wolf", label: "Wolf", eras: "late", attrs: A(3, 3, 3, 1, 1, 1, 3, 2, 3), abilities: {alertness: 2, athletics: 1, brawl: 3, stealth: 2}, weapon: {name: "Bite 4, claw 4", damage: "4", kind: ""}, willpower: 3, animal: true, health: "OK, -1, -1, -3, -5, Incapacitated", ref: "V20 p. 391 (pdf 399)"}
 ];
 
-/** The templates for a year: early ones before 1600, late ones from 1600 (when firearms are on the sheet by default), "any" always. */
-export function extrasFor(year) {
-  const y = Number(year);
-  const early = Number.isFinite(y) && year !== null && year !== "" ? y < 1600 : true;
+/**
+ * The templates for a year: early ones while guns are not on the sheet, late ones once they are, "any" always.
+ * B6668: the era profile's firearms switch decides (false: early, true: late); "early" firearms or no switch fall back
+ * to the year (late from 1600, when firearms are on the sheet by default).
+ */
+export function extrasFor(year, firearms) {
+  const early = !gunsOnSheet(firearms, year);
   return EXTRAS.filter(e => e.eras === "any" || (early ? e.eras === "early" : e.eras === "late"));
 }
 

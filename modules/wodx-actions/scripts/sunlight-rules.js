@@ -27,7 +27,7 @@ export function sunPosition(latitude, decl, hours) {
     return { altitude, azimuth: ((az % 360) + 360) % 360 };
 }
 
-/** Day, twilight (the sun just up: faint light), or night. Sunrise and sunset are at −0.833°. */
+/** Day, twilight (the sun just up: faint light), or night. Sunrise and sunset are at −0.833° (WoDX Chronicle calendar-math SUN_UP, B6381). */
 export function phaseOfSun(altitude) {
     if (altitude <= -0.833) return "night";
     if (altitude < 6) return "twilight";
@@ -44,6 +44,23 @@ export function shadowLength(height, altitude) {
 export function sunVector(azimuth, north = 0) {
     const a = (azimuth - north) * rad;
     return { x: Math.sin(a), y: -Math.cos(a) };
+}
+
+/**
+ * B6424: where a ray toward the sun stops inside the scene's own rectangle ({x, y, width, height}), a pixel short of
+ * its edge. The scene's bounds count as walls to Foundry's collision test (v12 on), so a low sun's long shadow ray
+ * that ran off the map read as shade from the map's edge; past the edge there are no walls to throw a shadow anyway.
+ */
+export function rayInScene(origin, v, len, rect, inset = 1) {
+    let t = Math.max(0, Number(len) || 0);
+    if (rect) {
+        const x0 = rect.x + inset, y0 = rect.y + inset, x1 = rect.x + rect.width - inset, y1 = rect.y + rect.height - inset;
+        if (origin.x < x0 || origin.x > x1 || origin.y < y0 || origin.y > y1) t = 0;
+        if (v.x > 0) t = Math.min(t, (x1 - origin.x) / v.x); else if (v.x < 0) t = Math.min(t, (x0 - origin.x) / v.x);
+        if (v.y > 0) t = Math.min(t, (y1 - origin.y) / v.y); else if (v.y < 0) t = Math.min(t, (y0 - origin.y) / v.y);
+        t = Math.max(0, t);
+    }
+    return { x: origin.x + v.x * t, y: origin.y + v.y * t };
 }
 
 /* ------------------------------------------------------------------ */

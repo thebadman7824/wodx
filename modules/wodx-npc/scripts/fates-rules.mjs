@@ -26,9 +26,11 @@ export const LINE_OF_TYPE = {
   Vampire: "vampire", Werewolf: "garou", "Changing Breed": "garou", Mage: "mage", Changeling: "changeling",
   Wraith: "wraith", Mummy: "mummy", Demon: "demon", Hunter: "hunter"
 };
-const LINES = new Set(Object.values(LINE_OF_TYPE));
+const LINES = new Set([...Object.values(LINE_OF_TYPE), "kuei-jin"]);
+/** B6314: the line Fates follows for a sheet: a Vampire sheet with the variant kindredeast is a Kuei-jin, never Kindred (no Embrace, no Generation, no diablerie). */
+export const fatesLine = (type, variant = "") => (type === "Vampire" && String(variant ?? "").toLowerCase() === "kindredeast" ? "kuei-jin" : LINE_OF_TYPE[type] ?? null);
 /** Lines that do not age. */
-export const UNDYING = new Set(["vampire", "wraith", "mummy", "demon"]);
+export const UNDYING = new Set(["vampire", "kuei-jin", "wraith", "mummy", "demon"]);
 /** The years a line can be met at all (demons are loosed in 1999; the imbued hunters are WoDX's from 1999 too, but
  *  hunters of every age are kept, as the Inquisition and the societies before them). */
 export const LINE_FROM = {demon: 1999};
@@ -46,6 +48,7 @@ export const RATES = {
   wraith: {death: 0.004, spectre: 0.003, transcend: 0.0005},
   mummy: {death: 0.01, back: [1, 12]},
   demon: {death: 0.006},
+  "kuei-jin": {death: 0.004}, // B6314: the Cathayans are not made by an Embrace but sent back by the Yama Kings (Kindred of the East), so Fates makes no brood for them
   hunter: {death: 0.05, old: [55, 80]}
 };
 /** Embraces a year by sect (house, B3262). Camarilla sires wait on the Prince's leave; the Sabbat swells its ranks. */
@@ -234,7 +237,7 @@ export function live(peopleIn = [], fromYear, toYear, {rand = null, seed = "fate
 }
 
 export const DEATH_WORD = {vampire: "meets Final Death", garou: "falls fighting the Wyrm", mage: "dies, of Paradox or an enemy", changeling: "dies",
-  wraith: "is destroyed in the Tempest", demon: "is cast back into the Abyss", hunter: "dies on the hunt"};
+  wraith: "is destroyed in the Tempest", demon: "is cast back into the Abyss", hunter: "dies on the hunt", "kuei-jin": "is sent down to the hells of the Yama Kings"};
 
 /** A new childe, cub, apprentice or fosterling: a record with no sheet until the Storyteller brings it into play. */
 export function newBrood(p, year, kind, {generation = null, sect = null, n = 1} = {}) {

@@ -995,7 +995,7 @@
     "src": "chronicle",
     "title": "The first Camarilla Conclave",
     "line": "Vampire",
-    "text": "The sect holds its first Conclave and names its first Justicars.",
+    "text": "The sect holds its first Conclave. Its first justicars are elected later, in 1504 (Archons and Templars).",
     "ref": "V20 Lore of the Clans pdf 251",
     "tier": "stated",
     "verdict": "ok"
@@ -1181,7 +1181,11 @@
     "text": "The whole tribe dies to stop a great servant of the Wyrm. No living Croatan remains.",
     "ref": "W20 p. 40",
     "tier": "stated",
-    "verdict": "ok"
+    "verdict": "ok",
+    "ruling": {
+     "action": "edit",
+     "note": "Daily check 2026-11-14: the book check (Past Lives pdf 66 to 70, Werewolf: The Wild West pdf 60, Croatan Song pdf 30) puts the Croatan's end in 1589. The lost colony card stays at 1590, the year the relief ship found Roanoke empty."
+    }
    },
    {
     "id": "ev-third-great-maelstrom",
@@ -2237,10 +2241,14 @@
     "src": "chronicle",
     "title": "The War of Tears ends",
     "line": "Werewolf",
-    "text": "The Bunyip are hunted out as Europeans settle Australia. No living Bunyip remains.",
+    "text": "The Bunyip are hunted out as Europeans settle Australia. The tribe is broken; a few hold out in the far country.",
     "ref": "W20 pp. 40-41",
     "tier": "stated",
-    "verdict": "ok"
+    "verdict": "ok",
+    "ruling": {
+     "action": "edit",
+     "note": "Daily check 2026-11-16 (House Events Desk): the War of Tears breaks the tribe in 1899, and the last stand of the Bunyip in 1937 (Past Lives pdf 70) ends it."
+    }
    },
    {
     "id": "en-rl-shinsegawa-0",

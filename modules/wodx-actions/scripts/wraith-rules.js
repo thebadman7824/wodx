@@ -61,10 +61,10 @@ export function arcanosDifficulty(code, { t = null, own = {}, shroud = 7, realm 
     return discDifficulty(s, { t, own });
 }
 
-/** Angst the Shadow takes from the art itself (pp. 199, 204): Outrage in the Labyrinth 1; Pandemonium in the Tempest or Stygia a point per 1 rolled. */
+/** Angst the Shadow takes from the art itself (pp. 199, 204): Outrage in the Labyrinth 1; Pandemonium in the Tempest or Stygia a point per 1 rolled, never in the Labyrinth (B6920). */
 export function realmAngst(arcanos, realm, faces = []) {
     if (arcanos === "Outrage" && realm === "labyrinth") return 1;
-    if (arcanos === "Pandemonium" && (realm === "tempest" || realm === "labyrinth")) return TERMS.successes(faces).ones;
+    if (arcanos === "Pandemonium" && realm === "tempest") return TERMS.successes(faces).ones;
     return 0;
 }
 

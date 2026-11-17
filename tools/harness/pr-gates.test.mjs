@@ -1,0 +1,60 @@
+// B7010: the PC gates workflow's queue script (tools/pcq/pr-gates.mjs) and its lock-down.
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+import {isHold, parseGates, priorPass, marker} from "../pcq/pr-gates.mjs";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+
+test("hold and handoff pull requests are not queued", () => {
+  assert.equal(isHold({title: "HOLD: local agent: names-04"}), true);
+  assert.equal(isHold({title: "[HOLD] outside LLM"}), true);
+  assert.equal(isHold({title: "Handoff: daily refresh"}), true);
+  assert.equal(isHold({title: "Fix x", labels: ["hold"]}), true);
+  assert.equal(isHold({title: "Fix x", headRef: "claude/handoff/today"}), true);
+  assert.equal(isHold({title: "gatetruthrelay: a fighter the burn does not Daze", headRef: "claude/x"}), false);
+  assert.equal(isHold({title: "Interactables: a wire holds you", headRef: "claude/x"}), false);
+});
+
+test("gate list is read from run-gate --list output", () => {
+  assert.deepEqual(parseGates("Touched modules: wodx-combat; 2 gate(s) to run.\nGATES [\"gateplains\",\"gatelifepath\"]\n"), ["gateplains", "gatelifepath"]);
+  assert.deepEqual(parseGates("Touched modules: none; 0 gate(s) to run.\nNothing in this change needs a gate.\n"), []);
+  assert.deepEqual(parseGates("GATES [\"ok\",\"bad name;rm\"]"), ["ok"]);
+});
+
+test("an earlier pass counts only when the gate inputs match", () => {
+  const ok = {context: "wodx/gates", state: "success"}, bad = {context: "wodx/gates", state: "failure"}, other = {context: "checks", state: "success"};
+  const cands = [{sha: "c3", statuses: [other]}, {sha: "c2", statuses: [ok]}, {sha: "c1", statuses: [ok]}];
+  assert.equal(priorPass(cands, () => true), "c2");
+  assert.equal(priorPass(cands, s => s === "c1"), "c1");
+  assert.equal(priorPass(cands, () => false), null);
+  assert.equal(priorPass([{sha: "c1", statuses: [bad]}], () => true), null);
+});
+
+test("job marker ties the issue to the pull request and commit", () => {
+  assert.equal(marker(1834, "0123456789abcdef0123"), "[PR #1834 0123456789ab]");
+});
+
+test("workflow is locked to owner pull requests from this repository's claude/ branches", () => {
+  const wf = fs.readFileSync(path.join(ROOT, ".github", "workflows", "pc-gates.yml"), "utf8");
+  assert.match(wf, /runs-on: \[self-hosted, wodx-gate\]/);
+  assert.match(wf, /head\.repo\.full_name == github\.repository/);
+  assert.match(wf, /user\.login == 'thebadman7824'/);
+  assert.match(wf, /startsWith\(github\.event\.pull_request\.head\.ref, 'claude\/'\)/);
+  assert.match(wf, /persist-credentials: false/);
+  assert.doesNotMatch(wf, /pull_request_target|workflow_run|issue_comment/);
+  assert.doesNotMatch(wf, /statuses: write|wodx\/gates.*state/);
+});
+
+test("no other workflow runs on the self-hosted runner", () => {
+  const dir = path.join(ROOT, ".github", "workflows");
+  for ( const f of fs.readdirSync(dir).filter(f => /\.ya?ml$/.test(f) && f !== "pc-gates.yml") )
+    assert.doesNotMatch(fs.readFileSync(path.join(dir, f), "utf8"), /self-hosted|wodx-gate/, f);
+});
+
+test("the runner's job hook copy refuses forks and other workflows", () => {
+  const hook = fs.readFileSync(path.join(ROOT, "tools", "pcq", "gh-runner", "job-started.ps1"), "utf8");
+  for ( const s of ["thebadman7824/wodx", "pc-gates.yml", "head.repo.full_name", "pull_request", "workflow_dispatch", "exit 1"] ) assert.ok(hook.includes(s), s);
+});

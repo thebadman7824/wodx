@@ -63,6 +63,7 @@ import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
+import {setupHookListeners} from "./hook-listeners.mjs";
 import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
@@ -71,7 +72,7 @@ import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.53.1";
+const VERSION = "0.55.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -301,7 +302,8 @@ export const sunUp = () => SUN_UP;
 function eraNow() {
   try {
     const e = chron()?.eras;
-    return {eraId: e?.activeEra?.()?.profile?.id ?? "", year: num(e?.currentYear?.())};
+    // B6668: the profile's firearms switch rides along, for the rules that ask whether guns are on the sheet
+    return {eraId: e?.activeEra?.()?.profile?.id ?? "", year: num(e?.currentYear?.()), firearms: e?.eraSwitch?.("firearms")};
   } catch (e) { return {eraId: "", year: 0}; }
 }
 
@@ -873,6 +875,8 @@ export async function applyAsk(msg) {
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
+    // B6784: the work itself, on the Storyteller's client (WoDX Paperdoll plays the sprite's move: stooping to a lock, a blow at a door)
+    Hooks.callAll("wodxInteractableWorked", {token: tokDoc.uuid, action: op.id, thing: o.kind ?? null, scene: scene.id, result: out.result ?? null});
     releaseEvents(doc.id, heard.map(h => h.uuid));
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, personal, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
@@ -1240,7 +1244,7 @@ export function trapsOnPath(scene, a, b, {npc = false} = {}) {
 }
 const springing = new Set();
 /** Active GM: a token moved. Any trap on its way goes off, with a card and an Undo. */
-export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = false} = {}) {
+export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = false, carried = false} = {}) {
   const scene = tokDoc.parent, actor = tokDoc.actor;
   // Where the move ends: Foundry 14 can call the hook before the document shows the new place, so the change wins
   const pos = {x: num(changes?.x ?? tokDoc.x), y: num(changes?.y ?? tokDoc.y)};
@@ -1250,7 +1254,7 @@ export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = 
   // WoDX Chronicle 0.22.0: a flaw set off by something on the way (running water, garlic, a cross, what a Phobia names)
   const tr = await traitTriggers(tokDoc, actor, scene, from, to, pos, userId);
   if ( tr?.hold ) return [tr.msg];
-  await carryAboard(tokDoc, scene, from, to, pos);
+  await carryAboard(tokDoc, scene, from, to, pos, {carried});
   // B5176: a player character breaking away from a fight is chased
   try { await game.modules.get(MOD)?.api?.chase?.pcMoved?.(tokDoc, from, to); } catch (e) { console.warn(`${MOD} | chase`, e); }
   // Walking out of a hiding place ends the hiding
@@ -1426,16 +1430,37 @@ async function fearOfFire(scene, tokDoc, actor, p) {
     await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: R.FEAR_OF_FIRE[o.size] ?? "torch", why: `Close to ${o.title || "a fire"}`});
   }
 }
-/** B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null. */
+/** B6362: the house of worship (a region tagged church, mosque, synagogue or temple) a point is in, as holy ground, or null. */
+function worshipAt(scene, p) {
+  const sceneFaith = scene?.flags?.["wodx-chronicle"]?.place?.faith ?? null;
+  for ( const r of scene?.regions?.contents ?? [...(scene?.regions?.values?.() ?? [])] ) {
+    const place = r.flags?.["wodx-npc"]?.place;
+    if ( !place || !R.WORSHIP_PLACES.includes(place.kind) ) continue;
+    const el = Number.isFinite(r.elevation?.bottom) ? r.elevation.bottom : 0;
+    let inside = false;
+    try { inside = !!r.testPoint?.({x: p.x, y: p.y, elevation: el}, el) || !!r.object?.testPoint?.({x: p.x, y: p.y}, el); } catch (e) { inside = false; }
+    if ( !inside ) continue;
+    const o = R.worshipGround(place, r.name, sceneFaith);
+    if ( o ) return {doc: r, o};
+  }
+  return null;
+}
+/**
+ * B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null.
+ * B6362: a house of worship's region is holy ground too, and the ground keeps a faith: the tile's own, else the
+ * house it stands in, else the scene's. -> {doc, o} with o.faith
+ */
 export function holyUnder(tokDoc) {
   const scene = tokDoc?.parent;
   if ( !scene ) return null;
   const p = centerOf(tokDoc, scene);
+  const house = worshipAt(scene, p);
   for ( const doc of tilesOf(scene) ) {
     const o = describeTile(doc);
-    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) ) return {doc, o};
+    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) )
+      return {doc, o: {...o, faith: o.faith ?? house?.o.faith ?? scene.flags?.["wodx-chronicle"]?.place?.faith ?? null}};
   }
-  return null;
+  return house && R.holyGround(house.o) ? house : null;
 }
 /** Active GM: a card for a hazard hurting a character, with Undo. why: "enters" or "turn". */
 export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
@@ -1473,10 +1498,14 @@ export async function onTurnStart(combat) {
   }
   if ( isDemonActor(actor) ) {
     const p = centerOf(tokDoc, scene);
+    let any = false;
     for ( const doc of tilesOf(scene) ) {
       const o = describeTile(doc);
-      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) cards.push(await holyCard(tokDoc, actor, doc, o, "turn"));
+      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) { any = true; cards.push(await holyCard(tokDoc, actor, doc, o, "turn")); }
     }
+    // B6362: a church, mosque, synagogue or temple sears as an altar does, whatever its faith (Demon: The Fallen p. 254)
+    const house = any ? null : worshipAt(scene, p);
+    if ( house && R.holyGround(house.o) ) cards.push(await holyCard(tokDoc, actor, house.doc, house.o, "turn"));
   }
   return cards.filter(Boolean);
 }
@@ -1499,7 +1528,8 @@ export async function holyCard(tokDoc, actor, doc, o, why = "enters") {
   try {
     const scene = doc.parent;
     const h = R.holyHarm(o, {kind: "demon", torment: tormentOf(actor)});
-    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground.` : `${actor.name} steps onto holy ground (rating ${o.rating}).`];
+    const where = o.house ? ` (${o.title || o.house}${o.faith ? `, kept for ${R.FAITH_WORDS[o.faith]}` : ""}, rating ${o.rating})` : ` (rating ${o.rating})`;
+    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground${o.house ? where : ""}.` : `${actor.name} steps onto holy ground${where}.`];
     let hurt = 0, faces = [];
     if ( !h?.harmed ) lines.push(`${h?.why ?? "Nothing happens"}.`);
     else {
@@ -1690,7 +1720,11 @@ export async function beastDown(actor) {
         const g = scene.grid?.size ?? 100;
         carrying.set(td.uuid, {x: num(td.x) + g, y: num(td.y)});
         try { await td.update({x: num(td.x) + g, y: num(td.y)}, STRAIGHT(td)); } catch (e) { carrying.delete(td.uuid); }
-        try { await td.toggleStatusEffect?.("prone", {active: true}); } catch (e) { /* no such status */ }
+        // B6785: thrown riders are Knocked down as WoDX Combat knows it (the stand-up roll, the lost action); core prone without it
+        try {
+          if ( game.wodxCombat?.markFollow && td.actor ) await game.wodxCombat.markFollow(td.actor, {name: "Knocked down", condition: "knockdown", lasts: "turn"});
+          else await td.toggleStatusEffect?.("prone", {active: true});
+        } catch (e) { /* no such status */ }
         let line = `${esc(td.name)} is thrown: two dice of bashing.`;
         if ( game.wodxCombat?.soakAndApply ) {
           try { await game.wodxCombat.soakAndApply(td.object ?? td.actor, {mode: "pool", amount: 2, type: "bashing", fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0}); line += " Soak and the result are on the WoDX Combat card."; }
@@ -1757,9 +1791,10 @@ const carrying = new Map();
  * Active GM: a token moved. At the reins: the mount or vehicle and everyone aboard move with it. A passenger who
  * moves on their own gets off. Returns what happened: "carried", "drove", "off" or null.
  */
-export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.x), y: num(tokDoc.y)}) {
-  // Our own move of a passenger (Foundry may snap it to the grid, so where it lands is not checked)
-  if ( carrying.delete(tokDoc.uuid) ) return "carried";
+export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.x), y: num(tokDoc.y)}, {carried = false} = {}) {
+  // Our own move of a passenger (Foundry may snap it to the grid, so where it lands is not checked); B6799: or another
+  // module's, marked {wodxCarried: true} on the update (a vehicle driven by remote carries its passengers)
+  if ( carrying.delete(tokDoc.uuid) || carried ) return "carried";
   const dx = to.x - from.x, dy = to.y - from.y, moved = !!(dx || dy);
   const fixed = p => Number.isFinite(p?.dx) && Number.isFinite(p?.dy);
   let what = null;
@@ -2116,6 +2151,8 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.loose = setupLoose({mapEvent});
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
+  // B6923: the trap, hazard and stock hooks have listeners: a word over the token, the Held mark, the stock card
+  setupHookListeners();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
   game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
@@ -2135,7 +2172,7 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
     b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
   });
 });
-Hooks.on("updateToken", (doc, changes, options, userId) => { if ( !doc?.flags?.["wodx-npc"]?.passerby && ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld}).catch(e => console.error(`${MOD} |`, e)); });
+Hooks.on("updateToken", (doc, changes, options, userId) => { if ( !doc?.flags?.["wodx-npc"]?.passerby && ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld, carried: !!options?.wodxCarried}).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("updateCombat", (combat, changes) => { if ( ("turn" in (changes ?? {}) || "round" in (changes ?? {})) && combat?.started && isActiveGM() ) onTurnStart(combat).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("canvasReady", () => { lastSeen.clear(); for ( const t of canvas.scene?.tokens?.contents ?? [] ) lastSeen.set(t.uuid, centerOf(t, canvas.scene)); });
 Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent)));

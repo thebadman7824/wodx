@@ -1,0 +1,5530 @@
+[
+ {
+  "target": "wodx-actions",
+  "path": [
+   "action"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/use.mjs:435"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "applyRenown"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:1035",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1036"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "autoBeast"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/hearts.mjs:334"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "autoTorporRise"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/fate.mjs:250"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "cannotAct"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/conductor.js:66",
+   "modules/wodx-combat/scripts/main.js:810"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "clock"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:313"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "effects",
+   "pickPoint"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/summons.js:458"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "enterTorpor"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:226",
+   "modules/wodx-solo/scripts/fate.mjs:233"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "fortune"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:190"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "fortune",
+   "html"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:191"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "fortune",
+   "name"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:1074"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "fortune",
+   "use"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:1068"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "frenzy"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:277"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "garouInfo"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:107"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "garouRules",
+   "data"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-change.mjs:15"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "getKind"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:223",
+   "modules/wodx-chronicle/scripts/player-view.mjs:68",
+   "modules/wodx-solo/scripts/fate.mjs:49"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "harrowing"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/advance.mjs:230",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:389",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:422"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "healPlan"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/aftercare.mjs:217",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:278",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:331"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "history"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/animal-keepers.mjs:100"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "hunt"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/apps.mjs:186",
+   "modules/wodx-storyteller/scripts/between.mjs:432"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "learnGift"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/apps.mjs:369",
+   "modules/wodx-creation/scripts/apps.mjs:463"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "masqEntries"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:1060"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "powerMods",
+   "defend"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:1419"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "powerMods",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/conductor.js:56",
+   "modules/wodx-combat/scripts/main.js:1459"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "powerMods",
+   "spend"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:1085"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "profiles"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/hearts.mjs:327",
+   "modules/wodx-npc/scripts/line-refill.mjs:47"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "profiles",
+   "resource"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/line-refill.mjs:40"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "quickCheck"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/use.mjs:226",
+   "modules/wodx-library/scripts/use.mjs:431"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "recordBreach"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:562"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "revealed"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/animal-keepers.mjs:101"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "rotschreckAuto"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1408",
+   "modules/wodx-interactables/scripts/main.mjs:1427"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "setWitnessState"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/orders.mjs:257"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "soulforge"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/tasks.mjs:354",
+   "modules/wodx-storyteller/scripts/tasks.mjs:354"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "trueFaith"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/faith-use.mjs:21",
+   "modules/wodx-library/scripts/faith-use.mjs:23"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "withPerson"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/talk.mjs:530",
+   "modules/wodx-npc/scripts/talk.mjs:554"
+  ]
+ },
+ {
+  "target": "wodx-actions",
+  "path": [
+   "witnessStep"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/c20.js:373",
+   "modules/wodx-actions/scripts/mummy.js:286"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "kit",
+   "cue"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/when.mjs:161",
+   "modules/wodx-chronicle/scripts/when.mjs:162"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "kit",
+   "play"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/between.mjs:138"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "mood",
+   "ruleAt"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/deeper-hooks.js:17",
+   "modules/wodx-otherworlds/scripts/ratings.mjs:118"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "opening",
+   "show"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/between.mjs:139"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/demon.js:298",
+   "modules/wodx-actions/scripts/effects.js:681",
+   "modules/wodx-actions/scripts/main.js:1740",
+   "modules/wodx-combat/scripts/main.js:2760",
+   "modules/wodx-library/scripts/hygiene-use.mjs:50",
+   "modules/wodx-otherworlds/scripts/ratings.mjs:122"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather",
+   "apply"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/hardship.mjs:177"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather",
+   "isOutdoor"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:1742",
+   "modules/wodx-actions/scripts/main.js:1742",
+   "modules/wodx-actions/scripts/wraith.js:119",
+   "modules/wodx-combat/scripts/main.js:2762",
+   "modules/wodx-combat/scripts/main.js:2762",
+   "modules/wodx-storyteller/scripts/hardship.mjs:170",
+   "modules/wodx-storyteller/scripts/remains.mjs:51"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather",
+   "night"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/demon.js:300",
+   "modules/wodx-actions/scripts/demon.js:302"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather",
+   "now"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:1742",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1015",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1140",
+   "modules/wodx-combat/scripts/main.js:2761",
+   "modules/wodx-interactables/scripts/living.mjs:30",
+   "modules/wodx-senses/scripts/main.mjs:160",
+   "modules/wodx-storyteller/scripts/core.mjs:279"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather",
+   "on"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/night.mjs:101"
+  ]
+ },
+ {
+  "target": "wodx-atmosphere",
+  "path": [
+   "weather",
+   "set"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/demon.js:300",
+   "modules/wodx-actions/scripts/demon.js:304",
+   "modules/wodx-actions/scripts/effects.js:1059"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "age"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/hearts.mjs:190"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "age",
+   "romance"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/fae-da.js:217",
+   "modules/wodx-actions/scripts/main.js:2855",
+   "modules/wodx-actions/scripts/treasures.js:190",
+   "modules/wodx-actions/scripts/treasures.js:224",
+   "modules/wodx-npc/scripts/family.mjs:47",
+   "modules/wodx-npc/scripts/hearts.mjs:37",
+   "modules/wodx-storyteller/scripts/threads.mjs:113"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "age",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/family.mjs:282"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "age",
+   "rules",
+   "ageFacts"
+  ],
+  "uses": [
+   "modules/wodx-paperdoll/scripts/sprites.mjs:674"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "age",
+   "rules",
+   "isMinor"
+  ],
+  "uses": [
+   "modules/wodx-paperdoll/scripts/sprites.mjs:681",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:681"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "applyTimed"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/demon.js:326",
+   "modules/wodx-actions/scripts/demon.js:363",
+   "modules/wodx-actions/scripts/garou.js:554",
+   "modules/wodx-actions/scripts/garou.js:555",
+   "modules/wodx-actions/scripts/kindred.js:265",
+   "modules/wodx-actions/scripts/kindred.js:266",
+   "modules/wodx-actions/scripts/main.js:1157",
+   "modules/wodx-actions/scripts/main.js:1957",
+   "modules/wodx-combat/scripts/main.js:660",
+   "modules/wodx-npc/scripts/family.mjs:129"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "approvals"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/main.mjs:88",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:184",
+   "modules/wodx-storyteller/scripts/inherit.mjs:72",
+   "modules/wodx-storyteller/scripts/institutions.mjs:230",
+   "modules/wodx-storyteller/scripts/omens.mjs:150",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:399"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "approvals",
+   "addToQueue"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/animal-stock.mjs:170",
+   "modules/wodx-creation/scripts/feed-vitae.mjs:68"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "approvals",
+   "decide"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1053"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "approvals",
+   "pending"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/conductor.js:130",
+   "modules/wodx-creation/scripts/first-night.mjs:322",
+   "modules/wodx-interactables/scripts/main.mjs:1051",
+   "modules/wodx-solo/scripts/main.mjs:212",
+   "modules/wodx-solo/scripts/main.mjs:218",
+   "modules/wodx-storyteller/scripts/core.mjs:662",
+   "modules/wodx-storyteller/scripts/core.mjs:706",
+   "modules/wodx-storyteller/scripts/core.mjs:709"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "approvals",
+   "propose"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:155",
+   "modules/wodx-otherworlds/scripts/drift.mjs:47",
+   "modules/wodx-storyteller/scripts/hunters.mjs:269",
+   "modules/wodx-storyteller/scripts/sites.mjs:109",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:82",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:209",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:305",
+   "modules/wodx-storyteller/scripts/wonders.mjs:129"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "approvals",
+   "registerHandler"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:168",
+   "modules/wodx-npc/scripts/memory.mjs:219",
+   "modules/wodx-otherworlds/scripts/drift.mjs:54",
+   "modules/wodx-storyteller/scripts/hunters.mjs:368",
+   "modules/wodx-storyteller/scripts/patronage.mjs:119",
+   "modules/wodx-storyteller/scripts/sites.mjs:184",
+   "modules/wodx-storyteller/scripts/sites.mjs:185",
+   "modules/wodx-storyteller/scripts/wonders.mjs:158"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "church"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:170"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "church",
+   "extra"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:173"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "church",
+   "faithOf"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:452"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "church",
+   "on"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:1292",
+   "modules/wodx-interactables/scripts/living.mjs:29",
+   "modules/wodx-senses/scripts/main.mjs:175"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "church",
+   "today"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:585"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "conditions"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:289",
+   "modules/wodx-combat/scripts/conductor.js:63",
+   "modules/wodx-combat/scripts/main.js:2259",
+   "modules/wodx-combat/scripts/main.js:2513",
+   "modules/wodx-combat/scripts/main.js:2933",
+   "modules/wodx-interactables/scripts/hook-listeners.mjs:28",
+   "modules/wodx-interactables/scripts/hook-listeners.mjs:36",
+   "modules/wodx-library/scripts/arms-use.mjs:146",
+   "modules/wodx-library/scripts/hygiene-use.mjs:11",
+   "modules/wodx-npc/scripts/main.mjs:1037"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "conditions",
+   "conditionsOf"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/limits.js:221",
+   "modules/wodx-combat/scripts/main.js:215",
+   "modules/wodx-combat/scripts/main.js:2925",
+   "modules/wodx-combat/scripts/main.js:2927",
+   "modules/wodx-library/scripts/look.mjs:57",
+   "modules/wodx-sheets/scripts/extras.mjs:263",
+   "modules/wodx-sheets/scripts/sheet-rolls.mjs:47"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "conditions",
+   "defenseDifficulty"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:2969"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "conditions",
+   "hasCondition"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:290",
+   "modules/wodx-actions/scripts/debts-marks.js:291",
+   "modules/wodx-combat/scripts/main.js:705",
+   "modules/wodx-combat/scripts/main.js:811",
+   "modules/wodx-combat/scripts/main.js:2393",
+   "modules/wodx-combat/scripts/main.js:2412",
+   "modules/wodx-combat/scripts/main.js:2437",
+   "modules/wodx-combat/scripts/movement.js:334",
+   "modules/wodx-library/scripts/hygiene-use.mjs:12",
+   "modules/wodx-library/scripts/hygiene-use.mjs:41",
+   "modules/wodx-library/scripts/hygiene-use.mjs:48",
+   "modules/wodx-library/scripts/hygiene-use.mjs:59",
+   "modules/wodx-npc/scripts/main.mjs:174",
+   "modules/wodx-npc/scripts/main.mjs:300",
+   "modules/wodx-npc/scripts/main.mjs:301",
+   "modules/wodx-senses/scripts/main.mjs:357",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:28",
+   "modules/wodx-targeting/scripts/main.mjs:79"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "conditions",
+   "setCondition"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:428",
+   "modules/wodx-actions/scripts/garou.js:312",
+   "modules/wodx-actions/scripts/garou.js:333",
+   "modules/wodx-actions/scripts/main.js:2605",
+   "modules/wodx-actions/scripts/turns.js:94",
+   "modules/wodx-combat/scripts/main.js:2398",
+   "modules/wodx-combat/scripts/main.js:2434",
+   "modules/wodx-library/scripts/arms-use.mjs:160",
+   "modules/wodx-library/scripts/hygiene-use.mjs:17",
+   "modules/wodx-library/scripts/hygiene-use.mjs:42",
+   "modules/wodx-library/scripts/hygiene-use.mjs:51",
+   "modules/wodx-library/scripts/hygiene-use.mjs:63",
+   "modules/wodx-npc/scripts/fates.mjs:123",
+   "modules/wodx-npc/scripts/fates.mjs:142",
+   "modules/wodx-npc/scripts/main.mjs:621",
+   "modules/wodx-npc/scripts/main.mjs:869",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:28"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "derangements",
+   "gain"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3357",
+   "modules/wodx-npc/scripts/hearts.mjs:267",
+   "modules/wodx-npc/scripts/hearts.mjs:279"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "derangements",
+   "hold"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3431"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "endScene"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:2539",
+   "modules/wodx-actions/scripts/main.js:2540",
+   "modules/wodx-chronicle/scripts/clock-app.mjs:32"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "eras"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/hunter.js:38",
+   "modules/wodx-creation/scripts/time.mjs:102",
+   "modules/wodx-interactables/scripts/main.mjs:304",
+   "modules/wodx-npc/scripts/trust.mjs:26"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "eras",
+   "activeEra"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:507",
+   "modules/wodx-actions/scripts/fae-da.js:38",
+   "modules/wodx-actions/scripts/garou.js:93",
+   "modules/wodx-actions/scripts/hunter.js:40",
+   "modules/wodx-actions/scripts/kindred.js:185",
+   "modules/wodx-actions/scripts/kindred.js:299",
+   "modules/wodx-actions/scripts/kindred.js:1142",
+   "modules/wodx-actions/scripts/m20.js:41",
+   "modules/wodx-actions/scripts/mage-da.js:47",
+   "modules/wodx-actions/scripts/voice.js:60",
+   "modules/wodx-actions/scripts/wraith.js:46",
+   "modules/wodx-atmosphere/scripts/main.mjs:296",
+   "modules/wodx-atmosphere/scripts/main.mjs:1293",
+   "modules/wodx-creation/scripts/actor-data.mjs:147",
+   "modules/wodx-creation/scripts/actor-data.mjs:151",
+   "modules/wodx-creation/scripts/first-change.mjs:100",
+   "modules/wodx-creation/scripts/first-night-build.mjs:37",
+   "modules/wodx-creation/scripts/first-night-prelude.mjs:55",
+   "modules/wodx-creation/scripts/group-sheet.mjs:20",
+   "modules/wodx-creation/scripts/lifepath.mjs:43",
+   "modules/wodx-creation/scripts/skip-test.mjs:82",
+   "modules/wodx-creation/scripts/time.mjs:296",
+   "modules/wodx-creation/scripts/totals-check.mjs:75",
+   "modules/wodx-creation/scripts/wizard.mjs:29",
+   "modules/wodx-interactables/scripts/fill.mjs:17",
+   "modules/wodx-library/scripts/examine.mjs:81",
+   "modules/wodx-library/scripts/look.mjs:17",
+   "modules/wodx-library/scripts/main.mjs:39",
+   "modules/wodx-library/scripts/shelves.mjs:12",
+   "modules/wodx-npc/scripts/main.mjs:121",
+   "modules/wodx-otherworlds/scripts/ratings.mjs:64",
+   "modules/wodx-senses/scripts/perception.mjs:200",
+   "modules/wodx-sheets/scripts/anachronism.mjs:30",
+   "modules/wodx-sheets/scripts/extras.mjs:26",
+   "modules/wodx-sheets/scripts/main.mjs:40",
+   "modules/wodx-storyteller/scripts/money.mjs:135"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "eras",
+   "currentYear"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/banal-life.js:22",
+   "modules/wodx-actions/scripts/charms.js:32",
+   "modules/wodx-actions/scripts/debts-marks.js:34",
+   "modules/wodx-actions/scripts/deeper-hooks.js:31",
+   "modules/wodx-actions/scripts/hunter.js:40",
+   "modules/wodx-actions/scripts/kindred.js:456",
+   "modules/wodx-actions/scripts/m20.js:37",
+   "modules/wodx-actions/scripts/main.js:1792",
+   "modules/wodx-actions/scripts/soulforge.js:26",
+   "modules/wodx-actions/scripts/wraith.js:47",
+   "modules/wodx-chronicle/scripts/when.mjs:110",
+   "modules/wodx-combat/scripts/aftermath.js:17",
+   "modules/wodx-combat/scripts/main.js:2747",
+   "modules/wodx-combat/scripts/main.js:2752",
+   "modules/wodx-creation/scripts/change-of-state.mjs:258",
+   "modules/wodx-creation/scripts/wizard.mjs:28",
+   "modules/wodx-interactables/scripts/carry.mjs:20",
+   "modules/wodx-interactables/scripts/case.mjs:28",
+   "modules/wodx-interactables/scripts/chase.mjs:26",
+   "modules/wodx-interactables/scripts/fill.mjs:66",
+   "modules/wodx-interactables/scripts/investigation.mjs:21",
+   "modules/wodx-interactables/scripts/vehicle-sheet.mjs:15",
+   "modules/wodx-library/scripts/examine.mjs:19",
+   "modules/wodx-library/scripts/know.mjs:17",
+   "modules/wodx-library/scripts/look.mjs:16",
+   "modules/wodx-library/scripts/main.mjs:47",
+   "modules/wodx-library/scripts/use.mjs:35",
+   "modules/wodx-library/scripts/weight.mjs:14",
+   "modules/wodx-npc/scripts/main.mjs:133",
+   "modules/wodx-npc/scripts/servant-world.mjs:25",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:31",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:234",
+   "modules/wodx-otherworlds/scripts/journey.mjs:40",
+   "modules/wodx-otherworlds/scripts/net.mjs:33",
+   "modules/wodx-otherworlds/scripts/realm-maps.mjs:17",
+   "modules/wodx-otherworlds/scripts/realm-worlds.mjs:27",
+   "modules/wodx-otherworlds/scripts/realms.mjs:18",
+   "modules/wodx-otherworlds/scripts/reflect.mjs:14",
+   "modules/wodx-paperdoll/scripts/main.mjs:348",
+   "modules/wodx-paperdoll/scripts/mounts.mjs:15",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:702",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:669",
+   "modules/wodx-senses/scripts/main.mjs:163",
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:32",
+   "modules/wodx-sheets/scripts/anachronism.mjs:31",
+   "modules/wodx-sheets/scripts/beginner.mjs:24",
+   "modules/wodx-sheets/scripts/extras.mjs:27",
+   "modules/wodx-solo/scripts/fate.mjs:58",
+   "modules/wodx-storyteller/scripts/caravans.mjs:30",
+   "modules/wodx-storyteller/scripts/cookery.mjs:24",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:21",
+   "modules/wodx-storyteller/scripts/herds.mjs:22",
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:29",
+   "modules/wodx-storyteller/scripts/hunters.mjs:30",
+   "modules/wodx-storyteller/scripts/inherit.mjs:22",
+   "modules/wodx-storyteller/scripts/institutions.mjs:29",
+   "modules/wodx-storyteller/scripts/letters.mjs:26",
+   "modules/wodx-storyteller/scripts/levers.mjs:19",
+   "modules/wodx-storyteller/scripts/market-news.mjs:66",
+   "modules/wodx-storyteller/scripts/markets.mjs:68",
+   "modules/wodx-storyteller/scripts/money.mjs:27",
+   "modules/wodx-storyteller/scripts/omens.mjs:33",
+   "modules/wodx-storyteller/scripts/owners.mjs:27",
+   "modules/wodx-storyteller/scripts/patronage.mjs:22",
+   "modules/wodx-storyteller/scripts/power.mjs:29",
+   "modules/wodx-storyteller/scripts/reach.mjs:36",
+   "modules/wodx-storyteller/scripts/remains.mjs:19",
+   "modules/wodx-storyteller/scripts/rumours.mjs:31",
+   "modules/wodx-storyteller/scripts/signals.mjs:61",
+   "modules/wodx-storyteller/scripts/sites.mjs:21",
+   "modules/wodx-storyteller/scripts/tasks.mjs:22",
+   "modules/wodx-storyteller/scripts/tasks.mjs:83",
+   "modules/wodx-storyteller/scripts/tasks.mjs:378",
+   "modules/wodx-storyteller/scripts/threads.mjs:32",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:35",
+   "modules/wodx-storyteller/scripts/wonders.mjs:23"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "eras",
+   "eraSwitch"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/fill.mjs:19",
+   "modules/wodx-sheets/scripts/beginner.mjs:26"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "eras",
+   "getProfile"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/fill.mjs:20",
+   "modules/wodx-library/scripts/main.mjs:55",
+   "modules/wodx-library/scripts/shelves.mjs:13"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "eras",
+   "profiles"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/setup.mjs:169"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "events"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/wraith.js:108",
+   "modules/wodx-storyteller/scripts/signals.mjs:59"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "events",
+   "fired"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/living.mjs:31",
+   "modules/wodx-otherworlds/scripts/journey.mjs:42",
+   "modules/wodx-storyteller/scripts/omens.mjs:54"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "events",
+   "has"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/wraith.js:108",
+   "modules/wodx-actions/scripts/wraith.js:108",
+   "modules/wodx-otherworlds/scripts/realms.mjs:19"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "events",
+   "list"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:103",
+   "modules/wodx-actions/scripts/debts-marks.js:373",
+   "modules/wodx-interactables/scripts/living.mjs:116",
+   "modules/wodx-storyteller/scripts/omens.mjs:55"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "events",
+   "load"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:102",
+   "modules/wodx-actions/scripts/debts-marks.js:372"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/people.mjs:46",
+   "modules/wodx-creation/scripts/people.mjs:52",
+   "modules/wodx-creation/scripts/people.mjs:143",
+   "modules/wodx-otherworlds/scripts/journey.mjs:32",
+   "modules/wodx-otherworlds/scripts/journey.mjs:37",
+   "modules/wodx-otherworlds/scripts/realm-worlds.mjs:146",
+   "modules/wodx-storyteller/scripts/core.mjs:344",
+   "modules/wodx-storyteller/scripts/night.mjs:33",
+   "modules/wodx-storyteller/scripts/night.mjs:91",
+   "modules/wodx-storyteller/scripts/night.mjs:201",
+   "modules/wodx-storyteller/scripts/night.mjs:209",
+   "modules/wodx-storyteller/scripts/night.mjs:252",
+   "modules/wodx-storyteller/scripts/night.mjs:289"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "context"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/people.mjs:143"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "cultures"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/people.mjs:158"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "draw"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/core.mjs:361"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "lookup"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/people.mjs:144"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "random"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/market-moves.mjs:113",
+   "modules/wodx-storyteller/scripts/market-moves.mjs:176",
+   "modules/wodx-storyteller/scripts/rumours.mjs:48"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "registerTables"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/people.mjs:45",
+   "modules/wodx-otherworlds/scripts/journey.mjs:28",
+   "modules/wodx-storyteller/scripts/night.mjs:29"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gen",
+   "seed"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:137",
+   "modules/wodx-creation/scripts/people.mjs:85",
+   "modules/wodx-creation/scripts/people.mjs:173",
+   "modules/wodx-senses/scripts/main.mjs:487",
+   "modules/wodx-senses/scripts/main.mjs:653"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gender"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:2081",
+   "modules/wodx-npc/scripts/family.mjs:32",
+   "modules/wodx-npc/scripts/hearts.mjs:90",
+   "modules/wodx-sheets/scripts/main.mjs:476",
+   "modules/wodx-storyteller/scripts/wills.mjs:48"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gender",
+   "forRules"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:2081",
+   "modules/wodx-storyteller/scripts/wonders.mjs:33"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gender",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-paperdoll/scripts/face64.mjs:44",
+   "modules/wodx-paperdoll/scripts/main.mjs:92",
+   "modules/wodx-sheets/scripts/main.mjs:484"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "gender",
+   "set"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/main.mjs:489"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "hold"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:208"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "isHeld"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:1323",
+   "modules/wodx-chronicle/scripts/clock-app.mjs:208",
+   "modules/wodx-creation/scripts/animal-keepers.mjs:191",
+   "modules/wodx-interactables/scripts/carry.mjs:120",
+   "modules/wodx-interactables/scripts/chase.mjs:370",
+   "modules/wodx-interactables/scripts/living.mjs:93",
+   "modules/wodx-library/scripts/hygiene-use.mjs:10",
+   "modules/wodx-library/scripts/use.mjs:115",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:27",
+   "modules/wodx-npc/scripts/carry-goals.mjs:19",
+   "modules/wodx-npc/scripts/cults.mjs:26",
+   "modules/wodx-npc/scripts/family.mjs:13",
+   "modules/wodx-npc/scripts/legacy.mjs:21",
+   "modules/wodx-npc/scripts/memory.mjs:18",
+   "modules/wodx-npc/scripts/orders.mjs:22",
+   "modules/wodx-npc/scripts/prowl.mjs:10",
+   "modules/wodx-npc/scripts/servants.mjs:24",
+   "modules/wodx-storyteller/scripts/dreams.mjs:129",
+   "modules/wodx-storyteller/scripts/hardship.mjs:104",
+   "modules/wodx-storyteller/scripts/herds.mjs:23",
+   "modules/wodx-storyteller/scripts/hunters.mjs:31",
+   "modules/wodx-storyteller/scripts/ledger.mjs:248",
+   "modules/wodx-storyteller/scripts/letters.mjs:257",
+   "modules/wodx-storyteller/scripts/money.mjs:26",
+   "modules/wodx-storyteller/scripts/rumours.mjs:187",
+   "modules/wodx-storyteller/scripts/tasks.mjs:21",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:31"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "isQuiet"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/archive.mjs:47"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "isSkipping"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3592",
+   "modules/wodx-actions/scripts/main.js:3633",
+   "modules/wodx-actions/scripts/main.js:3640",
+   "modules/wodx-actions/scripts/main.js:3655",
+   "modules/wodx-actions/scripts/main.js:3659",
+   "modules/wodx-actions/scripts/summons.js:507",
+   "modules/wodx-atmosphere/scripts/main.mjs:237",
+   "modules/wodx-atmosphere/scripts/main.mjs:471",
+   "modules/wodx-atmosphere/scripts/main.mjs:721",
+   "modules/wodx-atmosphere/scripts/main.mjs:1273",
+   "modules/wodx-interactables/scripts/carry.mjs:120",
+   "modules/wodx-interactables/scripts/living.mjs:93",
+   "modules/wodx-interactables/scripts/stock.mjs:43",
+   "modules/wodx-npc/scripts/line-refill.mjs:110",
+   "modules/wodx-npc/scripts/servant-world.mjs:241",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:29",
+   "modules/wodx-otherworlds/scripts/fading.mjs:76",
+   "modules/wodx-otherworlds/scripts/main.mjs:129",
+   "modules/wodx-otherworlds/scripts/realms.mjs:462",
+   "modules/wodx-sheets/scripts/anachronism.mjs:35",
+   "modules/wodx-storyteller/scripts/caravans.mjs:209",
+   "modules/wodx-storyteller/scripts/cookery.mjs:247",
+   "modules/wodx-storyteller/scripts/dreams.mjs:16",
+   "modules/wodx-storyteller/scripts/hardship.mjs:221",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:190",
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:370",
+   "modules/wodx-storyteller/scripts/hunters.mjs:32",
+   "modules/wodx-storyteller/scripts/institutions.mjs:237",
+   "modules/wodx-storyteller/scripts/ledger.mjs:25",
+   "modules/wodx-storyteller/scripts/letters.mjs:257",
+   "modules/wodx-storyteller/scripts/market-turn.mjs:35",
+   "modules/wodx-storyteller/scripts/money.mjs:517",
+   "modules/wodx-storyteller/scripts/night.mjs:187",
+   "modules/wodx-storyteller/scripts/omens.mjs:173",
+   "modules/wodx-storyteller/scripts/patronage.mjs:123",
+   "modules/wodx-storyteller/scripts/power.mjs:30",
+   "modules/wodx-storyteller/scripts/remains.mjs:158",
+   "modules/wodx-storyteller/scripts/rumours.mjs:18",
+   "modules/wodx-storyteller/scripts/tasks.mjs:462",
+   "modules/wodx-storyteller/scripts/threads.mjs:283",
+   "modules/wodx-storyteller/scripts/towns.mjs:36",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:428",
+   "modules/wodx-storyteller/scripts/wonders.mjs:236"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "languages"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night.mjs:153",
+   "modules/wodx-storyteller/scripts/reach.mjs:480"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "languages",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:370"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "languages",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:49"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "law",
+   "heat"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/reach.mjs:40"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "law",
+   "heat",
+   "add"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/trust.mjs:196",
+   "modules/wodx-otherworlds/scripts/net.mjs:501",
+   "modules/wodx-otherworlds/scripts/net.mjs:696",
+   "modules/wodx-storyteller/scripts/hunters.mjs:131"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "law",
+   "papers",
+   "project"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/tasks.mjs:127"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "law",
+   "standing",
+   "officeCap"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/institutions.mjs:111"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "law",
+   "tax"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/towns.mjs:66"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "legends",
+   "addDeed"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/aftermath.js:119",
+   "modules/wodx-storyteller/scripts/threads.mjs:236"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "looks"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/corruption-looks.mjs:15",
+   "modules/wodx-storyteller/scripts/town-looks.mjs:27"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "looks",
+   "end"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:954",
+   "modules/wodx-actions/scripts/effects.js:1066"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "looks",
+   "shake"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:89"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "looks",
+   "show"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:979",
+   "modules/wodx-actions/scripts/summons.js:159"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "looks",
+   "weather"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:357",
+   "modules/wodx-actions/scripts/charms.js:415",
+   "modules/wodx-actions/scripts/effects.js:944"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "nightwork"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/main.mjs:158",
+   "modules/wodx-solo/scripts/st-tools.mjs:208"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "place",
+   "describeAt"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:109",
+   "modules/wodx-senses/scripts/main.mjs:141"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "place",
+   "latitudeFor"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/family.mjs:40",
+   "modules/wodx-solo/scripts/panel.mjs:73",
+   "modules/wodx-solo/scripts/world.mjs:191"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "playerView"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:472"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "playerView",
+   "current"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:480",
+   "modules/wodx-sheets/scripts/beginner.mjs:21",
+   "modules/wodx-sheets/scripts/extras.mjs:472"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "pod",
+   "saga",
+   "current"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/threads.mjs:212"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "propose"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:927",
+   "modules/wodx-actions/scripts/effects.js:1102",
+   "modules/wodx-actions/scripts/servant-actions.js:77",
+   "modules/wodx-actions/scripts/servant-actions.js:120",
+   "modules/wodx-actions/scripts/servant-actions.js:154",
+   "modules/wodx-actions/scripts/servant-actions.js:259",
+   "modules/wodx-actions/scripts/social.js:353",
+   "modules/wodx-actions/scripts/voice.js:175",
+   "modules/wodx-actions/scripts/voice.js:176",
+   "modules/wodx-creation/scripts/first-night.mjs:395",
+   "modules/wodx-creation/scripts/first-night.mjs:416",
+   "modules/wodx-creation/scripts/lifepath.mjs:451",
+   "modules/wodx-creation/scripts/lifepath.mjs:462",
+   "modules/wodx-creation/scripts/people.mjs:215",
+   "modules/wodx-interactables/scripts/main.mjs:760",
+   "modules/wodx-npc/scripts/family.mjs:185",
+   "modules/wodx-npc/scripts/family.mjs:273",
+   "modules/wodx-npc/scripts/family.mjs:413",
+   "modules/wodx-npc/scripts/fates.mjs:98",
+   "modules/wodx-npc/scripts/kin.mjs:169",
+   "modules/wodx-npc/scripts/legacy.mjs:210",
+   "modules/wodx-npc/scripts/memory.mjs:121",
+   "modules/wodx-npc/scripts/servants.mjs:119",
+   "modules/wodx-npc/scripts/servants.mjs:231",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:204",
+   "modules/wodx-otherworlds/scripts/crossing.mjs:363",
+   "modules/wodx-otherworlds/scripts/crossing.mjs:371",
+   "modules/wodx-otherworlds/scripts/journey.mjs:72",
+   "modules/wodx-otherworlds/scripts/realms.mjs:194",
+   "modules/wodx-otherworlds/scripts/realms.mjs:202",
+   "modules/wodx-storyteller/scripts/contagion.mjs:306",
+   "modules/wodx-storyteller/scripts/contagion.mjs:343",
+   "modules/wodx-storyteller/scripts/core.mjs:391",
+   "modules/wodx-storyteller/scripts/core.mjs:428",
+   "modules/wodx-storyteller/scripts/core.mjs:463",
+   "modules/wodx-storyteller/scripts/core.mjs:575",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:124",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:161",
+   "modules/wodx-storyteller/scripts/inherit.mjs:138",
+   "modules/wodx-storyteller/scripts/institutions.mjs:112",
+   "modules/wodx-storyteller/scripts/institutions.mjs:138",
+   "modules/wodx-storyteller/scripts/institutions.mjs:182",
+   "modules/wodx-storyteller/scripts/market-moves.mjs:164",
+   "modules/wodx-storyteller/scripts/market-moves.mjs:179",
+   "modules/wodx-storyteller/scripts/market-turn.mjs:128",
+   "modules/wodx-storyteller/scripts/night.mjs:142",
+   "modules/wodx-storyteller/scripts/night.mjs:225",
+   "modules/wodx-storyteller/scripts/omens.mjs:119",
+   "modules/wodx-storyteller/scripts/omens.mjs:129",
+   "modules/wodx-storyteller/scripts/owners.mjs:401",
+   "modules/wodx-storyteller/scripts/patronage.mjs:76",
+   "modules/wodx-storyteller/scripts/spend.mjs:81",
+   "modules/wodx-storyteller/scripts/threads.mjs:117",
+   "modules/wodx-storyteller/scripts/towns.mjs:179",
+   "modules/wodx-storyteller/scripts/ventures.mjs:120",
+   "modules/wodx-storyteller/scripts/wills.mjs:82",
+   "modules/wodx-storyteller/scripts/wills.mjs:95"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "registerApprovalHandler"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3507",
+   "modules/wodx-actions/scripts/main.js:3507",
+   "modules/wodx-actions/scripts/servant-actions.js:310",
+   "modules/wodx-actions/scripts/social.js:345",
+   "modules/wodx-creation/scripts/animal-stock.mjs:232",
+   "modules/wodx-creation/scripts/feed-vitae.mjs:77",
+   "modules/wodx-creation/scripts/lifepath.mjs:101",
+   "modules/wodx-creation/scripts/lifepath.mjs:102",
+   "modules/wodx-creation/scripts/people.mjs:47",
+   "modules/wodx-creation/scripts/xp.mjs:157",
+   "modules/wodx-interactables/scripts/main.mjs:1834",
+   "modules/wodx-interactables/scripts/main.mjs:2159",
+   "modules/wodx-npc/scripts/family.mjs:455",
+   "modules/wodx-npc/scripts/fates.mjs:201",
+   "modules/wodx-npc/scripts/kin.mjs:174",
+   "modules/wodx-npc/scripts/legacy.mjs:213",
+   "modules/wodx-npc/scripts/main.mjs:1349",
+   "modules/wodx-npc/scripts/servants.mjs:421",
+   "modules/wodx-npc/scripts/servants.mjs:427",
+   "modules/wodx-otherworlds/scripts/crossing.mjs:383",
+   "modules/wodx-otherworlds/scripts/journey.mjs:30",
+   "modules/wodx-otherworlds/scripts/realms.mjs:210",
+   "modules/wodx-otherworlds/scripts/realms.mjs:464",
+   "modules/wodx-storyteller/scripts/contagion.mjs:385",
+   "modules/wodx-storyteller/scripts/inherit.mjs:143",
+   "modules/wodx-storyteller/scripts/market-moves.mjs:240",
+   "modules/wodx-storyteller/scripts/market-turn.mjs:182",
+   "modules/wodx-storyteller/scripts/night.mjs:30",
+   "modules/wodx-storyteller/scripts/night.mjs:31",
+   "modules/wodx-storyteller/scripts/owners.mjs:410",
+   "modules/wodx-storyteller/scripts/spend.mjs:89",
+   "modules/wodx-storyteller/scripts/threads.mjs:272",
+   "modules/wodx-storyteller/scripts/towns.mjs:370",
+   "modules/wodx-storyteller/scripts/ventures.mjs:308"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "registerCondition"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:98",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:21"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "release",
+   "check"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/report.mjs:62"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "roster",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:42"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "roster",
+   "play"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/fate.mjs:436"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "rule"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/voice.js:132",
+   "modules/wodx-actions/scripts/voice.js:150",
+   "modules/wodx-combat/scripts/start.js:78",
+   "modules/wodx-otherworlds/scripts/net.mjs:34",
+   "modules/wodx-otherworlds/scripts/realm-maps.mjs:18",
+   "modules/wodx-otherworlds/scripts/realm-worlds.mjs:28",
+   "modules/wodx-otherworlds/scripts/reflect.mjs:15",
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:33",
+   "modules/wodx-solo/scripts/fate.mjs:228"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "safety",
+   "openSessionZero"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night.mjs:431"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "scars"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/town-scars.mjs:10"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "scars",
+   "scar"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:990"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "scars",
+   "undo"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:1031"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "addMuse"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/patronage.mjs:80"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "allRowsOf"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/hunter.js:357",
+   "modules/wodx-actions/scripts/m20.js:118"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "ghoulFed"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/change-of-state.mjs:219"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "rowsOf"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/tasks.mjs:158"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "setOff"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:581"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "soakFor"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:1482"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "signatures",
+   "summary"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:438"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "terms"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/daysleep.js:65",
+   "modules/wodx-npc/scripts/passersby.mjs:96"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "terms",
+   "isNightHere"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/reach.mjs:35"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "terms",
+   "placeNow"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:101"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "terms",
+   "turnSeconds"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/daysleep.js:180",
+   "modules/wodx-actions/scripts/limits.js:39",
+   "modules/wodx-interactables/scripts/main.mjs:427"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "ticket",
+   "ask"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/approvals.mjs:436"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "timed"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:68",
+   "modules/wodx-actions/scripts/acts.js:193",
+   "modules/wodx-actions/scripts/acts.js:232",
+   "modules/wodx-actions/scripts/acts.js:268",
+   "modules/wodx-actions/scripts/acts.js:377"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "timed",
+   "applyTimed"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:115",
+   "modules/wodx-actions/scripts/charms.js:247",
+   "modules/wodx-actions/scripts/charms.js:412",
+   "modules/wodx-actions/scripts/charms.js:429",
+   "modules/wodx-actions/scripts/charms.js:450",
+   "modules/wodx-actions/scripts/fae-da.js:240",
+   "modules/wodx-actions/scripts/fomor.js:200",
+   "modules/wodx-actions/scripts/fomor.js:372",
+   "modules/wodx-actions/scripts/fomor.js:408",
+   "modules/wodx-actions/scripts/fomor.js:421",
+   "modules/wodx-actions/scripts/treasures.js:104",
+   "modules/wodx-actions/scripts/treasures.js:114",
+   "modules/wodx-npc/scripts/hearts.mjs:407"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "timed",
+   "endFor"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/after-costs.js:231",
+   "modules/wodx-actions/scripts/main.js:2550"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "timed",
+   "registerReverter"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3504",
+   "modules/wodx-actions/scripts/main.js:3505",
+   "modules/wodx-actions/scripts/treasures.js:53"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "timeSkip"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/time.mjs:295"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "tokenLooks"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/veil-looks.mjs:77",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:41"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "tokenLooks",
+   "refresh"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:572",
+   "modules/wodx-actions/scripts/effects.js:793",
+   "modules/wodx-actions/scripts/servant-actions.js:127",
+   "modules/wodx-actions/scripts/summons.js:468",
+   "modules/wodx-npc/scripts/servants.mjs:437",
+   "modules/wodx-otherworlds/scripts/fading.mjs:44",
+   "modules/wodx-otherworlds/scripts/veil-looks.mjs:72",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:36",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:41",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:43"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "tokenLooks",
+   "register"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/servant-actions.js:316",
+   "modules/wodx-npc/scripts/servants.mjs:436",
+   "modules/wodx-otherworlds/scripts/veil-looks.mjs:76",
+   "modules/wodx-storyteller/scripts/sick-looks.mjs:22"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "tours",
+   "start"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:50"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:1447",
+   "modules/wodx-combat/scripts/main.js:2980",
+   "modules/wodx-creation/scripts/first-night.mjs:119",
+   "modules/wodx-library/scripts/faith-use.mjs:58",
+   "modules/wodx-library/scripts/use.mjs:116",
+   "modules/wodx-otherworlds/scripts/crossing.mjs:484",
+   "modules/wodx-sheets/scripts/sheet-rolls.mjs:34",
+   "modules/wodx-storyteller/scripts/hardship.mjs:219",
+   "modules/wodx-storyteller/scripts/ledger.mjs:46",
+   "modules/wodx-storyteller/scripts/night.mjs:119"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "addBite"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:2009",
+   "modules/wodx-storyteller/scripts/reach.mjs:423"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "addSource"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3498",
+   "modules/wodx-atmosphere/scripts/main.mjs:1250",
+   "modules/wodx-library/scripts/faith-use.mjs:60",
+   "modules/wodx-storyteller/scripts/hardship.mjs:218"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "has"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:441",
+   "modules/wodx-creation/scripts/first-night-seed.mjs:28",
+   "modules/wodx-library/scripts/look.mjs:66",
+   "modules/wodx-storyteller/scripts/dreams.mjs:87",
+   "modules/wodx-storyteller/scripts/omens.mjs:95"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night-build.mjs:57",
+   "modules/wodx-creation/scripts/first-night.mjs:332"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "prompt"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:2020",
+   "modules/wodx-storyteller/scripts/night.mjs:155"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "pulls"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/director.mjs:67"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1338"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "rules",
+   "triggered"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1339"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "senses"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:237"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "shows"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:318"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "toughness"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:202"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "triggers"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1336"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "waiting",
+   "count"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:74"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "waiting",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:44"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "when"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/mood.mjs:37",
+   "modules/wodx-atmosphere/scripts/mood.mjs:91",
+   "modules/wodx-interactables/scripts/main.mjs:2039",
+   "modules/wodx-interactables/scripts/stock.mjs:18",
+   "modules/wodx-npc/scripts/main.mjs:156",
+   "modules/wodx-npc/scripts/main.mjs:1147"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "when",
+   "check"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:346"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "when",
+   "context"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:292",
+   "modules/wodx-actions/scripts/trait-hooks.js:25",
+   "modules/wodx-interactables/scripts/chase.mjs:382"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "when",
+   "run"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:337"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:122",
+   "modules/wodx-sheets/scripts/anachronism.mjs:133",
+   "modules/wodx-sheets/scripts/extras.mjs:40",
+   "modules/wodx-storyteller/scripts/core.mjs:282",
+   "modules/wodx-storyteller/scripts/letters.mjs:41",
+   "modules/wodx-storyteller/scripts/money.mjs:359",
+   "modules/wodx-storyteller/scripts/money.mjs:439",
+   "modules/wodx-storyteller/scripts/setup.mjs:81",
+   "modules/wodx-storyteller/scripts/setup.mjs:131",
+   "modules/wodx-storyteller/scripts/setup.mjs:163",
+   "modules/wodx-storyteller/scripts/towns.mjs:74",
+   "modules/wodx-storyteller/scripts/ventures.mjs:53"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "here"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:128",
+   "modules/wodx-atmosphere/scripts/main.mjs:135",
+   "modules/wodx-interactables/scripts/fill.mjs:67",
+   "modules/wodx-library/scripts/main.mjs:48",
+   "modules/wodx-npc/scripts/trust.mjs:187",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:47",
+   "modules/wodx-storyteller/scripts/contagion.mjs:52",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:33",
+   "modules/wodx-storyteller/scripts/hunters.mjs:57",
+   "modules/wodx-storyteller/scripts/institutions.mjs:43",
+   "modules/wodx-storyteller/scripts/levers.mjs:22",
+   "modules/wodx-storyteller/scripts/omens.mjs:44",
+   "modules/wodx-storyteller/scripts/patronage.mjs:37",
+   "modules/wodx-storyteller/scripts/reach.mjs:388",
+   "modules/wodx-storyteller/scripts/reach.mjs:390",
+   "modules/wodx-storyteller/scripts/reach.mjs:392",
+   "modules/wodx-storyteller/scripts/reach.mjs:416",
+   "modules/wodx-storyteller/scripts/reach.mjs:433",
+   "modules/wodx-storyteller/scripts/reach.mjs:489",
+   "modules/wodx-storyteller/scripts/setup.mjs:116",
+   "modules/wodx-storyteller/scripts/signals.mjs:23",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:271"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "homeland"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/lifepath.mjs:38",
+   "modules/wodx-npc/scripts/factions.mjs:101",
+   "modules/wodx-npc/scripts/family.mjs:38",
+   "modules/wodx-npc/scripts/hearts.mjs:54",
+   "modules/wodx-npc/scripts/kin.mjs:24",
+   "modules/wodx-npc/scripts/standing.mjs:25",
+   "modules/wodx-storyteller/scripts/contagion.mjs:48",
+   "modules/wodx-storyteller/scripts/hunters.mjs:58",
+   "modules/wodx-storyteller/scripts/inherit.mjs:23",
+   "modules/wodx-storyteller/scripts/letters.mjs:48",
+   "modules/wodx-storyteller/scripts/levers.mjs:23",
+   "modules/wodx-storyteller/scripts/market-news.mjs:66",
+   "modules/wodx-storyteller/scripts/reach.mjs:388",
+   "modules/wodx-storyteller/scripts/reach.mjs:392",
+   "modules/wodx-storyteller/scripts/reach.mjs:445",
+   "modules/wodx-storyteller/scripts/rumours.mjs:34",
+   "modules/wodx-storyteller/scripts/setup.mjs:83",
+   "modules/wodx-storyteller/scripts/setup.mjs:165",
+   "modules/wodx-storyteller/scripts/threads.mjs:34",
+   "modules/wodx-storyteller/scripts/wills.mjs:22"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "regionOf"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/settlement.mjs:69",
+   "modules/wodx-storyteller/scripts/letters.mjs:37",
+   "modules/wodx-storyteller/scripts/omens.mjs:45",
+   "modules/wodx-storyteller/scripts/setup.mjs:82"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "regions"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:103",
+   "modules/wodx-storyteller/scripts/builder.mjs:57",
+   "modules/wodx-storyteller/scripts/contagion.mjs:55",
+   "modules/wodx-storyteller/scripts/core.mjs:269",
+   "modules/wodx-storyteller/scripts/hunters.mjs:61",
+   "modules/wodx-storyteller/scripts/letters.mjs:34",
+   "modules/wodx-storyteller/scripts/levers.mjs:20",
+   "modules/wodx-storyteller/scripts/setup.mjs:164"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/fill.mjs:69",
+   "modules/wodx-library/scripts/main.mjs:49"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "rules",
+   "sphereFor"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/family.mjs:39",
+   "modules/wodx-npc/scripts/hearts.mjs:55",
+   "modules/wodx-npc/scripts/kin.mjs:25",
+   "modules/wodx-npc/scripts/standing.mjs:26",
+   "modules/wodx-storyteller/scripts/wills.mjs:23"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "world",
+   "setHomeland"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/setup.mjs:83",
+   "modules/wodx-storyteller/scripts/setup.mjs:85"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "applyDamage"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/fomor.js:398",
+   "modules/wodx-actions/scripts/fomor.js:398",
+   "modules/wodx-actions/scripts/treasures.js:91",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:342",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:409",
+   "modules/wodx-npc/scripts/family.mjs:126",
+   "modules/wodx-storyteller/scripts/contagion.mjs:221",
+   "modules/wodx-storyteller/scripts/hardship.mjs:97"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "attack"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/player-view.mjs:355"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "auto",
+   "toYards"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/companions.mjs:27"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "body",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/haul.mjs:91"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "corpusTrack"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/when.mjs:43",
+   "modules/wodx-interactables/scripts/haul.mjs:71",
+   "modules/wodx-library/scripts/look.mjs:60"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "fight",
+   "start"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:1057",
+   "modules/wodx-npc/scripts/factions.mjs:249",
+   "modules/wodx-storyteller/scripts/reach.mjs:154",
+   "modules/wodx-storyteller/scripts/reach.mjs:263"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "getKind"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/legends.mjs:51",
+   "modules/wodx-chronicle/scripts/pod.mjs:53",
+   "modules/wodx-chronicle/scripts/signatures.mjs:81",
+   "modules/wodx-chronicle/scripts/signatures.mjs:547",
+   "modules/wodx-chronicle/scripts/traits.mjs:27",
+   "modules/wodx-chronicle/scripts/when.mjs:59",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:38",
+   "modules/wodx-npc/scripts/cults.mjs:57",
+   "modules/wodx-paperdoll/scripts/face64.mjs:36"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "healDamage"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/fomor.js:165",
+   "modules/wodx-actions/scripts/fomor.js:165",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:99",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:277",
+   "modules/wodx-storyteller/scripts/contagion.mjs:330",
+   "modules/wodx-storyteller/scripts/hardship.mjs:126"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "quickAttack"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/player-view.mjs:356"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "rollInitiative"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/player-view.mjs:354"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "setDamage"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/treasures.js:77",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:95",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:275",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:279",
+   "modules/wodx-npc/scripts/carry-aftercare.mjs:333"
+  ]
+ },
+ {
+  "target": "wodx-combat",
+  "path": [
+   "soakAndApply"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:1304",
+   "modules/wodx-actions/scripts/treasures.js:294"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:159",
+   "modules/wodx-npc/scripts/orders.mjs:129",
+   "modules/wodx-npc/scripts/residents.mjs:26"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals",
+   "householdBeasts"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/residents.mjs:92",
+   "modules/wodx-npc/scripts/residents.mjs:95"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals",
+   "isAnimal"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:47"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals",
+   "kindOf"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:48"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals",
+   "ownBeast"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:160",
+   "modules/wodx-actions/scripts/kindred.js:172"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals",
+   "rules",
+   "lifespan"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:150"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "animals",
+   "rules",
+   "monthlyNeed"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:49"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "award"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/director.mjs:166",
+   "modules/wodx-solo/scripts/st-tools.mjs:153",
+   "modules/wodx-storyteller/scripts/hand.mjs:297",
+   "modules/wodx-storyteller/scripts/hand.mjs:337"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "data",
+   "newPowerOption"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:601",
+   "modules/wodx-actions/scripts/garou.js:602"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "firstNight"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:40",
+   "modules/wodx-chronicle/scripts/clock-app.mjs:150",
+   "modules/wodx-storyteller/scripts/setup.mjs:229"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "lifepathThreads"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/pod.mjs:502",
+   "modules/wodx-storyteller/scripts/threads.mjs:87"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "lines"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/hearts.mjs:51",
+   "modules/wodx-npc/scripts/line-mend.mjs:8",
+   "modules/wodx-npc/scripts/servant-world.mjs:146"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "passYears"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:34"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "people"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/bg-world.mjs:37",
+   "modules/wodx-npc/scripts/residents.mjs:21",
+   "modules/wodx-storyteller/scripts/night.mjs:288"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "people",
+   "generate"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/fates.mjs:168",
+   "modules/wodx-npc/scripts/kin.mjs:44"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "people",
+   "load"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/residents.mjs:147"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "wizard"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/arrival.mjs:171"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "xp"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:610"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "xp",
+   "award"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:611"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "xp",
+   "requestSpend"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:601",
+   "modules/wodx-actions/scripts/garou.js:605"
+  ]
+ },
+ {
+  "target": "wodx-creation",
+  "path": [
+   "xp",
+   "writeLogPage"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:614"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "adopt"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2149"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "beastOf"
+  ],
+  "uses": [
+   "modules/wodx-paperdoll/scripts/mounts.mjs:33"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "carry"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2144",
+   "modules/wodx-library/scripts/use.mjs:237"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "caseBoard"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:227",
+   "modules/wodx-chronicle/scripts/fronts.mjs:204",
+   "modules/wodx-interactables/scripts/main.mjs:2156"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "caseBoard",
+   "change"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:207",
+   "modules/wodx-chronicle/scripts/fronts.mjs:208"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "caseBoard",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:210",
+   "modules/wodx-chronicle/scripts/fronts.mjs:210"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "caseBoard",
+   "openBoard"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:205"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "caseBoard",
+   "pinClue"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:229"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "caseBoard",
+   "rules",
+   "addCard"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:208",
+   "modules/wodx-chronicle/scripts/fronts.mjs:208"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "chase"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2154"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "chase",
+   "fled"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/main.mjs:773"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "chase",
+   "join"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/orders.mjs:364",
+   "modules/wodx-npc/scripts/orders.mjs:374"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "chase",
+   "pcMoved"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1256"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "chase",
+   "rideOf"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2155"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "coverOnShot"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:2915"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "fill",
+   "index"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/anachronism.mjs:78"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "haul"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2146",
+   "modules/wodx-solo/scripts/companions.mjs:18",
+   "modules/wodx-solo/scripts/panel.mjs:304"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "haul",
+   "fallenOf"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/companions.mjs:87",
+   "modules/wodx-solo/scripts/companions.mjs:106",
+   "modules/wodx-solo/scripts/panel.mjs:306"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "haul",
+   "release"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:106"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "haul",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:234",
+   "modules/wodx-combat/scripts/main.js:1556",
+   "modules/wodx-combat/scripts/movement.js:86"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "haul",
+   "rules",
+   "liftKg"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/movement.js:87",
+   "modules/wodx-combat/scripts/movement.js:87"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "haul",
+   "thingOf"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:244"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "holyUnder"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/hunter.js:344"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "living"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2143"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "living",
+   "sync"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/caravans.mjs:96"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "loose"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:2558",
+   "modules/wodx-interactables/scripts/main.mjs:2148"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "loose",
+   "setDown"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:2561",
+   "modules/wodx-combat/scripts/main.js:2570"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "mapEvent"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/net.mjs:419"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "rideOf"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2155"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/anachronism.mjs:147"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "rules",
+   "datedParts"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/anachronism.mjs:55"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "rules",
+   "FAITH_WORDS"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/hunter.js:347"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "rules",
+   "MOUNTS"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/vehicle-sheet.mjs:72"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "rules",
+   "sameFaith"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/hunter.js:346",
+   "modules/wodx-actions/scripts/hunter.js:346"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "setConcealed"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/carry-goals.mjs:106"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "states"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2142"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "stock"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:2153"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "sunUp"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/gadget-use.mjs:72"
+  ]
+ },
+ {
+  "target": "wodx-interactables",
+  "path": [
+   "useRoom"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:2917"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "arms"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:241"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "cyber",
+   "installedFx"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:220",
+   "modules/wodx-senses/scripts/main.mjs:239"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "house",
+   "roadKit"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/chase.mjs:252",
+   "modules/wodx-storyteller/scripts/hardship.mjs:71"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "itemByName"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/tasks.mjs:262"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "look"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/deeper-hooks.js:25",
+   "modules/wodx-chronicle/scripts/when.mjs:103",
+   "modules/wodx-npc/scripts/attitude.mjs:34",
+   "modules/wodx-npc/scripts/faces.mjs:53",
+   "modules/wodx-npc/scripts/wanted.mjs:28"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "look",
+   "goods"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:380"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "look",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:240",
+   "modules/wodx-chronicle/scripts/when.mjs:79",
+   "modules/wodx-npc/scripts/faces.mjs:54",
+   "modules/wodx-npc/scripts/rivalry.mjs:60",
+   "modules/wodx-npc/scripts/routines.mjs:731"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "look",
+   "station"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:255"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "use",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:603"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "use",
+   "rules",
+   "substanceOf"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:382"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "use",
+   "sleptOff"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/hardship.mjs:138"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "weight"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/movement.js:85"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "weight",
+   "ready"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:187"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "wonders"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/soulforge.js:60",
+   "modules/wodx-storyteller/scripts/night.mjs:250",
+   "modules/wodx-storyteller/scripts/wonders.mjs:21"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "wonders",
+   "enabled"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/soulforge.js:62"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "wonders",
+   "kitFor"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/soulforge.js:63",
+   "modules/wodx-storyteller/scripts/wonders.mjs:56"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "wonders",
+   "lines"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/wonders.mjs:35"
+  ]
+ },
+ {
+  "target": "wodx-library",
+  "path": [
+   "wonders",
+   "settingOf"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/wonders.mjs:35"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "aftercare",
+   "mourn"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/hearts.mjs:312"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "animals"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/faces.mjs:52",
+   "modules/wodx-npc/scripts/faces.mjs:52",
+   "modules/wodx-npc/scripts/faces.mjs:52"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "attitude"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:344",
+   "modules/wodx-actions/scripts/effects.js:488",
+   "modules/wodx-actions/scripts/effects.js:1042",
+   "modules/wodx-actions/scripts/effects.js:1054",
+   "modules/wodx-chronicle/scripts/bg-world.mjs:51",
+   "modules/wodx-chronicle/scripts/reveals.mjs:200",
+   "modules/wodx-interactables/scripts/chase.mjs:335",
+   "modules/wodx-interactables/scripts/chase.mjs:355",
+   "modules/wodx-storyteller/scripts/inherit.mjs:78",
+   "modules/wodx-storyteller/scripts/reach.mjs:397"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "attitude",
+   "apply"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:99",
+   "modules/wodx-chronicle/scripts/bg-world.mjs:54",
+   "modules/wodx-chronicle/scripts/reveals.mjs:202",
+   "modules/wodx-chronicle/scripts/reveals.mjs:205",
+   "modules/wodx-creation/scripts/first-night-prelude.mjs:196",
+   "modules/wodx-interactables/scripts/chase.mjs:280",
+   "modules/wodx-npc/scripts/trust.mjs:69"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "attitude",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:57",
+   "modules/wodx-chronicle/scripts/when.mjs:99",
+   "modules/wodx-chronicle/scripts/when.mjs:180",
+   "modules/wodx-npc/scripts/faces.mjs:57",
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:238",
+   "modules/wodx-storyteller/scripts/rumours.mjs:76"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "attitude",
+   "propose"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:221",
+   "modules/wodx-actions/scripts/social.js:430"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "attitude",
+   "rules",
+   "difficultyShift"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:105",
+   "modules/wodx-actions/scripts/social.js:125"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "attitude",
+   "rules",
+   "STEPS"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:75"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "bonds",
+   "socialShift"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:127"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "bonds",
+   "stepToward"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/trust.mjs:62"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "endSession"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/core.mjs:642"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:339",
+   "modules/wodx-chronicle/scripts/signatures.mjs:636",
+   "modules/wodx-chronicle/scripts/when.mjs:165",
+   "modules/wodx-storyteller/scripts/owners.mjs:31"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "adjustPeople"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:341",
+   "modules/wodx-chronicle/scripts/when.mjs:166",
+   "modules/wodx-chronicle/scripts/when.mjs:168",
+   "modules/wodx-creation/scripts/first-night-seed.mjs:111",
+   "modules/wodx-storyteller/scripts/reach.mjs:454"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "mutate"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/ledger.mjs:241",
+   "modules/wodx-storyteller/scripts/owners.mjs:316"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "peopleOf"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/when.mjs:70"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "rules",
+   "applyChanges"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/owners.mjs:316"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "rules",
+   "peopleWord"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night.mjs:212"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "state"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:340",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1470",
+   "modules/wodx-chronicle/scripts/when.mjs:66",
+   "modules/wodx-creation/scripts/first-night.mjs:211",
+   "modules/wodx-npc/scripts/bonds.mjs:26",
+   "modules/wodx-npc/scripts/fates.mjs:46",
+   "modules/wodx-npc/scripts/standing.mjs:153",
+   "modules/wodx-storyteller/scripts/core.mjs:658",
+   "modules/wodx-storyteller/scripts/institutions.mjs:158",
+   "modules/wodx-storyteller/scripts/market-moves.mjs:41",
+   "modules/wodx-storyteller/scripts/owners.mjs:44",
+   "modules/wodx-storyteller/scripts/owners.mjs:51",
+   "modules/wodx-storyteller/scripts/owners.mjs:244",
+   "modules/wodx-storyteller/scripts/owners.mjs:528",
+   "modules/wodx-storyteller/scripts/reach.mjs:436",
+   "modules/wodx-storyteller/scripts/rumours.mjs:42",
+   "modules/wodx-storyteller/scripts/rumours.mjs:116"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "family",
+   "askChild"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:671"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "family",
+   "conceive"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:671"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "family",
+   "makeChild"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/hearts.mjs:167"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "family",
+   "propose"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:666"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "fates",
+   "apply"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/herds.mjs:101"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "hearts",
+   "court"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/memory.mjs:174",
+   "modules/wodx-storyteller/scripts/tasks.mjs:105"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "hearts",
+   "lineOf"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/legacy.mjs:34",
+   "modules/wodx-npc/scripts/trust.mjs:167",
+   "modules/wodx-storyteller/scripts/inherit.mjs:25"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "kin",
+   "lineOf"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/standing.mjs:150"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "kin",
+   "lines"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/legacy.mjs:195",
+   "modules/wodx-npc/scripts/standing.mjs:151"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "kin",
+   "rules",
+   "relationWord"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/legacy.mjs:197"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "kinNear"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/start.js:56"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "legacy"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/inherit.mjs:96"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "memory"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:87",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:133",
+   "modules/wodx-storyteller/scripts/omens.mjs:59"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "memory",
+   "fromTrust"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/trust.mjs:48"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "memory",
+   "remember"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/reach.mjs:455",
+   "modules/wodx-storyteller/scripts/reach.mjs:456"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "memory",
+   "restore"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:1050"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "memory",
+   "rules",
+   "temperOf"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/haven-works.mjs:145"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "modeFor"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/conductor.js:149"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "nameFor"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:56"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "openFollowers"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:673"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "openSecrets"
+  ],
+  "uses": [
+   "modules/wodx-sheets/scripts/extras.mjs:674"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "openTalk"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:81",
+   "modules/wodx-actions/scripts/social.js:102"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "openTree"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/apps.mjs:65",
+   "modules/wodx-creation/scripts/apps.mjs:65",
+   "modules/wodx-sheets/scripts/extras.mjs:663"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "orderCarry"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:95"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "orders"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/servant-world.mjs:83"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "orders",
+   "give"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/servant-world.mjs:88",
+   "modules/wodx-npc/scripts/servant-world.mjs:88"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "passersby"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3061"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "passersby",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:3069"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "profileFor"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:934",
+   "modules/wodx-npc/scripts/faces.mjs:51"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "rivalry"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night.mjs:215"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routineRules"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:169"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routineRules",
+   "feastOn"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:174"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routineRules",
+   "isCurfew"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:179"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routineRules",
+   "parseFeasts"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/main.mjs:173"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routineRules",
+   "pickReaction"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:934"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routineRules",
+   "RESPONSES"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:935"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routines"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/memory.mjs:203",
+   "modules/wodx-npc/scripts/servant-world.mjs:187",
+   "modules/wodx-npc/scripts/servant-world.mjs:193",
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:34"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routines",
+   "listPlaces"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/encounters.mjs:117"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "routines",
+   "setDuty"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/servant-world.mjs:214"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "secrets"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/acts.js:217",
+   "modules/wodx-chronicle/scripts/when.mjs:189",
+   "modules/wodx-otherworlds/scripts/net.mjs:504"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "secrets",
+   "add"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/fates.mjs:157",
+   "modules/wodx-storyteller/scripts/wills.mjs:114"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "secrets",
+   "expose"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/trust.mjs:129"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "secrets",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/trust.mjs:102"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "secrets",
+   "revealByText"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/when.mjs:190",
+   "modules/wodx-chronicle/scripts/when.mjs:193"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "servants"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/servant-actions.js:29"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "servants",
+   "bind"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/servant-actions.js:91",
+   "modules/wodx-actions/scripts/servant-actions.js:170",
+   "modules/wodx-actions/scripts/servant-actions.js:304"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "servants",
+   "flashBetween"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/servant-actions.js:271"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "servants",
+   "restrain"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:924"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "servants",
+   "unbind"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/servant-actions.js:104"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/family.mjs:318",
+   "modules/wodx-npc/scripts/family.mjs:390",
+   "modules/wodx-storyteller/scripts/haven-works.mjs:100"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing",
+   "deed"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/core.mjs:623"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing",
+   "feuds"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/legacy.mjs:188"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing",
+   "feudsOf"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/family.mjs:319",
+   "modules/wodx-npc/scripts/family.mjs:319"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing",
+   "rank"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/law-standing.mjs:24",
+   "modules/wodx-npc/scripts/family.mjs:392",
+   "modules/wodx-npc/scripts/family.mjs:392",
+   "modules/wodx-npc/scripts/legacy.mjs:192",
+   "modules/wodx-npc/scripts/legacy.mjs:192"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing",
+   "rankShift"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:129"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "standing",
+   "rules",
+   "matchObjection"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/family.mjs:392"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "talk",
+   "letterReply"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/letters.mjs:218"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "talk",
+   "openLine"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1632"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "talk",
+   "stock"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:58"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "ties",
+   "edges"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/bonds.mjs:49",
+   "modules/wodx-npc/scripts/hearts.mjs:247",
+   "modules/wodx-npc/scripts/kin.mjs:154",
+   "modules/wodx-npc/scripts/legacy.mjs:91",
+   "modules/wodx-npc/scripts/legacy.mjs:97",
+   "modules/wodx-npc/scripts/legacy.mjs:138",
+   "modules/wodx-npc/scripts/servants.mjs:53",
+   "modules/wodx-storyteller/scripts/rumours.mjs:45"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "ties",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/kin.mjs:59",
+   "modules/wodx-storyteller/scripts/wills.mjs:55",
+   "modules/wodx-storyteller/scripts/wills.mjs:145"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "wanted"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/hunters.mjs:292"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "wanted",
+   "dress",
+   "blendDiff"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/deeper-hooks.js:13"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "wanted",
+   "list"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/hunt-follow.mjs:259",
+   "modules/wodx-storyteller/scripts/hunters.mjs:151"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "corruption"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:38",
+   "modules/wodx-library/scripts/wonders-garou.mjs:70",
+   "modules/wodx-npc/scripts/cults.mjs:243",
+   "modules/wodx-senses/scripts/main.mjs:347",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:350"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "corruption",
+   "dialog"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/upkeep.mjs:353"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "corruption",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/cults.mjs:244",
+   "modules/wodx-npc/scripts/cults.mjs:244",
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:251"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "corruption",
+   "set"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:1064",
+   "modules/wodx-npc/scripts/cults.mjs:244",
+   "modules/wodx-npc/scripts/cults.mjs:244"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "corruption",
+   "setRate"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/levers.mjs:75",
+   "modules/wodx-storyteller/scripts/levers.mjs:111"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "decayCss"
+  ],
+  "uses": [
+   "modules/wodx-atmosphere/scripts/main.mjs:739",
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:98"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "drift"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/power.mjs:56",
+   "modules/wodx-storyteller/scripts/upkeep.mjs:348"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "drift",
+   "dialog"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/upkeep.mjs:352"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "drift",
+   "lever"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:86",
+   "modules/wodx-actions/scripts/charms.js:477",
+   "modules/wodx-storyteller/scripts/levers.mjs:79",
+   "modules/wodx-storyteller/scripts/levers.mjs:114"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "drift",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/power.mjs:48",
+   "modules/wodx-storyteller/scripts/sites.mjs:35"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "drift",
+   "undo"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:1062"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "journeyDialog"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/night.mjs:342"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "placeOf"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:203",
+   "modules/wodx-actions/scripts/charms.js:300",
+   "modules/wodx-actions/scripts/garou.js:511",
+   "modules/wodx-actions/scripts/wraith.js:99",
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:94"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "realmWorlds"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/world-map.mjs:106"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "realmWorlds",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/world-map.mjs:138"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "reflect",
+   "guessPath"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:115"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "sendAcross"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:303",
+   "modules/wodx-actions/scripts/charms.js:303",
+   "modules/wodx-actions/scripts/effects.js:1058"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "senses",
+   "natureOf"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/power-looks.mjs:13"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "spirits"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:672",
+   "modules/wodx-storyteller/scripts/wonders.mjs:22"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "spirits",
+   "courtOptions"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:673"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "spirits",
+   "effect"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:674",
+   "modules/wodx-storyteller/scripts/wonders.mjs:122"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "spirits",
+   "move"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:934"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "spirits",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:593"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "spirits",
+   "rules",
+   "summary"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:593"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "STATUS",
+   "dreaming",
+   "id"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:109"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "stepSideways"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/profile-menus.js:448",
+   "modules/wodx-actions/scripts/profile-menus.js:448"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "ways",
+   "make"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/charms.js:378"
+  ]
+ },
+ {
+  "target": "wodx-otherworlds",
+  "path": [
+   "worldsChart"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/world-map.mjs:76",
+   "modules/wodx-storyteller/scripts/world-map.mjs:106"
+  ]
+ },
+ {
+  "target": "wodx-paperdoll",
+  "path": [
+   "faces"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:308"
+  ]
+ },
+ {
+  "target": "wodx-paperdoll",
+  "path": [
+   "faces",
+   "uncanny"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:999",
+   "modules/wodx-library/scripts/look.mjs:100"
+  ]
+ },
+ {
+  "target": "wodx-sheets",
+  "path": [
+   "anachronism"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night.mjs:161"
+  ]
+ },
+ {
+  "target": "wodx-sheets",
+  "path": [
+   "sheetFor"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/advance.mjs:265",
+   "modules/wodx-creation/scripts/advance.mjs:211"
+  ]
+ },
+ {
+  "target": "wodx-solo",
+  "path": [
+   "arrival",
+   "pick"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/fate.mjs:437"
+  ]
+ },
+ {
+  "target": "wodx-solo",
+  "path": [
+   "director"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/panel.mjs:175"
+  ]
+ },
+ {
+  "target": "wodx-solo",
+  "path": [
+   "director",
+   "direct"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/panel.mjs:176",
+   "modules/wodx-solo/scripts/panel.mjs:177"
+  ]
+ },
+ {
+  "target": "wodx-solo",
+  "path": [
+   "isOn"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/net.mjs:77"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "aid"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/panel.mjs:184",
+   "modules/wodx-solo/scripts/world.mjs:43"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "aid",
+   "draw"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/panel.mjs:185",
+   "modules/wodx-solo/scripts/panel.mjs:185"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "aid",
+   "propose"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/panel.mjs:187"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "battleDeeds",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:1109"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "battles"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:1093"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "body"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/body.js:108",
+   "modules/wodx-sheets/scripts/extras.mjs:649"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "body",
+   "add"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/body.js:110",
+   "modules/wodx-combat/scripts/body.js:112"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "clocks"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/core.mjs:649"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "codex"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/know.mjs:19"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "codex",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/know.mjs:33"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "cookery"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/use.mjs:380",
+   "modules/wodx-library/scripts/use.mjs:396"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "cookery",
+   "salvageOf"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/use.mjs:68"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "country"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/card.mjs:46"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "entries"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/director.mjs:47"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hand"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/law-regime.mjs:21"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hand",
+   "call"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/law-regime.mjs:93",
+   "modules/wodx-chronicle/scripts/law-trial.mjs:59"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hand",
+   "noteFight"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/aftermath.js:122"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hardship",
+   "mark"
+  ],
+  "uses": [
+   "modules/wodx-library/scripts/use.mjs:99"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hunters"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:931"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hunters",
+   "filesOn"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/signatures.mjs:1062"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "hunters",
+   "follow",
+   "found"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:261"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "ledger",
+   "remove"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night-seed.mjs:102"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "ledger",
+   "save"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:226",
+   "modules/wodx-chronicle/scripts/pod.mjs:191",
+   "modules/wodx-chronicle/scripts/signatures.mjs:581",
+   "modules/wodx-chronicle/scripts/signatures.mjs:600",
+   "modules/wodx-npc/scripts/hearts.mjs:421",
+   "modules/wodx-npc/scripts/legacy.mjs:86",
+   "modules/wodx-npc/scripts/legacy.mjs:215",
+   "modules/wodx-npc/scripts/people.mjs:143",
+   "modules/wodx-npc/scripts/trust.mjs:73",
+   "modules/wodx-npc/scripts/trust.mjs:94",
+   "modules/wodx-npc/scripts/trust.mjs:107",
+   "modules/wodx-npc/scripts/trust.mjs:126",
+   "modules/wodx-npc/scripts/trust.mjs:133"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "ledger",
+   "state"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/legacy.mjs:185",
+   "modules/wodx-npc/scripts/talk.mjs:259",
+   "modules/wodx-npc/scripts/trust.mjs:90",
+   "modules/wodx-npc/scripts/trust.mjs:115",
+   "modules/wodx-solo/scripts/world.mjs:96"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "ledger",
+   "status"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night-seed.mjs:103",
+   "modules/wodx-npc/scripts/people.mjs:168",
+   "modules/wodx-npc/scripts/trust.mjs:125",
+   "modules/wodx-npc/scripts/trust.mjs:130",
+   "modules/wodx-npc/scripts/trust.mjs:132"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "letters",
+   "plan"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/standing.mjs:70"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "letters",
+   "rules",
+   "massOf"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/standing.mjs:80"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "log"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/journey.mjs:87"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "night"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/world.mjs:177"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "noteFight"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/aftermath.js:122"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "openOnYourOwn"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/panel.mjs:280"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "owners"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/fate.mjs:308"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "owners",
+   "set"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/bg-world.mjs:71"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "owners",
+   "whose"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:485"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "prelude"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night-prelude.mjs:38"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "prelude",
+   "make"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/first-night-prelude.mjs:138"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "reach"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/law-punish.mjs:81"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "reach",
+   "callHelp"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1637"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "reach",
+   "lawCome"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/wanted.mjs:274",
+   "modules/wodx-npc/scripts/wanted.mjs:274"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "reach",
+   "road"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/core.mjs:601"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "reach",
+   "send"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/cults.mjs:188",
+   "modules/wodx-npc/scripts/memory.mjs:211"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "reach",
+   "whereIs"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/memory.mjs:207"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "rumours"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:465"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "rumours",
+   "end"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:189"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "rumours",
+   "heardBy"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/overheard.mjs:100",
+   "modules/wodx-npc/scripts/overheard.mjs:100",
+   "modules/wodx-npc/scripts/talk.mjs:264"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "rumours",
+   "start"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/debts-marks.js:119",
+   "modules/wodx-actions/scripts/kindred.js:489",
+   "modules/wodx-chronicle/scripts/pod.mjs:125",
+   "modules/wodx-combat/scripts/aftermath.js:138",
+   "modules/wodx-npc/scripts/aftercare.mjs:289",
+   "modules/wodx-npc/scripts/cults.mjs:306",
+   "modules/wodx-npc/scripts/hearts.mjs:237",
+   "modules/wodx-npc/scripts/trust.mjs:70"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "rumours",
+   "tale"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/standing.mjs:56",
+   "modules/wodx-storyteller/scripts/core.mjs:627"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "rumours",
+   "toneFor"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/attitude.mjs:75"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "signals",
+   "post"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/encounters.mjs:61",
+   "modules/wodx-chronicle/scripts/fronts.mjs:94",
+   "modules/wodx-chronicle/scripts/reveals.mjs:54"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "tasks",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/orders.mjs:164",
+   "modules/wodx-npc/scripts/orders.mjs:241",
+   "modules/wodx-npc/scripts/orders.mjs:442"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "tasks",
+   "remove"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/orders.mjs:214",
+   "modules/wodx-npc/scripts/orders.mjs:214"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "tasks",
+   "save"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/soulforge.js:32",
+   "modules/wodx-actions/scripts/soulforge.js:48",
+   "modules/wodx-creation/scripts/learn.mjs:39",
+   "modules/wodx-npc/scripts/day-jobs.mjs:49",
+   "modules/wodx-npc/scripts/day-jobs.mjs:58",
+   "modules/wodx-npc/scripts/orders.mjs:163",
+   "modules/wodx-npc/scripts/orders.mjs:204",
+   "modules/wodx-npc/scripts/orders.mjs:244"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/spend-time.js:10",
+   "modules/wodx-combat/scripts/fight-time.js:32",
+   "modules/wodx-interactables/scripts/main.mjs:429",
+   "modules/wodx-otherworlds/scripts/journey.mjs:179"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time",
+   "ask"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/spend-time.js:11",
+   "modules/wodx-actions/scripts/spend-time.js:13"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time",
+   "bindClockRow"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:185"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time",
+   "clockRow"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/clock-app.mjs:127"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time",
+   "note"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/spend-time.js:14",
+   "modules/wodx-combat/scripts/fight-time.js:39",
+   "modules/wodx-combat/scripts/fight-time.js:39",
+   "modules/wodx-otherworlds/scripts/journey.mjs:183"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time",
+   "spend"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/fight-time.js:34",
+   "modules/wodx-combat/scripts/fight-time.js:34",
+   "modules/wodx-interactables/scripts/main.mjs:430",
+   "modules/wodx-interactables/scripts/main.mjs:432",
+   "modules/wodx-otherworlds/scripts/journey.mjs:181",
+   "modules/wodx-otherworlds/scripts/journey.mjs:182"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "time",
+   "unspend"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/main.mjs:1049"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "townLooks"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:80",
+   "modules/wodx-chronicle/scripts/reveals.mjs:193"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "towns"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/pod.mjs:185"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "tripContext"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/director.mjs:143"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:37",
+   "modules/wodx-actions/scripts/trade.js:13",
+   "modules/wodx-chronicle/scripts/law-regime.mjs:20",
+   "modules/wodx-chronicle/scripts/law-tax.mjs:20",
+   "modules/wodx-creation/scripts/advance.mjs:77"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "caravans",
+   "inTownScenes"
+  ],
+  "uses": [
+   "modules/wodx-interactables/scripts/living.mjs:34"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "caravans",
+   "onTrip"
+  ],
+  "uses": [
+   "modules/wodx-storyteller/scripts/core.mjs:417"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "contagion",
+   "end"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/effects.js:1065"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "herds"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:485"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "huntHere"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/main.js:1643",
+   "modules/wodx-actions/scripts/main.js:1918",
+   "modules/wodx-npc/scripts/passersby.mjs:102"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "institutions",
+   "seatsOf"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/law-regime.mjs:73",
+   "modules/wodx-chronicle/scripts/law-tax.mjs:33",
+   "modules/wodx-chronicle/scripts/law-trial.mjs:27"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "markets",
+   "of"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/overheard.mjs:111"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "markets",
+   "state"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/trade.js:21",
+   "modules/wodx-npc/scripts/factions.mjs:442"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:454",
+   "modules/wodx-actions/scripts/social.js:289",
+   "modules/wodx-actions/scripts/trade.js:14",
+   "modules/wodx-chronicle/scripts/law-punish.mjs:65",
+   "modules/wodx-chronicle/scripts/law-tax.mjs:47",
+   "modules/wodx-chronicle/scripts/pod.mjs:177",
+   "modules/wodx-library/scripts/examine.mjs:74",
+   "modules/wodx-library/scripts/gamble-use.mjs:11",
+   "modules/wodx-npc/scripts/hearts.mjs:217",
+   "modules/wodx-otherworlds/scripts/net.mjs:496",
+   "modules/wodx-storyteller/scripts/core.mjs:399"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "format"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:408",
+   "modules/wodx-library/scripts/gamble-use.mjs:21",
+   "modules/wodx-npc/scripts/orders.mjs:229",
+   "modules/wodx-npc/scripts/prowl.mjs:85"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "pay"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/day-jobs.mjs:85",
+   "modules/wodx-npc/scripts/hearts.mjs:231",
+   "modules/wodx-npc/scripts/orders.mjs:228",
+   "modules/wodx-storyteller/scripts/core.mjs:401"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "priceSync"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:85"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "purse"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:365",
+   "modules/wodx-library/scripts/gamble-use.mjs:56",
+   "modules/wodx-npc/scripts/hearts.mjs:118",
+   "modules/wodx-npc/scripts/prowl.mjs:80",
+   "modules/wodx-sheets/scripts/extras.mjs:469"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "receiveForeign"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/soulforge.js:89"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "rules"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/overheard.mjs:117"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "transfer"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/social.js:330",
+   "modules/wodx-actions/scripts/social.js:330",
+   "modules/wodx-npc/scripts/hearts.mjs:120",
+   "modules/wodx-npc/scripts/prowl.mjs:83",
+   "modules/wodx-npc/scripts/trust.mjs:124"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "power",
+   "state"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:106"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "townLooks"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/fronts.mjs:80",
+   "modules/wodx-chronicle/scripts/reveals.mjs:193",
+   "modules/wodx-npc/scripts/faction-looks.mjs:13"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "townLooks",
+   "setLooks"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/reveals.mjs:195",
+   "modules/wodx-chronicle/scripts/reveals.mjs:197"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "towns"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/pod.mjs:185"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "towns",
+   "ofScene"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/overheard.mjs:113",
+   "modules/wodx-npc/scripts/passersby.mjs:240"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "wills"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/kin.mjs:114"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "wills",
+   "open"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/kin.mjs:130"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "wonders"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/soulforge.js:60"
+  ]
+ },
+ {
+  "target": "wodx-targeting",
+  "path": [
+   "attackPanel"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:861"
+  ]
+ },
+ {
+  "target": "wodx-targeting",
+  "path": [
+   "preAttack"
+  ],
+  "uses": [
+   "modules/wodx-combat/scripts/main.js:845",
+   "modules/wodx-combat/scripts/main.js:846"
+  ]
+ },
+ {
+  "target": "wodx-targeting",
+  "path": [
+   "setTargets"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/main.mjs:815"
+  ]
+ }
+]

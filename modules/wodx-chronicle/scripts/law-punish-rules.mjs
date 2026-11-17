@@ -15,7 +15,7 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 /** Sentences by weight, most fitting first within each tier. */
 export const TIERS = {
   light: ["fine", "penance", "pillory", "flogging", "bamboo", "confiscation"],
-  middle: ["prison", "hard-labour", "banishment", "transportation", "galleys", "camp", "maiming", "outlawry", "outcaste", "enslave"],
+  middle: ["prison", "gaol", "hard-labour", "banishment", "transportation", "galleys", "camp", "maiming", "outlawry", "outcaste", "enslave"],
   grave: ["hanging", "death-state", "burning", "erasure", "camp", "transportation", "galleys", "hard-labour", "prison", "outlawry"]
 };
 /** Which tier a set of deeds earns: light up to 2, middle up to 5, grave beyond. */
@@ -29,7 +29,7 @@ export const MARKS = {
   fine: {kind: "fine", words: "Fined"}, penance: {kind: "record", words: "Penance done before the church"},
   pillory: {kind: "record", words: "Stood in the pillory"}, flogging: {kind: "record", words: "Flogged"}, bamboo: {kind: "record", words: "Beaten with the bamboo"},
   confiscation: {kind: "fine", words: "Land and goods taken"},
-  prison: {kind: "time", words: "Prison", years: [1, 5]}, "hard-labour": {kind: "time", words: "Hard labour", years: [2, 10]},
+  prison: {kind: "time", words: "Prison", years: [1, 5]}, gaol: {kind: "time", words: "The gaol", years: [1, 2]}, "hard-labour": {kind: "time", words: "Hard labour", years: [2, 10]},
   galleys: {kind: "time", words: "The galleys", years: [3, 10]}, camp: {kind: "time", words: "A labour camp", years: [5, 25]},
   transportation: {kind: "time", words: "Transportation overseas", years: [7, 14], away: true},
   banishment: {kind: "banished", words: "Banished from the land"}, outlawry: {kind: "outlaw", words: "Outlawed: anyone may kill them"},

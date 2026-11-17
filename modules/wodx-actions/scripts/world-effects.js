@@ -92,6 +92,8 @@ export const WORLD_POWERS = {
   "command the blaze": ["fire", "blaze"], "blaze of glory": ["blaze"], "gaia's vengeance": ["cleanse"], "riot": ["riot"],
   "divine wind": ["storm"], "invoke the spirits of the storm": ["storm"], "quell mob rage": ["calm"], "epidemic contagion": ["plague"],
   "cleansing tusks": ["cleanse"], "firebug": ["blaze"], "rain of doom": ["rubble"],
+  // Dark Ages fae: cantrips and Treasures that reach the ground or the fields (B6550, B6560)
+  "Fae (Dark Ages)|wall of fire": ["blaze"], "Fae (Dark Ages)|blight acres": ["blight"], "faerie dust of the pillar of fire": ["blaze"],
   // Wraith, Vampire, Mage, Changeling, Hunter
   "tesseract bomb": ["rubble"], "breath of thanatos": ["plague"], "bring the plague": ["plague"], "pillar of osiris": ["calm"],
   "mother's bounty": ["boon"], "storm brewing": ["storm"], "eldritch prime": ["blaze"], "pyrokinesis 4": ["blaze"], "pyrokinesis 5": ["blaze"],

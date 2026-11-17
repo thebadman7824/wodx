@@ -10,7 +10,9 @@
  *
  * Kinds (nothing else runs; every command is spawned with an argument list, never through a shell):
  *   gates       run-gate.mjs on testbed lanes: "gates" (names), or "touched": true, or "all": true; "lanes": how many
- *               lanes to split over (default 1); "reset": true resets each lane first
+ *               lanes to split over (default 1); each lane is reset first (B7190), "reset": false skips it. Lanes share one list of the
+ *               gates (B6526) and lanes that free up later join while it holds work: up to "lanes", or every lane
+ *               when no other lane job is waiting
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
  *   deploy      deploy the ref to "lanes" lanes (or "lane": N), nothing else
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
@@ -28,7 +30,7 @@ export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", fai
 export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
 export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane"]);
 const NAME = /^[\w-]{1,64}$/;
-const REF = /^(main|claude\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/;
+const REF = /^(main|(?:claude|handoff)\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/; // B7002: handoff/ branches too, so HOLD pull requests can be gated
 const TERM = /^[\p{L}\p{N} '’.,()&-]{1,80}$/u;
 const PATTERN = /^[\p{L}\p{N} _.()&-]{2,80}$/u;
 const UNDER = /^[\p{L}\p{N} _.()&\[\]\\\/-]{1,200}$/u;
@@ -47,7 +49,7 @@ export function validate(raw, laneIds = []) {
   const j = {...raw};
   if ( !KINDS.includes(j.kind) ) return err(`kind must be one of ${KINDS.join(", ")}.`);
   j.ref = j.ref ?? "main";
-  if ( typeof j.ref !== "string" || !REF.test(j.ref) || j.ref.includes("..") ) return err("ref must be main, a claude/... branch or a commit sha.");
+  if ( typeof j.ref !== "string" || !REF.test(j.ref) || j.ref.includes("..") ) return err("ref must be main, a claude/... or handoff/... branch or a commit sha.");
   j.prio = j.prio ?? 3;
   if ( !Number.isInteger(j.prio) || j.prio < 1 || j.prio > 5 ) return err("prio must be a whole number from 1 to 5.");
   if ( j.after !== undefined && !(Number.isInteger(j.after) && j.after > 0) ) return err("after must be an issue number.");
@@ -60,11 +62,14 @@ export function validate(raw, laneIds = []) {
     return null;
   };
   const e = oneLane(); if ( e ) return err(e);
+  // B6970: diag: true asks run-gate and gate-two for console lines and full failing steps in the job's report
+  if ( j.diag !== undefined && typeof j.diag !== "boolean" ) return err("diag must be true or false.");
   switch ( j.kind ) {
     case "gates": {
       const list = j.gates ?? [];
       if ( !Array.isArray(list) || list.some(g => typeof g !== "string" || !NAME.test(g)) ) return err("gates must be a list of gate names.");
       if ( !list.length && !j.touched && !j.all ) return err("Give gates, or touched: true, or all: true.");
+      if ( j.reset !== undefined && typeof j.reset !== "boolean" ) return err("reset must be true or false.");
       if ( list.length > 300 ) return err("At most 300 gates in one job.");
       j.gates = [...new Set(list)];
       j.lanes = j.lane !== undefined ? 1 : (j.lanes ?? 1);
@@ -117,12 +122,15 @@ export function order(jobs, openNumbers = new Set(), now = Date.now()) {
  * Two-browser gates are not in the gate map and are left to gate-two jobs.
  */
 export function gateArgs(job, lane, i, n, report) {
+  // B6526: a shared queue: every lane takes the next gate from the same list until it is empty
+  if ( job.queue ) return ["--queue", job.queue, "--lane", String(lane), "--wait", "10", "--report", report, ...(job.maxMinutes ? ["--max-minutes", String(job.maxMinutes)] : []), ...(job.diag ? ["--diag"] : [])];
   const a = [...job.gates];
   if ( job.touched ) a.push("--touched");
   if ( job.all ) a.push("--all");
   a.push("--lane", String(lane));
   if ( n > 1 ) a.push("--shard", `${i + 1}/${n}`);
   a.push("--wait", "10", "--report", report);
+  if ( job.diag ) a.push("--diag");
   return a;
 }
 
@@ -151,6 +159,12 @@ export function recheckVerdicts(gates, alone, main, notOnMain = new Set()) {
     return {gate, verdict: m.has(gate) ? "fails on main too: not this change's fault" : "NEW with this change: passes on main"};
   });
 }
+
+/**
+ * B7190: whether a lane job starts from the known-good world. Gates jobs do unless "reset": false: a lane left by an
+ * earlier job failed whole runs from its second gate (job 1910), while the recheck, which resets, passed them all.
+ */
+export const resetsFirst = job => job?.kind === "gate-two" || (job?.kind === "gates" && job.reset !== false);
 
 /** Exit codes of run-gate.mjs that mean the lane, not the code, went wrong: worth one retry after a reset. */
 export const INFRA_CODES = new Set([3, 4, 5]);
@@ -184,3 +198,29 @@ export const fit = (s, max = 60000) => s.length <= max ? s : `${s.slice(0, max -
 
 /** The issue body for a job, as submit.mjs prints it and the runner reads it. */
 export const issueBody = (job, note = "") => `${note ? note + "\n\n" : ""}\`\`\`json\n${JSON.stringify(job, null, 1)}\n\`\`\`\n\nRun by the PC runner (tools/pcq). Testbed lanes only; never lane 1 or Live.`;
+
+/**
+ * B7002: the wodx/gates commit status a finished gates job sets for the merge rules (tools/release/merge-rules.mjs),
+ * or null when the job says nothing about a whole branch: not a gates job, not touched or all (a hand-picked list may
+ * miss gates the change needs), a lane fault with no result, or lanes that ran different commits.
+ * parts: [{code, text, sha}] per lane. A failing gate that the recheck found failing on main too is not this change's
+ * fault: the status passes and names it, so the pull request is not held for a fault main already has.
+ */
+export const GATE_CONTEXT = "wodx/gates";
+export function gateStatusFor(job, parts, ok, failing = failingGates, url = undefined) {
+  if ( job?.kind !== "gates" || !(job.touched || job.all) || !parts?.length ) return null;
+  if ( parts.some(p => p.code === null || p.code === undefined || !p.sha) ) return null;
+  const shas = new Set(parts.map(p => p.sha));
+  if ( shas.size !== 1 ) return null;
+  // the shared queue was listed from one commit; lanes that fetched a newer one ran a list made for other code
+  if ( job.queueSha && !shas.has(job.queueSha) ) return null;
+  const text = parts.map(p => p.text ?? "").join("\n");
+  const ran = new Set([...text.matchAll(/^(gate[\w-]*): (?:\d+\/\d+ passed|ERROR)/gm)].map(m => m[1])).size;
+  const bad = failing(text);
+  const mainToo = new Set([...text.matchAll(/^- (gate[\w-]*): fails on main too/gm)].map(m => m[1]));
+  let state, description;
+  if ( ok ) { state = "success"; description = `${ran} gate(s) passed (${job.all ? "all" : "touched"})`; }
+  else if ( bad.length && bad.every(g => mainToo.has(g)) ) { state = "success"; description = `passed; failing on main too: ${bad.join(" ")}`; }
+  else { state = "failure"; description = `${bad.length || "some"} of ${ran} gate(s) failed${bad.length ? `: ${bad.join(" ")}` : ""}`; }
+  return {sha: [...shas][0], body: {state, context: GATE_CONTEXT, description: description.slice(0, 140), ...(url ? {target_url: url} : {})}};
+}

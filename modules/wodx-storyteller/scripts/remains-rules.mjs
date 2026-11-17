@@ -74,6 +74,35 @@ export function normRemains(r = {}, now = 0) {
     heated: !!o.heated, shown: STAGES.some(s => s.id === o.shown) ? o.shown : null, note: String(o.note ?? "").slice(0, 400)};
 }
 
+/**
+ * B6390: how a body died, read from what WoDX Actions leaves on the vessel. The Kiss writes the vessel's blood
+ * (flags wodx-actions.vesselBlood {value, at}) before the dead mark, and a botched Stamina roll marks it dying of the
+ * drinking (dying.why "drained"). Blood at 1 or less, taken within the day, or dying of it: drained; else not known.
+ */
+export function causeAtDeath(actionsFlags = {}, now = 0) {
+  const f = actionsFlags && typeof actionsFlags === "object" ? actionsFlags : {};
+  if ( f.dying?.why === "drained" ) return "drained";
+  const vb = f.vesselBlood;
+  if ( vb && Number.isFinite(Number(vb.value)) && Number(vb.value) <= 1 && num(now) - num(vb.at) <= DAY ) return "drained";
+  return "unknown";
+}
+
+/** Squares between two tokens' edges (1 = side by side), on a grid of size g. Token-like {x, y, width, height}. */
+export function squares(a, b, g = 100) {
+  const gap = (p, q, wp, wq) => Math.abs((p + wp / 2) - (q + wq / 2)) - (wp + wq) / 2;
+  const d = Math.max(gap(a.x, b.x, (a.width ?? 1) * g, (b.width ?? 1) * g), gap(a.y, b.y, (a.height ?? 1) * g, (b.height ?? 1) * g));
+  return Math.max(0, Math.round(d / g) + 1);
+}
+/**
+ * Who can come upon a body: "pc" (a player's character) or "town" (B5703: a mortal NPC who is not a passer-by or the
+ * hunters' own), else null. B6666: shared by remains.mjs and the hunters' own watch for bodies in hunt-follow.mjs.
+ */
+export function finderOf({pc = false, type = "", hidden = false, passerby = false, hunter = false} = {}) {
+  if ( hidden ) return null;
+  if ( pc ) return "pc";
+  return type === "Mortal" && !passerby && !hunter ? "town" : null;
+}
+
 /** Who looks into a death found, by the year, and what they can do. Bands end before the next one's year. */
 /** The book roll for examining a body: HH2 p. 94 (pdf p. 95) gives an autopsy as Intelligence + Medicine. */
 export const EXAMINE = "Whoever examines the body rolls Intelligence + Medicine (HH2 p. 94); more successes, more of the above.";

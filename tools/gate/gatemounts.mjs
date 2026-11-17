@@ -17,6 +17,8 @@
  *      style changes, and seats its driver (B4977)
  * Result: Data/wodx-gate/gatemounts-result.json.
  */
+/** A batch create does not keep its order (kit rule 1): match each made tile to its data by title. */
+const byTitle = (docs, data) => data.map(d => docs.find(x => x.flags?.["wodx-interactables"]?.title === d.flags?.["wodx-interactables"]?.title));
 import {gate, waitFor} from "./kit.mjs";
 
 const IX = "wodx-interactables", PD = "wodx-paperdoll";
@@ -171,8 +173,9 @@ export async function run() {
     await G.step("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)", async () => {
       if ( !MR.looksOf("train").length ) return G.ok("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)", true, {skipped: "no train looks in this WoDX Paperdoll"});
       const want = [["sled", "1600-troika"], ["snowmobile", "1960-snowmobile"], ["train", "1900-express"], ["tram", "1895-electric"]];
-      const tiles = await scene.createEmbeddedDocuments("Tile", want.map(([kind], i) => ({x: (2 + i * 6) * g, y: 14 * g, width: 2 * g, height: g, texture: {src: "icons/svg/wing.svg"},
-        flags: {[IX]: {mount: true, mountKind: kind, title: `Gate ${kind}`}}})));
+      const tileData = want.map(([kind], i) => ({x: (2 + i * 6) * g, y: 14 * g, width: 2 * g, height: g, texture: {src: "icons/svg/wing.svg"},
+        flags: {[IX]: {mount: true, mountKind: kind, title: `Gate ${kind}`}}}));
+      const tiles = byTitle(await scene.createEmbeddedDocuments("Tile", tileData), tileData);
       const got = [];
       for ( const [i, tile] of tiles.entries() ) {
         const [kind, id] = want[i];
@@ -192,7 +195,7 @@ export async function run() {
       G.ok("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)",
         got.every(x => x.look && x.frame && x.want && x.frame[0] === x.want[0] && x.frame[1] === x.want[1] && x.mesh) && r && !r.hidden && (!fig || fig.chart?.maneuver === 1),
         {got, driver: r, figures: fig ? {label: fig.label, chart: fig.chart, body: fig.body} : null});
-    });
+    }, {timeout: 150000}); // four looks drawn one after another, each may wait up to 30 s
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }
 }

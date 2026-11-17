@@ -42,7 +42,8 @@ export function viewOf(item) {
   const f = item.flags?.[MOD] ?? {}, s = item.system ?? {};
   const known = gearBy?.get(String(item.name ?? "").toLowerCase()) ?? goodsBy?.get(String(item.name ?? "").replace(/\s*\(\d+\)$/, "").toLowerCase()) ?? null;
   const kind = f.kind ?? f.category ?? known?.kind ?? "";
-  const count = Number(/\((\d+)\)\s*$/.exec(String(item.name ?? ""))?.[1]) || Number(s.quantity) || 1;
+  // B6816: a Possessions stack keeps its count in flags["wodx-sheets"].qty (WoDX Sheets' stacks, a harvest)
+  const count = Number(/\((\d+)\)\s*$/.exec(String(item.name ?? ""))?.[1]) || Number(item.flags?.["wodx-sheets"]?.qty) || Number(s.quantity) || 1;
   // Installed cyberware is part of the body (its equipped box ticked, B6080)
   const cyberOn = !!f.installed || (/cyber|implant|bioware/.test(String(kind)) && !!s.isequipped);
   return {name: String(item.name ?? "").replace(/\s*\(\d+\)$/, ""), type: item.type, kind, conceal: s.conceal ?? known?.conceal ?? "",

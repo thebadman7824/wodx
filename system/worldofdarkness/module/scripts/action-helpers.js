@@ -413,7 +413,7 @@ export default class ActionHelper {
 		}
 		else if (dataset.noability == "true") {
 			if (dataset.key == "paradox") {
-				this.RollParadox(event, actor);
+				this.RollParadox(undefined, actor);	// WoDX fork (B6722): no event in this scope (it read the browser's window.event)
 
 				return;
 			}
@@ -533,7 +533,7 @@ export default class ActionHelper {
 	}
 
 	static RollParadox(event, actor) {
-		event.preventDefault();
+		event?.preventDefault?.();
 
 		let template = [];
 		const paradoxRoll = new DiceRollContainer(actor);		
@@ -711,6 +711,22 @@ export const OnActorSwitch = async function (event, target) {
 	actorData = await calculateTotals(actorData);
 	actorData.system.settings.isupdated = false;
 	await this.actor.update(actorData);
+	this.render();
+}
+
+/**
+ * WoDX fork (B6721): the trash button on a removable bio field (Settings tab, data-type "system.bio.splatfields.<key>")
+ * had no handler, so a click did nothing. It removes that field from the actor; a field the splat marks as not
+ * removable is left alone.
+ */
+export const OnActorDelete = async function (event, target) {
+	event?.preventDefault?.();
+	const path = target.getAttribute("data-type") ?? "";
+	const m = /^system\.bio\.splatfields\.([^.]+)$/.exec(path);
+	if (!m) return;
+	const field = this.actor.system?.bio?.splatfields?.[m[1]];
+	if (!field || field.isremovable === false) return;
+	await this.actor.update({ [`system.bio.splatfields.-=${m[1]}`]: null });
 	this.render();
 }
 

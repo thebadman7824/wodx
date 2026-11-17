@@ -811,7 +811,7 @@ export function pickReaction(profile, sit) {
     || (sit.wraith && fears.includes("wraith"));
   // NPC 0.21.0 (B1001): animals bark or raise a racket only when they are callers; they never send for the watch
   const beast = !!p.animal, herd = Number(p.herd ?? 0), terr = Number(p.territory ?? 0), hung = Number(p.hunger ?? 0);
-  // Animals take no fright at the supernatural as such (Ben, 2026-11-12): only a wraith, through their fears
+  // Animals take no fright at the supernatural as such (the owner, 2026-11-12): only a wraith, through their fears
   const amiss = [sit.curfew && !beast && "abroad in the curfew", sit.trespass && "trespassing", sit.weapon && "weapon drawn", sit.supernatural && !beast && "the supernatural shown",
     sit.bloody && !beast && "blood on them", sit.seenThrough && !beast && "dressed as one of us"].filter(Boolean);
   const keeper = ["guard", "ghoul", "elder"].includes(p.template) || tac.includes("guard") || (tac.includes("call") && p.loyalty >= 1);

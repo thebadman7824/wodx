@@ -22,7 +22,8 @@ async function save(R) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
-const el = app => app?.element?.[0] ?? app?.element ?? null;
+// an ApplicationV2 sheet's element is the <form> itself, and form[0] is its first control: test for the element first
+const el = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
 const at = (id, v) => !!game.modules.get(id)?.active && !foundry.utils.isNewerVersion(v, game.modules.get(id).version);
 
 export async function run() {
@@ -47,7 +48,10 @@ export async function run() {
     // 8 is checked here too, on the same sheet
     const tools = sh?.querySelector(".window-header .wodx-sheet-tools");
     tools?.click(); await sleep(200);
-    const listed = [...document.querySelectorAll(".wodx-sheet-tools-list button")].map(b => b.textContent.trim());
+    // the old engine's sheet opens its own list; a sheet on ApplicationV2 opens the window's controls menu, which names each one
+    const listed = [...document.querySelectorAll(".wodx-sheet-tools-list button"), ...(sh?.querySelectorAll(".controls-dropdown li") ?? [])]
+      .map(b => b.textContent.trim()).filter(Boolean);
+    if (sh?.querySelector(".controls-dropdown.expanded")) sh.querySelector('.window-header [data-action="toggleControls"]')?.click();
     document.querySelector(".wodx-sheet-tools-list")?.remove();
     await actor.sheet.close(); await sleep(300);
     V.preview("beginner");

@@ -1,9 +1,9 @@
 /**
  * The Plains peoples for the People generator (Creation, B3820 to B3824): the Oceti Sakowin (Lakota, Dakota and
  * Nakota), the Cheyenne, the Comanche and the Kiowa. WoDX's own lists of recorded names; no book text. Built to the
- * same plan Ben picked for the Haudenosaunee and the Algonquian coast (B3120, B3510): recorded names with the famous
+ * same plan the owner picked for the Haudenosaunee and the Algonquian coast (B3120, B3510): recorded names with the famous
  * included, names staged by age, women named by band where the records give no name, and the American West held by
- * these peoples before the Spanish and as a share after. Picks logged in docs/PENDING-REVIEW.md for Ben.
+ * these peoples before the Spanish and as a share after. Picks logged in docs/PENDING-REVIEW.md for the owner.
  *
  * Sources (spellings as the agency clerks and treaty commissioners printed them, hyphens dropped): the signers of the
  * Fort Laramie (1851, 1868), Fort Sully (1865), Medicine Lodge (1867), Little Arkansas (1865) and Traverse des Sioux

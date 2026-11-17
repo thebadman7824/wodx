@@ -15,6 +15,7 @@ If you hold rights in something here and want it changed or taken out, open an i
 - `system/worldofdarkness/`: a fork of the World of Darkness 20th edition system for Foundry VTT by Johan Falt ([Foundry_WoD20](https://github.com/JohanFalt/Foundry_WoD20)), GPL-3.0 (see its `LICENSE` and `WODX-NOTICE.md`). Its fonts and images are the upstream ones, unchanged.
 - Fonts in `modules/wodx-chronicle/fonts` and `modules/wodx-sheets/fonts`: SIL Open Font License or Apache 2.0, each with its licence file in `fonts/licenses`.
 - `modules/wodx-paperdoll/vendor/dicebear-lorelei.mjs`: DiceBear (MIT) with the Lorelei design; see `LICENSE-dicebear.txt` beside it.
+- `tools/mapgen/layout.py` and the street plans of `tools/mapgen/organic.py`: a port of the layout steps of Oleg Dolya's Medieval Fantasy City Generator ([TownGeneratorOS](https://github.com/watabou/TownGeneratorOS)), GPL-3.0; see `tools/mapgen/MFCG-CREDIT.md`.
 - `tools/mapgen/cdda_types.json`: layouts adapted from Cataclysm: Dark Days Ahead, CC BY-SA 3.0; see `tools/mapgen/CDDA-CREDIT.md`.
 - Sounds in `modules/wodx-atmosphere/sounds` and the pixel-art sprites in `modules/wodx-paperdoll/sprites` are made by the project's own scripts in `tools/`.
 - Cyberpunk 2020 is a trademark of R. Talsorian Games. The Future Darkness gear lists draw on its cyberware rules (names and numbers only, with page references) as unofficial fan use; WoDX is not affiliated with or endorsed by R. Talsorian Games.

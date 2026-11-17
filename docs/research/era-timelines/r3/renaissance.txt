@@ -2,7 +2,7 @@
 1450|H|mor|EU|Formigny|battle|Formigny|French cannon break an English army; Normandy is French again.
 1450|H|mor|EU|Kent|uprising|Jack Cade's rebellion|Kentish rebels march on London against corrupt ministers.
 1450|H|mor|EU|Milan|crown|Francesco Sforza|The condottiere Francesco Sforza becomes Duke of Milan.
-1450|W|mag|EU|Horizon|founding,occult|Horizon is raised|Mages of nine traditions build the Horizon realm; the Grand Convocation begins.
+1450|W|mag|EU|Horizon|founding,occult|Horizon is raised|Mages of nine traditions build the Horizon realm, where the Grand Convocation will later meet.
 1450|H|mor|EU|Mainz|science,media|Gutenberg's press|Gutenberg sets up a press with Fust's money in Mainz.
 1451|H|mor|ME|Edirne|crown|Mehmed II returns|Mehmed II becomes sultan for good and plans to take Constantinople.
 1451|H|mor|EU|Glasgow|learning,founding|Glasgow university|A university is founded at Glasgow.
@@ -110,6 +110,7 @@
 1503|H|mor|EU|Florence|art|The Mona Lisa begun|Leonardo begins the portrait of Lisa Gherardini.
 1504|H|mor|EU|Florence|art|Michelangelo's David|The David is set up before the Palazzo Vecchio.
 1504|H|mor|AS|Kabul|crown|Babur takes Kabul|Babur, driven from Fergana, takes Kabul.
+1504|W|vam|EU|Vienna|crown|First justicars elected|At a secret conclave near Vienna the Camarilla elects seven justicars, one for each clan, and the Founders become the Inner Circle.
 1505|H|mor|AS|Goa|empire|Portugal's viceroy of India|Francisco de Almeida becomes first viceroy of Portuguese India.
 1506|H|mor|EU|Rome|building|New St. Peter's|Julius II lays the first stone of the new St. Peter's.
 1506|H|mor|EU|Lisbon|massacre|The Lisbon massacre|Mobs kill hundreds of converted Jews in Lisbon.
@@ -306,7 +307,7 @@
 1531|H|mor|EU|Prague|building|Prague castle rebuilt|Ferdinand I rebuilds Prague castle in the new style.
 1535|W|vam|EU|Munster|uprising,faith|Kindred in the kingdom of God|Kindred in Munster find the prophets' kingdom an easy place to hunt and a hard one to hide in.
 1540|H|mor|AS|Kannauj|battle|Kannauj|Sher Shah Suri drives Humayun out of India.
-1542|H|mor|EU|Prague|fire|The Prague fire|A great fire burns Prague's Lesser Town and castle.
+1541|H|mor|EU|Prague|fire|The Prague fire|A great fire burns Prague's Lesser Town and castle.
 1545|H|mor|AS|Delhi|crown,death|Sher Shah dies|Sher Shah Suri dies in a gunpowder explosion.
 1550|H|mor|AS|Beijing|war|Altan Khan at Beijing|The Mongol Altan Khan burns the suburbs of Beijing.
 1555|H|mor|AS|Delhi|crown|Humayun returns|Humayun takes back Delhi.
@@ -360,7 +361,7 @@
 1576|H|mor|AM|Mexico City|plague|The second cocoliztli|The bleeding fever returns to New Spain and kills about two million.
 1585|H|mor|AM|Roanoke|founding,exploration|Roanoke|English settlers land on Roanoke Island off the Carolina coast.
 1590|H|mor|AM|Roanoke|migration,death|The lost colony|A relief ship finds the settlement of Roanoke empty and the word CROATOAN cut into a post.
-1589|W|wer|AM|Roanoke|occult,death|The Croatan|The Croatan tribe gives itself whole in a great rite to bind the Eater-of-Souls, a great Wyrm spirit, and the Pure Ones are two tribes where there were three.
+1589|W|wer|AM|Roanoke|occult,death|The Croatan|The Croatan tribe gives itself whole in a great rite that banishes the Eater-of-Souls, a great Wyrm spirit, from the world, and the Pure Ones are two tribes where there were three.
 1600|H|mor|AM|Huaynaputina|disaster,weather|Huaynaputina|A volcano in southern Peru explodes; the ash darkens the sky, and the next years bring cold summers and famine as far as Russia.
 1456|H|mor|AF|Cape Verde|exploration,sea|The Cape Verde islands|Ships in Portuguese service find the empty islands of Cape Verde.
 1464|H|mor|AF|Gao|crown,empire|Sunni Ali|Sunni Ali takes the throne of Songhai and builds a fleet of war canoes on the Niger.

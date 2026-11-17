@@ -742,12 +742,39 @@ export function describeSacred(f = {}) {
   const rating = Math.max(1, Math.min(top, Math.round(Number(f.rating) || (kind === "fetish" ? 5 : 1))));
   return {
     sacred: true, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
-    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken,
+    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken, faith: FAITHS.includes(f.faith) ? f.faith : null,
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", progress: {}, tries: f.tries ?? {}
   };
 }
 /** Whether a sacred tile is holy ground now. */
 export const holyGround = o => !!o?.sacred && SACRED[o.kind].ground && !o.desecrated;
+/** B6362: the faiths a house of worship or an altar can be kept for (WoDX Chronicle's faith-rules.mjs keys). */
+export const FAITHS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
+const FAITH_FAMILY = {western: "christian", orthodox: "christian", theravada: "buddhist", tibetan: "buddhist"};
+/** The places a region can be tagged as that are houses of worship (adopt-rules worshipFor). */
+export const WORSHIP_PLACES = ["church", "mosque", "synagogue", "temple"];
+/**
+ * B6362: a region tagged as a house of worship (flags.wodx-npc.place {kind, faith, holy}) is holy ground, as an
+ * altar tile is: rating place.holy (1 to 5), 1 when not set (house rule: a parish church or a town mosque). faith:
+ * the place's own, else the scene's. -> a describeSacred-shaped object, or null for any other place.
+ */
+export function worshipGround(place, label = "", faith = null) {
+  if ( !place || !WORSHIP_PLACES.includes(place.kind) ) return null;
+  const f = FAITHS.includes(place.faith) ? place.faith : (FAITHS.includes(faith) ? faith : null);
+  const o = describeSacred({sacredKind: "altar", rating: Number(place.holy) || 1, desecrated: !!place.desecrated, title: label || place.kind, faith: f});
+  return {...o, house: place.kind};
+}
+/**
+ * B6362: whether holy ground of placeFaith is a believer's own (believerFaith). Christians share their churches,
+ * as do the Buddhists of the south and of Tibet; a ground or a believer of no named faith counts as anyone's.
+ */
+export function sameFaith(placeFaith, believerFaith) {
+  if ( !placeFaith || !believerFaith ) return true;
+  return placeFaith === believerFaith || (!!FAITH_FAMILY[placeFaith] && FAITH_FAMILY[placeFaith] === FAITH_FAMILY[believerFaith]);
+}
+/** The faith's name for a card. */
+export const FAITH_WORDS = {western: "the Western church", orthodox: "the Orthodox church", islamic: "Islam", jewish: "the Jewish faith", hindu: "the Hindu faith",
+  theravada: "the Buddhist faith", tibetan: "the Tibetan Buddhist faith", chinese: "the Chinese temples", own: "the people's own faith"};
 /**
  * What holy ground does to a demon (WoDX Actions' reading of Demon: The Fallen pp. 254-255): torment 3 or less, nothing;
  * otherwise lethal levels equal to the rating, and a Willpower roll each turn to stay. Null for anyone else.
@@ -847,7 +874,7 @@ export function clueTexts(o, successes = 0) {
  * with none, one of the stock wrong turns. others: the other clues' interactable data. House reading.
  */
 export const FALSE_LEADS = ["Marks here point the wrong way, toward the door nobody used.", "Someone has been here recently; the signs say a stranger, not anyone known.",
-  "It looks older than it is, and whatever happened here seems long over.", "It seems to have nothing to do with the matter at hand."];
+  "It looks older than it is, and whatever happened here seems long over.", "It seems unrelated to what is going on here."];
 export function falseClue(o, others = [], rand = Math.random) {
   const own = new Set((o?.texts ?? []).map(t => String(t).trim()));
   const pool = others.flatMap(x => (x?.texts ?? []).slice(1)).map(t => String(t ?? "").trim()).filter(t => t && !own.has(t));
@@ -868,6 +895,13 @@ export function kgPart(o) {
   return `${c}, ${kg <= 0 ? "weighing nothing to speak of" : kg < 1 ? "under a kilo" : `about ${kg >= 10 ? Math.round(kg) : Math.round(kg * 10) / 10} kg`}`;
 }
 
+/**
+ * Is it an era of bows, not guns? B6668: the era profile's firearms switch says (false: yes, true: no); "early"
+ * firearms or no switch fall back to the Dark Ages rules or a year before 1600.
+ */
+export const archeryEra = (era = {}) => era.firearms === false
+  || (era.firearms !== true && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && !TERMS.gunsOnSheet(era.firearms, era.year))));
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
   if ( o.cover ) return Cover.coverTitle(o);
@@ -875,7 +909,7 @@ export function nameOf(o, era = {}) {
     const T = TARGETS[o.kind];
     let t = o.title || T.label;
     // In the early eras a target with rings is an archery butt
-    if ( !o.title && o.kind === "mark" && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && era.year < 1600)) ) t = "Archery butt";
+    if ( !o.title && o.kind === "mark" && archeryEra(era) ) t = "Archery butt";
     if ( o.kind === "bottles" ) return `${t}${o.left ? `, ${o.left} standing` : ", all knocked down"}`;
     if ( o.kind === "object" ) return `${t}${o.broken ? ", broken" : ""}`;
     return t;

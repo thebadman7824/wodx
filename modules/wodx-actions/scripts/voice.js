@@ -207,11 +207,19 @@ export function build(ctx) {
 
     /* ---------------- prompts when the pressure rises ---------------- */
 
+    // B6159: the level before the change rides in the update's options, so the Storyteller's client sees it when a
+    // player changes their own sheet (the map only covers changes made on this client, such as an item update)
     const before = new Map();
-    function onPreUpdate(actor) { if (kindOf(actor)) before.set(actor.id, pressureOf(actor)?.level); }
-    async function onUpdate(actor) {
-        if (!isActiveGM() || !before.has(actor.id)) return;
-        const was = before.get(actor.id); before.delete(actor.id);
+    function onPreUpdate(actor, options) {
+        if (!kindOf(actor)) return;
+        const lvl = pressureOf(actor)?.level;
+        before.set(actor.id, lvl);
+        if (options && typeof options === "object" && lvl !== undefined) options.wodxVoiceBefore = lvl;
+    }
+    async function onUpdate(actor, options) {
+        const sent = options?.wodxVoiceBefore;
+        if (!isActiveGM() || (sent === undefined && !before.has(actor.id))) return;
+        const was = sent !== undefined ? sent : before.get(actor.id); before.delete(actor.id);
         if (!live(actor)) return;
         const p = pressureOf(actor);
         if (!p || !V.rose(was, p.level) || p.level === "calm") return;

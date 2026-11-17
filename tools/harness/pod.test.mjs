@@ -95,3 +95,28 @@ test("the Followers of Set keep their name and nothing comes from the mod's 5th 
   const src = readFileSync(new URL("../../modules/wodx-chronicle/data/pod.mjs", import.meta.url), "utf8");
   assert.ok(!/Ministry|Banu Haqim|Hecata|Thin-blood|Second Inquisition/i.test(src));
 });
+
+test("pod: a patron pays with Great cities off, the town is found under upkeep.towns, and the tick waits through a skip (B6162, B6164)", () => {
+  const f = readFileSync(new URL("../../modules/wodx-chronicle/scripts/pod.mjs", import.meta.url), "utf8");
+  const raise = f.slice(f.indexOf("export async function raiseBuilding"), f.indexOf("ACTS.boon"));
+  assert.doesNotMatch(raise, /!lineOn\("podCities"\) \|\|/, "the payment is not behind Great cities");
+  assert.match(raise, /ST\?\.upkeep\?\.towns/);
+  assert.match(f, /\(!settle && isQuiet\(\)\)/);
+  assert.match(f, /Hooks\.on\("wodxSkipEnd", \(\) => tick\(\{settle: true\}\)\)/);
+});
+
+test("B6747: the Golconda lift and harmful-feeding setbacks answer on the client that rolled, which owns the seeker", () => {
+  const f = readFileSync(new URL("../../modules/wodx-chronicle/scripts/pod.mjs", import.meta.url), "utf8");
+  const body = name => f.slice(f.indexOf(`function ${name}(`), f.indexOf("\n}", f.indexOf(`function ${name}(`)));
+  // WoDX Actions calls wodxSocial and wodxFed with Hooks.callAll on the roller's client only (social.js, main.js feed)
+  for ( const [file, hook] of [["wodx-actions/scripts/social.js", "wodxSocial"], ["wodx-actions/scripts/main.js", "wodxFed"]] ) {
+    const src = readFileSync(new URL(`../../modules/${file}`, import.meta.url), "utf8");
+    assert.match(src, new RegExp(`Hooks\\.callAll\\("${hook}"`));
+    assert.doesNotMatch(src, new RegExp(`socket[^\\n]*${hook}`), `${hook} is not relayed to the Storyteller`);
+  }
+  for ( const fn of ["onSocial", "onFed"] ) {
+    assert.doesNotMatch(body(fn), /isActiveGM\(\)/, `${fn} does not wait for the Storyteller's client`);
+    assert.match(body(fn), /isOwner/, `${fn} answers where the seeker is owned`);
+  }
+  assert.match(f, /if \( !game\.user\.isGM && !a\.isOwner \) return null;/, "golcondaStep lets the owner write");
+});

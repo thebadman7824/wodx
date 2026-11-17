@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the hedge magic kit for the wonders registry (B3810-B3813). No Foundry calls here.
  *
- * Ben's Item Crafting Desk pick m4 (full): a finished Enchantment makes an item with its level, its uses and the
+ * The owner's Item Crafting Desk pick m4 (full): a finished Enchantment makes an item with its level, its uses and the
  * power it holds. Sorcerer (Revised), the Path of Enchantment (pdf 72-75), is the book: a ritual-only path. The
  * object is crafted first (a Crafts roll, narrated; a fine result helps), then the Enchantment takes one to three days
  * a level and ends in one Intelligence + Occult roll (Intelligence + Science for a technosorcerer) at difficulty

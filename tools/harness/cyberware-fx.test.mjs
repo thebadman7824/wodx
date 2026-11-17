@@ -71,7 +71,8 @@ test("shields, parrying weapons, heavy guns and their armour carry their figures
   const f = n => by(n).flags["wodx-library"];
   assert.deepEqual(f("Small Shield").shield, {parry: 4, attack: 0, closeOnly: false});
   assert.deepEqual(f("War Shield").shield, {parry: null, attack: 2, closeOnly: false});
-  assert.deepEqual(f("Parry with Sword").parryWith, {weapon: "sword", parry: 6, attack: 1, closeOnly: true});
+  // B6779d: the parrying rows are not items; WoDX Combat reads a dagger or sword in hand by its name
+  assert.ok(!by("Parry with Sword") && !by("Parry with Dagger"));
   assert.equal(f("5-inch gun firing high explosive").heavy.pen, 5);
   assert.equal(f("Trench mortar").heavy.pen, 3);
   assert.equal(f("Light artillery, airburst shrapnel").heavy.blast, 6);

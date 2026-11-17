@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Fetch WoDX Atmosphere's recorded cues from Freesound (B6260-B6264), for Ben's PC (the cloud cannot reach Freesound).
+ * Fetch WoDX Atmosphere's recorded cues from Freesound (B6260-B6264), for the owner's PC (the cloud cannot reach Freesound).
  *
- * Ben asked for every generated sound to be swapped for a real recording where one can be had (15 November 2026),
+ * The owner asked for every generated sound to be swapped for a real recording where one can be had (15 November 2026),
  * from the free sources in docs/MUSIC-SOURCES.md. For each slot in real-cues.json this tool reads the Freesound pages
  * in the order given and takes the first one whose licence is CC0 or CC BY (Creative Commons Attribution); it refuses
  * BY-NC, Sampling+ and anything else, and any page it cannot read. It downloads Freesound's own high-quality preview

@@ -97,6 +97,8 @@ export async function runSetup(opts = {}) {
   }
   let dateLabel = "";
   calMod ??= await import("../../wodx-chronicle/scripts/calendar.mjs").catch(() => null);
+  // B6948: the opening year is kept even when the clock is not set, so feud law and the like read the chronicle's year
+  if ( Number(year) ) { try { await game.settings.set("wodx-chronicle", "openingYear", Number(year)); } catch (e) { /* Chronicle off */ } }
   if ( opts.setDate !== false ) {
     const engine = calMod.getEngine();
     const d = {year, month: Number(opts.month) || 1, day: Number(opts.day) || 1, hour: Number(opts.hour) || 21, minute: 0};
@@ -259,18 +261,32 @@ export async function refreshPrimer() {
   return true;
 }
 /**
+ * B6166: the scene where the player characters stand (their visible tokens; the one with the most of them, the active
+ * scene on a tie or when none stands anywhere), so the primer follows a company that travelled or walked a Way. A
+ * player character arriving on a scene names that scene itself (the hook below).
+ */
+export function companyScene() {
+  const active = game.scenes?.active ?? null;
+  let best = null, most = 0;
+  for ( const sc of game.scenes ?? [] ) {
+    const ids = new Set([...(sc.tokens ?? [])].filter(t => !t.hidden && t.actor?.hasPlayerOwner).map(t => t.actorId));
+    if ( ids.size > most || (ids.size === most && ids.size && sc === active) ) { best = sc; most = ids.size; }
+  }
+  return best ?? active;
+}
+/**
  * B5940 to B5942: the primer for a scene far from home. The page "Where you are now" of the players' primer follows the
- * active scene's land: what everyone knows there when its way of life is not the homeland's, a line saying so at
+ * land where the company stands (B6166): what everyone knows there when its way of life is not the homeland's, a line saying so at
  * home. When the table comes to stand in another way of life, a card tells the players and links the page.
  */
-export async function refreshAbroad({card = true} = {}) {
+export async function refreshAbroad({card = true, scene: at = null} = {}) {
   if ( !game.user.isGM || game.users?.activeGM?.id !== game.user.id ) return null;
   const j = findDoc(game.journal, "primer");
   if ( !j ) return null;
   const C = chron(), W = C?.world;
   const year = Number(C?.eras?.currentYear?.()) || 1197;
   const active = C?.eras?.activeEra?.()?.profile ?? null;
-  const scene = game.scenes?.active ?? null;
+  const scene = at ?? companyScene();
   let homeSphere = null, hereSphere = null, hereLabel = "", placeLabel = "";
   try {
     homeSphere = W?.rules?.sphereFor?.(W.homeland(), year) ?? null;
@@ -297,8 +313,18 @@ Hooks.on("wodxEraApplied", () => {
 });
 Hooks.on("updateScene", (scene, changes) => {
   const placed = foundry.utils.hasProperty(changes, "flags.wodx-chronicle.place") || foundry.utils.hasProperty(changes, "flags.wodx-chronicle.-=place");
-  if ( changes.active === true || (placed && scene.active) ) refreshAbroad().catch(e => console.warn("wodx-storyteller | primer abroad", e));
+  if ( changes.active === true || (placed && scene.active) ) refreshAbroad({scene}).catch(e => console.warn("wodx-storyteller | primer abroad", e));
 });
+// B6166: a player character's token arriving on a scene (travel, a Way, a call) moves the company: the primer follows
+// (the scene they just reached; the company's scene when one leaves)
+let abroadSoon = null, abroadAt = null;
+const abroadLater = (scene = null) => {
+  if ( scene ) abroadAt = scene;
+  clearTimeout(abroadSoon);
+  abroadSoon = setTimeout(() => { const at = abroadAt; abroadAt = null; refreshAbroad({scene: at}).catch(e => console.warn("wodx-storyteller | primer abroad", e)); }, 600);
+};
+Hooks.on("createToken", t => { if ( t?.actor?.hasPlayerOwner && !t.hidden ) abroadLater(t.parent ?? null); });
+Hooks.on("deleteToken", t => { if ( t?.actor?.hasPlayerOwner ) abroadLater(); });
 Hooks.on("updateSetting", s => {
   if ( s?.key !== "wodx-chronicle.homeland" ) return;
   refreshPrimer().catch(e => console.warn("wodx-storyteller | primer", e));

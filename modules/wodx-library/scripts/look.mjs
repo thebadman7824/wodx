@@ -105,4 +105,4 @@ export function describe(actor, {token = null} = {}) {
   return {marks, text: L.describeMarks(marks)};
 }
 
-export const api = () => ({of, viewOf, station, describe, seed: L.lookSeed, scene: L.sceneStep, line: L.readLine, dressedVs: L.dressedVs, asSeen: L.asSeen, rules: L});
+export const api = () => ({goods: () => G?.GOODS ?? [], of, viewOf, station, describe, seed: L.lookSeed, scene: L.sceneStep, line: L.readLine, dressedVs: L.dressedVs, asSeen: L.asSeen, rules: L});

@@ -128,7 +128,7 @@ export function exitsToWays(scenes = []) {
       if ( r.flags?.["wodx-otherworlds"]?.twinOf ) continue;
       for ( const b of r.behaviors ?? [] ) {
         if ( b.type !== "teleportToken" || b.disabled ) continue;
-        const dest = (b.system?.destinations ?? [])[0] ?? b.system?.destination ?? "";
+        const dest = [...(b.system?.destinations ?? [])][0] ?? b.system?.destination ?? "";
         const m = /^Scene\.([^.]+)\.Region\.([^.]+)$/.exec(String(dest));
         // A crossing inside one map (a ferry over the river) stays a plain teleport
         if ( m && m[1] === s.id ) continue;

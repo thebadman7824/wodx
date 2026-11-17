@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Carrying and dragging the fallen, and moving large things (B5070 to B5086, Ben's Carry Bodies Desk). Pure rules of
+/* Carrying and dragging the fallen, and moving large things (B5070 to B5086, the owner's Carry Bodies Desk). Pure rules of
    WoDX Interactables haul-rules.mjs, plus the wiring read from the source. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");

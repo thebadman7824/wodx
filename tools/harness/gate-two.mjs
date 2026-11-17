@@ -14,13 +14,21 @@ const args = process.argv.slice(2);
 const gate = args.find(a => !a.startsWith("--"));
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
 const url = (opt("url") ?? "https://localhost:30000").replace(/\/$/, "");
+const DIAG = args.includes("--diag");
 const channel = opt("channel") ?? (process.platform === "win32" ? "msedge" : undefined);
 if ( !gate || !/^[\w-]+$/.test(gate) ) { console.error("Usage: node tools/harness/gate-two.mjs <gate name>"); process.exit(2); }
 
 async function join(browser, name, password = "") {
   const ctx = await browser.newContext({ignoreHTTPSErrors: true, viewport: {width: 1600, height: 1000}});
+  // A large timing buffer, so a gate can see every file the game fetched (the browser keeps 250 by default)
+  await ctx.addInitScript(() => { try { performance.setResourceTimingBufferSize(100000); } catch {} });
   const page = await ctx.newPage();
   page.on("pageerror", e => console.log(`[${name}] page error: ${e.message}`));
+  // B6970: --diag prints both browsers' console errors and warnings, from page load on, as [diag] lines
+  if ( DIAG ) {
+    page.on("console", m => { if ( ["error", "warning"].includes(m.type()) ) console.log(`[diag] [${name}] ${new Date().toISOString().slice(11, 19)} ${m.type()}: ${m.text().slice(0, 600)}`); });
+    page.on("pageerror", e => console.log(`[diag] [${name}] ${new Date().toISOString().slice(11, 19)} pageerror: ${String(e.stack ?? e.message).slice(0, 900)}`));
+  }
   await page.goto(`${url}/join`, {waitUntil: "domcontentloaded"});
   const SEL = "select[name=userId], select[name=userid]";
   await page.waitForSelector(SEL, {timeout: 60000});
@@ -52,6 +60,12 @@ try {
   } catch (e) { playerSteps = [{name: "player browser", pass: false, error: e.message}]; }
   const summary = await runPhase(gm.page, "finish", {ids, playerSteps});
   await gm.page.evaluate(p => game.togglePause(p, {broadcast: true}), wasPaused).catch(() => {});
+  if ( DIAG ) {
+    const res = await gm.page.evaluate(async g => { try { return await (await fetch(`/wodx-gate/${g}-result.json?${Date.now()}`, {cache: "no-store"})).json(); } catch (e) { return {fetchError: e.message}; } }, gate).catch(e => ({fetchError: e.message}));
+    for ( const st of (res?.steps ?? []).filter(x => !x.pass) ) console.log(`[diag] step ${JSON.stringify(st).slice(0, 12000)}`);
+    for ( const st of (playerSteps ?? []).filter(x => !x?.pass) ) console.log(`[diag] player step ${JSON.stringify(st).slice(0, 12000)}`);
+    if ( res?.fetchError ) console.log(`[diag] no result file: ${res.fetchError}`);
+  }
   console.log(`${gate}: ${summary}`);
   if ( !/^(\d+)\/\1 passed$/.test(String(summary)) ) code = 1;
 } catch (e) { console.error(`${gate}: ${e.message}`); code = 1; }

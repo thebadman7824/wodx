@@ -1,5 +1,5 @@
 /**
- * What a power costs when it ends, from its own page (B4924, Ben's After-Cost Desk). Pure: no Foundry calls.
+ * What a power costs when it ends, from its own page (B4924, the owner's After-Cost Desk). Pure: no Foundry calls.
  *
  * on: who pays: "self" (the user), "target" (those it was used on) or "area" (whoever was caught in it).
  * cost: what happens when the power's lasting effect ends (or, with no lasting effect, when the scene ends).
@@ -48,7 +48,7 @@ export function effectMatches(entry, effectName = "", powerName = "") {
 /** The conditions the costs put on (B4924). mods follow WoDX Chronicle: ownDiffVision, noAction; socialDiff is read by Actions' social rolls. */
 export const CONDITIONS = {
   asleep: {id: "asleep", name: "Asleep", img: "icons/svg/sleep.svg", source: "WoDX after-cost", summary: "Deep sleep: no actions until it ends.", mods: {noAction: true, noDefense: true}},
-  ravenous: {id: "ravenous", name: "Ravenous", img: "icons/svg/tankard.svg", source: "W20 p. 177", summary: "Wakes starving: must eat before anything else; until then +1 difficulty in a fight and on social rolls (WoDX house reading, B6028).", mods: {ownDiff: 1, socialDiff: 1}},
+  ravenous: {id: "ravenous", name: "Ravenous", img: "icons/svg/tankard.svg", source: "W20 p. 177", summary: "Wakes starving: must eat before anything else; until then +1 difficulty in a fight and on social rolls (WoDX house reading, B6028).", mods: {ownDiff: 1}},
   habits: {id: "animal-habits", name: "Animal habits", img: "icons/svg/pawprint.svg", source: "VtDA p. 192", summary: "The beast's tics show: +1 difficulty on Social rolls (WoDX house reading).", mods: {socialDiff: 1}},
   blurred: {id: "blurred-sight", name: "Blurred sight", img: "icons/svg/blind.svg", source: "W20 Changing Breeds p. 241", summary: "+2 difficulty on sight-based rolls for the scene.", mods: {ownDiffVision: 2}},
   numbed: {id: "numbed", name: "Numbed", img: "icons/svg/frozen.svg", source: "VtDA p. 275", summary: "Dexterity -1 and three-quarter movement for a turn.", mods: {}}
@@ -65,3 +65,48 @@ export function fomorEnd(damageTotal, levels = 3, track = 7) {
 
 /** Nights of Animal habits: one per success, at least one. */
 export const habitNights = successes => Math.max(1, Math.round(Number(successes) || 1));
+
+/**
+ * B6156: what keeps a character from acting at all, read by every WoDX Actions window (Any roll, Common checks, the
+ * power windows, Feed, Spend Blood, the Actions menu). Asleep for the day (the daySleep flag) or a registered condition
+ * that leaves the bearer out cold: no action and no defence (Asleep, Torpor, Incapacitated), or staked.
+ * B6660: in a fight, Dazed (V20 Dark Ages p. 348: the next turn goes to shaking it off) also stops a character: no
+ * roll, no attack, no move (movement is part of the turn in a fight, VtDA20 p. 333). Outside a fight there are no turns,
+ * so Dazed is only shown on the roll there. A condition that only takes the attack away (a fomor's gas or liquid form)
+ * is shown on the roll, not refused.
+ * conds: the actor's registered conditions ({id, name, mods}); inFight: the actor is in a running fight.
+ * Returns the reason, or "" when the character may act.
+ */
+export const OUT_COLD = ["asleep", "torpor", "incapacitated", "staked"];
+/** B6660: the conditions that cost the bearer the whole turn in a fight. */
+export const LOSES_TURN = ["dazed"];
+export function cannotActWhy({name = "The character", daySleep = false, conds = [], inFight = false} = {}) {
+  if ( daySleep ) return `${name} is asleep for the day. Use Awaken by day if something rouses them.`;
+  const c = (conds ?? []).find(x => OUT_COLD.includes(x?.id) || (x?.mods?.noAction && x?.mods?.noDefense));
+  if ( c ) return `${name} cannot act: ${c.name}${c.summary ? ` (${c.summary})` : ""}.`;
+  const d = inFight ? (conds ?? []).find(x => LOSES_TURN.includes(x?.id)) : null;
+  return d ? `${name} is ${d.name} and loses this turn's action${d.source ? ` (${d.source})` : ""}.` : "";
+}
+
+/** B6156: the WoDX Actions conditions whose bearer loses the turn, for WoDX Combat's turn conductor to read (api.noActionIds). */
+export const NO_ACTION_IDS = ["asleep"];
+
+/**
+ * B6157: what the bearer's registered conditions do to its own roll: ownDiff always, ownDiffVision only when the roll
+ * needs sight (Blurred sight, Blinded), and a note for a condition that takes an action away. Returns {diff, parts}.
+ */
+export function conditionRollMods(conds = [], {sight = false} = {}) {
+  let diff = 0;
+  const parts = [];
+  for ( const c of conds ?? [] ) {
+    const m = c?.mods ?? {};
+    const own = Number(m.ownDiff) || 0, vis = sight ? Number(m.ownDiffVision) || 0 : 0;
+    if ( own ) { diff += own; parts.push(`${c.name} +${own} difficulty${c.source ? ` (${c.source})` : ""}`); }
+    if ( vis ) { diff += vis; parts.push(`${c.name} +${vis} difficulty on sight${c.source ? ` (${c.source})` : ""}`); }
+    if ( m.noAction && !OUT_COLD.includes(c.id) && !m.noDefense ) parts.push(`${c.name}: ${c.summary ?? "loses the action"}`);
+  }
+  return {diff, parts};
+}
+
+/** B6157: a roll needs sight when the player ticked "Uses sight", or it is a Perception roll not marked hearing or smell. */
+export const needsSight = (fd = {}) => !!fd["tag-sight"] || (fd.attr === "perception" && !fd["tag-hearing"] && !fd["tag-smell"]);

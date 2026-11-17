@@ -58,6 +58,49 @@ export function bloodHeal(d = {}, blood = 0) {
   return {bashing: b, lethal: l, spent: b + l};
 }
 
+/**
+ * B6315: every line that mends with its own power does so after a fight, as the Kindred do with blood. line: the
+ * all-lines key (lines-rules.mjs); d: {bashing, lethal, aggravated}; pool: what the line spends, now.
+ * Returns {pool, spent, bashing, lethal, aggravated, what} or null when the line has no such power (it heals with time).
+ *   vampire, ghoul  a blood point a level of bashing or lethal (V20 pdf 276), two kept back (one for a ghoul)
+ *   kuei-jin        a Chi point a level of bashing or lethal, five for an aggravated one (Kindred of the East
+ *                   Companion pdf 32, "like a Kuei-jin"); Yang Chi first, then Yin; two kept back
+ *   wraith          a Pathos point mends two bashing or one lethal Corpus level; aggravated cannot (Wraith 20th pdf 360)
+ *   demon           a Faith point mends all bashing, another each lethal level; aggravated cannot (Demon: the Fallen pdf 172); one kept back
+ * The Garou and Fera regenerate instead (WoDX Actions healPlan); every other line heals with time.
+ */
+export const MEND_KEEP = {vampire: 2, ghoul: 1, "kuei-jin": 2, wraith: 1, demon: 1};
+export const MEND_WORD = {vampire: "blood", ghoul: "blood", "kuei-jin": "Chi", wraith: "Pathos", demon: "Faith"};
+export function lineMend(line, d = {}, pool = 0) {
+  if ( !MEND_WORD[line] ) return null;
+  const can = Math.max(0, num(pool) - (MEND_KEEP[line] ?? 0));
+  const out = {pool: num(pool), spent: 0, bashing: 0, lethal: 0, aggravated: 0, what: MEND_WORD[line]};
+  if ( !can ) return out;
+  if ( line === "vampire" || line === "ghoul" ) {
+    const h = bloodHeal(d, can + BLOOD_KEEP);
+    Object.assign(out, {bashing: h.bashing, lethal: h.lethal, spent: h.spent});
+  } else if ( line === "kuei-jin" ) {
+    let left = can;
+    out.bashing = Math.min(num(d.bashing), left); left -= out.bashing;
+    out.lethal = Math.min(num(d.lethal), left); left -= out.lethal;
+    out.aggravated = Math.min(num(d.aggravated), Math.floor(left / 5)); left -= out.aggravated * 5;
+    out.spent = can - left;
+  } else if ( line === "wraith" ) {
+    let left = can;
+    out.lethal = Math.min(num(d.lethal), left); left -= out.lethal;
+    const pairs = Math.min(Math.ceil(num(d.bashing) / 2), left);
+    out.bashing = Math.min(num(d.bashing), pairs * 2); left -= pairs;
+    out.spent = can - left;
+  } else if ( line === "demon" ) {
+    let left = can;
+    if ( num(d.bashing) > 0 ) { out.bashing = num(d.bashing); left -= 1; }
+    out.lethal = Math.min(num(d.lethal), left); left -= out.lethal;
+    out.spent = can - left;
+  }
+  out.pool = num(pool) - out.spent;
+  return out;
+}
+
 /* ---- n3: rivals who back down ---- */
 
 /** Which of two rivals gives way: outnumbered first, then off its own ground, then the less bold. sides: [{id, us, them, ownGround, aggression}]. */

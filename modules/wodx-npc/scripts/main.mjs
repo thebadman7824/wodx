@@ -15,6 +15,9 @@
 import * as HN from "./hunt-npc-rules.mjs";
 import {build as buildProwl} from "./prowl.mjs";
 import {build as buildAftercare} from "./aftercare.mjs";
+import * as LM from "./line-mend.mjs";
+import * as REFILL from "./line-refill.mjs";
+import * as LR from "./lines-rules.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as PP from "./power-pick-rules.mjs";
 import * as RR from "./routine-rules.mjs";
@@ -63,7 +66,7 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.101.1";
+const VERSION = "0.103.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -193,7 +196,7 @@ function fearSources(actor) {
   }
   if ( num(actor?.system?.advantages?.faith?.permanent) > 0 ) out.add("faith");
   if ( [...(actor?.effects ?? [])].some(e => /crinos|hispo/i.test(e.name ?? "")) ) out.add("crinos");
-  // NPC 0.21.0: animals shy from the restless dead (Ben, 2026-11-12), not from Kindred
+  // NPC 0.21.0: animals shy from the restless dead (the owner, 2026-11-12), not from Kindred
   if ( C()?.getKind?.(actor) === "wraith" ) out.add("wraith");
   return [...out];
 }
@@ -312,7 +315,7 @@ export function readFight(tok, combat = game.combat) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  The fallen (B5077, Ben's Carry Bodies Desk c8)                     */
+/*  The fallen (B5077, the owner's Carry Bodies Desk c8)                     */
 /* ------------------------------------------------------------------ */
 
 const HAUL = () => IXA()?.haul ?? null;
@@ -607,7 +610,7 @@ async function undo(snap) {
 
 /**
  * B5056: an animal ghoul's frenzy check: Willpower at difficulty 6 (an animal has no Self-Control, B5046; no easier
- * difficulty for animals, Ben's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
+ * difficulty for animals, the owner's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
  */
 async function animalFrenzy(tok) {
   const actor = tok.actor;
@@ -804,7 +807,14 @@ async function execute(tok, opt) {
       return {done: true, text: `Frenzy check for ${tok.name}.`};
     case "power": {
       // The target WoDX Targeting picked goes up first, so the power window's own panel starts on it
-      const aim = target ?? canvas.tokens.get(rankPower(tok)?.pick?.id ?? "") ?? null;
+      // B6403: without WoDX Targeting's pick, the nearest foe in sight, so a harmful power is never rolled at no one
+      const nearest = () => {
+        try {
+          const e = (readFight(tok).state.enemies ?? []).filter(x => x.visible).sort((x, y) => (x.distance ?? 99) - (y.distance ?? 99))[0];
+          return e ? canvas.tokens.get(e.id) ?? null : null;
+        } catch (err) { return null; }
+      };
+      const aim = target ?? canvas.tokens.get(rankPower(tok)?.pick?.id ?? "") ?? nearest();
       if ( aim ) game.modules.get("wodx-targeting")?.api?.setTargets?.([aim.id]);
       // B4926: the NPC picks a power that fits the moment and rolls it, when WoDX Actions can fill that window
       const pp = powerPick(tok, aim);
@@ -896,7 +906,15 @@ const phaseKey = combat => { const f = combat?.getFlag?.("wodx-combat", "conduct
  * B4926, B4927: the power this NPC would use now, by what the moment calls for; obvious powers wait while mortals
  * watch, unless the NPC is frenzied, cornered or near death. Null: no fitting power (the menu opens as before).
  */
-function powerPick(tok, aim = null) {
+function powerPick(tok, aim = null, {held = false} = {}) {
+  const pc = powerContext(tok, aim);
+  return pc ? (held ? PP.heldBack : PP.pick)(pc.list, pc.st) : null;
+}
+/**
+ * What powerPick weighs: {list, st}, or null when the NPC picks no powers. B6486: the fight is read once here, so the
+ * card's pick and B6400's held-back test share one reading (readFight weighs every foe's best attack).
+ */
+function powerContext(tok, aim = null) {
   if ( !setting("pickPowers") || savedProfile(tok.actor)?.noAutoPower ) return null;
   const list = A()?.npcPowers?.(tok.actor) ?? [];
   if ( !list.length ) return null;
@@ -904,12 +922,12 @@ function powerPick(tok, aim = null) {
   try { st = readFight(tok).state; } catch (e) { return null; }
   const s = st.self, combatId = game.combat?.id ?? "";
   const close = (st.enemies ?? []).filter(e => (e.distance ?? 99) <= 2).length;
-  return PP.pick(list, {
+  return {list, st: {
     wounds: s.wounds, nearDeath: s.wounds >= 6, losing: s.wounds >= 5 || (st.sideDown ?? 0) >= 0.5,
     outnumbered: (st.enemies?.length ?? 0) > (st.allies?.length ?? 0) + 1, frenzied: !!s.inFrenzy, cornered: close >= 2 && s.wounds >= 3,
     mortalsSee: (st.witnesses ?? 0) > 0, hasTarget: !!aim || (st.enemies ?? []).some(e => e.visible),
     boosted: tok.actor.getFlag?.(MOD, "boosted") === combatId, called: tok.actor.getFlag?.(MOD, "called") === combatId
-  });
+  }};
 }
 /** WoDX Targeting's pick for a power plan, when that module is on and not switched off on this computer. */
 function rankPower(tok) {
@@ -923,8 +941,12 @@ async function postPlan(tok, combat, {profile, options}, mode) {
     if ( o.action !== "power" ) return o;
     const a = NR.aimPower(o, ranked ??= rankPower(tok));
     // B4926: the card names the power the NPC would pick
-    const pp = powerPick(tok, canvas.tokens.get(ranked?.pick?.id ?? "") ?? null);
-    return pp ? {...a, power: pp.power.name, why: `${a.why}; ${pp.power.name}: ${pp.why}`} : a;
+    const aimTok = canvas.tokens.get(ranked?.pick?.id ?? "") ?? null;
+    const pc = powerContext(tok, aimTok);
+    const pp = pc ? PP.pick(pc.list, pc.st) : null;
+    if ( pp ) return {...a, power: pp.power.name, why: `${a.why}; ${pp.power.name}: ${pp.why}`};
+    // B6400: its fitting powers are all obvious and mortals are watching, so it holds them back
+    return pc && PP.heldBack(pc.list, pc.st) ? {...a, held: true, why: `${a.why}; holds its powers back: mortals are watching`} : a;
   });
   const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
   let result = null, chosen = null, waiting = null;
@@ -933,8 +955,9 @@ async function postPlan(tok, combat, {profile, options}, mode) {
     if ( pick.act ) {
       const k = shown.indexOf(pick.act);
       const snap = snapshot([tok, ...(pick.act.target ? [canvas.tokens.get(pick.act.target)].filter(Boolean) : [])]);
-      const r = await execute(tok, pick.act);
-      result = r.text; chosen = k;
+      // B6403: a failure while acting still posts the card, saying what went wrong, so the turn is not lost unseen
+      const r = await execute(tok, pick.act).catch(e => { console.error(`${MOD} | auto turn`, e); return {done: false, text: `${tok.name} could not act: ${e?.message ?? e}.`}; });
+      result = pick.heldPower ? `${tok.name} holds back from using a power with mortals watching. ${r.text}` : r.text; chosen = k;
       flags.plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
     } else waiting = pick.needsStoryteller;
   }
@@ -1009,14 +1032,19 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   if ( tok.scene?.id !== canvas.scene?.id ) return null;
   const key = `${combat.id}:${combat.round}:${c.id}:${phaseKey(combat)}`;
   if ( handled.has(key) && !force ) return null;
-  handled.add(key);
+  // B6403: a turn passed over while WoDX was off for this NPC is not marked taken, so it is taken once Auto or
+  // Suggest is switched on and the turn comes round again (before, the key was spent while off)
   const mode = modeFor(tok.actor);
   if ( mode === "off" ) return null;
+  handled.add(key);
   const cond = chron()?.conditions;
   const stuck = NO_ACTION.find(id => cond?.hasCondition?.(tok.actor, id)) ?? (wounds(tok.actor) >= 7 ? "incapacitated" : null);
-  if ( stuck ) report(combat.id, c.id, {cannotAct: true});
-  if ( stuck ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
-    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(cond?.getCondition?.(stuck)?.name ?? stuck)}).</div></div>`});
+  // B6945: a failed stand-up or a derangement's bout spends this turn's action (WoDX Combat's lostAction flag)
+  const lost = tok.actor.getFlag?.("wodx-combat", "lostAction");
+  const lostWhy = !stuck && C()?.rules?.lostActionNow?.(lost, combat) ? (lost.why ? `in the grip of ${lost.why}` : "failed to stand up") : "";
+  if ( stuck || lostWhy ) report(combat.id, c.id, {cannotAct: true});
+  if ( stuck || lostWhy ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(lostWhy || (cond?.getCondition?.(stuck)?.name ?? stuck))}).</div></div>`});
   // B4966: a beast with someone in its saddle goes where its rider takes it (its dodge and its blows go with the rider's)
   const ridden = IXA()?.riddenBy?.(tok.document);
   if ( ridden?.driver ) {
@@ -1266,11 +1294,14 @@ Hooks.once("init", () => {
   HEARTS.listen();
   FAMILY.listen();
   STANDING.registerSettings();
+  STANDING.listenDeeds();
   cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
+  REFILL.registerSettings();
+  REFILL.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, prowl, aftercare, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
+  const api = {version: VERSION, prowl, aftercare, lines: {of: LM.keyOf, family: k => LR.familyOf(k), keys: LR.KEYS, mendOwn: LM.mendOwn, refill: {night: REFILL.runNight, one: REFILL.refillOne, enroll: REFILL.enroll, sheet: REFILL.sheetOf}}, /* B6310, B6319 */ factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, powerPick: (tok, aim = null) => powerPick(tok, aim), editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
     carryAftercare: {wards: carryAftercare.wards, stores: carryAftercare.stores, tick: carryAftercare.onClock, day: carryAftercare.day, dispose: carryAftercare.dispose, factionTurn: carryAftercare.onFactionTurn, held: carryAftercare.heldChoice, fate: carryAftercare.doFate, taken: carryAftercare.onTaken, rules: carryAftercare.rules}, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
@@ -1290,11 +1321,11 @@ Hooks.once("init", () => {
       fomorise: SWORLD.fomorise, openSocial: SWORLD.openSocial, keeperTurn: SWORLD.keeperTurn, undoKeepers: SWORLD.undoKeepers, world: SWORLD.api},
     memory: {remember: MEMORY.remember, forget: MEMORY.forget, restore: MEMORY.restore, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, act: MEMORY.act, harmCheck: MEMORY.harmCheck, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
-      answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+      answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, seekSide: TRUST.seekSide, rules: TRUST.rules},
     family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,
       makeChild: FAMILY.makeChild, childSheet: FAMILY.childSheetOf, ageOf: FAMILY.ageOf, growthPlan: FAMILY.growthPlan, grow: FAMILY.applyGrowth, planLines: FAMILY.planLines,
       propose: FAMILY.propose, answer: FAMILY.answer, checkWeddings: FAMILY.checkWeddings, rules: FAMILY.rules},
-    hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
+    hearts: {warmth: HEARTS.warmthOf, tell: HEARTS.tellLoved, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
       haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
       takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
     standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,
@@ -1312,6 +1343,7 @@ Hooks.once("setup", () => {
       summary: "Hidden by Obfuscate: only Auspex at least equal to the Obfuscate finds them, with Perception + Awareness at 8, less 1 a dot above.", mods: {}});
     registerCondition({id: "sneaking", name: "Sneaking", img: "icons/svg/mystery-man.svg", source: "V20 Dark Ages p. 169",
       summary: "Moving quietly: watchers roll Perception + Alertness against Dexterity + Stealth.", mods: {}});
+    registerCondition(HEARTS.GRIEVING); // B6170: known on every client from the start, so a Grieving actor loses its social die after a reload
   } catch (e) { console.warn(`${MOD} | could not register the Obfuscate and sneaking conditions`, e); }
 });
 Hooks.once("ready", () => {
@@ -1389,14 +1421,16 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.token;
   if ( !tokens?.tools ) return;
+  // B6765: a player's button shows only while the world has its feature on (a switched-off one only said so)
+  const isOn = k => { try { return game.settings.get(MOD, k) !== false; } catch (e) { return false; } };
   tokens.tools.wodxTalk = {name: "wodxTalk", title: "Talk to the person you target, or the nearest one in reach", icon: "fa-solid fa-comments", order: 108,
-    button: true, visible: true, onChange: () => talk.openTalk()};
+    button: true, visible: game.user.isGM || isOn("talkMenu"), onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
-    button: true, visible: true, onChange: () => orders.openOrders()};
+    button: true, visible: game.user.isGM || isOn("followerOrders"), onChange: () => orders.openOrders()};
   tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
     button: true, visible: true, onChange: () => followers.openFollowers()};
   tokens.tools.wodxRemembered = {name: "wodxRemembered", title: "Who remembers you (people who have not forgotten what you did)", icon: "fa-solid fa-brain", order: 109.6,
-    button: true, visible: !game.user.isGM, onChange: () => MEMORY.rememberedDialog()};
+    button: true, visible: !game.user.isGM && isOn("memory"), onChange: () => MEMORY.rememberedDialog()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,

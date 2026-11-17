@@ -7,6 +7,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxSoloArrived | solo | chronicle (in solo play the first-night tour is offered once the player's token is on the map, B5144) |
+| wodxFront | chronicle | chronicle (a judgement told as the truth makes Reinhold owe the company a favour, B6653) |
 | wodxSaga | chronicle | storyteller (a Rothenstein saga step with a town change floods, besieges, sickens or empties the saga's town through towns over time, once per step, B3670) |
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
 | wodxRegimeTurn | chronicle | storyteller (a turn of rule sweeps holders out of the institutions of its kinds, in its region or town, or only one character's seats after an election, B3618) |
@@ -27,6 +28,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
 | wodxBond | npc | npc (a player character's new servant becomes their ally in WoDX Creation, so the master's experience can raise it, B5127) |
+| wodxInteractablesTrap | interactables | interactables (a word floats over the token, and a snare that catches someone marks them Held until it lets go, B6923) |
+| wodxInteractablesHazard | interactables | interactables (a word floats over the token, and a live wire that holds someone marks them Held until they pull free or the power is cut, B6923) |
+| wodxStockDrawn | interactables | interactables (a run of stock draws whispers the Storyteller one card naming each container and what came in, B6923) |
 | wodxEffectApplied | actions | actions (a Puppeteer's rides on one mortal make a consort, B5118) |
 | wodxAttackRolled | combat | actions (an attack on someone an oath binds you to asks to break the oath, B5114), paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
 | wodxMagickWorked | actions | senses (vulgar magick strains the place for Prime sight; every working leaves an echo for Time sight) |
@@ -56,7 +60,10 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSkipStart | chronicle | chronicle (the Legends book is brought up to date before the clock moves) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
+| wodxLightTouchEnd | chronicle | chronicle (timed effects, the ghoul's monthly need, time served, derangement bouts, the Clan features and Cities ticks settle once when Light-touch mode is turned off, B6380); storyteller (the watch's patrols and calls for help, B6380) |
+| wodxSheetFollowsEra | chronicle | chronicle (a listener that returns false keeps a sheet on its old era when the era moves on; gatetruthchronicle keeps the world's own sheets out this way, B6383) |
 | wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption; a Golconda seeker's theft) |
+| wodxLookOver | actions | npc (a sense of the viewer's line is rolled for a hidden loyalty, B6452) |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
@@ -84,11 +91,16 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxNightUndone | chronicle | pieces of the Hand's work taken back with the night's work: {ids, plan} (B6222) |
+| wodxSoloReported | solo | a problem reported in play was saved as a journal entry: {report, entryId}. The seat on the PC (tools/solo/seat.mjs --reports) hears it from outside the modules and writes the report to a file (B7162) |
 | wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
 | wodxTwist | chronicle | a twist of book one was revealed: {n, variant, chains, changes} (B4850) |
-| wodxFront | chronicle | a front of book one stepped or was struck, a clue carrier was found, or a judgement came due: {front, step, at, title, scene, people, moves, struck} or {clue, carrier, whole} or {judgement, choice} (B4910) |
+| wodxEncounter | chronicle | an encounter of book one was played, put off, struck or passed unmet: {n, action: "play" \| "later" \| "never" \| "closed", scene, people, moved, talk} (B6640) |
+| wodxTwistShown | chronicle | a revealed twist of book one was shown on the table and its people acted: {n, variant, lines} (B6650) |
+| wodxFavour | chronicle | a favour owed to the company was called in: {who, what, scene, actor} (B6653) |
+| wodxMurder | chronicle | one of book one's three murders was counted: {name, count} (B6654) |
+| wodxColdTown | chronicle | the third murder turned the Lower Town cold: {scenes, cooled} (B6654) |
 | wodxThreadOpened | storyteller | a Threads of Fate storyline opened: {story} (B3650) |
 | wodxThreadEnded | storyteller | a Threads of Fate storyline ended: {story, ending} (B3654) |
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
@@ -105,12 +117,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxBirth | npc | a birth or a loss: {mother, other, record, outcome, child} (outcome is well, hard or loss) |
 | wodxGrownUp | npc | a child sheet grown by an approved card: {actor, plan} (plan.grown when they reach 18) |
 | wodxProposal | npc | a proposal of marriage answered: {a, b, record, answer} (answer is yes, no or blocked by a feud) |
-| wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
 | wodxCaptive | npc | an NPC has taken someone prisoner: {actor, name, faction, factionName, place, placeName, by, text} (B5089); the Storyteller's signal board makes it a rumour |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
-| wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
-| wodxInteractablesHazard | interactables | a hazard went off |
-| wodxInteractablesTrap | interactables | a trap went off |
 | wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |

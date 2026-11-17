@@ -17,6 +17,8 @@ export const CARRIED = {
   candle: {label: "Candle", bright: 1, dim: 3, angle: 360, hours: 4, color: "#ffb35c", animation: "torch", from: 0, to: 9999, wind: true, rain: true, verb: "gutters out"},
   torch: {label: "Torch", bright: 7, dim: 13, angle: 360, hours: 1, color: "#ff9b45", animation: "flame", from: 0, to: 9999, wind: false, rain: true, verb: "burns out"},
   lantern: {label: "Oil lantern", bright: 5, dim: 10, angle: 360, hours: 8, color: "#ffc27a", animation: "torch", from: 0, to: 9999, wind: false, rain: false, verb: "runs out of oil"},
+  // B6779c: a chemical light stick (sold from the early 1970s): a dim all-round glow for about eight hours, no flame
+  glow: {label: "Glow stick", bright: 0, dim: 3, angle: 360, hours: 8, color: "#9dff8a", animation: "", from: 1971, to: 9999, wind: false, rain: false, verb: "fades to nothing"},
   electric: {label: "Electric torch", bright: 10, dim: 20, angle: 60, hours: 2, hoursLate: 6, lateFrom: 1960, color: "#fff4d6", animation: "", from: 1899, to: 9999, wind: false, rain: false, verb: "fades as the battery dies"}
 };
 

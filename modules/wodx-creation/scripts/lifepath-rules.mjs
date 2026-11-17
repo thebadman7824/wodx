@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.11.0: lifepaths, the pure rules (Improvement Desk cr1, approved by Ben 2026-11-12). No Foundry here,
+ * WoDX Creation 0.11.0: lifepaths, the pure rules (Improvement Desk cr1, approved by the owner 2026-11-12). No Foundry here,
  * so the harness can test them.
  *
  * A lifepath is a short chain of scenes before points are spent: where and when the character was born, a youth, an
@@ -64,9 +64,9 @@ export function inSpans(spans, year) {
   return spans.some(([a, b]) => y >= (a ?? -Infinity) && y <= (b ?? Infinity));
 }
 
-/** The splats of a line open in a year, in list order. */
-export function splatsFor(line, year) {
-  return (SPLATS[line] ?? []).filter(s => inSpans(s.spans, year));
+/** The splats of a line open in a year, in list order. A splat marked futureBranch needs the Future Darkness branch (B6612). */
+export function splatsFor(line, year, {futureBranch = false} = {}) {
+  return (SPLATS[line] ?? []).filter(s => inSpans(s.spans, year) && (!s.futureBranch || futureBranch));
 }
 export const splatByKey = (line, key) => (SPLATS[line] ?? []).find(s => s.key === key) ?? null;
 

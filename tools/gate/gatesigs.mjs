@@ -13,7 +13,8 @@
  *   7. a Gangrel's frenzy leaves a mark that heals in 30 days, and its roll effects show
  *   8. a Malkavian with Paranoia: a glimpse a night (the second is refused) and a heard line for a talk card
  *   9. every other WoDX module still answers
- *  10. a Tzimisce carrying soil rests; without it the next night halves every pool
+ *  10. a Tzimisce carrying soil rests; without it the next night halves every pool, and the roll pipeline does it
+ *      (B6925): the traits sum carries one halving and the system's roller takes a six-die general roll to three
  *  11. a Lasombra in a scene marked watched: an empty frame card, if the year has cameras (the scene mark is put back)
  *  12. a Ravnos with a vice of lying: a persuasion is a chance (prompt), a deceit feeds the vice
  *  13. a thin-blooded Caitiff is rolled for this year's odd gift
@@ -23,7 +24,8 @@
  *  17. an Assamite contract kept raises standing; an overdue one fails at the tick
  *  18. a Giovanni binds and calls a wraith
  *  20. a ghoul unfed for two months gets a card; a Grimaldi revenant finds its family row; a family founded by the Storyteller is kept (the list is put back)
- *  21. a ghoul and the domitor on the active scene: an approval, and once approved a blood point passes (B4983)
+ *  21. a ghoul and the domitor on the active scene, at the world's default settings (Clan features off, Ghouls need
+ *      vitae on): the ghoul's monthly check offers the feeding, and once approved a blood point passes (B4983, B6160)
  *  19. bloodlines: a True Brujah finds its own row and roll effects; a Gargoyle talking to a mortal gets a breach card
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
@@ -134,7 +136,14 @@ async function runGate(K) {
       await api().tick({force: true});
       await until(() => sig(z).soil?.short === 1);
       const fx = api().effects(z);
-      ok("10 Tzimisce soil", rested && sig(z).soil?.short === 1 && fx.some(e => e.halve), {soil: sig(z).soil});
+      // B6925: the halving reaches the rolls (V20 p. 71)
+      const T = game.modules.get(C).api.traits;
+      const sum = T.rules.sumEffects(T.effects(z, {channel: "roll", tags: T.rules.rollTags("dexterity", "melee")}));
+      const RM = await import(`/systems/worldofdarkness/module/scripts/wodx-roll-mods.js?${Date.now()}`);
+      const dr = {actor: z, origin: "general", numDices: 6, difficulty: 6, targetlist: [], attribute: "dexterity", ability: "melee"};
+      const halved = RM.wodxHalveRoll(dr, {modsFor: game.modules.get("wodx-sheets")?.api?.sheetRollMods, on: true});
+      ok("10 Tzimisce soil", rested && sig(z).soil?.short === 1 && fx.some(e => e.halve) && sum.halve === 1 && halved === 1 && dr.numDices === 3,
+        {soil: sig(z).soil, sum: sum.halve, halved, dice: dr.numDices});
     });
     await step("11 Lasombra frame", async () => {
       const l = by("Lasombra"), scene = canvas.scene, had = scene?.flags?.[C]?.camera ?? null;
@@ -239,12 +248,20 @@ async function runGate(K) {
       await gh.update({"flags.wodx-creation.lineage": {domitor: dom.id}, "system.advantages.bloodpool.temporary": 0, [`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 31 * 86400, warned: 0}}});
       await dom.update({"system.advantages.bloodpool.temporary": 6});
       await scene.createEmbeddedDocuments("Token", [{actorId: gh.id, name: gh.name, x: 200, y: 200}, {actorId: dom.id, name: dom.name, x: 400, y: 200}]);
-      await api().tick({force: true});
+      // B6160: at the defaults: Clan features off, the monthly need on, and the ghoul a ghoul on its sheet
+      const needWas = game.settings.get(C, "ghoulNeed");
+      await game.settings.set(C, "sigVampire", false);
+      await game.settings.set(C, "ghoulNeed", true);
+      await gh.update({"system.settings.variant": "ghoul"});
+      await game.modules.get(C).api.ghoulNeed.check(game.actors.get(gh.id));
+      await game.settings.set(C, "ghoulNeed", needWas);
+      await game.settings.set(C, "sigVampire", true);
       await until(() => AP.pending().some(p => String(p.key ?? "").startsWith(`ghoulfeed:${gh.id}`)) || AP.history().some(p => String(p.key ?? "").startsWith(`ghoulfeed:${gh.id}`)));
       const p = AP.pending().find(x => String(x.key ?? "").startsWith(`ghoulfeed:${gh.id}`));
       if ( p ) await AP.decide(p.id, "approve");
       await until(() => Number(dom.system.advantages.bloodpool.temporary) === 5);
-      ok("21 the domitor feeds", Number(dom.system.advantages.bloodpool.temporary) === 5 && sig(gh).ghoul?.warned === 0, {domBlood: dom.system.advantages.bloodpool.temporary, ghoul: sig(gh).ghoul, queued: !!p});
+      const ghBlood = Number(game.actors.get(gh.id)?.system.advantages.bloodpool.temporary);
+      ok("21 the domitor feeds", Number(dom.system.advantages.bloodpool.temporary) === 5 && ghBlood === 1 && sig(gh).ghoul?.warned === 0, {domBlood: dom.system.advantages.bloodpool.temporary, ghBlood, ghoul: sig(gh).ghoul, queued: !!p});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

@@ -1,7 +1,7 @@
 /**
  * WoDX NPC: factions that go to war by themselves (B2211-B2216). The pure part; no Foundry calls here.
  *
- * Ben asked on 12 November 2026 for battles and sieges that start without the Storyteller, mainly from disputes
+ * The owner asked on 12 November 2026 for battles and sieges that start without the Storyteller, mainly from disputes
  * between factions, and for two kinds of war: those fought by mortals and those fought by the supernatural. Both
  * begin for the same reasons; a supernatural war lets more powers into the fighting.
  *

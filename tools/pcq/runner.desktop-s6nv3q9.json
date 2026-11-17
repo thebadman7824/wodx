@@ -1,0 +1,13 @@
+{
+  "_about": "B6880: settings for the runner on the second PC (DESKTOP-S6NV3Q9, 2 cores, 16 GB, no NVIDIA card). Keys here replace runner.json's. It drives lane 7 only, runs no book or Trove lookups (those files are on the main PC), runs no stale-PR sweep (the main runner does), and watches the live site and the main runner.",
+  "name": "second PC runner",
+  "statusTitle": "PC runner status (second PC)",
+  "alertPrefix": "Second PC alert",
+  "home": "C:/WoDX/pcq",
+  "lanes": [7],
+  "light": 0,
+  "sweep": false,
+  "minFreeGB": {"C": 30},
+  "minFreeRamGB": 2,
+  "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20}
+}

@@ -73,6 +73,7 @@ test("the state on screen: wounds, hunger, Rage, the Shadow, Paradox, Banality, 
   assert.deepEqual(P.stateEdges({kindred: true, blood: 4, selfcontrol: 3}), [], "at the line is not under it");
   assert.match(P.stateEdges({kindred: true, blood: 0, selfcontrol: 3})[0].words, /Ravenous/);
   assert.deepEqual(P.stateEdges({kindred: false, blood: 0, selfcontrol: 3}), [], "only Kindred feel the hunger line");
+  assert.deepEqual(P.stateEdges({kindred: true, blood: 0, selfcontrol: 3, building: true}), [], "not while the wizard builds the sheet (B6710)");
   assert.equal(P.stateEdges({garou: true, rage: 6, ragePerm: 6})[0].id, "rage");
   assert.deepEqual(P.stateEdges({garou: true, rage: 3, ragePerm: 3}), []);
   assert.equal(P.stateEdges({wraith: true, angst: 6, willpower: 5, willpowerPerm: 5})[0].id, "shadow");

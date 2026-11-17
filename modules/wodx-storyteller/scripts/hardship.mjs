@@ -213,6 +213,10 @@ export async function hardshipDialog() {
 }
 
 export function registerHardshipHooks() {
+  // B6169: the card's "dice off every roll" reaches the rolls: a WoDX Chronicle traits source reads needs.tired
+  const source = (a, ctx = {}) => (setting("hardship") ? H.tiredEffects(a?.flags?.[MOD]?.needs, ctx) : []);
+  const add = () => { try { chron()?.traits?.addSource?.(source); } catch (e) { console.warn(`${MOD} | tired rolls`, e); } };
+  if ( chron()?.traits ) add(); else Hooks.once("wodxChronicleReady", add);
   Hooks.on("wodxSkipEnd", () => { tick().catch(e => console.error(`${MOD} | hardship`, e)); });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } tick().catch(e => console.error(`${MOD} | hardship`, e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {

@@ -1,4 +1,4 @@
-"""Daily deconfliction check for every approved timeline event (Ben, 2026-11-12 03:13Z: run each day at 02:00 UTC).
+"""Daily deconfliction check for every approved timeline event (the owner, 2026-11-12 03:13Z: run each day at 02:00 UTC).
 
 Sources, all approved:
   timeline-approved-2026-11-11.json   stage 1 book cards, already deconflicted (PR 586)
@@ -107,7 +107,14 @@ def main():
              f'{len(found)} findings, {len(found) - len(new)} already ruled harmless in daily/accepted.json, {len(new)} new.', '']
     for k, kind, msg in new: lines += [f'- **{kind}** `{k}`: {msg}']
     if not new: lines.append('No new clashes.')
-    open(f'daily/{today}.md', 'w').write('\n'.join(lines) + '\n')
+    out = f'daily/{today}.md'
+    # Keep the notes a reader added by hand under their own heading (## ...) when the check runs again the same day.
+    kept = ''
+    if os.path.exists(out):
+        prev = open(out, encoding='utf-8').read()
+        at = prev.find('\n## ')
+        if at >= 0: kept = prev[at:]
+    open(out, 'w', encoding='utf-8').write('\n'.join(lines) + '\n' + kept)
     if '--accept' in sys.argv:
         for k, kind, msg in new: acc[k] = msg
         json.dump(acc, open('daily/accepted.json', 'w'), indent=1, ensure_ascii=False)

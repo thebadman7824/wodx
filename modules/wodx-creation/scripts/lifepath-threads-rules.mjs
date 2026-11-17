@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.14.0: lifepath threads, the pure part (Improvement Desk 2026-11-12b cr2, approved by Ben). No
+ * WoDX Creation 0.14.0: lifepath threads, the pure part (Improvement Desk 2026-11-12b cr2, approved by the owner). No
  * Foundry here.
  *
  * A lifepath scene can leave something open: a rival, a debt, someone lost, a promise, a secret someone else knows,

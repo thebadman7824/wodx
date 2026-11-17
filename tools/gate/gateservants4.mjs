@@ -9,10 +9,12 @@
  *   4. an attack on someone an oath binds you to breaks the oath at once
  *   5. a proposed Parted Mists spends the Glamour and makes the Enchantment last
  *   6. a proposed pact links the thrall and puts the gifts on the sheet
+ *   6b. the thrall calls on the pact gift (B6376): Willpower at its difficulty (dice forced to 10s), the effects card, and
+ *       once applied the gift's boost reaches the thrall's own rolls (WoDX Actions power effects)
  *   7. a True Name called brings the demon beside the caller on the map
  * Result: Data/wodx-gate/gateservants4-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 import {NEVER_AUTO} from "/modules/wodx-chronicle/scripts/approvals-rules.mjs";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -26,7 +28,10 @@ export async function run() {
   const held = a => game.actors.get(a.id)?.flags?.["wodx-npc"]?.held ?? {};
   try {
     await G.step("1. every kind can stand approved", async () => {
-      const known = (C?.approvals?.types?.() ?? []).map(t => t.type ?? t);
+      // the modules register their approval kinds as they get ready: wait a little for all of them
+      const kinds = () => (C?.approvals?.types?.() ?? []).map(t => t.type ?? t);
+      await waitFor(() => TYPES.every(t => kinds().includes(t)), 10000).catch(() => null);
+      const known = kinds();
       const missing = TYPES.filter(t => !known.includes(t)), barred = TYPES.filter(t => NEVER_AUTO.includes(t));
       G.ok("1. every kind can stand approved", !missing.length && !barred.length, {missing, barred});
     });
@@ -40,6 +45,8 @@ export async function run() {
       {name: "Gate Servants4 Sworn", type: "Changeling", system: {advantages: {willpower: {permanent: 5, temporary: 5}}}},
       {name: "Gate Servants4 Friend", type: "Changeling"},
       {name: "Gate Servants4 Demon", type: "Demon"}]);
+    // B6447: the system's create step sets a mortal's Willpower to 0 over the create data; write it back
+    await mortal.update({"system.advantages.willpower.permanent": 2, "system.advantages.willpower.temporary": 1});
     await G.tokens(scene, [{actor: master, x: 2, y: 2}, {actor: mortal, x: 3, y: 2}, {actor: fae, x: 4, y: 2}, {actor: fae2, x: 5, y: 2}]);
 
     await G.step("2. a bond, approved on sight", async () => {
@@ -72,6 +79,42 @@ export async function run() {
       const th = game.actors.get(demon.id).getFlag("wodx-actions", "demon")?.thralls ?? [];
       const gifts = game.actors.get(mortal.id).items.filter(i => i.flags?.["wodx-actions"]?.pactGift);
       G.ok("6. a pact on sight", th.some(t => t.actorId === mortal.id) && gifts.length >= 1, {thralls: th.length, gifts: gifts.length});
+    });
+    await G.step("6b. the pact gift answers", async () => {
+      const A = game.wodxActions;
+      const dice0 = CONFIG.Dice.randomUniform;
+      let forced = false;
+      for ( const u of [0.05, 0.95] ) { CONFIG.Dice.randomUniform = () => u; if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === 10 ) { forced = true; break; } }
+      const since = Date.now();
+      const ok = new Promise(resolve => {
+        const id = Hooks.on("renderDialogV2", (app, el) => {
+          const root = el?.querySelector ? el : app.element;
+          if ( !root?.querySelector?.("form") ) return;
+          Hooks.off("renderDialogV2", id);
+          setTimeout(() => { root.querySelector("button[data-action=ok]")?.click(); resolve(true); }, 50);
+        });
+        setTimeout(() => resolve(false), 8000);
+      });
+      try { await A.pactGift({actor: game.actors.get(mortal.id)}); await ok; } finally { CONFIG.Dice.randomUniform = dice0; }
+      await wait(800);
+      const card = game.messages.filter(m => m.timestamp >= since && /calls on a pact gift/.test(m.content ?? "")).at(-1);
+      const items = card?.flags?.["wodx-actions"]?.items ?? [];
+      for ( const it of items ) await A.effects?.apply?.(it, mortal.name).catch(e => G.R.notes.push(`apply: ${e?.message ?? e}`));
+      // the boost lands on whoever the item names: the world actor, or the thrall's unlinked token on the map
+      const bodies = () => [game.actors.get(mortal.id), ...(canvas.scene?.tokens ?? []).filter(t => t.actorId === mortal.id).map(t => t.actor)].filter(Boolean);
+      const boostOne = a => Math.max(Number(A.powerMods?.of?.(a, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(a, {tags: ["strength", "physical"]})?.dice) || 0);
+      const boostOf = () => Math.max(0, ...bodies().map(boostOne));
+      await waitFor(() => boostOf() > 0, 6000).catch(() => null);
+      const m = game.actors.get(mortal.id);
+      const fx = [...(m?.effects ?? [])].map(e => ({name: e.name, key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null, data: e.flags?.["wodx-chronicle"]?.timed?.data ?? null, disabled: !!e.disabled}));
+      const routes = items.map(it => it?.route ?? null), targets = items.map(it => String(it?.target ?? it?.targets ?? "").slice(0, 80));
+      const fxTok = bodies().slice(1).flatMap(a => [...(a.effects ?? [])].map(e => e.name));
+      const boost = boostOf();
+      // B6447: the card's own words go in the details, so a failed roll ("nothing comes") is told from a card with no items
+      const said = String(card?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 240);
+      const wpNow = m?.system?.advantages?.willpower ?? {};
+      G.ok("6b. the pact gift answers", !!card && items.length >= 1 && boost > 0,
+        {card: !!card, items: items.length, boost, forced, willpower: [wpNow.temporary, wpNow.permanent], said, routes, targets, fx, fxTok});
     });
     await G.step("7. a True Name brings the demon to the map", async () => {
       await C.propose({type: "wodx-actions.pressName", key: `gate4:press:${mortal.id}`, title: "gate", data: {caller: mortal.id, demon: demon.id, cmd: "kneel", scene: scene.id}});

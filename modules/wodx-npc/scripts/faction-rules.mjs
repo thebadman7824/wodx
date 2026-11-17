@@ -872,8 +872,9 @@ export const PLEDGE_KEYS = ["herd", "resources", "status", "retainers", "contact
 
 /**
  * A new faction from its founders' own Backgrounds. Each founder pledges up to the dots they hold; the faction's rating
- * in each Background is the sum of the pledges, to 5. Pooling follows the books' shared Backgrounds (a pack's Totem in
- * W20 pdf 142, a cabal's Chantry in M20 pdf 302); a faction has no shared pool rule of its own, so this is a house rule (B831). The
+ * in each Background is the sum of the pledges, to 5. Pooling follows the books' shared Backgrounds (a pack's pooled Allies, Contacts,
+ * Fate, Kinfolk and Resources in W20 pdf 142-143, where the Totem is the pack's already; a mage group's pooled Backgrounds
+ * and common Chantry in M20 pdf 302-303); a faction has no shared pool rule of its own, so this is a house rule (B831). The
  * founders' sheets are not changed: the founding card lists the pledges for the Storyteller to mark.
  *   spec: {id, name, kind, leader, members, places, secret, owners, run, sphere (where pledged Influence goes), notes, year}
  *   founders: [{id, has: {herd, ..., influence}, pledge: {herd, ..., influence}}]
@@ -1005,6 +1006,7 @@ export const EVENT_POWERS = {
   cappadocians: {kind: "kindred", name: "The Giovanni family", secret: true, note: "The Necromancers who took the founder's blood, and hunt what is left of the clan."},
   "first-conclave": {kind: "kindred", name: "A Justicar's archons", secret: true, note: "The Camarilla's new Justicars send their archons to see the domain keeps the Traditions."},
   resurgence: {kind: "fae", name: "A freehold of the returned", secret: true, note: "Fae who came back when the Dreaming flooded in, and need a freehold."},
+  "war-of-tears": {kind: "garou", name: "Bunyip in the far country", secret: true, note: "The last Bunyip, broken in the War of Tears, hold out away from the settlers until their last stand in 1937."},
   "week-of-nightmares": {kind: "kindred", name: "Kuei-jin envoys", secret: true, note: "With the Ravnos all but gone, the Cathayans push west."},
   "fallen-escape": {kind: "other", name: "A Fallen and their faithful", secret: true, note: "A demon out of the Abyss in a dying body, gathering mortal worshippers."},
   "venice-conclave": {kind: "kindred", name: "The Children of Carthage", secret: true, note: "Anarchs and neonates who answer the Inner Circle's grip with a dream of their own."},
@@ -1014,7 +1016,7 @@ export const EVENT_POWERS = {
 /** B3922: events that end a line, by the words in a faction's name. */
 export const EVENT_ENDS = {
   croatan: /\bcroatan/i,
-  "war-of-tears": /\bbunyip/i,
+  "bunyip-last-stand": /\bbunyip/i,
   "week-of-nightmares": /\bravnos/i,
   cappadocians: /\bcappadoci/i,
   doissetep: /\bdoissetep/i

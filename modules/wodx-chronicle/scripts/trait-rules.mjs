@@ -130,7 +130,7 @@ export function effectsFor(view, ctx = {}, idx = index()) {
         if ( !hit ) continue;
         diff = Number(e.moon[hit]) || 0;
       }
-      out.push({key: m.key, name: m.entry.name, dice: Number(e.dice) || 0, diff, note: e.note ?? ""});
+      out.push({key: m.key, name: m.entry.name, dice: Number(e.dice) || 0, diff, note: e.note ?? "", ...(e.noBotch ? {noBotch: true} : {})});
     }
   }
   return out;
@@ -151,15 +151,27 @@ export function ticksOf(view, idx = index()) {
 }
 
 /** The sum of some effects, with one part per trait for the roll card: {dice, diff, parts: ["Iron Will +3 diff"]}. */
+/** B6925: a pool halved k times, rounded down, never under one die (a Tzimisce without native soil, V20 p. 71); 0 stays 0. */
+export function halvePool(dice, k = 0) {
+  const d = Math.max(0, Math.floor(Number(dice) || 0)), t = Math.max(0, Math.floor(Number(k) || 0));
+  if ( !d || !t ) return d;
+  return Math.max(1, Math.floor(d / 2 ** t));
+}
+const timesWord = k => (k === 1 ? "" : k === 2 ? " twice" : ` ${k} times`);
 export function sumEffects(list = []) {
-  let dice = 0, diff = 0;
+  let dice = 0, diff = 0, noBotch = false, halve = 0;
   const parts = [];
   for ( const e of list ) {
-    dice += e.dice; diff += e.diff;
+    dice += Number(e.dice) || 0; diff += Number(e.diff) || 0;
     if ( e.dice ) parts.push(`${e.name} ${e.dice > 0 ? "+" : ""}${e.dice}`);
     if ( e.diff ) parts.push(`${e.name} ${e.diff > 0 ? "+" : ""}${e.diff} diff`);
+    // B6924: an effect kind that keeps the roll from botching
+    if ( e.noBotch ) { noBotch = true; parts.push(`${e.name}: cannot botch`); }
+    // B6925: halve, a count: the whole pool is halved that many times after every other die (halvePool)
+    const h = Math.max(0, Math.floor(Number(e.halve) || 0));
+    if ( h ) { halve = Math.max(halve, h); parts.push(`${e.name}: pool halved${timesWord(h)}`); }
   }
-  return {dice, diff, parts};
+  return {dice, diff, parts, ...(noBotch ? {noBotch} : {}), ...(halve ? {halve} : {})};
 }
 
 /**
@@ -183,7 +195,9 @@ const TAG_MAP = {
 const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
   "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing",
   // B3780: the Attributes and a few more Abilities, for merits and flaws that name them (Charisma rolls, the Art Talent)
-  "strength", "stamina", "charisma", "manipulation", "appearance", "intelligence", "wits", "art", "firearms", "archery", "kenning", "awareness", "willpower"]);
+  "strength", "stamina", "charisma", "manipulation", "appearance", "intelligence", "wits", "art", "firearms", "archery", "kenning", "awareness", "willpower",
+  // B6851: Demon: the Fallen's Intuition, for a form power that eases it
+  "intuition"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {

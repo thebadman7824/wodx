@@ -1,5 +1,5 @@
 /**
- * WoDX Creation: the drill-down lifepath's lists (Ben, 13 November 2026). Continent, region, origin, then childhood,
+ * WoDX Creation: the drill-down lifepath's lists (the owner, 13 November 2026). Continent, region, origin, then childhood,
  * the teenage years and each chapter of adult life. WoDX's own words; the history is general knowledge, rounded for
  * play, and the future ages are a house reading. Nothing here comes from a book's text.
  *
@@ -9,7 +9,7 @@
  *   ORIGINS    ... then [lines it is offered to], base key it follows (default its own key)
  *   the lists  [label, gives, {from, to, bases (only for these origins), not (never for these origins)}]
  *   the marks  the same, then tone ("+" good, "-" hard, "0" neither) and "role|what they were to you" for a person.
- *              Each stage shows five of them: two good, two hard, one neither (Ben, 13 November 2026).
+ *              Each stage shows five of them: two good, two hard, one neither (the owner, 13 November 2026).
  *   LOCAL      region id -> era group (M to 1499, E to 1788, I to 1945, N to 2022, F after) ->
  *              [the age's name, origins [[label, gives, base key]], a teen path [label, gives], a calling [label, gives]]
  * gives: "bg Allies|ab Crafts|merit Name|flaw Name|note Free text", as in data/lifepaths.mjs.

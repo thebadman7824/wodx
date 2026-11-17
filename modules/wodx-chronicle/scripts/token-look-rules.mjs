@@ -14,6 +14,14 @@ export const CONDITION_LOOKS = {
   rotschreck: {aura: {color: 0x6fa8dc, alpha: 0.3, radius: 0.7}, tint: 0xc8dcff, flicker: true}
 };
 
+/**
+ * B6163: conditions the system sheet marks itself, read beside the WoDX status: the sheet's own Frenzy box
+ * (system.conditions.isfrenzy) glows as the wodx-frenzy status does.
+ */
+export const SHEET_CONDITIONS = {frenzy: system => !!system?.conditions?.isfrenzy};
+/** Is this look's condition on? hasStatus: the WoDX status is on the actor; system: the actor's sheet data. */
+export const conditionOn = (id, {hasStatus = false, system = null} = {}) => !!hasStatus || !!SHEET_CONDITIONS[id]?.(system);
+
 /** The screen edge a derangement bout brings its own player: dark, swim, red, grey, bright or green. */
 export const DERANGEMENT_EDGE = {
   paranoia: "dark", schizophrenia: "swim", synesthesia: "swim", hysteria: "swim", multiple: "swim", manic: "bright", phobia: "dark",

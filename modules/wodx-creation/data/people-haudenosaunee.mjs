@@ -1,6 +1,6 @@
 /**
  * Haudenosaunee names for the People generator (Creation, B3120 to B3122). WoDX's own lists of recorded names; no book
- * text. Ben's desk picks, 2026-11-13: recorded names (famous ones included), the clan passed from the mother, names
+ * text. The owner's desk picks, 2026-11-13: recorded names (famous ones included), the clan passed from the mother, names
  * staged by age (own names alone at first, then church names beside them, then a church given name and a family
  * name), and the people both before the colonies and as a share after.
  *
@@ -11,6 +11,8 @@
  */
 
 /** Men's own names, every age before family names. */
+import {CLAN} from "./people-order.mjs";
+
 export const HN_MEN = `
   Onoyeahnee, Konneatorteeooh, Tokenhyonhau, Oneshauee, Kanatsoyh, Sohhonteoquent, Ooduhtsait, Konoohqung,
   Tossonggaulolus, Skenendoa, Oneatorleeooh, Kussanwatau, Eyootenyootanook, Kohnyeaugong, Shaguiesa, Teeroos,
@@ -72,7 +74,7 @@ const plain = (list, weight = 1) => split(list).map(text => ({text, weight}));
 const O = "haudenosaunee";
 /** A clan as it stands in the family slot. */
 export const clanName = c => `of the ${c} clan`;
-export const CLAN = /^of the (.+) clan$/;
+export {CLAN};
 
 /**
  * The tables for a people named this way (B3122, and the Algonquian coast, B3510). Medieval: own names and the clan

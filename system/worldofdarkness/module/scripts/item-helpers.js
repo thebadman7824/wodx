@@ -743,6 +743,7 @@ export default class ItemHelper {
 
 		// all Arcanois and Arcanoi Powers collected
 		actor.system.listdata.powers.arcanois.arcanoilist = _createList(actor.system.listdata.powers.arcanois.arcanoilist);
+		actor.system.listdata.powers.arcanois.rituallist = _createList(actor.system.listdata.powers.arcanois.rituallist);	// WoDX fork (B6819): _sortArcanois pushes rituals here
 	}
 
 	static async _sortArcanois(item, actor) {		

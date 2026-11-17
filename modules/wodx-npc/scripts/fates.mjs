@@ -15,6 +15,7 @@ import * as F from "./fates-rules.mjs";
 import {officesOf, polityFor, POLITIES} from "./politics-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {sexFromDraw} from "../../wodx-chronicle/scripts/gender-rules.mjs";
 
 const MOD = "wodx-npc";
 const DEAD_FOLDER = "WoDX · The Dead";
@@ -58,7 +59,7 @@ const isDead = a => a?.statuses?.has?.("dead") || num(a?.flags?.["wodx-creation"
 
 /** A sheet as the rules see it. */
 export function personOf(actor, year) {
-  const line = F.LINE_OF_TYPE[actor?.type];
+  const line = F.fatesLine(actor?.type, actor?.system?.settings?.variant);
   if ( !line ) return null;
   const s = actor.system ?? {}, c = actor.flags?.["wodx-creation"]?.chronology ?? {};
   const madeT = num(c.embraced) ?? num(c.awakened);
@@ -150,7 +151,7 @@ export async function apply(d) {
   const s = broodStore();
   s.records ??= {};
   for ( const b of d.brood ?? [] ) {
-    s.records[b.id] = {...b, name: nameFor(b)};
+    s.records[b.id] = {...b, ...drawnFor(b)};
     // g5: an Embrace made without leave is a secret on the sire that others can find
     const sire = b.noLeave ? game.actors.get(b.sireId) : null;
     if ( sire ) { try { await game.modules.get(MOD)?.api?.secrets?.add?.(sire, {kind: "childe", text: `Embraced ${s.records[b.id].name} in ${b.year} without leave`, weight: 2}); } catch (e) { /* no secrets */ } }
@@ -160,11 +161,22 @@ export async function apply(d) {
   return `${n} NPC${n === 1 ? "" : "s"} changed; ${(d.brood ?? []).length} new childer, cubs, apprentices or fosterlings kept as records`;
 }
 
-/** A given name from the people generator, else the record's own "X's childe". */
-function nameFor(b) {
-  if ( b.name && !/'s (childe|cub|apprentice|fosterling)$/.test(b.name) ) return b.name;
-  try { const p = creation()?.people?.generate?.({batch: `brood:${b.id}`, row: 0}); if ( p?.name ) return p.name; } catch (e) { /* none */ }
-  return b.name;
+/** A given name from the people generator, else the record's own "X's childe"; and the sex that goes with it. */
+function drawnFor(b) {
+  const own = b.name && !/'s (childe|cub|apprentice|fosterling)$/.test(b.name);
+  let p = null;
+  try { p = creation()?.people?.generate?.({batch: `brood:${b.id}`, row: 0}) ?? null; } catch (e) { /* none */ }
+  return {name: own ? b.name : (p?.name || b.name), sex: sexOf({...b, sex: b.sex ?? p?.sex})};
+}
+/**
+ * B6768: the sex a brood record's sheet gets: its own, else the People generator's for its name, else the generator's
+ * rule (one in a hundred nonbinary) from a steady draw on the record's id, so it never changes.
+ */
+export function sexOf(b) {
+  if ( ["female", "male", "nonbinary"].includes(b?.sex) ) return b.sex;
+  let h = 2166136261;
+  for ( const c of `brood:${b?.id ?? ""}` ) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
+  return sexFromDraw(h / 4294967296).sex;
 }
 
 const SHEET = {vampire: "Vampire", garou: "Werewolf", mage: "Mage", changeling: "Changeling"};
@@ -175,7 +187,7 @@ export async function bring(id) {
   if ( !b || b.actorId ) return b?.actorId ? game.actors.get(b.actorId) : null;
   const now = game.time.worldTime, madeAt = Math.max(0, now - (yearAt(now) - b.year) * YEAR_SECONDS);
   const data = {name: b.name, type: SHEET[b.line] ?? "Mortal",
-    flags: {"wodx-creation": {chronology: {bornYear: b.born, ...(b.line === "vampire" ? {embraced: madeAt} : {})},
+    flags: {"wodx-creation": {sex: b.sex ?? drawnFor(b).sex, chronology: {bornYear: b.born, ...(b.line === "vampire" ? {embraced: madeAt} : {})},
       lineage: b.line === "vampire" ? {sire: {id: b.sireId, name: b.sireName}} : {}}, [MOD]: {fates: {brood: b.id, reason: b.reason ?? null}}}};
   // g5: the reason for the Embrace shows on the childe's sheet
   if ( b.reason ) data.system = {...(data.system ?? {}), notes: `${b.sireName || "The sire"} made this childe in ${b.year} ${F.EMBRACE_REASONS?.[b.reason] ?? ""}${b.noLeave ? ", without leave" : ""}.`};

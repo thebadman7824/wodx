@@ -197,6 +197,8 @@ export function readForm(root) {
         if (!f.name) continue;
         if (f.type === "radio") { if (f.checked) fd[f.name] = f.value; continue; }
         if (f.type === "checkbox") fd[f.name] = f.checked;
+        // B6551: a multiple select gives every picked value
+        else if (f.tagName === "SELECT" && f.multiple) fd[f.name] = [...f.selectedOptions].map(o => o.value);
         else if (f.type === "number") fd[f.name] = num(f.value);
         else fd[f.name] = f.value;
     }
@@ -209,7 +211,7 @@ export function readForm(root) {
  */
 export function fit(app) {
     try {
-        const el = app?.element?.[0] ?? app?.element;
+        const el = app?.element instanceof HTMLElement ? app.element : (app?.element?.[0] ?? app?.element);
         if (!el?.getBoundingClientRect) return;
         const vh = window.innerHeight, margin = 12;
         const h = el.getBoundingClientRect().height;

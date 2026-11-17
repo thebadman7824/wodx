@@ -2,7 +2,7 @@
  * WoDX Library: blood sorcery that makes or marks objects (B3693-B3699). Data only; the kit is
  * scripts/wonders-kindred.mjs. Every row is WoDX's own short summary with a page reference, never book text.
  *
- * Ben's Item Crafting Desk (2026-11-13): k1 full (object rituals mark the chosen item; Enchant Talisman runs as a long
+ * The owner's Item Crafting Desk (2026-11-13): k1 full (object rituals mark the chosen item; Enchant Talisman runs as a long
  * task and makes the talisman), k2 folded in (Necromancy and the other blood sorceries mark items the same way).
  *
  * Row: {key, name, path ("thaumaturgy" | "necromancy"), level, blood (points spent at the casting), time (hours, for

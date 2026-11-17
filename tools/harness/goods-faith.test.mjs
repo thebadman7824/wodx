@@ -58,7 +58,10 @@ test("a set ward carried makes mind powers and magic from the supernatural one h
 
 test("the Library registers its ward with Chronicle's trait effects", () => {
   const f = src("modules/wodx-library/scripts/faith-use.mjs");
-  assert.match(f, /T\?\.addSource\?\.\(\(actor, ctx\) => F\.wardEffects/);
+  // B6177: one source function, added now or when Chronicle says it is ready
+  assert.match(f, /const wardSource = \(actor, ctx\) => F\.wardEffects/);
+  assert.match(f, /T\.addSource\(wardSource\)/);
+  assert.match(f, /Hooks\.once\("wodxChronicleReady"[^\n]*addSource\?\.\(wardSource\)/);
   assert.match(src("modules/wodx-library/scripts/main.mjs"), /setupFaith\(\)/);
   const u = src("modules/wodx-library/scripts/use.mjs");
   for ( const k of ["pray", "ward", "divine"] ) assert.match(u, new RegExp(`case "${k}": return FU\\.`));

@@ -10,6 +10,25 @@ export const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-
 export const specKey = (line, name) => `${slug(line)}|${slug(String(name ?? "").replace(/^[•\s]+/, ""))}`;
 
 export const SPECS = {
+ "fae-dark-ages|lesser-hounds-of-hell": {
+  "what": "beast",
+  "profile": "servant",
+  "count": {"by": "successes", "mult": 2},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DA:Fae p. 142",
+  "note": "B6550: two black hounds a success bay at one foe and harry them for the scene, never biting."
+ },
+ "fae-dark-ages|greater-hounds-of-hell": {
+  "what": "beast",
+  "profile": "servant",
+  "count": {"by": "successes", "mult": 2},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "stats": {"attack": "six dice to hit, five lethal dice of harm"},
+  "page": "DA:Fae p. 144",
+  "note": "B6550: two hounds a success that bite (six dice to hit, five lethal dice of harm) for the scene."
+ },
  "fomor|animal-control": {
   "what": "animal",
   "profile": "servant",
@@ -643,6 +662,15 @@ export const SPECS = {
   "page": "DA:W p. 122",
   "note": "Must know the spirit's name. One command, then it departs. Or 2 Gnosis calls every Gaian spirit within a mile. Abusers may be refused."
  },
+ "werewolf-dark-ages|totem-gift": {
+  "what": "spirit",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "none"},
+  "page": "DA:W p. 115",
+  "note": "B6857: the tribal totem, or a servant it sends, acts by its nature on one general wish; one success a distraction, five the totem itself attacking a foe."
+ },
  "werewolf-dark-ages|faerie-aid": {
   "what": "faerie",
   "profile": "called",
@@ -980,6 +1008,15 @@ export const SPECS = {
   "page": "DA Mage p. 135",
   "note": "Battle slain only. One Quintessence per body, up to the successes. Extra successes and Quintessence on one body raise traits. Raised to fight."
  },
+ "mage-dark-ages|horse-bringer": {
+  "what": "animal",
+  "profile": "servant",
+  "count": {"by": "successes"},
+  "lasts": {"kind": "hours", "n": 24},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DA Grimoire p. 86",
+  "note": "B6857: one wild horse (or other beast) a success comes within a day and obeys; rare beasts obey a day a success."
+ },
  "mage-dark-ages|solomonic-summoning": {
   "what": "spirit",
   "profile": "called",
@@ -1125,6 +1162,55 @@ export const SPECS = {
   "page": "DA Grimoire p. 101",
   "note": "Wild places only, one large wolf per success. Willpower 3, Survival 5. Control and duration are not legible in the scan.",
   "unsure": "unsure"
+ },
+ "vampire-dark-ages|minions-of-deep-marmora": {
+  "what": "beast", "profile": "servant", "count": {"by": "successes"}, "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"}, "page": "V20 Dark Ages p. 278",
+  "note": "B6855: one minion of the deep a success, up to the blood spent."
+ },
+ "vampire-dark-ages|seal-of-abamixtra": {
+  "what": "corpse", "profile": "servant", "count": {"by": "successes"}, "lasts": {"kind": "until-dismissed"},
+  "control": {"mode": "orders", "orders": "simple"}, "page": "V20 Dark Ages p. 279",
+  "note": "B6855: one corpse a success, one literal command; they do not defend themselves and work until the task is done or they rot."
+ },
+ "vampire-dark-ages|curse-of-the-maelstrom": {
+  "what": "ghost", "profile": "wild", "count": {"by": "successes"}, "lasts": {"kind": "scene"},
+  "control": {"mode": "none"}, "page": "V20 Dark Ages p. 291",
+  "note": "B6855: one Spectre a success, wreaking havoc around the necromancer; they ignore the caller."
+ },
+ "vampire-dark-ages|animate-the-unmoving": {
+  "what": "object", "profile": "servant", "count": {"by": "fixed", "fixed": 1}, "lasts": {"kind": "hours", "n": 1},
+  "control": {"mode": "direct", "range": "sight"}, "page": "V20 Dark Ages p. 299",
+  "note": "B6855: one object for up to an hour, in sight; no more at once than the caster's Intelligence."
+ },
+ "demon-dtf|coherent-light": {
+  "what": "construct",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": "faith"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct", "range": "sight"},
+  "roll": {"when": "each-turn", "who": "summoner", "pool": "willpower", "diff": "torment", "fail": "attack-nearest"},
+  "page": "DtF p. 196",
+  "note": "B6852: solid light that acts on the successes as a pool; one level of harm dispels it. The each-turn Willpower roll is the high-Torment form's."
+ },
+ "demon-dtf|possess-plant": {
+  "what": "plant",
+  "profile": "servant",
+  "count": {"by": "successes"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct", "range": "sight"},
+  "page": "DtF p. 206",
+  "note": "B6852: rooted; strikes with the demon's Willpower as Strength, attack and bashing dice."
+ },
+ "demon-dtf|unlife": {
+  "what": "corpse",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": "faith"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "roll": {"when": "each-turn", "who": "summoner", "pool": "willpower", "diff": 8, "fail": "attack-nearest"},
+  "page": "DtF p. 209",
+  "note": "B6852: mindless servants, Physical 1 each, no wound penalties, 10 levels to destroy; Willpower 7 a command. The each-turn Willpower 8 is the high-Torment form's, against frenzy."
  },
  "demon-dtf|animate": {
   "what": "object",
@@ -1491,6 +1577,15 @@ export const SPECS = {
   "persist": true,
   "page": "MtR p. 122",
   "note": "Cast over a dying person, who passes in peace while their shadow-soul stays there as a strong spirit harming the living. Necromancy binds it."
+ },
+ "kuei-jin-kote|cleave-the-demon": {
+  "what": "spirit",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1, "max": 1},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct"},
+  "page": "KotE p. 120",
+  "note": "B6857: the soul that loses the Hun-P'o contest leaves the body as a Yin- or Yang-spirit in the Mirror Lands, within 500 feet, with the vampire's Chi and Willpower (Hun as Gnosis or P'o as Rage); at zero Chi it goes to Yomi and the body falls into torpor."
  },
  "kuei-jin-kote|spirit-caul": {
   "what": "spirit",

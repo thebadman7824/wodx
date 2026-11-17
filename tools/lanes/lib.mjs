@@ -8,6 +8,7 @@
  *   server.pid         pid of a server this tooling started
  */
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import https from "node:https";
@@ -30,6 +31,12 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
+  // B6880: lanes can live on more than one PC. A lane with "host" belongs to that PC only; on a PC named in "hosts"
+  // its paths replace the main PC's and only its own lanes are seen. Every other machine sees the lanes without a host.
+  const host = (process.env.WODX_HOST ?? os.hostname()).toLowerCase(), mine = cfg.hosts?.[host];
+  cfg.allLaneIds = (cfg.lanes ?? []).map(l => String(l.id));
+  if ( mine ) { Object.assign(cfg, mine); cfg.lanes = (cfg.lanes ?? []).filter(l => l.host === host); }
+  else cfg.lanes = (cfg.lanes ?? []).filter(l => !l.host);
   // Paths may name environment variables as %NAME% (Windows style), read at run time, so the
   // file holds no user names. A variable that isn't set is left as written.
   const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
@@ -44,6 +51,14 @@ export function getLane(cfg, id) {
 }
 export const laneDir = lane => path.join(lane.dataPath, "wodx-lane");
 export const laneUrl = lane => lane.url ?? `https://localhost:${lane.port}`;
+/** B6887: a lane with "maxGates" (lane 7 on the slow Laptop) takes only small jobs that name their gates: no touched,
+ *  every-gate or shared-queue runs, and at most maxGates gates. Returns why the lane refuses the job, or null. */
+export function laneRefuses(lane, job) {
+  if ( !lane?.maxGates || job?.kind !== "gates" ) return null;
+  if ( job.touched || job.all || job.queue ) return `lane ${lane.id} takes only named gates (no touched, every-gate or queue runs)`;
+  if ( (job.gates?.length ?? 0) > lane.maxGates ) return `lane ${lane.id} takes at most ${lane.maxGates} gates per job (${job.gates.length} asked)`;
+  return null;
+}
 export function readJson(file, fallback = null) {
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch { return fallback; }
 }
@@ -186,6 +201,26 @@ export function worldFingerprint(raw, ignore = []) {
 }
 
 /**
+ * B6971: the world's fingerprint once start-up has stopped saving settings. A GM sign-in keeps writing world settings
+ * for some seconds after the game is ready (WoDX Chronicle's start level 1.5 s after ready, events fired, the
+ * Storyteller's signal board, Token Magic and FXMaster migrations). A fingerprint taken at once caught some of them, so
+ * the next sign-in saw them as drift and no gate ran (jobs 1801 and 1809, 16 Nov). This probes every 2 s and returns
+ * once the settings digest has not changed for quietMs, or after maxMs with the last probe.
+ */
+export async function settledFingerprint(page, ignore = [], {quietMs = 10000, maxMs = 90000, everyMs = 2000} = {}) {
+  const t0 = Date.now();
+  let last = worldFingerprint(await page.evaluate(WORLD_PROBE), ignore), since = Date.now();
+  while ( Date.now() - t0 < maxMs ) {
+    await new Promise(r => setTimeout(r, everyMs));
+    const now = worldFingerprint(await page.evaluate(WORLD_PROBE), ignore);
+    if ( now.settingsDigest !== last.settingsDigest ) { last = now; since = Date.now(); continue; }
+    last = now;
+    if ( Date.now() - since >= quietMs ) break;
+  }
+  return last;
+}
+
+/**
  * World drift between the clean fingerprint and now. "strict" entries stop a gate run: core, system and module
  * versions, the active module list, world settings and the clock. Document changes are warnings (test data a
  * gate forgot to clear), listed so they can be cleaned up.
@@ -309,6 +344,8 @@ export async function pickLane(cfg, {only = null, up = isUp, state = l => lockSt
   for ( const lane of cfg.lanes ) {
     if ( only && !only.includes(String(lane.id)) ) continue;
     if ( lane.disabled ) continue;
+    // B6527: a reserved lane (lane 6, the local agents') is used only when named
+    if ( lane.reserved && !only?.includes(String(lane.id)) ) continue;
     if ( state(lane).held ) continue;
     if ( await up(lane) ) free.push(lane);
   }
@@ -321,3 +358,128 @@ export function printDiffs(title, list) {
   for ( const d of list.slice(0, 60) ) console.log(`  - ${d.where}: ${d.what}`);
   if ( list.length > 60 ) console.log(`  ... and ${list.length - 60} more (full list in the lane's drift file)`);
 }
+
+/**
+ * B7181 (Finish-Line Desk w3): document flags a gate changed. Gates share the testbed's actors and scenes, and flags a
+ * gate set on them (a haven, a domain, a learned tactic) used to stay for every later gate, so a gate could pass alone
+ * and fail late in a long run. before/after: {uuid: flags} read before and after the gate. Returns, for each document
+ * there both times whose flags differ, the keys to unset and the [scope, key, value] to set again.
+ */
+export function flagPlan(before, after) {
+  const out = [];
+  for ( const [uuid, was] of Object.entries(before ?? {}) ) {
+    const now = after?.[uuid];
+    if ( now === undefined || JSON.stringify(was) === JSON.stringify(now) ) continue;
+    const unset = [], set = [];
+    for ( const scope of new Set([...Object.keys(was ?? {}), ...Object.keys(now ?? {})]) ) {
+      const w = was?.[scope] ?? {}, n = now?.[scope] ?? {};
+      for ( const key of new Set([...Object.keys(w), ...Object.keys(n)]) ) {
+        if ( JSON.stringify(w[key]) === JSON.stringify(n[key]) ) continue;
+        if ( key in n ) unset.push([scope, key]);
+        if ( key in w ) set.push([scope, key, w[key]]);
+      }
+    }
+    if ( unset.length || set.length ) out.push({uuid, unset, set});
+  }
+  return out;
+}
+
+/** Runs in the page: every actor, scene, scene token, journal entry, item and user's flags, by uuid. */
+export const READ_FLAGS = () => {
+  const out = {};
+  for ( const c of ["actors", "scenes", "journal", "items", "users"] ) for ( const d of game[c] ?? [] ) {
+    out[d.uuid] = d._source?.flags ?? {};
+    if ( c === "scenes" ) for ( const t of d.tokens ?? [] ) out[t.uuid] = t._source?.flags ?? {};
+  }
+  return out;
+};
+
+/** Runs in the page: puts flags back by a flagPlan. A key that changed is unset first, so no merged leftovers stay. */
+export const PUT_FLAGS_BACK = async plan => {
+  let n = 0;
+  for ( const {uuid, unset, set} of plan ) {
+    const d = fromUuidSync(uuid);
+    if ( !d ) continue;
+    try {
+      for ( const [scope, key] of unset ) await d.unsetFlag(scope, key);
+      for ( const [scope, key, value] of set ) await d.setFlag(scope, key, value);
+      n++;
+    } catch (e) { /* a scope with no module behind it: leave it, the next reset takes it */ }
+  }
+  return n;
+};
+
+/**
+ * B7192 (Finish-Line Desk w3): sheet data a gate changed. Settings, flags and new world documents were put back after
+ * each gate, but a shared actor's own data was not: a frenzy, wounds, spent blood, an emptied clip, a status effect.
+ * In job 1914 gateadaptive found its tension already "frenzy" before it started, and gatearms found a clip empty.
+ * before/after: READ_SHEETS results. Returns, for each document there both times, what to put back:
+ * {uuid, system (the old system data, when it changed), dropEffects (ids added since), addEffects (sources removed
+ * since), dropItems (embedded items added since), dropKids ({type: ids} placed on a scene since, B7193)}.
+ */
+export function sheetPlan(before, after) {
+  const out = [], same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  for ( const [uuid, was] of Object.entries(before ?? {}) ) {
+    const now = after?.[uuid];
+    if ( now === undefined ) continue;
+    const row = {uuid};
+    if ( !same(was.system, now.system) ) row.system = was.system ?? {};
+    const we = was.effects ?? {}, ne = now.effects ?? {};
+    const drop = Object.keys(ne).filter(id => !(id in we)), add = Object.keys(we).filter(id => !(id in ne)).map(id => we[id]);
+    const changed = Object.keys(we).filter(id => id in ne && !same(we[id], ne[id])).map(id => we[id]);
+    if ( drop.length || changed.length ) row.dropEffects = [...drop, ...changed.map(e => e._id)];
+    if ( add.length || changed.length ) row.addEffects = [...add, ...changed];
+    const items = (now.items ?? []).filter(id => !(was.items ?? []).includes(id));
+    if ( items.length ) row.dropItems = items;
+    // B7193: things a gate placed on a scene that was there before it (a chapel region, a token, a wall)
+    const kids = {};
+    for ( const [type, ids] of Object.entries(now.kids ?? {}) ) {
+      const fresh = ids.filter(id => !(was.kids?.[type] ?? []).includes(id));
+      if ( fresh.length ) kids[type] = fresh;
+    }
+    if ( Object.keys(kids).length ) row.dropKids = kids;
+    if ( Object.keys(row).length > 1 ) out.push(row);
+  }
+  return out;
+}
+
+/** Runs in the page: each actor's and item's system data, each actor's effects (whole) and embedded item ids, and each
+ * scene's placed documents by type (B7193), by uuid. */
+export const READ_SHEETS = () => {
+  const out = {}, src = d => foundry.utils.deepClone(d._source ?? {});
+  for ( const a of game.actors ?? [] ) {
+    const s = src(a);
+    out[a.uuid] = {system: s.system ?? {}, effects: Object.fromEntries((s.effects ?? []).map(e => [e._id, e])), items: (s.items ?? []).map(i => i._id)};
+    for ( const i of a.items ?? [] ) out[i.uuid] = {system: src(i).system ?? {}};
+  }
+  for ( const i of game.items ?? [] ) out[i.uuid] = {system: src(i).system ?? {}};
+  for ( const sc of game.scenes ?? [] ) {
+    const kids = {};
+    for ( const [type, coll] of [["Token", "tokens"], ["Region", "regions"], ["Wall", "walls"], ["Tile", "tiles"], ["Drawing", "drawings"],
+      ["AmbientLight", "lights"], ["AmbientSound", "sounds"], ["Note", "notes"]] ) kids[type] = [...(sc[coll] ?? [])].map(d => d.id);
+    out[sc.uuid] = {kids};
+  }
+  return out;
+};
+
+/** Runs in the page: puts sheets back by a sheetPlan. System data is replaced whole, so no merged leftovers stay. */
+export const PUT_SHEETS_BACK = async plan => {
+  let n = 0;
+  for ( const {uuid, system, dropEffects, addEffects, dropItems, dropKids} of plan ) {
+    const d = fromUuidSync(uuid);
+    if ( !d ) continue;
+    try {
+      if ( dropItems?.length ) await d.deleteEmbeddedDocuments("Item", dropItems.filter(id => d.items?.has(id)));
+      for ( const [type, ids] of Object.entries(dropKids ?? {}) ) {
+        const coll = d.getEmbeddedCollection?.(type);
+        const here = ids.filter(id => coll?.has(id));
+        if ( here.length ) await d.deleteEmbeddedDocuments(type, here);
+      }
+      if ( dropEffects?.length ) await d.deleteEmbeddedDocuments("ActiveEffect", dropEffects.filter(id => d.effects?.has(id)));
+      if ( addEffects?.length ) await d.createEmbeddedDocuments("ActiveEffect", addEffects, {keepId: true});
+      if ( system ) await d.update({system}, {diff: false, recursive: false, wodxGateTidy: true});
+      n++;
+    } catch (e) { /* a document the gate's own code still holds: the next reset takes it */ }
+  }
+  return n;
+};

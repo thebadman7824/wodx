@@ -22,6 +22,9 @@ test("rules at a glance: shared sections always, line sections only for the line
   assert.ok(ids(m).includes("paradox") && ids(m).includes("gauntlet") && ids(m).includes("harrowing") && !ids(m).includes("frenzy"));
   assert.equal(G.sections({lines: ["mortal"], every: true}).length, G.sections({}).length, "every line, or no line known, shows all");
   for ( const s of G.sections({}) ) for ( const l of s.lines ) assert.ok(l.label && !/undefined|\[object/.test(`${l.label} ${l.value}`), `${s.id}: ${l.label}`);
+  // B6895: M20 sets a magick roll's difficulty by the highest Sphere used, not by Arete
+  const px = G.sections({lines: ["mage"]}).find(s => s.id === "paradox");
+  assert.ok(px.lines.some(l => /highest Sphere/.test(l.value)) && !px.lines.some(l => /Arete/.test(l.value)));
 });
 
 test("rules at a glance: the Gauntlet follows the era's chart", () => {

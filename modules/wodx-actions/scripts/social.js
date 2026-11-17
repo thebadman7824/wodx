@@ -3,6 +3,17 @@ import { curseDice } from "./garou-rules.js";
 import { socialDiff, socialDice } from "./after-costs.js";
 import * as TH from "./trait-hooks.js";
 import * as TRD from "./trade.js";
+import { conditionMods } from "./limits.js";
+import { needsSight } from "./after-cost-rules.js";
+
+/**
+ * B6663: the roller's registered conditions (Drained, Ravenous, Blurred sight on a sight roll...) on a roll made here,
+ * the same as buildPool counts them (B6157). {diff, parts}.
+ */
+function condMods(actor, attr) {
+    try { return conditionMods(actor, { sight: needsSight({ attr }) }); }
+    catch (e) { console.warn("WoDX Actions | conditions", e); return { diff: 0, parts: [] }; }
+}
 
 /**
  * WoDX Actions 3.20.0: "With this person". A player picks one NPC (the target, the token given, or the nearest in
@@ -92,14 +103,7 @@ export function build(ctx) {
             if (act === "charm") {
                 npcTok.setTarget?.(true, { releaseOthers: true });
                 const shift = at ? npcApi().attitude.rules.difficultyShift(at.step) : 0;
-                return seduction({ actor, target: npc, shift, onDone: async res => {
-                    await after(actor, npc, name, { key: "charm", sway: "charmed", moves: { win: 1, lose: 0, botch: -1 } }, { result: res });
-                    // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
-                    if (res === "win" && feed && kindOf?.(actor) === "kindred") {
-                        const go = await dialog("Feed?", `<p>${esc(viewName(npcTok))} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
-                        if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
-                    }
-                } });
+                return seduction({ actor, target: npc, shift, onDone: res => charmDone(actor, npcTok, res) });
             }
             if (act === "power") { npcTok.setTarget?.(true, { releaseOthers: true }); return menu({ actor }); }
             if (act === "lift" || act === "plant") return lift(actor, npcTok, act);
@@ -150,8 +154,10 @@ export function build(ctx) {
         // B5754: the Curse (DA:W p. 91; W20 p. 263): a Garou's Rage over a human's Willpower costs Social dice with them
         const curse = kindOf?.(actor) === "lupine" && ["mortal", "hunter", "ghoul"].includes(kindOf?.(npc))
             ? curseDice(Number(actor.system?.advantages?.rage?.temporary) || 0, Number(npc.system?.advantages?.willpower?.permanent) || 3) : 0;
+        // B6663: Drained and the other conditions on the speaker
+        const cm = condMods(actor, pick.attr);
         const built = R.actionPool({
-            traitDice: tm.dice - curse, traitDiff: tm.diff, traitParts: curse ? [...(tm.parts ?? []), `The Curse −${curse}`] : tm.parts,
+            traitDice: tm.dice - curse, traitDiff: (tm.diff ?? 0) + cm.diff, traitParts: [...(tm.parts ?? []), ...(curse ? [`The Curse −${curse}`] : []), ...cm.parts],
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
             bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + shift + bondShift + rankShift + socialDiff(actor),
@@ -183,6 +189,21 @@ export function build(ctx) {
                 + `${rankShift ? `<p class="vta-note">Rank between them: difficulty ${rankShift > 0 ? "+" : ""}${rankShift}.</p>` : ""}${bondShift ? `<p class="vta-note">Bound by blood to ${esc(actor.name)}: difficulty ${bondShift}.</p>` : ""}${at ? `<p class="vta-note">Attitude ${esc(at.word)}: difficulty ${shift > 0 ? "+" : ""}${shift}.${move ? ` It moves ${move > 0 ? "up" : "down"} ${Math.abs(move)}${game.user.isGM ? "" : " (in the approval queue)"}.` : ""}</p>` : ""}</div></div>`
         });
         await after(actor, npc, name, act, res, why);
+        return res;
+    }
+
+    /** What a seduction leaves behind (B6580): the charmed sway and the attitude move on the person, and for a vampire
+     *  the Siren's feeding. The Seduction menu entry and Charm in "With this person" both end here. */
+    async function charmDone(actor, npcTok, res) {
+        const npc = npcTok?.actor ?? npcTok;
+        if (!actor || !npc) return null;
+        const name = npcTok?.actor ? viewName(npcTok) : (npc.name ?? "them");
+        await after(actor, npc, name, { key: "charm", sway: "charmed", moves: { win: 1, lose: 0, botch: -1 } }, { result: res });
+        // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
+        if (res === "win" && feed && kindOf?.(actor) === "kindred") {
+            const go = await dialog("Feed?", `<p>${esc(name)} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
+            if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
+        }
         return res;
     }
 
@@ -243,8 +264,10 @@ export function build(ctx) {
         if (!pick) { ui.notifications.warn("No pool fits."); return null; }
         const pool = readPool(actor, pick.attr, pick.abilityId);
         const contacts = key === "askabout" ? Math.max(0, Number([...(actor.items ?? [])].find(i => i.type === "Feature" && /^contacts\b/i.test(i.name ?? ""))?.system?.value ?? actor.system?.backgrounds?.contacts?.value) || 0) : 0;
+        // B6663: Drained and the other conditions on the one looking (a sight-only one when the look uses Perception)
+        const cm = condMods(actor, pick.attr);
         const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
-            abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: contacts, extraDiff: 0,
+            abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: contacts, extraDiff: 0, traitDiff: cm.diff, traitParts: cm.parts,
             baseDifficulty: def.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0 });
         if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
         const me = await rollPool(built.dice, built.difficulty);
@@ -362,7 +385,10 @@ export function build(ctx) {
         if (!pick) return null;
         if (fd.wp && !(await spendWillpower(actor, 1))) return null;
         const pool = readPool(actor, pick.attr, pick.abilityId);
+        // B6663: Drained and the other conditions on the hand in the pocket
+        const cm = condMods(actor, pick.attr);
         const built = R.actionPool({
+            traitDiff: cm.diff, traitParts: cm.parts,
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
             bonusDice: (Number(fd.bonus) || 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + socialDiff(actor), baseDifficulty: preset.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0
@@ -416,5 +442,5 @@ export function build(ctx) {
         attitudeOf, nameFor, viewName, npcApi, gmIds, proposeOrApply, moveItem });
     const trade = (actor, npcTok, key, given) => tradeX().trade(actor, npcTok, key, given);
 
-    return { withPerson, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };
+    return { withPerson, charmDone, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };
 }

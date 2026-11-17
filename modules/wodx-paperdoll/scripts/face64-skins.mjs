@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: rarer skins (13 November 2026, B3051). Ben asked for more skin tones and fantastical ones. Anyone may
+ * WoDX Paperdoll: rarer skins (13 November 2026, B3051). The owner asked for more skin tones and fantastical ones. Anyone may
  * have one of these rare skins; a demon's visage may take one of the apocalyptic colours below. A fae mien's colour is
  * rolled in face64-rules.mjs (FAE_SKINS) and shows to fae sight only.
  */

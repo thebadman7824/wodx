@@ -35,10 +35,11 @@ const yearNow = () => { try { return chron()?.eras?.currentYear?.() ?? null; } c
 export function charmsOf(actor) {
     const out = [];
     const keeps = !!actor?.system?.settings?.powers?.hascharms;
-    for (const i of actor?.items ?? []) {
-        if (i.type !== "Power") continue;
-        if (i.system?.type !== "wod.types.charm" && !keeps) continue;
-        const c = SC.charmOf(i.name);
+    const items = [...(actor?.items ?? [])].filter(i => i.type === "Power" && (i.system?.type === "wod.types.charm" || keeps));
+    // B6555: a faerie sprite's Blast, Healing, Reform and Swift Flight are the Dark Ages: Fae ones
+    const sprite = SC.isSpriteOf({ flag: !!actor?.getFlag?.(MOD, "faeSprite"), name: actor?.name, names: items.map(i => i.name) });
+    for (const i of items) {
+        const c = SC.charmOf(i.name, { sprite });
         if (c) out.push({ id: i.id, key: c.key, name: i.name, charm: c, item: i });
     }
     return out;
@@ -61,6 +62,14 @@ export function setup() {
     const C = chron();
     // What a Charm did for its time comes off when it ends: rows, the token as it was, lights, the Gauntlet, Rage
     C?.timed?.registerReverter?.("wodx-actions.charmOff", async (actor, data) => charmOff(actor, data ?? {}).catch(e => console.warn("WoDX | charm off", e)));
+    // B6038: Blighted and Possessed are WoDX conditions, so the token shows them and the rolls read them (Blighted: the worst
+    // of the nature rules, read as +1 difficulty on social rolls, house reading)
+    try {
+        C?.registerCondition?.({ id: "blighted", name: "Blighted", img: "icons/svg/poison.svg", source: "W20 p. 367 (Blighted Touch)",
+            summary: "The worst of their nature rules: +1 difficulty on social rolls (WoDX house reading, B6038).", mods: { socialDiff: 1 } });
+        C?.registerCondition?.({ id: "possessed", name: "Possessed", img: "icons/svg/statue.svg", source: "W20 p. 367 (Possession)",
+            summary: "A spirit rides the body: the player cannot move the token; the one who possesses it moves it (B6038).", mods: {} });
+    } catch (e) { console.warn("WoDX | charm conditions", e); }
     // Blighted Touch: whoever the spirit harms resists or is blighted
     Hooks.on("wodxAttackRolled", (attacker, d) => { if (d?.hit && attacker && has(attacker, "blightedtouch") && d.target) blight(attacker, d.target).catch(e => console.warn("WoDX | blighted touch", e)); });
 }
@@ -103,7 +112,7 @@ async function blight(spirit, target) {
     if (n(r.successes) > 0 && !r.botch) return null;
     const c = SC.BY_KEY.blightedtouch, text = `${target.name}'s worst traits rule ${r.botch ? "from now on" : "for the next three hours"} (Blighted Touch).`;
     if (r.botch) await target.createEmbeddedDocuments("ActiveEffect", [{ name: "Blighted", img: "icons/svg/poison.svg", statuses: ["wodx-blighted"], description: text, flags: { [MOD]: { charm: "blightedtouch", by: spirit.name } } }]);
-    else await chron()?.timed?.applyTimed?.(target, { name: "Blighted", img: "icons/svg/poison.svg", duration: { kind: "time", seconds: 3 * 3600 }, key: "wodx-charm-blight", source: SC.pageOf(c), description: text });
+    else await chron()?.timed?.applyTimed?.(target, { name: "Blighted", img: "icons/svg/poison.svg", condition: "blighted", duration: { kind: "time", seconds: 3 * 3600 }, key: "wodx-charm-blight", source: SC.pageOf(c), description: text });
     return ChatMessage.create({ speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>Blighted Touch</h3><p>${esc(text)}</p><p class="wodx-quiet">${SC.pageOf(c)}</p></div>` });
 }
 
@@ -174,10 +183,11 @@ export function build(ctx) {
             const who = first ?? actor;
             if (!SC.healLeft(actor.getFlag(MOD, "charmHealed") ?? {}, LIM.sceneNo(), who.id)) { notify(`${c.name}: ${who.name} has had this healing this scene.`); return null; }
         }
-        if (["blast", "updraft", "frenzy", "calcify"].includes(c.does) && !first) { notify(`${c.name}: target someone first.`); return null; }
+        if (["blast", "updraft", "frenzy", "calcify", "spriteblast", "stare"].includes(c.does) && !first) { notify(`${c.name}: target someone first.`); return null; }
+        const targetKind = first ? (isSpirit(first) ? "spirit" : (ctx.profile?.(first) ?? "mortal")) : null;
         if (c.does === "possess" && !first && !o.object) { notify(`${c.name}: target the one to possess first.`); return null; }
         const t = traits(actor);
-        const pay = SC.canPay(c, t, { size });
+        const pay = SC.canPay(c, t, { size, targetKind: targetKind === "mortal" || targetKind === "ghoul" ? "mortal" : targetKind });
         if (!pay.ok) { notify(`${c.name}: ${pay.why}.`); return null; }
         const lim = await LIM.gate(actor, { name: c.name, level: 1 });
         if (!lim) return null;
@@ -192,13 +202,14 @@ export function build(ctx) {
         if (rolled) {
             const gauntlet = c.diff === "gauntlet" && tok ? worlds()?.placeOf?.(tok.document ?? tok)?.gauntlet ?? null : null;
             const twp = first ? n(first.system?.advantages?.willpower?.permanent ?? first.system?.willpower?.permanent) : null;
-            const diff = SC.diffOf(c, { size, targetWillpower: twp, gauntlet, object: o.object });
+            const diff = SC.diffOf(c, { size, targetWillpower: twp, gauntlet, object: o.object,
+                targetStamina: first ? n(first.system?.attributes?.stamina?.value) : null, targetRage: first && isSpirit(first) ? n(first.system?.advantages?.rage?.permanent) : null });
             const dice = SC.poolOf(c, t, { static: !!actor.getFlag(MOD, "spiritStatic") });
             const r = await rollPool(dice, diff + n(lim.diff));
             rolls.push(r.roll);
             botch = !!r.botch;
             got = r.botch ? 0 : n(r.successes);
-            body += rollBlock(`${SC.rollLabel(c)}${actor.getFlag(MOD, "spiritStatic") ? " - 2 (Spirit Static)" : ""}`, r, lim.diff ? [`Drained +${lim.diff}`] : []);
+            body += rollBlock(`${SC.rollLabel(c)}${actor.getFlag(MOD, "spiritStatic") ? " - 2 (Spirit Static)" : ""}`, r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
         }
         let fx = [];
         if (got > 0) {
@@ -250,6 +261,30 @@ export function build(ctx) {
         const note = s => `<div class="vta-note">${esc(s)}</div>`;
         const C = combat();
         switch (c.does) {
+            case "animate": {
+                // B6555: the tools fight as a hand weapon of the sprite's for the hour, their harm bashing
+                const k = Math.max(1, n(o.size) || 1);
+                const [w] = await actor.createEmbeddedDocuments("Item", [{ name: `Animated tools (${k})`, type: "Melee Weapon", img: "icons/svg/sword.svg",
+                    system: { damage: { attribute: "strength", bonus: 1, type: "bashing", isrollable: true }, attack: { attribute: "dexterity", ability: "melee", accuracy: 0, isrollable: true }, difficulty: 6, isweapon: true,
+                        description: `<p>${k} household tool${k === 1 ? "" : "s"} or light weapon${k === 1 ? "" : "s"} brought to life by ${esc(actor.name)}; their harm is halved to bashing before soak (${SC.pageOf(c)}).</p>` } }]);
+                await mark(actor, c, { drop: w?.id ?? null }, { name: `Animate Tools (${k})`, img: "icons/svg/sword.svg", duration: { kind: "time", seconds: 3600 } });
+                return { html: note(`${k} tool${k === 1 ? "" : "s"} rise and fight for an hour (the Animated tools weapon on the sheet; harm halved to bashing).`) };
+            }
+            case "spriteblast": {
+                const b = SC.bought(o.size);
+                await C?.soakAndApply?.(tg[0], { apply: true, mode: "levels", amount: b.levels, type: b.type, soak: true });
+                return { html: note(`${first.name} takes ${b.levels} ${b.type} level${b.levels === 1 ? "" : "s"}, soaked as usual.`) };
+            }
+            case "spriteheal": {
+                const who = first ?? actor;
+                const b = SC.bought(o.size);
+                const have = n(who.system?.health?.damage?.[b.type]);
+                const k = Math.min(have, b.levels);
+                if (k > 0 && C?.healDamage) await C.healDamage(who, b.type, k);
+                return { html: note(k ? `${who.name} heals ${k} ${b.type} level${k === 1 ? "" : "s"}.` : `${who.name} has no ${b.type} harm to heal; the Essence is spent.`) };
+            }
+            case "stare":
+                return { html: note(`${first.name} cannot act for ${got} turn${got === 1 ? "" : "s"}.`) };
             case "track": {
                 for (const tt of tg) tt.ring?.flashColor?.(Color.from("#7fb3ff"));
                 await mark(actor, c, {}, { name: "On a spirit track" });
@@ -397,7 +432,7 @@ export function build(ctx) {
             case "possess": {
                 if (!first && !o.object) { notify(`${c.name}: target the one to possess first.`); return false; }
                 const when = SC.possessionTime(got);
-                if (first) await first.createEmbeddedDocuments("ActiveEffect", [{ name: `Possessed by ${actor.name}`, img: "icons/svg/possession.svg", statuses: ["wodx-possessed"],
+                if (first) await first.createEmbeddedDocuments("ActiveEffect", [{ name: `Possessed by ${actor.name}`, img: "icons/svg/statue.svg", statuses: ["wodx-possessed"],
                     description: `${actor.name} rides this body until it is driven out; it takes hold ${when.label}. A spirit inside a person can warp it into a fomor.`, flags: { [MOD]: { charm: "possession", by: actor.uuid } } }]);
                 const doc = tok?.document ?? tok;
                 if (doc) await doc.update({ hidden: true });

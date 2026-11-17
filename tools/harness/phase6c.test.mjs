@@ -79,6 +79,8 @@ test("an art's difficulty: the Shroud across, the target's traits, the realm for
   assert.equal(WR.realmAngst("Outrage", "labyrinth"), 1);
   assert.equal(WR.realmAngst("Pandemonium", "tempest", [1, 1, 7]), 2);
   assert.equal(WR.realmAngst("Pandemonium", "shadowlands", [1]), 0);
+  // B6920: Wraith 20th p. 204, the Shadow never gains Angst from Pandemonium in the Labyrinth
+  assert.equal(WR.realmAngst("Pandemonium", "labyrinth", [1, 1, 2, 7]), 0, "no Angst from Pandemonium in the Labyrinth");
 });
 
 test("the Arcanoi library: every art has a known Arcanos, a page, a pool and cost the rules can read", () => {

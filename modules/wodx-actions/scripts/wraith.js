@@ -15,6 +15,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: wraith-rules.js.
  */
 
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
@@ -196,19 +197,22 @@ export function build(ctx) {
             if (a.r) {
                 const [at, sec] = a.r.split("+");
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
-                const r = await rollPool(dice, n(fd.diff) + lim.diff);
+                // B6411: the target's ward or Magic Resistance makes an Arcanos on them harder
+                const rm = TH.targetResist(actor, ["magic"]);
+                const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
                 rolls.push(r.roll); faces = r.faces ?? []; successes = r.botch ? 0 : r.successes;
-                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...(lim.diff ? [`Drained +${lim.diff}`] : [])]);
+                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])]);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
             const angst = W.realmAngst(a.d, fd.realm, faces);
-            if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled outside the Shadowlands, p. 204"}).</div>`; }
+            if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled in the Tempest or Stygia, p. 204"}).</div>`; }
             body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(${bookOf(lib)} p. ${a.p})</span></div>`;
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
-            // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id
+            // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id.
+            // B6731: an art with no roll counts one success, as a Discipline or Gift with none does (B3751)
             let fxItems = [];
-            if (a.r && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}`, world: String(a.id).startsWith("gw-") ? "Wraith (Great War)" : "Wraith (W20)" });
+            if (successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}`, noRoll: !a.r, world: String(a.id).startsWith("gw-") ? "Wraith (Great War)" : "Wraith (W20)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
