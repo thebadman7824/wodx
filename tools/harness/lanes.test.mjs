@@ -238,6 +238,12 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.ok(!main.lanes.some(l => l.host));
     assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
     assert.match(main.foundryMain, /^G:/);
+    process.env.WODX_HOST = "cloud";
+    const cloud = L.loadConfig();
+    assert.deepEqual(cloud.lanes.map(l => l.id), [9], "a cloud thread's box sees lane 9 only (B7240)");
+    assert.ok(!cloud.lanes[0].dataPath.includes("%"), "the cloud lane's home folder is filled in");
+    assert.match(cloud.foundryMain, /\/foundry\/app\/main\.mjs$/);
+    assert.equal(cloud.lanes[0].url, "http://localhost:30090");
   } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
 });
 
@@ -351,4 +357,14 @@ test("B7204: stop takes over the lane's own Foundry by its port only when its co
   const stop = src.slice(src.indexOf("async function stop"), src.indexOf("async function accept"));
   assert.ok(stop.indexOf("lanePidByPort(lane)") < stop.indexOf("process.kill(pid)"), "the takeover comes before any kill");
   assert.ok(stop.includes("if ( !pidIsLane(pid, lane) ) throw"), "the stale-id guard still stands");
+});
+
+test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 24 through the proxy (B7240-B7242)", () => {
+  const src = fs.readFileSync(path.join(root, "tools/lanes/cloud-lane.mjs"), "utf8");
+  assert.ok(src.includes('"/mnt/project-files/private/cloud-foundry"'), "the zip and licence come from the private cache");
+  assert.ok(!/license\.json"\)\s*,\s*path\.join\(REPO/.test(src), "the licence is never copied into the checkout");
+  assert.ok(src.includes('NODE_USE_ENV_PROXY: "1"'), "Foundry's licence check goes through the cloud proxy");
+  assert.ok(src.includes('WODX_HOST: "cloud"'));
+  assert.match(src, />= 24/, "Foundry 14 needs Node 24");
+  assert.ok(!/console\.(log|warn|error)\([^)]*\.license\b/.test(src), "the key is never printed");
 });
