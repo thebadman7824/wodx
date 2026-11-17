@@ -1,0 +1,2 @@
+{"file":"tools/pcq/train.mjs","verdict":"working","how":"read in full; node --test train.test.mjs (6 pass, PR 1880's statuses replayed: wait, then out on a failed fresh run)","hash":"5374294e7619","at":"2026-11-17T13:58Z"}
+{"file":"tools/harness/train.test.mjs","verdict":"working","how":"read in full; node --test train.test.mjs (6 pass, PR 1880's statuses replayed: wait, then out on a failed fresh run)","hash":"d3315af9acf7","at":"2026-11-17T13:58Z"}

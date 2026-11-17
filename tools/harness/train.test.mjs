@@ -25,6 +25,13 @@ test("decide: conflict leaves, draft is marked ready, behind or unstamped is pre
   assert.equal(decide({...ready, mergeRules: "pending", gates: "pending"}).action, "wait");
   assert.equal(decide({...ready, mergeRules: "pending", gates: null, frontFor: 4 * H}).action, "leave", "no result in 3 hours lets the line move");
   assert.equal(decide({...ready, mergeRules: "pending", frontFor: 4 * H}, {maxHours: 6}).action, "wait");
+  // B7203: merge rules red only on the gate rule while the head's fresh gate run has not reported is a wait (PR 1880)
+  const gateOnly = {...ready, mergeRules: "failure", mergeRulesWhy: "Not ready: gate result", gates: null};
+  assert.equal(decide(gateOnly).action, "wait");
+  assert.equal(decide({...gateOnly, gates: "pending"}).action, "wait");
+  assert.equal(decide({...gateOnly, gates: "failure"}).action, "leave", "the fresh run failed: out");
+  assert.equal(decide({...gateOnly, frontFor: 4 * H}).action, "leave", "no gate result in 3 hours: out");
+  assert.equal(decide({...gateOnly, mergeRulesWhy: "Not ready: gate result, file review"}).action, "leave", "another rule broken: out");
   assert.equal(decide({...ready, gates: null}).action, "merge", "a change that needs no gate merges on checks and merge rules alone");
 });
 
@@ -70,6 +77,14 @@ test("step merges the front when it is green and leaves the rest alone", async (
   assert.equal(r.action, "merge");
   assert.ok(calls.includes("PUT /pulls/20/merge"));
   assert.ok(!calls.some(c => /pulls\/21\/merge|update-branch/.test(c)), "the second in line is not touched");
+});
+
+test("step waits on a head whose merge rules fail only for its pending gate run (PR 1880)", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const m = mockGh({statuses: [{context: "wodx/merge-rules", state: "failure", description: "Not ready: gate result"}]});
+  const r = await step({gh: m.gh, home, apply: true});
+  assert.equal(r.action, "wait");
+  assert.ok(!m.calls.some(c => /^(PUT|POST|DELETE)/.test(c)), "nothing posted, label kept");
 });
 
 test("step takes a red front out of the train and marks a draft ready", async () => {
