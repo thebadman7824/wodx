@@ -41,7 +41,9 @@ export function discMatches(libHeading, sheet) {
     if (SORC.includes(head)) {
         const tail = rest.join(" ");
         if (SORC.includes(S)) return false;
-        return tail === S || tail.endsWith(S) || S.endsWith(tail) || (S.length >= 5 && tail.includes(S));
+        // B7090: a sheet that names the sorcery too ("Thaumaturgy: Hands of Destruction") is matched on the path's own name
+        const own = S.split(" ")[0] === head ? S.slice(head.length + 1) : S;
+        return tail === own || tail.endsWith(own) || own.endsWith(tail) || (own.length >= 5 && tail.includes(own));
     }
     // "Quietus" covers both its variants; "Valeren (Healer)" matches "Valeren Healer" or "Valeren"
     return L.startsWith(S + " ") || S.startsWith(L + " ");
