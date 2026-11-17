@@ -17,7 +17,7 @@
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {existsSync, mkdirSync, readdirSync, readFileSync, rmSync, cpSync, statSync, writeFileSync, mkdtempSync} from 'node:fs';
-import {join, resolve, dirname, relative} from 'node:path';
+import {join, resolve, dirname, relative, basename} from 'node:path';
 import {tmpdir} from 'node:os';
 import net from 'node:net';
 import {fileURLToPath} from 'node:url';
@@ -89,7 +89,8 @@ async function deploy(o) {
   const zip = join(backups, `${world}-before-${o.label}-${new Date().toISOString().slice(0, 16).replace('T', '-').replace(':', '')}.tar.gz`);
   const parts = [`worlds/${world}`, 'systems/worldofdarkness', ...(existsSync(join(data, 'modules')) ? readdirSync(join(data, 'modules')).filter(n => n.startsWith('wodx-')).map(n => `modules/${n}`) : [])]
     .filter(p => existsSync(join(data, p)));
-  if (!o.dry) { mkdirSync(backups, {recursive: true}); execFileSync('tar', ['-czf', zip, '-C', data, ...parts]); }
+  // tar is given the archive by a bare name in its own folder: GNU tar (Git Bash) reads "D:\..." as host:path
+  if (!o.dry) { mkdirSync(backups, {recursive: true}); execFileSync('tar', ['-czf', basename(zip), '-C', data, ...parts], {cwd: backups}); }
   log.push(`backup: ${o.dry ? '(dry) ' : ''}${zip} (${parts.length} folders)`);
   // 2. The commit's packages
   const tmp = mkdtempSync(join(tmpdir(), 'wodx-rc-'));
@@ -97,7 +98,7 @@ async function deploy(o) {
   execFileSync('git', ['-C', repo, 'archive', '--format=tar', '-o', tar, commit, 'system/worldofdarkness', 'modules']);
   const src = join(tmp, 'src');
   mkdirSync(src);
-  execFileSync('tar', ['-xf', tar, '-C', src]);
+  execFileSync('tar', ['-xf', 'build.tar', '-C', 'src'], {cwd: tmp});
   const pk = packagesOf({system: existsSync(join(src, 'system/worldofdarkness/system.json')), modules: readdirSync(join(src, 'modules')).filter(m => existsSync(join(src, 'modules', m, 'module.json')))});
   // 3. Copy, 4. stamp, 5. check
   const bad = [];
@@ -109,9 +110,9 @@ async function deploy(o) {
   if (!o.dry) for (const p of pk) for (const f of md5Mismatches(walk(join(src, p.from)), walk(join(data, p.to)))) bad.push(`${p.to}/${f}`);
   rmSync(tmp, {recursive: true, force: true});
   log.push(`copied: ${pk.length} packages from ${commit.slice(0, 7)} (${date})${o.dry ? ' (dry, nothing copied)' : ''}`);
-  log.push(bad.length ? `MD5 MISMATCH in ${bad.length} file(s): ${bad.slice(0, 10).join(', ')}` : 'MD5: every copied file matches the commit');
+  log.push(o.dry ? 'MD5: not checked (dry run, nothing copied)' : bad.length ? `MD5 MISMATCH in ${bad.length} file(s): ${bad.slice(0, 10).join(', ')}` : 'MD5: every copied file matches the commit');
   if (!o.dry) writeFileSync(join(data, 'wodx-rc.json'), `${JSON.stringify({label: o.label, commit, date, world, deployedAt: new Date().toISOString()}, null, 1)}\n`);
-  return {ok: !bad.length, label: o.label, commit, log};
+  return {ok: !bad.length, dry: !!o.dry, label: o.label, commit, log};
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -132,7 +133,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     } else if (cmd === 'deploy') {
       const r = await deploy({data: opt('data'), label: opt('label'), commit: opt('commit'), world: opt('world'), port: opt('port'), backups: opt('backups'), dry: args.includes('--dry')});
       for (const l of r.log) console.log(l);
-      console.log(r.ok ? `${r.label} (${r.commit.slice(0, 7)}) is in place` : `${r.label}: the copy does not match; do not play on it`);
+      console.log(r.dry ? `dry run: ${r.label} (${r.commit.slice(0, 7)}) would be deployed; nothing changed` : r.ok ? `${r.label} (${r.commit.slice(0, 7)}) is in place` : `${r.label}: the copy does not match; do not play on it`);
       process.exitCode = r.ok ? 0 : 1;
     } else {
       console.error('usage: node tools/release/rc.mjs name | tag --commit <sha> | deploy --data <Data folder> --label rc-YYYY-MM-DD --commit <sha> [--world] [--port] [--backups] [--dry]');
