@@ -254,3 +254,22 @@ test("before each gate the runner looks for the WoDX apis again and names the mi
   const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
   assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
 });
+
+test("B6992: a page reload while the runner waits for the apis waits for the new page; reloads and api state are reported", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  const mods = new Map([["wodx-creation", {active: true}]]);
+  const was = globalThis.game;
+  globalThis.game = {modules: {get: id => mods.get(id)}};
+  try {
+    let calls = 0;
+    const page = {waitForLoadState: async () => {}, evaluate: async (fn, ids) => fn(ids),
+      waitForFunction: async (fn, ids) => { calls++; if ( calls === 1 ) throw new Error("Execution context was destroyed, most likely because of a navigation"); mods.get("wodx-creation").api = {startErrors: ["people.registerPeople: boom"], a: 1}; if ( !fn(ids) ) throw new Error("timeout"); }};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 5000), [], "the wait goes on over the reload");
+    assert.equal(calls, 2);
+    const st = B.apiState(["wodx-creation"]);
+    assert.equal(st[0].api, true); assert.deepEqual(st[0].startErrors, ["people.registerPeople: boom"]);
+  } finally { globalThis.game = was; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.ok(src.includes("page reloaded") && src.includes("DIAG apis"), "the gate's line names a reload, and --diag writes the api state");
+  assert.match(fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8"), /page\.on\("load"/);
+});

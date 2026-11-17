@@ -46,6 +46,7 @@ import * as VX from "./voice.js";
 import * as TR from "./theme-rules.js";
 import * as MXD from "./mage-da.js";
 import * as FXD from "./fae-da.js";
+import * as FDR from "./fae-da-rules.js";
 import * as TRS from "./treasures.js";
 import * as CXD from "./c20.js";
 import * as DXD from "./demon.js";
@@ -2021,6 +2022,12 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
     const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
+    // B7010: a Dark Ages fae's blood carries its Court's gift and price (Dark Ages: Fae p. 181); the firstborn's twice over
+    const daFaeV = vesselActor?.getFlag?.(MOD, "daFae");
+    if (drunk > 0 && isVampire(actor) && daFaeV?.origin && daFaeV.system !== "c20") {
+        const fb = FDR.faeBlood(daFaeV.origin, daFaeV.court);
+        html += `<div class="vta-note${fb.none ? "" : " bad"}">${fb.none ? esc(fb.text) : `Fae blood (${esc(FDR.COURTS[daFaeV.court]?.label ?? "Solstice")}): ${esc(fb.text)}`} <span class="wodx-quiet">(Dark Ages: Fae p. 181)</span></div>`;
+    }
     if (drunk > 0 && flag(actor, "carrier") && ["human", "child"].includes(vesselType)) html += `<div class="vta-warn">${esc(actor.name)} carries a blood-borne disease: this vessel may now have it (V20 p. 295).</div>`;
     // The vessel
     const living = vb.living && !vampireVessel;
@@ -3374,7 +3381,8 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
     /** Dark Ages fae soak for WoDX Combat: in the mien Stamina soaks lethal (DA:Fae p. 104); cold iron is soakable (p. 88). */
-    faeSoak: a => (a && FXD.isDA(a)) ? { lethal: !!fx().info(a).mien, coldIron: true } : null,
+    // B7010: soaksLethal is the rule (Dark Ages: Fae p. 104): in the mien, or a firstborn always
+    faeSoak: a => { if (!a || !FXD.isDA(a)) return null; const i = fx().info(a); return { lethal: FDR.soaksLethal({ mien: i.mien, origin: i.origin }), coldIron: true }; },
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),

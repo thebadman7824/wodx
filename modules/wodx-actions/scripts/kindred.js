@@ -33,6 +33,7 @@ import * as BR from "./book-rituals.js";
 import * as DSX from "./daysleep.js";
 import * as DSR from "./daysleep-rules.js";
 import * as FOM from "./fomor.js";
+import * as FDR from "./fae-da-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
@@ -239,6 +240,12 @@ export function build(ctx) {
             const link = beastLink(actor, tgtNow, p);
             if (immune(tgtNow, p)) {
                 body += `<div class="vta-warn">${esc(tgtNow.name)} is a vozhd: ${esc(p.d)} has no hold on it (V20 p. 502).</div>`;
+                return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
+            }
+            // B7011: Dominate fails on a Dark Ages fae whose Day or Night is at least the power's level (Dark Ages: Fae p. 181)
+            const faeT = tgtNow && tgtNow !== actor ? tgtNow.getFlag?.(MOD, "daFae") : null;
+            if (/^dominate$/i.test(String(p.d ?? "").trim()) && faeT?.origin && faeT.system !== "c20" && FDR.mindShield(faeT.dominions ?? {}, p.l)) {
+                body += `<div class="vta-warn">${esc(tgtNow.name)}'s Day or Night stands at ${Math.max(n(faeT.dominions?.day), n(faeT.dominions?.night))}: Dominate ${n(p.l)} slides off the fae mind (Dark Ages: Fae p. 181).</div>`;
                 return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
             }
             if (link && SUBSUME.test(p.n)) {

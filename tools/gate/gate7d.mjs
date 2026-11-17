@@ -61,6 +61,7 @@ export async function run() {
   const keep = {
     factions: foundry.utils.deepClone(game.settings.get(MOD, "factions")), mode: game.settings.get(MOD, "factionMode"), days: game.settings.get(MOD, "turnDays"),
     approvals: foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals")),
+    autoApprove: foundry.utils.deepClone(game.settings.get("wodx-chronicle", "autoApprove") ?? {}),
     masq: masqJournal() ? {id: masqJournal().id, entries: foundry.utils.deepClone(masqJournal().flags["wodx-actions"].entries ?? []),
       pages: masqJournal().pages.map(p => ({_id: p.id, "text.content": p.text?.content ?? ""}))} : null,
     history: historyJournal() ? {id: historyJournal().id, pages: historyJournal().pages.map(p => p.id)} : null,
@@ -102,6 +103,12 @@ export async function run() {
   let afterSuggest = null;
   await step("4. a turn in Suggest", async () => {
     await game.settings.set(MOD, "factionMode", "suggest");
+    // B6991 (#1824): since B4860 a world starts at Balanced, which approves small faction results on sight
+    // (automation-rules: "wodx-npc.faction": "small"). This step tests the queue, so that standing rule is set aside
+    // here and put back after the step (and again in step 10).
+    const auto = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "autoApprove") ?? {});
+    if ( "wodx-npc.faction" in auto ) { const a2 = {...auto}; delete a2["wodx-npc.faction"]; await game.settings.set("wodx-chronicle", "autoApprove", a2); }
+    try {
     const before = FX().state();
     const n0 = mine(start).length;
     const [rep] = await FX().runTurns({reason: "gate 7d", now: t0, forced: true});
@@ -122,6 +129,7 @@ export async function run() {
     afterSuggest = FX().state();
     ok("4. Suggest: every result with a change waits in the queue, nothing lands until approved, then it does", queued === sent && unchanged
       && (!landed || landed.now === Math.max(0, Math.min(5, landed.was + landed.change.delta))), {lines: rep.lines, queued, landed});
+    } finally { await game.settings.set("wodx-chronicle", "autoApprove", auto); }
   });
 
   let turnCards = [];
@@ -222,6 +230,7 @@ export async function run() {
     await game.settings.set(MOD, "factionMode", keep.mode);
     await game.settings.set(MOD, "turnDays", keep.days);
     await game.settings.set("wodx-chronicle", "approvals", keep.approvals);
+    await game.settings.set("wodx-chronicle", "autoApprove", keep.autoApprove);
     const mj = masqJournal();
     if ( keep.masq && mj ) { await mj.setFlag("wodx-actions", "entries", keep.masq.entries); await mj.updateEmbeddedDocuments("JournalEntryPage", keep.masq.pages); }
     else if ( !keep.masq && mj ) await mj.delete();
