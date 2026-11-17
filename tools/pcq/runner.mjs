@@ -194,12 +194,17 @@ const pullCache = new Map();
 async function staleJob(issue) {
   const mark = prMark(issue.title);
   if ( !mark ) return null;
+  const fetchPull = async () => {
+    try { const c = {at: Date.now(), pull: await gh("GET", `/pulls/${mark.pr}`)}; pullCache.set(mark.pr, c); return c; }
+    catch (e) { return null; } // unknown: never drop on a lookup failure
+  };
   let c = pullCache.get(mark.pr);
-  if ( !c || Date.now() - c.at > 2 * 60000 ) {
-    try { c = {at: Date.now(), pull: await gh("GET", `/pulls/${mark.pr}`)}; } catch (e) { return null; } // unknown: never drop on a lookup failure
-    pullCache.set(mark.pr, c);
-  }
-  return staleWhy(mark, c.pull);
+  if ( !c || Date.now() - c.at > 2 * 60000 ) c = await fetchPull();
+  if ( !c || !staleWhy(mark, c.pull) ) return null;
+  // B7205 fix: the cache can hold the head from before the push that queued this job (jobs 1967, 1969 and 1970 were
+  // dropped as "moved on" to their older commit), so a job is only dropped on a pull request read just now
+  if ( c.at < Date.now() - 5000 ) c = await fetchPull();
+  return c ? staleWhy(mark, c.pull) : null;
 }
 async function drop(issue, text) {
   await comment(issue.number, text);
