@@ -3,6 +3,13 @@
 The rules threads follow so that work flows to main without clashes or waits (Ben's speed-up list, 13 November 2026,
 decisions B3080 to B3085).
 
+## 0. Before anything: read TOOLS.md and ROUTING.md
+
+Every thread reads [TOOLS.md](TOOLS.md) (what each machine has, how to reach it) and [ROUTING.md](ROUTING.md) (where each
+kind of work goes) before it starts (B7004). Mechanical edits go to the local-agent queue, gates to the PC runner,
+OCR and conversions to the Secondary PC, art to ComfyUI. A thread that does such work by hand says why
+(`routed-by-hand: <reason>`); the merge rules warn when it does not.
+
 ## 1. Starting a thread: claim a decision block
 
     node tools/decisions/claim.mjs --thread <thread id> --feature "what the work is"
