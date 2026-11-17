@@ -40,3 +40,10 @@ test("B7089: every new row has keywords the effects card reads", () => {
   for (const p of V20.filter(x => /^v20-(candle|campfire|bonfire|inferno|movement-of-the-mind|fog|storm|encrypt)/.test(x.id))) assert.ok(kw[p.kw]?.k?.length, p.id);
   assert.ok(LIB.length > V20.length);
 });
+
+test("B7091: the V20 bloodline Disciplines a sheet could not reach have all five levels (V20 pp. 453-477)", () => {
+  for (const d of ["Melpominee", "Obeah", "Sanguinus", "Thanatosis", "Visceratika"]) {
+    const got = K.powersFor(V20, [{ name: d, value: 5 }]);
+    for (let l = 1; l <= 5; l++) assert.ok(got.some(p => p.l === l && p.d === d), `${d} level ${l}`);
+  }
+});

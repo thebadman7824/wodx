@@ -25,7 +25,8 @@ test("V20 entries are well formed: level, cost, duration, pool, page and text (B
     assert.ok(K.DURATION_TEXT[p.t], `${p.id}: duration ${p.t}`);
     assert.ok(/^(b\d+)?(w\d+)?$/.test(p.c), `${p.id}: cost ${p.c}`);
     if ( p.r ) assert.ok(K.poolParts(p.r).length, `${p.id}: pool ${p.r}`);
-    assert.ok(p.p >= 130 && p.p <= 245, `${p.id}: page`);
+    // B7091: the bloodline Disciplines sit in Chapter Ten (pp. 440-480)
+    assert.ok((p.p >= 130 && p.p <= 245) || (p.p >= 440 && p.p <= 480), `${p.id}: page`);
     assert.ok(p.e.length > 20 && p.book === "V20", `${p.id}: text`);
     assert.ok(PK.LINE_KEYWORDS.v20[p.kw], `${p.id}: keywords under ${p.kw}`);
   }
