@@ -23,10 +23,10 @@
  *    9f. arrival (B5140): the player asks to be brought in, and the seat answers with the character's token; the panel
  *        offers no Make my character to a player who has one, and Foundry's User Configuration is closed (B6711)
  *    9g. the hunger line waits while the character wizard is open on the character (B6710)
- *    9h. Report a problem (B7160): the player's report reaches the seat and is saved as a journal entry in the
- *        "Reported problems" folder that the player can read
  *    9h. Chronicle options (B6757): the player turns on Threads of Fate, Hardship and Bodies left behind from the panel,
  *        the seat writes them and refuses a key not on its list, and each is put back
+ *    9i. Report a problem (B7160): the player's report reaches the seat and is saved as a journal entry in the
+ *        "Reported problems" folder that the player can read
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
@@ -338,10 +338,10 @@ async function player(ids) {
     const closed = await until(() => !P.stateOf(me).building, 8000);
     ok("9g. the hunger line waits for the wizard", !before && open && closed, {before, open, closed});
   });
-  await step("9h. report a problem", async () => {
+  await step("9i. report a problem", async () => {
     // B7160 to B7162: the player's report reaches the seat and comes back as a journal entry the player may read
     const rep = S()?.report;
-    if ( !rep?.rules ) return ok("9h. report a problem", false, {error: "no Report a problem in this version"});
+    if ( !rep?.rules ) return ok("9i. report a problem", false, {error: "no Report a problem in this version"});
     const PR = rep.rules;
     const r = PR.buildReport({what: `${TAG} report: the gate checks the report button`, expected: "a journal entry", kind: "broken"},
       {at: Date.now(), world: game.world.id, by: game.user.name, isGM: false, build: {label: "gate"}, scene: {id: canvas.scene?.id, name: canvas.scene?.name},
@@ -352,7 +352,7 @@ async function player(ids) {
     const entry = game.journal.find(j => j.getFlag?.(MOD, "report")?.id === r.id);
     const inFolder = entry?.folder?.name === PR.FOLDER;
     const page = entry?.pages?.contents?.[0]?.text?.content ?? "";
-    ok("9h. report a problem", seen && inFolder && /the gate checks the report button/.test(page) && /What happened/.test(page),
+    ok("9i. report a problem", seen && inFolder && /the gate checks the report button/.test(page) && /What happened/.test(page),
       {id: r.id, seen, inFolder, folder: entry?.folder?.name ?? null, pageStart: page.slice(0, 120)});
   });
   return steps;
@@ -503,7 +503,7 @@ async function cleanup(ids, R) {
     for ( const id of ids?.users ?? [] ) await game.users.get(id)?.delete();
     if ( ids?.landingBefore !== undefined ) await game.settings.set(MOD, "landing", ids.landingBefore ?? "");
     for ( const id of ids?.items ?? [] ) await game.items.get(id)?.delete();
-    // 9h: the gate's own reports, and the folder when the run made it
+    // 9i: the gate's own reports, and the folder when the run made it
     const reps = game.journal.filter(j => String(j.getFlag?.(MOD, "report")?.what ?? "").startsWith(TAG)).map(j => j.id);
     if ( reps.length ) await JournalEntry.deleteDocuments(reps);
     const rf = game.folders.find(f => f.type === "JournalEntry" && f.name === "Reported problems");
