@@ -5,7 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody} from "../pcq/jobs.mjs";
+import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody, resetsFirst} from "../pcq/jobs.mjs";
 import {preflight, submitLanes} from "../pcq/submit.mjs";
 import * as gpu from "../pcq/gpu.mjs";
 
@@ -259,4 +259,13 @@ test("B6993: the job comment starts with every gate's line, failures first-hand,
   assert.doesNotMatch(d, /gatea|DIAG/);
   assert.equal(J.gateDigest([{text: "no gates here"}]), "");
   assert.match(fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8"), /gateDigest\(parts\)/);
+});
+
+test("B7190: gates jobs start on a reset lane unless they say reset: false", () => {
+  assert.equal(resetsFirst({kind: "gates", touched: true}), true);
+  assert.equal(resetsFirst({kind: "gates", gates: ["gate7b"], reset: false}), false);
+  assert.equal(resetsFirst({kind: "gate-two", gate: "gate7b"}), true);
+  assert.equal(resetsFirst({kind: "deploy"}), false);
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
 });

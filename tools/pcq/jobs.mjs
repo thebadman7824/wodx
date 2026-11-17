@@ -10,7 +10,7 @@
  *
  * Kinds (nothing else runs; every command is spawned with an argument list, never through a shell):
  *   gates       run-gate.mjs on testbed lanes: "gates" (names), or "touched": true, or "all": true; "lanes": how many
- *               lanes to split over (default 1); "reset": true resets each lane first. Lanes share one list of the
+ *               lanes to split over (default 1); each lane is reset first (B7190), "reset": false skips it. Lanes share one list of the
  *               gates (B6526) and lanes that free up later join while it holds work: up to "lanes", or every lane
  *               when no other lane job is waiting
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
@@ -69,6 +69,7 @@ export function validate(raw, laneIds = []) {
       const list = j.gates ?? [];
       if ( !Array.isArray(list) || list.some(g => typeof g !== "string" || !NAME.test(g)) ) return err("gates must be a list of gate names.");
       if ( !list.length && !j.touched && !j.all ) return err("Give gates, or touched: true, or all: true.");
+      if ( j.reset !== undefined && typeof j.reset !== "boolean" ) return err("reset must be true or false.");
       if ( list.length > 300 ) return err("At most 300 gates in one job.");
       j.gates = [...new Set(list)];
       j.lanes = j.lane !== undefined ? 1 : (j.lanes ?? 1);
@@ -158,6 +159,12 @@ export function recheckVerdicts(gates, alone, main, notOnMain = new Set()) {
     return {gate, verdict: m.has(gate) ? "fails on main too: not this change's fault" : "NEW with this change: passes on main"};
   });
 }
+
+/**
+ * B7190: whether a lane job starts from the known-good world. Gates jobs do unless "reset": false: a lane left by an
+ * earlier job failed whole runs from its second gate (job 1910), while the recheck, which resets, passed them all.
+ */
+export const resetsFirst = job => job?.kind === "gate-two" || (job?.kind === "gates" && job.reset !== false);
 
 /** Exit codes of run-gate.mjs that mean the lane, not the code, went wrong: worth one retry after a reset. */
 export const INFRA_CODES = new Set([3, 4, 5]);
