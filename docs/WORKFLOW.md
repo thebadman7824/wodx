@@ -128,8 +128,9 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
 
        node tools/pcq/submit.mjs gates --touched --ref claude/<branch> --lanes 2 --thread <thread id>
 
-   The PC runner sets the `wodx/gates` status on the commit it ran, and starts the pull request's failed checks
-   again so they pick it up. The result holds while the module, system and gate files stay as they were (a stamp
+   The PC runner sets the `wodx/gates` status on the commit it ran, and runs the pull request's merge rules job
+   again so it picks it up. Until then the `wodx/merge-rules` status (required on main, like `checks`) shows
+   "waiting for the PC gates": the pull request reads as pending, not failed, and cannot merge (B7006). The result holds while the module, system and gate files stay as they were (a stamp
    only moves version strings, so stamping after the run keeps it). A hand-picked gate list does not count, and a
    gate that the recheck finds failing on main too does not hold the pull request back.
 3. **File review.** Every changed file has a verdict made on it as it is now:
