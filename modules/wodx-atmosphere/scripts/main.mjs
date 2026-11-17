@@ -262,13 +262,13 @@ async function _applyWeather({force, quiet}) {
 
 function modifierList(day) {
   const m = W.modifiers(day);
-  return m.length ? `<ul>${m.map(x => `<li>${esc(x.label)}: ${x.n > 0 ? "+" : ""}${x.n} difficulty (${esc(x.applies)})</li>`).join("")}</ul>` : "";
+  return m.length ? `<ul>${m.map(x => `<li>${esc(x.label)}: ${x.n > 0 ? "+" : ""}${x.n} difficulty (${esc(x.applies)}${x.book ? `, ${esc(x.book)}` : ", house rule"})</li>`).join("")}</ul>` : "";
 }
 async function postWeather(day, {gm = true} = {}) {
   const t = timeAt();
   const head = gm ? "Tonight's weather" : "The weather tonight";
   const content = `<div class="wodx-card watmo-card"><h3>${head}</h3><p>${esc(day.label)}</p>${day.eraHard ? `<p class="watmo-era"><i class="fa-solid fa-volcano"></i> ${esc(day.eraHard)}</p>` : ""}
-    ${gm ? `${modifierList(day) ? `<p class="wodx-quiet">Out of doors, house rules:</p>${modifierList(day)}` : ""}
+    ${gm ? `${modifierList(day) ? `<p class="wodx-quiet">Out of doors:</p>${modifierList(day)}` : ""}
     <p class="wodx-quiet">${day.set ? "Set by hand. " : ""}${day.regionLabel ? `Far from home: ${esc(day.regionLabel)}. ` : ""}${esc(W.CLIMATES[day.climate]?.label ?? "")}${t ? `, ${esc(t.dateLabel)}` : ""}.</p>
     <button type="button" data-watmo="open"><i class="fa-solid fa-cloud-moon"></i> Weather and atmosphere</button>` : ""}</div>`;
   return ChatMessage.create({content, speaker: {alias: "Weather"}, whisper: gm ? all(game.users).filter(u => u.isGM).map(u => u.id) : [],
@@ -1107,7 +1107,7 @@ export function AtmosphereClass() {
       div.className = "watmo-body";
       div.innerHTML = `
         <section><h3>The weather</h3>
-          ${today ? `<p><b>${esc(today.label)}</b></p>${modifierList(today) ? `<p class="wodx-quiet">Out of doors (house rules):</p>${modifierList(today)}` : ""}
+          ${today ? `<p><b>${esc(today.label)}</b></p>${modifierList(today) ? `<p class="wodx-quiet">Out of doors:</p>${modifierList(today)}` : ""}
           <p class="wodx-quiet">${today.regionLabel ? `This scene stands far from home: ${esc(today.regionLabel)}. ` : ""}Climate: ${esc(W.CLIMATES[climate()]?.label)}. Sunlight's sky: ${esc(SKY_WORDS[today.sky])}.</p>
           ${(today.eraHard || today.eraAge) ? `<p class="watmo-era"><i class="fa-solid fa-volcano"></i> ${esc(today.eraHard || today.eraAge)}</p>` : ""}
           <table class="watmo-fc" data-fixed><tbody>${fc}</tbody></table>

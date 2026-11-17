@@ -115,10 +115,10 @@ test("the words are plain: no dashes for pauses and no gendered pronouns", () =>
   });
 });
 
-test("weather that matters: fog for sight and the Shroud, rain for scent, snow keeps tracks, nothing indoors", () => {
+test("weather that matters: fog for the senses and the Shroud, rain for scent, snow keeps tracks, nothing indoors", () => {
   const fog = W.finish({sky: "storm", precip: "none", fog: "thick", wind: "calm", tempNight: 4, tempDay: 8, snowLying: false});
   const ids = W.modifiers(fog).map(m => `${m.id}:${m.n}`);
-  assert.ok(ids.includes("sight:2") && ids.includes("shroud:-1"), ids.join());
+  assert.ok(ids.includes("senses:1") && ids.includes("shroud:-1"), ids.join()); // B7054: V20 p. 229
   const rain = W.finish({sky: "overcast", precip: "rain", intensity: "heavy", fog: "none", wind: "breeze", tempNight: 8, tempDay: 12});
   assert.ok(W.modifiers(rain).some(m => m.id === "scent" && m.n === 2));
   const snow = W.finish({sky: "clear", precip: "none", fog: "none", wind: "calm", tempNight: -6, tempDay: -1, snowLying: true});

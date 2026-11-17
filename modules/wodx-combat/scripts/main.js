@@ -1539,7 +1539,7 @@ function attackUsable(attacker, w, distance, reachD = distance, target = null) {
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
         if (!w.ranged && !AU.inReach(Math.max(0, (reachD ?? distance) - num(w.reachBonus)), unit)) return "out of reach";
-        if (w.ranged && w.range > 0 && distance > w.range * 3) return "beyond three times its range";
+        if (w.ranged && w.range > 0 && distance > w.range * weatherReach(attacker) * 3) return "beyond three times its range";
     }
     return "";
 }
@@ -1593,7 +1593,9 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
         if (why) { plans.push({ w, valid: false, why, score: -1 }); continue; }
         // Range band from the distance, for missiles
         let rangeBand = null;
-        if (w.ranged && distance != null && w.range > 0) rangeBand = distance <= w.range ? "short" : distance <= w.range * 2 ? "double" : "triple";
+        // B7054: fog, rain or snow out of doors halve a weapon's reach (V20 p. 229, WoDX Atmosphere's weather)
+        const reach = w.range * weatherReach(attacker);
+        if (w.ranged && distance != null && w.range > 0) rangeBand = distance <= reach ? "short" : distance <= reach * 2 ? "double" : "triple";
         const f = { ...fd, range: rangeBand ?? fd.range };
         const pool = attackPoolFor(attacker, w, f, maneuver, targeting, 0, target);
         if (pool.dice <= 0) { plans.push({ w, valid: false, why: "no dice to roll", score: -1 }); continue; }
@@ -2750,6 +2752,20 @@ function darkAgesNow() {
 function powderOn() { try { return setting("blackPowder") !== false; } catch (e) { return true; } }
 function yearNow() {
     try { const y = Number(chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) ? y : 0; } catch (e) { return 0; }
+}
+/**
+ * B7054: the share of a ranged weapon's reach the weather leaves where a token stands (V20 p. 229: half in fog, rain
+ * or snow): the lowest range figure among WoDX Atmosphere's modifiers on an outdoor scene, else 1.
+ */
+function weatherReach(tokOrActor) {
+    try {
+        const tok = tokOrActor?.document ?? tokOrActor?.getActiveTokens?.()[0]?.document ?? null;
+        const scene = tok?.parent ?? canvas?.scene ?? null;
+        const atm = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+        if (!atm?.modifiers || (atm.isOutdoor && !atm.isOutdoor(scene))) return 1;
+        const cut = (atm.modifiers(atm.now?.(scene) ?? undefined) ?? []).map(m => Number(m.range)).filter(x => x > 0 && x < 1);
+        return cut.length ? Math.min(...cut) : 1;
+    } catch (e) { return 1; }
 }
 /** The wet where a token stands: Atmosphere's weather on an outdoor scene, or a swimmer or wader in water. */
 function powderWet(tokOrActor) {

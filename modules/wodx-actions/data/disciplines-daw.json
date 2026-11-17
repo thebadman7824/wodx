@@ -180,9 +180,9 @@
 "p": 197,
 "r": "intelligence+subterfuge",
 "diff": "t:willpower",
-"c": "",
+"c": "w1:vampire",
 "t": "conc",
-"e": "Sends or reads thoughts; one success to send, more to read deeper."
+"e": "Sends or reads thoughts; one success to send, more to read deeper. Reading a vampire's mind costs a Willpower point."
 },
 {
 "id": "auspex-souls-flight",
@@ -203,10 +203,10 @@
 "n": "Restore Humanitas",
 "p": 200,
 "r": "conscience",
-"diff": 8,
-"c": "",
+"diff": "var",
+"c": "bX",
 "t": "instant",
-"e": "Within a week of losing a Humanity dot, rolls to regain it without experience."
+"e": "Within a week of losing a Humanity dot, and after spending all the blood in the body, rolls Conscience against the Road rating being regained to win it back without experience."
 },
 {
 "id": "bardo-banishing-sign-of-thoth",
@@ -334,8 +334,8 @@
 "l": 2,
 "n": "Fear of the Void",
 "p": 208,
-"r": "manipulation+intimidation",
-"diff": "t:courage",
+"r": "wits+intimidation",
+"diff": "t:courage+4",
 "c": "",
 "t": "instant",
 "e": "Mocking a known fear makes the target flee or freeze; vampires test Rötschreck."
@@ -406,7 +406,7 @@
 "l": 3,
 "n": "Eyes of Chaos",
 "p": 213,
-"r": "perception+occult",
+"r": "perception+enigmas",
 "diff": "var",
 "c": "",
 "t": "instant",
@@ -539,7 +539,7 @@
 "n": "Changeling Ward",
 "p": 223,
 "r": "intelligence+larceny",
-"diff": "7|t:willpower",
+"diff": "7|t:willpower+2",
 "c": "",
 "t": "permanent",
 "e": "A ward symbol that bars or hurts a named fae, object or person."
@@ -730,7 +730,7 @@
 "l": 5,
 "n": "Thirst of Donn",
 "p": 234,
-"r": "stamina+occult",
+"r": "strength+occult",
 "diff": 9,
 "c": "b1",
 "t": "var",
@@ -744,7 +744,7 @@
 "p": 235,
 "r": "charisma+performance",
 "diff": 7,
-"c": "",
+"c": "b1",
 "t": "scene",
 "e": "Projects one simple impression to everyone around: social rolls helped."
 },
@@ -768,7 +768,7 @@
 "p": 237,
 "r": "appearance+empathy",
 "diff": "t:willpower",
-"c": "",
+"c": "b1",
 "t": "var",
 "e": "Bends a subject's emotions: they want to serve the vampire, from hours to months by successes."
 },
@@ -780,7 +780,7 @@
 "p": 237,
 "r": "charisma+subterfuge",
 "diff": 5,
-"c": "",
+"c": "b1",
 "t": "var",
 "e": "Calls someone the vampire has met to come to them, as fast and as willingly as successes allow."
 },
@@ -862,7 +862,7 @@
 "l": 1,
 "n": "Blood Essence",
 "p": 244,
-"r": "perception+awareness",
+"r": "willpower",
 "diff": 9,
 "c": "b1",
 "t": "permanent",
@@ -947,10 +947,10 @@
 "n": "Cleansed in Blood",
 "p": 249,
 "r": "willpower",
-"diff": 8,
+"diff": "var",
 "c": "w1",
 "t": "instant",
-"e": "A blood baptism that can wash away a blood bond or Dominate."
+"e": "A blood baptism that can wash away a blood bond or Dominate: the subject spends blood equal to the level of the power and rolls Willpower against that level + 4."
 },
 {
 "id": "quietus-hematus-ripples-of-the-heart",
@@ -972,7 +972,7 @@
 "p": 249,
 "r": "manipulation+intimidation",
 "diff": "t:willpower",
-"c": "",
+"c": "w1",
 "t": "instant",
 "e": "Through a drop of the target's vitae, makes them sweat blood points away."
 },
@@ -1250,7 +1250,7 @@
 "diff": 6,
 "c": "bX",
 "t": "instant",
-"e": "A grasp that burns: aggravated damage per blood point."
+"e": "A grasp that burns: each blood point spent takes two dice from the victim's pools while held and a turn after, and each use deals a bashing level."
 },
 {
 "id": "valeren-warrior-armor-of-caines-fury",
@@ -1370,7 +1370,7 @@
 "diff": "var",
 "c": "b1",
 "t": "permanent",
-"e": "Reshapes bone; as an attack, aggravated damage."
+"e": "Reshapes bone; used to wound (difficulty 7), each success is a lethal level."
 },
 {
 "id": "vicissitude-awaken-the-zulo-shape",

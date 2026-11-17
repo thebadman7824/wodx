@@ -435,7 +435,8 @@ export function build(ctx) {
           <div class="form-group"><label>Numen</label>${searchBox("select[name=nm]", "Search Numina…", "Search Numina")}<select name="nm">${opts.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-num-info vta-note"></div>
           <div class="form-group"><label>Level used</label><input type="number" name="lvl" value="1" min="1" max="5"/> <label>difficulty</label> <input type="number" name="diff" value="7" min="2" max="10"/> <label>Willpower</label> <input type="number" name="wp" value="1" min="0" max="3" style="width:4em"/></div>
-          <div class="form-group"><label>Rating (for a library path)</label><input type="number" name="rating" value="1" min="0" max="5"/></div></form>`;
+          <div class="form-group"><label>Rating (for a library path)</label><input type="number" name="rating" value="1" min="0" max="5"/></div>
+          <div class="form-group wodx-num-curse" hidden><label>The curse reaches</label><select name="curseOn"><option value="physical">Physical rolls</option><option value="social">Social rolls</option><option value="mental">Mental rolls</option></select> <span class="wodx-quiet">Levels 1 to 4; at level 5 every roll (HH2 pp. 73-75)</span></div></form>`;
         const pickV = v => {
             const key = v.startsWith("l:") ? v.slice(2) : known[n(v.slice(1))]?.key;
             return { key, item: v.startsWith("s") ? known[n(v.slice(1))] : null, def: H.NUMINA[key] };
@@ -448,6 +449,8 @@ export function build(ctx) {
             root.querySelector("[name=diff]").value = def.diff;
             root.querySelector("[name=wp]").value = def.wp;
             if (item) root.querySelector("[name=rating]").value = item.value;
+            // B7054: a curse names the group of rolls it reaches
+            const cb = root.querySelector(".wodx-num-curse"); if (cb) cb.hidden = pick(root).key !== "curses";
             box.innerHTML = `<b>${esc(def.label)}</b> (${def.kind === "hedge" ? "hedge magic" : "psychic"}) · ${def.pool.map(cap).join(" + ")} at ${def.diff} · p. ${def.p}<ol>${def.levels.map(l => `<li>${esc(l)}</li>`).join("")}</ol>${def.note ? `<span class="wodx-quiet">${esc(def.note)}</span>` : ""}`;
         };
         return dialog(`Numina: ${actor.name}`, content, "Use", async fd => {
@@ -465,7 +468,7 @@ export function build(ctx) {
             const rm = TH.targetResist(actor, ["magic"]);
             const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
             await lim.done({ successes: r.botch ? 0 : r.successes });
-            const fx = !r.botch && r.successes > 0 && EF.isOn() ? EF.numinaPlan(actor, pickV(String(fd.nm ?? "")).key, n(fd.lvl), r.successes, def) : null;
+            const fx = !r.botch && r.successes > 0 && EF.isOn() ? EF.numinaPlan(actor, pickV(String(fd.nm ?? "")).key, n(fd.lvl), r.successes, def, { group: String(fd.curseOn ?? "") || null }) : null;
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, [...(n(fd.wp) ? [`${fd.wp} Willpower`] : []), ...rm.parts]) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
                 fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
@@ -494,6 +497,8 @@ export function build(ctx) {
         const describe = root => {
             const { def, item } = pick(root.querySelector("[name=path]").value);
             if (item) root.querySelector("[name=rating]").value = item.value;
+            // B7054: a curse names the group of rolls it reaches
+            const cb = root.querySelector(".wodx-num-curse"); if (cb) cb.hidden = pick(root).key !== "curses";
             root.querySelector(".wodx-hedge-info").innerHTML = def ? `<b>${esc(def.label)}</b> · ${def.pool.filter(Boolean).map(cap).join(" + ") || "see the page"} · ${def.wp ? `${def.wp} Willpower` : "no Willpower"}${def.ritualOnly ? " · rituals only" : ""}${def.noRituals ? " · no rituals" : ""}${def.aspects ? ` · aspects: ${def.aspects.map(esc).join(", ")}` : ""} · p. ${def.p}${def.note ? `<br><span class="wodx-quiet">${esc(def.note)}</span>` : ""}` : "Not a Sorcerer path: set the roll by hand.";
         };
         return dialog(`Hedge magic: ${actor.name}`, content, "Cast", async fd => {

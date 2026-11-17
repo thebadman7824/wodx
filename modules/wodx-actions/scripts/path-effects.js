@@ -79,15 +79,28 @@ export const PATH_EFFECTS = {
   [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true})
 };
 
+/** B7054: the groups of rolls a hedge curse at levels 1 to 4 may reach, as the caster names one. */
+export const CURSE_GROUPS = ["physical", "social", "mental"];
+/**
+ * B7054: a hedge curse at a level (HH2 pp. 73-75). Levels 1 to 4 reach only the rolls of the group the caster names
+ * (Physical, Social or Mental: the book's rolls that fit the curse, put as one group); level 5 reaches every roll.
+ * With no group named, a curse below level 5 reaches Physical rolls.
+ */
+export function curseSpec(level, group = "physical") {
+  const l = Math.max(1, Math.min(5, Math.floor(Number(level)) || 1));
+  const g = l < 5 ? (CURSE_GROUPS.includes(group) ? group : "physical") : null;
+  return [T("fortune", `Curse (${l})`, {ladder: HH_CURSE}, "one", {curse: true, shift: [1, 2, 3, 3, 4][l - 1], once: false, ...(g ? {tags: [g]} : {})}),
+    ...(l >= 4 ? [T("boost", `Curse (${l}): dice`, {ladder: HH_CURSE}, "one", {on: g ?? "all", dice: l - 3, sap: true})] : [])];
+}
+
 /** Numina, by "numen:level" (The Hunters Hunted II). */
 export const NUMINA_EFFECTS = {
   "divination:1": N(), "divination:2": N(), "divination:3": N(), "divination:4": N(), "divination:5": N(),
   "healing:1": N(), "healing:4": HL(1), "healing:5": HL(1, {aggravated: true}),
-  // B6858: read again on HH2 pp. 72-79. A curse is a standing harder roll for its ladder (on all the victim's rolls: the
-  // book leaves the situation to the Storyteller), with dice lost at four and five; Healing 2 takes away the pain of
-  // wounds for 10 minutes a success; astral travel crosses over; Cyberkinesis reads or works the device
-  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`curses:${l}`, [T("fortune", `Curse (${l})`, {ladder: HH_CURSE}, "one", {curse: true, shift: [1, 2, 3, 3, 4][l - 1], once: false}),
-    ...(l >= 4 ? [T("boost", `Curse (${l}): dice`, {ladder: HH_CURSE}, "one", {on: "all", dice: l - 3, sap: true})] : [])]])),
+  // B6858: read again on HH2 pp. 72-79. A curse is a standing harder roll for its ladder, with dice lost at four and
+  // five (curseSpec: which rolls it reaches); Healing 2 takes away the pain of wounds for 10 minutes a success; astral
+  // travel crosses over; Cyberkinesis reads or works the device
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`curses:${l}`, curseSpec(l)])),
   "healing:2": T("boost", "Pain eased", {turns: 200}, "one", {painless: true}),
   "astral:1": N("sense"), "astral:2": S("sideways"), "astral:3": S("manifest"), "astral:4": S("sideways"), "astral:5": S("veil"),
   "cyberkinesis:2": S("work"), "cyberkinesis:3": N("know"), "cyberkinesis:4": S("work"), "cyberkinesis:5": S("work"),
@@ -127,8 +140,8 @@ export function pathOutcomes(power, successes) {
 }
 
 /** What a Numen at a level does with its successes. */
-export function numinaOutcomes(key, level, successes, def = null) {
-  const spec = NUMINA_EFFECTS[`${key}:${level}`] ?? S();
+export function numinaOutcomes(key, level, successes, def = null, {group = null} = {}) {
+  const spec = key === "curses" && group ? curseSpec(level, group) : NUMINA_EFFECTS[`${key}:${level}`] ?? S();
   const label = `${def?.label ?? key} ${level}`;
   return outcomesOf(spec, {key: spec.kw, label, source: `The Hunters Hunted II p. ${def?.p ?? "?"}`}, successes, String(def?.levels?.[level - 1] ?? ""));
 }

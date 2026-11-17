@@ -257,8 +257,8 @@ export function pathPlan(actor, power, successes) {
 }
 
 /** A Numen at a level on the effects card (The Hunters Hunted II). */
-export function numinaPlan(actor, key, level, successes, def) {
-  return planOf(actor, PE.numinaOutcomes(key, level, successes, def), successes, {name: def?.label ? `${def.label} ${level}` : "", line: "Hunter (HH2)"});
+export function numinaPlan(actor, key, level, successes, def, opts = {}) {
+  return planOf(actor, PE.numinaOutcomes(key, level, successes, def, opts), successes, {name: def?.label ? `${def.label} ${level}` : "", line: "Hunter (HH2)"});
 }
 
 /**

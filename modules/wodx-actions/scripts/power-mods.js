@@ -46,6 +46,9 @@ export const BOOST_TAGS = {
   willpower: ["willpower"]
 };
 
+/** B7054: the BOOST_TAGS groups a shift's tag may name in place of single roll tags. */
+const GROUPS = new Set(["physical", "social", "mental"]);
+
 /** What a timed result keeps for the dice: only the numbers its key reads. out: an effects-rules outcome. */
 export function timedData(out = {}) {
   const d = {};
@@ -54,7 +57,9 @@ export function timedData(out = {}) {
   if ( out.key === "boost" ) { d.dice = n(out.dice); d.on = String(out.on ?? "physical"); }
   // B6850: a standing shift (a demon's Lordly Mien: Charisma and Manipulation 2 easier while the form lasts) is not spent,
   // and tags hold it to the rolls it names; "defend", "defend-ranged" and "defend-close" are attacks against the bearer
-  if ( out.key === "fortune" ) { d.shift = n(out.shift); d.once = out.once !== false; if ( Array.isArray(out.tags) && out.tags.length ) d.tags = out.tags.map(String); }
+  if ( out.key === "fortune" ) { d.shift = n(out.shift); d.once = out.once !== false; if ( Array.isArray(out.tags) && out.tags.length ) d.tags = out.tags.map(String);
+    // B7054: a bar makes the rolls its tags name fail outright (Hush: no voice at all, Dark Ages: Fae p. 141)
+    if ( out.bar ) d.bar = String(out.bar); }
   if ( out.key === "fear" && Number.isFinite(out.shift) ) d.shift = n(out.shift);
   if ( out.key === "hasten" ) { d.actions = n(out.actions); if ( out.name === "Slowed" || out.slow ) d.slow = true; }
   return Object.keys(d).length ? d : null;
@@ -84,6 +89,9 @@ export function wardHolds(against, {type = "", of = "", fireSun = false, bane = 
  */
 export function modsFrom(effects = [], ctx = {}) {
   const tags = new Set((ctx.tags ?? []).map(t => String(t).toLowerCase()));
+  // B7054: a shift's tag may name a whole group (a hedge curse on the Physical, Social or Mental rolls, HH2 p. 73)
+  const named = t => { const k = String(t).toLowerCase(); return (GROUPS.has(k) ? BOOST_TAGS[k] : [k]).some(x => tags.has(x)); };
+  let blocked = null;
   const roll = tags.size > 0 || ctx.soak || ctx.initiative || ctx.frenzy;
   let dice = 0, diff = 0;
   const parts = [], once = [];
@@ -100,8 +108,10 @@ export function modsFrom(effects = [], ctx = {}) {
       const hit = (on === "soak" && ctx.soak) || (on === "initiative" && ctx.initiative) || (on === "all" && tags.size > 0 && !ctx.soak && !ctx.initiative)
         || ((BOOST_TAGS[on] ?? []).some(t => tags.has(t)) && !ctx.soak && !ctx.initiative);
       if ( hit ) { dice += n(d.dice); parts.push(`${e.name} ${n(d.dice) > 0 ? "+" : ""}${n(d.dice)}`); }
+    } else if ( isFortune(e.key) && d.bar && roll && !ctx.soak && !ctx.initiative && Array.isArray(d.tags) && d.tags.some(named) ) {
+      blocked ??= `${e.name}: ${d.bar}`;
     } else if ( isFortune(e.key) && n(d.shift) && roll && !ctx.soak && !ctx.initiative
-      && (!Array.isArray(d.tags) || (!d.tags.some(t => DEFEND.has(t)) && d.tags.some(t => tags.has(String(t).toLowerCase())))) ) {
+      && (!Array.isArray(d.tags) || (!d.tags.some(t => DEFEND.has(t)) && d.tags.some(named))) ) {
       diff += n(d.shift);
       parts.push(`${e.name} ${n(d.shift) > 0 ? "+" : ""}${n(d.shift)} diff`);
       if ( d.once && e.id ) once.push(e.id);
@@ -117,7 +127,7 @@ export function modsFrom(effects = [], ctx = {}) {
   if ( ward ) { dice += ward; parts.push(`${wardName} +${ward} armour`); }
   const pen = penaltyFrom(effects, ctx);
   if ( pen.dice ) { dice += pen.dice; parts.push(...pen.parts); }
-  return {dice, diff, parts, once};
+  return blocked ? {dice, diff, parts, once, blocked} : {dice, diff, parts, once};
 }
 
 /** B6850: the tags of a shift that stands on attacks against its bearer, not on the bearer's own rolls. */

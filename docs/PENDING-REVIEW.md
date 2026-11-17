@@ -1832,6 +1832,16 @@ Every entry below was kept as built on the Final Audit Desk, except four ruled a
 | 2026-11-16 | B6858: Healing 2's 'negates wound penalties' | The sheet's ignoring-pain flag as an Active Effect change for 10 minutes a success | painless in mage-da-effects.js timedNumbers and effects.js |
 | 2026-11-16 | Mortals and aggravated damage in modern eras (final audit) | No change: V20 pp. 292-293 also treats a mortal's aggravated damage as lethal, as VtDA20 does, so WoDX Combat's era-blind rule stands | none needed |
 
+## Approved by Ben, 17 November 2026, 02:47 UTC (Book Numbers Desk, all recommended)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-17 | B7053: Hush (DA:Fae pdf 141: the tongue is paralysed, no difficulty given) | **Ben picked: voice rolls fail outright while hushed** (B7054) | HUSH in modules/wodx-actions/scripts/fae-da-cantrips.js; the bar branch in modsFrom (power-mods.js) |
+| 2026-11-17 | B7053: hedge curse reach (HH2 pdf 74-75: levels 1-4 reach the rolls that fit the curse, level 5 everything) | **Ben picked: levels 1-4 hit one group the caster names (Physical, Social or Mental); level 5 hits every roll** (B7054) | curseSpec in modules/wodx-actions/scripts/path-effects.js and the curse box in hunter.js |
+| 2026-11-17 | B7053: natural fog and rain numbers (V20 pdf 237 Weather Control) | **Ben picked: V20's numbers.** Fog +1 to Perception by sight or hearing; rain or falling snow +2 and +2 to Drive; both halve a ranged weapon's reach (B7054) | modifiers and rollEffects in modules/wodx-atmosphere/scripts/weather-rules.mjs; weatherReach in modules/wodx-combat/scripts/main.js |
+| 2026-11-17 | B7053: Invade the Mind on a vampire (V20DA pdf 198: costs a Willpower point) | **Ben picked: charge a Willpower point when the target is a vampire** (B7054) | c "w1:vampire" on auspex-invade-the-mind in modules/wodx-actions/data/disciplines-daw.json |
+| 2026-11-17 | B7053: house numbers checked against the books (suggestion 16): Maelstrom lethal (Wr20 pdf 361 gives dice, no type), Hakken Willpower 3 (Hengeyokai gives none), haven works (no book rules; Havens of the Damned only 9 pages in the text set) | Stay house rules, now recorded as checked; Net burn already follows CP2020; Harmony Flute's 6 is W20's default difficulty (pdf 236), not a house figure | Notes in /mnt/project-files/numbers-check/findings.md |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

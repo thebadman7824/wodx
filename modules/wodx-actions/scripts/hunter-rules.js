@@ -193,7 +193,9 @@ export const FAITH_LOSS_DIFFICULTY = 9;
 /** Hedge paths and psychic phenomena: the pool, the difficulty, the cost, and what each level does. */
 export const NUMINA = {
     curses: { label: "Curses", kind: "hedge", pool: ["manipulation", "intimidation"], diff: 7, wp: 1, p: "72–73",
-        levels: [1, 2, 3, 4, 5].map(l => `+${l} difficulty to the cursed situation (see the page for its reach)`),
+        // B7054: the shifts and dice of path-effects.js curseSpec (HH2 pp. 73-75); levels 1 to 4 reach the named group of rolls
+        levels: ["+1 difficulty to the named group of rolls", "+2 difficulty to the named group of rolls", "+3 difficulty to the named group of rolls",
+            "+3 difficulty and one die off the named group of rolls", "+4 difficulty and two dice off every roll"],
         note: "Breaking a curse: Wits + Subterfuge at 9 and 1 Willpower (a botch, suffer it). Frequent cursing calls for Humanity rolls." },
     divination: { label: "Divination", kind: "hedge", pool: ["perception", "occult"], diff: 7, wp: 0, p: "74–75",
         levels: ["−1 initiative lost an hour per success (forewarned)", "Warnings of danger", "Short-term outcomes", "Likely events (1 Willpower, difficulty 8; −1 to −3 with a personal link)", "Concrete futures"],
