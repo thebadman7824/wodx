@@ -160,10 +160,27 @@ export async function run() {
       await waitFor(() => tok.texture?.src === SR.stillPath("townsman-1888"), 5000).catch(() => null);
       G.ok("3. the routine brings the token in wearing its sprite, at the sprite's size", placed && wears === "townsman-1888" && tok.texture?.scaleX === SR.TOKEN.scaleX, {placed, wears, scale: tok.texture?.scaleX});
       G.ok("3. at work its hands move", work && where1 === "work" && f1 !== f2, {where: where1, act: work, frames: [f1, f2]});
-      G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned, movingSeen, samples, stateSeen, places: seenAt.size, animating: !!tok.object?.movementAnimationPromise, from, to: {x: tok.x, y: tok.y}, how});
       G.ok("3. and sits down there", ["stool", "seat", "sit"].includes(sat), {sat, where: smith.flags?.[NPC]?.where?.activity});
       // B6145: a walk with autoRotate turns the token, but the figure stays upright (the stool under it, not beside it)
       const rot = {doc: tok?.rotation ?? null, drawn: tok?.object?.mesh?.rotation ?? null};
+      // B6148: on a freshly reset lane Foundry sometimes lays the routine's first walk down in one go, with no animation,
+      // so there is no movement for the sprite to face (seen as 2 places and no moving state). The routine still got
+      // there (checked above). The facing is then checked on one animated step of the same token, now that the screen
+      // is warm: three squares to the left, in view, and it must face left on the way.
+      let probe = null;
+      if ( !movingSeen ) {
+        const back = {x: tok.x, y: tok.y}, pturned = [];
+        await canvas.pan({x: tok.x, y: tok.y + g / 2, scale: 0.8}); await sleep(300);
+        const pw = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving && f && pturned.at(-1) !== f ) pturned.push(f); }, 40);
+        try {
+          await tok.update({x: tok.x - 3 * g}, {animate: true, animation: {duration: 1500}});
+          await (tok.object?.movementAnimationPromise ?? sleep(1600)); await sleep(300);
+        } finally { clearInterval(pw); }
+        await tok.update(back, {animate: false});
+        probe = {turned: pturned};
+      }
+      const faced = turned.includes("right") || (!movingSeen && !!probe?.turned.includes("left"));
+      G.ok("3. it walks to the tavern facing the way it goes", faced, {turned, movingSeen, samples, stateSeen, places: seenAt.size, probe, from, to: {x: tok.x, y: tok.y}, how});
       G.ok("3. the seated figure is drawn upright, however the token was turned", rot.drawn === 0, rot);
     });
 
