@@ -6,6 +6,10 @@ $ErrorActionPreference = 'Continue'
 $base = if (Test-Path 'D:\WoDX\pcq') { 'D:\WoDX\pcq' } elseif ($env:WODX_PCQ_HOME) { $env:WODX_PCQ_HOME } else { 'C:\WoDX\pcq' }; $repo = "$base\repo"; $logs = "$base\logs"
 New-Item -ItemType Directory -Force $logs | Out-Null
 $env:PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1'
+# B7021: a PC whose runner.<host>.json sets "priority" (the Secondary PC: BelowNormal) runs the runner, and every gate,
+# Foundry and browser it starts, at that priority, so other work on the PC (the book OCR) keeps the CPU.
+$hostConf = "$repo\tools\pcq\runner.$($env:COMPUTERNAME.ToLower()).json"
+if (Test-Path $hostConf) { try { $pr = (Get-Content -Raw $hostConf | ConvertFrom-Json).priority; if ($pr) { (Get-Process -Id $PID).PriorityClass = $pr } } catch {} }
 while ($true) {
   if (Test-Path "$base\runner-off") { "$(Get-Date -Format o) runner-off found; stopping" | Add-Content "$logs\runner-console.log"; break }
   git -C $repo fetch -q origin 2>&1 | Out-Null

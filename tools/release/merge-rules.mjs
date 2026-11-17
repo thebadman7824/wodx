@@ -29,6 +29,8 @@
  *                                                                           is set (GITHUB_TOKEN), else only listed
  *   --github          read gate statuses from GitHub (CI); needs GITHUB_TOKEN and GITHUB_REPOSITORY
  *   --summary <file>  also write the result as Markdown (CI's job summary)
+ *   --post-status     post the result as the wodx/merge-rules commit status on the head (CI; B7006): pending while
+ *                     only the gate result is still to come, so the pull request shows as waiting, not failed
  * Exit 0 when every rule is met (or the work is Ben's own), 1 when one is broken, 2 on a usage fault.
  */
 import fs from "node:fs";
@@ -182,7 +184,7 @@ export function gateVerdict(need, candidates, sameAt) {
   }
   const queue = "node tools/pcq/submit.mjs gates --touched --ref <this branch> --lanes 2 --thread <thread id>";
   if ( failed ) return {ok: false, by: "", problems: [`gates failed on ${failed.c.sha.slice(0, 8)}: ${failed.s.description ?? ""} ${failed.s.target_url ?? ""}`.trim() + `; fix it, push and queue again: ${queue}`]};
-  return {ok: false, by: "", problems: [`${need.length} gate(s) needed and no passing ${GATE_CONTEXT} result on the branch for the code as it is now; queue them: ${queue} (the check runs again by itself when the result comes)`]};
+  return {ok: false, by: "", waiting: true, problems: [`${need.length} gate(s) needed and no passing ${GATE_CONTEXT} result on the branch for the code as it is now; queue them: ${queue} (the check runs again by itself when the result comes)`]};
 }
 
 /**
@@ -259,8 +261,37 @@ export async function evaluate({root = ROOT, base = "origin/main", head = "HEAD"
   result.rules.gates = gate.problems;
   result.gateBy = gate.by;
   result.gateUnread = !!gate.unread;
+  result.gateWaiting = !!gate.waiting;
   result.ok = Object.values(result.rules).every(p => !p.length);
   return result;
+}
+
+/**
+ * B7006: the result as the wodx/merge-rules commit status. "pending" when the only rule not met is a gate result
+ * that has not come in yet (none on the branch, none failed): GitHub shows the pull request as waiting, merging stays
+ * blocked because the required status is not success, and no failure mail goes out. "failure" for any broken rule.
+ */
+export const RULES_CONTEXT = "wodx/merge-rules";
+export function outcome(r) {
+  if ( r.ok || r.bensOwn ) return "success";
+  const others = Object.entries(r.rules).filter(([k, p]) => k !== "gates" && p.length).length;
+  return !others && r.gateWaiting ? "pending" : "failure";
+}
+export function statusBody(r, url) {
+  const state = outcome(r);
+  const broken = Object.entries(r.rules).filter(([, p]) => p.length).map(([k]) => ({note: "release note", gates: "gate result", review: "file review"})[k]);
+  const description = state === "success" ? (r.ok ? "Every merge rule is met" : "The owner's own work: reported, not blocked")
+    : state === "pending" ? `Waiting for the PC gates (${r.gatesNeeded} needed); merging stays blocked until they pass`
+    : `Not ready: ${broken.join(", ")}`;
+  return {state, context: RULES_CONTEXT, description: description.slice(0, 140), ...(url ? {target_url: url} : {})};
+}
+
+async function postStatus(sha, body) {
+  const repo = process.env.GITHUB_REPOSITORY, token = process.env.GITHUB_TOKEN;
+  if ( !repo || !token ) throw new Error("--post-status needs GITHUB_TOKEN and GITHUB_REPOSITORY");
+  const r = await fetch(`https://api.github.com/repos/${repo}/statuses/${sha}`, {method: "POST", body: JSON.stringify(body),
+    headers: {Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", "User-Agent": "wodx-merge-rules", "Content-Type": "application/json"}});
+  if ( !r.ok ) throw new Error(`posting ${RULES_CONTEXT}: ${r.status} ${(await r.text()).slice(0, 200)}`);
 }
 
 export function report(r) {
@@ -274,6 +305,7 @@ export function report(r) {
   }
   for ( const w of r.warnings ?? [] ) lines.push(`note ${w}`);
   if ( r.ok ) lines.push("Every merge rule is met.");
+  else if ( outcome(r) === "pending" ) lines.push("Waiting for the PC gates: the wodx/merge-rules status stays pending (merging blocked) until a passing result comes in.");
   else if ( r.bensOwn ) lines.push("The owner's own work: reported, not blocked.");
   else lines.push("Not ready to merge: fix the lines marked FAIL (docs/WORKFLOW.md, section 6).");
   return lines.join("\n");
@@ -283,10 +315,18 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
   const args = process.argv.slice(2);
   const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
   const useGithub = args.includes("--github") || !!process.env.GITHUB_TOKEN;
-  evaluate({base: opt("base") ?? "origin/main", head: opt("head") ?? "HEAD", statuses: useGithub ? githubStatuses : null}).then(r => {
+  evaluate({base: opt("base") ?? "origin/main", head: opt("head") ?? "HEAD", statuses: useGithub ? githubStatuses : null}).then(async r => {
     const text = report(r);
     console.log(text);
     if ( opt("summary") ) fs.appendFileSync(opt("summary"), `### Merge rules\n\n\`\`\`\n${text}\n\`\`\`\n`);
+    // B7006: CI posts the result as a commit status; a wait for the gates is pending there and does not fail the job
+    if ( args.includes("--post-status") ) {
+      const e = process.env, url = e.GITHUB_RUN_ID ? `${e.GITHUB_SERVER_URL}/${e.GITHUB_REPOSITORY}/actions/runs/${e.GITHUB_RUN_ID}` : undefined;
+      const body = statusBody(r, url);
+      await postStatus(r.head, body);
+      console.log(`${RULES_CONTEXT}: ${body.state} (${body.description})`);
+      process.exit(body.state === "failure" ? 1 : 0);
+    }
     // A local run cannot read the gate result; that alone is not a failure there
     const onlyUnread = !r.ok && r.gateUnread && r.rules.note.length + r.rules.review.length === 0;
     process.exit(r.ok || r.bensOwn || onlyUnread ? 0 : 1);
