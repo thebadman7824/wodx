@@ -48,6 +48,7 @@ merge past it. "recheck": false in the job turns this off.
 
     powershell -ExecutionPolicy Bypass -File tools\pcq\start-runner.ps1     start it if it is not running
     D:\WoDX\pcq\runner-off                                                  a file there stops it once idle
+    D:\WoDX\pcq\runner-hold                                                 a file there: no new jobs, all else runs
     D:\WoDX\pcq\logs                                                        its logs (14 days kept)
 
 `lane-reset.cmd` runs `start-runner.ps1` every night, so the runner is back by morning after a reboot.
@@ -56,6 +57,12 @@ A watchdog (`watchdog.ps1`, B5210-B5212) runs apart from the runner, started thr
 the runner's wrapper starts it again whenever it is missing. Every two minutes it checks that `run-runner.ps1` is
 running and, if not, starts it again and writes a line in `logs\runner-console.log`. A file named `runner-off` in
 `D:\WoDX\pcq` keeps it from restarting the runner; a file named `watchdog-off` stops the watchdog itself.
+
+Hold (B7207): to keep the lanes free for other work (an art render, say) without stopping the runner, put a file
+named `runner-hold` in `D:\WoDX\pcq`. Running jobs finish, no new job starts and no running job takes more lanes,
+while the status issue, the stale-pull-request sweep, the merge train, self updates and cancels go on. The status
+issue shows a HOLD line. Delete the file to take jobs again. `runner-off` is for stopping the runner; while it waits
+for running jobs it now still updates the status issue.
 
 ## The second PC (B6880-B6882)
 

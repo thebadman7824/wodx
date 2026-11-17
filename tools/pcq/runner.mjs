@@ -542,7 +542,7 @@ const trainFirst = jobs => trainNow?.front ? [...jobs.filter(j => isFrontJob(j.i
 
 // ---- status issue ----
 let statusIssue = null, lastStatus = "", lastStatusAt = 0, heldSince = null;
-async function status(queue) {
+async function status(queue, note = null) {
   const res = resources();
   const lanes = await Promise.all(LANES.map(async id => {
     const l = laneOf(id), s = state[id], lk = lockState(l, cfg);
@@ -551,6 +551,7 @@ async function status(queue) {
   }));
   const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the ${NAME} (${HOST}) at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
     "", "| Lane | Port | State |", "|---|---|---|", ...lanes, "",
+    ...(note ? [`HOLD: ${note}`, ""] : []),
     `Queue (${queue.length}): ${queue.map(q => `#${q.number} ${q.job.kind} p${q.job.prio}`).join(", ") || "empty"}`,
     `Last results: ${recent.join(", ") || "none yet"}`,
     ...(conf.train ? [`Merge train: ${trainNow?.front ? `front #${trainNow.front}, ${trainNow.action} (${trainNow.why}); line ${trainNow.line.map(n => `#${n}`).join(", ")}` : "empty (label a ready pull request merge-train)"}`] : []),
@@ -668,8 +669,12 @@ for ( ;; ) {
     if ( !draining && Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
+      // B7207: the status issue still says what is running while it waits
+      await status([], "runner-off: stops once the running job(s) end").catch(() => {});
       await sleep(30000); continue;
     }
+    // B7207: runner-hold takes no new jobs but keeps every other pass (status, sweep, train, updates, cancel) running
+    const holding = fs.existsSync(path.join(HOME, "runner-hold"));
     // Stale pull requests, every hour, beside the jobs (B4110).
     if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
@@ -709,7 +714,7 @@ for ( ;; ) {
       heldSince ??= Date.now();
       if ( Date.now() - heldSince > 30 * 60000 ) await alert("resources", "jobs held for low disk or memory", res.low.join("\n"));
     } else { heldSince = null; await recovered("resources"); }
-    for ( const q of draining ? [] : ready ) {
+    for ( const q of draining || holding ? [] : ready ) {
       if ( LANE_KINDS.has(q.job.kind) ) {
         if ( res.low.length ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
@@ -732,8 +737,8 @@ for ( ;; ) {
       }
     }
     // B6526: lanes still free join a running gates job that has work left on its shared queue
-    if ( !draining && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number)));
-    await status(queue.filter(q => !active.has(q.number)));
+    if ( !draining && !holding && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number)));
+    await status(queue.filter(q => !active.has(q.number)), holding ? "runner-hold: taking no new jobs" : null);
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;
   await sleep((conf.pollSeconds ?? 30) * 1000);

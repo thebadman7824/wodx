@@ -71,3 +71,15 @@ test("B7206: a closed or pc-cancel job is cancelled: processes ended, lanes rese
   assert.match(src, /if \( !g\.cancelled \) await finish\(issue, false, `Runner error/);
   assert.match(src, /Not run: labelled pc-cancel\./);
 });
+
+test("B7207: runner-hold blocks only job pickup and lane growth; runner-off still updates the status", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /const holding = fs\.existsSync\(path\.join\(HOME, "runner-hold"\)\);/);
+  assert.match(src, /for \( const q of draining \|\| holding \? \[\] : ready \)/);
+  assert.match(src, /if \( !draining && !holding && !res\.low\.length \) growJobs\(/);
+  assert.match(src, /holding \? "runner-hold: taking no new jobs" : null\)/);
+  assert.match(src, /await status\(\[\], "runner-off: stops once the running job\(s\) end"\)/);
+  // The hold check comes after the runner-off branch and before the passes it must not skip
+  const hold = src.indexOf('const holding = '), off = src.indexOf('"runner-off"))'), sweepAt = src.indexOf("sweep(gh, {apply"), cancel = src.indexOf("await cancelCheck(");
+  assert.ok(off < hold && hold < sweepAt && hold < cancel);
+});
