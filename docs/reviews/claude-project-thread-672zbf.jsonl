@@ -14,3 +14,9 @@
 {"file":"tools/pcq/runner.mjs","verdict":"working","how":"read gateDigest and its one caller; pcq.test 23 pass incl. the new B6993 test","hash":"474602ed6328","at":"2026-11-17T02:50Z"}
 {"file":"tools/pcq/jobs.mjs","verdict":"working","how":"read gateDigest and its one caller; pcq.test 23 pass incl. the new B6993 test","hash":"23073d8109be","at":"2026-11-17T02:50Z"}
 {"file":"tools/harness/pcq.test.mjs","verdict":"working","how":"read gateDigest and its one caller; pcq.test 23 pass incl. the new B6993 test","hash":"6119a9c4a6de","at":"2026-11-17T02:50Z"}
+{"file":"modules/wodx-actions/scripts/fae-da.js","verdict":"working","how":"only the decision numbers in comments changed (B7010-B7014 to B7110-B7114); faeexp-wiring test passes","hash":"37884eb3b5b8","at":"2026-11-17T03:21Z"}
+{"file":"modules/wodx-actions/scripts/kindred.js","verdict":"working","how":"only the decision numbers in comments changed (B7010-B7014 to B7110-B7114); faeexp-wiring test passes","hash":"795ceef5d6aa","at":"2026-11-17T03:21Z"}
+{"file":"modules/wodx-actions/scripts/main.js","verdict":"working","how":"only the decision numbers in comments changed (B7010-B7014 to B7110-B7114); faeexp-wiring test passes","hash":"dc93afbb39a2","at":"2026-11-17T03:21Z"}
+{"file":"tools/gate/gate6g.mjs","verdict":"working","how":"only the decision numbers in comments changed (B7010-B7014 to B7110-B7114); faeexp-wiring test passes","hash":"c38d16932d45","at":"2026-11-17T03:21Z"}
+{"file":"tools/harness/faeexp-wiring.test.mjs","verdict":"working","how":"only the decision numbers in comments changed (B7010-B7014 to B7110-B7114); faeexp-wiring test passes","hash":"eae50082a738","at":"2026-11-17T03:21Z"}
+{"file":"tools/pcq/runner.mjs","verdict":"working","how":"merged main's laneUrl import with the gateDigest import; node --check passes; pcq.test 23 pass","hash":"447e006ada27","at":"2026-11-17T03:21Z"}
