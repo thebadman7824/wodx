@@ -408,7 +408,7 @@ Next free block: B7210
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
-| B7190-B7199 | Gate trust: the runner removes what a gate placed on a shared scene (used B7190-B7193) | tools (lanes) |
+| B7190-B7199 | Gate trust: a busy runner takes new lane tools without waiting to be idle (used B7190-B7194) | tools (pcq runner) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200) | tools (testbed lanes, PC job queue) |
 <!-- decision-index:end -->
 
@@ -14096,6 +14096,11 @@ Reverse: drop sheetsBefore and the sheets put-back block in run-gate.mjs.
 Finish-Line Desk w3, after B7192. Cleaning up leftover documents covered world documents only. A region, token, wall, tile, drawing, light, sound or note that a gate placed on a scene already there before it stayed for every later gate. In PR 1836's job 1922, gateduties put a cult's worship night at a chapel region on another scene, not at its own chapel. On lanes reset every night, run-gate.mjs now also records each scene's placed documents before a gate and deletes any added since (tools/lanes/lib.mjs sheetPlan dropKids). Test: tools/harness/lanes.test.mjs "B7193".
 
 Reverse: drop the kids part of READ_SHEETS and sheetPlan.
+
+## B7194. Lane tools update in place (2026-11-17)
+Finish-Line Desk w3. The runner updated only by exiting, and only when no job was running. After waiting 10 minutes to drain (B6353), it took jobs again and waited for an idle moment. On 17 Nov the Main PC ran ad006f90 from 09:26 to past 13:30 UTC, so job 1926 ran without B7192 (no "sheets put back") and B7193. When main changes only tools/lanes or tools/harness/gate-two.mjs, and not the runner's own code in tools/pcq, the runner now moves its checkout to main in place. Each job spawns run-gate.mjs and lanes.mjs afresh, so the next job uses the new tools. A change to tools/pcq still exits and restarts as before. Test: tools/harness/pcq.test.mjs "B7194".
+
+Reverse: drop the in-place block in updateDue and make MY_SHA const again.
 
 ## B7200. Effects-module migration markers no longer count as lane drift (2026-11-17)
 Testbed lanes. On 16 and 17 November the PC runner hit exit 4 (drift found, no gate run) 83 times, and each one cost a lane reset and a retry. The drift blocks in the lane logs show why: every one of the 34 since job 1810 was the single setting fxmaster.parameterRangeMigrationVersion "added", and the earlier ones were the same kind of marker (fxmaster.parameterRangePassiveMigrationVersion, fxmaster.directionConventionPassiveMigrationVersion, tokenmagic.migration). FXMaster and Token Magic write these once per world a little after a GM signs in, too late for the clean fingerprint the reset takes, so the next sign-in by run-gate saw them as new. The lane's known-good copy predates them, so every reset brought the problem back. The four keys join ignoreSettings in tools/lanes/lanes.json, beside fxmaster.legacyCleanupVersion, which was already there for the same reason. They are markers of a migration already done, not world state a gate reads.
