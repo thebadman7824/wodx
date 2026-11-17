@@ -72,3 +72,18 @@ BENJAMIN-PC runs a third runner from `D:\WoDX\pcq` with `runner.benjamin-pc.json
 `D:\WoDX\FoundryData-lane8`), its own status issue "PC runner status (Secondary PC)" and alerts titled
 "Secondary PC alert". It reads the same queue and claims jobs the same way; name `--lane 8` to send a job there.
 It has 8 cores and 16 GB, so it can take longer gate lists than lane 7. Book and Trove lookups stay on the main PC.
+
+## GPU guard and status page (Main PC, 2026-11-17)
+
+`tools/pcq/gpuguard.mjs`: one GPU job at a time. `node gpuguard.mjs run --class art|local|other --need-gb N --label x -- <command>`
+waits for the card, checks `nvidia-smi` free VRAM (need plus 0.5 GB) and a core under 83 C, then runs the command and releases the
+lock when it ends. Art (ComfyUI) goes before local models (OpenHands, Devstral, Qwen) goes before other; art also runs `ollama stop` on
+loaded models before taking the card. A job that does not fit waits in `gpu-guard/waiters/`; a dead pid never blocks the card.
+`node gpuguard.mjs state` prints one JSON line (card, warning, holder, waiters). Warning: warn at 80 C core or 90% VRAM, critical at 83 C or 97%.
+State folder: `GPU_GUARD_DIR` (default `<repo>/../gpu-guard`, i.e. `D:\WoDX\pcq\gpu-guard`). Same files and JSON on every PC.
+
+`tools/pcq/status-server.mjs`: read-only page on 127.0.0.1:8787, GET only, under a secret path read from `status-secret.txt`
+(`/<secret>/` page, `/<secret>/status.json` data; anything else is 404). Shows the runner and watchdog, last runner log lines, lanes
+2-6 up/down, GPU and the guard's holder and waiters, Ollama's loaded models, the local-agent runner and its task counts, art runs, and an
+`issues` list. Start it outside the helper's process tree:
+`Invoke-CimMethod Win32_Process -MethodName Create -Arguments @{CommandLine='"C:\Program Files\nodejs\node.exe" D:\WoDX\pcq\repo\tools\pcq\status-server.mjs'; CurrentDirectory='D:\WoDX\pcq'}`.
