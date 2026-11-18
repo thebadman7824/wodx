@@ -14,11 +14,16 @@
  * says so. The key is never printed. EULA item 2 and the FAQ allow this second instance while nobody but the licence
  * owner can get past its login: lane 9 listens only inside the box, which nobody else can reach.
  *
- * World (B7243): the PC known-good world does not reach the cloud. Lane 9's world is the repo's world.json with the
- * WoDX modules on and a Gamemaster Test account; gates that need the PC world's scenes, actors or other modules
- * fail here and belong on a PC lane.
+ * World (B7243, B7300): when the cache holds the PC known-good world (testbed/testbed-known-good.zip.partNN, with a
+ * SHA256 file) setup joins the parts, checks the hash and uses that world as lane 9's known-good copy and world; when
+ * it holds the PC lane's other modules (modules/cloud-foundry-modules.zip.partNN) they go into the lane's Data folder
+ * the same way. Without them the world is the repo's world.json with the WoDX modules on and a Gamemaster Test
+ * account. Either way a cloud result is a hint, not a verdict: gate6b's werewolf form step failed on lane 9 with the
+ * PC world and 28 of its 30 modules (17 to 18 November 2026) while it passed on a PC lane, so a cloud fail is
+ * checked on a PC lane before anyone acts on it.
  */
 import {spawnSync} from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -53,6 +58,32 @@ function node24() {
     run("tar", ["xzf", tgz], {cwd: dir});
   }
   return NODE24;
+}
+
+/**
+ * B7300: joins <CACHE>/<sub>/<name>.zip.partNN into one zip in ROOT/tmp, checks it against <sub>/SHA256 when that file
+ * is there, unzips it into dest and deletes the joined zip (it never goes back to the shared folder, whose files are
+ * capped at 20 MiB). Skipped when dest already holds this hash (dest/.cloud-sha256). Returns true when it unpacked.
+ */
+async function fromParts(sub, name, dest) {
+  const dir = path.join(CACHE, sub);
+  const parts = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.startsWith(`${name}.zip.part`)).sort() : [];
+  if ( !parts.length ) return false;
+  const want = fs.existsSync(path.join(dir, "SHA256")) ? fs.readFileSync(path.join(dir, "SHA256"), "utf8").trim().split(/\s+/)[0] : null;
+  const mark = path.join(dest, ".cloud-sha256");
+  if ( want && fs.existsSync(mark) && fs.readFileSync(mark, "utf8").trim() === want ) return false;
+  const tmp = path.join(ROOT, "tmp"), zip = path.join(tmp, `${name}.zip`);
+  fs.mkdirSync(tmp, {recursive: true});
+  fs.writeFileSync(zip, "");
+  const hash = crypto.createHash("sha256");
+  for ( const p of parts ) { const b = fs.readFileSync(path.join(dir, p)); hash.update(b); fs.appendFileSync(zip, b); }
+  const got = hash.digest("hex");
+  if ( want && got !== want ) { fs.rmSync(zip, {force: true}); die(`${name}: the joined parts do not match ${sub}/SHA256 (got ${got.slice(0, 12)}); ask for a fresh copy.`); }
+  fs.mkdirSync(dest, {recursive: true});
+  run("unzip", ["-q", "-o", zip, "-d", dest]);
+  fs.rmSync(zip, {force: true});
+  fs.writeFileSync(mark, got);
+  return true;
 }
 
 /** Signs in as the world's first Gamemaster, adds Gamemaster Test (no password) and turns on every WoDX module. */
@@ -100,8 +131,29 @@ async function setup() {
   }
   const host = JSON.parse(fs.readFileSync(lic, "utf8")).host;
   if ( host !== os.hostname() ) console.warn(`The cached licence is signed for host "${host}", this box is "${os.hostname()}": expect the licence page (B7242).`);
-  // Lane tools' known-good copy and the lane's world: the repo's world.json (B7243)
-  for ( const dir of [path.join(ROOT, "known-good", WORLD), path.join(data, "Data", "worlds", WORLD)] ) {
+  const lanes = path.join(HERE, "lanes.mjs");
+  // B7300: the PC lane's other modules, and the PC known-good world, from the cache when it has them
+  if ( await timed("other modules checked", () => fromParts("modules", "cloud-foundry-modules", path.join(data, "Data"))) ) console.log("Other modules unpacked into the lane's Data folder.");
+  const kgRoot = path.join(ROOT, "known-good"), laneWorld = path.join(data, "Data", "worlds", WORLD);
+  const staged = path.join(ROOT, "tmp", "known-good");
+  if ( await timed("known-good world checked", () => fromParts("testbed", "testbed-known-good", staged)) ) {
+    fs.rmSync(path.join(kgRoot, WORLD), {recursive: true, force: true});
+    fs.mkdirSync(kgRoot, {recursive: true});
+    fs.renameSync(path.join(staged, "testbed-known-good", WORLD), path.join(kgRoot, WORLD));
+    fs.copyFileSync(path.join(staged, "testbed-known-good", "known-good.json"), path.join(kgRoot, "known-good.json"));
+    fs.rmSync(path.join(staged, "testbed-known-good"), {recursive: true, force: true});
+    console.log("PC known-good world in place as lane 9's known-good copy.");
+  }
+  // A lane world that is only world.json (the first trial's) gives way to the PC world once there is one
+  const realKg = fs.existsSync(path.join(kgRoot, "known-good.json"));
+  if ( realKg && !fs.existsSync(path.join(laneWorld, "data")) ) {
+    run(node, [lanes, "stop", "--lane", LANE], {allowFail: true});
+    fs.rmSync(laneWorld, {recursive: true, force: true});
+    fs.cpSync(path.join(kgRoot, WORLD), laneWorld, {recursive: true});
+    console.log("Lane 9's world is now the PC known-good world.");
+  }
+  // Otherwise the lane tools' known-good copy and the lane's world are the repo's world.json (B7243)
+  for ( const dir of [path.join(kgRoot, WORLD), laneWorld] ) {
     if ( fs.existsSync(path.join(dir, "world.json")) ) continue;
     fs.mkdirSync(dir, {recursive: true});
     fs.copyFileSync(path.join(REPO, "worlds", WORLD, "world.json"), path.join(dir, "world.json"));
@@ -109,12 +161,13 @@ async function setup() {
   fs.mkdirSync(path.join(ROOT, "backups"), {recursive: true});
   if ( !fs.existsSync(path.join(HERE, "../harness/node_modules/playwright")) ) await timed("harness tools installed",
     () => run("npm", ["install", "--no-audit", "--no-fund"], {cwd: path.join(HERE, "../harness"), env: {...env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"}}));
-  const lanes = path.join(HERE, "lanes.mjs");
   // The first deploy ends at the clean fingerprint, which needs Gamemaster Test: a fresh world has only the default
   // Gamemaster, so that step may fail once; the account is added and the fingerprint taken after it.
-  await timed("deployed", () => run(node, [lanes, "deploy", "--lane", LANE], {allowFail: true}));
-  await timed("world ready", bootstrapWorld);
-  await timed("clean fingerprint", () => run(node, [lanes, "accept", "--lane", LANE]));
+  const deployed = await timed("deployed", () => run(node, [lanes, "deploy", "--lane", LANE], {allowFail: true}));
+  if ( deployed !== 0 ) { // the PC world has Gamemaster Test already, so this is only the world.json case
+    await timed("world ready", bootstrapWorld);
+    await timed("clean fingerprint", () => run(node, [lanes, "accept", "--lane", LANE]));
+  }
   console.log(`Lane 9 ready at ${LANE_URL}. Run gates with: node tools/lanes/cloud-lane.mjs gate <gate>`);
 }
 
