@@ -98,7 +98,10 @@ plus the laptop's own runner, watchdog and status push. It flags:
 - lanes not answering and a hot graphics card on a PC whose readings are fresh;
 - a job running over 6 hours or waiting over 6 hours;
 - the same pull request at the front of the merge train for over 3.5 hours (the train itself gives up at 3);
-- the laptop's own runner, watchdog or status push not running.
+- the laptop's own runner, watchdog or status push not running;
+- a pull request green on `checks` and `wodx/merge-rules` for over 15 minutes that nothing will merge: one outside the
+  merge train, or the train front (B7421). This one goes on the alert at once, since its age is already measured; green
+  pull requests waiting their turn in the train are a note. It reads two commit results a pull request each cycle.
 
 It also lists the alerts that stayed open after the thing they named came back. Renders and OCR come from the `comfy` and
 `ocr` fields of a PC's status file (B7296): it flags work queued in ComfyUI with nothing finished for 30 minutes, OCR
@@ -159,5 +162,8 @@ head it saw, pc-gates.yml gates the new head and that gate job goes ahead of the
 `checks` and `wodx/merge-rules` are green. A conflict, a red result or nothing within `trainMaxHours` (3) takes it out
 with a comment. The rest of the line is left alone. The status issue shows the line; `node tools/pcq/train.mjs`
 prints what it would do now. The hourly sweep no longer merges main into open pull requests (`"sweepUpdates": true`
-brings that back). docs/WORKFLOW.md, section 6, is the thread's side.
+brings that back). docs/WORKFLOW.md, section 6, is the thread's side. A pull request labelled `urgent` as well goes to
+the front of the line (B7420); a fix to the train or runner that the train is stuck without is merged by its cloud
+thread instead (B7422).
 
+Stale runs (B7330-B7332): every push to a pull request cancels its gate jobs for older commits (closed if not started, pc-cancel if running), a push from outside the train to a pull request labelled `merge-train` takes it out of the train with a comment, and a runner stopping with runner-off still acts on pc-cancel. To pause a runner, use `runner-hold` (takes no new jobs, keeps status, cancels and the train going) rather than `runner-off`.

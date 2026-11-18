@@ -60,6 +60,57 @@ export function priorPass(candidates, sameAt) {
 /** Marker in the job issue title that ties it to the pull request and commit. */
 export const marker = (pr, sha) => `[PR #${pr} ${String(sha).slice(0, 12)}]`;
 
+/**
+ * B7331: the pull request's gate jobs that are for an older commit than head: {close} not started yet (closed unrun),
+ * {cancel} already running (labelled pc-cancel, so the runner ends them). A newer push makes their result useless,
+ * and a stale run held a lane for up to two hours (10.7 lane-hours in the week to 18 Nov).
+ */
+export function staleJobs(open, pr, head) {
+  const mine = (open ?? []).filter(i => i.title?.includes(`[PR #${pr} `) && !i.title.includes(marker(pr, head)));
+  const running = i => (i.labels ?? []).some(l => (l.name ?? l) === "pc-running");
+  const cancelled = i => (i.labels ?? []).some(l => (l.name ?? l) === "pc-cancel");
+  return {close: mine.filter(i => !running(i)), cancel: mine.filter(i => running(i) && !cancelled(i))};
+}
+
+/** B7332: a commit the merge train made (its merge of main, its carried reviews, or a stamp it marked). */
+export const TRAIN_TRAILER = "Merge-Train: yes";
+
+/**
+ * B7390: whether the merge-train label was on when the push happened: the newest "labeled" event for it is at or
+ * before pushedAt (an ISO time). With no time to go by, it counts as on (the B7332 behaviour).
+ */
+export function labelledBefore(events, pushedAt) {
+  const at = (events ?? []).filter(e => e.event === "labeled" && e.label?.name === "merge-train").map(e => Date.parse(e.created_at)).filter(Number.isFinite);
+  if ( !at.length ) return false;
+  const push = Date.parse(pushedAt ?? "");
+  return !Number.isFinite(push) || Math.max(...at) <= push;
+}
+export const isTrainCommit = msg => /\(merge train\)|^Merge train: /m.test(msg) || msg.includes(TRAIN_TRAILER);
+/**
+ * B7332: whether the commits a push added (oldest first) are the train's own. A stamp right after a train commit counts
+ * (merge-stamp writes it in the train's worktree); anything else is a push from outside the train.
+ */
+/**
+ * B7430: the messages of the commits a push added that main does not already have. A train push that merges main in
+ * also brings main's own commits into the compare list (PR 2051, 18 Nov 15:55Z: 26 main commits ahead of the train's
+ * merge, stamp and review carry-over), and none of them is the train's; they are main's, so they are not counted.
+ * pushCommits: /compare/{before}...{head} commits; mainCommits: /compare/{before}...main commits.
+ */
+export function addedByPush(pushCommits = [], mainCommits = []) {
+  const onMain = new Set((mainCommits ?? []).map(c => c.sha));
+  return (pushCommits ?? []).filter(c => !onMain.has(c.sha)).map(c => c.commit?.message ?? "");
+}
+export function isTrainPush(messages) {
+  if ( !messages?.length ) return false;
+  let train = false;
+  for ( const m of messages ) {
+    if ( isTrainCommit(m) ) { train = true; continue; }
+    if ( train && /^Stamp versions, changelogs and decisions for merge/.test(m) ) continue;
+    return false;
+  }
+  return train;
+}
+
 function ownerToken() {
   const r = spawnSync("git", ["credential", "fill"], {input: "protocol=https\nhost=github.com\n\n", encoding: "utf8", windowsHide: true, env: {...process.env, GCM_INTERACTIVE: "never"}});
   const t = /^password=(.+)$/m.exec(r.stdout ?? "")?.[1];
@@ -103,6 +154,49 @@ async function main() {
   }
   const checkedOut = execFileSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).trim();
   if ( checkedOut !== head ) { say(`PR #${pr} moved on (${head.slice(0, 8)}, checkout ${checkedOut.slice(0, 8)}): the newer run queues it.`); finish(0); }
+
+  // B7332: a push from outside the train to a pull request in the merge train takes it out of the train at once, so
+  // the train never gates or merges code a thread changed after saying it was done.
+  const before = env("BEFORE_SHA");
+  if ( labels.includes("merge-train") && /^[0-9a-f]{40}$/.test(before) && before !== head ) {
+    const cmp = await api(owner, "GET", `/compare/${before}...${head}`).catch(() => null);
+    // B7430: leave out main's own commits that a merge of main brought in
+    const fromMain = cmp?.status === "ahead" ? await api(owner, "GET", `/compare/${before}...main`).catch(() => null) : null;
+    const msgs = cmp?.status === "ahead" ? addedByPush(cmp.commits, fromMain?.commits) : null;
+    // B7390: only a push made while the label was on counts. A thread that takes the label off, pushes and labels
+    // again is following the rule (PR 1880, 18 Nov: pushed 15:37, re-labelled 15:37:41, ejected 15:37:55 by B7332).
+    const events = await api(owner, "GET", `/issues/${pr}/events?per_page=100`).catch(() => []);
+    const lastCommit = (cmp?.commits ?? []).at(-1)?.commit?.committer?.date ?? null;
+    const pushedAt = env("EVENT_AT") || lastCommit;
+    if ( (!msgs || !isTrainPush(msgs)) && labelledBefore(events, pushedAt) ) {
+      const why = msgs ? `${msgs.length} commit(s) pushed from outside the train` : "the branch was rewritten";
+      say(`PR #${pr}: ${why} while it was in the merge train; taking it out of the train.`);
+      if ( !DRY ) {
+        await api(owner, "POST", `/issues/${pr}/comments`, {body: `Merge train: this pull request left the train because ${why} (${before.slice(0, 8)} to ${head.slice(0, 8)}) while it was labelled merge-train, and the train must not gate or merge code that changed after the label went on. Finish pushing, then add the label again.\n\n---\n_Generated by [Claude Code](https://claude.ai/code)_`});
+        await api(owner, "DELETE", `/issues/${pr}/labels/merge-train`).catch(() => null);
+      }
+    }
+  }
+
+  // B7331: gate jobs for this pull request's older commits are closed (not started) or cancelled (running): their
+  // result could not be used, and a running one held a lane for up to two hours
+  const open = await api(owner, "GET", `/issues?state=open&labels=pc-job&per_page=100`);
+  const stale = staleJobs(open, pr, head);
+  for ( const i of stale.close ) {
+    say(`Closing #${i.number}: superseded by ${head.slice(0, 8)}`);
+    if ( !DRY ) {
+      await api(owner, "POST", `/issues/${i.number}/comments`, {body: `Superseded by a newer commit (${head.slice(0, 8)}) of PR #${pr}; not run.`});
+      await api(owner, "PATCH", `/issues/${i.number}`, {state: "closed", state_reason: "not_planned"});
+    }
+  }
+  for ( const i of stale.cancel ) {
+    say(`Cancelling #${i.number}: running on an older commit than ${head.slice(0, 8)}`);
+    if ( !DRY ) {
+      await api(owner, "POST", `/issues/${i.number}/comments`, {body: `PR #${pr} moved on to ${head.slice(0, 8)} while this ran, so its result could not be used; cancelled to free the lane.`});
+      await api(owner, "POST", `/issues/${i.number}/labels`, {labels: ["pc-cancel"]});
+    }
+  }
+
   if ( isHold({title, labels, headRef}) ) { say(`PR #${pr} is a hold or handoff: no gates queued.`); finish(0); }
 
   const list = spawnSync(process.execPath, [path.join(ROOT, "tools", "lanes", "run-gate.mjs"), "--touched", "--list", "--base", "origin/main", "--repo", ROOT], {cwd: ROOT, encoding: "utf8", windowsHide: true});
@@ -116,18 +210,8 @@ async function main() {
   const passed = priorPass(candidates, await sameAtFn(head));
   if ( passed ) { say(`PR #${pr}: ${GATE_CONTEXT} already passed on ${passed.slice(0, 8)} and no module, system or gate file changed since: nothing queued.`); finish(0); }
 
-  // Jobs already in the queue for this pull request
-  const open = await api(owner, "GET", `/issues?state=open&labels=pc-job&per_page=100`);
-  const mine = open.filter(i => i.title.includes(`[PR #${pr} `));
-  if ( mine.some(i => i.title.includes(marker(pr, head))) ) { say(`PR #${pr}: a job for ${head.slice(0, 8)} is already queued.`); finish(0); }
-  for ( const i of mine ) {
-    if ( (i.labels ?? []).some(l => l.name === "pc-running") ) continue;
-    say(`Closing #${i.number}: superseded by ${head.slice(0, 8)}`);
-    if ( !DRY ) {
-      await api(owner, "POST", `/issues/${i.number}/comments`, {body: `Superseded by a newer commit (${head.slice(0, 8)}) of PR #${pr}; not run.`});
-      await api(owner, "PATCH", `/issues/${i.number}`, {state: "closed", state_reason: "not_planned"});
-    }
-  }
+  // A job for this exact commit already queued or running
+  if ( open.some(i => i.title.includes(marker(pr, head))) ) { say(`PR #${pr}: a job for ${head.slice(0, 8)} is already queued.`); finish(0); }
 
   const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", "--touched", "--ref", head, "--prio", "2", "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
   if ( sub.status !== 0 ) { console.error((sub.stderr || sub.stdout || "").slice(-1500)); say("submit.mjs refused the job"); finish(1); }
