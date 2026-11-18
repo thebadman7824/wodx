@@ -47,9 +47,9 @@ The runner takes the first free lane, locks it, checks for drift and only then r
 
 Only the gates a change needs: `run-gate.mjs --touched [--base origin/main]` (the map is `gate-map.mjs`; corrections in
 `gate-map-extra.json`). Every gate: `--all`, split with `--shard 1/2`. `--report <file>` appends each gate's line.
-The nightly task resets every lane marked autoReset (2 to 6) and then runs `nightly.mjs`: pull main, deploy where the code differs
-(`lanes.mjs deploy --if-changed`), every gate split across the two lanes, lines in nightly-gates.log. A file named
-`nightly-off` here turns the full run off. B3083, B3084.
+The nightly task resets every lane marked autoReset (2 to 6) and starts the PC job runner. It no longer runs `nightly.mjs`
+(B7460): the one nightly full run is `tools/pcq/nightly-gates.mjs`, an all-gates PC job (B7020, docs/PRIORITIES.md).
+`nightly.mjs` still works by hand: pull main, deploy where the code differs, every gate split across the lanes. B3083, B3084.
 
 A long list (`--touched` often gives 80 or more gates) goes faster and cleaner split over lanes 2 and 3:
 `run-gate.mjs --touched --lanes 2,3`. After each gate the runner puts back the world settings it changed and removes

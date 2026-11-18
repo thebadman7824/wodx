@@ -57,8 +57,8 @@ comment on the issue. Gate the branch before merging and main after it. What the
     node tools/lanes/gate-map.mjs --touched           just the list, to put in a PC job
 
 A Paperdoll-only change runs the Paperdoll gates, not the Relationships ones. A change to WoDX Chronicle or the system
-still runs nearly every gate. The full run happens every night on lanes 2 and 3 after the reset
-(`tools/lanes/nightly.mjs`), so anything `--touched` misses shows up by morning in nightly-gates.log. If a gate covers
+still runs nearly every gate. The nightly full run is an all-gates PC job
+(`tools/pcq/nightly-gates.mjs`, B7020, B7460) on lane 8; while lane 8 is held, it waits. If a gate covers
 a module the map misses, add it in `tools/lanes/gate-map-extra.json` (`"add": {"gatex": ["wodx-npc"]}`).
 
 ### Gate rules (Ben, 14 November 2026)

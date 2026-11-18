@@ -85,8 +85,12 @@ test("the train clock stops while held, off or in a window (desk pick p5)", () =
 test("ask: the OCR leads on the Secondary PC, art fits its budget on the Main PC (desk pick p2)", () => {
   const ocr = prio.ask(p, {cls: "ocr", pc: "BENJAMIN-PC"});
   assert.equal(ocr.go, true); assert.equal(ocr.ramGb, 12.5);
-  assert.equal(prio.ask(p, {cls: "art", pc: "DESKTOP-MRKCMRG", freeGb: 20}).go, true);
-  assert.equal(prio.ask(p, {cls: "art", pc: "DESKTOP-MRKCMRG", freeGb: 4}).go, false);
+  const calm = Date.parse("2026-11-20T12:00:00Z"); // outside every planned window in the file
+  assert.equal(prio.ask(p, {cls: "art", pc: "DESKTOP-MRKCMRG", freeGb: 20, now: calm}).go, true);
+  assert.equal(prio.ask(p, {cls: "art", pc: "DESKTOP-MRKCMRG", freeGb: 4, now: calm}).go, false);
+  // B7461: the Main PC RAM install window in the file holds it from 30 minutes before
+  assert.ok(prio.activeWindow(p, "DESKTOP-MRKCMRG", Date.parse("2026-11-19T00:15:00Z")), "the RAM window holds the Main PC");
+  assert.equal(prio.activeWindow(p, "DESKTOP-MRKCMRG", Date.parse("2026-11-19T03:01:00Z")), null, "and lets go after it");
   assert.equal(prio.ask(p, {cls: "ocr", pc: "DESKTOP-MRKCMRG"}).go, false, "OCR is not a Main PC job");
   assert.equal(prio.ask(p, {cls: "ocr", pc: "SOMEWHERE"}).go, false);
   const q = structuredClone(p);
