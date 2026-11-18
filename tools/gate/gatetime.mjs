@@ -14,6 +14,7 @@
  *   8. every other WoDX module still answers
  * Result: Data/wodx-gate/gatetime-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R, name) {
   R.finished = new Date().toISOString();
@@ -24,7 +25,10 @@ async function save(R, name) {
 }
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( await fn() ) return true; await sleep(100); } return !!(await fn()); }
 
-export async function run() {
+// B6994 (#1824): the gate starts from Hands on, since new worlds start at Balanced (tools/gate/kit.mjs)
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
