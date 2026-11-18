@@ -8,16 +8,17 @@
  * not finish say so.
  *
  * deps: {lanesCmd(argv, opts) -> {code}, node(script, argv, opts), worktree(lane, ref) -> {dir, sha, error},
- *        stallFor(dir) -> minutes, log(msg), logs: folder for the per-run reports}
+ *        stallFor(dir) -> minutes, log(msg), logs: folder for the per-run reports,
+ *        mainCache: optional {read(sha) -> {gate: runs}, write(sha, {gate: runs})} (B7342)}
  */
 import fs from "node:fs";
 import path from "node:path";
-import {failingGates, gatePassed, recheckStep} from "./jobs.mjs";
+import {failingGates, gatePassed, recheckStep, mainSettled} from "./jobs.mjs";
 
 export const RECHECK_MINUTES = 120;
 
 export async function recheck({job, lane, tag, wt, rep, L, stopped = () => false, deps}) {
-  const {lanesCmd, node, worktree, stallFor = () => undefined, log = () => {}, logs} = deps;
+  const {lanesCmd, node, worktree, stallFor = () => undefined, log = () => {}, logs, mainCache = null} = deps;
   const failing = failingGates(rep).slice(0, 12);
   if ( !failing.length ) return "";
   const until = Date.now() + RECHECK_MINUTES * 60000;
@@ -51,12 +52,19 @@ export async function recheck({job, lane, tag, wt, rep, L, stopped = () => false
     else {
       for ( const g of failing ) if ( !fs.existsSync(path.join(m.dir, "tools", "gate", `${g}.mjs`)) ) st[g].notOnMain = true;
       if ( m.sha === wt.sha ) failing.forEach(g => { st[g].main = [...st[g].alone]; });
-      else await settle(m.dir, "main");
+      else {
+        // B7342: a gate's settled runs on a main commit are kept, so the next recheck on that commit reuses them
+        // instead of proving the same main failure again (276 "fails on main too" verdicts in a week, gateautomation 20)
+        const cache = mainCache?.read(m.sha) ?? {};
+        for ( const g of failing ) if ( st[g].main && !st[g].notOnMain && cache[g] ) { st[g].main = [...cache[g]]; st[g].fromCache = m.sha; }
+        await settle(m.dir, "main");
+        mainCache?.write(m.sha, Object.fromEntries(failing.filter(g => st[g].main && !st[g].fromCache && mainSettled(st[g].main)).map(g => [g, st[g].main])));
+      }
     }
   }
   const rows = failing.map(g => {
     const s = recheckStep(st[g].alone, st[g].main, {notOnMain: st[g].notOnMain});
-    const v = s.verdict ?? (outOfTime.has(g) ? `not settled: the recheck ran out of time (alone ${JSON.stringify(st[g].alone)}, main ${JSON.stringify(st[g].main)})` : "not settled");
+    const v = (s.verdict && st[g].fromCache ? `${s.verdict} (main's runs reused from an earlier recheck on ${String(st[g].fromCache).slice(0, 8)})` : s.verdict) ?? (outOfTime.has(g) ? `not settled: the recheck ran out of time (alone ${JSON.stringify(st[g].alone)}, main ${JSON.stringify(st[g].main)})` : "not settled");
     return `- ${g}: ${v}`;
   });
   return [`Recheck (each failing gate alone on a fresh lane, ${runs} run(s)):`, ...rows].join("\n");

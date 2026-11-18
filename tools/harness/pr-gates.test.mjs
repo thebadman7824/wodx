@@ -91,3 +91,38 @@ test("B7332: the workflow hands the script the head before the push", () => {
   const train = fs.readFileSync(path.join(ROOT, "tools", "pcq", "train.mjs"), "utf8");
   assert.equal((train.match(/Merge-Train: yes/g) ?? []).length >= 2, true, "the train marks its merge and its stamp");
 });
+test("B7390: a push made while the merge-train label was off does not eject", async () => {
+  const {labelledBefore} = await import("../pcq/pr-gates.mjs");
+  const ev = (event, at) => ({event, label: {name: "merge-train"}, created_at: at});
+  // PR 1880, 18 Nov: label off, push 15:37:30, label on 15:37:41; the workflow ran after the label went back on
+  const pr1880 = [ev("labeled", "2026-11-18T11:26:04Z"), ev("unlabeled", "2026-11-18T15:36:50Z"), ev("labeled", "2026-11-18T15:37:41Z")];
+  assert.equal(labelledBefore(pr1880, "2026-11-18T15:37:30Z"), false);
+  // PR 1995: label on 11:11:47, thread pushed 11:12:42 while labelled
+  const pr1995 = [ev("unlabeled", "2026-11-18T11:10:21Z"), ev("labeled", "2026-11-18T11:11:47Z")];
+  assert.equal(labelledBefore(pr1995, "2026-11-18T11:12:42Z"), true);
+  assert.equal(labelledBefore(pr1995, null), true, "no push time: counts as labelled, as before");
+  assert.equal(labelledBefore([], "2026-11-18T11:12:42Z"), false, "never labelled");
+  assert.equal(labelledBefore([{event: "labeled", label: {name: "urgent"}, created_at: "2026-11-18T10:00:00Z"}], "2026-11-18T11:00:00Z"), false, "other labels do not count");
+});
+
+test("B7390: the workflow passes the push time", () => {
+  const wf = fs.readFileSync(path.join(ROOT, ".github", "workflows", "pc-gates.yml"), "utf8");
+  assert.match(wf, /EVENT_AT: \$\{\{ github\.event\.pull_request\.updated_at \}\}/);
+  const src = fs.readFileSync(path.join(ROOT, "tools", "pcq", "pr-gates.mjs"), "utf8");
+  assert.match(src, /labelledBefore\(events, pushedAt\)/);
+});
+test("a train push that merges main in is the train's own, though main's commits come with it (B7430)", async () => {
+  const {addedByPush, isTrainPush} = await import("../pcq/pr-gates.mjs");
+  const c = (sha, message) => ({sha, commit: {message}});
+  // PR 2051, 18 Nov 15:55Z: main's commits, then the train's merge, review carry-over and stamp
+  const main = [c("m1", "Merge pull request #2065 (urgent label)"), c("m2", "Stamp versions, changelogs and decisions for merge"), c("m3", "File reviews carried over the merge with main (B7420)")];
+  const push = [...main, c("t1", "Merge main into claude/project-thread-wdrmjd (merge train)\n\nMerge-Train: yes"),
+    c("t2", "Merge train: carry 1 file review(s) over the merge with main"), c("t3", "Stamp versions, changelogs and decisions for merge\n\nMerge-Train: yes")];
+  assert.equal(isTrainPush(push.map(x => x.commit.message)), false, "the old check counted main's commits as from outside");
+  assert.deepEqual(addedByPush(push, main).length, 3);
+  assert.equal(isTrainPush(addedByPush(push, main)), true);
+  // a thread commit pushed with a merge of main still counts as from outside
+  assert.equal(isTrainPush(addedByPush([...push, c("x1", "Fix a test")], main)), false);
+  assert.equal(isTrainPush(addedByPush([...main, c("x2", "Merge branch 'main' into claude/x")], main)), false, "a thread's own merge of main");
+  assert.deepEqual(addedByPush(push, null).length, 6, "no main list: every commit counts, as before");
+});

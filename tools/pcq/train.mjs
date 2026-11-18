@@ -8,6 +8,7 @@
  * A thread whose pull request meets the merge rules it can meet by itself (release notes, file reviews, registry)
  * adds the label `merge-train` and stops pushing. The PC runner (the Main PC's, every few minutes) then works on the
  * pull request at the front of the line, oldest label first, and leaves the rest alone:
+ * A pull request labelled urgent as well joins at the front (B7420).
  *   1. A conflict with main, or a branch the train may not push to: the pull request leaves the train with a comment
  *      saying why (the label comes off), and the next one is the front. A draft is marked ready for review first.
  *   2. Behind main, or release notes still waiting under changes/: in its own worktree the runner merges main in
@@ -27,15 +28,20 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 import {OWNER} from "./jobs.mjs";
 
 export const TRAIN_LABEL = "merge-train";
+/** B7420: a pull request labelled urgent as well as merge-train goes to the front of the line (registry/priorities.json urgentLabel). */
+export const URGENT_LABEL = "urgent";
 export const CHECKS = "checks", MERGE_RULES = "wodx/merge-rules", GATES = "wodx/gates";
 const HOUR = 3600e3;
 
 /**
  * The line, front first: open pull requests labelled merge-train, by the time the label went on (then number).
- * prs: [{number, labelledAt (ms), draft, ...}].
+ * B7420: those also labelled urgent come first, in the same order among themselves. An urgent pull request that joins
+ * while another is at the front takes the front at the runner's next step; the old front waits behind it and is
+ * brought up to date again when its turn comes (its running gate job is not stopped).
+ * prs: [{number, labelledAt (ms), urgent, draft, ...}].
  */
 export function line(prs) {
-  return [...prs].sort((a, b) => (a.labelledAt ?? 0) - (b.labelledAt ?? 0) || a.number - b.number);
+  return [...prs].sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0) || (a.labelledAt ?? 0) - (b.labelledAt ?? 0) || a.number - b.number);
 }
 
 /**
@@ -104,10 +110,10 @@ export async function step(ctx) {
   for ( const i of issues.filter(x => x.pull_request) ) {
     const ev = await gh("GET", `/issues/${i.number}/events?per_page=100`).catch(() => []);
     const at = (ev ?? []).filter(e => e.event === "labeled" && e.label?.name === TRAIN_LABEL).map(e => Date.parse(e.created_at)).at(-1);
-    prs.push({number: i.number, title: i.title, labelledAt: at ?? Date.parse(i.created_at)});
+    prs.push({number: i.number, title: i.title, labelledAt: at ?? Date.parse(i.created_at), urgent: (i.labels ?? []).some(l => (l.name ?? l) === URGENT_LABEL)});
   }
   const order = line(prs);
-  const out = {front: null, action: "idle", why: "nothing in the train", line: order.map(p => p.number)};
+  const out = {front: null, action: "idle", why: "nothing in the train", line: order.map(p => p.number), urgent: order.filter(p => p.urgent).map(p => p.number)};
   if ( !order.length ) { save(stateFile, {}); return out; }
   const pr = order[0];
   out.front = pr.number;
