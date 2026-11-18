@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7230
+Next free block: B7240
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -411,6 +411,7 @@ Next free block: B7230
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
 | B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
+| B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14164,3 +14165,8 @@ Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull re
 PC job queue, the owner's go-ahead on 17 November ("Go ahead with one"). The runner only ever ran main's gate tools, so a test of a branch that changes them (PR 1937's hang watch) was started by hand outside the queue. The runner could not see it waiting, and running gate jobs took every lane that came free (growJobs grows to every lane when no lane job waits), so the test waited from 15:37Z to 17:37Z without a lane. A gates job may now say `"branchTools": true` (`submit.mjs --branch-tools`): the runner runs that ref's own tools/lanes/run-gate.mjs from its worktree, on one lane, with no recheck. It needs a branch or commit ref and named gates, so it never sets the wodx/gates status. Queued at prio 1, it takes the next lane that frees, and while it waits the running gates jobs grow no further. Running jobs are not stopped or slowed, and no lane is kept spare (the owner did not want big runs slowed).
 
 Reverse: drop the branchTools case in tools/pcq/jobs.mjs validate, and the branchTools branches in runner.mjs makeQueue and laneWork.
+
+## B7230. run-gate puts the page back after each gate, not only the world (2026-11-17)
+Testbed lanes. Settings, flags, sheets and leftover documents were already put back after each gate (B3086, B7181, B7192, B7193), but all the gates on a lane run in one page, so anything a gate left in the page itself carried on into the gates after it. Job 1979 (PR 1836) had 7 gates fail that pass alone and touch nothing of that pull request: gategadgets, gatehuntpowder, gatesprites, gatespritelife, gatestillmarks, gatetruthsheets and gatevoices. While a gate runs, run-gate now notes every hook (Hooks.on, Hooks.once) and interval the gate's own file registers, and removes the ones still there when it ends. A hook a module registers while a gate calls into it is the module's and stays (`gateCaller` in tools/lanes/lib.mjs looks past the wrappers and Foundry's own frames to the caller). It also restores the functions gates swap (the dice's randomUniform, the notices, the scrolling text, ChatMessage.create, game.time.advance) and takes off a property laid over game.user (a player's isGM). The gate's line says what was put back, for example "2 hook(s) the gate left removed (createChatMessage)", so the gate that leaks can be fixed.
+
+Reverse: remove the wrappers and `pageBack` from the page function in tools/lanes/run-gate.mjs, and `pageNote` from its line.
