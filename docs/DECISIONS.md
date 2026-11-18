@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7440
+Next free block: B7470
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -421,12 +421,16 @@ Next free block: B7440
 | B7290-B7299 | PC watcher: ComfyUI off between renders is normal (used B7290-B7297) | tools (pcq) |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
+| B7320-B7329 | gate7b names what stops the runner's flight (used B7321-B7323) | tools (gates) |
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
 | B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
+| B7350-B7359 | One priority order for every project process (used B7350-B7356) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 | B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
+| B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
+| B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14378,6 +14382,21 @@ Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 194
 
 Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
 
+## B7321. gate7b's Auto step names what stops the flight (2026-11-18)
+Gates. "Auto: the NPC moves round the wall" fails on some runs and passes on others with the same code (jobs 2026 and 2027). The result files of two passing runs (jobs 2027 and 2028, saved to registry/gate7b-results/) show the same cast as the failing runs: the hero is "Ada (6d, wraith)", the runner is "Brawling Villager (Template)", and the runner flees in the passing runs too ("Brawling Villager (Template) flees."). So the hero and the choice to flee are not what varies, as B7312 first read it: in a failing run the flight finds no cell to run to ("has nowhere to run", a path of one square). The step's detail now also names the runner's movement as WoDX Combat reads it (movementFor), its statuses, its cell and the tokens within three squares. No pass condition changed. Not yet run in Foundry.
+
+Reverse: take move, conditions, cell and near out of whyRun in tools/gate/gate7b.mjs.
+
+## B7322. gatelimits gives the fomor's Stamina as the roll reads it (2026-11-18)
+Gates. "13. a fomor's Numbing" failed on some full runs and passed when run again (job 2030 and others). In the failing run all four tries rolled "Stamina + Medicine : 1 dice", though the gate sets Stamina 5. The Numbing roll reads the stored Stamina total (attr in wodx-actions main.js), and the system works the total out again after an update only when its settings flag asks for it (wod-actor-base.js _onUpdate), so the total could stay at 1. With one die at difficulty 6, four failed tries in a row happen about one run in sixteen, which fits a failure that comes and goes. The gate now sets the total with the value, as other gates do (gate6g, gate6i, gate6j), and the step's detail shows the Stamina it read. Not yet run in Foundry.
+
+Reverse: take total: 5 and the stamina detail out of step 13 in tools/gate/gatelimits.mjs.
+
+## B7323. gateduties names the places when the worship lands elsewhere (2026-11-18)
+Gates. "2. a night of worship at the chapel" failed on some full runs (job 2030): the worship duty pointed at a region that was not the chapel. The cult takes the first region on the scene that has a place kind (tagged in wodx-npc cults.mjs), and this scene also has a haven. The step's detail now lists the scene's regions in the order the cult reads them, so the next failure shows which place came first and why. No pass condition changed. Not yet run in Foundry.
+
+Reverse: take chapel and regions out of the step 2 detail in tools/gate/gateduties.mjs.
+
 ## B7330. runner-off no longer skips the cancel pass (2026-11-18)
 Repository workflow. A runner with runner-off waits for its running jobs to end before it stops, but that wait skipped
 the cancel pass, so a job labelled pc-cancel, or whose issue was closed, ran to the end anyway: job 2031 ran on a stale
@@ -14431,6 +14450,64 @@ main commit (one failure, or two runs) are now kept in <home>/recheck-main-cache
 since lanes differ) and reused by later rechecks on that main commit; the verdict says so.
 
 Reverse: drop mainCache and its two uses in recheck().
+
+## B7350. One file holds the priority order every process reads (2026-11-18)
+Repository workflow. Six orderings were in use and none read the others: the 1 to 5 job number with hourly aging,
+the merge train's front-first rule, the GPU guard's class order, the OCR loop's free-memory wait, hand-placed hold
+files, and the coordinator's judgment for threads. On 18 November a stale train job took lane 8 from the OCR, the
+OCR waited about 14 hours behind gate lanes, and the train's own pushes stranded running gate jobs. The owner picked
+every rule on the Process Priority Desk (all as recommended). registry/priorities.json now holds the ranks (R0 never
+wait, R1 train front, R2 unblock, R3 pull request gates, R4 health runs, R5 side work), each PC's lead job and memory
+budget, planned hold windows, the train clock, the nightly rule, the GPU class order and the thread order.
+tools/pcq/prio.mjs reads it (check, rank, classOf, sortQueue, mayKeep, activeWindow, trainClockRuns, ask, claims)
+and changes nothing by itself; docs/PRIORITIES.md explains it. The runner, train, nightly run, GPU guard and PC loops
+are wired to it in later pull requests.
+
+Reverse: delete registry/priorities.json, tools/pcq/prio.mjs, tools/harness/prio.test.mjs and docs/PRIORITIES.md.
+
+## B7351. A lower job gives way at the next gate, and aging stays inside a rank (2026-11-18)
+Repository workflow. A higher rank never ends a running job: the lower one stops taking gates from its shared list
+and its unfinished gates go back to the queue as the same job (preempt.mode gate-boundary). B6490's hourly step stays,
+but a job only climbs inside its own rank (aging.withinRankOnly), so a nightly run never passes a pull request's gates.
+
+Reverse: set preempt.mode to job-end and aging.withinRankOnly to false in registry/priorities.json.
+
+## B7352. Each PC can have one lead job with a memory budget (2026-11-18)
+Repository workflow. The Secondary PC's lead is the book OCR until it is finished (12.5 GB: the vision model server's private bytes, measured 18 November; with the page file at 3 GB, lane 8 gets little until it is raised). The
+Main PC has no lead; an art render there runs inside an 8 GB budget, an untested estimate to remeasure after the 64 GB
+install. A lead or budgeted batch asks `prio.mjs ask --class ocr|art --claim`; the claim file tells the runner how
+much memory to keep free of lanes. Claims of dead processes are ignored.
+
+Reverse: set the pcs entries' lead to null and budgets to {}.
+
+## B7353. The train clock stops while lanes are held, off or in a planned window (2026-11-18)
+Repository workflow. Under runner-hold the train still counted its 3 hours (read from train.mjs and the runner; not
+seen to happen), so a long hold would put the front pull request out. train.clockStopsWhen lists hold, off and window;
+trainClockRuns() answers it. Planned hardware work goes in windows.planned, and from 30 minutes before it the PC takes
+no new jobs. The owner's evenings at the PCs change nothing.
+
+Reverse: empty train.clockStopsWhen in registry/priorities.json.
+
+## B7354. One nightly full run, at the lowest lane rank (2026-11-18)
+Repository workflow. Two nightly full runs exist: tools/pcq/nightly-gates.mjs on the Secondary PC through the job
+queue, and the older tools/lanes/nightly.mjs, started by the Main PC's lane-reset.cmd outside the queue, where the
+runner cannot see it. The queued one stays at R4 and is skipped when main's gate inputs match the last full pass; the
+older one is retired if the Main PC shows it still runs.
+
+Reverse: drop the nightly entry from registry/priorities.json.
+
+## B7355. Threads start in one order (2026-11-18)
+Repository workflow. At most three threads at once, started in this order: gate and runner fixes and other blockers;
+dated deadlines; the core (V20 Dark Ages Vampire in Rothenstein, Book 1 first for story); the Master Plan order; art
+and maps; studies, reviews and desks. The coordinator reads it from the threads list.
+
+Reverse: drop the threads list from registry/priorities.json.
+
+## B7356. prio.mjs is allowed under the PC upkeep freeze (2026-11-18)
+Repository workflow. ROUTING.md froze new PC tools on 17 November. The owner allowed tools/pcq/prio.mjs as an exception
+on the desk (pick p9), because it is the one reader every PC tool shares.
+
+Reverse: nothing to reverse beyond B7350.
 
 ## B7380. The recheck gets the lane's stop check passed in (2026-11-18)
 Repository workflow. B7310 moved the recheck loop into recheck() and called stopped() there, but stopped is defined
@@ -14488,3 +14565,100 @@ leaves out the commits main already has (addedByPush) before it asks isTrainPush
 own merge of main, still counts as from outside.
 
 Reverse: pass cmp.commits' messages to isTrainPush directly again in tools/pcq/pr-gates.mjs.
+
+## B7440. Each gate's seconds go in the run report (2026-11-18)
+Repository workflow. The 18 November gate payoff check (63 PR gate runs, about 94 lane-hours) could not name the slow
+gates: run reports give each gate's result but not its time, so only an average of about 24 lane-seconds a gate was
+known. run-gate.mjs now times each gate (sign-in, the run and the put-back) and ends each lane's report with one
+indented line, `  TIMES gate6b=12 gate6c=8 ...`, which the runner posts with the rest of the report. The line is
+indented so no report parser (gate lines start at the line start) reads it as a gate; a lane that bails still writes
+the times it has. `node tools/pcq/gate-times.mjs <report> [...]` lists the gates slowest first. Nothing else changes:
+no gate result, status or merge rule reads the line. This is step 0 of the four cuts chosen on 18 November; the next
+nightly full run gives the first real table of gate times.
+
+Reverse: drop the TIMES line in run-gate.mjs; gate-times.mjs then finds none.
+
+## B7441. A gate that passes alone twice does not hold a pull request (2026-11-18)
+Repository workflow, the owner's choice (18 November, step 1). Of 44 PR gate runs that failed on gates, 22 failed only
+on gates that also failed on main or passed when run alone: faults of the gate run, not of the change. The recheck
+now runs a gate that passed alone once more: two passes read "order fault: passes alone twice" (it fails only after
+other gates), a pass and a fail read "flaky". An order fault no longer turns wodx/gates red; the status names it
+("order faults: ...") for the gate cleanup, beside the failing-on-main ones it already named. A flaky gate, a NEW
+failure or a gate that fails alone twice still holds the pull request.
+Reverse: remove the order set in gateStatusFor; recheckStep's second lone run can stay.
+
+## B7445. The merge train batches up to three green pull requests into one pull request (2026-11-18)
+Repository workflow, the owner's choice ("one batch PR for the stack", 16:06Z). Each train merge used to bring the
+front up to date, stamp it and gate it alone, so the line moved one gate run at a time. When the front needs main and a
+stamp anyway and up to two pull requests behind it are green on their own heads and change none of its files, the
+train merges their heads, unchanged, onto main in claude/merge-train-batch, carries their file reviews, stamps once and
+opens a batch pull request; that is gated once by pc-gates.yml and merged when its checks and merge rules are green,
+which puts every member's head on main. A red batch is closed and the next takes half as many (down to the front alone),
+so the one at fault leaves the train with its own reason. GitHub marking each member merged when its head reaches main
+was not tested on this repository before this change; when it does not, the train says so on the member.
+Reverse: set "trainBatch": 1 in runner.json (or remove the batch block in train.mjs step()).
+
+## B7446. A branch-tools lane test finds playwright, and a run that stops says why (2026-11-18)
+Repository workflow. A branch-tools job (B7220) runs the branch's run-gate.mjs from its worktree, and browser.mjs
+loads playwright from that worktree's tools/harness, which has no node_modules; both such jobs ever run (#2062 on
+lane 7, #2068 on Main lane 3, 18 November) stopped at sign-in with exit 1 and only "exit 1" in the report. The runner
+now gives that run NODE_PATH pointing at its own clone's tools/harness/node_modules, and run-gate writes the error that
+ended a run into its report as well as to the console.
+Reverse: drop the env option on the branchTools run and the report line in run-gate's catch.
+
+## B7447. Gates a lane finished before a fault keep their result lines (2026-11-18)
+Repository workflow. On a shared gate queue, a lane that faults is reset and runs again with a fresh report; the gates it
+had finished were not put back on the queue (right), but their lines were dropped from the job's result, so a failure
+among them was lost too. PR 1880's run #2076 queued 309 gates and reported 281: lane 4 ran the first 20 and lane 5 eight
+more before each faulted (lane 4's report starts 26 minutes after the job, lane 5's retry found the queue empty). The
+runner now puts the earlier report in front of the new one (jobs.mjs withEarlier), and a failure in it fails the lane.
+Reverse: drop withEarlier in laneWork; the retry's report alone counts again.
+
+## B7442. After a merge of main, a pull request reruns only what main touched and what failed (2026-11-18)
+Repository workflow, the owner's choice (step 2). 33 of 63 PR gate runs on 17 and 18 November were for heads that
+differed from the last run only by a merge of main, a stamp or carried reviews, and each ran the whole list again.
+pr-gates.mjs now reads the last finished touched job of the pull request; when no gate input the branch itself
+changed since that job's commit (a file counts as the branch's own when it differs at the head from both that commit
+and main, version stamps ignored), it queues a touched job with "since": that commit. run-gate runs the gates of what
+changed since then (--touched --base) plus every gate that did not pass in that job. Its status reads "touched since
+<sha>". A lane fault, a cut comment or a job it cannot read means the whole list runs, as before.
+Reverse: drop sinceRun in pr-gates.mjs; jobs with "since" then stop being queued.
+
+## B7443. The nightly run names the merges behind a new failure, and skips when nothing changed (2026-11-18)
+Repository workflow, the owner's choice (step 4). The full run every night on main is the net for what the smaller PR
+runs leave out. When a gate that passed on the last nightly run fails, the summary names the pull requests merged in
+between, and a fix or revert of the one at fault goes to the front of the merge train. When main's modules, system,
+gates and lane tools are the same as at the last nightly result, the run is skipped with a summary issue that says
+so; --force runs it anyway.
+Reverse: remove the skip block and the blame line in nightly-gates.mjs.
+
+## B7444. Pull requests run tier 1: the changed modules' own gates and nine cross-module gates (2026-11-18)
+Repository workflow, the owner's choice (step 3). A gate counted as covering a module whenever its file named it, so
+a one-file Chronicle change ran 306 of 309 gates and the median PR run took 268. Each gate is now also FOR the
+modules its header comment names (gate-map.mjs gateOwners; with none named, the covered module its source names
+most; gate-map-extra.json "owners" sets them by hand; `gate-map.mjs --owners` lists them). run-gate --touched runs
+tier 1: the gates for each module whose own files changed (every gate for a system change), every changed gate, and
+the nine cross-module gates (gate-interact, gateapipaths and the seven gatetruth gates) when any module changed.
+Replayed on the 15 pull requests gated on 17 and 18 November: 2,501 gate runs become 1,049 (58% fewer). Modules that
+only load or require a changed one are left to the cross-module gates and the nightly full run, so a break between
+modules can reach main and show the next night (B7443 names the merge). --wide keeps the older list. This narrows the
+integration check on each push; the full suite with every module deployed still runs every night on main.
+Reverse: make run-gate --touched use the --wide branch again.
+
+## B7460. lane-reset.cmd no longer starts the older nightly full run (2026-11-18)
+Repository workflow. Desk pick p6 keeps one nightly full run, tools/pcq/nightly-gates.mjs, an all-gates PC job. The
+Main PC's daily "WoDX lane reset" task still started tools/lanes/nightly.mjs from the last line of
+lane-reset.cmd, outside the queue, so two full runs could share the lanes. A nightly-off file stood in for the fix
+from 18 November. lane-reset.cmd now resets the autoReset lanes, starts the runner and stops. nightly.mjs is kept and
+still runs by hand. A harness check fails if lane-reset.cmd starts it again. nightly-gates.mjs still pins lane 8, which is held for the
+book OCR, so until its health-rank wiring lands a full run of main needs an all-gates PC job queued by hand.
+
+Reverse: put `node tools\lanes\nightly.mjs >> "%LOG%" 2>&1 & exit /b` back as the last line of tools/lanes/lane-reset.cmd.
+
+## B7461. The Main PC RAM install is a planned window (2026-11-18)
+Repository workflow. registry/priorities.json windows.planned gets its first row: the Main PC, 00:30Z to 03:00Z on
+19 November, for the RAM install and memory test (owner's times, 18 November). prio.mjs window and ask hold the PC
+from 30 minutes before. Nothing reads the file for this yet, so a runner-hold set on the PC does the holding tonight.
+The ask tests now pass a fixed time, so a planned window in the file cannot change their answer.
+
+Reverse: empty windows.planned in registry/priorities.json.
