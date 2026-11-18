@@ -159,13 +159,17 @@ test("B7421: a green pull request nobody will merge raises the alert at once; on
     {number: 1988, title: "Waiting", draft: false, labels: [TRAIN_LABEL], greenSince: ms(90)},      // behind the front
     {number: 1855, title: "HOLD: names", draft: true, labels: [], greenSince: ms(90)},              // held on purpose
     {number: 1999, title: "Red", draft: false, labels: [], greenSince: null}];
-  const a = assess(healthy({prs}));
+  const a = assess(healthy({prs}), {train: {front: 1880, since: ms(40)}});
   assert.deepEqual(a.problems.map(p => p.key).sort(), ["pr:1880:green", "pr:2055:green"]);
   assert.deepEqual(a.confirmed.map(p => p.key).sort(), ["pr:1880:green", "pr:2055:green"], "no second cycle needed: the age is already measured");
   assert.match(a.problems.find(p => p.key === "pr:2055:green").text, /#2055 \(draft\).*20 min.*not in the merge train/);
   assert.match(a.problems.find(p => p.key === "pr:1880:green").text, /front #1880.*has not merged it/);
   assert.ok(a.notes.some(n => /waiting their turn in the merge train: #1988\./.test(n)));
   assert.deepEqual(assess(healthy()).problems, [], "no pull request list (an old snapshot) is fine");
+  const justFront = assess(healthy({prs: [{number: 1880, title: "Shared dice", labels: [TRAIN_LABEL], greenSince: ms(300)}]}), {train: {front: 1880, since: ms(5)}});
+  assert.deepEqual(justFront.problems, [], "a front reached 5 minutes ago, green for hours, is still being brought up to date");
+  const stuck = assess(healthy({prs: [{number: 1880, title: "Shared dice", labels: [TRAIN_LABEL], greenSince: ms(300)}]}), {train: {front: 1880, since: ms(20)}});
+  assert.ok(stuck.problems.some(p => p.key === "pr:1880:green" && /20 min/.test(p.text)));
 });
 
 test("B7421: green means the newest checks run passed and the newest merge rules status is success", () => {

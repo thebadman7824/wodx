@@ -127,11 +127,14 @@ export function assess(snap, prev = {}) {
   const waiting = [];
   for ( const pr of snap.prs ?? [] ) {
     if ( !pr.greenSince || /^HOLD\b/i.test(pr.title ?? "") ) continue;
-    const m = Math.round((now - pr.greenSince) / MIN);
+    const inTrain = (pr.labels ?? []).includes(TRAIN_LABEL), front = inTrain && pr.number === train?.front;
+    // A pull request that has just reached the front may be green from long ago but behind main: the train brings it
+    // up to date first, so its clock starts when this watcher first saw it at the front.
+    const m = Math.round((now - Math.max(pr.greenSince, front ? state.train?.since ?? now : 0)) / MIN);
     if ( m <= LIMITS.greenUnmergedMin ) continue;
-    const inTrain = (pr.labels ?? []).includes(TRAIN_LABEL), what = `#${pr.number}${pr.draft ? " (draft)" : ""}: ${String(pr.title ?? "").slice(0, 80)}`;
+    const what = `#${pr.number}${pr.draft ? " (draft)" : ""}: ${String(pr.title ?? "").slice(0, 80)}`;
     if ( !inTrain ) add(`pr:${pr.number}:green`, `Pull request ${what} has been green on checks and merge rules for ${hm(m)} but is not in the merge train, so nothing will merge it. It needs the owner's merge, the merge-train label, or its thread to merge it (docs/WORKFLOW.md section 6).`);
-    else if ( pr.number === train?.front ) add(`pr:${pr.number}:green`, `Merge train: the front ${what} has been green for ${hm(m)} but the train has not merged it.${silent.main ? " The Main PC, which drives the train, is silent." : ""}`);
+    else if ( front ) add(`pr:${pr.number}:green`, `Merge train: the front ${what} has been green for ${hm(m)} but the train has not merged it.${silent.main ? " The Main PC, which drives the train, is silent." : ""}`);
     else waiting.push(pr.number);
   }
   if ( waiting.length ) notes.push(`Green and waiting their turn in the merge train: ${waiting.map(n => `#${n}`).join(", ")}.`);
