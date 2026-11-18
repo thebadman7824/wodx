@@ -160,15 +160,47 @@ export function failingGates(report = "") {
  * (it fails only after other gates: leftovers or order), or "fails" on main jobs.
  */
 export function recheckVerdicts(gates, alone, main, notOnMain = new Set()) {
-  const bad = r => new Set(failingGates(r));
-  const a = bad(alone), m = main === null ? null : bad(main);
   return gates.map(gate => {
-    if ( !a.has(gate) ) return {gate, verdict: "passes alone: it fails only after other gates (leftovers or order)"};
-    // B5590: a gate this change adds cannot run on main, so its failure there says nothing: the change must fix it.
-    if ( notOnMain.has(gate) ) return {gate, verdict: "NEW with this change: the gate is not on main yet, so this change must fix it"};
-    if ( m === null ) return {gate, verdict: "fails alone too"};
-    return {gate, verdict: m.has(gate) ? "fails on main too: not this change's fault" : "NEW with this change: passes on main"};
+    const step = recheckStep([gatePassed(gate, alone) ?? false], main === null ? null : [gatePassed(gate, main) ?? false], {notOnMain: notOnMain.has(gate), once: true});
+    return {gate, verdict: step.verdict};
   });
+}
+
+/** B7310: whether one gate passed in a run-gate report: true, false (failed or ERROR), or null (no line: it did not run). */
+export function gatePassed(gate, report = "") {
+  let out = null;
+  for ( const m of String(report).matchAll(/^(gate[\w-]*): (?:(\d+)\/(\d+) passed|ERROR)/gm) )
+    if ( m[1] === gate ) out = m[2] !== undefined && Number(m[2]) >= Number(m[3]);
+  return out;
+}
+
+/**
+ * B7310: the recheck plan for one failing gate, as its runs come in. Each run is the gate ALONE on a freshly reset
+ * lane (one gate per run-gate call), so another gate's leftovers cannot decide it, and no verdict rests on one run.
+ *   alone: [pass?, ...] on this commit; main: [pass?, ...] on main, or null when the job ran main. null in a list is
+ *   a run the lane would not take.
+ * Returns {next: "alone" | "main" | null, verdict}. A pass alone settles it (the job's failure came from other gates
+ * or a bad draw). A failure alone is run once more, and a pass then means flaky. Two failures alone go to main the
+ * same way, where a pass is confirmed by a second run before the gate is called NEW.
+ * once: true keeps the old one-run answers (recheckVerdicts, for reports made before B7310).
+ */
+export function recheckStep(alone = [], main = null, {notOnMain = false, once = false} = {}) {
+  if ( alone.includes(null) ) return {next: null, verdict: "not rechecked: the lane would not take the rerun"};
+  if ( !alone.length ) return {next: "alone"};
+  if ( alone[0] === true ) return {next: null, verdict: "passes alone: it fails only after other gates (leftovers or order), or is flaky"};
+  if ( alone.length === 1 && !once ) return {next: "alone"};
+  if ( alone[1] === true ) return {next: null, verdict: "flaky: failed once and passed once, alone on a fresh lane"};
+  // B5590: a gate this change adds cannot run on main, so its failure there says nothing: the change must fix it.
+  if ( notOnMain ) return {next: null, verdict: "NEW with this change: the gate is not on main yet, so this change must fix it"};
+  const twice = once ? "" : " (twice, each on a fresh lane)";
+  if ( main === null ) return {next: null, verdict: `fails alone too${twice}`};
+  if ( main.includes(null) ) return {next: null, verdict: `fails alone${twice}; main could not be rechecked`};
+  if ( !main.length ) return {next: "main"};
+  if ( main[0] === false ) return {next: null, verdict: "fails on main too: not this change's fault"};
+  if ( main.length === 1 && !once ) return {next: "main"};
+  if ( once ) return {next: null, verdict: "NEW with this change: passes on main"};
+  return main[1] ? {next: null, verdict: "NEW with this change: fails alone twice here, passes alone twice on main"}
+    : {next: null, verdict: "fails here twice; flaky on main (passed once, failed once): probably not this change's"};
 }
 
 /**
