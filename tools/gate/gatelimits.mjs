@@ -184,10 +184,11 @@ export async function run() {
     });
 
     await G.step("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", async () => {
-      const [fo] = await G.make(Actor, [{name: "Gate Limits Fomor", type: "Mortal", system: {attributes: {stamina: {value: 5}}, advantages: {willpower: {permanent: 9, temporary: 9}}},
+      const [fo] = await G.make(Actor, [{name: "Gate Limits Fomor", type: "Mortal", system: {attributes: {stamina: {value: 5, total: 5}}, advantages: {willpower: {permanent: 9, temporary: 9}}},
         items: [{name: "Numbing", type: "Power", system: {type: "wod.types.power", value: 1}}]}]);
-      // The system's sheet can prepare a new mortal to Willpower 0: set the traits after creation
-      await fo.update({"system.advantages.willpower.permanent": 9, "system.advantages.willpower.temporary": 9, "system.attributes.stamina.value": 5});
+      // The system's sheet can prepare a new mortal to Willpower 0: set the traits after creation. B7322: the roll reads
+      // the stored total, which the system works out again only when its own settings flag says so, so set it with the value
+      await fo.update({"system.advantages.willpower.permanent": 9, "system.advantages.willpower.temporary": 9, "system.attributes.stamina.value": 5, "system.attributes.stamina.total": 5});
       const [ft] = await G.tokens(scene, [{actor: fo, x: 14, y: 8}]);
       const body = () => live(ft);
       const max0 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 7;
@@ -209,7 +210,7 @@ export async function run() {
       await waitFor(() => body().statuses?.has?.("dead") && scene.tokens.get(ft.id)?.alpha === 0.25, 6000);
       const dead = !!body().statuses?.has?.("dead"), alpha = scene.tokens.get(ft.id)?.alpha;
       G.ok("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", numb && max1 === max0 + 3 && pen === 0 && dead && alpha === 0.25,
-        {numb, max0, max1, pen, dead, alpha, wp0, cards});
+        {numb, max0, max1, pen, dead, alpha, wp0, stamina: body().system?.attributes?.stamina, cards});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
