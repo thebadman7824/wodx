@@ -420,6 +420,7 @@ Next free block: B7390
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
+| B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 <!-- decision-index:end -->
 
@@ -14344,6 +14345,32 @@ stamp-only train push is known as its own; its older commits are known by their 
 branch (not a fast-forward) also counts as an outside push.
 
 Reverse: drop the merge-train block in pr-gates.mjs and the trailers in train.mjs.
+
+## B7340. Free lanes join a running job unless a waiting job could use them (2026-11-18)
+Repository workflow. growJobs() let a running gates job take only its own lane count while any lane job waited, even
+a job pinned to a lane that was busy or to another PC's lane. On 18 November #2022 ran 309 gates on lane 2 alone from
+06:26 to 08:50Z while #2020 waited for lane 2 and lanes 3 to 5 sat idle. Now only a waiting job that could start on a
+lane free now holds the running job back. A job that arrives later waits for a lane of the running job to free.
+
+Reverse: pass the old test (any waiting lane job) to growJobs again.
+
+## B7341. A runner restart no longer throws away the run in progress (2026-11-18)
+When the runner restarted while a gates job ran, the job ran again from the start: 20 runs and 22.9 lane-hours lost
+from 14 to 18 November (#1993, #1994 and #1997 each lost 101 minutes at 02:04Z on 18 Nov). Now, on restart, the
+result lines of the gates that passed are kept with the job's commit, and when it starts again on the same commit only
+the gates it had not passed run: the queue, gates a lane took and did not finish, and gates that failed (so they are
+rechecked as usual). The kept lines go into the result and the wodx/gates status as their own part. A different
+commit, or fewer than two gates left, starts from the beginning as before.
+
+Reverse: drop saveResume and the resume branch in makeQueue.
+
+## B7342. The recheck keeps each gate's runs on main (2026-11-18)
+The recheck proved the same main failures again and again: 276 "fails on main too" verdicts in a week, gateautomation
+20 times, gate7d 19, gatetime 17, each at least three lone runs on a freshly reset lane. A gate's settled runs on a
+main commit (one failure, or two runs) are now kept in <home>/recheck-main-cache.json (newest 20 main commits, per PC,
+since lanes differ) and reused by later rechecks on that main commit; the verdict says so.
+
+Reverse: drop mainCache and its two uses in recheck().
 
 ## B7380. The recheck gets the lane's stop check passed in (2026-11-18)
 Repository workflow. B7310 moved the recheck loop into recheck() and called stopped() there, but stopped is defined
