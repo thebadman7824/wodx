@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, resumeState, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -350,6 +350,18 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
  * The whole recheck stops taking runs after RECHECK_MINUTES; gates it did not finish say so.
  */
 const RECHECK_MINUTES = 120;
+// B7342: settled main runs per gate, per main commit, on this PC (its lanes); the newest 20 main commits are kept
+const mainCache = {
+  file: path.join(HOME, "recheck-main-cache.json"),
+  read(sha) { const c = readJson(this.file, {})[sha] ?? {}; delete c._at; return c; },
+  write(sha, add) {
+    if ( !Object.keys(add).length ) return;
+    const all = readJson(this.file, {});
+    all[sha] = {...(all[sha] ?? {}), ...add, _at: Date.now()};
+    const keep = Object.entries(all).sort((a, b) => (b[1]._at ?? 0) - (a[1]._at ?? 0)).slice(0, 20);
+    try { fs.writeFileSync(this.file, JSON.stringify(Object.fromEntries(keep))); } catch (e) { log(`recheck cache not written: ${e.message}`); }
+  }
+};
 async function recheck(job, lane, tag, wt, rep, L) {
   const failing = failingGates(rep).slice(0, 12);
   if ( !failing.length ) return "";
@@ -384,12 +396,19 @@ async function recheck(job, lane, tag, wt, rep, L) {
     else {
       for ( const g of failing ) if ( !fs.existsSync(path.join(m.dir, "tools", "gate", `${g}.mjs`)) ) st[g].notOnMain = true;
       if ( m.sha === wt.sha ) failing.forEach(g => { st[g].main = [...st[g].alone]; });
-      else await settle(m.dir, "main");
+      else {
+        // B7342: a gate's settled runs on a main commit are kept, so the next recheck on that commit reuses them
+        // instead of proving the same main failure again (276 "fails on main too" verdicts in a week, gateautomation 20)
+        const cache = mainCache.read(m.sha);
+        for ( const g of failing ) if ( st[g].main && !st[g].notOnMain && cache[g] ) { st[g].main = [...cache[g]]; st[g].fromCache = m.sha; }
+        await settle(m.dir, "main");
+        mainCache.write(m.sha, Object.fromEntries(failing.filter(g => st[g].main && !st[g].fromCache && mainSettled(st[g].main)).map(g => [g, st[g].main])));
+      }
     }
   }
   const rows = failing.map(g => {
     const s = recheckStep(st[g].alone, st[g].main, {notOnMain: st[g].notOnMain});
-    const v = s.verdict ?? (outOfTime.has(g) ? `not settled: the recheck ran out of time (alone ${JSON.stringify(st[g].alone)}, main ${JSON.stringify(st[g].main)})` : "not settled");
+    const v = (s.verdict && st[g].fromCache ? `${s.verdict} (main's runs reused from an earlier recheck on ${short(st[g].fromCache)})` : s.verdict) ?? (outOfTime.has(g) ? `not settled: the recheck ran out of time (alone ${JSON.stringify(st[g].alone)}, main ${JSON.stringify(st[g].main)})` : "not settled");
     return `- ${g}: ${v}`;
   });
   return [`Recheck (each failing gate alone on a fresh lane, ${runs} run(s)):`, ...rows].join("\n");
@@ -574,7 +593,7 @@ async function start(issue, job, lanes) {
  * failed while the gates were still running turns green by itself.
  */
 async function gateStatus(issue, job, parts, ok) {
-  const st = gateStatusFor(job, parts, ok, failingGates, resumeState, issue.html_url);
+  const st = gateStatusFor(job, parts, ok, failingGates, resumeState, mainSettled, issue.html_url);
   if ( !st || DRY ) return;
   await gh("POST", `/statuses/${st.sha}`, st.body);
   log(`#${issue.number}: ${GATE_CONTEXT} ${st.body.state} on ${short(st.sha)}`);

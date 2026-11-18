@@ -294,3 +294,6 @@ export function resumeState(queueLeft, takenRows, reports) {
   const left = [...new Set([...takenRows, ...failed, ...queueLeft].filter(g => !passed.has(g)))];
   return {passed: [...passed.values()], left};
 }
+
+/** B7342: whether a gate's runs on main settle it (recheckStep needs no more): one failure, or two runs; no refused run. */
+export const mainSettled = runs => Array.isArray(runs) && !runs.includes(null) && (runs[0] === false || runs.length >= 2);
