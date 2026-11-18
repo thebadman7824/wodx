@@ -155,7 +155,7 @@
 1916|W|mag|EU|Zurich|art,occult|Marauders in Zurich|The house reading has a Marauder loose among the Dadaists, and the Cult of Ecstasy work to keep the cabaret from going mad entirely.
 1916|H|mor|EU|Geneva|founding,law|The Czechoslovak National Council|Masaryk, Benes and Stefanik form the Czechoslovak National Council in Paris.
 1916|H|mor|EU|Verdun|science,war|The Sacred Way|A single road from Bar-le-Duc carries a lorry every few seconds to keep Verdun supplied.
-1916|H|mor|EU|Ostrava|industry,war|The coal of Ostrava|Ostrava's pits and Vitkovice work round the clock for the army, with prisoners of war in the mines.
+1916|H|mor|MO|Ostrava|industry,war|The coal of Ostrava|Ostrava's pits and Vitkovice work round the clock for the army, with prisoners of war in the mines.
 1916|W|all,mag|MO|Vitkovice|industry,occult|The Iteration X works|The house reading has Iteration X take a quiet interest in the Vitkovice works, and a Brno Hermetic sees the Weaver tighten.
 1916|H|mor|ME|Medina|siege|The siege of Medina|Arab forces besiege Medina, whose Ottoman commander holds it beyond the end of the war.
 1916|H|mor|EU|Paris|science|Plastic surgery|Surgeons at Aldershot and Paris rebuild soldiers' faces; Harold Gillies's work founds modern plastic surgery.

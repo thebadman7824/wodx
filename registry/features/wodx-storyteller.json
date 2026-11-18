@@ -1,5 +1,102 @@
 {
  "module": "wodx-storyteller",
  "seeded": false,
- "rows": []
+ "rows": [
+  {
+   "id": "storyteller.ledger-due",
+   "name": "The Ledger: a dated debt, oath or boon comes due as the clock passes it",
+   "module": "wodx-storyteller",
+   "core": true,
+   "files": [
+    "modules/wodx-storyteller/scripts/ledger.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B125"
+    },
+    "wired": {
+     "reader": "modules/wodx-storyteller/scripts/ledger.mjs:registerLedgerHooks"
+    },
+    "shown": {
+     "what": "a whispered 'Comes due' card for the Storyteller, once, and a tracker line"
+    }
+   },
+   "open": [
+    "gated: gatedatedplay step 6 drives the real clock but checks the card only (graded marker); a due debt has nothing but the card to show",
+    "gateledger step 4 (inheritance) fails on cloud lane 9 alone with a fixed 800 ms wait (17 November 2026); it passes on the PC lanes"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
+  },
+  {
+   "id": "storyteller.market-news",
+   "name": "Market news: dated events and trade move the markets, applied from a card",
+   "module": "wodx-storyteller",
+   "core": true,
+   "files": [
+    "modules/wodx-storyteller/scripts/market-news.mjs",
+    "modules/wodx-storyteller/scripts/market-news-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B5934, B6897, B7261"
+    },
+    "wired": {
+     "reader": "modules/wodx-storyteller/scripts/market-news.mjs:setupMarketNews"
+    },
+    "shown": {
+     "what": "a whispered Markets card with Apply and Undo; applied, the market's prices and supply change and the passers-by on crowd scenes thin out"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedatedplay.mjs",
+     "step": "4"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
+  },
+  {
+   "id": "storyteller.event-looks",
+   "name": "Great events and war at home in the sky over the towns",
+   "module": "wodx-storyteller",
+   "core": true,
+   "files": [
+    "modules/wodx-storyteller/scripts/town-looks.mjs",
+    "modules/wodx-storyteller/scripts/town-look-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B4628, B7262, B7263"
+    },
+    "wired": {
+     "reader": "modules/wodx-storyteller/scripts/town-looks.mjs:showEvent"
+    },
+    "shown": {
+     "what": "an ash-grey pall for the Black Death, storms for the Great Maelstroms and the Avatar Storm, smoke from burning villages for a war in Moravia; gone again when the event is taken back"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedatedplay.mjs",
+     "step": "5"
+    }
+   },
+   "open": [
+    "town looks other than this event sky (fires, floods, sieges, hunters) are not rows yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
+  }
+ ]
 }
