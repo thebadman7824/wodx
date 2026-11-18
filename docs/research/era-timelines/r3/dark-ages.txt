@@ -184,7 +184,7 @@
 1305|H|mor|EU|London|death,war|Wallace executed|William Wallace is hanged, drawn and quartered at Smithfield.
 1306-3|H|mor|EU|Scone|crown|Robert the Bruce crowned|Robert Bruce kills a rival and is crowned King of Scots.
 1306-7|H|mor,hun|EU|France|persecution,money|The Jews expelled from France|Philip IV expels the Jews from France and takes their goods.
-1306|H|mor|EU|Olomouc|crown,death|The last Premyslid|Wenceslas III is murdered at Olomouc; the Bohemian royal line ends.
+1306|H|mor|MO|Olomouc|crown,death|The last Premyslid|Wenceslas III is murdered at Olomouc; the Bohemian royal line ends.
 1307-10|W|hun,vam|EU|Paris|persecution,heresy|The Templars arrested|On Friday 13 October Philip IV has every Templar in France seized; some say Cainite counsellors or Batini with grudges guided the king.
 1307|H|mor|EU|Lanercost|crown,death|Edward I dies|Edward I dies on the way north to fight Bruce; Edward II takes the throne.
 1308|H|mor|EU|Danzig|massacre,war|Danzig taken|The Teutonic Knights seize Danzig and kill many of its people.
@@ -277,14 +277,14 @@
 1239|H|mor|EU|Chernigov|siege|Chernigov falls|The Mongols take Chernigov and Pereyaslavl.
 1240|W|wer|EU|Rus|war,empire|The Tatar Yoke begins|The Rus princes submit to the Golden Horde; the Shadow Lords' quiet backing of the Mongols begins.
 1241|H|mor|EU|Pest|siege,fire|Pest burned|After Mohi the Mongols burn Pest and range across Hungary all summer.
-1241|H|mor|EU|Moravia|war|The Mongols in Moravia|A Mongol column crosses Moravia, burning villages and failing before Olomouc.
+1241|H|mor|MO|Moravia|war|The Mongols in Moravia|A Mongol column crosses Moravia, burning villages and failing before Olomouc.
 1242|H|mor|EU|Dalmatia|war|The Mongols at the Adriatic|Mongol riders chase King Bela to the coast at Trogir.
 1243|H|mor|EU|Rome|faith|Innocent IV|The new pope flees to Lyon to escape Frederick II.
 1245|H|mor|EU|Lyon|faith|The friars' mission to the Mongols|The Council of Lyon sends friars east to learn what the Mongols want.
 1246|H|mor|EU|Austria|crown,death|The last Babenberg|Duke Frederick of Austria dies in battle; Austria is left without a lord.
 1247|H|mor|AS|Sakya|faith,crown|The Sakya lama and the Mongols|Sakya Pandita submits Tibet to Godan Khan, the first tie between Tibet and the Mongols.
 1248|W|mag|AS|Tibet|faith|The Brotherhood watches the Mongols|The Akashic Brotherhood in Tibet watches the lamas bargain with the khans and keeps its own counsel.
-1249|H|mor|EU|Jihlava|money,law|The Iglau mining law|The silver town of Jihlava writes down its mining code.
+1249|H|mor|MO|Jihlava|money,law|The Iglau mining law|The silver town of Jihlava writes down its mining code.
 1250|H|mor|EU|Hungary|building|The stone castles|Bela IV orders stone castles built across Hungary against the Mongols' return.
 1251|H|mor|EU|Austria|crown|Ottokar takes Austria|Ottokar of Bohemia takes Austria and marries the Babenberg heiress.
 1252|H|mor|EU|Lithuania|crown|King Mindaugas|Mindaugas of Lithuania is baptised and crowned, though Lithuania stays pagan.

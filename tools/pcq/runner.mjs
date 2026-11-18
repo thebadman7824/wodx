@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -96,10 +96,10 @@ const openIssues = async label => (await gh("GET", `/issues?state=open&labels=${
  */
 const procs = new Map(); // job tag -> its running child processes (B7206)
 const endTree = p => { if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL"); };
-function run(cmd, argv, {cwd = ROOT, minutes = 30, stallMinutes = 0, logTo} = {}) {
+function run(cmd, argv, {cwd = ROOT, minutes = 30, stallMinutes = 0, logTo, env = {}} = {}) {
   return new Promise(done => {
     if ( DRY ) { log(`[dry] ${cmd} ${argv.join(" ")}`); return done({code: 0, out: ""}); }
-    const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"}});
+    const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1", ...env}});
     try { os.setPriority(p.pid, os.constants.priority.PRIORITY_BELOW_NORMAL); } catch {}
     // B7206: each job's processes are known by its log name (jobN-...), so a cancelled job can end them
     const owner = jobOfLog(logTo);
@@ -283,20 +283,22 @@ function failDetail(lane, report) {
   return out.join("\n");
 }
 /** One lane's part of a lane job. Returns {code, text}. */
-async function laneWork(job, lane, i, n, tag, retried = false) {
+async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return {code: null, text: wt.error};
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
   // B7205: a job stopped as stale neither retries a lane nor reruns failing gates
   const stopped = () => halted.has(tag) || (!!job.queue && fs.existsSync(`${job.queue}.stop`));
-  const faultRetry = async (why, out = "") => {
+  // carry: out is a gate report, whose finished gates keep their lines on the retry (B7447)
+  const faultRetry = async (why, out = "", carry = false) => {
     // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
-    if ( retried || stopped() ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
+    if ( retried || stopped() ) return {code: null, text: `${before ? `${before.trim()}\n` : ""}${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
     await lanesCmd(["reset", "--lane", lane], {logTo: L});
-    return laneWork(job, lane, i, n, tag, true);
+    // only on a shared queue: a shard run again runs all its gates again
+    return laneWork(job, lane, i, n, tag, true, carry && job.queue ? out : "");
   };
   if ( job.kind === "setup-lane" ) {
     const r = await lanesCmd(["setup", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 90});
@@ -329,17 +331,22 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   fs.rmSync(report, {force: true});
   const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
   const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, CEILING);
-  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports)
+  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports).
+  // B7446: the worktree has no node_modules, so playwright comes from the runner's own clone (NODE_PATH); without it
+  // every branch-tools job failed at sign-in before its first gate (#2062, #2068 on 18 Nov)
   const r = job.branchTools
-    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir)})
+    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir),
+      env: {NODE_PATH: [path.join(ROOT, "tools", "harness", "node_modules"), process.env.NODE_PATH].filter(Boolean).join(path.delimiter)}})
     : await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
-  const rep = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
+  const own = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
     (fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000));
-  if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
+  if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, own, true);
+  // B7447: the gates this lane finished before a fault and a reset keep their lines
+  const {report: rep, code: laneCode} = withEarlier(before, own, r.code, lane);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
-  if ( r.code !== 1 || job.recheck === false || stopped() ) return {code: r.code, text, sha: wt.sha};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
+  if ( laneCode !== 1 || job.recheck === false || stopped() ) return {code: laneCode, text, sha: wt.sha};
+  return {code: laneCode, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
 }
 
 /**
@@ -412,7 +419,7 @@ async function makeQueue(job, lane, tag) {
   if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
-  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
+  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched", ...(job.since ? ["--base", job.since] : [])] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
     {logTo: path.join(LOGS, `${tag}-list.log`), minutes: 5});
   const m = /^GATES (\[.*\])$/m.exec(r.out ?? "");
   let list = null;
@@ -586,7 +593,7 @@ let trainNow = null, trainBusy = false, lastTrain = 0;
 function trainTick() {
   if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
   lastTrain = Date.now(); trainBusy = true;
-  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3})
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3})
     .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
 }
 /** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */

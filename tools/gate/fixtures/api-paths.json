@@ -1412,7 +1412,7 @@
   ],
   "uses": [
    "modules/wodx-otherworlds/scripts/corruption-looks.mjs:15",
-   "modules/wodx-storyteller/scripts/town-looks.mjs:27"
+   "modules/wodx-storyteller/scripts/town-looks.mjs:28"
   ]
  },
  {
@@ -2261,6 +2261,7 @@
    "modules/wodx-storyteller/scripts/setup.mjs:83",
    "modules/wodx-storyteller/scripts/setup.mjs:165",
    "modules/wodx-storyteller/scripts/threads.mjs:34",
+   "modules/wodx-storyteller/scripts/town-looks.mjs:320",
    "modules/wodx-storyteller/scripts/wills.mjs:22"
   ]
  },
