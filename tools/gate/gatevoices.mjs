@@ -33,6 +33,12 @@ export async function run() {
   // Watch what Voices could do while the card goes by: speech, sound, files, socket, errors
   const S = globalThis.speechSynthesis, AH = foundry.audio?.AudioHelper, FPI = foundry.applications?.apps?.FilePicker?.implementation;
   const seen = {spoken: [], played: [], browsed: [], uploaded: [], made: [], socket: [], errors: []};
+  // B7250: the Voices api keeps its counters and engine states in memory for the whole page. A gate before this one on
+  // the lane may have switched Voices on to test it (gatetruthnpc step 6 speaks with the browser engine, and putting its
+  // settings back points the engine at the voice server again, which is not running). Step 5 asks whether anything
+  // happened while this gate ran, so it reads the counters and states against where they stood when it started.
+  const A0 = game.modules.get(MOD)?.api;
+  const start = {stats: {...(A0?.stats ?? {})}, engine: A0?.engine?.state ?? null, server: A0?.server?.state ?? null};
   const real = {speak: S?.speak, play: AH?.play, browse: FPI?.browse, upload: FPI?.upload, mkdir: FPI?.createDirectory, emit: game.socket?.emit, error: console.error};
   const voicesError = (...a) => a.some(x => /wodx-voices/i.test(String(x?.stack ?? x?.message ?? x)));
   const onError = ev => { if ( voicesError(ev?.error ?? ev?.message, ev?.filename) ) seen.errors.push(String(ev?.error?.message ?? ev?.message)); };
@@ -101,8 +107,12 @@ export async function run() {
       const A = api(), st = A?.stats ?? {};
       const engine = A?.engine?.state ?? null, server = A?.server?.state ?? null;
       const folders = [...seen.browsed, ...seen.uploaded, ...seen.made].filter(p => /wodx-voices/.test(p));
-      ok("5 nothing touched the voice folders", folders.length === 0 && engine === "off" && server === "off" && !st.renders && !st.hits && !st.plays,
-        {folders, engine, server, stats: {...st}});
+      const grew = ["renders", "hits", "plays", "fallbacks"].filter(k => (Number(st[k]) || 0) > (Number(start.stats[k]) || 0));
+      // off, or as an earlier gate left it and not moved since (named, so the lane's history shows)
+      const still = (now, was) => now === "off" || now === was;
+      ok("5 nothing touched the voice folders", folders.length === 0 && still(engine, start.engine) && still(server, start.server) && !grew.length,
+        {folders, engine, server, grew, stats: {...st}, ...(start.engine !== "off" || start.server !== "off" || Object.values(start.stats).some(Boolean)
+          ? {before: start, note: "an earlier gate on this lane used Voices; only changes during this gate count"} : {})});
     });
     await step("6 a talk card plays nothing and throws nothing", async () => {
       ok("6 a talk card plays nothing and throws nothing", !seen.spoken.length && !seen.played.length && !seen.socket.length && !seen.errors.length,

@@ -76,7 +76,9 @@ export async function setDown(tokDoc, ids = [], {at = null, how = ""} = {}) {
   tokDoc = docOf(tokDoc);
   const actor = tokDoc?.actor, scene = tokDoc?.parent;
   if ( !actor || !scene || !ids.length ) return null;
-  if ( !isActiveGM() ) { game.socket?.emit?.(SOCKET, {action: "loose", op: "setdown", user: game.user.id, who: tokDoc.uuid, ids}); return null; }
+  if ( !isActiveGM() ) { game.socket?.emit?.(SOCKET, {action: "loose", op: "setdown", user: game.user.id, who: tokDoc.uuid, ids,
+    // B6990 (#1814): carry where it lands and how, or a knock-away from a player's client lands at the owner's feet
+    at: at && Number.isFinite(Number(at.x)) && Number.isFinite(Number(at.y)) ? {x: Number(at.x), y: Number(at.y)} : null, how: String(how ?? "")}); return null; }
   const allowed = new Set(setDownChoices(actor).map(c => c.id));
   const items = ids.map(id => actor.items.get(id)).filter(i => i && allowed.has(i.id));
   if ( !items.length ) return null;
@@ -204,7 +206,7 @@ export function setupLoose(d = {}) {
     if ( msg?.action !== "loose" || !isActiveGM() ) return;
     const user = game.users.get(msg.user), who = sync(msg.who);
     if ( !who?.actor || !user || !who.actor.testUserPermission?.(user, "OWNER") ) return;
-    if ( msg.op === "setdown" ) await setDown(who, Array.isArray(msg.ids) ? msg.ids : []).catch(e => console.error(`${MOD} | set down`, e));
+    if ( msg.op === "setdown" ) await setDown(who, Array.isArray(msg.ids) ? msg.ids : [], {at: msg.at ?? null, how: typeof msg.how === "string" ? msg.how.slice(0, 300) : ""}).catch(e => console.error(`${MOD} | set down`, e));
   }));
   return {rules: L, contentsKg, gearKg, setDown, openSetDown, setDownChoices, pileAt, heapRows, looseFor, draw};
 }

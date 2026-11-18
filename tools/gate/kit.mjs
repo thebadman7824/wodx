@@ -191,3 +191,25 @@ export async function waitFor(test, ms = 10000, every = 100) {
   while ( Date.now() < until ) { try { if ( await test() ) return true; } catch {} await new Promise(r => setTimeout(r, every)); }
   return false;
 }
+
+/**
+ * B6994 (#1824): new worlds start at Balanced (B4860), where many approval kinds pass on their own and NPCs, fights
+ * and routines run on Auto. A gate that checks that results wait in the queue starts from Hands on instead. Call it
+ * before the gate reads the settings it keeps; the function it returns puts the level back as it was and deletes the
+ * level cards the two moves posted.
+ *   export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+ */
+export async function handsOnStart() {
+  const A = game.modules.get("wodx-chronicle")?.api?.automation;
+  const before = A?.level?.();
+  if ( !A?.setLevel || !before || before === "handsOn" ) return async () => {};
+  const since = Date.now();
+  await A.setLevel("handsOn");
+  return async () => {
+    try {
+      if ( A.level() !== before ) await A.setLevel(before);
+      const cards = game.messages.filter(m => m.timestamp >= since && m.getFlag?.("wodx-chronicle", "automationLevel") !== undefined).map(m => m.id);
+      if ( cards.length ) await ChatMessage.deleteDocuments(cards);
+    } catch (e) { console.warn("WoDX gate | the automation level was not put back", e); }
+  };
+}
