@@ -414,6 +414,7 @@ Next free block: B7320
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
+| B7260-B7279 | Master Plan gaps: dated events and the Ledger proven on the real clock; Moravia's own news (used B7260-B7264) | Chronicle, Storyteller |
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | Gate recheck reruns each failing gate alone, twice before any verdict (used B7310) | tools |
@@ -14200,6 +14201,46 @@ Reverse: copy a known-good world into ~/foundry/known-good when one can reach th
 Gates. The WoDX Voices api keeps its counters (renders, hits, plays, fallbacks) and the engine and voice server states in memory for the whole page. gatetruthnpc step 6 switches Voices on with the browser engine and speaks a line, so the fallback counter goes to 1; putting its settings back points the engine at the voice server again, which is not running, so the server state reads "error". gatevoices ran after it on lane 3 in job 1979 and failed step 5 ("server":"error", "fallbacks":1), and passed alone. Step 5 now reads the counters and both states against where they stood when gatevoices started: no counter may grow, and each state must be off or unchanged. When an earlier gate had used Voices, the step's detail says so and shows the starting values. A run on a fresh lane checks exactly what it did before.
 
 Reverse: put back the strict `engine === "off" && server === "off"` and zero counters in step 5 of tools/gate/gatevoices.mjs.
+
+## B7260. Events placed in Moravia are Moravia's news (2026-11-17)
+WoDX Chronicle data. The world timeline (docs/research/era-timelines/r3) filed every Moravian event before 1839 under
+Europe (EU), and only later ones under Moravia (MO). The rules that hear home news (the War market news, the Legends
+book) read MO, so the Mongols in Moravia (1241), the Hussites (1424), the Swedes at Olomouc (1642, 1650), Brno (1645,
+1742), Olomouc (1758), the Tatar raid (1663), Austerlitz (1805) and the rest never counted as home news. Every line
+whose place is Moravia, the Moravian Karst, Olomouc, Brno, Znojmo, Jihlava, Opava, Ostrava or Austerlitz is now MO
+(55 lines, 27 of them in the eight classic eras built into the game; the rest are prologue eras). A homeland elsewhere in Europe no longer hears
+these on its cards, as it already did not hear the MO events after 1839. A harness test keeps every Moravian place on MO.
+
+Reverse: set those lines' region back to EU in the r3 files and run node tools/timeline/build-world-history.mjs.
+
+## B7261. A siege in Moravia is war at home (2026-11-17)
+WoDX Storyteller, market-news-rules.mjs worldNewsFor. A world event tagged siege in Moravia, when Moravia is home,
+brings the War preset, as a war does. The besieged town is rarely the home market, so the Siege preset (nothing comes in
+through the gates) stays for the book events and the battles that name the town. House rule.
+
+Reverse: drop the siege test in worldNewsFor.
+
+## B7262. War at home shows smoke over the towns (2026-11-17)
+WoDX Storyteller, town-look-rules.mjs eventLookFor. Show, don't tell: when a world timeline war or siege in Moravia
+fires and Moravia is home, every town scene and the scene being played gets a faint smoke wash for three days, "smoke on
+the horizon from burning villages". The hidden story never shows. House rule.
+
+Reverse: remove HOME_WAR_LOOK from eventLookFor.
+
+## B7263. A dated event taken back takes its sky with it (2026-11-17)
+WoDX Storyteller, town-looks.mjs hideEvent. Setting the clock back before an event ended its market news (already) but
+left the Black Death's pall or the war smoke on the scenes. wodxEventUndone now ends the looks made for that event.
+
+Reverse: remove the wodxEventUndone hook in setupTownLooks.
+
+## B7264. Gate gatedatedplay: dated events and the Ledger on the real clock (2026-11-17)
+Tools. gateevents and gateledger hold the world and call the checks by hand, so they never proved the updateWorldTime
+path that play takes. gatedatedplay releases the world and moves the clock with game.time.advance: the Mongols in
+Moravia fire once with one card, the smoke shows, the War market news card's own Apply button raises the gate market's
+food to 1.5 and short and quiets the crowd, setting the clock back undoes all of it, and a Ledger debt comes due once.
+It puts the clock, the hold, the fired list, the Ledger and the markets back.
+
+Reverse: delete tools/gate/gatedatedplay.mjs.
 
 ## B7290. The laptop watches the PC job system and only reports (2026-11-18)
 Ben asked for the laptop (DESKTOP-S6NV3Q9) to be used to keep everything in line. tools/pcq/watcher.mjs runs every 5 minutes from the scheduled task "WoDX PC watcher at logon" (tools/pcq/install-watcher.ps1, loop in run-watcher.ps1), below normal priority, on battery too. It reads only GitHub (the pc-status branch files, the runner status issues, pc-job issues, the merge train line, pc-alert issues) and the laptop's own process list. It never starts or stops a process, restarts OCR or art, or touches a lane, a world, a job or another tool's alert. It is taken as a fix to how the PCs are watched under the PC upkeep freeze, with no new lane or runner (logged in docs/PENDING-REVIEW.md). Its checks are fixed rules, not a local model: the laptop's i5-8210Y would sit at full load for each model call and slow lane 7.
