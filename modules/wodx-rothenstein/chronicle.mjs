@@ -14,6 +14,7 @@ import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS as TWIST_CHAPTERS, 
 import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD} from "./data/reveals.mjs";
 import {ENCOUNTERS, KINDS} from "./data/encounters.mjs";
 import {ROTHENSTEIN as RECIPE} from "./data/recipe.mjs";
+import * as FACTIONS from "./data/factions.mjs";
 
 export const ID = "rothenstein";
 
@@ -57,5 +58,13 @@ export const PACK = {
   reveals: {REVEALS, JUDGED_FAVOURS, MURDERS, COLD},
   encounters: {ENCOUNTERS, KINDS, LAST: "c9"},
   /** The builder's recipe (WoDX Storyteller builder.mjs). */
-  recipe: RECIPE
+  recipe: RECIPE,
+  /** Its Threads of Fate cards, loaded when the Storyteller's deck first loads (WoDX Storyteller threads.mjs). */
+  /** Otherworld scene tags for the chronicle's scenes (WoDX Otherworlds' Fill from preset). */
+  scenePresets: {rothenstein: {title: "What Sleeps Beneath Rothenstein", path: "modules/wodx-rothenstein/data/scene-tags.json"}},
+  /** The valley's ten starting factions, for WoDX NPC's faction window. */
+  factions: FACTIONS,
+  cards: () => import("./data/cards.mjs").then(m => m.CARDS),
+  /** The Future Darkness world events set in Rothenstein (fdw-...-mo-N, ids unchanged), loaded with the other large tables. */
+  events: () => import("./data/world-events.mjs").then(m => m.default.events)
 };

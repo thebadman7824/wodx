@@ -15,6 +15,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mock = installMock({dataRoot: root});
 globalThis.canvas = null;
 await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
+await import(join(root, "modules/wodx-rothenstein/scripts/register.mjs"));
 const M = "wodx-chronicle", DAY = 86400;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
