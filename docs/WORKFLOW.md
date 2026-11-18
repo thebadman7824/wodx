@@ -259,6 +259,14 @@ Done means verified. The format is in [registry/features/README.md](../registry/
 - **Change the row with the code**, in the same pull request. A fault from the solo world's Report a problem button or
   an audit goes in the row's `faults`; deferred work in its `open` or `deferred` list, never only in a desk or a shared
   JSON file.
+- **Each bug has a GitHub issue (B7480).** A bug that is not fixed in the pull request that found it gets one issue in
+  this repo, labelled `bug`: a gate that fails on main, a fault a thread finds and leaves, a Report a problem entry, an
+  audit finding. Search the `bug` issues, open and closed, before filing. The title names what goes wrong; the body
+  says where it was seen (job or issue number, file and line), what happened, and what should have happened. The PR
+  that fixes it says `Fixes #N` in its description, so the merge closes the issue. When only a later run on main can
+  prove the fix (a gate that failed in long runs only), the PR says `Refs #N` and the issue is closed when that run
+  passes. The bug's entry in a row's `faults` (or in `_inbox.json`) carries `"issue": N`. The issue holds the
+  discussion; the row holds the status. A gate on the known-faults list (B7060) needs an open `bug` issue.
 - **Finish before starting (the ratchet).** A module's half-built count (built but not gated, or an open fault) may not
   grow. New work in a module starts by finishing a row there; bug fixes are exempt; Ben can override.
 - **The core first.** Rows with `"core": true` (V20 Dark Ages Vampire in Rothenstein, 1197, with mortals and ghouls)
