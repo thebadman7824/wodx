@@ -525,7 +525,7 @@
    "ageFacts"
   ],
   "uses": [
-   "modules/wodx-paperdoll/scripts/sprites.mjs:674"
+   "modules/wodx-paperdoll/scripts/sprites.mjs:701"
   ]
  },
  {
@@ -536,8 +536,8 @@
    "isMinor"
   ],
   "uses": [
-   "modules/wodx-paperdoll/scripts/sprites.mjs:681",
-   "modules/wodx-paperdoll/scripts/sprites.mjs:681"
+   "modules/wodx-paperdoll/scripts/sprites.mjs:708",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:708"
   ]
  },
  {
@@ -710,7 +710,7 @@
    "modules/wodx-interactables/scripts/hook-listeners.mjs:36",
    "modules/wodx-library/scripts/arms-use.mjs:146",
    "modules/wodx-library/scripts/hygiene-use.mjs:11",
-   "modules/wodx-npc/scripts/main.mjs:1037"
+   "modules/wodx-npc/scripts/main.mjs:1040"
   ]
  },
  {
@@ -787,8 +787,8 @@
    "modules/wodx-library/scripts/hygiene-use.mjs:63",
    "modules/wodx-npc/scripts/fates.mjs:123",
    "modules/wodx-npc/scripts/fates.mjs:142",
-   "modules/wodx-npc/scripts/main.mjs:621",
-   "modules/wodx-npc/scripts/main.mjs:869",
+   "modules/wodx-npc/scripts/main.mjs:624",
+   "modules/wodx-npc/scripts/main.mjs:872",
    "modules/wodx-storyteller/scripts/sick-looks.mjs:28"
   ]
  },
@@ -929,8 +929,8 @@
    "modules/wodx-otherworlds/scripts/reflect.mjs:14",
    "modules/wodx-paperdoll/scripts/main.mjs:348",
    "modules/wodx-paperdoll/scripts/mounts.mjs:15",
-   "modules/wodx-paperdoll/scripts/sprites.mjs:702",
-   "modules/wodx-paperdoll/scripts/sprites.mjs:669",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:777",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:696",
    "modules/wodx-senses/scripts/main.mjs:163",
    "modules/wodx-senses/scripts/otherworld-sight.mjs:32",
    "modules/wodx-sheets/scripts/anachronism.mjs:31",
@@ -1610,7 +1610,7 @@
    "modules/wodx-npc/scripts/fates.mjs:201",
    "modules/wodx-npc/scripts/kin.mjs:174",
    "modules/wodx-npc/scripts/legacy.mjs:213",
-   "modules/wodx-npc/scripts/main.mjs:1349",
+   "modules/wodx-npc/scripts/main.mjs:1353",
    "modules/wodx-npc/scripts/servants.mjs:421",
    "modules/wodx-npc/scripts/servants.mjs:427",
    "modules/wodx-otherworlds/scripts/crossing.mjs:383",
@@ -2148,7 +2148,7 @@
    "modules/wodx-interactables/scripts/main.mjs:2039",
    "modules/wodx-interactables/scripts/stock.mjs:18",
    "modules/wodx-npc/scripts/main.mjs:156",
-   "modules/wodx-npc/scripts/main.mjs:1147"
+   "modules/wodx-npc/scripts/main.mjs:1150"
   ]
  },
  {
@@ -2800,7 +2800,7 @@
    "fled"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/main.mjs:773"
+   "modules/wodx-npc/scripts/main.mjs:776"
   ]
  },
  {
@@ -5524,7 +5524,7 @@
    "setTargets"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/main.mjs:815"
+   "modules/wodx-npc/scripts/main.mjs:818"
   ]
  }
 ]

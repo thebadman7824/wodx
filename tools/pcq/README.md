@@ -67,6 +67,15 @@ the runner's wrapper starts it again whenever it is missing. Every two minutes i
 running and, if not, starts it again and writes a line in `logs\runner-console.log`. A file named `runner-off` in
 `D:\WoDX\pcq` keeps it from restarting the runner; a file named `watchdog-off` stops the watchdog itself.
 
+## Sprites asked for from the game (B6144)
+
+The Storyteller's "Draw sprites now" button (WoDX Paperdoll settings) writes `roster.json` and `request.json` into
+`worlds/<world>/wodx-sprites`. Each loop the runner looks in the data folders listed in `runner.json` `spriteData`
+(the testbed lanes 2 to 6 only; never lane 1 or the Live world) for a request with no answer, runs `tools/sprites/batch.py` from its own clone on that roster
+into the same folder at below-normal priority, and writes `status.json` (`drawing`, then `done` or `failed`). One
+world at a time, beside the jobs (none starts while `runner-hold` is set); `python` in `runner.json` is the interpreter with numpy and Pillow. The game reads
+the status and puts the new sprites on the tokens.
+
 Hold (B7207): to keep the lanes free for other work (an art render, say) without stopping the runner, put a file
 named `runner-hold` in `D:\WoDX\pcq`. Running jobs finish, no new job starts and no running job takes more lanes,
 while the status issue, the stale-pull-request sweep, the merge train, self updates and cancels go on. The status

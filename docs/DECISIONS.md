@@ -338,6 +338,7 @@ Next free block: B7310
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
 | B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
+| B6140-B6149 | Sprite tokens: own sprite automatically, door work plays moves, sprite check gate (used B6140-B6148) | Paperdoll, Interactables, PC job runner |
 | B6150-B6154 | Done-claims audit fixes for WoDX Combat: hook relay, knockdown, full defence, body conditions, extra-action pass (used B6150-B6154) | Combat, Paperdoll, Actions |
 | B6155-B6159 | Done-claims audit fixes for WoDX Actions (Golconda caps, the day's sleep in every window, conditions on rolls, frenzy held turn by turn, the inner voice) (used B6155-B6159) | Actions, system fork |
 | B6160-B6164 | Done-claims audit fixes for WoDX Chronicle (ghoul feeding, derangement bouts, skip and hold, looks, patrons) (used B6160-B6164) | Chronicle |
@@ -10573,6 +10574,43 @@ Reverse: remove "1589|The Croatan" from TOLD_BY_BOOK.
 WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold much of the colony's economy by 1830 and form the Squatters' Council, while the Bunyip withdraw inland; its War of Tears (pdf 23 to 24) is a single year of killing, told later in the book, and Past Lives (pdf 70) sets the Bunyip's last stand in 1937. The card no longer starts the war in 1830. It tells the Squattocracy instead, and the war stays the book event war-of-tears at 1899 (W20, era advancement's lost-tribe year), whose date note now names Rage Across Australia and Past Lives so the Storyteller can move it to 1937.
 
 Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
+
+## B6140. A token wears its character's drawn sprite by itself (2026-11-15, Ben's question on how WoDX picks a sprite)
+WoDX Paperdoll. A sprite drawn by the batch for a character used to reach a token only when the Storyteller picked it from the token's buttons or a macro called dress(): a token a routine brought in showed the plain picture. Now the active Storyteller's computer dresses the scene in view when it opens and when the drawn sprites are learnt, and gives a new token its character's sprite as it is made. A token that already wears another sprite (picked by hand, a Garou form) is left as it is. World setting spriteDress, on.
+Reverse: set "Tokens wear their character's drawn sprite" off, or remove onTokenMade and autoDress in sprites.mjs.
+
+## B6141. Interactables tells when work is done at a door or a thing (2026-11-15, bug found in a code check)
+WoDX Interactables. B2616 said Interactables would call wodxInteractableWorked; no module ever called it, so picking a lock, forcing a door or listening never played a move. applyAsk and the search now call it on the Storyteller's computer with the token, the option's id, the thing and the result.
+Reverse: remove the two Hooks.callAll("wodxInteractableWorked") lines in interactables main.mjs.
+Merged 17 Nov: main had meanwhile sent the same message from WoDX Interactables (B6784), so this branch leaves that module as main has it; sending it twice made each move play twice and broke the Interactables tests. Searching does not send it.
+
+## B6142. More kinds of work have a move (2026-11-15)
+WoDX Paperdoll. Striking, knocking over, tearing down or desecrating a thing plays the sprite's blow; examining a thing closely and searching a hiding place play the looking-about move, as listening already did.
+Reverse: drop the two new lines in workFor (sprite-rules.mjs).
+
+## B6143. A gate that checks what the canvas shows (2026-11-15)
+tools/gate/gatespritecheck.mjs walks four figures four ways, turns a rider with a horse, runs a real NPC routine from placing to working to walking to sitting, listens at a real door, and checks B6140, reading the frame the token shows. It saves map pictures beside its result.
+Reverse: delete the gate.
+
+## B6144. The Storyteller asks for sprites from inside the game (2026-11-15, Ben's "yes, please do")
+WoDX Paperdoll and the PC job runner. Paperdoll's settings have a "Draw sprites now" button for the Storyteller: it writes roster.json and request.json into the world's wodx-sprites folder. The PC runner (tools/pcq/sprite-draw.mjs) looks for unanswered requests in the Foundry data folders named in runner.json (spriteData: the testbed lanes 2 to 6 only; never lane 1, which is the owner's own Foundry data, and never the Live world; corrected 17 Nov at merge review), runs tools/sprites/batch.py on the roster into that folder at below-normal priority, one world at a time, and writes status.json. The game reads status.json every 20 seconds, learns the new sprites and the tokens put them on (B6140). A world whose data folder the runner does not watch (Live, hosted elsewhere) gets a note after three minutes that no drawer has answered.
+Reverse: remove spriteData from runner.json (the runner then never draws), and the spriteDraw menu in sprites.mjs.
+
+## B6145. A sprite is never drawn tilted (2026-11-15, the seated smith on the testbed lay at a slant)
+WoDX Paperdoll. NPC routines walk tokens with autoRotate, which turns the token toward its path; the sprite then showed the turned picture, so a figure seated on its stool lay sideways at a slant and looked to be leaning back in mid-air. A sprite already shows its way by its rows, so the figure is now drawn upright whatever the token's rotation. The rotation itself stays on the token for anything that reads it. The stool the seated pose sits on is drawn in the sprite sheet; on a map seat the seat pose is used and no second stool is drawn.
+Reverse: remove upright() and its refreshToken hook in sprites.mjs.
+
+## B6146. Riders sit astride (2026-11-15, Ben: "Fix the sitting positions for mounted sprites")
+WoDX Paperdoll and the sprite drawer. The riding sheet was the standing figure with its legs pressed shorter: seen from the side the legs hung straight down, seen from the front they stayed together, so a rider looked to stand in the saddle. It is now drawn joint by joint like the other poses (wear.py ride, riding()): hips in the saddle, thighs forward and down round the barrel, shins hanging a little back, hands low on the reins, knees and feet spread either side seen from front or back, rising and settling a pixel with the gait. Coming toward the viewer, a rider astride was drawn over the horse's head; now the rider is drawn whole and the mount's picture is laid over it, so the head and chest are in front and the rider, set six drawn pixels higher on a beast (not on a bicycle or motorbike), shows head and shoulders above. Vehicle seats (benches, windows) are unchanged. The proto riding sheets are redrawn; the batch's version goes to 14, so "Draw sprites now" redraws everyone's own sprite with the new seat.
+Reverse: drop 'ride' from drawn() in proto_attacks.py and the behind/layFronts lines in mounts.mjs.
+
+## B6147. A walk on a slow screen is still a walk (2026-11-15, found by the sprite check gate)
+WoDX Paperdoll. A token that moved three squares or more between two looks was taken as set down, not walked, so it slid with no steps and kept its old facing. On a slow or busy screen (the testbed's freshly started lanes) a routine's walk covers that much between frames, so the figure crossed the map without turning. Now a long step counts as a placement only when Foundry is not walking the token.
+Reverse: drop the walking argument of step() in sprite-rules.mjs and its use in sprites.mjs.
+
+## B6148. The sprite check sees facing on a warm screen (2026-11-17, found by the sprite check gate)
+Gate only (gatespritecheck step 3). On a freshly reset lane Foundry sometimes lays an NPC routine's first walk down in one go with no animation, so the sprite never moves and has nothing to face; the check then failed although the routine arrived and the token sat. When no movement was seen, the check now helps the seated figure up (a held seat otherwise stays put wherever the token is dragged) and moves the same token three squares left with an animated step, in view, and requires it to face left on the way, then puts it back. A walk that was animated is still judged as before (it must face right toward the tavern).
+Reverse: drop the probe block in gatespritecheck step 3 and judge turned.includes("right") alone.
 
 ## B6150. A player's attack and damage hooks fire on the Storyteller's client too (2026-11-15)
 WoDX Combat. wodxAttackRolled and wodxDamageApplied fired only on the client that rolled or applied, and nearly every
