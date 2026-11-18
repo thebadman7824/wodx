@@ -334,3 +334,13 @@ test("B7194: a runner whose own code is current moves to main in place when only
   assert.match(due, /MY_SHA = now; return false;/, "without exiting");
   assert.match(src, /^let MY_SHA = /m);
 });
+
+
+test("B7380: the recheck gets laneWork's stop check instead of reaching for it", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /async function recheck\(job, lane, tag, wt, rep, L, stopped = \(\) => false\)/);
+  assert.match(src, /await recheck\(job, lane, tag, wt, rep, L, stopped\)/);
+  // every stopped() call sits inside a function that has stopped in scope: laneWork defines it, recheck takes it
+  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  assert.ok(body.includes("stopped()"));
+});

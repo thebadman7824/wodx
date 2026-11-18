@@ -338,7 +338,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
   if ( r.code !== 1 || job.recheck === false || stopped() ) return {code: r.code, text, sha: wt.sha};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`, sha: wt.sha};
+  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
 }
 
 /**
@@ -350,7 +350,9 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
  * The whole recheck stops taking runs after RECHECK_MINUTES; gates it did not finish say so.
  */
 const RECHECK_MINUTES = 120;
-async function recheck(job, lane, tag, wt, rep, L) {
+// B7380: stopped is laneWork's (the job was cancelled or made stale); B7310 called it here without it, so every
+// failing gates job ended its lanes with "Runner error ... stopped is not defined" (12:25Z-14:30Z, 18 Nov)
+async function recheck(job, lane, tag, wt, rep, L, stopped = () => false) {
   const failing = failingGates(rep).slice(0, 12);
   if ( !failing.length ) return "";
   const until = Date.now() + RECHECK_MINUTES * 60000;
