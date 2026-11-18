@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, resumeState, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -447,9 +447,30 @@ async function makeQueue(job, lane, tag) {
   try { list = m ? JSON.parse(m[1]) : null; } catch (e) { list = null; }
   if ( !list || list.length < 2 ) return null;
   const file = path.join(LOGS, `${tag}-queue.json`);
+  // B7341: a run the runner restarted in the middle of goes on from the gates it had not passed, on the same commit
+  const resume = readJson(`${file}.resume`, null);
+  fs.rmSync(`${file}.resume`, {force: true});
+  let carried = [];
+  if ( resume?.sha === wt.sha && Array.isArray(resume.left) && resume.passed?.length ) {
+    const left = list.filter(g => resume.left.includes(g));
+    if ( left.length >= 2 ) { carried = resume.passed; list = left; log(`${tag}: resuming after a restart: ${left.length} gate(s) left, ${carried.length} passed before it kept`); }
+  }
   fs.writeFileSync(file, JSON.stringify(list));
+  fs.writeFileSync(`${file}.sha`, wt.sha);
   fs.rmSync(`${file}.taken`, {force: true}); fs.rmSync(`${file}.stop`, {force: true});
-  return {file, size: list.length, sha: wt.sha};
+  return {file, size: list.length, sha: wt.sha, carried};
+}
+
+function saveResume(tag) {
+  const file = path.join(LOGS, `${tag}-queue.json`);
+  if ( !fs.existsSync(file) || !fs.existsSync(`${file}.sha`) ) return null;
+  let taken = [];
+  try { taken = fs.readFileSync(`${file}.taken`, "utf8").split("\n").map(l => l.trim().split(" ")[1]).filter(Boolean); } catch { /* none */ }
+  const reports = fs.readdirSync(LOGS).filter(f => f.startsWith(`${tag}-l`) && f.endsWith("-report.txt")).map(f => fs.readFileSync(path.join(LOGS, f), "utf8"));
+  const st = resumeState(readQueue(file), taken, reports);
+  if ( !st.passed.length ) return null;
+  fs.writeFileSync(`${file}.resume`, JSON.stringify({sha: fs.readFileSync(`${file}.sha`, "utf8").trim(), ...st}));
+  return st;
 }
 const queueLeft = file => readQueue(file).length;
 function requeueUnfinished(file, lane, report) {
@@ -464,7 +485,12 @@ function addLane(g, lane, n = 1) {
     .then(r => { g.parts.push({lane, ...r}); if ( state[lane].busy === g.issue.number ) state[lane].busy = null; });
   g.pending.add(p); p.finally(() => g.pending.delete(p));
 }
-/** Free lanes join a running gates job whose queue still holds work. waiting: lane jobs still in the queue. */
+/** B7340: whether a waiting lane job could start on one of this runner's lanes that is free now (pinned: its own lane). */
+function couldStartNow(job) {
+  if ( job.lane !== undefined ) return LANES.includes(String(job.lane)) && laneFree(String(job.lane)) && !laneRefuses(laneOf(job.lane), job);
+  return LANES.some(l => laneFree(l) && !laneRefuses(laneOf(l), job));
+}
+/** Free lanes join a running gates job whose queue still holds work. waiting: lane jobs still in the queue that could start now. */
 function growJobs(waiting) {
   for ( const g of growing.values() ) {
     if ( g.job.lane !== undefined ) continue; // pinned to one lane
@@ -492,6 +518,8 @@ async function start(issue, job, lanes) {
     if ( lanes.length ) {
       const q = await makeQueue(job, lanes[0], tag);
       if ( q ) {
+        // B7341: the gates that passed before a restart count in this result, on the same commit
+        if ( q.carried?.length ) g.parts.push({lane: null, code: 0, sha: q.sha, text: `Passed before the runner restarted (same commit ${q.sha.slice(0, 8)}, not run again):\n${q.carried.join("\n")}`});
         g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, CEILING)};
         growing.set(issue.number, g);
         log(`#${issue.number}: ${q.size} gate(s) on a shared queue`);
@@ -546,7 +574,7 @@ async function start(issue, job, lanes) {
  * failed while the gates were still running turns green by itself.
  */
 async function gateStatus(issue, job, parts, ok) {
-  const st = gateStatusFor(job, parts, ok, failingGates, issue.html_url);
+  const st = gateStatusFor(job, parts, ok, failingGates, resumeState, issue.html_url);
   if ( !st || DRY ) return;
   await gh("POST", `/statuses/${st.sha}`, st.body);
   log(`#${issue.number}: ${GATE_CONTEXT} ${st.body.state} on ${short(st.sha)}`);
@@ -698,8 +726,11 @@ log(`runner ${short(MY_SHA)} up; lanes ${LANES.join(", ")}; light slots ${conf.l
 for ( const i of await openIssues(LABEL.running) ) {
   if ( !(await startedHere(i.number)) ) continue;
   log(`#${i.number} was running when the runner stopped; queued again`);
+  let kept = null;
+  try { kept = saveResume(`job${i.number}`); } catch (e) { log(`#${i.number}: could not keep its progress: ${e.message}`); }
   await setLabels(i.number, [], [LABEL.running]);
-  await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
+  await comment(i.number, kept ? `The runner restarted while this ran; it will go on from the ${kept.left.length} gate(s) it had not passed (${kept.passed.length} passed gate(s) kept, if the commit is the same).`
+    : "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
 let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, lastWatch = 0;
 let lastGpu = 0; const gpuWatch = gpu.watcher();
@@ -789,7 +820,10 @@ for ( ;; ) {
       }
     }
     // B6526: lanes still free join a running gates job that has work left on its shared queue
-    if ( !draining && !holding && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number)));
+    // B7340: only a waiting job that could start on a lane free now holds a running job to its own lane count; a job
+    // pinned to a busy lane, or to another PC's lane, no longer keeps the free lanes idle (#2022 ran 309 gates on lane 2
+    // alone for 2 h 24 min while #2020 waited for lane 2 and lanes 3 to 5 sat idle)
+    if ( !draining && !holding && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number) && couldStartNow(q.job)));
     await status(queue.filter(q => !active.has(q.number)), holding ? "runner-hold: taking no new jobs" : null);
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;

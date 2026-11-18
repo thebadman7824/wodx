@@ -279,3 +279,18 @@ export function gateDigest(parts = []) {
   const bad = lines.filter(l => !passed(l));
   return `${lines.length - bad.length} of ${lines.length} gate(s) passed.${bad.length ? `\n\nNot passed:\n${bad.map(l => `- ${l.slice(0, 400)}`).join("\n")}` : ""}\n\n`;
 }
+
+/**
+ * B7341: when the runner restarts while a gates job runs, what that job had done so far is kept for its next start:
+ * the result lines of gates that passed (from every lane's report) and the gates still to run (the queue, plus gates a
+ * lane took and did not pass). Returns {passed, left} or null when the job kept no shared queue. Pure on its inputs.
+ */
+export function resumeState(queueLeft, takenRows, reports) {
+  const passed = new Map(), failed = new Set();
+  for ( const rep of reports ) for ( const m of String(rep).matchAll(/^(gate[\w-]*): (?:(\d+)\/(\d+) passed|ERROR).*$/gm) ) {
+    if ( m[2] !== undefined && Number(m[2]) >= Number(m[3]) && Number(m[3]) > 0 ) { passed.set(m[1], m[0]); failed.delete(m[1]); }
+    else { failed.add(m[1]); passed.delete(m[1]); }
+  }
+  const left = [...new Set([...takenRows, ...failed, ...queueLeft].filter(g => !passed.has(g)))];
+  return {passed: [...passed.values()], left};
+}
