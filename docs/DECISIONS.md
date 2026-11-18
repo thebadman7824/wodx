@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7310
+Next free block: B7320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -418,6 +418,7 @@ Next free block: B7310
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
+| B7310-B7319 | Gate recheck reruns each failing gate alone, twice before any verdict (used B7310) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14291,3 +14292,15 @@ Reverse: unset the PC_COMFY_URL and PC_OCR_* settings on the PC; the watcher the
 cloud-lane.mjs setup joins testbed/testbed-known-good.zip.partNN and modules/cloud-foundry-modules.zip.partNN from /mnt/project-files/private/cloud-foundry, checks each against its SHA256 file, and uses the PC world as lane 9's known-good copy and world and the PC lane's other modules in its Data folder. The joined zips stay in the box (the shared folder caps files at 20 MiB). Without the parts, setup falls back to the repo's world.json (B7243). A cloud fail stays a hint: gate6b's werewolf form step fails on lane 9 with this world and 28 of its 30 modules while it passes on a PC lane.
 
 Reverse: drop fromParts and its two calls; lane 9 goes back to the world.json world.
+
+## B7310. Each failing gate is rechecked alone, and no verdict rests on one run (2026-11-18)
+Repository workflow. The recheck that says whose a failing gate is (B4610) reset the lane once and then ran every
+failing gate, up to 12, in one run-gate call, so the "alone" run was not alone, and one bad draw of a flaky gate
+became "NEW with this change" (job 2006: gate7b shared its rerun with four other gates; job 2013 then passed it alone
+15/15). Now each gate runs in its own run-gate call on a freshly reset lane. A pass alone settles it ("passes alone").
+A failure alone is run once more, and a pass then reads "flaky". Two failures alone go to main the same way, where
+one pass is confirmed by a second run before the gate is called NEW. All runs on the branch's commit come before the
+runs on main, so the lane is deployed twice at most, and the whole recheck stops taking runs after 120 minutes; a
+gate it did not finish says so. tools/pcq/jobs.mjs recheckStep holds the rules and the harness tests them.
+
+Reverse: put the old recheck() body back (one runOn for all failing gates, recheckVerdicts).
