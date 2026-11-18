@@ -39,7 +39,7 @@ const lastCard = (tokUuid, after) => game.messages.contents.filter(m => m.getFla
 const zero = {bashing: 0, lethal: 0, aggravated: 0};
 const dmgOf = a => { const ct = C().corpusTrack(a), d = ct?.damage ?? a.system?.health?.damage ?? {}; return {bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated)}; };
 
-/** B7313: what makes an actor obvious to WoDX NPC (its own rule, wodx-npc main.mjs obvious()), as this gate reads it. */
+/** B7312: what makes an actor obvious to WoDX NPC (its own rule, wodx-npc main.mjs obvious()), for a failure's detail. */
 const OBVIOUS_EFFECT = /crinos|hispo|glabro|shape of the beast|horrid form|vicissitude|tenebrous form|wings|bestial|monstrous/i;
 const showsWhat = a => ["spirit", "wraith"].includes(C().getKind?.(a)) || [...(a?.effects ?? [])].some(e => OBVIOUS_EFFECT.test(e.name ?? "")) || !!a?.getFlag?.(MOD, "obvious");
 
@@ -49,14 +49,7 @@ export function cast() {
   const npcs = game.actors.filter(a => !a.hasPlayerOwner && ["PC", "Mortal", "Vampire", "Werewolf", "Wraith", "Hunter", "Creature", "Changing Breed"].includes(a.type));
   const byTemplate = new Map();
   for ( const a of npcs ) { const t = R.templateFor(infoOf(a)); if ( !byTemplate.has(t) ) byTemplate.set(t, a); }
-  // B7313: the hero must not frighten a guard by being what it is. The steps were written against the testbed's first
-  // player's actor, Ilse (a Kindred who passes for human). When Ilse is not taken, the next one is Ada, a Wraith (job
-  // 2016), and the guard flees from an obvious foe instead of walking round the wall. So the hero is the first player's
-  // actor by id that passes for human (Ilse on the testbed), then the first one. Actors other gates made (named for a
-  // gate, or owned by everyone) come last, since their ids are random and could sort first.
-  const players = game.actors.filter(a => a.hasPlayerOwner && a.type !== "Group").sort((x, y) => (x.id < y.id ? -1 : x.id > y.id ? 1 : 0));
-  const made = a => /^(wodx )?gate\b/i.test(a.name ?? "") || Number(a.ownership?.default ?? 0) >= 3;
-  const hero = players.find(a => !made(a) && !showsWhat(a)) ?? players.find(a => !showsWhat(a)) ?? players[0];
+  const hero = game.actors.find(a => a.hasPlayerOwner && a.type !== "Group");
   const fighter = ["neonate", "ghoul", "guard", "garou", "hunter", "elder"].map(t => byTemplate.get(t)).find(Boolean) ?? [...byTemplate.values()][0];
   const runner = ["guard", "ghoul", "neonate", "hunter", "civilian"].map(t => byTemplate.get(t)).find(a => a && a !== fighter) ?? fighter;
   const kindred = byTemplate.get("neonate") ?? byTemplate.get("elder") ?? null;
