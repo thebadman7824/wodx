@@ -105,7 +105,10 @@ test("the report says plainly that OCR and ComfyUI cannot be seen when no PC sen
 test("renders: work in ComfyUI with nothing finished for over the limit is a problem; idle or busy-and-moving is a note", () => {
   const withComfy = comfy => healthy({pcs: {...healthy().pcs, main: pc("main", 2, {comfy})}});
   assert.ok(assess(withComfy({up: true, running: 1, pending: 3, lastDoneMin: LIMITS.renderStallMin + 5})).problems.some(p => p.key === "main:render"));
-  for ( const c of [{up: true, running: 1, pending: 0, lastDoneMin: 4}, {up: true, running: 0, pending: 0, lastDoneMin: 600}, {up: false, running: 0, pending: 0, lastDoneMin: null}] ) {
+  const down = {up: false, running: 0, pending: 0, lastDoneMin: null};
+  const held = healthy({pcs: {...healthy().pcs, main: pc("main", 2, {comfy: down, gpu: {tempC: 60, vramPct: 20, warning: "ok", loadPct: 30, jobHeld: true}})}});
+  assert.ok(assess(held).problems.some(p => p.key === "main:comfy"), "ComfyUI down while a render holds the guard");
+  for ( const c of [{up: true, running: 1, pending: 0, lastDoneMin: 4}, {up: true, running: 0, pending: 0, lastDoneMin: 600}, down] ) {
     const a = assess(withComfy(c));
     assert.equal(a.problems.length, 0, JSON.stringify(c)); assert.ok(a.notes.some(n => /Main PC: ComfyUI/.test(n)));
   }

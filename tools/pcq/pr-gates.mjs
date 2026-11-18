@@ -93,6 +93,16 @@ export const isTrainCommit = msg => /\(merge train\)|^Merge train: /m.test(msg) 
  * B7332: whether the commits a push added (oldest first) are the train's own. A stamp right after a train commit counts
  * (merge-stamp writes it in the train's worktree); anything else is a push from outside the train.
  */
+/**
+ * B7430: the messages of the commits a push added that main does not already have. A train push that merges main in
+ * also brings main's own commits into the compare list (PR 2051, 18 Nov 15:55Z: 26 main commits ahead of the train's
+ * merge, stamp and review carry-over), and none of them is the train's; they are main's, so they are not counted.
+ * pushCommits: /compare/{before}...{head} commits; mainCommits: /compare/{before}...main commits.
+ */
+export function addedByPush(pushCommits = [], mainCommits = []) {
+  const onMain = new Set((mainCommits ?? []).map(c => c.sha));
+  return (pushCommits ?? []).filter(c => !onMain.has(c.sha)).map(c => c.commit?.message ?? "");
+}
 export function isTrainPush(messages) {
   if ( !messages?.length ) return false;
   let train = false;
@@ -202,7 +212,9 @@ async function main() {
   const before = env("BEFORE_SHA");
   if ( labels.includes("merge-train") && /^[0-9a-f]{40}$/.test(before) && before !== head ) {
     const cmp = await api(owner, "GET", `/compare/${before}...${head}`).catch(() => null);
-    const msgs = cmp?.status === "ahead" ? (cmp.commits ?? []).map(c => c.commit?.message ?? "") : null;
+    // B7430: leave out main's own commits that a merge of main brought in
+    const fromMain = cmp?.status === "ahead" ? await api(owner, "GET", `/compare/${before}...main`).catch(() => null) : null;
+    const msgs = cmp?.status === "ahead" ? addedByPush(cmp.commits, fromMain?.commits) : null;
     // B7390: only a push made while the label was on counts. A thread that takes the label off, pushes and labels
     // again is following the rule (PR 1880, 18 Nov: pushed 15:37, re-labelled 15:37:41, ejected 15:37:55 by B7332).
     const events = await api(owner, "GET", `/issues/${pr}/events?per_page=100`).catch(() => []);

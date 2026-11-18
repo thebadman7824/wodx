@@ -158,3 +158,18 @@ test("B7390: the workflow passes the push time", () => {
   const src = fs.readFileSync(path.join(ROOT, "tools", "pcq", "pr-gates.mjs"), "utf8");
   assert.match(src, /labelledBefore\(events, pushedAt\)/);
 });
+test("a train push that merges main in is the train's own, though main's commits come with it (B7430)", async () => {
+  const {addedByPush, isTrainPush} = await import("../pcq/pr-gates.mjs");
+  const c = (sha, message) => ({sha, commit: {message}});
+  // PR 2051, 18 Nov 15:55Z: main's commits, then the train's merge, review carry-over and stamp
+  const main = [c("m1", "Merge pull request #2065 (urgent label)"), c("m2", "Stamp versions, changelogs and decisions for merge"), c("m3", "File reviews carried over the merge with main (B7420)")];
+  const push = [...main, c("t1", "Merge main into claude/project-thread-wdrmjd (merge train)\n\nMerge-Train: yes"),
+    c("t2", "Merge train: carry 1 file review(s) over the merge with main"), c("t3", "Stamp versions, changelogs and decisions for merge\n\nMerge-Train: yes")];
+  assert.equal(isTrainPush(push.map(x => x.commit.message)), false, "the old check counted main's commits as from outside");
+  assert.deepEqual(addedByPush(push, main).length, 3);
+  assert.equal(isTrainPush(addedByPush(push, main)), true);
+  // a thread commit pushed with a merge of main still counts as from outside
+  assert.equal(isTrainPush(addedByPush([...push, c("x1", "Fix a test")], main)), false);
+  assert.equal(isTrainPush(addedByPush([...main, c("x2", "Merge branch 'main' into claude/x")], main)), false, "a thread's own merge of main");
+  assert.deepEqual(addedByPush(push, null).length, 6, "no main list: every commit counts, as before");
+});
