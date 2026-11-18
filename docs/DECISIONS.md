@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7450
+Next free block: B7470
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -420,6 +420,7 @@ Next free block: B7450
 | B7290-B7299 | PC watcher: ComfyUI off between renders is normal (used B7290-B7297) | tools (pcq) |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
+| B7320-B7329 | gate7b names what stops the runner's flight (used B7321-B7323) | tools (gates) |
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
 | B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
 | B7350-B7359 | One priority order for every project process (used B7350-B7356) | tools |
@@ -428,6 +429,7 @@ Next free block: B7450
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
 | B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
+| B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14339,6 +14341,21 @@ Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 194
 
 Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
 
+## B7321. gate7b's Auto step names what stops the flight (2026-11-18)
+Gates. "Auto: the NPC moves round the wall" fails on some runs and passes on others with the same code (jobs 2026 and 2027). The result files of two passing runs (jobs 2027 and 2028, saved to registry/gate7b-results/) show the same cast as the failing runs: the hero is "Ada (6d, wraith)", the runner is "Brawling Villager (Template)", and the runner flees in the passing runs too ("Brawling Villager (Template) flees."). So the hero and the choice to flee are not what varies, as B7312 first read it: in a failing run the flight finds no cell to run to ("has nowhere to run", a path of one square). The step's detail now also names the runner's movement as WoDX Combat reads it (movementFor), its statuses, its cell and the tokens within three squares. No pass condition changed. Not yet run in Foundry.
+
+Reverse: take move, conditions, cell and near out of whyRun in tools/gate/gate7b.mjs.
+
+## B7322. gatelimits gives the fomor's Stamina as the roll reads it (2026-11-18)
+Gates. "13. a fomor's Numbing" failed on some full runs and passed when run again (job 2030 and others). In the failing run all four tries rolled "Stamina + Medicine : 1 dice", though the gate sets Stamina 5. The Numbing roll reads the stored Stamina total (attr in wodx-actions main.js), and the system works the total out again after an update only when its settings flag asks for it (wod-actor-base.js _onUpdate), so the total could stay at 1. With one die at difficulty 6, four failed tries in a row happen about one run in sixteen, which fits a failure that comes and goes. The gate now sets the total with the value, as other gates do (gate6g, gate6i, gate6j), and the step's detail shows the Stamina it read. Not yet run in Foundry.
+
+Reverse: take total: 5 and the stamina detail out of step 13 in tools/gate/gatelimits.mjs.
+
+## B7323. gateduties names the places when the worship lands elsewhere (2026-11-18)
+Gates. "2. a night of worship at the chapel" failed on some full runs (job 2030): the worship duty pointed at a region that was not the chapel. The cult takes the first region on the scene that has a place kind (tagged in wodx-npc cults.mjs), and this scene also has a haven. The step's detail now lists the scene's regions in the order the cult reads them, so the next failure shows which place came first and why. No pass condition changed. Not yet run in Foundry.
+
+Reverse: take chapel and regions out of the step 2 detail in tools/gate/gateduties.mjs.
+
 ## B7330. runner-off no longer skips the cancel pass (2026-11-18)
 Repository workflow. A runner with runner-off waits for its running jobs to end before it stops, but that wait skipped
 the cancel pass, so a job labelled pc-cancel, or whose issue was closed, ran to the end anyway: job 2031 ran on a stale
@@ -14586,3 +14603,21 @@ only load or require a changed one are left to the cross-module gates and the ni
 modules can reach main and show the next night (B7443 names the merge). --wide keeps the older list. This narrows the
 integration check on each push; the full suite with every module deployed still runs every night on main.
 Reverse: make run-gate --touched use the --wide branch again.
+
+## B7460. lane-reset.cmd no longer starts the older nightly full run (2026-11-18)
+Repository workflow. Desk pick p6 keeps one nightly full run, tools/pcq/nightly-gates.mjs, an all-gates PC job. The
+Main PC's daily "WoDX lane reset" task still started tools/lanes/nightly.mjs from the last line of
+lane-reset.cmd, outside the queue, so two full runs could share the lanes. A nightly-off file stood in for the fix
+from 18 November. lane-reset.cmd now resets the autoReset lanes, starts the runner and stops. nightly.mjs is kept and
+still runs by hand. A harness check fails if lane-reset.cmd starts it again. nightly-gates.mjs still pins lane 8, which is held for the
+book OCR, so until its health-rank wiring lands a full run of main needs an all-gates PC job queued by hand.
+
+Reverse: put `node tools\lanes\nightly.mjs >> "%LOG%" 2>&1 & exit /b` back as the last line of tools/lanes/lane-reset.cmd.
+
+## B7461. The Main PC RAM install is a planned window (2026-11-18)
+Repository workflow. registry/priorities.json windows.planned gets its first row: the Main PC, 00:30Z to 03:00Z on
+19 November, for the RAM install and memory test (owner's times, 18 November). prio.mjs window and ask hold the PC
+from 30 minutes before. Nothing reads the file for this yet, so a runner-hold set on the PC does the holding tonight.
+The ask tests now pass a fixed time, so a planned window in the file cannot change their answer.
+
+Reverse: empty windows.planned in registry/priorities.json.
