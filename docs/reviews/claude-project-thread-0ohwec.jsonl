@@ -1,0 +1,1 @@
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read the one added row: it sits last in the Waiting for review table, has the four columns, matches the audit numbers in registry/waste-audit-2026-11-18.md (58 of 80 runs, 306 and 217 gates, 217 vs 134 direct for Actions), and quality-check.sh passes","hash":"a72d01ce5d95","at":"2026-11-18T11:48Z"}
