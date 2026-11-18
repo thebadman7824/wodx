@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7390
+Next free block: B7430
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -422,6 +422,8 @@ Next free block: B7390
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
 | B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
+| B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
+| B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14380,3 +14382,40 @@ arguments; tools/harness/recheck.test.mjs runs it end to end with stand-in lanes
 and a cancelled job), so a name it uses but does not have fails in the harness, not on the PCs.
 
 Reverse: none; the earlier form fails.
+
+## B7390. A push made with the label off does not take a pull request out of the train (2026-11-18)
+Repository workflow. B7332 takes a pull request out of the merge train when a push from outside the train lands
+while it is labelled, but it read the label at the time the workflow ran, not at the time of the push. PR 1880's
+thread did what the rule asks: took the label off, merged main, pushed at 15:37, labelled it again at 15:37:41, and was
+ejected at 15:37:55. The guard now compares the newest merge-train labelled event with the push time (the pull
+request's updated_at in the push's own event, or the newest pushed commit's time), and only a push at or after the
+label went on counts.
+
+Reverse: drop the labelledBefore test from the guard in pr-gates.mjs.
+
+## B7420. An urgent pull request goes to the front of the merge train (2026-11-18)
+Repository workflow. PR 2055 fixed the runner's gate recheck and sat green for about 15 minutes on 18 November with
+nobody told it needed a merge. A pull request labelled `urgent` as well as `merge-train` now goes to the front of the
+line at the runner's next step (tools/pcq/train.mjs line()), with urgent ones in label order among themselves. The
+pull request it passes waits and is brought up to date again on its turn; its running gate job is not stopped. The
+label name matches registry/priorities.json `urgentLabel` (rank R2).
+
+Reverse: remove the urgent sort in line().
+
+## B7421. The laptop watcher reports green pull requests that nothing merges (2026-11-18)
+Repository workflow. watcher.mjs reads each open pull request's newest `checks` run and `wodx/merge-rules` status.
+Green on both for over 15 minutes and outside the merge train, or green at the train front without a merge: a problem
+on the "PC watcher alert" issue at once. Green and waiting behind the front: a note. Titles starting HOLD are left out.
+The watcher still only reports and never merges.
+
+Reverse: drop greenPrs() from the snapshot.
+
+## B7422. Fixes to the runner or the train merge from their cloud thread (2026-11-18)
+Repository workflow, Ben's plan of 18 November. A cloud thread can merge through the GitHub tools (tested on #2060,
+scratch branches only); a PC's Claude session cannot without the owner's words there. A fix the train is stuck without
+merges from the cloud thread that made it, after the thread reads the head's `checks` and `wodx/merge-rules` as green
+itself and merges with expectedHeadSha. The owner's account has the Repository admin bypass for pull requests, so GitHub
+may accept a merge on red checks: the thread never relies on GitHub refusing. If the merge is refused, the thread tells
+the owner at once with a push notification. docs/WORKFLOW.md section 6 no longer says nobody can bypass the ruleset.
+
+Reverse: drop the section 6 rule; runner fixes then wait for the owner's merge.
