@@ -1,7 +1,8 @@
 /**
  * Runs gates on whichever testbed lane is free, after a drift check.
  *   node tools/lanes/run-gate.mjs <gate> [<gate> ...] [--lane 2] [--wait 30] [--repo <checkout>] [--channel msedge]
- *   node tools/lanes/run-gate.mjs --touched [--base origin/main]   only the gates the checkout's changes need (B3083)
+ *   node tools/lanes/run-gate.mjs --touched [--base origin/main] [--wide]   only the gates the checkout's changes need (B3083;
+ *                                                                            tier 1 since B7444, --wide the older wider list)
  *   node tools/lanes/run-gate.mjs --all [--shard 1/2]              every gate in the map (the nightly full run), or
  *                                                                 one share of them so two lanes split the list
  *   --report <file>       also write each gate's line and the exit code to this file
@@ -44,7 +45,7 @@ import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendL
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
   flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
-import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
+import {gateMap, touched, gatesFor, tier1, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
 import {readQueue, takeQueued} from "./gate-queue.mjs";
@@ -57,8 +58,10 @@ let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(a
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
 if ( args.includes("--touched") ) {
-  const t = touched(changedPaths(opt("base") ?? "origin/main", gateRoot), {root: gateRoot});
-  const list = gatesFor(t.modules, t.gates, gateMap(gateRoot));
+  const paths = changedPaths(opt("base") ?? "origin/main", gateRoot);
+  const t = touched(paths, {root: gateRoot});
+  // B7444: tier 1 (the changed modules' own gates, changed gates and the cross-module gates); --wide: the old list
+  const list = args.includes("--wide") ? gatesFor(t.modules, t.gates, gateMap(gateRoot)) : tier1(paths, {root: gateRoot});
   console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
   if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
   gates.push(...list);
@@ -102,6 +105,9 @@ if ( opt("lanes") && !shard ) {
   process.exit(Math.max(...codes));
 }
 const reportFile = opt("report");
+const times = [];
+// B7440: indented, so the report parsers (gate lines start at the line start) never read it as a gate
+const reportTimes = () => { if ( !times.length ) return; const t = `  TIMES ${times.join(" ")}`; console.log(t); report(t); times.length = 0; };
 const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
 report(`==== ${new Date().toISOString()} ${gates.length} gate(s)${shard ? ` shard ${shard[0]}` : ""}`);
 const cfg = loadConfig();
@@ -135,7 +141,7 @@ console.log(`Lane ${lane.id} (${laneUrl(lane)}) locked for ${gates.join(", ")}`)
 let code = 0, browser = null, page = null;
 const release = () => releaseLock(lane);
 const closeBrowser = async () => { const b = browser; browser = null; if ( b ) await within(b.close(), 20000, "closing the browser").catch(() => {}); };
-const bail = async (c, why) => { console.error(why); report(why); await closeBrowser(); release(); report(`exit ${c} on lane ${lane.id}`); process.exit(c); };
+const bail = async (c, why) => { console.error(why); report(why); reportTimes(); await closeBrowser(); release(); report(`exit ${c} on lane ${lane.id}`); process.exit(c); };
 process.on("SIGINT", () => bail(130, `Stopped by hand on lane ${lane.id}.`));
 process.on("SIGTERM", () => bail(143, `Stopped on lane ${lane.id}.`));
 // The whole run's watchdog (B3089): the run ends itself instead of holding the lane.
@@ -191,6 +197,7 @@ try {
     if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
     for ( let gate, k = 0; (gate = queueFile ? takeQueued(queueFile, lane.id) : gates[k++]); ) {
       const limit = limitOf(gate);
+      const gateStart = Date.now();
       extendLock(lane, Date.now() + limit + 5 * 60000);
       if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
       if ( !page ) {
@@ -359,6 +366,8 @@ try {
       const reloadsDuring = life.loads - loadsSeen - reloadsBefore;
       loadsSeen = life.loads;
       for ( const [k, w] of [[reloadsBefore, "before this gate"], [reloadsDuring, "during this gate"]] ) if ( k > 0 ) { const note = ` [page reloaded ${w}${k > 1 ? ` ${k} times` : ""}]`; if ( out.error ) out.error += note; else out.summary += note; }
+      // B7440: each gate's seconds (sign-in, the run and the put-back), for the TIMES line at the end of the report
+      times.push(`${gate}=${Math.round((Date.now() - gateStart) / 1000)}`);
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       const diagDump = async () => {
         if ( !DIAG ) return;
@@ -394,11 +403,14 @@ try {
   }
 } catch (e) {
   console.error(`Lane ${lane.id}: ${e.message}`);
+  // B7446: into the report too, so the job comment says why the run stopped before a gate
+  report(`Lane ${lane.id}: ${e.message}`);
   code = 1;
 } finally {
   await closeBrowser();
   release();
 }
+reportTimes();
 report(`exit ${code} on lane ${lane.id}`);
 process.exit(code);
 

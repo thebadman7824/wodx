@@ -60,12 +60,12 @@ export async function preflight(job, gatesDir = GATES) {
 
 if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url) ) {
   const args = process.argv.slice(2), kind = args[0];
-  const valued = new Set(["lanes", "lane", "ref", "prio", "thread", "after", "book", "under"]);
+  const valued = new Set(["lanes", "lane", "ref", "prio", "thread", "after", "book", "under", "since"]);
   const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : undefined; };
   const pos = args.slice(1).filter((a, i, all) => !a.startsWith("--") && !(i > 0 && all[i - 1].startsWith("--") && valued.has(all[i - 1].slice(2))));
   const num = k => opt(k) === undefined ? undefined : Number(opt(k));
   const raw = {kind, ref: opt("ref"), prio: num("prio"), thread: opt("thread"), after: num("after"), lane: num("lane"), lanes: num("lanes")};
-  if ( kind === "gates" ) Object.assign(raw, {gates: pos, touched: args.includes("--touched") || undefined, all: args.includes("--all") || undefined, branchTools: args.includes("--branch-tools") || undefined, reset: args.includes("--no-reset") ? false : undefined});
+  if ( kind === "gates" ) Object.assign(raw, {gates: pos, touched: args.includes("--touched") || undefined, since: opt("since"), all: args.includes("--all") || undefined, branchTools: args.includes("--branch-tools") || undefined, reset: args.includes("--no-reset") ? false : undefined});
   if ( kind === "gate-two" ) raw.gate = pos[0];
   if ( kind === "books-find" ) Object.assign(raw, {terms: pos, book: opt("book")});
   if ( kind === "setup-lane" && args.includes("--again") ) raw.again = true;

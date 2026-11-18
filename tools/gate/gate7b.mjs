@@ -116,9 +116,8 @@ async function turnTo(combat, tok) {
   await sleep(1600);
 }
 /**
- * B7312: what the runner read when it chose, for a failure's detail. The step fails after other gates when the guard
- * runs instead of walking round the wall ("faces what it fears": a guard fears the supernatural once it shows), so
- * this names what showed: the hero's effects and flags as WoDX NPC reads them, and the runner's options.
+ * B7312, B7321: what the runner read when it chose, and what limits its move, for a failure's detail. The hero (Ada, a Wraith)
+ * frightens the guard in passing runs too, and the guard flees round the wall; in a failing run it "has nowhere to run".
  */
 function whyRun(T) {
   try {
@@ -127,7 +126,11 @@ function whyRun(T) {
     return {fears: p.fears ?? [], fleeAt: p.fleeAt, heroObvious: showsWhat(hero), heroKind: C().getKind?.(hero) ?? null,
       heroEffects: [...(hero.effects ?? [])].map(e => e.name).slice(0, 12), heroNpcFlags: Object.keys(hero.flags?.[MOD] ?? {}),
       heroLinked: !!T.hero.document.actorLink, enemies: (st?.enemies ?? []).map(e => ({name: e.name, obvious: e.obvious, fear: e.fearSources ?? [], sup: e.supernatural})),
-      wounds: st?.self?.wounds ?? null, options: plan.options.slice(0, 4).map(o => `${o.label} (${o.score}): ${o.why}`)};
+      wounds: st?.self?.wounds ?? null, options: plan.options.slice(0, 4).map(o => `${o.label} (${o.score}): ${o.why}`),
+      // passing runs flee too (cast and steps in the lane result files, 18 Nov); a failing one has nowhere to run, so what
+      // limits the runner's move: its movement as WoDX Combat reads it, its conditions, and where it and the tokens near it stand
+      move: C().movementFor?.(T.runner.actor) ?? null, conditions: [...(T.runner.actor?.statuses ?? [])],
+      cell: npc().cellOf(T.runner), near: canvas.tokens.placeables.filter(t => t !== T.runner && Math.hypot(t.x - T.runner.x, t.y - T.runner.y) <= 3 * canvas.grid.size).map(t => `${t.name}@${npc().cellOf(t).i},${npc().cellOf(t).j}`).slice(0, 10)};
   } catch (e) { return {error: e.message}; }
 }
 /** B7312: whose turn it is, for a failure's detail. */
