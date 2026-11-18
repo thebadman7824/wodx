@@ -147,7 +147,7 @@ export function assess(snap, prev = {}) {
       if ( o.gaveUp ) add(`${p.key}:ocr:gaveup`, `${p.label}: the book OCR's log says it gave up${o.memWait ? " while waiting for memory" : ""}.`);
       else if ( o.workers > 0 && o.lastOutputMin !== null && o.lastOutputMin !== undefined && o.lastOutputMin > LIMITS.ocrStallMin )
         add(`${p.key}:ocr:stalled`, `${p.label}: the book OCR has ${o.workers} worker${o.workers > 1 ? "s" : ""} running but no new output for ${hm(o.lastOutputMin)}${o.memWait ? "; its log says it is waiting for memory" : ""}.`);
-      else notes.push(`${p.label}: book OCR ${o.workers ? `${o.workers} worker${o.workers > 1 ? "s" : ""} running` : "not running"}${o.lastOutputMin != null ? `, last output ${hm(o.lastOutputMin)} ago` : ""}${o.memWait ? ", waiting for memory" : ""}.`);
+      else notes.push(`${p.label}: book OCR ${o.workers ? `${o.workers} worker${o.workers > 1 ? "s" : ""} running` : "not running"}${o.lastOutputMin != null ? `, last output ${hm(o.lastOutputMin)} ago` : ""}${o.memWait ? ", waiting for memory" : ""}${o.stopped ? ", stopped (pause file or end of loop)" : ""}.`);
     }
   }
   if ( !sawComfy ) { const g = fresh("main") ? snap.pcs.main.gpu : null;

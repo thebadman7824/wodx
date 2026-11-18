@@ -112,9 +112,25 @@ async function comfy() {
  * PC_OCR_OUT (a folder) gives minutes since its newest file, looked for two levels down; PC_OCR_LOG (a log file) gives
  * whether its last lines say it waits for memory or gave up. Only counts, minutes and booleans leave the PC.
  */
+// The newest line that names a state decides it. The log mixes UTF-16 lines (the GPU guard's redirected errors) with
+// plain ones, so NULs are stripped first. Wordings seen on the Secondary PC, 18 November 2026: "waiting: 8.5 GB free
+// commit, 10013 pages left", "batch cut short: 3.2 GB free commit", "gpu guard: waited 120 min for 7 GB free, gave
+// up" then "batch N exit 3", "pause file present; stopping", "loop end".
+const OCR_STATES = [
+  ["gaveUp", /gave up|giving up|timed out|abort/i],
+  ["stopped", /pause file present|stopping|loop end/i],
+  ["memWait", /waiting:\s*[\d.]+\s*GB free|free commit|wait\w*[^\n]*(memory|ram)|(memory|ram)[^\n]*wait/i],
+  ["running", /pages? (done|written)|batch \d+ (start|done|ok)|^\S+ (page|ocr) /i],
+];
 export function ocrLogState(lines) {
-  const tail = lines.filter(l => l.trim()).slice(-5).join("\n");
-  return {memWait: /wait\w*[^\n]*(memory|ram)|(memory|ram)[^\n]*wait/i.test(tail), gaveUp: /gave up|giving up|timed out|abort/i.test(tail)};
+  const out = {memWait: false, gaveUp: false, stopped: false};
+  const clean = lines.map(l => String(l).replace(/\0/g, "").trim()).filter(Boolean);
+  for ( let i = clean.length - 1; i >= 0 && i >= clean.length - 20; i-- ) {
+    if ( /^batch \d+ exit [1-9]|batch \S+ exit [1-9]/i.test(clean[i]) ) continue;  // follows a "gave up" line
+    const hit = OCR_STATES.find(([, re]) => re.test(clean[i]));
+    if ( hit ) { if ( hit[0] !== "running" ) out[hit[0]] = true; break; }
+  }
+  return out;
 }
 function newestMin(dir, depth = 2, now = Date.now()) {
   let best = 0, seen = 0;
@@ -137,7 +153,7 @@ function ocr(procs) {
   if ( process.env.PC_OCR_OUT ) out.lastOutputMin = newestMin(process.env.PC_OCR_OUT);
   if ( process.env.PC_OCR_LOG ) {
     try { const t = fs.readFileSync(process.env.PC_OCR_LOG, "utf8"); Object.assign(out, ocrLogState(t.slice(-8000).split(/\r?\n/))); }
-    catch { out.memWait = null; out.gaveUp = null; }
+    catch { out.memWait = null; out.gaveUp = null; out.stopped = null; }
   }
   return out;
 }

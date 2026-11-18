@@ -126,9 +126,19 @@ test("status push: ComfyUI's queue and history become counts and minutes", () =>
     b: {status: {messages: [["execution_error", {timestamp: now - 12 * 60e3}]]}}};
   assert.deepEqual(comfyFrom({queue_running: [[1]], queue_pending: [[2], [3]]}, hist, now), {up: true, running: 1, pending: 2, lastDoneMin: 12});
   assert.deepEqual(comfyFrom({}, {}, now), {up: true, running: 0, pending: 0, lastDoneMin: null});
-  assert.deepEqual(ocrLogState(["page 12 done", "waiting for free memory (3.1 GB, need 4)"]), {memWait: true, gaveUp: false});
-  assert.deepEqual(ocrLogState(["waited 2 h for memory; gave up", ""]), {memWait: true, gaveUp: true});
-  assert.deepEqual(ocrLogState(["page 13 done"]), {memWait: false, gaveUp: false});
+  const st = (memWait, gaveUp, stopped) => ({memWait, gaveUp, stopped});
+  assert.deepEqual(ocrLogState(["page 12 done", "waiting for free memory (3.1 GB, need 4)"]), st(true, false, false));
+  assert.deepEqual(ocrLogState(["page 13 done"]), st(false, false, false));
+});
+
+test("status push: the Secondary PC's real OCR log wordings, NULs from UTF-16 lines stripped, newest state wins", () => {
+  const st = (memWait, gaveUp, stopped) => ({memWait, gaveUp, stopped});
+  const u16 = s => [...s].join("\0") + "\0";
+  assert.deepEqual(ocrLogState(["2026-11-17T23:05:36-05:00 waiting: 8.5 GB free commit, 10013 pages left"]), st(true, false, false));
+  assert.deepEqual(ocrLogState(["batch cut short: 3.2 GB free commit"]), st(true, false, false));
+  assert.deepEqual(ocrLogState([u16("gpu guard: waited 120 min for 7 GB free, gave up"), "batch 14 exit 3"]), st(false, true, false));
+  assert.deepEqual(ocrLogState(["waiting: 8.5 GB free commit, 10013 pages left", "pause file present; stopping", "loop end"]), st(false, false, true));
+  assert.deepEqual(ocrLogState(["gpu guard: waited 120 min for 7 GB free, gave up", "batch 14 exit 3", "waiting: 9.1 GB free commit, 10000 pages left"]), st(true, false, false), "a newer wait replaces an older give-up");
 });
 
 test("parsers: the train line and the status stamp", () => {
