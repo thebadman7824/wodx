@@ -38,7 +38,7 @@ no lead (gates lead), and an art render there runs inside its own memory budget.
    (B7331, B7332). The 3-hour limit stops counting while the lanes that could run the front job are held, off, or in a
    planned window.
 6. **Nightly.** One nightly full run (tools/pcq/nightly-gates.mjs), at R4, skipped when main did not change. The
-   older Main PC run from lane-reset.cmd (tools/lanes/nightly.mjs) is retired if the Main PC shows it still runs.
+   older Main PC run from lane-reset.cmd (tools/lanes/nightly.mjs) is retired: lane-reset.cmd no longer starts it (B7460).
 7. **Planned hardware work.** Add a row to `windows.planned` (PC, start, end, reason). From 30 minutes before it, the
    PC takes no new jobs and the train clock stops, so a shutdown cuts nothing. The owner's evenings at the PCs
    (00:30 to 02:00 UTC) change nothing unless the owner asks.
