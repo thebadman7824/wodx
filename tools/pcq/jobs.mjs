@@ -169,6 +169,19 @@ export function recheckVerdicts(gates, alone, main, notOnMain = new Set()) {
 }
 
 /** B7310: whether one gate passed in a run-gate report: true, false (failed or ERROR), or null (no line: it did not run). */
+/**
+ * B7447: a lane that faulted mid-run is reset and runs once more, and its report file starts afresh; the gates it had
+ * finished are not put back on the shared queue, so their lines (and any failure among them) were lost from the job's
+ * result (PR 1880's #2076, 18 Nov: 309 gates queued, 281 reported, 28 run before a fault on lanes 4 and 3). The
+ * earlier report goes in front of the new one, and a failure in it fails the lane though the retry passed.
+ * Returns {report, code}.
+ */
+export function withEarlier(before, report, code, lane) {
+  if ( !String(before ?? "").trim() ) return {report, code};
+  const merged = `${String(before).trim()}\n(lane ${lane} was reset after that and the run went on)\n${report}`;
+  return {report: merged, code: code === 0 && failingGates(before).length ? 1 : code};
+}
+
 export function gatePassed(gate, report = "") {
   let out = null;
   for ( const m of String(report).matchAll(/^(gate[\w-]*): (?:(\d+)\/(\d+) passed|ERROR)/gm) )

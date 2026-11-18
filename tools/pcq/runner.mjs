@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -283,20 +283,22 @@ function failDetail(lane, report) {
   return out.join("\n");
 }
 /** One lane's part of a lane job. Returns {code, text}. */
-async function laneWork(job, lane, i, n, tag, retried = false) {
+async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return {code: null, text: wt.error};
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
   // B7205: a job stopped as stale neither retries a lane nor reruns failing gates
   const stopped = () => halted.has(tag) || (!!job.queue && fs.existsSync(`${job.queue}.stop`));
-  const faultRetry = async (why, out = "") => {
+  // carry: out is a gate report, whose finished gates keep their lines on the retry (B7447)
+  const faultRetry = async (why, out = "", carry = false) => {
     // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
-    if ( retried || stopped() ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
+    if ( retried || stopped() ) return {code: null, text: `${before ? `${before.trim()}\n` : ""}${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
     await lanesCmd(["reset", "--lane", lane], {logTo: L});
-    return laneWork(job, lane, i, n, tag, true);
+    // only on a shared queue: a shard run again runs all its gates again
+    return laneWork(job, lane, i, n, tag, true, carry && job.queue ? out : "");
   };
   if ( job.kind === "setup-lane" ) {
     const r = await lanesCmd(["setup", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 90});
@@ -336,13 +338,15 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
     ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir),
       env: {NODE_PATH: [path.join(ROOT, "tools", "harness", "node_modules"), process.env.NODE_PATH].filter(Boolean).join(path.delimiter)}})
     : await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
-  const rep = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
+  const own = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
     (fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000));
-  if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
+  if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, own, true);
+  // B7447: the gates this lane finished before a fault and a reset keep their lines
+  const {report: rep, code: laneCode} = withEarlier(before, own, r.code, lane);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
-  if ( r.code !== 1 || job.recheck === false || stopped() ) return {code: r.code, text, sha: wt.sha};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
+  if ( laneCode !== 1 || job.recheck === false || stopped() ) return {code: laneCode, text, sha: wt.sha};
+  return {code: laneCode, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
 }
 
 /**

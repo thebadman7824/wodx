@@ -386,3 +386,19 @@ test("B7330: a runner stopping with runner-off still acts on pc-cancel", () => {
   const block = src.slice(off, src.indexOf("continue;", off));
   assert.match(block, /cancelCheck\(/, "the runner-off wait runs the cancel pass");
 });
+
+test("B7447: the gates a lane finished before a fault and a reset keep their lines, and a failure among them counts", async () => {
+  const {withEarlier, failingGates} = await import("../pcq/jobs.mjs");
+  const before = "==== 2026-11-18T16:26:30Z 309 gate(s)\ngate-interact: 9/9 passed\ngate6b: 3/4 passed; failed: 2. x\n";
+  const after = "==== 2026-11-18T16:52:55Z 289 gate(s)\ngate7e: 10/10 passed\nexit 0 on lane 4\n";
+  const r = withEarlier(before, after, 0, 4);
+  assert.deepEqual([...r.report.matchAll(/^(gate[\w-]+): /gm)].map(m => m[1]), ["gate-interact", "gate6b", "gate7e"]);
+  assert.match(r.report, /lane 4 was reset after that and the run went on/);
+  assert.equal(r.code, 1, "gate6b failed before the fault, so the lane fails though the retry passed");
+  assert.deepEqual(failingGates(r.report), ["gate6b"]);
+  assert.equal(withEarlier(before.replace("3/4", "4/4").replace("; failed: 2. x", ""), after, 0, 4).code, 0);
+  assert.deepEqual(withEarlier("", after, 0, 4), {report: after, code: 0}, "no fault: unchanged");
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /faultRetry\(`run-gate on lane \$\{lane\} stopped with [^\n]*, own, true\)/);
+  assert.match(src, /return laneWork\(job, lane, i, n, tag, true, carry && job\.queue \? out : ""\)/, "only on a shared queue");
+});
