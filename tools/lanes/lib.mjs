@@ -483,3 +483,29 @@ export const PUT_SHEETS_BACK = async plan => {
   }
   return n;
 };
+
+/**
+ * B7230: what run-gate put back in the page itself after a gate (hooks and timers the gate's own code left, functions
+ * it swapped, a property laid over game.user), as the words on the gate's line. "" when nothing was left.
+ */
+export function pageNote(p) {
+  if ( !p ) return "";
+  const bits = [];
+  const hooks = [...new Set(p.hooks ?? [])];
+  if ( p.hooks?.length ) bits.push(`${p.hooks.length} hook(s) the gate left removed (${hooks.join(", ")})`);
+  if ( p.intervals ) bits.push(`${p.intervals} timer(s) the gate left stopped`);
+  if ( p.refs?.length ) bits.push(`${p.refs.join(", ")} put back`);
+  if ( p.user?.length ) bits.push(`game.user ${p.user.join(", ")} taken off`);
+  return bits.join(", ");
+}
+
+/**
+ * B7230: whether a stack trace (Error().stack, from inside run-gate's Hooks.on, Hooks.once or setInterval wrapper)
+ * was called by a gate file. Frames of the wrappers and of Foundry itself are passed over (Hooks.once calls Hooks.on),
+ * so a hook a module registers while a gate calls into it counts as the module's, and is left alone.
+ */
+export function gateCaller(stack) {
+  const frames = String(stack ?? "").split("\n").slice(1);
+  const caller = frames.find(l => /\bat\b/.test(l) && !/wodxGate(On|Once|Interval)|gateCaller|byGate|\/scripts\/foundry|\/foundry\.m?js/.test(l)) ?? "";
+  return caller.includes("/wodx-gate/");
+}
