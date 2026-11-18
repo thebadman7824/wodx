@@ -15,6 +15,21 @@ Licence: the Foundry EULA (Terms item 2) and FAQ (License Questions, example 3) 
 licence while only one is reachable by anyone other than the licence owner. Live is that one. Every lane stays local:
 UPnP off, no router forward, never a link to players.
 
+## Lane 9: a cloud thread's own box (B7240)
+
+A cloud thread can run gates without a PC lane. In the thread's Linux box:
+
+    node tools/lanes/cloud-lane.mjs setup          about 2 minutes: Foundry, Node 24, deploy, clean fingerprint
+    node tools/lanes/cloud-lane.mjs gate gateplains   run-gate.mjs on lane 9 (any run-gate options work)
+    node tools/lanes/cloud-lane.mjs stop
+
+Setup reads Ben's Foundry Node zip and the signed license.json from the private shared folder
+/mnt/project-files/private/cloud-foundry (never the repo, never printed). The cloud network must allow foundryvtt.com,
+r2.foundryvtt.com and api.foundryvtt.com. Lane 9's world is the repo's world.json with the WoDX modules on and a
+Gamemaster Test account, not the PC known-good world: gates that need that world's scenes, actors or other modules
+belong on a PC lane. Measured 17 November 2026: setup 108 s from the cache, gateplains 28/28 in 203 s, peak 3.1 GB RAM
+(browser 2.2 GB, Foundry 0.24 GB) of the box's 15 GB.
+
 ## Running gates
 
 Threads queue gate runs through the PC job queue (tools/pcq/README.md); the runner there drives lanes 2 to 5. Lane 6 is reserved for the local agents (B6527): run-gate takes it only with --lane 6, and the nightly reset leaves it alone.
