@@ -39,6 +39,7 @@ import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
 import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
+import {recheck as recheckRun} from "./recheck.mjs";
 import {prMark, staleWhy, jobOfLog} from "./stale.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
@@ -338,7 +339,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
   if ( r.code !== 1 || job.recheck === false || stopped() ) return {code: r.code, text, sha: wt.sha};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`, sha: wt.sha};
+  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
 }
 
 /**
@@ -349,51 +350,10 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
  * All the runs on this commit come first and the runs on main after, so the lane is deployed twice at most.
  * The whole recheck stops taking runs after RECHECK_MINUTES; gates it did not finish say so.
  */
-const RECHECK_MINUTES = 120;
-async function recheck(job, lane, tag, wt, rep, L) {
-  const failing = failingGates(rep).slice(0, 12);
-  if ( !failing.length ) return "";
-  const until = Date.now() + RECHECK_MINUTES * 60000;
-  let runs = 0;
-  const runOne = async (dir, gate) => {
-    const f = path.join(LOGS, `${tag}-l${lane}-re${++runs}-${gate}.txt`);
-    fs.rmSync(f, {force: true});
-    await lanesCmd(["reset", "--lane", lane, "--repo", dir], {logTo: L});
-    const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", "--repo", dir], {logTo: L});
-    if ( d.code !== 0 ) return null;
-    await node("tools/lanes/run-gate.mjs", [gate, "--lane", String(lane), "--wait", "10", "--report", f, "--repo", dir], {logTo: L, minutes: 36, stallMinutes: stallFor(dir)});
-    return fs.existsSync(f) ? gatePassed(gate, fs.readFileSync(f, "utf8")) : null;
-  };
-  log(`${tag} lane ${lane}: rechecking ${failing.join(" ")}, each alone on a fresh lane`);
-  const st = Object.fromEntries(failing.map(g => [g, {alone: [], main: job.ref === "main" ? null : [], notOnMain: false}]));
-  const outOfTime = new Set();
-  const settle = async (dir, side) => {
-    for ( const g of failing ) {
-      for ( ;; ) {
-        const s = recheckStep(st[g].alone, st[g].main, {notOnMain: st[g].notOnMain});
-        if ( s.next !== side ) break;
-        if ( stopped() || Date.now() > until ) { outOfTime.add(g); break; }
-        st[g][side].push(await runOne(dir, g));
-      }
-    }
-  };
-  await settle(wt.dir, "alone");
-  if ( job.ref !== "main" && failing.some(g => recheckStep(st[g].alone, st[g].main).next === "main") ) {
-    const m = await worktree(lane, "main");
-    if ( m.error ) failing.forEach(g => { if ( st[g].main ) st[g].main.push(null); });
-    else {
-      for ( const g of failing ) if ( !fs.existsSync(path.join(m.dir, "tools", "gate", `${g}.mjs`)) ) st[g].notOnMain = true;
-      if ( m.sha === wt.sha ) failing.forEach(g => { st[g].main = [...st[g].alone]; });
-      else await settle(m.dir, "main");
-    }
-  }
-  const rows = failing.map(g => {
-    const s = recheckStep(st[g].alone, st[g].main, {notOnMain: st[g].notOnMain});
-    const v = s.verdict ?? (outOfTime.has(g) ? `not settled: the recheck ran out of time (alone ${JSON.stringify(st[g].alone)}, main ${JSON.stringify(st[g].main)})` : "not settled");
-    return `- ${g}: ${v}`;
-  });
-  return [`Recheck (each failing gate alone on a fresh lane, ${runs} run(s)):`, ...rows].join("\n");
-}
+// B7380: the recheck lives in recheck.mjs (so the harness can run it); laneWork passes its own stopped check, which
+// B7310 had called here without having it, so every failing gates job ended its lanes with "stopped is not defined"
+const recheck = (job, lane, tag, wt, rep, L, stopped) => recheckRun({job, lane, tag, wt, rep, L, stopped,
+  deps: {lanesCmd, node, worktree, stallFor, log, logs: LOGS}});
 async function runLight(job, tag) {
   const L = path.join(LOGS, `${tag}.log`);
   if ( job.kind === "books-find" ) {
