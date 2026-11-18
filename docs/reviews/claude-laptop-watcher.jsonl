@@ -1,0 +1,8 @@
+{"file":"tools/pcq/watcher.mjs","verdict":"working","how":"read in full; 11 unit tests pass (node --test tools/harness/watcher.test.mjs); ran live on the laptop for real: opened report #2002 and alert #2003 for the Main PC status push","hash":"8e4548dc75c1","at":"2026-11-18T02:59Z"}
+{"file":"tools/harness/watcher.test.mjs","verdict":"working","how":"read in full; 11 unit tests pass (node --test tools/harness/watcher.test.mjs); ran live on the laptop for real: opened report #2002 and alert #2003 for the Main PC status push","hash":"678f90827a4e","at":"2026-11-18T02:59Z"}
+{"file":"tools/pcq/run-watcher.ps1","verdict":"working","how":"read in full; installed on the laptop, task runs the loop at BelowNormal (priority 6), second copy exits in 1.3 s, ASCII log checked","hash":"ff5fcd163db4","at":"2026-11-18T02:59Z"}
+{"file":"tools/pcq/install-watcher.ps1","verdict":"working","how":"read in full; installed on the laptop, task runs the loop at BelowNormal (priority 6), second copy exits in 1.3 s, ASCII log checked","hash":"951ba7cb9c80","at":"2026-11-18T02:59Z"}
+{"file":".github/workflows/pc-heartbeat.yml","verdict":"working","how":"read in full; ran its loop in Git Bash against live issues with writes stubbed, at 900 s (no alerts) and 20 s (alert branch fires)","hash":"9632c5f23d36","at":"2026-11-18T02:59Z"}
+{"file":"tools/pcq/README.md","verdict":"working","how":"read the changed sections in full","hash":"fc71c8604ee3","at":"2026-11-18T02:59Z"}
+{"file":"docs/TOOLS.md","verdict":"working","how":"read the changed sections in full","hash":"626dc91eebf4","at":"2026-11-18T02:59Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read the changed sections in full","hash":"54a141f76945","at":"2026-11-18T02:59Z"}
