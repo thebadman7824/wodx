@@ -151,9 +151,12 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    (B7145).
 
 Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
-`wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force
-pushes are blocked and main cannot be deleted. Nothing lands on main except through a pull request whose checks
-pass, so routines and tools that used to push to main directly must open a pull request instead.
+`wodx/merge-rules` must pass, force pushes are blocked and main cannot be deleted. Nothing lands on main except
+through a pull request whose checks pass, so routines and tools that used to push to main directly must open a pull
+request instead. On 18 November the owner gave the Repository admin role a bypass for pull requests, for the owner's
+own one-time go-aheads only. Threads, the runner and the watcher all act on GitHub as the owner's account, which holds
+that role, so GitHub may let them merge past red or missing checks instead of refusing: never rely on GitHub to
+refuse, and never use the bypass without the owner's one-time go-ahead for that pull request.
 
 `node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
 GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it.
@@ -167,6 +170,36 @@ pushes, lets pc-gates.yml gate the new head (that gate job runs before other gat
 train with a comment saying why; fix it, push, and add the label again. Pull requests further back are not brought up
 to date or gated again while they wait, and the hourly sweep no longer merges main into open pull requests. The
 runner's status issue shows the line. `node tools/pcq/train.mjs` prints what the train would do now.
+
+**Urgent pull requests (B7420, Ben, 18 November 2026).** A fix that other work is stuck behind gets the label `urgent`
+as well as `merge-train`. It goes to the front of the line at the runner's next step, ahead of older labels (urgent
+ones keep label order among themselves), and its gate job then runs as the train front. The pull request it passes
+waits behind it and is brought up to date again when its turn comes; its running gate job is not stopped. Use it
+only for real unblocking fixes (registry/priorities.json rank R2), since each one costs the pull request it passes a
+fresh gate run.
+
+**Fixes to the runner or the train itself (B7422, Ben, 18 November 2026).** The train cannot be trusted to merge a fix
+for itself, so a pull request whose fix is to `tools/pcq/runner.mjs`, `tools/pcq/train.mjs`, the gate recheck,
+`pc-gates.yml` or anything else the train needs in order to merge, and that the train is stuck without, is merged by
+the cloud thread that made it. A cloud thread can merge through the GitHub tools (tested 18 November 2026 on #2060).
+A Claude session on a PC cannot: its safety check refuses a merge without the owner's words in that session.
+
+1. Leave out the `merge-train` label, and finish rules 1, 3 and 4 as usual. Bring the branch up to date with main
+   and run merge-stamp yourself (the old way, below), then queue the touched gates.
+2. Before merging, read the head commit yourself: the newest `checks` check run is completed with success and the
+   newest `wodx/merge-rules` status is success, both on that exact commit. Then merge with `expectedHeadSha` set to
+   that commit, merge method `merge`. If either is not green, wait; never merge on the strength of GitHub accepting
+   the call (see the bypass above).
+3. If the merge call is refused, or the fix is still not green 15 minutes after the thread expected it to be, tell
+   the owner at once, in the thread and with a push notification, saying exactly what is needed (a merge, a one-time
+   go-ahead, a look at a failing gate). Do not wait to be asked.
+4. Say in the thread and on the pull request that it merged outside the train, since the train front is then behind
+   main and gets a fresh gate run.
+
+**Watching for stalls (B7421).** The laptop watcher (tools/pcq/watcher.mjs) lists every open pull request that has
+been green on `checks` and `wodx/merge-rules` for over 15 minutes. One outside the train, or a green train front that
+has not merged, goes on the "PC watcher alert" issue (label pc-alert) right away; one waiting its turn in the train is
+a note on the report. A title starting HOLD is left out. The watcher only reports; it never merges.
 
 Without the train (the owner, or the train is off), the old way still works:
 
