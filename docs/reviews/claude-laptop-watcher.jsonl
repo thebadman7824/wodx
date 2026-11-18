@@ -6,3 +6,9 @@
 {"file":"tools/pcq/README.md","verdict":"working","how":"read the changed sections in full","hash":"fc71c8604ee3","at":"2026-11-18T02:59Z"}
 {"file":"docs/TOOLS.md","verdict":"working","how":"read the changed sections in full","hash":"626dc91eebf4","at":"2026-11-18T02:59Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read the changed sections in full","hash":"54a141f76945","at":"2026-11-18T02:59Z"}
+{"file":"tools/pcq/watcher.mjs","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"3c9e554e6414","at":"2026-11-18T03:02Z"}
+{"file":"tools/pcq/README.md","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"a4a537cd7493","at":"2026-11-18T03:02Z"}
+{"file":"docs/TOOLS.md","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"b8639ab0f309","at":"2026-11-18T03:02Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"664461b799c8","at":"2026-11-18T03:02Z"}
+{"file":".github/workflows/pc-heartbeat.yml","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"b5275ce60ce4","at":"2026-11-18T03:02Z"}
+{"file":"changes/decisions/B7290.md","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"a5c6ff611aad","at":"2026-11-18T03:02Z"}

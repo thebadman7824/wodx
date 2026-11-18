@@ -1,5 +1,5 @@
 /**
- * PC watcher (B7260): the laptop (DESKTOP-S6NV3Q9) checks every few minutes that the PC job system is running as it
+ * PC watcher (B7290): the laptop (DESKTOP-S6NV3Q9) checks every few minutes that the PC job system is running as it
  * should, and writes what it finds to one issue. It only looks and reports: it never kills or starts a process,
  * restarts OCR or art, touches a lane or a world, closes another tool's alert or moves a job.
  *

@@ -82,7 +82,7 @@ or leave the lane out and the first free lane on either PC takes it. Book and Tr
 It is slower (2 cores) and has no graphics card, so it suits short gate lists. It also watches https://wodx.online and
 the main runner's status issue and opens an alert when either goes quiet.
 
-## The PC watcher on the laptop (B7260)
+## The PC watcher on the laptop (B7290)
 
 `watcher.mjs` runs on the laptop every 5 minutes, at below-normal priority, from the scheduled task "WoDX PC
 watcher at logon" (`install-watcher.ps1` sets it up; `run-watcher.ps1` is the loop; a file named `watcher-off` in

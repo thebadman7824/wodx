@@ -3,7 +3,7 @@
 # (label pc-status, updated every 2 minutes while its runner lives) or the PC watcher report (label pc-watch, every
 # 5 minutes) is more than 15 minutes old, an issue labelled pc-alert says so; it is closed again once the issue moves.
 # The coordinator watches pc-alert issues.
-# B7260: it used to read only the newest pc-status issue (per_page=1), so with three PCs it watched the newest one
+# B7290: it used to read only the newest pc-status issue (per_page=1), so with three PCs it watched the newest one
 # and missed the Main PC. It now checks each status issue and the watcher report by title.
 # Restart on the PC: powershell -ExecutionPolicy Bypass -File <home>\repo\tools\pcq\start-runner.ps1
 name: PC runner heartbeat
