@@ -419,7 +419,7 @@ Next free block: B7320
 | B7260-B7279 | Master Plan gaps: dated events and the Ledger proven on the real clock; Moravia's own news (used B7260-B7264) | Chronicle, Storyteller |
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
-| B7310-B7319 | Gate recheck reruns each failing gate alone, twice before any verdict (used B7310) | tools |
+| B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14345,3 +14345,13 @@ runs on main, so the lane is deployed twice at most, and the whole recheck stops
 gate it did not finish says so. tools/pcq/jobs.mjs recheckStep holds the rules and the harness tests them.
 
 Reverse: put the old recheck() body back (one runOn for all failing gates, recheckVerdicts).
+
+## B7311. gatetruthactions step 6 keeps the fight to itself and logs who moved it (2026-11-18)
+Gates. Step 6 (the frenzy check held turn by turn) failed after other gates in jobs 1944, 2006 and 2014, and passed alone. Each time the hold read 1 turn left right after the first roll, where it should read 2. The hold only goes down on the bearer's own turn (beastTurn), so one extra turn of the bearer ran before the step looked. The step moves the turns by hand, so for the step the turn conductor is set to off and WoDX NPC is off on the gate's scene (the other fighter is an NPC, and a world at Balanced runs NPC turns by itself); both are put back after the step. The step's detail now carries a log of every turn move and every change to the hold, each with the first frames of the code that made it, so a failure names what moved the fight. Not yet run in Foundry.
+
+Reverse: take the conductor and scene mode lines, the hooks and the log out of step 6 in tools/gate/gatetruthactions.mjs.
+
+## B7312. gate7b's Auto steps say what the NPC read (2026-11-18)
+Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 1944 and 2006 with the runner choosing to flee ("faces what it fears": a guard fears the supernatural once it shows), and "a lost action" failed in 2006 with a plan card instead of "cannot act". The same lane order passed and failed in job 1944, so the cause is state left in the world, not the order alone. The two steps' detail now names whose turn it was when the NPC acted, the runner's fears, whether the hero reads as obvious (its effects and WoDX NPC flags), the enemies as the runner saw them and its top options, and the card's token against the fighter's. No pass condition changed. On this branch the detail showed, in job 2016, the hero "Ada (6d, wraith)" read as obvious, so the guard fled. Two tries at choosing the hero instead (jobs 2021 and 2024) failed other steps, and the same code passed in jobs 2017 and 2018, so the hero is not the only thing that varies; those tries were taken back out. gate7b was the first gate after the lane's reset in all three failing runs, and also in job 2013, which passed; in 2017 and 2018 it came after other gates.
+
+Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
