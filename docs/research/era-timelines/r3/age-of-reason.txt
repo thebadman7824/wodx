@@ -40,7 +40,7 @@
 1620|H|mor|EU|Plymouth|migration|The Mayflower sails|English separatists sail on the Mayflower for America to worship as they choose.
 1621|H|mor|EU|Prague|death,persecution|The Old Town Square executions|Twenty-seven leaders of the revolt are executed in Prague.
 1621|H|mor|EU|Netherlands|war|The truce ends|The war between Spain and the Dutch resumes.
-1622|H|mor|EU|Moravia|persecution,migration|The Anabaptists expelled|The Hutterite communities are driven out of Moravia; many go to Hungary and Transylvania.
+1622|H|mor|MO|Moravia|persecution,migration|The Anabaptists expelled|The Hutterite communities are driven out of Moravia; many go to Hungary and Transylvania.
 1623|H|mor|AS|Ambon|massacre,trade|The Amboyna massacre|The Dutch torture and kill English traders on Ambon.
 1623|H|mor|ME|Baghdad|war|Shah Abbas takes Baghdad|Shah Abbas takes Baghdad from the Ottomans and holds it fifteen years.
 1624|H|mor|EU|Paris|crown|Richelieu|Cardinal Richelieu becomes chief minister of France and sets about breaking the Huguenots and the Habsburgs.
@@ -48,7 +48,7 @@
 1626|H|mor|EU|Dessau|battle|Dessau Bridge|Wallenstein beats Mansfeld's Protestant army at the Dessau bridge on the Elbe.
 1627|H|mor|EU|Bohemia|law,faith|The Renewed Land Ordinance|Bohemia becomes Catholic by law; Protestants must convert or leave.
 1627|H|mor|EU|La Rochelle|siege|La Rochelle|Richelieu besieges the Huguenot port; it starves into surrender.
-1628|H|mor|EU|Moravia|law,faith|Moravia made Catholic|The Renewed Land Ordinance comes to Moravia; Protestants must convert or leave, and many lords go into exile.
+1628|H|mor|MO|Moravia|law,faith|Moravia made Catholic|The Renewed Land Ordinance comes to Moravia; Protestants must convert or leave, and many lords go into exile.
 1628|H|mor|EU|Leszno|migration|Comenius leaves|The teacher and bishop of the Unity of Brethren, Jan Amos Comenius, leaves for exile in Poland and never returns.
 1629|H|mor|EU|Germany|law,faith|The Edict of Restitution|The emperor orders all church lands taken since 1552 given back; the Protestant princes are driven toward Sweden.
 1629|H|hun|EU|Bamberg|persecution,occult|The Bamberg trials|The prince-bishop of Bamberg burns hundreds as witches.
@@ -77,14 +77,14 @@
 1640|H|mor|EU|Barcelona|uprising|The Reapers' War|The reapers of Catalonia kill the viceroy and rise against Madrid; the war lasts twelve years.
 1641|H|mor|EU|Ulster|uprising,massacre|The Irish rising|Irish Catholics rise against English and Scottish settlers; thousands die and the tales grow in the telling.
 1642|H|mor|EU|Edgehill|battle,war|The English Civil War|King and Parliament raise armies and fight at Edgehill; the English Civil War has begun.
-1642|H|mor|EU|Olomouc|war,siege|The Swedes take Olomouc|Swedish troops take Olomouc and hold it as their base in Moravia until 1650.
+1642|H|mor|MO|Olomouc|war,siege|The Swedes take Olomouc|Swedish troops take Olomouc and hold it as their base in Moravia until 1650.
 1642|H|mor|EU|Paris|crown,death|Richelieu dies|Richelieu dies; Cardinal Mazarin takes the cardinal's place at the young king's side.
 1643|H|mor|EU|Rocroi|battle|Rocroi|The French destroy the famed Spanish infantry at Rocroi.
 1643|H|mor|EU|Paris|crown|Louis XIV|The four-year-old Louis XIV becomes king of France, with the queen mother and Mazarin to rule in the boy's name.
 1644|H|mor|AS|Beijing|crown,death|The Ming fall|Li Zicheng takes Beijing; the last Ming emperor is found hanged on Coal Hill.
 1644|H|mor|AS|Shanhai Pass|war,crown|The Qing take Beijing|Wu Sangui opens the pass; the Manchus take China.
 1644|H|mor|EU|Marston Moor|battle|Marston Moor|Cromwell's cavalry win the north for Parliament at Marston Moor.
-1645|H|mor|EU|Brno|siege|Brno holds|The Swedes besiege Brno for months and fail; the town is honoured for it ever after.
+1645|H|mor|MO|Brno|siege|Brno holds|The Swedes besiege Brno for months and fail; the town is honoured for it ever after.
 1645|H|mor|EU|Naseby|battle|Naseby|Parliament's New Model Army destroys the king's army.
 1645|H|mor|AS|Yangzhou|massacre|The Yangzhou massacre|Qing troops kill much of the population of Yangzhou in ten days after it resists them.
 1645|W|hun|EU|Essex|persecution,occult|The Witchfinder General|Matthew Hopkins hangs about a hundred people as witches in East Anglia.
@@ -98,7 +98,7 @@
 1649|H|mor|EU|London|crown,death,revolution|Charles I beheaded|Charles I is beheaded outside the royal Banqueting House in Whitehall.
 1649|H|mor|EU|Drogheda|massacre|Drogheda|Cromwell's army storms Drogheda and kills the garrison and many townspeople.
 1649|H|mor|EU|Russia|law|The Ulozhenie|Russia's law code binds peasants to the land.
-1650|H|mor|EU|Olomouc|war|The Swedes leave Olomouc|The Swedish garrison marches out of Olomouc after eight years, leaving a ruined town.
+1650|H|mor|MO|Olomouc|war|The Swedes leave Olomouc|The Swedish garrison marches out of Olomouc after eight years, leaving a ruined town.
 1651|H|mor|EU|London|learning|Leviathan|Thomas Hobbes publishes Leviathan: without a strong sovereign, life is nasty, brutish and short.
 1651|H|mor|EU|Worcester|battle|Worcester|Cromwell beats Charles II, who escapes by hiding in an oak.
 1652|H|mor|EU|Moscow|faith|Patriarch Nikon|Patriarch Nikon's reforms of Russian worship split the church; the Old Believers refuse them.
@@ -117,7 +117,7 @@
 1661|H|mor|EU|Paris|crown|Louis rules alone|Mazarin dies and Louis XIV announces a reign without a chief minister.
 1661|H|mor|AS|Beijing|crown|Kangxi|The Kangxi emperor takes the Qing throne as a child, to rule sixty-one years.
 1662|H|mor|AS|Taiwan|war|Koxinga takes Taiwan|The Ming loyalist Koxinga drives the Dutch from Taiwan.
-1663|H|mor|EU|Moravia|war|The Tatar raid|Ottoman Tatars raid Moravia and carry off thousands.
+1663|H|mor|MO|Moravia|war|The Tatar raid|Ottoman Tatars raid Moravia and carry off thousands.
 1664|H|mor|EU|Szentgotthard|battle|Szentgotthard|Imperial and French troops beat an Ottoman army at Szentgotthard.
 1665|H|mor|EU|London|plague|The Great Plague|Plague kills perhaps a hundred thousand Londoners, a quarter of the city.
 1665|W|vam|EU|London|plague|Kindred of the plague city|Prince Mithras's Kindred hunt among the dying while the court flees to Oxford.
@@ -173,7 +173,7 @@
 1709|H|mor|EU|Europe|weather,famine|The Great Frost|The coldest winter in five centuries kills crops and people.
 1710|H|mor|EU|Meissen|industry,founding|Meissen porcelain|The first European hard porcelain is made at Meissen.
 1711|H|mor|EU|Pruth|war|The Pruth|The Ottomans trap Peter's army on the Pruth and make the tsar give back Azov.
-1712|H|mor|EU|Moravia|plague|Plague in Moravia|Plague returns to Moravia; columns of thanks follow.
+1712|H|mor|MO|Moravia|plague|Plague in Moravia|Plague returns to Moravia; columns of thanks follow.
 1713|H|mor|EU|Utrecht|treaty|The Peace of Utrecht|The Peace of Utrecht ends the War of the Spanish Succession.
 1713|H|mor|EU|Vienna|law,crown|The Pragmatic Sanction|Charles VI issues the Pragmatic Sanction so a daughter, Maria Theresa, can inherit the Habsburg lands.
 1714|H|mor|EU|London|crown|George I|The Elector of Hanover becomes George I of Great Britain.
@@ -200,7 +200,7 @@
 1740|H|mor|EU|Silesia|war|The Silesian War|Frederick II of Prussia seizes Silesia from Austria; the War of the Austrian Succession begins.
 1740|H|mor|EU|Vienna|crown|Maria Theresa|Maria Theresa inherits the Habsburg lands at twenty-three and must fight to hold them.
 1741|H|mor|EU|Prague|war|The French take Prague|French and Bavarian troops take Prague by night; the Elector of Bavaria is crowned King of Bohemia.
-1742|H|mor|EU|Brno|siege|Frederick besieges Brno|Prussian troops invade Moravia and besiege Brno and its Spilberk fortress, and fail.
+1742|H|mor|MO|Brno|siege|Frederick besieges Brno|Prussian troops invade Moravia and besiege Brno and its Spilberk fortress, and fail.
 1742|H|mor|EU|Dublin|art|The Messiah|Handel's Messiah is first performed in Dublin.
 1745|H|mor|EU|Scotland|uprising|The Forty-Five|Charles Edward Stuart lands in Scotland and raises the clans.
 1746|H|mor|EU|Culloden|battle|Culloden|The Jacobite army is destroyed at Culloden; the Highlands are broken.
@@ -214,7 +214,7 @@
 1757|H|mor|EU|Kolin|battle|Kolin|Austria beats Frederick at Kolin in Bohemia.
 1757|H|mor|AS|Plassey|battle|Plassey|The East India Company wins Bengal at Plassey.
 1757|H|mor|EU|Rossbach|battle|Rossbach and Leuthen|Frederick crushes the French at Rossbach and the Austrians at Leuthen within a month.
-1758|H|mor|EU|Olomouc|siege|Olomouc holds|Frederick besieges Olomouc and fails when the Prussian supply convoy is destroyed.
+1758|H|mor|MO|Olomouc|siege|Olomouc holds|Frederick besieges Olomouc and fails when the Prussian supply convoy is destroyed.
 1759|H|mor|EU|Kunersdorf|battle|Kunersdorf|Russians and Austrians destroy Frederick's army at Kunersdorf.
 1760|H|mor|EU|London|crown|George III|George III becomes king of Great Britain.
 1761|H|mor|AS|Panipat|battle|The third Panipat|The Afghans destroy the Maratha army at the third battle of Panipat.
@@ -276,7 +276,7 @@
 1804|H|mor|EU|Paris|crown|Napoleon emperor|Napoleon takes the crown and is made emperor in Notre-Dame.
 1804|H|mor|EU|Serbia|uprising|The Serbian revolt|Serbia rises against the Ottomans under Karadjordje.
 1805-10|H|mor|EU|Trafalgar|battle,sea|Trafalgar|Nelson dies winning at Trafalgar.
-1805-12|W|wra|EU|Austerlitz|battle|Austerlitz|Napoleon wins near Brno; the dead flood the Moravian Shadowlands.
+1805-12|W|wra|MO|Austerlitz|battle|Austerlitz|Napoleon wins near Brno; the dead flood the Moravian Shadowlands.
 1806|H|mor|EU|Vienna|empire|The Holy Roman Empire ends|Francis II gives up the crown and the Holy Roman Empire ends.
 1806|H|mor|EU|Jena|battle|Jena|Napoleon crushes Prussia at Jena and Auerstedt.
 1807|H|mor|EU|Tilsit|treaty|Tilsit|At Tilsit Napoleon and Alexander divide Europe between them.
@@ -312,7 +312,7 @@
 1832|H|mor|EU|Paris|uprising,plague|The June rebellion|Republicans rise in Paris during the cholera year.
 1833|H|mor|EU|London|law|Slavery abolished|Britain abolishes slavery in its empire.
 1835|H|mor|EU|Vienna|crown,death|Francis I dies|Emperor Francis I dies; the simple-minded Ferdinand succeeds.
-1836|H|mor|EU|Brno|industry|Brno's mills|The woollen mills of Brno grow; it is called the Moravian Manchester.
+1836|H|mor|MO|Brno|industry|Brno's mills|The woollen mills of Brno grow; it is called the Moravian Manchester.
 1604|W|vam|EU|Prague|occult|Tremere at the alchemists' court|The alchemists' lane of Prague castle hides more than mortal adepts; the Tremere keep a close eye on Rudolf's circle.
 1618|W|vam|EU|Prague|war|The Kindred and the long war|The Thirty Years War opens; princes of the Camarilla and Sabbat both fatten on the armies.
 1626|W|wer|EU|Germany|war,famine|The wolves of the war|Packs of wolves, and worse, return to the empty villages of Germany; the Get of Fenris hunt the Wyrm's creatures in the ruins.
