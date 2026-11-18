@@ -164,6 +164,14 @@ Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC star
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
 touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
 
+## The GPU guard (B7510)
+`gpuguard.mjs` lets one GPU job hold the card at a time and starts a job only when its memory fits:
+`node tools/pcq/gpuguard.mjs run --class art|ocr|local|other [--need-gb N] [--label x] -- <command>`, and
+`gpuguard.mjs state` prints one JSON line (card reading, holder, waiters). Waiters line up by gpu.order in
+registry/priorities.json, then by arrival. The lock folder is GPU_GUARD_DIR (on the Secondary PC, D:\WoDX\pcq\gpu-guard).
+The PCs also run a copy from D:\WoDX\pcq\gpu-tools, which uses the same order built in; nightly-gates.mjs takes the
+repo copy first.
+
 ## The merge train (B7202)
 
 Pull requests labelled `merge-train` merge one at a time, oldest label first. Every few minutes the Main PC's runner
