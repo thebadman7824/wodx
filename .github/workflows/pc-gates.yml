@@ -48,5 +48,7 @@ jobs:
       - name: Queue gates
         env:
           PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr }}
+          # B7332: the head before this push, so a push from outside the merge train can take the PR out of it
+          BEFORE_SHA: ${{ github.event.before }}
           GITHUB_TOKEN: ${{ github.token }}
         run: node tools/pcq/pr-gates.mjs
