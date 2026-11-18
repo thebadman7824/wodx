@@ -403,6 +403,8 @@ try {
   }
 } catch (e) {
   console.error(`Lane ${lane.id}: ${e.message}`);
+  // B7446: into the report too, so the job comment says why the run stopped before a gate
+  report(`Lane ${lane.id}: ${e.message}`);
   code = 1;
 } finally {
   await closeBrowser();

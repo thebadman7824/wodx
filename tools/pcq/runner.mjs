@@ -96,10 +96,10 @@ const openIssues = async label => (await gh("GET", `/issues?state=open&labels=${
  */
 const procs = new Map(); // job tag -> its running child processes (B7206)
 const endTree = p => { if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL"); };
-function run(cmd, argv, {cwd = ROOT, minutes = 30, stallMinutes = 0, logTo} = {}) {
+function run(cmd, argv, {cwd = ROOT, minutes = 30, stallMinutes = 0, logTo, env = {}} = {}) {
   return new Promise(done => {
     if ( DRY ) { log(`[dry] ${cmd} ${argv.join(" ")}`); return done({code: 0, out: ""}); }
-    const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"}});
+    const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1", ...env}});
     try { os.setPriority(p.pid, os.constants.priority.PRIORITY_BELOW_NORMAL); } catch {}
     // B7206: each job's processes are known by its log name (jobN-...), so a cancelled job can end them
     const owner = jobOfLog(logTo);
@@ -329,9 +329,12 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   fs.rmSync(report, {force: true});
   const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
   const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, CEILING);
-  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports)
+  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports).
+  // B7446: the worktree has no node_modules, so playwright comes from the runner's own clone (NODE_PATH); without it
+  // every branch-tools job failed at sign-in before its first gate (#2062, #2068 on 18 Nov)
   const r = job.branchTools
-    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir)})
+    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir),
+      env: {NODE_PATH: [path.join(ROOT, "tools", "harness", "node_modules"), process.env.NODE_PATH].filter(Boolean).join(path.delimiter)}})
     : await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
   const rep = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
     (fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000));

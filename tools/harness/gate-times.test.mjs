@@ -2,6 +2,9 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {spawnSync} from "node:child_process";
 import {parseTimes, timeTable} from "../pcq/gate-times.mjs";
 import {failingGates, gatePassed, gateDigest} from "../pcq/jobs.mjs";
 
@@ -39,4 +42,25 @@ test("run-gate.mjs writes the TIMES line indented, before the exit line", () => 
   const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
   assert.match(src, /`  TIMES \$\{times\.join\(" "\)\}`/);
   assert.ok(src.indexOf("reportTimes();\nreport(`exit") > 0);
+});
+
+test("B7446: a branch-tools run finds playwright through the runner's clone, and a run that stops says why", () => {
+  const runner = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const call = /const r = job\.branchTools\s*\?[\s\S]*?: await node\("tools\/lanes\/run-gate\.mjs"/.exec(runner)?.[0] ?? "";
+  assert.match(call, /env: \{NODE_PATH: \[path\.join\(ROOT, "tools", "harness", "node_modules"\)/, "the branch-tools run gets NODE_PATH");
+  assert.match(runner, /env: \{\.\.\.process\.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1", \.\.\.env\}/, "run() passes it on");
+  const gate = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
+  assert.match(gate, /\} catch \(e\) \{\n  console\.error\(`Lane \$\{lane\.id\}: \$\{e\.message\}`\);\n[^\n]*\n  report\(`Lane \$\{lane\.id\}: \$\{e\.message\}`\);/);
+  // the mechanism itself: a require made for a folder with no node_modules finds a package on NODE_PATH
+  const t = fs.mkdtempSync(path.join(os.tmpdir(), "nodepath-"));
+  fs.mkdirSync(path.join(t, "wt", "tools", "harness"), {recursive: true});
+  fs.writeFileSync(path.join(t, "wt", "tools", "harness", "package.json"), "{}");
+  fs.mkdirSync(path.join(t, "clone", "node_modules", "fakepw"), {recursive: true});
+  fs.writeFileSync(path.join(t, "clone", "node_modules", "fakepw", "index.js"), "module.exports = 'found';");
+  const probe = path.join(t, "wt", "probe.mjs");
+  fs.writeFileSync(probe, `import {createRequire} from "node:module"; const r = createRequire(${JSON.stringify(path.join(t, "wt", "tools", "harness", "package.json"))});
+try { console.log(r("fakepw")); } catch { console.log("missing"); }`);
+  const go = env => spawnSync(process.execPath, [probe], {encoding: "utf8", env: {...process.env, NODE_PATH: "", ...env}}).stdout.trim();
+  assert.equal(go({}), "missing", "what #2062 and #2068 hit");
+  assert.equal(go({NODE_PATH: path.join(t, "clone", "node_modules")}), "found");
 });
