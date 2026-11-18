@@ -11,6 +11,9 @@
  *   --step-timeout 45     seconds a dialog or other window the gate opened may wait for an answer before the
  *                         runner closes it, so a step waiting on a click nobody makes goes on (default 45)
  *   --max-minutes N       the whole run's limit (default 15 plus the gate limits plus 2 minutes a gate)
+ *   --hang-checks 4       B7201: while a gate runs, the lane's server and page are asked every --hang-every seconds
+ *   --hang-every 30       (default 30) whether they still answer; this many misses in a row (0 turns it off) end the
+ *                         run as a lane fault (exit 5) with the gate given back, so the PC runner resets the lane
  *   --list                print the gates the run would take, as "GATES [json]", and stop (B6526)
  *   --queue <file>        take gates one at a time from a JSON list shared with runs on other lanes (B6526)
  * No run can hang a lane (B3089): a gate past its limit fails, its browser is closed and a new one signed in for the
@@ -32,22 +35,24 @@
  *    documents are listed as a warning.
  * 4. Writes <dataPath>/wodx-lane/latest.json (the fingerprint used) and drift.json (the differences, if any).
  * 5. Runs each gate (Data/wodx-gate/<gate>.mjs run()) and puts the clock and the pause back after each one.
- * Exit codes: 0 all passed, 1 a gate failed, 3 no free lane, 4 drift found (nothing was run).
+ * Exit codes: 0 all passed, 1 a gate failed, 3 no free lane, 4 drift found (nothing was run), 5 the lane failed
+ * mid-run (past the whole run's limit, hung, or would not sign in again; the gate in hand is left for a retry).
  * Never point a lane at the Live world: lanes.json only lists local testbed folders.
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
-  flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK} from "./lib.mjs";
+  flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
 import {readQueue, takeQueued} from "./gate-queue.mjs";
+import {watchHang} from "./hang-watch.mjs";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle"]);
+const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle", "hang-checks", "hang-every"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
@@ -107,6 +112,7 @@ const waitMin = Number(opt("wait") ?? 0);
 const gateMin = Number(opt("gate-timeout") ?? 15), stepSec = Number(opt("step-timeout") ?? 45);
 const perGate = loadExtra(gateRoot).timeouts ?? {};
 const limitOf = g => Number(perGate[g] ?? gateMin) * 60000;
+const hangChecks = Number(opt("hang-checks") ?? 4), hangEveryMs = Number(opt("hang-every") ?? 30) * 1000;
 const maxMs = Number(opt("max-minutes") ?? 0) * 60000 || (15 * 60000 + gates.reduce((t, g) => t + limitOf(g) + 120000, 0));
 /** Rejects when p has not settled in ms (B3089). */
 const within = (p, ms, what) => { let t; return Promise.race([p, new Promise((_, no) => { t = setTimeout(() => no(new Error(`${what} took longer than ${Math.round(ms / 1000)} s`)), ms); })]).finally(() => clearTimeout(t)); };
@@ -189,7 +195,9 @@ try {
       if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
       if ( !page ) {
         try { await signIn(); await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {}); }
-        catch (e) { report(`${gate}: ERROR could not sign in again: ${e.message}`); code = 1; break; }
+        // B7201: a lane that will not sign in again has failed, not the gate: the gate is given back (no line of its
+        // own in the report) and the runner resets the lane and runs what is left
+        catch (e) { await bail(5, `Lane ${lane.id}: could not sign in again before ${gate} (${e.message}); lane fault, the gate goes back on the queue.`); }
       }
       // B6960: the WoDX apis are looked for again before each gate (a world that lost them mid-lane is named, not the gate)
       const reloadsBefore = life.loads - loadsSeen;
@@ -201,7 +209,7 @@ try {
       const sheetsBefore = lane.autoReset ? await page.evaluate(READ_SHEETS).catch(() => null) : null;
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
-      const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
+      const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs, callerSrc}) => {
         const t0 = game.time.worldTime, paused = game.paused, startedAt = Date.now();
         const activeId = game.scenes.active?.id ?? null, viewedId = canvas?.scene?.id ?? null;
         const skip = k => ignore.some(p => p.endsWith("*") ? k.startsWith(p.slice(0, -1)) : k === p);
@@ -227,6 +235,42 @@ try {
             try { Promise.resolve(w.close?.()).catch(() => {}); } catch {}
           }
         }, 5000);
+        // B7230: what a gate leaves running in the page itself is put back after it too. Hooks and intervals the gate's
+        // own code registers (its file is the caller) are removed, functions it swapped (the dice, notices, chat) are
+        // restored, and a property it laid over game.user (isGM) is taken off. A module's own hooks are left alone.
+        const H = globalThis.Hooks, onWas = H.on, onceWas = H.once, ivWas = window.setInterval;
+        // the test for "the gate's own code called this" is lib.mjs gateCaller, handed in as source (harness-tested)
+        let isGate;
+        try { isGate = new Function(`return (${callerSrc});`)(); } catch (e) { isGate = st => /\/wodx-gate\//.test(String(st).split("\n").slice(3, 4).join("")); }
+        const byGate = () => isGate(new Error().stack);
+        const gateHooks = new Map(), gateIntervals = [];
+        H.on = function wodxGateOn(hook, fn, opts) { const id = onWas.call(this, hook, fn, opts); if ( byGate() ) gateHooks.set(`${hook}|${id}`, [hook, id]); return id; };
+        H.once = function wodxGateOnce(hook, fn) { const id = onceWas.call(this, hook, fn); if ( byGate() ) gateHooks.set(`${hook}|${id}`, [hook, id]); return id; };
+        window.setInterval = function wodxGateInterval(...a) { const id = ivWas.apply(this, a); if ( byGate() ) gateIntervals.push(id); return id; };
+        const refs = [[CONFIG?.Dice, "randomUniform"], [ui?.notifications, "info"], [ui?.notifications, "warn"], [ui?.notifications, "error"],
+          [ui?.notifications, "notify"], [canvas?.interface, "createScrollingText"], [globalThis.ChatMessage, "create"], [game.time, "advance"]]
+          .filter(([o]) => o).map(([o, k]) => ({o, k, own: Object.prototype.hasOwnProperty.call(o, k), v: o[k]}));
+        const userOwn = new Set(Object.getOwnPropertyNames(game.user));
+        const pageBack = () => {
+          H.on = onWas; H.once = onceWas; window.setInterval = ivWas;
+          const out = {hooks: [], intervals: 0, refs: [], user: []};
+          for ( const [hook, id] of gateHooks.values() ) {
+            const live = H.events?.[hook];
+            if ( Array.isArray(live) && !live.some(x => x?.id === id) ) continue;
+            try { H.off(hook, id); out.hooks.push(hook); } catch (e) { /* gone */ }
+          }
+          for ( const id of gateIntervals ) { clearInterval(id); out.intervals++; }
+          for ( const r of refs ) {
+            if ( r.o[r.k] === r.v ) continue;
+            if ( r.own ) r.o[r.k] = r.v; else delete r.o[r.k];
+            out.refs.push(r.k);
+          }
+          for ( const k of Object.getOwnPropertyNames(game.user) ) {
+            if ( userOwn.has(k) || !(k in Object.getPrototypeOf(game.user)) ) continue;
+            try { delete game.user[k]; out.user.push(k); } catch (e) { /* fixed */ }
+          }
+          return out;
+        };
         let timer;
         try {
           // B6952: a busy server can drop the fetch of the gate file itself; one more try after a pause
@@ -248,6 +292,8 @@ try {
         }
         // Writes a gate set off just before it ended (an approval queued by a hook) land first, then are put back.
         await new Promise(r => setTimeout(r, 1500));
+        let page0 = {hooks: [], intervals: 0, refs: [], user: []};
+        try { page0 = pageBack(); } catch (e) { error ??= `putting the page back: ${e?.message ?? e}`; }
         const moved = game.time.worldTime - t0;
         if ( moved ) await game.time.advance(-moved);
         let settingsBack = 0, docsGone = 0;
@@ -275,17 +321,21 @@ try {
         } catch (e) { error ??= `putting the scene back: ${e?.message ?? e}`; }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
         const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
-        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut};
-      }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000});
+        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut, page: page0};
+      }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000, callerSrc: gateCaller.toString()});
       let out;
       sinceSignIn++;
-      try { out = await within(run, limit + 3 * 60000, gate); }
+      // B7201: the hang watch runs beside the gate and ends the run within minutes when the lane stops answering
+      const watch = hangChecks > 0 ? watchHang({everyMs: hangEveryMs, misses: hangChecks,
+        probe: async () => (await isUp(lane, 5000)) && (await within(page.evaluate(() => 1), 20000, "the hang check")) === 1}) : null;
+      try { out = await within(watch ? Promise.race([run, watch.hung]) : run, limit + 3 * 60000, gate); }
       catch (e) {
+        if ( e?.hang ) { run.catch(() => {}); await bail(5, `Lane ${lane.id}: ${e.message} during ${gate}; lane fault, the gate goes back on the queue.`); }
         // The page itself stopped answering: this gate fails, and the next one gets a new browser.
         out = {error: `${e.message}; the browser was closed and the gate's changes were not put back`, moved: 0, back: true};
         run.catch(() => {});
         await closeBrowser(); page = null;
-      }
+      } finally { watch?.stop(); }
       // B7192: sheets first (a system update can move flags through hooks), then flags
       if ( sheetsBefore && page ) {
         try { out.sheetsBack = await page.evaluate(PUT_SHEETS_BACK, sheetPlan(sheetsBefore, await page.evaluate(READ_SHEETS))); }
@@ -298,7 +348,8 @@ try {
       const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : "",
         out.flagsBack ? `flags put back on ${out.flagsBack} document(s)` : "",
         out.sheetsBack ? `sheets put back on ${out.sheetsBack} document(s)` : "",
-        out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : ""].filter(Boolean).join(", ");
+        out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : "",
+        pageNote(out.page)].filter(Boolean).join(", ");
       if ( tidy && out.error ) out.error += ` [${tidy}]`;
       if ( tidy ) out.summary += ` [${tidy}]`;
       const signInNote = lateApis.length > 0;

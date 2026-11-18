@@ -67,6 +67,22 @@ test("a gates job splits over its lanes with a report file", () => {
   assert.deepEqual(gateArgs(validate({kind: "gates", touched: true}, LANES).job, "2", 0, 1, "r"), ["--touched", "--lane", "2", "--wait", "10", "--report", "r"]);
 });
 
+test("a branchTools job is a one-lane named-gate test of a branch, with no recheck and no gate status (B7220)", () => {
+  const j = validate({kind: "gates", gates: ["gateplains", "gatelifepath"], ref: "claude/project-thread-abc", branchTools: true, lanes: 3, prio: 1}, LANES).job;
+  assert.equal(j.lanes, 1);
+  assert.equal(j.recheck, false);
+  assert.deepEqual(gateArgs(j, "3", 0, 1, "r"), ["gateplains", "gatelifepath", "--lane", "3", "--wait", "10", "--report", "r"]);
+  assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "fa2a3729", branchTools: true}, LANES).job);
+  for ( const bad of [
+    {kind: "gates", gates: ["gatex"], branchTools: true},
+    {kind: "gates", gates: ["gatex"], ref: "main", branchTools: true},
+    {kind: "gates", touched: true, ref: "claude/x", branchTools: true},
+    {kind: "gates", all: true, ref: "claude/x", branchTools: true},
+    {kind: "gates", gates: ["gatex"], ref: "claude/x", branchTools: "yes"},
+    {kind: "gates", gates: ["gatex"], ref: "claude/x", branchTools: true, lane: 1}
+  ] ) assert.ok(validate(bad, LANES).error, JSON.stringify(bad));
+});
+
 test("lane faults are retried, gate failures are not", () => {
   for ( const c of [3, 4, 5, null] ) assert.ok(isInfraFault(c));
   for ( const c of [0, 1, 2] ) assert.ok(!isInfraFault(c));
@@ -184,6 +200,39 @@ test("failing gates and recheck verdicts", async () => {
   assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", null)[0].verdict, /fails alone too/);
   // B5590: a gate the change adds fails on main only because it is not there: that is the change's to fix.
   assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", "gatea: ERROR no such gate", new Set(["gatea"]))[0].verdict, /NEW with this change: the gate is not on main/);
+});
+
+test("B7310: each failing gate is rechecked alone, and no verdict rests on one run", async () => {
+  const {gatePassed, recheckStep} = await import("../pcq/jobs.mjs");
+  assert.equal(gatePassed("gatea", "gatea: 3/3 passed [1 setting(s) put back]"), true);
+  assert.equal(gatePassed("gatea", "gatea: 2/3 passed; failed: x"), false);
+  assert.equal(gatePassed("gatea", "gatea: ERROR could not sign in"), false);
+  assert.equal(gatePassed("gatea", "gateb: 3/3 passed"), null);
+  const step = (a, m, o) => recheckStep(a, m, o);
+  assert.equal(step([], []).next, "alone");
+  assert.match(step([true], []).verdict, /passes alone/);
+  assert.equal(step([false], []).next, "alone", "one failure alone is run again");
+  assert.match(step([false, true], []).verdict, /flaky/);
+  assert.equal(step([false, false], []).next, "main");
+  assert.match(step([false, false], [false]).verdict, /fails on main too/);
+  assert.equal(step([false, false], [true]).next, "main", "one pass on main is confirmed before NEW");
+  assert.match(step([false, false], [true, true]).verdict, /NEW with this change/);
+  assert.match(step([false, false], [true, false]).verdict, /flaky on main/);
+  assert.match(step([false, false], null).verdict, /fails alone too/);
+  assert.match(step([false, false], [], {notOnMain: true}).verdict, /not on main yet/);
+  assert.match(step([false, null], []).verdict, /not rechecked/);
+  assert.match(step([false, false], [null]).verdict, /main could not be rechecked/);
+  // job 2006: one bad draw of gate7b among other gates was called NEW; now it needs two failures alone and two passes on main
+  assert.notEqual(step([false], []).verdict?.startsWith("NEW"), true);
+});
+
+test("B7310: the runner reruns one gate per run-gate call", async () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  assert.match(body, /\[gate, "--lane"/, "run-gate gets a single gate");
+  assert.doesNotMatch(body, /\.\.\.failing, "--lane"/, "no longer all failing gates in one call");
+  assert.match(body, /lanesCmd\(\["reset"/, "each run starts from a reset");
+  assert.match(body, /recheckStep\(/);
 });
 
 // Graphics card heat watch.

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7210
+Next free block: B7320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -366,7 +366,7 @@ Next free block: B7210
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
 | B6520-B6529 | Graphics card heat watch; blind naming test on the PC; gates that failed on main; gates jobs share one list over the lanes; lane 6 kept for the local agents (used B6520-B6527) | tools (pcq, vision, gate, lanes), NPC |
 | B6530-B6539 | Lone Chronicle step 5: frenzy by the game, torpor, death and heirs, sleeping the years (used B6530-B6536) | Solo |
-| B6540-B6549 | Names follow customs everywhere: more peoples dated, Sámi and Khmer lists to 300 (used B6540-B6546) | Creation |
+| B6540-B6549 | Names follow customs everywhere: more peoples dated, short lists to 300 (used B6540-B6547) (used B6540-B6547) | Creation |
 | B6550-B6569 | Dark Ages fae: Dominion cantrip presets, sprite Charms, Treasures (DA:Fae and C20) (used B6550-B6566) | Actions |
 | B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 | B6580-B6589 | Every line equal, second pass: no menu entry that only posts text (used B6580-B6587) | Actions |
@@ -411,7 +411,14 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (PC job queue) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
+| B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
+| B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
+| B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
+| B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
+| B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
+| B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
+| B7310-B7319 | Gate recheck reruns each failing gate alone, twice before any verdict (used B7310) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -12371,6 +12378,11 @@ Sámi from the List of Sámi people (Wikipedia), Khmer from Cambodian name and L
 
 Reverse: remove the added names; drop RAISED_SHORT_OLD.
 
+## B6547. Banyarwanda, Amazigh, Moro and Maya to 300 recorded names; Tuareg to 175 (2026-11-17)
+WoDX Creation. Names from Wikidata (2,511 Rwandan citizens; people of Amazigh ethnic groups; people named "X ag Y" or "X walet Y") and the English and French Wikipedia categories of Kabyle, Berber, Moro, Maranao, Maya and Tuareg people, fetched on the Main PC on 16 and 17 November 2026 (names only, in /mnt/project-files/names-sources/wikidata/). Given names and family names were split from the recorded full names; the Tuareg father names after "ag" count as men's given names. Banyarwanda, Amazigh, Moro and Maya join RAISED_SHORT_OLD, held to 300 by the harness. Tuareg stays under 300: the Wikidata query service was down during the birthplace search, and few women's names are recorded.
+
+Reverse: remove the added names; drop the four peoples from RAISED_SHORT_OLD.
+
 ## B6550. The Dominions' named cantrips are presets (2026-11-15)
 WoDX Actions. fae-da-cantrips.js holds every named cantrip of the four Dominions (Dark Ages: Fae pp. 123-162) in WoDX's own words with its page, trait, level, difficulty, successes needed and costs, and an effects-card spec that a game system reads. The common cantrips (Call the element, Sword, Mantle, Charm and the rest) are one entry per Dominion. Cantrips no system can show (cold, drowning and silence, which WoDX has no system for) are card-only and logged for review.
 
@@ -14159,6 +14171,11 @@ Testbed lanes. On 16 and 17 November the PC runner hit exit 4 (drift found, no g
 
 Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
 
+## B7201. A hung lane fails in minutes and is reset (2026-11-17)
+Testbed lanes and PC job queue. A gate could hold a lane for its whole 15-minute limit plus 3 more, and a lane whose Foundry had hung failed every gate after it the same way, up to a job limit of 15 hours. Four changes. (1) run-gate.mjs runs a hang watch (tools/lanes/hang-watch.mjs) beside each gate: every 30 seconds it asks the lane's status page and the signed-in page for an answer, and four misses in a row (about two minutes) end the run with exit 5, a lane fault. The gate in hand gets no result line, so the shared queue gives it back. A lane that will not sign in again between gates is a lane fault the same way; before, it failed the job as if a gate had failed. (2) The PC runner ends a run-gate that prints nothing for longer than the longest gate limit plus 11 minutes (26 minutes today), for the case where run-gate itself freezes. (3) One lane's share of a gates job stops at jobCeilingMinutes in runner.json (default 240; a full suite takes 50 to 80 minutes), down from 900. (4) lanes.mjs stop now ends a lane's Foundry that holds its port but no longer answers (only the process in server.pid, and only when it is this lane's own Foundry), and forces it when it does not end, so the reset that follows a lane fault never copies over an open database. A lane fault is reset and retried once, as before (B4100).
+
+Reverse: run run-gate with --hang-checks 0, set stallMinutes to 0 and jobCeilingMinutes to 900 in tools/pcq/runner.json, and drop the hung branch in stop() in tools/lanes/lanes.mjs.
+
 ## B7202. The merge train: pull requests merge one at a time (2026-11-17)
 PC job queue and merging. Every merge to main left the other open pull requests behind. The hourly sweep (B4110) then merged main into each of them, each push started a full gate run again (150 to 300 gates, 50 to 80 minutes), and by the time one passed main had moved again; on 17 November 8 of 14 open pull requests had conflicts. Ben approved a merge train. A thread whose pull request meets the rules it can meet by itself labels it `merge-train` and stops pushing. The Main PC's runner (tools/pcq/train.mjs, every 3 minutes, "train": true only in runner.json) takes the front of the line, oldest label first. It marks a draft ready, merges main in and runs merge-stamp in its own worktree, and pushes with a lease on the head it saw, so a thread's own push wins. pc-gates.yml then gates the new head, and the runner takes that gate job before the rest of the queue. The runner merges when `checks` and `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out with a comment, and the line moves on. The others are not brought up to date or gated again while they wait. The sweep no longer merges main into open pull requests; it still starts CI where none ran. The train uses a merge, not a rebase, because the repository never rewrites a pushed branch.
 
@@ -14200,3 +14217,90 @@ Reverse: remove othersFailed and the otherChecksFailed field in tools/pcq/train.
 PC job queue. B7205 kept each pull request it looked up for two minutes. A gate job queued within two minutes of a push was then checked against the head from before the push, so on 17 November jobs 1967 (PR 1880), 1969 (PR 1836) and 1970 (PR 1963) were dropped as "moved on" to their own older commit, and the merge train had no gate runs. The cached pull request is still used to say a job is current, but before a job is dropped or stopped, the runner reads the pull request again and drops only on that fresh answer.
 
 Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.
+
+## B7220. A lane test of a branch's gate tools is a queued job (2026-11-17)
+PC job queue, the owner's go-ahead on 17 November ("Go ahead with one"). The runner only ever ran main's gate tools, so a test of a branch that changes them (PR 1937's hang watch) was started by hand outside the queue. The runner could not see it waiting, and running gate jobs took every lane that came free (growJobs grows to every lane when no lane job waits), so the test waited from 15:37Z to 17:37Z without a lane. A gates job may now say `"branchTools": true` (`submit.mjs --branch-tools`): the runner runs that ref's own tools/lanes/run-gate.mjs from its worktree, on one lane, with no recheck. It needs a branch or commit ref and named gates, so it never sets the wodx/gates status. Queued at prio 1, it takes the next lane that frees, and while it waits the running gates jobs grow no further. Running jobs are not stopped or slowed, and no lane is kept spare (the owner did not want big runs slowed).
+
+Reverse: drop the branchTools case in tools/pcq/jobs.mjs validate, and the branchTools branches in runner.mjs makeQueue and laneWork.
+
+## B7230. run-gate puts the page back after each gate, not only the world (2026-11-17)
+Testbed lanes. Settings, flags, sheets and leftover documents were already put back after each gate (B3086, B7181, B7192, B7193), but all the gates on a lane run in one page, so anything a gate left in the page itself carried on into the gates after it. Job 1979 (PR 1836) had 7 gates fail that pass alone and touch nothing of that pull request: gategadgets, gatehuntpowder, gatesprites, gatespritelife, gatestillmarks, gatetruthsheets and gatevoices. While a gate runs, run-gate now notes every hook (Hooks.on, Hooks.once) and interval the gate's own file registers, and removes the ones still there when it ends. A hook a module registers while a gate calls into it is the module's and stays (`gateCaller` in tools/lanes/lib.mjs looks past the wrappers and Foundry's own frames to the caller). It also restores the functions gates swap (the dice's randomUniform, the notices, the scrolling text, ChatMessage.create, game.time.advance) and takes off a property laid over game.user (a player's isGM). The gate's line says what was put back, for example "2 hook(s) the gate left removed (createChatMessage)", so the gate that leaks can be fixed.
+
+Reverse: remove the wrappers and `pageBack` from the page function in tools/lanes/run-gate.mjs, and `pageNote` from its line.
+
+## B7240. Lane 9 runs in a cloud thread's own Linux box (2026-11-17)
+tools/lanes/cloud-lane.mjs sets up Foundry 14.369 headless in the thread's box and runs gates there through run-gate.mjs, so a thread need not wait for a PC lane. lanes.json gains a "cloud" host whose paths sit under the box's home folder; PCs never see lane 9. Ben chose "Make it routine" after the trial (gateplains 28/28, setup about 2 minutes, 3.1 GB RAM).
+
+Reverse: delete cloud-lane.mjs, the "cloud" host and lane 9 from lanes.json.
+
+## B7241. Node 24 from npm and the proxy for Node's fetch (2026-11-17)
+Foundry 14 refuses Node below 24 and cloud boxes ship Node 22, so setup unpacks npm's node-linux-x64 build. Node's fetch ignores the cloud proxy unless NODE_USE_ENV_PROXY=1, without which the licence sign fails.
+
+Reverse: drop both once cloud boxes ship Node 24 with the proxy on by default.
+
+## B7242. The Foundry zip and signed licence live in the private shared folder (2026-11-17)
+Ben's timed download link lasts minutes, so the zip and license.json (signed for the box's host name) are kept in /mnt/project-files/private/cloud-foundry, never in the public repo. EULA item 2 and the FAQ allow a second instance while nobody but the licence owner can get past its login; lane 9 listens only inside the box.
+
+Reverse: delete that folder; each cloud setup then needs a fresh link and the key from Ben.
+
+## B7243. Lane 9's world is the repo's world.json (2026-11-17)
+The PC known-good world cannot reach the cloud from a thread. Lane 9 starts from the repo's world.json with the WoDX modules on and a Gamemaster Test account. Gates needing the PC world's scenes, actors or other modules stay on PC lanes.
+
+Reverse: copy a known-good world into ~/foundry/known-good when one can reach the cloud, and use lanes.mjs reset.
+
+## B7250. gatevoices step 5 counts only what happened while it ran (2026-11-17)
+Gates. The WoDX Voices api keeps its counters (renders, hits, plays, fallbacks) and the engine and voice server states in memory for the whole page. gatetruthnpc step 6 switches Voices on with the browser engine and speaks a line, so the fallback counter goes to 1; putting its settings back points the engine at the voice server again, which is not running, so the server state reads "error". gatevoices ran after it on lane 3 in job 1979 and failed step 5 ("server":"error", "fallbacks":1), and passed alone. Step 5 now reads the counters and both states against where they stood when gatevoices started: no counter may grow, and each state must be off or unchanged. When an earlier gate had used Voices, the step's detail says so and shows the starting values. A run on a fresh lane checks exactly what it did before.
+
+Reverse: put back the strict `engine === "off" && server === "off"` and zero counters in step 5 of tools/gate/gatevoices.mjs.
+
+## B7290. The laptop watches the PC job system and only reports (2026-11-18)
+Ben asked for the laptop (DESKTOP-S6NV3Q9) to be used to keep everything in line. tools/pcq/watcher.mjs runs every 5 minutes from the scheduled task "WoDX PC watcher at logon" (tools/pcq/install-watcher.ps1, loop in run-watcher.ps1), below normal priority, on battery too. It reads only GitHub (the pc-status branch files, the runner status issues, pc-job issues, the merge train line, pc-alert issues) and the laptop's own process list. It never starts or stops a process, restarts OCR or art, or touches a lane, a world, a job or another tool's alert. It is taken as a fix to how the PCs are watched under the PC upkeep freeze, with no new lane or runner (logged in docs/PENDING-REVIEW.md). Its checks are fixed rules, not a local model: the laptop's i5-8210Y would sit at full load for each model call and slow lane 7.
+
+Reverse: put a file named watcher-off in C:\WoDX\pcq, delete the scheduled task, and remove watcher.mjs, run-watcher.ps1 and install-watcher.ps1.
+
+## B7291. One report issue, one alert issue, both found by title (2026-11-18)
+The issue "PC watcher report" (label pc-watch) is rewritten every cycle. A problem must show on two cycles in a row before the one issue "PC watcher alert" (label pc-alert) opens. That issue gets a comment when the list changes and closes when everything clears. Both are found by title, never kept only in memory, so a restart does not open a second one. The runners' own alerts lose track of their issue when they restart (#1952 to #1957 stayed open after the Main PC came back), and the watcher lists such alerts instead of closing them. GitHub sends Ben no notice for issues his own account opens, so on Ben's pick (option 1, 18 November 2026) a thread with GitHub access reads the open "PC watcher alert" issue and passes it on. Phone push through ntfy.sh was offered and not taken.
+
+Reverse: change REPORT_TITLE, ALERT_TITLE or LIMITS.confirmCycles in tools/pcq/watcher.mjs.
+
+## B7292. Limits (2026-11-18)
+A status file older than 15 minutes means the PC's status push is quiet. A status issue older than 20 minutes means the runner is quiet. Both quiet together reads as the PC being off, asleep or rebooting. A quiet status push alone is a note up to 30 minutes and a problem after that. A job running or waiting over 6 hours is a problem, and so is the same merge-train front for over 3.5 hours (the train gives up at 3). Lane and graphics card readings are trusted only from a fresh status file.
+
+Reverse: change LIMITS in tools/pcq/watcher.mjs.
+
+## B7293. The heartbeat checks every status issue and the watcher report (2026-11-18)
+.github/workflows/pc-heartbeat.yml read only the newest open pc-status issue (per_page=1). With three PCs that was the Secondary PC's issue, so it never saw the Main PC go quiet. It now checks each pc-status issue and the pc-watch report by title. The Main PC keeps the old alert title "PC runner alert: the runner is silent", and the others get "Heartbeat alert: <title> is silent".
+
+Reverse: restore the per_page=1 query in pc-heartbeat.yml.
+
+## B7294. ComfyUI and book OCR are not visible yet (2026-11-18)
+Neither publishes a status the laptop can read, so the report says so plainly and shows only the Main PC's graphics card load and GPU guard. Covering them needs each PC's status-push.mjs to add a few fields (for ComfyUI the queue length and when the last image finished; for OCR the last page done and whether it is waiting for memory or gave up). That change goes through the PC helper on each machine, not this branch.
+
+Reverse: nothing to reverse; it is a gap left open.
+
+## B7295. Lanes are judged one at a time, and lane 6 is skipped (2026-11-18)
+The first live hour showed the Main PC's lane 6 down every cycle (it is kept for the paused local agents) and lanes 2 and 8 down for a cycle while their jobs reset them. A key for the whole set of down lanes changed whenever one lane came and went, so a lane that stayed down would never confirm. Each lane now has its own key, lane 6 is skipped, and a lane must be down three cycles in a row (about 15 minutes) before it reaches the alert.
+
+Reverse: empty IGNORE_LANES or set laneConfirmCycles to 2 in tools/pcq/watcher.mjs.
+
+## B7296. Renders and OCR report into the status files (2026-11-18)
+Ben asked for both PCs to report to the watcher. tools/pcq/status-push.mjs (now kept in the repository; each PC runs a copy from <home>\gpu-tools) adds two optional fields. comfy (set PC_COMFY_URL) holds whether ComfyUI answers, how many prompts run and wait, and minutes since the last one finished. ocr (set PC_OCR_MATCH, PC_OCR_OUT, PC_OCR_LOG) holds the worker count, minutes since the newest output file, and whether the log's last lines say it waits for memory or gave up. Only counts, minutes and booleans leave the PC, because the branch is public. The watcher flags renders with work queued but nothing finished for 30 minutes, OCR workers with no new output for 60 minutes, and an OCR run that gave up. Waiting for memory on its own is a note.
+
+Reverse: unset the PC_COMFY_URL and PC_OCR_* settings on the PC; the watcher then says it cannot see them.
+
+## B7300. Cloud setup loads the PC known-good world and modules from the private folder (2026-11-18)
+cloud-lane.mjs setup joins testbed/testbed-known-good.zip.partNN and modules/cloud-foundry-modules.zip.partNN from /mnt/project-files/private/cloud-foundry, checks each against its SHA256 file, and uses the PC world as lane 9's known-good copy and world and the PC lane's other modules in its Data folder. The joined zips stay in the box (the shared folder caps files at 20 MiB). Without the parts, setup falls back to the repo's world.json (B7243). A cloud fail stays a hint: gate6b's werewolf form step fails on lane 9 with this world and 28 of its 30 modules while it passes on a PC lane.
+
+Reverse: drop fromParts and its two calls; lane 9 goes back to the world.json world.
+
+## B7310. Each failing gate is rechecked alone, and no verdict rests on one run (2026-11-18)
+Repository workflow. The recheck that says whose a failing gate is (B4610) reset the lane once and then ran every
+failing gate, up to 12, in one run-gate call, so the "alone" run was not alone, and one bad draw of a flaky gate
+became "NEW with this change" (job 2006: gate7b shared its rerun with four other gates; job 2013 then passed it alone
+15/15). Now each gate runs in its own run-gate call on a freshly reset lane. A pass alone settles it ("passes alone").
+A failure alone is run once more, and a pass then reads "flaky". Two failures alone go to main the same way, where
+one pass is confirmed by a second run before the gate is called NEW. All runs on the branch's commit come before the
+runs on main, so the lane is deployed twice at most, and the whole recheck stops taking runs after 120 minutes; a
+gate it did not finish says so. tools/pcq/jobs.mjs recheckStep holds the rules and the harness tests them.
+
+Reverse: put the old recheck() body back (one runOn for all failing gates, recheckVerdicts).

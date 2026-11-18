@@ -21,6 +21,15 @@ free testbed lane, comments the result on the issue and closes it with `pc-done`
 Gate a branch before merging with `--ref claude/<branch>`; the branch must be pushed. `--after <issue>` waits for
 another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3.
 
+A lane test of a branch's own gate tools (a change to run-gate.mjs or the lane tools it imports) goes in the queue
+too, never as a run started by hand beside the runner, which cannot see such a run waiting and gives every free lane
+to the running jobs (B7220):
+
+    node tools/pcq/submit.mjs gates gateplains gatelifepath --ref claude/<branch> --branch-tools --prio 1 --thread <your thread id>
+
+It runs the branch's run-gate.mjs on one lane, with no recheck, and never sets the `wodx/gates` status (named gates
+only). While it waits, running gates jobs take no more lanes, and it gets the next lane that frees.
+
 Book and Trove lookups (`books-find`, `trove-find`) need no lane and run beside the gate jobs. Their results give book
 and page or file names only, never text, because the repository is public. Anything else (a copy, an OCR run, work
 that needs judgment) still goes to the PC helper thread.
@@ -41,9 +50,12 @@ start; a failing gate is a result and is not retried), and jobs that were runnin
 Heartbeat (B4700): a GitHub workflow (.github/workflows/pc-heartbeat.yml) checks every 15 minutes that the status
 issue has moved in the last 15 minutes, and opens a pc-alert issue "the runner is silent" when it has not.
 
-Recheck (B4610): when a gates job fails, each failing gate (up to 12) is rerun on a freshly reset lane, alone on the
-same commit and then on main, and the result ends with a verdict per gate: NEW with this change, fails on main too,
-or passes alone (it fails only after other gates). A "fails on main too" gate is still a fault to fix, not a reason to
+Recheck (B4610, B7310): when a gates job fails, each failing gate (up to 12) is rerun ALONE, one gate per run-gate
+call on a freshly reset lane, and no verdict rests on one run: a pass alone reads `passes alone` (it fails only after
+other gates, or is flaky); a failure alone is run once more, and a pass then reads `flaky`; two failures alone go to
+main the same way, where a pass is confirmed by a second run before it reads `NEW with this change`, and a failure
+there reads `fails on main too`. Runs on the branch come first and runs on main after (two deploys at most), and the
+recheck stops taking runs after 120 minutes. A "fails on main too" gate is still a fault to fix, not a reason to
 merge past it. "recheck": false in the job turns this off.
 
     powershell -ExecutionPolicy Bypass -File tools\pcq\start-runner.ps1     start it if it is not running
@@ -72,6 +84,33 @@ Both runners read the same queue; a claim comment decides which one takes a job.
 or leave the lane out and the first free lane on either PC takes it. Book and Trove lookups stay on the main PC.
 It is slower (2 cores) and has no graphics card, so it suits short gate lists. It also watches https://wodx.online and
 the main runner's status issue and opens an alert when either goes quiet.
+
+## The PC watcher on the laptop (B7290)
+
+`watcher.mjs` runs on the laptop every 5 minutes, at below-normal priority, from the scheduled task "WoDX PC
+watcher at logon" (`install-watcher.ps1` sets it up; `run-watcher.ps1` is the loop; a file named `watcher-off` in
+`C:\WoDX\pcq` stops it). It only looks and reports. It never starts or kills a process, never restarts OCR or art,
+and never touches a lane, a world, a job or another tool's alert. Each cycle it reads every PC's status file on the
+`pc-status` branch, the three runner status issues, the open pc-job issues, the merge train line and the open alerts,
+plus the laptop's own runner, watchdog and status push. It flags:
+
+- a PC that is silent on both its status push and its runner (off, asleep, rebooting), or only on one of them;
+- lanes not answering and a hot graphics card on a PC whose readings are fresh;
+- a job running over 6 hours or waiting over 6 hours;
+- the same pull request at the front of the merge train for over 3.5 hours (the train itself gives up at 3);
+- the laptop's own runner, watchdog or status push not running.
+
+It also lists the alerts that stayed open after the thing they named came back. Renders and OCR come from the `comfy` and
+`ocr` fields of a PC's status file (B7296): it flags work queued in ComfyUI with nothing finished for 30 minutes, OCR
+workers with no new output for 60 minutes, and an OCR run that gave up. Until a PC sends them, the report says so.
+
+`status-push.mjs` here is the copy every PC runs, from `<home>\gpu-tools`. Main PC: set `PC_COMFY_URL=http://127.0.0.1:8188`.
+Secondary PC: set `PC_OCR_MATCH` (default `book_pipeline`), `PC_OCR_OUT` (the OCR output folder) and `PC_OCR_LOG` (its log).
+
+The issue "PC watcher report" (label `pc-watch`) is rewritten each cycle. When a problem shows up on two cycles in a
+row, one issue "PC watcher alert" (label `pc-alert`) opens. It gets a comment when the list changes and closes when
+everything clears. Local copies are in `C:\WoDX\pcq\logs` (`watcher-report.md`, `watcher-<date>.log`,
+`watcher-state.json`). The heartbeat workflow checks that the report keeps moving, as it does for each status issue.
 
 ## The Secondary PC (B6990)
 
