@@ -1,4 +1,4 @@
-// Book one's twist web (B4850-B4853): chains, pairs, one twist a week, chapters and the end of new twists.
+// Book one's twist web (B4850-B4853): chains, pairs, one twist a month (B7292), chapters and the end of new twists.
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
@@ -15,12 +15,12 @@ test("the web holds together: 24 twists, six chains, the pairs and the order nam
   assert.deepEqual(T.chainsOf(17).sort(), ["egon", "white"]);
 });
 
-test("one twist a week of game time, unless the company dug it out itself", () => {
+test("one twist a month of game time, unless the company dug it out itself", () => {
   let s = T.reveal({}, 1, {now: 0}).state;
-  assert.match(T.whyNot(5, s, {now: 3 * DAY}), /One twist a week: the next can come in 4 days/);
+  assert.match(T.whyNot(5, s, {now: 3 * DAY}), /One twist a month: the next can come in 27 days/);
   assert.equal(T.whyNot(5, s, {now: 3 * DAY, force: true}), "");
-  assert.equal(T.whyNot(5, s, {now: 7 * DAY}), "");
-  assert.throws(() => T.reveal(s, 5, {now: DAY}), /One twist a week/);
+  assert.equal(T.whyNot(5, s, {now: 30 * DAY}), "");
+  assert.throws(() => T.reveal(s, 5, {now: DAY}), /One twist a month/);
 });
 
 test("a twist waits for its chapter, and none come after the choosing is played", () => {
@@ -44,7 +44,7 @@ test("the quick order suggests the next, with the quiet twists beside it, and ch
   let s = {};
   assert.deepEqual(T.suggest(s, {played: []}), {next: 1, quiet: [4, 10, 12, 14]});
   s = T.reveal(s, 1, {now: 0}).state;
-  assert.equal(T.suggest(s, {now: 7 * DAY, played: []}).next, 5);
+  assert.equal(T.suggest(s, {now: 30 * DAY, played: []}).next, 5);
   const letter = T.chainTally(s, []).find(c => c.key === "letter");
   assert.deepEqual([letter.found, letter.of, letter.due], [1, 4, ["c1"]]);
 });
