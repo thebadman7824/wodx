@@ -84,7 +84,7 @@ test("the train clock stops while held, off or in a window (desk pick p5)", () =
 
 test("ask: the OCR leads on the Secondary PC, art fits its budget on the Main PC (desk pick p2)", () => {
   const ocr = prio.ask(p, {cls: "ocr", pc: "BENJAMIN-PC"});
-  assert.equal(ocr.go, true); assert.equal(ocr.ramGb, 6);
+  assert.equal(ocr.go, true); assert.equal(ocr.ramGb, 12.5);
   assert.equal(prio.ask(p, {cls: "art", pc: "DESKTOP-MRKCMRG", freeGb: 20}).go, true);
   assert.equal(prio.ask(p, {cls: "art", pc: "DESKTOP-MRKCMRG", freeGb: 4}).go, false);
   assert.equal(prio.ask(p, {cls: "ocr", pc: "DESKTOP-MRKCMRG"}).go, false, "OCR is not a Main PC job");

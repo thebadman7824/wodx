@@ -46,6 +46,13 @@ no lead (gates lead), and an art render there runs inside its own memory budget.
    other blockers; dated deadlines; the core (V20 Dark Ages Vampire in Rothenstein, Book 1 first for story); the
    Master Plan order; art and maps; studies, reviews and desks.
 
+## A job's class
+
+A PC job carries its class in its JSON as `"class"` (for example `"urgent"` or `"health"`), set by the tool that
+queues it: pr-gates.mjs writes `urgent` for a pull request labelled urgent, nightly-gates.mjs writes `health`. The
+runner never looks labels up per job. A job with no class gets one from its kind (`classOf` in prio.mjs). The train
+front is read from the Main runner's status issue line "Merge train: front #N", so every PC's runner sees it.
+
 ## Which tool reads what
 
 | Tool | Reads | Status |

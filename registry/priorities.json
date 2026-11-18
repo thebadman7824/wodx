@@ -32,7 +32,7 @@
     },
     "BENJAMIN-PC": {
       "name": "Secondary PC",
-      "lead": {"class": "ocr", "until": "the book OCR has finished", "ramGb": 6, "source": "vl-loop.ps1 -NeedFreeGb 6, 18 November"},
+      "lead": {"class": "ocr", "until": "the book OCR has finished", "ramGb": 12.5, "source": "llama-server private bytes (qwen2.5vl 7B, context 8192), measured by the gate runner thread 18 November"},
       "budgets": {},
       "_about": "The book OCR leads until it is done; lane 8 takes only what its memory budget leaves (desk pick p2). ComfyUI here waits for the OCR and the new RAM."
     },

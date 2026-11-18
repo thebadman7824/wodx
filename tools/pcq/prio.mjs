@@ -73,7 +73,10 @@ export function rankOf(p, cls) {
 
 /**
  * The class of a PC job. job: the parsed job (jobs.mjs); ctx: {front: the job belongs to the train's front pull
- * request, labels: the pull request's labels}. A job may name its own "class"; otherwise it is worked out.
+ * request, labels: the pull request's labels}. job.class is the way in: a tool that knows the class (pr-gates.mjs
+ * sets "urgent" at submit time, nightly-gates.mjs "health") writes it into the job, and the runner never looks labels up
+ * per job. Without it the class is worked out from the job. ctx.front comes from the Main runner's status line
+ * "Merge train: front #N", so lanes 7 and 8 see it too.
  */
 export function classOf(p, job = {}, ctx = {}) {
   if ( ctx.front ) return "train-front";
