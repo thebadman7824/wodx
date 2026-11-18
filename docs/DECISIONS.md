@@ -412,6 +412,7 @@ Next free block: B7440
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
+| B7210-B7219 | Gate cleanup: corruption and upkeep start from a known table (used B7211-B7212) | tools (gates) |
 | B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
@@ -14223,6 +14224,16 @@ Reverse: remove othersFailed and the otherChecksFailed field in tools/pcq/train.
 PC job queue. B7205 kept each pull request it looked up for two minutes. A gate job queued within two minutes of a push was then checked against the head from before the push, so on 17 November jobs 1967 (PR 1880), 1969 (PR 1836) and 1970 (PR 1963) were dropped as "moved on" to their own older commit, and the merge train had no gate runs. The cached pull request is still used to say a job is current, but before a job is dropped or stopped, the runner reads the pull request again and drops only on that fresh answer.
 
 Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.
+
+## B7211. gateupkeep step 7 counts the region's hunters (2026-11-17)
+Gates. A place's hunting difficulty is its heat plus the stage of the region's hunters, capped at 3 (hunters.mjs `rulesHuntExtra`). The gate expected the heat alone (2), and when the testbed's region is watched by hunters it reads 3 (job 1926; job 1974 read 2, so the region's pressure differs from run to run). Step 7 now expects the smaller of 3 and 2 plus `hunters.stageDiff` for the scene, and records the hunters' share.
+
+Reverse: put `h.extra === 2` back in step 7 of tools/gate/gateupkeep.mjs.
+
+## B7212. gatecorruption starts from Hands on (2026-11-17)
+Gates. New worlds start at Balanced (B4860), where a Gauntlet drift is approved on sight (automation-rules QUEUE, "wodx-otherworlds.drift": "auto"). Step 4 looks for the drift waiting in the queue, so it failed whenever the world sat at Balanced ("4. applied {}" in jobs 1926 and 1974; it passed alone in the 1974 recheck, so the level the lane starts at varies). The gate now starts from Hands on with `handsOnStart` from tools/gate/kit.mjs (B6994) and puts the level back after, like gate7d, gate7e, gate8b, gateautomation, gatetime and gateupkeep.
+
+Reverse: drop the `handsOnStart` wrapper from tools/gate/gatecorruption.mjs.
 
 ## B7220. A lane test of a branch's gate tools is a queued job (2026-11-17)
 PC job queue, the owner's go-ahead on 17 November ("Go ahead with one"). The runner only ever ran main's gate tools, so a test of a branch that changes them (PR 1937's hang watch) was started by hand outside the queue. The runner could not see it waiting, and running gate jobs took every lane that came free (growJobs grows to every lane when no lane job waits), so the test waited from 15:37Z to 17:37Z without a lane. A gates job may now say `"branchTools": true` (`submit.mjs --branch-tools`): the runner runs that ref's own tools/lanes/run-gate.mjs from its worktree, on one lane, with no recheck. It needs a branch or commit ref and named gates, so it never sets the wodx/gates status. Queued at prio 1, it takes the next lane that frees, and while it waits the running gates jobs grow no further. Running jobs are not stopped or slowed, and no lane is kept spare (the owner did not want big runs slowed).
