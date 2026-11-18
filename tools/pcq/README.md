@@ -175,4 +175,14 @@ brings that back). docs/WORKFLOW.md, section 6, is the thread's side. A pull req
 the front of the line (B7420); a fix to the train or runner that the train is stuck without is merged by its cloud
 thread instead (B7422).
 
+Batches (B7445): when the front needs main merged in and a stamp anyway, and up to two pull requests behind it are green
+on their own heads (checks passed, gates not red, merge rules red for nothing but the gate result still to come) and
+change no file the others change, the train builds one batch instead: main, each member's head merged in unchanged,
+file reviews carried over, one stamp, pushed to `claude/merge-train-batch` (worktree `<home>/train-batch`) and opened as
+a pull request "Merge train batch: #a, #b". That pull request is the train front: it is gated once and merged when
+green, and then each member's head is on main, so GitHub marks it merged too. A red batch is closed and the next one
+takes half as many, down to the front alone, so the one at fault leaves the train with its own reason. A member that is
+pushed to or leaves the line, or an urgent pull request at the front, closes the batch and the train builds a new
+one; when main moves the batch is built again on it. `"trainBatch": 1` in runner.json turns batches off.
+
 Stale runs (B7330-B7332): every push to a pull request cancels its gate jobs for older commits (closed if not started, pc-cancel if running), a push from outside the train to a pull request labelled `merge-train` takes it out of the train with a comment, and a runner stopping with runner-off still acts on pc-cancel. To pause a runner, use `runner-hold` (takes no new jobs, keeps status, cancels and the train going) rather than `runner-off`.
