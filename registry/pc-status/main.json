@@ -1,6 +1,6 @@
 {
  "host": "main",
- "time": "2026-11-18T15:57:21.165Z",
+ "time": "2026-11-18T16:02:25.373Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -17,7 +17,7 @@
   },
   {
    "id": 5,
-   "up": true
+   "up": false
   },
   {
    "id": 6,
@@ -25,9 +25,9 @@
   }
  ],
  "gpu": {
-  "tempC": 58,
-  "loadPct": 36,
-  "vramPct": 16,
+  "tempC": 57,
+  "loadPct": 23,
+  "vramPct": 13,
   "warning": "ok",
   "jobHeld": false,
   "waiting": 0
