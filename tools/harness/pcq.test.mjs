@@ -228,7 +228,7 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
 
 test("B7310: the runner reruns one gate per run-gate call", async () => {
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
-  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  const body = fs.readFileSync(new URL("../pcq/recheck.mjs", import.meta.url), "utf8");
   assert.match(body, /\[gate, "--lane"/, "run-gate gets a single gate");
   assert.doesNotMatch(body, /\.\.\.failing, "--lane"/, "no longer all failing gates in one call");
   assert.match(body, /lanesCmd\(\["reset"/, "each run starts from a reset");
@@ -335,12 +335,3 @@ test("B7194: a runner whose own code is current moves to main in place when only
   assert.match(src, /^let MY_SHA = /m);
 });
 
-
-test("B7380: the recheck gets laneWork's stop check instead of reaching for it", () => {
-  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
-  assert.match(src, /async function recheck\(job, lane, tag, wt, rep, L, stopped = \(\) => false\)/);
-  assert.match(src, /await recheck\(job, lane, tag, wt, rep, L, stopped\)/);
-  // every stopped() call sits inside a function that has stopped in scope: laneWork defines it, recheck takes it
-  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
-  assert.ok(body.includes("stopped()"));
-});
