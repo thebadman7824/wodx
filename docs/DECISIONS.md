@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7250
+Next free block: B7260
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -413,6 +413,7 @@ Next free block: B7250
 | B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
+| B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14191,3 +14192,8 @@ Reverse: delete that folder; each cloud setup then needs a fresh link and the ke
 The PC known-good world cannot reach the cloud from a thread. Lane 9 starts from the repo's world.json with the WoDX modules on and a Gamemaster Test account. Gates needing the PC world's scenes, actors or other modules stay on PC lanes.
 
 Reverse: copy a known-good world into ~/foundry/known-good when one can reach the cloud, and use lanes.mjs reset.
+
+## B7250. gatevoices step 5 counts only what happened while it ran (2026-11-17)
+Gates. The WoDX Voices api keeps its counters (renders, hits, plays, fallbacks) and the engine and voice server states in memory for the whole page. gatetruthnpc step 6 switches Voices on with the browser engine and speaks a line, so the fallback counter goes to 1; putting its settings back points the engine at the voice server again, which is not running, so the server state reads "error". gatevoices ran after it on lane 3 in job 1979 and failed step 5 ("server":"error", "fallbacks":1), and passed alone. Step 5 now reads the counters and both states against where they stood when gatevoices started: no counter may grow, and each state must be off or unchanged. When an earlier gate had used Voices, the step's detail says so and shows the starting values. A run on a fresh lane checks exactly what it did before.
+
+Reverse: put back the strict `engine === "off" && server === "off"` and zero counters in step 5 of tools/gate/gatevoices.mjs.
