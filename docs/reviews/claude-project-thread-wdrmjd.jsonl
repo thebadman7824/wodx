@@ -9,3 +9,4 @@
 {"file":"registry/priorities.json","verdict":"working","how":"read in full after the gate runner thread's four points; prio.test.mjs 11 pass; prio.mjs check passes","hash":"5e5ab3bb19cd","at":"2026-11-18T12:42Z"}
 {"file":"tools/harness/prio.test.mjs","verdict":"working","how":"read in full after the gate runner thread's four points; prio.test.mjs 11 pass; prio.mjs check passes","hash":"621236aa8ba5","at":"2026-11-18T12:42Z"}
 {"file":"docs/PRIORITIES.md","verdict":"working","how":"read in full; job.class section matches prio.mjs classOf","hash":"5953491a8427","at":"2026-11-18T12:42Z"}
+{"file":"tools/pcq/README.md","verdict":"working","how":"carried over by the merge train after main merged in: the branch's own change to this file is the same; earlier check: read in full against registry/priorities.json and the desk picks; terms-guard test passes","hash":"1f7c09cc547b","at":"2026-11-18T15:54Z"}
