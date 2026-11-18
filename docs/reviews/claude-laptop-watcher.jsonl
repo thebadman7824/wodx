@@ -12,3 +12,6 @@
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"664461b799c8","at":"2026-11-18T03:02Z"}
 {"file":".github/workflows/pc-heartbeat.yml","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"b5275ce60ce4","at":"2026-11-18T03:02Z"}
 {"file":"changes/decisions/B7290.md","verdict":"working","how":"read in full after the B7260 to B7290 renumber; watcher tests pass 11/11","hash":"a5c6ff611aad","at":"2026-11-18T03:02Z"}
+{"file":"tools/pcq/watcher.mjs","verdict":"working","how":"read in full; 12/12 watcher tests pass; live dry run on the laptop","hash":"934b75d835d8","at":"2026-11-18T03:52Z"}
+{"file":"tools/harness/watcher.test.mjs","verdict":"working","how":"read in full; 12/12 watcher tests pass; live dry run on the laptop","hash":"7e364a377ac7","at":"2026-11-18T03:52Z"}
+{"file":"changes/decisions/B7290.md","verdict":"working","how":"read in full; 12/12 watcher tests pass; live dry run on the laptop","hash":"17c94520d243","at":"2026-11-18T03:52Z"}

@@ -47,7 +47,17 @@ test("status push quiet but runner alive is a note, and its old lane readings ar
 test("lanes down and a hot graphics card on a live PC are problems", () => {
   const s = healthy({pcs: {...healthy().pcs, main: pc("main", 2, {lanes: [{id: 2, up: false}, {id: 3, up: true}], gpu: {tempC: 84, vramPct: 50, warning: "critical", loadPct: 99, jobHeld: true}})}});
   const keys = assess(s).problems.map(p => p.key);
-  assert.ok(keys.includes("main:lanes:2")); assert.ok(keys.includes("main:gpu"));
+  assert.ok(keys.includes("main:lane:2")); assert.ok(keys.includes("main:gpu"));
+});
+
+test("lanes: one key each, lane 6 skipped, confirmed only after three cycles even when another lane flaps", () => {
+  const withLanes = lanes => healthy({pcs: {...healthy().pcs, main: pc("main", 2, {lanes: lanes.map(([id, up]) => ({id, up}))})}});
+  const a1 = assess(withLanes([[2, false], [6, false]]));
+  assert.deepEqual(a1.problems.map(p => p.key), ["main:lane:2"], "lane 6 is down on purpose");
+  const a2 = assess(withLanes([[2, false], [3, false]]), a1.state);
+  assert.equal(a2.confirmed.length, 0);
+  const a3 = assess(withLanes([[2, false]]), a2.state);
+  assert.deepEqual(a3.confirmed.map(p => p.key), ["main:lane:2"], "lane 2 counts up while lane 3 comes and goes");
 });
 
 test("jobs running or waiting past their limits are flagged; younger ones are not", () => {

@@ -40,7 +40,10 @@ export const LIMITS = {
   trainFrontHours: 3.5,  // the train takes a pull request out after trainMaxHours (3); the same front past this is stuck
   alertOldHours: 24,     // an alert open longer than this is listed as old
   confirmCycles: 2,      // a problem must show this many cycles in a row before the alert issue opens
+  laneConfirmCycles: 3,  // a lane must be down this many cycles (about 15 minutes): each gates job resets its lane first
 };
+/** Lanes that are down on purpose: 6 is kept for the local agents, which are paused (17 November 2026). */
+export const IGNORE_LANES = [6];
 
 /** The PCs: name in pc-status, runner status issue title, lanes. Lane 9 (the cloud lane) has no PC and no status. */
 export const PCS = [
@@ -86,8 +89,9 @@ export function assess(snap, prev = {}) {
     else if ( pushSilent && pushAge !== null && pushAge <= 2 * LIMITS.pushStaleMin ) { state = "push silent"; notes.push(`${p.label}: the runner is alive but its status push has been quiet for ${hm(pushAge)}, so lane and graphics card readings are old.`); }
     else if ( pushSilent ) { state = "push silent"; add(`${p.key}:push`, `${p.label}: the runner is alive but its status push (status-push.mjs) has been quiet for ${hm(pushAge)}; it may not have come back after a restart, so lane and graphics card readings are old.`); }
     if ( f && !pushSilent ) {
-      const down = (f.lanes ?? []).filter(l => !l.up).map(l => l.id);
-      if ( down.length ) add(`${p.key}:lanes:${down.join(",")}`, `${p.label}: lane${down.length > 1 ? "s" : ""} ${down.join(", ")} not answering.`);
+      // One key per lane, so a lane that flaps beside another still counts up (B7295). Lane 6 is kept for the
+      // paused local agents and is down on purpose.
+      for ( const l of f.lanes ?? [] ) if ( !l.up && !IGNORE_LANES.includes(l.id) ) add(`${p.key}:lane:${l.id}`, `${p.label}: lane ${l.id} not answering.`);
       if ( f.gpu && f.gpu.warning && f.gpu.warning !== "ok" ) add(`${p.key}:gpu`, `${p.label}: graphics card ${f.gpu.warning} (${f.gpu.tempC} C, memory ${f.gpu.vramPct}% used).`);
     }
     rows.push({pc: p.label, lanes: p.lanes.join(", "), push: hm(pushAge), runner: `${hm(runAge)} ago${iss ? ` (#${iss.number})` : ""}`, state});
@@ -129,7 +133,7 @@ export function assess(snap, prev = {}) {
   notes.push("Book OCR (Secondary PC) publishes no status, so the watcher cannot see it yet.");
   // Debounce: count cycles in a row for each problem.
   for ( const p of problems ) state.problems[p.key] = (prev.problems?.[p.key] ?? 0) + 1;
-  const confirmed = problems.filter(p => state.problems[p.key] >= LIMITS.confirmCycles);
+  const confirmed = problems.filter(p => state.problems[p.key] >= (/:lane:/.test(p.key) ? LIMITS.laneConfirmCycles : LIMITS.confirmCycles));
   return {problems, confirmed, notes, rows, train, state};
 }
 
