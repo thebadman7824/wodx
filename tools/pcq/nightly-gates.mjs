@@ -6,9 +6,9 @@
  *      and gives up if it has not got the card by 13:00 UTC, so a long OCR night never runs the suite into the day;
  *   2. queues one pc-job, every gate ("all": true) on lane 8 for main's current commit, opened with the owner's sign-in;
  *   3. waits for the job to finish and opens a summary issue (label nightly-gates) with the result and the counts;
- *      a gate that passed on the last nightly run and fails now names the pull requests merged in between (B7393).
+ *      a gate that passed on the last nightly run and fails now names the pull requests merged in between (B7443).
  * It skips the run (and says so in a summary issue) when main's gate inputs are the same as at the last nightly result
- * (B7393); --force runs it anyway.
+ * (B7443); --force runs it anyway.
  * The PC runner posts the wodx/gates status for main's commit as it does for any all-gates job (B7000).
  * It runs at below-normal priority (the task's .cmd starts it that way, and the PC runner on this PC runs below normal
  * too, B7021).
@@ -38,20 +38,20 @@ export function counts(text = "") {
   return {passed: n(/(\d+)\s+passed/i), failed: n(/(\d+)\s+failed/i), gates: n(/(\d+)\s+gate\(?s\)?/i)};
 }
 
-/** B7393: the gates failing tonight that passed on the last night's run (a gate new since then counts as new too). */
+/** B7443: the gates failing tonight that passed on the last night's run (a gate new since then counts as new too). */
 export function newFailures(last, now) {
   const before = new Set(last ?? []);
   return (now ?? []).filter(g => !before.has(g));
 }
 
-/** B7393: the pull requests merged between two main commits, from the compare's commit messages, oldest first. */
+/** B7443: the pull requests merged between two main commits, from the compare's commit messages, oldest first. */
 export function mergedPulls(messages = []) {
   const out = [];
   for ( const m of messages ) { const n = /^Merge pull request #(\d+)/.exec(m)?.[1]; if ( n && !out.includes(Number(n)) ) out.push(Number(n)); }
   return out;
 }
 
-/** B7393: the newest finished nightly job before this one: {number, sha12, failing} from its result comment, or null. */
+/** B7443: the newest finished nightly job before this one: {number, sha12, failing} from its result comment, or null. */
 async function lastNightly(tok, jobResult, skip = 0) {
   const closed = await api(tok, "GET", `/issues?state=closed&labels=pc-job&per_page=50&sort=created&direction=desc`);
   for ( const i of closed.filter(x => /^PC job: nightly full gates \[main [0-9a-f]{12}\]/.test(x.title) && x.number !== skip) ) {
@@ -109,7 +109,7 @@ async function main() {
     const {jobResult} = await import(pathToFileURL(path.join(HERE, "pr-gates.mjs")).href);
     const git = (...a) => execFileSync("git", a, {cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"]}).trim();
     const last = await lastNightly(tok, jobResult).catch(e => { log(`could not read the last nightly run: ${e.message}`); return null; });
-    // B7393: main's gate inputs (modules, system, gates, lane tools) unchanged since the last nightly result: nothing
+    // B7443: main's gate inputs (modules, system, gates, lane tools) unchanged since the last nightly result: nothing
     // new to learn, so the lane stays free
     if ( last && !args.includes("--force") ) {
       let same = false;
@@ -138,7 +138,7 @@ async function main() {
     const comments = await api(tok, "GET", `/issues/${issue.number}/comments?per_page=100`);
     const result = [...comments].reverse().find(c => !/^(Claim|Started)\b/.test(c.body))?.body ?? "";
     const c = counts(result);
-    // B7393: a gate that passed last night and fails tonight names the pull requests merged in between
+    // B7443: a gate that passed last night and fails tonight names the pull requests merged in between
     let blame = "";
     const now = jobResult(result);
     if ( now && last ) {

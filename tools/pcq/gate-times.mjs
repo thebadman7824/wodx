@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * B7390: seconds per gate from run-gate reports. run-gate.mjs ends each lane's report with one indented line,
+ * B7440: seconds per gate from run-gate reports. run-gate.mjs ends each lane's report with one indented line,
  * "  TIMES gate6b=12 gate6c=8 ...", the seconds each gate took (sign-in, the run and the put-back).
  *
  *   node tools/pcq/gate-times.mjs <report or saved job comment> [...]    slowest first: gate, runs, median s, max s

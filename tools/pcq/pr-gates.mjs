@@ -18,7 +18,7 @@
  *   - a job for this exact commit is already queued or running
  * When only main moved since the last finished touched job of the pull request (merges of main, stamps, carried
  * reviews: no gate input the branch itself changed), the job runs only the gates main's merge touched plus the gates
- * that did not pass last time (B7392; a touched job with "since").
+ * that did not pass last time (B7442; a touched job with "since").
  * A queued job for an older commit of the same pull request that has not started is closed as superseded.
  * Exit 0 when it queued or skipped, 1 on a fault.
  */
@@ -105,7 +105,7 @@ export function isTrainPush(messages) {
 }
 
 /**
- * B7392: the gate result of a finished touched job, from its result comment, or null when it cannot be relied on: a
+ * B7442: the gate result of a finished touched job, from its result comment, or null when it cannot be relied on: a
  * lane fault, no gate lines, or a comment cut at the size cap (gate lines could be missing). failing: every gate that
  * did not pass, whatever its recheck verdict.
  */
@@ -120,7 +120,7 @@ export function jobResult(body = "") {
 }
 
 /**
- * B7392 (the owner's choice, 18 November): the files the branch itself changed between an earlier gated commit and
+ * B7442 (the owner's choice, 18 November): the files the branch itself changed between an earlier gated commit and
  * the head, as opposed to what a merge of main brought in. A gate input file counts as the branch's own when it
  * differs at the head both from that earlier commit and from main (version stamps ignored by norm). show(ref, file)
  * gives the text or null. An empty answer means only main moved, so the earlier run still speaks for the branch's code.
@@ -161,7 +161,7 @@ async function sameAtFn(headSha) {
   };
 }
 
-/** B7392: {number, sha, failing} of the newest finished touched job of this pull request when only main moved since
+/** B7442: {number, sha, failing} of the newest finished touched job of this pull request when only main moved since
  *  its commit, else null. commits: the pull request's earlier commits, newest first. */
 async function sinceRun(owner, pr, head, commits) {
   const closed = await api(owner, "GET", `/issues?state=closed&labels=pc-job&per_page=50&sort=created&direction=desc`);
@@ -253,7 +253,7 @@ async function main() {
   // A job for this exact commit already queued or running
   if ( open.some(i => i.title.includes(marker(pr, head))) ) { say(`PR #${pr}: a job for ${head.slice(0, 8)} is already queued.`); finish(0); }
 
-  // B7392: when only main moved since the last finished touched run of this pull request, run what main's merge
+  // B7442: when only main moved since the last finished touched run of this pull request, run what main's merge
   // touched plus what failed last time, not the whole list again (33 of 63 PR runs on 17-18 November were such heads)
   const since = await sinceRun(owner, pr, head, commits).catch(e => { say(`PR #${pr}: could not read the last run (${e.message}); running the whole list.`); return null; });
   const extra = since ? since.failing : [];

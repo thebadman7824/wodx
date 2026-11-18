@@ -74,7 +74,7 @@ export function validate(raw, laneIds = []) {
       if ( !Array.isArray(list) || list.some(g => typeof g !== "string" || !NAME.test(g)) ) return err("gates must be a list of gate names.");
       if ( !list.length && !j.touched && !j.all ) return err("Give gates, or touched: true, or all: true.");
       if ( j.reset !== undefined && typeof j.reset !== "boolean" ) return err("reset must be true or false.");
-      // B7392: since: a touched run over only what changed after an earlier gated commit of the same branch
+      // B7442: since: a touched run over only what changed after an earlier gated commit of the same branch
       if ( j.since !== undefined && (!j.touched || typeof j.since !== "string" || !/^[0-9a-f]{40}$/.test(j.since)) ) return err("since must be a full commit sha, on a touched job.");
       if ( list.length > 300 ) return err("At most 300 gates in one job.");
       j.gates = [...new Set(list)];
@@ -181,7 +181,7 @@ export function gatePassed(gate, report = "") {
  * lane (one gate per run-gate call), so another gate's leftovers cannot decide it, and no verdict rests on one run.
  *   alone: [pass?, ...] on this commit; main: [pass?, ...] on main, or null when the job ran main. null in a list is
  *   a run the lane would not take.
- * Returns {next: "alone" | "main" | null, verdict}. A first run alone is always followed by a second (B7391): two
+ * Returns {next: "alone" | "main" | null, verdict}. A first run alone is always followed by a second (B7441): two
  * passes are an order fault (the job's failure came from other gates), a pass and a fail are flaky. A failure alone is run once more, and a pass then means flaky. Two failures alone go to main the
  * same way, where a pass is confirmed by a second run before the gate is called NEW.
  * once: true keeps the old one-run answers (recheckVerdicts, for reports made before B7310).
@@ -192,7 +192,7 @@ export function recheckStep(alone = [], main = null, {notOnMain = false, once = 
   if ( alone.length === 1 && !once ) return {next: "alone"};
   if ( alone[0] === true ) {
     if ( once ) return {next: null, verdict: "passes alone: it fails only after other gates (leftovers or order), or is flaky"};
-    // B7391: a pass alone is run once more, so an order fault (two passes) is told from a flaky gate (a pass and a fail)
+    // B7441: a pass alone is run once more, so an order fault (two passes) is told from a flaky gate (a pass and a fail)
     return alone[1] === true ? {next: null, verdict: `${ORDER_FAULT}: passes alone twice, each on a fresh lane; it fails only after other gates (leftovers or order)`}
       : {next: null, verdict: "flaky: passed once and failed once, alone on a fresh lane"};
   }
@@ -257,7 +257,7 @@ export const issueBody = (job, note = "") => `${note ? note + "\n\n" : ""}\`\`\`
  * fault: the status passes and names it, so the pull request is not held for a fault main already has.
  */
 export const GATE_CONTEXT = "wodx/gates";
-/** B7391: the verdict of a gate that fails only after other gates, as recheckStep writes it and gateStatusFor reads it. */
+/** B7441: the verdict of a gate that fails only after other gates, as recheckStep writes it and gateStatusFor reads it. */
 export const ORDER_FAULT = "order fault";
 export function gateStatusFor(job, parts, ok, failing = failingGates, url = undefined) {
   if ( job?.kind !== "gates" || !(job.touched || job.all) || !parts?.length ) return null;
@@ -270,7 +270,7 @@ export function gateStatusFor(job, parts, ok, failing = failingGates, url = unde
   const ran = new Set([...text.matchAll(/^(gate[\w-]*): (?:\d+\/\d+ passed|ERROR)/gm)].map(m => m[1])).size;
   const bad = failing(text);
   const mainToo = new Set([...text.matchAll(/^- (gate[\w-]*): fails on main too/gm)].map(m => m[1]));
-  // B7391 (the owner's choice, 18 November): a gate that passes alone twice fails only after other gates; that is a
+  // B7441 (the owner's choice, 18 November): a gate that passes alone twice fails only after other gates; that is a
   // fault of the gate run, not of this change, so it is named for the gate cleanup and does not hold the pull request
   const order = new Set([...text.matchAll(new RegExp(String.raw`^- (gate[\w-]*): ${ORDER_FAULT}:`, "gm"))].map(m => m[1]));
   let state, description;

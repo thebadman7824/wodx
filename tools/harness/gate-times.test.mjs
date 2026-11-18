@@ -1,4 +1,4 @@
-/* B7390: the TIMES line run-gate.mjs adds to a report is read by gate-times.mjs and ignored by every report parser. */
+/* B7440: the TIMES line run-gate.mjs adds to a report is read by gate-times.mjs and ignored by every report parser. */
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import fs from "node:fs";

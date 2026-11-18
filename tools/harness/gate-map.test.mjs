@@ -61,7 +61,7 @@ test("B6952: the runner counts 0/0 and a summary with no tally as a failure, and
   assert.match(B, /API_WAIT_MS = 180000/);
 });
 
-test("B7394: tier 1 runs a module's own gates, changed gates and the cross-module gates", async () => {
+test("B7444: tier 1 runs a module's own gates, changed gates and the cross-module gates", async () => {
   const {tier1, gateOwners, gateMap, touched, gatesFor, CROSS_GATES} = await import("../lanes/gate-map.mjs");
   const map = gateMap(), owners = gateOwners(undefined, map);
   for ( const [g, o] of Object.entries(owners) ) {
@@ -81,7 +81,7 @@ test("B7394: tier 1 runs a module's own gates, changed gates and the cross-modul
   assert.equal(tier1(["system/template.json"], {map}).length, Object.keys(map).length, "a system change runs every gate");
 });
 
-test("B7394: run-gate --touched takes tier 1, --wide the older list", () => {
+test("B7444: run-gate --touched takes tier 1, --wide the older list", () => {
   const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
   assert.match(src, /args\.includes\("--wide"\) \? gatesFor\(t\.modules, t\.gates, gateMap\(gateRoot\)\) : tier1\(paths, \{root: gateRoot\}\)/);
 });

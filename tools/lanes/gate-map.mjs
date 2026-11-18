@@ -6,9 +6,9 @@
  *
  *   node tools/lanes/gate-map.mjs                   the map: each gate and the modules it covers
  *   node tools/lanes/gate-map.mjs --touched [--base origin/main] [--wide [--direct]]
- *                                                   the gates the branch's changes need, one per line (tier 1, B7394;
- *                                                   --wide: every gate covering a touched module, the list before B7394)
- *   node tools/lanes/gate-map.mjs --owners          the modules each gate is for (B7394)
+ *                                                   the gates the branch's changes need, one per line (tier 1, B7444;
+ *                                                   --wide: every gate covering a touched module, the list before B7444)
+ *   node tools/lanes/gate-map.mjs --owners          the modules each gate is for (B7444)
  *   node tools/lanes/gate-map.mjs --modules wodx-npc,wodx-sheets
  *                                                   the gates for these modules
  *
@@ -136,7 +136,7 @@ export function gatesFor(mods, extraGates = [], map = gateMap()) {
 }
 
 /**
- * B7394: the modules each gate is for. Its header comment (the first comment block) names the module or modules it
+ * B7444: the modules each gate is for. Its header comment (the first comment block) names the module or modules it
  * tests; a gate whose header names none goes to the covered module its source names most often. gate-map-extra.json
  * "owners" sets them by hand. A gate covers many modules (any it calls), but is FOR only these.
  */
@@ -156,12 +156,12 @@ export function gateOwners(root = ROOT, map = gateMap(root)) {
   return out;
 }
 
-/** B7394: gates that drive several modules together; tier 1 runs them whenever any module changes. */
+/** B7444: gates that drive several modules together; tier 1 runs them whenever any module changes. */
 export const CROSS_GATES = ["gate-interact", "gateapipaths", "gatetruthactions", "gatetruthchronicle", "gatetruthcombat",
   "gatetruthholy", "gatetruthnpc", "gatetruthsheets", "gatetruthstoryteller"];
 
 /**
- * B7394 (the owner's choice, 18 November): the gates a pull request runs. The gates FOR each module whose own files
+ * B7444 (the owner's choice, 18 November): the gates a pull request runs. The gates FOR each module whose own files
  * changed (every module for a system change), every gate file that changed, and CROSS_GATES when any module changed.
  * Modules that only load or require a changed one are left to CROSS_GATES and the nightly full run, which runs every
  * gate on main. The wide list (gatesFor of touched()) is kept for --wide.

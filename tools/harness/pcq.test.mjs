@@ -210,7 +210,7 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
   assert.equal(gatePassed("gatea", "gateb: 3/3 passed"), null);
   const step = (a, m, o) => recheckStep(a, m, o);
   assert.equal(step([], []).next, "alone");
-  assert.equal(step([true], []).next, "alone", "B7391: one pass alone is run again");
+  assert.equal(step([true], []).next, "alone", "B7441: one pass alone is run again");
   assert.match(step([true, true], []).verdict, /^order fault: passes alone twice/);
   assert.match(step([true, false], []).verdict, /^flaky/);
   assert.match(step([true], [], {once: true}).verdict, /passes alone/, "old one-run reports keep their answer");
@@ -307,7 +307,7 @@ test("B7002: a touched or all gates job sets the wodx/gates status on the one co
   const m = gateStatusFor(job, mainToo, false);
   assert.equal(m.body.state, "success");
   assert.match(m.body.description, /failing on main too: gateb/);
-  // B7391: an order fault (passes alone twice) is named and does not hold the pull request; a flaky gate still does
+  // B7441: an order fault (passes alone twice) is named and does not hold the pull request; a flaky gate still does
   const rc = "\n\nRecheck (each failing gate alone on a fresh lane, 4 run(s)):\n";
   const ord = gateStatusFor(job, [{code: 1, sha, text: `gatea: 5/5 passed\ngateb: 1/3 passed\ngatec: 0/2 passed${rc}- gateb: order fault: passes alone twice, each on a fresh lane; it fails only after other gates (leftovers or order)\n- gatec: fails on main too: not this change's fault`}], false);
   assert.equal(ord.body.state, "success");

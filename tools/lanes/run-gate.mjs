@@ -2,7 +2,7 @@
  * Runs gates on whichever testbed lane is free, after a drift check.
  *   node tools/lanes/run-gate.mjs <gate> [<gate> ...] [--lane 2] [--wait 30] [--repo <checkout>] [--channel msedge]
  *   node tools/lanes/run-gate.mjs --touched [--base origin/main] [--wide]   only the gates the checkout's changes need (B3083;
- *                                                                            tier 1 since B7394, --wide the older wider list)
+ *                                                                            tier 1 since B7444, --wide the older wider list)
  *   node tools/lanes/run-gate.mjs --all [--shard 1/2]              every gate in the map (the nightly full run), or
  *                                                                 one share of them so two lanes split the list
  *   --report <file>       also write each gate's line and the exit code to this file
@@ -60,7 +60,7 @@ if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
 if ( args.includes("--touched") ) {
   const paths = changedPaths(opt("base") ?? "origin/main", gateRoot);
   const t = touched(paths, {root: gateRoot});
-  // B7394: tier 1 (the changed modules' own gates, changed gates and the cross-module gates); --wide: the old list
+  // B7444: tier 1 (the changed modules' own gates, changed gates and the cross-module gates); --wide: the old list
   const list = args.includes("--wide") ? gatesFor(t.modules, t.gates, gateMap(gateRoot)) : tier1(paths, {root: gateRoot});
   console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
   if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
@@ -106,7 +106,7 @@ if ( opt("lanes") && !shard ) {
 }
 const reportFile = opt("report");
 const times = [];
-// B7390: indented, so the report parsers (gate lines start at the line start) never read it as a gate
+// B7440: indented, so the report parsers (gate lines start at the line start) never read it as a gate
 const reportTimes = () => { if ( !times.length ) return; const t = `  TIMES ${times.join(" ")}`; console.log(t); report(t); times.length = 0; };
 const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
 report(`==== ${new Date().toISOString()} ${gates.length} gate(s)${shard ? ` shard ${shard[0]}` : ""}`);
@@ -366,7 +366,7 @@ try {
       const reloadsDuring = life.loads - loadsSeen - reloadsBefore;
       loadsSeen = life.loads;
       for ( const [k, w] of [[reloadsBefore, "before this gate"], [reloadsDuring, "during this gate"]] ) if ( k > 0 ) { const note = ` [page reloaded ${w}${k > 1 ? ` ${k} times` : ""}]`; if ( out.error ) out.error += note; else out.summary += note; }
-      // B7390: each gate's seconds (sign-in, the run and the put-back), for the TIMES line at the end of the report
+      // B7440: each gate's seconds (sign-in, the run and the put-back), for the TIMES line at the end of the report
       times.push(`${gate}=${Math.round((Date.now() - gateStart) / 1000)}`);
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       const diagDump = async () => {
