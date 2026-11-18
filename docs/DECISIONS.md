@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7240
+Next free block: B7310
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -413,6 +413,10 @@ Next free block: B7240
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
 | B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
+| B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
+| B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
+| B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
+| B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14181,3 +14185,68 @@ Reverse: drop the branchTools case in tools/pcq/jobs.mjs validate, and the branc
 Testbed lanes. Settings, flags, sheets and leftover documents were already put back after each gate (B3086, B7181, B7192, B7193), but all the gates on a lane run in one page, so anything a gate left in the page itself carried on into the gates after it. Job 1979 (PR 1836) had 7 gates fail that pass alone and touch nothing of that pull request: gategadgets, gatehuntpowder, gatesprites, gatespritelife, gatestillmarks, gatetruthsheets and gatevoices. While a gate runs, run-gate now notes every hook (Hooks.on, Hooks.once) and interval the gate's own file registers, and removes the ones still there when it ends. A hook a module registers while a gate calls into it is the module's and stays (`gateCaller` in tools/lanes/lib.mjs looks past the wrappers and Foundry's own frames to the caller). It also restores the functions gates swap (the dice's randomUniform, the notices, the scrolling text, ChatMessage.create, game.time.advance) and takes off a property laid over game.user (a player's isGM). The gate's line says what was put back, for example "2 hook(s) the gate left removed (createChatMessage)", so the gate that leaks can be fixed.
 
 Reverse: remove the wrappers and `pageBack` from the page function in tools/lanes/run-gate.mjs, and `pageNote` from its line.
+
+## B7240. Lane 9 runs in a cloud thread's own Linux box (2026-11-17)
+tools/lanes/cloud-lane.mjs sets up Foundry 14.369 headless in the thread's box and runs gates there through run-gate.mjs, so a thread need not wait for a PC lane. lanes.json gains a "cloud" host whose paths sit under the box's home folder; PCs never see lane 9. Ben chose "Make it routine" after the trial (gateplains 28/28, setup about 2 minutes, 3.1 GB RAM).
+
+Reverse: delete cloud-lane.mjs, the "cloud" host and lane 9 from lanes.json.
+
+## B7241. Node 24 from npm and the proxy for Node's fetch (2026-11-17)
+Foundry 14 refuses Node below 24 and cloud boxes ship Node 22, so setup unpacks npm's node-linux-x64 build. Node's fetch ignores the cloud proxy unless NODE_USE_ENV_PROXY=1, without which the licence sign fails.
+
+Reverse: drop both once cloud boxes ship Node 24 with the proxy on by default.
+
+## B7242. The Foundry zip and signed licence live in the private shared folder (2026-11-17)
+Ben's timed download link lasts minutes, so the zip and license.json (signed for the box's host name) are kept in /mnt/project-files/private/cloud-foundry, never in the public repo. EULA item 2 and the FAQ allow a second instance while nobody but the licence owner can get past its login; lane 9 listens only inside the box.
+
+Reverse: delete that folder; each cloud setup then needs a fresh link and the key from Ben.
+
+## B7243. Lane 9's world is the repo's world.json (2026-11-17)
+The PC known-good world cannot reach the cloud from a thread. Lane 9 starts from the repo's world.json with the WoDX modules on and a Gamemaster Test account. Gates needing the PC world's scenes, actors or other modules stay on PC lanes.
+
+Reverse: copy a known-good world into ~/foundry/known-good when one can reach the cloud, and use lanes.mjs reset.
+
+## B7250. gatevoices step 5 counts only what happened while it ran (2026-11-17)
+Gates. The WoDX Voices api keeps its counters (renders, hits, plays, fallbacks) and the engine and voice server states in memory for the whole page. gatetruthnpc step 6 switches Voices on with the browser engine and speaks a line, so the fallback counter goes to 1; putting its settings back points the engine at the voice server again, which is not running, so the server state reads "error". gatevoices ran after it on lane 3 in job 1979 and failed step 5 ("server":"error", "fallbacks":1), and passed alone. Step 5 now reads the counters and both states against where they stood when gatevoices started: no counter may grow, and each state must be off or unchanged. When an earlier gate had used Voices, the step's detail says so and shows the starting values. A run on a fresh lane checks exactly what it did before.
+
+Reverse: put back the strict `engine === "off" && server === "off"` and zero counters in step 5 of tools/gate/gatevoices.mjs.
+
+## B7290. The laptop watches the PC job system and only reports (2026-11-18)
+Ben asked for the laptop (DESKTOP-S6NV3Q9) to be used to keep everything in line. tools/pcq/watcher.mjs runs every 5 minutes from the scheduled task "WoDX PC watcher at logon" (tools/pcq/install-watcher.ps1, loop in run-watcher.ps1), below normal priority, on battery too. It reads only GitHub (the pc-status branch files, the runner status issues, pc-job issues, the merge train line, pc-alert issues) and the laptop's own process list. It never starts or stops a process, restarts OCR or art, or touches a lane, a world, a job or another tool's alert. It is taken as a fix to how the PCs are watched under the PC upkeep freeze, with no new lane or runner (logged in docs/PENDING-REVIEW.md). Its checks are fixed rules, not a local model: the laptop's i5-8210Y would sit at full load for each model call and slow lane 7.
+
+Reverse: put a file named watcher-off in C:\WoDX\pcq, delete the scheduled task, and remove watcher.mjs, run-watcher.ps1 and install-watcher.ps1.
+
+## B7291. One report issue, one alert issue, both found by title (2026-11-18)
+The issue "PC watcher report" (label pc-watch) is rewritten every cycle. A problem must show on two cycles in a row before the one issue "PC watcher alert" (label pc-alert) opens. That issue gets a comment when the list changes and closes when everything clears. Both are found by title, never kept only in memory, so a restart does not open a second one. The runners' own alerts lose track of their issue when they restart (#1952 to #1957 stayed open after the Main PC came back), and the watcher lists such alerts instead of closing them. GitHub sends Ben no notice for issues his own account opens, so on Ben's pick (option 1, 18 November 2026) a thread with GitHub access reads the open "PC watcher alert" issue and passes it on. Phone push through ntfy.sh was offered and not taken.
+
+Reverse: change REPORT_TITLE, ALERT_TITLE or LIMITS.confirmCycles in tools/pcq/watcher.mjs.
+
+## B7292. Limits (2026-11-18)
+A status file older than 15 minutes means the PC's status push is quiet. A status issue older than 20 minutes means the runner is quiet. Both quiet together reads as the PC being off, asleep or rebooting. A quiet status push alone is a note up to 30 minutes and a problem after that. A job running or waiting over 6 hours is a problem, and so is the same merge-train front for over 3.5 hours (the train gives up at 3). Lane and graphics card readings are trusted only from a fresh status file.
+
+Reverse: change LIMITS in tools/pcq/watcher.mjs.
+
+## B7293. The heartbeat checks every status issue and the watcher report (2026-11-18)
+.github/workflows/pc-heartbeat.yml read only the newest open pc-status issue (per_page=1). With three PCs that was the Secondary PC's issue, so it never saw the Main PC go quiet. It now checks each pc-status issue and the pc-watch report by title. The Main PC keeps the old alert title "PC runner alert: the runner is silent", and the others get "Heartbeat alert: <title> is silent".
+
+Reverse: restore the per_page=1 query in pc-heartbeat.yml.
+
+## B7294. ComfyUI and book OCR are not visible yet (2026-11-18)
+Neither publishes a status the laptop can read, so the report says so plainly and shows only the Main PC's graphics card load and GPU guard. Covering them needs each PC's status-push.mjs to add a few fields (for ComfyUI the queue length and when the last image finished; for OCR the last page done and whether it is waiting for memory or gave up). That change goes through the PC helper on each machine, not this branch.
+
+Reverse: nothing to reverse; it is a gap left open.
+
+## B7295. Lanes are judged one at a time, and lane 6 is skipped (2026-11-18)
+The first live hour showed the Main PC's lane 6 down every cycle (it is kept for the paused local agents) and lanes 2 and 8 down for a cycle while their jobs reset them. A key for the whole set of down lanes changed whenever one lane came and went, so a lane that stayed down would never confirm. Each lane now has its own key, lane 6 is skipped, and a lane must be down three cycles in a row (about 15 minutes) before it reaches the alert.
+
+Reverse: empty IGNORE_LANES or set laneConfirmCycles to 2 in tools/pcq/watcher.mjs.
+
+## B7296. Renders and OCR report into the status files (2026-11-18)
+Ben asked for both PCs to report to the watcher. tools/pcq/status-push.mjs (now kept in the repository; each PC runs a copy from <home>\gpu-tools) adds two optional fields. comfy (set PC_COMFY_URL) holds whether ComfyUI answers, how many prompts run and wait, and minutes since the last one finished. ocr (set PC_OCR_MATCH, PC_OCR_OUT, PC_OCR_LOG) holds the worker count, minutes since the newest output file, and whether the log's last lines say it waits for memory or gave up. Only counts, minutes and booleans leave the PC, because the branch is public. The watcher flags renders with work queued but nothing finished for 30 minutes, OCR workers with no new output for 60 minutes, and an OCR run that gave up. Waiting for memory on its own is a note.
+
+Reverse: unset the PC_COMFY_URL and PC_OCR_* settings on the PC; the watcher then says it cannot see them.
+
+## B7300. Cloud setup loads the PC known-good world and modules from the private folder (2026-11-18)
+cloud-lane.mjs setup joins testbed/testbed-known-good.zip.partNN and modules/cloud-foundry-modules.zip.partNN from /mnt/project-files/private/cloud-foundry, checks each against its SHA256 file, and uses the PC world as lane 9's known-good copy and world and the PC lane's other modules in its Data folder. The joined zips stay in the box (the shared folder caps files at 20 MiB). Without the parts, setup falls back to the repo's world.json (B7243). A cloud fail stays a hint: gate6b's werewolf form step fails on lane 9 with this world and 28 of its 30 modules while it passes on a PC lane.
+
+Reverse: drop fromParts and its two calls; lane 9 goes back to the world.json world.
