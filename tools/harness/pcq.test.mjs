@@ -228,7 +228,7 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
 
 test("B7310: the runner reruns one gate per run-gate call", async () => {
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
-  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  const body = fs.readFileSync(new URL("../pcq/recheck.mjs", import.meta.url), "utf8");
   assert.match(body, /\[gate, "--lane"/, "run-gate gets a single gate");
   assert.doesNotMatch(body, /\.\.\.failing, "--lane"/, "no longer all failing gates in one call");
   assert.match(body, /lanesCmd\(\["reset"/, "each run starts from a reset");
@@ -333,4 +333,44 @@ test("B7194: a runner whose own code is current moves to main in place when only
   assert.match(due, /"checkout", "-q", "-f", "--detach", "origin\/main"\]/, "and moves the checkout in place");
   assert.match(due, /MY_SHA = now; return false;/, "without exiting");
   assert.match(src, /^let MY_SHA = /m);
+});
+
+test("B7341: a restarted gates job keeps what passed and runs the rest", async () => {
+  const {resumeState} = await import("../pcq/jobs.mjs");
+  const lane2 = "==== x\ngatea: 3/3 passed [1 setting(s) put back]\ngateb: 2/3 passed; failed: 1\ngatec: ERROR lost the page\n";
+  const lane3 = "gated: 5/5 passed\ngatee: 0/0 passed\n";
+  const st = resumeState(["gatef", "gateg"], ["gateh", "gatea"], [lane2, lane3]);
+  assert.deepEqual(st.passed, ["gatea: 3/3 passed [1 setting(s) put back]", "gated: 5/5 passed"]);
+  assert.deepEqual(st.left.sort(), ["gateb", "gatec", "gatee", "gatef", "gateg", "gateh"].sort(), "failed, errored, no-step, taken-unfinished and queued gates run again");
+  // a gate that failed then passed later in the same run counts as passed
+  assert.deepEqual(resumeState([], [], ["gatea: 1/2 passed\ngatea: 2/2 passed"]).passed, ["gatea: 2/2 passed"]);
+});
+
+test("B7341, B7340, B7342: the runner wires them in", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /saveResume\(`job\$\{i\.number\}`\)/, "a job running at restart keeps its progress");
+  assert.match(src, /resume\?\.sha === wt\.sha/, "progress is used only on the same commit");
+  assert.match(src, /growJobs\(ready\.some\(q => LANE_KINDS\.has\(q\.job\.kind\) && !active\.has\(q\.number\) && couldStartNow\(q\.job\)\)\)/);
+  assert.match(src, /deps: \{lanesCmd, node, worktree, stallFor, log, logs: LOGS, mainCache\}/, "the runner hands the recheck its cache");
+  const re = fs.readFileSync(new URL("../pcq/recheck.mjs", import.meta.url), "utf8");
+  assert.match(re, /mainCache\?\.read\(m\.sha\)/);
+  assert.match(re, /mainSettled\(st\[g\]\.main\)/);
+});
+
+test("B7342: only settled main runs are kept", async () => {
+  const {mainSettled} = await import("../pcq/jobs.mjs");
+  assert.equal(mainSettled([false]), true);
+  assert.equal(mainSettled([true, true]), true);
+  assert.equal(mainSettled([true, false]), true);
+  assert.equal(mainSettled([true]), false);
+  assert.equal(mainSettled([false, null]), false);
+  assert.equal(mainSettled(null), false);
+});
+
+test("B7330: a runner stopping with runner-off still acts on pc-cancel", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const off = src.indexOf('if ( fs.existsSync(path.join(HOME, "runner-off")) )');
+  assert.ok(off > 0);
+  const block = src.slice(off, src.indexOf("continue;", off));
+  assert.match(block, /cancelCheck\(/, "the runner-off wait runs the cancel pass");
 });
