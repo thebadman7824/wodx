@@ -36,6 +36,41 @@
    "prs": [
     1414
    ]
+  },
+  {
+   "id": "chronicle.languages-in-chat",
+   "name": "Languages in chat: speech in a language a player's characters lack shows as made-up words",
+   "module": "wodx-chronicle",
+   "core": true,
+   "files": [
+    "modules/wodx-chronicle/scripts/languages.mjs",
+    "modules/wodx-chronicle/scripts/languages-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B3162, B3163, B7267-B7270"
+    },
+    "wired": {
+     "reader": "modules/wodx-chronicle/scripts/languages.mjs:registerLanguageHooks"
+    },
+    "shown": {
+     "what": "the Speaking box above the chat box, 'In Latin' on a line, made-up words and 'which your character does not speak' to a player without it, and a 'Try for the gist' button through a kindred language"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplaylang.mjs",
+     "step": "4"
+    }
+   },
+   "open": [
+    "gateplaylang is a two-browser gate: the PC gates job does not run it; queue it by name with submit.mjs gate-two",
+    "a character's languages are listed by hand in the Languages window; character creation does not fill them yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
   }
  ]
 }

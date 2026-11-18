@@ -4,6 +4,7 @@
     "gate6c-diag",
     "gatecssprobe",
     "gatedisplayb",
+    "gateplaylang",
     "gatedisplayd",
     "gatedebtsmarks",
     "gatelookhand",
@@ -114,7 +115,7 @@
     ]
   },
   "remove": {},
-  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks: run them by name on their own; gatesolo turns solo mode on). gatevoices is a lane gate again: it checks Voices switched off and needs no engine (B6763).",
+  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks, gateplaylang: run them by name on their own; gatesolo turns solo mode on). gatevoices is a lane gate again: it checks Voices switched off and needs no engine (B6763).",
   "timeouts": {},
   "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}."
 }
