@@ -166,3 +166,4 @@ brings that back). docs/WORKFLOW.md, section 6, is the thread's side. A pull req
 the front of the line (B7420); a fix to the train or runner that the train is stuck without is merged by its cloud
 thread instead (B7422).
 
+Stale runs (B7330-B7332): every push to a pull request cancels its gate jobs for older commits (closed if not started, pc-cancel if running), a push from outside the train to a pull request labelled `merge-train` takes it out of the train with a comment, and a runner stopping with runner-off still acts on pc-cancel. To pause a runner, use `runner-hold` (takes no new jobs, keeps status, cancels and the train going) rather than `runner-off`.
