@@ -39,13 +39,22 @@ const lastCard = (tokUuid, after) => game.messages.contents.filter(m => m.getFla
 const zero = {bashing: 0, lethal: 0, aggravated: 0};
 const dmgOf = a => { const ct = C().corpusTrack(a), d = ct?.damage ?? a.system?.health?.damage ?? {}; return {bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated)}; };
 
+/** B7313: what makes an actor obvious to WoDX NPC (its own rule, wodx-npc main.mjs obvious()), as this gate reads it. */
+const OBVIOUS_EFFECT = /crinos|hispo|glabro|shape of the beast|horrid form|vicissitude|tenebrous form|wings|bestial|monstrous/i;
+const showsWhat = a => ["spirit", "wraith"].includes(C().getKind?.(a)) || [...(a?.effects ?? [])].some(e => OBVIOUS_EFFECT.test(e.name ?? "")) || !!a?.getFlag?.(MOD, "obvious");
+
 /** Rothenstein's NPCs, one per template (sheets with no player owner), and a player's character. */
 export function cast() {
   const R = npc().rules;
   const npcs = game.actors.filter(a => !a.hasPlayerOwner && ["PC", "Mortal", "Vampire", "Werewolf", "Wraith", "Hunter", "Creature", "Changing Breed"].includes(a.type));
   const byTemplate = new Map();
   for ( const a of npcs ) { const t = R.templateFor(infoOf(a)); if ( !byTemplate.has(t) ) byTemplate.set(t, a); }
-  const hero = game.actors.find(a => a.hasPlayerOwner && a.type !== "Group");
+  // B7313: the hero must not frighten a guard by being what it is. The first player's actor in the world can be a
+  // wraith or another obvious being (job 2016: "Ada (6d, wraith)"), and then the guard flees instead of walking round
+  // the wall. So a player's character that passes for human is taken first, by name for the same pick on every lane.
+  const players = game.actors.filter(a => a.hasPlayerOwner && a.type !== "Group").sort((x, y) => x.name.localeCompare(y.name));
+  const passes = a => !showsWhat(a);
+  const hero = players.find(a => ["Mortal", "PC"].includes(a.type) && passes(a)) ?? players.find(passes) ?? players[0];
   const fighter = ["neonate", "ghoul", "guard", "garou", "hunter", "elder"].map(t => byTemplate.get(t)).find(Boolean) ?? [...byTemplate.values()][0];
   const runner = ["guard", "ghoul", "neonate", "hunter", "civilian"].map(t => byTemplate.get(t)).find(a => a && a !== fighter) ?? fighter;
   const kindred = byTemplate.get("neonate") ?? byTemplate.get("elder") ?? null;
@@ -120,7 +129,7 @@ function whyRun(T) {
   try {
     const hero = T.hero.actor, p = npc().profileFor(T.runner.actor);
     const plan = npc().planTurn(T.runner, game.combat), st = plan.fight?.state;
-    return {fears: p.fears ?? [], fleeAt: p.fleeAt, heroObvious: npc().obvious?.(hero) ?? null, heroKind: C().getKind?.(hero) ?? null,
+    return {fears: p.fears ?? [], fleeAt: p.fleeAt, heroObvious: showsWhat(hero), heroKind: C().getKind?.(hero) ?? null,
       heroEffects: [...(hero.effects ?? [])].map(e => e.name).slice(0, 12), heroNpcFlags: Object.keys(hero.flags?.[MOD] ?? {}),
       heroLinked: !!T.hero.document.actorLink, enemies: (st?.enemies ?? []).map(e => ({name: e.name, obvious: e.obvious, fear: e.fearSources ?? [], sup: e.supernatural})),
       wounds: st?.self?.wounds ?? null, options: plan.options.slice(0, 4).map(o => `${o.label} (${o.score}): ${o.why}`)};
