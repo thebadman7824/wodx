@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, TRAIN_LABEL} from "../pcq/train.mjs";
+import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
 
 const H = 3600e3;
 const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
@@ -69,7 +69,7 @@ function mockGh(over = {}) {
   const gh = async (method, url, body) => {
     calls.push(`${method} ${url}`);
     let m;
-    if ( url.startsWith("/issues?") ) return [{number: 21, pull_request: {}, created_at: "2026-11-17T09:00:00Z"}, {number: 20, pull_request: {}, created_at: "2026-11-17T10:00:00Z"}, {number: 5}];
+    if ( url.startsWith("/issues?") ) return [{number: 21, pull_request: {}, created_at: "2026-11-17T09:00:00Z", labels: over.labels21 ?? [{name: TRAIN_LABEL}]}, {number: 20, pull_request: {}, created_at: "2026-11-17T10:00:00Z", labels: [{name: TRAIN_LABEL}]}, {number: 5}];
     if ( (m = /^\/issues\/(\d+)\/events/.exec(url)) ) return [{event: "labeled", label: {name: TRAIN_LABEL}, created_at: m[1] === "20" ? "2026-11-17T11:00:00Z" : "2026-11-17T12:00:00Z"}];
     if ( (m = /^\/pulls\/(\d+)$/.exec(url)) ) return pr(+m[1]);
     if ( url.startsWith("/compare/") ) return {behind_by: over.behind ?? 0};
@@ -90,6 +90,17 @@ test("step merges the front when it is green and leaves the rest alone", async (
   assert.equal(r.action, "merge");
   assert.ok(calls.includes("PUT /pulls/20/merge"));
   assert.ok(!calls.some(c => /pulls\/21\/merge|update-branch/.test(c)), "the second in line is not touched");
+});
+
+test("B7420: an urgent pull request goes to the front, in label order among the urgent ones", async () => {
+  assert.deepEqual(line([{number: 9, labelledAt: 30}, {number: 4, labelledAt: 50, urgent: true}, {number: 7, labelledAt: 60, urgent: true}]).map(p => p.number), [4, 7, 9]);
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const {gh, calls} = mockGh({labels21: [{name: TRAIN_LABEL}, {name: URGENT_LABEL}]});
+  const r = await step({gh, home, apply: true});
+  assert.equal(r.front, 21, "the urgent one is the front though #20 was labelled first");
+  assert.deepEqual(r.line, [21, 20]);
+  assert.deepEqual(r.urgent, [21]);
+  assert.ok(calls.includes("PUT /pulls/21/merge") && !calls.includes("PUT /pulls/20/merge"));
 });
 
 test("step waits on a head whose merge rules fail only for its pending gate run (PR 1880)", async () => {
