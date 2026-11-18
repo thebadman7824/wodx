@@ -726,6 +726,9 @@ for ( ;; ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
       // B7207: the status issue still says what is running while it waits
       await status([], "runner-off: stops once the running job(s) end").catch(() => {});
+      // B7330: a job still running while the runner stops can be cancelled (pc-cancel or a closed issue): runner-off
+      // used to skip the cancel pass, so job 2031 ran on stale code for half an hour after its pc-cancel label
+      try { const open = await openIssues(LABEL.job); await cancelCheck(open, new Set(open.map(i => i.number))); } catch (e) { log(`cancel check failed: ${e.message}`); }
       await sleep(30000); continue;
     }
     // B7207: runner-hold takes no new jobs but keeps every other pass (status, sweep, train, updates, cancel) running

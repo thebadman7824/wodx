@@ -181,7 +181,7 @@ export async function prepare(ctx, ref, head) {
   const did = [];
   const behind = (await git(["merge-base", "--is-ancestor", "origin/main", "HEAD"], dir)).status !== 0;
   if ( behind ) {
-    const m = await git(["merge", "--no-edit", "-m", `Merge main into ${ref} (merge train)`, "origin/main"], dir);
+    const m = await git(["merge", "--no-edit", "-m", `Merge main into ${ref} (merge train)\n\nMerge-Train: yes`, "origin/main"], dir);
     if ( !ok(m) ) { await git(["merge", "--abort"], dir); return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"}; }
     did.push("main merged in");
     const carried = await carryReviews(dir, head);
@@ -190,7 +190,11 @@ export async function prepare(ctx, ref, head) {
   }
   const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
   if ( st.status !== 0 ) { await git(["reset", "-q", "--hard", head], dir); return {error: `merge-stamp refused: ${(st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400)}`}; }
-  if ( /Committed\./.test(st.stdout) ) did.push("release notes stamped");
+  if ( /Committed\./.test(st.stdout) ) {
+    did.push("release notes stamped");
+    // B7332: the stamp commit carries the train's trailer, so pc-gates.yml knows this push as the train's own
+    await git(["commit", "--amend", "-q", "--no-edit", "--trailer", "Merge-Train: yes"], dir);
+  }
   const sha = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
   if ( sha === head ) return {error: "the train had nothing to do but the branch still reads as behind or unstamped"};
   const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${ref}`, `--force-with-lease=refs/heads/${ref}:${head}`], dir);

@@ -58,3 +58,36 @@ test("the runner's job hook copy refuses forks and other workflows", () => {
   const hook = fs.readFileSync(path.join(ROOT, "tools", "pcq", "gh-runner", "job-started.ps1"), "utf8");
   for ( const s of ["thebadman7824/wodx", "pc-gates.yml", "head.repo.full_name", "pull_request", "workflow_dispatch", "exit 1"] ) assert.ok(hook.includes(s), s);
 });
+
+test("B7331: gate jobs for a PR's older commits are closed or cancelled", async () => {
+  const {staleJobs, marker} = await import("../pcq/pr-gates.mjs");
+  const head = "a".repeat(40), old = "b".repeat(40), older = "c".repeat(40);
+  const open = [
+    {number: 1, title: `PC job: gates touched ${marker(7, head)}`, labels: []},
+    {number: 2, title: `PC job: gates touched ${marker(7, old)}`, labels: [{name: "pc-running"}]},
+    {number: 3, title: `PC job: gates touched ${marker(7, older)}`, labels: []},
+    {number: 4, title: `PC job: gates touched ${marker(8, old)}`, labels: [{name: "pc-running"}]},
+    {number: 5, title: `PC job: gates touched ${marker(7, "d".repeat(40))}`, labels: [{name: "pc-running"}, {name: "pc-cancel"}]},
+    {number: 6, title: `PC job: gates touched ${marker(70, old)}`, labels: []}];
+  const s = staleJobs(open, 7, head);
+  assert.deepEqual(s.close.map(i => i.number), [3], "the unstarted older job is closed; the head's own and other PRs' are left");
+  assert.deepEqual(s.cancel.map(i => i.number), [2], "the running older job is cancelled once");
+});
+
+test("B7332: only the train's own commits keep a pull request in the train", async () => {
+  const {isTrainPush} = await import("../pcq/pr-gates.mjs");
+  assert.equal(isTrainPush(["Merge main into claude/x (merge train)\n\nMerge-Train: yes", "Merge train: carry 2 file review(s) over the merge with main", "Stamp versions, changelogs and decisions for merge\n\nMerge-Train: yes"]), true);
+  assert.equal(isTrainPush(["Stamp versions, changelogs and decisions for merge\n\nMerge-Train: yes"]), true, "a stamp-only train push");
+  assert.equal(isTrainPush(["Merge main into claude/x (merge train)", "Stamp versions, changelogs and decisions for merge"]), true, "older train commits, before the trailer");
+  assert.equal(isTrainPush(["Review PENDING-REVIEW again after merging main"]), false, "PR 1995 at 11:12Z");
+  assert.equal(isTrainPush(["Stamp versions, changelogs and decisions for merge"]), false, "a thread's own stamp");
+  assert.equal(isTrainPush(["Merge main into claude/x (merge train)", "Fix a test"]), false, "a thread commit after the train's");
+  assert.equal(isTrainPush([]), false);
+});
+
+test("B7332: the workflow hands the script the head before the push", () => {
+  const wf = fs.readFileSync(path.join(ROOT, ".github", "workflows", "pc-gates.yml"), "utf8");
+  assert.match(wf, /BEFORE_SHA: \$\{\{ github\.event\.before \}\}/);
+  const train = fs.readFileSync(path.join(ROOT, "tools", "pcq", "train.mjs"), "utf8");
+  assert.equal((train.match(/Merge-Train: yes/g) ?? []).length >= 2, true, "the train marks its merge and its stamp");
+});

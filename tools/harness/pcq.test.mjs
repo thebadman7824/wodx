@@ -366,3 +366,11 @@ test("B7342: only settled main runs are kept", async () => {
   assert.equal(mainSettled([false, null]), false);
   assert.equal(mainSettled(null), false);
 });
+
+test("B7330: a runner stopping with runner-off still acts on pc-cancel", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const off = src.indexOf('if ( fs.existsSync(path.join(HOME, "runner-off")) )');
+  assert.ok(off > 0);
+  const block = src.slice(off, src.indexOf("continue;", off));
+  assert.match(block, /cancelCheck\(/, "the runner-off wait runs the cancel pass");
+});

@@ -419,6 +419,7 @@ Next free block: B7390
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
+| B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
 | B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 <!-- decision-index:end -->
@@ -14316,6 +14317,34 @@ Reverse: take the conductor and scene mode lines, the hooks and the log out of s
 Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 1944 and 2006 with the runner choosing to flee ("faces what it fears": a guard fears the supernatural once it shows), and "a lost action" failed in 2006 with a plan card instead of "cannot act". The same lane order passed and failed in job 1944, so the cause is state left in the world, not the order alone. The two steps' detail now names whose turn it was when the NPC acted, the runner's fears, whether the hero reads as obvious (its effects and WoDX NPC flags), the enemies as the runner saw them and its top options, and the card's token against the fighter's. No pass condition changed. On this branch the detail showed, in job 2016, the hero "Ada (6d, wraith)" read as obvious, so the guard fled. Two tries at choosing the hero instead (jobs 2021 and 2024) failed other steps, and the same code passed in jobs 2017 and 2018, so the hero is not the only thing that varies; those tries were taken back out. gate7b was the first gate after the lane's reset in all three failing runs, and also in job 2013, which passed; in 2017 and 2018 it came after other gates.
 
 Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
+
+## B7330. runner-off no longer skips the cancel pass (2026-11-18)
+Repository workflow. A runner with runner-off waits for its running jobs to end before it stops, but that wait skipped
+the cancel pass, so a job labelled pc-cancel, or whose issue was closed, ran to the end anyway: job 2031 ran on a stale
+commit of PR 1995 for half an hour after its pc-cancel label, until it was stopped by hand. The wait now lists the open
+job issues and runs the cancel pass each time round. runner-hold (B7207) already did.
+
+Reverse: drop the cancelCheck line from the runner-off block in runner.mjs.
+
+## B7331. A push cancels the gate jobs of the pull request's older commits (2026-11-18)
+In the week to 18 November 21 of 71 pull request gate jobs were for a commit the pull request had moved past before
+the run ended, and the 10 that ran held lanes for about 10.7 lane-hours (about 7% of all lane time). Half came from
+the merge train's own merge-main and stamp pushes, half from threads pushing mid-run. pc-gates.yml runs on every push,
+so tools/pcq/pr-gates.mjs now closes that pull request's unstarted jobs for older commits (as before) and also labels
+its running ones pc-cancel, so the runner ends them within a minute. It does this before any other check, so a push
+that needs no new gates still frees the lane.
+
+Reverse: drop the stale.cancel loop in pr-gates.mjs.
+
+## B7332. A push from outside the train takes a pull request out of it (2026-11-18)
+Threads add merge-train and stop pushing, but PR 1995 got a thread push while labelled, which made its gate run stale.
+When a pull request labelled merge-train gets a push whose new commits are not all the train's own (its merge of main,
+its carried reviews, and a stamp it made), pr-gates.mjs takes the label off with a comment saying why, before the train
+can gate or merge that code. The train now marks its merge and its stamp commits with a Merge-Train: yes trailer so a
+stamp-only train push is known as its own; its older commits are known by their (merge train) wording. A rewritten
+branch (not a fast-forward) also counts as an outside push.
+
+Reverse: drop the merge-train block in pr-gates.mjs and the trailers in train.mjs.
 
 ## B7340. Free lanes join a running job unless a waiting job could use them (2026-11-18)
 Repository workflow. growJobs() let a running gates job take only its own lane count while any lane job waited, even
