@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7470
+Next free block: B7490
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -431,6 +431,7 @@ Next free block: B7470
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
 | B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
 | B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
+| B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14662,3 +14663,14 @@ from 30 minutes before. Nothing reads the file for this yet, so a runner-hold se
 The ask tests now pass a fixed time, so a planned window in the file cannot change their answer.
 
 Reverse: empty windows.planned in registry/priorities.json.
+
+## B7480. One GitHub issue per bug, closed by the fixing PR (2026-11-18)
+Docs only (docs/WORKFLOW.md section 8, registry/features/README.md). Until now bugs lived in PR descriptions,
+BUILD-LOG.md, nightly gate issues and thread handoff notes, and nothing tracked a bug that a thread found but did not
+fix. Each such bug now gets one issue labelled `bug`. The fixing PR says `Fixes #N`; when only a later run on main can
+prove the fix, it says `Refs #N` and the issue closes after that run. A registry fault entry carries `"issue": N`
+(registry.mjs check already accepts extra fields). Ben approved this on 18 November 2026, to start once Book 1 was
+finished. The open backlog (the nightly 2026-11-18 failures, #1843, gatetruthstoryteller, gategadgets and the final
+audit's open items) was filed the same day.
+
+Reverse: remove the bullet from section 8 and the `issue` field note; the issues stay as a record.
