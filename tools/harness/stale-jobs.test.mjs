@@ -79,9 +79,10 @@ test("B7207: runner-hold blocks only job pickup and lane growth; runner-off stil
   assert.match(src, /if \( !draining && !holding && !res\.low\.length \) growJobs\(/);
   assert.match(src, /holding \? "runner-hold: taking no new jobs" : null\)/);
   assert.match(src, /await status\(\[\], "runner-off: stops once the running job\(s\) end"\)/);
-  // The hold check comes after the runner-off branch and before the passes it must not skip
-  const hold = src.indexOf('const holding = '), off = src.indexOf('"runner-off"))'), sweepAt = src.indexOf("sweep(gh, {apply"), cancel = src.indexOf("await cancelCheck(");
-  assert.ok(off < hold && hold < sweepAt && hold < cancel);
+  // The hold check comes after the runner-off branch and before the passes it must not skip. B7330: the runner-off
+  // wait runs its own cancel pass, so the main loop's pass is the first one after the hold check.
+  const hold = src.indexOf('const holding = '), off = src.indexOf('"runner-off"))'), sweepAt = src.indexOf("sweep(gh, {apply"), cancel = src.indexOf("await cancelCheck(", hold);
+  assert.ok(off > 0 && off < hold && hold < sweepAt && hold < cancel);
 });
 
 test("B7209: a job is only dropped as stale on a pull request read just now, never on the cached head", () => {
