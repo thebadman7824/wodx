@@ -1,12 +1,12 @@
 {
- "time": "2026-11-18T20:55:54.536Z",
+ "time": "2026-11-18T21:05:22.190Z",
  "staleAfterMin": 15,
  "pcs": {
   "main": {
-   "ageMin": 5,
+   "ageMin": 4,
    "stale": false,
    "host": "main",
-   "time": "2026-11-18T20:50:58.883Z",
+   "time": "2026-11-18T21:00:57.622Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -15,15 +15,15 @@
     },
     {
      "id": 3,
-     "up": true
+     "up": false
     },
     {
      "id": 4,
-     "up": true
+     "up": false
     },
     {
      "id": 5,
-     "up": true
+     "up": false
     },
     {
      "id": 6,
@@ -31,11 +31,11 @@
     }
    ],
    "gpu": {
-    "tempC": 46,
-    "loadPct": 21,
-    "vramPct": 11,
+    "tempC": 50,
+    "loadPct": 16,
+    "vramPct": 9,
     "warning": "ok",
-    "jobHeld": true,
+    "jobHeld": false,
     "waiting": 0
    },
    "localAgents": {
@@ -44,8 +44,8 @@
     "running": 0
    },
    "comfy": {
-    "up": true,
-    "running": 1,
+    "up": false,
+    "running": 0,
     "pending": 0,
     "lastDoneMin": null
    },
@@ -55,7 +55,7 @@
    "ageMin": 1,
    "stale": false,
    "host": "secondary",
-   "time": "2026-11-18T20:54:28.558Z",
+   "time": "2026-11-18T21:04:35.302Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -64,28 +64,28 @@
     }
    ],
    "gpu": {
-    "tempC": 49.3,
-    "loadPct": 0,
-    "vramPct": 3,
-    "warning": "ok",
-    "jobHeld": false,
+    "tempC": 79,
+    "loadPct": 97,
+    "vramPct": 95,
+    "warning": "warn",
+    "jobHeld": true,
     "waiting": 0
    },
    "ocr": {
-    "workers": 0,
+    "workers": 1,
     "loopUp": true,
-    "lastOutputMin": 1,
-    "memWait": true,
+    "lastOutputMin": 0,
+    "memWait": false,
     "gaveUp": false,
     "stopped": false
    },
-   "issues": 0
+   "issues": 1
   },
   "laptop": {
-   "ageMin": 0,
+   "ageMin": 5,
    "stale": false,
    "host": "laptop",
-   "time": "2026-11-18T20:55:39.419Z",
+   "time": "2026-11-18T21:00:45.335Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -98,5 +98,5 @@
   }
  },
  "anyStale": false,
- "issues": 1
+ "issues": 2
 }
