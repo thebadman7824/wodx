@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7430
+Next free block: B7440
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -412,11 +412,12 @@ Next free block: B7430
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
+| B7210-B7219 | Gate cleanup: corruption and upkeep start from a known table (used B7211-B7212) | tools (gates) |
 | B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
-| B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
+| B7290-B7299 | PC watcher: ComfyUI off between renders is normal (used B7290-B7297) | tools (pcq) |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
@@ -425,6 +426,7 @@ Next free block: B7430
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 | B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
+| B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14224,6 +14226,16 @@ PC job queue. B7205 kept each pull request it looked up for two minutes. A gate 
 
 Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.
 
+## B7211. gateupkeep step 7 counts the region's hunters (2026-11-17)
+Gates. A place's hunting difficulty is its heat plus the stage of the region's hunters, capped at 3 (hunters.mjs `rulesHuntExtra`). The gate expected the heat alone (2), and when the testbed's region is watched by hunters it reads 3 (job 1926; job 1974 read 2, so the region's pressure differs from run to run). Step 7 now expects the smaller of 3 and 2 plus `hunters.stageDiff` for the scene, and records the hunters' share.
+
+Reverse: put `h.extra === 2` back in step 7 of tools/gate/gateupkeep.mjs.
+
+## B7212. gatecorruption starts from Hands on (2026-11-17)
+Gates. New worlds start at Balanced (B4860), where a Gauntlet drift is approved on sight (automation-rules QUEUE, "wodx-otherworlds.drift": "auto"). Step 4 looks for the drift waiting in the queue, so it failed whenever the world sat at Balanced ("4. applied {}" in jobs 1926 and 1974; it passed alone in the 1974 recheck, so the level the lane starts at varies). The gate now starts from Hands on with `handsOnStart` from tools/gate/kit.mjs (B6994) and puts the level back after, like gate7d, gate7e, gate8b, gateautomation, gatetime and gateupkeep.
+
+Reverse: drop the `handsOnStart` wrapper from tools/gate/gatecorruption.mjs.
+
 ## B7220. A lane test of a branch's gate tools is a queued job (2026-11-17)
 PC job queue, the owner's go-ahead on 17 November ("Go ahead with one"). The runner only ever ran main's gate tools, so a test of a branch that changes them (PR 1937's hang watch) was started by hand outside the queue. The runner could not see it waiting, and running gate jobs took every lane that came free (growJobs grows to every lane when no lane job waits), so the test waited from 15:37Z to 17:37Z without a lane. A gates job may now say `"branchTools": true` (`submit.mjs --branch-tools`): the runner runs that ref's own tools/lanes/run-gate.mjs from its worktree, on one lane, with no recheck. It needs a branch or commit ref and named gates, so it never sets the wodx/gates status. Queued at prio 1, it takes the next lane that frees, and while it waits the running gates jobs grow no further. Running jobs are not stopped or slowed, and no lane is kept spare (the owner did not want big runs slowed).
 
@@ -14293,6 +14305,11 @@ Reverse: empty IGNORE_LANES or set laneConfirmCycles to 2 in tools/pcq/watcher.m
 Ben asked for both PCs to report to the watcher. tools/pcq/status-push.mjs (now kept in the repository; each PC runs a copy from <home>\gpu-tools) adds two optional fields. comfy (set PC_COMFY_URL) holds whether ComfyUI answers, how many prompts run and wait, and minutes since the last one finished. ocr (set PC_OCR_MATCH, PC_OCR_OUT, PC_OCR_LOG) holds the worker count, minutes since the newest output file, and whether the log's last lines say it waits for memory or gave up. Only counts, minutes and booleans leave the PC, because the branch is public. The watcher flags renders with work queued but nothing finished for 30 minutes, OCR workers with no new output for 60 minutes, and an OCR run that gave up. Waiting for memory on its own is a note.
 
 Reverse: unset the PC_COMFY_URL and PC_OCR_* settings on the PC; the watcher then says it cannot see them.
+
+## B7297. ComfyUI off counts only while a render runs (2026-11-18)
+The Main PC's render batch starts ComfyUI and stops it when the batch ends, so ComfyUI not answering between renders is normal (the Main PC helper, 18 November 2026). The watcher now raises it as a problem only when a GPU job holds the guard, meaning a render should be running, and ComfyUI does not answer. Otherwise the report notes that ComfyUI is off and no render is running.
+
+Reverse: in tools/pcq/watcher.mjs, drop the jobHeld test so ComfyUI down is always a problem, or always a note.
 
 ## B7300. Cloud setup loads the PC known-good world and modules from the private folder (2026-11-18)
 cloud-lane.mjs setup joins testbed/testbed-known-good.zip.partNN and modules/cloud-foundry-modules.zip.partNN from /mnt/project-files/private/cloud-foundry, checks each against its SHA256 file, and uses the PC world as lane 9's known-good copy and world and the PC lane's other modules in its Data folder. The joined zips stay in the box (the shared folder caps files at 20 MiB). Without the parts, setup falls back to the repo's world.json (B7243). A cloud fail stays a hint: gate6b's werewolf form step fails on lane 9 with this world and 28 of its 30 modules while it passes on a PC lane.
@@ -14478,3 +14495,14 @@ may accept a merge on red checks: the thread never relies on GitHub refusing. If
 the owner at once with a push notification. docs/WORKFLOW.md section 6 no longer says nobody can bypass the ruleset.
 
 Reverse: drop the section 6 rule; runner fixes then wait for the owner's merge.
+
+## B7430. A merge-main push by the train no longer counts as from outside (2026-11-18)
+Repository workflow. B7332 lists every commit in the compare from the old head to the new one, and a train push that
+merges main in brings main's own commits into that list. None of them is the train's, so isTrainPush read the push as
+from outside and took the pull request off the train: PR 2051 at 15:55Z on 18 November, "29 commit(s) pushed from
+outside the train", when the push held only the train's merge, review carry-over and stamp. Every pull request behind
+main would be put out the same way at the front. pr-gates.mjs now also reads the compare from the old head to main and
+leaves out the commits main already has (addedByPush) before it asks isTrainPush. A thread's own commit, or a thread's
+own merge of main, still counts as from outside.
+
+Reverse: pass cmp.commits' messages to isTrainPush directly again in tools/pcq/pr-gates.mjs.
