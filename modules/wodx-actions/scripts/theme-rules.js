@@ -265,7 +265,7 @@ export const DESC = {
     "api:daFae": "Dark Ages: Origin, Court, Mists, Weaving, Dominions, cantrips, Features, Echoes and Oaths",
     "api:daMists": "Dark Ages: hide from mortals, cloak a cantrip, Bestow Kenning, enhance the mien",
     "api:daMien": "Dark Ages: take the fae mien or a human shape, by the Origin's roll",
-    "api:daOath": "Dark Ages: keep an oath and regain Weaving",
+    "api:daOath": "Dark Ages: keep an oath and regain Weaving, forge a new one, or lose Iron and Stone Oaths to baptism",
     "api:daRest": "Dark Ages: days in a faerie realm restore Mists and Weaving",
     "api:daEcho": "Dark Ages: an Echo's roll against the fae's oaths; the level it reaches",
     "api:daColdIron": "Dark Ages: cold iron's aggravated wound and the Mists it costs",

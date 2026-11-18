@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -523,6 +523,7 @@ async function start(issue, job, lanes) {
     const mins = Math.round((Date.now() - t0) / 60000);
     const used = parts.filter(p => p.lane).map(p => p.lane);
     const body = `**${ok ? "Passed" : "Failed"}** in ${mins} min${job.thread ? ` (for thread ${job.thread})` : ""}${g.job.queue ? `, ${g.job.queueSize} gates shared over lanes ${used.join(", ")}` : ""}.\n\n` +
+      gateDigest(parts) +
       parts.map(p => `${p.lane ? `Lane ${p.lane}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
     await finish(issue, ok, body);
     log(`#${issue.number} ${ok ? "passed" : "failed"} in ${mins} min`);
