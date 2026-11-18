@@ -427,6 +427,7 @@ Next free block: B7490
 | B7350-B7359 | One priority order for every project process (used B7350-B7356) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 | B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
+| B7400-B7409 | No gate run on a pull request the train has already merged (used B7400) | tools |
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
 | B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
@@ -14529,6 +14530,15 @@ request's updated_at in the push's own event, or the newest pushed commit's time
 label went on counts.
 
 Reverse: drop the labelledBefore test from the guard in pr-gates.mjs.
+
+## B7400. The train retires a merged pull request's gate jobs (2026-11-18)
+Repository workflow. The train merged PR 2085 at 22:37:08Z on an earlier gate pass, and two seconds later its queued
+gate job #2111 started 123 gates on lane 2 for the merged head: the runner's pull request cache (two minutes old)
+still read the pull request as open. Now, when the train merges a pull request (alone or as a batch), it closes that
+pull request's queued gate jobs unrun and labels a running one pc-cancel, with a comment. The runner also reads the
+pull request again just before it starts a lane job, so a merge a moment ago stops the start.
+
+Reverse: drop the retireJobs calls in train.mjs and the fresh staleJob read before a start in runner.mjs.
 
 ## B7420. An urgent pull request goes to the front of the merge train (2026-11-18)
 Repository workflow. PR 2055 fixed the runner's gate recheck and sat green for about 15 minutes on 18 November with
