@@ -74,6 +74,11 @@ function pidIsLane(pid, lane) {
   const data = String(lane.dataPath).toLowerCase().replace(/\\/g, "/").replace(/\/+$/, "");
   return /node(\.exe)?/.test(cmd) && cmd.includes(data) && cmd.includes(`--port=${lane.port}`);
 }
+/** Ends a process for good: its whole tree on Windows (taskkill /T /F), SIGKILL elsewhere. */
+function forceEnd(pid) {
+  if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(pid), "/T", "/F"], {windowsHide: true});
+  else { try { process.kill(pid, "SIGKILL"); } catch { /* already gone */ } }
+}
 /**
  * B7204: the lane's own Foundry found by its port, for when server.pid is missing or stale (a runner restart on 17
  * November left lanes 3 and 5 up with no usable server.pid, and every deploy there failed in 0 minutes). Only a node
@@ -89,7 +94,8 @@ function lanePidByPort(lane) {
 }
 async function stop(lane) {
   let pid = Number(readJson(path.join(laneDir(lane), "server.pid")) ?? 0);
-  if ( !(await isUp(lane)) ) return false;
+  const up = await isUp(lane);
+  // B7204: a missing or stale server.pid is replaced by the lane's own Foundry on its port (up, or hung and holding it)
   if ( !pid || !pidAlive(pid) || !pidIsLane(pid, lane) ) {
     const found = lanePidByPort(lane);
     if ( found ) {
@@ -97,12 +103,18 @@ async function stop(lane) {
       pid = found; fs.writeFileSync(path.join(laneDir(lane), "server.pid"), String(pid));
     }
   }
+  // B7201: a hung Foundry no longer answers its status page but still holds the port and the world's database; it is
+  // ended too (only when the pid is this lane's own Foundry), or a reset copied over an open database
+  const hung = !up && pid && pidAlive(pid) && pidIsLane(pid, lane);
+  if ( !hung && !up ) return false;
+  if ( hung ) console.log(`Lane ${lane.id}: its Foundry (process ${pid}) is not answering; ending it.`);
   if ( !pid || !pidAlive(pid) ) throw new Error(`Lane ${lane.id} is up, but not by a server this tool started. Stop it by hand first.`);
   // server.pid can be stale and Windows reuses process ids: kill only a node process whose command line names this
   // lane's data folder (twice today a stale id took down the PC runner instead of the lane)
   if ( !pidIsLane(pid, lane) ) throw new Error(`Lane ${lane.id}: process ${pid} in server.pid is not this lane's Foundry (stale id); nothing was killed. Stop the lane by hand.`);
   process.kill(pid);
   for ( let i = 0; i < 20 && await isUp(lane); i++ ) await sleep(1000);
+  if ( pidAlive(pid) ) { await sleep(5000); if ( pidAlive(pid) ) { console.log(`Lane ${lane.id}: process ${pid} did not end; forcing it.`); forceEnd(pid); } }
   fs.rmSync(path.join(laneDir(lane), "server.pid"), {force: true});
   await sleep(20000); // Foundry keeps the data folder locked for a while after it ends
   console.log(`Lane ${lane.id} stopped.`);
