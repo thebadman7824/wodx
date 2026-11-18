@@ -20,3 +20,4 @@
 {"file":"tools/gate/gatedatedplay.mjs","verdict":"working","how":"ran on cloud lane 9 with the real testbed world: 6/6; strength grader 2 effect steps","hash":"e434de65f991","at":"2026-11-17T23:48Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read the three new rows","hash":"e8ee0cc24d48","at":"2026-11-17T23:48Z"}
 {"file":"tools/gate/gatedatedplay.mjs","verdict":"working","how":"ran on cloud lane 9 with the real testbed world: 6/6 twice (price, crowd, smoke, undo, debt); the put-back of the log and night work settings added after is untested","hash":"d5fb35474b4a","at":"2026-11-18T00:14Z"}
+{"file":"docs/FEATURES.md","verdict":"working","how":"Regenerated with registry.mjs summary --write; registry.test passes 14/14","hash":"0b2a1d41d50f","at":"2026-11-18T00:16Z"}
