@@ -1,0 +1,2 @@
+{"file":"tools/lanes/run-gate.mjs","verdict":"working","how":"read the restore block in full; node --check passes; ran it on lane 8 after a reset: gatebattle 15/15 twice back to back with no drift (before the change the second run stopped with DRIFT nightWork added), then gate6b 18/18","hash":"855cf470caa4","at":"2026-11-18T07:07Z"}
+{"file":"tools/harness/rungate-late.test.mjs","verdict":"working","how":"read in full; node --test passes 1/1 on the Secondary PC","hash":"661558f2e261","at":"2026-11-18T07:07Z"}
