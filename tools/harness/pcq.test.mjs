@@ -228,7 +228,7 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
 
 test("B7310: the runner reruns one gate per run-gate call", async () => {
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
-  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  const body = fs.readFileSync(new URL("../pcq/recheck.mjs", import.meta.url), "utf8");
   assert.match(body, /\[gate, "--lane"/, "run-gate gets a single gate");
   assert.doesNotMatch(body, /\.\.\.failing, "--lane"/, "no longer all failing gates in one call");
   assert.match(body, /lanesCmd\(\["reset"/, "each run starts from a reset");
@@ -351,8 +351,10 @@ test("B7341, B7340, B7342: the runner wires them in", () => {
   assert.match(src, /saveResume\(`job\$\{i\.number\}`\)/, "a job running at restart keeps its progress");
   assert.match(src, /resume\?\.sha === wt\.sha/, "progress is used only on the same commit");
   assert.match(src, /growJobs\(ready\.some\(q => LANE_KINDS\.has\(q\.job\.kind\) && !active\.has\(q\.number\) && couldStartNow\(q\.job\)\)\)/);
-  assert.match(src, /mainCache\.read\(m\.sha\)/);
-  assert.match(src, /mainSettled\(st\[g\]\.main\)/);
+  assert.match(src, /deps: \{lanesCmd, node, worktree, stallFor, log, logs: LOGS, mainCache\}/, "the runner hands the recheck its cache");
+  const re = fs.readFileSync(new URL("../pcq/recheck.mjs", import.meta.url), "utf8");
+  assert.match(re, /mainCache\?\.read\(m\.sha\)/);
+  assert.match(re, /mainSettled\(st\[g\]\.main\)/);
 });
 
 test("B7342: only settled main runs are kept", async () => {
