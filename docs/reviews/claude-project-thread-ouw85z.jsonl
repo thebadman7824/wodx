@@ -37,3 +37,6 @@
 {"file":"changes/wodx-chronicle/languages-typed.md","verdict":"working","how":"Read in full; registry check 0 problems; registry.test passes","hash":"7cbd0046b018","at":"2026-11-18T03:54Z"}
 {"file":"changes/decisions/B7265.md","verdict":"working","how":"Read in full; registry check 0 problems; registry.test passes","hash":"58775b853b23","at":"2026-11-18T03:54Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read in full; registry check 0 problems; registry.test passes","hash":"deec7a51da96","at":"2026-11-18T03:54Z"}
+{"file":"tools/gate/gatedatedplay.mjs","verdict":"working","how":"read the diff against main again: put-back order is chat lines, hold, nightwork settle, quiet wait, then the written settings","hash":"2566f196080b","at":"2026-11-18T22:18Z"}
+{"file":"tools/gate/gateplaypage.mjs","verdict":"working","how":"read again as it stands at the head: seven steps and the put-back; last cloud lane run 7/7","hash":"319b5d1ebdb3","at":"2026-11-18T22:18Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"cherry-pick onto main: main's two new rows kept, this branch's three language and gate rows added; read the diff against main","hash":"b2ee044ecd17","at":"2026-11-18T22:18Z"}
