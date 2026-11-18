@@ -82,7 +82,9 @@ if ( notes.length ) { fs.writeFileSync("stamped.txt", notes.sort().join("\\n"));
   assert.equal(again.error, undefined, again.error);
   assert.notEqual(again.sha, tip);
   assert.equal(sh(origin, "rev-parse", `refs/heads/${BATCH_BRANCH}`), again.sha);
-  // a stale lease is refused
+  // a stale lease is refused (main moves once more first: built in the same second from the same commits, the batch
+  // would be the very commit already pushed, and git takes a push of what the branch already holds as done)
+  put("other.txt", "y"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "main once more"); sh(work, "push", "-q", "origin", "main");
   const stale = await buildBatch(ctx, r.members, {max: 2, lease: tip});
   assert.match(stale.error ?? "", /push to claude\/merge-train-batch was refused/);
   // one member alone is no batch: nothing pushed
