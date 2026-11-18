@@ -137,7 +137,10 @@ export function assess(snap, prev = {}) {
     const c = snap.pcs[p.key].comfy, o = snap.pcs[p.key].ocr;
     if ( c ) {
       sawComfy = true;
-      if ( !c.up ) notes.push(`${p.label}: ComfyUI is not answering (off, or not started after a restart).`);
+      // B7297: the render batch starts ComfyUI and stops it after, so ComfyUI off is normal between renders. It is a
+      // problem only while a GPU job holds the guard (a render is running) and ComfyUI does not answer.
+      if ( !c.up && snap.pcs[p.key].gpu?.jobHeld ) add(`${p.key}:comfy`, `${p.label}: a GPU job holds the guard (a render should be running) but ComfyUI is not answering.`);
+      else if ( !c.up ) notes.push(`${p.label}: ComfyUI is off (no render running).`);
       else if ( (c.running || c.pending) && c.lastDoneMin !== null && c.lastDoneMin > LIMITS.renderStallMin )
         add(`${p.key}:render`, `${p.label}: renders look stalled: ${c.running} running and ${c.pending} waiting in ComfyUI, and nothing has finished for ${hm(c.lastDoneMin)}.`);
       else notes.push(`${p.label}: ComfyUI ${c.running || c.pending ? `${c.running} running, ${c.pending} waiting` : "idle"}${c.lastDoneMin !== null ? `, last render ${hm(c.lastDoneMin)} ago` : ""}.`);
