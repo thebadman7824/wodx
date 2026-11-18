@@ -49,12 +49,14 @@ export function cast() {
   const npcs = game.actors.filter(a => !a.hasPlayerOwner && ["PC", "Mortal", "Vampire", "Werewolf", "Wraith", "Hunter", "Creature", "Changing Breed"].includes(a.type));
   const byTemplate = new Map();
   for ( const a of npcs ) { const t = R.templateFor(infoOf(a)); if ( !byTemplate.has(t) ) byTemplate.set(t, a); }
-  // B7313: the hero must not frighten a guard by being what it is. The first player's actor in the world can be a
-  // wraith or another obvious being (job 2016: "Ada (6d, wraith)"), and then the guard flees instead of walking round
-  // the wall. So a player's character that passes for human is taken first, by name for the same pick on every lane.
-  const players = game.actors.filter(a => a.hasPlayerOwner && a.type !== "Group").sort((x, y) => x.name.localeCompare(y.name));
-  const passes = a => !showsWhat(a);
-  const hero = players.find(a => ["Mortal", "PC"].includes(a.type) && passes(a)) ?? players.find(passes) ?? players[0];
+  // B7313: the hero must not frighten a guard by being what it is. The steps were written against the testbed's first
+  // player's actor, Ilse (a Kindred who passes for human). When Ilse is not taken, the next one is Ada, a Wraith (job
+  // 2016), and the guard flees from an obvious foe instead of walking round the wall. So the hero is the first player's
+  // actor by id that passes for human (Ilse on the testbed), then the first one. Actors other gates made (named for a
+  // gate, or owned by everyone) come last, since their ids are random and could sort first.
+  const players = game.actors.filter(a => a.hasPlayerOwner && a.type !== "Group").sort((x, y) => (x.id < y.id ? -1 : x.id > y.id ? 1 : 0));
+  const made = a => /^(wodx )?gate\b/i.test(a.name ?? "") || Number(a.ownership?.default ?? 0) >= 3;
+  const hero = players.find(a => !made(a) && !showsWhat(a)) ?? players.find(a => !showsWhat(a)) ?? players[0];
   const fighter = ["neonate", "ghoul", "guard", "garou", "hunter", "elder"].map(t => byTemplate.get(t)).find(Boolean) ?? [...byTemplate.values()][0];
   const runner = ["guard", "ghoul", "neonate", "hunter", "civilian"].map(t => byTemplate.get(t)).find(a => a && a !== fighter) ?? fighter;
   const kindred = byTemplate.get("neonate") ?? byTemplate.get("elder") ?? null;
