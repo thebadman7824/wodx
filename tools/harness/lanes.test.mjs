@@ -263,6 +263,25 @@ test("before each gate the runner looks for the WoDX apis again and names the mi
   assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
 });
 
+test("B6992: a page reload while the runner waits for the apis waits for the new page; reloads and api state are reported", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  const mods = new Map([["wodx-creation", {active: true}]]);
+  const was = globalThis.game;
+  globalThis.game = {modules: {get: id => mods.get(id)}};
+  try {
+    let calls = 0;
+    const page = {waitForLoadState: async () => {}, evaluate: async (fn, ids) => fn(ids),
+      waitForFunction: async (fn, ids) => { calls++; if ( calls === 1 ) throw new Error("Execution context was destroyed, most likely because of a navigation"); mods.get("wodx-creation").api = {startErrors: ["people.registerPeople: boom"], a: 1}; if ( !fn(ids) ) throw new Error("timeout"); }};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 5000), [], "the wait goes on over the reload");
+    assert.equal(calls, 2);
+    const st = B.apiState(["wodx-creation"]);
+    assert.equal(st[0].api, true); assert.deepEqual(st[0].startErrors, ["people.registerPeople: boom"]);
+  } finally { globalThis.game = was; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.ok(src.includes("page reloaded") && src.includes("DIAG apis"), "the gate's line names a reload, and --diag writes the api state");
+  assert.match(fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8"), /page\.on\("load"/);
+});
+
 test("lane 7 on the Laptop takes only small named-gate jobs (B6887)", () => {
   const cfg = JSON.parse(fs.readFileSync(path.join(root, "tools/lanes/lanes.json"), "utf8"));
   const seven = cfg.lanes.find(l => String(l.id) === "7"), two = cfg.lanes.find(l => String(l.id) === "2");
@@ -401,4 +420,10 @@ test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 2
   assert.ok(src.includes('WODX_HOST: "cloud"'));
   assert.match(src, />= 24/, "Foundry 14 needs Node 24");
   assert.ok(!/console\.(log|warn|error)\([^)]*\.license\b/.test(src), "the key is never printed");
+  // B7300: the PC world and modules come in parts from the private folder, checked against their hash
+  assert.match(src, /fromParts\("testbed", "testbed-known-good"/);
+  assert.match(src, /fromParts\("modules", "cloud-foundry-modules"/);
+  assert.match(src, /do not match \$\{sub\}\/SHA256/, "a joined copy with the wrong hash stops setup");
+  assert.ok(!/(writeFileSync|appendFileSync|renameSync)\(\s*path\.join\(CACHE/.test(src) && !/(copyFileSync|cpSync)\([^,]+,\s*path\.join\(CACHE/.test(src),
+    "nothing is written back to the shared folder");
 });

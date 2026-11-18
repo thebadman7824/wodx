@@ -22,6 +22,7 @@
  *  12. clean up
  * Result: Data/wodx-gate/gate8b-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const ST = "wodx-storyteller", OW = "wodx-otherworlds", AT = "wodx-atmosphere", CH = "wodx-chronicle";
 
@@ -47,7 +48,10 @@ const newer = (a, b) => {
 const get = (m, k) => { try { return game.settings.get(m, k); } catch (e) { return undefined; } };
 const clone = v => foundry.utils.deepClone(v);
 
-export async function run() {
+// B6994 (#1824): the gate starts from Hands on, since new worlds start at Balanced (tools/gate/kit.mjs)
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const {R, ok, step} = harness();
   if ( game.world.id !== "rothenstein-wodx" ) return `Run this gate in rothenstein-wodx only (this is ${game.world.id}).`;
   const C = game.modules.get(CH)?.api, S = game.modules.get(ST)?.api, O = game.modules.get(OW)?.api, A = game.modules.get(AT)?.api;

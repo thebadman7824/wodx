@@ -25,9 +25,12 @@ A cloud thread can run gates without a PC lane. In the thread's Linux box:
 
 Setup reads Ben's Foundry Node zip and the signed license.json from the private shared folder
 /mnt/project-files/private/cloud-foundry (never the repo, never printed). The cloud network must allow foundryvtt.com,
-r2.foundryvtt.com and api.foundryvtt.com. Lane 9's world is the repo's world.json with the WoDX modules on and a
-Gamemaster Test account, not the PC known-good world: gates that need that world's scenes, actors or other modules
-belong on a PC lane. Measured 17 November 2026: setup 108 s from the cache, gateplains 28/28 in 203 s, peak 3.1 GB RAM
+r2.foundryvtt.com and api.foundryvtt.com. When the private folder holds the PC known-good world (testbed/, in parts
+with a SHA256 file) and the PC lane's other modules (modules/), setup uses them (B7300); otherwise the world is the
+repo's world.json with the WoDX modules on and a Gamemaster Test account. A cloud result is a hint, not a verdict:
+gate6b's werewolf form step fails on lane 9 even with the PC world and 28 of its 30 modules, while it passes on a PC
+lane, so check a cloud fail on a PC lane before acting on it. Each gate6b run also leaves wodx-chronicle.nightWork
+added, so the next run there stops on drift until `lanes.mjs reset --lane 9`. Measured 17 November 2026: setup 108 s from the cache, gateplains 28/28 in 203 s, peak 3.1 GB RAM
 (browser 2.2 GB, Foundry 0.24 GB) of the box's 15 GB.
 
 ## Running gates
