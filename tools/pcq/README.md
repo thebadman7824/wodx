@@ -21,6 +21,15 @@ free testbed lane, comments the result on the issue and closes it with `pc-done`
 Gate a branch before merging with `--ref claude/<branch>`; the branch must be pushed. `--after <issue>` waits for
 another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3.
 
+A lane test of a branch's own gate tools (a change to run-gate.mjs or the lane tools it imports) goes in the queue
+too, never as a run started by hand beside the runner, which cannot see such a run waiting and gives every free lane
+to the running jobs (B7220):
+
+    node tools/pcq/submit.mjs gates gateplains gatelifepath --ref claude/<branch> --branch-tools --prio 1 --thread <your thread id>
+
+It runs the branch's run-gate.mjs on one lane, with no recheck, and never sets the `wodx/gates` status (named gates
+only). While it waits, running gates jobs take no more lanes, and it gets the next lane that frees.
+
 Book and Trove lookups (`books-find`, `trove-find`) need no lane and run beside the gate jobs. Their results give book
 and page or file names only, never text, because the repository is public. Anything else (a copy, an OCR run, work
 that needs judgment) still goes to the PC helper thread.

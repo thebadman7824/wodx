@@ -176,7 +176,7 @@ test("only a hung gate run that is still a node process is ended (B3089)", () =>
 
 test("run-gate has a gate limit, a window sweep, a whole-run watchdog and moves the lock deadline (B3089)", () => {
   const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/run-gate.mjs"), "utf8");
-  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "within(run, limit", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
+  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "limit + 3 * 60000, gate)", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
 });
 
 test("the picker takes the first lane that is up and free", async () => {
@@ -238,6 +238,12 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.ok(!main.lanes.some(l => l.host));
     assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
     assert.match(main.foundryMain, /^G:/);
+    process.env.WODX_HOST = "cloud";
+    const cloud = L.loadConfig();
+    assert.deepEqual(cloud.lanes.map(l => l.id), [9], "a cloud thread's box sees lane 9 only (B7240)");
+    assert.ok(!cloud.lanes[0].dataPath.includes("%"), "the cloud lane's home folder is filled in");
+    assert.match(cloud.foundryMain, /\/foundry\/app\/main\.mjs$/);
+    assert.equal(cloud.lanes[0].url, "http://localhost:30090");
   } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
 });
 
@@ -351,4 +357,48 @@ test("B7204: stop takes over the lane's own Foundry by its port only when its co
   const stop = src.slice(src.indexOf("async function stop"), src.indexOf("async function accept"));
   assert.ok(stop.indexOf("lanePidByPort(lane)") < stop.indexOf("process.kill(pid)"), "the takeover comes before any kill");
   assert.ok(stop.includes("if ( !pidIsLane(pid, lane) ) throw"), "the stale-id guard still stands");
+});
+
+test("B7230: gateCaller tells a gate's own hook from a module's, past the wrappers and Foundry", async () => {
+  const {gateCaller} = await import("../lanes/lib.mjs");
+  const st = (...frames) => ["Error", ...frames.map(f => `    at ${f}`)].join("\n");
+  const wrap = ["byGate (eval at evaluate (:1:1), <anonymous>:12:30)", "Function.wodxGateOn (eval at evaluate (:1:1), <anonymous>:14:80)"];
+  // the gate calls Hooks.on itself
+  assert.equal(gateCaller(st(...wrap, "body (http://localhost:30020/wodx-gate/gatesprites.mjs?123:40:9)")), true);
+  // Hooks.once goes through Foundry's own Hooks.on: still the gate's
+  assert.equal(gateCaller(st(...wrap, "Hooks.once (http://localhost:30020/scripts/foundry.mjs:5000:12)",
+    "Function.wodxGateOnce (eval at evaluate (:1:1), <anonymous>:15:80)", "run (http://localhost:30020/wodx-gate/gatefoo.mjs:9:3)")), true);
+  // a module registers a hook while the gate calls into it: the module's, left alone
+  assert.equal(gateCaller(st(...wrap, "open (http://localhost:30020/modules/wodx-library/scripts/use.mjs:80:5)",
+    "run (http://localhost:30020/wodx-gate/gategadgets.mjs:27:7)")), false);
+  assert.equal(gateCaller(""), false);
+  // the source runs on its own (run-gate hands it to the page with toString)
+  const again = new Function(`return (${gateCaller.toString()});`)();
+  assert.equal(again(st(...wrap, "x (http://h/wodx-gate/g.mjs:1:1)")), true);
+});
+
+test("B7230: pageNote names what run-gate put back in the page", async () => {
+  const {pageNote} = await import("../lanes/lib.mjs");
+  assert.equal(pageNote(null), "");
+  assert.equal(pageNote({hooks: [], intervals: 0, refs: [], user: []}), "");
+  assert.equal(pageNote({hooks: ["createChatMessage", "createChatMessage", "updateActor"], intervals: 1, refs: ["randomUniform"], user: ["isGM"]}),
+    "3 hook(s) the gate left removed (createChatMessage, updateActor), 1 timer(s) the gate left stopped, randomUniform put back, game.user isGM taken off");
+});
+
+test("B7230: run-gate wraps Hooks and setInterval for each gate and hands the page the caller test", () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/run-gate.mjs"), "utf8");
+  assert.match(src, /callerSrc: gateCaller\.toString\(\)/);
+  assert.match(src, /H\.on = function wodxGateOn/);
+  assert.match(src, /page0 = pageBack\(\)/);
+  assert.match(src, /pageNote\(out\.page\)/);
+});
+
+test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 24 through the proxy (B7240-B7242)", () => {
+  const src = fs.readFileSync(path.join(root, "tools/lanes/cloud-lane.mjs"), "utf8");
+  assert.ok(src.includes('"/mnt/project-files/private/cloud-foundry"'), "the zip and licence come from the private cache");
+  assert.ok(!/license\.json"\)\s*,\s*path\.join\(REPO/.test(src), "the licence is never copied into the checkout");
+  assert.ok(src.includes('NODE_USE_ENV_PROXY: "1"'), "Foundry's licence check goes through the cloud proxy");
+  assert.ok(src.includes('WODX_HOST: "cloud"'));
+  assert.match(src, />= 24/, "Foundry 14 needs Node 24");
+  assert.ok(!/console\.(log|warn|error)\([^)]*\.license\b/.test(src), "the key is never printed");
 });
