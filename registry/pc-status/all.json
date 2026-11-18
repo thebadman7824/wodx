@@ -1,12 +1,12 @@
 {
- "time": "2026-11-18T16:38:06.293Z",
+ "time": "2026-11-18T16:43:58.120Z",
  "staleAfterMin": 15,
  "pcs": {
   "main": {
-   "ageMin": 0,
+   "ageMin": 1,
    "stale": false,
    "host": "main",
-   "time": "2026-11-18T16:38:03.774Z",
+   "time": "2026-11-18T16:43:09.504Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -19,7 +19,7 @@
     },
     {
      "id": 4,
-     "up": true
+     "up": false
     },
     {
      "id": 5,
@@ -31,11 +31,11 @@
     }
    ],
    "gpu": {
-    "tempC": 62,
-    "loadPct": 13,
-    "vramPct": 17,
+    "tempC": 59,
+    "loadPct": 36,
+    "vramPct": 20,
     "warning": "ok",
-    "jobHeld": true,
+    "jobHeld": false,
     "waiting": 0
    },
    "localAgents": {
@@ -55,7 +55,7 @@
    "ageMin": 2,
    "stale": false,
    "host": "secondary",
-   "time": "2026-11-18T16:36:34.875Z",
+   "time": "2026-11-18T16:41:37.924Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -64,8 +64,8 @@
     }
    ],
    "gpu": {
-    "tempC": 80.7,
-    "loadPct": 61,
+    "tempC": 68.8,
+    "loadPct": 48,
     "vramPct": 95,
     "warning": "warn",
     "jobHeld": true,
@@ -82,10 +82,10 @@
    "issues": 1
   },
   "laptop": {
-   "ageMin": 3,
+   "ageMin": 4,
    "stale": false,
    "host": "laptop",
-   "time": "2026-11-18T16:34:43.498Z",
+   "time": "2026-11-18T16:39:47.675Z",
    "runnerUp": true,
    "lanes": [
     {
