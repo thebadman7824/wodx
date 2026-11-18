@@ -10,9 +10,10 @@
     "wodx-actions.sessionId", "wodx-actions.dawnDusk", "wodx-actions.sunDamage", "wodx-actions.autoDayV1",
     "fxmaster.legacyCleanupVersion", "fxmaster.releaseMessage", "sequencer.update-notice-shown-version", "tokenmagic.presets",
     "fxmaster.parameterRangeMigrationVersion", "fxmaster.parameterRangePassiveMigrationVersion", "fxmaster.directionConventionPassiveMigrationVersion", "tokenmagic.migration"],
-  "_hosts": "B6880: the second PC (DESKTOP-S6NV3Q9) runs lane 7 with its own runner, and the Secondary PC (BENJAMIN-PC) runs lane 8 the same way (B6990). Paths there replace the ones above; lanes with a host are seen only on that PC.",
+  "_hosts": "B6880: the second PC (DESKTOP-S6NV3Q9) runs lane 7 with its own runner, and the Secondary PC (BENJAMIN-PC) runs lane 8 the same way (B6990). Paths there replace the ones above; lanes with a host are seen only on that PC. B7240: lane 9 lives in a cloud thread's own Linux box (WODX_HOST=cloud, set by cloud-lane.mjs); its folders are under that box's home folder.",
   "hosts": {"desktop-s6nv3q9": {"foundryMain": "C:/WoDX/Foundry/resources/app/main.js", "knownGood": "C:/WoDX/testbed-known-good", "backups": "C:/WoDX/Backups", "setupFrom": "C:/WoDX/lane1-copy"},
-    "benjamin-pc": {"foundryMain": "D:/WoDX/Foundry/resources/app/main.js", "knownGood": "D:/WoDX/testbed-known-good", "backups": "D:/WoDX/Backups", "setupFrom": "D:/WoDX/lane1-copy"}},
+    "benjamin-pc": {"foundryMain": "D:/WoDX/Foundry/resources/app/main.js", "knownGood": "D:/WoDX/testbed-known-good", "backups": "D:/WoDX/Backups", "setupFrom": "D:/WoDX/lane1-copy"},
+    "cloud": {"foundryMain": "%HOME%/foundry/app/main.mjs", "knownGood": "%HOME%/foundry/known-good", "backups": "%HOME%/foundry/backups"}},
   "lanes": [
     {"id": 1, "port": 30000, "dataPath": "%LOCALAPPDATA%/FoundryVTT", "autoReset": false},
     {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
@@ -21,6 +22,7 @@
     {"id": 5, "port": 30050, "dataPath": "D:/WoDX/FoundryData-lane5", "autoReset": true},
     {"id": 6, "port": 30060, "dataPath": "D:/WoDX/FoundryData-lane6", "autoReset": false, "reserved": "local-agents"},
     {"id": 7, "port": 30070, "url": "http://localhost:30070", "dataPath": "C:/WoDX/FoundryData-lane7", "autoReset": true, "host": "desktop-s6nv3q9", "maxGates": 10},
-    {"id": 8, "port": 30080, "url": "http://localhost:30080", "dataPath": "D:/WoDX/FoundryData-lane8", "autoReset": true, "host": "benjamin-pc"}
+    {"id": 8, "port": 30080, "url": "http://localhost:30080", "dataPath": "D:/WoDX/FoundryData-lane8", "autoReset": true, "host": "benjamin-pc"},
+    {"id": 9, "port": 30090, "url": "http://localhost:30090", "dataPath": "%HOME%/foundry/data", "autoReset": true, "host": "cloud"}
   ]
 }

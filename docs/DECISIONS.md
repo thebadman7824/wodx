@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7240
+Next free block: B7260
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -414,6 +414,8 @@ Next free block: B7240
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
 | B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
+| B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
+| B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14222,3 +14224,28 @@ Reverse: drop the branchTools case in tools/pcq/jobs.mjs validate, and the branc
 Testbed lanes. Settings, flags, sheets and leftover documents were already put back after each gate (B3086, B7181, B7192, B7193), but all the gates on a lane run in one page, so anything a gate left in the page itself carried on into the gates after it. Job 1979 (PR 1836) had 7 gates fail that pass alone and touch nothing of that pull request: gategadgets, gatehuntpowder, gatesprites, gatespritelife, gatestillmarks, gatetruthsheets and gatevoices. While a gate runs, run-gate now notes every hook (Hooks.on, Hooks.once) and interval the gate's own file registers, and removes the ones still there when it ends. A hook a module registers while a gate calls into it is the module's and stays (`gateCaller` in tools/lanes/lib.mjs looks past the wrappers and Foundry's own frames to the caller). It also restores the functions gates swap (the dice's randomUniform, the notices, the scrolling text, ChatMessage.create, game.time.advance) and takes off a property laid over game.user (a player's isGM). The gate's line says what was put back, for example "2 hook(s) the gate left removed (createChatMessage)", so the gate that leaks can be fixed.
 
 Reverse: remove the wrappers and `pageBack` from the page function in tools/lanes/run-gate.mjs, and `pageNote` from its line.
+
+## B7240. Lane 9 runs in a cloud thread's own Linux box (2026-11-17)
+tools/lanes/cloud-lane.mjs sets up Foundry 14.369 headless in the thread's box and runs gates there through run-gate.mjs, so a thread need not wait for a PC lane. lanes.json gains a "cloud" host whose paths sit under the box's home folder; PCs never see lane 9. Ben chose "Make it routine" after the trial (gateplains 28/28, setup about 2 minutes, 3.1 GB RAM).
+
+Reverse: delete cloud-lane.mjs, the "cloud" host and lane 9 from lanes.json.
+
+## B7241. Node 24 from npm and the proxy for Node's fetch (2026-11-17)
+Foundry 14 refuses Node below 24 and cloud boxes ship Node 22, so setup unpacks npm's node-linux-x64 build. Node's fetch ignores the cloud proxy unless NODE_USE_ENV_PROXY=1, without which the licence sign fails.
+
+Reverse: drop both once cloud boxes ship Node 24 with the proxy on by default.
+
+## B7242. The Foundry zip and signed licence live in the private shared folder (2026-11-17)
+Ben's timed download link lasts minutes, so the zip and license.json (signed for the box's host name) are kept in /mnt/project-files/private/cloud-foundry, never in the public repo. EULA item 2 and the FAQ allow a second instance while nobody but the licence owner can get past its login; lane 9 listens only inside the box.
+
+Reverse: delete that folder; each cloud setup then needs a fresh link and the key from Ben.
+
+## B7243. Lane 9's world is the repo's world.json (2026-11-17)
+The PC known-good world cannot reach the cloud from a thread. Lane 9 starts from the repo's world.json with the WoDX modules on and a Gamemaster Test account. Gates needing the PC world's scenes, actors or other modules stay on PC lanes.
+
+Reverse: copy a known-good world into ~/foundry/known-good when one can reach the cloud, and use lanes.mjs reset.
+
+## B7250. gatevoices step 5 counts only what happened while it ran (2026-11-17)
+Gates. The WoDX Voices api keeps its counters (renders, hits, plays, fallbacks) and the engine and voice server states in memory for the whole page. gatetruthnpc step 6 switches Voices on with the browser engine and speaks a line, so the fallback counter goes to 1; putting its settings back points the engine at the voice server again, which is not running, so the server state reads "error". gatevoices ran after it on lane 3 in job 1979 and failed step 5 ("server":"error", "fallbacks":1), and passed alone. Step 5 now reads the counters and both states against where they stood when gatevoices started: no counter may grow, and each state must be off or unchanged. When an earlier gate had used Voices, the step's detail says so and shows the starting values. A run on a fresh lane checks exactly what it did before.
+
+Reverse: put back the strict `engine === "off" && server === "off"` and zero counters in step 5 of tools/gate/gatevoices.mjs.
