@@ -1,11 +1,11 @@
 {
  "host": "main",
- "time": "2026-11-18T08:43:54.069Z",
+ "time": "2026-11-18T08:48:59.067Z",
  "runnerUp": true,
  "lanes": [
   {
    "id": 2,
-   "up": false
+   "up": true
   },
   {
    "id": 3,
