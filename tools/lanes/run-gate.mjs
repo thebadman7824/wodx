@@ -43,7 +43,7 @@ import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
   flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
-import {openGM, waitApis} from "./browser.mjs";
+import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
@@ -150,12 +150,15 @@ const signIn = async () => {
   // B6952: modules still without an api after the wait are named on the next gate's line
   lateApis = session.late ?? [];
   diagLog = session.diag ?? []; diagFrom = 0;
+  life = session.life ?? {loads: 0}; loadsSeen = life.loads;
 };
 // B6970: --diag writes, under each failing gate, the console errors and warnings since the last gate (since sign-in for
 // the first) and every failing step in full, so a lane failure can be read from the job's report.
 const DIAG = args.includes("--diag");
 let diagLog = [], diagFrom = 0;
 let lateApis = [];
+// B6992: page loads seen by the end of the last gate; more by the next gate means the world reloaded in between
+let life = {loads: 0}, loadsSeen = 0;
 try {
   // Code drift: the repo checkout against the lane's deployed files.
   const cache = path.join(laneDir(lane), "cache");
@@ -197,6 +200,7 @@ try {
         catch (e) { await bail(5, `Lane ${lane.id}: could not sign in again before ${gate} (${e.message}); lane fault, the gate goes back on the queue.`); }
       }
       // B6960: the WoDX apis are looked for again before each gate (a world that lost them mid-lane is named, not the gate)
+      const reloadsBefore = life.loads - loadsSeen;
       const lostApis = await waitApis(page).catch(() => []);
       const diagStart = diagFrom;
       if ( lostApis.length ) console.log(`Lane ${lane.id}: no api before ${gate} after 120 s: ${lostApis.join(", ")}`);
@@ -357,6 +361,10 @@ try {
       const signInNote = lateApis.length > 0;
       if ( lateApis.length ) { const note = ` [no api after sign-in: ${lateApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; lateApis = []; }
       if ( lostApis.length && !signInNote ) { const note = ` [no api before this gate: ${lostApis.join(", ")}]`; if ( out.error ) out.error += note; else out.summary += note; }
+      // B6992: the page reloaded before this gate (after the last one ended) or while it ran
+      const reloadsDuring = life.loads - loadsSeen - reloadsBefore;
+      loadsSeen = life.loads;
+      for ( const [k, w] of [[reloadsBefore, "before this gate"], [reloadsDuring, "during this gate"]] ) if ( k > 0 ) { const note = ` [page reloaded ${w}${k > 1 ? ` ${k} times` : ""}]`; if ( out.error ) out.error += note; else out.summary += note; }
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       const diagDump = async () => {
         if ( !DIAG ) return;
@@ -367,6 +375,9 @@ try {
         for ( const st of (res?.steps ?? []).filter(x => !x.pass) ) report(`  DIAG step ${JSON.stringify(st).slice(0, 12000)}`);
         for ( const e of (res?.errors ?? []) ) report(`  DIAG error ${String(e).slice(0, 4000)}`);
         if ( res?.fetchError ) report(`  DIAG no result file: ${res.fetchError}`);
+        // B6992: which WoDX modules have their api now, and what Creation kept from its start-up
+        const st = await page.evaluate(apiState, LATE_APIS).catch(e => [{error: e.message}]);
+        report(`  DIAG apis ${JSON.stringify(st).slice(0, 3000)}`);
       };
       if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; await diagDump(); diagFrom = diagLog.length; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);

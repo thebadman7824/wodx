@@ -182,6 +182,43 @@ export async function run() {
             ok("an Echo at level 5: the Storyteller's button applies 3 aggravated, once", Number(lord.system.health.damage.aggravated) === 3, { agg: lord.system.health.damage.aggravated });
             await lord.update(zero);
         });
+        // B7114: the oath window forges an oath for Weaving (Gramarye at least the kind's) and a baptism keeps only Gold Oaths
+        await step("forging an Iron Oath: Weaving equal to its rating, the oath on the sheet; a baptism washes it away", async () => {
+            const [gram] = await lord.createEmbeddedDocuments("Item", [{ name: "Gramarye", type: "Trait", system: { type: "wod.types.knowledgesecondability", value: 1 } }]);
+            try {
+                await lord.setFlag(MOD, "daFae", { ...fl(lord), weaving: { perm: 3, temp: 3 } });
+                const n0 = game.messages.size, o0 = (fl(lord).oaths ?? []).length;
+                answer(root => { set(root, "op", "forge"); set(root, "kind", "iron"); set(root, "rating", 1); set(root, "terms", "the gate's own oath"); });
+                A().daOath({ actor: lord });
+                const m = await untilMsg(n0, 6000, x => /forges an oath/.test(x.content ?? ""));
+                const forged = (fl(lord).oaths ?? []).length === o0 + 1 && W(lord) === 2;
+                const n1 = game.messages.size;
+                answer(root => { set(root, "op", "baptism"); });
+                A().daOath({ actor: lord });
+                const b = await untilMsg(n1, 6000, x => /is baptised/.test(x.content ?? ""));
+                const left = fl(lord).oaths ?? [];
+                ok("forging an Iron Oath: Weaving equal to its rating, the oath on the sheet; a baptism washes it away", !!m && forged && !!b && /wash/.test(text(b)) && left.every(o => o.kind === "gold"),
+                    { forged, weaving: W(lord), card: text(m).slice(0, 160), baptism: text(b).slice(0, 200), left: left.length });
+            } finally {
+                await gram.delete();
+                await lord.setFlag(MOD, "daFae", { ...fl(lord), oaths: [{ kind: "iron", rating: 2, terms: "keeps the miller's family from the wolves", active: true }], weaving: { perm: 3, temp: 3 } });
+            }
+        });
+        // B7113: mortals who see an enhanced mien roll to escape a new Echo; a failure adds it to the sheet
+        await step("mortals see the enhanced mien: 10 dice at 7 less their losses, a new Echo added on a failure", async () => {
+            await lord.setFlag(MOD, "daFae", { ...fl(lord), mists: { perm: 5, temp: 5 } });
+            answer(root => { set(root, "use", "enhance"); });
+            A().daMists({ actor: lord }); await sleep(1500);
+            const e0 = (fl(lord).echoes ?? []).length, n0 = game.messages.size;
+            answer(root => { set(root, "use", "seen"); set(root, "mortals", 3); set(root, "sawCantrip", true); });
+            A().daMists({ actor: lord });
+            const m = await untilMsg(n0, 6000, x => /Escaping a new Echo/.test(x.content ?? ""));
+            const t = text(m), e1 = (fl(lord).echoes ?? []).length;
+            // the firstborn's one Lesser Feature counts as Greater: 10 − 1 − 1 (three mortals) − 1 (a cantrip) = 7 dice
+            const fine = /7 dice, diff 7/.test(t) && (/no new Echo/.test(t) ? e1 === e0 : /new Echo/.test(t) && e1 > e0);
+            ok("mortals see the enhanced mien: 10 dice at 7 less their losses, a new Echo added on a failure", fine, { card: t.slice(0, 300), echoes: [e0, e1] });
+            await lord.setFlag(MOD, "daFae", { ...fl(lord), echoes: [{ trigger: "the sound of church bells" }], enhanced: null });
+        });
         await step("hidden by the Mists longer than Willpower: the new day warns the Storyteller", async () => {
             const n0 = game.messages.size;
             await lord.setFlag(MOD, "daFae", { ...fl(lord), hiddenSince: game.time.worldTime - 6 * 86400, lastDay: null });

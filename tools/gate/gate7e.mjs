@@ -19,6 +19,7 @@
  *  10. clean up
  * Result: Data/wodx-gate/gate7e-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-storyteller";
 const st = () => game.modules.get(MOD).api;
@@ -46,7 +47,10 @@ const newer = (a, b) => {
 const KEYS = ["log", "personal", "beats", "convened", "session", "travelMinutes", "encounters", "encounterChance", "encounterTable", "soloLimit", "dawnLead", "beatsOn"];
 const queued = (type, since) => chron().approvals.pending().filter(p => p.type === `${MOD}.${type}` && p.createdAt >= since);
 
-export async function run() {
+// B6994 (#1824): the gate starts from Hands on, since new worlds start at Balanced (tools/gate/kit.mjs)
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const {R, ok, step} = harness();
   const start = Date.now(), t0 = game.time.worldTime;
   const keep = {settings: Object.fromEntries(KEYS.map(k => [k, foundry.utils.deepClone(game.settings.get(MOD, k))])),

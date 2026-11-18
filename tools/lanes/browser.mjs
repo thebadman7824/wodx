@@ -32,8 +32,26 @@ export function apisMissing(ids) {
  * and returns the modules still without one, so the lane report says the world had lost them, not the gate.
  */
 export async function waitApis(page, ids = LATE_APIS, ms = 120000) {
-  const ready = await page.waitForFunction(apisReady, ids, {timeout: ms}).then(() => true, () => false);
-  return ready ? [] : await page.evaluate(apisMissing, ids).catch(() => ids);
+  // B6992: a page that reloads while the runner waits destroys the page's context; the wait went on as if the apis
+  // were there, and the gate then ran on a page whose late modules had not started. Now it waits for the new page.
+  const until = Date.now() + ms;
+  for ( ;; ) {
+    const left = Math.max(1, until - Date.now());
+    const r = await page.waitForFunction(apisReady, ids, {timeout: left}).then(() => "ready", e => (/context was destroyed|navigat|Target closed/i.test(String(e?.message)) ? "reloaded" : "timeout"));
+    if ( r === "ready" ) return [];
+    if ( r === "reloaded" && Date.now() < until ) { await page.waitForLoadState?.("domcontentloaded").catch(() => {}); continue; }
+    return await page.evaluate(apisMissing, ids).catch(() => ids);
+  }
+}
+
+/**
+ * B6992: runs in the page: for each module, whether it is on, has its api, how many keys the api has, and the
+ * start-up errors it kept (WoDX Creation's api.startErrors, B6811). Written under a failing gate with --diag, so a
+ * module that lost its api (or never got one) shows which.
+ */
+export function apiState(ids) {
+  return ids.map(id => { const m = globalThis.game?.modules?.get?.(id); const a = m?.api;
+    return {id, active: !!m?.active, api: !!a, keys: a ? Object.keys(a).length : 0, startErrors: Array.isArray(a?.startErrors) ? a.startErrors.slice(0, 5) : []}; });
 }
 
 export async function openGM(url, {channel = process.platform === "win32" ? "msedge" : undefined, user = "Gamemaster Test"} = {}) {
@@ -47,6 +65,12 @@ export async function openGM(url, {channel = process.platform === "win32" ? "mse
   const diag = [];
   page.on("console", m => { if ( ["error", "warning"].includes(m.type()) && diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} ${m.type()}: ${m.text().slice(0, 600)}`); });
   page.on("pageerror", e => { if ( diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} pageerror: ${String(e.stack ?? e.message).slice(0, 900)}`); });
+  // B6992: every page load is counted and logged, so a gate's line can say the world reloaded under it
+  const life = {loads: 0};
+  page.on("load", () => { life.loads++; if ( diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} load: page load ${life.loads} (${page.url().replace(/^https?:\/\/[^/]+/, "")})`); });
+  // B6992: a module script that fails to load leaves its module with no hooks and no api: name the file
+  page.on("requestfailed", r => { if ( /\.m?js(\?|$)/.test(r.url()) && diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} script failed: ${r.url().replace(/^https?:\/\/[^/]+/, "")} ${r.failure()?.errorText ?? ""}`); });
+  page.on("response", r => { if ( r.status() >= 400 && /\.m?js(\?|$)/.test(r.url()) && diag.length < 2000 ) diag.push(`${new Date().toISOString().slice(11, 19)} script ${r.status()}: ${r.url().replace(/^https?:\/\/[^/]+/, "")}`); });
   await page.goto(`${url}/join`, {waitUntil: "domcontentloaded"});
   const SEL = "select[name=userId], select[name=userid]";
   await page.waitForSelector(SEL, {timeout: 90000});
@@ -65,5 +89,5 @@ export async function openGM(url, {channel = process.platform === "win32" ? "mse
     late = await page.evaluate(apisMissing, LATE_APIS).catch(() => []);
     console.log(`Some WoDX modules had no api ${API_WAIT_MS / 1000} s after sign-in: ${late.join(", ")}`);
   });
-  return {browser, page, late, diag};
+  return {browser, page, late, diag, life};
 }

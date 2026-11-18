@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7310
+Next free block: B7320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -402,9 +402,11 @@ Next free block: B7310
 | B6960-B6969 | Gate run 1779 fixes | tools |
 | B6970-B6979 | Gate diagnostics, lane snapshot, truth relay fighter (used B6970-B6972) | tools |
 | B6980-B6989 | PC queue: jobs can name the other PCs' lanes (used B6980) | tools |
+| B6990-B6999 | Final audit leftovers: the disarm relay, queue gates on the Balanced start, and the runner's reload check (used B6990-B6994) | Interactables |
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
+| B7110-B7119 | Dark Ages fae exports wired into play (used B7110-B7114) | Actions |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
@@ -416,6 +418,7 @@ Next free block: B7310
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
+| B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -13910,6 +13913,31 @@ B6972. gatetruthrelay's fighter now has Stamina 3 with its total set too (issue 
 effect: none, a gate change only; play is unchanged.
 visible: none, only the gate's test fighter changes.
 
+## B6990. A set-down relayed to the Storyteller carries where it lands and why (2026-11-17)
+WoDX Interactables. `setDown` on a player's client sends `at` (a point on the map) and `how` (the cause) with the socket message, and the Storyteller's handler passes them on, so a knock-away from a player lands where it was sent with the Knocked away card. `how` is cut to 300 characters. Test: tools/harness/loose-knocked.test.mjs (fails before the fix, passes after). Issue 1814.
+
+Reverse: drop `at` and `how` from the message in loose.mjs.
+
+## B6991. gate7d sets the faction standing rule aside while it tests the queue (2026-11-17)
+Tools. Since B4860 a world starts at Balanced, which approves small `wodx-npc.faction` results on sight, so step 4 (a faction turn in Suggest) found nothing in the queue. The step now removes that one standing rule, runs, and puts it back; step 10 puts the whole autoApprove setting back too. Same pattern as gate-interact step 7. Issue 1824.
+
+Reverse: remove the set-aside in gate7d step 4.
+
+## B6992. The gate runner says when the page reloaded, and waits through a reload (2026-11-17)
+Tools. WoDX Creation was seen without its api partway through long lane runs (runs 1774, 1779, and gatestates2 in 1789) while the same gates pass on a freshly reset lane (job 1817). The runner's wait for the apis before each gate treated a page reload as "apis present", so a gate could start on a page whose late modules had not started yet. Now `waitApis` waits for the new page and keeps waiting; each page load is counted, and a gate's line says "[page reloaded before this gate]" or "[page reloaded during this gate]"; with --diag, a failing gate also writes the api state of each WoDX module (with Creation's start-up errors) and any module script that failed to load. Test: tools/harness/lanes.test.mjs "B6992".
+
+Reverse: restore the single waitForFunction in waitApis and drop the load counter.
+
+## B6993. A PC job's comment lists every gate's line first (2026-11-17)
+Tools. Job 1837 (217 gates with --diag) lost 200 gate lines to the 60,000-character comment cap, because console dumps came first. The comment now starts with a digest from `gateDigest` (jobs.mjs): how many gates passed, then each one that did not, cut to 400 characters. The full lane text follows as before. Test: tools/harness/pcq.test.mjs "B6993".
+
+Reverse: drop gateDigest from the comment body in runner.mjs.
+
+## B6994. Queue gates start from Hands on (2026-11-17)
+Tools. New worlds start at Balanced (B4860), where many approval kinds pass on their own and NPC, fight and routine settings run on Auto. Six gates that check results waiting in the queue were written for a Hands on start and failed on main the same way on a reset lane (jobs 1886 and 1887): gate7d, gate7e, gate8b, gatetime, gateupkeep, gateautomation. `handsOnStart()` in tools/gate/kit.mjs moves to Hands on before the gate reads what it keeps, and afterwards puts the level back and deletes the two level cards. Each of the six gates wraps its body with it. The game's start level is not changed. Issue 1824.
+
+Reverse: remove handsOnStart from kit.mjs and the wrapper from the six gates.
+
 ## B7000. CI enforces the merge rules (2026-11-17)
 Repository workflow. The checking rules lived only in thread instructions, so a pull request could merge without
 them and nobody would know. `tools/release/merge-rules.mjs` now checks three of them on every pull request, in a
@@ -14007,6 +14035,31 @@ on main's commit as for any all-gates job, and a gate failing there reads as a f
 `run-runner.ps1` reads an optional "priority" from `runner.<host>.json` and sets it on itself before starting the
 runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
 (BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
+
+## B7110. Fae blood and soak in the mien read the Dark Ages: Fae rules (2026-11-17)
+WoDX Actions. The feeding card adds `faeBlood` for a vampire who drinks a Dark Ages fae (its Court's gift and price, twice over for the firstborn, nothing from the inanimae; Dark Ages: Fae p. 181), next to the fae-blood high it already had. `faeSoak`, which WoDX Combat reads, now calls `soaksLethal` (p. 104) instead of repeating it.
+
+Reverse: remove the faeBlood note in feedResolve; put back the inline mien test in faeSoak.
+
+## B7111. Dominate fails on a fae with Day or Night at least the power's level (2026-11-17)
+WoDX Actions. Using a Dominate power on a Dark Ages fae whose Day or Night is at least the power's level posts that it slides off and stops there (`mindShield`, p. 181). House reading: only Dominate counts as "and like powers" until a desk says which others do.
+
+Reverse: remove the check after the vozhd check in kindred.js.
+
+## B7112. The warning signs are counted from play (2026-11-17)
+WoDX Actions. A botched cantrip is kept as spoiled magic (the last five, a week counts); an Echo that bites harder than the one before it within thirty days counts as "Echoes bite differently" (a house reading); the imbalance comes from Mists and Weaving. `driftSigns` (p. 103) shows them in the Mists window and whispers a warning once a day when there are more than two. An overnight change of nature is read from a `changedNature` flag for the Storyteller to set.
+
+Reverse: remove drift() and its two callers in fae-da.js.
+
+## B7113. Mortals who see the mien may bring a new Echo (2026-11-17)
+WoDX Actions. The Mists window has "Mortals saw the mien": how many, and whether they saw a cantrip or an Unleashing (awry or not). It rolls `newEchoPool` (p. 114) and adds `newEchoOutcome`'s new Echoes to the sheet for the Storyteller to name. After Enhance the mien this scene, every Lesser Feature counts as a Greater one.
+
+Reverse: remove the "seen" use from the Mists window.
+
+## B7114. The oath window forges oaths and records a baptism (2026-11-17)
+WoDX Actions. The oath window (daOath) keeps an oath as before, forges a new one when `forgeCheck` allows it (kind, rating, Gramarye, Weaving equal to the rating spent, pp. 107-109), and on a baptism keeps only the Gold Oaths (`baptismClears`, p. 108).
+
+Reverse: put back the keep-only oath window.
 
 ## B7140. One feature registry in the repo (2026-11-17)
 Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
@@ -14239,3 +14292,25 @@ Reverse: unset the PC_COMFY_URL and PC_OCR_* settings on the PC; the watcher the
 cloud-lane.mjs setup joins testbed/testbed-known-good.zip.partNN and modules/cloud-foundry-modules.zip.partNN from /mnt/project-files/private/cloud-foundry, checks each against its SHA256 file, and uses the PC world as lane 9's known-good copy and world and the PC lane's other modules in its Data folder. The joined zips stay in the box (the shared folder caps files at 20 MiB). Without the parts, setup falls back to the repo's world.json (B7243). A cloud fail stays a hint: gate6b's werewolf form step fails on lane 9 with this world and 28 of its 30 modules while it passes on a PC lane.
 
 Reverse: drop fromParts and its two calls; lane 9 goes back to the world.json world.
+
+## B7310. Each failing gate is rechecked alone, and no verdict rests on one run (2026-11-18)
+Repository workflow. The recheck that says whose a failing gate is (B4610) reset the lane once and then ran every
+failing gate, up to 12, in one run-gate call, so the "alone" run was not alone, and one bad draw of a flaky gate
+became "NEW with this change" (job 2006: gate7b shared its rerun with four other gates; job 2013 then passed it alone
+15/15). Now each gate runs in its own run-gate call on a freshly reset lane. A pass alone settles it ("passes alone").
+A failure alone is run once more, and a pass then reads "flaky". Two failures alone go to main the same way, where
+one pass is confirmed by a second run before the gate is called NEW. All runs on the branch's commit come before the
+runs on main, so the lane is deployed twice at most, and the whole recheck stops taking runs after 120 minutes; a
+gate it did not finish says so. tools/pcq/jobs.mjs recheckStep holds the rules and the harness tests them.
+
+Reverse: put the old recheck() body back (one runOn for all failing gates, recheckVerdicts).
+
+## B7311. gatetruthactions step 6 keeps the fight to itself and logs who moved it (2026-11-18)
+Gates. Step 6 (the frenzy check held turn by turn) failed after other gates in jobs 1944, 2006 and 2014, and passed alone. Each time the hold read 1 turn left right after the first roll, where it should read 2. The hold only goes down on the bearer's own turn (beastTurn), so one extra turn of the bearer ran before the step looked. The step moves the turns by hand, so for the step the turn conductor is set to off and WoDX NPC is off on the gate's scene (the other fighter is an NPC, and a world at Balanced runs NPC turns by itself); both are put back after the step. The step's detail now carries a log of every turn move and every change to the hold, each with the first frames of the code that made it, so a failure names what moved the fight. Not yet run in Foundry.
+
+Reverse: take the conductor and scene mode lines, the hooks and the log out of step 6 in tools/gate/gatetruthactions.mjs.
+
+## B7312. gate7b's Auto steps say what the NPC read (2026-11-18)
+Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 1944 and 2006 with the runner choosing to flee ("faces what it fears": a guard fears the supernatural once it shows), and "a lost action" failed in 2006 with a plan card instead of "cannot act". The same lane order passed and failed in job 1944, so the cause is state left in the world, not the order alone. The two steps' detail now names whose turn it was when the NPC acted, the runner's fears, whether the hero reads as obvious (its effects and WoDX NPC flags), the enemies as the runner saw them and its top options, and the card's token against the fighter's. No pass condition changed. On this branch the detail showed, in job 2016, the hero "Ada (6d, wraith)" read as obvious, so the guard fled. Two tries at choosing the hero instead (jobs 2021 and 2024) failed other steps, and the same code passed in jobs 2017 and 2018, so the hero is not the only thing that varies; those tries were taken back out. gate7b was the first gate after the lane's reset in all three failing runs, and also in job 2013, which passed; in 2017 and 2018 it came after other gates.
+
+Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.

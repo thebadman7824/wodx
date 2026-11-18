@@ -14,6 +14,7 @@
  *  10. clean up: scene, actors, messages, our queue entries
  * Result: Data/wodx-gate/gateupkeep-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const STEPS = 10;
 const DAY = 86400;
@@ -27,7 +28,10 @@ async function save(R) {
 }
 const atLeast = (id, v) => { const m = game.modules.get(id); return !!m?.active && !foundry.utils.isNewerVersion(v, m.version); };
 
-export async function run() {
+// B6994 (#1824): the gate starts from Hands on, since new worlds start at Balanced (tools/gate/kit.mjs)
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
