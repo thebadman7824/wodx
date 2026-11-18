@@ -50,9 +50,12 @@ start; a failing gate is a result and is not retried), and jobs that were runnin
 Heartbeat (B4700): a GitHub workflow (.github/workflows/pc-heartbeat.yml) checks every 15 minutes that the status
 issue has moved in the last 15 minutes, and opens a pc-alert issue "the runner is silent" when it has not.
 
-Recheck (B4610): when a gates job fails, each failing gate (up to 12) is rerun on a freshly reset lane, alone on the
-same commit and then on main, and the result ends with a verdict per gate: NEW with this change, fails on main too,
-or passes alone (it fails only after other gates). A "fails on main too" gate is still a fault to fix, not a reason to
+Recheck (B4610, B7310): when a gates job fails, each failing gate (up to 12) is rerun ALONE, one gate per run-gate
+call on a freshly reset lane, and no verdict rests on one run: a pass alone reads `passes alone` (it fails only after
+other gates, or is flaky); a failure alone is run once more, and a pass then reads `flaky`; two failures alone go to
+main the same way, where a pass is confirmed by a second run before it reads `NEW with this change`, and a failure
+there reads `fails on main too`. Runs on the branch come first and runs on main after (two deploys at most), and the
+recheck stops taking runs after 120 minutes. A "fails on main too" gate is still a fault to fix, not a reason to
 merge past it. "recheck": false in the job turns this off.
 
     powershell -ExecutionPolicy Bypass -File tools\pcq\start-runner.ps1     start it if it is not running
