@@ -11,7 +11,7 @@
  *   PC_BUILD_ALL     "1" on the Main PC only: also builds registry/pc-status/all.json from the three files each cycle
  *   PC_LOCAL_AGENT_DIR  optional, a local-agent tasks folder (inbox/running counts), Main PC only
  *   PC_COMFY_URL     optional, ComfyUI's address on this PC (Main PC: http://127.0.0.1:8188): adds "comfy" (B7296)
- *   PC_OCR_MATCH, PC_OCR_OUT, PC_OCR_LOG   optional, the book OCR (Secondary PC): adds "ocr" (B7296)
+ *   PC_OCR_MATCH, PC_OCR_LOOP_MATCH, PC_OCR_OUT, PC_OCR_LOG   optional, the book OCR (Secondary PC): adds "ocr" (B7296)
  * B7296: this copy in tools/pcq is the one to deploy. Each PC runs it from <home>\gpu-tools\status-push.mjs (copy it
  * there; PC_HOME then defaults to <home>\status-push-clone). The laptop's PC watcher reads the comfy and ocr fields.
  * Push is never forced: fetch, write only our own file(s), commit, push; if rejected, fetch, rebase and retry (3 tries).
@@ -147,9 +147,12 @@ function newestMin(dir, depth = 2, now = Date.now()) {
   return best ? Math.round((now - best) / 60000) : null;
 }
 function ocr(procs) {
-  if ( !process.env.PC_OCR_MATCH && !process.env.PC_OCR_OUT && !process.env.PC_OCR_LOG ) return undefined;
+  if ( !process.env.PC_OCR_MATCH && !process.env.PC_OCR_LOOP_MATCH && !process.env.PC_OCR_OUT && !process.env.PC_OCR_LOG ) return undefined;
   const re = new RegExp(process.env.PC_OCR_MATCH || "book_pipeline", "i");
   const out = {workers: procs.filter(l => re.test(l) && !/status-push/.test(l)).length};
+  // PC_OCR_LOOP_MATCH (Secondary PC: vl-loop): the loop that starts the workers batch by batch, so a dead loop and
+  // a loop waiting between batches read differently.
+  if ( process.env.PC_OCR_LOOP_MATCH ) { const lr = new RegExp(process.env.PC_OCR_LOOP_MATCH, "i"); out.loopUp = procs.some(l => lr.test(l) && !/status-push/.test(l)); }
   if ( process.env.PC_OCR_OUT ) out.lastOutputMin = newestMin(process.env.PC_OCR_OUT);
   if ( process.env.PC_OCR_LOG ) {
     try { const t = fs.readFileSync(process.env.PC_OCR_LOG, "utf8"); Object.assign(out, ocrLogState(t.slice(-8000).split(/\r?\n/))); }

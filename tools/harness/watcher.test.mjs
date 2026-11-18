@@ -116,6 +116,9 @@ test("OCR: gave up or workers with no output past the limit are problems; waitin
   assert.ok(assess(withOcr({workers: 1, lastOutputMin: 5, memWait: true, gaveUp: true})).problems.some(p => p.key === "secondary:ocr:gaveup"));
   const st = assess(withOcr({workers: 2, lastOutputMin: LIMITS.ocrStallMin + 1, memWait: true, gaveUp: false})).problems.find(p => p.key === "secondary:ocr:stalled");
   assert.ok(st); assert.match(st.text, /waiting for memory/);
+  assert.ok(assess(withOcr({workers: 0, loopUp: false, lastOutputMin: 900, memWait: true, gaveUp: false, stopped: false})).problems.some(p => p.key === "secondary:ocr:loop"), "a dead loop");
+  assert.equal(assess(withOcr({workers: 0, loopUp: false, lastOutputMin: 900, memWait: false, gaveUp: false, stopped: true})).problems.length, 0, "stopped on purpose");
+  assert.equal(assess(withOcr({workers: 0, loopUp: true, lastOutputMin: 900, memWait: true, gaveUp: false, stopped: false})).problems.length, 0, "the loop waiting between batches");
   const ok = assess(withOcr({workers: 1, lastOutputMin: 10, memWait: true, gaveUp: false}));
   assert.equal(ok.problems.length, 0); assert.ok(ok.notes.some(n => /book OCR 1 worker running.*waiting for memory/.test(n)));
 });
