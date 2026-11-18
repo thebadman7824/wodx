@@ -171,6 +171,13 @@ train with a comment saying why; fix it, push, and add the label again. Pull req
 to date or gated again while they wait, and the hourly sweep no longer merges main into open pull requests. The
 runner's status issue shows the line. `node tools/pcq/train.mjs` prints what the train would do now.
 
+**Batches (B7445, Ben, 18 November 2026).** When the front needs main and a stamp anyway, the train takes up to two
+green pull requests behind it that change other files into one batch pull request ("Merge train batch: #a, #b"),
+stamped and gated once. Its merge puts each member's head on main, and GitHub shows each as merged. A red batch is
+closed and tried again with half as many, down to one, so the pull request at fault leaves the train with its own
+reason. Nothing changes for the thread: label it and stop pushing. A push to a batched pull request takes it out of
+the train as before and closes the batch.
+
 **Urgent pull requests (B7420, Ben, 18 November 2026).** A fix that other work is stuck behind gets the label `urgent`
 as well as `merge-train`. It goes to the front of the line at the runner's next step, ahead of older labels (urgent
 ones keep label order among themselves), and its gate job then runs as the train front. The pull request it passes

@@ -16,6 +16,9 @@
  *   - an earlier commit of the pull request has a passing wodx/gates status and no module, system or gate file differs
  *     from it (version stamps ignored, the same test merge-rules.mjs uses), so stamp commits start nothing
  *   - a job for this exact commit is already queued or running
+ * When only main moved since the last finished touched job of the pull request (merges of main, stamps, carried
+ * reviews: no gate input the branch itself changed), the job runs only the gates main's merge touched plus the gates
+ * that did not pass last time (B7442; a touched job with "since").
  * A queued job for an older commit of the same pull request that has not started is closed as superseded.
  * Exit 0 when it queued or skipped, 1 on a fault.
  */
@@ -111,6 +114,32 @@ export function isTrainPush(messages) {
   return train;
 }
 
+/**
+ * B7442: the gate result of a finished touched job, from its result comment, or null when it cannot be relied on: a
+ * lane fault, no gate lines, or a comment cut at the size cap (gate lines could be missing). failing: every gate that
+ * did not pass, whatever its recheck verdict.
+ */
+export function jobResult(body = "") {
+  const head = /^\*\*(Passed|Failed)\*\* in \d+ min/.exec(body);
+  if ( !head || /exit fault|Runner error|\(cut: \d+ more characters/.test(body) ) return null;
+  if ( !/^gate[\w-]*: (?:\d+\/\d+ passed|ERROR)/m.test(body) ) return null;
+  const failing = [];
+  for ( const m of body.matchAll(/^(gate[\w-]*): (?:(\d+)\/(\d+) passed|ERROR)/gm) )
+    if ( (m[2] === undefined || Number(m[2]) < Number(m[3]) || m[3] === "0") && !failing.includes(m[1]) ) failing.push(m[1]);
+  return {passed: head[1] === "Passed", failing};
+}
+
+/**
+ * B7442 (the owner's choice, 18 November): the files the branch itself changed between an earlier gated commit and
+ * the head, as opposed to what a merge of main brought in. A gate input file counts as the branch's own when it
+ * differs at the head both from that earlier commit and from main (version stamps ignored by norm). show(ref, file)
+ * gives the text or null. An empty answer means only main moved, so the earlier run still speaks for the branch's code.
+ */
+export function ownChanges(names, show, {prior, head, main = "origin/main", norm = x => x} = {}) {
+  const n = t => t === null ? null : norm(t);
+  return names.filter(f => { const h = n(show(head, f)); return h !== n(show(prior, f)) && h !== n(show(main, f)); });
+}
+
 function ownerToken() {
   const r = spawnSync("git", ["credential", "fill"], {input: "protocol=https\nhost=github.com\n\n", encoding: "utf8", windowsHide: true, env: {...process.env, GCM_INTERACTIVE: "never"}});
   const t = /^password=(.+)$/m.exec(r.stdout ?? "")?.[1];
@@ -140,6 +169,29 @@ async function sameAtFn(headSha) {
     const show = (s, f) => { try { return git("show", `${s}:${f}`); } catch { return null; } };
     return names.every(f => { const a = show(sha, f), b = show(headSha, f); return a !== null && b !== null && normalise(a) === normalise(b); });
   };
+}
+
+/** B7442: {number, sha, failing} of the newest finished touched job of this pull request when only main moved since
+ *  its commit, else null. commits: the pull request's earlier commits, newest first. */
+async function sinceRun(owner, pr, head, commits) {
+  const closed = await api(owner, "GET", `/issues?state=closed&labels=pc-job&per_page=50&sort=created&direction=desc`);
+  for ( const i of closed.filter(x => x.title.includes(`[PR #${pr} `) && /gates touched/.test(x.title)) ) {
+    const comments = await api(owner, "GET", `/issues/${i.number}/comments?per_page=100`);
+    const res = comments.map(c => jobResult(c.body ?? "")).filter(Boolean).at(-1);
+    if ( !res ) continue;
+    const short = /\[PR #\d+ ([0-9a-f]{12})\]/.exec(i.title)?.[1];
+    const sha = commits.find(c => c.startsWith(short ?? "-"));
+    if ( !sha ) return null;
+    const git = (...a) => execFileSync("git", a, {cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"]}).trim();
+    const names = git("diff", "--name-only", sha, head, "--", ...INPUTS).split("\n").filter(Boolean);
+    let norm = x => x;
+    const mr = path.join(ROOT, "tools", "release", "merge-rules.mjs");
+    if ( fs.existsSync(mr) ) { try { norm = (await import(pathToFileURL(mr).href)).normalise ?? norm; } catch {} }
+    const show = (ref, f) => { try { return git("show", `${ref}:${f}`); } catch { return null; } };
+    const own = ownChanges(names, show, {prior: sha, head, norm});
+    return own.length ? null : {number: i.number, sha, failing: res.failing};
+  }
+  return null;
 }
 
 async function main() {
@@ -213,16 +265,28 @@ async function main() {
   // A job for this exact commit already queued or running
   if ( open.some(i => i.title.includes(marker(pr, head))) ) { say(`PR #${pr}: a job for ${head.slice(0, 8)} is already queued.`); finish(0); }
 
-  const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", "--touched", "--ref", head, "--prio", "2", "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
+  // B7442: when only main moved since the last finished touched run of this pull request, run what main's merge
+  // touched plus what failed last time, not the whole list again (33 of 63 PR runs on 17-18 November were such heads)
+  const since = await sinceRun(owner, pr, head, commits).catch(e => { say(`PR #${pr}: could not read the last run (${e.message}); running the whole list.`); return null; });
+  const extra = since ? since.failing : [];
+  let count = gates.length;
+  if ( since ) {
+    const narrow = spawnSync(process.execPath, [path.join(ROOT, "tools", "lanes", "run-gate.mjs"), ...extra, "--touched", "--base", since.sha, "--list", "--repo", ROOT], {cwd: ROOT, encoding: "utf8", windowsHide: true});
+    count = narrow.status === 0 ? new Set([...parseGates(narrow.stdout), ...extra]).size : gates.length;
+    say(`PR #${pr}: only main moved since #${since.number} (${since.sha.slice(0, 8)}); queuing ${count} gate(s) instead of ${gates.length}: what main's merge touched${extra.length ? ` and the ${extra.length} that did not pass there` : ""}.`);
+    if ( !count ) { say(`PR #${pr}: nothing to run since ${since.sha.slice(0, 8)}; the whole list runs instead.`); }
+  }
+  const narrowed = since && count > 0;
+  const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", ...(narrowed ? extra : []), "--touched", ...(narrowed ? ["--since", since.sha] : []), "--ref", head, "--prio", "2", "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
   if ( sub.status !== 0 ) { console.error((sub.stderr || sub.stdout || "").slice(-1500)); say("submit.mjs refused the job"); finish(1); }
   const job = JSON.parse(sub.stdout.slice(sub.stdout.indexOf("{")));
   const issue = {title: `PC job: gates touched ${marker(pr, head)}`, labels: ["pc-job"],
-    body: `Queued by pc-gates.yml for PR #${pr} (${gates.length} gate(s)).\n\n\`\`\`json\n${JSON.stringify(job, null, 1)}\n\`\`\`\n`};
+    body: `Queued by pc-gates.yml for PR #${pr} (${count} gate(s)${narrowed ? `, since ${since.sha.slice(0, 8)}` : ""}).\n\n\`\`\`json\n${JSON.stringify(job, null, 1)}\n\`\`\`\n`};
   if ( DRY ) { say(`DRY: would open "${issue.title}" with ${JSON.stringify(job)}`); finish(0); }
   const made = await api(owner, "POST", "/issues", issue);
-  say(`PR #${pr}: queued ${gates.length} gate(s) for ${head.slice(0, 8)} as #${made.number}. The result arrives as the ${GATE_CONTEXT} status.`);
+  say(`PR #${pr}: queued ${count} gate(s) for ${head.slice(0, 8)} as #${made.number}. The result arrives as the ${GATE_CONTEXT} status.`);
   const gh = env("GITHUB_TOKEN");
-  if ( gh ) await api(gh, "POST", `/issues/${pr}/comments`, {body: `Gates queued for ${head.slice(0, 8)}: #${made.number} (${gates.length} gate(s)). The result will show as the \`${GATE_CONTEXT}\` check.`}).catch(e => console.log(`PR comment failed: ${e.message}`));
+  if ( gh ) await api(gh, "POST", `/issues/${pr}/comments`, {body: `Gates queued for ${head.slice(0, 8)}: #${made.number} (${count} gate(s)${narrowed ? `, only what changed since ${since.sha.slice(0, 8)}` : ""}). The result will show as the \`${GATE_CONTEXT}\` check.`}).catch(e => console.log(`PR comment failed: ${e.message}`));
   finish(0);
 }
 
