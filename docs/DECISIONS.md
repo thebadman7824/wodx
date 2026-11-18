@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7320
+Next free block: B7430
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -419,6 +419,11 @@ Next free block: B7320
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
+| B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
+| B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
+| B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
+| B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
+| B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14314,3 +14319,103 @@ Reverse: take the conductor and scene mode lines, the hooks and the log out of s
 Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 1944 and 2006 with the runner choosing to flee ("faces what it fears": a guard fears the supernatural once it shows), and "a lost action" failed in 2006 with a plan card instead of "cannot act". The same lane order passed and failed in job 1944, so the cause is state left in the world, not the order alone. The two steps' detail now names whose turn it was when the NPC acted, the runner's fears, whether the hero reads as obvious (its effects and WoDX NPC flags), the enemies as the runner saw them and its top options, and the card's token against the fighter's. No pass condition changed. On this branch the detail showed, in job 2016, the hero "Ada (6d, wraith)" read as obvious, so the guard fled. Two tries at choosing the hero instead (jobs 2021 and 2024) failed other steps, and the same code passed in jobs 2017 and 2018, so the hero is not the only thing that varies; those tries were taken back out. gate7b was the first gate after the lane's reset in all three failing runs, and also in job 2013, which passed; in 2017 and 2018 it came after other gates.
 
 Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
+
+## B7330. runner-off no longer skips the cancel pass (2026-11-18)
+Repository workflow. A runner with runner-off waits for its running jobs to end before it stops, but that wait skipped
+the cancel pass, so a job labelled pc-cancel, or whose issue was closed, ran to the end anyway: job 2031 ran on a stale
+commit of PR 1995 for half an hour after its pc-cancel label, until it was stopped by hand. The wait now lists the open
+job issues and runs the cancel pass each time round. runner-hold (B7207) already did.
+
+Reverse: drop the cancelCheck line from the runner-off block in runner.mjs.
+
+## B7331. A push cancels the gate jobs of the pull request's older commits (2026-11-18)
+In the week to 18 November 21 of 71 pull request gate jobs were for a commit the pull request had moved past before
+the run ended, and the 10 that ran held lanes for about 10.7 lane-hours (about 7% of all lane time). Half came from
+the merge train's own merge-main and stamp pushes, half from threads pushing mid-run. pc-gates.yml runs on every push,
+so tools/pcq/pr-gates.mjs now closes that pull request's unstarted jobs for older commits (as before) and also labels
+its running ones pc-cancel, so the runner ends them within a minute. It does this before any other check, so a push
+that needs no new gates still frees the lane.
+
+Reverse: drop the stale.cancel loop in pr-gates.mjs.
+
+## B7332. A push from outside the train takes a pull request out of it (2026-11-18)
+Threads add merge-train and stop pushing, but PR 1995 got a thread push while labelled, which made its gate run stale.
+When a pull request labelled merge-train gets a push whose new commits are not all the train's own (its merge of main,
+its carried reviews, and a stamp it made), pr-gates.mjs takes the label off with a comment saying why, before the train
+can gate or merge that code. The train now marks its merge and its stamp commits with a Merge-Train: yes trailer so a
+stamp-only train push is known as its own; its older commits are known by their (merge train) wording. A rewritten
+branch (not a fast-forward) also counts as an outside push.
+
+Reverse: drop the merge-train block in pr-gates.mjs and the trailers in train.mjs.
+
+## B7340. Free lanes join a running job unless a waiting job could use them (2026-11-18)
+Repository workflow. growJobs() let a running gates job take only its own lane count while any lane job waited, even
+a job pinned to a lane that was busy or to another PC's lane. On 18 November #2022 ran 309 gates on lane 2 alone from
+06:26 to 08:50Z while #2020 waited for lane 2 and lanes 3 to 5 sat idle. Now only a waiting job that could start on a
+lane free now holds the running job back. A job that arrives later waits for a lane of the running job to free.
+
+Reverse: pass the old test (any waiting lane job) to growJobs again.
+
+## B7341. A runner restart no longer throws away the run in progress (2026-11-18)
+When the runner restarted while a gates job ran, the job ran again from the start: 20 runs and 22.9 lane-hours lost
+from 14 to 18 November (#1993, #1994 and #1997 each lost 101 minutes at 02:04Z on 18 Nov). Now, on restart, the
+result lines of the gates that passed are kept with the job's commit, and when it starts again on the same commit only
+the gates it had not passed run: the queue, gates a lane took and did not finish, and gates that failed (so they are
+rechecked as usual). The kept lines go into the result and the wodx/gates status as their own part. A different
+commit, or fewer than two gates left, starts from the beginning as before.
+
+Reverse: drop saveResume and the resume branch in makeQueue.
+
+## B7342. The recheck keeps each gate's runs on main (2026-11-18)
+The recheck proved the same main failures again and again: 276 "fails on main too" verdicts in a week, gateautomation
+20 times, gate7d 19, gatetime 17, each at least three lone runs on a freshly reset lane. A gate's settled runs on a
+main commit (one failure, or two runs) are now kept in <home>/recheck-main-cache.json (newest 20 main commits, per PC,
+since lanes differ) and reused by later rechecks on that main commit; the verdict says so.
+
+Reverse: drop mainCache and its two uses in recheck().
+
+## B7380. The recheck gets the lane's stop check passed in (2026-11-18)
+Repository workflow. B7310 moved the recheck loop into recheck() and called stopped() there, but stopped is defined
+inside laneWork, so from 12:25Z on 18 November every gates job with a failing gate ended that lane with "Runner error
+on lane N: stopped is not defined" and no result (#2042, #2043, lane 3 of #2044). The recheck now lives in tools/pcq/recheck.mjs and takes the lane's stopped check and the runner's helpers as
+arguments; tools/harness/recheck.test.mjs runs it end to end with stand-in lanes (NEW after two runs a side, flaky,
+and a cancelled job), so a name it uses but does not have fails in the harness, not on the PCs.
+
+Reverse: none; the earlier form fails.
+
+## B7390. A push made with the label off does not take a pull request out of the train (2026-11-18)
+Repository workflow. B7332 takes a pull request out of the merge train when a push from outside the train lands
+while it is labelled, but it read the label at the time the workflow ran, not at the time of the push. PR 1880's
+thread did what the rule asks: took the label off, merged main, pushed at 15:37, labelled it again at 15:37:41, and was
+ejected at 15:37:55. The guard now compares the newest merge-train labelled event with the push time (the pull
+request's updated_at in the push's own event, or the newest pushed commit's time), and only a push at or after the
+label went on counts.
+
+Reverse: drop the labelledBefore test from the guard in pr-gates.mjs.
+
+## B7420. An urgent pull request goes to the front of the merge train (2026-11-18)
+Repository workflow. PR 2055 fixed the runner's gate recheck and sat green for about 15 minutes on 18 November with
+nobody told it needed a merge. A pull request labelled `urgent` as well as `merge-train` now goes to the front of the
+line at the runner's next step (tools/pcq/train.mjs line()), with urgent ones in label order among themselves. The
+pull request it passes waits and is brought up to date again on its turn; its running gate job is not stopped. The
+label name matches registry/priorities.json `urgentLabel` (rank R2).
+
+Reverse: remove the urgent sort in line().
+
+## B7421. The laptop watcher reports green pull requests that nothing merges (2026-11-18)
+Repository workflow. watcher.mjs reads each open pull request's newest `checks` run and `wodx/merge-rules` status.
+Green on both for over 15 minutes and outside the merge train, or green at the train front without a merge: a problem
+on the "PC watcher alert" issue at once. Green and waiting behind the front: a note. Titles starting HOLD are left out.
+The watcher still only reports and never merges.
+
+Reverse: drop greenPrs() from the snapshot.
+
+## B7422. Fixes to the runner or the train merge from their cloud thread (2026-11-18)
+Repository workflow, Ben's plan of 18 November. A cloud thread can merge through the GitHub tools (tested on #2060,
+scratch branches only); a PC's Claude session cannot without the owner's words there. A fix the train is stuck without
+merges from the cloud thread that made it, after the thread reads the head's `checks` and `wodx/merge-rules` as green
+itself and merges with expectedHeadSha. The owner's account has the Repository admin bypass for pull requests, so GitHub
+may accept a merge on red checks: the thread never relies on GitHub refusing. If the merge is refused, the thread tells
+the owner at once with a push notification. docs/WORKFLOW.md section 6 no longer says nobody can bypass the ruleset.
+
+Reverse: drop the section 6 rule; runner fixes then wait for the owner's merge.

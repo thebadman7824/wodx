@@ -1,0 +1,2 @@
+{"file":"tools/pcq/pr-gates.mjs","verdict":"working","how":"read the B7332 block and the new filter in full; pr-gates.test.mjs 13 pass, including the PR 2051 case that fails on the old check","hash":"99d4684ac019","at":"2026-11-18T15:57Z"}
+{"file":"tools/harness/pr-gates.test.mjs","verdict":"working","how":"read the B7332 block and the new filter in full; pr-gates.test.mjs 13 pass, including the PR 2051 case that fails on the old check","hash":"df3582b86b39","at":"2026-11-18T15:57Z"}

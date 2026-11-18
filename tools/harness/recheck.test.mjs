@@ -56,5 +56,18 @@ test("the runner hands the recheck its stop check and helpers", () => {
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   assert.match(src, /await recheck\(job, lane, tag, wt, rep, L, stopped\)/);
   assert.match(src, /recheckRun\(\{job, lane, tag, wt, rep, L, stopped,/);
-  assert.match(src, /deps: \{lanesCmd, node, worktree, stallFor, log, logs: LOGS\}/);
+  assert.match(src, /deps: \{lanesCmd, node, worktree, stallFor, log, logs: LOGS(, mainCache)?\}/);
+});
+
+test("B7342: a second recheck on the same main commit reuses main's runs", async () => {
+  const store = {};
+  const mainCache = {read: sha => ({...(store[sha] ?? {})}), write: (sha, add) => { store[sha] = {...(store[sha] ?? {}), ...add}; }};
+  const one = lanes({alone: [false, false], main: [false]});
+  const out1 = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job4", wt: one.wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps: {...one.deps, mainCache}});
+  assert.match(out1, /- gatea: fails on main too/);
+  assert.deepEqual(store["m".repeat(40)], {gatea: [false]});
+  const two = lanes({alone: [false, false], main: []});
+  const out2 = await recheck({job: {ref: "claude/y"}, lane: "2", tag: "job5", wt: two.wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps: {...two.deps, mainCache}});
+  assert.match(out2, /- gatea: fails on main too: not this change's fault \(main's runs reused/);
+  assert.ok(!two.calls.some(c => c.startsWith("main:")), "main is not run again");
 });
