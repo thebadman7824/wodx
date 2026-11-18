@@ -1,3 +1,4 @@
+import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engines read the chronicle in play
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";

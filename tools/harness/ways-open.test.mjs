@@ -88,7 +88,7 @@ test("doors on one street stand apart along the south edge", () => {
   assert.equal(d.y, 500, "a row further in once the edge is full");
 });
 test("the Rothenstein recipe's doors are each named once and pass the recipe check", async () => {
-  const {ROTHENSTEIN} = await import(join(root, "modules/wodx-storyteller/data/recipe-rothenstein.mjs"));
+  const {ROTHENSTEIN} = await import(join(root, "modules/wodx-rothenstein/data/recipe.mjs"));
   const R = await import(join(root, "modules/wodx-storyteller/scripts/recipe-rules.mjs"));
   assert.ok(ROTHENSTEIN.doors.length >= 30);
   assert.deepEqual(R.validate(ROTHENSTEIN).filter(m => /door/.test(m)), []);

@@ -12,7 +12,7 @@
  * scene's short side), mark or text (a sign drawn as words), color, line (spots in a row), wash (the whole scene).
  * Scene "@company" means the scene the company stands in.
  */
-import {DAY, WEEK} from "../scripts/terms.mjs";
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 export {WEEK};
 
 export const FRONTS = [
@@ -152,7 +152,7 @@ export const FRONTS = [
  * window; when the chapter comes, the card says what follows.
  */
 export const JUDGEMENTS = [
-  {key: "reinhold", label: "Reinhold the knight", ask: "Did the company lie to Reinhold about the cousin?",
+  {key: "reinhold", label: "Reinhold the knight", answer: "the knight's answer", ask: "Did the company lie to Reinhold about the cousin?",
     choices: {
       lied: {label: "They lied", chapter: "c7", text: "Reinhold comes back with kin, and many horses stand on the bridge.",
         sight: {scene: "The Ford", looks: [{kind: "calm", spots: 6, r: 0.03, text: "♞", color: "#c9b27a", line: true}]}, talk: "Knights on the bridge, with their kin, asking for the newcomers by name."},
@@ -216,7 +216,7 @@ export const CLUES = [
     carriers: [{kind: "person", label: "Vesna at the lantern"}, {kind: "place", label: "The new galleries the foreman will not report"}, {kind: "thing", label: "Matej's tools, found below"}]}
 ];
 
-/** Book one's chapters in order (as in twists-rothenstein.mjs). */
+/** Book one's chapters in order (as in twists.mjs). */
 export const CHAPTERS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10"];
 /** A twist's week: fronts keep out of it unless pushed. */
 export {DAY};

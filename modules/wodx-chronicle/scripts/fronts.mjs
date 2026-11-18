@@ -1,6 +1,6 @@
 /**
  * Book one's fronts, roles and clue carriers (Rothenstein Rebuilt, spine part two, B4910-B4919). Rules in
- * front-rules.mjs, data in data/fronts-rothenstein.mjs.
+ * front-rules.mjs, data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
  *
  * While book one of the saga runs, each front takes its next step at its own pace (the court and the cult weekly, the
  * council and the Church every two weeks, Marta every three, the Husbandman every two), never before the step's
@@ -10,7 +10,7 @@
  * (the roles filled in by who holds them now) and place. Hook wodxFront.
  *
  * Clue carriers found pin cards on the open case board (WoDX Interactables); the third carrier of a fact pins the whole
- * of it. Judgements (Reinhold, Baba Yaroslava) send their card when their chapter comes.
+ * of it. Judgements (the chronicle's JUDGEMENTS) send their card when their chapter comes.
  *
  * State in podState.saga.fronts (see front-rules.mjs). Storyteller only; the saga window holds the controls.
  */
@@ -18,7 +18,8 @@ import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
 import * as F from "./front-rules.mjs";
 import * as S from "./saga-rules.mjs";
 
-const BOOK = S.FIRST_BOOK;
+/** The first book of the chronicle in play (read when used: the chronicle registers after this file loads). */
+const book = () => S.FIRST_BOOK;
 const now = () => game.time?.worldTime ?? 0;
 const mod = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
 const pod = () => foundry.utils.deepClone(game.settings.get(MODULE_ID, "podState") ?? {}) ?? {};
@@ -28,11 +29,11 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 
 /** The chapters of book one played so far: all of them once the book is done. */
 function played(s) {
-  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === BOOK);
-  if ( x.books[BOOK] === "done" ) return [...F.CHAPTERS];
+  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === book());
+  if ( x.books[book()] === "done" ) return [...F.CHAPTERS];
   return [...(run?.played ?? [])];
 }
-const running = s => sagaOf(s).books[BOOK] === "running";
+const running = s => sagaOf(s).books[book()] === "running";
 const twistsOf = s => sagaOf(s).twists ?? {revealed: {}};
 const ctxOf = s => ({now: now(), played: played(s), twists: twistsOf(s)});
 
@@ -179,7 +180,7 @@ export async function frontTickNow() {
     await showSight("courier", {scene: "The Mountain Trail", looks: [{kind: "calm", spots: 1, r: 0.04, text: "♞", color: "#c9b27a"}]}, `courier:${st.courier.rider}`);
   }
   for ( const j of judged ) {
-    await card(`${j.label}: ${j.label === "Reinhold the knight" ? "the knight's answer" : "the choosing"}`, `<p>${esc(F.fill(j.text, st, twistsOf(s)))}</p>`);
+    await card(`${j.label}: ${j.answer ?? "the choosing"}`, `<p>${esc(F.fill(j.text, st, twistsOf(s)))}</p>`);
     if ( j.sight ) await showSight(`judge:${j.key}`, j.sight, j.key);
     if ( j.talk ) await talk(j.talk, `judge:${j.key}`);
     Hooks.callAll("wodxFront", {judgement: j.key, choice: j.choice});
