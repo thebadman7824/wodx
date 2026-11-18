@@ -67,6 +67,22 @@ test("a gates job splits over its lanes with a report file", () => {
   assert.deepEqual(gateArgs(validate({kind: "gates", touched: true}, LANES).job, "2", 0, 1, "r"), ["--touched", "--lane", "2", "--wait", "10", "--report", "r"]);
 });
 
+test("a branchTools job is a one-lane named-gate test of a branch, with no recheck and no gate status (B7220)", () => {
+  const j = validate({kind: "gates", gates: ["gateplains", "gatelifepath"], ref: "claude/project-thread-abc", branchTools: true, lanes: 3, prio: 1}, LANES).job;
+  assert.equal(j.lanes, 1);
+  assert.equal(j.recheck, false);
+  assert.deepEqual(gateArgs(j, "3", 0, 1, "r"), ["gateplains", "gatelifepath", "--lane", "3", "--wait", "10", "--report", "r"]);
+  assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "fa2a3729", branchTools: true}, LANES).job);
+  for ( const bad of [
+    {kind: "gates", gates: ["gatex"], branchTools: true},
+    {kind: "gates", gates: ["gatex"], ref: "main", branchTools: true},
+    {kind: "gates", touched: true, ref: "claude/x", branchTools: true},
+    {kind: "gates", all: true, ref: "claude/x", branchTools: true},
+    {kind: "gates", gates: ["gatex"], ref: "claude/x", branchTools: "yes"},
+    {kind: "gates", gates: ["gatex"], ref: "claude/x", branchTools: true, lane: 1}
+  ] ) assert.ok(validate(bad, LANES).error, JSON.stringify(bad));
+});
+
 test("lane faults are retried, gate failures are not", () => {
   for ( const c of [3, 4, 5, null] ) assert.ok(isInfraFault(c));
   for ( const c of [0, 1, 2] ) assert.ok(!isInfraFault(c));

@@ -12,7 +12,9 @@
  * - Health: every idle lane is probed every 5 minutes; a lane that is down is started once; one that stays down is
  *   taken out of service and gets an alert issue (label pc-alert), closed again when it comes back.
  * - Hang guard: every step has a time limit and is ended with its whole process tree past it (run-gate.mjs has its
- *   own per-gate limits inside that).
+ *   own per-gate limits inside that). B7201: a lane's share of a gates job stops at jobCeilingMinutes (240), a
+ *   run-gate that prints nothing for longer than its longest gate limit plus 11 minutes is ended, and run-gate's own
+ *   hang watch ends a run whose lane stops answering within about two minutes; each is a lane fault (reset, retry).
  * - One retry on a lane fault (no free lane, drift, run-gate's watchdog, a deploy or start that fails): reset the
  *   lane, deploy again and run once more. A gate that fails is a result, not a fault, and is not retried.
  * - Recheck (B4610): each failing gate is rerun on a fresh lane, alone and then on main, and the result says whether it
@@ -86,10 +88,14 @@ const openIssues = async label => (await gh("GET", `/issues?state=open&labels=${
   .filter(i => !i.pull_request && i.user?.login === OWNER);
 
 // ---- processes ----
-/** Runs a command with a time limit; past it the whole process tree is ended. Returns {code, out}. */
+/**
+ * Runs a command with a time limit; past it the whole process tree is ended. Returns {code, out}. B7201: with
+ * stallMinutes, a command that prints nothing for that long is ended the same way (a run-gate that froze), so a lane
+ * is back in minutes rather than at the end of a limit of hours.
+ */
 const procs = new Map(); // job tag -> its running child processes (B7206)
 const endTree = p => { if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL"); };
-function run(cmd, argv, {cwd = ROOT, minutes = 30, logTo} = {}) {
+function run(cmd, argv, {cwd = ROOT, minutes = 30, stallMinutes = 0, logTo} = {}) {
   return new Promise(done => {
     if ( DRY ) { log(`[dry] ${cmd} ${argv.join(" ")}`); return done({code: 0, out: ""}); }
     const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"}});
@@ -97,15 +103,19 @@ function run(cmd, argv, {cwd = ROOT, minutes = 30, logTo} = {}) {
     // B7206: each job's processes are known by its log name (jobN-...), so a cancelled job can end them
     const owner = jobOfLog(logTo);
     if ( owner ) { (procs.get(owner) ?? procs.set(owner, new Set()).get(owner)).add(p); p.on("exit", () => procs.get(owner)?.delete(p)); }
-    let out = "", timedOut = false;
-    const keep = d => { out += d; if ( out.length > 400000 ) out = out.slice(-300000); if ( logTo ) fs.appendFileSync(logTo, d); };
+    let out = "", timedOut = false, lastData = Date.now();
+    const keep = d => { lastData = Date.now(); out += d; if ( out.length > 400000 ) out = out.slice(-300000); if ( logTo ) fs.appendFileSync(logTo, d); };
     p.stdout.on("data", keep); p.stderr.on("data", keep);
-    const t = setTimeout(() => {
-      timedOut = true; log(`time limit (${minutes} min) for ${path.basename(argv[0] ?? cmd)}: ending process tree ${p.pid}`);
+    const end = why => {
+      if ( timedOut ) return;
+      timedOut = true; log(`${why} for ${path.basename(argv[0] ?? cmd)}: ending process tree ${p.pid}`);
       if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL");
-    }, minutes * 60000);
-    p.on("error", e => { clearTimeout(t); done({code: null, out: out + `\n${e.message}`}); });
-    p.on("exit", code => { clearTimeout(t); done({code: timedOut ? null : code, out, timedOut}); });
+    };
+    const t = setTimeout(() => end(`time limit (${minutes} min)`), minutes * 60000);
+    const s = stallMinutes > 0 ? setInterval(() => { if ( Date.now() - lastData > stallMinutes * 60000 ) end(`no output for ${stallMinutes} min`); }, 30000) : null;
+    const stopTimers = () => { clearTimeout(t); if ( s ) clearInterval(s); };
+    p.on("error", e => { stopTimers(); done({code: null, out: out + `\n${e.message}`}); });
+    p.on("exit", code => { stopTimers(); done({code: timedOut ? null : code, out, timedOut}); });
   });
 }
 const node = (script, argv, o) => run(process.execPath, [path.join(ROOT, script), ...argv], o);
@@ -181,6 +191,15 @@ async function recovered(key) {
 }
 
 // ---- jobs ----
+// B7201: the most one lane's share of a gates job may run (a full suite takes 50 to 80 minutes on four lanes; the
+// old limit was 15 hours), and the silence after which a run-gate counts as frozen: the longest gate limit (15
+// minutes unless gate-map-extra.json gives one more) plus the 3 minutes run-gate waits on a page, plus 8.
+const CEILING = Number(conf.jobCeilingMinutes ?? 240);
+function stallFor(dir) {
+  if ( conf.stallMinutes !== undefined ) return Number(conf.stallMinutes);
+  const t = readJson(path.join(dir, "tools", "lanes", "gate-map-extra.json"), {})?.timeouts ?? {};
+  return Math.max(15, ...Object.values(t).map(Number).filter(Number.isFinite)) + 3 + 8;
+}
 const recent = [];
 async function finish(issue, ok, text) {
   await comment(issue.number, text);
@@ -308,9 +327,13 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});
   const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
-  const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, 900);
-  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes});
-  const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
+  const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, CEILING);
+  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports)
+  const r = job.branchTools
+    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir)})
+    : await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
+  const rep = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
+    (fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000));
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
   // B7002: the commit this lane ran, for the gate status the merge rules read
@@ -331,7 +354,7 @@ async function recheck(job, lane, tag, wt, rep, L) {
     await lanesCmd(["reset", "--lane", lane, "--repo", dir], {logTo: L});
     const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", "--repo", dir], {logTo: L});
     if ( d.code !== 0 ) return null;
-    await node("tools/lanes/run-gate.mjs", [...failing, "--lane", String(lane), "--wait", "10", "--report", f, "--repo", dir], {logTo: L, minutes: 16 * failing.length + 20});
+    await node("tools/lanes/run-gate.mjs", [...failing, "--lane", String(lane), "--wait", "10", "--report", f, "--repo", dir], {logTo: L, minutes: 16 * failing.length + 20, stallMinutes: stallFor(dir)});
     return fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null;
   };
   log(`${tag} lane ${lane}: rechecking ${failing.join(" ")}`);
@@ -391,7 +414,7 @@ const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now()
  */
 const growing = new Map();
 async function makeQueue(job, lane, tag) {
-  if ( job.kind !== "gates" ) return null;
+  if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
   const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
@@ -446,7 +469,7 @@ async function start(issue, job, lanes) {
     if ( lanes.length ) {
       const q = await makeQueue(job, lanes[0], tag);
       if ( q ) {
-        g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, 900)};
+        g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, CEILING)};
         growing.set(issue.number, g);
         log(`#${issue.number}: ${q.size} gate(s) on a shared queue`);
       }

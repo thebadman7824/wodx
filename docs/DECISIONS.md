@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7210
+Next free block: B7240
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -411,7 +411,9 @@ Next free block: B7210
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
-| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (PC job queue) |
+| B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
+| B7220-B7229 | Gate runner and merge train upkeep: lane tests queued as jobs, hang watch merge (used B7220) | tools (PC job queue) |
+| B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14164,6 +14166,11 @@ Testbed lanes. On 16 and 17 November the PC runner hit exit 4 (drift found, no g
 
 Reverse: take the four keys out of ignoreSettings in tools/lanes/lanes.json.
 
+## B7201. A hung lane fails in minutes and is reset (2026-11-17)
+Testbed lanes and PC job queue. A gate could hold a lane for its whole 15-minute limit plus 3 more, and a lane whose Foundry had hung failed every gate after it the same way, up to a job limit of 15 hours. Four changes. (1) run-gate.mjs runs a hang watch (tools/lanes/hang-watch.mjs) beside each gate: every 30 seconds it asks the lane's status page and the signed-in page for an answer, and four misses in a row (about two minutes) end the run with exit 5, a lane fault. The gate in hand gets no result line, so the shared queue gives it back. A lane that will not sign in again between gates is a lane fault the same way; before, it failed the job as if a gate had failed. (2) The PC runner ends a run-gate that prints nothing for longer than the longest gate limit plus 11 minutes (26 minutes today), for the case where run-gate itself freezes. (3) One lane's share of a gates job stops at jobCeilingMinutes in runner.json (default 240; a full suite takes 50 to 80 minutes), down from 900. (4) lanes.mjs stop now ends a lane's Foundry that holds its port but no longer answers (only the process in server.pid, and only when it is this lane's own Foundry), and forces it when it does not end, so the reset that follows a lane fault never copies over an open database. A lane fault is reset and retried once, as before (B4100).
+
+Reverse: run run-gate with --hang-checks 0, set stallMinutes to 0 and jobCeilingMinutes to 900 in tools/pcq/runner.json, and drop the hung branch in stop() in tools/lanes/lanes.mjs.
+
 ## B7202. The merge train: pull requests merge one at a time (2026-11-17)
 PC job queue and merging. Every merge to main left the other open pull requests behind. The hourly sweep (B4110) then merged main into each of them, each push started a full gate run again (150 to 300 gates, 50 to 80 minutes), and by the time one passed main had moved again; on 17 November 8 of 14 open pull requests had conflicts. Ben approved a merge train. A thread whose pull request meets the rules it can meet by itself labels it `merge-train` and stops pushing. The Main PC's runner (tools/pcq/train.mjs, every 3 minutes, "train": true only in runner.json) takes the front of the line, oldest label first. It marks a draft ready, merges main in and runs merge-stamp in its own worktree, and pushes with a lease on the head it saw, so a thread's own push wins. pc-gates.yml then gates the new head, and the runner takes that gate job before the rest of the queue. The runner merges when `checks` and `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out with a comment, and the line moves on. The others are not brought up to date or gated again while they wait. The sweep no longer merges main into open pull requests; it still starts CI where none ran. The train uses a merge, not a rebase, because the repository never rewrites a pushed branch.
 
@@ -14205,3 +14212,13 @@ Reverse: remove othersFailed and the otherChecksFailed field in tools/pcq/train.
 PC job queue. B7205 kept each pull request it looked up for two minutes. A gate job queued within two minutes of a push was then checked against the head from before the push, so on 17 November jobs 1967 (PR 1880), 1969 (PR 1836) and 1970 (PR 1963) were dropped as "moved on" to their own older commit, and the merge train had no gate runs. The cached pull request is still used to say a job is current, but before a job is dropped or stopped, the runner reads the pull request again and drops only on that fresh answer.
 
 Reverse: in tools/pcq/runner.mjs staleJob, return staleWhy on the cached pull request again.
+
+## B7220. A lane test of a branch's gate tools is a queued job (2026-11-17)
+PC job queue, the owner's go-ahead on 17 November ("Go ahead with one"). The runner only ever ran main's gate tools, so a test of a branch that changes them (PR 1937's hang watch) was started by hand outside the queue. The runner could not see it waiting, and running gate jobs took every lane that came free (growJobs grows to every lane when no lane job waits), so the test waited from 15:37Z to 17:37Z without a lane. A gates job may now say `"branchTools": true` (`submit.mjs --branch-tools`): the runner runs that ref's own tools/lanes/run-gate.mjs from its worktree, on one lane, with no recheck. It needs a branch or commit ref and named gates, so it never sets the wodx/gates status. Queued at prio 1, it takes the next lane that frees, and while it waits the running gates jobs grow no further. Running jobs are not stopped or slowed, and no lane is kept spare (the owner did not want big runs slowed).
+
+Reverse: drop the branchTools case in tools/pcq/jobs.mjs validate, and the branchTools branches in runner.mjs makeQueue and laneWork.
+
+## B7230. run-gate puts the page back after each gate, not only the world (2026-11-17)
+Testbed lanes. Settings, flags, sheets and leftover documents were already put back after each gate (B3086, B7181, B7192, B7193), but all the gates on a lane run in one page, so anything a gate left in the page itself carried on into the gates after it. Job 1979 (PR 1836) had 7 gates fail that pass alone and touch nothing of that pull request: gategadgets, gatehuntpowder, gatesprites, gatespritelife, gatestillmarks, gatetruthsheets and gatevoices. While a gate runs, run-gate now notes every hook (Hooks.on, Hooks.once) and interval the gate's own file registers, and removes the ones still there when it ends. A hook a module registers while a gate calls into it is the module's and stays (`gateCaller` in tools/lanes/lib.mjs looks past the wrappers and Foundry's own frames to the caller). It also restores the functions gates swap (the dice's randomUniform, the notices, the scrolling text, ChatMessage.create, game.time.advance) and takes off a property laid over game.user (a player's isGM). The gate's line says what was put back, for example "2 hook(s) the gate left removed (createChatMessage)", so the gate that leaks can be fixed.
+
+Reverse: remove the wrappers and `pageBack` from the page function in tools/lanes/run-gate.mjs, and `pageNote` from its line.
