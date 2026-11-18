@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7390
+Next free block: B7400
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -422,6 +422,7 @@ Next free block: B7390
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
 | B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
+| B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14380,3 +14381,13 @@ arguments; tools/harness/recheck.test.mjs runs it end to end with stand-in lanes
 and a cancelled job), so a name it uses but does not have fails in the harness, not on the PCs.
 
 Reverse: none; the earlier form fails.
+
+## B7390. A push made with the label off does not take a pull request out of the train (2026-11-18)
+Repository workflow. B7332 takes a pull request out of the merge train when a push from outside the train lands
+while it is labelled, but it read the label at the time the workflow ran, not at the time of the push. PR 1880's
+thread did what the rule asks: took the label off, merged main, pushed at 15:37, labelled it again at 15:37:41, and was
+ejected at 15:37:55. The guard now compares the newest merge-train labelled event with the push time (the pull
+request's updated_at in the push's own event, or the newest pushed commit's time), and only a push at or after the
+label went on counts.
+
+Reverse: drop the labelledBefore test from the guard in pr-gates.mjs.
