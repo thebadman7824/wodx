@@ -60,3 +60,28 @@ test("B6952: the runner counts 0/0 and a summary with no tally as a failure, and
   const B = fs.readFileSync(path.join(G.ROOT, "tools/lanes/browser.mjs"), "utf8");
   assert.match(B, /API_WAIT_MS = 180000/);
 });
+
+test("B7444: tier 1 runs a module's own gates, changed gates and the cross-module gates", async () => {
+  const {tier1, gateOwners, gateMap, touched, gatesFor, CROSS_GATES} = await import("../lanes/gate-map.mjs");
+  const map = gateMap(), owners = gateOwners(undefined, map);
+  for ( const [g, o] of Object.entries(owners) ) {
+    assert.ok(o.length, `${g} is for some module`);
+    for ( const m of o ) assert.ok(map[g].includes(m), `${g} is only for modules it covers (${m})`);
+  }
+  for ( const g of CROSS_GATES ) assert.ok(map[g], `cross-module gate ${g} exists`);
+  const chron = ["modules/wodx-chronicle/scripts/main.mjs"];
+  const t = tier1(chron, {map});
+  const wide = gatesFor(touched(chron).modules, [], map);
+  assert.ok(t.length < wide.length, `a Chronicle change runs fewer gates (${t.length} of ${wide.length})`);
+  for ( const g of Object.keys(owners).filter(g => owners[g].includes("wodx-chronicle")) ) assert.ok(t.includes(g), `${g} is for Chronicle`);
+  for ( const g of CROSS_GATES ) assert.ok(t.includes(g));
+  assert.deepEqual(tier1(["docs/README.md", "tools/pcq/runner.mjs"], {map}), [], "docs and tools need no gate");
+  const one = Object.keys(map)[0];
+  assert.deepEqual(tier1([`tools/gate/${one}.mjs`], {map}), [one], "a changed gate runs alone");
+  assert.equal(tier1(["system/template.json"], {map}).length, Object.keys(map).length, "a system change runs every gate");
+});
+
+test("B7444: run-gate --touched takes tier 1, --wide the older list", () => {
+  const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
+  assert.match(src, /args\.includes\("--wide"\) \? gatesFor\(t\.modules, t\.gates, gateMap\(gateRoot\)\) : tier1\(paths, \{root: gateRoot\}\)/);
+});
