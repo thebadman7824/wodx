@@ -1,13 +1,13 @@
 {
  "host": "laptop",
- "time": "2026-11-18T05:27:56.975Z",
+ "time": "2026-11-18T05:33:00.692Z",
  "runnerUp": true,
  "lanes": [
   {
    "id": 7,
-   "up": true
+   "up": false
   }
  ],
  "gpu": null,
- "issues": 0
+ "issues": 1
 }
