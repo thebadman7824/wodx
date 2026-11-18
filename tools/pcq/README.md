@@ -85,6 +85,33 @@ or leave the lane out and the first free lane on either PC takes it. Book and Tr
 It is slower (2 cores) and has no graphics card, so it suits short gate lists. It also watches https://wodx.online and
 the main runner's status issue and opens an alert when either goes quiet.
 
+## The PC watcher on the laptop (B7290)
+
+`watcher.mjs` runs on the laptop every 5 minutes, at below-normal priority, from the scheduled task "WoDX PC
+watcher at logon" (`install-watcher.ps1` sets it up; `run-watcher.ps1` is the loop; a file named `watcher-off` in
+`C:\WoDX\pcq` stops it). It only looks and reports. It never starts or kills a process, never restarts OCR or art,
+and never touches a lane, a world, a job or another tool's alert. Each cycle it reads every PC's status file on the
+`pc-status` branch, the three runner status issues, the open pc-job issues, the merge train line and the open alerts,
+plus the laptop's own runner, watchdog and status push. It flags:
+
+- a PC that is silent on both its status push and its runner (off, asleep, rebooting), or only on one of them;
+- lanes not answering and a hot graphics card on a PC whose readings are fresh;
+- a job running over 6 hours or waiting over 6 hours;
+- the same pull request at the front of the merge train for over 3.5 hours (the train itself gives up at 3);
+- the laptop's own runner, watchdog or status push not running.
+
+It also lists the alerts that stayed open after the thing they named came back. Renders and OCR come from the `comfy` and
+`ocr` fields of a PC's status file (B7296): it flags work queued in ComfyUI with nothing finished for 30 minutes, OCR
+workers with no new output for 60 minutes, and an OCR run that gave up. Until a PC sends them, the report says so.
+
+`status-push.mjs` here is the copy every PC runs, from `<home>\gpu-tools`. Main PC: set `PC_COMFY_URL=http://127.0.0.1:8188`.
+Secondary PC: set `PC_OCR_MATCH` (default `book_pipeline`), `PC_OCR_OUT` (the OCR output folder) and `PC_OCR_LOG` (its log).
+
+The issue "PC watcher report" (label `pc-watch`) is rewritten each cycle. When a problem shows up on two cycles in a
+row, one issue "PC watcher alert" (label `pc-alert`) opens. It gets a comment when the list changes and closes when
+everything clears. Local copies are in `C:\WoDX\pcq\logs` (`watcher-report.md`, `watcher-<date>.log`,
+`watcher-state.json`). The heartbeat workflow checks that the report keeps moving, as it does for each status issue.
+
 ## The Secondary PC (B6990)
 
 BENJAMIN-PC runs a third runner from `D:\WoDX\pcq` with `runner.benjamin-pc.json`: lane 8 (port 30080,
