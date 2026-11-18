@@ -1,0 +1,59 @@
+{
+  "_about": "One priority order for every project process (B7350-B7359; the owner's picks on the Process Priority Desk, 18 November 2026, all as recommended). Every tool that orders work reads this file through tools/pcq/prio.mjs; none keeps its own list. docs/PRIORITIES.md explains it in plain words. Check it with: node tools/pcq/prio.mjs check",
+  "version": 1,
+  "ranks": [
+    {"id": "R0", "name": "never wait", "covers": "Lane 1 and the Live world (never touched), the owner's own use of a PC, cancels, holds, status pushes, the watcher, the heartbeat", "yieldsTo": []},
+    {"id": "R1", "name": "train front", "covers": "The gate job of the pull request at the front of the merge train, with its recheck", "yieldsTo": ["R0"]},
+    {"id": "R2", "name": "unblock", "covers": "Lane tests of gate-tool fixes (branchTools), and gate jobs for a pull request labelled urgent", "yieldsTo": ["R0", "R1"]},
+    {"id": "R3", "name": "PR gates", "covers": "Every other pull request gate job, by the pull request's Master Plan order, then age", "yieldsTo": ["R0", "R1", "R2"]},
+    {"id": "R4", "name": "health runs", "covers": "Nightly and scheduled full runs on main; skipped when main's gate inputs match the last full pass", "yieldsTo": ["R0", "R1", "R2", "R3"]},
+    {"id": "R5", "name": "side work", "covers": "Book and Trove lookups and local models: their own slots, no lane", "yieldsTo": ["R0", "R1", "R2", "R3", "R4"]}
+  ],
+  "classes": {
+    "control": "R0",
+    "train-front": "R1",
+    "branch-tools": "R2",
+    "urgent": "R2",
+    "pr-gates": "R3",
+    "hand": "R3",
+    "health": "R4",
+    "lookup": "R5",
+    "local": "R5"
+  },
+  "urgentLabel": "urgent",
+  "aging": {"hoursPerStep": 1, "withinRankOnly": true, "_about": "B6490 kept, but a job only climbs inside its own rank (desk pick p4)"},
+  "preempt": {"mode": "gate-boundary", "_about": "A higher rank never ends a running job. A lower job hands its lanes over at the next gate and its unfinished gates go back to the queue as the same job (desk pick p3). Needs the runner's rerun-only-unfinished-gates fix first."},
+  "pcs": {
+    "DESKTOP-MRKCMRG": {
+      "name": "Main PC",
+      "lead": null,
+      "budgets": {"art": {"ramGb": 8, "source": "untested estimate; remeasure after the 64 GB install of 18 November"}},
+      "_about": "Gates lead. ComfyUI renders run inside their memory budget: while a render holds its claim, the runner keeps that much memory free of lanes (desk pick p2)."
+    },
+    "BENJAMIN-PC": {
+      "name": "Secondary PC",
+      "lead": {"class": "ocr", "until": "the book OCR has finished", "ramGb": 6, "source": "vl-loop.ps1 -NeedFreeGb 6, 18 November"},
+      "budgets": {},
+      "_about": "The book OCR leads until it is done; lane 8 takes only what its memory budget leaves (desk pick p2). ComfyUI here waits for the OCR and the new RAM."
+    },
+    "DESKTOP-S6NV3Q9": {"name": "Laptop", "lead": null, "budgets": {}, "_about": "Lane 7 (short named-gate jobs) and the watcher."}
+  },
+  "gpu": {"order": ["art", "ocr", "local", "other"], "_about": "The GPU guard's class order (desk pick p10). Gate lanes do not take the card lock (PENDING-REVIEW, 17 November)."},
+  "train": {"maxHours": 3, "clockStopsWhen": ["hold", "off", "window"], "_about": "The 3-hour limit counts only time when a lane that could run the front job is taking work (desk pick p5)."},
+  "nightly": {"rank": "R4", "skipWhenUnchanged": true, "keep": "tools/pcq/nightly-gates.mjs", "retire": "tools/lanes/nightly.mjs (the older Main PC run from lane-reset.cmd), if the Main PC shows it still runs", "_about": "One nightly full run (desk pick p6)."},
+  "windows": {
+    "holdMinutesBefore": 30,
+    "planned": [],
+    "_about": "Planned hardware work, one row each: {\"pc\": \"BENJAMIN-PC\", \"from\": \"2026-11-21T15:00:00Z\", \"to\": \"2026-11-21T17:00:00Z\", \"why\": \"RAM install\"}. From holdMinutesBefore minutes ahead the PC takes no new jobs and the train clock stops (desk pick p7)."
+  },
+  "atPc": {"utc": "00:30-02:00", "effect": "none", "_about": "The owner's evenings at the PCs change nothing unless the owner asks (desk pick p7)."},
+  "threads": [
+    {"order": 1, "kind": "Gate and runner fixes, and anything else that unblocks other work"},
+    {"order": 2, "kind": "Dated deadlines (the solo build before Friday 20 November, 4 PM New York)"},
+    {"order": 3, "kind": "The core: V20 Dark Ages Vampire in Rothenstein, Book 1 first for story work"},
+    {"order": 4, "kind": "The Master Plan order: 1 gaps, 2 Interactables, 3 Responsive maps, 4 WoDX Senses, 5 Live performance"},
+    {"order": 5, "kind": "Art and maps"},
+    {"order": 6, "kind": "Studies, reviews and desks"}
+  ],
+  "threadsMax": 3
+}

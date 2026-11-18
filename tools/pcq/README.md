@@ -19,7 +19,9 @@ free testbed lane, comments the result on the issue and closes it with `pc-done`
    `issue_read` (get_comments). For a long run, schedule one check for about when it should end rather than polling.
 
 Gate a branch before merging with `--ref claude/<branch>`; the branch must be pushed. `--after <issue>` waits for
-another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3.
+another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3. One order for every process now
+lives in registry/priorities.json (docs/PRIORITIES.md, B7350); the runner moves onto its ranks in a later change, and
+until then `--prio` orders the queue as before.
 
 A lane test of a branch's own gate tools (a change to run-gate.mjs or the lane tools it imports) goes in the queue
 too, never as a run started by hand beside the runner, which cannot see such a run waiting and gives every free lane

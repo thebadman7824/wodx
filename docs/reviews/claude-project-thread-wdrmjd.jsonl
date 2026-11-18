@@ -1,0 +1,7 @@
+{"file":"tools/pcq/prio.mjs","verdict":"working","how":"read in full; ran node --test prio.test.mjs (11 pass) and prio.mjs check/rank/ask/threads by hand; pcq, registry and guard tests still pass","hash":"f2112746a8f1","at":"2026-11-18T12:38Z"}
+{"file":"registry/priorities.json","verdict":"working","how":"read in full; ran node --test prio.test.mjs (11 pass) and prio.mjs check/rank/ask/threads by hand; pcq, registry and guard tests still pass","hash":"34bbf809412e","at":"2026-11-18T12:38Z"}
+{"file":"tools/harness/prio.test.mjs","verdict":"working","how":"read in full; ran node --test prio.test.mjs (11 pass) and prio.mjs check/rank/ask/threads by hand; pcq, registry and guard tests still pass","hash":"d714cb8bfffc","at":"2026-11-18T12:38Z"}
+{"file":"docs/PRIORITIES.md","verdict":"working","how":"read in full against registry/priorities.json and the desk picks; terms-guard test passes","hash":"ce96c5909f93","at":"2026-11-18T12:38Z"}
+{"file":"docs/ROUTING.md","verdict":"working","how":"read in full against registry/priorities.json and the desk picks; terms-guard test passes","hash":"fa4dade56b98","at":"2026-11-18T12:38Z"}
+{"file":"docs/TOOLS.md","verdict":"working","how":"read in full against registry/priorities.json and the desk picks; terms-guard test passes","hash":"5a9c361e39c4","at":"2026-11-18T12:38Z"}
+{"file":"tools/pcq/README.md","verdict":"working","how":"read in full against registry/priorities.json and the desk picks; terms-guard test passes","hash":"fc16ae8b3317","at":"2026-11-18T12:38Z"}
