@@ -1,0 +1,2 @@
+{"file":"tools/pcq/runner.mjs","verdict":"working","how":"read the runner-off block in full; node --check passes; the new B7330 test in pcq.test.mjs checks the cancel pass runs in the runner-off wait; 28 of 29 pcq tests pass on Windows, the one failure is the existing D:\\D:\\ path fault in the parse test","hash":"4034aaa77baf","at":"2026-11-18T11:39Z"}
+{"file":"tools/harness/pcq.test.mjs","verdict":"working","how":"read the new test in full; ran node --test pcq.test.mjs on the Secondary PC","hash":"8ee95e1cedd1","at":"2026-11-18T11:39Z"}
