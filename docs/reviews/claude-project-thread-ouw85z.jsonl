@@ -22,3 +22,4 @@
 {"file":"tools/gate/gatedatedplay.mjs","verdict":"working","how":"ran on cloud lane 9 with the real testbed world: 6/6 twice (price, crowd, smoke, undo, debt); the put-back of the log and night work settings added after is untested","hash":"d5fb35474b4a","at":"2026-11-18T00:14Z"}
 {"file":"docs/FEATURES.md","verdict":"working","how":"Regenerated with registry.mjs summary --write; registry.test passes 14/14","hash":"0b2a1d41d50f","at":"2026-11-18T00:16Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"carried over by the merge train after main merged in: the branch's own change to this file is the same; earlier check: read the three new rows","hash":"55fe6befa51c","at":"2026-11-18T11:07Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"merged main in by hand: kept main's new 1836 row and this branch's three Moravia rows; diff against main is only the three rows, read again","hash":"ade84b680936","at":"2026-11-18T11:12Z"}
