@@ -2,7 +2,8 @@
 
 Every thread reads this file and [ROUTING.md](ROUTING.md) before it starts work (B7004). Threads that don't know
 what each PC has end up doing the work themselves, which costs tokens and time. This file lists what each machine
-has and how a thread reaches it. ROUTING.md says where each kind of work goes.
+has and how a thread reaches it. ROUTING.md says where each kind of work goes, and [PRIORITIES.md](PRIORITIES.md) says what goes first when work
+shares a PC, a lane, a graphics card or the merge train.
 
 A thread never asks for device, folder or screen access itself. It reaches the PCs through the PC job queue
 (GitHub issues, below), the PC helper threads, which the coordinator names in each new

@@ -19,7 +19,9 @@ free testbed lane, comments the result on the issue and closes it with `pc-done`
    `issue_read` (get_comments). For a long run, schedule one check for about when it should end rather than polling.
 
 Gate a branch before merging with `--ref claude/<branch>`; the branch must be pushed. `--after <issue>` waits for
-another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3.
+another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3. One order for every process now
+lives in registry/priorities.json (docs/PRIORITIES.md, B7350); the runner moves onto its ranks in a later change, and
+until then `--prio` orders the queue as before.
 
 A lane test of a branch's own gate tools (a change to run-gate.mjs or the lane tools it imports) goes in the queue
 too, never as a run started by hand beside the runner, which cannot see such a run waiting and gives every free lane
@@ -98,7 +100,10 @@ plus the laptop's own runner, watchdog and status push. It flags:
 - lanes not answering and a hot graphics card on a PC whose readings are fresh;
 - a job running over 6 hours or waiting over 6 hours;
 - the same pull request at the front of the merge train for over 3.5 hours (the train itself gives up at 3);
-- the laptop's own runner, watchdog or status push not running.
+- the laptop's own runner, watchdog or status push not running;
+- a pull request green on `checks` and `wodx/merge-rules` for over 15 minutes that nothing will merge: one outside the
+  merge train, or the train front (B7421). This one goes on the alert at once, since its age is already measured; green
+  pull requests waiting their turn in the train are a note. It reads two commit results a pull request each cycle.
 
 It also lists the alerts that stayed open after the thing they named came back. Renders and OCR come from the `comfy` and
 `ocr` fields of a PC's status file (B7296): it flags work queued in ComfyUI with nothing finished for 30 minutes, OCR
@@ -159,5 +164,8 @@ head it saw, pc-gates.yml gates the new head and that gate job goes ahead of the
 `checks` and `wodx/merge-rules` are green. A conflict, a red result or nothing within `trainMaxHours` (3) takes it out
 with a comment. The rest of the line is left alone. The status issue shows the line; `node tools/pcq/train.mjs`
 prints what it would do now. The hourly sweep no longer merges main into open pull requests (`"sweepUpdates": true`
-brings that back). docs/WORKFLOW.md, section 6, is the thread's side.
+brings that back). docs/WORKFLOW.md, section 6, is the thread's side. A pull request labelled `urgent` as well goes to
+the front of the line (B7420); a fix to the train or runner that the train is stuck without is merged by its cloud
+thread instead (B7422).
 
+Stale runs (B7330-B7332): every push to a pull request cancels its gate jobs for older commits (closed if not started, pc-cancel if running), a push from outside the train to a pull request labelled `merge-train` takes it out of the train with a comment, and a runner stopping with runner-off still acts on pc-cancel. To pause a runner, use `runner-hold` (takes no new jobs, keeps status, cancels and the train going) rather than `runner-off`.

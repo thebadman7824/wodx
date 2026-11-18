@@ -22,7 +22,8 @@ follows the token-thrift rule: Opus threads plan, review and do the hard rules w
 No new machines, lanes, runners, status pushes or PC tools until the feature registry is seeded and the core (V20
 Dark Ages Vampire) is verified; fixes to what exists are fine. One Sonnet PC helper owns upkeep on all three PCs, and
 game threads do not edit `tools/pcq/` or `tools/lanes/`. The merge rules warn when a branch does, unless a commit says
-`upkeep: <reason>` (B7149).
+`upkeep: <reason>` (B7149). The owner allowed one exception on 18 November: `tools/pcq/prio.mjs`, the reader of
+[PRIORITIES.md](PRIORITIES.md) that every PC tool shares (B7356).
 
 ## Merge rules warning
 
