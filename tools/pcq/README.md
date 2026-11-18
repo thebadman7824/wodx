@@ -30,6 +30,9 @@ to the running jobs (B7220):
 It runs the branch's run-gate.mjs on one lane, with no recheck, and never sets the `wodx/gates` status (named gates
 only). While it waits, running gates jobs take no more lanes, and it gets the next lane that frees.
 
+Gate times (B7390): each lane's report ends with an indented line `  TIMES gate6b=12 gate6c=8 ...`, the seconds each
+gate took. `node tools/pcq/gate-times.mjs <saved report or comment> [...]` lists them slowest first.
+
 Book and Trove lookups (`books-find`, `trove-find`) need no lane and run beside the gate jobs. Their results give book
 and page or file names only, never text, because the repository is public. Anything else (a copy, an OCR run, work
 that needs judgment) still goes to the PC helper thread.

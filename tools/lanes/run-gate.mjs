@@ -102,6 +102,9 @@ if ( opt("lanes") && !shard ) {
   process.exit(Math.max(...codes));
 }
 const reportFile = opt("report");
+const times = [];
+// B7390: indented, so the report parsers (gate lines start at the line start) never read it as a gate
+const reportTimes = () => { if ( !times.length ) return; const t = `  TIMES ${times.join(" ")}`; console.log(t); report(t); times.length = 0; };
 const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
 report(`==== ${new Date().toISOString()} ${gates.length} gate(s)${shard ? ` shard ${shard[0]}` : ""}`);
 const cfg = loadConfig();
@@ -135,7 +138,7 @@ console.log(`Lane ${lane.id} (${laneUrl(lane)}) locked for ${gates.join(", ")}`)
 let code = 0, browser = null, page = null;
 const release = () => releaseLock(lane);
 const closeBrowser = async () => { const b = browser; browser = null; if ( b ) await within(b.close(), 20000, "closing the browser").catch(() => {}); };
-const bail = async (c, why) => { console.error(why); report(why); await closeBrowser(); release(); report(`exit ${c} on lane ${lane.id}`); process.exit(c); };
+const bail = async (c, why) => { console.error(why); report(why); reportTimes(); await closeBrowser(); release(); report(`exit ${c} on lane ${lane.id}`); process.exit(c); };
 process.on("SIGINT", () => bail(130, `Stopped by hand on lane ${lane.id}.`));
 process.on("SIGTERM", () => bail(143, `Stopped on lane ${lane.id}.`));
 // The whole run's watchdog (B3089): the run ends itself instead of holding the lane.
@@ -191,6 +194,7 @@ try {
     if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
     for ( let gate, k = 0; (gate = queueFile ? takeQueued(queueFile, lane.id) : gates[k++]); ) {
       const limit = limitOf(gate);
+      const gateStart = Date.now();
       extendLock(lane, Date.now() + limit + 5 * 60000);
       if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
       if ( !page ) {
@@ -359,6 +363,8 @@ try {
       const reloadsDuring = life.loads - loadsSeen - reloadsBefore;
       loadsSeen = life.loads;
       for ( const [k, w] of [[reloadsBefore, "before this gate"], [reloadsDuring, "during this gate"]] ) if ( k > 0 ) { const note = ` [page reloaded ${w}${k > 1 ? ` ${k} times` : ""}]`; if ( out.error ) out.error += note; else out.summary += note; }
+      // B7390: each gate's seconds (sign-in, the run and the put-back), for the TIMES line at the end of the report
+      times.push(`${gate}=${Math.round((Date.now() - gateStart) / 1000)}`);
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       const diagDump = async () => {
         if ( !DIAG ) return;
@@ -399,6 +405,7 @@ try {
   await closeBrowser();
   release();
 }
+reportTimes();
 report(`exit ${code} on lane ${lane.id}`);
 process.exit(code);
 
