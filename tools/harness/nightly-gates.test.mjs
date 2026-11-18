@@ -35,3 +35,18 @@ test("the nightly job is every gate on lane 8, through the GPU guard", () => {
   assert.match(src, /guard\.acquire\(/);
   assert.match(src, /guard\?\.release\?\.\(\)/);
 });
+
+test("B7393: new failures since the last night name the pull requests merged in between", async () => {
+  const {newFailures, mergedPulls} = await import("../pcq/nightly-gates.mjs");
+  assert.deepEqual(newFailures(["gate7d", "gatetime"], ["gate7d", "gatefaith", "gatenew"]), ["gatefaith", "gatenew"]);
+  assert.deepEqual(newFailures(null, ["gatea"]), ["gatea"]);
+  assert.deepEqual(newFailures(["gatea"], []), []);
+  assert.deepEqual(mergedPulls(["Merge pull request #2048 from x (urgent)", "File reviews", "Merge pull request #2045 from y", "Merge pull request #2048 again"]), [2048, 2045]);
+});
+
+test("B7393: the nightly run skips when main's gate inputs match the last nightly result", () => {
+  const src = fs.readFileSync(path.join(ROOT, "tools", "pcq", "nightly-gates.mjs"), "utf8");
+  assert.match(src, /"diff", "--name-only", last\.sha12, sha, "--", "modules", "system", "tools\/gate", "tools\/lanes"/);
+  assert.ok(src.indexOf("skipped, nothing changed") < src.indexOf("submit.mjs\"), \"gates\", \"--all\""), "the skip comes before the job is queued");
+  assert.match(src, /--force/);
+});

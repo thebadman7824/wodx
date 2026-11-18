@@ -5,8 +5,10 @@
  * removes modules by hand and lists files in tools/gate that are not gates.
  *
  *   node tools/lanes/gate-map.mjs                   the map: each gate and the modules it covers
- *   node tools/lanes/gate-map.mjs --touched [--base origin/main] [--direct]
- *                                                   the gates the branch's changes need, one per line
+ *   node tools/lanes/gate-map.mjs --touched [--base origin/main] [--wide [--direct]]
+ *                                                   the gates the branch's changes need, one per line (tier 1, B7394;
+ *                                                   --wide: every gate covering a touched module, the list before B7394)
+ *   node tools/lanes/gate-map.mjs --owners          the modules each gate is for (B7394)
  *   node tools/lanes/gate-map.mjs --modules wodx-npc,wodx-sheets
  *                                                   the gates for these modules
  *
@@ -133,6 +135,49 @@ export function gatesFor(mods, extraGates = [], map = gateMap()) {
   return Object.keys(map).filter(g => extraGates.includes(g) || map[g].some(m => want.has(m)));
 }
 
+/**
+ * B7394: the modules each gate is for. Its header comment (the first comment block) names the module or modules it
+ * tests; a gate whose header names none goes to the covered module its source names most often. gate-map-extra.json
+ * "owners" sets them by hand. A gate covers many modules (any it calls), but is FOR only these.
+ */
+export function gateOwners(root = ROOT, map = gateMap(root)) {
+  const extra = loadExtra(root).owners ?? {}, out = {};
+  for ( const [g, covered] of Object.entries(map) ) {
+    if ( extra[g] ) { out[g] = [...extra[g]].sort(); continue; }
+    const src = fs.readFileSync(path.join(root, "tools/gate", `${g}.mjs`), "utf8");
+    const head = (/^\s*(\/\*[\s\S]*?\*\/|(?:\/\/.*\n)+)/.exec(src)?.[1] ?? "").slice(0, 800);
+    const re = id => new RegExp(String.raw`(\b${id}\b|\bWoDX ${shortName(id)}\b|game\.wodx\??\.${shortName(id)}\b)`, "gi");
+    const named = covered.filter(id => re(id).test(head));
+    if ( named.length ) { out[g] = named; continue; }
+    let best = covered[0], bn = -1;
+    for ( const id of covered ) { const n = (src.match(re(id)) ?? []).length; if ( n > bn ) { bn = n; best = id; } }
+    out[g] = [best];
+  }
+  return out;
+}
+
+/** B7394: gates that drive several modules together; tier 1 runs them whenever any module changes. */
+export const CROSS_GATES = ["gate-interact", "gateapipaths", "gatetruthactions", "gatetruthchronicle", "gatetruthcombat",
+  "gatetruthholy", "gatetruthnpc", "gatetruthsheets", "gatetruthstoryteller"];
+
+/**
+ * B7394 (the owner's choice, 18 November): the gates a pull request runs. The gates FOR each module whose own files
+ * changed (every module for a system change), every gate file that changed, and CROSS_GATES when any module changed.
+ * Modules that only load or require a changed one are left to CROSS_GATES and the nightly full run, which runs every
+ * gate on main. The wide list (gatesFor of touched()) is kept for --wide.
+ */
+export function tier1(paths, {root = ROOT, map = gateMap(root)} = {}) {
+  const ids = moduleIds(root), own = new Set(), changedGates = new Set();
+  for ( const p of paths.map(p => p.replace(/\\/g, "/")) ) {
+    const m = /^modules\/(wodx-[a-z]+)\//.exec(p);
+    if ( m && ids.includes(m[1]) ) own.add(m[1]);
+    else if ( p.startsWith("system/") ) ids.forEach(i => own.add(i));
+    else if ( /^tools\/gate\/(gate[\w-]*)\.mjs$/.test(p) ) changedGates.add(/^tools\/gate\/(gate[\w-]*)\.mjs$/.exec(p)[1]);
+  }
+  const owners = gateOwners(root, map);
+  return Object.keys(map).filter(g => changedGates.has(g) || owners[g].some(o => own.has(o)) || (own.size && CROSS_GATES.includes(g)));
+}
+
 export function changedPaths(base = "origin/main", root = ROOT) {
   const run = (...a) => execFileSync("git", a, {cwd: root, encoding: "utf8"}).trim();
   const mb = run("merge-base", base, "HEAD");
@@ -144,9 +189,11 @@ export function changedPaths(base = "origin/main", root = ROOT) {
 function main() {
   const args = process.argv.slice(2), opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
   const map = gateMap();
+  if ( args.includes("--owners") ) { for ( const [g, o] of Object.entries(gateOwners(ROOT, map)) ) console.log(`${g.padEnd(22)} ${o.join(" ")}`); return; }
   if ( args.includes("--touched") ) {
-    const t = touched(changedPaths(opt("base") ?? "origin/main"), {direct: args.includes("--direct")});
-    const list = gatesFor(t.modules, t.gates, map);
+    const paths = changedPaths(opt("base") ?? "origin/main");
+    const t = touched(paths, {direct: args.includes("--direct")});
+    const list = args.includes("--wide") ? gatesFor(t.modules, t.gates, map) : tier1(paths, {map});
     console.error(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} of ${Object.keys(map).length} gates.`);
     console.log(list.join("\n"));
     return;

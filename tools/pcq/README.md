@@ -30,6 +30,12 @@ to the running jobs (B7220):
 It runs the branch's run-gate.mjs on one lane, with no recheck, and never sets the `wodx/gates` status (named gates
 only). While it waits, running gates jobs take no more lanes, and it gets the next lane that frees.
 
+Smaller runs (B7391-B7394): a pull request runs tier 1 (the changed modules' own gates, changed gates and nine
+cross-module gates; `run-gate.mjs --touched --wide` gives the older list); after a merge of main it reruns only what
+main touched and what failed (a touched job with "since"); a gate that passes alone twice is an order fault and does
+not hold it; the nightly full run names the merges behind a new failure and skips when main's gate inputs did not
+change.
+
 Gate times (B7390): each lane's report ends with an indented line `  TIMES gate6b=12 gate6c=8 ...`, the seconds each
 gate took. `node tools/pcq/gate-times.mjs <saved report or comment> [...]` lists them slowest first.
 

@@ -1,7 +1,8 @@
 /**
  * Runs gates on whichever testbed lane is free, after a drift check.
  *   node tools/lanes/run-gate.mjs <gate> [<gate> ...] [--lane 2] [--wait 30] [--repo <checkout>] [--channel msedge]
- *   node tools/lanes/run-gate.mjs --touched [--base origin/main]   only the gates the checkout's changes need (B3083)
+ *   node tools/lanes/run-gate.mjs --touched [--base origin/main] [--wide]   only the gates the checkout's changes need (B3083;
+ *                                                                            tier 1 since B7394, --wide the older wider list)
  *   node tools/lanes/run-gate.mjs --all [--shard 1/2]              every gate in the map (the nightly full run), or
  *                                                                 one share of them so two lanes split the list
  *   --report <file>       also write each gate's line and the exit code to this file
@@ -44,7 +45,7 @@ import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendL
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
   flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
-import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
+import {gateMap, touched, gatesFor, tier1, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
 import {readQueue, takeQueued} from "./gate-queue.mjs";
@@ -57,8 +58,10 @@ let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(a
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
 if ( args.includes("--touched") ) {
-  const t = touched(changedPaths(opt("base") ?? "origin/main", gateRoot), {root: gateRoot});
-  const list = gatesFor(t.modules, t.gates, gateMap(gateRoot));
+  const paths = changedPaths(opt("base") ?? "origin/main", gateRoot);
+  const t = touched(paths, {root: gateRoot});
+  // B7394: tier 1 (the changed modules' own gates, changed gates and the cross-module gates); --wide: the old list
+  const list = args.includes("--wide") ? gatesFor(t.modules, t.gates, gateMap(gateRoot)) : tier1(paths, {root: gateRoot});
   console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
   if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
   gates.push(...list);

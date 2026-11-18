@@ -412,7 +412,7 @@ async function makeQueue(job, lane, tag) {
   if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
-  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
+  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched", ...(job.since ? ["--base", job.since] : [])] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
     {logTo: path.join(LOGS, `${tag}-list.log`), minutes: 5});
   const m = /^GATES (\[.*\])$/m.exec(r.out ?? "");
   let list = null;
