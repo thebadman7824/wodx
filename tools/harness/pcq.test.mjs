@@ -202,6 +202,39 @@ test("failing gates and recheck verdicts", async () => {
   assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", "gatea: ERROR no such gate", new Set(["gatea"]))[0].verdict, /NEW with this change: the gate is not on main/);
 });
 
+test("B7310: each failing gate is rechecked alone, and no verdict rests on one run", async () => {
+  const {gatePassed, recheckStep} = await import("../pcq/jobs.mjs");
+  assert.equal(gatePassed("gatea", "gatea: 3/3 passed [1 setting(s) put back]"), true);
+  assert.equal(gatePassed("gatea", "gatea: 2/3 passed; failed: x"), false);
+  assert.equal(gatePassed("gatea", "gatea: ERROR could not sign in"), false);
+  assert.equal(gatePassed("gatea", "gateb: 3/3 passed"), null);
+  const step = (a, m, o) => recheckStep(a, m, o);
+  assert.equal(step([], []).next, "alone");
+  assert.match(step([true], []).verdict, /passes alone/);
+  assert.equal(step([false], []).next, "alone", "one failure alone is run again");
+  assert.match(step([false, true], []).verdict, /flaky/);
+  assert.equal(step([false, false], []).next, "main");
+  assert.match(step([false, false], [false]).verdict, /fails on main too/);
+  assert.equal(step([false, false], [true]).next, "main", "one pass on main is confirmed before NEW");
+  assert.match(step([false, false], [true, true]).verdict, /NEW with this change/);
+  assert.match(step([false, false], [true, false]).verdict, /flaky on main/);
+  assert.match(step([false, false], null).verdict, /fails alone too/);
+  assert.match(step([false, false], [], {notOnMain: true}).verdict, /not on main yet/);
+  assert.match(step([false, null], []).verdict, /not rechecked/);
+  assert.match(step([false, false], [null]).verdict, /main could not be rechecked/);
+  // job 2006: one bad draw of gate7b among other gates was called NEW; now it needs two failures alone and two passes on main
+  assert.notEqual(step([false], []).verdict?.startsWith("NEW"), true);
+});
+
+test("B7310: the runner reruns one gate per run-gate call", async () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  assert.match(body, /\[gate, "--lane"/, "run-gate gets a single gate");
+  assert.doesNotMatch(body, /\.\.\.failing, "--lane"/, "no longer all failing gates in one call");
+  assert.match(body, /lanesCmd\(\["reset"/, "each run starts from a reset");
+  assert.match(body, /recheckStep\(/);
+});
+
 // Graphics card heat watch.
 test("gpu line parses and N/A memory is null", () => {
   const r = gpu.parseLine("2026/11/15 22:30:00.000, 72, N/A, 250.51, 73, 98, 8400");
