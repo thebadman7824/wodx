@@ -19,7 +19,9 @@ free testbed lane, comments the result on the issue and closes it with `pc-done`
    `issue_read` (get_comments). For a long run, schedule one check for about when it should end rather than polling.
 
 Gate a branch before merging with `--ref claude/<branch>`; the branch must be pushed. `--after <issue>` waits for
-another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3.
+another job. `--prio` is 1 to 5 in the Master Plan order (1 for Master Plan gaps), default 3. One order for every process now
+lives in registry/priorities.json (docs/PRIORITIES.md, B7350); the runner moves onto its ranks in a later change, and
+until then `--prio` orders the queue as before.
 
 A lane test of a branch's own gate tools (a change to run-gate.mjs or the lane tools it imports) goes in the queue
 too, never as a run started by hand beside the runner, which cannot see such a run waiting and gives every free lane
@@ -29,6 +31,15 @@ to the running jobs (B7220):
 
 It runs the branch's run-gate.mjs on one lane, with no recheck, and never sets the `wodx/gates` status (named gates
 only). While it waits, running gates jobs take no more lanes, and it gets the next lane that frees.
+
+Smaller runs (B7441-B7444): a pull request runs tier 1 (the changed modules' own gates, changed gates and nine
+cross-module gates; `run-gate.mjs --touched --wide` gives the older list); after a merge of main it reruns only what
+main touched and what failed (a touched job with "since"); a gate that passes alone twice is an order fault and does
+not hold it; the nightly full run names the merges behind a new failure and skips when main's gate inputs did not
+change.
+
+Gate times (B7440): each lane's report ends with an indented line `  TIMES gate6b=12 gate6c=8 ...`, the seconds each
+gate took. `node tools/pcq/gate-times.mjs <saved report or comment> [...]` lists them slowest first.
 
 Book and Trove lookups (`books-find`, `trove-find`) need no lane and run beside the gate jobs. Their results give book
 and page or file names only, never text, because the repository is public. Anything else (a copy, an OCR run, work
@@ -165,5 +176,15 @@ prints what it would do now. The hourly sweep no longer merges main into open pu
 brings that back). docs/WORKFLOW.md, section 6, is the thread's side. A pull request labelled `urgent` as well goes to
 the front of the line (B7420); a fix to the train or runner that the train is stuck without is merged by its cloud
 thread instead (B7422).
+
+Batches (B7445): when the front needs main merged in and a stamp anyway, and up to two pull requests behind it are green
+on their own heads (checks passed, gates not red, merge rules red for nothing but the gate result still to come) and
+change no file the others change, the train builds one batch instead: main, each member's head merged in unchanged,
+file reviews carried over, one stamp, pushed to `claude/merge-train-batch` (worktree `<home>/train-batch`) and opened as
+a pull request "Merge train batch: #a, #b". That pull request is the train front: it is gated once and merged when
+green, and then each member's head is on main, so GitHub marks it merged too. A red batch is closed and the next one
+takes half as many, down to the front alone, so the one at fault leaves the train with its own reason. A member that is
+pushed to or leaves the line, or an urgent pull request at the front, closes the batch and the train builds a new
+one; when main moves the batch is built again on it. `"trainBatch": 1` in runner.json turns batches off.
 
 Stale runs (B7330-B7332): every push to a pull request cancels its gate jobs for older commits (closed if not started, pc-cancel if running), a push from outside the train to a pull request labelled `merge-train` takes it out of the train with a comment, and a runner stopping with runner-off still acts on pc-cancel. To pause a runner, use `runner-hold` (takes no new jobs, keeps status, cancels and the train going) rather than `runner-off`.

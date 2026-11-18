@@ -18,6 +18,8 @@
  *      merges with the head it saw. Either red, or no result within trainMaxHours (default 3): the pull request
  *      leaves the train with a comment.
  * Pull requests behind the front are not brought up to date and not gated again while they wait.
+ *   4. B7445: when the front would be prepared and up to two green pull requests behind it change other files, the
+ *      train builds one batch pull request of them instead (buildBatch, batchStep below); that batch is the front.
  *
  *   node tools/pcq/train.mjs           what the train would do now (reads GitHub, changes nothing)
  */
@@ -114,6 +116,12 @@ export async function step(ctx) {
   }
   const order = line(prs);
   const out = {front: null, action: "idle", why: "nothing in the train", line: order.map(p => p.number), urgent: order.filter(p => p.urgent).map(p => p.number)};
+  // B7445: a batch pull request in flight is the front until it merges, fails or goes stale
+  if ( !state.batch ) { const adopted = await adoptBatch(gh); if ( adopted ) state.batch = adopted; }
+  if ( state.batch ) {
+    const b = await batchStep(ctx, state, order);
+    if ( b ) { save(stateFile, state); log(`train: batch #${b.front} ${b.action}: ${b.why}`); return {...out, ...b}; }
+  }
   if ( !order.length ) { save(stateFile, {}); return out; }
   const pr = order[0];
   out.front = pr.number;
@@ -138,6 +146,33 @@ export async function step(ctx) {
     otherChecksFailed: othersFailed(runs.check_runs),
     frontFor: Date.now() - state.since};
   const d = decide(f, {maxHours});
+  // B7445: a front that needs main and a stamp anyway takes up to two green pull requests behind it into one batch
+  const maxBatch = state.maxBatch ?? ctx.batch ?? BATCH_MAX;
+  if ( d.action === "prepare" && maxBatch >= 2 && !pr.urgent && eligible(f).ok ) {
+    const cands = [{number: pr.number, ref: full.head.ref, head}];
+    for ( const p of order.slice(1, 1 + BATCH_LOOK) ) {
+      const m = await memberFacts(gh, p).catch(() => null);
+      if ( m && eligible(m).ok ) cands.push(m);
+    }
+    if ( cands.length >= 2 ) {
+      const names = cands.map(c => `#${c.number}`).join(", ");
+      if ( !apply ) { Object.assign(out, {action: "batch", why: `${d.why}: would batch ${names} (up to ${maxBatch})`}); log(`train: #${pr.number} ${out.action}: ${out.why}`); return out; }
+      const r = await (ctx.build ?? buildBatch)(ctx, cands, {max: maxBatch});
+      if ( r.error ) log(`train: no batch (${r.error}); #${pr.number} goes alone`);
+      else if ( r.members.length >= 2 ) {
+        const bp = await openBatch(gh, r);
+        delete state.pr; delete state.head;
+        state.batch = {pr: bp.number, head: r.sha, members: r.members.map(({number, ref, head: h}) => ({number, ref, head: h})), since: Date.now()};
+        for ( const m of r.members ) await comment(gh, m.number, `Merge train: batched with ${r.members.filter(x => x !== m).map(x => `#${x.number}`).join(", ")} in #${bp.number}. Its gates run there once for all of them; when #${bp.number} merges, this head (${m.head.slice(0, 8)}) is on main and this pull request shows as merged. Do not push to this branch meanwhile.`);
+        const skipped = r.skipped.length ? `; left out ${r.skipped.map(x => `#${x.number} (${x.why})`).join(", ")}` : "";
+        Object.assign(out, {front: bp.number, batch: r.members.map(m => m.number), action: "batch", why: `${r.did}${skipped}`});
+        save(stateFile, state);
+        log(`train: batch #${bp.number} of ${out.batch.map(n => `#${n}`).join(", ")}: ${out.why}`);
+        return out;
+      }
+      else log(`train: no batch (${r.skipped.map(x => `#${x.number} ${x.why}`).join("; ") || "nothing to add"}); #${pr.number} goes alone`);
+    }
+  }
   Object.assign(out, d);
   log(`train: #${pr.number} ${d.action}: ${d.why}`);
   if ( apply ) {
@@ -220,15 +255,15 @@ export const ownChange = diff => String(diff ?? "").split("\n").filter(l => /^[+
  * the earlier "how". A file whose own change differs (a conflict resolved by hand) keeps its stale verdict, and the
  * merge rules send it back to its thread. Commits the new lines; returns {n} or {error}.
  */
-export async function carryReviews(dir, oldHead) {
+export async function carryReviews(dir, oldHead, {other = "HEAD^2", what = "the merge with main"} = {}) {
   const MR = await import(`${pathToFileURL(path.join(dir, "tools", "release", "merge-rules.mjs")).href}?${Date.now()}`).catch(() => null);
   if ( !MR?.branchReviews || !MR?.hashOf ) return {n: 0};
   const g = MR.gitIn(dir);
-  const before = g.tryRun("merge-base", oldHead, "HEAD^2");
+  const before = g.tryRun("merge-base", oldHead, other);
   if ( !before ) return {n: 0};
   const latest = new Map();
   for ( const it of MR.branchReviews(g, before, oldHead).items ) latest.set(it.file, it);
-  const files = (g.tryRun("diff", "--name-only", "--no-renames", "HEAD^2", "HEAD") ?? "").split("\n").filter(Boolean);
+  const files = (g.tryRun("diff", "--name-only", "--no-renames", other, "HEAD") ?? "").split("\n").filter(Boolean);
   const lines = [];
   for ( const file of files ) {
     const v = latest.get(file);
@@ -236,8 +271,8 @@ export async function carryReviews(dir, oldHead) {
     const was = g.show(oldHead, file), now = g.show("HEAD", file);
     if ( MR.hashOf(was) !== v.hash || MR.hashOf(now) === v.hash ) continue; // stale before, or still current
     const mine = ownChange(g.tryRun("diff", "-U0", "--no-renames", before, oldHead, "--", file));
-    if ( !mine || mine !== ownChange(g.tryRun("diff", "-U0", "--no-renames", "HEAD^2", "HEAD", "--", file)) ) continue;
-    lines.push({file, verdict: v.verdict, how: `carried over by the merge train after main merged in: the branch's own change to this file is the same; earlier check: ${v.how}`.slice(0, 900),
+    if ( !mine || mine !== ownChange(g.tryRun("diff", "-U0", "--no-renames", other, "HEAD", "--", file)) ) continue;
+    lines.push({file, verdict: v.verdict, how: `carried over by the merge train after ${other === "HEAD^2" ? "main merged in" : "the merge into the batch"}: the branch's own change to this file is the same; earlier check: ${v.how}`.slice(0, 900),
       hash: MR.hashOf(now), at: new Date().toISOString().slice(0, 16) + "Z"});
   }
   if ( !lines.length ) return {n: 0};
@@ -246,9 +281,188 @@ export async function carryReviews(dir, oldHead) {
   if ( !target ) return {n: 0};
   fs.appendFileSync(path.join(dir, target), lines.map(l => JSON.stringify(l)).join("\n") + "\n");
   const add = spawnSync("git", ["add", "--", target], {cwd: dir, encoding: "utf8"});
-  const c = spawnSync("git", ["commit", "-q", "-m", `Merge train: carry ${lines.length} file review(s) over the merge with main`], {cwd: dir, encoding: "utf8"});
+  const c = spawnSync("git", ["commit", "-q", "-m", `Merge train: carry ${lines.length} file review(s) over ${what}`], {cwd: dir, encoding: "utf8"});
   if ( add.status || c.status ) return {error: `the train could not commit the carried reviews (${(c.stderr || add.stderr || "").trim().slice(0, 160)})`};
   return {n: lines.length};
+}
+
+/* ---- B7445: batches. Up to BATCH_MAX green pull requests from the front of the line merge as one ---- */
+
+export const BATCH_BRANCH = "claude/merge-train-batch", BATCH_MAX = 3, BATCH_LOOK = 6;
+const MARK = /<!-- merge-train-batch (\[.*?\]) -->/;
+
+/**
+ * Whether a pull request may join a batch. f: the facts decide() reads, plus urgent. Its own checks must be green on its
+ * head (or red only because the merge rules job waits on a gate result, B7208), its gates not red, its merge rules not
+ * red for any reason but a gate result still to come (the batch brings that), and it must merge cleanly with main.
+ * Returns {ok, why}.
+ */
+export function eligible(f) {
+  if ( !f.ownBranch ) return {ok: false, why: "not the owner's claude/ branch"};
+  if ( f.draft ) return {ok: false, why: "a draft"};
+  if ( f.urgent ) return {ok: false, why: "urgent pull requests go alone"};
+  if ( f.mergeable !== true ) return {ok: false, why: f.mergeable === false ? "a conflict with main" : "GitHub has not worked out whether it merges"};
+  if ( f.gates === "failure" ) return {ok: false, why: "its gates failed"};
+  const gateOnly = /^Not ready: gate result$/.test(f.mergeRulesWhy ?? "");
+  if ( f.mergeRules === "failure" && !gateOnly ) return {ok: false, why: `its merge rules fail (${f.mergeRulesWhy || "no reason given"})`};
+  // B7208: a merge rules job that waits on the gate result fails, and the summing checks job with it (PR 1880, 18 Nov)
+  const checksOk = f.checks === "success" || (f.checks === "failure" && f.mergeRules === "failure" && gateOnly && f.otherChecksFailed === false);
+  if ( !checksOk ) return {ok: false, why: `its checks are ${f.checks ?? "missing"}`};
+  return {ok: true, why: ""};
+}
+
+/** The facts eligible() needs for a pull request in the line. */
+async function memberFacts(gh, p) {
+  const full = await gh("GET", `/pulls/${p.number}`);
+  const h = full.head.sha;
+  const [statuses, runs] = await Promise.all([gh("GET", `/commits/${h}/statuses?per_page=100`), gh("GET", `/commits/${h}/check-runs?per_page=100`)]);
+  return {number: p.number, ref: full.head.ref, head: h, urgent: !!p.urgent, draft: !!full.draft, mergeable: full.mergeable ?? null,
+    ownBranch: full.user?.login === OWNER && full.head.repo?.full_name === full.base.repo?.full_name && /^claude\//.test(full.head.ref),
+    checks: checkOf(runs?.check_runs, CHECKS), gates: statusOf(statuses, GATES), mergeRules: statusOf(statuses, MERGE_RULES),
+    mergeRulesWhy: (statuses ?? []).find(x => x.context === MERGE_RULES)?.description ?? "", otherChecksFailed: othersFailed(runs?.check_runs)};
+}
+
+/**
+ * Builds the batch branch in the train's batch worktree (<home>/train-batch): main, then each member's head merged in
+ * (never changed: when the batch merges, each member's head is on main), with its file reviews carried over where main
+ * changed the same file, then one merge-stamp for all of them. A member that changes a file an earlier member changes,
+ * or does not merge cleanly, is left out (it goes later, alone or in the next batch). Pushes to BATCH_BRANCH with a lease
+ * (lease: the head to replace; by default whatever the branch holds now, an old batch). members: [{number, ref, head}]
+ * front first. Returns {sha, members, skipped: [{number, why}], did} or {error}; fewer than two members pushes nothing.
+ */
+export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, branch = BATCH_BRANCH} = {}) {
+  const {git, home, repoRoot} = ctx;
+  const dir = path.join(home, "train-batch");
+  const ok = r => r && r.status === 0;
+  const refs = members.map(m => `+refs/heads/${m.ref}:refs/remotes/origin/${m.ref}`);
+  if ( !ok(await git(["fetch", "-q", "origin", "main", ...refs], repoRoot)) ) return {error: "the train could not fetch main and the batch's branches"};
+  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(await git(["worktree", "add", "--detach", "-f", dir, "origin/main"], repoRoot)) ) return {error: "the train could not make its batch worktree"};
+  await git(["merge", "--abort"], dir);
+  if ( !ok(await git(["checkout", "-q", "-f", "--detach", "origin/main"], dir)) ) return {error: "the train could not check out main"};
+  await git(["clean", "-q", "-fd"], dir);
+  const taken = new Set(), chosen = [], skipped = [];
+  for ( const m of members ) {
+    if ( chosen.length >= max ) break;
+    const mb = (await git(["merge-base", "origin/main", m.head], dir)).stdout?.trim();
+    if ( !mb ) { skipped.push({number: m.number, why: `its head ${m.head.slice(0, 8)} was not fetched`}); continue; }
+    const files = String((await git(["diff", "--name-only", "--no-renames", mb, m.head], dir)).stdout ?? "").split("\n").filter(Boolean);
+    const both = files.filter(f => taken.has(f));
+    if ( both.length ) { skipped.push({number: m.number, why: `it changes ${both.slice(0, 3).join(", ")}${both.length > 3 ? " and more" : ""}, as an earlier one in the batch does`}); continue; }
+    const before = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
+    const mg = await git(["merge", "--no-ff", "--no-edit", "-m", `Merge #${m.number} (${m.ref}) into the batch (merge train)\n\nMerge-Train: yes`, m.head], dir);
+    if ( !ok(mg) ) { await git(["merge", "--abort"], dir); await git(["reset", "-q", "--hard", before], dir); skipped.push({number: m.number, why: "it does not merge cleanly into the batch"}); continue; }
+    const carried = await carryReviews(dir, m.head, {other: "HEAD^1", what: `the merge of #${m.number} into the batch`});
+    if ( carried.error ) { await git(["reset", "-q", "--hard", before], dir); skipped.push({number: m.number, why: carried.error}); continue; }
+    for ( const f of files ) taken.add(f);
+    chosen.push({...m, carried: carried.n ?? 0});
+  }
+  const names = chosen.map(m => `#${m.number}`).join(", ");
+  if ( chosen.length < 2 ) return {members: chosen, skipped};
+  const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
+  if ( st.status !== 0 ) return {error: `merge-stamp refused the batch of ${names}: ${(st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400)}`};
+  const stamped = /Committed\./.test(st.stdout);
+  if ( stamped ) await git(["commit", "--amend", "-q", "--no-edit", "--trailer", "Merge-Train: yes"], dir);
+  const sha = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
+  const now = lease ?? (String((await git(["ls-remote", "origin", `refs/heads/${branch}`], dir)).stdout ?? "").split(/\s/)[0] || "");
+  const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${branch}`, `--force-with-lease=refs/heads/${branch}:${now}`], dir);
+  if ( !ok(p) ) return {error: `the push to ${branch} was refused (${String(p.stderr ?? "").trim().slice(0, 200)})`};
+  const carried = chosen.reduce((n, m) => n + m.carried, 0);
+  return {sha, members: chosen, skipped, did: [`${names} merged onto main`, carried ? `${carried} file review(s) carried over` : "", stamped ? "release notes stamped once" : ""].filter(Boolean).join(", ")};
+}
+
+const batchTitle = ms => `Merge train batch: ${ms.map(m => `#${m.number}`).join(", ")}`;
+function batchBody(r) {
+  const list = r.members.map(m => `- #${m.number} at ${m.head.slice(0, 8)} (${m.ref})`).join("\n");
+  const keep = r.members.map(({number, ref, head}) => ({number, ref, head}));
+  return `The merge train (B7445) put these pull requests together, so they are brought up to date, stamped and gated once instead of one after another:\n\n${list}\n\nEach head is merged in unchanged, so when this pull request merges each of them shows as merged too. If the checks or gates fail here, the train closes this pull request and tries again with half as many (in the end one at a time), so the one that fails is found and leaves the train with the reason.\n\n<!-- merge-train-batch ${JSON.stringify(keep)} -->\n\n---\n_Generated by [Claude Code](https://claude.ai/code)_`;
+}
+
+/** Opens the batch pull request, or updates the open one on the batch branch. Returns the pull request. */
+async function openBatch(gh, r) {
+  const open = await gh("GET", `/pulls?state=open&head=${OWNER}:${BATCH_BRANCH}`).catch(() => []);
+  const was = Array.isArray(open) ? open[0] : null;
+  if ( was ) return gh("PATCH", `/pulls/${was.number}`, {title: batchTitle(r.members), body: batchBody(r)});
+  return gh("POST", "/pulls", {title: batchTitle(r.members), head: BATCH_BRANCH, base: "main", body: batchBody(r), maintainer_can_modify: false});
+}
+
+/** An open batch pull request the state file lost (a restart): its members come from the mark in its body. */
+export async function adoptBatch(gh) {
+  const open = await gh("GET", `/pulls?state=open&head=${OWNER}:${BATCH_BRANCH}`).catch(() => null);
+  const p = Array.isArray(open) ? open[0] : null;
+  const m = p && MARK.exec(p.body ?? "");
+  if ( !m ) return null;
+  try { return {pr: p.number, head: p.head.sha, members: JSON.parse(m[1]), since: Date.now()}; } catch { return null; }
+}
+
+/**
+ * One step for the batch in flight (state.batch: {pr, head, members, since}). Returns the step's result, or null when
+ * the batch is gone and the line goes on as usual. Merged: each member is told (after up to two more steps for GitHub
+ * to mark it merged). A member that left the line or was pushed to, or an urgent pull request at the front: the batch
+ * is closed and built again. Main moved: built again on the new main. Red, or no green result in maxHours: closed,
+ * and the next batch takes half as many (state.maxBatch), down to one at a time.
+ */
+export async function batchStep(ctx, state, order) {
+  const {gh, apply = false, maxHours = 3} = ctx;
+  const b = state.batch;
+  const n = b.members.length, nums = b.members.map(m => `#${m.number}`).join(", ");
+  const res = (action, why) => ({front: b.pr, batch: b.members.map(m => m.number), action, why});
+  const bp = await gh("GET", `/pulls/${b.pr}`);
+  const close = async why => { if ( apply ) { await comment(gh, b.pr, `Merge train: closing this batch because ${why}.`); await gh("PATCH", `/pulls/${b.pr}`, {state: "closed"}).catch(() => null); } };
+  if ( bp.merged ) {
+    const ps = await Promise.all(b.members.map(m => gh("GET", `/pulls/${m.number}`).catch(() => null)));
+    const open = b.members.filter((m, i) => !ps[i]?.merged);
+    b.waits = (b.waits ?? 0) + 1;
+    if ( open.length && b.waits < 3 ) return res("wait", `merged; waiting for GitHub to mark ${open.map(m => `#${m.number}`).join(", ")} merged`);
+    if ( apply ) for ( const m of b.members ) {
+      if ( !open.includes(m) ) await comment(gh, m.number, `Merge train: merged to main with batch #${b.pr} at ${m.head.slice(0, 8)}. The branch is left for the owner to delete.`);
+      else { await comment(gh, m.number, `Merge train: this head (${m.head.slice(0, 8)}) is on main through batch #${b.pr}, but GitHub has not marked this pull request merged; close it by hand.`); await gh("DELETE", `/issues/${m.number}/labels/${TRAIN_LABEL}`).catch(() => null); }
+    }
+    for ( const k of Object.keys(state) ) delete state[k];
+    return res("merged", `batch of ${nums} merged${open.length ? `; ${open.map(m => `#${m.number}`).join(", ")} not marked merged by GitHub` : ""}`);
+  }
+  if ( bp.state === "closed" ) { delete state.batch; return null; }
+  const inLine = new Map(order.map(p => [p.number, p]));
+  const gone = [];
+  for ( const m of b.members ) {
+    if ( !inLine.has(m.number) ) { gone.push(`#${m.number} left the line`); continue; }
+    const p = await gh("GET", `/pulls/${m.number}`).catch(() => null);
+    if ( p?.head?.sha && p.head.sha !== m.head ) gone.push(`#${m.number} has a new head (${p.head.sha.slice(0, 8)})`);
+  }
+  const first = order[0];
+  if ( first?.urgent && !b.members.some(m => m.number === first.number) ) gone.push(`#${first.number} is urgent`);
+  if ( gone.length ) {
+    if ( !apply ) return res("wait", `would close: ${gone.join(", ")}`);
+    await close(`${gone.join(", ")}; the train builds a new batch`); delete state.batch; return null;
+  }
+  const cmp = await gh("GET", `/compare/${bp.base.ref}...${bp.head.sha}`);
+  if ( (cmp.behind_by ?? 0) > 0 ) {
+    if ( !apply ) return res("prepare", `behind main by ${cmp.behind_by}: would build the batch again`);
+    const r = await (ctx.build ?? buildBatch)(ctx, b.members, {max: n, lease: bp.head.sha});
+    if ( r.error || r.members?.length !== n ) { await close(r.error ?? `not all of ${nums} merge onto the new main`); delete state.batch; return null; }
+    await gh("PATCH", `/pulls/${b.pr}`, {body: batchBody(r)}).catch(() => null);
+    Object.assign(b, {head: r.sha, since: Date.now()});
+    return res("prepare", `main moved: built again (${r.did}); the gates run on ${r.sha.slice(0, 8)}`);
+  }
+  const head = bp.head.sha;
+  if ( b.head !== head ) Object.assign(b, {head, since: Date.now()});
+  const [statuses, runs] = await Promise.all([gh("GET", `/commits/${head}/statuses?per_page=100`), gh("GET", `/commits/${head}/check-runs?per_page=100`)]);
+  const d = decide({draft: false, mergeable: bp.mergeable ?? null, behind: 0, fragments: 0, ownBranch: true,
+    checks: checkOf(runs?.check_runs, CHECKS), mergeRules: statusOf(statuses, MERGE_RULES), gates: statusOf(statuses, GATES),
+    mergeRulesWhy: (statuses ?? []).find(x => x.context === MERGE_RULES)?.description ?? "", otherChecksFailed: othersFailed(runs?.check_runs),
+    frontFor: Date.now() - (b.since ?? Date.now())}, {maxHours});
+  if ( d.action === "merge" ) {
+    if ( !apply ) return res("merge", d.why);
+    try { await gh("PUT", `/pulls/${b.pr}/merge`, {sha: head, merge_method: "merge", commit_title: `Merge pull request #${b.pr}: ${nums} (merge train batch)`}); }
+    catch (e) { return res("wait", `merge refused for now (${String(e.message).slice(0, 160)})`); }
+    return res("merge", `merged at ${head.slice(0, 8)}; ${nums} follow`);
+  }
+  if ( d.action === "leave" ) {
+    const next = Math.ceil(n / 2);
+    await close(`${d.why.replace(/: fix them.*$|: see the merge rules.*$|: look at the gate job.*$/, "")}. The next batch takes ${next === 1 ? "the front alone" : `${next} at most`}, so the one that fails is found`);
+    if ( apply ) { delete state.batch; state.maxBatch = next; }
+    return res("split", d.why);
+  }
+  return res("wait", d.why);
 }
 
 if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url) ) {

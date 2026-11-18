@@ -57,8 +57,8 @@ comment on the issue. Gate the branch before merging and main after it. What the
     node tools/lanes/gate-map.mjs --touched           just the list, to put in a PC job
 
 A Paperdoll-only change runs the Paperdoll gates, not the Relationships ones. A change to WoDX Chronicle or the system
-still runs nearly every gate. The full run happens every night on lanes 2 and 3 after the reset
-(`tools/lanes/nightly.mjs`), so anything `--touched` misses shows up by morning in nightly-gates.log. If a gate covers
+still runs nearly every gate. The nightly full run is an all-gates PC job
+(`tools/pcq/nightly-gates.mjs`, B7020, B7460) on lane 8; while lane 8 is held, it waits. If a gate covers
 a module the map misses, add it in `tools/lanes/gate-map-extra.json` (`"add": {"gatex": ["wodx-npc"]}`).
 
 ### Gate rules (Ben, 14 November 2026)
@@ -171,6 +171,13 @@ train with a comment saying why; fix it, push, and add the label again. Pull req
 to date or gated again while they wait, and the hourly sweep no longer merges main into open pull requests. The
 runner's status issue shows the line. `node tools/pcq/train.mjs` prints what the train would do now.
 
+**Batches (B7445, Ben, 18 November 2026).** When the front needs main and a stamp anyway, the train takes up to two
+green pull requests behind it that change other files into one batch pull request ("Merge train batch: #a, #b"),
+stamped and gated once. Its merge puts each member's head on main, and GitHub shows each as merged. A red batch is
+closed and tried again with half as many, down to one, so the pull request at fault leaves the train with its own
+reason. Nothing changes for the thread: label it and stop pushing. A push to a batched pull request takes it out of
+the train as before and closes the batch.
+
 **Urgent pull requests (B7420, Ben, 18 November 2026).** A fix that other work is stuck behind gets the label `urgent`
 as well as `merge-train`. It goes to the front of the line at the runner's next step, ahead of older labels (urgent
 ones keep label order among themselves), and its gate job then runs as the train front. The pull request it passes
@@ -259,6 +266,14 @@ Done means verified. The format is in [registry/features/README.md](../registry/
 - **Change the row with the code**, in the same pull request. A fault from the solo world's Report a problem button or
   an audit goes in the row's `faults`; deferred work in its `open` or `deferred` list, never only in a desk or a shared
   JSON file.
+- **Each bug has a GitHub issue (B7480).** A bug that is not fixed in the pull request that found it gets one issue in
+  this repo, labelled `bug`: a gate that fails on main, a fault a thread finds and leaves, a Report a problem entry, an
+  audit finding. Search the `bug` issues, open and closed, before filing. The title names what goes wrong; the body
+  says where it was seen (job or issue number, file and line), what happened, and what should have happened. The PR
+  that fixes it says `Fixes #N` in its description, so the merge closes the issue. When only a later run on main can
+  prove the fix (a gate that failed in long runs only), the PR says `Refs #N` and the issue is closed when that run
+  passes. The bug's entry in a row's `faults` (or in `_inbox.json`) carries `"issue": N`. The issue holds the
+  discussion; the row holds the status. A gate on the known-faults list (B7060) needs an open `bug` issue.
 - **Finish before starting (the ratchet).** A module's half-built count (built but not gated, or an open fault) may not
   grow. New work in a module starts by finishing a row there; bug fixes are exempt; Ben can override.
 - **The core first.** Rows with `"core": true` (V20 Dark Ages Vampire in Rothenstein, 1197, with mortals and ghouls)
