@@ -1,5 +1,40 @@
 {
  "module": "wodx-creation",
  "seeded": false,
- "rows": []
+ "rows": [
+  {
+   "id": "creation.archive-of-the-dead",
+   "name": "Archive of the dead: the long dead leave the world for a compendium, by hand or by the clock, and come back",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/archive.mjs",
+    "modules/wodx-creation/scripts/archive-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B6179, B6414, B6750, B6770"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/archive.mjs:setupAutoArchive"
+    },
+    "shown": {
+     "what": "the Archive of the dead window (tick and archive, Bring back) and the 'WoDX · Archive of the dead' index journal"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplaypage.mjs",
+     "step": "5"
+    }
+   },
+   "open": [
+    "Bring back takes about 2 seconds on the testbed (395 characters) before its archive entry goes; measured on the cloud lane, not on a PC"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
+  }
+ ]
 }

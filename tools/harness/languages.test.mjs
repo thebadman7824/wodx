@@ -85,12 +85,42 @@ test("the chat box language is set on a character's speech, not on cards or roll
   const roll = {updateSource(c) { this.changes = c; }};
   await Hooks.callAll("preCreateChatMessage", roll, {speaker: {actor: "a1"}, rolls: [{}]}, {}, "p1");
   assert.equal(roll.changes, undefined);
-  const before = mock.log.chat.length;
-  const results = await Hooks.callAll("chatMessage", {}, "/in Latin Pax <b>tecum</b>", {speaker: {alias: "Jan"}});
+  // B7267: Jan has no Latin, so the player's "/in Latin" sends nothing and says why
+  const warned = [];
+  const warn0 = ui.notifications.warn;
+  ui.notifications.warn = m => { warned.push(String(m)); };
+  let before = mock.log.chat.length;
+  let results = await Hooks.callAll("chatMessage", {}, "/in Latin Pax tecum", {speaker: {alias: "Jan"}});
   assert.ok(results.includes(false));
-  const made = mock.log.chat.slice(before)[0];
-  assert.equal(made.flags[M].language, "Latin");
-  assert.equal(made.content, "Pax &lt;b&gt;tecum&lt;/b&gt;", "the words are escaped");
+  assert.equal(mock.log.chat.length, before, "nothing is sent");
+  assert.match(warned.at(-1) ?? "", /does not speak Latin/);
+  ui.notifications.warn = warn0;
+  // B7268: Foundry 14's chat box sends HTML; "/in" is read from the text typed
+  before = mock.log.chat.length;
+  results = await Hooks.callAll("chatMessage", {}, "<p>/in Czech Dobrý <b>večer</b></p>", {speaker: {alias: "Jan"}});
+  assert.ok(results.includes(false));
+  let made = mock.log.chat.slice(before)[0];
+  assert.equal(made?.flags?.[M]?.language, "Czech");
+  assert.equal(made.content, "Dobrý večer", "the text typed, with no markup");
+  // B7269: Speaking set, a plain line by a character is sent here, in character and in the language
+  await game.settings.set(M, "speaking", "German");
+  before = mock.log.chat.length;
+  results = await Hooks.callAll("chatMessage", {}, "<p>Guten Abend</p>", {speaker: {actor: "a1", alias: "Jan"}});
+  assert.ok(results.includes(false));
+  made = mock.log.chat.slice(before)[0];
+  assert.equal(made?.flags?.[M]?.language, "German");
+  assert.equal(made.speaker?.actor, "a1");
+  // with no character speaking, the line is Foundry's to send
+  before = mock.log.chat.length;
+  results = await Hooks.callAll("chatMessage", {}, "<p>out of character</p>", {speaker: {}});
+  assert.ok(!results.includes(false));
+  assert.equal(mock.log.chat.length, before);
   await game.settings.set(M, "speaking", "");
   mock.asGM();
+  // the Storyteller speaks anything
+  before = mock.log.chat.length;
+  results = await Hooks.callAll("chatMessage", {}, "/in Latin Pax <b>tecum</b>", {speaker: {alias: "Jan"}});
+  made = mock.log.chat.slice(before)[0];
+  assert.equal(made?.flags?.[M]?.language, "Latin");
+  assert.equal(made.content, "Pax tecum", "markup typed into the box does not reach the line");
 });

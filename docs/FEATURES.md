@@ -8,16 +8,16 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | system | not yet | 0 | 0 | 0 |
 | wodx-actions | not yet | 0 | 0 | 0 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
-| wodx-chronicle | not yet | 1 | 0 | 0 |
+| wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | not yet | 1 | 0 | 0 |
-| wodx-creation | not yet | 0 | 0 | 0 |
+| wodx-creation | not yet | 1 | 0 | 0 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | not yet | 0 | 0 | 0 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | not yet | 0 | 0 | 0 |
+| wodx-sheets | not yet | 1 | 0 | 0 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -28,12 +28,25 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Dated events: history fires on its date as the clock passes it (`chronicle.dated-events`) | core | gated | 2 | gatedatedplay 5 |
+| Languages in chat: speech in a language a player's characters lack shows as made-up words (`chronicle.languages-in-chat`) | core | gated | 2 | gateplaylang 4 |
 
 ## wodx-combat
 
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Standing up from a knockdown (`combat.knockdown-stand`) | core | gated | 1 | gateknockdown 4 |
+
+## wodx-creation
+
+| Feature | Core | Status | Open | Gate |
+| --- | --- | --- | --- | --- |
+| Archive of the dead: the long dead leave the world for a compendium, by hand or by the clock, and come back (`creation.archive-of-the-dead`) | core | gated | 1 | gateplaypage 5 |
+
+## wodx-sheets
+
+| Feature | Core | Status | Open | Gate |
+| --- | --- | --- | --- | --- |
+| The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions (`sheets.page-two`) | core | gated | 1 | gateplaypage 4 |
 
 ## wodx-storyteller
 

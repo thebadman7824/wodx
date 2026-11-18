@@ -73,6 +73,30 @@ export function speakable(user = game.user) {
   return [...seen.values()];
 }
 
+/** May this user speak this language? The Storyteller always; a player only in a language their characters know (B7267). */
+export function mayUse(language, user = game.user) {
+  return !language || !!user?.isGM || understands(charactersOf(user).map(languagesOf), language);
+}
+function refuse(language) {
+  ui.notifications.warn(`Your character does not speak ${language}. A player speaks only the languages their characters know; the Storyteller can add more.`);
+}
+
+/** The text of what was typed into the chat box (Foundry 14 sends it as HTML), with line breaks kept. */
+export function typedText(message) {
+  const raw = String(message ?? "");
+  if ( !/[<&]/.test(raw) || typeof document === "undefined" ) return raw.trim();
+  const t = document.createElement("template");
+  t.innerHTML = raw;
+  t.content.querySelectorAll("br").forEach(br => br.replaceWith("\n"));
+  return String(t.content.textContent ?? "").trim();
+}
+
+/** A line of speech, in character, in a language. */
+function speak(content, speaker, language) {
+  const modes = CONFIG.ChatMessage?.modes ?? {};
+  return ChatMessage.create({content, speaker, flags: {[MODULE_ID]: {language}}}, modes.ic ? {messageMode: "ic"} : {});
+}
+
 /** Messages this client caught the gist of (B3163), for this session. */
 const gistRead = new Set();
 /** Can this user read speech in this language? */
@@ -86,11 +110,23 @@ export function registerLanguageHooks() {
   // "/in Latin Pax tecum": one message in that language, whatever the chat box is set to
   Hooks.on("chatMessage", (log, message, chatData) => {
     if ( !on() ) return true;
+    // B7268: Foundry 14's chat box sends HTML ("<p>/in Latin ...</p>"); read it as the text typed
+    const text = typedText(message);
     const known = [...speakable(), ...LANGUAGES.common, ...LANGUAGES.supernatural];
-    const p = parseInCommand(message, known);
-    if ( !p ) return true;
+    const p = parseInCommand(text, known);
     const speaker = chatData?.speaker ?? ChatMessage.getSpeaker?.() ?? {};
-    ChatMessage.create({content: esc(p.text), speaker, flags: {[MODULE_ID]: {language: p.language}}});
+    if ( p ) {
+      // B7267: a player speaks only what their characters know; the Storyteller speaks anything
+      if ( !mayUse(p.language) ) { refuse(p.language); return false; }
+      speak(esc(p.text), speaker, p.language);
+      return false;
+    }
+    // B7269: with Speaking set, a plain line is the character's speech in that language. Foundry 14 sends a plain
+    // line out of character (no speaker) unless the chat mode is In Character, so the line is sent here, in character.
+    const lang = game.settings.get(MODULE_ID, "speaking");
+    if ( !lang || text.startsWith("/") || !(speaker?.actor || speaker?.token) ) return true;
+    if ( !mayUse(lang) ) { refuse(lang); return false; }
+    speak(String(message).trim().replace(/^<p>|<\/p>$/gi, ""), speaker, lang);
     return false;
   });
 
@@ -99,12 +135,19 @@ export function registerLanguageHooks() {
     if ( !on() || userId !== game.user.id ) return;
     if ( data.flags?.[MODULE_ID]?.language !== undefined || (data.rolls?.length) ) return;
     const lang = game.settings.get(MODULE_ID, "speaking");
-    if ( !lang || !data.speaker?.actor ) return;
+    if ( !lang || !data.speaker?.actor || !mayUse(lang) ) return;
     if ( Object.keys(data.flags ?? {}).some(k => k !== "core") ) return; // a module's card, not speech
     doc.updateSource({[`flags.${MODULE_ID}.language`]: lang});
   });
 
   Hooks.on("renderChatMessageHTML", (message, el) => renderLanguage(message, el?.[0] ?? el));
+  document.addEventListener("click", ev => {
+    const b = ev.target?.closest?.(".wodx-gist[data-message-id]");
+    if ( !b ) return;
+    ev.preventDefault();
+    const message = game.messages.get(b.dataset.messageId), who = game.actors.get(b.dataset.actorId);
+    if ( message && who && !gistTried.has(`${message.id}:${who.id}`) ) tryGist(message, who, b.dataset.language, b.dataset.kin);
+  });
 
   Hooks.on("renderChatLog", (app, html) => installPicker(html?.[0] ?? html));
   Hooks.on("updateActor", () => { const el = document.querySelector?.(".wodx-speaking"); if ( el ) refreshPicker(el); });
@@ -135,7 +178,9 @@ export function renderLanguage(message, el) {
       const b = document.createElement("button");
       b.type = "button"; b.className = "wodx-gist";
       b.textContent = `Try for the gist (${who.name} knows ${kin})`;
-      b.addEventListener("click", () => tryGist(message, who, lang, kin));
+      // B7270: read on a click anywhere in the page, so a copy of the line (Foundry 14's chat notifications, a popped
+      // out log) works as the log's own line does
+      Object.assign(b.dataset, {messageId: message.id, actorId: who.id, language: lang, kin});
       tag.append(" ", b);
     }
   }
@@ -176,7 +221,12 @@ function refreshPicker(wrap) {
   wrap.innerHTML = `<label><i class="fa-solid fa-language" inert></i> Speaking
     <input type="text" name="wodxSpeaking" list="wodx-speaking-names" value="${esc(current)}" placeholder="no set language" aria-label="Language your character speaks"></label>
     <datalist id="wodx-speaking-names">${langs.map(l => `<option value="${esc(l)}"></option>`).join("")}</datalist>`;
-  wrap.querySelector("input").addEventListener("change", ev => game.settings.set(MODULE_ID, "speaking", String(ev.target.value).trim()));
+  wrap.querySelector("input").addEventListener("change", ev => {
+    const v = String(ev.target.value).trim();
+    // B7267: a language none of the player's characters knows is not kept
+    if ( !mayUse(v) ) { refuse(v); ev.target.value = game.settings.get(MODULE_ID, "speaking"); return; }
+    game.settings.set(MODULE_ID, "speaking", v);
+  });
 }
 
 const {ApplicationV2} = foundry.applications?.api ?? {ApplicationV2: class {}};
