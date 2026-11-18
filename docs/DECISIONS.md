@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7320
+Next free block: B7390
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -420,6 +420,7 @@ Next free block: B7320
 | B7290-B7299 | PC watcher on the laptop: every PC, runner, job and the merge train checked every 5 minutes, and a heartbeat that covers every status issue (used B7290-B7296) | tools (pcq), .github workflows, docs |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
+| B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14325,3 +14326,12 @@ Reverse: take the conductor and scene mode lines, the hooks and the log out of s
 Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 1944 and 2006 with the runner choosing to flee ("faces what it fears": a guard fears the supernatural once it shows), and "a lost action" failed in 2006 with a plan card instead of "cannot act". The same lane order passed and failed in job 1944, so the cause is state left in the world, not the order alone. The two steps' detail now names whose turn it was when the NPC acted, the runner's fears, whether the hero reads as obvious (its effects and WoDX NPC flags), the enemies as the runner saw them and its top options, and the card's token against the fighter's. No pass condition changed. On this branch the detail showed, in job 2016, the hero "Ada (6d, wraith)" read as obvious, so the guard fled. Two tries at choosing the hero instead (jobs 2021 and 2024) failed other steps, and the same code passed in jobs 2017 and 2018, so the hero is not the only thing that varies; those tries were taken back out. gate7b was the first gate after the lane's reset in all three failing runs, and also in job 2013, which passed; in 2017 and 2018 it came after other gates.
 
 Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
+
+## B7380. The recheck gets the lane's stop check passed in (2026-11-18)
+Repository workflow. B7310 moved the recheck loop into recheck() and called stopped() there, but stopped is defined
+inside laneWork, so from 12:25Z on 18 November every gates job with a failing gate ended that lane with "Runner error
+on lane N: stopped is not defined" and no result (#2042, #2043, lane 3 of #2044). The recheck now lives in tools/pcq/recheck.mjs and takes the lane's stopped check and the runner's helpers as
+arguments; tools/harness/recheck.test.mjs runs it end to end with stand-in lanes (NEW after two runs a side, flaky,
+and a cancelled job), so a name it uses but does not have fails in the harness, not on the PCs.
+
+Reverse: none; the earlier form fails.
