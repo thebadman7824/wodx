@@ -401,4 +401,10 @@ test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 2
   assert.ok(src.includes('WODX_HOST: "cloud"'));
   assert.match(src, />= 24/, "Foundry 14 needs Node 24");
   assert.ok(!/console\.(log|warn|error)\([^)]*\.license\b/.test(src), "the key is never printed");
+  // B7300: the PC world and modules come in parts from the private folder, checked against their hash
+  assert.match(src, /fromParts\("testbed", "testbed-known-good"/);
+  assert.match(src, /fromParts\("modules", "cloud-foundry-modules"/);
+  assert.match(src, /do not match \$\{sub\}\/SHA256/, "a joined copy with the wrong hash stops setup");
+  assert.ok(!/(writeFileSync|appendFileSync|renameSync)\(\s*path\.join\(CACHE/.test(src) && !/(copyFileSync|cpSync)\([^,]+,\s*path\.join\(CACHE/.test(src),
+    "nothing is written back to the shared folder");
 });
