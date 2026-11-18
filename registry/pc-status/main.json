@@ -1,6 +1,6 @@
 {
  "host": "main",
- "time": "2026-11-18T20:14:47.752Z",
+ "time": "2026-11-18T20:19:56.811Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -25,11 +25,11 @@
   }
  ],
  "gpu": {
-  "tempC": 71,
-  "loadPct": 2,
-  "vramPct": 63,
+  "tempC": 52,
+  "loadPct": 3,
+  "vramPct": 9,
   "warning": "ok",
-  "jobHeld": true,
+  "jobHeld": false,
   "waiting": 0
  },
  "localAgents": {
@@ -38,10 +38,10 @@
   "running": 0
  },
  "comfy": {
-  "up": true,
-  "running": 1,
+  "up": false,
+  "running": 0,
   "pending": 0,
-  "lastDoneMin": 0
+  "lastDoneMin": null
  },
  "issues": 1
 }
