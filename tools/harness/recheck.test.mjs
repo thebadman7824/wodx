@@ -1,0 +1,60 @@
+// B7380: the recheck runs end to end with stand-in lanes, so a name it uses but does not have (B7310's stopped) fails here
+// and not on the PCs.
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {recheck} from "../pcq/recheck.mjs";
+
+function lanes(results) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "recheck-"));
+  const mainDir = path.join(tmp, "main"), branchDir = path.join(tmp, "branch");
+  for ( const d of [mainDir, branchDir] ) fs.mkdirSync(path.join(d, "tools", "gate"), {recursive: true});
+  fs.writeFileSync(path.join(mainDir, "tools", "gate", "gatea.mjs"), "");
+  const calls = [];
+  const deps = {
+    logs: tmp, log: () => {},
+    lanesCmd: async argv => { calls.push(argv[0]); return {code: 0}; },
+    worktree: async () => ({dir: mainDir, sha: "m".repeat(40)}),
+    // run-gate stand-in: writes the next scripted result for the side (branch or main) into the report file
+    node: async (script, argv) => {
+      const gate = argv[0], report = argv[argv.indexOf("--report") + 1], side = argv[argv.indexOf("--repo") + 1] === mainDir ? "main" : "alone";
+      const pass = results[side].shift();
+      fs.writeFileSync(report, `==== x\n${gate}: ${pass ? "2/2" : "1/2"} passed\n`);
+      calls.push(`${side}:${gate}`);
+      return {code: pass ? 0 : 1, out: ""};
+    }
+  };
+  return {deps, calls, wt: {dir: branchDir, sha: "b".repeat(40)}};
+}
+
+test("a gate that fails alone twice and passes twice on main is NEW, after two runs a side", async () => {
+  const {deps, calls, wt} = lanes({alone: [false, false], main: [true, true]});
+  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job1", wt, rep: "gatea: 1/2 passed\ngateb: 3/3 passed\n", L: "x.log", deps});
+  assert.match(out, /- gatea: NEW with this change/);
+  assert.match(out, /4 run\(s\)/);
+  assert.deepEqual(calls.filter(c => c.includes(":")), ["alone:gatea", "alone:gatea", "main:gatea", "main:gatea"]);
+  assert.equal(calls.filter(c => c === "reset").length, 4, "every run starts from a reset");
+});
+
+test("a failure alone that passes the second time is flaky, and main is not run", async () => {
+  const {deps, calls, wt} = lanes({alone: [false, true], main: []});
+  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2", wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps});
+  assert.match(out, /- gatea: flaky/);
+  assert.ok(!calls.some(c => c.startsWith("main:")));
+});
+
+test("a cancelled job stops rechecking: stopped is honoured", async () => {
+  const {deps, calls, wt} = lanes({alone: [false, false], main: [true, true]});
+  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job3", wt, rep: "gatea: 1/2 passed\n", L: "x.log", stopped: () => true, deps});
+  assert.match(out, /- gatea: not settled: the recheck ran out of time/);
+  assert.equal(calls.length, 0);
+});
+
+test("the runner hands the recheck its stop check and helpers", () => {
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /await recheck\(job, lane, tag, wt, rep, L, stopped\)/);
+  assert.match(src, /recheckRun\(\{job, lane, tag, wt, rep, L, stopped,/);
+  assert.match(src, /deps: \{lanesCmd, node, worktree, stallFor, log, logs: LOGS\}/);
+});

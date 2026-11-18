@@ -228,7 +228,7 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
 
 test("B7310: the runner reruns one gate per run-gate call", async () => {
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
-  const body = src.slice(src.indexOf("async function recheck("), src.indexOf("async function runLight("));
+  const body = fs.readFileSync(new URL("../pcq/recheck.mjs", import.meta.url), "utf8");
   assert.match(body, /\[gate, "--lane"/, "run-gate gets a single gate");
   assert.doesNotMatch(body, /\.\.\.failing, "--lane"/, "no longer all failing gates in one call");
   assert.match(body, /lanesCmd\(\["reset"/, "each run starts from a reset");
