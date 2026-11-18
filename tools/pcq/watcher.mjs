@@ -40,6 +40,8 @@ export const LIMITS = {
   trainFrontHours: 3.5,  // the train takes a pull request out after trainMaxHours (3); the same front past this is stuck
   alertOldHours: 24,     // an alert open longer than this is listed as old
   confirmCycles: 2,      // a problem must show this many cycles in a row before the alert issue opens
+  renderStallMin: 30,    // ComfyUI has work but nothing finished for this long: renders look stalled (B7296)
+  ocrStallMin: 60,       // OCR workers run but the output folder has nothing newer than this (B7296)
   laneConfirmCycles: 3,  // a lane must be down this many cycles (about 15 minutes): each gates job resets its lane first
 };
 /** Lanes that are down on purpose: 6 is kept for the local agents, which are paused (17 November 2026). */
@@ -127,10 +129,30 @@ export function assess(snap, prev = {}) {
   // The laptop's own processes.
   if ( snap.local ) for ( const [k, label] of [["runner", "runner"], ["watchdog", "runner watchdog"], ["statusPush", "status push"]] )
     if ( !snap.local[k] ) add(`laptop:local:${k}`, `Laptop: its ${label} is not running.`);
-  // Art and OCR: only what is visible.
-  const g = snap.pcs.main?.gpu;
-  notes.push(`ComfyUI (Main PC) has no status of its own; ${g && !(ageMin(snap.pcs.main?.time, now) > LIMITS.pushStaleMin) ? `the Main PC's card shows ${g.loadPct}% load, ${g.tempC} C, guard ${g.jobHeld ? "held by a job" : "free"}` : "the Main PC's card readings are old or missing"}.`);
-  notes.push("Book OCR (Secondary PC) publishes no status, so the watcher cannot see it yet.");
+  // Art renders and book OCR (B7296): read from the status file's comfy and ocr fields where a PC sends them.
+  const fresh = k => snap.pcs[k] && !(ageMin(snap.pcs[k].time, now) > LIMITS.pushStaleMin);
+  let sawComfy = false, sawOcr = false;
+  for ( const p of PCS ) {
+    if ( !fresh(p.key) ) continue;
+    const c = snap.pcs[p.key].comfy, o = snap.pcs[p.key].ocr;
+    if ( c ) {
+      sawComfy = true;
+      if ( !c.up ) notes.push(`${p.label}: ComfyUI is not answering (off, or not started after a restart).`);
+      else if ( (c.running || c.pending) && c.lastDoneMin !== null && c.lastDoneMin > LIMITS.renderStallMin )
+        add(`${p.key}:render`, `${p.label}: renders look stalled: ${c.running} running and ${c.pending} waiting in ComfyUI, and nothing has finished for ${hm(c.lastDoneMin)}.`);
+      else notes.push(`${p.label}: ComfyUI ${c.running || c.pending ? `${c.running} running, ${c.pending} waiting` : "idle"}${c.lastDoneMin !== null ? `, last render ${hm(c.lastDoneMin)} ago` : ""}.`);
+    }
+    if ( o ) {
+      sawOcr = true;
+      if ( o.gaveUp ) add(`${p.key}:ocr:gaveup`, `${p.label}: the book OCR's log says it gave up${o.memWait ? " while waiting for memory" : ""}.`);
+      else if ( o.workers > 0 && o.lastOutputMin !== null && o.lastOutputMin !== undefined && o.lastOutputMin > LIMITS.ocrStallMin )
+        add(`${p.key}:ocr:stalled`, `${p.label}: the book OCR has ${o.workers} worker${o.workers > 1 ? "s" : ""} running but no new output for ${hm(o.lastOutputMin)}${o.memWait ? "; its log says it is waiting for memory" : ""}.`);
+      else notes.push(`${p.label}: book OCR ${o.workers ? `${o.workers} worker${o.workers > 1 ? "s" : ""} running` : "not running"}${o.lastOutputMin != null ? `, last output ${hm(o.lastOutputMin)} ago` : ""}${o.memWait ? ", waiting for memory" : ""}.`);
+    }
+  }
+  if ( !sawComfy ) { const g = fresh("main") ? snap.pcs.main.gpu : null;
+    notes.push(`ComfyUI sends no status yet; ${g ? `the Main PC's card shows ${g.loadPct}% load, ${g.tempC} C, guard ${g.jobHeld ? "held by a job" : "free"}` : "the Main PC's card readings are old or missing"}.`); }
+  if ( !sawOcr ) notes.push("Book OCR (Secondary PC) sends no status yet, so the watcher cannot see it.");
   // Debounce: count cycles in a row for each problem.
   for ( const p of problems ) state.problems[p.key] = (prev.problems?.[p.key] ?? 0) + 1;
   const confirmed = problems.filter(p => state.problems[p.key] >= (/:lane:/.test(p.key) ? LIMITS.laneConfirmCycles : LIMITS.confirmCycles));

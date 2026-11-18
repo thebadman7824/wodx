@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {assess, report, parseTrain, statusStamp, LIMITS, PCS} from "../pcq/watcher.mjs";
+import {comfyFrom, ocrLogState} from "../pcq/status-push.mjs";
 
 const NOW = Date.parse("2026-11-18T03:00:00Z");
 const iso = minAgo => new Date(NOW - minAgo * 60e3).toISOString();
@@ -96,8 +97,38 @@ test("alerts about a silent Main PC that is back are listed as left open; the wa
   assert.ok(a.notes.some(n => /over 24 h: #1532\./.test(n)));
 });
 
-test("the report says plainly that OCR cannot be seen", () => {
-  assert.match(report(assess(healthy()), NOW, "Laptop"), /OCR \(Secondary PC\) publishes no status/);
+test("the report says plainly that OCR and ComfyUI cannot be seen when no PC sends them", () => {
+  const r = report(assess(healthy()), NOW, "Laptop");
+  assert.match(r, /OCR \(Secondary PC\) sends no status yet/); assert.match(r, /ComfyUI sends no status yet/);
+});
+
+test("renders: work in ComfyUI with nothing finished for over the limit is a problem; idle or busy-and-moving is a note", () => {
+  const withComfy = comfy => healthy({pcs: {...healthy().pcs, main: pc("main", 2, {comfy})}});
+  assert.ok(assess(withComfy({up: true, running: 1, pending: 3, lastDoneMin: LIMITS.renderStallMin + 5})).problems.some(p => p.key === "main:render"));
+  for ( const c of [{up: true, running: 1, pending: 0, lastDoneMin: 4}, {up: true, running: 0, pending: 0, lastDoneMin: 600}, {up: false, running: 0, pending: 0, lastDoneMin: null}] ) {
+    const a = assess(withComfy(c));
+    assert.equal(a.problems.length, 0, JSON.stringify(c)); assert.ok(a.notes.some(n => /Main PC: ComfyUI/.test(n)));
+  }
+});
+
+test("OCR: gave up or workers with no output past the limit are problems; waiting for memory alone is a note", () => {
+  const withOcr = ocr => healthy({pcs: {...healthy().pcs, secondary: pc("secondary", 2, {ocr})}});
+  assert.ok(assess(withOcr({workers: 1, lastOutputMin: 5, memWait: true, gaveUp: true})).problems.some(p => p.key === "secondary:ocr:gaveup"));
+  const st = assess(withOcr({workers: 2, lastOutputMin: LIMITS.ocrStallMin + 1, memWait: true, gaveUp: false})).problems.find(p => p.key === "secondary:ocr:stalled");
+  assert.ok(st); assert.match(st.text, /waiting for memory/);
+  const ok = assess(withOcr({workers: 1, lastOutputMin: 10, memWait: true, gaveUp: false}));
+  assert.equal(ok.problems.length, 0); assert.ok(ok.notes.some(n => /book OCR 1 worker running.*waiting for memory/.test(n)));
+});
+
+test("status push: ComfyUI's queue and history become counts and minutes", () => {
+  const now = Date.parse("2026-11-18T04:00:00Z");
+  const hist = {a: {status: {messages: [["execution_start", {timestamp: now - 50 * 60e3}], ["execution_success", {timestamp: now - 40 * 60e3}]]}},
+    b: {status: {messages: [["execution_error", {timestamp: now - 12 * 60e3}]]}}};
+  assert.deepEqual(comfyFrom({queue_running: [[1]], queue_pending: [[2], [3]]}, hist, now), {up: true, running: 1, pending: 2, lastDoneMin: 12});
+  assert.deepEqual(comfyFrom({}, {}, now), {up: true, running: 0, pending: 0, lastDoneMin: null});
+  assert.deepEqual(ocrLogState(["page 12 done", "waiting for free memory (3.1 GB, need 4)"]), {memWait: true, gaveUp: false});
+  assert.deepEqual(ocrLogState(["waited 2 h for memory; gave up", ""]), {memWait: true, gaveUp: true});
+  assert.deepEqual(ocrLogState(["page 13 done"]), {memWait: false, gaveUp: false});
 });
 
 test("parsers: the train line and the status stamp", () => {

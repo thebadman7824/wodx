@@ -97,8 +97,12 @@ plus the laptop's own runner, watchdog and status push. It flags:
 - the same pull request at the front of the merge train for over 3.5 hours (the train itself gives up at 3);
 - the laptop's own runner, watchdog or status push not running.
 
-It also lists the alerts that stayed open after the thing they named came back. ComfyUI and the book OCR publish no
-status yet, so the report says what it can see (the Main PC's card load and guard) and says plainly what it can't.
+It also lists the alerts that stayed open after the thing they named came back. Renders and OCR come from the `comfy` and
+`ocr` fields of a PC's status file (B7296): it flags work queued in ComfyUI with nothing finished for 30 minutes, OCR
+workers with no new output for 60 minutes, and an OCR run that gave up. Until a PC sends them, the report says so.
+
+`status-push.mjs` here is the copy every PC runs, from `<home>\gpu-tools`. Main PC: set `PC_COMFY_URL=http://127.0.0.1:8188`.
+Secondary PC: set `PC_OCR_MATCH` (default `book_pipeline`), `PC_OCR_OUT` (the OCR output folder) and `PC_OCR_LOG` (its log).
 
 The issue "PC watcher report" (label `pc-watch`) is rewritten each cycle. When a problem shows up on two cycles in a
 row, one issue "PC watcher alert" (label `pc-alert`) opens. It gets a comment when the list changes and closes when
