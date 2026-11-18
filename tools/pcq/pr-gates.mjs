@@ -74,6 +74,17 @@ export function staleJobs(open, pr, head) {
 
 /** B7332: a commit the merge train made (its merge of main, its carried reviews, or a stamp it marked). */
 export const TRAIN_TRAILER = "Merge-Train: yes";
+
+/**
+ * B7390: whether the merge-train label was on when the push happened: the newest "labeled" event for it is at or
+ * before pushedAt (an ISO time). With no time to go by, it counts as on (the B7332 behaviour).
+ */
+export function labelledBefore(events, pushedAt) {
+  const at = (events ?? []).filter(e => e.event === "labeled" && e.label?.name === "merge-train").map(e => Date.parse(e.created_at)).filter(Number.isFinite);
+  if ( !at.length ) return false;
+  const push = Date.parse(pushedAt ?? "");
+  return !Number.isFinite(push) || Math.max(...at) <= push;
+}
 export const isTrainCommit = msg => /\(merge train\)|^Merge train: /m.test(msg) || msg.includes(TRAIN_TRAILER);
 /**
  * B7332: whether the commits a push added (oldest first) are the train's own. A stamp right after a train commit counts
@@ -140,7 +151,12 @@ async function main() {
   if ( labels.includes("merge-train") && /^[0-9a-f]{40}$/.test(before) && before !== head ) {
     const cmp = await api(owner, "GET", `/compare/${before}...${head}`).catch(() => null);
     const msgs = cmp?.status === "ahead" ? (cmp.commits ?? []).map(c => c.commit?.message ?? "") : null;
-    if ( !msgs || !isTrainPush(msgs) ) {
+    // B7390: only a push made while the label was on counts. A thread that takes the label off, pushes and labels
+    // again is following the rule (PR 1880, 18 Nov: pushed 15:37, re-labelled 15:37:41, ejected 15:37:55 by B7332).
+    const events = await api(owner, "GET", `/issues/${pr}/events?per_page=100`).catch(() => []);
+    const lastCommit = (cmp?.commits ?? []).at(-1)?.commit?.committer?.date ?? null;
+    const pushedAt = env("EVENT_AT") || lastCommit;
+    if ( (!msgs || !isTrainPush(msgs)) && labelledBefore(events, pushedAt) ) {
       const why = msgs ? `${msgs.length} commit(s) pushed from outside the train` : "the branch was rewritten";
       say(`PR #${pr}: ${why} while it was in the merge train; taking it out of the train.`);
       if ( !DRY ) {

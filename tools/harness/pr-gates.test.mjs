@@ -91,3 +91,23 @@ test("B7332: the workflow hands the script the head before the push", () => {
   const train = fs.readFileSync(path.join(ROOT, "tools", "pcq", "train.mjs"), "utf8");
   assert.equal((train.match(/Merge-Train: yes/g) ?? []).length >= 2, true, "the train marks its merge and its stamp");
 });
+test("B7390: a push made while the merge-train label was off does not eject", async () => {
+  const {labelledBefore} = await import("../pcq/pr-gates.mjs");
+  const ev = (event, at) => ({event, label: {name: "merge-train"}, created_at: at});
+  // PR 1880, 18 Nov: label off, push 15:37:30, label on 15:37:41; the workflow ran after the label went back on
+  const pr1880 = [ev("labeled", "2026-11-18T11:26:04Z"), ev("unlabeled", "2026-11-18T15:36:50Z"), ev("labeled", "2026-11-18T15:37:41Z")];
+  assert.equal(labelledBefore(pr1880, "2026-11-18T15:37:30Z"), false);
+  // PR 1995: label on 11:11:47, thread pushed 11:12:42 while labelled
+  const pr1995 = [ev("unlabeled", "2026-11-18T11:10:21Z"), ev("labeled", "2026-11-18T11:11:47Z")];
+  assert.equal(labelledBefore(pr1995, "2026-11-18T11:12:42Z"), true);
+  assert.equal(labelledBefore(pr1995, null), true, "no push time: counts as labelled, as before");
+  assert.equal(labelledBefore([], "2026-11-18T11:12:42Z"), false, "never labelled");
+  assert.equal(labelledBefore([{event: "labeled", label: {name: "urgent"}, created_at: "2026-11-18T10:00:00Z"}], "2026-11-18T11:00:00Z"), false, "other labels do not count");
+});
+
+test("B7390: the workflow passes the push time", () => {
+  const wf = fs.readFileSync(path.join(ROOT, ".github", "workflows", "pc-gates.yml"), "utf8");
+  assert.match(wf, /EVENT_AT: \$\{\{ github\.event\.pull_request\.updated_at \}\}/);
+  const src = fs.readFileSync(path.join(ROOT, "tools", "pcq", "pr-gates.mjs"), "utf8");
+  assert.match(src, /labelledBefore\(events, pushedAt\)/);
+});
