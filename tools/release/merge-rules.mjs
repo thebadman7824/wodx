@@ -96,9 +96,11 @@ export function changedFiles(g, base, head) {
   return out;
 }
 
-/** Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. */
+/** Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. --full-history
+ * because a note added and then stamped away is absent on both sides of a later merge of main, and plain history
+ * simplification follows main's side and loses it (PR 1880). */
 export function branchNotes(g, base, head) {
-  const added = new Set(g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
+  const added = new Set(g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
   const out = [];
   for ( const file of [...added].sort() ) {
     const m = /^changes\/([\w-]+)\/([^/]+\.md)$/.exec(file);
@@ -107,7 +109,7 @@ export function branchNotes(g, base, head) {
     if ( text === null ) {
       // Gone at the head (merge-stamp removed it): the last commit on the branch that touched it removed it, so its
       // first parent holds the note's last form.
-      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
+      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file);
       text = last ? g.show(`${last}^1`, file) : null;
     }
     out.push({file, module: m[1], frag: text === null ? null : parseFragment(text)});
@@ -138,7 +140,7 @@ export function branchCommits(g, base, head) {
 
 /** Decision fragments added on the branch: [{file, numbers}], the B numbers of their "## B1234." sections. */
 export function branchDecisions(g, base, head) {
-  const added = g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean);
+  const added = g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean);
   const out = [];
   for ( const file of [...new Set(added)].sort() ) {
     if ( !/^changes\/decisions\/B\d+\.md$/.test(file) ) continue;
@@ -146,7 +148,7 @@ export function branchDecisions(g, base, head) {
     if ( text === null ) {
       // Gone by the head. A stamp removes a fragment in the same commit that writes docs/DECISIONS.md, so its numbers
       // still count; a fragment renamed or deleted any other way (B7010.md renumbered to B7110.md) no longer holds them.
-      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
+      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file);
       const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
       if ( !stamped ) continue;
       text = g.show(`${last}^1`, file);

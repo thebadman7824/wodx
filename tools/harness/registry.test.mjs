@@ -5,7 +5,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 import * as REG from "../registry/registry.mjs";
 import * as ST from "../registry/strength.mjs";
-import {registryRule, decisionClashes, upkeepWarnings, branchDecisions, gitIn} from "../release/merge-rules.mjs";
+import {registryRule, decisionClashes, upkeepWarnings, branchDecisions, branchNotes, gitIn} from "../release/merge-rules.mjs";
 import os from "node:os";
 import {execFileSync} from "node:child_process";
 
@@ -192,4 +192,24 @@ test("branchDecisions: a renamed fragment drops its old numbers; a stamped one k
   fs.rmSync(dir, {recursive: true, force: true});
   assert.deepEqual(frags.map(f => [f.file, f.numbers]), [["changes/decisions/B7110.md", ["B7110", "B7111"]], ["changes/decisions/B7120.md", ["B7120"]]]);
   assert.deepEqual(decisionClashes(frags, "# Decisions\n\n## B7010. Taken by PR 1835\n"), [], "B7010 was renamed away, so no clash");
+});
+
+test("branchNotes and branchDecisions: a stamped note still counts after main is merged in again (PR 1880)", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wodx-notes-"));
+  const git = (...a) => execFileSync("git", ["-c", "user.email=t@t", "-c", "user.name=t", ...a], {cwd: dir, encoding: "utf8"});
+  const put = (f, t) => { fs.mkdirSync(path.dirname(path.join(dir, f)), {recursive: true}); fs.writeFileSync(path.join(dir, f), t); };
+  git("init", "-q", "-b", "main");
+  put("docs/DECISIONS.md", "# Decisions\n"); git("add", "-A"); git("commit", "-qm", "base");
+  git("checkout", "-qb", "work");
+  put("changes/mod-a/x.md", "---\nbump: patch\n---\nA fix.\n"); put("changes/decisions/B7120.md", "## B7120. C\n"); git("add", "-A"); git("commit", "-qm", "note");
+  fs.rmSync(path.join(dir, "changes"), {recursive: true}); put("docs/DECISIONS.md", "# Decisions\n\n## B7120. C\n"); git("add", "-A"); git("commit", "-qm", "stamp");
+  // Another pull request's note lands on main, so after the merge changes/ matches main's side and plain history
+  // simplification would follow only that side.
+  git("checkout", "-q", "main"); put("changes/mod-b/y.md", "---\nbump: patch\n---\nOther.\n"); git("add", "-A"); git("commit", "-qm", "main moves");
+  git("checkout", "-q", "work"); git("merge", "-q", "--no-edit", "main");
+  const base = git("merge-base", "main", "HEAD").trim();
+  const notes = branchNotes(gitIn(dir), base, "HEAD"), frags = branchDecisions(gitIn(dir), base, "HEAD");
+  fs.rmSync(dir, {recursive: true, force: true});
+  assert.deepEqual(notes.map(n => [n.file, n.module, n.frag !== null]), [["changes/mod-a/x.md", "mod-a", true]]);
+  assert.deepEqual(frags.map(f => [f.file, f.numbers]), [["changes/decisions/B7120.md", ["B7120"]]]);
 });
