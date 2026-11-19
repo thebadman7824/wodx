@@ -277,7 +277,7 @@ async function main() {
     if ( !count ) { say(`PR #${pr}: nothing to run since ${since.sha.slice(0, 8)}; the whole list runs instead.`); }
   }
   const narrowed = since && count > 0;
-  const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", ...(narrowed ? extra : []), "--touched", ...(narrowed ? ["--since", since.sha] : []), "--ref", head, "--prio", "2", "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
+  const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", ...(narrowed ? extra : []), "--touched", ...(narrowed ? ["--since", since.sha] : []), "--ref", head, "--prio", "2", ...(labels.includes("urgent") ? ["--class", "urgent"] : []), "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
   if ( sub.status !== 0 ) { console.error((sub.stderr || sub.stdout || "").slice(-1500)); say("submit.mjs refused the job"); finish(1); }
   const job = JSON.parse(sub.stdout.slice(sub.stdout.indexOf("{")));
   const issue = {title: `PC job: gates touched ${marker(pr, head)}`, labels: ["pc-job"],
