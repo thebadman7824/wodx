@@ -55,12 +55,13 @@ test("B6720: never twice, never on the general window, soak or damage, and off w
   assert.deepEqual(WODX_ORIGINS, ["power", "attack", "magic", "item"]);
 });
 
-test("B6720: difficulty is held at 10 and the dice never go below none", () => {
+test("B6720: the dice roll at 10 and never go below none; B7120: each point past 10 needs one more success", () => {
   const r = container({ difficulty: 9, numDices: 1 });
   applyWodxRollMods(r, { modsFor: () => ({ dice: -3, diff: 3, parts: ["Blinded +3 diff"] }) });
   assert.equal(r.difficulty, 10);
   assert.equal(r.numDices, 0);
-  assert.match(r.extraInfo.join(" "), /held at 10/);
+  assert.equal(r.wodxOver, 2);
+  assert.match(r.extraInfo.join(" "), /rolled at 10; 2 more successes needed/);
 });
 
 test("B6720: the system's DiceRoller applies them before it reads the pool", () => {

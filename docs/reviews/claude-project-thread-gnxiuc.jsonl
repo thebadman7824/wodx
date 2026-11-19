@@ -12,3 +12,4 @@
 {"file":"system/worldofdarkness/module/scripts/roll-dice.js","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"a558bcc59cf5","at":"2026-11-19T23:31Z"}
 {"file":"system/worldofdarkness/module/scripts/wodx-roll-mods.js","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"31c5b1b835bd","at":"2026-11-19T23:31Z"}
 {"file":"tools/harness/past-ten-system.test.mjs","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"869f0cf89f15","at":"2026-11-19T23:31Z"}
+{"file":"tools/harness/system-audit-w1.test.mjs","verdict":"working","how":"B6720 test now asserts the B7120 wording and wodxOver; ran it (11/11)","hash":"aa0d0048c7e2","at":"2026-11-19T23:34Z"}
