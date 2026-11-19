@@ -71,7 +71,7 @@ export const MENUS = {
             ["Gifts and Gnosis", [["api:useGift", "Use a Gift", "fa-star"], ["api:learnGift", "Learn a Gift", "fa-book-open"],
                 ["api:useFetish", "Fetish or talen", "fa-gem"], ["api:meditate", "Meditate (regain Gnosis)", "fa-moon"]]],
             ["Rites and spirits", [["api:performRite", "Perform a rite", "fa-circle-notch"], ["api:summonSpirit", "Summon a spirit", "fa-ghost"],
-                ["api:chiminage", "Chiminage (spirit debts)", "fa-handshake"]]],
+                ["api:chiminage", "Chiminage (spirit debts)", "fa-handshake"], ["api:packTotem", "Pack totem", "fa-paw"]]],
             ["Body", [["api:shiftForm", "Change form", "fa-dog"], ["regen", "Regenerate", "fa-heartbeat"], ["api:hazard", "Fire / fall / silver", "fa-burn"],
                 ["api:battleScar", "Battle Scar", "fa-band-aid"], ["api:healing", "Healing with time", "fa-clock"]]],
             ["Renown and witnesses", [["api:accomplishment", "Rite of Accomplishment", "fa-medal"], ["api:awardRenown", "Award Renown (GM)", "fa-award"],

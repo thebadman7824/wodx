@@ -74,7 +74,9 @@ test("B7206: a closed or pc-cancel job is cancelled: processes ended, lanes rese
 
 test("B7207: runner-hold blocks only job pickup and lane growth; runner-off still updates the status", () => {
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
-  assert.match(src, /const holding = fs\.existsSync\(path\.join\(HOME, "runner-hold"\)\);/);
+  // B7448: a planned window holds the same way as the runner-hold file
+  assert.match(src, /const hold = fs\.existsSync\(path\.join\(HOME, "runner-hold"\)\);/);
+  assert.match(src, /const holding = hold \|\| !!win;/);
   assert.match(src, /for \( const q of draining \|\| holding \? \[\] : ready \)/);
   assert.match(src, /if \( !draining && !holding && !res\.low\.length \) growJobs\(/);
   assert.match(src, /holding \? "runner-hold: taking no new jobs" : null\)/);

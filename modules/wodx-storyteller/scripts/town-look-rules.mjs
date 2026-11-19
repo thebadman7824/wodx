@@ -242,8 +242,15 @@ export const EVENT_LOOKS = [
   {re: /great-maelstrom$/, kind: "storm", alpha: 0.22, color: "#1d2430", last: 3 * DAY, note: "a storm that will not break, and the dead restless in it"},
   {re: /^avatar-storm$/, kind: "storm", alpha: 0.18, color: "#3b2a55", last: 3 * DAY, note: "a storm of strange colour in the sky"}
 ];
-export function eventLookFor(id, {now = 0} = {}) {
-  const e = EVENT_LOOKS.find(x => x.re.test(String(id ?? "")));
+/**
+ * B7262: war at home. A world timeline event of war or a siege in Moravia (the Mongols in 1241, the Hussites, the Swedes)
+ * puts smoke from burning villages on the horizon over the towns, for three days, when Moravia is home.
+ */
+export const HOME_WAR_LOOK = {kind: "smoke", alpha: 0.14, color: "#4a3a30", last: 3 * DAY, note: "smoke on the horizon from burning villages"};
+export const homeWar = (ev, homePart = "MO") => !!ev && !ev.hidden && homePart === "MO" && ev.region === "MO" && typeof ev.id === "string" && ev.id.startsWith("wh-")
+  && Array.isArray(ev.tags) && (ev.tags.includes("war") || ev.tags.includes("siege"));
+export function eventLookFor(id, {now = 0, ev = null, homePart = "MO"} = {}) {
+  const e = EVENT_LOOKS.find(x => x.re.test(String(id ?? ""))) ?? (homeWar(ev, homePart) ? HOME_WAR_LOOK : null);
   return e ? {kind: e.kind, at: null, until: {worldTime: Math.round(Number(now) || 0) + e.last}, note: e.note, color: e.color, alpha: e.alpha} : null;
 }
 

@@ -40,10 +40,12 @@
   },
   "gpu": {"order": ["art", "ocr", "local", "other"], "_about": "The GPU guard's class order (desk pick p10). Gate lanes do not take the card lock (PENDING-REVIEW, 17 November)."},
   "train": {"maxHours": 3, "clockStopsWhen": ["hold", "off", "window"], "_about": "The 3-hour limit counts only time when a lane that could run the front job is taking work (desk pick p5)."},
-  "nightly": {"rank": "R4", "skipWhenUnchanged": true, "keep": "tools/pcq/nightly-gates.mjs", "retire": "tools/lanes/nightly.mjs (the older Main PC run from lane-reset.cmd), if the Main PC shows it still runs", "_about": "One nightly full run (desk pick p6)."},
+  "nightly": {"rank": "R4", "skipWhenUnchanged": true, "keep": "tools/pcq/nightly-gates.mjs", "retired": "tools/lanes/nightly.mjs: lane-reset.cmd no longer starts it (B7460)", "_about": "One nightly full run (desk pick p6)."},
   "windows": {
     "holdMinutesBefore": 30,
-    "planned": [],
+    "planned": [
+      {"pc": "DESKTOP-MRKCMRG", "from": "2026-11-19T00:30:00Z", "to": "2026-11-19T03:00:00Z", "why": "RAM install and memory test"}
+    ],
     "_about": "Planned hardware work, one row each: {\"pc\": \"BENJAMIN-PC\", \"from\": \"2026-11-21T15:00:00Z\", \"to\": \"2026-11-21T17:00:00Z\", \"why\": \"RAM install\"}. From holdMinutesBefore minutes ahead the PC takes no new jobs and the train clock stops (desk pick p7)."
   },
   "atPc": {"utc": "00:30-02:00", "effect": "none", "_about": "The owner's evenings at the PCs change nothing unless the owner asks (desk pick p7)."},

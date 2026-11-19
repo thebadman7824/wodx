@@ -223,7 +223,7 @@
 1958|H|mor|AS|Beijing|famine|The Great Leap Forward|Mao's Great Leap brings famine that kills tens of millions.
 1958|H|mor|EU|Brussels|building,art|Expo 58|Czechoslovakia's pavilion and its Laterna Magika win the Brussels fair.
 1959|H|mor|AS|Lhasa|uprising|The Tibetan rising|Tibet rises against China, and the Dalai Lama flees to India.
-1960|H|mor|EU|Brno|law|The new constitution|Czechoslovakia declares itself a socialist republic, the second in the bloc after the Soviet Union.
+1960|H|mor|MO|Brno|law|The new constitution|Czechoslovakia declares itself a socialist republic, the second in the bloc after the Soviet Union.
 1960|H|mor|ME|Baghdad|founding,trade|OPEC|Iran, Iraq, Kuwait, Saudi Arabia and Venezuela found OPEC in Baghdad to take back control of oil prices.
 1961|H|mor|EU|Moscow|science,travel|Gagarin|Yuri Gagarin orbits the earth in Vostok 1, the first person in space.
 1961|H|mor|EU|Berlin|building|The Berlin Wall|East Germany builds a wall through Berlin overnight to stop its people from leaving.

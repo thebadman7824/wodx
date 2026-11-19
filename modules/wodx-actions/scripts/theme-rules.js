@@ -71,7 +71,7 @@ export const MENU_PLAN = {
     },
     lupine: {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useGift", "api:shiftForm", "api:spendRage", "preset:primalurge", "preset:trackscent", "api:useFetish", "api:performRite",
-            "api:summonSpirit", "api:curse", "api:learnGift", "api:chiminage", "api:accomplishment"],
+            "api:summonSpirit", "api:curse", "api:learnGift", "api:chiminage", "api:packTotem", "api:accomplishment"],
         resist: ["api:rageRoll", "api:garouEndFrenzy", "api:hazard", "api:battleScar"],
         recover: ["regen", "api:healing", "api:remainActive", "api:meditate", "uses:willpower"],
         st: ["api:awardRenown", "api:delirium"],
@@ -239,6 +239,7 @@ export const DESC = {
     "api:performRite": "Perform a rite: its roll and time",
     "api:summonSpirit": "Call a spirit from the Umbra",
     "api:chiminage": "Record a debt owed to a spirit or a caern, or one paid",
+    "api:packTotem": "The pack's totem: its gifts, a Pack Trait for the scene, its Willpower, its ban",
     "api:shiftForm": "Change form: the new form's Attributes and difficulty",
     "regen": "Regenerate a level of damage this turn",
     "api:battleScar": "A Battle Scar from a grievous wound, and its Glory",

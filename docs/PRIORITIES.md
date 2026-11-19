@@ -38,7 +38,7 @@ no lead (gates lead), and an art render there runs inside its own memory budget.
    (B7331, B7332). The 3-hour limit stops counting while the lanes that could run the front job are held, off, or in a
    planned window.
 6. **Nightly.** One nightly full run (tools/pcq/nightly-gates.mjs), at R4, skipped when main did not change. The
-   older Main PC run from lane-reset.cmd (tools/lanes/nightly.mjs) is retired if the Main PC shows it still runs.
+   older Main PC run from lane-reset.cmd (tools/lanes/nightly.mjs) is retired: lane-reset.cmd no longer starts it (B7460).
 7. **Planned hardware work.** Add a row to `windows.planned` (PC, start, end, reason). From 30 minutes before it, the
    PC takes no new jobs and the train clock stops, so a shutdown cuts nothing. The owner's evenings at the PCs
    (00:30 to 02:00 UTC) change nothing unless the owner asks.
@@ -58,10 +58,12 @@ front is read from the Main runner's status issue line "Merge train: front #N", 
 | Tool | Reads | Status |
 |---|---|---|
 | tools/pcq/prio.mjs | the whole file | built (B7350) |
-| runner.mjs, submit.mjs, pr-gates.mjs | ranks, aging, claims, the gate-boundary hand-over | to build, gate runner thread |
-| train.mjs | train clock | to build, gate runner thread |
-| nightly-gates.mjs | R4, skip when unchanged | to build, gate runner thread |
-| gpuguard.mjs | gpu order | to build (rebase of pull request 1834) |
+| runner.mjs, submit.mjs, pr-gates.mjs | ranks and aging (queue order), planned windows, job classes | built (B7448) |
+| runner.mjs | claims (reservedGb kept free) | to build, gate runner thread |
+| runner.mjs | the gate-boundary hand-over | to build, after the rerun-only-unfinished-gates fix |
+| train.mjs | train clock | built (B7449) |
+| nightly-gates.mjs | R4 (class health), skip when unchanged | built (B7448, B7443) |
+| gpuguard.mjs | gpu order | reads it (B7510) |
 | vl-loop.ps1 (Secondary PC), art-batch.ps1 (Main PC) | `prio.mjs ask --class ocr|art --claim` | to wire, PC helper threads |
 | watcher.mjs | flags a lower rank running while a higher one waited over 30 minutes | to build |
 | The coordinator and new threads | thread order | in use from 18 November |

@@ -8,7 +8,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | system | not yet | 0 | 0 | 0 |
 | wodx-actions | not yet | 0 | 0 | 0 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
-| wodx-chronicle | not yet | 0 | 0 | 0 |
+| wodx-chronicle | not yet | 1 | 0 | 0 |
 | wodx-combat | not yet | 1 | 0 | 0 |
 | wodx-creation | not yet | 0 | 0 | 0 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
@@ -20,12 +20,26 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-senses | not yet | 0 | 0 | 0 |
 | wodx-sheets | not yet | 0 | 0 | 0 |
 | wodx-solo | not yet | 0 | 0 | 0 |
-| wodx-storyteller | not yet | 0 | 0 | 0 |
+| wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
 | wodx-voices | not yet | 0 | 0 | 0 |
+
+## wodx-chronicle
+
+| Feature | Core | Status | Open | Gate |
+| --- | --- | --- | --- | --- |
+| Dated events: history fires on its date as the clock passes it (`chronicle.dated-events`) | core | gated | 2 | gatedatedplay 5 |
 
 ## wodx-combat
 
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Standing up from a knockdown (`combat.knockdown-stand`) | core | gated | 1 | gateknockdown 4 |
+
+## wodx-storyteller
+
+| Feature | Core | Status | Open | Gate |
+| --- | --- | --- | --- | --- |
+| Great events and war at home in the sky over the towns (`storyteller.event-looks`) | core | gated | 1 | gatedatedplay 5 |
+| Market news: dated events and trade move the markets, applied from a card (`storyteller.market-news`) | core | gated |  | gatedatedplay 4 |
+| The Ledger: a dated debt, oath or boon comes due as the clock passes it (`storyteller.ledger-due`) | core | shown | 2 |  |

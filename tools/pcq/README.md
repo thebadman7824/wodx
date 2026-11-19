@@ -32,6 +32,15 @@ to the running jobs (B7220):
 It runs the branch's run-gate.mjs on one lane, with no recheck, and never sets the `wodx/gates` status (named gates
 only). While it waits, running gates jobs take no more lanes, and it gets the next lane that frees.
 
+Smaller runs (B7441-B7444): a pull request runs tier 1 (the changed modules' own gates, changed gates and nine
+cross-module gates; `run-gate.mjs --touched --wide` gives the older list); after a merge of main it reruns only what
+main touched and what failed (a touched job with "since"); a gate that passes alone twice is an order fault and does
+not hold it; the nightly full run names the merges behind a new failure and skips when main's gate inputs did not
+change.
+
+Gate times (B7440): each lane's report ends with an indented line `  TIMES gate6b=12 gate6c=8 ...`, the seconds each
+gate took. `node tools/pcq/gate-times.mjs <saved report or comment> [...]` lists them slowest first.
+
 Book and Trove lookups (`books-find`, `trove-find`) need no lane and run beside the gate jobs. Their results give book
 and page or file names only, never text, because the repository is public. Anything else (a copy, an OCR run, work
 that needs judgment) still goes to the PC helper thread.
@@ -155,6 +164,14 @@ Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC star
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
 touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
 
+## The GPU guard (B7510)
+`gpuguard.mjs` lets one GPU job hold the card at a time and starts a job only when its memory fits:
+`node tools/pcq/gpuguard.mjs run --class art|ocr|local|other [--need-gb N] [--label x] -- <command>`, and
+`gpuguard.mjs state` prints one JSON line (card reading, holder, waiters). Waiters line up by gpu.order in
+registry/priorities.json, then by arrival. The lock folder is GPU_GUARD_DIR (on the Secondary PC, D:\WoDX\pcq\gpu-guard).
+The PCs also run a copy from D:\WoDX\pcq\gpu-tools, which uses the same order built in; nightly-gates.mjs takes the
+repo copy first.
+
 ## The merge train (B7202)
 
 Pull requests labelled `merge-train` merge one at a time, oldest label first. Every few minutes the Main PC's runner
@@ -167,5 +184,15 @@ prints what it would do now. The hourly sweep no longer merges main into open pu
 brings that back). docs/WORKFLOW.md, section 6, is the thread's side. A pull request labelled `urgent` as well goes to
 the front of the line (B7420); a fix to the train or runner that the train is stuck without is merged by its cloud
 thread instead (B7422).
+
+Batches (B7445): when the front needs main merged in and a stamp anyway, and up to two pull requests behind it are green
+on their own heads (checks passed, gates not red, merge rules red for nothing but the gate result still to come) and
+change no file the others change, the train builds one batch instead: main, each member's head merged in unchanged,
+file reviews carried over, one stamp, pushed to `claude/merge-train-batch` (worktree `<home>/train-batch`) and opened as
+a pull request "Merge train batch: #a, #b". That pull request is the train front: it is gated once and merged when
+green, and then each member's head is on main, so GitHub marks it merged too. A red batch is closed and the next one
+takes half as many, down to the front alone, so the one at fault leaves the train with its own reason. A member that is
+pushed to or leaves the line, or an urgent pull request at the front, closes the batch and the train builds a new
+one; when main moves the batch is built again on it. `"trainBatch": 1` in runner.json turns batches off.
 
 Stale runs (B7330-B7332): every push to a pull request cancels its gate jobs for older commits (closed if not started, pc-cancel if running), a push from outside the train to a pull request labelled `merge-train` takes it out of the train with a comment, and a runner stopping with runner-off still acts on pc-cancel. To pause a runner, use `runner-hold` (takes no new jobs, keeps status, cancels and the train going) rather than `runner-off`.

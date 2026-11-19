@@ -1,0 +1,5 @@
+{"file":"tools/pcq/gpuguard.mjs","verdict":"working","how":"diffed against the Secondary PC's live copy (same apart from CRLF) and read the changed rank, sort and usage lines in full; gpuguard.test.mjs 4 pass","hash":"506977bc6b76","at":"2026-11-18T21:59Z"}
+{"file":"tools/harness/gpuguard.test.mjs","verdict":"working","how":"4 pass; order test fails if RANK ignores the file","hash":"a007d9d0b11d","at":"2026-11-18T21:59Z"}
+{"file":"docs/PRIORITIES.md","verdict":"working","how":"read against gpuguard.mjs and the Secondary PC notes of 18 Nov","hash":"b429b77be5fe","at":"2026-11-18T21:59Z"}
+{"file":"tools/pcq/README.md","verdict":"working","how":"read against gpuguard.mjs and the Secondary PC notes of 18 Nov","hash":"b1ec175689b2","at":"2026-11-18T21:59Z"}
+{"file":"docs/PRIORITIES.md","verdict":"working","how":"merge with main: kept main's reader table (B7448, B7449) and set only the gpuguard row to reads it (B7510)","hash":"085562af5815","at":"2026-11-19T05:56Z"}

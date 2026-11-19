@@ -36,6 +36,8 @@ export const EVERY_TURN = {
   "invoke the storm": {line: "Demon (DtF)", rounds: "faith", area: {radius: "faith"}, strike: {die: 9, damage: {pool: "torment", type: "lethal", soak: true}}, page: "DtF p. 200", text: "lightning strikes at random each turn (a 9 or 10 per person inside), Torment lethal dice; rolls inside two harder"},
   "naming the body's destruction": {line: "Mummy (2nd)", on: "target", levelsEq: 3, roll: {pool: "stamina", diff: 8, onFail: {damage: {levels: 1, type: "lethal", soak: true}}}, endOnHeal: true, page: "MtR p. 124", text: "Stamina at 8 each turn or a lethal level, until the wound is treated"},
   "witch's nimbus": {line: "Orpheus", touch: true, page: "Orpheus pp. 104-105", text: "whatever lands a close blow takes the nimbus's lethal levels"},
+  // B7093: a living thing held by Movement of the Mind fights it every turn (V20 p. 220)
+  "movement of the mind": {line: "Vampire (V20)", on: "target", roll: {pool: "willpower", diff: "caster:willpower", onWin: {end: true}}, page: "V20 p. 220", text: "a living thing held rolls Willpower each turn against the caster's Willpower, and breaks free on a success"},
   "blood pump": {line: "Werewolf (Changing Breeds)", flag: "noBloodCap", page: "W20 CB p. 67", text: "no limit on the blood spent each turn"}
 };
 
@@ -116,4 +118,6 @@ export function stepOf(rec, roll = null) {
 }
 
 /** The roll's difficulty: a number, or the character's Torment. */
-export const rollDiff = (diff, {torment = 0} = {}) => Math.max(3, Math.min(10, diff === "torment" ? (n(torment) || 6) : n(diff) || 6));
+/** A roll's difficulty: a number, the Torment, or a trait of the caster ("caster:willpower", B7093). */
+export const rollDiff = (diff, {torment = 0, caster = 0} = {}) => Math.max(3, Math.min(10, diff === "torment" ? (n(torment) || 6)
+  : /^caster:/.test(String(diff)) ? (n(caster) || 6) : n(diff) || 6));
