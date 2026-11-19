@@ -435,6 +435,7 @@ Next free block: B7530
 | B7470-B7479 | gatetruthstoryteller step 3 waits for the convened record (used B7470) | tools |
 | B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
 | B7500-B7509 | The Secondary PC drives the merge train while the Main PC is down (used B7500) | tools |
+| B7510-B7519 | GPU guard in the repo, reading the GPU order from the priority file (used B7510) | tools |
 | B7520-B7529 | Merge rules find release notes after a stamp and a second merge of main (used B7520) | tools |
 <!-- decision-index:end -->
 
@@ -14820,6 +14821,20 @@ The Laptop already has `train: false`. The train keeps its state in `<home>/trai
 Secondary PC starts its own and reads the line afresh from the labels.
 
 Reverse: set `train` back to `true` in runner.json and to `false` in runner.benjamin-pc.json once the Main PC is up.
+
+## B7510. The GPU guard reads gpu.order from registry/priorities.json (2026-11-18)
+Repository workflow. Desk pick p10 puts the GPU class order (art, ocr, local, other) in registry/priorities.json. The
+guard the PCs run, D:\WoDX\pcq\gpu-tools\gpuguard.mjs, came from pull request 1834's branch and was never in the repo,
+and its order (art, local, other) was written into the file. tools/pcq/gpuguard.mjs is now that same guard (the
+Secondary PC's live copy of 18 November, byte for byte apart from line endings) with the order read from the priority
+file, a built-in fallback to the same order when the file is missing, an ocr class, and unknown classes last.
+nightly-gates.mjs already looks for tools/pcq/gpuguard.mjs before the PC copy, so once a PC's clone has it the nightly
+run uses it. The lock folder does not change on the Secondary PC: GPU_GUARD_DIR is set there to D:\WoDX\pcq\gpu-guard, and
+its runner clone (D:\WoDX\pcq\repo) would give the same folder by default. On a PC without GPU_GUARD_DIR the default
+depends on where the clone sits (untested on the Main PC). The book OCR still asks as class other; moving it to ocr is a one-word change in
+vl-loop.ps1 on the PC. The status page from pull request 1834 is not part of this.
+
+Reverse: delete tools/pcq/gpuguard.mjs and tools/harness/gpuguard.test.mjs; nightly-gates.mjs falls back to the PC copy.
 
 ## B7520. Merge rules read the branch's notes with full history (2026-11-19)
 Repository workflow, bug #2124. The merge rules list the release notes and decision fragments a branch added with

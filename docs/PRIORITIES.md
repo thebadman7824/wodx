@@ -63,7 +63,7 @@ front is read from the Main runner's status issue line "Merge train: front #N", 
 | runner.mjs | the gate-boundary hand-over | to build, after the rerun-only-unfinished-gates fix |
 | train.mjs | train clock | built (B7449) |
 | nightly-gates.mjs | R4 (class health), skip when unchanged | built (B7448, B7443) |
-| gpuguard.mjs | gpu order | to build (rebase of pull request 1834) |
+| gpuguard.mjs | gpu order | reads it (B7510) |
 | vl-loop.ps1 (Secondary PC), art-batch.ps1 (Main PC) | `prio.mjs ask --class ocr|art --claim` | to wire, PC helper threads |
 | watcher.mjs | flags a lower rank running while a higher one waited over 30 minutes | to build |
 | The coordinator and new threads | thread order | in use from 18 November |
