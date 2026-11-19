@@ -1,6 +1,6 @@
 {
  "host": "secondary",
- "time": "2026-11-19T10:27:16.590Z",
+ "time": "2026-11-19T10:32:19.352Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -19,7 +19,7 @@
  "ocr": {
   "workers": 0,
   "loopUp": false,
-  "lastOutputMin": 621,
+  "lastOutputMin": 626,
   "memWait": false,
   "gaveUp": false,
   "stopped": true
