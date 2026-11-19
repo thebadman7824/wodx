@@ -167,7 +167,7 @@ export function build(ctx) {
         if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
         const me = await rollPool(built.dice, built.difficulty, { specialty: !!fd.specialty, willpower: !!fd.wp });
         const op = opponentPool(npc, preset.opp, { oppPool: "preset", diff: preset.diff ?? 6, oppDice: 3, oppDiff: 6 }, actor);
-        const them = await rollPool(op.dice, Math.min(10, op.diff + nm.diff));
+        const them = await rollPool(op.dice, op.diff + nm.diff);
         const res = SR.outcome(me, them, { needMore: !!preset.opp?.needMore });
         const label = [pool.attributeLabel, pool.abilityLabel || pick.abilityName].filter(Boolean).join(" + ");
         let body = rollBlock(label, me, built.parts.concat(fd.specialty ? ["specialty"] : [], fd.wp ? ["Willpower"] : []), !!fd.specialty);
