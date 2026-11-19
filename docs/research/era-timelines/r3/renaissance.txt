@@ -44,7 +44,7 @@
 1468|H|mor|EU|Albania|death|Skanderbeg dies|Albania's defender dies of malaria; the Ottomans take the country within a decade.
 1469|H|mor|EU|Florence|crown|Lorenzo de' Medici|Lorenzo the Magnificent leads Florence.
 1469|H|mor|EU|Valladolid|crown|Ferdinand and Isabella marry|The heirs of Aragon and Castile marry in secret.
-1469|H|mor|EU|Olomouc|crown|Matthias king in Olomouc|Catholic lords elect Matthias Corvinus King of Bohemia at Olomouc.
+1469|H|mor|MO|Olomouc|crown|Matthias king in Olomouc|Catholic lords elect Matthias Corvinus King of Bohemia at Olomouc.
 1470|H|mor|ME|Negroponte|siege|Negroponte|The Ottomans take Venice's island of Negroponte.
 1471|H|mor|EU|Tewkesbury|battle,death|Tewkesbury|Edward IV kills the Lancastrian prince; Henry VI dies in the Tower days later.
 1471|H|mor|EU|Prague|crown,death|George of Podebrady dies|The Hussite king dies; Vladislaus Jagiellon takes Bohemia.
@@ -63,7 +63,7 @@
 1478|H|mor|EU|Florence|death,crown|The Pazzi conspiracy|Plotters kill Giuliano de' Medici in the cathedral; Lorenzo survives.
 1478|W|hun|EU|Seville|persecution,faith|The Spanish Inquisition|The pope allows Ferdinand and Isabella their own Inquisition; the first burnings come in 1481.
 1478|H|mor|EU|Novgorod|crown|Novgorod taken|Ivan III ends the Novgorod republic.
-1479|H|mor|EU|Olomouc|treaty|The Peace of Olomouc|Matthias keeps Moravia, Silesia and Lusatia for life.
+1479|H|mor|MO|Olomouc|treaty|The Peace of Olomouc|Matthias keeps Moravia, Silesia and Lusatia for life.
 1479|H|mor|EU|Constantinople|treaty|Venice pays for peace|Venice makes peace with Mehmed II.
 1480|H|mor|EU|Ugra River|war|The Great Stand on the Ugra|Moscow and the Horde face each other across the Ugra; the Tatars ride away and the yoke ends.
 1480|H|mor|EU|Otranto|massacre|Otranto|The Ottomans take Otranto in Italy and kill hundreds who will not convert.
@@ -156,7 +156,7 @@
 1526-8|H|mor|EU|Mohacs|battle,crown,death|Mohacs|Suleiman destroys the Hungarian army; King Louis II drowns fleeing.
 1526|H|mor|EU|Prague|crown|Ferdinand king of Bohemia|Ferdinand of Habsburg is elected King of Bohemia.
 1527|H|mor|EU|Rome|massacre,siege|The sack of Rome|Imperial troops sack Rome for weeks; the pope is besieged in Castel Sant'Angelo.
-1528|H|mor|EU|Moravia|faith,migration|Anabaptists in Moravia|Anabaptist communities settle in southern Moravia.
+1528|H|mor|MO|Moravia|faith,migration|Anabaptists in Moravia|Anabaptist communities settle in southern Moravia.
 1528|W|vam|EU|Venice|faith|The promise of 1528|Augustus Giovanni's clan comes to its arrangement with the Camarilla.
 1529|H|mor|EU|Vienna|siege|The siege of Vienna|Suleiman besieges Vienna and fails.
 1529|H|mor|EU|Marburg|faith|The Marburg Colloquy|Luther and Zwingli fail to agree.
@@ -277,7 +277,7 @@
 1451|H|mor|AS|Delhi|crown|The Lodi dynasty|Bahlul Lodi takes the throne of Delhi.
 1455|H|mor|EU|Cyprus|sea|Pirates of the Aegean|Corsairs make the Aegean islands unsafe as Byzantine power ends.
 1457|H|mor|AS|Edo|building,founding|Edo castle|Ota Dokan builds a castle at Edo, the future Tokyo.
-1460|H|mor|EU|Moravia|war|Moravia in the Bohemian wars|Catholic lords in Moravia fight George of Podebrady's Hussites.
+1460|H|mor|MO|Moravia|war|Moravia in the Bohemian wars|Catholic lords in Moravia fight George of Podebrady's Hussites.
 1465|W|mag|EU|Florence|learning,occult|Ficino translates Hermes|Marsilio Ficino translates the Hermetic writings for Cosimo de' Medici; the Order of Hermes is delighted and alarmed.
 1469|H|mor|AS|Punjab|faith|Guru Nanak born|The founder of the Sikh faith is born.
 1472|H|mor|ME|Persia|war|Venice seeks allies in Persia|Venetian envoys go to Uzun Hasan for help against the Ottomans.
@@ -296,8 +296,8 @@
 1507|W|mag|EU|Sponheim|occult|Trithemius and Faust|The abbot Trithemius warns of a vagabond going by the name Faustus.
 1509|H|mor|EU|Agnadello|battle|Agnadello|The French crush Venice's army.
 1510|W|mag|EU|Cologne|occult,learning|Agrippa's occult philosophy|Cornelius Agrippa drafts the Three Books of Occult Philosophy.
-1514|H|mor|EU|Moravia|faith|Brethren in Moravia|The Unity of Brethren grow in Moravia despite the king's ban.
-1515|W|hun|EU|Moravia|faith,persecution|A quiet march|The Unity of Brethren keep their faith in Moravia; inquirers from Prague find them hard to catch.
+1514|H|mor|MO|Moravia|faith|Brethren in Moravia|The Unity of Brethren grow in Moravia despite the king's ban.
+1515|W|hun|MO|Moravia|faith,persecution|A quiet march|The Unity of Brethren keep their faith in Moravia; inquirers from Prague find them hard to catch.
 1517|H|mor|AS|Delhi|crown|Ibrahim Lodi|The last Lodi sultan takes Delhi.
 1520|W|vam|EU|Rome|art,faith|Raphael dies|The painter dies in Rome; Toreador of the city call it a loss to the blood itself.
 1522|W|hun|EU|Bohemia|faith|Lutherans in Bohemia|Lutheran preachers reach Bohemia and Moravia.

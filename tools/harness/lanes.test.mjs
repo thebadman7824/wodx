@@ -200,6 +200,9 @@ test("lane tools never name the Live world and keep backups", () => {
     const src = fs.readFileSync(path.join(root, "tools/lanes", f), "utf8");
     assert.ok(!/rothenstein-live/.test(src), `${f} mentions the Live world`);
   }
+  // B7460: one nightly full run, and it is the queued tools/pcq/nightly-gates.mjs
+  const reset = fs.readFileSync(path.join(root, "tools/lanes/lane-reset.cmd"), "utf8");
+  assert.ok(!/^node tools\\lanes\\nightly\.mjs/m.test(reset), "lane-reset.cmd does not start the older nightly run");
   const m = fs.readFileSync(path.join(root, "tools/lanes/lanes.mjs"), "utf8");
   assert.match(m, /case "reset":[\s\S]*backup\(worldDir\(lane\)/, "reset backs the world up before copying");
   assert.match(m, /allow-lane-1/, "lane 1 reset needs an explicit flag");

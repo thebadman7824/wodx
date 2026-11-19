@@ -122,6 +122,13 @@ test("omen looks: every sign that can be seen shows for a night; great events da
   assert.equal(L.eventLookFor("avatar-storm").kind, "storm");
   assert.equal(L.eventLookFor("black-death").kind, "plague");
   assert.equal(L.eventLookFor("first-printed-bible"), null);
+  const mongols = {id: "wh-1241-the-mongols-in-moravia", region: "MO", tags: ["war"]};
+  assert.equal(L.eventLookFor(mongols.id, {ev: mongols, now: 10}).kind, "smoke", "B7262: war at home shows smoke over the towns");
+  assert.equal(L.eventLookFor(mongols.id, {ev: mongols, now: 10}).until.worldTime, 10 + 3 * 86400);
+  assert.equal(L.eventLookFor("wh-1645-brno-holds", {ev: {id: "wh-1645-brno-holds", region: "MO", tags: ["siege"]}}).kind, "smoke");
+  assert.equal(L.eventLookFor(mongols.id, {ev: mongols, homePart: "EU"}), null, "only when Moravia is home");
+  assert.equal(L.eventLookFor(mongols.id, {ev: {...mongols, region: "EU"}}), null, "a war elsewhere in Europe shows nothing");
+  assert.equal(L.eventLookFor(mongols.id, {ev: {...mongols, hidden: true}}), null, "the hidden story shows nothing");
   for ( const m of Object.keys(L.MARK_TEXT) ) assert.ok(L.MARK_TEXT[m].length >= 1);
 });
 

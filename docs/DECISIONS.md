@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7450
+Next free block: B7490
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -417,9 +417,11 @@ Next free block: B7450
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
+| B7260-B7279 | Master Plan gaps: dated events and the Ledger proven on the real clock; Moravia's own news (used B7260-B7264) | Chronicle, Storyteller |
 | B7290-B7299 | PC watcher: ComfyUI off between renders is normal (used B7290-B7297) | tools (pcq) |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
+| B7320-B7329 | gate7b names what stops the runner's flight (used B7321-B7323) | tools (gates) |
 | B7330-B7339 | No gate run is wasted on a commit its pull request has already moved past (used B7330-B7332) | tools |
 | B7340-B7349 | Less lane time lost: restarts resume, idle lanes join, main failures are not proved again (used B7340-B7342) | tools |
 | B7350-B7359 | One priority order for every project process (used B7350-B7356) | tools |
@@ -428,6 +430,9 @@ Next free block: B7450
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
 | B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
+| B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
+| B7470-B7479 | gatetruthstoryteller step 3 waits for the convened record (used B7470) | tools |
+| B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14272,6 +14277,46 @@ Gates. The WoDX Voices api keeps its counters (renders, hits, plays, fallbacks) 
 
 Reverse: put back the strict `engine === "off" && server === "off"` and zero counters in step 5 of tools/gate/gatevoices.mjs.
 
+## B7260. Events placed in Moravia are Moravia's news (2026-11-17)
+WoDX Chronicle data. The world timeline (docs/research/era-timelines/r3) filed every Moravian event before 1839 under
+Europe (EU), and only later ones under Moravia (MO). The rules that hear home news (the War market news, the Legends
+book) read MO, so the Mongols in Moravia (1241), the Hussites (1424), the Swedes at Olomouc (1642, 1650), Brno (1645,
+1742), Olomouc (1758), the Tatar raid (1663), Austerlitz (1805) and the rest never counted as home news. Every line
+whose place is Moravia, the Moravian Karst, Olomouc, Brno, Znojmo, Jihlava, Opava, Ostrava or Austerlitz is now MO
+(55 lines, 27 of them in the eight classic eras built into the game; the rest are prologue eras). A homeland elsewhere in Europe no longer hears
+these on its cards, as it already did not hear the MO events after 1839. A harness test keeps every Moravian place on MO.
+
+Reverse: set those lines' region back to EU in the r3 files and run node tools/timeline/build-world-history.mjs.
+
+## B7261. A siege in Moravia is war at home (2026-11-17)
+WoDX Storyteller, market-news-rules.mjs worldNewsFor. A world event tagged siege in Moravia, when Moravia is home,
+brings the War preset, as a war does. The besieged town is rarely the home market, so the Siege preset (nothing comes in
+through the gates) stays for the book events and the battles that name the town. House rule.
+
+Reverse: drop the siege test in worldNewsFor.
+
+## B7262. War at home shows smoke over the towns (2026-11-17)
+WoDX Storyteller, town-look-rules.mjs eventLookFor. Show, don't tell: when a world timeline war or siege in Moravia
+fires and Moravia is home, every town scene and the scene being played gets a faint smoke wash for three days, "smoke on
+the horizon from burning villages". The hidden story never shows. House rule.
+
+Reverse: remove HOME_WAR_LOOK from eventLookFor.
+
+## B7263. A dated event taken back takes its sky with it (2026-11-17)
+WoDX Storyteller, town-looks.mjs hideEvent. Setting the clock back before an event ended its market news (already) but
+left the Black Death's pall or the war smoke on the scenes. wodxEventUndone now ends the looks made for that event.
+
+Reverse: remove the wodxEventUndone hook in setupTownLooks.
+
+## B7264. Gate gatedatedplay: dated events and the Ledger on the real clock (2026-11-17)
+Tools. gateevents and gateledger hold the world and call the checks by hand, so they never proved the updateWorldTime
+path that play takes. gatedatedplay releases the world and moves the clock with game.time.advance: the Mongols in
+Moravia fire once with one card, the smoke shows, the War market news card's own Apply button raises the gate market's
+food to 1.5 and short and quiets the crowd, setting the clock back undoes all of it, and a Ledger debt comes due once.
+It puts the clock, the hold, the fired list, the Ledger and the markets back.
+
+Reverse: delete tools/gate/gatedatedplay.mjs.
+
 ## B7290. The laptop watches the PC job system and only reports (2026-11-18)
 Ben asked for the laptop (DESKTOP-S6NV3Q9) to be used to keep everything in line. tools/pcq/watcher.mjs runs every 5 minutes from the scheduled task "WoDX PC watcher at logon" (tools/pcq/install-watcher.ps1, loop in run-watcher.ps1), below normal priority, on battery too. It reads only GitHub (the pc-status branch files, the runner status issues, pc-job issues, the merge train line, pc-alert issues) and the laptop's own process list. It never starts or stops a process, restarts OCR or art, or touches a lane, a world, a job or another tool's alert. It is taken as a fix to how the PCs are watched under the PC upkeep freeze, with no new lane or runner (logged in docs/PENDING-REVIEW.md). Its checks are fixed rules, not a local model: the laptop's i5-8210Y would sit at full load for each model call and slow lane 7.
 
@@ -14338,6 +14383,21 @@ Reverse: take the conductor and scene mode lines, the hooks and the log out of s
 Gates. "Auto: the NPC moves round the wall" failed after other gates in jobs 1944 and 2006 with the runner choosing to flee ("faces what it fears": a guard fears the supernatural once it shows), and "a lost action" failed in 2006 with a plan card instead of "cannot act". The same lane order passed and failed in job 1944, so the cause is state left in the world, not the order alone. The two steps' detail now names whose turn it was when the NPC acted, the runner's fears, whether the hero reads as obvious (its effects and WoDX NPC flags), the enemies as the runner saw them and its top options, and the card's token against the fighter's. No pass condition changed. On this branch the detail showed, in job 2016, the hero "Ada (6d, wraith)" read as obvious, so the guard fled. Two tries at choosing the hero instead (jobs 2021 and 2024) failed other steps, and the same code passed in jobs 2017 and 2018, so the hero is not the only thing that varies; those tries were taken back out. gate7b was the first gate after the lane's reset in all three failing runs, and also in job 2013, which passed; in 2017 and 2018 it came after other gates.
 
 Reverse: take turnOf, whyRun and the added detail fields out of tools/gate/gate7b.mjs.
+
+## B7321. gate7b's Auto step names what stops the flight (2026-11-18)
+Gates. "Auto: the NPC moves round the wall" fails on some runs and passes on others with the same code (jobs 2026 and 2027). The result files of two passing runs (jobs 2027 and 2028, saved to registry/gate7b-results/) show the same cast as the failing runs: the hero is "Ada (6d, wraith)", the runner is "Brawling Villager (Template)", and the runner flees in the passing runs too ("Brawling Villager (Template) flees."). So the hero and the choice to flee are not what varies, as B7312 first read it: in a failing run the flight finds no cell to run to ("has nowhere to run", a path of one square). The step's detail now also names the runner's movement as WoDX Combat reads it (movementFor), its statuses, its cell and the tokens within three squares. No pass condition changed. Not yet run in Foundry.
+
+Reverse: take move, conditions, cell and near out of whyRun in tools/gate/gate7b.mjs.
+
+## B7322. gatelimits gives the fomor's Stamina as the roll reads it (2026-11-18)
+Gates. "13. a fomor's Numbing" failed on some full runs and passed when run again (job 2030 and others). In the failing run all four tries rolled "Stamina + Medicine : 1 dice", though the gate sets Stamina 5. The Numbing roll reads the stored Stamina total (attr in wodx-actions main.js), and the system works the total out again after an update only when its settings flag asks for it (wod-actor-base.js _onUpdate), so the total could stay at 1. With one die at difficulty 6, four failed tries in a row happen about one run in sixteen, which fits a failure that comes and goes. The gate now sets the total with the value, as other gates do (gate6g, gate6i, gate6j), and the step's detail shows the Stamina it read. Not yet run in Foundry.
+
+Reverse: take total: 5 and the stamina detail out of step 13 in tools/gate/gatelimits.mjs.
+
+## B7323. gateduties names the places when the worship lands elsewhere (2026-11-18)
+Gates. "2. a night of worship at the chapel" failed on some full runs (job 2030): the worship duty pointed at a region that was not the chapel. The cult takes the first region on the scene that has a place kind (tagged in wodx-npc cults.mjs), and this scene also has a haven. The step's detail now lists the scene's regions in the order the cult reads them, so the next failure shows which place came first and why. No pass condition changed. Not yet run in Foundry.
+
+Reverse: take chapel and regions out of the step 2 detail in tools/gate/gateduties.mjs.
 
 ## B7330. runner-off no longer skips the cancel pass (2026-11-18)
 Repository workflow. A runner with runner-off waits for its running jobs to end before it stops, but that wait skipped
@@ -14586,3 +14646,44 @@ only load or require a changed one are left to the cross-module gates and the ni
 modules can reach main and show the next night (B7443 names the merge). --wide keeps the older list. This narrows the
 integration check on each push; the full suite with every module deployed still runs every night on main.
 Reverse: make run-gate --touched use the --wide branch again.
+
+## B7460. lane-reset.cmd no longer starts the older nightly full run (2026-11-18)
+Repository workflow. Desk pick p6 keeps one nightly full run, tools/pcq/nightly-gates.mjs, an all-gates PC job. The
+Main PC's daily "WoDX lane reset" task still started tools/lanes/nightly.mjs from the last line of
+lane-reset.cmd, outside the queue, so two full runs could share the lanes. A nightly-off file stood in for the fix
+from 18 November. lane-reset.cmd now resets the autoReset lanes, starts the runner and stops. nightly.mjs is kept and
+still runs by hand. A harness check fails if lane-reset.cmd starts it again. nightly-gates.mjs still pins lane 8, which is held for the
+book OCR, so until its health-rank wiring lands a full run of main needs an all-gates PC job queued by hand.
+
+Reverse: put `node tools\lanes\nightly.mjs >> "%LOG%" 2>&1 & exit /b` back as the last line of tools/lanes/lane-reset.cmd.
+
+## B7461. The Main PC RAM install is a planned window (2026-11-18)
+Repository workflow. registry/priorities.json windows.planned gets its first row: the Main PC, 00:30Z to 03:00Z on
+19 November, for the RAM install and memory test (owner's times, 18 November). prio.mjs window and ask hold the PC
+from 30 minutes before. Nothing reads the file for this yet, so a runner-hold set on the PC does the holding tonight.
+The ask tests now pass a fixed time, so a planned window in the file cannot change their answer.
+
+Reverse: empty windows.planned in registry/priorities.json.
+
+## B7470. The house-door step waits for the convened record, not only the token (2026-11-18)
+Testing gates. Step 3 of gatetruthstoryteller walks a convened character back through a Way and checks that the
+convened record now names the scene it reached (B6166). travel() in WoDX Storyteller makes the token on the new scene
+first and writes the record afterwards, behind any other write in the Storyteller's settings queue. The step read the
+record the moment the token landed, so on a slower lane it could still name the old scene: job #2084 on lane 7 (18
+November) failed this way twice on main, with the token back and the record naming the inn abroad. The step now waits
+up to 10 seconds for the record as well and reports lateMs, how long the record took after the token. A record that
+still names the old scene after 10 seconds fails as before, so a real fault in the game code still shows. The cause
+is the most likely reading of the failure, not yet proven: the next run's lateMs confirms or rules it out.
+
+Reverse: read the record straight after the token lands again in tools/gate/gatetruthstoryteller.mjs step 3.
+
+## B7480. One GitHub issue per bug, closed by the fixing PR (2026-11-18)
+Docs only (docs/WORKFLOW.md section 8, registry/features/README.md). Until now bugs lived in PR descriptions,
+BUILD-LOG.md, nightly gate issues and thread handoff notes, and nothing tracked a bug that a thread found but did not
+fix. Each such bug now gets one issue labelled `bug`. The fixing PR says `Fixes #N`; when only a later run on main can
+prove the fix, it says `Refs #N` and the issue closes after that run. A registry fault entry carries `"issue": N`
+(registry.mjs check already accepts extra fields). Ben approved this on 18 November 2026, to start once Book 1 was
+finished. The open backlog (the nightly 2026-11-18 failures, #1843, gatetruthstoryteller, gategadgets and the final
+audit's open items) was filed the same day.
+
+Reverse: remove the bullet from section 8 and the `issue` field note; the issues stay as a record.

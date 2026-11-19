@@ -56,8 +56,8 @@ export const EVENT_NEWS = {
 
 /**
  * B5934: the world timeline's news (WoDX Chronicle wh- and fdw- events) moves the markets too, but only what the
- * homeland feels: a plague or a famine in the homeland's own part of the world, and a war when it is fought in Moravia
- * itself and Moravia is home. Never the hidden story, never news a year old by the time it fires (a time skip), and
+ * homeland feels: a plague or a famine in the homeland's own part of the world, and a war or a siege when it is fought
+ * in Moravia itself and Moravia is home. Never the hidden story, never news a year old by the time it fires (a time skip), and
  * one card of each kind in WORLD_GAP_DAYS. homePart: WoDX Chronicle partOf(homeland); year: the year now.
  */
 export const WORLD_TAGS = {plague: "plague", famine: "famine"};
@@ -70,7 +70,8 @@ export function worldNewsFor(ev = {}, {homePart = "MO", year = 0} = {}) {
   // B6897: Moravia lies in Europe, so a Moravian home feels a European plague or famine; a war still has to be in Moravia.
   const near = ev.region === homePart || (homePart === "MO" && ev.region === "EU");
   if ( near ) for ( const t of ["plague", "famine"] ) if ( tags.includes(t) ) return WORLD_TAGS[t];
-  if ( homePart === "MO" && ev.region === "MO" && tags.includes("war") ) return "war";
+  // B7261: a siege in Moravia (Brno 1645, Olomouc 1758) is war at home too; the town besieged is not this market
+  if ( homePart === "MO" && ev.region === "MO" && (tags.includes("war") || tags.includes("siege")) ) return "war";
   return null;
 }
 /** Is a world card of this kind too soon after the last one? last: world time of the last card of the kind. */

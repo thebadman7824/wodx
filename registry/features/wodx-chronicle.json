@@ -1,5 +1,41 @@
 {
  "module": "wodx-chronicle",
  "seeded": false,
- "rows": []
+ "rows": [
+  {
+   "id": "chronicle.dated-events",
+   "name": "Dated events: history fires on its date as the clock passes it",
+   "module": "wodx-chronicle",
+   "core": true,
+   "files": [
+    "modules/wodx-chronicle/scripts/events.mjs",
+    "modules/wodx-chronicle/scripts/events-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B120, B5890-B5892, B5920-B5926, B7260"
+    },
+    "wired": {
+     "reader": "modules/wodx-chronicle/scripts/main.mjs:events.checkEvents()"
+    },
+    "shown": {
+     "what": "a 'The world turns' card naming the event, 'Not yet happened' when the clock goes back, and the event's sky or war smoke over the towns (Storyteller town looks)"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedatedplay.mjs",
+     "step": "5"
+    }
+   },
+   "open": [
+    "book: the 25 book events carry their pages in data/events.mjs; the world timeline lines are real history read on the approved timeline desk, not yet tied to a page each",
+    "a homeland outside Moravia hears no war at home: worldNewsFor and HOME_WAR_LOOK read Moravia only (global rule, 12 November 2026)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
+  }
+ ]
 }

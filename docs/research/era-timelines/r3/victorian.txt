@@ -101,7 +101,7 @@
 1864|H|mor|EU|London|learning|The First International|Workers' leaders found the International Workingmen's Association in London.
 1864|H|mor|AS|Nanjing|siege,war|Nanjing falls|Qing armies take the Taiping capital and kill over a hundred thousand; Hong Xiuquan is already dead.
 1864|H|mor|EU|Caucasus|massacre,migration|The Circassian expulsion|Russia ends its war in the Caucasus by driving hundreds of thousands of Circassians to Ottoman lands; many die on the shore.
-1865|H|mor|EU|Brno|science|Mendel's peas|Gregor Mendel reads the laws of heredity to the Brno natural history society; no one understands them for thirty-five years.
+1865|H|mor|MO|Brno|science|Mendel's peas|Gregor Mendel reads the laws of heredity to the Brno natural history society; no one understands them for thirty-five years.
 1865|W|all,mag|MO|Brno|science,occult|The abbot's garden|The house reading has an Order of Reason visitor to the Brno monastery mark Mendel's work as a future paradigm and leave it unknown.
 1865|H|mor|AS|Tashkent|war,empire|Russia takes Tashkent|Russian troops take Tashkent and the conquest of Central Asia begins.
 1866|H|mor|MO|Hradec Kralove|battle,war|Koniggratz|Prussia crushes Austria in Bohemia in a single day, and the German question is settled.
@@ -157,7 +157,7 @@
 1879|W|vam,wer|EU|London|science,occult|The light comes on|The house reading has the night shrinking for the Kindred as electric light spreads, and the Weaver grows stronger in every lit street.
 1879|H|mor|AS|Kabul|war|The Second Afghan War|The British envoy at Kabul is murdered, and British troops occupy the city again.
 1880|H|mor|AS|Kandahar|battle,war|Maiwand and Kandahar|An Afghan army wins at Maiwand, and Roberts marches three hundred miles to relieve Kandahar.
-1869|H|mor|EU|Brno|travel,building|Trams in Brno|Brno opens horse trams, among the first in the Czech lands.
+1869|H|mor|MO|Brno|travel,building|Trams in Brno|Brno opens horse trams, among the first in the Czech lands.
 1881|H|mor|EU|St Petersburg|terror,death|Alexander II killed|Revolutionaries of the People's Will kill the tsar with bombs on the Catherine Canal.
 1881|H|mor|EU|Kiev|persecution,massacre|The pogroms|After the tsar's murder, mobs attack Jewish towns across the south of the empire, and emigration to America begins.
 1881|H|mor|EU|Prague|fire,building|The National Theatre burns|The new National Theatre in Prague burns before its formal opening; the nation pays to rebuild it in two years.
