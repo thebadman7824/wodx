@@ -115,8 +115,13 @@ export async function run() {
       const away = !!tb() && !(Math.abs(tb().x + g / 2 - rx) < r.width / 2 && Math.abs(tb().y + g / 2 - ry) < r.height / 2);
       await tb()?.update({x: Math.round(rx - g / 2), y: Math.round(ry - g / 2)});
       const back = await waitFor(() => onA(w.id), 10000);
-      const rec = (game.settings.get(ST, "convened") ?? {})[w.id] ?? null;
-      G.ok("3. a convened character walks a house door", back && rec?.scene === a.id, {back, away, convened: rec});
+      // B7470: travel() makes the token on A first and writes the convened record after it, behind any other setting
+      // write in the Storyteller's queue, so wait for the record too instead of reading it the moment the token lands.
+      // lateMs says how long the record took after the token; a record still naming B after 10 seconds is a real fault.
+      const tBack = Date.now(), recNow = () => (game.settings.get(ST, "convened") ?? {})[w.id] ?? null;
+      const moved = back && await waitFor(() => recNow()?.scene === a.id, 10000);
+      const rec = recNow();
+      G.ok("3. a convened character walks a house door", back && moved, {back, away, lateMs: back ? Date.now() - tBack : null, convened: rec});
       await S.release([w.id]);
     });
 

@@ -797,7 +797,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
       ${TH.ticksHtml(actor, esc)}${DH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
-      <div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${rd.name} ${rd.value}: ${R.auraModifier(rd.value) >= 0 ? "+" : ""}${R.auraModifier(rd.value)})</label></div>
+      ${bearingBox(rd)}${GX.totemTicksHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
@@ -827,7 +827,8 @@ export async function action({ actor: a, preset = "" } = {}) {
             if (p.diff) f.diff.value = p.diff;
             f.mode.value = p.mode || "simple";
             if (p.target) f.goal.value = p.target;
-            f.aura.checked = !!p.aura;
+            // B7080: a Path's bearing goes by what the Path names, not by the Humanity presets
+            f.aura.checked = !!p.aura && !pathBearingFor(actor, rd);
             root.querySelector(".vta-preset-note").textContent = p.note || "";
             sync();
         });
@@ -1007,6 +1008,22 @@ function opponentPool(target, spec, fd, actor = null) {
     return { dice: attr(target, spec.attr) + (ab?.value ?? 0), diff: spec.diff, label: `${cap(spec.attr)} + ${ab?.name ?? cap(spec.ability)}`, specialty: false };
 }
 
+/** The roll window's bearing box: the Road aura, or a V20 Path's bearing and what it covers (B7080). */
+function bearingBox(rd) {
+    const b = KX.DATA.paths && rd?.found ? KR.pathBearing(KX.DATA.paths, rd.found, rd.value) : null;
+    const sign = v => `${v >= 0 ? "+" : ""}${v}`;
+    if (b) return `<div class="form-group"><label><input type="checkbox" name="aura"/> ${esc(b.name)} bearing applies (${esc(b.path)} ${rd.value}: ${sign(b.step)} difficulty on ${esc(b.covers)}${b.byItself ? "; counted by itself when the roll is one of those" : "; tick it when this roll is one"})</label></div>`;
+    return `<div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${esc(rd.name)} ${rd.value}: ${sign(R.auraModifier(rd.value))})</label></div>`;
+}
+
+/** B7080: the bearing of the V20 Path the roller walks, for one roll of the general window (null: no Path). */
+function pathBearingFor(actor, rd, fd = {}, pool = {}) {
+    if (!KX.DATA.paths || !rd?.found) return null;
+    const tags = [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...(fd.attr === "special:willpower" ? ["willpower"] : [])];
+    const wounded = !pool.special && !fd.ignoreWounds && woundPenalty(actor) > 0;
+    return KR.pathBearing(KX.DATA.paths, rd.found, rd.value, { tags, wounded, ticked: !!fd.aura });
+}
+
 /** The pool and difficulty a roll window's choices give, with every modifier and where it came from (3.43.0: also the odds
  *  shown before the roll). pool: readPool()'s answer. */
 function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability), { teamDice = 0, overflow = 0 } = {}) {
@@ -1036,6 +1053,15 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
         if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
     } catch (e) { console.warn("WoDX Actions | conditions", e); }
+    // B7080: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
+    // Humanity and the Roads keep the plain aura box
+    const pb = pathBearingFor(actor, rd, fd, pool);
+    if (pb?.applies && pb.step) tm = { ...tm, diff: (tm.diff ?? 0) + pb.step, parts: [...(tm.parts ?? []), pb.part] };
+    // B7083: the pack totem's gifts to a packmate (W20 pp. 372-377): Attribute dots as dice, roll effects, a held Pack Trait
+    try {
+        const tt = GX.totemMods(actor, fd, pool, TH.tagsFor(fd.attr, pool.abilityKey, fd.preset));
+        if (tt && (tt.dice || tt.diff)) tm = { ...tm, dice: (tm.dice ?? 0) + tt.dice, diff: (tm.diff ?? 0) + tt.diff, parts: [...(tm.parts ?? []), ...tt.parts] };
+    } catch (e) { console.warn("WoDX Actions | totem", e); }
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -1043,7 +1069,7 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
         bonusDice: fd.bonus, extraDiff: fd.extraDiff, baseDifficulty: fd.diff,
         woundPenalty: pool.special ? 0 : woundPenalty(actor), ignoreWounds: fd.ignoreWounds,
-        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura ? R.auraModifier(rd.value) : 0,
+        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura && !pb ? R.auraModifier(rd.value) : 0,
         daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
     });
     // B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89) goes with the pool to the roll
@@ -2870,7 +2896,10 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
       <div class="form-group"><label><input type="checkbox" name="aura" checked/> Apply Road aura</label></div>
     </form>`;
     return dialog("Seduction", content, "Seduce", async fd => {
-        const aura = fd.aura ? R.auraModifier(road(actor).value) : 0;
+        // B7080: a Path walker's bearing counts here only when the Path's bearing is seduction (the Cathari, V20 p. 323)
+        const rdS = road(actor);
+        const pbS = KX.DATA.paths && rdS.found ? KR.pathBearing(KX.DATA.paths, rdS.found, rdS.value, { tags: ["seduce", "social"] }) : null;
+        const aura = pbS ? (fd.aura && pbS.auto ? pbS.step : 0) : fd.aura ? R.auraModifier(rdS.value) : 0;
         const wpen = woundPenalty(actor);
         const steps = [
             ["Approach", "appearance", "subterfuge", fd.wits + 3, "The subject shows disinterest.", "The subject grows disgusted or angry."],
@@ -3365,7 +3394,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.112.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.113.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3409,7 +3438,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     useGift: withActor(a => gx().useGift(a)), learnGift: withActor(a => gx().learnGift(a)), performRite: withActor(a => gx().performRite(a)),
     summonSpirit: withActor(a => gx().summonSpirit(a)), useFetish: withActor(a => gx().useFetish(a)), accomplishment: withActor(a => gx().accomplishment(a)),
     battleScar: withActor(a => gx().battleScar(a)), curse: withActor(a => gx().curse(a)), kinfolk: withActor(a => gx().kinfolk(a)),
-    chiminage: withActor(a => gx().chiminage(a)),
+    chiminage: withActor(a => gx().chiminage(a)), packTotem: withActor(a => gx().packTotem(a)),
     awardRenown: () => gx().awardRenown(), delirium: (o = {}) => gx().deliriumCheck(o), moonRise: (o = {}) => gx().moonRise(o),
     applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
     garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g),

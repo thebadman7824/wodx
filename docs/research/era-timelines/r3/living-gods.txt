@@ -3,7 +3,7 @@
 # Canon anchors wait on the PC book check (prologue-timeline/book-check.md); fix any card it contradicts.
 -10000|H|mor|ME|Levant|founding,migration|The Natufian villages|Hunter-gatherers in the Levant settle in round stone houses and harvest wild grain with flint sickles.
 -10000|M|vam|ME|Land of Nod|death,faith|The first murder|Caine kills Abel in the fields, is cursed, and goes into the wilderness east of Eden.
--9800|H|mor|EU|Moravian Karst|migration|Hunters in the karst caves|Late Ice Age hunters shelter in the caves of the Moravian Karst and follow reindeer and horse across the plain.
+-9800|H|mor|MO|Moravian Karst|migration|Hunters in the karst caves|Late Ice Age hunters shelter in the caves of the Moravian Karst and follow reindeer and horse across the plain.
 -9700|H|mor|EU|Europe|weather|The Ice Age ends|The cold snap called the Younger Dryas breaks; forests spread north and the great herds thin.
 -9600|H|mor|ME|Jericho|founding|Jericho's first settlers|People settle by the spring at Jericho, one of the oldest continuously lived-in places.
 -9500|H|mor|ME|Gobekli Tepe|faith,building|The pillars of Gobekli Tepe|Hunters raise carved stone pillars on a hill in Anatolia, a sacred place built before farming.
@@ -72,7 +72,7 @@
 -3000|H|mor|AS|Indus valley|founding|The early Indus towns|Towns of the Indus valley begin building with baked brick.
 -3000|W|mag|AS|Himalayas|faith,learning|Monks of the high passes|The Akashic Brotherhood counts its oldest roots among hermits in the mountains above the Indus.
 -2900|H|mor|ME|Mesopotamia|flood,disaster|The flood layer at Shuruppak|A deep layer of river silt at Shuruppak marks a great flood, the kind later remembered in the flood stories.
--2900|H|mor|EU|Moravia|migration|Corded Ware in Moravia|Herders who bury their dead with corded beakers and stone battle-axes settle across Moravia.
+-2900|H|mor|MO|Moravia|migration|Corded Ware in Moravia|Herders who bury their dead with corded beakers and stone battle-axes settle across Moravia.
 -2800|H|mor|AS|Yellow River|founding|The Longshan towns|Walled towns of black polished pottery rise along the Yellow River.
 -2700|H|mor|ME|Uruk|crown|Gilgamesh of Uruk|Gilgamesh, later the hero of the oldest written epic, rules Uruk about now.
 -2700|H|mor|AF|Egypt|crown|The Old Kingdom|Egypt's Old Kingdom begins, the age of the great pyramids.
@@ -116,8 +116,8 @@
 -1799|W|vam|AF|Egypt|faith,occult|The Setites in ancient Egypt|The Followers of Set grow strong in the cult centres of the Delta, as the Encyclopaedia records.
 -1792|H|mor|ME|Babylon|crown|Hammurabi becomes king|Hammurabi takes the throne of Babylon and spends thirty years making it an empire.
 -1754|H|mor|ME|Babylon|law|The code of Hammurabi|Hammurabi has his laws carved on a basalt stele: an eye for an eye, set by rank.
--1750|H|mor|EU|Moravia|death,money|Bronze hoards|Bronze axes, rings and ingots are buried in hoards across Moravia, as offerings or savings.
--1750|W|wra|EU|Moravia|death,occult|Hoards the dead guard|Wraiths of the Unetice dead are said to linger over the hoards buried with their names.
+-1750|H|mor|MO|Moravia|death,money|Bronze hoards|Bronze axes, rings and ingots are buried in hoards across Moravia, as offerings or savings.
+-1750|W|wra|MO|Moravia|death,occult|Hoards the dead guard|Wraiths of the Unetice dead are said to linger over the hoards buried with their names.
 -1700|H|mor|EU|Nebra|science,faith|The Nebra sky disc|A bronze disc inlaid with gold sun, moon and stars is buried on a hill in Germany.
 -1650|H|mor|AF|Egypt|war,crown|The Hyksos|Foreign kings called the Hyksos rule the Nile Delta, bringing the horse and chariot to Egypt.
 -1650|W|vam|AF|Avaris|crown,faith|Set worshipped at Avaris|The Hyksos kings honour Set at Avaris; the Followers of Set count this a high time of their cult.
@@ -227,10 +227,10 @@
 -1000|M|wer|AS|Asia|faith|Ordained by Sun and Moon|The Encyclopaedia's tale of a breed ordained by both sun and moon.
 -900|M|wer|EU|Croatia|occult|Krapina and Ananasa's Web|An old lair at Krapina tied to the spider queen, as the Encyclopaedia records.
 -5000|H|mor|AS|Hemudu|science,building|Hemudu|Villagers at Hemudu near the Yangtze mouth build timber houses on stilts and grow rice.
--4700|H|mor|EU|Moravia|art,faith|The Venus of Hluboke Masovky|Farmers of southern Moravia make clay figurines of women for their homes and shrines.
+-4700|H|mor|MO|Moravia|art,faith|The Venus of Hluboke Masovky|Farmers of southern Moravia make clay figurines of women for their homes and shrines.
 -4300|H|mor|EU|Brittany|building|The Carnac rows|Thousands of standing stones are set in rows at Carnac.
 -4000|H|mor|AF|Sahara|weather,migration|The Sahara dries|The green Sahara turns to desert; herders move toward the Nile and the south.
--3800|H|mor|EU|Moravia|science|The copper axe in Moravia|Copper tools reach Moravian farmers through trade from the Balkans.
+-3800|H|mor|MO|Moravia|science|The copper axe in Moravia|Copper tools reach Moravian farmers through trade from the Balkans.
 -3600|H|mor|EU|Ireland|building,death|The passage tombs of Ireland|Farmers in Ireland raise passage tombs in the Boyne valley.
 -3200|H|mor|EU|Newgrange|building,faith|Newgrange|The passage tomb at Newgrange is built so the midwinter sunrise lights its inner chamber.
 -3200|W|cha|EU|Newgrange|faith,occult|The hollow hills|Kithain call the Boyne tombs the first hollow hills, doors of the sidhe long before the Sundering.
@@ -245,7 +245,7 @@
 -2300|H|mor|AS|Indus valley|trade,sea|Indus ships at Ur|Indus traders sail to Sumer with carnelian beads; Sumerians call the land Meluhha.
 -2200|H|mor|AS|Shimao|founding,building|Shimao|A great stone-walled town rises on the loess at Shimao in northern China.
 -2100|H|mor|ME|Ur|crown|Shulgi|King Shulgi of Ur sets up a road network with rest houses and standard weights.
--1900|H|mor|EU|Moravia|trade|Amber from the north|Baltic amber passes through Moravia toward the south.
+-1900|H|mor|MO|Moravia|trade|Amber from the north|Baltic amber passes through Moravia toward the south.
 -1800|H|mor|ME|Mari|learning,crown|The palace of Mari|The palace archive of King Zimri-Lim at Mari records spies, prophets and diplomacy.
 -1750|H|mor|ME|Mari|faith,occult|The prophets of Mari|Mari's letters record ecstatic prophets who carry messages from the gods to the king.
 -1700|H|mor|EU|Crete|disaster,quake|Crete's palaces rebuilt|Earthquakes wreck the Cretan palaces; they are rebuilt grander than before.
@@ -260,31 +260,31 @@
 -1150|H|mor|AF|Thebes|crime|The tomb robbery trials|Tomb robbers in the Valley of the Kings are tried and confess.
 -1100|H|mor|ME|Assyria|crown,empire|Tiglath-Pileser I|Tiglath-Pileser I campaigns to the Mediterranean and hunts lions and wild bulls.
 -1050|H|mor|ME|Philistia|war|The Philistines|The Philistine cities of the coast fight Israel's tribes.
--1000|H|mor|EU|Moravia|death,faith|The urnfields at Klentnice|Large urnfield cemeteries spread across southern Moravia below the Palava hills.
+-1000|H|mor|MO|Moravia|death,faith|The urnfields at Klentnice|Large urnfield cemeteries spread across southern Moravia below the Palava hills.
 -1000|H|mor|ME|Arabia|trade|The incense road|Camels carry frankincense and myrrh from south Arabia north to the Levant.
 -950|H|mor|ME|Saba|crown,trade|Saba|The kingdom of Saba grows rich on incense in south Arabia.
 -900|H|mor|EU|Greece|art|Geometric pottery|Greek potters paint vases with bands of zigzags and meanders.
 -880|H|mor|ME|Urartu|founding,crown|Urartu|The kingdom of Urartu rises around Lake Van.
--850|H|mor|EU|Moravia|trade,science|Iron reaches Moravia|The first iron tools reach Moravia; the Hallstatt age begins there.
+-850|H|mor|MO|Moravia|trade,science|Iron reaches Moravia|The first iron tools reach Moravia; the Hallstatt age begins there.
 -820|H|mor|ME|Tyre|crown|Tyre's queen flees|Elissa of Tyre flees a brother king and sails west, in the tale that ends with Carthage.
 -10000|H|mor|AS|Japan|art|Jomon pottery|Hunter-gatherers in Japan make some of the world's oldest pottery.
 -9000|H|mor|AM|Americas|migration|Hunters across the Americas|Hunters with fluted spear points have spread through both Americas.
 -7000|H|mor|AF|Sahara|art|The rock paintings of the Sahara|Herders paint cattle, giraffes and dancers on the rocks of a green Sahara.
--6000|H|mor|EU|Moravia|migration|The last hunters of Moravia|Bands of hunters and fishers still live by the rivers of Moravia before the farmers come.
--4000|H|mor|EU|Moravia|building|Lengyel villages|Farmers of the Lengyel culture build fortified villages in southern Moravia.
--3500|H|mor|EU|Moravia|building|The Baden villages|The Baden culture's villages spread through Moravia, with wheeled carts and copper.
--3000|H|mor|EU|Moravia|death|The Moravian cave burials|People of the Copper Age bury some of their dead in the caves of the Moravian Karst.
--2500|H|mor|EU|Moravia|migration|Bell Beakers in Moravia|Bell Beaker people settle in Moravia beside the Corded Ware herders.
--2000|H|mor|EU|Moravia|death|Unetice graves|The Unetice dead are buried crouched on their sides with bronze pins and rings.
--1600|H|mor|EU|Moravia|war|Fortified Bronze Age towns|Bronze Age settlements in Moravia gain ditches and palisades.
--1200|H|mor|EU|Moravia|money|Bronze hoards of the Urnfield age|Moravian smiths bury hoards of sickles, axes and scrap bronze.
--900|H|mor|EU|Moravia|building|The hillfort at Hostyn|An Urnfield hillfort stands on Hostyn hill, a height later held sacred.
--900|W|wer|EU|Moravia|faith,occult|The hill of Hostyn|The Garou of Moravia keep a caern on the wooded height of Hostyn, and the hillfort's builders leave offerings there.
+-6000|H|mor|MO|Moravia|migration|The last hunters of Moravia|Bands of hunters and fishers still live by the rivers of Moravia before the farmers come.
+-4000|H|mor|MO|Moravia|building|Lengyel villages|Farmers of the Lengyel culture build fortified villages in southern Moravia.
+-3500|H|mor|MO|Moravia|building|The Baden villages|The Baden culture's villages spread through Moravia, with wheeled carts and copper.
+-3000|H|mor|MO|Moravia|death|The Moravian cave burials|People of the Copper Age bury some of their dead in the caves of the Moravian Karst.
+-2500|H|mor|MO|Moravia|migration|Bell Beakers in Moravia|Bell Beaker people settle in Moravia beside the Corded Ware herders.
+-2000|H|mor|MO|Moravia|death|Unetice graves|The Unetice dead are buried crouched on their sides with bronze pins and rings.
+-1600|H|mor|MO|Moravia|war|Fortified Bronze Age towns|Bronze Age settlements in Moravia gain ditches and palisades.
+-1200|H|mor|MO|Moravia|money|Bronze hoards of the Urnfield age|Moravian smiths bury hoards of sickles, axes and scrap bronze.
+-900|H|mor|MO|Moravia|building|The hillfort at Hostyn|An Urnfield hillfort stands on Hostyn hill, a height later held sacred.
+-900|W|wer|MO|Moravia|faith,occult|The hill of Hostyn|The Garou of Moravia keep a caern on the wooded height of Hostyn, and the hillfort's builders leave offerings there.
 -8000|H|mor|EU|Star Carr|faith,art|The antler masks of Star Carr|Hunters by a lake in Yorkshire wear red-deer antler headdresses, perhaps for rites.
 -7500|H|mor|ME|Ain Ghazal|art,faith|The statues of Ain Ghazal|Villagers near Amman shape tall plaster figures with staring eyes.
 -7000|H|mor|ME|Jericho|death,art|The plastered skulls|The people of Jericho keep their dead's skulls, rebuilt in plaster with shell eyes.
 -7000|W|wra|ME|Jericho|death,occult|Skulls kept at home|Wraith lore holds that the plastered skulls of Jericho were Fetters, keeping the first dead close to the living.
--5500|H|mor|EU|Moravia|death|The long houses and their dead|The Linear Pottery farmers of Moravia bury their dead beside the villages, crouched with pots and adzes.
+-5500|H|mor|MO|Moravia|death|The long houses and their dead|The Linear Pottery farmers of Moravia bury their dead beside the villages, crouched with pots and adzes.
 -5000|H|mor|EU|Balkans|science|Vinca signs|Potters of the Vinca culture scratch signs on clay that some take for an early script.
 -4500|H|mor|ME|Mesopotamia|faith,building|The temples of Eridu grow|Each rebuilding raises Eridu's temple higher, toward the later ziggurat.
 -4000|H|mor|AS|Botai|science|Horses milked and ridden|The Botai people of the Kazakh steppe keep herds of horses.
@@ -427,7 +427,7 @@
 -5400|H|mor|EU|Ukraine|founding|The Bug-Dniester farmers|Foragers along the Bug and Dniester begin to keep pigs and plant wheat.
 -5300|H|mor|EU|Germany|massacre|Schoneck-Kilianstadten|Another farming village is killed and buried in a ditch, legs broken.
 -5200|H|mor|ME|Iran|founding|Susiana|Villages spread over the plain of Susa.
--5200|H|mor|EU|Moravia|building|Moravian long houses|Long houses forty metres long stand in rows on the loess of Moravia.
+-5200|H|mor|MO|Moravia|building|Moravian long houses|Long houses forty metres long stand in rows on the loess of Moravia.
 -5100|H|mor|AS|India|science|Cotton in the Indus hills|The people of Mehrgarh grow cotton.
 -5000|H|mor|AS|China|founding|Banpo|A village of round houses with a ditch grows at Banpo near later Xi'an.
 -5000|H|mor|AF|Sahara|art|Cattle in the paintings|The rock painters of the Sahara turn from wild beasts to cattle herds.
@@ -595,7 +595,7 @@
 -1800|H|mor|ME|Babylon|learning|The flood tale of Atrahasis|Babylonian scribes write the story of a flood sent by the gods and one man who survives it.
 -1800|H|mor|AS|Indus valley|disaster|The Saraswati dries|Rivers of the eastern Indus shift and the towns along them empty.
 -1800|H|mor|AM|Mexico|art|Pottery in Mesoamerica|Villagers in Mesoamerica make their first pots.
--1800|H|mor|EU|Moravia|building|Bronze in Moravia|Unetice smiths in Moravia cast bronze axes and rings for trade.
+-1800|H|mor|MO|Moravia|building|Bronze in Moravia|Unetice smiths in Moravia cast bronze axes and rings for trade.
 -1800|W|vam|ME|Babylon|occult,learning|The tablet of Atrahasis|Noddists read the Atrahasis flood as a memory of the flood that ended Enoch.
 -1780|H|mor|AF|Egypt|crown|Sobekneferu|Sobekneferu rules Egypt as the first certain woman king.
 -1760|H|mor|ME|Mari|war|Hammurabi takes Mari|Hammurabi destroys Mari, his former ally.
@@ -687,7 +687,7 @@
 -1100|H|mor|ME|Levant|migration|The Arameans|Aramean tribes spread over Syria and the Euphrates.
 -1100|H|mor|AF|Egypt|crown|Thebes ruled by priests|The high priests of Amun rule Upper Egypt in all but name.
 -1100|H|mor|EU|Iberia|founding|Gadir|Phoenician tradition dates the founding of Gadir, later Cadiz, to about now.
--1100|H|mor|EU|Moravia|building|Urnfield hilltops of Moravia|Fortified hilltops rise across Moravia as the Bronze Age world breaks apart.
+-1100|H|mor|MO|Moravia|building|Urnfield hilltops of Moravia|Fortified hilltops rise across Moravia as the Bronze Age world breaks apart.
 -1100|H|mor|AS|India|science|Iron in the Ganges|Smiths of the Ganges plain make iron tools.
 -1100|H|mor|AM|Mexico|art|San Lorenzo's heads|The Olmec of San Lorenzo carve colossal stone heads of their rulers.
 -1100|W|cha|EU|Europe|occult,war|Iron in every village|Kithain mourn the age when iron left the forges of kings and came into every farmhouse.
@@ -747,7 +747,7 @@
 -860|M|wer|ME|Israel|faith|Elijah and the ravens|Corax tales say the ravens that fed Elijah were their kin.
 -858|H|mor|ME|Assyria|crown|Shalmaneser III|Shalmaneser III fights every year for thirty-five years.
 -850|H|mor|EU|Austria|science|Iron swords at Hallstatt|Smiths of the Hallstatt world forge long iron swords.
--850|H|mor|EU|Moravia|founding|Hallstatt in Moravia|The Hallstatt world reaches Moravia with iron and painted pots.
+-850|H|mor|MO|Moravia|founding|Hallstatt in Moravia|The Hallstatt world reaches Moravia with iron and painted pots.
 -850|H|mor|AS|India|learning|The Brahmanas|Priests write prose guides to the Vedic sacrifice.
 -850|H|mor|ME|Moab|war|Moab rebels|Mesha of Moab throws off Israel's rule.
 -845|H|mor|ME|Damascus|crown|Hazael of Damascus|Hazael takes the throne of Aram and wars on Israel.
@@ -802,7 +802,7 @@
 -1000|H|mor|AS|Thailand|science|Bronze in south-east Asia|Smiths at Ban Chiang cast bronze.
 -1000|H|mor|AF|Nigeria|founding|The Jos plateau|Farmers settle the Jos plateau, where the Nok will rise.
 -1000|H|mor|EU|Iberia|founding|Tartessos|The kingdom of Tartessos grows rich on silver in the south of Spain.
--1000|H|mor|EU|Moravia|death|The Platenice burials|Urnfield farmers of Bohemia and Moravia bury their ashes with painted pots.
+-1000|H|mor|MO|Moravia|death|The Platenice burials|Urnfield farmers of Bohemia and Moravia bury their ashes with painted pots.
 -1000|W|kue|AS|Japan|migration,occult|The first Wan Kuei of the islands|Kuei-jin tales say the first hungry dead of Japan rose among the rice-farmers from Korea.
 -1000|W|mum|AF|Nubia|faith,occult|Amun at Jebel Barkal|The Reborn say Amun's priests carried the old rites to Napata when Thebes weakened.
 -990|H|mor|AF|Egypt|crown|Psusennes I at Tanis|Psusennes I is buried at Tanis in a silver coffin.
@@ -893,7 +893,7 @@
 -850|W|wra|AF|Nubia|death,faith|The pyramids of Kurru|Wraith lore says the kings of Kush kept Egyptian ways of binding the dead to their tombs.
 -1100|H|mor|AS|China|science|Glazed stoneware|Potters of the Zhou fire glazed stoneware.
 -1000|H|mor|ME|Arabia|science|The camel tamed|The camel is tamed in Arabia.
--920|H|mor|EU|Moravia|trade|Amber through Moravia|The amber road runs from the Baltic through Moravia to the south.
+-920|H|mor|MO|Moravia|trade|Amber through Moravia|The amber road runs from the Baltic through Moravia to the south.
 -880|H|mor|AF|Ethiopia|science|Ethiopian farmers|Highland farmers grow teff and plough with oxen.
 -860|H|mor|AS|Japan|founding|Late Jomon villages|Jomon villages shrink as the climate cools.
 -840|H|mor|EU|Greece|art|The Dipylon pots|Great pots mark Athenian graves with funerals painted on them.

@@ -21,6 +21,7 @@ import * as TR from "./town-rules.mjs";
 import * as Battles from "./battles.mjs";
 import * as Towns from "./towns.mjs";
 import {MOD, chron, isActiveGM, setting} from "./core.mjs";
+import {partOf} from "../../wodx-chronicle/scripts/events-rules.mjs";
 
 const all = c => (c ? [...(c.contents ?? c)] : []);
 const now = () => game.time?.worldTime ?? 0;
@@ -315,10 +316,28 @@ export async function showOmen(text) {
 /** A great dated event (B4628): its sky over every town scene and the scene being played. */
 export async function showEvent(ev) {
   if ( !game.user.isGM || setting("townLooks") === false ) return 0;
-  const look = L.eventLookFor(ev?.id, {now: now()});
+  let homePart = "MO";
+  try { homePart = partOf(chron()?.world?.homeland?.() ?? "moravia"); } catch (e) { /* Moravia */ }
+  const look = L.eventLookFor(ev?.id, {now: now(), ev, homePart});
   if ( !look ) return 0;
   let n = 0;
   for ( const {scene} of skyScenes() ) if ( await show(scene, look, `event:${ev.id}`) ) n++;
+  return n;
+}
+
+/**
+ * B7262: a dated event taken back (the clock set before it) takes its sky off the scenes: the shared layer's looks and
+ * the fallback drawings made for `event:<id>`.
+ */
+export async function hideEvent(ev) {
+  if ( !game.user.isGM || !ev?.id ) return 0;
+  const key = `event:${ev.id}`, S = layer();
+  let n = 0;
+  for ( const scene of all(game.scenes) ) {
+    if ( S?.list && S?.end ) for ( const lk of S.list(scene) ?? [] ) if ( lk.source === key ) { await S.end(lk.id); n++; }
+    const gone = ownDrawings(scene).filter(d => d.flags[MOD].look.source === key).map(d => d.id);
+    if ( gone.length ) { await scene.deleteEmbeddedDocuments("Drawing", gone); n += gone.length; }
+  }
   return n;
 }
 
@@ -379,6 +398,7 @@ export function setupTownLooks() {
   Hooks.on("createSetting", s => { if ( s?.key === `${MOD}.townState` ) prosLater(); });
   prosLater();
   Hooks.on("wodxEventFired", ev => { if ( isActiveGM() ) showEvent(ev).catch(e => console.error(`${MOD} | event looks`, e)); });
+  Hooks.on("wodxEventUndone", ev => { if ( isActiveGM() ) hideEvent(ev).catch(e => console.error(`${MOD} | event looks`, e)); });
   Hooks.on("updateWorldTime", t => {
     if ( !isActiveGM() || Math.abs(t - lastSweep) < 600 ) return;
     lastSweep = t;
@@ -387,4 +407,4 @@ export function setupTownLooks() {
   });
 }
 
-export const api = () => ({show, showTownEvent, endFor, sweep, setLooks, marksOf, syncSick, syncHunters, torchesIn, syncSieges, syncShops, havenFire, showOmen, showEvent, syncProsperity, rules: L});
+export const api = () => ({show, showTownEvent, endFor, sweep, setLooks, marksOf, syncSick, syncHunters, torchesIn, syncSieges, syncShops, havenFire, showOmen, showEvent, hideEvent, syncProsperity, rules: L});

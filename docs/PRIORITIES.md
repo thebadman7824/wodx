@@ -58,9 +58,11 @@ front is read from the Main runner's status issue line "Merge train: front #N", 
 | Tool | Reads | Status |
 |---|---|---|
 | tools/pcq/prio.mjs | the whole file | built (B7350) |
-| runner.mjs, submit.mjs, pr-gates.mjs | ranks, aging, claims, the gate-boundary hand-over | to build, gate runner thread |
-| train.mjs | train clock | to build, gate runner thread |
-| nightly-gates.mjs | R4, skip when unchanged | to build, gate runner thread |
+| runner.mjs, submit.mjs, pr-gates.mjs | ranks and aging (queue order), planned windows, job classes | built (B7448) |
+| runner.mjs | claims (reservedGb kept free) | to build, gate runner thread |
+| runner.mjs | the gate-boundary hand-over | to build, after the rerun-only-unfinished-gates fix |
+| train.mjs | train clock | built (B7449) |
+| nightly-gates.mjs | R4 (class health), skip when unchanged | built (B7448, B7443) |
 | gpuguard.mjs | gpu order | reads it (B7510) |
 | vl-loop.ps1 (Secondary PC), art-batch.ps1 (Main PC) | `prio.mjs ask --class ocr|art --claim` | to wire, PC helper threads |
 | watcher.mjs | flags a lower rank running while a higher one waited over 30 minutes | to build |

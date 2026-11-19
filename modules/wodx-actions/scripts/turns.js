@@ -128,7 +128,8 @@ export async function onTurn(fight) {
     const rec = foundry.utils.deepClone(rec0);
     let roll = null, rolled = "";
     if ( rec.roll ) {
-      const diff = TR.rollDiff(rec.roll.diff, {torment: actor.system?.advantages?.torment?.permanent});
+      const by = /^caster:/.test(String(rec.roll.diff)) && rec.byUuid ? fromUuidSync(rec.byUuid) : null;
+      const diff = TR.rollDiff(rec.roll.diff, {torment: actor.system?.advantages?.torment?.permanent, caster: by ? poolDice(by.actor ?? by, String(rec.roll.diff).slice(7)) : 0});
       const dice = Math.max(1, poolDice(actor, rec.roll.pool));
       const r = new Roll(`${dice}d10`);
       await r.evaluate();

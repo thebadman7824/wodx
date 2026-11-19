@@ -60,7 +60,8 @@ grow (the ratchet, B7146): new work in a module starts by finishing a row there,
 ## Faults and deferred work
 
 - A fault (a Report a problem entry from the solo world, an audit finding) is an entry in the row's `faults` list:
-  `{"id", "at", "by", "role", "kind", "what", "expected", "build", "report", "status": "open|fixed|not-a-fault", "fix"}`.
+  `{"id", "at", "by", "role", "kind", "what", "expected", "build", "report", "status": "open|fixed|not-a-fault", "fix", "issue"}`.
+  `issue` is the number of the fault's GitHub issue, labelled `bug` (B7480, docs/WORKFLOW.md section 8).
   Find the row with `node tools/registry/registry.mjs owner <file>`. A fault no row owns goes in `_inbox.json` with a
   `guess` of the module, and a person or the triage step moves it to a row.
 - Deferred work goes in the row's `open` or `deferred` list, with where it was deferred. Shared-folder JSON and desk
