@@ -62,10 +62,11 @@ Heartbeat (B4700): a GitHub workflow (.github/workflows/pc-heartbeat.yml) checks
 issue has moved in the last 15 minutes, and opens a pc-alert issue "the runner is silent" when it has not.
 
 Recheck (B4610, B7310): when a gates job fails, each failing gate (up to 12) is rerun ALONE, one gate per run-gate
-call on a freshly reset lane, and no verdict rests on one run: a pass alone reads `passes alone` (it fails only after
-other gates, or is flaky); a failure alone is run once more, and a pass then reads `flaky`; two failures alone go to
+call on a freshly reset lane, and no verdict rests on one run: a pass alone is run once more, and two passes read
+`order fault` (it fails only after other gates; B7441); a pass and a fail alone read `flaky`; two failures alone go to
 main the same way, where a pass is confirmed by a second run before it reads `NEW with this change`, and a failure
-there reads `fails on main too`. Runs on the branch come first and runs on main after (two deploys at most), and the
+there reads `fails on main too`. A flaky gate goes to main as well (B7521): a failure there reads `fails on main too`,
+two passes there leave it `flaky`. An order fault or a `fails on main too` gate does not turn wodx/gates red. Runs on the branch come first and runs on main after (two deploys at most), and the
 recheck stops taking runs after 120 minutes. A "fails on main too" gate is still a fault to fix, not a reason to
 merge past it. "recheck": false in the job turns this off.
 
