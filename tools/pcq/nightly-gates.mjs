@@ -8,7 +8,7 @@
  *   3. waits for the job to finish and opens a summary issue (label nightly-gates) with the result and the counts;
  *      a gate that passed on the last nightly run and fails now names the pull requests merged in between (B7443).
  * It skips the run (and says so in a summary issue) when main's gate inputs are the same as at the last nightly result
- * (B7443); --force runs it anyway.
+ * (B7443); --force runs it anyway. Its job carries class "health" (B7448), so PR gate jobs go before it in the queue.
  * The PC runner posts the wodx/gates status for main's commit as it does for any all-gates job (B7000).
  * It runs at below-normal priority (the task's .cmd starts it that way, and the PC runner on this PC runs below normal
  * too, B7021).
@@ -121,7 +121,7 @@ async function main() {
         return 0;
       }
     }
-    const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", "--all", "--lane", String(LANE), "--ref", sha, "--prio", "3", "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
+    const sub = spawnSync(process.execPath, [path.join(HERE, "submit.mjs"), "gates", "--all", "--lane", String(LANE), "--ref", sha, "--prio", "3", "--class", "health", "--json"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
     if ( sub.status !== 0 ) throw new Error(`submit.mjs refused: ${(sub.stdout + sub.stderr).slice(-400)}`);
     const job = JSON.parse(sub.stdout.slice(sub.stdout.indexOf("{")));
     const title = `PC job: nightly full gates [main ${sha.slice(0, 12)}]`;

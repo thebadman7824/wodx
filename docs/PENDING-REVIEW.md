@@ -1658,7 +1658,9 @@ Ben kept all eight rows as built on the Decisions Desk (https://claude.ai/artifa
 | 2026-11-17 | Where the Secondary PC writes its 5-minute status | D:\WoDX\pcq\status\secondary.json on the PC (task 'WoDX secondary status'); the PC has no route to the shared project folder without a tunnel, so a thread on the PC copies it to registry/pc-status/secondary.json when it is there | Add a tunnel or a sync folder and point the writer at it |
 | 2026-11-17 | HWiNFO on the Secondary PC | Not installed: every winget version of REALiX.HWiNFO fails with a 404 from its mirror. nvidia-smi already gives the core temperature the guard uses | Install HWiNFO by hand from its site, or retry winget later |
 
-## Waiting for review
+## Approved by auto-approval, 19 November 2026, 06:00 UTC
+
+Rows dated 17 and 18 November that Ben had not approved or disapproved by 19 November 06:00 UTC (the watcher-alerts row was already picked by Ben on 18 November). None deletes anything or changes the Live world.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1675,3 +1677,8 @@ Ben kept all eight rows as built on the Decisions Desk (https://claude.ai/artifa
 | 2026-11-17 | Show a war in Moravia on the map? | Yes: smoke from burning villages over every town scene and the scene being played, for three days, only when Moravia is home, never for the hidden story; it goes again if the clock is set back before the event (B7262, B7263). | Remove HOME_WAR_LOOK from eventLookFor and the wodxEventUndone hook in setupTownLooks. |
 | 2026-11-17 | PR 1836: the fixes pass, but seven gates fail only after other gates (gate7b, gate7b1, gateapipaths, gatearms, gatehunters, gatespritelife, gatevoices). Loosen the merge rule, or wait? | Wait (the coordinator took the thread's recommendation while you were away). The merge rule is not loosened. 1836's gates run again once the document-flag clean-up (B7176) and the recheck lane reset are on main; whatever main gates still fail after it merges go to the registry thread. | Let gateStatusFor() in tools/pcq/jobs.mjs also pass gates the recheck finds pass alone. |
 | 2026-11-18 | Wasted compute audit: "touched" gate runs are nearly full runs (58 of 80 pull request runs took 200 or more of 309 gates; one file in WoDX Chronicle takes 306, WoDX Actions 217), because the gate map ties most gates to those modules and adds every module that requires them. Narrow it? | No change. Fewer gates would weaken the integration check rule, so it stays as it is until Ben decides. One option to weigh: modules that only require a changed module run their gates in the nightly full run rather than on every push (about 40 percent fewer gates for a WoDX Actions change). Medium: for the daily decisions desk. Audit: /mnt/project-files/registry/waste-audit-2026-11-18.md | Nothing to reverse. To narrow it, pass direct to touched() in tools/lanes/run-gate.mjs. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|

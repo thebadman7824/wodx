@@ -96,9 +96,11 @@ export function changedFiles(g, base, head) {
   return out;
 }
 
-/** Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. --full-history
- * because a note added and then stamped away is absent on both sides of a later merge of main, and plain history
- * simplification follows main's side and loses it (PR 1880). */
+/**
+ * Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. B7520:
+ * --full-history, because once a stamp has removed the notes, a later merge of main whose changes/ folder matches
+ * main's side makes git follow only that side and hide the commits that added them (PR 1848, 19 November 2026).
+ */
 export function branchNotes(g, base, head) {
   const added = new Set(g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
   const out = [];
@@ -109,7 +111,7 @@ export function branchNotes(g, base, head) {
     if ( text === null ) {
       // Gone at the head (merge-stamp removed it): the last commit on the branch that touched it removed it, so its
       // first parent holds the note's last form.
-      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file);
+      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
       text = last ? g.show(`${last}^1`, file) : null;
     }
     out.push({file, module: m[1], frag: text === null ? null : parseFragment(text)});
@@ -148,7 +150,7 @@ export function branchDecisions(g, base, head) {
     if ( text === null ) {
       // Gone by the head. A stamp removes a fragment in the same commit that writes docs/DECISIONS.md, so its numbers
       // still count; a fragment renamed or deleted any other way (B7010.md renumbered to B7110.md) no longer holds them.
-      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file);
+      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
       const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
       if ( !stamped ) continue;
       text = g.show(`${last}^1`, file);

@@ -107,6 +107,8 @@ export async function step(ctx) {
   const {gh, log = () => {}, apply = false, home, maxHours = 3} = ctx;
   const stateFile = path.join(home, "train-state.json");
   const state = (() => { try { return JSON.parse(fs.readFileSync(stateFile, "utf8")); } catch { return {}; } })();
+  // B7449: the front's 3-hour limit counts only time its clock ran (ctx.clockRuns from the runner)
+  const ran = tick(state, ctx.clockRuns ?? true);
   const issues = await gh("GET", `/issues?state=open&labels=${TRAIN_LABEL}&per_page=100`);
   const prs = [];
   for ( const i of issues.filter(x => x.pull_request) ) {
@@ -119,6 +121,7 @@ export async function step(ctx) {
   // B7445: a batch pull request in flight is the front until it merges, fails or goes stale
   if ( !state.batch ) { const adopted = await adoptBatch(gh); if ( adopted ) state.batch = adopted; }
   if ( state.batch ) {
+    state.batch.ran = (state.batch.ran ?? 0) + ran;
     const b = await batchStep(ctx, state, order);
     if ( b ) { save(stateFile, state); log(`train: batch #${b.front} ${b.action}: ${b.why}`); return {...out, ...b}; }
   }
@@ -127,7 +130,8 @@ export async function step(ctx) {
   out.front = pr.number;
   const full = await gh("GET", `/pulls/${pr.number}`);
   const head = full.head.sha;
-  if ( state.pr !== pr.number || state.head !== head ) { state.pr = pr.number; state.head = head; state.since = Date.now(); }
+  if ( state.pr !== pr.number || state.head !== head ) { state.pr = pr.number; state.head = head; state.since = Date.now(); state.ran = 0; }
+  else state.ran = (state.ran ?? 0) + ran;
   const [cmp, statuses, runs, tree] = await Promise.all([
     gh("GET", `/compare/${full.base.ref}...${head}`),
     gh("GET", `/commits/${head}/statuses?per_page=100`),
@@ -144,7 +148,7 @@ export async function step(ctx) {
     checks: checkOf(runs.check_runs, CHECKS), mergeRules: statusOf(statuses, MERGE_RULES), gates: statusOf(statuses, GATES),
     mergeRulesWhy: (statuses ?? []).find(x => x.context === MERGE_RULES)?.description ?? "",
     otherChecksFailed: othersFailed(runs.check_runs),
-    frontFor: Date.now() - state.since};
+    frontFor: state.ran};
   const d = decide(f, {maxHours});
   // B7445: a front that needs main and a stamp anyway takes up to two green pull requests behind it into one batch
   const maxBatch = state.maxBatch ?? ctx.batch ?? BATCH_MAX;
@@ -162,7 +166,7 @@ export async function step(ctx) {
       else if ( r.members.length >= 2 ) {
         const bp = await openBatch(gh, r);
         delete state.pr; delete state.head;
-        state.batch = {pr: bp.number, head: r.sha, members: r.members.map(({number, ref, head: h}) => ({number, ref, head: h})), since: Date.now()};
+        state.batch = {pr: bp.number, head: r.sha, members: r.members.map(({number, ref, head: h}) => ({number, ref, head: h})), since: Date.now(), ran: 0};
         for ( const m of r.members ) await comment(gh, m.number, `Merge train: batched with ${r.members.filter(x => x !== m).map(x => `#${x.number}`).join(", ")} in #${bp.number}. Its gates run there once for all of them; when #${bp.number} merges, this head (${m.head.slice(0, 8)}) is on main and this pull request shows as merged. Do not push to this branch meanwhile.`);
         const skipped = r.skipped.length ? `; left out ${r.skipped.map(x => `#${x.number} (${x.why})`).join(", ")}` : "";
         Object.assign(out, {front: bp.number, batch: r.members.map(m => m.number), action: "batch", why: `${r.did}${skipped}`});
@@ -196,6 +200,19 @@ export async function step(ctx) {
   }
   save(stateFile, out.action === "merge" || out.action === "leave" ? {} : state);
   return out;
+}
+
+/**
+ * B7449 (desk pick p5): the time since the last step that counts on the front's clock. It counts only when the clock ran
+ * at both steps (no runner-hold, no planned window: prio.mjs trainClockRuns) and the steps were less than CLOCK_GAP
+ * apart, so a runner that was off or restarting adds nothing. Updates state.tick and state.ticking.
+ */
+export const CLOCK_GAP = 15 * 60e3;
+export function tick(state, runs, now = Date.now()) {
+  const gap = state.tick ? now - state.tick : 0;
+  const counted = runs && state.ticking !== false && gap > 0 && gap < CLOCK_GAP ? gap : 0;
+  state.tick = now; state.ticking = !!runs;
+  return counted;
 }
 
 const save = (f, s) => { try { fs.writeFileSync(f, JSON.stringify(s)); } catch { /* the next step starts the clock again */ } };
@@ -440,16 +457,16 @@ export async function batchStep(ctx, state, order) {
     const r = await (ctx.build ?? buildBatch)(ctx, b.members, {max: n, lease: bp.head.sha});
     if ( r.error || r.members?.length !== n ) { await close(r.error ?? `not all of ${nums} merge onto the new main`); delete state.batch; return null; }
     await gh("PATCH", `/pulls/${b.pr}`, {body: batchBody(r)}).catch(() => null);
-    Object.assign(b, {head: r.sha, since: Date.now()});
+    Object.assign(b, {head: r.sha, since: Date.now(), ran: 0});
     return res("prepare", `main moved: built again (${r.did}); the gates run on ${r.sha.slice(0, 8)}`);
   }
   const head = bp.head.sha;
-  if ( b.head !== head ) Object.assign(b, {head, since: Date.now()});
+  if ( b.head !== head ) Object.assign(b, {head, since: Date.now(), ran: 0});
   const [statuses, runs] = await Promise.all([gh("GET", `/commits/${head}/statuses?per_page=100`), gh("GET", `/commits/${head}/check-runs?per_page=100`)]);
   const d = decide({draft: false, mergeable: bp.mergeable ?? null, behind: 0, fragments: 0, ownBranch: true,
     checks: checkOf(runs?.check_runs, CHECKS), mergeRules: statusOf(statuses, MERGE_RULES), gates: statusOf(statuses, GATES),
     mergeRulesWhy: (statuses ?? []).find(x => x.context === MERGE_RULES)?.description ?? "", otherChecksFailed: othersFailed(runs?.check_runs),
-    frontFor: Date.now() - (b.since ?? Date.now())}, {maxHours});
+    frontFor: b.ran ?? 0}, {maxHours});
   if ( d.action === "merge" ) {
     if ( !apply ) return res("merge", d.why);
     try { await gh("PUT", `/pulls/${b.pr}/merge`, {sha: head, merge_method: "merge", commit_title: `Merge pull request #${b.pr}: ${nums} (merge train batch)`}); }

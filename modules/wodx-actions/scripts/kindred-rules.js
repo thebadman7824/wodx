@@ -41,7 +41,9 @@ export function discMatches(libHeading, sheet) {
     if (SORC.includes(head)) {
         const tail = rest.join(" ");
         if (SORC.includes(S)) return false;
-        return tail === S || tail.endsWith(S) || S.endsWith(tail) || (S.length >= 5 && tail.includes(S));
+        // B7090: a sheet that names the sorcery too ("Thaumaturgy: Hands of Destruction") is matched on the path's own name
+        const own = S.split(" ")[0] === head ? S.slice(head.length + 1) : S;
+        return tail === own || tail.endsWith(own) || own.endsWith(tail) || (own.length >= 5 && tail.includes(own));
     }
     // "Quietus" covers both its variants; "Valeren (Healer)" matches "Valeren Healer" or "Valeren"
     return L.startsWith(S + " ") || S.startsWith(L + " ");
@@ -64,9 +66,26 @@ export function librarySet(da = [], v20 = [], { darkAges = false, v20Names = new
  * The powers a character can use: sheet = [{name, value}] (Disciplines and paths). For each library power, the
  * rating of the best-matching sheet entry must reach the power's level. Elder powers need the level too.
  */
+/** B7092: does a sheet entry give the Discipline a combination power needs? A sorcery ("Necromancy", "Thaumaturgy")
+ *  is met by the sorcery itself or by any of its paths; its rating is the primary (best) path's. */
+export function needMatches(need, sheetName, pathHeads = []) {
+    const N = normName(need), S = normName(sheetName);
+    if (!N || !S) return false;
+    if (!["necromancy", "thaumaturgy", "koldunic"].includes(N)) return discMatches(need, sheetName);
+    if (S === N || S.startsWith(N + " ")) return true;
+    return pathHeads.some(h => normName(h).startsWith(N + " ") && discMatches(h, sheetName));
+}
+
 export function powersFor(powers, sheet) {
     const out = [];
+    const heads = [...new Set((powers ?? []).map(p => p.d).filter(Boolean))];
     for (const p of powers ?? []) {
+        // B7092: a combination power (V20 Lore of the Clans) needs every Discipline it names at its level
+        if (Array.isArray(p.needs) && p.needs.length) {
+            const met = p.needs.map(nd => (sheet ?? []).filter(s => needMatches(nd.d, s.name, heads)).reduce((m, s) => Math.max(m, n(s.value)), 0) >= n(nd.l));
+            if (met.every(Boolean)) out.push({ ...p, rating: Math.min(...p.needs.map(nd => n(nd.l))), item: null, sheetName: p.needs.map(nd => nd.d).join(" + ") });
+            continue;
+        }
         let best = null;
         for (const s of sheet ?? []) if (discMatches(p.d, s.name) && (!best || n(s.value) > n(best.value))) best = s;
         if (best && n(best.value) >= n(p.l)) out.push({ ...p, rating: n(best.value), item: best.id ?? null, sheetName: best.name });
@@ -173,7 +192,8 @@ export function v20PathFor(data, label = "", custom = "") {
     let k = m && P[m[1]] ? m[1] : null;
     if (!k && custom && (!label || label === "custom")) {
         const c = String(custom).trim().toLowerCase().replace(/^the\s+/, "");
-        k = Object.keys(P).find(x => P[x].name.toLowerCase() === c) ?? null;
+        // B7081: another name the book gives the same Path ("Path of Death and the Soul" is the Path of the Bones, V20 p. 320)
+        k = Object.keys(P).find(x => [P[x].name, ...(P[x].aliases ?? [])].some(nm => nm.toLowerCase() === c)) ?? null;
     }
     return k ? { key: `v20-${k}`, road: { ...P[k], book: data.book ?? "V20" }, path: null } : null;
 }
@@ -224,9 +244,39 @@ export const SIN_EVENTS = {
 export function sinForEvent(found, event) {
     if (!found) return null;
     const byPath = found.path ? SIN_EVENTS[found.path.name] : null;
-    const t = byPath ?? SIN_EVENTS[found.key] ?? {};
+    // B7081: a variant Path (Harmony) sins as the Path it grew from
+    const t = byPath ?? SIN_EVENTS[found.key] ?? (found.road?.variantOf ? SIN_EVENTS[`v20-${found.road.variantOf}`] : null) ?? {};
     if (event === "killFeed" && !("killFeed" in t)) return t.kill ?? null;
     return t[event] ?? null;
+}
+
+/**
+ * B7080: the bearing step at a Humanity or Path rating, from the table in the data (V20 p. 310): [[minimum rating, step]]
+ * from the top down. A + step makes the roll harder.
+ */
+export function bearingStep(steps, rating) {
+    const r = n(rating);
+    for (const [min, step] of steps ?? []) if (r >= n(min)) return n(step);
+    return 0;
+}
+
+/**
+ * B7080: a V20 Path's bearing on one roll (V20 p. 310; each Path's bearing with its description, pp. 316-338). Only a
+ * Path walker has one here; Humanity's bearing stays with the Road aura box and the low-Humanity rules. The bearing
+ * counts on its own when the roll's tags meet the Path's (Stealth for the Bones, seduction for the Cathari) or, for
+ * Lilith, when the roller carries a wound penalty; `ticked` is the player saying the roll draws on it otherwise.
+ * Returns null for no Path, else {name, covers, path, step, auto, applies, byItself (some rolls count on their own), part}.
+ */
+export function pathBearing(data, found, rating, { tags = [], wounded = false, ticked = false } = {}) {
+    const b = found?.road?.bearing;
+    if (!b || !String(found.key ?? "").startsWith("v20-")) return null;
+    const step = bearingStep(data?.bearingSteps, rating);
+    const want = (b.tags ?? []).map(t => String(t).toLowerCase());
+    const auto = want.some(t => tags.map(x => String(x).toLowerCase()).includes(t)) || (!!b.wounded && !!wounded);
+    const applies = auto || !!ticked;
+    const sign = step > 0 ? "+" : "";
+    return { name: b.name, covers: b.covers, path: found.road.name, step, auto, applies, byItself: want.length > 0 || !!b.wounded,
+        part: applies && step ? `${b.name} bearing (${found.road.name} ${n(rating)}) ${sign}${step} diff, ${data?.book ?? "V20"} p. ${data?.bearingPage ?? 310}` : "" };
 }
 
 /** The Road's two Virtues decide the labels and whether Instinct rules apply. */

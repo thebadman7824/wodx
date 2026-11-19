@@ -38,6 +38,7 @@ import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, rea
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
+import * as PRIO from "./prio.mjs";
 import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
 import {recheck as recheckRun} from "./recheck.mjs";
 import {prMark, staleWhy, jobOfLog} from "./stale.mjs";
@@ -589,11 +590,24 @@ const graphql = async (query, variables) => {
   if ( !r.ok || j.errors?.length ) throw new Error(`GraphQL ${r.status} ${JSON.stringify(j.errors ?? j).slice(0, 200)}`);
   return j.data;
 };
-let trainNow = null, trainBusy = false, lastTrain = 0;
+/**
+ * B7448: registry/priorities.json (prio.mjs), read again each loop so a change to it needs no restart. A file that
+ * does not read or check leaves the older queue order and no windows, and is logged once.
+ */
+let prioBad = "";
+function prioNow() {
+  try {
+    const p = PRIO.load(), bad = PRIO.check(p);
+    if ( bad.length ) throw new Error(bad.slice(0, 3).join("; "));
+    prioBad = "";
+    return p;
+  } catch (e) { if ( prioBad !== e.message ) log(`priorities: not used (${e.message})`); prioBad = e.message; return null; }
+}
+let trainNow = null, trainBusy = false, lastTrain = 0, trainClock = true;
 function trainTick() {
   if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
   lastTrain = Date.now(); trainBusy = true;
-  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3})
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3, clockRuns: trainClock})
     .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
 }
 /** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */
@@ -739,7 +753,13 @@ for ( ;; ) {
       await sleep(30000); continue;
     }
     // B7207: runner-hold takes no new jobs but keeps every other pass (status, sweep, train, updates, cancel) running
-    const holding = fs.existsSync(path.join(HOME, "runner-hold"));
+    const hold = fs.existsSync(path.join(HOME, "runner-hold"));
+    // B7448 (desk pick p7): from holdMinutesBefore ahead of a planned window for this PC to its end, no new jobs
+    const P = prioNow();
+    const win = P ? PRIO.activeWindow(P, HOST) : null;
+    const holding = hold || !!win;
+    // B7449 (desk pick p5): the train front's clock stops while this runner holds or a window holds it
+    trainClock = P ? PRIO.trainClockRuns(P, {held: hold, window: !!win}) : !hold;
     // Stale pull requests, every hour, beside the jobs (B4110).
     if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
@@ -773,7 +793,8 @@ for ( ;; ) {
     await stopStale();
     await cancelCheck(issues, openNums);
     trainTick();
-    const ready = trainFirst(order(queue, openNums));
+    // B7448 (desk pick p1): rank first (train front, unblock, PR gates, health ...), then the aged number, then age
+    const ready = trainFirst(order(queue, openNums, Date.now(), P ? {prio: P, sortQueue: PRIO.sortQueue, isFront: q => !!trainNow?.front && isFrontJob(q.issue?.title, trainNow.front)} : {}));
     const res = resources();
     if ( res.low.length ) {
       heldSince ??= Date.now();
@@ -806,7 +827,7 @@ for ( ;; ) {
     // pinned to a busy lane, or to another PC's lane, no longer keeps the free lanes idle (#2022 ran 309 gates on lane 2
     // alone for 2 h 24 min while #2020 waited for lane 2 and lanes 3 to 5 sat idle)
     if ( !draining && !holding && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number) && couldStartNow(q.job)));
-    await status(queue.filter(q => !active.has(q.number)), holding ? "runner-hold: taking no new jobs" : null);
+    await status(queue.filter(q => !active.has(q.number)), win ? `planned window (${win.why ?? "hardware work"}, ${win.from} to ${win.to}): taking no new jobs` : holding ? "runner-hold: taking no new jobs" : null);
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;
   await sleep((conf.pollSeconds ?? 30) * 1000);
