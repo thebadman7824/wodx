@@ -19,6 +19,18 @@ const STEP_KINDS = ["chapter", "interlude", "world"];
 export const bookByKey = k => SAGA.books.find(b => b.key === k) ?? null;
 export const chainKey = book => `${SAGA_PREFIX}${book}`;
 export const isSagaKey = k => String(k ?? "").startsWith(SAGA_PREFIX);
+/**
+ * The saga keys of story chains in this world that no chronicle in play owns (a chronicle module switched off while its
+ * saga runs, Chronicle Packs Desk c1): ["<saga key>", ...], sorted, each once.
+ */
+export function orphanSagas(chains = []) {
+  const out = new Set();
+  for ( const r of chains ?? [] ) {
+    const m = /^saga:([^:]*):/.exec(String(r?.key ?? ""));
+    if ( m && !String(r.key).startsWith(SAGA_PREFIX) ) out.add(m[1] || "?");
+  }
+  return [...out].sort();
+}
 export const bookOfKey = k => isSagaKey(k) ? bookByKey(String(k).slice(SAGA_PREFIX.length)) : null;
 
 /** Whole days from one [year, month, day] to the next (the proleptic calendar; good enough for gaps). */

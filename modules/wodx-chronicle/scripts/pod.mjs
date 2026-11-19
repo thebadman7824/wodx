@@ -702,6 +702,12 @@ export function registerPodHooks() {
     approve: e => startThread(e.data?.actor, e.data?.thread), reject: e => dismissThread(e.data?.actor, e.data?.thread?.id)});
   registerHandler(T_SAGA, {label: "The next book of the chronicle's saga", approve: e => startSaga(e.data?.book), reject: e => skipSaga(e.data?.book)});
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | exposure`, e)); });
+  // A saga still running whose chronicle module is off says so once, to the Storyteller (Chronicle Packs Desk c1)
+  Hooks.once("ready", () => {
+    if ( !isActiveGM() ) return;
+    const lost = P.saga.orphanSagas(state().chains);
+    if ( lost.length ) ui.notifications.warn(`WoDX: this world has a saga under way (${lost.join(", ")}) whose chronicle module is not switched on, so it is paused. Turn that module on in Manage Modules to carry on, or leave it off to play on without it.`, {permanent: true});
+  });
   Hooks.on("wodxSensesGather", onSenses);
   Hooks.on("wodxDamageApplied", onDamage);
   Hooks.on("updateActor", onActorUpdate);

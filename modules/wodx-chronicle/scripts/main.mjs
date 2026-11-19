@@ -66,6 +66,7 @@ import * as waiting from "./waiting.mjs";
 import * as age from "./age.mjs";
 import * as gender from "./gender.mjs";
 import * as waitingRules from "./waiting-rules.mjs";
+import * as chronicleData from "./chronicle-data.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -245,6 +246,8 @@ Hooks.once("ready", async () => {
 
   age.listen();
   const api = {
+    // The story chronicle in play (Chronicle Packs Desk a1-a4): {current(), currentId(), list()}
+    chronicle: {current: chronicleData.current, currentId: chronicleData.currentId, list: chronicleData.chronicles},
     // B6180-B6199: one meaning for the words every module uses (time, dice, health, distance, eras, who is who)
     terms: termsApi(),
     // B3210: the age floor of 18 for anything romantic or sexual
