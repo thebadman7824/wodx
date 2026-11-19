@@ -182,3 +182,13 @@ test("a gathering gives what the cult promises, once a week (B5960 to B5964)", a
   assert.equal(C.normCult({lastGift: 55}).lastGift, 55);
   for ( const [kind, bg] of Object.entries(C.SHEET_BG) ) assert.equal(C.CULT_KINDS[kind].bg.split(" ")[0], bg, kind);
 });
+
+test("cults: the night of worship goes to a place of worship whatever the region order (B7530)", () => {
+  const haven = {uuid: "R.haven", kind: "haven"}, chapel = {uuid: "R.chapel", kind: "church"}, bare = {uuid: "R.bare"};
+  assert.equal(C.worshipPlace([haven, chapel]), "R.chapel");
+  assert.equal(C.worshipPlace([chapel, haven]), "R.chapel");
+  assert.equal(C.worshipPlace([bare, haven]), "R.haven", "no place of worship: the first tagged place");
+  assert.equal(C.worshipPlace([bare]), null);
+  assert.equal(C.worshipPlace([{uuid: "R.t", kind: "Temple"}, haven]), "R.t", "kinds match in any case");
+  assert.match(src("modules/wodx-npc/scripts/cults.mjs"), /C\.worshipPlace\(/, "serve uses the rule");
+});

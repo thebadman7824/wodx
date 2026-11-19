@@ -190,7 +190,7 @@ export function build(ctx) {
   }
 
   /* B5692 (e1), B5693 (e2): what an NPC's cult does for its founder each week, and the faithful seen on the map */
-  const tagged = sc => { if ( !sc ) return null; const r = [...(sc.regions ?? [])].find(x => x.flags?.[MOD]?.place?.kind); return r?.uuid ?? (sc.flags?.[MOD]?.place?.kind ? sc.uuid : null); };
+  const tagged = sc => { if ( !sc ) return null; const r = C.worshipPlace([...(sc.regions ?? [])].map(x => ({uuid: x.uuid, kind: x.flags?.[MOD]?.place?.kind}))); return r ?? (sc.flags?.[MOD]?.place?.kind ? sc.uuid : null); };
   const inAnyCult = id => list().some(c => !c.ended && (c.founder?.id === id || c.named.some(m => m.id === id)));
   /** Set a Background the cult gives on the founder's sheet; one the Storyteller set higher by hand stands. True when changed. */
   async function syncBackground(a, name, dots, cultId) {
