@@ -436,7 +436,7 @@ Next free block: B7540
 | B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
 | B7500-B7509 | The Secondary PC drives the merge train while the Main PC is down (used B7500) | tools |
 | B7510-B7519 | GPU guard in the repo, reading the GPU order from the priority file (used B7510) | tools |
-| B7520-B7529 | Merge rules find release notes after a stamp and a second merge of main (used B7520) | tools |
+| B7520-B7529 | The gate recheck runs a flaky gate on main, so a fault main has too does not hold a pull request (used B7520-B7521) | tools |
 | B7530-B7539 | Cult worship goes to a place of worship (used B7530) | NPC |
 <!-- decision-index:end -->
 
@@ -14844,6 +14844,16 @@ of main whose changes/ folder matches main's side is followed down that side onl
 notes drop out. PR 1848 then failed "release note" with all seven notes on the branch. Both calls now pass
 --full-history, and a test builds the stamp and the second merge in a scratch repository.
 Reverse: drop --full-history from branchNotes and branchDecisions in tools/release/merge-rules.mjs.
+
+## B7521. A flaky gate is rechecked on main (2026-11-19)
+Repository workflow, bug #2135, under the owner's settled rule that a fault main has too does not hold a pull request.
+The recheck called a gate flaky when it passed once and failed once alone, and stopped there, so wodx/gates went red
+for a fault main may share. Each full run drew a different flaky gate, and train pull requests bounced again and again
+(PR 1880 on gateduties, PR 2132 on gatespritelife and gatetruthnpc, 19 November 2026). A flaky gate now goes to main as
+a failure alone does: a failure there reads "fails on main too" and does not hold the pull request; two passes alone
+on main leave it flaky, and it still holds. Main's runs are kept per main commit (B7342), so the cost falls on the
+first pull request each day.
+Reverse: return the flaky verdict straight away in recheckStep (tools/pcq/jobs.mjs), without the main runs.
 
 ## B7530. A cult worships at a place of worship first (2026-11-19)
 WoDX NPC. When a cult serves its founder, the night of worship goes to the scene's first region tagged as a place of worship (church, chapel, cathedral, abbey, monastery, temple, shrine, mosque or synagogue), and only then to the first tagged place. Foundry does not keep a scene's regions in a set order, so the old "first tagged region" rule sent the worship to a haven on some loads, which made gateduties step 2 fail at random (gate runs #2114 and #2131 on PR 1880, both "flaky" alone). The rule is `worshipPlace` in cult-rules.mjs.
