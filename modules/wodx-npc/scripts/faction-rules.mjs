@@ -280,7 +280,8 @@ export const rollDice = (rand, n) => Array.from({length: Math.max(0, n)}, () => 
 /** Successes at a difficulty: each die at or above it, less one for each 1; a botch is no successes and a 1 (V20 p. 249). */
 export function successes(dice, difficulty) {
   const r = TERMS.successes(dice, difficulty);
-  return {net: r.net, botch: r.botch, hits: r.raw, ones: r.ones};
+  // B7120: past 10, each point needs one more success (terms.mjs successes)
+  return {net: r.successes, botch: r.botch, hits: r.raw, ones: r.ones};
 }
 
 /* ------------------------------------------------------------------ */
