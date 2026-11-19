@@ -18,10 +18,15 @@ export const WOUND_LEVELS = TERMS.HEALTH_LEVELS;
  */
 export function countSuccesses(faces, difficulty, opts = {}) {
     // B6189: the one V20 count (terms.mjs): difficulty held to 2-10, a 10 always hits
-    const { specialty = false, willpower = false, autoSuccesses = 0, canBotch = true } = opts;
-    const r = TERMS.successes(faces, difficulty, { specialty, willpower, auto: autoSuccesses, canBotch });
-    return { raw: r.raw, ones: r.ones, successes: r.successes, botch: r.botch };
+    // B7120: past 10, each point needs one more success (M20 pdf 504); opts.over when the caller held it at 10
+    const { specialty = false, willpower = false, autoSuccesses = 0, canBotch = true, over = null } = opts;
+    const r = TERMS.successes(faces, difficulty, { specialty, willpower, auto: autoSuccesses, canBotch, over });
+    return { raw: r.raw, ones: r.ones, successes: r.successes, botch: r.botch, over: r.over ?? 0, rolled: r.rolled ?? r.successes };
 }
+
+/** B7120: how far a difficulty goes past 10, and the card's words for it (terms.mjs). */
+export function overTen(d) { return TERMS.overTen ? TERMS.overTen(d) : 0; }
+export function overTenText(over, wanted = null) { return TERMS.overTenText ? TERMS.overTenText(over, wanted) : ""; }
 
 /** Clamp a difficulty into the 2-10 range used by the Storyteller System. */
 export function clampDifficulty(d) {
