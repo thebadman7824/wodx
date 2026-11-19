@@ -56,6 +56,8 @@ export function validate(raw, laneIds = []) {
   if ( typeof j.ref !== "string" || !REF.test(j.ref) || j.ref.includes("..") ) return err("ref must be main, a claude/... or handoff/... branch or a commit sha.");
   j.prio = j.prio ?? 3;
   if ( !Number.isInteger(j.prio) || j.prio < 1 || j.prio > 5 ) return err("prio must be a whole number from 1 to 5.");
+  // B7448: the job's class in registry/priorities.json (urgent from pr-gates.mjs, health from nightly-gates.mjs)
+  if ( j.class !== undefined && (typeof j.class !== "string" || !/^[a-z][a-z-]{1,30}$/.test(j.class)) ) return err("class must be a class name from registry/priorities.json.");
   if ( j.after !== undefined && !(Number.isInteger(j.after) && j.after > 0) ) return err("after must be an issue number.");
   if ( j.thread !== undefined && !/^cmsg_\w{10,80}$/.test(j.thread) ) return err("thread must be a cmsg_ id.");
   const lanes = laneIds.map(String);
@@ -125,9 +127,20 @@ export function effectivePrio(j, now = Date.now()) {
   const hours = Number.isFinite(made) ? Math.max(0, Math.floor((now - made) / 3600000)) : 0;
   return Math.max(1, j.job.prio - hours);
 }
-export function order(jobs, openNumbers = new Set(), now = Date.now()) {
-  return jobs.filter(j => !(j.job.after && openNumbers.has(j.job.after)))
-    .sort((a, b) => effectivePrio(a, now) - effectivePrio(b, now) || a.number - b.number);
+/**
+ * The queue in the order to start. B7448: with the priorities file (prio: registry/priorities.json, parsed; sortQueue:
+ * prio.mjs's), by rank first (train front, unblock, PR gates, health ...), then the job's own number aged inside its
+ * rank, then the older issue; isFront(entry) says which jobs are the train front's. Without it, the older order: the
+ * aged number across every job.
+ */
+export function order(jobs, openNumbers = new Set(), now = Date.now(), {prio = null, sortQueue = null, isFront = () => false} = {}) {
+  const live = jobs.filter(j => !(j.job.after && openNumbers.has(j.job.after)));
+  if ( prio && sortQueue ) {
+    const made = j => Date.parse(j.issue?.created_at ?? j.created_at ?? "");
+    const wrapped = live.map(j => ({j, job: j.job, number: j.number, waitedMs: Number.isFinite(made(j)) ? Math.max(0, now - made(j)) : 0, ctx: {front: !!isFront(j)}}));
+    return sortQueue(prio, wrapped).map(w => w.j);
+  }
+  return live.sort((a, b) => effectivePrio(a, now) - effectivePrio(b, now) || a.number - b.number);
 }
 
 /**
