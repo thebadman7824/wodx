@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7490
+Next free block: B7530
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -429,10 +429,12 @@ Next free block: B7490
 | B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
-| B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
+| B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip, merge-train batches; the runner follows registry/priorities.json (queue order, windows, train clock) (used B7440-B7449) | tools |
 | B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
 | B7470-B7479 | gatetruthstoryteller step 3 waits for the convened record (used B7470) | tools |
 | B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
+| B7500-B7509 | The Secondary PC drives the merge train while the Main PC is down (used B7500) | tools |
+| B7520-B7529 | Merge rules find release notes after a stamp and a second merge of main (used B7520) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14647,6 +14649,25 @@ modules can reach main and show the next night (B7443 names the merge). --wide k
 integration check on each push; the full suite with every module deployed still runs every night on main.
 Reverse: make run-gate --touched use the --wide branch again.
 
+## B7448. The PC runner orders its queue by rank and holds in planned windows (2026-11-18)
+Repository workflow, the owner's picks on the Process Priority Desk (p1, p6, p7). The runner sorted every waiting job
+by its 1-5 number less one per hour waited, so an old nightly or hand job could go before a pull request's gates. It
+now reads registry/priorities.json each loop (prio.mjs, B7350) and starts jobs by rank first: the train front's gate
+job, then unblocking work (urgent pull requests, branch-tools lane tests), then pull request gates, then health runs,
+with aging only inside a rank. A job can carry its class: pr-gates.mjs writes "urgent" for a pull request labelled
+urgent, nightly-gates.mjs "health". From holdMinutesBefore ahead of a planned window for its PC to the window's end
+the runner takes no new jobs, as with runner-hold, and says so on its status issue. A file that does not read or check
+leaves the older order, logged once.
+Reverse: call order(queue, openNums) without the prio options in runner.mjs and drop the window check.
+
+## B7449. The merge train's front clock stops while its runner holds (2026-11-18)
+Repository workflow, the owner's pick p5. The front's 3-hour limit counted wall time, so a runner on hold or in a
+planned window ran the clock out and the pull request was put out of the train for no fault of its own. The train now
+adds up only the time between steps when the clock ran at both (prio.mjs trainClockRuns: no runner-hold, no window)
+and the steps were less than 15 minutes apart, so a runner that was off or restarting adds nothing. A batch pull
+request (B7445) keeps the same clock.
+Reverse: set frontFor back to Date.now() - state.since in train.mjs (and b.since for a batch).
+
 ## B7460. lane-reset.cmd no longer starts the older nightly full run (2026-11-18)
 Repository workflow. Desk pick p6 keeps one nightly full run, tools/pcq/nightly-gates.mjs, an all-gates PC job. The
 Main PC's daily "WoDX lane reset" task still started tools/lanes/nightly.mjs from the last line of
@@ -14687,3 +14708,22 @@ finished. The open backlog (the nightly 2026-11-18 failures, #1843, gatetruthsto
 audit's open items) was filed the same day.
 
 Reverse: remove the bullet from section 8 and the `issue` field note; the issues stay as a record.
+
+## B7500. The Secondary PC drives the merge train while the Main PC is down (2026-11-19)
+tools/pcq/runner.benjamin-pc.json has `train: true` and tools/pcq/runner.json has `train: false`. The Main PC went
+down with a hardware fault on 18 November, and its runner was the only one driving the train (B7202), so labelled pull
+requests stopped merging. Ben asked for the Secondary PC to stand in. It gates on lane 8 only, its one Foundry lane,
+and keeps its memory floor (`minFreeRamGB` 3 on 16 GB). runner.json goes to `false` at the same time, so the Main PC
+cannot drive the train as well when it comes back: two drivers would both push merge-main commits to the same front.
+The Laptop already has `train: false`. The train keeps its state in `<home>/train-state.json` on each PC, so the
+Secondary PC starts its own and reads the line afresh from the labels.
+
+Reverse: set `train` back to `true` in runner.json and to `false` in runner.benjamin-pc.json once the Main PC is up.
+
+## B7520. Merge rules read the branch's notes with full history (2026-11-19)
+Repository workflow, bug #2124. The merge rules list the release notes and decision fragments a branch added with
+git log over base..head. Plain git log simplifies history at merges: once a stamp has removed the notes, a later merge
+of main whose changes/ folder matches main's side is followed down that side only, and the commits that added the
+notes drop out. PR 1848 then failed "release note" with all seven notes on the branch. Both calls now pass
+--full-history, and a test builds the stamp and the second merge in a scratch repository.
+Reverse: drop --full-history from branchNotes and branchDecisions in tools/release/merge-rules.mjs.
