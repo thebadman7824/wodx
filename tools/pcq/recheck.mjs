@@ -3,7 +3,8 @@
  * with stand-in lanes. Each failing gate runs ALONE, one gate per run-gate call on a freshly reset lane, and no verdict
  * rests on a single run (jobs.mjs recheckStep): a failure alone is run once more (two different results: flaky), and
  * two failures alone then go to main the same way, where a pass is confirmed by a second run before it says NEW. All
- * the runs on this commit come first and the runs on main after, so the lane is deployed twice at most. The recheck
+ * the runs on this commit come first and the runs on main after, so the lane is deployed in full twice, once before
+ * each side's first run (B7540), and only on a change after that. The recheck
  * stops taking runs after RECHECK_MINUTES, or when stopped() says the job was cancelled or made stale; gates it did
  * not finish say so.
  *
@@ -23,12 +24,20 @@ export async function recheck({job, lane, tag, wt, rep, L, stopped = () => false
   if ( !failing.length ) return "";
   const until = Date.now() + RECHECK_MINUTES * 60000;
   let runs = 0;
+  // B7540: the first run on each side deploys in full. "--if-changed" leaves out compendium pack files (lib.mjs
+  // isPackDb), so after the full run the branch's runs kept what it left in the packages while main's runs, on other
+  // code, got a full deploy: gates failed alone on the branch and passed on main (gatearms #2151, gatemarketgoods
+  // #2158), then passed alone on the same head an hour later.
+  const deployed = new Set();
   const runOne = async (dir, gate) => {
     const f = path.join(logs, `${tag}-l${lane}-re${++runs}-${gate}.txt`);
     fs.rmSync(f, {force: true});
-    await lanesCmd(["reset", "--lane", lane, "--repo", dir], {logTo: L});
-    const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", "--repo", dir], {logTo: L});
+    const r = await lanesCmd(["reset", "--lane", lane, "--repo", dir], {logTo: L});
+    if ( r?.code ) log(`${tag} lane ${lane}: reset before ${gate} exited ${r.code}; the run may start on a used world`);
+    const full = !deployed.has(dir);
+    const d = await lanesCmd(["deploy", "--lane", lane, ...(full ? [] : ["--if-changed"]), "--repo", dir], {logTo: L});
     if ( d.code !== 0 ) return null;
+    deployed.add(dir);
     await node("tools/lanes/run-gate.mjs", [gate, "--lane", String(lane), "--wait", "10", "--report", f, "--repo", dir], {logTo: L, minutes: 36, stallMinutes: stallFor(dir)});
     return fs.existsSync(f) ? gatePassed(gate, fs.readFileSync(f, "utf8")) : null;
   };
