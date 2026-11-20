@@ -409,6 +409,7 @@ Next free block: B7570
 | B7080-B7109 | Rules as data: Path bearings first, then kith, totems, fetishes, Thaumaturgy and factions as data tables (used B7080-B7093) | Actions |
 | B7110-B7119 | Dark Ages fae exports wired into play (used B7110-B7114) | Actions |
 | B7120-B7129 | Weekly review picks st1 and ac1 (17 November): difficulty past 10, trying again (used B7120-B7121) | Chronicle, NPC, Otherworlds, Combat, Actions, Sheets, system fork |
+| B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130) | Combat, Creation, NPC, Solo |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
@@ -14194,6 +14195,11 @@ Reverse: make overTen in terms.mjs return 0.
 WoDX Actions remembers a failed simple or teamwork roll per character, task (the preset, or the Attribute and Ability) and target, for the scene. The next try at the same thing is +1 difficulty a failure, named on the card ("Retry (third try) +2 diff"), and once that brings the difficulty to 10 the Action window says it cannot be attempted now (V20 Dark Ages pdf 324; Demon: The Fallen pdf 223; Hunter: The Reckoning pdf 172). Extended rolls (which already allow repeated attempts) and resisted rolls (won or lost outright) are left out, as the books say. A success, a new scene, or the Storyteller's Clear failed tries button (the Scene row of every line's menu) starts it again. The Retries box in the window still works, and the higher of the two counts. World setting "Trying again gets harder" (on). Ben's pick ac1.
 
 Reverse: switch the setting off.
+
+## B7130. Gear weight counts on dry land (2026-11-17)
+WoDX Combat reads the gear's weight (WoDX Library) against what Strength and Potence lift (WoDX Interactables' chart) on land as well as in water. Past half the lift, +1 difficulty to dodge and to stealth; past all of it, half speed as well. A burden set by hand on the token HUD's weight button wins over the weight (a heavy load counts as past half, all they can lift as past the lift, a pack as nothing on land), and "By what they carry" goes back to the weight. Flyers, riders, swimmers and a mist or spirit are left out; worn armor still counts only by its own Dexterity penalty. A house rule: the books give Strength a lifting limit and no pace for a load. Ben's pick mc1 on the weekly review desk.
+
+Reverse: make landLoad in movement-rules.js return steps 0.
 
 ## B7140. One feature registry in the repo (2026-11-17)
 Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
