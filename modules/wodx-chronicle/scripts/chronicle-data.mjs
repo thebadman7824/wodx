@@ -14,6 +14,7 @@
  * Several may register (desk a4); one is in play at a time.
  */
 import {WEEK as TERMS_WEEK, DAY} from "./terms.mjs";
+import {addLiveWorlds} from "./live-worlds.mjs";
 
 const EMPTY_SAGA = Object.freeze({key: "", title: "", where: "", region: "", origin: null, books: []});
 
@@ -101,6 +102,8 @@ function load(p) {
 export function registerChronicle(pack) {
   if ( !pack?.id ) throw new Error("A chronicle pack needs an id.");
   packs.set(pack.id, pack);
+  // B7564: its Live worlds join the one shared list (they stay on it if the pack is taken off again)
+  addLiveWorlds(pack.manifest?.live ?? []);
   if ( !inPlay || inPlay === pack.id ) useChronicle(pack.id);
   return pack;
 }

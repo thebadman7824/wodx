@@ -1,6 +1,6 @@
 /**
- * Book one's encounters on the table (Rothenstein Rebuilt, Volume Two picks v1-v6, B6640-B6649). Rules in
- * encounter-rules.mjs, data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
+ * Book one's encounters on the table (the chronicle rebuild, Volume Two picks v1-v6, B6640-B6649). Rules in
+ * encounter-rules.mjs, data from the chronicle in play (chronicle-data.mjs; the first chronicle's is in its own module).
  *
  * While book one runs, the saga's tick (and arriving on a map) offers the Storyteller a card for each encounter that
  * fits where the company stands, in its months and chapter: Play, Not tonight, Never (v1). Play puts its people on
@@ -27,7 +27,7 @@ const pod = () => foundry.utils.deepClone(game.settings.get(MODULE_ID, "podState
 const savePod = s => game.settings.set(MODULE_ID, "podState", s);
 const sagaOf = s => { const x = s.saga ??= {}; x.endings ??= {}; x.clocks ??= {}; x.books ??= {}; return x; };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
-/** The actor folder for encounter people, named for the chronicle's town ("Rothenstein encounters"). */
+/** The actor folder for encounter people, named for the chronicle's town ("<town> encounters"). */
 const folderName = () => `${S.SAGA.where || "Chronicle"} encounters`;
 
 function played(s) {
@@ -43,7 +43,7 @@ const ctxOf = (s, extra = {}) => ({now: now(), played: played(s), month: monthNo
 export const encounterState = (s = pod()) => E.normState(sagaOf(s).encounters ?? {}, now());
 /** The encounters played, for the twists (twist-rules ctx.met). */
 export const metOf = s => E.met(E.normState(sagaOf(s).encounters ?? {}, now()));
-/* B6740 meets Rothenstein's encounters: every write of the encounter state waits its turn on the story-chain state
+/* B6740 meets the chronicle's encounters: every write of the encounter state waits its turn on the story-chain state
  * (util podTurn), as the fronts and the saga do, so the clock's tick never writes an older copy over it. The cards,
  * front moves and people come after the turn: Fronts' own changes take turns too, and a turn must not wait on one. */
 const change = fn => podTurn(async () => {

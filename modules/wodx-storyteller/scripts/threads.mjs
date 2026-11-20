@@ -210,7 +210,7 @@ export function nightBeat(rand = Math.random) {
   let first = true;
   const b = T.nightBeat(state(), () => (first ? ((first = false), r) : rand()));
   if ( b ) return b;
-  // No storyline open: the running step of a Rothenstein saga book (WoDX Chronicle), if one runs
+  // No storyline open: the running step of a chronicle's saga book (WoDX Chronicle), if one runs
   try {
     const c = chron()?.pod?.saga?.current?.();
     if ( c?.step ) return {key: `saga:${c.book}`, title: c.title ?? "", step: {key: c.step.key ?? "", title: c.step.title ?? "", text: c.step.text ?? ""}};

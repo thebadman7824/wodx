@@ -1,6 +1,6 @@
 {
   "_about": "Corrections to the gate map in gate-map.mjs: add or remove modules a gate covers, and files in tools/gate that are diagnostics, not gates.",
-  "notGates": [
+  "notGates": ["gatecleanworld",
     "gate6c-diag",
     "gatecssprobe",
     "gatedisplayb",
@@ -122,5 +122,7 @@
   "remove": {},
   "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks: run them by name on their own; gatesolo turns solo mode on). gatevoices is a lane gate again: it checks Voices switched off and needs no engine (B6763).",
   "timeouts": {},
-  "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}."
+  "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}.",
+  "_clean": "Chronicle Packs Desk e2: the clean smoke set, run in wodx-clean (run-gate.mjs --world clean --clean-set) after the nightly full run, on one lane. gatecleanworld is left out of the map because in rothenstein-wodx a chronicle is in play on purpose; the others are ordinary gates that must also pass with no chronicle in play.",
+  "clean": ["gatecleanworld", "gatethreads", "gateoworld", "gatepod"]
 }

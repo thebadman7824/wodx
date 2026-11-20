@@ -14,6 +14,7 @@ import * as C from "./core.mjs";
 import {lineFor} from "./prelude-rules.mjs";
 import {CHECKS, GROUPS} from "../../wodx-actions/scripts/checks-rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 
 const {MOD, esc} = C;
 const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];
@@ -25,8 +26,7 @@ const wait = cfg => foundry.applications.api.DialogV2.wait({rejectClose: false, 
 const formData = (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object;
 const variantOf = a => a?.system?.settings?.variant ?? "";
 const {ApplicationV2} = foundry.applications?.api ?? {ApplicationV2: class {}};
-const LIVE_WORLDS = ["rothenstein-live"];
-export const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags?.wodx?.liveWorld;
+export const isLive = () => isLiveWorld(game.world); // B7564: the one shared list
 
 export function registerHandSettings() {
   // B3170: fights since the last wrap-up, from WoDX Combat's after-action card

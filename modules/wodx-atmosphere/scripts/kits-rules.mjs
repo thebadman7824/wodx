@@ -5,7 +5,7 @@
  * the colour of the maps:
  *
  *   Music       moods (calm, tension, combat, sorrow, wonder), one Foundry playlist each, built from the files in
- *               the kit's folder or chosen from the world's own playlists (Rothenstein's score, for the Dark Ages)
+ *               the kit's folder or chosen from the world's own playlists (a chronicle's own score, for the Dark Ages)
  *   Ambience    one loop per kind of place (the twelve kinds WoDX NPC tags) and per weather, picked for the scene
  *   Sounds      short cues for dawn, dusk and a notice, and birdsong and cock-crow before sunrise; generated ones ship
  *               with the module as the fallback, recorded ones (tools/atmosphere/fetch-cues.mjs) fill the kit folders
@@ -107,7 +107,7 @@ export function themeToPlay(theme, {last = 0, now = Date.now(), force = false} =
 }
 
 /**
- * Places that age: the same map in other years (Rothenstein in 1200, 1348, 1620, 1890, 2020). variants: [{from, img}],
+ * Places that age: the same map in other years (one town in 1200, 1348, 1620, 1890, 2020). variants: [{from, img}],
  * each shown from its year on; before the first, the map's own picture (base). Returns the picture for the year.
  */
 export function ageFor({base = null, variants = []} = {}, year) {

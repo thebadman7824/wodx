@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.61.0: Build this chronicle (Rothenstein Rebuild Desk, B2780-B2785). The builder reads a recipe
+ * WoDX Storyteller 0.61.0: Build this chronicle (the rebuild desk, B2780-B2785). The builder reads a recipe
  * (a chronicle module's recipe, such as wodx-rothenstein/data/recipe.mjs) and makes the chronicle in the world it names, one step at a time. Each step is safe to
  * run twice (what it made carries a flag and is found again), and the steps that make documents can be taken back.
  *
@@ -80,7 +80,7 @@ async function stepSettings(r) {
   // The saga over the years (B3671): the recipe's spine names it, and Chronicle's switch goes on in this world
   let saga = "";
   if ( r.spine?.saga ) {
-    try { await game.settings.set("wodx-chronicle", "podSaga", true); saga = ", the Rothenstein saga on"; } catch (e) { saga = ", the saga switch was not found (WoDX Chronicle is too old)"; }
+    try { await game.settings.set("wodx-chronicle", "podSaga", true); saga = ", the chronicle's saga on"; } catch (e) { saga = ", the saga switch was not found (WoDX Chronicle is too old)"; }
   }
   return {note: `Done: ${res.done.join(", ")}${saga}.`};
 }
@@ -162,7 +162,7 @@ async function stepAnchors(r) {
 /* The scenes that are tries and prototypes, not places: no Ways are laid in them. */
 const NOT_WALKED = /\((gridless )?trial\)|^Prototype\b|^⚔|^WoDX gate/i;
 const WAY_T = `${MOD}.${Ways.TYPE}`;
-const FORBIDDEN = new RegExp(`^(${R.FORBIDDEN_WORLDS.join("|")})$`);
+const FORBIDDEN = {test: id => R.FORBIDDEN_WORLDS.includes(String(id ?? ""))}; // B7564: read when asked, so a chronicle's Live worlds count
 const hasWayTo = (scene, toId) => all(scene.regions).some(r => all(r.behaviors).some(b => b.type === WAY_T && b.system?.to === toId));
 function sceneBox(scene) {
   const d = scene.dimensions ?? {};
@@ -182,7 +182,9 @@ export async function layWays(r = recipe(), prev = record().steps?.ways?.made ??
   const scenes = only ? only.map(id => game.scenes.get(id)).filter(Boolean) : all(game.scenes).filter(s => !NOT_WALKED.test(s.name ?? ""));
   const view = scenes.map(s => ({id: s.id, name: s.name, regions: all(s.regions).map(x => ({id: x.id, name: x.name, flags: x.flags,
     behaviors: all(x.behaviors).map(b => ({id: b.id, type: b.type, disabled: b.disabled, system: b.system?.toObject?.() ?? b.system}))}))}));
-  const {ways, lost} = WR.exitsToWays(view);
+  // B7565: the recipe's castle anchors make the gates (the chronicle names its castle, shared code does not)
+  const castles = (r?.anchors?.places ?? []).filter(p => p.kind === "castle" && p.match).map(p => p.match);
+  const {ways, lost} = WR.exitsToWays(view, {castles});
   let exits = 0, doors = 0;
   for ( const w of ways ) {
     const region = game.scenes.get(w.sceneId)?.regions.get(w.regionId);

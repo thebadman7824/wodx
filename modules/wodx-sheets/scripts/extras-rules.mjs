@@ -142,7 +142,7 @@ export function tierAt(value, year = 0) {
 
 /**
  * The coin in use, by year, for the places a WoDX chronicle is likely to be: the German lands (the default, for
- * Rothenstein), England and the United States. denoms run smallest first. Coins of account (never struck) are marked.
+ * the first chronicle), England and the United States. denoms run smallest first. Coins of account (never struck) are marked.
  * A house list from general history; the Storyteller renames coins freely.
  */
 export const CURRENCIES = {

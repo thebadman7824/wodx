@@ -1,9 +1,9 @@
 /**
- * Book one's fronts, roles and clue carriers (Rothenstein Rebuilt, spine part two, B4910-B4919). Rules in
- * front-rules.mjs, data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
+ * Book one's fronts, roles and clue carriers (the chronicle rebuild, spine part two, B4910-B4919). Rules in
+ * front-rules.mjs, data from the chronicle in play (chronicle-data.mjs; the first chronicle's is in its own module).
  *
  * While book one of the saga runs, each front takes its next step at its own pace (the court and the cult weekly, the
- * council and the Church every two weeks, Marta every three, the Husbandman every two), never before the step's
+ * council and the Church every two weeks, other fronts at their own pace), never before the step's
  * chapter and never in a twist's week unless the company pushed it. A step shows first on the map: its marks go on the
  * step's scene through WoDX Storyteller's town looks (torches, riders, smoke, the flood, the grey field), the street
  * talk goes on the signal board, the saga clocks it names move, and the Storyteller gets a card with the step's people

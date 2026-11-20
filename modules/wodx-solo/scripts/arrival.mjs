@@ -4,7 +4,7 @@
  * Foundry lets no player make an Actor, and a world can open with no scene active, so a lone player could log in to
  * an empty screen with nothing to move. Arrival fixes that from the seat:
  *   the landing  the scene the player lands on (solo-rules.mjs pickLanding): one flagged wodx-solo.landing, the one
- *                the "landing" setting names, a Rothenstein scene with a map (the market first), the active one, or
+ *                the "landing" setting names, a scene of the chronicle's town with a map (the market first), the active one, or
  *                any with a map. A world with no map at all gets a plain night scene (LANDING_BLANK). The landing is
  *                made active when no scene with a map is.
  *   the character  a player with no character picks a name and a line; the seat makes the sheet (the player owns
@@ -35,13 +35,16 @@ const on = () => H.isOn() && H.get("arrive") !== false;
 
 const sceneRow = s => ({id: s.id, name: s.name, active: !!s.active, landing: !!s.getFlag?.(MOD, "landing"), img: s.background?.src ?? s.img ?? ""});
 
+/** The town of the chronicle in play (its manifest), or "" with none (B7565). */
+const townInPlay = () => { try { return game.modules.get("wodx-chronicle")?.api?.chronicle?.current?.()?.manifest?.town ?? ""; } catch (e) { return ""; } };
+
 /** The landing scene, made when the world has none with a map. The seat only. */
 export async function landing() {
   if ( !H.isSeat() ) return null;
-  const id = R.pickLanding(all(game.scenes).map(sceneRow), H.get("landing") ?? "");
+  const id = R.pickLanding(all(game.scenes).map(sceneRow), H.get("landing") ?? "", townInPlay());
   let scene = id ? game.scenes.get(id) : null;
   if ( !scene ) {
-    scene = await Scene.create({...R.LANDING_BLANK, flags: {[MOD]: {landing: true, made: true}}});
+    scene = await Scene.create({...R.landingBlank(townInPlay()), flags: {[MOD]: {landing: true, made: true}}});
     await H.log({kind: "scene", source: MOD, title: scene.name, note: "the world had no map, so a plain night scene was made to land on"});
   }
   if ( H.get("landing") !== scene.id ) await game.settings.set(MOD, "landing", scene.id);
@@ -144,7 +147,7 @@ export async function pick() {
   closeUserConfig();
   try {
     const opts = R.ARRIVAL_LINES.map((l, i) => `<label class="wsolo-choice"><input type="radio" name="line" value="${l.id}"${i === 0 ? " checked" : ""}> ${esc(l.label)}<span class="wodx-quiet"> ${esc(l.hint)}</span></label>`).join("");
-    const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog", "wsolo-arrive"], window: {title: "Who comes to Rothenstein?"},
+    const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog", "wsolo-arrive"], window: {title: R.arrivalTitle(townInPlay())},
       content: `<p>You have no character yet. Give a name and pick what they are. The character wizard opens next to build the sheet.</p>
         <div class="form-group"><label>Name</label><input type="text" name="name" maxlength="${R.NAME_MAX}" placeholder="${esc(R.DEFAULT_NAME)}" autofocus></div>
         <fieldset class="wsolo-choices" data-fixed><legend>What they are</legend>${opts}</fieldset>`,
