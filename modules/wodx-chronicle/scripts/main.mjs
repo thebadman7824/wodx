@@ -168,6 +168,8 @@ Hooks.once("init", () => {
   pod.registerPodSettings();
   roads.registerRoadSettings();
   pod.registerPodHooks();
+  // Chronicle Packs Desk c1: a chronicle closed or opened again brings its own world events, or takes them away
+  Hooks.on("wodxChronicleInPlay", () => { events.reloadChronicle().catch(err => console.error("WoDX | chronicle events", err)); });
   roads.registerRoadHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();

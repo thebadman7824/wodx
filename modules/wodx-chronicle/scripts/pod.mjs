@@ -10,7 +10,10 @@ import {watched} from "./signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
 import {DAY} from "./terms.mjs";
-import {current as chronicleInPlay} from "./chronicle-data.mjs";
+import {current as chronicleInPlay, chronicles, settleInPlay} from "./chronicle-data.mjs";
+import * as CL from "./close-rules.mjs";
+import {describeTime} from "./calendar.mjs";
+import {record as nightRecord} from "./nightwork.mjs";
 /** The saga's name for cards and windows: the chronicle in play names it (Chronicle Packs Desk d2). */
 const sagaName = () => (P.saga.SAGA.where ? `The ${P.saga.SAGA.where} saga` : "The chronicle's saga");
 
@@ -47,6 +50,7 @@ const T_TEACH = `${MODULE_ID}.podTeach`;
 const T_GRANT = `${MODULE_ID}.podGolcondaGrant`;
 const T_LP = `${MODULE_ID}.podLifepath`;
 const T_SAGA = `${MODULE_ID}.podSaga`;
+const T_SAGA_END = `${MODULE_ID}.podSagaEnd`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 const now = () => game.time?.worldTime ?? 0;
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -68,6 +72,10 @@ export function registerPodSettings() {
   flag("podSaga", "The chronicle's saga over the years", "The story chronicle in play (from a chronicle module that is on) told over years and ages: books of dated chapters and interludes, long clocks, and endings that later books answer. Does nothing when no chronicle module is on.");
   game.settings.register(MODULE_ID, "podCity", {name: "The chronicle's city", hint: "The city a scene is in when the scene names none (scene flag wodx-chronicle.city).", scope: "world", config: true, type: String, default: chronicleInPlay()?.manifest?.town ?? ""});
   game.settings.register(MODULE_ID, "podState", {scope: "world", config: false, type: Object, default: {cities: {}, chains: []}});
+  // Chronicle Packs Desk c1: the chronicles closed in this world. Any change (a close, Open it again, or the night's
+  // work taking a close back) settles which chronicle is in play on every client
+  game.settings.register(MODULE_ID, "chroniclesClosed", {scope: "world", config: false, type: Object, default: {},
+    onChange: () => { applyClosed().catch(e => console.error(`${MODULE_ID} | closed chronicles`, e)); }});
   game.settings.registerMenu(MODULE_ID, "podMenu", {name: "Cities, Golconda and story chains", label: "Open", hint: "City exposure, the great cities, story chains and opening goals.",
     icon: "fa-solid fa-city", type: PodApp, restricted: true});
 }
@@ -299,7 +307,7 @@ export const stopChain = id => podTurn(() => { const s = state(); s.chains = (s.
 export const dealChains = () => podTurn(dealDue);
 async function dealDue() {
   if ( !(lineOn("podChains") || lineOn("podSaga")) || !isActiveGM() ) return;
-  const s = state(), t = now(), yr = currentYear();
+  const s = state(), t = now(), yr = currentYear(), ended = [];
   let changed = false;
   for ( const run of s.chains ?? [] ) {
     if ( !lineOn(run.saga ? "podSaga" : "podChains") ) continue;
@@ -313,9 +321,21 @@ async function dealDue() {
       run.at = n.index + 1; run.last = run.saga ? n.due : t; changed = true;
       n = P.nextStep(run, yr);
     }
-    if ( run.saga && !n ) { (s.saga ??= {}).books ??= {}; s.saga.books[run.saga.book] = "done"; changed = true; }
+    if ( run.saga && !n ) { const x = sagaOf(s); x.books[run.saga.book] = "done"; changed = true; ended.push(run.saga.book); }
   }
-  if ( changed ) { s.chains = s.chains.filter(r => P.nextStep(r, yr)); await saveState(s); }
+  if ( changed ) {
+    s.chains = s.chains.filter(r => P.nextStep(r, yr));
+    // Chronicle Packs Desk c3: at a book's end the Storyteller says "next book" or "close here" (sagaTickNow asks);
+    // after the last book there is nothing to carry on to, so the card offers the close alone
+    const last = [];
+    for ( const b of ended ) {
+      if ( CL.nextBook(P.saga.SAGA, b, {future: futureOn()}) ) (sagaOf(s).after ??= {})[b] = "ask";
+      else last.push(b);
+    }
+    await saveState(s);
+    for ( const b of last ) await card(`${sagaName()}: the last book is done`, `<p>${esc(P.saga.bookByKey(b)?.title ?? b)} was the saga's last book. The chronicle can be closed here: its fronts, twists, encounters, cards and world events stop, and its people, places and factions carry on as ordinary parts of the world.</p>`,
+      {act: {key: "closeChronicle", label: "Close the chronicle", data: {id: chronicleInPlay()?.id ?? ""}}});
+  }
 }
 
 /* ---------------- the chronicle's saga (B3660-B3669; the data comes from the chronicle in play) ---------------- */
@@ -451,6 +471,86 @@ function twistSection(s) {
     <ul>${tally}</ul><table class="wodx-check"><tbody>${rows}</tbody></table>
     <p class="vta-note">Each twist sits under the encounter of the same number. The twists' words are in the Storyteller's third volume; a revealed twist gives its partner another heart.</p>`;
 }
+/* ---------------- closing a chronicle (Chronicle Packs Desk c1 and c3) ---------------- */
+
+const closedList = () => { try { return foundry.utils.deepClone(game.settings.get(MODULE_ID, "chroniclesClosed") ?? {}); } catch (e) { return {}; } };
+const dateNow = () => { try { return describeTime(now()).dateLabel ?? ""; } catch (e) { return ""; } };
+
+/**
+ * Settle the chronicle in play from the world's closed list, on every client. On the active Storyteller's client a
+ * chronicle that is off the list but still put away in the story state is brought back (Open it again, or the
+ * night's work taking a close back), so the list and the state never disagree.
+ */
+export async function applyClosed() {
+  const list = closedList();
+  if ( isActiveGM() ) {
+    await podTurn(async () => {
+      const s = state();
+      const back = Object.keys(s.closed ?? {}).filter(id => !list[id] && chronicles().some(p => p.id === id));
+      if ( !back.length ) return;
+      let st = s;
+      for ( const id of back ) { const r = CL.reopenState(st, id); if ( r.error ) ui.notifications.warn(`WoDX: ${r.error}`); else st = r.state; }
+      await saveState(st);
+    });
+  }
+  const was = chronicleInPlay()?.id ?? "", p = settleInPlay(CL.closedIdsOf(list)), id = p?.id ?? "";
+  if ( was !== id ) Hooks.callAll("wodxChronicleInPlay", {id, was});
+  return p;
+}
+
+/**
+ * Close the chronicle in play for good in this world: its saga books stop and are put away, its pending saga books
+ * leave the queue, and nothing of it is offered again. Its documents stay as they are. One piece of the night's work.
+ */
+export async function closeChronicle({id = chronicleInPlay()?.id ?? ""} = {}) {
+  const pack = chronicles().find(p => p.id === id);
+  if ( !pack || !game.user.isGM ) return null;
+  if ( closedList()[id] ) return null;
+  return nightRecord(`Close the chronicle: ${pack.title}`, async () => {
+    const r = await podTurn(async () => {
+      const r = CL.closeState(state(), pack, {at: now(), date: dateNow()});
+      await saveState(r.state);
+      return r;
+    });
+    await game.settings.set(MODULE_ID, "chroniclesClosed", CL.withClosed(closedList(), r.entry));
+    await applyClosed();
+    // Its books still waiting in the queue go (their handlers find no book once it is out of play)
+    try {
+      const A = await import("./approvals.mjs");
+      for ( const e of A.pending().filter(e => e.type === T_SAGA || e.type === T_SAGA_END) ) await A.decide(e.id, "reject", "The chronicle was closed.");
+    } catch (e) { console.error(`${MODULE_ID} | closing the chronicle`, e); }
+    const book = P.saga.bookByKey?.(r.entry.book) ?? pack.saga?.SAGA?.books?.find(b => b.key === r.entry.book);
+    await card(`${pack.title}: the chronicle is closed`, `<p>The chronicle ends here${book ? `, after ${esc(book.title)}` : ""}${r.entry.date ? ` (${esc(r.entry.date)})` : ""}. Its saga, fronts, twists, encounters, reveals, Threads of Fate cards and world events stop for good in this world.</p>
+      <p>Its people, places and factions stay as they ended. From now on the shared systems run them: routines, factions, rumours and the region's Threads of Fate cards.</p>
+      <p class="vta-note">Nothing was deleted. Take it back with the night's work, or open it again from the Cities, Golconda and story chains window. To start a new chronicle in a fresh world, carry characters across with Carry to a new chronicle.</p>`);
+    Hooks.callAll("wodxChronicleClosed", {id, book: r.entry.book});
+    return r.entry;
+  }, {source: "chronicle"});
+}
+ACTS.closeChronicle = d => closeChronicle({id: d?.id || chronicleInPlay()?.id || ""});
+
+/** Open a closed chronicle again: its saga state comes back as it was put away. */
+export async function reopenChronicle(id) {
+  const list = closedList();
+  if ( !list[id] || !game.user.isGM ) return false;
+  const s = state(), test = CL.reopenState(s, id);
+  if ( test.error && s.closed?.[id] ) { ui.notifications.warn(`WoDX: ${test.error}`); return false; }
+  await nightRecord(`Open the chronicle again: ${list[id].title}`, async () => {
+    await game.settings.set(MODULE_ID, "chroniclesClosed", CL.withoutClosed(list, id));
+    await applyClosed();
+  }, {source: "chronicle"});
+  return true;
+}
+
+/** "Next book" at a book's end (c3): the next book comes to the queue when the year fits it. */
+export const carryOn = book => podTurn(async () => {
+  if ( !game.user.isGM ) return;
+  const s = state(), x = sagaOf(s);
+  if ( x.after?.[book] !== "ask" ) return;
+  x.after[book] = "next";
+  await saveState(s);
+});
+
 export const skipSaga = book => podTurn(() => skipSagaNow(book));
 async function skipSagaNow(book) {
   if ( !P.saga.bookByKey(book) || !game.user.isGM ) return;
@@ -484,6 +584,9 @@ async function askAll(asks = []) {
 async function sagaTickNow() {
   if ( !lineOn("podSaga") || !isActiveGM() ) return [];
   const s = state(), x = sagaOf(s), yr = currentYear();
+  // Chronicle Packs Desk c3: a book that ended waits for "next book" or "close here"; the queue never holds it twice
+  const waiting = CL.endsWaiting(x).map(b => CL.endAsk(P.saga.SAGA, b, {future: futureOn(), name: sagaName()})).filter(Boolean);
+  if ( waiting.length ) return waiting.map(a => ({type: T_SAGA_END, ...a}));
   const gone = P.saga.passedBooks(x, yr, {future: futureOn()});
   if ( gone.length ) {
     const before = {...x.clocks};
@@ -619,6 +722,16 @@ export class PodApp extends ApplicationV2 {
       sagaStart: async function(e, el) { await startSaga(el.dataset.book); this.render(); },
       sagaSkip: async function(e, el) { await skipSaga(el.dataset.book); this.render(); },
       sagaPlayed: async function(e, el) { await sagaPlayed(el.dataset.book); this.render(); },
+      sagaCarryOn: async function(e, el) { await carryOn(el.dataset.book); this.render(); },
+      chronicleClose: async function() {
+        const p = chronicleInPlay();
+        if ( !p ) return;
+        const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Close this chronicle"},
+          content: `<p>Close <b>${esc(p.title)}</b> in this world? Its saga, fronts, twists, encounters, cards and world events stop for good. Its people, places and factions stay and carry on as ordinary parts of the world. Nothing is deleted, and the night's work can take it back.</p>`});
+        if ( ok ) await closeChronicle({id: p.id});
+        this.render();
+      },
+      chronicleOpen: async function(e, el) { await reopenChronicle(el.dataset.id); this.render(); },
       twist: async function(e, el) { const row = el.closest("[data-twist]"), v = row.querySelector("select")?.value ?? "";
         try { await revealTwist(el.dataset.n, {variant: v, force: el.dataset.force === "1"}); } catch (err) { ui.notifications.warn(err.message); } this.render(); },
       untwist: async function(e, el) { await unrevealTwist(el.dataset.n); this.render(); },
@@ -655,7 +768,9 @@ export class PodApp extends ApplicationV2 {
       const rows = pcs().flatMap(a => threadsOf(a).map(x => `<li>${esc(a.name)}: ${esc(x.label)} (${x.year}, ${esc(x.name ? `${x.name}, ${x.role}` : x.role)})${seenOf(a.id)[x.id] ? `, ${word[seenOf(a.id)[x.id]] ?? ""}` : ` <button type="button" data-action="thread" data-actor="${a.id}" data-thread="${esc(x.id)}">Start now</button>`}</li>`));
       parts.push(`<h3>Threads from the past</h3><ul>${rows.join("") || "<li>No open threads. They come from a character's lifepath.</li>"}</ul><p class="vta-note">Each falls due by itself in time and comes to the approval queue.</p>`);
     }
-    if ( lineOn("podSaga") ) {
+    const shut = closedList();
+    if ( Object.keys(shut).length ) parts.push(`<h3>Closed chronicles</h3><ul>${Object.values(shut).map(c => `<li><b>${esc(c.title)}</b>: closed${c.date ? ` ${esc(c.date)}` : ""}${c.book ? `, after ${esc(chronicles().find(p => p.id === c.id)?.saga?.SAGA?.books?.find(b => b.key === c.book)?.title ?? c.book)}` : ""}.${chronicles().some(p => p.id === c.id) ? ` <button type="button" data-action="chronicleOpen" data-id="${esc(c.id)}">Open it again</button>` : " Its module is off."}</li>`).join("")}</ul><p class="vta-note">A closed chronicle offers nothing more. Its people, places and factions carry on under the shared systems.</p>`);
+    if ( lineOn("podSaga") && chronicleInPlay() ) {
       const x = sagaOf(s), word = {running: "running", done: "done", skipped: "skipped", passed: "passed without play", offered: "waiting for approval", ready: "fits the year", ahead: "later", past: "its years are past"};
       const books = P.saga.bookStates(x, yr, {future: futureOn()});
       const ends = Object.entries(P.saga.SAGA_ENDINGS);
@@ -669,7 +784,10 @@ export class PodApp extends ApplicationV2 {
           ${(() => { const r = b.state === "running" ? (s.chains ?? []).find(c => c.saga?.book === b.key) : null, w = r ? P.saga.waitingOn(r, P.chainOf(r, yr)) : null;
             return w ? ` Waiting on ${esc(w.title)}. <button type="button" data-action="sagaPlayed" data-book="${b.key}">Played</button>` : ""; })()}
           ${endable ? ` <select data-ending="${b.key}" data-fixed><option value="">No ending yet</option>${ends.map(([k, e]) => `<option value="${k}" ${x.endings[b.key] === k ? "selected" : ""}>${esc(e.label)}</option>`).join("")}</select>` : ""}</li>`; }).join("")}</ul>
-        <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
+        <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>
+        ${CL.endsWaiting(x).map(b => { const bk = P.saga.bookByKey(b), n = CL.nextBook(P.saga.SAGA, b, {future: futureOn()});
+          return `<p>${esc(bk?.title ?? b)} is done. <button type="button" data-action="sagaCarryOn" data-book="${esc(b)}">Carry on to ${esc(n?.title ?? "the next book")}</button> <button type="button" data-action="chronicleClose">Close the chronicle here</button></p>`; }).join("")}
+        <p><button type="button" data-action="chronicleClose">Close this chronicle</button> <span class="vta-note">Ends ${esc(chronicleInPlay().title)} in this world for good; its people and places stay.</span></p>`);
       if ( x.books[P.saga.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
       if ( x.books[P.saga.FIRST_BOOK] === "running" || x.fronts ) parts.push(Fronts.section(s));
       if ( x.books[P.saga.FIRST_BOOK] === "running" || x.encounters ) parts.push(Encounters.section(s));
@@ -701,9 +819,15 @@ export function registerPodHooks() {
   registerHandler(T_LP, {label: "A thread from a character's lifepath returns as a story chain",
     approve: e => startThread(e.data?.actor, e.data?.thread), reject: e => dismissThread(e.data?.actor, e.data?.thread?.id)});
   registerHandler(T_SAGA, {label: "The next book of the chronicle's saga", approve: e => startSaga(e.data?.book), reject: e => skipSaga(e.data?.book)});
+  // Chronicle Packs Desk c3: at a book's end, approve carries on to the next book, reject closes the chronicle here
+  registerHandler(T_SAGA_END, {label: "A book of the chronicle's saga is done: carry on, or close the chronicle",
+    approve: e => carryOn(e.data?.book),
+    // Only while that book still waits: a stale entry, or a gate's tidy-up of the queue, never closes a chronicle
+    reject: e => (sagaOf(state()).after?.[e.data?.book] === "ask" ? closeChronicle() : null)});
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | exposure`, e)); });
   // A saga still running whose chronicle module is off says so once, to the Storyteller (Chronicle Packs Desk c1)
   Hooks.once("ready", () => {
+    applyClosed().catch(e => console.error(`${MODULE_ID} | closed chronicles`, e));
     if ( !isActiveGM() ) return;
     const lost = P.saga.orphanSagas(state().chains);
     if ( lost.length ) ui.notifications.warn(`WoDX: this world has a saga under way (${lost.join(", ")}) whose chronicle module is not switched on, so it is paused. Turn that module on in Manage Modules to carry on, or leave it off to play on without it.`, {permanent: true});
@@ -745,4 +869,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor, golcondaReadiness: readiness, atThreshold,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), reveals: Reveals.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, settled: () => podTurn(() => null), rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, carryOn, close: closeChronicle, reopen: reopenChronicle, closed: closedList, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), encounters: Encounters.api(), reveals: Reveals.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, settled: () => podTurn(() => null), rules: P.saga}, open: () => new PodApp().render(true), rules: P};
