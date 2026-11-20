@@ -30,6 +30,9 @@ test("validate accepts the job kinds and fills defaults", () => {
   assert.equal(validate({kind: "gates", gates: ["gatex"], lane: 4, lanes: 3}, LANES).job.lanes, 1);
   assert.ok(validate({kind: "gate-two", gate: "gatelookhand"}, LANES).job);
   assert.ok(validate({kind: "reset", lane: 3}, LANES).job);
+  assert.equal(validate({kind: "setup-clean", lane: 3}, LANES).job.lanes, 1, "setup-clean runs on its one lane");
+  assert.ok(validate({kind: "setup-clean"}, LANES).error, "setup-clean needs a lane");
+  assert.ok(validate({kind: "setup-clean", lane: 1}, LANES).error, "never on lane 1");
   assert.ok(validate({kind: "books-find", terms: ["Four Bears", "Mato-Tope", "Buffalo Bird Woman"]}, LANES).job);
   assert.ok(validate({kind: "trove-find", pattern: "Catlin", under: "The Ultimate Trove - Books (C-D)"}, LANES).job);
   assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "claude/project-thread-abc"}, LANES).job);

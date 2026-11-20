@@ -22,6 +22,9 @@
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
  *   setup-lane  set up "lane" N from lane 1's Config and the known-good world (only lanes listed in lanes.json);
  *               "again": true sets up a lane that has a world already, taking lane 1's installed modules afresh
+ *   setup-clean make the clean test world (no chronicle in play) on "lane" N: lanes.mjs setup-clean, which takes its
+ *               known-good copy and leaves the lane on its default world; "again": true makes it afresh. The lane
+ *               needs its default world set up first (setup-lane). Gates then use it with --world clean.
  *   books-find  tools/books/books.mjs find over the PC's book texts: "terms" (up to 40), optional "book";
  *               the result lists book and page only, never the text (the repository is public)
  *   trove-find  names of files under F:\TheTrove whose name holds "pattern" (letters, digits, spaces, - _ . ( ) &),
@@ -31,8 +34,8 @@
  */
 export const OWNER = "thebadman7824", REPO_NAME = "wodx";
 export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", failed: "pc-failed", alert: "pc-alert", status: "pc-status", cancel: "pc-cancel"};
-export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
-export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane"]);
+export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "setup-clean", "books-find", "trove-find"];
+export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane", "setup-clean"]);
 const NAME = /^[\w-]{1,64}$/;
 const REF = /^(main|(?:claude|handoff)\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/; // B7002: handoff/ branches too, so HOLD pull requests can be gated
 const TERM = /^[\p{L}\p{N} '’.,()&-]{1,80}$/u;
@@ -99,7 +102,7 @@ export function validate(raw, laneIds = []) {
       j.lanes = 1; break;
     case "deploy":
       j.lanes = j.lane !== undefined ? 1 : Math.min(Math.max(1, Number.isInteger(j.lanes) ? j.lanes : 1), Math.max(1, lanes.length)); break;
-    case "reset": case "setup-lane":
+    case "reset": case "setup-lane": case "setup-clean":
       if ( j.lane === undefined ) return err(`${j.kind} needs lane.`);
       j.lanes = 1; break;
     case "books-find": {
