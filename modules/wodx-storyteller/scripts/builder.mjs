@@ -1,6 +1,6 @@
 /**
  * WoDX Storyteller 0.61.0: Build this chronicle (Rothenstein Rebuild Desk, B2780-B2785). The builder reads a recipe
- * (data/recipe-rothenstein.mjs) and makes the chronicle in the world it names, one step at a time. Each step is safe to
+ * (a chronicle module's recipe, such as wodx-rothenstein/data/recipe.mjs) and makes the chronicle in the world it names, one step at a time. Each step is safe to
  * run twice (what it made carries a flag and is found again), and the steps that make documents can be taken back.
  *
  * Phase 1 steps: check the world (and turn on the WoDX modules in a world made for the recipe), Start a chronicle
@@ -15,9 +15,10 @@ import * as Setup from "./setup.mjs";
 import * as Ways from "./ways.mjs";
 import * as WR from "./way-rules.mjs";
 import {MOD, esc} from "./core.mjs";
-import {ROTHENSTEIN} from "../data/recipe-rothenstein.mjs";
+import {chronicles, current} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
-export const RECIPES = {[ROTHENSTEIN.id]: ROTHENSTEIN};
+/** Every registered chronicle's recipe, by recipe id (Chronicle Packs Desk a3: the builder reads the chronicles that are on). */
+export const recipes = () => Object.fromEntries(chronicles().filter(c => c.recipe).map(c => [c.recipe.id, c.recipe]));
 const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];
 const DEL = () => foundry.data?.operators?.ForcedDeletion ? new foundry.data.operators.ForcedDeletion() : null;
 
@@ -25,9 +26,9 @@ export function registerBuilderSettings() {
   game.settings.register(MOD, "builder", {scope: "world", config: false, type: Object, default: {}});
 }
 
-/** The recipe this world was made for (world flag wodx.recipe), else Rothenstein's. */
-export const recipeId = () => game.world?.flags?.wodx?.recipe ?? ROTHENSTEIN.id;
-export const recipe = (id = recipeId()) => RECIPES[id] ?? null;
+/** The recipe this world was made for (world flag wodx.recipe), else the chronicle in play's; "" with none. */
+export const recipeId = () => game.world?.flags?.wodx?.recipe ?? current()?.recipe?.id ?? "";
+export const recipe = (id = recipeId()) => recipes()[id] ?? null;
 /** Show the button only where a recipe belongs or the builder has run. */
 export const wanted = () => !!game.user?.isGM && (!!game.world?.flags?.wodx?.recipe || !!Object.keys(record().steps ?? {}).length);
 

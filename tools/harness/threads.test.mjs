@@ -120,11 +120,12 @@ test("threads: the age floor keeps romance away from anyone under 18", () => {
   assert.equal(T.ageSafe({tags: []}, ["b"], () => false), true);
 });
 
-test("threads: the deck has about 150 cards, a unique hook for every world region, and doors for every line", async () => {
+test("threads: the shared deck has about 130 cards (a chronicle's own are in its module), a unique hook for every world region, and doors for every line", async () => {
   const {CARDS} = await import(pathToFileURL(join(root, "modules/wodx-storyteller/data/threads-cards.mjs")));
   const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs")));
   const deck = CARDS.map(T.normCard);
-  assert.ok(deck.length >= 150, `${deck.length} cards`);
+  assert.ok(deck.length >= 130, `${deck.length} cards`);
+  assert.ok(deck.every(c => !c.key.startsWith("roth-")), "Rothenstein's cards live in wodx-rothenstein");
   assert.equal(new Set(deck.map(c => c.key)).size, deck.length, "keys are unique");
   for ( const c of deck ) {
     assert.ok(c.needs.length && c.needs.every(k => S.KINDS.includes(k)), `${c.key} answers known signals`);
@@ -154,4 +155,13 @@ test("threads: a locked storyline waits, and Session Zero lines cut tagged cards
   assert.equal(T.due(T.lock(st, "k", false), 0).length, 1);
   assert.deepEqual(T.cutsFrom(["No harm to children", "nothing sexual"]).sort(), ["children", "romance"]);
   assert.deepEqual(T.cutsFrom([]), []);
+});
+
+test("threads: the chronicle in play adds its own cards to the deck, and only then (Chronicle Packs Desk b2)", async () => {
+  const CD = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/chronicle-data.mjs")));
+  const {PACK} = await import(pathToFileURL(join(root, "modules/wodx-rothenstein/scripts/register.mjs")));
+  const own = await PACK.cards();
+  assert.equal(own.length, 23);
+  assert.ok(own.every(c => c.key.startsWith("roth-") && c.chronicle === "rothenstein"));
+  assert.equal(CD.current()?.id, "rothenstein");
 });

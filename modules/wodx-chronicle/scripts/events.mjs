@@ -4,6 +4,7 @@ import {searchBox} from "./search.mjs";
 import EVENT_DATA from "../data/events.mjs";
 import {eventTable, dateKey, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS, capTold, isWorld, worldEraAt, shownIn} from "./events-rules.mjs";
 import * as place from "./place.mjs";
+import {current as chronicleInPlay} from "./chronicle-data.mjs";
 
 /**
  * Dated events. When the Chronicle Clock passes an event's date it fires once: a chat card, the hook
@@ -23,8 +24,10 @@ let BIG = null, loading = null;
 /** Load the large tables once; resolves to {future, world, history}. */
 export function load() {
   if ( BIG ) return Promise.resolve(BIG);
-  loading ??= Promise.all([import("../data/future-events.mjs"), import("../data/future-world.mjs"), import("../data/world-history.mjs")])
-    .then(([f, w, h]) => (BIG = {future: f.default, world: w.default, history: h.default}))
+  const pack = chronicleInPlay();
+  loading ??= Promise.all([import("../data/future-events.mjs"), import("../data/future-world.mjs"), import("../data/world-history.mjs"),
+    Promise.resolve(pack?.events?.() ?? [])])
+    .then(([f, w, h, c]) => (BIG = {future: f.default, world: w.default, history: h.default, chronicle: {id: pack?.id ?? "", events: c ?? []}}))
     .catch(err => { loading = null; throw err; });
   return loading;
 }
@@ -32,7 +35,9 @@ export function load() {
 export const loaded = () => !!BIG;
 
 /** Every event the data holds: the book events, and once loaded the future and the world timeline. */
-export const allEvents = () => BIG ? [...EVENT_DATA.events, ...BIG.future.events, ...BIG.world.events, ...BIG.history.events] : EVENT_DATA.events;
+/** The chronicle in play's own world events (Chronicle Packs Desk b2), only while that chronicle is still the one in play. */
+const chronicleEvents = () => (BIG?.chronicle.id && BIG.chronicle.id === chronicleInPlay()?.id ? BIG.chronicle.events : []);
+export const allEvents = () => BIG ? [...EVENT_DATA.events, ...BIG.future.events, ...BIG.world.events, ...chronicleEvents(), ...BIG.history.events] : EVENT_DATA.events;
 /** The eras of the world timeline, 1197 to 2009 (B5920): {id, name, from, to}; empty until loaded. */
 export const worldEras = () => BIG?.history.eras ?? [];
 /** The era of the world timeline the clock stands in. */

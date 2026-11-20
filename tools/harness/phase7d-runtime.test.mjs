@@ -11,6 +11,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const MOD = "wodx-npc";
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+await import(join(root, "modules/wodx-rothenstein/scripts/register.mjs"));
 
 /* ---- the stand-in ---- */
 const store = new Map(), registered = new Map();
@@ -90,7 +91,7 @@ test("settings: the state, the mode (Suggest by default) and the week between tu
 });
 
 test("Rothenstein's factions: ten powers, leaders and members found by name, places by name, standing both ways", async () => {
-  const list = await Fx.setupRothenstein({confirm: false});
+  const list = await Fx.setupChronicleFactions({confirm: false});
   assert.equal(list.length, 10);
   const court = fac("The Voivode");
   assert.equal(court.leader, "bogdan");
@@ -107,8 +108,15 @@ test("Rothenstein's factions: ten powers, leaders and members found by name, pla
   // the goals that name a rival point at its id
   assert.equal(fac("Konrad").goals.find(g => g.move === "scheme").target, fac("The parish").id);
   // never twice
-  assert.equal(await Fx.setupRothenstein({confirm: false}), null);
+  assert.equal(await Fx.setupChronicleFactions({confirm: false}), null);
   assert.ok(Fx.state().lastTurn !== null);
+});
+
+test("chronicle factions come from the chronicle in play: with none in play there are none to set up", async () => {
+  const CD = await import(join(root, "modules/wodx-chronicle/scripts/chronicle-data.mjs"));
+  assert.equal(Fx.chronicleFactions().TITLE, "Rothenstein's factions");
+  CD.useChronicle("");
+  try { assert.equal(Fx.chronicleFactions(), null); } finally { CD.useChronicle("rothenstein"); }
 });
 
 test("hunting grounds: the court in its keep, a stranger trespassing, the area table of the Dark Ages", () => {

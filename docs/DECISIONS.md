@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7540
+Next free block: B7560
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -435,10 +435,12 @@ Next free block: B7540
 | B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
 | B7470-B7479 | gatetruthstoryteller step 3 waits for the convened record (used B7470) | tools |
 | B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
+| B7490-B7499 | Chronicle packs: Rothenstein in a module of its own, engines read the chronicle in play (used B7490-B7493) | Rothenstein, Chronicle, Storyteller |
 | B7500-B7509 | The Secondary PC drives the merge train while the Main PC is down (used B7500) | tools |
 | B7510-B7519 | GPU guard in the repo, reading the GPU order from the priority file (used B7510) | tools |
 | B7520-B7529 | The gate recheck runs a flaky gate on main, so a fault main has too does not hold a pull request (used B7520-B7521) | tools |
 | B7530-B7539 | Cult worship goes to a place of worship (used B7530) | NPC |
+| B7550-B7559 | The PC watcher reads the merge train from the PC that drives it (used B7550) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14823,6 +14825,39 @@ audit's open items) was filed the same day.
 
 Reverse: remove the bullet from section 8 and the `issue` field note; the issues stay as a record.
 
+## B7490. A chronicle is a module of its own (2026-11-18)
+Chronicle Packs Desk a1, a2 (Ben, 18 Nov 2026). Everything written for one story lives in a WoDX module with
+chronicle.mjs at its root: MANIFEST (id, title, town, homeland, opening, span, eras, lines, world, live worlds, books,
+first book, marks) and PACK (the data the story engines read). WoDX Rothenstein is the first. With it off, the game
+has no Rothenstein in it.
+
+Reverse: move modules/wodx-rothenstein/data back to wodx-chronicle/data and wodx-storyteller/data and import them
+directly again.
+
+## B7491. The story engines read the chronicle in play (2026-11-18)
+Desk a3, a4. WoDX Chronicle's chronicle-data.mjs holds live bindings (SAGA, FRONTS, TWISTS, REVEALS, ENCOUNTERS and
+the rest) that a chronicle module fills with registerChronicle. Several may register; one is in play (the first,
+or useChronicle(id)). With none, every list is empty and the saga, fronts, twists, reveals and encounters stay idle.
+The first book, the saga key prefix and the encounters' last chapter come from the pack, so nothing in the engines is
+read at load time. The builder lists the recipes of the chronicles that registered and falls back to the chronicle in
+play's, never to Rothenstein by name.
+
+Reverse: import the data files in the rules files again.
+
+## B7492. Saved state and words stay as they were (2026-11-18)
+Desk f1, f2. Keys, the podState.saga shape, the saga key prefix (saga:rothenstein:), the actor folder "Rothenstein
+encounters", "The Rothenstein saga" on cards and the podCity default all come out the same for Rothenstein, now read
+from the pack (SAGA.where, MANIFEST.town). The setting podSaga is now named "The chronicle's saga over the years".
+The judgement card's answer word and the cold place after the murders come from the chronicle's data (answer, COLD.place).
+
+Reverse: write the Rothenstein words back into pod.mjs, fronts.mjs, reveals.mjs and encounters.mjs.
+
+## B7493. A guard keeps a chronicle's words out of shared code (2026-11-18)
+Desk e1. tools/harness/chronicle-guard.test.mjs counts each chronicle's marks (whole words) in every other module;
+the mentions there today are in chronicle-guard-baseline.json, which may only shrink. A new mention fails the harness.
+
+Reverse: delete the guard and its baseline.
+
 ## B7500. The Secondary PC drives the merge train while the Main PC is down (2026-11-19)
 tools/pcq/runner.benjamin-pc.json has `train: true` and tools/pcq/runner.json has `train: false`. The Main PC went
 down with a hardware fault on 18 November, and its runner was the only one driving the train (B7202), so labelled pull
@@ -14870,3 +14905,13 @@ Reverse: return the flaky verdict straight away in recheckStep (tools/pcq/jobs.m
 WoDX NPC. When a cult serves its founder, the night of worship goes to the scene's first region tagged as a place of worship (church, chapel, cathedral, abbey, monastery, temple, shrine, mosque or synagogue), and only then to the first tagged place. Foundry does not keep a scene's regions in a set order, so the old "first tagged region" rule sent the worship to a haven on some loads, which made gateduties step 2 fail at random (gate runs #2114 and #2131 on PR 1880, both "flaky" alone). The rule is `worshipPlace` in cult-rules.mjs.
 
 Reverse: in cults.mjs `tagged`, take the first region with a place kind again, and drop `worshipPlace` and `WORSHIP_KINDS`.
+
+## B7550. The watcher reads the merge train from the runner that drives it (2026-11-20)
+tools/pcq/watcher.mjs took the "Merge train:" line only from the Main PC's status issue. Since B7500 the Secondary PC
+drives the train, so once the Main PC died the watcher kept reporting its last line: #1848 "at the front" for 28 hours
+after #1848 had merged, blamed on the silent Main PC. The new trainSource() takes the line from whichever runner's
+status issue shows one, preferring a live runner and then the freshest stamp, so a dead PC's last line never stands
+for the train. The stuck-train and green-front problems name the PC that drives the train when it goes silent, and the
+report says which runner the train line came from.
+
+Reverse: read `parseTrain(status.main?.body)` again in assess() and drop trainSource().

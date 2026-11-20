@@ -1,6 +1,6 @@
 /**
  * Book one's encounters, the rules (Rothenstein Rebuilt, Volume Two picks v1-v6, B6640-B6649). Pure functions over
- * the state in podState.saga.encounters; encounters.mjs puts them on the table. Data in data/encounters-rothenstein.mjs.
+ * the state in podState.saga.encounters; encounters.mjs puts them on the table. Data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
  *
  * An encounter is offered on a card when the company stands on one of its maps, in its months, from its chapter, after
  * any encounter it needs (v1). The Storyteller plays it, puts it off for tonight, or strikes it. Each plays once; put
@@ -11,7 +11,7 @@
  * State: {since, played: {n: at}, later: {n: until}, never: {n: at}, closed: {n: at}, offered: {n: at}, seen: {n: 1},
  *   people: {n: [actor ids]}}.
  */
-import {ENCOUNTERS, KINDS} from "../data/encounters-rothenstein.mjs";
+import {ENCOUNTERS, KINDS, LAST_ENCOUNTER} from "./chronicle-data.mjs";
 import {CHAPTERS, chapterNow, pickScene, frontOf, clueOf, judgementOf} from "./front-rules.mjs";
 import {SAGA_CLOCKS} from "./saga-rules.mjs";
 import {DAY} from "./terms.mjs";
@@ -19,7 +19,7 @@ import {DAY} from "./terms.mjs";
 export {ENCOUNTERS, KINDS, DAY};
 const idx = k => CHAPTERS.indexOf(k);
 /** The chapter after which no new twist comes (twist-rules LAST_CHAPTER): an encounter for "any time" closes there. */
-export const LAST = "c9";
+export {LAST_ENCOUNTER as LAST};
 /** How long Not tonight puts an encounter off. */
 export const LATER = DAY;
 /** An offered encounter is not offered again for this long, while the company stays. */
@@ -27,7 +27,7 @@ export const QUIET = DAY;
 
 export const encounterOf = n => ENCOUNTERS.find(e => e.n === Number(n)) ?? null;
 /** The chapter its window closes after. */
-export const closesAfter = e => (e?.best?.length ? e.best[e.best.length - 1] : LAST);
+export const closesAfter = e => (e?.best?.length ? e.best[e.best.length - 1] : LAST_ENCOUNTER);
 
 export function normState(s = {}, now = 0) {
   const o = k => ({...(s?.[k] ?? {})});
