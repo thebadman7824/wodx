@@ -18,6 +18,7 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-21 | Weekly review pick us1: add the rule that each mechanical part of a change goes out as one local-agent issue? And the two held local-agent name PRs (1787 Banyarwanda, 1855 Amazigh)? | The rule is not added while local coding agents are paused (17 November). Both PRs are closed unmerged: main already raised Banyarwanda and Amazigh to 300 recorded names (B6547), and both branches conflict with it and carry names that do not belong (English given names, prefixes on their own, a Hebrew name, pipe pairs). | Add the one-local-agent-issue rule to docs/WORKFLOW.md once local agents resume; reopen either PR from its branch if a name in it is wanted. |
 | 2026-11-09 | Paperdoll: the marks for each health level | Bruised a cheek bruise and a graze, Hurt a split lip, Injured a black eye, Wounded a bleeding cut, Mauled a second cut and pallor, Crippled a bandage, Incapacitated paler (B343). Only Bruised was shown to Ben. | Edit damageMarks in wodx-paperdoll/scripts/doll-rules.mjs. |
 | 2026-11-09 | Paperdoll: which mood each health level shows | Disgruntled at Bruised and Hurt, upset from Injured, grim from Crippled, snarling in frenzy (B343). | Edit moodFor in doll-rules.mjs, or untick "The face shows the health track". |
 | 2026-11-09 | Paperdoll: other eras | Every era shows the Dark Ages clothes until its own kit is drawn (B344). | Draw the next era kit. |
