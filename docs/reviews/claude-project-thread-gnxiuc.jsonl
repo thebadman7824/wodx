@@ -8,3 +8,8 @@
 {"file":"modules/wodx-combat/scripts/rules.js","verdict":"working","how":"read every hunk; ran past-ten-combat test (2/2) and terms-guard","hash":"2271fd67df93","at":"2026-11-19T21:07Z"}
 {"file":"tools/harness/past-ten-combat.test.mjs","verdict":"working","how":"read every hunk; ran past-ten-combat test (2/2) and terms-guard","hash":"6addb2b98bb4","at":"2026-11-19T21:07Z"}
 {"file":"changes/wodx-combat/past-ten-combat.md","verdict":"working","how":"read every hunk; ran past-ten-combat test (2/2) and terms-guard","hash":"329a4f58e30f","at":"2026-11-19T21:07Z"}
+{"file":"system/worldofdarkness/module/dialogs/dialog-generalroll.js","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"8ce0c082946d","at":"2026-11-19T23:31Z"}
+{"file":"system/worldofdarkness/module/scripts/roll-dice.js","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"a558bcc59cf5","at":"2026-11-19T23:31Z"}
+{"file":"system/worldofdarkness/module/scripts/wodx-roll-mods.js","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"31c5b1b835bd","at":"2026-11-19T23:31Z"}
+{"file":"tools/harness/past-ten-system.test.mjs","verdict":"working","how":"read every hunk; soak and damage rolls left out; ran past-ten-system test (1/1)","hash":"869f0cf89f15","at":"2026-11-19T23:31Z"}
+{"file":"tools/harness/system-audit-w1.test.mjs","verdict":"working","how":"B6720 test now asserts the B7120 wording and wodxOver; ran it (11/11)","hash":"aa0d0048c7e2","at":"2026-11-19T23:34Z"}
