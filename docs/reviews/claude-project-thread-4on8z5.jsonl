@@ -15,3 +15,6 @@
 {"file":"changes/decisions/B7570.md","verdict":"working","how":"read in full; matches changes/README.md form","hash":"ecb9a0ebfffa","at":"2026-11-20T22:51Z"}
 {"file":"changes/wodx-chronicle/close-this-chronicle.md","verdict":"working","how":"read in full; matches changes/README.md form","hash":"fc9bfc4864d4","at":"2026-11-20T22:51Z"}
 {"file":"changes/wodx-storyteller/carry-to-a-new-chronicle.md","verdict":"working","how":"read in full; matches changes/README.md form","hash":"dcd26a7dd635","at":"2026-11-20T22:51Z"}
+{"file":"modules/wodx-storyteller/README.md","verdict":"working","how":"read the diff; storyteller-readme, hooks and gate-rules harness tests pass; harness shards 3 and 4 run locally","hash":"5786797642a0","at":"2026-11-20T22:58Z"}
+{"file":"docs/HOOKS.md","verdict":"working","how":"read the diff; storyteller-readme, hooks and gate-rules harness tests pass; harness shards 3 and 4 run locally","hash":"3833652dc232","at":"2026-11-20T22:58Z"}
+{"file":"tools/gate/gatechronicleclose.mjs","verdict":"working","how":"read the diff; storyteller-readme, hooks and gate-rules harness tests pass; harness shards 3 and 4 run locally","hash":"c36a7baf17ea","at":"2026-11-20T22:58Z"}

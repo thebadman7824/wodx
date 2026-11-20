@@ -120,8 +120,11 @@ export async function run() {
     });
 
     await step("7 carry", async () => {
-      const a = game.actors.contents.find(x => x.hasPlayerOwner) ?? game.actors.contents[0];
-      if ( !a ) { ok("7 carry", false, {why: "no actor in this world"}); return; }
+      // Its own character, of a player character's kind, so no one in the world is touched
+      const kind = game.actors.contents.find(x => x.hasPlayerOwner)?.type ?? "";
+      if ( !kind ) { ok("7 carry", false, {why: "no player character in this world to take the sheet kind from"}); return; }
+      const a = await Actor.create({name: `Gate carry ${Date.now()}`, type: kind});
+      made.push(a.id);
       const doc = a.toObject();
       foundry.utils.setProperty(doc, "flags.wodx.chronicle", pack.id);
       const w = await ST().carry.write({Actor: [{doc}]}, {download: false});
