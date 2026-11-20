@@ -440,6 +440,7 @@ Next free block: B7560
 | B7510-B7519 | GPU guard in the repo, reading the GPU order from the priority file (used B7510) | tools |
 | B7520-B7529 | The gate recheck runs a flaky gate on main, so a fault main has too does not hold a pull request (used B7520-B7521) | tools |
 | B7530-B7539 | Cult worship goes to a place of worship (used B7530) | NPC |
+| B7540-B7549 | Recheck: each side's first run gets a full deploy (used B7540) | tools (pcq) |
 | B7550-B7559 | The PC watcher reads the merge train from the PC that drives it (used B7550) | tools |
 <!-- decision-index:end -->
 
@@ -14905,6 +14906,11 @@ Reverse: return the flaky verdict straight away in recheckStep (tools/pcq/jobs.m
 WoDX NPC. When a cult serves its founder, the night of worship goes to the scene's first region tagged as a place of worship (church, chapel, cathedral, abbey, monastery, temple, shrine, mosque or synagogue), and only then to the first tagged place. Foundry does not keep a scene's regions in a set order, so the old "first tagged region" rule sent the worship to a haven on some loads, which made gateduties step 2 fail at random (gate runs #2114 and #2131 on PR 1880, both "flaky" alone). The rule is `worshipPlace` in cult-rules.mjs.
 
 Reverse: in cults.mjs `tagged`, take the first region with a place kind again, and drop `worshipPlace` and `WORSHIP_KINDS`.
+
+## B7540. A recheck deploys in full before each side's first run (2026-11-20)
+PC runner (tools/pcq/recheck.mjs). Each recheck run resets the lane's world and then deploys with --if-changed. That check leaves out compendium pack files (lib.mjs isPackDb). So the branch's first run, which comes straight after the full run on the same code, never redeployed, and whatever the full run left in the deployed packages stayed. Main's first run, on other code, always got a full deploy. Twice a gate failed alone on the branch and passed on main (gatearms on run #2151, gatemarketgoods on #2158), then passed alone on the same head soon after. The NEW verdict held each pull request for another full gate run on the one PC lane. Now the first run on each side deploys in full, and later runs keep --if-changed. A reset that exits non-zero is logged, where before it went unnoticed. This costs one more deploy per recheck. It removes the one known difference between the sides; that it was the cause is not yet proven (bug #2163).
+
+Reverse: give runOne back its plain --if-changed deploy.
 
 ## B7550. The watcher reads the merge train from the runner that drives it (2026-11-20)
 tools/pcq/watcher.mjs took the "Merge train:" line only from the Main PC's status issue. Since B7500 the Secondary PC
