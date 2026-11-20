@@ -212,10 +212,19 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
   assert.equal(step([], []).next, "alone");
   assert.equal(step([true], []).next, "alone", "B7441: one pass alone is run again");
   assert.match(step([true, true], []).verdict, /^order fault: passes alone twice/);
-  assert.match(step([true, false], []).verdict, /^flaky/);
+  assert.match(step([true, false], null).verdict, /^flaky/);
+  // B7521: a flaky gate is run on main; failing there too, it is main's and does not hold the pull request
+  assert.equal(step([true, false], []).next, "main");
+  assert.equal(step([false, true], []).next, "main");
+  assert.match(step([true, false], [false]).verdict, /^fails on main too \(here flaky/);
+  assert.equal(step([false, true], [true]).next, "main", "one pass on main is run again");
+  assert.match(step([false, true], [true, false]).verdict, /^fails on main too/);
+  assert.match(step([true, false], [true, true]).verdict, /^flaky: .*passes alone twice on main/);
+  assert.match(step([true, false], [], {notOnMain: true}).verdict, /^flaky/);
+  assert.match(step([true, false], [null]).verdict, /^flaky.*main could not be rechecked/);
   assert.match(step([true], [], {once: true}).verdict, /passes alone/, "old one-run reports keep their answer");
   assert.equal(step([false], []).next, "alone", "one failure alone is run again");
-  assert.match(step([false, true], []).verdict, /flaky/);
+  assert.match(step([false, true], null).verdict, /flaky/);
   assert.equal(step([false, false], []).next, "main");
   assert.match(step([false, false], [false]).verdict, /fails on main too/);
   assert.equal(step([false, false], [true]).next, "main", "one pass on main is confirmed before NEW");
@@ -314,6 +323,10 @@ test("B7002: a touched or all gates job sets the wodx/gates status on the one co
   assert.match(ord.body.description, /failing on main too: gatec; order faults: gateb/);
   const fl = gateStatusFor(job, [{code: 1, sha, text: `gatea: 5/5 passed\ngateb: 1/3 passed${rc}- gateb: flaky: passed once and failed once, alone on a fresh lane`}], false);
   assert.equal(fl.body.state, "failure");
+  // B7521: a flaky gate that fails on main too is main's, so it does not hold the pull request either
+  const flMain = gateStatusFor(job, [{code: 1, sha, text: `gatea: 5/5 passed\ngateb: 1/3 passed${rc}- gateb: fails on main too (here flaky: passed once and failed once, alone on a fresh lane): not this change's fault`}], false);
+  assert.equal(flMain.body.state, "success");
+  assert.match(flMain.body.description, /failing on main too: gateb/);
   const mixed = gateStatusFor(job, [{code: 1, sha, text: `gateb: 1/3 passed\ngatec: 0/1 passed${rc}- gateb: order fault: passes alone twice\n- gatec: NEW with this change: fails alone twice here, passes alone twice on main`}], false);
   assert.equal(mixed.body.state, "failure", "a NEW failure still holds it");
   assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");

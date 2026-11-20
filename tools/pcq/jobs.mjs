@@ -209,20 +209,30 @@ export function gatePassed(gate, report = "") {
  *   a run the lane would not take.
  * Returns {next: "alone" | "main" | null, verdict}. A first run alone is always followed by a second (B7441): two
  * passes are an order fault (the job's failure came from other gates), a pass and a fail are flaky. A failure alone is run once more, and a pass then means flaky. Two failures alone go to main the
- * same way, where a pass is confirmed by a second run before the gate is called NEW.
+ * same way, where a pass is confirmed by a second run before the gate is called NEW. A flaky gate goes to main too
+ * (B7521): a failure there makes it main's fault, two passes there leave it flaky.
  * once: true keeps the old one-run answers (recheckVerdicts, for reports made before B7310).
  */
 export function recheckStep(alone = [], main = null, {notOnMain = false, once = false} = {}) {
   if ( alone.includes(null) ) return {next: null, verdict: "not rechecked: the lane would not take the rerun"};
   if ( !alone.length ) return {next: "alone"};
   if ( alone.length === 1 && !once ) return {next: "alone"};
-  if ( alone[0] === true ) {
-    if ( once ) return {next: null, verdict: "passes alone: it fails only after other gates (leftovers or order), or is flaky"};
-    // B7441: a pass alone is run once more, so an order fault (two passes) is told from a flaky gate (a pass and a fail)
-    return alone[1] === true ? {next: null, verdict: `${ORDER_FAULT}: passes alone twice, each on a fresh lane; it fails only after other gates (leftovers or order)`}
-      : {next: null, verdict: "flaky: passed once and failed once, alone on a fresh lane"};
+  if ( alone[0] === true && once ) return {next: null, verdict: "passes alone: it fails only after other gates (leftovers or order), or is flaky"};
+  // B7441: a pass alone is run once more, so an order fault (two passes) is told from a flaky gate (a pass and a fail)
+  if ( alone[0] === true && alone[1] === true )
+    return {next: null, verdict: `${ORDER_FAULT}: passes alone twice, each on a fresh lane; it fails only after other gates (leftovers or order)`};
+  if ( alone[0] === true || alone[1] === true ) {
+    const flaky = `flaky: ${alone[0] ? "passed once and failed once" : "failed once and passed once"}, alone on a fresh lane`;
+    // B7521: a flaky gate goes to main as a failure alone does. Failing there too, it is main's fault and does not hold
+    // the pull request (gateduties and gatetruthnpc held one train pull request after another, 19 November 2026);
+    // passing alone twice on main, it may be this change's and still holds.
+    if ( notOnMain || main === null ) return {next: null, verdict: flaky};
+    if ( main.includes(null) ) return {next: null, verdict: `${flaky}; main could not be rechecked`};
+    if ( !main.length || (main[0] === true && main.length === 1) ) return {next: "main"};
+    if ( main[0] === false ) return {next: null, verdict: `fails on main too (here ${flaky}): not this change's fault`};
+    return main[1] ? {next: null, verdict: `${flaky}; passes alone twice on main, so it may be this change's`}
+      : {next: null, verdict: `fails on main too (here ${flaky}; on main passed once, failed once): not this change's fault`};
   }
-  if ( alone[1] === true ) return {next: null, verdict: "flaky: failed once and passed once, alone on a fresh lane"};
   // B5590: a gate this change adds cannot run on main, so its failure there says nothing: the change must fix it.
   if ( notOnMain ) return {next: null, verdict: "NEW with this change: the gate is not on main yet, so this change must fix it"};
   const twice = once ? "" : " (twice, each on a fresh lane)";

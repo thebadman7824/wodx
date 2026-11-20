@@ -2,7 +2,7 @@
    train and the alerts into problems and notes, and only looks and reports. */
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {assess, report, parseTrain, statusStamp, greenAt, LIMITS, PCS, TRAIN_LABEL} from "../pcq/watcher.mjs";
+import {assess, report, parseTrain, statusStamp, greenAt, trainSource, LIMITS, PCS, TRAIN_LABEL} from "../pcq/watcher.mjs";
 import {comfyFrom, ocrLogState} from "../pcq/status-push.mjs";
 
 const NOW = Date.parse("2026-11-18T03:00:00Z");
@@ -183,4 +183,31 @@ test("B7421: green means the newest checks run passed and the newest merge rules
   assert.equal(greenAt([{name: "checks", status: "in_progress", started_at: "2026-11-18T15:10:00Z"}], ok), null);
   assert.equal(greenAt([run("success", "x", "2026-11-18T15:20:45Z")], [{context: "wodx/merge-rules", state: "pending"}, ...ok]), null, "newest status first");
   assert.equal(greenAt([], ok), null);
+});
+
+test("B7550: the train is read from the runner that drives it, not a silent Main PC's last line", () => {
+  // The Main PC died with #1848 at the front of its last status; the Secondary PC drives the train now and shows it empty.
+  const snap = healthy({pcs: {main: null, secondary: pc("secondary", 3), laptop: pc("laptop", 1)},
+    statusIssues: [statusIssue("main", 1700, "Merge train: front #1848, prepare (behind main by 47: main merged in); line #1848, #2104"),
+      statusIssue("secondary", 1, "Merge train: empty (label a ready pull request merge-train)"), statusIssue("laptop", 1)]});
+  const a = assess(snap, {train: {front: 1848, since: NOW - 28 * 3600e3}});
+  assert.equal(a.train.front, null, "the Secondary PC's empty train wins over the dead Main PC's front");
+  assert.equal(a.trainPc, "Secondary PC");
+  assert.ok(!a.problems.some(p => p.key.startsWith("train")), "no stuck-train problem from a stale line");
+  assert.equal(a.state.train, null);
+  assert.match(report(a, NOW, "Laptop"), /Merge train: empty \(from the Secondary PC's runner\)/);
+  // A front on the Secondary PC is tracked and blamed on it when its runner goes quiet.
+  const front = healthy({statusIssues: [statusIssue("main", 1700, "Merge train: front #1848, wait; line #1848"),
+    statusIssue("secondary", LIMITS.runnerStaleMin + 5, "Merge train: front #2098, wait (gates); line #2098"), statusIssue("laptop", 1)],
+    pcs: {main: null, secondary: null, laptop: pc("laptop", 1)}});
+  const b = assess(front, {train: {front: 2098, since: NOW - (LIMITS.trainFrontHours + 1) * 3600e3}});
+  assert.equal(b.train.front, 2098, "both silent: the freshest line wins");
+  assert.match(b.problems.find(p => p.key === "train:2098").text, /The Secondary PC, which drives the train, is silent\./);
+});
+
+test("B7550: trainSource prefers a live runner, then the freshest stamp, and skips issues with no train line", () => {
+  const st = {main: statusIssue("main", 1, "Merge train: front #1, wait; line #1"), secondary: statusIssue("secondary", 5, "Merge train: front #2, wait; line #2"), laptop: statusIssue("laptop", 1)};
+  assert.equal(trainSource(st, {main: false, secondary: false}).key, "main", "both live: the fresher one");
+  assert.equal(trainSource(st, {main: true, secondary: false}).key, "secondary", "a live runner beats a silent one");
+  assert.equal(trainSource({main: null, secondary: null, laptop: statusIssue("laptop", 1)}), null);
 });

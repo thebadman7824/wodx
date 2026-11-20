@@ -65,10 +65,22 @@ test("night is sunset to sunrise for the date and place, not set hours", () => {
 });
 
 test("dice: V20 difficulty 2 to 10, a 10 always hits, 1s cancel, botch with no hit and a 1", () => {
-  assert.deepEqual(T.successes([10, 1, 6], 6), {raw: 2, ones: 1, net: 1, successes: 1, botch: false, difficulty: 6});
+  assert.deepEqual(T.successes([10, 1, 6], 6), {raw: 2, ones: 1, net: 1, successes: 1, botch: false, difficulty: 6, over: 0, rolled: 1});
   assert.equal(T.successes([1, 3], 6).botch, true);
   assert.equal(T.successes([1, 6], 6).botch, false, "a hit cancelled by a 1 is a failure, not a botch");
-  assert.equal(T.successes([10], 12).successes, 1, "a difficulty past 10 is 10");
+  // B7120: past 10 the dice roll at 10 and each point past it needs one more success (M20 pdf 504, V20 pdf 166)
+  assert.equal(T.successes([10], 12).difficulty, 10, "a difficulty past 10 is rolled at 10");
+  assert.equal(T.successes([10], 12).over, 2);
+  assert.equal(T.successes([10], 12).successes, 0, "one hit at 12 is short of the three needed");
+  assert.equal(T.successes([10, 10, 10], 12).successes, 1, "three hits at 12: one success");
+  assert.equal(T.successes([10], 12).botch, false, "falling short past 10 is a failure, not a botch");
+  assert.equal(T.successes([10, 10], 11, {willpower: true}).successes, 2, "Willpower's success counts toward the need");
+  assert.equal(T.successes([10, 10], 10, {over: 1}).successes, 1, "a caller that held it at 10 passes over");
+  assert.equal(T.overTen(13), 3);
+  assert.equal(T.overTen(9), 0);
+  assert.equal(T.overTen("x"), 0);
+  assert.equal(T.overTenText(2, 12), "2 more successes needed (difficulty 12, past 10)");
+  assert.equal(T.overTenText(0), "");
   assert.equal(T.successes([2], 1).successes, 1, "a difficulty below 2 is 2");
   assert.equal(T.successes([1], 1).botch, true, "a 1 never hits");
   assert.equal(T.successes([10], 6, {specialty: true}).successes, 2);

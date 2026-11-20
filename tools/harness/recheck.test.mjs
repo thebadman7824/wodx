@@ -38,11 +38,15 @@ test("a gate that fails alone twice and passes twice on main is NEW, after two r
   assert.equal(calls.filter(c => c === "reset").length, 4, "every run starts from a reset");
 });
 
-test("a failure alone that passes the second time is flaky, and main is not run", async () => {
-  const {deps, calls, wt} = lanes({alone: [false, true], main: []});
-  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2", wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps});
-  assert.match(out, /- gatea: flaky/);
-  assert.ok(!calls.some(c => c.startsWith("main:")));
+test("B7521: a flaky gate is run on main: passing there twice it stays flaky, failing there it is main's", async () => {
+  const a = lanes({alone: [false, true], main: [true, true]});
+  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2", wt: a.wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps: a.deps});
+  assert.match(out, /- gatea: flaky: failed once and passed once.*passes alone twice on main/);
+  assert.equal(a.calls.filter(c => c.startsWith("main:")).length, 2);
+  const b = lanes({alone: [true, false], main: [false]});
+  const out2 = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2b", wt: b.wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps: b.deps});
+  assert.match(out2, /- gatea: fails on main too \(here flaky/);
+  assert.equal(b.calls.filter(c => c.startsWith("main:")).length, 1);
 });
 
 test("a cancelled job stops rechecking: stopped is honoured", async () => {
