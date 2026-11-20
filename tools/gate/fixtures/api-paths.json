@@ -602,7 +602,7 @@
   ],
   "uses": [
    "modules/wodx-combat/scripts/conductor.js:130",
-   "modules/wodx-creation/scripts/first-night.mjs:322",
+   "modules/wodx-creation/scripts/first-night.mjs:323",
    "modules/wodx-interactables/scripts/main.mjs:1051",
    "modules/wodx-solo/scripts/main.mjs:212",
    "modules/wodx-solo/scripts/main.mjs:218",
@@ -643,6 +643,16 @@
    "modules/wodx-storyteller/scripts/sites.mjs:184",
    "modules/wodx-storyteller/scripts/sites.mjs:185",
    "modules/wodx-storyteller/scripts/wonders.mjs:158"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "chronicle",
+   "current"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/arrival.mjs:39"
   ]
  },
  {
@@ -1314,7 +1324,7 @@
    "languages"
   ],
   "uses": [
-   "modules/wodx-creation/scripts/first-night.mjs:153",
+   "modules/wodx-creation/scripts/first-night.mjs:154",
    "modules/wodx-storyteller/scripts/reach.mjs:480"
   ]
  },
@@ -1539,8 +1549,8 @@
    "modules/wodx-actions/scripts/social.js:353",
    "modules/wodx-actions/scripts/voice.js:175",
    "modules/wodx-actions/scripts/voice.js:176",
-   "modules/wodx-creation/scripts/first-night.mjs:395",
-   "modules/wodx-creation/scripts/first-night.mjs:416",
+   "modules/wodx-creation/scripts/first-night.mjs:396",
+   "modules/wodx-creation/scripts/first-night.mjs:417",
    "modules/wodx-creation/scripts/lifepath.mjs:451",
    "modules/wodx-creation/scripts/lifepath.mjs:462",
    "modules/wodx-creation/scripts/people.mjs:215",
@@ -1695,7 +1705,7 @@
    "openSessionZero"
   ],
   "uses": [
-   "modules/wodx-creation/scripts/first-night.mjs:431"
+   "modules/wodx-creation/scripts/first-night.mjs:432"
   ]
  },
  {
@@ -1987,7 +1997,7 @@
   "uses": [
    "modules/wodx-combat/scripts/main.js:1450",
    "modules/wodx-combat/scripts/main.js:2985",
-   "modules/wodx-creation/scripts/first-night.mjs:119",
+   "modules/wodx-creation/scripts/first-night.mjs:120",
    "modules/wodx-library/scripts/faith-use.mjs:58",
    "modules/wodx-library/scripts/use.mjs:116",
    "modules/wodx-otherworlds/scripts/crossing.mjs:484",
@@ -2043,7 +2053,7 @@
   ],
   "uses": [
    "modules/wodx-creation/scripts/first-night-build.mjs:57",
-   "modules/wodx-creation/scripts/first-night.mjs:332"
+   "modules/wodx-creation/scripts/first-night.mjs:333"
   ]
  },
  {
@@ -2660,7 +2670,7 @@
    "wizard"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/arrival.mjs:171"
+   "modules/wodx-solo/scripts/arrival.mjs:174"
   ]
  },
  {
@@ -3482,7 +3492,7 @@
    "peopleWord"
   ],
   "uses": [
-   "modules/wodx-creation/scripts/first-night.mjs:212"
+   "modules/wodx-creation/scripts/first-night.mjs:213"
   ]
  },
  {
@@ -3495,7 +3505,7 @@
    "modules/wodx-actions/scripts/social.js:340",
    "modules/wodx-chronicle/scripts/signatures.mjs:1470",
    "modules/wodx-chronicle/scripts/when.mjs:66",
-   "modules/wodx-creation/scripts/first-night.mjs:211",
+   "modules/wodx-creation/scripts/first-night.mjs:212",
    "modules/wodx-npc/scripts/bonds.mjs:26",
    "modules/wodx-npc/scripts/fates.mjs:46",
    "modules/wodx-npc/scripts/standing.mjs:153",
@@ -3808,7 +3818,7 @@
    "rivalry"
   ],
   "uses": [
-   "modules/wodx-creation/scripts/first-night.mjs:215"
+   "modules/wodx-creation/scripts/first-night.mjs:216"
   ]
  },
  {
@@ -4496,7 +4506,7 @@
    "anachronism"
   ],
   "uses": [
-   "modules/wodx-creation/scripts/first-night.mjs:161"
+   "modules/wodx-creation/scripts/first-night.mjs:162"
   ]
  },
  {

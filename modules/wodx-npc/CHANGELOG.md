@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.103.4 (The curfew setting's hint says the late bell without naming a town, and comments no longer name the first chronicle (B7566))
 - 0.103.3 (The faction window's starting-factions button sets up the chronicle in play's own factions (api setupChronicleFactions, chronicleFactions), not Rothenstein's by name; the ten Rothenstein factions moved to WoDX Rothenstein unchanged (Chronicle Packs Desk f1). With no chronicle in play the button is not shown)
 - 0.103.2 (A faction's roll past difficulty 10 needs one more success a point, as every other roll does (B7120))
 - 0.103.1 (A cult's night of worship goes to a place of worship on its scene (a church, chapel, temple, shrine, mosque or synagogue) before any other tagged place. It took the first tagged region, and scenes do not keep their regions in a fixed order, so the faithful were sometimes sent to the founder's haven instead (B7530; gateduties step 2 failed at random))
