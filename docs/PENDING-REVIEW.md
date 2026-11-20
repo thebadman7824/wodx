@@ -1695,3 +1695,4 @@ Rows dated 17 and 18 November that Ben had not approved or disapproved by 19 Nov
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-20 | OCR page picker (Secondary PC): after the spot-check found model "no text" replies and Tesseract junk kept as book text, how should flagged pages be picked? | Ben OK'd in the helper thread: a "no text" vision reply counts as none, picture pages with next to no real words become [art], and clean vision text wins when Tesseract is under 50% real words (measured against Tesseract's English word list plus game words). 78 finished books were re-picked and 359 pages re-queued for a vision read. | Copy `D:\WoDX\books\out-pre-repick-20261120\*` back to `out\`, restore `book_pipeline.py` from `book_pipeline.py.bak6-20261120` and `pushed.txt` from `pushed.txt.bak-20261120`. |
