@@ -82,11 +82,11 @@ async function body() {
 
   await step("2. Rothenstein's factions", async () => {
     await game.settings.set(MOD, "factions", FX().rules.blankState());
-    const list = await FX().setupRothenstein({confirm: false});
+    const list = await FX().setupChronicleFactions({confirm: false});
     const s = FX().state();
     const lead = name => s.factions.find(f => f.name.startsWith(name))?.leader;
     const nameOf = id => game.actors.get(id)?.name ?? null;
-    const found = Object.fromEntries(FX().ROTHENSTEIN.map(r => [r.name, nameOf(lead(r.name))]));
+    const found = Object.fromEntries(FX().chronicleFactions().FACTIONS.map(r => [r.name, nameOf(lead(r.name))]));
     ok("2. ten factions, the court ruling, the leaders found by name", list?.length === 10 && /Bogdan/.test(nameOf(lead("The Voivode")) ?? "")
       && /Ludovic/.test(nameOf(lead("The parish")) ?? "") && /Graff/.test(nameOf(lead("The German")) ?? "") && s.factions.find(f => f.ruler)?.name === "The Voivode's court",
     {found, places: Object.fromEntries(s.factions.map(f => [f.name, f.places.map(p => FX().names(s).place(p))]))});

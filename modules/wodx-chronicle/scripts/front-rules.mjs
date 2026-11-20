@@ -8,7 +8,8 @@
  *   courier: {rider, stopped}}.
  * Context: {now, played: [chapter keys], twists: the twist web's state}.
  */
-import {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK, DAY} from "../data/fronts-rothenstein.mjs";
+import {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK} from "./chronicle-data.mjs";
+import {DAY} from "./terms.mjs";
 export {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK, DAY};
 
 export const frontOf = k => FRONTS.find(f => f.key === k) ?? null;

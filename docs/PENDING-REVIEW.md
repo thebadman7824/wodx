@@ -1658,6 +1658,19 @@ Ben kept all eight rows as built on the Decisions Desk (https://claude.ai/artifa
 | 2026-11-17 | Where the Secondary PC writes its 5-minute status | D:\WoDX\pcq\status\secondary.json on the PC (task 'WoDX secondary status'); the PC has no route to the shared project folder without a tunnel, so a thread on the PC copies it to registry/pc-status/secondary.json when it is there | Add a tunnel or a sync folder and point the writer at it |
 | 2026-11-17 | HWiNFO on the Secondary PC | Not installed: every winget version of REALiX.HWiNFO fails with a 404 from its mirror. nvidia-smi already gives the core temperature the guard uses | Install HWiNFO by hand from its site, or retry winget later |
 
+## Approved by Ben, 18 November 2026, 20:42 UTC (Chronicle Packs Desk)
+
+Ben picked every one of the 18 items as recommended, with no notes (https://claude.ai/artifact/KCYjax5fLoUS5wynK9Y2ku; audit /mnt/project-files/chronicle-packs/audit-2026-11-18.md). Being built now, merged and tested by 23 Nov, before the solo test Ben moved to 25 Nov.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-18 | Where a chronicle's content lives, and how the engines find it (a1-a4) | A WoDX module per chronicle (wodx-rothenstein) with a manifest; the saga, fronts, twists, reveals, encounters and builder read whichever chronicle is registered and stay idle with none; several may register, one plays | Move the data back into WoDX Chronicle and Storyteller (B7490, B7491) |
+| 2026-11-18 | How pieces are marked, and where the line sits (b1, b2) | Every data entry carries the chronicle id, every Foundry document it brings carries flags.wodx.chronicle, its state sits under its id; anything written for the story (cast, plot, the town and its maps, factions, later-age events) is chronicle, the rest is world | Drop the marks |
+| 2026-11-18 | Ending and resetting (c1-c3) | A Close this chronicle step (engines stop, people and places stay as ordinary world content, undoable); reset is a fresh template world with the module off and chosen characters carried; each later saga book asks next book or close | Leave the saga running as before |
+| 2026-11-18 | Shared systems and names (d1-d4) | General hooks (local feasts, a town's top seat title, extra languages, caern scenes, a hunter group's start) that the chronicle fills; Rothenstein names moved out of general rules; small talk and coin by homeland region; one shared Live-world list | Put the items back in shared data |
+| 2026-11-18 | Checks (e1, e2) | A harness guard that fails on new chronicle words in shared code (baseline only shrinks); nightly clean-world smoke gates in a template world with no chronicle | Delete the guard and the clean world |
+| 2026-11-18 | Order and timing (f1-f3) | Move first with no change in play, then the Book 1 rebuild edits the module; saved state keeps its shape for now; build at once, merged and tested by 23 Nov; Live untouched | Hold until after 25 Nov |
+
 ## Approved by auto-approval, 19 November 2026, 06:00 UTC
 
 Rows dated 17 and 18 November that Ben had not approved or disapproved by 19 November 06:00 UTC (the watcher-alerts row was already picked by Ben on 18 November). None deletes anything or changes the Live world.

@@ -1,6 +1,6 @@
 /**
  * Twists on the table (Rothenstein Rebuilt, Volume Three picks x1, x2 and x5, B6650-B6659). Rules in reveal-rules.mjs,
- * data in data/twist-reveals-rothenstein.mjs.
+ * data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
  *
  * Revealing a twist (pod.mjs revealTwist) shows it: the thing goes into the hands of a character on the company's map,
  * the marks go on its map through the town looks, or the line is heard by whoever stands on that map (WoDX Senses)
@@ -8,7 +8,7 @@
  * round, or leave the valley, or the fronts they move are pushed or stepped, and the street talks (x2).
  * Favours (Vlasta, Yaroslava, and Reinhold told the truth) are debts the Storyteller calls in from the saga window:
  * the one who owes comes to the company's map (x5). Havel, Vlasta and Ctibor's clerk dead by the company's hand are
- * the three murders: after the third, the Lower Town turns cold, with its shutters closed on its maps and each of its
+ * the murders: after the last, the chronicle's COLD place (Rothenstein: the Lower Town) turns cold, with its shutters closed on its maps and each of its
  * people a step cooler toward every character (WoDX NPC attitudes). Hooks wodxFavour and wodxColdTown.
  *
  * State in podState.saga.reveals. Storyteller only.
@@ -21,7 +21,10 @@ import * as Fronts from "./fronts.mjs";
 import {bring} from "./encounters.mjs";
 import {DAY} from "./terms.mjs";
 
-const BOOK = S.FIRST_BOOK;
+/** The first book of the chronicle in play (read when used: the chronicle registers after this file loads). */
+const book = () => S.FIRST_BOOK;
+/** The place that turns cold after the murders, as the chronicle names it ("the Lower Town"). */
+const coldPlace = (cap = false) => { const p = RR.COLD?.place || "the town"; return cap ? p[0].toUpperCase() + p.slice(1) : p; };
 const now = () => game.time?.worldTime ?? 0;
 const mod = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
 const pod = () => foundry.utils.deepClone(game.settings.get(MODULE_ID, "podState") ?? {}) ?? {};
@@ -31,8 +34,8 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const SOUND_FOR = 3 * DAY;
 
 function played(s) {
-  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === BOOK);
-  if ( x.books[BOOK] === "done" ) return [...F.CHAPTERS];
+  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === book());
+  if ( x.books[book()] === "done" ) return [...F.CHAPTERS];
   return [...(run?.played ?? [])];
 }
 export const revealState = (s = pod()) => RR.normState(sagaOf(s).reveals ?? {});
@@ -161,7 +164,7 @@ export async function onDeath(effect) {
   if ( !isActiveGM() || !effect?.statuses?.has?.("dead") ) return;
   const a = effect.parent;
   if ( !a || !RR.MURDERS.includes(a.name) || revealState().murders[a.name] ) return;
-  await card(`${a.name} is dead`, `<p>Was it by the company's hand? It is one of the three murders: after the third, the Lower Town turns cold.</p>
+  await card(`${a.name} is dead`, `<p>Was it by the company's hand? It is one of the murders: after the last, ${esc(coldPlace())} turns cold.</p>
     <p><button type="button" data-wct-murder="yes" data-name="${esc(a.name)}">By the company's hand</button> <button type="button" data-wct-murder="no" data-name="${esc(a.name)}">No</button></p>`, {murder: {name: a.name}});
 }
 export function onRenderCard(message, el) {
@@ -181,11 +184,11 @@ export async function markMurder(name) {
   const r = await change(st => RR.murder(st, name, now()));
   Hooks.callAll("wodxMurder", {name, count: r.count});
   if ( r.cold ) await turnCold();
-  else await card(`A murder: ${name}`, `<p>${r.count} of ${RR.MURDERS.length}. After the third, the Lower Town turns cold toward the company.</p>`);
+  else await card(`A murder: ${name}`, `<p>${r.count} of ${RR.MURDERS.length}. After the last, ${esc(coldPlace())} turns cold toward the company.</p>`);
   return r;
 }
 export async function unmarkMurder(name) { if ( game.user.isGM ) await change(st => RR.unmurder(st, name)); }
-/** The Lower Town turns cold: shutters on its maps, its people a step cooler toward every character, the talk. */
+/** The chronicle's COLD place turns cold: shutters on its maps, its people a step cooler toward every character, the talk. */
 export async function turnCold() {
   // The company's own map first, so the cold shows where they stand before it spreads
   const C = RR.COLD, here = Fronts.sceneFor("@company"), marked = [];
@@ -202,10 +205,10 @@ export async function turnCold() {
   if ( AT?.apply ) {
     const npcs = new Map();
     for ( const sc of scenes ) for ( const t of sc.tokens ) if ( t.actor && !t.actor.hasPlayerOwner ) npcs.set(t.actor.id, game.actors.get(t.actor.id) ?? t.actor);
-    for ( const npc of [...npcs.values()].slice(0, 80) ) for ( const pc of pcs ) { await AT.apply(npc, pc, {delta: C.delta, why: "The Lower Town has turned against the newcomers."}); cooled++; }
+    for ( const npc of [...npcs.values()].slice(0, 80) ) for ( const pc of pcs ) { await AT.apply(npc, pc, {delta: C.delta, why: `${coldPlace(true)} has turned against the newcomers.`}); cooled++; }
   }
   await talk(C.talk, "cold:lower-town");
-  await card("The Lower Town turns cold", `<p>The third murder. ${marked.length ? `Shutters close on ${esc(marked.join(", "))}.` : "No Lower Town map in this world; show it at the table."} ${cooled ? `Its people are a step cooler toward the company (${cooled} changes).` : ""}</p><p>In the streets: "${esc(C.talk)}"</p>`);
+  await card(`${coldPlace(true)} turns cold`, `<p>The last murder. ${marked.length ? `Shutters close on ${esc(marked.join(", "))}.` : `No ${esc(RR.COLD?.scenes ?? "")} map in this world; show it at the table.`} ${cooled ? `Its people are a step cooler toward the company (${cooled} changes).` : ""}</p><p>In the streets: "${esc(C.talk)}"</p>`);
   Hooks.callAll("wodxColdTown", {scenes: marked, cooled});
   return {scenes: marked, cooled};
 }
@@ -220,7 +223,7 @@ export function section(s) {
   }).join("") || `<tr><td colspan="2">Nobody owes the company yet.</td></tr>`;
   const murders = RR.MURDERS.map(n => st.murders[n] !== undefined ? `<button type="button" data-action="murderUnmark" data-name="${esc(n)}" class="active" title="Take it back">✓ ${esc(n)}</button>` : `<button type="button" data-action="murderMark" data-name="${esc(n)}" title="Killed by the company">${esc(n)}</button>`).join(" ");
   return `<h3>Favours and murders</h3><table class="wodx-check" data-debts><tbody>${debts}</tbody></table>
-    <p>The three murders: ${murders}. ${st.cold ? "The Lower Town has turned cold." : "After the third, the Lower Town turns cold."}</p>`;
+    <p>The murders: ${murders}. ${st.cold ? `${esc(coldPlace())} has turned cold.` : `After the last, ${esc(coldPlace())} turns cold.`}</p>`;
 }
 export const ACTIONS = {
   favourCall: async function(e, el) { try { await callFavour(el.dataset.who); } catch (err) { ui.notifications.warn(err.message); } this.render(); },

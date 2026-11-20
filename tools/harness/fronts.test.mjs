@@ -1,5 +1,6 @@
 // Book one's fronts, roles and clue carriers (B4910-B4919): pace, chapters, the twist's week, holds and strikes,
 // succession, judgements, clues and the map sights.
+import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engines read the chronicle in play
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
