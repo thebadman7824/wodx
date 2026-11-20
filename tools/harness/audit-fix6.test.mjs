@@ -25,8 +25,8 @@ test("B6175: a sheet roll sums the trait effects, the powers and the conditions"
 });
 
 test("B6175: the system window's bonus and difficulty with the parts on, held between the lowest and 10", () => {
-  assert.deepEqual(RR.applyTo({bonus: 0, difficulty: 6}, {dice: -1, diff: 1}), {bonus: -1, difficulty: 7, capped: false});
-  assert.deepEqual(RR.applyTo({bonus: 2, difficulty: 9}, {dice: 0, diff: 3}), {bonus: 2, difficulty: 10, capped: true});
+  assert.deepEqual(RR.applyTo({bonus: 0, difficulty: 6}, {dice: -1, diff: 1}), {bonus: -1, difficulty: 7, capped: false, over: 0});
+  assert.deepEqual(RR.applyTo({bonus: 2, difficulty: 9}, {dice: 0, diff: 3}), {bonus: 2, difficulty: 10, capped: true, over: 2});
   assert.equal(RR.applyTo({bonus: 0, difficulty: 3}, {diff: -4}, 2).difficulty, 2);
   assert.match(RR.cardLine({dice: -1, diff: 1, parts: ["Drunk -1", "Nightmares +1 diff"]}), /^WoDX: Drunk -1; Nightmares \+1 diff \(-1 dice, \+1 difficulty\)$/);
   assert.equal(RR.cardLine({parts: []}), "");
