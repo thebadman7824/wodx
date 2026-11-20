@@ -1,6 +1,6 @@
 {
  "host": "secondary",
- "time": "2026-11-20T12:33:03.637Z",
+ "time": "2026-11-20T12:38:06.762Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -9,20 +9,20 @@
   }
  ],
  "gpu": {
-  "tempC": 46.2,
-  "loadPct": 0,
-  "vramPct": 3,
-  "warning": "ok",
-  "jobHeld": false,
+  "tempC": 80.1,
+  "loadPct": 72,
+  "vramPct": 90,
+  "warning": "warn",
+  "jobHeld": true,
   "waiting": 0
  },
  "ocr": {
-  "workers": 0,
+  "workers": 1,
   "loopUp": true,
-  "lastOutputMin": 3,
-  "memWait": true,
+  "lastOutputMin": 0,
+  "memWait": false,
   "gaveUp": false,
   "stopped": false
  },
- "issues": 0
+ "issues": 1
 }
