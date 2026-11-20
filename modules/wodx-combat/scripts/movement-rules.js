@@ -290,6 +290,25 @@ export function swimLoad({armorPenalty = 0, burden = 0, strength = 2, potence = 
       : `weighed down (${parts.join(", ")}): swimming at ${["", "three quarters", "half", "a quarter"][steps]} speed, +${Math.min(3, steps)} difficulty in the water`};
 }
 
+/**
+ * B7130: what a character carries on dry land (house rule; the books give Strength a lifting limit and no pace for a
+ * load). The gear's weight in WoDX Library against what Strength and Potence lift (WoDX Interactables' chart, the
+ * same reading as weighedBurden): past half the lift, +1 difficulty to dodge and to stealth; past all of it, half
+ * speed as well. A burden set by hand on the token's HUD wins over the weight (a heavy load is past half, all they can
+ * lift is past the lift; a pack is nothing on land). Worn armor counts its own way and is left out here.
+ * {steps (0, 2 or 3), from ("hand"|"weight"|""), diff, factor, note}
+ */
+export function landLoad({burden = 0, gearKg = 0, liftKg = 0} = {}) {
+  const hand = burdenOf(burden).id, weighed = weighedBurden(gearKg, liftKg);
+  const from = hand ? "hand" : weighed ? "weight" : "";
+  const level = hand || weighed;
+  const steps = level >= 3 ? 3 : level >= 2 ? 2 : 0;
+  const what = from === "hand" ? burdenOf(hand).label.toLowerCase() : `${Math.round((Number(gearKg) || 0) * 10) / 10} kg of gear`;
+  return {steps, from: steps ? from : "", diff: steps ? 1 : 0, factor: steps >= 3 ? 0.5 : 1,
+    note: !steps ? "" : steps >= 3 ? `weighed down (${what}, past what they can lift): half speed, +1 to dodge and stealth`
+      : `weighed down (${what}, past half what they can lift): +1 to dodge and stealth`};
+}
+
 /* ------------------------------------------------------------------ */
 /*  Riding and driving in a fight (3.20.0, house rules B2440-B2442)    */
 /* ------------------------------------------------------------------ */
