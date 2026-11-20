@@ -65,7 +65,7 @@ export function registerPodSettings() {
   flag("podCities", "Great cities that change with history", "Paris, Rome, Constantinople, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc change by date; Senses and map generation follow.");
   flag("podGolconda", "Golconda as a long road", "A seeker's road of ten steps, set back by killing, frenzy, theft and harmful feeding, and taught by a mentor month by month.");
   flag("podChains", "Story chains and opening goals", "Dated runs of scenes dealt out by the clock, and three opening goals for each new character.");
-  flag("podSaga", "The chronicle's saga over the years", "The story chronicle in play (a chronicle module such as WoDX Rothenstein) told over years and ages: books of dated chapters and interludes, long clocks, and endings that later books answer. Does nothing when no chronicle module is on.");
+  flag("podSaga", "The chronicle's saga over the years", "The story chronicle in play (from a chronicle module that is on) told over years and ages: books of dated chapters and interludes, long clocks, and endings that later books answer. Does nothing when no chronicle module is on.");
   game.settings.register(MODULE_ID, "podCity", {name: "The chronicle's city", hint: "The city a scene is in when the scene names none (scene flag wodx-chronicle.city).", scope: "world", config: true, type: String, default: chronicleInPlay()?.manifest?.town ?? ""});
   game.settings.register(MODULE_ID, "podState", {scope: "world", config: false, type: Object, default: {cities: {}, chains: []}});
   game.settings.registerMenu(MODULE_ID, "podMenu", {name: "Cities, Golconda and story chains", label: "Open", hint: "City exposure, the great cities, story chains and opening goals.",
@@ -679,7 +679,7 @@ export class PodApp extends ApplicationV2 {
       const list = seekers();
       parts.push(`<h3>Seekers of Golconda</h3><ul>${list.map(a => `<li>${esc(a.name)}: step ${golOf(a).step} of ${P.GOLCONDA_STEPS}${golOf(a).mentor ? `, taught by ${esc(golOf(a).mentor)}` : ""}</li>`).join("") || "<li>None.</li>"}</ul><p class="vta-note">Start or teach from the character's Signature feature window.</p>`);
     }
-    if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road, Story chains or the chronicle's saga in the module settings (the saga needs a chronicle module, such as WoDX Rothenstein).</p>`);
+    if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road, Story chains or the chronicle's saga in the module settings (the saga needs a chronicle module turned on).</p>`);
     // B6164: a patron raises or restores a building with every switch off too
     parts.push(`<h3>A building raised or restored</h3><p class="vta-note">The patron pays, the scene's town gains and the faction owes a boon.</p>
         <div data-build class="form-group"><input name="patron" placeholder="Patron (a character)"><input name="building" placeholder="Building"><input name="faction" placeholder="Faction that gains"><label><input type="checkbox" name="restore"> Restore</label><button type="button" data-action="build">Raise or restore</button></div>`);

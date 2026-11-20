@@ -68,8 +68,13 @@ test("old exits between maps become Ways; twins, crossings and dead ends do not"
   assert.deepEqual(ways.map(w => [w.regionId, w.to, w.arrive, w.kind]), [["r1", "q", "a1", "street"], ["r4", "f", "a2", "stair"]]);
   assert.deepEqual(lost, ["Lower Town · Market Square: Exit: nowhere"]);
 });
-test("the kind of an old exit comes from the two names", () => {
-  assert.equal(W.exitKind("The Keep Road", "Kranzfels · The Outer Bailey"), "gate");
+test("the kind of an old exit comes from the two names", async () => {
+  // B7565: the castle comes from the chronicle's recipe, not from shared code
+  const {ROTHENSTEIN} = await import(join(root, "modules/wodx-rothenstein/data/recipe.mjs"));
+  const castles = ROTHENSTEIN.anchors.places.filter(p => p.kind === "castle").map(p => p.match);
+  assert.ok(castles.length);
+  assert.equal(W.exitKind("The Keep Road", "Kranzfels · The Outer Bailey", {castles}), "gate");
+  assert.equal(W.exitKind("The Keep Road", "Kranzfels · The Outer Bailey"), "road", "with no castle named, a road");
   assert.equal(W.exitKind("Kranzfels · The Outer Bailey", "Kranzfels · Inner Ward and Great Hall"), "gate");
   assert.equal(W.exitKind("The River Road and Fields", "Toll-post and Ivo's Ferry"), "ferry");
   assert.equal(W.exitKind("The Forest Road", "The Old Grove"), "road");

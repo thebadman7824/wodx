@@ -97,7 +97,7 @@ export const AREA_GUESS = {tavern: "lower", street: "lower", market: "market", w
   gate: "patrolled", castle: "patrolled", haven: "lower", wilds: "market", caern: "market", other: "market"};
 /**
  * The kind of place a scene's name suggests, for a scene no one has tagged in 7c (WoDX reading). The first match wins,
- * so "Kranzfels · Outer Bailey" is a gate before it is a castle.
+ * so "Castle · Outer Bailey" is a gate before it is a castle.
  */
 const NAME_KINDS = [
   ["tavern", /\b(tavern|inn|alehouse|taproom|brothel)\b/i], ["market", /\b(market|square|fair|plaza)\b/i],

@@ -1,5 +1,5 @@
 /**
- * The Rothenstein saga's rules (B3660-B3669). Pure, so the harness can test them: checking the saga, turning a book
+ * The chronicle saga's rules (B3660-B3669). Pure, so the harness can test them: checking the saga, turning a book
  * into a story chain the clock deals out, the gaps between dated steps, which book comes next, the long clocks and
  * the words a step takes after an earlier ending.
  *

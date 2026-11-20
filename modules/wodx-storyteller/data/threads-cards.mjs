@@ -1,7 +1,7 @@
 /**
  * Threads of Fate hook cards (B3650-B3656), made by the build script kept with the project files
  * (story-weaver/build_cards.py). Own words; no book text. Groups: the 45 world regions
- * (r-<region> and r-<region>-alt), line doors for twists (door-), and a player's own threads (own-). A chronicle's own cards live in its module (Rothenstein's roth- cards: wodx-rothenstein/data/cards.mjs).
+ * (r-<region> and r-<region>-alt), line doors for twists (door-), and a player's own threads (own-). A chronicle's own cards live in its module (the first chronicle's roth- cards: wodx-rothenstein/data/cards.mjs).
  * The Storyteller can add, change, refuse or lock any card in play; the Storyteller's lines always win.
  */
 export const CARDS = [

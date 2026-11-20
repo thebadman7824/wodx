@@ -1,6 +1,6 @@
 /**
- * Twists on the table (Rothenstein Rebuilt, Volume Three picks x1, x2 and x5, B6650-B6659). Rules in reveal-rules.mjs,
- * data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
+ * Twists on the table (the chronicle rebuild, Volume Three picks x1, x2 and x5, B6650-B6659). Rules in reveal-rules.mjs,
+ * data from the chronicle in play (chronicle-data.mjs; the first chronicle's is in its own module).
  *
  * Revealing a twist (pod.mjs revealTwist) shows it: the thing goes into the hands of a character on the company's map,
  * the marks go on its map through the town looks, or the line is heard by whoever stands on that map (WoDX Senses)
@@ -8,7 +8,7 @@
  * round, or leave the valley, or the fronts they move are pushed or stepped, and the street talks (x2).
  * Favours (Vlasta, Yaroslava, and Reinhold told the truth) are debts the Storyteller calls in from the saga window:
  * the one who owes comes to the company's map (x5). Havel, Vlasta and Ctibor's clerk dead by the company's hand are
- * the murders: after the last, the chronicle's COLD place (Rothenstein: the Lower Town) turns cold, with its shutters closed on its maps and each of its
+ * the murders: after the last, the chronicle's COLD place (in the first chronicle, its lower town) turns cold, with its shutters closed on its maps and each of its
  * people a step cooler toward every character (WoDX NPC attitudes). Hooks wodxFavour and wodxColdTown.
  *
  * State in podState.saga.reveals. Storyteller only.

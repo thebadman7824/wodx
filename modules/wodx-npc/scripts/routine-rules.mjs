@@ -83,8 +83,8 @@ const B = (from, to, place, activity, more = {}) => ({from, to, place, activity,
 /**
  * Ready routines. Each template of 7b has one by default (DEFAULT_PRESET); the rest can be picked in the editor.
  * Hours are WoDX readings of the trade, not book rules. The canonical hours follow the Western monastic day. Where
- * Rothenstein's own notes give a time, the presets follow them: the market shutters at dusk, and the priest is in the
- * church from dusk until the late bell (Rothenstein Codex, The Lower Town; Places, Ludovic's Presbytery).
+ * the first chronicle's notes gave a time, the presets follow them, as any town of the age would keep them: the market
+ * shutters at dusk, and the priest is in the church from dusk until the late bell.
  */
 export const PRESETS = {
   "night-watch": {label: "Guard, night watch", blocks: [
@@ -655,7 +655,7 @@ export function placeAt(blocks, time, describe, ctx) {
 const TITLES = /^(captain|father|brother|sister|master|mistress|richter|baba|old|young|sir|lady|lord|dame|frau|herr|mother|the)$/i;
 const strip = s => String(s ?? "").replace(/^⚔\s*BATTLEMAP\s*·\s*/u, "");
 /**
- * A first guess at a place from a scene's name: {kind, owner}. Rothenstein names its private rooms "Trespass · X's ..."
+ * A first guess at a place from a scene's name: {kind, owner}. Built chronicles name private rooms "Trespass · X's ..."
  * and its trades "Workplace · ...". Story scenes (encounters, sessions) are left untagged.
  */
 export function guessPlace(name) {

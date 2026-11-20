@@ -1695,3 +1695,5 @@ Rows dated 17 and 18 November that Ben had not approved or disapproved by 19 Nov
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-20 | Two Future Darkness metaplot events in WoDX Chronicle name Rothenstein inside a wider Moravian event (2044 Wraith: "the Shadowlands of Moravia and Rothenstein, the failing Hierarchy's last fortress"; 2058 Hunter: "Rothenstein's old families ... tried as collaborators"). Move or reword them? | Left as they are for now (the chronicle guard's baseline keeps them, so no new mention can join them). Recommended next: split each into a shared event that names only Moravia, plus a chronicle event in WoDX Rothenstein with the town line, the way the four fdw-*-mo-1 events moved (B7566). | Nothing to undo; the split, if picked, is a new change. |
+| 2026-11-20 | The clean world's smoke set: which shared gates go in it now? | gatecleanworld, gatethreads, gateoworld and gatepod (all passed in wodx-clean on cloud lane 9). gate7d, gatebuilder and gateevents stay out until they read the chronicle in play (B7563). | Edit "clean" in tools/lanes/gate-map-extra.json. |

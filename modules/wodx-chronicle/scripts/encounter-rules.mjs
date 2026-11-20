@@ -1,6 +1,6 @@
 /**
- * Book one's encounters, the rules (Rothenstein Rebuilt, Volume Two picks v1-v6, B6640-B6649). Pure functions over
- * the state in podState.saga.encounters; encounters.mjs puts them on the table. Data from the chronicle in play (chronicle-data.mjs; Rothenstein's is wodx-rothenstein/data).
+ * Book one's encounters, the rules (the chronicle rebuild, Volume Two picks v1-v6, B6640-B6649). Pure functions over
+ * the state in podState.saga.encounters; encounters.mjs puts them on the table. Data from the chronicle in play (chronicle-data.mjs; the first chronicle's is in its own module).
  *
  * An encounter is offered on a card when the company stands on one of its maps, in its months, from its chapter, after
  * any encounter it needs (v1). The Storyteller plays it, puts it off for tonight, or strikes it. Each plays once; put
