@@ -199,7 +199,7 @@ export function build(ctx) {
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
                 // B6411: the target's ward or Magic Resistance makes an Arcanos on them harder
                 const rm = TH.targetResist(actor, ["magic"]);
-                const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
+                const r = await rollPool(dice, n(fd.diff) + lim.diff + n(rm.diff));
                 rolls.push(r.roll); faces = r.faces ?? []; successes = r.botch ? 0 : r.successes;
                 body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])]);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;

@@ -185,6 +185,7 @@ export const DESC = {
     "api:endStory": "End the story: what lasts a story is restored or reset for every character",
     "api:newNight": "Start a new night for every character: Willpower, healing rested, frenzy over, and blood to rise for the Kindred",
     "api:endScene": "End the scene: once-a-scene powers and limits reset",
+    "api:clearTries": "Forget the failed tries remembered this scene, so the next attempt has no retry penalty (V20 Dark Ages pdf 324)",
     "api:innerVoice": "The character's inner voice: whisper, propose a check, assign who plays it",
     "api:voices": "The inner voices you play for other characters",
     "uses:willpower": "Spend Willpower for a success or to resist; regain it",

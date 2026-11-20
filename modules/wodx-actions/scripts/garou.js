@@ -605,7 +605,7 @@ export function build(ctx) {
                 // B7086: a held Pack Trait of the pack's totem adds its dice to a Gift of its kinds (Cockroach, Owl, Unicorn)
                 const tv = totemView(actor);
                 const td = tv ? TOT.giftDice(tv.row, { holds: tv.holds, ofKind: !!fd.totemGift, banned: tv.banned }) : 0;
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus) + td), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus) + td), n(fd.diff) + lim.diff + n(rm.diff));
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
                 body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", td ? `${tv.row.name}: +${td} (Pack Trait)` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
