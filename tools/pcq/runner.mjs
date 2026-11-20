@@ -306,6 +306,12 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( r.code === 0 ) { state[lane].down = false; state[lane].why = null; }
     return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
   }
+  // The clean test world (PR 2169): lanes.mjs stops the lane, builds the world, takes its known-good copy and starts
+  // the lane on its default world again, so it runs before the start-and-deploy steps below
+  if ( job.kind === "setup-clean" ) {
+    const r = await lanesCmd(["setup-clean", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 60});
+    return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
+  }
   if ( !(await isUp(laneOf(lane))) ) {
     const s = await lanesCmd(["start", "--lane", lane], {logTo: L, minutes: 6});
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
