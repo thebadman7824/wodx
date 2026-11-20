@@ -68,7 +68,7 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
   if ( kind === "gates" ) Object.assign(raw, {gates: pos, touched: args.includes("--touched") || undefined, since: opt("since"), all: args.includes("--all") || undefined, branchTools: args.includes("--branch-tools") || undefined, reset: args.includes("--no-reset") ? false : undefined});
   if ( kind === "gate-two" ) raw.gate = pos[0];
   if ( kind === "books-find" ) Object.assign(raw, {terms: pos, book: opt("book")});
-  if ( kind === "setup-lane" && args.includes("--again") ) raw.again = true;
+  if ( (kind === "setup-lane" || kind === "setup-clean") && args.includes("--again") ) raw.again = true;
   if ( kind === "trove-find" ) Object.assign(raw, {pattern: pos[0], under: opt("under")});
   for ( const k of Object.keys(raw) ) if ( raw[k] === undefined ) delete raw[k];
   const v = validate(raw, runnerLanes);
