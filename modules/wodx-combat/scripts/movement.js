@@ -6,6 +6,9 @@
  * 3.20.0: the mount or vehicle a token is on (read from WoDX Interactables) sets the pace of the one at the reins,
  * gives the saddle and the vehicle their own stances and a rider's charge its dice; worn armor and a burden set on
  * the token's HUD slow a swimmer or take them under.
+ *
+ * B7130: on land, gear past half of what Strength lifts adds 1 to a dodge and stealth, and past all of it halves the
+ * pace; a burden set by hand wins over the weight.
  */
 import * as MV from "./movement-rules.js";
 
@@ -71,11 +74,8 @@ export function rideOf(tok) {
   } catch (e) { return null; }
 }
 /** What weighs on a swimmer: worn armor's Dexterity penalty and the burden set on the character (movement-rules swimLoad). */
-export function loadOf(actor) {
-  if ( !actor ) return MV.swimLoad();
-  const ab = abilitiesOf(actor);
-  // A shape of mist or a spirit carries nothing
-  if ( ab.phase ) return MV.swimLoad();
+/** What they have on them against what they lift: {strength, potence, gearKg, liftKg}. */
+function weightOf(actor) {
   let potence = 0;
   try { potence = Number(D.discipline?.(actor, "Potence")) || 0; } catch (e) { potence = 0; }
   const strength = D.attr(actor, "strength");
@@ -86,8 +86,21 @@ export function loadOf(actor) {
     const hr = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.haul?.rules : null;
     if ( W?.ready && hr?.liftKg ) { gearKg = W.actorKg(actor).carried; liftKg = hr.liftKg((Number(strength) || 0) + potence); }
   } catch (e) { gearKg = 0; }
-  return MV.swimLoad({armorPenalty: D.armorPenalty?.(actor) ?? 0, burden: actor.getFlag?.(D.MOD, "load") ?? actor.flags?.[D.MOD]?.load ?? 0,
-    strength, potence, gearKg, liftKg});
+  return {strength, potence, gearKg, liftKg};
+}
+const handBurden = actor => actor.getFlag?.(D.MOD, "load") ?? actor.flags?.[D.MOD]?.load ?? 0;
+export function loadOf(actor) {
+  if ( !actor ) return MV.swimLoad();
+  const ab = abilitiesOf(actor);
+  // A shape of mist or a spirit carries nothing
+  if ( ab.phase ) return MV.swimLoad();
+  return MV.swimLoad({armorPenalty: D.armorPenalty?.(actor) ?? 0, burden: handBurden(actor), ...weightOf(actor)});
+}
+/** B7130: what weighs on them on dry land (movement-rules landLoad). A mist or a spirit carries nothing. */
+export function landLoadOf(actor) {
+  if ( !actor || abilitiesOf(actor).phase ) return MV.landLoad();
+  const {gearKg, liftKg} = weightOf(actor);
+  return MV.landLoad({burden: handBurden(actor), gearKg, liftKg});
 }
 
 /** The regions holding a point on a scene. */
@@ -306,6 +319,9 @@ export function moveCheck(doc, changes, base) {
   const m = inWater ? "swim" : mode;
   const load = inWater ? loadOf(actor) : null;
   let limit = m === "walk" ? null : MV.speedFor(m, base, ab, {athletics, jumpYards: Number(jump?.yards) || 0, load});
+  // B7130: on land, past what they can lift, half speed (flight is left alone: a flyer's power carries them)
+  const land = !inWater && mode !== "fly" ? landLoadOf(actor) : null;
+  if ( land?.factor < 1 ) limit = Math.max(1, Math.floor((limit === null ? Number(base.run) || 0 : limit) * land.factor));
   // B5072, B5081: half pace carrying or pushing, a quarter dragging or straining at something heavy
   const hb = haulOf(doc);
   if ( hb && !hb.carried && Number(hb.factor) > 0 ) {
@@ -313,7 +329,7 @@ export function moveCheck(doc, changes, base) {
     return {mode: m === "walk" ? "haul" : m, limit, cost: w?.kind === "shallow" && mode !== "fly" ? MV.SHALLOW_COST : 1, refuse: "", jumped: mode === "jump", note: hb.note};
   }
   return {mode: m, limit, cost: w?.kind === "shallow" && mode !== "fly" ? MV.SHALLOW_COST : 1, refuse: "", jumped: mode === "jump",
-    note: load?.steps ? (load.sinks ? "too much weight to swim" : "weighed down") : ""};
+    note: load?.steps ? (load.sinks ? "too much weight to swim" : "weighed down") : land?.factor < 1 ? "weighed down: half speed" : ""};
 }
 
 /* ------------------------------------------------------------------ */
@@ -404,13 +420,26 @@ export function defenseMods(target) {
   // B5074: a burden makes a dodge harder; letting go of it is free
   const hb = haulOfActor(target);
   if ( hb && !hb.carried && hb.dodge ) notes.push(`${target?.name ?? "Target"}: ${hb.note}, +${hb.dodge} on a dodge (house rule)`);
-  return {diff: r.diff + (hb && !hb.carried ? Number(hb.dodge) || 0 : 0), notes, stance: st};
+  // B7130: gear past half what they lift, on land
+  const land = onLand(target, st) ? landLoadOf(target) : null;
+  if ( land?.diff ) notes.push(`${target?.name ?? "Target"}: ${land.note} (house rule)`);
+  return {diff: r.diff + (hb && !hb.carried ? Number(hb.dodge) || 0 : 0) + (land?.diff || 0), notes, stance: st};
 }
 /** A plain roll's changes: kinds from the roll's pool (stealth, perception, dexterity). */
 export function rollMods(actor, kinds = []) {
   if ( !on() ) return {diff: 0, parts: []};
   const st = stanceOfActor(actor);
-  return MV.rollStance(st, kinds, {load: ["swimming", "under"].includes(st) ? loadOf(actor) : null});
+  const r = MV.rollStance(st, kinds, {load: ["swimming", "under"].includes(st) ? loadOf(actor) : null});
+  // B7130: gear past half what they lift makes a dodge or a quiet step harder on land
+  const land = [...kinds].some(k => ["dodge", "stealth"].includes(k)) && onLand(actor, st) ? landLoadOf(actor) : null;
+  if ( land?.diff ) { r.diff += land.diff; r.parts.push(`Weighed down +${land.diff} (${land.from === "hand" ? "the burden set on them" : "gear past half their lift"})`); }
+  return r;
+}
+/** On their own feet on land: not in the water, not in the air, not carried by a mount or vehicle. */
+const LAND_STANCES = new Set(["standing", "prone", "wading", "climbing", "jumped"]);
+function onLand(actor, st) {
+  if ( !LAND_STANCES.has(st) ) return false;
+  try { return !rideOf(tokenOf(actor)); } catch (e) { return true; }
 }
 /** Noticing this actor: the observer's difficulty change. */
 export const spotMod = actor => (on() ? MV.spotStance(stanceOfActor(actor)) : 0);
@@ -432,14 +461,18 @@ export async function setBurden(actor, n) {
   if ( b.id ) await actor.setFlag(D.MOD, "load", b.id); else await actor.unsetFlag(D.MOD, "load");
   return b;
 }
-/** The window: what the character carries, and what it does in the water. */
+/** The window: what the character carries, and what it does on land and in the water. */
 export async function burdenDialog(actor) {
   if ( !actor?.isOwner || !D.ask ) return null;
   const cur = MV.burdenOf(actor.getFlag(D.MOD, "load")).id;
   const pen = D.armorPenalty?.(actor) ?? 0;
-  const rows = MV.BURDENS.map(b => `<label class="vtc-burden"><input type="radio" name="burden" value="${b.id}"${b.id === cur ? " checked" : ""}> <b>${D.esc(b.label)}</b> <span class="hint">${D.esc(b.hint)}</span></label>`).join("");
+  const land = landLoadOf(actor), {gearKg, liftKg} = weightOf(actor);
+  const kg = n => `${Math.round((Number(n) || 0) * 10) / 10} kg`;
+  const now = liftKg ? `Their gear weighs ${kg(gearKg)} against a lift of ${kg(liftKg)}${land.note ? `: ${D.esc(land.note)}` : ": nothing slows them"}.` : "Their gear has no weight to read (WoDX Library and WoDX Interactables give it).";
+  const rows = MV.BURDENS.map(b => `<label class="vtc-burden"><input type="radio" name="burden" value="${b.id}"${b.id === cur ? " checked" : ""}> <b>${D.esc(b.id ? b.label : "By what they carry")}</b> <span class="hint">${D.esc(b.id ? b.hint : "the gear's own weight decides")}</span></label>`).join("");
   const r = await D.ask({title: `What ${actor.name} carries`, width: 440,
-    content: `<form><p>Weight matters in deep water. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of rolls made in the water; four steps and there is no swimming at all. Worn armor counts by its Dexterity penalty (now ${pen}); Strength and Potence of 4 or more take a step off. A house rule.</p>
+    content: `<form><p>On land, gear past half of what Strength lifts adds 1 to the difficulty of a dodge and of stealth, and past all of it the character moves at half speed. ${now} A burden picked here wins over the weight.</p>
+      <p>In deep water each step takes a quarter off the swimming speed and adds 1 to the difficulty of rolls made in the water; four steps and there is no swimming at all. Worn armor counts by its Dexterity penalty (now ${pen}); Strength and Potence of 4 or more take a step off. House rules.</p>
       <div class="vtc-burdens" data-fixed>${rows}</div></form>`,
     buttons: [{id: "ok", label: "Set", icon: "fa-solid fa-check", default: true}, {id: "cancel", label: "Cancel"}]});
   if ( r?.id !== "ok" ) return null;
@@ -454,7 +487,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   const cur = MV.burdenOf(actor.getFlag(D.MOD, "load"));
   const btn = document.createElement("div");
   btn.className = `control-icon vtc-hud vtc-burden-btn${cur.id ? " active" : ""}`;
-  btn.title = `What they carry: ${cur.label.toLowerCase()} (weight slows a swimmer)`;
+  btn.title = `What they carry: ${cur.id ? cur.label.toLowerCase() : "by the gear's weight"} (weight slows them on land and in the water)`;
   btn.setAttribute("role", "button");
   btn.setAttribute("aria-label", "What they carry");
   btn.innerHTML = '<i class="fa-solid fa-weight-hanging" aria-hidden="true"></i>';
@@ -466,10 +499,10 @@ export function setupMovement(deps) {
   D = deps;
   game.settings.register(D.MOD, "movementModes", {
     name: "Flying, swimming, climbing and other ways of moving",
-    hint: "Fly, Through walls and Into the ground only for those with a power or form that grants it; speeds for each way of moving in a fight, the mount's own pace for whoever holds the reins; deep and shallow water regions (name a region \"WoDX: Deep water\", a river or a lake), with breath and drowning in a fight; a fall when flight ends in the air; Earth Meld hides the token; height counts in range and reach; worn armor and a burden slow a swimmer. Most speeds are house rules.",
+    hint: "Fly, Through walls and Into the ground only for those with a power or form that grants it; speeds for each way of moving in a fight, the mount's own pace for whoever holds the reins; deep and shallow water regions (name a region \"WoDX: Deep water\", a river or a lake), with breath and drowning in a fight; a fall when flight ends in the air; Earth Meld hides the token; height counts in range and reach; worn armor and a burden slow a swimmer, and gear past half of what Strength lifts slows a dodge and stealth on land (past all of it, half speed). Most speeds are house rules.",
     scope: "world", config: true, type: Boolean, default: true
   });
   try { configureActions(); } catch (e) { console.warn("WoDX | movement actions", e); }
   return {abilitiesOf, tokensOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod,
-    rideOf, loadOf, chargeOf, rideCapOf, setBurden, burdenDialog, tokenFor, reachBetween, movedYards, on, rules: MV};
+    rideOf, loadOf, chargeOf, rideCapOf, setBurden, burdenDialog, tokenFor, reachBetween, movedYards, on, landLoadOf, rules: MV};
 }

@@ -17,11 +17,18 @@
  *               It needs a branch or commit ref and named gates, runs on one lane with no recheck, and never sets the
  *               wodx/gates status. Queue it at prio 1 so it takes the next free lane: a waiting job also stops
  *               running gates jobs from taking more lanes.
+ *               "world": "clean" runs the gates in the lane's clean test world (PR 2169; the lane needs a setup-clean
+ *               job first): the lane is reset to that world, the gates get --world clean, and the lane goes back to its
+ *               default world after. "cleanSet": true adds the clean smoke set (run-gate --clean-set; needs world
+ *               clean, and needs no named gates). Such a job runs on one lane, with no shared queue and no recheck.
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
  *   deploy      deploy the ref to "lanes" lanes (or "lane": N), nothing else
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
  *   setup-lane  set up "lane" N from lane 1's Config and the known-good world (only lanes listed in lanes.json);
  *               "again": true sets up a lane that has a world already, taking lane 1's installed modules afresh
+ *   setup-clean make the clean test world (no chronicle in play) on "lane" N: lanes.mjs setup-clean, which takes its
+ *               known-good copy and leaves the lane on its default world; "again": true makes it afresh. The lane
+ *               needs its default world set up first (setup-lane). Gates then use it with --world clean.
  *   books-find  tools/books/books.mjs find over the PC's book texts: "terms" (up to 40), optional "book";
  *               the result lists book and page only, never the text (the repository is public)
  *   trove-find  names of files under F:\TheTrove whose name holds "pattern" (letters, digits, spaces, - _ . ( ) &),
@@ -31,8 +38,8 @@
  */
 export const OWNER = "thebadman7824", REPO_NAME = "wodx";
 export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", failed: "pc-failed", alert: "pc-alert", status: "pc-status", cancel: "pc-cancel"};
-export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
-export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane"]);
+export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "setup-clean", "books-find", "trove-find"];
+export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane", "setup-clean"]);
 const NAME = /^[\w-]{1,64}$/;
 const REF = /^(main|(?:claude|handoff)\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/; // B7002: handoff/ branches too, so HOLD pull requests can be gated
 const TERM = /^[\p{L}\p{N} '’.,()&-]{1,80}$/u;
@@ -74,7 +81,9 @@ export function validate(raw, laneIds = []) {
     case "gates": {
       const list = j.gates ?? [];
       if ( !Array.isArray(list) || list.some(g => typeof g !== "string" || !NAME.test(g)) ) return err("gates must be a list of gate names.");
-      if ( !list.length && !j.touched && !j.all ) return err("Give gates, or touched: true, or all: true.");
+      if ( j.world !== undefined && j.world !== "clean" ) return err('world must be "clean" (the lane\'s clean test world).');
+      if ( j.cleanSet !== undefined && (j.cleanSet !== true || j.world !== "clean") ) return err('cleanSet must be true, with world "clean".');
+      if ( !list.length && !j.touched && !j.all && !j.cleanSet ) return err("Give gates, or touched: true, or all: true.");
       if ( j.reset !== undefined && typeof j.reset !== "boolean" ) return err("reset must be true or false.");
       // B7442: since: a touched run over only what changed after an earlier gated commit of the same branch
       if ( j.since !== undefined && (!j.touched || typeof j.since !== "string" || !/^[0-9a-f]{40}$/.test(j.since)) ) return err("since must be a full commit sha, on a touched job.");
@@ -85,6 +94,8 @@ export function validate(raw, laneIds = []) {
       j.lanes = Math.min(j.lanes, Math.max(1, lanes.length));
       // a named list is never split over more lanes than it has gates (an empty share used to read as a failure)
       if ( list.length && !j.touched && !j.all ) j.lanes = Math.min(j.lanes, j.gates.length);
+      // a clean-world run keeps to one lane: the lane is switched to that world and back
+      if ( j.world ) { j.lanes = 1; j.recheck = false; }
       // B7220: a lane test of a branch's gate tools, queued like any job so the runner sees it waiting
       if ( j.branchTools !== undefined ) {
         if ( j.branchTools !== true ) return err("branchTools must be true.");
@@ -99,7 +110,7 @@ export function validate(raw, laneIds = []) {
       j.lanes = 1; break;
     case "deploy":
       j.lanes = j.lane !== undefined ? 1 : Math.min(Math.max(1, Number.isInteger(j.lanes) ? j.lanes : 1), Math.max(1, lanes.length)); break;
-    case "reset": case "setup-lane":
+    case "reset": case "setup-lane": case "setup-clean":
       if ( j.lane === undefined ) return err(`${j.kind} needs lane.`);
       j.lanes = 1; break;
     case "books-find": {
@@ -151,6 +162,8 @@ export function gateArgs(job, lane, i, n, report) {
   // B6526: a shared queue: every lane takes the next gate from the same list until it is empty
   if ( job.queue ) return ["--queue", job.queue, "--lane", String(lane), "--wait", "10", "--report", report, ...(job.maxMinutes ? ["--max-minutes", String(job.maxMinutes)] : []), ...(job.diag ? ["--diag"] : [])];
   const a = [...job.gates];
+  if ( job.world ) a.push(...worldArgs(job));
+  if ( job.cleanSet ) a.push("--clean-set");
   if ( job.touched ) a.push("--touched", ...(job.since ? ["--base", job.since] : []));
   if ( job.all ) a.push("--all");
   a.push("--lane", String(lane));
@@ -250,7 +263,9 @@ export function recheckStep(alone = [], main = null, {notOnMain = false, once = 
  * B7190: whether a lane job starts from the known-good world. Gates jobs do unless "reset": false: a lane left by an
  * earlier job failed whole runs from its second gate (job 1910), while the recheck, which resets, passed them all.
  */
-export const resetsFirst = job => job?.kind === "gate-two" || (job?.kind === "gates" && job.reset !== false);
+/** The lanes.mjs and run-gate.mjs arguments for a job's world ("world": "clean"); none for the default world. */
+export const worldArgs = job => job?.world ? ["--world", job.world] : [];
+export const resetsFirst = job => job?.kind === "gate-two" || (job?.kind === "gates" && (job.reset !== false || !!job.world));
 
 /** Exit codes of run-gate.mjs that mean the lane, not the code, went wrong: worth one retry after a reset. */
 export const INFRA_CODES = new Set([3, 4, 5]);

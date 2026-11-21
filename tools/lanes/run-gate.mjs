@@ -309,7 +309,7 @@ try {
         const moved = game.time.worldTime - t0;
         if ( moved ) await game.time.advance(-moved);
         let settingsBack = 0, docsGone = 0;
-        try {
+        const settingsPass = async () => {
           for ( const s of store() ) {
             if ( skip(s.key) ) continue;
             const was = before.get(s.key), now = s._source?.value ?? s.value;
@@ -318,7 +318,8 @@ try {
           }
           const have = new Set(store().map(s => s.key));
           for ( const [key, value] of before ) if ( !have.has(key) && !skip(key) ) { await getDocumentClass("Setting").create({key, value}); settingsBack++; }
-        } catch (e) { error ??= `putting settings back: ${e?.message ?? e}`; }
+        };
+        try { await settingsPass(); } catch (e) { error ??= `putting settings back: ${e?.message ?? e}`; }
         if ( cleanDocs ) for ( const c of COLS.filter(c => ids[c]) ) {
           const extra = [...game[c]].filter(d => !ids[c].has(d.id)).map(d => d.id);
           if ( !extra.length ) continue;
@@ -332,6 +333,11 @@ try {
           if ( view && canvas?.scene?.id !== viewedId ) await view.view();
         } catch (e) { error ??= `putting the scene back: ${e?.message ?? e}`; }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
+        // B7580: putting the clock, the scene and the pause back sets off hooks that can write a setting after the pass
+        // above (gatebattle left wodx-chronicle.nightWork added, so the next run on that lane stopped on drift). After
+        // a short settle the settings are put back once more.
+        await new Promise(r => setTimeout(r, 3000));
+        try { await settingsPass(); } catch (e) { error ??= `putting late settings back: ${e?.message ?? e}`; }
         const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
         return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut, page: page0};
       }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000, callerSrc: gateCaller.toString()});

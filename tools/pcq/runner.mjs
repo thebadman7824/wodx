@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -212,7 +212,7 @@ async function finish(issue, ok, text) {
 // ---- stale pull request jobs (B7205) ----
 // A gates job for an old commit of a pull request is not run, and one that is running stops after its current gates.
 const pullCache = new Map();
-async function staleJob(issue) {
+async function staleJob(issue, maxAgeMs = 2 * 60000) {
   const mark = prMark(issue.title);
   if ( !mark ) return null;
   const fetchPull = async () => {
@@ -220,7 +220,7 @@ async function staleJob(issue) {
     catch (e) { return null; } // unknown: never drop on a lookup failure
   };
   let c = pullCache.get(mark.pr);
-  if ( !c || Date.now() - c.at > 2 * 60000 ) c = await fetchPull();
+  if ( !c || Date.now() - c.at > maxAgeMs ) c = await fetchPull();
   if ( !c || !staleWhy(mark, c.pull) ) return null;
   // B7205 fix: the cache can hold the head from before the push that queued this job (jobs 1967, 1969 and 1970 were
   // dropped as "moved on" to their older commit), so a job is only dropped on a pull request read just now
@@ -297,7 +297,7 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
     if ( retried || stopped() ) return {code: null, text: `${before ? `${before.trim()}\n` : ""}${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
-    await lanesCmd(["reset", "--lane", lane], {logTo: L});
+    await lanesCmd(["reset", "--lane", lane, ...worldArgs(job)], {logTo: L});
     // only on a shared queue: a shard run again runs all its gates again
     return laneWork(job, lane, i, n, tag, true, carry && job.queue ? out : "");
   };
@@ -306,13 +306,21 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( r.code === 0 ) { state[lane].down = false; state[lane].why = null; }
     return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
   }
+  // The clean test world (PR 2169): lanes.mjs stops the lane, builds the world, takes its known-good copy and starts
+  // the lane on its default world again, so it runs before the start-and-deploy steps below
+  if ( job.kind === "setup-clean" ) {
+    const r = await lanesCmd(["setup-clean", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 60});
+    return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
+  }
   if ( !(await isUp(laneOf(lane))) ) {
-    const s = await lanesCmd(["start", "--lane", lane], {logTo: L, minutes: 6});
+    const s = await lanesCmd(["start", "--lane", lane, ...worldArgs(job)], {logTo: L, minutes: 6});
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
-  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
+  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...worldArgs(job), ...repo], {logTo: L});
+  // a clean-world run deploys into that world: a deploy restarts the lane, on its default world unless told
+  // otherwise (#2214 drifted that way: the gates found rothenstein-wodx running)
+  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...worldArgs(job), ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
   if ( job.kind === "gate-two" ) {
@@ -345,6 +353,9 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
   // B7447: the gates this lane finished before a fault and a reset keep their lines
   const {report: rep, code: laneCode} = withEarlier(before, own, r.code, lane);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
+  // a clean-world run puts the lane back on its default world (after the failing steps are read), so the next job
+  // finds it as usual
+  if ( job.world ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   // B7002: the commit this lane ran, for the gate status the merge rules read
   if ( laneCode !== 1 || job.recheck === false || stopped() ) return {code: laneCode, text, sha: wt.sha};
   return {code: laneCode, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
@@ -417,7 +428,7 @@ const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now()
  */
 const growing = new Map();
 async function makeQueue(job, lane, tag) {
-  if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
+  if ( job.kind !== "gates" || job.branchTools || job.world ) return null; // B7220: a branch-tools test runs on its one lane; so does a clean-world run
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
   const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched", ...(job.since ? ["--base", job.since] : [])] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
@@ -813,6 +824,9 @@ for ( ;; ) {
         const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(l => laneFree(l) && !laneRefuses(laneOf(l), q.job)).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
+        // B7590: the pull request is read again just before a lane job starts (the queue pass above may read a
+        // two-minute-old copy), so a job whose pull request merged a moment ago is not started (#2111, 18 Nov)
+        { const why = await staleJob(q.issue, 0); if ( why ) { log(`#${q.number}: ${why}; not run`); await drop(q.issue, `Not run: ${why}, so this commit's result would not be used.`); continue; } }
         for ( const l of want ) state[l].busy = q.number;
         if ( !(await claim(q.number)) ) { for ( const l of want ) state[l].busy = null; continue; }
         start(q.issue, q.job, want);
