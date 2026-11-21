@@ -313,12 +313,14 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
   }
   if ( !(await isUp(laneOf(lane))) ) {
-    const s = await lanesCmd(["start", "--lane", lane], {logTo: L, minutes: 6});
+    const s = await lanesCmd(["start", "--lane", lane, ...worldArgs(job)], {logTo: L, minutes: 6});
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
   if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...worldArgs(job), ...repo], {logTo: L});
-  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
+  // a clean-world run deploys into that world: a deploy restarts the lane, on its default world unless told
+  // otherwise (#2214 drifted that way: the gates found rothenstein-wodx running)
+  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...worldArgs(job), ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
   if ( job.kind === "gate-two" ) {
