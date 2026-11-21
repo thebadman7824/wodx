@@ -78,5 +78,19 @@ test("B5934: plague and famine at home move the markets; far news, old news and 
   assert.equal(N.worldNewsFor(ev({tags: ["war"]}), {homePart: "MO", year: 1347}), null, "a European war is not a Moravian one");
   assert.equal(N.worldNewsFor(ev({region: "MO"}), {homePart: "EU", year: 1347}), null);
   assert.equal(N.worldNewsFor({id: "black-death", region: "EU", tags: ["plague"]}, {homePart: "EU"}), null, "book events keep their own table");
+  assert.equal(N.worldNewsFor(ev({tags: ["siege"], region: "MO"}), {homePart: "MO", year: 1347}), "war", "B7261: a siege in Moravia is war at home");
+  assert.equal(N.worldNewsFor(ev({tags: ["siege"]}), {homePart: "MO", year: 1347}), null, "a siege elsewhere in Europe is not");
   assert.ok(N.tooSoon(0, 30 * 86400) && !N.tooSoon(0, 100 * 86400) && !N.tooSoon(100, 0) && !N.tooSoon(-Infinity, 0));
+});
+
+test("B7260: the world timeline files Moravia's own events under Moravia, so a Moravian home hears its wars", async () => {
+  const H = (await import("../../modules/wodx-chronicle/data/world-history.mjs")).default;
+  const byId = Object.fromEntries(H.events.map(e => [e.id, e]));
+  for ( const id of ["wh-1241-the-mongols-in-moravia", "wh-1424-the-hussites-in-moravia", "wh-1642-the-swedes-take-olomouc", "wh-1645-brno-holds", "wh-1742-frederick-besieges-brno"] ) {
+    assert.equal(byId[id]?.region, "MO", id);
+    assert.equal(N.worldNewsFor(byId[id], {homePart: "MO", year: byId[id].year}), "war", id);
+  }
+  const PLACES = /^(Moravia|Moravian Karst|Olomouc|Brno|Znojmo|Jihlava|Opava|Ostrava|Austerlitz)$/;
+  const stray = H.events.filter(e => PLACES.test(e.place ?? "") && e.region !== "MO").map(e => e.id);
+  assert.deepEqual(stray, [], "every event placed in Moravia is Moravia's news");
 });

@@ -132,7 +132,7 @@ test("the HTML hides nothing from the Storyteller and escapes text", () => {
 
 test("the window is wired: setting, approval types, sheet button, Clock, setup wizard, session hook", () => {
   const fn = readFileSync(new URL("../../modules/wodx-creation/scripts/first-night.mjs", import.meta.url), "utf8");
-  for ( const s of ["wodx-first-night-step", "wodx-first-night-hook", "\"firstNight\"", "getHeaderControlsActorSheetV2", "wodxSessionEnded", "rothenstein-live"] ) assert.ok(fn.includes(s), s);
+  for ( const s of ["wodx-first-night-step", "wodx-first-night-hook", "\"firstNight\"", "getHeaderControlsActorSheetV2", "wodxSessionEnded", "isLiveWorld(game.world)"] ) assert.ok(fn.includes(s), s);
   const main = readFileSync(new URL("../../modules/wodx-creation/scripts/main.mjs", import.meta.url), "utf8");
   assert.match(main, /firstNight: actor =>/);
   assert.match(readFileSync(new URL("../../modules/wodx-chronicle/scripts/clock-app.mjs", import.meta.url), "utf8"), /data-action="firstNight"/);

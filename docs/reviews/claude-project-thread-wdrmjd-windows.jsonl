@@ -1,0 +1,8 @@
+{"file":"docs/PRIORITIES.md","verdict":"working","how":"read each changed paragraph against lane-reset.cmd and nightly-gates.mjs header (lane 8, B7020)","hash":"eb21e95178a5","at":"2026-11-18T18:52Z"}
+{"file":"docs/WORKFLOW.md","verdict":"working","how":"read each changed paragraph against lane-reset.cmd and nightly-gates.mjs header (lane 8, B7020)","hash":"d341988b9d2f","at":"2026-11-18T18:52Z"}
+{"file":"tools/lanes/README.md","verdict":"working","how":"read each changed paragraph against lane-reset.cmd and nightly-gates.mjs header (lane 8, B7020)","hash":"abca2bc2b20d","at":"2026-11-18T18:52Z"}
+{"file":"registry/priorities.json","verdict":"working","how":"prio.mjs check passes; window row tested by prio.test.mjs at 00:15Z and 03:01Z","hash":"befdf94b41cd","at":"2026-11-18T18:52Z"}
+{"file":"tools/lanes/lane-reset.cmd","verdict":"working","how":"read in full; the reset loop and start-runner are unchanged, only the nightly.mjs line and its comment go; lanes.test.mjs checks the line is gone","hash":"55baab3e7d24","at":"2026-11-18T18:52Z"}
+{"file":"tools/harness/lanes.test.mjs","verdict":"working","how":"lanes and prio tests 44 pass; both new checks fail against the old files","hash":"f858ec64a4fa","at":"2026-11-18T18:52Z"}
+{"file":"tools/harness/prio.test.mjs","verdict":"working","how":"lanes and prio tests 44 pass; both new checks fail against the old files","hash":"72770002d88e","at":"2026-11-18T18:52Z"}
+{"file":"docs/WORKFLOW.md","verdict":"working","how":"carried over by the merge train after the merge into the batch: the branch's own change to this file is the same; earlier check: read each changed paragraph against lane-reset.cmd and nightly-gates.mjs header (lane 8, B7020)","hash":"357c8a2e5db6","at":"2026-11-18T21:52Z"}

@@ -15,6 +15,7 @@
  *   9. clean up: scenes, actors, messages, our queue entries
  * Result: Data/wodx-gate/gatecorruption-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const STEPS = 9;
 const M = "wodx-otherworlds";
@@ -27,7 +28,11 @@ async function save(R) {
   return R.summary;
 }
 
-export async function run() {
+// B7212: at Balanced a Gauntlet drift is approved on sight (automation-rules QUEUE "wodx-otherworlds.drift": "auto"),
+// so step 4 found no drift waiting (job 1926: "4. applied {}"). The gate starts from Hands on (tools/gate/kit.mjs).
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }

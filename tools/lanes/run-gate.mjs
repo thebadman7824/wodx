@@ -1,7 +1,8 @@
 /**
  * Runs gates on whichever testbed lane is free, after a drift check.
  *   node tools/lanes/run-gate.mjs <gate> [<gate> ...] [--lane 2] [--wait 30] [--repo <checkout>] [--channel msedge]
- *   node tools/lanes/run-gate.mjs --touched [--base origin/main]   only the gates the checkout's changes need (B3083)
+ *   node tools/lanes/run-gate.mjs --touched [--base origin/main] [--wide]   only the gates the checkout's changes need (B3083;
+ *                                                                            tier 1 since B7444, --wide the older wider list)
  *   node tools/lanes/run-gate.mjs --all [--shard 1/2]              every gate in the map (the nightly full run), or
  *                                                                 one share of them so two lanes split the list
  *   --report <file>       also write each gate's line and the exit code to this file
@@ -16,6 +17,10 @@
  *                         run as a lane fault (exit 5) with the gate given back, so the PC runner resets the lane
  *   --list                print the gates the run would take, as "GATES [json]", and stop (B6526)
  *   --queue <file>        take gates one at a time from a JSON list shared with runs on other lanes (B6526)
+ *   --world clean         run in the lane's clean world (wodx-clean, lanes.json "worlds"), checked against its own clean
+ *                         fingerprint; the lane must be running it (lanes.mjs reset --lane N --world clean)
+ *   --clean-set           add the clean smoke set (gate-map-extra.json "clean": gatecleanworld and the shared gates that
+ *                         must pass with no chronicle in play); give it with --world clean
  * No run can hang a lane (B3089): a gate past its limit fails, its browser is closed and a new one signed in for the
  * next gate; past the whole run's limit the runner closes its browser, frees the lane and exits with 5. The lane lock
  * carries a deadline that moves on before each gate, so another run takes over a lane whose run has hung past it,
@@ -41,10 +46,10 @@
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
-  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
+  diffCode, diffRunning, cleanPath, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
   flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
-import {gateMap, touched, gatesFor, changedPaths, loadExtra} from "./gate-map.mjs";
+import {gateMap, touched, gatesFor, tier1, changedPaths, loadExtra} from "./gate-map.mjs";
 import fs from "node:fs";
 import {fileURLToPath} from "node:url";
 import {readQueue, takeQueued} from "./gate-queue.mjs";
@@ -52,13 +57,16 @@ import {watchHang} from "./hang-watch.mjs";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle", "hang-checks", "hang-every"]);
+const valued = new Set(["world", "lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle", "hang-checks", "hang-every"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
+if ( args.includes("--clean-set") ) gates.push(...(loadExtra(gateRoot).clean ?? []));
 if ( args.includes("--touched") ) {
-  const t = touched(changedPaths(opt("base") ?? "origin/main", gateRoot), {root: gateRoot});
-  const list = gatesFor(t.modules, t.gates, gateMap(gateRoot));
+  const paths = changedPaths(opt("base") ?? "origin/main", gateRoot);
+  const t = touched(paths, {root: gateRoot});
+  // B7444: tier 1 (the changed modules' own gates, changed gates and the cross-module gates); --wide: the old list
+  const list = args.includes("--wide") ? gatesFor(t.modules, t.gates, gateMap(gateRoot)) : tier1(paths, {root: gateRoot});
   console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
   if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
   gates.push(...list);
@@ -102,9 +110,12 @@ if ( opt("lanes") && !shard ) {
   process.exit(Math.max(...codes));
 }
 const reportFile = opt("report");
+const times = [];
+// B7440: indented, so the report parsers (gate lines start at the line start) never read it as a gate
+const reportTimes = () => { if ( !times.length ) return; const t = `  TIMES ${times.join(" ")}`; console.log(t); report(t); times.length = 0; };
 const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
 report(`==== ${new Date().toISOString()} ${gates.length} gate(s)${shard ? ` shard ${shard[0]}` : ""}`);
-const cfg = loadConfig();
+const cfg = loadConfig(undefined, {world: opt("world") ?? process.env.WODX_WORLD});
 const repo = path.resolve(opt("repo") ?? REPO);
 const only = opt("lane") ? [String(opt("lane"))] : null;
 const waitMin = Number(opt("wait") ?? 0);
@@ -135,7 +146,7 @@ console.log(`Lane ${lane.id} (${laneUrl(lane)}) locked for ${gates.join(", ")}`)
 let code = 0, browser = null, page = null;
 const release = () => releaseLock(lane);
 const closeBrowser = async () => { const b = browser; browser = null; if ( b ) await within(b.close(), 20000, "closing the browser").catch(() => {}); };
-const bail = async (c, why) => { console.error(why); report(why); await closeBrowser(); release(); report(`exit ${c} on lane ${lane.id}`); process.exit(c); };
+const bail = async (c, why) => { console.error(why); report(why); reportTimes(); await closeBrowser(); release(); report(`exit ${c} on lane ${lane.id}`); process.exit(c); };
 process.on("SIGINT", () => bail(130, `Stopped by hand on lane ${lane.id}.`));
 process.on("SIGTERM", () => bail(143, `Stopped on lane ${lane.id}.`));
 // The whole run's watchdog (B3089): the run ends itself instead of holding the lane.
@@ -169,7 +180,7 @@ try {
   // World drift: the running world against its clean fingerprint.
   await signIn();
   const now = await within(settledFingerprint(page, cfg.ignoreSettings), 150000, "the world check");
-  const clean = readJson(path.join(laneDir(lane), "clean.json"));
+  const clean = readJson(cleanPath(lane, cfg));
   const world = clean ? diffWorld(clean, now, {versions: false}) : {strict: [{where: "clean fingerprint", what: "none yet: reset the lane or run lanes.mjs accept"}], warn: []};
   world.strict.push(...diffRunning(expected, now));
   const fp = {lane: lane.id, at: new Date().toISOString(), repo, code: actual, world: now};
@@ -191,6 +202,7 @@ try {
     if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
     for ( let gate, k = 0; (gate = queueFile ? takeQueued(queueFile, lane.id) : gates[k++]); ) {
       const limit = limitOf(gate);
+      const gateStart = Date.now();
       extendLock(lane, Date.now() + limit + 5 * 60000);
       if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
       if ( !page ) {
@@ -321,7 +333,7 @@ try {
           if ( view && canvas?.scene?.id !== viewedId ) await view.view();
         } catch (e) { error ??= `putting the scene back: ${e?.message ?? e}`; }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
-        // B7320: putting the clock, the scene and the pause back sets off hooks that can write a setting after the pass
+        // B7580: putting the clock, the scene and the pause back sets off hooks that can write a setting after the pass
         // above (gatebattle left wodx-chronicle.nightWork added, so the next run on that lane stopped on drift). After
         // a short settle the settings are put back once more.
         await new Promise(r => setTimeout(r, 3000));
@@ -365,6 +377,8 @@ try {
       const reloadsDuring = life.loads - loadsSeen - reloadsBefore;
       loadsSeen = life.loads;
       for ( const [k, w] of [[reloadsBefore, "before this gate"], [reloadsDuring, "during this gate"]] ) if ( k > 0 ) { const note = ` [page reloaded ${w}${k > 1 ? ` ${k} times` : ""}]`; if ( out.error ) out.error += note; else out.summary += note; }
+      // B7440: each gate's seconds (sign-in, the run and the put-back), for the TIMES line at the end of the report
+      times.push(`${gate}=${Math.round((Date.now() - gateStart) / 1000)}`);
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       const diagDump = async () => {
         if ( !DIAG ) return;
@@ -400,11 +414,14 @@ try {
   }
 } catch (e) {
   console.error(`Lane ${lane.id}: ${e.message}`);
+  // B7446: into the report too, so the job comment says why the run stopped before a gate
+  report(`Lane ${lane.id}: ${e.message}`);
   code = 1;
 } finally {
   await closeBrowser();
   release();
 }
+reportTimes();
 report(`exit ${code} on lane ${lane.id}`);
 process.exit(code);
 

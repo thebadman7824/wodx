@@ -30,6 +30,16 @@ test("validate accepts the job kinds and fills defaults", () => {
   assert.equal(validate({kind: "gates", gates: ["gatex"], lane: 4, lanes: 3}, LANES).job.lanes, 1);
   assert.ok(validate({kind: "gate-two", gate: "gatelookhand"}, LANES).job);
   assert.ok(validate({kind: "reset", lane: 3}, LANES).job);
+  assert.equal(validate({kind: "setup-clean", lane: 3}, LANES).job.lanes, 1, "setup-clean runs on its one lane");
+  assert.ok(validate({kind: "setup-clean"}, LANES).error, "setup-clean needs a lane");
+  assert.ok(validate({kind: "setup-clean", lane: 1}, LANES).error, "never on lane 1");
+  const cw = validate({kind: "gates", world: "clean", cleanSet: true, lane: 3, lanes: 4}, LANES).job;
+  assert.ok(cw, "a clean-set run needs no named gates");
+  assert.equal(cw.lanes, 1, "a clean-world run keeps to one lane");
+  assert.equal(cw.recheck, false);
+  assert.deepEqual(gateArgs(cw, 3, 0, 1, "r.txt").slice(0, 3), ["--world", "clean", "--clean-set"]);
+  assert.ok(validate({kind: "gates", gates: ["gatex"], world: "rothenstein-live"}, LANES).error, "only the clean world");
+  assert.ok(validate({kind: "gates", gates: ["gatex"], cleanSet: true}, LANES).error, "cleanSet needs world clean");
   assert.ok(validate({kind: "books-find", terms: ["Four Bears", "Mato-Tope", "Buffalo Bird Woman"]}, LANES).job);
   assert.ok(validate({kind: "trove-find", pattern: "Catlin", under: "The Ultimate Trove - Books (C-D)"}, LANES).job);
   assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "claude/project-thread-abc"}, LANES).job);
@@ -210,9 +220,21 @@ test("B7310: each failing gate is rechecked alone, and no verdict rests on one r
   assert.equal(gatePassed("gatea", "gateb: 3/3 passed"), null);
   const step = (a, m, o) => recheckStep(a, m, o);
   assert.equal(step([], []).next, "alone");
-  assert.match(step([true], []).verdict, /passes alone/);
+  assert.equal(step([true], []).next, "alone", "B7441: one pass alone is run again");
+  assert.match(step([true, true], []).verdict, /^order fault: passes alone twice/);
+  assert.match(step([true, false], null).verdict, /^flaky/);
+  // B7521: a flaky gate is run on main; failing there too, it is main's and does not hold the pull request
+  assert.equal(step([true, false], []).next, "main");
+  assert.equal(step([false, true], []).next, "main");
+  assert.match(step([true, false], [false]).verdict, /^fails on main too \(here flaky/);
+  assert.equal(step([false, true], [true]).next, "main", "one pass on main is run again");
+  assert.match(step([false, true], [true, false]).verdict, /^fails on main too/);
+  assert.match(step([true, false], [true, true]).verdict, /^flaky: .*passes alone twice on main/);
+  assert.match(step([true, false], [], {notOnMain: true}).verdict, /^flaky/);
+  assert.match(step([true, false], [null]).verdict, /^flaky.*main could not be rechecked/);
+  assert.match(step([true], [], {once: true}).verdict, /passes alone/, "old one-run reports keep their answer");
   assert.equal(step([false], []).next, "alone", "one failure alone is run again");
-  assert.match(step([false, true], []).verdict, /flaky/);
+  assert.match(step([false, true], null).verdict, /flaky/);
   assert.equal(step([false, false], []).next, "main");
   assert.match(step([false, false], [false]).verdict, /fails on main too/);
   assert.equal(step([false, false], [true]).next, "main", "one pass on main is confirmed before NEW");
@@ -304,6 +326,19 @@ test("B7002: a touched or all gates job sets the wodx/gates status on the one co
   const m = gateStatusFor(job, mainToo, false);
   assert.equal(m.body.state, "success");
   assert.match(m.body.description, /failing on main too: gateb/);
+  // B7441: an order fault (passes alone twice) is named and does not hold the pull request; a flaky gate still does
+  const rc = "\n\nRecheck (each failing gate alone on a fresh lane, 4 run(s)):\n";
+  const ord = gateStatusFor(job, [{code: 1, sha, text: `gatea: 5/5 passed\ngateb: 1/3 passed\ngatec: 0/2 passed${rc}- gateb: order fault: passes alone twice, each on a fresh lane; it fails only after other gates (leftovers or order)\n- gatec: fails on main too: not this change's fault`}], false);
+  assert.equal(ord.body.state, "success");
+  assert.match(ord.body.description, /failing on main too: gatec; order faults: gateb/);
+  const fl = gateStatusFor(job, [{code: 1, sha, text: `gatea: 5/5 passed\ngateb: 1/3 passed${rc}- gateb: flaky: passed once and failed once, alone on a fresh lane`}], false);
+  assert.equal(fl.body.state, "failure");
+  // B7521: a flaky gate that fails on main too is main's, so it does not hold the pull request either
+  const flMain = gateStatusFor(job, [{code: 1, sha, text: `gatea: 5/5 passed\ngateb: 1/3 passed${rc}- gateb: fails on main too (here flaky: passed once and failed once, alone on a fresh lane): not this change's fault`}], false);
+  assert.equal(flMain.body.state, "success");
+  assert.match(flMain.body.description, /failing on main too: gateb/);
+  const mixed = gateStatusFor(job, [{code: 1, sha, text: `gateb: 1/3 passed\ngatec: 0/1 passed${rc}- gateb: order fault: passes alone twice\n- gatec: NEW with this change: fails alone twice here, passes alone twice on main`}], false);
+  assert.equal(mixed.body.state, "failure", "a NEW failure still holds it");
   assert.ok(validate({kind: "gates", touched: true, ref: "handoff/la-names-04"}, ["2"]).job, "a handoff branch can be gated");
 });
 
@@ -322,6 +357,7 @@ test("B7190: gates jobs start on a reset lane unless they say reset: false", () 
   assert.equal(resetsFirst({kind: "gates", gates: ["gate7b"], reset: false}), false);
   assert.equal(resetsFirst({kind: "gate-two", gate: "gate7b"}), true);
   assert.equal(resetsFirst({kind: "deploy"}), false);
+  assert.equal(resetsFirst({kind: "gates", cleanSet: true, world: "clean", reset: false}), true, "a clean-world run always switches the lane to that world first");
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
 });
@@ -373,4 +409,20 @@ test("B7330: a runner stopping with runner-off still acts on pc-cancel", () => {
   assert.ok(off > 0);
   const block = src.slice(off, src.indexOf("continue;", off));
   assert.match(block, /cancelCheck\(/, "the runner-off wait runs the cancel pass");
+});
+
+test("B7447: the gates a lane finished before a fault and a reset keep their lines, and a failure among them counts", async () => {
+  const {withEarlier, failingGates} = await import("../pcq/jobs.mjs");
+  const before = "==== 2026-11-18T16:26:30Z 309 gate(s)\ngate-interact: 9/9 passed\ngate6b: 3/4 passed; failed: 2. x\n";
+  const after = "==== 2026-11-18T16:52:55Z 289 gate(s)\ngate7e: 10/10 passed\nexit 0 on lane 4\n";
+  const r = withEarlier(before, after, 0, 4);
+  assert.deepEqual([...r.report.matchAll(/^(gate[\w-]+): /gm)].map(m => m[1]), ["gate-interact", "gate6b", "gate7e"]);
+  assert.match(r.report, /lane 4 was reset after that and the run went on/);
+  assert.equal(r.code, 1, "gate6b failed before the fault, so the lane fails though the retry passed");
+  assert.deepEqual(failingGates(r.report), ["gate6b"]);
+  assert.equal(withEarlier(before.replace("3/4", "4/4").replace("; failed: 2. x", ""), after, 0, 4).code, 0);
+  assert.deepEqual(withEarlier("", after, 0, 4), {report: after, code: 0}, "no fault: unchanged");
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /faultRetry\(`run-gate on lane \$\{lane\} stopped with [^\n]*, own, true\)/);
+  assert.match(src, /return laneWork\(job, lane, i, n, tag, true, carry && job\.queue \? out : ""\)/, "only on a shared queue");
 });

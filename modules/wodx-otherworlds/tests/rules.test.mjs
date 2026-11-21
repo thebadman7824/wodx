@@ -107,7 +107,7 @@ test("suggestions and battlemaps", () => {
 });
 
 test("Rothenstein preset uses the plan's three tags only", () => {
-  const p = JSON.parse(readFileSync(new URL("../data/presets/rothenstein.json", import.meta.url)));
+  const p = JSON.parse(readFileSync(new URL("../../wodx-rothenstein/data/scene-tags.json", import.meta.url)));
   const tags = new Set(Object.values(p.scenes));
   assert.deepEqual([...tags].sort(), ["town", "village", "wilderness"]);
   assert.equal(p.scenes["Lower Town · Market Square"], "town");

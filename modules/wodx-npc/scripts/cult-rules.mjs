@@ -266,6 +266,17 @@ export function capFor(year, population = 0) {
   const y = n(year);
   return y < 1500 ? 40 : y < 1850 ? 120 : y < 1950 ? 300 : 600;
 }
+/** Place kinds a cult gathers to worship at, first choice (B7530). */
+export const WORSHIP_KINDS = ["church", "chapel", "cathedral", "abbey", "monastery", "temple", "shrine", "mosque", "synagogue"];
+/**
+ * Which tagged place on a scene a cult's night of worship goes to (B7530): a place of worship first, else the first
+ * tagged place. Scenes do not keep their regions in a fixed order, so taking the first tagged one sent the worship to a
+ * haven on some loads and the chapel on others. places: [{uuid, kind}]; returns a uuid or null.
+ */
+export function worshipPlace(places = []) {
+  const tagged = (places ?? []).filter(p => p?.uuid && p.kind);
+  return (tagged.find(p => WORSHIP_KINDS.includes(String(p.kind).toLowerCase())) ?? tagged[0])?.uuid ?? null;
+}
 export const sizeWord = m => (n(m) < 13 ? "a circle" : n(m) < 51 ? "a congregation" : n(m) < 201 ? "a movement" : "a church of its own");
 
 /* ------------------------------------------------------------------ */

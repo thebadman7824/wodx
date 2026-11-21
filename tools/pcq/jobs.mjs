@@ -17,11 +17,18 @@
  *               It needs a branch or commit ref and named gates, runs on one lane with no recheck, and never sets the
  *               wodx/gates status. Queue it at prio 1 so it takes the next free lane: a waiting job also stops
  *               running gates jobs from taking more lanes.
+ *               "world": "clean" runs the gates in the lane's clean test world (PR 2169; the lane needs a setup-clean
+ *               job first): the lane is reset to that world, the gates get --world clean, and the lane goes back to its
+ *               default world after. "cleanSet": true adds the clean smoke set (run-gate --clean-set; needs world
+ *               clean, and needs no named gates). Such a job runs on one lane, with no shared queue and no recheck.
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
  *   deploy      deploy the ref to "lanes" lanes (or "lane": N), nothing else
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
  *   setup-lane  set up "lane" N from lane 1's Config and the known-good world (only lanes listed in lanes.json);
  *               "again": true sets up a lane that has a world already, taking lane 1's installed modules afresh
+ *   setup-clean make the clean test world (no chronicle in play) on "lane" N: lanes.mjs setup-clean, which takes its
+ *               known-good copy and leaves the lane on its default world; "again": true makes it afresh. The lane
+ *               needs its default world set up first (setup-lane). Gates then use it with --world clean.
  *   books-find  tools/books/books.mjs find over the PC's book texts: "terms" (up to 40), optional "book";
  *               the result lists book and page only, never the text (the repository is public)
  *   trove-find  names of files under F:\TheTrove whose name holds "pattern" (letters, digits, spaces, - _ . ( ) &),
@@ -31,8 +38,8 @@
  */
 export const OWNER = "thebadman7824", REPO_NAME = "wodx";
 export const LABEL = {job: "pc-job", running: "pc-running", done: "pc-done", failed: "pc-failed", alert: "pc-alert", status: "pc-status", cancel: "pc-cancel"};
-export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "books-find", "trove-find"];
-export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane"]);
+export const KINDS = ["gates", "gate-two", "deploy", "reset", "setup-lane", "setup-clean", "books-find", "trove-find"];
+export const LANE_KINDS = new Set(["gates", "gate-two", "deploy", "reset", "setup-lane", "setup-clean"]);
 const NAME = /^[\w-]{1,64}$/;
 const REF = /^(main|(?:claude|handoff)\/[\w.\/-]{1,80}|[0-9a-f]{7,40})$/; // B7002: handoff/ branches too, so HOLD pull requests can be gated
 const TERM = /^[\p{L}\p{N} '’.,()&-]{1,80}$/u;
@@ -56,6 +63,8 @@ export function validate(raw, laneIds = []) {
   if ( typeof j.ref !== "string" || !REF.test(j.ref) || j.ref.includes("..") ) return err("ref must be main, a claude/... or handoff/... branch or a commit sha.");
   j.prio = j.prio ?? 3;
   if ( !Number.isInteger(j.prio) || j.prio < 1 || j.prio > 5 ) return err("prio must be a whole number from 1 to 5.");
+  // B7448: the job's class in registry/priorities.json (urgent from pr-gates.mjs, health from nightly-gates.mjs)
+  if ( j.class !== undefined && (typeof j.class !== "string" || !/^[a-z][a-z-]{1,30}$/.test(j.class)) ) return err("class must be a class name from registry/priorities.json.");
   if ( j.after !== undefined && !(Number.isInteger(j.after) && j.after > 0) ) return err("after must be an issue number.");
   if ( j.thread !== undefined && !/^cmsg_\w{10,80}$/.test(j.thread) ) return err("thread must be a cmsg_ id.");
   const lanes = laneIds.map(String);
@@ -72,8 +81,12 @@ export function validate(raw, laneIds = []) {
     case "gates": {
       const list = j.gates ?? [];
       if ( !Array.isArray(list) || list.some(g => typeof g !== "string" || !NAME.test(g)) ) return err("gates must be a list of gate names.");
-      if ( !list.length && !j.touched && !j.all ) return err("Give gates, or touched: true, or all: true.");
+      if ( j.world !== undefined && j.world !== "clean" ) return err('world must be "clean" (the lane\'s clean test world).');
+      if ( j.cleanSet !== undefined && (j.cleanSet !== true || j.world !== "clean") ) return err('cleanSet must be true, with world "clean".');
+      if ( !list.length && !j.touched && !j.all && !j.cleanSet ) return err("Give gates, or touched: true, or all: true.");
       if ( j.reset !== undefined && typeof j.reset !== "boolean" ) return err("reset must be true or false.");
+      // B7442: since: a touched run over only what changed after an earlier gated commit of the same branch
+      if ( j.since !== undefined && (!j.touched || typeof j.since !== "string" || !/^[0-9a-f]{40}$/.test(j.since)) ) return err("since must be a full commit sha, on a touched job.");
       if ( list.length > 300 ) return err("At most 300 gates in one job.");
       j.gates = [...new Set(list)];
       j.lanes = j.lane !== undefined ? 1 : (j.lanes ?? 1);
@@ -81,6 +94,8 @@ export function validate(raw, laneIds = []) {
       j.lanes = Math.min(j.lanes, Math.max(1, lanes.length));
       // a named list is never split over more lanes than it has gates (an empty share used to read as a failure)
       if ( list.length && !j.touched && !j.all ) j.lanes = Math.min(j.lanes, j.gates.length);
+      // a clean-world run keeps to one lane: the lane is switched to that world and back
+      if ( j.world ) { j.lanes = 1; j.recheck = false; }
       // B7220: a lane test of a branch's gate tools, queued like any job so the runner sees it waiting
       if ( j.branchTools !== undefined ) {
         if ( j.branchTools !== true ) return err("branchTools must be true.");
@@ -95,7 +110,7 @@ export function validate(raw, laneIds = []) {
       j.lanes = 1; break;
     case "deploy":
       j.lanes = j.lane !== undefined ? 1 : Math.min(Math.max(1, Number.isInteger(j.lanes) ? j.lanes : 1), Math.max(1, lanes.length)); break;
-    case "reset": case "setup-lane":
+    case "reset": case "setup-lane": case "setup-clean":
       if ( j.lane === undefined ) return err(`${j.kind} needs lane.`);
       j.lanes = 1; break;
     case "books-find": {
@@ -123,9 +138,20 @@ export function effectivePrio(j, now = Date.now()) {
   const hours = Number.isFinite(made) ? Math.max(0, Math.floor((now - made) / 3600000)) : 0;
   return Math.max(1, j.job.prio - hours);
 }
-export function order(jobs, openNumbers = new Set(), now = Date.now()) {
-  return jobs.filter(j => !(j.job.after && openNumbers.has(j.job.after)))
-    .sort((a, b) => effectivePrio(a, now) - effectivePrio(b, now) || a.number - b.number);
+/**
+ * The queue in the order to start. B7448: with the priorities file (prio: registry/priorities.json, parsed; sortQueue:
+ * prio.mjs's), by rank first (train front, unblock, PR gates, health ...), then the job's own number aged inside its
+ * rank, then the older issue; isFront(entry) says which jobs are the train front's. Without it, the older order: the
+ * aged number across every job.
+ */
+export function order(jobs, openNumbers = new Set(), now = Date.now(), {prio = null, sortQueue = null, isFront = () => false} = {}) {
+  const live = jobs.filter(j => !(j.job.after && openNumbers.has(j.job.after)));
+  if ( prio && sortQueue ) {
+    const made = j => Date.parse(j.issue?.created_at ?? j.created_at ?? "");
+    const wrapped = live.map(j => ({j, job: j.job, number: j.number, waitedMs: Number.isFinite(made(j)) ? Math.max(0, now - made(j)) : 0, ctx: {front: !!isFront(j)}}));
+    return sortQueue(prio, wrapped).map(w => w.j);
+  }
+  return live.sort((a, b) => effectivePrio(a, now) - effectivePrio(b, now) || a.number - b.number);
 }
 
 /**
@@ -136,7 +162,9 @@ export function gateArgs(job, lane, i, n, report) {
   // B6526: a shared queue: every lane takes the next gate from the same list until it is empty
   if ( job.queue ) return ["--queue", job.queue, "--lane", String(lane), "--wait", "10", "--report", report, ...(job.maxMinutes ? ["--max-minutes", String(job.maxMinutes)] : []), ...(job.diag ? ["--diag"] : [])];
   const a = [...job.gates];
-  if ( job.touched ) a.push("--touched");
+  if ( job.world ) a.push(...worldArgs(job));
+  if ( job.cleanSet ) a.push("--clean-set");
+  if ( job.touched ) a.push("--touched", ...(job.since ? ["--base", job.since] : []));
   if ( job.all ) a.push("--all");
   a.push("--lane", String(lane));
   if ( n > 1 ) a.push("--shard", `${i + 1}/${n}`);
@@ -167,6 +195,19 @@ export function recheckVerdicts(gates, alone, main, notOnMain = new Set()) {
 }
 
 /** B7310: whether one gate passed in a run-gate report: true, false (failed or ERROR), or null (no line: it did not run). */
+/**
+ * B7447: a lane that faulted mid-run is reset and runs once more, and its report file starts afresh; the gates it had
+ * finished are not put back on the shared queue, so their lines (and any failure among them) were lost from the job's
+ * result (PR 1880's #2076, 18 Nov: 309 gates queued, 281 reported, 28 run before a fault on lanes 4 and 3). The
+ * earlier report goes in front of the new one, and a failure in it fails the lane though the retry passed.
+ * Returns {report, code}.
+ */
+export function withEarlier(before, report, code, lane) {
+  if ( !String(before ?? "").trim() ) return {report, code};
+  const merged = `${String(before).trim()}\n(lane ${lane} was reset after that and the run went on)\n${report}`;
+  return {report: merged, code: code === 0 && failingGates(before).length ? 1 : code};
+}
+
 export function gatePassed(gate, report = "") {
   let out = null;
   for ( const m of String(report).matchAll(/^(gate[\w-]*): (?:(\d+)\/(\d+) passed|ERROR)/gm) )
@@ -179,17 +220,32 @@ export function gatePassed(gate, report = "") {
  * lane (one gate per run-gate call), so another gate's leftovers cannot decide it, and no verdict rests on one run.
  *   alone: [pass?, ...] on this commit; main: [pass?, ...] on main, or null when the job ran main. null in a list is
  *   a run the lane would not take.
- * Returns {next: "alone" | "main" | null, verdict}. A pass alone settles it (the job's failure came from other gates
- * or a bad draw). A failure alone is run once more, and a pass then means flaky. Two failures alone go to main the
- * same way, where a pass is confirmed by a second run before the gate is called NEW.
+ * Returns {next: "alone" | "main" | null, verdict}. A first run alone is always followed by a second (B7441): two
+ * passes are an order fault (the job's failure came from other gates), a pass and a fail are flaky. A failure alone is run once more, and a pass then means flaky. Two failures alone go to main the
+ * same way, where a pass is confirmed by a second run before the gate is called NEW. A flaky gate goes to main too
+ * (B7521): a failure there makes it main's fault, two passes there leave it flaky.
  * once: true keeps the old one-run answers (recheckVerdicts, for reports made before B7310).
  */
 export function recheckStep(alone = [], main = null, {notOnMain = false, once = false} = {}) {
   if ( alone.includes(null) ) return {next: null, verdict: "not rechecked: the lane would not take the rerun"};
   if ( !alone.length ) return {next: "alone"};
-  if ( alone[0] === true ) return {next: null, verdict: "passes alone: it fails only after other gates (leftovers or order), or is flaky"};
   if ( alone.length === 1 && !once ) return {next: "alone"};
-  if ( alone[1] === true ) return {next: null, verdict: "flaky: failed once and passed once, alone on a fresh lane"};
+  if ( alone[0] === true && once ) return {next: null, verdict: "passes alone: it fails only after other gates (leftovers or order), or is flaky"};
+  // B7441: a pass alone is run once more, so an order fault (two passes) is told from a flaky gate (a pass and a fail)
+  if ( alone[0] === true && alone[1] === true )
+    return {next: null, verdict: `${ORDER_FAULT}: passes alone twice, each on a fresh lane; it fails only after other gates (leftovers or order)`};
+  if ( alone[0] === true || alone[1] === true ) {
+    const flaky = `flaky: ${alone[0] ? "passed once and failed once" : "failed once and passed once"}, alone on a fresh lane`;
+    // B7521: a flaky gate goes to main as a failure alone does. Failing there too, it is main's fault and does not hold
+    // the pull request (gateduties and gatetruthnpc held one train pull request after another, 19 November 2026);
+    // passing alone twice on main, it may be this change's and still holds.
+    if ( notOnMain || main === null ) return {next: null, verdict: flaky};
+    if ( main.includes(null) ) return {next: null, verdict: `${flaky}; main could not be rechecked`};
+    if ( !main.length || (main[0] === true && main.length === 1) ) return {next: "main"};
+    if ( main[0] === false ) return {next: null, verdict: `fails on main too (here ${flaky}): not this change's fault`};
+    return main[1] ? {next: null, verdict: `${flaky}; passes alone twice on main, so it may be this change's`}
+      : {next: null, verdict: `fails on main too (here ${flaky}; on main passed once, failed once): not this change's fault`};
+  }
   // B5590: a gate this change adds cannot run on main, so its failure there says nothing: the change must fix it.
   if ( notOnMain ) return {next: null, verdict: "NEW with this change: the gate is not on main yet, so this change must fix it"};
   const twice = once ? "" : " (twice, each on a fresh lane)";
@@ -207,7 +263,9 @@ export function recheckStep(alone = [], main = null, {notOnMain = false, once = 
  * B7190: whether a lane job starts from the known-good world. Gates jobs do unless "reset": false: a lane left by an
  * earlier job failed whole runs from its second gate (job 1910), while the recheck, which resets, passed them all.
  */
-export const resetsFirst = job => job?.kind === "gate-two" || (job?.kind === "gates" && job.reset !== false);
+/** The lanes.mjs and run-gate.mjs arguments for a job's world ("world": "clean"); none for the default world. */
+export const worldArgs = job => job?.world ? ["--world", job.world] : [];
+export const resetsFirst = job => job?.kind === "gate-two" || (job?.kind === "gates" && (job.reset !== false || !!job.world));
 
 /** Exit codes of run-gate.mjs that mean the lane, not the code, went wrong: worth one retry after a reset. */
 export const INFRA_CODES = new Set([3, 4, 5]);
@@ -250,6 +308,8 @@ export const issueBody = (job, note = "") => `${note ? note + "\n\n" : ""}\`\`\`
  * fault: the status passes and names it, so the pull request is not held for a fault main already has.
  */
 export const GATE_CONTEXT = "wodx/gates";
+/** B7441: the verdict of a gate that fails only after other gates, as recheckStep writes it and gateStatusFor reads it. */
+export const ORDER_FAULT = "order fault";
 export function gateStatusFor(job, parts, ok, failing = failingGates, url = undefined) {
   if ( job?.kind !== "gates" || !(job.touched || job.all) || !parts?.length ) return null;
   if ( parts.some(p => p.code === null || p.code === undefined || !p.sha) ) return null;
@@ -261,9 +321,17 @@ export function gateStatusFor(job, parts, ok, failing = failingGates, url = unde
   const ran = new Set([...text.matchAll(/^(gate[\w-]*): (?:\d+\/\d+ passed|ERROR)/gm)].map(m => m[1])).size;
   const bad = failing(text);
   const mainToo = new Set([...text.matchAll(/^- (gate[\w-]*): fails on main too/gm)].map(m => m[1]));
+  // B7441 (the owner's choice, 18 November): a gate that passes alone twice fails only after other gates; that is a
+  // fault of the gate run, not of this change, so it is named for the gate cleanup and does not hold the pull request
+  const order = new Set([...text.matchAll(new RegExp(String.raw`^- (gate[\w-]*): ${ORDER_FAULT}:`, "gm"))].map(m => m[1]));
   let state, description;
-  if ( ok ) { state = "success"; description = `${ran} gate(s) passed (${job.all ? "all" : "touched"})`; }
-  else if ( bad.length && bad.every(g => mainToo.has(g)) ) { state = "success"; description = `passed; failing on main too: ${bad.join(" ")}`; }
+  const what = job.all ? "all" : job.since ? `touched since ${job.since.slice(0, 8)}` : "touched";
+  if ( ok ) { state = "success"; description = `${ran} gate(s) passed (${what})`; }
+  else if ( bad.length && bad.every(g => mainToo.has(g) || order.has(g)) ) {
+    state = "success";
+    const named = [bad.filter(g => mainToo.has(g)), bad.filter(g => !mainToo.has(g))];
+    description = ["passed", named[0].length ? `failing on main too: ${named[0].join(" ")}` : "", named[1].length ? `order faults: ${named[1].join(" ")}` : ""].filter(Boolean).join("; ");
+  }
   else { state = "failure"; description = `${bad.length || "some"} of ${ran} gate(s) failed${bad.length ? `: ${bad.join(" ")}` : ""}`; }
   return {sha: [...shas][0], body: {state, context: GATE_CONTEXT, description: description.slice(0, 140), ...(url ? {target_url: url} : {})}};
 }

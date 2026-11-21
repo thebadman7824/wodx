@@ -51,11 +51,18 @@ export const isSocial = (tags = []) => (tags ?? []).includes("social");
 
 /**
  * The system window's bonus dice and difficulty with the modifiers on. The difficulty stays between the system's
- * lowest (lowest, 2 by default) and 10.
+ * lowest (lowest, 2 by default) and 10; over says how far past 10 it went (B7120).
  */
 export function applyTo({bonus = 0, difficulty = 6} = {}, mods = {}, lowest = 2) {
   const want = n(difficulty) + n(mods.diff);
-  return {bonus: n(bonus) + n(mods.dice), difficulty: Math.max(lowest, Math.min(MAX_DIFF, want)), capped: want > MAX_DIFF};
+  // B7120: past 10 the dice roll at 10 and each point past it needs one more success (over, read by the system roller)
+  return {bonus: n(bonus) + n(mods.dice), difficulty: Math.max(lowest, Math.min(MAX_DIFF, want)), capped: want > MAX_DIFF, over: Math.max(0, want - MAX_DIFF)};
+}
+
+/** B7120: the card's note for a difficulty past 10, or "". */
+export function overNote(applied = {}) {
+  const k = Math.max(0, Math.round(n(applied.over)));
+  return k ? ` (rolled at 10; ${k} more success${k === 1 ? "" : "es"} needed)` : "";
 }
 
 /** The line the roll card gets, naming each part. */

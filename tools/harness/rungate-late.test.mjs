@@ -1,4 +1,4 @@
-// B7320: run-gate puts settings back a second time after a short settle, so a setting written by the hooks that putting
+// B7580: run-gate puts settings back a second time after a short settle, so a setting written by the hooks that putting
 // the clock, scene and pause back sets off (gatebattle's wodx-chronicle.nightWork) does not leave the lane drifted.
 import {test} from "node:test";
 import assert from "node:assert/strict";

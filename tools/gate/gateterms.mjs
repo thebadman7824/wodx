@@ -34,7 +34,7 @@ export async function run() {
     const T = chron()?.terms;
     await G.step("1. api.terms answers with the books' figures", async () => {
       G.ok("1. api.terms answers with the books' figures", !!T && T.TURN_SECONDS === 3 && T.DAY === 86400 && T.MONTH === 30 * 86400
-        && T.successes([10], 12).successes === 1 && T.successes([1, 3], 6).botch === true && T.toYards(30, "ft") === 10
+        && T.successes([10], 12).successes === 0 && T.successes([10, 10, 10], 12).successes === 1 && T.successes([1], 12).botch === true && T.successes([1, 3], 6).botch === true && T.toYards(30, "ft") === 10
         && typeof T.turnSeconds() === "number" && typeof T.isNightHere() === "boolean", {turn: T?.turnSeconds?.(), night: T?.isNightHere?.()});
     });
 
@@ -43,11 +43,12 @@ export async function run() {
       const list = [
         ["combat", await M("wodx-combat/scripts/rules.js"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
         ["chronicle", await M("wodx-chronicle/scripts/referee-rules.mjs"), (m, f, d) => m.successes(f, d).successes, "successes"],
-        ["npc", await M("wodx-npc/scripts/faction-rules.mjs"), (m, f, d) => m.successes(f, d).net, "net"],
+        // B7120: NPC and Otherworlds report the count after a difficulty past 10 takes its successes off
+        ["npc", await M("wodx-npc/scripts/faction-rules.mjs"), (m, f, d) => m.successes(f, d).net, "successes"],
         ["library", await M("wodx-library/scripts/arms-rules.mjs"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
-        ["otherworlds", await M("wodx-otherworlds/scripts/rules.mjs"), (m, f, d) => m.countRoll(f, d).net, "net"]
+        ["otherworlds", await M("wodx-otherworlds/scripts/rules.mjs"), (m, f, d) => m.countRoll(f, d).net, "successes"]
       ];
-      const rolls = [[[10, 1, 6], 6], [[10], 12], [[2, 2], 1], [[1, 6], 6]];
+      const rolls = [[[10, 1, 6], 6], [[10], 12], [[10, 10, 10], 12], [[2, 2], 1], [[1, 6], 6]];
       const off = [];
       for ( const [f, d] of rolls ) for ( const [k, m, fn, field] of list ) if ( fn(m, f, d) !== T.successes(f, d)[field] ) off.push(`${k} ${f}@${d}`);
       G.ok("2. every module's dice count agrees", !off.length, {off});

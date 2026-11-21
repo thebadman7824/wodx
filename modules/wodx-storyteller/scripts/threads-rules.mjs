@@ -2,7 +2,7 @@
  * Threads of Fate (B3650-B3656), the pure part: hook cards, and the weave that makes storylines from them. No Foundry
  * here, so the harness can test it. The owner's picks on the Threads of Fate Desk, 2026-11-14.
  *
- * A hook card is shaped like the authored Rothenstein session and encounter pages: an opening line to read out, a
+ * A hook card is shaped like the first chronicle's authored session and encounter pages: an opening line to read out, a
  * mood, who (a slot filled from the world), what they want, a kind of place, the surface (what mortals see), what lies
  * beneath for each line, the complication, what can be found, the question at its heart, a cost, a pressure valve, a
  * place for a fight if it comes to that, the faction it touches, the pressure steps (the story chains' step format),
@@ -31,7 +31,7 @@ export const LINE_FROM = {demon: 1999};
 /** Each story chain (WoDX Chronicle data/pod.mjs CHAINS) and the signal kinds a storyline may not repeat while it runs. */
 export const CHAIN_KINDS = {"black-death": ["plague"], "inquisition": ["hunters", "trial", "arrest"], "serpent-faith": ["cult"],
   "anarch-revolt": ["war"], "antediluvian": [], "week-nightmares": ["change"]};
-/** The ten-night spine in three parts (desk item 16), as Rothenstein and its sequels use it: night -> part. */
+/** The ten-night spine in three parts (desk item 16), as the first chronicle and its sequels use it: night -> part. */
 export const SPINE = [1, 1, 1, 2, 2, 2, 2, 3, 3, 3];
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

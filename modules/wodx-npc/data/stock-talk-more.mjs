@@ -3,7 +3,7 @@
  * trade and social-roll answers, the voices of kinds of people, small talk on feasts, weather and the season, talk
  * of the characters' own deeds, farewells, and remembering a past visit. House writing, not from any book. The
  * Storyteller's own lines always come first, and every part can be switched off.
- * Places are Moravian (Rothenstein lies in Moravia): the Morava, the Svratka, Brno, Olomouc, Prague, Vienna.
+ * Places are Moravian (the default homeland): the Morava, the Svratka, Brno, Olomouc, Prague, Vienna.
  */
 
 /** Said aside when a mortal notices something wrong about the character (kind or state). */

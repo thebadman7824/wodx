@@ -1,4 +1,5 @@
 // Book one's twist web (B4850-B4853): chains, pairs, one twist a week, chapters and the end of new twists.
+import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engines read the chronicle in play
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {join, dirname} from "node:path";

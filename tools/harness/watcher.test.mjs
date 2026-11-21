@@ -2,7 +2,7 @@
    train and the alerts into problems and notes, and only looks and reports. */
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {assess, report, parseTrain, statusStamp, LIMITS, PCS} from "../pcq/watcher.mjs";
+import {assess, report, parseTrain, statusStamp, greenAt, trainSource, LIMITS, PCS, TRAIN_LABEL} from "../pcq/watcher.mjs";
 import {comfyFrom, ocrLogState} from "../pcq/status-push.mjs";
 
 const NOW = Date.parse("2026-11-18T03:00:00Z");
@@ -105,7 +105,10 @@ test("the report says plainly that OCR and ComfyUI cannot be seen when no PC sen
 test("renders: work in ComfyUI with nothing finished for over the limit is a problem; idle or busy-and-moving is a note", () => {
   const withComfy = comfy => healthy({pcs: {...healthy().pcs, main: pc("main", 2, {comfy})}});
   assert.ok(assess(withComfy({up: true, running: 1, pending: 3, lastDoneMin: LIMITS.renderStallMin + 5})).problems.some(p => p.key === "main:render"));
-  for ( const c of [{up: true, running: 1, pending: 0, lastDoneMin: 4}, {up: true, running: 0, pending: 0, lastDoneMin: 600}, {up: false, running: 0, pending: 0, lastDoneMin: null}] ) {
+  const down = {up: false, running: 0, pending: 0, lastDoneMin: null};
+  const held = healthy({pcs: {...healthy().pcs, main: pc("main", 2, {comfy: down, gpu: {tempC: 60, vramPct: 20, warning: "ok", loadPct: 30, jobHeld: true}})}});
+  assert.ok(assess(held).problems.some(p => p.key === "main:comfy"), "ComfyUI down while a render holds the guard");
+  for ( const c of [{up: true, running: 1, pending: 0, lastDoneMin: 4}, {up: true, running: 0, pending: 0, lastDoneMin: 600}, down] ) {
     const a = assess(withComfy(c));
     assert.equal(a.problems.length, 0, JSON.stringify(c)); assert.ok(a.notes.some(n => /Main PC: ComfyUI/.test(n)));
   }
@@ -148,4 +151,63 @@ test("parsers: the train line and the status stamp", () => {
   assert.deepEqual(parseTrain("x\nMerge train: front #12, merge (green); line #12, #13\n"), {front: 12, line: [12, 13], why: "merge (green)"});
   assert.equal(parseTrain("no train here"), null);
   assert.equal(statusStamp("Updated 2026-11-18T01:52Z by the PC runner"), "2026-11-18T01:52:00Z");
+});
+
+test("B7421: a green pull request nobody will merge raises the alert at once; one waiting behind the train front is a note", () => {
+  const ms = minAgo => NOW - minAgo * 60e3;
+  const prs = [
+    {number: 2055, title: "Recheck stopped fix", draft: true, labels: [], greenSince: ms(20)},       // the 18 November wait
+    {number: 2035, title: "gatecorruption", draft: true, labels: [], greenSince: ms(10)},           // not 15 minutes yet
+    {number: 1880, title: "Shared dice", draft: false, labels: [TRAIN_LABEL], greenSince: ms(30)},  // the train front
+    {number: 1988, title: "Waiting", draft: false, labels: [TRAIN_LABEL], greenSince: ms(90)},      // behind the front
+    {number: 1855, title: "HOLD: names", draft: true, labels: [], greenSince: ms(90)},              // held on purpose
+    {number: 1999, title: "Red", draft: false, labels: [], greenSince: null}];
+  const a = assess(healthy({prs}), {train: {front: 1880, since: ms(40)}});
+  assert.deepEqual(a.problems.map(p => p.key).sort(), ["pr:1880:green", "pr:2055:green"]);
+  assert.deepEqual(a.confirmed.map(p => p.key).sort(), ["pr:1880:green", "pr:2055:green"], "no second cycle needed: the age is already measured");
+  assert.match(a.problems.find(p => p.key === "pr:2055:green").text, /#2055 \(draft\).*20 min.*not in the merge train/);
+  assert.match(a.problems.find(p => p.key === "pr:1880:green").text, /front #1880.*has not merged it/);
+  assert.ok(a.notes.some(n => /waiting their turn in the merge train: #1988\./.test(n)));
+  assert.deepEqual(assess(healthy()).problems, [], "no pull request list (an old snapshot) is fine");
+  const justFront = assess(healthy({prs: [{number: 1880, title: "Shared dice", labels: [TRAIN_LABEL], greenSince: ms(300)}]}), {train: {front: 1880, since: ms(5)}});
+  assert.deepEqual(justFront.problems, [], "a front reached 5 minutes ago, green for hours, is still being brought up to date");
+  const stuck = assess(healthy({prs: [{number: 1880, title: "Shared dice", labels: [TRAIN_LABEL], greenSince: ms(300)}]}), {train: {front: 1880, since: ms(20)}});
+  assert.ok(stuck.problems.some(p => p.key === "pr:1880:green" && /20 min/.test(p.text)));
+});
+
+test("B7421: green means the newest checks run passed and the newest merge rules status is success", () => {
+  const run = (conclusion, started, done) => ({name: "checks", status: "completed", conclusion, started_at: started, completed_at: done});
+  const ok = [{context: "wodx/merge-rules", state: "success", created_at: "2026-11-18T15:19:08Z"}];
+  assert.equal(greenAt([run("success", "2026-11-18T15:10:00Z", "2026-11-18T15:20:45Z")], ok), Date.parse("2026-11-18T15:20:45Z"), "the later of the two");
+  assert.equal(greenAt([run("success", "2026-11-18T15:00:00Z", "2026-11-18T15:05:00Z"), run("failure", "2026-11-18T15:10:00Z", "2026-11-18T15:20:00Z")], ok), null, "a newer red run wins");
+  assert.equal(greenAt([{name: "checks", status: "in_progress", started_at: "2026-11-18T15:10:00Z"}], ok), null);
+  assert.equal(greenAt([run("success", "x", "2026-11-18T15:20:45Z")], [{context: "wodx/merge-rules", state: "pending"}, ...ok]), null, "newest status first");
+  assert.equal(greenAt([], ok), null);
+});
+
+test("B7550: the train is read from the runner that drives it, not a silent Main PC's last line", () => {
+  // The Main PC died with #1848 at the front of its last status; the Secondary PC drives the train now and shows it empty.
+  const snap = healthy({pcs: {main: null, secondary: pc("secondary", 3), laptop: pc("laptop", 1)},
+    statusIssues: [statusIssue("main", 1700, "Merge train: front #1848, prepare (behind main by 47: main merged in); line #1848, #2104"),
+      statusIssue("secondary", 1, "Merge train: empty (label a ready pull request merge-train)"), statusIssue("laptop", 1)]});
+  const a = assess(snap, {train: {front: 1848, since: NOW - 28 * 3600e3}});
+  assert.equal(a.train.front, null, "the Secondary PC's empty train wins over the dead Main PC's front");
+  assert.equal(a.trainPc, "Secondary PC");
+  assert.ok(!a.problems.some(p => p.key.startsWith("train")), "no stuck-train problem from a stale line");
+  assert.equal(a.state.train, null);
+  assert.match(report(a, NOW, "Laptop"), /Merge train: empty \(from the Secondary PC's runner\)/);
+  // A front on the Secondary PC is tracked and blamed on it when its runner goes quiet.
+  const front = healthy({statusIssues: [statusIssue("main", 1700, "Merge train: front #1848, wait; line #1848"),
+    statusIssue("secondary", LIMITS.runnerStaleMin + 5, "Merge train: front #2098, wait (gates); line #2098"), statusIssue("laptop", 1)],
+    pcs: {main: null, secondary: null, laptop: pc("laptop", 1)}});
+  const b = assess(front, {train: {front: 2098, since: NOW - (LIMITS.trainFrontHours + 1) * 3600e3}});
+  assert.equal(b.train.front, 2098, "both silent: the freshest line wins");
+  assert.match(b.problems.find(p => p.key === "train:2098").text, /The Secondary PC, which drives the train, is silent\./);
+});
+
+test("B7550: trainSource prefers a live runner, then the freshest stamp, and skips issues with no train line", () => {
+  const st = {main: statusIssue("main", 1, "Merge train: front #1, wait; line #1"), secondary: statusIssue("secondary", 5, "Merge train: front #2, wait; line #2"), laptop: statusIssue("laptop", 1)};
+  assert.equal(trainSource(st, {main: false, secondary: false}).key, "main", "both live: the fresher one");
+  assert.equal(trainSource(st, {main: true, secondary: false}).key, "secondary", "a live runner beats a silent one");
+  assert.equal(trainSource({main: null, secondary: null, laptop: statusIssue("laptop", 1)}), null);
 });

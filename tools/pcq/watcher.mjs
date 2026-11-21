@@ -10,8 +10,11 @@
  *   status push alive, its runner up, its lanes answering, its graphics card cool.
  * - the open pc-status issues (each runner rewrites its own every 2 minutes): is each runner alive.
  * - open pc-job issues: a job running or waiting too long.
- * - the merge train line, as the Main PC's status issue shows it: the same front for too long.
+ * - the merge train line, from the status issue of the runner that drives the train (B7550: whichever live runner
+ *   shows a train line, not always the Main PC): the same front for too long.
  * - open pc-alert issues: alerts left open after the thing they named came back.
+ * - open pull requests (B7421): one green on `checks` and `wodx/merge-rules` for over 15 minutes that nobody will merge
+ *   (not in the merge train), or a green train front the train has not merged. It only reports them; it never merges.
  * - on the laptop itself: its runner, watchdog and status push are running.
  * Book OCR on the Secondary PC and ComfyUI on the Main PC publish no status the laptop can read, so the report says
  * what it can see of them (the graphics card load and guard) and says plainly what it cannot.
@@ -43,7 +46,9 @@ export const LIMITS = {
   renderStallMin: 30,    // ComfyUI has work but nothing finished for this long: renders look stalled (B7296)
   ocrStallMin: 60,       // OCR workers run but the output folder has nothing newer than this (B7296)
   laneConfirmCycles: 3,  // a lane must be down this many cycles (about 15 minutes): each gates job resets its lane first
+  greenUnmergedMin: 15,  // B7421: a pull request green on both required checks this long and still open (PR 2055 waited)
 };
+export const TRAIN_LABEL = "merge-train";
 /** Lanes that are down on purpose: 6 is kept for the local agents, which are paused (17 November 2026). */
 export const IGNORE_LANES = [6];
 
@@ -65,6 +70,24 @@ export function parseTrain(body) {
   const front = /front #(\d+)/.exec(m[1])?.[1] ?? null;
   const line = [...(/line (.*)$/.exec(m[1])?.[1] ?? "").matchAll(/#(\d+)/g)].map(x => Number(x[1]));
   return {front: front ? Number(front) : null, line, why: /front #\d+, (.*?);? line /.exec(m[1])?.[1] ?? ""};
+}
+
+/**
+ * B7550: which PC drives the merge train. Only the runner with `train: true` writes a "Merge train:" line, and B7500
+ * moved that job from the Main PC to the Secondary PC. Take the line from the freshest status issue that has one,
+ * preferring a live runner (silent[key] false), so a dead PC's last line never stands for the train.
+ * statusByKey: {main: issue|null, ...}. Returns {key, train} or null when no status issue shows a train line.
+ */
+export function trainSource(statusByKey, silent = {}, now = Date.now()) {
+  let best = null;
+  for ( const p of PCS ) {
+    const iss = statusByKey[p.key], train = parseTrain(iss?.body);
+    if ( !train ) continue;
+    const t = Date.parse(statusStamp(iss.body) ?? iss.updated_at ?? 0) || 0;
+    const rank = [silent[p.key] ? 0 : 1, t];
+    if ( !best || rank[0] > best.rank[0] || (rank[0] === best.rank[0] && rank[1] > best.rank[1]) ) best = {key: p.key, train, rank};
+  }
+  return best ? {key: best.key, train: best.train} : null;
 }
 
 /** The "Updated <iso>" stamp a runner writes at the top of its status issue. */
@@ -108,15 +131,34 @@ export function assess(snap, prev = {}) {
       if ( h > LIMITS.jobWaitHours ) add(`job:${j.number}:wait`, `Job #${j.number} has waited ${h.toFixed(1)} h without starting: ${j.title.slice(0, 90)}`);
     }
   }
-  // Merge train: the same front, seen by this watcher, for too long.
-  const train = parseTrain(status.main?.body);
+  // Merge train: the same front, seen by this watcher, for too long. B7550: read from the PC that drives it.
+  const src = trainSource(status, silent, now), train = src?.train ?? null;
+  const driver = src ? PCS.find(p => p.key === src.key) : null;
+  const driverSilent = driver ? ` The ${driver.label}, which drives the train, is silent.` : "";
   const state = {problems: {}, train: prev.train ?? null};
   if ( train?.front ) {
     const since = prev.train?.front === train.front ? prev.train.since : now;
     state.train = {front: train.front, since};
     const h = (now - since) / HOUR;
-    if ( h > LIMITS.trainFrontHours ) add(`train:${train.front}`, `Merge train: #${train.front} has been at the front ${h.toFixed(1)} h (${train.why || "no reason shown"}).${silent.main ? " The Main PC, which drives the train, is silent." : ""}`);
+    if ( h > LIMITS.trainFrontHours ) add(`train:${train.front}`, `Merge train: #${train.front} has been at the front ${h.toFixed(1)} h (${train.why || "no reason shown"}).${src && silent[src.key] ? driverSilent : ""}`);
   } else if ( train ) state.train = null;
+  // B7421: pull requests green on both required checks but not merged. The age is measured from the later of the two
+  // green results, so the alert needs no second cycle. A pull request waiting behind the train front is waiting by
+  // design and is only listed; the front itself, and anything outside the train, is a problem.
+  const waiting = [];
+  for ( const pr of snap.prs ?? [] ) {
+    if ( !pr.greenSince || /^HOLD\b/i.test(pr.title ?? "") ) continue;
+    const inTrain = (pr.labels ?? []).includes(TRAIN_LABEL), front = inTrain && pr.number === train?.front;
+    // A pull request that has just reached the front may be green from long ago but behind main: the train brings it
+    // up to date first, so its clock starts when this watcher first saw it at the front.
+    const m = Math.round((now - Math.max(pr.greenSince, front ? state.train?.since ?? now : 0)) / MIN);
+    if ( m <= LIMITS.greenUnmergedMin ) continue;
+    const what = `#${pr.number}${pr.draft ? " (draft)" : ""}: ${String(pr.title ?? "").slice(0, 80)}`;
+    if ( !inTrain ) add(`pr:${pr.number}:green`, `Pull request ${what} has been green on checks and merge rules for ${hm(m)} but is not in the merge train, so nothing will merge it. It needs the owner's merge, the merge-train label, or its thread to merge it (docs/WORKFLOW.md section 6).`);
+    else if ( front ) add(`pr:${pr.number}:green`, `Merge train: the front ${what} has been green for ${hm(m)} but the train has not merged it.${src && silent[src.key] ? driverSilent : ""}`);
+    else waiting.push(pr.number);
+  }
+  if ( waiting.length ) notes.push(`Green and waiting their turn in the merge train: ${waiting.map(n => `#${n}`).join(", ")}.`);
   // Alerts left open: a "silent" alert whose PC is alive again, and any alert open over a day.
   const leaked = [], old = [];
   for ( const a of snap.alerts ) {
@@ -137,7 +179,10 @@ export function assess(snap, prev = {}) {
     const c = snap.pcs[p.key].comfy, o = snap.pcs[p.key].ocr;
     if ( c ) {
       sawComfy = true;
-      if ( !c.up ) notes.push(`${p.label}: ComfyUI is not answering (off, or not started after a restart).`);
+      // B7297: the render batch starts ComfyUI and stops it after, so ComfyUI off is normal between renders. It is a
+      // problem only while a GPU job holds the guard (a render is running) and ComfyUI does not answer.
+      if ( !c.up && snap.pcs[p.key].gpu?.jobHeld ) add(`${p.key}:comfy`, `${p.label}: a GPU job holds the guard (a render should be running) but ComfyUI is not answering.`);
+      else if ( !c.up ) notes.push(`${p.label}: ComfyUI is off (no render running).`);
       else if ( (c.running || c.pending) && c.lastDoneMin !== null && c.lastDoneMin > LIMITS.renderStallMin )
         add(`${p.key}:render`, `${p.label}: renders look stalled: ${c.running} running and ${c.pending} waiting in ComfyUI, and nothing has finished for ${hm(c.lastDoneMin)}.`);
       else notes.push(`${p.label}: ComfyUI ${c.running || c.pending ? `${c.running} running, ${c.pending} waiting` : "idle"}${c.lastDoneMin !== null ? `, last render ${hm(c.lastDoneMin)} ago` : ""}.`);
@@ -156,8 +201,8 @@ export function assess(snap, prev = {}) {
   if ( !sawOcr ) notes.push("Book OCR (Secondary PC) sends no status yet, so the watcher cannot see it.");
   // Debounce: count cycles in a row for each problem.
   for ( const p of problems ) state.problems[p.key] = (prev.problems?.[p.key] ?? 0) + 1;
-  const confirmed = problems.filter(p => state.problems[p.key] >= (/:lane:/.test(p.key) ? LIMITS.laneConfirmCycles : LIMITS.confirmCycles));
-  return {problems, confirmed, notes, rows, train, state};
+  const confirmed = problems.filter(p => state.problems[p.key] >= (/:lane:/.test(p.key) ? LIMITS.laneConfirmCycles : /^pr:/.test(p.key) ? 1 : LIMITS.confirmCycles));
+  return {problems, confirmed, notes, rows, train, trainPc: driver?.label ?? null, state};
 }
 
 /** The report issue body. */
@@ -168,7 +213,8 @@ export function report(a, now, host) {
   for ( const p of a.problems ) L.push(`- ${p.text}${a.confirmed.includes(p) ? "" : " _(first sighting)_"}`);
   L.push("", "| PC | Lanes | Status push | Runner update | State |", "|---|---|---|---|---|");
   for ( const r of a.rows ) L.push(`| ${r.pc} | ${r.lanes} | ${r.push} ago | ${r.runner} | ${r.state} |`);
-  L.push("", `Merge train: ${a.train?.front ? `front #${a.train.front}, line ${a.train.line.map(n => `#${n}`).join(", ")}` : a.train ? "empty" : "not shown (Main PC status issue missing)"}`, "");
+  const by = a.trainPc ? ` (from the ${a.trainPc}'s runner)` : "";
+  L.push("", `Merge train: ${a.train?.front ? `front #${a.train.front}, line ${a.train.line.map(n => `#${n}`).join(", ")}${by}` : a.train ? `empty${by}` : "not shown (no runner status issue has a train line)"}`, "");
   for ( const n of a.notes ) L.push(`- ${n}`);
   return L.join("\n");
 }
@@ -204,6 +250,31 @@ function localProcs() {
     statusPush: l.some(x => /status-push\.mjs/i.test(x))};
 }
 
+/**
+ * B7421: open pull requests with the time both required results went green on the head, or null. Reads only: two
+ * calls a pull request. A failed read leaves greenSince null, so a GitHub hiccup never raises an alert.
+ */
+export function greenAt(runs, statuses) {
+  const c = (runs ?? []).filter(r => r.name === "checks").sort((a, b) => Date.parse(b.started_at ?? 0) - Date.parse(a.started_at ?? 0))[0];
+  const m = (statuses ?? []).find(x => x.context === "wodx/merge-rules"); // newest first
+  if ( !c || c.status !== "completed" || c.conclusion !== "success" || m?.state !== "success" ) return null;
+  return Math.max(Date.parse(c.completed_at), Date.parse(m.created_at));
+}
+async function greenPrs() {
+  const out = [];
+  let list = [];
+  try { list = await gh("GET", "/pulls?state=open&per_page=100"); } catch { return out; }
+  for ( const p of list ) {
+    let greenSince = null;
+    try {
+      const [runs, statuses] = [await gh("GET", `/commits/${p.head.sha}/check-runs?check_name=checks&per_page=20`), await gh("GET", `/commits/${p.head.sha}/statuses?per_page=100`)];
+      greenSince = greenAt(runs.check_runs, statuses);
+    } catch {}
+    out.push({number: p.number, title: p.title, draft: !!p.draft, labels: (p.labels ?? []).map(l => l.name), greenSince});
+  }
+  return out;
+}
+
 async function snapshot() {
   const now = Date.now(), pcs = {};
   for ( const p of PCS ) {
@@ -218,7 +289,7 @@ async function snapshot() {
     if ( running ) try { startedAt = (await gh("GET", `/issues/${j.number}/comments?per_page=100`)).filter(c => /^Started /.test(c.body)).at(-1)?.created_at ?? null; } catch {}
     jobs.push({number: j.number, title: j.title, created_at: j.created_at, running, startedAt});
   }
-  return {now, pcs, statusIssues, jobs, alerts, local: localProcs()};
+  return {now, pcs, statusIssues, jobs, alerts, prs: await greenPrs(), local: localProcs()};
 }
 
 async function main() {

@@ -324,9 +324,11 @@ async function rollD10(n) {
 
 async function rollPool(dice, difficulty, opts = {}) {
     const diff = R.clampDifficulty(difficulty);
+    // B7120: rolled at 10, each point past it takes a success (M20 pdf 504)
+    const over = opts.over ?? R.overTen(difficulty);
     const { roll, faces } = await rollD10(dice);
-    const res = R.countSuccesses(faces, diff, opts);
-    return { ...res, roll, faces, dice, difficulty: diff };
+    const res = R.countSuccesses(faces, diff, { ...opts, over });
+    return { ...res, roll, faces, dice, difficulty: diff, wanted: diff + (res.over || 0) };
 }
 
 function diceHtml(faces, diff, specialty = false) {
@@ -1046,7 +1048,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice, target);
     const fitNow = fitPlan(attacker, w, fd);
     if (fitNow.notes.length) log.push(esc(`${fitNow.notes.join(". ")}.`));
-    if (pool.difficulty > 10) log.push(`<b>Difficulty ${pool.difficulty}:</b> above 10: the action is impossible (VtDA20 p. 323). Rolled at 10.`);
+    // B7120: the old note cited VtDA20 p. 323, which is the trying-again rule; past 10 the roll needs more successes
+    if (pool.difficulty > 10) log.push(`<b>Difficulty ${pool.difficulty}:</b> rolled at 10; ${esc(R.overTenText(R.overTen(pool.difficulty)))} (M20 pdf 504, V20 pdf 166).`);
 
     let bloodSpent = (fd.potBlood ? 1 : 0) + (fd.celMulti ? 1 : 0) + (fd.extraBlood || 0);
     const bloodBoost = boostSpend.find(x => x[0] === "blood")?.[1] ?? 0;
@@ -1632,8 +1635,8 @@ function planDefense(target, type, fd, w, maneuver) {
         try { m = MTD.mountDodgeOf(target, { ranged: !!w.ranged, used: mountDodgedThisRound(target), celerity: false }); } catch (e) { m = null; }
         if (!m) return { type, valid: false, invalid: "No mount under the rider to dodge for them: no defense.", expected: 0 };
         if (!m.valid) return { type, valid: false, invalid: `${cap(m.why)}: no defense.`, expected: 0 };
-        const diff = Math.min(10, m.diff + (maneuver.defDiff || 0));
-        return { type, valid: true, dice: m.dice, diff, abKey: "athletics", notes: m.notes, weapon: null, abilityName: m.abilityName, expected: R.expectedSuccesses(m.dice, diff) };
+        const want = m.diff + (maneuver.defDiff || 0), diff = Math.min(10, want);
+        return { type, valid: true, dice: m.dice, diff, over: R.overTen(want), abKey: "athletics", notes: m.notes, weapon: null, abilityName: m.abilityName, expected: R.expectedSuccesses(m.dice, diff) };
     }
     // B4794: at the wheel, the vehicle swerves; anyone else sat inside does not dodge
     if (type === "swerve") {
@@ -1641,8 +1644,8 @@ function planDefense(target, type, fd, w, maneuver) {
         try { s = VH.swerveOf(target, { ranged: !!w.ranged, wounds: woundPenalty(target) }); } catch (e) { s = null; }
         if (!s) return { type, valid: false, invalid: "Not at the wheel of a vehicle: no swerve.", expected: 0 };
         if (!s.valid) return { type, valid: false, invalid: `Cannot swerve (${s.why}): no defense.`, expected: 0 };
-        const diff = Math.min(10, s.diff + (fd.defDiff || 0) + (maneuver.defDiff || 0));
-        return { type, valid: true, dice: Math.max(0, s.dice + (fd.defDice || 0) - num(fd.defIndex)), diff, abKey: "drive", notes: s.notes, weapon: null, abilityName: s.abilityName, expected: R.expectedSuccesses(s.dice, diff) };
+        const want = s.diff + (fd.defDiff || 0) + (maneuver.defDiff || 0), diff = Math.min(10, want);
+        return { type, valid: true, dice: Math.max(0, s.dice + (fd.defDice || 0) - num(fd.defIndex)), diff, over: R.overTen(want), abKey: "drive", notes: s.notes, weapon: null, abilityName: s.abilityName, expected: R.expectedSuccesses(s.dice, diff) };
     }
     if (type === "dodge") {
         let seat = null;
@@ -1691,7 +1694,9 @@ function planDefense(target, type, fd, w, maneuver) {
         if (!weapon) notes.push("no melee weapon on the sheet");
     }
     const abLabel = game.i18n.localize(target.system?.abilities?.[abKey]?.label || "") || ab.name || abKey;
-    return { type, valid: true, dice, diff: Math.min(10, diff), abKey, notes, weapon,
+    // B7120: held at 10 for the dice; each point past it needs one more success
+    if (diff > 10) notes.push(R.overTenText(R.overTen(diff), diff));
+    return { type, valid: true, dice, diff: Math.min(10, diff), over: R.overTen(diff), abKey, notes, weapon,
         abilityName: (abLabel.startsWith("wod.") || abLabel === abKey) ? cap(abKey) : abLabel,
         expected: R.expectedSuccesses(dice, Math.min(10, diff)) };
 }
@@ -1720,7 +1725,7 @@ export function bestDefense(target, fd, w, maneuver = {}) {
 async function rollDefense(target, fd, w, maneuver) {
     const p = planDefense(target, fd.defense, fd, w, maneuver);
     if (!p.valid) return { invalid: p.invalid };
-    const r = await rollPool(p.dice, p.diff);
+    const r = await rollPool(p.dice, p.diff, { over: p.over || 0 });
     return { ...r, type: p.type, abilityName: p.abilityName, notes: p.notes, weapon: p.weapon };
 }
 
@@ -2212,7 +2217,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.47.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.48.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;

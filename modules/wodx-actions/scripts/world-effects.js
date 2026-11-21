@@ -99,7 +99,7 @@ export const WORLD_POWERS = {
   "mother's bounty": ["boon"], "storm brewing": ["storm"], "eldritch prime": ["blaze"], "pyrokinesis 4": ["blaze"], "pyrokinesis 5": ["blaze"],
   "weather control": ["storm"],
   // Mummy: the Resurrection (Hekau and its rituals)
-  "spark of ra": ["blaze"], "grip the water": ["flood"], "call the stars": ["fire"], "greater weather magic": ["storm"],
+  "spark of ra": ["blaze"], "Vampire (V20)|inferno": ["blaze"], "grip the water": ["flood"], "call the stars": ["fire"], "greater weather magic": ["storm"],
   "potent weather magic": ["storm", "flood"], "sandstorm": ["storm"], "plague of ma'at": ["plague"], "rousing apophis": ["quake", "rubble"],
   // Werewolf rites
   "rite of cleansing": ["cleanse"], "rite of the opened sky": ["cleanse"], "enchant the forest": ["dread"], "rite of the wilderness": ["dread"]

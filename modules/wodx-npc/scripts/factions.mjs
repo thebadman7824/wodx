@@ -27,6 +27,7 @@ import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 export const TYPE = "wodx-npc.faction";
 
@@ -649,77 +650,41 @@ export function build(ctx) {
   }
 
   /* ------------------------------------------------------------------ */
-  /*  Rothenstein's own factions                                         */
+  /*  The chronicle's own factions                                       */
   /* ------------------------------------------------------------------ */
 
-  /**
-   * The powers of the valley as the chronicle's notes give them ("The Domain of Rothenstein", "Overview & Cast", "The
-   * Herd", "The Weavers' Guild Hall", "Hunter & Inquisition Threats"). The dots are WoDX's estimates from those notes
-   * (B102), for the Storyteller to adjust. Members and places are matched by name; anything not found is left out.
-   */
-  const ROTHENSTEIN = [
-    {key: "court", name: "The Voivode's court", kind: "kindred", ruler: true, leader: "Bogdan Ursu", members: ["Bogdan Ursu"], places: [/kranzfels|keep floors|inner ward|great hall/i],
-      assets: {herd: 4, status: 5, domain: 4, security: 1, retainers: 3, contacts: 1, resources: 3, influence: {crown: 2, military: 2}}, goals: [{move: "defend"}, {move: "recruit"}],
-      notes: "Bogdan holds the keep and gives judgment; the Herd is thirty-one named mortals, the Voivode's to ration (Herd 4: thirty vessels)."},
-    {key: "cult", name: "Konrad's cult", kind: "kindred", leader: "Konrad", members: ["Konrad", "Kasimir"], places: [/silver adit|konrad/i],
-      assets: {herd: 1, retainers: 2, status: 1, contacts: 1, influence: {underworld: 1, guild: 1}}, goals: [{move: "recruit"}, {move: "scheme", target: "church"}],
-      notes: "The flesh-smith's believers and the changed miners, under the Adit. Secret even from the court."},
-    {key: "marta", name: "Sister Marta's network", kind: "kindred", leader: "Marta", members: ["Marta"], places: [/marta/i],
-      assets: {status: 2, contacts: 3, resources: 1, influence: {church: 2, folk: 1}}, goals: [{move: "lielow"}, {move: "expand", sphere: "church"}],
-      notes: "A Lasombra in a nun's habit with the church's confidence; help from outside the valley."},
-    {key: "radu", name: "Old Radu", kind: "kindred", leader: "Old Radu", members: ["Old Radu"], places: [/radu|crossroads/i],
-      assets: {status: 2, contacts: 3, influence: {folk: 2}}, goals: [{move: "lielow"}],
-      notes: "A drifter who has watched the valley since before the town had a name."},
-    {key: "council", name: "The German council (the Hospites)", kind: "mortal", leader: "Graff", members: ["Graff", "Jan Dvorak", "Ludwig of Regensburg"], places: [/market square|market floors|graff/i],
-      assets: {resources: 4, status: 2, retainers: 1, contacts: 2, influence: {guild: 3, crown: 1}}, goals: [{move: "expand", sphere: "guild"}],
-      notes: "The council wants profit; the Adit is theirs on paper and fought over in practice."},
-    {key: "church", name: "The parish of St. Aegidius", kind: "church", leader: "Ludovic", members: ["Ludovic", "Paval", "Gizela"], places: [/aegidius|church close|presbytery/i],
-      assets: {status: 2, contacts: 2, resources: 1, influence: {church: 3, folk: 2}}, goals: [{move: "hunt"}],
-      notes: "The church wants heresy stamped out."},
-    {key: "folk", name: "The Moravian villages", kind: "folk", leader: "Yaroslava", members: ["Yaroslava", "Bohumil Krejci", "Jitka"], places: [/dolany|moravian village/i],
-      assets: {contacts: 2, resources: 1, influence: {folk: 3}}, goals: [{move: "defend"}],
-      notes: "The elders of the old families want to be left alone."},
-    {key: "weavers", name: "The Weavers' Guild", kind: "guild", leader: "Lenka Prochazka", members: ["Lenka Prochazka", "Jakub Hlavac"], places: [/craftsmen|weaver/i],
-      assets: {resources: 2, contacts: 2, influence: {guild: 2}}, goals: [{move: "expand", sphere: "guild"}],
-      notes: "The strongest craft guild; favours are kept on a tally and called in."},
-    {key: "ondrej", name: "Ondrej's company", kind: "mercenaries", leader: "Ondrej", members: ["Ondrej"], places: [/outer bailey|barracks/i],
-      assets: {retainers: 3, resources: 1, influence: {military: 2}}, goals: [{move: "recruit"}],
-      notes: "A dozen spears for hire."},
-    {key: "hunters", name: "The Church's hunters", kind: "hunters", leader: "Anselm", members: ["Anselm"], places: [/anselm|mountain trail|hermitage/i],
-      assets: {contacts: 2, resources: 1, influence: {church: 1}}, goals: [],
-      notes: "Brother Anselm keeps a count; the friar, the exorcist and the knight-inquisitor come when the net opens (Act Three)."}
-  ];
-  const ROTH_STANDING = [["court", "church", -2], ["church", "court", -1], ["court", "council", -1], ["council", "court", -1], ["council", "folk", -1], ["folk", "council", -1],
-    ["court", "cult", 1], ["cult", "court", 1], ["cult", "church", -2], ["marta", "court", -1], ["radu", "court", -1], ["folk", "court", -1], ["weavers", "council", 1],
-    ["council", "weavers", 1], ["ondrej", "court", 1], ["court", "ondrej", 1], ["hunters", "court", -1], ["church", "hunters", 1], ["hunters", "church", 1]];
+  /** The chronicle in play's starting factions ({TITLE, MARKER, ASK, FACTIONS, STANDING}), or null (Chronicle Packs Desk f1). */
+  const chronicleFactions = () => (chronicleInPlay()?.factions?.FACTIONS?.length ? chronicleInPlay().factions : null);
   /** Find an NPC by a part of its name: the shortest match wins (so "Konrad" finds "Konrad the Flesh-Smith"). */
   function findActor(part) {
     const p = part.toLowerCase();
     return allActors().filter(a => !a.hasPlayerOwner && a.name.toLowerCase().includes(p)).sort((a, b) => a.name.length - b.name.length)[0] ?? null;
   }
-  const hasRothenstein = () => !!findActor("Bogdan Ursu");
-  /** Build Rothenstein's factions (asks first; never replaces factions already made). */
-  async function setupRothenstein({confirm = true} = {}) {
+  const hasChronicleFactions = () => { const c = chronicleFactions(); return !!c && !!findActor(c.MARKER ?? c.FACTIONS[0].leader); };
+  /** Build the chronicle's factions (asks first; never replaces factions already made). */
+  async function setupChronicleFactions({confirm = true} = {}) {
     if ( !game.user.isGM ) return null;
+    const c = chronicleFactions();
+    if ( !c ) { ui.notifications.warn("The chronicle in play has no factions of its own."); return null; }
     const s = state();
-    if ( s.factions.length ) { ui.notifications.warn("There are factions already. Rothenstein's are only set up in a world with none."); return null; }
+    if ( s.factions.length ) { ui.notifications.warn(`There are factions already. ${c.TITLE} are only set up in a world with none.`); return null; }
     if ( confirm ) {
-      const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Rothenstein's factions"}, classes: ["wodx-dialog", "wodx-npc-dialog"],
-        content: `<p>Set up the valley's ten powers from the chronicle's notes, with their leaders, members and places found by name? The dots are WoDX's estimates; change them as you like.</p>`});
+      const ok = await foundry.applications.api.DialogV2.confirm({window: {title: c.TITLE}, classes: ["wodx-dialog", "wodx-npc-dialog"],
+        content: `<p>${esc(c.ASK)}</p>`});
       if ( !ok ) return null;
     }
     const places = placeList();
     const placeIds = rx => uniqueIds(places.filter(p => rx.test(p.name)).map(p => p.id)).slice(0, 6);
-    const ids = new Map(ROTHENSTEIN.map(r => [r.key, newId()]));
-    const list = ROTHENSTEIN.map(r => {
+    const ids = new Map(c.FACTIONS.map(r => [r.key, newId()]));
+    const list = c.FACTIONS.map(r => {
       const leader = findActor(r.leader);
       const members = r.members.map(findActor).filter(Boolean).map(a => a.id);
       return F.normFaction({id: ids.get(r.key), name: r.name, kind: r.kind, ruler: !!r.ruler, leader: leader?.id ?? null, members, places: r.places.flatMap(placeIds),
         assets: r.assets, goals: r.goals.map(g => ({...g, target: g.target ? ids.get(g.target) : null})), notes: r.notes,
-        standing: Object.fromEntries(ROTH_STANDING.filter(([a]) => a === r.key).map(([, b, v]) => [ids.get(b), v]))});
+        standing: Object.fromEntries((c.STANDING ?? []).filter(([a]) => a === r.key).map(([, b, v]) => [ids.get(b), v]))});
     });
     await mutate(st => { st.factions = list; st.lastTurn ??= game.time.worldTime; return {state: st}; });
-    const missing = ROTHENSTEIN.filter(r => !findActor(r.leader)).map(r => r.leader);
+    const missing = c.FACTIONS.filter(r => !findActor(r.leader)).map(r => r.leader);
     ui.notifications.info(`Set up ${list.length} factions.${missing.length ? ` No NPC found for: ${missing.join(", ")}.` : ""}`);
     return list;
   }
@@ -947,7 +912,7 @@ export function build(ctx) {
           add: () => editFaction(), edit: (ev, t) => editFaction(t.dataset.id), del: (ev, t) => deleteFaction(t.dataset.id),
           found: () => founding?.foundDialog?.(), end: (ev, t) => endFaction(t.dataset.id), absorb: (ev, t) => absorbFaction(t.dataset.id),
           turn: () => runTurns({reason: "asked for by the Storyteller", forced: true}), session: () => endSession(),
-          roth: () => setupRothenstein(), hunt: () => huntDialog(), report: () => reportDialog(),
+          roth: () => setupChronicleFactions(), hunt: () => huntDialog(), report: () => reportDialog(),
           contain: (ev, t) => setBreach(t.dataset.id, "contained"), stop: (ev, t) => setBreach(t.dataset.id, "stopped"), resume: (ev, t) => setBreach(t.dataset.id, "live"),
           forget: (ev, t) => deleteBreach(t.dataset.id), settings: FactionsApp.#onSettings
         }
@@ -994,7 +959,7 @@ export function build(ctx) {
             <button type="button" data-action="session" title="The end of a session: every faction takes a turn">End the session</button>
             <button type="button" data-action="hunt">Hunting…</button>
             <button type="button" data-action="report">Report a breach…</button>
-            ${!s.factions.length && hasRothenstein() ? `<button type="button" data-action="roth">Rothenstein's factions</button>` : ""}
+            ${!s.factions.length && hasChronicleFactions() ? `<button type="button" data-action="roth">${esc(chronicleFactions().TITLE)}</button>` : ""}
             <button type="button" data-action="settings" title="Mode and days between turns">Settings…</button>
           </div></div>
           <div class="wodx-scroll wodx-table-wrap">
@@ -1245,7 +1210,7 @@ export function build(ctx) {
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
   return {postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
-    setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
-    FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
+    setupChronicleFactions, chronicleFactions, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
+    FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F,
     applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
 }
