@@ -33,6 +33,13 @@ test("validate accepts the job kinds and fills defaults", () => {
   assert.equal(validate({kind: "setup-clean", lane: 3}, LANES).job.lanes, 1, "setup-clean runs on its one lane");
   assert.ok(validate({kind: "setup-clean"}, LANES).error, "setup-clean needs a lane");
   assert.ok(validate({kind: "setup-clean", lane: 1}, LANES).error, "never on lane 1");
+  const cw = validate({kind: "gates", world: "clean", cleanSet: true, lane: 3, lanes: 4}, LANES).job;
+  assert.ok(cw, "a clean-set run needs no named gates");
+  assert.equal(cw.lanes, 1, "a clean-world run keeps to one lane");
+  assert.equal(cw.recheck, false);
+  assert.deepEqual(gateArgs(cw, 3, 0, 1, "r.txt").slice(0, 3), ["--world", "clean", "--clean-set"]);
+  assert.ok(validate({kind: "gates", gates: ["gatex"], world: "rothenstein-live"}, LANES).error, "only the clean world");
+  assert.ok(validate({kind: "gates", gates: ["gatex"], cleanSet: true}, LANES).error, "cleanSet needs world clean");
   assert.ok(validate({kind: "books-find", terms: ["Four Bears", "Mato-Tope", "Buffalo Bird Woman"]}, LANES).job);
   assert.ok(validate({kind: "trove-find", pattern: "Catlin", under: "The Ultimate Trove - Books (C-D)"}, LANES).job);
   assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "claude/project-thread-abc"}, LANES).job);
@@ -350,6 +357,7 @@ test("B7190: gates jobs start on a reset lane unless they say reset: false", () 
   assert.equal(resetsFirst({kind: "gates", gates: ["gate7b"], reset: false}), false);
   assert.equal(resetsFirst({kind: "gate-two", gate: "gate7b"}), true);
   assert.equal(resetsFirst({kind: "deploy"}), false);
+  assert.equal(resetsFirst({kind: "gates", cleanSet: true, world: "clean", reset: false}), true, "a clean-world run always switches the lane to that world first");
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   assert.match(src, /if \( resetsFirst\(job\) \) await lanesCmd\(\["reset"/);
 });

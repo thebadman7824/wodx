@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -297,7 +297,7 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
     if ( retried || stopped() ) return {code: null, text: `${before ? `${before.trim()}\n` : ""}${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
-    await lanesCmd(["reset", "--lane", lane], {logTo: L});
+    await lanesCmd(["reset", "--lane", lane, ...worldArgs(job)], {logTo: L});
     // only on a shared queue: a shard run again runs all its gates again
     return laneWork(job, lane, i, n, tag, true, carry && job.queue ? out : "");
   };
@@ -317,7 +317,7 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
+  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...worldArgs(job), ...repo], {logTo: L});
   const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
@@ -351,6 +351,9 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
   // B7447: the gates this lane finished before a fault and a reset keep their lines
   const {report: rep, code: laneCode} = withEarlier(before, own, r.code, lane);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
+  // a clean-world run puts the lane back on its default world (after the failing steps are read), so the next job
+  // finds it as usual
+  if ( job.world ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   // B7002: the commit this lane ran, for the gate status the merge rules read
   if ( laneCode !== 1 || job.recheck === false || stopped() ) return {code: laneCode, text, sha: wt.sha};
   return {code: laneCode, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
@@ -423,7 +426,7 @@ const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now()
  */
 const growing = new Map();
 async function makeQueue(job, lane, tag) {
-  if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
+  if ( job.kind !== "gates" || job.branchTools || job.world ) return null; // B7220: a branch-tools test runs on its one lane; so does a clean-world run
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
   const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched", ...(job.since ? ["--base", job.since] : [])] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
