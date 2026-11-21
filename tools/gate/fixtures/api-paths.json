@@ -5315,6 +5315,16 @@
   "target": "wodx-storyteller",
   "path": [
    "upkeep",
+   "markets"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/learn.mjs:115"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
    "markets",
    "of"
   ],

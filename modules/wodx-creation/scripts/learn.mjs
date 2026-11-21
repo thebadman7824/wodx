@@ -112,7 +112,7 @@ const npcApi = () => game.modules.get("wodx-npc")?.active ? game.modules.get("wo
 /** The town (a market of WoDX Storyteller) an actor's token stands in: the viewed scene first, else any scene. "" when not known. */
 function townOf(a) {
   try {
-    const mk = storyteller()?.markets;
+    const mk = storyteller()?.upkeep?.markets;
     if ( !mk?.state || !mk.rules?.marketOfScene ) return "";
     const st = mk.state();
     const scenes = [globalThis.canvas?.scene, ...(game.scenes ?? [])].filter(Boolean);

@@ -50,6 +50,8 @@ test("Creation asks WoDX NPC, closes the row for a player, lets the Storyteller 
   assert.match(m, /n\?\.attitude\?\.of\?\.\(teacher, learner\)\?\.step/);
   assert.match(m, /n\?\.trust\?\.of\?\.\(teacher, learner\)/);
   assert.match(m, /mk\.rules\.marketOfScene\(st, sc\.id\)/);
+  // the markets live under WoDX Storyteller's api.upkeep (gateapipaths, PR 2202)
+  assert.match(m, /const mk = storyteller\(\)\?\.upkeep\?\.markets;/);
   assert.match(m, /const closed = blood \|\| \(blocks\(w\) && !user\.isGM \? w\.why : ""\);/);
   assert.match(m, /if \( blocks\(w\) && !src\.override \) return \{ok: false/);
   assert.match(m, /await st\.ledger\?\.save\?\.\(\{kind: src\.price\.kind/);
