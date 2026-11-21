@@ -12,6 +12,8 @@
  *   twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK},
  *   reveals: {REVEALS, JUDGED_FAVOURS, MURDERS, COLD}, encounters: {ENCOUNTERS, KINDS, LAST}}.
  * Several may register (desk a4); one is in play at a time.
+ * manifest.local (optional, desk d1, B7610): what belongs to the chronicle's own place: feasts, seat titles, languages,
+ * caerns and the hunters' start, read through chronicle-local-rules.mjs.
  */
 import {WEEK as TERMS_WEEK, DAY} from "./terms.mjs";
 import {addLiveWorlds} from "./live-worlds.mjs";

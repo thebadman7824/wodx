@@ -113,6 +113,23 @@ export function ranksOf(kind, year = 0, faith = "western", law = "") {
   const r = KINDS[kind]?.ranks;
   return typeof r === "function" ? r(year, law) : r ?? [];
 }
+/**
+ * The ranks of one institution in a year: its kind's ladder with the seats its town calls by another name (B7612).
+ * inst.titles: [{rank, title, from, to}], put there by reconcile from the chronicle's local titles.
+ */
+export function instRanks(inst = {}, year = 0) {
+  const ranks = ranksOf(inst.kind, year, inst.faith, inst.law);
+  const map = {};
+  for ( const t of Array.isArray(inst.titles) ? inst.titles : [] ) {
+    if ( t?.from != null && year < t.from ) continue;
+    if ( t?.to != null && year > t.to ) continue;
+    if ( t?.title && Number.isInteger(t.rank) ) map[t.rank] = t.title;
+  }
+  return Object.keys(map).length ? ranks.map((r, i) => map[i] ?? r) : ranks;
+}
+const normTitles = v => (Array.isArray(v) ? v : []).slice(0, 10).map(t => ({rank: Math.max(0, Math.min(RANKS - 1, Math.round(n(t?.rank)))), title: str(t?.title, 80),
+  from: t?.from == null || t?.from === "" ? null : n(t.from), to: t?.to == null || t?.to === "" ? null : n(t.to)})).filter(t => t.title);
+
 /** What the institution is called in a year and faith. */
 export function labelOf(kind, year = 0, faith = "western", law = "") {
   if ( kind === "worship" ) { const w = WORSHIP[faith] ?? WORSHIP.own; return w.name.replace(/^./, c => c.toUpperCase()); }
@@ -140,12 +157,14 @@ export function normInst(x = {}) {
   const kind = KINDS[x.kind] ? x.kind : "council";
   const seats = Array.isArray(x.seats) && x.seats.length ? x.seats.slice(0, 40).map(normSeat) : blankSeats();
   return {id: str(x.id, 60), kind, town: str(x.town, 80), name: str(x.name, 120), faith: str(x.faith, 20) || "western", law: str(x.law, 20), founded: n(x.founded), closed: x.closed ? n(x.closed) : 0,
-    seats, log: (Array.isArray(x.log) ? x.log : []).slice(-30).map(l => ({at: n(l.at), text: str(l.text, 300)}))};
+    seats, log: (Array.isArray(x.log) ? x.log : []).slice(-30).map(l => ({at: n(l.at), text: str(l.text, 300)})), titles: normTitles(x.titles)};
 }
 
 /** The institutions a town should have now: the kinds it lacks are opened, those past their years are closed. */
-export function reconcile(list, {town, year, people, faith = "western", law = "", order = null, name = ""} = {}) {
+export function reconcile(list, {town, year, people, faith = "western", law = "", order = null, name = "", titles = {}} = {}) {
   const out = (list ?? []).map(normInst);
+  // B7612: the seats the chronicle's town calls by its own names ({kind: rows}); other towns keep the shared names
+  const named = k => normTitles(titles?.[k]);
   const want = new Set(kindsFor(year, people, order));
   const events = [];
   for ( const i of out ) if ( i.town === town && !i.closed && !want.has(i.kind) && ((KINDS[i.kind].to != null && year > KINDS[i.kind].to) || (KINDS[i.kind].needs && order)) ) {
@@ -157,6 +176,7 @@ export function reconcile(list, {town, year, people, faith = "western", law = ""
     const i = normInst({id, kind: k, town, faith, law, founded: year, name: `${labelOf(k, year, faith, law)} of ${name || "the town"}`});
     out.push(i); events.push({kind: "opened", inst: id, text: `${i.name} now stands.`});
   }
+  for ( const i of out ) if ( i.town === town ) i.titles = named(i.kind);
   return {list: out, events};
 }
 
@@ -223,7 +243,7 @@ export function monthTurn(inst0, {npcs = [], isPc = () => false, rand = Math.ran
   const inst = normInst(inst0);
   const events = [];
   if ( inst.closed ) return {inst, events};
-  const ranks = ranksOf(inst.kind, year, inst.faith, inst.law);
+  const ranks = instRanks(inst, year);
   const seated = new Set(inst.seats.filter(s => s.holder).map(s => s.holder.id));
   const free = (npcs ?? []).filter(p => p?.id && !seated.has(p.id));
   inst.seats.forEach((s, i) => {

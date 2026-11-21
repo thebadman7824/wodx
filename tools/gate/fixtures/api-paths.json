@@ -568,7 +568,7 @@
    "modules/wodx-solo/scripts/main.mjs:88",
    "modules/wodx-storyteller/scripts/haven-works.mjs:184",
    "modules/wodx-storyteller/scripts/inherit.mjs:72",
-   "modules/wodx-storyteller/scripts/institutions.mjs:230",
+   "modules/wodx-storyteller/scripts/institutions.mjs:237",
    "modules/wodx-storyteller/scripts/omens.mjs:150",
    "modules/wodx-storyteller/scripts/upkeep.mjs:399"
   ]
@@ -620,7 +620,7 @@
   "uses": [
    "modules/wodx-actions/scripts/debts-marks.js:155",
    "modules/wodx-otherworlds/scripts/drift.mjs:47",
-   "modules/wodx-storyteller/scripts/hunters.mjs:269",
+   "modules/wodx-storyteller/scripts/hunters.mjs:278",
    "modules/wodx-storyteller/scripts/sites.mjs:109",
    "modules/wodx-storyteller/scripts/upkeep.mjs:82",
    "modules/wodx-storyteller/scripts/upkeep.mjs:209",
@@ -638,7 +638,7 @@
    "modules/wodx-actions/scripts/debts-marks.js:168",
    "modules/wodx-npc/scripts/memory.mjs:219",
    "modules/wodx-otherworlds/scripts/drift.mjs:54",
-   "modules/wodx-storyteller/scripts/hunters.mjs:368",
+   "modules/wodx-storyteller/scripts/hunters.mjs:377",
    "modules/wodx-storyteller/scripts/patronage.mjs:119",
    "modules/wodx-storyteller/scripts/sites.mjs:184",
    "modules/wodx-storyteller/scripts/sites.mjs:185",
@@ -652,7 +652,10 @@
    "current"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/arrival.mjs:39"
+   "modules/wodx-solo/scripts/arrival.mjs:39",
+   "modules/wodx-storyteller/scripts/hunters.mjs:197",
+   "modules/wodx-storyteller/scripts/institutions.mjs:52",
+   "modules/wodx-storyteller/scripts/power.mjs:555"
   ]
  },
  {
@@ -953,9 +956,9 @@
    "modules/wodx-storyteller/scripts/haven-works.mjs:21",
    "modules/wodx-storyteller/scripts/herds.mjs:22",
    "modules/wodx-storyteller/scripts/hunt-follow.mjs:29",
-   "modules/wodx-storyteller/scripts/hunters.mjs:30",
+   "modules/wodx-storyteller/scripts/hunters.mjs:31",
    "modules/wodx-storyteller/scripts/inherit.mjs:22",
-   "modules/wodx-storyteller/scripts/institutions.mjs:29",
+   "modules/wodx-storyteller/scripts/institutions.mjs:30",
    "modules/wodx-storyteller/scripts/letters.mjs:26",
    "modules/wodx-storyteller/scripts/levers.mjs:19",
    "modules/wodx-storyteller/scripts/market-news.mjs:66",
@@ -964,7 +967,7 @@
    "modules/wodx-storyteller/scripts/omens.mjs:33",
    "modules/wodx-storyteller/scripts/owners.mjs:27",
    "modules/wodx-storyteller/scripts/patronage.mjs:22",
-   "modules/wodx-storyteller/scripts/power.mjs:29",
+   "modules/wodx-storyteller/scripts/power.mjs:30",
    "modules/wodx-storyteller/scripts/reach.mjs:36",
    "modules/wodx-storyteller/scripts/remains.mjs:19",
    "modules/wodx-storyteller/scripts/rumours.mjs:31",
@@ -1249,7 +1252,7 @@
    "modules/wodx-storyteller/scripts/dreams.mjs:129",
    "modules/wodx-storyteller/scripts/hardship.mjs:104",
    "modules/wodx-storyteller/scripts/herds.mjs:23",
-   "modules/wodx-storyteller/scripts/hunters.mjs:31",
+   "modules/wodx-storyteller/scripts/hunters.mjs:32",
    "modules/wodx-storyteller/scripts/ledger.mjs:248",
    "modules/wodx-storyteller/scripts/letters.mjs:257",
    "modules/wodx-storyteller/scripts/money.mjs:26",
@@ -1299,8 +1302,8 @@
    "modules/wodx-storyteller/scripts/hardship.mjs:221",
    "modules/wodx-storyteller/scripts/haven-works.mjs:190",
    "modules/wodx-storyteller/scripts/hunt-follow.mjs:370",
-   "modules/wodx-storyteller/scripts/hunters.mjs:32",
-   "modules/wodx-storyteller/scripts/institutions.mjs:237",
+   "modules/wodx-storyteller/scripts/hunters.mjs:33",
+   "modules/wodx-storyteller/scripts/institutions.mjs:244",
    "modules/wodx-storyteller/scripts/ledger.mjs:25",
    "modules/wodx-storyteller/scripts/letters.mjs:257",
    "modules/wodx-storyteller/scripts/market-turn.mjs:35",
@@ -1308,7 +1311,7 @@
    "modules/wodx-storyteller/scripts/night.mjs:187",
    "modules/wodx-storyteller/scripts/omens.mjs:173",
    "modules/wodx-storyteller/scripts/patronage.mjs:123",
-   "modules/wodx-storyteller/scripts/power.mjs:30",
+   "modules/wodx-storyteller/scripts/power.mjs:31",
    "modules/wodx-storyteller/scripts/remains.mjs:158",
    "modules/wodx-storyteller/scripts/rumours.mjs:18",
    "modules/wodx-storyteller/scripts/tasks.mjs:462",
@@ -1369,7 +1372,7 @@
    "modules/wodx-npc/scripts/trust.mjs:196",
    "modules/wodx-otherworlds/scripts/net.mjs:501",
    "modules/wodx-otherworlds/scripts/net.mjs:696",
-   "modules/wodx-storyteller/scripts/hunters.mjs:131"
+   "modules/wodx-storyteller/scripts/hunters.mjs:132"
   ]
  },
  {
@@ -1391,7 +1394,7 @@
    "officeCap"
   ],
   "uses": [
-   "modules/wodx-storyteller/scripts/institutions.mjs:111"
+   "modules/wodx-storyteller/scripts/institutions.mjs:118"
   ]
  },
  {
@@ -1579,9 +1582,9 @@
    "modules/wodx-storyteller/scripts/haven-works.mjs:124",
    "modules/wodx-storyteller/scripts/haven-works.mjs:161",
    "modules/wodx-storyteller/scripts/inherit.mjs:138",
-   "modules/wodx-storyteller/scripts/institutions.mjs:112",
-   "modules/wodx-storyteller/scripts/institutions.mjs:138",
-   "modules/wodx-storyteller/scripts/institutions.mjs:182",
+   "modules/wodx-storyteller/scripts/institutions.mjs:119",
+   "modules/wodx-storyteller/scripts/institutions.mjs:145",
+   "modules/wodx-storyteller/scripts/institutions.mjs:189",
    "modules/wodx-storyteller/scripts/market-moves.mjs:164",
    "modules/wodx-storyteller/scripts/market-moves.mjs:179",
    "modules/wodx-storyteller/scripts/market-turn.mjs:128",
@@ -2239,8 +2242,8 @@
    "modules/wodx-otherworlds/scripts/corruption.mjs:47",
    "modules/wodx-storyteller/scripts/contagion.mjs:52",
    "modules/wodx-storyteller/scripts/haven-works.mjs:33",
-   "modules/wodx-storyteller/scripts/hunters.mjs:57",
-   "modules/wodx-storyteller/scripts/institutions.mjs:43",
+   "modules/wodx-storyteller/scripts/hunters.mjs:58",
+   "modules/wodx-storyteller/scripts/institutions.mjs:44",
    "modules/wodx-storyteller/scripts/levers.mjs:22",
    "modules/wodx-storyteller/scripts/omens.mjs:44",
    "modules/wodx-storyteller/scripts/patronage.mjs:37",
@@ -2269,7 +2272,8 @@
    "modules/wodx-npc/scripts/kin.mjs:24",
    "modules/wodx-npc/scripts/standing.mjs:25",
    "modules/wodx-storyteller/scripts/contagion.mjs:48",
-   "modules/wodx-storyteller/scripts/hunters.mjs:58",
+   "modules/wodx-storyteller/scripts/hunters.mjs:59",
+   "modules/wodx-storyteller/scripts/hunters.mjs:198",
    "modules/wodx-storyteller/scripts/inherit.mjs:23",
    "modules/wodx-storyteller/scripts/letters.mjs:48",
    "modules/wodx-storyteller/scripts/levers.mjs:23",
@@ -2309,7 +2313,7 @@
    "modules/wodx-storyteller/scripts/builder.mjs:58",
    "modules/wodx-storyteller/scripts/contagion.mjs:55",
    "modules/wodx-storyteller/scripts/core.mjs:269",
-   "modules/wodx-storyteller/scripts/hunters.mjs:61",
+   "modules/wodx-storyteller/scripts/hunters.mjs:62",
    "modules/wodx-storyteller/scripts/letters.mjs:34",
    "modules/wodx-storyteller/scripts/levers.mjs:20",
    "modules/wodx-storyteller/scripts/setup.mjs:164"
@@ -3510,7 +3514,7 @@
    "modules/wodx-npc/scripts/fates.mjs:46",
    "modules/wodx-npc/scripts/standing.mjs:153",
    "modules/wodx-storyteller/scripts/core.mjs:658",
-   "modules/wodx-storyteller/scripts/institutions.mjs:158",
+   "modules/wodx-storyteller/scripts/institutions.mjs:165",
    "modules/wodx-storyteller/scripts/market-moves.mjs:41",
    "modules/wodx-storyteller/scripts/owners.mjs:44",
    "modules/wodx-storyteller/scripts/owners.mjs:51",
@@ -4158,7 +4162,7 @@
    "wanted"
   ],
   "uses": [
-   "modules/wodx-storyteller/scripts/hunters.mjs:292"
+   "modules/wodx-storyteller/scripts/hunters.mjs:301"
   ]
  },
  {
@@ -4180,7 +4184,7 @@
   ],
   "uses": [
    "modules/wodx-storyteller/scripts/hunt-follow.mjs:259",
-   "modules/wodx-storyteller/scripts/hunters.mjs:151"
+   "modules/wodx-storyteller/scripts/hunters.mjs:152"
   ]
  },
  {
@@ -4257,7 +4261,7 @@
    "drift"
   ],
   "uses": [
-   "modules/wodx-storyteller/scripts/power.mjs:56",
+   "modules/wodx-storyteller/scripts/power.mjs:57",
    "modules/wodx-storyteller/scripts/upkeep.mjs:348"
   ]
  },
@@ -4291,7 +4295,7 @@
    "of"
   ],
   "uses": [
-   "modules/wodx-storyteller/scripts/power.mjs:48",
+   "modules/wodx-storyteller/scripts/power.mjs:49",
    "modules/wodx-storyteller/scripts/sites.mjs:35"
   ]
  },
