@@ -134,7 +134,7 @@ export async function onRequest(payload) {
       await ChatMessage.create({content: `<div class="wodx-card"><p>The request for ${esc(actor.name)} could not be queued: ${esc(r.why)}</p></div>`, whisper: [user.id], speaker: {alias: "Storyteller"}});
       return;
     }
-    srcLine = ` Learned from ${r.src.kind === "practice" ? "practice" : r.src.name} (${SOURCE_KINDS[payload.purchase.source.kind]}), as a long task of ${r.plan.goal} successes at difficulty ${r.plan.diff}; the trait rises when it is done.`;
+    srcLine = ` Learned from ${r.src.kind === "practice" ? "practice" : r.src.name} (${SOURCE_KINDS[payload.purchase.source.kind]}), as a long task of ${r.plan.goal} successes at difficulty ${r.plan.diff}; the trait rises when it is done.${r.src.price ? ` The teacher asks a price: ${r.src.price.what} (written to the Ledger when the study begins).` : ""}`;
   }
   const api = chronicle();
   await api.approvals.addToQueue({

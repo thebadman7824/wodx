@@ -409,7 +409,7 @@ Next free block: B7570
 | B7080-B7109 | Rules as data: Path bearings first, then kith, totems, fetishes, Thaumaturgy and factions as data tables (used B7080-B7093) | Actions |
 | B7110-B7119 | Dark Ages fae exports wired into play (used B7110-B7114) | Actions |
 | B7120-B7129 | Weekly review picks st1 and ac1 (17 November): difficulty past 10, trying again (used B7120-B7121) | Chronicle, NPC, Otherworlds, Combat, Actions, Sheets, system fork |
-| B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130) | Combat, Creation, NPC, Solo |
+| B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130-B7131) | Combat, Creation, NPC, Solo |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
@@ -14200,6 +14200,11 @@ Reverse: switch the setting off.
 WoDX Combat reads the gear's weight (WoDX Library) against what Strength and Potence lift (WoDX Interactables' chart) on land as well as in water. Past half the lift, +1 difficulty to dodge and to stealth; past all of it, half speed as well. A burden set by hand on the token HUD's weight button wins over the weight (a heavy load counts as past half, all they can lift as past the lift, a pack as nothing on land), and "By what they carry" goes back to the weight. Flyers, riders, swimmers and a mist or spirit are left out; worn armor still counts only by its own Dexterity penalty. A house rule: the books give Strength a lifting limit and no pace for a load. Ben's pick mc1 on the weekly review desk.
 
 Reverse: make landLoad in movement-rules.js return steps 0.
+
+## B7131. A teacher has to be willing, and may ask a price (2026-11-17)
+WoDX Creation's learning (teachersFor and the Where is it learned window) asks WoDX NPC how the teacher regards the student. Welcome or Honoured, or trust of 2 or more, teaches freely; Hostile or Hunted, or trust of -2 or less, refuses; anything between asks a price, which is written to WoDX Storyteller's Ledger as the student's debt when the study begins: a guild fee or a season's service before 1500, a tutor's wage or work before 1900, tuition or a favour before 2030, a contract after; between two Kindred it is a boon (minor, major from the fourth dot). A teacher whose token stands in another town (WoDX Storyteller's markets) needs a trip there first. A character a player runs always teaches. The Storyteller sees every teacher open, marked "the Storyteller overrides", and the Storyteller's own "a teacher the Storyteller finds" picks a willing one first. House rule (V20 pdf 131 expects a mentor who teaches; the books give no price). Ben's pick mc2.
+
+Reverse: make willingness in learn-rules.mjs return will "teach" and trip "".
 
 ## B7140. One feature registry in the repo (2026-11-17)
 Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
