@@ -1,6 +1,6 @@
 {
  "host": "secondary",
- "time": "2026-11-21T00:32:09.130Z",
+ "time": "2026-11-21T00:37:12.273Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -9,10 +9,10 @@
   }
  ],
  "gpu": {
-  "tempC": 69.5,
-  "loadPct": 10,
-  "vramPct": 94,
-  "warning": "warn",
+  "tempC": 79,
+  "loadPct": 65,
+  "vramPct": 97,
+  "warning": "critical",
   "jobHeld": true,
   "waiting": 0
  },
