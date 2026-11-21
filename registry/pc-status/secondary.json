@@ -1,6 +1,6 @@
 {
  "host": "secondary",
- "time": "2026-11-21T10:39:58.475Z",
+ "time": "2026-11-21T10:45:01.372Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -9,8 +9,8 @@
   }
  ],
  "gpu": {
-  "tempC": 37.1,
-  "loadPct": 5,
+  "tempC": 36.9,
+  "loadPct": 1,
   "vramPct": 3,
   "warning": "ok",
   "jobHeld": false,
@@ -19,7 +19,7 @@
  "ocr": {
   "workers": 0,
   "loopUp": false,
-  "lastOutputMin": 336,
+  "lastOutputMin": 341,
   "memWait": false,
   "gaveUp": false,
   "stopped": false
