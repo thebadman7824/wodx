@@ -1,11 +1,10 @@
 /**
- * Twists on the table, the rules (Rothenstein Rebuilt, Volume Three picks x1, x2 and x5, B6650-B6659). Pure functions
- * over podState.saga.reveals; reveals.mjs puts them on the map. Data in data/twist-reveals-rothenstein.mjs.
+ * Twists on the table, the rules (the chronicle rebuild, Volume Three picks x1, x2 and x5, B6650-B6659). Pure functions
+ * over podState.saga.reveals; reveals.mjs puts them on the map. Data from the chronicle in play (chronicle-data.mjs; the first chronicle's is in its own module).
  *
  * State: {debts: {who: {from, what, at, called}}, murders: {name: at}, cold: at | null, sounds: {n: {scene, text, until}}}.
  */
-import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD} from "../data/twist-reveals-rothenstein.mjs";
-import {TWISTS} from "../data/twists-rothenstein.mjs";
+import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD, TWISTS} from "./chronicle-data.mjs";
 import {CHAPTERS, chapterNow, frontOf, judgementOf} from "./front-rules.mjs";
 
 export {REVEALS, JUDGED_FAVOURS, MURDERS, COLD};

@@ -1,6 +1,6 @@
 /**
  * WoDX Actions — a Dark Ages test pack for the Phase 6b gate. GM only; asks first; creates actors in their own folder
- * and never touches existing ones. Rothenstein has no Garou of its own, so the gate needs these.
+ * and never touches existing ones. The testbed world has no Garou of its own, so the gate needs these.
  */
 import * as GX from "./garou.js";
 

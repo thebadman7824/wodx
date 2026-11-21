@@ -10,6 +10,9 @@ import {watched} from "./signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
 import {DAY} from "./terms.mjs";
+import {current as chronicleInPlay} from "./chronicle-data.mjs";
+/** The saga's name for cards and windows: the chronicle in play names it (Chronicle Packs Desk d2). */
+const sagaName = () => (P.saga.SAGA.where ? `The ${P.saga.SAGA.where} saga` : "The chronicle's saga");
 
 /**
  * WoDX Chronicle 0.37.0: four ideas taken from the Princes of Darkness mod, rebuilt on WoDX's own systems.
@@ -33,7 +36,7 @@ import {DAY} from "./terms.mjs";
  *   lp: {<actorId>: {since, last, seen: {<threadId>: "put"|"running"|"dismissed"}}}}.
  * Actor flags wodx-chronicle.golconda = {step, mentor, mentorAt, log} and wodx-chronicle.goal = {key, label}.
  *
- *   The Rothenstein saga (podSaga, B3660-B3669): What Sleeps Beneath Rothenstein told over years and ages. Each book
+ *   The chronicle's saga (podSaga, B3660-B3669): the chronicle in play (chronicle-data.mjs) told over years and ages. Each book
  *     runs as a story chain of dated chapters, interludes and world steps; the next book that fits the year goes to the
  *     approval queue. Steps move four long clocks and post signals (hook wodxSaga); the first book's ending changes
  *     the words of later books. State in podState.saga = {endings, clocks, books}.
@@ -62,8 +65,8 @@ export function registerPodSettings() {
   flag("podCities", "Great cities that change with history", "Paris, Rome, Constantinople, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc change by date; Senses and map generation follow.");
   flag("podGolconda", "Golconda as a long road", "A seeker's road of ten steps, set back by killing, frenzy, theft and harmful feeding, and taught by a mentor month by month.");
   flag("podChains", "Story chains and opening goals", "Dated runs of scenes dealt out by the clock, and three opening goals for each new character.");
-  flag("podSaga", "The Rothenstein saga over the years", "What Sleeps Beneath Rothenstein told over years and ages: books of dated chapters and interludes from 880 to 2030, long clocks, and endings that later books answer.");
-  game.settings.register(MODULE_ID, "podCity", {name: "The chronicle's city", hint: "The city a scene is in when the scene names none (scene flag wodx-chronicle.city).", scope: "world", config: true, type: String, default: "Rothenstein"});
+  flag("podSaga", "The chronicle's saga over the years", "The story chronicle in play (from a chronicle module that is on) told over years and ages: books of dated chapters and interludes, long clocks, and endings that later books answer. Does nothing when no chronicle module is on.");
+  game.settings.register(MODULE_ID, "podCity", {name: "The chronicle's city", hint: "The city a scene is in when the scene names none (scene flag wodx-chronicle.city).", scope: "world", config: true, type: String, default: chronicleInPlay()?.manifest?.town ?? ""});
   game.settings.register(MODULE_ID, "podState", {scope: "world", config: false, type: Object, default: {cities: {}, chains: []}});
   game.settings.registerMenu(MODULE_ID, "podMenu", {name: "Cities, Golconda and story chains", label: "Open", hint: "City exposure, the great cities, story chains and opening goals.",
     icon: "fa-solid fa-city", type: PodApp, restricted: true});
@@ -315,7 +318,7 @@ async function dealDue() {
   if ( changed ) { s.chains = s.chains.filter(r => P.nextStep(r, yr)); await saveState(s); }
 }
 
-/* ---------------- the Rothenstein saga (B3660-B3669) ---------------- */
+/* ---------------- the chronicle's saga (B3660-B3669; the data comes from the chronicle in play) ---------------- */
 
 const sagaOf = s => { const x = s.saga ??= {}; x.endings ??= {}; x.clocks ??= {}; x.books ??= {}; return x; };
 const futureOn = () => { try { return !!rule("futureBranch"); } catch (e) { return false; } };
@@ -487,13 +490,13 @@ async function sagaTickNow() {
     for ( const g of gone ) { x.clocks = P.saga.moveClocks(x.clocks, P.saga.worldDelta(g)); x.books[g.key] = "passed"; }
     await saveState(s);
     const moved = P.saga.SAGA_CLOCKS.filter(k => (x.clocks[k.key] ?? 0) !== (before[k.key] ?? 0)).map(k => `${esc(k.label)}: ${x.clocks[k.key]} of ${k.size}`);
-    await card("The Rothenstein saga: years gone by", `<p>The clock passed ${gone.map(g => esc(g.title)).join(", ")} without play. What the wider world did in those years still happened.</p>${moved.length ? `<p>The long clocks: ${moved.join("; ")}.</p>` : ""}<p class="vta-note">Any of them can still be started from the saga window.</p>`);
+    await card(`${sagaName()}: years gone by`, `<p>The clock passed ${gone.map(g => esc(g.title)).join(", ")} without play. What the wider world did in those years still happened.</p>${moved.length ? `<p>The long clocks: ${moved.join("; ")}.</p>` : ""}<p class="vta-note">Any of them can still be started from the saga window.</p>`);
   }
   const b = P.saga.dueBook(x, yr, {future: futureOn()});
   if ( !b ) return [];
   x.books[b.key] = "offered";
   await saveState(s);
-  return [{type: T_SAGA, key: `saga:${b.key}`, title: `The Rothenstein saga, book ${b.n}: ${b.title}`,
+  return [{type: T_SAGA, key: `saga:${b.key}`, title: `${sagaName()}, book ${b.n}: ${b.title}`,
     detail: `${b.from} to ${b.to}. ${b.text} Approve to start it; reject to skip this book.`, data: {book: b.key}}];
 }
 
@@ -656,7 +659,7 @@ export class PodApp extends ApplicationV2 {
       const x = sagaOf(s), word = {running: "running", done: "done", skipped: "skipped", passed: "passed without play", offered: "waiting for approval", ready: "fits the year", ahead: "later", past: "its years are past"};
       const books = P.saga.bookStates(x, yr, {future: futureOn()});
       const ends = Object.entries(P.saga.SAGA_ENDINGS);
-      parts.push(`<h3>The Rothenstein saga</h3><p>${esc(P.saga.SAGA.title)}, told over the years. The next book that fits the year comes to the approval queue.</p>
+      parts.push(`<h3>${esc(sagaName())}</h3><p>${esc(P.saga.SAGA.title)}, told over the years. The next book that fits the year comes to the approval queue.</p>
         <table class="wodx-check"><tbody>${P.saga.SAGA_CLOCKS.map(c => `<tr><td>${esc(c.label)}</td><td><input type="number" min="0" max="${c.size}" value="${x.clocks[c.key] ?? 0}" data-clock="${c.key}" style="width:4em"> of ${c.size}</td></tr>`).join("")}</tbody></table>
         <button type="button" data-action="sagaClocks">Set the clocks</button>
         <ul>${books.map(b => { const bk = P.saga.bookByKey(b.key), endable = bk.steps.some(st => st.ending);
@@ -676,7 +679,7 @@ export class PodApp extends ApplicationV2 {
       const list = seekers();
       parts.push(`<h3>Seekers of Golconda</h3><ul>${list.map(a => `<li>${esc(a.name)}: step ${golOf(a).step} of ${P.GOLCONDA_STEPS}${golOf(a).mentor ? `, taught by ${esc(golOf(a).mentor)}` : ""}</li>`).join("") || "<li>None.</li>"}</ul><p class="vta-note">Start or teach from the character's Signature feature window.</p>`);
     }
-    if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road, Story chains or the Rothenstein saga in the module settings.</p>`);
+    if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road, Story chains or the chronicle's saga in the module settings (the saga needs a chronicle module turned on).</p>`);
     // B6164: a patron raises or restores a building with every switch off too
     parts.push(`<h3>A building raised or restored</h3><p class="vta-note">The patron pays, the scene's town gains and the faction owes a boon.</p>
         <div data-build class="form-group"><input name="patron" placeholder="Patron (a character)"><input name="building" placeholder="Building"><input name="faction" placeholder="Faction that gains"><label><input type="checkbox" name="restore"> Restore</label><button type="button" data-action="build">Raise or restore</button></div>`);
@@ -697,8 +700,14 @@ export function registerPodHooks() {
   }});
   registerHandler(T_LP, {label: "A thread from a character's lifepath returns as a story chain",
     approve: e => startThread(e.data?.actor, e.data?.thread), reject: e => dismissThread(e.data?.actor, e.data?.thread?.id)});
-  registerHandler(T_SAGA, {label: "The next book of the Rothenstein saga", approve: e => startSaga(e.data?.book), reject: e => skipSaga(e.data?.book)});
+  registerHandler(T_SAGA, {label: "The next book of the chronicle's saga", approve: e => startSaga(e.data?.book), reject: e => skipSaga(e.data?.book)});
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | exposure`, e)); });
+  // A saga still running whose chronicle module is off says so once, to the Storyteller (Chronicle Packs Desk c1)
+  Hooks.once("ready", () => {
+    if ( !isActiveGM() ) return;
+    const lost = P.saga.orphanSagas(state().chains);
+    if ( lost.length ) ui.notifications.warn(`WoDX: this world has a saga under way (${lost.join(", ")}) whose chronicle module is not switched on, so it is paused. Turn that module on in Manage Modules to carry on, or leave it off to play on without it.`, {permanent: true});
+  });
   Hooks.on("wodxSensesGather", onSenses);
   Hooks.on("wodxDamageApplied", onDamage);
   Hooks.on("updateActor", onActorUpdate);
@@ -709,7 +718,7 @@ export function registerPodHooks() {
   // B6162: story chains, the saga, fronts and Golconda teaching wait through a time skip or a hold; the skip's end
   // runs them once (settle)
   const tick = ({settle = false} = {}) => { if ( !isActiveGM() || (!settle && isQuiet()) || (!settle && Date.now() - last < 2000) ) return; last = Date.now();
-    // B6740: the whole tick is one turn on the story-chain state; its proposals go out after it. Rothenstein's
+    // B6740: the whole tick is one turn on the story-chain state; its proposals go out after it. The chronicle's
     // encounters come after the turn: each of their state writes takes its own turn (encounters.mjs)
     podTurn(async () => { await dealDue(); const asks = await lifepathTickNow(); asks.push(...await sagaTickNow()); await Fronts.frontTickNow(); return asks; })
       .then(askAll).then(() => Encounters.encounterTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));

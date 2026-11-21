@@ -62,10 +62,11 @@ Heartbeat (B4700): a GitHub workflow (.github/workflows/pc-heartbeat.yml) checks
 issue has moved in the last 15 minutes, and opens a pc-alert issue "the runner is silent" when it has not.
 
 Recheck (B4610, B7310): when a gates job fails, each failing gate (up to 12) is rerun ALONE, one gate per run-gate
-call on a freshly reset lane, and no verdict rests on one run: a pass alone reads `passes alone` (it fails only after
-other gates, or is flaky); a failure alone is run once more, and a pass then reads `flaky`; two failures alone go to
+call on a freshly reset lane, and no verdict rests on one run: a pass alone is run once more, and two passes read
+`order fault` (it fails only after other gates; B7441); a pass and a fail alone read `flaky`; two failures alone go to
 main the same way, where a pass is confirmed by a second run before it reads `NEW with this change`, and a failure
-there reads `fails on main too`. Runs on the branch come first and runs on main after (two deploys at most), and the
+there reads `fails on main too`. A flaky gate goes to main as well (B7521): a failure there reads `fails on main too`,
+two passes there leave it `flaky`. An order fault or a `fails on main too` gate does not turn wodx/gates red. Runs on the branch come first and runs on main after (two deploys at most), and the
 recheck stops taking runs after 120 minutes. A "fails on main too" gate is still a fault to fix, not a reason to
 merge past it. "recheck": false in the job turns this off.
 
@@ -163,6 +164,14 @@ Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC star
 05:00 UTC. It waits for the GPU guard (gives up at 13:00 UTC), queues every gate on lane 8 for main's commit, and opens
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
 touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
+
+## The GPU guard (B7510)
+`gpuguard.mjs` lets one GPU job hold the card at a time and starts a job only when its memory fits:
+`node tools/pcq/gpuguard.mjs run --class art|ocr|local|other [--need-gb N] [--label x] -- <command>`, and
+`gpuguard.mjs state` prints one JSON line (card reading, holder, waiters). Waiters line up by gpu.order in
+registry/priorities.json, then by arrival. The lock folder is GPU_GUARD_DIR (on the Secondary PC, D:\WoDX\pcq\gpu-guard).
+The PCs also run a copy from D:\WoDX\pcq\gpu-tools, which uses the same order built in; nightly-gates.mjs takes the
+repo copy first.
 
 ## The merge train (B7202)
 

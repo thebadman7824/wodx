@@ -42,12 +42,15 @@ export function applyWodxRollMods(diceRoll, {modsFor = null, on = true, lowest =
 	// B6925: a halving count (a Tzimisce without native soil): wodxHalveRoll halves the pool once the dice are in
 	diceRoll.wodxHalve = Math.max(0, Math.floor(n(mods?.halve)));
 	if (!dice && !diff && !parts.length) return null;
+	// B7120: past 10 the dice roll at 10 and each point past it needs one more success (M20 pdf 504); the roller reads it
+	const over0 = Math.max(0, n(diceRoll.difficulty) + diff - 10);
 	diceRoll.numDices = Math.max(0, n(diceRoll.numDices) + dice);
 	for (const t of diceRoll.targetlist ?? []) t.numDices = Math.max(0, n(t.numDices) + dice);
 	const want = n(diceRoll.difficulty) + diff;
 	diceRoll.difficulty = Math.max(lowest, Math.min(10, want));
+	diceRoll.wodxOver = Math.max(n(diceRoll.wodxOver), over0);
 	const sum = [dice ? `${dice > 0 ? "+" : ""}${dice} dice` : "", diff ? `${diff > 0 ? "+" : ""}${diff} difficulty` : ""].filter(Boolean).join(", ");
-	if (parts.length) diceRoll.extraInfo = [...(diceRoll.extraInfo ?? []), `WoDX: ${parts.join("; ")}${sum ? ` (${sum})` : ""}${want > 10 ? " (difficulty held at 10)" : ""}`];
+	if (parts.length) diceRoll.extraInfo = [...(diceRoll.extraInfo ?? []), `WoDX: ${parts.join("; ")}${sum ? ` (${sum})` : ""}${want > 10 ? ` (rolled at 10; ${wodxOverText(want - 10)})` : ""}`];
 	return { dice, diff, parts, once: mods?.once ?? [], capped: want > 10 };
 }
 
@@ -63,6 +66,23 @@ export function wodxNoBotch(diceRoll, {modsFor = null, on = true} = {}) {
 	try { diceRoll.wodxNoBotch = !!modsFor(diceRoll.actor, { attributeKey: diceRoll.attribute, abilityKey: diceRoll.ability })?.noBotch; }
 	catch (e) { diceRoll.wodxNoBotch = false; }
 	return diceRoll.wodxNoBotch;
+}
+
+/** B7120: the words for a difficulty past 10: "2 more successes needed". */
+export function wodxOverText(over) {
+	const k = Math.max(0, Math.round(n(over)));
+	return k ? `${k} more success${k === 1 ? "" : "es"} needed` : "";
+}
+
+/**
+ * B7120: take one success off for each point the difficulty went past 10 (M20 pdf 504; V20 pdf 166). diceRoll.wodxOver
+ * is set by applyWodxRollMods, or by the general window when WoDX Sheets held its difficulty at 10. A roll that only
+ * falls short this way is a failure. Returns {success, over}.
+ */
+export function wodxOverSuccesses(diceRoll, success) {
+	const over = Math.max(0, Math.round(n(diceRoll?.wodxOver)));
+	if (!over || ["soak", "damage"].includes(diceRoll?.origin)) return { success, over: 0 };
+	return { success: Math.max(0, n(success) - over), over };
 }
 
 /** B6925: a pool halved k times, rounded down, never under one die; 0 stays 0. */

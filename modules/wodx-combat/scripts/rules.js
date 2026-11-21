@@ -18,10 +18,15 @@ export const WOUND_LEVELS = TERMS.HEALTH_LEVELS;
  */
 export function countSuccesses(faces, difficulty, opts = {}) {
     // B6189: the one V20 count (terms.mjs): difficulty held to 2-10, a 10 always hits
-    const { specialty = false, willpower = false, autoSuccesses = 0, canBotch = true } = opts;
-    const r = TERMS.successes(faces, difficulty, { specialty, willpower, auto: autoSuccesses, canBotch });
-    return { raw: r.raw, ones: r.ones, successes: r.successes, botch: r.botch };
+    // B7120: past 10, each point needs one more success (M20 pdf 504); opts.over when the caller held it at 10
+    const { specialty = false, willpower = false, autoSuccesses = 0, canBotch = true, over = null } = opts;
+    const r = TERMS.successes(faces, difficulty, { specialty, willpower, auto: autoSuccesses, canBotch, over });
+    return { raw: r.raw, ones: r.ones, successes: r.successes, botch: r.botch, over: r.over ?? 0, rolled: r.rolled ?? r.successes };
 }
+
+/** B7120: how far a difficulty goes past 10, and the card's words for it (terms.mjs). */
+export function overTen(d) { return TERMS.overTen ? TERMS.overTen(d) : 0; }
+export function overTenText(over, wanted = null) { return TERMS.overTenText ? TERMS.overTenText(over, wanted) : ""; }
 
 /** Clamp a difficulty into the 2-10 range used by the Storyteller System. */
 export function clampDifficulty(d) {
@@ -241,7 +246,7 @@ export const MANEUVERS = {
     stake: { label: "Stake (+3 diff)", diff: 3, dmg: 0, dice: 0, note: "Stake: three damage successes pierce the heart: vampires are immobilized (torpid-like) and mortals die (V20 Dark Ages p. 347)." },
     impale: { label: "Impale (+3 diff, archery)", diff: 3, dmg: 0, dice: 0, note: "Impale: as a stake, with a shaft through the heart (V20 Dark Ages p. 349)." },
     suppress: { label: "Suppressive fire (-2 diff, defender +2)", diff: -2, dmg: 0, dice: 0, defDiff: 2, note: "Suppressive Fire (3+ Archery): a target who advances defends at +2 difficulty (V20 Dark Ages p. 349)." },
-    // ---- House maneuvers (not from the book): Storyteller's option, added in v1.1.0 for the Rothenstein armory.
+    // ---- House maneuvers (not from the book): Storyteller's option, added in v1.1.0 for the first chronicle's armory.
     lunge: { label: "Lunge [house] (+1 diff, +1 dmg, defender +1 diff; you are overextended)", diff: 1, dmg: 1, dice: 0, defDiff: 1, note: "Lunge: {name} is overextended: +1 difficulty on defense for the rest of this turn and the next (marked, B6921)." },
     cleave: { label: "Overhead Cleave [house] (+2 diff, +3 dmg, no defense this turn)", diff: 2, dmg: 3, dice: 0, noDefense: true, note: "Overhead Cleave: {name} may not defend for the rest of the turn." },
     hurried: { label: "Hurried Strike [house] (-1 diff, -1 dmg)", diff: -1, dmg: -1, dice: 0 },

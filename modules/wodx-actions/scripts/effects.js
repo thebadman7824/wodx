@@ -24,13 +24,13 @@ import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { isLiveWorld } from "../../wodx-chronicle/scripts/live-worlds.mjs";
 
 const MOD = "wodx-actions";
 const TYPE = "wodx-actions.effect";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const LIVE_WORLDS = ["rothenstein-live"];
-const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags?.wodx?.liveWorld;
+const isLive = () => isLiveWorld(game.world); // B7564: the one shared list
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 const combat = () => game.modules.get("wodx-combat")?.api ?? null;
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;

@@ -1,0 +1,2338 @@
+{
+ "source": "V20 Lore of the Clans: combination Disciplines (needs: every Discipline at the level named). Own words; page refs.",
+ "book": "V20 LotC",
+ "kind": "combination",
+ "line": "vampire",
+ "rows": [
+  {
+   "id": "lotc-baals-sight",
+   "kw": "baals-sight",
+   "d": "Combination (Auspex 2, Quietus 4)",
+   "l": 4,
+   "n": "Baal's Sight",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Quietus",
+     "l": 4
+    }
+   ],
+   "p": 28,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 18,
+   "e": "Sorcerer caste: always sees dematerialized spirits, with no roll or cost (it counts toward the sorcerer Taste of Death); the eyes stay bloodshot, and spirits nearby can tell they are seen.",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-draught-of-the-soul",
+   "kw": "draught-of-the-soul",
+   "d": "Combination (Auspex 4, Quietus 5)",
+   "l": 5,
+   "n": "Draught of the Soul",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Quietus",
+     "l": 5
+    }
+   ],
+   "p": 28,
+   "r": "willpower",
+   "diff": "var",
+   "c": "",
+   "t": "instant",
+   "xp": 27,
+   "e": "Only during diablerie: spend Willpower equal to the victim's Intelligence and roll at the victim's Willpower +1 a derangement (most 9); success gives an experience point for each Skill the victim had at least as high, kept for those Skills, and perhaps dreamlike memories. A botch: a lasting derangement, often the victim's.",
+   "book": "V20 LotC",
+   "k": [
+    "know"
+   ]
+  },
+  {
+   "id": "lotc-eyes-of-alamut",
+   "kw": "eyes-of-alamut",
+   "d": "Combination (Auspex 4, Quietus 3)",
+   "l": 4,
+   "n": "Eyes of Alamut",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Quietus",
+     "l": 3
+    }
+   ],
+   "p": 28,
+   "r": "perception+awareness",
+   "diff": "var",
+   "c": "w1",
+   "t": "var",
+   "xp": 21,
+   "e": "After a touch, see and hear through the target, an hour a success, at the target's current Willpower. A target with Telepathy may notice on Perception + Occult (6).",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-eyes-of-blades",
+   "kw": "eyes-of-blades",
+   "d": "Combination (Auspex 2, Celerity 3)",
+   "l": 3,
+   "n": "Eyes of Blades",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Celerity",
+     "l": 3
+    }
+   ],
+   "p": 29,
+   "r": "",
+   "diff": "",
+   "c": "b2w1",
+   "t": "turn",
+   "xp": 15,
+   "e": "At the start of the turn, as one turn of Celerity: no action but defence, and the full dodge or parry pool against every attack that turn.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-forced-march",
+   "kw": "forced-march",
+   "d": "Combination (Celerity 2, Fortitude 2)",
+   "l": 2,
+   "n": "Forced March",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 2
+    }
+   ],
+   "p": 29,
+   "r": "",
+   "diff": "",
+   "c": "bX",
+   "t": "var",
+   "xp": 12,
+   "e": "Out of combat: spend half Celerity in blood (round up) to run at running speed times Celerity for hours equal to Fortitude.",
+   "book": "V20 LotC",
+   "k": [
+    "hasten"
+   ]
+  },
+  {
+   "id": "lotc-honeyed-words",
+   "kw": "honeyed-words",
+   "d": "Combination (Auspex 2, Presence 1)",
+   "l": 2,
+   "n": "Honeyed Words",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 1
+    }
+   ],
+   "p": 29,
+   "r": "manipulation+expression",
+   "diff": 6,
+   "c": "",
+   "t": "scene",
+   "xp": 9,
+   "e": "For the scene, talking one person round is easier by the successes (never below 4), and the Storyteller warns before anything said would offend, confuse or worry them.",
+   "book": "V20 LotC",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-shadow-feint",
+   "kw": "shadow-feint",
+   "d": "Combination (Celerity 2, Obfuscate 2)",
+   "l": 2,
+   "n": "Shadow Feint",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 2
+    },
+    {
+     "d": "Obfuscate",
+     "l": 2
+    }
+   ],
+   "p": 30,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "turn",
+   "xp": 12,
+   "e": "In a turn with Celerity on and an evasive first action, one more blood: everything aimed at the Assamite is +2 (most 9) for the turn; vampires whose Auspex is above the Obfuscate see through it.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-burning-wrath",
+   "kw": "burning-wrath",
+   "d": "Combination (Celerity 3, Potence 3)",
+   "l": 3,
+   "n": "Burning Wrath",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 3
+    },
+    {
+     "d": "Potence",
+     "l": 3
+    }
+   ],
+   "p": 49,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "scene",
+   "xp": 18,
+   "e": "Brawl attacks do aggravated damage for the scene.",
+   "book": "V20 LotC",
+   "k": [
+    "boost",
+    "harm"
+   ]
+  },
+  {
+   "id": "lotc-command-the-wary-beast",
+   "kw": "command-the-wary-beast",
+   "d": "Combination (Animalism 2, Presence 3)",
+   "l": 3,
+   "n": "Command the Wary Beast",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 49,
+   "r": "manipulation+animalken",
+   "diff": 7,
+   "c": "w1",
+   "t": "scene",
+   "xp": 15,
+   "e": "Hostile beasts with no master flee; an enemy's beasts are 3 harder to command; beasts friendly to the Brujah's side are 2 easier.",
+   "book": "V20 LotC",
+   "k": [
+    "fear"
+   ]
+  },
+  {
+   "id": "lotc-esprit-de-corps",
+   "kw": "esprit-de-corps",
+   "d": "Combination (Potence 4, Presence 4)",
+   "l": 4,
+   "n": "Esprit de Corps",
+   "needs": [
+    {
+     "d": "Potence",
+     "l": 4
+    },
+    {
+     "d": "Presence",
+     "l": 4
+    }
+   ],
+   "p": 49,
+   "r": "charisma+leadership",
+   "diff": 7,
+   "c": "",
+   "t": "scene",
+   "xp": 24,
+   "e": "Successes reach one, two, six, twenty or every ally nearby; those inspired are 2 harder to frighten and gain a Potence dot for each two successes (most 3; mortals only the passive dice) for the scene.",
+   "book": "V20 LotC",
+   "k": [
+    "boost",
+    "fear:calm"
+   ]
+  },
+  {
+   "id": "lotc-iron-heart",
+   "kw": "iron-heart",
+   "d": "Combination (Potence 3, Presence 3)",
+   "l": 3,
+   "n": "Iron Heart",
+   "needs": [
+    {
+     "d": "Potence",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 49,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 18,
+   "e": "Always: supernatural attempts to sway or bend the Brujah's mind are 2 harder (most 9), or resisting an unrolled one is 2 easier. Spending a Willpower while urging someone else to stand firm gives them 1 of the same.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-leaps-and-bounds",
+   "kw": "leaps-and-bounds",
+   "d": "Combination (Celerity 2, Potence 2)",
+   "l": 2,
+   "n": "Leaps and Bounds",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 2
+    },
+    {
+     "d": "Potence",
+     "l": 2
+    }
+   ],
+   "p": 49,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 12,
+   "e": "Jumps go as far as usual times the lower of Celerity and Potence, with no roll; a hard landing may call for Dexterity + Athletics (4).",
+   "book": "V20 LotC",
+   "k": [
+    "move"
+   ]
+  },
+  {
+   "id": "lotc-pulse-of-undeath",
+   "kw": "pulse-of-undeath",
+   "d": "Combination (Auspex 1, Potence 1)",
+   "l": 1,
+   "n": "Pulse of Undeath",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Potence",
+     "l": 1
+    }
+   ],
+   "p": 50,
+   "r": "perception+empathy",
+   "diff": 6,
+   "c": "",
+   "t": "instant",
+   "xp": 6,
+   "e": "Each success names one of the target's physical Disciplines (Celerity, Potence, Fortitude) and roughly its level.",
+   "book": "V20 LotC",
+   "k": [
+    "know"
+   ]
+  },
+  {
+   "id": "lotc-reluctant-performance-artist",
+   "kw": "reluctant-performance-artist",
+   "d": "Combination (Dominate 3, Presence 3)",
+   "l": 3,
+   "n": "Reluctant Performance Artist",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 50,
+   "r": "",
+   "diff": "",
+   "c": "w1",
+   "t": "scene",
+   "xp": 18,
+   "e": "One more Willpower on Mesmerize sends a mortal to perform in public; watching mortals whose Willpower is not above the successes can only watch (+1 if it is dangerous or unlawful, +3 if the performer attacks them), and later shrug it off as art.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "hold"
+   ]
+  },
+  {
+   "id": "lotc-scourge-of-alecto",
+   "kw": "scourge-of-alecto",
+   "d": "Combination (Celerity 2, Presence 4)",
+   "l": 4,
+   "n": "Scourge of Alecto",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 4
+    }
+   ],
+   "p": 51,
+   "r": "willpower",
+   "diff": "var",
+   "c": "w1",
+   "t": "instant",
+   "xp": 18,
+   "e": "A full turn's focus on one target, permanent Willpower at their current Willpower: a bashing level a success, and anyone who can frenzy rolls against it at +2.",
+   "book": "V20 LotC",
+   "k": [
+    "harm",
+    "fear"
+   ]
+  },
+  {
+   "id": "lotc-true-loves-face",
+   "kw": "true-loves-face",
+   "d": "Combination (Obfuscate 3, Presence 3)",
+   "l": 3,
+   "n": "True Love's Face",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 69,
+   "r": "charisma+empathy",
+   "diff": 6,
+   "c": "",
+   "t": "scene",
+   "xp": 18,
+   "e": "The chosen victim sees the Setite as someone they love, for as long as the Setite stays near; if no one is named, the victim supplies who, and the Setite must work out who that is.",
+   "book": "V20 LotC",
+   "k": [
+    "illusion",
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-typhonic-beast",
+   "kw": "typhonic-beast",
+   "d": "Combination (Potence 3, Serpentis 4)",
+   "l": 4,
+   "n": "Typhonic Beast",
+   "needs": [
+    {
+     "d": "Potence",
+     "l": 3
+    },
+    {
+     "d": "Serpentis",
+     "l": 4
+    }
+   ],
+   "p": 69,
+   "r": "",
+   "diff": "",
+   "c": "b3",
+   "t": "night",
+   "xp": 21,
+   "e": "Three turns to take the Typhonic beast's shape until sunrise: +1 Strength, Dexterity and Stamina, soak at difficulty 5, Stamina soaks aggravated claws and fangs, the Cobra's venomous bite, double running speed, +2 dice to smell and hearing.",
+   "book": "V20 LotC",
+   "k": [
+    "shape",
+    "boost"
+   ]
+  },
+  {
+   "id": "lotc-weigh-the-heart",
+   "kw": "weigh-the-heart",
+   "d": "Combination (Auspex 3, Serpentis 5)",
+   "l": 5,
+   "n": "Weigh the Heart",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 3
+    },
+    {
+     "d": "Serpentis",
+     "l": 5
+    }
+   ],
+   "p": 70,
+   "r": "perception+empathy",
+   "diff": 8,
+   "c": "",
+   "t": "instant",
+   "xp": 24,
+   "e": "A truth about the target a success, Nature first, then derangements, passions, fears and guilts, never the details of a crime.",
+   "book": "V20 LotC",
+   "k": [
+    "know"
+   ]
+  },
+  {
+   "id": "lotc-blood-thorns",
+   "kw": "blood-thorns",
+   "d": "Combination (Protean 2, Potence 2)",
+   "l": 2,
+   "n": "Blood Thorns",
+   "needs": [
+    {
+     "d": "Protean",
+     "l": 2
+    },
+    {
+     "d": "Potence",
+     "l": 2
+    }
+   ],
+   "p": 89,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "instant",
+   "xp": 12,
+   "e": "Shoot a claw or barb at someone within 10 yards as a ranged attack for Strength +1 aggravated; the claw takes three turns to grow back.",
+   "book": "V20 LotC",
+   "k": [
+    "harm"
+   ]
+  },
+  {
+   "id": "lotc-claw-immunity",
+   "kw": "claw-immunity",
+   "d": "Combination (Animalism 2, Fortitude 4)",
+   "l": 4,
+   "n": "Claw Immunity",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 4
+    }
+   ],
+   "p": 89,
+   "r": "",
+   "diff": "",
+   "c": "b2",
+   "t": "scene",
+   "xp": 18,
+   "e": "For the scene, soak against ordinary animals' claws, fangs and the like adds Animalism + Fortitude dice to the usual soak; no use against Feral Claws or supernatural beasts.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-flesh-wound",
+   "kw": "flesh-wound",
+   "d": "Combination (Fortitude 2, Obfuscate 3)",
+   "l": 3,
+   "n": "Flesh Wound",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 2
+    },
+    {
+     "d": "Obfuscate",
+     "l": 3
+    }
+   ],
+   "p": 90,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "scene",
+   "xp": 15,
+   "e": "For the scene, new wounds do not show, nor limping or bleeding, until the vampire is Incapacitated or staked.",
+   "book": "V20 LotC",
+   "k": [
+    "veil"
+   ]
+  },
+  {
+   "id": "lotc-king-of-the-beasts",
+   "kw": "king-of-the-beasts",
+   "d": "Combination (Fortitude 2, Animalism 4)",
+   "l": 4,
+   "n": "King of the Beasts",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 2
+    },
+    {
+     "d": "Animalism",
+     "l": 4
+    }
+   ],
+   "p": 90,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 18,
+   "e": "Beasts the vampire calls with Animalism have a Fortitude dot while in sight.",
+   "book": "V20 LotC",
+   "k": [
+    "boost"
+   ]
+  },
+  {
+   "id": "lotc-see-the-reflected-form",
+   "kw": "see-the-reflected-form",
+   "d": "Combination (Auspex 2, Protean 4)",
+   "l": 4,
+   "n": "See the Reflected Form",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Protean",
+     "l": 4
+    }
+   ],
+   "p": 90,
+   "r": "perception+awareness",
+   "diff": 6,
+   "c": "",
+   "t": "instant",
+   "xp": 18,
+   "e": "In the aura: one success shows the subject's true form, three every form a vampire can take and the Disciplines behind them, five the forms of shapeshifters and fae too. Obfuscate is not a change of shape and stays hidden.",
+   "book": "V20 LotC",
+   "k": [
+    "know"
+   ]
+  },
+  {
+   "id": "lotc-shatterproof",
+   "kw": "shatterproof",
+   "d": "Combination (Protean 3, Fortitude 4)",
+   "l": 4,
+   "n": "Shatterproof",
+   "needs": [
+    {
+     "d": "Protean",
+     "l": 3
+    },
+    {
+     "d": "Fortitude",
+     "l": 4
+    }
+   ],
+   "p": 90,
+   "r": "",
+   "diff": "",
+   "c": "w1",
+   "t": "instant",
+   "xp": 21,
+   "e": "Soak aggravated damage with Stamina and Fortitude together.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-spirit-tracking",
+   "kw": "spirit-tracking",
+   "d": "Combination (Protean 2, Animalism 2)",
+   "l": 2,
+   "n": "Spirit Tracking",
+   "needs": [
+    {
+     "d": "Protean",
+     "l": 2
+    },
+    {
+     "d": "Animalism",
+     "l": 2
+    }
+   ],
+   "p": 90,
+   "r": "perception+survival",
+   "diff": 7,
+   "c": "",
+   "t": "scene",
+   "xp": 12,
+   "e": "Track a vampire's Beast within 10 yards, 100 yards at three successes; at five, sense who has been here in the last three days. Illusions short of ones that fool every sense do not mislead the tracker.",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-eyes-of-a-thousand-shades",
+   "kw": "eyes-of-a-thousand-shades",
+   "d": "Combination (Auspex 1, Necromancy 3)",
+   "l": 3,
+   "n": "Eyes of a Thousand Shades",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Necromancy",
+     "l": 3
+    }
+   ],
+   "p": 107,
+   "r": "perception+occult",
+   "diff": "",
+   "c": "b1",
+   "t": "scene",
+   "xp": 12,
+   "e": "Look out through the eyes of every ghost within 25 yards per success, switching between them at will. The dead see the living world dimly, through their own memories, so fine detail is lost.",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-sharing-the-masters-vigor",
+   "kw": "sharing-the-masters-vigor",
+   "d": "Combination (Dominate 5, Necromancy 3)",
+   "l": 5,
+   "n": "Sharing the Master's Vigor",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 5
+    },
+    {
+     "d": "Necromancy",
+     "l": 3
+    }
+   ],
+   "p": 107,
+   "r": "wits+occult",
+   "diff": "",
+   "c": "b1",
+   "t": "var",
+   "xp": 24,
+   "e": "Each success gives one zombie raised by Shambling Hordes a dot of Celerity, Fortitude or Potence the vampire has, never above the vampire's own rating, for as long as the zombie stands.",
+   "book": "V20 LotC",
+   "k": [
+    "boost"
+   ]
+  },
+  {
+   "id": "lotc-armor-of-the-abyss",
+   "kw": "armor-of-the-abyss",
+   "d": "Combination (Obtenebration 3, Fortitude 3)",
+   "l": 3,
+   "n": "Armor of the Abyss",
+   "needs": [
+    {
+     "d": "Obtenebration",
+     "l": 3
+    },
+    {
+     "d": "Fortitude",
+     "l": 3
+    }
+   ],
+   "p": 124,
+   "r": "manipulation+occult",
+   "diff": 7,
+   "c": "b1",
+   "t": "var",
+   "xp": 18,
+   "e": "Shadow wraps the vampire as a suit of armor that does not hinder movement or sight. Armor rating equals Fortitude, for three turns (or ten minutes) per success.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-empower-minion",
+   "kw": "empower-minion",
+   "d": "Combination (Dominate 3, Potence 3)",
+   "l": 3,
+   "n": "Empower Minion",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 3
+    },
+    {
+     "d": "Potence",
+     "l": 3
+    }
+   ],
+   "p": 125,
+   "r": "",
+   "diff": "",
+   "c": "bX",
+   "t": "var",
+   "xp": 18,
+   "e": "A servant under the vampire's Dominate borrows Potence at any distance: one blood per dot, up to three dots per servant, spent over several turns if needed, while the Dominate lasts. It replaces any Potence the servant has.",
+   "book": "V20 LotC",
+   "k": [
+    "boost"
+   ]
+  },
+  {
+   "id": "lotc-fear-of-the-dark",
+   "kw": "fear-of-the-dark",
+   "d": "Combination (Presence 2, Obtenebration 2)",
+   "l": 2,
+   "n": "Fear of the Dark",
+   "needs": [
+    {
+     "d": "Presence",
+     "l": 2
+    },
+    {
+     "d": "Obtenebration",
+     "l": 2
+    }
+   ],
+   "p": 125,
+   "r": "manipulation+intimidation",
+   "diff": 6,
+   "c": "",
+   "t": "scene",
+   "xp": 12,
+   "e": "Used with Shadow Play: each success makes one person nearby see horrors in the shadows. A target who fails a Courage roll (difficulty 8) flees in terror.",
+   "book": "V20 LotC",
+   "k": [
+    "fear"
+   ]
+  },
+  {
+   "id": "lotc-mind-strike",
+   "kw": "mind-strike",
+   "d": "Combination (Dominate 2, Potence 2)",
+   "l": 2,
+   "n": "Mind Strike",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 2
+    },
+    {
+     "d": "Potence",
+     "l": 2
+    }
+   ],
+   "p": 125,
+   "r": "manipulation+intimidation",
+   "diff": "t:willpower",
+   "c": "w1",
+   "t": "instant",
+   "xp": 12,
+   "e": "Needs eye contact. Successes plus Potence become bashing damage to the victim's mind, soaked as normal. Shadow Play adds nothing, and vampires of lower Generation are immune.",
+   "book": "V20 LotC",
+   "k": [
+    "harm"
+   ]
+  },
+  {
+   "id": "lotc-shadow-mark",
+   "kw": "shadow-mark",
+   "d": "Combination (Dominate 3, Obtenebration 6)",
+   "l": 6,
+   "n": "Shadow Mark",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 3
+    },
+    {
+     "d": "Obtenebration",
+     "l": 6
+    }
+   ],
+   "p": 125,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "instant",
+   "xp": 27,
+   "e": "Shadowstep can land in the shadow where any Dominated servant stands, at any distance, at one higher difficulty. The servant must stand in shadow.",
+   "book": "V20 LotC",
+   "k": [
+    "move"
+   ]
+  },
+  {
+   "id": "lotc-shroud-of-absence",
+   "kw": "shroud-of-absence",
+   "d": "Combination (Obfuscate 3, Obtenebration 3)",
+   "l": 3,
+   "n": "Shroud of Absence",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 3
+    },
+    {
+     "d": "Obtenebration",
+     "l": 3
+    }
+   ],
+   "p": 125,
+   "r": "manipulation+subterfuge",
+   "diff": 7,
+   "c": "b1",
+   "t": "var",
+   "xp": 18,
+   "e": "Cloaks an area about ten feet across in sight for an hour per success, moving at walking pace; onlookers ignore it. Seeing in takes a Willpower roll (difficulty 7) with more successes than the vampire scored.",
+   "book": "V20 LotC",
+   "k": [
+    "veil"
+   ]
+  },
+  {
+   "id": "lotc-creepy-clown-coat",
+   "kw": "creepy-clown-coat",
+   "d": "Combination (Dementation 1, Obfuscate 3)",
+   "l": 3,
+   "n": "Creepy Clown Coat",
+   "needs": [
+    {
+     "d": "Dementation",
+     "l": 1
+    },
+    {
+     "d": "Obfuscate",
+     "l": 3
+    }
+   ],
+   "p": 144,
+   "r": "wits+awareness",
+   "diff": "t:willpower",
+   "c": "",
+   "t": "scene",
+   "xp": 12,
+   "e": "The vampire looks like whatever the target fears most, in human form. To do anything but react to that fear, the target needs a Courage roll with as many successes as the vampire scored.",
+   "book": "V20 LotC",
+   "k": [
+    "fear",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-days-of-passions-past",
+   "kw": "days-of-passions-past",
+   "d": "Combination (Dementation 3, Auspex 2)",
+   "l": 3,
+   "n": "Days of Passions Past",
+   "needs": [
+    {
+     "d": "Dementation",
+     "l": 3
+    },
+    {
+     "d": "Auspex",
+     "l": 2
+    }
+   ],
+   "p": 144,
+   "r": "perception+awareness",
+   "diff": "var",
+   "c": "",
+   "t": "instant",
+   "xp": 15,
+   "e": "Read an aura's history: each success shows one more of its commonest colors over the span chosen (difficulty 5 since last night, 6 a week, 7 a month, 8 a year, 9 a decade). It also shows supernatural blood drunk, diablerie included, but nothing of who, why or whose.",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-do-as-i-say-not-as-i-say",
+   "kw": "do-as-i-say-not-as-i-say",
+   "d": "Combination (Dominate 1, Dementation 4)",
+   "l": 4,
+   "n": "Do As I Say, Not As I Say",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 1
+    },
+    {
+     "d": "Dementation",
+     "l": 4
+    }
+   ],
+   "p": 144,
+   "r": "manipulation+subterfuge",
+   "diff": "t:willpower",
+   "c": "",
+   "t": "instant",
+   "xp": 15,
+   "e": "With eye contact, the words spoken aloud differ from the command the subject hears inside; the inner one is obeyed. More successes, more zeal.",
+   "book": "V20 LotC",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-ignore-me",
+   "kw": "ignore-me",
+   "d": "Combination (Dominate 4, Obfuscate 2)",
+   "l": 4,
+   "n": "Ignore Me",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 4
+    },
+    {
+     "d": "Obfuscate",
+     "l": 2
+    }
+   ],
+   "p": 144,
+   "r": "wits+subterfuge",
+   "diff": "t:willpower",
+   "c": "",
+   "t": "var",
+   "xp": 18,
+   "e": "Extended, one roll a day, until successes reach five times the target's Courage. Then for a month the target ignores the vampire at that place, even tidying what the vampire disturbs, unless harmed. A Courage roll against the vampire's Willpower breaks it.",
+   "book": "V20 LotC",
+   "k": [
+    "veil",
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-malkavs-pavlovian-response",
+   "kw": "malkavs-pavlovian-response",
+   "d": "Combination (Dementation 2, Dominate 2)",
+   "l": 2,
+   "n": "Malkav's Pavlovian Response",
+   "needs": [
+    {
+     "d": "Dementation",
+     "l": 2
+    },
+    {
+     "d": "Dominate",
+     "l": 2
+    }
+   ],
+   "p": 145,
+   "r": "charisma+subterfuge",
+   "diff": "t:willpower",
+   "c": "",
+   "t": "night",
+   "xp": 12,
+   "e": "A spoken word, perhaps hidden in a sentence, is tied to an emotion; the target feels it whenever meeting that word or its object, for one night per success.",
+   "book": "V20 LotC",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-rando",
+   "kw": "rando",
+   "d": "Combination (Obfuscate 3, Dementation 3)",
+   "l": 3,
+   "n": "Rando",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 3
+    },
+    {
+     "d": "Dementation",
+     "l": 3
+    }
+   ],
+   "p": 145,
+   "r": "wits+stealth",
+   "diff": "var",
+   "c": "",
+   "t": "scene",
+   "xp": 18,
+   "e": "One chosen person sees a new, fitting stranger each time they look at the vampire. Difficulty follows the crowd: 9 an empty midnight street, down to 5 a packed concert.",
+   "book": "V20 LotC",
+   "k": [
+    "veil",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-screams-made-real",
+   "kw": "screams-made-real",
+   "d": "Combination (Auspex 4, Dementation 4)",
+   "l": 4,
+   "n": "Screams Made Real",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Dementation",
+     "l": 4
+    }
+   ],
+   "p": 145,
+   "r": "manipulation+empathy",
+   "diff": 8,
+   "c": "b1",
+   "t": "scene",
+   "xp": 24,
+   "e": "Each success drags a disturbing image out of the target's mind as a seemingly real sight for the scene. Mortals flee or fight at once; beings that frenzy check for it, at a difficulty raised by the successes.",
+   "book": "V20 LotC",
+   "k": [
+    "fear",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-ze-monkeys-paw",
+   "kw": "ze-monkeys-paw",
+   "d": "Combination (Auspex 3, Dementation 4)",
+   "l": 4,
+   "n": "Ze Monkey's Paw",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 3
+    },
+    {
+     "d": "Dementation",
+     "l": 4
+    }
+   ],
+   "p": 145,
+   "r": "wits+subterfuge",
+   "diff": 6,
+   "c": "w1",
+   "t": "var",
+   "xp": 21,
+   "e": "Curse an object touched against one person. Once that person next sees it, each success costs them a Health level (an accident) or a Willpower point (blamed misfortune), split as the vampire chooses, at most one of each per scene.",
+   "book": "V20 LotC",
+   "k": [
+    "harm",
+    "fortune"
+   ]
+  },
+  {
+   "id": "lotc-bestial-presence",
+   "kw": "bestial-presence",
+   "d": "Combination (Animalism 3, Obfuscate 3)",
+   "l": 3,
+   "n": "Bestial Presence",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 3
+    },
+    {
+     "d": "Obfuscate",
+     "l": 3
+    }
+   ],
+   "p": 164,
+   "r": "manipulation+animalken",
+   "diff": 8,
+   "c": "b1",
+   "t": "var",
+   "xp": 18,
+   "e": "A brooding animal shape made of nearby vampires' Beasts follows the vampire for an hour per success. Every other vampire close by loses two dice on Social rolls and on rolls to resist frenzy.",
+   "book": "V20 LotC",
+   "k": [
+    "fear",
+    "summon"
+   ]
+  },
+  {
+   "id": "lotc-cloak-the-beast",
+   "kw": "cloak-the-beast",
+   "d": "Combination (Animalism 5, Obfuscate 3)",
+   "l": 5,
+   "n": "Cloak the Beast",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 5
+    },
+    {
+     "d": "Obfuscate",
+     "l": 3
+    }
+   ],
+   "p": 164,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 24,
+   "e": "Any power that reads the vampire's Humanity or Path or Virtues has its difficulty raised by the higher of Animalism or Obfuscate; a failed reading shows firm Virtues and a rating of at least 7.",
+   "book": "V20 LotC",
+   "k": [
+    "veil"
+   ]
+  },
+  {
+   "id": "lotc-forbidden-zone",
+   "kw": "forbidden-zone",
+   "d": "Combination (Obfuscate 5, Potence 3)",
+   "l": 5,
+   "n": "Forbidden Zone",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 5
+    },
+    {
+     "d": "Potence",
+     "l": 3
+    }
+   ],
+   "p": 164,
+   "r": "strength+subterfuge",
+   "diff": 6,
+   "c": "b1",
+   "t": "var",
+   "xp": 24,
+   "e": "A barrier of the mind up to six feet of radius per dot of Obfuscate and Potence, for an hour per success, needing no one nearby. Entering (or coming back) takes a roll like forcing a door, difficulty 7, needing successes equal to Obfuscate + Potence. A touch from the vampire lets someone through.",
+   "book": "V20 LotC",
+   "k": [
+    "ward",
+    "hold"
+   ]
+  },
+  {
+   "id": "lotc-haunted-place",
+   "kw": "haunted-place",
+   "d": "Combination (Presence 2, Obfuscate 5)",
+   "l": 5,
+   "n": "Haunted Place",
+   "needs": [
+    {
+     "d": "Presence",
+     "l": 2
+    },
+    {
+     "d": "Obfuscate",
+     "l": 5
+    }
+   ],
+   "p": 164,
+   "r": "manipulation+empathy",
+   "diff": "var",
+   "c": "b5",
+   "t": "var",
+   "xp": 21,
+   "e": "Three one-hour rituals on three nights in a row, five blood each, at a difficulty the vampire picks; if all three succeed, a corrupt air settles on the place for as long as the vampire exists or the place stays the same. Others need a Willpower roll at that difficulty to enter.",
+   "book": "V20 LotC",
+   "k": [
+    "fear",
+    "place"
+   ]
+  },
+  {
+   "id": "lotc-i-know",
+   "kw": "i-know",
+   "d": "Combination (Auspex 2, Obfuscate 2)",
+   "l": 2,
+   "n": "I Know",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Obfuscate",
+     "l": 2
+    }
+   ],
+   "p": 165,
+   "r": "perception+subterfuge",
+   "diff": "t:willpower",
+   "c": "",
+   "t": "scene",
+   "xp": 12,
+   "e": "The target becomes convinced the vampire knows a damaging secret, from a hint at one success to certainty of the darkest secrets at five. The vampire learns nothing real; a wrong guess breaks the effect.",
+   "book": "V20 LotC",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-power-animal",
+   "kw": "power-animal",
+   "d": "Combination (Animalism 3, Potence 1)",
+   "l": 3,
+   "n": "Power Animal",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 3
+    },
+    {
+     "d": "Potence",
+     "l": 1
+    }
+   ],
+   "p": 165,
+   "r": "",
+   "diff": "",
+   "c": "bX",
+   "t": "night",
+   "xp": 12,
+   "e": "After Feral Whispers, one blood per dot gives the animal Potence for the night, never above its Strength or the vampire's own Potence.",
+   "book": "V20 LotC",
+   "k": [
+    "boost"
+   ]
+  },
+  {
+   "id": "lotc-wolf-in-sheeps-clothing",
+   "kw": "wolf-in-sheeps-clothing",
+   "d": "Combination (Animalism 3, Obfuscate 2)",
+   "l": 3,
+   "n": "Wolf in Sheep's Clothing",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 3
+    },
+    {
+     "d": "Obfuscate",
+     "l": 2
+    }
+   ],
+   "p": 165,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "var",
+   "xp": 15,
+   "e": "Any Obfuscate power can be laid on an animal under the vampire's Animalism or one that has drunk the vampire's blood, with the vampire paying and rolling as usual.",
+   "book": "V20 LotC",
+   "k": [
+    "veil"
+   ]
+  },
+  {
+   "id": "lotc-carriage-horses",
+   "kw": "carriage-horses",
+   "d": "Combination (Animalism 2, Fortitude 3)",
+   "l": 3,
+   "n": "Carriage Horses",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 3
+    }
+   ],
+   "p": 183,
+   "r": "stamina+animalken",
+   "diff": 8,
+   "c": "b1",
+   "t": "instant",
+   "xp": 15,
+   "e": "Reflexive, right after soaking a wound: each success shifts a Health level of damage, whatever its type, onto an animal ghoul in sight.",
+   "book": "V20 LotC",
+   "k": [
+    "mend"
+   ]
+  },
+  {
+   "id": "lotc-eventide-strength",
+   "kw": "eventide-strength",
+   "d": "Combination (Chimerstry 3, Fortitude 1)",
+   "l": 3,
+   "n": "Eventide Strength",
+   "needs": [
+    {
+     "d": "Chimerstry",
+     "l": 3
+    },
+    {
+     "d": "Fortitude",
+     "l": 1
+    }
+   ],
+   "p": 183,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 12,
+   "e": "The vampire's Chimerstry illusions last through one hour of sunlight instead of fading at its touch.",
+   "book": "V20 LotC",
+   "k": [
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-hearts-desire",
+   "kw": "hearts-desire",
+   "d": "Combination (Auspex 4, Chimerstry 2)",
+   "l": 4,
+   "n": "Heart's Desire",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Chimerstry",
+     "l": 2
+    }
+   ],
+   "p": 183,
+   "r": "intelligence+subterfuge",
+   "diff": "t:willpower",
+   "c": "b1w1",
+   "t": "instant",
+   "xp": 18,
+   "e": "Within three turns of touching the target, three successes make an illusory object of the target's dearest wish appear in the vampire's hand, as with Fata Morgana, and the vampire grasps what the wish is, though not why.",
+   "book": "V20 LotC",
+   "k": [
+    "know",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-sympathetic-agony",
+   "kw": "sympathetic-agony",
+   "d": "Combination (Chimerstry 2, Fortitude 4)",
+   "l": 4,
+   "n": "Sympathetic Agony",
+   "needs": [
+    {
+     "d": "Chimerstry",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 4
+    }
+   ],
+   "p": 184,
+   "r": "manipulation+intimidation",
+   "diff": "t:perception+selfcontrol",
+   "c": "",
+   "t": "scene",
+   "xp": 18,
+   "e": "For the scene, whenever the target attacks the vampire, the target takes a penalty to physical actions equal to the successes scored, for three turns. Several uses do not add up; the highest counts.",
+   "book": "V20 LotC",
+   "k": [
+    "harm",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-waking-dream",
+   "kw": "waking-dream",
+   "d": "Combination (Chimerstry 1, Fortitude 1)",
+   "l": 1,
+   "n": "Waking Dream",
+   "needs": [
+    {
+     "d": "Chimerstry",
+     "l": 1
+    },
+    {
+     "d": "Fortitude",
+     "l": 1
+    }
+   ],
+   "p": 184,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "turn",
+   "xp": 6,
+   "e": "Once a session, one simple illusion (a rope, a key, a soft landing) works as if real for one turn. It never harms or helps anyone else directly.",
+   "book": "V20 LotC",
+   "k": [
+    "illusion",
+    "make"
+   ]
+  },
+  {
+   "id": "lotc-bliss",
+   "kw": "bliss",
+   "d": "Combination (Dominate 2, Presence 3)",
+   "l": 3,
+   "n": "Bliss",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 201,
+   "r": "intelligence+empathy",
+   "diff": "var",
+   "c": "",
+   "t": "night",
+   "xp": 15,
+   "e": "After a trance over a fitting work of beauty, within one scene: success raises Self-Control, Conscience or Courage by one (to five at most) for the night. Difficulty is twice the Virtue's rating. On a willing partner, roll Wits + Expression at one higher difficulty. A botch costs a Willpower point.",
+   "book": "V20 LotC",
+   "k": [
+    "boost"
+   ]
+  },
+  {
+   "id": "lotc-devils-mark",
+   "kw": "devils-mark",
+   "d": "Combination (Presence 1, Vicissitude 2)",
+   "l": 2,
+   "n": "Devil's Mark",
+   "needs": [
+    {
+     "d": "Presence",
+     "l": 1
+    },
+    {
+     "d": "Vicissitude",
+     "l": 2
+    }
+   ],
+   "p": 202,
+   "r": "dexterity+expression",
+   "diff": 7,
+   "c": "bX",
+   "t": "var",
+   "xp": 9,
+   "e": "Extended, one roll an hour: a tattoo or piercing holds a Presence power the artist knows, needing twice its level in successes. One blood, plus one per use stored. The mark must be visible to work. A vampire bearer may spend a permanent Willpower point to keep the power, until Vicissitude or a cut removes the mark.",
+   "book": "V20 LotC",
+   "k": [
+    "imbue"
+   ]
+  },
+  {
+   "id": "lotc-doubletalk",
+   "kw": "doubletalk",
+   "d": "Combination (Auspex 2, Celerity 1, Obfuscate 1)",
+   "l": 2,
+   "n": "Doubletalk",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Celerity",
+     "l": 1
+    },
+    {
+     "d": "Obfuscate",
+     "l": 1
+    }
+   ],
+   "p": 203,
+   "r": "intelligence+expression",
+   "diff": 6,
+   "c": "",
+   "t": "instant",
+   "xp": 12,
+   "e": "Hide a second message inside ordinary talk. A listener who knows the trick rolls Perception + Subterfuge (difficulty 6) to catch it; failing, the vampire is not understood, and a botch says the hidden phrase aloud.",
+   "book": "V20 LotC",
+   "k": [
+    "speak"
+   ]
+  },
+  {
+   "id": "lotc-haunting-seduction",
+   "kw": "haunting-seduction",
+   "d": "Combination (Dementation 2, Presence 1)",
+   "l": 2,
+   "n": "Haunting Seduction",
+   "needs": [
+    {
+     "d": "Dementation",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 1
+    }
+   ],
+   "p": 203,
+   "r": "manipulation+subterfuge",
+   "diff": "t:perception+selfcontrol|instinct",
+   "c": "b1",
+   "t": "var",
+   "xp": 9,
+   "e": "After a conversation, the victim feels the vampire's touch and whisper when alone, for one night at one success, then two nights, a week, a month, three months, and a year at six or more. Their next meeting is likely to be swayed by it.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-scalpel-tongue",
+   "kw": "scalpel-tongue",
+   "d": "Combination (Presence 1, Celerity 1)",
+   "l": 1,
+   "n": "Scalpel Tongue",
+   "needs": [
+    {
+     "d": "Presence",
+     "l": 1
+    },
+    {
+     "d": "Celerity",
+     "l": 1
+    }
+   ],
+   "p": 204,
+   "r": "wits+empathy",
+   "diff": 7,
+   "c": "",
+   "t": "turns",
+   "xp": 6,
+   "e": "A stinging quip silences the target for one turn per success, twice that against anyone not Toreador; one higher difficulty against a stranger. One Willpower point shrugs it off.",
+   "book": "V20 LotC",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "lotc-soul-painting",
+   "kw": "soul-painting",
+   "d": "Combination (Auspex 4, Presence 2)",
+   "l": 4,
+   "n": "Soul Painting",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Presence",
+     "l": 2
+    }
+   ],
+   "p": 204,
+   "r": "manipulation+empathy",
+   "diff": 6,
+   "c": "",
+   "t": "instant",
+   "xp": 18,
+   "e": "After an hour's study and a long unbroken sitting, one success puts the subject's Nature in the work; each further success shows one more of Humanity or Path, Willpower, or a Virtue. Others may need a roll to read it.",
+   "book": "V20 LotC",
+   "k": [
+    "know",
+    "make"
+   ]
+  },
+  {
+   "id": "lotc-under-the-skin",
+   "kw": "under-the-skin",
+   "d": "Combination (Auspex 3, Presence 3)",
+   "l": 3,
+   "n": "Under the Skin",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 204,
+   "r": "wits+perception",
+   "diff": 6,
+   "c": "",
+   "t": "scene",
+   "xp": 18,
+   "e": "After a few turns of talk, a cutting analysis: 1-2 successes leave the target silent and brooding (one die off Social rolls), 3-4 send the target storming off (two dice off), 5 drives the target to violence (+1 difficulty to resist frenzy), 6 or more into frenzy (+3). A Willpower point lowers it one step.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "fear"
+   ]
+  },
+  {
+   "id": "lotc-blood-sight",
+   "kw": "blood-sight",
+   "d": "Combination (Auspex 2, Thaumaturgy: the Path of Blood 1)",
+   "l": 2,
+   "n": "Blood Sight",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Thaumaturgy: the Path of Blood",
+     "l": 1
+    }
+   ],
+   "p": 220,
+   "r": "perception+medicine",
+   "diff": 6,
+   "c": "",
+   "t": "instant",
+   "xp": 9,
+   "e": "Touching a sample tells whether the blood is human, animal or supernatural; two successes name the kind of being, five its relative power (a vampire's Generation, perhaps Clan). For an hour per success, the vampire knows if they touch the blood's owner.",
+   "book": "V20 LotC",
+   "k": [
+    "know"
+   ]
+  },
+  {
+   "id": "lotc-chain-of-slavery",
+   "kw": "chain-of-slavery",
+   "d": "Combination (Auspex 2, Dominate 2)",
+   "l": 2,
+   "n": "Chain of Slavery",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Dominate",
+     "l": 2
+    }
+   ],
+   "p": 220,
+   "r": "perception+empathy",
+   "diff": "var",
+   "c": "",
+   "t": "instant",
+   "xp": 12,
+   "e": "With eye contact, a Dominated subject shows the image of whoever controls them: vague at one success, blurred but recognizable at three, clear at five. Difficulty is the controller's Willpower; failure and no controller look the same.",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-theft-of-will",
+   "kw": "theft-of-will",
+   "d": "Combination (Dominate 3, Thaumaturgy 4)",
+   "l": 4,
+   "n": "Theft of Will",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 3
+    },
+    {
+     "d": "Thaumaturgy",
+     "l": 4
+    }
+   ],
+   "p": 220,
+   "r": "stamina+occult",
+   "diff": "var",
+   "c": "w1",
+   "t": "instant",
+   "xp": 21,
+   "e": "Seize a Thaumaturgy working the vampire knows is there, if its level is below the vampire's own Thaumaturgy: the vampire becomes its caster, with its strength and duration unchanged. Difficulty is the original caster's Willpower.",
+   "book": "V20 LotC",
+   "k": [
+    "bind"
+   ]
+  },
+  {
+   "id": "lotc-thaumaturgical-sight",
+   "kw": "thaumaturgical-sight",
+   "d": "Combination (Auspex 2, Thaumaturgy 1)",
+   "l": 2,
+   "n": "Thaumaturgical Sight",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Thaumaturgy",
+     "l": 1
+    }
+   ],
+   "p": 220,
+   "r": "perception+occult",
+   "diff": 8,
+   "c": "",
+   "t": "instant",
+   "xp": 6,
+   "e": "See blood magic as a crimson halo: one success shows magic is there, three name a path or ritual the vampire knows, five recognize any Thaumaturgy, or at least its purpose.",
+   "book": "V20 LotC",
+   "k": [
+    "sense"
+   ]
+  },
+  {
+   "id": "lotc-birth-the-vozhd",
+   "kw": "birth-the-vozhd",
+   "d": "Combination (Animalism 6, Vicissitude 6)",
+   "l": 6,
+   "n": "Birth the Vozhd",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 6
+    },
+    {
+     "d": "Vicissitude",
+     "l": 6
+    }
+   ],
+   "p": 241,
+   "r": "intelligence+medicine",
+   "diff": 9,
+   "c": "",
+   "t": "var",
+   "xp": 36,
+   "e": "Fuse fifteen or more ghouls into one war-beast with a shared mad Beast; one success takes up to a year, five about a month. Later Vicissitude on it is at +2 difficulty, Animalism on it at +3. A botch makes a dead or uncontrollable creature.",
+   "book": "V20 LotC",
+   "k": [
+    "make",
+    "shape"
+   ]
+  },
+  {
+   "id": "lotc-body-armory",
+   "kw": "body-armory",
+   "d": "Combination (Protean 3, Vicissitude 3)",
+   "l": 3,
+   "n": "Body Armory",
+   "needs": [
+    {
+     "d": "Protean",
+     "l": 3
+    },
+    {
+     "d": "Vicissitude",
+     "l": 3
+    }
+   ],
+   "p": 241,
+   "r": "dexterity+medicine",
+   "diff": 7,
+   "c": "b2",
+   "t": "scene",
+   "xp": 18,
+   "e": "Grow a weapon from the body in two turns (a large one costs four blood and takes three). These weapons deal aggravated damage.",
+   "book": "V20 LotC",
+   "k": [
+    "harm",
+    "shape"
+   ]
+  },
+  {
+   "id": "lotc-chaining-the-beast",
+   "kw": "chaining-the-beast",
+   "d": "Combination (Animalism 3, Dominate 1)",
+   "l": 3,
+   "n": "Chaining the Beast",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 3
+    },
+    {
+     "d": "Dominate",
+     "l": 1
+    }
+   ],
+   "p": 241,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 16,
+   "e": "Dominate works on a vampire in frenzy or Rotschreck without the usual penalties.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "hold"
+   ]
+  },
+  {
+   "id": "lotc-ears-of-the-bat",
+   "kw": "ears-of-the-bat",
+   "d": "Combination (Auspex 1, Vicissitude 1)",
+   "l": 1,
+   "n": "Ears of the Bat",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Vicissitude",
+     "l": 1
+    }
+   ],
+   "p": 241,
+   "r": "intelligence+medicine",
+   "diff": 7,
+   "c": "b1",
+   "t": "scene",
+   "xp": 6,
+   "e": "Bat ears give echolocation all around, seeing in total darkness: hearing rolls at -3 difficulty, but Social rolls with mortals at +1 unless the ears are hidden.",
+   "book": "V20 LotC",
+   "k": [
+    "sense",
+    "shape"
+   ]
+  },
+  {
+   "id": "lotc-flaying-touch",
+   "kw": "flaying-touch",
+   "d": "Combination (Potence 2, Vicissitude 2)",
+   "l": 2,
+   "n": "Flaying Touch",
+   "needs": [
+    {
+     "d": "Potence",
+     "l": 2
+    },
+    {
+     "d": "Vicissitude",
+     "l": 2
+    }
+   ],
+   "p": 242,
+   "r": "dexterity+medicine",
+   "diff": "var",
+   "c": "",
+   "t": "instant",
+   "xp": 12,
+   "e": "A Fleshcraft roll at one higher difficulty (9 at most), reflexive after a Brawl hit on bare skin: each success is a lethal level soaked at difficulty 8; damage above the victim's Stamina leaves them writhing for the turn. Mortals bleed bashing damage each minute until the wound is closed (Dexterity + Medicine, difficulty 9), then each hour.",
+   "book": "V20 LotC",
+   "k": [
+    "harm"
+   ]
+  },
+  {
+   "id": "lotc-soul-decoration",
+   "kw": "soul-decoration",
+   "d": "Combination (Auspex 2, Obfuscate 3)",
+   "l": 3,
+   "n": "Soul Decoration",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Obfuscate",
+     "l": 3
+    }
+   ],
+   "p": 242,
+   "r": "perception+empathy",
+   "diff": "t:willpower",
+   "c": "w3",
+   "t": "night",
+   "xp": 21,
+   "e": "Ten minutes of needlework repaint a subject's aura for a night per success: primary color at one success, secondary at two, state of mind at three, hiding or faking diablerie and magic at four, the subject's very nature at five. The aura does not change with new conditions meanwhile.",
+   "book": "V20 LotC",
+   "k": [
+    "veil",
+    "illusion"
+   ]
+  },
+  {
+   "id": "lotc-the-false-drink",
+   "kw": "the-false-drink",
+   "d": "Combination (Auspex 1, Vicissitude 5)",
+   "l": 5,
+   "n": "The False Drink",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Vicissitude",
+     "l": 5
+    }
+   ],
+   "p": 242,
+   "r": "intelligence+medicine",
+   "diff": 8,
+   "c": "",
+   "t": "instant",
+   "xp": 18,
+   "e": "Swallowed blood is held apart from the body so it forms no blood bond or Vinculum, and can be brought up later. Failure absorbs it as usual; a botch spews it out with half the blood pool.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-wound-sculpting",
+   "kw": "wound-sculpting",
+   "d": "Combination (Fortitude 3, Vicissitude 2)",
+   "l": 3,
+   "n": "Wound Sculpting",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 3
+    },
+    {
+     "d": "Vicissitude",
+     "l": 2
+    }
+   ],
+   "p": 243,
+   "r": "wits+medicine",
+   "diff": 8,
+   "c": "b1",
+   "t": "instant",
+   "xp": 15,
+   "e": "Every success mends a bashing or lethal wound level, at a minute of steady focus apiece.",
+   "book": "V20 LotC",
+   "k": [
+    "mend"
+   ]
+  },
+  {
+   "id": "lotc-command-from-afar",
+   "kw": "command-from-afar",
+   "d": "Combination (Auspex 4, Presence 4)",
+   "l": 4,
+   "n": "Command from Afar",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Presence",
+     "l": 4
+    }
+   ],
+   "p": 262,
+   "r": "charisma+expression",
+   "diff": "",
+   "c": "w1",
+   "t": "instant",
+   "xp": 24,
+   "e": "Send five words per success, at any distance while it is night for both, to one ghoul, blood-bound vampire or Vinculum packmate, who knows the sender. It carries no compulsion beyond the bond's own.",
+   "book": "V20 LotC",
+   "k": [
+    "speak"
+   ]
+  },
+  {
+   "id": "lotc-denial-of-aphrodites-kiss",
+   "kw": "denial-of-aphrodites-kiss",
+   "d": "Combination (Dominate 3, Presence 3)",
+   "l": 3,
+   "n": "Denial of Aphrodite's Kiss",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 262,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 18,
+   "e": "Presence powers of levels one to three used by a vampire of higher Generation have no effect on this vampire.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-divine-aura",
+   "kw": "divine-aura",
+   "d": "Combination (Auspex 2, Presence 3)",
+   "l": 3,
+   "n": "Divine Aura",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 262,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "night",
+   "xp": 15,
+   "e": "Until dawn, any Kindred who reads this vampire's aura can be met with a reflexive Entrancement, rolled as usual, even if the vampire does not notice the reading.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-impeccable-manners",
+   "kw": "impeccable-manners",
+   "d": "Combination (Auspex 2, Presence 1)",
+   "l": 2,
+   "n": "Impeccable Manners",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 1
+    }
+   ],
+   "p": 263,
+   "r": "perception+etiquette",
+   "diff": "var",
+   "c": "",
+   "t": "scene",
+   "xp": 9,
+   "e": "While talking with someone (difficulty 6 for a mortal, 8 for a supernatural being), each success lowers the difficulty of ordinary Etiquette and Persuasion rolls on them by one for the scene. Discipline rolls do not benefit.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "fortune"
+   ]
+  },
+  {
+   "id": "lotc-rescue-beacon",
+   "kw": "rescue-beacon",
+   "d": "Combination (Fortitude 1, Presence 4)",
+   "l": 4,
+   "n": "Rescue Beacon",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 1
+    },
+    {
+     "d": "Presence",
+     "l": 4
+    }
+   ],
+   "p": 263,
+   "r": "charisma+subterfuge",
+   "diff": 4,
+   "c": "b1",
+   "t": "instant",
+   "xp": 15,
+   "e": "Fires on its own when the vampire is staked or falls into torpor, even though staked: a Summon, as the Presence power, to the nearest person who has tasted the vampire's blood.",
+   "book": "V20 LotC",
+   "k": [
+    "summon"
+   ]
+  },
+  {
+   "id": "lotc-retaliatory-terror",
+   "kw": "retaliatory-terror",
+   "d": "Combination (Fortitude 1, Presence 2)",
+   "l": 2,
+   "n": "Retaliatory Terror",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 1
+    },
+    {
+     "d": "Presence",
+     "l": 2
+    }
+   ],
+   "p": 263,
+   "r": "charisma+intimidation",
+   "diff": "var",
+   "c": "b1",
+   "t": "instant",
+   "xp": 9,
+   "e": "Reflexive when a Brawl or Melee attack wounds the vampire: a Dread Gaze strikes the attacker. Difficulty is the attacker's Wits + Courage, less one per Health level dealt (4 at least). Useless against a staking.",
+   "book": "V20 LotC",
+   "k": [
+    "fear"
+   ]
+  },
+  {
+   "id": "lotc-telepathic-command",
+   "kw": "telepathic-command",
+   "d": "Combination (Auspex 4, Dominate 1)",
+   "l": 4,
+   "n": "Telepathic Command",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Dominate",
+     "l": 1
+    }
+   ],
+   "p": 263,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "instant",
+   "xp": 15,
+   "e": "With eye contact, a Command can be given by Telepathy, unheard by anyone else. Vampires of lower Generation are immune.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "speak"
+   ]
+  },
+  {
+   "id": "lotc-bagmans-shelter",
+   "kw": "bagmans-shelter",
+   "d": "Combination (Obtenebration 2, Fortitude 3)",
+   "l": 3,
+   "n": "Bagman's Shelter",
+   "needs": [
+    {
+     "d": "Obtenebration",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 3
+    }
+   ],
+   "p": 270,
+   "r": "",
+   "diff": "",
+   "c": "b1w1",
+   "t": "var",
+   "xp": 15,
+   "e": "Before the day's sleep, shadows thicken over a flimsy shelter so that indirect sunlight cannot reach the sleeper. It fails if the vampire wakes.",
+   "book": "V20 LotC",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "lotc-beneath-contempt",
+   "kw": "beneath-contempt",
+   "d": "Combination (Obfuscate 2, Presence 3)",
+   "l": 3,
+   "n": "Beneath Contempt",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 271,
+   "r": "",
+   "diff": "",
+   "c": "w1",
+   "t": "scene",
+   "xp": 15,
+   "e": "For the scene, anyone sizing the vampire up as a threat rolls Willpower against the vampire's Humanity (4 for a Path follower); on a failure, they dismiss the vampire as not worth fighting, though they may still take a beaten one prisoner.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "veil"
+   ]
+  },
+  {
+   "id": "lotc-mover-and-shaker",
+   "kw": "mover-and-shaker",
+   "d": "Combination (Auspex 2, Presence 3)",
+   "l": 3,
+   "n": "Mover and Shaker",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 271,
+   "r": "",
+   "diff": "",
+   "c": "w1",
+   "t": "var",
+   "xp": 15,
+   "e": "Each night spent mingling with a small town's people costs a Willpower point and builds quiet goodwill: for a week per point spent, Social rolls about the vampire in that town are at +2 difficulty.",
+   "book": "V20 LotC",
+   "k": [
+    "sway",
+    "place"
+   ]
+  }
+ ]
+}

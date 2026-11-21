@@ -33,11 +33,12 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
+import * as PRIO from "./prio.mjs";
 import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
 import {recheck as recheckRun} from "./recheck.mjs";
 import {prMark, staleWhy, jobOfLog} from "./stale.mjs";
@@ -296,7 +297,7 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
     if ( retried || stopped() ) return {code: null, text: `${before ? `${before.trim()}\n` : ""}${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
-    await lanesCmd(["reset", "--lane", lane], {logTo: L});
+    await lanesCmd(["reset", "--lane", lane, ...worldArgs(job)], {logTo: L});
     // only on a shared queue: a shard run again runs all its gates again
     return laneWork(job, lane, i, n, tag, true, carry && job.queue ? out : "");
   };
@@ -305,13 +306,21 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
     if ( r.code === 0 ) { state[lane].down = false; state[lane].why = null; }
     return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
   }
+  // The clean test world (PR 2169): lanes.mjs stops the lane, builds the world, takes its known-good copy and starts
+  // the lane on its default world again, so it runs before the start-and-deploy steps below
+  if ( job.kind === "setup-clean" ) {
+    const r = await lanesCmd(["setup-clean", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 60});
+    return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
+  }
   if ( !(await isUp(laneOf(lane))) ) {
-    const s = await lanesCmd(["start", "--lane", lane], {logTo: L, minutes: 6});
+    const s = await lanesCmd(["start", "--lane", lane, ...worldArgs(job)], {logTo: L, minutes: 6});
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
-  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
+  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...worldArgs(job), ...repo], {logTo: L});
+  // a clean-world run deploys into that world: a deploy restarts the lane, on its default world unless told
+  // otherwise (#2214 drifted that way: the gates found rothenstein-wodx running)
+  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...worldArgs(job), ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
   if ( job.kind === "gate-two" ) {
@@ -344,6 +353,9 @@ async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
   // B7447: the gates this lane finished before a fault and a reset keep their lines
   const {report: rep, code: laneCode} = withEarlier(before, own, r.code, lane);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
+  // a clean-world run puts the lane back on its default world (after the failing steps are read), so the next job
+  // finds it as usual
+  if ( job.world ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   // B7002: the commit this lane ran, for the gate status the merge rules read
   if ( laneCode !== 1 || job.recheck === false || stopped() ) return {code: laneCode, text, sha: wt.sha};
   return {code: laneCode, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
@@ -416,7 +428,7 @@ const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now()
  */
 const growing = new Map();
 async function makeQueue(job, lane, tag) {
-  if ( job.kind !== "gates" || job.branchTools ) return null; // B7220: a branch-tools test runs on its one lane
+  if ( job.kind !== "gates" || job.branchTools || job.world ) return null; // B7220: a branch-tools test runs on its one lane; so does a clean-world run
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
   const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched", ...(job.since ? ["--base", job.since] : [])] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
@@ -589,11 +601,24 @@ const graphql = async (query, variables) => {
   if ( !r.ok || j.errors?.length ) throw new Error(`GraphQL ${r.status} ${JSON.stringify(j.errors ?? j).slice(0, 200)}`);
   return j.data;
 };
-let trainNow = null, trainBusy = false, lastTrain = 0;
+/**
+ * B7448: registry/priorities.json (prio.mjs), read again each loop so a change to it needs no restart. A file that
+ * does not read or check leaves the older queue order and no windows, and is logged once.
+ */
+let prioBad = "";
+function prioNow() {
+  try {
+    const p = PRIO.load(), bad = PRIO.check(p);
+    if ( bad.length ) throw new Error(bad.slice(0, 3).join("; "));
+    prioBad = "";
+    return p;
+  } catch (e) { if ( prioBad !== e.message ) log(`priorities: not used (${e.message})`); prioBad = e.message; return null; }
+}
+let trainNow = null, trainBusy = false, lastTrain = 0, trainClock = true;
 function trainTick() {
   if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
   lastTrain = Date.now(); trainBusy = true;
-  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3})
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3, clockRuns: trainClock})
     .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
 }
 /** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */
@@ -739,7 +764,13 @@ for ( ;; ) {
       await sleep(30000); continue;
     }
     // B7207: runner-hold takes no new jobs but keeps every other pass (status, sweep, train, updates, cancel) running
-    const holding = fs.existsSync(path.join(HOME, "runner-hold"));
+    const hold = fs.existsSync(path.join(HOME, "runner-hold"));
+    // B7448 (desk pick p7): from holdMinutesBefore ahead of a planned window for this PC to its end, no new jobs
+    const P = prioNow();
+    const win = P ? PRIO.activeWindow(P, HOST) : null;
+    const holding = hold || !!win;
+    // B7449 (desk pick p5): the train front's clock stops while this runner holds or a window holds it
+    trainClock = P ? PRIO.trainClockRuns(P, {held: hold, window: !!win}) : !hold;
     // Stale pull requests, every hour, beside the jobs (B4110).
     if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
@@ -773,7 +804,8 @@ for ( ;; ) {
     await stopStale();
     await cancelCheck(issues, openNums);
     trainTick();
-    const ready = trainFirst(order(queue, openNums));
+    // B7448 (desk pick p1): rank first (train front, unblock, PR gates, health ...), then the aged number, then age
+    const ready = trainFirst(order(queue, openNums, Date.now(), P ? {prio: P, sortQueue: PRIO.sortQueue, isFront: q => !!trainNow?.front && isFrontJob(q.issue?.title, trainNow.front)} : {}));
     const res = resources();
     if ( res.low.length ) {
       heldSince ??= Date.now();
@@ -792,7 +824,7 @@ for ( ;; ) {
         const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(l => laneFree(l) && !laneRefuses(laneOf(l), q.job)).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
-        // B7400: the pull request is read again just before a lane job starts (the queue pass above may read a
+        // B7590: the pull request is read again just before a lane job starts (the queue pass above may read a
         // two-minute-old copy), so a job whose pull request merged a moment ago is not started (#2111, 18 Nov)
         { const why = await staleJob(q.issue, 0); if ( why ) { log(`#${q.number}: ${why}; not run`); await drop(q.issue, `Not run: ${why}, so this commit's result would not be used.`); continue; } }
         for ( const l of want ) state[l].busy = q.number;
@@ -809,7 +841,7 @@ for ( ;; ) {
     // pinned to a busy lane, or to another PC's lane, no longer keeps the free lanes idle (#2022 ran 309 gates on lane 2
     // alone for 2 h 24 min while #2020 waited for lane 2 and lanes 3 to 5 sat idle)
     if ( !draining && !holding && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number) && couldStartNow(q.job)));
-    await status(queue.filter(q => !active.has(q.number)), holding ? "runner-hold: taking no new jobs" : null);
+    await status(queue.filter(q => !active.has(q.number)), win ? `planned window (${win.why ?? "hardware work"}, ${win.from} to ${win.to}): taking no new jobs` : holding ? "runner-hold: taking no new jobs" : null);
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;
   await sleep((conf.pollSeconds ?? 30) * 1000);

@@ -20,18 +20,19 @@ import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";
 import {WizardApp, ledgerFor} from "./wizard.mjs";
 import {PreludeRunApp, writtenPrelude, sendTies, meetingJournal, registerTies} from "./first-night-prelude.mjs";
 import {underWay} from "./first-night-prelude-rules.mjs";
+import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FLAG = "firstNight";
 const STEP_APPROVAL = "wodx-first-night-step";
 const HOOK_APPROVAL = "wodx-first-night-hook";
-const LIVE_WORLDS = ["rothenstein-live"];
+
 const api = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
 const chron = () => api("wodx-chronicle");
 const yearNow = () => { try { return getEngine().timeToDate(game.time?.worldTime ?? 0).year; } catch { return null; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const ownerIds = actor => game.users.filter(u => u.isGM || actor.testUserPermission(u, "OWNER")).map(u => u.id);
-const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags?.wodx?.liveWorld;
+const isLive = () => isLiveWorld(game.world); // B7564: the one shared list
 const pcs = () => [...(game.actors ?? [])].filter(a => a.hasPlayerOwner && !/group|spirit|creature/i.test(String(a.type))).sort((a, b) => a.name.localeCompare(b.name));
 
 export const recordOf = actor => R.normRecord(actor?.flags?.[MODULE_ID]?.[FLAG] ?? {});

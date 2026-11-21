@@ -115,7 +115,8 @@ export function shiftTime(successes) {
  */
 export function countRoll(faces, difficulty, {doubleOnes = false} = {}) {
   const r = TERMS.successes(faces, difficulty, {doubleOnes});
-  return {successes: r.raw, ones: r.ones, net: r.net, botch: r.botch, success: r.raw - r.ones > 0};
+  // B7120: past 10, each point needs one more success (terms.mjs successes)
+  return {successes: r.raw, ones: r.ones, net: r.successes, botch: r.botch, success: r.successes > 0};
 }
 
 /**

@@ -319,7 +319,7 @@ export function build(ctx) {
             if (p.key === "umbralpassage") dice = Math.max(dice, pools(actor).gnosis);
             // B6662: the target's ward or Magic Resistance makes a fomor power aimed at them harder
             const rm = FP.aimedAtOther(p) ? TH.targetResist(actor, ["magic"]) : { diff: 0, parts: [] };
-            const r = await rollPool(dice, Math.min(10, n(p.diff) + n(lim.diff) + n(rm.diff)));
+            const r = await rollPool(dice, n(p.diff) + n(lim.diff) + n(rm.diff));
             rolls.push(r.roll);
             got = r.botch ? 0 : n(r.successes);
             body += rollBlock(FP.rollLabel(p.roll), r, [...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])]);

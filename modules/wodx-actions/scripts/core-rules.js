@@ -7,5 +7,5 @@
  */
 export {
     WOUND_LEVELS, countSuccesses, clampDifficulty, addDamage, removeDamage, woundState, condition,
-    soakPool, damageAfterSoak
+    soakPool, damageAfterSoak, overTen, overTenText
 } from "../../wodx-combat/scripts/rules.js";

@@ -1,7 +1,7 @@
 /**
  * WoDX Creation 0.11.0: lifepaths, the era bands, the lines and the mortal scenes (birth, youth, adult life, later
- * life). WoDX's own words; history is general knowledge of the Bohemian crown lands and Europe (Rothenstein is in
- * Moravia), with a choice in most scenes for a character from elsewhere. Nothing here comes from a book's text.
+ * life). WoDX's own words; history is general knowledge of the Bohemian crown lands and Europe (the first chronicle is
+ * in Moravia), with a choice in most scenes for a character from elsewhere. Nothing here comes from a book's text.
  *
  * Shapes (the rules are in scripts/lifepath-rules.mjs):
  *   event  {id, stage, title, text, w (weight, default 10), when {lines, notLines, splats, spans [[from, to]], flags,

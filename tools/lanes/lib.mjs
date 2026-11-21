@@ -27,7 +27,7 @@ const SKIP = new Set(["LOCK", "LOG", "LOG.old", ".DS_Store", "Thumbs.db"]);
 const LEVELDB = /^(CURRENT|MANIFEST-\d+|\d+\.(log|ldb|sst))$/;
 export const isPackDb = rel => /(^|\/)packs\//.test(rel) && LEVELDB.test(rel.split("/").pop());
 
-export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json")) {
+export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json"), {world = process.env.WODX_WORLD} = {}) {
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
@@ -42,8 +42,31 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
   for ( const k of ["foundryMain", "knownGood", "backups"] ) cfg[k] = expand(cfg[k]);
   for ( const lane of cfg.lanes ?? [] ) lane.dataPath = expand(lane.dataPath);
+  return selectWorld(cfg, world);
+}
+/**
+ * Chronicle Packs Desk c2/e2: a lane can also run another testbed world from lanes.json "worlds" (the clean world,
+ * wodx-clean: every WoDX module on except the chronicle modules). --world <key> (or WODX_WORLD) picks it; the default
+ * stays rothenstein-wodx. The other world has its own known-good copy (its "knownGood", else the default's folder plus
+ * "-<key>") and its own clean fingerprint (clean-<key>.json), so the two never mix.
+ */
+export function selectWorld(cfg, key) {
+  cfg.worldKey = "";
+  cfg.cleanName = "clean.json";
+  if ( !key || key === "default" || key === cfg.world ) return cfg;
+  const w = cfg.worlds?.[key];
+  if ( !w?.world ) throw new Error(`No world "${key}" in lanes.json (worlds: ${Object.keys(cfg.worlds ?? {}).join(", ") || "none"})`);
+  if ( /live/i.test(w.world) ) throw new Error(`World "${key}" points at a Live world (${w.world}); lanes never run Live.`);
+  cfg.defaultWorld = {world: cfg.world, knownGood: cfg.knownGood};
+  cfg.worldKey = key;
+  cfg.worldSpec = w;
+  cfg.world = w.world;
+  cfg.knownGood = w.knownGood ?? `${cfg.knownGood}-${key}`;
+  cfg.cleanName = `clean-${key}.json`;
   return cfg;
 }
+/** The lane's clean fingerprint file for the world cfg runs (clean.json for the default world). */
+export const cleanPath = (lane, cfg) => path.join(laneDir(lane), cfg?.cleanName ?? "clean.json");
 export function getLane(cfg, id) {
   const lane = cfg.lanes.find(l => String(l.id) === String(id));
   if ( !lane ) throw new Error(`No lane ${id} in lanes.json (lanes: ${cfg.lanes.map(l => l.id).join(", ")})`);

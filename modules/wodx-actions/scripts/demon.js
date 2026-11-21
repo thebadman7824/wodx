@@ -246,7 +246,7 @@ export function build(ctx) {
             // B6411: the target's ward or Magic Resistance makes an evocation on them harder
             const rm = TH.targetResist(actor, ["magic"]);
             plan.notes.push(...rm.parts);
-            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + (Number(rm.diff) || 0)), { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff + (Number(rm.diff) || 0), { willpower: wp, autoSuccesses: plan.autoSuccesses });
             if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const out = D.evocationOutcome(r, { torment: i.torment.perm, chooseHigh: !!fd.dark, rule: i.rule });
             const notes = [];

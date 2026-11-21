@@ -132,6 +132,11 @@ test("each-turn rules: lasting harm, the books' every-turn powers, and the steps
   assert.deepEqual(TR.stepOf(af, {successes: 2}), []);
   assert.deepEqual(TR.stepOf(TR.everyTurnOf("Lost in the Mists"), {successes: 1}), [{kind: "end"}]);
   assert.equal(TR.rollDiff("torment", {torment: 8}), 8);
+  // B7093: Movement of the Mind's hold is fought with Willpower against the caster's Willpower
+  const mm = TR.everyTurnOf("Movement of the Mind 3", "Vampire (V20)");
+  assert.equal(mm.roll.diff, "caster:willpower");
+  assert.equal(TR.rollDiff(mm.roll.diff, {caster: 7}), 7);
+  assert.deepEqual(TR.stepOf(mm, {successes: 1}), [{kind: "end"}]);
 });
 
 test("the bounds check: no applying power has an unbound keyword or a summoning with no spec (B4835)", async () => {

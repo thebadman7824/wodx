@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7490
+Next free block: B7570
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -406,7 +406,10 @@ Next free block: B7490
 | B7000-B7009 | Merge rules: CI blocks a pull request without its note, gate result and file reviews (used B7000-B7006) | tools |
 | B7010-B7019 | PC gates queue themselves on every pull request, from a locked-down runner on the Secondary PC (used B7010-B7011) | tools |
 | B7020-B7029 | Nightly full gate run on the Secondary PC, and its PC runner at below-normal priority (used B7020-B7021) | tools |
+| B7080-B7109 | Rules as data: Path bearings first, then kith, totems, fetishes, Thaumaturgy and factions as data tables (used B7080-B7093) | Actions |
 | B7110-B7119 | Dark Ages fae exports wired into play (used B7110-B7114) | Actions |
+| B7120-B7129 | Weekly review picks st1 and ac1 (17 November): difficulty past 10, trying again (used B7120-B7121) | Chronicle, NPC, Otherworlds, Combat, Actions, Sheets, system fork |
+| B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130-B7134) | Combat, Creation, NPC, Solo |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
@@ -427,13 +430,20 @@ Next free block: B7490
 | B7350-B7359 | One priority order for every project process (used B7350-B7356) | tools |
 | B7380-B7389 | Gate recheck no longer faults every failing job (stopped is not defined) (used B7380) | tools |
 | B7390-B7399 | The merge-train push guard counts only pushes made while the label was on (used B7390) | tools |
-| B7400-B7409 | No gate run on a pull request the train has already merged (used B7400) | tools |
 | B7420-B7429 | Urgent merges never stall: urgent train label, cloud merge rule for runner fixes, watcher alert for green unmerged pull requests (used B7420-B7422) | tools |
 | B7430-B7439 | Train guard ignores main's commits in a merge-main push (used B7430) | tools |
-| B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip (used B7440-B7447) | tools |
+| B7440-B7449 | Gate time cuts: gate times, order faults, reruns after main moves, tier-1 PR gates, nightly blame and skip, merge-train batches; the runner follows registry/priorities.json (queue order, windows, train clock) (used B7440-B7449) | tools |
 | B7460-B7469 | One nightly run, and the Main PC RAM install window (used B7460-B7461) | tools |
 | B7470-B7479 | gatetruthstoryteller step 3 waits for the convened record (used B7470) | tools |
 | B7480-B7489 | Bug tracking: one GitHub issue per bug, registry faults link issue numbers (used B7480) | docs |
+| B7490-B7499 | Chronicle packs: Rothenstein in a module of its own, engines read the chronicle in play (used B7490-B7493) | Rothenstein, Chronicle, Storyteller |
+| B7500-B7509 | The Secondary PC drives the merge train while the Main PC is down (used B7500) | tools |
+| B7510-B7519 | GPU guard in the repo, reading the GPU order from the priority file (used B7510) | tools |
+| B7520-B7529 | The gate recheck runs a flaky gate on main, so a fault main has too does not hold a pull request (used B7520-B7521) | tools |
+| B7530-B7539 | Cult worship goes to a place of worship (used B7530) | NPC |
+| B7540-B7549 | Recheck: each side's first run gets a full deploy (used B7540) | tools (pcq) |
+| B7550-B7559 | The PC watcher reads the merge train from the PC that drives it (used B7550) | tools |
+| B7560-B7569 | Clean template world and names out of shared code: wodx-clean, gatecleanworld, one Live list (used B7560-B7566) | Chronicle, Actions, Sheets, Creation, Atmosphere, Combat, NPC, Solo, Storyteller, tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14051,6 +14061,106 @@ on main's commit as for any all-gates job, and a gate failing there reads as a f
 runner, so every gate, Foundry server and browser it starts inherits it. Only `runner.benjamin-pc.json` sets it
 (BelowNormal), so the book OCR and other work on that PC keep the CPU; the other PCs are unchanged.
 
+## B7080. A V20 Path's bearing is read from the Path's row (2026-11-17)
+WoDX Actions. paths-v20.json gives each Path a bearing {name, covers, tags, wounded} and the file the V20 p. 310 steps
+(bearingSteps: 10 is -2 difficulty, 9-8 -1, 7-4 none, 3-2 +1, 1 +2). kindred-rules.js pathBearing() counts it on its own
+when the roll's tags meet the Path's (willpower, stealth, seduce, intimidation, manipulation, leadership) or, for Lilith,
+when the roller takes a wound penalty; Paths whose bearing no roll tag can tell (Caine, Honorable Accord, Night, Typhon)
+count when the player ticks the box. Humanity and the Dark Ages Roads keep the plain aura box. The Seduction window
+counts a Path's bearing only when it is the Cathari's. Tag choices are a WoDX reading of each Path's bearing line.
+
+Reverse: drop the bearing fields from paths-v20.json; pathBearing then returns null and the aura box works as before.
+
+## B7081. Two more names for V20 Paths (2026-11-17)
+WoDX Actions. "Path of Death and the Soul" is an alias of the Path of the Bones (V20 p. 320 says the two work the same).
+The Path of Harmony (V20 p. 326, the Feral Heart's older form) is a variant row with Conscience and Instinct; the book
+gives it no hierarchy, so it keeps the Feral Heart's sins and sin events (WoDX reading).
+
+Reverse: remove the aliases field and the harmony row.
+
+## B7082. W20 pack totems are a data table (2026-11-17)
+WoDX Actions. data/rules/werewolf/totems-w20.json holds the 19 totems of W20 pp. 373-377 and Sable (p. 509) and
+Minotaur (p. 514), each with its cost, page, Individual Traits, Pack Traits, Willpower pool, ban, and the tribes it
+favors or will not take, in our own words. totem-rules.js reads the rows; its problems() is the guard the harness runs.
+The sheet's Pack Totem field names the totem; a flag wodx-actions.rules.totem picks a row by key instead. Packmates are
+the shapeshifters with the same Pack Name (WoDX reading: the sheet has no pack list).
+
+Reverse: delete the table; totemOf() then returns null and nothing changes on any roll.
+
+## B7083. What a totem does to a roll (2026-11-17)
+WoDX Actions. An Attribute dot a totem gives counts as a die on that Attribute's rolls, as WoDX does for kith
+birthrights (WoDX reading: the sheet dot would be lost when the totem goes). Roll effects use the trait table's grammar;
+the ones the roll cannot tell (Thunder's name invoked, Unicorn's blow against a Garou, Uktena among other tribes, Rat's
+bite, Stag's long run) are ticks on the roll window. A broken ban turns every benefit off for the whole pack.
+
+## B7084. Accepting the pack, Renown, and Pack Traits (2026-11-17)
+WoDX Actions. Each packmate accepts the totem once in the totem window; the Renown it grants is paid then (Bear's loss
+stops at the temporary Honor there is). Later positive awards of the cut Renown shrink by the totem's amount, never
+below 0. A Pack Trait (W20 p. 372) is held by one packmate at a time until the scene ends; the claim names the scene
+and lapses when another scene is viewed (WoDX reading of "the scene").
+
+## B7085. The totem's Willpower (2026-11-17)
+WoDX Actions. The pool is tracked on each packmate's flag as how much was spent; what is left is the size less the most
+any packmate's flag shows. Drawing a point gives the packmate one temporary Willpower, up to the permanent rating
+(WoDX reading: the book lets the pack spend it as its own). A new story empties the count. Wendigo adds five Rage past
+the rating at the start of each story (W20 p. 374).
+
+## B7086. Gift dice from the totem (2026-11-17)
+WoDX Actions. Cockroach, Owl and Unicorn give three dice to a Gift of the kinds the book names; the Gift window shows a
+box for the packmate who holds that Pack Trait, ticked when the Gift is one of those kinds (WoDX reading: Gifts carry
+no kind field to test).
+
+## B7087. The ban and the Rite of Contrition (2026-11-17)
+WoDX Actions. The Storyteller marks the ban broken in the totem window: every packmate's flag gets banned and every
+Pack Trait is let go. "Rite of Contrition done" clears it (W20 p. 372). The Uktena soak in the Umbra, the Umbral notes,
+Coyote's avatars and Minotaur's teaching stay as text on the window, for the Storyteller.
+
+Reverse (B7083-B7087): remove the totem hooks in garou.js and main.js; the table stays and nothing reads it.
+
+## B7088. The rest of the Garou fetishes and talens get keywords (2026-11-17)
+WoDX Actions. power-keywords-lines.js gives the 16 W20 core and Breedbook fetishes and talens left out by B6737 their
+effect keywords (house readings of each item's line). The weapons (Dsiah, Fang Dagger, Klaive, Grand Klaive,
+Ironhammer, Jarlhammer, Sun Whip, Blade of the Kings), Magpie's Swag, the Puda and the Wind Snorkel stay text: their
+weapon or gear item does the rest. tools/harness/fetish-keys.test.mjs keeps every Garou wonder keyed or listed.
+
+## B7089. The V20 core Thaumaturgy paths are complete (2026-11-17)
+WoDX Actions. disciplines-v20.json gains the powers V20 pp. 213-230 give that a V20 sheet could not reach: the Path of
+Blood's levels 1, 4 and 5 and Elemental Mastery's 2 to 5 (the Dark Ages rows of the same names sit under Potestas
+Vitae and Potestas Elementorum, which a V20 sheet does not name), Movement of the Mind and the Lure of Flames as one row
+a level (the book gives a chart, not named powers; the rows carry the chart's weight or fire), Weather Control's Fog
+and Storm, and Technomancy's Encrypt/Decrypt. The Lure of Flames' level 1 is the Candle and Palm of Flame is level 2
+(V20 p. 218); the old row had Palm of Flame at 1. Each row has effect keywords; tools/harness/v20-thaumaturgy.test.mjs
+checks every path has all five levels.
+
+## B7090. Sheet names for Thaumaturgy paths (2026-11-17)
+WoDX Actions. The V20 name of the Path of Decay is Hands of Destruction (V20 p. 217); the rows' heading carries both,
+so either name on a sheet finds them. kindred-rules.js discMatches() also reads a sheet entry that writes the sorcery
+in front ("Thaumaturgy: Hands of Destruction") by the path's own name.
+
+## B7091. The V20 bloodline Disciplines a sheet could not reach (2026-11-17)
+WoDX Actions. disciplines-v20.json gains levels 1 to 5 of Melpominee, Obeah, Sanguinus, Thanatosis and Visceratika
+(V20 pp. 453-477), in our own words with their pools, costs and durations. Elder levels (6 and up) are left out, as for
+every other V20 Discipline here. Daimoinon, Mytherceria, Temporis, Spiritus, Bardo and Valeren already come from the
+Dark Ages library by Discipline name. Group use (Melpominee's singers together, the Blood Brothers' circle) is in each
+row's text for the Storyteller: no roll window knows who else is singing or who is in the circle.
+
+## B7092. Lore of the Clans combination Disciplines as one table (2026-11-17)
+WoDX Actions. The combination Disciplines of V20 Lore of the Clans (82, from the Assamite to the Caitiff appendix,
+pp. 28-271) live in data/rules/vampire/combinations-lotc.json, one row each in the disciplines-v20.json shape plus
+`needs` (desk r6): every Discipline and level the power asks for. powersFor offers a row only when each need is met on
+the sheet, and lists it at the lowest needed level under "Combination (...)". A sorcery need ("Necromancy 3",
+"Thaumaturgy 4") is met by the sorcery itself or by any of its paths at that rating, never by an unrelated Discipline;
+a need that names a path (Blood Sight's Path of Blood) takes that path only. Text is our own, with the page; long tables
+(Under the Skin, Soul Decoration, Days of Passions Past) are folded into the row's text, and difficulties that hang on
+a choice or a target's trait the window cannot see stay "var" for the Storyteller. The power named "Do As I Say, Not
+As I Say" keeps its book name, the only run the overlap check reports.
+
+## B7093. Movement of the Mind is fought every turn (2026-11-17)
+WoDX Actions. A living thing held by Movement of the Mind (V20 p. 220) rolls Willpower on each of its turns in a fight,
+at the caster's Willpower, and breaks free on a success. turn-rules.js gains the row and a "caster:<trait>" difficulty
+that turns.js reads from the caster's sheet. The powers bounds check now finds no each-turn text left unworked.
+The Lure of Flames' Inferno (V20 p. 218) is a fire in the world: world-effects.js lists it as a blaze, so the ground it
+burns harms whoever stands in it, like every other power that sets a place on fire.
 ## B7110. Fae blood and soak in the mien read the Dark Ages: Fae rules (2026-11-17)
 WoDX Actions. The feeding card adds `faeBlood` for a vampire who drinks a Dark Ages fae (its Court's gift and price, twice over for the firstborn, nothing from the inanimae; Dark Ages: Fae p. 181), next to the fae-blood high it already had. `faeSoak`, which WoDX Combat reads, now calls `soaksLethal` (p. 104) instead of repeating it.
 
@@ -14075,6 +14185,36 @@ Reverse: remove the "seen" use from the Mists window.
 WoDX Actions. The oath window (daOath) keeps an oath as before, forges a new one when `forgeCheck` allows it (kind, rating, Gramarye, Weaving equal to the rating spent, pp. 107-109), and on a baptism keeps only the Gold Oaths (`baptismClears`, p. 108).
 
 Reverse: put back the keep-only oath window.
+
+## B7120. A difficulty past 10 needs one more success a point (2026-11-17)
+WoDX Chronicle's shared count (terms.mjs successes) rolls a difficulty past 10 at 10 and takes one success off for each point past it: three hits at difficulty 12 make one success, and one hit makes a failure, never a botch. M20 pdf 504 puts it this way for magick, and V20 pdf 166 does the same for Dominate; no V20 page found gives a general ceiling, so this is the house reading for every roll. Before, every roll was cut to 10 without a word, so stacked conditions, weather and wounds stopped counting there. Rollers that hold the difficulty at 10 themselves pass the count on (`over`), and the card says "2 more successes needed (difficulty 12, past 10)". WoDX Combat's attack log cited VtDA20 p. 323 for "above 10 the action is impossible", which is the trying-again rule; it now says how many more successes are needed. Ben's pick st1 on the weekly review desk.
+
+Reverse: make overTen in terms.mjs return 0.
+
+## B7121. Trying again after a failure gets harder (2026-11-17)
+WoDX Actions remembers a failed simple or teamwork roll per character, task (the preset, or the Attribute and Ability) and target, for the scene. The next try at the same thing is +1 difficulty a failure, named on the card ("Retry (third try) +2 diff"), and once that brings the difficulty to 10 the Action window says it cannot be attempted now (V20 Dark Ages pdf 324; Demon: The Fallen pdf 223; Hunter: The Reckoning pdf 172). Extended rolls (which already allow repeated attempts) and resisted rolls (won or lost outright) are left out, as the books say. A success, a new scene, or the Storyteller's Clear failed tries button (the Scene row of every line's menu) starts it again. The Retries box in the window still works, and the higher of the two counts. World setting "Trying again gets harder" (on). Ben's pick ac1.
+
+Reverse: switch the setting off.
+
+## B7130. Gear weight counts on dry land (2026-11-17)
+WoDX Combat reads the gear's weight (WoDX Library) against what Strength and Potence lift (WoDX Interactables' chart) on land as well as in water. Past half the lift, +1 difficulty to dodge and to stealth; past all of it, half speed as well. A burden set by hand on the token HUD's weight button wins over the weight (a heavy load counts as past half, all they can lift as past the lift, a pack as nothing on land), and "By what they carry" goes back to the weight. Flyers, riders, swimmers and a mist or spirit are left out; worn armor still counts only by its own Dexterity penalty. A house rule: the books give Strength a lifting limit and no pace for a load. Ben's pick mc1 on the weekly review desk.
+
+Reverse: make landLoad in movement-rules.js return steps 0.
+
+## B7131. A teacher has to be willing, and may ask a price (2026-11-17)
+WoDX Creation's learning (teachersFor and the Where is it learned window) asks WoDX NPC how the teacher regards the student. Welcome or Honoured, or trust of 2 or more, teaches freely; Hostile or Hunted, or trust of -2 or less, refuses; anything between asks a price, which is written to WoDX Storyteller's Ledger as the student's debt when the study begins: a guild fee or a season's service before 1500, a tutor's wage or work before 1900, tuition or a favour before 2030, a contract after; between two Kindred it is a boon (minor, major from the fourth dot). A teacher whose token stands in another town (WoDX Storyteller's markets) needs a trip there first. A character a player runs always teaches. The Storyteller sees every teacher open, marked "the Storyteller overrides", and the Storyteller's own "a teacher the Storyteller finds" picks a willing one first. House rule (V20 pdf 131 expects a mentor who teaches; the books give no price). Ben's pick mc2.
+
+Reverse: make willingness in learn-rules.mjs return will "teach" and trip "".
+
+## B7132. The oracle's odds move with the night, and its edges turn it (2026-11-17)
+WoDX Solo's oracle asks what a yes would mean for the character (good news, bad news or neither) and reads the director's temper for the night. Under pressure a yes that is bad news, or neither, is a step likelier and good news a step less likely; on a rest it goes the other way; a steady night changes nothing. The odds stop at Almost certain and Hardly, and the card names the shift. A 10 or a 1 at any odds puts the question on WoDX Storyteller's signal board as a hook and weaves a Threads of Fate storyline, which always waits in the approval queue (a forced weave is never opened straight away), so the year's own cards bring the unexpected. After Mythic Game Master Emulator's Chaos Factor; a house rule. Ben's pick so1.
+
+Reverse: make shiftOdds in world-rules.mjs return the odds unchanged and turnsTheNight return false.
+
+## B7134. WoDX Voices is shelved (2026-11-17)
+Voices was shelved for good on 13 November (keep everything, delete nothing). tools/lanes/gate-map-extra.json now names it under "shelved": no gate covers it, a change to it runs none, gatevoices is out of the lane list, and the other gates drop it from their modules. tools/audit/coverage.mjs leaves its files out of an audit's scope, so a done claim needs no verdict for them, and the line-by-line review skips it. docs/MODULES.md marks it shelved. Its code, its harness test and the module stay; fix it only if it stops the world from loading. Ben's pick st2.
+
+Reverse: take wodx-voices off the "shelved" list and gatevoices off notGates.
 
 ## B7140. One feature registry in the repo (2026-11-17)
 Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
@@ -14531,15 +14671,6 @@ label went on counts.
 
 Reverse: drop the labelledBefore test from the guard in pr-gates.mjs.
 
-## B7400. The train retires a merged pull request's gate jobs (2026-11-18)
-Repository workflow. The train merged PR 2085 at 22:37:08Z on an earlier gate pass, and two seconds later its queued
-gate job #2111 started 123 gates on lane 2 for the merged head: the runner's pull request cache (two minutes old)
-still read the pull request as open. Now, when the train merges a pull request (alone or as a batch), it closes that
-pull request's queued gate jobs unrun and labels a running one pc-cancel, with a comment. The runner also reads the
-pull request again just before it starts a lane job, so a merge a moment ago stops the start.
-
-Reverse: drop the retireJobs calls in train.mjs and the fresh staleJob read before a start in runner.mjs.
-
 ## B7420. An urgent pull request goes to the front of the merge train (2026-11-18)
 Repository workflow. PR 2055 fixed the runner's gate recheck and sat green for about 15 minutes on 18 November with
 nobody told it needed a merge. A pull request labelled `urgent` as well as `merge-train` now goes to the front of the
@@ -14657,6 +14788,25 @@ modules can reach main and show the next night (B7443 names the merge). --wide k
 integration check on each push; the full suite with every module deployed still runs every night on main.
 Reverse: make run-gate --touched use the --wide branch again.
 
+## B7448. The PC runner orders its queue by rank and holds in planned windows (2026-11-18)
+Repository workflow, the owner's picks on the Process Priority Desk (p1, p6, p7). The runner sorted every waiting job
+by its 1-5 number less one per hour waited, so an old nightly or hand job could go before a pull request's gates. It
+now reads registry/priorities.json each loop (prio.mjs, B7350) and starts jobs by rank first: the train front's gate
+job, then unblocking work (urgent pull requests, branch-tools lane tests), then pull request gates, then health runs,
+with aging only inside a rank. A job can carry its class: pr-gates.mjs writes "urgent" for a pull request labelled
+urgent, nightly-gates.mjs "health". From holdMinutesBefore ahead of a planned window for its PC to the window's end
+the runner takes no new jobs, as with runner-hold, and says so on its status issue. A file that does not read or check
+leaves the older order, logged once.
+Reverse: call order(queue, openNums) without the prio options in runner.mjs and drop the window check.
+
+## B7449. The merge train's front clock stops while its runner holds (2026-11-18)
+Repository workflow, the owner's pick p5. The front's 3-hour limit counted wall time, so a runner on hold or in a
+planned window ran the clock out and the pull request was put out of the train for no fault of its own. The train now
+adds up only the time between steps when the clock ran at both (prio.mjs trainClockRuns: no runner-hold, no window)
+and the steps were less than 15 minutes apart, so a runner that was off or restarting adds nothing. A batch pull
+request (B7445) keeps the same clock.
+Reverse: set frontFor back to Date.now() - state.since in train.mjs (and b.since for a batch).
+
 ## B7460. lane-reset.cmd no longer starts the older nightly full run (2026-11-18)
 Repository workflow. Desk pick p6 keeps one nightly full run, tools/pcq/nightly-gates.mjs, an all-gates PC job. The
 Main PC's daily "WoDX lane reset" task still started tools/lanes/nightly.mjs from the last line of
@@ -14697,3 +14847,170 @@ finished. The open backlog (the nightly 2026-11-18 failures, #1843, gatetruthsto
 audit's open items) was filed the same day.
 
 Reverse: remove the bullet from section 8 and the `issue` field note; the issues stay as a record.
+
+## B7490. A chronicle is a module of its own (2026-11-18)
+Chronicle Packs Desk a1, a2 (Ben, 18 Nov 2026). Everything written for one story lives in a WoDX module with
+chronicle.mjs at its root: MANIFEST (id, title, town, homeland, opening, span, eras, lines, world, live worlds, books,
+first book, marks) and PACK (the data the story engines read). WoDX Rothenstein is the first. With it off, the game
+has no Rothenstein in it.
+
+Reverse: move modules/wodx-rothenstein/data back to wodx-chronicle/data and wodx-storyteller/data and import them
+directly again.
+
+## B7491. The story engines read the chronicle in play (2026-11-18)
+Desk a3, a4. WoDX Chronicle's chronicle-data.mjs holds live bindings (SAGA, FRONTS, TWISTS, REVEALS, ENCOUNTERS and
+the rest) that a chronicle module fills with registerChronicle. Several may register; one is in play (the first,
+or useChronicle(id)). With none, every list is empty and the saga, fronts, twists, reveals and encounters stay idle.
+The first book, the saga key prefix and the encounters' last chapter come from the pack, so nothing in the engines is
+read at load time. The builder lists the recipes of the chronicles that registered and falls back to the chronicle in
+play's, never to Rothenstein by name.
+
+Reverse: import the data files in the rules files again.
+
+## B7492. Saved state and words stay as they were (2026-11-18)
+Desk f1, f2. Keys, the podState.saga shape, the saga key prefix (saga:rothenstein:), the actor folder "Rothenstein
+encounters", "The Rothenstein saga" on cards and the podCity default all come out the same for Rothenstein, now read
+from the pack (SAGA.where, MANIFEST.town). The setting podSaga is now named "The chronicle's saga over the years".
+The judgement card's answer word and the cold place after the murders come from the chronicle's data (answer, COLD.place).
+
+Reverse: write the Rothenstein words back into pod.mjs, fronts.mjs, reveals.mjs and encounters.mjs.
+
+## B7493. A guard keeps a chronicle's words out of shared code (2026-11-18)
+Desk e1. tools/harness/chronicle-guard.test.mjs counts each chronicle's marks (whole words) in every other module;
+the mentions there today are in chronicle-guard-baseline.json, which may only shrink. A new mention fails the harness.
+
+Reverse: delete the guard and its baseline.
+
+## B7500. The Secondary PC drives the merge train while the Main PC is down (2026-11-19)
+tools/pcq/runner.benjamin-pc.json has `train: true` and tools/pcq/runner.json has `train: false`. The Main PC went
+down with a hardware fault on 18 November, and its runner was the only one driving the train (B7202), so labelled pull
+requests stopped merging. Ben asked for the Secondary PC to stand in. It gates on lane 8 only, its one Foundry lane,
+and keeps its memory floor (`minFreeRamGB` 3 on 16 GB). runner.json goes to `false` at the same time, so the Main PC
+cannot drive the train as well when it comes back: two drivers would both push merge-main commits to the same front.
+The Laptop already has `train: false`. The train keeps its state in `<home>/train-state.json` on each PC, so the
+Secondary PC starts its own and reads the line afresh from the labels.
+
+Reverse: set `train` back to `true` in runner.json and to `false` in runner.benjamin-pc.json once the Main PC is up.
+
+## B7510. The GPU guard reads gpu.order from registry/priorities.json (2026-11-18)
+Repository workflow. Desk pick p10 puts the GPU class order (art, ocr, local, other) in registry/priorities.json. The
+guard the PCs run, D:\WoDX\pcq\gpu-tools\gpuguard.mjs, came from pull request 1834's branch and was never in the repo,
+and its order (art, local, other) was written into the file. tools/pcq/gpuguard.mjs is now that same guard (the
+Secondary PC's live copy of 18 November, byte for byte apart from line endings) with the order read from the priority
+file, a built-in fallback to the same order when the file is missing, an ocr class, and unknown classes last.
+nightly-gates.mjs already looks for tools/pcq/gpuguard.mjs before the PC copy, so once a PC's clone has it the nightly
+run uses it. The lock folder does not change on the Secondary PC: GPU_GUARD_DIR is set there to D:\WoDX\pcq\gpu-guard, and
+its runner clone (D:\WoDX\pcq\repo) would give the same folder by default. On a PC without GPU_GUARD_DIR the default
+depends on where the clone sits (untested on the Main PC). The book OCR still asks as class other; moving it to ocr is a one-word change in
+vl-loop.ps1 on the PC. The status page from pull request 1834 is not part of this.
+
+Reverse: delete tools/pcq/gpuguard.mjs and tools/harness/gpuguard.test.mjs; nightly-gates.mjs falls back to the PC copy.
+
+## B7520. Merge rules read the branch's notes with full history (2026-11-19)
+Repository workflow, bug #2124. The merge rules list the release notes and decision fragments a branch added with
+git log over base..head. Plain git log simplifies history at merges: once a stamp has removed the notes, a later merge
+of main whose changes/ folder matches main's side is followed down that side only, and the commits that added the
+notes drop out. PR 1848 then failed "release note" with all seven notes on the branch. Both calls now pass
+--full-history, and a test builds the stamp and the second merge in a scratch repository.
+Reverse: drop --full-history from branchNotes and branchDecisions in tools/release/merge-rules.mjs.
+
+## B7521. A flaky gate is rechecked on main (2026-11-19)
+Repository workflow, bug #2135, under the owner's settled rule that a fault main has too does not hold a pull request.
+The recheck called a gate flaky when it passed once and failed once alone, and stopped there, so wodx/gates went red
+for a fault main may share. Each full run drew a different flaky gate, and train pull requests bounced again and again
+(PR 1880 on gateduties, PR 2132 on gatespritelife and gatetruthnpc, 19 November 2026). A flaky gate now goes to main as
+a failure alone does: a failure there reads "fails on main too" and does not hold the pull request; two passes alone
+on main leave it flaky, and it still holds. Main's runs are kept per main commit (B7342), so the cost falls on the
+first pull request each day.
+Reverse: return the flaky verdict straight away in recheckStep (tools/pcq/jobs.mjs), without the main runs.
+
+## B7530. A cult worships at a place of worship first (2026-11-19)
+WoDX NPC. When a cult serves its founder, the night of worship goes to the scene's first region tagged as a place of worship (church, chapel, cathedral, abbey, monastery, temple, shrine, mosque or synagogue), and only then to the first tagged place. Foundry does not keep a scene's regions in a set order, so the old "first tagged region" rule sent the worship to a haven on some loads, which made gateduties step 2 fail at random (gate runs #2114 and #2131 on PR 1880, both "flaky" alone). The rule is `worshipPlace` in cult-rules.mjs.
+
+Reverse: in cults.mjs `tagged`, take the first region with a place kind again, and drop `worshipPlace` and `WORSHIP_KINDS`.
+
+## B7540. A recheck deploys in full before each side's first run (2026-11-20)
+PC runner (tools/pcq/recheck.mjs). Each recheck run resets the lane's world and then deploys with --if-changed. That check leaves out compendium pack files (lib.mjs isPackDb). So the branch's first run, which comes straight after the full run on the same code, never redeployed, and whatever the full run left in the deployed packages stayed. Main's first run, on other code, always got a full deploy. Twice a gate failed alone on the branch and passed on main (gatearms on run #2151, gatemarketgoods on #2158), then passed alone on the same head soon after. The NEW verdict held each pull request for another full gate run on the one PC lane. Now the first run on each side deploys in full, and later runs keep --if-changed. A reset that exits non-zero is logged, where before it went unnoticed. This costs one more deploy per recheck. It removes the one known difference between the sides; that it was the cause is not yet proven (bug #2163).
+
+Reverse: give runOne back its plain --if-changed deploy.
+
+## B7550. The watcher reads the merge train from the runner that drives it (2026-11-20)
+tools/pcq/watcher.mjs took the "Merge train:" line only from the Main PC's status issue. Since B7500 the Secondary PC
+drives the train, so once the Main PC died the watcher kept reporting its last line: #1848 "at the front" for 28 hours
+after #1848 had merged, blamed on the silent Main PC. The new trainSource() takes the line from whichever runner's
+status issue shows one, preferring a live runner and then the freshest stamp, so a dead PC's last line never stands
+for the train. The stuck-train and green-front problems name the PC that drives the train when it goes silent, and the
+report says which runner the train line came from.
+
+Reverse: read `parseTrain(status.main?.body)` again in assess() and drop trainSource().
+
+## B7560. A lane can run a second testbed world, picked with --world (2026-11-20)
+Chronicle Packs Desk c2 and e2 (Ben, 18 Nov 2026). tools/lanes/lanes.json "worlds" lists other testbed worlds; the
+first is clean (wodx-clean). lanes.mjs reset, snapshot, accept, start, deploy and setup, and run-gate.mjs, take
+--world clean (or WODX_WORLD=clean). That world has its own known-good copy (the default copy's folder plus -clean)
+and its own clean fingerprint (clean-clean.json), so the two worlds never mix. With no --world everything works on
+rothenstein-wodx as before. A world whose id names Live is refused.
+
+Reverse: remove "worlds" from lanes.json and selectWorld from lib.mjs; the lanes fall back to rothenstein-wodx.
+
+## B7561. The clean world is made from the template, with no chronicle (2026-11-20)
+lanes.mjs setup-clean --lane N copies worlds/wodx-template/world.json in as wodx-clean (flags.wodx.clean), signs in
+as its first Gamemaster to add Gamemaster Test and Player Test, turns on every WoDX module except the chronicle
+modules (any module with a chronicle.mjs at its root, so no chronicle is named in the tool) plus the default world's
+other modules (read from the lane's clean fingerprint), runs Start a chronicle once with its own defaults (1197, the
+default homeland), checks no chronicle is on or in play, takes the known-good copy and the clean fingerprint, and
+starts the lane on rothenstein-wodx again. Tried on cloud lane 9 on 20 Nov 2026: about 3 minutes, 44 modules on.
+
+Reverse: delete the wodx-clean world folder and its known-good copy (generated test data, backed up first).
+
+## B7562. gatecleanworld proves the shared game runs with no chronicle (2026-11-20)
+tools/gate/gatecleanworld.mjs runs in wodx-clean only (it refuses a world without flags.wodx.clean). It reads each
+installed chronicle module's marks, Threads of Fate card keys, world event ids, scene presets and factions from that
+module's chronicle.mjs, then checks: none is on, registered or in play and the engines hold no story; the saga window
+names no chronicle and a week of game time brings no saga, front, twist, reveal or encounter card; the deck, the
+world events (Future Darkness branch on), the faction window and Otherworld tagging hold none of a chronicle's
+content; no document carries a chronicle flag and no name, chat card or journal page holds a mark. It puts back what
+it changed and the clock. It is in gate-map-extra.json notGates: in rothenstein-wodx a chronicle is in play on purpose.
+First run on lane 9: 8 of 9; the saga window's hint still named the chronicle module (wodx-chronicle pod.mjs, in
+the guard baseline). B7566 takes that text out in the same pull request.
+
+Reverse: delete the gate and its notGates entry.
+
+## B7563. The clean smoke set (2026-11-20)
+gate-map-extra.json "clean" lists the gates that run in wodx-clean: gatecleanworld, plus shared gates that must also
+pass with no chronicle in play. run-gate.mjs --world clean --clean-set runs them. On lane 9 on 20 Nov 2026,
+gatethreads 9/9, gateoworld 7/7 and gatepod 10/10 passed in wodx-clean as they are, so they are in the set. gate7d
+(reads the chronicle's starting factions), gatebuilder (wants the chronicle's recipe) and gateevents (refuses any
+world but rothenstein-wodx) still insist on Rothenstein; they join once they check the chronicle in play and pass as
+"no chronicle" in wodx-clean. The set joins the nightly run (after the full main run, on one lane) once
+gatecleanworld passes on main, so the nightly result starts green.
+
+Reverse: empty the list.
+
+## B7564. One Live-world list (2026-11-20)
+Chronicle Packs Desk d4. WoDX Chronicle's scripts/live-worlds.mjs holds LIVE_WORLDS and isLiveWorld(world). It starts
+with rothenstein-live, so the guard holds with every chronicle module off, and registerChronicle adds the chronicle's
+manifest `live` list. Actions (effects), Sheets (anachronism), Creation (first night), Storyteller (hand, recipe
+rules, builder), Solo (never worlds) and Chronicle (automation seeding) read it instead of a copy each; the solo,
+recipe and automation names (NEVER_WORLDS, FORBIDDEN_WORLDS, NEVER_SEED) are the same array. A world with
+flags.wodx.liveWorld still counts.
+
+Reverse: put a ["rothenstein-live"] list back in each file.
+
+## B7565. Shared rules read the chronicle in play, not its names (2026-11-20)
+Solo's landing takes the town from the chronicle in play's manifest: landingNames(town) tries a market, a scene named
+for the town, a lower town, then any scene naming the town; the plain night scene and the arrival window are named
+for the town, or "By night: the way in" and "Who comes in out of the night?" with none. Laying Ways makes a gate where
+a scene matching one of the recipe's castle anchors meets one that does not (exitKind's castles option), instead of
+a castle name typed in way-rules.mjs.
+
+Reverse: put the town and castle names back in solo-rules.mjs and way-rules.mjs.
+
+## B7566. Words that named the first chronicle (2026-11-20)
+The saga setting's hint, the story window's empty-state line, one failure line, the curfew hint, the builder's saga
+note and the characters step's label say "the chronicle" or nothing, and comments say what they mean in general. The
+chronicle guard's baseline falls from 70 mentions in 37 files to 10 in 2: two Future Darkness metaplot events
+(future-events.mjs, 2044 and 2058) that name the town inside a wider Moravian event, and WoDX Otherworlds' tests of
+the chronicle's own preset. The two events wait for the owner (docs/PENDING-REVIEW.md): they are house metaplot.
+
+Reverse: restore the old words.

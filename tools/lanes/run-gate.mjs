@@ -17,6 +17,10 @@
  *                         run as a lane fault (exit 5) with the gate given back, so the PC runner resets the lane
  *   --list                print the gates the run would take, as "GATES [json]", and stop (B6526)
  *   --queue <file>        take gates one at a time from a JSON list shared with runs on other lanes (B6526)
+ *   --world clean         run in the lane's clean world (wodx-clean, lanes.json "worlds"), checked against its own clean
+ *                         fingerprint; the lane must be running it (lanes.mjs reset --lane N --world clean)
+ *   --clean-set           add the clean smoke set (gate-map-extra.json "clean": gatecleanworld and the shared gates that
+ *                         must pass with no chronicle in play); give it with --world clean
  * No run can hang a lane (B3089): a gate past its limit fails, its browser is closed and a new one signed in for the
  * next gate; past the whole run's limit the runner closes its browser, frees the lane and exits with 5. The lane lock
  * carries a deadline that moves on before each gate, so another run takes over a lane whose run has hung past it,
@@ -42,7 +46,7 @@
  */
 import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, extendLock, pickLane, isUp, codeFingerprint, expectedCode,
-  diffCode, diffRunning, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
+  diffCode, diffRunning, cleanPath, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO,
   flagPlan, READ_FLAGS, PUT_FLAGS_BACK, sheetPlan, READ_SHEETS, PUT_SHEETS_BACK, pageNote, gateCaller} from "./lib.mjs";
 import {openGM, waitApis, apiState, LATE_APIS} from "./browser.mjs";
 import {gateMap, touched, gatesFor, tier1, changedPaths, loadExtra} from "./gate-map.mjs";
@@ -53,10 +57,11 @@ import {watchHang} from "./hang-watch.mjs";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle", "hang-checks", "hang-every"]);
+const valued = new Set(["world", "lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes", "queue", "recycle", "hang-checks", "hang-every"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
 const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
+if ( args.includes("--clean-set") ) gates.push(...(loadExtra(gateRoot).clean ?? []));
 if ( args.includes("--touched") ) {
   const paths = changedPaths(opt("base") ?? "origin/main", gateRoot);
   const t = touched(paths, {root: gateRoot});
@@ -110,7 +115,7 @@ const times = [];
 const reportTimes = () => { if ( !times.length ) return; const t = `  TIMES ${times.join(" ")}`; console.log(t); report(t); times.length = 0; };
 const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
 report(`==== ${new Date().toISOString()} ${gates.length} gate(s)${shard ? ` shard ${shard[0]}` : ""}`);
-const cfg = loadConfig();
+const cfg = loadConfig(undefined, {world: opt("world") ?? process.env.WODX_WORLD});
 const repo = path.resolve(opt("repo") ?? REPO);
 const only = opt("lane") ? [String(opt("lane"))] : null;
 const waitMin = Number(opt("wait") ?? 0);
@@ -175,7 +180,7 @@ try {
   // World drift: the running world against its clean fingerprint.
   await signIn();
   const now = await within(settledFingerprint(page, cfg.ignoreSettings), 150000, "the world check");
-  const clean = readJson(path.join(laneDir(lane), "clean.json"));
+  const clean = readJson(cleanPath(lane, cfg));
   const world = clean ? diffWorld(clean, now, {versions: false}) : {strict: [{where: "clean fingerprint", what: "none yet: reset the lane or run lanes.mjs accept"}], warn: []};
   world.strict.push(...diffRunning(expected, now));
   const fp = {lane: lane.id, at: new Date().toISOString(), repo, code: actual, world: now};

@@ -54,7 +54,14 @@ export const DATA = { disc: null, roads: null, v20: null, paths: null };
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    [DATA.disc, DATA.roads, DATA.v20, DATA.paths] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json")]);
+    let combos;
+    [DATA.disc, DATA.roads, DATA.v20, DATA.paths, combos] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json"), get("rules/vampire/combinations-lotc.json")]);
+    // B7092: the combination Disciplines (V20 Lore of the Clans) join the V20 powers; each row's needs say which Disciplines
+    if (DATA.v20 && combos?.rows?.length) {
+        DATA.v20 = { ...DATA.v20, powers: [...DATA.v20.powers, ...combos.rows] };
+        // each row carries its effect keywords (k), which the effects card reads with the V20 powers'
+        for (const r of combos.rows) if (r.kw && r.k?.length && !PK.LINE_KEYWORDS.v20[r.kw]) PK.LINE_KEYWORDS.v20[r.kw] = { n: r.n, k: r.k };
+    }
     return DATA;
 }
 
@@ -257,7 +264,7 @@ export function build(ctx) {
                 // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
                 const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
                 const rm = target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : { diff: 0, parts: [] };
-                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
+                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + rm.diff + lim.diff, { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
                 body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])], fd.specialty);
@@ -288,7 +295,7 @@ export function build(ctx) {
             // A power with no roll counts one success (B3751)
             // B6853: a passive power picked here turns on for its time
             if (!fx && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: p.book === "V20" ? "Vampire (V20)" : "Vampire (Dark Ages)" });
+                const pp = EF.powerPlan(actor, { set: /^V20/.test(p.book ?? "") ? "v20" : "disc", id: /^V20/.test(p.book ?? "") ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: /^V20/.test(p.book ?? "") ? "Vampire (V20)" : "Vampire (Dark Ages)" });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
@@ -1149,7 +1156,7 @@ export function build(ctx) {
         const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
         const lib = K.librarySet(DATA.disc.powers, DATA.v20?.powers, { darkAges: era === "dark-ages" || era === "long-night", v20Names: new Set(Object.keys(PK.LINE_KEYWORDS.v20 ?? {})) });
         return K.powersFor(lib, sheetDisciplines(actor)).filter(p => !p.passive && p.r).map(p => ({ use: "useDiscipline", field: "power", value: p.id, name: p.n, disc: p.d, level: p.l,
-            set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id }));
+            set: /^V20/.test(p.book ?? "") ? "v20" : "disc", id: /^V20/.test(p.book ?? "") ? p.kw : p.id }));
     }
     return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
         daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };

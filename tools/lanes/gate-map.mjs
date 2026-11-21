@@ -17,7 +17,8 @@
  * way up, unless --direct is given; so a Chronicle change runs nearly everything and a Paperdoll change only the
  * Paperdoll gates. A change to the
  * system (system/) touches every module. A changed gate file runs that gate. Docs, tools and changes/ alone need no
- * gate. run-gate.mjs uses this for --touched and --all.
+ * gate. run-gate.mjs uses this for --touched and --all. Shelved modules (gate-map-extra.json "shelved", B7134) are
+ * covered by no gate and touch none.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -51,10 +52,12 @@ export function loadExtra(root = ROOT) {
   const f = path.join(root, "tools/lanes/gate-map-extra.json");
   return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : {};
 }
+/** B7134: the shelved modules (gate-map-extra.json "shelved"): no gate covers them, and audits leave them out. */
+export const shelved = (root = ROOT) => new Set(loadExtra(root).shelved ?? []);
 
 /** {gate: [module ids]} for every gate file (gate*.mjs with an exported run). */
 export function gateMap(root = ROOT) {
-  const ids = moduleIds(root), extra = loadExtra(root), not = new Set(extra.notGates ?? []);
+  const ids = moduleIds(root), extra = loadExtra(root), not = new Set(extra.notGates ?? []), shelf = new Set(extra.shelved ?? []);
   const map = {};
   for ( const f of fs.readdirSync(path.join(root, "tools/gate")).sort() ) {
     const name = f.replace(/\.mjs$/, "");
@@ -67,6 +70,9 @@ export function gateMap(root = ROOT) {
     const set = coveredBy(src, ids);
     for ( const m of extra.add?.[name] ?? [] ) set.add(m);
     for ( const m of extra.remove?.[name] ?? [] ) set.delete(m);
+    // B7134: a gate for shelved modules alone is left out; the others drop them
+    if ( set.size && [...set].every(m => shelf.has(m)) ) continue;
+    for ( const m of shelf ) set.delete(m);
     if ( !set.size ) set.add("wodx-chronicle"); // a gate that names nothing still runs when the core changes
     map[name] = [...set].sort();
   }
@@ -126,7 +132,9 @@ export function touched(paths, {root = ROOT, direct = false} = {}) {
     const req = requirers(root), queue = [...owners];
     while ( queue.length ) for ( const d of req[queue.shift()] ?? [] ) if ( !mods.has(d) ) { mods.add(d); queue.push(d); }
   }
-  return {modules: [...mods].sort(), gates: [...gates].sort()};
+  // B7134: a shelved module is never touched, so its change runs no gate
+  const shelf = shelved(root);
+  return {modules: [...mods].filter(m => !shelf.has(m)).sort(), gates: [...gates].sort()};
 }
 
 /** Gates for a set of modules, plus the named gate files that are real gates. */
