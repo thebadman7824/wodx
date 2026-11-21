@@ -4858,6 +4858,15 @@
  {
   "target": "wodx-storyteller",
   "path": [
+   "markets"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/learn.mjs:115"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
    "night"
   ],
   "uses": [
@@ -5300,6 +5309,16 @@
    "modules/wodx-chronicle/scripts/law-regime.mjs:73",
    "modules/wodx-chronicle/scripts/law-tax.mjs:33",
    "modules/wodx-chronicle/scripts/law-trial.mjs:27"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "markets"
+  ],
+  "uses": [
+   "modules/wodx-creation/scripts/learn.mjs:115"
   ]
  },
  {
