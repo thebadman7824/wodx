@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7570
+Next free block: B7590
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -444,6 +444,7 @@ Next free block: B7570
 | B7540-B7549 | Recheck: each side's first run gets a full deploy (used B7540) | tools (pcq) |
 | B7550-B7559 | The PC watcher reads the merge train from the PC that drives it (used B7550) | tools |
 | B7560-B7569 | Clean template world and names out of shared code: wodx-clean, gatecleanworld, one Live list (used B7560-B7566) | Chronicle, Actions, Sheets, Creation, Atmosphere, Combat, NPC, Solo, Storyteller, tools |
+| B7580-B7589 | run-gate puts late settings back, so gatebattle no longer leaves a lane drifted (PR 2047, first written as B7320) (used B7580) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15014,3 +15015,14 @@ chronicle guard's baseline falls from 70 mentions in 37 files to 10 in 2: two Fu
 the chronicle's own preset. The two events wait for the owner (docs/PENDING-REVIEW.md): they are house metaplot.
 
 Reverse: restore the old words.
+
+## B7580. Settings are put back a second time after a short settle (2026-11-18)
+Repository workflow. After each gate run-gate puts back the settings the gate changed and removes the ones it added,
+then puts the clock, the active scene and the pause back. Those last steps set off hooks that can write a setting
+after the pass: gatebattle left wodx-chronicle.nightWork added, so the next run on that lane stopped with drift
+(exit 4), seen on cloud lane 9 and reproduced on lane 8 (gatebattle twice: the second run refused). run-gate now
+waits 3 seconds after the pause is back and runs the settings pass once more. On lane 8 gatebattle then passed twice
+back to back with no drift, and gate6b after it. nightWork was not added to ignoreSettings, so a real nightWork fault
+still shows. First written as B7320; that block went to gate7b on main, so the number moved.
+
+Reverse: drop the second settingsPass call and its wait in run-gate.mjs.
