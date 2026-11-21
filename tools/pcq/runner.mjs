@@ -212,7 +212,7 @@ async function finish(issue, ok, text) {
 // ---- stale pull request jobs (B7205) ----
 // A gates job for an old commit of a pull request is not run, and one that is running stops after its current gates.
 const pullCache = new Map();
-async function staleJob(issue) {
+async function staleJob(issue, maxAgeMs = 2 * 60000) {
   const mark = prMark(issue.title);
   if ( !mark ) return null;
   const fetchPull = async () => {
@@ -220,7 +220,7 @@ async function staleJob(issue) {
     catch (e) { return null; } // unknown: never drop on a lookup failure
   };
   let c = pullCache.get(mark.pr);
-  if ( !c || Date.now() - c.at > 2 * 60000 ) c = await fetchPull();
+  if ( !c || Date.now() - c.at > maxAgeMs ) c = await fetchPull();
   if ( !c || !staleWhy(mark, c.pull) ) return null;
   // B7205 fix: the cache can hold the head from before the push that queued this job (jobs 1967, 1969 and 1970 were
   // dropped as "moved on" to their older commit), so a job is only dropped on a pull request read just now
@@ -824,6 +824,9 @@ for ( ;; ) {
         const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(l => laneFree(l) && !laneRefuses(laneOf(l), q.job)).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
+        // B7590: the pull request is read again just before a lane job starts (the queue pass above may read a
+        // two-minute-old copy), so a job whose pull request merged a moment ago is not started (#2111, 18 Nov)
+        { const why = await staleJob(q.issue, 0); if ( why ) { log(`#${q.number}: ${why}; not run`); await drop(q.issue, `Not run: ${why}, so this commit's result would not be used.`); continue; } }
         for ( const l of want ) state[l].busy = q.number;
         if ( !(await claim(q.number)) ) { for ( const l of want ) state[l].busy = null; continue; }
         start(q.issue, q.job, want);

@@ -94,3 +94,22 @@ test("B7209: a job is only dropped as stale on a pull request read just now, nev
   assert.match(fn, /if \( c\.at < Date\.now\(\) - 5000 \) c = await fetchPull\(\);/);
   assert.match(fn, /return c \? staleWhy\(mark, c\.pull\) : null;/);
 });
+
+test("B7590: a merged pull request's gate jobs are retired, others are left", async () => {
+  const {jobsFor} = await import("../pcq/train.mjs");
+  const open = [
+    {number: 1, title: "PC job: gates touched [PR #2085 c7fe0de90cc7]", labels: [{name: "pc-running"}]},
+    {number: 2, title: "PC job: gates touched [PR #2085 aaaaaaaaaaaa]", labels: []},
+    {number: 3, title: "PC job: gates touched [PR #20850 c7fe0de90cc7]", labels: []},
+    {number: 4, title: "PC job: gates touched [PR #2085 bbbbbbbbbbbb]", labels: [{name: "pc-cancel"}]},
+    {number: 5, title: "PC job: nightly full gates [main c7fe0de90cc7]", labels: []}];
+  assert.deepEqual(jobsFor(open, [2085]).map(i => i.number), [1, 2]);
+  assert.deepEqual(jobsFor(open, ["2085", 7]).map(i => i.number), [1, 2], "numbers as strings work too");
+});
+
+test("B7590: the train retires after both kinds of merge, and the runner re-reads the PR before a start", () => {
+  const train = fs.readFileSync(new URL("../pcq/train.mjs", import.meta.url), "utf8");
+  assert.equal((train.match(/await retireJobs\(gh, /g) ?? []).length, 2, "the front merge and the batch merge");
+  const runner = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(runner, /await staleJob\(q\.issue, 0\)/);
+});

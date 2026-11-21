@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7590
+Next free block: B7600
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -445,6 +445,7 @@ Next free block: B7590
 | B7550-B7559 | The PC watcher reads the merge train from the PC that drives it (used B7550) | tools |
 | B7560-B7569 | Clean template world and names out of shared code: wodx-clean, gatecleanworld, one Live list (used B7560-B7566) | Chronicle, Actions, Sheets, Creation, Atmosphere, Combat, NPC, Solo, Storyteller, tools |
 | B7580-B7589 | run-gate puts late settings back, so gatebattle no longer leaves a lane drifted (PR 2047, first written as B7320) (used B7580) | tools |
+| B7590-B7599 | No gate run on a pull request the train has already merged (PR 2112, first written as B7400) (used B7590) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15026,3 +15027,13 @@ back to back with no drift, and gate6b after it. nightWork was not added to igno
 still shows. First written as B7320; that block went to gate7b on main, so the number moved.
 
 Reverse: drop the second settingsPass call and its wait in run-gate.mjs.
+
+## B7590. The train retires a merged pull request's gate jobs (2026-11-18)
+Repository workflow. The train merged PR 2085 at 22:37:08Z on an earlier gate pass, and two seconds later its queued
+gate job #2111 started 123 gates on lane 2 for the merged head: the runner's pull request cache (two minutes old)
+still read the pull request as open. Now, when the train merges a pull request (alone or as a batch), it closes that
+pull request's queued gate jobs unrun and labels a running one pc-cancel, with a comment. The runner also reads the
+pull request again just before it starts a lane job, so a merge a moment ago stops the start. First written as B7400,
+a number in another thread's claimed block, so it moved.
+
+Reverse: drop the retireJobs calls in train.mjs and the fresh staleJob read before a start in runner.mjs.
