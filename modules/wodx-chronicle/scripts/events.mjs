@@ -31,6 +31,16 @@ export function load() {
     .catch(err => { loading = null; throw err; });
   return loading;
 }
+/**
+ * The chronicle in play changed (closed, opened again; Chronicle Packs Desk c1): its own world events are read again,
+ * so a chronicle opened after the tables loaded brings its events with it.
+ */
+export async function reloadChronicle() {
+  if ( !BIG ) return;
+  const pack = chronicleInPlay();
+  if ( (pack?.id ?? "") === BIG.chronicle.id ) return;
+  BIG.chronicle = {id: pack?.id ?? "", events: (await pack?.events?.()) ?? []};
+}
 /** Are the large tables in? */
 export const loaded = () => !!BIG;
 
@@ -92,7 +102,8 @@ function today() {
 let table = {key: null, rows: [], byId: new Map()};
 function current() {
   const o = opts();
-  const key = `${JSON.stringify(o.overrides)}|${!!o.futureBranch}|${o.cascade}|${!!BIG}`;
+  // The chronicle in play is part of the key: a chronicle closed or opened again takes its own events with it (B7572)
+  const key = `${JSON.stringify(o.overrides)}|${!!o.futureBranch}|${o.cascade}|${!!BIG}|${chronicleInPlay()?.id ?? ""}|${BIG?.chronicle.id ?? ""}`;
   if ( table.key !== key ) {
     const rows = eventTable(allEvents(), o);
     table = {key, rows, byId: new Map(rows.map(ev => [ev.id, ev]))};

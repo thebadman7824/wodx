@@ -59,6 +59,8 @@ export let LAST_ENCOUNTER = "";
 
 const packs = new Map();
 let inPlay = null;
+/** Chronicles closed in this world (Chronicle Packs Desk c1): they stay registered, but never go into play. */
+let shut = new Set();
 
 /** Every registered chronicle, in the order they registered. */
 export const chronicles = () => [...packs.values()];
@@ -104,7 +106,7 @@ export function registerChronicle(pack) {
   packs.set(pack.id, pack);
   // B7564: its Live worlds join the one shared list (they stay on it if the pack is taken off again)
   addLiveWorlds(pack.manifest?.live ?? []);
-  if ( !inPlay || inPlay === pack.id ) useChronicle(pack.id);
+  if ( (!inPlay || inPlay === pack.id) && !shut.has(pack.id) ) useChronicle(pack.id);
   return pack;
 }
 
@@ -120,4 +122,20 @@ export function useChronicle(id = "") {
 export function unregisterChronicle(id) {
   packs.delete(id);
   if ( inPlay === id ) useChronicle(chronicles()[0]?.id ?? "");
+}
+
+/** Is this chronicle closed in this world? */
+export const isClosed = id => shut.has(String(id ?? ""));
+/** The ids of the chronicles closed in this world. */
+export const closedIds = () => [...shut];
+
+/**
+ * Settle which chronicle is in play once the world's closed list is known (Chronicle Packs Desk c1 and c3). A closed
+ * chronicle leaves play and the next registered one that is still open takes its place, or none. A chronicle opened
+ * again comes back into play when none is. Returns the chronicle in play, or null.
+ */
+export function settleInPlay(closed = []) {
+  shut = new Set((closed ?? []).map(String).filter(Boolean));
+  if ( inPlay && !shut.has(inPlay) ) return current();
+  return useChronicle(chronicles().find(p => !shut.has(p.id))?.id ?? "");
 }

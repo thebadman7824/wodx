@@ -504,7 +504,7 @@
    "modules/wodx-actions/scripts/treasures.js:224",
    "modules/wodx-npc/scripts/family.mjs:47",
    "modules/wodx-npc/scripts/hearts.mjs:37",
-   "modules/wodx-storyteller/scripts/threads.mjs:116"
+   "modules/wodx-storyteller/scripts/threads.mjs:119"
   ]
  },
  {
@@ -1312,7 +1312,7 @@
    "modules/wodx-storyteller/scripts/remains.mjs:158",
    "modules/wodx-storyteller/scripts/rumours.mjs:18",
    "modules/wodx-storyteller/scripts/tasks.mjs:462",
-   "modules/wodx-storyteller/scripts/threads.mjs:286",
+   "modules/wodx-storyteller/scripts/threads.mjs:289",
    "modules/wodx-storyteller/scripts/towns.mjs:36",
    "modules/wodx-storyteller/scripts/upkeep.mjs:428",
    "modules/wodx-storyteller/scripts/wonders.mjs:236"
@@ -1412,7 +1412,7 @@
   ],
   "uses": [
    "modules/wodx-combat/scripts/aftermath.js:119",
-   "modules/wodx-storyteller/scripts/threads.mjs:239"
+   "modules/wodx-storyteller/scripts/threads.mjs:242"
   ]
  },
  {
@@ -1531,7 +1531,7 @@
    "current"
   ],
   "uses": [
-   "modules/wodx-storyteller/scripts/threads.mjs:215"
+   "modules/wodx-storyteller/scripts/threads.mjs:218"
   ]
  },
  {
@@ -1592,7 +1592,7 @@
    "modules/wodx-storyteller/scripts/owners.mjs:401",
    "modules/wodx-storyteller/scripts/patronage.mjs:76",
    "modules/wodx-storyteller/scripts/spend.mjs:81",
-   "modules/wodx-storyteller/scripts/threads.mjs:120",
+   "modules/wodx-storyteller/scripts/threads.mjs:123",
    "modules/wodx-storyteller/scripts/towns.mjs:179",
    "modules/wodx-storyteller/scripts/ventures.mjs:120",
    "modules/wodx-storyteller/scripts/wills.mjs:82",
@@ -1636,7 +1636,7 @@
    "modules/wodx-storyteller/scripts/night.mjs:31",
    "modules/wodx-storyteller/scripts/owners.mjs:410",
    "modules/wodx-storyteller/scripts/spend.mjs:89",
-   "modules/wodx-storyteller/scripts/threads.mjs:275",
+   "modules/wodx-storyteller/scripts/threads.mjs:278",
    "modules/wodx-storyteller/scripts/towns.mjs:370",
    "modules/wodx-storyteller/scripts/ventures.mjs:308"
   ]
@@ -2428,7 +2428,7 @@
   ],
   "uses": [
    "modules/wodx-chronicle/scripts/legends.mjs:51",
-   "modules/wodx-chronicle/scripts/pod.mjs:56",
+   "modules/wodx-chronicle/scripts/pod.mjs:60",
    "modules/wodx-chronicle/scripts/signatures.mjs:81",
    "modules/wodx-chronicle/scripts/signatures.mjs:547",
    "modules/wodx-chronicle/scripts/traits.mjs:27",
@@ -2599,7 +2599,7 @@
   "uses": [
    "modules/wodx-chronicle/scripts/clock-app.mjs:40",
    "modules/wodx-chronicle/scripts/clock-app.mjs:150",
-   "modules/wodx-storyteller/scripts/setup.mjs:229"
+   "modules/wodx-storyteller/scripts/setup.mjs:243"
   ]
  },
  {
@@ -2608,8 +2608,8 @@
    "lifepathThreads"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:505",
-   "modules/wodx-storyteller/scripts/threads.mjs:90"
+   "modules/wodx-chronicle/scripts/pod.mjs:608",
+   "modules/wodx-storyteller/scripts/threads.mjs:93"
   ]
  },
  {
@@ -4784,7 +4784,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/social.js:226",
-   "modules/wodx-chronicle/scripts/pod.mjs:194",
+   "modules/wodx-chronicle/scripts/pod.mjs:202",
    "modules/wodx-chronicle/scripts/signatures.mjs:581",
    "modules/wodx-chronicle/scripts/signatures.mjs:600",
    "modules/wodx-npc/scripts/hearts.mjs:421",
@@ -5032,7 +5032,7 @@
   "uses": [
    "modules/wodx-actions/scripts/debts-marks.js:119",
    "modules/wodx-actions/scripts/kindred.js:503",
-   "modules/wodx-chronicle/scripts/pod.mjs:128",
+   "modules/wodx-chronicle/scripts/pod.mjs:136",
    "modules/wodx-combat/scripts/aftermath.js:138",
    "modules/wodx-npc/scripts/aftercare.mjs:289",
    "modules/wodx-npc/scripts/cults.mjs:306",
@@ -5219,7 +5219,7 @@
    "towns"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:188"
+   "modules/wodx-chronicle/scripts/pod.mjs:196"
   ]
  },
  {
@@ -5357,7 +5357,7 @@
    "modules/wodx-actions/scripts/trade.js:14",
    "modules/wodx-chronicle/scripts/law-punish.mjs:65",
    "modules/wodx-chronicle/scripts/law-tax.mjs:47",
-   "modules/wodx-chronicle/scripts/pod.mjs:180",
+   "modules/wodx-chronicle/scripts/pod.mjs:188",
    "modules/wodx-library/scripts/examine.mjs:74",
    "modules/wodx-library/scripts/gamble-use.mjs:11",
    "modules/wodx-npc/scripts/hearts.mjs:217",
@@ -5498,7 +5498,7 @@
    "towns"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:188"
+   "modules/wodx-chronicle/scripts/pod.mjs:196"
   ]
  },
  {

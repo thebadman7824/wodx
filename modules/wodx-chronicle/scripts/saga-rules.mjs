@@ -75,12 +75,18 @@ export function bookStates(st = {}, year = 1197, {future = false} = {}) {
 }
 
 /**
+ * A book has ended and the Storyteller has not yet said "next book" or "close here" (Chronicle Packs Desk c3,
+ * st.after = {<book>: "ask"|"next"}): no later book is offered or passed while it waits.
+ */
+export const waitsAtEnd = (st = {}) => Object.values(st?.after ?? {}).includes("ask");
+
+/**
  * The book to offer for this year, or null: the first one the year fits that nobody has started, finished, skipped or
  * been offered, while no other book runs. The prologue fits only before 1197; the future book only on that branch.
  */
 export function dueBook(st = {}, year = 1197, {future = false} = {}) {
   const books = st.books ?? {};
-  if ( Object.values(books).includes("running") ) return null;
+  if ( Object.values(books).includes("running") || waitsAtEnd(st) ) return null;
   return SAGA.books.find(b => year >= b.from && year <= b.to && !books[b.key] && (future || b.branch !== "future")) ?? null;
 }
 
@@ -89,6 +95,7 @@ export function dueBook(st = {}, year = 1197, {future = false} = {}) {
  * clock moves are summed so the valley is as it would be (the Storyteller sees a card and can set them back).
  */
 export function passedBooks(st = {}, year = 1197, {future = false} = {}) {
+  if ( waitsAtEnd(st) ) return [];
   return SAGA.books.filter(b => b.to < year && !st.books?.[b.key] && (future || b.branch !== "future"));
 }
 export function worldDelta(book) {

@@ -47,6 +47,9 @@ export function loadDeck() {
   return deckLoading;
 }
 
+/** The chronicle in play changed (Chronicle Packs Desk c1): the deck loads again with the new chronicle's cards, or none. */
+export function forgetDeck() { DECK = []; deckLoading = null; }
+
 export function registerThreadSettings() {
   game.settings.register(MOD, "threads", {name: "Threads of Fate (storylines woven from what happens)", hint: "Off, Suggest (each storyline asks the Storyteller first) or Open by itself (it opens and the Storyteller is told). Woven once a week, when a session ends, and at once for great events.",
     scope: "world", config: true, type: String, default: "off", choices: {off: "Off", suggest: "Suggest", auto: "Open by itself"}});
