@@ -18,3 +18,4 @@
 {"file":"modules/wodx-storyteller/README.md","verdict":"working","how":"read the diff; storyteller-readme, hooks and gate-rules harness tests pass; harness shards 3 and 4 run locally","hash":"5786797642a0","at":"2026-11-20T22:58Z"}
 {"file":"docs/HOOKS.md","verdict":"working","how":"read the diff; storyteller-readme, hooks and gate-rules harness tests pass; harness shards 3 and 4 run locally","hash":"3833652dc232","at":"2026-11-20T22:58Z"}
 {"file":"tools/gate/gatechronicleclose.mjs","verdict":"working","how":"read the diff; storyteller-readme, hooks and gate-rules harness tests pass; harness shards 3 and 4 run locally","hash":"c36a7baf17ea","at":"2026-11-20T22:58Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"carried over by the merge train after main merged in: the branch's own change to this file is the same; earlier check: read in full; matches changes/README.md form","hash":"4b594f662b28","at":"2026-11-21T04:17Z"}
