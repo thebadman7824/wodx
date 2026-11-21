@@ -1,6 +1,0 @@
----
-bump: minor
-effect: a chronicle module can name its town's own holy days and customs, and its own languages, and the shared calendar and chat read them; a custom such as a night of fires is named on the Chronicle Clock and makes a night of revel without being a day off work, and a chronicle language can be closed to learning for a book and still give hearers its sense without a roll
-visible: nothing changes in a world until a chronicle fills these (Rothenstein does not yet; the Book 1 rebuild will); then the Clock shows the town's own days, the Languages window and chat language box list the chronicle's tongues, a player who adds a closed one is told no one can learn it now, and a hearer who lacks a language that gives its sense sees the strange words and a line with the meaning
----
-Chronicle-local hooks (Chronicle Packs Desk d1, B7610-B7614): manifest.local in a chronicle pack holds feasts, titles, languages, caerns and hunters (chronicle-local-rules.mjs). The church year takes the chronicle's holy days and customs where the homeland's year is kept; the Storyteller's own feasts setting still applies everywhere. Chat languages take the chronicle's tongues, their closed books, their sense and their own sounds.
