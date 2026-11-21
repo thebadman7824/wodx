@@ -1710,4 +1710,5 @@ Rows dated 17 to 20 November that Ben had not approved or disapproved by 21 Nove
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-21 | Small change in talk outside Moravia (d3, B7602) | The two smallest coins of the region's money that year (farthings and pence in England in 1600); Moravia keeps its hand-picked coin words, so Rothenstein's talk does not change | Drop the {coinSmall} rule from modules/wodx-npc/data/grammar/house.mjs |
 | 2026-11-21 | Weekly review pick us1: add the rule that each mechanical part of a change goes out as one local-agent issue? And the two held local-agent name PRs (1787 Banyarwanda, 1855 Amazigh)? | The rule is not added while local coding agents are paused (17 November). Both PRs are closed unmerged: main already raised Banyarwanda and Amazigh to 300 recorded names (B6547), and both branches conflict with it and carry names that do not belong (English given names, prefixes on their own, a Hebrew name, pipe pairs). | Add the one-local-agent-issue rule to docs/WORKFLOW.md once local agents resume; reopen either PR from its branch if a name in it is wanted. |

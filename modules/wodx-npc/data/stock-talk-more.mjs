@@ -3,7 +3,7 @@
  * trade and social-roll answers, the voices of kinds of people, small talk on feasts, weather and the season, talk
  * of the characters' own deeds, farewells, and remembering a past visit. House writing, not from any book. The
  * Storyteller's own lines always come first, and every part can be switched off.
- * Places are Moravian (the default homeland): the Morava, the Svratka, Brno, Olomouc, Prague, Vienna.
+ * No line names a real place: lines that name a land's own towns and rivers are in data/region-talk.mjs, by region.
  */
 
 /** Said aside when a mortal notices something wrong about the character (kind or state). */
@@ -106,13 +106,13 @@ export const VOICES = {
   noble: {label: "Noble", greet: {cold: ["\"You presume to address me?\"", "\"State your business, then begone.\""], neutral: ["\"Yes? You may speak.\"", "\"I can spare you a moment.\""], warm: ["\"Ah, a welcome face. Come, walk with me.\"", "\"My door is open to you, as ever.\""]},
     none: ["\"Such matters are beneath my notice.\"", "\"Ask my steward. I don't concern myself with that.\""], gossip: ["\"The baron's heir is a fool. Everyone at court says so.\"", "\"There's a match being arranged that will set half the county against the other half.\""]},
   merchant: {label: "Merchant", greet: {cold: ["\"If you're not buying, you're blocking the light.\"", "\"I've nothing for you. Move along.\""], neutral: ["\"Good day! Buying or selling?\"", "\"Welcome. Everything you see is for sale.\""], warm: ["\"My best customer! Come in, come in.\"", "\"I saved something special for you.\""]},
-    none: ["\"Not my line of business, I'm afraid.\"", "\"If it doesn't sell, I don't know about it.\""], gossip: ["\"The tolls on the Brno road have doubled. Someone's lining their pockets.\"", "\"A shipment went missing on the Morava. Third this season.\""]},
+    none: ["\"Not my line of business, I'm afraid.\"", "\"If it doesn't sell, I don't know about it.\""], gossip: ["\"The tolls on the high road have doubled. Someone's lining their pockets.\"", "\"A shipment went missing on the river. Third this season.\""]},
   soldier: {label: "Soldier or watch", greet: {cold: ["\"Keep your hands where I can see them.\"", "\"You. Stop right there.\""], neutral: ["\"Halt. State your business.\"", "\"Evening. Keep out of trouble.\""], warm: ["\"At ease, friend. Good to see you.\"", "\"You're all right. Pass.\""]},
     none: ["\"Above my rank.\"", "\"I just follow orders.\""], gossip: ["\"The captain's been drinking. More than usual.\"", "\"Two of the night watch never came back from the east gate.\""]},
   criminal: {label: "Criminal", greet: {cold: ["\"You've got a nerve, showing your face here.\"", "\"Wrong door, friend. Very wrong.\""], neutral: ["\"Who sent you?\"", "\"Talk quiet. Walls have ears.\""], warm: ["\"Well, well. My favourite customer.\"", "\"For you, I've always got time. What's the job?\""]},
     none: ["\"Never heard of it. Never heard of you.\"", "\"Don't know, don't want to.\""], gossip: ["\"Somebody's moving in on the docks. Somebody nobody's seen.\"", "\"There's a fence who stopped buying. Says some goods are cursed.\""]},
   scholar: {label: "Scholar", greet: {cold: ["\"I'm busy. Very busy. Go away.\"", "\"You've interrupted my work. Again.\""], neutral: ["\"Hm? Oh. Yes, what is it?\"", "\"A visitor. How unusual. What do you want?\""], warm: ["\"Ah! Just the person. I've found something remarkable.\"", "\"Come in, mind the books. Sit anywhere that isn't paper.\""]},
-    none: ["\"The texts are silent on that.\"", "\"I'd have to consult my notes. Come back in a month.\""], gossip: ["\"Someone has been stealing pages from the oldest books in the library.\"", "\"A colleague in Prague stopped answering my letters. Most unlike them.\""]},
+    none: ["\"The texts are silent on that.\"", "\"I'd have to consult my notes. Come back in a month.\""], gossip: ["\"Someone has been stealing pages from the oldest books in the library.\"", "\"A colleague in the capital stopped answering my letters. Most unlike them.\""]},
   servant: {label: "Servant", greet: {cold: ["\"The master's not receiving. Not you, anyway.\"", "\"I'll thank you to wipe your feet.\""], neutral: ["\"Can I help you? The household is busy.\"", "\"Yes? Who shall I say is calling?\""], warm: ["\"Oh, it's you. Come round the back, there's soup.\"", "\"The master's out. Come in, warm yourself.\""]},
     none: ["\"It's not my place to say.\"", "\"I just keep the house, I don't know such things.\""], gossip: ["\"The master hasn't eaten a meal at the table in a month. But the larder empties.\"", "\"There's a room upstairs no one is allowed to clean.\""]},
   peasant: {label: "Farmer or villager", greet: {cold: ["\"We don't want your kind here.\"", "\"Get off my land.\""], neutral: ["\"Good day. You're a long way from town.\"", "\"Hello there. Mind the dog.\""], warm: ["\"Come in, come in. There's milk, if you'd like.\"", "\"Good to see you! Sit, the chores can wait.\""]},
@@ -133,8 +133,8 @@ export const VOICES = {
 export const SMALL = {
   feast: ["\"A blessed {feast} to you.\"", "\"{feast}, and not a drop of wine left in the house.\"", "\"Happy {feast}. Will you go to Mass?\""],
   fast: ["\"Fasting again, and me with an empty belly.\"", "\"Fish again. Always fish on a fast day.\"", "\"Keep the fast, they say. Easy for them to say.\""],
-  winter: ["\"Cold enough to freeze the Morava solid.\"", "\"Winter's in my bones this year.\"", "\"The days are so short. Barely light at all.\""],
-  spring: ["\"The thaw's come at last.\"", "\"Mud everywhere. Spring in Moravia.\"", "\"The orchards are in blossom. Lovely, isn't it?\""],
+  winter: ["\"Cold enough to freeze the river solid.\"", "\"Winter's in my bones this year.\"", "\"The days are so short. Barely light at all.\""],
+  spring: ["\"The thaw's come at last.\"", "\"Mud everywhere. Spring's come.\"", "\"The orchards are in blossom. Lovely, isn't it?\""],
   summer: ["\"Hot enough to bake bread on the stones.\"", "\"The harvest's coming in. Busy times.\"", "\"Long days. Too long, some say.\""],
   autumn: ["\"The leaves are turning. Winter's not far off.\"", "\"Wine harvest soon. The vineyards look good.\"", "\"Getting dark earlier every night.\""],
   night: ["\"Late to be abroad, isn't it?\"", "\"Not many folk out this late. Honest ones, anyway.\"", "\"Mind yourself out there. The nights aren't safe.\""],

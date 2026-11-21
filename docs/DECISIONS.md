@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7600
+Next free block: B7610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -447,6 +447,7 @@ Next free block: B7600
 | B7570-B7579 | Close this chronicle, next book or close at a book's end, carry to a new chronicle (Chronicle Packs Desk c1, c2, c3) (used B7570-B7575) | Chronicle, Storyteller, tools |
 | B7580-B7589 | run-gate puts late settings back, so gatebattle no longer leaves a lane drifted (PR 2047, first written as B7320) (used B7580) | tools |
 | B7590-B7599 | No gate run on a pull request the train has already merged (PR 2112, first written as B7400) (used B7590) | tools |
+| B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15068,3 +15069,23 @@ pull request again just before it starts a lane job, so a merge a moment ago sto
 a number in another thread's claimed block, so it moved.
 
 Reverse: drop the retireJobs calls in train.mjs and the fresh staleJob read before a start in runner.mjs.
+
+## B7600. A land's own talk lines are region data (2026-11-21)
+WoDX NPC. Ben's pick d3 (18 Nov 2026): small talk and coin follow the homeland region, not Moravia. The shared stock talk (stock-talk.mjs, stock-talk-more.mjs) and the house grammar named Moravian places, a Bohemian saint and a Moravian drink in every world. Those lines move to data/region-talk.mjs under the WoDX Chronicle region id (moravia), in the same shape as the stock tables, and the shared pools get place-free lines in their stead (the river, the capital, the high road, by all the saints, some brandy). A region's lines join the shared pools and never replace them: generator rules carry a region test and one less boost, so they score level and pool; the plain stock paths add the region's lines to the tables. A harness test fails if a shared line names one of these places again.
+
+Reverse: put the moved lines back in the stock tables and drop region-talk.mjs and region-talk-rules.mjs.
+
+## B7601. The region talk is in: the scene's own, else the homeland (2026-11-21)
+WoDX NPC. talk.mjs reads WoDX Chronicle world.here(scene): the scene's region flag, else the chronicle's homeland, as passers-by and money already do. The talk facts gain region (the region id), so a Storyteller's grammar journal can test region too. A chronicle set in Moravia hears what it did before.
+
+Reverse: stop passing the region facts in stockCtx and genLine.
+
+## B7602. Small change in the money of the region here (2026-11-21)
+WoDX NPC. The house grammar's #coin# took Moravian coin by year everywhere. Where the region is not Moravia and WoDX Storyteller's money rules are there, #coin# names the two smallest units of that region's money in that year (moneyFor), plural: farthings and pence in England in 1600. Moravia keeps the hand-picked rows (denars, groschen and heller, kreuzer, heller and kronen, korun), which read better than the money table's smallest units, so Rothenstein's lines do not change; where the region is not known the same rows stand.
+
+Reverse: drop the boosted {coinSmall} rule from house.mjs coin.
+
+## B7603. A land's saint and drink are region symbols (2026-11-21)
+WoDX NPC. The oath "by Saint Wenceslas" (medieval) and "some slivovice" (nineteenth and twentieth centuries) are Moravian. They are symbol rules in region-talk.mjs with the region test, holding the shared words as well, so in Moravia the choice is as before and elsewhere it is the shared words ("by all the saints", "some brandy").
+
+Reverse: put the two words back in house.mjs and drop the symbols entry.
