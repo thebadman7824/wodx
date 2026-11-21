@@ -409,7 +409,7 @@ Next free block: B7570
 | B7080-B7109 | Rules as data: Path bearings first, then kith, totems, fetishes, Thaumaturgy and factions as data tables (used B7080-B7093) | Actions |
 | B7110-B7119 | Dark Ages fae exports wired into play (used B7110-B7114) | Actions |
 | B7120-B7129 | Weekly review picks st1 and ac1 (17 November): difficulty past 10, trying again (used B7120-B7121) | Chronicle, NPC, Otherworlds, Combat, Actions, Sheets, system fork |
-| B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130-B7132) | Combat, Creation, NPC, Solo |
+| B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130-B7134) | Combat, Creation, NPC, Solo |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
@@ -14210,6 +14210,11 @@ Reverse: make willingness in learn-rules.mjs return will "teach" and trip "".
 WoDX Solo's oracle asks what a yes would mean for the character (good news, bad news or neither) and reads the director's temper for the night. Under pressure a yes that is bad news, or neither, is a step likelier and good news a step less likely; on a rest it goes the other way; a steady night changes nothing. The odds stop at Almost certain and Hardly, and the card names the shift. A 10 or a 1 at any odds puts the question on WoDX Storyteller's signal board as a hook and weaves a Threads of Fate storyline, which always waits in the approval queue (a forced weave is never opened straight away), so the year's own cards bring the unexpected. After Mythic Game Master Emulator's Chaos Factor; a house rule. Ben's pick so1.
 
 Reverse: make shiftOdds in world-rules.mjs return the odds unchanged and turnsTheNight return false.
+
+## B7134. WoDX Voices is shelved (2026-11-17)
+Voices was shelved for good on 13 November (keep everything, delete nothing). tools/lanes/gate-map-extra.json now names it under "shelved": no gate covers it, a change to it runs none, gatevoices is out of the lane list, and the other gates drop it from their modules. tools/audit/coverage.mjs leaves its files out of an audit's scope, so a done claim needs no verdict for them, and the line-by-line review skips it. docs/MODULES.md marks it shelved. Its code, its harness test and the module stay; fix it only if it stops the world from loading. Ben's pick st2.
+
+Reverse: take wodx-voices off the "shelved" list and gatevoices off notGates.
 
 ## B7140. One feature registry in the repo (2026-11-17)
 Ben's pick o1 on the Finish-Line Desk. registry/features/<module>.json (plus system.json) holds one row per thing a player or the Storyteller uses, with its files, steps, open work, faults, art ids and pull requests. docs/FEATURES.md is written from it by tools/registry/registry.mjs summary --write, and a harness test fails when the two differ. Every module starts unseeded with no rows except one worked example (combat.knockdown-stand); seeding is Phase 2.
