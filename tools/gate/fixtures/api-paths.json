@@ -1499,7 +1499,7 @@
   "uses": [
    "modules/wodx-npc/scripts/family.mjs:40",
    "modules/wodx-solo/scripts/panel.mjs:73",
-   "modules/wodx-solo/scripts/world.mjs:191"
+   "modules/wodx-solo/scripts/world.mjs:214"
   ]
  },
  {
@@ -4565,7 +4565,7 @@
   ],
   "uses": [
    "modules/wodx-solo/scripts/panel.mjs:184",
-   "modules/wodx-solo/scripts/world.mjs:43"
+   "modules/wodx-solo/scripts/world.mjs:44"
   ]
  },
  {
@@ -4692,7 +4692,8 @@
    "entries"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/director.mjs:47"
+   "modules/wodx-solo/scripts/director.mjs:47",
+   "modules/wodx-solo/scripts/world.mjs:60"
   ]
  },
  {
@@ -4808,7 +4809,7 @@
    "modules/wodx-npc/scripts/talk.mjs:259",
    "modules/wodx-npc/scripts/trust.mjs:90",
    "modules/wodx-npc/scripts/trust.mjs:115",
-   "modules/wodx-solo/scripts/world.mjs:96"
+   "modules/wodx-solo/scripts/world.mjs:119"
   ]
  },
  {
@@ -4858,19 +4859,10 @@
  {
   "target": "wodx-storyteller",
   "path": [
-   "markets"
-  ],
-  "uses": [
-   "modules/wodx-creation/scripts/learn.mjs:115"
-  ]
- },
- {
-  "target": "wodx-storyteller",
-  "path": [
    "night"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/world.mjs:177"
+   "modules/wodx-solo/scripts/world.mjs:200"
   ]
  },
  {
@@ -5119,6 +5111,15 @@
    "modules/wodx-npc/scripts/orders.mjs:163",
    "modules/wodx-npc/scripts/orders.mjs:204",
    "modules/wodx-npc/scripts/orders.mjs:244"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "threads"
+  ],
+  "uses": [
+   "modules/wodx-solo/scripts/world.mjs:66"
   ]
  },
  {
