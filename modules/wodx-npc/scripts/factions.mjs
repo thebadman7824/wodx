@@ -23,6 +23,7 @@ import {calendarFor} from "./hunt-calendar.mjs";
 import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
+import * as POACH from "./poach-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -646,7 +647,72 @@ export function build(ctx) {
       const mine = factionsOf(s, actor.id)[0];
       if ( mine ) await proposeChanges(`${h.trespass.name} notices a trespass`, `${actor.name} hunted in its domain without leave.`, [{op: "standing", faction: h.trespass.faction, other: mine.id, delta: -1}], {key: `trespass:${actor.id}:${h.trespass.faction}`, kind: "trespass"});
     }
+    // B7638 (Dark Ages depth desk item 6): an NPC who feeds in a player's domain leaves signs, and the holder may track it
+    const holderF = h.trespass ? s.factions.find(f => f.id === h.trespass.faction) : null;
+    if ( caught && POACH.isPoach(h, holderF, pcActors(), actor.id) ) await poachCard(actor, placeId, h, holderF, factionsOf(s, actor.id)[0] ?? null).catch(e => console.error(`${MOD} | poach`, e));
     return {...h, pool, rolls: rolls.map(r => ({dice: r.dice, ...r.res})), caught, botch, message: msg};
+  }
+
+  /** The scene a place lies on (a tagged scene, a region's scene, or a scene by uuid). */
+  function sceneForPlace(id) {
+    const p = routines.listPlaces().find(x => x.id === id);
+    if ( p?.scene ) return p.scene;
+    const d = sceneOf(id);
+    return d?.documentName === "Scene" ? d : d?.parent?.documentName === "Scene" ? d.parent : null;
+  }
+  /**
+   * B7638-B7640: the signs a poacher leaves in a player's domain, for the Storyteller and the players who hold it, with a
+   * button for each of their characters to track it. The district's herd gives one (WoDX Storyteller herd pools).
+   */
+  async function poachCard(actor, placeId, h, holder, mine) {
+    const pcs = POACH.holdersOf(holder, pcActors());
+    if ( !pcs.length ) return null;
+    const place = placeList().find(p => p.id === placeId) ?? {id: placeId, kind: "other"};
+    const wild = ["wilds", "caern"].includes(place.kind);
+    const feeds = num(actor.system?.advantages?.yangchi?.permanent ?? actor.system?.advantages?.yangchi?.max) > 0 ? "chi" : "blood";
+    const scene = sceneForPlace(placeId);
+    try { if ( scene ) await game.modules.get("wodx-storyteller")?.api?.upkeep?.herds?.feed?.({scene, who: actor.name}); } catch (e) { console.warn(`${MOD} | poach herd`, e); }
+    const key = PO.polityFor(holder, eraInfo().year);
+    const law = POACH.brokenLaw(key ? PO.POLITIES[key]?.law ?? [] : []);
+    const security = num(h.trespass?.security), diff = POACH.trackDiff(security);
+    const n = names(state());
+    const owners = (game.users ?? []).filter(u => !u.isGM && pcs.some(id => game.actors.get(id)?.testUserPermission?.(u, "OWNER"))).map(u => u.id);
+    const buttons = pcs.map(id => `<button type="button" class="wnpc-f-track" data-actor="${esc(id)}">Track the poacher: ${esc(n.actor(id))}</button>`).join(" ");
+    const poach = {place: placeId, placeName: n.place(placeId), poacher: actor.id, poacherName: actor.name, poacherFaction: mine?.id ?? null,
+      poacherFactionName: mine?.name ?? "", holder: holder.id, holderName: holder.name, security, wild, law, diff};
+    return ChatMessage.create({whisper: [...new Set([...gmIds(), ...owners])], speaker: {alias: "WoDX factions"}, flags: {[MOD]: {poach}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>Someone has fed in ${esc(holder.name)}'s domain</h3>
+        <p>At ${esc(poach.placeName)}:</p><ul>${POACH.poachSigns({feeds, wild}).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        <p class="wodx-quiet">Track the poacher: Perception + ${wild ? "Survival" : "Investigation"} at ${diff} (6, less ${security} for the domain's security; V20 Dark Ages p. 180).</p>
+        <p>${buttons}</p></div>`});
+  }
+  /** B7639: one holder tracks the poacher from the signs. The result card tells the Storyteller what was found. */
+  async function trackPoacher(msg, a) {
+    const p = msg.flags?.[MOD]?.poach;
+    if ( !p || !a ) return null;
+    const tp = POACH.trackPool({perception: attrOf(a, "perception"), investigation: abilityOf(a, "investigation"), survival: abilityOf(a, "survival")}, p.wild);
+    const r = await new Roll(`${tp.dice}d10`).evaluate();
+    const dice = r.dice[0]?.results?.map(x => x.result) ?? [];
+    const res = F.successes(dice, p.diff), verdict = POACH.trackVerdict(res);
+    const who = `${p.poacherName}${p.poacherFactionName ? `, of ${p.poacherFactionName}` : ""}`;
+    const text = verdict === "found" ? `${a.name} follows the signs to ${who}. Hunting there broke ${p.law}: it can be brought before the court.`
+      : verdict === "lost" ? `A botch: ${a.name} follows the wrong trail, and the poacher learns that someone is looking.`
+      : `${a.name} finds where the poacher fed, and then the trail goes cold.`;
+    return ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), rolls: [r], whisper: [...new Set([...gmIds(), game.user.id])],
+      flags: {[MOD]: {poachTracked: {of: msg.id, verdict, tracker: a.id, ...p}}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(a.name)} tracks the poacher</h3>
+        <p class="wodx-quiet">Perception + ${tp.skill === "survival" ? "Survival" : "Investigation"}: ${tp.dice} dice at ${p.diff}.</p><p>[${dice.join(" ")}]</p><p><b>${esc(text)}</b></p></div>`});
+  }
+  /** B7640: what the Storyteller's side does with a found poacher: the holder thinks worse of the poacher's faction (queued), and the History has it. */
+  async function onPoachTracked(m) {
+    const t = m.flags?.[MOD]?.poachTracked;
+    if ( !t || !isActiveGM() || t.verdict !== "found" ) return null;
+    const a = game.actors.get(t.tracker);
+    try { if ( a ) await game.wodxActions?.history?.(a, `Tracks a poacher in the domain at ${t.placeName}: ${t.poacherName}.`, "domain"); } catch (e) { console.warn(`${MOD} | poach history`, e); }
+    const s = state();
+    if ( !t.poacherFaction || !s.factions.some(f => f.id === t.poacherFaction) || !s.factions.some(f => f.id === t.holder) ) return null;
+    return proposeChanges(`${t.holderName} learns who poached its domain`, `${t.poacherName} fed at ${t.placeName} without leave; ${t.holderName} knows it.`,
+      [{op: "standing", faction: t.holder, other: t.poacherFaction, delta: -1}], {key: `poach:${t.of}`, kind: "trespass"});
   }
 
   /* ------------------------------------------------------------------ */
@@ -1168,9 +1234,16 @@ export function build(ctx) {
     Hooks.on("wodxBattle", p => { onBattle(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
+    Hooks.on("createChatMessage", m => { if ( m.flags?.[MOD]?.poachTracked ) onPoachTracked(m).catch(e => console.error(`${MOD} | poach`, e)); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const fl = msg.flags?.[MOD];
       // B6766: the Undo on a settled boon's card (factionBoon) is wired too; it was a dead button
+      // B7639: the Track button on a poacher's signs, for the owners of the domain's holders (once a card)
+      if ( fl?.poach ) el.querySelectorAll("button.wnpc-f-track").forEach(b => {
+        const a = game.actors.get(b.dataset.actor);
+        if ( !a?.isOwner || game.messages.some(m => m.flags?.[MOD]?.poachTracked?.of === msg.id) ) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); el.querySelectorAll("button.wnpc-f-track").forEach(x => { x.disabled = true; }); trackPoacher(msg, a).catch(e => console.error(`${MOD} | track`, e)); });
+      });
       if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach && !fl?.factionYears && !fl?.factionEnd && !fl?.factionBoon ) return;
       el.querySelectorAll("button.wnpc-f-mapbreach").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
@@ -1212,5 +1285,5 @@ export function build(ctx) {
   return {postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
     setupChronicleFactions, chronicleFactions, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F,
-    applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
+    applyNow, proposeChanges, bgValue, allActors, poachCard, trackPoacher, poachRules: POACH, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
 }
