@@ -706,7 +706,7 @@
    "today"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:587"
+   "modules/wodx-npc/scripts/factions.mjs:588"
   ]
  },
  {
@@ -2266,7 +2266,7 @@
   ],
   "uses": [
    "modules/wodx-creation/scripts/lifepath.mjs:38",
-   "modules/wodx-npc/scripts/factions.mjs:103",
+   "modules/wodx-npc/scripts/factions.mjs:104",
    "modules/wodx-npc/scripts/family.mjs:38",
    "modules/wodx-npc/scripts/hearts.mjs:54",
    "modules/wodx-npc/scripts/kin.mjs:24",
@@ -2309,7 +2309,7 @@
    "regions"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:105",
+   "modules/wodx-npc/scripts/factions.mjs:106",
    "modules/wodx-storyteller/scripts/builder.mjs:58",
    "modules/wodx-storyteller/scripts/contagion.mjs:55",
    "modules/wodx-storyteller/scripts/core.mjs:269",
@@ -2420,7 +2420,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/kindred.js:1096",
-   "modules/wodx-npc/scripts/factions.mjs:251",
+   "modules/wodx-npc/scripts/factions.mjs:252",
    "modules/wodx-storyteller/scripts/reach.mjs:154",
    "modules/wodx-storyteller/scripts/reach.mjs:263"
   ]
@@ -3436,6 +3436,7 @@
    "factions"
   ],
   "uses": [
+   "modules/wodx-actions/scripts/road-faith.js:13",
    "modules/wodx-actions/scripts/social.js:339",
    "modules/wodx-chronicle/scripts/signatures.mjs:636",
    "modules/wodx-chronicle/scripts/when.mjs:165",
@@ -3454,6 +3455,26 @@
    "modules/wodx-chronicle/scripts/when.mjs:168",
    "modules/wodx-creation/scripts/first-night-seed.mjs:111",
    "modules/wodx-storyteller/scripts/reach.mjs:454"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "flocksOf"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/road-faith.js:53"
+  ]
+ },
+ {
+  "target": "wodx-npc",
+  "path": [
+   "factions",
+   "gatherFlock"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/road-faith.js:96"
   ]
  },
  {
@@ -4600,7 +4621,7 @@
    "rules"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:1140"
+   "modules/wodx-npc/scripts/factions.mjs:1141"
   ]
  },
  {
@@ -4609,7 +4630,7 @@
    "battles"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:1124"
+   "modules/wodx-npc/scripts/factions.mjs:1125"
   ]
  },
  {
@@ -4767,7 +4788,7 @@
    "found"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:263"
+   "modules/wodx-npc/scripts/factions.mjs:264"
   ]
  },
  {
@@ -5310,7 +5331,7 @@
    "feed"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:674"
+   "modules/wodx-npc/scripts/factions.mjs:675"
   ]
  },
  {
@@ -5368,7 +5389,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/trade.js:21",
-   "modules/wodx-npc/scripts/factions.mjs:444"
+   "modules/wodx-npc/scripts/factions.mjs:445"
   ]
  },
  {

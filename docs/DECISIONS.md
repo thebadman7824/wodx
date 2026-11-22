@@ -452,7 +452,7 @@ Next free block: B7660
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
-| B7630-B7649 | Dark Ages depth desk: walking a Road as a faith with people in it (used B7630-B7648) | Actions, Creation |
+| B7630-B7649 | Dark Ages depth desk: a Road's walkers in a town (used B7630-B7649) | NPC, Actions |
 | B7650-B7659 | gate7b pins the turn conductor; derange and powder name what changed (used B7651-B7656) | tools (gates) |
 <!-- decision-index:end -->
 
@@ -15357,6 +15357,11 @@ Reverse: remove the change acts from the window; Road and Path (setRoad) still s
 WoDX Actions (road-faith.js). Taking a Path of the Road walked asks only a Moment of Truth and the same roll for five successes; a failed roll costs a Road dot, a botch two, and running out of Willpower ends the attempt without the Beast (p. 114).
 
 Reverse: as B7647.
+
+## B7649. A Road's walkers in a town are its local group (2026-11-22)
+WoDX NPC (road-flock-rules.mjs, factions.mjs gatherFlock), WoDX Actions (road-faith.js). From the Road window the Storyteller gathers the vampires on a character's Road who stand in the scene, or belong to a faction holding it, into the Road's local group: a secret Kindred faction holding the scene, run on the Storyteller's orders so it makes no moves by itself. It takes the name and shape the book gives the Road (V20 Dark Ages, each Road's Organization, pp. 116-141): the Luminaries' court of oaths under a Lord, the Faithful's congregation, the Apostates' pack under whoever holds the lead, the Sinners' school under a praeceptor, a Black Church with no head, and the rest. The head is the member highest on the Road; two walkers make a group. Gathering again replaces it with who is there now. Members see their group in the Road window. Desk item 3, part 2, recommended option "Do all of it"; logged in docs/PENDING-REVIEW.md.
+
+Reverse: remove the gatherFlock choice from the Road window; the groups already made stay as ordinary factions.
 
 ## B7651. gate7b runs with the turn conductor off (2026-11-22)
 Gates. In the full run on main (job 2241) gate7b failed "a lost action: the fighter that failed to stand does not act": the turn the gate had just moved to the fighter was the runner's when the NPC acted (want false, lost flag set). The gate moves turns itself and makes NPCs act with takeTurn. The turn conductor (WoDX Combat) skips a combatant that cannot act, and the lost-action flag the step sets is one of its reasons, so with the conductor on, the fighter's turn ends by itself. The world's default is off, and the gate passed alone twice. The gate now turns the conductor off for its run and puts it back after, as gatetruthactions does for its fight (B7310), and records the level it found (conductorAtStart, and in the step's detail). That a leftover conductor level is what other gates leave is not yet proven: the next failing run's detail says. Not yet run in Foundry.
