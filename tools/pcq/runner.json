@@ -1,5 +1,5 @@
 {
-  "_about": "PC runner settings (B4100-B4109). train: this runner drives the merge train (B7202; one PC at a time: the Secondary PC while the Main PC is down, B7500); trainMinutes, trainMaxHours and sweepUpdates are optional. lanes: the testbed lanes the runner drives, never 1, and not 6 (kept for the local agents since 2026-11-16, B6527). light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment.",
+  "_about": "PC runner settings (B4100-B4109). train: this runner drives the merge train (B7202; one PC at a time: the Main PC again since its repair, B7620; the Secondary PC stood in while it was down, B7500); trainMinutes, trainMaxHours and sweepUpdates are optional. lanes: the testbed lanes the runner drives, never 1, and not 6 (kept for the local agents since 2026-11-16, B6527). light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment.",
   "home": "D:/WoDX/pcq",
   "lanes": [2, 3, 4, 5],
   "light": 2,
@@ -8,5 +8,5 @@
   "minFreeRamGB": 3,
   "bookText": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/text",
   "trove": "F:/TheTrove",
-  "train": false
+  "train": true
 }
