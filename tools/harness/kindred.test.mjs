@@ -139,6 +139,95 @@ test("sins from events follow the Road: Kings frenzy, Humanity killing, the Beas
   assert.equal(K.sinForEvent(K.roadFor(ROADS, "Road of Sin"), "notRidden"), 8);
 });
 
+test("Paths from V20 Dark Ages (B7630-B7632): own sins at their levels, own Virtues, the Path of the Devil", () => {
+  // B7631: the nine Paths whose book entries list a few sins of their own
+  const partial = ["Path of the Hunter", "Path of Journeys", "Path of Liberation", "Path of Breath", "Path of Community",
+    "Path of Illumination", "Path of Thorns", "Path of Veils", "Path of Making"];
+  for ( const name of partial ) {
+    const f = K.roadFor(ROADS, name);
+    assert.equal(f?.path?.name, name, name);
+    const at = f.path.sinsAt;
+    assert.ok(at && Object.keys(at).length >= 2, name);
+    const h = K.hierarchyOf(f);
+    assert.equal(h.length, 10, name);
+    for ( const [lv, s] of Object.entries(at) ) {
+      assert.ok(Number(lv) >= 1 && Number(lv) <= 10, `${name} ${lv}`);
+      assert.ok(K.sinAt(h, Number(lv)).startsWith(s), `${name} ${lv}`);
+      assert.ok(K.sinAt(h, Number(lv)).toLowerCase().includes(K.sinAt(f.road.sins, Number(lv)).toLowerCase()), `${name} keeps the Road's sin at ${lv}`);
+    }
+  }
+  // a level the Path doesn't name keeps the Road's sin
+  const hunt = K.roadFor(ROADS, "Path of the Hunter");
+  assert.equal(K.sinAt(K.hierarchyOf(hunt), 1), ROADS.roads.beast.sins[9]);
+  // a Path with a full chart of its own still uses it
+  assert.deepEqual(K.hierarchyOf(K.roadFor(ROADS, "Path of Chivalry")), K.roadFor(ROADS, "Path of Chivalry").path.sins);
+  // B7632: Virtues of the Path's own (V20DA pp. 118, 126, 136)
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of Journeys")), {conviction: true, instinct: false});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of the Hunter")), {conviction: true, instinct: true});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of Chivalry")), {conviction: false, instinct: false});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of the Devil")), {conviction: true, instinct: false});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of Pleasure")), {conviction: true, instinct: true});
+  // B7630: the old names still find the Paths, so saved characters keep theirs
+  assert.equal(K.roadFor(ROADS, "Path of Rebellion").path.name, "Path of the Devil");
+  assert.equal(K.roadFor(ROADS, "Path of Damnation").path.name, "Path of Screams");
+  assert.equal(K.pathByName(ROADS.roads.sin, "Path of Rebellion").name, "Path of the Devil");
+  assert.equal(K.pathByName(ROADS.roads.sin, "Path of Damnation").name, "Path of Screams");
+  assert.equal(K.pathByName(ROADS.roads.sin, "nonsense"), null);
+  assert.equal(K.roadFor(ROADS, "Path of Screams").path.sins.length, 10);
+  assert.equal(ROADS.roads.sin.paths.filter(p => p.name === "Path of Damnation").length, 0);
+  assert.equal(K.sinForEvent(K.roadFor(ROADS, "Path of the Devil"), "notRidden"), 8);
+  assert.equal(K.sinForEvent(K.roadFor(ROADS, "Path of Screams"), "notRidden"), 8);
+});
+
+test("sins from play on every Dark Ages Road (B7633): each event lands on the line that names it", () => {
+  const line = (name, ev) => { const f = K.roadFor(ROADS, name); const lv = K.sinForEvent(f, ev); return {lv, text: lv === null ? "" : K.sinAt(K.hierarchyOf(f), lv)}; };
+  const want = [
+    ["Road of Humanity", "theft", 7, /theft/i], ["Path of Community", "theft", 4, /theft/i], ["Path of Breath", "mindMortal", 10, /as a vampire/i],
+    ["Path of Breath", "theft", 7, /theft/i], ["Road of the Beast", "starve", 1, /starving/i], ["Path of the Hunter", "starve", 1, /starving/i],
+    ["Path of Christ", "feedUnwilling", 6, /without leave/i], ["Path of Christ", "lie", 8, /lying/i], ["Path of Christ", "theft", 9, /greed/i],
+    ["Derech Chaim (Path of Life)", "theft", 7, /laws/i], ["Path of the Prophet", "lie", 8, /cheating/i], ["Path of the Prophet", "wordBroken", 7, /promise/i],
+    ["Path of the Eightfold Wheel", "wordBroken", 4, /promise/i], ["Path of the Watchful Gods", "lie", 9, /lying/i], ["Path of the Watchful Gods", "wordBroken", 7, /dishonourable/i],
+    ["Road of Kings", "wordBroken", 2, /word/i], ["Path of Chivalry", "wordBroken", 2, /word/i], ["Path of Chivalry", "lie", 9, /dishonourable/i],
+    ["Path of Devaraja", "wordBroken", 2, /word/i], ["Path of Daena", "wordBroken", 2, /word/i], ["Path of Daena", "theft", 9, /law/i],
+    ["Road of Metamorphosis", "starve", 6, /food/i], ["Road of Sin", "starve", 3, /feeding/i], ["Path of Pleasure", "starve", 3, /feeding/i],
+    ["Path of the Devil", "starve", 3, /feeding/i], ["Path of Screams", "starve", 7, /feeding/i], ["Road of Yasa", "lie", 8, /lying/i]
+  ];
+  for ( const [name, ev, lv, re] of want ) {
+    const got = line(name, ev);
+    assert.equal(got.lv, lv, `${name} ${ev}`);
+    assert.match(got.text, re, `${name} ${ev} at ${lv}: ${got.text}`);
+  }
+  // a Road with no line for the act asks nothing
+  assert.equal(line("Road of Kings", "lie").lv, null);
+  assert.equal(line("Road of Bones", "starve").lv, null);
+  assert.equal(line("Road of Humanity", "feedUnwilling").lv, null);
+  // the Embrace counts as the killing where a Road has no row of its own (B7634)
+  assert.equal(line("Road of Humanity", "embrace").lv, 3);
+  assert.equal(line("Path of Christ", "embrace").lv, 4);
+  assert.equal(line("Road of the Beast", "embrace").lv, null);
+  // the old events are unchanged
+  assert.equal(line("Road of Humanity", "kill").lv, 3);
+  assert.equal(line("Road of Kings", "frenzy").lv, 1);
+  assert.equal(line("Road of Sin", "notRidden").lv, 8);
+  // which rolls are a lie or a theft
+  assert.equal(K.rollSinEvent({preset: "credibility"}), "lie");
+  assert.equal(K.rollSinEvent({preset: "fasttalk", successes: 0}), "lie");
+  assert.equal(K.rollSinEvent({attr: "manipulation", ability: "subterfuge"}), "lie");
+  assert.equal(K.rollSinEvent({preset: "check-staycalm", attr: "wits", ability: "subterfuge"}), null);
+  assert.equal(K.rollSinEvent({preset: "intrusion", successes: 2}), "theft");
+  assert.equal(K.rollSinEvent({preset: "intrusion", successes: 0}), null);
+  assert.equal(K.rollSinEvent({preset: "check-sleight", successes: 1, botch: true}), null);
+  assert.equal(K.rollSinEvent({attr: "dexterity", ability: "larceny", successes: 1}), "theft");
+  assert.equal(K.rollSinEvent({attr: "perception", ability: "larceny", successes: 3}), null);
+  // a night gone hungry: under the hunger line and nothing drunk in the last 16 hours
+  const now = 1000000;
+  assert.equal(K.starvedTonight({blood: 2, virtue: 3, now}), true);
+  assert.equal(K.starvedTonight({blood: 4, virtue: 3, now}), false);
+  assert.equal(K.starvedTonight({blood: 2, virtue: 3, lastFed: now - 3600, now}), false);
+  assert.equal(K.starvedTonight({blood: 2, virtue: 3, lastFed: now - 17 * 3600, now}), true);
+  assert.equal(K.starvedTonight({blood: 6, virtue: 0, now}), true);
+});
+
 test("mortal healing with time (VtDA20 p. 352): worst level first; lethal past Hurt needs care", () => {
   const h = 3600, d = 86400;
   let r = K.mortalHealing({bashing: 3}, 2 * h);

@@ -113,6 +113,8 @@ export async function embrace(mortal, {sire = null, clanName, generation, startB
     whisper: game.users.filter(u => u.isGM || vampire.testUserPermission?.(u, "OWNER")).map(u => u.id)
   });
   await writeLineageJournal();
+  // B7633: the sire's Road weighs the Embrace (the mortal dies of it): a Road that counts it asks, with the level it names
+  if ( sire ) { try { await game.wodxActions?.sinPrompt?.(sire, "embrace", `The Embrace of ${mortal.name}`); } catch (e) { console.warn("WoDX Creation | Embrace sin", e); } }
   ui.notifications.info(`${vampire.name} is Embraced.${moved ? ` ${moved} token(s) now show the vampire.` : ""}`);
   return vampire;
 }
