@@ -5,6 +5,7 @@ import * as AS from "./animal-stock-rules.mjs";
 import {learningFor} from "./learn-rules.mjs";
 import {splatOf} from "./lines.mjs";
 import * as LX from "./lines-xp-rules.mjs";
+import * as RF from "../../wodx-actions/scripts/road-faith-rules.js";
 
 export const MODULE_ID = "wodx-creation";
 export const DISCIPLINE = "wod.types.discipline";
@@ -204,6 +205,19 @@ export function xpTotals(actor) {
   return {earned, spent, available: earned - spent};
 }
 
+/** B7644: the price of a vampire's next Road dot with the Road record (Mentor, Moment of Truth) of WoDX Actions. */
+export function roadDotPrice(actor, base, current) {
+  const flag = actor?.flags?.["wodx-actions"] ?? {};
+  const f = RF.faithOf(flag.roadFaith);
+  let story = "first";
+  try { story = game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { /* no WoDX Actions */ }
+  const truth = !!RF.openTruth(f, story);
+  let mentor = f.mentor;
+  try { const m = mentor?.uuid ? fromUuidSync(mentor.uuid) : null; if ( m ) mentor = {...mentor, rating: Number(m.system?.advantages?.path?.permanent) || 0}; } catch (e) { /* not linked */ }
+  const r = RF.roadDotCost(base, {rating: current, mentor, road: flag.road?.key ?? null, truth});
+  return {...r, truth};
+}
+
 /** Every trait this actor could raise by one dot, with its cost and whether it is allowed. */
 export function purchaseOptions(actor) {
   const line = spendLine(actor);
@@ -223,7 +237,12 @@ export function purchaseOptions(actor) {
     const old = legacy(line);
     const max = old ? traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda})
       : LX.lineMax({line, kind, key, cat: extra.cat, arete: Number(sys.advantages?.arete?.permanent) || 0});
-    const cost = old ? xpCost({line, kind, current, discipline: extra.discipline}) : LX.lineCost({line, kind, key, current, cat: extra.cat, own: extra.own});
+    let cost = old ? xpCost({line, kind, current, discipline: extra.discipline}) : LX.lineCost({line, kind, key, current, cat: extra.cat, own: extra.own});
+    // B7644-B7645: a vampire's Road dot costs less with a Mentor and half at a Moment of Truth (V20 Dark Ages pp. 111, 115)
+    if ( kind === "road" && line === "vampire" && cost !== null ) {
+      const rc = roadDotPrice(actor, cost, current);
+      if ( rc.parts.length ) { cost = rc.cost; extra = {...extra, costParts: rc.parts, truth: rc.truth}; }
+    }
     // B6271: a line that does not buy this with experience does not show it at all
     if ( !old && cost === null ) return;
     let reason = "";
