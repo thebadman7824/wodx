@@ -1216,6 +1216,11 @@ async function resolveAction(actor, target, fd) {
             body += `<div class="vta-note">${esc(actor.name)} is out of sight and moving quietly: marked Sneaking for the scene.</div>`;
         } catch (e) { console.warn("WoDX | sneaking", e); }
     }
+    // B7633: a lie told or a theft that worked: the Roads that count it ask (the card names the level; it never rolls by itself)
+    if (isVampire(actor)) {
+        const ev = KR.rollSinEvent({ preset: fd.preset ?? "", attr: fd.attr, ability: pool.abilityKey, successes: r.successes, botch: r.botch });
+        if (ev) { try { const sp = await kx().sinPrompt(actor, ev, ev === "lie" ? "A lie told to get the better of someone" : "Something taken that was not theirs"); if (sp?.html) body += sp.html; } catch (e) { console.warn("WoDX | sin from a roll", e); } }
+    }
     if (preset.note) body += `<div class="vta-note">${preset.note}</div>`;
 
     // Extended: create a tracker card
@@ -1730,6 +1735,7 @@ export async function hunt({ actor: a } = {}) {
       <div class="form-group"><label>Blood to take (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       ${stateFields(here?.outbreak ? "disease" : style?.state ?? "clean")}
       ${feedingFields(actor, rule, { hunting: true })}
+      ${leaveField(actor)}
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
@@ -1843,6 +1849,7 @@ async function resolveHunt(actor, fd) {
     const st = KF.HUNT_STYLES[fd.style];
     const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls, state: fd.vstate, drinks: fd.drinks, cold: st?.cold ?? 0,
         rule: fd.rule ?? null, fits: fd.fits === undefined ? true : !!fd.fits, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering });
+    fed.html += await leaveSin(actor, fd, fed, "the prey");
     return post(actor, `${actor.name} hunts`, body + fed.html, rolls);
 }
 
@@ -1902,6 +1909,17 @@ function feedingFields(actor, rule, { tags = [], fits = null, willing = false, f
     if (rule.offering) h += `<div class="form-group"><label><input type="checkbox" name="offering" checked/> The vessel is offered to the gods first (thirty seconds)</label></div>`;
     return h;
 }
+/** B7633: a Road that counts drinking without leave as a sin (the Path of Christ, level 6, V20 Dark Ages p. 120) asks in the feeding windows. */
+function leaveField(actor) {
+    if (!isVampire(actor) || KR.sinForEvent(KX.roadOf(actor), "feedUnwilling") === null) return "";
+    return `<div class="form-group"><label><input type="checkbox" name="leave"/> The vessel gave leave to drink (or is no innocent)</label></div>`;
+}
+/** The sin prompt for drinking from a person without leave, as html for the feeding card ("" when there is none). */
+async function leaveSin(actor, fd, fed, who) {
+    if (!(num(fed?.drunk) > 0) || fd.leave || fd.vessel !== "human" || !leaveField(actor)) return "";
+    try { const sp = await kx().sinPrompt(actor, "feedUnwilling", `Drinks from ${who} without leave`); return sp?.html ?? ""; }
+    catch (e) { console.warn("WoDX | sin from feeding", e); return ""; }
+}
 /** Save a changed palate on the vampire. */
 async function savePalate(actor, rule, fd) {
     if (!rule?.palate || fd.palateText === undefined) return;
@@ -1931,6 +1949,7 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
       ${stateFields(vessel?.flags?.[MOD]?.vesselState ?? "clean")}
       ${vessel ? `<div class="form-group"><label>Vessel's tags (who they are)</label><input type="text" name="vtags" value="${esc(vtags.join(", "))}" placeholder="merchant, woman, catholic"/></div>` : ""}
       ${feedingFields(actor, rule, { tags: vtags, fits, willing, fought: vessel ? foughtRecently(vessel, actor) : false })}
+      ${leaveField(actor)}
     </form>`;
     return dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
@@ -1943,6 +1962,7 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
         const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks,
             rule, fits: rule?.palate ? !!fd.fits : true, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering,
             flesh: num(fd.flesh), tags: vessel ? KF.parseTags(fd.vtags) : [] });
+        fed.html += await leaveSin(actor, fd, fed, vessel?.name ?? "a vessel");
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls, fed.undo ? { kind: "feed", actor: actor.uuid, undo: fed.undo } : null);
     });
 }
@@ -2196,6 +2216,8 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     }
     const hasUndo = !!(undo && setting("applyChanges") && (harm || undo.statuses.length || drunk > 0));
     if (hasUndo) html += `<button type="button" class="vta-btn" data-action="feedUndo">Undo the harm to ${esc(vesselActor.name)}</button>`;
+    // B7633: when the vampire last drank, so dawn can tell a night gone hungry (the starve sin)
+    if (drunk > 0 && actor.isOwner) { try { await setFlag(actor, "lastFed", game.time?.worldTime ?? 0); } catch (e) { console.warn("WoDX | lastFed", e); } }
     // 3.47.0: who was fed on, for WoDX NPC's memory of it (the vessel knows something happened)
     if (drunk > 0 && vesselActor) {
         const fed = { by: { uuid: actor.uuid, name: actor.name }, vessel: { uuid: vesselActor.uuid, name: vesselActor.name }, drunk, willing: !!willing, fought: !!fought };
@@ -3487,7 +3509,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     recordBreach: o => kx().recordBreach(o), masqEntries: () => kx().masqEntries(), witnessStep: (o = {}) => kx().witnessStep(o.actor === null ? null : resolveActor(o.actor), o.tokens ?? [], o), autoHunts: () => dm().autoHunts(), liftHunt: id => dm().endHunt(id, "lifted"), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
     crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
-    history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
+    history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), sinPrompt: (a, event, what) => kx().sinPrompt(resolveActor(a), event, what), hungryAtDawn: list => kx().hungryAtDawn((list ?? []).map(resolveActor)), healPlan: (a, seconds) => kx().healPlan(a, seconds),
     healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), daySleep: () => kx().daySleep(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),
     kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,

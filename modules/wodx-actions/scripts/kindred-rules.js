@@ -233,19 +233,37 @@ export function hierarchyOf(found) {
  * kill (a vessel drained to death, a killing), killFrenzy (killing in frenzy), diablerie, frenzy (losing yourself
  * to frenzy), notRidden (failing to ride the wave). null: the event is no sin on that Road.
  */
+// B7633: sins from play on every Dark Ages Road. Each level below is the hierarchy line that names the act (V20 Dark Ages
+// pp. 116-136 and the data in roads-daw.json); the card names the line and asks, it never rolls by itself. Events:
+//   lie            a Subterfuge roll to deceive (Credibility, Fast-Talk, Manipulation + Subterfuge)
+//   theft          a Larceny roll that worked (break-in, lockpicking, sleight of hand)
+//   wordBroken     a boon refused in the Prestation ledger
+//   feedUnwilling  drinking from a living person who gave no leave
+//   starve         dawn comes and the vampire went hungry all night without feeding
+//   mindMortal     Dominate or Presence worked on a mortal
+//   embrace        the Embrace; where a Road has no row for it, the killing counts (a house reading, B7634)
+// A Path with an entry here uses only its entry, so a Path that adds to its Road's rows repeats them.
+const HUMANITY_EVENTS = { kill: 3, killFrenzy: 4, diablerie: 1, theft: 7 };
+const SIN_ROAD_EVENTS = { notRidden: 8, starve: 3 };
 export const SIN_EVENTS = {
-    humanity: { kill: 3, killFrenzy: 4, diablerie: 1 },
+    humanity: HUMANITY_EVENTS,
+    "Path of Breath": { ...HUMANITY_EVENTS, mindMortal: 10 }, "Path of Community": { ...HUMANITY_EVENTS, theft: 4 },
     beast: { starve: 1 },
     heaven: { kill: 4, diablerie: 4 },
-    "Path of Christ": { kill: 4, diablerie: 4 }, "Derech Chaim (Path of Life)": { kill: 2, diablerie: 2 }, "Path of the Prophet": { kill: 4, diablerie: 4 },
-    "Path of the Eightfold Wheel": { kill: 2 }, "Path of the Watchful Gods": { kill: 7 },
-    kings: { kill: 6, frenzy: 1, killFrenzy: 1 },
-    "Path of Chivalry": { kill: 9, killFrenzy: 9 }, "Path of Devaraja": { kill: 3, frenzy: 1, killFrenzy: 1 }, "Path of Daena": { kill: 6, frenzy: 1, killFrenzy: 1 },
+    "Path of Christ": { kill: 4, diablerie: 4, lie: 8, theft: 9, feedUnwilling: 6 },
+    "Derech Chaim (Path of Life)": { kill: 2, diablerie: 2, theft: 7 },
+    "Path of the Prophet": { kill: 4, diablerie: 4, lie: 8, theft: 8, wordBroken: 7 },
+    "Path of the Eightfold Wheel": { kill: 2, wordBroken: 4 },
+    "Path of the Watchful Gods": { kill: 7, lie: 9, wordBroken: 7 },
+    kings: { kill: 6, frenzy: 1, killFrenzy: 1, wordBroken: 2 },
+    "Path of Chivalry": { kill: 9, killFrenzy: 9, lie: 9, theft: 9, wordBroken: 2 },
+    "Path of Devaraja": { kill: 3, frenzy: 1, killFrenzy: 1, wordBroken: 2 },
+    "Path of Daena": { kill: 6, frenzy: 1, killFrenzy: 1, theft: 9, wordBroken: 2 },
     lilith: { kill: 4, killFrenzy: 4, diablerie: 4 },
-    metamorphosis: { notRidden: 10 },
-    sin: { notRidden: 8 }, "Path of Pleasure": { notRidden: 8 }, "Path of the Devil": { notRidden: 8 }, "Path of Screams": { notRidden: 8 },
+    metamorphosis: { notRidden: 10, starve: 6 },
+    sin: SIN_ROAD_EVENTS, "Path of Pleasure": SIN_ROAD_EVENTS, "Path of the Devil": SIN_ROAD_EVENTS, "Path of Screams": { notRidden: 8, starve: 7 },
     bones: { frenzy: 6, killFrenzy: 6 },
-    yasa: { killFrenzy: 4 },
+    yasa: { killFrenzy: 4, lie: 8 },
     // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
     // Path has no row for it, kill counts. A null is no sin. Instinct Paths sin on notRidden, Self-Control ones on frenzy.
     "v20-blood": { killFeed: 10, kill: null, frenzy: 6, killFrenzy: 6 },
@@ -267,7 +285,28 @@ export function sinForEvent(found, event) {
     // B7081: a variant Path (Harmony) sins as the Path it grew from
     const t = byPath ?? SIN_EVENTS[found.key] ?? (found.road?.variantOf ? SIN_EVENTS[`v20-${found.road.variantOf}`] : null) ?? {};
     if (event === "killFeed" && !("killFeed" in t)) return t.kill ?? null;
+    if (event === "embrace" && !("embrace" in t)) return ("killFeed" in t ? t.killFeed : t.kill) ?? null;
     return t[event] ?? null;
+}
+
+/** B7633: the sin event a dice roll from the action window is, or null. A lie is told whether or not it lands; a theft counts when the roll worked. */
+const LIE_PRESETS = new Set(["credibility", "fasttalk"]), THEFT_PRESETS = new Set(["intrusion", "check-sleight"]);
+export function rollSinEvent({ preset = "", attr = "", ability = "", successes = 0, botch = false } = {}) {
+    const a = String(ability ?? "").toLowerCase(), at = String(attr ?? "").toLowerCase();
+    if (LIE_PRESETS.has(preset) || (!preset && a === "subterfuge" && at === "manipulation")) return "lie";
+    if ((THEFT_PRESETS.has(preset) || (!preset && a === "larceny" && at === "dexterity")) && !botch && n(successes) > 0) return "theft";
+    return null;
+}
+
+/**
+ * B7633: did a vampire go hungry all night? At dawn: blood under the hunger line (7 minus Self-Control, or Instinct on an
+ * Instinct Road, V20 Dark Ages p. 357) and nothing drunk since `night` seconds before dawn (house reading: 16 hours,
+ * the longest Moravian winter night).
+ */
+export const LONGEST_NIGHT = 16 * 3600;
+export function starvedTonight({ blood, virtue, lastFed = null, now, night = LONGEST_NIGHT } = {}) {
+    if (n(blood) >= 7 - n(virtue)) return false;
+    return lastFed === null || lastFed === undefined || n(lastFed) < n(now) - night;
 }
 
 /**

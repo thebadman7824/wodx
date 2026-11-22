@@ -179,6 +179,55 @@ test("Paths from V20 Dark Ages (B7630-B7632): own sins at their levels, own Virt
   assert.equal(K.sinForEvent(K.roadFor(ROADS, "Path of Screams"), "notRidden"), 8);
 });
 
+test("sins from play on every Dark Ages Road (B7633): each event lands on the line that names it", () => {
+  const line = (name, ev) => { const f = K.roadFor(ROADS, name); const lv = K.sinForEvent(f, ev); return {lv, text: lv === null ? "" : K.sinAt(K.hierarchyOf(f), lv)}; };
+  const want = [
+    ["Road of Humanity", "theft", 7, /theft/i], ["Path of Community", "theft", 4, /theft/i], ["Path of Breath", "mindMortal", 10, /as a vampire/i],
+    ["Path of Breath", "theft", 7, /theft/i], ["Road of the Beast", "starve", 1, /starving/i], ["Path of the Hunter", "starve", 1, /starving/i],
+    ["Path of Christ", "feedUnwilling", 6, /without leave/i], ["Path of Christ", "lie", 8, /lying/i], ["Path of Christ", "theft", 9, /greed/i],
+    ["Derech Chaim (Path of Life)", "theft", 7, /laws/i], ["Path of the Prophet", "lie", 8, /cheating/i], ["Path of the Prophet", "wordBroken", 7, /promise/i],
+    ["Path of the Eightfold Wheel", "wordBroken", 4, /promise/i], ["Path of the Watchful Gods", "lie", 9, /lying/i], ["Path of the Watchful Gods", "wordBroken", 7, /dishonourable/i],
+    ["Road of Kings", "wordBroken", 2, /word/i], ["Path of Chivalry", "wordBroken", 2, /word/i], ["Path of Chivalry", "lie", 9, /dishonourable/i],
+    ["Path of Devaraja", "wordBroken", 2, /word/i], ["Path of Daena", "wordBroken", 2, /word/i], ["Path of Daena", "theft", 9, /law/i],
+    ["Road of Metamorphosis", "starve", 6, /food/i], ["Road of Sin", "starve", 3, /feeding/i], ["Path of Pleasure", "starve", 3, /feeding/i],
+    ["Path of the Devil", "starve", 3, /feeding/i], ["Path of Screams", "starve", 7, /feeding/i], ["Road of Yasa", "lie", 8, /lying/i]
+  ];
+  for ( const [name, ev, lv, re] of want ) {
+    const got = line(name, ev);
+    assert.equal(got.lv, lv, `${name} ${ev}`);
+    assert.match(got.text, re, `${name} ${ev} at ${lv}: ${got.text}`);
+  }
+  // a Road with no line for the act asks nothing
+  assert.equal(line("Road of Kings", "lie").lv, null);
+  assert.equal(line("Road of Bones", "starve").lv, null);
+  assert.equal(line("Road of Humanity", "feedUnwilling").lv, null);
+  // the Embrace counts as the killing where a Road has no row of its own (B7634)
+  assert.equal(line("Road of Humanity", "embrace").lv, 3);
+  assert.equal(line("Path of Christ", "embrace").lv, 4);
+  assert.equal(line("Road of the Beast", "embrace").lv, null);
+  // the old events are unchanged
+  assert.equal(line("Road of Humanity", "kill").lv, 3);
+  assert.equal(line("Road of Kings", "frenzy").lv, 1);
+  assert.equal(line("Road of Sin", "notRidden").lv, 8);
+  // which rolls are a lie or a theft
+  assert.equal(K.rollSinEvent({preset: "credibility"}), "lie");
+  assert.equal(K.rollSinEvent({preset: "fasttalk", successes: 0}), "lie");
+  assert.equal(K.rollSinEvent({attr: "manipulation", ability: "subterfuge"}), "lie");
+  assert.equal(K.rollSinEvent({preset: "check-staycalm", attr: "wits", ability: "subterfuge"}), null);
+  assert.equal(K.rollSinEvent({preset: "intrusion", successes: 2}), "theft");
+  assert.equal(K.rollSinEvent({preset: "intrusion", successes: 0}), null);
+  assert.equal(K.rollSinEvent({preset: "check-sleight", successes: 1, botch: true}), null);
+  assert.equal(K.rollSinEvent({attr: "dexterity", ability: "larceny", successes: 1}), "theft");
+  assert.equal(K.rollSinEvent({attr: "perception", ability: "larceny", successes: 3}), null);
+  // a night gone hungry: under the hunger line and nothing drunk in the last 16 hours
+  const now = 1000000;
+  assert.equal(K.starvedTonight({blood: 2, virtue: 3, now}), true);
+  assert.equal(K.starvedTonight({blood: 4, virtue: 3, now}), false);
+  assert.equal(K.starvedTonight({blood: 2, virtue: 3, lastFed: now - 3600, now}), false);
+  assert.equal(K.starvedTonight({blood: 2, virtue: 3, lastFed: now - 17 * 3600, now}), true);
+  assert.equal(K.starvedTonight({blood: 6, virtue: 0, now}), true);
+});
+
 test("mortal healing with time (VtDA20 p. 352): worst level first; lethal past Hurt needs care", () => {
   const h = 3600, d = 86400;
   let r = K.mortalHealing({bashing: 3}, 2 * h);
