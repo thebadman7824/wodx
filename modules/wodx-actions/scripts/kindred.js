@@ -441,9 +441,10 @@ export function build(ctx) {
         return dialog("Prestation", content, "Record", async fd => {
             const when = (await clockNow()).dateLabel;
             const list = BOONJ.entries();
-            let text;
+            let text, who = [fd.from, fd.to];
             if (fd.settle !== "" && fd.settle !== undefined && list[n(fd.settle)]) {
                 const e = list[n(fd.settle)];
+                who = [e.from, e.to]; // a settled boon goes on the pages of the two it binds, not of the names left in the record fields
                 e.status = fd.how; e.settled = when;
                 text = `${e.from}'s ${K.BOONS[e.kind]?.label.toLowerCase() ?? "boon"} to ${e.to}: ${fd.how}.`;
                 // B7633: refusing a boon owed is breaking one's word: the Roads that count it ask (Kings 2, the Prophet 7...)
@@ -455,7 +456,7 @@ export function build(ctx) {
                 text = `${fd.from} owes ${fd.to} a ${K.BOONS[fd.kind]?.label.toLowerCase()}${fd.for ? ` for ${fd.for}` : ""}.`;
             }
             await writeBoons(list);
-            for (const nm of [fd.from, fd.to]) { const a = game.actors.getName(nm); if (a) await logEvent(a, text, "boon"); }
+            for (const nm of new Set(who)) { const a = game.actors.getName(nm); if (a) await logEvent(a, text, "boon"); }
             return ChatMessage.create({ content: `<div class="vta-card"><h3>Prestation</h3><p>${esc(text)}</p><p class="wodx-quiet">Journal: WoDX Prestation</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
         }, { width: 520 });
     }
