@@ -180,7 +180,8 @@ export function build(ctx) {
             const dice = attr(actor, fd.attr) + rating + risk;
             // B6662: the target's ward or Magic Resistance makes a Blessing on them harder
             const rm = TH.targetResist(actor, ["magic"]);
-            const C = await catechumen(actor, await rollPool(dice, Math.min(10, n(fd.diff) + n(rm.diff))), !!fd.catechumen);
+            // B7120: past 10 the roll needs more successes, so the difficulty is not capped here
+            const C = await catechumen(actor, await rollPool(dice, n(fd.diff) + n(rm.diff)), !!fd.catechumen);
             const r = C.r;
             let body = C.note + rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
             if (risk) {
@@ -483,7 +484,7 @@ export function build(ctx) {
             const dice = attr(actor, a) + (findAbility(actor, b)?.value ?? 0);
             // B6662: the target's ward or Magic Resistance makes a Numen or edge on them harder
             const rm = TH.targetResist(actor, ["magic"]);
-            const r = await rollPool(dice, Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
+            const r = await rollPool(dice, n(fd.diff) + lim.diff + n(rm.diff));
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const fx = !r.botch && r.successes > 0 && EF.isOn() ? EF.numinaPlan(actor, pickV(String(fd.nm ?? "")).key, n(fd.lvl), r.successes, def) : null;
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
@@ -541,7 +542,7 @@ export function build(ctx) {
             if (!a) return post(actor, `${actor.name}: ${esc(def.label)}`, `<div class="vta-note">Difficulty ${S.difficulty + n(fd.mod)}, ${S.need} success${S.need === 1 ? "" : "es"} needed; the roll is on p. ${def.p}.</div>`);
             // B6662: the target's ward or Magic Resistance makes hedge magic on them harder
             const rm = TH.targetResist(actor, ["magic"]);
-            const r = await rollPool(statOf(a) + statOf(b), Math.min(10, S.difficulty + n(fd.mod) + lim.diff + n(rm.diff)), { willpower: !!fd.wpx });
+            const r = await rollPool(statOf(a) + statOf(b), S.difficulty + n(fd.mod) + lim.diff + n(rm.diff), { willpower: !!fd.wpx });
             const s = r.botch ? 0 : r.successes, ok = s >= S.need;
             await lim.done({ successes: ok ? s : 0 });
             let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", ...rm.parts,S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));

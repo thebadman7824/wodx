@@ -8,6 +8,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 |---|---|---|
 | wodxSoloArrived | solo | chronicle (in solo play the first-night tour is offered once the player's token is on the map, B5144) |
 | wodxFront | chronicle | chronicle (a judgement told as the truth makes Reinhold owe the company a favour, B6653) |
+| wodxChronicleInPlay | chronicle | chronicle and storyteller (the chronicle in play changed: closed or opened again; the world events and the Threads of Fate deck load its own again, B7572) |
 | wodxSaga | chronicle | storyteller (a Rothenstein saga step with a town change floods, besieges, sickens or empties the saga's town through towns over time, once per step, B3670) |
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
 | wodxRegimeTurn | chronicle | storyteller (a turn of rule sweeps holders out of the institutions of its kinds, in its region or town, or only one character's seats after an election, B3618) |
@@ -90,7 +91,9 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxChronicleClosed | chronicle | `{id, book}`: a chronicle was closed in this world (Close this chronicle, B7570) |
 | wodxNightUndone | chronicle | pieces of the Hand's work taken back with the night's work: {ids, plan} (B6222) |
+| wodxSoloReported | solo | a problem reported in play was saved as a journal entry: {report, entryId}. The seat on the PC (tools/solo/seat.mjs --reports) hears it from outside the modules and writes the report to a file (B7162) |
 | wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |

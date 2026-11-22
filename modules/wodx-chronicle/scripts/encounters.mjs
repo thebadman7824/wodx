@@ -1,6 +1,6 @@
 /**
- * Book one's encounters on the table (Rothenstein Rebuilt, Volume Two picks v1-v6, B6640-B6649). Rules in
- * encounter-rules.mjs, data in data/encounters-rothenstein.mjs.
+ * Book one's encounters on the table (the chronicle rebuild, Volume Two picks v1-v6, B6640-B6649). Rules in
+ * encounter-rules.mjs, data from the chronicle in play (chronicle-data.mjs; the first chronicle's is in its own module).
  *
  * While book one runs, the saga's tick (and arriving on a map) offers the Storyteller a card for each encounter that
  * fits where the company stands, in its months and chapter: Play, Not tonight, Never (v1). Play puts its people on
@@ -19,21 +19,23 @@ import * as S from "./saga-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {getEngine} from "./calendar.mjs";
 
-const BOOK = S.FIRST_BOOK;
+/** The first book of the chronicle in play (read when used: the chronicle registers after this file loads). */
+const book = () => S.FIRST_BOOK;
 const now = () => game.time?.worldTime ?? 0;
 const mod = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
 const pod = () => foundry.utils.deepClone(game.settings.get(MODULE_ID, "podState") ?? {}) ?? {};
 const savePod = s => game.settings.set(MODULE_ID, "podState", s);
 const sagaOf = s => { const x = s.saga ??= {}; x.endings ??= {}; x.clocks ??= {}; x.books ??= {}; return x; };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
-const FOLDER = "Rothenstein encounters";
+/** The actor folder for encounter people, named for the chronicle's town ("<town> encounters"). */
+const folderName = () => `${S.SAGA.where || "Chronicle"} encounters`;
 
 function played(s) {
-  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === BOOK);
-  if ( x.books[BOOK] === "done" ) return [...F.CHAPTERS];
+  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === book());
+  if ( x.books[book()] === "done" ) return [...F.CHAPTERS];
   return [...(run?.played ?? [])];
 }
-const running = s => sagaOf(s).books[BOOK] === "running";
+const running = s => sagaOf(s).books[book()] === "running";
 const monthNow = () => { try { return Number(getEngine().timeToDate(now()).month) || 0; } catch (e) { return 0; } };
 const sceneName = () => Fronts.sceneFor("@company")?.name ?? "";
 const ctxOf = (s, extra = {}) => ({now: now(), played: played(s), month: monthNow(), scene: sceneName(), ...extra});
@@ -41,7 +43,7 @@ const ctxOf = (s, extra = {}) => ({now: now(), played: played(s), month: monthNo
 export const encounterState = (s = pod()) => E.normState(sagaOf(s).encounters ?? {}, now());
 /** The encounters played, for the twists (twist-rules ctx.met). */
 export const metOf = s => E.met(E.normState(sagaOf(s).encounters ?? {}, now()));
-/* B6740 meets Rothenstein's encounters: every write of the encounter state waits its turn on the story-chain state
+/* B6740 meets the chronicle's encounters: every write of the encounter state waits its turn on the story-chain state
  * (util podTurn), as the fronts and the saga do, so the clock's tick never writes an older copy over it. The cards,
  * front moves and people come after the turn: Fronts' own changes take turns too, and a turn must not wait on one. */
 const change = fn => podTurn(async () => {
@@ -110,7 +112,7 @@ function rectOf(scene) {
   return r ? {x: r.x, y: r.y, width: r.width, height: r.height} : {x: 0, y: 0, width: scene?.width ?? 3000, height: scene?.height ?? 2000};
 }
 async function folder() {
-  return game.folders.find(f => f.type === "Actor" && f.name === FOLDER) ?? Folder.create({name: FOLDER, type: "Actor", color: "#6b2020"});
+  return game.folders.find(f => f.type === "Actor" && f.name === folderName()) ?? Folder.create({name: folderName(), type: "Actor", color: "#6b2020"});
 }
 /** A home for an encounter's person: a place tagged home on a map whose name holds the hint (WoDX NPC places). */
 function homeFor(hint) {

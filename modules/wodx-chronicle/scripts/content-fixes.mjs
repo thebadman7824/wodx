@@ -6,7 +6,7 @@ import * as approvals from "./approvals.mjs";
  * nothing changes until the Storyteller approves it.
  *
  * tile-anchors-v14: Foundry 14 places a tile by its anchor point (the centre, by default). Foundry 13 and the
- * Rothenstein importers placed tiles by their top-left corner. Tiles written the old way show half their size up
+ * The first chronicle's importers placed tiles by their top-left corner. Tiles written the old way show half their size up
  * and to the left of where they belong (roofs off their houses, effects off their spots, camp and haven modules
  * off their walls). The fix moves each such tile by half its size and marks it, so it is never moved twice.
  */
@@ -14,7 +14,7 @@ import * as approvals from "./approvals.mjs";
 const FIX = "tile-anchors-v14";
 const MARK = "anchored";
 
-/** Tile kinds that the Rothenstein importers and macros placed by their corner. */
+/** Tile kinds that the first chronicle's importers and macros placed by their corner. */
 const KINDS = [
   ["roof", t => !!t.flags?.world?.tm5?.roof],
   ["effect", t => !!(t.flags?.world?.art5 || t.flags?.world?.landingFx)],

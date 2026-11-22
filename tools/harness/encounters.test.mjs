@@ -1,5 +1,6 @@
 // Book one's encounters (B6640-B6649): the offer on the company's map and in season, once only, Not tonight and
 // Never, the window that closes and what happens off the map, the ties, and the twist that waits for its encounter.
+import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engines read the chronicle in play
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {join, dirname} from "node:path";

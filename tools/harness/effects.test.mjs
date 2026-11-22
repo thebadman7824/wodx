@@ -94,7 +94,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(m20, /EF\.fieldset\(i\.spheres, EF\.rotesOf\(actor\)\)/); assert.match(m20, /EF\.wire\(root/); assert.match(m20, /kind: "effects"/);
   const fx = src("modules/wodx-actions/scripts/effects.js");
   assert.match(fx, /createChatMessage/); assert.match(fx, /isActiveGM\(\)/); assert.match(fx, /setDamage/);
-  assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
+  assert.match(fx, /registerApprovalHandler/); assert.match(fx, /isLiveWorld\(game\.world\)/); // B7564: the shared Live list
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
 });

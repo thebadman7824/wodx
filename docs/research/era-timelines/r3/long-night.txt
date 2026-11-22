@@ -18,7 +18,7 @@
 1349|H|hun|EU|Germany|persecution,faith,plague|The flagellants march|Processions of flagellants cross Germany; the pope condemns them in October.
 1349|H|hun|EU|Mainz|massacre|Mainz and Cologne|The Jewish communities of the Rhineland are destroyed.
 1349|H|all|EU|Norway|plague|Plague in Norway|A ship brings the plague to Bergen; Norway loses perhaps half its people.
-1349|H|all|EU|Moravia|plague|Plague in Moravia|The plague reaches Moravia, lighter than in the west but bad in the towns.
+1349|H|all|MO|Moravia|plague|Plague in Moravia|The plague reaches Moravia, lighter than in the west but bad in the towns.
 1349|H|mor|EU|England|law|The Ordinance of Labourers|Edward III forbids wages above the old rates; there are too few hands left to obey.
 1349|W|mag|EU|Europe|plague,occult|Physicians and pestilence|Hermetic healers and Chorus monks die tending the sick; the young Order of Reason studies the plague's spread.
 1350|W|cha|EU|Europe|faith|The Shattering|Banality closes the trods to Arcadia; fae who stay must hide in mortal bodies.
@@ -175,7 +175,7 @@
 1434|H|mor|EU|Cape Bojador|exploration,sea|Cape Bojador|Gil Eanes sails past the cape the Portuguese feared.
 1435|W|vam|EU|Europe|founding|The Camarilla founded|Elders form the Camarilla to save themselves from the revolt and the Inquisition.
 1435|H|mor|EU|Arras|treaty|The Congress of Arras|Burgundy makes peace with France; the English are alone.
-1436|H|mor|EU|Jihlava|treaty,faith|The Basel Compacts|The Hussites and the Church make peace at Jihlava; the Czechs keep the cup.
+1436|H|mor|MO|Jihlava|treaty,faith|The Basel Compacts|The Hussites and the Church make peace at Jihlava; the Czechs keep the cup.
 1436|H|mor|EU|Florence|building|Brunelleschi's dome|Florence cathedral's dome is finished.
 1436|H|mor|EU|Paris|war|Paris taken back|The French retake Paris from the English.
 1437|H|mor|EU|Prague|crown,death|Sigismund dies|The last Luxembourg emperor dies; Albert of Habsburg follows.
@@ -262,7 +262,7 @@
 1421|W|hun|EU|Bohemia|heresy,persecution|The Adamites destroyed|Zizka exterminates the Adamites, a radical sect said to go naked and hold all things common.
 1422|H|mor|EU|Bohemia|war|The Hussite raids begin|Hussite armies raid into Hungary, Silesia and Saxony.
 1423|H|mor|EU|Bohemia|war|Hussite against Hussite|Zizka beats the Prague Hussites at Horice.
-1424|H|mor|EU|Moravia|war|The Hussites in Moravia|Hussite armies campaign through Moravia; Catholic lords and towns hold out.
+1424|H|mor|MO|Moravia|war|The Hussites in Moravia|Hussite armies campaign through Moravia; Catholic lords and towns hold out.
 1425|H|mor|AS|Beijing|crown,death|Yongle dies|The Yongle emperor dies on campaign in Mongolia.
 1425|H|mor|EU|Leuven|learning,founding|Leuven university|A university is founded at Leuven.
 1426|H|mor|EU|Florence|art|Masaccio's frescoes|Masaccio paints the Brancacci chapel.

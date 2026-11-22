@@ -2,7 +2,9 @@
  * WoDX NPC 0.45.0: the house grammar for the talk generator (scripts/talk-grammar.mjs). House writing, not from any
  * book. One template speaks in every era because its words come from the lexicon below: forms of address, greetings,
  * oaths, coin, who keeps order, light, drink, travel and landmarks, each by era band or by exact years.
- * Rothenstein lies in Moravia, so coin and places follow Moravia. Coin years match WoDX Storyteller's money rules.
+ * Words that belong to one land (a saint, a drink) are in data/region-talk.mjs, by region. Coin: the rows below are
+ * Moravia's (the default homeland, years as WoDX Storyteller's money rules); elsewhere {coinSmall} and {coinBig}
+ * come from the money of the region the talk happens in (scripts/region-talk-rules.mjs).
  * Gender-neutral throughout. These lines pool with the hand-written stock talk; the Storyteller's lines come first.
  */
 
@@ -28,15 +30,16 @@ export const SYMBOLS = {
     EW("future", "cold", ["citizen", "you"]), EW("future", "neutral", ["friend", "neighbour"]), EW("future", "warm", ["my friend", "old friend"])
   ],
   oath: [
-    E("medieval", ["God's bones", "by Saint Wenceslas", "Mother of God"]),
+    E("medieval", ["God's bones", "by all the saints", "Mother of God"]),
     E("earlymodern", ["Jesus and Mary", "by all the saints", "God's mercy"]),
     E("nineteenth", ["good heavens", "heavens above", "Jesus and Mary"]),
     E("twentieth", ["good grief", "hell", "Jesus and Mary"]),
     E("modern", ["Christ", "oh, come on", "unbelievable"]),
     E("future", ["static take it", "glitch it", "unbelievable"])
   ],
-  /** small change, as people say it (WoDX Storyteller money rules, Moravian region) */
+  /** small change, as people say it: the money of the region here when talk.mjs knows it, else Moravia's by year */
   coin: [
+    {when: {coinSmall: true}, boost: 1, say: ["{coinSmall}", "{coinBig}"]},
     Y(null, 1299, ["denars", "silver denars"]),
     Y(1300, 1526, ["groschen", "heller"]),
     Y(1527, 1891, ["kreuzer", "kreuzer"]),
@@ -65,8 +68,8 @@ export const SYMBOLS = {
     E("medieval", ["some ale", "a cup of wine", "some mead"]),
     Y(1450, 1699, ["some beer", "a cup of wine"]),
     Y(1700, 1836, ["some coffee", "a cup of wine"]),
-    E("nineteenth", ["some coffee", "a glass of beer", "some slivovice"]),
-    E("twentieth", ["some coffee", "a beer", "some slivovice"]),
+    E("nineteenth", ["some coffee", "a glass of beer", "some brandy"]),
+    E("twentieth", ["some coffee", "a beer", "some brandy"]),
     E("modern", ["a coffee", "a beer", "something stronger"]),
     E("future", ["real coffee", "a synth beer", "something stronger"])
   ],

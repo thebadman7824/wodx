@@ -446,6 +446,8 @@ In the saddle no Ability counts for more dots than the rider has in Ride (V20 Da
 
 Weight matters in deep water. Worn armor counts by its Dexterity penalty, and the weight button on the token HUD sets what else the character carries, from nothing that matters to all they can lift. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of blows, dodges and footing in the water; at four steps the character goes under until they let something go. Strength and Potence of 4 or more take a step off. All of this is a house rule.
 
+Weight counts on dry land too. When WoDX Library knows the gear's weight, a character carrying more than half of what Strength and Potence lift has +1 difficulty to dodge and to stealth, and one carrying more than all of it moves at half speed. A burden picked on the weight button wins over the gear's weight: a heavy load counts as past half, all they can lift as past the lift, and a pack as nothing on land. Pick "By what they carry" to go back to the weight. A flyer, a rider and a mist or spirit are left out. A house rule.
+
 Look, Listen and Smell answer from where the character is: from the air the eye reaches further, from the ground or the water less far, and under the water there is nothing to smell. Someone lying prone or under the water is found only on a closer look.
 
 ## Battles and sieges

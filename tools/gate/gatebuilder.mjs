@@ -1,29 +1,43 @@
 /**
- * Build this chronicle, phase 1 gate (WoDX Storyteller 0.61.0, B2780-B2785). In Foundry, in rothenstein-x (the rebuilt
- * Rothenstein world, made by the PC job), as Gamemaster Test:
+ * Build this chronicle, phase 1 gate (WoDX Storyteller 0.61.0, B2780-B2785). It tests whichever chronicle is in play
+ * (Chronicle Packs Desk, last step; Ben 22 Nov 2026): the recipe is the one the builder reads (the world's recipe flag,
+ * else the chronicle in play's), and every name, place and date the gate checks comes from that recipe. In Foundry, as
+ * Gamemaster Test:
  *   await (await import(`/wodx-gate/gatebuilder.mjs?${Date.now()}`)).run()
- * Never in the Live Version world. The carry file must be at worlds/rothenstein-x/carry/rothenstein-carry.json.
+ * Never in a Live world. In the recipe's own world (rothenstein-x for WoDX Rothenstein, made by the PC job) the carry
+ * file must be where the recipe says (recipe.carry.file).
  *
  * The world is built by the gate and left built at the end (that is its purpose); the clock is set to the recipe's
  * opening night by the settings step.
  *   1. the module: Storyteller 0.61.0, api.builder, the world's recipe flag, the button wanted
- *   2. the builder refuses rothenstein-live, even forced, and another world unless forced
+ *   2. the builder refuses every Live world, even forced, and another world unless forced
  *   3. every ready step runs in order: check, settings, carry, anchors
- *   4. the homeland is Moravia and the clock reads the recipe's opening year (1200)
+ *   4. the homeland is the recipe's and the clock reads the recipe's opening year
  *   5. every document in the carry file is in the world, with its old id
  *   6. links in carried journals to carried documents resolve
  *   7. running carry again makes nothing new
- *   8. the anchors: Bogdan Ursu and a Kranzfels scene are marked; a scene's own kind of place is kept
+ *   8. the anchors: the recipe's first person and first place anchors are marked; a scene's own kind of place is kept
  *   9. Undo on the anchors takes the marks off; running it again puts them back
  *  10. Undo on the carry removes only what the builder made; running it again brings everything back
  * Result: Data/wodx-gate/gatebuilder-result.json.
  *
  * On a testbed world (rothenstein-wodx and the lanes) the build itself is not wanted, so the gate checks only what
  * holds in any world: the module and its api, that the builder refuses Live even when forced, and that running every
- * step here refuses and makes nothing. The full ten steps run only in the recipe's own world.
+ * step here refuses and makes nothing. The full ten steps run only in the recipe's own world. In a world with no
+ * recipe at all (wodx-clean: no chronicle in play) the gate registers a small chronicle of its own whose recipe builds
+ * a world that does not exist, runs the testbed checks with it, and takes it off again, so the chronicle in play
+ * (none) is the same at the end.
  */
 const MOD = "wodx-storyteller";
 const B = () => game.modules.get(MOD).api.builder;
+// The same module the builder imports, so a chronicle registered here is the one the builder reads
+const CD = () => import("/modules/wodx-chronicle/scripts/chronicle-data.mjs");
+const FIX = "gate-builder-chronicle";
+/** The gate's own recipe: valid in shape, for a world that is never made. */
+const FIX_RECIPE = {id: FIX, version: 1, title: "Gate builder chronicle", world: "wodx-gate-builder-nowhere", homeland: "moravia",
+  opening: {year: 1197, month: 1, day: 1, hour: 21}, climate: "auto", lines: ["vampire", "mortal"],
+  carry: {from: "wodx-gate-builder-old", file: "worlds/wodx-gate-builder-nowhere/carry/carry.json"}, anchors: {places: [], people: []}, doors: []};
+const FIX_PACK = {id: FIX, title: FIX_RECIPE.title, manifest: {id: FIX, title: FIX_RECIPE.title, live: []}, recipe: FIX_RECIPE};
 
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -37,22 +51,42 @@ export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
-  if ( game.world.id === "rothenstein-live" ) throw new Error("Never in the Live Version world.");
+  const {isLiveWorld} = await import(`/modules/wodx-chronicle/scripts/live-worlds.mjs`);
+  if ( isLiveWorld(game.world) ) throw new Error("Never in a Live world.");
   const Rules = await import(`/modules/${MOD}/scripts/recipe-rules.mjs?${Date.now()}`);
+  const C = await CD();
+  const inPlay = C.currentId();
+  // No recipe here (no chronicle in play, or one without a recipe): the gate's own chronicle stands in for the run
+  let own = false;
+  // The builder writes what it ran to the Storyteller's log; the gate puts it back (gate rule: put back what you change)
+  let log0 = null; try { log0 = foundry.utils.deepClone(game.settings.get(MOD, "log")); } catch (e) { log0 = null; }
+  if ( !B()?.recipe?.() ) { C.registerChronicle(FIX_PACK); C.useChronicle(FIX); own = true; }
+  try { await body(R, ok, step, Rules, own); } finally {
+    if ( own ) { C.unregisterChronicle(FIX); C.useChronicle(inPlay); }
+    R.chronicle = {before: inPlay || null, after: C.currentId() || null, own};
+    if ( C.currentId() !== inPlay ) ok("chronicle in play put back", false, R.chronicle);
+    if ( log0 !== null && !R.mode?.startsWith?.("build") ) { try { await game.settings.set(MOD, "log", log0); } catch (e) { R.errors.push(`log: ${e.message}`); } }
+  }
+  return save(R);
+}
+
+async function body(R, ok, step, Rules, own) {
   const recipe = B()?.recipe?.();
   let carry = null;
-  const home = recipe && game.world.flags?.wodx?.recipe === "rothenstein" && Rules.canBuildHere(game.world.id, recipe).ok;
+  const live = Rules.FORBIDDEN_WORLDS;
+  const refusesLive = () => live.length > 0 && live.every(w => !Rules.canBuildHere(w, recipe, {force: true}).ok);
+  const home = recipe && game.world.flags?.wodx?.recipe === recipe.id && Rules.canBuildHere(game.world.id, recipe).ok;
   R.mode = home ? "build" : "testbed";
+  R.recipe = recipe?.id ?? null;
 
   if ( !home ) {
     await step("1 module", async () => {
       const m = game.modules.get(MOD);
-      ok("1 module", m?.active && Rules.versionAtLeast(m.version, "0.61.0") && !!B() && !!recipe, {version: m?.version});
+      ok("1 module", m?.active && Rules.versionAtLeast(m.version, "0.61.0") && !!B() && !!recipe, {version: m?.version, recipe: recipe?.id, own});
     });
     await step("2 refuses Live", async () => {
-      const live = Rules.canBuildHere("rothenstein-live", recipe, {force: true});
       const here = Rules.canBuildHere(game.world.id, recipe);
-      ok("2 refuses Live", !live.ok && !here.ok && Rules.FORBIDDEN_WORLDS.includes("rothenstein-live"), {live: live.reason, here: here.reason});
+      ok("2 refuses Live", refusesLive() && !here.ok, {live, reasons: live.map(w => Rules.canBuildHere(w, recipe, {force: true}).reason), here: here.reason});
     });
     await step("3 nothing built here", async () => {
       const count = () => game.scenes.size + game.journal.size + game.actors.size + game.items.size;
@@ -63,19 +97,18 @@ export async function run() {
         {out: out.map(o => ({id: o.id, ok: o.ok, note: o.note ?? o.wait ?? o.error})), made});
     });
     R.notes.push(`Testbed mode in ${game.world.id}: the build steps run only in ${recipe?.world ?? "the recipe's world"}.`);
-    return save(R);
+    return;
   }
 
   await step("1 module", async () => {
     const m = game.modules.get(MOD);
-    ok("1 module", m?.active && Rules.versionAtLeast(m.version, "0.61.0") && !!B() && game.world.flags?.wodx?.recipe === "rothenstein" && !!recipe,
+    ok("1 module", m?.active && Rules.versionAtLeast(m.version, "0.61.0") && !!B() && game.world.flags?.wodx?.recipe === recipe.id && !!recipe,
       {version: m?.version, flag: game.world.flags?.wodx?.recipe});
   });
   await step("2 refuses Live", async () => {
-    const live = Rules.canBuildHere("rothenstein-live", recipe, {force: true});
-    const other = Rules.canBuildHere("rothenstein-wodx", recipe);
+    const other = Rules.canBuildHere(recipe.carry?.from ?? `${recipe.world}-other`, recipe);
     const res = await B().run("check", {force: true});
-    ok("2 refuses Live", !live.ok && !other.ok && Rules.FORBIDDEN_WORLDS.includes("rothenstein-live"), {live: live.reason, other: other.reason, here: res.note ?? res.error});
+    ok("2 refuses Live", refusesLive() && !other.ok, {live, other: other.reason, here: res.note ?? res.error});
   });
   await step("3 run every step", async () => {
     const out = await B().runAll();
@@ -87,7 +120,7 @@ export async function run() {
     const C = game.modules.get("wodx-chronicle").api;
     const cal = await import(`/modules/wodx-chronicle/scripts/calendar.mjs`);
     const d = cal.getEngine().timeToDate(game.time.worldTime);
-    ok("4 settings", C.world.homeland() === "moravia" && d.year === recipe.opening.year, {homeland: C.world.homeland(), date: d});
+    ok("4 settings", C.world.homeland() === recipe.homeland && d.year === recipe.opening.year, {homeland: C.world.homeland(), wants: recipe.homeland, date: d});
   });
   await step("5 carried", async () => {
     carry = await (await fetch(`/${recipe.carry.file}?${Date.now()}`)).json();
@@ -120,11 +153,12 @@ export async function run() {
     ok("7 again", res.ok && before === after, {before, after, note: res.note});
   });
   await step("8 anchors", async () => {
-    const bog = game.actors.find(a => a.flags?.[MOD]?.anchor?.key === "bogdan");
-    const kr = game.scenes.filter(s => s.flags?.[MOD]?.anchor?.key === "kranzfels");
+    const who = recipe.anchors?.people?.[0]?.key, where = recipe.anchors?.places?.[0]?.key;
+    const person = game.actors.find(a => a.flags?.[MOD]?.anchor?.key === who);
+    const places = game.scenes.filter(s => s.flags?.[MOD]?.anchor?.key === where);
     const rec = B().record().steps?.anchors;
     const kept = (rec?.made ?? []).filter(c => !c.setKind && c.uuid.startsWith("Scene.")).length;
-    ok("8 anchors", !!bog && kr.length > 0, {bogdan: bog?.name, kranzfels: kr.map(s => s.name), marks: rec?.made?.length, kindsKept: kept, note: rec?.note});
+    ok("8 anchors", !!who && !!where && !!person && places.length > 0, {person: who, actor: person?.name, place: where, scenes: places.map(s => s.name), marks: rec?.made?.length, kindsKept: kept, note: rec?.note});
   });
   await step("9 undo anchors", async () => {
     const n0 = (B().record().steps?.anchors?.made ?? []).length;
@@ -145,5 +179,4 @@ export async function run() {
     const missing = Object.entries(carry.docs ?? {}).flatMap(([t, l]) => l.filter(d => !game.collections.get(t)?.get(d._id))).length;
     ok("10 undo carry", u.ok && left === 0 && handKept && r.ok && missing === 0, {undo: u.note, left, handKept, again: r.note, missing});
   });
-  return save(R);
 }

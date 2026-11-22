@@ -5,7 +5,7 @@
  * twists' own words stay in the Storyteller's volumes; the labels here are short handles in our own words.
  * Pure data: twist-rules.mjs reads it.
  */
-import {WEEK} from "../scripts/terms.mjs";
+import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 export {WEEK};
 
 /** The chains: key, a handle, the twists on it and the chapters it pays off in. */
@@ -65,6 +65,6 @@ export const ORDER = [1, 5, 2, 3, 9, 6, 7, 8, 11, 13, 15, 16, 17, 18, 19, 20, 21
 
 /** The last chapter that may bring a new twist; after it is played, the company pulls the last threads itself. */
 export const LAST_CHAPTER = "c9";
-/** Book one's chapters in order (saga-rothenstein.mjs). */
+/** Book one's chapters in order (saga.mjs). */
 export const CHAPTERS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10"];
 /** One twist a week of game time (the owner, 2026-11-14). */

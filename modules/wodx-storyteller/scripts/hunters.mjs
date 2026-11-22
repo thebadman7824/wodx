@@ -22,6 +22,7 @@ import * as TownLooks from "./town-looks.mjs";
 import {huntFollowApi} from "./hunt-follow.mjs";
 import {MOD, esc, isActiveGM, setting, chron, npc, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const T_HUNTERS = `${MOD}.hunters`;
@@ -190,7 +191,15 @@ export async function turn({force = false} = {}) {
   running = true;
   try {
     let s = state();
-    const t = now(), due = force ? 1 : H.turnsDue(s.lastTurn, t);
+    const t = now();
+    // B7616: the chronicle in play may open with its hunters already past Quiet
+    try {
+      const pack = chron()?.chronicle?.current?.() ?? null;
+      const st = Local.hunterStart(Local.localOf(pack), chron()?.world?.homeland?.() ?? pack?.manifest?.homeland ?? "");
+      const r = pack && st ? H.applyStart(s, pack.id, st, t) : null;
+      if ( r ) { s = r.state; await save(s); }
+    } catch (e) { console.error(`${MOD} | hunters' start`, e); }
+    const due = force ? 1 : H.turnsDue(s.lastTurn, t);
     if ( !due ) return 0;
     const since = s.lastTurn ?? t - H.TURN_DAYS * H.DAY;
     s = await readDescriptions(s, since, t);

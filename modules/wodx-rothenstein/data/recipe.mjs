@@ -1,7 +1,7 @@
 /**
- * WoDX Storyteller 0.61.0: the recipe for What Sleeps Beneath Rothenstein, rebuilt (Rothenstein Rebuild Desk,
- * approved by the owner 2026-11-13; B2780-B2785). The builder (builder.mjs) reads it and makes the chronicle step by step in
- * the world it names. Data only: recipe-rules.mjs checks it and plans the steps.
+ * WoDX Rothenstein (was WoDX Storyteller 0.61.0, data/recipe-rothenstein.mjs): the recipe for What Sleeps Beneath Rothenstein, rebuilt (Rothenstein Rebuild Desk,
+ * approved by the owner 2026-11-13; B2780-B2785). WoDX Storyteller's builder (builder.mjs) reads it through the chronicle in play and makes the chronicle step by step in
+ * the world it names. Data only: WoDX Storyteller's recipe-rules.mjs checks it and plans the steps.
  *
  * Phase 1 uses: world, title, homeland, opening, lines, carry, anchors and doors. The later parts (town, reach, ages, spine)
  * are written down now so the shape is fixed; their steps come with phases 2 to 7.

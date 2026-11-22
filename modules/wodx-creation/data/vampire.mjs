@@ -26,7 +26,7 @@ export const GENERATIONS = {
 /**
  * Clans and their Disciplines. Dark Ages Disciplines from V20DA chapter 2 (pages per clan). `modern` lists a clan whose
  * main Disciplines differ after the Dark Ages (V20 chapter 2).
- * `aliases` match the names Rothenstein and upstream use.
+ * `aliases` match the names the first chronicle's sheets and upstream use.
  */
 export const CLANS = [
   {id: "assamite", name: "Assamite", disciplines: ["Auspex", "Presence", "Quietus"], darkAges: "V20DA p. 42 (viziers)",

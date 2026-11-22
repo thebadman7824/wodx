@@ -378,7 +378,7 @@ export function newsEvent(preset, {name = ""} = {}) {
 }
 
 /**
- * What a step of the Rothenstein saga does to the town it happens in (B3670). Keys match WoDX Chronicle's saga
+ * What a step of a chronicle's saga does to the town it happens in (B3670). Keys match WoDX Chronicle's saga
  * TOWN_KINDS. The figures follow the news presets; exile and expulsion empty houses, a flood wrecks the riverside.
  */
 export const SAGA_TOWN = {

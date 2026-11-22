@@ -2,6 +2,9 @@
 
 Newest first.
 
+- 0.15.0 (The oracle reads the night (B7132): the director's rest, steady or pressure moves the odds a step by what a yes would mean, and a 10 or a 1 draws a Threads of Fate storyline through the approval queue. shiftOdds and turnsTheNight are new in the world rules)
+- 0.14.1 (The lone player's landing follows the chronicle in play (B7565): a scene named for its town counts after a market, and the plain night scene and the arrival window are named for that town; with no chronicle in play they name none ("By night: the way in", "Who comes in out of the night?"). The never-run worlds are WoDX Chronicle's one Live-world list (B7564))
+- 0.14.0 (Report a problem: the player (from the panel, under More) and the Storyteller (from the Settings sidebar) describe a fault in a short form; the seat saves it as a journal entry with the build, the scene, the character, the game date, the last 20 console errors, the last chat cards and the open windows, keeps it on the player's user until a Storyteller connects, and hands it to the seat's --reports folder on the PC (B7160 to B7163))
 - 0.13.0 (An objective that a map event finishes now counts as the night's success for solo experience, the same as one marked kept by hand (B6896); The Lone Chronicle now has a way to three parts of WoDX Storyteller (final audit, B6757). Threads of Fate, hardship and bodies left behind are off by default and in no preset, and Game Settings belongs to the Storyteller, so a player alone could never reach them)
 - 0.12.4 (A lone fate card read the year through an api path WoDX Chronicle never had (calendar.yearOf), so when its calendar import failed the year fell to the computer clock; it now reads api.eras.currentYear)
 - 0.12.3 (Arrival closes Foundry's own User Configuration window, which Foundry opens for a player with no character at login and which covered the arrival; the walk script answers Yes when turning the Storyteller tools on (B6711, B6712))

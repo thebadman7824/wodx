@@ -72,10 +72,13 @@ const SOUNDS = {
   russian: ["sk", "ov", "na", "ye", "st", "vo", "ka", "zh", "ny", "da", "shch", "ra", "li", "po"]
 };
 
-/** Speech in a tongue the reader lacks: each word becomes a made-up word of about the same length. */
-export function scramble(text, language = "") {
+/**
+ * Speech in a tongue the reader lacks: each word becomes a made-up word of about the same length. own: syllables a
+ * chronicle gives one of its languages (B7613), used before the shared ones.
+ */
+export function scramble(text, language = "", own = null) {
   const key = norm(language);
-  const sounds = SOUNDS[Object.keys(SOUNDS).find(k => key.startsWith(k))] ?? SOUNDS.default;
+  const sounds = (Array.isArray(own) && own.length ? own : null) ?? SOUNDS[Object.keys(SOUNDS).find(k => key.startsWith(k))] ?? SOUNDS.default;
   return String(text ?? "").replace(/[\p{L}\p{M}']+/gu, word => {
     let h = hash(`${key}|${word.toLowerCase()}`);
     let out = "";

@@ -85,7 +85,9 @@ test("compendium LevelDB files are left out; other pack files still count", () =
 
 test("lanes.json ignores the settings that change on their own", () => {
   const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
-  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
+  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady",
+    // B7200: the effects modules' migration markers, the cause of every exit-4 lane reset on 16 and 17 November
+    "fxmaster.parameterRangeMigrationVersion", "fxmaster.parameterRangePassiveMigrationVersion", "fxmaster.directionConventionPassiveMigrationVersion", "tokenmagic.migration"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
 });
 
 test("the hash cache gives the same answer and sees edits", () => {
@@ -174,7 +176,7 @@ test("only a hung gate run that is still a node process is ended (B3089)", () =>
 
 test("run-gate has a gate limit, a window sweep, a whole-run watchdog and moves the lock deadline (B3089)", () => {
   const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/run-gate.mjs"), "utf8");
-  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "within(run, limit", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
+  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "limit + 3 * 60000, gate)", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
 });
 
 test("the picker takes the first lane that is up and free", async () => {
@@ -198,6 +200,9 @@ test("lane tools never name the Live world and keep backups", () => {
     const src = fs.readFileSync(path.join(root, "tools/lanes", f), "utf8");
     assert.ok(!/rothenstein-live/.test(src), `${f} mentions the Live world`);
   }
+  // B7460: one nightly full run, and it is the queued tools/pcq/nightly-gates.mjs
+  const reset = fs.readFileSync(path.join(root, "tools/lanes/lane-reset.cmd"), "utf8");
+  assert.ok(!/^node tools\\lanes\\nightly\.mjs/m.test(reset), "lane-reset.cmd does not start the older nightly run");
   const m = fs.readFileSync(path.join(root, "tools/lanes/lanes.mjs"), "utf8");
   assert.match(m, /case "reset":[\s\S]*backup\(worldDir\(lane\)/, "reset backs the world up before copying");
   assert.match(m, /allow-lane-1/, "lane 1 reset needs an explicit flag");
@@ -236,6 +241,12 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.ok(!main.lanes.some(l => l.host));
     assert.deepEqual(main.lanes.map(l => l.id), [1, 2, 3, 4, 5, 6]);
     assert.match(main.foundryMain, /^G:/);
+    process.env.WODX_HOST = "cloud";
+    const cloud = L.loadConfig();
+    assert.deepEqual(cloud.lanes.map(l => l.id), [9], "a cloud thread's box sees lane 9 only (B7240)");
+    assert.ok(!cloud.lanes[0].dataPath.includes("%"), "the cloud lane's home folder is filled in");
+    assert.match(cloud.foundryMain, /\/foundry\/app\/main\.mjs$/);
+    assert.equal(cloud.lanes[0].url, "http://localhost:30090");
   } finally { if ( was === undefined ) delete process.env.WODX_HOST; else process.env.WODX_HOST = was; }
 });
 
@@ -255,6 +266,25 @@ test("before each gate the runner looks for the WoDX apis again and names the mi
   assert.ok(src.includes("await waitApis(page)") && src.includes("no api before this gate"), "run-gate waits before each gate and says so on the gate's line");
 });
 
+test("B6992: a page reload while the runner waits for the apis waits for the new page; reloads and api state are reported", async () => {
+  const B = await import(pathToFileURL(path.join(root, "tools/lanes/browser.mjs")));
+  const mods = new Map([["wodx-creation", {active: true}]]);
+  const was = globalThis.game;
+  globalThis.game = {modules: {get: id => mods.get(id)}};
+  try {
+    let calls = 0;
+    const page = {waitForLoadState: async () => {}, evaluate: async (fn, ids) => fn(ids),
+      waitForFunction: async (fn, ids) => { calls++; if ( calls === 1 ) throw new Error("Execution context was destroyed, most likely because of a navigation"); mods.get("wodx-creation").api = {startErrors: ["people.registerPeople: boom"], a: 1}; if ( !fn(ids) ) throw new Error("timeout"); }};
+    assert.deepEqual(await B.waitApis(page, ["wodx-creation"], 5000), [], "the wait goes on over the reload");
+    assert.equal(calls, 2);
+    const st = B.apiState(["wodx-creation"]);
+    assert.equal(st[0].api, true); assert.deepEqual(st[0].startErrors, ["people.registerPeople: boom"]);
+  } finally { globalThis.game = was; }
+  const src = fs.readFileSync(path.join(root, "tools/lanes/run-gate.mjs"), "utf8");
+  assert.ok(src.includes("page reloaded") && src.includes("DIAG apis"), "the gate's line names a reload, and --diag writes the api state");
+  assert.match(fs.readFileSync(path.join(root, "tools/lanes/browser.mjs"), "utf8"), /page\.on\("load"/);
+});
+
 test("lane 7 on the Laptop takes only small named-gate jobs (B6887)", () => {
   const cfg = JSON.parse(fs.readFileSync(path.join(root, "tools/lanes/lanes.json"), "utf8"));
   const seven = cfg.lanes.find(l => String(l.id) === "7"), two = cfg.lanes.find(l => String(l.id) === "2");
@@ -268,4 +298,135 @@ test("lane 7 on the Laptop takes only small named-gate jobs (B6887)", () => {
   assert.equal(L.laneRefuses(two, {kind: "gates", touched: true, gates: []}), null, "main PC lanes keep taking any run");
   const runner = fs.readFileSync(path.join(root, "tools/pcq/runner.mjs"), "utf8"), submit = fs.readFileSync(path.join(root, "tools/pcq/submit.mjs"), "utf8");
   assert.ok(runner.includes("!laneRefuses(laneOf(l), q.job)") && submit.includes("laneRefuses(named, v.job)"), "runner and submit both check it");
+});
+
+test("B7181: flagPlan puts back the flags a gate changed on documents that were there before it", async () => {
+  const {flagPlan} = await import("../lanes/lib.mjs");
+  const before = {
+    "Actor.a": {"wodx-npc": {haven: "Scene.x", mood: 1}, core: {sheetClass: "s"}},
+    "Scene.x": {},
+    "Actor.same": {"wodx-npc": {k: 1}},
+    "Actor.gone": {"wodx-npc": {k: 1}}
+  };
+  const after = {
+    "Actor.a": {"wodx-npc": {haven: "Scene.gate", mood: 1, learned: ["dodge"]}, core: {sheetClass: "s"}},
+    "Scene.x": {"wodx-chronicle": {domain: "gate"}},
+    "Actor.same": {"wodx-npc": {k: 1}},
+    "Actor.new": {"wodx-npc": {k: 2}}
+  };
+  const plan = flagPlan(before, after);
+  assert.deepEqual(plan, [
+    {uuid: "Actor.a", unset: [["wodx-npc", "haven"], ["wodx-npc", "learned"]], set: [["wodx-npc", "haven", "Scene.x"]]},
+    {uuid: "Scene.x", unset: [["wodx-chronicle", "domain"]], set: []}
+  ], "changed keys are unset then set back, added keys unset; unchanged, deleted and new documents are left alone");
+  const deep = flagPlan({"A.b": {m: {o: {x: 1}}}}, {"A.b": {m: {o: {x: 1, y: 2}}}});
+  assert.deepEqual(deep, [{uuid: "A.b", unset: [["m", "o"]], set: [["m", "o", {x: 1}]]}], "an object value is replaced whole, so no merged key stays");
+  assert.deepEqual(flagPlan({}, {}), []);
+});
+
+test("B7192: sheetPlan puts back the sheet data, effects and items a gate changed on shared actors", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const frenzy = {_id: "e1", name: "Frenzy", statuses: ["frenzy"]}, old = {_id: "e0", name: "Blessed", statuses: []};
+  const before = {
+    "Actor.a": {system: {conditions: {isfrenzy: false}, blood: 10}, effects: {e0: old}, items: ["i1"]},
+    "Actor.a.Item.i1": {system: {clip: 6}},
+    "Actor.same": {system: {blood: 3}, effects: {}, items: []},
+    "Actor.gone": {system: {}, effects: {}, items: []}
+  };
+  const after = {
+    "Actor.a": {system: {conditions: {isfrenzy: true}, blood: 7}, effects: {e1: frenzy}, items: ["i1", "i2"]},
+    "Actor.a.Item.i1": {system: {clip: 0}},
+    "Actor.same": {system: {blood: 3}, effects: {}, items: []},
+    "Actor.new": {system: {blood: 1}, effects: {}, items: []}
+  };
+  assert.deepEqual(sheetPlan(before, after), [
+    {uuid: "Actor.a", system: {conditions: {isfrenzy: false}, blood: 10}, dropEffects: ["e1"], addEffects: [old], dropItems: ["i2"]},
+    {uuid: "Actor.a.Item.i1", system: {clip: 6}}
+  ], "changed system data comes back whole, added effects and items go, removed effects return; unchanged, deleted and new documents are left alone");
+  const edited = sheetPlan({"Actor.b": {system: {}, effects: {e0: old}, items: []}}, {"Actor.b": {system: {}, effects: {e0: {...old, name: "x"}}, items: []}});
+  assert.deepEqual(edited, [{uuid: "Actor.b", dropEffects: ["e0"], addEffects: [old]}], "an edited effect is replaced by its old self");
+  assert.deepEqual(sheetPlan({}, {}), []);
+});
+
+test("B7192: run-gate reads sheets before each gate and puts them back before the flags", () => {
+  const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
+  assert.match(src, /const sheetsBefore = lane\.autoReset \? await page\.evaluate\(READ_SHEETS\)/);
+  assert.ok(src.indexOf("PUT_SHEETS_BACK, sheetPlan") < src.indexOf("PUT_FLAGS_BACK, flagPlan"), "sheets go back before flags");
+});
+
+test("B7193: sheetPlan removes what a gate placed on a scene that was there before it", async () => {
+  const {sheetPlan} = await import("../lanes/lib.mjs");
+  const before = {"Scene.s": {kids: {Region: ["r1"], Token: ["t1"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}};
+  const after = {"Scene.s": {kids: {Region: ["r1", "chapel"], Token: ["t1", "t2"], Wall: []}}, "Scene.same": {kids: {Region: ["r1"]}}, "Scene.new": {kids: {Region: ["x"]}}};
+  assert.deepEqual(sheetPlan(before, after), [{uuid: "Scene.s", dropKids: {Region: ["chapel"], Token: ["t2"]}}]);
+});
+
+test("B7200: a migration marker written after the clean fingerprint is not drift", () => {
+  const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
+  const raw = settings => ({world: "w", core: "14.369", system: {id: "worldofdarkness", version: "1"}, modules: {fxmaster: "6"}, settings, docs: {}, worldTime: 0});
+  const clean = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "1"}), cfg.ignoreSettings);
+  const now = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "1", "fxmaster.parameterRangeMigrationVersion": "\"6.0\"", "tokenmagic.migration": "2"}), cfg.ignoreSettings);
+  assert.deepEqual(L.diffWorld(clean, now).strict, []);
+  const real = L.worldFingerprint(raw({"wodx-chronicle.automationLevel": "2"}), cfg.ignoreSettings);
+  assert.deepEqual(L.diffWorld(clean, real).strict.map(d => d.where), ["setting wodx-chronicle.automationLevel"], "a real setting change still stops the run");
+});
+
+test("B7204: stop takes over the lane's own Foundry by its port only when its command line is this lane's", () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/lanes.mjs"), "utf8");
+  const fn = src.slice(src.indexOf("function lanePidByPort"), src.indexOf("async function stop"));
+  assert.match(fn, /Get-NetTCPConnection -LocalPort \$\{Number\(lane\.port\)\} -State Listen/);
+  assert.match(fn, /pid > 0 && pidIsLane\(pid, lane\) \? pid : 0/, "a process that is not the lane's Foundry is never taken");
+  const stop = src.slice(src.indexOf("async function stop"), src.indexOf("async function accept"));
+  assert.ok(stop.indexOf("lanePidByPort(lane)") < stop.indexOf("process.kill(pid)"), "the takeover comes before any kill");
+  assert.ok(stop.includes("if ( !pidIsLane(pid, lane) ) throw"), "the stale-id guard still stands");
+});
+
+test("B7230: gateCaller tells a gate's own hook from a module's, past the wrappers and Foundry", async () => {
+  const {gateCaller} = await import("../lanes/lib.mjs");
+  const st = (...frames) => ["Error", ...frames.map(f => `    at ${f}`)].join("\n");
+  const wrap = ["byGate (eval at evaluate (:1:1), <anonymous>:12:30)", "Function.wodxGateOn (eval at evaluate (:1:1), <anonymous>:14:80)"];
+  // the gate calls Hooks.on itself
+  assert.equal(gateCaller(st(...wrap, "body (http://localhost:30020/wodx-gate/gatesprites.mjs?123:40:9)")), true);
+  // Hooks.once goes through Foundry's own Hooks.on: still the gate's
+  assert.equal(gateCaller(st(...wrap, "Hooks.once (http://localhost:30020/scripts/foundry.mjs:5000:12)",
+    "Function.wodxGateOnce (eval at evaluate (:1:1), <anonymous>:15:80)", "run (http://localhost:30020/wodx-gate/gatefoo.mjs:9:3)")), true);
+  // a module registers a hook while the gate calls into it: the module's, left alone
+  assert.equal(gateCaller(st(...wrap, "open (http://localhost:30020/modules/wodx-library/scripts/use.mjs:80:5)",
+    "run (http://localhost:30020/wodx-gate/gategadgets.mjs:27:7)")), false);
+  assert.equal(gateCaller(""), false);
+  // the source runs on its own (run-gate hands it to the page with toString)
+  const again = new Function(`return (${gateCaller.toString()});`)();
+  assert.equal(again(st(...wrap, "x (http://h/wodx-gate/g.mjs:1:1)")), true);
+});
+
+test("B7230: pageNote names what run-gate put back in the page", async () => {
+  const {pageNote} = await import("../lanes/lib.mjs");
+  assert.equal(pageNote(null), "");
+  assert.equal(pageNote({hooks: [], intervals: 0, refs: [], user: []}), "");
+  assert.equal(pageNote({hooks: ["createChatMessage", "createChatMessage", "updateActor"], intervals: 1, refs: ["randomUniform"], user: ["isGM"]}),
+    "3 hook(s) the gate left removed (createChatMessage, updateActor), 1 timer(s) the gate left stopped, randomUniform put back, game.user isGM taken off");
+});
+
+test("B7230: run-gate wraps Hooks and setInterval for each gate and hands the page the caller test", () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/run-gate.mjs"), "utf8");
+  assert.match(src, /callerSrc: gateCaller\.toString\(\)/);
+  assert.match(src, /H\.on = function wodxGateOn/);
+  assert.match(src, /page0 = pageBack\(\)/);
+  assert.match(src, /pageNote\(out\.page\)/);
+});
+
+test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 24 through the proxy (B7240-B7242)", () => {
+  const src = fs.readFileSync(path.join(root, "tools/lanes/cloud-lane.mjs"), "utf8");
+  assert.ok(src.includes('"/mnt/project-files/private/cloud-foundry"'), "the zip and licence come from the private cache");
+  assert.ok(!/license\.json"\)\s*,\s*path\.join\(REPO/.test(src), "the licence is never copied into the checkout");
+  assert.ok(src.includes('NODE_USE_ENV_PROXY: "1"'), "Foundry's licence check goes through the cloud proxy");
+  assert.ok(src.includes('WODX_HOST: "cloud"'));
+  assert.match(src, />= 24/, "Foundry 14 needs Node 24");
+  assert.ok(!/console\.(log|warn|error)\([^)]*\.license\b/.test(src), "the key is never printed");
+  // B7300: the PC world and modules come in parts from the private folder, checked against their hash
+  assert.match(src, /fromParts\("testbed", "testbed-known-good"/);
+  assert.match(src, /fromParts\("modules", "cloud-foundry-modules"/);
+  assert.match(src, /do not match \$\{sub\}\/SHA256/, "a joined copy with the wrong hash stops setup");
+  assert.ok(!/(writeFileSync|appendFileSync|renameSync)\(\s*path\.join\(CACHE/.test(src) && !/(copyFileSync|cpSync)\([^,]+,\s*path\.join\(CACHE/.test(src),
+    "nothing is written back to the shared folder");
 });

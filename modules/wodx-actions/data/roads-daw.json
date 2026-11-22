@@ -38,15 +38,36 @@
    "paths": [
     {
      "name": "Path of the Hunter",
-     "p": 117
+     "p": 117,
+     "sinsAt": {
+      "8": "Ignoring a threat to your hunt",
+      "7": "Acting without a plan",
+      "2": "Hunting without ritual preparation"
+     },
+     "sinsPage": 119
     },
     {
      "name": "Path of Journeys",
-     "p": 118
+     "p": 118,
+     "sinsAt": {
+      "3": "Not exploring",
+      "2": "Accepting ties to a land or people"
+     },
+     "sinsPage": 119,
+     "virtues": [
+      "conviction",
+      "selfcontrol"
+     ]
     },
     {
      "name": "Path of Liberation",
-     "p": 118
+     "p": 118,
+     "sinsAt": {
+      "8": "Sparing someone a hard truth",
+      "6": "Taking comfort in the city instead of tearing it down",
+      "1": "Strengthening a tyranny"
+     },
+     "sinsPage": 119
     }
    ]
   },
@@ -172,15 +193,33 @@
    "paths": [
     {
      "name": "Path of Breath",
-     "p": 123
+     "p": 123,
+     "sinsAt": {
+      "10": "Thinking or acting as a vampire",
+      "7": "Knowingly letting a person suffer",
+      "1": "A night without human company"
+     },
+     "sinsPage": 123
     },
     {
      "name": "Path of Community",
-     "p": 124
+     "p": 124,
+     "sinsAt": {
+      "7": "Damaging common property, even by accident",
+      "4": "Theft",
+      "1": "Ending a community's power to grow"
+     },
+     "sinsPage": 124
     },
     {
      "name": "Path of Illumination",
-     "p": 124
+     "p": 124,
+     "sinsAt": {
+      "10": "Staying where your journey stalls",
+      "7": "Keeping a Cainite from the journey you began",
+      "1": "Letting true darkness in"
+     },
+     "sinsPage": 125
     }
    ]
   },
@@ -222,6 +261,10 @@
       "Letting a challenge to your honour pass",
       "Breaking your word",
       "Breaking a sworn oath"
+     ],
+     "virtues": [
+      "conscience",
+      "selfcontrol"
      ]
     },
     {
@@ -284,15 +327,34 @@
    "paths": [
     {
      "name": "Path of Thorns",
-     "p": 130
+     "p": 130,
+     "sinsAt": {
+      "9": "Joining a community of fools",
+      "5": "Taking a student the first time they ask",
+      "2": "Putting another's learning before your own"
+     },
+     "sinsPage": 131
     },
     {
      "name": "Path of Veils",
-     "p": 131
+     "p": 131,
+     "sinsAt": {
+      "9": "Abiding by any law of Caine or God",
+      "8": "Leaving the works of Noddist liars standing",
+      "4": "Snuffing out one who wants to burn brighter"
+     },
+     "sinsPage": 131
     },
     {
      "name": "Path of Making",
-     "p": 131
+     "p": 131,
+     "sinsAt": {
+      "10": "Turning away demons who bring seed",
+      "7": "Abandoning a creation for being ugly or frightening",
+      "5": "Leaving a secret of making with those who miss its purpose",
+      "1": "Turning away angels who bring seed"
+     },
+     "sinsPage": 131
     }
    ]
   },
@@ -367,8 +429,8 @@
      ]
     },
     {
-     "name": "Path of Rebellion",
-     "p": 136,
+     "name": "Path of the Devil",
+     "p": 135,
      "sins": [
       "Acknowledging the laws of God or man",
       "Not indulging a new desire",
@@ -380,10 +442,17 @@
       "Not feeding or killing when needed",
       "Wealth over higher things",
       "Encouraging false virtue"
+     ],
+     "aliases": [
+      "Path of Rebellion"
+     ],
+     "virtues": [
+      "conviction",
+      "selfcontrol"
      ]
     },
     {
-     "name": "Path of Damnation",
+     "name": "Path of Screams",
      "p": 136,
      "sins": [
       "Acknowledging any law but Hell's",
@@ -396,11 +465,10 @@
       "Selflessness",
       "Acting against Hell's servants",
       "Encouraging virtue"
+     ],
+     "aliases": [
+      "Path of Damnation"
      ]
-    },
-    {
-     "name": "Path of Screams",
-     "p": 136
     }
    ]
   },

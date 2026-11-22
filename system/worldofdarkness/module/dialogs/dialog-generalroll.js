@@ -605,7 +605,9 @@ export class DialogGeneralRoll extends FormApplication {
         generalRoll.origin = "general";
         generalRoll.numDices = numDices;
         generalRoll.woundpenalty = parseInt(woundPenaltyVal);
-        generalRoll.difficulty = parseInt(this.object.difficulty);          
+        generalRoll.difficulty = parseInt(this.object.difficulty);
+        // WoDX fork (B7120): WoDX Sheets held a difficulty past 10 at 10; the roller takes a success a point
+        if (this.object.wodxOver > 0) generalRoll.wodxOver = Number(this.object.wodxOver) || 0;
         generalRoll.speciality = this.object.useSpeciality;
         generalRoll.usewillpower = this.object.useWillpower;
         generalRoll.specialityText = specialityText;

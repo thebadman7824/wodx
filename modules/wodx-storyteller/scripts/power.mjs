@@ -22,6 +22,7 @@ import * as U from "./upkeep-rules.mjs";
 import * as Sites from "./sites.mjs";
 import {MOD, esc, chron, isActiveGM, gmIds, setting} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -545,7 +546,25 @@ export async function powerDialog() {
 /** The places in a scene: for other modules (a Node nearby, a freehold's rights). */
 export function placesIn(sceneId) { return state().list.filter(p => p.scene === sceneId); }
 
+/**
+ * B7615: put the chronicle in play's caerns (manifest.local.caerns) on the register, each once, when its scene is in
+ * the world. A caern the Storyteller removes later stays removed. Returns the places added.
+ */
+export async function seedChronicleCaerns() {
+  if ( !isActiveGM() ) return [];
+  const pack = chron()?.chronicle?.current?.() ?? null;
+  if ( !pack ) return [];
+  const st = state();
+  const seeds = Local.caernSeeds(Local.localOf(pack), pack.id, {scenes: all(game.scenes).map(sc => ({id: sc.id, name: sc.name})), have: st.list.map(p => p.id), seeded: st.seeded});
+  if ( !seeds.length ) return [];
+  const places = seeds.map(x => P.logLine(P.normPlace(x.place), now(), "Put on the register by the chronicle."));
+  await save({...st, list: [...st.list, ...places], seeded: [...st.seeded, ...seeds.map(x => x.id)]});
+  return places;
+}
+
 export async function setupPower() {
+  seedChronicleCaerns().catch(e => console.error(`${MOD} | chronicle caerns`, e));
+  Hooks.on("createScene", () => { seedChronicleCaerns().catch(e => console.error(`${MOD} | chronicle caerns`, e)); });
   let lastHour = -1;
   Hooks.on("updateWorldTime", () => {
     const hour = Math.floor(now() / 3600);
@@ -557,5 +576,5 @@ export async function setupPower() {
 }
 
 export const rules = P;
-export const api = () => ({open: powerDialog, state, on, run, edit: editPlace, remove: removePlace, meditate, gatherTass, absorbTass, dream, reave, memberLeaves, destroy, placesIn, rules: P,
+export const api = () => ({open: powerDialog, state, on, run, edit: editPlace, remove: removePlace, seedChronicle: seedChronicleCaerns, meditate, gatherTass, absorbTass, dream, reave, memberLeaves, destroy, placesIn, rules: P,
   caern: {moot: holdMoot, open: openCaern, raid: meetRaid, war: caernWar, reclaim: reclaimCaern, raise: raiseCaern, rules: C}});

@@ -132,7 +132,7 @@ export function build(ctx) {
         const sm = TH.sleepMods(a);
         if (sm.light) return { res: DS.awakening(null, { light: true }), html: "", rolls: [] };
         const rd = rating(a);
-        const r = await rollPool(rd, Math.min(10, 8 + sm.diff));
+        const r = await rollPool(rd, 8 + sm.diff);
         const res = DS.awakening(r);
         const what = a?.system?.settings?.variant === "kindredeast" ? "Hun or Dharma" : "Road";
         return { res, html: rollBlock(`${what} ${rd}${sm.diff ? " (Deep Sleeper +2)" : ""}`, r), rolls: [r.roll].filter(Boolean), uncapped: false };

@@ -5,13 +5,17 @@
   "knownGood": "D:/WoDX/testbed-known-good",
   "backups": "D:/WoDX/Backups",
   "lockMaxMinutes": 180,
-  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready, the session id a GM sets on first load), the once-per-world move of dawn, dusk and the sun to happening by themselves (B4895), which runs again on every lane reset because the clean copies predate it (B6500), and the first-run notes the effects modules write when a GM first loads the world (B4701).",
+  "_worlds": "Chronicle Packs Desk c2/e2 (Ben 18 Nov 2026): other testbed worlds a lane can run with --world <key>. clean is wodx-clean, made from worlds/wodx-template by lanes.mjs setup-clean: every WoDX module on except the chronicle modules (those with a chronicle.mjs, so none is named here), the same other modules as the default world, the two test accounts and Start a chronicle run once. Its known-good copy is the default one's folder plus -clean.",
+  "worlds": {"clean": {"world": "wodx-clean", "title": "WoDX Clean (testbed)", "template": "worlds/wodx-template"}},
+  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready, the session id a GM sets on first load), the once-per-world move of dawn, dusk and the sun to happening by themselves (B4895), which runs again on every lane reset because the clean copies predate it (B6500), the first-run notes the effects modules write when a GM first loads the world (B4701), and the once-per-world migration markers FXMaster and Token Magic write a little after a GM sign-in, too late for the clean fingerprint, so the next run saw them as drift and stopped (B7200: 83 exit-4 lane resets on 16 and 17 November, all 34 since job 1810 this one fxmaster key)",
   "ignoreSettings": ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady",
     "wodx-actions.sessionId", "wodx-actions.dawnDusk", "wodx-actions.sunDamage", "wodx-actions.autoDayV1",
-    "fxmaster.legacyCleanupVersion", "fxmaster.releaseMessage", "sequencer.update-notice-shown-version", "tokenmagic.presets"],
-  "_hosts": "B6880: the second PC (DESKTOP-S6NV3Q9) runs lane 7 with its own runner, and the Secondary PC (BENJAMIN-PC) runs lane 8 the same way (B6990). Paths there replace the ones above; lanes with a host are seen only on that PC.",
+    "fxmaster.legacyCleanupVersion", "fxmaster.releaseMessage", "sequencer.update-notice-shown-version", "tokenmagic.presets",
+    "fxmaster.parameterRangeMigrationVersion", "fxmaster.parameterRangePassiveMigrationVersion", "fxmaster.directionConventionPassiveMigrationVersion", "tokenmagic.migration"],
+  "_hosts": "B6880: the second PC (DESKTOP-S6NV3Q9) runs lane 7 with its own runner, and the Secondary PC (BENJAMIN-PC) runs lane 8 the same way (B6990). Paths there replace the ones above; lanes with a host are seen only on that PC. B7240: lane 9 lives in a cloud thread's own Linux box (WODX_HOST=cloud, set by cloud-lane.mjs); its folders are under that box's home folder.",
   "hosts": {"desktop-s6nv3q9": {"foundryMain": "C:/WoDX/Foundry/resources/app/main.js", "knownGood": "C:/WoDX/testbed-known-good", "backups": "C:/WoDX/Backups", "setupFrom": "C:/WoDX/lane1-copy"},
-    "benjamin-pc": {"foundryMain": "D:/WoDX/Foundry/resources/app/main.js", "knownGood": "D:/WoDX/testbed-known-good", "backups": "D:/WoDX/Backups", "setupFrom": "D:/WoDX/lane1-copy"}},
+    "benjamin-pc": {"foundryMain": "D:/WoDX/Foundry/resources/app/main.js", "knownGood": "D:/WoDX/testbed-known-good", "backups": "D:/WoDX/Backups", "setupFrom": "D:/WoDX/lane1-copy"},
+    "cloud": {"foundryMain": "%HOME%/foundry/app/main.mjs", "knownGood": "%HOME%/foundry/known-good", "backups": "%HOME%/foundry/backups"}},
   "lanes": [
     {"id": 1, "port": 30000, "dataPath": "%LOCALAPPDATA%/FoundryVTT", "autoReset": false},
     {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
@@ -20,6 +24,7 @@
     {"id": 5, "port": 30050, "dataPath": "D:/WoDX/FoundryData-lane5", "autoReset": true},
     {"id": 6, "port": 30060, "dataPath": "D:/WoDX/FoundryData-lane6", "autoReset": false, "reserved": "local-agents"},
     {"id": 7, "port": 30070, "url": "http://localhost:30070", "dataPath": "C:/WoDX/FoundryData-lane7", "autoReset": true, "host": "desktop-s6nv3q9", "maxGates": 10},
-    {"id": 8, "port": 30080, "url": "http://localhost:30080", "dataPath": "D:/WoDX/FoundryData-lane8", "autoReset": true, "host": "benjamin-pc"}
+    {"id": 8, "port": 30080, "url": "http://localhost:30080", "dataPath": "D:/WoDX/FoundryData-lane8", "autoReset": true, "host": "benjamin-pc"},
+    {"id": 9, "port": 30090, "url": "http://localhost:30090", "dataPath": "%HOME%/foundry/data", "autoReset": true, "host": "cloud"}
   ]
 }

@@ -2,6 +2,8 @@
 
 For a release of the system and the WoDX modules to the live server (wodx.online, world rothenstein-live). Nothing goes to the live server without Ben's go-ahead for that release. Releases go out the day before a game night, never during one.
 
+Before a build goes to Live, it is played in the solo world as a frozen release candidate ([SOLO-TESTING.md](SOLO-TESTING.md), B7161), and the problems reported there are fixed or accepted.
+
 ## Before (cloud or PC)
 
 1. The release commit is on main, and the harness passes on it: `cd tools/harness && node --test *.test.mjs`. This includes the letter-case test (path-case.test.mjs), the language-key test, the cross-module import test and the text-cleanup test.

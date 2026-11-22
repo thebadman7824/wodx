@@ -1,5 +1,6 @@
 // Twists on the table (B6650-B6659): every twist shows something and sets someone moving, the hearts pick their own
 // actions, favours are debts called in from their chapter, and the third murder turns the Lower Town cold.
+import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engines read the chronicle in play
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {join, dirname} from "node:path";

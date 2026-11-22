@@ -162,9 +162,10 @@ test("a docs-only branch needs a review but no note and no gate; the owner's own
 
 test("B7005: a soft warning when a thread does by hand work that ROUTING.md sends to a machine", () => {
   const routes = R.readRoutes(fs.readFileSync(path.join(R.ROOT, "docs/ROUTING.md"), "utf8"));
-  assert.ok(routes.length >= 3 && routes.every(r => r.kind && r.home && r.paths?.length), "docs/ROUTING.md has its routes block");
+  assert.ok(routes.length >= 2 && routes.every(r => r.kind && r.home && r.paths?.length), "docs/ROUTING.md has its routes block");
   assert.deepEqual(R.readRoutes("no block here"), []);
   const names = [{file: "modules/wodx-creation/data/people-maya.mjs"}], thread = [{author: "Claude", body: "More names"}];
+  routes.push({kind: "name lists", home: "the local-agent queue", paths: ["modules/wodx-creation/data/people-*.mjs"]}); // sample route: the real one is paused
   assert.match(R.routeWarnings(names, routes, thread).join(), /name lists .*local-agent queue/);
   assert.deepEqual(R.routeWarnings(names, routes, [...thread, {author: "openhands", body: "x"}]), [], "a local agent did it");
   assert.deepEqual(R.routeWarnings(names, routes, [{author: "Claude", body: "x\n\nrouted-by-hand: the PC was off"}]), []);
@@ -251,4 +252,31 @@ test("B7006: the owner's own work and a branch needing no gate are success", () 
   assert.equal(R.outcome({...base, bensOwn: false, ok: true, rules: {note: [], gates: [], review: []}}), "success");
   assert.equal(R.outcome({...base, bensOwn: false, rules: {note: [], gates: ["x"], review: []}}), "pending");
   assert.equal(R.outcome({...base, bensOwn: false, gateWaiting: false, rules: {note: [], gates: ["x"], review: []}}), "failure");
+});
+
+test("B7520: notes and decision fragments stay found after a stamp and a second merge of main", () => {
+  const s = scratch();
+  try {
+    s.put("modules/wodx-foo/scripts/main.mjs", 'export const VERSION = "1.0.0";\nexport const n = 2;\n');
+    s.put("changes/wodx-foo/two.md", "---\nbump: patch\n---\nFoo counts to two.\n");
+    s.put("changes/decisions/B9001.md", "## B9001. Two\n\nFoo counts to two.\n");
+    s.commit(`Foo counts to two${trailer}`);
+    // the train stamps: the note and the fragment go
+    fs.rmSync(path.join(s.dir, "changes/wodx-foo/two.md"));
+    fs.rmSync(path.join(s.dir, "changes/decisions/B9001.md"));
+    s.put("docs/DECISIONS.md", "## B9001. Two\n");
+    s.commit("Stamp versions, changelogs and decisions for merge");
+    // main moves on with a fragment of its own and is merged in: the merge's changes/ matches main's side
+    s.git("checkout", "-q", "main");
+    s.put("changes/decisions/B9002.md", "## B9002. Other\n\nOther work.\n");
+    s.commit(`Other work${trailer}`);
+    s.git("checkout", "-q", "claude/x");
+    s.git("-c", "user.name=Claude", "-c", "user.email=a@example.invalid", "merge", "-q", "--no-edit", "main");
+    const g = R.gitIn(s.dir), base = s.git("merge-base", "main", "HEAD");
+    assert.equal(s.git("log", "--format=%h", "--diff-filter=A", `${base}..HEAD`, "--", "changes/"), "",
+      "plain git log hides the adding commit here, which is the fault");
+    assert.deepEqual(R.branchNotes(g, base, "HEAD").map(n => n.file), ["changes/wodx-foo/two.md"]);
+    assert.ok(R.branchNotes(g, base, "HEAD")[0].frag, "the note is read as it stood before the stamp");
+    assert.deepEqual(R.branchDecisions(g, base, "HEAD").map(d => d.file), ["changes/decisions/B9001.md"]);
+  } finally { fs.rmSync(s.dir, {recursive: true, force: true}); }
 });

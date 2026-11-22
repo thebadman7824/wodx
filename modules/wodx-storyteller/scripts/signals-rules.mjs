@@ -19,7 +19,7 @@ export const TTL = {1: 14 * DAY, 2: 28 * DAY, 3: 56 * DAY};
 export const MAX = 200;
 /**
  * The kinds of signal. The first eight are the omens kinds (omen-rules.mjs KINDS); a kind omens has no symbols for
- * falls back to "change" there. "saga" is a step of a Rothenstein saga book (WoDX Chronicle, wodxSaga).
+ * falls back to "change" there. "saga" is a step of a chronicle's saga book (WoDX Chronicle, wodxSaga).
  */
 export const KINDS = ["grudge", "hunters", "plague", "war", "fire", "flood", "death", "change",
   "fight", "rumour", "tale", "fate", "cult", "wyrm", "caern", "node", "freehold", "town", "seat", "arrest", "trial",

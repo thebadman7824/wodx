@@ -107,6 +107,15 @@ export function build(ctx) {
     // no Unleashing while it lasts (Dark Ages: Fae pp. 110-111). It ends with the scene.
     const echoHold = actor => { const h = actor?.getFlag?.(MOD, "daFae")?.echoHold; return h && n(h.scene) === LIM.sceneNo() ? n(h.level) : 0; };
     const echoDiff = actor => { const l = echoHold(actor); return l >= 2 ? 2 : l ? 1 : 0; };
+    // B7112: the warning signs (p. 103) from what the fae has done: an imbalance, cantrips botched this week, an Echo
+    // that bit harder than the one before it this month (a house reading of "Echoes bite differently")
+    const drift = i => {
+        const now = game.time.worldTime;
+        const spoiledCasts = (Array.isArray(i.f.spoiled) ? i.f.spoiled : []).filter(t => now - n(t) <= 7 * DAY).length;
+        const met = (Array.isArray(i.f.echoesMet) ? i.f.echoesMet : []).filter(e => now - n(e.t) <= 30 * DAY);
+        const echoesWorse = met.length >= 2 && n(met.at(-1).level) > n(met.at(-2).level);
+        return F.driftSigns({ mists: i.mists.perm, weaving: i.weaving.perm, spoiledCasts, changedNature: !!i.f.changedNature, echoesWorse });
+    };
     async function spend(actor, which, k) {
         const i = info(actor);
         const have = i[which].temp;
@@ -298,8 +307,10 @@ export function build(ctx) {
             // B6662: the target's ward or Magic Resistance makes a cantrip on them harder
             const rm = TH.targetResist(actor, ["magic"]);
             plan.notes.push(...rm.parts);
-            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed + n(rm.diff)), { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff + ed + n(rm.diff), { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
+            // B7112: a botched cantrip is spoiled magic, one of the warning signs (p. 103); the last five are kept
+            if (r.botch) await save(actor, { spoiled: [...(Array.isArray(i.f.spoiled) ? i.f.spoiled : []), game.time.worldTime].slice(-5) });
             const name = c?.name ?? `a level-${level} ${F.DOMINIONS[dominion].label} cantrip`;
             let body = rollBlock(`${F.DOMINIONS[dominion].label} + ${esc(t.label)}`, r, [...plan.notes, ...(fd.cloak ? ["cloaked: Perception + Kenning (8) to see it"] : []), ...(wp ? ["Willpower"] : [])]);
             body += r.botch ? `<div class="vta-big bad">The cantrip twists: the Storyteller says how.</div>`
@@ -366,7 +377,7 @@ export function build(ctx) {
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (echoHold(actor) >= 4) { notify(`${actor.name} met an Echo of the fourth level this scene: no Unleashing while it lasts.`); return null; }
             if (plan.weavingSpent && !(await spend(actor, "weaving", plan.weavingSpent))) return null;
-            const base = await rollPool(plan.dice, Math.min(10, plan.difficulty + echoDiff(actor)));
+            const base = await rollPool(plan.dice, plan.difficulty + echoDiff(actor));
             const wild = await rollPool(plan.wildDice, plan.wildDifficulty);
             const out = F.unleashOutcome(base, plan.wildDice ? wild : { successes: 0, botch: false });
             const back = await gain(actor, "mists", out.mistsBack);
@@ -458,6 +469,8 @@ export function build(ctx) {
             const weave = Math.min(n(fd.weave) - (n(fd.weave) % 2), i.weaving.temp - (i.weaving.temp % 2));
             if (weave && !(await spend(actor, "weaving", weave))) return null;
             const level = F.echoLevel({ successes: er.botch ? 0 : er.successes, origin: i.origin, oathSuccesses: oathS, weavingSpent: weave, trueName: !!fd.name });
+            // B7112: the Echoes met, for the warning sign "Echoes bite differently" (p. 103); the last five are kept
+            if (level) await save(actor, { echoesMet: [...(Array.isArray(i.f.echoesMet) ? i.f.echoesMet : []), { t: game.time.worldTime, level }].slice(-5) });
             body += `<div class="vta-big ${level ? "bad" : "good"}">${level ? `Echo, level ${level}` : "The Echo fails"}${e ? `: ${esc(e.trigger)}` : ""}.</div><div class="vta-res">${esc(F.ECHO_LEVELS[level])}</div>`;
             if (weave) body += `<div class="vta-note">${weave} Weaving spent: −${weave / 2}.</div>`;
             if (level >= 1 && level <= 5) body += `<div class="vta-note">For instance: ${F.ECHO_PICKS[level].map(esc).join("; ")}.</div>`;
@@ -497,10 +510,17 @@ export function build(ctx) {
         const hidden = i.hiddenDays !== null;
         const content = `<form>
           <p><b>${esc(actor.name)}</b>: Mists ${i.mists.temp}/${i.mists.perm}.${hidden ? ` Hidden by the Mists for ${i.hiddenDays} day${i.hiddenDays === 1 ? "" : "s"} (Willpower ${i.willpower}).` : ""}${i.suppression.over ? " Weaving overspent today: +2 to Mists rolls." : ""}</p>
+          ${(() => { const d = drift(i); return d.signs.length ? `<p class="wodx-quiet">Warning signs: ${esc(d.signs.join(", "))}${d.near ? ` (close to ${d.toward ?? "Lost or Locked"})` : ""}.</p>` : ""; })()}
           <div class="form-group"><label>Use</label><select name="use" data-fixed>
             ${hidden ? `<option value="release">Let the Mists fall (end the hiding)</option>` : `<option value="hide">Hide from mortals (Mists, 7)</option>`}
             <option value="kenning">Bestow Kenning for a day</option>
-            <option value="enhance">Enhance the mien for the scene (2)</option></select></div>
+            <option value="enhance">Enhance the mien for the scene (2)</option>
+            <option value="seen">Mortals saw the mien (risk a new Echo)</option></select></div>
+          <fieldset><legend>If mortals saw the mien</legend>
+            <div class="form-group"><label>How many mortals</label><input type="number" name="mortals" min="1" max="99" value="1"/></div>
+            <div class="form-group"><label><input type="checkbox" name="sawCantrip"/> They saw a cantrip cast</label></div>
+            <div class="form-group"><label><input type="checkbox" name="sawUnleash"/> They saw an Unleashing</label> <label><input type="checkbox" name="awry"/> and it went awry</label></div>
+          </fieldset>
           <div class="form-group"><label>Kenning for</label><select name="target" data-fixed><option value="mortal">a mortal (1)</option><option value="humane-kindred">a Kindred on the Road of Humanity (1)</option><option value="homid">a homid Garou (1)</option><option value="supernatural">another supernatural being (2)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="unwilling"/> Unwilling: they resist (Willpower 6 against Mists 6)</label></div>
         </form>`;
@@ -523,7 +543,27 @@ export function build(ctx) {
                 if (fd.unwilling) { const r = await rollPool(i.mists.perm, 6 + i.suppression.mistsPenalty); rolls.push(r.roll); body += rollBlock("Mists (against their Willpower, 6)", r) + `<div class="vta-note">The Storyteller rolls the target's Willpower (6); more successes and the gift fails.</div>`; }
             } else if (u === "enhance") {
                 if (!(await spend(actor, "mists", 2))) return null;
+                await save(actor, { enhanced: LIM.sceneNo() });
                 body += `<div class="vta-res">2 Mists: a Lesser Feature works as a Greater one for the scene. Mortals who see it may bring a new Echo.</div>`;
+            } else if (u === "seen") {
+                // B7113: mortals who see the mien risk a new Echo (p. 114): 10 dice at 7, less for each thing they saw;
+                // enhanced this scene, every Lesser Feature counts as a Greater one
+                const enh = i.f.enhanced != null && n(i.f.enhanced) === n(LIM.sceneNo());
+                const lesser = enh ? 0 : i.lesser.length, greater = i.greater.length + (enh ? i.lesser.length : 0);
+                const pool = F.newEchoPool({ lesser, greater, origin: i.origin, mortals: Math.max(1, n(fd.mortals)), cantrip: !!fd.sawCantrip, unleash: !!fd.sawUnleash, awry: !!fd.awry });
+                if (!pool.atRisk) body += `<div class="vta-res good">Too few Features show (${i.lesser.length} Lesser, ${i.greater.length} Greater): no new Echo.</div>`;
+                else {
+                    const r = pool.dice > 0 ? await rollPool(pool.dice, pool.difficulty) : { successes: 0, botch: false, roll: null };
+                    if (r.roll) { rolls.push(r.roll); body += rollBlock("Escaping a new Echo", r, [`${lesser} Lesser, ${greater} Greater`, `${Math.max(1, n(fd.mortals))} mortal${n(fd.mortals) === 1 ? "" : "s"}`, ...(fd.sawCantrip ? ["a cantrip seen"] : []), ...(fd.sawUnleash ? [fd.awry ? "an Unleashing gone awry" : "an Unleashing seen"] : [])]); }
+                    else body += `<div class="vta-note">No dice left to roll.</div>`;
+                    const k = F.newEchoOutcome(r, pool.dice);
+                    if (k) {
+                        const fresh = Array.from({ length: k }, () => ({ trigger: "A new Echo from mortal eyes (the Storyteller names it)", fresh: true }));
+                        await save(actor, { echoes: [...i.echoes, ...fresh] });
+                        body += `<div class="vta-big bad">${k === 1 ? "A new Echo takes" : "Two new Echoes take"} hold.</div><div class="vta-note">Added to the sheet's Echoes for the Storyteller to name.</div>`;
+                    } else body += `<div class="vta-big good">The mortals' eyes leave no new Echo.</div>`;
+                }
+                body += `<div class="wodx-quiet">${REF} p. 114</div>`;
             }
             body += `<div class="wodx-quiet">${REF} p. 101</div>`;
             return post(actor, `${actor.name} calls the Mists`, body, rolls.filter(Boolean));
@@ -551,10 +591,33 @@ export function build(ctx) {
         const i = await needFae(actor);
         if (!i) return null;
         const oaths = i.oaths.map((o, k) => ({ ...o, k })).filter(o => o.active !== false);
-        if (!oaths.length) return notify(`${actor.name} keeps no active oath.`);
-        const content = `<form><div class="form-group"><label>The oath kept</label><select name="o" data-fixed>${oaths.map(o => `<option value="${o.k}">${esc(oathLine(o))}</option>`).join("")}</select></div>
-          <p class="wodx-quiet">Each time the fae takes the time to keep their side, roll the oath's rating (6): a Weaving point per success (Dark Ages: Fae p. 102).</p></form>`;
-        return dialog(`Keep an oath: ${actor.name}`, content, "Roll", async fd => {
+        // B7114: the oath window also forges a new oath (forgeCheck, p. 109) and records a baptism (baptismClears, p. 108)
+        const content = `<form><div class="form-group"><label>What happens</label><select name="op" data-fixed>
+            ${oaths.length ? `<option value="keep">Keep an oath (Weaving back)</option>` : ""}<option value="forge">Forge a new oath</option>${i.oaths.length ? `<option value="baptism">Baptised: Iron and Stone Oaths wash away</option>` : ""}</select></div>
+          ${oaths.length ? `<div class="form-group"><label>The oath kept</label><select name="o" data-fixed>${oaths.map(o => `<option value="${o.k}">${esc(oathLine(o))}</option>`).join("")}</select></div>
+          <p class="wodx-quiet">Each time the fae takes the time to keep their side, roll the oath's rating (6): a Weaving point per success (Dark Ages: Fae p. 102).</p>` : `<p class="wodx-quiet">No active oaths to keep.</p>`}
+          <fieldset><legend>A new oath</legend>
+            <div class="form-group"><label>Kind</label><select name="kind" data-fixed>${Object.entries(F.OATHS).map(([k, o]) => `<option value="${k}">${esc(o.label)} (${o.min}–${o.max}, Gramarye ${o.gramarye})</option>`).join("")}</select></div>
+            <div class="form-group"><label>Rating</label><input type="number" name="rating" min="1" max="5" value="1"/></div>
+            <div class="form-group"><label>What each side keeps</label><input type="text" name="terms" maxlength="200"/></div>
+            <p class="wodx-quiet">Forging costs Weaving equal to the rating, with no roll (${REF} p. 109). Gramarye ${i.gramarye}; Weaving ${i.weaving.temp}.</p>
+          </fieldset></form>`;
+        return dialog(`Oaths: ${actor.name}`, content, "Do it", async fd => {
+            if (fd.op === "forge") {
+                const chk = F.forgeCheck({ kind: fd.kind, rating: n(fd.rating), gramarye: i.gramarye, weaving: i.weaving.temp });
+                if (!chk.ok) return notify(`${actor.name} cannot forge it: ${chk.why}.`);
+                const terms = String(fd.terms ?? "").trim().slice(0, 200) || "terms the Storyteller sets";
+                if (!(await spend(actor, "weaving", chk.cost))) return null;
+                const o = { kind: fd.kind, rating: n(fd.rating), terms, active: true };
+                await save(actor, { oaths: [...(actor.getFlag(MOD, "daFae")?.oaths ?? []), o] });
+                return post(actor, `${actor.name} forges an oath`, `<div class="vta-big good">${esc(oathLine(o))}</div><div class="vta-res">${chk.cost} Weaving spent; the oath is on the sheet.</div><div class="wodx-quiet">${REF} pp. 107–109</div>`);
+            }
+            if (fd.op === "baptism") {
+                const kept = F.baptismClears(i.oaths), gone = i.oaths.filter(o => !kept.includes(o));
+                await save(actor, { oaths: kept });
+                return post(actor, `${actor.name} is baptised`, `<div class="vta-big ${gone.length ? "bad" : ""}">${gone.length ? `${gone.length} oath${gone.length === 1 ? "" : "s"} wash${gone.length === 1 ? "es" : ""} away: ${esc(gone.map(oathLine).join("; "))}.` : "No oath is lost."}</div>${kept.length ? `<div class="vta-res">Gold Oaths survive: ${esc(kept.map(oathLine).join("; "))}.</div>` : ""}<div class="wodx-quiet">${REF} p. 108</div>`);
+            }
+            if (!oaths.length) return notify(`${actor.name} keeps no active oath.`);
             const o = i.oaths[n(fd.o)];
             const r = await rollPool(o.rating, 6);
             const got = await gain(actor, "weaving", r.botch ? 0 : r.successes);
@@ -648,6 +711,8 @@ export function build(ctx) {
             await actor.setFlag(MOD, "daFae", { ...f, ...patch });
             const warn = [];
             if (i.hiddenDays !== null && F.hiddenRisk(i.hiddenDays, i.willpower)) warn.push(`hidden by the Mists ${i.hiddenDays} days, more than Willpower ${i.willpower}: the fae becomes Lost (Dark Ages: Fae p. 101)`);
+            const dr = drift(i);
+            if (dr.near && n(f.driftWarned) !== day) { warn.push(`${dr.signs.length} warning signs (${dr.signs.join(", ")}): close to ${dr.toward ?? "Lost or Locked"} (Dark Ages: Fae p. 103)`); await actor.setFlag(MOD, "daFae", { ...actor.getFlag(MOD, "daFae"), driftWarned: day }); }
             if (n(patch.weavingStreak) > i.willpower) warn.push(`Weaving overspent ${patch.weavingStreak} days running, more than Willpower: the fae may become Locked (Dark Ages: Fae p. 102)`);
             if (warn.length) await ChatMessage.create({ whisper: [...new Set([...gmIds(), ...game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER")).map(u => u.id)])],
                 content: `<div class="vta-card wodx-x"><div class="vta-body">${esc(actor.name)}: ${warn.map(esc).join("; ")}.</div></div>` });

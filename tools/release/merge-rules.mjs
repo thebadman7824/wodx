@@ -99,9 +99,13 @@ export function changedFiles(g, base, head) {
   return out;
 }
 
-/** Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. */
+/**
+ * Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. B7520:
+ * --full-history, because once a stamp has removed the notes, a later merge of main whose changes/ folder matches
+ * main's side makes git follow only that side and hide the commits that added them (PR 1848, 19 November 2026).
+ */
 export function branchNotes(g, base, head) {
-  const added = new Set(g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
+  const added = new Set(g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
   const out = [];
   for ( const file of [...added].sort() ) {
     const m = /^changes\/([\w-]+)\/([^/]+\.md)$/.exec(file);

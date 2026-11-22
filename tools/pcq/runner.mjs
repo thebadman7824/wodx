@@ -12,17 +12,20 @@
  * - Health: every idle lane is probed every 5 minutes; a lane that is down is started once; one that stays down is
  *   taken out of service and gets an alert issue (label pc-alert), closed again when it comes back.
  * - Hang guard: every step has a time limit and is ended with its whole process tree past it (run-gate.mjs has its
- *   own per-gate limits inside that).
+ *   own per-gate limits inside that). B7201: a lane's share of a gates job stops at jobCeilingMinutes (240), a
+ *   run-gate that prints nothing for longer than its longest gate limit plus 11 minutes is ended, and run-gate's own
+ *   hang watch ends a run whose lane stops answering within about two minutes; each is a lane fault (reset, retry).
  * - One retry on a lane fault (no free lane, drift, run-gate's watchdog, a deploy or start that fails): reset the
  *   lane, deploy again and run once more. A gate that fails is a result, not a fault, and is not retried.
- * - Recheck (B4610): each failing gate is rerun on a fresh lane, alone and then on main, and the result says whether it
+ * - Recheck (B4610, B7310): each failing gate is rerun alone on a fresh lane (a failure twice), then on main, and the result says whether it
  *   is new with this change, failing on main too, or failing only after other gates.
  * - Resources: no lane job starts below minFreeRamGB of free memory or minFreeGB on a drive; a hold of more than
  *   30 minutes raises an alert.
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
- * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every minute it logs the graphics card heat (gpu.mjs).
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every few minutes the Main PC's runner moves the
+ * merge train on (train.mjs, B7202), and the gate job of the pull request at its front runs before other gate jobs. Every minute it logs the graphics card heat (gpu.mjs).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -30,11 +33,15 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts, gateStatusFor, GATE_CONTEXT} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
+import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
-import {readQueue, putBack} from "../lanes/gate-queue.mjs";
+import * as PRIO from "./prio.mjs";
+import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
+import {recheck as recheckRun} from "./recheck.mjs";
+import {prMark, staleWhy, jobOfLog} from "./stale.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -83,21 +90,34 @@ const openIssues = async label => (await gh("GET", `/issues?state=open&labels=${
   .filter(i => !i.pull_request && i.user?.login === OWNER);
 
 // ---- processes ----
-/** Runs a command with a time limit; past it the whole process tree is ended. Returns {code, out}. */
-function run(cmd, argv, {cwd = ROOT, minutes = 30, logTo} = {}) {
+/**
+ * Runs a command with a time limit; past it the whole process tree is ended. Returns {code, out}. B7201: with
+ * stallMinutes, a command that prints nothing for that long is ended the same way (a run-gate that froze), so a lane
+ * is back in minutes rather than at the end of a limit of hours.
+ */
+const procs = new Map(); // job tag -> its running child processes (B7206)
+const endTree = p => { if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL"); };
+function run(cmd, argv, {cwd = ROOT, minutes = 30, stallMinutes = 0, logTo, env = {}} = {}) {
   return new Promise(done => {
     if ( DRY ) { log(`[dry] ${cmd} ${argv.join(" ")}`); return done({code: 0, out: ""}); }
-    const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"}});
+    const p = spawn(cmd, argv, {cwd, windowsHide: true, env: {...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1", ...env}});
     try { os.setPriority(p.pid, os.constants.priority.PRIORITY_BELOW_NORMAL); } catch {}
-    let out = "", timedOut = false;
-    const keep = d => { out += d; if ( out.length > 400000 ) out = out.slice(-300000); if ( logTo ) fs.appendFileSync(logTo, d); };
+    // B7206: each job's processes are known by its log name (jobN-...), so a cancelled job can end them
+    const owner = jobOfLog(logTo);
+    if ( owner ) { (procs.get(owner) ?? procs.set(owner, new Set()).get(owner)).add(p); p.on("exit", () => procs.get(owner)?.delete(p)); }
+    let out = "", timedOut = false, lastData = Date.now();
+    const keep = d => { lastData = Date.now(); out += d; if ( out.length > 400000 ) out = out.slice(-300000); if ( logTo ) fs.appendFileSync(logTo, d); };
     p.stdout.on("data", keep); p.stderr.on("data", keep);
-    const t = setTimeout(() => {
-      timedOut = true; log(`time limit (${minutes} min) for ${path.basename(argv[0] ?? cmd)}: ending process tree ${p.pid}`);
+    const end = why => {
+      if ( timedOut ) return;
+      timedOut = true; log(`${why} for ${path.basename(argv[0] ?? cmd)}: ending process tree ${p.pid}`);
       if ( process.platform === "win32" ) spawnSync("taskkill", ["/PID", String(p.pid), "/T", "/F"], {windowsHide: true}); else p.kill("SIGKILL");
-    }, minutes * 60000);
-    p.on("error", e => { clearTimeout(t); done({code: null, out: out + `\n${e.message}`}); });
-    p.on("exit", code => { clearTimeout(t); done({code: timedOut ? null : code, out, timedOut}); });
+    };
+    const t = setTimeout(() => end(`time limit (${minutes} min)`), minutes * 60000);
+    const s = stallMinutes > 0 ? setInterval(() => { if ( Date.now() - lastData > stallMinutes * 60000 ) end(`no output for ${stallMinutes} min`); }, 30000) : null;
+    const stopTimers = () => { clearTimeout(t); if ( s ) clearInterval(s); };
+    p.on("error", e => { stopTimers(); done({code: null, out: out + `\n${e.message}`}); });
+    p.on("exit", code => { stopTimers(); done({code: timedOut ? null : code, out, timedOut}); });
   });
 }
 const node = (script, argv, o) => run(process.execPath, [path.join(ROOT, script), ...argv], o);
@@ -173,12 +193,84 @@ async function recovered(key) {
 }
 
 // ---- jobs ----
+// B7201: the most one lane's share of a gates job may run (a full suite takes 50 to 80 minutes on four lanes; the
+// old limit was 15 hours), and the silence after which a run-gate counts as frozen: the longest gate limit (15
+// minutes unless gate-map-extra.json gives one more) plus the 3 minutes run-gate waits on a page, plus 8.
+const CEILING = Number(conf.jobCeilingMinutes ?? 240);
+function stallFor(dir) {
+  if ( conf.stallMinutes !== undefined ) return Number(conf.stallMinutes);
+  const t = readJson(path.join(dir, "tools", "lanes", "gate-map-extra.json"), {})?.timeouts ?? {};
+  return Math.max(15, ...Object.values(t).map(Number).filter(Number.isFinite)) + 3 + 8;
+}
 const recent = [];
 async function finish(issue, ok, text) {
   await comment(issue.number, text);
   await setLabels(issue.number, [ok ? LABEL.done : LABEL.failed], [LABEL.running]);
   await close(issue.number);
   recent.unshift(`#${issue.number} ${ok ? "done" : "FAILED"} ${new Date().toISOString().slice(11, 16)}Z`); recent.length = Math.min(recent.length, 12);
+}
+// ---- stale pull request jobs (B7205) ----
+// A gates job for an old commit of a pull request is not run, and one that is running stops after its current gates.
+const pullCache = new Map();
+async function staleJob(issue, maxAgeMs = 2 * 60000) {
+  const mark = prMark(issue.title);
+  if ( !mark ) return null;
+  const fetchPull = async () => {
+    try { const c = {at: Date.now(), pull: await gh("GET", `/pulls/${mark.pr}`)}; pullCache.set(mark.pr, c); return c; }
+    catch (e) { return null; } // unknown: never drop on a lookup failure
+  };
+  let c = pullCache.get(mark.pr);
+  if ( !c || Date.now() - c.at > maxAgeMs ) c = await fetchPull();
+  if ( !c || !staleWhy(mark, c.pull) ) return null;
+  // B7205 fix: the cache can hold the head from before the push that queued this job (jobs 1967, 1969 and 1970 were
+  // dropped as "moved on" to their older commit), so a job is only dropped on a pull request read just now
+  if ( c.at < Date.now() - 5000 ) c = await fetchPull();
+  return c ? staleWhy(mark, c.pull) : null;
+}
+async function drop(issue, text) {
+  await comment(issue.number, text);
+  await setLabels(issue.number, [], [LABEL.running]).catch(() => {});
+  if ( !DRY ) await gh("PATCH", `/issues/${issue.number}`, {state: "closed", state_reason: "not_planned"});
+  finished.set(issue.number, Date.now());
+  recent.unshift(`#${issue.number} dropped ${new Date().toISOString().slice(11, 16)}Z`); recent.length = Math.min(recent.length, 12);
+}
+let lastStale = 0;
+async function stopStale() {
+  if ( Date.now() - lastStale < 3 * 60000 ) return;
+  lastStale = Date.now();
+  for ( const g of growing.values() ) {
+    if ( g.stale || !g.job.queue ) continue;
+    const why = await staleJob(g.issue);
+    if ( !why ) continue;
+    g.stale = why;
+    let left = 0; try { left = stopQueue(g.job.queue); } catch (e) { log(`#${g.issue.number}: could not stop its queue: ${e.message}`); }
+    log(`#${g.issue.number}: ${why}; stopping after the running gates (${left} not run)`);
+    g.staleLeft = left;
+  }
+}
+// ---- cancel (B7206): close a running job's issue, or label it pc-cancel, and the runner ends it ----
+const halted = new Set(); // job tags whose lanes neither retry nor recheck
+const running = new Map(); // issue number -> job record, while start() runs it
+async function cancelJob(g, why) {
+  if ( g.cancelled || g.finishing ) return;
+  g.cancelled = why;
+  halted.add(g.tag);
+  if ( g.job.queue ) { try { stopQueue(g.job.queue); } catch (e) { log(`#${g.issue.number}: could not stop its queue: ${e.message}`); } }
+  const ps = [...(procs.get(g.tag) ?? [])];
+  log(`#${g.issue.number}: ${why}; ending ${ps.length} process tree(s) and freeing its lanes`);
+  for ( const p of ps ) { try { endTree(p); } catch (e) { log(`#${g.issue.number}: could not end ${p.pid}: ${e.message}`); } }
+}
+/** Running jobs whose issue was closed by hand or labelled pc-cancel. openNums: the open job issues just listed. */
+async function cancelCheck(issues, openNums) {
+  for ( const g of running.values() ) {
+    if ( g.cancelled || g.finishing ) continue;
+    const listed = issues.find(i => i.number === g.issue.number);
+    if ( listed?.labels?.some(l => l.name === LABEL.cancel) ) { await cancelJob(g, "labelled pc-cancel"); continue; }
+    if ( openNums.has(g.issue.number) ) continue;
+    // The list can lag; only a closed state read from the issue itself cancels
+    let st = null; try { st = (await gh("GET", `/issues/${g.issue.number}`)).state; } catch (e) { continue; }
+    if ( st === "closed" && !g.finishing ) await cancelJob(g, "its issue was closed");
+  }
 }
 /** The failing steps of the gates in a report, from each lane's result files. */
 function failDetail(lane, report) {
@@ -192,31 +284,43 @@ function failDetail(lane, report) {
   return out.join("\n");
 }
 /** One lane's part of a lane job. Returns {code, text}. */
-async function laneWork(job, lane, i, n, tag, retried = false) {
+async function laneWork(job, lane, i, n, tag, retried = false, before = "") {
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return {code: null, text: wt.error};
   const L = path.join(LOGS, `${tag}-l${lane}.log`);
   const repo = ["--repo", wt.dir];
-  const faultRetry = async (why, out = "") => {
+  // B7205: a job stopped as stale neither retries a lane nor reruns failing gates
+  const stopped = () => halted.has(tag) || (!!job.queue && fs.existsSync(`${job.queue}.stop`));
+  // carry: out is a gate report, whose finished gates keep their lines on the retry (B7447)
+  const faultRetry = async (why, out = "", carry = false) => {
     // B6526: gates this lane took from the shared queue and did not finish go back on it for any lane
     if ( job.queue ) requeueUnfinished(job.queue, lane, out);
-    if ( retried ) return {code: null, text: `${why} (after one retry)\n${out.slice(-1500)}`};
+    if ( retried || stopped() ) return {code: null, text: `${before ? `${before.trim()}\n` : ""}${why} (after one retry)\n${out.slice(-1500)}`};
     log(`${tag} lane ${lane}: ${why}; resetting the lane and trying once more`);
-    await lanesCmd(["reset", "--lane", lane], {logTo: L});
-    return laneWork(job, lane, i, n, tag, true);
+    await lanesCmd(["reset", "--lane", lane, ...worldArgs(job)], {logTo: L});
+    // only on a shared queue: a shard run again runs all its gates again
+    return laneWork(job, lane, i, n, tag, true, carry && job.queue ? out : "");
   };
   if ( job.kind === "setup-lane" ) {
     const r = await lanesCmd(["setup", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 90});
     if ( r.code === 0 ) { state[lane].down = false; state[lane].why = null; }
     return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
   }
+  // The clean test world (PR 2169): lanes.mjs stops the lane, builds the world, takes its known-good copy and starts
+  // the lane on its default world again, so it runs before the start-and-deploy steps below
+  if ( job.kind === "setup-clean" ) {
+    const r = await lanesCmd(["setup-clean", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 60});
+    return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
+  }
   if ( !(await isUp(laneOf(lane))) ) {
-    const s = await lanesCmd(["start", "--lane", lane], {logTo: L, minutes: 6});
+    const s = await lanesCmd(["start", "--lane", lane, ...worldArgs(job)], {logTo: L, minutes: 6});
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( job.reset || job.kind === "gate-two" ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
-  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
+  if ( resetsFirst(job) ) await lanesCmd(["reset", "--lane", lane, ...worldArgs(job), ...repo], {logTo: L});
+  // a clean-world run deploys into that world: a deploy restarts the lane, on its default world unless told
+  // otherwise (#2214 drifted that way: the gates found rothenstein-wodx running)
+  const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...worldArgs(job), ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
   if ( job.kind === "deploy" ) return {code: 0, text: d.out.trim().split("\n").slice(-3).join("\n")};
   if ( job.kind === "gate-two" ) {
@@ -235,46 +339,52 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});
   const gatesN = job.queue ? job.queueSize : job.all ? 400 : job.touched ? 150 : job.gates.length;
-  const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, 900);
-  const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes});
-  const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
-  if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
+  const minutes = job.queue ? job.maxMinutes + 10 : Math.min(16 * Math.ceil(gatesN / n) + 20, CEILING);
+  // B7220: branchTools runs the branch's own run-gate (from its worktree, which also holds the lane tools it imports).
+  // B7446: the worktree has no node_modules, so playwright comes from the runner's own clone (NODE_PATH); without it
+  // every branch-tools job failed at sign-in before its first gate (#2062, #2068 on 18 Nov)
+  const r = job.branchTools
+    ? await run(process.execPath, [path.join(wt.dir, "tools", "lanes", "run-gate.mjs"), ...gateArgs(job, lane, i, n, report), ...repo], {cwd: wt.dir, logTo: L, minutes, stallMinutes: stallFor(wt.dir),
+      env: {NODE_PATH: [path.join(ROOT, "tools", "harness", "node_modules"), process.env.NODE_PATH].filter(Boolean).join(path.delimiter)}})
+    : await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes, stallMinutes: stallFor(wt.dir)});
+  const own = (job.branchTools ? `Gate tools from ${job.ref} at ${wt.sha.slice(0, 8)} (branchTools).\n` : "") +
+    (fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000));
+  if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, own, true);
+  // B7447: the gates this lane finished before a fault and a reset keep their lines
+  const {report: rep, code: laneCode} = withEarlier(before, own, r.code, lane);
   const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
+  // a clean-world run puts the lane back on its default world (after the failing steps are read), so the next job
+  // finds it as usual
+  if ( job.world ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   // B7002: the commit this lane ran, for the gate status the merge rules read
-  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text, sha: wt.sha};
-  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`, sha: wt.sha};
+  if ( laneCode !== 1 || job.recheck === false || stopped() ) return {code: laneCode, text, sha: wt.sha};
+  return {code: laneCode, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L, stopped)}`, sha: wt.sha};
 }
 
 /**
- * B4610: a failing gate is run again before the result goes back, so the thread knows whose it is: alone on a fresh
- * lane on the same commit (does it fail only after other gates?), then on main (was it failing already?).
+ * B4610, B7310: a failing gate is run again before the result goes back, so the thread knows whose it is. Each gate
+ * runs ALONE, one gate per run-gate call on a freshly reset lane, so no other gate's leftovers decide it, and no
+ * verdict rests on a single run (recheckStep): a failure alone is run once more (two different results: flaky), and
+ * two failures alone then go to main the same way, where a pass is confirmed by a second run before it says NEW.
+ * All the runs on this commit come first and the runs on main after, so the lane is deployed twice at most.
+ * The whole recheck stops taking runs after RECHECK_MINUTES; gates it did not finish say so.
  */
-async function recheck(job, lane, tag, wt, rep, L) {
-  const failing = failingGates(rep).slice(0, 12);
-  if ( !failing.length ) return "";
-  const runOn = async (dir, name) => {
-    const f = path.join(LOGS, `${tag}-l${lane}-${name}.txt`);
-    fs.rmSync(f, {force: true});
-    await lanesCmd(["reset", "--lane", lane, "--repo", dir], {logTo: L});
-    const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", "--repo", dir], {logTo: L});
-    if ( d.code !== 0 ) return null;
-    await node("tools/lanes/run-gate.mjs", [...failing, "--lane", String(lane), "--wait", "10", "--report", f, "--repo", dir], {logTo: L, minutes: 16 * failing.length + 20});
-    return fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null;
-  };
-  log(`${tag} lane ${lane}: rechecking ${failing.join(" ")}`);
-  const alone = await runOn(wt.dir, "alone");
-  let main = null; const notOnMain = new Set();
-  if ( job.ref !== "main" ) {
-    const m = await worktree(lane, "main");
-    if ( !m.error ) {
-      for ( const g of failing ) if ( !fs.existsSync(path.join(m.dir, "tools", "gate", `${g}.mjs`)) ) notOnMain.add(g);
-      main = m.sha === wt.sha ? alone : await runOn(m.dir, "main");
-    }
+// B7342: settled main runs per gate, per main commit, on this PC (its lanes); the newest 20 main commits are kept
+const mainCache = {
+  file: path.join(HOME, "recheck-main-cache.json"),
+  read(sha) { const c = readJson(this.file, {})[sha] ?? {}; delete c._at; return c; },
+  write(sha, add) {
+    if ( !Object.keys(add).length ) return;
+    const all = readJson(this.file, {});
+    all[sha] = {...(all[sha] ?? {}), ...add, _at: Date.now()};
+    const keep = Object.entries(all).sort((a, b) => (b[1]._at ?? 0) - (a[1]._at ?? 0)).slice(0, 20);
+    try { fs.writeFileSync(this.file, JSON.stringify(Object.fromEntries(keep))); } catch (e) { log(`recheck cache not written: ${e.message}`); }
   }
-  if ( alone === null ) return "Recheck: the lane would not take the rerun; nothing more to say.";
-  const rows = recheckVerdicts(failing, alone, main, notOnMain);
-  return ["Recheck (each failing gate rerun on a fresh lane):", ...rows.map(r => `- ${r.gate}: ${r.verdict}`)].join("\n");
-}
+};
+// B7380: the recheck lives in recheck.mjs (so the harness can run it); laneWork passes its own stopped check, which
+// B7310 had called here without having it, so every failing gates job ended its lanes with "stopped is not defined"
+const recheck = (job, lane, tag, wt, rep, L, stopped) => recheckRun({job, lane, tag, wt, rep, L, stopped,
+  deps: {lanesCmd, node, worktree, stallFor, log, logs: LOGS, mainCache}});
 async function runLight(job, tag) {
   const L = path.join(LOGS, `${tag}.log`);
   if ( job.kind === "books-find" ) {
@@ -318,19 +428,40 @@ const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now()
  */
 const growing = new Map();
 async function makeQueue(job, lane, tag) {
-  if ( job.kind !== "gates" ) return null;
+  if ( job.kind !== "gates" || job.branchTools || job.world ) return null; // B7220: a branch-tools test runs on its one lane; so does a clean-world run
   const wt = await worktree(lane, job.ref);
   if ( wt.error ) return null;
-  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched"] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
+  const r = await node("tools/lanes/run-gate.mjs", [...job.gates, ...(job.touched ? ["--touched", ...(job.since ? ["--base", job.since] : [])] : []), ...(job.all ? ["--all"] : []), "--list", "--repo", wt.dir],
     {logTo: path.join(LOGS, `${tag}-list.log`), minutes: 5});
   const m = /^GATES (\[.*\])$/m.exec(r.out ?? "");
   let list = null;
   try { list = m ? JSON.parse(m[1]) : null; } catch (e) { list = null; }
   if ( !list || list.length < 2 ) return null;
   const file = path.join(LOGS, `${tag}-queue.json`);
+  // B7341: a run the runner restarted in the middle of goes on from the gates it had not passed, on the same commit
+  const resume = readJson(`${file}.resume`, null);
+  fs.rmSync(`${file}.resume`, {force: true});
+  let carried = [];
+  if ( resume?.sha === wt.sha && Array.isArray(resume.left) && resume.passed?.length ) {
+    const left = list.filter(g => resume.left.includes(g));
+    if ( left.length >= 2 ) { carried = resume.passed; list = left; log(`${tag}: resuming after a restart: ${left.length} gate(s) left, ${carried.length} passed before it kept`); }
+  }
   fs.writeFileSync(file, JSON.stringify(list));
-  fs.rmSync(`${file}.taken`, {force: true});
-  return {file, size: list.length, sha: wt.sha};
+  fs.writeFileSync(`${file}.sha`, wt.sha);
+  fs.rmSync(`${file}.taken`, {force: true}); fs.rmSync(`${file}.stop`, {force: true});
+  return {file, size: list.length, sha: wt.sha, carried};
+}
+
+function saveResume(tag) {
+  const file = path.join(LOGS, `${tag}-queue.json`);
+  if ( !fs.existsSync(file) || !fs.existsSync(`${file}.sha`) ) return null;
+  let taken = [];
+  try { taken = fs.readFileSync(`${file}.taken`, "utf8").split("\n").map(l => l.trim().split(" ")[1]).filter(Boolean); } catch { /* none */ }
+  const reports = fs.readdirSync(LOGS).filter(f => f.startsWith(`${tag}-l`) && f.endsWith("-report.txt")).map(f => fs.readFileSync(path.join(LOGS, f), "utf8"));
+  const st = resumeState(readQueue(file), taken, reports);
+  if ( !st.passed.length ) return null;
+  fs.writeFileSync(`${file}.resume`, JSON.stringify({sha: fs.readFileSync(`${file}.sha`, "utf8").trim(), ...st}));
+  return st;
 }
 const queueLeft = file => readQueue(file).length;
 function requeueUnfinished(file, lane, report) {
@@ -345,7 +476,12 @@ function addLane(g, lane, n = 1) {
     .then(r => { g.parts.push({lane, ...r}); if ( state[lane].busy === g.issue.number ) state[lane].busy = null; });
   g.pending.add(p); p.finally(() => g.pending.delete(p));
 }
-/** Free lanes join a running gates job whose queue still holds work. waiting: lane jobs still in the queue. */
+/** B7340: whether a waiting lane job could start on one of this runner's lanes that is free now (pinned: its own lane). */
+function couldStartNow(job) {
+  if ( job.lane !== undefined ) return LANES.includes(String(job.lane)) && laneFree(String(job.lane)) && !laneRefuses(laneOf(job.lane), job);
+  return LANES.some(l => laneFree(l) && !laneRefuses(laneOf(l), job));
+}
+/** Free lanes join a running gates job whose queue still holds work. waiting: lane jobs still in the queue that could start now. */
 function growJobs(waiting) {
   for ( const g of growing.values() ) {
     if ( g.job.lane !== undefined ) continue; // pinned to one lane
@@ -366,13 +502,16 @@ async function start(issue, job, lanes) {
   for ( const l of lanes ) state[l].busy = issue.number;
   log(`#${issue.number} ${job.kind} starting${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""}`);
   const g = {issue, job, tag, used: [], parts: [], pending: new Set()};
+  running.set(issue.number, g);
   try {
     await setLabels(issue.number, [LABEL.running]);
     await comment(issue.number, `Started ${new Date().toISOString().slice(0, 16)}Z${lanes.length ? ` on lane(s) ${lanes.join(", ")}` : ""} (ref ${job.ref}) by the ${NAME} [host:${HOST}].`);
     if ( lanes.length ) {
       const q = await makeQueue(job, lanes[0], tag);
       if ( q ) {
-        g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, 900)};
+        // B7341: the gates that passed before a restart count in this result, on the same commit
+        if ( q.carried?.length ) g.parts.push({lane: null, code: 0, sha: q.sha, text: `Passed before the runner restarted (same commit ${q.sha.slice(0, 8)}, not run again):\n${q.carried.join("\n")}`});
+        g.job = {...job, queue: q.file, queueSize: q.size, queueSha: q.sha, maxMinutes: Math.min(16 * q.size + 20, CEILING)};
         growing.set(issue.number, g);
         log(`#${issue.number}: ${q.size} gate(s) on a shared queue`);
       }
@@ -380,19 +519,39 @@ async function start(issue, job, lanes) {
       while ( g.pending.size ) await Promise.race([...g.pending]);
       growing.delete(issue.number);
     } else g.parts.push({lane: null, ...(await runLight(job, tag))});
+    if ( g.cancelled ) {
+      for ( const l of new Set([...lanes, ...g.used]) ) await lanesCmd(["reset", "--lane", l], {logTo: path.join(LOGS, `${tag}-l${l}.log`)}).catch(() => {});
+      halted.delete(tag);
+      const mins = Math.round((Date.now() - t0) / 60000);
+      await comment(issue.number, `**Cancelled** after ${mins} min (${g.cancelled}). Its processes were ended and its lanes reset; no result or gate status was posted.`).catch(() => {});
+      await setLabels(issue.number, [], [LABEL.running, LABEL.cancel]).catch(() => {});
+      if ( !DRY ) await gh("PATCH", `/issues/${issue.number}`, {state: "closed", state_reason: "not_planned"}).catch(() => {});
+      recent.unshift(`#${issue.number} cancelled ${new Date().toISOString().slice(11, 16)}Z`); recent.length = Math.min(recent.length, 12);
+      log(`#${issue.number} cancelled`);
+      return;
+    }
+    g.finishing = true;
+    if ( g.stale ) {
+      const mins = Math.round((Date.now() - t0) / 60000);
+      await drop(issue, `**Stopped** after ${mins} min: ${g.stale}. ${g.staleLeft ?? 0} gate(s) were not run; the run for the newer commit gives the result.`);
+      log(`#${issue.number} stopped (${g.stale})`);
+      return;
+    }
     const parts = g.parts.sort((a, b) => g.used.indexOf(a.lane) - g.used.indexOf(b.lane));
     const ok = parts.every(p => p.code === 0);
     const mins = Math.round((Date.now() - t0) / 60000);
     const used = parts.filter(p => p.lane).map(p => p.lane);
     const body = `**${ok ? "Passed" : "Failed"}** in ${mins} min${job.thread ? ` (for thread ${job.thread})` : ""}${g.job.queue ? `, ${g.job.queueSize} gates shared over lanes ${used.join(", ")}` : ""}.\n\n` +
+      gateDigest(parts) +
       parts.map(p => `${p.lane ? `Lane ${p.lane}, exit ${p.code ?? "fault"}:\n` : ""}\`\`\`\n${p.text}\n\`\`\``).join("\n");
     await finish(issue, ok, body);
     log(`#${issue.number} ${ok ? "passed" : "failed"} in ${mins} min`);
     await gateStatus(issue, g.job, parts, ok).catch(e => log(`#${issue.number}: gate status not posted: ${e.message}`));
   } catch (e) {
     log(`#${issue.number} runner error: ${e.stack ?? e.message}`);
-    await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
+    if ( !g.cancelled ) await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
   } finally {
+    running.delete(issue.number); halted.delete(tag);
     growing.delete(issue.number);
     for ( const l of new Set([...lanes, ...g.used]) ) if ( state[l].busy === issue.number ) state[l].busy = null;
     finished.set(issue.number, Date.now()); active.delete(issue.number);
@@ -406,7 +565,7 @@ async function start(issue, job, lanes) {
  * failed while the gates were still running turns green by itself.
  */
 async function gateStatus(issue, job, parts, ok) {
-  const st = gateStatusFor(job, parts, ok, failingGates, issue.html_url);
+  const st = gateStatusFor(job, parts, ok, failingGates, resumeState, mainSettled, issue.html_url);
   if ( !st || DRY ) return;
   await gh("POST", `/statuses/${st.sha}`, st.body);
   log(`#${issue.number}: ${GATE_CONTEXT} ${st.body.state} on ${short(st.sha)}`);
@@ -434,9 +593,40 @@ async function rerunFor(pr, sha, tries) {
   } catch (e) { log(`checks rerun for PR #${pr.number}: ${e.message}`); }
 }
 
+// ---- merge train (B7202): only the runner with "train" on (the Main PC's) drives it ----
+const graphql = async (query, variables) => {
+  const r = await fetch("https://api.github.com/graphql", {method: "POST", body: JSON.stringify({query, variables}),
+    headers: {Authorization: `bearer ${TOKEN}`, "User-Agent": "wodx-pcq", "Content-Type": "application/json"}});
+  const j = await r.json();
+  if ( !r.ok || j.errors?.length ) throw new Error(`GraphQL ${r.status} ${JSON.stringify(j.errors ?? j).slice(0, 200)}`);
+  return j.data;
+};
+/**
+ * B7448: registry/priorities.json (prio.mjs), read again each loop so a change to it needs no restart. A file that
+ * does not read or check leaves the older queue order and no windows, and is logged once.
+ */
+let prioBad = "";
+function prioNow() {
+  try {
+    const p = PRIO.load(), bad = PRIO.check(p);
+    if ( bad.length ) throw new Error(bad.slice(0, 3).join("; "));
+    prioBad = "";
+    return p;
+  } catch (e) { if ( prioBad !== e.message ) log(`priorities: not used (${e.message})`); prioBad = e.message; return null; }
+}
+let trainNow = null, trainBusy = false, lastTrain = 0, trainClock = true;
+function trainTick() {
+  if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
+  lastTrain = Date.now(); trainBusy = true;
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3, clockRuns: trainClock})
+    .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
+}
+/** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */
+const trainFirst = jobs => trainNow?.front ? [...jobs.filter(j => isFrontJob(j.issue?.title, trainNow.front)), ...jobs.filter(j => !isFrontJob(j.issue?.title, trainNow.front))] : jobs;
+
 // ---- status issue ----
 let statusIssue = null, lastStatus = "", lastStatusAt = 0, heldSince = null;
-async function status(queue) {
+async function status(queue, note = null) {
   const res = resources();
   const lanes = await Promise.all(LANES.map(async id => {
     const l = laneOf(id), s = state[id], lk = lockState(l, cfg);
@@ -445,8 +635,10 @@ async function status(queue) {
   }));
   const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the ${NAME} (${HOST}) at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
     "", "| Lane | Port | State |", "|---|---|---|", ...lanes, "",
+    ...(note ? [`HOLD: ${note}`, ""] : []),
     `Queue (${queue.length}): ${queue.map(q => `#${q.number} ${q.job.kind} p${q.job.prio}`).join(", ") || "empty"}`,
     `Last results: ${recent.join(", ") || "none yet"}`,
+    ...(conf.train ? [`Merge train: ${trainNow?.front ? `front #${trainNow.front}, ${trainNow.action} (${trainNow.why}); line ${trainNow.line.map(n => `#${n}`).join(", ")}` : "empty (label a ready pull request merge-train)"}`] : []),
     `Free: ${Object.entries(res.free).map(([d, v]) => `${d}: ${v.gb} GB`).join(", ")}, memory ${res.ram} GB${res.low.length ? ` (HOLDING: ${res.low.join("; ")})` : ""}`,
     "", "How to queue a job: tools/pcq/README.md."].join("\n");
   const changed = body.replace(/^Updated.*$/m, "") !== lastStatus.replace(/^Updated.*$/m, "");
@@ -459,7 +651,7 @@ async function status(queue) {
 }
 
 // ---- self update: exit 75 when main changed the runner or lane tools and nothing is running ----
-const MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
+let MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
 // A busy runner stops taking new jobs once an update is due ("draining") and exits when the last job ends, so an update
 // never waits for a quiet moment that may not come.
 let draining = false, drainSince = 0, deferUntilIdle = false;
@@ -472,6 +664,14 @@ async function updateDue() {
   if ( deferUntilIdle ) return !active.size;
   const d = await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq", "tools/lanes", "tools/harness/gate-two.mjs"]);
   if ( d.status !== 1 ) return false;
+  // B7194: when only the lane tools changed, the runner's own code is the same, and each job spawns run-gate and
+  // lanes.mjs afresh, so the checkout moves to main in place and the next job uses the new tools. A busy runner used
+  // to wait for an idle moment that never came: on 17 Nov the Main PC ran ad006f90 for four hours after main moved on.
+  if ( (await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq"])).status === 0 ) {
+    const co = await git(["checkout", "-q", "-f", "--detach", "origin/main"]);
+    const now = (await git(["rev-parse", "HEAD"])).stdout?.trim();
+    if ( co.status === 0 && now ) { log(`lane tools updated in place: ${short(MY_SHA)} to ${short(now)}`); MY_SHA = now; return false; }
+  }
   if ( !draining ) { log(`main changed the runner; taking no new jobs until the running ones end (at most ${DRAIN_MIN} min)`); drainSince = Date.now(); }
   draining = true;
   return !active.size;
@@ -530,8 +730,11 @@ log(`runner ${short(MY_SHA)} up; lanes ${LANES.join(", ")}; light slots ${conf.l
 for ( const i of await openIssues(LABEL.running) ) {
   if ( !(await startedHere(i.number)) ) continue;
   log(`#${i.number} was running when the runner stopped; queued again`);
+  let kept = null;
+  try { kept = saveResume(`job${i.number}`); } catch (e) { log(`#${i.number}: could not keep its progress: ${e.message}`); }
   await setLabels(i.number, [], [LABEL.running]);
-  await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
+  await comment(i.number, kept ? `The runner restarted while this ran; it will go on from the ${kept.left.length} gate(s) it had not passed (${kept.passed.length} passed gate(s) kept, if the commit is the same).`
+    : "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
 let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, lastWatch = 0;
 let lastGpu = 0; const gpuWatch = gpu.watcher();
@@ -553,12 +756,25 @@ for ( ;; ) {
     if ( !draining && Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
+      // B7207: the status issue still says what is running while it waits
+      await status([], "runner-off: stops once the running job(s) end").catch(() => {});
+      // B7330: a job still running while the runner stops can be cancelled (pc-cancel or a closed issue): runner-off
+      // used to skip the cancel pass, so job 2031 ran on stale code for half an hour after its pc-cancel label
+      try { const open = await openIssues(LABEL.job); await cancelCheck(open, new Set(open.map(i => i.number))); } catch (e) { log(`cancel check failed: ${e.message}`); }
       await sleep(30000); continue;
     }
+    // B7207: runner-hold takes no new jobs but keeps every other pass (status, sweep, train, updates, cancel) running
+    const hold = fs.existsSync(path.join(HOME, "runner-hold"));
+    // B7448 (desk pick p7): from holdMinutesBefore ahead of a planned window for this PC to its end, no new jobs
+    const P = prioNow();
+    const win = P ? PRIO.activeWindow(P, HOST) : null;
+    const holding = hold || !!win;
+    // B7449 (desk pick p5): the train front's clock stops while this runner holds or a window holds it
+    trainClock = P ? PRIO.trainClockRuns(P, {held: hold, window: !!win}) : !hold;
     // Stale pull requests, every hour, beside the jobs (B4110).
     if ( conf.sweep !== false && !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
-      sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json")})
+      sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json"), update: !!conf.sweepUpdates})
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
         .catch(e => log(`sweep failed: ${e.message}`)).finally(() => { sweeping = false; });
     }
@@ -580,15 +796,22 @@ for ( ;; ) {
       if ( !p.error && p.job?.lane !== undefined && !LANES.includes(String(p.job.lane)) && cfg.allLaneIds.includes(String(p.job.lane)) && String(p.job.lane) !== "1" ) continue;
       const v = p.error ? p : validate(p.job, LANES);
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
+      if ( i.labels.some(l => l.name === LABEL.cancel) ) { await drop(i, "Not run: labelled pc-cancel."); continue; }
+      const why = await staleJob(i);
+      if ( why ) { log(`#${i.number}: ${why}; not run`); await drop(i, `Not run: ${why}, so this commit's result would not be used.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
     }
-    const ready = order(queue, openNums);
+    await stopStale();
+    await cancelCheck(issues, openNums);
+    trainTick();
+    // B7448 (desk pick p1): rank first (train front, unblock, PR gates, health ...), then the aged number, then age
+    const ready = trainFirst(order(queue, openNums, Date.now(), P ? {prio: P, sortQueue: PRIO.sortQueue, isFront: q => !!trainNow?.front && isFrontJob(q.issue?.title, trainNow.front)} : {}));
     const res = resources();
     if ( res.low.length ) {
       heldSince ??= Date.now();
       if ( Date.now() - heldSince > 30 * 60000 ) await alert("resources", "jobs held for low disk or memory", res.low.join("\n"));
     } else { heldSince = null; await recovered("resources"); }
-    for ( const q of draining ? [] : ready ) {
+    for ( const q of draining || holding ? [] : ready ) {
       if ( LANE_KINDS.has(q.job.kind) ) {
         if ( res.low.length ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
@@ -601,6 +824,9 @@ for ( ;; ) {
         const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(l => laneFree(l) && !laneRefuses(laneOf(l), q.job)).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
         if ( !want.length || want.some(l => !free(l)) ) continue;
+        // B7590: the pull request is read again just before a lane job starts (the queue pass above may read a
+        // two-minute-old copy), so a job whose pull request merged a moment ago is not started (#2111, 18 Nov)
+        { const why = await staleJob(q.issue, 0); if ( why ) { log(`#${q.number}: ${why}; not run`); await drop(q.issue, `Not run: ${why}, so this commit's result would not be used.`); continue; } }
         for ( const l of want ) state[l].busy = q.number;
         if ( !(await claim(q.number)) ) { for ( const l of want ) state[l].busy = null; continue; }
         start(q.issue, q.job, want);
@@ -611,8 +837,11 @@ for ( ;; ) {
       }
     }
     // B6526: lanes still free join a running gates job that has work left on its shared queue
-    if ( !draining && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number)));
-    await status(queue.filter(q => !active.has(q.number)));
+    // B7340: only a waiting job that could start on a lane free now holds a running job to its own lane count; a job
+    // pinned to a busy lane, or to another PC's lane, no longer keeps the free lanes idle (#2022 ran 309 gates on lane 2
+    // alone for 2 h 24 min while #2020 waited for lane 2 and lanes 3 to 5 sat idle)
+    if ( !draining && !holding && !res.low.length ) growJobs(ready.some(q => LANE_KINDS.has(q.job.kind) && !active.has(q.number) && couldStartNow(q.job)));
+    await status(queue.filter(q => !active.has(q.number)), win ? `planned window (${win.why ?? "hardware work"}, ${win.from} to ${win.to}): taking no new jobs` : holding ? "runner-hold: taking no new jobs" : null);
   } catch (e) { log(`loop error: ${e.stack ?? e.message}`); }
   if ( ONCE ) break;
   await sleep((conf.pollSeconds ?? 30) * 1000);

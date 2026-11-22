@@ -259,3 +259,46 @@ export function learningFor(rec, kind, key, label = "") {
 
 /** The line for the spend's experience log entry. */
 export const logName = (p, src, done = false) => `${done ? "" : "Learning: "}${p.kind === "newDiscipline" || p.kind === "newAbility" || p.kind === "newPower" ? `${p.label} (new)` : `${p.label} ${p.current} → ${p.next}`}${src?.name ? `, ${done ? "learned " : ""}from ${src.kind === "practice" ? "practice" : src.name}` : ""}`;
+
+/* -------------------------------------------- */
+/*  A willing teacher (B7131)                    */
+/* -------------------------------------------- */
+
+/**
+ * B7131: a teacher has to be willing (house rule; V20 pdf 131 expects a mentor, not just someone with the dots). For an
+ * NPC teacher, WoDX NPC's attitude toward the student (-3 Hunted to +3 Honoured) and trust in them (-5 to +5) decide:
+ * Welcome or better, or trusting them (2 or more), teaches; Hostile or worse, or distrusting them (-2 or less),
+ * refuses; anything between asks a price, which goes to the Ledger as the student's debt (a boon between Kindred). A
+ * teacher whose town is not the student's needs a trip there first. A character a player runs always teaches (the
+ * players settle it between them), and the Storyteller can override any of it.
+ *   pc: the teacher has a player owner; attitude, trust: numbers or null (unknown counts as 0)
+ *   town, here: the teacher's town and the student's (names, "" when not known: then no trip is asked)
+ *   override: "teach", "price" or "refuse" set by the Storyteller, else ""
+ * Returns {will: "teach"|"price"|"refuse", trip (the town to travel to, or ""), why}.
+ */
+export const WILL = {teach: "Willing to teach", price: "Asks a price", refuse: "Refuses to teach"};
+export function willingness({pc = false, attitude = 0, trust = 0, town = "", here = "", override = "", name = "The teacher"} = {}) {
+  const trip = town && here && norm(town) !== norm(here) ? String(town) : "";
+  const tripWhy = trip ? `; lives in ${trip}, so a trip there comes first` : "";
+  if ( WILL[override] ) return {will: override, trip, why: `${WILL[override]} (the Storyteller's word)${tripWhy}`};
+  if ( pc ) return {will: "teach", trip, why: `A player's character: settle it between you${tripWhy}`};
+  const at = Math.round(Number(attitude) || 0), tr = Math.round(Number(trust) || 0);
+  if ( at <= -2 || tr <= -2 ) return {will: "refuse", trip, why: `${name} ${at <= -2 ? "is hostile to them" : "distrusts them"} and will not teach`};
+  if ( at >= 2 || tr >= 2 ) return {will: "teach", trip, why: `${name} ${at >= 2 ? "welcomes them" : "trusts them"} and teaches freely${tripWhy}`};
+  return {will: "price", trip, why: `${name} will teach for a price${tripWhy}`};
+}
+
+/**
+ * What a teacher who is neither friend nor foe asks, by the year and the teacher's kind (house figures). kindred: the
+ * teacher is a vampire teaching a vampire, which is a boon in every age. Returns {kind ("debt"|"boon"), size, what}.
+ */
+export function priceFor(year, {kindred = false, next = 1} = {}) {
+  if ( kindred ) return {kind: "boon", size: (Number(next) || 1) >= 4 ? "major" : "minor", what: "a boon owed for the teaching"};
+  const y = year === null || year === undefined || year === "" ? NaN : Number(year);
+  const what = !Number.isFinite(y) ? "a fee or a service in return"
+    : y < 1500 ? "a guild fee, or a season's service in the teacher's house"
+    : y < 1900 ? "a tutor's wage, or work done for the teacher"
+    : y < 2030 ? "tuition paid, or a favour done for the teacher"
+    : "a contract: hours of work, data or a favour owed";
+  return {kind: "debt", size: null, what};
+}

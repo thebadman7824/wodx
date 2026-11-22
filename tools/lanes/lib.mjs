@@ -27,7 +27,7 @@ const SKIP = new Set(["LOCK", "LOG", "LOG.old", ".DS_Store", "Thumbs.db"]);
 const LEVELDB = /^(CURRENT|MANIFEST-\d+|\d+\.(log|ldb|sst))$/;
 export const isPackDb = rel => /(^|\/)packs\//.test(rel) && LEVELDB.test(rel.split("/").pop());
 
-export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json")) {
+export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json"), {world = process.env.WODX_WORLD} = {}) {
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
@@ -42,8 +42,31 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
   for ( const k of ["foundryMain", "knownGood", "backups"] ) cfg[k] = expand(cfg[k]);
   for ( const lane of cfg.lanes ?? [] ) lane.dataPath = expand(lane.dataPath);
+  return selectWorld(cfg, world);
+}
+/**
+ * Chronicle Packs Desk c2/e2: a lane can also run another testbed world from lanes.json "worlds" (the clean world,
+ * wodx-clean: every WoDX module on except the chronicle modules). --world <key> (or WODX_WORLD) picks it; the default
+ * stays rothenstein-wodx. The other world has its own known-good copy (its "knownGood", else the default's folder plus
+ * "-<key>") and its own clean fingerprint (clean-<key>.json), so the two never mix.
+ */
+export function selectWorld(cfg, key) {
+  cfg.worldKey = "";
+  cfg.cleanName = "clean.json";
+  if ( !key || key === "default" || key === cfg.world ) return cfg;
+  const w = cfg.worlds?.[key];
+  if ( !w?.world ) throw new Error(`No world "${key}" in lanes.json (worlds: ${Object.keys(cfg.worlds ?? {}).join(", ") || "none"})`);
+  if ( /live/i.test(w.world) ) throw new Error(`World "${key}" points at a Live world (${w.world}); lanes never run Live.`);
+  cfg.defaultWorld = {world: cfg.world, knownGood: cfg.knownGood};
+  cfg.worldKey = key;
+  cfg.worldSpec = w;
+  cfg.world = w.world;
+  cfg.knownGood = w.knownGood ?? `${cfg.knownGood}-${key}`;
+  cfg.cleanName = `clean-${key}.json`;
   return cfg;
 }
+/** The lane's clean fingerprint file for the world cfg runs (clean.json for the default world). */
+export const cleanPath = (lane, cfg) => path.join(laneDir(lane), cfg?.cleanName ?? "clean.json");
 export function getLane(cfg, id) {
   const lane = cfg.lanes.find(l => String(l.id) === String(id));
   if ( !lane ) throw new Error(`No lane ${id} in lanes.json (lanes: ${cfg.lanes.map(l => l.id).join(", ")})`);
@@ -357,4 +380,155 @@ export function printDiffs(title, list) {
   console.log(`${title} (${list.length}):`);
   for ( const d of list.slice(0, 60) ) console.log(`  - ${d.where}: ${d.what}`);
   if ( list.length > 60 ) console.log(`  ... and ${list.length - 60} more (full list in the lane's drift file)`);
+}
+
+/**
+ * B7181 (Finish-Line Desk w3): document flags a gate changed. Gates share the testbed's actors and scenes, and flags a
+ * gate set on them (a haven, a domain, a learned tactic) used to stay for every later gate, so a gate could pass alone
+ * and fail late in a long run. before/after: {uuid: flags} read before and after the gate. Returns, for each document
+ * there both times whose flags differ, the keys to unset and the [scope, key, value] to set again.
+ */
+export function flagPlan(before, after) {
+  const out = [];
+  for ( const [uuid, was] of Object.entries(before ?? {}) ) {
+    const now = after?.[uuid];
+    if ( now === undefined || JSON.stringify(was) === JSON.stringify(now) ) continue;
+    const unset = [], set = [];
+    for ( const scope of new Set([...Object.keys(was ?? {}), ...Object.keys(now ?? {})]) ) {
+      const w = was?.[scope] ?? {}, n = now?.[scope] ?? {};
+      for ( const key of new Set([...Object.keys(w), ...Object.keys(n)]) ) {
+        if ( JSON.stringify(w[key]) === JSON.stringify(n[key]) ) continue;
+        if ( key in n ) unset.push([scope, key]);
+        if ( key in w ) set.push([scope, key, w[key]]);
+      }
+    }
+    if ( unset.length || set.length ) out.push({uuid, unset, set});
+  }
+  return out;
+}
+
+/** Runs in the page: every actor, scene, scene token, journal entry, item and user's flags, by uuid. */
+export const READ_FLAGS = () => {
+  const out = {};
+  for ( const c of ["actors", "scenes", "journal", "items", "users"] ) for ( const d of game[c] ?? [] ) {
+    out[d.uuid] = d._source?.flags ?? {};
+    if ( c === "scenes" ) for ( const t of d.tokens ?? [] ) out[t.uuid] = t._source?.flags ?? {};
+  }
+  return out;
+};
+
+/** Runs in the page: puts flags back by a flagPlan. A key that changed is unset first, so no merged leftovers stay. */
+export const PUT_FLAGS_BACK = async plan => {
+  let n = 0;
+  for ( const {uuid, unset, set} of plan ) {
+    const d = fromUuidSync(uuid);
+    if ( !d ) continue;
+    try {
+      for ( const [scope, key] of unset ) await d.unsetFlag(scope, key);
+      for ( const [scope, key, value] of set ) await d.setFlag(scope, key, value);
+      n++;
+    } catch (e) { /* a scope with no module behind it: leave it, the next reset takes it */ }
+  }
+  return n;
+};
+
+/**
+ * B7192 (Finish-Line Desk w3): sheet data a gate changed. Settings, flags and new world documents were put back after
+ * each gate, but a shared actor's own data was not: a frenzy, wounds, spent blood, an emptied clip, a status effect.
+ * In job 1914 gateadaptive found its tension already "frenzy" before it started, and gatearms found a clip empty.
+ * before/after: READ_SHEETS results. Returns, for each document there both times, what to put back:
+ * {uuid, system (the old system data, when it changed), dropEffects (ids added since), addEffects (sources removed
+ * since), dropItems (embedded items added since), dropKids ({type: ids} placed on a scene since, B7193)}.
+ */
+export function sheetPlan(before, after) {
+  const out = [], same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  for ( const [uuid, was] of Object.entries(before ?? {}) ) {
+    const now = after?.[uuid];
+    if ( now === undefined ) continue;
+    const row = {uuid};
+    if ( !same(was.system, now.system) ) row.system = was.system ?? {};
+    const we = was.effects ?? {}, ne = now.effects ?? {};
+    const drop = Object.keys(ne).filter(id => !(id in we)), add = Object.keys(we).filter(id => !(id in ne)).map(id => we[id]);
+    const changed = Object.keys(we).filter(id => id in ne && !same(we[id], ne[id])).map(id => we[id]);
+    if ( drop.length || changed.length ) row.dropEffects = [...drop, ...changed.map(e => e._id)];
+    if ( add.length || changed.length ) row.addEffects = [...add, ...changed];
+    const items = (now.items ?? []).filter(id => !(was.items ?? []).includes(id));
+    if ( items.length ) row.dropItems = items;
+    // B7193: things a gate placed on a scene that was there before it (a chapel region, a token, a wall)
+    const kids = {};
+    for ( const [type, ids] of Object.entries(now.kids ?? {}) ) {
+      const fresh = ids.filter(id => !(was.kids?.[type] ?? []).includes(id));
+      if ( fresh.length ) kids[type] = fresh;
+    }
+    if ( Object.keys(kids).length ) row.dropKids = kids;
+    if ( Object.keys(row).length > 1 ) out.push(row);
+  }
+  return out;
+}
+
+/** Runs in the page: each actor's and item's system data, each actor's effects (whole) and embedded item ids, and each
+ * scene's placed documents by type (B7193), by uuid. */
+export const READ_SHEETS = () => {
+  const out = {}, src = d => foundry.utils.deepClone(d._source ?? {});
+  for ( const a of game.actors ?? [] ) {
+    const s = src(a);
+    out[a.uuid] = {system: s.system ?? {}, effects: Object.fromEntries((s.effects ?? []).map(e => [e._id, e])), items: (s.items ?? []).map(i => i._id)};
+    for ( const i of a.items ?? [] ) out[i.uuid] = {system: src(i).system ?? {}};
+  }
+  for ( const i of game.items ?? [] ) out[i.uuid] = {system: src(i).system ?? {}};
+  for ( const sc of game.scenes ?? [] ) {
+    const kids = {};
+    for ( const [type, coll] of [["Token", "tokens"], ["Region", "regions"], ["Wall", "walls"], ["Tile", "tiles"], ["Drawing", "drawings"],
+      ["AmbientLight", "lights"], ["AmbientSound", "sounds"], ["Note", "notes"]] ) kids[type] = [...(sc[coll] ?? [])].map(d => d.id);
+    out[sc.uuid] = {kids};
+  }
+  return out;
+};
+
+/** Runs in the page: puts sheets back by a sheetPlan. System data is replaced whole, so no merged leftovers stay. */
+export const PUT_SHEETS_BACK = async plan => {
+  let n = 0;
+  for ( const {uuid, system, dropEffects, addEffects, dropItems, dropKids} of plan ) {
+    const d = fromUuidSync(uuid);
+    if ( !d ) continue;
+    try {
+      if ( dropItems?.length ) await d.deleteEmbeddedDocuments("Item", dropItems.filter(id => d.items?.has(id)));
+      for ( const [type, ids] of Object.entries(dropKids ?? {}) ) {
+        const coll = d.getEmbeddedCollection?.(type);
+        const here = ids.filter(id => coll?.has(id));
+        if ( here.length ) await d.deleteEmbeddedDocuments(type, here);
+      }
+      if ( dropEffects?.length ) await d.deleteEmbeddedDocuments("ActiveEffect", dropEffects.filter(id => d.effects?.has(id)));
+      if ( addEffects?.length ) await d.createEmbeddedDocuments("ActiveEffect", addEffects, {keepId: true});
+      if ( system ) await d.update({system}, {diff: false, recursive: false, wodxGateTidy: true});
+      n++;
+    } catch (e) { /* a document the gate's own code still holds: the next reset takes it */ }
+  }
+  return n;
+};
+
+/**
+ * B7230: what run-gate put back in the page itself after a gate (hooks and timers the gate's own code left, functions
+ * it swapped, a property laid over game.user), as the words on the gate's line. "" when nothing was left.
+ */
+export function pageNote(p) {
+  if ( !p ) return "";
+  const bits = [];
+  const hooks = [...new Set(p.hooks ?? [])];
+  if ( p.hooks?.length ) bits.push(`${p.hooks.length} hook(s) the gate left removed (${hooks.join(", ")})`);
+  if ( p.intervals ) bits.push(`${p.intervals} timer(s) the gate left stopped`);
+  if ( p.refs?.length ) bits.push(`${p.refs.join(", ")} put back`);
+  if ( p.user?.length ) bits.push(`game.user ${p.user.join(", ")} taken off`);
+  return bits.join(", ");
+}
+
+/**
+ * B7230: whether a stack trace (Error().stack, from inside run-gate's Hooks.on, Hooks.once or setInterval wrapper)
+ * was called by a gate file. Frames of the wrappers and of Foundry itself are passed over (Hooks.once calls Hooks.on),
+ * so a hook a module registers while a gate calls into it counts as the module's, and is left alone.
+ */
+export function gateCaller(stack) {
+  const frames = String(stack ?? "").split("\n").slice(1);
+  const caller = frames.find(l => /\bat\b/.test(l) && !/wodxGate(On|Once|Interval)|gateCaller|byGate|\/scripts\/foundry|\/foundry\.m?js/.test(l)) ?? "";
+  return caller.includes("/wodx-gate/");
 }

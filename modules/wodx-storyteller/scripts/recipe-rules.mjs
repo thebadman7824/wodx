@@ -1,15 +1,17 @@
 /**
- * WoDX Storyteller 0.61.0: the chronicle builder's rules (Rothenstein Rebuild Desk, B2780-B2785). Pure, so the harness
+ * WoDX Storyteller 0.61.0: the chronicle builder's rules (the rebuild desk, B2780-B2785). Pure, so the harness
  * can test them: checking a recipe, where the builder may work, which steps are ready, how each document of an old
  * world is sorted for the carry-over, and how anchors are found.
  *
  * builder.mjs runs the steps in Foundry; tools/gate/carryexport.mjs uses classify() to write the inventory.
  */
 
+import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+
 export const RECIPE_VERSION = 1;
 
-/** Worlds the builder never touches, forced or not. Live is locked (B2781). */
-export const FORBIDDEN_WORLDS = ["rothenstein-live"];
+/** Worlds the builder never touches, forced or not. Live is locked (B2781); B7564: the one shared Live list (WoDX Chronicle live-worlds.mjs). */
+export const FORBIDDEN_WORLDS = LIVE_WORLDS;
 
 /**
  * The builder's steps, in order. phase: the rebuild phase that brings the step (1 now; the rest come later).
@@ -29,7 +31,7 @@ export const STEPS = [
   {id: "trade", phase: 4, label: "Purses, markets, caravans, ventures and letters", undo: true, needs: {"wodx-storyteller": "0.61.0"}},
   {id: "spine", phase: 5, label: "Dated events, clocks and the Legends book", undo: true, needs: {"wodx-chronicle": "0.51.0"}},
   {id: "ages", phase: 5, label: "The town at every settlement age, with heirs", undo: true, needs: {}},
-  {id: "characters", phase: 6, label: "Rothenstein origins for the start hub and wizard", undo: true, needs: {"wodx-creation": "0.23.0"}},
+  {id: "characters", phase: 6, label: "The chronicle's origins for the start hub and wizard", undo: true, needs: {"wodx-creation": "0.23.0"}},
   {id: "run", phase: 7, label: "Play a week, then cross every age to 2030", undo: false, needs: {}}
 ];
 export const PHASE_NOW = 1;

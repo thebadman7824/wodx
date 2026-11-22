@@ -16,7 +16,7 @@ export function childeGeneration(sireGeneration) {
 
 const norm = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.vampire\./, "").replace(/[()]/g, " ").replace(/\s+/g, " ").trim();
 
-/** Find a clan by any name Rothenstein or upstream uses ("Old Clan Tzimisce", "wod.bio.vampire.gangrel"). */
+/** Find a clan by any name a chronicle's sheets or upstream use ("Old Clan Tzimisce", "wod.bio.vampire.gangrel"). */
 export function findClan(name) {
   const n = norm(name);
   if ( !n ) return null;

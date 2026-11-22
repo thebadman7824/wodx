@@ -189,17 +189,25 @@ export async function openSetup() {
       ${climates.length ? `<div class="form-group"><label>Climate</label><select name="climate" data-fixed><option value="auto"${curClimate === "auto" ? " selected" : ""}>Follow the region</option>${climates.map(([k, c]) => `<option value="${k}"${curClimate === k ? " selected" : ""}>${esc(c.label)}</option>`).join("")}</select></div>` : ""}
     </fieldset>
     <fieldset><legend>Lines at the table</legend>${searchBox(".wstory-lines", "Search lines…", "Search lines")}<div class="wstory-lines">${lineBoxes.replaceAll('<label class="wstory-check">', '<label class="wstory-check" data-search-item>')}</div></fieldset>
+    <fieldset><legend>Characters from an earlier chronicle</legend>
+      <div class="form-group"><label>Carry file</label><input type="text" name="carry" value="" placeholder="wodx-carry/…json"><button type="button" data-wstory-carry title="Pick the carry file"><i class="fa-solid fa-file-import"></i></button></div>
+      <p class="wodx-quiet">Optional. The file Carry to a new chronicle wrote in the old world. Its characters and items are made here, once, in the folder Carried across.</p>
+    </fieldset>
     ${isTemplate() && off.length ? `<p><b>Off in this world:</b> ${off.map(esc).join(", ")}. <button type="button" data-wstory-modules>Turn them on (Foundry reloads)</button></p>` : ""}
     <p class="wodx-quiet">House rules are in the Chronicle Clock's House rules window; the Chronicle Rules journal lists them for everyone.</p>`;
   const read = form => {
     const f = new foundry.applications.ux.FormDataExtended(form).object;
     return {name: f.name, year: f.year, month: f.month, day: f.day, hour: f.hour, setDate: !!f.setDate, region: f.region, homeland: f.homeland, latitude: f.latitude, climate: f.climate,
-      lines: Object.keys(S.LINES).filter(k => f[`line-${k}`])};
+      lines: Object.keys(S.LINES).filter(k => f[`line-${k}`]), carry: String(f.carry ?? "").trim()};
   };
   const result = await foundry.applications.api.DialogV2.wait({
     classes: ["wodx-dialog", "wstory-dialog", "wstory-setup"], window: {title: "Start a chronicle", icon: "fa-solid fa-book-open"}, position: {width: 620},
     content, rejectClose: false,
     render: (ev, dialog) => {
+      dialog.element.querySelector("[data-wstory-carry]")?.addEventListener("click", () => {
+        const input = dialog.element.querySelector("input[name=carry]");
+        new foundry.applications.apps.FilePicker.implementation({type: "any", current: "wodx-carry", callback: p => { input.value = p; }}).render(true);
+      });
       dialog.element.querySelector("[data-wstory-modules]")?.addEventListener("click", async () => {
         const turned = await enableModules();
         if ( turned.length ) { ui.notifications.info(`Turned on: ${turned.join(", ")}. Reloading.`); foundry.utils.debouncedReload?.() ?? window.location.reload(); }
@@ -224,6 +232,12 @@ export async function openSetup() {
   const r = await runSetup(result);
   if ( r?.error ) return openSetup();
   ui.notifications.info(`The chronicle is set up in ${r?.profile?.name ?? "its era"}.`);
+  // Chronicle Packs Desk c2: characters carried from an earlier chronicle
+  if ( result.carry ) {
+    const c = await (await import("./carry-app.mjs")).readCarry(result.carry);
+    if ( c.error ) ui.notifications.warn(`WoDX: ${c.error}`);
+    else if ( c.made.length ) ui.notifications.info(`Brought across: ${c.made.join(", ")}.`);
+  }
   findDoc(game.journal, "screen")?.sheet?.render(true);
   // Then the players' characters: Before the First Night (WoDX Creation 0.12.0), when it is on
   try { game.modules.get("wodx-creation")?.api?.firstNight?.(); } catch (e) { console.warn(`${MOD} | first night`, e); }

@@ -8,9 +8,11 @@
  *   the log      what the seat decided, kept from the player until asked for
  */
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 export const NAME = "The Lone Chronicle";
 /** Worlds the mode never acts in, whatever the setting says. */
-export const NEVER_WORLDS = ["rothenstein-live"];
+/** B7564: the one shared Live list (WoDX Chronicle live-worlds.mjs). */
+export const NEVER_WORLDS = LIVE_WORLDS;
 export const LOG_CAP = 600;
 
 /** What the one switch sets. A setting whose module is off or missing is skipped and named. */
@@ -123,6 +125,8 @@ export const PANEL = [
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
+  // B7160: a fault met in play, written down with the build, the scene and the recent errors
+  {id: "report", label: "Report a problem", icon: "fa-solid fa-bug"},
   // B5079: ask a companion to carry someone who is down
   {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"},
   // B6757: the chronicle's own options the lone player may turn on (OPTIONS)
@@ -420,13 +424,21 @@ export function arrivalName(v) {
   return s || DEFAULT_NAME;
 }
 
-/** Names that mark a Rothenstein scene the chronicle opens on (the recipe's market anchor first). */
-export const LANDING_NAMES = [/Market (Street|Square)/i, /^Rothenstein\b/i, /Lower Town/i, /Rothenstein/i];
+/**
+ * Names that mark the scene a chronicle opens on: a market first, then a scene named for the chronicle's town (the
+ * town in the manifest of the chronicle in play, B7565), then a lower town, then any scene that names the town.
+ * Shared code names no chronicle: with none in play only the market and the lower town count.
+ */
+export function landingNames(town = "") {
+  const t = String(town ?? "").trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return [/Market (Street|Square)/i, ...(t ? [new RegExp(`^${t}\\b`, "i")] : []), /Lower Town/i, ...(t ? [new RegExp(t, "i")] : [])];
+}
+export const LANDING_NAMES = landingNames();
 
 /**
  * The scene the lone player lands on. scenes: [{id, name, active, landing, img}], where landing is the scene's
  * wodx-solo.landing flag and img its background. chosen: the world setting's scene id. Order: the flagged scene, the
- * chosen one, a Rothenstein scene with a map (market first), the active scene, any scene with a map. Null when none
+ * chosen one, a scene of the chronicle's town with a map (market first), the active scene, any scene with a map. Null when none
  * fits; the seat then makes the plain night scene (LANDING_BLANK).
  */
 /** Foundry's own welcome scene, which a new world opens on; never a landing, and always given way to. */
@@ -449,13 +461,13 @@ export function ownsByName(ownership = {}, userId = "") {
   return Number(ownership?.[String(userId)]) >= 3;
 }
 
-export function pickLanding(scenes = [], chosen = "") {
+export function pickLanding(scenes = [], chosen = "", town = "") {
   const list = (scenes ?? []).filter(s => s?.id && !isCoreScene(s));
   const flagged = list.find(s => s.landing);
   if ( flagged ) return flagged.id;
   if ( chosen && list.some(s => s.id === chosen) ) return chosen;
   const mapped = list.filter(s => s.img);
-  for ( const re of LANDING_NAMES ) {
+  for ( const re of landingNames(town) ) {
     const hit = mapped.find(s => re.test(String(s.name ?? "")));
     if ( hit ) return hit.id;
   }
@@ -469,13 +481,17 @@ export function pickLanding(scenes = [], chosen = "") {
  * default out of doors, B6168), so the arrival is "at night" only when the clock says night (B6169).
  */
 export const LANDING_BLANK = {
-  name: "Rothenstein by night: the way in",
+  name: "By night: the way in",
   width: 3000, height: 2000, padding: 0.1, backgroundColor: "#0b0f1a",
   grid: {size: 100, type: 1},
   tokenVision: true,
   environment: {darknessLevel: 0.85, globalLight: {enabled: false}},
   initial: {x: 1500, y: 1000, scale: 1}
 };
+/** The plain night scene, named for the chronicle's town when one is in play (B7565). */
+export const landingBlank = (town = "") => ({...LANDING_BLANK, name: String(town ?? "").trim() ? `${String(town).trim()} by night: the way in` : LANDING_BLANK.name});
+/** The arrival window's title: the chronicle's town when one is in play (B7565). */
+export const arrivalTitle = (town = "") => (String(town ?? "").trim() ? `Who comes to ${String(town).trim()}?` : "Who comes in out of the night?");
 
 /**
  * What arrival does for a player. has: {character, token, onLanding, viewing}: the player has a character, it has a

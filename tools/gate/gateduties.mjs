@@ -56,7 +56,9 @@ export async function run() {
       const r = await npc().cults.serve(cult);
       G.ok("2. the faithful are named from the place", r.cult.named.some(m => m.id === m1.id) && r.cult.named.some(m => m.id === m2.id), {named: r.cult.named});
       const duty = m1.getFlag(MOD, "duties")?.["cult-gateDutiesCult"];
-      G.ok("2. a night of worship at the chapel", duty?.place === chapel.uuid && duty.days?.length === 1, {duty});
+      // B7323: which places the scene holds, in the order the cult reads them, when the worship lands elsewhere
+      G.ok("2. a night of worship at the chapel", duty?.place === chapel.uuid && duty.days?.length === 1,
+        {duty, chapel: chapel.uuid, regions: [...sc.regions].map(x => `${x.id} ${x.name} ${x.flags?.[MOD]?.place?.kind ?? "-"}`)});
       const herd = founder.items.find(i => i.type === "Feature" && i.name === "Herd");
       G.ok("2. the cult is Herd on the founder's sheet", (Number(herd?.system?.value) || 0) >= 1, {herd: herd?.system?.value, lines: r.lines});
       const ord = r.cult.named.find(m => m.rank === "ordained");
