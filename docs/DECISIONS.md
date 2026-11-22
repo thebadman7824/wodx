@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7630
+Next free block: B7650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -450,6 +450,7 @@ Next free block: B7630
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
+| B7630-B7649 | Dark Ages depth desk: Road data fix and sins from play (used B7630-B7635) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15137,3 +15138,33 @@ old train-state.json from 18 November points at #1848, which has since merged, a
 (B7400).
 
 Reverse: set `train` back to `false` in runner.json and to `true` in runner.benjamin-pc.json (B7500's setup).
+
+## B7630. The Path of the Devil and the Path of Screams (2026-11-22)
+WoDX Actions (data/roads-daw.json, kindred-rules.js pathNames and pathByName). V20 Dark Ages names the Road of Sin's Paths Pleasure, the Devil and Screams (pp. 135-136). WoDX had the Path of the Devil as the "Path of Rebellion" (the book heads its ethics and chart "Rebellion"), and the Path of Screams with no chart, beside a "Path of Damnation" that is the Path of Screams' own chart ("Additional Ethics of Damnation", p. 137). The Devil now has its book name, with "Path of Rebellion" kept as an alias; Screams has the Damnation chart, with "Path of Damnation" as an alias, and the separate Damnation entry is gone. A character whose Road flag or sheet names an old name still finds the Path. Desk item 1, picked by Ben 20 Nov 2026 ("Do it now").
+
+Reverse: restore the Path of Rebellion and Path of Damnation entries in roads-daw.json and drop the aliases.
+
+## B7631. A Path's own sins join its Road's chart (2026-11-22)
+WoDX Actions (kindred-rules.js hierarchyOf, roads-daw.json sinsAt). Nine Paths print only a few sins of their own in V20 Dark Ages: the Hunter, Journeys and Liberation (p. 119), Breath, Community and Illumination (pp. 123-125), Thorns, Veils and Making (p. 131). The book says a Path shares most of its Road's ethics (p. 114) and that a level may hold more than one sin, so WoDX adds the Path's sin to the Road's at that level ("the Path's sin; or the Road's sin") and leaves the other levels as the Road has them. The wording is WoDX's summary, not the book's. Logged in docs/PENDING-REVIEW.md: a Path's sin could instead replace the Road's at that level.
+
+Reverse: hierarchyOf returns the Road's sins for a Path without a full chart, as before.
+
+## B7632. A Path's own Virtues (2026-11-22)
+WoDX Actions (kindred-rules.js roadVirtues, kindred.js Road dialog). Three Paths give Virtues that differ from their Road's: the Path of Journeys, Conviction and Self-Control (p. 118, the Road of the Beast has Instinct); the Path of Chivalry, Conscience and Self-Control (p. 126, the Road of Kings has Conviction); the Path of the Devil, Conviction and Self-Control (p. 136, the Road of Sin has Instinct). Sin, frenzy and Rötschreck rolls and the Road dialog now use the Path's. Every other Path's Virtues match its Road in the book and are left unset.
+
+Reverse: remove the virtues fields from those three Paths in roads-daw.json.
+
+## B7633. Sins from play on every Dark Ages Road (2026-11-22)
+WoDX Actions (kindred-rules.js SIN_EVENTS, rollSinEvent, starvedTonight; kindred.js sinPrompt, hungryAtDawn, the Discipline window and the Prestation ledger; main.js the action window, feeding and hunting) and WoDX Creation (change-of-state.mjs embrace). A sin prompt used to fire on four things only (a killing, a vessel drained to death, frenzy and diablerie). Seven more events now go to the sin card, each at the level of the hierarchy line that names the act on that Road or Path (V20 Dark Ages pp. 115-140): a lie (the Credibility and Fast-Talk presets, or Manipulation + Subterfuge): the Path of Christ 8, the Prophet 8 (cheating), the Watchful Gods 9, Chivalry 9 (dishonour), Yasa 8; a theft that worked (lockpicking, sleight of hand, Dexterity + Larceny): Humanity 7, Community 4, Christ 9 (greed), Derech Chaim 7 (the community's laws), the Prophet 8, Chivalry 9, Daena 9 (the law); a boon refused in the Prestation ledger: Kings, Chivalry, Devaraja and Daena 2, the Prophet 7, the Eightfold Wheel 4, the Watchful Gods 7; drinking from a person without leave: the Path of Christ 6, with a "gave leave" box in the feeding windows of that Path only; a night gone hungry, asked at dawn: the Beast 1, Metamorphosis 6, Sin, Pleasure and the Devil 3, Screams 7; Dominate or Presence that worked on a mortal: the Path of Breath 10. A Road with no line for an act asks nothing. The card names the line and offers the Degeneration roll; it never rolls by itself. Desk item 2, picked by Ben 20 Nov 2026 ("All Roads").
+
+Reverse: drop the new keys from SIN_EVENTS; the call sites then find no level and ask nothing.
+
+## B7634. The Embrace counts as the killing (2026-11-22)
+WoDX Actions (kindred-rules.js sinForEvent) and WoDX Creation. No Dark Ages hierarchy names the Embrace itself, and the mortal dies of it, so where a Road has no "embrace" row the killing's level counts (a vessel drained to death, else a killing): Humanity 3, the Path of Christ 4, Kings 6. A Road that counts no killing (the Beast) asks nothing. House reading, logged in docs/PENDING-REVIEW.md.
+
+Reverse: remove the embrace line from sinForEvent.
+
+## B7635. When a night counts as gone hungry (2026-11-22)
+WoDX Actions (kindred-rules.js starvedTonight, main.js feedResolve). At dawn a vampire counts as starving when the blood stands under the hunger line (7 minus Self-Control, or Instinct on an Instinct Road, V20 Dark Ages p. 357) and the last drink was more than 16 hours ago (the longest Moravian winter night). Feeding now keeps the time of the last drink on the character (flag lastFed). House reading, logged in docs/PENDING-REVIEW.md.
+
+Reverse: drop the starve call from dawn.
