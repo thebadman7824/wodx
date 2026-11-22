@@ -4743,16 +4743,6 @@
  {
   "target": "wodx-storyteller",
   "path": [
-   "herds",
-   "feed"
-  ],
-  "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:674"
-  ]
- },
- {
-  "target": "wodx-storyteller",
-  "path": [
    "hunters"
   ],
   "uses": [
@@ -5310,6 +5300,17 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/kindred.js:510"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "herds",
+   "feed"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:674"
   ]
  },
  {

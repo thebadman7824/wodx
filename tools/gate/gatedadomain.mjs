@@ -40,6 +40,8 @@ export async function run() {
     try { keep.approvals = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals")); } catch (e) { keep.approvals = undefined; }
     try { if ( game.settings.get("wodx-actions", "historyLog") !== true ) await game.settings.set("wodx-actions", "historyLog", true); } catch (e) { /* absent */ }
     await game.settings.set(MOD, "factionMode", "auto");
+    // herd pools on for the run (allowed 22 Nov 2026 to test the merges fully), put back after
+    try { keep.herd = game.settings.get("wodx-storyteller", "herdPools"); if ( keep.herd !== true ) await game.settings.set("wodx-storyteller", "herdPools", true); } catch (e) { keep.herd = undefined; }
     const market = await G.make(Scene, {name: "Gate DA Domain Market Square", width: 1000, height: 1000, grid: {size: 100, type: 1}});
     const vamp = (name, extra = {}) => ({name, type: "Vampire", system: {advantages: {bloodpool: {temporary: 3, max: 10}}, ...extra}});
     const [holder, poacher] = await G.make(Actor, [
@@ -68,10 +70,10 @@ export async function run() {
       cardEl = el;
       const signs = (card?.content ?? "").match(/<li>/g)?.length ?? 0;
       const btn = el?.querySelector?.(`button.wnpc-f-track[data-actor="${holder.id}"]`);
-      const herdOn = game.modules.get("wodx-storyteller")?.api?.herds?.on?.() ?? false;
+      const herdApi = !!game.modules.get("wodx-storyteller")?.api?.upkeep?.herds, herdOn = game.modules.get("wodx-storyteller")?.api?.upkeep?.herds?.on?.() ?? false;
       const fed = herdOn ? await waitFor(() => herdFeeds() > feeds0, 6000) : true;
       G.ok("2. the meal leaves signs in the domain, with a Track button for the holder", !!card && signs === 3 && /pale and faint/.test(card.content) && !!btn
-        && card.flags[MOD].poach.diff === 4 && fed, {card: !!card, signs, button: !!btn, diff: card?.flags?.[MOD]?.poach?.diff, law: card?.flags?.[MOD]?.poach?.law, herdOn, herd: [feeds0, herdFeeds()],
+        && card.flags[MOD].poach.diff === 4 && herdOn && fed, {card: !!card, signs, button: !!btn, diff: card?.flags?.[MOD]?.poach?.diff, law: card?.flags?.[MOD]?.poach?.law, herdApi, storyteller: !!game.modules.get("wodx-storyteller")?.active, herdOn, herd: [feeds0, herdFeeds()],
         whisper: card?.whisper?.length ?? 0, inLog: !!msgEl(card?.id)});
     });
 
@@ -108,6 +110,7 @@ export async function run() {
   } catch (e) { G.ok("no error", false, {error: e.message}); }
   finally {
     try { if ( keep.factions !== undefined ) await game.settings.set(MOD, "factions", keep.factions); } catch (e) { G.ok("put back the factions", false, {error: e.message}); }
+    try { if ( keep.herd !== undefined && keep.herd !== true ) await game.settings.set("wodx-storyteller", "herdPools", keep.herd); } catch (e) { /* ignore */ }
     try { if ( keep.mode !== undefined ) await game.settings.set(MOD, "factionMode", keep.mode); } catch (e) { /* ignore */ }
     try { if ( keep.approvals !== undefined ) await game.settings.set("wodx-chronicle", "approvals", keep.approvals); } catch (e) { /* ignore */ }
   }
