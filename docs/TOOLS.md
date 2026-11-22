@@ -2,7 +2,8 @@
 
 Every thread reads this file and [ROUTING.md](ROUTING.md) before it starts work (B7004). Threads that don't know
 what each PC has end up doing the work themselves, which costs tokens and time. This file lists what each machine
-has and how a thread reaches it. ROUTING.md says where each kind of work goes.
+has and how a thread reaches it. ROUTING.md says where each kind of work goes, and [PRIORITIES.md](PRIORITIES.md) says what goes first when work
+shares a PC, a lane, a graphics card or the merge train.
 
 A thread never asks for device, folder or screen access itself. It reaches the PCs through the PC job queue
 (GitHub issues, below), the PC helper threads, which the coordinator names in each new
@@ -56,11 +57,13 @@ Ryzen 7 3800X, 16 GB, RTX 2080 Super (8 GB).
 
 ## Laptop (DESKTOP-S6NV3Q9)
 
-Weak i5, no graphics card.
+Intel i5-8210Y (2 cores, 4 threads, 1.6 GHz, fanless), 15.9 GB of memory, Intel UHD 617 graphics with no separate
+card, 512 GB SSD (measured 18 November 2026). Too slow for local models or long gate runs.
 
 | Tool | Good for |
 |---|---|
 | Testbed lane 7 (port 30070) | Short gate lists: `--lane 7`. It also watches Live and the main runner and opens an alert when either goes quiet |
+| PC watcher (`tools/pcq/watcher.mjs`, B7290) | Checks every 5 minutes that all the PCs, runners, jobs and the merge train are moving; writes the issue "PC watcher report" and one "PC watcher alert". It only looks and reports ([tools/pcq/README.md](../tools/pcq/README.md)) |
 | uv (Python) | Light Python tools |
 
 ## The cloud container (every thread)

@@ -14,6 +14,7 @@
  *  10. clean up: scene, actors, messages, our queue entries
  * Result: Data/wodx-gate/gateupkeep-result.json.
  */
+import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const STEPS = 10;
 const DAY = 86400;
@@ -27,7 +28,10 @@ async function save(R) {
 }
 const atLeast = (id, v) => { const m = game.modules.get(id); return !!m?.active && !foundry.utils.isNewerVersion(v, m.version); };
 
-export async function run() {
+// B6994 (#1824): the gate starts from Hands on, since new worlds start at Balanced (tools/gate/kit.mjs)
+export async function run() { const back = await handsOnStart(); try { return await body(); } finally { await back(); } }
+
+async function body() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
@@ -76,7 +80,11 @@ export async function run() {
     scene = await Scene.create({name: "WoDX gate: alley", width: 1000, height: 1000, flags: {"wodx-storyteller": {hunt: {area: "slums", heat: 0, since: t}}}});
     for ( let i = 0; i < 3; i++ ) await T.upkeep.addHeat(scene, "botch");
     const h = T.upkeep.huntHere(scene);
-    ok("7. heat and ground", h.area === "slums" && h.heat === 6 && h.band.name === "Watched" && h.extra === 2, {here: {area: h.area, heat: h.heat, band: h.band.name, extra: h.extra, herd: h.herd ?? null}});
+    // B7211: the region's hunters add their stage's difficulty on top, capped at 3 (hunters.mjs rulesHuntExtra); the
+    // testbed region can be watched (job 1926: extra 3 where the heat alone gives 2)
+    const hunted = Number(T.hunters?.stageDiff?.(scene)) || 0;
+    ok("7. heat and ground", h.area === "slums" && h.heat === 6 && h.band.name === "Watched" && h.extra === Math.min(3, 2 + hunted),
+      {here: {area: h.area, heat: h.heat, band: h.band.name, extra: h.extra, herd: h.herd ?? null}, hunted});
 
     await T.upkeep.addHeat(scene, "botch");
     await sleep(300);

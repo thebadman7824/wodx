@@ -58,6 +58,27 @@ export function oracleAnswer(oddsKey, face) {
   return d === o.at - 1 ? "noBut" : "no";
 }
 
+/**
+ * B7132: the night's temper moves the odds one step (after Mythic's Chaos Factor; a house rule). The player says what a
+ * yes would mean for the character. Under pressure a yes that is bad news, or neither, is a step likelier and a yes
+ * that is good news a step less likely; on a rest it goes the other way; a steady night leaves the odds alone. The
+ * odds stop at Almost certain and Hardly. -> {odds, from, step (-1 likelier, 0, +1 less likely), why}
+ */
+export const TONES = {neither: "Neither good nor bad for them", bad: "Bad news for them", good: "Good news for them"};
+export const TEMPER_WORDS = {rest: "a quiet night", steady: "a steady night", pressure: "a night under pressure"};
+export function shiftOdds(oddsKey, temper = "steady", tone = "neither") {
+  const from = ODDS[oddsKey] ? oddsKey : "even";
+  const t = TONES[tone] ? tone : "neither";
+  const lean = temper === "pressure" ? -1 : temper === "rest" ? 1 : 0;
+  const step = t === "good" ? -lean : lean;
+  const i = Math.max(0, Math.min(ODDS_ORDER.length - 1, ODDS_ORDER.indexOf(from) + step));
+  const odds = ODDS_ORDER[i];
+  const why = odds === from ? "" : `${TEMPER_WORDS[temper] ?? "tonight"}: ${ODDS[from].label} becomes ${ODDS[odds].label}`;
+  return {odds, from, step: odds === from ? 0 : step, why: why ? why[0].toUpperCase() + why.slice(1) : ""};
+}
+/** B7132: a 10 or a 1 at any odds turns the night: the seat draws a Threads of Fate storyline for the Storyteller. */
+export const turnsTheNight = face => [1, 10].includes(Math.round(Number(face) || 0));
+
 /** A question as the oracle keeps it: trimmed, at most 200 characters; null when there is none. */
 export function cleanQuestion(q) {
   const s = String(q ?? "").replace(/\s+/g, " ").trim().slice(0, 200);

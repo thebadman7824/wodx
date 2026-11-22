@@ -7,6 +7,7 @@
  *
  *   node tools/pcq/submit.mjs gates gateplains gatelifepath [--lanes 2] [--ref claude/x] [--prio 1] [--thread cmsg_..] [--no-reset]
  *   node tools/pcq/submit.mjs gates --touched [--lanes 3] ...     the gates the branch's changes need
+ *   node tools/pcq/submit.mjs gates gateplains --ref claude/x --branch-tools --prio 1   lane test of the branch's own gate tools (B7220)
  *   node tools/pcq/submit.mjs gate-two gatelookhand
  *   node tools/pcq/submit.mjs deploy [--lanes 5]
  *   node tools/pcq/submit.mjs reset --lane 4
@@ -59,15 +60,15 @@ export async function preflight(job, gatesDir = GATES) {
 
 if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url) ) {
   const args = process.argv.slice(2), kind = args[0];
-  const valued = new Set(["lanes", "lane", "ref", "prio", "thread", "after", "book", "under"]);
+  const valued = new Set(["lanes", "lane", "ref", "prio", "thread", "after", "book", "under", "since", "class", "world"]);
   const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : undefined; };
   const pos = args.slice(1).filter((a, i, all) => !a.startsWith("--") && !(i > 0 && all[i - 1].startsWith("--") && valued.has(all[i - 1].slice(2))));
   const num = k => opt(k) === undefined ? undefined : Number(opt(k));
-  const raw = {kind, ref: opt("ref"), prio: num("prio"), thread: opt("thread"), after: num("after"), lane: num("lane"), lanes: num("lanes")};
-  if ( kind === "gates" ) Object.assign(raw, {gates: pos, touched: args.includes("--touched") || undefined, all: args.includes("--all") || undefined, reset: args.includes("--no-reset") ? false : undefined});
+  const raw = {kind, ref: opt("ref"), prio: num("prio"), thread: opt("thread"), after: num("after"), lane: num("lane"), lanes: num("lanes"), class: opt("class") ?? undefined};
+  if ( kind === "gates" ) Object.assign(raw, {world: opt("world"), cleanSet: args.includes("--clean-set") || undefined, gates: pos, touched: args.includes("--touched") || undefined, since: opt("since"), all: args.includes("--all") || undefined, branchTools: args.includes("--branch-tools") || undefined, reset: args.includes("--no-reset") ? false : undefined});
   if ( kind === "gate-two" ) raw.gate = pos[0];
   if ( kind === "books-find" ) Object.assign(raw, {terms: pos, book: opt("book")});
-  if ( kind === "setup-lane" && args.includes("--again") ) raw.again = true;
+  if ( (kind === "setup-lane" || kind === "setup-clean") && args.includes("--again") ) raw.again = true;
   if ( kind === "trove-find" ) Object.assign(raw, {pattern: pos[0], under: opt("under")});
   for ( const k of Object.keys(raw) ) if ( raw[k] === undefined ) delete raw[k];
   const v = validate(raw, runnerLanes);

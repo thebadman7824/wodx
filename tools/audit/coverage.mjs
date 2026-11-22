@@ -4,6 +4,7 @@
  * when this passes.
  *   node tools/audit/coverage.mjs <audit dir> [--list] [--all]
  *   --all: every file git tracks, not only scripts (B6903)
+ * Shelved modules (tools/lanes/gate-map-extra.json "shelved", B7134) are out of scope either way.
  * Reads every items.jsonl under the audit dir. A file counts as covered when an item names it in `file`, or in `where`
  * as "path" or "path:line". It is open when no item names it, or when every item naming it is not-checked.
  * Exit 1 with the open files listed; exit 0 when every file has a verdict.
@@ -17,9 +18,15 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 /** The script files an audit must cover: every module script and the system's own code. */
 export const SCOPE = ["modules/*/scripts/**", "system/worldofdarkness/module/**"];
 
+/** B7134: the shelved modules' folders (tools/lanes/gate-map-extra.json "shelved"), which an audit leaves out. */
+export function shelvedDirs(root = ROOT) {
+  try { return (JSON.parse(fs.readFileSync(path.join(root, "tools/lanes/gate-map-extra.json"), "utf8")).shelved ?? []).map(id => `modules/${id}/`); }
+  catch (e) { return []; }
+}
 export function scriptFiles(root = ROOT, all = false) {
   const out = execFileSync("git", ["ls-files", ...(all ? [] : ["--", ...SCOPE])], {cwd: root, encoding: "utf8"});
-  return out.split("\n").filter(f => f && (all || /\.(m?js)$/.test(f))).sort();
+  const shelf = shelvedDirs(root);
+  return out.split("\n").filter(f => f && (all || /\.(m?js)$/.test(f)) && !shelf.some(d => f.startsWith(d))).sort();
 }
 const pathOf = s => String(s ?? "").trim().replace(/:\d+(-\d+)?$/, "").replace(/\\/g, "/");
 

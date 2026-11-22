@@ -24,6 +24,7 @@ import * as SR from "./signals-rules.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {getLinesVeils} from "../../wodx-chronicle/scripts/journals.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 const TYPE = `${MOD}.threads`;
 const FOLDER = "Threads of Fate";
@@ -40,9 +41,14 @@ const cardOf = key => DECK.find(c => c.key === key) ?? null;
  */
 let DECK = [], deckLoading = null;
 export function loadDeck() {
-  deckLoading ??= import("../data/threads-cards.mjs").then(m => (DECK = m.CARDS.map(T.normCard).filter(Boolean))).catch(err => { deckLoading = null; throw err; });
+  // The shared deck, plus the cards of the chronicle in play (a chronicle module's pack.cards loads them; B7494)
+  deckLoading ??= Promise.all([import("../data/threads-cards.mjs"), Promise.resolve(chronicleInPlay()?.cards?.()).then(c => c ?? [])])
+    .then(([m, own]) => (DECK = [...m.CARDS, ...own].map(T.normCard).filter(Boolean))).catch(err => { deckLoading = null; throw err; });
   return deckLoading;
 }
+
+/** The chronicle in play changed (Chronicle Packs Desk c1): the deck loads again with the new chronicle's cards, or none. */
+export function forgetDeck() { DECK = []; deckLoading = null; }
 
 export function registerThreadSettings() {
   game.settings.register(MOD, "threads", {name: "Threads of Fate (storylines woven from what happens)", hint: "Off, Suggest (each storyline asks the Storyteller first) or Open by itself (it opens and the Storyteller is told). Woven once a week, when a session ends, and at once for great events.",
@@ -207,7 +213,7 @@ export function nightBeat(rand = Math.random) {
   let first = true;
   const b = T.nightBeat(state(), () => (first ? ((first = false), r) : rand()));
   if ( b ) return b;
-  // No storyline open: the running step of a Rothenstein saga book (WoDX Chronicle), if one runs
+  // No storyline open: the running step of a chronicle's saga book (WoDX Chronicle), if one runs
   try {
     const c = chron()?.pod?.saga?.current?.();
     if ( c?.step ) return {key: `saga:${c.book}`, title: c.title ?? "", step: {key: c.step.key ?? "", title: c.step.title ?? "", text: c.step.text ?? ""}};

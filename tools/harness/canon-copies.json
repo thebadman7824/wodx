@@ -1,12 +1,12 @@
 {
  "modules/wodx-chronicle/data/eras.json|convention-of-thorns": 1,
  "modules/wodx-chronicle/data/pod.mjs|black-death": 1,
- "modules/wodx-chronicle/data/saga-rothenstein.mjs|black-death": 1,
  "modules/wodx-creation/data/advance.mjs|black-death": 1,
  "modules/wodx-creation/data/lifepaths-turnings.mjs|anarch-revolt": 1,
  "modules/wodx-creation/data/lifepaths-turnings.mjs|convention-of-thorns": 1,
  "modules/wodx-npc/scripts/kin-rules.mjs|black-death": 1,
  "modules/wodx-npc/scripts/politics-rules.mjs|anarch-revolt": 2,
+ "modules/wodx-rothenstein/data/saga.mjs|black-death": 1,
  "modules/wodx-storyteller/scripts/town-rules.mjs|black-death": 1,
  "modules/wodx-storyteller/scripts/upkeep-rules.mjs|black-death": 1
 }

@@ -70,5 +70,5 @@ export const JUDGED_FAVOURS = [{judgement: "reinhold", choice: "truth", who: "Re
 /** The three murders (pick x5): after the third, the Lower Town turns cold toward the company. */
 export const MURDERS = ["Havel", "Old Vlasta", "Ctibor's clerk"];
 /** How the Lower Town shows it: shutters closed on its maps, and each of its people one step cooler. */
-export const COLD = {scenes: "Lower Town", talk: "In the Lower Town doors shut when the newcomers pass, and nobody sells them bread.",
+export const COLD = {scenes: "Lower Town", place: "the Lower Town", talk: "In the Lower Town doors shut when the newcomers pass, and nobody sells them bread.",
   looks: [{kind: "calm", spots: 6, r: 0.02, text: "▮", color: "#2e2a26"}], delta: -1};

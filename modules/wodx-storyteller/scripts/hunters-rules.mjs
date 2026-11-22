@@ -161,7 +161,25 @@ export function normState(s = {}) {
   const regions = {};
   for ( const [k, v] of Object.entries(x.regions ?? {}) ) if ( k ) regions[String(k).slice(0, 60)] = normRegion(v);
   const trail = (Array.isArray(x.trail) ? x.trail : []).map(t => ({file: normFile(t?.file), to: str(t?.to, 60), from: str(t?.from, 60), at: num(t?.at)})).filter(t => t.to && t.file.id).slice(-60);
-  return {regions, lastTurn: x.lastTurn === null || x.lastTurn === undefined ? null : num(x.lastTurn), trail};
+  // B7616: the chronicles whose hunters' start has been laid down in this world, so it is done once
+  const started = [...new Set((Array.isArray(x.started) ? x.started : []).map(v => str(v, 60)).filter(Boolean))].slice(-20);
+  return {regions, lastTurn: x.lastTurn === null || x.lastTurn === undefined ? null : num(x.lastTurn), trail, started};
+}
+
+/**
+ * A chronicle's hunters' start (B7616): start {region, stage} (WoDX Chronicle chronicle-local-rules hunterStart).
+ * The region starts at the stage's least pressure, as if the talk began now, and then cools and grows as any other.
+ * Done once a chronicle; a region that already has a record keeps it. Returns {state, region, stage} or null.
+ */
+export function applyStart(s0, chronicleId, start, now = 0) {
+  const s = normState(s0), id = str(chronicleId, 60);
+  if ( !id || !start?.region || s.started.includes(id) ) return null;
+  const stage = STAGES.find(x => x.key === start.stage);
+  s.started = [...s.started, id];
+  if ( !stage || s.regions[start.region] ) return {state: s, region: null, stage: null};
+  s.regions[start.region] = normRegion({pressure: stage.min, stage: stage.key, since: num(now), last: num(now),
+    log: [{at: num(now), text: `The chronicle opens with the hunters at ${stage.name}.`}]});
+  return {state: s, region: start.region, stage};
 }
 
 const note = (r, at, text) => ({...r, log: [...r.log, {at, text}].slice(-KEEP_LOG)});

@@ -61,6 +61,12 @@ async function uFor(face) {
   throw new Error(`no value gives a ${face}`);
 }
 
+/** B7311: the first frames of a stack that are not Foundry's own or this helper's, short (module and file:line). */
+function callers(stack, n = 3) {
+  return String(stack ?? "").split("\n").slice(1).filter(l => /\bat\b/.test(l) && !/\/scripts\/foundry|\/foundry\.m?js|callers|\bwho\b|onPre|onHold/.test(l))
+    .slice(0, n).map(l => l.trim().replace(/^at\s+/, "").replace(/\(?https?:\/\/[^/]+\//, "(").replace(/\?[^:)]*/, "")).join(" < ");
+}
+
 /** Answer the next Actions window: fill the fields, press OK. */
 function answer(vals = {}) {
   return new Promise(resolve => {
@@ -235,27 +241,48 @@ export async function run() {
 
     await G.step("6. a frenzy check in a fight is held turn by turn", async () => {
       await fixDice(10); // every die a 10: Self-Control 2 gives 2 successes a roll
-      const [fight] = await G.make(Combat, [{scene: scene.id}]);
-      await fight.createEmbeddedDocuments("Combatant", [{tokenId: tBeast.id, sceneId: scene.id, actorId: beast.id, initiative: 20},
-        {tokenId: tOther.id, sceneId: scene.id, actorId: other.id, initiative: 5}]);
-      await fight.startCombat();
-      const onBeast = () => fight.combatant?.actorId === beast.id;
-      const toTurn = async want => { for ( let i = 0; i < 4 && onBeast() !== want; i++ ) { await fight.nextTurn(); await wait(400); } };
-      await toTurn(false);
-      const since = Date.now(), re = /Frenzy check|Instinct check/;
-      await beast.update({"system.health.damage.lethal": 4});
-      await waitFor(() => cardsOf(since, beast, re).length >= 1, 10000);
-      await wait(1500);
-      const first = {cards: cardsOf(since, beast, re).length, total: num(beast.getFlag(MOD, "beastHold")?.d?.total), left: num(beast.getFlag(MOD, "beastHold")?.left)};
-      await toTurn(true); await wait(800);
-      const held = {cards: cardsOf(since, beast, re).length, left: num(beast.getFlag(MOD, "beastHold")?.left)};
-      await toTurn(false); await toTurn(true);
-      await waitFor(() => cardsOf(since, beast, re).length >= 2, 8000);
-      await wait(500);
-      const second = {cards: cardsOf(since, beast, re).length, total: num(beast.getFlag(MOD, "beastHold")?.d?.total)};
-      G.ok("6. a frenzy check in a fight is held turn by turn", first.cards === 1 && first.total === 2 && first.left === 2 && held.cards === 1 && held.left === 1
-        && second.cards === 2 && second.total === 4 && !beast.system?.conditions?.isfrenzy, {first, held, second});
-      CONFIG.Dice.randomUniform = dice;
+      // B7311: this step moves the turns by hand and counts the Beast's turns, so nothing else may move them or act in
+      // the fight: the turn conductor is off and WoDX NPC is off on this scene (the other fighter is an NPC, and a world
+      // at Balanced runs NPC turns by itself). Every turn move and every change to the hold is logged with who made it,
+      // so a failure names what moved the fight.
+      const was = {conductor: (() => { try { return game.settings.get("wodx-combat", "turnConductor"); } catch (e) { return undefined; } })(),
+        npc: scene.getFlag("wodx-npc", "mode") ?? null};
+      if ( was.conductor !== undefined && was.conductor !== "off" ) await game.settings.set("wodx-combat", "turnConductor", "off");
+      if ( game.modules.get("wodx-npc")?.active ) await scene.setFlag("wodx-npc", "mode", "off");
+      const log = [], t6 = Date.now(), who = () => callers(new Error().stack);
+      const onPre = (c, ch) => { if ( "turn" in (ch ?? {}) || "round" in (ch ?? {}) ) log.push({ms: Date.now() - t6, pre: `${c.round}.${c.turn} to ${ch.round ?? c.round}.${ch.turn ?? c.turn}`, by: who()}); };
+      const onTurn = (c, ch) => { if ( "turn" in (ch ?? {}) || "round" in (ch ?? {}) ) log.push({ms: Date.now() - t6, turn: `${c.round}.${c.turn}`, on: c.combatant?.name ?? null, same: c.id === fight?.id}); };
+      const onHold = (a, ch) => { if ( a.id === beast.id && foundry.utils.hasProperty(ch ?? {}, `flags.${MOD}`) && JSON.stringify(ch.flags[MOD]).includes("beastHold") )
+        log.push({ms: Date.now() - t6, hold: a.getFlag(MOD, "beastHold")?.left ?? null, by: who()}); };
+      const hooks = [["preUpdateCombat", Hooks.on("preUpdateCombat", onPre)], ["updateCombat", Hooks.on("updateCombat", onTurn)], ["updateActor", Hooks.on("updateActor", onHold)]];
+      let fight;
+      try {
+        [fight] = await G.make(Combat, [{scene: scene.id}]);
+        await fight.createEmbeddedDocuments("Combatant", [{tokenId: tBeast.id, sceneId: scene.id, actorId: beast.id, initiative: 20},
+          {tokenId: tOther.id, sceneId: scene.id, actorId: other.id, initiative: 5}]);
+        await fight.startCombat();
+        const onBeast = () => fight.combatant?.actorId === beast.id;
+        const toTurn = async want => { for ( let i = 0; i < 4 && onBeast() !== want; i++ ) { await fight.nextTurn(); await wait(400); } };
+        await toTurn(false);
+        const since = Date.now(), re = /Frenzy check|Instinct check/;
+        await beast.update({"system.health.damage.lethal": 4});
+        await waitFor(() => cardsOf(since, beast, re).length >= 1, 10000);
+        await wait(1500);
+        const first = {cards: cardsOf(since, beast, re).length, total: num(beast.getFlag(MOD, "beastHold")?.d?.total), left: num(beast.getFlag(MOD, "beastHold")?.left)};
+        await toTurn(true); await wait(800);
+        const held = {cards: cardsOf(since, beast, re).length, left: num(beast.getFlag(MOD, "beastHold")?.left)};
+        await toTurn(false); await toTurn(true);
+        await waitFor(() => cardsOf(since, beast, re).length >= 2, 8000);
+        await wait(500);
+        const second = {cards: cardsOf(since, beast, re).length, total: num(beast.getFlag(MOD, "beastHold")?.d?.total)};
+        G.ok("6. a frenzy check in a fight is held turn by turn", first.cards === 1 && first.total === 2 && first.left === 2 && held.cards === 1 && held.left === 1
+          && second.cards === 2 && second.total === 4 && !beast.system?.conditions?.isfrenzy, {first, held, second, was, log: log.slice(0, 30)});
+      } finally {
+        for ( const [h, id] of hooks ) Hooks.off(h, id);
+        CONFIG.Dice.randomUniform = dice;
+        if ( was.conductor !== undefined && was.conductor !== "off" ) await game.settings.set("wodx-combat", "turnConductor", was.conductor);
+        if ( game.modules.get("wodx-npc")?.active ) { if ( was.npc === null ) await scene.unsetFlag("wodx-npc", "mode"); else await scene.setFlag("wodx-npc", "mode", was.npc); }
+      }
     });
 
     await G.step("7. the voice's before level rides in the update", async () => {

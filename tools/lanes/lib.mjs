@@ -27,7 +27,7 @@ const SKIP = new Set(["LOCK", "LOG", "LOG.old", ".DS_Store", "Thumbs.db"]);
 const LEVELDB = /^(CURRENT|MANIFEST-\d+|\d+\.(log|ldb|sst))$/;
 export const isPackDb = rel => /(^|\/)packs\//.test(rel) && LEVELDB.test(rel.split("/").pop());
 
-export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json")) {
+export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json"), {world = process.env.WODX_WORLD} = {}) {
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
@@ -42,8 +42,31 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
   for ( const k of ["foundryMain", "knownGood", "backups"] ) cfg[k] = expand(cfg[k]);
   for ( const lane of cfg.lanes ?? [] ) lane.dataPath = expand(lane.dataPath);
+  return selectWorld(cfg, world);
+}
+/**
+ * Chronicle Packs Desk c2/e2: a lane can also run another testbed world from lanes.json "worlds" (the clean world,
+ * wodx-clean: every WoDX module on except the chronicle modules). --world <key> (or WODX_WORLD) picks it; the default
+ * stays rothenstein-wodx. The other world has its own known-good copy (its "knownGood", else the default's folder plus
+ * "-<key>") and its own clean fingerprint (clean-<key>.json), so the two never mix.
+ */
+export function selectWorld(cfg, key) {
+  cfg.worldKey = "";
+  cfg.cleanName = "clean.json";
+  if ( !key || key === "default" || key === cfg.world ) return cfg;
+  const w = cfg.worlds?.[key];
+  if ( !w?.world ) throw new Error(`No world "${key}" in lanes.json (worlds: ${Object.keys(cfg.worlds ?? {}).join(", ") || "none"})`);
+  if ( /live/i.test(w.world) ) throw new Error(`World "${key}" points at a Live world (${w.world}); lanes never run Live.`);
+  cfg.defaultWorld = {world: cfg.world, knownGood: cfg.knownGood};
+  cfg.worldKey = key;
+  cfg.worldSpec = w;
+  cfg.world = w.world;
+  cfg.knownGood = w.knownGood ?? `${cfg.knownGood}-${key}`;
+  cfg.cleanName = `clean-${key}.json`;
   return cfg;
 }
+/** The lane's clean fingerprint file for the world cfg runs (clean.json for the default world). */
+export const cleanPath = (lane, cfg) => path.join(laneDir(lane), cfg?.cleanName ?? "clean.json");
 export function getLane(cfg, id) {
   const lane = cfg.lanes.find(l => String(l.id) === String(id));
   if ( !lane ) throw new Error(`No lane ${id} in lanes.json (lanes: ${cfg.lanes.map(l => l.id).join(", ")})`);
@@ -483,3 +506,29 @@ export const PUT_SHEETS_BACK = async plan => {
   }
   return n;
 };
+
+/**
+ * B7230: what run-gate put back in the page itself after a gate (hooks and timers the gate's own code left, functions
+ * it swapped, a property laid over game.user), as the words on the gate's line. "" when nothing was left.
+ */
+export function pageNote(p) {
+  if ( !p ) return "";
+  const bits = [];
+  const hooks = [...new Set(p.hooks ?? [])];
+  if ( p.hooks?.length ) bits.push(`${p.hooks.length} hook(s) the gate left removed (${hooks.join(", ")})`);
+  if ( p.intervals ) bits.push(`${p.intervals} timer(s) the gate left stopped`);
+  if ( p.refs?.length ) bits.push(`${p.refs.join(", ")} put back`);
+  if ( p.user?.length ) bits.push(`game.user ${p.user.join(", ")} taken off`);
+  return bits.join(", ");
+}
+
+/**
+ * B7230: whether a stack trace (Error().stack, from inside run-gate's Hooks.on, Hooks.once or setInterval wrapper)
+ * was called by a gate file. Frames of the wrappers and of Foundry itself are passed over (Hooks.once calls Hooks.on),
+ * so a hook a module registers while a gate calls into it counts as the module's, and is left alone.
+ */
+export function gateCaller(stack) {
+  const frames = String(stack ?? "").split("\n").slice(1);
+  const caller = frames.find(l => /\bat\b/.test(l) && !/wodxGate(On|Once|Interval)|gateCaller|byGate|\/scripts\/foundry|\/foundry\.m?js/.test(l)) ?? "";
+  return caller.includes("/wodx-gate/");
+}

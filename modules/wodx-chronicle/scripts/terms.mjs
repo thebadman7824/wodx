@@ -120,16 +120,37 @@ export function clampDifficulty(d) {
 }
 
 /**
+ * How far a difficulty goes past 10 (B7120): the dice are rolled at 10, and each point past it needs one more success
+ * (M20 pdf 504, which puts it as modifiers past 10 adding successes one for one; V20 pdf 166 does the same for
+ * Dominate). 0 for 10 or less, or for anything that is not a number.
+ */
+export function overTen(d) {
+  const n = Math.round(Number(d));
+  return Number.isFinite(n) ? Math.max(0, n - MAX_DIFFICULTY) : 0;
+}
+
+/** The card's words for a difficulty past 10: "2 more successes needed (difficulty 12, past 10)", or "". */
+export function overTenText(over, wanted = null) {
+  const k = Math.max(0, Math.round(Number(over) || 0));
+  if ( !k ) return "";
+  const at = Number.isFinite(Number(wanted)) ? `difficulty ${Math.round(Number(wanted))}, ` : "";
+  return `${k} more success${k === 1 ? "" : "es"} needed (${at}past 10)`;
+}
+
+/**
  * Count a roll of ten-sided dice the V20 way.
  * opts: specialty (a 10 counts twice), willpower (one automatic success, and no botch), auto (more automatic successes,
  * added after the 1s cancel), canBotch (false for damage and soak), onesCancel (false where a book says 1s do not take
- * away successes), doubleOnes (each 1 counts as two, an Umbral storm).
- * Returns {raw, ones, net, successes, botch, difficulty}: raw is dice that hit, net the successes after the 1s,
- * successes adds the automatic ones.
+ * away successes), doubleOnes (each 1 counts as two, an Umbral storm), over (how far past 10 the difficulty went, when
+ * the caller already held it at 10; otherwise read from the difficulty itself).
+ * Returns {raw, ones, net, successes, botch, difficulty, over, rolled}: raw is dice that hit, net the successes after
+ * the 1s, rolled adds the automatic ones, and successes takes off one for each point past 10 (B7120). A roll that only
+ * falls short that way is a failure, never a botch.
  */
 export function successes(faces = [], difficulty = DEFAULT_DIFFICULTY, opts = {}) {
   const {specialty = false, willpower = false, auto = 0, canBotch = true, onesCancel = true, doubleOnes = false} = opts;
   const diff = clampDifficulty(difficulty);
+  const over = opts.over != null ? Math.max(0, Math.round(num(opts.over))) : overTen(difficulty);
   let raw = 0, ones = 0;
   for ( const f0 of faces ?? [] ) {
     const f = Number(f0);
@@ -139,7 +160,8 @@ export function successes(faces = [], difficulty = DEFAULT_DIFFICULTY, opts = {}
   const net = Math.max(0, raw - (onesCancel ? ones : 0));
   const extra = (willpower ? 1 : 0) + Math.max(0, num(auto));
   const botch = canBotch && raw === 0 && ones > 0 && extra === 0;
-  return {raw, ones, net, successes: net + extra, botch, difficulty: diff};
+  const rolled = net + extra;
+  return {raw, ones, net, successes: Math.max(0, rolled - over), botch, difficulty: diff, over, rolled};
 }
 
 /** Hits less 1s, below 0 when the 1s outnumber the hits (some rules read how badly a roll failed). */

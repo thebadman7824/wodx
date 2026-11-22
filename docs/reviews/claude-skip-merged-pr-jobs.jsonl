@@ -1,0 +1,3 @@
+{"file":"tools/pcq/train.mjs","verdict":"working","how":"read retireJobs, jobsFor and both merge paths in full; node --check passes; stale-jobs.test.mjs B7400 tests pass (jobsFor picks only that PR's open, uncancelled jobs; both merge paths call retireJobs)","hash":"d857d71d011a","at":"2026-11-18T22:40Z"}
+{"file":"tools/pcq/runner.mjs","verdict":"working","how":"read staleJob and the new fresh read before claim in full; node --check passes; the B7400 wiring test passes","hash":"3d6463f24752","at":"2026-11-18T22:40Z"}
+{"file":"tools/harness/stale-jobs.test.mjs","verdict":"working","how":"read the new tests in full; ran stale-jobs, train and pcq tests on the Secondary PC: all pass except the existing Windows-only path fault","hash":"7119744faac8","at":"2026-11-18T22:40Z"}

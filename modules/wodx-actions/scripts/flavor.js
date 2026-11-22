@@ -23,7 +23,7 @@ export const POOLS = {
         ],
         failure: [
             "It doesn't take. {name} will have to try again, or try something else.",
-            "Close, and close is worth nothing in Rothenstein.",
+            "Close, and close is worth nothing here.",
             "The moment passes, and {name} is left holding nothing but the effort.",
             "Somewhere a bell rings the hour, as if to say the time for this is gone.",
             "{name}'s fingers are clumsy tonight, and the night has noticed.",

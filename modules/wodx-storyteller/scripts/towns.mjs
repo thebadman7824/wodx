@@ -273,7 +273,7 @@ async function onBattle({battle, step} = {}) {
   } finally { LANDING.delete(`${m.id}|${key}`); }
 }
 
-/** A Rothenstein saga step that changes its town (hook wodxSaga with `town`; B3670). Once per step. */
+/** A chronicle's saga step that changes its town (hook wodxSaga with `town`; B3670). Once per step. */
 async function onSaga(p = {}) {
   if ( !isActiveGM() || !p.town || !p.where ) return null;
   const m = TR.townOfPlace(p.where, Markets.state().markets, sceneName);

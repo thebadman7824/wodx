@@ -60,8 +60,8 @@ function markNextCard(actor, mods, applied) {
     if ( speaker !== actor.id || data?.flags?.[MOD]?.rollMods ) return;
     off();
     const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
-    msg.updateSource({content: `${msg.content ?? ""}<div class="wodx-sheet-rollmods"><small>${esc(line)}${applied.capped ? " (difficulty held at 10)" : ""}</small></div>`,
-      [`flags.${MOD}.rollMods`]: {dice: mods.dice, diff: mods.diff, parts: mods.parts, difficulty: applied.difficulty, bonus: applied.bonus}});
+    msg.updateSource({content: `${msg.content ?? ""}<div class="wodx-sheet-rollmods"><small>${esc(line)}${RR.overNote(applied)}</small></div>`,
+      [`flags.${MOD}.rollMods`]: {dice: mods.dice, diff: mods.diff, parts: mods.parts, difficulty: applied.difficulty, bonus: applied.bonus, over: applied.over || 0}});
   });
   setTimeout(off, 15000);
 }
@@ -79,11 +79,11 @@ function wrap() {
     const keep = {bonus: o.bonus, difficulty: o.difficulty};
     const applied = RR.applyTo(keep, mods, Number(CONFIG.worldofdarkness?.lowestDifficulty) || 2);
     markNextCard(this.actor, mods, applied);
-    o.bonus = applied.bonus; o.difficulty = applied.difficulty; o.wodxApplied = true;
+    o.bonus = applied.bonus; o.difficulty = applied.difficulty; o.wodxApplied = true; o.wodxOver = applied.over || 0;
     try { return original.call(this, event); }
     finally {
       // the system read the numbers when it built the roll: the window's own fields go back as the player left them
-      o.bonus = keep.bonus; o.difficulty = keep.difficulty; o.wodxApplied = false;
+      o.bonus = keep.bonus; o.difficulty = keep.difficulty; o.wodxApplied = false; o.wodxOver = 0;
       if ( mods.once?.length ) game.wodxActions?.powerMods?.spend?.(this.actor, mods.once)?.catch?.(() => {});
     }
   };

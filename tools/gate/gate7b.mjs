@@ -39,6 +39,10 @@ const lastCard = (tokUuid, after) => game.messages.contents.filter(m => m.getFla
 const zero = {bashing: 0, lethal: 0, aggravated: 0};
 const dmgOf = a => { const ct = C().corpusTrack(a), d = ct?.damage ?? a.system?.health?.damage ?? {}; return {bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated)}; };
 
+/** B7312: what makes an actor obvious to WoDX NPC (its own rule, wodx-npc main.mjs obvious()), for a failure's detail. */
+const OBVIOUS_EFFECT = /crinos|hispo|glabro|shape of the beast|horrid form|vicissitude|tenebrous form|wings|bestial|monstrous/i;
+const showsWhat = a => ["spirit", "wraith"].includes(C().getKind?.(a)) || [...(a?.effects ?? [])].some(e => OBVIOUS_EFFECT.test(e.name ?? "")) || !!a?.getFlag?.(MOD, "obvious");
+
 /** Rothenstein's NPCs, one per template (sheets with no player owner), and a player's character. */
 export function cast() {
   const R = npc().rules;
@@ -111,11 +115,32 @@ async function turnTo(combat, tok) {
   await combat.update({turn: idx});
   await sleep(1600);
 }
+/**
+ * B7312, B7321: what the runner read when it chose, and what limits its move, for a failure's detail. The hero (Ada, a Wraith)
+ * frightens the guard in passing runs too, and the guard flees round the wall; in a failing run it "has nowhere to run".
+ */
+function whyRun(T) {
+  try {
+    const hero = T.hero.actor, p = npc().profileFor(T.runner.actor);
+    const plan = npc().planTurn(T.runner, game.combat), st = plan.fight?.state;
+    return {fears: p.fears ?? [], fleeAt: p.fleeAt, heroObvious: showsWhat(hero), heroKind: C().getKind?.(hero) ?? null,
+      heroEffects: [...(hero.effects ?? [])].map(e => e.name).slice(0, 12), heroNpcFlags: Object.keys(hero.flags?.[MOD] ?? {}),
+      heroLinked: !!T.hero.document.actorLink, enemies: (st?.enemies ?? []).map(e => ({name: e.name, obvious: e.obvious, fear: e.fearSources ?? [], sup: e.supernatural})),
+      wounds: st?.self?.wounds ?? null, options: plan.options.slice(0, 4).map(o => `${o.label} (${o.score}): ${o.why}`),
+      // passing runs flee too (cast and steps in the lane result files, 18 Nov); a failing one has nowhere to run, so what
+      // limits the runner's move: its movement as WoDX Combat reads it, its conditions, and where it and the tokens near it stand
+      move: C().movementFor?.(T.runner.actor) ?? null, conditions: [...(T.runner.actor?.statuses ?? [])],
+      cell: npc().cellOf(T.runner), near: canvas.tokens.placeables.filter(t => t !== T.runner && Math.hypot(t.x - T.runner.x, t.y - T.runner.y) <= 3 * canvas.grid.size).map(t => `${t.name}@${npc().cellOf(t).i},${npc().cellOf(t).j}`).slice(0, 10)};
+  } catch (e) { return {error: e.message}; }
+}
+/** B7312: whose turn it is, for a failure's detail. */
+const turnOf = combat => combat?.combatant ? {round: combat.round, turn: combat.turn, on: combat.combatant.name, token: combat.combatant.tokenId} : null;
 /** Make it this token's turn with WoDX NPC held off, then have it act in the mode given. Returns its card. */
 async function actNow(sc, combat, tok, mode) {
   await sc.setFlag(MOD, "mode", "off");
   await turnTo(combat, tok);
   await sc.setFlag(MOD, "mode", mode);
+  actNow.was = {...turnOf(combat), want: tok.id === combat.combatant?.tokenId};
   const msg = await npc().takeTurn(combat, {force: true});
   await sleep(1200);
   return msg ? game.messages.get(msg.id) : null;
@@ -255,6 +280,7 @@ export async function run() {
     T = Object.fromEntries(Object.entries(T).map(([k, t]) => [k, canvas.tokens.get(t.id)]));
   });
   await step("Auto: the NPC moves round the wall on its turn; Undo puts it back", async () => {
+    const t0 = Date.now();
     const start = {x: T.runner.document.x, y: T.runner.document.y};
     const msg = await actNow(sc, combat, T.runner, "auto");
     let done = msg?.getFlag(MOD, "plan")?.done;
@@ -273,7 +299,8 @@ export async function run() {
     await sleep(800);
     const back = T.runner.document.x === start.x && T.runner.document.y === start.y;
     ok("Auto: the NPC moves round the wall on its turn; Undo puts it back", !!done && moved && clean && back && msg.getFlag(MOD, "plan").done.undone,
-      {did: done?.text ?? msg?.getFlag(MOD, "plan")?.options?.[0]?.label ?? null, moved, squares: path.length, clean, back});
+      {did: done?.text ?? msg?.getFlag(MOD, "plan")?.options?.[0]?.label ?? null, moved, squares: path.length, clean, back, turn: actNow.was, why: whyRun(T),
+        cards: game.messages.contents.filter(m => m.getFlag(MOD, "plan")?.token === T.runner.document.uuid && m.timestamp >= t0).length});
   });
   await step("Auto: the fighter attacks; Undo takes the damage back", async () => {
     const before = dmgOf(T.hero.actor);
@@ -310,13 +337,15 @@ export async function run() {
     await turnTo(combat, T.fighter);
     await T.fighter.actor.setFlag("wodx-combat", "lostAction", {combat: combat.id, round: combat.round});
     await sc.setFlag(MOD, "mode", "auto");
+    const was = {...turnOf(combat), want: T.fighter.id === combat.combatant?.tokenId, lost: T.fighter.actor.getFlag("wodx-combat", "lostAction") ?? null};
     const msg = await npc().takeTurn(combat, {force: true});
     await sleep(800);
     await T.fighter.actor.unsetFlag("wodx-combat", "lostAction");
     const card = msg ? game.messages.get(msg.id) : null;
     const plans = game.messages.contents.filter(m => m.timestamp >= t0 && m.getFlag(MOD, "plan")?.token === T.fighter.document.uuid);
     ok("a lost action: the fighter that failed to stand does not act", /cannot act \(failed to stand up\)/.test(card?.content ?? "") && !plans.length,
-      {card: card?.content?.replace(/<[^>]+>/g, " ").trim().slice(0, 160) ?? null, plans: plans.length});
+      {card: card?.content?.replace(/<[^>]+>/g, " ").trim().slice(0, 160) ?? null, plans: plans.length, turn: was,
+        cardToken: card?.getFlag(MOD, "plan")?.token ?? null, fighter: T.fighter.document.uuid});
   });
   await sc?.unsetFlag(MOD, "mode");
   if ( startScene && startScene.id !== canvas.scene?.id ) await startScene.view();

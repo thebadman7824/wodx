@@ -38,3 +38,27 @@ test("Dark Ages fae: havocStep lowers a havoc on the card, cantripCap sets the c
   assert.match(src("modules/wodx-actions/scripts/fae-da.js"), /F\.havocStep\(/);
   assert.match(src("modules/wodx-actions/scripts/fae-da-rules.js"), /cantripCap\(weaving, dominions\[d\]\)/);
 });
+
+/* B7110-B7114: the rest of the Dark Ages fae exports reach play. */
+const F = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/fae-da-rules.js")));
+test("Dark Ages fae: new Echoes from mortal eyes, forging and baptism, the warning signs, soak, blood and the Dominate shield are read in play", () => {
+  const fx = src("modules/wodx-actions/scripts/fae-da.js");
+  for ( const fn of ["newEchoPool", "newEchoOutcome", "forgeCheck", "baptismClears", "driftSigns"] ) assert.match(fx, new RegExp(`F\\.${fn}\\(`), fn);
+  assert.match(fx, /value="seen"/, "the Mists window offers 'mortals saw the mien'");
+  assert.match(fx, /value="forge"/); assert.match(fx, /value="baptism"/);
+  const main = src("modules/wodx-actions/scripts/main.js");
+  assert.match(main, /FDR\.soaksLethal\(/); assert.match(main, /FDR\.faeBlood\(/);
+  assert.match(src("modules/wodx-actions/scripts/kindred.js"), /FDR\.mindShield\(/);
+});
+test("Dark Ages fae rules behave as the book says", () => {
+  assert.equal(F.newEchoPool({lesser: 4}).atRisk, false, "fewer than five Lesser Features and no Greater: no risk");
+  assert.deepEqual(F.newEchoPool({lesser: 5, greater: 1, mortals: 3, cantrip: true}), {atRisk: true, dice: 6, difficulty: 7});
+  assert.equal(F.newEchoOutcome({successes: 1}, 6), 0); assert.equal(F.newEchoOutcome({successes: 0}, 6), 1); assert.equal(F.newEchoOutcome({successes: 0, botch: true}, 6), 2);
+  assert.equal(F.forgeCheck({kind: "iron", rating: 2, gramarye: 1, weaving: 1}).ok, false, "too little Weaving");
+  assert.deepEqual(F.forgeCheck({kind: "stone", rating: 3, gramarye: 4, weaving: 3}), {ok: true, cost: 3});
+  assert.deepEqual(F.baptismClears([{kind: "iron"}, {kind: "gold"}, {kind: "stone"}]), [{kind: "gold"}]);
+  assert.equal(F.driftSigns({mists: 5, weaving: 1, spoiledCasts: 1, echoesWorse: true}).near, true);
+  assert.equal(F.soaksLethal({mien: false, origin: "changeling"}), false);
+  assert.equal(F.mindShield({day: 3}, 3), true); assert.equal(F.mindShield({night: 2}, 3), false);
+  assert.equal(F.faeBlood("inanimae", "summer").none, true);
+});

@@ -96,9 +96,13 @@ export function changedFiles(g, base, head) {
   return out;
 }
 
-/** Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. */
+/**
+ * Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. B7520:
+ * --full-history, because once a stamp has removed the notes, a later merge of main whose changes/ folder matches
+ * main's side makes git follow only that side and hide the commits that added them (PR 1848, 19 November 2026).
+ */
 export function branchNotes(g, base, head) {
-  const added = new Set(g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
+  const added = new Set(g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
   const out = [];
   for ( const file of [...added].sort() ) {
     const m = /^changes\/([\w-]+)\/([^/]+\.md)$/.exec(file);
@@ -138,7 +142,7 @@ export function branchCommits(g, base, head) {
 
 /** Decision fragments added on the branch: [{file, numbers}], the B numbers of their "## B1234." sections. */
 export function branchDecisions(g, base, head) {
-  const added = g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean);
+  const added = g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean);
   const out = [];
   for ( const file of [...new Set(added)].sort() ) {
     if ( !/^changes\/decisions\/B\d+\.md$/.test(file) ) continue;

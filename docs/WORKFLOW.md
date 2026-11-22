@@ -57,8 +57,8 @@ comment on the issue. Gate the branch before merging and main after it. What the
     node tools/lanes/gate-map.mjs --touched           just the list, to put in a PC job
 
 A Paperdoll-only change runs the Paperdoll gates, not the Relationships ones. A change to WoDX Chronicle or the system
-still runs nearly every gate. The full run happens every night on lanes 2 and 3 after the reset
-(`tools/lanes/nightly.mjs`), so anything `--touched` misses shows up by morning in nightly-gates.log. If a gate covers
+still runs nearly every gate. The nightly full run is an all-gates PC job
+(`tools/pcq/nightly-gates.mjs`, B7020, B7460) on lane 8; while lane 8 is held, it waits. If a gate covers
 a module the map misses, add it in `tools/lanes/gate-map-extra.json` (`"add": {"gatex": ["wodx-npc"]}`).
 
 ### Gate rules (Ben, 14 November 2026)
@@ -151,9 +151,12 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    (B7145).
 
 Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
-`wodx/merge-rules` must pass, nobody may bypass it (the owner's account included, and so every thread), force
-pushes are blocked and main cannot be deleted. Nothing lands on main except through a pull request whose checks
-pass, so routines and tools that used to push to main directly must open a pull request instead.
+`wodx/merge-rules` must pass, force pushes are blocked and main cannot be deleted. Nothing lands on main except
+through a pull request whose checks pass, so routines and tools that used to push to main directly must open a pull
+request instead. On 18 November the owner gave the Repository admin role a bypass for pull requests, for the owner's
+own one-time go-aheads only. Threads, the runner and the watcher all act on GitHub as the owner's account, which holds
+that role, so GitHub may let them merge past red or missing checks instead of refusing: never rely on GitHub to
+refuse, and never use the bypass without the owner's one-time go-ahead for that pull request.
 
 `node tools/release/merge-rules.mjs` runs the same check on a checkout (it reads the gate result only with a
 GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it.
@@ -167,6 +170,43 @@ pushes, lets pc-gates.yml gate the new head (that gate job runs before other gat
 train with a comment saying why; fix it, push, and add the label again. Pull requests further back are not brought up
 to date or gated again while they wait, and the hourly sweep no longer merges main into open pull requests. The
 runner's status issue shows the line. `node tools/pcq/train.mjs` prints what the train would do now.
+
+**Batches (B7445, Ben, 18 November 2026).** When the front needs main and a stamp anyway, the train takes up to two
+green pull requests behind it that change other files into one batch pull request ("Merge train batch: #a, #b"),
+stamped and gated once. Its merge puts each member's head on main, and GitHub shows each as merged. A red batch is
+closed and tried again with half as many, down to one, so the pull request at fault leaves the train with its own
+reason. Nothing changes for the thread: label it and stop pushing. A push to a batched pull request takes it out of
+the train as before and closes the batch.
+
+**Urgent pull requests (B7420, Ben, 18 November 2026).** A fix that other work is stuck behind gets the label `urgent`
+as well as `merge-train`. It goes to the front of the line at the runner's next step, ahead of older labels (urgent
+ones keep label order among themselves), and its gate job then runs as the train front. The pull request it passes
+waits behind it and is brought up to date again when its turn comes; its running gate job is not stopped. Use it
+only for real unblocking fixes (registry/priorities.json rank R2), since each one costs the pull request it passes a
+fresh gate run.
+
+**Fixes to the runner or the train itself (B7422, Ben, 18 November 2026).** The train cannot be trusted to merge a fix
+for itself, so a pull request whose fix is to `tools/pcq/runner.mjs`, `tools/pcq/train.mjs`, the gate recheck,
+`pc-gates.yml` or anything else the train needs in order to merge, and that the train is stuck without, is merged by
+the cloud thread that made it. A cloud thread can merge through the GitHub tools (tested 18 November 2026 on #2060).
+A Claude session on a PC cannot: its safety check refuses a merge without the owner's words in that session.
+
+1. Leave out the `merge-train` label, and finish rules 1, 3 and 4 as usual. Bring the branch up to date with main
+   and run merge-stamp yourself (the old way, below), then queue the touched gates.
+2. Before merging, read the head commit yourself: the newest `checks` check run is completed with success and the
+   newest `wodx/merge-rules` status is success, both on that exact commit. Then merge with `expectedHeadSha` set to
+   that commit, merge method `merge`. If either is not green, wait; never merge on the strength of GitHub accepting
+   the call (see the bypass above).
+3. If the merge call is refused, or the fix is still not green 15 minutes after the thread expected it to be, tell
+   the owner at once, in the thread and with a push notification, saying exactly what is needed (a merge, a one-time
+   go-ahead, a look at a failing gate). Do not wait to be asked.
+4. Say in the thread and on the pull request that it merged outside the train, since the train front is then behind
+   main and gets a fresh gate run.
+
+**Watching for stalls (B7421).** The laptop watcher (tools/pcq/watcher.mjs) lists every open pull request that has
+been green on `checks` and `wodx/merge-rules` for over 15 minutes. One outside the train, or a green train front that
+has not merged, goes on the "PC watcher alert" issue (label pc-alert) right away; one waiting its turn in the train is
+a note on the report. A title starting HOLD is left out. The watcher only reports; it never merges.
 
 Without the train (the owner, or the train is off), the old way still works:
 
@@ -226,6 +266,14 @@ Done means verified. The format is in [registry/features/README.md](../registry/
 - **Change the row with the code**, in the same pull request. A fault from the solo world's Report a problem button or
   an audit goes in the row's `faults`; deferred work in its `open` or `deferred` list, never only in a desk or a shared
   JSON file.
+- **Each bug has a GitHub issue (B7480).** A bug that is not fixed in the pull request that found it gets one issue in
+  this repo, labelled `bug`: a gate that fails on main, a fault a thread finds and leaves, a Report a problem entry, an
+  audit finding. Search the `bug` issues, open and closed, before filing. The title names what goes wrong; the body
+  says where it was seen (job or issue number, file and line), what happened, and what should have happened. The PR
+  that fixes it says `Fixes #N` in its description, so the merge closes the issue. When only a later run on main can
+  prove the fix (a gate that failed in long runs only), the PR says `Refs #N` and the issue is closed when that run
+  passes. The bug's entry in a row's `faults` (or in `_inbox.json`) carries `"issue": N`. The issue holds the
+  discussion; the row holds the status. A gate on the known-faults list (B7060) needs an open `bug` issue.
 - **Finish before starting (the ratchet).** A module's half-built count (built but not gated, or an open fault) may not
   grow. New work in a module starts by finishing a row there; bug fixes are exempt; Ben can override.
 - **The core first.** Rows with `"core": true` (V20 Dark Ages Vampire in Rothenstein, 1197, with mortals and ghouls)

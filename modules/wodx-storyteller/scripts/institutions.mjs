@@ -18,6 +18,7 @@ import * as Towns from "./towns.mjs";
 import * as Rumours from "./rumours.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
 import {lawOf} from "../../wodx-chronicle/scripts/law-rules.mjs";
 import {sweepSeats} from "../../wodx-chronicle/scripts/law-regime-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
@@ -45,7 +46,13 @@ function townInfo(m) {
   try { faith = faithFor(region, yearNow()) || "western"; } catch (e) { /* western */ }
   let law = "", order = null;
   try { const l = lawOf(region, yearNow()); law = l.family; order = l.order; } catch (e) { /* no law of the land */ }
-  return {town: m.id, name: m.name, region, people: Number(t?.people) || 1000, faith, law, order, year: yearNow()};
+  // B7612: the chronicle's own names for the seats of its town (manifest.local.titles)
+  let titles = {};
+  try {
+    const pack = chron()?.chronicle?.current?.() ?? null, loc = Local.localOf(pack);
+    for ( const k of new Set(loc.titles.map(x => x.kind)) ) titles[k] = Local.townTitles(loc, k, m.name, pack?.manifest);
+  } catch (e) { titles = {}; }
+  return {town: m.id, name: m.name, region, people: Number(t?.people) || 1000, faith, law, order, year: yearNow(), titles};
 }
 
 /** Open what each town should have now, close what has had its day. Returns the events. */
@@ -63,7 +70,7 @@ export const byId = id => state().list.find(i => i.id === id) ?? null;
 /** The seats someone holds anywhere: [{inst, rank, title}]. */
 export function seatsOf(id) {
   const out = [];
-  for ( const i of state().list ) { if ( i.closed ) continue; const b = I.bestSeat(i, id); if ( b ) out.push({inst: i.id, name: i.name, kind: i.kind, rank: b.rank, title: I.ranksOf(i.kind, yearNow(), i.faith, i.law)[b.rank], pawn: b.pawn}); }
+  for ( const i of state().list ) { if ( i.closed ) continue; const b = I.bestSeat(i, id); if ( b ) out.push({inst: i.id, name: i.name, kind: i.kind, rank: b.rank, title: I.instRanks(i, yearNow())[b.rank], pawn: b.pawn}); }
   return out;
 }
 
@@ -105,7 +112,7 @@ export async function onClimbDone(a, t) {
   const pawn = t.target?.id ? game.actors.get(t.target.id) : null;
   const who = pawn ? {id: pawn.id, name: pawn.name, pawnOf: a.id} : {id: a.id, name: a.name};
   const have = I.bestSeat(inst, a.id);
-  const next = I.ranksOf(inst.kind, yearNow(), inst.faith, inst.law)[have ? have.rank + 1 : 0] ?? "the top";
+  const next = I.instRanks(inst, yearNow())[have ? have.rank + 1 : 0] ?? "the top";
   // B3614: standing before the law can bar the higher offices (WoDX Chronicle)
   let barred = I.RANKS - 1;
   try { barred = chron()?.law?.standing?.officeCap?.(pawn ?? a, inst.kind) ?? barred; } catch (e) { /* no standing */ }
@@ -121,7 +128,7 @@ async function approveClimb(e) {
   if ( r.why ) return ui.notifications?.warn?.(`${who?.name}: ${r.why}.`);
   s.list[k] = r.inst;
   await save(s);
-  const title = I.ranksOf(r.inst.kind, yearNow(), r.inst.faith, r.inst.law)[r.to];
+  const title = I.instRanks(r.inst, yearNow())[r.to];
   await log({kind: "institution", actor: who.pawnOf || who.id, name: who.name, text: `${who.name} is now ${title} in ${r.inst.name}${r.bumped ? `, in place of ${r.bumped.name}` : ""}.`});
 }
 
@@ -249,7 +256,7 @@ export async function institutionsDialog() {
   const year = yearNow();
   const towns = new Map((Markets.state()?.markets ?? []).map(m => [m.id, m.name]));
   const block = i => {
-    const ranks = I.ranksOf(i.kind, year, i.faith, i.law);
+    const ranks = I.instRanks(i, year);
     const seats = i.seats.filter(x => x.holder).sort((a, b) => b.rank - a.rank).map(x => `<li>${esc(ranks[x.rank])}: ${esc(x.holder.name)}${x.holder.pawnOf ? ` <small>(for ${esc(game.actors.get(x.holder.pawnOf)?.name ?? "someone")})</small>` : ""}</li>`).join("");
     const levers = mine.flatMap(id => { const b = I.bestSeat(i, id); return b ? I.leversFor(i.kind, b.rank).map(l => `<button type="button" data-lever="${esc(l.key)}" data-inst="${esc(i.id)}" data-actor="${esc(id)}">${esc(l.words)}</button>`) : []; }).join("");
     const share = I.control(i).slice(0, 3).map(c => `${esc(game.actors.get(c.who)?.name ?? c.who)} ${c.share}%`).join(", ");

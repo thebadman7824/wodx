@@ -46,6 +46,7 @@ import * as VX from "./voice.js";
 import * as TR from "./theme-rules.js";
 import * as MXD from "./mage-da.js";
 import * as FXD from "./fae-da.js";
+import * as FDR from "./fae-da-rules.js";
 import * as TRS from "./treasures.js";
 import * as CXD from "./c20.js";
 import * as DXD from "./demon.js";
@@ -69,6 +70,7 @@ import * as EFX from "./effects.js";
 import * as SUM from "./summons.js";
 import * as TURN from "./turns.js";
 import * as LIM from "./limits.js";
+import * as RTY from "./retry-rules.js";
 import * as AFC from "./after-costs.js";
 import * as ACR from "./after-cost-rules.js";
 import * as NPW from "./npc-power-rules.js";
@@ -103,6 +105,28 @@ const GEN = () => game.release?.generation ?? 11;
 const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
+/* B7121: the failures remembered for trying again, kept on the actor for the scene (retry-rules.js) */
+function retrySceneNo() { try { return chronicle()?.terms?.sceneNo?.() ?? canvas?.scene?.id ?? null; } catch (e) { return canvas?.scene?.id ?? null; } }
+function retryKeyOf(fd, target) { return RTY.retryKey({ preset: fd?.preset ?? "", attr: fd?.attr ?? "", ability: fd?.ability ?? "", targetId: target?.id ?? "" }); }
+function retriesRemembered(actor, fd, target) {
+    if (!actor || !setting("retryMemory") || !RTY.counts(fd?.mode)) return 0;
+    return RTY.retriesNow(actor.getFlag?.(MOD, "retry") ?? null, retryKeyOf(fd, target), retrySceneNo());
+}
+async function rememberTry(actor, fd, target, r) {
+    if (!actor?.isOwner || !setting("retryMemory") || !RTY.counts(fd?.mode)) return;
+    const failed = !!r?.botch || !(r?.successes > 0);
+    const store = actor.getFlag?.(MOD, "retry") ?? null, key = retryKeyOf(fd, target), scene = retrySceneNo();
+    if (!failed && !RTY.retriesNow(store, key, scene)) return;
+    try { await actor.setFlag(MOD, "retry", RTY.afterRoll(store, key, scene, { failed })); } catch (e) { console.warn("WoDX Actions | trying again", e); }
+}
+/** B7121: the Storyteller's Clear: forget every failed try remembered on these characters (all with none given). */
+async function clearRetries(actors = null) {
+    if (!game.user.isGM) return 0;
+    const list = actors ? [actors].flat().filter(Boolean) : [...(game.actors ?? [])].filter(a => a.getFlag?.(MOD, "retry"));
+    let k = 0;
+    for (const a of list) { if (a.getFlag?.(MOD, "retry")) { await a.unsetFlag(MOD, "retry"); k++; } }
+    return k;
+}
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 /* ================================================================== */
@@ -129,6 +153,8 @@ function registerSettings() {
     s("applyChanges", "Apply results to sheets", "Apply health, Road, Virtue, frenzy and blood results automatically. Off: results are reported only.", Boolean, true);
     s("showDice", "Show the dice in chat", "List each die face in result cards.", Boolean, true);
     s("untrained", "Untrained ability rules", "Talents default to the Attribute, Skills at +1 difficulty, Knowledges cannot be attempted (V20 standard).", Boolean, true);
+    // B7121: trying again after a failure (V20 Dark Ages pdf 324)
+    s("retryMemory", "Trying again gets harder", "A failed simple roll tried again on the same task and target in the same scene is +1 difficulty a try, and at 10 it cannot be tried (V20 Dark Ages pdf 324). Extended and resisted rolls are left out. A new scene or a success starts it again.", Boolean, true);
     s("createMacros", "Create hotbar macros", "Create the WoDX Actions macros in the Macro directory if missing.", Boolean, true);
     s("profileMenu", "Menu follows the actor type",
         "The Actions menu shows the buttons for the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). Off: always the Kindred menu.", Boolean, true);
@@ -380,6 +406,8 @@ async function setDamage(actor, damage) { return updateActor(actor, healthUpdate
 
 async function rollPool(dice, difficulty, opts = {}) {
     const diff = R.clampDifficulty(difficulty);
+    // B7120: rolled at 10; each point past it needs one more success (M20 pdf 504). opts.over when a caller held it at 10
+    opts = { ...opts, over: opts.over ?? R.overTen(difficulty) };
     dice = Math.max(0, dice - LIM.takeDull());
     let faces = [], roll = null;
     if (dice > 0) {
@@ -403,7 +431,7 @@ async function rollPool(dice, difficulty, opts = {}) {
             fortune = { first, name: TH.fortuneName(fa), left: lk.left };
         }
     }
-    return { ...res, roll, faces, dice, difficulty: diff, fortune };
+    return { ...res, roll, faces, dice, difficulty: diff, wanted: diff + (res.over || 0), fortune };
 }
 function diceHtml(r, specialty = false) {
     if (!setting("showDice") || !r?.faces?.length) return "";
@@ -416,7 +444,8 @@ function resultLine(r, { degreeText = true } = {}) {
 }
 function rollBlock(title, r, parts = [], specialty = false) {
     const again = r?.fortune ? `<div class="vta-note wodx-fortune">${esc(r.fortune.name)}: the first roll failed${setting("showDice") && r.fortune.first?.length ? ` (${r.fortune.first.join(", ")})` : ""} and is rolled again (${r.fortune.left} left this story).</div>` : "";
-    return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${again}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
+    const over = r?.over ? `<div class="vta-note wodx-over">${esc(R.overTenText(r.over, r.wanted))}${r.rolled > 0 && !r.successes ? `: ${r.rolled} rolled, not enough` : ""}</div>` : "";
+    return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${over}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${again}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
 }
 /**
  * 3.67.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
@@ -796,7 +825,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
       ${TH.ticksHtml(actor, esc)}${DH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
-      <div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${rd.name} ${rd.value}: ${R.auraModifier(rd.value) >= 0 ? "+" : ""}${R.auraModifier(rd.value)})</label></div>
+      ${bearingBox(rd)}${GX.totemTicksHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
@@ -826,7 +855,8 @@ export async function action({ actor: a, preset = "" } = {}) {
             if (p.diff) f.diff.value = p.diff;
             f.mode.value = p.mode || "simple";
             if (p.target) f.goal.value = p.target;
-            f.aura.checked = !!p.aura;
+            // B7080: a Path's bearing goes by what the Path names, not by the Humanity presets
+            f.aura.checked = !!p.aura && !pathBearingFor(actor, rd);
             root.querySelector(".vta-preset-note").textContent = p.note || "";
             sync();
         });
@@ -1006,6 +1036,22 @@ function opponentPool(target, spec, fd, actor = null) {
     return { dice: attr(target, spec.attr) + (ab?.value ?? 0), diff: spec.diff, label: `${cap(spec.attr)} + ${ab?.name ?? cap(spec.ability)}`, specialty: false };
 }
 
+/** The roll window's bearing box: the Road aura, or a V20 Path's bearing and what it covers (B7080). */
+function bearingBox(rd) {
+    const b = KX.DATA.paths && rd?.found ? KR.pathBearing(KX.DATA.paths, rd.found, rd.value) : null;
+    const sign = v => `${v >= 0 ? "+" : ""}${v}`;
+    if (b) return `<div class="form-group"><label><input type="checkbox" name="aura"/> ${esc(b.name)} bearing applies (${esc(b.path)} ${rd.value}: ${sign(b.step)} difficulty on ${esc(b.covers)}${b.byItself ? "; counted by itself when the roll is one of those" : "; tick it when this roll is one"})</label></div>`;
+    return `<div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${esc(rd.name)} ${rd.value}: ${sign(R.auraModifier(rd.value))})</label></div>`;
+}
+
+/** B7080: the bearing of the V20 Path the roller walks, for one roll of the general window (null: no Path). */
+function pathBearingFor(actor, rd, fd = {}, pool = {}) {
+    if (!KX.DATA.paths || !rd?.found) return null;
+    const tags = [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...(fd.attr === "special:willpower" ? ["willpower"] : [])];
+    const wounded = !pool.special && !fd.ignoreWounds && woundPenalty(actor) > 0;
+    return KR.pathBearing(KX.DATA.paths, rd.found, rd.value, { tags, wounded, ticked: !!fd.aura });
+}
+
 /** The pool and difficulty a roll window's choices give, with every modifier and where it came from (3.43.0: also the odds
  *  shown before the roll). pool: readPool()'s answer. */
 function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability), { teamDice = 0, overflow = 0 } = {}) {
@@ -1035,6 +1081,15 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
         if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
     } catch (e) { console.warn("WoDX Actions | conditions", e); }
+    // B7080: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
+    // Humanity and the Roads keep the plain aura box
+    const pb = pathBearingFor(actor, rd, fd, pool);
+    if (pb?.applies && pb.step) tm = { ...tm, diff: (tm.diff ?? 0) + pb.step, parts: [...(tm.parts ?? []), pb.part] };
+    // B7083: the pack totem's gifts to a packmate (W20 pp. 372-377): Attribute dots as dice, roll effects, a held Pack Trait
+    try {
+        const tt = GX.totemMods(actor, fd, pool, TH.tagsFor(fd.attr, pool.abilityKey, fd.preset));
+        if (tt && (tt.dice || tt.diff)) tm = { ...tm, dice: (tm.dice ?? 0) + tt.dice, diff: (tm.diff ?? 0) + tt.diff, parts: [...(tm.parts ?? []), ...tt.parts] };
+    } catch (e) { console.warn("WoDX Actions | totem", e); }
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -1042,7 +1097,8 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
         bonusDice: fd.bonus, extraDiff: fd.extraDiff, baseDifficulty: fd.diff,
         woundPenalty: pool.special ? 0 : woundPenalty(actor), ignoreWounds: fd.ignoreWounds,
-        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura ? R.auraModifier(rd.value) : 0,
+        multiIndex: num(fd.multi), retries: Math.max(num(fd.retries), retriesRemembered(actor, fd, target)), retryLabel: num(fd.retries) >= retriesRemembered(actor, fd, target) ? "" : RTY.tryLabel(retriesRemembered(actor, fd, target)),
+        aura: fd.aura && !pb ? R.auraModifier(rd.value) : 0,
         daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
     });
     // B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89) goes with the pool to the roll
@@ -1116,12 +1172,14 @@ async function resolveAction(actor, target, fd) {
         }
     }
     body = helperHtml + body + rollBlock(label || "Pool", r, built.parts.concat(fd.specialty ? ["specialty"] : [], fd.wp ? ["Willpower"] : []), fd.specialty);
+    // B7121: a failure is remembered for the next try at this task in this scene; a success clears it
+    await rememberTry(actor, fd, target, r);
 
     // Resisted
     if (fd.mode === "resisted") {
         let op = opponentPool(target, preset.opp, fd, actor);
         // Spotting someone prone, under water or in the earth is harder (WoDX Combat 3.12.0, house rule)
-        if (pool.abilityKey === "stealth") { try { const sp = game.wodxCombat?.movement?.spotMod?.(actor) ?? 0; if (sp) op = { ...op, diff: Math.min(10, op.diff + sp) }; } catch (e) { /* off */ } }
+        if (pool.abilityKey === "stealth") { try { const sp = game.wodxCombat?.movement?.spotMod?.(actor) ?? 0; if (sp) op = { ...op, diff: op.diff + sp }; } catch (e) { /* off */ } }
         const o = await rollPool(op.dice, op.diff);
         rolls.push(o.roll);
         body += rollBlock(`${target ? esc(target.name) : "Opponent"} (${esc(op.label)})`, o);
@@ -1157,6 +1215,11 @@ async function resolveAction(actor, target, fd) {
             await chronicle()?.applyTimed?.(actor, { name: "Sneaking", condition: "sneaking", duration: { kind: "scene" }, key: "wodx-actions-sneak", source: "V20 Dark Ages p. 169" });
             body += `<div class="vta-note">${esc(actor.name)} is out of sight and moving quietly: marked Sneaking for the scene.</div>`;
         } catch (e) { console.warn("WoDX | sneaking", e); }
+    }
+    // B7633: a lie told or a theft that worked: the Roads that count it ask (the card names the level; it never rolls by itself)
+    if (isVampire(actor)) {
+        const ev = KR.rollSinEvent({ preset: fd.preset ?? "", attr: fd.attr, ability: pool.abilityKey, successes: r.successes, botch: r.botch });
+        if (ev) { try { const sp = await kx().sinPrompt(actor, ev, ev === "lie" ? "A lie told to get the better of someone" : "Something taken that was not theirs"); if (sp?.html) body += sp.html; } catch (e) { console.warn("WoDX | sin from a roll", e); } }
     }
     if (preset.note) body += `<div class="vta-note">${preset.note}</div>`;
 
@@ -1262,7 +1325,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         const tm = TH.traitMods(actor, ["frenzy"]);
         // B3132: open fire in a mood region makes the Beast harder to hold
         const fire = DH.fireStep(actor);
-        diff = R.clampDifficulty(diff + fd.mod + tm.diff + fire);
+        diff = diff + fd.mod + tm.diff + fire;  // B7120: past 10 counts (rollPool)
         try { await TH.spendOnce(actor, tm); } catch (e) { /* nothing spent */ }
         return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
     });
@@ -1290,7 +1353,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
         if (actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear")
             return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
         const p = R.ROTSCHRECK_PROVOCATIONS[fd.prov];
-        const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod + DH.fireStep(actor));  // B3132
+        const diff = (Number(fd.prov === "custom" ? fd.diff : p.diff) || 6) + fd.mod + DH.fireStep(actor);  // B3132; B7120: past 10 counts
         return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, lucky: !!fd.lucky, total: 0 });
     });
 }
@@ -1306,7 +1369,7 @@ export async function rotschreckAuto({ actor: a, provocation = "torch", why = ""
     let dawn = 0;
     try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
     const p = R.ROTSCHRECK_PROVOCATIONS[provocation] ?? R.ROTSCHRECK_PROVOCATIONS.torch;
-    const diff = R.clampDifficulty(p.diff + dawn + DH.fireStep(actor));
+    const diff = p.diff + dawn + DH.fireStep(actor);  // B7120: past 10 counts (rollPool)
     return beastRoll(actor, { kind: "fear", diff, prov: why || p.label, wp: false, total: 0 });
 }
 
@@ -1396,7 +1459,7 @@ export async function autoBeast({ actor: a, kind = "frenzy", provocation = null,
         const p = R.ROTSCHRECK_PROVOCATIONS[provocation] ?? R.ROTSCHRECK_PROVOCATIONS.torch;
         let dawn = 0;
         try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
-        diff = R.clampDifficulty(n0(p?.diff ?? 6) + dawn + DH.fireStep(actor));
+        diff = n0(p?.diff ?? 6) + dawn + DH.fireStep(actor);  // B7120: past 10 counts (rollPool)
         prov = p?.label ?? "Fire";
     } else {
         const p = R.FRENZY_PROVOCATIONS[provocation] ?? R.FRENZY_PROVOCATIONS.physical;
@@ -1404,7 +1467,7 @@ export async function autoBeast({ actor: a, kind = "frenzy", provocation = null,
         if (provocation === "atrocity") d0 = 9 - v.conscience.value;
         const tm = TH.traitMods(actor, ["frenzy"]);
         const fire = DH.fireStep(actor);
-        diff = R.clampDifficulty(d0 + tm.diff + fire);
+        diff = d0 + tm.diff + fire;  // B7120: past 10 counts (rollPool)
         traitDice = tm.dice; traitParts = fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts;
         prov = p?.label ?? "Frenzy";
     }
@@ -1672,6 +1735,7 @@ export async function hunt({ actor: a } = {}) {
       <div class="form-group"><label>Blood to take (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       ${stateFields(here?.outbreak ? "disease" : style?.state ?? "clean")}
       ${feedingFields(actor, rule, { hunting: true })}
+      ${leaveField(actor)}
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
@@ -1785,6 +1849,7 @@ async function resolveHunt(actor, fd) {
     const st = KF.HUNT_STYLES[fd.style];
     const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls, state: fd.vstate, drinks: fd.drinks, cold: st?.cold ?? 0,
         rule: fd.rule ?? null, fits: fd.fits === undefined ? true : !!fd.fits, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering });
+    fed.html += await leaveSin(actor, fd, fed, "the prey");
     return post(actor, `${actor.name} hunts`, body + fed.html, rolls);
 }
 
@@ -1844,6 +1909,17 @@ function feedingFields(actor, rule, { tags = [], fits = null, willing = false, f
     if (rule.offering) h += `<div class="form-group"><label><input type="checkbox" name="offering" checked/> The vessel is offered to the gods first (thirty seconds)</label></div>`;
     return h;
 }
+/** B7633: a Road that counts drinking without leave as a sin (the Path of Christ, level 6, V20 Dark Ages p. 120) asks in the feeding windows. */
+function leaveField(actor) {
+    if (!isVampire(actor) || KR.sinForEvent(KX.roadOf(actor), "feedUnwilling") === null) return "";
+    return `<div class="form-group"><label><input type="checkbox" name="leave"/> The vessel gave leave to drink (or is no innocent)</label></div>`;
+}
+/** The sin prompt for drinking from a person without leave, as html for the feeding card ("" when there is none). */
+async function leaveSin(actor, fd, fed, who) {
+    if (!(num(fed?.drunk) > 0) || fd.leave || fd.vessel !== "human" || !leaveField(actor)) return "";
+    try { const sp = await kx().sinPrompt(actor, "feedUnwilling", `Drinks from ${who} without leave`); return sp?.html ?? ""; }
+    catch (e) { console.warn("WoDX | sin from feeding", e); return ""; }
+}
 /** Save a changed palate on the vampire. */
 async function savePalate(actor, rule, fd) {
     if (!rule?.palate || fd.palateText === undefined) return;
@@ -1873,6 +1949,7 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
       ${stateFields(vessel?.flags?.[MOD]?.vesselState ?? "clean")}
       ${vessel ? `<div class="form-group"><label>Vessel's tags (who they are)</label><input type="text" name="vtags" value="${esc(vtags.join(", "))}" placeholder="merchant, woman, catholic"/></div>` : ""}
       ${feedingFields(actor, rule, { tags: vtags, fits, willing, fought: vessel ? foughtRecently(vessel, actor) : false })}
+      ${leaveField(actor)}
     </form>`;
     return dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
@@ -1885,6 +1962,7 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
         const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks,
             rule, fits: rule?.palate ? !!fd.fits : true, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering,
             flesh: num(fd.flesh), tags: vessel ? KF.parseTags(fd.vtags) : [] });
+        fed.html += await leaveSin(actor, fd, fed, vessel?.name ?? "a vessel");
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls, fed.undo ? { kind: "feed", actor: actor.uuid, undo: fed.undo } : null);
     });
 }
@@ -1896,7 +1974,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     // counts them (B6157); no feeding roll here uses sight, so a sight-only condition does not
     let cm = { diff: 0, parts: [] };
     try { cm = LIM.conditionMods(actor, { sight: false }); } catch (e) { console.warn("WoDX Actions | conditions", e); }
-    const ownRoll = (dice, diff, o) => rollPool(dice, Math.min(10, diff + cm.diff), o);
+    const ownRoll = (dice, diff, o) => rollPool(dice, diff + cm.diff, o);  // B7120: past 10 counts
     // What is in the vessel's blood (V20 pp. 295, 301-302): a blood-borne disease may be spotted before drinking
     const taint = R.VESSEL_STATES[state] && state !== "clean" ? state : null;
     if (taint === "disease" && isVampire(actor)) {
@@ -2021,6 +2099,12 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
     const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
+    // B7110: a Dark Ages fae's blood carries its Court's gift and price (Dark Ages: Fae p. 181); the firstborn's twice over
+    const daFaeV = vesselActor?.getFlag?.(MOD, "daFae");
+    if (drunk > 0 && isVampire(actor) && daFaeV?.origin && daFaeV.system !== "c20") {
+        const fb = FDR.faeBlood(daFaeV.origin, daFaeV.court);
+        html += `<div class="vta-note${fb.none ? "" : " bad"}">${fb.none ? esc(fb.text) : `Fae blood (${esc(FDR.COURTS[daFaeV.court]?.label ?? "Solstice")}): ${esc(fb.text)}`} <span class="wodx-quiet">(Dark Ages: Fae p. 181)</span></div>`;
+    }
     if (drunk > 0 && flag(actor, "carrier") && ["human", "child"].includes(vesselType)) html += `<div class="vta-warn">${esc(actor.name)} carries a blood-borne disease: this vessel may now have it (V20 p. 295).</div>`;
     // The vessel
     const living = vb.living && !vampireVessel;
@@ -2132,6 +2216,8 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     }
     const hasUndo = !!(undo && setting("applyChanges") && (harm || undo.statuses.length || drunk > 0));
     if (hasUndo) html += `<button type="button" class="vta-btn" data-action="feedUndo">Undo the harm to ${esc(vesselActor.name)}</button>`;
+    // B7633: when the vampire last drank, so dawn can tell a night gone hungry (the starve sin)
+    if (drunk > 0 && actor.isOwner) { try { await setFlag(actor, "lastFed", game.time?.worldTime ?? 0); } catch (e) { console.warn("WoDX | lastFed", e); } }
     // 3.47.0: who was fed on, for WoDX NPC's memory of it (the vessel knows something happened)
     if (drunk > 0 && vesselActor) {
         const fed = { by: { uuid: actor.uuid, name: actor.name }, vessel: { uuid: vesselActor.uuid, name: vesselActor.name }, drunk, willing: !!willing, fought: !!fought };
@@ -2434,7 +2520,7 @@ export async function daytime({ actor: a } = {}) {
         if (fd.wp && !(await spendWillpower(actor, 1))) fd.wp = false;
         // Deep Sleeper (V20 p. 485 printed): waking is 2 harder; Light Sleeper wakes at once
         const sm = TH.sleepMods(actor);
-        const r = sm.light ? null : await rollPool(rd.value, Math.min(10, 8 + sm.diff), { willpower: fd.wp });
+        const r = sm.light ? null : await rollPool(rd.value, 8 + sm.diff, { willpower: fd.wp });
         if (r) { rolls.push(r.roll); html += rollBlock(rd.name, r, sm.diff ? ["Deep Sleeper +2 diff"] : []); }
         const res = r ? R.awakeningResult(r) : { awake: true, turns: Infinity, text: "Light Sleeper: wide awake at once, and the Road does not cap the dice today." };
         html += `<div class="vta-big ${res.awake ? "good" : "bad"}">${res.text}</div>`;
@@ -2863,7 +2949,10 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
       <div class="form-group"><label><input type="checkbox" name="aura" checked/> Apply Road aura</label></div>
     </form>`;
     return dialog("Seduction", content, "Seduce", async fd => {
-        const aura = fd.aura ? R.auraModifier(road(actor).value) : 0;
+        // B7080: a Path walker's bearing counts here only when the Path's bearing is seduction (the Cathari, V20 p. 323)
+        const rdS = road(actor);
+        const pbS = KX.DATA.paths && rdS.found ? KR.pathBearing(KX.DATA.paths, rdS.found, rdS.value, { tags: ["seduce", "social"] }) : null;
+        const aura = pbS ? (fd.aura && pbS.auto ? pbS.step : 0) : fd.aura ? R.auraModifier(rdS.value) : 0;
         const wpen = woundPenalty(actor);
         const steps = [
             ["Approach", "appearance", "subterfuge", fd.wits + 3, "The subject shows disinterest.", "The subject grows disgusted or angry."],
@@ -2874,7 +2963,7 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
         const rolls = [];
         for (const [name, at, ab, diff, fail, botch] of steps) {
             const dice = Math.max(0, attr(actor, at) + (findAbility(actor, ab)?.value ?? 0) + carry + wpen);
-            const r = await rollPool(dice, R.clampDifficulty(diff + aura + (Number(shift) || 0)));
+            const r = await rollPool(dice, diff + aura + (Number(shift) || 0));  // B7120: past 10 counts
             rolls.push(r.roll);
             html += rollBlock(`${name}: ${cap(at)} + ${cap(ab)}`, r, [`difficulty ${diff}${aura ? ` ${aura > 0 ? "+" : ""}${aura} aura` : ""}${shift ? ` ${shift > 0 ? "+" : ""}${shift} how they regard ${actor.name}` : ""}`, carry ? `+${carry} carried` : ""].filter(Boolean));
             if (!r.successes) {
@@ -3356,9 +3445,11 @@ async function createMacros() {
 async function gainDerangement(actor, cause, why) {
     try { return await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(actor, cause, why); } catch (e) { console.warn("WoDX Actions | derangement", e); return null; }
 }
-const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
+const API = { menu, action, clearRetries, retryRules: RTY,
+    // B7121: the Storyteller's Clear for trying again, from the Scene row of every menu
+    clearTries: async () => { const k = await clearRetries(null); ui.notifications.info(k ? `Failed tries forgotten for ${k} character${k === 1 ? "" : "s"}: the next attempt is a fresh one.` : "No failed tries are remembered."); return k; }, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.111.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.115.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3374,7 +3465,8 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
     /** Dark Ages fae soak for WoDX Combat: in the mien Stamina soaks lethal (DA:Fae p. 104); cold iron is soakable (p. 88). */
-    faeSoak: a => (a && FXD.isDA(a)) ? { lethal: !!fx().info(a).mien, coldIron: true } : null,
+    // B7110: soaksLethal is the rule (Dark Ages: Fae p. 104): in the mien, or a firstborn always
+    faeSoak: a => { if (!a || !FXD.isDA(a)) return null; const i = fx().info(a); return { lethal: FDR.soaksLethal({ mien: i.mien, origin: i.origin }), coldIron: true }; },
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),
@@ -3401,7 +3493,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     useGift: withActor(a => gx().useGift(a)), learnGift: withActor(a => gx().learnGift(a)), performRite: withActor(a => gx().performRite(a)),
     summonSpirit: withActor(a => gx().summonSpirit(a)), useFetish: withActor(a => gx().useFetish(a)), accomplishment: withActor(a => gx().accomplishment(a)),
     battleScar: withActor(a => gx().battleScar(a)), curse: withActor(a => gx().curse(a)), kinfolk: withActor(a => gx().kinfolk(a)),
-    chiminage: withActor(a => gx().chiminage(a)),
+    chiminage: withActor(a => gx().chiminage(a)), packTotem: withActor(a => gx().packTotem(a)),
     awardRenown: () => gx().awardRenown(), delirium: (o = {}) => gx().deliriumCheck(o), moonRise: (o = {}) => gx().moonRise(o),
     applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
     garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g),
@@ -3417,7 +3509,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     recordBreach: o => kx().recordBreach(o), masqEntries: () => kx().masqEntries(), witnessStep: (o = {}) => kx().witnessStep(o.actor === null ? null : resolveActor(o.actor), o.tokens ?? [], o), autoHunts: () => dm().autoHunts(), liftHunt: id => dm().endHunt(id, "lifted"), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
     crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
-    history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
+    history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), sinPrompt: (a, event, what) => kx().sinPrompt(resolveActor(a), event, what), hungryAtDawn: list => kx().hungryAtDawn((list ?? []).map(resolveActor)), healPlan: (a, seconds) => kx().healPlan(a, seconds),
     healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), daySleep: () => kx().daySleep(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),
     kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,

@@ -596,7 +596,7 @@
 -100|H|mor|AS|China|learning|Sima Qian|Sima Qian writes the Records of the Grand Historian.
 -100|H|mor|AM|Mexico|founding|Teotihuacan begins|Farmers gather in the valley of Teotihuacan.
 -100|H|mor|AF|Ethiopia|founding|Aksum's first kings|A kingdom grows at Aksum in the highlands.
--100|H|mor|EU|Moravia|trade|Glass of the Boii|Celtic glassmakers in Moravia make blue bracelets.
+-100|H|mor|MO|Moravia|trade|Glass of the Boii|Celtic glassmakers in Moravia make blue bracelets.
 -91|H|mor|EU|Italy|war|The Social War|Rome's Italian allies fight for citizenship.
 -88|H|mor|ME|Pontus|massacre|The Asian Vespers|Mithridates of Pontus has thousands of Romans in Asia killed in a day.
 -82|H|mor|EU|Italy|crown|Sulla|Sulla takes Rome and rules as dictator.
@@ -678,7 +678,7 @@
 189|H|mor|AS|China|war|Dong Zhuo|The warlord Dong Zhuo burns Luoyang.
 200|H|mor|AS|India|learning|The Laws of Manu|The Laws of Manu are written in their present form.
 200|H|mor|AS|India|learning|Nagarjuna|The Buddhist teacher Nagarjuna writes on emptiness.
-200|H|mor|EU|Moravia|migration|The Quadi hold Moravia|The Quadi farm Moravia beyond the Roman frontier.
+200|H|mor|MO|Moravia|migration|The Quadi hold Moravia|The Quadi farm Moravia beyond the Roman frontier.
 208|H|mor|AS|China|war|Red Cliffs|Sun Quan and Liu Bei burn Cao Cao's fleet at the Red Cliffs.
 216|H|mor|ME|Persia|faith|Mani born|Mani, founder of Manichaeism, is born in Babylonia.
 220|H|mor|AS|China|crown|The Three Kingdoms|Wei, Shu and Wu split China.

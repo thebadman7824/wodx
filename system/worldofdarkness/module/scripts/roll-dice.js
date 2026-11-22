@@ -1,6 +1,6 @@
 import BonusHelper from "./bonus-helpers.js";
 import CombatHelper from "./combat-helpers.js";
-import { applyWodxRollMods, wodxRollSources, wodxNoBotch, wodxHalveRoll } from "./wodx-roll-mods.js";
+import { applyWodxRollMods, wodxRollSources, wodxNoBotch, wodxHalveRoll, wodxOverSuccesses, wodxOverText } from "./wodx-roll-mods.js";
 
 let _diceColor;
 let _specialDiceType = "";
@@ -455,6 +455,12 @@ export async function DiceRoller(diceRoll) {
 		}
 		else if (success < 0) {
 			success = 0;
+		}
+		// WoDX fork (B7120): past 10, each point of difficulty needs one more success (M20 pdf 504)
+		const wodxOver = wodxOverSuccesses(diceRoll, success);
+		if (wodxOver.over) {
+			info.push(`WoDX: ${wodxOverText(wodxOver.over)} (difficulty past 10)${success > 0 && !wodxOver.success ? `: ${success} rolled, not enough` : ""}`);
+			success = wodxOver.success;
 		}
 
 		if (success > 0) {

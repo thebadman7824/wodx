@@ -38,6 +38,8 @@ export function takeQueued(file, laneId) {
 /** Gates this lane took that have no result line in its report go back to the front of the list. Returns them. */
 export function putBack(file, laneId, report = "") {
   return withLock(file, () => {
+    // A stopped queue (stop below) takes nothing back
+    if ( fs.existsSync(`${file}.stop`) ) return [];
     let rows = [];
     try { rows = fs.readFileSync(`${file}.taken`, "utf8").split("\n").map(l => l.trim().split(" ")).filter(x => x[1]); }
     catch (e) { return []; }
@@ -49,5 +51,15 @@ export function putBack(file, laneId, report = "") {
     const lost = [...new Set(taken.filter(g => !done.has(g) && !q.includes(g)))];
     if ( lost.length ) fs.writeFileSync(file, JSON.stringify([...lost, ...q]));
     return lost;
+  });
+}
+
+/** B7205: empties the list so each lane ends after the gate it is running, and keeps putBack from refilling it. Returns how many gates were left. */
+export function stop(file) {
+  return withLock(file, () => {
+    const left = readQueue(file).length;
+    fs.writeFileSync(`${file}.stop`, new Date().toISOString());
+    fs.writeFileSync(file, "[]");
+    return left;
   });
 }

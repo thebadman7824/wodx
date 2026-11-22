@@ -41,7 +41,9 @@ export function discMatches(libHeading, sheet) {
     if (SORC.includes(head)) {
         const tail = rest.join(" ");
         if (SORC.includes(S)) return false;
-        return tail === S || tail.endsWith(S) || S.endsWith(tail) || (S.length >= 5 && tail.includes(S));
+        // B7090: a sheet that names the sorcery too ("Thaumaturgy: Hands of Destruction") is matched on the path's own name
+        const own = S.split(" ")[0] === head ? S.slice(head.length + 1) : S;
+        return tail === own || tail.endsWith(own) || own.endsWith(tail) || (own.length >= 5 && tail.includes(own));
     }
     // "Quietus" covers both its variants; "Valeren (Healer)" matches "Valeren Healer" or "Valeren"
     return L.startsWith(S + " ") || S.startsWith(L + " ");
@@ -64,9 +66,26 @@ export function librarySet(da = [], v20 = [], { darkAges = false, v20Names = new
  * The powers a character can use: sheet = [{name, value}] (Disciplines and paths). For each library power, the
  * rating of the best-matching sheet entry must reach the power's level. Elder powers need the level too.
  */
+/** B7092: does a sheet entry give the Discipline a combination power needs? A sorcery ("Necromancy", "Thaumaturgy")
+ *  is met by the sorcery itself or by any of its paths; its rating is the primary (best) path's. */
+export function needMatches(need, sheetName, pathHeads = []) {
+    const N = normName(need), S = normName(sheetName);
+    if (!N || !S) return false;
+    if (!["necromancy", "thaumaturgy", "koldunic"].includes(N)) return discMatches(need, sheetName);
+    if (S === N || S.startsWith(N + " ")) return true;
+    return pathHeads.some(h => normName(h).startsWith(N + " ") && discMatches(h, sheetName));
+}
+
 export function powersFor(powers, sheet) {
     const out = [];
+    const heads = [...new Set((powers ?? []).map(p => p.d).filter(Boolean))];
     for (const p of powers ?? []) {
+        // B7092: a combination power (V20 Lore of the Clans) needs every Discipline it names at its level
+        if (Array.isArray(p.needs) && p.needs.length) {
+            const met = p.needs.map(nd => (sheet ?? []).filter(s => needMatches(nd.d, s.name, heads)).reduce((m, s) => Math.max(m, n(s.value)), 0) >= n(nd.l));
+            if (met.every(Boolean)) out.push({ ...p, rating: Math.min(...p.needs.map(nd => n(nd.l))), item: null, sheetName: p.needs.map(nd => nd.d).join(" + ") });
+            continue;
+        }
         let best = null;
         for (const s of sheet ?? []) if (discMatches(p.d, s.name) && (!best || n(s.value) > n(best.value))) best = s;
         if (best && n(best.value) >= n(p.l)) out.push({ ...p, rating: n(best.value), item: best.id ?? null, sheetName: best.name });
@@ -145,12 +164,23 @@ export const DURATION_TEXT = { scene: "the scene", conc: "while they concentrate
 /*  Roads                                                              */
 /* ------------------------------------------------------------------ */
 
+/** A Path's own name and the older names WoDX gave it (B7630: the Path of Rebellion is V20 Dark Ages' Path of the Devil, p. 135). */
+export function pathNames(p) {
+    return [p?.name, ...(p?.aliases ?? [])].map(normName).filter(Boolean);
+}
+/** The Path on a Road by its name or an older name, as saved in a character's Road flag. */
+export function pathByName(road, name) {
+    const S = normName(name);
+    if (!S) return null;
+    return (road?.paths ?? []).find(p => pathNames(p).includes(S)) ?? null;
+}
+
 /** Find the Road (and Path) a sheet's Road name means: key, name, Latin name, nickname or a Path's name. */
 export function roadFor(data, name) {
     const S = normName(name);
     if (!S || !data?.roads) return null;
     for (const [k, r] of Object.entries(data.roads)) {
-        for (const p of r.paths ?? []) if (normName(p.name) === S || (S.length > 4 && normName(p.name).includes(S))) return { key: k, road: r, path: p };
+        for (const p of r.paths ?? []) if (pathNames(p).some(x => x === S || (S.length > 4 && x.includes(S)))) return { key: k, road: r, path: p };
     }
     for (const [k, r] of Object.entries(data.roads)) {
         const names = [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
@@ -173,7 +203,8 @@ export function v20PathFor(data, label = "", custom = "") {
     let k = m && P[m[1]] ? m[1] : null;
     if (!k && custom && (!label || label === "custom")) {
         const c = String(custom).trim().toLowerCase().replace(/^the\s+/, "");
-        k = Object.keys(P).find(x => P[x].name.toLowerCase() === c) ?? null;
+        // B7081: another name the book gives the same Path ("Path of Death and the Soul" is the Path of the Bones, V20 p. 320)
+        k = Object.keys(P).find(x => [P[x].name, ...(P[x].aliases ?? [])].some(nm => nm.toLowerCase() === c)) ?? null;
     }
     return k ? { key: `v20-${k}`, road: { ...P[k], book: data.book ?? "V20" }, path: null } : null;
 }
@@ -184,8 +215,17 @@ export function sinAt(hier, rating) {
     const r = Math.max(1, Math.min(10, n(rating)));
     return hier[10 - r];
 }
+/**
+ * The hierarchy a character sins against. A Path with a full chart of its own uses it. B7631: a Path whose book entry
+ * lists only a few levels (`sinsAt`, V20 Dark Ages pp. 119, 123-125, 131) adds those sins to its Road's chart at those
+ * levels; the rest of the Road's chart still holds (p. 114: a Path shares most of its Road's ethics).
+ */
 export function hierarchyOf(found) {
-    return found?.path?.sins ?? found?.road?.sins ?? null;
+    if (found?.path?.sins) return found.path.sins;
+    const base = found?.road?.sins ?? null;
+    const at = found?.path?.sinsAt;
+    if (!base || !at) return base;
+    return base.map((s, i) => { const own = at[String(10 - i)]; return own ? `${own}; or ${s.charAt(0).toLowerCase()}${s.slice(1)}` : s; });
 }
 
 /**
@@ -193,19 +233,37 @@ export function hierarchyOf(found) {
  * kill (a vessel drained to death, a killing), killFrenzy (killing in frenzy), diablerie, frenzy (losing yourself
  * to frenzy), notRidden (failing to ride the wave). null: the event is no sin on that Road.
  */
+// B7633: sins from play on every Dark Ages Road. Each level below is the hierarchy line that names the act (V20 Dark Ages
+// pp. 116-136 and the data in roads-daw.json); the card names the line and asks, it never rolls by itself. Events:
+//   lie            a Subterfuge roll to deceive (Credibility, Fast-Talk, Manipulation + Subterfuge)
+//   theft          a Larceny roll that worked (break-in, lockpicking, sleight of hand)
+//   wordBroken     a boon refused in the Prestation ledger
+//   feedUnwilling  drinking from a living person who gave no leave
+//   starve         dawn comes and the vampire went hungry all night without feeding
+//   mindMortal     Dominate or Presence worked on a mortal
+//   embrace        the Embrace; where a Road has no row for it, the killing counts (a house reading, B7634)
+// A Path with an entry here uses only its entry, so a Path that adds to its Road's rows repeats them.
+const HUMANITY_EVENTS = { kill: 3, killFrenzy: 4, diablerie: 1, theft: 7 };
+const SIN_ROAD_EVENTS = { notRidden: 8, starve: 3 };
 export const SIN_EVENTS = {
-    humanity: { kill: 3, killFrenzy: 4, diablerie: 1 },
+    humanity: HUMANITY_EVENTS,
+    "Path of Breath": { ...HUMANITY_EVENTS, mindMortal: 10 }, "Path of Community": { ...HUMANITY_EVENTS, theft: 4 },
     beast: { starve: 1 },
     heaven: { kill: 4, diablerie: 4 },
-    "Path of Christ": { kill: 4, diablerie: 4 }, "Derech Chaim (Path of Life)": { kill: 2, diablerie: 2 }, "Path of the Prophet": { kill: 4, diablerie: 4 },
-    "Path of the Eightfold Wheel": { kill: 2 }, "Path of the Watchful Gods": { kill: 7 },
-    kings: { kill: 6, frenzy: 1, killFrenzy: 1 },
-    "Path of Chivalry": { kill: 9, killFrenzy: 9 }, "Path of Devaraja": { kill: 3, frenzy: 1, killFrenzy: 1 }, "Path of Daena": { kill: 6, frenzy: 1, killFrenzy: 1 },
+    "Path of Christ": { kill: 4, diablerie: 4, lie: 8, theft: 9, feedUnwilling: 6 },
+    "Derech Chaim (Path of Life)": { kill: 2, diablerie: 2, theft: 7 },
+    "Path of the Prophet": { kill: 4, diablerie: 4, lie: 8, theft: 8, wordBroken: 7 },
+    "Path of the Eightfold Wheel": { kill: 2, wordBroken: 4 },
+    "Path of the Watchful Gods": { kill: 7, lie: 9, wordBroken: 7 },
+    kings: { kill: 6, frenzy: 1, killFrenzy: 1, wordBroken: 2 },
+    "Path of Chivalry": { kill: 9, killFrenzy: 9, lie: 9, theft: 9, wordBroken: 2 },
+    "Path of Devaraja": { kill: 3, frenzy: 1, killFrenzy: 1, wordBroken: 2 },
+    "Path of Daena": { kill: 6, frenzy: 1, killFrenzy: 1, theft: 9, wordBroken: 2 },
     lilith: { kill: 4, killFrenzy: 4, diablerie: 4 },
-    metamorphosis: { notRidden: 10 },
-    sin: { notRidden: 8 }, "Path of Pleasure": { notRidden: 8 }, "Path of Rebellion": { notRidden: 8 }, "Path of Damnation": { notRidden: 8 },
+    metamorphosis: { notRidden: 10, starve: 6 },
+    sin: SIN_ROAD_EVENTS, "Path of Pleasure": SIN_ROAD_EVENTS, "Path of the Devil": SIN_ROAD_EVENTS, "Path of Screams": { notRidden: 8, starve: 7 },
     bones: { frenzy: 6, killFrenzy: 6 },
-    yasa: { killFrenzy: 4 },
+    yasa: { killFrenzy: 4, lie: 8 },
     // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
     // Path has no row for it, kill counts. A null is no sin. Instinct Paths sin on notRidden, Self-Control ones on frenzy.
     "v20-blood": { killFeed: 10, kill: null, frenzy: 6, killFrenzy: 6 },
@@ -224,14 +282,66 @@ export const SIN_EVENTS = {
 export function sinForEvent(found, event) {
     if (!found) return null;
     const byPath = found.path ? SIN_EVENTS[found.path.name] : null;
-    const t = byPath ?? SIN_EVENTS[found.key] ?? {};
+    // B7081: a variant Path (Harmony) sins as the Path it grew from
+    const t = byPath ?? SIN_EVENTS[found.key] ?? (found.road?.variantOf ? SIN_EVENTS[`v20-${found.road.variantOf}`] : null) ?? {};
     if (event === "killFeed" && !("killFeed" in t)) return t.kill ?? null;
+    if (event === "embrace" && !("embrace" in t)) return ("killFeed" in t ? t.killFeed : t.kill) ?? null;
     return t[event] ?? null;
+}
+
+/** B7633: the sin event a dice roll from the action window is, or null. A lie is told whether or not it lands; a theft counts when the roll worked. */
+const LIE_PRESETS = new Set(["credibility", "fasttalk"]), THEFT_PRESETS = new Set(["intrusion", "check-sleight"]);
+export function rollSinEvent({ preset = "", attr = "", ability = "", successes = 0, botch = false } = {}) {
+    const a = String(ability ?? "").toLowerCase(), at = String(attr ?? "").toLowerCase();
+    if (LIE_PRESETS.has(preset) || (!preset && a === "subterfuge" && at === "manipulation")) return "lie";
+    if ((THEFT_PRESETS.has(preset) || (!preset && a === "larceny" && at === "dexterity")) && !botch && n(successes) > 0) return "theft";
+    return null;
+}
+
+/**
+ * B7633: did a vampire go hungry all night? At dawn: blood under the hunger line (7 minus Self-Control, or Instinct on an
+ * Instinct Road, V20 Dark Ages p. 357) and nothing drunk since `night` seconds before dawn (house reading: 16 hours,
+ * the longest Moravian winter night).
+ */
+export const LONGEST_NIGHT = 16 * 3600;
+export function starvedTonight({ blood, virtue, lastFed = null, now, night = LONGEST_NIGHT } = {}) {
+    if (n(blood) >= 7 - n(virtue)) return false;
+    return lastFed === null || lastFed === undefined || n(lastFed) < n(now) - night;
+}
+
+/**
+ * B7080: the bearing step at a Humanity or Path rating, from the table in the data (V20 p. 310): [[minimum rating, step]]
+ * from the top down. A + step makes the roll harder.
+ */
+export function bearingStep(steps, rating) {
+    const r = n(rating);
+    for (const [min, step] of steps ?? []) if (r >= n(min)) return n(step);
+    return 0;
+}
+
+/**
+ * B7080: a V20 Path's bearing on one roll (V20 p. 310; each Path's bearing with its description, pp. 316-338). Only a
+ * Path walker has one here; Humanity's bearing stays with the Road aura box and the low-Humanity rules. The bearing
+ * counts on its own when the roll's tags meet the Path's (Stealth for the Bones, seduction for the Cathari) or, for
+ * Lilith, when the roller carries a wound penalty; `ticked` is the player saying the roll draws on it otherwise.
+ * Returns null for no Path, else {name, covers, path, step, auto, applies, byItself (some rolls count on their own), part}.
+ */
+export function pathBearing(data, found, rating, { tags = [], wounded = false, ticked = false } = {}) {
+    const b = found?.road?.bearing;
+    if (!b || !String(found.key ?? "").startsWith("v20-")) return null;
+    const step = bearingStep(data?.bearingSteps, rating);
+    const want = (b.tags ?? []).map(t => String(t).toLowerCase());
+    const auto = want.some(t => tags.map(x => String(x).toLowerCase()).includes(t)) || (!!b.wounded && !!wounded);
+    const applies = auto || !!ticked;
+    const sign = step > 0 ? "+" : "";
+    return { name: b.name, covers: b.covers, path: found.road.name, step, auto, applies, byItself: want.length > 0 || !!b.wounded,
+        part: applies && step ? `${b.name} bearing (${found.road.name} ${n(rating)}) ${sign}${step} diff, ${data?.book ?? "V20"} p. ${data?.bearingPage ?? 310}` : "" };
 }
 
 /** The Road's two Virtues decide the labels and whether Instinct rules apply. */
 export function roadVirtues(found) {
-    const v = found?.road?.virtues ?? [];
+    // B7632: a Path with Virtues of its own uses them (Journeys p. 118, Chivalry p. 126, the Devil p. 136)
+    const v = found?.path?.virtues ?? found?.road?.virtues ?? [];
     return { conviction: v.includes("conviction"), instinct: v.includes("instinct") };
 }
 
