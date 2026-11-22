@@ -7,3 +7,4 @@
 {"file":"changes/wodx-chronicle/future-moravia.md","verdict":"working","how":"Shared events rebuilt from source; chronicle guard clean; chronicle, events, future-world, guards harness pass","hash":"c7a211d9e69b","at":"2026-11-22T10:52Z"}
 {"file":"changes/wodx-rothenstein/fortress.md","verdict":"working","how":"Shared events rebuilt from source; chronicle guard clean; chronicle, events, future-world, guards harness pass","hash":"113e2e41d3cf","at":"2026-11-22T10:52Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Merge conflict: kept main's two new rows and this branch's row","hash":"1e7fd348b0d5","at":"2026-11-22T14:56Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Merge conflict: kept main's new rows and this branch's row","hash":"3a2a86dbf083","at":"2026-11-22T16:14Z"}
