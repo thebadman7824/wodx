@@ -154,7 +154,9 @@ for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ??
   add("Demon (DtF)", `Lore of ${l.label.replace(/^the /, "")}`, `${"•".repeat(k + 1)} ${e.name}`, { src: [e, c], status: st, kw: c?.spec?.kw ? [c.spec.kw] : kw?.keywords ?? [], page: `DtF p. ${l.page}`,
     how: c ? `evocation card (effect, duration, range, high Torment)${st === "applies" ? `; effects card ${c.spec.kind}` : ""}; running count against permanent Faith` : "Evoke rolls only" });
 }
-const dtfFull = Object.values(D.LORES).flatMap(l => (l.evo ?? []).map(e => e.name.toLowerCase()));
+// B7062: the keyword list also names apocalyptic form powers by a short name ("Chameleon" for Chameleon Skin, "Conjure"
+// for Conjure from Nothing, DtF pp. 207, 215); those are counted with the forms below, not as powers with no rules
+const dtfFull = Object.values(D.LORES).flatMap(l => [...(l.evo ?? []).map(e => e.name), ...(l.form ?? []), ...(l.high ?? [])].map(x => String(x).toLowerCase()));
 // A short name in the keyword list ("Manipulate", "Reach Across") is one of the Lore table's evocations, already counted
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.dtf) ) if ( !dtfNames.has(id) && !dtfFull.some(f => f.startsWith(String(e.n).toLowerCase())) )
   add("Demon (DtF)", "Lores (keyword list only)", e.n, { src: e, status: "none", kw: e.k, page: "DtF", how: "named in the keyword list, not in the Lore table" });
@@ -224,9 +226,10 @@ for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, 
   how: g.k === "offering" ? "Thralls window: each thrall's offering reaches the demon's Faith at dawn (demon.js daily)" : "Thralls window lists the gift and its Faith" });
 const IB = await import(A("scripts/inq-blessings.js"));
 for ( const b of IB.BLESSINGS ) {
-  const st = applyingSpec(b.spec) && !INFO.has(b.spec.kw) && E.KEYWORDS[b.spec.kw]?.tier !== "st" && b.spec.kw !== "free" ? "applies" : "card";
+  // B7065: a Blessing whose rule is built into a window (b.applied names where) applies too
+  const st = b.applied || (applyingSpec(b.spec) && !INFO.has(b.spec.kw) && E.KEYWORDS[b.spec.kw]?.tier !== "st" && b.spec.kw !== "free") ? "applies" : "card";
   add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { src: b, status: st, story: st === "card" ? b.story : undefined, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
-    how: `Blessing window: the book list sets the roll, difficulty and Conviction${st === "applies" ? `; effects card ${b.spec.kind}` : "; the card says what it does"}` });
+    how: b.applied ? `built into a window: ${b.applied}` : `Blessing window: the book list sets the roll, difficulty and Conviction${st === "applies" ? `; effects card ${b.spec.kind}` : "; the card says what it does"}` });
 }
 for ( const g of J("gifts-fera.json").gifts ) {
   const st = applyingSpec(g.spec) && !INFO.has(g.spec.kw) && E.KEYWORDS[g.spec.kw]?.tier !== "st" && g.spec.kw !== "free" ? "applies" : "card";
@@ -245,7 +248,8 @@ const RR = await import(pathToFileURL(path.join(ROOT, "tools/powers/read-rules.m
 const specsHave = r => { const s = r.src; const l = Array.isArray(s) ? s : [s]; return l.some(x => x && (x.kind || x.spec)); };
 const kwOutcome = (k, ctx = {}) => (E.KEYWORDS[k] ? E.outcome(k, { ok: true, strength: 3, duration: 1, targets: 0 }, ctx) : null);
 const specOutcomes = sp => { try { return DAE.outcomesOf(sp, { label: "x", source: "" }, 3, ""); } catch (e) { return null; } };
-for ( const r of rows ) r.read = r.status === "applies" ? (r.world ? "direct" : RR.powerRead(r, kwOutcome, specOutcomes)) : null;
+// B7065: a rule built into the line's own window (src.applied) is worked by that window, as "direct" is
+for ( const r of rows ) r.read = r.status === "applies" ? (r.world || r.src?.applied ? "direct" : RR.powerRead(r, kwOutcome, specOutcomes)) : null;
 const out = { made: new Date().toISOString(), counts: {}, reads: {}, byLine: {}, rows };
 for ( const r of rows ) if ( r.read ) out.reads[r.read] = (out.reads[r.read] ?? 0) + 1;
 for ( const r of rows ) {
