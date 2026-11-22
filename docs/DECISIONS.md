@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7620
+Next free block: B7630
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -449,6 +449,7 @@ Next free block: B7620
 | B7590-B7599 | No gate run on a pull request the train has already merged (PR 2112, first written as B7400) (used B7590) | tools |
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
+| B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15125,3 +15126,14 @@ Reverse: drop seedChronicleCaerns and the seeded list from the register.
 WoDX Storyteller. local.hunters: {stage, region}. At the first hunters' turn in a world with the chronicle in play, the region (else the homeland) starts at the least pressure of that stage (hunters-rules STAGES), as if the talk began now; from then on it cools and grows like any region. Done once a chronicle (the hunters' state keeps started), and never over a region that already has a record. A house reading: the books set no starting pressure.
 
 Reverse: drop applyStart and its call at the head of turn().
+
+## B7620. The Main PC drives the merge train again (2026-11-22)
+tools/pcq/runner.json has `train: true` again and tools/pcq/runner.benjamin-pc.json has `train: false`. This reverses
+B7500. The Main PC came back from its repair on 22 November with 64 GB of RAM, and Ben asked for the work moved to the
+Secondary PC to come home. Only one runner may drive the train (B7202). The Secondary PC was powered off for its own
+RAM install before this change merged, so the two never drove at the same time. When it comes back it reads the new
+runner.benjamin-pc.json and runs lane 8 gate jobs only. The Main PC starts its own train state from the labels; its
+old train-state.json from 18 November points at #1848, which has since merged, and the train retires a merged front
+(B7400).
+
+Reverse: set `train` back to `false` in runner.json and to `true` in runner.benjamin-pc.json (B7500's setup).
