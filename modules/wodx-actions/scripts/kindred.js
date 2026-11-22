@@ -86,7 +86,7 @@ export function roadOf(actor) {
     const f = actor?.getFlag?.(MOD, "road");
     if (f?.key && DATA.roads.roads[f.key]) {
         const road = DATA.roads.roads[f.key];
-        return { key: f.key, road, path: road.paths.find(p => p.name === f.path) ?? null };
+        return { key: f.key, road, path: K.pathByName(road, f.path) };
     }
     const p = actor?.system?.advantages?.path ?? {};
     // B6724: a V20 Path of Enlightenment from the system sheet's choice
@@ -375,16 +375,18 @@ export function build(ctx) {
             const [k, path] = root.querySelector("[name=road]").value.split("|");
             const r = DATA.roads.roads[k];
             const found = { key: k, road: r, path: r?.paths.find(p => p.name === path) ?? null };
-            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)} · <b>Virtues:</b> ${r.virtues.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${hierarchyTable(found, rating)}` : "";
+            const vs = found.path?.virtues ?? r?.virtues ?? [];
+            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)} · <b>Virtues:</b> ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${hierarchyTable(found, rating)}` : "";
         };
         return dialog(`Road: ${actor.name}`, content, "Save", async fd => {
             const [k, path] = String(fd.road).split("|");
             const r = DATA.roads.roads[k];
             if (!r) return null;
+            const vs = r.paths.find(p => p.name === path)?.virtues ?? r.virtues;
             await ctx.setFlag(actor, "road", { key: k, path: path || null });
             if (fd.writeSheet) await updateActor(actor, { "system.advantages.path.custom": path || r.name });
             await logEvent(actor, `Walks the ${path || r.name}.`, "road");
-            return post(actor, `${actor.name}: ${esc(path || r.name)}`, `<div class="vta-note">Virtues: ${r.virtues.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage. Aura: ${esc(r.aura)}. Sin, frenzy and Rötschreck rolls now use these.</div>`);
+            return post(actor, `${actor.name}: ${esc(path || r.name)}`, `<div class="vta-note">Virtues: ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage. Aura: ${esc(r.aura)}. Sin, frenzy and Rötschreck rolls now use these.</div>`);
         }, { width: 540, render: root => { show(root); root.querySelector("[name=road]").addEventListener("change", () => show(root)); } });
     }
 

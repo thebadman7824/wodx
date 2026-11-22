@@ -139,6 +139,46 @@ test("sins from events follow the Road: Kings frenzy, Humanity killing, the Beas
   assert.equal(K.sinForEvent(K.roadFor(ROADS, "Road of Sin"), "notRidden"), 8);
 });
 
+test("Paths from V20 Dark Ages (B7630-B7632): own sins at their levels, own Virtues, the Path of the Devil", () => {
+  // B7631: the nine Paths whose book entries list a few sins of their own
+  const partial = ["Path of the Hunter", "Path of Journeys", "Path of Liberation", "Path of Breath", "Path of Community",
+    "Path of Illumination", "Path of Thorns", "Path of Veils", "Path of Making"];
+  for ( const name of partial ) {
+    const f = K.roadFor(ROADS, name);
+    assert.equal(f?.path?.name, name, name);
+    const at = f.path.sinsAt;
+    assert.ok(at && Object.keys(at).length >= 2, name);
+    const h = K.hierarchyOf(f);
+    assert.equal(h.length, 10, name);
+    for ( const [lv, s] of Object.entries(at) ) {
+      assert.ok(Number(lv) >= 1 && Number(lv) <= 10, `${name} ${lv}`);
+      assert.ok(K.sinAt(h, Number(lv)).startsWith(s), `${name} ${lv}`);
+      assert.ok(K.sinAt(h, Number(lv)).toLowerCase().includes(K.sinAt(f.road.sins, Number(lv)).toLowerCase()), `${name} keeps the Road's sin at ${lv}`);
+    }
+  }
+  // a level the Path doesn't name keeps the Road's sin
+  const hunt = K.roadFor(ROADS, "Path of the Hunter");
+  assert.equal(K.sinAt(K.hierarchyOf(hunt), 1), ROADS.roads.beast.sins[9]);
+  // a Path with a full chart of its own still uses it
+  assert.deepEqual(K.hierarchyOf(K.roadFor(ROADS, "Path of Chivalry")), K.roadFor(ROADS, "Path of Chivalry").path.sins);
+  // B7632: Virtues of the Path's own (V20DA pp. 118, 126, 136)
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of Journeys")), {conviction: true, instinct: false});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of the Hunter")), {conviction: true, instinct: true});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of Chivalry")), {conviction: false, instinct: false});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of the Devil")), {conviction: true, instinct: false});
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Path of Pleasure")), {conviction: true, instinct: true});
+  // B7630: the old names still find the Paths, so saved characters keep theirs
+  assert.equal(K.roadFor(ROADS, "Path of Rebellion").path.name, "Path of the Devil");
+  assert.equal(K.roadFor(ROADS, "Path of Damnation").path.name, "Path of Screams");
+  assert.equal(K.pathByName(ROADS.roads.sin, "Path of Rebellion").name, "Path of the Devil");
+  assert.equal(K.pathByName(ROADS.roads.sin, "Path of Damnation").name, "Path of Screams");
+  assert.equal(K.pathByName(ROADS.roads.sin, "nonsense"), null);
+  assert.equal(K.roadFor(ROADS, "Path of Screams").path.sins.length, 10);
+  assert.equal(ROADS.roads.sin.paths.filter(p => p.name === "Path of Damnation").length, 0);
+  assert.equal(K.sinForEvent(K.roadFor(ROADS, "Path of the Devil"), "notRidden"), 8);
+  assert.equal(K.sinForEvent(K.roadFor(ROADS, "Path of Screams"), "notRidden"), 8);
+});
+
 test("mortal healing with time (VtDA20 p. 352): worst level first; lethal past Hurt needs care", () => {
   const h = 3600, d = 86400;
   let r = K.mortalHealing({bashing: 3}, 2 * h);

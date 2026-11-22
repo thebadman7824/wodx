@@ -164,12 +164,23 @@ export const DURATION_TEXT = { scene: "the scene", conc: "while they concentrate
 /*  Roads                                                              */
 /* ------------------------------------------------------------------ */
 
+/** A Path's own name and the older names WoDX gave it (B7630: the Path of Rebellion is V20 Dark Ages' Path of the Devil, p. 135). */
+export function pathNames(p) {
+    return [p?.name, ...(p?.aliases ?? [])].map(normName).filter(Boolean);
+}
+/** The Path on a Road by its name or an older name, as saved in a character's Road flag. */
+export function pathByName(road, name) {
+    const S = normName(name);
+    if (!S) return null;
+    return (road?.paths ?? []).find(p => pathNames(p).includes(S)) ?? null;
+}
+
 /** Find the Road (and Path) a sheet's Road name means: key, name, Latin name, nickname or a Path's name. */
 export function roadFor(data, name) {
     const S = normName(name);
     if (!S || !data?.roads) return null;
     for (const [k, r] of Object.entries(data.roads)) {
-        for (const p of r.paths ?? []) if (normName(p.name) === S || (S.length > 4 && normName(p.name).includes(S))) return { key: k, road: r, path: p };
+        for (const p of r.paths ?? []) if (pathNames(p).some(x => x === S || (S.length > 4 && x.includes(S)))) return { key: k, road: r, path: p };
     }
     for (const [k, r] of Object.entries(data.roads)) {
         const names = [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
@@ -204,8 +215,17 @@ export function sinAt(hier, rating) {
     const r = Math.max(1, Math.min(10, n(rating)));
     return hier[10 - r];
 }
+/**
+ * The hierarchy a character sins against. A Path with a full chart of its own uses it. B7631: a Path whose book entry
+ * lists only a few levels (`sinsAt`, V20 Dark Ages pp. 119, 123-125, 131) adds those sins to its Road's chart at those
+ * levels; the rest of the Road's chart still holds (p. 114: a Path shares most of its Road's ethics).
+ */
 export function hierarchyOf(found) {
-    return found?.path?.sins ?? found?.road?.sins ?? null;
+    if (found?.path?.sins) return found.path.sins;
+    const base = found?.road?.sins ?? null;
+    const at = found?.path?.sinsAt;
+    if (!base || !at) return base;
+    return base.map((s, i) => { const own = at[String(10 - i)]; return own ? `${own}; or ${s.charAt(0).toLowerCase()}${s.slice(1)}` : s; });
 }
 
 /**
@@ -223,7 +243,7 @@ export const SIN_EVENTS = {
     "Path of Chivalry": { kill: 9, killFrenzy: 9 }, "Path of Devaraja": { kill: 3, frenzy: 1, killFrenzy: 1 }, "Path of Daena": { kill: 6, frenzy: 1, killFrenzy: 1 },
     lilith: { kill: 4, killFrenzy: 4, diablerie: 4 },
     metamorphosis: { notRidden: 10 },
-    sin: { notRidden: 8 }, "Path of Pleasure": { notRidden: 8 }, "Path of Rebellion": { notRidden: 8 }, "Path of Damnation": { notRidden: 8 },
+    sin: { notRidden: 8 }, "Path of Pleasure": { notRidden: 8 }, "Path of the Devil": { notRidden: 8 }, "Path of Screams": { notRidden: 8 },
     bones: { frenzy: 6, killFrenzy: 6 },
     yasa: { killFrenzy: 4 },
     // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
@@ -281,7 +301,8 @@ export function pathBearing(data, found, rating, { tags = [], wounded = false, t
 
 /** The Road's two Virtues decide the labels and whether Instinct rules apply. */
 export function roadVirtues(found) {
-    const v = found?.road?.virtues ?? [];
+    // B7632: a Path with Virtues of its own uses them (Journeys p. 118, Chivalry p. 126, the Devil p. 136)
+    const v = found?.path?.virtues ?? found?.road?.virtues ?? [];
     return { conviction: v.includes("conviction"), instinct: v.includes("instinct") };
 }
 
