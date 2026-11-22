@@ -146,8 +146,23 @@ async function actNow(sc, combat, tok, mode) {
   return msg ? game.messages.get(msg.id) : null;
 }
 
+/**
+ * B7651: gate7b moves the turns itself (turnTo) and makes the NPCs act with takeTurn. The turn conductor, when another
+ * gate's run leaves it on, ends turns by itself as well: it skips a combatant that cannot act, so the lost-action step
+ * found the next NPC's turn instead of the fighter's (job 2241). The conductor is off while this gate runs and put back after.
+ */
+const conductorNow = () => { try { return game.settings.get("wodx-combat", "turnConductor"); } catch (e) { return undefined; } };
+let conductorWas;
 export async function run() {
+  conductorWas = conductorNow();
+  if ( conductorWas !== undefined && conductorWas !== "off" ) await game.settings.set("wodx-combat", "turnConductor", "off");
+  try { return await body(); }
+  finally { if ( conductorWas !== undefined && conductorWas !== "off" ) await game.settings.set("wodx-combat", "turnConductor", conductorWas); }
+}
+
+async function body() {
   const {R, ok, step} = harness();
+  R.conductorAtStart = conductorWas ?? null;
   const startScene = canvas.scene;
   const roles = cast();
   R.cast = {hero: roles.hero?.name, fighter: roles.fighter?.name, runner: roles.runner?.name, kindred: roles.kindred?.name ?? null,
@@ -337,7 +352,7 @@ export async function run() {
     await turnTo(combat, T.fighter);
     await T.fighter.actor.setFlag("wodx-combat", "lostAction", {combat: combat.id, round: combat.round});
     await sc.setFlag(MOD, "mode", "auto");
-    const was = {...turnOf(combat), want: T.fighter.id === combat.combatant?.tokenId, lost: T.fighter.actor.getFlag("wodx-combat", "lostAction") ?? null};
+    const was = {...turnOf(combat), want: T.fighter.id === combat.combatant?.tokenId, lost: T.fighter.actor.getFlag("wodx-combat", "lostAction") ?? null, conductor: conductorNow() ?? null};
     const msg = await npc().takeTurn(combat, {force: true});
     await sleep(800);
     await T.fighter.actor.unsetFlag("wodx-combat", "lostAction");

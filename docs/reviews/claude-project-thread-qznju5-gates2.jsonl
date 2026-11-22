@@ -1,0 +1,3 @@
+{"file":"tools/gate/gatederange.mjs","verdict":"working","how":"Read the diff; node --check; read job 2241's failing details for gatederange step 2 and gatehuntpowder step 7","hash":"92c85b9ad868","at":"2026-11-22T16:36Z"}
+{"file":"tools/gate/gatehuntpowder.mjs","verdict":"working","how":"Read the diff; node --check; read job 2241's failing details for gatederange step 2 and gatehuntpowder step 7","hash":"d3035a9f3fc5","at":"2026-11-22T16:36Z"}
+{"file":"changes/decisions/B7650.md","verdict":"working","how":"Read the diff; read job 2241's failing details for gate7b, gatederange step 2 and gatehuntpowder step 7","hash":"a02152bddd1d","at":"2026-11-22T16:37Z"}
