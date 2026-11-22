@@ -86,7 +86,7 @@ export function roadOf(actor) {
     const f = actor?.getFlag?.(MOD, "road");
     if (f?.key && DATA.roads.roads[f.key]) {
         const road = DATA.roads.roads[f.key];
-        return { key: f.key, road, path: road.paths.find(p => p.name === f.path) ?? null };
+        return { key: f.key, road, path: K.pathByName(road, f.path) };
     }
     const p = actor?.system?.advantages?.path ?? {};
     // B6724: a V20 Path of Enlightenment from the system sheet's choice
@@ -301,6 +301,11 @@ export function build(ctx) {
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             // Who could see it, if the power showed (3.42.0): the Storyteller judges whether it did
             if (!p.passive && setting("witnessAsk")) revealed(actor, { event: `used ${p.n}`, ask: true }).catch(e => console.error("WoDX |", e));
+            // B7633: Dominate or Presence worked on a mortal: a Road that counts it asks (the Path of Breath, level 10)
+            if (successes > 0 && tgtNow && tgtNow !== actor && /^(dominate|presence)$/i.test(String(p.d ?? "").trim()) && ["mortal", "hunter"].includes(P.detectProfile(tgtNow))) {
+                const sp = await sinPrompt(actor, "mindMortal", `${p.n} on ${tgtNow.name}, a mortal`);
+                if (sp?.html) body += sp.html;
+            }
             await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
@@ -375,16 +380,18 @@ export function build(ctx) {
             const [k, path] = root.querySelector("[name=road]").value.split("|");
             const r = DATA.roads.roads[k];
             const found = { key: k, road: r, path: r?.paths.find(p => p.name === path) ?? null };
-            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)} · <b>Virtues:</b> ${r.virtues.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${hierarchyTable(found, rating)}` : "";
+            const vs = found.path?.virtues ?? r?.virtues ?? [];
+            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)} · <b>Virtues:</b> ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${hierarchyTable(found, rating)}` : "";
         };
         return dialog(`Road: ${actor.name}`, content, "Save", async fd => {
             const [k, path] = String(fd.road).split("|");
             const r = DATA.roads.roads[k];
             if (!r) return null;
+            const vs = r.paths.find(p => p.name === path)?.virtues ?? r.virtues;
             await ctx.setFlag(actor, "road", { key: k, path: path || null });
             if (fd.writeSheet) await updateActor(actor, { "system.advantages.path.custom": path || r.name });
             await logEvent(actor, `Walks the ${path || r.name}.`, "road");
-            return post(actor, `${actor.name}: ${esc(path || r.name)}`, `<div class="vta-note">Virtues: ${r.virtues.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage. Aura: ${esc(r.aura)}. Sin, frenzy and Rötschreck rolls now use these.</div>`);
+            return post(actor, `${actor.name}: ${esc(path || r.name)}`, `<div class="vta-note">Virtues: ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage. Aura: ${esc(r.aura)}. Sin, frenzy and Rötschreck rolls now use these.</div>`);
         }, { width: 540, render: root => { show(root); root.querySelector("[name=road]").addEventListener("change", () => show(root)); } });
     }
 
@@ -439,6 +446,9 @@ export function build(ctx) {
                 const e = list[n(fd.settle)];
                 e.status = fd.how; e.settled = when;
                 text = `${e.from}'s ${K.BOONS[e.kind]?.label.toLowerCase() ?? "boon"} to ${e.to}: ${fd.how}.`;
+                // B7633: refusing a boon owed is breaking one's word: the Roads that count it ask (Kings 2, the Prophet 7...)
+                const debtor = fd.how === "refused" ? game.actors.getName(e.from) : null;
+                if (debtor && P.detectProfile(debtor) === "kindred") { try { await sinPrompt(debtor, "wordBroken", `Refuses the ${K.BOONS[e.kind]?.label.toLowerCase() ?? "boon"} owed to ${e.to}`); } catch (err) { console.warn("WoDX | boon", err); } }
             } else {
                 if (!fd.from || !fd.to) return ctx.notify("Name who owes and to whom.");
                 list.push({ date: when, from: fd.from, to: fd.to, kind: fd.kind, for: fd.for || "", status: "owed" });
@@ -790,7 +800,7 @@ export function build(ctx) {
         return null;
     }
 
-    /** A sin prompt with the Road's suggested level (event: kill, killFrenzy, diablerie, frenzy, notRidden). */
+    /** A sin prompt with the Road's suggested level (event: kill, killFrenzy, killFeed, diablerie, frenzy, notRidden, and from B7633 lie, theft, wordBroken, feedUnwilling, starve, mindMortal, embrace). */
     async function sinPrompt(actor, event, what) {
         if (!setting("eventPrompts")) return null;
         const found = roadOf(actor);
@@ -904,9 +914,22 @@ export function build(ctx) {
         }
     }
 
+    /** B7633: at dawn, a vampire who went hungry all night and fed nothing: the Roads that count it as a sin ask (Beast 1, Sin 3...). Returns the names asked about. */
+    async function hungryAtDawn(vamps, now = game.time.worldTime) {
+        const asked = [];
+        for (const a of vamps ?? []) {
+            if (!a || P.detectProfile(a) !== "kindred") continue;
+            const vv = a.system?.advantages?.virtues ?? {};
+            const virtue = n(vv.selfcontrol?.permanent) || n(vv.instinct?.permanent);
+            if (!K.starvedTonight({ blood: ctx.blood(a).value, virtue, lastFed: a.getFlag(MOD, "lastFed") ?? null, now })) continue;
+            try { if (await sinPrompt(a, "starve", "Dawn comes and they went hungry all night without feeding")) asked.push(a.name); } catch (e) { console.warn("WoDX | starve", e); }
+        }
+        return asked;
+    }
     async function dawn(t) {
         const vamps = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor"));
         if (!vamps.length) return null;
+        await hungryAtDawn(vamps);
         const rows = [];
         const api = ctx.api();
         const sunInfo = await api.sunNow?.();
@@ -1158,7 +1181,7 @@ export function build(ctx) {
         return K.powersFor(lib, sheetDisciplines(actor)).filter(p => !p.passive && p.r).map(p => ({ use: "useDiscipline", field: "power", value: p.id, name: p.n, disc: p.d, level: p.l,
             set: /^V20/.test(p.book ?? "") ? "v20" : "disc", id: /^V20/.test(p.book ?? "") ? p.kw : p.id }));
     }
-    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt, hungryAtDawn,
         daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
