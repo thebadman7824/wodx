@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.86.2 (Lifepaths: the plague years band reads the Black Death from the Chronicle canon, 1347 to 1351 (was 1348 to 1352); the bands either side move with it (B7173))
 - 0.86.1 (The Embrace asks the sire's Road (B7633): when a vampire Embraces a mortal, the sin card comes up with the level the sire's Road or Path names for the killing, if it names one)
 - 0.86.0 (A teacher has to be willing (B7131): WoDX NPC's attitude and trust decide teach, a price or a refusal, and the town each one is in decides whether a trip comes first. willingness and priceFor are new in the learning rules)
 - 0.85.1 (The first night's Live guard reads WoDX Chronicle's one Live-world list (B7564); comments and a test name no longer name the first chronicle)

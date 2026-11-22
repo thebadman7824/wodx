@@ -412,6 +412,7 @@ Next free block: B7650
 | B7130-B7139 | Weekly review picks mc1, mc2, so1, st2 (17 November): weights on land, willing teachers, oracle, Voices freeze (ch1 came with the chronicle packs, PR 2098) (used B7130-B7134) | Combat, Creation, NPC, Solo |
 | B7140-B7159 | Finish-Line Phase 0: the feature registry, gate strength, merge rule 4, decision-number check, PC upkeep warning (used B7140-B7149) | tools (registry, merge rules), docs |
 | B7160-B7169 | Solo play testing: release-candidate build for the solo world and Report a problem (used B7160-B7163) | Solo |
+| B7170-B7179 | Chronicle canon: shared dates in one checked file, with a guard test (used B7170-B7177) | Chronicle, NPC, Storyteller, Creation, tools (harness) |
 | B7180-B7189 | Gate trust, first piece: the runner puts back document flags; a renamed decision fragment no longer clashes (used B7180-B7181) | tools (lanes, merge rules) |
 | B7190-B7199 | Gate trust: reset first, sheets and placed documents put back, busy runners take new lane tools (used B7190-B7194) | tools (pcq runner, lanes) |
 | B7200-B7209 | Gate runs that stop getting stuck: drift ignore list, hang watch, merge train (used B7200-B7209) | tools (testbed lanes, PC job queue) |
@@ -450,7 +451,7 @@ Next free block: B7650
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
-| B7630-B7649 | Dark Ages depth desk: a domain someone else wants (used B7630-B7640) | NPC |
+| B7630-B7649 | Dark Ages depth desk: Disciplines you can see on the map (used B7630-B7643) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14293,6 +14294,36 @@ No new routine. The PC helper copies the seat's report files to /mnt/project-fil
 
 Reverse: stop collecting; reports stay in the world's journal.
 
+## B7170. Chronicle canon (2026-11-17)
+Finish-Line Desk o6 (Ben: canon in Chronicle, with the guard). modules/wodx-chronicle/data/canon/index.mjs holds each shared date once, with the book pages it was checked against, and canon("<id>") reads it (an unknown id throws). tools/harness/canon.test.mjs scans modules/ and system/ (not the Encyclopaedia's book index or language files): a hand-typed year in the same clause as a canon name fails when it lies outside the canon span, and the copies that agree sit on tools/harness/canon-copies.json, which may only shrink. First batch, six facts: camarilla-founded 1435, first-conclave 1486, convention-of-thorns 1493, anarch-revolt 1335 to 1493, second-anarch-revolt 1944, black-death 1347 to 1351. The Sabbat has no single founding night in the books (Lore of the Clans pdf 232: it formed some time after Thorns), so it waits.
+
+Reverse: delete data/canon/, the test and its list, and put the typed years back.
+
+## B7171. The Anarch Revolt runs 1335 to 1493 (2026-11-17)
+WoDX had three spans: 1381 to 1493 (story chain), 1394 to 1493 (NPC fates danger) and 1381 to 1492 (rivalries). No book gives 1381 or 1394. The V20 books give no starting year (Anarchs Unbound pdf 13: the stage is set by the 14th century, the war consumes the 15th); Revised Archons pdf 32 dates Tyler's first blow against Hardestadt to about 1335. The Revolt runs until the Convention of Thorns in October 1493, so 1493 is still a Revolt year for rivalries.
+
+Reverse: set anarch-revolt's from to 1381 in the canon file.
+
+## B7172. The Camarilla was founded in 1435, not 1486 (2026-11-17)
+The Storyteller's Renaissance primer said the Camarilla forms in 1486. Lore of the Clans pdf 251 (V20) and Archons pdf 32 give 1435; 1486 is the first Conclave. Fixed, and the primer reads both dates from the canon.
+
+Reverse: none needed (a fix).
+
+## B7173. The Black Death is 1347 to 1351 everywhere (2026-11-17)
+Changeling 2nd edition pdf 55 and Wraith 20th pdf 99. The Chronicle story chain ran to 1353 and the Creation lifepath band ran 1348 to 1352; both read the canon now, and the bands either side move with it. Local dates inside the span (Rothenstein's 1348 arrival) stay as they are.
+
+Reverse: set black-death's span in the canon file.
+
+## B7174. The Second Anarch Revolt is 1944 (2026-11-17)
+V20 pdf 52 says 1944; Anarchs Unbound pdf 20 says 1943. V20 comes first.
+
+Reverse: set second-anarch-revolt to 1943.
+
+## B7177. A battle or saga step lands on a town once (2026-11-17)
+WoDX Storyteller. Found by gatetowns failing late in job 1898. onBattle and onSaga saved the "seen" mark only after landing the change, so a second call during the landing sacked the town again (600, 522, 455 people). Both now hold the town and key in a landing set from the check until the save.
+
+Reverse: none needed (a fix).
+
 ## B7180. A renamed decision fragment no longer clashes with itself (2026-11-17)
 Fix to B7145. branchDecisions() read every fragment ever added on a branch, including ones renamed away, so PR 1836's B7010.md (renumbered to B7110.md after PR 1835 took B7010) still claimed B7010. A fragment gone by the head now counts only when the commit that removed it also wrote docs/DECISIONS.md, which is what merge-stamp does. Regression test in tools/harness/registry.test.mjs.
 
@@ -15193,3 +15224,18 @@ Reverse: remove the button and trackPoacher.
 WoDX NPC (poach-rules.mjs brokenLaw; factions.mjs onPoachTracked). The result names the court law broken: the holder's polity's own law of hunting in another's fief or domain (the Dark Ages court has "hunting in another's fief"), else the Tradition of Domain. On the Storyteller's side the holder's faction thinks a step worse of the poacher's (through the approval queue) and the tracker's History page records it. No court case is opened by itself: bringing it before the Prince is played at the table.
 
 Reverse: remove onPoachTracked and its createChatMessage hook.
+
+## B7641. A Discipline worked shows on the token (2026-11-22)
+WoDX Actions (discipline-looks.js, effects.js). When a power is rolled through its window (WoDX Actions' wodxPowerShown), the worker's tokens on the scene are marked for six seconds and WoDX Chronicle's token looks draw it: Presence's warm aura, Dominate's red eyes, Animalism's earthy glow, Celerity's blur, Potence's flush, Fortitude's stone sheen, Obtenebration's shadow, Protean's red eyes, Vicissitude's moving flesh, and the rest of the seventeen Disciplines the Dark Ages clans start with. Colours, glows and the six seconds are WoDX's own (show, don't tell). Desk item 7, recommended option "All thirteen Disciplines" (the desk's count; the clans' list holds seventeen), taken under the keep-working rule while Ben had not picked; Ben said on 22 Nov to go on with the planned items. Logged in docs/PENDING-REVIEW.md. The same looks serve V20 Disciplines in later eras.
+
+Reverse: remove the wodx-actions.disciplines token look and the wodxPowerShown handler in effects.js.
+
+## B7642. Who sees a Discipline (2026-11-22)
+WoDX Actions (discipline-looks.js visibleTo). Powers worked in the open are seen by every viewer. Auspex works inside the senses, so only the one who works it and the Storyteller see its look. Obfuscate shows nothing at all, since a look would undo it (its unseen state is drawn elsewhere already, as WoDX Paperdoll's unseen veil).
+
+Reverse: set every Discipline's seen to "all".
+
+## B7643. A power family can have its own look (2026-11-22)
+WoDX Actions (discipline-looks.js families). Within a Discipline a power family may differ: Presence's Dread Gaze is a dark red, Majesty a wide gold; Dominate's Possession deeper; Obtenebration's Arms of Ahriman and Tenebrous Form wider and darker; Thaumaturgy's Lure of Flames a fire's orange; Animalism's summonings wider. A shape change (Protean's forms, Earth Meld) is not drawn here and waits for the Storyteller.
+
+Reverse: empty the families lists.
