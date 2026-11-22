@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.106.0 (A domain is now a fief someone else wants (B7638-B7640, V20 Dark Ages pp. 28, 180): an NPC who feeds in a player's domain leaves signs and takes one from the district's herd, and the holder tracks it with Perception + Investigation (Survival in the wilds) at 6, less a dot of the domain's security each; a success names the poacher, the court law it broke, and turns the holder's faction against the poacher's)
 - 0.105.0 (The Dark Ages court has the offices V20 Dark Ages names (B7637): the Chamberlain, who stands between the Prince and the court, and the Keeper of Elysium, with violence in Elysium as a charge. The court's note now says that elders meet, openly or in secret)
 - 0.104.0 (Talk by home region (Chronicle Packs Desk d3, B7600-B7603): the shared stock talk and house grammar name no place of one land; Moravia's own lines (Brno, Olomouc, the Morava, Prague, Vienna, Saint Wenceslas, slivovice) are in data/region-talk.mjs and join the pools only when the talk happens in Moravia (the scene's region, else the homeland). Small change is named in the money of the region here (WoDX Storyteller money rules); Moravia keeps its own coin rows)
 - 0.103.4 (The curfew setting's hint says the late bell without naming a town, and comments no longer name the first chronicle (B7566))
