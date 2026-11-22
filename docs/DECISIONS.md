@@ -450,7 +450,7 @@ Next free block: B7650
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
-| B7630-B7649 | Dark Ages depth desk: a domain someone else wants (used B7630-B7640) | NPC |
+| B7630-B7649 | Dark Ages depth desk: Disciplines you can see on the map (used B7630-B7643) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15193,3 +15193,18 @@ Reverse: remove the button and trackPoacher.
 WoDX NPC (poach-rules.mjs brokenLaw; factions.mjs onPoachTracked). The result names the court law broken: the holder's polity's own law of hunting in another's fief or domain (the Dark Ages court has "hunting in another's fief"), else the Tradition of Domain. On the Storyteller's side the holder's faction thinks a step worse of the poacher's (through the approval queue) and the tracker's History page records it. No court case is opened by itself: bringing it before the Prince is played at the table.
 
 Reverse: remove onPoachTracked and its createChatMessage hook.
+
+## B7641. A Discipline worked shows on the token (2026-11-22)
+WoDX Actions (discipline-looks.js, effects.js). When a power is rolled through its window (WoDX Actions' wodxPowerShown), the worker's tokens on the scene are marked for six seconds and WoDX Chronicle's token looks draw it: Presence's warm aura, Dominate's red eyes, Animalism's earthy glow, Celerity's blur, Potence's flush, Fortitude's stone sheen, Obtenebration's shadow, Protean's red eyes, Vicissitude's moving flesh, and the rest of the seventeen Disciplines the Dark Ages clans start with. Colours, glows and the six seconds are WoDX's own (show, don't tell). Desk item 7, recommended option "All thirteen Disciplines" (the desk's count; the clans' list holds seventeen), taken under the keep-working rule while Ben had not picked; Ben said on 22 Nov to go on with the planned items. Logged in docs/PENDING-REVIEW.md. The same looks serve V20 Disciplines in later eras.
+
+Reverse: remove the wodx-actions.disciplines token look and the wodxPowerShown handler in effects.js.
+
+## B7642. Who sees a Discipline (2026-11-22)
+WoDX Actions (discipline-looks.js visibleTo). Powers worked in the open are seen by every viewer. Auspex works inside the senses, so only the one who works it and the Storyteller see its look. Obfuscate shows nothing at all, since a look would undo it (its unseen state is drawn elsewhere already, as WoDX Paperdoll's unseen veil).
+
+Reverse: set every Discipline's seen to "all".
+
+## B7643. A power family can have its own look (2026-11-22)
+WoDX Actions (discipline-looks.js families). Within a Discipline a power family may differ: Presence's Dread Gaze is a dark red, Majesty a wide gold; Dominate's Possession deeper; Obtenebration's Arms of Ahriman and Tenebrous Form wider and darker; Thaumaturgy's Lure of Flames a fire's orange; Animalism's summonings wider. A shape change (Protean's forms, Earth Meld) is not drawn here and waits for the Storyteller.
+
+Reverse: empty the families lists.
