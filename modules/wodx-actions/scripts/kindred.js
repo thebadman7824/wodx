@@ -416,7 +416,7 @@ export function build(ctx) {
         const bal = K.boonBalance(entries);
         const out = bal.length ? `<table><tr><th>Owes</th><th>To</th><th>Boons</th></tr>${bal.map(b => `<tr><td>${esc(b.from)}</td><td>${esc(b.to)}</td><td>${b.boons.map(k => esc(K.BOONS[k]?.label ?? k)).join(", ")}</td></tr>`).join("")}</table>` : "<p>No boons outstanding.</p>";
         const all = entries.length ? `<table><tr><th>When</th><th>Owes</th><th>To</th><th>Boon</th><th>For</th><th>Status</th></tr>${entries.map(e => `<tr><td>${esc(e.date)}</td><td>${esc(e.from)}</td><td>${esc(e.to)}</td><td>${esc(K.BOONS[e.kind]?.label ?? e.kind)}</td><td>${esc(e.for)}</td><td>${esc(e.status)}${e.settled ? ` (${esc(e.settled)})` : ""}</td></tr>`).join("")}</table>` : "<p></p>";
-        await j.pages.getName("Outstanding")?.update({ "text.content": `<p class="wodx-quiet">Prestation (V20 Dark Ages): trivial, minor, major, blood and life boons.</p>${out}` });
+        await j.pages.getName("Outstanding")?.update({ "text.content": `<p class="wodx-quiet">Prestation: trivial, minor, major, blood and life boons (a WoDX house rule in the Dark Ages; the scale is the later Camarilla custom).</p>${out}` });
         await j.pages.getName("Ledger")?.update({ "text.content": all });
         return j;
     }
