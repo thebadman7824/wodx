@@ -125,7 +125,9 @@ export async function run() {
             answer(root => { set(root, "a-locus", "primus"); set(root, "a-aegis", "anima"); set(root, "a-gladius", "vires"); set(root, "b-locus", "forlog"); set(root, "b-aegis", "fara"); set(root, "b-gladius", "hjaldar"); });
             A().daCertamen({ actor: mg });
             const m = await untilMsg(n0, 8000, /Certámen/);
-            let duel = m?.getFlag(MOD, "daDuel"), strikes = 0;
+            // The card is posted before its duel flag is set (mage-da.js daCertamen), so wait for the flag when a duel began
+            for (let i = 0; m && /duelx/.test(m.content ?? "") && !game.messages.get(m.id)?.getFlag(MOD, "daDuel") && i < 20; i++) await sleep(250);
+            let duel = m ? game.messages.get(m.id)?.getFlag(MOD, "daDuel") : undefined, strikes = 0;
             for (; duel && !duel.done && strikes < 24; strikes++) {
                 answer(root => { set(root, "side", strikes % 2 ? "b" : "a"); set(root, "sa", "offensive"); set(root, "sd", "balanced"); });
                 await A().daBacklashButton(game.messages.get(m.id), "duelx"); await sleep(1500);
