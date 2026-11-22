@@ -1706,7 +1706,9 @@ Rows dated 17 to 20 November that Ben had not approved or disapproved by 21 Nove
 | 2026-11-20 | Close this chronicle (desk c3): when a saga book ends, should the queue's answer default to carrying on or to closing? | Approve carries on, reject closes; a standing auto-approve rule for the type therefore carries on, so nothing closes without the Storyteller's word (B7571). After the last book there is nothing to carry on to, so a card offers the close alone. | Swap approve and reject in the podSagaEnd handler (modules/wodx-chronicle/scripts/pod.mjs). |
 | 2026-11-20 | Carry to a new chronicle (desk c2): what stays behind when a character crosses into a fresh world? | The sheet and held items cross whole. Left behind and listed on a card: the chronicle mark, the builder's mark, an opening goal, the folder, and faction seats (factions live in the old world's list). Owners cross by player name and are given back to players of the same name (B7573). | Edit TIES in modules/wodx-storyteller/scripts/carry-rules.mjs. |
 
-## Waiting for review
+## Approved by auto-approval, 22 November 2026, 06:00 UTC
+
+Rows dated 21 November that Ben had not approved or disapproved by 22 November 06:00 UTC (on us1, Ben picked closing PRs 1787 and 1855 on 21 November, and both are closed). None deletes anything or changes the Live world; each lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1715,6 +1717,11 @@ Rows dated 17 to 20 November that Ben had not approved or disapproved by 21 Nove
 | 2026-11-21 | How a chronicle language that gives its sense shows to a hearer who lacks it (d1, B7613) | The words stay made-up and a line under them gives the meaning as written, with no roll | Drop the sense line from renderLanguage; hearers then roll for the gist only through a kindred language |
 | 2026-11-21 | A town's custom on its day (d1, B7611) | A custom is named on the Clock and can make a night of revel, but it is no holy day: no day off, the fast unchanged | Mark the row as a plain feast instead (drop custom) |
 | 2026-11-21 | The hunters' starting stage (d1, B7616) | The region starts at the least pressure of the stage, once, and then cools and grows like any region; the books set no starting pressure | Set the region's pressure by hand in the Hunters window |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
 | 2026-11-22 | How a Dark Ages Path's own few sins sit with its Road's chart (desk item 1, B7631) | The Path's sin joins the Road's at that level ("the Path's sin; or the Road's sin"); the book says a Path shares most of its Road's ethics and a level may hold more than one sin | Make hierarchyOf put the Path's sin in place of the Road's at those levels |
 | 2026-11-22 | The Path of Damnation entry (desk item 1, B7630) | V20 Dark Ages has no Path of Damnation: its chart belongs to the Path of Screams, so the entry is folded into Screams and the old name kept as an alias | Restore the separate entry in roads-daw.json |
 | 2026-11-22 | Which Road lines the new play events land on (desk item 2, B7633) | Only lines that name the act plainly: a lie on Christ, the Prophet, the Watchful Gods, Chivalry and Yasa; theft on Humanity, Community, Christ (greed), Derech Chaim, the Prophet, Chivalry and Daena; a refused boon as a broken word on Kings and its Paths, the Prophet, the Eightfold Wheel and the Watchful Gods; Dominate on a mortal only on the Path of Breath. Humanity has no line for a lie or for Dominate, so it asks nothing for them | Add a lie or Dominate to Humanity at level 9 ("small selfish acts") or level 8 |
