@@ -31,6 +31,8 @@ import * as F from "./flavor.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as GX from "./garou.js";
 import * as KR from "./kindred-rules.js";
+import * as RFR from "./road-faith-rules.js";
+import * as RFX from "./road-faith.js";
 import * as KX from "./kindred.js";
 import * as WRR from "./witness-rules.js";
 import * as SR from "./sunlight-rules.js";
@@ -262,7 +264,10 @@ function road(actor) {
     if (name === "Humanity") name = "Road of Humanity";
     const found = KX.DATA.roads ? KX.roadOf(actor) : null;
     if (found) name = found.path?.name ?? found.road.name;
-    return { value: num(p.permanent ?? p.value), name, found };
+    const value = num(p.permanent ?? p.value);
+    // B7646: an Excommunicate's aura penalties are doubled (V20 Dark Ages p. 112)
+    const status = RFR.faithOf(actor?.flags?.[MOD]?.roadFaith).status;
+    return { value, name, found, status, aura: RFR.auraFor(R.auraModifier(value), status) };
 }
 function willpower(actor) {
     const w = actor?.system?.advantages?.willpower ?? {};
@@ -1041,7 +1046,7 @@ function bearingBox(rd) {
     const b = KX.DATA.paths && rd?.found ? KR.pathBearing(KX.DATA.paths, rd.found, rd.value) : null;
     const sign = v => `${v >= 0 ? "+" : ""}${v}`;
     if (b) return `<div class="form-group"><label><input type="checkbox" name="aura"/> ${esc(b.name)} bearing applies (${esc(b.path)} ${rd.value}: ${sign(b.step)} difficulty on ${esc(b.covers)}${b.byItself ? "; counted by itself when the roll is one of those" : "; tick it when this roll is one"})</label></div>`;
-    return `<div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${esc(rd.name)} ${rd.value}: ${sign(R.auraModifier(rd.value))})</label></div>`;
+    return `<div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${esc(rd.name)} ${rd.value}: ${sign(rd.aura)}${rd.status === "excommunicate" ? ", doubled for an Excommunicate" : ""})</label></div>`;
 }
 
 /** B7080: the bearing of the V20 Path the roller walks, for one roll of the general window (null: no Path). */
@@ -1098,7 +1103,7 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         bonusDice: fd.bonus, extraDiff: fd.extraDiff, baseDifficulty: fd.diff,
         woundPenalty: pool.special ? 0 : woundPenalty(actor), ignoreWounds: fd.ignoreWounds,
         multiIndex: num(fd.multi), retries: Math.max(num(fd.retries), retriesRemembered(actor, fd, target)), retryLabel: num(fd.retries) >= retriesRemembered(actor, fd, target) ? "" : RTY.tryLabel(retriesRemembered(actor, fd, target)),
-        aura: fd.aura && !pb ? R.auraModifier(rd.value) : 0,
+        aura: fd.aura && !pb ? rd.aura : 0,
         daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
     });
     // B6924: a no-botch effect (a Boggan's Crafts, C20 p. 89) goes with the pool to the roll
@@ -1415,8 +1420,12 @@ async function beastRoll(actor, d, msg = null) {
         await kx().logEvent(actor, `${fear ? "Rötschreck" : ridden ? "Rides the wave of frenzy" : "Frenzy"}: ${d.prov}.`, "frenzy");
         // Some Roads count frenzy itself, or failing to ride it, as a sin (Kings, Bones, Sin, Metamorphosis…)
         if (!fear) {
-            const sp = await kx().sinPrompt(actor, d.kind === "instinct" && !ridden ? "notRidden" : ridden ? "none" : "frenzy", ridden ? "" : "The Beast was given the reins");
+            const ev = d.kind === "instinct" && !ridden ? "notRidden" : ridden ? "none" : "frenzy";
+            const sp = await kx().sinPrompt(actor, ev, ridden ? "" : "The Beast was given the reins");
             if (sp?.html) body += sp.html;
+            // B7645: a frenzy that risks no Road dot opens a Moment of Truth (V20 Dark Ages p. 115)
+            const sinLv = rd.found ? KR.sinForEvent(rd.found, ev) : null;
+            if (isVampire(actor) && rd.value > 0 && !(sinLv !== null && sinLv <= rd.value)) body += await rf().openTruth(actor, "frenzy", d.prov ? String(d.prov).slice(0, 80) : "");
         }
     }
     if (msg) await markUsed(msg);
@@ -1655,6 +1664,9 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
     return dialog("Sin against the Road", content, "Roll", async fd => {
         fd.level = num(fd.level);
         const chk = R.sinCheck(rd.value, fd.level);
+        // B7646: an Excommunicate rolls Conscience or Conviction at +2 (V20 Dark Ages p. 112)
+        const exc = RFR.conscienceDiff(rd.status);
+        if (exc && chk.roll) { chk.rawDifficulty += exc; chk.difficulty = Math.min(10, chk.rawDifficulty); }
         const title = `${actor.name}: ${fd.desc ? esc(fd.desc) : `level ${fd.level} sin`}`;
         if (!fd.automatic && !chk.roll) return post(actor, title, `<div class="vta-note">${chk.reason}</div>`);
         let body = "", rolls = [], fail = true;
@@ -1665,20 +1677,21 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
             const pen = POWMOD.penaltyOf(actor); // B6370: a night's penalty reaches the sin's roll too
             const r = await rollPool(Math.max(0, vp.dice + pen.dice), chk.difficulty, { willpower: fd.wp, fortune: fd.lucky ? actor : (LIM.takeFortune(), null) });
             rolls.push(r.roll);
-            body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(chk.rawDifficulty > 10 ? ["capped at 10"] : [], pen.parts));
+            body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(exc ? ["+2 Excommunicate"] : [], chk.rawDifficulty > 10 ? ["capped at 10"] : [], pen.parts));
             fail = r.successes === 0;
             if (r.botch) { body += `<div class="vta-note">Botch: a Derangement tied to the sin, drawn from those a sin leaves and written into the box.</div>`; await gainDerangement(actor, "sin", fd.desc ? `from the sin: ${String(fd.desc).slice(0, 60)}` : "from a sin botch"); }
         }
         if (!fail) {
             body += `<div class="vta-big good">The sin is rationalized; the Road holds.</div>`;
-            if (chk.momentOfTruth) body += `<div class="vta-note">A major sin resisted can spark a Moment of Truth (half-cost Road increase this story).</div>`;
+            // B7645: a major sin resisted opens a Moment of Truth (V20 Dark Ages p. 115)
+            if (chk.momentOfTruth && !fd.automatic) body += await rf().openTruth(actor, "sin", fd.desc ? String(fd.desc).slice(0, 80) : `a level ${fd.level} sin`);
         } else {
             const path = fd.lose === "road" ? "system.advantages.path.permanent" : `system.advantages.virtues.${fd.lose}.permanent`;
             const cur = fd.lose === "road" ? rd.value : v[fd.lose].value;
             const label = fd.lose === "road" ? rd.name : v[fd.lose].label;
             if (setting("applyChanges")) await updateActor(actor, { [path]: Math.max(0, cur - 1) });
             body += `<div class="vta-big bad">${esc(label)} falls from ${cur} to ${Math.max(0, cur - 1)}.</div>`;
-            if (fd.lose === "road") body += `<div class="vta-note">New aura modifier: ${R.auraModifier(Math.max(0, cur - 1))}. Penance after losing a dot can lead to a Moment of Truth.</div>`;
+            if (fd.lose === "road") body += `<div class="vta-note">New aura modifier: ${R.auraModifier(Math.max(0, cur - 1))}. Penance after losing a dot can lead to a Moment of Truth: the Storyteller opens it from the Road window.</div>`;
             if (fd.lose === "road" && cur - 1 <= 0) body += `<div class="vta-warn">Road 0: the Beast has won: the character is lost (Wassail).</div>`;
         }
         await kx().logEvent(actor, `Sin (level ${fd.level}${fd.desc ? `: ${fd.desc}` : ""}): ${fail ? `loses a dot of ${fd.lose === "road" ? rd.name : v[fd.lose]?.label ?? fd.lose}` : "rationalized"}.`, "sin");
@@ -2972,7 +2985,7 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
         // B7080: a Path walker's bearing counts here only when the Path's bearing is seduction (the Cathari, V20 p. 323)
         const rdS = road(actor);
         const pbS = KX.DATA.paths && rdS.found ? KR.pathBearing(KX.DATA.paths, rdS.found, rdS.value, { tags: ["seduce", "social"] }) : null;
-        const aura = pbS ? (fd.aura && pbS.auto ? pbS.step : 0) : fd.aura ? R.auraModifier(rdS.value) : 0;
+        const aura = pbS ? (fd.aura && pbS.auto ? pbS.step : 0) : fd.aura ? rdS.aura : 0;
         const wpen = woundPenalty(actor);
         const steps = [
             ["Approach", "appearance", "subterfuge", fd.wits + 3, "The subject shows disinterest.", "The subject grows disgusted or angry."],
@@ -3219,6 +3232,13 @@ let SVAE = null;
 /** Servants and bonds (B5112-B5119): Conditioning, Enchantment, oaths that cost, pacts, names, Thralls, Puppeteer consorts. */
 function svx() {
     return SVAE ??= SVA.build({ post, dialog, rollPool, rollBlock, setFlag, dm, dx, kx, kindOf: a => P.detectProfile(a), notify: m => ui.notifications.warn(m) });
+}
+
+let RFE = null;
+/** B7644: the Road as a faith: rank, Mentor, Moments of Truth, standing and the change of Road. */
+function rf() {
+    return RFE ??= RFX.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, road, virtues, willpower, spendWillpower,
+        logEvent: (a, t, k) => kx().logEvent(a, t, k), roadOf: a => KX.roadOf(a), roads: () => KX.DATA.roads, notify: m => ui.notifications.warn(m) });
 }
 
 let KXE = null;
@@ -3469,7 +3489,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // B7121: the Storyteller's Clear for trying again, from the Scene row of every menu
     clearTries: async () => { const k = await clearRetries(null); ui.notifications.info(k ? `Failed tries forgotten for ${k} character${k === 1 ? "" : "s"}: the next attempt is a fresh one.` : "No failed tries are remembered."); return k; }, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.117.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.118.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3520,7 +3540,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // Test code: fetched only when a gate asks for it, so players never download it
     makeTestPack: (...args) => import("./garou-testpack.js").then(m => m.makeTestPack(...args)),
     // Kindred additions and automatic prompts (3.2.0)
-    useDiscipline: withActor(a => kx().useDiscipline(a)), castRitual: withActor(a => kx().castRitual(a)), setRoad: withActor(a => kx().setRoad(a)), downtime: withActor(a => kx().downtime(a)),
+    useDiscipline: withActor(a => kx().useDiscipline(a)), castRitual: withActor(a => kx().castRitual(a)), setRoad: withActor(a => kx().setRoad(a)), roadFaith: withActor(a => rf().window(a)), roadFaithAct: (a, fd) => rf().act(resolveActor(a), fd), roadFaithInfo: a => rf().info(resolveActor(a)), roadFaithRules: RFR, downtime: withActor(a => kx().downtime(a)),
     bloodHunt: (o = {}) => dm().bloodHunt(o.actor ? resolveActor(o.actor) : resolveActor()), callHunt: (a, o) => dm().callHunt(resolveActor(a), o), endHunt: (id, how) => dm().endHunt(id, how),
     oaths: withActor(a => dm().oaths(a)), diablerieMarks: withActor(a => dm().marks(a)), beastTurn: c => dm().onTurn(c ?? game.combat), wakeCard: (a, since) => dm().wake(resolveActor(a), since),
     debtsRules: DR_DEBTS, beastRules: DR_BEAST, debtsMarks: () => dm(),

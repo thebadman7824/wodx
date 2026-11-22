@@ -349,7 +349,7 @@ export class SpendApp extends ApplicationV2 {
       if ( !list.length ) return "";
       return `<h3>${esc(title)}</h3><table class="wodx-table wodx-traits"><tbody>${list.map(o => `
         <tr class="${o.ok ? "" : "wodx-muted"}" data-search-text="${esc(o.label)}"><td>${esc(o.label)}${o.discipline === "clan" ? ' <span class="wodx-tag">clan</span>' : ""}${o.kind === "power" && o.own ? ` <span class="wodx-tag">${esc(o.cat === "sphere" ? "affinity" : "own")}</span>` : ""}</td>
-          <td>${o.current} → ${o.next}</td><td>${o.cost ?? "–"} xp</td>
+          <td>${o.current} → ${o.next}</td><td${o.costParts?.length ? ` title="${esc(o.costParts.join("; "))}"` : ""}>${o.cost ?? "–"} xp${o.costParts?.length ? ` <span class="wodx-quiet">(${esc(o.costParts.join("; "))})</span>` : ""}</td>
           <td><button type="button" data-action="buy" data-kind="${o.kind}" data-key="${esc(o.key)}" ${o.ok ? "" : "disabled"} title="${esc(o.reason)}">${verb}</button>${(f => f ? ` <button type="button" data-action="buyChange" data-kind="${o.kind}" data-key="${esc(o.key)}" ${f.ok ? "" : "disabled"} title="${esc(f.reason || `A dot from ${CP.POOLS[f.fromChange.change].label}`)}">Free</button>` : "")(freeOf(o))}</td></tr>`).join("")}
         </tbody></table>`;
     }).join("");

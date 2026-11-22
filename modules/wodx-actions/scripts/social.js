@@ -162,7 +162,7 @@ export function build(ctx) {
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
             bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + shift + bondShift + rankShift + socialDiff(actor),
             baseDifficulty: preset.diff ?? 6, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0,
-            aura: fd.aura ? R.auraModifier(rd.value) : 0
+            aura: fd.aura ? (rd.aura ?? R.auraModifier(rd.value)) : 0
         });
         if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
         const me = await rollPool(built.dice, built.difficulty, { specialty: !!fd.specialty, willpower: !!fd.wp });

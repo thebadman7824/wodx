@@ -38,7 +38,7 @@ export const MENU_PLAN = {
     kindred: {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin"],
-        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad"],
+        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith"],
         st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
@@ -157,6 +157,7 @@ export const DESC = {
     "api:diablerie": "Drink a Cainite's soul: each step of diablerie",
     "api:useDiscipline": "Use a Discipline power: its roll, cost and effect",
     "api:setRoad": "The Road and its hierarchy of sins; change the Road or Path",
+    "api:roadFaith": "The Road as a faith: rank, Mentor, Moments of Truth, standing, and leaving for another Road",
     "api:downtime": "Time between stories: domain, havens, projects",
     "api:frenzy": "The Beast rises: a frenzy check against anger or hunger",
     "api:rotschreck": "Fire or sunlight: the Red Fear",
