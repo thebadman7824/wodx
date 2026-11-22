@@ -150,7 +150,9 @@ test("B7081: Death and the Soul is the Path of the Bones; Harmony is the Feral H
 test("B7080: the general roll window and the Seduction window read the Path's bearing", () => {
   const src = read("modules/wodx-actions/scripts/main.js");
   assert.match(src, /const pb = pathBearingFor\(actor, rd, fd, pool\);/);
-  assert.match(src, /aura: fd\.aura && !pb \? R\.auraModifier\(rd\.value\) : 0/);
+  // B7646: the Road's aura comes from road(), doubled for an Excommunicate
+  assert.match(src, /aura: fd\.aura && !pb \? rd\.aura : 0/);
+  assert.match(src, /aura: RFR\.auraFor\(R\.auraModifier\(value\), status\)/);
   assert.match(src, /\$\{bearingBox\(rd\)\}/);
   assert.match(src, /pbS \? \(fd\.aura && pbS\.auto \? pbS\.step : 0\)/);
 });
