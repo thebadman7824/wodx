@@ -10,6 +10,7 @@ import * as RF from "./road-faith-rules.js";
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const npcFactions = () => game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api?.factions ?? null : null;
 const opt = (v, l, sel = false) => `<option value="${esc(v)}"${sel ? " selected" : ""}>${esc(l)}</option>`;
 
 export const storyNow = () => { try { return game.settings.get(MOD, "storyId") || "first"; } catch (e) { return "first"; } };
@@ -48,7 +49,8 @@ export function build(ctx) {
         const study = mentor ? RF.studyReady(mentor, rd.value, game.time.worldTime) : null;
         const change = f.change ? changeState(actor, f) : null;
         return { faith: f, road: rd, key: found?.key ?? null, rank: RF.rankOf(rd.value), mentor, mentorCounts: RF.mentorCounts(mentor, found?.key, rd.value),
-            study, truth: RF.openTruth(f, story), story, change, virtues: v, paragons: RF.paragonsToExcommunicate(rd.value) };
+            study, truth: RF.openTruth(f, story), story, change, virtues: v, paragons: RF.paragonsToExcommunicate(rd.value),
+            flocks: (() => { try { return npcFactions()?.flocksOf?.(actor) ?? []; } catch (e) { return []; } })() };
     }
 
     function changeState(actor, f = faith(actor)) {
@@ -75,6 +77,8 @@ export function build(ctx) {
             I.mentor ? `Mentor: <b>${esc(I.mentor.name)}</b>, ${I.mentor.rating} dots${I.mentorCounts ? `: a Road dot costs ${Math.min(I.mentor.rating - rd.value, Math.floor(rd.value))} less (to no less than half)` : I.mentor.road && I.key && I.mentor.road !== I.key ? " on another Road: no help with the cost" : ": not more dots than the character, no help with the cost"}.${I.study ? ` Study: ${I.study.done} of ${I.study.need} months.` : ""}` : "No Mentor.",
             I.truth ? `A Moment of Truth is open this story (${esc(RF.CATALYSTS[I.truth.key].label.toLowerCase())}): the next Road dot costs half.` : "No Moment of Truth open this story."
         ];
+        // B7649: the Road's local group the character belongs to (WoDX NPC factions)
+        rows.push(I.flocks.length ? `Among ${I.flocks.map(x => `<b>${esc(x.name)}</b>${x.leader === actor.id ? " (its head)" : ""}`).join(", ")}.` : "In no gathering of the Road.");
         if ( I.change ) rows.push(`Changing to <b>${esc(I.change.name)}</b>: ${I.change.steps.map(s => `${s.done ? "&#10003;" : "&#9675;"} ${esc(s.label)}`).join("; ")}.${I.change.ready ? ` Willpower roll at ${I.change.difficulty}: ${I.change.successes} of ${I.change.target} successes.` : ""}`);
         const prompts = game.user.isGM ? (RF.ROAD_PROMPTS[I.key] ?? []) : [];
         return `<div class="vta-note">${rows.map(r => `<p>${r}</p>`).join("")}${prompts.length ? `<p class="wodx-quiet">From the Road's own book: ${prompts.map(p => `${esc(p.text)} (${esc(p.src)})`).join("; ")}.</p>` : ""}</div>`;
@@ -89,6 +93,7 @@ export function build(ctx) {
         if ( I.study?.ready ) acts.push(["study", "The study with the Mentor is done: a Moment of Truth"]);
         if ( gm ) acts.push(["truth", "Open a Moment of Truth (Storyteller)"], ["apostate", "Name an Apostate (Storyteller)"], ["excommunicate", "Excommunicate (Storyteller)"]);
         if ( gm && I.faith.status ) acts.push(["clearStatus", "Back in good standing (Storyteller)"]);
+        if ( gm && npcFactions()?.gatherFlock && I.key ) acts.push(["gatherFlock", "Gather the Road's walkers in this scene as its local group (Storyteller)"]);
         if ( !I.change ) acts.push(["change", "Begin a change of Road or Path"]);
         else { if ( I.change.ready ) acts.push(["changeRoll", `Roll Willpower for the change (1 point)`]); acts.push(["cancelChange", "Give up the change"]); }
         const D = roadsData();
@@ -171,6 +176,15 @@ export function build(ctx) {
                 await save(actor, { ...f, change: null });
                 return post(actor, title, `<div class="vta-note">The change is given up.</div>`);
             case "changeRoll": return changeRoll(actor);
+            case "gatherFlock": {
+                if ( !gm ) return null;
+                const key = ctx.roadOf(actor)?.key, FX = npcFactions();
+                if ( !key || !FX?.gatherFlock ) return ctx.notify("No Road recognized, or WoDX NPC is off.");
+                const r = await FX.gatherFlock(key, globalThis.canvas?.scene ?? null);
+                if ( !r.ok ) return post(actor, title, `<div class="vta-note">${esc(r.reason)}</div>`);
+                await logEvent(actor, `Gathers with ${r.faction?.name ?? "the Road's walkers"}.`, "road");
+                return post(actor, title, `<div class="vta-note">${esc(r.faction?.name ?? "The Road's walkers")}: ${r.walkers.length} walkers of the Road here, gathered as a secret faction the Storyteller runs (V20 Dark Ages, the Road's Organization).</div>`);
+            }
             default: return null;
         }
     }

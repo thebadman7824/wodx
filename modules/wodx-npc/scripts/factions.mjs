@@ -24,6 +24,7 @@ import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as POACH from "./poach-rules.mjs";
+import * as FLOCK from "./road-flock-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -1282,7 +1283,32 @@ export function build(ctx) {
     return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
-  return {postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
+  /**
+   * B7649: a Road's walkers in a scene gathered as their local group (a secret Kindred faction run on orders). Walkers
+   * are the vampires with a token in the scene or in a faction that holds it, on that Road (WoDX Actions' Road).
+   * Gathering again replaces the group with who is there now. Storyteller only.
+   */
+  async function gatherFlock(road, scene = globalThis.canvas?.scene ?? null) {
+    if ( !game.user.isGM ) return {ok: false, reason: "The Storyteller gathers a Road's flock."};
+    const A = game.modules.get("wodx-actions")?.api ?? game.wodxActions;
+    if ( !scene?.uuid || !A?.roadOf ) return {ok: false, reason: "No scene, or WoDX Actions is off."};
+    const near = new Set([...(scene.tokens ?? [])].map(t => t.actor?.isToken ? (t.actor.baseActor?.id ?? t.actorId) : t.actorId).filter(Boolean));
+    // the Road groups themselves do not count: gathering again takes who is there now
+    for ( const f of state().factions ) if ( !f.id.startsWith("road-") && (f.places ?? []).includes(scene.uuid) ) for ( const id of [f.leader, ...(f.members ?? [])] ) if ( id ) near.add(id);
+    const walkers = [...near].map(id => game.actors.get(id)).filter(a => a && a.type !== "Group" && A.roadOf(a)?.key === road && Number(a.system?.advantages?.path?.permanent) > 0)
+      .map(a => ({id: a.id, name: a.name, rating: Number(a.system.advantages.path.permanent) || 0}));
+    const roadName = A.roads?.()?.roads?.[road]?.name ?? road;
+    const spec = FLOCK.flockSpec({road, roadName, place: {uuid: scene.uuid, name: scene.navName || scene.name}, walkers});
+    if ( !spec ) return {ok: false, reason: `Fewer than ${FLOCK.FLOCK_MIN} walkers of the ${roadName} here.`, walkers};
+    const had = state().factions.some(f => f.id === spec.id);
+    await applyNow([...(had ? [{op: "faction-remove", id: spec.id}] : []), {op: "faction-add", faction: F.normFaction(spec)}], {reason: `The ${roadName} gathers`});
+    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(spec.name)}</h3><p>${esc(spec.notes)}</p><p class="wodx-quiet">A secret Kindred faction, run on your orders (B7649).</p></div>`});
+    return {ok: true, faction: state().factions.find(f => f.id === spec.id) ?? null, walkers, replaced: had};
+  }
+  /** B7649: the Road groups a character belongs to. */
+  const flocksOf = actor => state().factions.filter(f => f.id.startsWith("road-") && (f.members ?? []).includes(actor?.id));
+
+  return {gatherFlock, flocksOf, flockRules: FLOCK, postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
     setupChronicleFactions, chronicleFactions, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F,
     applyNow, proposeChanges, bgValue, allActors, poachCard, trackPoacher, poachRules: POACH, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
