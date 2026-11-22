@@ -49,7 +49,10 @@ export function cast() {
   const npcs = game.actors.filter(a => !a.hasPlayerOwner && ["PC", "Mortal", "Vampire", "Werewolf", "Wraith", "Hunter", "Creature", "Changing Breed"].includes(a.type));
   const byTemplate = new Map();
   for ( const a of npcs ) { const t = R.templateFor(infoOf(a)); if ( !byTemplate.has(t) ) byTemplate.set(t, a); }
-  const hero = game.actors.find(a => a.hasPlayerOwner && a.type !== "Group");
+  // B7656: the hero is a PC a mortal can look at without fleeing. A wraith or spirit PC (or one showing an obvious
+  // power) made a guard-template runner flee instead of walking round the wall, so that step tested the wrong thing
+  const pcs = game.actors.filter(a => a.hasPlayerOwner && a.type !== "Group");
+  const hero = pcs.find(a => !showsWhat(a)) ?? pcs[0];
   const fighter = ["neonate", "ghoul", "guard", "garou", "hunter", "elder"].map(t => byTemplate.get(t)).find(Boolean) ?? [...byTemplate.values()][0];
   const runner = ["guard", "ghoul", "neonate", "hunter", "civilian"].map(t => byTemplate.get(t)).find(a => a && a !== fighter) ?? fighter;
   const kindred = byTemplate.get("neonate") ?? byTemplate.get("elder") ?? null;
