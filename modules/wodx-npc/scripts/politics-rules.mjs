@@ -53,14 +53,18 @@ export const POLITIES = {
     offices: [
       {key: "prince", title: "Prince", seats: 1, fill: "challenge", top: true, judge: true},
       {key: "seneschal", title: "Seneschal", seats: 1, fill: "appoint"},
+      // B7637: the two offices V20 Dark Ages names for its own nights (pdf 31-32): the Keeper of the city's Elysia and
+      // the Chamberlain, who stands between the Prince and the court and knows names, sires and territories
+      {key: "chamberlain", title: "Chamberlain", seats: 1, fill: "appoint"},
+      {key: "keeper", title: "Keeper of Elysium", seats: 1, fill: "appoint"},
       {key: "sheriff", title: "Sheriff", seats: 1, fill: "appoint"},
       {key: "scourge", title: "Scourge", seats: 1, fill: "appoint"},
       {key: "herald", title: "Herald", seats: 1, fill: "appoint"},
       {key: "harpy", title: "Harpy", seats: 1, fill: "appoint", harpy: true}
     ],
-    law: ["a broken oath to a liege", "hunting in another's fief", "an Embrace without leave", "defiance of the Prince"],
+    law: ["a broken oath to a liege", "violence in Elysium", "hunting in another's fief", "an Embrace without leave", "defiance of the Prince"],
     titles: {prince: ["Prince", "Voivode", "Margrave", "Lord"]},
-    notes: "Lords and vassals bound by oaths of fealty; a vassal holds a fief of hunting ground from a liege (V20 Dark Ages pdf 126-127)."
+    notes: "Lords and vassals bound by oaths of fealty; a vassal holds a fief of hunting ground from a liege (V20 Dark Ages pdf 126-127). The Keeper keeps the city's Elysia and the Chamberlain the way to the Prince (pdf 31-32). Wherever there are elders, they meet, openly or in secret, and strike deals the court hears of later (pdf 33)."
   },
   camarilla: {
     label: "A Camarilla court", line: "vampire", kinds: ["kindred"], from: 1435, to: null,

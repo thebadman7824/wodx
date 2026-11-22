@@ -476,7 +476,11 @@ export function willpowerAfter(mode, temp, perm, event) {
     return t;
 }
 
-/** Boons (prestation, V20 Dark Ages): trivial, minor, major, blood, life. */
+/**
+ * Boons: trivial, minor, major, blood, life. B7636: a house rule. Neither V20 Dark Ages nor V20 names this scale or the
+ * word "prestation" (no match in either book's text); it is the Camarilla's custom in later books (the boons WoDX NPC's
+ * politics cite), used in every era here. A Dark Ages court trades oaths and service as much as favours.
+ */
 export const BOONS = {
     trivial: { label: "Trivial boon", weight: 1 },
     minor: { label: "Minor boon", weight: 2 },

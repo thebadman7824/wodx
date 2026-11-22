@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.105.0 (The Dark Ages court has the offices V20 Dark Ages names (B7637): the Chamberlain, who stands between the Prince and the court, and the Keeper of Elysium, with violence in Elysium as a charge. The court's note now says that elders meet, openly or in secret)
 - 0.104.0 (Talk by home region (Chronicle Packs Desk d3, B7600-B7603): the shared stock talk and house grammar name no place of one land; Moravia's own lines (Brno, Olomouc, the Morava, Prague, Vienna, Saint Wenceslas, slivovice) are in data/region-talk.mjs and join the pools only when the talk happens in Moravia (the scene's region, else the homeland). Small change is named in the money of the region here (WoDX Storyteller money rules); Moravia keeps its own coin rows)
 - 0.103.4 (The curfew setting's hint says the late bell without naming a town, and comments no longer name the first chronicle (B7566))
 - 0.103.3 (The faction window's starting-factions button sets up the chronicle in play's own factions (api setupChronicleFactions, chronicleFactions), not Rothenstein's by name; the ten Rothenstein factions moved to WoDX Rothenstein unchanged (Chronicle Packs Desk f1). With no chronicle in play the button is not shown)

@@ -562,3 +562,14 @@ test("the courts beyond Europe carry the books' own titles", () => {
   assert.equal(title("nunnehi-council", "voice"), "Voice of a tribe");
   assert.ok(!JSON.stringify(PO.POLITIES).includes("Zarad"), "Zarad is a Makara auspice, not a court");
 });
+
+test("the Dark Ages court has the Keeper and the Chamberlain V20 Dark Ages names (B7637)", () => {
+  const c = PO.POLITIES["dark-ages-court"];
+  const keys = c.offices.map(o => o.key);
+  for ( const k of ["prince", "chamberlain", "keeper", "sheriff", "scourge", "harpy"] ) assert.ok(keys.includes(k), k);
+  assert.equal(c.offices.find(o => o.key === "keeper").title, "Keeper of Elysium");
+  assert.equal(c.offices.find(o => o.key === "chamberlain").fill, "appoint");
+  assert.equal(c.offices.filter(o => o.top).length, 1);
+  assert.ok(c.law.includes("violence in Elysium"));
+  assert.match(c.notes, /elders/i);
+});
