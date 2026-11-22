@@ -1,11 +1,15 @@
 /**
- * Dated events gate (WoDX Chronicle 0.5.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * Dated events gate (WoDX Chronicle 0.5.0), in Foundry, in a testbed world only (rothenstein-wodx with its chronicle in
+ * play, or wodx-clean with none; never a Live world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateevents.mjs?${Date.now()}`)).run()
  * Back the world up first.
  *
  * It holds the world first (WoDX Chronicle's Hold the world), so moving the clock wakes no routine, faction turn,
- * expiring effect or era proposal in Rothenstein, and checks the events itself with check({force: true}). At the end
- * it puts back the clock, the hold, the fired list and the Storyteller's event choices, and deletes its chat cards.
+ * expiring effect or era proposal in the chronicle in play (whichever it is, or none), and checks the events itself with
+ * check({force: true}). The events it moves through are the world's, which every chronicle shares. At the end it puts
+ * back the clock, the hold, the fired list and the Storyteller's event choices, and deletes its chat cards.
+ *   0. the world: a testbed (rothenstein-wodx, or the clean testbed wodx-clean (flags.wodx.clean)), never a Live world;
+ *      the chronicle in play is noted, and must be the same at the end
  *   1. the module: WoDX Chronicle 0.5.0 or later with the events API and at least 25 events (the list grows)
  *   2. the settings menu "Dated events" is registered
  *   3. moving the clock past 1 October 1347 fires the Black Death: one card, the hook, has() true
@@ -19,6 +23,9 @@
  * Result: Data/wodx-gate/gateevents-result.json.
  */
 const M = "wodx-chronicle";
+const {isLiveWorld} = await import(`/modules/${M}/scripts/live-worlds.mjs`);
+/** A testbed world: the owner's testing world, or one the lane tools flag as a testbed (wodx-clean: flags.wodx.clean). */
+const isTestbed = w => !isLiveWorld(w) && (w.id === "rothenstein-wodx" || !!w.flags?.wodx?.clean);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function save(R, name) {
@@ -37,11 +44,13 @@ const newer = (a, b) => {
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
-  if ( game.world.id !== "rothenstein-wodx" ) {
-    ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"});
+  if ( !isTestbed(game.world) ) {
+    ok("0. world", false, {error: "Run this gate in a testbed world only (rothenstein-wodx or wodx-clean), never a Live world"});
     return save(R, "gateevents-result.json");
   }
   const api = game.modules.get(M)?.api;
+  const inPlay = api?.chronicle?.currentId?.() ?? "";
+  R.chronicle = inPlay || null;
   const t0 = game.time.worldTime;
   const saved = {
     fired: foundry.utils.deepClone(game.settings.get(M, "eventsFired")),
@@ -112,8 +121,9 @@ export async function run() {
     const after = game.settings.get(M, "eventsFired");
     const same = (a, b) => JSON.stringify([...(a ?? [])].sort()) === JSON.stringify([...(b ?? [])].sort());
     const byDate = api?.events?.list().filter(e => e.live && e.key <= keyOf(t0)).map(e => e.id);
-    ok("9. put back", game.time.worldTime === t0 && !!api?.isHeld?.() === saved.held && (same(after, saved.fired) || same(after, byDate)),
-      {removedCards: mine.length, time: game.time.worldTime === t0, held: !!api?.isHeld?.(), saved: saved.fired, after, byDate});
+    const inPlayAfter = api?.chronicle?.currentId?.() ?? "";
+    ok("9. put back", game.time.worldTime === t0 && !!api?.isHeld?.() === saved.held && (same(after, saved.fired) || same(after, byDate)) && inPlayAfter === inPlay,
+      {removedCards: mine.length, time: game.time.worldTime === t0, held: !!api?.isHeld?.(), saved: saved.fired, after, byDate, chronicle: {before: inPlay, after: inPlayAfter}});
   }
   try {
     const st = api?.migrations?.status() ?? [];
