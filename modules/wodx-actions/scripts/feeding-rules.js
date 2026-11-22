@@ -129,6 +129,10 @@ export const CLAN_FEEDING = {
     "assamite-antitribu": { label: "Assamite antitribu",
         v20: { addiction: true, page: "V20 printed p. 429",
             note: "Drinking Kindred blood: Self-Control or Instinct (3 + points drunk) or addiction; once addicted, Self-Control or Instinct (6) to pass up a chance to drink it." } },
+    // B7661: only a Bomkazi witch's blood nourishes an Impundulu (V20 Dark Ages p. 86): the palate rule, the witch as palate
+    impundulu: { label: "Impundulu",
+        da: { palate: true, miss: "none", page: "V20 Dark Ages pdf p. 87",
+            note: "Only the blood of a Bomkazi witch nourishes; set the palate to the witch (tag: bomkazi). Other blood gives nothing." } },
     tremere: { label: "Tremere",
         da: { bondFirstDouble: true, page: "V20 Dark Ages pdf p. 64",
             note: "The first drink of another Cainite's blood counts as two toward the Blood Oath." } }
@@ -147,7 +151,7 @@ export function clanKey(text) {
         if (/ventrue/.test(t)) return "ventrue";
         return null;
     }
-    for (const k of ["ventrue", "nagaraja", "giovanni", "noiad", "danava", "lamia", "tremere"]) if (t.includes(k)) return k;
+    for (const k of ["ventrue", "nagaraja", "giovanni", "noiad", "danava", "impundulu", "lamia", "tremere"]) if (t.includes(k)) return k;
     return null;
 }
 

@@ -186,6 +186,9 @@ export function build(ctx) {
         return came;
     }
 
+    /** The clan written on the sheet (a custom clan's name, or the system's clan key). */
+    const clanTextOf = a => String(a?.system?.clan === "custom" ? a?.system?.custom?.clan ?? "" : a?.system?.clan ?? "");
+
     async function useDiscipline(actor) {
         if (LIM.refuseIdle(actor)) return null; // B6156: asleep for the day or out cold
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
@@ -204,7 +207,8 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/></div>
           <div class="form-group"><label>Blood / Willpower to spend</label><input type="number" name="blood" value="0" min="0" style="width:4em"/> <input type="number" name="wp" value="0" min="0" style="width:4em"/></div>
           <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div>
-          <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
+          ${/ramanga/i.test(clanTextOf(actor)) ? `<div class="form-group"><label><input type="checkbox" name="piece"/> Holds a piece of the victim (hair, a nail, blood): no Ramanga +1 on Presence or Aizina (V20 Dark Ages p. 98)</label></div>` : ""}</form>`;
         const describe = root => {
             const p = list.find(x => x.id === root.querySelector("[name=power]").value);
             const box = root.querySelector(".wodx-disc-info");
@@ -263,7 +267,11 @@ export function build(ctx) {
                 const pool = poolOf(actor, p.r, fd.attr);
                 // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
                 const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
-                const rm = target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : { diff: 0, parts: [] };
+                // A copy: resistMods can hand back its frozen NONE, which the bloodline step below adds to
+                const rm = { diff: 0, parts: [], ...(target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : {}) };
+                // B7661: the Ramanga's weakness on Presence and Aizina used on others (V20 Dark Ages p. 98)
+                const bl = K.bloodlinePowerDiff(clanTextOf(actor), p.d, { onOther: !!target && target !== actor, piece: !!fd.piece });
+                if (bl.diff) { rm.diff = n(rm.diff) + bl.diff; rm.parts = [...(rm.parts ?? []), bl.part]; }
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + rm.diff + lim.diff, { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;

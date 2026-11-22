@@ -546,3 +546,15 @@ export const beyondGolconda = name => GOLCONDA_BEYOND.includes(String(name ?? ""
 /** B5096: the sun counts one step weaker on the ladder for a vampire in Golconda (the owner's pick, a house rule). */
 export const GOLCONDA_SUN_LADDER = ["faint", "covered", "indirect", "cloudy", "direct"];
 export const golcondaSun = light => { const i = GOLCONDA_SUN_LADDER.indexOf(light); return i > 0 ? GOLCONDA_SUN_LADDER[i - 1] : light; };
+
+/**
+ * B7661: a bloodline's own weight on its Discipline rolls. The Ramanga use Presence and Aizina (their Obtenebration) at
+ * +1 difficulty on others, unless they hold a piece of the victim (V20 Dark Ages p. 98). clan: the sheet's clan text.
+ * Returns {diff, part} (diff 0 and part "" when nothing applies), and asks: whether the "piece" box is worth showing.
+ */
+export function bloodlinePowerDiff(clan, discipline, { onOther = true, piece = false } = {}) {
+    const ramanga = /ramanga/i.test(String(clan ?? ""));
+    const asks = ramanga && /presence|obtenebration|aizina/i.test(String(discipline ?? ""));
+    if (!asks || !onOther || piece) return { diff: 0, part: "", asks };
+    return { diff: 1, part: "Ramanga +1 (no piece of the victim held)", asks };
+}

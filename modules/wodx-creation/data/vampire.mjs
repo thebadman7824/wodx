@@ -89,6 +89,19 @@ export const CLANS = [
   {id: "tlacique", name: "Tlacique", disciplines: ["Obfuscate", "Presence", "Protean"], darkAges: "Clanbook: Followers of Set (Revised) pdf p. 54; V20 p. 435", aliases: ["tlacique setites"]},
   {id: "mla-watu", name: "Mla Watu", disciplines: ["Auspex", "Fortitude", "Necromancy"], darkAges: "Kindred of the Ebony Kingdom pdf p. 200", aliases: ["mlawatu"]},
   {id: "nkulu-zao", name: "Nkulu Zao", disciplines: ["Auspex", "Fortitude", "Obeah"], darkAges: "Kindred of the Ebony Kingdom pdf p. 202", aliases: ["nkulu"]},
+  // B7661: the six Dark Ages lines the full check found with no row (V20 Dark Ages chapter 2), and the Valkyrjer, the
+  // Dark Ages Ahrimanes (p. 70), who are not the later Ahrimanes (V20 p. 415, open from 1493)
+  {id: "bonsam", name: "Bonsam", disciplines: ["Abombwe", "Obfuscate", "Potence"], darkAges: "V20DA p. 76"},
+  {id: "children-of-osiris", name: "Children of Osiris", disciplines: ["Bardo"], darkAges: "V20DA p. 78",
+    withOriginal: true, noEmbrace: "the initiation leaves their blood inert (V20 Dark Ages p. 78)", aliases: ["penitent", "penitents", "osirian"]},
+  {id: "danava", name: "Danava", disciplines: ["Dominate", "Fortitude", "Thaumaturgy"], darkAges: "V20DA p. 79"},
+  {id: "impundulu", name: "Impundulu", disciplines: ["Fortitude", "Necromancy", "Presence"], darkAges: "V20DA p. 86"},
+  {id: "ramanga", name: "Ramanga", disciplines: ["Obfuscate", "Obtenebration", "Presence"], darkAges: "V20DA p. 98 (Aizina is their Obtenebration)"},
+  {id: "salubri-watcher", name: "Salubri (Watcher)", disciplines: ["Auspex", "Obfuscate", "Valeren"], darkAges: "V20DA p. 104",
+    aliases: ["salubri watcher", "wu zao"]},
+  {id: "valkyrjer", name: "Valkyrjer", disciplines: ["Animalism", "Potence", "Spiritus"], darkAges: "V20DA p. 70 (Ahrimanes)",
+    aliases: ["valkyrje", "dark ages ahrimanes"], opens: {until: 1492},
+    noBondNoGhoul: "an Ahrimane's blood makes neither blood bonds nor ghouls (V20 Dark Ages p. 71)"},
   {id: "niktuku", name: "Nictuku", disciplines: ["Auspex", "Celerity", "Potence"], darkAges: "V20DA p. 97", aliases: ["niktuku"]},
   {id: "caitiff", name: "Caitiff", disciplines: [], darkAges: "V20 p. 124 (no clan Disciplines)", aliases: ["clanless"]}
 ];

@@ -234,7 +234,9 @@ export function purchaseOptions(actor) {
   const domitorGen = domitor ? generationOf(domitor) : null;
   const domitorDisciplines = domitor ? disciplinesOf(domitor).filter(d => d.value > 0).map(d => d.name) : [];
   const ownClan = line === "vampire" ? clanOf(actor) : (domitor ? clanOf(domitor) : null);
-  const clanList = clanDisciplines(ownClan, vampireEra()).map(d => d.toLowerCase());
+  // B7661: a Child of Osiris keeps Bardo and the Disciplines of the clan they came from (V20 Dark Ages p. 78)
+  const origin = ownClan?.withOriginal ? findClan(clanNameOf(line === "vampire" ? actor : domitor).toLowerCase().replace(/children of osiris|penitents?|osirian/g, " ")) : null;
+  const clanList = [...clanDisciplines(ownClan, vampireEra()), ...(origin && origin.id !== ownClan.id ? clanDisciplines(origin, vampireEra()) : [])].map(d => d.toLowerCase());
   const caitiff = line === "vampire" && ownClan?.id === "caitiff";
   const {available} = xpTotals(payerOf(actor));
   const out = [];
