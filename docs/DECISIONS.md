@@ -450,7 +450,7 @@ Next free block: B7650
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
-| B7630-B7649 | Dark Ages depth desk: Road data fix and sins from play (used B7630-B7635) | Actions |
+| B7630-B7649 | Dark Ages depth desk: a domain someone else wants (used B7630-B7640) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15168,3 +15168,28 @@ Reverse: remove the embrace line from sinForEvent.
 WoDX Actions (kindred-rules.js starvedTonight, main.js feedResolve). At dawn a vampire counts as starving when the blood stands under the hunger line (7 minus Self-Control, or Instinct on an Instinct Road, V20 Dark Ages p. 357) and the last drink was more than 16 hours ago (the longest Moravian winter night). Feeding now keeps the time of the last drink on the character (flag lastFed). House reading, logged in docs/PENDING-REVIEW.md.
 
 Reverse: drop the starve call from dawn.
+
+## B7636. The boon scale is a house rule in the Dark Ages (2026-11-22)
+WoDX Actions (kindred-rules.js BOONS, kindred.js Prestation journal). The boons ledger called its scale (trivial, minor, major, blood, life) "prestation, V20 Dark Ages". Neither V20 Dark Ages nor V20 has the word "prestation" or that scale in its text (searched 20 and 22 Nov 2026); it is the later Camarilla's custom. The ledger stays as it is in every era, now labelled a WoDX house rule for the Dark Ages. Desk item 5, recommended option ("Fix the citation now; do the duties together with item 4"), taken under the keep-working rule while Ben had not picked. Logged in docs/PENDING-REVIEW.md.
+
+Reverse: restore the old comment and journal line.
+
+## B7637. The Keeper and the Chamberlain in the Dark Ages court (2026-11-22)
+WoDX NPC (politics-rules.mjs dark-ages-court). V20 Dark Ages describes a Dark Medieval domain's offices (pdf 30-33): the Prince, the Keeper who keeps the city's Elysia, the Chamberlain who stands between the Prince and everyone else, the Sheriff, Harpies, Scourges and free lances, and the elders who meet openly or in secret. WoDX's court had the Prince, Seneschal, Sheriff, Scourge, Herald and Harpy, with the Keeper only in the Camarilla court from 1435. The Chamberlain and the Keeper of Elysium join as appointed seats, "violence in Elysium" joins the court's law, and the court's note names the elders' meetings (no second gathering is modelled). Desk item 4, the part of its recommended option that needs no new window.
+
+Reverse: remove the two offices, the charge and the note's last two sentences.
+
+## B7638. A poacher leaves signs in a player's domain (2026-11-22)
+WoDX NPC (poach-rules.mjs, factions.mjs hunt). V20 Dark Ages p. 180 makes Domain a feeding ground the court upholds, with security dots that cut both ways, and the Second Tradition (p. 28) makes hunting there without leave a wrong. WoDX already marked an NPC's hunt in another faction's place as a trespass at +security. Now, when an NPC (not a player's character) feeds in a place held by a faction with a player's character in it, a card goes to the Storyteller and the holder's players with three signs (the fed-on vessel, a thinner herd, a trail), and the district's herd pool gives one. The signs are WoDX's own. Desk item 6, recommended option "Do it", taken under the keep-working rule while Ben had not picked; Ben said on 22 Nov to go on with the planned items. Logged in docs/PENDING-REVIEW.md.
+
+Reverse: remove the poachCard call in factions.mjs hunt().
+
+## B7639. Tracking the poacher (2026-11-22)
+WoDX NPC (poach-rules.mjs trackDiff, trackPool; factions.mjs trackPoacher). The card has a Track button for each of the holder's characters, once per card: Perception + Investigation (Survival in the wilds) at 6, less a dot each for the domain's security, to no less than 3 (the security rule, V20 Dark Ages p. 180; the pool and the base 6 are WoDX readings). A success names the poacher and its faction; a failure loses the trail; a botch follows the wrong trail and lets the poacher know someone is looking.
+
+Reverse: remove the button and trackPoacher.
+
+## B7640. A found poacher goes to the court (2026-11-22)
+WoDX NPC (poach-rules.mjs brokenLaw; factions.mjs onPoachTracked). The result names the court law broken: the holder's polity's own law of hunting in another's fief or domain (the Dark Ages court has "hunting in another's fief"), else the Tradition of Domain. On the Storyteller's side the holder's faction thinks a step worse of the poacher's (through the approval queue) and the tracker's History page records it. No court case is opened by itself: bringing it before the Prince is played at the table.
+
+Reverse: remove onPoachTracked and its createChatMessage hook.
