@@ -968,7 +968,8 @@ export function build(ctx) {
     /** Heal bashing and lethal with blood on rising, keeping blood at the hunger line. */
     async function riseHeal(actor, { quiet = false } = {}) {
         const b = ctx.blood(actor), dmg = ctx.healthTrack(actor).damage;
-        const plan = K.risingHeal(dmg, b.value, n(actor.system?.advantages?.virtues?.selfcontrol?.permanent), ctx.R.planHealing);
+        const per = TH.healCostPerLevel(actor);
+        const plan = K.risingHeal(dmg, b.value, n(actor.system?.advantages?.virtues?.selfcontrol?.permanent), ctx.R.planHealing, { perLevel: per });
         if (!plan.spent) {
             if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
             return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
@@ -976,7 +977,7 @@ export function build(ctx) {
         // B6441: the blood goes first and the wounds close after it, so a sheet that reads healed has paid already
         const ch = await ctx.changeBlood(actor, -plan.spent);
         await ctx.setDamage(actor, { ...plan.after });
-        const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
+        const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})${per > 1 ? `, two blood a level for Slow Healing (V20 p. 483)` : ""}`;
         if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
     }

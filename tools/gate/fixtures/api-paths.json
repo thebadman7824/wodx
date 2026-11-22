@@ -499,7 +499,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/fae-da.js:226",
-   "modules/wodx-actions/scripts/main.js:2941",
+   "modules/wodx-actions/scripts/main.js:2961",
    "modules/wodx-actions/scripts/treasures.js:190",
    "modules/wodx-actions/scripts/treasures.js:224",
    "modules/wodx-npc/scripts/family.mjs:47",
@@ -618,7 +618,7 @@
    "propose"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:155",
+   "modules/wodx-actions/scripts/debts-marks.js:156",
    "modules/wodx-otherworlds/scripts/drift.mjs:47",
    "modules/wodx-storyteller/scripts/hunters.mjs:278",
    "modules/wodx-storyteller/scripts/sites.mjs:109",
@@ -635,7 +635,7 @@
    "registerHandler"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:168",
+   "modules/wodx-actions/scripts/debts-marks.js:169",
    "modules/wodx-npc/scripts/memory.mjs:219",
    "modules/wodx-otherworlds/scripts/drift.mjs:54",
    "modules/wodx-storyteller/scripts/hunters.mjs:377",
@@ -715,7 +715,7 @@
    "conditions"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:289",
+   "modules/wodx-actions/scripts/debts-marks.js:290",
    "modules/wodx-combat/scripts/conductor.js:63",
    "modules/wodx-combat/scripts/main.js:2264",
    "modules/wodx-combat/scripts/main.js:2518",
@@ -760,8 +760,8 @@
    "hasCondition"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:290",
    "modules/wodx-actions/scripts/debts-marks.js:291",
+   "modules/wodx-actions/scripts/debts-marks.js:292",
    "modules/wodx-combat/scripts/main.js:707",
    "modules/wodx-combat/scripts/main.js:813",
    "modules/wodx-combat/scripts/main.js:2398",
@@ -790,7 +790,7 @@
    "modules/wodx-actions/scripts/charms.js:428",
    "modules/wodx-actions/scripts/garou.js:370",
    "modules/wodx-actions/scripts/garou.js:391",
-   "modules/wodx-actions/scripts/main.js:2691",
+   "modules/wodx-actions/scripts/main.js:2699",
    "modules/wodx-actions/scripts/turns.js:94",
    "modules/wodx-combat/scripts/main.js:2403",
    "modules/wodx-combat/scripts/main.js:2439",
@@ -813,7 +813,7 @@
    "gain"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3446",
+   "modules/wodx-actions/scripts/main.js:3466",
    "modules/wodx-npc/scripts/hearts.mjs:267",
    "modules/wodx-npc/scripts/hearts.mjs:279"
   ]
@@ -825,7 +825,7 @@
    "hold"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3523"
+   "modules/wodx-actions/scripts/main.js:3543"
   ]
  },
  {
@@ -834,8 +834,8 @@
    "endScene"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:2625",
-   "modules/wodx-actions/scripts/main.js:2626",
+   "modules/wodx-actions/scripts/main.js:2633",
+   "modules/wodx-actions/scripts/main.js:2634",
    "modules/wodx-chronicle/scripts/clock-app.mjs:32"
   ]
  },
@@ -864,7 +864,7 @@
    "modules/wodx-actions/scripts/hunter.js:40",
    "modules/wodx-actions/scripts/kindred.js:193",
    "modules/wodx-actions/scripts/kindred.js:318",
-   "modules/wodx-actions/scripts/kindred.js:1180",
+   "modules/wodx-actions/scripts/kindred.js:1181",
    "modules/wodx-actions/scripts/m20.js:41",
    "modules/wodx-actions/scripts/mage-da.js:47",
    "modules/wodx-actions/scripts/voice.js:60",
@@ -905,7 +905,7 @@
   "uses": [
    "modules/wodx-actions/scripts/banal-life.js:22",
    "modules/wodx-actions/scripts/charms.js:32",
-   "modules/wodx-actions/scripts/debts-marks.js:34",
+   "modules/wodx-actions/scripts/debts-marks.js:35",
    "modules/wodx-actions/scripts/deeper-hooks.js:31",
    "modules/wodx-actions/scripts/hunter.js:40",
    "modules/wodx-actions/scripts/kindred.js:481",
@@ -1055,8 +1055,8 @@
    "list"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:103",
-   "modules/wodx-actions/scripts/debts-marks.js:373",
+   "modules/wodx-actions/scripts/debts-marks.js:104",
+   "modules/wodx-actions/scripts/debts-marks.js:374",
    "modules/wodx-interactables/scripts/living.mjs:116",
    "modules/wodx-storyteller/scripts/omens.mjs:55"
   ]
@@ -1068,8 +1068,8 @@
    "load"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:102",
-   "modules/wodx-actions/scripts/debts-marks.js:372"
+   "modules/wodx-actions/scripts/debts-marks.js:103",
+   "modules/wodx-actions/scripts/debts-marks.js:373"
   ]
  },
  {
@@ -1276,11 +1276,11 @@
    "isSkipping"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3684",
-   "modules/wodx-actions/scripts/main.js:3725",
-   "modules/wodx-actions/scripts/main.js:3732",
-   "modules/wodx-actions/scripts/main.js:3747",
-   "modules/wodx-actions/scripts/main.js:3751",
+   "modules/wodx-actions/scripts/main.js:3704",
+   "modules/wodx-actions/scripts/main.js:3745",
+   "modules/wodx-actions/scripts/main.js:3752",
+   "modules/wodx-actions/scripts/main.js:3767",
+   "modules/wodx-actions/scripts/main.js:3771",
    "modules/wodx-actions/scripts/summons.js:507",
    "modules/wodx-atmosphere/scripts/main.mjs:237",
    "modules/wodx-atmosphere/scripts/main.mjs:471",
@@ -1338,7 +1338,7 @@
    "of"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:370"
+   "modules/wodx-actions/scripts/debts-marks.js:371"
   ]
  },
  {
@@ -1608,8 +1608,8 @@
    "registerApprovalHandler"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3599",
-   "modules/wodx-actions/scripts/main.js:3599",
+   "modules/wodx-actions/scripts/main.js:3619",
+   "modules/wodx-actions/scripts/main.js:3619",
    "modules/wodx-actions/scripts/servant-actions.js:310",
    "modules/wodx-actions/scripts/social.js:345",
    "modules/wodx-creation/scripts/animal-stock.mjs:232",
@@ -1757,7 +1757,7 @@
    "allRowsOf"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/hunter.js:357",
+   "modules/wodx-actions/scripts/hunter.js:378",
    "modules/wodx-actions/scripts/m20.js:118"
   ]
  },
@@ -1817,7 +1817,7 @@
    "terms"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/daysleep.js:65",
+   "modules/wodx-actions/scripts/daysleep.js:67",
    "modules/wodx-npc/scripts/passersby.mjs:96"
   ]
  },
@@ -1858,7 +1858,7 @@
    "turnSeconds"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/daysleep.js:180",
+   "modules/wodx-actions/scripts/daysleep.js:197",
    "modules/wodx-actions/scripts/limits.js:39",
    "modules/wodx-interactables/scripts/main.mjs:427"
   ]
@@ -1916,7 +1916,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/after-costs.js:231",
-   "modules/wodx-actions/scripts/main.js:2636"
+   "modules/wodx-actions/scripts/main.js:2644"
   ]
  },
  {
@@ -1926,8 +1926,8 @@
    "registerReverter"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3596",
-   "modules/wodx-actions/scripts/main.js:3597",
+   "modules/wodx-actions/scripts/main.js:3616",
+   "modules/wodx-actions/scripts/main.js:3617",
    "modules/wodx-actions/scripts/treasures.js:53"
   ]
  },
@@ -2028,7 +2028,7 @@
    "addSource"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3590",
+   "modules/wodx-actions/scripts/main.js:3610",
    "modules/wodx-atmosphere/scripts/main.mjs:1250",
    "modules/wodx-library/scripts/faith-use.mjs:60",
    "modules/wodx-storyteller/scripts/hardship.mjs:218"
@@ -2193,7 +2193,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/social.js:292",
-   "modules/wodx-actions/scripts/trait-hooks.js:25",
+   "modules/wodx-actions/scripts/trait-hooks.js:26",
    "modules/wodx-interactables/scripts/chase.mjs:382"
   ]
  },
@@ -2419,7 +2419,7 @@
    "start"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:1095",
+   "modules/wodx-actions/scripts/kindred.js:1096",
    "modules/wodx-npc/scripts/factions.mjs:251",
    "modules/wodx-storyteller/scripts/reach.mjs:154",
    "modules/wodx-storyteller/scripts/reach.mjs:263"
@@ -2952,7 +2952,7 @@
    "holyUnder"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/hunter.js:344"
+   "modules/wodx-actions/scripts/hunter.js:365"
   ]
  },
  {
@@ -3039,7 +3039,7 @@
    "FAITH_WORDS"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/hunter.js:347"
+   "modules/wodx-actions/scripts/hunter.js:368"
   ]
  },
  {
@@ -3059,8 +3059,8 @@
    "sameFaith"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/hunter.js:346",
-   "modules/wodx-actions/scripts/hunter.js:346"
+   "modules/wodx-actions/scripts/hunter.js:367",
+   "modules/wodx-actions/scripts/hunter.js:367"
   ]
  },
  {
@@ -3793,7 +3793,7 @@
    "passersby"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3150"
+   "modules/wodx-actions/scripts/main.js:3170"
   ]
  },
  {
@@ -3803,7 +3803,7 @@
    "rules"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3158"
+   "modules/wodx-actions/scripts/main.js:3178"
   ]
  },
  {
@@ -4500,7 +4500,7 @@
    "uncanny"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:1037",
+   "modules/wodx-actions/scripts/kindred.js:1038",
    "modules/wodx-library/scripts/look.mjs:100"
   ]
  },
@@ -5023,7 +5023,7 @@
    "end"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:189"
+   "modules/wodx-actions/scripts/debts-marks.js:190"
   ]
  },
  {
@@ -5045,7 +5045,7 @@
    "start"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/debts-marks.js:119",
+   "modules/wodx-actions/scripts/debts-marks.js:120",
    "modules/wodx-actions/scripts/kindred.js:514",
    "modules/wodx-chronicle/scripts/pod.mjs:136",
    "modules/wodx-combat/scripts/aftermath.js:138",
