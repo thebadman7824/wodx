@@ -36,7 +36,9 @@ export const CLANS = [
   {id: "gangrel", name: "Gangrel", disciplines: ["Animalism", "Fortitude", "Protean"], darkAges: "V20DA p. 48"},
   {id: "lasombra", name: "Lasombra", disciplines: ["Dominate", "Obtenebration", "Potence"], darkAges: "V20DA p. 50"},
   {id: "malkavian", name: "Malkavian", disciplines: ["Auspex", "Dementation", "Obfuscate"], darkAges: "V20DA p. 52"},
-  {id: "nosferatu", name: "Nosferatu", disciplines: ["Animalism", "Obfuscate", "Potence"], darkAges: "V20DA p. 54"},
+  {id: "nosferatu", name: "Nosferatu", disciplines: ["Animalism", "Obfuscate", "Potence"], darkAges: "V20DA p. 54",
+    // B7660: Appearance starts at 0 and cannot be raised (V20 Dark Ages p. 55; V20 p. 63)
+    appearanceZero: "V20 Dark Ages p. 55"},
   {id: "ravnos", name: "Ravnos", disciplines: ["Animalism", "Chimerstry", "Fortitude"], darkAges: "V20DA p. 56"},
   {id: "setite", name: "Followers of Set", disciplines: ["Obfuscate", "Presence", "Serpentis"], darkAges: "V20DA p. 58",
     aliases: ["setite", "set"]},

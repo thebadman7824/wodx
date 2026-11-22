@@ -155,6 +155,17 @@ export function traitMax({line, kind, generation, domitorGeneration, golconda = 
   return 5;
 }
 
+/**
+ * B7660: a trait the clan's blood or a Flaw holds at 0 for good: a Nosferatu's Appearance (V20 Dark Ages p. 55), or
+ * anyone with the Monstrous Flaw (p. 421). Returns the reason, or null when the trait may rise.
+ */
+export function lockedAtZero({clan = null, key = "", flaws = []} = {}) {
+  if ( key !== "appearance" ) return null;
+  if ( clan?.appearanceZero ) return `${clan.name}: Appearance stays at 0 (${clan.appearanceZero})`;
+  if ( (flaws ?? []).some(f => /^monstrous$/i.test(String(f).trim())) ) return "Monstrous: Appearance stays at 0 (V20 Dark Ages p. 421)";
+  return null;
+}
+
 /** Whether a clan is open in a year (B6612): a clan with opens is only there from its year, on the Future branch if it says so. */
 export function clanOpen(c, {year = null, futureBranch = false} = {}) {
   if ( !c?.opens ) return true;

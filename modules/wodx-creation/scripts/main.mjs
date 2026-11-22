@@ -156,3 +156,14 @@ Hooks.on("getSceneControlButtons", controls => {
 });
 
 Hooks.on("updateActor", () => { if ( active ) CreationApp.refresh(); });
+
+// B7660: a sheet given a clan whose blood holds Appearance at 0 (the Nosferatu, V20 Dark Ages p. 55) loses its
+// Appearance dots, once, by the client that made the change
+Hooks.on("updateActor", (actor, changes, _opts, userId) => {
+  if ( userId !== game.user?.id ) return;
+  const s = changes?.system;
+  if ( !s || !("clan" in s || "custom" in s || "attributes" in s) ) return;
+  const app = actor.system?.attributes?.appearance;
+  if ( !app || !(Number(app.value) > 0) || !data.attributeLock(actor, "appearance") ) return;
+  actor.update({"system.attributes.appearance.value": 0}).catch(() => null);
+});

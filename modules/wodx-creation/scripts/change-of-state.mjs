@@ -65,6 +65,8 @@ export function embraceData(mortal, {sire = null, clanName, generation, startBlo
   src.type = CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire";
   const known = new Set((src.items ?? []).filter(i => i.type === "Power" && i.system?.type === "wod.types.discipline").map(i => i.name.toLowerCase()));
   const clan = findClan(clanName);
+  // B7660: the Nosferatu curse takes Appearance to 0 at the Embrace (V20 Dark Ages p. 55)
+  if ( clan?.appearanceZero && sys.attributes?.appearance ) sys.attributes.appearance.value = 0;
   const newDisciplines = clanDisciplines(clan, eraKey).filter(d => !known.has(d.toLowerCase()));
   src.items = [...(src.items ?? []).map(i => { const c = {...i}; delete c._id; return c; }), ...newDisciplines.map(d => disciplineItem(d, 0))];
   const before = {flags: src.flags};

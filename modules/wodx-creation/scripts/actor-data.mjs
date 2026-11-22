@@ -1,4 +1,4 @@
-import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLearn, xpCost, traitMax, KINDS} from "./rules.mjs";
+import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLearn, xpCost, traitMax, KINDS, lockedAtZero} from "./rules.mjs";
 import {XP} from "../data/vampire.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 import * as AS from "./animal-stock-rules.mjs";
@@ -126,6 +126,12 @@ export function clanNameOf(actor) {
 export function clanOf(actor) {
   return findClan(clanNameOf(actor));
 }
+
+/** B7660: the names of the actor's Flaws (Feature items of the flaw type). */
+export const flawNames = actor => items(actor).filter(i => i.type === "Feature" && i.system?.type === "wod.types.flaw").map(i => i.name);
+
+/** B7660: why this Attribute may not rise, or null (a Nosferatu's Appearance, the Monstrous Flaw). */
+export const attributeLock = (actor, key) => lockedAtZero({clan: lineOf(actor) === "vampire" ? clanOf(actor) : null, key, flaws: flawNames(actor)});
 
 export function disciplinesOf(actor) {
   return items(actor).filter(i => i.type === "Power" && i.system?.type === DISCIPLINE)
@@ -260,7 +266,8 @@ export function purchaseOptions(actor) {
     if ( a?.isvisible === false ) continue;
     // B5047: an animal has only Physical and Mental Attributes (V20 Dark Ages p. 396)
     if ( beast && !AG.ANIMAL_ATTRIBUTES.includes(k) ) continue;
-    add("attribute", k, loc(a.label) || k, Number(a.value) || 0);
+    const lock = attributeLock(actor, k);
+    add("attribute", k, loc(a.label) || k, Number(a.value) || 0, lock ? {blocked: lock} : {});
   }
   for ( const [k, a] of Object.entries(sys.abilities ?? {}) ) {
     if ( !a?.isvisible && !(Number(a?.value) > 0) ) continue;
