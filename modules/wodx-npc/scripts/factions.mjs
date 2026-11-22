@@ -671,7 +671,7 @@ export function build(ctx) {
     const wild = ["wilds", "caern"].includes(place.kind);
     const feeds = num(actor.system?.advantages?.yangchi?.permanent ?? actor.system?.advantages?.yangchi?.max) > 0 ? "chi" : "blood";
     const scene = sceneForPlace(placeId);
-    try { if ( scene ) await game.modules.get("wodx-storyteller")?.api?.herds?.feed?.({scene, who: actor.name}); } catch (e) { console.warn(`${MOD} | poach herd`, e); }
+    try { if ( scene ) await game.modules.get("wodx-storyteller")?.api?.upkeep?.herds?.feed?.({scene, who: actor.name}); } catch (e) { console.warn(`${MOD} | poach herd`, e); }
     const key = PO.polityFor(holder, eraInfo().year);
     const law = POACH.brokenLaw(key ? PO.POLITIES[key]?.law ?? [] : []);
     const security = num(h.trespass?.security), diff = POACH.trackDiff(security);

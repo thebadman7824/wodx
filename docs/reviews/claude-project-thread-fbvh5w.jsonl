@@ -27,3 +27,5 @@
 {"file":"changes/decisions/B7638.md","verdict":"working","how":"Read the diff line by line; gatedadomain 4/4 twice on cloud lane 9; poach, politics, faction, guard harness tests pass","hash":"be17ac0c6b3a","at":"2026-11-22T12:49Z"}
 {"file":"changes/wodx-npc/domain-poachers.md","verdict":"working","how":"Read the diff line by line; gatedadomain 4/4 twice on cloud lane 9; poach, politics, faction, guard harness tests pass","hash":"b97c9b89e429","at":"2026-11-22T12:49Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read the diff line by line; gatedadomain 4/4 twice on cloud lane 9; poach, politics, faction, guard harness tests pass","hash":"0bde79f7a2ab","at":"2026-11-22T12:49Z"}
+{"file":"modules/wodx-npc/scripts/factions.mjs","verdict":"working","how":"One-line fix of the herds API path (api.upkeep.herds); gatedadomain 4/4 with herd pools on, the herd fell 0 to 1","hash":"1db494c211c1","at":"2026-11-22T13:06Z"}
+{"file":"tools/gate/gatedadomain.mjs","verdict":"working","how":"One-line fix of the herds API path (api.upkeep.herds); gatedadomain 4/4 with herd pools on, the herd fell 0 to 1","hash":"65d7550cdb0e","at":"2026-11-22T13:06Z"}
