@@ -122,16 +122,27 @@ export function branchNotes(g, base, head) {
   return out;
 }
 
-/** B7067: decision fragments added on the branch, each as it last stood: [{file, block: {lo, hi} | null, thread, numbers}]. */
+/**
+ * Decision fragments added on the branch, each as it last stood: [{file, block: {lo, hi} | null, thread, numbers}],
+ * numbers being the "B1234" of its "## B1234." sections (B7145, B7067). A fragment gone by the head still counts
+ * when a stamp removed it (the stamp writes docs/DECISIONS.md in the same commit); one renamed or deleted any other
+ * way (B7010.md renumbered to B7110.md) no longer holds its numbers (PR 1836).
+ */
 export function branchDecisions(g, base, head) {
   const added = new Set(g.run("log", "--full-history", "--no-merges", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean));
   const out = [];
   for ( const file of [...added].sort() ) {
     if ( !/^changes\/decisions\/[^/]+\.md$/.test(file) ) continue;
     let text = g.show(head, file);
-    if ( text === null ) { const gone = g.tryRun("log", "-1", "--full-history", "--no-merges", "--format=%H", "--diff-filter=D", `${base}..${head}`, "--", file)?.trim(); text = gone ? g.show(`${gone}^1`, file) : null; }
+    if ( text === null ) {
+      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file)?.trim();
+      const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
+      if ( !stamped ) continue;
+      text = g.show(`${last}^1`, file);
+    }
     const frag = text === null ? null : parseFragment(text);
-    out.push({file, block: blockRange(frag?.meta.block), thread: frag?.meta.thread ?? "", numbers: frag ? sectionNumbers(frag.body) : []});
+    const numbers = [...String(text ?? "").matchAll(/^## B(\d+)[a-z]?\b/gm)].map(m => `B${m[1]}`);
+    out.push({file, block: blockRange(frag?.meta.block), thread: frag?.meta.thread ?? "", numbers});
   }
   return out;
 }
@@ -171,12 +182,13 @@ export function decisionProblems(frags, added, taken, claims = null) {
   const name = r => r.lo === r.hi ? `B${r.lo}` : `B${r.lo}-B${r.hi}`;
   for ( const f of frags ) {
     if ( !f.block ) { out.push(`${f.file}: no block: line (B<lo>-B<hi>, from node tools/decisions/claim.mjs)`); continue; }
-    for ( const n of f.numbers ) if ( n < f.block.lo || n > f.block.hi ) out.push(`${f.file}: B${n} is outside its block ${name(f.block)}`);
+    const nums = f.numbers.map(x => typeof x === "number" ? x : +String(x).replace(/^B/, ""));
+    for ( const n of nums ) if ( n < f.block.lo || n > f.block.hi ) out.push(`${f.file}: B${n} is outside its block ${name(f.block)}`);
     // A block already on main may take more decisions later (merge-stamp, B3081): its own index row is no clash, a
     // section number already written there is
     const same = t => t.lo === f.block.lo && t.hi === f.block.hi;
     const hit = taken.filter(t => overlaps(t, f.block) && !same(t) && !(t.lo === t.hi && taken.some(same)));
-    for ( const n of f.numbers ) if ( taken.some(same) && taken.some(t => t.lo === n && t.hi === n) ) out.push(`${f.file}: B${n} is already written on main`);
+    for ( const n of nums ) if ( taken.some(same) && taken.some(t => t.lo === n && t.hi === n) ) out.push(`${f.file}: B${n} is already written on main`);
     if ( hit.length ) out.push(`${f.file}: block ${name(f.block)} is already taken on main (${hit.slice(0, 3).map(name).join(", ")}); claim a new block with tools/decisions/claim.mjs`);
     if ( !f.thread ) out.push(`${f.file}: no thread: line (the thread id that claimed ${name(f.block)} with tools/decisions/claim.mjs)`);
     if ( claims ) {
