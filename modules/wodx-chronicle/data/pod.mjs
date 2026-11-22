@@ -3,6 +3,7 @@
  * text, art or code copied, and its 5th edition material left out). Rules in scripts/pod-rules.mjs, the Foundry side
  * in scripts/pod.mjs. Every date below is history; the Kindred side follows V20, V20 Dark Ages and Revised.
  */
+import {canon} from "./canon/index.mjs";
 
 /** City Masquerade exposure: the bands, lowest first. `court` marks the band where a strict court acts. */
 export const EXPOSURE_BANDS = [
@@ -131,13 +132,13 @@ export const CHAINS = [
     step("schism", "The split", "The congregation divides over a new teaching. Pick the side the Setite feeds.", 21),
     step("temple", "A hidden temple", "The Setite's followers dig or buy a cellar under the faith's own house.", 30),
     step("fall", "The faith turns", "The faith now serves the Setite, or the characters have broken it. The Corruption ledger shows who fell.", 30)]},
-  {key: "anarch-revolt", label: "The Anarch Revolt", lines: ["vampire"], from: 1381, to: 1493, page: "V20 p. 45 (pdf 53)", steps: [
+  {key: "anarch-revolt", label: "The Anarch Revolt", lines: ["vampire"], from: canon("anarch-revolt").from, to: canon("anarch-revolt").to, page: "V20 p. 45 (pdf 53)", steps: [
     step("murmurs", "Murmurs of the young", "Neonates talk in the dark about killing their sires.", 0),
     step("first-blood", "An elder dies", "A local elder is found destroyed, the work of a childe and friends.", 14),
     step("take-sides", "Sides", "The court demands that every Kindred in the city declare.", 14),
     step("siege", "The haven burns", "Anarchs and their ghouls storm an elder's haven.", 21),
-    step("terms", "Terms", "A truce, a purge, or the city falls to the anarchs. Thorns is near (1493).", 30)]},
-  {key: "black-death", label: "The Black Death comes", lines: ["all"], from: 1347, to: 1353, page: "Wraith 20th p. 34 (pdf 99)", steps: [
+    step("terms", "Terms", `A truce, a purge, or the city falls to the anarchs. Thorns is near (${canon("convention-of-thorns").from}).`, 30)]},
+  {key: "black-death", label: "The Black Death comes", lines: ["all"], from: canon("black-death").from, to: canon("black-death").to, page: "Wraith 20th p. 34 (pdf 99)", steps: [
     step("ships", "News of ships", "Merchants speak of a sickness in the southern ports.", 0),
     step("first", "The first dead", "Swellings, fever and death in three days. The vessels are dying.", 14),
     step("flight", "Flight and blame", "The rich flee; the poor blame strangers and Jews. Mobs gather.", 14),

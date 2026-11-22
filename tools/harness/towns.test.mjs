@@ -236,3 +236,12 @@ test("the town at each settlement age, for the rebuild (B3420)", () => {
   assert.equal(TR.townAtAges(null, [1197])[0].size, null);
   assert.match(src("modules/wodx-storyteller/scripts/towns.mjs"), /atAges/);
 });
+
+test("B7177: a battle or saga step lands on a town once, even when a second call comes while the first is landing", () => {
+  const t = src("modules/wodx-storyteller/scripts/towns.mjs");
+  for ( const fn of ["onBattle", "onSaga"] ) {
+    const body = t.slice(t.indexOf(`async function ${fn}(`), t.indexOf("\n}\n", t.indexOf(`async function ${fn}(`)));
+    const guard = body.indexOf("LANDING.has("), add = body.indexOf("LANDING.add("), land = body.indexOf("await landNow("), free = body.indexOf("finally { LANDING.delete(");
+    assert.ok(guard > 0 && add > guard && land > add && free > land, `${fn}: checks and marks the landing before it awaits, and frees it after`);
+  }
+});

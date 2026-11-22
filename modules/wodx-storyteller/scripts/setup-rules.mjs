@@ -6,6 +6,7 @@
  * makes or updates, by a flag and never twice: the Storyteller screen, the era primer for the players, the group actor,
  * Session Zero and the Chronicle Rules (through WoDX Chronicle). A dry run shows the plan first.
  */
+import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 import {worldPrimer} from "../data/primers-world.mjs";
 
 export const TEMPLATE_VERSION = 1;
@@ -55,7 +56,7 @@ export const PRIMERS = {
   "renaissance": {
     players: ["Trade, printing and new learning are changing the world. Cities grow rich; artists and scholars find patrons; ships reach new lands.",
       "Faith splits: reformers and the old Church quarrel, and wars follow. The first firearms are loud, slow and frightening."],
-    storyteller: ["The Camarilla forms in 1486 and the Convention of Thorns ends the Anarch revolt in 1493; those who refuse become the Sabbat.",
+    storyteller: [`The Camarilla forms in ${canon("camarilla-founded").from} and the Convention of Thorns ends the Anarch revolt in ${canon("convention-of-thorns").from}; those who refuse become the Sabbat.`,
       "For mages this is the Sorcerers Crusade: the Order of Reason's science against the old traditions. Witch trials are a real danger to anyone found out."]
   },
   "age-of-reason": {

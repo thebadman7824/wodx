@@ -10,12 +10,13 @@
  *           f flag or [flags], n {eventId: weight} (the next scene, as Princes of Darkness chains its events)}
  * Station flags start "st:"; they shape the later scenes. Writing rule: second person, no gendered words.
  */
+import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 
 /** Era bands, 1197 to the World of Future Darkness. */
 export const BANDS = [
-  {key: "high-medieval", from: 1100, to: 1347, label: "the high Middle Ages"},
-  {key: "plague", from: 1348, to: 1352, label: "the Black Death"},
-  {key: "late-medieval", from: 1353, to: 1499, label: "the late Middle Ages"},
+  {key: "high-medieval", from: 1100, to: canon("black-death").from - 1, label: "the high Middle Ages"},
+  {key: "plague", from: canon("black-death").from, to: canon("black-death").to, label: "the Black Death"},
+  {key: "late-medieval", from: canon("black-death").to + 1, to: 1499, label: "the late Middle Ages"},
   {key: "renaissance", from: 1500, to: 1617, label: "the Renaissance and Reformation"},
   {key: "thirty-years", from: 1618, to: 1648, label: "the Thirty Years' War"},
   {key: "baroque", from: 1649, to: 1788, label: "the Baroque and the Enlightenment"},
