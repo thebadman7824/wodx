@@ -80,7 +80,9 @@ export async function run() {
       // B6665: the shared token and the routine-less stranger walk into the hospital as themselves
       const inHospital = id => { const t = sc.tokens.get(id); return !!t && !t.hidden && t.x >= 8 * S && t.x < 13 * S && t.y >= 1 * S && t.y < 6 * S; };
       const at = id => { const t = sc.tokens.get(id); return t ? {x: t.x / S, y: t.y / S, hidden: t.hidden, away: away(id)} : null; };
-      G.ok("2. a shared NPC's token is tended as itself", away(tCrowd1.id)?.place === R("Hospital") && inHospital(tCrowd1.id), {t: at(tCrowd1.id)});
+      // B7655: the place the tending went to, by name and scene, when it is not this scene's hospital
+      const whereTo = id => { const u = away(id)?.place; const d = u ? fromUuidSync(u) : null; return {uuid: u ?? null, name: d?.name ?? null, scene: d?.parent?.name ?? null, ours: d?.parent?.id === sc.id, kind: d?.flags?.["wodx-npc"]?.place?.kind ?? null}; };
+      G.ok("2. a shared NPC's token is tended as itself", away(tCrowd1.id)?.place === R("Hospital") && inHospital(tCrowd1.id), {t: at(tCrowd1.id), went: whereTo(tCrowd1.id), hospital: R("Hospital")});
       G.ok("2. a routine-less passer-by is tended as itself", away(tStranger.id)?.place === R("Hospital") && inHospital(tStranger.id), {t: at(tStranger.id)});
       const a = sc.tokens.get(ta.id).actor, au = sc.tokens.get(tHurtU.id).actor;
       await a.setFlag(MOD, "mend", {last: game.time.worldTime - 12 * 86400});

@@ -43,7 +43,9 @@ export async function run() {
     };
 
     // B6958: where the price thinks it is, so an order-dependent miss on a shared lane says why
-    const whereNow = sc => { try { return {here: ch().world.here(sc)?.id ?? null, homeland: ch().world.homeland?.()?.id ?? ch().world.homeland?.() ?? null, abroad: !!ch().world.isAbroad?.(sc), moneyRegion: game.settings.get(ST, "moneyRegion")}; } catch (e) { return {whereError: e.message}; } };
+    const whereNow = sc => { try { return {here: ch().world.here(sc)?.id ?? null, homeland: ch().world.homeland?.()?.id ?? ch().world.homeland?.() ?? null, abroad: !!ch().world.isAbroad?.(sc), moneyRegion: game.settings.get(ST, "moneyRegion"),
+      // B7654: the scene's own place as stored, when a failure reads the homeland for the Kyoto scene
+      placeFlag: foundry.utils.deepClone(game.scenes.get(sc?.id)?.flags?.[CH]?.place ?? null), sceneThere: !!game.scenes.get(sc?.id)}; } catch (e) { return {whereError: e.message}; } };
     await G.step("1. the rules and the setting", async () => {
       G.ok("1. the rules and the setting", typeof GP.placeOf === "function" && game.settings.settings.has(`${ST}.goodsByPlace`) && Object.keys(GP.LAND_TRADE).length === 16);
     });

@@ -128,7 +128,9 @@ export async function run() {
         musket1750: PW.gunLock({name: "Musket", ranged: true}, 1750)?.lock, glock: PW.gunLock({name: "Glock 17", ranged: true}, 1995)?.lock, bow: PW.gunLock({name: "Longbow", ranged: true}, 1400)};
       ok("7. black powder", afterReload?.wet === false && afterLight?.matchOut === false && locks.arquebus === "matchlock" && locks.musket1630 === "matchlock"
         && locks.musket1750 === "flintlock" && locks.glock === "cartridge" && locks.bow === null && game.settings.get("wodx-combat", "blackPowder") === true,
-        {afterReload, afterLight, locks, said, backReload, backLight, gunThere: !!gunman.items.get(gun.id), items: gunman.items.size});
+        {afterReload, afterLight, locks, said, backReload, backLight, gunThere: !!gunman.items.get(gun.id), items: gunman.items.size,
+          // B7653: the gun was gone after the reload in job 2241 (nine items, none of them it): name what the actor holds now
+          held: gunman.items.map(i => `${i.id} ${i.type} ${i.name}`).slice(0, 15), gunId: gun.id, linked: game.actors.get(gunman.id) === gunman});
     });
     await step("8. other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-npc", "wodx-actions", "wodx-combat", "wodx-storyteller", "wodx-atmosphere", "wodx-interactables", "wodx-senses"];

@@ -36,6 +36,8 @@ export async function run() {
       const test = m => m.content?.includes(a.name) && /dice, diff \d+/.test(m.content ?? "");
       await waitFor(() => newestMessage(since, test), 8000);
       const m = newestMessage(since, test);
+      // B7652: the card's own words, for a failure's detail (what made the roll harder)
+      persuadeDiff.last = String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 400);
       return m ? Number(/dice, diff (\d+)/.exec(m.content)?.[1]) : null;
     }
 
@@ -49,11 +51,13 @@ export async function run() {
     let before = null;
     await G.step("2. a bout makes the next roll harder", async () => {
       before = await persuadeDiff();
+      const beforeCard = persuadeDiff.last, t0 = game.time.worldTime;
       const r = await D.hold(a, "paranoia", {give: true});
       const after = await persuadeDiff();
       const melee = fx(["melee"]);
       G.ok("2. a bout makes the next roll harder", !!r && !r.held && deranged() && Number.isFinite(before) && after === Math.min(10, before + 2) && !melee.length,
-        {held: r?.held, status: deranged(), before, after, melee});
+        {held: r?.held, status: deranged(), before, after, melee, beforeCard, afterCard: persuadeDiff.last, clockMoved: game.time.worldTime - t0,
+          effects: (T?.effects?.(a, {channel: "roll"}) ?? []).map(e => `${e.key}: ${e.label ?? e.name ?? ""}`).slice(0, 12)});
     });
 
     await G.step("3. a spent point", async () => {
