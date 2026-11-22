@@ -60,3 +60,4 @@
 {"file":"tools/gate/gate6n.mjs","verdict":"working","how":"Waits for the daDuel flag the card gets after posting (mage-da.js); Certámen step passed 3 of 3 on cloud lane 9","hash":"591755ef272d","at":"2026-11-22T16:07Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Merge conflict: kept main's new rows and this branch's row","hash":"24fe6f72648d","at":"2026-11-22T16:14Z"}
 {"file":"docs/WORKFLOW.md","verdict":"working","how":"Changed only by merging main (PR 1896's canon-dates paragraph); read","hash":"e1b6734a08c2","at":"2026-11-22T16:14Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Merge conflict: kept main's rows; the branch adds only its own row","hash":"f9c20d7af329","at":"2026-11-22T17:26Z"}
