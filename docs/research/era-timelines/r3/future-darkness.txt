@@ -214,6 +214,7 @@
 2043|F|mor|EU|Lyon|founding,faith|Lyon's chapels|Merciful imbued open chapels in Lyon for anyone the crusade has hurt.
 2044|W|wra|MO|Rothenstein|occult,war|The last fortress|The house reading follows the approved timeline: the heirs of the Dark Kingdom of Iron fortify the Shadowlands of Moravia and Rothenstein, the failing Hierarchy's last fortress.
 2044|F|mor|MO|Rothenstein|occult,faith|Rothenstein's walking dead|Visitors to Rothenstein report the dead walking its old walls at night, and pilgrims come to see.
+2044|F|mor|MO|Rothenstein|occult,war|The fortress under Rothenstein|Rothenstein's people hear marching under the streets at night, and the priests say the town sits on the dead's last fortress.
 2044|F|mor|AS|Tokyo|learning,occult|Students of chi|Tokyo universities offer courses in feeling chi, and Visionary imbued sit at the back.
 2045|F|mor|ME|Mosul|war,persecution|Kindred on the glass rim|Kindred driven out of the crusade's Europe settle on the rim of the Mideast glass, where no drone flies.
 2045|F|mor|EU|Rome|war,persecution|Sabbat raids on Rome|Sabbat packs from the glass rim raid Rome and Naples for blood like a border war.
