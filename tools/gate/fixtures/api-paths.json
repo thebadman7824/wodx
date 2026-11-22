@@ -706,7 +706,7 @@
    "today"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:586"
+   "modules/wodx-npc/scripts/factions.mjs:587"
   ]
  },
  {
@@ -2266,7 +2266,7 @@
   ],
   "uses": [
    "modules/wodx-creation/scripts/lifepath.mjs:38",
-   "modules/wodx-npc/scripts/factions.mjs:102",
+   "modules/wodx-npc/scripts/factions.mjs:103",
    "modules/wodx-npc/scripts/family.mjs:38",
    "modules/wodx-npc/scripts/hearts.mjs:54",
    "modules/wodx-npc/scripts/kin.mjs:24",
@@ -2309,7 +2309,7 @@
    "regions"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:104",
+   "modules/wodx-npc/scripts/factions.mjs:105",
    "modules/wodx-storyteller/scripts/builder.mjs:58",
    "modules/wodx-storyteller/scripts/contagion.mjs:55",
    "modules/wodx-storyteller/scripts/core.mjs:269",
@@ -2420,7 +2420,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/kindred.js:1095",
-   "modules/wodx-npc/scripts/factions.mjs:250",
+   "modules/wodx-npc/scripts/factions.mjs:251",
    "modules/wodx-storyteller/scripts/reach.mjs:154",
    "modules/wodx-storyteller/scripts/reach.mjs:263"
   ]
@@ -4600,7 +4600,7 @@
    "rules"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:1074"
+   "modules/wodx-npc/scripts/factions.mjs:1140"
   ]
  },
  {
@@ -4609,7 +4609,7 @@
    "battles"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:1058"
+   "modules/wodx-npc/scripts/factions.mjs:1124"
   ]
  },
  {
@@ -4743,6 +4743,16 @@
  {
   "target": "wodx-storyteller",
   "path": [
+   "herds",
+   "feed"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/factions.mjs:674"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
    "hunters"
   ],
   "uses": [
@@ -4767,7 +4777,7 @@
    "found"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:262"
+   "modules/wodx-npc/scripts/factions.mjs:263"
   ]
  },
  {
@@ -5357,7 +5367,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/trade.js:21",
-   "modules/wodx-npc/scripts/factions.mjs:443"
+   "modules/wodx-npc/scripts/factions.mjs:444"
   ]
  },
  {
