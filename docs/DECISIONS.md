@@ -452,7 +452,7 @@ Next free block: B7660
 | B7600-B7609 | Small talk and coin by home region (Chronicle Packs Desk d3) (used B7600-B7603) | NPC |
 | B7610-B7619 | Chronicle-local hooks: feasts, seat titles, languages, caern seeds, hunters' start (Chronicle Packs Desk d1) (used B7610-B7616) | Chronicle, Storyteller |
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
-| B7630-B7649 | Dark Ages depth desk: Disciplines you can see on the map (used B7630-B7643) | Actions |
+| B7630-B7649 | Dark Ages depth desk: walking a Road as a faith with people in it (used B7630-B7648) | Actions, Creation |
 | B7650-B7659 | gate7b pins the turn conductor; derange and powder name what changed (used B7651-B7656) | tools (gates) |
 <!-- decision-index:end -->
 
@@ -15332,6 +15332,31 @@ Reverse: set every Discipline's seen to "all".
 WoDX Actions (discipline-looks.js families). Within a Discipline a power family may differ: Presence's Dread Gaze is a dark red, Majesty a wide gold; Dominate's Possession deeper; Obtenebration's Arms of Ahriman and Tenebrous Form wider and darker; Thaumaturgy's Lure of Flames a fire's orange; Animalism's summonings wider. A shape change (Protean's forms, Earth Meld) is not drawn here and waits for the Storyteller.
 
 Reverse: empty the families lists.
+
+## B7644. Ranks and Mentors on a Road (2026-11-22)
+WoDX Actions (road-faith-rules.js, road-faith.js), WoDX Creation (actor-data.mjs). A vampire's Road shows its rank: Initiate at one to three dots, Adherent at four to seven, Paragon at eight or more (V20 Dark Ages pp. 111-112). The Road window names a Mentor, from a sheet in the world or by name and dots. A Mentor on the same Road with more dots takes one experience point off the next Road dot per dot between them, to no less than half the cost (p. 111); WoDX Creation prices the dot so, and shows why. The book's own example prices the sixth dot at 12 where its table (current rating x 2, p. 183) gives 10; WoDX keeps the table. Desk item 3, recommended option "Do all of it", taken under the keep-working rule while the desk had no pick; logged in docs/PENDING-REVIEW.md.
+
+Reverse: drop the roadDotPrice call in actor-data.mjs; the window can stay as a record.
+
+## B7645. Moments of Truth (2026-11-22)
+WoDX Actions (road-faith.js, main.js sin and frenzy), WoDX Creation (xp.mjs). A Moment of Truth is open for the story it happens in (the End of story button starts a new one). A level 1 to 3 sin resisted in the Sin window, and a frenzy that risks no Road dot on the character's Road, open one by themselves; study with a Mentor for as many months as the Road's dots opens one from the Road window; penance and a story event are the Storyteller's to open (p. 115). A Road dot bought while one is open costs half, after the Mentor's share, rounded down, to no less than 1, and spends it. The Storyteller sees the Road books' own prompts for the character's Road in the window (Road of Kings, Heaven, Sin, the Beast and Humanity, 2nd edition Dark Ages; WoDX summaries with PDF pages).
+
+Reverse: remove the openTruth calls in main.js and the truth part of roadDotCost.
+
+## B7646. Apostates and Excommunicates (2026-11-22)
+WoDX Actions (road-faith.js, main.js road and sin). The Storyteller may name a character an Apostate (one who changed Roads, or is known to have broken the Road's level 1 precept), and a change of Road names one by itself (p. 112). An Excommunicate is put out by one Paragon if an Initiate, three if an Adherent; a Paragon cannot be. While on the Road still, the Sin window rolls Conscience or Conviction at +2 and the Road aura's penalties are doubled wherever the aura is ticked (p. 112).
+
+Reverse: drop the status from road() in main.js and the +2 in sin().
+
+## B7647. Changing Roads, guided (2026-11-22)
+WoDX Actions (road-faith.js). The Road window begins a change and shows its steps: a Mentor on the new Road; each Virtue the new Road does not share brought to one dot by sinning; the old Road brought to one dot by sinning; a Moment of Truth for the change (the Storyteller's). Then the window rolls the extended Willpower roll a point at a time: permanent Willpower at 10 less the Virtues left, ten successes; a botch costs another point; running out first drops the old Road to 0 and the Beast has the character. Done, the new Road is walked at one free dot and the character is an Apostate to the old (p. 112). WoDX keeps the roll's difficulty between 2 and 10, and counts a roll with no successes as a failed one.
+
+Reverse: remove the change acts from the window; Road and Path (setRoad) still sets a Road by hand.
+
+## B7648. A Path of the same Road (2026-11-22)
+WoDX Actions (road-faith.js). Taking a Path of the Road walked asks only a Moment of Truth and the same roll for five successes; a failed roll costs a Road dot, a botch two, and running out of Willpower ends the attempt without the Beast (p. 114).
+
+Reverse: as B7647.
 
 ## B7651. gate7b runs with the turn conductor off (2026-11-22)
 Gates. In the full run on main (job 2241) gate7b failed "a lost action: the fighter that failed to stand does not act": the turn the gate had just moved to the fighter was the runner's when the NPC acted (want false, lost flag set). The gate moves turns itself and makes NPCs act with takeTurn. The turn conductor (WoDX Combat) skips a combatant that cannot act, and the lost-action flag the step sets is one of its reasons, so with the conductor on, the fighter's turn ends by itself. The world's default is off, and the gate passed alone twice. The gate now turns the conductor off for its run and puts it back after, as gatetruthactions does for its fight (B7310), and records the level it found (conductorAtStart, and in the step's detail). That a leftover conductor level is what other gates leave is not yet proven: the next failing run's detail says. Not yet run in Foundry.
