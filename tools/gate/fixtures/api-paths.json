@@ -864,7 +864,7 @@
    "modules/wodx-actions/scripts/hunter.js:40",
    "modules/wodx-actions/scripts/kindred.js:193",
    "modules/wodx-actions/scripts/kindred.js:318",
-   "modules/wodx-actions/scripts/kindred.js:1179",
+   "modules/wodx-actions/scripts/kindred.js:1180",
    "modules/wodx-actions/scripts/m20.js:41",
    "modules/wodx-actions/scripts/mage-da.js:47",
    "modules/wodx-actions/scripts/voice.js:60",
@@ -908,7 +908,7 @@
    "modules/wodx-actions/scripts/debts-marks.js:34",
    "modules/wodx-actions/scripts/deeper-hooks.js:31",
    "modules/wodx-actions/scripts/hunter.js:40",
-   "modules/wodx-actions/scripts/kindred.js:480",
+   "modules/wodx-actions/scripts/kindred.js:481",
    "modules/wodx-actions/scripts/m20.js:37",
    "modules/wodx-actions/scripts/main.js:1857",
    "modules/wodx-actions/scripts/soulforge.js:26",
@@ -2419,7 +2419,7 @@
    "start"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:1094",
+   "modules/wodx-actions/scripts/kindred.js:1095",
    "modules/wodx-npc/scripts/factions.mjs:250",
    "modules/wodx-storyteller/scripts/reach.mjs:154",
    "modules/wodx-storyteller/scripts/reach.mjs:263"
@@ -4500,7 +4500,7 @@
    "uncanny"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:1036",
+   "modules/wodx-actions/scripts/kindred.js:1037",
    "modules/wodx-library/scripts/look.mjs:100"
   ]
  },
@@ -5013,7 +5013,7 @@
    "rumours"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:489"
+   "modules/wodx-actions/scripts/kindred.js:490"
   ]
  },
  {
@@ -5046,7 +5046,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/debts-marks.js:119",
-   "modules/wodx-actions/scripts/kindred.js:513",
+   "modules/wodx-actions/scripts/kindred.js:514",
    "modules/wodx-chronicle/scripts/pod.mjs:136",
    "modules/wodx-combat/scripts/aftermath.js:138",
    "modules/wodx-npc/scripts/aftercare.mjs:289",
@@ -5299,7 +5299,7 @@
    "herds"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:509"
+   "modules/wodx-actions/scripts/kindred.js:510"
   ]
  },
  {
@@ -5367,7 +5367,7 @@
    "money"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/kindred.js:478",
+   "modules/wodx-actions/scripts/kindred.js:479",
    "modules/wodx-actions/scripts/social.js:289",
    "modules/wodx-actions/scripts/trade.js:14",
    "modules/wodx-chronicle/scripts/law-punish.mjs:65",
