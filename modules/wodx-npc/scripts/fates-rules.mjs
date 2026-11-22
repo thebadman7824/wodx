@@ -17,6 +17,7 @@
  * books give no such tables. The Storyteller sees every result on one card and approves it before anything is written.
  */
 
+import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 import {embraceReason, withoutLeave, EMBRACE_REASONS} from "./duty-rules.mjs";
 export {EMBRACE_REASONS};
 import {TORPOR} from "../../wodx-creation/data/time.mjs";
@@ -63,8 +64,8 @@ export const BROOD_CAP = 40;
 /** Dangerous ages: a line's death chance is multiplied in these years (house reading of the books' history, B3263). */
 export const ERA_DANGER = [
   {from: 1231, to: 1480, lines: ["vampire", "garou", "mage", "changeling"], mult: 2, what: "the Inquisition's long hunt"},
-  {from: 1347, to: 1351, lines: ["vampire", "garou", "mage", "changeling", "hunter"], mult: 1.5, what: "the Black Death"},
-  {from: 1394, to: 1493, lines: ["vampire"], mult: 1.5, what: "the Anarch Revolt"},
+  {from: canon("black-death").from, to: canon("black-death").to, lines: ["vampire", "garou", "mage", "changeling", "hunter"], mult: 1.5, what: "the Black Death"},
+  {from: canon("anarch-revolt").from, to: canon("anarch-revolt").to, lines: ["vampire"], mult: 1.5, what: "the Anarch Revolt"},
   {from: 1350, to: 1968, lines: ["changeling"], mult: 1.5, what: "the Shattering and the long Banality"},
   {from: 1914, to: 1918, lines: ["garou", "hunter", "mage"], mult: 1.3, what: "the Great War"},
   {from: 1939, to: 1945, lines: ["vampire", "garou", "mage", "hunter"], mult: 1.5, what: "the Second World War"}

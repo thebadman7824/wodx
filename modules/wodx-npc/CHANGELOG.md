@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.106.2 (Fates and rivalries read the Anarch Revolt and the Black Death from the Chronicle canon (B7171): the Revolt's danger and its anarch-elder hostility now run 1335 to 1493 (were 1394 and 1381 to 1492, with no book behind either))
 - 0.106.1 (A poacher in a player's domain now really takes one from the district's herd pool (B7638): the call looked for the herd pools in the wrong place in WoDX Storyteller and did nothing)
 - 0.106.0 (A domain is now a fief someone else wants (B7638-B7640, V20 Dark Ages pp. 28, 180): an NPC who feeds in a player's domain leaves signs and takes one from the district's herd, and the holder tracks it with Perception + Investigation (Survival in the wilds) at 6, less a dot of the domain's security each; a success names the poacher, the court law it broke, and turns the holder's faction against the poacher's)
 - 0.105.0 (The Dark Ages court has the offices V20 Dark Ages names (B7637): the Chamberlain, who stands between the Prince and the court, and the Keeper of Elysium, with violence in Elysium as a charge. The court's note now says that elders meet, openly or in secret)
