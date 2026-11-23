@@ -16,7 +16,7 @@ test("the spine holds together: six fronts, two judgements, eight roles, six clu
   assert.deepEqual(F.FRONTS.map(f => f.every), [7, 7, 14, 14, 21, 14]);
   assert.equal(F.JUDGEMENTS.length, 2);
   assert.equal(F.ROLES.length, 8);
-  assert.equal(F.CLUES.length, 6);
+  assert.equal(F.CLUES.length, 7);
   for ( const c of F.CLUES ) assert.equal(c.carriers.length, 3);
 });
 

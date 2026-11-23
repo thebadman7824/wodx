@@ -20,7 +20,10 @@ export const SAGA_CLOCKS = [
   {key: "sleeper", label: "The Rudý Hospodář stirs", size: 10, text: "How awake the thing under the red hill is. Full, and it walks the valley in a body of its choosing."},
   {key: "ashfield", label: "The Ashfield spreads", size: 8, text: "The dead ground. Each segment is a field, a farm or a street lost to it."},
   {key: "church", label: "The Church's eye on the valley", size: 8, text: "How close the Church, and later the state, is to learning what rules Rothenstein."},
-  {key: "charter", label: "The Charter holds", size: 6, text: "Whether the valley's Kindred keep one law among themselves. Empty, and it is every one for themself."}
+  {key: "charter", label: "The Charter holds", size: 6, text: "Whether the valley's Kindred keep one law among themselves. Empty, and it is every one for themself."},
+  // B7804: the omnibus's two Book 1 clocks (ruling 27)
+  {key: "guests", label: "The Guests grow", size: 6, text: "Konrad's believers and the changed miners: about seven at the first frost, fifteen by the second winter, thirty by the choosing if nobody stops it."},
+  {key: "flight", label: "Graff's road east", size: 4, text: "The Richter's second ledger and the escape already arranged. Full, and the Richter is gone east with the Adit's silver and every name in the ledger."}
 ];
 
 /** The endings of the first book, which later books answer (B7800: the omnibus of 18 Nov 2026). */
@@ -46,6 +49,17 @@ export const SAGA = {
         s("grove", "chapter", [880, 9, 1], "The ring of stones", "The binders raise twelve standing stones on the crown of the red hill, where the cattle sicken and the ground runs with red roots. The Grove's wolf-kin say the thing below is of the Wyrm."),
         s("raid", "world", [902, 6, 1], "Riders on the plain", "Magyar horsemen burn the lowland villages. The valley's people hide in the caves under the red hill and hear something breathing in the rock.", {clocks: {sleeper: 1}}),
         s("bind", "chapter", [906, 10, 31], "The Words, the Ground and the Price", "With the realm falling, the binders and the Grove's kin bind the thing under the hill. A mortal voice speaks the Words, a grey stone from a far field is the Ground, and a child is the Price. Cainite blood falls into the rite, and it is only half made: it holds while the child's father stays.", {clocks: {sleeper: -1}})
+      ]},
+    // B7805: the omnibus's long watch between the binding and the first night (ruling 20 years)
+    {key: "long-watch", n: 0, title: "The Long Watch", from: 908, to: 1196, era: "premyslid-duchy", journal: null, lines: ["all"], prologue: true,
+      text: "A second prologue: three hundred years of keeping a half-made binding, from the fall of Great Moravia to the year the singing starts under the mine.",
+      steps: [
+        s("hollow", "chapter", [1070, 10, 31], "The Hollow Man", "Altenhof's keepers set a guardian at their lower door, over the keystone in the cellar. It does not sleep, it does not eat, and it lets nobody down the stair."),
+        s("keep", "chapter", [1100, 5, 1], "Blood in the foundations", "A Carpathian stranger with a silent sire raises a keep on the rock above the river and mixes blood into the mortar. Something under the stone answers. The first Hospites elders swear the Charter on the oath cloth."),
+        s("strike", "world", [1150, 8, 1], "The first strike", "Miners find silver in the red hill. The Adit is framed for something taller than a man, and a Silesian overseer goes down with the first shift and does not come up the same."),
+        s("fire", "chapter", [1170, 6, 23], "Altenhof burns", "The binding slips. Altenhof's lord, a keeper of the Grove, sets the tower alight as a Price. The lady goes back up for the candlesticks, the two children are left by the keystone, and Radu sees the Grove stir in the smoke."),
+        s("physician", "world", [1194, 11, 11], "The physician's Embrace", "A physician from Regensburg, who came east in a lord's train, is Embraced in the keep and set to the rites of the flesh."),
+        s("singing", "chapter", [1196, 6, 23], "The singing under the mine", "The physician starts listening to a singing below the last red mark and learning its grammar. The first volunteers write their names in a guest-book in blood. Nobody knows yet what they have caught.")
       ]},
     {key: "red-stone", n: 1, title: "What Sleeps Beneath Rothenstein", from: 1200, to: 1203, era: "dark-ages", journal: "What Sleeps Beneath Rothenstein", lines: ["all"],
       text: "The first book: ten chapters over two years, from St Aegidius' day, 1 September 1200, to the first snow at Martinmas 1202, one act a year with open time between, and a thaw epilogue in the spring of 1203. Each chapter waits until it has been played, so a company that goes slowly carries the book on.",

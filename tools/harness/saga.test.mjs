@@ -84,6 +84,14 @@ test("the next book: one at a time, by year, never one already dealt with", () =
   assert.equal(S.dueBook({}, 1200).key, "red-stone");
   assert.equal(S.dueBook({}, 1197), null, "no book before the autumn of 1200");
   assert.equal(S.dueBook({}, 900).key, "prologue");
+  // B7805: the Long Watch fills the years between the binding and the first night
+  assert.equal(S.dueBook({}, 1100).key, "long-watch");
+  assert.equal(S.dueBook({}, 1196).key, "long-watch");
+  const watch = S.SAGA.books.find(b => b.key === "long-watch");
+  assert.equal(watch.era, "premyslid-duchy");
+  assert.ok(watch.prologue);
+  assert.deepEqual(watch.steps.map(x => x.at[0]), [1070, 1100, 1150, 1170, 1194, 1196]);
+  assert.deepEqual(S.worldDelta(watch), {}, "passing the Long Watch moves no clock");
   assert.equal(S.dueBook({books: {"red-stone": "running"}}, 1203), null, "not while another runs");
   assert.equal(S.dueBook({books: {"red-stone": "done"}}, 1203).key, "patriarch");
   assert.equal(S.dueBook({books: {"plague": "skipped"}}, 1350), null);

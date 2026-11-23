@@ -44,9 +44,21 @@ test("a chronicle's local block is cleaned, and a chronicle without one changes 
   }
 });
 
-test("the shipped Rothenstein chronicle fills no local hooks yet (the Book 1 rebuild does)", () => {
+test("the Rothenstein chronicle fills its local hooks from the Book 1 omnibus (B7804)", () => {
   const l = L.localOf(PACK);
-  assert.deepEqual([l.feasts, l.titles, l.languages, l.caerns, l.hunters], [[], [], [], [], null]);
+  const o = L.feastOptions(l);
+  assert.deepEqual(o.extra.map(f => f.slice(0, 2)), [[9, 1], [9, 28]], "St Aegidius and St Wenceslas are holy days");
+  assert.deepEqual(o.customs.map(f => f.slice(0, 2)), [[6, 23]], "the Kupala fires are a custom, not a holy day");
+  assert.equal(o.revels.length, 2);
+  assert.equal(C.churchDay(date(1200, 9, 1), o).feast, "St Aegidius, the parish feast", "chapter I opens on the parish feast");
+  assert.deepEqual(L.titlesFor(l, "council", 1200), {4: "Richter"});
+  assert.deepEqual(L.titlesFor(l, "council", 1900), {}, "the Richter seat ends with the old town law");
+  assert.deepEqual(L.languageNames(l), ["the Old Tongue"]);
+  assert.deepEqual(l.languages[0].closedIn, ["red-stone"]);
+  assert.equal(l.languages[0].intent, true);
+  assert.deepEqual(l.caerns.map(c => [c.key, c.level]), [["old-grove", 3]], "an active caern: Gauntlet 3");
+  assert.deepEqual(L.hunterStart(l, PACK.manifest.homeland), {region: "moravia", stage: "rumours"});
+  assert.ok(H.STAGES.some(s => s.key === l.hunters.stage));
 });
 
 test("feasts: a holy day and a local custom; the custom is named and makes a night of revel but is no day off", () => {

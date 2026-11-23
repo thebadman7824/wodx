@@ -42,6 +42,21 @@ export const MANIFEST = {
   books: SAGA.books.map(b => b.key),
   /** The book whose ending later books answer; fronts, twists and encounters run while it runs. */
   firstBook: "red-stone",
+  /**
+   * What is local to the valley (WoDX Chronicle chronicle-local-rules.mjs, B7610-B7616), filled from the Book 1
+   * omnibus, ruling 27 (B7804).
+   */
+  local: {
+    feasts: [
+      {month: 9, day: 1, name: "St Aegidius, the parish feast", revel: true},
+      {month: 9, day: 28, name: "St Wenceslas"},
+      {month: 6, day: 23, name: "The Kupala fires", custom: true, revel: true}
+    ],
+    titles: [{kind: "council", rank: 4, title: "Richter", to: 1849}],
+    languages: [{name: "the Old Tongue", closedIn: ["red-stone"], intent: true, sounds: ["ur", "va", "dho", "ost", "rem", "ka", "zhi", "lu", "sva", "tor"]}],
+    caerns: [{key: "old-grove", name: "The Old Grove", scene: "Old Grove", level: 3, tribes: "Silver Fang kin"}],
+    hunters: {stage: "rumours"}
+  },
   /** The words that mark this chronicle in shared code (the guard test reads them). */
   marks: ["Rothenstein", "Kranzfels", "Bogdan Ursu", "Husbandman", "Rudý Hospodář", "Črnomir", "Richter Graff", "Father Ludovic",
     "Baba Yaroslava", "Altenhof", "Ashfield", "Dolany", "Old Grove", "Silver Adit", "Ivo's Ferry", "red-stone"]

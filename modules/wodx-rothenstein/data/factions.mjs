@@ -30,7 +30,7 @@ export const FACTIONS = [
   {key: "folk", name: "The Moravian villages", kind: "folk", leader: "Yaroslava", members: ["Yaroslava", "Bohumil Krejci", "Jitka"], places: [/dolany|moravian village/i],
     assets: {contacts: 2, resources: 1, influence: {folk: 3}}, goals: [{move: "defend"}],
     notes: "The elders of the old families want to be left alone."},
-  {key: "weavers", name: "The Weavers' Guild", kind: "guild", leader: "Lenka Prochazka", members: ["Lenka Prochazka", "Jakub Hlavac"], places: [/craftsmen|weaver/i],
+  {key: "weavers", name: "The Weavers' Guild", kind: "guild", leader: "The guild warden", members: ["The guild warden", "Lenka Prochazka", "Jakub Hlavac"], places: [/craftsmen|weaver/i],
     assets: {resources: 2, contacts: 2, influence: {guild: 2}}, goals: [{move: "expand", sphere: "guild"}],
     notes: "The strongest craft guild; favours are kept on a tally and called in."},
   {key: "ondrej", name: "Ondrej's company", kind: "mercenaries", leader: "Ondrej", members: ["Ondrej"], places: [/outer bailey|barracks/i],
