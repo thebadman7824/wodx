@@ -703,5 +703,107 @@
   "building b01 (unnamed): use guessed as a home",
   "building b02 (unnamed): use guessed as a home"
  ],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "the East Road",
+   "path": [
+    [
+     0,
+     20
+    ],
+    [
+     10,
+     19.5
+    ],
+    [
+     20,
+     18.5
+    ],
+    [
+     30,
+     18
+    ],
+    [
+     40,
+     17.5
+    ],
+    [
+     50,
+     17
+    ],
+    [
+     60,
+     15.5
+    ],
+    [
+     66,
+     15
+    ]
+   ],
+   "width": 3,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "the Ashfield",
+   "path": [
+    [
+     32,
+     25
+    ],
+    [
+     45,
+     22
+    ],
+    [
+     60,
+     23
+    ],
+    [
+     66,
+     26
+    ],
+    [
+     66,
+     44
+    ],
+    [
+     34,
+     44
+    ],
+    [
+     30,
+     36
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "field strips",
+   "path": [
+    [
+     16,
+     24
+    ],
+    [
+     32,
+     24
+    ],
+    [
+     32,
+     33
+    ],
+    [
+     16,
+     33
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

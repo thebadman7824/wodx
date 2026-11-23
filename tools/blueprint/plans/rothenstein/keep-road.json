@@ -468,5 +468,99 @@
   }
  ],
  "open": [],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "the Keep Road",
+   "path": [
+    [
+     24,
+     0
+    ],
+    [
+     26,
+     5
+    ],
+    [
+     30,
+     10
+    ],
+    [
+     28,
+     15
+    ],
+    [
+     18,
+     18
+    ],
+    [
+     12,
+     22
+    ],
+    [
+     14,
+     28
+    ],
+    [
+     24,
+     32
+    ],
+    [
+     30,
+     36
+    ],
+    [
+     34,
+     40
+    ],
+    [
+     30,
+     43
+    ],
+    [
+     20,
+     46
+    ],
+    [
+     15,
+     48
+    ],
+    [
+     12,
+     53
+    ],
+    [
+     12,
+     58
+    ]
+   ],
+   "width": 4,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "cobbled lane to Church Close",
+   "path": [
+    [
+     0,
+     44
+    ],
+    [
+     6,
+     45
+    ],
+    [
+     12,
+     46.5
+    ],
+    [
+     15,
+     48
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

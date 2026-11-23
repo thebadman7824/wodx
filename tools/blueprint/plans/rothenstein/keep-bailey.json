@@ -2183,5 +2183,23 @@
   "building b09 (unnamed): use guessed as a home",
   "building b11 (unnamed): use guessed as a home"
  ],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "cobbled way, gate to gate",
+   "path": [
+    [
+     30,
+     0
+    ],
+    [
+     30,
+     48
+    ]
+   ],
+   "width": 4,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }
