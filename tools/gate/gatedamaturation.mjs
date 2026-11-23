@@ -8,6 +8,8 @@
  *   4. Try to raise rolls for Allies and adds a dot (DASC p. 74)
  *   5. a century in danger with every die a 1: the Willpower botch costs points and Tempting Fate costs Allies a dot (DASC pp. 72-73)
  *   6. torpor without Willpower 7 and Perception 4 gives no points, and Backgrounds cannot be raised after it (DASC p. 72)
+ *   7. at 600 years the Sleep of Ages is held off four decades on Road 4; with every die a 1 it takes them, and the
+ *      Thirst of Caine botches (DASC pp. 75-77)
  * Makes its own actor and removes it. Result: Data/wodx-gate/gatedamaturation-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -98,6 +100,18 @@ export async function run() {
       const out = await C.buy(k, {kind: "background", key: allies?.id});
       G.ok("6. torpor without the traits gives no points and bars raising", rec?.earned === 0 && Number(st?.pool?.torpor ?? 0) === before && st?.mayRaise === false && out === null,
         {rec, pool: st?.pool, mayRaise: st?.mayRaise, out});
+    });
+
+    await G.step("7. past 500 years: the Sleep of Ages held off, and the Thirst of Caine botched", async () => {
+      await k.update({"system.advantages.path.permanent": 4});
+      CONFIG.Dice.randomUniform = () => 0.95;
+      try { await C.mature(k, {years: 100, activity: "active", age: 600}); } finally { CONFIG.Dice.randomUniform = dice0; }
+      const held = k.getFlag("wodx-creation", "maturation")?.sleep;
+      CONFIG.Dice.randomUniform = () => 0.01;
+      try { await C.mature(k, {years: 100, activity: "active", age: 700, thirst: true}); } finally { CONFIG.Dice.randomUniform = dice0; }
+      const st = k.getFlag("wodx-creation", "maturation");
+      G.ok("7. past 500 years: the Sleep of Ages held off, and the Thirst of Caine botched", held?.decades === 4 && held?.torpor === false && st?.sleep?.torpor === true && st?.thirst === "addicted",
+        {held, sleep: st?.sleep, thirst: st?.thirst});
     });
   } catch ( err ) { G.ok("no error", false, {error: String(err?.stack ?? err)}); }
   finally { CONFIG.Dice.randomUniform = dice0; ui.notifications.warn = warn0; }

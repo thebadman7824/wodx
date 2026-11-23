@@ -171,7 +171,7 @@ export async function applyAdvance(actor, change, plan, choice = null) {
     case "adv.maturation": {
       // B7685: years spent as the Storyteller picked; the points wait for the Maturation window
       const M = await import("./maturation.mjs");
-      const rec = await M.mature(actor, {years: d.years, activity: pick, age: awakeBefore(actor, plan.from) + n(d.years), label: `${plan.fromYear}–${plan.toYear}`});
+      const rec = await M.mature(actor, {years: d.years, activity: pick, age: awakeBefore(actor, plan.from) + n(d.years), label: `${plan.fromYear}–${plan.toYear}`, thirst: !!d.thirst});
       return rec ? {note: `${rec.banked} points, ${pick}`} : null;
     }
     case "adv.xp":

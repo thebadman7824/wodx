@@ -120,3 +120,20 @@ test("the Road of Night: found by name, ten sins, a parish and the Path of Night
   assert.equal(ROAD_TO_PATH.night.to, "night");
   assert.equal(K.roadFor(ROADS, "Path of Heavenly Abode").key, "night");
 });
+
+/* B7692-B7693: the Sleep of Ages and the Thirst of Caine, DASC 2002 pp. 75-77 */
+test("the Sleep of Ages past 500 years and the Thirst of Caine's stages", () => {
+  assert.equal(M.sleepOfAges(400, 5, fixed(3)), null);
+  assert.equal(M.sleepOfAges(600, 5, fixed(3)).decades, 3);
+  assert.equal(M.sleepOfAges(600, 5, fixed(0)).torpor, true);
+  assert.equal(M.sleepOfAges(600, 5, fixed(0, true)).derangement, true);
+  const t = M.thirstTriggers({road: 3, roadKey: "beast", age: 520, nature: "Bravo", extra: ["a diablerist"]});
+  assert.equal(t.length, 5);
+  assert.equal(M.thirstTriggers({road: 6, roadKey: "heaven", age: 300, nature: "Martyr"}).length, 0);
+  assert.equal(M.thirstRoll("none", 5, 5, fixed(0)).stage, "wavering");
+  assert.equal(M.thirstRoll("wavering", 5, 5, fixed(0)).stage, "addicted");
+  assert.equal(M.thirstRoll("none", 5, 1, fixed(0, true)).stage, "addicted");
+  assert.equal(M.thirstRoll("none", 5, 1, fixed(1)).diff, 2);
+  assert.equal(M.thirstRoll("none", 5, 0, fixed(0)).stage, "none");
+  assert.match(src("modules/wodx-chronicle/data/house-rules.mjs"), /"id": "yearsThirstOfCaine",[\s\S]*?"default": false/);
+});

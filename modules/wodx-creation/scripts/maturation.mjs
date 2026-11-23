@@ -10,7 +10,7 @@
 import * as M from "./maturation-rules.mjs";
 import {MODULE_ID, esc, clanOf, vampireEra, disciplinesOf} from "./actor-data.mjs";
 import {clanDisciplines} from "./rules.mjs";
-import {awakeBefore} from "./advance.mjs";
+import {awakeBefore, viewOf} from "./advance.mjs";
 import {successes} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
@@ -81,13 +81,33 @@ export async function mature(actor, o = {}) {
     lines.push(`${b.name}: ${t.why}`);
   }
 
+  // B7692: past 500 years the Sleep of Ages calls (DASC pp. 75-76); torpor years do not count
+  let sleep = null;
+  if ( activity !== "torpor" ) {
+    sleep = M.sleepOfAges(traits.age, n(s.advantages?.path?.permanent), dice);
+    if ( sleep ) lines.push(sleep.why);
+  }
+  // B7693: the Thirst of Caine, the book's systematic option (switch), rolled once a downtime of a century or more
+  let thirst = st.thirst ?? "none";
+  if ( o.thirst && years >= 100 ) {
+    let v = {};
+    try { v = viewOf(actor); } catch { /* a bare sheet */ }
+    const trig = M.thirstTriggers({road: n(s.advantages?.path?.permanent), roadKey: v.road?.key, age: traits.age, nature: s.nature,
+      extra: actor.getFlag?.(MODULE_ID, "thirstTriggers") ?? []});
+    const t = M.thirstRoll(thirst, willpower, trig.length, dice);
+    thirst = t.stage;
+    if ( t.why ) lines.push(`${t.why} Triggers: ${trig.join("; ")}.`);
+  }
+
   // The points: the plain ones, and those kept for one kind of trait
   const torpor = activity === "torpor";
   const key = torpor ? "torpor" : "any";
   pool[key] = n(pool[key]) + points;
   if ( e.extra ) pool[e.only] = n(pool[e.only]) + e.extra;
   const rec = {at: game.time.worldTime, years, activity, banked: points, earned: e.points, bonus, lost, extra: e.extra, only: e.only, upkept: paid.kept.length, label: o.label ?? ""};
-  const next = {pool, tempted, mayRaise: A.raise, periodMax: M.maxDotsFor(years), raised: {}, attempts: 0, log: [...(st.log ?? []), rec].slice(-20)};
+  // One Background roll each 50 years carries no penalty (DASC p. 74, the example on p. 75)
+  const next = {pool, tempted, mayRaise: A.raise, periodMax: M.maxDotsFor(years), raised: {}, attempts: 0, freeAttempts: Math.max(1, Math.ceil(years / 50)),
+    sleep, thirst, log: [...(st.log ?? []), rec].slice(-20)};
   await save(actor, next);
   const total = Object.values(pool).reduce((x, y) => x + n(y), 0);
   await ChatMessage.create({whisper: game.users.filter(u => u.isGM || actor.testUserPermission(u, "OWNER")).map(u => u.id), speaker: {alias: "Maturation"},
@@ -145,7 +165,7 @@ export async function buy(actor, t = {}) {
     if ( tf && !tf.mayRaise ) { ui.notifications.warn(`${o.name}: Tempting Fate bars raising it this time (p. 73).`); return null; }
     st.attempts = n(st.attempts) + 1;
     const it = actor.items.get(o.key);
-    const r = M.raiseBackground(o.name, {value: o.value, attempt: st.attempts, tempted: !!tf?.raiseDiff, pooledBig: !!it?.flags?.[MODULE_ID]?.pooledAnchor && o.value >= 6}, dice);
+    const r = M.raiseBackground(o.name, {value: o.value, attempt: Math.max(1, st.attempts - n(st.freeAttempts || 1) + 1), tempted: !!tf?.raiseDiff, pooledBig: !!it?.flags?.[MODULE_ID]?.pooledAnchor && o.value >= 6}, dice);
     if ( !r.ok ) { ui.notifications.warn(r.why); return null; }
     if ( it ) await it.update({"system.value": Math.max(0, Math.min(10, o.value + r.gain - r.lose))});
     note = `${o.name}: ${r.why}`;
@@ -204,6 +224,7 @@ export class MaturationApp extends ApplicationV2 {
     const div = document.createElement("div");
     div.className = "wodx-body";
     div.innerHTML = `<p><b>Waiting:</b> ${esc(pools)}. ${st.mayRaise === false ? "Backgrounds cannot be raised this time." : ""} One dot a trait for each ${st.periodMax > 1 ? `of ${st.periodMax} periods` : "period"}.</p>
+      ${st.sleep?.torpor ? `<p class="wodx-warn">The Sleep of Ages has them: voluntary torpor.</p>` : ""}${st.thirst && st.thirst !== "none" ? `<p class="wodx-warn">The Thirst of Caine: ${st.thirst === "addicted" ? "only Cainite vitae feeds them" : "they crave Cainite vitae"}.</p>` : ""}
       ${game.user.isGM ? `<div class="form-group"><label>Years by hand</label><input type="number" name="years" value="10" min="1" max="2000"/>
         <select name="activity" data-fixed>${M.ACTIVITY_KEYS.map(k => `<option value="${k}">${esc(M.ACTIVITY[k].label)}</option>`).join("")}</select>
         <button type="button" data-action="mature">Mature</button></div>` : ""}

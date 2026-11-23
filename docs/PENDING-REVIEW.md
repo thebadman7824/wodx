@@ -375,3 +375,5 @@ Ben approved these deletes in the project chat on 22 November: "Yes. Delete the 
 | 2026-11-23 | Road of Night sins from play (full check, B7690) | None: its killing sin turns on whether a confession was taken, which play does not record | Killing a mortal counts as sin 8 unless the Storyteller says a confession was taken |
 | 2026-11-23 | Path of Heavenly Abode (full check, B7690) | Named as a path of the Road of Night that walks the Road's own hierarchy | Left out, as the book gives it no hierarchy |
 | 2026-11-23 | Elder Abilities before bonus points (full check, B7691) | Still none above 3, as Dark Ages: Vampire (2002) step three says | No cap for elders |
+| 2026-11-23 | The Sleep of Ages (full check, B7692) | Rolled each downtime spent awake past 500 years; the card reports it and the Storyteller puts the character to sleep | WoDX puts the character into torpor by itself |
+| 2026-11-23 | The Thirst of Caine (full check, B7693) | A switch, off by default, as the book offers it as an option | On by default |

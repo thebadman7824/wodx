@@ -183,3 +183,47 @@ export function raiseBackground(name, o = {}, roll) {
 
 /** Each trait may rise one dot a period (a century, or the downtime) at most (p. 73). */
 export const maxDotsFor = years => periodsOf(years);
+
+/* ---------------- The Sleep of Ages and the Thirst of Caine (B7692-B7693) ---------------- */
+/**
+ * The Sleep of Ages (DASC 2002 pp. 75-76): past 500 years a Cainite must sleep or hold it off with a Willpower point
+ * and a roll of the Road at 8: a decade more for each success; a failure means voluntary torpor, a botch torpor and a
+ * Derangement. Returns null under 500 years, else {decades, torpor, derangement, why}.
+ */
+export const SLEEP = {age: 500, diff: 8, yearsPerSuccess: 10};
+export function sleepOfAges(age, road, roll) {
+  if ( n(age) < SLEEP.age ) return null;
+  const r = roll(n(road), SLEEP.diff);
+  if ( r.botch ) return {decades: 0, torpor: true, derangement: true, why: "The Sleep of Ages: the roll botched, so torpor and a Derangement; waking early costs Willpower."};
+  if ( !r.successes ) return {decades: 0, torpor: true, derangement: false, why: "The Sleep of Ages: no success, so voluntary torpor; waking early costs Willpower."};
+  return {decades: r.successes, torpor: false, derangement: false, why: `The Sleep of Ages held off ${r.successes} decade${r.successes === 1 ? "" : "s"} more for a point of Willpower.`};
+}
+
+/**
+ * The Thirst of Caine (DASC 2002 pp. 76-77), the book's systematic option: the triggers a sheet shows. v = {road,
+ * roadKey, age, nature, extra (triggers the Storyteller ticks: diablerist, sire addicted, blood Derangement, five
+ * childer, five under oath)}. Returns [label].
+ */
+export const THIRST_ROADS = ["beast", "metamorphosis", "blood"];
+export const CALM_NATURES = ["architect", "caregiver", "cavalier", "martyr"];
+export function thirstTriggers(v = {}) {
+  const t = [];
+  if ( n(v.road) > 0 && n(v.road) <= 3 ) t.push("Road 3 or less");
+  if ( THIRST_ROADS.includes(String(v.roadKey ?? "")) ) t.push("the Road of the Beast, Metamorphosis or Blood");
+  if ( n(v.age) >= 500 ) t.push("active 500 years or more");
+  if ( v.nature && !CALM_NATURES.includes(String(v.nature).trim().toLowerCase()) ) t.push("a Nature other than Architect, Caregiver, Cavalier or Martyr");
+  for ( const x of v.extra ?? [] ) t.push(String(x));
+  return t;
+}
+/** One roll: Willpower at the number of triggers (2 at least). stage none → wavering → addicted; a botch, addicted. */
+export const THIRST_STAGES = ["none", "wavering", "addicted"];
+export function thirstRoll(stage, willpower, triggers, roll) {
+  const now = THIRST_STAGES.includes(stage) ? stage : "none";
+  if ( now === "addicted" || !n(triggers) ) return {stage: now, diff: 0, why: ""};
+  const diff = clamp(Math.max(2, n(triggers)), 2, 10);
+  const r = roll(n(willpower), diff);
+  if ( r.botch ) return {stage: "addicted", diff, why: `The Thirst of Caine: botched at ${diff}; only Cainite vitae feeds them now.`};
+  if ( r.successes ) return {stage: now, diff, why: `The Thirst of Caine: held at ${diff}.`};
+  const next = now === "none" ? "wavering" : "addicted";
+  return {stage: next, diff, why: next === "wavering" ? `The Thirst of Caine: failed at ${diff}; they crave Cainite vitae and drink it when they can.` : `The Thirst of Caine: failed again at ${diff}; they must drink Cainite vitae to survive.`};
+}

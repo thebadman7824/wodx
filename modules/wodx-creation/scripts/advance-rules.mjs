@@ -162,7 +162,7 @@ export function propose(v, ctx) {
   if ( matures ) {
     add("adv.maturation", `Maturation: about ${matPoints(awake)} points for ${awake} years`,
       `Pick how the years were spent; the Willpower roll each century, Background upkeep and, in danger, Tempting Fate follow. Spend the points in the Maturation window (${MAT_SOURCE}).`,
-      true, {years: awake, choice: "active"}, MAT_KEYS.map(k => ({value: k, label: MAT_ACTIVITY[k].label})));
+      true, {years: awake, choice: "active", thirst: !!sw.thirst}, MAT_KEYS.map(k => ({value: k, label: MAT_ACTIVITY[k].label})));
   }
 
   // Experience for the years (switch)
