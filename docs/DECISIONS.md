@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7790
+Next free block: B7800
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -461,6 +461,7 @@ Next free block: B7790
 | B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7762) | tools |
 | B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
 | B7780-B7789 | Map blueprints: every map planned as a true-size plan before its art (used B7780-B7784) | tools |
+| B7790-B7799 | Map blueprints: tier 1 hand pass, roads and rivers, the Book 1 places drawn (used B7790-B7793) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15788,3 +15789,31 @@ chest, bench, shelf, cask) and a line in the plan's `open` list. Every kit slot 
 move or replace.
 
 Reverse: leave such buildings empty until named.
+
+## B7790. The Book 1 places with no map are drawn from the book plan (2026-11-23)
+tools/blueprint/plans/rothenstein. Seven tier 4 places get a hand-drawn blueprint from the Book 1 plan's places
+section: the Red Field and the dark field, the High Fold and the warm spring, Radek's Hollow and the Ivy Cave, the
+Lower Mill and Otto's Dam, Dolany's burnt farm and the old well, the High Pass, and the first field with the far
+shrine. Where the book is silent (which map a road joins, how many monks keep the shrine), the plan takes a working
+guess and lists it in its `open` list.
+
+Reverse: delete the seven plans; the inventory keeps them as to draw.
+
+## B7791. Roads, rivers and fields are part of a blueprint (2026-11-23)
+A plan's `ground` list holds roads, tracks, paths, brooks, rivers and field areas as centre lines with a width, or
+closed outlines. Plans seeded from a tools/pixelmap drawer read them from its `land.ground()` call; the open-world
+maps drawn as AI images get theirs traced from the scene images.
+
+Reverse: drop the `ground` key; drawings lose the road and water bands.
+
+## B7792. An open-air map may rely on scene darkness alone (2026-11-23)
+A map with no fire or lamp in the book (a ruin, a slope, a hollow at night) sets `env.outdoor` and its darkness
+instead of inventing a light source. `check` still fails a walled map that has neither.
+
+Reverse: require at least one light on every walled map again.
+
+## B7793. The valley travel map waits for the scene images (2026-11-23)
+The to-scale valley map (night rides half again as long as day rides) is drawn once the scene images are traced, so
+each place sits where its own map puts it. It stays in tier 4 as to draw.
+
+Reverse: draw it now from the book's distances alone.
