@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 1 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | not yet | 0 | 0 | 0 |
+| wodx-creation | yes | 18 | 0 | 8 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | not yet | 0 | 0 | 0 |
@@ -49,6 +49,29 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 1 | gatemove drowning in a fight |
 | Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | shown | 2 |  |
 | Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming (`combat.vehicles`) |  | gated | 1 | gatetruthcombat 10. a quick attack on a vehicle's token comes off its sheet's Structure |
+
+## wodx-creation
+
+| Feature | Core | Status | Open | Gate |
+| --- | --- | --- | --- | --- |
+| Animals' traits, training and breeds; war ghouls, kennels and household beasts (`creation.animal-training`) | core | gated | 1 | gateanimalstock 5. the wizard offers animal retainers |
+| Before the First Night: one hub per character with a card for each step, and the guided builder (`creation.first-night`) | core | book |  | gatefirstnight 4 build |
+| Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
+| Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 2 | gatedalines 3. a Valkyrje's blood makes no ghoul and no bond |
+| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | shown | 2 |  |
+| Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
+| Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
+| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | shown | 1 |  |
+| The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
+| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | shown | 2 |  |
+| The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
+| The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
+| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 1 | gatewizard 10 derived traits |
+| The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
+| Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | shown | 1 |  |
+| Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | shown | 1 |  |
+| The archive of the dead, by hand and by itself as the clock moves on (`creation.archive`) |  | book |  | gatetruthsheets 8. the long dead go to the archive by themselves |
+| The First Change: a mortal becomes a Garou (`creation.first-change`) |  | gated | 1 | gate6b first change |
 
 ## wodx-sheets
 
