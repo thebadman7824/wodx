@@ -4,7 +4,7 @@
  * Turns the saga on with book one running, reveals twists, and puts the settings, the chat cards and the clock back.
  *   1. the api and the twist section in the saga window (24 twists, six chains)
  *   2. revealing twist 1 sends the Storyteller a card that names the partner it changes, and fires wodxTwist
- *   3. a second twist within the week is refused with the days left; "anyway" reveals it, and a week later the next
+ *   3. a second twist within the month is refused with the days left; "anyway" reveals it, and a month later the next
  *      comes without asking
  *   4. a twist with two hearts asks for one; a twist of a later chapter waits for it
  *   5. taking a twist back clears it
@@ -67,13 +67,13 @@ export async function run() {
       let refused = "";
       try { await tw().reveal(5); } catch (e) { refused = e.message; }
       await tw().reveal(5, {force: true});
-      await game.time.advance(8 * DAY);
+      await game.time.advance(31 * DAY); // B7802: one twist a month
       let later = "";
       try { await tw().reveal(10); } catch (e) { later = e.message; }
-      ok("3 a week", /One twist a week/.test(refused) && !!tw().state().revealed?.[5] && !later && !!tw().state().revealed?.[10], {refused, later});
+      ok("3 a week", /One twist a month/.test(refused) && !!tw().state().revealed?.[5] && !later && !!tw().state().revealed?.[10], {refused, later});
     });
     await step("4 hearts and chapters", async () => {
-      await game.time.advance(8 * DAY);
+      await game.time.advance(31 * DAY);
       let heart = "", chap = "";
       try { await tw().reveal(22); } catch (e) { heart = e.message; }
       try { await tw().reveal(16); } catch (e) { chap = e.message; }

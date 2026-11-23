@@ -23,16 +23,19 @@ test("the saga covers every era of the main timeline from 1200, and the prologue
   assert.ok(S.span({future: true}).to > 2030);
 });
 
-test("the first book opens in the autumn of 1200 and each chapter waits to be played", () => {
+test("the first book opens in the autumn of 1200, runs two years, and each chapter waits to be played", () => {
   const b = S.bookByKey("red-stone"), c = S.bookChain(b);
   const ch = b.steps.filter(x => x.kind === "chapter");
   assert.equal(ch.length, 10, "ten chapters, one for each session");
   assert.deepEqual(b.steps[0].at, [1200, 9, 1]);
-  assert.equal(ch.at(-1).at[0], 1200, "the tenth night falls at the first snow of 1200");
+  // B7800: the omnibus calendar (ruling 17), one act a year, Martinmas 1202 at the first snow, a thaw epilogue in 1203.
+  assert.deepEqual(ch.map(x => x.at), [[1200, 9, 1], [1200, 9, 15], [1200, 10, 10], [1201, 4, 16], [1201, 6, 23], [1201, 9, 29],
+    [1201, 11, 11], [1202, 3, 17], [1202, 9, 29], [1202, 11, 11]]);
+  assert.deepEqual(c.steps.at(-1).at ?? b.steps.at(-1).at, [1203, 4, 6], "the epilogue at the thaw of 1203");
   assert.ok(ch.every(x => x.wait), "every chapter waits");
   assert.ok(c.steps.filter(x => x.kind !== "chapter").every(x => !x.wait));
   const days = c.steps.reduce((n, x) => n + x.days, 0);
-  assert.ok(days > 60 && days < 365, `${days} days`);
+  assert.ok(days > 900 && days < 1000, `${days} days`);
   assert.equal(c.steps[0].days, 0);
   assert.ok(c.steps.every(x => x.days >= 0));
   assert.equal(c.steps.at(-1).kind, "interlude");

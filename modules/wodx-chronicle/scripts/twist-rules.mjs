@@ -1,13 +1,13 @@
 /**
  * Book one's twist web (B4850-B4853): which twists can be revealed now, which a revealed twist rules out, and the one
- * twist a week of game time. Pure, so the harness can test it; pod.mjs keeps the state and shows the window.
+ * twist a month of game time (B7802). Pure, so the harness can test it; pod.mjs keeps the state and shows the window.
  *
  * State: {revealed: {<n>: {at, variant, chapter}}, last: <world time of the last reveal>}.
  * Context: {now, played: [chapter keys played], force}.
  */
-import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK} from "./chronicle-data.mjs";
+import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP} from "./chronicle-data.mjs";
 import {DAY} from "./terms.mjs";
-export {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK};
+export {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP};
 
 export const twistOf = n => TWISTS.find(t => t.n === Number(n)) ?? null;
 export const chainsOf = n => CHAINS.filter(c => c.twists.includes(Number(n))).map(c => c.key);
@@ -50,9 +50,9 @@ export function whyNot(n, state = {}, ctx = {}) {
   // B6645: a twist waits for its encounter (Volume Two pick v5); ctx.met lists the encounters played
   if ( !ctx.force && Array.isArray(ctx.met) && !ctx.met.map(Number).includes(t.n) ) return `Its encounter (${t.n}) has not been played yet.`;
   const last = state.last === undefined || state.last === null ? NaN : Number(state.last), at = Number(ctx.now) || 0;
-  if ( !ctx.force && Number.isFinite(last) && at - last < WEEK ) {
-    const days = Math.ceil((WEEK - (at - last)) / DAY);
-    return `One twist a week: the next can come in ${days} ${days === 1 ? "day" : "days"}.`;
+  if ( !ctx.force && Number.isFinite(last) && at - last < TWIST_GAP ) {
+    const days = Math.ceil((TWIST_GAP - (at - last)) / DAY);
+    return `One twist a month: the next can come in ${days} ${days === 1 ? "day" : "days"}.`;
   }
   return "";
 }

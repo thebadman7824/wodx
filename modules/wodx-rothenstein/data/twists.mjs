@@ -5,7 +5,7 @@
  * twists' own words stay in the Storyteller's volumes; the labels here are short handles in our own words.
  * Pure data: twist-rules.mjs reads it.
  */
-import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import {WEEK, DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 export {WEEK};
 
 /** The chains: key, a handle, the twists on it and the chapters it pays off in. */
@@ -35,7 +35,7 @@ export const TWISTS = [
   {n: 10, label: "The wolf that wore a collar", from: "c1", free: true},
   {n: 11, label: "The players' script", from: "c2"},
   {n: 12, label: "Who bought the purse", from: "c1", free: true},
-  {n: 13, label: "The hunter in Hungary", from: "c9"},
+  {n: 13, label: "The hunter in Hungary", from: "c8"},
   {n: 14, label: "The shrine past the ferry", from: "c1", free: true},
   {n: 15, label: "The wedding's missing bride", from: "c4"},
   {n: 16, label: "Who cut the dam", from: "c8"},
@@ -44,7 +44,7 @@ export const TWISTS = [
   {n: 19, label: "A message for a name", from: "c3"},
   {n: 20, label: "The knight's cousin", from: "c4"},
   {n: 21, label: "What the Dolany woman saw", from: "c5"},
-  {n: 22, label: "The blind man's fortunes", from: "c1", variants: {tool: "the Husbandman speaks through them", seer: "they are a true seer's"}},
+  {n: 22, label: "The blind man's fortunes", from: "c1", variants: {tool: "the Hospodář speaks through them", seer: "they are a true seer's"}},
   {n: 23, label: "The arrow in the Grove", from: "c5"},
   {n: 24, label: "The margrave's clerk", from: "c6", variants: {turned: "the clerk is turned", killed: "the clerk is killed"}}
 ];
@@ -67,4 +67,5 @@ export const ORDER = [1, 5, 2, 3, 9, 6, 7, 8, 11, 13, 15, 16, 17, 18, 19, 20, 21
 export const LAST_CHAPTER = "c9";
 /** Book one's chapters in order (saga.mjs). */
 export const CHAPTERS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10"];
-/** One twist a week of game time (the owner, 2026-11-14). */
+/** One twist a week of game time (the owner, 2026-11-14), now about one a month over the two-year book (ruling 17, B7802). */
+export const TWIST_GAP = 30 * DAY;

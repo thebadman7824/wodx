@@ -34,7 +34,7 @@ test("an ending picked while the clock's tick deals the saga is kept", async () 
   await game.time.advance(40 * DAY); await saga.settled?.();
   assert.equal(await saga.played("red-stone"), "c1");
   await wait(2100); // the tick runs at most once every two seconds
-  const ticking = game.time.advance(8 * DAY); // deals the roads and Chapter II, steps the fronts
+  const ticking = game.time.advance(16 * DAY); // deals the roads and Chapter II (15 Sep, B7800), steps the fronts
   await wait(5);
   await saga.ending("red-stone", "take");
   await ticking; await wait(50); await saga.settled?.();

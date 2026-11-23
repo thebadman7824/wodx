@@ -10,7 +10,7 @@
  */
 import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS} from "./data/saga.mjs";
 import {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK} from "./data/fronts.mjs";
-import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS as TWIST_CHAPTERS, WEEK as TWIST_WEEK} from "./data/twists.mjs";
+import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS as TWIST_CHAPTERS, WEEK as TWIST_WEEK, TWIST_GAP} from "./data/twists.mjs";
 import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD} from "./data/reveals.mjs";
 import {ENCOUNTERS, KINDS} from "./data/encounters.mjs";
 import {ROTHENSTEIN as RECIPE} from "./data/recipe.mjs";
@@ -54,7 +54,7 @@ export const PACK = {
   manifest: MANIFEST,
   saga: {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, FIRST_BOOK: MANIFEST.firstBook},
   fronts: {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK},
-  twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS: TWIST_CHAPTERS, WEEK: TWIST_WEEK},
+  twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS: TWIST_CHAPTERS, WEEK: TWIST_WEEK, GAP: TWIST_GAP},
   reveals: {REVEALS, JUDGED_FAVOURS, MURDERS, COLD},
   encounters: {ENCOUNTERS, KINDS, LAST: "c9"},
   /** The builder's recipe (WoDX Storyteller builder.mjs). */
