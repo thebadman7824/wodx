@@ -85,12 +85,14 @@ export async function run() {
       await until(() => saga().current?.()?.step?.key === "i2", 6000);
       await sleep(2300);
       await game.time.advance(19 * DAY);
-      await until(() => (saga().state().clocks.ashfield ?? 0) >= 1, 8000);
+      // A front can grey a field before the vigil, so wait for the vigil itself, then its clock
+      await until(() => saga().current?.()?.step?.key === "c3", 8000);
+      await until(() => (saga().state().clocks.ashfield ?? 0) >= 1, 4000);
       const st = saga().state(), sig = heard.find(h => h.step === "c3");
       // B6750: when the vigil is not dealt, say why (a hold or Light-touch left by an earlier gate, or the run's place)
       const run = game.settings.get(C, "podState").chains?.find(r => r.saga?.book === "red-stone");
       const why = {quiet: !!game.modules.get(C).api?.isQuiet?.(), held: !!game.modules.get(C).api?.isHeld?.(), at: run?.at ?? null, current: saga().current?.()?.step?.key ?? null};
-      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step), why});
+      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield >= 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step), why});
     });
 
     await step("4 ending", async () => {
