@@ -726,6 +726,41 @@
    "prs": [
     2323
    ]
+  },
+  {
+   "id": "creation.revenant-families",
+   "name": "Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/revenant-rules.mjs",
+    "modules/wodx-creation/scripts/revenant.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2379,
+     "decisions": "B7840-B7848"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/revenant.mjs:markOf"
+    },
+    "shown": {
+     "what": "the revenant window lists the year's families; the Khavi's sunlight card with its soak dice and bashing levels; the Family weakness roll cards"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedarevenants.mjs",
+     "step": "2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude"
+    },
+    "book": {
+     "ref": "V20 Dark Ages pp. 453-454; V20 p. 500; V20 Ghouls and Revenants pdf 87-114"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2379
+   ]
   }
  ]
 }
