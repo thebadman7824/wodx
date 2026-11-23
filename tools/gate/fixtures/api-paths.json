@@ -337,8 +337,8 @@
    "withPerson"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/talk.mjs:554",
-   "modules/wodx-npc/scripts/talk.mjs:578"
+   "modules/wodx-npc/scripts/talk.mjs:555",
+   "modules/wodx-npc/scripts/talk.mjs:579"
   ]
  },
  {
@@ -4890,7 +4890,7 @@
   ],
   "uses": [
    "modules/wodx-npc/scripts/legacy.mjs:185",
-   "modules/wodx-npc/scripts/talk.mjs:283",
+   "modules/wodx-npc/scripts/talk.mjs:284",
    "modules/wodx-npc/scripts/trust.mjs:90",
    "modules/wodx-npc/scripts/trust.mjs:115",
    "modules/wodx-solo/scripts/world.mjs:119"
@@ -4938,17 +4938,6 @@
   ],
   "uses": [
    "modules/wodx-otherworlds/scripts/journey.mjs:87"
-  ]
- },
- {
-  "target": "wodx-storyteller",
-  "path": [
-   "money",
-   "rules",
-   "moneyFor"
-  ],
-  "uses": [
-   "modules/wodx-npc/scripts/talk.mjs:263"
   ]
  },
  {
@@ -5115,7 +5104,7 @@
   "uses": [
    "modules/wodx-npc/scripts/overheard.mjs:100",
    "modules/wodx-npc/scripts/overheard.mjs:100",
-   "modules/wodx-npc/scripts/talk.mjs:288"
+   "modules/wodx-npc/scripts/talk.mjs:289"
   ]
  },
  {
@@ -5545,6 +5534,18 @@
   ],
   "uses": [
    "modules/wodx-npc/scripts/overheard.mjs:117"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "money",
+   "rules",
+   "moneyFor"
+  ],
+  "uses": [
+   "modules/wodx-npc/scripts/talk.mjs:264"
   ]
  },
  {

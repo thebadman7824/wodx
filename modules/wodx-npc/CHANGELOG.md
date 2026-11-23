@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.107.3 (Small talk found the Storyteller's money rules at the wrong path, so a land's own coins never reached the talk lines; it now reads them where the Storyteller keeps them (B7731))
 - 0.107.2 (The Road of Night's local group (B7690))
 - 0.107.1 (Town groups for the Appendix B Roads (B7669))
 - 0.107.0 (A Road's walkers in a town (B7649): from the Road window the Storyteller gathers the vampires on a Road in the scene into its local group, named and shaped as the book gives that Road (the Luminaries' court of oaths under a Lord, the Faithful's congregation, the Apostates' pack, a Black Church), a secret Kindred faction holding the scene and run on the Storyteller's orders (V20 Dark Ages pp. 116-141))

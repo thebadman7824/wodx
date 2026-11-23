@@ -256,11 +256,12 @@ export function build(ctx) {
     return regionPools.get(region);
   }
   /** The talk facts for where a scene stands: {region, coinSmall, coinBig} (B7601, B7602). */
+  // B7731: the money rules sit under the Storyteller api's upkeep.money (api.money was never there, so coin words fell back)
   function placeFacts(scene, year) {
     let here = null;
     try { here = chron()?.world?.here?.(scene ?? globalThis.canvas?.scene ?? null) ?? null; } catch (e) { here = null; }
     let moneyFor = null;
-    try { moneyFor = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.money?.rules?.moneyFor ?? null : null; } catch (e) { moneyFor = null; }
+    try { moneyFor = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep?.money?.rules?.moneyFor ?? null : null; } catch (e) { moneyFor = null; }
     return RT.regionFacts(here, year, moneyFor);
   }
   const storyteller = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
