@@ -63,6 +63,33 @@ export const ROAD_PROMPTS = {
         { text: "A long exchange of letters with a learned Prodigal", src: "Road of Humanity, PDF p. 75" }]
 };
 
+/**
+ * B7750 (Desk item 2026-11-23-mc3): the events WoDX records that match a Road book's own prompt. When a walker of that Road
+ * takes part, a Moment of Truth (the "story event" catalyst) is proposed to the Storyteller's approval queue; it opens
+ * only when approved.
+ */
+export const ROAD_EVENTS = {
+    oath: { roads: ["kings"], label: "An oath sworn to a liege or a vassal", src: "Road of Kings, PDF p. 62" }
+};
+/** The Road prompt an event matches for a walker of roadKey, or null. */
+export function truthFromEvent(roadKey, event) {
+    const e = ROAD_EVENTS[event];
+    return e && roadKey && e.roads.includes(roadKey) ? { event, catalyst: "event", label: e.label, src: e.src } : null;
+}
+
+/**
+ * B7751 (Desk item 2026-11-23-mc1): a Mentor has to be willing, as a teacher does (WoDX Creation, B7131). terms: what WoDX
+ * Creation's learn.terms gives ({will, why, blocks, price}), or null when it cannot tell (no WoDX Creation, or a name
+ * typed by hand). The Storyteller's word overrides a refusal or a trip. Returns {ok, note, price}.
+ */
+export function mentorAllowed(terms, { gm = false } = {}) {
+    if ( !terms ) return { ok: true, note: gm ? "" : "Named by hand: the Storyteller confirms the Mentor is willing.", price: null };
+    if ( terms.blocks ) return gm ? { ok: true, note: `${terms.why} (taken as Mentor on the Storyteller's word).`, price: null }
+        : { ok: false, note: `${terms.why}.`, price: null };
+    if ( terms.will === "price" && terms.price ) return { ok: true, note: `${terms.why}: ${terms.price.what} (in the Ledger).`, price: terms.price };
+    return { ok: true, note: `${terms.why}.`, price: null };
+}
+
 /** The record kept on a character (flag wodx-actions.roadFaith), with every field in place. */
 export function faithOf(flag = {}) {
     const f = flag ?? {};
