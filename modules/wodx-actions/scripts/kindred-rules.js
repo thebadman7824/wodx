@@ -582,3 +582,12 @@ export function overstimulation({ willpower = 0, intensity = 0 } = {}) {
  * from 4 (a robber behind the door) to 9 (a plot years deep). Returns the clamped difficulty.
  */
 export const revelationDiff = d => Math.max(4, Math.min(9, n(d) || 6));
+
+/**
+ * B7665: the Thirteenth Generation Flaw makes every Discipline activation roll one harder (V20 Dark Ages p. 426).
+ * flaws: the sheet's Flaw names. Returns {diff, part}.
+ */
+export function flawPowerDiff(flaws = []) {
+    const has = (flaws ?? []).some(f => /^thirteenth generation$/i.test(String(f ?? "").trim()));
+    return has ? { diff: 1, part: "Thirteenth Generation +1" } : { diff: 0, part: "" };
+}

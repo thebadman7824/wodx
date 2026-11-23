@@ -277,6 +277,9 @@ export function build(ctx) {
                 // B7661: the Ramanga's weakness on Presence and Aizina used on others (V20 Dark Ages p. 98)
                 const bl = K.bloodlinePowerDiff(clanTextOf(actor), p.d, { onOther: !!target && target !== actor, piece: !!fd.piece });
                 if (bl.diff) { rm.diff = n(rm.diff) + bl.diff; rm.parts = [...(rm.parts ?? []), bl.part]; }
+                // B7665: the Thirteenth Generation Flaw (V20 Dark Ages p. 426)
+                const fl = K.flawPowerDiff([...(actor.items ?? [])].filter(i => i.type === "Feature" && i.system?.type === "wod.types.flaw").map(i => i.name));
+                if (fl.diff) { rm.diff = n(rm.diff) + fl.diff; rm.parts = [...(rm.parts ?? []), fl.part]; }
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + rm.diff + lim.diff, { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
