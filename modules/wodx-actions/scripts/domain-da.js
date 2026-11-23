@@ -8,6 +8,8 @@
  *   Secret Ways on Stealth in the manor).
  *   Domain events (Storyteller): one of the ten, or a roll on the table. Its change moves the sheet's Background (or the
  *   manor's aspect) and is put back when the season ends (the world clock) or the Storyteller ends it.
+ *   The season turn (B7753 (desk item 2026-11-23-im1)): every 91 days of world time each held domain proposes one event, or
+ *   none, to the approval queue, with the price of its next maturation dot.
  *   Fealty (Storyteller): oaths between liege and vassal in the "WoDX Fealty" journal. Swearing pools the Anchor's dots
  *   with the vassal's own; cutting a vassal off takes them back and costs the liege a dot of that Background; an oath
  *   broken by the vassal is their word broken (the Roads that count it ask).
@@ -144,12 +146,49 @@ export function build(ctx) {
         await logEvent?.(actor, `${e.name} passes from the domain.`, "domain");
         return e;
     }
-    /** The season's end: the active Storyteller ends the events whose time is up. */
+    /** The season's end: the active Storyteller ends the events whose time is up, then turns the season (im1). */
     async function tick(now = game.time.worldTime) {
         if (!isActiveGM()) return 0;
         let k = 0;
         for (const a of game.actors) for (const e of (a.getFlag?.(MOD, "domainDA")?.events ?? [])) if (!e.ended && e.until && now >= e.until) { await endEvent(a, e.id); k++; }
+        try { await seasonTurn(now); } catch (e) { console.warn("WoDX | domain season", e); }
         return k;
+    }
+
+    /* ---- B7753 (Desk item 2026-11-23-im1): the season turn ---- */
+    const T_SEASON = "wodx-actions.domainSeason";
+    const approvals = () => game.modules.get("wodx-chronicle")?.api?.approvals ?? null;
+    const yearNow = () => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { return null; } };
+    /** Each held domain (Domain 1 or more) proposes its season's event, or none, and its next maturation dot. */
+    async function seasonTurn(now = game.time.worldTime, { d10 = null, rand = null } = {}) {
+        if (!isActiveGM()) return [];
+        const out = [];
+        for (const a of game.actors ?? []) {
+            if (a.type === "Group" || bg(a, "domain") < 1) continue;
+            const d = flagOf(a);
+            const t = D.seasonTurn({ last: d.season ?? null, now, d10: d10 ?? (1 + Math.floor(Math.random() * 10)), rand: rand ?? Math.random(), day: DAY });
+            if (!t.due && !t.first) continue;
+            d.season = t.season; await save(a, d);
+            if (!t.due) continue;
+            const cost = D.maturationCost(bg(a, "domain"), { prosperityHalf: false });
+            const mature = `Its next dot of Domain takes ${cost} maturation experience (${D.page(105)}).`;
+            const ap = approvals();
+            if (t.event && ap?.propose) {
+                const E = D.EVENTS[t.event];
+                await ap.propose({ type: T_SEASON, key: `domainSeason:${a.id}:${t.season}`, title: `${D.eventWords(t.event, yearNow())}: ${a.name}'s domain`,
+                    detail: `The season turns. ${E.does} ${mature} Approved, the event comes to the domain (${D.page(E.p)}).`, data: { actor: a.id, key: t.event } });
+            }
+            await ChatMessage.create({ whisper: gmIds(), speaker: { alias: "Domain" }, flags: { [MOD]: { info: true } },
+                content: `<div class="vta-card"><h3>The season turns: ${esc(a.name)}'s domain</h3><p>${t.event ? `${esc(D.eventWords(t.event, yearNow()))} waits in the approval queue.` : "A quiet season: no event (house rule, a d10 of 1 to 5)."}</p><p>${esc(mature)}</p><p class="wodx-quiet">${esc(D.page(113))}</p></div>` });
+            out.push({ actor: a.id, season: t.season, event: t.event });
+        }
+        return out;
+    }
+    function registerHandlers() {
+        approvals()?.registerHandler?.(T_SEASON, { label: "A domain's season event", approve: async entry => {
+            const a = game.actors.get(entry.data?.actor);
+            if (a && D.EVENTS[entry.data?.key]) await applyEvent(a, { key: entry.data.key, choice: 0 });
+        } });
     }
 
     /* ---------------- Fealty ---------------- */
@@ -190,6 +229,8 @@ export function build(ctx) {
         const list = FJ.entries(); list.push(e); await writeOaths(list);
         const text = `${vassal} swears fealty to ${liege}: ${o.anchorBg} ${n(o.anchorDots)} anchored for ${offered.map(x => `${x.bg} ${x.dots}`).join(", ") || "reputation"}${e.phantom ? ` (reputation ${e.phantom})` : ""}${e.duties ? `; owes ${e.duties}` : ""}.`;
         for (const a of [L, V]) if (a) await logEvent?.(a, text, "fealty");
+        // B7750 (Desk item 2026-11-23-mc3): an oath is a Road of Kings catalyst (Road of Kings, PDF p. 62): proposed to the queue
+        for (const a of [L, V]) if (a) { try { await ctx.proposeTruth?.(a, "oath", a === L ? `takes ${vassal} as a vassal` : `swears to ${liege}`); } catch (err) { console.warn("WoDX | fealty: Road", err); } }
         await ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } }, content: `<div class="vta-card"><h3>Fealty</h3><p>${esc(text)}</p><p class="wodx-quiet">Journal: WoDX Fealty. ${D.page(106)}</p></div>` });
         return e;
     }
@@ -233,5 +274,5 @@ export function build(ctx) {
             : swear({ liege: fd.liege, vassal: fd.vassal, anchorBg: fd.anchorBg, anchorDots: n(fd.anchorDots), offered: fd.offered, phantom: n(fd.phantom), duties: fd.duties }), { width: 540 });
     }
 
-    return { window, saveWindow, stateOf, domainEvent, applyEvent, endEvent, tick, fealty, swear, endOath, oaths: () => FJ.entries() };
+    return { window, saveWindow, stateOf, domainEvent, applyEvent, endEvent, tick, seasonTurn, registerHandlers, fealty, swear, endOath, oaths: () => FJ.entries() };
 }

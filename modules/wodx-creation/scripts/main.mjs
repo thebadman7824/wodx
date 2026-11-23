@@ -102,7 +102,7 @@ function start() {
     // B6270: every line, one key each, for any WoDX module
     lines: {of: lines.splatOf, info: lines.lineInfo, family: lines.familyOf, label: lines.labelOf, keys: lines.KEYS},
     learn: {rules: learnRules, choices: learn.choicesFor, resolve: learn.resolveSource, begin: learn.begin, records: learn.recordsOf, needsSource: learn.needsSource,
-      waived: learn.waived, setWaived: learn.setWaived, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
+      waived: learn.waived, setWaived: learn.setWaived, terms: learn.teacherTerms, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
     passYears: () => PassYearsApp.open(),
     runSkipTest,
     open: () => CreationApp.open(),

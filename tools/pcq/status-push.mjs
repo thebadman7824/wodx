@@ -12,6 +12,12 @@
  *   PC_LOCAL_AGENT_DIR  optional, a local-agent tasks folder (inbox/running counts), Main PC only
  *   PC_COMFY_URL     optional, ComfyUI's address on this PC (Main PC: http://127.0.0.1:8188): adds "comfy" (B7296)
  *   PC_OCR_MATCH, PC_OCR_LOOP_MATCH, PC_OCR_OUT, PC_OCR_LOG   optional, the book OCR (Secondary PC): adds "ocr" (B7296)
+ *   PC_LANES_JSON    optional, the path of this PC's tools/lanes/lanes.json: lets the daily tally count lane busy minutes
+ *                    (a lane counts as busy while its lock.json is held by a live process)
+ * Daily tally (B7755, desk items 2026-11-17-us2 and 2026-11-23-us2b): each cycle also adds its five minutes to
+ * registry/pc-status/daily/<name>-<YYYY-MM-DD>.json (UTC day): runner up, each lane up and busy, GPU busy (load 50% or
+ * more) and GPU held by the guard by class (art, ocr, local, other), ComfyUI renders finished, OCR working minutes.
+ * Only counts and minutes. The Monday review reads seven of them; the gate jobs per lane come from the job issues.
  * B7296: this copy in tools/pcq is the one to deploy. Each PC runs it from <home>\gpu-tools\status-push.mjs (copy it
  * there; PC_HOME then defaults to <home>\status-push-clone). The laptop's PC watcher reads the comfy and ocr fields.
  * Push is never forced: fetch, write only our own file(s), commit, push; if rejected, fetch, rebase and retry (3 tries).
@@ -24,6 +30,7 @@
 import {spawnSync} from "node:child_process";
 import fs from "node:fs";
 import net from "node:net";
+import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 
@@ -38,6 +45,8 @@ const REMOTE = "https://github.com/thebadman7824/wodx.git";
 const BRANCH = "pc-status";
 const REL = "registry/pc-status";
 const STALE_MIN = 15;
+const STEP_MIN = 5;
+const LANES_JSON = process.env.PC_LANES_JSON || "";
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const git = (...a) => spawnSync("git", a, {cwd: DIR, encoding: "utf8", windowsHide: true, timeout: 90000});
@@ -77,7 +86,7 @@ function guardBusy() {
     const l = JSON.parse(fs.readFileSync(path.join(dir, "lock.json"), "utf8"));
     let alive = true; try { process.kill(l.pid, 0); } catch (e) { alive = e.code === "EPERM"; }
     const w = fs.existsSync(path.join(dir, "waiters")) ? fs.readdirSync(path.join(dir, "waiters")).length : 0;
-    return {jobHeld: alive, waiting: w};
+    return {jobHeld: alive, waiting: w, ...(alive && l.class ? {class: String(l.class).replace(/[^a-z]/gi, "").slice(0, 12)} : {})};
   } catch { return {jobHeld: false, waiting: 0}; }
 }
 
@@ -99,12 +108,69 @@ export function comfyFrom(queue, history, now = Date.now()) {
       if ( (kind === "execution_success" || kind === "execution_error") && Number.isFinite(m?.timestamp) ) last = Math.max(last ?? 0, m.timestamp);
   return {up: true, running, pending, lastDoneMin: last ? Math.round((now - last) / 60000) : null};
 }
+/** Prompts ComfyUI finished after a time (ms), for the daily tally. */
+export function doneSince(history, since) {
+  let k = 0;
+  for ( const h of Object.values(history ?? {}) )
+    if ( (h?.status?.messages ?? []).some(([kind, m]) => kind === "execution_success" && Number.isFinite(m?.timestamp) && m.timestamp > since) ) k++;
+  return k;
+}
+
+/**
+ * The lanes' state folders from lanes.json, as WoDX's lanes tools read them (tools/lanes/lib.mjs loadConfig): a PC
+ * named in "hosts" sees only its own lanes, with its paths; %NAME% reads an environment variable. ids: this PC's lanes.
+ * Returns {id: folder of lock.json}.
+ */
+export function laneStateDirs(cfg, ids, host, env = process.env) {
+  const h = String(host ?? "").toLowerCase(), mine = cfg?.hosts?.[h];
+  const lanes = (cfg?.lanes ?? []).filter(l => (mine ? l.host === h : !l.host) && ids.includes(Number(l.id)));
+  const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (env[n] ?? m).replace(/\\/g, "/")) : v;
+  return Object.fromEntries(lanes.filter(l => l.dataPath).map(l => [Number(l.id), path.join(expand(l.dataPath), "wodx-lane")]));
+}
+/** Is a lane's lock held now? (a live process, not past its deadline) */
+export function lockHeld(lock, now = Date.now(), alive = pid => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === "EPERM"; } }) {
+  if ( !lock?.pid || !alive(lock.pid) ) return false;
+  return !(lock.until && now > Date.parse(lock.until));
+}
+function laneBusy() {
+  if ( !LANES_JSON ) return null;
+  try {
+    const dirs = laneStateDirs(JSON.parse(fs.readFileSync(LANES_JSON, "utf8")), LANES, process.env.WODX_HOST || os.hostname());
+    return Object.fromEntries(Object.entries(dirs).map(([id, d]) => { let l = null; try { l = JSON.parse(fs.readFileSync(path.join(d, "lock.json"), "utf8")); } catch {} return [id, lockHeld(l)]; }));
+  } catch { return null; }
+}
+
+/**
+ * Adds one cycle's sample to the day's tally. tally: the day's file so far (or null); s: what collect() gave, with
+ * laneBusy {id: bool} when known. Every count is minutes except comfyRenders and samples. Returns the new tally.
+ */
+export function addSample(tally, s, {step = STEP_MIN} = {}) {
+  const day = String(s.time ?? new Date().toISOString()).slice(0, 10);
+  const t = tally && tally.day === day ? structuredClone(tally) : {host: s.host, day, stepMin: step, samples: 0, runnerUpMin: 0, lanes: {}, gpu: {busyMin: 0, heldMin: {}}, comfyRenders: 0, ocrWorkingMin: 0};
+  t.samples += 1;
+  t.last = s.time;
+  if ( s.runnerUp ) t.runnerUpMin += step;
+  for ( const l of s.lanes ?? [] ) {
+    const r = t.lanes[l.id] ??= {upMin: 0, busyMin: 0};
+    if ( l.up ) r.upMin += step;
+    if ( s.laneBusy?.[l.id] ) r.busyMin += step;
+  }
+  if ( s.laneBusy ) t.laneBusyKnown = true;
+  if ( s.gpu ) {
+    if ( s.gpu.loadPct >= 50 ) t.gpu.busyMin += step;
+    if ( s.gpu.jobHeld ) { const c = s.gpu.class || "job"; t.gpu.heldMin[c] = (t.gpu.heldMin[c] ?? 0) + step; }
+  }
+  if ( s.comfy?.doneLast5 ) t.comfyRenders += s.comfy.doneLast5;
+  if ( s.ocr && s.ocr.workers > 0 && !(s.ocr.lastOutputMin > 2 * step) ) t.ocrWorkingMin += step;
+  return t;
+}
 async function comfy() {
   const base = process.env.PC_COMFY_URL;
   if ( !base ) return undefined;
   try {
     const get = async p => { const r = await fetch(base.replace(/\/$/, "") + p, {signal: AbortSignal.timeout(10000)}); if ( !r.ok ) throw new Error(String(r.status)); return r.json(); };
-    return comfyFrom(await get("/queue"), await get("/history?max_items=20"));
+    const hist = await get("/history?max_items=20");
+    return {...comfyFrom(await get("/queue"), hist), doneLast5: doneSince(hist, Date.now() - STEP_MIN * 60000)};
   } catch { return {up: false, running: 0, pending: 0, lastDoneMin: null}; }
 }
 
@@ -171,6 +237,7 @@ async function collect() {
   const la = localAgents(procs); if ( la ) out.localAgents = la;
   const c = await comfy(); if ( c ) out.comfy = c;
   const o = ocr(procs); if ( o ) out.ocr = o;
+  const lb = laneBusy(); if ( lb ) out.laneBusy = lb;
   const issues = [];
   if ( !out.runnerUp ) issues.push("runner down");
   if ( lanes.some(l => !l.up) ) issues.push("lane down");
@@ -219,6 +286,10 @@ async function cycle() {
   for ( let attempt = 0; attempt < 3; attempt++ ) {
     sync();
     write(`${REL}/${NAME}.json`, mine);
+    // The daily tally (us2b): read back from the branch after sync, so a restart or another clone loses nothing
+    const dayRel = `${REL}/daily/${NAME}-${mine.time.slice(0, 10)}.json`;
+    let before = null; try { before = JSON.parse(fs.readFileSync(path.join(DIR, dayRel), "utf8")); } catch {}
+    if ( !before || before.last !== mine.time ) write(dayRel, addSample(before, mine));
     if ( BUILD_ALL ) write(`${REL}/all.json`, buildAll());
     git("add", "-A");
     const c = git("commit", "-q", "-m", `pc status ${NAME}`);

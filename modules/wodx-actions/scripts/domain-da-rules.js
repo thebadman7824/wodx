@@ -17,6 +17,8 @@
  *   B7683 maturation (p. 105): these Backgrounds and the Vassal and Settlement Merits rise with maturation experience,
  *         2 for the first dot and the current rating x2 after.
  */
+import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
+
 export const BOOK = "V20 Dark Ages Companion";
 export const page = p => `${BOOK} p. ${p}`;
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -167,6 +169,47 @@ export function withEvents(base = {}, events = [], now = 0) {
 }
 /** A random event from the table (rand in [0, 1)). */
 export const rollEvent = rand => EVENT_KEYS[Math.floor(clamp(n(rand), 0, 0.9999) * EVENT_KEYS.length)];
+
+/**
+ * B7752 (Desk item 2026-11-23-mc2): what the running events do to the holder's hunt. A Populace (Herd) event already moves the
+ * sheet's Herd, so the hunt reads it there and only names it; an event that takes the manor's Area also shrinks the
+ * Domain dots counted on the hunt. aspects, effective: the manor as set and as the events leave it.
+ * Returns {domainShift (0 or less), lines[]}.
+ */
+export function huntFromDomain({ aspects = {}, effective = {}, events = [] } = {}) {
+    const shift = Math.min(0, n(effective.area) - n(aspects.area));
+    const lines = [];
+    for (const e of events ?? []) {
+        if (e.ended || !(e.bg === "populace" || e.bg === "area")) continue;
+        const net = n(e.delta) + n(e.restore);
+        if (!net) continue;
+        const what = e.bg === "populace" ? `Herd ${net > 0 ? "+" : ""}${net} (on the sheet already)` : `Area ${net > 0 ? "+" : ""}${net}, so Domain ${net > 0 ? "+" : ""}${net} on the hunt`;
+        lines.push(`${e.name} in the domain: ${what}, ${e.until ? "for a season" : e.lasts ?? "until it ends"} (${page(EVENTS[e.key]?.p ?? 113)})`);
+    }
+    return { domainShift: shift, lines };
+}
+
+/* ---------------- The season turn (B7753 (desk item 2026-11-23-im1)) ---------------- */
+/**
+ * Every season of world time each held domain proposes one event, or none, to the Storyteller's approval queue, with
+ * the price of its next maturation dot (house rule: a d10 of 1 to 5 brings no event, 6 to 10 rolls on the table).
+ * seasonOf: the season number of a world time in seconds (day: seconds in a day).
+ */
+export const seasonOf = (now, day = DAY) => Math.floor(Math.max(0, n(now)) / (SEASON_DAYS * day));
+export const QUIET_MAX = 5;
+/**
+ * last: the season last turned (null: never, so this one is only marked); now: world time; d10: 1-10; rand: [0, 1).
+ * Returns {due, season, event (a key or null)}.
+ */
+export function seasonTurn({ last = null, now = 0, d10 = 1, rand = 0, day = DAY } = {}) {
+    const season = seasonOf(now, day);
+    if (last === null || last === undefined || season <= n(last)) return { due: false, season, event: null, first: last === null || last === undefined };
+    return { due: true, season, event: clamp(n(d10), 1, 10) > QUIET_MAX ? rollEvent(rand) : null };
+}
+/** The same events in later centuries' words, for the card (the systems do not change). */
+const LATER = { famine: "Hard times: work and trade dry up", outlaws: "Crime: gangs and thieves work the streets", pilgrims: "Visitors: tourists and travellers spend money",
+    invasion: "A takeover: a rival moves in by force or by law", court: "The overlord's visit", heresy: "A new movement that the powers dislike", disaster: "Disaster: fire, flood or storm" };
+export const eventWords = (key, year = null) => (n(year) >= 1800 && LATER[key] ? LATER[key] : EVENTS[key]?.name ?? key);
 
 /* ---------------- Maturation (B7683) ---------------- */
 /** Maturation experience for the next dot of a domain Background or the Vassal and Settlement Merits (p. 105). */
