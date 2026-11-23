@@ -57,6 +57,9 @@ export const PCS = [
   {key: "main", label: "Main PC", statusTitle: "PC runner status", lanes: [2, 3, 4, 5, 6]},
   {key: "secondary", label: "Secondary PC", statusTitle: "PC runner status (Secondary PC)", lanes: [8]},
   {key: "laptop", label: "Laptop", statusTitle: "PC runner status (second PC)", lanes: [7]},
+  // The New PC (HP OMEN 35L, PR #2306): lane 10, status issue #2308. Its status file is newpc.json once its
+  // status-push.mjs runs with PC_STATUS_NAME=newpc PC_LANES=10; until then the watcher reports that it has never sent one.
+  {key: "newpc", label: "New PC", statusTitle: "PC runner status (New PC)", lanes: [10]},
 ];
 
 const ageMin = (t, now) => t ? Math.round((now - Date.parse(t)) / MIN) : null;
@@ -112,6 +115,7 @@ export function assess(snap, prev = {}) {
     if ( pushSilent && runSilent ) { state = "silent"; add(`${p.key}:silent`, `${p.label} is silent: no status push for ${hm(pushAge)} and no runner update for ${hm(runAge)}. It is probably off, asleep, rebooting or offline.`); }
     else if ( runSilent ) { state = "runner silent"; add(`${p.key}:runner`, `${p.label} is on (status push ${hm(pushAge)} ago) but its runner has not updated its status issue${iss ? ` #${iss.number}` : ""} for ${hm(runAge)}${f && f.runnerUp === false ? ", and the PC says the runner is not running" : ""}.`); }
     else if ( pushSilent && pushAge !== null && pushAge <= 2 * LIMITS.pushStaleMin ) { state = "push silent"; notes.push(`${p.label}: the runner is alive but its status push has been quiet for ${hm(pushAge)}, so lane and graphics card readings are old.`); }
+    else if ( pushSilent && pushAge === null ) { state = "no status push"; add(`${p.key}:push`, `${p.label}: the runner is alive but the PC has never sent a status file (registry/pc-status/${p.key}.json), so its lanes and graphics card are not seen. Start status-push.mjs there with PC_STATUS_NAME=${p.key}${p.lanes.length ? ` PC_LANES=${p.lanes.join(",")}` : ""} (tools/pcq/README.md).`); }
     else if ( pushSilent ) { state = "push silent"; add(`${p.key}:push`, `${p.label}: the runner is alive but its status push (status-push.mjs) has been quiet for ${hm(pushAge)}; it may not have come back after a restart, so lane and graphics card readings are old.`); }
     if ( f && !pushSilent ) {
       // One key per lane, so a lane that flaps beside another still counts up (B7295). Lane 6 is kept for the
@@ -119,7 +123,7 @@ export function assess(snap, prev = {}) {
       for ( const l of f.lanes ?? [] ) if ( !l.up && !IGNORE_LANES.includes(l.id) ) add(`${p.key}:lane:${l.id}`, `${p.label}: lane ${l.id} not answering.`);
       if ( f.gpu && f.gpu.warning && f.gpu.warning !== "ok" ) add(`${p.key}:gpu`, `${p.label}: graphics card ${f.gpu.warning} (${f.gpu.tempC} C, memory ${f.gpu.vramPct}% used).`);
     }
-    rows.push({pc: p.label, lanes: p.lanes.join(", "), push: hm(pushAge), runner: `${hm(runAge)} ago${iss ? ` (#${iss.number})` : ""}`, state});
+    rows.push({pc: p.label, lanes: p.lanes.join(", "), push: pushAge === null ? "never" : `${hm(pushAge)} ago`, runner: `${hm(runAge)} ago${iss ? ` (#${iss.number})` : ""}`, state});
   }
   // Jobs
   for ( const j of snap.jobs ) {
@@ -212,7 +216,7 @@ export function report(a, now, host) {
     a.problems.length ? `**${a.problems.length} problem${a.problems.length > 1 ? "s" : ""}**` : "**All clear.**", ""];
   for ( const p of a.problems ) L.push(`- ${p.text}${a.confirmed.includes(p) ? "" : " _(first sighting)_"}`);
   L.push("", "| PC | Lanes | Status push | Runner update | State |", "|---|---|---|---|---|");
-  for ( const r of a.rows ) L.push(`| ${r.pc} | ${r.lanes} | ${r.push} ago | ${r.runner} | ${r.state} |`);
+  for ( const r of a.rows ) L.push(`| ${r.pc} | ${r.lanes} | ${r.push} | ${r.runner} | ${r.state} |`);
   const by = a.trainPc ? ` (from the ${a.trainPc}'s runner)` : "";
   L.push("", `Merge train: ${a.train?.front ? `front #${a.train.front}, line ${a.train.line.map(n => `#${n}`).join(", ")}${by}` : a.train ? `empty${by}` : "not shown (no runner status issue has a train line)"}`, "");
   for ( const n of a.notes ) L.push(`- ${n}`);
