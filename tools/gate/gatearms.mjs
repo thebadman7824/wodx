@@ -12,7 +12,9 @@
  *   7. ammunition (B3900): an empty cartridge revolver (named so, since the testbed year gives an unnamed gun an old lock) reloads from the two cartridges in Possessions (2 of 6), and they are gone
  * Result: Data/wodx-gate/gatearms-result.json.
  */
-import {gate, newestMessage} from "./kit.mjs";
+import {gate, newestMessage, inOrder} from "./kit.mjs";
+// B7773: a batch create does not keep its order (kit rule 1), so what it made is matched back to its data by name
+const madeInOrder = async (parent, type, data) => inOrder(await parent.createEmbeddedDocuments(type, data), data);
 
 const LIB = "wodx-library";
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -107,7 +109,7 @@ export async function run() {
       G.ok("6. a bear trap", caught && imm() && card, {caught, sets, immobilized: imm(), damageCard: card});
     });
     await G.step("7. reloading from Possessions", async () => {
-      const [rev, ammo] = await m.createEmbeddedDocuments("Item", [{name: "Gate Arms cartridge revolver", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 12,
+      const [rev, ammo] = await madeInOrder(m, "Item", [{name: "Gate Arms cartridge revolver", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 12,
         damage: {attribute: "", bonus: 4, type: "lethal"}, attack: {attribute: "dexterity", ability: "firearms"}, clip: {value: 0, max: 6}}},
         {name: "a cartridge", type: "Item", flags: {"wodx-sheets": {qty: 2}}}]);
       const r = await C.reload({actor: m, weaponId: rev?.id});

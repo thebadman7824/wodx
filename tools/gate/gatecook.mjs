@@ -15,6 +15,9 @@
  *  10. every other WoDX module still answers
  * Result: Data/wodx-gate/gatecook-result.json.
  */
+import {inOrder} from "./kit.mjs";
+// B7773: a batch create does not keep its order (kit rule 1), so what it made is matched back to its data by name
+const madeInOrder = async (parent, type, data) => inOrder(await parent.createEmbeddedDocuments(type, data), data);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-storyteller";
 async function save(R, name) {
@@ -123,7 +126,7 @@ export async function run() {
     });
 
     await step("take apart", async () => {
-      const [bar, saw] = await A.createEmbeddedDocuments("Item", [{name: "a crowbar", type: "Item"}, {name: "a hand saw", type: "Item"}]);
+      const [bar, saw] = await madeInOrder(A, "Item", [{name: "a crowbar", type: "Item"}, {name: "a hand saw", type: "Item"}]);
       const uses = await game.modules.get("wodx-library")?.api?.use?.abilities?.(bar);
       const before = A.items.size;
       const r = await ck().takeApart(A, bar);

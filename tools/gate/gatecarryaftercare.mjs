@@ -18,7 +18,9 @@
  *  10. a player's character held (a12): a card with Try the bonds, Talk and Wait; Wait answers with a card
  * Result: Data/wodx-gate/gatecarryaftercare-result.json.
  */
-import {gate, waitFor} from "./kit.mjs";
+import {gate, waitFor, inOrder} from "./kit.mjs";
+// B7773: a batch create does not keep its order (kit rule 1), so what it made is matched back to its data by name
+const madeInOrder = async (parent, type, data) => inOrder(await parent.createEmbeddedDocuments(type, data), data);
 
 const IX = "wodx-interactables", NPC = "wodx-npc", ACT = "wodx-actions";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -37,7 +39,7 @@ export async function run() {
   try {
     const N = () => game.modules.get(NPC)?.api, AC = () => N()?.carryAftercare, C = () => game.modules.get("wodx-chronicle")?.api;
     const scene = await G.scene({width: 3000, height: 2000});
-    const [home, watch] = await scene.createEmbeddedDocuments("Region", [
+    const [home, watch] = await madeInOrder(scene, "Region", [
       {name: "Gate Aftercare home", shapes: [{type: "rectangle", x: 200, y: 200, width: 400, height: 400}], flags: {[NPC]: {place: {kind: "home"}}}},
       {name: "Gate Aftercare watch-house", shapes: [{type: "rectangle", x: 2000, y: 200, width: 400, height: 400}], flags: {[NPC]: {place: {kind: "gate"}}}}]);
     const [ada, bo, cy, dan, eva, fil, gil, hed, ivy] = await G.make(Actor, [
