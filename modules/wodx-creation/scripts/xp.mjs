@@ -7,6 +7,7 @@ import {LINE_XP} from "./lines-xp-rules.mjs";
 import {XP} from "../data/vampire.mjs";
 import {labelOf} from "./lines.mjs";
 import * as CP from "./change-points-rules.mjs";
+import * as RF from "../../wodx-actions/scripts/road-faith-rules.js";
 
 /**
  * The experience log. Awards and spends are upstream Experience items (so the sheet's totals stay right), each
@@ -49,6 +50,14 @@ export async function award(actors, amount, note = "", time = game.time.worldTim
   return actors;
 }
 
+/** B7645: the Moment of Truth that halved a Road dot is spent with it. */
+async function truthSpent(actor, now) {
+  if ( now?.kind !== "road" || !now.truth ) return;
+  let story = "first";
+  try { story = game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { /* no WoDX Actions */ }
+  await actor.setFlag("wodx-actions", "roadFaith", RF.useTruth(actor.flags?.["wodx-actions"]?.roadFaith, story));
+}
+
 /** Record a spend and raise the trait. Re-checks the cost first. Returns false if it no longer holds. */
 export async function spend(actor, purchase, {by = game.user.name, time = game.time.worldTime, waive = false} = {}) {
   // B6779f: a dot left by a change (the Chrysalis, the Fall, the Second Breath, the death) costs no experience
@@ -63,11 +72,12 @@ export async function spend(actor, purchase, {by = game.user.name, time = game.t
   if ( !change && !waive && Learn.needsSource(actor, now) ) {
     if ( !purchase.source?.kind ) return {ok: false, reason: "Name where it is learned: a teacher, a book, a school or practice."};
     const r = await Learn.begin(actor, now, purchase.source, {by, time});
-    if ( r.ok ) await writeLogPage(payerOf(actor));
+    if ( r.ok ) { await truthSpent(actor, now); await writeLogPage(payerOf(actor)); }
     return r.ok ? {ok: true, option: now, learning: r.learning, source: r.source} : {ok: false, reason: r.reason};
   }
   const payer = payerOf(actor);
   await applyPurchase(actor, now);
+  await truthSpent(actor, now);
   if ( change ) {
     const take = CP.takeOne(actor.flags?.[MODULE_ID] ?? {}, change.fromChange);
     if ( take ) await actor.update({[`flags.${MODULE_ID}.${take[0]}`]: take[1]});
@@ -134,7 +144,7 @@ export async function onRequest(payload) {
       await ChatMessage.create({content: `<div class="wodx-card"><p>The request for ${esc(actor.name)} could not be queued: ${esc(r.why)}</p></div>`, whisper: [user.id], speaker: {alias: "Storyteller"}});
       return;
     }
-    srcLine = ` Learned from ${r.src.kind === "practice" ? "practice" : r.src.name} (${SOURCE_KINDS[payload.purchase.source.kind]}), as a long task of ${r.plan.goal} successes at difficulty ${r.plan.diff}; the trait rises when it is done.`;
+    srcLine = ` Learned from ${r.src.kind === "practice" ? "practice" : r.src.name} (${SOURCE_KINDS[payload.purchase.source.kind]}), as a long task of ${r.plan.goal} successes at difficulty ${r.plan.diff}; the trait rises when it is done.${r.src.price ? ` The teacher asks a price: ${r.src.price.what} (written to the Ledger when the study begins).` : ""}`;
   }
   const api = chronicle();
   await api.approvals.addToQueue({

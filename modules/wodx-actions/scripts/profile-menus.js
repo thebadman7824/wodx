@@ -30,37 +30,37 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
-            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:conditioning", "Dominate Conditioning", "fa-user-lock"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
+            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:conditioning", "Dominate Conditioning", "fa-user-lock"], ["api:setRoad", "Road and Path", "fa-road"], ["api:roadFaith", "The Road: rank, Mentor, Moments of Truth", "fa-route"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"], ["api:malkRite", "Rite of the Orders (Malkavian)", "fa-eye"], ["api:glyconCheck", "Power within reach (Warrior of Glycon)", "fa-crown"], ["api:exorcise", "Exorcism (rite)", "fa-cross"], ["api:infernal", "Infernal pacts (Storyteller)", "fa-file-signature"], ["api:infernalFlame", "Breathe flame (infernal)", "fa-fire"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"], ["api:diablerieMarks", "Marks of diablerie", "fa-eye"]]],
-            ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
-            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:bloodHunt", "Blood Hunt", "fa-crosshairs"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:newNight", "New night (GM)", "fa-moon"], WILL]]
+            ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"], ["api:domainDA", "Domain and manor", "fa-chess-rook"], ["api:maturation", "Maturation", "fa-hourglass"]]],
+            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:bloodHunt", "Blood Hunt", "fa-crosshairs"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"], ["api:sampleDemon", "A demon (V20 Dark Ages)", "fa-dragon"], ["api:sampleGhost", "A ghost (V20 Dark Ages)", "fa-ghost"], ["api:sampleSwarm", "A swarm of animals (GM)", "fa-bug"], ["api:spiderOn", "A spider on someone (GM)", "fa-spider"], ["api:fealty", "Fealty (GM)", "fa-crown"], ["api:domainEvent", "Domain event (GM)", "fa-cloud-showers-heavy"]]],
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], ["api:newNight", "New night (GM)", "fa-moon"], WILL]]
         ]
     },
     ghoul: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
-            ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"], ["api:ghoulBlood", "Drink, withdrawal, day (V20)", "fa-wine-glass"]]],
+            ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"], ["api:ghoulBlood", "Drink, withdrawal, day (V20)", "fa-wine-glass"], ["api:exorcise", "Exorcism (rite)", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:frenzy", "Fear / frenzy check", "fa-fire-alt"], ["api:healing", "Healing", "fa-band-aid"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     mortal: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
-            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:pactGift", "A pact gift", "fa-file-signature"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:fomorPower", "Fomor powers", "fa-biohazard"]]],
+            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:holyArtifact", "A Holy Artifact (GM, V20 Dark Ages)", "fa-ring"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:pactGift", "A pact gift", "fa-file-signature"], ["api:exorcise", "Exorcism (rite)", "fa-cross"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:fomorPower", "Fomor powers", "fa-biohazard"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     hunter: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
             ["The hunter", [["api:hunterSheet", "Hunter traits", "fa-id-card"], ["api:hunterPower", "Blessing / Edge", "fa-hand-sparkles"], ["api:hunterVirtue", "Virtue roll / second sight", "fa-shield-alt"], ["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"]]],
-            ["Faith and conviction", [["api:trueFaith", "True Faith", "fa-cross"], ["api:prayer", "Prayer", "fa-praying-hands"], ["api:sinGod", "A sin (Piety)", "fa-balance-scale"], ["api:relic", "Holy relic", "fa-gem"], ["api:bankConviction", "Bank Conviction", "fa-piggy-bank"], ["uses:conviction", "Conviction", "fa-fist-raised"]]],
+            ["Faith and conviction", [["api:trueFaith", "True Faith", "fa-cross"], ["api:holyArtifact", "A Holy Artifact (GM, V20 Dark Ages)", "fa-ring"], ["api:prayer", "Prayer", "fa-praying-hands"], ["api:sinGod", "A sin (Piety)", "fa-balance-scale"], ["api:relic", "Holy relic", "fa-gem"], ["api:exorcise", "Exorcism (rite)", "fa-cross"], ["api:bankConviction", "Bank Conviction", "fa-piggy-bank"], ["uses:conviction", "Conviction", "fa-fist-raised"]]],
             ["Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     lupine: {
@@ -71,12 +71,12 @@ export const MENUS = {
             ["Gifts and Gnosis", [["api:useGift", "Use a Gift", "fa-star"], ["api:learnGift", "Learn a Gift", "fa-book-open"],
                 ["api:useFetish", "Fetish or talen", "fa-gem"], ["api:meditate", "Meditate (regain Gnosis)", "fa-moon"]]],
             ["Rites and spirits", [["api:performRite", "Perform a rite", "fa-circle-notch"], ["api:summonSpirit", "Summon a spirit", "fa-ghost"],
-                ["api:chiminage", "Chiminage (spirit debts)", "fa-handshake"]]],
+                ["api:chiminage", "Chiminage (spirit debts)", "fa-handshake"], ["api:packTotem", "Pack totem", "fa-paw"]]],
             ["Body", [["api:shiftForm", "Change form", "fa-dog"], ["regen", "Regenerate", "fa-heartbeat"], ["api:hazard", "Fire / fall / silver", "fa-burn"],
                 ["api:battleScar", "Battle Scar", "fa-band-aid"], ["api:healing", "Healing with time", "fa-clock"]]],
             ["Renown and witnesses", [["api:accomplishment", "Rite of Accomplishment", "fa-medal"], ["api:awardRenown", "Award Renown (GM)", "fa-award"],
                 ["api:curse", "The Curse (target a human)", "fa-user-slash"], ["api:delirium", "The Delirium (GM, witnesses)", "fa-eye"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     mage: {
@@ -85,7 +85,7 @@ export const MENUS = {
             ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Quiet", "The Quiet", "fa-eye-slash"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Draw", "Meditate for Quintessence each day", "fa-om"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
             ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     /** Dark Ages: Mage (3.7.0): Foundation and Pillars instead of Arete and Spheres. */
@@ -97,7 +97,7 @@ export const MENUS = {
                 ["api:daCountermagic", "Countermagic", "fa-shield-alt"], ["api:daGuide", "Using the Art (Pillar guide)", "fa-book-open"], ["api:daCertamen", "Certámen (the duel arcane)", "fa-khanda"]]],
             ["Sorcery and Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     /** Dark Ages: Fae (3.8.0): Mists, Weaving and the Dominions instead of Glamour and the Arts. */
@@ -110,7 +110,7 @@ export const MENUS = {
                 ["api:daOath", "Oaths: keep, forge or lose to baptism", "fa-handshake"], ["api:oaths", "An oath is broken", "fa-unlink"], ["api:daRest", "Rest in a faerie realm", "fa-tree"]]],
             ["Treasures", [["api:treasureUse", "Use a Treasure", "fa-gem"], ["api:treasureOath", "Keep a Treasure's oath", "fa-handshake"], ["api:treasureGive", "Give a Treasure (GM)", "fa-gift"]]],
             ["Danger", [["api:daEcho", "Face an Echo", "fa-bell"], ["api:daColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:faeDA", "Fae rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     fae: {
@@ -121,7 +121,7 @@ export const MENUS = {
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["api:c20Everyday", "Everyday Banality (GM)", "fa-building"], ["api:oaths", "Oaths sworn and broken", "fa-handshake"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
             ["Treasures", [["api:treasureUse", "Use a Treasure", "fa-gem"], ["api:treasureOath", "Keep a Treasure's oath", "fa-handshake"], ["api:treasureGive", "Give a Treasure (GM)", "fa-gift"]]],
             ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     wraith: {
@@ -131,21 +131,30 @@ export const MENUS = {
             ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"], ["api:chainThrall", "Hold a Thrall", "fa-link"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["rules:wraith", "Wraith rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
+        ]
+    },
+    // B7676: a ghost of V20 Dark Ages (a Wraith sheet flagged daGhost): Passion is its blood, its powers are Disciplines (p. 403)
+    ghostDA: {
+        sections: [
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:useDiscipline", "Use a Discipline (Passion)", "fa-hand-sparkles"]]],
+            ["The dead", [["api:ghostManifest", "Manifest for a turn (1 Passion)", "fa-ghost"], ["api:ghostSight", "Deathsight and Lifesight", "fa-eye"], ["uses:pathos", "Passion", "fa-fire-alt"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:ghostDA", "Ghost rules", "fa-book"]]],
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     spirit: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"]]],
             ["Charms", [["api:spiritCharm", "Spirit Charms", "fa-wind"], ["uses:essence", "Essence", "fa-sparkles"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
     beast: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["preset:trackscent", "Track by scent", "fa-paw"], ["preset:sneaking", "Sneak / stalk", "fa-user-secret"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:beast", "Creature rules", "fa-book"]]],
-            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     }
 };
@@ -159,7 +168,7 @@ MENUS.demon = {
         ["Torment", [["api:demonSin", "A sin (Virtue at 8)", "fa-balance-scale"], ["api:demonKindness", "An act of kindness", "fa-dove"], ["uses:torment", "Torment", "fa-fire"]]],
         ["Danger", [["api:demonHoly", "Holy ground / sacred object", "fa-cross"], ["api:demonName", "A name is spoken", "fa-comment"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:demonIllusion", "See through illusion", "fa-low-vision"],
             ["api:hazard", "Fire / fall", "fa-burn"], ["rules:demon", "Demon rules", "fa-book"]]],
-        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
     ]
 };
 
@@ -171,7 +180,7 @@ MENUS.kote = {
             ["api:kotSight", "Ghostsight, Lifesight, Hun", "fa-eye"], ["api:kotSetup", "Dharma, direction, P'o", "fa-scroll"]]],
         ["The Demon", [["api:kotNature", "Fire, wave or shadow soul", "fa-fire-alt"], ["api:kotDemon", "Demon Chi and the rage", "fa-dragon"], ["api:kotDharma", "A Dharma roll", "fa-balance-scale"]]],
         ["Night and day", [["api:kotRise", "Rise at dusk", "fa-moon"], ["api:kotSun", "Sunlight", "fa-sun"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:kote", "Kuei-jin rules", "fa-book"]]],
-        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
     ]
 };
 
@@ -182,7 +191,7 @@ MENUS.mummy = {
         ["Hekau", [["api:mummyCast", "Work Hekau (spell or ritual)", "fa-ankh"], ["api:mummySekhem", "Regain Sekhem", "fa-sun"], ["uses:sekhem", "Sekhem", "fa-coins"], ["api:mummySetup", "Amenti and the Web", "fa-scroll"]]],
         ["Ma'at", [["api:mummyBalance", "Balance (conviction, counter, forbid)", "fa-balance-scale"], ["api:mummyOffense", "An offense against Ma'at", "fa-gavel"]]],
         ["Death and life", [["api:mummyResurrect", "The resurrection", "fa-redo"], ["api:mummyVeil", "The Veil (a witness)", "fa-eye-slash"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:mummy", "Mummy rules", "fa-book"]]],
-        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
     ]
 };
 
@@ -192,7 +201,7 @@ MENUS.orpheus = {
         ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
         ["The spook", [["api:orphHorror", "Use a Horror", "fa-ghost"], ["api:orphVitality", "Vitality (rest, share, tap)", "fa-heartbeat"], ["api:orphProject", "Projection (skimmers)", "fa-bed"], ["api:orphSetup", "Shade, Lament, Horrors", "fa-id-card"]]],
         ["Danger", [["api:orphHarm", "Harm to the spook", "fa-skull"], ["api:orphSpite", "Spite", "fa-angry"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:orpheus", "Orpheus rules", "fa-book"]]],
-        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
     ]
 };
 
@@ -200,7 +209,7 @@ MENUS.orpheus = {
 for (const [k, res] of [
     ["exalted", [["uses:essence", "Essence", "fa-sun"]]]]) {
     MENUS[k] = { sections: [["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"]]], ["Traits", res],
-        ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]] };
+        ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]] };
 }
 
 /*
@@ -216,24 +225,29 @@ export const SHARED_TOOLS = {
     newNight: ["api:newNight", "New night (GM)", "fa-moon"],
     endStory: ["api:endStory", "End of story (GM)", "fa-book"],
     witnesses: ["api:masquerade", "Witnesses (GM)", "fa-mask"],
-    sky: ["api:skyAndSun", "Sky and sun (GM)", "fa-cloud-sun"]
+    sky: ["api:skyAndSun", "Sky and sun (GM)", "fa-cloud-sun"],
+    // B7679-B7684: a manor and its lands, its events and the oaths of fealty (V20 Dark Ages Companion chapter 7)
+    domain: ["api:domainDA", "Domain and manor", "fa-chess-rook"],
+    fealty: ["api:fealty", "Fealty (GM)", "fa-crown"],
+    domainEvent: ["api:domainEvent", "Domain event (GM)", "fa-cloud-showers-heavy"]
 };
 /** Which shared tools each line gets: the living and the bodied get all; spirits, beasts and ghosts get what fits. */
 export const SHARED_FOR = {
-    ghoul: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    mortal: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    hunter: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    lupine: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
-    mage: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
-    mageDA: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
-    fae: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    faeDA: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    ghoul: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mortal: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    hunter: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    lupine: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mage: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mageDA: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    fae: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    faeDA: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
     wraith: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    demon: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    kote: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    exalted: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    ghostDA: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    demon: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    kote: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    exalted: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
     spirit: ["newNight", "endStory", "witnesses", "sky"],
     beast: ["newNight", "endStory", "witnesses", "sky"]
 };
@@ -353,6 +367,7 @@ export const RULES = {
     mortal: "<b>Mortals</b> soak bashing with Stamina; lethal and aggravated damage only with armor, and aggravated damage counts as lethal. (VtDA20 p. 345)",
     beast: "<b>Creatures</b> use the mortal soak rules. Natural weapons (claws, bite, horns) are listed on the sheet as <i>natural</i> weapons; set the Creature profile on any animal for the animal menu.",
     mage: "<b>Mages</b> cannot soak lethal or aggravated damage without armor, protection or magick (Mage 20 p. 334). Coincidental magick: difficulty = highest Sphere + 3. Vulgar without witnesses: +4. Vulgar with witnesses: +5. Use the <i>Cast</i> button; Paradox for vulgar effects is set by the Storyteller.",
+    ghostDA: "<b>Dark Ages ghosts</b> (V20 Dark Ages p. 403) spend Passion as blood for their powers, which are Disciplines and work across the Shroud without manifesting. A point of Passion lets the ghost touch the physical world for a turn. Deathsight shows the hand of death on people and things; Lifesight reads souls as Auspex does. Most of the time the living cannot see a ghost.",
     faeDA: "<b>Dark Ages fae</b> soak lethal damage only in the fae mien. Cold iron does aggravated damage (soakable) and costs a Mists point per wound. A cantrip: Dominion + the trait it names, difficulty 6; −1 each for the Court's Dominion, its hour and its season; never below 4. Unleashing: Mists + Dominion against 5 Unleashing dice (3 for firstborn), Weaving removes them. Echoes: the mortal's Willpower (7) or 5 dice, less oath successes (Dark Ages: Fae pp. 88, 104, 110–122).",
     orpheus: "<b>Spooks</b> (ghosts and projected souls) have no health levels: wounds come off Vitality; a skimmer's come out in the body as bashing. At zero Vitality a Willpower point is spent at once for three; at zero of both the spook dissipates. Three Vitality spent in a turn is felt three blocks off, five draws Spectres from five. Spite at or above the starting Vitality: +1 difficulty (Orpheus pp. 190–193).",
     mummy: "<b>The Reborn</b> soak bashing and lethal with Stamina, never aggravated (save by Hekau); fire is aggravated, no worse. Lethal heals one level faster than a mortal's. Past Incapacitated the khat has five more levels; the resurrection is Willpower + Ba (a permanent Sekhem) or Sekhem + Ba (a permanent Willpower) at 8. A spell: the path + its Trait; Sekhem spent either way (Mummy: The Resurrection pp. 78, 136–138).",
@@ -550,7 +565,7 @@ export function build(ctx) {
             } else {
                 const pu = findAbility(actor, "primalurge");
                 const dice = attr(actor, "stamina") + (pu?.value ?? 0);
-                const rr = await rollPool(dice, Math.min(10, f.diff + fd.mod));
+                const rr = await rollPool(dice, f.diff + fd.mod);
                 rolls.push(rr.roll);
                 body += rollBlock("Stamina + Primal-Urge", rr, [`to ${f.label}: difficulty ${f.diff}`]);
                 if (!rr.successes) body += `<div class="vta-note">Failure: the change does not happen this turn.</div>`;
@@ -597,13 +612,13 @@ export function build(ctx) {
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
     async function menuFor(actor, { recent = [], pinned = [], isGM = !!globalThis.game?.user?.isGM, beginner = false } = {}) {
         const kind = P.detectProfile(actor);
-        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (kind === "kindred" && ctx.isKotE?.(actor)) ? MENUS.kote : (kind === "mortal" && ctx.isOrpheus?.(actor)) ? MENUS.orpheus : (MENUS[kind] ?? MENUS.mortal);
+        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (kind === "wraith" && ctx.isDAGhost?.(actor)) ? MENUS.ghostDA : (kind === "kindred" && ctx.isKotE?.(actor)) ? MENUS.kote : (kind === "mortal" && ctx.isOrpheus?.(actor)) ? MENUS.orpheus : (MENUS[kind] ?? MENUS.mortal);
         const auto = P.detectProfile(actor, { ignoreFlag: true });
         const overridden = kind !== auto;
         const kindBtn = `<button type="button" class="vta-kind" title="Change the actor type"><i class="fas fa-exchange-alt" aria-hidden="true"></i> Type</button>`;
         // 6e: the restyled lines group their buttons by intent, with search, recent uses, hints and keys
         if (TR.LINE_LOOK.includes(kind)) {
-            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : def === MENUS.kote ? "kote" : def === MENUS.orpheus ? "orpheus" : kind, def.sections, { isGM });
+            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : def === MENUS.ghostDA ? "ghostDA" : def === MENUS.kote ? "kote" : def === MENUS.orpheus ? "orpheus" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             // 3.62.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
             const line = x => (beginner ? TR.actionLine(x.spec, x.desc) : "");

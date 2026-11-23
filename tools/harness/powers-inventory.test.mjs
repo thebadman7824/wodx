@@ -15,7 +15,7 @@ const inv = JSON.parse(fs.readFileSync(out, "utf8"));
 const line = l => inv.rows.filter(r => r.line === l);
 
 /** Ceilings: raise none of them. Lower each when a line is built (powers pass, desk order). */
-const MOST_ROLL_ONLY = 0, MOST_NOTHING = 2;
+const MOST_ROLL_ONLY = 0, MOST_NOTHING = 0; // B7062: Chameleon and Conjure were form powers counted twice
 
 test("every line WoDX has powers for is in the list", () => {
   assert.ok(inv.rows.length >= 2100, `only ${inv.rows.length} powers listed`);
@@ -56,7 +56,7 @@ test("Dark Ages powers with no roll and the always-on combat Disciplines take ef
  * power had a card or a keyword, not whether anything applied it. A power that only shows its card now fails here
  * unless it names, from its book page, why there is nothing to apply (story). The few left with no story are pinned
  * by name, so the list can only shrink. */
-const CARD_ONLY_NO_STORY_MOST = 2; // Catechumen and Wreathed in Shadows (Inquisitor), 16 Nov
+const CARD_ONLY_NO_STORY_MOST = 0; // B7065: Catechumen and Wreathed in Shadows (Inquisitor) now apply, 17 Nov
 test("a power that only shows its card is a story power with its reason, or one of the pinned few", () => {
   const bare = inv.rows.filter(r => r.status === "card" && !r.story);
   assert.ok(bare.length <= CARD_ONLY_NO_STORY_MOST,

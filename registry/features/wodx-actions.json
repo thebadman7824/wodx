@@ -1,5 +1,1456 @@
 {
  "module": "wodx-actions",
- "seeded": false,
- "rows": []
+ "seeded": true,
+ "rows": [
+  {
+   "id": "actions.action-window",
+   "name": "The action window, the profile menus and the WoDX card",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/main.js",
+    "modules/wodx-actions/scripts/rules.js",
+    "modules/wodx-actions/scripts/core-rules.js",
+    "modules/wodx-actions/scripts/flavor.js",
+    "modules/wodx-actions/scripts/profiles.js",
+    "modules/wodx-actions/scripts/profile-menus.js",
+    "modules/wodx-actions/scripts/theme-rules.js",
+    "modules/wodx-actions/scripts/aim.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B51, B58"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/main.js:action"
+    },
+    "shown": {
+     "what": "the WoDX menu grouped by intent for the character's line, an action window with the pool, and a card with the roll and what changed"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6e.mjs",
+     "step": "a card: header, roll, what changed with pips"
+    }
+   },
+   "open": [
+    "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "actions.common-checks",
+   "name": "Common checks: noticing, reading a person, keeping one's feet, resisting",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/checks-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 24,
+     "decisions": "Actions 3.13"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/main.js:quickCheck"
+    },
+    "shown": {
+     "what": "the common checks on the menu and the Quick rolls row, each rolling the book's pool with a card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatechecks.mjs",
+     "step": "4 notice"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Abilities chapter; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    24
+   ]
+  },
+  {
+   "id": "actions.odds",
+   "name": "The odds of a roll before it is made",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/odds-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 652,
+     "decisions": "Actions 3.43.0"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/odds-rules.js:odds"
+    },
+    "shown": {
+     "what": "the chance of success and of a botch in the action window, updated as the pool changes"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetable.mjs",
+     "step": "odds in the Action window"
+    },
+    "book": {
+     "none": "arithmetic on the Storyteller System's dice; no rule of its own"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    652
+   ]
+  },
+  {
+   "id": "actions.retry",
+   "name": "Trying again: a failed task tried again is one harder each time",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/retry-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2187,
+     "decisions": "B7121"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/retry-rules.js:afterRoll"
+    },
+    "shown": {
+     "what": "the action window and card name the attempt and its added difficulty"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
+    "book: V20 Dark Ages trying again; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2187
+   ]
+  },
+  {
+   "id": "actions.disciplines",
+   "name": "Using a Discipline from the V20 Dark Ages library",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/kindred.js",
+    "modules/wodx-actions/scripts/kindred-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "Actions 3.2"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/kindred.js:sheetDisciplines"
+    },
+    "shown": {
+     "what": "a Discipline window listing the powers the character's dots reach, the roll, and the power's card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedapowers.mjs",
+     "step": "2. Creatio Ignis 3 works Campfire at difficulty 6"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Disciplines chapter; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "actions.discipline-looks",
+   "name": "Disciplines you can see on the map",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/discipline-looks.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2272,
+     "decisions": "B7641-B7643"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/discipline-looks.js:lookForPower"
+    },
+    "shown": {
+     "what": "a mark on the token and its aura while a power that shows is worked"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedalooks.mjs",
+     "step": "1. Dread Gaze marks the token"
+    },
+    "book": {
+     "none": "show-don't-tell: what the power's own words say others see, drawn on the map"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2272
+   ]
+  },
+  {
+   "id": "actions.frenzy",
+   "name": "Frenzy and Rötschreck checks, by hand and when provoked",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/main.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "Actions 3.2"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/main.js:frenzy"
+    },
+    "shown": {
+     "what": "a frenzy check card with the Self-Control or Instinct roll, and the frenzy status on the token"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthactions.mjs",
+     "step": "9. Destiny rolls a failed frenzy check again"
+    }
+   },
+   "open": [
+    "gatetruthactions step 9 drives a real frenzy check but checks Destiny's reroll of it",
+    "book: V20 Dark Ages frenzy and Rötschreck; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "actions.road-sins",
+   "name": "Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/main.js",
+    "modules/wodx-actions/scripts/kindred-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "Actions 3.2, B7644-B7648"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/main.js:sin"
+    },
+    "shown": {
+     "what": "a sin prompt after an act that breaks the Road, the Conscience roll on a card, and the Road dot leaving the sheet"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedasins.mjs",
+     "step": "1. a lie told through the action window takes a Conscience dot"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Roads and the hierarchy of sins; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "actions.road-faith",
+   "name": "Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/road-faith.js",
+    "modules/wodx-actions/scripts/road-faith-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2294,
+     "decisions": "B7644-B7648"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/road-faith.js:build"
+    },
+    "shown": {
+     "what": "the Road window with the character's rank, Mentor and Moment of Truth; a change of Road rolled from it until it ends"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedaroad.mjs",
+     "step": "4. a change of Road to the Road of the Beast"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Roads chapter and Road of Kings p. 62; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2294,
+    2336
+   ]
+  },
+  {
+   "id": "actions.feeding",
+   "name": "Feeding: what the Kiss does to the vessel, clan and bloodline palates, and the night's hunt",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/feeding-rules.js",
+    "modules/wodx-actions/scripts/hunt-night-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 614,
+     "decisions": "Actions 3.41.0, 3.45.0"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/feeding-rules.js:kissDamage"
+    },
+    "shown": {
+     "what": "the feeding window puts blood back on the sheet and marks the vessel Dazed or hurt"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefeed.mjs",
+     "step": "2 feed on an unlinked mortal"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages feeding and hunting, p. 334; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    614,
+    665
+   ]
+  },
+  {
+   "id": "actions.sunlight",
+   "name": "The sun: where it stands, wall shadows, and damage in sunlight regions",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/sunlight.js",
+    "modules/wodx-actions/scripts/sunlight-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "Actions 3.3"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/sunlight.js:build"
+    },
+    "shown": {
+     "what": "sunlight regions on the map burn a Cainite standing in them, with the marker on the token"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedaysleep.mjs",
+     "step": "6. burned in the sun, the marker shows"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages sunlight damage; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "actions.daysleep",
+   "name": "Day sleep: Cainites sleep while the sun is up and rise at their own hour",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/daysleep.js",
+    "modules/wodx-actions/scripts/daysleep-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1320,
+     "decisions": "B4890-B4899"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/daysleep.js:build"
+    },
+    "shown": {
+     "what": "sleeping tokens marked by day, a player's windows refused while asleep, and the rise at the hour with healing"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedaysleep.mjs",
+     "step": "4. rises at the hour, heals with blood"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages day sleep and Humanity's waking hours; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1320
+   ]
+  },
+  {
+   "id": "actions.social",
+   "name": "With this person: dealing with one NPC face to face",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/social.js",
+    "modules/wodx-actions/scripts/social-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 526,
+     "decisions": "Actions 3.20.0, B6663"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/social.js:build"
+    },
+    "shown": {
+     "what": "the With this person window, a resisted roll, and the NPC's regard moving on a card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesocial.mjs",
+     "step": "6 window"
+    }
+   },
+   "open": [
+    "book: V20 social rolls; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    526
+   ]
+  },
+  {
+   "id": "actions.trade",
+   "name": "Trade with one NPC: buy, sell and barter at the prices of the time and place",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/trade.js",
+    "modules/wodx-actions/scripts/trade-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 595,
+     "decisions": "Actions 3.36.0"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/trade.js:build"
+    },
+    "shown": {
+     "what": "a trade window from With this person with the prices, haggling and the goods moving between sheets"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    595
+   ]
+  },
+  {
+   "id": "actions.witness",
+   "name": "Who an act startles and how far word of it goes",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/witness-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 618,
+     "decisions": "Actions 3.42.0"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/witness-rules.js:reaction"
+    },
+    "shown": {
+     "what": "onlookers' reactions on the card and a breach for the Storyteller when mortals see the supernatural"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    618
+   ]
+  },
+  {
+   "id": "actions.debts-marks",
+   "name": "Debts and oaths, the Blood Hunt, and the marks of the Beast, low Humanity and diablerie",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/debts-marks.js",
+    "modules/wodx-actions/scripts/debts-rules.js",
+    "modules/wodx-actions/scripts/beast-marks-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 953,
+     "decisions": "B3560-B3565"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/debts-marks.js:build"
+    },
+    "shown": {
+     "what": "a Blood Hunt card and its rumour, a broken oath's card, and the Beast's marks on the character"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedebtsmarks.mjs",
+     "step": "a. Blood Hunt"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages the Blood Hunt and diablerie; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    953
+   ]
+  },
+  {
+   "id": "actions.nature",
+   "name": "Nature gives Willpower back when the character acts to it",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/nature-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1103,
+     "decisions": "B3916"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/nature-rules.js:cueFor"
+    },
+    "shown": {
+     "what": "the Nature button on the sheet and a Willpower point back on the card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthsheets.mjs",
+     "step": "3. the Nature button on a plain mortal"
+    }
+   },
+   "open": [
+    "book: V20 Nature and Willpower; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1103
+   ]
+  },
+  {
+   "id": "actions.trait-hooks",
+   "name": "Merits, flaws and what other modules leave on a character reach the dice",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/trait-hooks.js",
+    "modules/wodx-actions/scripts/deeper-rules.js",
+    "modules/wodx-actions/scripts/deeper-hooks.js",
+    "modules/wodx-actions/scripts/power-mods.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 555,
+     "decisions": "B3130-B3133, B6000-B6004"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/trait-hooks.js:traitMods"
+    },
+    "shown": {
+     "what": "the action card names each merit, flaw, ward or blessing that changed the pool or difficulty"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedamerits.mjs",
+     "step": "2. Thirteenth Generation makes a Discipline one harder"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Merits and Flaws; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    555,
+    887,
+    1497
+   ]
+  },
+  {
+   "id": "actions.power-effects",
+   "name": "A power's effect keywords on the effects card, and powers that apply or reach the world themselves",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/power-effects.js",
+    "modules/wodx-actions/scripts/power-keywords.js",
+    "modules/wodx-actions/scripts/power-keywords-lines.js",
+    "modules/wodx-actions/scripts/effects.js",
+    "modules/wodx-actions/scripts/effects-rules.js",
+    "modules/wodx-actions/scripts/acts.js",
+    "modules/wodx-actions/scripts/binds.js",
+    "modules/wodx-actions/scripts/world-effects.js",
+    "modules/wodx-actions/scripts/npc-power-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 553,
+     "decisions": "B781, B783, B3757, B4926, B5780-B5795"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/power-effects.js:powerOutcomes"
+    },
+    "shown": {
+     "what": "the effects card with Apply; applied, the change shows on the target, the token or the town"
+    },
+    "gated": {
+     "gate": "tools/gate/gatepowers.mjs",
+     "step": "6 V20 Discipline library"
+    }
+   },
+   "open": [
+    "book: each power's own page; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    553,
+    558,
+    567,
+    588,
+    1112,
+    1290,
+    1410
+   ]
+  },
+  {
+   "id": "actions.limits-costs",
+   "name": "How often a power may be used, and the costs it pays when it ends",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/limits.js",
+    "modules/wodx-actions/scripts/limit-rules.js",
+    "modules/wodx-actions/scripts/after-costs.js",
+    "modules/wodx-actions/scripts/after-cost-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1290,
+     "decisions": "B4920-B4925"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/limits.js:stateOf"
+    },
+    "shown": {
+     "what": "greyed options in the power windows once a power is used up, and the after-cost card when it ends"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1290
+   ]
+  },
+  {
+   "id": "actions.timed-powers",
+   "name": "Powers that act each turn while they hold",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/turns.js",
+    "modules/wodx-actions/scripts/turn-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1239,
+     "decisions": "B4832-B4834"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/turns.js:onTurn"
+    },
+    "shown": {
+     "what": "a card on each beat of the power while it holds"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1239
+   ]
+  },
+  {
+   "id": "actions.summons",
+   "name": "Summoned beings and the rules every summoning lives by",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/summons.js",
+    "modules/wodx-actions/scripts/summon-rules.js",
+    "modules/wodx-actions/scripts/summon-specs.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1239,
+     "decisions": "B4820-B4829"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/summons.js:specFor"
+    },
+    "shown": {
+     "what": "the summoned being's token on the map with its time left, gone when it ends"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1239
+   ]
+  },
+  {
+   "id": "actions.rituals-paths",
+   "name": "Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/book-rituals.js",
+    "modules/wodx-actions/scripts/path-effects.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 567,
+     "decisions": "B784"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/path-effects.js:pathOutcomes"
+    },
+    "shown": {
+     "what": "a ritual or path power's keywords on the effects card; a Ward counted as armour on a blow's soak"
+    },
+    "gated": {
+     "gate": "tools/gate/gaterituals.mjs",
+     "step": "2b. a Ward is armour on a weapon blow's soak too"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages pp. 275-302; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    553,
+    567
+   ]
+  },
+  {
+   "id": "actions.domain",
+   "name": "Building a domain: the manor's aspects, holdings and fealty",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/domain-da.js",
+    "modules/wodx-actions/scripts/domain-da-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2300,
+     "decisions": "B7679-B7684"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/domain-da.js:build"
+    },
+    "shown": {
+     "what": "the Domain window with the manor's aspects, and the season turn's card for the Storyteller"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedadomain2.mjs",
+     "step": "1. the Domain window saves the manor's aspects"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Companion chapter 7; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2300,
+    2336
+   ]
+  },
+  {
+   "id": "actions.ghosts-da",
+   "name": "The ghosts of V20 Dark Ages: Passion as blood, manifesting",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/ghost-da.js",
+    "modules/wodx-actions/scripts/ghost-da-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2300,
+     "decisions": "B7676"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/ghost-da.js:build"
+    },
+    "shown": {
+     "what": "a Manifest button on a Dark Ages ghost's sheet that spends Passion and sets Strength for the turn"
+    }
+   },
+   "open": [
+    "gated: gatedach8 steps 2 to 4 are direct calls",
+    "book: V20 Dark Ages p. 403; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2300
+   ]
+  },
+  {
+   "id": "actions.spend-time",
+   "name": "A long roll's time moves the clock",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/spend-time.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 680,
+     "decisions": "Actions 3.50.0"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/spend-time.js:spendTime"
+    },
+    "shown": {
+     "what": "with Move the clock ticked, the clock or the character's own time moves by the roll's time"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    680
+   ]
+  },
+  {
+   "id": "actions.inquisitors",
+   "name": "Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/hunter.js",
+    "modules/wodx-actions/scripts/hunter-rules.js",
+    "modules/wodx-actions/scripts/inq-blessings.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B42, B45"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/hunter.js:build"
+    },
+    "shown": {
+     "what": "a Blessing window with the roll and its effect on the card"
+    },
+    "gated": {
+     "gate": "tools/gate/gateinqblessings.mjs",
+     "step": "1. Wreathed in Shadows adds the Flock at once"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Inquisitor chapter five and V20 Dark Ages pp. 392 on (True Faith); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1043
+   ]
+  },
+  {
+   "id": "actions.servant-actions",
+   "name": "The actions that make servants: enchantment, oaths, bonds",
+   "module": "wodx-actions",
+   "core": true,
+   "files": [
+    "modules/wodx-actions/scripts/servant-actions.js",
+    "modules/wodx-actions/scripts/servant-actions-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1353,
+     "decisions": "B5112-B5119"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/servant-actions.js:build"
+    },
+    "shown": {
+     "what": "a servant made through the action window and written on WoDX NPC's servant ledger"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1353
+   ]
+  },
+  {
+   "id": "actions.voice",
+   "name": "The inner voice: the Beast, the Shadow, Rage and the Impulse played by someone",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/voice.js",
+    "modules/wodx-actions/scripts/voice-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B53-B56"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/voice.js:build"
+    },
+    "shown": {
+     "what": "whispers only the character, the voice and the Storyteller see, and proposals to the queue"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6d.mjs",
+     "step": "a whisper reaches only the character, the voice and the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ],
+   "parked": "Voices shelved by Ben's pick on the 17 November weekly review (st2, B7134)"
+  },
+  {
+   "id": "actions.reckoning",
+   "name": "The imbued of Hunter: The Reckoning (1999 on)",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/reckoning.js",
+    "modules/wodx-actions/scripts/reckoning-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B42"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/reckoning.js:build"
+    },
+    "shown": {
+     "what": "edges in the action window with Conviction spent and risked on the card"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "actions.garou",
+   "name": "Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/garou.js",
+    "modules/wodx-actions/scripts/garou-rules.js",
+    "modules/wodx-actions/scripts/garou-testpack.js",
+    "modules/wodx-actions/scripts/totem-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B39, B41, B7082-B7087"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/garou.js:totemOf"
+    },
+    "shown": {
+     "what": "the form changing through the system's shapes, Rage and Gnosis on the sheet, Gift cards"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6b.mjs",
+     "step": "change form"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Werewolf and W20; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1848
+   ]
+  },
+  {
+   "id": "actions.fomor-charms",
+   "name": "Fomor powers and spirit Charms",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/fomor.js",
+    "modules/wodx-actions/scripts/fomor-powers.js",
+    "modules/wodx-actions/scripts/charms.js",
+    "modules/wodx-actions/scripts/spirit-charms.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1329,
+     "decisions": "B5162, B5610-B5619, B5650-B5659"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/fomor.js:fomorPowersOf"
+    },
+    "shown": {
+     "what": "the fomor's and spirit's powers in their action windows, with cards"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
+    "book: W20 pp. 366-368 and 430-439; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1329,
+    1360,
+    1377
+   ]
+  },
+  {
+   "id": "actions.mage-da",
+   "name": "Dark Ages mages: Foundation and Pillars, the Grimoire, and Consensus by era",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/mage-da.js",
+    "modules/wodx-actions/scripts/mage-da-rules.js",
+    "modules/wodx-actions/scripts/mage-da-grimoire.js",
+    "modules/wodx-actions/scripts/mage-da-effects.js",
+    "modules/wodx-actions/scripts/consensus-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B71"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/mage-da.js:build"
+    },
+    "shown": {
+     "what": "the Cast window with the Pillars, the rote's effect on the card"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6n.mjs",
+     "step": "a Grimoire rote: Revoking the Gift of Adam casts with its Grimoire page"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Mage and its Grimoire; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    66,
+    117,
+    553
+   ]
+  },
+  {
+   "id": "actions.m20",
+   "name": "Mages of the later eras: Arete, Spheres, Paradox and the Quiet",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/m20.js",
+    "modules/wodx-actions/scripts/m20-rules.js",
+    "modules/wodx-actions/scripts/quiet.js",
+    "modules/wodx-actions/scripts/quiet-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B3550, B3551"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/m20.js:build"
+    },
+    "shown": {
+     "what": "the Cast window, the Paradox pool on the sheet, and the Quiet's marks"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6m.mjs",
+     "step": "countermagick: Arete at 7"
+    }
+   },
+   "open": [
+    "book: Mage 20th; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    956
+   ]
+  },
+  {
+   "id": "actions.fae-da",
+   "name": "Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/fae-da.js",
+    "modules/wodx-actions/scripts/fae-da-rules.js",
+    "modules/wodx-actions/scripts/fae-da-cantrips.js",
+    "modules/wodx-actions/scripts/fae-treasures.js",
+    "modules/wodx-actions/scripts/treasures.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B72, B6560-B6566"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/fae-da.js:build"
+    },
+    "shown": {
+     "what": "the cantrip window and its card; cold iron's harm and the Treasure's use"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6g.mjs",
+     "step": "cold iron: an aggravated level through WoDX Combat and a Mists point"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Fae; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1668
+   ]
+  },
+  {
+   "id": "actions.c20",
+   "name": "Changelings of the later eras: Arts, Realms, Nightmare, Imbalance and Banality",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/c20.js",
+    "modules/wodx-actions/scripts/c20-rules.js",
+    "modules/wodx-actions/scripts/c20-arts.js",
+    "modules/wodx-actions/scripts/banal-life.js",
+    "modules/wodx-actions/scripts/banal-life-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B73, B3555, B3556"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/c20.js:build"
+    },
+    "shown": {
+     "what": "the cantrip window with the bunk, Nightmare on the sheet, Banality at the scene's end"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6h.mjs",
+     "step": "Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns"
+    }
+   },
+   "open": [
+    "book: Changeling: The Dreaming 20th; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    956,
+    1010
+   ]
+  },
+  {
+   "id": "actions.wraith",
+   "name": "The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/wraith.js",
+    "modules/wodx-actions/scripts/wraith-rules.js",
+    "modules/wodx-actions/scripts/soulforge.js",
+    "modules/wodx-actions/scripts/soulforge-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B43, B44, B3553, B3554"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/wraith.js:library"
+    },
+    "shown": {
+     "what": "the Arcanos window, Pathos from Passions, Corpus healing on the sheet, soulforged items"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6c.mjs",
+     "step": "use an Arcanos"
+    }
+   },
+   "open": [
+    "book: Wraith: The Oblivion 20th; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    956
+   ]
+  },
+  {
+   "id": "actions.demon",
+   "name": "Demon: The Fallen: lores, evocations, Faith and Torment, the apocalyptic form",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/demon.js",
+    "modules/wodx-actions/scripts/demon-rules.js",
+    "modules/wodx-actions/scripts/demon-evocations.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B76"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/demon.js:build"
+    },
+    "shown": {
+     "what": "the evocation window and card, Faith and Torment on the sheet, the apocalyptic form's look"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6i.mjs",
+     "step": "choosing the dark effect costs a temporary Torment point"
+    }
+   },
+   "open": [
+    "book: Demon: The Fallen pp. 172-216; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1010
+   ]
+  },
+  {
+   "id": "actions.kote",
+   "name": "The Kuei-jin: Chi, Dharma, the P'o and their Disciplines",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/kote.js",
+    "modules/wodx-actions/scripts/kote-rules.js",
+    "modules/wodx-actions/scripts/kote-arts.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B77"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/kote.js:build"
+    },
+    "shown": {
+     "what": "Chi spent per turn under the Dharma's limit, and the Art's card"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6j.mjs",
+     "step": "Dharma 3 allows one Chi a turn"
+    }
+   },
+   "open": [
+    "book: Kindred of the East, Revised, pp. 101-126; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1031
+   ]
+  },
+  {
+   "id": "actions.mummy",
+   "name": "The Reborn: Balance, Sekhem and Hekau",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/mummy.js",
+    "modules/wodx-actions/scripts/mummy-rules.js",
+    "modules/wodx-actions/scripts/mummy-hekau.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B78"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/mummy.js:build"
+    },
+    "shown": {
+     "what": "the spell window with Sekhem spent, and the offense against Ma'at kept for the judges"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6k.mjs",
+     "step": "Forbiddance: Balance against Willpower at 6"
+    }
+   },
+   "open": [
+    "book: Mummy: The Resurrection pp. 81-131; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1015
+   ]
+  },
+  {
+   "id": "actions.orpheus",
+   "name": "Orpheus: Vitality, Spite and the Horrors",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/orpheus.js",
+    "modules/wodx-actions/scripts/orpheus-rules.js",
+    "modules/wodx-actions/scripts/orpheus-horrors.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B79"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/orpheus.js:build"
+    },
+    "shown": {
+     "what": "the Horror window with Vitality spent and the ripple felt nearby on the card"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6l.mjs",
+     "step": "a Willpower point for three Vitality"
+    }
+   },
+   "open": [
+    "book: Orpheus pp. 99-115; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1023
+   ]
+  },
+  {
+   "id": "actions.infernal-pacts",
+   "name": "Demonic pacts, infernal investments and the Supplicium",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/infernal.js",
+    "modules/wodx-actions/scripts/infernal-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7696"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/infernal.js:build"
+    },
+    "shown": {
+     "what": "the Infernal pacts window with each pact and what it has left; purchases on the sheet, a Breathe flame action, and a Supplicium card to the Storyteller"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedainfernal.mjs",
+     "step": "1. the window records a pact and buys Armor"
+    }
+   },
+   "open": [
+    "book: Dark Ages Companion (2002) chapter 7; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
+  }
+ ]
 }

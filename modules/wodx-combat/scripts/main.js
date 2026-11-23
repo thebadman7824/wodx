@@ -37,6 +37,8 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as PW from "./powder-rules.js";
 import * as MTD from "./mounted.js";
 import * as VH from "./vehicles.js";
+import * as SW from "./swarm.js";
+import * as SWR from "./swarm-rules.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
@@ -74,6 +76,10 @@ function registerSettings() {
     s("classicManeuvers", "Offer World of Darkness: Combat maneuvers",
         "Add Heavy/Quick Strike, Heavy/Quick Kick and Grapple from the 1996 supplement to the maneuver list (optional rules).",
         Boolean, false);
+    // B7694
+    s("companion2002Maneuvers", "Offer the Dark Ages Companion (2002) maneuvers",
+        "Add Choke Hold, Gobbet Rend, Joint Break, Neck Snap and Tendon Slice to the maneuver list, each with its prerequisites and what it leaves (optional rules in that book).",
+        Boolean, true);
     s("showKindMenus", "Show actor-type options",
         "Show the attacker/defender type selectors and the type-specific options (Rage, Glamour, Pathos, banes...) in the attack dialog.",
         Boolean, true);
@@ -324,9 +330,11 @@ async function rollD10(n) {
 
 async function rollPool(dice, difficulty, opts = {}) {
     const diff = R.clampDifficulty(difficulty);
+    // B7120: rolled at 10, each point past it takes a success (M20 pdf 504)
+    const over = opts.over ?? R.overTen(difficulty);
     const { roll, faces } = await rollD10(dice);
-    const res = R.countSuccesses(faces, diff, opts);
-    return { ...res, roll, faces, dice, difficulty: diff };
+    const res = R.countSuccesses(faces, diff, { ...opts, over });
+    return { ...res, roll, faces, dice, difficulty: diff, wanted: diff + (res.over || 0) };
 }
 
 function diceHtml(faces, diff, specialty = false) {
@@ -554,12 +562,14 @@ export function corpusCondition(d, max) {
     return { key: "ok", label: "Corporeal" };
 }
 
-export async function applyDamage(actor, type, levels, { status = true } = {}) {
+export async function applyDamage(actor, type, levels, { status = true, swarmArea = false } = {}) {
     if (!actor) throw new Error("No actor");
     if (!actor.isOwner) {
         requestGM({ action: "applyDamage", uuid: actor.uuid, type, levels });
         return { requested: true };
     }
+    // B7677: a swarm counts its harm against its chart health, not a health track (V20 Dark Ages p. 399)
+    if (SWR.isSwarm(actor)) return SW.harm(actor, levels, { area: swarmArea });
     const ct = corpusTrack(actor);
     if (ct) {
         const before = { ...ct.damage };
@@ -687,7 +697,8 @@ function kindOpts(sel, autoLabel) {
 }
 
 function maneuverTable() {
-    return setting("classicManeuvers") ? { ...R.MANEUVERS, ...R.CLASSIC } : R.MANEUVERS;
+    const t = setting("classicManeuvers") ? { ...R.MANEUVERS, ...R.CLASSIC } : R.MANEUVERS;
+    return setting("companion2002Maneuvers") ? { ...t, ...R.DA2002 } : t;
 }
 
 function attackDialogHtml(attacker, target, weapons, selWeapon) {
@@ -977,7 +988,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const gripWhy = [
         R.clinchLimit(attacker.getFlag?.(MOD, "clinch"), game.combat, target?.uuid ?? null, w?.id),
         w?.id === "unarmed:bite" && !w.natural && !R.biteReady(target?.getFlag?.(MOD, "grip"), attacker.uuid, game.combat) ? "a bite needs a clinch, hold or tackle on this target first" : "",
-        mkey === "riposte" && game.combat?.started && !R.riposteReady(recentCards().filter(d => AU.countThisRound([d], roundKey(), () => true)), attacker.uuid) ? "a riposte needs a successful defense earlier this turn" : ""
+        mkey === "riposte" && game.combat?.started && !R.riposteReady(recentCards().filter(d => AU.countThisRound([d], roundKey(), () => true)), attacker.uuid) ? "a riposte needs a successful defense earlier this turn" : "",
+        // B7694: the Dark Ages Companion (2002) maneuvers' prerequisites
+        R.da2002Why(mkey, { brawl: ability(attacker, "brawl").value, melee: ability(attacker, "melee").value, strength: attr(attacker, "strength"),
+            dexterity: attr(attacker, "dexterity"), potence: discipline(attacker, "Potence"), protean: discipline(attacker, "Protean") }, w)
     ].filter(Boolean);
     if (gripWhy.length) {
         if (!game.user.isGM) throw new Error(`${attacker.name}: ${gripWhy[0]}.`);
@@ -1046,7 +1060,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice, target);
     const fitNow = fitPlan(attacker, w, fd);
     if (fitNow.notes.length) log.push(esc(`${fitNow.notes.join(". ")}.`));
-    if (pool.difficulty > 10) log.push(`<b>Difficulty ${pool.difficulty}:</b> above 10: the action is impossible (VtDA20 p. 323). Rolled at 10.`);
+    // B7120: the old note cited VtDA20 p. 323, which is the trying-again rule; past 10 the roll needs more successes
+    if (pool.difficulty > 10) log.push(`<b>Difficulty ${pool.difficulty}:</b> rolled at 10; ${esc(R.overTenText(R.overTen(pool.difficulty)))} (M20 pdf 504, V20 pdf 166).`);
 
     let bloodSpent = (fd.potBlood ? 1 : 0) + (fd.celMulti ? 1 : 0) + (fd.extraBlood || 0);
     const bloodBoost = boostSpend.find(x => x[0] === "blood")?.[1] ?? 0;
@@ -1163,7 +1178,11 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
             soak.pool = sp;
             if (soak.roll) rolls.push(soak.roll);
             const left = R.damageAfterSoak(dmg.successes, soak.successes, dmgType, profile, { elder: isElder(target) });
-            if (minLevels && left.levels < minLevels) { left.levels = minLevels; log.push(`A ${sb.metal} hit does at least ${minLevels} level.`); }
+            // B7672: an immunity stops its harm outright (a demon's Immunity to Fire, V20 Dark Ages p. 402)
+            if (sp.immune) { left.levels = 0; log.push(`${esc(target.name)}: ${esc(sp.immune)}, no harm.`); }
+            // B7677: a swarm does not soak, and a weapon does it at most one level a turn (V20 Dark Ages p. 399)
+            else if (SWR.isSwarm(target)) { left.levels = SWR.harmToSwarm(dmg.successes, { takenThisTurn: SW.takenThisTurn(target) }); left.halved = false; log.push(`${esc(target.name)} is a swarm: no soak, and a weapon does at most one level a turn (V20 Dark Ages p. 399).`); }
+            else if (minLevels && left.levels < minLevels) { left.levels = minLevels; log.push(`A ${sb.metal} hit does at least ${minLevels} level.`); }
             outcome = { levels: left.levels, halved: left.halved, type: dmgType };
             const dz = dazedThreshold(target, tKind);
             if (left.levels > dz.threshold) {
@@ -1254,7 +1273,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const grips = [];
     if (target && hit && !atk.botch) {
         const now = game.combat?.started ? { combat: game.combat.id, round: game.combat.round } : { combat: null, round: null };
-        const kind = mkey === "hold" ? "hold" : mkey === "c_grapple" ? "grapple" : w?.id === "unarmed:clinch" ? "clinch" : mkey === "tackle" ? "tackle" : null;
+        const kind = mkey === "hold" ? "hold" : mkey === "choke" ? "choke" : mkey === "c_grapple" ? "grapple" : w?.id === "unarmed:clinch" ? "clinch" : mkey === "tackle" ? "tackle" : null;
         if (kind) grips.push([target, "grip", { by: attacker.uuid, byName: attacker.name, kind, ...now }]);
         if (kind === "clinch") {
             grips.push([target, "clinch", { with: attacker.uuid, combat: now.combat }], [attacker, "clinch", { with: target.uuid, combat: now.combat }]);
@@ -1323,6 +1342,11 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
         if (offer && target.isOwner) await BD.offerMaim(target, offer, { attacker });
         else if (offer) requestGM({ action: "maim", uuid: target.uuid, offer, by: attacker?.name ?? "" });
+    }
+    // B7694: what a Dark Ages Companion (2002) maneuver leaves
+    if (target && R.DA2002[mkey]) {
+        const fx = R.da2002After(mkey, { hit: !!hit && !atk.botch, levels: outcome?.levels ?? 0, profile, aimed: String(fd.aimType ?? fd.targeting ?? "") });
+        if (fx.length) await da2002Effects(target, fx, attacker).catch(e => console.warn(`${MOD} | 2002 maneuver`, e));
     }
     return { attack: atk, defense: def, damage: dmg, soak, outcome, counter, message: msg };
 }
@@ -1492,11 +1516,13 @@ function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice),
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice)
+            + (fd.maneuver === "necksnap" ? attr(target, "strength") : 0), // B7694: Strength soaks a Neck Snap too (DAC 2002 p. 36)
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
     if (pw.parts?.length && Array.isArray(sp.notes)) sp.notes.push(...pw.parts);
+    if (pw.immune) sp.immune = pw.immune;
     return sp;
 }
 
@@ -1632,8 +1658,8 @@ function planDefense(target, type, fd, w, maneuver) {
         try { m = MTD.mountDodgeOf(target, { ranged: !!w.ranged, used: mountDodgedThisRound(target), celerity: false }); } catch (e) { m = null; }
         if (!m) return { type, valid: false, invalid: "No mount under the rider to dodge for them: no defense.", expected: 0 };
         if (!m.valid) return { type, valid: false, invalid: `${cap(m.why)}: no defense.`, expected: 0 };
-        const diff = Math.min(10, m.diff + (maneuver.defDiff || 0));
-        return { type, valid: true, dice: m.dice, diff, abKey: "athletics", notes: m.notes, weapon: null, abilityName: m.abilityName, expected: R.expectedSuccesses(m.dice, diff) };
+        const want = m.diff + (maneuver.defDiff || 0), diff = Math.min(10, want);
+        return { type, valid: true, dice: m.dice, diff, over: R.overTen(want), abKey: "athletics", notes: m.notes, weapon: null, abilityName: m.abilityName, expected: R.expectedSuccesses(m.dice, diff) };
     }
     // B4794: at the wheel, the vehicle swerves; anyone else sat inside does not dodge
     if (type === "swerve") {
@@ -1641,8 +1667,8 @@ function planDefense(target, type, fd, w, maneuver) {
         try { s = VH.swerveOf(target, { ranged: !!w.ranged, wounds: woundPenalty(target) }); } catch (e) { s = null; }
         if (!s) return { type, valid: false, invalid: "Not at the wheel of a vehicle: no swerve.", expected: 0 };
         if (!s.valid) return { type, valid: false, invalid: `Cannot swerve (${s.why}): no defense.`, expected: 0 };
-        const diff = Math.min(10, s.diff + (fd.defDiff || 0) + (maneuver.defDiff || 0));
-        return { type, valid: true, dice: Math.max(0, s.dice + (fd.defDice || 0) - num(fd.defIndex)), diff, abKey: "drive", notes: s.notes, weapon: null, abilityName: s.abilityName, expected: R.expectedSuccesses(s.dice, diff) };
+        const want = s.diff + (fd.defDiff || 0) + (maneuver.defDiff || 0), diff = Math.min(10, want);
+        return { type, valid: true, dice: Math.max(0, s.dice + (fd.defDice || 0) - num(fd.defIndex)), diff, over: R.overTen(want), abKey: "drive", notes: s.notes, weapon: null, abilityName: s.abilityName, expected: R.expectedSuccesses(s.dice, diff) };
     }
     if (type === "dodge") {
         let seat = null;
@@ -1691,7 +1717,9 @@ function planDefense(target, type, fd, w, maneuver) {
         if (!weapon) notes.push("no melee weapon on the sheet");
     }
     const abLabel = game.i18n.localize(target.system?.abilities?.[abKey]?.label || "") || ab.name || abKey;
-    return { type, valid: true, dice, diff: Math.min(10, diff), abKey, notes, weapon,
+    // B7120: held at 10 for the dice; each point past it needs one more success
+    if (diff > 10) notes.push(R.overTenText(R.overTen(diff), diff));
+    return { type, valid: true, dice, diff: Math.min(10, diff), over: R.overTen(diff), abKey, notes, weapon,
         abilityName: (abLabel.startsWith("wod.") || abLabel === abKey) ? cap(abKey) : abLabel,
         expected: R.expectedSuccesses(dice, Math.min(10, diff)) };
 }
@@ -1720,7 +1748,7 @@ export function bestDefense(target, fd, w, maneuver = {}) {
 async function rollDefense(target, fd, w, maneuver) {
     const p = planDefense(target, fd.defense, fd, w, maneuver);
     if (!p.valid) return { invalid: p.invalid };
-    const r = await rollPool(p.dice, p.diff);
+    const r = await rollPool(p.dice, p.diff, { over: p.over || 0 });
     return { ...r, type: p.type, abilityName: p.abilityName, notes: p.notes, weapon: p.weapon };
 }
 
@@ -1919,8 +1947,8 @@ async function applyFromMessage(msg, which = "main") {
             ui.notifications.info(`Damage to ${actor.name} sent to the GM.`);
         return;
     }
-    const r = await applyDamage(actor, src.type, src.levels);
-    if (!isCounter) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
+    const r = await applyDamage(actor, src.type, src.levels, { swarmArea: !isCounter && !!data.swarmArea });
+    if (!isCounter && !r.swarm) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
     // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
     const applied = { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
         fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id };
@@ -2033,6 +2061,12 @@ export async function soakAndApply(tok, fd) {
         } else left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
     }
     if (fd.chimerical && kind !== "fae") left = { levels: 0, halved: false };
+    // B7672: an immunity stops its harm outright (a demon's Immunity to Fire, V20 Dark Ages p. 402)
+    const immune = powerModsOf(actor, { soak: true, harm: { type, of: fd.of ?? (fd.fireSun ? "fire" : ""), fireSun: !!fd.fireSun, bane } }).immune;
+    if (immune) { left = { levels: 0, halved: false }; (sp?.notes ?? []).push(`${immune}: no harm`); }
+    // B7677: a swarm takes fire and other area harm in full and a weapon's at most one level a turn, with no soak (V20 Dark Ages p. 399)
+    const swarmArea = SWR.isSwarm(actor) ? (fd.area ?? (!!fd.fireSun || fd.of === "fire")) : false;
+    if (SWR.isSwarm(actor)) { soak = null; left = { levels: SWR.harmToSwarm(dmgLevels, { area: swarmArea, takenThisTurn: SW.takenThisTurn(actor) }), halved: false }; }
     // Damage from one attack, entered by hand, dazes the same way (V20 Dark Ages p. 348)
     const dz = dazedThreshold(actor, kind);
     const dazed = left.levels > dz.threshold;
@@ -2041,11 +2075,12 @@ export async function soakAndApply(tok, fd) {
     else html += `<div class="vtc-sec"><b>Damage</b> ${dmgLevels} ${type} levels</div>`;
     if (soak) html += `<div class="vtc-sec"><b>Soak</b> (${profileLabel(profile)}): ${sp.dice} dice${sp.autoSoak ? ` + ${sp.autoSoak} automatic` : ""}${soakDiff !== 6 ? `, diff ${soakDiff}` : ""}<div class="vtc-parts">${sp.notes.join(" · ")}</div>${diceHtml(soak.faces, soakDiff)}<div class="vtc-res">${soak.successes} soaked${left.halved ? " · bashing halved" : ""}</div></div>`;
     html += `<div class="vtc-big ${left.levels ? "hit" : ""}">${left.levels ? `${left.levels} ${type}` : "No damage"}</div>`;
+    if (immune) html += `<div class="vtc-note">${esc(actor.name)}: ${esc(immune)}, the fire does no harm (V20 Dark Ages p. 402).</div>`;
     if (dazed) html += `<div class="vtc-note"><b>Dazed:</b> ${left.levels} levels after soak is more than ${dz.label} (${dz.threshold}): ${esc(actor.name)} spends the next turn shaking it off (V20 Dark Ages p. 348).</div>`;
     if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : "; apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
     if (left.levels) html += `<div class="vtc-pending">${setting("autoApply") ? "Applying…" : ""}<button type="button" class="vtc-apply" data-which="main">Apply ${left.levels} ${type} to ${actor.name}</button></div>`;
     html += `</div>`;
-    const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
+    const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun, swarmArea };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
     // B5650: a power whose harm the book applies outright (a spirit's Blast, a fomor's splash) asks for it with apply: true
     if ((setting("autoApply") || fd.apply) && left.levels) await applyFromMessage(msg, "main");
@@ -2082,7 +2117,8 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         if (a.getFlag?.(MOD, "stoodUp") && R.stoodPenalty(a.getFlag(MOD, "stoodUp"), combat)) await a.unsetFlag(MOD, "stoodUp");
         const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood
             + powerModsOf(a, { initiative: true }).dice; // B6004: an Initiative Boost from a power
-        const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
+        // B7677: a swarm acts on the chart's Initiative, not a roll (V20 Dark Ages p. 399)
+        const roll = SWR.isSwarm(a) ? new Roll(String(SWR.specOf(a)?.init ?? 1)) : new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         rolls.push(roll);
         // Ties go to the higher rating (Dexterity + Wits), encoded as decimals.
@@ -2211,8 +2247,10 @@ Hooks.once("init", () => {
     const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
-    const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.47.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    SW.init({ rollPool, soakAndApply, markFollow, attr, ability });
+    SW.hooks();
+    const api = { swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.50.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;
@@ -2435,14 +2473,16 @@ export async function breakFree(actor, combat = game.combat) {
     };
     // a holder who is gone, down or out of the fight holds nobody
     if (!holder || cannotActWhy(holder) || chronicle()?.conditions?.hasCondition?.(holder, "incapacitated")) { await free(); return { free: true, line: `${actor.name} slips free: ${grip.byName ?? "the holder"} no longer holds on.` }; }
-    const pool = a => Math.max(0, attr(a, "strength") + ability(a, "brawl").value + woundPenalty(a));
+    // B7694: a choke is fought with Strength alone (DAC 2002 p. 35)
+    const pool = a => Math.max(0, attr(a, "strength") + (grip.kind === "choke" ? 0 : ability(a, "brawl").value) + woundPenalty(a));
     const rv = await rollPool(pool(actor), 6), rh = await rollPool(pool(holder), 6);
     const out = R.breaksFree(rv.botch ? 0 : rv.successes, rh.botch ? 0 : rh.successes);
     if (out) await free();
-    const what = { hold: "the hold", grapple: "the grapple", clinch: "the clinch" }[grip.kind];
-    const line = out ? `${actor.name} breaks free of ${what}.` : `${actor.name} stays in ${what} and can take no other physical action this turn.`;
+    const what = { hold: "the hold", grapple: "the grapple", clinch: "the clinch", choke: "the choke hold" }[grip.kind];
+    let line = out ? `${actor.name} breaks free of ${what}.` : `${actor.name} stays in ${what} and can take no other physical action this turn.`;
+    if (!out && grip.kind === "choke") line += ` ${await chokeTick(actor, grip, combat)}`;
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [rv.roll, rh.roll].filter(Boolean),
-        content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>Strength + Brawl, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
+        content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>${grip.kind === "choke" ? "Strength" : "Strength + Brawl"}, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
     return { free: out, line };
 }
 Hooks.on("updateCombat", (combat, changed) => {
@@ -2710,7 +2750,7 @@ export function computeHints(attacker, target, fdIn = {}, tokens = {}) {
     const table = maneuverTable();
     let best = null;
     for (const [k, m] of Object.entries(table)) {
-        if (AU.SUGGEST_SKIP.has(k) || m.noDamage) continue;
+        if (AU.SUGGEST_SKIP.has(k) || m.noDamage || R.DA2002[k]) continue; // B7694: the 2002 moves have prerequisites and costs of their own
         const p = planChoice(attacker, target, { ...fd, maneuver: k }, fd.weapon, tokens);
         if (p && (!best || p.expectedLevels > best.p.expectedLevels)) best = { k, m, p };
     }
@@ -3014,4 +3054,44 @@ async function markDazed(actor) {
     // In a fight Dazed lasts the next turn; outside one there are no turns, so it lasts until the scene ends
     const duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
     await api.applyTimed(actor, { name: "Dazed", condition: "dazed", key: "wodx-dazed", duration, source: "V20 Dark Ages p. 348" });
+}
+
+/* ---------- B7694: the Dark Ages Companion (2002) maneuvers ---------- */
+async function da2002Effects(target, fx, attacker) {
+    if (!target.isOwner && !game.user.isGM) return;
+    const lines = [];
+    for (const f of fx) {
+        if (f.kind === "blood") {
+            const now = blood(target);
+            if (now > 0) { await target.update({ "system.advantages.bloodpool.temporary": Math.max(0, now - f.points) }); lines.push(`${f.points} blood point torn away (${now} → ${now - f.points}).`); }
+            else lines.push("No blood left to tear away.");
+        } else if (f.kind === "cripple" || f.kind === "tendon") {
+            await target.createEmbeddedDocuments("ActiveEffect", [{ name: `Crippled: ${f.label.toLowerCase()}`, img: "icons/svg/bones.svg",
+                description: f.kind === "tendon" ? "Tendon cut (Dark Ages Companion 2002 p. 34): a wrist's hand holds no weapon; an ankle cuts the move to a quarter (a beast's to a half). For life, unless blood or magic heals it."
+                    : "Limb broken (Dark Ages Companion 2002 p. 36): useless until the damage heals.",
+                flags: { [MOD]: { crippled: f.part, da2002: f.kind } } }]);
+            lines.push(f.kind === "tendon" ? `The ${f.label.toLowerCase().replace(" (tendon cut)", "")} tendon is cut.` : "The limb breaks: useless until it heals.");
+        } else if (f.kind === "neck") {
+            if (f.how === "dies") { await killOutright(target); lines.push("The neck breaks: death."); }
+            else if (f.how === "paralysed") { await chronicle()?.conditions?.setCondition?.(target, "immobilized", true); lines.push("The neck breaks: paralysed until the damage is healed."); }
+            else { await chronicle()?.conditions?.setCondition?.(target, "incapacitated", true); lines.push("The neck breaks: Incapacitated, healing from there as usual."); }
+        }
+    }
+    if (lines.length) await ChatMessage.create({ speaker: { alias: "WoDX Combat" }, content: `<div class="vtc-card"><p><b>${esc(target.name)}</b>${attacker ? ` (by ${esc(attacker.name)})` : ""}: ${lines.map(esc).join(" ")}</p></div>` });
+}
+/** B7694: a death that is no wound's worsening: the track filled with lethal, any aggravated kept. */
+async function killOutright(actor) {
+    const t = healthTrack(actor), agg = Math.min(t.max, num(t.damage?.aggravated));
+    await setDamage(actor, { bashing: 0, lethal: t.max - agg, aggravated: agg });
+    try { await setStatus(actor, "dead"); } catch (e) { /* no status */ }
+}
+async function chokeTick(actor, grip, combat) {
+    const vampire = P.detectProfile(actor) === "vampire";
+    const incap = !!chronicle()?.conditions?.hasCondition?.(actor, "incapacitated") || actor.statuses?.has?.("unconscious");
+    const t = R.chokeTurn({ round: combat?.round ?? 0, startRound: grip.round ?? 0, incapacitated: incap, incapTurns: grip.incapTurns ?? 0, stamina: attr(actor, "stamina"), vampire });
+    if (t.incapTurns !== (grip.incapTurns ?? 0)) await actor.setFlag(MOD, "grip", { ...grip, incapTurns: t.incapTurns });
+    if (vampire) return "A Cainite needs no breath: only silenced.";
+    if (t.dies) { await killOutright(actor); return "Held past their Stamina while Incapacitated: they die."; }
+    if (t.levels) { await applyDamage(actor, "bashing", t.levels); return "A health level lost to the choke, not soaked (it heals at one an hour)."; }
+    return incap ? `Incapacitated in the choke: ${Math.max(0, attr(actor, "stamina") - t.incapTurns)} turn(s) more and they die.` : "No harm yet: the first turn only silences.";
 }

@@ -148,7 +148,9 @@ function main() {
   }
   if ( !c ) { console.error("Could not claim a block after 6 tries; try again in a minute."); process.exit(1); }
   console.log(`${c.again ? "Already claimed" : "Claimed"}: ${label(c)} for ${c.feature}`);
-  console.log(`Write the decisions in changes/decisions/B${c.lo}.md (block: ${label(c)}); see changes/README.md.`);
+  console.log(`Write the decisions in changes/decisions/B${c.lo}.md; see changes/README.md. Its front matter starts:`);
+  console.log(`---\nblock: ${label(c)}\nthread: ${c.thread}\nfeature: ${c.feature}\nmodules: <modules>\n---`);
+  console.log("CI fails a block with no thread: line, or numbers outside it; a run that reads the registry also fails one claimed by another thread (B7067).");
 }
 
 if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url) ) main();

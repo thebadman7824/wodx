@@ -1,0 +1,573 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "mountain-trail",
+ "name": "The Mountain Trail",
+ "chronicle": "rothenstein",
+ "tier": 2,
+ "cells": [
+  58,
+  50
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/the-mountain-trail/the-mountain-trail.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    42.0,
+    28.0,
+    52.0,
+    28.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    8.0,
+    19.0,
+    14.0,
+    19.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    14.0,
+    8.0,
+    19.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    35.6,
+    41.0,
+    35.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    30.0,
+    41.0,
+    35.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    28.0,
+    52.0,
+    38.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    30.0,
+    26.0,
+    36.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    30.0,
+    34.0,
+    32.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    14.0,
+    14.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    17.0,
+    14.0,
+    19.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    0.0,
+    24.6,
+    6.0,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    38.0,
+    42.0,
+    31.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    34.0,
+    30.0,
+    41.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    38.0,
+    42.0,
+    38.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.0,
+    22.0,
+    46.0,
+    22.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.0,
+    22.6,
+    58.0,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    14.0,
+    14.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    23.0,
+    12.0,
+    25.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    33.3,
+    34.0,
+    35.6
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    14.0,
+    16.0,
+    14.0,
+    17.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    34.0,
+    32.3,
+    34.0,
+    33.3
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "The Herdsman's Shelter",
+   "rect": [
+    33.4,
+    29.4,
+    8.2,
+    6.8
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "The Penitent's Hermitage (own plan: in-anselm)",
+   "rect": [
+    7.4,
+    13.4,
+    7.2,
+    6.2
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [
+  {
+   "id": "sheepfold",
+   "label": "Sheepfold",
+   "rect": [
+    43,
+    28,
+    10,
+    10
+   ],
+   "use": "pen"
+  }
+ ],
+ "slots": [
+  {
+   "id": "open-hearth-on-its-slab-b01",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b01)",
+   "rect": [
+    37.0,
+    32.3,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-b01",
+   "obj": "cask",
+   "label": "Cask (b01)",
+   "rect": [
+    36.419,
+    29.9,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-penitent-s-hermitage",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Penitent's Hermitage)",
+   "rect": [
+    10.5,
+    16.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "water-trough",
+   "obj": "trough",
+   "label": "Water trough",
+   "rect": [
+    47.4,
+    36.8,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "wayside-cross-by-the-hermitage",
+   "obj": "shrine-wayside",
+   "label": "Wayside cross by the hermitage",
+   "rect": [
+    16.55,
+    13.05,
+    0.9,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 37.5,
+   "y": 32.8,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 8.525,
+   "y": 18.45,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 15.9,
+   "y": 13.9,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 17.3,
+   "y": 13.9,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 11.0,
+   "y": 16.4,
+   "text": "A bed of boards, and a sword...",
+   "used": true
+  },
+  {
+   "x": 11.0,
+   "y": 16.5,
+   "text": "Brother Anselm lives here (The Penitent's Hermitage).",
+   "used": true
+  },
+  {
+   "x": 52.0,
+   "y": 1.4,
+   "text": "The High Pass, closed by the first heavy snow. Beyond: Hungary."
+  },
+  {
+   "x": 37.5,
+   "y": 32.8,
+   "text": "The herdsman shares...",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-high-woods",
+   "to": "high-woods",
+   "rect": [
+    0.0,
+    29.0,
+    1.4,
+    2.0
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-high-woods",
+   "to": null,
+   "rect": [
+    2.5,
+    29.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-minecamp",
+   "to": "minecamp",
+   "rect": [
+    0.0,
+    40.8,
+    1.4,
+    2.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-minecamp",
+   "to": null,
+   "rect": [
+    2.5,
+    41.3,
+    1.4,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "track",
+   "label": "trail up to the High Pass",
+   "path": [
+    [
+     0,
+     29.5
+    ],
+    [
+     12,
+     28
+    ],
+    [
+     22,
+     24
+    ],
+    [
+     32,
+     18
+    ],
+    [
+     40,
+     13
+    ],
+    [
+     46,
+     5
+    ],
+    [
+     50,
+     0
+    ]
+   ],
+   "width": 2,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "path to the mining camp",
+   "path": [
+    [
+     0,
+     42
+    ],
+    [
+     10,
+     41
+    ],
+    [
+     20,
+     38
+    ],
+    [
+     30,
+     34
+    ],
+    [
+     33,
+     33
+    ]
+   ],
+   "width": 1.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "snowfield",
+   "path": [
+    [
+     0,
+     0
+    ],
+    [
+     58,
+     0
+    ],
+    [
+     58,
+     12
+    ],
+    [
+     40,
+     14
+    ],
+    [
+     20,
+     13
+    ],
+    [
+     0,
+     12
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
+}

@@ -19,9 +19,9 @@
 import * as AR from "./anachronism-rules.mjs";
 import {MOD} from "./extras-rules.mjs";
 import {look, loadGoods} from "./extras.mjs";
+import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 
-const LIVE_WORLDS = ["rothenstein-live"];
-const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags?.wodx?.liveWorld;
+const isLive = () => isLiveWorld(game.world); // B7564: the one shared list
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 const chron = () => game.modules.get("wodx-chronicle")?.api;
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");

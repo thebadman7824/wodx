@@ -15,7 +15,7 @@ function lanes(results) {
   const calls = [];
   const deps = {
     logs: tmp, log: () => {},
-    lanesCmd: async argv => { calls.push(argv[0]); return {code: 0}; },
+    lanesCmd: async argv => { calls.push(argv[0] === "deploy" ? `deploy${argv.includes("--if-changed") ? "?" : "!"}:${argv[argv.indexOf("--repo") + 1] === mainDir ? "main" : "alone"}` : argv[0]); return {code: 0}; },
     worktree: async () => ({dir: mainDir, sha: "m".repeat(40)}),
     // run-gate stand-in: writes the next scripted result for the side (branch or main) into the report file
     node: async (script, argv) => {
@@ -34,15 +34,21 @@ test("a gate that fails alone twice and passes twice on main is NEW, after two r
   const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job1", wt, rep: "gatea: 1/2 passed\ngateb: 3/3 passed\n", L: "x.log", deps});
   assert.match(out, /- gatea: NEW with this change/);
   assert.match(out, /4 run\(s\)/);
-  assert.deepEqual(calls.filter(c => c.includes(":")), ["alone:gatea", "alone:gatea", "main:gatea", "main:gatea"]);
+  assert.deepEqual(calls.filter(c => c.includes(":") && !c.startsWith("deploy")), ["alone:gatea", "alone:gatea", "main:gatea", "main:gatea"]);
   assert.equal(calls.filter(c => c === "reset").length, 4, "every run starts from a reset");
+  // B7540: each side's first run gets a full deploy (pack files are not in the --if-changed check), later runs check first
+  assert.deepEqual(calls.filter(c => c.startsWith("deploy")), ["deploy!:alone", "deploy?:alone", "deploy!:main", "deploy?:main"]);
 });
 
-test("a failure alone that passes the second time is flaky, and main is not run", async () => {
-  const {deps, calls, wt} = lanes({alone: [false, true], main: []});
-  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2", wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps});
-  assert.match(out, /- gatea: flaky/);
-  assert.ok(!calls.some(c => c.startsWith("main:")));
+test("B7521: a flaky gate is run on main: passing there twice it stays flaky, failing there it is main's", async () => {
+  const a = lanes({alone: [false, true], main: [true, true]});
+  const out = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2", wt: a.wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps: a.deps});
+  assert.match(out, /- gatea: flaky: failed once and passed once.*passes alone twice on main/);
+  assert.equal(a.calls.filter(c => c.startsWith("main:")).length, 2);
+  const b = lanes({alone: [true, false], main: [false]});
+  const out2 = await recheck({job: {ref: "claude/x"}, lane: "2", tag: "job2b", wt: b.wt, rep: "gatea: 1/2 passed\n", L: "x.log", deps: b.deps});
+  assert.match(out2, /- gatea: fails on main too \(here flaky/);
+  assert.equal(b.calls.filter(c => c.startsWith("main:")).length, 1);
 });
 
 test("a cancelled job stops rechecking: stopped is honoured", async () => {

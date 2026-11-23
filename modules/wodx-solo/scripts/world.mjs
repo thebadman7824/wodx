@@ -18,6 +18,7 @@
  *   scene flag wodx-solo.encounters  "town", "wilds" or "none": which encounters a scene takes (none: never)
  */
 import * as W from "./world-rules.mjs";
+import {temperOf} from "./director-rules.mjs";
 import * as R from "./solo-rules.mjs";
 import {addAsks, addActions, placeOf, tell, ask} from "./panel.mjs";
 
@@ -52,27 +53,49 @@ async function drawLead(actor) {
 /*  The oracle (B5980, B5981)                                          */
 /* ------------------------------------------------------------------ */
 
-/** The seat answers a question. -> {q, odds, face, answer, lead} or null */
-export async function askOracle(userId, {question = "", odds = "even", actorId = null} = {}) {
+/** B7132: the director's temper tonight for the character (director-rules temperOf), "steady" when not known. */
+function temperFor(actor) {
+  if ( !actor ) return "steady";
+  try {
+    const entries = (stApi()?.entries?.() ?? []).filter(e => e && (e.actor === actor.id || (!e.actor && String(e.text ?? "").startsWith("A fight began"))));
+    return temperOf(entries, game.time.worldTime);
+  } catch (e) { return "steady"; }
+}
+/** B7132: a 10 or a 1 turns the night: the question goes on the signal board and a storyline is woven for the approval queue. */
+async function turnTheNight(actor, q, answer) {
+  const T = stApi()?.threads;
+  if ( !T?.run ) return null;
+  try {
+    if ( actor ) await T.addHook?.(actor.id, `The oracle, asked "${q}": ${W.ANSWERS[answer]?.label ?? answer}`, 3);
+    return await T.run({force: true, why: "oracle"});
+  } catch (e) { console.warn(`${MOD} | the oracle's turn`, e); return null; }
+}
+
+/** The seat answers a question. -> {q, odds, face, answer, lead, temper, fate} or null */
+export async function askOracle(userId, {question = "", odds = "even", tone = "neither", actorId = null} = {}) {
   if ( !game.user.isGM || !game.users.get(userId) ) return null;
   const q = W.cleanQuestion(question);
   if ( !q ) { await tell(userId, "<p>The oracle needs a question.</p>"); return null; }
-  const o = W.ODDS[odds] ? odds : "even";
   const actor = actorFor(userId, actorId);
+  const temper = temperFor(actor);
+  const shift = W.shiftOdds(W.ODDS[odds] ? odds : "even", temper, tone);
+  const o = shift.odds;
   const roll = await new Roll("1d10").evaluate();
   const face = Number(roll.total) || 1;
   const answer = W.oracleAnswer(o, face);
   const A = W.ANSWERS[answer];
+  const turns = W.turnsTheNight(face);
   const ids = [...new Set([userId, ...game.users.filter(u => u.isGM).map(u => u.id)])];
   const msg = await ChatMessage.create({whisper: ids, speaker: {alias: "The oracle"}, rolls: [roll], sound: CONFIG.sounds?.dice,
     flags: {[MOD]: {panel: true, oracle: {q, odds: o, face, answer}}},
     content: `<div class="wodx-card wsolo-oracle wsolo-${A.yes ? "yes" : "no"}"><h3>The oracle</h3><p class="wsolo-q">${esc(q)}</p>
-      <p class="wodx-quiet">${esc(W.ODDS[o].label)}: a yes on ${W.ODDS[o].at} or more. The die shows ${face}.</p>
-      <p class="wsolo-answer"><b>${esc(A.label)}</b></p>${A.lead ? "<p class=\"wodx-quiet\">The night has moved further than you asked. A sign is on its way.</p>" : ""}</div>`});
+      ${shift.why ? `<p class="wodx-quiet wsolo-shift">${esc(shift.why)}.</p>` : ""}<p class="wodx-quiet">${esc(W.ODDS[o].label)}: a yes on ${W.ODDS[o].at} or more. The die shows ${face}.</p>
+      <p class="wsolo-answer"><b>${esc(A.label)}</b></p>${A.lead ? "<p class=\"wodx-quiet\">The night has moved further than you asked. A sign is on its way.</p>" : ""}${turns ? "<p class=\"wodx-quiet wsolo-turn\">The die shows the edge of the night: something larger stirs.</p>" : ""}</div>`});
   await game.settings.set(MOD, "oracle", W.addAsked(H.get("oracle"), {at: game.time.worldTime, q, odds: o, face, answer, actorId: actor?.id ?? null}));
   const lead = A.lead ? await drawLead(actor) : null;
-  await H.log({kind: "note", source: MOD, title: "The oracle was asked", note: `${q} (${W.ODDS[o].label}, ${face}): ${A.label}${lead ? "; a lead was drawn" : ""}`});
-  return {q, odds: o, face, answer, lead: lead?.label ?? null, messageId: msg?.id ?? null};
+  const fate = turns ? await turnTheNight(actor, q, answer) : null;
+  await H.log({kind: "note", source: MOD, title: "The oracle was asked", note: `${q} (${W.ODDS[o].label}${shift.why ? `, ${shift.why.toLowerCase()}` : ""}, ${face}): ${A.label}${lead ? "; a lead was drawn" : ""}${fate ? `; a storyline waits for the Storyteller: ${fate.title}` : ""}`});
+  return {q, odds: o, asked: shift.from, temper, face, answer, lead: lead?.label ?? null, fate: fate?.title ?? null, messageId: msg?.id ?? null};
 }
 
 /* ------------------------------------------------------------------ */
@@ -216,11 +239,14 @@ export async function nightTick({force = false, actorId = null, sceneId = null, 
 const ACTIONS = {
   async oracle() {
     const opts = W.ODDS_ORDER.map(k => `<option value="${k}"${k === "even" ? " selected" : ""}>${esc(W.ODDS[k].label)}</option>`).join("");
+    const tones = Object.entries(W.TONES).map(([k, v]) => `<option value="${k}"${k === "neither" ? " selected" : ""}>${esc(v)}</option>`).join("");
     const pick = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog"], window: {title: "Ask the oracle"},
       content: `<p>Ask what you would ask a Storyteller: a question with a yes or a no. Say how likely you think a yes is.</p>
         <div class="form-group"><label>Your question</label><input type="text" name="q" maxlength="200" placeholder="Is anyone watching the house?" autofocus></div>
-        <div class="form-group"><label>How likely</label><select name="odds" data-fixed>${opts}</select></div>`,
-      ok: {label: "Ask", callback: (ev, b) => ({question: b.form.elements.q.value, odds: b.form.elements.odds.value})}, rejectClose: false});
+        <div class="form-group"><label>How likely</label><select name="odds" data-fixed>${opts}</select></div>
+        <div class="form-group"><label>A yes would be</label><select name="tone" data-fixed>${tones}</select></div>
+        <p class="wodx-quiet">How the night has gone moves the odds a step: a night under pressure makes bad news likelier, a quiet night good news.</p>`,
+      ok: {label: "Ask", callback: (ev, b) => ({question: b.form.elements.q.value, odds: b.form.elements.odds.value, tone: b.form.elements.tone.value})}, rejectClose: false});
     if ( !pick?.question?.trim() ) return;
     ask("ask.oracle", pick);
   },

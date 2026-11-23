@@ -1,0 +1,427 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-watch",
+ "name": "The Watch-house and Cells",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-watch-house-and-cells/workplace-the-watch-house-and-cells.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    17.0,
+    12.0,
+    17.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    8.0,
+    24.0,
+    12.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    17.0,
+    6.0,
+    17.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    13.0,
+    24.0,
+    14.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    11.0,
+    14.0,
+    27.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    27.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    3.0,
+    27.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    13.0,
+    21.0,
+    14.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    17.0,
+    8.0,
+    21.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    14.0,
+    9.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    8.0,
+    21.0,
+    12.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    9.0,
+    11.0,
+    17.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    6.0,
+    27.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    11.0,
+    8.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    3.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    8.0,
+    27.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    3.0,
+    17.0,
+    5.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    9.0,
+    14.0,
+    11.0,
+    14.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    12.0,
+    21.0,
+    13.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    17.0,
+    5.0,
+    17.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    27.0,
+    5.0,
+    27.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    17.0,
+    11.0,
+    17.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    24.0,
+    12.0,
+    24.0,
+    13.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    8.0,
+    11.0,
+    9.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": true
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-sergeant-s-desk",
+   "label": "The sergeant's desk",
+   "rect": [
+    18.4,
+    4.2,
+    3.6,
+    1.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-guardroom",
+   "label": "The guardroom",
+   "rect": [
+    3.4,
+    3.4,
+    13.6,
+    7.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cells",
+   "label": "The cells",
+   "rect": [
+    17.4,
+    8.4,
+    9.6,
+    5.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-armory",
+   "label": "The armory",
+   "rect": [
+    3.4,
+    11.4,
+    13.6,
+    2.6
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-sergeant-s-desk",
+   "obj": "desk",
+   "label": "The sergeant's desk",
+   "rect": [
+    19.8,
+    4.75,
+    0.8,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-armory",
+   "obj": "weapon-rack",
+   "label": "The armory",
+   "rect": [
+    9.7,
+    12.55,
+    1.0,
+    0.3
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 3.6,
+   "y": 9.2,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 20.0,
+   "y": 5.0,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 3.6,
+   "y": 9.2,
+   "kind": "fire",
+   "bright": 0.72,
+   "dim": 5.14,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 9.0,
+   "y": 6.3,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.28,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 22.0,
+   "y": 9.6,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.86,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 14.6,
+   "text": "GM: The Lower Town watch-house. The"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-westgate"
+}

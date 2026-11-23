@@ -18,7 +18,8 @@ It prints a block such as B3090-B3099 and records it in `/mnt/project-files/regi
 thread sees at once. A claim takes about 12 seconds: it is read back after a pause and moves up a block if another
 thread took the same one a moment earlier (B3088). Use only numbers from that block. `--size 30` claims a bigger one; `--list` shows every claim.
 The coordinator claims the block when it starts a thread and names it in the first message; a thread that finds none
-there claims its own.
+there claims its own. The fragment's front matter names the block and the thread that claimed it (`block:` and
+`thread:`, printed by the claim); the merge rules check both (rule 4 below).
 
 ## 2. While working: fragments, not hand edits
 
@@ -149,6 +150,13 @@ pull request, including handoff/ HOLD pull requests and local-agent drafts, and 
    `ratchet-override: <link>`. Modules not seeded yet get a warning only, until each is seeded (Ben, Finish-Line
    Desk, 17 November 2026; B7144, B7146). A decision fragment may not reuse a number main's docs/DECISIONS.md has
    (B7145).
+5. **Decision numbers (B7067).** Decisions go only in a `changes/decisions/` fragment whose `block:` came from
+   `node tools/decisions/claim.mjs --thread <thread id> --feature "..."` (section 1), with a `thread:` line naming
+   that thread. CI fails a fragment with no `block:` or `thread:`, a section numbered outside its block, a block that
+   overlaps numbers already written on main, and any B number added to docs/DECISIONS.md by hand outside the
+   branch's block. CI cannot read the claim registry, so a run of `merge-rules.mjs` in a thread (which can) also
+   fails a block that is not claimed, is claimed by another thread, or overlaps another claim. Run it before asking
+   for a merge.
 
 Main is guarded by a branch ruleset the owner set up on 17 November 2026: the required status checks `checks` and
 `wodx/merge-rules` must pass, force pushes are blocked and main cannot be deleted. Nothing lands on main except
@@ -266,6 +274,14 @@ Done means verified. The format is in [registry/features/README.md](../registry/
 - **Change the row with the code**, in the same pull request. A fault from the solo world's Report a problem button or
   an audit goes in the row's `faults`; deferred work in its `open` or `deferred` list, never only in a desk or a shared
   JSON file.
+- **Each bug has a GitHub issue (B7480).** A bug that is not fixed in the pull request that found it gets one issue in
+  this repo, labelled `bug`: a gate that fails on main, a fault a thread finds and leaves, a Report a problem entry, an
+  audit finding. Search the `bug` issues, open and closed, before filing. The title names what goes wrong; the body
+  says where it was seen (job or issue number, file and line), what happened, and what should have happened. The PR
+  that fixes it says `Fixes #N` in its description, so the merge closes the issue. When only a later run on main can
+  prove the fix (a gate that failed in long runs only), the PR says `Refs #N` and the issue is closed when that run
+  passes. The bug's entry in a row's `faults` (or in `_inbox.json`) carries `"issue": N`. The issue holds the
+  discussion; the row holds the status.
 - **Finish before starting (the ratchet).** A module's half-built count (built but not gated, or an open fault) may not
   grow. New work in a module starts by finishing a row there; bug fixes are exempt; Ben can override.
 - **The core first.** Rows with `"core": true` (V20 Dark Ages Vampire in Rothenstein, 1197, with mortals and ghouls)
@@ -276,6 +292,10 @@ Done means verified. The format is in [registry/features/README.md](../registry/
 - **Art by id.** Code that shows a portrait, sprite or object loads it by its id from the art tables
   (registry/art-assets/ in the shared folder, kept by the art thread), never by a file path, so the locked style
   swaps in without code changes. Rows list the ids they use in `art`.
+- **Dates by canon.** A date more than one module uses (a founding, a war, a plague) lives once in
+  modules/wodx-chronicle/data/canon/index.mjs with its book pages, and code reads `canon("<id>")`. tools/harness/
+  canon.test.mjs fails on a typed year that disagrees with the canon, and its list of agreeing copies only shrinks
+  (B7170).
 - **Verified by someone else.** The Monday review re-checks a sample of 20 rows that reached gated that week and sets
   verified, or drops a row back. A builder never marks its own row verified.
 

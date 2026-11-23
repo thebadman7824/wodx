@@ -107,6 +107,38 @@ const otherSect = (learner, teacher, p) => {
 /*  The choices                                  */
 /* -------------------------------------------- */
 
+/* B7131: is the teacher willing? WoDX NPC's attitude and trust, and the town each one is in (WoDX Storyteller's markets) */
+const npcApi = () => game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api : null;
+/** The town (a market of WoDX Storyteller) an actor's token stands in: the viewed scene first, else any scene. "" when not known. */
+function townOf(a) {
+  try {
+    const mk = storyteller()?.upkeep?.markets;
+    if ( !mk?.state || !mk.rules?.marketOfScene ) return "";
+    const st = mk.state();
+    const scenes = [globalThis.canvas?.scene, ...(game.scenes ?? [])].filter(Boolean);
+    const sc = scenes.find(x => [...(x.tokens ?? [])].some(t => t.actorId === a.id));
+    return sc ? (mk.rules.marketOfScene(st, sc.id)?.name ?? "") : "";
+  } catch (e) { return ""; }
+}
+/** How a teacher feels about teaching this student (learn-rules willingness). */
+export function willOf(learner, teacher) {
+  const n = npcApi();
+  let attitude = 0, trust = 0;
+  try { attitude = n?.attitude?.of?.(teacher, learner)?.step ?? 0; } catch (e) { attitude = 0; }
+  try { trust = n?.trust?.of?.(teacher, learner) ?? 0; } catch (e) { trust = 0; }
+  return L.willingness({pc: !!teacher.hasPlayerOwner, attitude, trust, town: townOf(teacher), here: townOf(learner), name: teacher.name});
+}
+const blocks = w => w.will === "refuse" || !!w.trip;
+/**
+ * B7131 for the Road (B7751 (desk item 2026-11-23-mc1)): the same willingness for a Mentor on a Road, with the price asked when
+ * the Mentor is neither friend nor foe. next: the Road dot to be learned. Returns {will, trip, why, blocks, price}.
+ */
+export function teacherTerms(learner, teacher, {next = 1} = {}) {
+  const w = willOf(learner, teacher);
+  const price = w.will === "price" ? L.priceFor(yearNow(), {kindred: lineOf(learner) === "vampire" && lineOf(teacher) === "vampire", next}) : null;
+  return {...w, blocks: blocks(w), price};
+}
+
 /** Teachers in the world who know it well enough: the user's view of the world, those on the scene first. */
 export function teachersFor(actor, p, {user = game.user, limit = 12} = {}) {
   const here = new Set((canvas?.scene?.tokens ?? []).map(t => t.actorId));
@@ -132,8 +164,12 @@ export function choicesFor(actor, p, {user = game.user} = {}) {
     out.push({src, plan, ok, why: !allowed.includes(src.kind) ? why : (extra.closed || plan.why), time: L.timeWords(plan, pool(plan) + (plan.dice ?? 0))});
   };
   for ( const {a, rating} of teachersFor(actor, q, {user}) ) {
-    const closed = L.needsBlood(q, {line}) && (a.type !== actor.type || num(a.system?.advantages?.bloodpool?.temporary) < 1) ? "A new out-of-clan Discipline needs a Kindred teacher with a blood point to feed (V20 pdf 136)" : "";
-    push({kind: "teacher", id: a.id, name: a.name, rating, ...(otherSect(actor, a, q) ? {otherSect: true} : {})}, {closed});
+    const blood = L.needsBlood(q, {line}) && (a.type !== actor.type || num(a.system?.advantages?.bloodpool?.temporary) < 1) ? "A new out-of-clan Discipline needs a Kindred teacher with a blood point to feed (V20 pdf 136)" : "";
+    // B7131: an unwilling teacher, or one in another town, is closed to a player; the Storyteller may override
+    const w = willOf(actor, a), gmOver = user.isGM && blocks(w);
+    const closed = blood || (blocks(w) && !user.isGM ? w.why : "");
+    push({kind: "teacher", id: a.id, name: a.name, rating, will: w.will, willWhy: gmOver ? `${w.why} (the Storyteller overrides)` : w.why, ...(gmOver ? {override: true} : {}),
+      ...(otherSect(actor, a, q) ? {otherSect: true} : {})}, {closed});
   }
   if ( allowed.includes("teacher") ) push({kind: "storyteller", name: L.SOURCE_KINDS.storyteller});
   if ( allowed.includes("spirit") ) push({kind: "spirit", name: q.cat === "gift" ? "A spirit summoned to teach the Gift" : "The spirits' regard"});
@@ -162,7 +198,7 @@ export async function chooseSource(actor, p) {
   const first = choices.findIndex(c => c.ok);
   const row = (c, i) => `<li class="${c.ok ? "" : "wodx-muted"}"><label><input type="radio" name="src" value="${i}" ${i === first ? "checked" : ""} ${c.ok ? "" : "disabled"}>
     <b>${esc(c.src.kind === "teacher" ? `${c.src.name} (${c.src.rating} dots)` : c.src.name)}</b>${c.src.quality ? ` <span class="wodx-tag">${esc(c.src.quality)}</span>` : ""}
-    <span class="wodx-quiet">${c.ok ? esc(`${c.time}; difficulty ${c.plan.diff}, ${c.plan.goal} successes`) : esc(c.why)}</span></label></li>`;
+    <span class="wodx-quiet">${c.ok ? esc(`${c.time}; difficulty ${c.plan.diff}, ${c.plan.goal} successes${c.src.willWhy ? `. ${c.src.willWhy}` : ""}`) : esc(c.why)}</span></label></li>`;
   const gm = game.user.isGM ? `<div class="form-group"><label><input type="checkbox" name="waive"> Waive it this time: learn at once</label></div>` : "";
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog", "wodx-learn"],
@@ -197,7 +233,10 @@ export function resolveSource(actor, p, src) {
   if ( !src?.kind ) return {ok: false, why: "Name where it is learned (a teacher, a book, a school or practice)."};
   const {allowed, why} = L.sourcesFor(q, {line});
   if ( src.kind === "storyteller" ) {
-    const best = teachersFor(actor, q, {user: game.user, limit: 40}).find(({a}) => !L.needsBlood(q, {line}) || (a.type === actor.type && num(a.system?.advantages?.bloodpool?.temporary) >= 1));
+    const fit = teachersFor(actor, q, {user: game.user, limit: 40}).filter(({a}) => !L.needsBlood(q, {line}) || (a.type === actor.type && num(a.system?.advantages?.bloodpool?.temporary) >= 1));
+    // B7131: the Storyteller finds a willing teacher first, one who would teach freely before one who asks a price
+    const rank = ({a}) => { const w = willOf(actor, a); return blocks(w) ? 2 : w.will === "price" ? 1 : 0; };
+    const best = fit.map(x => ({...x, r: rank(x)})).sort((x, y) => x.r - y.r)[0];
     if ( !best ) return {ok: false, why: `No one in the chronicle knows ${p.label} to ${p.next}, so there is no teacher to find.`};
     src = {kind: "teacher", id: best.a.id, name: best.a.name, rating: best.rating, found: true, ...(otherSect(actor, best.a, q) ? {otherSect: true} : {})};
   }
@@ -207,6 +246,11 @@ export function resolveSource(actor, p, src) {
     if ( !a ) return {ok: false, why: "That teacher is gone."};
     src = {...src, name: a.name, rating: ratingOf(a, q), otherSect: otherSect(actor, a, q)};
     if ( L.needsBlood(q, {line}) && (a.type !== actor.type || num(a.system?.advantages?.bloodpool?.temporary) < 1) ) return {ok: false, why: "The teacher must be Kindred with a blood point to feed (V20 pdf 136)."};
+    // B7131: willing, or asking a price (written to the Ledger when the study begins); refused or far away unless the Storyteller overrides
+    const w = willOf(actor, a);
+    if ( blocks(w) && !src.override ) return {ok: false, why: `${w.why}.`};
+    const price = w.will === "price" ? L.priceFor(yearNow(), {kindred: lineOf(actor) === "vampire" && lineOf(a) === "vampire", next: p.next}) : null;
+    src = {...src, will: w.will, willWhy: w.why, price};
   }
   if ( src.kind === "spirit" ) src = {...src, name: src.name || L.SOURCE_KINDS.spirit};
   if ( src.kind === "book" ) {
@@ -251,8 +295,18 @@ export async function begin(actor, purchase, source, {by = game.user.name, time 
   const name = payer === actor ? L.logName(purchase, src) : `${actor.name}: ${L.logName(purchase, src)}`;
   const [xpItem] = await payer.createEmbeddedDocuments("Item", [{name, type: "Experience", system: {amount: purchase.cost, isspent: true},
     flags: {[MODULE_ID]: {time, kind: purchase.kind, key: purchase.key, from: purchase.current, to: purchase.next, by, for: actor.id, learning: id}}}]);
+  // B7131: a teacher who asked a price is owed it, in the Ledger
+  let owed = "";
+  if ( src.kind === "teacher" && src.price ) {
+    const t = game.actors.get(src.id);
+    try {
+      await st.ledger?.save?.({kind: src.price.kind, ...(src.price.size ? {size: src.price.size} : {}), from: {id: actor.id, name: actor.name}, to: {id: t?.id ?? src.id, name: t?.name ?? src.name},
+        what: `For teaching ${purchase.label} ${purchase.next}: ${src.price.what}`});
+      owed = ` Owed to ${src.name} for it: ${src.price.what} (in the Ledger).`;
+    } catch (e) { console.warn("WoDX | learning: Ledger", e); }
+  }
   const task = await st.tasks.save(actor, {...taskData(actor, q, plan), name: `Learn ${purchase.label} ${purchase.next} (${src.kind === "practice" ? "practice" : src.name})`,
-    note: `Experience paid (${purchase.cost}). The trait rises when this is finished. ${L.SOURCE_KINDS[src.kind]}: ${src.name}.`, opts: {learn: id}});
+    note: `Experience paid (${purchase.cost}). The trait rises when this is finished. ${L.SOURCE_KINDS[src.kind]}: ${src.name}.${owed}`, opts: {learn: id}});
   const [fx] = await actor.createEmbeddedDocuments("ActiveEffect", [{name: `Studying ${purchase.label}`, img: IMG, statuses: [STATUS],
     description: `<p>Learning ${esc(purchase.label)} ${purchase.next} from ${esc(src.name)}.</p>`, flags: {[MODULE_ID]: {learning: id}}}]);
   await actor.update({[`flags.${MODULE_ID}.learning.${id}`]: {purchase: {kind: purchase.kind, key: purchase.key, label: purchase.label, current: purchase.current, next: purchase.next, cost: purchase.cost, group: purchase.group ?? "",

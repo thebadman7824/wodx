@@ -2,6 +2,9 @@ import {MODULE_ID, esc, setting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import {LANGUAGES, linguisticsAllows, languagesFromMerits, understands, scramble, parseInCommand, norm, allowance, listAllowed, kinOf, GIST} from "./languages-rules.mjs";
 import * as TERMS from "./terms.mjs";
+import * as chronicleData from "./chronicle-data.mjs";
+import * as Local from "./chronicle-local-rules.mjs";
+import {currentYear} from "./eras.mjs";
 
 /**
  * Languages in chat. Each character keeps the languages it speaks (flags["wodx-chronicle"].languages, the first one
@@ -22,6 +25,12 @@ export function registerLanguageSettings() {
 
 const on = () => { try { return !!setting("languagesInChat"); } catch { return false; } };
 
+/** The chronicle in play's own languages (manifest.local.languages, B7613). */
+const local = () => { try { return Local.localOf(chronicleData.current()); } catch (e) { return Local.localOf(null); } };
+const yearNow = () => { try { return Number(currentYear()) || 0; } catch (e) { return 0; } };
+/** Every language name to offer: the shared lists and the chronicle's own. */
+export const allNames = () => [...new Set([...LANGUAGES.common, ...LANGUAGES.supernatural, ...Local.languageNames(local())])];
+
 /** The languages a character speaks. */
 export function languagesOf(actor) {
   const l = actor?.flags?.[MODULE_ID]?.languages;
@@ -33,6 +42,12 @@ export async function setLanguages(actor, list) {
   for ( const x of list ?? [] ) { const s = String(x).trim(); if ( s && !clean.some(c => norm(c) === norm(s)) ) clean.push(s); }
   // B3162: a player cannot list more languages than Linguistics or the Language Merits give
   if ( !game.user.isGM ) {
+    // B7614: a chronicle's language closed in this book cannot be learned; one already on the sheet stays
+    const shut = Local.closedAdded(local(), languagesOf(actor), clean, {y: yearNow(), books: chronicleData.SAGA?.books ?? []});
+    if ( shut.length ) {
+      ui.notifications.warn(`No one can learn ${shut.join(", ")} in this part of the chronicle. The Storyteller can still give it to a character.`);
+      return null;
+    }
     const allow = allowanceOf(actor);
     if ( !listAllowed(languagesOf(actor), clean, allow) ) {
       ui.notifications.warn(`${actor.name} can list ${allow} language${allow === 1 ? "" : "s"}: the native one and those from Linguistics or Language Merits. The Storyteller can add more.`);
@@ -112,7 +127,7 @@ export function registerLanguageHooks() {
     if ( !on() ) return true;
     // B7268: Foundry 14's chat box sends HTML ("<p>/in Latin ...</p>"); read it as the text typed
     const text = typedText(message);
-    const known = [...speakable(), ...LANGUAGES.common, ...LANGUAGES.supernatural];
+    const known = [...speakable(), ...allNames()];
     const p = parseInCommand(text, known);
     const speaker = chatData?.speaker ?? ChatMessage.getSpeaker?.() ?? {};
     if ( p ) {
@@ -161,17 +176,26 @@ export function renderLanguage(message, el) {
   if ( !body ) return;
   const authorId = message.author?.id ?? message.author ?? message.user?.id;
   const read = canRead(game.user, lang, authorId, message.id);
+  const own = Local.languageOf(local(), lang);
+  // B7613: a chronicle language that gives its sense: the words stay strange, the meaning comes through, no roll
+  const sense = !read && Local.givesIntent(local(), lang) ? body.textContent.trim() : "";
   if ( !read ) {
     const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
     const nodes = [];
     while ( walker.nextNode() ) nodes.push(walker.currentNode);
-    for ( const n of nodes ) n.nodeValue = scramble(n.nodeValue, lang);
+    for ( const n of nodes ) n.nodeValue = scramble(n.nodeValue, lang, own?.sounds);
+  }
+  if ( sense ) {
+    const p = document.createElement("p");
+    p.className = "wodx-language-sense";
+    p.textContent = `The meaning reaches you without the words: ${sense}`;
+    body.append(p);
   }
   const tag = document.createElement("div");
-  tag.className = `wodx-language ${read ? "is-known" : "is-unknown"}`;
-  tag.textContent = read ? `In ${lang}` : `In ${lang}, which your character does not speak`;
+  tag.className = `wodx-language ${read || sense ? "is-known" : "is-unknown"}`;
+  tag.textContent = read ? `In ${lang}` : sense ? `In ${lang}, which no one taught your character` : `In ${lang}, which your character does not speak`;
   // B3163: a kindred language gives a roll for the gist
-  if ( !read ) {
+  if ( !read && !sense ) {
     const who = charactersOf(game.user).find(a => kinOf([languagesOf(a)], lang));
     const kin = who ? kinOf([languagesOf(who)], lang) : null;
     if ( kin && !gistTried.has(`${message.id}:${who.id}`) ) {
@@ -216,7 +240,7 @@ function installPicker(root) {
 
 function refreshPicker(wrap) {
   // A text box with suggestions: typing narrows the list, so a long list needs no separate search box
-  const langs = game.user.isGM ? [...new Set([...speakable(), ...LANGUAGES.common, ...LANGUAGES.supernatural])] : speakable();
+  const langs = game.user.isGM ? [...new Set([...speakable(), ...allNames()])] : speakable();
   const current = game.settings.get(MODULE_ID, "speaking");
   wrap.innerHTML = `<label><i class="fa-solid fa-language" inert></i> Speaking
     <input type="text" name="wodxSpeaking" list="wodx-speaking-names" value="${esc(current)}" placeholder="no set language" aria-label="Language your character speaks"></label>
@@ -256,7 +280,7 @@ export class LanguagesApp extends ApplicationV2 {
   }
 
   async _renderHTML() {
-    const all = [...LANGUAGES.common, ...LANGUAGES.supernatural];
+    const all = allNames();
     const rows = LanguagesApp.actors().map(a => {
       const list = languagesOf(a);
       const dots = linguisticsOf(a);

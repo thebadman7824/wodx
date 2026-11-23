@@ -1,0 +1,357 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-voss",
+ "name": "Master Voss's Laboratory and Cellar",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-master-voss-s-laboratory-and-cellar/trespass-master-voss-s-laboratory-and-cellar.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    14.0,
+    10.0,
+    14.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    10.0,
+    28.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    3.0,
+    28.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    10.0,
+    8.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    3.0,
+    7.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    10.0,
+    20.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    7.0,
+    14.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    14.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    18.0,
+    28.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    3.0,
+    28.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    8.0,
+    2.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    3.0,
+    2.0,
+    7.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    14.0,
+    14.0,
+    18.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    7.0,
+    3.0,
+    8.0,
+    3.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    20.0,
+    10.0,
+    21.0,
+    10.0
+   ],
+   "kind": "secret",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    6.0,
+    14.0,
+    7.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    13.0,
+    14.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    10.0,
+    9.0,
+    10.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    2.0,
+    7.0,
+    2.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-hidden-stair",
+   "label": "The hidden stair",
+   "rect": [
+    19.6,
+    9.6,
+    1.8,
+    1.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cellar-circle",
+   "label": "The cellar circle",
+   "rect": [
+    3.4,
+    11.0,
+    9.6,
+    6.5
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-study",
+   "label": "The study",
+   "rect": [
+    14.4,
+    3.4,
+    13.2,
+    6.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-laboratory",
+   "label": "The laboratory",
+   "rect": [
+    2.4,
+    3.4,
+    11.6,
+    6.2
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-hidden-stair",
+   "obj": "stairs",
+   "label": "The hidden stair",
+   "rect": [
+    20.2,
+    10.4,
+    0.6,
+    2.0
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 8.2,
+   "y": 14.2,
+   "kind": "eerie",
+   "bright": 0.0,
+   "dim": 5.42,
+   "color": "#c9332a"
+  },
+  {
+   "x": 13.2,
+   "y": 6.2,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 24.0,
+   "y": 14.0,
+   "kind": "eerie",
+   "bright": 0.0,
+   "dim": 3.72,
+   "color": "#a02a2a"
+  },
+  {
+   "x": 13.2,
+   "y": 6.2,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 5.14,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 18.8,
+   "y": 5.0,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.72,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 10.6,
+   "text": "GM: The back rooms and cellar of the"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false,
+ "on": "lt-market"
+}

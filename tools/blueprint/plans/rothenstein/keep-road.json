@@ -1,0 +1,566 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "keep-road",
+ "name": "The Keep Road",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  46,
+  58
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/the-keep-road/the-keep-road.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    28.2,
+    55.1,
+    28.2,
+    56.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.4,
+    48.6,
+    34.4,
+    56.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.2,
+    48.6,
+    28.2,
+    50.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.4,
+    57.8,
+    36.0,
+    57.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    48.6,
+    24.5,
+    48.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.4,
+    47.2,
+    20.4,
+    57.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    52.8,
+    22.0,
+    56.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.2,
+    56.4,
+    30.8,
+    56.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    56.4,
+    25.6,
+    56.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    52.2,
+    22.0,
+    52.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    28.2,
+    52.6,
+    34.4,
+    52.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.2,
+    56.4,
+    30.2,
+    56.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.6,
+    56.4,
+    26.2,
+    56.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.0,
+    57.8,
+    36.0,
+    47.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    30.8,
+    56.4,
+    34.4,
+    56.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.2,
+    51.1,
+    28.2,
+    54.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.0,
+    47.2,
+    29.0,
+    47.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    48.6,
+    22.0,
+    52.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.5,
+    48.6,
+    34.4,
+    48.6
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    28.2,
+    50.1,
+    28.2,
+    51.1
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    24.5,
+    48.6,
+    25.5,
+    48.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    28.2,
+    54.1,
+    28.2,
+    55.1
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "The Passau House",
+   "rect": [
+    21.4,
+    48.0,
+    13.6,
+    9.0
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "cask-the-passau-house",
+   "obj": "cask",
+   "label": "Cask (The Passau House)",
+   "rect": [
+    26.444,
+    48.5,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 33.625,
+   "y": 54.438,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 21.55,
+   "y": 52.5,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 25.9,
+   "y": 56.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 28.062,
+   "y": 53.225,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 34.15,
+   "y": 51.013,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 30.038,
+   "y": 49.075,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 38.3,
+   "y": 40.4,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 30.5,
+   "y": 56.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 22.725,
+   "y": 52.45,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  }
+ ],
+ "labels": [
+  {
+   "x": 31.3,
+   "y": 50.6,
+   "text": "Good china, a Passau bishop-prince's seal cut out of a letter, and no one to imp",
+   "used": true
+  },
+  {
+   "x": 31.25,
+   "y": 50.65,
+   "text": "Sieglinde von Passau lives here (The Passau House, Sieglinde's Rooms).",
+   "used": true
+  },
+  {
+   "x": 6.6,
+   "y": 35.2,
+   "text": "The gallows on the knoll. Empty this week."
+  },
+  {
+   "x": 38.3,
+   "y": 39.3,
+   "text": "A wayside shrine to St. Aegidius. Fresh flowers, and a coin no one has dared to "
+  },
+  {
+   "x": 30.0,
+   "y": 51.6,
+   "text": "...",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "arrive",
+   "name": "from-lt-church",
+   "to": null,
+   "rect": [
+    2.5,
+    44.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-keep-bailey",
+   "to": null,
+   "rect": [
+    22.3,
+    2.5,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-keep-bailey",
+   "to": "keep-bailey",
+   "rect": [
+    21.0,
+    0.0,
+    4.0,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-market",
+   "to": "lt-market",
+   "rect": [
+    10.0,
+    56.6,
+    4.0,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-church",
+   "to": "lt-church",
+   "rect": [
+    0.0,
+    43.2,
+    1.4,
+    3.6
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-lt-market",
+   "to": null,
+   "rect": [
+    11.3,
+    54.1,
+    1.4,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "the Keep Road",
+   "path": [
+    [
+     24,
+     0
+    ],
+    [
+     26,
+     5
+    ],
+    [
+     30,
+     10
+    ],
+    [
+     28,
+     15
+    ],
+    [
+     18,
+     18
+    ],
+    [
+     12,
+     22
+    ],
+    [
+     14,
+     28
+    ],
+    [
+     24,
+     32
+    ],
+    [
+     30,
+     36
+    ],
+    [
+     34,
+     40
+    ],
+    [
+     30,
+     43
+    ],
+    [
+     20,
+     46
+    ],
+    [
+     15,
+     48
+    ],
+    [
+     12,
+     53
+    ],
+    [
+     12,
+     58
+    ]
+   ],
+   "width": 4,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "cobbled lane to Church Close",
+   "path": [
+    [
+     0,
+     44
+    ],
+    [
+     6,
+     45
+    ],
+    [
+     12,
+     46.5
+    ],
+    [
+     15,
+     48
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
+}

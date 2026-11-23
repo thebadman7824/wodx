@@ -1,0 +1,391 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-graff",
+ "name": "Richter Graff's House and Strongroom",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-richter-graff-s-house-and-strongroom/trespass-richter-graff-s-house-and-strongroom.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    16.0,
+    2.0,
+    16.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    11.0,
+    8.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    15.0,
+    21.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    2.0,
+    3.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    15.0,
+    27.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    8.0,
+    27.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    6.0,
+    16.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    11.0,
+    16.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    8.0,
+    21.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    15.0,
+    8.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    2.0,
+    27.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    13.0,
+    16.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    2.0,
+    27.0,
+    2.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    16.0,
+    12.0,
+    16.0,
+    13.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    8.0,
+    11.0,
+    9.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    15.0,
+    22.0,
+    15.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16.0,
+    5.0,
+    16.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    8.0,
+    15.0,
+    9.0,
+    15.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-waiting-benches",
+   "label": "The waiting benches",
+   "rect": [
+    4.0,
+    12.0,
+    5.0,
+    2.5
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-reeve-s-desk",
+   "label": "The reeve's desk",
+   "rect": [
+    7.0,
+    5.0,
+    4.0,
+    1.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-strongroom",
+   "label": "The strongroom",
+   "rect": [
+    16.2,
+    8.2,
+    10.8,
+    6.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-bed",
+   "label": "The bed",
+   "rect": [
+    22.6,
+    2.6,
+    2.9,
+    2.8
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-waiting-benches-1",
+   "obj": "bench",
+   "label": "The waiting benches 1",
+   "rect": [
+    4.45,
+    13.075,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-waiting-benches-2",
+   "obj": "bench",
+   "label": "The waiting benches 2",
+   "rect": [
+    6.95,
+    13.075,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-reeve-s-desk",
+   "obj": "desk",
+   "label": "The reeve's desk",
+   "rect": [
+    8.6,
+    5.65,
+    0.8,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-bed",
+   "obj": "bed-box",
+   "label": "The bed",
+   "rect": [
+    23.6,
+    3.3,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 17.257,
+   "y": 5.3,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 17.2,
+   "y": 5.3,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 9.0,
+   "y": 4.5,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.0,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 22.0,
+   "y": 11.4,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 3.72,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 16.0,
+   "y": 11.6,
+   "text": "GM: The reeve's house at the edge of"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-market"
+}

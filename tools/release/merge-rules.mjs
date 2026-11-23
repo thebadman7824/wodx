@@ -26,6 +26,9 @@
  *      a commit says `ratchet-override: <link to Ben's message>`. Modules not seeded yet get a warning instead.
  *   Decision numbers (B7145): a decision fragment added on the branch may not use a number main's docs/DECISIONS.md
  *      already has (part of rule 1).
+ *   5. Decision numbers (B7067): a fragment names its claimed block and thread, its sections stay inside the block,
+ *      the block overlaps nothing on main, and no B number is written into docs/DECISIONS.md by hand; a run that can
+ *      read the claim registry also fails a block claimed by another thread.
  *
  * It also warns, never blocking, when a thread did by hand work that docs/ROUTING.md sends to a machine (B7005), and
  * when a thread changes the PC tools that one helper owns while upkeep is frozen (B7149; `upkeep: <reason>` answers it).
@@ -47,7 +50,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import {execFileSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {parseFragment, checkModuleFragment, effectWarnings, visibleWarnings} from "./merge-stamp.mjs";
+import {parseFragment, checkModuleFragment, effectWarnings, visibleWarnings, blockRange, sectionNumbers} from "./merge-stamp.mjs";
 import * as REG from "../registry/registry.mjs";
 import {gradeStep} from "../registry/strength.mjs";
 
@@ -96,9 +99,13 @@ export function changedFiles(g, base, head) {
   return out;
 }
 
-/** Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. */
+/**
+ * Release notes added on the branch: [{file, module, frag}], each read as it last stood on the branch. B7520:
+ * --full-history, because once a stamp has removed the notes, a later merge of main whose changes/ folder matches
+ * main's side makes git follow only that side and hide the commits that added them (PR 1848, 19 November 2026).
+ */
 export function branchNotes(g, base, head) {
-  const added = new Set(g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
+  const added = new Set(g.run("log", "--full-history", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/").split("\n").filter(Boolean));
   const out = [];
   for ( const file of [...added].sort() ) {
     const m = /^changes\/([\w-]+)\/([^/]+\.md)$/.exec(file);
@@ -113,6 +120,92 @@ export function branchNotes(g, base, head) {
     out.push({file, module: m[1], frag: text === null ? null : parseFragment(text)});
   }
   return out;
+}
+
+/**
+ * Decision fragments added on the branch, each as it last stood: [{file, block: {lo, hi} | null, thread, numbers}],
+ * numbers being the "B1234" of its "## B1234." sections (B7145, B7067). A fragment gone by the head still counts
+ * when a stamp removed it (the stamp writes docs/DECISIONS.md in the same commit); one renamed or deleted any other
+ * way (B7010.md renumbered to B7110.md) no longer holds its numbers (PR 1836).
+ */
+export function branchDecisions(g, base, head) {
+  const added = new Set(g.run("log", "--full-history", "--no-merges", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean));
+  const out = [];
+  for ( const file of [...added].sort() ) {
+    if ( !/^changes\/decisions\/[^/]+\.md$/.test(file) ) continue;
+    let text = g.show(head, file);
+    if ( text === null ) {
+      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file)?.trim();
+      const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
+      if ( !stamped ) continue;
+      text = g.show(`${last}^1`, file);
+    }
+    const frag = text === null ? null : parseFragment(text);
+    const numbers = [...String(text ?? "").matchAll(/^## B(\d+)[a-z]?\b/gm)].map(m => `B${m[1]}`);
+    out.push({file, block: blockRange(frag?.meta.block), thread: frag?.meta.thread ?? "", numbers});
+  }
+  return out;
+}
+
+/** B7067: the B numbers taken in a DECISIONS.md text: every index row's range, every section heading. */
+export function decisionsTaken(text) {
+  const ranges = [];
+  for ( const m of String(text ?? "").matchAll(/^\| B(\d+)(?:-B(\d+))? \|/gm) ) ranges.push({lo: +m[1], hi: +(m[2] ?? m[1])});
+  for ( const m of String(text ?? "").matchAll(/^#+ B(\d+)/gm) ) ranges.push({lo: +m[1], hi: +m[1]});
+  return ranges;
+}
+
+/** B7067: B numbers the branch's diff adds to docs/DECISIONS.md (headings and index rows). */
+export function decisionsAdded(g, base, head) {
+  const diff = g.run("diff", "--no-renames", "-U0", base, head, "--", "docs/DECISIONS.md");
+  const out = [];
+  for ( const line of diff.split("\n") ) {
+    if ( !line.startsWith("+") || line.startsWith("+++") ) continue;
+    const t = line.slice(1);
+    const h = /^#+ B(\d+)/.exec(t);
+    if ( h ) { out.push({lo: +h[1], hi: +h[1], line: t.slice(0, 80)}); continue; }
+    const r = /^\| B(\d+)(?:-B(\d+))? \|/.exec(t);
+    if ( r ) out.push({lo: +r[1], hi: +(r[2] ?? r[1]), line: t.slice(0, 80)});
+  }
+  return out;
+}
+
+/**
+ * Rule 5 (B7067, decision-number collisions). frags: this branch's decision fragments; added: numbers its diff adds
+ * to DECISIONS.md; taken: ranges already on the base (DECISIONS.md and the fragments there); claims: the shared claim
+ * registry's rows, or null where it cannot be read (CI). Returns problems.
+ */
+export function decisionProblems(frags, added, taken, claims = null) {
+  const out = [];
+  const within = (x, r) => r && x.lo >= r.lo && x.hi <= r.hi;
+  const overlaps = (a, b) => a.lo <= b.hi && b.lo <= a.hi;
+  const name = r => r.lo === r.hi ? `B${r.lo}` : `B${r.lo}-B${r.hi}`;
+  for ( const f of frags ) {
+    if ( !f.block ) { out.push(`${f.file}: no block: line (B<lo>-B<hi>, from node tools/decisions/claim.mjs)`); continue; }
+    const nums = f.numbers.map(x => typeof x === "number" ? x : +String(x).replace(/^B/, ""));
+    for ( const n of nums ) if ( n < f.block.lo || n > f.block.hi ) out.push(`${f.file}: B${n} is outside its block ${name(f.block)}`);
+    // A block already on main may take more decisions later (merge-stamp, B3081): its own index row is no clash, a
+    // section number already written there is
+    const same = t => t.lo === f.block.lo && t.hi === f.block.hi;
+    const hit = taken.filter(t => overlaps(t, f.block) && !same(t) && !(t.lo === t.hi && taken.some(same)));
+    for ( const n of nums ) if ( taken.some(same) && taken.some(t => t.lo === n && t.hi === n) ) out.push(`${f.file}: B${n} is already written on main`);
+    if ( hit.length ) out.push(`${f.file}: block ${name(f.block)} is already taken on main (${hit.slice(0, 3).map(name).join(", ")}); claim a new block with tools/decisions/claim.mjs`);
+    if ( !f.thread ) out.push(`${f.file}: no thread: line (the thread id that claimed ${name(f.block)} with tools/decisions/claim.mjs)`);
+    if ( claims ) {
+      const mine = claims.find(c => within(f.block, c));
+      if ( !mine ) out.push(`${f.file}: block ${name(f.block)} is not a claim in the registry; claim one with tools/decisions/claim.mjs`);
+      else if ( f.thread && !String(mine.thread ?? "").startsWith(f.thread) && !f.thread.startsWith(String(mine.thread ?? "x")) ) out.push(`${f.file}: block ${name(f.block)} is claimed by thread ${mine.thread}, not ${f.thread}`);
+      const others = claims.filter(c => c !== mine && overlaps(c, f.block));
+      if ( others.length ) out.push(`${f.file}: block ${name(f.block)} overlaps other claims (${others.map(c => `${name(c)} ${c.thread ?? ""}`.trim()).join("; ")})`);
+    }
+  }
+  for ( const a of added ) if ( !frags.some(f => within(a, f.block)) ) out.push(`docs/DECISIONS.md: ${name(a)} added outside any claimed block of this branch (write decisions in a changes/decisions/ fragment): ${a.line}`);
+  return out;
+}
+
+/** The shared claim registry's rows, or null when it is not readable here (CI runs without the project files). */
+export function readClaims(file = process.env.WODX_REGISTRY ?? "/mnt/project-files/registry/decision-blocks.json") {
+  try { const d = JSON.parse(fs.readFileSync(file, "utf8")); return Array.isArray(d) ? d : (d.claims ?? null); } catch { return null; }
 }
 
 /** Review items written on the branch: the lines the branch added to docs/reviews/*.jsonl. */
@@ -136,30 +229,12 @@ export function branchCommits(g, base, head) {
   return raw.split("\x1e").map(s => s.trim()).filter(Boolean).map(s => { const [sha, author, body] = s.split("\x1f"); return {sha, author, body: body ?? ""}; });
 }
 
-/** Decision fragments added on the branch: [{file, numbers}], the B numbers of their "## B1234." sections. */
-export function branchDecisions(g, base, head) {
-  const added = g.run("log", "--format=", "--name-only", "--diff-filter=A", `${base}..${head}`, "--", "changes/decisions/").split("\n").filter(Boolean);
-  const out = [];
-  for ( const file of [...new Set(added)].sort() ) {
-    if ( !/^changes\/decisions\/B\d+\.md$/.test(file) ) continue;
-    let text = g.show(head, file);
-    if ( text === null ) {
-      // Gone by the head. A stamp removes a fragment in the same commit that writes docs/DECISIONS.md, so its numbers
-      // still count; a fragment renamed or deleted any other way (B7010.md renumbered to B7110.md) no longer holds them.
-      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
-      const stamped = last && String(g.tryRun("show", "--name-only", "--format=", last) ?? "").split("\n").includes("docs/DECISIONS.md");
-      if ( !stamped ) continue;
-      text = g.show(`${last}^1`, file);
-    }
-    out.push({file, numbers: [...String(text ?? "").matchAll(/^## (B\d+)\./gm)].map(m => m[1])});
-  }
-  return out;
-}
 /** B7145: numbers a branch's fragments share with main's decision log (or with each other). */
 export function decisionClashes(frags, decisionsText) {
   const used = new Set([...String(decisionsText ?? "").matchAll(/^## (B\d+)\./gm)].map(m => m[1]));
   const seen = new Map(), out = [];
-  for ( const f of frags ) for ( const n of f.numbers ) {
+  for ( const f of frags ) for ( const x of f.numbers ) {
+    const n = typeof x === "number" ? `B${x}` : x; // B7067's reader gives numbers, B7145's gave "B1234"
     if ( used.has(n) ) out.push(`${f.file}: ${n} is already in docs/DECISIONS.md on main; claim a fresh block (node tools/decisions/claim.mjs) and renumber`);
     if ( seen.has(n) ) out.push(`${f.file}: ${n} is also used in ${seen.get(n)}`);
     else seen.set(n, f.file);
@@ -333,6 +408,14 @@ export async function evaluate({root = ROOT, base = "origin/main", head = "HEAD"
   result.rules.registry = reg.problems;
   if ( !result.bensOwn ) result.warnings.push(...reg.warnings);
 
+  // B7067: decision numbers only from a block this branch claimed, never one main already has
+  const frags = branchDecisions(g, mb, headSha);
+  const baseFrags = (g.tryRun("ls-tree", "--name-only", mb, "changes/decisions/") ?? "").split("\n").filter(f => /\.md$/.test(f) && !frags.some(x => x.file === f))
+    .map(f => blockRange(parseFragment(g.show(mb, f) ?? "")?.meta.block)).filter(Boolean);
+  const claims = readClaims();
+  result.claimsRead = !!claims;
+  result.rules.decisions = result.bensOwn ? [] : decisionProblems(frags, decisionsAdded(g, mb, headSha), [...decisionsTaken(g.show(mb, "docs/DECISIONS.md")), ...baseFrags], claims);
+
   const {items, bad} = branchReviews(g, mb, headSha);
   result.rules.review = [...bad, ...reviewProblems(own, items)];
 
@@ -391,13 +474,14 @@ async function postStatus(sha, body) {
 
 export function report(r) {
   const lines = [`Merge rules for ${r.head.slice(0, 8)} (base ${r.base.slice(0, 8)}): ${r.files} changed file(s), modules ${r.modules.join(", ") || "none"}, ${r.gatesNeeded} gate(s) needed.`];
-  const names = {note: "1. Release note", gates: "2. Gate result", review: "3. File review", registry: "4. Feature registry"};
+  const names = {note: "1. Release note", gates: "2. Gate result", review: "3. File review", registry: "4. Feature registry", decisions: "5. Decision numbers"};
   for ( const [k, label] of Object.entries(names) ) {
     const p = r.rules[k];
     lines.push(`${p.length ? "FAIL" : "ok  "} ${label}${k === "gates" && r.gateBy ? `: ${r.gateBy}` : ""}`);
     for ( const x of p.slice(0, 60) ) lines.push(`       ${x}`);
     if ( p.length > 60 ) lines.push(`       ... and ${p.length - 60} more`);
   }
+  if ( r.claimsRead === false ) lines.push("note 5. the claim registry is not readable here, so blocks were checked against main only; a thread's own run checks the registry too");
   for ( const w of r.warnings ?? [] ) lines.push(`note ${w}`);
   if ( r.ok ) lines.push("Every merge rule is met.");
   else if ( outcome(r) === "pending" ) lines.push("Waiting for the PC gates: the wodx/merge-rules status stays pending (merging blocked) until a passing result comes in.");
@@ -423,7 +507,7 @@ if ( process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.m
       process.exit(body.state === "failure" ? 1 : 0);
     }
     // A local run cannot read the gate result; that alone is not a failure there
-    const onlyUnread = !r.ok && r.gateUnread && r.rules.note.length + r.rules.review.length === 0;
+    const onlyUnread = !r.ok && r.gateUnread && r.rules.note.length + r.rules.review.length + (r.rules.registry?.length ?? 0) + (r.rules.decisions?.length ?? 0) === 0;
     process.exit(r.ok || r.bensOwn || onlyUnread ? 0 : 1);
   }).catch(e => { console.error(`merge-rules: ${e.message}`); process.exit(2); });
 }

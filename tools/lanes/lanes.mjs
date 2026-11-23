@@ -11,6 +11,11 @@
  *   node tools/lanes/lanes.mjs reset    --lane 2 [--if-free]   backs the lane's world up, puts known-good back, restarts, accepts
  *   node tools/lanes/lanes.mjs accept   --lane 2          records the running world as the lane's clean fingerprint
  *   node tools/lanes/lanes.mjs compare                    differences between lanes (packages and clean worlds)
+ *   node tools/lanes/lanes.mjs setup-clean --lane 2 [--again]   makes the clean world (wodx-clean, clean-world.mjs) on the
+ *                                                         lane from worlds/wodx-template, takes its known-good copy, then
+ *                                                         starts the lane on its default world again
+ *   --world clean         reset, snapshot, accept, start and setup work on the clean world instead of rothenstein-wodx
+ *                         (lanes.json "worlds"; its own known-good copy and clean fingerprint)
  * Lane 1 is the testbed the owner also plays in: reset and snapshot-over-it refuse lane 1 unless --allow-lane-1 is given.
  * Every overwrite is preceded by a dated copy in the backups folder; nothing in the backups folder is ever removed.
  * Runs at below-normal priority.
@@ -21,18 +26,20 @@ import os from "node:os";
 import {spawn, spawnSync} from "node:child_process";
 import {loadConfig, getLane, laneDir, laneUrl, isUp, acquireLock, releaseLock, lockState, readJson, writeJson,
   codeFingerprint, expectedCode, diffCode, diffPackages, hashTree, treeDigest, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld,
-  printDiffs, pidAlive, REPO} from "./lib.mjs";
+  printDiffs, pidAlive, REPO, cleanPath, withKnownGoodWrite, waitKnownGood} from "./lib.mjs";
+import {repoModules, cleanModuleConfig, cleanWorldJson, CLEAN_START, BOOTSTRAP, START} from "./clean-world.mjs";
 
 try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch { }
 const args = process.argv.slice(2);
 const cmd = args[0];
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
 const flag = k => args.includes(`--${k}`);
-const cfg = loadConfig();
+// setup-clean always works on the clean world; elsewhere --world (or WODX_WORLD) picks one, rothenstein-wodx by default
+const cfg = loadConfig(undefined, {world: opt("world") ?? (cmd === "setup-clean" ? "clean" : process.env.WODX_WORLD)});
 const repo = path.resolve(opt("repo") ?? REPO);
 const stamp = () => new Date().toISOString().replace(/[:]/g, "").replace(/\..*/, "");
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const worldDir = lane => path.join(lane.dataPath, "Data", "worlds", cfg.world);
+const worldDir = (lane, world = cfg.world) => path.join(lane.dataPath, "Data", "worlds", world);
 const die = (msg, code = 1) => { console.error(msg); process.exit(code); };
 
 /** Copies a folder. mirror: the target ends up exactly like the source. robocopy on Windows (/R:0 for LevelDB locks). */
@@ -54,12 +61,12 @@ function backup(src, name) {
   return dst;
 }
 
-async function start(lane) {
+async function start(lane, world = cfg.world) {
   if ( await isUp(lane) ) { console.log(`Lane ${lane.id} is already up on port ${lane.port}.`); return; }
   fs.mkdirSync(laneDir(lane), {recursive: true});
   fs.mkdirSync(path.join(lane.dataPath, "Logs"), {recursive: true});
   const log = fs.openSync(path.join(lane.dataPath, "Logs", "lane-server.log"), "a");
-  const child = spawn(process.execPath, [cfg.foundryMain, `--dataPath=${lane.dataPath}`, `--port=${lane.port}`, `--world=${cfg.world}`, "--noupnp", "--noupdate"],
+  const child = spawn(process.execPath, [cfg.foundryMain, `--dataPath=${lane.dataPath}`, `--port=${lane.port}`, `--world=${world}`, "--noupnp", "--noupdate"],
     {detached: true, stdio: ["ignore", log, log], windowsHide: true});
   child.unref();
   fs.writeFileSync(path.join(laneDir(lane), "server.pid"), String(child.pid));
@@ -125,14 +132,15 @@ async function accept(lane) {
   const {browser, page} = await openGM(laneUrl(lane));
   try {
     const now = await settledFingerprint(page, cfg.ignoreSettings);
-    const old = readJson(path.join(laneDir(lane), "clean.json"));
+    const old = readJson(cleanPath(lane, cfg));
     if ( old ) {
       const d = diffWorld(old, now);
       fs.appendFileSync(path.join(laneDir(lane), "accept-log.txt"), `${new Date().toISOString()} accepted ${d.strict.length} change(s): ${d.strict.map(x => x.where).join(", ")}\n`);
       printDiffs("Accepted changes", d.strict);
     }
-    writeJson(path.join(laneDir(lane), "clean.json"), now);
-    console.log(`Lane ${lane.id}: clean fingerprint recorded (settings ${now.settingsDigest.slice(0, 12)}).`);
+    if ( now.world !== cfg.world ) throw new Error(`Lane ${lane.id} runs ${now.world}, not ${cfg.world}: nothing recorded (reset it${cfg.worldKey ? ` with --world ${cfg.worldKey}` : ""}).`);
+    writeJson(cleanPath(lane, cfg), now);
+    console.log(`Lane ${lane.id}: clean fingerprint recorded for ${cfg.world} (settings ${now.settingsDigest.slice(0, 12)}).`);
   } finally { await browser.close(); }
 }
 function deployFiles(lane) {
@@ -159,7 +167,7 @@ try {
   switch ( cmd ) {
     case "status":
       for ( const l of cfg.lanes ) {
-        const st = lockState(l, cfg), clean = readJson(path.join(laneDir(l), "clean.json")), drift = readJson(path.join(laneDir(l), "drift.json"));
+        const st = lockState(l, cfg), clean = readJson(cleanPath(l, cfg)), drift = readJson(path.join(laneDir(l), "drift.json"));
         const nd = drift ? drift.code.length + drift.world.length : null;
         console.log(`lane ${l.id}  port ${l.port}  ${(await isUp(l)) ? "up     " : "stopped"}  ${st.held ? `busy (${st.lock.gates?.join(" ")})` : "free"}  clean: ${clean ? "yes" : "none"}  last check: ${nd === null ? "never" : nd ? `${nd} difference(s)` : "matched"}  ${l.dataPath}`);
       }
@@ -209,6 +217,7 @@ try {
         copyTree(path.join(src.dataPath, "Data", kind, d.name), path.join(lane.dataPath, "Data", kind, d.name), {mirror: true});
       }
       deployFiles(lane);
+      await waitKnownGood(cfg.knownGood); // B7762: not while another lane writes it
       copyTree(path.join(cfg.knownGood, cfg.world), worldDir(lane), {mirror: true});
       await start(lane);
       await accept(lane);
@@ -218,11 +227,13 @@ try {
     case "snapshot": {
       const from = getLane(cfg, opt("from") ?? die("Give --from N.", 2));
       if ( await isUp(from) ) die(`Lane ${from.id} is running. Stop it first: a running world's database can't be copied safely.`);
-      fs.mkdirSync(cfg.knownGood, {recursive: true});
-      backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
-      copyTree(worldDir(from), path.join(cfg.knownGood, cfg.world), {mirror: true});
-      writeJson(path.join(cfg.knownGood, "known-good.json"), {from: from.id, at: new Date().toISOString(), world: cfg.world,
-        digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), packages: Object.fromEntries(Object.entries(codeFingerprint(from.dataPath)).map(([k, v]) => [k, v.version]))});
+      await withKnownGoodWrite(cfg.knownGood, `snapshot from lane ${from.id}`, () => {
+        fs.mkdirSync(cfg.knownGood, {recursive: true});
+        backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
+        copyTree(worldDir(from), path.join(cfg.knownGood, cfg.world), {mirror: true});
+        writeJson(path.join(cfg.knownGood, "known-good.json"), {from: from.id, at: new Date().toISOString(), world: cfg.world,
+          digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), packages: Object.fromEntries(Object.entries(codeFingerprint(from.dataPath)).map(([k, v]) => [k, v.version]))});
+      });
       console.log(`Known-good copy of ${cfg.world} taken from lane ${from.id}.`);
       break;
     }
@@ -234,10 +245,11 @@ try {
       lockOrDie(lane, flag("if-free"));
       try {
         await stop(lane);
+        await waitKnownGood(cfg.knownGood); // B7762: not while another lane writes it
         const same = fs.existsSync(worldDir(lane)) && treeDigest(hashTree(worldDir(lane))) === treeDigest(hashTree(kg));
         if ( same ) console.log(`Lane ${lane.id}'s world already matches known-good; no copy needed.`);
         else { backup(worldDir(lane), `lane${lane.id}-${cfg.world}`); copyTree(kg, worldDir(lane), {mirror: true}); }
-        fs.rmSync(path.join(laneDir(lane), "clean.json"), {force: true});
+        fs.rmSync(cleanPath(lane, cfg), {force: true});
         await start(lane);
         await accept(lane);
         console.log(`Lane ${lane.id} reset from known-good.`);
@@ -245,7 +257,7 @@ try {
       break;
     }
     case "compare": {
-      const fps = cfg.lanes.filter(l => fs.existsSync(path.join(l.dataPath, "Data"))).map(l => ({l, code: codeFingerprint(l.dataPath, {cacheDir: path.join(laneDir(l), "cache")}), clean: readJson(path.join(laneDir(l), "clean.json"))}));
+      const fps = cfg.lanes.filter(l => fs.existsSync(path.join(l.dataPath, "Data"))).map(l => ({l, code: codeFingerprint(l.dataPath, {cacheDir: path.join(laneDir(l), "cache")}), clean: readJson(cleanPath(l, cfg))}));
       for ( let i = 1; i < fps.length; i++ ) {
         const a = fps[0], b = fps[i];
         console.log(`lane ${a.l.id} vs lane ${b.l.id}:`);
@@ -256,6 +268,57 @@ try {
       }
       break;
     }
-    default: die("Commands: status, setup, start, stop, deploy, snapshot, reset, accept, compare", 2);
+    case "setup-clean": {
+      if ( String(lane.id) === "1" ) die("Lane 1 is the testbed Ben plays in; the clean world goes on the shared lanes.");
+      const spec = cfg.worldSpec ?? die(`No clean world in lanes.json "worlds".`);
+      const home = cfg.defaultWorld.world, wdir = worldDir(lane);
+      // The default world's clean fingerprint names its other modules; the clean world gets the same ones
+      const homeClean = readJson(path.join(laneDir(lane), "clean.json")) ?? die(`Lane ${lane.id} has no clean fingerprint for ${home}: reset it first.`);
+      if ( fs.existsSync(path.join(wdir, "world.json")) && !flag("again") ) die(`Lane ${lane.id} already has ${cfg.world}. Use reset --world ${cfg.worldKey}, or --again.`);
+      const mods = repoModules(repo), moduleCfg = cleanModuleConfig(mods, homeClean.modules ?? {});
+      lockOrDie(lane);
+      try {
+        await stop(lane);
+        if ( fs.existsSync(wdir) ) { backup(wdir, `lane${lane.id}-${cfg.world}`); fs.rmSync(wdir, {recursive: true, force: true}); }
+        fs.mkdirSync(wdir, {recursive: true});
+        const tpl = readJson(path.join(repo, spec.template ?? "worlds/wodx-template", "world.json")) ?? die("No template world.json.");
+        writeJson(path.join(wdir, "world.json"), cleanWorldJson(tpl, spec));
+        await start(lane);
+        const {openGM, waitApis} = await import("./browser.mjs");
+        // A world made from world.json alone has one account, Gamemaster: it adds the test accounts and the modules
+        let b = await openGM(laneUrl(lane), {user: "Gamemaster"});
+        try {
+          const missing = await b.page.evaluate(BOOTSTRAP, moduleCfg);
+          if ( missing.length ) console.log(`Modules the default world has that this lane lacks (left out): ${missing.join(", ")}`);
+        } finally { await b.browser.close(); }
+        b = await openGM(laneUrl(lane));
+        let made;
+        try {
+          const late = await waitApis(b.page);
+          if ( late.length ) throw new Error(`No api after the modules went on: ${late.join(", ")}`);
+          made = await b.page.evaluate(START, CLEAN_START);
+        } finally { await b.browser.close(); }
+        if ( made.error ) throw new Error(`Start a chronicle: ${made.error}`);
+        const on = mods.chronicles.filter(id => made.active.includes(id));
+        if ( on.length || made.inPlay || made.chronicleMods.length ) throw new Error(`A chronicle is on in the clean world (${[...on, made.inPlay, ...made.chronicleMods].filter(Boolean).join(", ")}).`);
+        console.log(`Start a chronicle ran (${made.done.join(", ") || "nothing to change"}); ${made.active.length} modules on, no chronicle in play.`);
+        await stop(lane);
+        // B7762: setup-clean on several lanes of one PC take turns writing the shared clean copy
+        await withKnownGoodWrite(cfg.knownGood, `setup-clean on lane ${lane.id}`, () => {
+          fs.mkdirSync(cfg.knownGood, {recursive: true});
+          backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
+          copyTree(wdir, path.join(cfg.knownGood, cfg.world), {mirror: true});
+          writeJson(path.join(cfg.knownGood, "known-good.json"), {from: lane.id, at: new Date().toISOString(), world: cfg.world,
+            digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), modules: moduleCfg});
+        });
+        await start(lane);
+        await accept(lane);
+        await stop(lane);
+        await start(lane, home);
+        console.log(`Clean world ${cfg.world} made on lane ${lane.id}; known-good copy at ${cfg.knownGood}. Lane ${lane.id} runs ${home} again.`);
+      } finally { releaseLock(lane); }
+      break;
+    }
+    default: die("Commands: status, setup, setup-clean, start, stop, deploy, snapshot, reset, accept, compare", 2);
   }
 } catch (e) { die(`lanes.mjs ${cmd}: ${e.message}`); }

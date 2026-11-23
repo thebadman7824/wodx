@@ -62,10 +62,11 @@ Heartbeat (B4700): a GitHub workflow (.github/workflows/pc-heartbeat.yml) checks
 issue has moved in the last 15 minutes, and opens a pc-alert issue "the runner is silent" when it has not.
 
 Recheck (B4610, B7310): when a gates job fails, each failing gate (up to 12) is rerun ALONE, one gate per run-gate
-call on a freshly reset lane, and no verdict rests on one run: a pass alone reads `passes alone` (it fails only after
-other gates, or is flaky); a failure alone is run once more, and a pass then reads `flaky`; two failures alone go to
+call on a freshly reset lane, and no verdict rests on one run: a pass alone is run once more, and two passes read
+`order fault` (it fails only after other gates; B7441); a pass and a fail alone read `flaky`; two failures alone go to
 main the same way, where a pass is confirmed by a second run before it reads `NEW with this change`, and a failure
-there reads `fails on main too`. Runs on the branch come first and runs on main after (two deploys at most), and the
+there reads `fails on main too`. A flaky gate goes to main as well (B7521): a failure there reads `fails on main too`,
+two passes there leave it `flaky`. An order fault or a `fails on main too` gate does not turn wodx/gates red. Runs on the branch come first and runs on main after (two deploys at most), and the
 recheck stops taking runs after 120 minutes. A "fails on main too" gate is still a fault to fix, not a reason to
 merge past it. "recheck": false in the job turns this off.
 
@@ -120,6 +121,8 @@ workers with no new output for 60 minutes, and an OCR run that gave up. Until a 
 
 `status-push.mjs` here is the copy every PC runs, from `<home>\gpu-tools`. Main PC: set `PC_COMFY_URL=http://127.0.0.1:8188`.
 Secondary PC: set `PC_OCR_MATCH` (default `book_pipeline`), `PC_OCR_OUT` (the OCR output folder) and `PC_OCR_LOG` (its log).
+New PC: set `PC_STATUS_NAME=newpc` and `PC_LANES=10`. The watcher reads its status file `newpc.json` and its status
+issue "PC runner status (New PC)" the same way it reads the Main PC's and the Secondary's.
 
 The issue "PC watcher report" (label `pc-watch`) is rewritten each cycle. When a problem shows up on two cycles in a
 row, one issue "PC watcher alert" (label `pc-alert`) opens. It gets a comment when the list changes and closes when
@@ -132,6 +135,21 @@ BENJAMIN-PC runs a third runner from `D:\WoDX\pcq` with `runner.benjamin-pc.json
 `D:\WoDX\FoundryData-lane8`), its own status issue "PC runner status (Secondary PC)" and alerts titled
 "Secondary PC alert". It reads the same queue and claims jobs the same way; name `--lane 8` to send a job there.
 It has 8 cores and 16 GB, so it can take longer gate lists than lane 7. Book and Trove lookups stay on the main PC.
+
+## The New PC
+
+NEW_PC_LEBRUN (HP OMEN 35L: 12 cores, 64 GB, RTX 5080 16 GB) runs a fourth runner from `D:\WoDX\pcq` with
+`runner.new_pc_lebrun.json`: lanes 10 to 13 (ports 30100 to 30130, `D:\WoDX\FoundryData-lane10` to `-lane13`; lanes
+11 to 13 since B7760), its own status issue "PC runner status (New PC)" and alerts titled "New PC alert". Name
+`--lane 10` (or 11 to 13) to send a job there. A new lane there is set up with a setup-lane job naming it. Its Foundry is the Node build
+(`D:\WoDX\Foundry\main.mjs`); its lane was set up from the cloud lane kit's known-good world and add-on modules. It
+drives no merge train and runs no stale-PR sweep, and book and Trove lookups stay on the main PC. It also holds the
+solo world (`D:\WoDX\FoundryData-solo`, port 30010), which no lane touches. Its gate runners are new-pc-gate-1 and
+new-pc-gate-2 (`gh-runner\install.ps1 -Prefix new-pc-gate`).
+
+B7761: a runner with `prGatesDeferMinutes` in its settings (the Secondary PC: 10) leaves a pull request's touched or
+every-gate run to the runners with more lanes for that many minutes after the job is queued, then takes it if nobody
+has. Jobs named to a lane are never held.
 
 ## Gates on every pull request (B7010)
 
@@ -163,6 +181,14 @@ Nightly full run (B7020): the "WoDX nightly gates" task on the Secondary PC star
 05:00 UTC. It waits for the GPU guard (gives up at 13:00 UTC), queues every gate on lane 8 for main's commit, and opens
 a summary issue labelled `nightly-gates`. A health signal for main only; merges still need the pull request's own
 touched gates. The Secondary PC's runner runs at below-normal priority (`"priority"` in `runner.benjamin-pc.json`, B7021).
+
+## The GPU guard (B7510)
+`gpuguard.mjs` lets one GPU job hold the card at a time and starts a job only when its memory fits:
+`node tools/pcq/gpuguard.mjs run --class art|ocr|local|other [--need-gb N] [--label x] -- <command>`, and
+`gpuguard.mjs state` prints one JSON line (card reading, holder, waiters). Waiters line up by gpu.order in
+registry/priorities.json, then by arrival. The lock folder is GPU_GUARD_DIR (on the Secondary PC, D:\WoDX\pcq\gpu-guard).
+The PCs also run a copy from D:\WoDX\pcq\gpu-tools, which uses the same order built in; nightly-gates.mjs takes the
+repo copy first.
 
 ## The merge train (B7202)
 

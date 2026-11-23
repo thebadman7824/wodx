@@ -22,6 +22,7 @@ import {TOTALS} from "./totals-rules.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
 import {traitGroups} from "./first-night-build-rules.mjs";
 import {MERITS_FLAWS} from "../../wodx-chronicle/data/trait-effects.mjs";
+import {daTable} from "../../wodx-chronicle/data/trait-lines.mjs";
 import {WORLD_REGIONS, cultureOf} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {generate, createPeople} from "./people.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
@@ -41,8 +42,10 @@ const homeland = () => { try { return chron()?.world?.homeland?.() ?? null; } ca
 function bookOf(actor) {
   let eraId = "";
   try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch { /* none */ }
-  const L = TOTALS[defaultLine(actor.type, {variant: actor.system?.settings?.variant ?? "", eraId})] ?? {};
-  return {label: L.short ?? L.label ?? "the book", abilityCap: L.abilityCap ?? 3, backgrounds: L.backgrounds ?? null, flaws: L.flaws ?? 7, table: MERITS_FLAWS};
+  const line = defaultLine(actor.type, {variant: actor.system?.settings?.variant ?? "", eraId});
+  const L = TOTALS[line] ?? {};
+  // B7665: a Dark Ages vampire's Merits and Flaws are V20 Dark Ages' own, at its costs
+  return {label: L.short ?? L.label ?? "the book", abilityCap: L.abilityCap ?? 3, backgrounds: L.backgrounds ?? null, flaws: L.flaws ?? 7, table: line === "vtda20" ? daTable(MERITS_FLAWS) : MERITS_FLAWS};
 }
 const sheetView = actor => {
   const g = traitGroups(actor.system ?? {});

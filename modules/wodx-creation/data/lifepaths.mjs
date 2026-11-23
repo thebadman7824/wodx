@@ -1,7 +1,7 @@
 /**
  * WoDX Creation 0.11.0: lifepaths, the era bands, the lines and the mortal scenes (birth, youth, adult life, later
- * life). WoDX's own words; history is general knowledge of the Bohemian crown lands and Europe (Rothenstein is in
- * Moravia), with a choice in most scenes for a character from elsewhere. Nothing here comes from a book's text.
+ * life). WoDX's own words; history is general knowledge of the Bohemian crown lands and Europe (the first chronicle is
+ * in Moravia), with a choice in most scenes for a character from elsewhere. Nothing here comes from a book's text.
  *
  * Shapes (the rules are in scripts/lifepath-rules.mjs):
  *   event  {id, stage, title, text, w (weight, default 10), when {lines, notLines, splats, spans [[from, to]], flags,
@@ -10,12 +10,13 @@
  *           f flag or [flags], n {eventId: weight} (the next scene, as Princes of Darkness chains its events)}
  * Station flags start "st:"; they shape the later scenes. Writing rule: second person, no gendered words.
  */
+import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 
 /** Era bands, 1197 to the World of Future Darkness. */
 export const BANDS = [
-  {key: "high-medieval", from: 1100, to: 1347, label: "the high Middle Ages"},
-  {key: "plague", from: 1348, to: 1352, label: "the Black Death"},
-  {key: "late-medieval", from: 1353, to: 1499, label: "the late Middle Ages"},
+  {key: "high-medieval", from: 1100, to: canon("black-death").from - 1, label: "the high Middle Ages"},
+  {key: "plague", from: canon("black-death").from, to: canon("black-death").to, label: "the Black Death"},
+  {key: "late-medieval", from: canon("black-death").to + 1, to: 1499, label: "the late Middle Ages"},
   {key: "renaissance", from: 1500, to: 1617, label: "the Renaissance and Reformation"},
   {key: "thirty-years", from: 1618, to: 1648, label: "the Thirty Years' War"},
   {key: "baroque", from: 1649, to: 1788, label: "the Baroque and the Enlightenment"},

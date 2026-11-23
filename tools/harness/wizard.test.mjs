@@ -155,9 +155,11 @@ test("the wizard window walks a vampire through the book and writes to the sheet
   assert.ok([...a.items].some(i => i.name === "Resources" && i.system.type === "wod.types.background"));
   await act("go", {dataset: {page: "meritsFlaws"}});
   const mf = app.element.querySelector(".wodx-wz-add");
-  mf.querySelector("select[name=pick-mf]").value = "eat-food";
+  // B7665: a Dark Ages vampire takes the Dark Ages list, where Deceptive Eating stands in for V20's Eat Food
+  const eat = w0.line === "vtda20" ? ["deceptive-eating", "Deceptive Eating"] : ["eat-food", "Eat Food"];
+  mf.querySelector("select[name=pick-mf]").value = eat[0];
   await act("addFeature", mf.querySelector("button[data-action=addFeature]"));
-  assert.ok([...a.items].some(i => i.name === "Eat Food" && i.system.value === 1));
+  assert.ok([...a.items].some(i => i.name === eat[1] && i.system.value === 1));
   // Freebies: Willpower goes up and is in the ledger
   await act("go", {dataset: {page: "freebies"}});
   const wpBefore = a.system.advantages.willpower.permanent;

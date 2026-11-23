@@ -1,0 +1,321 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-ivo",
+ "name": "Ivo's Ferry Cabin",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-ivo-s-ferry-cabin/trespass-ivo-s-ferry-cabin.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    14.0,
+    4.0,
+    14.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    4.0,
+    20.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    9.0,
+    20.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    4.0,
+    20.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    7.0,
+    14.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    14.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    4.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    9.0,
+    16.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    14.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    9.0,
+    8.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    9.0,
+    14.0,
+    9.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    14.0,
+    6.0,
+    14.0,
+    7.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    9.0,
+    9.0,
+    9.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16.0,
+    9.0,
+    18.0,
+    9.0
+   ],
+   "kind": "gate",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-cabin-table",
+   "label": "The cabin table",
+   "rect": [
+    8.0,
+    4.0,
+    3.0,
+    1.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-boat-store",
+   "label": "The boat store",
+   "rect": [
+    14.0,
+    4.0,
+    6.0,
+    5.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-jetty",
+   "label": "The jetty",
+   "rect": [
+    5.0,
+    9.6,
+    4.0,
+    0.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-loose-board",
+   "label": "The loose board",
+   "rect": [
+    9.6,
+    6.9,
+    0.8,
+    0.8
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-cabin-table",
+   "obj": "table",
+   "label": "The cabin table",
+   "rect": [
+    8.6,
+    4.25,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-boat-store",
+   "obj": "boat",
+   "label": "The boat store",
+   "rect": [
+    16.5,
+    5.1,
+    1.0,
+    2.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-loose-board",
+   "obj": "hatch",
+   "label": "The loose board",
+   "rect": [
+    9.7,
+    7.0,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 13.257,
+   "y": 4.257,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 13.2,
+   "y": 4.3,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 16.0,
+   "y": 9.2,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 3.14,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 10.0,
+   "y": 13.0,
+   "text": "GM: Ivo's river cabin below the town."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "ferry"
+}

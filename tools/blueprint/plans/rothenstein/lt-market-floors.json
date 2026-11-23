@@ -1,0 +1,2147 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "lt-market-floors",
+ "name": "Lower Town, Upper Floors and Cellars",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  58,
+  27
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/lower-town-upper-floors-and-cellars/lower-town-upper-floors-and-cellars.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    34.0,
+    15.0,
+    34.0,
+    22.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.075,
+    10.8,
+    19.0,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.625,
+    10.8,
+    15.275,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.1,
+    6.4,
+    16.3,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    2.0,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    53.5,
+    7.0,
+    56.0,
+    7.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.375,
+    10.8,
+    9.175,
+    10.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    12.0,
+    56.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    15.0,
+    24.0,
+    22.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    8.375,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    2.0,
+    6.4,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    6.4,
+    3.7,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    15.0,
+    19.0,
+    23.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    4.6,
+    19.0,
+    5.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    27.15,
+    2.0,
+    27.75,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    15.0,
+    2.0,
+    23.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    22.4,
+    34.0,
+    22.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.75,
+    9.8,
+    34.6,
+    9.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    9.5,
+    50.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.6,
+    7.8,
+    10.6,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.075,
+    2.0,
+    19.0,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    6.2,
+    27.5,
+    6.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.925,
+    10.8,
+    5.725,
+    10.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    11.825,
+    2.0,
+    12.625,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    24.0,
+    15.0,
+    34.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.7,
+    7.8,
+    13.9,
+    7.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.8,
+    2.0,
+    14.8,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    7.8,
+    5.7,
+    7.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.175,
+    2.0,
+    11.825,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    2.0,
+    27.15,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.3,
+    6.4,
+    19.0,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    7.0,
+    52.5,
+    7.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.15,
+    9.8,
+    27.75,
+    9.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    15.275,
+    2.0,
+    16.075,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    10.8,
+    4.925,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.6,
+    2.0,
+    10.6,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    9.8,
+    27.15,
+    9.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.75,
+    2.0,
+    34.6,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    2.0,
+    56.0,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.0,
+    2.0,
+    56.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    2.0,
+    19.0,
+    4.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    5.4,
+    19.0,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.5,
+    6.2,
+    30.6,
+    6.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.375,
+    2.0,
+    9.175,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    19.9,
+    12.0,
+    23.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    5.0,
+    50.0,
+    8.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.9,
+    7.8,
+    19.0,
+    7.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    2.0,
+    24.0,
+    9.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    15.0,
+    12.0,
+    18.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    2.0,
+    50.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.7,
+    6.4,
+    7.9,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.725,
+    10.8,
+    8.375,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.6,
+    2.0,
+    34.6,
+    5.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.6,
+    6.2,
+    34.6,
+    9.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.175,
+    10.8,
+    11.825,
+    10.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    2.0,
+    40.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    15.0,
+    19.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.6,
+    8.3,
+    30.6,
+    9.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.825,
+    10.8,
+    12.625,
+    10.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.625,
+    2.0,
+    15.275,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.9,
+    6.4,
+    12.1,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    23.8,
+    19.0,
+    23.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.6,
+    2.0,
+    30.6,
+    7.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.275,
+    10.8,
+    16.075,
+    10.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    34.6,
+    5.6,
+    34.6,
+    6.2
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    5.7,
+    7.8,
+    6.7,
+    7.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    27.5,
+    6.2,
+    28.5,
+    6.2
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.1,
+    6.4,
+    13.1,
+    6.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16.3,
+    6.4,
+    17.3,
+    6.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    18.9,
+    12.0,
+    19.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    13.9,
+    7.8,
+    14.9,
+    7.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    30.6,
+    7.3,
+    30.6,
+    8.3
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    52.5,
+    7.0,
+    53.5,
+    7.0
+   ],
+   "kind": "secret",
+   "locked": false
+  },
+  {
+   "c": [
+    7.9,
+    6.4,
+    8.9,
+    6.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    50.0,
+    8.5,
+    50.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    3.7,
+    6.4,
+    4.7,
+    6.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    50.0,
+    4.0,
+    50.0,
+    5.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "etienne-s-room",
+   "label": "Etienne's Room",
+   "rect": [
+    2.0,
+    2.0,
+    4.2,
+    4.4
+   ],
+   "use": "home"
+  },
+  {
+   "id": "ctibor-s-room",
+   "label": "Ctibor's Room",
+   "rect": [
+    6.4,
+    2.0,
+    4.200000000000001,
+    4.4
+   ],
+   "use": "home"
+  },
+  {
+   "id": "ludwig-s-room",
+   "label": "Ludwig's Room",
+   "rect": [
+    10.6,
+    2.0,
+    4.200000000000001,
+    4.4
+   ],
+   "use": "home"
+  },
+  {
+   "id": "sir-reinhold-s-room",
+   "label": "Sir Reinhold's Room",
+   "rect": [
+    14.8,
+    2.0,
+    4.199999999999999,
+    4.4
+   ],
+   "use": "home"
+  },
+  {
+   "id": "upper-passage",
+   "label": "Upper passage",
+   "rect": [
+    2,
+    6.4,
+    17,
+    1.4
+   ],
+   "use": "hall"
+  },
+  {
+   "id": "linen-room",
+   "label": "Linen room",
+   "rect": [
+    2,
+    7.8,
+    8.6,
+    3.0
+   ],
+   "use": "store"
+  },
+  {
+   "id": "innkeeper-s-room",
+   "label": "Innkeeper's room",
+   "rect": [
+    10.6,
+    7.8,
+    8.4,
+    3.0
+   ],
+   "use": "home"
+  },
+  {
+   "id": "inn-cellar",
+   "label": "Inn cellar",
+   "rect": [
+    2,
+    15,
+    10,
+    8.8
+   ],
+   "use": "store"
+  },
+  {
+   "id": "cider-cellar",
+   "label": "Cider cellar",
+   "rect": [
+    12,
+    15,
+    7,
+    8.8
+   ],
+   "use": "store"
+  },
+  {
+   "id": "graff-s-bedchamber",
+   "label": "Graff's Bedchamber",
+   "rect": [
+    24,
+    2,
+    6.6,
+    4.2
+   ],
+   "use": "home"
+  },
+  {
+   "id": "upper-landing",
+   "label": "Upper landing",
+   "rect": [
+    24,
+    6.2,
+    6.6,
+    3.6
+   ],
+   "use": "hall"
+  },
+  {
+   "id": "jan-s-garret",
+   "label": "Jan's Garret",
+   "rect": [
+    30.6,
+    2,
+    4.0,
+    7.8
+   ],
+   "use": "home"
+  },
+  {
+   "id": "back-room-cellar",
+   "label": "Back-room cellar",
+   "rect": [
+    24,
+    15,
+    10,
+    7.4
+   ],
+   "use": "store"
+  },
+  {
+   "id": "master-voss-s-cellar",
+   "label": "Master Voss's Cellar",
+   "rect": [
+    40,
+    2,
+    10,
+    10
+   ],
+   "use": "workshop"
+  },
+  {
+   "id": "chalk-circle",
+   "label": "Chalk circle",
+   "rect": [
+    42.5,
+    4.5,
+    5.0,
+    5.0
+   ],
+   "use": "ritual"
+  },
+  {
+   "id": "skrik-s-niche",
+   "label": "Skrik's Niche",
+   "rect": [
+    50,
+    7,
+    6,
+    5
+   ],
+   "use": "home"
+  },
+  {
+   "id": "trapdoor-stair",
+   "label": "Trapdoor stair",
+   "rect": [
+    50,
+    2,
+    6,
+    5
+   ],
+   "use": "hall"
+  }
+ ],
+ "slots": [
+  {
+   "id": "box-bed",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    2.1,
+    2.55,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    4.1,
+    2.1,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "stool",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    5.45,
+    4.05,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "box-bed-2",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    6.5,
+    2.55,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-2",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    8.5,
+    2.1,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "stool-2",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    9.85,
+    4.05,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "box-bed-3",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    10.7,
+    2.55,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-3",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    12.7,
+    2.1,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "stool-3",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    14.05,
+    4.05,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "box-bed-4",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    14.9,
+    2.55,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-4",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    16.9,
+    2.1,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "stool-4",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    18.25,
+    4.05,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "linen-chest",
+   "obj": "chest",
+   "label": "Linen chest",
+   "rect": [
+    2.5,
+    9.9,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "shelf",
+   "obj": "shelf",
+   "label": "Shelf",
+   "rect": [
+    6.5,
+    10.425,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "box-bed-5",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    11.3,
+    8.85,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "money-box",
+   "obj": "strongbox",
+   "label": "Money box",
+   "rect": [
+    13.75,
+    10.225,
+    0.5,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    15.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-2",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    16.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-3",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    17.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-4",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    18.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-5",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    19.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-6",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    20.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-7",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    2.375,
+    21.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    5.75,
+    15.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-2",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    5.75,
+    16.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-3",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    5.75,
+    17.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    7.825,
+    22.95,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-2",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    8.825,
+    22.95,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cider-barrel",
+   "obj": "cask",
+   "label": "Cider barrel",
+   "rect": [
+    12.775,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cider-barrel-2",
+   "obj": "cask",
+   "label": "Cider barrel",
+   "rect": [
+    13.775,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cider-barrel-3",
+   "obj": "cask",
+   "label": "Cider barrel",
+   "rect": [
+    14.775,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cider-barrel-4",
+   "obj": "cask",
+   "label": "Cider barrel",
+   "rect": [
+    15.775,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cider-barrel-5",
+   "obj": "cask",
+   "label": "Cider barrel",
+   "rect": [
+    16.775,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cider-barrel-6",
+   "obj": "cask",
+   "label": "Cider barrel",
+   "rect": [
+    17.775,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "salt-sack-silver-inside",
+   "obj": "sack",
+   "label": "Salt sack, silver inside",
+   "rect": [
+    16.325,
+    16.95,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "salt-sack-silver-inside-2",
+   "obj": "sack",
+   "label": "Salt sack, silver inside",
+   "rect": [
+    17.325,
+    16.95,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "box-bed-6",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    24.3,
+    3.15,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-5",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    29.0,
+    2.1,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "fireplace",
+   "obj": "fireplace",
+   "label": "Fireplace",
+   "rect": [
+    30.0,
+    3.4,
+    0.6,
+    1.2
+   ],
+   "facing": "W",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "document-chest",
+   "obj": "chest",
+   "label": "Document chest",
+   "rect": [
+    29.0,
+    8.9,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "straw-cot",
+   "obj": "cot",
+   "label": "Straw cot",
+   "rect": [
+    33.25,
+    3.1,
+    1.3,
+    0.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "desk",
+   "obj": "desk",
+   "label": "Desk",
+   "rect": [
+    32.2,
+    9.05,
+    0.8,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool-5",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    32.45,
+    8.35,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "table",
+   "obj": "table",
+   "label": "Table",
+   "rect": [
+    27.1,
+    15.55,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "jar-shelf",
+   "obj": "shelf",
+   "label": "Jar shelf",
+   "rect": [
+    24.125,
+    17.5,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    33.175,
+    15.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-2",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    33.175,
+    16.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-3",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    33.175,
+    17.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "chest-6",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    25.5,
+    21.5,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "lectern",
+   "obj": "lectern",
+   "label": "Lectern",
+   "rect": [
+    40.8,
+    2.8,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "shelf-of-jars",
+   "obj": "shelf",
+   "label": "Shelf of jars",
+   "rect": [
+    44.5,
+    2.125,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "locked-chest",
+   "obj": "chest",
+   "label": "Locked chest",
+   "rect": [
+    40.5,
+    11.1,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "brazier",
+   "obj": "brazier",
+   "label": "Brazier",
+   "rect": [
+    48.6,
+    3.3,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "rag-nest",
+   "obj": "sack",
+   "label": "Rag nest",
+   "rect": [
+    55.05,
+    10.625,
+    0.5,
+    0.35
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 27.45,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 7.162,
+   "y": 3.575,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 40.25,
+   "y": 7.4,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 30.462,
+   "y": 3.85,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 8.775,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 30.6,
+   "y": 15.625,
+   "kind": "fire",
+   "bright": 1.12,
+   "dim": 5.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 27.45,
+   "y": 10.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 10.463,
+   "y": 3.712,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 29.05,
+   "y": 7.737,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 8.775,
+   "y": 11.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 4.737,
+   "y": 2.175,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 31.363,
+   "y": 5.35,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 31.85,
+   "y": 9.55,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 42.45,
+   "y": 2.575,
+   "kind": "fire",
+   "bright": 1.12,
+   "dim": 5.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 6.05,
+   "y": 7.938,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 24.25,
+   "y": 18.087,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 48.85,
+   "y": 11.425,
+   "kind": "fire",
+   "bright": 1.12,
+   "dim": 5.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 35.05,
+   "y": 5.9,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 19.45,
+   "y": 5.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 5.325,
+   "y": 11.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.45,
+   "y": 2.175,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 15.675,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 8.637,
+   "y": 15.25,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 40.425,
+   "y": 7.05,
+   "kind": "eerie",
+   "bright": 0.38,
+   "dim": 2.0,
+   "color": "#7affc0"
+  },
+  {
+   "x": 12.225,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 55.438,
+   "y": 11.475,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 15.675,
+   "y": 11.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 28.05,
+   "y": 9.55,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 17.35,
+   "y": 6.263,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.225,
+   "y": 11.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  }
+ ],
+ "labels": [
+  {
+   "x": 8.5,
+   "y": 4.213,
+   "text": "Ctibor of Olomouc lives here (The Inn \u00b7 Upper Floor, Ctibor's Room)."
+  },
+  {
+   "x": 13.3,
+   "y": 22.5,
+   "text": "Steps up to the stair hall."
+  },
+  {
+   "x": 32.55,
+   "y": 5.9,
+   "text": "Jan Dvorak lives here (Graff's House \u00b7 Upper Floor, Jan's Garret)."
+  },
+  {
+   "x": 16.5,
+   "y": 17.2,
+   "text": "Behind the cider barrels: Ludwig's smuggled silver, packed in salt sacks and mar"
+  },
+  {
+   "x": 12.7,
+   "y": 4.213,
+   "text": "Ludwig of Regensburg lives here (The Inn \u00b7 Upper Floor, Ludwig's Room)."
+  },
+  {
+   "x": 52.95,
+   "y": 9.45,
+   "text": "Skrik the Bound Imp lives here (Master Voss's Cellar, Skrik's Niche)."
+  },
+  {
+   "x": 16.887,
+   "y": 4.213,
+   "text": "Sir Reinhold von Teck lives here (The Inn \u00b7 Upper Floor, Sir Reinhold's Room)."
+  },
+  {
+   "x": 31.4,
+   "y": 21.1,
+   "text": "Steps up to the back room."
+  },
+  {
+   "x": 17.8,
+   "y": 8.9,
+   "text": "Stairs down to the common room."
+  },
+  {
+   "x": 25.8,
+   "y": 8.1,
+   "text": "Stairs down to the waiting room."
+  },
+  {
+   "x": 27.35,
+   "y": 4.15,
+   "text": "Richter Hannes Graff lives here (Graff's House \u00b7 Upper Floor, Graff's Bedchamber"
+  },
+  {
+   "x": 45.0,
+   "y": 7.0,
+   "text": "The circle is chalk over an older one cut into the floor. Skrik cannot cross it "
+  },
+  {
+   "x": 54.95,
+   "y": 3.2,
+   "text": "The trapdoor stair up to the workroom."
+  },
+  {
+   "x": 4.213,
+   "y": 4.213,
+   "text": "Etienne Vauclair lives here (The Inn \u00b7 Upper Floor, Etienne's Room)."
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "stair-voss-cellar",
+   "to": "lt-market",
+   "rect": [
+    54.3,
+    2.4,
+    1.3,
+    1.6
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-inn-up",
+   "to": "lt-market",
+   "rect": [
+    16.8,
+    7.9,
+    2.0,
+    2.0
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "surgeon-cellar",
+   "to": null,
+   "rect": [
+    30.7,
+    18.9,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-inn-cellar",
+   "to": "lt-market",
+   "rect": [
+    12.4,
+    21.8,
+    1.8,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "voss-cellar",
+   "to": null,
+   "rect": [
+    52.9,
+    3.9,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "inn-cellar",
+   "to": null,
+   "rect": [
+    12.6,
+    20.2,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "inn-up",
+   "to": null,
+   "rect": [
+    15.3,
+    6.4,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-graff-up",
+   "to": "lt-market",
+   "rect": [
+    25.0,
+    7.4,
+    1.6,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "graff-up",
+   "to": null,
+   "rect": [
+    26.6,
+    7.4,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-surgeon-cellar",
+   "to": "lt-market",
+   "rect": [
+    30.6,
+    20.4,
+    1.6,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false
+}

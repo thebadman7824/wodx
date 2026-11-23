@@ -32,9 +32,11 @@ export async function run() {
     const [vamp] = await G.make(Actor, [{name: "Gate SystemRolls Mourner", type: "Vampire", system: {
       attributes: Object.fromEntries(Object.entries(attrs).map(([k, v]) => [k, {value: v, total: v}])),
       abilities: {intimidation: {value: 2}, brawl: {value: 1}}}}]);
-    const [command, blow] = await vamp.createEmbeddedDocuments("Item", [
+    // B7771: a batch create does not keep its order (kit rule 1), so the two powers are taken by name
+    const made = await vamp.createEmbeddedDocuments("Item", [
       {name: "Gate SystemRolls Command", type: "Power", system: {type: "wod.types.disciplinepower", dice1: "manipulation", dice2: "intimidation", difficulty: 6, level: 1}},
       {name: "Gate SystemRolls Blow", type: "Power", system: {type: "wod.types.disciplinepower", dice1: "strength", dice2: "brawl", difficulty: 6, level: 1}}]);
+    const command = made.find(i => i.name === "Gate SystemRolls Command"), blow = made.find(i => i.name === "Gate SystemRolls Blow");
     await Ch.conditions.setCondition(vamp, "grieving", true);
     await waitFor(() => (Ch.conditions.conditionsOf?.(vamp) ?? []).some(c => c.id === "grieving"), 4000);
 

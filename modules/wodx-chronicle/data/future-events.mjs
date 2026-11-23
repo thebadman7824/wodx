@@ -2221,7 +2221,7 @@ export default {
     "wraith"
    ],
    "name": "Wraith",
-   "summary": "The Dark Kingdom of Iron's heirs fortify the Shadowlands of Moravia and Rothenstein, the failing Hierarchy's last fortress.",
+   "summary": "The Dark Kingdom of Iron's heirs fortify the Shadowlands of Moravia, the failing Hierarchy's last fortress.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {
@@ -2420,7 +2420,7 @@ export default {
     "hunter"
    ],
    "name": "Hunter: Catholic Europe",
-   "summary": "The crusade reaches Moravia. Rothenstein's old families, who hid Kindred for centuries, are tried as collaborators.",
+   "summary": "The crusade reaches Moravia. The old families who hid Kindred for centuries are tried as collaborators.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {

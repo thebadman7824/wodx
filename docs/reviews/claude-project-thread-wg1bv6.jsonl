@@ -1,0 +1,2 @@
+{"file":"tools/gate/gatetruthstoryteller.mjs","verdict":"working","how":"read step 3 and core.mjs travel()/moveToScene/mutate in full; node --check; quality-check.sh and gate-rules/gate-map harness tests pass","hash":"50eb12db0a32","at":"2026-11-18T20:26Z"}
+{"file":"changes/decisions/B7470.md","verdict":"working","how":"read step 3 and core.mjs travel()/moveToScene/mutate in full; node --check; quality-check.sh and gate-rules/gate-map harness tests pass","hash":"a30c3a7a840f","at":"2026-11-18T20:26Z"}

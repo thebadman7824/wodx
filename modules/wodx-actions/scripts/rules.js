@@ -21,7 +21,7 @@ export const DIFFICULTIES = {
  * Build a dice pool and difficulty for an ordinary action.
  * p: { attribute, ability, abilityType ("talent"|"skill"|"knowledge"|""), abilityKey,
  *      bonusDice, extraDiff, baseDifficulty, woundPenalty, ignoreWounds,
- *      multiIndex, retries, aura, daytimeCap (Road rating or null), teamworkDice, teamworkOverflow,
+ *      multiIndex, retries, retryLabel (B7121: "third try"), aura, daytimeCap (Road rating or null), teamworkDice, teamworkOverflow,
  *      traitDice, traitDiff, traitParts (merits and flaws, from trait-hooks.js) }
  * Returns { dice, difficulty, parts[], blocked: string|null, autoSuccessAllowed }
  */
@@ -51,7 +51,7 @@ export function actionPool(p) {
     add("Teamwork", p.teamworkDice || 0);
     if (p.woundPenalty && !p.ignoreWounds) add("Wounds", p.woundPenalty);
     if (p.multiIndex > 0) { add("Multiple actions", -p.multiIndex); addD("Multiple actions", p.multiIndex); }
-    addD("Retry", p.retries || 0);
+    addD(p.retryLabel ? `Retry (${p.retryLabel})` : "Retry", p.retries || 0);
     addD("Aura", p.aura || 0);
     addD("Too many helpers", p.teamworkOverflow || 0);
     addD("Other", p.extraDiff || 0);
@@ -60,7 +60,7 @@ export function actionPool(p) {
         dice = p.daytimeCap;
     }
     if (diff >= 10 && (p.multiIndex > 0 || p.retries > 0))
-        blocked = blocked || "Difficulty reaches 10 from multiple actions or retries: the action cannot be attempted (V20 Dark Ages pp. 322–323).";
+        blocked = blocked || "Difficulty reaches 10 from multiple actions or tries after a failure: the action cannot be attempted now (V20 Dark Ages pp. 322–323).";
     dice = Math.max(0, dice);
     return { dice, difficulty: diff, parts, blocked, autoSuccessAllowed: dice >= diff };
 }
@@ -285,12 +285,14 @@ export function imitateLifeCost(road) { return Math.max(0, 8 - road); }
  * Plan healing with blood (p. 340, 345): one blood per bashing or lethal level (lethal first, worst first),
  * aggravated levels cost five blood and a day's rest each.
  */
-export function planHealing(damage, blood, { includeAggravated = false, maxSpend = Infinity } = {}) {
+export function planHealing(damage, blood, { includeAggravated = false, maxSpend = Infinity, perLevel = 1 } = {}) {
     let b = damage.bashing || 0, l = damage.lethal || 0, a = damage.aggravated || 0;
     let spent = 0, healed = { bashing: 0, lethal: 0, aggravated: 0 };
     const budget = Math.min(blood, maxSpend);
-    while (spent < budget && l > 0) { l--; spent++; healed.lethal++; }
-    while (spent < budget && b > 0) { b--; spent++; healed.bashing++; }
+    // B7066: perLevel is the blood one level of bashing or lethal costs (2 with Slow Healing, V20 p. 483)
+    const per = Math.max(1, Number(perLevel) || 1);
+    while (spent + per <= budget && l > 0) { l--; spent += per; healed.lethal++; }
+    while (spent + per <= budget && b > 0) { b--; spent += per; healed.bashing++; }
     if (includeAggravated) while (budget - spent >= 5 && a > 0) { a--; spent += 5; healed.aggravated++; }
     return { spent, healed, after: { bashing: b, lethal: l, aggravated: a } };
 }

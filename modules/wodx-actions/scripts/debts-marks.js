@@ -22,6 +22,7 @@ import * as D from "./debts-rules.js";
 import * as B from "./beast-marks-rules.js";
 import * as C from "./c20-rules.js";
 import * as P from "./profiles.js";
+import * as TH from "./trait-hooks.js";
 import * as FD from "./fae-da.js";
 
 const MOD = "wodx-actions";
@@ -393,7 +394,12 @@ export function build(ctx) {
     }
     function auraNote(target) {
         const now = B.marksNow(target?.getFlag?.(MOD, "diablerieMarks") ?? [], game.time.worldTime);
-        return now.veins.length ? `<div class="vta-big bad">Black veins run through ${esc(target.name)}'s aura: a diablerist (V20 p. 294).</div>` : "";
+        // B7066: Deceptive Aura reads as a mortal's; Hidden Diablerie shows no black veins (V20 p. 493)
+        const hide = TH.auraHides(target);
+        const kindred = P.detectProfile(target) === "kindred";
+        let out = kindred ? (hide.kind ? `<div class="vta-note">${esc(target.name)}'s aura is bright and full of colour, as a living person's is.</div>` : `<div class="vta-note">${esc(target.name)}'s aura is intense but pale: a vampire (V20 p. 136).</div>`) : "";
+        if (now.veins.length && !hide.veins) out += `<div class="vta-big bad">Black veins run through ${esc(target.name)}'s aura: a diablerist (V20 p. 294).</div>`;
+        return out;
     }
     async function marks(actor) {
         const list = actor.getFlag(MOD, "diablerieMarks") ?? [];

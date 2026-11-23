@@ -8,6 +8,7 @@
  * changed a setting by hand since. No Foundry here: the harness tests every function.
  */
 import {NEVER_AUTO} from "./approvals-rules.mjs";
+import {LIVE_WORLDS} from "./live-worlds.mjs";
 
 export const LEVELS = ["handsOn", "balanced", "handsOff"];
 export const LEVEL_LABELS = {
@@ -44,7 +45,8 @@ export const SETTINGS = {handsOn: [], balanced: BALANCED, handsOff: HANDS_OFF};
  * alone.
  */
 export const START_LEVEL = "balanced";
-export const NEVER_SEED = ["rothenstein-live"];
+/** B7564: the one shared Live list (live-worlds.mjs). */
+export const NEVER_SEED = LIVE_WORLDS;
 export function seedPlan({worldId = "", seeded = false, level = "handsOn", base = {}, solo = false} = {}) {
   if ( seeded || solo ) return null;
   if ( NEVER_SEED.includes(String(worldId)) ) return null;

@@ -321,7 +321,11 @@ export const SHOWS = {
   "lord-of-the-flies": {sound: [{t: "Flies drone around someone {{dir}}.", n: 0}], sight: [{t: "Flies circle someone {{dir}} and will not leave.", n: 1}]},
   "permanent-fangs": {sight: [{t: "The one {{dir}} has long, sharp eyeteeth.", n: 2}]},
   "cast-no-reflection": {sight: [{t: "The one {{dir}} throws no reflection in the glass.", n: 2}], indoor: true},
-  "touch-of-frost": {sight: [{t: "Flowers and leaves close to someone {{dir}} have gone black, as if frost had bitten them.", n: 2}]}
+  "touch-of-frost": {sight: [{t: "Flowers and leaves close to someone {{dir}} have gone black, as if frost had bitten them.", n: 2}]},
+  // B7665: V20 Dark Ages pp. 421 and 427
+  "unclean": {sight: [{t: "Sores and scabs mark the skin of someone {{dir}}, like a leper's.", n: 0}]},
+  "harbinger-of-the-abyss": {sight: [{t: "The shadows lean toward someone {{dir}}, and the flames near them gutter.", n: 1}, {t: "Flowers and leaves close to someone {{dir}} have gone black, as if frost had bitten them.", n: 2}],
+    touch: [{t: "Something about the one {{dir}} sets the teeth on edge.", n: 1}]}
 };
 
 /** Senses a trait takes away (V20 Blind and Deaf), by WoDX Senses' sense names. */

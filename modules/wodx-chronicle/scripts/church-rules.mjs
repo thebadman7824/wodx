@@ -124,7 +124,9 @@ export function seasonOn(date) {
 
 /**
  * Everything the church year says about one date.
- * date: {year, month, day, calendar, jdn, dayOfWeek}; opts: {extra (parseFeasts), observance (to override the year's)}.
+ * date: {year, month, day, calendar, jdn, dayOfWeek}; opts: {extra (parseFeasts), observance (to override the year's),
+ *   customs ([[m, d, name]]: a place's own customs, named but no holy day), revels ([names] that also make a night of revel)}
+ *   (B7611).
  * Returns {feast, day, vigil, fast, ember, season, observance, revel, crowd, curfewStart, huntStep, lines}.
  *   crowd: "busy" (a night of revel), "quiet" (a fast kept strictly) or null; curfewStart: 24 on a night of revel, else null;
  *   huntStep: -1 on a night of revel, +1 on a strict fast, else 0 (hunting in town only).
@@ -137,6 +139,7 @@ export function churchDay(date, opts = {}) {
   const feast = feastOn({...date, calendar: cal}, opts.extra ?? []);
   const named = MOVABLE_DAYS.find(([o]) => o === off)?.[1] ?? (month === 1 && day === 5 ? "Twelfth Night" : month === 12 && day === 31 ? "New Year's Eve" : null);
   const vigil = FIXED_VIGILS.find(([m, d]) => m === month && d === day)?.[2] ?? MOVABLE_VIGILS.find(([o]) => o === off)?.[1] ?? null;
+  const custom = (opts.customs ?? []).filter(([m, d]) => m === month && d === day).map(x => x[2]).join("; ") || null;
   const ember = emberDays(year, cal).includes(jdn);
   const season = seasonOn({...date, calendar: cal});
   // The fast of the day: the strictest that applies
@@ -147,10 +150,10 @@ export function churchDay(date, opts = {}) {
   else if ( vigil && !feast ) fast = `${vigil}, a fast before the feast`;
   else if ( ember ) fast = "An Ember day, a fast";
   else if ( dow === 4 && !feast && season !== "Christmastide" && season !== "Eastertide" ) fast = "Friday: no meat";
-  const label = [feast, named, vigil].filter(Boolean);
+  const label = [feast, custom, named, vigil].filter(Boolean);
   const dayName = label.length ? [...new Set(label)].join("; ") : null;
-  const revelList = observance === "light" ? LIGHT_REVELS : REVELS;
-  const revel = [feast, named, vigil].some(n => n && revelList.includes(n));
+  const revelList = [...(observance === "light" ? LIGHT_REVELS : REVELS), ...(opts.revels ?? [])];
+  const revel = [feast, named, vigil, ...String(custom ?? "").split("; ")].some(n => n && revelList.includes(n));
   const strictFast = observance === "strict" && !!fast && !fast.startsWith("Friday") && !revel;
   const crowd = revel ? "busy" : strictFast ? "quiet" : null;
   const lines = [];
@@ -160,7 +163,7 @@ export function churchDay(date, opts = {}) {
   if ( fast?.startsWith("Friday") && observance !== "light" ) lines.push("A Friday: fish, not meat, at every table.");
   if ( season === "Lent" && observance === "strict" && !revel ) lines.push("Lent: no weddings, no feasting, no meat or dairy.");
   if ( season === "Advent" && observance === "strict" ) lines.push("Advent: a quieter season; no weddings until Christmas.");
-  return {feast, day: dayName, vigil, fast, ember, season, observance, revel, crowd,
+  return {feast, day: dayName, vigil, custom, fast, ember, season, observance, revel, crowd,
     curfewStart: revel ? 24 : null, huntStep: revel ? -1 : strictFast ? 1 : 0, lines};
 }
 

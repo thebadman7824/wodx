@@ -25,6 +25,8 @@ import * as G from "./talk-grammar.mjs";
 import {HOUSE} from "../data/grammar/house.mjs";
 import {GROUPS_GRAMMAR, SIDE_FACTS} from "../data/grammar/groups.mjs";
 import {OVERHEARD} from "../data/grammar/overheard.mjs";
+import {REGION_TALK} from "../data/region-talk.mjs";
+import * as RT from "./region-talk-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -150,7 +152,7 @@ export function build(ctx) {
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
   /* NPC 0.45.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
-  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR, OVERHEARD); // 0.53.0: overheard talk (B2750)
+  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, RT.regionGrammar(REGION_TALK, G.poolRules), GROUPS_GRAMMAR, OVERHEARD); // 0.53.0: overheard talk (B2750); B7600: a land's own lines
   let GRAMMAR = BASE;
   /* NPC 0.45.0 (B1646): the Storyteller's own grammar, in the journal "WoDX talk grammar" */
   const GRAMMAR_JOURNAL = "WoDX talk grammar";
@@ -204,7 +206,7 @@ export function build(ctx) {
   function genLine(r, kind, c, extra = {}) {
     if ( !setting("talkGrammar") ) return null;
     const npc = baseActor(r.npcTok), pc = baseActor(r.me), key = `${npc?.id}|${pc?.id}`;
-    const facts = {era: c.era, year: c.year, regard: c.regard, voice: c.voice?.key ?? null, ...whoAndMood(r), ...extra};
+    const facts = {era: c.era, year: c.year, regard: c.regard, voice: c.voice?.key ?? null, ...(c.place ?? {}), ...whoAndMood(r), ...extra};
     let hit = null;
     try { hit = G.generate(kind, facts, {grammar: GRAMMAR, seed: c.seed, recent: lately.get(key) ?? []}); } catch (e) { console.warn("WoDX NPC | talk generator", e); hit = null; }
     if ( hit?.say ) lately.set(key, [...(lately.get(key) ?? []), hit.say].slice(-6));
@@ -228,16 +230,39 @@ export function build(ctx) {
     const n = asked.get(key) ?? 0;
     if ( kind !== "greet" ) asked.set(key, n + 1);
     const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
-    return {era: TK.eraBand(year, branch), regard: TK.toneRegard(step, npc?.system?.demeanor), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n, year, wc, voice: voiceOf(npc, year)};
+    const place = placeFacts(r.scene, year);
+    return {era: TK.eraBand(year, branch), regard: TK.toneRegard(step, npc?.system?.demeanor), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n, year, wc, place,
+      pools: poolsFor(place.region ?? ""), voice: voiceOf(npc, year, place.region ?? "")};
   }
   /** The kind of person they speak as (the Storyteller's choice, else their factions and household), with its lines. */
-  function voiceOf(npc, year) {
+  function voiceOf(npc, year, region = "") {
     if ( !npc ) return null;
     let names = [];
     try { const st = game.modules.get(MOD)?.api?.factions?.state?.(); names = (st?.factions ?? []).filter(f => (f.members ?? []).includes(npc.id) || f.leader === npc.id).map(f => f.name ?? ""); } catch (e) { names = []; }
     const p = savedProfile(npc);
     const k = TK.voiceFor({voice: p.voice ?? null, factions: [...factionKeysOf(npc), ...names], household: p.household ?? null, year}, MORE.VOICES);
-    return k ? {key: k, only: ["child", "beggar", "drunk"].includes(k), ...MORE.VOICES[k]} : null;
+    if ( !k ) return null;
+    const own = REGION_TALK[region]?.VOICES?.[k];
+    return {key: k, only: ["child", "beggar", "drunk"].includes(k), ...RT.withRegion(MORE.VOICES[k], own ? {gossip: own.gossip ?? []} : null)};
+  }
+  /* B7600 (Chronicle Packs Desk d3): the region the talk happens in (the scene's own, else the homeland) */
+  const regionPools = new Map();
+  /** The stock tables with this region's own lines added: {stock, small}. */
+  function poolsFor(region = "") {
+    if ( !regionPools.has(region) ) {
+      const add = REGION_TALK[region] ?? null;
+      regionPools.set(region, {stock: RT.withRegion(STOCK, add ? {NEWS: add.NEWS, GOSSIP: add.GOSSIP} : null), small: RT.withRegion(MORE.SMALL, add?.SMALL ?? null)});
+    }
+    return regionPools.get(region);
+  }
+  /** The talk facts for where a scene stands: {region, coinSmall, coinBig} (B7601, B7602). */
+  // B7731: the money rules sit under the Storyteller api's upkeep.money (api.money was never there, so coin words fell back)
+  function placeFacts(scene, year) {
+    let here = null;
+    try { here = chron()?.world?.here?.(scene ?? globalThis.canvas?.scene ?? null) ?? null; } catch (e) { here = null; }
+    let moneyFor = null;
+    try { moneyFor = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep?.money?.rules?.moneyFor ?? null : null; } catch (e) { moneyFor = null; }
+    return RT.regionFacts(here, year, moneyFor);
   }
   const storyteller = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
   /** Does an "Only when" test hold for this actor? */
@@ -268,7 +293,7 @@ export function build(ctx) {
       let day = null;
       try { const atm = game.modules.get("wodx-atmosphere"); day = atm?.active ? atm.api?.weather?.now?.() : null; } catch (e) { day = null; }
       const keys = TK.smallTalkKeys(c.wc, day?.tags ?? [], day?.jdn ? TK.monthOfJdn(day.jdn) : null);
-      out.small = TK.smallTalk(MORE.SMALL, keys, {seed: c.seed, feast: c.wc.feast ?? ""});
+      out.small = TK.smallTalk(c.pools?.small ?? MORE.SMALL, keys, {seed: c.seed, feast: c.wc.feast ?? ""});
     }
     const last = npc?.flags?.[MOD]?.talked?.[pc.id];
     const rem = last === undefined ? null : TK.rememberOf(last, game.time?.worldTime ?? 0);
@@ -302,7 +327,7 @@ export function build(ctx) {
     const gk = kind === "rumours" ? (rum ? "rumour" : "gossip") : kind;
     const gen = genLine(r, gk, c, rum ? {rumour: rum.text} : {});
     if ( gen?.say ) return {kind: "stock", say: gen.say, when: "", then: TK.parseThen(""), rumourId: gk === "rumour" && rum ? rum.id : null, rule: gen.rule, gen: gen.gen};
-    const hit = TK.stockLine(kind, {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null, voice: c.voice});
+    const hit = TK.stockLine(kind, {stock: c.pools?.stock ?? STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null, voice: c.voice});
     return hit ? {kind: "stock", say: hit.say, when: "", then: TK.parseThen(""), rumourId: hit.rumour ? rum.id : null} : null;
   }
 
@@ -316,7 +341,7 @@ export function build(ctx) {
     let greet = g?.say ?? "";
     if ( stockOn(r.npcTok.actor) ) {
       const c = stockCtx(r, "greet"), a = asidesOf(r, c);
-      const plain = greet || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
+      const plain = greet || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: c.pools?.stock ?? STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
       // the Storyteller's own greeting is never replaced, only followed
       greet = TK.composeGreet({greet: plain, remember: greet ? "" : a.remember, notice: a.notice, ledger: a.ledger, about: a.about, small: a.small});
     }
@@ -720,7 +745,7 @@ export function build(ctx) {
       const r = {npcTok: n, me: tokDoc, scene};
       const sheet = TK.greetFor(chainOf(npc, scene), checker(pc, tokDoc, npc));
       let plain = "";
-      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
+      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: c.pools?.stock ?? STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
       const text = TK.passingLine(sheet, plain);
       if ( !text ) continue;
       await say(n, text);
@@ -760,7 +785,7 @@ export function build(ctx) {
     if ( !stockOn(npc) ) return "";
     const c = stockCtx(r, "letter");
     if ( c.regard === "hate" && c.seed % 2 === 0 ) return "";
-    const greet = own("greet") || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
+    const greet = own("greet") || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: c.pools?.stock ?? STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
     const news = stockAnswer(r, c.seed % 3 === 0 ? "news" : "rumours")?.say ?? "";
     const bye = own("farewell") || TK.moreLine("farewell", {more: MORE, era: c.era, regard: c.regard, seed: c.seed}) || "";
     return [greet, news, bye].filter(Boolean).join("\n\n");

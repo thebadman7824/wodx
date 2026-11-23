@@ -307,7 +307,7 @@ export function build(ctx) {
             // B6662: the target's ward or Magic Resistance makes a cantrip on them harder
             const rm = TH.targetResist(actor, ["magic"]);
             plan.notes.push(...rm.parts);
-            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + ed + n(rm.diff)), { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff + ed + n(rm.diff), { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
             // B7112: a botched cantrip is spoiled magic, one of the warning signs (p. 103); the last five are kept
             if (r.botch) await save(actor, { spoiled: [...(Array.isArray(i.f.spoiled) ? i.f.spoiled : []), game.time.worldTime].slice(-5) });
@@ -377,7 +377,7 @@ export function build(ctx) {
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (echoHold(actor) >= 4) { notify(`${actor.name} met an Echo of the fourth level this scene: no Unleashing while it lasts.`); return null; }
             if (plan.weavingSpent && !(await spend(actor, "weaving", plan.weavingSpent))) return null;
-            const base = await rollPool(plan.dice, Math.min(10, plan.difficulty + echoDiff(actor)));
+            const base = await rollPool(plan.dice, plan.difficulty + echoDiff(actor));
             const wild = await rollPool(plan.wildDice, plan.wildDifficulty);
             const out = F.unleashOutcome(base, plan.wildDice ? wild : { successes: 0, botch: false });
             const back = await gain(actor, "mists", out.mistsBack);

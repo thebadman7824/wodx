@@ -2,13 +2,15 @@
  * WoDX Chronicle: feast and fast days in the world. The rules are in church-rules.mjs; this reads the clock.
  *   on(date)   the church day for a described date (describeTime output), with active = the house rule's state
  *   today()    the same for the current world time
- *   extra()    the Storyteller's own feasts (setting "feasts"), for WoDX NPC's routines
+ *   extra()    the Storyteller's own feasts (setting "feasts") and the chronicle's holy days, for WoDX NPC's routines
  */
 import {MODULE_ID, rule, setting} from "./util.mjs";
 import {describeTime} from "./calendar.mjs";
 import * as R from "./church-rules.mjs";
 import * as F from "./faith-rules.mjs";
 import * as place from "./place.mjs";
+import * as chronicleData from "./chronicle-data.mjs";
+import * as Local from "./chronicle-local-rules.mjs";
 
 export function registerChurchSettings() {
   game.settings.register(MODULE_ID, "feasts", {
@@ -37,7 +39,15 @@ export function faithOf(scene = activeScene(), year = 0) {
   } catch (e) { return {faith: "western", region: "moravia"}; }
 }
 
-export const extra = () => { try { return R.parseFeasts(setting("feasts")); } catch (e) { return []; } };
+/** The holy days of the chronicle in play (manifest.local.feasts, B7611): {extra, customs, revels}. */
+export const localFeasts = () => { try { return Local.feastOptions(Local.localOf(chronicleData.current())); } catch (e) { return {extra: [], customs: [], revels: []}; } };
+
+/** The Storyteller's own feasts, then the chronicle's holy days (B7611). */
+export const extra = () => {
+  let own = [];
+  try { own = R.parseFeasts(setting("feasts")); } catch (e) { own = []; }
+  return [...own, ...localFeasts().extra];
+};
 
 /**
  * The holy day for a described date. opts.scene: the scene whose people keep it (the active scene when left out);
@@ -46,7 +56,11 @@ export const extra = () => { try { return R.parseFeasts(setting("feasts")); } ca
 export function on(date, opts = {}) {
   if ( !date ) return null;
   const {faith, region} = faithOf(opts.scene === undefined ? activeScene() : opts.scene, date.year);
-  const c = F.faithDay(faith, date, {extra: extra(), region});
+  // B7611: the chronicle's own days are kept where its homeland's year is kept, not in a scene far from home
+  const home = region === place.homeland(), loc = home ? localFeasts() : {extra: [], customs: [], revels: []};
+  let own = [];
+  try { own = R.parseFeasts(setting("feasts")); } catch (e) { own = []; }
+  const c = F.faithDay(faith, date, {extra: [...own, ...loc.extra], customs: loc.customs, revels: loc.revels, region});
   let active = false;
   try { active = !!rule("feastFast"); } catch (e) { active = false; }
   const out = {...c, faith, region, calendar: F.FAITHS[faith]?.year ?? "Church year", active, label: R.churchLabel(c)};

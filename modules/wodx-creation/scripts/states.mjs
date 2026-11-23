@@ -190,6 +190,69 @@ export async function awaken(mortal, {affinity, paradigm = "", practice = "", in
 }
 
 /* -------------------------------------------- */
+/*  Becoming Mortal (B7667)                      */
+/* -------------------------------------------- */
+
+const BEFORE_MORTAL = "WoDX · Before the Curse lifted";
+const canLift = actor => lineOf(actor) === "vampire" && !lineage(actor).became;
+
+/** GM: the Curse lifts and a vampire is mortal again (V20 Dark Ages pp. 359-360). Returns the new Mortal. */
+export async function becomeMortal(vampire, {catalyst = "other", note = "", time = game.time.worldTime, moveTokens = true} = {}) {
+  if ( !game.user.isGM ) return null;
+  if ( !canLift(vampire) ) throw new Error(`${vampire?.name} is not a vampire whose Curse can lift`);
+  const adv = vampire.system?.advantages ?? {};
+  const st = SR.mortalAgain({road: adv.path?.permanent ?? adv.path?.value, willpower: adv.willpower?.permanent, catalyst});
+  const updates = {
+    "system.advantages.path.permanent": st.humanity, "system.advantages.path.value": st.humanity, "system.advantages.path.label": "wod.advantages.path.humanity", "system.advantages.path.custom": "",
+    "system.advantages.willpower.permanent": st.willpower, "system.advantages.willpower.temporary": Math.min(st.willpower, n(adv.willpower?.temporary ?? st.willpower)),
+    [`flags.${MODULE_ID}.mortalAgain`]: {catalyst: st.catalyst, note: String(note ?? ""), at: time}
+  };
+  const {made, moved} = await rebuild(vampire, {type: CONFIG.worldofdarkness?.sheettype?.mortal ?? "Mortal", updates,
+    chronologyKey: "mortalAgain", folderName: BEFORE_MORTAL, folderKind: "before-mortal", time, moveTokens});
+  // The blood's gifts do not come along
+  const gone = [...(made.items ?? [])].filter(i => i.type === "Power" && /wod\.types\.discipline(path)?$/.test(i.system?.type ?? "")).map(i => i.id);
+  if ( gone.length ) await made.deleteEmbeddedDocuments("Item", gone);
+  await ChatMessage.create({
+    content: `<div class="wodx-card wodx-embrace"><h3>The Curse lifts</h3>
+      <p><strong>${esc(made.name)}</strong> is mortal again: ${esc(SR.MORTAL_CATALYSTS[st.catalyst])}${note ? ` (${esc(note)})` : ""}.</p>
+      <p>Humanity ${st.humanity}, Willpower ${st.willpower}. Disciplines, the blood and the Generation are gone; the heart beats and the sun no longer burns.</p>
+      ${st.dying ? "<p>The book's own example: mortal in the dying. The Storyteller says whether the life goes on.</p>" : ""}
+      <p class="wodx-quiet">V20 Dark Ages pp. 359-360: no vampire knows one who has done it; the truth is the Storyteller's. ${esc(dateLabel(time))}</p></div>`,
+    speaker: {alias: "Chronicle"}, whisper: whisperTo(made)
+  });
+  await writeLineageJournal();
+  ui.notifications.info(`${made.name} is mortal again.${moved ? ` ${moved} token(s) now show the mortal.` : ""}`);
+  return made;
+}
+
+/** GM: the Becoming Mortal dialog. */
+export async function becomeMortalDialog() {
+  if ( !game.user.isGM ) return null;
+  const vamps = game.actors.filter(canLift).sort((a, b) => a.name.localeCompare(b.name));
+  if ( !vamps.length ) return ui.notifications.warn("There is no vampire whose Curse can lift.");
+  const sel = globalThis.canvas?.tokens?.controlled?.[0]?.actor;
+  const pick = sel && canLift(sel) ? sel : vamps[0];
+  const o = (rows, v) => rows.map(([k, l]) => `<option value="${esc(k)}" ${k === v ? "selected" : ""}>${esc(l)}</option>`).join("");
+  const result = await foundry.applications.api.DialogV2.prompt({
+    classes: ["wodx", "wodx-dialog"], window: {title: "Becoming mortal"}, position: {width: 520},
+    content: `
+      <p>Legends tell of Cainites who threw off the Curse and lived again (V20 Dark Ages pp. 359-360). The book leaves it
+        to the Storyteller. A Mortal sheet is made from the vampire's; the vampire sheet is kept, in "${BEFORE_MORTAL}".</p>
+      <div class="form-group"><label>Vampire</label>${searchBox("select[name=vampire]", "Search vampires…", "Search vampires")}<select name="vampire">${o(vamps.map(a => [a.id, a.name]), pick.id)}</select></div>
+      <div class="form-group"><label>What lifted it</label><select name="catalyst" data-fixed>${o(Object.entries(SR.MORTAL_CATALYSTS), "other")}</select></div>
+      <div class="form-group"><label>In a few words</label><input type="text" name="note" value=""></div>
+      <div class="form-group"><label><input type="checkbox" name="moveTokens" checked> Tokens of the vampire become the mortal</label></div>`,
+    ok: {label: "Lift the Curse", callback: (event, button) => {
+      const f = button.form.elements;
+      return {vampire: f.vampire.value, catalyst: f.catalyst.value, note: f.note.value, moveTokens: f.moveTokens.checked};
+    }},
+    rejectClose: false
+  });
+  if ( !result ) return null;
+  return becomeMortal(game.actors.get(result.vampire), result);
+}
+
+/* -------------------------------------------- */
 /*  Dialogs                                      */
 /* -------------------------------------------- */
 

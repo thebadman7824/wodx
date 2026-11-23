@@ -1,0 +1,494 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "lower-mill",
+ "name": "The Lower Mill and Otto's Dam",
+ "chronicle": "rothenstein",
+ "tier": 4,
+ "cells": [
+  48,
+  32
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "hand",
+  "from": "Book 1 omnibus (chronicle-rebuild v2), places section"
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    17,
+    11.5,
+    22.5,
+    9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30,
+    12,
+    34,
+    12
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.2,
+    12,
+    40,
+    12
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30,
+    19,
+    40,
+    19
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30,
+    12,
+    30,
+    15
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30,
+    16.0,
+    30,
+    19
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40,
+    12,
+    40,
+    19
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    34,
+    12,
+    35.2,
+    12
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    30,
+    15,
+    30,
+    16.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "otto-s-mill",
+   "label": "Otto's Mill",
+   "rect": [
+    30,
+    12,
+    10,
+    7
+   ],
+   "use": "mill",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "water-wheel",
+   "obj": "waterwheel",
+   "label": "Water wheel",
+   "rect": [
+    29.3,
+    15.8,
+    0.6,
+    2.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "millstones",
+   "obj": "millstones",
+   "label": "Millstones",
+   "rect": [
+    32.4,
+    14.4,
+    1.2,
+    1.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth",
+   "obj": "hearth",
+   "label": "Hearth",
+   "rect": [
+    37.5,
+    16.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "box-bed",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    38.2,
+    13.35,
+    1.4,
+    0.9
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    35.5,
+    18.1,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "grain-sack",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    30.825,
+    18.15,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-2",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    31.725,
+    18.15,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-3",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    32.625,
+    18.15,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-4",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    33.525,
+    18.15,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "miller-s-cart",
+   "obj": "cart",
+   "label": "Miller's cart",
+   "rect": [
+    42.2,
+    8.55,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "Woodpile",
+   "rect": [
+    41.2,
+    14.4,
+    0.6,
+    1.2
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 38,
+   "y": 17,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 4.0,
+   "color": "#ff9a40"
+  }
+ ],
+ "labels": [
+  {
+   "x": 16,
+   "y": 13,
+   "text": "Otto's dam: cut in E16",
+   "used": false
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-lt-crafts",
+   "to": "lt-crafts",
+   "rect": [
+    46.5,
+    1,
+    1.5,
+    3
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-crafts",
+   "to": "lt-crafts",
+   "rect": [
+    0,
+    1.5,
+    1.5,
+    3
+   ]
+  }
+ ],
+ "ground": [
+  {
+   "kind": "river",
+   "label": "the Lower Town's water",
+   "path": [
+    [
+     0,
+     24
+    ],
+    [
+     12,
+     24.5
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     36,
+     24
+    ],
+    [
+     48,
+     24.5
+    ]
+   ],
+   "width": 5.0
+  },
+  {
+   "kind": "water",
+   "label": "Otto's millpond",
+   "path": [
+    [
+     4,
+     6
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     22,
+     8
+    ],
+    [
+     18,
+     12
+    ],
+    [
+     6,
+     12
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "brook",
+   "label": "millrace",
+   "path": [
+    [
+     20,
+     11
+    ],
+    [
+     24,
+     13
+    ],
+    [
+     27,
+     15
+    ],
+    [
+     29,
+     19
+    ],
+    [
+     30,
+     23
+    ]
+   ],
+   "width": 1.2
+  },
+  {
+   "kind": "road",
+   "label": "mill road",
+   "path": [
+    [
+     0,
+     3
+    ],
+    [
+     12,
+     2.5
+    ],
+    [
+     24,
+     3
+    ],
+    [
+     36,
+     3
+    ],
+    [
+     48,
+     2.5
+    ]
+   ],
+   "width": 1.2
+  },
+  {
+   "kind": "track",
+   "label": "lane to the mill door",
+   "path": [
+    [
+     34.6,
+     3
+    ],
+    [
+     34.6,
+     12
+    ]
+   ],
+   "width": 1.0
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "Which Lower Town map the mill road joins (set to lt-crafts for now)"
+ ],
+ "seeded": false,
+ "env": {
+  "outdoor": true,
+  "darkness": 0.8
+ }
+}

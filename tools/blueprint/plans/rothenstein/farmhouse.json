@@ -1,0 +1,1057 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "farmhouse",
+ "name": "Farmhouse (pattern map)",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  20,
+  14
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "pixelmap",
+  "drawer": "tools/pixelmap/maps/farmhouse.py",
+  "seed": 77
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    4,
+    3,
+    7.6,
+    3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.6,
+    3,
+    12.9,
+    3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.9,
+    3,
+    16,
+    3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4,
+    10,
+    5,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6,
+    10,
+    7,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8,
+    10,
+    9.4,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.4,
+    10,
+    12.4,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.4,
+    10,
+    16,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4,
+    3,
+    4,
+    5.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4,
+    6.8,
+    4,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16,
+    3,
+    16,
+    4.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16,
+    5.4,
+    16,
+    8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16,
+    9,
+    16,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11,
+    3,
+    11,
+    4.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11,
+    5.4,
+    11,
+    8.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11,
+    9.1,
+    11,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11,
+    7,
+    13.2,
+    7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.2,
+    7,
+    16,
+    7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5,
+    10,
+    6,
+    10
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    9.4,
+    10,
+    10.4,
+    10
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    7.6,
+    3,
+    8.6,
+    3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    12.9,
+    3,
+    13.9,
+    3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    4,
+    5.8,
+    4,
+    6.8
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    16,
+    4.4,
+    16,
+    5.4
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    12.4,
+    10,
+    13.4,
+    10
+   ],
+   "kind": "window"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    7,
+    10,
+    8,
+    10
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16,
+    8,
+    16,
+    9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11,
+    4.4,
+    11,
+    5.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11,
+    8.1,
+    11,
+    9.1
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    13.2,
+    7,
+    14.2,
+    7
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "house",
+   "label": "Farmhouse",
+   "rect": [
+    4,
+    3,
+    12,
+    7
+   ],
+   "use": "home"
+  }
+ ],
+ "slots": [
+  {
+   "id": "red-painted-chest",
+   "obj": "chest",
+   "label": "Red painted chest",
+   "rect": [
+    5.367,
+    9.109,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "water-cask",
+   "obj": "cask",
+   "label": "Water cask",
+   "rect": [
+    10.35,
+    9.217,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sauerkraut-crock",
+   "obj": "thing",
+   "label": "Sauerkraut crock",
+   "rect": [
+    9.672,
+    9.338,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "blue-painted-chest",
+   "obj": "chest",
+   "label": "Blue painted chest",
+   "rect": [
+    14.591,
+    5.509,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask-of-grain",
+   "obj": "cask",
+   "label": "Cask of grain",
+   "rect": [
+    11.302,
+    7.387,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-of-grain-2",
+   "obj": "cask",
+   "label": "Cask of grain",
+   "rect": [
+    12.057,
+    7.387,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-of-apples",
+   "obj": "cask",
+   "label": "Cask of apples",
+   "rect": [
+    12.902,
+    7.259,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-2",
+   "obj": "cask",
+   "label": "Water cask",
+   "rect": [
+    11.349,
+    8.312,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    15.138,
+    7.303,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-2",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    14.362,
+    7.325,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-3",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    15.144,
+    7.963,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-4",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    14.436,
+    7.915,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-of-apples",
+   "obj": "crate",
+   "label": "Crate of apples",
+   "rect": [
+    14.431,
+    9.343,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-of-jars",
+   "obj": "crate",
+   "label": "Crate of jars",
+   "rect": [
+    15.239,
+    9.221,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "table",
+   "obj": "table",
+   "label": "table",
+   "rect": [
+    6.9,
+    5.8,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench",
+   "obj": "bench",
+   "label": "bench",
+   "rect": [
+    7.0,
+    5.225,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-2",
+   "obj": "bench",
+   "label": "bench",
+   "rect": [
+    7.0,
+    6.905,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool",
+   "obj": "stool",
+   "label": "stool",
+   "rect": [
+    9.2,
+    6.1,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "bed",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    4.27,
+    8.1,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "shelf-of-crockery-and-food",
+   "obj": "shelf",
+   "label": "shelf of crockery and food",
+   "rect": [
+    9.05,
+    3.275,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "water-cask-2",
+   "obj": "cask",
+   "label": "Water cask",
+   "rect": [
+    10.225,
+    9.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "wall-bench-with-a-sheepskin",
+   "obj": "bench",
+   "label": "wall bench with a sheepskin",
+   "rect": [
+    9.88,
+    6.625,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool-2",
+   "obj": "stool",
+   "label": "stool",
+   "rect": [
+    5.1,
+    6.6,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "great-bed",
+   "obj": "bed-box",
+   "label": "great bed",
+   "rect": [
+    14.62,
+    3.6,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cot",
+   "obj": "cot",
+   "label": "cot",
+   "rect": [
+    11.67,
+    5.67,
+    0.8,
+    1.3
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "small-table-with-a-candle",
+   "obj": "table",
+   "label": "small table with a candle",
+   "rect": [
+    12.15,
+    3.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "shelf-of-linen",
+   "obj": "shelf",
+   "label": "shelf of linen",
+   "rect": [
+    10.92,
+    3.625,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask-of-grain-2",
+   "obj": "cask",
+   "label": "Cask of grain",
+   "rect": [
+    11.275,
+    7.275,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-of-grain-3",
+   "obj": "cask",
+   "label": "Cask of grain",
+   "rect": [
+    12.035,
+    7.275,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-of-apples-2",
+   "obj": "cask",
+   "label": "Cask of apples",
+   "rect": [
+    12.775,
+    7.225,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-3",
+   "obj": "cask",
+   "label": "Water cask",
+   "rect": [
+    11.225,
+    8.275,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-2",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    15.155,
+    7.25,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-3",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    14.355,
+    7.25,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "grain-sack-4",
+   "obj": "sack",
+   "label": "Grain sack",
+   "rect": [
+    14.455,
+    7.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "shelf-of-stores",
+   "obj": "shelf",
+   "label": "shelf of stores",
+   "rect": [
+    12.6,
+    9.575,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "crate-of-apples-2",
+   "obj": "crate",
+   "label": "Crate of apples",
+   "rect": [
+    14.44,
+    9.23,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-of-jars-2",
+   "obj": "crate",
+   "label": "Crate of jars",
+   "rect": [
+    15.11,
+    9.23,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hay-and-pitchfork",
+   "obj": "haystack",
+   "label": "hay and pitchfork",
+   "rect": [
+    10.65,
+    7.95,
+    2.2,
+    2.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bake-oven",
+   "obj": "oven-bread",
+   "label": "bake oven",
+   "rect": [
+    4.14,
+    3.14,
+    1.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "woodpile",
+   "rect": [
+    2.6,
+    4.8,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "chopping-block-and-axe",
+   "obj": "chopping-block",
+   "label": "chopping block and axe",
+   "rect": [
+    2.95,
+    6.75,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "well",
+   "obj": "well",
+   "label": "well",
+   "rect": [
+    2.2,
+    11.0,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-3",
+   "obj": "bench",
+   "label": "bench",
+   "rect": [
+    8.25,
+    10.375,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-trough",
+   "obj": "trough",
+   "label": "water trough",
+   "rect": [
+    16.93,
+    6.7,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 4.84,
+   "y": 3.84,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 4,
+   "color": "#ff9a3c"
+  }
+ ],
+ "labels": [
+  {
+   "x": 7.8,
+   "y": 6.25,
+   "text": "rug"
+  },
+  {
+   "x": 6.2,
+   "y": 3.45,
+   "text": "firewood"
+  },
+  {
+   "x": 9.74,
+   "y": 9.5,
+   "text": "Sauerkraut crock"
+  },
+  {
+   "x": 8.6,
+   "y": 9.45,
+   "text": "water bucket"
+  },
+  {
+   "x": 4.6,
+   "y": 6.3,
+   "text": "wool basket and spindle"
+  },
+  {
+   "x": 12.65,
+   "y": 4.95,
+   "text": "rug"
+  },
+  {
+   "x": 13.9,
+   "y": 8.85,
+   "text": "baskets of onions and turnips"
+  },
+  {
+   "x": 7.5,
+   "y": 10.0,
+   "text": "Front door"
+  },
+  {
+   "x": 16.0,
+   "y": 8.5,
+   "text": "Store door"
+  },
+  {
+   "x": 11.0,
+   "y": 4.9,
+   "text": "Chamber door"
+  },
+  {
+   "x": 5.45,
+   "y": 11.85,
+   "text": "washing line"
+  },
+  {
+   "x": 12.4,
+   "y": 13.0,
+   "text": "kitchen garden"
+  },
+  {
+   "x": 15.67,
+   "y": 13.0,
+   "text": "wattle fence"
+  },
+  {
+   "x": 8.7,
+   "y": 9.75,
+   "text": "herbs and onions on the beam"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "river-road"
+}

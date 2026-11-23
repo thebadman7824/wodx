@@ -7,11 +7,12 @@ const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8")
 
 /* B5650-B5659: every spirit Charm of W20 pp. 366-368 plays from the Spirit Charms window */
 test("the whole W20 list is here, each with a page in 366-368 and a summary in WoDX's words", () => {
-  assert.equal(SC.CHARMS.filter(c => c.group !== "sprite").length, 32);
+  assert.equal(SC.CHARMS.filter(c => !["sprite", "demon"].includes(c.group)).length, 32);
+  assert.equal(SC.CHARMS.filter(c => c.group === "demon").length, 8, "the eight demon Charms of V20 Dark Ages p. 402");
   assert.equal(SC.CHARMS.filter(c => c.group === "sprite").length, 7, "the seven sprite Charms of Dark Ages: Fae p. 97");
   const keys = new Set();
   for (const c of SC.CHARMS) {
-    assert.ok(c.book ? c.p === 97 : c.p >= 366 && c.p <= 368, `${c.name} page`);
+    assert.ok(c.book === SC.DEMON_BOOK ? c.p === 402 : c.book ? c.p === 97 : c.p >= 366 && c.p <= 368, `${c.name} page`);
     assert.ok(c.fx.length > 10 && c.fx.length < 200, `${c.name} summary`);
     assert.ok(["always", "roll", "free"].includes(c.kind), `${c.name} kind`);
     assert.ok(SC.GROUPS[c.group], `${c.name} group`);
@@ -27,7 +28,7 @@ test("each Charm does something on the table (standing rule 31)", () => {
   for (const c of SC.CHARMS) assert.ok(c.does || c.spec || c.world?.length, `${c.name} has no effect`);
   const f = src("modules/wodx-actions/scripts/charms.js");
   assert.match(f, /async function blight\(spirit, target\)/);
-  for (const d of new Set(SC.CHARMS.map(c => c.does).filter(d => d && d !== "blight"))) assert.match(f, new RegExp(`case "${d}"`), `no handler for ${d}`);
+  for (const d of new Set(SC.CHARMS.map(c => c.does).filter(d => d && !["blight", "fireproof"].includes(d)))) assert.match(f, new RegExp(`case "${d}"`), `no handler for ${d}`);
 });
 
 test("a sheet item's name finds its Charm", () => {

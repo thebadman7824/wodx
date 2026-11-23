@@ -168,7 +168,7 @@ export function build(ctx) {
             if (n(fd.dice)) {
                 // B6662: the target's ward or Magic Resistance makes a Kuei-jin power on them harder
                 const rm = TH.targetResist(actor, ["magic"]);
-                const r = await rollPool(n(fd.dice), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff))); rolls.push(r.roll);
+                const r = await rollPool(n(fd.dice), n(fd.diff) + lim.diff + n(rm.diff)); rolls.push(r.roll);
                 body += rollBlock(pw ? esc(pw.name) : it ? esc(it.name) : "The roll", r, [...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])]);
                 got = r.botch ? 0 : r.successes;
                 if (r.botch && i.temp.length) {

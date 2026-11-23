@@ -138,6 +138,8 @@ Hooks.once("init", () => {
   Omens.registerOmenSettings();
   Signals.registerSignalSettings();
   Threads.registerThreadSettings();
+  // Chronicle Packs Desk c1: the Threads of Fate deck follows the chronicle in play (closed, or opened again)
+  Hooks.on("wodxChronicleInPlay", () => Threads.forgetDeck());
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   TownLooks.registerTownLookSettings();
@@ -230,8 +232,11 @@ Hooks.once("ready", () => {
     wills: {of: Wills.willOf, save: Wills.saveWill, open: Wills.willDialog, estate: Wills.estateOf, law: Wills.lawAt, kin: Wills.kinOf, rules: WillRules},
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
+    // Chronicle Packs Desk c2: carry characters and items to a new chronicle in a fresh world
+    carry: {open: () => import("./carry-app.mjs").then(m => m.openCarry()), write: (picks, opts) => import("./carry-app.mjs").then(m => m.writeCarry(picks, opts)),
+      read: path => import("./carry-app.mjs").then(m => m.readCarry(path)), rules: () => import("./carry-rules.mjs")},
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules, refreshPrimer: Setup.refreshPrimer, refreshAbroad: Setup.refreshAbroad},
-    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
+    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, get recipes() { return Builder.recipes(); }, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor, makeItem: Night.makeAidItem},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
@@ -398,6 +403,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Dash.DashboardApp.open()};
   tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
     button: true, visible: game.user.isGM, onChange: () => Setup.openSetup()};
+  tokens.tools.wodxCarry = {name: "wodxCarry", title: "Carry to a new chronicle (characters and items to bring into a fresh world)", icon: "fa-solid fa-suitcase", order: 118.5,
+    button: true, visible: game.user.isGM, onChange: () => import("./carry-app.mjs").then(m => m.openCarry())};
   tokens.tools.wodxBuilder = {name: "wodxBuilder", title: "Build this chronicle (the recipe's steps, each safe to run twice, with Undo)", icon: "fa-solid fa-chess-rook", order: 127,
     button: true, visible: Builder.wanted(), onChange: () => Builder.openBuilder()};
   tokens.tools.wodxHand = {name: "wodxHand", title: "The Storyteller's hand (rules at a glance, call for a roll, before play, the end of the night, the timer)", icon: "fa-solid fa-hand-sparkles", order: 123,

@@ -36,12 +36,25 @@ test("a change runs only the gates it needs", () => {
   const n = G.gatesFor(pd.modules, pd.gates, map).length;
   assert.ok(n > 0 && n < all / 4, `a Paperdoll change runs ${n} of ${all} gates`);
   assert.deepEqual(G.touched(["docs/DECISIONS.md", "tools/release/stamp.mjs", "changes/wodx-npc/x.md"]).modules, []);
-  assert.equal(G.touched(["system/worldofdarkness/system.json"]).modules.length, ids.length);
+  assert.equal(G.touched(["system/worldofdarkness/system.json"]).modules.length, ids.length - G.shelved().size, "every module but the shelved ones");
   const ch = G.touched(["modules/wodx-chronicle/scripts/main.mjs"]).modules;
   for ( const m of ["wodx-npc", "wodx-actions", "wodx-sheets"] ) assert.ok(ch.includes(m), `a Chronicle change reaches ${m}`);
   const gate = G.touched(["tools/gate/gatecase.mjs"]);
   assert.deepEqual(G.gatesFor(gate.modules, gate.gates, map), ["gatecase"]);
   assert.deepEqual(G.touched(["modules/wodx-actions/scripts/main.js"], {direct: true}).modules.includes("wodx-sheets"), false);
+});
+
+test("B7134: a shelved module (Voices) is covered by no gate and touches none; its files are out of an audit", async () => {
+  assert.ok(G.shelved().has("wodx-voices"));
+  assert.deepEqual(G.touched(["modules/wodx-voices/scripts/main.mjs"]).modules, []);
+  for ( const [g, mods] of Object.entries(map) ) assert.ok(!mods.includes("wodx-voices"), `${g} does not cover Voices`);
+  assert.ok(!("gatevoices" in map), "the Voices gate is left out");
+  assert.ok(G.touched(["system/worldofdarkness/system.json"]).modules.every(m => m !== "wodx-voices"));
+  const C = await import(new URL("../audit/coverage.mjs", import.meta.url));
+  assert.ok(C.scriptFiles().length > 0 && C.scriptFiles().every(f => !f.startsWith("modules/wodx-voices/")));
+  assert.ok(C.scriptFiles(G.ROOT, true).every(f => !f.startsWith("modules/wodx-voices/")));
+  assert.ok(fs.existsSync(path.join(G.ROOT, "modules/wodx-voices/module.json")), "nothing is deleted");
+  assert.match(fs.readFileSync(path.join(G.ROOT, "docs/MODULES.md"), "utf8"), /\| wodx-voices \| [\d.]+ \| Shelved \(13 November 2026/);
 });
 
 test("B6951: two-browser gates (a player phase) are left out of the lane map", async () => {

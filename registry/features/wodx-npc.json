@@ -1,5 +1,1143 @@
 {
  "module": "wodx-npc",
- "seeded": false,
- "rows": []
+ "seeded": true,
+ "rows": [
+  {
+   "id": "npc.tactics",
+   "name": "NPC combat tactics: each NPC weighs what it could do on its turn and plans the best",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/main.mjs",
+    "modules/wodx-npc/scripts/npc-rules.mjs",
+    "modules/wodx-npc/scripts/lines-rules.mjs",
+    "modules/wodx-npc/scripts/hook-relay.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B65, B66, B6310, B6760"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/npc-rules.mjs:scoreOptions"
+    },
+    "shown": {
+     "what": "a plan whispered to the Storyteller, best first, each with its reason; on Auto the NPC acts and the turn moves on"
+    },
+    "gated": {
+     "gate": "tools/gate/gate7b.mjs",
+     "step": "an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason"
+    },
+    "book": {
+     "none": "house rule (B65, B66): the books leave this to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1580,
+    1766
+   ]
+  },
+  {
+   "id": "npc.fear",
+   "name": "Fear: a Kindred NPC shies from fire in a fight",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/npc-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B66"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/npc-rules.mjs:scoreOptions"
+    },
+    "shown": {
+     "what": "the NPC's plan names the torch and it keeps away from it on the map"
+    },
+    "gated": {
+     "gate": "tools/gate/gate7b.mjs",
+     "step": "fear: a Kindred NPC shies from a torch in the hero's hand"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Rötschreck; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "npc.auto-powers",
+   "name": "An NPC uses its own powers in a fight, and holds back obvious ones while mortals watch",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/power-pick-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1329,
+     "decisions": "B4926, B4927"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/power-pick-rules.mjs:pick"
+    },
+    "shown": {
+     "what": "on Auto the NPC's power card on its own turn, or the next best act when mortals are watching"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthnpc.mjs",
+     "step": "5. Auto: an NPC whose best option is a power uses it on its own turn"
+    },
+    "book": {
+     "none": "house rule (B4926): the books leave this to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1329
+   ]
+  },
+  {
+   "id": "npc.routines",
+   "name": "Places, routines on the clock, duties and what an NPC does after its first reaction",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/routines.mjs",
+    "modules/wodx-npc/scripts/routine-rules.mjs",
+    "modules/wodx-npc/scripts/follow-rules.mjs",
+    "modules/wodx-npc/scripts/duty-rules.mjs",
+    "modules/wodx-npc/scripts/hunt-npc-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B5680-B5698"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/routines.mjs:build"
+    },
+    "shown": {
+     "what": "NPC tokens walk to work, prayer, home and their duties as the clock turns"
+    },
+    "gated": {
+     "gate": "tools/gate/gateduties.mjs",
+     "step": "7. the duty moves the token on the clock"
+    },
+    "book": {
+     "none": "house rule (Phase 7c, B5692-B5698): the books leave this to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1394
+   ]
+  },
+  {
+   "id": "npc.alerts",
+   "name": "Alarms: a place raised to alarm and how NPCs answer what happens on the map",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/alert-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 47,
+     "decisions": "Phase 7c"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/alert-rules.mjs:raise"
+    },
+    "shown": {
+     "what": "guards and townsfolk turn toward the trouble and the scene stays on alarm for an hour"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    47
+   ]
+  },
+  {
+   "id": "npc.factions",
+   "name": "Factions and domains: members, places held, faction turns, founding, politics and war",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/factions.mjs",
+    "modules/wodx-npc/scripts/faction-rules.mjs",
+    "modules/wodx-npc/scripts/founding.mjs",
+    "modules/wodx-npc/scripts/politics-rules.mjs",
+    "modules/wodx-npc/scripts/war-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "Phase 7d, B2211-B2216"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/factions.mjs:build"
+    },
+    "shown": {
+     "what": "the Factions window, faction turn cards for the Storyteller, and wars that start by themselves"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    572,
+    625,
+    714
+   ]
+  },
+  {
+   "id": "npc.faction-looks",
+   "name": "Who holds a place, shown on its scene",
+   "module": "wodx-npc",
+   "core": false,
+   "files": [
+    "modules/wodx-npc/scripts/faction-looks.mjs",
+    "modules/wodx-npc/scripts/faction-look-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1176,
+     "decisions": "B4631"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/faction-looks.mjs:syncBanners"
+    },
+    "shown": {
+     "what": "the holder's banners and colours on the scene, changing when the place changes hands"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1176
+   ]
+  },
+  {
+   "id": "npc.poaching",
+   "name": "A domain someone else wants: poaching, its signs and tracking the poacher",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/poach-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2265,
+     "decisions": "B7638-B7640"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/poach-rules.mjs:trackPool"
+    },
+    "shown": {
+     "what": "signs of the poacher posted in the domain, a tracking roll for the holder, and the factions' regard changing"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedadomain.mjs",
+     "step": "3. the holder tracks the poacher: Perception + Investigation at 4, and finds it"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages domain and hunting rules; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2265
+   ]
+  },
+  {
+   "id": "npc.road-flock",
+   "name": "A Road's followers in a town as a small Kindred faction",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/road-flock-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2297,
+     "decisions": "B7649"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/road-flock-rules.mjs:flockSpec"
+    },
+    "shown": {
+     "what": "the Luminaries of a scene gathered from the Road window as a faction"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedaflock.mjs",
+     "step": "1. the Storyteller gathers the Luminaries of the scene from the Road window"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages Road congregations; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2297
+   ]
+  },
+  {
+   "id": "npc.hunt-calendar",
+   "name": "The faith calendar and the hunt: feast days, fasts and curfews change the hunt",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/hunt-calendar.mjs",
+    "modules/wodx-npc/scripts/hunt-calendar-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 836,
+     "decisions": "B2710, B2711"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/hunt-calendar.mjs:calendarFor"
+    },
+    "shown": {
+     "what": "the hunt window names the day's feast or fast and its change to the difficulty"
+    }
+   },
+   "open": [
+    "gated: gatehuntpowder '6. the hunt window' is graded marker",
+    "book: V20 p. 259 and V20 Dark Ages p. 334 (hunting grounds); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    836
+   ]
+  },
+  {
+   "id": "npc.attitude",
+   "name": "How each NPC regards each character, and why",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/attitude.mjs",
+    "modules/wodx-npc/scripts/attitude-rules.mjs",
+    "modules/wodx-npc/scripts/opinion-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 526,
+     "decisions": "B1908"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/attitude.mjs:build"
+    },
+    "shown": {
+     "what": "the regard on the Relationships tab and the reasons behind it for the Storyteller"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    526,
+    653
+   ]
+  },
+  {
+   "id": "npc.faces",
+   "name": "Faces you have met: a stranger's token shows a description until you learn the name",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/faces.mjs",
+    "modules/wodx-npc/scripts/faces-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 98,
+     "decisions": "NPC 0.7.0"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/faces.mjs:applyName"
+    },
+    "shown": {
+     "what": "a short description under an NPC's token for each player until one of their characters learns the name"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    98
+   ]
+  },
+  {
+   "id": "npc.talk",
+   "name": "The topic menu: walk up to someone and pick a topic, and the talk generator for unwritten answers",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/talk.mjs",
+    "modules/wodx-npc/scripts/talk-rules.mjs",
+    "modules/wodx-npc/scripts/talk-grammar.mjs",
+    "modules/wodx-npc/scripts/region-talk-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 521,
+     "decisions": "B7600-B7603"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/talk.mjs:build"
+    },
+    "shown": {
+     "what": "a Talk window with the topics; the answer in chat, and what was taught on the sheet with Undo"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetalk.mjs",
+     "step": "the window"
+    },
+    "book": {
+     "none": "a WoDX play aid; the words are WoDX's own"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    521,
+    677,
+    2230
+   ]
+  },
+  {
+   "id": "npc.overheard",
+   "name": "NPCs who talk to each other where a character can overhear",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/overheard.mjs",
+    "modules/wodx-npc/scripts/overheard-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 834,
+     "decisions": "B2750-B2753"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/overheard.mjs:build"
+    },
+    "shown": {
+     "what": "lines of talk between NPCs over their tokens and in chat for those in earshot"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    834
+   ]
+  },
+  {
+   "id": "npc.passersby",
+   "name": "Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/passersby.mjs",
+    "modules/wodx-npc/scripts/passerby-rules.mjs",
+    "modules/wodx-npc/scripts/passerby-world.mjs",
+    "modules/wodx-npc/scripts/passerby-local.mjs",
+    "modules/wodx-npc/scripts/crowd-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 623,
+     "decisions": "B970-B975, B2220-B2226, B2671, B2674"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/passersby.mjs:build"
+    },
+    "shown": {
+     "what": "people who walk in from the edge of the scene dressed for the place and age, and leave again"
+    },
+    "gated": {
+     "gate": "tools/gate/gateworldways.mjs",
+     "step": "7. local looks"
+    },
+    "book": {
+     "none": "a living-world aid; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    623,
+    687,
+    826,
+    827
+   ]
+  },
+  {
+   "id": "npc.residents",
+   "name": "Residents of generated towns and settlements",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/residents.mjs",
+    "modules/wodx-npc/scripts/resident-rules.mjs",
+    "modules/wodx-npc/scripts/settlement.mjs",
+    "modules/wodx-npc/scripts/settlement-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 754,
+     "decisions": "B2500-B2504, B2520-B2529"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/residents.mjs:build"
+    },
+    "shown": {
+     "what": "each building's household made as NPCs on the map, and the Settlements window"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    754,
+    767
+   ]
+  },
+  {
+   "id": "npc.rivalry",
+   "name": "Natural rivalries between kinds of NPC, and NPCs who start a fight by themselves",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/rivalry.mjs",
+    "modules/wodx-npc/scripts/rivalry-rules.mjs",
+    "modules/wodx-npc/scripts/fight-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 573,
+     "decisions": "B808, B809, B820-B825"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/rivalry.mjs:build"
+    },
+    "shown": {
+     "what": "rivals in sight start a fight on the map through WoDX Combat's starter"
+    },
+    "gated": {
+     "gate": "tools/gate/gaterivals.mjs",
+     "step": "start the fight"
+    },
+    "book": {
+     "none": "house rule (B820-B825): the books leave this to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    566,
+    573
+   ]
+  },
+  {
+   "id": "npc.followers",
+   "name": "Followers who take orders: one window for a character's followers, orders and day jobs",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/followers.mjs",
+    "modules/wodx-npc/scripts/followers-rules.mjs",
+    "modules/wodx-npc/scripts/orders.mjs",
+    "modules/wodx-npc/scripts/order-rules.mjs",
+    "modules/wodx-npc/scripts/day-jobs.mjs",
+    "modules/wodx-npc/scripts/day-jobs-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 696,
+     "decisions": "B1820-B1822, B3590-B3596"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/orders.mjs:build"
+    },
+    "shown": {
+     "what": "the Followers window, a quick order to a follower on the map, and day jobs as long tasks"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefollowers3.mjs",
+     "step": "3. quick order"
+    },
+    "book": {
+     "none": "house rule (B1820-B1822): the books leave this to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    154,
+    696,
+    957
+   ]
+  },
+  {
+   "id": "npc.servants",
+   "name": "One ledger for every bond that makes one person serve another, and servants the world makes",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/servants.mjs",
+    "modules/wodx-npc/scripts/servant-rules.mjs",
+    "modules/wodx-npc/scripts/servant-world.mjs",
+    "modules/wodx-npc/scripts/servant-world-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1284,
+     "decisions": "B5100-B5111, B5120-B5127"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/servants.mjs:records"
+    },
+    "shown": {
+     "what": "each servant bond listed with its strength; fomori and pact servants made by the world with a card"
+    },
+    "gated": {
+     "gate": "tools/gate/gateservants4.mjs",
+     "step": "6b. the pact gift answers"
+    }
+   },
+   "open": [
+    "book: W20 pp. 430-439 (fomori) and each line's servant rules; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1284,
+    1369
+   ]
+  },
+  {
+   "id": "npc.bonds",
+   "name": "Bonds from the books as relationships, with what each one does: the blood bond, the Vinculum, Fetters",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/bonds.mjs",
+    "modules/wodx-npc/scripts/bond-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 844,
+     "decisions": "B2840-B2846"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/bonds.mjs:stepToward"
+    },
+    "shown": {
+     "what": "the Relationships tab says what each bond does in play, and a thrall's attack on the regnant gets a card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebonds.mjs",
+     "step": "7. sheet"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages blood bond steps; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    844
+   ]
+  },
+  {
+   "id": "npc.ties-secrets",
+   "name": "Relationships and lineage read from both ends, secrets and hooks",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/people.mjs",
+    "modules/wodx-npc/scripts/ties-rules.mjs",
+    "modules/wodx-npc/scripts/secrets-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 653,
+     "decisions": "B1900-B1905"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/people.mjs:build"
+    },
+    "shown": {
+     "what": "ties grouped on the sheet's Relationships tab, with hidden ties and secrets kept from players"
+    }
+   },
+   "open": [
+    "gated: gatepeople '10. sheet' is graded marker and the rest are direct calls"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    653
+   ]
+  },
+  {
+   "id": "npc.trust",
+   "name": "Trust, betrayal, boons in every line, blackmail and hidden loyalties",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/trust.mjs",
+    "modules/wodx-npc/scripts/trust-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 844,
+     "decisions": "B2847-B2853"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/trust.mjs:moveTrust"
+    },
+    "shown": {
+     "what": "trust on the sheet, betrayal and boon cards, and a hidden loyalty named to its owner"
+    }
+   },
+   "open": [
+    "gated: gatetrust '8. sheet' is graded marker and the rest are direct calls",
+    "boon scale is a labelled house rule: V20 Dark Ages has no prestation"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    844
+   ]
+  },
+  {
+   "id": "npc.hearts",
+   "name": "Courtship, marriage and the law, children, households and loved ones as a weak spot",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/hearts.mjs",
+    "modules/wodx-npc/scripts/hearts-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 844,
+     "decisions": "B2854-B2862"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/hearts.mjs:hindranceFor"
+    },
+    "shown": {
+     "what": "warmth on the Relationships tab, marriage cards by the law of the time and place, and a household together"
+    }
+   },
+   "open": [
+    "gated: gatehearts '8. sheet' is graded marker and the rest are direct calls"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    844
+   ]
+  },
+  {
+   "id": "npc.family",
+   "name": "Pregnancy and birth by century and place, child sheets and growing up",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/family.mjs",
+    "modules/wodx-npc/scripts/family-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 901,
+     "decisions": "B3220-B3231, B3440"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/family.mjs:conceive"
+    },
+    "shown": {
+     "what": "family news on the Relationships tab, a birth card when the time comes, and a child's sheet"
+    }
+   },
+   "open": [
+    "gated: gatefamily '4. sheet' is graded marker and the rest are direct calls"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    901
+   ]
+  },
+  {
+   "id": "npc.kin",
+   "name": "Family lines that outlive the character, and ties after a jump in time",
+   "module": "wodx-npc",
+   "core": false,
+   "files": [
+    "modules/wodx-npc/scripts/kin.mjs",
+    "modules/wodx-npc/scripts/kin-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 844,
+     "decisions": "B2770-B2772"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/kin.mjs:growLines"
+    },
+    "shown": {
+     "what": "the family tree window with the line's living members in the current year"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    844
+   ]
+  },
+  {
+   "id": "npc.legacy",
+   "name": "Past lives, lines of teaching, the web of every tie and scene ideas from ties",
+   "module": "wodx-npc",
+   "core": false,
+   "files": [
+    "modules/wodx-npc/scripts/legacy.mjs",
+    "modules/wodx-npc/scripts/legacy-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 844,
+     "decisions": "B2872-B2876"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/legacy.mjs:recall"
+    },
+    "shown": {
+     "what": "past lives and teachers on the Relationships tab, and scene ideas for the Storyteller"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    844
+   ]
+  },
+  {
+   "id": "npc.standing",
+   "name": "Standing by community, with news of a deed travelling at the era's speed; social rank and feuds",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/standing.mjs",
+    "modules/wodx-npc/scripts/standing-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 844,
+     "decisions": "B2863-B2871"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/standing.mjs:deed"
+    },
+    "shown": {
+     "what": "standing in the town rising or falling after a deed, on the sheet and in how townsfolk greet the character"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthnpc.mjs",
+     "step": "11. untying a prisoner is a deed: standing in the town rises"
+    },
+    "book": {
+     "none": "house rule (B2863-B2871): the books leave this to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    844
+   ]
+  },
+  {
+   "id": "npc.memory-wanted",
+   "name": "NPC memory and grudges, and a description of a culprit that spreads and fades",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/memory.mjs",
+    "modules/wodx-npc/scripts/memory-rules.mjs",
+    "modules/wodx-npc/scripts/grudge-rules.mjs",
+    "modules/wodx-npc/scripts/wanted.mjs",
+    "modules/wodx-npc/scripts/wanted-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 927,
+     "decisions": "B3346-B3349, B5690-B5691, B1823-B1827"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/memory.mjs:remember"
+    },
+    "shown": {
+     "what": "what an NPC remembers of a character in its notes; a wanted description posted and fading with time"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    696,
+    927,
+    1394
+   ]
+  },
+  {
+   "id": "npc.aftercare",
+   "name": "What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/aftercare.mjs",
+    "modules/wodx-npc/scripts/aftercare-rules.mjs",
+    "modules/wodx-npc/scripts/carry-aftercare.mjs",
+    "modules/wodx-npc/scripts/carry-aftercare-rules.mjs",
+    "modules/wodx-npc/scripts/carry-goals.mjs",
+    "modules/wodx-npc/scripts/carry-goal-rules.mjs",
+    "modules/wodx-npc/scripts/line-mend.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1394,
+     "decisions": "B5087-B5089, B5710-B5721, B5800-B5806, B6315"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/aftercare.mjs:build"
+    },
+    "shown": {
+     "what": "a fed-on mortal Dazed and waking by morning; the hurt tended and mending; the fallen carried to where they belong"
+    },
+    "gated": {
+     "gate": "tools/gate/gateaftercare.mjs",
+     "step": "3. after the Kiss"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages the Kiss and healing; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1394,
+    1453,
+    1580
+   ]
+  },
+  {
+   "id": "npc.line-refill",
+   "name": "NPCs of every line refill their own pools the way their book says",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/line-refill.mjs",
+    "modules/wodx-npc/scripts/line-refill-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1580,
+     "decisions": "B6319"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/line-refill.mjs:enroll"
+    },
+    "shown": {
+     "what": "once a night the NPCs' pools rise on their sheets"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1580
+   ]
+  },
+  {
+   "id": "npc.fates",
+   "name": "Off-screen lives of supernatural NPCs across a jump in time",
+   "module": "wodx-npc",
+   "core": false,
+   "files": [
+    "modules/wodx-npc/scripts/fates.mjs",
+    "modules/wodx-npc/scripts/fates-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 908,
+     "decisions": "B3260-B3266"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/fates.mjs:cast"
+    },
+    "shown": {
+     "what": "a card for the Storyteller naming what each supernatural NPC did in the gap"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    908
+   ]
+  },
+  {
+   "id": "npc.cults",
+   "name": "Cults and congregations that gather around a character",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/cults.mjs",
+    "modules/wodx-npc/scripts/cult-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 907,
+     "decisions": "B3240-B3249, B7530"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/cults.mjs:build"
+    },
+    "shown": {
+     "what": "a cult's members gathering at its place of worship and serving the character"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    907
+   ]
+  },
+  {
+   "id": "npc.prowl",
+   "name": "Footpads, burglars and highwaymen on the prowl pick a mark and demand money",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/prowl.mjs",
+    "modules/wodx-npc/scripts/prowl-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1394,
+     "decisions": "B5688"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/prowl.mjs:build"
+    },
+    "shown": {
+     "what": "a robber's token closing in on a lone character and a card to pay, talk or fight"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1394
+   ]
+  },
+  {
+   "id": "npc.archetypes",
+   "name": "NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line",
+   "module": "wodx-npc",
+   "core": true,
+   "files": [
+    "modules/wodx-npc/scripts/animal-rules.mjs",
+    "modules/wodx-npc/scripts/mortal-rules.mjs",
+    "modules/wodx-npc/scripts/supernatural-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 610,
+     "decisions": "B1000-B1013"
+    },
+    "wired": {
+     "reader": "modules/wodx-npc/scripts/supernatural-rules.mjs:pickSupernatural"
+    },
+    "shown": {
+     "what": "each NPC's temperament and routine follow its archetype"
+    }
+   },
+   "open": [
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    610,
+    615,
+    616
+   ]
+  }
+ ]
 }

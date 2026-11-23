@@ -137,6 +137,22 @@ export default {
       "source": "House rule"
     },
     {
+      "id": "yearsMaturation",
+      "group": "years",
+      "name": "Maturation for Dark Ages Cainites",
+      "hint": "Pass the Years: in the Dark Ages a vampire's years give maturation points by how they were spent, with the Willpower roll each century, Background upkeep and Tempting Fate, in place of experience for the years and the Background fade. Off uses the house experience instead.",
+      "default": true,
+      "source": "Dark Ages: Vampire (2002) pp. 166-167; Dark Ages Storytellers Companion (2002) pp. 71-75"
+    },
+    {
+      "id": "yearsThirstOfCaine",
+      "group": "years",
+      "name": "The Thirst of Caine",
+      "hint": "Pass the Years, with maturation: once a downtime of a century or more, a Dark Ages Cainite rolls Willpower at the number of triggers (2 at least: Road 3 or less, the Road of the Beast, Metamorphosis or Blood, 500 years active, a restless Nature, and any the Storyteller ticks). A failure leaves them craving the blood of Cainites, a second failure or a botch needing it. The book offers this as an option.",
+      "default": false,
+      "source": "Dark Ages Storytellers Companion (2002) pp. 76-77"
+    },
+    {
       "id": "yearsConvertAbilities",
       "group": "years",
       "name": "Convert Dark Ages Abilities",

@@ -1,0 +1,308 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-tannery",
+ "name": "The Tannery",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-tannery/workplace-the-tannery.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    14.0,
+    10.0,
+    17.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    3.0,
+    22.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    22.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    14.0,
+    3.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    14.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    14.0,
+    10.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.0,
+    7.0,
+    14.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    10.0,
+    22.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    10.0,
+    3.0,
+    10.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    3.0,
+    10.0,
+    3.0,
+    3.0
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    17.0,
+    10.0,
+    18.0,
+    10.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    6.0,
+    14.0,
+    7.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-drying-racks",
+   "label": "The drying racks",
+   "rect": [
+    3.4,
+    11.0,
+    10.2,
+    3.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-tanning-pits",
+   "label": "The tanning pits",
+   "rect": [
+    3.4,
+    3.4,
+    10.2,
+    6.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-workshop",
+   "label": "The workshop",
+   "rect": [
+    14.2,
+    3.2,
+    7.8,
+    6.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-stream",
+   "label": "The stream",
+   "rect": [
+    21.0,
+    0.0,
+    9.0,
+    20.0
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-drying-racks-1",
+   "obj": "rack",
+   "label": "The drying racks 1",
+   "rect": [
+    5.35,
+    12.3,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-drying-racks-2",
+   "obj": "rack",
+   "label": "The drying racks 2",
+   "rect": [
+    10.45,
+    12.3,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-tanning-pits-1",
+   "obj": "vat",
+   "label": "The tanning pits 1",
+   "rect": [
+    5.15,
+    5.7,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-tanning-pits-2",
+   "obj": "vat",
+   "label": "The tanning pits 2",
+   "rect": [
+    10.25,
+    5.7,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 17.0,
+   "y": 4.7,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 17.6,
+   "y": 7.2,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.28,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 10.6,
+   "text": "GM: The tannery at the edge of the"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-crafts"
+}

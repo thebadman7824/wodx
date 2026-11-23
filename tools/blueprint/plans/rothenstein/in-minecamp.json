@@ -1,0 +1,456 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-minecamp",
+ "name": "The Mining Camp buildings",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-mining-camp/workplace-the-mining-camp.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    19.0,
+    16.0,
+    26.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    11.0,
+    2.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    11.0,
+    13.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    11.0,
+    17.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    11.0,
+    17.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    25.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    9.0,
+    18.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    9.0,
+    25.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    11.0,
+    9.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    11.0,
+    26.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    16.0,
+    17.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    4.0,
+    3.0,
+    1.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    14.0,
+    9.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.0,
+    3.0,
+    25.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.2,
+    1.2,
+    6.2,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    11.0,
+    26.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    17.0,
+    9.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    1.2,
+    6.2,
+    1.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    11.0,
+    11.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    14.0,
+    19.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    11.0,
+    9.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.2,
+    4.0,
+    3.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    14.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    11.0,
+    19.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    11.0,
+    5.0,
+    11.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    9.0,
+    13.0,
+    9.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    13.0,
+    11.0,
+    14.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    18.0,
+    9.0,
+    19.0,
+    9.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    5.0,
+    11.0,
+    6.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    19.0,
+    13.0,
+    19.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": true
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-bunkhouse",
+   "label": "The bunkhouse",
+   "rect": [
+    14.2,
+    3.2,
+    10.8,
+    5.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-powder-store",
+   "label": "The powder store",
+   "rect": [
+    19.2,
+    11.2,
+    6.8,
+    4.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-assay-shack",
+   "label": "The assay shack",
+   "rect": [
+    11.0,
+    11.0,
+    6.0,
+    5.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-adit-mouth",
+   "label": "The adit mouth",
+   "rect": [
+    3.0,
+    1.2,
+    3.2,
+    2.8
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [],
+ "lights": [
+  {
+   "x": 22.0,
+   "y": 13.6,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 24.4,
+   "y": 4.5,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 5.1,
+   "y": 3.4,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 24.4,
+   "y": 4.4,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 14.0,
+   "y": 12.2,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 3.1,
+   "y": 14.2,
+   "kind": "fire",
+   "bright": 0.72,
+   "dim": 4.86,
+   "color": "#ff7a2a"
+  },
+  {
+   "x": 3.1,
+   "y": 14.3,
+   "kind": "fire",
+   "bright": 1.28,
+   "dim": 6.86,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 9.8,
+   "text": "GM: The mining camp outside the adit"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "minecamp"
+}

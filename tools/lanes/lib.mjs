@@ -27,7 +27,7 @@ const SKIP = new Set(["LOCK", "LOG", "LOG.old", ".DS_Store", "Thumbs.db"]);
 const LEVELDB = /^(CURRENT|MANIFEST-\d+|\d+\.(log|ldb|sst))$/;
 export const isPackDb = rel => /(^|\/)packs\//.test(rel) && LEVELDB.test(rel.split("/").pop());
 
-export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json")) {
+export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json"), {world = process.env.WODX_WORLD} = {}) {
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
@@ -42,8 +42,31 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
   for ( const k of ["foundryMain", "knownGood", "backups"] ) cfg[k] = expand(cfg[k]);
   for ( const lane of cfg.lanes ?? [] ) lane.dataPath = expand(lane.dataPath);
+  return selectWorld(cfg, world);
+}
+/**
+ * Chronicle Packs Desk c2/e2: a lane can also run another testbed world from lanes.json "worlds" (the clean world,
+ * wodx-clean: every WoDX module on except the chronicle modules). --world <key> (or WODX_WORLD) picks it; the default
+ * stays rothenstein-wodx. The other world has its own known-good copy (its "knownGood", else the default's folder plus
+ * "-<key>") and its own clean fingerprint (clean-<key>.json), so the two never mix.
+ */
+export function selectWorld(cfg, key) {
+  cfg.worldKey = "";
+  cfg.cleanName = "clean.json";
+  if ( !key || key === "default" || key === cfg.world ) return cfg;
+  const w = cfg.worlds?.[key];
+  if ( !w?.world ) throw new Error(`No world "${key}" in lanes.json (worlds: ${Object.keys(cfg.worlds ?? {}).join(", ") || "none"})`);
+  if ( /live/i.test(w.world) ) throw new Error(`World "${key}" points at a Live world (${w.world}); lanes never run Live.`);
+  cfg.defaultWorld = {world: cfg.world, knownGood: cfg.knownGood};
+  cfg.worldKey = key;
+  cfg.worldSpec = w;
+  cfg.world = w.world;
+  cfg.knownGood = w.knownGood ?? `${cfg.knownGood}-${key}`;
+  cfg.cleanName = `clean-${key}.json`;
   return cfg;
 }
+/** The lane's clean fingerprint file for the world cfg runs (clean.json for the default world). */
+export const cleanPath = (lane, cfg) => path.join(laneDir(lane), cfg?.cleanName ?? "clean.json");
 export function getLane(cfg, id) {
   const lane = cfg.lanes.find(l => String(l.id) === String(id));
   if ( !lane ) throw new Error(`No lane ${id} in lanes.json (lanes: ${cfg.lanes.map(l => l.id).join(", ")})`);
@@ -318,6 +341,48 @@ export function acquireLock(lane, cfg, info) {
   const lock = {pid: process.pid, since: new Date().toISOString(), ...info};
   try { fs.writeFileSync(file, JSON.stringify(lock), {flag: "wx"}); } catch { return null; }
   return lock;
+}
+/**
+ * B7762: one writer at a time for a known-good folder (cfg.knownGood). setup-clean on several lanes of one PC each
+ * write the shared clean copy at the end (on the New PC, 23 November, setup-clean #2346 to #2348 wrote
+ * D:/WoDX/testbed-known-good-clean within 10 s of each other). The lock is a file beside the folder, not in it, so a
+ * mirrored copy of the folder never removes it. It counts while its process lives and is younger than maxMinutes.
+ */
+export const knownGoodLockFile = dir => `${String(dir).replace(/[\\/]+$/, "")}.lock.json`;
+export function knownGoodLockState(dir, {now = Date.now(), alive = pidAlive, maxMinutes = 30} = {}) {
+  const lock = readJson(knownGoodLockFile(dir));
+  if ( !lock ) return {held: false};
+  if ( !alive(lock.pid) ) return {held: false, stale: "its process has ended", lock};
+  if ( (now - Date.parse(lock.since)) / 60000 > maxMinutes ) return {held: false, stale: `older than ${maxMinutes} minutes`, lock};
+  return {held: true, lock};
+}
+const pause = ms => new Promise(r => setTimeout(r, ms));
+/** Waits (up to waitMinutes) while another process writes the known-good folder. Readers call this before copying. */
+export async function waitKnownGood(dir, {waitMinutes = 30, everyMs = 5000, log = console.log, state = knownGoodLockState, sleep = pause} = {}) {
+  const until = Date.now() + waitMinutes * 60000;
+  let told = false;
+  for ( let st = state(dir); st.held; st = state(dir) ) {
+    if ( Date.now() > until ) throw new Error(`The known-good copy at ${dir} has been written by process ${st.lock.pid} (${st.lock.what ?? "?"}) for over ${waitMinutes} minutes.`);
+    if ( !told ) { log(`Waiting: process ${st.lock.pid} (${st.lock.what ?? "?"}) is writing ${dir}.`); told = true; }
+    await sleep(everyMs);
+  }
+}
+/** Runs fn while holding the known-good folder's write lock, waiting for another writer first. */
+export async function withKnownGoodWrite(dir, what, fn, {waitMinutes = 30, everyMs = 5000, log = console.log, sleep = pause} = {}) {
+  const file = knownGoodLockFile(dir);
+  const until = Date.now() + waitMinutes * 60000;
+  for ( ;; ) {
+    const st = knownGoodLockState(dir);
+    if ( st.stale ) fs.rmSync(file, {force: true});
+    if ( !st.held ) {
+      fs.mkdirSync(path.dirname(file), {recursive: true});
+      try { fs.writeFileSync(file, JSON.stringify({pid: process.pid, since: new Date().toISOString(), what}), {flag: "wx"}); break; } catch { /* another took it first */ }
+    }
+    if ( Date.now() > until ) throw new Error(`Could not take the write lock on ${dir} in ${waitMinutes} minutes.`);
+    await sleep(everyMs);
+  }
+  try { return await fn(); }
+  finally { if ( readJson(file)?.pid === process.pid ) fs.rmSync(file, {force: true}); }
 }
 export function releaseLock(lane) {
   const file = path.join(laneDir(lane), "lock.json");

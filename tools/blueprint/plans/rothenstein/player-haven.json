@@ -1,0 +1,854 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "player-haven",
+ "name": "Player Haven",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  44,
+  32
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/player-haven/player-haven.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    32.0,
+    21.5,
+    29.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    26.5,
+    29.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.312,
+    18.1,
+    26.6,
+    17.812
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    8.5,
+    9.5,
+    11.0,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.8,
+    18.5,
+    27.688,
+    18.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    11.0,
+    21.5,
+    8.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.5,
+    26.5,
+    8.5,
+    26.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    9.5,
+    32.0,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.688,
+    18.1,
+    27.8,
+    18.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    26.6,
+    17.812,
+    27.0,
+    17.7
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    14.5,
+    4.5,
+    14.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.6,
+    19.188,
+    26.312,
+    18.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    8.5,
+    26.5,
+    8.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.5,
+    4.5,
+    35.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.5,
+    26.5,
+    29.5,
+    26.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.5,
+    4.5,
+    14.5,
+    4.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.5,
+    4.5,
+    8.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    9.5,
+    14.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.2,
+    18.5,
+    26.312,
+    18.1
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    33.0,
+    9.5,
+    35.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.5,
+    26.5,
+    35.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    17.7,
+    27.4,
+    17.812
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    14.5,
+    21.5,
+    12.0,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.5,
+    26.5,
+    14.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    4.5,
+    29.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    19.3,
+    26.6,
+    19.188
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    17.812,
+    27.688,
+    18.1
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    26.312,
+    18.9,
+    26.2,
+    18.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    19.188,
+    27.0,
+    19.3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    35.5,
+    21.5,
+    33.0,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    4.5,
+    35.5,
+    4.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.688,
+    18.9,
+    27.4,
+    19.188
+   ],
+   "kind": "window"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    33.0,
+    21.5,
+    32.0,
+    21.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    21.5,
+    11.0,
+    21.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    32.0,
+    9.5,
+    33.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.0,
+    9.5,
+    12.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "chamber-i",
+   "label": "Chamber I",
+   "rect": [
+    8.5,
+    4.5,
+    6,
+    5
+   ],
+   "use": "home"
+  },
+  {
+   "id": "chamber-ii",
+   "label": "Chamber II",
+   "rect": [
+    29.5,
+    4.5,
+    6,
+    5
+   ],
+   "use": "home"
+  },
+  {
+   "id": "chamber-iii",
+   "label": "Chamber III",
+   "rect": [
+    8.5,
+    21.5,
+    6,
+    5
+   ],
+   "use": "home"
+  },
+  {
+   "id": "chamber-iv",
+   "label": "Chamber IV",
+   "rect": [
+    29.5,
+    21.5,
+    6,
+    5
+   ],
+   "use": "home"
+  },
+  {
+   "id": "haven-yard",
+   "label": "Haven yard",
+   "rect": [
+    2,
+    2,
+    40,
+    28
+   ],
+   "use": "yard"
+  }
+ ],
+ "slots": [
+  {
+   "id": "fireplace",
+   "obj": "fireplace",
+   "label": "Fireplace",
+   "rect": [
+    10.9,
+    4.5,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "box-bed",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    8.65,
+    6.8,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    13.0,
+    4.8,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "table",
+   "obj": "table",
+   "label": "Table",
+   "rect": [
+    11.6,
+    7.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    12.35,
+    8.15,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "fireplace-2",
+   "obj": "fireplace",
+   "label": "Fireplace",
+   "rect": [
+    31.9,
+    4.5,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "box-bed-2",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    29.65,
+    6.8,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-2",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    34.0,
+    4.8,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "table-2",
+   "obj": "table",
+   "label": "Table",
+   "rect": [
+    32.6,
+    7.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool-2",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    33.35,
+    8.15,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "fireplace-3",
+   "obj": "fireplace",
+   "label": "Fireplace",
+   "rect": [
+    10.9,
+    25.9,
+    1.2,
+    0.6
+   ],
+   "facing": "N",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "box-bed-3",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    8.65,
+    22.8,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-3",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    13.0,
+    25.6,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "table-3",
+   "obj": "table",
+   "label": "Table",
+   "rect": [
+    11.6,
+    23.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool-3",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    12.35,
+    22.55,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "fireplace-4",
+   "obj": "fireplace",
+   "label": "Fireplace",
+   "rect": [
+    31.9,
+    25.9,
+    1.2,
+    0.6
+   ],
+   "facing": "N",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "box-bed-4",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    29.65,
+    22.8,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-4",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    34.0,
+    25.6,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "table-4",
+   "obj": "table",
+   "label": "Table",
+   "rect": [
+    32.6,
+    23.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "stool-4",
+   "obj": "stool",
+   "label": "Stool",
+   "rect": [
+    33.35,
+    22.55,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "fire-pit",
+   "obj": "hearth",
+   "label": "Fire pit",
+   "rect": [
+    21.5,
+    15.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "bench",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    21.2,
+    14.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-2",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    21.2,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "well",
+   "obj": "well",
+   "label": "Well",
+   "rect": [
+    21.6,
+    7.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "Woodpile",
+   "rect": [
+    25.4,
+    16.7,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 10.863,
+   "y": 4.675,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 22.0,
+   "y": 16.0,
+   "kind": "fire",
+   "bright": 2.24,
+   "dim": 9.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 31.863,
+   "y": 4.675,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 33.138,
+   "y": 26.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.137,
+   "y": 26.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 22.0,
+   "y": 16.0,
+   "text": "The Haven yard. Add buildings with the Builder: Add Module macro; move or rotate"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false
+}

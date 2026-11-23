@@ -1,0 +1,2334 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "lt-westgate",
+ "name": "Lower Town, West Gate and the Common",
+ "chronicle": "rothenstein",
+ "tier": 2,
+ "cells": [
+  60,
+  42
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/lower-town-west-gate-and-the-common/lower-town-west-gate-and-the-common.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    52.7,
+    17.4,
+    53.5,
+    17.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    38.5,
+    18.4,
+    40.0,
+    18.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.5,
+    23.8,
+    40.0,
+    23.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    1.8,
+    52.0,
+    4.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    5.5,
+    52.0,
+    8.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    34.0,
+    28.0,
+    40.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    7.838,
+    36.15,
+    6.575,
+    35.15
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    55.175,
+    27.9,
+    55.175,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    55.438,
+    1.8,
+    58.4,
+    1.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    2.0,
+    45.837,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.562,
+    24.6,
+    48.4,
+    24.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.1,
+    13.9,
+    49.0,
+    13.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.9,
+    31.4,
+    45.5,
+    31.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    49.6,
+    30.2,
+    52.25,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.45,
+    17.4,
+    49.0,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    26.8,
+    36.7,
+    26.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.2,
+    15.0,
+    50.2,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    2.0,
+    12.0,
+    10.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.975,
+    32.85,
+    16.238,
+    31.85
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    50.4,
+    2.0,
+    50.4,
+    7.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.6,
+    24.6,
+    58.6,
+    27.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    4.7,
+    52.0,
+    5.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    15.4,
+    40.0,
+    18.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    34.0,
+    28.0,
+    34.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    33.2,
+    0.0,
+    33.2,
+    18.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.4,
+    24.6,
+    48.4,
+    31.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    10.0,
+    2.0,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    49.6,
+    24.6,
+    53.025,
+    24.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.2,
+    14.2,
+    50.2,
+    15.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    53.5,
+    17.4,
+    55.237,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    24.6,
+    44.562,
+    24.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.375,
+    27.562,
+    14.725,
+    29.363
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    36.7,
+    26.8,
+    37.3,
+    26.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    55.175,
+    24.6,
+    55.175,
+    26.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    31.4,
+    44.9,
+    31.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.2,
+    23.8,
+    33.2,
+    42.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    12.0,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    34.0,
+    15.4,
+    34.0,
+    18.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    53.05,
+    30.2,
+    58.6,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.625,
+    29.875,
+    5.812,
+    28.337
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    50.2,
+    11.8,
+    50.2,
+    14.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    23.8,
+    34.0,
+    26.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    17.4,
+    44.45,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.812,
+    28.337,
+    6.575,
+    26.925
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    50.2,
+    11.8,
+    52.7,
+    11.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.475,
+    26.238,
+    17.375,
+    27.562
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    20.0,
+    40.0,
+    20.0,
+    34.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.025,
+    24.6,
+    58.6,
+    24.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    1.8,
+    54.438,
+    1.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.3,
+    15.4,
+    40.0,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    10.4,
+    42.0,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.7,
+    28.7,
+    48.4,
+    28.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    10.4,
+    45.1,
+    10.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.387,
+    28.462,
+    8.625,
+    29.875
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    58.6,
+    11.8,
+    58.6,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    40.0,
+    20.0,
+    40.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    52.0,
+    6.188,
+    54.7,
+    6.188
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.237,
+    17.4,
+    58.6,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    53.5,
+    11.8,
+    55.3,
+    11.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.7,
+    15.4,
+    37.3,
+    15.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    58.6,
+    27.0,
+    58.6,
+    27.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    8.562,
+    32.65,
+    9.825,
+    33.65
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    54.788,
+    8.4,
+    58.4,
+    8.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    49.6,
+    27.0,
+    49.6,
+    27.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.4,
+    14.6,
+    58.6,
+    14.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.837,
+    2.0,
+    50.4,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.2,
+    17.4,
+    52.7,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.825,
+    33.65,
+    7.838,
+    36.15
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    55.3,
+    11.8,
+    56.1,
+    11.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    42.0,
+    24.6,
+    42.0,
+    31.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.825,
+    28.038,
+    16.475,
+    26.238
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    58.4,
+    4.7,
+    58.4,
+    5.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    42.0,
+    28.7,
+    44.7,
+    28.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.725,
+    29.363,
+    13.825,
+    28.038
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    16.238,
+    31.85,
+    18.225,
+    34.35
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    56.1,
+    11.8,
+    58.6,
+    11.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.962,
+    35.35,
+    14.975,
+    32.85
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    18.225,
+    34.35,
+    16.962,
+    35.35
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    34.0,
+    15.4,
+    36.7,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.4,
+    11.8,
+    54.4,
+    12.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.4,
+    1.8,
+    58.4,
+    4.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.3,
+    26.8,
+    40.0,
+    26.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.575,
+    35.15,
+    8.562,
+    32.65
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    55.7,
+    6.188,
+    58.4,
+    6.188
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    13.9,
+    47.1,
+    13.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    23.8,
+    40.0,
+    26.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    18.4,
+    37.5,
+    18.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.575,
+    26.925,
+    9.387,
+    28.462
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    42.0,
+    7.6,
+    46.9,
+    7.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    23.8,
+    37.5,
+    23.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    49.6,
+    24.6,
+    49.6,
+    27.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.4,
+    5.5,
+    58.4,
+    8.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.5,
+    31.4,
+    48.4,
+    31.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    8.4,
+    53.788,
+    8.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.4,
+    16.5,
+    54.4,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    49.0,
+    10.4,
+    49.0,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    2.0,
+    42.0,
+    7.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.9,
+    7.6,
+    50.4,
+    7.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.6,
+    27.8,
+    58.6,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.1,
+    10.4,
+    45.9,
+    10.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    49.6,
+    27.8,
+    49.6,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.7,
+    11.8,
+    53.5,
+    11.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.4,
+    13.7,
+    54.4,
+    15.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.25,
+    30.2,
+    53.05,
+    30.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    10.0,
+    2.0,
+    10.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    45.9,
+    10.4,
+    49.0,
+    10.4
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    55.237,
+    17.4,
+    56.237,
+    17.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    44.45,
+    17.4,
+    45.45,
+    17.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    55.175,
+    26.9,
+    55.175,
+    27.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.4,
+    12.7,
+    54.4,
+    13.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.438,
+    1.8,
+    55.438,
+    1.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.7,
+    6.188,
+    55.7,
+    6.188
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.4,
+    15.5,
+    54.4,
+    16.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    47.1,
+    13.9,
+    48.1,
+    13.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    53.788,
+    8.4,
+    54.788,
+    8.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    44.7,
+    28.7,
+    45.7,
+    28.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    37.5,
+    18.4,
+    38.5,
+    18.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    37.5,
+    23.8,
+    38.5,
+    23.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    44.562,
+    24.6,
+    45.562,
+    24.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    46.9,
+    7.6,
+    47.9,
+    7.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    45.837,
+    2.0,
+    46.837,
+    2.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    53.025,
+    24.6,
+    54.025,
+    24.6
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "House inside the gate",
+   "rect": [
+    51.475,
+    1.281,
+    7.45,
+    7.662
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "House inside the gate",
+   "rect": [
+    41.4,
+    24.0,
+    7.6,
+    8.0
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b03",
+   "label": "Gatehouse guard room (south)",
+   "rect": [
+    33.4,
+    23.2,
+    7.2,
+    4.2
+   ],
+   "use": "guardhall",
+   "roof": true
+  },
+  {
+   "id": "b04",
+   "label": "Gatehouse guard room (north)",
+   "rect": [
+    33.4,
+    14.8,
+    7.2,
+    4.2
+   ],
+   "use": "guardhall",
+   "roof": true
+  },
+  {
+   "id": "b05",
+   "label": "Alehouse by the gate",
+   "rect": [
+    41.475,
+    9.869,
+    8.05,
+    8.062
+   ],
+   "use": "inn",
+   "roof": true
+  },
+  {
+   "id": "b06",
+   "label": "House inside the gate",
+   "rect": [
+    49.075,
+    24.075,
+    10.05,
+    6.65
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b07",
+   "label": "House inside the gate",
+   "rect": [
+    41.4,
+    1.406,
+    9.6,
+    6.812
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b08",
+   "label": "House inside the gate",
+   "rect": [
+    49.675,
+    11.269,
+    9.45,
+    6.662
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [
+  {
+   "id": "the-common",
+   "label": "The Common",
+   "rect": [
+    0,
+    23,
+    32,
+    19
+   ],
+   "use": "camp"
+  },
+  {
+   "id": "mikhal-the-tinker-s-camp",
+   "label": "Mikhal the Tinker's camp",
+   "rect": [
+    22,
+    3,
+    8,
+    8
+   ],
+   "use": "camp"
+  },
+  {
+   "id": "sheep-pen",
+   "label": "Sheep pen",
+   "rect": [
+    19.9,
+    34,
+    8,
+    5.9
+   ],
+   "use": "pen"
+  }
+ ],
+ "slots": [
+  {
+   "id": "open-hearth-on-its-slab-b01",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b01)",
+   "rect": [
+    51.925,
+    1.781,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b01",
+   "obj": "bed-box",
+   "label": "Box bed for two (b01)",
+   "rect": [
+    51.925,
+    7.043,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b01",
+   "obj": "table",
+   "label": "Household table (b01)",
+   "rect": [
+    57.525,
+    1.731,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b01",
+   "obj": "chest",
+   "label": "Chest (b01)",
+   "rect": [
+    51.975,
+    3.171,
+    0.6,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b01",
+   "obj": "bench",
+   "label": "Bench (b01)",
+   "rect": [
+    58.075,
+    4.312,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b01",
+   "obj": "shelf",
+   "label": "Wall shelf (b01)",
+   "rect": [
+    51.975,
+    4.612,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b01",
+   "obj": "cask",
+   "label": "Cask (b01)",
+   "rect": [
+    55.738,
+    7.993,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "cask-b02",
+   "obj": "cask",
+   "label": "Cask (b02)",
+   "rect": [
+    41.9,
+    26.944,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b06",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b06)",
+   "rect": [
+    49.525,
+    24.575,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b06",
+   "obj": "bed-box",
+   "label": "Box bed for two (b06)",
+   "rect": [
+    49.525,
+    28.825,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b06",
+   "obj": "table",
+   "label": "Household table (b06)",
+   "rect": [
+    57.725,
+    24.525,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b06",
+   "obj": "chest",
+   "label": "Chest (b06)",
+   "rect": [
+    51.563,
+    29.625,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b06",
+   "obj": "bench",
+   "label": "Bench (b06)",
+   "rect": [
+    49.575,
+    26.081,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b06",
+   "obj": "shelf",
+   "label": "Wall shelf (b06)",
+   "rect": [
+    53.6,
+    29.975,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b06",
+   "obj": "cask",
+   "label": "Cask (b06)",
+   "rect": [
+    50.613,
+    29.775,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b07",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b07)",
+   "rect": [
+    45.7,
+    4.312,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b08",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b08)",
+   "rect": [
+    50.125,
+    11.769,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b08",
+   "obj": "bed-box",
+   "label": "Box bed for two (b08)",
+   "rect": [
+    50.125,
+    16.031,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b08",
+   "obj": "table",
+   "label": "Household table (b08)",
+   "rect": [
+    57.725,
+    12.214,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b08",
+   "obj": "chest",
+   "label": "Chest (b08)",
+   "rect": [
+    52.013,
+    11.769,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b08",
+   "obj": "bench",
+   "label": "Bench (b08)",
+   "rect": [
+    50.175,
+    13.28,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b08",
+   "obj": "shelf",
+   "label": "Wall shelf (b08)",
+   "rect": [
+    52.013,
+    17.181,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b08",
+   "obj": "cask",
+   "label": "Cask (b08)",
+   "rect": [
+    50.175,
+    15.039,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-alehouse-by-the-gate",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (Alehouse by the gate)",
+   "rect": [
+    41.925,
+    10.369,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "household-table-alehouse-by-the-gate",
+   "obj": "table",
+   "label": "Household table (Alehouse by the gate)",
+   "rect": [
+    41.925,
+    16.531,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "household-table-alehouse-by-the-gate-2",
+   "obj": "table",
+   "label": "Household table (Alehouse by the gate)",
+   "rect": [
+    43.263,
+    10.369,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "bench-alehouse-by-the-gate",
+   "obj": "bench",
+   "label": "Bench (Alehouse by the gate)",
+   "rect": [
+    48.675,
+    11.014,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "bench-alehouse-by-the-gate-2",
+   "obj": "bench",
+   "label": "Bench (Alehouse by the gate)",
+   "rect": [
+    41.975,
+    11.709,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "shop-counter-alehouse-by-the-gate",
+   "obj": "counter",
+   "label": "Shop counter (Alehouse by the gate)",
+   "rect": [
+    45.394,
+    10.369,
+    1.6,
+    0.5
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-alehouse-by-the-gate",
+   "obj": "cask",
+   "label": "Cask (Alehouse by the gate)",
+   "rect": [
+    46.113,
+    16.981,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "cask-alehouse-by-the-gate-2",
+   "obj": "cask",
+   "label": "Cask (Alehouse by the gate)",
+   "rect": [
+    41.975,
+    14.514,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "players-wagon",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    6.7,
+    28.25,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "players-wagon-2",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    14.6,
+    27.25,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "players-wagon-3",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    7.2,
+    33.85,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "players-wagon-4",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    15.7,
+    33.05,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "the-players-prop-tent",
+   "obj": "tent",
+   "label": "The players' prop tent",
+   "rect": [
+    3.8,
+    36.2,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "camp-fire",
+   "obj": "hearth",
+   "label": "Camp fire",
+   "rect": [
+    11.5,
+    30.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "tinker-s-tent",
+   "obj": "tent",
+   "label": "Tinker's tent",
+   "rect": [
+    25.4,
+    5.9,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tinker-s-barrow",
+   "obj": "handcart",
+   "label": "Tinker's barrow",
+   "rect": [
+    24.1,
+    9.0,
+    0.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "camp-fire-2",
+   "obj": "hearth",
+   "label": "Camp fire",
+   "rect": [
+    23.5,
+    5.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "wayside-cross",
+   "obj": "shrine-wayside",
+   "label": "Wayside cross",
+   "rect": [
+    18.45,
+    16.45,
+    0.9,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 38.075,
+   "y": 15.65,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 57.9,
+   "y": 13.175,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 46.2,
+   "y": 4.8,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 53.1,
+   "y": 11.35,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 42.65,
+   "y": 12.175,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 52.65,
+   "y": 30.65,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 54.075,
+   "y": 6.05,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 49.75,
+   "y": 14.6,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 54.263,
+   "y": 15.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 55.7,
+   "y": 11.35,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 56.725,
+   "y": 14.738,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 45.2,
+   "y": 31.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 12.0,
+   "y": 31.0,
+   "kind": "fire",
+   "bright": 2.24,
+   "dim": 9.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 49.15,
+   "y": 27.4,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 59.05,
+   "y": 27.4,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 51.55,
+   "y": 5.1,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 45.65,
+   "y": 13.762,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 45.5,
+   "y": 9.95,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 52.425,
+   "y": 27.425,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 50.85,
+   "y": 14.575,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 24.0,
+   "y": 6.0,
+   "kind": "fire",
+   "bright": 2.24,
+   "dim": 9.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 53.1,
+   "y": 17.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 42.175,
+   "y": 16.163,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 57.75,
+   "y": 3.975,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 37.0,
+   "y": 14.95,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 37.0,
+   "y": 27.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 46.15,
+   "y": 28.837,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 56.1,
+   "y": 8.225,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 58.85,
+   "y": 5.1,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 34.725,
+   "y": 16.85,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 47.675,
+   "y": 26.75,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 39.75,
+   "y": 25.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 42.25,
+   "y": 26.788,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 39.75,
+   "y": 24.962,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 5.0,
+   "y": 37.0,
+   "text": "The players' prop tent: masks, a painted backcloth, a mock judge's chair."
+  },
+  {
+   "x": 7.6,
+   "y": 28.1,
+   "text": "Kilian the Player-King lives here (the red wagon; the players sleep in the other"
+  },
+  {
+   "x": 33.2,
+   "y": 21.0,
+   "text": "The West Gate. Shut at curfew; the watch opens it for coin or a good reason."
+  },
+  {
+   "x": 26.6,
+   "y": 6.6,
+   "text": "Mikhal the Tinker lives here (..."
+  },
+  {
+   "x": 1.2,
+   "y": 21.0,
+   "text": "The road to Olomouc. Off the edge of the chronicle: a day to the next town."
+  }
+ ],
+ "exits": [
+  {
+   "kind": "arrive",
+   "name": "from-lt-market",
+   "to": null,
+   "rect": [
+    56.1,
+    20.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-river-road",
+   "to": null,
+   "rect": [
+    13.7,
+    38.1,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-forest-road",
+   "to": null,
+   "rect": [
+    8.1,
+    2.5,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-market",
+   "to": "lt-market",
+   "rect": [
+    58.6,
+    18.8,
+    1.4,
+    4.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-forest-road",
+   "to": "forest-road",
+   "rect": [
+    7.1,
+    0.0,
+    3.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-river-road",
+   "to": "river-road",
+   "rect": [
+    12.7,
+    40.6,
+    3.4,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "the road to Olomouc, through the West Gate to the Market Square",
+   "path": [
+    [
+     0,
+     21
+    ],
+    [
+     20,
+     21
+    ],
+    [
+     33,
+     21
+    ],
+    [
+     60,
+     21
+    ]
+   ],
+   "width": 4.0,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "the Forest Road",
+   "path": [
+    [
+     8,
+     0
+    ],
+    [
+     12,
+     8
+    ],
+    [
+     18,
+     14
+    ],
+    [
+     26,
+     19
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "to the River Road and the ferry",
+   "path": [
+    [
+     14,
+     42
+    ],
+    [
+     17,
+     32
+    ],
+    [
+     21,
+     25
+    ],
+    [
+     24,
+     22
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
+}

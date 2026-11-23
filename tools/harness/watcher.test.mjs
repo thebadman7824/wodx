@@ -2,16 +2,16 @@
    train and the alerts into problems and notes, and only looks and reports. */
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {assess, report, parseTrain, statusStamp, greenAt, LIMITS, PCS, TRAIN_LABEL} from "../pcq/watcher.mjs";
+import {assess, report, parseTrain, statusStamp, greenAt, trainSource, LIMITS, PCS, TRAIN_LABEL} from "../pcq/watcher.mjs";
 import {comfyFrom, ocrLogState} from "../pcq/status-push.mjs";
 
 const NOW = Date.parse("2026-11-18T03:00:00Z");
 const iso = minAgo => new Date(NOW - minAgo * 60e3).toISOString();
 const stamp = minAgo => `Updated ${iso(minAgo).slice(0, 16)}Z by the PC runner (x) at abc.`;
 const pc = (key, minAgo, extra = {}) => ({host: key, time: iso(minAgo), runnerUp: true, lanes: PCS.find(p => p.key === key).lanes.map(id => ({id, up: true})), gpu: null, issues: 0, ...extra});
-const statusIssue = (key, minAgo, more = "") => ({number: {main: 1066, secondary: 1822, laptop: 1805}[key], title: PCS.find(p => p.key === key).statusTitle, updated_at: iso(minAgo), body: `${stamp(minAgo)}\n${more}`});
-const healthy = (over = {}) => ({now: NOW, pcs: {main: pc("main", 2), secondary: pc("secondary", 3), laptop: pc("laptop", 1)},
-  statusIssues: [statusIssue("main", 1, "Merge train: front #1880, wait (gates not reported yet); line #1880, #1988"), statusIssue("secondary", 1), statusIssue("laptop", 1)],
+const statusIssue = (key, minAgo, more = "") => ({number: {main: 1066, secondary: 1822, laptop: 1805, newpc: 2308}[key], title: PCS.find(p => p.key === key).statusTitle, updated_at: iso(minAgo), body: `${stamp(minAgo)}\n${more}`});
+const healthy = (over = {}) => ({now: NOW, pcs: {main: pc("main", 2), secondary: pc("secondary", 3), laptop: pc("laptop", 1), newpc: pc("newpc", 2)},
+  statusIssues: [statusIssue("main", 1, "Merge train: front #1880, wait (gates not reported yet); line #1880, #1988"), statusIssue("secondary", 1), statusIssue("laptop", 1), statusIssue("newpc", 1)],
   jobs: [], alerts: [], local: {runner: true, watchdog: true, statusPush: true}, ...over});
 
 test("all clear when every PC, runner and job is fresh", () => {
@@ -34,6 +34,27 @@ test("a PC silent on both its status push and its runner reads as off; runner-on
 test("a missing status file or status issue counts as silent, not as fine", () => {
   const s = healthy({pcs: {...healthy().pcs, laptop: null}, statusIssues: healthy().statusIssues.filter(i => i.number !== 1805)});
   assert.ok(assess(s).problems.some(p => p.key === "laptop:silent"));
+});
+
+test("the New PC is watched like the Main PC and the Secondary: lanes 10 to 13, its own status issue, silent, push and lane problems", () => {
+  const p = PCS.find(x => x.key === "newpc");
+  assert.deepEqual([p.label, p.statusTitle, p.lanes], ["New PC", "PC runner status (New PC)", [10, 11, 12, 13]]);
+  const a = assess(healthy());
+  assert.ok(a.rows.some(r => r.pc === "New PC" && r.lanes === "10, 11, 12, 13" && r.state === "ok" && /#2308/.test(r.runner)));
+  const off = healthy({pcs: {...healthy().pcs, newpc: null}, statusIssues: healthy().statusIssues.filter(i => i.number !== 2308)});
+  assert.ok(assess(off).problems.some(x => x.key === "newpc:silent" && /New PC is silent/.test(x.text)));
+  // No status file yet (status-push not started there) while its runner is alive: a push problem, not "off".
+  const noPush = assess(healthy({pcs: {...healthy().pcs, newpc: null}}));
+  assert.ok(noPush.problems.some(x => x.key === "newpc:push" && /never sent a status file \(registry\/pc-status\/newpc\.json\).*PC_STATUS_NAME=newpc PC_LANES=10,11,12,13/.test(x.text)));
+  assert.ok(!noPush.problems.some(x => x.key === "newpc:silent"));
+  assert.ok(noPush.rows.some(r => r.pc === "New PC" && r.state === "no status push"));
+  const lane = assess(healthy({pcs: {...healthy().pcs, newpc: pc("newpc", 2, {lanes: [{id: 10, up: false}]})}}));
+  assert.ok(lane.problems.some(x => x.key === "newpc:lane:10" && /New PC: lane 10 not answering/.test(x.text)));
+  const run = healthy(); run.statusIssues[3] = statusIssue("newpc", LIMITS.runnerStaleMin + 5);
+  assert.ok(assess(run).problems.some(x => x.key === "newpc:runner"));
+  // Its runner's "main PC runner has been silent" alert is listed as leaked once the Main PC is back, like the others'.
+  const leak = assess(healthy({alerts: [{number: 9, title: "New PC alert: the main PC runner has been silent for 30 minutes", created_at: iso(10)}]}));
+  assert.ok(leak.notes.some(n => /#9/.test(n)));
 });
 
 test("status push quiet but runner alive is a note, and its old lane readings are not trusted", () => {
@@ -183,4 +204,31 @@ test("B7421: green means the newest checks run passed and the newest merge rules
   assert.equal(greenAt([{name: "checks", status: "in_progress", started_at: "2026-11-18T15:10:00Z"}], ok), null);
   assert.equal(greenAt([run("success", "x", "2026-11-18T15:20:45Z")], [{context: "wodx/merge-rules", state: "pending"}, ...ok]), null, "newest status first");
   assert.equal(greenAt([], ok), null);
+});
+
+test("B7550: the train is read from the runner that drives it, not a silent Main PC's last line", () => {
+  // The Main PC died with #1848 at the front of its last status; the Secondary PC drives the train now and shows it empty.
+  const snap = healthy({pcs: {main: null, secondary: pc("secondary", 3), laptop: pc("laptop", 1)},
+    statusIssues: [statusIssue("main", 1700, "Merge train: front #1848, prepare (behind main by 47: main merged in); line #1848, #2104"),
+      statusIssue("secondary", 1, "Merge train: empty (label a ready pull request merge-train)"), statusIssue("laptop", 1)]});
+  const a = assess(snap, {train: {front: 1848, since: NOW - 28 * 3600e3}});
+  assert.equal(a.train.front, null, "the Secondary PC's empty train wins over the dead Main PC's front");
+  assert.equal(a.trainPc, "Secondary PC");
+  assert.ok(!a.problems.some(p => p.key.startsWith("train")), "no stuck-train problem from a stale line");
+  assert.equal(a.state.train, null);
+  assert.match(report(a, NOW, "Laptop"), /Merge train: empty \(from the Secondary PC's runner\)/);
+  // A front on the Secondary PC is tracked and blamed on it when its runner goes quiet.
+  const front = healthy({statusIssues: [statusIssue("main", 1700, "Merge train: front #1848, wait; line #1848"),
+    statusIssue("secondary", LIMITS.runnerStaleMin + 5, "Merge train: front #2098, wait (gates); line #2098"), statusIssue("laptop", 1)],
+    pcs: {main: null, secondary: null, laptop: pc("laptop", 1)}});
+  const b = assess(front, {train: {front: 2098, since: NOW - (LIMITS.trainFrontHours + 1) * 3600e3}});
+  assert.equal(b.train.front, 2098, "both silent: the freshest line wins");
+  assert.match(b.problems.find(p => p.key === "train:2098").text, /The Secondary PC, which drives the train, is silent\./);
+});
+
+test("B7550: trainSource prefers a live runner, then the freshest stamp, and skips issues with no train line", () => {
+  const st = {main: statusIssue("main", 1, "Merge train: front #1, wait; line #1"), secondary: statusIssue("secondary", 5, "Merge train: front #2, wait; line #2"), laptop: statusIssue("laptop", 1)};
+  assert.equal(trainSource(st, {main: false, secondary: false}).key, "main", "both live: the fresher one");
+  assert.equal(trainSource(st, {main: true, secondary: false}).key, "secondary", "a live runner beats a silent one");
+  assert.equal(trainSource({main: null, secondary: null, laptop: statusIssue("laptop", 1)}), null);
 });

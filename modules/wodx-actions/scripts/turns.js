@@ -114,6 +114,19 @@ async function strikes(tok, rec) {
   return hits.length ? `struck: ${hits.join(", ")}` : "no strike lands";
 }
 
+/** A roll for each token inside the area (High Winds): its own pool at the record's difficulty; a failure brings the condition. */
+async function areaRolls(tok, rec) {
+  const ar = rec.areaRoll, fell = [];
+  for ( const t of inside(tok, rec) ) {
+    const dice = Math.max(1, poolDice(t.actor, ar.pool)), diff = TR.rollDiff(ar.diff);
+    const r = new Roll(`${dice}d10`);
+    await r.evaluate();
+    const res = countSuccesses(r.dice[0]?.results?.map(x => x.result) ?? [], diff);
+    if ( (n(res.successes) <= 0 || res.botch) && ar.onFail?.condition ) { await chron()?.conditions?.setCondition?.(t.actor, ar.onFail.condition, true); fell.push(t.name); }
+  }
+  return fell.length ? `${ar.onFail?.condition ?? "fails"}: ${fell.join(", ")}` : "everyone inside keeps their feet";
+}
+
 /** Work every every-turn effect on the combatant whose turn it is. */
 export async function onTurn(fight) {
   if ( !isActiveGM() || !fight?.started ) return 0;
@@ -128,7 +141,8 @@ export async function onTurn(fight) {
     const rec = foundry.utils.deepClone(rec0);
     let roll = null, rolled = "";
     if ( rec.roll ) {
-      const diff = TR.rollDiff(rec.roll.diff, {torment: actor.system?.advantages?.torment?.permanent});
+      const by = /^caster:/.test(String(rec.roll.diff)) && rec.byUuid ? fromUuidSync(rec.byUuid) : null;
+      const diff = TR.rollDiff(rec.roll.diff, {torment: actor.system?.advantages?.torment?.permanent, caster: by ? poolDice(by.actor ?? by, String(rec.roll.diff).slice(7)) : 0});
       const dice = Math.max(1, poolDice(actor, rec.roll.pool));
       const r = new Roll(`${dice}d10`);
       await r.evaluate();
@@ -146,6 +160,7 @@ export async function onTurn(fight) {
       else done.push(r);
     }
     if ( rec.strike ) done.push(await strikes(c.token, rec));
+    if ( rec.areaRoll ) done.push(await areaRolls(c.token, rec));
     if ( ended ) await e.delete();
     else await e.setFlag(MOD, "everyTurn", {...rec, lastTurn: key});
     const whisper = actor.hasPlayerOwner ? game.users.filter(u => u.isGM || actor.testUserPermission?.(u, "OWNER")).map(u => u.id) : game.users.filter(u => u.isGM).map(u => u.id);

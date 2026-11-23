@@ -251,35 +251,44 @@ async function onEventFired(e) {
   if ( n ) await landNow([n], e?.name ? `the news (${e.name})` : "the news");
 }
 
+/** B7177: town and key pairs being landed now. A second battle step that arrives while the first is still landing
+ * (a slow world, two assaults close together) used to pass the seen check and sack the town twice. */
+const LANDING = new Set();
 async function onBattle({battle, step} = {}) {
   if ( !isActiveGM() || !battle?.over || !step ) return;
   const m = TR.townOfPlace(battle.place || battle.war?.place, Markets.state().markets, sceneName);
   if ( !m ) return;
   const st = state();
   const key = `battle:${battle.id}`;
-  if ( st.towns[m.id]?.seen?.includes(key) ) return;
+  if ( st.towns[m.id]?.seen?.includes(key) || LANDING.has(`${m.id}|${key}`) ) return;
   const n = TR.battleEvent(battle, m.id);
   if ( !n ) return;
-  const r = await landNow([n], battle.name || "the battle");
-  // A battle reaches a town once, whatever is undone or fought on after
-  const s2 = state();
-  if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
-  return r;
+  LANDING.add(`${m.id}|${key}`);
+  try {
+    const r = await landNow([n], battle.name || "the battle");
+    // A battle reaches a town once, whatever is undone or fought on after
+    const s2 = state();
+    if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
+    return r;
+  } finally { LANDING.delete(`${m.id}|${key}`); }
 }
 
-/** A Rothenstein saga step that changes its town (hook wodxSaga with `town`; B3670). Once per step. */
+/** A chronicle's saga step that changes its town (hook wodxSaga with `town`; B3670). Once per step. */
 async function onSaga(p = {}) {
   if ( !isActiveGM() || !p.town || !p.where ) return null;
   const m = TR.townOfPlace(p.where, Markets.state().markets, sceneName);
   if ( !m ) return null;
   const key = `saga:${p.book}:${p.step}`;
-  if ( state().towns[m.id]?.seen?.includes(key) ) return null;
+  if ( state().towns[m.id]?.seen?.includes(key) || LANDING.has(`${m.id}|${key}`) ) return null;
   const n = TR.sagaEvent(p.town, m.id, p.title ?? "");
   if ( !n ) return null;
-  const r = await landNow([n], p.title ? `the saga (${p.title})` : "the saga");
-  const s2 = state();
-  if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
-  return r;
+  LANDING.add(`${m.id}|${key}`);
+  try {
+    const r = await landNow([n], p.title ? `the saga (${p.title})` : "the saga");
+    const s2 = state();
+    if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
+    return r;
+  } finally { LANDING.delete(`${m.id}|${key}`); }
 }
 
 /**

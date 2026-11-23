@@ -1,6 +1,7 @@
 {
   "_about": "Corrections to the gate map in gate-map.mjs: add or remove modules a gate covers, and files in tools/gate that are diagnostics, not gates.",
-  "notGates": [
+  "notGates": ["gatecleanworld",
+    "gatevoices",
     "gate6c-diag",
     "gatecssprobe",
     "gatedisplayb",
@@ -17,6 +18,12 @@
     "gatetruthwalk"
   ],
   "add": {
+    "gatepathbearing": [
+      "wodx-actions"
+    ],
+    "gatetotem": [
+      "wodx-actions"
+    ],
     "gatepowers": [
       "wodx-actions",
       "wodx-combat"
@@ -115,7 +122,11 @@
     ]
   },
   "remove": {},
-  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks, gateplaylang: run them by name on their own; gatesolo turns solo mode on). gatevoices is a lane gate again: it checks Voices switched off and needs no engine (B6763).",
+  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks, gateplaylang: run them by name on their own; gatesolo turns solo mode on). gatevoices is out again since Voices is shelved (B7134); run it by name if Voices ever stops the world from loading.",
   "timeouts": {},
-  "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}."
+  "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}.",
+  "_clean": "Chronicle Packs Desk e2: the clean smoke set, run in wodx-clean (run-gate.mjs --world clean --clean-set) after the nightly full run, on one lane. gatecleanworld is left out of the map because in rothenstein-wodx a chronicle is in play on purpose; the others are ordinary gates that must also pass with no chronicle in play.",
+  "clean": ["gatecleanworld", "gatethreads", "gateoworld", "gatepod", "gate7d", "gatebuilder", "gateevents"],
+  "shelved": ["wodx-voices"],
+  "_shelved": "B7134: shelved modules (docs/MODULES.md, Shelved). Kept in the repo and never deleted, but no gate covers them: a change to one touches no gate, a gate that covers only shelved modules is left out, and the others drop them. tools/audit/coverage.mjs leaves their files out of an audit's scope, and so does the line-by-line review. Fix one only if it stops the world from loading."
 }

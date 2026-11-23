@@ -9,6 +9,8 @@
  * The numbers ride in the effect's WoDX Chronicle timed data (effects.js timedData), so an old effect without them
  * counts nothing, as before.
  */
+import * as DOM from "./domain-da-rules.js";
+
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 /** B6850: a Blessing or Curse key, the plain one or a standing scoped one ("wodx-effect-fortune:<name>:<tags>"). */
 const isFortune = k => k === "wodx-effect-fortune" || String(k ?? "").startsWith("wodx-effect-fortune:");
@@ -87,10 +89,12 @@ export function modsFrom(effects = [], ctx = {}) {
   const roll = tags.size > 0 || ctx.soak || ctx.initiative || ctx.frenzy;
   let dice = 0, diff = 0;
   const parts = [], once = [];
-  let ward = 0, wardName = "";
+  let ward = 0, wardName = "", immune = "";
   for ( const e of effects ) {
     if ( !e || e.disabled ) continue;
     const d = e.data ?? {};
+    // B7672: an immunity (a demon's Immunity to Fire, V20 Dark Ages p. 402) stops its kind of harm outright
+    if ( e.key === KEYS.ward && ctx.soak && d.immune && wardHolds(d.against, ctx.harm ?? {}) ) { immune = e.name; continue; }
     if ( e.key === KEYS.ward && ctx.soak && wardHolds(d.against, ctx.harm ?? {}) ) {
       // The stronger of two Wards counts (effects-rules KEYWORDS.ward)
       if ( n(d.dice) > ward ) { ward = n(d.dice); wardName = e.name; }
@@ -117,7 +121,8 @@ export function modsFrom(effects = [], ctx = {}) {
   if ( ward ) { dice += ward; parts.push(`${wardName} +${ward} armour`); }
   const pen = penaltyFrom(effects, ctx);
   if ( pen.dice ) { dice += pen.dice; parts.push(...pen.parts); }
-  return {dice, diff, parts, once};
+  if ( immune ) parts.push(`${immune}: no harm`);
+  return {dice, diff, parts, once, immune};
 }
 
 /** B6850: the tags of a shift that stands on attacks against its bearer, not on the bearer's own rolls. */
@@ -185,10 +190,30 @@ export function looksFrom(effects = []) {
 
 /** A character's live effects in the shape modsFrom reads. */
 export function effectsOf(actor) {
-  return [...(actor?.effects ?? [])].map(e => {
+  const out = [...(actor?.effects ?? [])].map(e => {
     const t = e.flags?.["wodx-chronicle"]?.timed ?? null;
     return {id: e.id, name: e.name ?? "", key: t?.key ?? null, data: t?.data ?? null, disabled: !!e.disabled};
   });
+  return [...out, ...standingOf(actor?.items ?? []), ...domainOf(actor)];
+}
+
+/** B7684: the holder's domain, as standing shifts on Commerce, Seneschal and Leadership, and Stealth in the manor. */
+function domainOf(actor) {
+  const d = actor?.flags?.["wodx-actions"]?.domainDA;
+  if ( !d ) return [];
+  const onManor = !!d.manorScene && globalThis.canvas?.scene?.id === d.manorScene;
+  // the Servants are the sheet's Background; an event that still runs moves the manor's aspects (B7682)
+  const sv = [...(actor?.items ?? [])].find(i => i?.type === "Feature" && /^servants/i.test(String(i.name ?? "").trim()) && String(i.system?.type ?? "").includes("background"));
+  const now = Number(globalThis.game?.time?.worldTime) || 0;
+  const aspects = DOM.withEvents(DOM.normAspects(d.aspects), (d.events ?? []).filter(e => DOM.ASPECT_KEYS.includes(e.bg)), now);
+  return DOM.standingShifts({...d, aspects}, {onManor, servants: n(sv?.system?.value)}).map(x => ({id: null, name: x.name, key: `${KEYS.fortune}:domain-${x.tags[0]}`, data: {shift: x.shift, once: false, tags: x.tags}, disabled: false}));
+}
+
+/** B7672: what a spirit's always-on Charm stands for in these terms: Immunity to Fire is no harm from fire (V20 Dark Ages p. 402). */
+export const FIRE_IMMUNE = /^\s*immun(e|ity) to fire\s*$/i;
+export function standingOf(items = []) {
+  const charm = [...items].filter(i => i?.type === "Power" && (i.system?.type === "wod.types.charm" || i.parent?.system?.settings?.powers?.hascharms));
+  return charm.some(i => FIRE_IMMUNE.test(i.name ?? "")) ? [{id: null, name: "Immunity to Fire", key: KEYS.ward, data: {against: "fire", immune: true}, disabled: false}] : [];
 }
 /** What the powers on a character do to one roll (see modsFrom). */
 export const powerMods = (actor, ctx = {}) => modsFrom(effectsOf(actor), ctx);

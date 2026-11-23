@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const R = await import(join(root, "modules/wodx-storyteller/scripts/recipe-rules.mjs"));
-const {ROTHENSTEIN} = await import(join(root, "modules/wodx-storyteller/data/recipe-rothenstein.mjs"));
+const {ROTHENSTEIN} = await import(join(root, "modules/wodx-rothenstein/data/recipe.mjs"));
 const {WORLD_REGIONS} = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
 const {PLACE_KINDS} = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
 const ctx = {regions: Object.keys(WORLD_REGIONS), placeKinds: Object.keys(PLACE_KINDS)};

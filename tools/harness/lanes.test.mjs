@@ -236,6 +236,11 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.deepEqual(three.lanes.map(l => l.id), [8], "the Secondary PC sees lane 8 only (B6990)");
     assert.equal(three.foundryMain, "D:/WoDX/Foundry/resources/app/main.js");
     assert.ok(three.allLaneIds.includes("8") && three.allLaneIds.includes("7"));
+    process.env.WODX_HOST = "new_pc_lebrun";
+    const four = L.loadConfig();
+    assert.deepEqual(four.lanes.map(l => l.id), [10, 11, 12, 13], "the New PC sees lanes 10 to 13 only (B7760)");
+    assert.equal(four.foundryMain, "D:/WoDX/Foundry/main.mjs");
+    assert.ok(four.allLaneIds.includes("10") && four.allLaneIds.includes("8"));
     process.env.WODX_HOST = "desktop-mrkcmrg";
     const main = L.loadConfig();
     assert.ok(!main.lanes.some(l => l.host));
@@ -429,4 +434,33 @@ test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 2
   assert.match(src, /do not match \$\{sub\}\/SHA256/, "a joined copy with the wrong hash stops setup");
   assert.ok(!/(writeFileSync|appendFileSync|renameSync)\(\s*path\.join\(CACHE/.test(src) && !/(copyFileSync|cpSync)\([^,]+,\s*path\.join\(CACHE/.test(src),
     "nothing is written back to the shared folder");
+});
+
+test("writers of a known-good folder take turns, and readers wait for the writer (B7762)", async () => {
+  const L = await import("../lanes/lib.mjs");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kg-lock-"));
+  const dir = path.join(root, "testbed-known-good-clean");
+  assert.equal(L.knownGoodLockFile(dir + "/"), `${dir}.lock.json`, "the lock sits beside the folder, never in it");
+  const order = [];
+  const write = (who, ms) => L.withKnownGoodWrite(dir, who, async () => {
+    order.push(`${who} in`);
+    assert.equal(L.knownGoodLockState(dir).lock.what, who);
+    await new Promise(r => setTimeout(r, ms));
+    order.push(`${who} out`);
+  }, {everyMs: 10, log: () => {}});
+  await Promise.all([write("lane 11", 60), write("lane 12", 10), write("lane 13", 10)]);
+  for ( let i = 0; i < order.length; i += 2 ) assert.equal(order[i].replace(" in", ""), order[i + 1].replace(" out", ""), `one writer at a time: ${order.join(", ")}`);
+  assert.equal(order.length, 6);
+  assert.ok(!fs.existsSync(L.knownGoodLockFile(dir)), "the lock goes when the last writer ends");
+  // a lock left by a process that has ended does not hold anyone up
+  fs.writeFileSync(L.knownGoodLockFile(dir), JSON.stringify({pid: 999999, since: new Date().toISOString(), what: "gone"}));
+  assert.equal(L.knownGoodLockState(dir, {alive: () => false}).held, false);
+  // a reader waits while a live writer holds it, then goes on
+  let held = 2;
+  const state = () => held-- > 0 ? {held: true, lock: {pid: 1, what: "setup-clean on lane 12"}} : {held: false};
+  const lines = [];
+  await L.waitKnownGood(dir, {state, everyMs: 1, log: m => lines.push(m), sleep: async () => {}});
+  assert.equal(lines.length, 1); assert.match(lines[0], /setup-clean on lane 12/);
+  await assert.rejects(L.waitKnownGood(dir, {state: () => ({held: true, lock: {pid: 1}}), waitMinutes: 0, sleep: async () => {}, log: () => {}}), /for over 0 minutes/);
+  fs.rmSync(root, {recursive: true, force: true});
 });

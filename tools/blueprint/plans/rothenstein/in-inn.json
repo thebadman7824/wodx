@@ -1,0 +1,507 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-inn",
+ "name": "The Inn Upstairs and Cellar",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-inn-upstairs-and-cellar/workplace-the-inn-upstairs-and-cellar.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    8.0,
+    2.0,
+    8.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    2.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.0,
+    8.0,
+    8.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    2.0,
+    28.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    12.0,
+    16.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    28.0,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    12.0,
+    14.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    16.0,
+    16.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    12.0,
+    20.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    8.0,
+    4.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    6.0,
+    14.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    12.0,
+    28.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    8.0,
+    12.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    2.0,
+    14.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    15.0,
+    28.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    2.0,
+    20.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    8.0,
+    16.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    6.0,
+    20.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    18.0,
+    28.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    6.0,
+    8.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    18.0,
+    9.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    8.0,
+    28.0,
+    8.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    16.0,
+    15.0,
+    16.0,
+    16.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    8.0,
+    9.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    4.0,
+    8.0,
+    5.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    22.0,
+    8.0,
+    23.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    9.0,
+    18.0,
+    10.0,
+    18.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    12.0,
+    15.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    5.0,
+    8.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16.0,
+    8.0,
+    17.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    5.0,
+    14.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    20.0,
+    5.0,
+    20.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    28.0,
+    14.0,
+    28.0,
+    15.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    20.0,
+    12.0,
+    21.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": true
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-cellar",
+   "label": "The cellar",
+   "rect": [
+    16.4,
+    12.4,
+    11.6,
+    5.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-kitchen",
+   "label": "The kitchen",
+   "rect": [
+    2.4,
+    12.4,
+    13.4,
+    5.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-guest-rooms",
+   "label": "The guest rooms",
+   "rect": [
+    2.4,
+    2.4,
+    25.6,
+    5.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-landing-chest",
+   "label": "The landing chest",
+   "rect": [
+    18.0,
+    9.4,
+    3.0,
+    1.0
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-landing-chest",
+   "obj": "chest",
+   "label": "The landing chest",
+   "rect": [
+    19.0,
+    9.6,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 6.0,
+   "y": 15.0,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.86,
+   "color": "#ff9a4a"
+  },
+  {
+   "x": 22.0,
+   "y": 13.0,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 3.14,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 5.0,
+   "y": 4.0,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 3.14,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 11.0,
+   "y": 9.6,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 6.0,
+   "y": 15.086,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 12.6,
+   "text": "GM: The upper floor, kitchen and"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-market-floors"
+}

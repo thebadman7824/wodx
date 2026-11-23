@@ -17,7 +17,9 @@
  *  10. WoDX Combat: heavy fire: a 5-inch gun against penetration difficulty 4 rolls 5 dice at 4 and says what the hit did
  * Result: Data/wodx-gate/gatecyber-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, inOrder} from "./kit.mjs";
+// B7773: a batch create does not keep its order (kit rule 1), so what it made is matched back to its data by name
+const madeInOrder = async (parent, type, data) => inOrder(await parent.createEmbeddedDocuments(type, data), data);
 
 const LIB = "wodx-library";
 
@@ -86,7 +88,7 @@ export async function run() {
     });
     await G.step("7. senses read the optics", async () => {
       const S = game.modules.get("wodx-senses")?.api;
-      const [eye, ear] = await m.createEmbeddedDocuments("Item", [piece("Low Lite"), piece("Amplified Hearing")]);
+      const [eye, ear] = await madeInOrder(m, "Item", [piece("Low Lite"), piece("Amplified Hearing")]);
       await eye.update({"system.isequipped": true}); await ear.update({"system.isequipped": true});
       const t = S.traitsOf(m), pw = S.rules.powersFor(t);
       const base = S.rules.difficulty("sound", {}, S.rules.powersFor({})).diff, now = S.rules.difficulty("sound", {}, pw).diff;

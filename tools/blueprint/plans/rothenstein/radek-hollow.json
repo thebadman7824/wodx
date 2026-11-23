@@ -1,0 +1,525 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "radek-hollow",
+ "name": "Radek's Hollow and the Ivy Cave",
+ "chronicle": "rothenstein",
+ "tier": 4,
+ "cells": [
+  46,
+  34
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "hand",
+  "from": "Book 1 omnibus (chronicle-rebuild v2), places section"
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    34,
+    18,
+    40,
+    16
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40,
+    16,
+    44,
+    19
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44,
+    19,
+    44,
+    26
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44,
+    26,
+    40,
+    29
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40,
+    29,
+    35,
+    27
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34,
+    18,
+    34,
+    21
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34,
+    23.5,
+    35,
+    27
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    34,
+    21,
+    34,
+    23.5
+   ],
+   "kind": "secret",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-hollow",
+   "label": "The hollow",
+   "rect": [
+    10,
+    15,
+    22,
+    14
+   ],
+   "use": "camp"
+  },
+  {
+   "id": "the-ivy-cave",
+   "label": "The Ivy Cave",
+   "rect": [
+    35,
+    18,
+    8,
+    9
+   ],
+   "use": "cave"
+  }
+ ],
+ "slots": [
+  {
+   "id": "old-beech",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    2.2,
+    5.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "old-beech-2",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    8.2,
+    5.7,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "old-beech-3",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    26.2,
+    5.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "old-beech-4",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    32.2,
+    6.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "old-beech-5",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    40.2,
+    5.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "old-beech-6",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    4.2,
+    9.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "old-beech-7",
+   "obj": "tree",
+   "label": "Old beech",
+   "rect": [
+    28.2,
+    9.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "campfire",
+   "obj": "hearth",
+   "label": "Campfire",
+   "rect": [
+    20.5,
+    21.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "tent",
+   "obj": "tent",
+   "label": "Tent",
+   "rect": [
+    12.8,
+    17.3,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tent-2",
+   "obj": "tent",
+   "label": "Tent",
+   "rect": [
+    12.8,
+    24.3,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "lean-to",
+   "obj": "lean-to",
+   "label": "Lean-to",
+   "rect": [
+    25.5,
+    16.1,
+    3.0,
+    1.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "Woodpile",
+   "rect": [
+    24.4,
+    25.7,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "loot-crate",
+   "obj": "crate",
+   "label": "Loot crate",
+   "rect": [
+    27.75,
+    21.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "loot-sack",
+   "obj": "sack",
+   "label": "Loot sack",
+   "rect": [
+    28.825,
+    23.25,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    26.775,
+    24.275,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "log-seat",
+   "obj": "bench",
+   "label": "Log seat",
+   "rect": [
+    20.2,
+    23.225,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "straw-where-the-courier-was-held",
+   "obj": "cot",
+   "label": "Straw where the courier was held",
+   "rect": [
+    38.35,
+    19.6,
+    1.3,
+    0.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    40.7,
+    24.5,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 21,
+   "y": 22,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 38,
+   "y": 23,
+   "kind": "lamp",
+   "bright": 0.5,
+   "dim": 2.0,
+   "color": "#ffd890"
+  }
+ ],
+ "labels": [
+  {
+   "x": 33,
+   "y": 21.5,
+   "text": "Ivy hangs over the mouth: a secret door",
+   "used": false
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-mountain-trail",
+   "to": "mountain-trail",
+   "rect": [
+    0,
+    2.5,
+    1.5,
+    3
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-mountain-trail",
+   "to": "mountain-trail",
+   "rect": [
+    44.5,
+    2.5,
+    1.5,
+    3
+   ]
+  }
+ ],
+ "ground": [
+  {
+   "kind": "track",
+   "label": "Ridge Road",
+   "path": [
+    [
+     0,
+     4
+    ],
+    [
+     12,
+     3.5
+    ],
+    [
+     24,
+     4.5
+    ],
+    [
+     36,
+     3.5
+    ],
+    [
+     46,
+     4
+    ]
+   ],
+   "width": 1.0
+  },
+  {
+   "kind": "path",
+   "label": "goat path down to the hollow",
+   "path": [
+    [
+     18,
+     4.5
+    ],
+    [
+     17,
+     9
+    ],
+    [
+     19,
+     14
+    ],
+    [
+     21,
+     18
+    ]
+   ],
+   "width": 0.4
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": false,
+ "env": {
+  "outdoor": true,
+  "darkness": 0.85
+ }
+}

@@ -16,6 +16,9 @@ import {splatOf, labelOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
 import {PeopleApp} from "./people.mjs";
+import {bookPeopleDialog} from "./book-people.mjs";
+import {supportingCastDialog} from "./supporting-cast.mjs";
+import {demonsDialog} from "./dac-demons.mjs";
 import {runSkipTest, isTestWorld} from "./skip-test.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
@@ -66,6 +69,9 @@ export class CreationApp extends ApplicationV2 {
       log: CreationApp.#onLog,
       passYears: () => PassYearsApp.open(),
       people: () => PeopleApp.open(),
+      bookPeople: () => bookPeopleDialog(),
+      supportingCast: () => supportingCastDialog(),
+      dacDemons: () => demonsDialog(),
       skipTest: () => runSkipTest().then(() => CreationApp.refresh())
     }
   };
@@ -146,6 +152,9 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="tree"><i class="fa-solid fa-sitemap"></i> Family tree</button>
           <button type="button" data-action="passYears"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>
           <button type="button" data-action="people"><i class="fa-solid fa-users"></i> People</button>
+          <button type="button" data-action="bookPeople" title="The Storyteller characters of V20 Dark Ages pp. 383-396"><i class="fa-solid fa-book-open"></i> People of the book</button>
+          <button type="button" data-action="supportingCast" title="The supporting-character templates of the Dark Ages Storytellers Companion, base, experienced or exceptional"><i class="fa-solid fa-people-group"></i> Supporting characters</button>
+          <button type="button" data-action="dacDemons" title="The sample and bound demons of the Dark Ages Companion (2002) pp. 180-185, and the four monsters of the V20 Dark Ages Companion"><i class="fa-solid fa-skull-crossbones"></i> Demons</button>
           ${isTestWorld() ? `<button type="button" data-action="skipTest" title="Test worlds only. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}
         </div>
         <div class="form-group"><label><input type="checkbox" data-action="toggleNPCs" ${this.showNPCs ? "checked" : ""}> Show every NPC (to make one an ally)</label></div>
@@ -349,7 +358,7 @@ export class SpendApp extends ApplicationV2 {
       if ( !list.length ) return "";
       return `<h3>${esc(title)}</h3><table class="wodx-table wodx-traits"><tbody>${list.map(o => `
         <tr class="${o.ok ? "" : "wodx-muted"}" data-search-text="${esc(o.label)}"><td>${esc(o.label)}${o.discipline === "clan" ? ' <span class="wodx-tag">clan</span>' : ""}${o.kind === "power" && o.own ? ` <span class="wodx-tag">${esc(o.cat === "sphere" ? "affinity" : "own")}</span>` : ""}</td>
-          <td>${o.current} → ${o.next}</td><td>${o.cost ?? "–"} xp</td>
+          <td>${o.current} → ${o.next}</td><td${o.costParts?.length ? ` title="${esc(o.costParts.join("; "))}"` : ""}>${o.cost ?? "–"} xp${o.costParts?.length ? ` <span class="wodx-quiet">(${esc(o.costParts.join("; "))})</span>` : ""}</td>
           <td><button type="button" data-action="buy" data-kind="${o.kind}" data-key="${esc(o.key)}" ${o.ok ? "" : "disabled"} title="${esc(o.reason)}">${verb}</button>${(f => f ? ` <button type="button" data-action="buyChange" data-kind="${o.kind}" data-key="${esc(o.key)}" ${f.ok ? "" : "disabled"} title="${esc(f.reason || `A dot from ${CP.POOLS[f.fromChange.change].label}`)}">Free</button>` : "")(freeOf(o))}</td></tr>`).join("")}
         </tbody></table>`;
     }).join("");

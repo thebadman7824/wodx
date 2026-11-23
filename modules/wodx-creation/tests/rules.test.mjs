@@ -17,7 +17,7 @@ test("a childe is one Generation further from Caine", () => {
   assert.equal(childeGeneration(undefined), null);
 });
 
-test("clan names as Rothenstein and upstream write them", () => {
+test("clan names as the first chronicle's sheets and upstream write them", () => {
   assert.equal(findClan("Old Clan Tzimisce").id, "tzimisce");
   assert.equal(findClan("wod.bio.vampire.gangrel").id, "gangrel");
   assert.equal(findClan("Salubri (Healer)").id, "salubri-healer");

@@ -1,0 +1,568 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "high-fold",
+ "name": "The High Fold and the warm spring",
+ "chronicle": "rothenstein",
+ "tier": 4,
+ "cells": [
+  46,
+  34
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "hand",
+  "from": "Book 1 omnibus (chronicle-rebuild v2), places section"
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    14,
+    14,
+    28,
+    14
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    28,
+    14,
+    30,
+    22
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    30,
+    22,
+    26,
+    27
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    26,
+    27,
+    14,
+    26
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14,
+    26,
+    12,
+    20
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12,
+    20,
+    14,
+    14
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4,
+    18,
+    9,
+    18
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4,
+    22,
+    9,
+    22
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4,
+    18,
+    4,
+    22
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9,
+    18,
+    9,
+    19.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9,
+    20.5,
+    9,
+    22
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    20.5,
+    14,
+    22.5,
+    14
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    9,
+    19.5,
+    9,
+    20.5
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "shepherd-s-hut",
+   "label": "Shepherd's hut",
+   "rect": [
+    4,
+    18,
+    5,
+    4
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [
+  {
+   "id": "the-fold",
+   "label": "The fold",
+   "rect": [
+    14,
+    15,
+    15,
+    11
+   ],
+   "use": "pen"
+  },
+  {
+   "id": "old-tusk-s-wallow",
+   "label": "Old Tusk's wallow",
+   "rect": [
+    39,
+    27,
+    6,
+    6
+   ],
+   "use": "lair"
+  }
+ ],
+ "slots": [
+  {
+   "id": "hearth-stones",
+   "obj": "hearth",
+   "label": "Hearth stones",
+   "rect": [
+    6.0,
+    19.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "straw-cot",
+   "obj": "cot",
+   "label": "Straw cot",
+   "rect": [
+    3.95,
+    19.2,
+    1.3,
+    0.8
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    7.3,
+    21.2,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "water-trough",
+   "obj": "trough",
+   "label": "Water trough",
+   "rect": [
+    20.4,
+    23.8,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hay",
+   "obj": "haystack",
+   "label": "Hay",
+   "rect": [
+    24.9,
+    15.9,
+    2.2,
+    2.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "Woodpile",
+   "rect": [
+    10.2,
+    17.9,
+    0.6,
+    1.2
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    1.2,
+    2.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir-2",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    8.2,
+    1.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir-3",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    40.2,
+    2.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir-4",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    42.2,
+    12.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir-5",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    38.2,
+    16.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir-6",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    4.2,
+    28.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fir-7",
+   "obj": "tree",
+   "label": "Fir",
+   "rect": [
+    10.2,
+    29.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder",
+   "obj": "boulder",
+   "label": "Boulder",
+   "rect": [
+    36.6,
+    22.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-2",
+   "obj": "boulder",
+   "label": "Boulder",
+   "rect": [
+    42.6,
+    24.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 6.5,
+   "y": 20,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 4.0,
+   "color": "#ff9a40"
+  }
+ ],
+ "labels": [],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-high-woods",
+   "to": "high-woods",
+   "rect": [
+    0,
+    6.5,
+    1.5,
+    3
+   ]
+  }
+ ],
+ "ground": [
+  {
+   "kind": "track",
+   "label": "track from the high woods",
+   "path": [
+    [
+     0,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     16,
+     12
+    ],
+    [
+     22,
+     15
+    ]
+   ],
+   "width": 0.8
+  },
+  {
+   "kind": "water",
+   "label": "the warm spring: never freezes",
+   "path": [
+    [
+     33,
+     6
+    ],
+    [
+     36,
+     5
+    ],
+    [
+     38,
+     7
+    ],
+    [
+     36,
+     9
+    ],
+    [
+     33,
+     8.5
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "brook",
+   "label": "spring run",
+   "path": [
+    [
+     35,
+     9
+    ],
+    [
+     33,
+     14
+    ],
+    [
+     31,
+     20
+    ],
+    [
+     30,
+     34
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "path",
+   "label": "gully",
+   "path": [
+    [
+     30,
+     22
+    ],
+    [
+     34,
+     24
+    ],
+    [
+     38,
+     26
+    ],
+    [
+     42,
+     29
+    ],
+    [
+     44,
+     32
+    ]
+   ],
+   "width": 0.5
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "Where the drained sheep are found each time (E1, E10)"
+ ],
+ "seeded": false,
+ "env": {
+  "outdoor": true,
+  "darkness": 0.85
+ }
+}

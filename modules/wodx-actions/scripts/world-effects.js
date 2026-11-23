@@ -92,6 +92,8 @@ export const WORLD_POWERS = {
   "command the blaze": ["fire", "blaze"], "blaze of glory": ["blaze"], "gaia's vengeance": ["cleanse"], "riot": ["riot"],
   "divine wind": ["storm"], "invoke the spirits of the storm": ["storm"], "quell mob rage": ["calm"], "epidemic contagion": ["plague"],
   "cleansing tusks": ["cleanse"], "firebug": ["blaze"], "rain of doom": ["rubble"],
+  // B7697: Bloody Bones curses a place up to a village: crops wither and tempers flare (DAC 2002 p. 108)
+  "bloody bones": ["blight", "riot"],
   // Dark Ages fae: cantrips and Treasures that reach the ground or the fields (B6550, B6560)
   "Fae (Dark Ages)|wall of fire": ["blaze"], "Fae (Dark Ages)|blight acres": ["blight"], "faerie dust of the pillar of fire": ["blaze"],
   // Wraith, Vampire, Mage, Changeling, Hunter
@@ -99,7 +101,7 @@ export const WORLD_POWERS = {
   "mother's bounty": ["boon"], "storm brewing": ["storm"], "eldritch prime": ["blaze"], "pyrokinesis 4": ["blaze"], "pyrokinesis 5": ["blaze"],
   "weather control": ["storm"],
   // Mummy: the Resurrection (Hekau and its rituals)
-  "spark of ra": ["blaze"], "grip the water": ["flood"], "call the stars": ["fire"], "greater weather magic": ["storm"],
+  "spark of ra": ["blaze"], "Vampire (V20)|inferno": ["blaze"], "grip the water": ["flood"], "call the stars": ["fire"], "greater weather magic": ["storm"],
   "potent weather magic": ["storm", "flood"], "sandstorm": ["storm"], "plague of ma'at": ["plague"], "rousing apophis": ["quake", "rubble"],
   // Werewolf rites
   "rite of cleansing": ["cleanse"], "rite of the opened sky": ["cleanse"], "enchant the forest": ["dread"], "rite of the wilderness": ["dread"]

@@ -322,7 +322,9 @@ export function normPlace(p = {}) {
 }
 export function normState(s = {}) {
   const list = (Array.isArray(s?.list) ? s.list : []).map(normPlace).filter(p => p.id);
-  return {v: 1, list};
+  // B7615: the chronicle places put on the register once (so one the Storyteller removes stays removed)
+  const seeded = [...new Set((Array.isArray(s?.seeded) ? s.seeded : []).map(x => str(x, 40)).filter(Boolean))].slice(-100);
+  return {v: 1, list, seeded};
 }
 export const placeById = (st, id) => normState(st).list.find(p => p.id === id) ?? null;
 export const logLine = (p, t, text) => ({...p, log: [...(p.log ?? []), {t: num(t), text: str(text, 300)}].slice(-LOG_CAP)});

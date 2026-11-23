@@ -3,15 +3,21 @@ import {SETTLEMENTS, CHARTS, gauntletFor, suggestSettlement, battlemapParent} fr
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import {clearCrossing} from "./crossing.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
-/** Presets shipped with the module: data/presets/<id>.json */
-export const PRESETS = {rothenstein: "What Sleeps Beneath Rothenstein"};
+/**
+ * Scene-tag presets come from the chronicle in play (Chronicle Packs Desk f1): {id: {title, path}}, path from the Foundry
+ * data root. With no chronicle in play there are none, and the preset row is hidden.
+ */
+export const presets = () => chronicleInPlay()?.scenePresets ?? {};
 
 async function loadPreset(id) {
-  const url = foundry.utils.getRoute(`modules/${MODULE_ID}/data/presets/${id}.json`);
+  const p = presets()[id];
+  if ( !p ) throw new Error("The chronicle in play has no such preset");
+  const url = foundry.utils.getRoute(p.path);
   const response = await fetch(url, {cache: "no-store"});
   if ( !response.ok ) throw new Error(`Preset ${id} could not be loaded`);
   return response.json();
@@ -69,7 +75,7 @@ export class TaggingApp extends ApplicationV2 {
         <td><input type="checkbox" name="${s.id}.umbralStorm" ${r.umbralStorm ? "checked" : ""}></td>
       </tr>`;
     }).join("");
-    const presetOptions = Object.entries(PRESETS).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("");
+    const presetOptions = Object.entries(presets()).map(([k, v]) => `<option value="${esc(k)}">${esc(v.title)}</option>`).join("");
     const div = document.createElement("div");
     div.className = "wodx-body";
     div.innerHTML = `
@@ -77,8 +83,8 @@ export class TaggingApp extends ApplicationV2 {
       <p>Era chart in force: <strong>${esc(chart.name)}</strong> (${esc(chart.source)}). A region with the "WoDX: Otherworld ratings" behavior overrides its scene.</p>
       <div class="wodx-buttons">
         <button type="button" data-action="fillNames" title="Only fills rows that are not set">Suggest from scene names</button>
-        <select name="preset">${presetOptions}</select>
-        <button type="button" data-action="fillPreset" title="Only fills rows that are not set">Fill from preset</button>
+        ${presetOptions ? `<select name="preset">${presetOptions}</select>
+        <button type="button" data-action="fillPreset" title="Only fills rows that are not set">Fill from preset</button>` : ""}
         <button type="button" data-action="followParents">Battlemaps follow their scene</button>
         <button type="button" data-action="report"><i class="fa-solid fa-book"></i> Write report</button>
         <button type="button" data-action="prototype" title="Copies the scene you are viewing">Penumbra prototype</button>

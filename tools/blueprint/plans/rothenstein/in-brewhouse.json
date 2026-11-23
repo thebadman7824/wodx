@@ -1,0 +1,410 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-brewhouse",
+ "name": "The Brewhouse",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-brewhouse/workplace-the-brewhouse.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    17.0,
+    3.0,
+    17.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    12.0,
+    21.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    17.0,
+    27.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    12.0,
+    8.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    15.0,
+    17.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    9.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    17.0,
+    21.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    3.0,
+    27.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    12.0,
+    17.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    3.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    6.0,
+    17.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    3.0,
+    27.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    12.0,
+    27.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    12.0,
+    17.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    8.0,
+    27.0,
+    8.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    22.0,
+    8.0,
+    23.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    9.0,
+    3.0,
+    11.0,
+    3.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    17.0,
+    14.0,
+    17.0,
+    15.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    12.0,
+    22.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    17.0,
+    5.0,
+    17.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    17.0,
+    23.0,
+    17.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    12.0,
+    9.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    17.0,
+    11.0,
+    17.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-kettles",
+   "label": "The kettles",
+   "rect": [
+    5.0,
+    5.0,
+    8.0,
+    3.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-malt-floor",
+   "label": "The malt floor",
+   "rect": [
+    17.4,
+    8.4,
+    9.6,
+    5.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cellar",
+   "label": "The cellar",
+   "rect": [
+    3.4,
+    12.4,
+    13.6,
+    4.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-brewer-s-rooms",
+   "label": "The brewer's rooms",
+   "rect": [
+    17.4,
+    3.4,
+    9.6,
+    4.4
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-kettles-1",
+   "obj": "vat",
+   "label": "The kettles 1",
+   "rect": [
+    6.2,
+    5.7,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-kettles-2",
+   "obj": "vat",
+   "label": "The kettles 2",
+   "rect": [
+    10.2,
+    5.7,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 19.4,
+   "y": 5.0,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 8.0,
+   "y": 15.0,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 3.14,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 4.2,
+   "y": 5.2,
+   "kind": "fire",
+   "bright": 0.86,
+   "dim": 6.0,
+   "color": "#ff9a4a"
+  },
+  {
+   "x": 4.1,
+   "y": 5.2,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 12.6,
+   "text": "GM: The brewhouse near the tavern. It"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-crafts"
+}

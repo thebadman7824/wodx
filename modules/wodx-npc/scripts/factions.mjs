@@ -23,10 +23,13 @@ import {calendarFor} from "./hunt-calendar.mjs";
 import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
+import * as POACH from "./poach-rules.mjs";
+import * as FLOCK from "./road-flock-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 export const TYPE = "wodx-npc.faction";
 
@@ -645,81 +648,110 @@ export function build(ctx) {
       const mine = factionsOf(s, actor.id)[0];
       if ( mine ) await proposeChanges(`${h.trespass.name} notices a trespass`, `${actor.name} hunted in its domain without leave.`, [{op: "standing", faction: h.trespass.faction, other: mine.id, delta: -1}], {key: `trespass:${actor.id}:${h.trespass.faction}`, kind: "trespass"});
     }
+    // B7638 (Dark Ages depth desk item 6): an NPC who feeds in a player's domain leaves signs, and the holder may track it
+    const holderF = h.trespass ? s.factions.find(f => f.id === h.trespass.faction) : null;
+    if ( caught && POACH.isPoach(h, holderF, pcActors(), actor.id) ) await poachCard(actor, placeId, h, holderF, factionsOf(s, actor.id)[0] ?? null).catch(e => console.error(`${MOD} | poach`, e));
     return {...h, pool, rolls: rolls.map(r => ({dice: r.dice, ...r.res})), caught, botch, message: msg};
   }
 
+  /** The scene a place lies on (a tagged scene, a region's scene, or a scene by uuid). */
+  function sceneForPlace(id) {
+    const p = routines.listPlaces().find(x => x.id === id);
+    if ( p?.scene ) return p.scene;
+    const d = sceneOf(id);
+    return d?.documentName === "Scene" ? d : d?.parent?.documentName === "Scene" ? d.parent : null;
+  }
+  /**
+   * B7638-B7640: the signs a poacher leaves in a player's domain, for the Storyteller and the players who hold it, with a
+   * button for each of their characters to track it. The district's herd gives one (WoDX Storyteller herd pools).
+   */
+  async function poachCard(actor, placeId, h, holder, mine) {
+    const pcs = POACH.holdersOf(holder, pcActors());
+    if ( !pcs.length ) return null;
+    const place = placeList().find(p => p.id === placeId) ?? {id: placeId, kind: "other"};
+    const wild = ["wilds", "caern"].includes(place.kind);
+    const feeds = num(actor.system?.advantages?.yangchi?.permanent ?? actor.system?.advantages?.yangchi?.max) > 0 ? "chi" : "blood";
+    const scene = sceneForPlace(placeId);
+    try { if ( scene ) await game.modules.get("wodx-storyteller")?.api?.upkeep?.herds?.feed?.({scene, who: actor.name}); } catch (e) { console.warn(`${MOD} | poach herd`, e); }
+    const key = PO.polityFor(holder, eraInfo().year);
+    const law = POACH.brokenLaw(key ? PO.POLITIES[key]?.law ?? [] : []);
+    const security = num(h.trespass?.security), diff = POACH.trackDiff(security);
+    const n = names(state());
+    const owners = (game.users ?? []).filter(u => !u.isGM && pcs.some(id => game.actors.get(id)?.testUserPermission?.(u, "OWNER"))).map(u => u.id);
+    const buttons = pcs.map(id => `<button type="button" class="wnpc-f-track" data-actor="${esc(id)}">Track the poacher: ${esc(n.actor(id))}</button>`).join(" ");
+    const poach = {place: placeId, placeName: n.place(placeId), poacher: actor.id, poacherName: actor.name, poacherFaction: mine?.id ?? null,
+      poacherFactionName: mine?.name ?? "", holder: holder.id, holderName: holder.name, security, wild, law, diff};
+    return ChatMessage.create({whisper: [...new Set([...gmIds(), ...owners])], speaker: {alias: "WoDX factions"}, flags: {[MOD]: {poach}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>Someone has fed in ${esc(holder.name)}'s domain</h3>
+        <p>At ${esc(poach.placeName)}:</p><ul>${POACH.poachSigns({feeds, wild}).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        <p class="wodx-quiet">Track the poacher: Perception + ${wild ? "Survival" : "Investigation"} at ${diff} (6, less ${security} for the domain's security; V20 Dark Ages p. 180).</p>
+        <p>${buttons}</p></div>`});
+  }
+  /** B7639: one holder tracks the poacher from the signs. The result card tells the Storyteller what was found. */
+  async function trackPoacher(msg, a) {
+    const p = msg.flags?.[MOD]?.poach;
+    if ( !p || !a ) return null;
+    const tp = POACH.trackPool({perception: attrOf(a, "perception"), investigation: abilityOf(a, "investigation"), survival: abilityOf(a, "survival")}, p.wild);
+    const r = await new Roll(`${tp.dice}d10`).evaluate();
+    const dice = r.dice[0]?.results?.map(x => x.result) ?? [];
+    const res = F.successes(dice, p.diff), verdict = POACH.trackVerdict(res);
+    const who = `${p.poacherName}${p.poacherFactionName ? `, of ${p.poacherFactionName}` : ""}`;
+    const text = verdict === "found" ? `${a.name} follows the signs to ${who}. Hunting there broke ${p.law}: it can be brought before the court.`
+      : verdict === "lost" ? `A botch: ${a.name} follows the wrong trail, and the poacher learns that someone is looking.`
+      : `${a.name} finds where the poacher fed, and then the trail goes cold.`;
+    return ChatMessage.create({speaker: ChatMessage.getSpeaker({actor: a}), rolls: [r], whisper: [...new Set([...gmIds(), game.user.id])],
+      flags: {[MOD]: {poachTracked: {of: msg.id, verdict, tracker: a.id, ...p}}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(a.name)} tracks the poacher</h3>
+        <p class="wodx-quiet">Perception + ${tp.skill === "survival" ? "Survival" : "Investigation"}: ${tp.dice} dice at ${p.diff}.</p><p>[${dice.join(" ")}]</p><p><b>${esc(text)}</b></p></div>`});
+  }
+  /** B7640: what the Storyteller's side does with a found poacher: the holder thinks worse of the poacher's faction (queued), and the History has it. */
+  async function onPoachTracked(m) {
+    const t = m.flags?.[MOD]?.poachTracked;
+    if ( !t || !isActiveGM() || t.verdict !== "found" ) return null;
+    const a = game.actors.get(t.tracker);
+    try { if ( a ) await game.wodxActions?.history?.(a, `Tracks a poacher in the domain at ${t.placeName}: ${t.poacherName}.`, "domain"); } catch (e) { console.warn(`${MOD} | poach history`, e); }
+    const s = state();
+    if ( !t.poacherFaction || !s.factions.some(f => f.id === t.poacherFaction) || !s.factions.some(f => f.id === t.holder) ) return null;
+    return proposeChanges(`${t.holderName} learns who poached its domain`, `${t.poacherName} fed at ${t.placeName} without leave; ${t.holderName} knows it.`,
+      [{op: "standing", faction: t.holder, other: t.poacherFaction, delta: -1}], {key: `poach:${t.of}`, kind: "trespass"});
+  }
+
   /* ------------------------------------------------------------------ */
-  /*  Rothenstein's own factions                                         */
+  /*  The chronicle's own factions                                       */
   /* ------------------------------------------------------------------ */
 
-  /**
-   * The powers of the valley as the chronicle's notes give them ("The Domain of Rothenstein", "Overview & Cast", "The
-   * Herd", "The Weavers' Guild Hall", "Hunter & Inquisition Threats"). The dots are WoDX's estimates from those notes
-   * (B102), for the Storyteller to adjust. Members and places are matched by name; anything not found is left out.
-   */
-  const ROTHENSTEIN = [
-    {key: "court", name: "The Voivode's court", kind: "kindred", ruler: true, leader: "Bogdan Ursu", members: ["Bogdan Ursu"], places: [/kranzfels|keep floors|inner ward|great hall/i],
-      assets: {herd: 4, status: 5, domain: 4, security: 1, retainers: 3, contacts: 1, resources: 3, influence: {crown: 2, military: 2}}, goals: [{move: "defend"}, {move: "recruit"}],
-      notes: "Bogdan holds the keep and gives judgment; the Herd is thirty-one named mortals, the Voivode's to ration (Herd 4: thirty vessels)."},
-    {key: "cult", name: "Konrad's cult", kind: "kindred", leader: "Konrad", members: ["Konrad", "Kasimir"], places: [/silver adit|konrad/i],
-      assets: {herd: 1, retainers: 2, status: 1, contacts: 1, influence: {underworld: 1, guild: 1}}, goals: [{move: "recruit"}, {move: "scheme", target: "church"}],
-      notes: "The flesh-smith's believers and the changed miners, under the Adit. Secret even from the court."},
-    {key: "marta", name: "Sister Marta's network", kind: "kindred", leader: "Marta", members: ["Marta"], places: [/marta/i],
-      assets: {status: 2, contacts: 3, resources: 1, influence: {church: 2, folk: 1}}, goals: [{move: "lielow"}, {move: "expand", sphere: "church"}],
-      notes: "A Lasombra in a nun's habit with the church's confidence; help from outside the valley."},
-    {key: "radu", name: "Old Radu", kind: "kindred", leader: "Old Radu", members: ["Old Radu"], places: [/radu|crossroads/i],
-      assets: {status: 2, contacts: 3, influence: {folk: 2}}, goals: [{move: "lielow"}],
-      notes: "A drifter who has watched the valley since before the town had a name."},
-    {key: "council", name: "The German council (the Hospites)", kind: "mortal", leader: "Graff", members: ["Graff", "Jan Dvorak", "Ludwig of Regensburg"], places: [/market square|market floors|graff/i],
-      assets: {resources: 4, status: 2, retainers: 1, contacts: 2, influence: {guild: 3, crown: 1}}, goals: [{move: "expand", sphere: "guild"}],
-      notes: "The council wants profit; the Adit is theirs on paper and fought over in practice."},
-    {key: "church", name: "The parish of St. Aegidius", kind: "church", leader: "Ludovic", members: ["Ludovic", "Paval", "Gizela"], places: [/aegidius|church close|presbytery/i],
-      assets: {status: 2, contacts: 2, resources: 1, influence: {church: 3, folk: 2}}, goals: [{move: "hunt"}],
-      notes: "The church wants heresy stamped out."},
-    {key: "folk", name: "The Moravian villages", kind: "folk", leader: "Yaroslava", members: ["Yaroslava", "Bohumil Krejci", "Jitka"], places: [/dolany|moravian village/i],
-      assets: {contacts: 2, resources: 1, influence: {folk: 3}}, goals: [{move: "defend"}],
-      notes: "The elders of the old families want to be left alone."},
-    {key: "weavers", name: "The Weavers' Guild", kind: "guild", leader: "Lenka Prochazka", members: ["Lenka Prochazka", "Jakub Hlavac"], places: [/craftsmen|weaver/i],
-      assets: {resources: 2, contacts: 2, influence: {guild: 2}}, goals: [{move: "expand", sphere: "guild"}],
-      notes: "The strongest craft guild; favours are kept on a tally and called in."},
-    {key: "ondrej", name: "Ondrej's company", kind: "mercenaries", leader: "Ondrej", members: ["Ondrej"], places: [/outer bailey|barracks/i],
-      assets: {retainers: 3, resources: 1, influence: {military: 2}}, goals: [{move: "recruit"}],
-      notes: "A dozen spears for hire."},
-    {key: "hunters", name: "The Church's hunters", kind: "hunters", leader: "Anselm", members: ["Anselm"], places: [/anselm|mountain trail|hermitage/i],
-      assets: {contacts: 2, resources: 1, influence: {church: 1}}, goals: [],
-      notes: "Brother Anselm keeps a count; the friar, the exorcist and the knight-inquisitor come when the net opens (Act Three)."}
-  ];
-  const ROTH_STANDING = [["court", "church", -2], ["church", "court", -1], ["court", "council", -1], ["council", "court", -1], ["council", "folk", -1], ["folk", "council", -1],
-    ["court", "cult", 1], ["cult", "court", 1], ["cult", "church", -2], ["marta", "court", -1], ["radu", "court", -1], ["folk", "court", -1], ["weavers", "council", 1],
-    ["council", "weavers", 1], ["ondrej", "court", 1], ["court", "ondrej", 1], ["hunters", "court", -1], ["church", "hunters", 1], ["hunters", "church", 1]];
+  /** The chronicle in play's starting factions ({TITLE, MARKER, ASK, FACTIONS, STANDING}), or null (Chronicle Packs Desk f1). */
+  const chronicleFactions = () => (chronicleInPlay()?.factions?.FACTIONS?.length ? chronicleInPlay().factions : null);
   /** Find an NPC by a part of its name: the shortest match wins (so "Konrad" finds "Konrad the Flesh-Smith"). */
   function findActor(part) {
     const p = part.toLowerCase();
     return allActors().filter(a => !a.hasPlayerOwner && a.name.toLowerCase().includes(p)).sort((a, b) => a.name.length - b.name.length)[0] ?? null;
   }
-  const hasRothenstein = () => !!findActor("Bogdan Ursu");
-  /** Build Rothenstein's factions (asks first; never replaces factions already made). */
-  async function setupRothenstein({confirm = true} = {}) {
+  const hasChronicleFactions = () => { const c = chronicleFactions(); return !!c && !!findActor(c.MARKER ?? c.FACTIONS[0].leader); };
+  /** Build the chronicle's factions (asks first; never replaces factions already made). */
+  async function setupChronicleFactions({confirm = true} = {}) {
     if ( !game.user.isGM ) return null;
+    const c = chronicleFactions();
+    if ( !c ) { ui.notifications.warn("The chronicle in play has no factions of its own."); return null; }
     const s = state();
-    if ( s.factions.length ) { ui.notifications.warn("There are factions already. Rothenstein's are only set up in a world with none."); return null; }
+    if ( s.factions.length ) { ui.notifications.warn(`There are factions already. ${c.TITLE} are only set up in a world with none.`); return null; }
     if ( confirm ) {
-      const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Rothenstein's factions"}, classes: ["wodx-dialog", "wodx-npc-dialog"],
-        content: `<p>Set up the valley's ten powers from the chronicle's notes, with their leaders, members and places found by name? The dots are WoDX's estimates; change them as you like.</p>`});
+      const ok = await foundry.applications.api.DialogV2.confirm({window: {title: c.TITLE}, classes: ["wodx-dialog", "wodx-npc-dialog"],
+        content: `<p>${esc(c.ASK)}</p>`});
       if ( !ok ) return null;
     }
     const places = placeList();
     const placeIds = rx => uniqueIds(places.filter(p => rx.test(p.name)).map(p => p.id)).slice(0, 6);
-    const ids = new Map(ROTHENSTEIN.map(r => [r.key, newId()]));
-    const list = ROTHENSTEIN.map(r => {
+    const ids = new Map(c.FACTIONS.map(r => [r.key, newId()]));
+    const list = c.FACTIONS.map(r => {
       const leader = findActor(r.leader);
       const members = r.members.map(findActor).filter(Boolean).map(a => a.id);
       return F.normFaction({id: ids.get(r.key), name: r.name, kind: r.kind, ruler: !!r.ruler, leader: leader?.id ?? null, members, places: r.places.flatMap(placeIds),
         assets: r.assets, goals: r.goals.map(g => ({...g, target: g.target ? ids.get(g.target) : null})), notes: r.notes,
-        standing: Object.fromEntries(ROTH_STANDING.filter(([a]) => a === r.key).map(([, b, v]) => [ids.get(b), v]))});
+        standing: Object.fromEntries((c.STANDING ?? []).filter(([a]) => a === r.key).map(([, b, v]) => [ids.get(b), v]))});
     });
     await mutate(st => { st.factions = list; st.lastTurn ??= game.time.worldTime; return {state: st}; });
-    const missing = ROTHENSTEIN.filter(r => !findActor(r.leader)).map(r => r.leader);
+    const missing = c.FACTIONS.filter(r => !findActor(r.leader)).map(r => r.leader);
     ui.notifications.info(`Set up ${list.length} factions.${missing.length ? ` No NPC found for: ${missing.join(", ")}.` : ""}`);
     return list;
   }
@@ -947,7 +979,7 @@ export function build(ctx) {
           add: () => editFaction(), edit: (ev, t) => editFaction(t.dataset.id), del: (ev, t) => deleteFaction(t.dataset.id),
           found: () => founding?.foundDialog?.(), end: (ev, t) => endFaction(t.dataset.id), absorb: (ev, t) => absorbFaction(t.dataset.id),
           turn: () => runTurns({reason: "asked for by the Storyteller", forced: true}), session: () => endSession(),
-          roth: () => setupRothenstein(), hunt: () => huntDialog(), report: () => reportDialog(),
+          roth: () => setupChronicleFactions(), hunt: () => huntDialog(), report: () => reportDialog(),
           contain: (ev, t) => setBreach(t.dataset.id, "contained"), stop: (ev, t) => setBreach(t.dataset.id, "stopped"), resume: (ev, t) => setBreach(t.dataset.id, "live"),
           forget: (ev, t) => deleteBreach(t.dataset.id), settings: FactionsApp.#onSettings
         }
@@ -994,7 +1026,7 @@ export function build(ctx) {
             <button type="button" data-action="session" title="The end of a session: every faction takes a turn">End the session</button>
             <button type="button" data-action="hunt">Hunting…</button>
             <button type="button" data-action="report">Report a breach…</button>
-            ${!s.factions.length && hasRothenstein() ? `<button type="button" data-action="roth">Rothenstein's factions</button>` : ""}
+            ${!s.factions.length && hasChronicleFactions() ? `<button type="button" data-action="roth">${esc(chronicleFactions().TITLE)}</button>` : ""}
             <button type="button" data-action="settings" title="Mode and days between turns">Settings…</button>
           </div></div>
           <div class="wodx-scroll wodx-table-wrap">
@@ -1203,9 +1235,16 @@ export function build(ctx) {
     Hooks.on("wodxBattle", p => { onBattle(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
+    Hooks.on("createChatMessage", m => { if ( m.flags?.[MOD]?.poachTracked ) onPoachTracked(m).catch(e => console.error(`${MOD} | poach`, e)); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const fl = msg.flags?.[MOD];
       // B6766: the Undo on a settled boon's card (factionBoon) is wired too; it was a dead button
+      // B7639: the Track button on a poacher's signs, for the owners of the domain's holders (once a card)
+      if ( fl?.poach ) el.querySelectorAll("button.wnpc-f-track").forEach(b => {
+        const a = game.actors.get(b.dataset.actor);
+        if ( !a?.isOwner || game.messages.some(m => m.flags?.[MOD]?.poachTracked?.of === msg.id) ) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); el.querySelectorAll("button.wnpc-f-track").forEach(x => { x.disabled = true; }); trackPoacher(msg, a).catch(e => console.error(`${MOD} | track`, e)); });
+      });
       if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach && !fl?.factionYears && !fl?.factionEnd && !fl?.factionBoon ) return;
       el.querySelectorAll("button.wnpc-f-mapbreach").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
@@ -1244,8 +1283,33 @@ export function build(ctx) {
     return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
-  return {postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
-    setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
-    FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
-    applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
+  /**
+   * B7649: a Road's walkers in a scene gathered as their local group (a secret Kindred faction run on orders). Walkers
+   * are the vampires with a token in the scene or in a faction that holds it, on that Road (WoDX Actions' Road).
+   * Gathering again replaces the group with who is there now. Storyteller only.
+   */
+  async function gatherFlock(road, scene = globalThis.canvas?.scene ?? null) {
+    if ( !game.user.isGM ) return {ok: false, reason: "The Storyteller gathers a Road's flock."};
+    const A = game.modules.get("wodx-actions")?.api ?? game.wodxActions;
+    if ( !scene?.uuid || !A?.roadOf ) return {ok: false, reason: "No scene, or WoDX Actions is off."};
+    const near = new Set([...(scene.tokens ?? [])].map(t => t.actor?.isToken ? (t.actor.baseActor?.id ?? t.actorId) : t.actorId).filter(Boolean));
+    // the Road groups themselves do not count: gathering again takes who is there now
+    for ( const f of state().factions ) if ( !f.id.startsWith("road-") && (f.places ?? []).includes(scene.uuid) ) for ( const id of [f.leader, ...(f.members ?? [])] ) if ( id ) near.add(id);
+    const walkers = [...near].map(id => game.actors.get(id)).filter(a => a && a.type !== "Group" && A.roadOf(a)?.key === road && Number(a.system?.advantages?.path?.permanent) > 0)
+      .map(a => ({id: a.id, name: a.name, rating: Number(a.system.advantages.path.permanent) || 0}));
+    const roadName = A.roads?.()?.roads?.[road]?.name ?? road;
+    const spec = FLOCK.flockSpec({road, roadName, place: {uuid: scene.uuid, name: scene.navName || scene.name}, walkers});
+    if ( !spec ) return {ok: false, reason: `Fewer than ${FLOCK.FLOCK_MIN} walkers of the ${roadName} here.`, walkers};
+    const had = state().factions.some(f => f.id === spec.id);
+    await applyNow([...(had ? [{op: "faction-remove", id: spec.id}] : []), {op: "faction-add", faction: F.normFaction(spec)}], {reason: `The ${roadName} gathers`});
+    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(spec.name)}</h3><p>${esc(spec.notes)}</p><p class="wodx-quiet">A secret Kindred faction, run on your orders (B7649).</p></div>`});
+    return {ok: true, faction: state().factions.find(f => f.id === spec.id) ?? null, walkers, replaced: had};
+  }
+  /** B7649: the Road groups a character belongs to. */
+  const flocksOf = actor => state().factions.filter(f => f.id.startsWith("road-") && (f.members ?? []).includes(actor?.id));
+
+  return {gatherFlock, flocksOf, flockRules: FLOCK, postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
+    setupChronicleFactions, chronicleFactions, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
+    FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F,
+    applyNow, proposeChanges, bgValue, allActors, poachCard, trackPoacher, poachRules: POACH, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
 }

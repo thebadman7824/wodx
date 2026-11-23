@@ -29,3 +29,20 @@ Ben's rule (2026-11-10): anything that touches the passage of time must work in 
 ## Checked and sound
 
 Senses (lines banded by year from medieval to future), Atmosphere (a kit per era with fallbacks), Chronicle's calendar, reckoning, church year and era advancement, Storyteller letters and money (by year up to the euro and the Net), Hunter line by year, Otherworlds Maelstroms, Avatar Storm and the Net, Wraith's Great War library in 1914 to 1918. Combat, Targeting, Sheets, hardship and havens use the same book rules in every era and need no era data.
+
+## Recheck, 17 November 2026
+
+Each open gap above, checked against main (bb06e0e). Where a gap was not checked, it says so.
+
+| # | Gap | Now |
+|---|---|---|
+| 1 | Years no era covers | Done (the two bridge eras). 1902 to 1913 and 2005 to 2009 still keep the era before. |
+| 2 | Dated events | The world timeline now holds 3,055 events from 1197 to 2009 (wodx-chronicle data/world-history.mjs). Only 422 touch a game line: Demon 2, Mummy 15, Changeling 16, Kuei-jin 25, Werewolf 36, Wraith 39, Hunter 68, Mage 79, Vampire 123. The 1600s and 1700s hold 32 such events between them. Still open for the game lines. |
+| 3 | Encyclopaedia era tags | Still open, unchanged: 1,846 entries tagged modern, 6 Future Darkness, 1 Time of Judgment, none the Long Night, the Age of Reason or Mid-century. |
+| 4 | Gear by era | 389 items. None is tagged the Age of Reason or Mid-century (both borrow from the era before); modern has 26 and the Time of Judgment 26. Still open for the two bridge eras. |
+| 5 | Map generation | Not rechecked here (its own thread). |
+| 6 | Paperdoll clothes | Not rechecked in full. Some later-era pieces now exist (hoodies, suits). |
+| 7 | NPC factions | Done: five sphere lists by year, from the medieval roads to a Future Darkness list with the Net (NPC 0.17.0, B830, faction-rules.mjs). |
+| 8 | Otherworlds after 1999 | Not rechecked here. |
+| 9 | Interactables for Future Darkness | Not rechecked here. |
+| 10 | Languages | Still open: one list for every era (languages-rules.mjs LANGUAGES.common), though its comment says "in each era". |

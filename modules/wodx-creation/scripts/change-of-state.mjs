@@ -65,6 +65,8 @@ export function embraceData(mortal, {sire = null, clanName, generation, startBlo
   src.type = CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire";
   const known = new Set((src.items ?? []).filter(i => i.type === "Power" && i.system?.type === "wod.types.discipline").map(i => i.name.toLowerCase()));
   const clan = findClan(clanName);
+  // B7660: the Nosferatu curse takes Appearance to 0 at the Embrace (V20 Dark Ages p. 55)
+  if ( clan?.appearanceZero && sys.attributes?.appearance ) sys.attributes.appearance.value = 0;
   const newDisciplines = clanDisciplines(clan, eraKey).filter(d => !known.has(d.toLowerCase()));
   src.items = [...(src.items ?? []).map(i => { const c = {...i}; delete c._id; return c; }), ...newDisciplines.map(d => disciplineItem(d, 0))];
   const before = {flags: src.flags};
@@ -78,6 +80,9 @@ export function embraceData(mortal, {sire = null, clanName, generation, startBlo
 export async function embrace(mortal, {sire = null, clanName, generation, startBlood, time = game.time.worldTime, moveTokens = true} = {}) {
   if ( !game.user.isGM ) return null;
   if ( !["mortal", "ghoul"].includes(lineOf(mortal)) ) throw new Error(`${mortal?.name} is not a mortal or a ghoul`);
+  // B7661: a Child of Osiris cannot Embrace (V20 Dark Ages p. 78)
+  const sireClan = sire && lineOf(sire) === "vampire" ? clanOf(sire) : null;
+  if ( sireClan?.noEmbrace ) throw new Error(`${sire.name} cannot Embrace: ${sireClan.noEmbrace}`);
   const {data, row, newDisciplines} = embraceData(mortal, {sire, clanName, generation, startBlood});
   const vampire = await Actor.create(data);
   const before = lineage(mortal);
@@ -113,6 +118,8 @@ export async function embrace(mortal, {sire = null, clanName, generation, startB
     whisper: game.users.filter(u => u.isGM || vampire.testUserPermission?.(u, "OWNER")).map(u => u.id)
   });
   await writeLineageJournal();
+  // B7633: the sire's Road weighs the Embrace (the mortal dies of it): a Road that counts it asks, with the level it names
+  if ( sire ) { try { await game.wodxActions?.sinPrompt?.(sire, "embrace", `The Embrace of ${mortal.name}`); } catch (e) { console.warn("WoDX Creation | Embrace sin", e); } }
   ui.notifications.info(`${vampire.name} is Embraced.${moved ? ` ${moved} token(s) now show the vampire.` : ""}`);
   return vampire;
 }
@@ -183,6 +190,13 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
   if ( !game.user.isGM ) return null;
   if ( lineOf(regnant) !== "vampire" ) throw new Error(`${regnant?.name} is not a vampire`);
   if ( drinker.id === regnant.id ) throw new Error("A vampire cannot bond to itself");
+  // B7661: the Valkyrjer's blood feeds but neither bonds nor makes a ghoul (V20 Dark Ages p. 71)
+  const barren = clanOf(regnant)?.noBondNoGhoul;
+  if ( barren ) {
+    await ChatMessage.create({content: `<div class="wodx-card wodx-vitae"><h3>Vitae</h3><p><strong>${esc(drinker.name)}</strong> drinks from <strong>${esc(regnant.name)}</strong>: no bond forms and no ghoul is made, because ${esc(barren)}.</p><p class="wodx-quiet">${esc(dateLabel(time))}</p></div>`,
+      speaker: {alias: "Chronicle"}, whisper: game.users.filter(u => u.isGM).map(u => u.id)});
+    return {stage: bondStage(lineage(drinker).bonds?.[regnant.id]?.drinks ?? 0), becameGhoul: false, sameNight: false, oath: null, barren: true};
+  }
   const before = lineage(drinker).bonds?.[regnant.id];
   const sameNight = before?.last !== undefined && nightOf(before.last) === nightOf(time);
   // Once a full blood oath is sworn, no new bond can form (V20DA p. 341)
@@ -217,6 +231,14 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
   // B5044: a drink from the domitor starts the ghoul's month again (WoDX Chronicle's monthly check)
   if ( lineOf(drinker) === "ghoul" && lineage(drinker).domitor?.id === regnant.id ) {
     try { await game.modules.get("wodx-chronicle")?.api?.signatures?.ghoulFed?.(drinker); } catch (e) { console.warn(`${MODULE_ID} |`, e); }
+  }
+  // B7696: an infernalist's poisoned blood (Dark Ages Companion 2002 p. 177): five soakable levels for each point drunk
+  if ( Number(regnant.flags?.["wodx-actions"]?.infernal?.owned?.poison) > 0 ) {
+    notes.push(`the blood is poisoned: five levels to soak for each of the ${points} point${points === 1 ? "" : "s"} (DAC 2002 p. 177)`);
+    const C = game.wodxCombat;
+    if ( C?.soakAndApply ) for ( let i = 0; i < Math.max(1, Number(points) || 1); i++ ) {
+      try { await C.soakAndApply(drinker, {amount: 5, type: "lethal", soak: true, mode: "levels"}); } catch (e) { console.warn(`${MODULE_ID} |`, e); }
+    }
   }
   notes.push(oath ? `already sworn to ${oath[1].name}, so no new bond forms` : (sameNight ? `${stage.label} (a second drink the same night does not deepen the bond)` : stage.label));
 
@@ -293,6 +315,9 @@ export async function embraceDialog() {
   if ( !result ) return null;
   const mortal = game.actors.get(result.mortal);
   const sire = result.sire ? game.actors.get(result.sire) : null;
+  // B7661: a Child of Osiris cannot Embrace (V20 Dark Ages p. 78)
+  const sireClan = sire ? clanOf(sire) : null;
+  if ( sireClan?.noEmbrace ) { ui.notifications.warn(`${sire.name} cannot Embrace: ${sireClan.noEmbrace}.`); return null; }
   if ( sire && Number(result.generation) <= generationOf(sire) ) {
     ui.notifications.warn(`A childe cannot be closer to Caine than the sire (${ordinal(generationOf(sire))} Generation).`);
     return null;

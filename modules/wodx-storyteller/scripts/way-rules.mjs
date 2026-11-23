@@ -102,13 +102,18 @@ export function wayLine(way = {}, destName = "", minutes = null) {
 
 /* ---- Laying Ways in a built world (B4810-B4813) ---- */
 
-/** The kind of Way an old exit becomes, from the names of the two places. */
-export function exitKind(fromName = "", toName = "") {
+/**
+ * The kind of Way an old exit becomes, from the names of the two places. castles: the scene-name patterns of the
+ * recipe's castle anchors (B7565: the chronicle's recipe names its castle, shared code does not); crossing into or out
+ * of one is a gate.
+ */
+export function exitKind(fromName = "", toName = "", {castles = []} = {}) {
   const a = String(fromName), b = String(toName), both = `${a} | ${b}`;
+  const inCastle = name => castles.some(c => { try { return new RegExp(c, "i").test(name); } catch (e) { return false; } });
   if ( /Upper Floor|Cellar|Undercroft/i.test(both) ) return "stair";
   if ( /Ferry|Ford/i.test(b) && !/Ferry|Ford/i.test(a) ) return "ferry";
   if ( /Bailey|Inner Ward|West Gate/i.test(a) && /Bailey|Inner Ward|West Gate/i.test(b) ) return "gate";
-  if ( /^Kranzfels/i.test(a) !== /^Kranzfels/i.test(b) ) return "gate";
+  if ( inCastle(a) !== inCastle(b) ) return "gate";
   if ( /^Lower Town/i.test(a) && /^Lower Town/i.test(b) ) return "street";
   return "road";
 }
@@ -119,7 +124,7 @@ export function exitKind(fromName = "", toName = "") {
  * the list; a crossing inside one map is left as it is. Returns [{sceneId, regionId, behaviorId, to, arrive, kind, name}]; exits that point nowhere are left out
  * and listed in `lost`.
  */
-export function exitsToWays(scenes = []) {
+export function exitsToWays(scenes = [], {castles = []} = {}) {
   const byId = new Map(scenes.map(s => [s.id, s]));
   const out = [], lost = [];
   for ( const s of scenes ) {
@@ -134,7 +139,7 @@ export function exitsToWays(scenes = []) {
         if ( m && m[1] === s.id ) continue;
         const to = m && byId.get(m[1]);
         if ( !to || !(to.regions ?? []).some(x => x.id === m[2]) ) { lost.push(`${s.name}: ${r.name}`); continue; }
-        out.push({sceneId: s.id, regionId: r.id, behaviorId: b.id, to: to.id, arrive: m[2], kind: exitKind(s.name, to.name), name: `Way to ${to.name}`});
+        out.push({sceneId: s.id, regionId: r.id, behaviorId: b.id, to: to.id, arrive: m[2], kind: exitKind(s.name, to.name, {castles}), name: `Way to ${to.name}`});
       }
     }
   }

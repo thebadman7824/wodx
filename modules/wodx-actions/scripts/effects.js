@@ -13,6 +13,7 @@ import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
 import * as PM from "./power-mods.js";
+import * as DL from "./discipline-looks.js";
 import * as W from "./world-effects.js";
 import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
@@ -24,13 +25,13 @@ import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { isLiveWorld } from "../../wodx-chronicle/scripts/live-worlds.mjs";
 
 const MOD = "wodx-actions";
 const TYPE = "wodx-actions.effect";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const LIVE_WORLDS = ["rothenstein-live"];
-const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags?.wodx?.liveWorld;
+const isLive = () => isLiveWorld(game.world); // B7564: the one shared list
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 const combat = () => game.modules.get("wodx-combat")?.api ?? null;
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
@@ -292,7 +293,7 @@ export function summonResult(actor, r, successes, power = null, {bound = false} 
   const spec = (power?.name ? SUM.specFor(power.name, power.line ?? "") : null) ?? SR.KEYWORD_SPEC;
   const adv = actor?.system?.advantages ?? {};
   const ladder = r.out?.timed !== undefined ? r.out.timed : null;
-  const res = SR.resolve(spec, {successes: n(successes), faith: n(adv.faith?.permanent), torment: n(adv.torment?.permanent), level: n(r.out?.level ?? successes),
+  const res = SR.resolve(spec, {successes: n(successes), faith: n(adv.faith?.permanent), rage: n(adv.rage?.permanent), torment: n(adv.torment?.permanent), level: n(r.out?.level ?? successes),
     gnosisSpent: n(r.out?.spent?.gnosis), rageSpent: n(r.out?.spent?.rage), willpowerSpent: n(r.out?.spent?.willpower), bloodSpent: n(r.out?.spent?.blood),
     ladder, ladderLabel: r.out?.duration ?? null, bound, npc: !actor?.hasPlayerOwner});
   const caster = actor?.name ?? "the summoner";
@@ -1329,6 +1330,18 @@ export function registerHandler(api) {
   });
   // B6000: what a power does to a character shows on the token: a Ward's shimmer, a Boost's glow, a Curse's shadow
   try { api?.tokenLooks?.register?.("wodx-actions.powers", token => { const l = PM.looksFrom(PM.effectsOf(token?.actor)); return l.length ? api.tokenLooks.rules?.combine?.(l, "full") ?? l[0] : null; }); } catch (e) { /* no looks */ }
+  // B7641-B7643 (Dark Ages depth desk item 7): a Discipline worked shows on the token for a few seconds, to those who could see it
+  try { api?.tokenLooks?.register?.("wodx-actions.disciplines", token => {
+    const m = token?.document?.getFlag?.("wodx-actions", "powerLook");
+    if ( !DL.live(m, Date.now()) ) return null;
+    const L = DL.lookForPower(m.info ?? {});
+    return L && DL.visibleTo(L.seen, {isGM: game.user.isGM, isOwner: !!token.actor?.isOwner}) ? L.look : null;
+  }); } catch (e) { /* no looks */ }
+  Hooks.on("wodxPowerShown", (actor, info = {}) => { markPowerLook(actor, info).catch(e => console.warn("WoDX | power look", e)); });
+  Hooks.on("updateToken", (doc, ch) => {
+    const m = ch?.flags?.["wodx-actions"]?.powerLook;
+    if ( m?.until ) setTimeout(() => { try { api?.tokenLooks?.refresh?.(); } catch (e) { /* no looks */ } }, Math.max(0, Number(m.until) - Date.now()) + 150);
+  });
   Hooks.on("createActiveEffect", e => { if ( String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "").startsWith("wodx-effect-") ) try { api?.tokenLooks?.refresh?.(); } catch (x) { /* no looks */ } });
   Hooks.on("deleteActiveEffect", e => { if ( String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "").startsWith("wodx-effect-") ) try { api?.tokenLooks?.refresh?.(); } catch (x) { /* no looks */ } });
   // Small (Chronicle 0.46.0, B2453): never. Only what is already past the effect rules' own Auto reaches the queue
@@ -1458,4 +1471,14 @@ export async function storytellerEffect() {
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(i.out.text)}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div></div>`;
   return ChatMessage.create({content, speaker: {alias: title}, whisper: fd["st-whisper"] ? game.users.filter(u => u.isGM).map(u => u.id) : [],
     flags: {[MOD]: {kind: "effects", caster: title, items}}});
+}
+
+/** B7641: mark the worker's tokens on this scene with the look of the power worked (one the user may change). */
+async function markPowerLook(actor, info = {}) {
+  const L = DL.lookForPower(info);
+  if ( !L || !actor ) return null;
+  const docs = (actor.getActiveTokens?.(false, true) ?? []).filter(d => d?.isOwner);
+  const until = Date.now() + L.seconds * 1000;
+  for ( const d of docs ) await d.setFlag("wodx-actions", "powerLook", {key: L.key, info: {power: info.power ?? null, group: info.group ?? null}, until});
+  return docs.length;
 }

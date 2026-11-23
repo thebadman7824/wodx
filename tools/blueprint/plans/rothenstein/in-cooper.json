@@ -1,0 +1,419 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-cooper",
+ "name": "The Cooper's Workshop",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-cooper-s-workshop/workplace-the-cooper-s-workshop.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    10.0,
+    11.0,
+    20.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    3.0,
+    20.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    11.0,
+    22.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    8.0,
+    20.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    4.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    11.0,
+    8.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    3.0,
+    26.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    20.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    3.0,
+    26.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    3.0,
+    20.0,
+    7.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    11.0,
+    26.0,
+    11.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    8.0,
+    11.0,
+    10.0,
+    11.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    20.0,
+    7.0,
+    20.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    22.0,
+    11.0,
+    23.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": true
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-lumber-yard",
+   "label": "The lumber yard",
+   "rect": [
+    4.4,
+    12.2,
+    14.6,
+    2.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-workbench",
+   "label": "The workbench",
+   "rect": [
+    5.0,
+    3.6,
+    10.0,
+    1.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cooper-s-rooms",
+   "label": "The cooper's rooms",
+   "rect": [
+    20.2,
+    3.2,
+    5.8,
+    7.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-barrels",
+   "label": "The barrels",
+   "rect": [
+    5.0,
+    6.0,
+    13.0,
+    2.4
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-lumber-yard",
+   "obj": "woodpile",
+   "label": "The lumber yard",
+   "rect": [
+    11.1,
+    13.1,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-workbench",
+   "obj": "workbench",
+   "label": "The workbench",
+   "rect": [
+    9.3,
+    3.95,
+    1.4,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-1",
+   "obj": "cask",
+   "label": "The barrels 1",
+   "rect": [
+    6.4,
+    6.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-2",
+   "obj": "cask",
+   "label": "The barrels 2",
+   "rect": [
+    6.4,
+    7.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-3",
+   "obj": "cask",
+   "label": "The barrels 3",
+   "rect": [
+    9.65,
+    6.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-4",
+   "obj": "cask",
+   "label": "The barrels 4",
+   "rect": [
+    9.65,
+    7.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-5",
+   "obj": "cask",
+   "label": "The barrels 5",
+   "rect": [
+    12.9,
+    6.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-6",
+   "obj": "cask",
+   "label": "The barrels 6",
+   "rect": [
+    12.9,
+    7.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-7",
+   "obj": "cask",
+   "label": "The barrels 7",
+   "rect": [
+    16.15,
+    6.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-barrels-8",
+   "obj": "cask",
+   "label": "The barrels 8",
+   "rect": [
+    16.15,
+    7.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 18.4,
+   "y": 4.3,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.58,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 18.4,
+   "y": 4.257,
+   "kind": "fire",
+   "bright": 0.86,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 24.4,
+   "y": 4.6,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 3.14,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 11.4,
+   "text": "GM: A cooper and carpenter's workshop."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-crafts"
+}

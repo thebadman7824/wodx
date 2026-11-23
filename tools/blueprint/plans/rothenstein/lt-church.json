@@ -1,0 +1,2502 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "lt-church",
+ "name": "Lower Town, Church Close",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  58,
+  44
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/lower-town-church-close/lower-town-church-close.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    19.75,
+    20.0,
+    22.6,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.3,
+    29.6,
+    21.3,
+    29.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.15,
+    20.0,
+    30.25,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.6,
+    35.8,
+    33.6,
+    36.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    19.15,
+    20.0,
+    19.75,
+    20.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    21.6,
+    20.0,
+    21.6,
+    22.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.6,
+    25.6,
+    30.6,
+    27.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.7,
+    5.8,
+    40.0,
+    5.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.6,
+    26.4,
+    9.4,
+    26.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    16.0,
+    11.5,
+    16.0,
+    12.1
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.6,
+    32.6,
+    47.1,
+    32.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.15,
+    8.0,
+    19.75,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    31.5,
+    8.0,
+    34.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.8,
+    39.4,
+    41.6,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.6,
+    41.6,
+    48.2,
+    41.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    47.6,
+    26.4,
+    30.6,
+    26.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.7,
+    33.0,
+    41.6,
+    33.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.45,
+    8.0,
+    26.55,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    14.6,
+    16.0,
+    15.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.2,
+    32.7,
+    25.2,
+    34.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.3,
+    34.8,
+    22.1,
+    34.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    1.6,
+    35.4,
+    4.85,
+    35.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.6,
+    14.5,
+    11.6,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.2,
+    41.6,
+    54.6,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.4,
+    2.8,
+    36.4,
+    5.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.6,
+    37.6,
+    47.1,
+    37.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.6,
+    36.6,
+    41.6,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.1,
+    37.6,
+    54.6,
+    37.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.6,
+    22.6,
+    22.6,
+    22.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    22.6,
+    25.2,
+    22.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    1.6,
+    31.7,
+    1.6,
+    35.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.6,
+    35.7,
+    50.6,
+    38.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    1.6,
+    27.4,
+    4.7,
+    27.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    2.8,
+    40.0,
+    5.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    8.0,
+    34.0,
+    10.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.6,
+    33.0,
+    38.6,
+    35.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.25,
+    20.0,
+    30.85,
+    20.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    50.6,
+    32.6,
+    50.6,
+    34.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    18.0,
+    37.2,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.6,
+    33.0,
+    41.6,
+    35.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.4,
+    29.6,
+    17.5,
+    29.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    13.7,
+    41.0,
+    14.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    38.6,
+    36.7,
+    38.6,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.6,
+    17.4,
+    16.0,
+    17.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.2,
+    3.0,
+    10.2,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.6,
+    33.9,
+    8.6,
+    35.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.4,
+    2.2,
+    47.6,
+    2.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    5.45,
+    35.4,
+    12.6,
+    35.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.4,
+    3.0,
+    13.4,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.6,
+    31.4,
+    12.6,
+    31.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.8,
+    10.0,
+    41.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.1,
+    29.6,
+    25.2,
+    29.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.2,
+    29.6,
+    25.2,
+    31.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    17.5,
+    34.0,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.6,
+    29.9,
+    8.6,
+    32.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.6,
+    10.6,
+    11.6,
+    13.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.6,
+    36.6,
+    33.6,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.6,
+    41.6,
+    47.6,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.6,
+    33.0,
+    33.6,
+    35.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.8,
+    18.0,
+    41.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    20.0,
+    26.55,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.75,
+    8.0,
+    22.85,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.6,
+    35.8,
+    41.6,
+    36.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.4,
+    32.6,
+    14.4,
+    34.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.5,
+    29.6,
+    18.3,
+    29.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.6,
+    27.4,
+    12.6,
+    32.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.7,
+    27.4,
+    12.6,
+    27.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.2,
+    6.0,
+    11.3,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.55,
+    20.0,
+    27.15,
+    20.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    25.6,
+    25.6,
+    25.6,
+    27.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.3,
+    34.8,
+    21.3,
+    34.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.4,
+    29.6,
+    14.4,
+    31.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.4,
+    5.8,
+    37.7,
+    5.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.4,
+    34.8,
+    17.5,
+    34.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.6,
+    39.4,
+    36.0,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.2,
+    10.0,
+    37.8,
+    10.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    11.6,
+    10.6,
+    16.0,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    10.0,
+    41.0,
+    13.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    12.1,
+    16.0,
+    13.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.85,
+    8.0,
+    23.45,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    31.4,
+    42.8,
+    43.4,
+    42.8
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    48.1,
+    32.6,
+    54.6,
+    32.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    16.5,
+    16.0,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    15.9,
+    16.0,
+    16.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.6,
+    32.6,
+    44.6,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.1,
+    34.8,
+    25.2,
+    34.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.3,
+    29.6,
+    22.1,
+    29.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    37.2,
+    18.0,
+    37.8,
+    18.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    47.6,
+    2.2,
+    47.6,
+    26.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    50.6,
+    39.9,
+    50.6,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.4,
+    31.8,
+    14.4,
+    32.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.6,
+    33.9,
+    12.6,
+    35.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.0,
+    39.4,
+    36.8,
+    39.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    8.6,
+    27.4,
+    8.6,
+    28.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.5,
+    34.8,
+    18.3,
+    34.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    10.2,
+    3.0,
+    13.4,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    1.6,
+    27.4,
+    1.6,
+    31.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    14.3,
+    41.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.85,
+    20.0,
+    34.0,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.6,
+    33.0,
+    35.7,
+    33.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    20.0,
+    19.15,
+    20.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.55,
+    8.0,
+    27.15,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.4,
+    2.8,
+    40.0,
+    2.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.4,
+    26.4,
+    9.4,
+    2.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    1.6,
+    31.1,
+    1.6,
+    31.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.85,
+    35.4,
+    5.45,
+    35.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.6,
+    32.6,
+    54.6,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.2,
+    20.0,
+    25.2,
+    22.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.15,
+    8.0,
+    30.5,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.3,
+    6.0,
+    13.4,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    10.0,
+    37.2,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    8.0,
+    19.15,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    8.0,
+    16.0,
+    11.5
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    8.6,
+    32.9,
+    8.6,
+    33.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.6,
+    28.9,
+    8.6,
+    29.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    47.1,
+    37.6,
+    48.1,
+    37.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.6,
+    13.5,
+    11.6,
+    14.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.6,
+    32.9,
+    12.6,
+    33.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.3,
+    6.0,
+    12.3,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    30.5,
+    8.0,
+    31.5,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    35.7,
+    33.0,
+    36.7,
+    33.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16.0,
+    13.4,
+    16.0,
+    14.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    4.7,
+    27.4,
+    5.7,
+    27.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    50.6,
+    38.9,
+    50.6,
+    39.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    22.6,
+    20.0,
+    24.2,
+    20.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    37.7,
+    5.8,
+    38.7,
+    5.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    50.6,
+    34.7,
+    50.6,
+    35.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    38.6,
+    35.7,
+    38.6,
+    36.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    47.1,
+    32.6,
+    48.1,
+    32.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    25.2,
+    31.7,
+    25.2,
+    32.7
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "",
+   "rect": [
+    10.794,
+    9.794,
+    6.013,
+    8.412
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "",
+   "rect": [
+    35.8,
+    2.2,
+    4.8,
+    4.2
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b03",
+   "label": "Gizela's House",
+   "rect": [
+    33.075,
+    32.475,
+    9.05,
+    7.45
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b04",
+   "label": "",
+   "rect": [
+    9.662,
+    2.475,
+    4.275,
+    4.05
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b05",
+   "label": "",
+   "rect": [
+    21.0,
+    19.406,
+    4.8,
+    3.812
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b06",
+   "label": "",
+   "rect": [
+    33.3,
+    9.287,
+    8.4,
+    9.425
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b07",
+   "label": "",
+   "rect": [
+    13.869,
+    29.075,
+    11.863,
+    6.25
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b08",
+   "label": "",
+   "rect": [
+    15.3,
+    7.306,
+    19.4,
+    13.412
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b09",
+   "label": "The Scriptorium",
+   "rect": [
+    1.0,
+    26.8,
+    12.2,
+    9.2
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b10",
+   "label": "The Presbytery",
+   "rect": [
+    44.0,
+    32.0,
+    11.2,
+    10.2
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "open-hearth-on-its-slab-b01",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b01)",
+   "rect": [
+    13.3,
+    13.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "bench-b01",
+   "obj": "bench",
+   "label": "Bench (b01)",
+   "rect": [
+    11.244,
+    10.294,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b01",
+   "obj": "shelf",
+   "label": "Wall shelf (b01)",
+   "rect": [
+    11.244,
+    17.456,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-gizela-s-house",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (Gizela's House)",
+   "rect": [
+    33.525,
+    32.975,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-gizela-s-house",
+   "obj": "bed-box",
+   "label": "Box bed for two (Gizela's House)",
+   "rect": [
+    33.525,
+    38.025,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-gizela-s-house",
+   "obj": "table",
+   "label": "Household table (Gizela's House)",
+   "rect": [
+    40.725,
+    32.925,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-gizela-s-house",
+   "obj": "chest",
+   "label": "Chest (Gizela's House)",
+   "rect": [
+    35.313,
+    38.825,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-gizela-s-house",
+   "obj": "bench",
+   "label": "Bench (Gizela's House)",
+   "rect": [
+    33.575,
+    34.163,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-gizela-s-house",
+   "obj": "shelf",
+   "label": "Wall shelf (Gizela's House)",
+   "rect": [
+    41.375,
+    35.006,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-gizela-s-house",
+   "obj": "cask",
+   "label": "Cask (Gizela's House)",
+   "rect": [
+    37.375,
+    32.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b04",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b04)",
+   "rect": [
+    10.162,
+    2.925,
+    1.0,
+    1.0
+   ],
+   "facing": "E",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b04",
+   "obj": "bed-box",
+   "label": "Box bed for two (b04)",
+   "rect": [
+    12.037,
+    2.925,
+    1.4,
+    0.9
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b04",
+   "obj": "bench",
+   "label": "Bench (b04)",
+   "rect": [
+    10.162,
+    4.088,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b04",
+   "obj": "shelf",
+   "label": "Wall shelf (b04)",
+   "rect": [
+    13.187,
+    4.0,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b04",
+   "obj": "cask",
+   "label": "Cask (b04)",
+   "rect": [
+    12.987,
+    5.288,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b05",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b05)",
+   "rect": [
+    22.537,
+    21.718,
+    1.0,
+    1.0
+   ],
+   "facing": "N",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b06",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b06)",
+   "rect": [
+    37.0,
+    13.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b06",
+   "obj": "bed-box",
+   "label": "Box bed for two (b06)",
+   "rect": [
+    33.8,
+    10.69,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b06",
+   "obj": "table",
+   "label": "Household table (b06)",
+   "rect": [
+    33.8,
+    12.259,
+    0.9,
+    1.8
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b06",
+   "obj": "chest",
+   "label": "Chest (b06)",
+   "rect": [
+    33.8,
+    14.44,
+    0.6,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b06",
+   "obj": "bench",
+   "label": "Bench (b06)",
+   "rect": [
+    33.8,
+    15.796,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b06",
+   "obj": "shelf",
+   "label": "Wall shelf (b06)",
+   "rect": [
+    40.95,
+    9.737,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b06",
+   "obj": "cask",
+   "label": "Cask (b06)",
+   "rect": [
+    37.275,
+    9.787,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b07",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b07)",
+   "rect": [
+    19.3,
+    31.7,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b07",
+   "obj": "bed-box",
+   "label": "Box bed for two (b07)",
+   "rect": [
+    14.369,
+    29.525,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b07",
+   "obj": "table",
+   "label": "Household table (b07)",
+   "rect": [
+    15.464,
+    33.925,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b07",
+   "obj": "chest",
+   "label": "Chest (b07)",
+   "rect": [
+    24.632,
+    29.525,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b07",
+   "obj": "bench",
+   "label": "Bench (b07)",
+   "rect": [
+    16.66,
+    29.575,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b07",
+   "obj": "shelf",
+   "label": "Wall shelf (b07)",
+   "rect": [
+    14.369,
+    30.612,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b07",
+   "obj": "cask",
+   "label": "Cask (b07)",
+   "rect": [
+    18.261,
+    34.375,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b08",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b08)",
+   "rect": [
+    24.5,
+    13.512,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b08",
+   "obj": "shelf",
+   "label": "Wall shelf (b08)",
+   "rect": [
+    15.75,
+    7.806,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-scriptorium",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Scriptorium)",
+   "rect": [
+    6.6,
+    30.9,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-the-scriptorium",
+   "obj": "cask",
+   "label": "Cask (The Scriptorium)",
+   "rect": [
+    1.5,
+    31.175,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-presbytery",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Presbytery)",
+   "rect": [
+    49.1,
+    36.6,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-the-presbytery",
+   "obj": "cask",
+   "label": "Cask (The Presbytery)",
+   "rect": [
+    44.5,
+    33.556,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 43.6,
+   "y": 31.8,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 31.2,
+   "y": 26.4,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 23.538,
+   "y": 8.35,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 17.9,
+   "y": 35.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.95,
+   "y": 32.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 30.55,
+   "y": 20.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 17.9,
+   "y": 29.15,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 21.7,
+   "y": 35.25,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 15.55,
+   "y": 11.8,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 12.037,
+   "y": 31.812,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 5.15,
+   "y": 35.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 36.4,
+   "y": 39.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 32.95,
+   "y": 18.8,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 37.5,
+   "y": 18.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 19.45,
+   "y": 20.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 26.85,
+   "y": 7.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 52.837,
+   "y": 33.55,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 21.7,
+   "y": 29.15,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.025,
+   "y": 14.05,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 2.475,
+   "y": 28.15,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 37.5,
+   "y": 9.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 46.6,
+   "y": 37.462,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 24.012,
+   "y": 19.65,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 45.325,
+   "y": 35.15,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 33.15,
+   "y": 36.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 18.925,
+   "y": 29.775,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 26.85,
+   "y": 20.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 37.6,
+   "y": 14.0,
+   "kind": "eerie",
+   "bright": 0.76,
+   "dim": 5.0,
+   "color": "#c81818"
+  },
+  {
+   "x": 47.65,
+   "y": 40.875,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 42.05,
+   "y": 36.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 50.737,
+   "y": 35.663,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 32.05,
+   "y": 18.8,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.075,
+   "y": 30.95,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 15.55,
+   "y": 16.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 41.45,
+   "y": 14.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.425,
+   "y": 14.05,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 37.725,
+   "y": 17.65,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 8.238,
+   "y": 31.15,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 2.475,
+   "y": 33.35,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 41.425,
+   "y": 37.062,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 23.15,
+   "y": 7.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 1.15,
+   "y": 31.4,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 34.35,
+   "y": 14.075,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 34.25,
+   "y": 36.175,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 6.263,
+   "y": 27.65,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 47.9,
+   "y": 42.05,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 33.775,
+   "y": 37.225,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 19.45,
+   "y": 7.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 25.0,
+   "y": 26.4,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 54.075,
+   "y": 41.038,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 40.087,
+   "y": 36.2,
+   "text": "Gizela the Midwife lives here (Gizela's House, Bedchamber).",
+   "used": true
+  },
+  {
+   "x": 37.6,
+   "y": 14.0,
+   "text": "The sanctuary lamp burns red.",
+   "used": true
+  },
+  {
+   "x": 44.0,
+   "y": 10.6,
+   "text": "A fresh mound, no marker yet."
+  },
+  {
+   "x": 36.2,
+   "y": 36.8,
+   "text": "Under the dresser: a box of birth and death records in...",
+   "used": true
+  },
+  {
+   "x": 23.8,
+   "y": 35.9,
+   "text": "Blind Havel lives here: a pallet under the almshouse eaves. Of an evening..."
+  },
+  {
+   "x": 18.4,
+   "y": 14.0,
+   "text": "The font.",
+   "used": true
+  },
+  {
+   "x": 13.0,
+   "y": 13.6,
+   "text": "Ladder up to the bell chamber. The rope hangs in the middle of the floor.",
+   "used": true
+  },
+  {
+   "x": 52.55,
+   "y": 39.55,
+   "text": "Father Ludovic lives here (The Presbytery, Ludovic's Chamber).",
+   "used": true
+  },
+  {
+   "x": 10.55,
+   "y": 29.45,
+   "text": "Brother Paval lives here (The Scriptorium, Paval's Cell).",
+   "used": true
+  },
+  {
+   "x": 32.5,
+   "y": 18.8,
+   "text": "The Lady Chapel altar. Fresh paint covers an older picture.",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "arrive",
+   "name": "from-lt-keeproad",
+   "to": null,
+   "rect": [
+    54.1,
+    28.7,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-market",
+   "to": "lt-market",
+   "rect": [
+    26.0,
+    42.6,
+    4.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-keeproad",
+   "to": "lt-keeproad",
+   "rect": [
+    56.6,
+    27.4,
+    1.4,
+    4.0
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-lt-market",
+   "to": null,
+   "rect": [
+    27.5,
+    40.1,
+    1.4,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "building b01 (unnamed): use guessed as a home",
+  "building b02 (unnamed): use guessed as a home",
+  "building b04 (unnamed): use guessed as a home",
+  "building b05 (unnamed): use guessed as a home",
+  "building b06 (unnamed): use guessed as a home",
+  "building b07 (unnamed): use guessed as a home",
+  "building b08 (unnamed): use guessed as a home"
+ ],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "cobbled street to the Keep Road",
+   "path": [
+    [
+     27,
+     29
+    ],
+    [
+     40,
+     29
+    ],
+    [
+     58,
+     29.5
+    ]
+   ],
+   "width": 4,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "cobbled street to the Market Square",
+   "path": [
+    [
+     28,
+     27
+    ],
+    [
+     28,
+     36
+    ],
+    [
+     28,
+     44
+    ]
+   ],
+   "width": 3.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "path to the church door",
+   "path": [
+    [
+     24.5,
+     22
+    ],
+    [
+     26,
+     27
+    ]
+   ],
+   "width": 1.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "back lane",
+   "path": [
+    [
+     2,
+     37
+    ],
+    [
+     14,
+     37
+    ],
+    [
+     26,
+     36
+    ]
+   ],
+   "width": 2,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "water",
+   "label": "pond",
+   "path": [
+    [
+     40,
+     4
+    ],
+    [
+     44,
+     4
+    ],
+    [
+     45,
+     8
+    ],
+    [
+     41,
+     9
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
+}

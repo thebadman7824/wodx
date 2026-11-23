@@ -9,6 +9,7 @@
  * gains are paid from the prelude's own 3 points. Traits the creation check does not count (Willpower, Humanity or a
  * Road, Rage, Gnosis, Arete, Glamour) are bought on the freebie page and kept in the wizard's ledger.
  */
+import {daTable} from "../../wodx-chronicle/data/trait-lines.mjs";
 import {TOTALS, checkCreation} from "./totals-rules.mjs";
 import {CLANS} from "../data/vampire.mjs";
 import {clanOpen, clansOpen} from "./rules.mjs";
@@ -179,6 +180,8 @@ export function costChoices(cost) {
 /** Merits and Flaws a line can take: [{key, name, kind, choices, book, page, pdf}], by name. */
 export function meritOptions(lineId, table = []) {
   const kind = LINE_KIND[lineId] ?? "mortal";
+  // B7665: a Dark Ages vampire takes the 80 Merits and Flaws of V20 Dark Ages, at its costs (pp. 420-427)
+  if ( lineId === "vtda20" ) table = daTable(table);
   return table.filter(t => (t.kind === "merit" || t.kind === "flaw") && kindFits(t.holders ?? [], kind))
     .map(t => ({key: t.key, name: t.name, kind: t.kind, choices: costChoices(t.cost), book: t.book ?? "", page: t.page ?? null, pdf: t.pdf ?? null}))
     .filter(t => t.choices.length)

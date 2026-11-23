@@ -1,26 +1,36 @@
 /**
- * The Rothenstein saga's rules (B3660-B3669). Pure, so the harness can test them: checking the saga, turning a book
+ * The chronicle saga's rules (B3660-B3669). Pure, so the harness can test them: checking the saga, turning a book
  * into a story chain the clock deals out, the gaps between dated steps, which book comes next, the long clocks and
  * the words a step takes after an earlier ending.
  *
  * pod.mjs runs the books as story chains (a run with `saga` set) and keeps the saga's own state in podState.saga =
  * {endings: {<book>: <ending>}, clocks: {<key>: n}, books: {<book>: "running"|"done"|"skipped"|"offered"}}.
  */
-import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS} from "../data/saga-rothenstein.mjs";
+import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, SAGA_PREFIX, FIRST_BOOK} from "./chronicle-data.mjs";
 import {DAY} from "./terms.mjs";
 export {DAY};
 
-export {SAGA, SAGA_CLOCKS, SAGA_ENDINGS};
+export {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, SAGA_PREFIX, FIRST_BOOK};
 /** What a step may do to the town (WoDX Storyteller town-rules SAGA_TOWN has the same keys; B3670). */
 export const TOWN_KINDS = ["boom", "war", "siege", "famine", "plague", "exile", "expulsion", "flood"];
-export const SAGA_PREFIX = `saga:${SAGA.key}:`;
-/** The book whose ending later books answer. */
-export const FIRST_BOOK = "red-stone";
+/* SAGA_PREFIX and FIRST_BOOK come from the chronicle in play (chronicle-data.mjs). */
 const STEP_KINDS = ["chapter", "interlude", "world"];
 
 export const bookByKey = k => SAGA.books.find(b => b.key === k) ?? null;
 export const chainKey = book => `${SAGA_PREFIX}${book}`;
 export const isSagaKey = k => String(k ?? "").startsWith(SAGA_PREFIX);
+/**
+ * The saga keys of story chains in this world that no chronicle in play owns (a chronicle module switched off while its
+ * saga runs, Chronicle Packs Desk c1): ["<saga key>", ...], sorted, each once.
+ */
+export function orphanSagas(chains = []) {
+  const out = new Set();
+  for ( const r of chains ?? [] ) {
+    const m = /^saga:([^:]*):/.exec(String(r?.key ?? ""));
+    if ( m && !String(r.key).startsWith(SAGA_PREFIX) ) out.add(m[1] || "?");
+  }
+  return [...out].sort();
+}
 export const bookOfKey = k => isSagaKey(k) ? bookByKey(String(k).slice(SAGA_PREFIX.length)) : null;
 
 /** Whole days from one [year, month, day] to the next (the proleptic calendar; good enough for gaps). */
@@ -46,7 +56,7 @@ export function bookChain(book, endings = {}) {
     clocks: x.clocks ?? null, signal: x.signal ? {region: SAGA.region, about: "", ...x.signal} : null,
     ending: x.ending ?? null, encounters: x.encounters ?? [], town: x.town ?? null, wait: !!x.wait}));
   return {key: chainKey(b.key), label: `${SAGA.title}, book ${b.n}: ${b.title}`, lines: b.lines, from: b.from, to: b.to,
-    page: "The Rothenstein saga (WoDX's own story)", saga: b.key, steps};
+    page: `${SAGA.title} (WoDX's own story)`, saga: b.key, steps};
 }
 
 /** Every book's state for the window: running, done, skipped, offered, ready (fits the year) or ahead/past. */
@@ -65,12 +75,18 @@ export function bookStates(st = {}, year = 1197, {future = false} = {}) {
 }
 
 /**
+ * A book has ended and the Storyteller has not yet said "next book" or "close here" (Chronicle Packs Desk c3,
+ * st.after = {<book>: "ask"|"next"}): no later book is offered or passed while it waits.
+ */
+export const waitsAtEnd = (st = {}) => Object.values(st?.after ?? {}).includes("ask");
+
+/**
  * The book to offer for this year, or null: the first one the year fits that nobody has started, finished, skipped or
  * been offered, while no other book runs. The prologue fits only before 1197; the future book only on that branch.
  */
 export function dueBook(st = {}, year = 1197, {future = false} = {}) {
   const books = st.books ?? {};
-  if ( Object.values(books).includes("running") ) return null;
+  if ( Object.values(books).includes("running") || waitsAtEnd(st) ) return null;
   return SAGA.books.find(b => year >= b.from && year <= b.to && !books[b.key] && (future || b.branch !== "future")) ?? null;
 }
 
@@ -79,6 +95,7 @@ export function dueBook(st = {}, year = 1197, {future = false} = {}) {
  * clock moves are summed so the valley is as it would be (the Storyteller sees a card and can set them back).
  */
 export function passedBooks(st = {}, year = 1197, {future = false} = {}) {
+  if ( waitsAtEnd(st) ) return [];
   return SAGA.books.filter(b => b.to < year && !st.books?.[b.key] && (future || b.branch !== "future"));
 }
 export function worldDelta(book) {

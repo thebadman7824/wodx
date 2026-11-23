@@ -1,0 +1,2 @@
+{"file":"tools/pcq/watcher.mjs","verdict":"working","how":"read the whole diff and assess() train path; ran node --test watcher.test.mjs (20 pass) incl. new B7550 cases for a dead Main PC line vs live Secondary line","hash":"1957e5614fd3","at":"2026-11-20T03:28Z"}
+{"file":"tools/harness/watcher.test.mjs","verdict":"working","how":"ran node --test watcher.test.mjs, 20 pass; new tests fail on old code (parseTrain from main only)","hash":"9db16358dc8b","at":"2026-11-20T03:28Z"}

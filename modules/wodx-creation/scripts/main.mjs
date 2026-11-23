@@ -24,6 +24,8 @@ import * as firstChange from "./first-change.mjs";
 import * as people from "./people.mjs";
 import * as archive from "./archive.mjs";
 import * as states from "./states.mjs";
+import * as maturation from "./maturation.mjs";
+import * as maturationRules from "./maturation-rules.mjs";
 import * as totals from "./totals-rules.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import * as lifepath from "./lifepath.mjs";
@@ -34,6 +36,13 @@ import * as firstNightRules from "./first-night-rules.mjs";
 import * as wizardRules from "./wizard-rules.mjs";
 import {WizardApp, ledgerFor as wizardLedger, derivedFor} from "./wizard.mjs";
 import * as derivedRules from "./derived-rules.mjs";
+import * as BOOKP from "../data/vtda-people.mjs";
+import * as BOOKPM from "./book-people.mjs";
+import * as DASC from "../data/dasc-templates.mjs";
+import * as SCR from "./supporting-cast-rules.mjs";
+import * as SCM from "./supporting-cast.mjs";
+import * as DDR from "./dac-demons-rules.mjs";
+import * as DDM from "./dac-demons.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -93,7 +102,7 @@ function start() {
     // B6270: every line, one key each, for any WoDX module
     lines: {of: lines.splatOf, info: lines.lineInfo, family: lines.familyOf, label: lines.labelOf, keys: lines.KEYS},
     learn: {rules: learnRules, choices: learn.choicesFor, resolve: learn.resolveSource, begin: learn.begin, records: learn.recordsOf, needsSource: learn.needsSource,
-      waived: learn.waived, setWaived: learn.setWaived, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
+      waived: learn.waived, setWaived: learn.setWaived, terms: learn.teacherTerms, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
     passYears: () => PassYearsApp.open(),
     runSkipTest,
     open: () => CreationApp.open(),
@@ -106,6 +115,9 @@ function start() {
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups,
+    // B7685-B7689: Dark Ages maturation
+    maturation: {open: actor => maturation.MaturationApp.open(actor), mature: maturation.mature, offers: maturation.offers, buy: maturation.buy, state: maturation.stateOf, rules: maturationRules},
+    becomeMortal: states.becomeMortal, becomeMortalDialog: states.becomeMortalDialog,
     deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
     revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,
     fallenHost: states.fallenHost, fallenDialog: states.fallenDialog, possess: states.possess, possessDialog: states.possessDialog,
@@ -116,6 +128,11 @@ function start() {
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs, dueNow: archive.dueNow, autoTick: archive.autoTick},
+    bookPeople: {list: () => BOOKP.PEOPLE, make: k => BOOKPM.makeBookPerson(k), open: () => BOOKPM.bookPeopleDialog()},
+    // B7695: the Dark Ages Storytellers Companion supporting-character templates
+    supportingCast: {list: () => DASC.TEMPLATES, tiers: DASC.TIERS, build: (k, t) => SCR.build(k, t), make: (k, t) => SCM.makeSupporting(k, t), open: () => SCM.supportingCastDialog()},
+    // B7698: the Dark Ages Companion demons (pp. 180-185)
+    dacDemons: {list: () => DDR.ALL, plan: k => DDR.plan(DDR.byKey(k)), make: k => DDM.makeDemon(k), open: () => DDM.demonsDialog()},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople,
       // B6242: the People tables load on first use; load() resolves when they are in
       load: () => people.load(), loaded: () => !!people.loaded(), feminine: people.feminine}
@@ -156,3 +173,14 @@ Hooks.on("getSceneControlButtons", controls => {
 });
 
 Hooks.on("updateActor", () => { if ( active ) CreationApp.refresh(); });
+
+// B7660: a sheet given a clan whose blood holds Appearance at 0 (the Nosferatu, V20 Dark Ages p. 55) loses its
+// Appearance dots, once, by the client that made the change
+Hooks.on("updateActor", (actor, changes, _opts, userId) => {
+  if ( userId !== game.user?.id ) return;
+  const s = changes?.system;
+  if ( !s || !("clan" in s || "custom" in s || "attributes" in s) ) return;
+  const app = actor.system?.attributes?.appearance;
+  if ( !app || !(Number(app.value) > 0) || !data.attributeLock(actor, "appearance") ) return;
+  actor.update({"system.attributes.appearance.value": 0}).catch(() => null);
+});
