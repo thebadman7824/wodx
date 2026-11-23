@@ -294,6 +294,20 @@ export function laneClashes(cfg, runnerLanes) {
   return out;
 }
 
+/**
+ * B7761: a runner with few lanes (prGatesDeferMinutes in its settings) leaves a pull request's whole-branch gate run
+ * to a runner with more lanes for that many minutes after the job was queued, and takes it only if nobody has by then.
+ * Job 2310 (219 gates for the merge train's front) went to the Secondary PC's one lane and took 129 minutes; the same
+ * list took 46 on the Main PC's four (job 2320). Jobs named to a lane, hand-picked lists and jobs that are not a pull
+ * request's (title without "[PR #n sha]") are never held. issue: {title, created_at}.
+ */
+export function deferToBigger(job, issue, minutes, now = Date.now()) {
+  if ( !(Number(minutes) > 0) || job?.kind !== "gates" || !(job.touched || job.all) || job.lane !== undefined ) return false;
+  if ( !/\[PR #\d+ /.test(String(issue?.title ?? "")) ) return false;
+  const at = Date.parse(issue?.created_at ?? "");
+  return Number.isFinite(at) && now - at < Number(minutes) * 60000;
+}
+
 /** Cuts a comment to GitHub's limit, keeping the start. */
 export const fit = (s, max = 60000) => s.length <= max ? s : `${s.slice(0, max - 200)}\n\n(cut: ${s.length - max + 200} more characters are in the runner log on the PC)`;
 

@@ -19,7 +19,7 @@
  * First run creates the clone and, if the branch does not exist yet, an orphan `pc-status` branch.
  * Run detached, outside any helper's process tree (Win32_Process Create), e.g.
  *   PC_STATUS_NAME=secondary PC_LANES=8 node status-push.mjs
- *   PC_STATUS_NAME=newpc PC_LANES=10 node status-push.mjs   (the New PC)
+ *   PC_STATUS_NAME=newpc PC_LANES=10,11,12,13 node status-push.mjs   (the New PC, B7760)
  */
 import {spawnSync} from "node:child_process";
 import fs from "node:fs";

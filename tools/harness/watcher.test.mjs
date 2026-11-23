@@ -36,16 +36,16 @@ test("a missing status file or status issue counts as silent, not as fine", () =
   assert.ok(assess(s).problems.some(p => p.key === "laptop:silent"));
 });
 
-test("the New PC is watched like the Main PC and the Secondary: lane 10, its own status issue, silent, push and lane problems", () => {
+test("the New PC is watched like the Main PC and the Secondary: lanes 10 to 13, its own status issue, silent, push and lane problems", () => {
   const p = PCS.find(x => x.key === "newpc");
-  assert.deepEqual([p.label, p.statusTitle, p.lanes], ["New PC", "PC runner status (New PC)", [10]]);
+  assert.deepEqual([p.label, p.statusTitle, p.lanes], ["New PC", "PC runner status (New PC)", [10, 11, 12, 13]]);
   const a = assess(healthy());
-  assert.ok(a.rows.some(r => r.pc === "New PC" && r.lanes === "10" && r.state === "ok" && /#2308/.test(r.runner)));
+  assert.ok(a.rows.some(r => r.pc === "New PC" && r.lanes === "10, 11, 12, 13" && r.state === "ok" && /#2308/.test(r.runner)));
   const off = healthy({pcs: {...healthy().pcs, newpc: null}, statusIssues: healthy().statusIssues.filter(i => i.number !== 2308)});
   assert.ok(assess(off).problems.some(x => x.key === "newpc:silent" && /New PC is silent/.test(x.text)));
   // No status file yet (status-push not started there) while its runner is alive: a push problem, not "off".
   const noPush = assess(healthy({pcs: {...healthy().pcs, newpc: null}}));
-  assert.ok(noPush.problems.some(x => x.key === "newpc:push" && /never sent a status file \(registry\/pc-status\/newpc\.json\).*PC_STATUS_NAME=newpc PC_LANES=10/.test(x.text)));
+  assert.ok(noPush.problems.some(x => x.key === "newpc:push" && /never sent a status file \(registry\/pc-status\/newpc\.json\).*PC_STATUS_NAME=newpc PC_LANES=10,11,12,13/.test(x.text)));
   assert.ok(!noPush.problems.some(x => x.key === "newpc:silent"));
   assert.ok(noPush.rows.some(r => r.pc === "New PC" && r.state === "no status push"));
   const lane = assess(healthy({pcs: {...healthy().pcs, newpc: pc("newpc", 2, {lanes: [{id: 10, up: false}]})}}));

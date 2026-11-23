@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -814,6 +814,8 @@ for ( ;; ) {
     for ( const q of draining || holding ? [] : ready ) {
       if ( LANE_KINDS.has(q.job.kind) ) {
         if ( res.low.length ) continue;
+        // B7761: a small runner gives the bigger ones first pick of a pull request's whole-branch gate run
+        if ( deferToBigger(q.job, q.issue, conf.prGatesDeferMinutes) ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
         const free = q.job.kind === "setup-lane" ? l => !state[l].busy && !lockState(laneOf(l), cfg).held : laneFree;
         // B6887: a small-jobs lane (lane 7) never takes a touched, every-gate or large run. Named on it, the job is
