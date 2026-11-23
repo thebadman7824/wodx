@@ -60,6 +60,8 @@ import * as CHM from "./charms.js";
 import * as SCH from "./spirit-charms.js";
 import * as GHD from "./ghost-da.js";
 import * as DMD from "./domain-da.js";
+import * as INF from "./infernal.js";
+import * as INFR from "./infernal-rules.js";
 import * as DMR from "./domain-da-rules.js";
 import * as GHR from "./ghost-da-rules.js";
 import * as KER from "./kote-rules.js";
@@ -3214,6 +3216,12 @@ function dmx() {
     return DOME ??= DMD.build({ dialog, notify: m => ui.notifications.warn(m), logEvent: (a, t, k) => kx().logEvent(a, t, k), sinPrompt: (a, e, w) => kx().sinPrompt(a, e, w) });
 }
 
+/** B7696: demonic pacts, infernal investments and the Supplicium (Dark Ages Companion 2002 ch. 7). */
+let INFE = null;
+function ix() {
+    return INFE ??= INF.build({ dialog, post, rollPool, rollBlock, attr, findAbility, notify: m => ui.notifications.warn(m), logEvent: (a, t, k) => kx().logEvent(a, t, k) });
+}
+
 /** B5162: fomor powers (Numbing). */
 function fmx() {
     return FME ??= FOM.build({ post, rollPool, rollBlock, dialog, attr, findAbility, spendWillpower, profile: a => P.detectProfile(a), notify: m => ui.notifications.warn(m) });
@@ -3517,6 +3525,16 @@ function bindCard(msg, el) {
         const r = await dm().onChatButton(b);
         if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
     }));
+    el.querySelectorAll?.("button.vta-btn[data-ix]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `ix|${b.dataset.ix}|${b.dataset.actor}|${b.dataset.arg ?? ""}`;
+        // The two Supplicium buttons answer one question: either one closes the card
+        const pair = ["prevails", "atones", "finalLost", "finalWon"].includes(b.dataset.ix) ? used.some(u => u.startsWith(`ix|`) && u.endsWith(`|${b.dataset.actor}|`) && !u.startsWith("ix|burn")) : false;
+        if (used.includes(key) || pair) return ui.notifications.info("Already done.");
+        const r = await ix().onChatButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
     el.querySelectorAll?.("button.vta-btn[data-vx]").forEach(b => b.addEventListener("click", async ev => {
         ev.preventDefault();
         await vx().onChatButton(b);
@@ -3647,7 +3665,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), domainDA: withActor(a => dmx().window(a)), maturation: withActor(a => creationApi()?.maturation?.open?.(a) ?? ui.notifications.warn("Maturation needs WoDX Creation.")), domainEvent: withActor(a => dmx().domainEvent(a)), fealty: (o = {}) => dmx().fealty(o?.actor ? resolveActor(o.actor) : resolveActor()), domain: { window: a => dmx().window(resolveActor(a)), save: (a, fd) => dmx().saveWindow(resolveActor(a), fd), state: a => dmx().stateOf(resolveActor(a)), event: (a, o) => dmx().domainEvent(resolveActor(a), o), end: (a, id) => dmx().endEvent(resolveActor(a), id), tick: t => dmx().tick(t), swear: o => dmx().swear(o), endOath: (id, how) => dmx().endOath(id, how), oaths: () => dmx().oaths(), rules: DMR }, ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), domainDA: withActor(a => dmx().window(a)), infernal: withActor(a => ix().window(a)), infernalFlame: withActor(a => ix().flame(a)), infernalPacts: { window: a => ix().window(resolveActor(a)), record: (a, fd) => ix().record(resolveActor(a), fd), pact: (a, o) => ix().makePact(resolveActor(a), o), spend: (a, id, b) => ix().spend(resolveActor(a), id, b), state: a => ix().stateOf(resolveActor(a)), prevails: a => ix().prevails(resolveActor(a)), final: (a, won) => ix().finalOutcome(resolveActor(a), won), flame: a => ix().flame(resolveActor(a)), rules: INFR }, maturation: withActor(a => creationApi()?.maturation?.open?.(a) ?? ui.notifications.warn("Maturation needs WoDX Creation.")), domainEvent: withActor(a => dmx().domainEvent(a)), fealty: (o = {}) => dmx().fealty(o?.actor ? resolveActor(o.actor) : resolveActor()), domain: { window: a => dmx().window(resolveActor(a)), save: (a, fd) => dmx().saveWindow(resolveActor(a), fd), state: a => dmx().stateOf(resolveActor(a)), event: (a, o) => dmx().domainEvent(resolveActor(a), o), end: (a, id) => dmx().endEvent(resolveActor(a), id), tick: t => dmx().tick(t), swear: o => dmx().swear(o), endOath: (id, how) => dmx().endOath(id, how), oaths: () => dmx().oaths(), rules: DMR }, ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();

@@ -383,3 +383,8 @@ Ben approved these deletes in the project chat on 22 November: "Yes. Delete the 
 | 2026-11-23 | The 2002 Abilities on the supporting characters (full check, B7695) | Dodge as Athletics, Larceny as Legerdemain, Herbalism as Medicine, Linguistics kept as a Secondary Knowledge | Linguistics folded into Academics |
 | 2026-11-23 | The supporting characters' Road rating, which the book does not print (full check, B7695) | The two moral Virtues added, as V20 Dark Ages creation does | A fixed Road 5 for every template |
 | 2026-11-23 | Four supporting-character names (full check, B7695) | Craftsperson, Levy Archer, Wise One and Mercenary Foot Soldier, with the book's name in the notes | The book's own names |
+| 2026-11-23 | How pact points buy an Attribute (full check, B7696) | The new level + 2 in points, as p. 177 states; the book's own example on p. 175 (a 5-point pact raising an Attribute from 3 to 4) does not add up under it | The new level + 1, which fits the example |
+| 2026-11-23 | The Via Diabolis in V20 Dark Ages terms (full check, B7696) | Road of Sin, Path of the Devil | A Via Diabolis Road of its own |
+| 2026-11-23 | Infernal claws and poisoned blood, whose damage type the book does not give (full check, B7696) | Lethal for both | Aggravated claws, as Feral Claws are |
+| 2026-11-23 | The difficulty of the infernal flame's Dexterity + Occult roll (full check, B7696) | 6 | The target's Dexterity + 3 |
+| 2026-11-23 | Infernal sites (p. 166, 1 to 5 dice to infernal actions) and escaping Hell's pursuit three times (p. 175) (full check, B7696) | Not built: the Storyteller adds the dice and judges the escape | A scene setting that adds the dice to Dark Thaumaturgy and Daimoinon |

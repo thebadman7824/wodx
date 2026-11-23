@@ -36,10 +36,10 @@ export const INTENTS = [
 /** Per line: each intent's buttons, most used first; "scene" is the strip at the foot of the menu. */
 export const MENU_PLAN = {
     kindred: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise", "api:infernalFlame"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
         recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA", "api:maturation"],
-        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent"],
+        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent", "api:infernal"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     wraith: {
@@ -167,6 +167,8 @@ export const DESC = {
     "api:exorcise": "Exorcism, a rite anyone can learn: Intelligence + Occult tears Essence from a demon or spirit until it is driven off (V20 Dark Ages)",
     "api:sampleDemon": "Make one of the sample demons of V20 Dark Ages with its traits and Charms",
     "api:maturation": "Spend the maturation points the years gave: traits already held, and a roll to raise Backgrounds (Dark Ages: Vampire 2002)",
+    "api:infernal": "Demonic pacts and infernal investments, and the Supplicium each one brings (Dark Ages Companion 2002)",
+    "api:infernalFlame": "Breathe the flame an infernal pact gave: Dexterity + Occult, three aggravated levels (Dark Ages Companion 2002)",
     "api:domainDA": "The manor and its lands: the Domain's aspects, the people, settlements, Servants and staff (V20 Dark Ages Companion)",
     "api:domainEvent": "Bring a domain event for a season: famine, invasion, pilgrims, an itinerant court...",
     "api:fealty": "Swear, cut off or break an oath of fealty: the Anchor's dots pool with the vassal's own",
