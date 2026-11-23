@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7740
+Next free block: B7770
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -457,6 +457,7 @@ Next free block: B7740
 | B7660-B7709 | V20 Dark Ages full check: gaps from the rule-by-rule pass (used B7660-B7703) | Creation, Chronicle, Actions, NPC, Combat |
 | B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
 | B7730-B7739 | gates: apipaths money path, vehicles ram retries, powder names who deleted the gun (used B7731-B7735) | wodx-npc, tools (gates) |
+| B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7761) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15664,3 +15665,28 @@ Reverse: put back `const [gun] = await gunman.createEmbeddedDocuments(...)` in s
 Gates. gateapipaths walks the paths listed in tools/gate/fixtures/api-paths.json, and that list is made from the code by tools/audit/api-paths.mjs. Job 2322 still listed the old talk.mjs path because the list had not been made again after B7731. It is made again here (`node tools/audit/api-paths.mjs --write`): the old path is gone, and a few line numbers in talk.mjs moved by one. Not yet run in Foundry.
 
 Reverse: run the audit again after reversing B7731.
+
+## B7760. The New PC drives lanes 10 to 13 (2026-11-23)
+Measured from the 54 gates jobs that finished between 19 and 23 November (their TIMES lines): a gate takes a median of
+13 s and an average of 16 s on the New PC's lane 10, against 25 s median (31 s average) on a Main PC lane with four
+running and 21 s on the Secondary PC. A train front's run of about 220 gates took 46 minutes on the Main PC's four lanes
+(job 2320) and 129 on the Secondary PC's one (job 2310). The New PC ran one lane with 47 GB of memory free, while a busy
+lane uses about 2.4 to 4.2 GB (registry/ram-baseline-2026-11-17.md) and about one core of its twelve. So it gets three
+more lanes, 11 to 13 on ports 30110 to 30130 (the next free ones after lane 10's 30100, and 30000 plus ten times the id
+as status-push.mjs expects), with data folders D:\WoDX\FoundryData-lane11 to -lane13, set up from the same known-good
+world as lane 10 with a setup-lane job each. A gates job's lanes share one queue only within one runner, so a run that
+starts on the New PC takes all four of its lanes. The watcher now expects lanes 10 to 13 on the New PC. Four, not more,
+until a run on all four shows how much each lane slows the others (four lanes on the Main PC ran each gate 16 to 21%
+slower than one or two did, 17 November).
+
+Reverse: take lanes 11 to 13 out of lanes.json, runner.new_pc_lebrun.json and watcher.mjs's PCS list.
+
+## B7761. A small runner leaves pull request gate runs to bigger ones for ten minutes (2026-11-23)
+Any runner that is free claims a queued gates job, so a pull request's whole-branch run (touched or every gate) could go
+to a runner with a single lane while one with four sat free a minute later; that is how job 2310 took 129 minutes. A
+runner whose settings hold prGatesDeferMinutes leaves such a job for that many minutes after its issue was opened, then
+takes it if nobody has (deferToBigger in tools/pcq/jobs.mjs). The Secondary PC (one lane) has 10; the Main PC and the
+New PC have none and take the job at once. A job named to a lane, a hand-picked gate list and a job that is not a pull
+request's are never held. The merge train still merges one pull request at a time.
+
+Reverse: remove prGatesDeferMinutes from runner.benjamin-pc.json (the check in runner.mjs then does nothing).
