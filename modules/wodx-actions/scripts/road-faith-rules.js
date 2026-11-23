@@ -80,13 +80,14 @@ export function truthFromEvent(roadKey, event) {
 /**
  * B7751 (Desk item 2026-11-23-mc1): a Mentor has to be willing, as a teacher does (WoDX Creation, B7131). terms: what WoDX
  * Creation's learn.terms gives ({will, why, blocks, price}), or null when it cannot tell (no WoDX Creation, or a name
- * typed by hand). The Storyteller's word overrides a refusal or a trip. Returns {ok, note, price}.
+ * typed by hand). The Storyteller's word overrides a refusal or a trip. Only the Storyteller's client can write the
+ * Ledger, so a player's price is sent to the Storyteller to write. Returns {ok, note, price}.
  */
 export function mentorAllowed(terms, { gm = false } = {}) {
     if ( !terms ) return { ok: true, note: gm ? "" : "Named by hand: the Storyteller confirms the Mentor is willing.", price: null };
     if ( terms.blocks ) return gm ? { ok: true, note: `${terms.why} (taken as Mentor on the Storyteller's word).`, price: null }
         : { ok: false, note: `${terms.why}.`, price: null };
-    if ( terms.will === "price" && terms.price ) return { ok: true, note: `${terms.why}: ${terms.price.what} (in the Ledger).`, price: terms.price };
+    if ( terms.will === "price" && terms.price ) return { ok: true, note: `${terms.why}: ${terms.price.what} (${gm ? "in the Ledger" : "the Storyteller writes it in the Ledger"}).`, price: terms.price };
     return { ok: true, note: `${terms.why}.`, price: null };
 }
 

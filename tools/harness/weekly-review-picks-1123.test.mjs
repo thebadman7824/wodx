@@ -29,8 +29,9 @@ test("mc3: an oath is a Road of Kings catalyst and goes to the approval queue", 
 test("mc1: a Road Mentor has to be willing, as a teacher does", () => {
   const price = {kind: "boon", size: "minor", what: "a boon owed for the teaching"};
   assert.deepEqual(RF.mentorAllowed({will: "teach", why: "Ana trusts them and teaches freely", blocks: false, price: null}), {ok: true, note: "Ana trusts them and teaches freely.", price: null});
-  const asks = RF.mentorAllowed({will: "price", why: "Ana will teach for a price", blocks: false, price});
-  assert.equal(asks.ok, true); assert.equal(asks.price, price); assert.match(asks.note, /in the Ledger/);
+  const asks = RF.mentorAllowed({will: "price", why: "Ana will teach for a price", blocks: false, price}, {gm: true});
+  assert.equal(asks.ok, true); assert.equal(asks.price, price); assert.match(asks.note, /\(in the Ledger\)/);
+  assert.match(RF.mentorAllowed({will: "price", why: "Ana will teach for a price", blocks: false, price}).note, /the Storyteller writes it in the Ledger/);
   const no = {will: "refuse", why: "Ana is hostile to them and will not teach", blocks: true, price: null};
   assert.equal(RF.mentorAllowed(no).ok, false);
   assert.match(RF.mentorAllowed(no, {gm: true}).note, /Storyteller's word/);
@@ -40,7 +41,7 @@ test("mc1: a Road Mentor has to be willing, as a teacher does", () => {
   assert.equal(RF.mentorAllowed(null, {gm: true}).note, "");
   const rf = src("modules/wodx-actions/scripts/road-faith.js"), learn = src("modules/wodx-creation/scripts/learn.mjs"), cm = src("modules/wodx-creation/scripts/main.mjs");
   assert.match(rf, /creationLearn\(\)\?\.terms\?\.\(actor, m/);
-  assert.match(rf, /ledger\?\.save\?\.\(/);
+  assert.match(rf, /if \( gm \) \{ try \{ await storytellerApi\(\)\?\.ledger\?\.save\?\.\(/);
   assert.match(learn, /export function teacherTerms\(learner, teacher/);
   assert.match(cm, /terms: learn\.teacherTerms/);
 });

@@ -156,8 +156,10 @@ export function build(ctx) {
                 if ( !ok.ok ) return post(actor, title, `<div class="vta-note bad">${esc(ok.note)}</div>`);
                 const mentor = { name, uuid: m?.uuid ?? null, rating: m ? road(m).value : n(fd.mentorRating), road: m ? ctx.roadOf(m)?.key ?? null : f.change?.to ?? ctx.roadOf(actor)?.key ?? null, since: game.time.worldTime, ...(terms ? { will: terms.will } : {}) };
                 if ( ok.price ) {
-                    try { await storytellerApi()?.ledger?.save?.({ kind: ok.price.kind, ...(ok.price.size ? { size: ok.price.size } : {}), from: { id: actor.id, name: actor.name }, to: { id: m.id, name: m.name },
-                        what: `For teaching the ${road(actor).name}: ${ok.price.what}` }); } catch (e) { console.warn("WoDX | Road Mentor: Ledger", e); }
+                    const what = `For teaching the ${road(actor).name}: ${ok.price.what}`;
+                    // Only the Storyteller's client writes the Ledger (a world setting); a player's price goes to them to write
+                    if ( gm ) { try { await storytellerApi()?.ledger?.save?.({ kind: ok.price.kind, ...(ok.price.size ? { size: ok.price.size } : {}), from: { id: actor.id, name: actor.name }, to: { id: m.id, name: m.name }, what }); } catch (e) { console.warn("WoDX | Road Mentor: Ledger", e); } }
+                    else await ChatMessage.create({ whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>A Mentor's price</h3><p>${esc(actor.name)} owes ${esc(m.name)}: ${esc(what)}${ok.price.size ? ` (a ${esc(ok.price.size)} ${esc(ok.price.kind)})` : ""}. Write it in the Ledger.</p></div>` });
                 }
                 await save(actor, { ...f, mentor });
                 await logEvent(actor, `Takes ${name} as a Mentor on the Road.`, "road");
