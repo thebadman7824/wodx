@@ -1606,19 +1606,19 @@
  "buildings": [
   {
    "id": "b01",
-   "label": "",
+   "label": "The Warehouse and Customs House",
    "rect": [
     13.4,
     18.594,
     16.2,
     9.613
    ],
-   "use": "home",
+   "use": "store",
    "roof": true
   },
   {
    "id": "b02",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     18.281,
     5.481,
@@ -1630,7 +1630,7 @@
   },
   {
    "id": "b03",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     1.462,
     5.881,
@@ -1642,7 +1642,7 @@
   },
   {
    "id": "b04",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     24.206,
     6.406,
@@ -1654,7 +1654,7 @@
   },
   {
    "id": "b05",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     35.8,
     6.4,
@@ -1666,7 +1666,7 @@
   },
   {
    "id": "b06",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     8.863,
     6.881,
@@ -1678,7 +1678,7 @@
   },
   {
    "id": "b07",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     44.4,
     5.4,
@@ -1697,19 +1697,19 @@
     9.613,
     6.213
    ],
-   "use": "home",
+   "use": "mill",
    "roof": true
   },
   {
    "id": "b09",
-   "label": "",
+   "label": "The Tannery",
    "rect": [
     49.475,
     18.469,
     12.45,
     8.463
    ],
-   "use": "home",
+   "use": "tannery",
    "roof": true
   },
   {
@@ -1721,12 +1721,12 @@
     12.0,
     8.812
    ],
-   "use": "home",
+   "use": "guardhall",
    "roof": true
   },
   {
    "id": "b11",
-   "label": "",
+   "label": "Quay cottage",
    "rect": [
     51.0,
     6.8,
@@ -1737,50 +1737,31 @@
    "roof": true
   }
  ],
- "rooms": [],
+ "rooms": [
+  {
+   "id": "the-burnt-boathouse-roofless",
+   "label": "The Burnt Boathouse (roofless)",
+   "rect": [
+    2.2,
+    25,
+    7.6,
+    4.6
+   ],
+   "use": "ruin"
+  },
+  {
+   "id": "the-riverside-quay",
+   "label": "The Riverside Quay",
+   "rect": [
+    12,
+    27.6,
+    40,
+    2.4
+   ],
+   "use": "quay"
+  }
+ ],
  "slots": [
-  {
-   "id": "open-hearth-on-its-slab-b01",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (b01)",
-   "rect": [
-    21.0,
-    22.901,
-    1.0,
-    1.0
-   ],
-   "facing": "S",
-   "art": "pending",
-   "auto": true
-  },
-  {
-   "id": "box-bed-for-two-b01",
-   "obj": "bed-box",
-   "label": "Box bed for two (b01)",
-   "rect": [
-    19.25,
-    26.307,
-    0.9,
-    1.4
-   ],
-   "facing": "N",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "cask-b01",
-   "obj": "cask",
-   "label": "Cask (b01)",
-   "rect": [
-    21.275,
-    19.094,
-    0.45,
-    0.45
-   ],
-   "facing": "S",
-   "art": "todo",
-   "auto": true
-  },
   {
    "id": "open-hearth-on-its-slab-b02",
    "obj": "hearth",
@@ -2146,132 +2127,6 @@
    "auto": true
   },
   {
-   "id": "cask-the-town-mill",
-   "obj": "cask",
-   "label": "Cask (The Town Mill)",
-   "rect": [
-    2.889,
-    23.469,
-    0.45,
-    0.45
-   ],
-   "facing": "N",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "open-hearth-on-its-slab-b09",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (b09)",
-   "rect": [
-    55.2,
-    22.2,
-    1.0,
-    1.0
-   ],
-   "facing": "S",
-   "art": "pending",
-   "auto": true
-  },
-  {
-   "id": "box-bed-for-two-b09",
-   "obj": "bed-box",
-   "label": "Box bed for two (b09)",
-   "rect": [
-    49.925,
-    18.969,
-    0.9,
-    1.4
-   ],
-   "facing": "S",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "household-table-b09",
-   "obj": "table",
-   "label": "Household table (b09)",
-   "rect": [
-    49.925,
-    25.532,
-    1.8,
-    0.9
-   ],
-   "facing": "N",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "chest-b09",
-   "obj": "chest",
-   "label": "Chest (b09)",
-   "rect": [
-    60.825,
-    19.739,
-    0.6,
-    1.0
-   ],
-   "facing": "W",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "bench-b09",
-   "obj": "bench",
-   "label": "Bench (b09)",
-   "rect": [
-    52.413,
-    26.082,
-    1.6,
-    0.35
-   ],
-   "facing": "N",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "wall-shelf-b09",
-   "obj": "shelf",
-   "label": "Wall shelf (b09)",
-   "rect": [
-    49.975,
-    20.56,
-    0.25,
-    1.0
-   ],
-   "facing": "E",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "cask-b09",
-   "obj": "cask",
-   "label": "Cask (b09)",
-   "rect": [
-    51.313,
-    18.969,
-    0.45,
-    0.45
-   ],
-   "facing": "S",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "cask-the-watch-house",
-   "obj": "cask",
-   "label": "Cask (The Watch-house)",
-   "rect": [
-    46.05,
-    22.042,
-    0.45,
-    0.45
-   ],
-   "facing": "W",
-   "art": "todo",
-   "auto": true
-  },
-  {
    "id": "cask-b11",
    "obj": "cask",
    "label": "Cask (b11)",
@@ -2284,6 +2139,272 @@
    "facing": "S",
    "art": "todo",
    "auto": true
+  },
+  {
+   "id": "sack-the-warehouse-and-customs-house",
+   "obj": "sack",
+   "label": "Sack (The Warehouse and Customs House)",
+   "rect": [
+    17.587,
+    19.094,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "sack-the-warehouse-and-customs-house-2",
+   "obj": "sack",
+   "label": "Sack (The Warehouse and Customs House)",
+   "rect": [
+    19.456,
+    27.207,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "crate-the-warehouse-and-customs-house",
+   "obj": "crate",
+   "label": "Crate (The Warehouse and Customs House)",
+   "rect": [
+    21.25,
+    19.094,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "cask-the-warehouse-and-customs-house",
+   "obj": "cask",
+   "label": "Cask (The Warehouse and Customs House)",
+   "rect": [
+    21.275,
+    27.257,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "crate-the-warehouse-and-customs-house-2",
+   "obj": "crate",
+   "label": "Crate (The Warehouse and Customs House)",
+   "rect": [
+    13.9,
+    23.151,
+    0.4,
+    0.5
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "sack-the-warehouse-and-customs-house-3",
+   "obj": "sack",
+   "label": "Sack (The Warehouse and Customs House)",
+   "rect": [
+    25.062,
+    19.094,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "sack-the-town-mill",
+   "obj": "sack",
+   "label": "Sack (The Town Mill)",
+   "rect": [
+    2.901,
+    23.419,
+    0.35,
+    0.5
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "sack-the-town-mill-2",
+   "obj": "sack",
+   "label": "Sack (The Town Mill)",
+   "rect": [
+    1.906,
+    19.276,
+    0.5,
+    0.35
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "sack-the-town-mill-3",
+   "obj": "sack",
+   "label": "Sack (The Town Mill)",
+   "rect": [
+    10.019,
+    19.276,
+    0.5,
+    0.35
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "vat-or-mash-tun-the-tannery",
+   "obj": "vat",
+   "label": "Vat or mash tun (The Tannery)",
+   "rect": [
+    49.925,
+    18.969,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "vat-or-mash-tun-the-tannery-2",
+   "obj": "vat",
+   "label": "Vat or mash tun (The Tannery)",
+   "rect": [
+    49.925,
+    24.832,
+    1.6,
+    1.6
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "vat-or-mash-tun-the-tannery-3",
+   "obj": "vat",
+   "label": "Vat or mash tun (The Tannery)",
+   "rect": [
+    59.825,
+    19.664,
+    1.6,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "drying-rack-the-tannery",
+   "obj": "rack",
+   "label": "Drying rack (The Tannery)",
+   "rect": [
+    52.513,
+    26.032,
+    1.2,
+    0.4
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "workbench-the-tannery",
+   "obj": "workbench",
+   "label": "Workbench (The Tannery)",
+   "rect": [
+    49.975,
+    21.23,
+    0.5,
+    1.4
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "water-trough-the-tannery",
+   "obj": "trough",
+   "label": "Water trough (The Tannery)",
+   "rect": [
+    55.1,
+    18.969,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "upturned-boat",
+   "obj": "boat",
+   "label": "Upturned boat",
+   "rect": [
+    3.1,
+    27.9,
+    2.8,
+    1.0
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-on-the-quay",
+   "obj": "crate",
+   "label": "Crate on the quay",
+   "rect": [
+    16.75,
+    28.4,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-on-the-quay-2",
+   "obj": "crate",
+   "label": "Crate on the quay",
+   "rect": [
+    28.75,
+    28.4,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-on-the-quay-3",
+   "obj": "crate",
+   "label": "Crate on the quay",
+   "rect": [
+    39.75,
+    28.4,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
   }
  ],
  "lights": [
@@ -2871,16 +2992,72 @@
    "state": "to plan"
   }
  ],
- "open": [
-  "building b01 (unnamed): use guessed as a home",
-  "building b02 (unnamed): use guessed as a home",
-  "building b03 (unnamed): use guessed as a home",
-  "building b04 (unnamed): use guessed as a home",
-  "building b05 (unnamed): use guessed as a home",
-  "building b06 (unnamed): use guessed as a home",
-  "building b07 (unnamed): use guessed as a home",
-  "building b09 (unnamed): use guessed as a home",
-  "building b11 (unnamed): use guessed as a home"
- ],
- "seeded": true
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "street to the Market Square",
+   "path": [
+    [
+     30.9,
+     0
+    ],
+    [
+     30.9,
+     14
+    ],
+    [
+     30.9,
+     28
+    ]
+   ],
+   "width": 4.0,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "street to the River Road",
+   "path": [
+    [
+     0,
+     15.5
+    ],
+    [
+     15,
+     15.5
+    ],
+    [
+     32,
+     15.5
+    ]
+   ],
+   "width": 3.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "river",
+   "label": "the river",
+   "path": [
+    [
+     0,
+     33
+    ],
+    [
+     20,
+     33.5
+    ],
+    [
+     40,
+     33.5
+    ],
+    [
+     64,
+     33
+    ]
+   ],
+   "width": 10.0,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

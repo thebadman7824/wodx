@@ -1142,7 +1142,7 @@
  "buildings": [
   {
    "id": "b01",
-   "label": "",
+   "label": "House inside the gate",
    "rect": [
     51.475,
     1.281,
@@ -1154,7 +1154,7 @@
   },
   {
    "id": "b02",
-   "label": "",
+   "label": "House inside the gate",
    "rect": [
     41.4,
     24.0,
@@ -1166,43 +1166,43 @@
   },
   {
    "id": "b03",
-   "label": "",
+   "label": "Gatehouse guard room (south)",
    "rect": [
     33.4,
     23.2,
     7.2,
     4.2
    ],
-   "use": "home",
+   "use": "guardhall",
    "roof": true
   },
   {
    "id": "b04",
-   "label": "",
+   "label": "Gatehouse guard room (north)",
    "rect": [
     33.4,
     14.8,
     7.2,
     4.2
    ],
-   "use": "home",
+   "use": "guardhall",
    "roof": true
   },
   {
    "id": "b05",
-   "label": "",
+   "label": "Alehouse by the gate",
    "rect": [
     41.475,
     9.869,
     8.05,
     8.062
    ],
-   "use": "home",
+   "use": "inn",
    "roof": true
   },
   {
    "id": "b06",
-   "label": "",
+   "label": "House inside the gate",
    "rect": [
     49.075,
     24.075,
@@ -1214,7 +1214,7 @@
   },
   {
    "id": "b07",
-   "label": "",
+   "label": "House inside the gate",
    "rect": [
     41.4,
     1.406,
@@ -1226,7 +1226,7 @@
   },
   {
    "id": "b08",
-   "label": "",
+   "label": "House inside the gate",
    "rect": [
     49.675,
     11.269,
@@ -1237,7 +1237,41 @@
    "roof": true
   }
  ],
- "rooms": [],
+ "rooms": [
+  {
+   "id": "the-common",
+   "label": "The Common",
+   "rect": [
+    0,
+    23,
+    32,
+    19
+   ],
+   "use": "camp"
+  },
+  {
+   "id": "mikhal-the-tinker-s-camp",
+   "label": "Mikhal the Tinker's camp",
+   "rect": [
+    22,
+    3,
+    8,
+    8
+   ],
+   "use": "camp"
+  },
+  {
+   "id": "sheep-pen",
+   "label": "Sheep pen",
+   "rect": [
+    19.9,
+    34,
+    8,
+    5.9
+   ],
+   "use": "pen"
+  }
+ ],
  "slots": [
   {
    "id": "open-hearth-on-its-slab-b01",
@@ -1348,132 +1382,6 @@
     0.45
    ],
    "facing": "E",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "cask-b03",
-   "obj": "cask",
-   "label": "Cask (b03)",
-   "rect": [
-    36.775,
-    26.45,
-    0.45,
-    0.45
-   ],
-   "facing": "N",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "cask-b04",
-   "obj": "cask",
-   "label": "Cask (b04)",
-   "rect": [
-    36.775,
-    15.3,
-    0.45,
-    0.45
-   ],
-   "facing": "S",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "open-hearth-on-its-slab-b05",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (b05)",
-   "rect": [
-    41.925,
-    10.369,
-    1.0,
-    1.0
-   ],
-   "facing": "S",
-   "art": "pending",
-   "auto": true
-  },
-  {
-   "id": "box-bed-for-two-b05",
-   "obj": "bed-box",
-   "label": "Box bed for two (b05)",
-   "rect": [
-    41.925,
-    16.031,
-    0.9,
-    1.4
-   ],
-   "facing": "N",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "household-table-b05",
-   "obj": "table",
-   "label": "Household table (b05)",
-   "rect": [
-    43.263,
-    10.369,
-    1.8,
-    0.9
-   ],
-   "facing": "S",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "chest-b05",
-   "obj": "chest",
-   "label": "Chest (b05)",
-   "rect": [
-    48.425,
-    11.089,
-    0.6,
-    1.0
-   ],
-   "facing": "W",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "bench-b05",
-   "obj": "bench",
-   "label": "Bench (b05)",
-   "rect": [
-    41.975,
-    11.709,
-    0.35,
-    1.6
-   ],
-   "facing": "E",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "wall-shelf-b05",
-   "obj": "shelf",
-   "label": "Wall shelf (b05)",
-   "rect": [
-    48.775,
-    12.63,
-    0.25,
-    1.0
-   ],
-   "facing": "W",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "cask-b05",
-   "obj": "cask",
-   "label": "Cask (b05)",
-   "rect": [
-    45.275,
-    10.369,
-    0.45,
-    0.45
-   ],
-   "facing": "S",
    "art": "todo",
    "auto": true
   },
@@ -1686,6 +1594,258 @@
    "facing": "E",
    "art": "todo",
    "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-alehouse-by-the-gate",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (Alehouse by the gate)",
+   "rect": [
+    41.925,
+    10.369,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "household-table-alehouse-by-the-gate",
+   "obj": "table",
+   "label": "Household table (Alehouse by the gate)",
+   "rect": [
+    41.925,
+    16.531,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "household-table-alehouse-by-the-gate-2",
+   "obj": "table",
+   "label": "Household table (Alehouse by the gate)",
+   "rect": [
+    43.263,
+    10.369,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "bench-alehouse-by-the-gate",
+   "obj": "bench",
+   "label": "Bench (Alehouse by the gate)",
+   "rect": [
+    48.675,
+    11.014,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "bench-alehouse-by-the-gate-2",
+   "obj": "bench",
+   "label": "Bench (Alehouse by the gate)",
+   "rect": [
+    41.975,
+    11.709,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "shop-counter-alehouse-by-the-gate",
+   "obj": "counter",
+   "label": "Shop counter (Alehouse by the gate)",
+   "rect": [
+    45.394,
+    10.369,
+    1.6,
+    0.5
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-alehouse-by-the-gate",
+   "obj": "cask",
+   "label": "Cask (Alehouse by the gate)",
+   "rect": [
+    46.113,
+    16.981,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "cask-alehouse-by-the-gate-2",
+   "obj": "cask",
+   "label": "Cask (Alehouse by the gate)",
+   "rect": [
+    41.975,
+    14.514,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "players-wagon",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    6.7,
+    28.25,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "players-wagon-2",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    14.6,
+    27.25,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "players-wagon-3",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    7.2,
+    33.85,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "players-wagon-4",
+   "obj": "cart",
+   "label": "Players' wagon",
+   "rect": [
+    15.7,
+    33.05,
+    1.6,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "the-players-prop-tent",
+   "obj": "tent",
+   "label": "The players' prop tent",
+   "rect": [
+    3.8,
+    36.2,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "camp-fire",
+   "obj": "hearth",
+   "label": "Camp fire",
+   "rect": [
+    11.5,
+    30.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "tinker-s-tent",
+   "obj": "tent",
+   "label": "Tinker's tent",
+   "rect": [
+    25.4,
+    5.9,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tinker-s-barrow",
+   "obj": "handcart",
+   "label": "Tinker's barrow",
+   "rect": [
+    24.1,
+    9.0,
+    0.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "camp-fire-2",
+   "obj": "hearth",
+   "label": "Camp fire",
+   "rect": [
+    23.5,
+    5.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "wayside-cross",
+   "obj": "shrine-wayside",
+   "label": "Wayside cross",
+   "rect": [
+    18.45,
+    16.45,
+    0.9,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
   }
  ],
  "lights": [
@@ -2095,15 +2255,80 @@
    "state": "to plan"
   }
  ],
- "open": [
-  "building b01 (unnamed): use guessed as a home",
-  "building b02 (unnamed): use guessed as a home",
-  "building b03 (unnamed): use guessed as a home",
-  "building b04 (unnamed): use guessed as a home",
-  "building b05 (unnamed): use guessed as a home",
-  "building b06 (unnamed): use guessed as a home",
-  "building b07 (unnamed): use guessed as a home",
-  "building b08 (unnamed): use guessed as a home"
- ],
- "seeded": true
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "the road to Olomouc, through the West Gate to the Market Square",
+   "path": [
+    [
+     0,
+     21
+    ],
+    [
+     20,
+     21
+    ],
+    [
+     33,
+     21
+    ],
+    [
+     60,
+     21
+    ]
+   ],
+   "width": 4.0,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "the Forest Road",
+   "path": [
+    [
+     8,
+     0
+    ],
+    [
+     12,
+     8
+    ],
+    [
+     18,
+     14
+    ],
+    [
+     26,
+     19
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "to the River Road and the ferry",
+   "path": [
+    [
+     14,
+     42
+    ],
+    [
+     17,
+     32
+    ],
+    [
+     21,
+     25
+    ],
+    [
+     24,
+     22
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

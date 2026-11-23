@@ -131,8 +131,161 @@
  ],
  "doors": [],
  "buildings": [],
- "rooms": [],
- "slots": [],
+ "rooms": [
+  {
+   "id": "camp-clearing",
+   "label": "Camp clearing",
+   "rect": [
+    7,
+    4,
+    22,
+    18
+   ],
+   "use": "camp"
+  }
+ ],
+ "slots": [
+  {
+   "id": "camp-fire",
+   "obj": "hearth",
+   "label": "Camp fire",
+   "rect": [
+    17.0,
+    12.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "log-seat",
+   "obj": "bench",
+   "label": "Log seat",
+   "rect": [
+    16.7,
+    10.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "log-seat-2",
+   "obj": "bench",
+   "label": "Log seat",
+   "rect": [
+    16.7,
+    13.925,
+    1.6,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "firewood",
+   "obj": "woodpile",
+   "label": "Firewood",
+   "rect": [
+    20.7,
+    11.9,
+    0.6,
+    1.2
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "handcart",
+   "obj": "handcart",
+   "label": "Handcart",
+   "rect": [
+    13.4,
+    12.1,
+    1.2,
+    0.8
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask",
+   "obj": "cask",
+   "label": "Water cask",
+   "rect": [
+    20.275,
+    15.275,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tent",
+   "obj": "tent",
+   "label": "Tent",
+   "rect": [
+    11.3,
+    7.8,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tent-2",
+   "obj": "tent",
+   "label": "Tent",
+   "rect": [
+    22.3,
+    7.8,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tent-3",
+   "obj": "tent",
+   "label": "Tent",
+   "rect": [
+    11.3,
+    15.8,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tent-4",
+   "obj": "tent",
+   "label": "Tent",
+   "rect": [
+    22.3,
+    15.8,
+    2.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
  "lights": [
   {
    "x": 17.5,
@@ -190,5 +343,5 @@
   }
  ],
  "open": [],
- "seeded": true
+ "seeded": false
 }

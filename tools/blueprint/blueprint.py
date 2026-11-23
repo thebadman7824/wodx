@@ -181,7 +181,7 @@ def _name_buildings(bp):
 
 USES = [("mill", "mill"), ("smith", "smithy"), ("forge", "smithy"), ("chapel", "church"), ("church", "church"),
         ("hall", "hall"), ("inn", "inn"), ("tavern", "inn"), ("barn", "barn"), ("stable", "stable"), ("granary", "store"),
-        ("store", "store"), ("shed", "store"), ("hut", "home"), ("house", "home"), ("cottage", "home"), ("farm", "home")]
+        ("store", "store"), ("shed", "store"), ("watch", "guardhall"), ("guard", "guardhall"), ("tanner", "tannery"), ("hut", "home"), ("house", "home"), ("cottage", "home"), ("farm", "home")]
 
 
 def _use_of(label):
@@ -224,6 +224,8 @@ KITS = {
     "store": ["sack", "sack", "crate", "cask", "crate", "sack"],
     "barn": ["haystack", "cart", "sack"],
     "stable": ["stall-horse", "stall-horse", "trough", "haystack"],
+    "guardhall": ["hearth", "table", "bench", "bench", "weapon-rack", "chest", "cot", "cot"],
+    "tannery": ["vat", "vat", "vat", "rack", "workbench", "trough"],
 }
 
 
@@ -284,7 +286,7 @@ def furnish_buildings(bp):
 
 # ---------------------------------------------------------------- seeding from tools/pixelmap output
 
-GROUND_KINDS = ("road", "track", "path", "brook", "river", "field", "water")
+GROUND_KINDS = ("road", "track", "path", "brook", "river", "field", "water", "wood", "hill")
 
 
 def drawer_ground(path):
@@ -407,7 +409,7 @@ INK = {"bg": (16, 42, 77), "grid": (34, 70, 112), "grid5": (52, 92, 138), "wall"
        "fire": (255, 170, 70), "lamp": (255, 230, 160), "eerie": (170, 140, 255), "exit": (255, 110, 200),
        "label": (205, 220, 240), "title": (255, 255, 255),
        "g_road": (70, 78, 92), "g_track": (60, 70, 90), "g_path": (55, 66, 92), "g_brook": (28, 86, 140),
-       "g_river": (28, 86, 140), "g_water": (28, 86, 140), "g_field": (60, 110, 90)}
+       "g_river": (28, 86, 140), "g_water": (28, 86, 140), "g_field": (60, 110, 90), "g_wood": (50, 120, 80), "g_hill": (170, 90, 80)}
 
 
 def _font(px):
@@ -422,6 +424,12 @@ def _dash(dr, a, b, fill, width, on=6, off=5):
     ux, uy = (b[0] - a[0]) / L, (b[1] - a[1]) / L; t = 0
     while t < L:
         e = min(L, t + on); dr.line([(a[0] + ux * t, a[1] + uy * t), (a[0] + ux * e, a[1] + uy * e)], fill=fill, width=width); t = e + off
+
+
+def _span(n, bp):
+    """n squares as a distance: feet on a battle map, kilometres on a travel map."""
+    ft = n * bp.get("square_ft", SQ_FT)
+    return f"{ft * 0.3048 / 1000:.2f} km".replace(".00 km", " km") if ft >= 500 else f"{ft:g} ft"
 
 
 def render(bp, out, px=None):
@@ -485,7 +493,7 @@ def render(bp, out, px=None):
     dr.rectangle([0, 0, img.width, head - 1], fill=(10, 28, 54))
     dr.text((10, 8), f"{bp['name']}", fill=INK["title"], font=f_l)
     n_keep = sum(s["art"] == "keep" for s in bp["slots"]); n_pend = sum(s["art"] == "pending" for s in bp["slots"])
-    dr.text((10, 34), f"Blueprint {bp['id']} · tier {bp['tier']} · {W} x {H} squares of 5 ft ({W * 5} x {H * 5} ft) · "
+    dr.text((10, 34), f"Blueprint {bp['id']} · tier {bp['tier']} · {W} x {H} squares of {_span(1, bp)} ({_span(W, bp)} x {_span(H, bp)}) · "
                       f"{len(bp['slots'])} object slots ({n_keep} with approved art, {n_pend} pending) · layers: {', '.join(bp['layers'])}",
             fill=INK["label"], font=f_s)
     y0 = H * px + head + 10; x0 = 10
@@ -499,7 +507,7 @@ def render(bp, out, px=None):
         if x0 > img.width - 140: x0 = 10; y0 += 18
     sx = img.width - 5 * px - 20; sy = H * px + head + foot - 18
     dr.line([(sx, sy), (sx + 5 * px, sy)], fill=INK["title"], width=3)
-    dr.text((sx, sy - 16), "25 ft", fill=INK["title"], font=f_s)
+    dr.text((sx, sy - 16), _span(5, bp), fill=INK["title"], font=f_s)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     img.save(out, optimize=True)
     return out
