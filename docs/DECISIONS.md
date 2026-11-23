@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7730
+Next free block: B7740
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -456,6 +456,7 @@ Next free block: B7730
 | B7650-B7659 | gate7b pins the turn conductor; derange and powder name what changed (used B7651-B7656) | tools (gates) |
 | B7660-B7709 | V20 Dark Ages full check: gaps from the rule-by-rule pass (used B7660-B7703) | Creation, Chronicle, Actions, NPC, Combat |
 | B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
+| B7730-B7739 | gates: apipaths money path, vehicles ram retries, powder names who deleted the gun (used B7731-B7735) | wodx-npc, tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15638,3 +15639,28 @@ the 17 November known-good Rothenstein world with the old test items cleared, as
 port 30010 (jobs.mjs refuses it).
 
 Reverse: run the solo world from the Main PC again.
+
+## B7731. Small talk reads the money rules where the Storyteller keeps them (2026-11-23)
+WoDX NPC. The nightly full run on main (job 2312) failed gateapipaths: talk.mjs read the Storyteller's money rules at api.money.rules.moneyFor, but they sit at api.upkeep.money.rules.moneyFor (as kindred.js, pod.mjs and law-punish.mjs read them). So moneyFor was always missing and talk about a region with its own money fell back to the plain words, never its coins (B7601, B7602). It now reads the right path. Not yet run in Foundry.
+
+Reverse: put back `api?.money?.rules?.moneyFor` in placeFacts in modules/wodx-npc/scripts/talk.mjs.
+
+## B7732. gatevehicles: each ram try is the driver's first action (2026-11-23)
+Gates. "8. a real ram" failed in job 2312 (it passes alone twice). The step rams up to 8 times until a blow lands. Each quick attack outside a fight opens one (the blow stands as the opening of an ambush), so from the second try on the attack counted as the driver's second, third and later action that turn: by the last try "attack 7, -4 dice, +4 difficulty", difficulty past 10. The step now ends the fight on its own scene before each try after the first, and its detail names the fight it found at the start and how many it ended. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: take fightBefore, cleared and the combat delete before each try out of step 8 in tools/gate/gatevehicles.mjs.
+
+## B7733. gatehuntpowder names what took the gun (2026-11-23)
+Gates. "7. black powder" failed in job 2312 as in job 2241: after the reload the gun was no longer on the actor. The recheck found it flaky alone too. The detail the PC runner prints is cut short, and the list of held items started with the nine traits the system gives every new mortal, so the cut came before the answer. The step now records every item the actor loses while it reloads and lights the match (id, name, user, delete options, when, and a short stack) and lists only the non-trait items held. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: take the deleteItem hook, lost and the trait filter out of step 7 in tools/gate/gatehuntpowder.mjs.
+
+## B7734. gatehuntpowder takes the gun by its type (2026-11-23)
+Gates. The record from B7733 named the cause on its first run (job 2322): the item the step called the gun was "a lead musket ball", which the reload spends. The step made the gun, the ball and the powder horn in one batch and took the first one made as the gun, but a batch create does not keep its order (kit rule 1), so on some runs the gun was the ball. It now takes the Ranged Weapon from what was made. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: put back `const [gun] = await gunman.createEmbeddedDocuments(...)` in step 7 of tools/gate/gatehuntpowder.mjs.
+
+## B7735. The api-paths fixture follows the money path fix (2026-11-23)
+Gates. gateapipaths walks the paths listed in tools/gate/fixtures/api-paths.json, and that list is made from the code by tools/audit/api-paths.mjs. Job 2322 still listed the old talk.mjs path because the list had not been made again after B7731. It is made again here (`node tools/audit/api-paths.mjs --write`): the old path is gone, and a few line numbers in talk.mjs moved by one. Not yet run in Foundry.
+
+Reverse: run the audit again after reversing B7731.
