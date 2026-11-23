@@ -6,6 +6,7 @@
  * A proposal: {kind, label, detail, checked, data, choices?}. `choices` ([{value, label}]) puts a pick in the Pass the
  * Years window; data.choice holds the default.
  */
+import {ACTIVITY as MAT_ACTIVITY, ACTIVITY_KEYS as MAT_KEYS, pointsFor as matPoints, SOURCE as MAT_SOURCE} from "./maturation-rules.mjs";
 import {DECLINE, THICK_BLOOD, DRIFT, YEARS_XP, BACKGROUNDS, ABILITY_CONVERSION, ROAD_TO_PATH, DA_ERAS, LINE_YEARS,
   LOST_TRIBES, FAE_CROSSING, DA_RECORDS} from "../data/advance.mjs";
 
@@ -155,9 +156,18 @@ export function propose(v, ctx) {
     }
   }
 
+  // B7685: maturation, the book's downtime for a Dark Ages Cainite (switch, on by default); it stands in for the
+  // house experience and the Background fade for that character
+  const matures = !!sw.maturation && v.line === "vampire" && awake >= 1 && isDAEra((ctx.toEra ?? ctx.fromEra)?.id);
+  if ( matures ) {
+    add("adv.maturation", `Maturation: about ${matPoints(awake)} points for ${awake} years`,
+      `Pick how the years were spent; the Willpower roll each century, Background upkeep and, in danger, Tempting Fate follow. Spend the points in the Maturation window (${MAT_SOURCE}).`,
+      true, {years: awake, choice: "active", thirst: !!sw.thirst}, MAT_KEYS.map(k => ({value: k, label: MAT_ACTIVITY[k].label})));
+  }
+
   // Experience for the years (switch)
   // Only the lines WoDX knows; a wraith's years are not lived, and a creature keeps no experience
-  if ( sw.xp && awake >= 1 && v.line && v.line !== "wraith" ) {
+  if ( sw.xp && !matures && awake >= 1 && v.line && v.line !== "wraith" ) {
     const n = yearsXP(awake);
     if ( n > 0 ) add("adv.xp", `${n} experience for the years`, `${YEARS_XP.perYear} a year awake and active, at most ${YEARS_XP.cap} a skip; spend it on what the years suggest (${YEARS_XP.source}).`, true, {amount: n});
   }
@@ -170,7 +180,7 @@ export function propose(v, ctx) {
     if ( value <= 0 ) continue;
     if ( eraChanges && BACKGROUNDS.societal.some(s => name.includes(s)) ) {
       add("adv.bgReset", `${b.name} resets in ${ctx.toEra.name}`, `${value} → 0: it belonged to a society that is gone (${BACKGROUNDS.source}).`, false, {itemId: b.id, to: 0});
-    } else if ( decades > 0 && BACKGROUNDS.decays.some(s => name.includes(s)) ) {
+    } else if ( !matures && decades > 0 && BACKGROUNDS.decays.some(s => name.includes(s)) ) {
       const to = Math.max(0, value - decades);
       add("adv.bgDecay", `${b.name} fades if untended`, `${value} → ${to}: a dot per decade not tended in play (${BACKGROUNDS.source}).`, false, {itemId: b.id, to});
     }

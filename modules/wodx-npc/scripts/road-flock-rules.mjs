@@ -38,6 +38,7 @@ export const FLOCKS = {
     paradox: { flock: "Asura", group: "gathering", head: "none", structure: "none", meets: "a night of stories of success and failure", p: 445 },
     abyss: { flock: "Abyss Mystics", group: "brethren", head: "the deepest in the dark", structure: "cult", meets: "study of the darkness", p: 441 },
     samiel: { flock: "Warriors of Samiel", group: "warrior band", head: "the eldest warrior", structure: "network", meets: "the hunt for evil", p: 447 },
+    night: { flock: "Redeemers", group: "parish", head: "the Father or Mother above", structure: "hierarchy", meets: "a fierce sermon", p: 29, book: "Dark Ages Storytellers Companion (2002)" },
     set: { flock: "Followers of Set", group: "temple", head: "the high priest", structure: "faith", meets: "the temple's rites", p: 449 }
 };
 
@@ -60,6 +61,6 @@ export function flockSpec({ road, roadName = "", place, walkers = [] }) {
     if ( list.length < FLOCK_MIN ) return null;
     const head = F.structure === "none" ? null : list[0];
     const name = `The ${F.flock} of ${place.name}`;
-    const notes = `${roadName || road}: a ${F.group}${head ? `, its head ${F.head === "Lord" ? "the Lord" : F.head}: ${head.name}` : ", with no head"}. They meet at ${F.meets} (V20 Dark Ages p. ${F.p}). Members: ${list.map(w => `${w.name} (${Number(w.rating) || 0})`).join(", ")}.`;
+    const notes = `${roadName || road}: a ${F.group}${head ? `, its head ${F.head === "Lord" ? "the Lord" : F.head}: ${head.name}` : ", with no head"}. They meet at ${F.meets} (${F.book ?? "V20 Dark Ages"} p. ${F.p}). Members: ${list.map(w => `${w.name} (${Number(w.rating) || 0})`).join(", ")}.`;
     return { id: flockId(road, place.uuid), name, kind: "kindred", secret: true, run: "orders", leader: head?.id ?? null, members: list.map(w => w.id), places: [place.uuid], notes, assets: { status: Math.min(5, Math.max(1, Math.round((Number(list[0].rating) || 0) / 2))) } };
 }

@@ -102,7 +102,26 @@ export const POWER_KEYWORDS = {
     "valeren-watcher-aversion": [["sway","fortune"]], "valeren-watcher-purification": [["banish"]], "valeren-watcher-soul-exchange": [["possess"]],
     "vicissitude-chiropteran-marauder": [["shape","rise"]], "vicissitude-blood-of-the-earth": [["ward"],1], "vicissitude-sublimation-of": [["harm"]],
     "vicissitude-the-last-dracul": [["shape","boost"]], "abyss-mysticism-into-the-chasm": [["sideways","summon"]], "abyss-mysticism-evocation-of-the-oubliette": [["harm"]],
-    "abyss-mysticism-cry-that-slays-the-light": [["light"]]
+    "abyss-mysticism-cry-that-slays-the-light": [["light"]],
+    // B7699: the elder powers of the Dark Ages Companion (2002) ch. 4, pp. 78-104
+    "animalism-sense-the-savage-way": [["sense"]], "animalism-twist-the-feral-will": [["sway"]], "animalism-taunt-the-caged-beast": [["fear"]],
+    "auspex-spirit-bond": [["bind","sense"]], "auspex-stealing-the-minds-eye": [["sense","possess"]], "auspex-pluck-the-secret": [["know"]],
+    "auspex-the-oracles-sight": [["know"]], "celerity-mercurys-arrow": [["harm","boost"]], "celerity-sanguinary-wind": [["boost"]],
+    "celerity-resist-earths-grasp": [["move"]], "chimerstry-army-of-apparitions": [["illusion"]], "chimerstry-mirrors-visage": [["illusion"]],
+    "chimerstry-fantasy-world": [["illusion","bind"]], "daimoinon-unleash-hells-fury": [["harm"]], "dementation-lunas-embrace": [["bind"]],
+    "dementation-delayed-delirium": [["bind"]], "dominate-autonomic-mastery": [["hold"]], "dominate-command-the-legion": [["sway"]],
+    "dominate-empowering-the-puppet-king": [["sway"]], "fortitude-armor-of-vitality": [["ward","work"]], "fortitude-bestow-vigor": [["boost","ward"]],
+    "fortitude-eternal-vigilance": [["ward"]], "mortis-animate-host": [["summon"]], "mortis-sense-deaths-imminence": [["sense","know"]],
+    "mortis-plague-wind": [["harm"]], "obfuscate-diastasis": [["illusion","veil"]], "obfuscate-veil-the-legions": [["veil"]],
+    "obfuscate-trusted-confessor": [["illusion","sway"]], "obtenebration-darksome-embrace": [["hold","fear"]], "obtenebration-death-shroud": [["summon"]],
+    "obtenebration-night-shades-servants": [["summon"]], "potence-the-fist-of-caine": [["harm"]], "potence-the-forgers-hammer": [["make"]],
+    "potence-touch-of-pain": [["harm","work"]], "presence-renew-the-earthly-pleasures": [["hold","boost"]], "presence-unholy-penance": [["hold","know"]],
+    "presence-bloodlust": [["boost","fear"]], "protean-mastery-of-the-earth": [["move","veil"]], "protean-the-mantle-of-bestial-majesty": [["shape","boost"]],
+    "protean-purify-the-body": [["mend"]], "quietus-hematus-quicken-the-mortals-blood": [["charge"]], "quietus-hematus-hinder-the-cainite-vitae": [["hold"]],
+    "serpentis-ophidian-infestation": [["harm"]], "serpentis-sets-curse": [["shape"]], "serpentis-apeps-semblance": [["shape","boost"]],
+    "vicissitude-corrupt-construction": [["make","summon"]], "vicissitude-liquefy-the-mortal-coil": [["harm"]], "vicissitude-sculpture-of-the-mind": [["shape","harm"]],
+    "abombwe-predators-mastery": [["sway"]], "ogham-inscribe-the-forgotten-names": [["summon"]], "valeren-healer-warding-the-beast": [["mend"]],
+    "valeren-warrior-loving-agony": [["harm","fear"]], "valeren-warrior-shadow-of-taint": [["banish"]]
   },
   gift: {
     "artisans-command": [["work"]], "aura-of-confidence": [["veil"]], "beast-speech": [["speak"]],
