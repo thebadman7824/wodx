@@ -9,7 +9,9 @@
  *   3. a wristwatch tells the hour on a card to its owner
  * Result: Data/wodx-gate/gategadgets-result.json.
  */
-import {gate, waitFor} from "./kit.mjs";
+import {gate, waitFor, inOrder} from "./kit.mjs";
+// B7773: a batch create does not keep its order (kit rule 1), so what it made is matched back to its data by name
+const madeInOrder = async (parent, type, data) => inOrder(await parent.createEmbeddedDocuments(type, data), data);
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
@@ -20,7 +22,7 @@ export async function run() {
     const scene = await G.scene();
     const [a] = await G.make(Actor, [{name: "Gate Gadgets Gardener", type: "Mortal"}]);
     const [tok] = await G.tokens(scene, [{actor: a, x: 2, y: 2, actorLink: true}]);
-    const [seeds, match, candle, watch] = await a.createEmbeddedDocuments("Item", [{name: "seed potatoes", type: "Item"},
+    const [seeds, match, candle, watch] = await madeInOrder(a, "Item", [{name: "seed potatoes", type: "Item"},
       {name: "a match", type: "Item"}, {name: "a tallow candle", type: "Item"}, {name: "a wristwatch", type: "Item"}]);
 
     await G.step("1. plant and harvest", async () => {

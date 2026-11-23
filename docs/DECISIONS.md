@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7770
+Next free block: B7780
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -459,6 +459,7 @@ Next free block: B7770
 | B7730-B7739 | gates: apipaths money path, vehicles ram retries, powder names who deleted the gun (used B7731-B7735) | wodx-npc, tools (gates) |
 | B7750-B7759 | Improvement desk picks of 23 November 2026: Road and domain connections, the season turn, the daily PC tally (used B7750-B7755) | Actions, Creation, Sheets |
 | B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7761) | tools |
+| B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15721,3 +15722,18 @@ New PC have none and take the job at once. A job named to a lane, a hand-picked 
 request's are never held. The merge train still merges one pull request at a time.
 
 Reverse: remove prGatesDeferMinutes from runner.benjamin-pc.json (the check in runner.mjs then does nothing).
+
+## B7771. gatesystemrolls takes its two powers by name (2026-11-23)
+Gates. Job 2330 (PR 2321) failed steps 2, 3 and 4, which pass alone twice. The detail showed the powers swapped: the step meant for Manipulation + Intimidation (5 dice) rolled 3 dice with attribute 2 and ability 1, which is the Strength + Brawl power, and the Strength + Brawl step rolled 4 dice with attribute 3 and ability 2. The gate made both powers in one batch and took them by place, but a batch create does not keep its order (kit rule 1). It now takes each power by its name. The pass conditions are unchanged. Not yet run in Foundry.
+
+Reverse: put back `const [command, blow] = await vamp.createEmbeddedDocuments(...)` in tools/gate/gatesystemrolls.mjs.
+
+## B7772. gate-maps looks for the alarm's note in every message since the hour passed (2026-11-23)
+Gates. Job 2330 failed step 5 ("an hour later the alarm dies down"): the place was wary and the lamp out, but the note was not found. The step looked only at the last five chat messages. An hour passing lets other modules post their own cards, so after other gates the note can sit further back. The step now looks at every message made since it moved the clock, and its detail counts them and shows the last four. The pass condition is otherwise unchanged. The cause is a likely reading, not yet proven: the new detail will show it. Not yet run in Foundry.
+
+Reverse: put back `game.messages.contents.slice(-5)` in step 5 of tools/gate/gate-maps.mjs and drop posted and last from its detail.
+
+## B7773. Six more gates match a batch create back to its data by name (2026-11-23)
+Gates. The same order fault as B7734 and B7771 sat in six more gates, each taking two or more documents from one batch create by place: gatearms (the revolver and its cartridges, step 7; gatearms has an open flake, issue 2155), gatecarrynpc and gatecarryaftercare (the home and watch-house regions; gatecarrynpc step 9 is flaky alone), gatecyber (two optics), gategadgets (seeds, match, candle, watch) and gatecook (crowbar and saw). Each now makes them through a small madeInOrder helper that matches the results back to the data by name with the kit's inOrder. Batch creates of tokens and sounds, which have no names, are left as they are. The pass conditions are unchanged. Not yet run in Foundry.
+
+Reverse: replace `madeInOrder(X, type, data)` with `X.createEmbeddedDocuments(type, data)` in those six gates and drop the helper and the inOrder import.
