@@ -32,8 +32,8 @@ export const MENUS = {
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
             ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:conditioning", "Dominate Conditioning", "fa-user-lock"], ["api:setRoad", "Road and Path", "fa-road"], ["api:roadFaith", "The Road: rank, Mentor, Moments of Truth", "fa-route"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"], ["api:malkRite", "Rite of the Orders (Malkavian)", "fa-eye"], ["api:glyconCheck", "Power within reach (Warrior of Glycon)", "fa-crown"], ["api:exorcise", "Exorcism (rite)", "fa-cross"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"], ["api:diablerieMarks", "Marks of diablerie", "fa-eye"]]],
-            ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
-            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:bloodHunt", "Blood Hunt", "fa-crosshairs"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"], ["api:sampleDemon", "A demon (V20 Dark Ages)", "fa-dragon"], ["api:sampleGhost", "A ghost (V20 Dark Ages)", "fa-ghost"], ["api:sampleSwarm", "A swarm of animals (GM)", "fa-bug"], ["api:spiderOn", "A spider on someone (GM)", "fa-spider"]]],
+            ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"], ["api:domainDA", "Domain and manor", "fa-chess-rook"]]],
+            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:bloodHunt", "Blood Hunt", "fa-crosshairs"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"], ["api:sampleDemon", "A demon (V20 Dark Ages)", "fa-dragon"], ["api:sampleGhost", "A ghost (V20 Dark Ages)", "fa-ghost"], ["api:sampleSwarm", "A swarm of animals (GM)", "fa-bug"], ["api:spiderOn", "A spider on someone (GM)", "fa-spider"], ["api:fealty", "Fealty (GM)", "fa-crown"], ["api:domainEvent", "Domain event (GM)", "fa-cloud-showers-heavy"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], ["api:newNight", "New night (GM)", "fa-moon"], WILL]]
         ]
     },
@@ -225,25 +225,29 @@ export const SHARED_TOOLS = {
     newNight: ["api:newNight", "New night (GM)", "fa-moon"],
     endStory: ["api:endStory", "End of story (GM)", "fa-book"],
     witnesses: ["api:masquerade", "Witnesses (GM)", "fa-mask"],
-    sky: ["api:skyAndSun", "Sky and sun (GM)", "fa-cloud-sun"]
+    sky: ["api:skyAndSun", "Sky and sun (GM)", "fa-cloud-sun"],
+    // B7679-B7684: a manor and its lands, its events and the oaths of fealty (V20 Dark Ages Companion chapter 7)
+    domain: ["api:domainDA", "Domain and manor", "fa-chess-rook"],
+    fealty: ["api:fealty", "Fealty (GM)", "fa-crown"],
+    domainEvent: ["api:domainEvent", "Domain event (GM)", "fa-cloud-showers-heavy"]
 };
 /** Which shared tools each line gets: the living and the bodied get all; spirits, beasts and ghosts get what fits. */
 export const SHARED_FOR = {
-    ghoul: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    mortal: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    hunter: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    lupine: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
-    mage: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
-    mageDA: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
-    fae: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    faeDA: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    ghoul: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mortal: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    hunter: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    lupine: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mage: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mageDA: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    fae: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    faeDA: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
     wraith: ["downtime", "newNight", "endStory", "witnesses", "sky"],
     ghostDA: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    demon: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    kote: ["downtime", "newNight", "endStory", "witnesses", "sky"],
-    mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
-    exalted: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    demon: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    kote: ["downtime", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
+    exalted: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky", "domain", "fealty", "domainEvent"],
     spirit: ["newNight", "endStory", "witnesses", "sky"],
     beast: ["newNight", "endStory", "witnesses", "sky"]
 };

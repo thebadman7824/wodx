@@ -9,6 +9,8 @@
  * The numbers ride in the effect's WoDX Chronicle timed data (effects.js timedData), so an old effect without them
  * counts nothing, as before.
  */
+import * as DOM from "./domain-da-rules.js";
+
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 /** B6850: a Blessing or Curse key, the plain one or a standing scoped one ("wodx-effect-fortune:<name>:<tags>"). */
 const isFortune = k => k === "wodx-effect-fortune" || String(k ?? "").startsWith("wodx-effect-fortune:");
@@ -192,7 +194,19 @@ export function effectsOf(actor) {
     const t = e.flags?.["wodx-chronicle"]?.timed ?? null;
     return {id: e.id, name: e.name ?? "", key: t?.key ?? null, data: t?.data ?? null, disabled: !!e.disabled};
   });
-  return [...out, ...standingOf(actor?.items ?? [])];
+  return [...out, ...standingOf(actor?.items ?? []), ...domainOf(actor)];
+}
+
+/** B7684: the holder's domain, as standing shifts on Commerce, Seneschal and Leadership, and Stealth in the manor. */
+function domainOf(actor) {
+  const d = actor?.flags?.["wodx-actions"]?.domainDA;
+  if ( !d ) return [];
+  const onManor = !!d.manorScene && globalThis.canvas?.scene?.id === d.manorScene;
+  // the Servants are the sheet's Background; an event that still runs moves the manor's aspects (B7682)
+  const sv = [...(actor?.items ?? [])].find(i => i?.type === "Feature" && /^servants/i.test(String(i.name ?? "").trim()) && String(i.system?.type ?? "").includes("background"));
+  const now = Number(globalThis.game?.time?.worldTime) || 0;
+  const aspects = DOM.withEvents(DOM.normAspects(d.aspects), (d.events ?? []).filter(e => DOM.ASPECT_KEYS.includes(e.bg)), now);
+  return DOM.standingShifts({...d, aspects}, {onManor, servants: n(sv?.system?.value)}).map(x => ({id: null, name: x.name, key: `${KEYS.fortune}:domain-${x.tags[0]}`, data: {shift: x.shift, once: false, tags: x.tags}, disabled: false}));
 }
 
 /** B7672: what a spirit's always-on Charm stands for in these terms: Immunity to Fire is no harm from fire (V20 Dark Ages p. 402). */

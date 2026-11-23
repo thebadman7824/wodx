@@ -38,8 +38,8 @@ export const MENU_PLAN = {
     kindred: {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
-        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith"],
-        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn"],
+        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA"],
+        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     wraith: {
@@ -65,8 +65,8 @@ export const MENU_PLAN = {
     mortal: {
         act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk", "api:exorcise"],
         resist: ["api:hazard"],
-        recover: ["api:healing", "uses:willpower"],
-        st: ["api:imbue", "api:holyArtifact"],
+        recover: ["api:healing", "uses:willpower", "api:domainDA"],
+        st: ["api:imbue", "api:holyArtifact", "api:fealty", "api:domainEvent"],
         scene: ["api:endScene", "api:voices", "rules:mortal"]
     },
     lupine: {
@@ -166,6 +166,9 @@ export const DESC = {
     "api:roadFaith": "The Road as a faith: rank, Mentor, Moments of Truth, standing, and leaving for another Road",
     "api:exorcise": "Exorcism, a rite anyone can learn: Intelligence + Occult tears Essence from a demon or spirit until it is driven off (V20 Dark Ages)",
     "api:sampleDemon": "Make one of the sample demons of V20 Dark Ages with its traits and Charms",
+    "api:domainDA": "The manor and its lands: the Domain's aspects, the people, settlements, Servants and staff (V20 Dark Ages Companion)",
+    "api:domainEvent": "Bring a domain event for a season: famine, invasion, pilgrims, an itinerant court...",
+    "api:fealty": "Swear, cut off or break an oath of fealty: the Anchor's dots pool with the vassal's own",
     "api:holyArtifact": "Give the chosen sheet a Holy Artifact: its True Faith adds to theirs, to ten at most",
     "api:malkRite": "A Malkavian Order's rite for the night: Enigmas (study, madness set aside) or Ecstasy (pain and passion, sharper sight)",
     "api:glyconCheck": "A Warrior of Glycon offered power or a convert: Willpower at 6, or chase it above all else",
