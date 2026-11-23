@@ -454,7 +454,7 @@ Next free block: B7730
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
 | B7630-B7649 | Dark Ages depth desk: a Road's walkers in a town (used B7630-B7649) | NPC, Actions |
 | B7650-B7659 | gate7b pins the turn conductor; derange and powder name what changed (used B7651-B7656) | tools (gates) |
-| B7660-B7709 | V20 Dark Ages full check: gaps from the rule-by-rule pass (used B7660-B7684) | Creation, Chronicle, Actions, NPC, Combat |
+| B7660-B7709 | V20 Dark Ages full check: gaps from the rule-by-rule pass (used B7660-B7703) | Creation, Chronicle, Actions, NPC, Combat |
 | B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
 <!-- decision-index:end -->
 
@@ -15520,6 +15520,98 @@ Reverse: remove maturationCost.
 WoDX Actions (power-mods.js domainOf), WoDX Chronicle (trait-rules.mjs roll tags commerce and seneschal). pp. 109, 112: Prosperity takes its dots off the difficulty of the holder's Commerce rolls; Servants take theirs off Seneschal and Leadership rolls; Secret Ways take theirs off Stealth rolls in the scene marked as the manor. An event that moves an aspect moves the shift with it.
 
 Reverse: remove domainOf from effectsOf and the two roll tags.
+
+## B7685. Maturation points for the years (2026-11-23)
+WoDX Creation (maturation-rules.mjs, maturation.mjs, advance-rules.mjs, advance.mjs), WoDX Chronicle (house rule yearsMaturation, on). Dark Ages: Vampire (2002) pp. 166-167 and the Dark Ages Storytellers Companion (2002) pp. 71-72: Pass the Years gives a Dark Ages Cainite maturation points by the years (a point a year for 5, a point each 5 to 30, each 10 to 130, then each 20 and 25 and 30) and by how they were spent (active, in danger at half again, seclusion at half, research and practice with a point a decade for Knowledges or physical traits, torpor only with Willpower 7, Perception 4 and 500 years). For that character it stands in for the house experience for the years and the Background fade. Off, the house experience comes back.
+
+Reverse: switch yearsMaturation off, or remove adv.maturation from propose.
+
+## B7686. The Willpower roll each century (2026-11-23)
+WoDX Creation (maturation-rules.mjs risksAndRewards). DASC p. 72: each century (or the downtime when shorter) rolls Willpower at the activity's difficulty; successes add points, a botch costs a die of points (never in seclusion), and in danger no success costs a die too. Ordinary, research and practice years keep at least a point a century.
+
+Reverse: drop the roll from mature().
+
+## B7687. Background upkeep and Tempting Fate (2026-11-23)
+WoDX Creation (maturation-rules.mjs payUpkeep, temptingFate). DASC p. 73: each Background but Generation costs a point a century (two in seclusion, research or torpor), the highest rated paid first; one left unpaid loses a dot. A pooled anchor rated 6 or more costs double (p. 74). In danger each Background rolls Willpower at 7: a botch loses a dot, a failure bars raising it, a success lets it be raised at +1 difficulty.
+
+Reverse: drop upkeep and Tempting Fate from mature().
+
+## B7688. Spending maturation points (2026-11-23)
+WoDX Creation (maturation-rules.mjs costOf, mayBuy; maturation.mjs MaturationApp), WoDX Actions (Kindred menu "Maturation"). DAV p. 166, DASC p. 73: points buy only traits already held, a dot a trait a century at most. Attributes 5 (10 once the Cainite's age passes Willpower times 100), Abilities 2, Disciplines 3 plus a point each two centuries past the second and 1 more out of clan (a sorcerer's dot also raises a path), Virtues 2, Road 1 below Willpower else 2, Willpower 2. Points from research and practice pay only for their kind; torpor's pay mental traits at three quarters.
+
+Reverse: remove the window and the menu entry; the points stay on the sheet's flag.
+
+## B7689. Raising Backgrounds in downtime (2026-11-23)
+WoDX Creation (maturation-rules.mjs raiseBackground). DASC pp. 74-75: a Background already held may be raised with a roll of its rating at the book's difficulty (Allies 7, Contacts 6, Domain 7, Herd 6, Influence 8, Mentor 7, Resources 8, Retainers 6, Status 8), +1 for each attempt after the first, +1 after Tempting Fate, +1 for a big pooled anchor; one success adds a dot and more add more; a botch loses a dot. Generation and new Backgrounds are refused; none can be raised after seclusion, research or torpor.
+
+Reverse: remove the Background rows from the window.
+
+## B7690. The Road of Night (2026-11-23)
+WoDX Actions (roads-daw.json night, kindred-rules.js roadFor), WoDX NPC (road-flock-rules.mjs night), WoDX Creation (ROAD_TO_PATH night). Dark Ages Storytellers Companion (2002) pp. 28-30: Via Noctis, the Redeemers, with its aura (Guilt, on rolls to draw out secrets or stir remorse), Virtues (Conviction and Self-Control), ten sins in WoDX's own words, its parish led by the Father or Mother above, and the Path of Heavenly Abode, which walks the Road's hierarchy. Leaving the Dark Ages it becomes the Path of Night. No sin from play: its killing sin turns on a confession play does not record. Road names now match exactly, a path's and then a Road's, before any partial match, so the Road of Heaven is not read as the Path of Heavenly Abode.
+
+Reverse: remove the night entries.
+
+## B7691. Elder Cainites at creation (2026-11-23)
+WoDX Creation (creation-totals.mjs daelder, derived-rules.mjs). Dark Ages Storytellers Companion (2002) printed p. 76, on Dark Ages: Vampire (2002)'s steps and bonus point costs: Attributes 10/7/5, Abilities 20/12/8, 10 Disciplines (half at least of the clan), 15 Backgrounds, 7 Virtues, 30 bonus points; the Road less 2 for the years (1 more each 150 years active past 300, for 15 more bonus points each), blood pool two dice, Generation from ninth. The line is a choice in the creation wizard.
+
+Reverse: remove the daelder line.
+
+## B7692. The Sleep of Ages (2026-11-23)
+WoDX Creation (maturation-rules.mjs sleepOfAges, maturation.mjs). Dark Ages Storytellers Companion (2002) pp. 75-76: a Cainite past 500 years who spends a downtime awake rolls the Road at 8 for a point of Willpower; each success holds off torpor a decade more, a failure means voluntary torpor, a botch torpor and a Derangement. The card says which and the Maturation window shows it; the Storyteller puts the character to sleep. Also from p. 75's example: one Background roll each 50 years of the downtime carries no penalty, the +1 starting after those.
+
+Reverse: drop the roll from mature().
+
+## B7693. The Thirst of Caine (2026-11-23)
+WoDX Creation (maturation-rules.mjs thirstTriggers, thirstRoll), WoDX Chronicle (house rule yearsThirstOfCaine, off). DASC pp. 76-77, the book's systematic option: once a downtime of a century or more, Willpower at the number of triggers (2 at least); the sheet supplies Road 3 or less, the Road of the Beast, Metamorphosis or Blood, 500 years active and a Nature outside Architect, Caregiver, Cavalier and Martyr; the Storyteller adds the rest in the flag thirstTriggers. A failure leaves them craving Cainite vitae, a second failure or any botch needing it.
+
+Reverse: switch yearsThirstOfCaine off.
+
+## B7694. The Dark Ages Companion's maneuvers (2026-11-23)
+WoDX Combat (rules.js DA2002, da2002Why, da2002After, chokeTurn; main.js setting companion2002Maneuvers, on). Dark Ages Companion (2002) pp. 34-36, optional rules there: Choke Hold (difficulty 7, held by the throat, a health level a turn after the first that cannot be soaked, death after Stamina turns at Incapacitated, broken by a resisted Strength roll; Cainites only silenced), Gobbet Rend (8, Potence 2 or claws; damage not all soaked tears away a blood point), Joint Break (8, Strength + 2, Brawl 4 and Strength 2; any damage breaks the limb), Neck Snap (9, Strength + 3, two actions, Brawl 2 and Strength 2; the victim soaks with Strength too; any level through kills a mortal, paralyses a Cainite until healed, drops a fast healer to Incapacitated) and Tendon Slice (blades with Melee 4 and Dexterity 2, or fangs and claws with Brawl 4; two levels cut a wrist or an ankle). A player is stopped short of a prerequisite; the Storyteller is told. The harm suggestions leave these out.
+
+Reverse: switch companion2002Maneuvers off.
+
+## B7695. The Storytellers Companion's supporting characters (2026-11-23)
+WoDX Creation (data/dasc-templates.mjs, supporting-cast-rules.mjs, supporting-cast.mjs; a "Supporting characters" button on the Creation panel). Dark Ages Storytellers Companion (2002) chapter 4, pdf pp. 58-61 (printed pp. 57-60): the twenty templates (seven everyday mortals, six notable mortals, two ghouls, five Cainites) with the book's numbers, and the table of experienced and exceptional versions (dots added to Attributes, Abilities, Backgrounds and Disciplines; Cainites at the 10th or 8th Generation; a ghoul's Disciplines in Potence, a Cainite's in clan Disciplines). The book leaves the placing of the added dots to the Storyteller; WoDX adds one dot a pass to each trait the template already has, highest first, up to 5. The 2002 Abilities are read for V20 Dark Ages: Dodge as Athletics, Larceny as Legerdemain, Herbalism as Medicine; Linguistics stays as a Secondary Knowledge. The Road is the two moral Virtues added; a Cainite rolls one die of blood. Four book names become gender-neutral on the sheet (Craftsperson, Levy Archer, Wise One, Mercenary Foot Soldier), with the book's name in the notes.
+
+Reverse: remove the button and the three files.
+
+## B7696. Demonic pacts, infernal investments and the Supplicium (2026-11-23)
+WoDX Actions (infernal-rules.js, infernal.js; "Infernal pacts" for the Storyteller and "Breathe flame" in the Kindred menus), WoDX Combat (body-rules.js infernalClaws, infernalBarbs, infernalLimb), WoDX Creation (change-of-state.mjs giveVitae). Dark Ages Companion (2002) ch. 7, pp. 165-166 and 175-177, checked against the page images. A pact is rated 1 (Malice) to 10 (Soul Pact) by the service; its rating is points spent on investments: Armor 1 (a soak die against bashing and lethal each time, a point of Appearance every third), Claws 1 (+1 retractable), Flame 3 (three aggravated levels, dodged against Dexterity + Occult, +1 level for 2 more points), Flight 3 (wings, +1 barbed), Limbs 2, Poison 1 (+1 sacs); Attributes at the new level + 2, Abilities + 1, Disciplines + 3, one level a pact; a single power at its level + 1; Dark Thaumaturgy at the new level; a year of life a point; a possessed servant 1, a bound demon 2. Each pact, each purchase and each new level of Dark Thaumaturgy whispers a Supplicium card: the demon prevailing takes a Road point with no remorse roll, at 0 the character walks the Via Diabolis at 1 (WoDX: Road of Sin, Path of the Devil); on it a fall to 0 calls the last Supplicium (lost: the soul is taken and the demon has the body; won: back to 1). Whoever drinks the infernalist's poisoned blood soaks five levels for each point. Everything is kept in the flag wodx-actions.infernal.
+
+Reverse: remove the two menu entries, the three body features and the poison check.
+
+## B7697. Dark Thaumaturgy, Maleficia and Striga (2026-11-23)
+WoDX Actions (data/disciplines-daw.json, path-effects.js, book-rituals.js, kindred-rules.js darkBotchCost and darkNotes, kindred.js, infernal-rules.js DARK_PATHS and DARK_DISCIPLINES, infernal.js). Dark Ages Companion (2002) pp. 105-111, checked against the page images. The first full check named only the paths; the pages hold four paths (Rego Venalis, Video Nefas, Rego Dolor, Rego Manes), eleven rituals and two Disciplines (Maleficia, Striga). Each of the 30 powers is a library row with book "DAC 2002", its printed page, the roll the book names and a short summary in WoDX's words, and an effect spec on the effects card cited to the Companion. Path powers take one blood and a Willpower roll at level + 3; a botch takes a permanent Willpower point off the sheet (p. 105). Rego Manes is five rows, one for each rank of demon it calls; summonings, the shadow servant and Barrenness stay the Storyteller's. The rituals join the Dark Ages ritual set with a book of their own, which the ritual cards cite. The Infernal pacts window offers the four paths and the two Disciplines by name.
+
+Reverse: remove the 30 rows and rules.dark, the 30 effect specs, the 11 rituals, the two helpers and the two option lists.
+
+## B7698. The Dark Ages Companion's demons (2026-11-23)
+WoDX Creation (data/dac-demons.mjs, dac-demons-rules.mjs, dac-demons.mjs; "Demons" in the Storyteller's creation window; API dacDemons). Dark Ages Companion (2002) ch. 7, printed pp. 180-185, checked against the page images. Ten stat blocks: Kaiser, the Huntsman, Spite, the Star Daemon, Belteroth, the Black Monk, Jenny Green Teeth, Gergimoth, the Familiar and the Custodes. Each is made as a Creature with blood and Disciplines (as WoDX makes a vozhd), its Dark Thaumaturgy and Thaumaturgy paths as path items, the 2002 Abilities read in V20 Dark Ages terms (Dodge is Athletics, Larceny is Legerdemain, Acting and Music are Performance), and the book's health levels on the sheet's seven slots with the book's penalties. The attack, the page and WoDX's own description go in the notes. The 2002 path names are read as V20 Dark Ages names them (Rego Elementum is Potestas Elementorum, Rego Motus is Potestas Motus, Cre Ignem is Creatio Ignis, Rego Tempestas is Potestas Tempestatum); Rego Terram keeps its name.
+
+Reverse: remove the three files, the window button and the API entry.
+
+## B7699. The Dark Ages Companion's elder powers (2026-11-23)
+WoDX Actions (data/disciplines-daw.json, power-keywords.js). Dark Ages Companion (2002) ch. 4, printed pp. 78-104, read from the page images. 53 elder powers that V20 Dark Ages does not hold, across Animalism, Auspex, Celerity, Chimerstry, Daimoinon, Dementation, Dominate, Fortitude, Mortis, Obfuscate, Obtenebration, Potence, Presence, Protean, Quietus, Serpentis, Vicissitude, Abombwe, Ogham and Valeren. Each is a library row with elder true, book "DAC 2002", its printed page, the roll the book names where it names one, and a short summary in WoDX's words; each has effect keywords. Celerity, Fortitude and Potence alternates say they are taken instead of the next dot (pp. 79, 83, 88). Left out as the same power under V20 Dark Ages: Diabolic Lure and Infernal Servitor (Lure Diabolik, Demonic Servitor), Prison of the Mind, Blood Awakening, the 2002 Abombwe, Ogham and Valeren levels 1-5, Safe Passage, Aversion and Purification. Deimos (pp. 100-101) is left out: V20 Dark Ages gives the Lamia the Path of the Twilight Garden, which holds the same powers. Obtenebration 8 is named "Night Shades (servants)" so it is not mistaken for V20 Dark Ages' Obtenebration 4.
+
+Reverse: remove the 53 rows and their keywords.
+
+## B7700. The Dark Ages Companion's Thaumaturgy paths (2026-11-23)
+WoDX Actions (data/disciplines-daw.json, path-effects.js). Dark Ages Companion (2002) pp. 92-96: Thaumaturgical Alchemy, the Way of the Levinbolt, Prey on the Soul's Fear and the Path of Warding, five levels each. They use the book's path system: one blood and a Willpower roll at level + 3 (Glyph of Enlightenment at 7 and Secure the Sacred Domain at 8, as their pages say). Each row carries book "DAC 2002", and its effect spec cites "Dark Ages Companion (2002)". The Levinbolt's strikes are dice the target may dodge, so their harm waits for the Storyteller.
+
+Reverse: remove the 20 rows and the 20 effect specs.
+
+## B7701. The V20 Dark Ages Companion's Roads and Paths (2026-11-23)
+WoDX Actions (data/roads-daw.json, kindred.js). V20 Dark Ages Companion pp. 20, 70 and 83-84, read from the book text. The Path of the Pure (the Katharoi's Path of the Road of Heaven, p. 20: its own ten sins, the Road's aura, Virtues and ethics), the Path of the Archangel (a Path of the Road of Heaven with an aura of Melancholia, p. 70), and the Road of Zarathustra as the book's two Roads (pp. 83-84): the Road of Angra Mainyu (the Path of Apep's chart with three rungs replaced, Conviction and Self-Control, an aura of Corruption) and the Road of Ahura Mazda (the Road of Humanity's chart with three sins added, Conviction and Self-Control, an aura of Goodness). The Road window now shows a Path's own aura and book where it has one. The Guides of Frashokereti's extra sin (a sidebar on p. 85) is left out: it is one cult's variant, not a Road.
+Reverse: remove the four entries and the two lines in kindred.js.
+
+## B7702. The V20 Dark Ages Companion's monsters (2026-11-23)
+WoDX Creation (data/v20dac-monsters.mjs, dac-demons-rules.mjs, dac-demons.mjs, main.mjs). V20 Dark Ages Companion pp. 35, 48, 66 and 97, from the book text: the Black Dog, the Fossegrim, the Kallikantzaros and the Pishacha, made from the Demons window into a folder of their own. The book gives them no health levels and no attack, so they keep the sheet's seven levels and fight with Brawl; Equivalent Disciplines are made as Disciplines, and the limits on them (only some powers, only on holy days) are in the notes with each one's Road rating and rules.
+Reverse: remove the data file, the ALL list and the monster lines in the plan and the window.
+
+## B7703. The Zoroastrian rituals (2026-11-23)
+WoDX Actions (book-rituals.js). V20 Dark Ages Companion pp. 85-86: Guardian's Gaze, Vengeance of Angra Mainyu, Tower of Silence, Yasna's Protection and Padyab, in the Cast a ritual window as a group of their own, in WoDX's words.
+Reverse: remove the five rows.
 
 ## B7720. The New PC runs lane 10 with its own runner (2026-11-23)
 The New PC (NEW_PC_LEBRUN, an HP OMEN 35L with 12 cores, 64 GB and an RTX 5080) gets lane 10 on port 30100 under

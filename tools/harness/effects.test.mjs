@@ -206,13 +206,13 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   const PE = await import(join(root, "modules/wodx-actions/scripts/path-effects.js"));
   const disc = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8")).powers;
   const paths = disc.filter(p => PE.isPath(p.d));
-  assert.equal(paths.length, 95); // B7662: four lesser paths and Genius Loci
+  assert.equal(paths.length, 115); // B7662: four lesser paths and Genius Loci; B7700: four Companion paths
   // B6855: a few Dark Ages Discipline powers outside the paths take a spec here too
   for ( const id of Object.keys(PE.PATH_EFFECTS) ) assert.ok(disc.some(p => p.id === id), `no power ${id}`);
   for ( const p of paths ) {
     const o = PE.pathOutcomes(p, 2);
     assert.ok(o.length >= 1, p.id);
-    for ( const x of o ) assert.match(x.out.source, /V20 Dark Ages p\. \d+/);
+    for ( const x of o ) assert.match(x.out.source, /(V20 Dark Ages|Dark Ages Companion \(2002\)) p\. \d+/);
   }
   assert.deepEqual(PE.pathOutcomes(paths[0], 0), []);
   assert.equal(PE.isPath("Quietus"), false);
@@ -225,8 +225,8 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.deepEqual(PE.numinaOutcomes("telekinesis", 2, 4, H.NUMINA.telekinesis).map(o => [o.out.levels, o.out.type, o.ask]), [[2, "bashing", true]]);
   assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
   assert.deepEqual(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses).map(o => [o.out.shift, o.out.duration]), [[2, "one scene"]]); // B6858: a standing curse
-  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 98); // B6855: three Discipline powers outside the paths; B7662: 25 lesser-path and Genius Loci rows
-  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 11); // B6738, B6855: the rest now apply or are story (PATH_STORY)
+  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 148); // B7700: 20 rows of the Companion's four Thaumaturgy paths; B7697: 30 Dark Ages Companion rows (Dark Thaumaturgy, Maleficia, Striga); // B6855: three Discipline powers outside the paths; B7662: 25 lesser-path and Genius Loci rows
+  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 24); // B7700: the five Levinbolt strikes wait for the Storyteller; B7697: eight Companion summonings and Barrenness are the Storyteller's; B6738, B6855: the rest now apply or are story (PATH_STORY)
   const by = id => paths.find(p => p.id.endsWith(id));
   assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3).map(o => o.out.pool), ["blood", "blood"]); // B6855
   assert.deepEqual(PE.pathOutcomes(by("dust-to-dust"), 3).map(o => [o.out.levels, o.out.type, o.out.soak]), [[3, "aggravated", false]]);

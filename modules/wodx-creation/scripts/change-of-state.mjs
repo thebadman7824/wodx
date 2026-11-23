@@ -232,6 +232,14 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
   if ( lineOf(drinker) === "ghoul" && lineage(drinker).domitor?.id === regnant.id ) {
     try { await game.modules.get("wodx-chronicle")?.api?.signatures?.ghoulFed?.(drinker); } catch (e) { console.warn(`${MODULE_ID} |`, e); }
   }
+  // B7696: an infernalist's poisoned blood (Dark Ages Companion 2002 p. 177): five soakable levels for each point drunk
+  if ( Number(regnant.flags?.["wodx-actions"]?.infernal?.owned?.poison) > 0 ) {
+    notes.push(`the blood is poisoned: five levels to soak for each of the ${points} point${points === 1 ? "" : "s"} (DAC 2002 p. 177)`);
+    const C = game.wodxCombat;
+    if ( C?.soakAndApply ) for ( let i = 0; i < Math.max(1, Number(points) || 1); i++ ) {
+      try { await C.soakAndApply(drinker, {amount: 5, type: "lethal", soak: true, mode: "levels"}); } catch (e) { console.warn(`${MODULE_ID} |`, e); }
+    }
+  }
   notes.push(oath ? `already sworn to ${oath[1].name}, so no new bond forms` : (sameNight ? `${stage.label} (a second drink the same night does not deepen the bond)` : stage.label));
 
   await ChatMessage.create({

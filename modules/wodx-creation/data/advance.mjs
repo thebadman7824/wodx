@@ -11,7 +11,9 @@ export const SWITCHES = {
   decline: "yearsMortalDecline",
   drift: "yearsMoralityDrift",
   xp: "yearsExperience",
-  convert: "yearsConvertAbilities"
+  convert: "yearsConvertAbilities",
+  maturation: "yearsMaturation",
+  thirst: "yearsThirstOfCaine"
 };
 
 /** Mortal decline: at these ages a Physical dot is lost; the player picks which (house rule). */
@@ -72,6 +74,7 @@ export const ROAD_TO_PATH = {
   abyss: {to: "night"},
   blood: {to: "blood", note: "The Road of Blood is the Assamite Path of Blood's forebear"},
   samiel: {to: "humanity", or: ["accord"], note: "V20 has no Code of Samiel; the Storyteller picks"},
+  night: {to: "night", note: "The Road of Night is the forebear of the Path of Night"},
   yasa: {to: "humanity", or: ["accord"], note: "No V20 Path matches; the Storyteller picks"}
 };
 

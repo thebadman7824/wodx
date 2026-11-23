@@ -2203,6 +2203,141 @@ export const SPECS = {
   },
   "page": "W20 p. 212",
   "note": "Checked: the spirit cannot escape its caller and must attend, but nothing binds it to obey. Success count sets only its attitude."
+ },
+ "vampire-dark-ages|unleash-the-dark-soul": {
+  "what": "shade",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "night"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 105",
+  "note": "B7697: the slain mortal's shadow serves until dawn: it spies, passes through matter and speaks mind to mind."
+ },
+ "vampire-dark-ages|recall-the-bloody-deed": {
+  "what": "demon",
+  "profile": "wild",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "days", "perSuccess": true},
+  "control": {"mode": "none"},
+  "page": "DAC 2002 p. 106",
+  "note": "B7697: a minor demon in the victim's likeness hunts the killer for a day and a night a success; it heeds no one."
+ },
+ "vampire-dark-ages|call-an-insignificant-demon": {
+  "what": "demon",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 107",
+  "note": "B7697: successes set how far it serves (the Storyteller's call); a failure wastes the night and a botch makes it attack."
+ },
+ "vampire-dark-ages|call-a-least-demon": {
+  "what": "demon",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 107",
+  "note": "B7697: successes set how far it serves (the Storyteller's call); a failure wastes the night and a botch makes it attack."
+ },
+ "vampire-dark-ages|call-a-lesser-demon": {
+  "what": "demon",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 107",
+  "note": "B7697: successes set how far it serves (the Storyteller's call); a failure wastes the night and a botch makes it attack."
+ },
+ "vampire-dark-ages|call-a-minor-demon": {
+  "what": "demon",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 107",
+  "note": "B7697: successes set how far it serves (the Storyteller's call); a failure wastes the night and a botch makes it attack."
+ },
+ "vampire-dark-ages|call-a-specific-demon": {
+  "what": "demon",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "task"},
+  "control": {"mode": "none"},
+  "page": "DAC 2002 p. 107",
+  "note": "B7697: a named demon who wants sacrifices and serves only its own ends; a botch makes it attack."
+ },
+ "vampire-dark-ages|animate-host": {
+  "what": "corpse",
+  "profile": "servant",
+  "count": {"by": "blood-spent"},
+  "lasts": {"kind": "rounds", "perSuccess": true},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 84",
+  "note": "B7699: a corpse a blood point, a turn a success; gone at Incapacitated."
+ },
+ "vampire-dark-ages|death-shroud": {
+  "what": "double",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "hours", "perSuccess": true},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 87",
+  "note": "B7699: the subject's own shadow, an hour a success; if it dies the caster loses half their Willpower."
+ },
+ "vampire-dark-ages|night-shades-servants": {
+  "what": "shade",
+  "profile": "servant",
+  "count": {"by": "willpower-spent", "max": 3},
+  "lasts": {"kind": "night"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 87",
+  "note": "B7699: up to three shadow servants, a Willpower point and five blood points each, until dawn."
+ },
+ "vampire-dark-ages|corrupt-construction": {
+  "what": "construct",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "until-destroyed"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 96",
+  "note": "B7699: one grafted guardian; the book gives an hour to a year by successes, so the Storyteller ends it."
+ },
+ "vampire-dark-ages|inscribe-the-forgotten-names": {
+  "what": "beast",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "none"},
+  "page": "DAC 2002 p. 100",
+  "note": "B7699: the ancient beast comes within the scene, unbound, and must be appeased."
+ },
+ "rituals-v20-dark-ages|bind-the-familiar-infernal": {
+  "what": "demon",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "until-destroyed"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 108",
+  "note": "B7697: a minor imp in an animal's body serves faithfully as a familiar."
+ },
+ "rituals-v20-dark-ages|blood-imp": {
+  "what": "construct",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "night"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 108",
+  "note": "B7697: a homunculus of the caster's blood for one night; it carries and spies but does not fight."
+ },
+ "rituals-v20-dark-ages|vile-swarm": {
+  "what": "swarm",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "upkeep"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "page": "DAC 2002 p. 109",
+  "note": "B7697: kept hidden while the caster concentrates, a Willpower point an hour; only fire or great destruction stops it."
  }
 };
 

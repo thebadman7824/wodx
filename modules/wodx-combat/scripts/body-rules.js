@@ -126,6 +126,10 @@ export const FEATURES = {
   tail:     {label: "A tail", adds: [["tail", "tail", "m"]], ref: "Fleshcraft"},
   fangs:    {label: "Fangs", adds: [], weapons: {bite: {type: "lethal", bonus: 1}}, ref: "Fleshcraft"},
   looks:    {label: "Changed looks", adds: [], ref: "Fleshcraft (V20)"},
+  // B7696: infernal investments (Dark Ages Companion 2002 p. 177), written by WoDX Actions' Infernal pacts window
+  infernalClaws: {label: "Infernal claws", adds: [], weapons: {claw: {type: "lethal", bonus: 2}}, ref: "Infernal investment, DAC 2002 p. 177", note: "Strength + 2"},
+  infernalBarbs: {label: "Barbed wings", adds: [], weapons: {claw: {type: "lethal", bonus: 2}}, ref: "Infernal investment, DAC 2002 p. 177", note: "The wings strike as claws, Strength + 2"},
+  infernalLimb: {label: "An infernal limb", adds: [], ref: "Infernal investment, DAC 2002 p. 177", note: "One more attack each turn without splitting the pool; each extra attack is at +1 difficulty"},
   prosthetic: {label: "A false limb", adds: [], note: "Takes the place of a lost part: a wooden leg or hook hand in the early eras, a modern limb, a cybernetic one in the World of Future Darkness"},
   lost:     {label: "A lost part", adds: [], loses: true}
 };

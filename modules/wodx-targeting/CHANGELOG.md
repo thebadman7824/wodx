@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.4.3 (Table tags for the Dark Ages Companion's powers (B7697, B7699, B7700))
 - 0.4.2 (Target tags for the powers of B7662)
 - 0.4.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.4.0 (Automatic for everyone: players get automatic targets too, for the Hands off level)
