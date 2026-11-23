@@ -58,6 +58,15 @@ class Blueprint(unittest.TestCase):
         self.assertTrue(any("true size" in p for p in probs))
         self.assertTrue(any("no lights" in p for p in probs))
 
+    def test_drawer_ground(self):
+        g = B.drawer_ground(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "pixelmap", "maps", "road.py"))
+        kinds = {x["kind"] for x in g}
+        self.assertIn("track", kinds); self.assertIn("brook", kinds)
+        self.assertTrue(all(len(x["path"]) >= 2 and x["width"] > 0 for x in g))
+        bp = {"cells": [10, 10], "slots": [], "doors": [], "walls": [], "lights": [], "eras": [{"era": "dark-ages", "state": "drawn"}],
+              "ground": [{"kind": "lava", "path": [[0, 0]]}]}
+        self.assertEqual(len(B.check(bp)), 2)
+
     def test_plans_pass(self):
         here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "plans")
         for root, _, files in os.walk(here):
