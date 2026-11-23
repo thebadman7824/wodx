@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 1 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | yes | 21 | 0 | 8 |
+| wodx-creation | yes | 21 | 0 | 7 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | yes | 34 | 0 | 20 |
@@ -69,7 +69,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Kuei-jin: Chi, Dharma, the P'o and their Disciplines (`actions.kote`) |  | gated | 1 | gate6j Dharma 3 allows one Chi a turn |
 | The Reborn: Balance, Sekhem and Hekau (`actions.mummy`) |  | gated | 1 | gate6k Forbiddance: Balance against Willpower at 6 |
 | The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging (`actions.wraith`) |  | gated | 1 | gate6c use an Arcanos |
-| Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 1 | gate6b change form |
+| Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 2 | gate6b change form |
 
 ## wodx-chronicle
 
@@ -113,9 +113,9 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | shown | 2 |  |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
-| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 1 | gatewizard 10 derived traits |
+| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 2 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
-| Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | shown | 1 |  |
+| Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
 | Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | shown | 1 |  |
 | The archive of the dead, by hand and by itself as the clock moves on (`creation.archive`) |  | book |  | gatetruthsheets 8. the long dead go to the archive by themselves |
