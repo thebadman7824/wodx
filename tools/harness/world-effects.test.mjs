@@ -31,7 +31,9 @@ test("the powers the words flag but the table leaves out were each read and left
     // B6560: one wounded person fills with sea water
     "Sword of Drowning",
     // B7662: Creatio Ignis 5 is one thrown flame on one target (V20 Dark Ages p. 297)
-    "Inferno"];
+    "Inferno",
+    // B7699: Renew the Earthly Pleasures floods one Cainite with mortal feelings (DAC 2002 p. 89)
+    "Renew the Earthly Pleasures"];
   const unread = [...new Set(sweep.unread.map(h => h.name.replace(/^[•\s]+/, "")))];
   assert.deepEqual(unread.filter(n => !LEFT_OUT.includes(n)), [], "a new power the words flag: read it and add it to WORLD_POWERS or here");
 });

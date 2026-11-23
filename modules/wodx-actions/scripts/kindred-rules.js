@@ -566,6 +566,18 @@ export const golcondaSun = light => { const i = GOLCONDA_SUN_LADDER.indexOf(ligh
  * +1 difficulty on others, unless they hold a piece of the victim (V20 Dark Ages p. 98). clan: the sheet's clan text.
  * Returns {diff, part} (diff 0 and part "" when nothing applies), and asks: whether the "piece" box is worth showing.
  */
+/** B7697: does a botch of this power cost a permanent Willpower point? Dark Thaumaturgy paths (Dark Ages Companion (2002) p. 105). */
+export const darkBotchCost = p => !!p?.dark && /^dark thaumaturgy/i.test(String(p?.d ?? ""));
+
+/** B7697: the notes an infernal power's card carries, from the library's rules.dark (the path rule, Rego Manes, Maleficia). */
+export function darkNotes(p, rules = {}) {
+    if (!p?.dark || !rules) return [];
+    const d = String(p.d ?? "");
+    if (/^dark thaumaturgy/i.test(d)) return [rules.power, /rego manes/i.test(d) ? rules.manes : null].filter(Boolean);
+    if (/^maleficia$/i.test(d)) return [rules.maleficia].filter(Boolean);
+    return [];
+}
+
 export function bloodlinePowerDiff(clan, discipline, { onOther = true, piece = false } = {}) {
     const ramanga = /ramanga/i.test(String(clan ?? ""));
     const asks = ramanga && /presence|obtenebration|aizina/i.test(String(discipline ?? ""));

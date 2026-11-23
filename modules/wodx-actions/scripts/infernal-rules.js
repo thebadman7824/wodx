@@ -135,5 +135,10 @@ export const finalSupplicium = won => won ? { rating: 1, damned: false } : { rat
 /** Is this Road and Path the Via Diabolis as WoDX reads it? road: {key, path} */
 export const onViaDiabolis = road => road?.key === "sin" && /devil/i.test(String(road?.path ?? ""));
 
+/** B7697: the Dark Thaumaturgy paths (DAC 2002 pp. 105-108): the sheet name and the path's plain name. */
+export const DARK_PATHS = [["Rego Venalis", "Path of Corruption"], ["Video Nefas", "Path of Evil Revelations"], ["Rego Dolor", "Path of Pain"], ["Rego Manes", "Path of Spirit"]];
+/** B7697: the infernal Disciplines (pp. 109-111). */
+export const DARK_DISCIPLINES = ["Maleficia", "Striga"];
+
 /** An infernal site's dice (p. 166): a faint one 1, a hideous altar used each midnight 5. */
 export const siteDice = level => Math.min(5, Math.max(0, Math.trunc(Number(level) || 0)));

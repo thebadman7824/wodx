@@ -45,9 +45,13 @@ export function build(ctx) {
             const now = n(v?.value); if (now < 5) o.push([`ab:${k}`, `${game.i18n.localize(v?.label || k)} ${now} → ${now + 1} (${I.costOf.ability(now + 1)})`]);
         }
         for (const d of disciplines(actor)) { const now = n(d.system?.value); if (now < 5) o.push([`disc:${d.name}`, `${d.name} ${now} → ${now + 1} (${I.costOf.discipline(now + 1)})`]); }
+        // B7697: the infernal Disciplines of the Dark Ages Companion (2002) pp. 109-111, when not yet on the sheet
+        for (const d of I.DARK_DISCIPLINES) if (!disciplines(actor).some(x => x.name.toLowerCase() === d.toLowerCase())) o.push([`disc:${d}`, `${d} at 1 (4)`]);
         o.push(["disc:", "A Discipline not on the sheet, at 1 (4): name it below"]);
         for (const p of darkPaths(actor)) { const now = n(p.system?.value); if (now < 5) o.push([`dark:${p.name.replace(/^Dark Thaumaturgy:\s*/i, "")}`, `${p.name} ${now} → ${now + 1} (${now + 1})`]); }
-        o.push(["dark:", "A path of Dark Thaumaturgy at 1 (1): name it below"]);
+        // B7697: the four paths of pp. 105-108 by name, then any other the Storyteller names
+        for (const [k, label] of I.DARK_PATHS) if (!darkPaths(actor).some(x => x.name.toLowerCase() === `dark thaumaturgy: ${k}`.toLowerCase())) o.push([`dark:${k}`, `Dark Thaumaturgy: ${k} (${label}) at 1 (1)`]);
+        o.push(["dark:", "Another path of Dark Thaumaturgy at 1 (1): name it below"]);
         o.push(["power:", "One power of a Discipline (its level + 1): name it and give the level below"]);
         o.push(["life:", "Years of life for a mortal (1 a year): years below"]);
         o.push(["servant:", "A possessed servant (1)"], ["boundDemon:", "A bound demon (2)"]);

@@ -288,10 +288,20 @@ export function build(ctx) {
                 successes = r.botch ? 0 : r.successes;
                 body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
+                // B7697: a botched Dark Thaumaturgy power costs a permanent Willpower point (Dark Ages Companion (2002) p. 105)
+                if (r.botch && K.darkBotchCost(p) && actor.isOwner) {
+                    const wp = n(actor.system?.advantages?.willpower?.permanent);
+                    if (wp > 0) {
+                        await actor.update({ "system.advantages.willpower.permanent": wp - 1, "system.advantages.willpower.temporary": Math.min(n(actor.system?.advantages?.willpower?.temporary), wp - 1) });
+                        body += `<div class="vta-warn">${esc(actor.name)} loses a point of permanent Willpower (${wp} → ${wp - 1}), and something from below may take notice.</div>`;
+                    }
+                }
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // B7662: a lesser path's one rule for all its levels (V20 Dark Ages p. 297)
             if (p.lesser && DATA.disc?.rules?.lesser?.[p.d]) body += `<div class="vta-note wodx-quiet">${esc(DATA.disc.rules.lesser[p.d])}</div>`;
+            // B7697: the Dark Ages Companion's rule for its infernal powers (DAC 2002 pp. 105-109)
+            for (const note of K.darkNotes(p, DATA.disc?.rules?.dark)) body += `<div class="vta-note wodx-quiet">${esc(note)}</div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
             // B6855: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
@@ -449,7 +459,7 @@ export function build(ctx) {
                 body += `<div class="vta-big good">${esc(r.n)}: woken in the Gargoyle's own stone, with no roll. It lasts the scene or until dismissed (V20 Dark Ages p. 309).</div>`;
                 body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
                 let gx = [];
-                if (EF.isOn()) { const pp = EF.ritualPlan(actor, r, 1, `${BR.BOOK_RITUALS[s].book} ${r.page}`, `Rituals (${BR.BOOK_RITUALS[s].book})`); body += pp.html; gx = pp.items.filter(x => x.route !== "off" && x.route !== "st"); }
+                if (EF.isOn()) { const pp = EF.ritualPlan(actor, r, 1, `${BR.ritualBook(s, r)} ${r.page}`, `Rituals (${BR.ritualBook(s, r)})`); body += pp.html; gx = pp.items.filter(x => x.route !== "off" && x.route !== "st"); }
                 return post(actor, `${actor.name}: ${esc(r.n)}`, body, [], gx.length ? { kind: "effects", caster: actor.name, items: gx } : undefined);
             }
             const rr = await rollPool(dice, Math.max(2, Math.min(10, n(fd.diff))));
@@ -459,7 +469,7 @@ export function build(ctx) {
             body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
             let fxItems = [];
             if (got && EF.isOn()) {
-                const pp = EF.ritualPlan(actor, r, got, `${BR.BOOK_RITUALS[s].book} ${r.page}`, `Rituals (${BR.BOOK_RITUALS[s].book})`);
+                const pp = EF.ritualPlan(actor, r, got, `${BR.ritualBook(s, r)} ${r.page}`, `Rituals (${BR.ritualBook(s, r)})`);
                 body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             if (fd.advance) body += await spendTime(actor, 300 * BR.ritualLevel(r), "a ritual");

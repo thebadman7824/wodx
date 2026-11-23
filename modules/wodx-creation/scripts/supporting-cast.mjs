@@ -91,7 +91,7 @@ export async function supportingCastDialog() {
     content: `<p>The supporting-character templates of the ${esc(SHORT)} (pdf pp. 58-61). Pick one or more (Ctrl or Shift) and a version.
       Experienced and exceptional add the book's dots to the traits each template already has; move them on the sheet if you like.</p>
       <div class="form-group"><select name="who" multiple size="14" data-fixed>${groups}</select></div>
-      <div class="form-group"><label>Version</label><select name="tier">${tiers}</select></div>`,
+      <div class="form-group"><label>Version</label><select name="tier" data-fixed>${tiers}</select></div>`,
     ok: {label: "Make", callback: (event, button) => ({keys: [...button.form.elements.who.selectedOptions].map(o => o.value), tier: button.form.elements.tier.value})}});
   const made = [];
   for ( const k of res?.keys ?? [] ) { const a = await makeSupporting(k, res.tier); if ( a ) made.push(a); }
