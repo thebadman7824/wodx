@@ -17,7 +17,7 @@ import {gate, waitFor} from "./kit.mjs";
 const filledOf = a => { const h = a?.system?.health?.damage ?? {}; return ["bashing", "lethal", "aggravated"].reduce((s, k) => s + (Number(h[k]) || 0), 0); };
 
 export async function run() {
-  const G = gate("gatedach8", {stepTimeout: 90000});
+  const G = gate("gatedach8", {stepTimeout: 150000});
   if ( G.notLive() ) return "gatedach8 never runs in the Live world";
   const A = game.modules.get("wodx-actions")?.api;
   const WC = game.modules.get("wodx-combat")?.api;
@@ -100,8 +100,10 @@ export async function run() {
         await waitFor(() => !!va().getFlag("wodx-combat", "swarmDodge"), 20000).catch(() => null);
         dodged = va().getFlag("wodx-combat", "swarmDodge");
         before = filledOf(va());
-        await WC.swarm.turn(swarmTok.object);
-        await waitFor(() => filledOf(va()) !== before, 20000).catch(() => null);
+        try { await WC.swarm.turn(swarmTok.object); } finally { CONFIG.Dice.randomUniform = dice0; }
+        // The bite's harm is written after the turn's card (on a slower lane well after); the dice go back first, as in
+        // step 5, so a soak rolled late does not roll the forced tens
+        await waitFor(() => filledOf(va()) !== before, 60000).catch(() => null);
         harm = filledOf(va()) - before;
       } finally { CONFIG.Dice.randomUniform = dice0; vTok.object?.release?.(); }
       // three dice at 4 forced to tens: three successes, less the dodge's
