@@ -224,7 +224,7 @@ export function build(ctx) {
             root.querySelector(".wodx-disc-attr").style.display = /attr/.test(p.r ?? "") ? "" : "none";
             const costTxt = [c.blood && `${c.blood} blood${c.optional ? " (optional)" : ""}`, c.willpower && `${c.willpower} Willpower`, c.variable && "blood as needed"].filter(Boolean).join(", ") || "none";
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
-            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
+            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}${p.lesser && DATA.disc?.rules?.lesser?.[p.d] ? `<br><i>${esc(DATA.disc.rules.lesser[p.d])}</i>` : ""}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "")
                 + (own ? `<br><i>${esc(tgt.name)} is ${esc(actor.name)}'s own ghoul: one easier${SUBSUME.test(p.n) ? ", and no roll is needed to share its senses" : ""}.</i>` : "")
@@ -279,6 +279,8 @@ export function build(ctx) {
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
+            // B7662: a lesser path's one rule for all its levels (V20 Dark Ages p. 297)
+            if (p.lesser && DATA.disc?.rules?.lesser?.[p.d]) body += `<div class="vta-note wodx-quiet">${esc(DATA.disc.rules.lesser[p.d])}</div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
             // B6855: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
@@ -314,10 +316,49 @@ export function build(ctx) {
                 const sp = await sinPrompt(actor, "mindMortal", `${p.n} on ${tgtNow.name}, a mortal`);
                 if (sp?.html) body += sp.html;
             }
+            // B7663: Auspex can drown the senses or show a glimpse of what is coming (V20 Dark Ages pp. 194-195)
+            if (/^auspex$/i.test(String(p.d ?? "").trim())) body += `<div class="vta-note">${kbtn("overstim", actor, "Overstimulated? Roll Willpower")} ${kbtn("revelation", actor, "Sudden revelation (Storyteller)")}</div>`;
             await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
+    }
+
+    /* ---------------- Auspex: overstimulation and sudden revelations (B7663) ---------------- */
+    function auspexDots(actor) {
+        return sheetDisciplines(actor).filter(s => /^auspex$/i.test(String(s.name ?? "").trim())).reduce((m, s) => Math.max(m, n(s.value)), 0);
+    }
+    async function overstimulate(actor) {
+        const wp = traitValue(actor, "willpower");
+        const content = `<form><p>Something beautiful, horrible or sudden pulls at ${esc(actor.name)}'s heightened senses (V20 Dark Ages p. 195).
+          Willpower ${wp}, difficulty 4 and up by how strong it is.</p>
+          <div class="form-group"><label>How strong (adds to 4)</label><input type="number" name="intensity" value="0" min="0" max="6"/></div></form>`;
+        return dialog(`Overstimulation: ${actor.name}`, content, "Roll", async fd => {
+            const o = K.overstimulation({ willpower: wp, intensity: fd.intensity });
+            const r = await rollPool(wp, o.diff);
+            let body = rollBlock("Willpower", r, [`difficulty ${o.diff}`]);
+            if (r.successes > 0 && !r.botch) body += `<div class="vta-big good">${esc(actor.name)} keeps focus.</div>`;
+            else {
+                body += `<div class="vta-big bad">Overstimulated: -${o.penalty} dice on anything but the stimulus for ${o.turns} turn${o.turns === 1 ? "" : "s"}.</div>`;
+                if (chronicle()?.applyTimed && actor.isOwner) await chronicle().applyTimed(actor, { name: "Overstimulated", img: "icons/svg/daze.svg",
+                    description: `-${o.penalty} dice on actions outside the stimulus (V20 Dark Ages p. 195)`, duration: { kind: "rounds", rounds: o.turns }, source: "V20 Dark Ages p. 195", key: "auspex-overstim" });
+            }
+            return post(actor, `${actor.name}: overstimulation`, body, [r.roll].filter(Boolean));
+        });
+    }
+    async function suddenRevelation(actor) {
+        const dots = auspexDots(actor);
+        const content = `<form><p>Rolled in secret: ${esc(actor.name)}'s Auspex, ${dots} dice (V20 Dark Ages p. 194). 4 is a robber behind the door;
+          9 is a plot that will take decades to unravel. Give what comes as a small sensory detail or a gut feeling.</p>
+          <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="4" max="9"/></div>
+          <div class="form-group"><label>The glimpse (optional, for the Storyteller's note)</label><input type="text" name="what" value=""/></div></form>`;
+        return dialog(`Sudden revelation: ${actor.name}`, content, "Roll", async fd => {
+            const d = K.revelationDiff(fd.diff);
+            const r = await rollPool(dots, d);
+            const got = r.botch ? 0 : r.successes;
+            const body = rollBlock("Auspex", r, [`difficulty ${d}`]) + `<div class="vta-big ${got ? "good" : ""}">${got ? `A glimpse comes${fd.what ? `: ${esc(fd.what)}` : ""}.` : "Nothing comes."}</div>`;
+            return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}: sudden revelation</h3>${body}</div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: [r.roll].filter(Boolean) });
+        });
     }
 
     /* ---------------- Thaumaturgy and Necromancy rituals (B3753) ---------------- */
@@ -332,21 +373,33 @@ export function build(ctx) {
           <div class="wodx-ritual-info wodx-quiet"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" min="2" max="10" value="4"/></div>
           <div class="form-group"><label>Blood to spend</label><input type="number" name="blood" min="0" value="0"/></div>
+          ${/gargoyle/i.test(clanTextOf(actor)) ? `<div class="form-group wodx-garg-rit"><label><input type="checkbox" name="enchanted"/> Enchanted into this Gargoyle: no roll, 1 blood, lasts the scene (V20 Dark Ages p. 309)</label></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (five minutes a level)</label></div></form>`;
         const pick = root => { const [s, i] = String(root.querySelector("[name=rit]")?.value ?? "").split(":"); return { s, r: BR.BOOK_RITUALS[s]?.list?.[n(i)] }; };
         const describe = root => {
             const { s, r } = pick(root); if (!r) return;
             root.querySelector("[name=diff]").value = Math.min(9, BR.ritualLevel(r) + 3);
             const b = /(\d+) blood/.exec(r.takes ?? ""); root.querySelector("[name=blood]").value = b ? b[1] : 0;
-            root.querySelector(".wodx-ritual-info").textContent = `${r.g}, level ${r.lvl}; takes ${r.takes}; on ${r.who}. ${BR.ritualNote(s, r)}`;
+            root.querySelector(".wodx-ritual-info").textContent = `${r.g}, level ${r.lvl}; takes ${r.takes}; on ${r.who}.${r.gargoyle ? " A Gargoyle Ritual." : ""} ${BR.ritualNote(s, r)}`;
+            const g = root.querySelector(".wodx-garg-rit"); if (g) g.style.display = r.gargoyle ? "" : "none";
         };
         return dialog(`Cast a ritual: ${actor.name}`, content, "Cast", async fd => {
             const [s, i] = String(fd.rit ?? "").split(":"); const r = BR.BOOK_RITUALS[s]?.list?.[n(i)];
             if (!r) return null;
-            const spendB = Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
+            // B7662: a Gargoyle Ritual enchanted into a Gargoyle wakes for one blood, with no roll, for the scene (V20 Dark Ages p. 309)
+            const garg = fd.enchanted ? K.gargoyleRitual(clanTextOf(actor), r) : null;
+            if (garg && !garg.ok) return ctx.notify(`${actor.name}: ${garg.why}.`);
+            const spendB = garg ? Math.max(1, n(fd.blood)) : Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
             if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
             let body = "";
             if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
+            if (garg) {
+                body += `<div class="vta-big good">${esc(r.n)}: woken in the Gargoyle's own stone, with no roll. It lasts the scene or until dismissed (V20 Dark Ages p. 309).</div>`;
+                body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
+                let gx = [];
+                if (EF.isOn()) { const pp = EF.ritualPlan(actor, r, 1, `${BR.BOOK_RITUALS[s].book} ${r.page}`, `Rituals (${BR.BOOK_RITUALS[s].book})`); body += pp.html; gx = pp.items.filter(x => x.route !== "off" && x.route !== "st"); }
+                return post(actor, `${actor.name}: ${esc(r.n)}`, body, [], gx.length ? { kind: "effects", caster: actor.name, items: gx } : undefined);
+            }
             const rr = await rollPool(dice, Math.max(2, Math.min(10, n(fd.diff))));
             body += rollBlock("Intelligence + Occult", rr, [`level ${r.lvl}`]);
             const got = rr.botch ? 0 : rr.successes;
@@ -1136,6 +1189,8 @@ export function build(ctx) {
             case "stayAwake": return stayAwake(a);
             case "sun": return api.hazard({ actor: a, kind: "sun" });
             case "riseHeal": return riseHeal(a);
+            case "overstim": return overstimulate(a);
+            case "revelation": if (!game.user.isGM) return ctx.notify("The Storyteller rolls a sudden revelation."); return suddenRevelation(a);
             case "seen": {
                 const [sec, ev, list = ""] = arg.split("|");
                 const ws = []; for (const u of list.split(",").filter(Boolean)) { const d = await fromUuid(u); const x = d?.actor ?? d; if (x) ws.push(x); }

@@ -558,3 +558,27 @@ export function bloodlinePowerDiff(clan, discipline, { onOther = true, piece = f
     if (!asks || !onOther || piece) return { diff: 0, part: "", asks };
     return { diff: 1, part: "Ramanga +1 (no piece of the victim held)", asks };
 }
+
+/**
+ * B7662: a Gargoyle Ritual enchanted into a Gargoyle (V20 Dark Ages p. 309). It needs no roll, costs one blood point to
+ * wake (unless the ritual itself asks more), and lasts the scene or until dismissed. clan: the sheet's clan text.
+ * Returns {ok, why}: why says what stops it.
+ */
+export function gargoyleRitual(clan, ritual) {
+    if (!/gargoyle/i.test(String(clan ?? ""))) return { ok: false, why: "only a Gargoyle carries an enchanted ritual" };
+    if (!ritual?.gargoyle) return { ok: false, why: `${ritual?.n ?? "This ritual"} is not a Gargoyle Ritual` };
+    return { ok: true, why: "" };
+}
+
+/**
+ * B7663: Auspex overstimulation (V20 Dark Ages p. 195). A Willpower roll at 4, raised by how intense the stimulus is;
+ * on a failure the vampire loses two dice on everything else for 10 minus Willpower turns (at least one).
+ */
+export function overstimulation({ willpower = 0, intensity = 0 } = {}) {
+    return { diff: Math.max(4, Math.min(10, 4 + n(intensity))), turns: Math.max(1, 10 - n(willpower)), penalty: 2 };
+}
+/**
+ * B7663: a sudden revelation (V20 Dark Ages p. 194). The Storyteller rolls the Auspex dots in secret; the difficulty runs
+ * from 4 (a robber behind the door) to 9 (a plot years deep). Returns the clamped difficulty.
+ */
+export const revelationDiff = d => Math.max(4, Math.min(9, n(d) || 6));

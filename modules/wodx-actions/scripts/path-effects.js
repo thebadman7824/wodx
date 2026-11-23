@@ -76,7 +76,13 @@ export const PATH_EFFECTS = {
   "valeren-watcher-souls-breath": [P("blood", 1, "self"), H("harm", 1, "lethal")],
   "valeren-warrior-song-of-the-blooded": T("boost", "Song of the Blooded", "scene", "self", {on: "physical", dice: 3}),
   "abyss-mysticism-cry-that-slays-the-light": KW("light", "self", {dark: true}),
-  [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true})
+  [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true}),
+  // B7662: the lesser paths and Genius Loci, from the full check of V20 Dark Ages (pp. 278, 297-299)
+  ...Object.fromEntries([1, 1, 2, 2, 3].map((lv, i) => [`thaumaturgy-creatio-ignis-${i + 1}`, H("harm", lv, "aggravated", {fixed: true, ask: true})])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-iter-pernix-${l}`, N("move")])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-potestas-motus-${l}`, N("move")])),
+  ...Object.fromEntries(["fog", "rain", "wind", "storm", "storm"].map((w, i) => [`thaumaturgy-potestas-tempestatum-${i + 1}`, KW("weather", "self", {weather: w})])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`koldunic-sorcery-genius-loci-${l}`, T("sense", "Genius Loci", "scene", "self")]))
 };
 
 /** Numina, by "numen:level" (The Hunters Hunted II). */
