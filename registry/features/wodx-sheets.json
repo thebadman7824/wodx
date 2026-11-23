@@ -616,6 +616,35 @@
    "prs": [
     830
    ]
+  },
+  {
+   "id": "sheets.standing-strip",
+   "name": "Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab",
+   "module": "wodx-sheets",
+   "core": false,
+   "files": [
+    "modules/wodx-sheets/scripts/standing-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2336,
+     "decisions": "B7754"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:standingStrip"
+    },
+    "shown": {
+     "what": "a read-only strip at the top of the Bio tab; each part opens the Road or the Domain and fealty window in WoDX Actions"
+    }
+   },
+   "open": [
+    "gated: weekly-review-picks-1123.test.mjs checks the lines and the hook; no gate step opens a sheet and finds the strip yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2336
+   ]
   }
  ]
 }

@@ -18,7 +18,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 18 | 0 | 2 |
+| wodx-sheets | yes | 19 | 0 | 3 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -56,6 +56,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Relationships tab: every tie, what it does in play, family news, Followers (`sheets.relationships`) | core | gated | 1 | gatebonds 7. sheet |
 | Bring forward: things on the maps swap for their equal in the card's year (`sheets.bring-forward`) |  | book |  | gatebringforward buttons |
 | History with Undo for this session's edits, and Print (`sheets.history-print`) |  | shown | 1 |  |
+| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | shown | 1 |  |
 | Sheet tools: the title bar's buttons and window controls in one menu (`sheets.sheet-tools`) |  | book |  | gateplayerextras 8. sheet tools |
 | The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | shown | 1 |  |
 
