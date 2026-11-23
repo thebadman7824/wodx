@@ -181,3 +181,5 @@
 {"file":"modules/wodx-creation/scripts/book-people.mjs","verdict":"working","how":"Select marked fixed for the searchable-select test; gate step 5b clicks the swarm card's Dodge button; gatedach8 8/8 on lane 9","hash":"8bd4c77bc65d","at":"2026-11-23T03:08Z"}
 {"file":"tools/gate/gatedach8.mjs","verdict":"working","how":"Select marked fixed for the searchable-select test; gate step 5b clicks the swarm card's Dodge button; gatedach8 8/8 on lane 9","hash":"2cb6dda6abb6","at":"2026-11-23T03:08Z"}
 {"file":"docs/reviews/claude-project-thread-fbvh5w.jsonl","verdict":"working","how":"The review log for this change set","hash":"cdd422c5eca2","at":"2026-11-23T03:09Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Merge with main: kept both sides' new rows, no row lost","hash":"c6ebb5801d0f","at":"2026-11-23T03:09Z"}
+{"file":"docs/reviews/claude-project-thread-fbvh5w.jsonl","verdict":"working","how":"The review log for this change set","hash":"3a40a95c8f51","at":"2026-11-23T03:09Z"}
