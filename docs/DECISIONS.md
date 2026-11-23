@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7660
+Next free block: B7730
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -454,6 +454,7 @@ Next free block: B7660
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
 | B7630-B7649 | Dark Ages depth desk: a Road's walkers in a town (used B7630-B7649) | NPC, Actions |
 | B7650-B7659 | gate7b pins the turn conductor; derange and powder name what changed (used B7651-B7656) | tools (gates) |
+| B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15392,3 +15393,29 @@ Reverse: take went and hospital out of the step 2 detail in tools/gate/gateafter
 Gates. On PR 2283's own run (job 2286) gate7b failed "Auto: the NPC moves round the wall on its turn": the runner (guard template, fears the supernatural) fled at once and had nowhere to run, because the hero the gate picked, the world's first player-owned actor, was a wraith, and wraiths are plainly inhuman to the NPC rules. The step is about the way round the wall, so the gate now picks the first player-owned actor that is not plainly inhuman (no wraith or spirit kind, no obvious power, no obvious flag), and falls back to the first one only when there is none. gate7b1 shares this cast. Not yet run in Foundry.
 
 Reverse: put back `game.actors.find(a => a.hasPlayerOwner && a.type !== "Group")` as the hero in cast() in tools/gate/gate7b.mjs.
+
+## B7720. The New PC runs lane 10 with its own runner (2026-11-23)
+The New PC (NEW_PC_LEBRUN, an HP OMEN 35L with 12 cores, 64 GB and an RTX 5080) gets lane 10 on port 30100 under
+D:\WoDX, set up the same way as lane 8 (B6990): host paths in tools/lanes/lanes.json and runner settings in
+tools/pcq/runner.new_pc_lebrun.json. Port 30100 is the next free one after lane 9's 30090. Its Foundry is the Node
+build at D:\WoDX\Foundry\main.mjs, because that is the copy the cloud lane kit holds (B7242); the licence was signed
+on this PC by the owner. The lane's known-good world and add-on modules came from the same kit (B7300), so its
+other modules are the kit's 28, not the Main PC lane 1's full list. It drives no merge train and runs no stale-PR sweep:
+the Main PC keeps both, and moving the Main PC's roles here waits until after the owner's solo test. `minFreeRamGB` is
+4 rather than 3 because this PC has more memory to spare.
+
+Reverse: remove lane 10 and the new_pc_lebrun host from lanes.json and delete runner.new_pc_lebrun.json.
+
+## B7721. The gate runner installer takes a name (2026-11-23)
+tools/pcq/gh-runner/install.ps1 gets `-Prefix` (default benjamin-pc-gate, so the Secondary PC is unchanged), and the New
+PC's two runners are new-pc-gate-1 and new-pc-gate-2. Same labels, same job-started hook.
+
+Reverse: drop the parameter and the New PC's runners.
+
+## B7722. The solo world lives on the New PC (2026-11-23)
+The solo world (rothenstein-solo, D:\WoDX\FoundryData-solo, port 30010) is set up on the New PC at the same paths
+docs/SOLO-TESTING.md gives, so rc.mjs, walk.mjs, seat.mjs and the Jobs B and C texts work there unchanged. Its world is
+the 17 November known-good Rothenstein world with the old test items cleared, as on the Main PC before. No lane uses
+port 30010 (jobs.mjs refuses it).
+
+Reverse: run the solo world from the Main PC again.
