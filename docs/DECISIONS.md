@@ -458,7 +458,7 @@ Next free block: B7780
 | B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
 | B7730-B7739 | gates: apipaths money path, vehicles ram retries, powder names who deleted the gun (used B7731-B7735) | wodx-npc, tools (gates) |
 | B7750-B7759 | Improvement desk picks of 23 November 2026: Road and domain connections, the season turn, the daily PC tally (used B7750-B7755) | Actions, Creation, Sheets |
-| B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7761) | tools |
+| B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7762) | tools |
 | B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
 <!-- decision-index:end -->
 
@@ -15722,6 +15722,17 @@ New PC have none and take the job at once. A job named to a lane, a hand-picked 
 request's are never held. The merge train still merges one pull request at a time.
 
 Reverse: remove prGatesDeferMinutes from runner.benjamin-pc.json (the check in runner.mjs then does nothing).
+
+## B7762. Lanes of one PC take turns writing a known-good copy (2026-11-23)
+On the New PC, setup-clean jobs #2346 to #2348 (lanes 11 to 13) each wrote the shared clean copy
+D:\WoDX\testbed-known-good-clean within 10 seconds of each other. It checked out whole that time, but two mirrored
+copies into one folder at once can leave a mix of both. lanes.mjs setup-clean and snapshot now write the known-good
+folder under a write lock (withKnownGoodWrite in tools/lanes/lib.mjs): a file beside the folder (<folder>.lock.json, so
+a mirrored copy never deletes it) naming the process and what it does. A second writer waits for it, up to 30 minutes.
+setup and reset, which copy from the folder, wait while a writer holds it. A lock whose process has ended, or that is
+older than 30 minutes, is cleared. The lock is per PC, as each PC has its own known-good folders.
+
+Reverse: drop the withKnownGoodWrite and waitKnownGood calls in lanes.mjs.
 
 ## B7771. gatesystemrolls takes its two powers by name (2026-11-23)
 Gates. Job 2330 (PR 2321) failed steps 2, 3 and 4, which pass alone twice. The detail showed the powers swapped: the step meant for Manipulation + Intimidation (5 dice) rolled 3 dice with attribute 2 and ability 1, which is the Strength + Brawl power, and the Strength + Brawl step rolled 4 dice with attribute 3 and ability 2. The gate made both powers in one batch and took them by place, but a batch create does not keep its order (kit rule 1). It now takes each power by its name. The pass conditions are unchanged. Not yet run in Foundry.
