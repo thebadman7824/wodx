@@ -90,16 +90,18 @@ test("settings: the state, the mode (Suggest by default) and the week between tu
   assert.deepEqual(Fx.state().factions, []);
 });
 
-test("Rothenstein's factions: ten powers, leaders and members found by name, places by name, standing both ways", async () => {
+test("Rothenstein's factions: twelve powers, leaders and members found by name, places by name, standing both ways", async () => {
   const list = await Fx.setupChronicleFactions({confirm: false});
-  assert.equal(list.length, 10);
+  assert.equal(list.length, 12);
   const court = fac("The Voivode");
   assert.equal(court.leader, "bogdan");
   assert.equal(court.ruler, true);
   assert.ok(court.places.includes("Scene.keep"));
   assert.equal(court.assets.herd, 4);
   assert.equal(fac("Konrad").leader, "konrad");
-  assert.deepEqual(fac("Konrad").members, ["konrad", "kasimir"]);
+  assert.deepEqual(fac("Konrad").members, ["konrad"]);
+  assert.ok(court.members.includes("kasimir"), "Kasimir is sworn to the court, not the cult (B7803)");
+  assert.equal(fac("The Grove").leader, null, "the Grove's kin have no leader on the map");
   assert.equal(fac("Sister Marta").leader, "marta");
   assert.ok(fac("The German").places.includes("Scene.square"));
   assert.equal(fac("The Church's").kind, "hunters");

@@ -724,7 +724,8 @@ export function build(ctx) {
   const chronicleFactions = () => (chronicleInPlay()?.factions?.FACTIONS?.length ? chronicleInPlay().factions : null);
   /** Find an NPC by a part of its name: the shortest match wins (so "Konrad" finds "Konrad the Flesh-Smith"). */
   function findActor(part) {
-    const p = part.toLowerCase();
+    if ( !part ) return null; // B7803: a faction with no leader on the map names none
+    const p = String(part).toLowerCase();
     return allActors().filter(a => !a.hasPlayerOwner && a.name.toLowerCase().includes(p)).sort((a, b) => a.name.length - b.name.length)[0] ?? null;
   }
   const hasChronicleFactions = () => { const c = chronicleFactions(); return !!c && !!findActor(c.MARKER ?? c.FACTIONS[0].leader); };
@@ -751,7 +752,7 @@ export function build(ctx) {
         standing: Object.fromEntries((c.STANDING ?? []).filter(([a]) => a === r.key).map(([, b, v]) => [ids.get(b), v]))});
     });
     await mutate(st => { st.factions = list; st.lastTurn ??= game.time.worldTime; return {state: st}; });
-    const missing = c.FACTIONS.filter(r => !findActor(r.leader)).map(r => r.leader);
+    const missing = c.FACTIONS.filter(r => r.leader && !findActor(r.leader)).map(r => r.leader);
     ui.notifications.info(`Set up ${list.length} factions.${missing.length ? ` No NPC found for: ${missing.join(", ")}.` : ""}`);
     return list;
   }
