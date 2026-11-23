@@ -1,0 +1,2187 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "keep-bailey",
+ "name": "Kranzfels, the Outer Bailey",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  60,
+  48
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/kranzfels-the-outer-bailey/kranzfels-the-outer-bailey.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    15.0,
+    26.0,
+    15.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    32.0,
+    43.5,
+    32.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.0,
+    4.0,
+    56.0,
+    44.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    46.4,
+    58.4,
+    46.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    14.5,
+    22.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.5,
+    24.0,
+    44.1,
+    24.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    41.6,
+    23.5,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    8.0,
+    17.4,
+    13.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.4,
+    42.0,
+    58.4,
+    46.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.0,
+    41.6,
+    38.0,
+    46.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.137,
+    24.5,
+    23.0,
+    24.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    13.4,
+    33.0,
+    13.4,
+    35.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    33.0,
+    9.6,
+    33.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    33.0,
+    6.4,
+    36.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.762,
+    8.0,
+    10.363,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    6.4,
+    31.0,
+    15.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    24.0,
+    23.137,
+    23.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    34.0,
+    41.6,
+    34.0,
+    46.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.5,
+    8.0,
+    18.038,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.7,
+    42.0,
+    6.4,
+    42.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    41.6,
+    26.0,
+    46.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.5,
+    41.6,
+    38.0,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    42.0,
+    55.7,
+    42.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.038,
+    8.0,
+    18.637,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    41.6,
+    22.0,
+    46.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    1.0,
+    52.0,
+    4.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    11.7,
+    6.4,
+    12.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    6.4,
+    36.0,
+    6.4,
+    36.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    24.0,
+    40.0,
+    27.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    42.0,
+    54.0,
+    46.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.5,
+    41.6,
+    26.0,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    39.6,
+    9.6,
+    39.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.863,
+    23.5,
+    25.0,
+    24.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    6.4,
+    8.0,
+    9.762,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.363,
+    8.0,
+    13.9,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    14.5,
+    17.4,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.9,
+    32.0,
+    48.5,
+    32.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    10.0,
+    43.5,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.6,
+    39.6,
+    10.2,
+    39.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    13.9,
+    8.0,
+    14.5,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    52.0,
+    1.0,
+    58.4,
+    1.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.9,
+    16.0,
+    14.5,
+    16.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    24.5,
+    23.137,
+    24.863,
+    23.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    14.5,
+    16.0,
+    18.038,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    46.0,
+    38.0,
+    46.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    2.0,
+    6.4,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.0,
+    24.0,
+    24.863,
+    24.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    24.5,
+    24.863,
+    24.0,
+    25.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    23.137,
+    23.5,
+    23.5,
+    23.137
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    18.637,
+    16.0,
+    22.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.7,
+    18.0,
+    52.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    14.3,
+    40.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    8.0,
+    22.0,
+    11.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.3,
+    16.0,
+    13.9,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    4.0,
+    28.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    42.0,
+    3.7,
+    42.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    32.0,
+    4.0,
+    56.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    44.0,
+    4.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.363,
+    16.0,
+    11.3,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    13.7,
+    40.0,
+    14.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    9.762,
+    16.0,
+    10.363,
+    16.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    48.6,
+    10.0,
+    48.6,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    12.3,
+    6.4,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.7,
+    42.0,
+    58.4,
+    42.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    36.6,
+    6.4,
+    39.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    7.4,
+    58.4,
+    7.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.2,
+    39.6,
+    13.4,
+    39.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    8.0,
+    6.4,
+    11.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    27.7,
+    52.0,
+    28.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    13.4,
+    37.5,
+    13.4,
+    39.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    16.5,
+    52.0,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.1,
+    24.0,
+    47.9,
+    24.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    46.4,
+    6.4,
+    46.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.6,
+    33.0,
+    10.2,
+    33.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    10.0,
+    40.0,
+    13.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.5,
+    32.0,
+    44.1,
+    32.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    52.0,
+    10.0,
+    52.0,
+    15.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    19.0,
+    6.4,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.4,
+    42.0,
+    6.4,
+    46.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    6.4,
+    3.7,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    42.0,
+    2.0,
+    46.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.4,
+    1.0,
+    58.4,
+    7.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    23.0,
+    24.5,
+    23.137
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    44.1,
+    32.0,
+    47.9,
+    32.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    11.7,
+    22.0,
+    12.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    6.4,
+    19.0,
+    15.0,
+    19.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.9,
+    24.0,
+    48.5,
+    24.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    24.863,
+    24.5,
+    24.5,
+    24.863
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    28.0,
+    44.0,
+    4.0,
+    44.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.5,
+    24.0,
+    52.0,
+    24.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    24.0,
+    43.5,
+    24.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.0,
+    41.6,
+    35.5,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.5,
+    23.137,
+    24.0,
+    23.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    6.4,
+    16.0,
+    9.762,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    2.0,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    6.4,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    25.0,
+    23.5,
+    24.863
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    44.1,
+    10.0,
+    52.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.7,
+    6.4,
+    6.4,
+    6.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.0,
+    44.0,
+    32.0,
+    44.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.2,
+    33.0,
+    13.4,
+    33.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    28.8,
+    40.0,
+    32.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    12.3,
+    22.0,
+    13.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    46.0,
+    26.0,
+    46.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    18.0,
+    42.3,
+    18.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    28.3,
+    52.0,
+    32.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    24.0,
+    52.0,
+    27.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    5.1,
+    52.0,
+    7.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.637,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.5,
+    32.0,
+    52.0,
+    32.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.038,
+    16.0,
+    18.637,
+    16.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    43.5,
+    10.0,
+    44.1,
+    10.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    23.5,
+    24.863,
+    23.137,
+    24.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    15.0,
+    19.0,
+    15.0,
+    24.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    52.0,
+    4.1,
+    52.0,
+    5.1
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    17.4,
+    13.5,
+    17.4,
+    14.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    42.3,
+    18.0,
+    43.7,
+    18.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    40.0,
+    27.2,
+    40.0,
+    28.8
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    22.0,
+    13.5,
+    22.0,
+    14.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    3.7,
+    42.0,
+    4.7,
+    42.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    52.0,
+    15.5,
+    52.0,
+    16.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    3.7,
+    6.4,
+    4.7,
+    6.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    23.5,
+    41.6,
+    24.5,
+    41.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    35.5,
+    41.6,
+    36.5,
+    41.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    55.7,
+    42.0,
+    56.7,
+    42.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.3,
+    16.0,
+    12.3,
+    16.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "Halvard's Tower",
+   "rect": [
+    51.2,
+    0.206,
+    8.0,
+    8.012
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "",
+   "rect": [
+    5.806,
+    32.4,
+    8.213,
+    7.8
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b03",
+   "label": "",
+   "rect": [
+    5.881,
+    18.469,
+    9.662,
+    13.062
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b04",
+   "label": "",
+   "rect": [
+    39.4,
+    23.4,
+    13.2,
+    9.2
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b05",
+   "label": "The Keep Chapel",
+   "rect": [
+    39.4,
+    9.394,
+    13.2,
+    9.213
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b06",
+   "label": "",
+   "rect": [
+    1.2,
+    41.2,
+    6.0,
+    6.0
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b07",
+   "label": "",
+   "rect": [
+    53.2,
+    41.2,
+    6.0,
+    6.0
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b08",
+   "label": "",
+   "rect": [
+    21.2,
+    40.8,
+    5.6,
+    6.0
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b09",
+   "label": "",
+   "rect": [
+    33.2,
+    40.8,
+    5.6,
+    6.0
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b10",
+   "label": "The Barracks",
+   "rect": [
+    5.8,
+    7.4,
+    16.8,
+    9.2
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b11",
+   "label": "",
+   "rect": [
+    1.2,
+    1.2,
+    6.0,
+    6.0
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "bench-halvard-s-tower",
+   "obj": "bench",
+   "label": "Bench (Halvard's Tower)",
+   "rect": [
+    51.65,
+    0.706,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-halvard-s-tower",
+   "obj": "shelf",
+   "label": "Wall shelf (Halvard's Tower)",
+   "rect": [
+    51.65,
+    7.468,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b02",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b02)",
+   "rect": [
+    9.412,
+    35.8,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b02",
+   "obj": "bed-box",
+   "label": "Box bed for two (b02)",
+   "rect": [
+    12.119,
+    35.1,
+    1.4,
+    0.9
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "chest-b02",
+   "obj": "chest",
+   "label": "Chest (b02)",
+   "rect": [
+    12.919,
+    36.538,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b02",
+   "obj": "cask",
+   "label": "Cask (b02)",
+   "rect": [
+    9.688,
+    32.9,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b03",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b03)",
+   "rect": [
+    10.212,
+    24.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b03",
+   "obj": "bed-box",
+   "label": "Box bed for two (b03)",
+   "rect": [
+    6.331,
+    18.969,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b03",
+   "obj": "table",
+   "label": "Household table (b03)",
+   "rect": [
+    6.331,
+    30.131,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b03",
+   "obj": "chest",
+   "label": "Chest (b03)",
+   "rect": [
+    14.443,
+    20.314,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b03",
+   "obj": "bench",
+   "label": "Bench (b03)",
+   "rect": [
+    8.121,
+    18.969,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b03",
+   "obj": "shelf",
+   "label": "Wall shelf (b03)",
+   "rect": [
+    14.793,
+    18.919,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b03",
+   "obj": "cask",
+   "label": "Cask (b03)",
+   "rect": [
+    8.409,
+    30.581,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b04",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b04)",
+   "rect": [
+    45.5,
+    27.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-b04",
+   "obj": "cask",
+   "label": "Cask (b04)",
+   "rect": [
+    51.65,
+    27.775,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-keep-chapel",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Keep Chapel)",
+   "rect": [
+    45.5,
+    13.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-the-keep-chapel",
+   "obj": "cask",
+   "label": "Cask (The Keep Chapel)",
+   "rect": [
+    45.775,
+    17.657,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "bench-b06",
+   "obj": "bench",
+   "label": "Bench (b06)",
+   "rect": [
+    1.65,
+    46.35,
+    1.6,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b06",
+   "obj": "shelf",
+   "label": "Wall shelf (b06)",
+   "rect": [
+    1.65,
+    41.7,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b07",
+   "obj": "bench",
+   "label": "Bench (b07)",
+   "rect": [
+    53.65,
+    46.35,
+    1.6,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b07",
+   "obj": "shelf",
+   "label": "Wall shelf (b07)",
+   "rect": [
+    53.65,
+    41.7,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b08",
+   "obj": "bench",
+   "label": "Bench (b08)",
+   "rect": [
+    21.65,
+    45.95,
+    1.6,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b08",
+   "obj": "shelf",
+   "label": "Wall shelf (b08)",
+   "rect": [
+    21.65,
+    41.3,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b09",
+   "obj": "bench",
+   "label": "Bench (b09)",
+   "rect": [
+    33.65,
+    45.95,
+    1.6,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b09",
+   "obj": "shelf",
+   "label": "Wall shelf (b09)",
+   "rect": [
+    33.65,
+    41.3,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-barracks",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Barracks)",
+   "rect": [
+    13.7,
+    11.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-the-barracks",
+   "obj": "cask",
+   "label": "Cask (The Barracks)",
+   "rect": [
+    13.975,
+    7.9,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "bench-b11",
+   "obj": "bench",
+   "label": "Bench (b11)",
+   "rect": [
+    1.65,
+    1.7,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b11",
+   "obj": "shelf",
+   "label": "Wall shelf (b11)",
+   "rect": [
+    1.65,
+    6.45,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 5.95,
+   "y": 36.3,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 10.062,
+   "y": 7.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 10.062,
+   "y": 16.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 32.4,
+   "y": 40.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 54.462,
+   "y": 6.95,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 48.2,
+   "y": 32.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 43.8,
+   "y": 9.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 17.262,
+   "y": 12.925,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 47.6,
+   "y": 14.0,
+   "kind": "eerie",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#c81818"
+  },
+  {
+   "x": 22.45,
+   "y": 12.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 49.4,
+   "y": 11.0,
+   "kind": "lamp",
+   "bright": 0.0,
+   "dim": 2.2,
+   "color": "#000000"
+  },
+  {
+   "x": 18.337,
+   "y": 16.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 14.2,
+   "y": 16.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 20.337,
+   "y": 11.75,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 43.8,
+   "y": 23.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 48.2,
+   "y": 23.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 32.4,
+   "y": 7.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 36.388,
+   "y": 45.55,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 14.2,
+   "y": 7.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 18.337,
+   "y": 7.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 39.55,
+   "y": 14.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 5.95,
+   "y": 12.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 7.375,
+   "y": 36.25,
+   "kind": "fire",
+   "bright": 1.12,
+   "dim": 6.0,
+   "color": "#ff7a30"
+  },
+  {
+   "x": 24.288,
+   "y": 42.05,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 19.65,
+   "y": 8.25,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 48.237,
+   "y": 14.05,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 35.663,
+   "y": 42.05,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 40.25,
+   "y": 12.588,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 51.438,
+   "y": 10.525,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 23.462,
+   "y": 42.05,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 27.6,
+   "y": 7.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 47.837,
+   "y": 14.05,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 27.6,
+   "y": 40.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 52.45,
+   "y": 28.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 11.213,
+   "y": 15.75,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 43.8,
+   "y": 32.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 9.9,
+   "y": 32.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 10.137,
+   "y": 39.35,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 48.462,
+   "y": 14.113,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 9.9,
+   "y": 40.05,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  }
+ ],
+ "labels": [
+  {
+   "x": 19.65,
+   "y": 12.0,
+   "text": "Captain Ondrej \"Ironjaw\" lives here (The Barracks, Captain's Room).",
+   "used": true
+  },
+  {
+   "x": 42.0,
+   "y": 35.5,
+   "text": "Archery butts. The men shoot here at dawn."
+  },
+  {
+   "x": 55.0,
+   "y": 4.2,
+   "text": "Halvard sleeps by day in a nest of wolf furs on earth...",
+   "used": true
+  },
+  {
+   "x": 30.0,
+   "y": 44.0,
+   "text": "The outer gate: portcullis and two leaves of oak. Shut from dusk unless the capt"
+  },
+  {
+   "x": 50.3,
+   "y": 16.7,
+   "text": "A trapdoor under the pallet: a ladder down to the crypt below the chapel, where ",
+   "used": true
+  },
+  {
+   "x": 50.25,
+   "y": 14.0,
+   "text": "\"Sister\" Marta lives here (The Keep Chapel, Marta's Cell).",
+   "used": true
+  },
+  {
+   "x": 50.3,
+   "y": 14.0,
+   "text": "Marta's cell has its own door to the yard and a squint through the wall to the a",
+   "used": true
+  },
+  {
+   "x": 30.0,
+   "y": 4.0,
+   "text": "The inner gate to the ward and the great hall. Two of Ondrej's men, always."
+  },
+  {
+   "x": 55.2,
+   "y": 4.2,
+   "text": "Halvard Eriksson lives here (Halvard's Tower).",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-lt-keeproad",
+   "to": "lt-keeproad",
+   "rect": [
+    28.0,
+    46.6,
+    4.0,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-lt-keeproad",
+   "to": null,
+   "rect": [
+    29.3,
+    44.1,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-keep-ward",
+   "to": null,
+   "rect": [
+    29.3,
+    6.1,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-keep-ward",
+   "to": "keep-ward",
+   "rect": [
+    28.0,
+    2.6,
+    4.0,
+    1.6
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "building b02 (unnamed): use guessed as a home",
+  "building b03 (unnamed): use guessed as a home",
+  "building b04 (unnamed): use guessed as a home",
+  "building b06 (unnamed): use guessed as a home",
+  "building b07 (unnamed): use guessed as a home",
+  "building b08 (unnamed): use guessed as a home",
+  "building b09 (unnamed): use guessed as a home",
+  "building b11 (unnamed): use guessed as a home"
+ ],
+ "seeded": true
+}

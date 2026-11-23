@@ -1,0 +1,391 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-weaver",
+ "name": "The Weaver's Workshop",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-weaver-s-workshop/workplace-the-weaver-s-workshop.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    17.0,
+    8.0,
+    21.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    11.0,
+    17.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    3.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    14.0,
+    9.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    11.0,
+    8.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    6.0,
+    17.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    27.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    14.0,
+    22.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    8.0,
+    27.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    12.0,
+    17.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    14.0,
+    27.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    3.0,
+    17.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    3.0,
+    27.0,
+    14.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    21.0,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    22.0,
+    14.0,
+    23.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    17.0,
+    5.0,
+    17.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    17.0,
+    11.0,
+    17.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    9.0,
+    14.0,
+    11.0,
+    14.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    11.0,
+    10.0,
+    11.0
+   ],
+   "kind": "gate",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-dye-vats",
+   "label": "The dye vats",
+   "rect": [
+    17.2,
+    8.2,
+    9.8,
+    5.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cloth-store",
+   "label": "The cloth store",
+   "rect": [
+    3.4,
+    10.4,
+    13.6,
+    3.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-looms",
+   "label": "The looms",
+   "rect": [
+    4.0,
+    3.6,
+    12.0,
+    2.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-weaver-s-rooms",
+   "label": "The weaver's rooms",
+   "rect": [
+    17.2,
+    3.2,
+    9.8,
+    4.6
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-dye-vats-1",
+   "obj": "vat",
+   "label": "The dye vats 1",
+   "rect": [
+    18.85,
+    10.3,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-dye-vats-2",
+   "obj": "vat",
+   "label": "The dye vats 2",
+   "rect": [
+    23.75,
+    10.3,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-looms-1",
+   "obj": "loom",
+   "label": "The looms 1",
+   "rect": [
+    6.1,
+    4.3,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "the-looms-2",
+   "obj": "loom",
+   "label": "The looms 2",
+   "rect": [
+    12.1,
+    4.3,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 21.8,
+   "y": 9.0,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.14,
+   "color": "#ff9a4a"
+  },
+  {
+   "x": 19.0,
+   "y": 5.0,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 10.0,
+   "y": 7.0,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.86,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 22.3,
+   "y": 8.8,
+   "kind": "fire",
+   "bright": 0.72,
+   "dim": 3.72,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 13.6,
+   "text": "GM: A weaver's workshop. At night the"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-crafts"
+}

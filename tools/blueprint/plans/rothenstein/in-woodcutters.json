@@ -1,0 +1,354 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-woodcutters",
+ "name": "The Woodcutters' and Charcoal Camp",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-woodcutters-and-charcoal-camp/workplace-the-woodcutters-and-charcoal-camp.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    23.0,
+    3.0,
+    28.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    4.0,
+    10.0,
+    8.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.0,
+    3.0,
+    22.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    8.0,
+    18.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    4.0,
+    10.0,
+    4.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    28.0,
+    3.0,
+    28.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    3.0,
+    16.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    8.0,
+    25.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    8.0,
+    4.0,
+    4.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    26.0,
+    8.0,
+    28.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    3.0,
+    23.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.0,
+    3.0,
+    22.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    8.0,
+    22.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    8.0,
+    4.0,
+    8.0
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    25.0,
+    8.0,
+    26.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    18.0,
+    8.0,
+    19.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-charcoal-clamps",
+   "label": "The charcoal clamps",
+   "rect": [
+    4.0,
+    11.0,
+    14.0,
+    4.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-saw-pit",
+   "label": "The saw pit",
+   "rect": [
+    4.0,
+    4.0,
+    6.0,
+    4.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-foreman-s-hut",
+   "label": "The foreman's hut",
+   "rect": [
+    23.0,
+    3.0,
+    5.0,
+    5.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-bunk-hut",
+   "label": "The bunk hut",
+   "rect": [
+    16.0,
+    3.0,
+    6.0,
+    5.0
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-charcoal-clamps-1",
+   "obj": "kiln-charcoal",
+   "label": "The charcoal clamps 1",
+   "rect": [
+    5.8,
+    11.3,
+    3.4,
+    3.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-charcoal-clamps-2",
+   "obj": "kiln-charcoal",
+   "label": "The charcoal clamps 2",
+   "rect": [
+    12.8,
+    11.3,
+    3.4,
+    3.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-bunk-hut",
+   "obj": "cot",
+   "label": "The bunk hut",
+   "rect": [
+    18.6,
+    4.85,
+    0.8,
+    1.3
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 25.0,
+   "y": 4.2,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 17.2,
+   "y": 5.6,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 11.0,
+   "y": 14.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 3.72,
+   "color": "#ff6a2a"
+  },
+  {
+   "x": 6.0,
+   "y": 13.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 3.72,
+   "color": "#ff6a2a"
+  },
+  {
+   "x": 16.0,
+   "y": 13.4,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 3.72,
+   "color": "#ff6a2a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 9.6,
+   "text": "GM: A woodcutters' and charcoal"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "forest-road"
+}

@@ -1,0 +1,6396 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "lt-crafts",
+ "name": "Lower Town, Craftsmen's Lane",
+ "chronicle": "rothenstein",
+ "tier": 2,
+ "cells": [
+  66,
+  40
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "pixelmap",
+  "drawer": "tools/pixelmap/maps/lt_crafts.py",
+  "seed": 1270,
+  "scene": "maps-ref/scenes-export/lower-town-craftsmen-s-lane/lower-town-craftsmen-s-lane.json"
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    2.0,
+    2.2,
+    14.6,
+    2.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    28.6,
+    2.0,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.85,
+    33.4,
+    12.6,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    33.6,
+    27.55,
+    33.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.4,
+    28.3,
+    43.4,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.7,
+    26.0,
+    57.0,
+    26.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    31.6,
+    31.7,
+    31.6,
+    33.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.6,
+    28.6,
+    12.6,
+    30.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.4,
+    24.8,
+    43.4,
+    27.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.6,
+    12.84,
+    42.6,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.6,
+    31.0,
+    12.6,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    12.55,
+    17.4,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    10.0,
+    47.7,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.06,
+    15.6,
+    35.2,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.6,
+    3.0,
+    42.6,
+    5.76
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    33.4,
+    5.05,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    12.9,
+    2.0,
+    16.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.7,
+    15.4,
+    56.4,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.2,
+    24.8,
+    44.2,
+    27.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.4,
+    8.85,
+    27.4,
+    11.75
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    13.1,
+    51.4,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    5.0,
+    20.3,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.4,
+    3.0,
+    29.4,
+    5.76
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    31.0,
+    2.0,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    25.4,
+    2.0,
+    27.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.9,
+    31.0,
+    43.4,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.6,
+    6.1,
+    14.6,
+    8.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    31.0,
+    53.8,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    31.6,
+    24.6,
+    31.6,
+    26.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.6,
+    24.8,
+    39.67,
+    24.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.3,
+    15.6,
+    27.4,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.6,
+    3.0,
+    34.6,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    9.0,
+    2.0,
+    12.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.6,
+    9.0,
+    10.6,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    9.0,
+    6.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.4,
+    31.0,
+    50.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    7.5,
+    51.4,
+    12.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    31.6,
+    27.3,
+    31.6,
+    30.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    53.05,
+    4.0,
+    56.4,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    12.05,
+    45.0,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.2,
+    31.0,
+    46.8,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.4,
+    3.0,
+    42.6,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    2.2,
+    2.0,
+    8.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    15.4,
+    47.7,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.4,
+    12.84,
+    29.4,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    28.2,
+    50.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    7.95,
+    45.0,
+    11.45
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    25.4,
+    9.0,
+    26.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    31.6,
+    29.0,
+    35.6,
+    29.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    26.0,
+    51.4,
+    28.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.4,
+    5.0,
+    23.4,
+    9.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.2,
+    24.8,
+    47.67,
+    24.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.95,
+    4.0,
+    52.45,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    4.0,
+    45.0,
+    7.35
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    25.4,
+    5.3,
+    25.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.2,
+    28.2,
+    44.2,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    29.4,
+    12.6,
+    29.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.9,
+    9.6,
+    27.4,
+    9.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.6,
+    3.0,
+    38.6,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.67,
+    24.8,
+    43.4,
+    24.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    24.8,
+    50.0,
+    27.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    28.9,
+    51.4,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    15.6,
+    21.5,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.4,
+    8.6,
+    31.5,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.7,
+    10.0,
+    56.4,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    31.9,
+    9.0,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    57.0,
+    26.0,
+    57.0,
+    28.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.8,
+    15.6,
+    38.94,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    27.9,
+    9.0,
+    30.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.4,
+    12.55,
+    27.4,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    32.5,
+    8.6,
+    36.1,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    29.4,
+    24.2,
+    33.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    5.0,
+    17.4,
+    8.05
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    39.74,
+    15.6,
+    42.6,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.6,
+    2.2,
+    14.6,
+    4.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.6,
+    24.8,
+    37.6,
+    27.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.15,
+    33.6,
+    35.6,
+    33.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.1,
+    8.6,
+    42.6,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.6,
+    24.6,
+    35.6,
+    24.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.67,
+    24.8,
+    50.0,
+    24.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.4,
+    5.0,
+    27.4,
+    8.05
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    8.85,
+    17.4,
+    11.75
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.4,
+    6.56,
+    29.4,
+    12.04
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.6,
+    31.0,
+    40.1,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.6,
+    24.6,
+    35.6,
+    33.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.4,
+    4.0,
+    56.4,
+    7.35
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.1,
+    5.0,
+    27.4,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.6,
+    31.0,
+    57.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.06,
+    3.0,
+    35.6,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    7.9,
+    16.2,
+    10.6,
+    16.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.4,
+    3.0,
+    32.26,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    26.0,
+    53.7,
+    26.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.5,
+    9.6,
+    24.9,
+    9.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.4,
+    15.6,
+    32.26,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    24.6,
+    24.2,
+    28.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.6,
+    28.3,
+    37.6,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.7,
+    25.4,
+    12.6,
+    25.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    56.4,
+    7.95,
+    56.4,
+    15.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    4.0,
+    48.35,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    24.6,
+    27.0,
+    24.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.6,
+    12.9,
+    10.6,
+    16.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    16.2,
+    4.7,
+    16.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.6,
+    25.4,
+    12.6,
+    27.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    37.1,
+    8.6,
+    40.1,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    57.0,
+    28.9,
+    57.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.6,
+    9.0,
+    10.6,
+    12.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.4,
+    9.6,
+    19.5,
+    9.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    8.2,
+    14.6,
+    8.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.4,
+    4.0,
+    51.4,
+    6.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.6,
+    6.56,
+    42.6,
+    12.04
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    28.8,
+    24.2,
+    29.4
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    57.0,
+    28.1,
+    57.0,
+    28.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    56.4,
+    7.35,
+    56.4,
+    7.95
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    53.8,
+    31.0,
+    54.6,
+    31.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    52.45,
+    4.0,
+    53.05,
+    4.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    44.2,
+    27.6,
+    44.2,
+    28.2
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    38.94,
+    15.6,
+    39.74,
+    15.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    45.0,
+    7.35,
+    45.0,
+    7.95
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    42.6,
+    5.76,
+    42.6,
+    6.56
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    2.0,
+    30.2,
+    2.0,
+    31.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    17.4,
+    11.75,
+    17.4,
+    12.55
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    2.0,
+    27.8,
+    2.0,
+    28.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    45.0,
+    11.45,
+    45.0,
+    12.05
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    37.6,
+    27.5,
+    37.6,
+    28.3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    12.6,
+    30.2,
+    12.6,
+    31.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    32.26,
+    15.6,
+    33.06,
+    15.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    10.6,
+    12.3,
+    10.6,
+    12.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    48.35,
+    4.0,
+    48.95,
+    4.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    46.8,
+    31.0,
+    47.4,
+    31.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    32.26,
+    3.0,
+    33.06,
+    3.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    2.0,
+    12.3,
+    2.0,
+    12.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    20.3,
+    5.0,
+    21.1,
+    5.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    40.1,
+    31.0,
+    40.9,
+    31.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    43.4,
+    27.5,
+    43.4,
+    28.3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    17.4,
+    8.05,
+    17.4,
+    8.85
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    51.4,
+    28.1,
+    51.4,
+    28.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    29.4,
+    12.04,
+    29.4,
+    12.84
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    50.0,
+    27.6,
+    50.0,
+    28.2
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    5.05,
+    33.4,
+    5.85,
+    33.4
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    11.75,
+    27.4,
+    12.55
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    6.0,
+    9.0,
+    6.6,
+    9.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    8.05,
+    27.4,
+    8.85
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.55,
+    33.6,
+    28.15,
+    33.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    42.6,
+    12.04,
+    42.6,
+    12.84
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    35.6,
+    3.0,
+    36.4,
+    3.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    29.4,
+    5.76,
+    29.4,
+    6.56
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    12.6,
+    27.8,
+    12.6,
+    28.6
+   ],
+   "kind": "window"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    9.0,
+    26.9,
+    9.0,
+    27.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    40.1,
+    8.6,
+    41.1,
+    8.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    51.4,
+    6.5,
+    51.4,
+    7.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.5,
+    15.6,
+    23.3,
+    15.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    39.67,
+    24.8,
+    40.67,
+    24.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    5.3,
+    25.4,
+    6.7,
+    25.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    31.6,
+    30.7,
+    31.6,
+    31.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    24.9,
+    9.6,
+    25.9,
+    9.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    47.7,
+    15.4,
+    48.7,
+    15.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    36.1,
+    8.6,
+    37.1,
+    8.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    47.7,
+    10.0,
+    48.7,
+    10.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    53.7,
+    26.0,
+    54.7,
+    26.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    31.5,
+    8.6,
+    32.5,
+    8.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    47.67,
+    24.8,
+    48.67,
+    24.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    31.6,
+    26.3,
+    31.6,
+    27.3
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    19.5,
+    9.6,
+    20.5,
+    9.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    9.0,
+    30.9,
+    9.0,
+    31.9
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    35.2,
+    15.6,
+    36.8,
+    15.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    27.0,
+    24.6,
+    28.6,
+    24.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    51.4,
+    12.1,
+    51.4,
+    13.1
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "the-smithy",
+   "label": "The Smithy",
+   "rect": [
+    1.406,
+    8.394,
+    9.812,
+    8.412
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "the-stables",
+   "label": "The Stables",
+   "rect": [
+    1.463,
+    1.681,
+    13.675,
+    7.062
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "the-weiss-cooperage",
+   "label": "The Weiss Cooperage",
+   "rect": [
+    16.869,
+    4.475,
+    11.062,
+    11.65
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "the-weavers-hall",
+   "label": "The Weavers' Hall",
+   "rect": [
+    28.869,
+    2.475,
+    14.262,
+    13.65
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "the-shuttered-house",
+   "label": "The Shuttered House",
+   "rect": [
+    44.4,
+    3.4,
+    12.6,
+    12.6
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "the-dyers-workshop",
+   "label": "The Dyers' Workshop",
+   "rect": [
+    1.462,
+    24.869,
+    11.675,
+    9.062
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "the-brewhouse",
+   "label": "The Brewhouse",
+   "rect": [
+    23.594,
+    24.0,
+    12.613,
+    10.2
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "cottage-west",
+   "label": "Cottage (west",
+   "rect": [
+    37.075,
+    24.275,
+    6.85,
+    7.25
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "cottage-middle",
+   "label": "Cottage (middle",
+   "rect": [
+    43.6,
+    24.2,
+    7.0,
+    7.4
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "cottage-east",
+   "label": "Cottage (east",
+   "rect": [
+    50.875,
+    25.469,
+    6.65,
+    6.062
+   ],
+   "use": "",
+   "roof": true
+  }
+ ],
+ "rooms": [
+  {
+   "id": "the-stables",
+   "label": "The Stables",
+   "rect": [
+    2,
+    2.2,
+    12.6,
+    6.0
+   ],
+   "use": "shop"
+  },
+  {
+   "id": "the-smithy",
+   "label": "The Smithy",
+   "rect": [
+    2,
+    9,
+    8.6,
+    7.2
+   ],
+   "use": "shop"
+  },
+  {
+   "id": "the-weiss-cooperage",
+   "label": "The Weiss Cooperage",
+   "rect": [
+    17.4,
+    5,
+    10,
+    10.6
+   ],
+   "use": "shop"
+  },
+  {
+   "id": "the-weavers-hall",
+   "label": "The Weavers' Hall",
+   "rect": [
+    29.4,
+    3,
+    13.2,
+    12.6
+   ],
+   "use": "shop"
+  },
+  {
+   "id": "the-shuttered-house",
+   "label": "The Shuttered House",
+   "rect": [
+    45,
+    4,
+    11.4,
+    11.4
+   ],
+   "use": "home"
+  },
+  {
+   "id": "the-dyers-workshop",
+   "label": "The Dyers' Workshop",
+   "rect": [
+    2,
+    25.4,
+    10.6,
+    8
+   ],
+   "use": "shop"
+  },
+  {
+   "id": "the-brewhouse",
+   "label": "The Brewhouse",
+   "rect": [
+    24.2,
+    24.6,
+    11.4,
+    9
+   ],
+   "use": "shop"
+  },
+  {
+   "id": "cottage-west",
+   "label": "Cottage (west)",
+   "rect": [
+    37.6,
+    24.8,
+    5.8,
+    6.2
+   ],
+   "use": "home"
+  },
+  {
+   "id": "cottage-middle",
+   "label": "Cottage (middle)",
+   "rect": [
+    44.2,
+    24.8,
+    5.8,
+    6.2
+   ],
+   "use": "home"
+  },
+  {
+   "id": "cottage-east",
+   "label": "Cottage (east)",
+   "rect": [
+    51.4,
+    26,
+    5.6,
+    5
+   ],
+   "use": "home"
+  }
+ ],
+ "slots": [
+  {
+   "id": "oats-sack-stables",
+   "obj": "sack",
+   "label": "Oats sack (stables)",
+   "rect": [
+    9.857,
+    7.325,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-smithy",
+   "obj": "cask",
+   "label": "Water cask (smithy)",
+   "rect": [
+    7.604,
+    9.514,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "charcoal-cask-smithy",
+   "obj": "cask",
+   "label": "Charcoal cask (smithy)",
+   "rect": [
+    8.307,
+    9.514,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-smithy",
+   "obj": "cask",
+   "label": "Cask (smithy)",
+   "rect": [
+    9.807,
+    15.408,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-cooperage",
+   "obj": "cask",
+   "label": "Water cask (cooperage)",
+   "rect": [
+    17.806,
+    5.312,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "meal-cask-cooperage",
+   "obj": "cask",
+   "label": "Meal cask (cooperage)",
+   "rect": [
+    22.806,
+    5.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-cooperage-store",
+   "obj": "crate",
+   "label": "Crate (cooperage store)",
+   "rect": [
+    26.069,
+    5.63,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-cooperage-store-2",
+   "obj": "crate",
+   "label": "Crate (cooperage store)",
+   "rect": [
+    24.271,
+    8.534,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    19.104,
+    10.111,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-2",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    23.902,
+    10.409,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-3",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    19.806,
+    13.014,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-4",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    20.998,
+    14.111,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-5",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    22.902,
+    14.409,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-6",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    26.104,
+    10.216,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-7",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    26.2,
+    12.611,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-cask-cooperage",
+   "obj": "cask",
+   "label": "New cask (cooperage)",
+   "rect": [
+    24.498,
+    14.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-cask-cooperage-2",
+   "obj": "cask",
+   "label": "New cask (cooperage)",
+   "rect": [
+    25.2,
+    14.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-cask-cooperage-3",
+   "obj": "cask",
+   "label": "New cask (cooperage)",
+   "rect": [
+    25.902,
+    14.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-weavers-kitchen",
+   "obj": "cask",
+   "label": "Cask (weavers' kitchen)",
+   "rect": [
+    33.7,
+    5.014,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-weavers-kitchen-2",
+   "obj": "cask",
+   "label": "Cask (weavers' kitchen)",
+   "rect": [
+    33.7,
+    5.61,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-shuttered-house",
+   "obj": "cask",
+   "label": "Cask (Shuttered House)",
+   "rect": [
+    45.498,
+    5.11,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-shuttered-house-kitchen",
+   "obj": "cask",
+   "label": "Cask (Shuttered House kitchen)",
+   "rect": [
+    49.306,
+    14.61,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-shuttered-house-kitchen-2",
+   "obj": "cask",
+   "label": "Cask (Shuttered House kitchen)",
+   "rect": [
+    49.998,
+    14.61,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-shuttered-house-kitchen",
+   "obj": "crate",
+   "label": "Crate (Shuttered House kitchen)",
+   "rect": [
+    49.665,
+    10.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-shuttered-house-kitchen",
+   "obj": "sack",
+   "label": "Sack (Shuttered House kitchen)",
+   "rect": [
+    46.171,
+    14.399,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "mordant-cask-dyers",
+   "obj": "cask",
+   "label": "Mordant cask (dyers)",
+   "rect": [
+    2.498,
+    26.11,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "madder-cask-dyers",
+   "obj": "cask",
+   "label": "Madder cask (dyers)",
+   "rect": [
+    2.498,
+    26.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woad-sack-dyers",
+   "obj": "sack",
+   "label": "Woad sack (dyers)",
+   "rect": [
+    2.554,
+    31.111,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "weld-sack-dyers",
+   "obj": "sack",
+   "label": "Weld sack (dyers)",
+   "rect": [
+    3.049,
+    31.606,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-dyers-store",
+   "obj": "crate",
+   "label": "Crate (dyers' store)",
+   "rect": [
+    11.463,
+    31.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-dyers-store-2",
+   "obj": "crate",
+   "label": "Crate (dyers' store)",
+   "rect": [
+    9.463,
+    32.63,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.647,
+    30.514,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-2",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.647,
+    31.216,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-3",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.647,
+    31.908,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-4",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.647,
+    32.611,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sack-brewhouse",
+   "obj": "sack",
+   "label": "Malt sack (brewhouse)",
+   "rect": [
+    25.846,
+    25.218,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sack-brewhouse-2",
+   "obj": "sack",
+   "label": "Malt sack (brewhouse)",
+   "rect": [
+    26.458,
+    25.027,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sack-brewhouse-3",
+   "obj": "sack",
+   "label": "Malt sack (brewhouse)",
+   "rect": [
+    26.171,
+    25.718,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    32.902,
+    30.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-2",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    32.902,
+    31.514,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-3",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    34.806,
+    29.812,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-4",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    34.806,
+    30.514,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-5",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    34.806,
+    31.216,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-brewhouse-store",
+   "obj": "crate",
+   "label": "Crate (brewhouse store)",
+   "rect": [
+    32.463,
+    29.63,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-brewhouse-store-2",
+   "obj": "crate",
+   "label": "Crate (brewhouse store)",
+   "rect": [
+    34.463,
+    32.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cottage",
+   "obj": "cask",
+   "label": "Cask (cottage)",
+   "rect": [
+    38.104,
+    25.11,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cottage-2",
+   "obj": "cask",
+   "label": "Cask (cottage)",
+   "rect": [
+    54.806,
+    26.408,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cottage-3",
+   "obj": "cask",
+   "label": "Cask (cottage)",
+   "rect": [
+    55.498,
+    26.408,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    22.105,
+    16.014,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-2",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    26.7,
+    16.216,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-3",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    43.498,
+    16.407,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-4",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    30.903,
+    23.11,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.894,
+    6.372,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-2",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.889,
+    6.756,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-3",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.873,
+    7.144,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    9.882,
+    13.631,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-2",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    9.882,
+    14.099,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-3",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    2.498,
+    10.419,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-4",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    2.498,
+    10.887,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-5",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    23.902,
+    7.206,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-6",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    23.902,
+    7.674,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-7",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    23.902,
+    8.142,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-8",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    24.881,
+    7.674,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    25.559,
+    8.045,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-2",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    25.569,
+    6.629,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-9",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    25.062,
+    6.11,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-10",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    24.966,
+    8.248,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-11",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    26.168,
+    6.046,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-4",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.857,
+    6.186,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-5",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    41.884,
+    10.362,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-6",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    41.874,
+    10.755,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-7",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    41.889,
+    11.144,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-8",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    55.66,
+    8.511,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-9",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    8.277,
+    28.793,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-10",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    8.255,
+    29.176,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-11",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    8.288,
+    29.569,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-12",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    10.829,
+    32.589,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-13",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    11.296,
+    32.589,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-14",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    11.764,
+    32.589,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-15",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    10.244,
+    31.897,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-12",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    10.925,
+    30.951,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-13",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    10.139,
+    32.596,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-14",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    11.059,
+    31.484,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-16",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    10.127,
+    31.291,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-15",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    11.607,
+    31.34,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-16",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    24.612,
+    26.538,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-17",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    24.607,
+    26.925,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-18",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    24.607,
+    27.314,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-17",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.881,
+    28.28,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-18",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.881,
+    28.748,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-19",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.881,
+    29.216,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-20",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    27.743,
+    27.589,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-21",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.179,
+    28.568,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-19",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    25.32,
+    27.293,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-22",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    28.796,
+    27.451,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-23",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    27.041,
+    29.536,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-20",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    28.287,
+    30.473,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-21",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    32.863,
+    32.84,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-22",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.245,
+    32.835,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-23",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.64,
+    32.835,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-24",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    34.357,
+    32.377,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-3",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    33.186,
+    30.12,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-4",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    31.878,
+    32.704,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-5",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    33.484,
+    32.14,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-25",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.857,
+    30.835,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-26",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    32.718,
+    32.33,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-24",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    33.998,
+    29.536,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-27",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.767,
+    31.538,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-25",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    0.456,
+    21.387,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-26",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    58.349,
+    20.206,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-27",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    0.456,
+    19.759,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-28",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    28.285,
+    17.759,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-29",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    39.806,
+    21.653,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-6",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    57.048,
+    17.737,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-7",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    57.537,
+    17.737,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-28",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    0.411,
+    20.676,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-30",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    26.328,
+    21.653,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-31",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    13.456,
+    17.759,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-29",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    58.303,
+    18.671,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-8",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    28.154,
+    21.598,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-9",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    28.644,
+    21.598,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-10",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    51.271,
+    23.12,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-11",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    51.271,
+    23.609,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-12",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    15.399,
+    15.204,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-13",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    15.888,
+    15.204,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "horse-stalls",
+   "obj": "stall-horse",
+   "label": "horse stalls",
+   "rect": [
+    7.3,
+    2.4,
+    1.4,
+    2.0
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hay",
+   "obj": "haystack",
+   "label": "hay",
+   "rect": [
+    5.9,
+    6.2,
+    2.2,
+    2.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-trough",
+   "obj": "trough",
+   "label": "water trough",
+   "rect": [
+    2.5,
+    7.35,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "oats-sack-stables-2",
+   "obj": "sack",
+   "label": "Oats sack (stables)",
+   "rect": [
+    9.855,
+    7.25,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tree",
+   "obj": "tree",
+   "label": "tree",
+   "rect": [
+    12.6,
+    0.8,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "forge",
+   "obj": "forge",
+   "label": "forge",
+   "rect": [
+    5.5,
+    9.3,
+    1.6,
+    1.2
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "quench-trough",
+   "obj": "trough",
+   "label": "quench trough",
+   "rect": [
+    2.65,
+    9.4,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-smithy-2",
+   "obj": "cask",
+   "label": "Water cask (smithy)",
+   "rect": [
+    7.475,
+    9.475,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "charcoal-cask-smithy-2",
+   "obj": "cask",
+   "label": "Charcoal cask (smithy)",
+   "rect": [
+    8.175,
+    9.475,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "anvil",
+   "obj": "anvil",
+   "label": "anvil",
+   "rect": [
+    6.05,
+    11.7,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "workbench",
+   "obj": "workbench",
+   "label": "workbench",
+   "rect": [
+    2.4,
+    15.25,
+    1.4,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-smithy-2",
+   "obj": "cask",
+   "label": "Cask (smithy)",
+   "rect": [
+    9.675,
+    15.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-trough-2",
+   "obj": "trough",
+   "label": "water trough",
+   "rect": [
+    11.65,
+    9.65,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "handcart",
+   "obj": "handcart",
+   "label": "handcart",
+   "rect": [
+    12.8,
+    12.0,
+    0.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth-cooperage-hall",
+   "obj": "hearth",
+   "label": "hearth (cooperage hall)",
+   "rect": [
+    19.9,
+    5.1,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "table",
+   "obj": "table",
+   "label": "table",
+   "rect": [
+    19.7,
+    6.4,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-cooperage-2",
+   "obj": "cask",
+   "label": "Water cask (cooperage)",
+   "rect": [
+    17.675,
+    5.275,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "meal-cask-cooperage-2",
+   "obj": "cask",
+   "label": "Meal cask (cooperage)",
+   "rect": [
+    22.675,
+    5.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "barrel-hoops",
+   "obj": "cask",
+   "label": "barrel hoops",
+   "rect": [
+    20.875,
+    8.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bed",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    23.75,
+    5.5,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "straw-bed-in-the-loft-store",
+   "obj": "bed-box",
+   "label": "straw bed in the loft store",
+   "rect": [
+    25.65,
+    6.9,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "crate-cooperage-store-2",
+   "obj": "crate",
+   "label": "Crate (cooperage store)",
+   "rect": [
+    26.08,
+    5.51,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-cooperage-store-3",
+   "obj": "crate",
+   "label": "Crate (cooperage store)",
+   "rect": [
+    24.28,
+    8.42,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "shaving-horse-and-bench",
+   "obj": "bench",
+   "label": "shaving horse and bench",
+   "rect": [
+    17.35,
+    12.425,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-2",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    18.975,
+    10.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-3",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    23.775,
+    10.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-4",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    19.675,
+    12.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-5",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    20.875,
+    14.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-6",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    22.775,
+    14.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-7",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    25.975,
+    10.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cooperage-8",
+   "obj": "cask",
+   "label": "Cask (cooperage)",
+   "rect": [
+    26.075,
+    12.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-cask-cooperage-2",
+   "obj": "cask",
+   "label": "New cask (cooperage)",
+   "rect": [
+    24.375,
+    14.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-cask-cooperage-3",
+   "obj": "cask",
+   "label": "New cask (cooperage)",
+   "rect": [
+    25.075,
+    14.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-cask-cooperage-4",
+   "obj": "cask",
+   "label": "New cask (cooperage)",
+   "rect": [
+    25.775,
+    14.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "new-casks",
+   "obj": "cask",
+   "label": "new casks",
+   "rect": [
+    25.075,
+    14.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth-weavers-kitchen",
+   "obj": "hearth",
+   "label": "hearth (weavers' kitchen)",
+   "rect": [
+    31.1,
+    3.1,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "table-2",
+   "obj": "table",
+   "label": "table",
+   "rect": [
+    30.7,
+    4.45,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-weavers-kitchen-2",
+   "obj": "cask",
+   "label": "Cask (weavers' kitchen)",
+   "rect": [
+    33.575,
+    4.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-weavers-kitchen-3",
+   "obj": "cask",
+   "label": "Cask (weavers' kitchen)",
+   "rect": [
+    33.575,
+    5.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "shelf-of-crockery",
+   "obj": "shelf",
+   "label": "shelf of crockery",
+   "rect": [
+    29.3,
+    4.175,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "lenka-s-bed",
+   "obj": "bed-box",
+   "label": "Lenka's bed",
+   "rect": [
+    36.25,
+    3.5,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "hynek-s-bed",
+   "obj": "bed-box",
+   "label": "Hynek's bed",
+   "rect": [
+    40.15,
+    3.5,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "loom",
+   "obj": "loom",
+   "label": "loom",
+   "rect": [
+    33.25,
+    9.05,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "loom-2",
+   "obj": "loom",
+   "label": "loom",
+   "rect": [
+    37.65,
+    9.05,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "loom-3",
+   "obj": "loom",
+   "label": "loom",
+   "rect": [
+    32.35,
+    13.65,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "loom-4",
+   "obj": "loom",
+   "label": "loom",
+   "rect": [
+    40.45,
+    13.65,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "a-half-finished-red-robe-on-the-loom",
+   "obj": "loom",
+   "label": "a half-finished red robe on the loom",
+   "rect": [
+    37.65,
+    9.0,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "hearth-shuttered-house-hall",
+   "obj": "hearth",
+   "label": "hearth (shuttered house hall)",
+   "rect": [
+    47.7,
+    4.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "long-table",
+   "obj": "table-long",
+   "label": "long table",
+   "rect": [
+    47.2,
+    5.7,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask-shuttered-house-2",
+   "obj": "cask",
+   "label": "Cask (Shuttered House)",
+   "rect": [
+    45.375,
+    5.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tomas-s-bed",
+   "obj": "bed-box",
+   "label": "Tomas's bed",
+   "rect": [
+    54.85,
+    6.2,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "kitchen-hearth-shuttered-house",
+   "obj": "hearth",
+   "label": "kitchen hearth (shuttered house)",
+   "rect": [
+    45.25,
+    11.9,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "kitchen-hearth",
+   "obj": "hearth",
+   "label": "kitchen hearth",
+   "rect": [
+    45.25,
+    11.9,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "kitchen-table",
+   "obj": "table",
+   "label": "kitchen table",
+   "rect": [
+    47.4,
+    12.15,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-shuttered-house-kitchen-2",
+   "obj": "cask",
+   "label": "Cask (Shuttered House kitchen)",
+   "rect": [
+    49.175,
+    14.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-shuttered-house-kitchen-3",
+   "obj": "cask",
+   "label": "Cask (Shuttered House kitchen)",
+   "rect": [
+    49.875,
+    14.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-shuttered-house-kitchen-2",
+   "obj": "crate",
+   "label": "Crate (Shuttered House kitchen)",
+   "rect": [
+    49.68,
+    10.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "day-rest-beds-no-window",
+   "obj": "bed-box",
+   "label": "day-rest beds, no window",
+   "rect": [
+    54.85,
+    12.1,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "dye-vat",
+   "obj": "vat",
+   "label": "dye vat",
+   "rect": [
+    4.0,
+    26.2,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dye-vat-2",
+   "obj": "vat",
+   "label": "dye vat",
+   "rect": [
+    5.0,
+    28.5,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dye-vat-3",
+   "obj": "vat",
+   "label": "dye vat",
+   "rect": [
+    4.8,
+    30.4,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dye-vat-4",
+   "obj": "vat",
+   "label": "dye vat",
+   "rect": [
+    6.3,
+    31.4,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "mordant-cask-dyers-2",
+   "obj": "cask",
+   "label": "Mordant cask (dyers)",
+   "rect": [
+    2.375,
+    26.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "madder-cask-dyers-2",
+   "obj": "cask",
+   "label": "Madder cask (dyers)",
+   "rect": [
+    2.375,
+    26.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woad-sack-dyers-2",
+   "obj": "sack",
+   "label": "Woad sack (dyers)",
+   "rect": [
+    2.555,
+    31.05,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "weld-sack-dyers-2",
+   "obj": "sack",
+   "label": "Weld sack (dyers)",
+   "rect": [
+    3.055,
+    31.55,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "jakub-s-bed",
+   "obj": "bed-box",
+   "label": "Jakub's bed",
+   "rect": [
+    10.75,
+    25.8,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cot",
+   "obj": "cot",
+   "label": "cot",
+   "rect": [
+    10.9,
+    29.65,
+    0.8,
+    1.3
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-dyers-store-2",
+   "obj": "crate",
+   "label": "Crate (dyers' store)",
+   "rect": [
+    11.47,
+    31.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-dyers-store-3",
+   "obj": "crate",
+   "label": "Crate (dyers' store)",
+   "rect": [
+    9.47,
+    32.51,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "big-dye-vat-in-the-yard",
+   "obj": "vat",
+   "label": "big dye vat in the yard",
+   "rect": [
+    13.8,
+    24.5,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "big-dye-vat-in-the-yard-2",
+   "obj": "vat",
+   "label": "big dye vat in the yard",
+   "rect": [
+    16.3,
+    24.5,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "big-dye-vat-in-the-yard-3",
+   "obj": "vat",
+   "label": "big dye vat in the yard",
+   "rect": [
+    18.8,
+    24.5,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "big-dye-vat-in-the-yard-4",
+   "obj": "vat",
+   "label": "big dye vat in the yard",
+   "rect": [
+    13.8,
+    27.8,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "big-dye-vat-in-the-yard-5",
+   "obj": "vat",
+   "label": "big dye vat in the yard",
+   "rect": [
+    16.3,
+    27.8,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "mash-tun",
+   "obj": "vat",
+   "label": "mash tun",
+   "rect": [
+    28.6,
+    25.6,
+    1.6,
+    1.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-2",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.515,
+    30.475,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-3",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.515,
+    31.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-4",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.515,
+    31.875,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-brewhouse-5",
+   "obj": "cask",
+   "label": "Ale cask (brewhouse)",
+   "rect": [
+    24.515,
+    32.575,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-casks",
+   "obj": "cask",
+   "label": "ale casks",
+   "rect": [
+    24.525,
+    31.475,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sack-brewhouse-2",
+   "obj": "sack",
+   "label": "Malt sack (brewhouse)",
+   "rect": [
+    25.855,
+    25.15,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sack-brewhouse-3",
+   "obj": "sack",
+   "label": "Malt sack (brewhouse)",
+   "rect": [
+    26.455,
+    24.95,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sack-brewhouse-4",
+   "obj": "sack",
+   "label": "Malt sack (brewhouse)",
+   "rect": [
+    26.155,
+    25.65,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "malt-sacks",
+   "obj": "sack",
+   "label": "malt sacks",
+   "rect": [
+    26.125,
+    25.25,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bed-2",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    33.75,
+    25.1,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-2",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    32.775,
+    30.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-3",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    32.775,
+    31.475,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-4",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    34.675,
+    29.775,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-5",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    34.675,
+    30.475,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-brewhouse-store-6",
+   "obj": "cask",
+   "label": "Cask (brewhouse store)",
+   "rect": [
+    34.675,
+    31.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-brewhouse-store-2",
+   "obj": "crate",
+   "label": "Crate (brewhouse store)",
+   "rect": [
+    32.47,
+    29.51,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-brewhouse-store-3",
+   "obj": "crate",
+   "label": "Crate (brewhouse store)",
+   "rect": [
+    34.47,
+    32.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth-cottage-at-38",
+   "obj": "hearth",
+   "label": "hearth (cottage at 38)",
+   "rect": [
+    40.0,
+    27.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "bed-3",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    37.9,
+    29.0,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask-cottage-2",
+   "obj": "cask",
+   "label": "Cask (cottage)",
+   "rect": [
+    37.975,
+    25.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth-cottage-at-44",
+   "obj": "hearth",
+   "label": "hearth (cottage at 44)",
+   "rect": [
+    46.6,
+    27.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "bed-4",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    44.5,
+    28.9,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "bed-5",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    48.9,
+    28.9,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "hearth-cottage-at-51",
+   "obj": "hearth",
+   "label": "hearth (cottage at 51)",
+   "rect": [
+    53.7,
+    28.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "bed-6",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    51.8,
+    29.2,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "cask-cottage-3",
+   "obj": "cask",
+   "label": "Cask (cottage)",
+   "rect": [
+    54.675,
+    26.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-cottage-4",
+   "obj": "cask",
+   "label": "Cask (cottage)",
+   "rect": [
+    55.375,
+    26.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "lantern-post",
+   "obj": "lantern-post",
+   "label": "lantern post",
+   "rect": [
+    10.9,
+    23.5,
+    0.2,
+    0.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "lantern-post-2",
+   "obj": "lantern-post",
+   "label": "lantern post",
+   "rect": [
+    23.3,
+    17.9,
+    0.2,
+    0.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "lantern-post-3",
+   "obj": "lantern-post",
+   "label": "lantern post",
+   "rect": [
+    36.3,
+    22.3,
+    0.2,
+    0.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "lantern-post-4",
+   "obj": "lantern-post",
+   "label": "lantern post",
+   "rect": [
+    52.5,
+    22.8,
+    0.2,
+    0.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-2",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    21.975,
+    15.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-3",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    26.575,
+    16.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-4",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    43.375,
+    16.375,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-by-the-lane-5",
+   "obj": "cask",
+   "label": "Cask by the lane",
+   "rect": [
+    30.775,
+    23.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "woodpile",
+   "rect": [
+    43.9,
+    15.95,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-2",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.875,
+    6.3,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-3",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.875,
+    6.69,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-4",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.875,
+    7.07,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-2",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    9.755,
+    13.595,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-3",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    9.755,
+    14.065,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-4",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    2.375,
+    10.385,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-5",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    2.375,
+    10.845,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-6",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    23.775,
+    7.165,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-7",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    23.775,
+    7.635,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-8",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    23.775,
+    8.105,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-9",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    24.755,
+    7.635,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-2",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    25.57,
+    7.93,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-3",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    25.58,
+    6.51,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-10",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    24.935,
+    6.075,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-11",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    24.835,
+    8.215,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-12",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    26.045,
+    6.005,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-5",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    41.875,
+    10.3,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-6",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    41.875,
+    10.69,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-7",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    41.875,
+    11.07,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-8",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    55.645,
+    8.44,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-9",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    8.275,
+    28.73,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-10",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    8.275,
+    29.49,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-13",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    10.705,
+    32.555,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-14",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    11.165,
+    32.555,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-15",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    11.635,
+    32.555,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-16",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    10.115,
+    31.865,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-11",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    10.945,
+    30.9,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-17",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    9.995,
+    31.255,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-12",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    11.615,
+    31.27,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-13",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    24.615,
+    26.47,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-14",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    24.615,
+    26.86,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-15",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    24.615,
+    27.24,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-18",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.755,
+    28.245,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-19",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.755,
+    28.715,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-20",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.755,
+    29.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-21",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    27.615,
+    27.555,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-22",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    30.055,
+    28.535,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-23",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    28.665,
+    27.415,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-24",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    26.915,
+    29.495,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-16",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    28.285,
+    30.4,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-17",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    32.865,
+    32.77,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-18",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.255,
+    32.77,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-19",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.635,
+    32.77,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-4",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    33.2,
+    30.0,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-5",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    31.89,
+    32.59,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-6",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    33.49,
+    32.02,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-20",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.855,
+    30.77,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-21",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    32.715,
+    32.26,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-25",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    33.875,
+    29.495,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-22",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    33.765,
+    31.47,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-26",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    0.325,
+    21.345,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-27",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    58.225,
+    20.165,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-28",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    0.325,
+    19.725,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-29",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    28.155,
+    17.725,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-30",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    39.675,
+    21.615,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-7",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    57.06,
+    17.62,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-8",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    57.55,
+    17.62,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-31",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    26.205,
+    21.615,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "cask-32",
+   "obj": "cask",
+   "label": "Cask",
+   "rect": [
+    13.325,
+    17.725,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-9",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    28.16,
+    21.48,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-10",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    28.65,
+    21.48,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-11",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    51.28,
+    23.0,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-12",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    51.28,
+    23.49,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-13",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    15.41,
+    15.09,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-14",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    15.9,
+    15.09,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 6.3,
+   "y": 9.9,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 5,
+   "color": "#ff8a30"
+  },
+  {
+   "x": 20.4,
+   "y": 5.6,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 22.4,
+   "y": 12.4,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 31.6,
+   "y": 3.6,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 30.0,
+   "y": 6.2,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 3,
+   "color": "#ffc46b"
+  },
+  {
+   "x": 41.9,
+   "y": 13.0,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 3,
+   "color": "#ffc46b"
+  },
+  {
+   "x": 48.2,
+   "y": 4.5,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 45.75,
+   "y": 12.4,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 56.0,
+   "y": 12.4,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 3,
+   "color": "#ffc46b"
+  },
+  {
+   "x": 6.7,
+   "y": 27.6,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 9.2,
+   "y": 27.5,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 3,
+   "color": "#ffc46b"
+  },
+  {
+   "x": 25.05,
+   "y": 29.2,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 32.2,
+   "y": 25.2,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 3,
+   "color": "#ffc46b"
+  },
+  {
+   "x": 40.5,
+   "y": 27.9,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 47.1,
+   "y": 27.9,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 54.2,
+   "y": 28.5,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 11.0,
+   "y": 23.6,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 23.4,
+   "y": 18.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 36.4,
+   "y": 22.4,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 52.6,
+   "y": 22.9,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 30,
+   "y": 20,
+   "text": "Craftsmen's Lane, cobbled"
+  },
+  {
+   "x": 60.5,
+   "y": 20.0,
+   "text": "plank bridge over the town ditch"
+  },
+  {
+   "x": 60.6,
+   "y": 30,
+   "text": "the town ditch"
+  },
+  {
+   "x": 59.0,
+   "y": 10,
+   "text": "hurdle fence along the ditch"
+  },
+  {
+   "x": 17.3,
+   "y": 34.6,
+   "text": "dye yard fence"
+  },
+  {
+   "x": 12.6,
+   "y": 7.6,
+   "text": "saddle rack"
+  },
+  {
+   "x": 7.6,
+   "y": 15.75,
+   "text": "rack of bar iron"
+  },
+  {
+   "x": 9.8,
+   "y": 11.4,
+   "text": "horseshoes on pegs"
+  },
+  {
+   "x": 26.6,
+   "y": 8.8,
+   "text": "ladder to the loft"
+  },
+  {
+   "x": 22.3,
+   "y": 10.05,
+   "text": "stack of staves"
+  },
+  {
+   "x": 22.4,
+   "y": 12.4,
+   "text": "cresset fire for bending staves (cooperage)"
+  },
+  {
+   "x": 25.0,
+   "y": 13.4,
+   "text": "adze and drawknife"
+  },
+  {
+   "x": 33.4,
+   "y": 7.5,
+   "text": "baskets of wool"
+  },
+  {
+   "x": 29.8,
+   "y": 12.2,
+   "text": "bolts of cloth"
+  },
+  {
+   "x": 53.5,
+   "y": 12.8,
+   "text": "rug"
+  },
+  {
+   "x": 52.2,
+   "y": 10.2,
+   "text": "a bar on the inside of the door"
+  },
+  {
+   "x": 6.7,
+   "y": 27.6,
+   "text": "fire under the dye kettle"
+  },
+  {
+   "x": 6.7,
+   "y": 27.6,
+   "text": "dye kettle on the fire"
+  },
+  {
+   "x": 2.85,
+   "y": 29.0,
+   "text": "dyed hanks on the pegs"
+  },
+  {
+   "x": 17.2,
+   "y": 32.4,
+   "text": "dyed cloth drying on lines"
+  },
+  {
+   "x": 27.1,
+   "y": 31.9,
+   "text": "wort cooling tun"
+  },
+  {
+   "x": 25.05,
+   "y": 29.2,
+   "text": "brew furnace with its copper"
+  },
+  {
+   "x": 40.5,
+   "y": 34.1,
+   "text": "vegetable garden"
+  },
+  {
+   "x": 47.1,
+   "y": 34.1,
+   "text": "vegetable garden"
+  },
+  {
+   "x": 54.4,
+   "y": 33.9,
+   "text": "vegetable garden"
+  },
+  {
+   "x": 57.6,
+   "y": 35.0,
+   "text": "bush"
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-lt-market",
+   "to": "lt-market",
+   "rect": [
+    0.0,
+    17.8,
+    1.4,
+    4.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-east-road",
+   "to": "east-road",
+   "rect": [
+    64.6,
+    17.9,
+    1.4,
+    4.2
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-lt-market",
+   "to": null,
+   "rect": [
+    2.5,
+    19.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-east-road",
+   "to": null,
+   "rect": [
+    62.1,
+    19.3,
+    1.4,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true
+}

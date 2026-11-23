@@ -1,0 +1,414 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-marta",
+ "name": "Sister Marta's Cell and the Keep Chapel",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-sister-marta-s-cell-and-the-keep-chapel/trespass-sister-marta-s-cell-and-the-keep-chapel.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    12.0,
+    14.0,
+    12.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    11.0,
+    12.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    15.0,
+    28.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    17.0,
+    28.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    3.0,
+    28.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    3.0,
+    12.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    3.0,
+    28.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    17.0,
+    20.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    15.0,
+    18.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    7.0,
+    12.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    11.0,
+    5.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    3.0,
+    2.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    9.0,
+    28.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    11.0,
+    12.0,
+    11.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    12.0,
+    13.0,
+    12.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    28.0,
+    8.0,
+    28.0,
+    9.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    18.0,
+    15.0,
+    19.0,
+    15.0
+   ],
+   "kind": "secret",
+   "locked": false
+  },
+  {
+   "c": [
+    20.0,
+    17.0,
+    22.0,
+    17.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    5.0,
+    11.0,
+    6.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    6.0,
+    12.0,
+    7.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-cot",
+   "label": "The cot",
+   "rect": [
+    2.5,
+    3.5,
+    2.0,
+    3.3
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-sealed-seam",
+   "label": "The sealed seam",
+   "rect": [
+    18.0,
+    14.7,
+    1.0,
+    0.7
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-corner",
+   "label": "The corner",
+   "rect": [
+    8.6,
+    7.5,
+    3.2,
+    3.1
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-crypt-hatch",
+   "label": "The crypt hatch",
+   "rect": [
+    16.5,
+    15.6,
+    0.9,
+    0.9
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cell-desk",
+   "label": "The cell desk",
+   "rect": [
+    7.0,
+    3.6,
+    3.0,
+    1.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-altar",
+   "label": "The altar",
+   "rect": [
+    17.0,
+    3.4,
+    6.0,
+    1.8
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-cot",
+   "obj": "cot",
+   "label": "The cot",
+   "rect": [
+    3.1,
+    4.5,
+    0.8,
+    1.3
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-crypt-hatch",
+   "obj": "hatch",
+   "label": "The crypt hatch",
+   "rect": [
+    16.65,
+    15.75,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-cell-desk",
+   "obj": "desk",
+   "label": "The cell desk",
+   "rect": [
+    8.1,
+    4.05,
+    0.8,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-altar",
+   "obj": "altar",
+   "label": "The altar",
+   "rect": [
+    19.4,
+    4.0,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 20.0,
+   "y": 3.9,
+   "kind": "eerie",
+   "bright": 0.28,
+   "dim": 4.28,
+   "color": "#c9332a"
+  },
+  {
+   "x": 16.0,
+   "y": 3.8,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.72,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 8.5,
+   "y": 4.2,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 12.0,
+   "text": "GM: The keep chapel and Marta's cell."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "keep-ward"
+}

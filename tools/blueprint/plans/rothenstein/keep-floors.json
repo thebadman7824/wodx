@@ -1,0 +1,1313 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "keep-floors",
+ "name": "Kranzfels, Upper Floor and Undercroft",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  60,
+  34
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/kranzfels-upper-floor-and-undercroft/kranzfels-upper-floor-and-undercroft.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    42.0,
+    16.0,
+    42.0,
+    25.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    14.0,
+    22.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.4,
+    30.0,
+    21.0,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    26.5,
+    14.0,
+    28.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    32.0,
+    30.0,
+    58.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.8,
+    30.0,
+    13.4,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.5,
+    23.0,
+    58.0,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.0,
+    12.5,
+    48.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.812,
+    27.325,
+    44.337,
+    27.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    46.5,
+    16.0,
+    58.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.8,
+    30.0,
+    28.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    48.0,
+    2.0,
+    48.0,
+    11.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.362,
+    27.325,
+    46.913,
+    27.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    28.0,
+    2.0,
+    28.0,
+    17.762
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    9.5,
+    2.0,
+    10.1
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    50.0,
+    16.0,
+    50.0,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.5,
+    14.0,
+    19.5,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.175,
+    26.6,
+    44.45,
+    26.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    17.762,
+    2.0,
+    18.363
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    47.337,
+    26.2,
+    47.375,
+    26.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    47.263,
+    25.875,
+    47.337,
+    26.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    9.6,
+    30.0,
+    12.8,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    26.5,
+    42.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    26.637,
+    28.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    30.0,
+    9.6,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    46.913,
+    25.7,
+    47.263,
+    25.875
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.337,
+    27.0,
+    44.175,
+    26.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    28.0,
+    26.038,
+    28.0,
+    26.637
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    2.0,
+    5.362
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.913,
+    27.5,
+    46.288,
+    27.587
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    17.2,
+    30.0,
+    20.4,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.8,
+    30.0,
+    9.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.2,
+    2.0,
+    5.8,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    2.0,
+    5.2,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.0,
+    2.0,
+    58.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    17.762,
+    28.0,
+    18.363
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    26.038,
+    2.0,
+    26.637
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    5.8,
+    2.0,
+    9.0,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.6,
+    2.0,
+    12.8,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    18.5,
+    12.0,
+    25.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    14.0,
+    12.0,
+    17.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    30.0,
+    24.2,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    21.9,
+    2.0,
+    22.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    45.312,
+    27.5,
+    44.812,
+    27.325
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    46.288,
+    27.587,
+    45.75,
+    27.587
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    45.312,
+    25.7,
+    45.737,
+    25.613
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    32.0,
+    2.0,
+    32.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.4,
+    2.0,
+    28.0,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.2,
+    30.0,
+    5.8,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.45,
+    26.2,
+    44.913,
+    25.875
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    24.2,
+    30.0,
+    24.8,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    22.5,
+    2.0,
+    26.038
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.5,
+    16.0,
+    45.5,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    42.0,
+    23.0,
+    45.5,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    22.0,
+    15.5,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    14.0,
+    7.5,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    8.5,
+    15.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.45,
+    27.0,
+    47.362,
+    27.325
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    5.362,
+    2.0,
+    5.963
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    30.0,
+    5.2,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    32.0,
+    2.0,
+    58.0,
+    2.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.4,
+    30.0,
+    16.6,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.737,
+    25.613,
+    46.312,
+    25.613
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    46.5,
+    23.0,
+    53.5,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    2.0,
+    15.0,
+    7.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.5,
+    22.0,
+    28.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.312,
+    25.613,
+    46.913,
+    25.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    32.0,
+    16.0,
+    37.5,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    2.0,
+    9.6,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    28.0,
+    18.363,
+    28.0,
+    26.038
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.8,
+    2.0,
+    13.4,
+    2.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    45.75,
+    27.587,
+    45.312,
+    27.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    26.637,
+    2.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.375,
+    26.6,
+    47.45,
+    27.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    26.5,
+    12.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    18.363,
+    2.0,
+    21.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.5,
+    14.0,
+    25.5,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.913,
+    25.875,
+    45.312,
+    25.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    10.1,
+    2.0,
+    17.762
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.6,
+    30.0,
+    17.2,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    5.963,
+    2.0,
+    9.5
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    37.5,
+    16.0,
+    38.5,
+    16.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    48.0,
+    11.5,
+    48.0,
+    12.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    15.5,
+    22.0,
+    16.5,
+    22.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    42.0,
+    25.5,
+    42.0,
+    26.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    25.5,
+    12.0,
+    26.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    25.5,
+    14.0,
+    26.5,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    19.5,
+    14.0,
+    20.5,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    7.5,
+    14.0,
+    8.5,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    53.5,
+    23.0,
+    54.5,
+    23.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    17.5,
+    12.0,
+    18.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    15.0,
+    7.5,
+    15.0,
+    8.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    45.5,
+    23.0,
+    46.5,
+    23.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    45.5,
+    16.0,
+    46.5,
+    16.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [],
+ "slots": [],
+ "lights": [
+  {
+   "x": 7.838,
+   "y": 2.6,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 28.45,
+   "y": 26.337,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 39.9,
+   "y": 3.075,
+   "kind": "eerie",
+   "bright": 0.38,
+   "dim": 2.0,
+   "color": "#7affc0"
+  },
+  {
+   "x": 18.425,
+   "y": 21.863,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 1.55,
+   "y": 22.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 53.225,
+   "y": 2.6,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 28.45,
+   "y": 18.062,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 8.588,
+   "y": 29.4,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 9.3,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 19.738,
+   "y": 29.025,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 35.763,
+   "y": 29.4,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 20.438,
+   "y": 25.538,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.137,
+   "y": 25.212,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 9.3,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 20.7,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 16.9,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 12.137,
+   "y": 16.488,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 57.038,
+   "y": 16.413,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 1.55,
+   "y": 9.8,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.1,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 5.5,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 6.65,
+   "y": 29.4,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 13.1,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 32.6,
+   "y": 6.8,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 34.3,
+   "y": 15.537,
+   "kind": "fire",
+   "bright": 1.12,
+   "dim": 5.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 33.1,
+   "y": 2.925,
+   "kind": "fire",
+   "bright": 1.12,
+   "dim": 5.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 1.55,
+   "y": 5.662,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 24.5,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 49.587,
+   "y": 22.538,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 27.4,
+   "y": 7.125,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 1.55,
+   "y": 26.337,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 5.5,
+   "y": 1.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 17.488,
+   "y": 14.562,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 8.7,
+   "y": 3.025,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 1.55,
+   "y": 18.062,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 16.587,
+   "y": 14.562,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 21.5,
+   "y": 5.0,
+   "text": "There is no bed. Bogdan lies by day in a long iron-bound chest of Carpathian ear"
+  },
+  {
+   "x": 21.275,
+   "y": 8.225,
+   "text": "Voivode Bogdan Ursu lives here (The Voivode's Floor, The Voivode's Bedchamber)."
+  },
+  {
+   "x": 40.0,
+   "y": 6.0,
+   "text": "The flesh-rites are written in a careful hand on the wall above the tables."
+  },
+  {
+   "x": 25.8,
+   "y": 28.1,
+   "text": "The great stair down to the guard hall."
+  },
+  {
+   "x": 46.0,
+   "y": 19.5,
+   "text": "A captured villager, alive, does not remember..."
+  },
+  {
+   "x": 53.0,
+   "y": 6.0,
+   "text": "Konrad's day-rest: a long chest of native earth..."
+  },
+  {
+   "x": 21.5,
+   "y": 8.0,
+   "text": "Every guest is watched. A squint in the wall looks down into the great hall."
+  },
+  {
+   "x": 40.225,
+   "y": 9.225,
+   "text": "Konrad the Flesh-Smith lives here (The Undercroft, Konrad's Workshop)."
+  },
+  {
+   "x": 55.8,
+   "y": 28.1,
+   "text": "The narrow stair up to the guard hall."
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "stair-keep-up",
+   "to": "keep-ward",
+   "rect": [
+    24.6,
+    26.8,
+    2.4,
+    2.6
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-keep-under",
+   "to": "keep-ward",
+   "rect": [
+    54.6,
+    26.8,
+    2.4,
+    2.6
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "keep-under",
+   "to": null,
+   "rect": [
+    52.7,
+    27.4,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "keep-up",
+   "to": null,
+   "rect": [
+    22.7,
+    27.4,
+    1.4,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true
+}

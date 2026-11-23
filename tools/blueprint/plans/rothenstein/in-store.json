@@ -1,0 +1,341 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-store",
+ "name": "The General Store",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-general-store/workplace-the-general-store.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    12.0,
+    14.0,
+    26.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    7.0,
+    20.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    14.0,
+    10.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    4.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.0,
+    11.0,
+    20.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    11.0,
+    16.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    3.0,
+    20.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    3.0,
+    26.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    26.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    11.0,
+    7.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    11.0,
+    26.0,
+    14.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    26.0,
+    10.0,
+    26.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    7.0,
+    11.0,
+    8.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    20.0,
+    6.0,
+    20.0,
+    7.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    16.0,
+    11.0,
+    17.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    10.0,
+    14.0,
+    12.0,
+    14.0
+   ],
+   "kind": "gate",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-shelves",
+   "label": "The shelves",
+   "rect": [
+    4.3,
+    3.3,
+    15.4,
+    7.3
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cellar-hatch",
+   "label": "The cellar hatch",
+   "rect": [
+    18.2,
+    11.6,
+    0.8,
+    0.8
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-counter",
+   "label": "The counter",
+   "rect": [
+    6.0,
+    5.6,
+    8.0,
+    1.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-back-room",
+   "label": "The back room",
+   "rect": [
+    20.2,
+    3.2,
+    5.8,
+    7.6
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-shelves",
+   "obj": "shelf",
+   "label": "The shelves",
+   "rect": [
+    11.5,
+    6.825,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "the-cellar-hatch",
+   "obj": "hatch",
+   "label": "The cellar hatch",
+   "rect": [
+    18.3,
+    11.7,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-counter",
+   "obj": "counter",
+   "label": "The counter",
+   "rect": [
+    9.2,
+    5.95,
+    1.6,
+    0.5
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 9.0,
+   "y": 12.6,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.86,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 22.4,
+   "y": 8.8,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 10.0,
+   "y": 5.8,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.86,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 13.5,
+   "text": "GM: A general store in the Lower Town."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-market"
+}

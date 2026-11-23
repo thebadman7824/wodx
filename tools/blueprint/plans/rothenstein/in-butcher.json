@@ -1,0 +1,364 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-butcher",
+ "name": "The Butcher's Shop",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-butcher-s-shop/workplace-the-butcher-s-shop.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    11.0,
+    3.0,
+    26.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.0,
+    10.0,
+    19.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.0,
+    10.6,
+    5.0,
+    13.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    9.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.4,
+    13.6,
+    15.4,
+    10.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    16.0,
+    10.0,
+    16.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    10.0,
+    26.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    14.0,
+    16.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    4.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    14.0,
+    8.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.0,
+    13.6,
+    15.4,
+    13.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.0,
+    10.0,
+    12.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    10.0,
+    4.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    3.0,
+    26.0,
+    10.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    9.0,
+    3.0,
+    11.0,
+    3.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    19.0,
+    10.0,
+    20.0,
+    10.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    12.0,
+    10.0,
+    13.0,
+    10.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    14.0,
+    10.0,
+    14.0
+   ],
+   "kind": "gate",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-slaughter-yard",
+   "label": "The slaughter yard",
+   "rect": [
+    4.6,
+    10.4,
+    11.4,
+    3.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cellar-hatch",
+   "label": "The cellar hatch",
+   "rect": [
+    24.4,
+    8.0,
+    0.9,
+    0.9
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-hooks",
+   "label": "The hooks",
+   "rect": [
+    4.8,
+    3.2,
+    10.4,
+    6.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-chopping-block",
+   "label": "The chopping block",
+   "rect": [
+    6.0,
+    5.4,
+    6.0,
+    1.6
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-cellar-hatch",
+   "obj": "hatch",
+   "label": "The cellar hatch",
+   "rect": [
+    24.55,
+    8.15,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-hooks-1",
+   "obj": "rack",
+   "label": "The hooks 1",
+   "rect": [
+    6.8,
+    6.0,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-hooks-2",
+   "obj": "rack",
+   "label": "The hooks 2",
+   "rect": [
+    12.0,
+    6.0,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-chopping-block",
+   "obj": "chopping-block",
+   "label": "The chopping block",
+   "rect": [
+    8.8,
+    6.0,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 9.0,
+   "y": 6.2,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.0,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 18.4,
+   "y": 4.7,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 13.8,
+   "text": "GM: The butcher's shop and yard. Dogs"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-market"
+}

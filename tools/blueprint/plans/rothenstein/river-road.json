@@ -1,0 +1,750 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "river-road",
+ "name": "The River Road and Fields",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  66,
+  46
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/the-river-road-and-fields/the-river-road-and-fields.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    2.0,
+    41.6,
+    2.0,
+    45.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.8,
+    40.6,
+    15.6,
+    40.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.5,
+    34.0,
+    12.0,
+    34.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    36.3,
+    11.0,
+    38.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.6,
+    40.6,
+    12.0,
+    40.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    34.0,
+    8.5,
+    34.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    37.7,
+    6.0,
+    40.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.6,
+    34.0,
+    15.6,
+    40.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    34.0,
+    6.0,
+    36.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    45.6,
+    12.0,
+    45.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    36.9,
+    6.0,
+    37.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    34.0,
+    12.8,
+    34.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.8,
+    34.0,
+    15.6,
+    34.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.4,
+    35.2,
+    64.6,
+    35.2
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    6.0,
+    40.6,
+    8.8,
+    40.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    40.6,
+    12.8,
+    40.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    41.6,
+    12.0,
+    42.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.0,
+    37.4,
+    15.6,
+    37.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    44.4,
+    12.0,
+    45.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.6,
+    33.0,
+    16.6,
+    46.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    11.0,
+    39.5,
+    11.0,
+    40.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    41.6,
+    12.0,
+    41.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.4,
+    19.4,
+    64.6,
+    19.4
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    11.0,
+    34.0,
+    11.0,
+    35.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16.6,
+    1.4,
+    16.6,
+    24.4
+   ],
+   "kind": "hedge"
+  },
+  {
+   "c": [
+    8.8,
+    40.6,
+    9.6,
+    40.6
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    11.0,
+    38.5,
+    11.0,
+    39.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.5,
+    34.0,
+    9.5,
+    34.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.0,
+    35.3,
+    11.0,
+    36.3
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "The Svoboda Farmstead",
+   "rect": [
+    5.475,
+    33.475,
+    10.65,
+    7.65
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "",
+   "rect": [
+    1.462,
+    41.075,
+    11.075,
+    4.925
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "open-hearth-on-its-slab-the-svoboda-farmstead",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Svoboda Farmstead)",
+   "rect": [
+    5.925,
+    33.975,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-svoboda-farmstead",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Svoboda Farmstead)",
+   "rect": [
+    5.925,
+    39.225,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-svoboda-farmstead",
+   "obj": "table",
+   "label": "Household table (The Svoboda Farmstead)",
+   "rect": [
+    14.725,
+    33.925,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-svoboda-farmstead",
+   "obj": "chest",
+   "label": "Chest (The Svoboda Farmstead)",
+   "rect": [
+    7.019,
+    40.025,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-svoboda-farmstead",
+   "obj": "bench",
+   "label": "Bench (The Svoboda Farmstead)",
+   "rect": [
+    5.975,
+    35.213,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-svoboda-farmstead",
+   "obj": "shelf",
+   "label": "Wall shelf (The Svoboda Farmstead)",
+   "rect": [
+    9.206,
+    40.375,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-svoboda-farmstead",
+   "obj": "cask",
+   "label": "Cask (The Svoboda Farmstead)",
+   "rect": [
+    7.088,
+    33.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b02",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b02)",
+   "rect": [
+    6.499,
+    43.038,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b02",
+   "obj": "bed-box",
+   "label": "Box bed for two (b02)",
+   "rect": [
+    1.962,
+    41.525,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b02",
+   "obj": "table",
+   "label": "Household table (b02)",
+   "rect": [
+    11.137,
+    41.525,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b02",
+   "obj": "chest",
+   "label": "Chest (b02)",
+   "rect": [
+    3.059,
+    44.9,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b02",
+   "obj": "bench",
+   "label": "Bench (b02)",
+   "rect": [
+    4.056,
+    41.575,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b02",
+   "obj": "shelf",
+   "label": "Wall shelf (b02)",
+   "rect": [
+    5.353,
+    45.25,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b02",
+   "obj": "cask",
+   "label": "Cask (b02)",
+   "rect": [
+    4.343,
+    45.05,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 5.55,
+   "y": 37.3,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 6.65,
+   "y": 37.275,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 14.9,
+   "y": 38.938,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 9.2,
+   "y": 41.05,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 19.3,
+   "y": 29.1,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.4,
+   "y": 33.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 15.425,
+   "y": 35.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 17.9,
+   "y": 29.1,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.4,
+   "y": 41.05,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 10.863,
+   "y": 36.7,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 8.512,
+   "y": 37.3,
+   "text": "Jindrich Svoboda lives here (The Svoboda Farmstead, Hall).",
+   "used": true
+  },
+  {
+   "x": 18.6,
+   "y": 28.4,
+   "text": "Zofie's shrine at the field edge. People leave ribbons and bread...."
+  },
+  {
+   "x": 13.287,
+   "y": 35.712,
+   "text": "Zofie the Visionary lives here (The Svoboda Farmstead, Zofie's Bed).",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-ferry",
+   "to": "ferry",
+   "rect": [
+    28.2,
+    44.6,
+    3.6,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-lt-quay",
+   "to": null,
+   "rect": [
+    62.1,
+    9.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-ford",
+   "to": "ford",
+   "rect": [
+    0.0,
+    29.7,
+    1.4,
+    2.6
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-quay",
+   "to": "lt-quay",
+   "rect": [
+    64.6,
+    8.5,
+    1.4,
+    3.0
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-ferry",
+   "to": null,
+   "rect": [
+    29.3,
+    42.1,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-lt-westgate",
+   "to": null,
+   "rect": [
+    17.3,
+    2.5,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-ford",
+   "to": null,
+   "rect": [
+    2.5,
+    30.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-lt-westgate",
+   "to": "lt-westgate",
+   "rect": [
+    16.2,
+    0.0,
+    3.6,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "building b02 (unnamed): use guessed as a home"
+ ],
+ "seeded": true
+}
