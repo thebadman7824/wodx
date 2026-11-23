@@ -4,8 +4,8 @@
 #   powershell -ExecutionPolicy Bypass -File tools\pcq\gh-runner\install.ps1 [-Count 2] [-Zip <runner zip>]
 # The registration token is fetched with the owner's Git Credential Manager sign-in and is never printed. No admin
 # rights or Windows service: the runners run as the signed-in user, started at sign-in like the PC job runner.
-# -Name sets the runner names (<Name>-1, <Name>-2): benjamin-pc-gate on the Secondary PC, new-pc-gate on the New PC.
-param([int]$Count = 2, [string]$Zip = "D:\WoDX\gh-runner\actions-runner-win-x64-2.338.2.zip", [string]$Name = "benjamin-pc-gate")
+# -Prefix sets the runner names (<Prefix>-1, <Prefix>-2; not -Name, which PowerShell would share with $name): benjamin-pc-gate on the Secondary PC, new-pc-gate on the New PC.
+param([int]$Count = 2, [string]$Zip = "D:\WoDX\gh-runner\actions-runner-win-x64-2.338.2.zip", [string]$Prefix = "benjamin-pc-gate")
 $ErrorActionPreference = "Stop"
 $root = "D:\WoDX\gh-runner"
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -19,7 +19,7 @@ $startup = [Environment]::GetFolderPath("Startup")
 $lines = @("@echo off", "rem WoDX self-hosted GitHub runners (B7010), below-normal priority")
 for ($i = 1; $i -le $Count; $i++) {
   $dir = Join-Path $root "$i"
-  $name = "$Name-$i"
+  $name = "$Prefix-$i"
   if (-not (Test-Path (Join-Path $dir "config.cmd"))) {
     New-Item -ItemType Directory -Force $dir | Out-Null
     Add-Type -AssemblyName System.IO.Compression.FileSystem

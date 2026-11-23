@@ -142,7 +142,7 @@ status (New PC)" and alerts titled "New PC alert". Name `--lane 10` to send a jo
 (`D:\WoDX\Foundry\main.mjs`); its lane was set up from the cloud lane kit's known-good world and add-on modules. It
 drives no merge train and runs no stale-PR sweep, and book and Trove lookups stay on the main PC. It also holds the
 solo world (`D:\WoDX\FoundryData-solo`, port 30010), which no lane touches. Its gate runners are new-pc-gate-1 and
-new-pc-gate-2 (`gh-runner\install.ps1 -Name new-pc-gate`).
+new-pc-gate-2 (`gh-runner\install.ps1 -Prefix new-pc-gate`).
 
 ## Gates on every pull request (B7010)
 
