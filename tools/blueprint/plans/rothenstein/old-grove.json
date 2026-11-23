@@ -556,7 +556,19 @@
  ],
  "doors": [],
  "buildings": [],
- "rooms": [],
+ "rooms": [
+  {
+   "id": "stone-ring",
+   "label": "The stone ring",
+   "rect": [
+    22,
+    16,
+    16,
+    14
+   ],
+   "use": "ritual"
+  }
+ ],
  "slots": [
   {
    "id": "the-altar-stone",
@@ -570,6 +582,174 @@
    ],
    "facing": "S",
    "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-1",
+   "obj": "standing-stone",
+   "label": "Standing stone 1",
+   "rect": [
+    33.76,
+    18.06,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-2",
+   "obj": "standing-stone",
+   "label": "Standing stone 2",
+   "rect": [
+    25.56,
+    27.56,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-3",
+   "obj": "standing-stone",
+   "label": "Standing stone 3",
+   "rect": [
+    24.34,
+    19.13,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-4",
+   "obj": "standing-stone",
+   "label": "Standing stone 4",
+   "rect": [
+    36.38,
+    23.53,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-5",
+   "obj": "standing-stone",
+   "label": "Standing stone 5",
+   "rect": [
+    22.99,
+    22.02,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-6",
+   "obj": "standing-stone",
+   "label": "Standing stone 6",
+   "rect": [
+    30.58,
+    16.85,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-7",
+   "obj": "standing-stone",
+   "label": "Standing stone 7",
+   "rect": [
+    35.9,
+    20.62,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-8",
+   "obj": "standing-stone",
+   "label": "Standing stone 8",
+   "rect": [
+    27.18,
+    17.29,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-9",
+   "obj": "standing-stone",
+   "label": "Standing stone 9",
+   "rect": [
+    32.3,
+    28.21,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-10",
+   "obj": "standing-stone",
+   "label": "Standing stone 10",
+   "rect": [
+    28.87,
+    28.73,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-11",
+   "obj": "standing-stone",
+   "label": "Standing stone 11",
+   "rect": [
+    23.41,
+    25.04,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "standing-stone-12",
+   "obj": "standing-stone",
+   "label": "Standing stone 12",
+   "rect": [
+    35.11,
+    26.38,
+    0.6,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
    "auto": false
   }
  ],

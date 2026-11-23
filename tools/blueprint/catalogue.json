@@ -64,6 +64,8 @@
   "grave":          {"label": "Grave", "ft": [3, 7], "words": ["grave", "fresh grave", "old graves"], "art": "todo"},
   "boat":           {"label": "Rowing boat", "ft": [5, 14], "words": ["boat", "boat store"], "art": "todo"},
   "ferry":          {"label": "Ferry raft", "ft": [10, 20], "words": ["ferry"], "art": "todo"},
+  "waterwheel":     {"label": "Undershot water wheel", "ft": [3, 14], "words": ["water wheel", "waterwheel", "mill wheel"], "art": "todo"},
+  "reeds":          {"label": "Reed bed", "ft": [10, 5], "words": ["reeds", "reed bed"], "art": "todo"},
   "tree":           {"label": "Field tree", "ft": [18, 18], "words": ["tree", "orchard"], "art": "todo"},
   "thing":          {"label": "Small thing (named)", "ft": [2, 2], "words": [], "art": "todo"}
  }
