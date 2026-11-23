@@ -38,7 +38,7 @@ export const MENU_PLAN = {
     kindred: {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
-        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA"],
+        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA", "api:maturation"],
         st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
@@ -166,6 +166,7 @@ export const DESC = {
     "api:roadFaith": "The Road as a faith: rank, Mentor, Moments of Truth, standing, and leaving for another Road",
     "api:exorcise": "Exorcism, a rite anyone can learn: Intelligence + Occult tears Essence from a demon or spirit until it is driven off (V20 Dark Ages)",
     "api:sampleDemon": "Make one of the sample demons of V20 Dark Ages with its traits and Charms",
+    "api:maturation": "Spend the maturation points the years gave: traits already held, and a roll to raise Backgrounds (Dark Ages: Vampire 2002)",
     "api:domainDA": "The manor and its lands: the Domain's aspects, the people, settlements, Servants and staff (V20 Dark Ages Companion)",
     "api:domainEvent": "Bring a domain event for a season: famine, invasion, pilgrims, an itinerant court...",
     "api:fealty": "Swear, cut off or break an oath of fealty: the Anchor's dots pool with the vassal's own",

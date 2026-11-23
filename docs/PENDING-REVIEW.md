@@ -368,3 +368,7 @@ Ben approved these deletes in the project chat on 22 November: "Yes. Delete the 
 | 2026-11-23 | Hiring for an itinerant court (full check, B7682) | The 1 Resources is gone for the season and comes back when the court leaves | Gone for good |
 | 2026-11-23 | What Servants ease (full check, B7684) | Servants take their dots off the difficulty of every Seneschal and Leadership roll of the holder | Only rolls on the domain's own business |
 | 2026-11-23 | A fealty Anchor's dots (full check, B7681) | Swearing adds the Anchor to the vassal's own Background on the sheet (ten at most); the liege's sheet is unchanged until a cut-off | Kept apart from the sheet, as a note |
+| 2026-11-23 | Maturation and the house experience (full check, B7685) | For a Dark Ages vampire, maturation replaces the house experience for the years and the Background fade (switch on by default) | Both at once, or the house experience only |
+| 2026-11-23 | Upkeep order (full check, B7687) | The highest rated Backgrounds are paid first | The player picks the order each time |
+| 2026-11-23 | How the years were spent (full check, B7685) | The Storyteller picks it on the Pass the Years row, ordinary unlife by default | Asked of each player before the skip |
+| 2026-11-23 | Points left over (full check, B7688) | Unspent maturation points wait on the sheet for the next window or downtime | Lost when the downtime ends |

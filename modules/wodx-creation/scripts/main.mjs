@@ -24,6 +24,8 @@ import * as firstChange from "./first-change.mjs";
 import * as people from "./people.mjs";
 import * as archive from "./archive.mjs";
 import * as states from "./states.mjs";
+import * as maturation from "./maturation.mjs";
+import * as maturationRules from "./maturation-rules.mjs";
 import * as totals from "./totals-rules.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import * as lifepath from "./lifepath.mjs";
@@ -108,6 +110,8 @@ function start() {
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups,
+    // B7685-B7689: Dark Ages maturation
+    maturation: {open: actor => maturation.MaturationApp.open(actor), mature: maturation.mature, offers: maturation.offers, buy: maturation.buy, state: maturation.stateOf, rules: maturationRules},
     becomeMortal: states.becomeMortal, becomeMortalDialog: states.becomeMortalDialog,
     deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
     revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,

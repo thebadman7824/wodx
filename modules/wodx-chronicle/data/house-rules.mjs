@@ -137,6 +137,14 @@ export default {
       "source": "House rule"
     },
     {
+      "id": "yearsMaturation",
+      "group": "years",
+      "name": "Maturation for Dark Ages Cainites",
+      "hint": "Pass the Years: in the Dark Ages a vampire's years give maturation points by how they were spent, with the Willpower roll each century, Background upkeep and Tempting Fate, in place of experience for the years and the Background fade. Off uses the house experience instead.",
+      "default": true,
+      "source": "Dark Ages: Vampire (2002) pp. 166-167; Dark Ages Storytellers Companion (2002) pp. 71-75"
+    },
+    {
       "id": "yearsConvertAbilities",
       "group": "years",
       "name": "Convert Dark Ages Abilities",

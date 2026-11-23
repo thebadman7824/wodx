@@ -11,7 +11,8 @@ export const SWITCHES = {
   decline: "yearsMortalDecline",
   drift: "yearsMoralityDrift",
   xp: "yearsExperience",
-  convert: "yearsConvertAbilities"
+  convert: "yearsConvertAbilities",
+  maturation: "yearsMaturation"
 };
 
 /** Mortal decline: at these ages a Physical dot is lost; the player picks which (house rule). */

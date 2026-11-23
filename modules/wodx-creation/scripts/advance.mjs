@@ -168,6 +168,12 @@ export async function applyAdvance(actor, change, plan, choice = null) {
       if ( lost ) await actor.update({"system.advantages.path.permanent": Math.max(0, road - lost)});
       return {note: `${lost} of ${d.rolls} failed`};
     }
+    case "adv.maturation": {
+      // B7685: years spent as the Storyteller picked; the points wait for the Maturation window
+      const M = await import("./maturation.mjs");
+      const rec = await M.mature(actor, {years: d.years, activity: pick, age: awakeBefore(actor, plan.from) + n(d.years), label: `${plan.fromYear}–${plan.toYear}`});
+      return rec ? {note: `${rec.banked} points, ${pick}`} : null;
+    }
     case "adv.xp":
       await actor.createEmbeddedDocuments("Item", [{name: `The years ${plan.fromYear}–${plan.toYear}`, type: "Experience",
         system: {amount: d.amount, isspent: false}, flags: {[MODULE_ID]: {time: plan.to, kind: "award", by: "Pass the Years"}}}]);
