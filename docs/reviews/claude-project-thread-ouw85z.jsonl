@@ -48,3 +48,4 @@
 {"file":"registry/features/wodx-sheets.json","verdict":"working","how":"Read the merge of main: kept main's side and added this branch's rows or lines; tests and registry check pass","hash":"dfafa9360526","at":"2026-11-23T22:48Z"}
 {"file":"tools/lanes/gate-map-extra.json","verdict":"working","how":"Read the merge of main: kept main's side and added this branch's rows or lines; tests and registry check pass","hash":"8fde054fb886","at":"2026-11-23T22:48Z"}
 {"file":"changes/decisions/B7265.md","verdict":"working","how":"Read the merge of main: kept main's side and added this branch's rows or lines; tests and registry check pass","hash":"4b073bf61549","at":"2026-11-23T22:48Z"}
+{"file":"tools/gate/gateplaypage.mjs","verdict":"working","how":"Step 7 failed in a full run because the clock looks once a world day and an earlier gate had already looked that day; now steps past the next midnight","hash":"1520ae4af967","at":"2026-11-23T22:48Z"}

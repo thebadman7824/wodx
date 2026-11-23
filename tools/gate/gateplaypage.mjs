@@ -147,11 +147,13 @@ export async function run() {
 
     await G.step("7. the clock archives the long dead", async () => {
       await game.settings.set(C, "autoArchive", 10);
-      const due = api.dueNow(game.time.worldTime + 60, 10).map(c => c.id);
+      // the clock looks once a world day, so step just past the next midnight (an earlier gate may have looked today)
+      const step = 86400 - (((game.time.worldTime % 86400) + 86400) % 86400) + 60;
+      const due = api.dueNow(game.time.worldTime + step, 10).map(c => c.id);
       const others = due.filter(id => !mine.has(id));
       if ( others.length ) return G.ok("7. the clock archives the long dead", false, {error: `${others.length} character(s) the gate did not make are due; not run`});
       await ch?.hold?.(false); await sleep(500);
-      await game.time.advance(60);
+      await game.time.advance(step);
       await waitFor(() => !game.actors.get(old.id), 30000);
       await ch?.hold?.(true);
       const pack = game.packs.get("world.wodx-archive");
