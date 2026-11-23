@@ -1,5 +1,731 @@
 {
  "module": "wodx-creation",
- "seeded": false,
- "rows": []
+ "seeded": true,
+ "rows": [
+  {
+   "id": "creation.embrace",
+   "name": "The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/change-of-state.mjs",
+    "modules/wodx-creation/scripts/lineage.mjs",
+    "modules/wodx-creation/scripts/rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B19"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/change-of-state.mjs:embrace"
+    },
+    "shown": {
+     "what": "a new Vampire sheet with the sire's generation and clan, the mortal kept in 'WoDX · Before the Embrace', and the player given the new sheet"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthsheets.mjs",
+     "step": "4. the Embrace hands the player over"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages generation chart and the Embrace; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "creation.give-vitae",
+   "name": "Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/change-of-state.mjs",
+    "modules/wodx-creation/scripts/lineage.mjs",
+    "modules/wodx-creation/scripts/feed-vitae.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B5049"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/change-of-state.mjs:makeGhoul"
+    },
+    "shown": {
+     "what": "a Give vitae window and a card naming the drink, the ghouling and the bond's step"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedalines.mjs",
+     "step": "3. a Valkyrje's blood makes no ghoul and no bond"
+    }
+   },
+   "open": [
+    "gatedalines step 3 drives the Give vitae window but checks a refusal; no effect step checks an ordinary ghouling and bond end to end",
+    "book: V20 Dark Ages ghouls and the blood bond; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1302
+   ]
+  },
+  {
+   "id": "creation.xp-spend",
+   "name": "Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/xp.mjs",
+    "modules/wodx-creation/scripts/apps.mjs",
+    "modules/wodx-creation/scripts/lines.mjs",
+    "modules/wodx-creation/scripts/lines-xp-rules.mjs",
+    "modules/wodx-creation/scripts/change-points-rules.mjs",
+    "modules/wodx-creation/scripts/actor-data.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B6270, B6271, B6779f"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/xp.mjs:spend"
+    },
+    "shown": {
+     "what": "a Spend experience window with the price; the dot rises on the sheet once approved, and the Road's Moment of Truth is spent"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedaroad.mjs",
+     "step": "2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages experience costs; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1553
+   ]
+  },
+  {
+   "id": "creation.learning",
+   "name": "Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/learn.mjs",
+    "modules/wodx-creation/scripts/learn-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1553,
+     "decisions": "B6230-B6239, B7131"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/learn.mjs:needsSource"
+    },
+    "shown": {
+     "what": "the spend names where the trait is learned; the token carries a book mark while the study runs, and the end shows on the token"
+    }
+   },
+   "open": [
+    "gated: gatelearning '3. the study ends and the trait rises' is a direct call (tools/registry/strength.mjs); no step drives it from the window or the token",
+    "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1553,
+    2202,
+    2336
+   ]
+  },
+  {
+   "id": "creation.wizard",
+   "name": "The step-by-step character wizard, the quick start and the derived traits",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/wizard.mjs",
+    "modules/wodx-creation/scripts/wizard-rules.mjs",
+    "modules/wodx-creation/scripts/derived-rules.mjs",
+    "modules/wodx-creation/scripts/quick-start-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 841,
+     "decisions": "B2760-B2766, B2827, B3000-B3004"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/wizard.mjs:WizardApp"
+    },
+    "shown": {
+     "what": "a wizard window, one page per step of the book's creation order, with Back and Next and a last look; the derived traits filled in"
+    },
+    "gated": {
+     "gate": "tools/gate/gatewizard.mjs",
+     "step": "10 derived traits"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages character creation order and totals; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    841,
+    846,
+    864
+   ]
+  },
+  {
+   "id": "creation.lifepath",
+   "name": "Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/lifepath.mjs",
+    "modules/wodx-creation/scripts/lifepath-rules.mjs",
+    "modules/wodx-creation/scripts/lifepath-drill-rules.mjs",
+    "modules/wodx-creation/scripts/lifepath-short-rules.mjs",
+    "modules/wodx-creation/scripts/lifepath-threads-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 651,
+     "decisions": "B2828"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/lifepath.mjs:applyToSheet"
+    },
+    "shown": {
+     "what": "the lifepath window's picks and dice, the story as a paragraph, and the result on the sheet and in a prelude journal"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplayercreation.mjs",
+     "step": "4. short lifepath"
+    },
+    "book": {
+     "none": "a WoDX creation aid (Improvement Desk cr1); the books have no lifepath tables"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    651,
+    695,
+    785,
+    846
+   ]
+  },
+  {
+   "id": "creation.first-night",
+   "name": "Before the First Night: one hub per character with a card for each step, and the guided builder",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/first-night.mjs",
+    "modules/wodx-creation/scripts/first-night-rules.mjs",
+    "modules/wodx-creation/scripts/first-night-build.mjs",
+    "modules/wodx-creation/scripts/first-night-build-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 668,
+     "decisions": "Chronicle Start Desk (12 November 2026)"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/first-night.mjs:registerFirstNight"
+    },
+    "shown": {
+     "what": "the hub window with a card per step and a troupe view for the Storyteller; the builder's live count of points"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefirstnight.mjs",
+     "step": "4 build"
+    },
+    "book": {
+     "none": "a session-zero tool; the creation points it counts sit on the wizard row"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    668,
+    670
+   ]
+  },
+  {
+   "id": "creation.prelude-seed",
+   "name": "The prelude runner, troupe ties, and the world seeded at sign-off",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/first-night-prelude.mjs",
+    "modules/wodx-creation/scripts/first-night-prelude-rules.mjs",
+    "modules/wodx-creation/scripts/first-night-seed.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 670,
+     "decisions": "Chronicle Start Desk p1-p3, t1, t2, d4, d7"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/first-night-prelude.mjs:PreludeRunApp"
+    },
+    "shown": {
+     "what": "the prelude played scene by scene with rolls; at sign-off one card per thing to seed (an enemy NPC, Ledger entries, Backgrounds)"
+    }
+   },
+   "open": [
+    "gated: gatefirstnight steps 5 and 6 are direct calls and step 7 (sign-off and seed cards) is graded marker"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    668,
+    670
+   ]
+  },
+  {
+   "id": "creation.people",
+   "name": "The People generator: mortals and ghouls for the era and homeland, with ready sheets",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/people.mjs",
+    "modules/wodx-creation/scripts/people-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B52, B63"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/people.mjs:generate"
+    },
+    "shown": {
+     "what": "people with a name, trade, Nature, Demeanor, wants and secrets, sent to the approval queue or made at once"
+    }
+   },
+   "open": [
+    "gated: gatepeople '10. sheet' is graded marker and the rest are direct calls"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "creation.book-people",
+   "name": "The Storyteller characters of V20 Dark Ages as ready sheets",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/book-people.mjs",
+    "modules/wodx-creation/scripts/book-people-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2300,
+     "decisions": "B7674"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/book-people.mjs:bookPeopleDialog"
+    },
+    "shown": {
+     "what": "a window listing the book's Storyteller characters by group; each makes a sheet with the book's numbers and page"
+    }
+   },
+   "open": [
+    "gated: no gate step makes a book person yet",
+    "book: V20 Dark Ages pp. 383-396; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2300
+   ]
+  },
+  {
+   "id": "creation.animal-ghouls",
+   "name": "Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/animal-ghoul-rules.mjs",
+    "modules/wodx-creation/scripts/animal-blood.mjs",
+    "modules/wodx-creation/scripts/feed-vitae.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1302,
+     "decisions": "B5040-B5049, B5130, B5131"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/feed-vitae.mjs:requestFeed"
+    },
+    "shown": {
+     "what": "Feed vitae on the token menu, the beast's blood pool on its sheet, and the clan's mark on its token"
+    },
+    "gated": {
+     "gate": "tools/gate/gateanimalghoul.mjs",
+     "step": "4. Feed vitae on the token menu"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages p. 401 (animal ghouls); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1257,
+    1302
+   ]
+  },
+  {
+   "id": "creation.animal-training",
+   "name": "Animals' traits, training and breeds; war ghouls, kennels and household beasts",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/animal-stock.mjs",
+    "modules/wodx-creation/scripts/animal-stock-rules.mjs",
+    "modules/wodx-creation/scripts/animal-keepers.mjs",
+    "modules/wodx-creation/scripts/animal-keepers-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1290,
+     "decisions": "B5058-B5064, B5133-B5137"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/animal-stock.mjs:startTraining"
+    },
+    "shown": {
+     "what": "Train on the token menu as a long task, the trained mark on the token, and animal retainers offered in the wizard"
+    },
+    "gated": {
+     "gate": "tools/gate/gateanimalstock.mjs",
+     "step": "5. the wizard offers animal retainers"
+    }
+   },
+   "open": [
+    "book: V20 Dark Ages pp. 396-399 (animals) and V20 p. 502 (szlachta); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1257,
+    1290
+   ]
+  },
+  {
+   "id": "creation.creation-window",
+   "name": "The Creation window: allies, patrons and the tools for each character",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/apps.mjs",
+    "modules/wodx-creation/scripts/main.mjs",
+    "modules/wodx-creation/scripts/actor-data.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "none recorded"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/apps.mjs:CreationApp"
+    },
+    "shown": {
+     "what": "the Creation window with each character's line, sire or domitor and the buttons for its tools"
+    }
+   },
+   "open": [
+    "gated: gatestates '6. Creation window buttons' is a direct call"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "creation.group-sheet",
+   "name": "The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/group-sheet.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "none recorded"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/group-sheet.mjs:poolTotal"
+    },
+    "shown": {
+     "what": "a Group actor sheet listing members, the Backgrounds they pool and shared notes"
+    }
+   },
+   "open": [
+    "gated: no gate step opens the group sheet",
+    "book: V20 Dark Ages p. 182 (coteries) and W20 pp. 140-141 (packs); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "creation.pass-years",
+   "name": "Pass the Years: era advancement, ages and time awake across the centuries",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/pass-years.mjs",
+    "modules/wodx-creation/scripts/advance.mjs",
+    "modules/wodx-creation/scripts/advance-rules.mjs",
+    "modules/wodx-creation/scripts/time.mjs",
+    "modules/wodx-creation/scripts/skip-test.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B83, B6275"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/advance.mjs:viewOf"
+    },
+    "shown": {
+     "what": "the Pass the Years window with each character's proposed changes, ticked where the rules decide"
+    }
+   },
+   "open": [
+    "gated: gateera steps 3 to 6 are direct calls; step 7 (an effect step) checks the put back, not the passing"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "creation.archive",
+   "name": "The archive of the dead, by hand and by itself as the clock moves on",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/archive.mjs",
+    "modules/wodx-creation/scripts/archive-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 30,
+     "decisions": "B120-B133, B6414"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/archive.mjs:setupAutoArchive"
+    },
+    "shown": {
+     "what": "the long dead move into the 'WoDX · Archive of the Dead' compendium and links in notes follow"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthsheets.mjs",
+     "step": "8. the long dead go to the archive by themselves"
+    },
+    "book": {
+     "none": "a Storyteller housekeeping tool; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    30,
+    1638
+   ]
+  },
+  {
+   "id": "creation.first-change",
+   "name": "The First Change: a mortal becomes a Garou",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/first-change.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "Phase 6b"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/first-change.mjs:firstChangeData"
+    },
+    "shown": {
+     "what": "a new Werewolf sheet with its forms, the mortal's traits copied across, and starting Rage, Gnosis, Renown and Gifts"
+    },
+    "gated": {
+     "gate": "tools/gate/gate6b.mjs",
+     "step": "first change"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Werewolf pp. 79-85 and 107; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "creation.changes-of-state",
+   "name": "Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/states.mjs",
+    "modules/wodx-creation/scripts/states-rules.mjs",
+    "modules/wodx-creation/scripts/totals-rules.mjs",
+    "modules/wodx-creation/scripts/totals-check.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 60,
+     "decisions": "B120-B133"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/states.mjs:deathToWraith"
+    },
+    "shown": {
+     "what": "the new sheet linked to the old and filed, and the creation check window against the book's totals"
+    }
+   },
+   "open": [
+    "gated: every gatestates step is a direct call"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    60,
+    68
+   ]
+  },
+  {
+   "id": "creation.maturation",
+   "name": "Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/maturation.mjs",
+    "modules/wodx-creation/scripts/maturation-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7685-B7689, B7692-B7693"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/maturation.mjs:MaturationApp"
+    },
+    "shown": {
+     "what": "the Maturation window with the points waiting, one dot a trait a period, and Try to raise for Backgrounds; Pass the Years adds the points"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedamaturation.mjs",
+     "step": "2. the Maturation window buys a dot of Strength"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Vampire (2002) pp. 166-167 and Dark Ages Storytellers Companion (2002) pp. 71-76; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
+  },
+  {
+   "id": "creation.supporting-cast",
+   "name": "The Dark Ages Storytellers Companion's supporting characters as ready sheets, by tier",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/supporting-cast.mjs",
+    "modules/wodx-creation/scripts/supporting-cast-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7695"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/supporting-cast.mjs:supportingCastDialog"
+    },
+    "shown": {
+     "what": "a window of the book's templates by group and tier; Make builds a mortal, ghoul or Cainite sheet with the template's traits"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedasupporting.mjs",
+     "step": "1. the window makes two experienced templates with its Make button"
+    }
+   },
+   "open": [
+    "book: Dark Ages Storytellers Companion (2002) supporting character templates (the code cites pdf p. 58); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
+  },
+  {
+   "id": "creation.dac-demons",
+   "name": "The Dark Ages Companion's demons and the V20 Dark Ages Companion's monsters as sheets",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/dac-demons.mjs",
+    "modules/wodx-creation/scripts/dac-demons-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7698, B7702"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/dac-demons.mjs:demonsDialog"
+    },
+    "shown": {
+     "what": "a window listing the demons and monsters; Make builds a Creature sheet with its blood, Disciplines, health levels, attack and page"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedadacdemons.mjs",
+     "step": "1. the window makes two demons with its Make button"
+    }
+   },
+   "open": [
+    "book: Dark Ages Companion (2002) pp. 180-185 and the V20 Dark Ages Companion's monsters; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
+  }
+ ]
 }
