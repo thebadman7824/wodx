@@ -1151,9 +1151,12 @@ export function build(ctx) {
         if (!isActiveGM() || !setting("autoRegen")) return [];
         const lines = [], rolls = [];
         for (const c of combat.combatants ?? []) {
-            const a = c.actor; if (!a || !isShifter(a)) continue;
-            const i = info(a);
-            const r = G.regeneration({ breed: i.breed, form: i.form, fera: i.fera });
+            const a = c.actor; if (!a) continue;
+            // B7820: a Mockery Breed on a Creature sheet regenerates as a Garou does (W20 Book of the Wyrm)
+            const mock = isShifter(a) ? "" : (chronicle()?.traits?.mockeryOf?.(a) ?? "");
+            if (!isShifter(a) && !mock) continue;
+            const i = mock ? null : info(a);
+            const r = mock ? G.mockeryRegeneration(mock) : G.regeneration({ breed: i.breed, form: i.form, fera: i.fera });
             const h = a.system?.health?.damage ?? {};
             if (!r.regen || r.condition) continue;
             const type = n(h.lethal) ? "lethal" : n(h.bashing) ? "bashing" : null;
@@ -1163,7 +1166,7 @@ export function build(ctx) {
                 if (!(rr.successes > 0)) { lines.push(`${a.name}: the lethal wound doesn't close (Stamina at 8${rr.botch ? ", botch: no more until rest" : ""}).`); continue; }
             }
             if (game.wodxCombat?.healDamage) await game.wodxCombat.healDamage(a, type, 1);
-            lines.push(`${a.name}: one ${type} level regenerates.`);
+            lines.push(`${a.name}: one ${type} level regenerates${r.page ? ` (${r.name}, ${r.page})` : ""}.`);
         }
         if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Regeneration, round ${combat.round}</h3><ul>${lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul><p class="wodx-quiet">DA:W p. 102; W20 p. 256</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
         return lines;

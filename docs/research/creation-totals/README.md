@@ -20,6 +20,11 @@ One file per book. Each file gives the creation totals with page references (pdf
 | Mummy: The Resurrection | mummy-the-resurrection.md | 6/4/3, then +2 | 11/7/4, then +5 | 3 Hekau | 3, then +2 | 5, then +10 | 5 |
 | Kindred of the East | kindred-of-the-east.md | 7/5/3 | 13/9/5 | 3 Disciplines (1 Demon Art) | 5 | 15 | Hun (at least 5) |
 | Orpheus | orpheus.md | 6/4/3 | 11/7/4 | Shade's Horror | 2 + 2 Orpheus | 15 (+5 Spirit) | Shade + Nature |
+| The Hunters Hunted II (V20) | hh2.md | 6/4/3 | 13/9/5 | Numina by freebies only | 5 | 21 | Courage |
+| A mortal (HH2, no Numina) | hh2.md | 6/4/3 | 13/9/5 | none | 5 | 21 | Courage |
+| Sorcerer Revised | sorcerer-revised.md | 6/4/3 | 11/7/4 | 5 Numina | 5 | 21 | 5 |
+| W20 Kinfolk | w20-kinfolk.md | 6/4/3 | 11/7/4 | none (no Gifts at creation) | 5 | 21 | 3 |
+| C20 Kinain | c20-kinain.md | 7/5/3 (house) | 13/9/5 (house) | 1 Art, 2 Realms | 5 | 15 (house) | Storyteller |
 
 Special items:
 - (a) Wraith, a mortal becoming a wraith in play: wr20.md, last section.
