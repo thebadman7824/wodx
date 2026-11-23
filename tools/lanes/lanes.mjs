@@ -26,7 +26,7 @@ import os from "node:os";
 import {spawn, spawnSync} from "node:child_process";
 import {loadConfig, getLane, laneDir, laneUrl, isUp, acquireLock, releaseLock, lockState, readJson, writeJson,
   codeFingerprint, expectedCode, diffCode, diffPackages, hashTree, treeDigest, WORLD_PROBE, worldFingerprint, settledFingerprint, diffWorld,
-  printDiffs, pidAlive, REPO, cleanPath} from "./lib.mjs";
+  printDiffs, pidAlive, REPO, cleanPath, withKnownGoodWrite, waitKnownGood} from "./lib.mjs";
 import {repoModules, cleanModuleConfig, cleanWorldJson, CLEAN_START, BOOTSTRAP, START} from "./clean-world.mjs";
 
 try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch { }
@@ -217,6 +217,7 @@ try {
         copyTree(path.join(src.dataPath, "Data", kind, d.name), path.join(lane.dataPath, "Data", kind, d.name), {mirror: true});
       }
       deployFiles(lane);
+      await waitKnownGood(cfg.knownGood); // B7762: not while another lane writes it
       copyTree(path.join(cfg.knownGood, cfg.world), worldDir(lane), {mirror: true});
       await start(lane);
       await accept(lane);
@@ -226,11 +227,13 @@ try {
     case "snapshot": {
       const from = getLane(cfg, opt("from") ?? die("Give --from N.", 2));
       if ( await isUp(from) ) die(`Lane ${from.id} is running. Stop it first: a running world's database can't be copied safely.`);
-      fs.mkdirSync(cfg.knownGood, {recursive: true});
-      backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
-      copyTree(worldDir(from), path.join(cfg.knownGood, cfg.world), {mirror: true});
-      writeJson(path.join(cfg.knownGood, "known-good.json"), {from: from.id, at: new Date().toISOString(), world: cfg.world,
-        digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), packages: Object.fromEntries(Object.entries(codeFingerprint(from.dataPath)).map(([k, v]) => [k, v.version]))});
+      await withKnownGoodWrite(cfg.knownGood, `snapshot from lane ${from.id}`, () => {
+        fs.mkdirSync(cfg.knownGood, {recursive: true});
+        backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
+        copyTree(worldDir(from), path.join(cfg.knownGood, cfg.world), {mirror: true});
+        writeJson(path.join(cfg.knownGood, "known-good.json"), {from: from.id, at: new Date().toISOString(), world: cfg.world,
+          digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), packages: Object.fromEntries(Object.entries(codeFingerprint(from.dataPath)).map(([k, v]) => [k, v.version]))});
+      });
       console.log(`Known-good copy of ${cfg.world} taken from lane ${from.id}.`);
       break;
     }
@@ -242,6 +245,7 @@ try {
       lockOrDie(lane, flag("if-free"));
       try {
         await stop(lane);
+        await waitKnownGood(cfg.knownGood); // B7762: not while another lane writes it
         const same = fs.existsSync(worldDir(lane)) && treeDigest(hashTree(worldDir(lane))) === treeDigest(hashTree(kg));
         if ( same ) console.log(`Lane ${lane.id}'s world already matches known-good; no copy needed.`);
         else { backup(worldDir(lane), `lane${lane.id}-${cfg.world}`); copyTree(kg, worldDir(lane), {mirror: true}); }
@@ -299,11 +303,14 @@ try {
         if ( on.length || made.inPlay || made.chronicleMods.length ) throw new Error(`A chronicle is on in the clean world (${[...on, made.inPlay, ...made.chronicleMods].filter(Boolean).join(", ")}).`);
         console.log(`Start a chronicle ran (${made.done.join(", ") || "nothing to change"}); ${made.active.length} modules on, no chronicle in play.`);
         await stop(lane);
-        fs.mkdirSync(cfg.knownGood, {recursive: true});
-        backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
-        copyTree(wdir, path.join(cfg.knownGood, cfg.world), {mirror: true});
-        writeJson(path.join(cfg.knownGood, "known-good.json"), {from: lane.id, at: new Date().toISOString(), world: cfg.world,
-          digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), modules: moduleCfg});
+        // B7762: setup-clean on several lanes of one PC take turns writing the shared clean copy
+        await withKnownGoodWrite(cfg.knownGood, `setup-clean on lane ${lane.id}`, () => {
+          fs.mkdirSync(cfg.knownGood, {recursive: true});
+          backup(path.join(cfg.knownGood, cfg.world), `testbed-known-good-${cfg.world}`);
+          copyTree(wdir, path.join(cfg.knownGood, cfg.world), {mirror: true});
+          writeJson(path.join(cfg.knownGood, "known-good.json"), {from: lane.id, at: new Date().toISOString(), world: cfg.world,
+            digest: treeDigest(hashTree(path.join(cfg.knownGood, cfg.world))), modules: moduleCfg});
+        });
         await start(lane);
         await accept(lane);
         await stop(lane);
