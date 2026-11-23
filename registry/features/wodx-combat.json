@@ -1,21 +1,517 @@
 {
  "module": "wodx-combat",
- "seeded": false,
+ "seeded": true,
  "rows": [
   {
    "id": "combat.knockdown-stand",
    "name": "Standing up from a knockdown",
    "module": "wodx-combat",
    "core": true,
-   "files": ["modules/wodx-combat/scripts/main.js"],
+   "files": [
+    "modules/wodx-combat/scripts/main.js"
+   ],
    "steps": {
-    "built": {"pr": 1125, "decisions": "B3921"},
-    "wired": {"reader": "modules/wodx-combat/scripts/main.js:standUp(c.actor, combat)"},
-    "shown": {"what": "a 'tries to stand' card with the dice at the start of the turn, and the Knocked down status leaving the token on a success"},
-    "gated": {"gate": "tools/gate/gateknockdown.mjs", "step": "4"}
+    "built": {
+     "pr": 1125,
+     "decisions": "B3921"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/main.js:standUp(c.actor, combat)"
+    },
+    "shown": {
+     "what": "a 'tries to stand' card with the dice at the start of the turn, and the Knocked down status leaving the token on a success"
+    },
+    "gated": {
+     "gate": "tools/gate/gateknockdown.mjs",
+     "step": "4"
+    }
    },
-   "open": ["book: B3921 cites V20 Dark Ages p. 348 (Maneuver Complications); the OCR text names that page but the Knockdown rule itself was not found in it, so the page is not confirmed yet"],
-   "prs": [1125, 1638]
+   "open": [
+    "book: B3921 cites V20 Dark Ages p. 348 (Maneuver Complications); the OCR text names that page but the Knockdown rule itself was not found in it, so the page is not confirmed yet"
+   ],
+   "prs": [
+    1125,
+    1638
+   ]
+  },
+  {
+   "id": "combat.attack-soak",
+   "name": "An attack: the roll, the defence, damage and soak by the target's kind",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/main.js",
+    "modules/wodx-combat/scripts/rules.js",
+    "modules/wodx-combat/scripts/profiles.js",
+    "modules/wodx-combat/scripts/auto.js",
+    "modules/wodx-combat/scripts/flavor.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "ported from vtda20 2.2.1; B6151-B6154, B7120"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/main.js:quickAttack"
+    },
+    "shown": {
+     "what": "an attack card with the dice, the defence, the levels after soak and a flavour line; the health track on the sheet and the token change"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthrelay.mjs",
+     "step": "a. the player's quick attack hits"
+    }
+   },
+   "open": [
+    "book: the code cites VtDA20 p. 322-323 (successes) and the soak models in rules.js; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22,
+    1880,
+    2149
+   ]
+  },
+  {
+   "id": "combat.turn-conductor",
+   "name": "Turns that move on by themselves: NPC turns, player turns with a countdown, Hold and Act next",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/conductor.js",
+    "modules/wodx-combat/scripts/conductor-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B68, B69"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/conductor.js:advance"
+    },
+    "shown": {
+     "what": "the turn banner and countdown; the turn ends when the action is spent or the time runs out, with Hold and Act next"
+    },
+    "gated": {
+     "gate": "tools/gate/gate7b1.mjs",
+     "step": "Everyone: the hero's action is spent, a countdown, then the turn ends with no click"
+    }
+   },
+   "open": [
+    "book: the code cites VtDA20 pdf p. 344 (the turn order and delaying); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "combat.extra-actions",
+   "name": "Extra actions (Celerity) in a second pass at the end of the turn",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/conductor.js",
+    "modules/wodx-combat/scripts/conductor-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B68, B69, B6154"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/conductor.js:declareExtra"
+    },
+    "shown": {
+     "what": "a second pass at the end of the turn in Initiative order before the next turn begins"
+    },
+    "gated": {
+     "gate": "tools/gate/gate7b1.mjs",
+     "step": "extra actions: a second pass at the end of the turn, in Initiative order, then the next turn"
+    }
+   },
+   "open": [
+    "book: the code cites VtDA20 pdf p. 203 and p. 344 (Celerity's extra actions); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "combat.fight-start",
+   "name": "A fight that starts by itself: sight, alarms, regions, frenzy, an attack outside a fight",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/start.js",
+    "modules/wodx-combat/scripts/start-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 566,
+     "decisions": "B807-B810"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/start.js:start"
+    },
+    "shown": {
+     "what": "a Start the fight card for the Storyteller (Suggest), or the fight started with an Undo card (Auto)"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefight.mjs",
+     "step": "start the fight"
+    },
+    "book": {
+     "none": "house rule: the books leave starting a fight to the Storyteller (VtDA20 pdf p. 344)"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    566
+   ]
+  },
+  {
+   "id": "combat.ambush",
+   "name": "The ambush: Dexterity + Stealth against Perception + Alertness for a free attack",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/ambush-rules.js",
+    "modules/wodx-combat/scripts/start.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 577,
+     "decisions": "B836"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/start.js:afterAttack"
+    },
+    "shown": {
+     "what": "the ambush roll on the card, and the free attack or the first turn it gives"
+    }
+   },
+   "open": [
+    "gated: gatefight 'ambush from hiding' is a direct call (tools/registry/strength.mjs); no step drives a hidden attacker's real attack",
+    "book: the code cites V20 printed p. 274 and V20 Dark Ages printed p. 345; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    577
+   ]
+  },
+  {
+   "id": "combat.fight-end",
+   "name": "Fights that end by themselves once one side has nobody standing for a full turn",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/fight-end.js",
+    "modules/wodx-combat/scripts/fight-end-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 758,
+     "decisions": "B2455"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/fight-end.js:installFightEnd"
+    },
+    "shown": {
+     "what": "an End the fight card for the Storyteller (Suggest), or the encounter ended (Auto), then the fight's own end follows"
+    },
+    "gated": {
+     "gate": "tools/gate/gateautomation.mjs",
+     "step": "8. fight ends"
+    },
+    "book": {
+     "none": "house rule B2455: the books leave ending a fight to the Storyteller"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    758
+   ]
+  },
+  {
+   "id": "combat.fight-time",
+   "name": "How long a fight took: the clock moves by rounds times three seconds",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/fight-time.js",
+    "modules/wodx-combat/scripts/fight-time-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 680,
+     "decisions": "B1966"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/fight-time.js:lengthOf"
+    },
+    "shown": {
+     "what": "the world clock (or the fighters' own time) moves once when the fight ends; the after-action card names the length"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetime.mjs",
+     "step": "fight length"
+    }
+   },
+   "open": [
+    "book: the code cites V20 pdf 262 and V20 Dark Ages pdf 344 (three seconds a turn); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    680
+   ]
+  },
+  {
+   "id": "combat.aftermath",
+   "name": "The after-action card: what each fighter took, dealt and spent, and who saw it",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/aftermath.js",
+    "modules/wodx-combat/scripts/aftermath-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 652,
+     "decisions": "B1340"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/aftermath.js:setupAftermath"
+    },
+    "shown": {
+     "what": "a whispered card for the Storyteller with each fighter's levels and points, the witnesses, and a button for the Masquerade breach and rumour"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetable.mjs",
+     "step": "after-action card"
+    },
+    "book": {
+     "none": "house rule B1340 (how far a tale travels by year); the books have no after-action rule"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    652
+   ]
+  },
+  {
+   "id": "combat.body-plan",
+   "name": "The body plan: shapes, parts, held gear coming off, where blows land, the maiming card",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/body.js",
+    "modules/wodx-combat/scripts/body-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 630,
+     "decisions": "B1200-B1210"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/body.js:offerMaim"
+    },
+    "shown": {
+     "what": "held gear coming off in a shape without hands with an Undo card, and the maiming card after a heavy blow to a limb or eye"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebody.mjs",
+     "step": "the maiming card"
+    },
+    "book": {
+     "none": "house rules B1200-B1209: the books give no body parts; the health track stays as printed"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    630
+   ]
+  },
+  {
+   "id": "combat.movement-modes",
+   "name": "Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/movement.js",
+    "modules/wodx-combat/scripts/movement-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 609,
+     "decisions": "B940-B945, B7130"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/movement.js:setupMovement"
+    },
+    "shown": {
+     "what": "Fly, Through walls and Into the ground on the movement actions; a breath count and drowning cards in deep water; a fall when flight ends"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemove.mjs",
+     "step": "drowning in a fight"
+    }
+   },
+   "open": [
+    "book: the code cites VtDA20 p. 355 (falling) and p. 100 (swimming needs Athletics); drowning from Hunter: The Reckoning pdf 208; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    609
+   ]
+  },
+  {
+   "id": "combat.mounted",
+   "name": "Fighting from the saddle: the mount's Strength, its dodge, keeping the saddle, the lance, bows at a trot",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/mounted.js",
+    "modules/wodx-combat/scripts/mounted-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1226,
+     "decisions": "B4770-B4776"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/mounted.js:mountedShotOf"
+    },
+    "shown": {
+     "what": "the attack card names the mount's part; a rider thrown comes off the mount on the map and lies Knocked down"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemounted.mjs",
+     "step": "6. a bow at a trot"
+    }
+   },
+   "open": [
+    "book: the code cites V20 Dark Ages printed p. 399 and Dark Ages: Vampire pp. 244-245; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1226
+   ]
+  },
+  {
+   "id": "combat.swarms",
+   "name": "Animal swarms: one token that bites everyone inside it, dodges at 8, overrun at three levels",
+   "module": "wodx-combat",
+   "core": true,
+   "files": [
+    "modules/wodx-combat/scripts/swarm.js",
+    "modules/wodx-combat/scripts/swarm-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2300,
+     "decisions": "B7677"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/swarm.js:turn"
+    },
+    "shown": {
+     "what": "the swarm's bite card on its turn, the overrun victim knocked down, and the swarm's harm counted on its own track"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedach8.mjs",
+     "step": "5. a rat swarm overruns the one inside it"
+    }
+   },
+   "open": [
+    "book: the code cites V20 Dark Ages p. 399; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2300
+   ]
+  },
+  {
+   "id": "combat.vehicles",
+   "name": "Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming",
+   "module": "wodx-combat",
+   "core": false,
+   "files": [
+    "modules/wodx-combat/scripts/vehicles.js",
+    "modules/wodx-combat/scripts/vehicle-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1242,
+     "decisions": "B4790-B4799"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/vehicles.js:strikeHull"
+    },
+    "shown": {
+     "what": "a tint on the vehicle's tile that darkens as it is battered, a word over it, and wrecked at its Structure"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthcombat.mjs",
+     "step": "10. a quick attack on a vehicle's token comes off its sheet's Structure"
+    }
+   },
+   "open": [
+    "book: the code cites Mage: The Ascension 20th Anniversary pp. 459-463; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1242
+   ]
+  },
+  {
+   "id": "combat.black-powder",
+   "name": "Black powder: misfires, wet powder and the lock of the year",
+   "module": "wodx-combat",
+   "core": false,
+   "files": [
+    "modules/wodx-combat/scripts/powder-rules.js",
+    "modules/wodx-combat/scripts/main.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 836,
+     "decisions": "B2712-B2714"
+    },
+    "wired": {
+     "reader": "modules/wodx-combat/scripts/main.js:PW.gunLock"
+    },
+    "shown": {
+     "what": "the attack card names the lock and a misfire or wet powder"
+    }
+   },
+   "open": [
+    "gated: gatehuntpowder '7. black powder' is a direct call; no step fires a real gun in the rain",
+    "book: the code cites V20 printed p. 272 (a botched shot) and p. 278 (reload); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    836
+   ]
   }
  ]
 }
