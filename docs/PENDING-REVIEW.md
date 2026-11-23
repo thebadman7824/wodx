@@ -1740,13 +1740,20 @@ Rows dated 22 November that Ben had not approved or disapproved by 23 November 0
 | 2026-11-22 | Desk item 3 part 2, unpicked: the recommended option taken (B7649) | Each town's Road groups: the Storyteller gathers a Road's walkers in a scene into a secret Kindred faction run on orders, named and shaped by the Road's Organization in V20 Dark Ages (court of oaths, congregation, pack, school, Black Church). Gate gatedaflock 2/2 on cloud lane 9 | Pick another option on the desk |
 | 2026-11-22 | OCR page picker (Secondary PC), refinement 2: what else counts as no text, and which reading wins? | Picture descriptions count as no text; character-sheet circle rows are removed, so ratings read blank, not 0; a clearly better vision reading wins. | Restore `D:\WoDX\books\picker.py` from `picker.py.bak-20261122` and copy `out-pre-repick-20261122\*` back to `out\`. |
 
-## Waiting for review
+## Approved by Ben, 22 November 2026, project chat
+
+Ben approved these deletes in the project chat on 22 November: "Yes. Delete the old copies" (15:14 UTC, the OCR zips), and "As much stuff as can be exported onto my PC is authorized" (15:35 UTC, after the 15:29 UTC "start exporting those renders onto the Main PC"; the two shared-folder moves).
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-22 | Superseded OCR zips in the shared folder root: keep or delete? | Deleted 98, with the owner's OK in the project chat: 95 per-book book-text-vl-*.zip plus the bundle-20261121a, repick-20261120-bundle1 and repick-20261121-bundle zips. Every text in them is unzipped in book-text/, and full copies stay on BENJAMIN-PC in `D:\WoDX\books\out` and `outbox`. | Re-push the zips from the Secondary PC. |
 | 2026-11-22 | Moving world-buildout out of the shared folder: where does it go? | Moved to the Main PC at `D:\WoDX\archive\shared-folder-2026-11-22\world-buildout\` (8,222 files, about 3.1 GB), with every file's size checked before the cloud copy was deleted; the objects desk folders stayed. Authorized by the owner 22 Nov 15:35Z. Log: /mnt/project-files/registry/shared-folder-move-deletes-2026-11-22.txt. | Copy it back from the PC archive. |
 | 2026-11-22 | Shared folder move to the Main PC, round 2: what else moves? | 8 older repo bundles (13 to 20 Nov; SHA-256 matched, bundle verify passed) and the paperdoll, maps and maps-ref images (883 files, sizes matched) moved to `D:\WoDX\archive\shared-folder-2026-11-22\`. The cloud copies were deleted; the newest two bundles stay in the shared folder. Log: /mnt/project-files/registry/shared-folder-move-deletes-2026-11-22.txt. | Copy them back from the PC archive. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
 | 2026-11-22 | A Child of Osiris: which Disciplines count as in-clan (full check, B7661) | The book gives Bardo plus two of the origin clan's three, and the sheet does not record the two; so all three of the origin clan's Disciplines price as in-clan, with Bardo | Record the two picks on the sheet and price only those |
 | 2026-11-22 | The Valkyrjer's dates (full check, B7661) | V20 Dark Ages p. 70 says the Ahrimanes are gone by the end of the Dark Ages; the bloodline is offered to 1492 and closed from 1493, the year WoDX already uses for the end of the era | Set another closing year in the clan row's opens.until |
 | 2026-11-22 | The Dark Ages combination Disciplines: learned how? (full check, B7664) | As with Lore of the Clans (B7092), a combination is offered once the sheet has every Discipline it needs; the window shows the book's experience cost and the Storyteller takes it | Make each combination a bought trait in the experience window |
