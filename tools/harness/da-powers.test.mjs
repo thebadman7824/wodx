@@ -46,3 +46,22 @@ test("overstimulation and sudden revelations", () => {
   assert.deepEqual(overstimulation({willpower: 10, intensity: 3}), {diff: 7, turns: 1, penalty: 2});
   assert.equal(revelationDiff(2), 4); assert.equal(revelationDiff(12), 9); assert.equal(revelationDiff(""), 6);
 });
+
+test("the 23 combination Disciplines of V20 Dark Ages", async () => {
+  const C = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/rules/vampire/combinations-v20da.json"), "utf8")).rows;
+  assert.equal(C.length, 23);
+  assert.equal(new Set(C.map(r => r.id)).size, 23);
+  const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+  for ( const r of C ) {
+    assert.ok(r.needs.length >= 2 && r.xp > 0 && r.p >= 313 && r.p <= 317 && r.e.length <= 220, r.id);
+    for ( const k of r.k ) assert.ok(E.KEYWORDS[k], `${r.id} ${k}`);
+    assert.ok(!/\b(he|she|him|her|his|hers)\b/i.test(r.e), `${r.id}: no gendered pronoun`);
+  }
+  const heads = [...new Set([...powers, ...C].map(p => p.d))];
+  const got = powersFor([...powers, ...C], [{name: "Auspex", value: 1}, {name: "Celerity", value: 1}, {name: "Fortitude", value: 1}]);
+  const names = got.filter(p => p.needs).map(p => p.n).sort();
+  assert.deepEqual(names, ["Guardian Vigil", "Hand of the Master Artisan"]);
+  const v = powersFor(C, [{name: "Auspex", value: 4}, {name: "Valeren (Warrior)", value: 4}]).map(p => p.n);
+  assert.ok(v.includes("Eye of Unforgiving Heaven") && v.includes("Glare of Lies"), "Glare of Lies takes any Valeren");
+  assert.ok(heads.length > 0);
+});

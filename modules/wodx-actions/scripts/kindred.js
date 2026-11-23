@@ -54,8 +54,13 @@ export const DATA = { disc: null, roads: null, v20: null, paths: null };
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    let combos;
-    [DATA.disc, DATA.roads, DATA.v20, DATA.paths, combos] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json"), get("rules/vampire/combinations-lotc.json")]);
+    let combos, daCombos;
+    [DATA.disc, DATA.roads, DATA.v20, DATA.paths, combos, daCombos] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json"), get("rules/vampire/combinations-lotc.json"), get("rules/vampire/combinations-v20da.json")]);
+    // B7664: the 23 combination Disciplines of V20 Dark Ages (pp. 312-317) join the Dark Ages library, keywords and all
+    if (DATA.disc && daCombos?.rows?.length) {
+        DATA.disc = { ...DATA.disc, powers: [...DATA.disc.powers, ...daCombos.rows] };
+        for (const r of daCombos.rows) if (r.k?.length && !PK.POWER_KEYWORDS.disc[r.id]) PK.POWER_KEYWORDS.disc[r.id] = [r.k, r.passive ? 1 : 0];
+    }
     // B7092: the combination Disciplines (V20 Lore of the Clans) join the V20 powers; each row's needs say which Disciplines
     if (DATA.v20 && combos?.rows?.length) {
         DATA.v20 = { ...DATA.v20, powers: [...DATA.v20.powers, ...combos.rows] };
@@ -224,7 +229,7 @@ export function build(ctx) {
             root.querySelector(".wodx-disc-attr").style.display = /attr/.test(p.r ?? "") ? "" : "none";
             const costTxt = [c.blood && `${c.blood} blood${c.optional ? " (optional)" : ""}`, c.willpower && `${c.willpower} Willpower`, c.variable && "blood as needed"].filter(Boolean).join(", ") || "none";
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
-            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}${p.lesser && DATA.disc?.rules?.lesser?.[p.d] ? `<br><i>${esc(DATA.disc.rules.lesser[p.d])}</i>` : ""}`
+            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}${p.lesser && DATA.disc?.rules?.lesser?.[p.d] ? `<br><i>${esc(DATA.disc.rules.lesser[p.d])}</i>` : ""}${p.xp ? `<br><i>A combination: learned for ${p.xp} experience (${esc(p.book ?? "")} p. ${p.p}); the Storyteller takes it.</i>` : ""}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "")
                 + (own ? `<br><i>${esc(tgt.name)} is ${esc(actor.name)}'s own ghoul: one easier${SUBSUME.test(p.n) ? ", and no roll is needed to share its senses" : ""}.</i>` : "")
