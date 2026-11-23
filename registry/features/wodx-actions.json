@@ -306,7 +306,8 @@
    "deferred": [],
    "faults": [],
    "prs": [
-    2294
+    2294,
+    2336
    ]
   },
   {
@@ -817,7 +818,8 @@
    "deferred": [],
    "faults": [],
    "prs": [
-    2300
+    2300,
+    2336
    ]
   },
   {
@@ -1414,6 +1416,40 @@
    "prs": [
     22,
     1023
+   ]
+  },
+  {
+   "id": "actions.infernal-pacts",
+   "name": "Demonic pacts, infernal investments and the Supplicium",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/infernal.js",
+    "modules/wodx-actions/scripts/infernal-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7696"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/infernal.js:build"
+    },
+    "shown": {
+     "what": "the Infernal pacts window with each pact and what it has left; purchases on the sheet, a Breathe flame action, and a Supplicium card to the Storyteller"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedainfernal.mjs",
+     "step": "1. the window records a pact and buys Armor"
+    }
+   },
+   "open": [
+    "book: Dark Ages Companion (2002) chapter 7; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
    ]
   }
  ]

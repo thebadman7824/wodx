@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 41 | 0 | 11 |
+| wodx-actions | yes | 42 | 0 | 11 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 1 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
@@ -60,6 +60,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 1 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |
 | Dark Ages mages: Foundation and Pillars, the Grimoire, and Consensus by era (`actions.mage-da`) |  | gated | 1 | gate6n a Grimoire rote: Revoking the Gift of Adam casts with its Grimoire page |
 | Demon: The Fallen: lores, evocations, Faith and Torment, the apocalyptic form (`actions.demon`) |  | gated | 1 | gate6i choosing the dark effect costs a temporary Torment point |
+| Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
 | Fomor powers and spirit Charms (`actions.fomor-charms`) |  | shown | 2 |  |
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
