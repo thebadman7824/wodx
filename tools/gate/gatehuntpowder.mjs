@@ -110,9 +110,12 @@ export async function run() {
       const PW = game.wodxCombat.powder;
       const [gunman] = await Actor.create([{name: "WoDX gate: musketeer", type: "Mortal"}]);
       actors.push(gunman);
-      const [gun] = await gunman.createEmbeddedDocuments("Item", [{name: "Matchlock arquebus", type: "Ranged Weapon", system: {clip: {value: 0, max: 1}}},
+      const made = await gunman.createEmbeddedDocuments("Item", [{name: "Matchlock arquebus", type: "Ranged Weapon", system: {clip: {value: 0, max: 1}}},
         // B3900: a reload takes its ball from Possessions, and a ball needs a powder horn
         {name: "a lead musket ball", type: "Item"}, {name: "a powder horn", type: "Item"}]);
+      // B7734: a batch create does not keep its order (kit rule 1). The first one made was sometimes the ball, which the
+      // reload spends, so "the gun" was gone after it (jobs 2241, 2312, 2322): take the gun by its type
+      const gun = made.find(i => i.type === "Ranged Weapon");
       await gun.setFlag("wodx-combat", "powder", {wet: true, matchOut: true});
       // B5860: when this step fails only after other gates, the notices the two calls gave say why
       const said = [], kinds = ["info", "warn", "error"], keep = Object.fromEntries(kinds.map(k => [k, ui.notifications[k]]));
