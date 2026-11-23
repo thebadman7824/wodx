@@ -118,11 +118,16 @@ export async function run() {
       const said = [], kinds = ["info", "warn", "error"], keep = Object.fromEntries(kinds.map(k => [k, ui.notifications[k]]));
       for (const k of kinds) ui.notifications[k] = function (m, ...rest) { said.push(`${k}: ${m}`); return keep[k].call(this, m, ...rest); };
       let backReload = null, backLight = null, afterReload = null;
+      // B7733: the gun was gone after the reload (jobs 2241, 2312; flaky alone too): record each item this actor loses, by whom and how
+      const lost = [], onDel = (item, options, userId) => { if ( item.parent?.id === gunman.id ) lost.push({id: item.id, name: item.name, user: userId,
+        options: Object.keys(options ?? {}).filter(k => !["modifiedTime", "render"].includes(k)), at: Date.now(), stack: String(new Error().stack).split("\n").slice(2, 9).map(l => l.trim()).join(" | ")}); };
+      const delHook = Hooks.on("deleteItem", onDel);
+      const t7 = Date.now();
       try {
         backReload = await game.wodxCombat.reload({actor: gunman, weaponId: gun.id}) ?? null;
         afterReload = gunman.items.get(gun.id)?.getFlag("wodx-combat", "powder") ?? null;
         backLight = await game.wodxCombat.lightMatch({actor: gunman, weaponId: gun.id}) ?? null;
-      } finally { for (const k of kinds) ui.notifications[k] = keep[k]; }
+      } finally { for (const k of kinds) ui.notifications[k] = keep[k]; Hooks.off("deleteItem", delHook); }
       const afterLight = gunman.items.get(gun.id)?.getFlag("wodx-combat", "powder") ?? null;
       const locks = {arquebus: PW.gunLock({name: "Matchlock arquebus", ranged: true}, year)?.lock, musket1630: PW.gunLock({name: "Musket", ranged: true}, 1630)?.lock,
         musket1750: PW.gunLock({name: "Musket", ranged: true}, 1750)?.lock, glock: PW.gunLock({name: "Glock 17", ranged: true}, 1995)?.lock, bow: PW.gunLock({name: "Longbow", ranged: true}, 1400)};
@@ -130,7 +135,8 @@ export async function run() {
         && locks.musket1750 === "flintlock" && locks.glock === "cartridge" && locks.bow === null && game.settings.get("wodx-combat", "blackPowder") === true,
         {afterReload, afterLight, locks, said, backReload, backLight, gunThere: !!gunman.items.get(gun.id), items: gunman.items.size,
           // B7653: the gun was gone after the reload in job 2241 (nine items, none of them it): name what the actor holds now
-          held: gunman.items.map(i => `${i.id} ${i.type} ${i.name}`).slice(0, 15), gunId: gun.id, linked: game.actors.get(gunman.id) === gunman});
+          gunId: gun.id, linked: game.actors.get(gunman.id) === gunman, lost: lost.map(l => ({...l, at: l.at - t7})),
+          held: gunman.items.filter(i => i.type !== "Trait").map(i => `${i.id} ${i.type} ${i.name}`).slice(0, 15)});
     });
     await step("8. other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-npc", "wodx-actions", "wodx-combat", "wodx-storyteller", "wodx-atmosphere", "wodx-interactables", "wodx-senses"];
