@@ -379,3 +379,7 @@ Ben approved these deletes in the project chat on 22 November: "Yes. Delete the 
 | 2026-11-23 | The Thirst of Caine (full check, B7693) | A switch, off by default, as the book offers it as an option | On by default |
 | 2026-11-23 | The 2002 maneuvers (full check, B7694) | Offered by default (setting on), though the book calls them optional | Off until the Storyteller turns them on |
 | 2026-11-23 | Which limb Joint Break and Tendon Slice mark (full check, B7694) | The right arm, or the wrist or ankle by the aim chosen | The Storyteller picks the side each time |
+| 2026-11-23 | Where an experienced or exceptional supporting character's added dots go (full check, B7695) | One dot a pass to each trait the template already has, highest first, up to 5 | The Storyteller places every dot in a window |
+| 2026-11-23 | The 2002 Abilities on the supporting characters (full check, B7695) | Dodge as Athletics, Larceny as Legerdemain, Herbalism as Medicine, Linguistics kept as a Secondary Knowledge | Linguistics folded into Academics |
+| 2026-11-23 | The supporting characters' Road rating, which the book does not print (full check, B7695) | The two moral Virtues added, as V20 Dark Ages creation does | A fixed Road 5 for every template |
+| 2026-11-23 | Four supporting-character names (full check, B7695) | Craftsperson, Levy Archer, Wise One and Mercenary Foot Soldier, with the book's name in the notes | The book's own names |
