@@ -39,3 +39,21 @@ test("sins from play on the Appendix B Roads follow their hierarchies", () => {
   assert.equal(K.sinForEvent(f("Code of Samiel"), "lie"), 8);
   assert.equal(K.sinForEvent(f("Path of Apep"), "kill"), null);
 });
+
+// B7670-B7671: the Setite castes and the Malkavian Orders' rites (V20 Dark Ages pp. 444, 450)
+test("the Setite castes and the Malkavian rites", async () => {
+  const V = await import("../../modules/wodx-creation/data/vampire.mjs");
+  const all = [...(V.BLOODLINES ?? []), ...(V.CLANS ?? [])];
+  assert.deepEqual(all.find(x => x.id === "warriors-of-glycon")?.disciplines, ["Obfuscate", "Potence", "Serpentis"]);
+  assert.deepEqual(all.find(x => x.id === "witches-of-echidna")?.disciplines, ["Animalism", "Presence", "Thaumaturgy"]);
+  assert.ok(K.isEchidna("Witches of Echidna") && !K.isEchidna("Followers of Set"));
+  assert.ok(K.isGlycon("Warriors of Glycon") && !K.isGlycon("Followers of Set"));
+  assert.equal(K.echidnaVisage({}), false);
+  assert.equal(K.echidnaVisage({selfControlFailed: true}), true);
+  assert.equal(K.echidnaVisage({instinct: true}), true);
+  assert.ok(K.ECHIDNA_SORCERY.test("Thaumaturgy: Path of Blood") && !K.ECHIDNA_SORCERY.test("Celerity"));
+  assert.equal(K.malkRiteDiscDiff("Auspex", "enigmas"), 1);
+  assert.equal(K.malkRiteDiscDiff("Dementation", "ecstasy"), -1);
+  assert.equal(K.malkRiteDiscDiff("Obfuscate", "ecstasy"), 0);
+  assert.equal(K.MALK_RITES.enigmas.diff, 8);
+});

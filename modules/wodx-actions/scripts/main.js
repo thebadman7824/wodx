@@ -357,9 +357,12 @@ async function spendWillpower(actor, n = 1) {
     if (setting("spendResources")) await updateActor(actor, { "system.advantages.willpower.temporary": w.temp - n });
     return true;
 }
-async function changeBlood(actor, delta) {
+const clanText = a => String(a?.system?.clan === "custom" ? a?.system?.custom?.clan ?? "" : a?.system?.clan ?? "");
+async function changeBlood(actor, delta, { sorcery = false } = {}) {
     const b = blood(actor);
     const v = Math.max(0, Math.min(b.max, b.value + delta));
+    // B7670: Echidna takes one more at the scene's end from a Witch who used or took in blood, unless it fed sorcery (V20 Dark Ages p. 450)
+    if (delta && !sorcery && KR.isEchidna(clanText(actor)) && actor.isOwner) await setFlag(actor, "echidnaDue", true);
     if (setting("spendResources")) await updateActor(actor, { "system.advantages.bloodpool.temporary": v });
     return { before: b.value, after: v, wasted: (b.value + delta) - v };
 }
@@ -1411,6 +1414,23 @@ async function beastRoll(actor, d, msg = null) {
             if (state.outcome === "botch") { await gainDerangement(actor, fear ? "fear" : "frenzy", fear ? "from a Rötschreck botch" : "from a frenzy botch"); await markBotch(actor, fear, d.diff); }
         }
     }
+    // B7670: a Witch of Echidna also rolls Self-Control at the same difficulty; failing either, or any check with Instinct,
+    // puts on Echidna's Visage (V20 Dark Ages p. 450)
+    if (!fear && !msg && !d.total && KR.isEchidna(clanText(actor))) {
+        let scFail = false;
+        if (!v.selfcontrol.isInstinct) {
+            const sc = await rollPool(Math.max(0, num(v.selfcontrol.value)), d.diff);
+            scFail = !(sc.successes > 0 && !sc.botch);
+            body += rollBlock("Self-Control (Echidna)", sc, [`difficulty ${d.diff}`]);
+            r.extra = sc.roll;
+        }
+        if (KR.echidnaVisage({ instinct: v.selfcontrol.isInstinct, frenzied: enter, selfControlFailed: scFail })) {
+            body += `<div class="vta-big bad">Echidna's Visage: Appearance 0 for the rest of the scene.</div>`;
+            if (chronicle()?.applyTimed && actor.isOwner) await chronicle().applyTimed(actor, { name: "Echidna's Visage", img: "icons/svg/terror.svg",
+                description: "Appearance 0 for the scene (V20 Dark Ages p. 450)", duration: { kind: "scene" }, source: "V20 Dark Ages p. 450", key: "echidna-visage",
+                changes: [{ key: "system.attributes.appearance.value", mode: 5, value: "0" }] });
+        }
+    }
     if (enter) {
         body += `<div class="vta-note">In frenzy: ignore wound penalties; +2 difficulty to Dominate the frenzied vampire, –2 for them to resist it; immune to Rötschreck. A Willpower point controls one action for a turn. Usually lasts a scene.${!fear && d.kind !== "instinct" ? " Frenzying without risking a Road dot can bring a Moment of Truth." : ""}</div>`;
         if (setting("applyChanges")) { await updateActor(actor, { "system.conditions.isfrenzy": true }); await setFlag(actor, "frenzyType", fear ? "fear" : "rage"); await condition(actor, fear ? "rotschreck" : "frenzy", true); }
@@ -1429,7 +1449,7 @@ async function beastRoll(actor, d, msg = null) {
         }
     }
     if (msg) await markUsed(msg);
-    return post(actor, `${actor.name}: ${fear ? "Rötschreck" : d.kind === "instinct" ? "Instinct" : "Frenzy"} check`, body, [r.roll], data);
+    return post(actor, `${actor.name}: ${fear ? "Rötschreck" : d.kind === "instinct" ? "Instinct" : "Frenzy"} check`, body, [r.roll, r.extra].filter(Boolean), data);
 }
 
 /**
@@ -2675,6 +2695,11 @@ export async function endScene({ actors, fromChronicle = false, map = false } = 
         if (Object.keys(upd).length) await actor.update(upd);
         if (q) await actor.unsetFlag(MOD, "quickening");
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
+        if (flag(actor, "echidnaDue")) {
+            const b = blood(actor);
+            if (b.value > 0) { await updateActor(actor, { "system.advantages.bloodpool.temporary": b.value - 1 }); bits.push(`Echidna takes the due: blood ${b.value} → ${b.value - 1}`); }
+            await actor.unsetFlag(MOD, "echidnaDue");
+        }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
     // A new map is a new scene too, but the Nature card waits for the Storyteller's own End scene (no card per map)
@@ -3563,7 +3588,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // Test code: fetched only when a gate asks for it, so players never download it
     makeTestPack: (...args) => import("./garou-testpack.js").then(m => m.makeTestPack(...args)),
     // Kindred additions and automatic prompts (3.2.0)
-    useDiscipline: withActor(a => kx().useDiscipline(a)), castRitual: withActor(a => kx().castRitual(a)), setRoad: withActor(a => kx().setRoad(a)), roadFaith: withActor(a => rf().window(a)), roadFaithAct: (a, fd) => rf().act(resolveActor(a), fd), roadFaithInfo: a => rf().info(resolveActor(a)), roadFaithRules: RFR, downtime: withActor(a => kx().downtime(a)),
+    useDiscipline: withActor(a => kx().useDiscipline(a)), castRitual: withActor(a => kx().castRitual(a)), malkRite: withActor(a => kx().malkRite(a)), glyconCheck: withActor(a => kx().glyconCheck(a)), setRoad: withActor(a => kx().setRoad(a)), roadFaith: withActor(a => rf().window(a)), roadFaithAct: (a, fd) => rf().act(resolveActor(a), fd), roadFaithInfo: a => rf().info(resolveActor(a)), roadFaithRules: RFR, downtime: withActor(a => kx().downtime(a)),
     bloodHunt: (o = {}) => dm().bloodHunt(o.actor ? resolveActor(o.actor) : resolveActor()), callHunt: (a, o) => dm().callHunt(resolveActor(a), o), endHunt: (id, how) => dm().endHunt(id, how),
     oaths: withActor(a => dm().oaths(a)), diablerieMarks: withActor(a => dm().marks(a)), beastTurn: c => dm().onTurn(c ?? game.combat), wakeCard: (a, since) => dm().wake(resolveActor(a), since),
     debtsRules: DR_DEBTS, beastRules: DR_BEAST, debtsMarks: () => dm(),

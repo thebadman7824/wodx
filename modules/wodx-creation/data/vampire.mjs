@@ -102,6 +102,11 @@ export const CLANS = [
   {id: "valkyrjer", name: "Valkyrjer", disciplines: ["Animalism", "Potence", "Spiritus"], darkAges: "V20DA p. 70 (Ahrimanes)",
     aliases: ["valkyrje", "dark ages ahrimanes"], opens: {until: 1492},
     noBondNoGhoul: "an Ahrimane's blood makes neither blood bonds nor ghouls (V20 Dark Ages p. 71)"},
+  // B7670: the Setite castes of V20 Dark Ages Appendix B (p. 450); they come before the clan so their names find their own row
+  {id: "warriors-of-glycon", name: "Warriors of Glycon", disciplines: ["Obfuscate", "Potence", "Serpentis"], darkAges: "V20DA p. 450",
+    aliases: ["glycon", "crooks", "warrior setites"]},
+  {id: "witches-of-echidna", name: "Witches of Echidna", disciplines: ["Animalism", "Presence", "Thaumaturgy"], darkAges: "V20DA p. 450 (their sorcery is Setite Thaumaturgy)",
+    aliases: ["echidna", "gorgons"]},
   {id: "niktuku", name: "Nictuku", disciplines: ["Auspex", "Celerity", "Potence"], darkAges: "V20DA p. 97", aliases: ["niktuku"]},
   {id: "caitiff", name: "Caitiff", disciplines: [], darkAges: "V20 p. 124 (no clan Disciplines)", aliases: ["clanless"]}
 ];

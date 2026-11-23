@@ -247,7 +247,7 @@ export function build(ctx) {
             const notes = [];
             if (spendB > bb.perTurn) notes.push(`more than ${bb.perTurn} blood a turn: ${Math.ceil(spendB / bb.perTurn)} turns`);
             if (spendW && !(await spendWillpower(actor, spendW))) return null;
-            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); notes.push(`blood ${ch.before} → ${ch.after}`); }
+            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB, { sorcery: K.ECHIDNA_SORCERY.test(String(p.d ?? "")) }); notes.push(`blood ${ch.before} → ${ch.after}`); }
             if (spendW) notes.push(`${spendW} Willpower`);
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
@@ -280,6 +280,9 @@ export function build(ctx) {
                 // B7665: the Thirteenth Generation Flaw (V20 Dark Ages p. 426)
                 const fl = K.flawPowerDiff([...(actor.items ?? [])].filter(i => i.type === "Feature" && i.system?.type === "wod.types.flaw").map(i => i.name));
                 if (fl.diff) { rm.diff = n(rm.diff) + fl.diff; rm.parts = [...(rm.parts ?? []), fl.part]; }
+                // B7671: a Malkavian Order's rite of the night (V20 Dark Ages p. 444)
+                const mr = riteOf(actor), md = mr ? K.malkRiteDiscDiff(p.d, mr) : 0;
+                if (md) { rm.diff = n(rm.diff) + md; rm.parts = [...(rm.parts ?? []), `${K.MALK_RITES[mr].name} ${md > 0 ? "+" : ""}${md}`]; }
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + rm.diff + lim.diff, { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
@@ -369,6 +372,47 @@ export function build(ctx) {
         });
     }
 
+    /* ---------------- The Malkavian Orders' rites (B7671, V20 Dark Ages p. 444) ---------------- */
+    const riteOf = actor => [...(actor?.effects ?? [])].map(e => e.getFlag?.(MOD, "malkRite")).find(Boolean) ?? null;
+    async function malkRite(actor) {
+        const R0 = K.MALK_RITES;
+        const content = `<form><p>The Orders of Mystery (V20 Dark Ages p. 444): an hour of study, or of pain and ecstasy, and a Willpower point.
+          The rite holds for the night.</p>
+          <div class="form-group"><label>Rite</label><select name="rite" data-fixed>
+            <option value="enigmas">${esc(R0.enigmas.name)} (Ordo Aenigmatis): Perception + Enigmas at 8; main Derangement set aside, +3 dice on Enigmas, Auspex and Dementation one harder</option>
+            <option value="ecstasy">${esc(R0.ecstasy.name)} (Ordo Ecstasis): Willpower at 6; Auspex and Dementation one easier, no Willpower to set a Derangement aside</option>
+          </select></div></form>`;
+        return dialog(`Rite of the Orders: ${actor.name}`, content, "Roll", async fd => {
+            const rite = R0[fd.rite] ? fd.rite : "enigmas", R = R0[rite];
+            if (!(await spendWillpower(actor, 1))) return ctx.notify(`${actor.name} has no Willpower to spend.`);
+            const dice = rite === "enigmas" ? attr(actor, "perception") + abilityDots(actor, "enigmas") : traitValue(actor, "willpower");
+            const r = await rollPool(dice, R.diff);
+            let body = rollBlock(rite === "enigmas" ? "Perception + Enigmas" : "Willpower", r, [`difficulty ${R.diff}${R.house ? " (house reading)" : ""}`, "1 Willpower spent"]);
+            if (r.successes > 0 && !r.botch) {
+                const text = rite === "enigmas" ? "Main Derangement set aside for the night; +3 dice on Enigmas rolls; Auspex and Dementation +1 difficulty."
+                    : "Auspex and Dementation -1 difficulty for the night; no Willpower may be spent to set a Derangement aside.";
+                body += `<div class="vta-big good">${esc(R.name)}: ${esc(text)}</div>`;
+                if (chronicle()?.applyTimed && actor.isOwner) {
+                    const e = await chronicle().applyTimed(actor, { name: R.name, img: "icons/svg/eye.svg", description: text, duration: { kind: "night" }, source: "V20 Dark Ages p. 444", key: "malk-rite" });
+                    await e?.setFlag?.(MOD, "malkRite", rite);
+                }
+            } else body += `<div class="vta-big bad">The rite does not take hold.</div>`;
+            return post(actor, `${actor.name}: ${esc(R.name)}`, body, [r.roll].filter(Boolean));
+        });
+    }
+
+    /* B7670: a Warrior of Glycon offered power or a convert (V20 Dark Ages p. 450) */
+    async function glyconCheck(actor) {
+        if (!K.isGlycon(clanTextOf(actor))) return ctx.notify(`${actor.name} is not a Warrior of Glycon.`);
+        const wp = traitValue(actor, "willpower");
+        const r = await rollPool(wp, K.GLYCON_DIFF);
+        const held = r.successes > 0 && !r.botch;
+        const body = rollBlock("Willpower", r, [`difficulty ${K.GLYCON_DIFF}`]) + `<div class="vta-big ${held ? "good" : "bad"}">${held
+            ? `${esc(actor.name)} weighs the chance and keeps their head.`
+            : `${esc(actor.name)} goes after the power or the convert, to the exclusion of all else.`}</div><div class="vta-note">A surrender offered must be taken (usually by a Blood Oath), lest a convert be lost.</div>`;
+        return post(actor, `${actor.name}: power within reach`, body, [r.roll].filter(Boolean));
+    }
+
     /* ---------------- Thaumaturgy and Necromancy rituals (B3753) ---------------- */
     // Intelligence + Occult at the ritual's level + 3, at most 9 (V20 p. 230; V20 Dark Ages p. 302); five minutes a level.
     async function castRitual(actor) {
@@ -400,7 +444,7 @@ export function build(ctx) {
             const spendB = garg ? Math.max(1, n(fd.blood)) : Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
             if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
             let body = "";
-            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
+            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB, { sorcery: true }); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
             if (garg) {
                 body += `<div class="vta-big good">${esc(r.n)}: woken in the Gargoyle's own stone, with no roll. It lasts the scene or until dismissed (V20 Dark Ages p. 309).</div>`;
                 body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
@@ -1254,7 +1298,7 @@ export function build(ctx) {
         return K.powersFor(lib, sheetDisciplines(actor)).filter(p => !p.passive && p.r).map(p => ({ use: "useDiscipline", field: "power", value: p.id, name: p.n, disc: p.d, level: p.l,
             set: /^V20/.test(p.book ?? "") ? "v20" : "disc", id: /^V20/.test(p.book ?? "") ? p.kw : p.id }));
     }
-    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt, hungryAtDawn,
+    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, malkRite, glyconCheck, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt, hungryAtDawn,
         daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 

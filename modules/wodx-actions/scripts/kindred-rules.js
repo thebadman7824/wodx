@@ -568,6 +568,38 @@ export function bloodlinePowerDiff(clan, discipline, { onOther = true, piece = f
 }
 
 /**
+ * B7670: the Setite castes of V20 Dark Ages Appendix B (p. 450). clan: the sheet's clan text.
+ * Witches of Echidna: every frenzy check brings a Self-Control check at the same difficulty; failing either (or any
+ * frenzy check at all for a Witch with Instinct) puts on Echidna's Visage, Appearance 0 for the scene. And each scene
+ * the Witch uses or takes in blood, Echidna eats one more point at its end, unless the blood fed sorcery (Ritual or
+ * Thaumaturgy). Warriors of Glycon: a chance at power or a convert asks a Willpower roll at 6, or the Warrior chases it
+ * to the exclusion of all else.
+ */
+export const isEchidna = clan => /echidna|gorgon/i.test(String(clan ?? ""));
+export const isGlycon = clan => /glycon/i.test(String(clan ?? ""));
+export function echidnaVisage({ instinct = false, frenzied = false, selfControlFailed = false } = {}) {
+    return instinct || frenzied || selfControlFailed;
+}
+export const ECHIDNA_SORCERY = /thaumaturg|sorcery|ritual/i;
+export const GLYCON_DIFF = 6;
+
+/**
+ * B7671: the Rites of Enigmas and Ecstasy of the Malkavian Orders (V20 Dark Ages p. 444). Both take an hour and a
+ * Willpower point. Enigmas: Perception + Enigmas at 8; on a success the main Derangement is set aside for the night,
+ * Enigmas rolls gain three dice, and Auspex and Dementation are one harder. Ecstasy: a Willpower roll (difficulty 6,
+ * a house reading: the book names none); on a success Auspex and Dementation are one easier for the night, and no
+ * Willpower may be spent to set a Derangement aside.
+ */
+export const MALK_RITES = {
+    enigmas: { name: "Rite of Enigmas", pool: ["perception", "enigmas"], diff: 8, disc: +1, enigmasDice: 3, derangementOff: true, page: 444 },
+    ecstasy: { name: "Rite of Ecstasy", pool: ["willpower"], diff: 6, disc: -1, enigmasDice: 0, noWillpowerOnDerangement: true, page: 444, house: "the difficulty 6" }
+};
+export function malkRiteDiscDiff(discipline, rite) {
+    const r = MALK_RITES[rite];
+    return r && /auspex|dementation/i.test(String(discipline ?? "")) ? r.disc : 0;
+}
+
+/**
  * B7662: a Gargoyle Ritual enchanted into a Gargoyle (V20 Dark Ages p. 309). It needs no roll, costs one blood point to
  * wake (unless the ritual itself asks more), and lasts the scene or until dismissed. clan: the sheet's clan text.
  * Returns {ok, why}: why says what stops it.

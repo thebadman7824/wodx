@@ -36,8 +36,8 @@ export const INTENTS = [
 /** Per line: each intent's buttons, most used first; "scene" is the strip at the foot of the menu. */
 export const MENU_PLAN = {
     kindred: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie"],
-        resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite"],
+        resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
         recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith"],
         st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
@@ -158,6 +158,8 @@ export const DESC = {
     "api:useDiscipline": "Use a Discipline power: its roll, cost and effect",
     "api:setRoad": "The Road and its hierarchy of sins; change the Road or Path",
     "api:roadFaith": "The Road as a faith: rank, Mentor, Moments of Truth, standing, and leaving for another Road",
+    "api:malkRite": "A Malkavian Order's rite for the night: Enigmas (study, madness set aside) or Ecstasy (pain and passion, sharper sight)",
+    "api:glyconCheck": "A Warrior of Glycon offered power or a convert: Willpower at 6, or chase it above all else",
     "api:downtime": "Time between stories: domain, havens, projects",
     "api:frenzy": "The Beast rises: a frenzy check against anger or hunger",
     "api:rotschreck": "Fire or sunlight: the Red Fear",
