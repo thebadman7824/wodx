@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.49.0 (Immunity to Fire in the damage cards (V20 Dark Ages p. 402, B7672); Animal swarms and the spider (V20 Dark Ages p. 399, B7677, B7678))
 - 3.48.0 (Gear weight counts on dry land (B7130): past half the lift +1 to dodge and stealth, past the lift half speed; the burden set by hand wins. landLoadOf is new on the movement API)
 - 3.47.2 (A comment no longer names the first chronicle (B7566))
 - 3.47.1 (A difficulty past 10 in combat now needs one more success for each point past it (B7120): the roller, mount dodges, swerves and every defence keep the count when they hold the dice at 10, and the attack log says how many more successes are needed (M20 pdf 504, V20 pdf 166) instead of citing VtDA20 p. 323, which is the trying-again rule)
