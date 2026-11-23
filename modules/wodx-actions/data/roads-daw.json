@@ -1,5 +1,5 @@
 {
- "source": "V20 Dark Ages (VtDA20), The Roads We Walk, pp. 110–145, and Appendix B, Apocrypha of the Clans, pp. 432–449 (the Road of Blood, the Road of the Abyss, the Road of Paradox, the Code of Samiel, the Road of Set and the Path of Apep). Sins are WoDX paraphrases; the book's rationales are not reproduced.",
+ "source": "V20 Dark Ages (VtDA20), The Roads We Walk, pp. 110–145, and Appendix B, Apocrypha of the Clans, pp. 432–449 (the Road of Blood, the Road of the Abyss, the Road of Paradox, the Code of Samiel, the Road of Set and the Path of Apep). The Road of Night is from the Dark Ages Storytellers Companion (2002) pp. 28-30. Sins are WoDX paraphrases; the book's rationales are not reproduced.",
  "aura": {
   "table": "p. 114",
   "note": "Road 10: −2 difficulty … Road 1: +2 (aura modifiers apply to Social rolls with humans)."
@@ -676,6 +676,40 @@
       "Punishing someone for indecency",
       "Upholding the law"
      ]
+    }
+   ]
+  },
+  "night": {
+   "name": "Road of Night",
+   "latin": "Via Noctis",
+   "nick": "Redeemers, Confessors",
+   "book": "Dark Ages Storytellers Companion (2002)",
+   "p": 28,
+   "aura": "Guilt",
+   "auraOn": "rolls to draw out secrets or stir remorse",
+   "virtues": [
+    "conviction",
+    "selfcontrol"
+   ],
+   "hp": 29,
+   "appendix": true,
+   "sins": [
+    "Spending your nights on Cainite affairs",
+    "Feeling remorse for what you do",
+    "Killing a mortal who has not confessed",
+    "Trying to redeem a Cainite",
+    "Bowing to a Cainite not of the Road or your clan",
+    "Killing a sinner except in self-defence",
+    "Trying to redeem a sinner without pain",
+    "Letting a mortal be corrupted",
+    "Embracing a sinner who could still repent",
+    "Corrupting a mortal yourself"
+   ],
+   "paths": [
+    {
+     "name": "Path of Heavenly Abode",
+     "p": 29,
+     "house": "The Storytellers Companion names this path without its own hierarchy; it walks the Road's, a house reading"
     }
    ]
   }

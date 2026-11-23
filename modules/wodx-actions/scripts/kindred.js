@@ -494,7 +494,7 @@ export function build(ctx) {
             const r = DATA.roads.roads[k];
             const found = { key: k, road: r, path: r?.paths.find(p => p.name === path) ?? null };
             const vs = found.path?.virtues ?? r?.virtues ?? [];
-            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)}${r.auraOn ? ` (on ${esc(r.auraOn)})` : ""} · <b>Virtues:</b> ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${found.path?.house ?? r.house ? `<p class="vta-note wodx-quiet">${esc(found.path?.house ?? r.house)}.</p>` : ""}${hierarchyTable(found, rating)}` : "";
+            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)}${r.auraOn ? ` (on ${esc(r.auraOn)})` : ""} · <b>Virtues:</b> ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · ${esc(r.book ?? "VtDA20")} p. ${found.path?.p ?? r.p}</p>${found.path?.house ?? r.house ? `<p class="vta-note wodx-quiet">${esc(found.path?.house ?? r.house)}.</p>` : ""}${hierarchyTable(found, rating)}` : "";
         };
         return dialog(`Road: ${actor.name}`, content, "Save", async fd => {
             const [k, path] = String(fd.road).split("|");

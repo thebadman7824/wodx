@@ -92,3 +92,31 @@ test("the Maturation window is on the Kindred menu and wired to WoDX Creation", 
   assert.match(src("modules/wodx-creation/scripts/advance.mjs"), /case "adv\.maturation"/);
   void PM; void TR;
 });
+
+/* B7691: elder Cainites, Dark Ages Storytellers Companion (2002) printed p. 76 */
+test("elder creation: the book's totals, the Road less 2, two dice of blood", async () => {
+  const {TOTALS} = await import("../../modules/wodx-creation/data/creation-totals.mjs");
+  const D = await import("../../modules/wodx-creation/scripts/derived-rules.mjs");
+  const e = TOTALS.daelder;
+  assert.deepEqual([e.attributes, e.abilities, e.backgrounds, e.powers[0].dots, e.virtues, e.freebies], [[10, 7, 5], [20, 12, 8], 15, 10, 7, 30]);
+  assert.equal(e.costs.road, 1);
+  const sys = {advantages: {virtues: {conscience: {permanent: 3}, selfcontrol: {permanent: 4}, courage: {permanent: 3}}}};
+  const road = D.derivedTraits("daelder", sys).rows.find(r => r.key === "road");
+  assert.equal(road.want, 5);
+  assert.deepEqual(D.startingBlood("daelder"), {roll: 2, plus: 0, how: "Two dice; any past the Generation's limit are lost"});
+});
+
+/* B7690: the Road of Night, Dark Ages Storytellers Companion (2002) pp. 28-30 */
+test("the Road of Night: found by name, ten sins, a parish and the Path of Night after the Dark Ages", async () => {
+  const K = await import("../../modules/wodx-actions/scripts/kindred-rules.js");
+  const {FLOCKS} = await import("../../modules/wodx-npc/scripts/road-flock-rules.mjs");
+  const {ROAD_TO_PATH} = await import("../../modules/wodx-creation/data/advance.mjs");
+  const ROADS = JSON.parse(src("modules/wodx-actions/data/roads-daw.json"));
+  for ( const name of ["Road of Night", "Via Noctis", "Redeemers"] ) assert.equal(K.roadFor(ROADS, name).key, "night", name);
+  assert.equal(ROADS.roads.night.sins.length, 10);
+  assert.equal(K.sinAt(K.hierarchyOf(K.roadFor(ROADS, "Road of Night")), 1), "Corrupting a mortal yourself");
+  assert.deepEqual(K.roadVirtues(K.roadFor(ROADS, "Road of Night")), {conviction: true, instinct: false});
+  assert.equal(FLOCKS.night.group, "parish");
+  assert.equal(ROAD_TO_PATH.night.to, "night");
+  assert.equal(K.roadFor(ROADS, "Path of Heavenly Abode").key, "night");
+});

@@ -179,12 +179,16 @@ export function pathByName(road, name) {
 export function roadFor(data, name) {
     const S = normName(name);
     if (!S || !data?.roads) return null;
+    // B7690: exact names first, a path's then a Road's, so the Road of Heaven is not read as the Path of Heavenly Abode
     for (const [k, r] of Object.entries(data.roads)) {
-        for (const p of r.paths ?? []) if (pathNames(p).some(x => x === S || (S.length > 4 && x.includes(S)))) return { key: k, road: r, path: p };
+        for (const p of r.paths ?? []) if (pathNames(p).includes(S)) return { key: k, road: r, path: p };
     }
     const namesOf = (k, r) => [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
     // B7669: an exact name first, so the Road of Blood is not read as the Road of Yasa ("Bloodbrothers")
     for (const [k, r] of Object.entries(data.roads)) if (namesOf(k, r).includes(S)) return { key: k, road: r, path: null };
+    for (const [k, r] of Object.entries(data.roads)) {
+        for (const p of r.paths ?? []) if (pathNames(p).some(x => S.length > 4 && x.includes(S))) return { key: k, road: r, path: p };
+    }
     for (const [k, r] of Object.entries(data.roads)) {
         if (namesOf(k, r).some(x => S.length > 3 && (x.startsWith(S) || S.startsWith(x)))) return { key: k, road: r, path: null };
     }
@@ -271,6 +275,8 @@ export const SIN_EVENTS = {
     abyss: { frenzy: 5, killFrenzy: 5, starve: 7 },
     paradox: { killFeed: 7, kill: 3, killFrenzy: 3, embrace: 1 },
     samiel: { lie: 8, feedUnwilling: 7 },
+    // B7690: the Road of Night (DASC 2002 p. 30); a kill is 8 only without a confession, which play does not record
+    night: {},
     set: {}, "Path of Apep": {},
     // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
     // Path has no row for it, kill counts. A null is no sin. Instinct Paths sin on notRidden, Self-Control ones on frenzy.

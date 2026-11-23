@@ -372,3 +372,6 @@ Ben approved these deletes in the project chat on 22 November: "Yes. Delete the 
 | 2026-11-23 | Upkeep order (full check, B7687) | The highest rated Backgrounds are paid first | The player picks the order each time |
 | 2026-11-23 | How the years were spent (full check, B7685) | The Storyteller picks it on the Pass the Years row, ordinary unlife by default | Asked of each player before the skip |
 | 2026-11-23 | Points left over (full check, B7688) | Unspent maturation points wait on the sheet for the next window or downtime | Lost when the downtime ends |
+| 2026-11-23 | Road of Night sins from play (full check, B7690) | None: its killing sin turns on whether a confession was taken, which play does not record | Killing a mortal counts as sin 8 unless the Storyteller says a confession was taken |
+| 2026-11-23 | Path of Heavenly Abode (full check, B7690) | Named as a path of the Road of Night that walks the Road's own hierarchy | Left out, as the book gives it no hierarchy |
+| 2026-11-23 | Elder Abilities before bonus points (full check, B7691) | Still none above 3, as Dark Ages: Vampire (2002) step three says | No cap for elders |
