@@ -17,6 +17,8 @@
  *   B7683 maturation (p. 105): these Backgrounds and the Vassal and Settlement Merits rise with maturation experience,
  *         2 for the first dot and the current rating x2 after.
  */
+import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
+
 export const BOOK = "V20 Dark Ages Companion";
 export const page = p => `${BOOK} p. ${p}`;
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -193,13 +195,13 @@ export function huntFromDomain({ aspects = {}, effective = {}, events = [] } = {
  * the price of its next maturation dot (house rule: a d10 of 1 to 5 brings no event, 6 to 10 rolls on the table).
  * seasonOf: the season number of a world time in seconds (day: seconds in a day).
  */
-export const seasonOf = (now, day = 86400) => Math.floor(Math.max(0, n(now)) / (SEASON_DAYS * day));
+export const seasonOf = (now, day = DAY) => Math.floor(Math.max(0, n(now)) / (SEASON_DAYS * day));
 export const QUIET_MAX = 5;
 /**
  * last: the season last turned (null: never, so this one is only marked); now: world time; d10: 1-10; rand: [0, 1).
  * Returns {due, season, event (a key or null)}.
  */
-export function seasonTurn({ last = null, now = 0, d10 = 1, rand = 0, day = 86400 } = {}) {
+export function seasonTurn({ last = null, now = 0, d10 = 1, rand = 0, day = DAY } = {}) {
     const season = seasonOf(now, day);
     if (last === null || last === undefined || season <= n(last)) return { due: false, season, event: null, first: last === null || last === undefined };
     return { due: true, season, event: clamp(n(d10), 1, 10) > QUIET_MAX ? rollEvent(rand) : null };

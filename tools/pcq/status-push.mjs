@@ -106,7 +106,7 @@ export function comfyFrom(queue, history, now = Date.now()) {
   for ( const h of Object.values(history ?? {}) )
     for ( const [kind, m] of h?.status?.messages ?? [] )
       if ( (kind === "execution_success" || kind === "execution_error") && Number.isFinite(m?.timestamp) ) last = Math.max(last ?? 0, m.timestamp);
-  return {up: true, running, pending, lastDoneMin: last ? Math.round((now - last) / 60000) : null, doneLast5: doneSince(history, now - STEP_MIN * 60000)};
+  return {up: true, running, pending, lastDoneMin: last ? Math.round((now - last) / 60000) : null};
 }
 /** Prompts ComfyUI finished after a time (ms), for the daily tally. */
 export function doneSince(history, since) {
@@ -169,7 +169,8 @@ async function comfy() {
   if ( !base ) return undefined;
   try {
     const get = async p => { const r = await fetch(base.replace(/\/$/, "") + p, {signal: AbortSignal.timeout(10000)}); if ( !r.ok ) throw new Error(String(r.status)); return r.json(); };
-    return comfyFrom(await get("/queue"), await get("/history?max_items=20"));
+    const hist = await get("/history?max_items=20");
+    return {...comfyFrom(await get("/queue"), hist), doneLast5: doneSince(hist, Date.now() - STEP_MIN * 60000)};
   } catch { return {up: false, running: 0, pending: 0, lastDoneMin: null}; }
 }
 
