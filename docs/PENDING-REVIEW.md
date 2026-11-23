@@ -1720,7 +1720,9 @@ Rows dated 21 November that Ben had not approved or disapproved by 22 November 0
 | 2026-11-21 | A town's custom on its day (d1, B7611) | A custom is named on the Clock and can make a night of revel, but it is no holy day: no day off, the fast unchanged | Mark the row as a plain feast instead (drop custom) |
 | 2026-11-21 | The hunters' starting stage (d1, B7616) | The region starts at the least pressure of the stage, once, and then cools and grows like any region; the books set no starting pressure | Set the region's pressure by hand in the Hunters window |
 
-## Waiting for review
+## Approved by auto-approval, 23 November 2026, 06:00 UTC
+
+Rows dated 22 November that Ben had not approved or disapproved by 23 November 06:00 UTC. None deletes anything or changes the Live world; each lists how to reverse it. The three shared-folder rows that record deletes stay in Waiting for Ben.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1737,6 +1739,11 @@ Rows dated 21 November that Ben had not approved or disapproved by 22 November 0
 | 2026-11-22 | Desk item 3, unpicked: the recommended option taken (B7644-B7648) | Road ranks, Mentors (a point off per dot between, to half), Moments of Truth (half a Road dot this story; a resisted major sin and a frenzy that risks nothing open their own), Apostates and Excommunicates (+2 on Conscience or Conviction, aura penalties doubled), a guided change of Road or Path with the extended Willpower roll. The book prices a Road dot at 12 in its Mentor example where its table gives 10; WoDX keeps the table. Each town's Road congregations come next | Pick another option on the desk |
 | 2026-11-22 | Desk item 3 part 2, unpicked: the recommended option taken (B7649) | Each town's Road groups: the Storyteller gathers a Road's walkers in a scene into a secret Kindred faction run on orders, named and shaped by the Road's Organization in V20 Dark Ages (court of oaths, congregation, pack, school, Black Church). Gate gatedaflock 2/2 on cloud lane 9 | Pick another option on the desk |
 | 2026-11-22 | OCR page picker (Secondary PC), refinement 2: what else counts as no text, and which reading wins? | Picture descriptions count as no text; character-sheet circle rows are removed, so ratings read blank, not 0; a clearly better vision reading wins. | Restore `D:\WoDX\books\picker.py` from `picker.py.bak-20261122` and copy `out-pre-repick-20261122\*` back to `out\`. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
 | 2026-11-22 | Superseded OCR zips in the shared folder root: keep or delete? | Deleted 98, with the owner's OK in the project chat: 95 per-book book-text-vl-*.zip plus the bundle-20261121a, repick-20261120-bundle1 and repick-20261121-bundle zips. Every text in them is unzipped in book-text/, and full copies stay on BENJAMIN-PC in `D:\WoDX\books\out` and `outbox`. | Re-push the zips from the Secondary PC. |
 | 2026-11-22 | Moving world-buildout out of the shared folder: where does it go? | Moved to the Main PC at `D:\WoDX\archive\shared-folder-2026-11-22\world-buildout\` (8,222 files, about 3.1 GB), with every file's size checked before the cloud copy was deleted; the objects desk folders stayed. Authorized by the owner 22 Nov 15:35Z. Log: /mnt/project-files/registry/shared-folder-move-deletes-2026-11-22.txt. | Copy it back from the PC archive. |
 | 2026-11-22 | Shared folder move to the Main PC, round 2: what else moves? | 8 older repo bundles (13 to 20 Nov; SHA-256 matched, bundle verify passed) and the paperdoll, maps and maps-ref images (883 files, sizes matched) moved to `D:\WoDX\archive\shared-folder-2026-11-22\`. The cloud copies were deleted; the newest two bundles stay in the shared folder. Log: /mnt/project-files/registry/shared-folder-move-deletes-2026-11-22.txt. | Copy them back from the PC archive. |
