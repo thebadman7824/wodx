@@ -623,6 +623,108 @@
     60,
     68
    ]
+  },
+  {
+   "id": "creation.maturation",
+   "name": "Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/maturation.mjs",
+    "modules/wodx-creation/scripts/maturation-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7685-B7689, B7692-B7693"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/maturation.mjs:MaturationApp"
+    },
+    "shown": {
+     "what": "the Maturation window with the points waiting, one dot a trait a period, and Try to raise for Backgrounds; Pass the Years adds the points"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedamaturation.mjs",
+     "step": "2. the Maturation window buys a dot of Strength"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Vampire (2002) pp. 166-167 and Dark Ages Storytellers Companion (2002) pp. 71-76; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
+  },
+  {
+   "id": "creation.supporting-cast",
+   "name": "The Dark Ages Storytellers Companion's supporting characters as ready sheets, by tier",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/supporting-cast.mjs",
+    "modules/wodx-creation/scripts/supporting-cast-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7695"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/supporting-cast.mjs:supportingCastDialog"
+    },
+    "shown": {
+     "what": "a window of the book's templates by group and tier; Make builds a mortal, ghoul or Cainite sheet with the template's traits"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedasupporting.mjs",
+     "step": "1. the window makes two experienced templates with its Make button"
+    }
+   },
+   "open": [
+    "book: Dark Ages Storytellers Companion (2002) supporting character templates (the code cites pdf p. 58); not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
+  },
+  {
+   "id": "creation.dac-demons",
+   "name": "The Dark Ages Companion's demons and the V20 Dark Ages Companion's monsters as sheets",
+   "module": "wodx-creation",
+   "core": false,
+   "files": [
+    "modules/wodx-creation/scripts/dac-demons.mjs",
+    "modules/wodx-creation/scripts/dac-demons-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2323,
+     "decisions": "B7698, B7702"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/dac-demons.mjs:demonsDialog"
+    },
+    "shown": {
+     "what": "a window listing the demons and monsters; Make builds a Creature sheet with its blood, Disciplines, health levels, attack and page"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedadacdemons.mjs",
+     "step": "1. the window makes two demons with its Make button"
+    }
+   },
+   "open": [
+    "book: Dark Ages Companion (2002) pp. 180-185 and the V20 Dark Ages Companion's monsters; not checked against the book text yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2323
+   ]
   }
  ]
 }

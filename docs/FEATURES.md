@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 1 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | yes | 18 | 0 | 8 |
+| wodx-creation | yes | 21 | 0 | 8 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | not yet | 0 | 0 | 0 |
@@ -69,8 +69,11 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 1 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | shown | 1 |  |
+| Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
 | Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | shown | 1 |  |
 | The archive of the dead, by hand and by itself as the clock moves on (`creation.archive`) |  | book |  | gatetruthsheets 8. the long dead go to the archive by themselves |
+| The Dark Ages Companion's demons and the V20 Dark Ages Companion's monsters as sheets (`creation.dac-demons`) |  | gated | 1 | gatedadacdemons 1. the window makes two demons with its Make button |
+| The Dark Ages Storytellers Companion's supporting characters as ready sheets, by tier (`creation.supporting-cast`) |  | gated | 1 | gatedasupporting 1. the window makes two experienced templates with its Make button |
 | The First Change: a mortal becomes a Garou (`creation.first-change`) |  | gated | 1 | gate6b first change |
 
 ## wodx-sheets
