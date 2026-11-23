@@ -12,3 +12,4 @@
 {"file":"tools/harness/revenants.test.mjs","verdict":"working","how":"read in full; the test file runs green; gate steps checked against the code paths they drive (gate-rules and gate-map tests pass)","hash":"fb6ddf9eef51","at":"2026-11-23T23:57Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read the six new rows and the registry row; registry.mjs check reports 0 problems","hash":"a7689051fc2c","at":"2026-11-23T23:57Z"}
 {"file":"registry/features/wodx-creation.json","verdict":"working","how":"read the six new rows and the registry row; registry.mjs check reports 0 problems","hash":"70c9fd68458f","at":"2026-11-23T23:57Z"}
+{"file":"modules/wodx-creation/scripts/revenant-rules.mjs","verdict":"working","how":"read the canon-year change in full; canon, revenants, lifepath-app and cross-imports tests pass","hash":"584cadc5b2b6","at":"2026-11-23T23:57Z"}

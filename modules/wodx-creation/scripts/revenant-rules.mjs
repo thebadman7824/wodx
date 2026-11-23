@@ -15,6 +15,10 @@
  * docs/PENDING-REVIEW.md. Never V5.
  */
 import {FAMILIES} from "./states-rules.mjs";
+import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
+
+/** The last year of the Dark Ages lines: the Convention of Thorns, read from the canon. */
+const THORNS = canon("convention-of-thorns").from;
 
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 
@@ -97,19 +101,19 @@ export const LINES = [
     why: "V20 Dark Ages p. 453 names them; Ghouls and Revenants pdf 101 calls them extinct in modern nights. House: gone by 1700."},
   {key: "bratovich", years: [FIRST_YEAR, LAST_YEAR], da: "bratovich", gr: "bratovich", patron: "Tzimisce", home: "the Carpathians; from about 1700 the Americas",
     why: "V20 Dark Ages p. 453; Ghouls and Revenants pdf 90-91 (a ship to the West Indies at the dawn of the 18th century)."},
-  {key: "danislav", years: [FIRST_YEAR, 1493], da: "danislav", gr: null, patron: "Tzimisce", home: "the Voivodate",
-    why: "V20 Dark Ages pp. 453-454. House: not named after the Convention of Thorns, so their line ends in 1493."},
+  {key: "danislav", years: [FIRST_YEAR, THORNS], da: "danislav", gr: null, patron: "Tzimisce", home: "the Voivodate",
+    why: "V20 Dark Ages pp. 453-454. House: not named after the Convention of Thorns, so their line ends that year."},
   {key: "grimaldi", years: [FIRST_YEAR, LAST_YEAR], da: "grimaldi", gr: "grimaldi", patron: "Tzimisce", home: "Italy and the lands where the Fiends have little sway",
     why: "V20 Dark Ages p. 454 has them serving in the Dark Ages (Ghouls and Revenants pdf 98 says the late Middle Ages; V20 Dark Ages wins in its era)."},
   {key: "obertus", years: [FIRST_YEAR, LAST_YEAR], da: "obertus", gr: "obertus", patron: "Tzimisce", home: "Constantinople, scattered after 1204; then Eastern Europe",
     why: "V20 Dark Ages p. 454; Ghouls and Revenants pdf 102."},
   {key: "szantovich", years: [FIRST_YEAR, LAST_YEAR], da: "szantovich", gr: "zantosa", patron: "Tzimisce", home: "the courts of Hungary and the Voivodate",
-    names: [[FIRST_YEAR, 1493, "Szantovich"], [1494, LAST_YEAR, "Zantosa"]],
-    why: "V20 Dark Ages p. 454 (Szantovich); Ghouls and Revenants pdf 112: \"originally known as the Szantovich\". House: the new name after the Anarch Revolt, from 1494."},
-  {key: "vlaszy", years: [FIRST_YEAR, 1493], da: "vlaszy", gr: null, patron: "Tzimisce", home: "Hungary (Magyar stock)",
-    why: "V20 Dark Ages p. 454. House: not named after the Convention of Thorns, so their line ends in 1493."},
-  {key: "khavi", years: [FIRST_YEAR, 1493], da: "khavi", gr: null, patron: "the Fiend Byelobog", home: "the rivers and the Baltic coast",
-    why: "V20 Dark Ages p. 454; Ghouls and Revenants pdf 102 speaks of them in the past. House: their line ends in 1493."},
+    names: [[FIRST_YEAR, THORNS, "Szantovich"], [THORNS + 1, LAST_YEAR, "Zantosa"]],
+    why: "V20 Dark Ages p. 454 (Szantovich); Ghouls and Revenants pdf 112: \"originally known as the Szantovich\". House: the new name from the year after the Convention of Thorns."},
+  {key: "vlaszy", years: [FIRST_YEAR, THORNS], da: "vlaszy", gr: null, patron: "Tzimisce", home: "Hungary (Magyar stock)",
+    why: "V20 Dark Ages p. 454. House: not named after the Convention of Thorns, so their line ends that year."},
+  {key: "khavi", years: [FIRST_YEAR, THORNS], da: "khavi", gr: null, patron: "the Fiend Byelobog", home: "the rivers and the Baltic coast",
+    why: "V20 Dark Ages p. 454; Ghouls and Revenants pdf 102 speaks of them in the past. House: their line ends with the Convention of Thorns."},
   {key: "krevcheski", years: [FIRST_YEAR, 1249], da: "krevcheski", gr: null, patron: "Tzimisce (the elder Krevcheski)", home: "a mountain fortress in the Carpathians",
     why: "Dark Ages: Vampire p. 289; Ghouls and Revenants pdf 94 has them defect to the Tremere and take the name Ducheski. House: the defection in 1250."},
   {key: "ducheski", years: [1250, LAST_YEAR], da: null, gr: "ducheski", patron: "Tremere", home: "Tremere chantries",
