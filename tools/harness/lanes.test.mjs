@@ -435,3 +435,32 @@ test("cloud lane 9 keeps Foundry and its licence out of the repo and uses Node 2
   assert.ok(!/(writeFileSync|appendFileSync|renameSync)\(\s*path\.join\(CACHE/.test(src) && !/(copyFileSync|cpSync)\([^,]+,\s*path\.join\(CACHE/.test(src),
     "nothing is written back to the shared folder");
 });
+
+test("writers of a known-good folder take turns, and readers wait for the writer (B7762)", async () => {
+  const L = await import("../lanes/lib.mjs");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kg-lock-"));
+  const dir = path.join(root, "testbed-known-good-clean");
+  assert.equal(L.knownGoodLockFile(dir + "/"), `${dir}.lock.json`, "the lock sits beside the folder, never in it");
+  const order = [];
+  const write = (who, ms) => L.withKnownGoodWrite(dir, who, async () => {
+    order.push(`${who} in`);
+    assert.equal(L.knownGoodLockState(dir).lock.what, who);
+    await new Promise(r => setTimeout(r, ms));
+    order.push(`${who} out`);
+  }, {everyMs: 10, log: () => {}});
+  await Promise.all([write("lane 11", 60), write("lane 12", 10), write("lane 13", 10)]);
+  for ( let i = 0; i < order.length; i += 2 ) assert.equal(order[i].replace(" in", ""), order[i + 1].replace(" out", ""), `one writer at a time: ${order.join(", ")}`);
+  assert.equal(order.length, 6);
+  assert.ok(!fs.existsSync(L.knownGoodLockFile(dir)), "the lock goes when the last writer ends");
+  // a lock left by a process that has ended does not hold anyone up
+  fs.writeFileSync(L.knownGoodLockFile(dir), JSON.stringify({pid: 999999, since: new Date().toISOString(), what: "gone"}));
+  assert.equal(L.knownGoodLockState(dir, {alive: () => false}).held, false);
+  // a reader waits while a live writer holds it, then goes on
+  let held = 2;
+  const state = () => held-- > 0 ? {held: true, lock: {pid: 1, what: "setup-clean on lane 12"}} : {held: false};
+  const lines = [];
+  await L.waitKnownGood(dir, {state, everyMs: 1, log: m => lines.push(m), sleep: async () => {}});
+  assert.equal(lines.length, 1); assert.match(lines[0], /setup-clean on lane 12/);
+  await assert.rejects(L.waitKnownGood(dir, {state: () => ({held: true, lock: {pid: 1}}), waitMinutes: 0, sleep: async () => {}, log: () => {}}), /for over 0 minutes/);
+  fs.rmSync(root, {recursive: true, force: true});
+});
