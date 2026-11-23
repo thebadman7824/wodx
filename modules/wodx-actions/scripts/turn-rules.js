@@ -27,6 +27,8 @@ export const EVERY_TURN = {
   "bitter fruit": {line: "Mage (Dark Ages)", on: "target", only: true, rounds: "successes", roll: {pool: "stamina", diff: 7, onFail: {damage: {levels: 1, type: "lethal", soak: false}}}, endOnHeal: true, page: "DA Mage p. 69", text: "Stamina at 7 each turn for as many turns as the successes, or an unsoakable lethal level"},
   "tripping the ire": {line: "Changeling (C20)", counter: {start: "successes", label: "dice of Ire to share"}, each: {counter: -1}, page: "C20 p. 205", text: "a pool of dice to share each round, one smaller each round"},
   "ride the flames": {line: "Demon (DtF)", counter: {start: "successes", label: "square feet of fire"}, roll: {pool: "willpower", diff: 6, onFail: {counter: -1}}, page: "DtF p. 176", text: "Willpower at 6 each turn feeds the fire, or it shrinks; at nothing the body comes back"},
+  // B7668: Potestas Tempestatum's high wind: all in it roll Dexterity at 6 each turn to stay standing (V20 Dark Ages p. 298)
+  "high winds": {area: {yards: 30}, areaRoll: {pool: "dexterity", diff: 6, onFail: {condition: "knockdown"}}, page: "VtDA20 p. 298", text: "everyone in the wind rolls Dexterity at 6 each turn or is knocked down"},
   "command the wind": {line: "Demon (DtF)", high: true, area: {radius: "faith", living: true, skipMasked: true}, each: {damage: {levels: 1, type: "bashing", soak: false}}, page: "DtF p. 184", text: "a choking wind: an unsoakable bashing level each turn to every living thing within Faith yards unless masked"},
   "cyclone": {line: "Demon (DtF)", counter: {start: "successes", label: "Strength of the whirlwind"}, area: {radius: "faith"}, each: {damage: {pool: "counter", type: "bashing", soak: true}, counter: -1}, page: "DtF p. 184", text: "the whirlwind rolls its Strength as bashing on all inside each turn, one weaker each turn"},
   // B6852: Possess Animals at high Torment (DtF p. 204); Command the Dead's after-roll is the Storyteller's (p. 211)
@@ -37,6 +39,8 @@ export const EVERY_TURN = {
   "naming the body's destruction": {line: "Mummy (2nd)", on: "target", levelsEq: 3, roll: {pool: "stamina", diff: 8, onFail: {damage: {levels: 1, type: "lethal", soak: true}}}, endOnHeal: true, page: "MtR p. 124", text: "Stamina at 8 each turn or a lethal level, until the wound is treated"},
   "witch's nimbus": {line: "Orpheus", touch: true, page: "Orpheus pp. 104-105", text: "whatever lands a close blow takes the nimbus's lethal levels"},
   // B7093: a living thing held by Movement of the Mind fights it every turn (V20 p. 220)
+  // B7668: Potestas Motus: an unwilling one lifted opposes with Willpower each turn (V20 Dark Ages p. 297), as B7093
+  "levitation": {line: "Vampire (Dark Ages)", on: "target", roll: {pool: "willpower", diff: "caster:willpower", onWin: {end: true}}, page: "VtDA20 p. 297", text: "an unwilling one lifted rolls Willpower each turn against the caster's Willpower, and breaks free on a success"},
   "movement of the mind": {line: "Vampire (V20)", on: "target", roll: {pool: "willpower", diff: "caster:willpower", onWin: {end: true}}, page: "V20 p. 220", text: "a living thing held rolls Willpower each turn against the caster's Willpower, and breaks free on a success"},
   "blood pump": {line: "Werewolf (Changing Breeds)", flag: "noBloodCap", page: "W20 CB p. 67", text: "no limit on the blood spent each turn"}
 };
@@ -53,7 +57,7 @@ export function resolveRec(rec, ctx = {}) {
   if ( rec.counter ) out.counter = {...rec.counter, value: at(rec.counter.start)};
   if ( rec.area ) out.area = {...rec.area, yards: at(rec.area.radius)};
   // Nothing to roll or apply each turn: the record only marks the effect (a burning touch, a lifted limit, shared wounds)
-  out.passive = !rec.each && !rec.roll && !rec.strike;
+  out.passive = !rec.each && !rec.roll && !rec.strike && !rec.areaRoll;
   return out;
 }
 

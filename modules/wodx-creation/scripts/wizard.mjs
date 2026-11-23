@@ -7,7 +7,7 @@
  */
 import * as MDA from "../../wodx-actions/scripts/mage-da-rules.js";
 import * as FDA from "../../wodx-actions/scripts/fae-da-rules.js";
-import {MODULE_ID, esc} from "./actor-data.mjs";
+import {MODULE_ID, esc, attributeLock} from "./actor-data.mjs";
 import {TOTALS} from "./totals-rules.mjs";
 import {totalsView, lineFor, CreationCheckApp} from "./totals-check.mjs";
 import * as B from "./first-night-build-rules.mjs";
@@ -176,10 +176,18 @@ export class WizardApp extends ApplicationV2 {
     }
   }
 
+  /** B7660: an Attribute the clan or a Flaw holds at 0 (a Nosferatu's Appearance), from the row's sheet path. */
+  #lock(change) {
+    if ( change?.kind !== "attribute" ) return null;
+    const key = String(change.path ?? "").match(/attributes\.([a-z]+)\./)?.[1] ?? "";
+    return key ? attributeLock(this.actor, key) : null;
+  }
+
   /** One row of dots with its - and + buttons. change: the data the step handler reads. */
   #row(label, value, max, min, change, ctx, page) {
     const ch = this.#change(change);
-    const up = W.canRaise(ctx.view, ctx.lineId, ch, {page, value, max, ...ctx.opts});
+    const lock = this.#lock(change);
+    const up = lock ? {ok: false, cost: 0, why: lock} : W.canRaise(ctx.view, ctx.lineId, ch, {page, value, max, ...ctx.opts});
     const data = Object.entries(change).map(([k, v]) => `data-${k}="${esc(v)}"`).join(" ");
     const price = page === "freebies" && up.cost ? `<span class="wodx-quiet">+${up.cost}</span>` : "";
     const note = noteFor(label, ctx.lineId, change.group ?? (change.kind === "virtue" ? "virtues" : null)).text;
@@ -484,6 +492,8 @@ export class WizardApp extends ApplicationV2 {
     const kindOrder = data.kind === "attribute" ? "attributes" : data.kind === "ability" ? "abilities" : null;
     if ( kindOrder && !wizardOf(a).order[kindOrder] ) { const w = wizardOf(a); w.order[kindOrder] = this.#order(kindOrder); await saveWizard(a, w); }
     if ( d > 0 ) {
+      const lock = this.#lock(data);
+      if ( lock ) return ui.notifications.info(lock);
       const up = W.canRaise(totalsView(a, this.lineId), this.lineId, this.#change(data), {page: data.page, value, max, ...this.opts});
       if ( !up.ok ) return ui.notifications.info(up.why);
     }

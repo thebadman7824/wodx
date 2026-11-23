@@ -148,3 +148,19 @@ export function secondBreathStart({willpower = 0} = {}) {
 
 /** B5023: the traits a Fallen takes from a new host's body (DtF pdf 260: the body's Physical traits). */
 export const HOST_PHYSICAL = ["strength", "dexterity", "stamina"];
+
+/**
+ * B7667: Becoming Mortal (V20 Dark Ages pp. 359-360). The book leaves the truth to the Storyteller and names three
+ * catalysts. A vampire who becomes mortal keeps the person: Attributes, Abilities, Virtues, Willpower and the life story;
+ * Disciplines, the blood pool and Generation go. The Road's rating becomes Humanity (house reading).
+ */
+export const MORTAL_CATALYSTS = {
+  sire: "Slew the sire",
+  love: "Found true love",
+  sacrifice: "Gave their life for another, and became mortal in the dying",
+  other: "Something else, the Storyteller's own"
+};
+export function mortalAgain({road = 0, willpower = 0, catalyst = "other"} = {}) {
+  return {humanity: Math.max(1, Math.min(10, n(road) || 1)), willpower: Math.max(1, n(willpower)), catalyst: MORTAL_CATALYSTS[catalyst] ? catalyst : "other",
+    dying: catalyst === "sacrifice"};
+}

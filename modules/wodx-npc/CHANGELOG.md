@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.107.1 (Town groups for the Appendix B Roads (B7669))
 - 0.107.0 (A Road's walkers in a town (B7649): from the Road window the Storyteller gathers the vampires on a Road in the scene into its local group, named and shaped as the book gives that Road (the Luminaries' court of oaths under a Lord, the Faithful's congregation, the Apostates' pack, a Black Church), a secret Kindred faction holding the scene and run on the Storyteller's orders (V20 Dark Ages pp. 116-141))
 - 0.106.2 (Fates and rivalries read the Anarch Revolt and the Black Death from the Chronicle canon (B7171): the Revolt's danger and its anarch-elder hostility now run 1335 to 1493 (were 1394 and 1381 to 1492, with no book behind either))
 - 0.106.1 (A poacher in a player's domain now really takes one from the district's herd pool (B7638): the call looked for the herd pools in the wrong place in WoDX Storyteller and did nothing)

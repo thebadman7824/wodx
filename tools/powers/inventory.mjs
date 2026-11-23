@@ -138,6 +138,9 @@ for ( const [id, c] of Object.entries(DC.CANTRIPS) ) {
 const SCH = await import(A("scripts/spirit-charms.js"));
 for ( const c of SCH.CHARMS.filter(x => x.group === "sprite") )
   add("Fae (Dark Ages)", "Sprite Charms", c.name, { src: c.spec ?? { does: c.does }, status: "applies", kw: c.keywords ?? [], page: `DA:Fae p. ${c.p}`, how: `Spirit Charm window: Essence${c.roll ? `, ${c.roll} roll` : ", no roll"}; ${c.does ? `${c.does} (charms.js)` : "effects card"}` });
+/* -- B7672: the demon Charms of V20 Dark Ages p. 402 (charms.js) */
+for ( const c of SCH.CHARMS.filter(x => x.group === "demon") )
+  add("Vampire (Dark Ages)", "Demon Charms", c.name, { src: c.spec ?? { does: c.does }, status: "applies", kw: c.keywords ?? [], page: `VtDA20 p. ${c.p}`, how: `Spirit Charm window: Essence${c.roll ? `, ${c.roll} roll` : ", no roll"}; ${c.does ? `${c.does} (charms.js)` : "effects card"}` });
 /* -- Faerie Treasures, every era (treasures.js) */
 const TRZ = await import(A("scripts/fae-treasures.js"));
 for ( const [k, t] of Object.entries(TRZ.TREASURES) )

@@ -10,6 +10,16 @@ export const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-
 export const specKey = (line, name) => `${slug(line)}|${slug(String(name ?? "").replace(/^[•\s]+/, ""))}`;
 
 export const SPECS = {
+ "vampire-dark-ages|summon-hellhounds": {
+  "what": "beast",
+  "profile": "servant",
+  "count": {"by": "rage"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "stats": {"attack": "a dog's (VtDA20 p. 397), its Attributes raised to the demon's Rage; bites and claws aggravated"},
+  "page": "VtDA20 p. 402",
+  "note": "B7672: five Essence calls one Hellhound for each dot of the demon's Rage; the book gives no length, so they stay the scene (house reading)."
+ },
  "fae-dark-ages|lesser-hounds-of-hell": {
   "what": "beast",
   "profile": "servant",

@@ -120,6 +120,32 @@ export const CLAN_MARKS = {
   ventrue: {label: "Picky", text: "The beast will feed from only one kind of prey."},
   toreador: {label: "Entranced", text: "The beast freezes before bright or beautiful things."}
 };
+/**
+ * B7673: a human ghoul with five or more points shows the domitor's clan weakness too (V20 Dark Ages p. 400), read
+ * for a living servant in WoDX's words from the clan pages (pp. 43-71). frenzy: the step on the ghoul's frenzy roll.
+ * Weaknesses a living body cannot carry (the sun's extra harm, native soil) are named as the Storyteller's to show.
+ */
+export const HUMAN_MARKS = {
+  assamite: {label: "Fixation", text: "An obsession with their best scholarly or creative Ability rules them like a derangement."},
+  brujah: {label: "Hot blood", text: "Frenzy is two harder to resist, and Willpower cannot hold it off, only end it.", frenzy: 2},
+  cappadocian: {label: "Ashen", text: "Their skin turns ashy and corpse-like; people feel it."},
+  gangrel: {label: "The beast shows", text: "Each frenzy can leave a small animal trait in body or habit."},
+  lasombra: {label: "No reflection", text: "They cast no reflection; bright light troubles them (the Storyteller says how)."},
+  malkavian: {label: "A crack in the mind", text: "One derangement takes hold; Willpower sets it aside for a turn at a time."},
+  nosferatu: {label: "Hideous", text: "Their face twists toward the clan's: first impressions fail, but to frighten."},
+  ravnos: {label: "A vice", text: "One trait of character they cannot resist when the chance comes."},
+  setite: {label: "Shuns the sun", text: "Sunlight is hateful to them (the Storyteller says how a living body feels it)."},
+  toreador: {label: "Struck by beauty", text: "Beauty holds them: Self-Control at 5 or lost in it until the scene ends or it goes."},
+  tremere: {label: "Quick to bind", text: "The first drink of Cainite blood counts twice toward a blood oath."},
+  tzimisce: {label: "Tied to the soil", text: "They sleep badly away from home earth (the Storyteller says how far the halving reaches)."},
+  ventrue: {label: "Picky", text: "Vitae aside, only one kind of food or company truly satisfies them (the Storyteller names it)."},
+  "salubri-healer": {label: "Third eye", text: "A faint third eye shows when they use Valeren; feeding the unwilling troubles them."},
+  "salubri-warrior": {label: "Third eye", text: "A faint third eye shows when they use Valeren; they must prove themselves against those they serve."}
+};
+export function humanMark(clanId, points = 0) {
+  return Number(points) >= MARK_AT ? HUMAN_MARKS[clanId] ?? null : null;
+}
+
 /** The mark an animal ghoul shows: its domitor's clan id and the points in it. -> a CLAN_MARKS entry or null. */
 export function clanMark(clanId, points = 0) {
   return Number(points) >= MARK_AT ? CLAN_MARKS[clanId] ?? null : null;

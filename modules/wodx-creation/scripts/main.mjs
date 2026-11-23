@@ -34,6 +34,8 @@ import * as firstNightRules from "./first-night-rules.mjs";
 import * as wizardRules from "./wizard-rules.mjs";
 import {WizardApp, ledgerFor as wizardLedger, derivedFor} from "./wizard.mjs";
 import * as derivedRules from "./derived-rules.mjs";
+import * as BOOKP from "../data/vtda-people.mjs";
+import * as BOOKPM from "./book-people.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -106,6 +108,7 @@ function start() {
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups,
+    becomeMortal: states.becomeMortal, becomeMortalDialog: states.becomeMortalDialog,
     deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
     revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,
     fallenHost: states.fallenHost, fallenDialog: states.fallenDialog, possess: states.possess, possessDialog: states.possessDialog,
@@ -116,6 +119,7 @@ function start() {
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs, dueNow: archive.dueNow, autoTick: archive.autoTick},
+    bookPeople: {list: () => BOOKP.PEOPLE, make: k => BOOKPM.makeBookPerson(k), open: () => BOOKPM.bookPeopleDialog()},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople,
       // B6242: the People tables load on first use; load() resolves when they are in
       load: () => people.load(), loaded: () => !!people.loaded(), feminine: people.feminine}
@@ -156,3 +160,14 @@ Hooks.on("getSceneControlButtons", controls => {
 });
 
 Hooks.on("updateActor", () => { if ( active ) CreationApp.refresh(); });
+
+// B7660: a sheet given a clan whose blood holds Appearance at 0 (the Nosferatu, V20 Dark Ages p. 55) loses its
+// Appearance dots, once, by the client that made the change
+Hooks.on("updateActor", (actor, changes, _opts, userId) => {
+  if ( userId !== game.user?.id ) return;
+  const s = changes?.system;
+  if ( !s || !("clan" in s || "custom" in s || "attributes" in s) ) return;
+  const app = actor.system?.attributes?.appearance;
+  if ( !app || !(Number(app.value) > 0) || !data.attributeLock(actor, "appearance") ) return;
+  actor.update({"system.attributes.appearance.value": 0}).catch(() => null);
+});

@@ -54,8 +54,13 @@ export const DATA = { disc: null, roads: null, v20: null, paths: null };
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    let combos;
-    [DATA.disc, DATA.roads, DATA.v20, DATA.paths, combos] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json"), get("rules/vampire/combinations-lotc.json")]);
+    let combos, daCombos;
+    [DATA.disc, DATA.roads, DATA.v20, DATA.paths, combos, daCombos] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json"), get("paths-v20.json"), get("rules/vampire/combinations-lotc.json"), get("rules/vampire/combinations-v20da.json")]);
+    // B7664: the 23 combination Disciplines of V20 Dark Ages (pp. 312-317) join the Dark Ages library, keywords and all
+    if (DATA.disc && daCombos?.rows?.length) {
+        DATA.disc = { ...DATA.disc, powers: [...DATA.disc.powers, ...daCombos.rows] };
+        for (const r of daCombos.rows) if (r.k?.length && !PK.POWER_KEYWORDS.disc[r.id]) PK.POWER_KEYWORDS.disc[r.id] = [r.k, r.passive ? 1 : 0];
+    }
     // B7092: the combination Disciplines (V20 Lore of the Clans) join the V20 powers; each row's needs say which Disciplines
     if (DATA.v20 && combos?.rows?.length) {
         DATA.v20 = { ...DATA.v20, powers: [...DATA.v20.powers, ...combos.rows] };
@@ -186,6 +191,9 @@ export function build(ctx) {
         return came;
     }
 
+    /** The clan written on the sheet (a custom clan's name, or the system's clan key). */
+    const clanTextOf = a => String(a?.system?.clan === "custom" ? a?.system?.custom?.clan ?? "" : a?.system?.clan ?? "");
+
     async function useDiscipline(actor) {
         if (LIM.refuseIdle(actor)) return null; // B6156: asleep for the day or out cold
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
@@ -204,7 +212,8 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/></div>
           <div class="form-group"><label>Blood / Willpower to spend</label><input type="number" name="blood" value="0" min="0" style="width:4em"/> <input type="number" name="wp" value="0" min="0" style="width:4em"/></div>
           <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div>
-          <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
+          ${/ramanga/i.test(clanTextOf(actor)) ? `<div class="form-group"><label><input type="checkbox" name="piece"/> Holds a piece of the victim (hair, a nail, blood): no Ramanga +1 on Presence or Aizina (V20 Dark Ages p. 98)</label></div>` : ""}</form>`;
         const describe = root => {
             const p = list.find(x => x.id === root.querySelector("[name=power]").value);
             const box = root.querySelector(".wodx-disc-info");
@@ -220,7 +229,7 @@ export function build(ctx) {
             root.querySelector(".wodx-disc-attr").style.display = /attr/.test(p.r ?? "") ? "" : "none";
             const costTxt = [c.blood && `${c.blood} blood${c.optional ? " (optional)" : ""}`, c.willpower && `${c.willpower} Willpower`, c.variable && "blood as needed"].filter(Boolean).join(", ") || "none";
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
-            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
+            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}${p.lesser && DATA.disc?.rules?.lesser?.[p.d] ? `<br><i>${esc(DATA.disc.rules.lesser[p.d])}</i>` : ""}${p.xp ? `<br><i>A combination: learned for ${p.xp} experience (${esc(p.book ?? "")} p. ${p.p}); the Storyteller takes it.</i>` : ""}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "")
                 + (own ? `<br><i>${esc(tgt.name)} is ${esc(actor.name)}'s own ghoul: one easier${SUBSUME.test(p.n) ? ", and no roll is needed to share its senses" : ""}.</i>` : "")
@@ -238,7 +247,7 @@ export function build(ctx) {
             const notes = [];
             if (spendB > bb.perTurn) notes.push(`more than ${bb.perTurn} blood a turn: ${Math.ceil(spendB / bb.perTurn)} turns`);
             if (spendW && !(await spendWillpower(actor, spendW))) return null;
-            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); notes.push(`blood ${ch.before} → ${ch.after}`); }
+            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB, { sorcery: K.ECHIDNA_SORCERY.test(String(p.d ?? "")) }); notes.push(`blood ${ch.before} → ${ch.after}`); }
             if (spendW) notes.push(`${spendW} Willpower`);
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
@@ -263,7 +272,17 @@ export function build(ctx) {
                 const pool = poolOf(actor, p.r, fd.attr);
                 // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
                 const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
-                const rm = target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : { diff: 0, parts: [] };
+                // A copy: resistMods can hand back its frozen NONE, which the bloodline step below adds to
+                const rm = { diff: 0, parts: [], ...(target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : {}) };
+                // B7661: the Ramanga's weakness on Presence and Aizina used on others (V20 Dark Ages p. 98)
+                const bl = K.bloodlinePowerDiff(clanTextOf(actor), p.d, { onOther: !!target && target !== actor, piece: !!fd.piece });
+                if (bl.diff) { rm.diff = n(rm.diff) + bl.diff; rm.parts = [...(rm.parts ?? []), bl.part]; }
+                // B7665: the Thirteenth Generation Flaw (V20 Dark Ages p. 426)
+                const fl = K.flawPowerDiff([...(actor.items ?? [])].filter(i => i.type === "Feature" && i.system?.type === "wod.types.flaw").map(i => i.name));
+                if (fl.diff) { rm.diff = n(rm.diff) + fl.diff; rm.parts = [...(rm.parts ?? []), fl.part]; }
+                // B7671: a Malkavian Order's rite of the night (V20 Dark Ages p. 444)
+                const mr = riteOf(actor), md = mr ? K.malkRiteDiscDiff(p.d, mr) : 0;
+                if (md) { rm.diff = n(rm.diff) + md; rm.parts = [...(rm.parts ?? []), `${K.MALK_RITES[mr].name} ${md > 0 ? "+" : ""}${md}`]; }
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + rm.diff + lim.diff, { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
@@ -271,6 +290,8 @@ export function build(ctx) {
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
+            // B7662: a lesser path's one rule for all its levels (V20 Dark Ages p. 297)
+            if (p.lesser && DATA.disc?.rules?.lesser?.[p.d]) body += `<div class="vta-note wodx-quiet">${esc(DATA.disc.rules.lesser[p.d])}</div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
             // B6855: any power with a path spec takes it, rolled or not (a no-roll power counts one success)
@@ -306,10 +327,90 @@ export function build(ctx) {
                 const sp = await sinPrompt(actor, "mindMortal", `${p.n} on ${tgtNow.name}, a mortal`);
                 if (sp?.html) body += sp.html;
             }
+            // B7663: Auspex can drown the senses or show a glimpse of what is coming (V20 Dark Ages pp. 194-195)
+            if (/^auspex$/i.test(String(p.d ?? "").trim())) body += `<div class="vta-note">${kbtn("overstim", actor, "Overstimulated? Roll Willpower")} ${kbtn("revelation", actor, "Sudden revelation (Storyteller)")}</div>`;
             await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
+    }
+
+    /* ---------------- Auspex: overstimulation and sudden revelations (B7663) ---------------- */
+    function auspexDots(actor) {
+        return sheetDisciplines(actor).filter(s => /^auspex$/i.test(String(s.name ?? "").trim())).reduce((m, s) => Math.max(m, n(s.value)), 0);
+    }
+    async function overstimulate(actor) {
+        const wp = traitValue(actor, "willpower");
+        const content = `<form><p>Something beautiful, horrible or sudden pulls at ${esc(actor.name)}'s heightened senses (V20 Dark Ages p. 195).
+          Willpower ${wp}, difficulty 4 and up by how strong it is.</p>
+          <div class="form-group"><label>How strong (adds to 4)</label><input type="number" name="intensity" value="0" min="0" max="6"/></div></form>`;
+        return dialog(`Overstimulation: ${actor.name}`, content, "Roll", async fd => {
+            const o = K.overstimulation({ willpower: wp, intensity: fd.intensity });
+            const r = await rollPool(wp, o.diff);
+            let body = rollBlock("Willpower", r, [`difficulty ${o.diff}`]);
+            if (r.successes > 0 && !r.botch) body += `<div class="vta-big good">${esc(actor.name)} keeps focus.</div>`;
+            else {
+                body += `<div class="vta-big bad">Overstimulated: -${o.penalty} dice on anything but the stimulus for ${o.turns} turn${o.turns === 1 ? "" : "s"}.</div>`;
+                if (chronicle()?.applyTimed && actor.isOwner) await chronicle().applyTimed(actor, { name: "Overstimulated", img: "icons/svg/daze.svg",
+                    description: `-${o.penalty} dice on actions outside the stimulus (V20 Dark Ages p. 195)`, duration: { kind: "rounds", rounds: o.turns }, source: "V20 Dark Ages p. 195", key: "auspex-overstim" });
+            }
+            return post(actor, `${actor.name}: overstimulation`, body, [r.roll].filter(Boolean));
+        });
+    }
+    async function suddenRevelation(actor) {
+        const dots = auspexDots(actor);
+        const content = `<form><p>Rolled in secret: ${esc(actor.name)}'s Auspex, ${dots} dice (V20 Dark Ages p. 194). 4 is a robber behind the door;
+          9 is a plot that will take decades to unravel. Give what comes as a small sensory detail or a gut feeling.</p>
+          <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="4" max="9"/></div>
+          <div class="form-group"><label>The glimpse (optional, for the Storyteller's note)</label><input type="text" name="what" value=""/></div></form>`;
+        return dialog(`Sudden revelation: ${actor.name}`, content, "Roll", async fd => {
+            const d = K.revelationDiff(fd.diff);
+            const r = await rollPool(dots, d);
+            const got = r.botch ? 0 : r.successes;
+            const body = rollBlock("Auspex", r, [`difficulty ${d}`]) + `<div class="vta-big ${got ? "good" : ""}">${got ? `A glimpse comes${fd.what ? `: ${esc(fd.what)}` : ""}.` : "Nothing comes."}</div>`;
+            return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}: sudden revelation</h3>${body}</div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: [r.roll].filter(Boolean) });
+        });
+    }
+
+    /* ---------------- The Malkavian Orders' rites (B7671, V20 Dark Ages p. 444) ---------------- */
+    const riteOf = actor => [...(actor?.effects ?? [])].map(e => e.getFlag?.(MOD, "malkRite")).find(Boolean) ?? null;
+    async function malkRite(actor) {
+        const R0 = K.MALK_RITES;
+        const content = `<form><p>The Orders of Mystery (V20 Dark Ages p. 444): an hour of study, or of pain and ecstasy, and a Willpower point.
+          The rite holds for the night.</p>
+          <div class="form-group"><label>Rite</label><select name="rite" data-fixed>
+            <option value="enigmas">${esc(R0.enigmas.name)} (Ordo Aenigmatis): Perception + Enigmas at 8; main Derangement set aside, +3 dice on Enigmas, Auspex and Dementation one harder</option>
+            <option value="ecstasy">${esc(R0.ecstasy.name)} (Ordo Ecstasis): Willpower at 6; Auspex and Dementation one easier, no Willpower to set a Derangement aside</option>
+          </select></div></form>`;
+        return dialog(`Rite of the Orders: ${actor.name}`, content, "Roll", async fd => {
+            const rite = R0[fd.rite] ? fd.rite : "enigmas", R = R0[rite];
+            if (!(await spendWillpower(actor, 1))) return ctx.notify(`${actor.name} has no Willpower to spend.`);
+            const dice = rite === "enigmas" ? attr(actor, "perception") + abilityDots(actor, "enigmas") : traitValue(actor, "willpower");
+            const r = await rollPool(dice, R.diff);
+            let body = rollBlock(rite === "enigmas" ? "Perception + Enigmas" : "Willpower", r, [`difficulty ${R.diff}${R.house ? " (house reading)" : ""}`, "1 Willpower spent"]);
+            if (r.successes > 0 && !r.botch) {
+                const text = rite === "enigmas" ? "Main Derangement set aside for the night; +3 dice on Enigmas rolls; Auspex and Dementation +1 difficulty."
+                    : "Auspex and Dementation -1 difficulty for the night; no Willpower may be spent to set a Derangement aside.";
+                body += `<div class="vta-big good">${esc(R.name)}: ${esc(text)}</div>`;
+                if (chronicle()?.applyTimed && actor.isOwner) {
+                    const e = await chronicle().applyTimed(actor, { name: R.name, img: "icons/svg/eye.svg", description: text, duration: { kind: "night" }, source: "V20 Dark Ages p. 444", key: "malk-rite" });
+                    await e?.setFlag?.(MOD, "malkRite", rite);
+                }
+            } else body += `<div class="vta-big bad">The rite does not take hold.</div>`;
+            return post(actor, `${actor.name}: ${esc(R.name)}`, body, [r.roll].filter(Boolean));
+        });
+    }
+
+    /* B7670: a Warrior of Glycon offered power or a convert (V20 Dark Ages p. 450) */
+    async function glyconCheck(actor) {
+        if (!K.isGlycon(clanTextOf(actor))) return ctx.notify(`${actor.name} is not a Warrior of Glycon.`);
+        const wp = traitValue(actor, "willpower");
+        const r = await rollPool(wp, K.GLYCON_DIFF);
+        const held = r.successes > 0 && !r.botch;
+        const body = rollBlock("Willpower", r, [`difficulty ${K.GLYCON_DIFF}`]) + `<div class="vta-big ${held ? "good" : "bad"}">${held
+            ? `${esc(actor.name)} weighs the chance and keeps their head.`
+            : `${esc(actor.name)} goes after the power or the convert, to the exclusion of all else.`}</div><div class="vta-note">A surrender offered must be taken (usually by a Blood Oath), lest a convert be lost.</div>`;
+        return post(actor, `${actor.name}: power within reach`, body, [r.roll].filter(Boolean));
     }
 
     /* ---------------- Thaumaturgy and Necromancy rituals (B3753) ---------------- */
@@ -324,21 +425,33 @@ export function build(ctx) {
           <div class="wodx-ritual-info wodx-quiet"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" min="2" max="10" value="4"/></div>
           <div class="form-group"><label>Blood to spend</label><input type="number" name="blood" min="0" value="0"/></div>
+          ${/gargoyle/i.test(clanTextOf(actor)) ? `<div class="form-group wodx-garg-rit"><label><input type="checkbox" name="enchanted"/> Enchanted into this Gargoyle: no roll, 1 blood, lasts the scene (V20 Dark Ages p. 309)</label></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (five minutes a level)</label></div></form>`;
         const pick = root => { const [s, i] = String(root.querySelector("[name=rit]")?.value ?? "").split(":"); return { s, r: BR.BOOK_RITUALS[s]?.list?.[n(i)] }; };
         const describe = root => {
             const { s, r } = pick(root); if (!r) return;
             root.querySelector("[name=diff]").value = Math.min(9, BR.ritualLevel(r) + 3);
             const b = /(\d+) blood/.exec(r.takes ?? ""); root.querySelector("[name=blood]").value = b ? b[1] : 0;
-            root.querySelector(".wodx-ritual-info").textContent = `${r.g}, level ${r.lvl}; takes ${r.takes}; on ${r.who}. ${BR.ritualNote(s, r)}`;
+            root.querySelector(".wodx-ritual-info").textContent = `${r.g}, level ${r.lvl}; takes ${r.takes}; on ${r.who}.${r.gargoyle ? " A Gargoyle Ritual." : ""} ${BR.ritualNote(s, r)}`;
+            const g = root.querySelector(".wodx-garg-rit"); if (g) g.style.display = r.gargoyle ? "" : "none";
         };
         return dialog(`Cast a ritual: ${actor.name}`, content, "Cast", async fd => {
             const [s, i] = String(fd.rit ?? "").split(":"); const r = BR.BOOK_RITUALS[s]?.list?.[n(i)];
             if (!r) return null;
-            const spendB = Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
+            // B7662: a Gargoyle Ritual enchanted into a Gargoyle wakes for one blood, with no roll, for the scene (V20 Dark Ages p. 309)
+            const garg = fd.enchanted ? K.gargoyleRitual(clanTextOf(actor), r) : null;
+            if (garg && !garg.ok) return ctx.notify(`${actor.name}: ${garg.why}.`);
+            const spendB = garg ? Math.max(1, n(fd.blood)) : Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
             if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
             let body = "";
-            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
+            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB, { sorcery: true }); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
+            if (garg) {
+                body += `<div class="vta-big good">${esc(r.n)}: woken in the Gargoyle's own stone, with no roll. It lasts the scene or until dismissed (V20 Dark Ages p. 309).</div>`;
+                body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
+                let gx = [];
+                if (EF.isOn()) { const pp = EF.ritualPlan(actor, r, 1, `${BR.BOOK_RITUALS[s].book} ${r.page}`, `Rituals (${BR.BOOK_RITUALS[s].book})`); body += pp.html; gx = pp.items.filter(x => x.route !== "off" && x.route !== "st"); }
+                return post(actor, `${actor.name}: ${esc(r.n)}`, body, [], gx.length ? { kind: "effects", caster: actor.name, items: gx } : undefined);
+            }
             const rr = await rollPool(dice, Math.max(2, Math.min(10, n(fd.diff))));
             body += rollBlock("Intelligence + Occult", rr, [`level ${r.lvl}`]);
             const got = rr.botch ? 0 : rr.successes;
@@ -381,7 +494,7 @@ export function build(ctx) {
             const r = DATA.roads.roads[k];
             const found = { key: k, road: r, path: r?.paths.find(p => p.name === path) ?? null };
             const vs = found.path?.virtues ?? r?.virtues ?? [];
-            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)} · <b>Virtues:</b> ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${hierarchyTable(found, rating)}` : "";
+            root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)}${r.auraOn ? ` (on ${esc(r.auraOn)})` : ""} · <b>Virtues:</b> ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${found.path?.house ?? r.house ? `<p class="vta-note wodx-quiet">${esc(found.path?.house ?? r.house)}.</p>` : ""}${hierarchyTable(found, rating)}` : "";
         };
         return dialog(`Road: ${actor.name}`, content, "Save", async fd => {
             const [k, path] = String(fd.road).split("|");
@@ -1128,6 +1241,8 @@ export function build(ctx) {
             case "stayAwake": return stayAwake(a);
             case "sun": return api.hazard({ actor: a, kind: "sun" });
             case "riseHeal": return riseHeal(a);
+            case "overstim": return overstimulate(a);
+            case "revelation": if (!game.user.isGM) return ctx.notify("The Storyteller rolls a sudden revelation."); return suddenRevelation(a);
             case "seen": {
                 const [sec, ev, list = ""] = arg.split("|");
                 const ws = []; for (const u of list.split(",").filter(Boolean)) { const d = await fromUuid(u); const x = d?.actor ?? d; if (x) ws.push(x); }
@@ -1183,7 +1298,7 @@ export function build(ctx) {
         return K.powersFor(lib, sheetDisciplines(actor)).filter(p => !p.passive && p.r).map(p => ({ use: "useDiscipline", field: "power", value: p.id, name: p.n, disc: p.d, level: p.l,
             set: /^V20/.test(p.book ?? "") ? "v20" : "disc", id: /^V20/.test(p.book ?? "") ? p.kw : p.id }));
     }
-    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt, hungryAtDawn,
+    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, malkRite, glyconCheck, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt, hungryAtDawn,
         daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 

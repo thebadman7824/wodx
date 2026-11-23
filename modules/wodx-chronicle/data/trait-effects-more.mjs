@@ -33,6 +33,11 @@ export const MORE_EFFECTS = {
     tick("heard-mockery", "Intimidating someone who has heard the mocking stories", {need: ["intimidation"], diff: 2, note: "+2 difficulty to intimidate those who know the stories"})],
   // V20 Dark Ages, printed pp. 422-427
   "animate-shadow": [tick("lasombra-aware", "With a Lasombra who knows of the shadow", {need: ["social"], dice: -2, note: "-2 dice on Social rolls with Lasombra who know of it"})],
+  // B7665: Flaws the full check of V20 Dark Ages found missing (pp. 421-427)
+  "impaired-sense": [tick("impaired-sense", "The roll leans on the impaired sense", {diff: 3, note: "+3 difficulty on rolls with the impaired sense (V20 Dark Ages p. 421)"})],
+  "marked-for-death": [tick("marked-distracted", "The Storyteller says the fear of the hunters weighs on this Mental roll", {need: ["mental"], dice: -1, note: "-1 die on a Mental roll (V20 Dark Ages p. 424)"})],
+  "outspoken-heretic": [tick("heresy-known", "With the devout, or those who fear the Church", {need: ["social"], diff: 3, note: "up to +3 difficulty on Social rolls; the Storyteller may lower it (V20 Dark Ages p. 424)"})],
+  "harbinger-of-the-abyss": [{ch: "roll", tags: ["intimidation"], diff: -2, note: "-2 difficulty on Intimidation, not below 4 (V20 Dark Ages p. 427)"}],
   // W20 Changing Breeds, printed p. 209
   "unsure-footing": [{ch: "roll", tags: ["dexterity", "athletics", "brawl", "melee", "dodge"], diff: 2, note: "+2 difficulty on moving and fighting on land"}],
   // M20 Book of Secrets, printed pp. 37-78
@@ -312,6 +317,13 @@ export const MORE_PROMPTS_4 = {
   "without-a-trace": {on: ["night"], text: "in the wild, ordinary tracking fails and supernatural tracking is at +2 difficulty"},
   "ragged-bite": {on: ["feed"], text: "the wound cannot be closed; the victim rolls Stamina (damage + 5) against infection"},
   "celestial-attunement": {on: ["night"], text: "the stars and seasons speak to the character's reckoning"},
+  // B7665: V20 Dark Ages pp. 422-426
+  "ethical-prohibition": {on: ["feed"], text: "will not drink from people (2 points: animals only), or drinks only when it must (4 points)"},
+  "debt-of-gratitude": {on: ["social"], text: "an elder owes the character a favour (1 point) or their unlife (3 points), and resents it"},
+  "apostate": {on: ["social"], text: "left the old Road loudly: its walkers want revenge and the new Road's walkers are wary"},
+  "nameless": {on: ["social"], text: "every record of the character is gone; no reputation Merits, and the Storyteller may bar social Backgrounds"},
+  "unlucky": {on: ["night"], text: "a number of times a day equal to the Flaw's points, the Storyteller may make a success be rolled again"},
+  "thirteenth-generation": {on: ["night"], text: "every Discipline activation is one harder; the frightened and suspicious may make other things harder"},
   "literacy": {on: ["social"], text: "reads and writes the native tongue and Latin"},
   "multi-lingual": {on: ["social"], text: "speaks one more language for each dot of Intelligence"},
   "the-company-of-saints-and-heroes": {on: ["social"], text: "keeps company the faithful revere"},

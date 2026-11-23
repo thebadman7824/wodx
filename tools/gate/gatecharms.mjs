@@ -38,7 +38,7 @@ export async function run() {
   try {
     await G.step("1. the rules and the api", async () => {
       const list = K?.rules?.CHARMS ?? [];
-      const w20 = list.filter(c => c.group !== "sprite"), sprite = list.filter(c => c.group === "sprite");
+      const w20 = list.filter(c => !["sprite", "demon"].includes(c.group)), sprite = list.filter(c => c.group === "sprite");
       G.ok("1. the rules and the api", w20.length === 32 && w20.every(c => c.p >= 366 && c.p <= 368) && sprite.length === 7 && sprite.every(c => c.p === 97) && typeof K?.use === "function" && typeof A?.spiritCharm === "function",
         {n: list.length, sprite: sprite.length});
     });

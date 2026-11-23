@@ -287,6 +287,27 @@ export function overfeed(pool, max, stamina, drink) {
 export const WITHDRAWAL = { difficulty: 7, weeks: stamina => Math.max(1, 6 - n(stamina)) };
 
 /**
+ * B7673: the V20 Dark Ages ghoul rules of p. 400, read in every era (crossover B761). A ghoul frenzies only with five
+ * or more points of vitae in it, and then resists at two lower; a lost part grows back for blood (1 small, 2 medium,
+ * 3 large), a Willpower and a Stamina roll at 8, a botch losing it for good. Blood held stands for the domitor's
+ * points in it (house reading: the sheet keeps one pool).
+ */
+export const GHOUL_DA = { frenzyAt: 5, frenzyDiff: -2, regrowDiff: 8, regrowWillpower: 1, page: "VtDA20 p. 400" };
+export const REGROW = { small: { blood: 1, label: "A small part (a finger, an ear): 1 blood" }, medium: { blood: 2, label: "A middling part (an eye, a foot, a hand): 2 blood" },
+    large: { blood: 3, label: "A large part (an arm, a leg): 3 blood" } };
+/** The size of a lost part by its name; a hand counts with a foot (house reading: the book names eyes and feet). */
+export function regrowSizeOf(part = "") {
+    const s = String(part).toLowerCase();
+    if (/arm|leg/.test(s)) return "large";
+    if (/eye|foot|feet|hand/.test(s)) return "medium";
+    return "small";
+}
+/** Can a ghoul with this much blood frenzy, and the step on the roll to resist. */
+export const ghoulFrenzy = blood => (n(blood) >= GHOUL_DA.frenzyAt ? { can: true, diff: GHOUL_DA.frenzyDiff } : { can: false, diff: 0 });
+/** The regrowth roll's outcome. */
+export const regrowOutcome = ({ successes = 0, botch = false } = {}) => (botch ? "lost" : n(successes) > 0 ? "grown" : "failed");
+
+/**
  * What a hedge spell does once it works (Sorcerer pp. 64-86), for the effects card: the keyword and outcome by path,
  * from the highest aspect level, the successes and the Path rating. s below need: nothing.
  */
@@ -322,4 +343,28 @@ export function repelResults(rules, successes, { source = "" } = {}) {
     const timed = flee ? { kind: "rounds", rounds: s } : { kind: "scene" }, label = flee ? `${s} turn${s === 1 ? "" : "s"}` : "the scene";
     return [{ key: "banish", who: "one", out: { key: "repel", label: "Repelled by faith", source, kind: "timed", name: "Repelled", timed, duration: label, successes: Math.max(1, s),
         text: flee ? `Flees for ${label}; if touched by the faithful, ${s} aggravated level${s === 1 ? "" : "s"}` : "Cannot come at the faithful with ill intent or draw nearer" } }];
+}
+
+/* ---------------- B7675: Holy Artifacts (V20 Dark Ages pp. 394-395) ---------------- */
+/** A Holy Artifact has True Faith of its own, 1 to 5; holding it adds those dots, to ten at most. */
+export const ARTIFACT_DA = { min: 1, max: 5, faithCap: 10, page: "V20 Dark Ages pp. 394-395" };
+/** The book's three examples, in WoDX's own words. place: a spot to use rather than a thing to carry. */
+export const HOLY_ARTIFACTS = [
+    { key: "wedding-band", name: "The Wedding Band of Raquel the Martyr", faith: 1, about: "A plain wooden ring that would not burn on a martyred local saint of Brittany; the story says the one who wears it does not burn either." },
+    { key: "pacifist-ji", name: "The Pacifist's Ji", faith: 3, about: "The spear of a forgotten Buddhist guardian of the Silk Road caravans; it is said to slip past the living and strike only the corruption of the soul." },
+    { key: "lost-yoni", name: "The Lost Yoni", faith: 5, place: true, about: "A carved stone set in the floor of a ruined Greek house, once a sacred midwife's guard against the evil that preys on mothers; a birth while touching it is said to be safe for life." },
+];
+/** The highest Holy Artifact a sheet holds: items flagged wodx-actions.holyArtifact with a rating, 1 to 5. */
+export function artifactOf(items = []) {
+    let best = null;
+    for (const it of items ?? []) {
+        const d = Math.min(ARTIFACT_DA.max, Math.max(0, Math.floor(Number(it?.flags?.["wodx-actions"]?.holyArtifact) || 0)));
+        if (d >= ARTIFACT_DA.min && (!best || d > best.dots)) best = { dots: d, name: it.name };
+    }
+    return best;
+}
+/** True Faith with a Holy Artifact in hand: its dots on top of their own, ten at most; none while the holder strays. */
+export function faithWithArtifact(base, dots, strayed = false) {
+    const b = Math.max(0, Number(base) || 0);
+    return strayed ? b : Math.min(ARTIFACT_DA.faithCap, b + Math.max(0, Number(dots) || 0));
 }

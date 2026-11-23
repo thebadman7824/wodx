@@ -37,6 +37,8 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as PW from "./powder-rules.js";
 import * as MTD from "./mounted.js";
 import * as VH from "./vehicles.js";
+import * as SW from "./swarm.js";
+import * as SWR from "./swarm-rules.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
@@ -556,12 +558,14 @@ export function corpusCondition(d, max) {
     return { key: "ok", label: "Corporeal" };
 }
 
-export async function applyDamage(actor, type, levels, { status = true } = {}) {
+export async function applyDamage(actor, type, levels, { status = true, swarmArea = false } = {}) {
     if (!actor) throw new Error("No actor");
     if (!actor.isOwner) {
         requestGM({ action: "applyDamage", uuid: actor.uuid, type, levels });
         return { requested: true };
     }
+    // B7677: a swarm counts its harm against its chart health, not a health track (V20 Dark Ages p. 399)
+    if (SWR.isSwarm(actor)) return SW.harm(actor, levels, { area: swarmArea });
     const ct = corpusTrack(actor);
     if (ct) {
         const before = { ...ct.damage };
@@ -1166,7 +1170,11 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
             soak.pool = sp;
             if (soak.roll) rolls.push(soak.roll);
             const left = R.damageAfterSoak(dmg.successes, soak.successes, dmgType, profile, { elder: isElder(target) });
-            if (minLevels && left.levels < minLevels) { left.levels = minLevels; log.push(`A ${sb.metal} hit does at least ${minLevels} level.`); }
+            // B7672: an immunity stops its harm outright (a demon's Immunity to Fire, V20 Dark Ages p. 402)
+            if (sp.immune) { left.levels = 0; log.push(`${esc(target.name)}: ${esc(sp.immune)}, no harm.`); }
+            // B7677: a swarm does not soak, and a weapon does it at most one level a turn (V20 Dark Ages p. 399)
+            else if (SWR.isSwarm(target)) { left.levels = SWR.harmToSwarm(dmg.successes, { takenThisTurn: SW.takenThisTurn(target) }); left.halved = false; log.push(`${esc(target.name)} is a swarm: no soak, and a weapon does at most one level a turn (V20 Dark Ages p. 399).`); }
+            else if (minLevels && left.levels < minLevels) { left.levels = minLevels; log.push(`A ${sb.metal} hit does at least ${minLevels} level.`); }
             outcome = { levels: left.levels, halved: left.halved, type: dmgType };
             const dz = dazedThreshold(target, tKind);
             if (left.levels > dz.threshold) {
@@ -1500,6 +1508,7 @@ function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
         ...soakOpts(target, profile)
     });
     if (pw.parts?.length && Array.isArray(sp.notes)) sp.notes.push(...pw.parts);
+    if (pw.immune) sp.immune = pw.immune;
     return sp;
 }
 
@@ -1924,8 +1933,8 @@ async function applyFromMessage(msg, which = "main") {
             ui.notifications.info(`Damage to ${actor.name} sent to the GM.`);
         return;
     }
-    const r = await applyDamage(actor, src.type, src.levels);
-    if (!isCounter) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
+    const r = await applyDamage(actor, src.type, src.levels, { swarmArea: !isCounter && !!data.swarmArea });
+    if (!isCounter && !r.swarm) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
     // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
     const applied = { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
         fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id };
@@ -2038,6 +2047,12 @@ export async function soakAndApply(tok, fd) {
         } else left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
     }
     if (fd.chimerical && kind !== "fae") left = { levels: 0, halved: false };
+    // B7672: an immunity stops its harm outright (a demon's Immunity to Fire, V20 Dark Ages p. 402)
+    const immune = powerModsOf(actor, { soak: true, harm: { type, of: fd.of ?? (fd.fireSun ? "fire" : ""), fireSun: !!fd.fireSun, bane } }).immune;
+    if (immune) { left = { levels: 0, halved: false }; (sp?.notes ?? []).push(`${immune}: no harm`); }
+    // B7677: a swarm takes fire and other area harm in full and a weapon's at most one level a turn, with no soak (V20 Dark Ages p. 399)
+    const swarmArea = SWR.isSwarm(actor) ? (fd.area ?? (!!fd.fireSun || fd.of === "fire")) : false;
+    if (SWR.isSwarm(actor)) { soak = null; left = { levels: SWR.harmToSwarm(dmgLevels, { area: swarmArea, takenThisTurn: SW.takenThisTurn(actor) }), halved: false }; }
     // Damage from one attack, entered by hand, dazes the same way (V20 Dark Ages p. 348)
     const dz = dazedThreshold(actor, kind);
     const dazed = left.levels > dz.threshold;
@@ -2046,11 +2061,12 @@ export async function soakAndApply(tok, fd) {
     else html += `<div class="vtc-sec"><b>Damage</b> ${dmgLevels} ${type} levels</div>`;
     if (soak) html += `<div class="vtc-sec"><b>Soak</b> (${profileLabel(profile)}): ${sp.dice} dice${sp.autoSoak ? ` + ${sp.autoSoak} automatic` : ""}${soakDiff !== 6 ? `, diff ${soakDiff}` : ""}<div class="vtc-parts">${sp.notes.join(" · ")}</div>${diceHtml(soak.faces, soakDiff)}<div class="vtc-res">${soak.successes} soaked${left.halved ? " · bashing halved" : ""}</div></div>`;
     html += `<div class="vtc-big ${left.levels ? "hit" : ""}">${left.levels ? `${left.levels} ${type}` : "No damage"}</div>`;
+    if (immune) html += `<div class="vtc-note">${esc(actor.name)}: ${esc(immune)}, the fire does no harm (V20 Dark Ages p. 402).</div>`;
     if (dazed) html += `<div class="vtc-note"><b>Dazed:</b> ${left.levels} levels after soak is more than ${dz.label} (${dz.threshold}): ${esc(actor.name)} spends the next turn shaking it off (V20 Dark Ages p. 348).</div>`;
     if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : "; apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
     if (left.levels) html += `<div class="vtc-pending">${setting("autoApply") ? "Applying…" : ""}<button type="button" class="vtc-apply" data-which="main">Apply ${left.levels} ${type} to ${actor.name}</button></div>`;
     html += `</div>`;
-    const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
+    const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun, swarmArea };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
     // B5650: a power whose harm the book applies outright (a spirit's Blast, a fomor's splash) asks for it with apply: true
     if ((setting("autoApply") || fd.apply) && left.levels) await applyFromMessage(msg, "main");
@@ -2087,7 +2103,8 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         if (a.getFlag?.(MOD, "stoodUp") && R.stoodPenalty(a.getFlag(MOD, "stoodUp"), combat)) await a.unsetFlag(MOD, "stoodUp");
         const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood
             + powerModsOf(a, { initiative: true }).dice; // B6004: an Initiative Boost from a power
-        const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
+        // B7677: a swarm acts on the chart's Initiative, not a roll (V20 Dark Ages p. 399)
+        const roll = SWR.isSwarm(a) ? new Roll(String(SWR.specOf(a)?.init ?? 1)) : new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         rolls.push(roll);
         // Ties go to the higher rating (Dexterity + Wits), encoded as decimals.
@@ -2216,8 +2233,10 @@ Hooks.once("init", () => {
     const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
-    const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.48.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    SW.init({ rollPool, soakAndApply, markFollow, attr, ability });
+    SW.hooks();
+    const api = { swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.49.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;

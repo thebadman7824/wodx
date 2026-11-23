@@ -1,0 +1,669 @@
+{
+ "source": "V20 Dark Ages: Combination Disciplines (pp. 312-317). Needs: every Discipline at the level named. Own words; page refs. A combination with Dominate cannot reach a vampire of lower Generation (p. 313).",
+ "book": "VtDA20",
+ "kind": "combination",
+ "line": "vampire",
+ "rows": [
+  {
+   "id": "vtda-arsenal-of-flesh-and-bone",
+   "kw": "arsenal-of-flesh-and-bone",
+   "d": "Combination (Protean 2, Vicissitude 3)",
+   "l": 3,
+   "n": "Arsenal of Flesh and Bone",
+   "needs": [
+    {
+     "d": "Protean",
+     "l": 2
+    },
+    {
+     "d": "Vicissitude",
+     "l": 3
+    }
+   ],
+   "p": 313,
+   "r": "dexterity+bodycrafts",
+   "diff": 7,
+   "c": "b2",
+   "t": "scene",
+   "xp": 21,
+   "e": "Grows a blade or spike from the body: 2 blood a weapon, 4 for a two-handed one; the weapons deal aggravated damage.",
+   "book": "VtDA20",
+   "k": [
+    "make",
+    "harm"
+   ]
+  },
+  {
+   "id": "vtda-aura-of-accursed-rage",
+   "kw": "aura-of-accursed-rage",
+   "d": "Combination (Animalism 3, Presence 2)",
+   "l": 3,
+   "n": "Aura of Accursed Rage",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 2
+    }
+   ],
+   "p": 313,
+   "r": "charisma+intimidation",
+   "diff": 7,
+   "c": "b1",
+   "t": "scene",
+   "xp": 21,
+   "e": "Road of the Beast: every vampire in sight resists frenzy at +1 difficulty a success for the scene, and for the night after leaving; mortals roll Self-Control against violent impulse.",
+   "book": "VtDA20",
+   "k": [
+    "fear"
+   ]
+  },
+  {
+   "id": "vtda-aura-of-inescapable-truth",
+   "kw": "aura-of-inescapable-truth",
+   "d": "Combination (Dominate 4, Presence 4)",
+   "l": 4,
+   "n": "Aura of Inescapable Truth",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 4
+    },
+    {
+     "d": "Presence",
+     "l": 4
+    }
+   ],
+   "p": 313,
+   "r": "charisma+leadership",
+   "diff": "var",
+   "c": "",
+   "t": "var",
+   "xp": 28,
+   "e": "All who can be heard cannot lie: 1 success the next statement, 2 a minute, 3 ten minutes, 4 the scene, 5 the night and past hearing. Difficulty: the highest Willpower points present; no lower Generation.",
+   "book": "VtDA20",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "vtda-bird-in-ear",
+   "kw": "bird-in-ear",
+   "d": "Combination (Animalism 2, Chimerstry 2)",
+   "l": 2,
+   "n": "Bird in Ear",
+   "needs": [
+    {
+     "d": "Animalism",
+     "l": 2
+    },
+    {
+     "d": "Chimerstry",
+     "l": 2
+    }
+   ],
+   "p": 313,
+   "r": "manipulation+subterfuge",
+   "diff": 7,
+   "c": "w1",
+   "t": "days",
+   "xp": 14,
+   "e": "Ravnos: a small animal carries a spoken message to a person the vampire pictures clearly, and says it in the vampire's voice; it has a day a success to arrive.",
+   "book": "VtDA20",
+   "k": [
+    "speak"
+   ]
+  },
+  {
+   "id": "vtda-blood-apocrypha",
+   "kw": "blood-apocrypha",
+   "d": "Combination (Auspex 1, Obfuscate 1)",
+   "l": 1,
+   "n": "Blood Apocrypha",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Obfuscate",
+     "l": 1
+    }
+   ],
+   "p": 313,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "var",
+   "xp": 7,
+   "e": "Nosferatu: a secret message hidden in blood, read by taste with no roll; written in blood it lasts a night to forever by blood spent (1 to 5). Perception + Occult at 7 senses one.",
+   "book": "VtDA20",
+   "k": [
+    "speak",
+    "veil"
+   ]
+  },
+  {
+   "id": "vtda-bulgroths-exquisite-torture",
+   "kw": "bulgroths-exquisite-torture",
+   "d": "Combination (Daimoinon 3, Temporis 3)",
+   "l": 3,
+   "n": "Bulgroth's Exquisite Torture",
+   "needs": [
+    {
+     "d": "Daimoinon",
+     "l": 3
+    },
+    {
+     "d": "Temporis",
+     "l": 3
+    }
+   ],
+   "p": 314,
+   "r": "manipulation+occult",
+   "diff": "var",
+   "c": "",
+   "t": "var",
+   "xp": 10,
+   "e": "Baali: a victim taking lethal or aggravated harm keeps those wounds and penalties in the mind while a permanent Willpower dot stays marked off. Difficulty: the victim's Self-Control or Instinct + 4.",
+   "book": "VtDA20",
+   "k": [
+    "fear"
+   ]
+  },
+  {
+   "id": "vtda-craft-ephemera",
+   "kw": "craft-ephemera",
+   "d": "Combination (Chimerstry 5, Fortitude 3)",
+   "l": 5,
+   "n": "Craft Ephemera",
+   "needs": [
+    {
+     "d": "Chimerstry",
+     "l": 5
+    },
+    {
+     "d": "Fortitude",
+     "l": 3
+    }
+   ],
+   "p": 314,
+   "r": "willpower",
+   "diff": 7,
+   "c": "b3w1",
+   "t": "night",
+   "xp": 35,
+   "e": "Ravnos: an illusion becomes a solid object no bigger than the maker, real until destroyed or dawn; Auspex above the maker's Chimerstry and a Willpower point see through it.",
+   "book": "VtDA20",
+   "k": [
+    "make",
+    "illusion"
+   ]
+  },
+  {
+   "id": "vtda-eye-of-unforgiving-heaven",
+   "kw": "eye-of-unforgiving-heaven",
+   "d": "Combination (Auspex 4, Valeren (Warrior) 4)",
+   "l": 4,
+   "n": "Eye of Unforgiving Heaven",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Valeren (Warrior)",
+     "l": 4
+    }
+   ],
+   "p": 314,
+   "r": "conscience",
+   "diff": 6,
+   "c": "b1w1",
+   "t": "turns",
+   "xp": 28,
+   "e": "Salubri: the third eye shines as direct sunlight on every vampire in sight, friend or foe, a blood and a Willpower each turn; the Salubri takes 3 lethal dice a turn. Conscience only.",
+   "book": "VtDA20",
+   "k": [
+    "light",
+    "harm"
+   ]
+  },
+  {
+   "id": "vtda-glare-of-lies",
+   "kw": "glare-of-lies",
+   "d": "Combination (Auspex 2, Valeren 1)",
+   "l": 2,
+   "n": "Glare of Lies",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 2
+    },
+    {
+     "d": "Valeren",
+     "l": 1
+    }
+   ],
+   "p": 314,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 14,
+   "e": "Salubri: each lie told nearby is a contested Manipulation + Subterfuge (8) against the Salubri's Perception + Empathy (6); a win shows the lie, though not omissions or half-truths.",
+   "book": "VtDA20",
+   "k": [
+    "know"
+   ],
+   "passive": true
+  },
+  {
+   "id": "vtda-guardian-vigil",
+   "kw": "guardian-vigil",
+   "d": "Combination (Auspex 1, Celerity 1, Fortitude 1)",
+   "l": 1,
+   "n": "Guardian Vigil",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Celerity",
+     "l": 1
+    },
+    {
+     "d": "Fortitude",
+     "l": 1
+    }
+   ],
+   "p": 315,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "night",
+   "xp": 7,
+   "e": "Malkavian: cannot be surprised or ambushed by mortal means for the night (Obfuscate is checked against Auspex); acts first in that fight's first turn. One ambush a blood; can be set before day sleep.",
+   "book": "VtDA20",
+   "k": [
+    "sense",
+    "ward"
+   ]
+  },
+  {
+   "id": "vtda-hand-of-the-master-artisan",
+   "kw": "hand-of-the-master-artisan",
+   "d": "Combination (Auspex 1, Celerity 1)",
+   "l": 1,
+   "n": "Hand of the Master Artisan",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Celerity",
+     "l": 1
+    }
+   ],
+   "p": 315,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "turn",
+   "xp": 7,
+   "e": "Toreador: a blood point does an hour's craft in a one-minute turn, or a minute's work in a three-second turn; more blood builds a house in under an hour.",
+   "book": "VtDA20",
+   "k": [
+    "work",
+    "hasten"
+   ]
+  },
+  {
+   "id": "vtda-hindsight",
+   "kw": "hindsight",
+   "d": "Combination (Auspex 3, Temporis 1)",
+   "l": 3,
+   "n": "Hindsight",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 3
+    },
+    {
+     "d": "Temporis",
+     "l": 1
+    }
+   ],
+   "p": 315,
+   "r": "perception+awareness",
+   "diff": "var",
+   "c": "",
+   "t": "instant",
+   "xp": 10,
+   "e": "Touch reads the past: difficulty 8, +1 a century, -1 a Temporis dot (4 at least); each success one fact; failures become bashing damage, and a success can cancel one.",
+   "book": "VtDA20",
+   "k": [
+    "know"
+   ]
+  },
+  {
+   "id": "vtda-livia-yorkes-ouroboros",
+   "kw": "livia-yorkes-ouroboros",
+   "d": "Combination (Serpentis 3, Vicissitude 3)",
+   "l": 3,
+   "n": "Livia Yorke's Ouroboros",
+   "needs": [
+    {
+     "d": "Serpentis",
+     "l": 3
+    },
+    {
+     "d": "Vicissitude",
+     "l": 3
+    }
+   ],
+   "p": 315,
+   "r": "",
+   "diff": "",
+   "c": "b1w1",
+   "t": "permanent",
+   "xp": 6,
+   "e": "A mortal fed the blood grows a serpent beast that bursts out when a daily Stamina roll fails; it feeds on its maker's traits and health. One alive at a time (stats on p. 316).",
+   "book": "VtDA20",
+   "k": [
+    "summon",
+    "harm"
+   ]
+  },
+  {
+   "id": "vtda-the-long-march",
+   "kw": "the-long-march",
+   "d": "Combination (Celerity 2, Fortitude 2)",
+   "l": 2,
+   "n": "The Long March",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 2
+    }
+   ],
+   "p": 316,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "var",
+   "xp": 14,
+   "e": "Assamite: for an hour of travel, running speed times Celerity + 1; ends with any jarring action; at most Fortitude hours a night.",
+   "book": "VtDA20",
+   "k": [
+    "move"
+   ]
+  },
+  {
+   "id": "vtda-mcshaws-grace",
+   "kw": "mcshaws-grace",
+   "d": "Combination (Dominate 2, Presence 3)",
+   "l": 3,
+   "n": "McShaw's Grace",
+   "needs": [
+    {
+     "d": "Dominate",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 316,
+   "r": "charisma+performance",
+   "diff": 7,
+   "c": "b1w1",
+   "t": "scene",
+   "xp": 6,
+   "e": "Toreador: during a performance, anyone with fewer Wits dots than the successes suffers the Toreador weakness for the scene; twice their Wits, for a month.",
+   "book": "VtDA20",
+   "k": [
+    "sway"
+   ]
+  },
+  {
+   "id": "vtda-memory-rift",
+   "kw": "memory-rift",
+   "d": "Combination (Obfuscate 2, Presence 2)",
+   "l": 2,
+   "n": "Memory Rift",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 2
+    },
+    {
+     "d": "Presence",
+     "l": 2
+    }
+   ],
+   "p": 316,
+   "r": "manipulation+subterfuge",
+   "diff": "t:willpower",
+   "c": "b1",
+   "t": "permanent",
+   "xp": 14,
+   "e": "One victim forgets the vampire was ever there for one scene or event; one with more Willpower dots than the Obfuscate may recall it given clear proof. Once a victim.",
+   "book": "VtDA20",
+   "k": [
+    "veil"
+   ]
+  },
+  {
+   "id": "vtda-nikolai-steens-acuity",
+   "kw": "nikolai-steens-acuity",
+   "d": "Combination (Auspex 1, Dementation 1)",
+   "l": 1,
+   "n": "Nikolai Steen's Acuity",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 1
+    },
+    {
+     "d": "Dementation",
+     "l": 1
+    }
+   ],
+   "p": 316,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 6,
+   "e": "Malkavian: any Auspex or Dementation power that perceives someone also shows their Derangements and Mental Flaws, with no roll.",
+   "book": "VtDA20",
+   "k": [
+    "know"
+   ],
+   "passive": true
+  },
+  {
+   "id": "vtda-nightmare-curse",
+   "kw": "nightmare-curse",
+   "d": "Combination (Auspex 4, Chimerstry 5)",
+   "l": 5,
+   "n": "Nightmare Curse",
+   "needs": [
+    {
+     "d": "Auspex",
+     "l": 4
+    },
+    {
+     "d": "Chimerstry",
+     "l": 5
+    }
+   ],
+   "p": 316,
+   "r": "perception+intimidation",
+   "diff": "t:willpower",
+   "c": "w1",
+   "t": "nights",
+   "xp": 35,
+   "e": "Ravnos: the victim's worst fear haunts only them, a night a success (+1 a blood); in sight, or within a mile at +2 with a personal item. The victim has the Haunted and Nightmares Flaws.",
+   "book": "VtDA20",
+   "k": [
+    "fear",
+    "illusion"
+   ]
+  },
+  {
+   "id": "vtda-penitent-resilience",
+   "kw": "penitent-resilience",
+   "d": "Combination (Fortitude 4, Valeren (Healer) 4)",
+   "l": 4,
+   "n": "Penitent Resilience",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 4
+    },
+    {
+     "d": "Valeren (Healer)",
+     "l": 4
+    }
+   ],
+   "p": 317,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "scene",
+   "xp": 28,
+   "e": "Salubri: a blood in sunlight and no Rötschreck while blood lasts; sun damage is rolled, soaked by Fortitude only, and burns blood instead of health. Conscience and Self-Control only.",
+   "book": "VtDA20",
+   "k": [
+    "ward"
+   ]
+  },
+  {
+   "id": "vtda-retain-the-quick-blood",
+   "kw": "retain-the-quick-blood",
+   "d": "Combination (Celerity 3, Quietus (Cruscitus) 2)",
+   "l": 3,
+   "n": "Retain the Quick Blood",
+   "needs": [
+    {
+     "d": "Celerity",
+     "l": 3
+    },
+    {
+     "d": "Quietus (Cruscitus)",
+     "l": 2
+    }
+   ],
+   "p": 317,
+   "r": "",
+   "diff": "",
+   "c": "",
+   "t": "passive",
+   "xp": 21,
+   "e": "Assamite warrior: blood spent on Celerity actions comes back, one point a minute; always on.",
+   "book": "VtDA20",
+   "k": [
+    "charge"
+   ],
+   "passive": true
+  },
+  {
+   "id": "vtda-the-rod-raw-rending",
+   "kw": "the-rod-raw-rending",
+   "d": "Combination (Fortitude 1, Potence 1)",
+   "l": 1,
+   "n": "The Rod Raw Rending",
+   "needs": [
+    {
+     "d": "Fortitude",
+     "l": 1
+    },
+    {
+     "d": "Potence",
+     "l": 1
+    }
+   ],
+   "p": 317,
+   "r": "",
+   "diff": "",
+   "c": "b1",
+   "t": "scene",
+   "xp": 8,
+   "e": "Brawl and Melee blows ignore armor up to the Fortitude dots (3 dots: 3/3 armor) for the scene.",
+   "book": "VtDA20",
+   "k": [
+    "boost"
+   ]
+  },
+  {
+   "id": "vtda-sympathetic-agony",
+   "kw": "sympathetic-agony",
+   "d": "Combination (Chimerstry 2, Fortitude 4)",
+   "l": 4,
+   "n": "Sympathetic Agony",
+   "needs": [
+    {
+     "d": "Chimerstry",
+     "l": 2
+    },
+    {
+     "d": "Fortitude",
+     "l": 4
+    }
+   ],
+   "p": 317,
+   "r": "manipulation+intimidation",
+   "diff": "var",
+   "c": "b1",
+   "t": "scene",
+   "xp": 28,
+   "e": "Ravnos: each success ignores one wound level's penalty and gives one target a phantom wound that counts for penalties, even to torpor. Difficulty: the target's higher of Perception or Self-Control.",
+   "book": "VtDA20",
+   "k": [
+    "ward",
+    "fear"
+   ]
+  },
+  {
+   "id": "vtda-true-loves-face",
+   "kw": "true-loves-face",
+   "d": "Combination (Obfuscate 3, Presence 3)",
+   "l": 3,
+   "n": "True Love's Face",
+   "needs": [
+    {
+     "d": "Obfuscate",
+     "l": 3
+    },
+    {
+     "d": "Presence",
+     "l": 3
+    }
+   ],
+   "p": 317,
+   "r": "charisma+empathy",
+   "diff": 6,
+   "c": "",
+   "t": "scene",
+   "xp": 21,
+   "e": "Looks like a chosen victim's true love to everyone for the scene; the vampire must have met the victim and does not know the face shown.",
+   "book": "VtDA20",
+   "k": [
+    "illusion",
+    "sway"
+   ]
+  }
+ ]
+}

@@ -36,7 +36,9 @@ export const CLANS = [
   {id: "gangrel", name: "Gangrel", disciplines: ["Animalism", "Fortitude", "Protean"], darkAges: "V20DA p. 48"},
   {id: "lasombra", name: "Lasombra", disciplines: ["Dominate", "Obtenebration", "Potence"], darkAges: "V20DA p. 50"},
   {id: "malkavian", name: "Malkavian", disciplines: ["Auspex", "Dementation", "Obfuscate"], darkAges: "V20DA p. 52"},
-  {id: "nosferatu", name: "Nosferatu", disciplines: ["Animalism", "Obfuscate", "Potence"], darkAges: "V20DA p. 54"},
+  {id: "nosferatu", name: "Nosferatu", disciplines: ["Animalism", "Obfuscate", "Potence"], darkAges: "V20DA p. 54",
+    // B7660: Appearance starts at 0 and cannot be raised (V20 Dark Ages p. 55; V20 p. 63)
+    appearanceZero: "V20 Dark Ages p. 55"},
   {id: "ravnos", name: "Ravnos", disciplines: ["Animalism", "Chimerstry", "Fortitude"], darkAges: "V20DA p. 56"},
   {id: "setite", name: "Followers of Set", disciplines: ["Obfuscate", "Presence", "Serpentis"], darkAges: "V20DA p. 58",
     aliases: ["setite", "set"]},
@@ -87,6 +89,24 @@ export const CLANS = [
   {id: "tlacique", name: "Tlacique", disciplines: ["Obfuscate", "Presence", "Protean"], darkAges: "Clanbook: Followers of Set (Revised) pdf p. 54; V20 p. 435", aliases: ["tlacique setites"]},
   {id: "mla-watu", name: "Mla Watu", disciplines: ["Auspex", "Fortitude", "Necromancy"], darkAges: "Kindred of the Ebony Kingdom pdf p. 200", aliases: ["mlawatu"]},
   {id: "nkulu-zao", name: "Nkulu Zao", disciplines: ["Auspex", "Fortitude", "Obeah"], darkAges: "Kindred of the Ebony Kingdom pdf p. 202", aliases: ["nkulu"]},
+  // B7661: the six Dark Ages lines the full check found with no row (V20 Dark Ages chapter 2), and the Valkyrjer, the
+  // Dark Ages Ahrimanes (p. 70), who are not the later Ahrimanes (V20 p. 415, open from 1493)
+  {id: "bonsam", name: "Bonsam", disciplines: ["Abombwe", "Obfuscate", "Potence"], darkAges: "V20DA p. 76"},
+  {id: "children-of-osiris", name: "Children of Osiris", disciplines: ["Bardo"], darkAges: "V20DA p. 78",
+    withOriginal: true, noEmbrace: "the initiation leaves their blood inert (V20 Dark Ages p. 78)", aliases: ["penitent", "penitents", "osirian"]},
+  {id: "danava", name: "Danava", disciplines: ["Dominate", "Fortitude", "Thaumaturgy"], darkAges: "V20DA p. 79"},
+  {id: "impundulu", name: "Impundulu", disciplines: ["Fortitude", "Necromancy", "Presence"], darkAges: "V20DA p. 86"},
+  {id: "ramanga", name: "Ramanga", disciplines: ["Obfuscate", "Obtenebration", "Presence"], darkAges: "V20DA p. 98 (Aizina is their Obtenebration)"},
+  {id: "salubri-watcher", name: "Salubri (Watcher)", disciplines: ["Auspex", "Obfuscate", "Valeren"], darkAges: "V20DA p. 104",
+    aliases: ["salubri watcher", "wu zao"]},
+  {id: "valkyrjer", name: "Valkyrjer", disciplines: ["Animalism", "Potence", "Spiritus"], darkAges: "V20DA p. 70 (Ahrimanes)",
+    aliases: ["valkyrje", "dark ages ahrimanes"], opens: {until: 1492},
+    noBondNoGhoul: "an Ahrimane's blood makes neither blood bonds nor ghouls (V20 Dark Ages p. 71)"},
+  // B7670: the Setite castes of V20 Dark Ages Appendix B (p. 450); they come before the clan so their names find their own row
+  {id: "warriors-of-glycon", name: "Warriors of Glycon", disciplines: ["Obfuscate", "Potence", "Serpentis"], darkAges: "V20DA p. 450",
+    aliases: ["glycon", "crooks", "warrior setites"]},
+  {id: "witches-of-echidna", name: "Witches of Echidna", disciplines: ["Animalism", "Presence", "Thaumaturgy"], darkAges: "V20DA p. 450 (their sorcery is Setite Thaumaturgy)",
+    aliases: ["echidna", "gorgons"]},
   {id: "niktuku", name: "Nictuku", disciplines: ["Auspex", "Celerity", "Potence"], darkAges: "V20DA p. 97", aliases: ["niktuku"]},
   {id: "caitiff", name: "Caitiff", disciplines: [], darkAges: "V20 p. 124 (no clan Disciplines)", aliases: ["clanless"]}
 ];

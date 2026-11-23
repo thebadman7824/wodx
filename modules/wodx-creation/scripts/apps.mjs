@@ -16,6 +16,7 @@ import {splatOf, labelOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
 import {PeopleApp} from "./people.mjs";
+import {bookPeopleDialog} from "./book-people.mjs";
 import {runSkipTest, isTestWorld} from "./skip-test.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
@@ -66,6 +67,7 @@ export class CreationApp extends ApplicationV2 {
       log: CreationApp.#onLog,
       passYears: () => PassYearsApp.open(),
       people: () => PeopleApp.open(),
+      bookPeople: () => bookPeopleDialog(),
       skipTest: () => runSkipTest().then(() => CreationApp.refresh())
     }
   };
@@ -146,6 +148,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="tree"><i class="fa-solid fa-sitemap"></i> Family tree</button>
           <button type="button" data-action="passYears"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>
           <button type="button" data-action="people"><i class="fa-solid fa-users"></i> People</button>
+          <button type="button" data-action="bookPeople" title="The Storyteller characters of V20 Dark Ages pp. 383-396"><i class="fa-solid fa-book-open"></i> People of the book</button>
           ${isTestWorld() ? `<button type="button" data-action="skipTest" title="Test worlds only. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}
         </div>
         <div class="form-group"><label><input type="checkbox" data-action="toggleNPCs" ${this.showNPCs ? "checked" : ""}> Show every NPC (to make one an ally)</label></div>

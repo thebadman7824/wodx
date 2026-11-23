@@ -38,8 +38,10 @@ export function charmsOf(actor) {
     const items = [...(actor?.items ?? [])].filter(i => i.type === "Power" && (i.system?.type === "wod.types.charm" || keeps));
     // B6555: a faerie sprite's Blast, Healing, Reform and Swift Flight are the Dark Ages: Fae ones
     const sprite = SC.isSpriteOf({ flag: !!actor?.getFlag?.(MOD, "faeSprite"), name: actor?.name, names: items.map(i => i.name) });
+    // B7672: a demon of V20 Dark Ages has its own Possession (p. 402)
+    const demon = SC.isDemonOf({ flag: !!actor?.getFlag?.(MOD, "demon"), names: items.map(i => i.name) });
     for (const i of items) {
-        const c = SC.charmOf(i.name, { sprite });
+        const c = SC.charmOf(i.name, { sprite, demon });
         if (c) out.push({ id: i.id, key: c.key, name: i.name, charm: c, item: i });
     }
     return out;
@@ -141,6 +143,7 @@ export function build(ctx) {
             <div class="form-group wodx-charm-size"><label>How much</label><select name="size" data-fixed></select></div>
             <div class="form-group wodx-charm-specific"><label>A particular being (a Willpower roll)</label><input type="checkbox" name="specific"/></div>
             <div class="form-group wodx-charm-form"><label>Looks like</label><input type="text" name="form" placeholder="a black dog"/></div>
+            <div class="form-group wodx-charm-wish"><label>The wish (a Background or Merit, 5 points or fewer)</label><input type="text" name="wish" placeholder="Resources 3"/></div>
             <div class="form-group wodx-charm-object"><label>An object, not a living being (difficulty 4)</label><input type="checkbox" name="object"/></div>
             <div class="form-group wodx-charm-attr"><label>Attribute to take</label><select name="attr" data-fixed><option value="">The highest</option><option value="strength">Strength</option><option value="dexterity">Dexterity</option><option value="stamina">Stamina</option></select></div>
             <div class="form-group wodx-charm-to"><label>Bridge to</label><select name="to" data-fixed>${[...(game.scenes ?? [])].filter(s => s.id !== canvas?.scene?.id).map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></div>
@@ -157,6 +160,7 @@ export function build(ctx) {
             show(".wodx-charm-specific", c.key === "shapeshift");
             show(".wodx-charm-form", c.key === "shapeshift");
             show(".wodx-charm-object", c.key === "possession");
+            show(".wodx-charm-wish", c.key === "wish");
             show(".wodx-charm-attr", c.key === "calcify");
             show(".wodx-charm-to", c.key === "moonbridge");
             const box = root.querySelector(".wodx-charm-fx");
@@ -165,7 +169,7 @@ export function build(ctx) {
         };
         return dialog(`${actor.name}: Spirit Charm`, content, "Use", async fd => {
             if (!fd.charm) return true;
-            return use(actor, fd.charm, { size: fd.size || null, specific: !!fd.specific, form: fd.form || "", object: !!fd.object, attr: fd.attr || "", to: fd.to || null });
+            return use(actor, fd.charm, { size: fd.size || null, specific: !!fd.specific, form: fd.form || "", wish: fd.wish || "", object: !!fd.object, attr: fd.attr || "", to: fd.to || null });
         }, { render: root => { fill(root); root.querySelector("[name=charm]")?.addEventListener("change", () => fill(root)); root.querySelector("[name=size]")?.addEventListener("change", () => fill(root)); } });
     }
 
@@ -183,7 +187,7 @@ export function build(ctx) {
             const who = first ?? actor;
             if (!SC.healLeft(actor.getFlag(MOD, "charmHealed") ?? {}, LIM.sceneNo(), who.id)) { notify(`${c.name}: ${who.name} has had this healing this scene.`); return null; }
         }
-        if (["blast", "updraft", "frenzy", "calcify", "spriteblast", "stare"].includes(c.does) && !first) { notify(`${c.name}: target someone first.`); return null; }
+        if (["blast", "updraft", "frenzy", "calcify", "spriteblast", "stare", "reap", "harvest", "dpossess", "wish"].includes(c.does) && !first) { notify(`${c.name}: target someone first.`); return null; }
         const targetKind = first ? (isSpirit(first) ? "spirit" : (ctx.profile?.(first) ?? "mortal")) : null;
         if (c.does === "possess" && !first && !o.object) { notify(`${c.name}: target the one to possess first.`); return null; }
         const t = traits(actor);
@@ -311,6 +315,58 @@ export function build(ctx) {
                 const cb = game.combat?.combatants?.find?.(k => k.tokenId === doc?.id);
                 if (cb) await cb.update({ hidden: true, defeated: true });
                 return { html: note(`${actor.name} dissolves and flows home through the Umbra, out of the scene.`) };
+            }
+            /* B7672: the demon Charms of V20 Dark Ages p. 402 */
+            case "answer": {
+                const doc = tok?.document ?? tok;
+                const to = first ? tg[0]?.document ?? null : null;
+                if (doc && to && to.parent === doc.parent) await doc.update({ x: to.x + (canvas?.grid?.size ?? 100), y: to.y, hidden: false });
+                return { html: note(`${actor.name} answers ${first ? first.name : "the call"}${to ? " and stands beside them" : ""}, bound by nothing the caller did; the caller may not know it is unchained.`) };
+            }
+            case "teleport": {
+                const doc = tok?.document ?? tok;
+                if (doc) await doc.update({ hidden: true });
+                const cb = game.combat?.combatants?.find?.(k => k.tokenId === doc?.id);
+                if (cb) await cb.update({ hidden: true, defeated: true });
+                return { html: note(`${actor.name} is gone to safety, out of the scene, at the cost of an Essence.`) };
+            }
+            case "reap": {
+                const wp = n(first.system?.advantages?.willpower?.temporary ?? first.system?.willpower?.temporary);
+                const k = SC.reapGain(wp);
+                if (k) await actor.update({ "system.advantages.essence.temporary": t.essence + k });
+                return { html: note(`${first.name} gives in to the deed ${actor.name} drives them to: ${k} Essence for the demon (their Willpower left), now ${t.essence + k}.`) };
+            }
+            case "harvest": {
+                const kind = String(ctx.profile?.(first) ?? "mortal");
+                if (!["mortal", "ghoul"].includes(kind)) { notify(`${c.name}: only a mortal's soul can be harvested.`); return false; }
+                const a = first.system?.attributes ?? {}, adv = first.system?.advantages ?? {};
+                const xp = [...(first.items ?? [])].filter(i => i.type === "Experience" && !i.system?.isspent).reduce((k, i) => k + n(i.system?.amount), 0);
+                const k = SC.harvestGain({ willpower: adv.willpower?.permanent ?? first.system?.willpower?.permanent, perception: a.perception?.value, intelligence: a.intelligence?.value, wits: a.wits?.value, xp });
+                await actor.update({ "system.advantages.essence.temporary": t.essence + k });
+                await first.setFlag(MOD, "soulHeld", { by: actor.uuid, name: actor.name, page: SC.pageOf(c) });
+                // the body dies outright: every health level filled, and the Dead status
+                await combat()?.applyDamage?.(first, "aggravated", 10, { status: false })?.catch?.(() => null);
+                if (!first.statuses?.has?.("dead")) await first.toggleStatusEffect?.("dead", { active: true, overlay: true })?.catch?.(() => null);
+                return { html: note(`The contract comes due: ${first.name} dies and ${actor.name} takes the soul, ${k} Essence (now ${t.essence + k}). While it holds the soul, no one can raise them, speak with their spirit or call it.`) };
+            }
+            case "wish": {
+                const what = String(o.wish ?? "").trim() || "the wish";
+                const list = [...(first.getFlag(MOD, "demonWishes") ?? []), { by: actor.name, what, contract: o.size === "contract" }];
+                await first.setFlag(MOD, "demonWishes", list);
+                return { html: note(`${first.name} has ${what} at once${o.size === "contract" ? ", under contract" : ""}: the Storyteller adds it to the sheet as a Background or Merit of 5 points or fewer.`) };
+            }
+            case "dpossess": {
+                const kind = String(ctx.profile?.(first) ?? "mortal");
+                if (!SC.POSSESSABLE.has(kind)) { notify(`${c.name}: a demon rides only a mortal or a vampire.`); return false; }
+                const pr = SC.possessRoll(first.system?.advantages?.willpower?.permanent ?? first.system?.willpower?.permanent, t.gnosis);
+                const r = await resistRoll(ctx, first, pr.pool, pr.diff, c.name);
+                if (n(r.successes) > 0 && !r.botch) return { html: note(`${first.name} holds on to their body (${r.successes} success${r.successes === 1 ? "" : "es"} against ${pr.diff}); the Essence is spent.`) };
+                await first.createEmbeddedDocuments("ActiveEffect", [{ name: `Possessed by ${actor.name}`, img: "icons/svg/statue.svg", statuses: ["wodx-possessed"],
+                    description: `${actor.name} rides this body until it leaves or is exorcised. It gains an Essence each time it makes the body act against the host's Nature, and can let the host have the body back a while for an Essence (${SC.pageOf(c)}).`,
+                    flags: { [MOD]: { charm: "demonpossession", by: actor.uuid, demon: true } } }]);
+                const doc = tok?.document ?? tok;
+                if (doc) await doc.update({ hidden: true });
+                return { html: note(`${first.name} fails to hold on (Willpower against ${pr.diff}): ${actor.name} is inside them now.`) };
             }
             case "armor": {
                 await rows(x, c, ["bashing", "lethal", "aggravated"].map(k => ["soak_buff", k, t.gnosis]));
@@ -505,5 +561,57 @@ export function build(ctx) {
             .map(c => ({ use: "useCharm", field: "charm", value: c.key, name: c.name, level: 1, set: "charm", id: c.key, keywords: c.keywords }));
     }
 
-    return { power, use, powersFor };
+    /**
+     * B7672: Exorcism (V20 Dark Ages p. 402): a rite anyone can learn. Intelligence + Occult against the demon's Essence,
+     * one Essence a success; at none it is driven off and cannot come back to the place for a century (p. 401).
+     * Target the demon, or the body it rides. Many ritualists each take their own turn.
+     */
+    async function exorcise(actor, o = {}) {
+        const t0 = o.target ?? targetsOf(actor)[0]?.actor ?? null;
+        const ride = t0 ? [...(t0.effects ?? [])].find(e => /possession$/.test(String(e.getFlag?.(MOD, "charm") ?? ""))) : null;
+        const demon = ride ? await fromUuid(ride.getFlag(MOD, "by")).catch(() => null) : t0;
+        if (!demon || !isSpirit(demon)) { notify("Exorcism: target the demon or spirit, or the body it rides, first."); return null; }
+        const knows = [...(actor.items ?? [])].some(i => /exorcis/i.test(i.name ?? ""));
+        const dice = SC.exorcismPool(ctx.attr?.(actor, "intelligence") ?? n(actor.system?.attributes?.intelligence?.value), n(actor.system?.abilities?.occult?.value));
+        const content = `<form><p><b>${esc(actor.name)}</b> against <b>${esc(demon.name)}</b>${ride ? ` (riding ${esc(t0.name)})` : ""}: Intelligence + Occult, ${dice} dice at ${SC.EXORCISM_DIFF} (house: the book names none). Each success takes one Essence; ${traits(demon).essence} left.</p>
+            <div class="form-group"><label><input type="checkbox" name="rite"${knows ? " checked" : ""}/> Knows a rite of exorcism (learning one is a scene or story of its own)</label></div></form>`;
+        const work = async fd => {
+            if (!fd.rite) { notify("Exorcism: the rite has to be learned first."); return null; }
+            const lim = await LIM.gate(actor, { name: "Exorcism", level: 1 });
+            if (!lim) return null;
+            const r = await rollPool(dice, SC.EXORCISM_DIFF + n(lim.diff));
+            const got = r.botch ? 0 : n(r.successes);
+            const ess = traits(demon).essence, hit = SC.exorcismHit(ess, got);
+            let body = rollBlock("Intelligence + Occult", r, [`difficulty ${SC.EXORCISM_DIFF}`]);
+            if (hit.taken) await demon.update({ "system.advantages.essence.temporary": hit.left });
+            if (hit.gone && hit.taken) {
+                if (ride) await ride.delete();
+                for (const tk of demon.getActiveTokens?.(true, true) ?? []) await (tk.document ?? tk).update({ hidden: true });
+                const year = n(yearNow());
+                await demon.setFlag(MOD, "exiled", { scene: canvas?.scene?.id ?? null, place: canvas?.scene?.name ?? "", until: year ? year + SC.EXILE_YEARS : null });
+                body += `<div class="vta-big good">${esc(demon.name)} is driven off${ride ? ` and out of ${esc(t0.name)}` : ""}: its Essence is gone, and it cannot come back here for a hundred years${year ? ` (until ${year + SC.EXILE_YEARS})` : ""}.</div>`;
+            } else body += `<div class="vta-res ${hit.taken ? "good" : "bad"}">${hit.taken ? `${hit.taken} Essence torn from ${esc(demon.name)}: ${hit.left} left.` : `${esc(demon.name)} holds; the rite takes nothing this turn.`}</div><div class="vta-note">The demon can still use every power it has against the ritualists.</div>`;
+            await lim.done({ successes: got });
+            return post(actor, `${actor.name}: Exorcism`, body + `<div class="wodx-quiet">VtDA20 p. 402</div>`, [r.roll].filter(Boolean));
+        };
+        // the window, or straight to the rite for a caller that already knows (a gate, a macro): {rite: true}
+        if (o.rite !== undefined) return work({ rite: !!o.rite });
+        return dialog(`${actor.name}: Exorcism`, content, "Begin the rite", work);
+    }
+
+    /** B7672: a sample demon of V20 Dark Ages (pp. 401-402) as a Creature with its Charms, for the Storyteller. */
+    async function sampleDemon() {
+        if (!game.user?.isGM) { notify("Only the Storyteller makes demons."); return null; }
+        const content = `<form><div class="form-group"><label>Demon</label><select name="d" data-fixed>${SC.SAMPLE_DEMONS.map(d => `<option value="${d.key}">${esc(d.name)} (Willpower ${d.willpower}, Rage ${d.rage}, Gnosis ${d.gnosis}, Essence ${d.essence})</option>`).join("")}</select></div>
+            <p class="wodx-quiet">${SC.SAMPLE_DEMONS.map(d => `${esc(d.name)}: ${esc(d.about)}`).join("<br>")}</p></form>`;
+        return dialog("A demon of V20 Dark Ages", content, "Make", async fd => {
+            const d = SC.SAMPLE_DEMONS.find(x => x.key === fd.d);
+            if (!d) return null;
+            const a = await Actor.create(SC.demonActorData(d));
+            a?.sheet?.render?.(true);
+            return a;
+        });
+    }
+
+    return { power, use, powersFor, exorcise, sampleDemon };
 }
