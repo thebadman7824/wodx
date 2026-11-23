@@ -1,0 +1,447 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "player-haven",
+ "name": "Player Haven",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  44,
+  32
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/player-haven/player-haven.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    32.0,
+    21.5,
+    29.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    26.5,
+    29.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.312,
+    18.1,
+    26.6,
+    17.812
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    8.5,
+    9.5,
+    11.0,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.8,
+    18.5,
+    27.688,
+    18.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    11.0,
+    21.5,
+    8.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.5,
+    26.5,
+    8.5,
+    26.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    9.5,
+    32.0,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.688,
+    18.1,
+    27.8,
+    18.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    26.6,
+    17.812,
+    27.0,
+    17.7
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    14.5,
+    4.5,
+    14.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.6,
+    19.188,
+    26.312,
+    18.9
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    8.5,
+    26.5,
+    8.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.5,
+    4.5,
+    35.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.5,
+    26.5,
+    29.5,
+    26.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.5,
+    4.5,
+    14.5,
+    4.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.5,
+    4.5,
+    8.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    9.5,
+    14.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.2,
+    18.5,
+    26.312,
+    18.1
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    33.0,
+    9.5,
+    35.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.5,
+    26.5,
+    35.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    17.7,
+    27.4,
+    17.812
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    14.5,
+    21.5,
+    12.0,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.5,
+    26.5,
+    14.5,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    4.5,
+    29.5,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    19.3,
+    26.6,
+    19.188
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    17.812,
+    27.688,
+    18.1
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    26.312,
+    18.9,
+    26.2,
+    18.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    19.188,
+    27.0,
+    19.3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    35.5,
+    21.5,
+    33.0,
+    21.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    4.5,
+    35.5,
+    4.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.688,
+    18.9,
+    27.4,
+    19.188
+   ],
+   "kind": "window"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    33.0,
+    21.5,
+    32.0,
+    21.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    21.5,
+    11.0,
+    21.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    32.0,
+    9.5,
+    33.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.0,
+    9.5,
+    12.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [],
+ "slots": [],
+ "lights": [
+  {
+   "x": 10.863,
+   "y": 4.675,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 22.0,
+   "y": 16.0,
+   "kind": "fire",
+   "bright": 2.24,
+   "dim": 9.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 31.863,
+   "y": 4.675,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 33.138,
+   "y": 26.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 12.137,
+   "y": 26.325,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 22.0,
+   "y": 16.0,
+   "text": "The Haven yard. Add buildings with the Builder: Add Module macro; move or rotate"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true
+}

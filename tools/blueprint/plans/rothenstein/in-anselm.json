@@ -1,0 +1,302 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-anselm",
+ "name": "Brother Anselm's Hermitage",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-brother-anselm-s-hermitage/trespass-brother-anselm-s-hermitage.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    12.0,
+    12.0,
+    18.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    4.0,
+    18.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    7.0,
+    4.0,
+    7.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    9.0,
+    18.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    6.0,
+    24.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    12.0,
+    24.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    6.0,
+    18.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    7.0,
+    4.0,
+    18.0,
+    4.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    7.0,
+    12.0,
+    11.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    6.0,
+    24.0,
+    6.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    18.0,
+    8.0,
+    18.0,
+    9.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    11.0,
+    12.0,
+    12.0,
+    12.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-cot",
+   "label": "The cot",
+   "rect": [
+    8.0,
+    4.5,
+    1.7,
+    3.1
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-floor-hatch",
+   "label": "The floor hatch",
+   "rect": [
+    12.8,
+    8.4,
+    0.9,
+    0.9
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-letters",
+   "label": "The letters",
+   "rect": [
+    11.5,
+    5.0,
+    3.0,
+    1.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-chapel-nook",
+   "label": "The chapel nook",
+   "rect": [
+    18.2,
+    6.2,
+    5.8,
+    5.8
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-cot",
+   "obj": "cot",
+   "label": "The cot",
+   "rect": [
+    8.45,
+    5.4,
+    0.8,
+    1.3
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-floor-hatch",
+   "obj": "hatch",
+   "label": "The floor hatch",
+   "rect": [
+    12.95,
+    8.55,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-chapel-nook",
+   "obj": "shrine-wayside",
+   "label": "The chapel nook",
+   "rect": [
+    20.65,
+    8.65,
+    0.9,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 16.8,
+   "y": 5.8,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 17.143,
+   "y": 5.457,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 20.0,
+   "y": 7.5,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.58,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 12.0,
+   "y": 3.5,
+   "text": "GM: A hermitage half a day from town."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "high-woods"
+}

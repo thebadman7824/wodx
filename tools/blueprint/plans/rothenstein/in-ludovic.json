@@ -1,0 +1,399 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-ludovic",
+ "name": "Father Ludovic's Presbytery",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-father-ludovic-s-presbytery/trespass-father-ludovic-s-presbytery.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    9.0,
+    10.0,
+    18.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    3.0,
+    24.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    4.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    17.0,
+    24.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19.0,
+    10.0,
+    24.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    10.0,
+    8.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    3.0,
+    8.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    3.0,
+    14.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    14.0,
+    14.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    17.0,
+    19.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    10.0,
+    14.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    7.0,
+    14.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    3.0,
+    24.0,
+    17.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    18.0,
+    10.0,
+    19.0,
+    10.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    13.0,
+    14.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    19.0,
+    17.0,
+    20.0,
+    17.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    8.0,
+    3.0,
+    9.0,
+    3.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    6.0,
+    14.0,
+    7.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    10.0,
+    9.0,
+    10.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-study-desk",
+   "label": "The study desk",
+   "rect": [
+    19.0,
+    7.2,
+    3.0,
+    1.5
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-parlor-table",
+   "label": "The parlor table",
+   "rect": [
+    7.0,
+    5.8,
+    3.5,
+    1.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-prie-dieu",
+   "label": "The prie-dieu",
+   "rect": [
+    21.2,
+    5.2,
+    2.2,
+    1.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-cellar-hatch",
+   "label": "The cellar hatch",
+   "rect": [
+    17.0,
+    12.0,
+    1.0,
+    1.0
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-study-desk",
+   "obj": "desk",
+   "label": "The study desk",
+   "rect": [
+    20.1,
+    7.7,
+    0.8,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-parlor-table",
+   "obj": "table",
+   "label": "The parlor table",
+   "rect": [
+    7.85,
+    6.15,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-prie-dieu",
+   "obj": "prie-dieu",
+   "label": "The prie-dieu",
+   "rect": [
+    22.1,
+    5.45,
+    0.4,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-cellar-hatch",
+   "obj": "hatch",
+   "label": "The cellar hatch",
+   "rect": [
+    17.2,
+    12.2,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 11.5,
+   "y": 14.6,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.14,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 4.7,
+   "y": 6.3,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 4.7,
+   "y": 6.3,
+   "kind": "fire",
+   "bright": 0.86,
+   "dim": 5.72,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 11.5,
+   "y": 14.686,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 21.0,
+   "y": 7.7,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.42,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 10.5,
+   "text": "GM: Father Ludovic's presbytery...."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-church"
+}

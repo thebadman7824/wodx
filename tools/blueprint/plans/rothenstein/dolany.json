@@ -1,0 +1,4251 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "dolany",
+ "name": "Dolany Village",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  68,
+  50
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/dolany-village/dolany-village.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    14.6,
+    20.4,
+    14.6,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.0,
+    40.4,
+    44.0,
+    41.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    25.875,
+    31.725,
+    26.825,
+    32.025
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    50.0,
+    15.6,
+    50.0,
+    18.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    17.0,
+    10.613,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    27.6,
+    40.0,
+    30.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    29.6,
+    14.8,
+    29.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    19.0,
+    50.0,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    60.8,
+    43.0,
+    61.6,
+    43.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    7.0,
+    16.925,
+    7.0,
+    19.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    49.4,
+    13.0,
+    49.4,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.4,
+    17.9,
+    27.4,
+    18.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    20.6,
+    41.5,
+    20.6,
+    42.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    37.4,
+    2.0,
+    40.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.0,
+    13.4,
+    36.0,
+    14.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.0,
+    14.2,
+    44.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.762,
+    21.6,
+    27.4,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.85,
+    29.175,
+    34.4,
+    29.3
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    52.0,
+    27.0,
+    52.0,
+    29.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.825,
+    32.025,
+    27.387,
+    32.538
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.112,
+    19.1,
+    54.112,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.875,
+    34.675,
+    25.1,
+    34.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    52.55,
+    21.6,
+    57.0,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.65,
+    33.4,
+    55.45,
+    33.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    48.2,
+    45.4,
+    51.0,
+    45.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    21.6,
+    51.55,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.0,
+    40.4,
+    51.0,
+    42.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.562,
+    15.0,
+    23.562,
+    17.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.0,
+    40.6,
+    58.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    13.0,
+    4.1,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    34.4,
+    43.0,
+    34.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.7,
+    43.6,
+    44.0,
+    43.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.387,
+    32.538,
+    27.25,
+    33.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    24.587,
+    44.4,
+    26.0,
+    44.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.0,
+    13.0,
+    49.4,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.05,
+    33.2,
+    21.863,
+    32.538
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    23.562,
+    18.8,
+    23.562,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.4,
+    34.0,
+    8.4,
+    36.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.0,
+    10.6,
+    36.0,
+    13.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    19.6,
+    4.1,
+    19.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.6,
+    19.6,
+    14.6,
+    20.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.325,
+    32.025,
+    23.275,
+    31.725
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    61.0,
+    30.6,
+    61.0,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.0,
+    22.0,
+    49.4,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.0,
+    37.4,
+    61.237,
+    37.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.9,
+    19.6,
+    7.0,
+    19.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    40.0,
+    4.8,
+    40.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    61.0,
+    27.0,
+    61.0,
+    29.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    34.0,
+    4.287,
+    34.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.35,
+    20.5,
+    12.35,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.0,
+    27.6,
+    50.0,
+    27.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    57.0,
+    15.6,
+    57.0,
+    18.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    57.0,
+    19.0,
+    57.0,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.6,
+    45.4,
+    47.4,
+    45.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    61.0,
+    29.8,
+    61.0,
+    30.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    29.6,
+    12.0,
+    31.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.988,
+    31.6,
+    25.875,
+    31.725
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    18.0,
+    21.6,
+    20.762,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.25,
+    33.2,
+    26.75,
+    33.862
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.9,
+    13.0,
+    7.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.4,
+    10.6,
+    39.2,
+    10.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    43.6,
+    34.4,
+    46.438,
+    34.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.6,
+    42.3,
+    20.6,
+    44.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.6,
+    40.4,
+    44.6,
+    42.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.8,
+    35.0,
+    15.6,
+    35.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    47.038,
+    40.4,
+    51.0,
+    40.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.2,
+    31.8,
+    8.2,
+    29.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.2,
+    29.8,
+    10.8,
+    29.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    23.0,
+    10.738,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.2,
+    31.6,
+    24.988,
+    31.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    33.625,
+    27.95,
+    33.95,
+    27.625
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    33.95,
+    27.625,
+    34.4,
+    27.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    41.6,
+    10.6,
+    44.0,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    41.5,
+    26.0,
+    42.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.0,
+    10.6,
+    44.0,
+    13.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    30.6,
+    52.0,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.5,
+    33.862,
+    22.05,
+    33.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    35.175,
+    28.85,
+    34.85,
+    29.175
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    12.0,
+    32.7,
+    12.0,
+    35.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    16.25,
+    2.0,
+    19.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.5,
+    28.4,
+    33.625,
+    27.95
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    45.0,
+    31.0,
+    50.0,
+    31.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.438,
+    34.4,
+    50.0,
+    34.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    17.9,
+    18.0,
+    18.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.8,
+    40.0,
+    5.6,
+    40.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    38.6,
+    41.688,
+    38.6,
+    43.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.4,
+    10.6,
+    40.4,
+    13.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    29.8,
+    52.0,
+    30.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    5.6,
+    40.0,
+    8.4,
+    40.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    27.6,
+    45.0,
+    28.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    47.4,
+    45.4,
+    48.2,
+    45.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    38.7,
+    17.0,
+    40.8,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    5.287,
+    34.0,
+    8.4,
+    34.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.0,
+    20.0,
+    58.0,
+    12.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    22.775,
+    39.4,
+    26.0,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.0,
+    43.3,
+    51.0,
+    45.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    15.0,
+    20.75,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.1,
+    34.8,
+    24.087,
+    34.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.0,
+    13.0,
+    44.0,
+    16.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.4,
+    29.6,
+    18.4,
+    31.538
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    39.2,
+    10.6,
+    40.8,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    57.575,
+    27.0,
+    57.575,
+    29.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.95,
+    27.6,
+    46.4,
+    27.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.85,
+    27.625,
+    35.175,
+    27.95
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.4,
+    18.7,
+    27.4,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.6,
+    44.4,
+    23.587,
+    44.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    51.0,
+    42.5,
+    51.0,
+    43.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    24.087,
+    34.8,
+    23.275,
+    34.675
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    8.0,
+    20.4,
+    8.0,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.312,
+    34.375,
+    25.875,
+    34.675
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.0,
+    17.0,
+    37.7,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.6,
+    38.0,
+    38.6,
+    40.688
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.0,
+    12.0,
+    66.0,
+    12.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    23.95,
+    39.4,
+    23.95,
+    41.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.0,
+    10.6,
+    38.4,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.175,
+    27.95,
+    35.3,
+    28.4
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    14.8,
+    29.6,
+    15.6,
+    29.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    21.55,
+    15.0,
+    27.4,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    55.288,
+    27.0,
+    61.0,
+    27.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    15.0,
+    18.0,
+    17.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    31.3,
+    40.0,
+    34.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.4,
+    27.6,
+    47.0,
+    27.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    31.9,
+    12.0,
+    32.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    23.275,
+    34.675,
+    22.837,
+    34.375
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    10.8,
+    29.8,
+    10.8,
+    31.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    34.0,
+    2.0,
+    36.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    62.237,
+    37.4,
+    64.4,
+    37.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.75,
+    15.0,
+    21.55,
+    15.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.6,
+    40.4,
+    46.038,
+    40.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.4,
+    37.4,
+    8.4,
+    40.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    27.0,
+    54.288,
+    27.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.112,
+    15.6,
+    54.112,
+    18.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.6,
+    43.6,
+    40.9,
+    43.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    61.6,
+    43.0,
+    64.4,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.4,
+    14.1,
+    40.4,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    57.575,
+    30.7,
+    57.575,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.0,
+    14.2,
+    36.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.0,
+    41.2,
+    44.0,
+    43.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    35.3,
+    28.4,
+    35.175,
+    28.85
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    57.0,
+    18.2,
+    57.0,
+    19.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    44.0,
+    18.5,
+    44.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.0,
+    33.2,
+    45.0,
+    34.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    39.4,
+    26.0,
+    41.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    30.7,
+    40.0,
+    31.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    43.0,
+    34.4,
+    43.6,
+    34.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    64.4,
+    37.4,
+    64.4,
+    39.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.35,
+    17.0,
+    12.35,
+    19.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    52.0,
+    33.4,
+    54.65,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    17.0,
+    8.0,
+    19.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.6,
+    42.5,
+    44.6,
+    43.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    50.0,
+    15.6,
+    54.138,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    58.0,
+    37.4,
+    58.0,
+    39.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.8,
+    31.8,
+    8.2,
+    31.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    19.6,
+    8.0,
+    20.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    27.6,
+    42.95,
+    27.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.0,
+    13.4,
+    44.0,
+    14.2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    23.95,
+    42.4,
+    23.95,
+    44.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.95,
+    29.175,
+    33.625,
+    28.85
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    4.1,
+    19.6,
+    4.9,
+    19.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    50.0,
+    18.2,
+    50.0,
+    19.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    45.0,
+    29.8,
+    45.0,
+    32.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34.4,
+    27.5,
+    34.85,
+    27.625
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    23.275,
+    31.725,
+    24.2,
+    31.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    34.4,
+    29.3,
+    33.95,
+    29.175
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    58.0,
+    39.8,
+    58.0,
+    40.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    20.6,
+    39.4,
+    20.6,
+    41.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.1,
+    13.0,
+    4.9,
+    13.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    58.0,
+    43.0,
+    60.8,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    55.138,
+    15.6,
+    57.0,
+    15.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    27.6,
+    50.0,
+    34.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.613,
+    17.0,
+    14.6,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.6,
+    43.3,
+    44.6,
+    45.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    64.4,
+    40.6,
+    64.4,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.6,
+    17.0,
+    14.6,
+    19.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    38.6,
+    38.0,
+    40.9,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.6,
+    29.6,
+    18.4,
+    29.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.9,
+    43.6,
+    41.7,
+    43.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    18.4,
+    32.538,
+    18.4,
+    35.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.6,
+    17.0,
+    44.0,
+    17.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.738,
+    23.0,
+    14.6,
+    23.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.8,
+    10.6,
+    41.6,
+    10.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    2.0,
+    36.6,
+    2.0,
+    37.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    7.0,
+    13.0,
+    7.0,
+    15.925
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.6,
+    39.4,
+    21.775,
+    39.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    66.0,
+    20.0,
+    58.0,
+    20.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    21.863,
+    32.538,
+    22.325,
+    32.025
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    26.0,
+    42.3,
+    26.0,
+    44.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    64.4,
+    39.8,
+    64.4,
+    40.6
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    18.0,
+    18.7,
+    18.0,
+    21.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    66.0,
+    12.0,
+    66.0,
+    20.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.8,
+    17.0,
+    41.6,
+    17.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    12.0,
+    35.0,
+    14.8,
+    35.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.9,
+    38.0,
+    41.7,
+    38.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    33.625,
+    28.85,
+    33.5,
+    28.4
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    41.7,
+    38.0,
+    44.0,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.0,
+    38.0,
+    44.0,
+    40.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    2.0,
+    13.0,
+    2.0,
+    15.25
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.6,
+    35.0,
+    18.4,
+    35.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    55.45,
+    33.4,
+    61.0,
+    33.4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.75,
+    33.862,
+    26.312,
+    34.375
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    8.4,
+    36.6,
+    8.4,
+    37.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    27.4,
+    15.0,
+    27.4,
+    17.9
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.837,
+    34.375,
+    22.5,
+    33.862
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    7.0,
+    15.925,
+    7.0,
+    16.925
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    42.95,
+    27.6,
+    43.95,
+    27.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    46.438,
+    34.4,
+    47.438,
+    34.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.112,
+    18.1,
+    54.112,
+    19.1
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.35,
+    19.5,
+    12.35,
+    20.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    45.0,
+    32.2,
+    45.0,
+    33.2
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    51.55,
+    21.6,
+    52.55,
+    21.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    18.4,
+    31.538,
+    18.4,
+    32.538
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    40.4,
+    13.1,
+    40.4,
+    14.1
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    38.6,
+    40.688,
+    38.6,
+    41.688
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    10.613,
+    17.0,
+    11.613,
+    17.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    23.587,
+    44.4,
+    24.587,
+    44.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.775,
+    39.4,
+    22.775,
+    39.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    2.0,
+    15.25,
+    2.0,
+    16.25
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    57.575,
+    29.7,
+    57.575,
+    30.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    20.762,
+    21.6,
+    21.762,
+    21.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    37.7,
+    17.0,
+    38.7,
+    17.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    4.287,
+    34.0,
+    5.287,
+    34.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    23.562,
+    17.8,
+    23.562,
+    18.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    23.95,
+    41.4,
+    23.95,
+    42.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    10.738,
+    23.0,
+    11.738,
+    23.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.138,
+    15.6,
+    55.138,
+    15.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    61.237,
+    37.4,
+    62.237,
+    37.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    54.288,
+    27.0,
+    55.288,
+    27.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    46.038,
+    40.4,
+    47.038,
+    40.4
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    45.0,
+    28.8,
+    45.0,
+    29.8
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "The Huntsman's House",
+   "rect": [
+    49.475,
+    15.062,
+    8.05,
+    7.075
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "The Brezina Farmstead",
+   "rect": [
+    51.475,
+    26.475,
+    10.05,
+    7.45
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b03",
+   "label": "The Village Mill",
+   "rect": [
+    35.475,
+    10.062,
+    9.05,
+    7.475
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b04",
+   "label": "",
+   "rect": [
+    44.075,
+    39.875,
+    7.45,
+    6.05
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b05",
+   "label": "Old Vlasta's Hut",
+   "rect": [
+    57.475,
+    36.875,
+    7.45,
+    6.65
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b06",
+   "label": "",
+   "rect": [
+    38.075,
+    37.475,
+    6.45,
+    6.65
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b07",
+   "label": "",
+   "rect": [
+    43.475,
+    12.463,
+    6.45,
+    10.075
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b08",
+   "label": "Anezka's Family Cottage",
+   "rect": [
+    20.075,
+    38.875,
+    6.45,
+    6.05
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b09",
+   "label": "The Novotny Cottage",
+   "rect": [
+    11.469,
+    29.075,
+    7.463,
+    6.45
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b10",
+   "label": "The Herbwife's Cottage",
+   "rect": [
+    1.462,
+    33.475,
+    7.475,
+    7.05
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b11",
+   "label": "The Elder's House",
+   "rect": [
+    17.469,
+    14.463,
+    10.463,
+    7.675
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b12",
+   "label": "",
+   "rect": [
+    1.469,
+    12.463,
+    6.062,
+    7.675
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b13",
+   "label": "The Hajek Cottage",
+   "rect": [
+    7.481,
+    16.462,
+    7.662,
+    7.075
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b14",
+   "label": "The Reeve's House",
+   "rect": [
+    39.4,
+    27.0,
+    11.2,
+    8.0
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "open-hearth-on-its-slab-the-huntsman-s-house",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Huntsman's House)",
+   "rect": [
+    49.925,
+    15.562,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-huntsman-s-house",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Huntsman's House)",
+   "rect": [
+    49.925,
+    20.237,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-huntsman-s-house",
+   "obj": "table",
+   "label": "Household table (The Huntsman's House)",
+   "rect": [
+    56.125,
+    16.059,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-huntsman-s-house",
+   "obj": "chest",
+   "label": "Chest (The Huntsman's House)",
+   "rect": [
+    51.463,
+    15.562,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-huntsman-s-house",
+   "obj": "bench",
+   "label": "Bench (The Huntsman's House)",
+   "rect": [
+    49.975,
+    17.228,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-huntsman-s-house",
+   "obj": "shelf",
+   "label": "Wall shelf (The Huntsman's House)",
+   "rect": [
+    56.775,
+    18.099,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-huntsman-s-house",
+   "obj": "cask",
+   "label": "Cask (The Huntsman's House)",
+   "rect": [
+    53.275,
+    21.187,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-brezina-farmstead",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Brezina Farmstead)",
+   "rect": [
+    51.925,
+    26.975,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-brezina-farmstead",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Brezina Farmstead)",
+   "rect": [
+    51.925,
+    32.025,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-brezina-farmstead",
+   "obj": "table",
+   "label": "Household table (The Brezina Farmstead)",
+   "rect": [
+    60.125,
+    26.925,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-brezina-farmstead",
+   "obj": "chest",
+   "label": "Chest (The Brezina Farmstead)",
+   "rect": [
+    53.963,
+    32.825,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-brezina-farmstead",
+   "obj": "bench",
+   "label": "Bench (The Brezina Farmstead)",
+   "rect": [
+    51.975,
+    28.163,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-brezina-farmstead",
+   "obj": "shelf",
+   "label": "Wall shelf (The Brezina Farmstead)",
+   "rect": [
+    60.775,
+    29.006,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-brezina-farmstead",
+   "obj": "cask",
+   "label": "Cask (The Brezina Farmstead)",
+   "rect": [
+    53.013,
+    32.975,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-village-mill",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Village Mill)",
+   "rect": [
+    35.925,
+    10.562,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-village-mill",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Village Mill)",
+   "rect": [
+    35.925,
+    15.637,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-village-mill",
+   "obj": "table",
+   "label": "Household table (The Village Mill)",
+   "rect": [
+    43.125,
+    11.109,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-village-mill",
+   "obj": "chest",
+   "label": "Chest (The Village Mill)",
+   "rect": [
+    37.713,
+    10.562,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-village-mill",
+   "obj": "bench",
+   "label": "Bench (The Village Mill)",
+   "rect": [
+    35.975,
+    11.756,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-village-mill",
+   "obj": "shelf",
+   "label": "Wall shelf (The Village Mill)",
+   "rect": [
+    39.5,
+    16.787,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-village-mill",
+   "obj": "cask",
+   "label": "Cask (The Village Mill)",
+   "rect": [
+    39.775,
+    10.562,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b04",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b04)",
+   "rect": [
+    47.3,
+    42.4,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b04",
+   "obj": "bed-box",
+   "label": "Box bed for two (b04)",
+   "rect": [
+    44.525,
+    44.025,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b04",
+   "obj": "table",
+   "label": "Household table (b04)",
+   "rect": [
+    50.125,
+    40.325,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b04",
+   "obj": "chest",
+   "label": "Chest (b04)",
+   "rect": [
+    44.575,
+    40.325,
+    0.6,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b04",
+   "obj": "bench",
+   "label": "Bench (b04)",
+   "rect": [
+    45.763,
+    45.075,
+    1.6,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b04",
+   "obj": "shelf",
+   "label": "Wall shelf (b04)",
+   "rect": [
+    44.575,
+    41.881,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b04",
+   "obj": "cask",
+   "label": "Cask (b04)",
+   "rect": [
+    47.575,
+    44.975,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-old-vlasta-s-hut",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (Old Vlasta's Hut)",
+   "rect": [
+    60.7,
+    39.7,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-old-vlasta-s-hut",
+   "obj": "bed-box",
+   "label": "Box bed for two (Old Vlasta's Hut)",
+   "rect": [
+    57.925,
+    37.375,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-old-vlasta-s-hut",
+   "obj": "table",
+   "label": "Household table (Old Vlasta's Hut)",
+   "rect": [
+    57.925,
+    42.125,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-old-vlasta-s-hut",
+   "obj": "chest",
+   "label": "Chest (Old Vlasta's Hut)",
+   "rect": [
+    63.825,
+    37.325,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-old-vlasta-s-hut",
+   "obj": "bench",
+   "label": "Bench (Old Vlasta's Hut)",
+   "rect": [
+    64.075,
+    38.881,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-old-vlasta-s-hut",
+   "obj": "shelf",
+   "label": "Wall shelf (Old Vlasta's Hut)",
+   "rect": [
+    59.313,
+    37.375,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-old-vlasta-s-hut",
+   "obj": "cask",
+   "label": "Cask (Old Vlasta's Hut)",
+   "rect": [
+    60.213,
+    42.575,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b06",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b06)",
+   "rect": [
+    40.8,
+    40.3,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b06",
+   "obj": "bed-box",
+   "label": "Box bed for two (b06)",
+   "rect": [
+    38.525,
+    37.975,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b06",
+   "obj": "table",
+   "label": "Household table (b06)",
+   "rect": [
+    38.525,
+    42.725,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b06",
+   "obj": "chest",
+   "label": "Chest (b06)",
+   "rect": [
+    43.425,
+    37.925,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b06",
+   "obj": "bench",
+   "label": "Bench (b06)",
+   "rect": [
+    40.006,
+    37.975,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b06",
+   "obj": "shelf",
+   "label": "Wall shelf (b06)",
+   "rect": [
+    43.775,
+    39.113,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b06",
+   "obj": "cask",
+   "label": "Cask (b06)",
+   "rect": [
+    41.075,
+    43.175,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b07",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b07)",
+   "rect": [
+    46.2,
+    17.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b07",
+   "obj": "bed-box",
+   "label": "Box bed for two (b07)",
+   "rect": [
+    43.925,
+    20.638,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b07",
+   "obj": "table",
+   "label": "Household table (b07)",
+   "rect": [
+    44.394,
+    12.963,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b07",
+   "obj": "chest",
+   "label": "Chest (b07)",
+   "rect": [
+    48.825,
+    13.935,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b07",
+   "obj": "bench",
+   "label": "Bench (b07)",
+   "rect": [
+    43.975,
+    14.807,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b07",
+   "obj": "shelf",
+   "label": "Wall shelf (b07)",
+   "rect": [
+    45.063,
+    21.788,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b07",
+   "obj": "cask",
+   "label": "Cask (b07)",
+   "rect": [
+    48.975,
+    15.094,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-anezka-s-family-cottage",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (Anezka's Family Cottage)",
+   "rect": [
+    20.525,
+    43.425,
+    1.0,
+    1.0
+   ],
+   "facing": "N",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-anezka-s-family-cottage",
+   "obj": "bed-box",
+   "label": "Box bed for two (Anezka's Family Cottage)",
+   "rect": [
+    24.625,
+    39.325,
+    1.4,
+    0.9
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-anezka-s-family-cottage",
+   "obj": "table",
+   "label": "Household table (Anezka's Family Cottage)",
+   "rect": [
+    20.575,
+    40.581,
+    0.9,
+    1.8
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-anezka-s-family-cottage",
+   "obj": "chest",
+   "label": "Chest (Anezka's Family Cottage)",
+   "rect": [
+    25.425,
+    40.881,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-anezka-s-family-cottage",
+   "obj": "bench",
+   "label": "Bench (Anezka's Family Cottage)",
+   "rect": [
+    25.675,
+    42.431,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-anezka-s-family-cottage",
+   "obj": "shelf",
+   "label": "Wall shelf (Anezka's Family Cottage)",
+   "rect": [
+    20.575,
+    39.325,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-anezka-s-family-cottage",
+   "obj": "cask",
+   "label": "Cask (Anezka's Family Cottage)",
+   "rect": [
+    21.8,
+    43.975,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-novotny-cottage",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Novotny Cottage)",
+   "rect": [
+    14.7,
+    31.8,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-novotny-cottage",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Novotny Cottage)",
+   "rect": [
+    11.969,
+    29.525,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-novotny-cottage",
+   "obj": "table",
+   "label": "Household table (The Novotny Cottage)",
+   "rect": [
+    12.514,
+    34.125,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-novotny-cottage",
+   "obj": "chest",
+   "label": "Chest (The Novotny Cottage)",
+   "rect": [
+    17.832,
+    29.525,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-novotny-cottage",
+   "obj": "bench",
+   "label": "Bench (The Novotny Cottage)",
+   "rect": [
+    13.78,
+    29.575,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-novotny-cottage",
+   "obj": "shelf",
+   "label": "Wall shelf (The Novotny Cottage)",
+   "rect": [
+    11.969,
+    30.662,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-novotny-cottage",
+   "obj": "cask",
+   "label": "Cask (The Novotny Cottage)",
+   "rect": [
+    14.975,
+    34.575,
+    0.45,
+    0.45
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-herbwife-s-cottage",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Herbwife's Cottage)",
+   "rect": [
+    4.699,
+    36.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-herbwife-s-cottage",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Herbwife's Cottage)",
+   "rect": [
+    1.962,
+    33.925,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-herbwife-s-cottage",
+   "obj": "table",
+   "label": "Household table (The Herbwife's Cottage)",
+   "rect": [
+    7.537,
+    33.925,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-herbwife-s-cottage",
+   "obj": "chest",
+   "label": "Chest (The Herbwife's Cottage)",
+   "rect": [
+    2.609,
+    39.425,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-herbwife-s-cottage",
+   "obj": "bench",
+   "label": "Bench (The Herbwife's Cottage)",
+   "rect": [
+    1.962,
+    35.063,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-herbwife-s-cottage",
+   "obj": "shelf",
+   "label": "Wall shelf (The Herbwife's Cottage)",
+   "rect": [
+    4.003,
+    39.775,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-herbwife-s-cottage",
+   "obj": "cask",
+   "label": "Cask (The Herbwife's Cottage)",
+   "rect": [
+    7.987,
+    36.063,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-elder-s-house",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Elder's House)",
+   "rect": [
+    18.989,
+    14.963,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-elder-s-house",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Elder's House)",
+   "rect": [
+    19.002,
+    20.238,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-elder-s-house",
+   "obj": "table",
+   "label": "Household table (The Elder's House)",
+   "rect": [
+    26.532,
+    15.535,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-elder-s-house",
+   "obj": "chest",
+   "label": "Chest (The Elder's House)",
+   "rect": [
+    17.969,
+    15.635,
+    0.6,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-elder-s-house",
+   "obj": "bench",
+   "label": "Bench (The Elder's House)",
+   "rect": [
+    20.905,
+    14.963,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-elder-s-house",
+   "obj": "shelf",
+   "label": "Wall shelf (The Elder's House)",
+   "rect": [
+    17.969,
+    17.079,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-elder-s-house",
+   "obj": "cask",
+   "label": "Cask (The Elder's House)",
+   "rect": [
+    20.197,
+    14.963,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b12",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b12)",
+   "rect": [
+    4.0,
+    15.8,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b12",
+   "obj": "bed-box",
+   "label": "Box bed for two (b12)",
+   "rect": [
+    2.452,
+    12.963,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b12",
+   "obj": "table",
+   "label": "Household table (b12)",
+   "rect": [
+    2.339,
+    18.738,
+    1.8,
+    0.9
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b12",
+   "obj": "chest",
+   "label": "Chest (b12)",
+   "rect": [
+    6.431,
+    13.635,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b12",
+   "obj": "bench",
+   "label": "Bench (b12)",
+   "rect": [
+    3.7,
+    12.963,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b12",
+   "obj": "shelf",
+   "label": "Wall shelf (b12)",
+   "rect": [
+    4.52,
+    19.388,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b12",
+   "obj": "cask",
+   "label": "Cask (b12)",
+   "rect": [
+    5.453,
+    12.963,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-the-hajek-cottage",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Hajek Cottage)",
+   "rect": [
+    7.931,
+    16.962,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-the-hajek-cottage",
+   "obj": "bed-box",
+   "label": "Box bed for two (The Hajek Cottage)",
+   "rect": [
+    7.931,
+    21.637,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-the-hajek-cottage",
+   "obj": "table",
+   "label": "Household table (The Hajek Cottage)",
+   "rect": [
+    13.743,
+    17.459,
+    0.9,
+    1.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-the-hajek-cottage",
+   "obj": "chest",
+   "label": "Chest (The Hajek Cottage)",
+   "rect": [
+    7.981,
+    18.206,
+    0.6,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-the-hajek-cottage",
+   "obj": "bench",
+   "label": "Bench (The Hajek Cottage)",
+   "rect": [
+    7.981,
+    19.771,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-the-hajek-cottage",
+   "obj": "shelf",
+   "label": "Wall shelf (The Hajek Cottage)",
+   "rect": [
+    14.393,
+    19.499,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-the-hajek-cottage",
+   "obj": "cask",
+   "label": "Cask (The Hajek Cottage)",
+   "rect": [
+    9.509,
+    16.962,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "cask-the-reeve-s-house",
+   "obj": "cask",
+   "label": "Cask (The Reeve's House)",
+   "rect": [
+    49.65,
+    29.944,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 47.825,
+   "y": 42.925,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 15.225,
+   "y": 32.325,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 41.325,
+   "y": 40.825,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 11.55,
+   "y": 32.3,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 22.125,
+   "y": 41.925,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 55.05,
+   "y": 33.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 35.55,
+   "y": 13.8,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 15.2,
+   "y": 29.15,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 61.225,
+   "y": 40.225,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 40.725,
+   "y": 30.95,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 40.25,
+   "y": 29.85,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 4.5,
+   "y": 20.05,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 5.2,
+   "y": 40.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 49.75,
+   "y": 33.175,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 61.45,
+   "y": 30.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 4.5,
+   "y": 12.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 41.3,
+   "y": 44.05,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 44.15,
+   "y": 42.9,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 57.55,
+   "y": 40.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 51.55,
+   "y": 30.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 23.7,
+   "y": 17.15,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 26.45,
+   "y": 41.9,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 8.85,
+   "y": 37.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 64.85,
+   "y": 40.2,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 44.45,
+   "y": 13.8,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 15.05,
+   "y": 20.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.263,
+   "y": 13.537,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 18.65,
+   "y": 18.275,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 15.2,
+   "y": 35.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 41.2,
+   "y": 17.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 21.15,
+   "y": 14.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.538,
+   "y": 13.188,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 50.65,
+   "y": 18.575,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 49.225,
+   "y": 29.35,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 20.15,
+   "y": 41.9,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 1.55,
+   "y": 37.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 54.825,
+   "y": 30.225,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 4.525,
+   "y": 16.325,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 5.225,
+   "y": 37.025,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 17.55,
+   "y": 18.3,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 41.3,
+   "y": 37.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 21.775,
+   "y": 15.175,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 51.45,
+   "y": 42.9,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 53.975,
+   "y": 19.65,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 49.55,
+   "y": 18.6,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 57.45,
+   "y": 18.6,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 27.85,
+   "y": 18.3,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 43.3,
+   "y": 34.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 12.213,
+   "y": 20.788,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 46.7,
+   "y": 27.15,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 41.2,
+   "y": 10.15,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 61.2,
+   "y": 43.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 47.8,
+   "y": 45.85,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 55.587,
+   "y": 15.775,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 7.55,
+   "y": 20.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 39.55,
+   "y": 31.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 8.65,
+   "y": 19.975,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 44.45,
+   "y": 40.8,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 38.8,
+   "y": 10.15,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.688,
+   "y": 22.825,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  }
+ ],
+ "labels": [
+  {
+   "x": 47.45,
+   "y": 32.65,
+   "text": "Bohumil Krejci lives here (The Reeve's House).",
+   "used": true
+  },
+  {
+   "x": 22.6,
+   "y": 18.0,
+   "text": "Baba Yaroslava does not rise for anyone....",
+   "used": true
+  },
+  {
+   "x": 61.2,
+   "y": 40.2,
+   "text": "Old Vlasta lives here (Old Vlasta's Hut).",
+   "used": true
+  },
+  {
+   "x": 42.188,
+   "y": 13.8,
+   "text": "Dorota the Miller's Widow lives here (The Village Mill, Dorota's Room).",
+   "used": true
+  },
+  {
+   "x": 54.812,
+   "y": 30.2,
+   "text": "Bohuslav Brezina lives here (The Brezina Farmstead).",
+   "used": true
+  },
+  {
+   "x": 1.2,
+   "y": 27.0,
+   "text": "West: the other Moravian villages, half a day apart."
+  },
+  {
+   "x": 25.462,
+   "y": 18.3,
+   "text": "Baba Yaroslava lives here (The Elder's House).",
+   "used": true
+  },
+  {
+   "x": 53.4,
+   "y": 18.6,
+   "text": "Antlers over the door, hides drying in the yard, and a boar spear by the hearth.",
+   "used": true
+  },
+  {
+   "x": 15.2,
+   "y": 32.4,
+   "text": "Marketa's room is as...",
+   "used": true
+  },
+  {
+   "x": 55.538,
+   "y": 18.6,
+   "text": "Stanek Kovar lives here (The Huntsman's House).",
+   "used": true
+  },
+  {
+   "x": 5.2,
+   "y": 37.0,
+   "text": "Jitka the Herbwife lives here (The Herbwife's Cottage).",
+   "used": true
+  },
+  {
+   "x": 41.8,
+   "y": 13.4,
+   "text": "Dorota sees visions in the flour dust. It is ergot. Mostly.",
+   "used": true
+  },
+  {
+   "x": 22.288,
+   "y": 41.9,
+   "text": "Little Anezka lives here (Anezka's Family Cottage).",
+   "used": true
+  },
+  {
+   "x": 61.2,
+   "y": 36.0,
+   "text": "Old Vlasta, hedge-witch and midwife...."
+  },
+  {
+   "x": 54.0,
+   "y": 30.2,
+   "text": "Bohuslav Brezina, the groom's father, waits here for news of...",
+   "used": true
+  },
+  {
+   "x": 15.2,
+   "y": 32.3,
+   "text": "Marketa Novotna lives here (The Novotny Cottage).",
+   "used": true
+  },
+  {
+   "x": 13.463,
+   "y": 20.0,
+   "text": "Milos Hajek lives here (The Hajek Cottage).",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-high-woods",
+   "to": "high-woods",
+   "rect": [
+    29.5,
+    0.0,
+    3.0,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-high-woods",
+   "to": null,
+   "rect": [
+    30.3,
+    2.5,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-forest-road",
+   "to": null,
+   "rect": [
+    64.1,
+    25.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-forest-road",
+   "to": "forest-road",
+   "rect": [
+    66.6,
+    24.2,
+    1.4,
+    3.6
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "building b04 (unnamed): use guessed as a home",
+  "building b06 (unnamed): use guessed as a home",
+  "building b07 (unnamed): use guessed as a home",
+  "building b12 (unnamed): use guessed as a home"
+ ],
+ "seeded": true
+}

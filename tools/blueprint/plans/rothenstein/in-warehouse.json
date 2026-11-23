@@ -1,0 +1,361 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-warehouse",
+ "name": "The Warehouse and Customs House",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-warehouse-and-customs-house/workplace-the-warehouse-and-customs-house.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    11.0,
+    12.0,
+    21.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    3.0,
+    21.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    21.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    9.0,
+    23.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    12.0,
+    8.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    3.0,
+    27.0,
+    9.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    13.0,
+    27.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    9.0,
+    27.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    3.0,
+    21.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    11.0,
+    21.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    3.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    3.0,
+    27.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    6.0,
+    21.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    13.0,
+    23.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    6.0,
+    21.0,
+    12.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.0,
+    9.0,
+    27.0,
+    9.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    8.0,
+    12.0,
+    11.0,
+    12.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    10.0,
+    21.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    21.0,
+    5.0,
+    21.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    5.0,
+    21.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    23.0,
+    13.0,
+    24.0,
+    13.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    23.0,
+    9.0,
+    24.0,
+    9.0
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-quay",
+   "label": "The quay",
+   "rect": [
+    4.6,
+    12.8,
+    9.8,
+    4.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-bonded-store",
+   "label": "The bonded store",
+   "rect": [
+    21.4,
+    9.4,
+    5.6,
+    3.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-warehouse-floor",
+   "label": "The warehouse floor",
+   "rect": [
+    3.4,
+    3.4,
+    17.2,
+    8.2
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-customs-office",
+   "label": "The customs office",
+   "rect": [
+    21.4,
+    3.4,
+    5.6,
+    5.2
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [],
+ "lights": [
+  {
+   "x": 9.6,
+   "y": 12.6,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 3.14,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 23.6,
+   "y": 5.0,
+   "kind": "fire",
+   "bright": 0.28,
+   "dim": 3.72,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 14.0,
+   "y": 7.4,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 5.14,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 24.0,
+   "y": 11.3,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.86,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 12.6,
+   "text": "GM: The river warehouse and customs"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-quay"
+}

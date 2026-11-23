@@ -1,0 +1,411 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-watermill",
+ "name": "The Water Mill",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-water-mill/workplace-the-water-mill.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    20.0,
+    6.0,
+    20.0,
+    10.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    6.0,
+    4.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    11.0,
+    20.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    15.0,
+    20.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    6.0,
+    20.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    15.0,
+    22.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    6.0,
+    20.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    6.0,
+    26.0,
+    6.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.0,
+    15.0,
+    26.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.0,
+    6.0,
+    26.0,
+    15.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.0,
+    15.0,
+    8.0,
+    15.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    22.0,
+    15.0,
+    23.0,
+    15.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    20.0,
+    10.0,
+    20.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    15.0,
+    10.0,
+    15.0
+   ],
+   "kind": "gate",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-miller-s-rooms",
+   "label": "The miller's rooms",
+   "rect": [
+    20.2,
+    6.2,
+    5.8,
+    8.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-mill-race",
+   "label": "The mill race",
+   "rect": [
+    1.0,
+    0.5,
+    3.5,
+    5.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-grain-sacks",
+   "label": "The grain sacks",
+   "rect": [
+    5.0,
+    12.6,
+    14.0,
+    2.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-millstones",
+   "label": "The millstones",
+   "rect": [
+    7.0,
+    8.0,
+    9.0,
+    3.0
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-grain-sacks-1",
+   "obj": "sack",
+   "label": "The grain sacks 1",
+   "rect": [
+    6.575,
+    12.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-2",
+   "obj": "sack",
+   "label": "The grain sacks 2",
+   "rect": [
+    6.575,
+    13.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-3",
+   "obj": "sack",
+   "label": "The grain sacks 3",
+   "rect": [
+    10.075,
+    12.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-4",
+   "obj": "sack",
+   "label": "The grain sacks 4",
+   "rect": [
+    10.075,
+    13.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-5",
+   "obj": "sack",
+   "label": "The grain sacks 5",
+   "rect": [
+    13.575,
+    12.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-6",
+   "obj": "sack",
+   "label": "The grain sacks 6",
+   "rect": [
+    13.575,
+    13.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-7",
+   "obj": "sack",
+   "label": "The grain sacks 7",
+   "rect": [
+    17.075,
+    12.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-grain-sacks-8",
+   "obj": "sack",
+   "label": "The grain sacks 8",
+   "rect": [
+    17.075,
+    13.85,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-millstones-1",
+   "obj": "millstones",
+   "label": "The millstones 1",
+   "rect": [
+    8.65,
+    8.9,
+    1.2,
+    1.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-millstones-2",
+   "obj": "millstones",
+   "label": "The millstones 2",
+   "rect": [
+    13.15,
+    8.9,
+    1.2,
+    1.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 23.5,
+   "y": 9.0,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 3.72,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 11.5,
+   "y": 9.5,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.86,
+   "color": "#ffe9a8"
+  }
+ ],
+ "labels": [
+  {
+   "x": 12.0,
+   "y": 15.6,
+   "text": "GM: The grain mill below the dam. The"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "ford"
+}

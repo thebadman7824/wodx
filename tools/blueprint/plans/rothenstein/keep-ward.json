@@ -1,0 +1,2219 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "keep-ward",
+ "name": "Kranzfels, Inner Ward and Great Hall",
+ "chronicle": "rothenstein",
+ "tier": 1,
+ "cells": [
+  60,
+  46
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/kranzfels-inner-ward-and-great-hall/kranzfels-inner-ward-and-great-hall.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    11.7,
+    13.0,
+    13.4,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.6,
+    5.0,
+    24.8,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    13.8,
+    40.0,
+    17.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.35,
+    16.0,
+    49.65,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.6,
+    5.0,
+    40.6,
+    8.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.8,
+    5.0,
+    25.4,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    41.0,
+    23.3,
+    41.0,
+    26.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    22.0,
+    17.2,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.0,
+    5.0,
+    50.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.4,
+    5.0,
+    13.4,
+    8.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.1,
+    26.0,
+    18.0,
+    26.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    22.0,
+    10.7,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    28.663,
+    4.6,
+    29.462
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.0,
+    23.3,
+    54.0,
+    26.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.3,
+    26.0,
+    15.1,
+    26.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    25.4,
+    5.0,
+    28.6,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    26.9,
+    54.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.3,
+    26.0,
+    14.3,
+    26.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.8,
+    22.0,
+    21.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.7,
+    22.0,
+    13.4,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    18.4,
+    40.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    19.7,
+    54.0,
+    22.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.2,
+    5.0,
+    17.8,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    29.137,
+    29.5,
+    29.5,
+    29.137
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    40.0,
+    9.5,
+    40.0,
+    13.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    43.0,
+    3.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    32.4,
+    18.0,
+    34.538
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    5.0,
+    4.6,
+    8.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    29.5,
+    30.863,
+    29.137,
+    30.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    27.9,
+    22.0,
+    32.4,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    30.5,
+    18.0,
+    31.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.2,
+    22.0,
+    17.8,
+    22.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    8.3,
+    38.0,
+    14.3,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.6,
+    5.0,
+    50.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    26.0,
+    18.0,
+    29.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    45.35,
+    30.0,
+    49.65,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.7,
+    5.0,
+    9.3,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    30.0,
+    29.0,
+    30.5,
+    29.137
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    28.6,
+    5.0,
+    29.2,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    30.863,
+    30.5,
+    30.5,
+    30.863
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    29.137,
+    30.5,
+    29.0,
+    30.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    44.75,
+    30.0,
+    45.35,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    18.0,
+    34.538,
+    18.0,
+    35.337
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.0,
+    19.1,
+    54.0,
+    19.7
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.6,
+    9.5,
+    40.6,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.0,
+    5.0,
+    46.0,
+    10.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    17.8,
+    14.0,
+    18.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    9.0,
+    13.0,
+    9.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.863,
+    29.5,
+    31.0,
+    30.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    4.6,
+    5.0,
+    8.7,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    31.6,
+    4.6,
+    32.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    40.0,
+    13.2,
+    40.0,
+    13.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    57.0,
+    43.0,
+    32.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    7.5,
+    26.0,
+    8.3,
+    26.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    41.0,
+    26.3,
+    41.0,
+    26.9
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    31.0,
+    30.0,
+    30.863,
+    30.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    4.6,
+    26.0,
+    7.5,
+    26.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    49.65,
+    16.0,
+    50.25,
+    16.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    41.0,
+    16.0,
+    41.0,
+    20.3
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    32.4,
+    5.0,
+    33.0,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.2,
+    22.0,
+    36.8,
+    22.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    41.0,
+    22.7,
+    41.0,
+    23.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    41.0,
+    21.7,
+    41.0,
+    22.7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    26.9,
+    41.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17.8,
+    5.0,
+    21.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    26.0,
+    4.6,
+    28.663
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    32.5,
+    12.0,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.4,
+    9.5,
+    13.4,
+    17.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    18.4,
+    14.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    32.4,
+    22.0,
+    33.0,
+    22.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    33.0,
+    22.0,
+    36.2,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    33.0,
+    5.0,
+    36.2,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    31.6,
+    18.0,
+    32.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    29.0,
+    30.0,
+    29.137,
+    29.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    21.0,
+    5.0,
+    21.6,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    29.2,
+    5.0,
+    32.4,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    17.8,
+    4.6,
+    18.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    54.0,
+    22.7,
+    54.0,
+    23.3
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    13.4,
+    17.8,
+    13.4,
+    18.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.6,
+    35.337,
+    4.6,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.6,
+    13.0,
+    42.7,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    16.0,
+    54.0,
+    19.1
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36.8,
+    22.0,
+    40.0,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.5,
+    29.137,
+    30.863,
+    29.5
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    40.0,
+    5.0,
+    40.0,
+    8.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.0,
+    26.0,
+    12.0,
+    31.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    7.3,
+    13.0,
+    10.7,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    9.5,
+    14.0,
+    13.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44.75,
+    16.0,
+    45.35,
+    16.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.0,
+    5.0,
+    17.2,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    18.4,
+    4.6,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    54.0,
+    26.3,
+    54.0,
+    26.9
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    9.3,
+    5.0,
+    13.4,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    38.0,
+    7.5,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.25,
+    16.0,
+    54.0,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18.0,
+    35.337,
+    18.0,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    5.0,
+    14.0,
+    8.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    29.462,
+    4.6,
+    31.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    30.0,
+    44.75,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    34.538,
+    4.6,
+    35.337
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    13.4,
+    18.4,
+    13.4,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    41.0,
+    16.0,
+    44.75,
+    16.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.6,
+    22.0,
+    26.1,
+    22.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.1,
+    38.0,
+    18.0,
+    38.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    43.7,
+    13.0,
+    50.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    50.25,
+    30.0,
+    54.0,
+    30.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.0,
+    31.0,
+    29.5,
+    30.863
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    4.6,
+    9.2,
+    4.6,
+    17.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    40.0,
+    17.8,
+    40.0,
+    18.4
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.0,
+    13.2,
+    14.0,
+    13.8
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    29.5,
+    29.137,
+    30.0,
+    29.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    7.5,
+    38.0,
+    8.3,
+    38.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.6,
+    32.4,
+    4.6,
+    34.538
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30.5,
+    30.863,
+    30.0,
+    31.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    57.0,
+    3.0,
+    57.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46.0,
+    11.5,
+    46.0,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    43.0,
+    3.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    22.0,
+    21.6,
+    22.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.2,
+    5.0,
+    36.8,
+    5.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    36.8,
+    5.0,
+    40.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    14.0,
+    13.8,
+    14.0,
+    17.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    4.6,
+    13.0,
+    6.3,
+    13.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    57.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    49.65,
+    30.0,
+    50.25,
+    30.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    14.3,
+    38.0,
+    15.1,
+    38.0
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4.6,
+    8.6,
+    4.6,
+    9.2
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    40.6,
+    8.5,
+    40.6,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    40.0,
+    8.5,
+    40.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    26.1,
+    22.0,
+    27.9,
+    22.0
+   ],
+   "kind": "gate",
+   "locked": false
+  },
+  {
+   "c": [
+    10.7,
+    22.0,
+    11.7,
+    22.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    6.3,
+    13.0,
+    7.3,
+    13.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    41.0,
+    20.3,
+    41.0,
+    21.7
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    42.7,
+    13.0,
+    43.7,
+    13.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    31.5,
+    12.0,
+    32.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    46.0,
+    10.5,
+    46.0,
+    11.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    10.7,
+    13.0,
+    11.7,
+    13.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    14.0,
+    8.5,
+    14.0,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    13.4,
+    8.5,
+    13.4,
+    9.5
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    18.0,
+    29.5,
+    18.0,
+    30.5
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b01",
+   "label": "The Chancery",
+   "rect": [
+    40.0,
+    4.4,
+    10.6,
+    9.2
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b02",
+   "label": "",
+   "rect": [
+    4.006,
+    4.4,
+    10.012,
+    18.2
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b03",
+   "label": "",
+   "rect": [
+    4.081,
+    25.469,
+    14.463,
+    13.062
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b04",
+   "label": "",
+   "rect": [
+    13.244,
+    4.25,
+    27.512,
+    18.5
+   ],
+   "use": "home",
+   "roof": true
+  },
+  {
+   "id": "b05",
+   "label": "",
+   "rect": [
+    40.05,
+    15.05,
+    14.9,
+    15.9
+   ],
+   "use": "home",
+   "roof": true
+  }
+ ],
+ "rooms": [],
+ "slots": [
+  {
+   "id": "open-hearth-on-its-slab-the-chancery",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (The Chancery)",
+   "rect": [
+    44.8,
+    8.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "cask-the-chancery",
+   "obj": "cask",
+   "label": "Cask (The Chancery)",
+   "rect": [
+    41.606,
+    4.9,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "cask-b02",
+   "obj": "cask",
+   "label": "Cask (b02)",
+   "rect": [
+    13.068,
+    11.169,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b03",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b03)",
+   "rect": [
+    4.531,
+    25.969,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "box-bed-for-two-b03",
+   "obj": "bed-box",
+   "label": "Box bed for two (b03)",
+   "rect": [
+    4.531,
+    36.631,
+    0.9,
+    1.4
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "household-table-b03",
+   "obj": "table",
+   "label": "Household table (b03)",
+   "rect": [
+    6.001,
+    25.969,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "chest-b03",
+   "obj": "chest",
+   "label": "Chest (b03)",
+   "rect": [
+    6.101,
+    37.431,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "bench-b03",
+   "obj": "bench",
+   "label": "Bench (b03)",
+   "rect": [
+    4.581,
+    27.239,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b03",
+   "obj": "shelf",
+   "label": "Wall shelf (b03)",
+   "rect": [
+    17.794,
+    25.919,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b03",
+   "obj": "cask",
+   "label": "Cask (b03)",
+   "rect": [
+    17.594,
+    27.383,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b04",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b04)",
+   "rect": [
+    26.5,
+    13.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b04",
+   "obj": "shelf",
+   "label": "Wall shelf (b04)",
+   "rect": [
+    13.694,
+    4.75,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b04",
+   "obj": "cask",
+   "label": "Cask (b04)",
+   "rect": [
+    13.744,
+    13.275,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "open-hearth-on-its-slab-b05",
+   "obj": "hearth",
+   "label": "Open hearth on its slab (b05)",
+   "rect": [
+    47.0,
+    22.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": true
+  },
+  {
+   "id": "bench-b05",
+   "obj": "bench",
+   "label": "Bench (b05)",
+   "rect": [
+    40.5,
+    15.55,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "wall-shelf-b05",
+   "obj": "shelf",
+   "label": "Wall shelf (b05)",
+   "rect": [
+    40.5,
+    30.2,
+    1.0,
+    0.25
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "cask-b05",
+   "obj": "cask",
+   "label": "Cask (b05)",
+   "rect": [
+    54.0,
+    15.5,
+    0.45,
+    0.45
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 9.05,
+   "y": 5.725,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 8.012,
+   "y": 37.825,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 18.45,
+   "y": 32.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 7.338,
+   "y": 26.175,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 49.95,
+   "y": 15.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.55,
+   "y": 13.5,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 33.0,
+   "y": 41.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 41.475,
+   "y": 10.25,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 4.15,
+   "y": 32.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 41.475,
+   "y": 6.75,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 40.45,
+   "y": 18.1,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 32.7,
+   "y": 22.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 45.638,
+   "y": 6.05,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 14.7,
+   "y": 38.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 52.925,
+   "y": 23.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 32.7,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 4.15,
+   "y": 18.1,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.55,
+   "y": 23.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 14.938,
+   "y": 37.4,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 14.6,
+   "y": 11.325,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 4.15,
+   "y": 34.938,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 54.45,
+   "y": 26.6,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.55,
+   "y": 18.1,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 13.85,
+   "y": 18.1,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 7.9,
+   "y": 25.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 4.15,
+   "y": 29.062,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 45.05,
+   "y": 15.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 17.5,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 45.05,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 33.0,
+   "y": 23.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 27.0,
+   "y": 23.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 7.9,
+   "y": 38.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 28.9,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 46.763,
+   "y": 8.45,
+   "kind": "fire",
+   "bright": 0.44,
+   "dim": 2.5,
+   "color": "#ffc070"
+  },
+  {
+   "x": 14.7,
+   "y": 25.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 27.0,
+   "y": 14.8,
+   "kind": "fire",
+   "bright": 1.88,
+   "dim": 7.5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 39.4,
+   "y": 18.275,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 12.137,
+   "y": 33.025,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 18.45,
+   "y": 34.938,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 54.45,
+   "y": 19.4,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.85,
+   "y": 9.688,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 40.55,
+   "y": 26.6,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 27.0,
+   "y": 41.0,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 9.0,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 14.6,
+   "y": 18.275,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 21.3,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 53.4,
+   "y": 21.85,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 4.15,
+   "y": 8.9,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 4.85,
+   "y": 15.775,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 36.5,
+   "y": 22.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 36.5,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 39.4,
+   "y": 11.325,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 49.95,
+   "y": 30.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 40.45,
+   "y": 13.5,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 17.5,
+   "y": 22.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 54.45,
+   "y": 23.0,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 21.3,
+   "y": 22.45,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  },
+  {
+   "x": 48.5,
+   "y": 12.75,
+   "kind": "fire",
+   "bright": 0.76,
+   "dim": 4.0,
+   "color": "#ffc070"
+  },
+  {
+   "x": 25.1,
+   "y": 4.55,
+   "kind": "fire",
+   "bright": 0.0,
+   "dim": 1.6,
+   "color": "#ffb060"
+  }
+ ],
+ "labels": [
+  {
+   "x": 48.0,
+   "y": 7.0,
+   "text": "Under a loose board: the second copy of every letter Ottilie has made for the vo",
+   "used": true
+  },
+  {
+   "x": 51.8,
+   "y": 18.3,
+   "text": "The great stair up to the voivode's chambers.",
+   "used": true
+  },
+  {
+   "x": 48.0,
+   "y": 10.6,
+   "text": "Ottilie's room has no window....",
+   "used": true
+  },
+  {
+   "x": 51.8,
+   "y": 27.7,
+   "text": "A narrow stair down to the undercroft. Konrad keeps it unlocked.",
+   "used": true
+  },
+  {
+   "x": 45.0,
+   "y": 36.6,
+   "text": "The voivode's herb garden. Monkshood grows in the far bed."
+  },
+  {
+   "x": 47.95,
+   "y": 9.0,
+   "text": "Ottilie the Copyist lives here (The Chancery, Ottilie's Room).",
+   "used": true
+  }
+ ],
+ "exits": [
+  {
+   "kind": "arrive",
+   "name": "from-keep-bailey",
+   "to": null,
+   "rect": [
+    29.3,
+    39.5,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-donjon-ground-u",
+   "to": "keep-floors",
+   "rect": [
+    50.6,
+    26.4,
+    2.4,
+    2.6
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "donjon-ground-u",
+   "to": null,
+   "rect": [
+    48.9,
+    27.0,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "stair-donjon-ground",
+   "to": "keep-floors",
+   "rect": [
+    50.6,
+    17.0,
+    2.4,
+    2.6
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "donjon-ground",
+   "to": null,
+   "rect": [
+    48.9,
+    17.6,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-keep-bailey",
+   "to": "keep-bailey",
+   "rect": [
+    28.0,
+    44.4,
+    4.0,
+    1.6
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "building b02 (unnamed): use guessed as a home",
+  "building b03 (unnamed): use guessed as a home",
+  "building b04 (unnamed): use guessed as a home",
+  "building b05 (unnamed): use guessed as a home"
+ ],
+ "seeded": true
+}

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7780
+Next free block: B7790
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -460,6 +460,7 @@ Next free block: B7780
 | B7750-B7759 | Improvement desk picks of 23 November 2026: Road and domain connections, the season turn, the daily PC tally (used B7750-B7755) | Actions, Creation, Sheets |
 | B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7762) | tools |
 | B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
+| B7780-B7789 | Map blueprints: every map planned as a true-size plan before its art (used B7780-B7784) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15748,3 +15749,42 @@ Reverse: put back `game.messages.contents.slice(-5)` in step 5 of tools/gate/gat
 Gates. The same order fault as B7734 and B7771 sat in six more gates, each taking two or more documents from one batch create by place: gatearms (the revolver and its cartridges, step 7; gatearms has an open flake, issue 2155), gatecarrynpc and gatecarryaftercare (the home and watch-house regions; gatecarrynpc step 9 is flaky alone), gatecyber (two optics), gategadgets (seeds, match, candle, watch) and gatecook (crowbar and saw). Each now makes them through a small madeInOrder helper that matches the results back to the data by name with the kit's inOrder. Batch creates of tokens and sounds, which have no names, are left as they are. The pass conditions are unchanged. Not yet run in Foundry.
 
 Reverse: replace `madeInOrder(X, type, data)` with `X.createEmbeddedDocuments(type, data)` in those six gates and drop the helper and the inOrder import.
+
+## B7780. Maps are planned as blueprints first (2026-11-23)
+tools/blueprint. Object art is paused, so every map is laid out now as a blueprint: one JSON plan per map
+(format wodx-blueprint 1) with its size in 5 ft squares, walls, doors, windows, roofed buildings, rooms, an object slot
+at true size for each piece of furniture, the Foundry lights, the exits and one row per era stage. catalogue.json
+holds every slot's object with its real size in feet and whether an approved picture exists, so a map never waits
+on art and art drops into the slots once approved. Seeds come from the testbed scene export, tools/pixelmap
+outputs or tools/mapgen sidecars; blueprint.py draws and checks them.
+
+Reverse: drop tools/blueprint; the maps keep their scenes and drawers.
+
+## B7781. One plan for a building, inside and out (2026-11-23)
+A building players walk into (the 16 private quarters and 14 workplaces of tier 3) has one plan. Its place on the
+open-world map and its close-up scene are drawn from that plan, so the two cannot disagree. Each tier 3 plan names
+the open-world map it stands on (`on`).
+
+Reverse: keep the close-up scenes as separate plans and drop `on`.
+
+## B7782. The order maps are drawn in (2026-11-23)
+By the first slice: tier 1 the first nights of Book 1 (14 maps), tier 2 the rest of Book 1 (10), tier 3 the
+buildings (31), tier 4 places Book 1 names that have no map yet (8), tier 5 the old 30 by 20 scenes the open-world
+maps replaced (no plan), tier 6 the wider world and pattern maps (held). inventory.json is the list.
+
+Reverse: reorder the tiers in inventory.json.
+
+## B7783. Later eras and the wider world wait for the slice, and come from mapgen (2026-11-23)
+Every plan carries the era stages from dark-ages to future-darkness (the eras.json profile ids), but only the Dark
+Medieval stage is drawn until the first slice passes (design doc section 14, step 5). Later stages are drawn as
+changes to the same plan, after the age-by-age rules of tools/mapgen/eras.py. Pattern maps for other regions and
+years come from tools/mapgen, whose sidecars seed a plan the same way.
+
+Reverse: draw later stages or tier 6 now by hand.
+
+## B7784. A building of unknown use starts as a home (2026-11-23)
+When a roofed building on a seeded map has no note saying what it is, it gets the home kit (hearth, bed, table,
+chest, bench, shelf, cask) and a line in the plan's `open` list. Every kit slot is marked auto, for the hand pass to
+move or replace.
+
+Reverse: leave such buildings empty until named.

@@ -1,0 +1,194 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "player-camp",
+ "name": "Player Camp",
+ "chronicle": "rothenstein",
+ "tier": 2,
+ "cells": [
+  36,
+  26
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/player-camp/player-camp.json",
+  "grid_px": 80
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    22.3,
+    17.5,
+    22.3,
+    15.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.7,
+    17.5,
+    11.3,
+    17.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.7,
+    9.5,
+    11.3,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.3,
+    7.5,
+    13.7,
+    7.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.7,
+    7.5,
+    24.7,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.3,
+    15.5,
+    24.7,
+    15.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.3,
+    7.5,
+    24.7,
+    7.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.7,
+    17.5,
+    22.3,
+    17.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.3,
+    17.5,
+    11.3,
+    15.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    11.3,
+    15.5,
+    13.7,
+    15.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.7,
+    7.5,
+    13.7,
+    9.5
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24.7,
+    9.5,
+    22.3,
+    9.5
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [],
+ "buildings": [],
+ "rooms": [],
+ "slots": [],
+ "lights": [
+  {
+   "x": 17.5,
+   "y": 12.5,
+   "kind": "fire",
+   "bright": 2.24,
+   "dim": 9.0,
+   "color": "#ff9a40"
+  }
+ ],
+ "labels": [
+  {
+   "x": 18.0,
+   "y": 13.0,
+   "text": "The camp clearing: lay it out anew wherever the party stops. Builder: Add Module"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true
+}

@@ -1,0 +1,352 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-barber",
+ "name": "The Barber-Surgeon's Shop",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/workplace-the-barber-surgeon-s-shop/workplace-the-barber-surgeon-s-shop.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    3.0,
+    14.0,
+    8.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    3.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    3.0,
+    15.0,
+    5.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    3.0,
+    27.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    14.0,
+    27.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    6.0,
+    15.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10.0,
+    14.0,
+    21.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    3.0,
+    27.0,
+    14.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    9.0,
+    11.0,
+    15.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    8.0,
+    20.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    21.0,
+    8.0,
+    27.0,
+    8.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    3.0,
+    11.0,
+    8.0,
+    11.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    8.0,
+    11.0,
+    9.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    20.0,
+    8.0,
+    21.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    15.0,
+    5.0,
+    15.0,
+    6.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    21.0,
+    14.0,
+    22.0,
+    14.0
+   ],
+   "kind": "door",
+   "locked": true
+  },
+  {
+   "c": [
+    8.0,
+    14.0,
+    10.0,
+    14.0
+   ],
+   "kind": "gate",
+   "locked": false
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-bath-room",
+   "label": "The bath room",
+   "rect": [
+    16.0,
+    8.4,
+    7.4,
+    5.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-operating-table",
+   "label": "The operating table",
+   "rect": [
+    17.4,
+    4.0,
+    4.0,
+    2.4
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-parlor",
+   "label": "The parlor",
+   "rect": [
+    3.4,
+    3.4,
+    11.6,
+    7.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-mortuary",
+   "label": "The mortuary",
+   "rect": [
+    22.8,
+    8.4,
+    4.2,
+    5.6
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-bath-room",
+   "obj": "washtub",
+   "label": "The bath room",
+   "rect": [
+    19.4,
+    10.9,
+    0.6,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "the-operating-table",
+   "obj": "workbench",
+   "label": "The operating table",
+   "rect": [
+    18.7,
+    4.95,
+    1.4,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 21.0,
+   "y": 12.8,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.86,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 3.6,
+   "y": 7.0,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 3.72,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 9.0,
+   "y": 6.6,
+   "kind": "fire",
+   "bright": 0.42,
+   "dim": 4.86,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 19.0,
+   "y": 4.0,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.58,
+   "color": "#ffe9a8"
+  },
+  {
+   "x": 3.6,
+   "y": 7.0,
+   "kind": "fire",
+   "bright": 1.0,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 14.6,
+   "text": "GM: The barber-surgeon's shop...."
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "lt-market"
+}

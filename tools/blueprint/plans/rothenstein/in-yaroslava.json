@@ -1,0 +1,321 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "in-yaroslava",
+ "name": "Baba Yaroslava's House",
+ "chronicle": "rothenstein",
+ "tier": 3,
+ "cells": [
+  30,
+  20
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "foundry-scene-export",
+  "file": "maps-ref/scenes-export/trespass-baba-yaroslava-s-house/trespass-baba-yaroslava-s-house.json",
+  "grid_px": 70
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [
+  {
+   "c": [
+    25.0,
+    11.0,
+    27.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    11.0,
+    24.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    8.0,
+    22.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    3.0,
+    22.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    3.0,
+    22.0,
+    7.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    3.0,
+    22.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    13.0,
+    11.0,
+    22.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    27.0,
+    3.0,
+    27.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.0,
+    3.0,
+    27.0,
+    3.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    3.0,
+    6.0,
+    11.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6.0,
+    11.0,
+    12.0,
+    11.0
+   ],
+   "kind": "solid"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    22.0,
+    7.0,
+    22.0,
+    8.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.0,
+    11.0,
+    13.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    24.0,
+    11.0,
+    25.0,
+    11.0
+   ],
+   "kind": "door",
+   "locked": true
+  }
+ ],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "the-store-room",
+   "label": "The store room",
+   "rect": [
+    22.2,
+    3.2,
+    4.8,
+    7.6
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-carved-chair",
+   "label": "The carved chair",
+   "rect": [
+    14.6,
+    8.2,
+    1.0,
+    1.0
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-icon-corner",
+   "label": "The icon corner",
+   "rect": [
+    18.6,
+    3.3,
+    2.8,
+    1.1
+   ],
+   "use": ""
+  },
+  {
+   "id": "the-loom",
+   "label": "The loom",
+   "rect": [
+    7.0,
+    8.8,
+    3.5,
+    1.6
+   ],
+   "use": ""
+  }
+ ],
+ "slots": [
+  {
+   "id": "the-carved-chair",
+   "obj": "chair",
+   "label": "The carved chair",
+   "rect": [
+    14.85,
+    8.45,
+    0.5,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": true
+  },
+  {
+   "id": "the-icon-corner",
+   "obj": "crucifix",
+   "label": "The icon corner",
+   "rect": [
+    19.8,
+    3.75,
+    0.4,
+    0.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  },
+  {
+   "id": "the-loom",
+   "obj": "loom",
+   "label": "The loom",
+   "rect": [
+    7.85,
+    9.0,
+    1.8,
+    1.2
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": true
+  }
+ ],
+ "lights": [
+  {
+   "x": 8.2,
+   "y": 5.2,
+   "kind": "fire",
+   "bright": 0.72,
+   "dim": 6.0,
+   "color": "#ffb35a"
+  },
+  {
+   "x": 20.5,
+   "y": 3.8,
+   "kind": "fire",
+   "bright": 0.14,
+   "dim": 2.86,
+   "color": "#ff9a4a"
+  },
+  {
+   "x": 8.2,
+   "y": 5.286,
+   "kind": "fire",
+   "bright": 0.58,
+   "dim": 4.28,
+   "color": "#ffb35a"
+  }
+ ],
+ "labels": [
+  {
+   "x": 14.0,
+   "y": 11.4,
+   "text": "GM: The elder's house. A child or two"
+  }
+ ],
+ "exits": [],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true,
+ "on": "dolany"
+}

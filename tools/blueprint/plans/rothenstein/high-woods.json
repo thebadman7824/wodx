@@ -1,0 +1,1191 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "high-woods",
+ "name": "The High Woods",
+ "chronicle": "rothenstein",
+ "tier": 2,
+ "cells": [
+  66,
+  48
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "pixelmap",
+  "drawer": "tools/pixelmap/maps/high_woods.py",
+  "seed": 1241,
+  "scene": "maps-ref/scenes-export/the-high-woods/the-high-woods.json"
+ },
+ "layers": [
+  "material",
+  "shadowlands",
+  "penumbra"
+ ],
+ "walls": [
+  {
+   "c": [
+    20.0,
+    4.6,
+    22.4,
+    4.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.2,
+    4.6,
+    24.8,
+    4.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    25.6,
+    4.6,
+    28.0,
+    4.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    10.6,
+    22.4,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    23.2,
+    10.6,
+    25.5,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26.5,
+    10.6,
+    28.0,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    4.6,
+    20.0,
+    7.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    20.0,
+    8.0,
+    20.0,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    4.6,
+    28.0,
+    7.2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28.0,
+    8.0,
+    28.0,
+    10.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.1,
+    37.6,
+    12.1,
+    39.8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    12.1,
+    40.8,
+    12.1,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    37.6,
+    15.0,
+    37.6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    43.0,
+    15.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    37.6,
+    8.0,
+    39.41
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8.0,
+    40.41,
+    8.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    37.6,
+    15.0,
+    39.66
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    15.0,
+    40.66,
+    15.0,
+    43.0
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    22.4,
+    4.6,
+    23.2,
+    4.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    24.8,
+    4.6,
+    25.6,
+    4.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    22.4,
+    10.6,
+    23.2,
+    10.6
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    28.0,
+    7.2,
+    28.0,
+    8.0
+   ],
+   "kind": "window"
+  },
+  {
+   "c": [
+    20.0,
+    7.2,
+    20.0,
+    8.0
+   ],
+   "kind": "window"
+  }
+ ],
+ "doors": [
+  {
+   "c": [
+    25.5,
+    10.6,
+    26.5,
+    10.6
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    12.1,
+    39.8,
+    12.1,
+    40.8
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    8.0,
+    39.41,
+    8.0,
+    40.41
+   ],
+   "kind": "door",
+   "locked": false
+  },
+  {
+   "c": [
+    15.0,
+    39.66,
+    15.0,
+    40.66
+   ],
+   "kind": "door",
+   "locked": false
+  }
+ ],
+ "buildings": [
+  {
+   "id": "egons-lodge-roof",
+   "label": "Egon's lodge",
+   "rect": [
+    19.47,
+    4.08,
+    9.062,
+    7.062
+   ],
+   "use": "",
+   "roof": true
+  },
+  {
+   "id": "game-reeves-lodge-roof",
+   "label": "game-reeve's lodge",
+   "rect": [
+    7.48,
+    37.08,
+    8.062,
+    6.45
+   ],
+   "use": "",
+   "roof": true
+  }
+ ],
+ "rooms": [
+  {
+   "id": "egon-s-lodge-home",
+   "label": "Egon's lodge",
+   "rect": [
+    20.0,
+    4.6,
+    8.0,
+    6.0
+   ],
+   "use": "home"
+  },
+  {
+   "id": "game-reeve-s-lodge-home",
+   "label": "Game-reeve's lodge",
+   "rect": [
+    8.0,
+    37.6,
+    7.0,
+    5.4
+   ],
+   "use": "home"
+  }
+ ],
+ "slots": [
+  {
+   "id": "water-cask-egon-s-lodge",
+   "obj": "cask",
+   "label": "Water cask (Egon's lodge)",
+   "rect": [
+    26.455,
+    4.962,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "meal-cask-egon-s-lodge",
+   "obj": "cask",
+   "label": "Meal cask (Egon's lodge)",
+   "rect": [
+    27.253,
+    4.962,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-game-reeve-s-lodge",
+   "obj": "cask",
+   "label": "Water cask (game-reeve's lodge)",
+   "rect": [
+    14.403,
+    38.014,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.521,
+    38.017,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    19.09,
+    2.342,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-2",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    19.58,
+    2.342,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-3",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    6.176,
+    33.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-4",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    6.665,
+    33.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-5",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    16.133,
+    33.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-6",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    16.622,
+    33.938,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-7",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    13.08,
+    44.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-8",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    13.569,
+    44.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bed",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    20.35,
+    4.9,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "table",
+   "obj": "table",
+   "label": "table",
+   "rect": [
+    23.6,
+    5.0,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "water-cask-egon-s-lodge-2",
+   "obj": "cask",
+   "label": "Water cask (Egon's lodge)",
+   "rect": [
+    26.325,
+    4.925,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "meal-cask-egon-s-lodge-2",
+   "obj": "cask",
+   "label": "Meal cask (Egon's lodge)",
+   "rect": [
+    27.125,
+    4.925,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth-egon-s-lodge",
+   "obj": "hearth",
+   "label": "hearth (egon's lodge)",
+   "rect": [
+    23.52,
+    7.12,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "stools-by-the-fire",
+   "obj": "stool",
+   "label": "stools by the fire",
+   "rect": [
+    23.85,
+    8.25,
+    0.3,
+    0.3
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "shelf",
+   "obj": "shelf",
+   "label": "shelf",
+   "rect": [
+    20.0,
+    7.575,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "hides-drying-on-racks",
+   "obj": "rack",
+   "label": "hides drying on racks",
+   "rect": [
+    22.8,
+    12.5,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "chopping-block",
+   "obj": "chopping-block",
+   "label": "chopping block",
+   "rect": [
+    27.4,
+    11.6,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile",
+   "obj": "woodpile",
+   "label": "woodpile",
+   "rect": [
+    28.45,
+    9.6,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    18.6,
+    14.9,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hearth-game-reeve-s-lodge",
+   "obj": "hearth",
+   "label": "hearth (game-reeve's lodge)",
+   "rect": [
+    9.57,
+    41.8,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "table-2",
+   "obj": "table",
+   "label": "table",
+   "rect": [
+    9.1,
+    38.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "shelf-2",
+   "obj": "shelf",
+   "label": "shelf",
+   "rect": [
+    11.2,
+    38.575,
+    1.0,
+    0.25
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "bed-2",
+   "obj": "bed-box",
+   "label": "bed",
+   "rect": [
+    13.85,
+    41.4,
+    0.9,
+    1.4
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "chest",
+   "rect": [
+    12.4,
+    37.9,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "water-cask-game-reeve-s-lodge-2",
+   "obj": "cask",
+   "label": "Water cask (game-reeve's lodge)",
+   "rect": [
+    14.275,
+    37.975,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "woodpile-2",
+   "obj": "woodpile",
+   "label": "woodpile",
+   "rect": [
+    9.6,
+    44.4,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-2",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    55.6,
+    9.2,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-3",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    43.6,
+    23.8,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-4",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    39.8,
+    40.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-5",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    18.8,
+    24.2,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-6",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    60.0,
+    21.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-7",
+   "obj": "boulder",
+   "label": "boulder",
+   "rect": [
+    2.8,
+    29.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-2",
+   "obj": "sack",
+   "label": "Sack",
+   "rect": [
+    13.525,
+    37.95,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-2",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    19.1,
+    2.23,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-3",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    19.59,
+    2.23,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-4",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    6.19,
+    33.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-5",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    6.68,
+    33.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-6",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    16.14,
+    33.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-7",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    16.63,
+    33.82,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-8",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    13.09,
+    44.68,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-9",
+   "obj": "crate",
+   "label": "Crate",
+   "rect": [
+    13.58,
+    44.68,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 24.02,
+   "y": 7.62,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 10.07,
+   "y": 42.3,
+   "kind": "fire",
+   "bright": 1,
+   "dim": 5,
+   "color": "#ff9a40"
+  }
+ ],
+ "labels": [
+  {
+   "x": 22.7,
+   "y": 10.0,
+   "text": "herbs drying"
+  },
+  {
+   "x": 26.15,
+   "y": 6.9,
+   "text": "wolf pelt on the floor"
+  },
+  {
+   "x": 22.0,
+   "y": 8.85,
+   "text": "deer hide on the floor"
+  },
+  {
+   "x": 27.4,
+   "y": 8.7,
+   "text": "basket"
+  },
+  {
+   "x": 34.0,
+   "y": 16.3,
+   "text": "rope stretched low across the path"
+  },
+  {
+   "x": 28.62,
+   "y": 7.6,
+   "text": "cow-bell on a rope"
+  },
+  {
+   "x": 29.4,
+   "y": 8.6,
+   "text": "gnawed bones"
+  },
+  {
+   "x": 18.9,
+   "y": 12.3,
+   "text": "gnawed bones"
+  },
+  {
+   "x": 7.6,
+   "y": 10.6,
+   "text": "wolf den under the rocks"
+  },
+  {
+   "x": 9.0,
+   "y": 13.2,
+   "text": "bones by the den"
+  },
+  {
+   "x": 8.5,
+   "y": 41.4,
+   "text": "bow and quiver on the wall"
+  },
+  {
+   "x": 12.9,
+   "y": 42.15,
+   "text": "fox pelt"
+  },
+  {
+   "x": 10.6,
+   "y": 35.6,
+   "text": "hides drying on a rack"
+  },
+  {
+   "x": 51.6,
+   "y": 34.6,
+   "text": "muddy wallow, churned by a boar"
+  },
+  {
+   "x": 54.0,
+   "y": 31.0,
+   "text": "blackthorn thicket"
+  },
+  {
+   "x": 55.7,
+   "y": 17.4,
+   "text": "fallen log"
+  },
+  {
+   "x": 59.1,
+   "y": 8.8,
+   "text": "fallen log"
+  },
+  {
+   "x": 34.0,
+   "y": 16.3,
+   "text": "A rope across the path, tied to a cow-bell at the lodge. Egon hears every visito"
+  },
+  {
+   "x": 7.0,
+   "y": 10.6,
+   "text": "Gray Alpha lives here: the wolf den under the rocks. The pack is never far."
+  },
+  {
+   "x": 52.0,
+   "y": 34.0,
+   "text": "Old Tusk lives here: the blackthorn thicket and its wallow. Tracks the size of a"
+  },
+  {
+   "x": 31.0,
+   "y": 14.6,
+   "text": "A pit trap under a lattice of sticks and leaves (Perception to spot, Dexterity +"
+  }
+ ],
+ "exits": [
+  {
+   "kind": "arrive",
+   "name": "from-old-grove",
+   "to": null,
+   "rect": [
+    45.3,
+    44.1,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-mountain-trail",
+   "to": "mountain-trail",
+   "rect": [
+    64.6,
+    8.8,
+    1.4,
+    2.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-dolany",
+   "to": null,
+   "rect": [
+    19.3,
+    44.1,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "arrive",
+   "name": "from-mountain-trail",
+   "to": null,
+   "rect": [
+    62.1,
+    9.3,
+    1.4,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-old-grove",
+   "to": "old-grove",
+   "rect": [
+    44.9,
+    46.6,
+    2.2,
+    1.4
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-dolany",
+   "to": "dolany",
+   "rect": [
+    18.7,
+    46.6,
+    2.6,
+    1.4
+   ]
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [],
+ "seeded": true
+}
