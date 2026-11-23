@@ -72,6 +72,8 @@ export function countOf(count = {}, ctx = {}) {
     case "rage+gnosis-spent": k = (n(ctx.rageSpent) + n(ctx.gnosisSpent)) || 1; break;
     case "willpower-spent": k = n(ctx.willpowerSpent) || 1; break;
     case "blood-spent": k = n(ctx.bloodSpent) || n(ctx.successes); break;
+    // B7672: one for each dot of the summoner's Rage (a demon's Summon Hellhounds, V20 Dark Ages p. 402)
+    case "rage": k = n(ctx.rage); break;
     default: k = n(ctx.successes);
   }
   if ( c.by !== "fixed" && c.mult ) k = c.mult < 1 ? Math.ceil(k * c.mult) : k * n(c.mult);

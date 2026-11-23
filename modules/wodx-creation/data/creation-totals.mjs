@@ -35,6 +35,20 @@ export const TOTALS = {
     start: ["Road = the two Road Virtues added", "Willpower = Courage", "Blood pool: one die + Domain + Herd, to the Generation's limit"],
     costRef: "pdf 159 / printed 158"
   },
+  // B7691: elder Cainites, Dark Ages Storytellers Companion (2002) printed p. 76, on Dark Ages: Vampire (2002)'s steps
+  // and bonus point costs (pdf 131-132; printed numbers from the book's offset of 3)
+  daelder: {
+    label: "Dark Ages: Vampire elder (Storytellers Companion 2002)", short: "Dark Ages elder", sheet: "Vampire", ref: "DASC 2002 pdf 77 / printed 76; DAV 2002 pdf 131–132 / printed 128–129",
+    attributes: [10, 7, 5], abilities: [20, 12, 8], abilityCap: 3, backgrounds: 15,
+    powers: [{key: "discipline", label: "Disciplines", dots: 10, note: "At least half of them Clan Disciplines."}],
+    virtues: 7, freebies: 30, flaws: 7,
+    costs: {attribute: 5, ability: 2, discipline: 7, background: 1, virtue: 2, road: 1, willpower: 1},
+    start: ["Road = the two Road Virtues added, less 1 for every 150 years active (2 for any elder)", "Willpower = Courage",
+      "Blood pool: two dice, to the Generation's limit", "Generation: ninth, each dot of the Background one lower",
+      "201-350 years undead; the Storyteller may add 15 bonus points for every 150 years active (the Road already pays for them)"],
+    elder: {baseGeneration: 9, roadPer: 150, bonusPer: 15, freeVirtueDots: 1},
+    costRef: "DAV 2002 pdf 132 / printed 129"
+  },
   ghoul: {
     label: "V20 Ghouls and Revenants: ghoul", short: "Ghoul", sheet: "Mortal", ref: "V20 G&R pdf 117 / printed 116",
     attributes: [6, 4, 3], abilities: [11, 7, 4], abilityCap: 3, backgrounds: 5,

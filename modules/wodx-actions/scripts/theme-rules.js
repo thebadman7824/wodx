@@ -36,10 +36,10 @@ export const INTENTS = [
 /** Per line: each intent's buttons, most used first; "scene" is the strip at the foot of the menu. */
 export const MENU_PLAN = {
     kindred: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie"],
-        resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin"],
-        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith"],
-        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise", "api:infernalFlame"],
+        resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
+        recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA", "api:maturation"],
+        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent", "api:infernal"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     wraith: {
@@ -50,23 +50,23 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:wraith"]
     },
     hunter: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:hunterPower", "api:hunterVirtue", "api:trueFaith", "api:prayer", "uses:conviction", "api:numina", "api:hedgeMagic", "api:relic", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:hunterPower", "api:hunterVirtue", "api:trueFaith", "api:prayer", "uses:conviction", "api:numina", "api:hedgeMagic", "api:relic", "api:seduction", "api:exorcise"],
         resist: ["api:sinGod", "api:hazard"],
         recover: ["api:healing", "uses:willpower", "api:bankConviction"],
-        st: ["api:imbue"],
+        st: ["api:imbue", "api:holyArtifact"],
         scene: ["api:hunterSheet", "api:endScene", "api:innerVoice", "api:voices", "rules:mortal"]
     },
     ghoul: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "uses:blood", "api:ghoulBlood", "api:seduction", "api:bloodOath"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "uses:blood", "api:ghoulBlood", "api:seduction", "api:bloodOath", "api:exorcise"],
         resist: ["api:frenzy", "api:hazard"],
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:ghoul"]
     },
     mortal: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk", "api:exorcise"],
         resist: ["api:hazard"],
-        recover: ["api:healing", "uses:willpower"],
-        st: ["api:imbue"],
+        recover: ["api:healing", "uses:willpower", "api:domainDA"],
+        st: ["api:imbue", "api:holyArtifact", "api:fealty", "api:domainEvent"],
         scene: ["api:endScene", "api:voices", "rules:mortal"]
     },
     lupine: {
@@ -93,6 +93,12 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
     /** Dark Ages: Fae (3.8.0): the Dominions, the Mists and Weaving in place of Glamour. */
+    ghostDA: {
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:ghostManifest", "api:ghostSight", "uses:pathos"],
+        resist: ["api:hazard"],
+        recover: ["uses:willpower"],
+        scene: ["api:endScene", "api:voices", "rules:ghostDA"]
+    },
     faeDA: {
         act: ["action", "api:quickCheck", "api:withPerson", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:treasureUse", "api:seduction"],
         resist: ["api:daEcho", "api:daColdIron", "api:hazard"],
@@ -158,6 +164,17 @@ export const DESC = {
     "api:useDiscipline": "Use a Discipline power: its roll, cost and effect",
     "api:setRoad": "The Road and its hierarchy of sins; change the Road or Path",
     "api:roadFaith": "The Road as a faith: rank, Mentor, Moments of Truth, standing, and leaving for another Road",
+    "api:exorcise": "Exorcism, a rite anyone can learn: Intelligence + Occult tears Essence from a demon or spirit until it is driven off (V20 Dark Ages)",
+    "api:sampleDemon": "Make one of the sample demons of V20 Dark Ages with its traits and Charms",
+    "api:maturation": "Spend the maturation points the years gave: traits already held, and a roll to raise Backgrounds (Dark Ages: Vampire 2002)",
+    "api:infernal": "Demonic pacts and infernal investments, and the Supplicium each one brings (Dark Ages Companion 2002)",
+    "api:infernalFlame": "Breathe the flame an infernal pact gave: Dexterity + Occult, three aggravated levels (Dark Ages Companion 2002)",
+    "api:domainDA": "The manor and its lands: the Domain's aspects, the people, settlements, Servants and staff (V20 Dark Ages Companion)",
+    "api:domainEvent": "Bring a domain event for a season: famine, invasion, pilgrims, an itinerant court...",
+    "api:fealty": "Swear, cut off or break an oath of fealty: the Anchor's dots pool with the vassal's own",
+    "api:holyArtifact": "Give the chosen sheet a Holy Artifact: its True Faith adds to theirs, to ten at most",
+    "api:malkRite": "A Malkavian Order's rite for the night: Enigmas (study, madness set aside) or Ecstasy (pain and passion, sharper sight)",
+    "api:glyconCheck": "A Warrior of Glycon offered power or a convert: Willpower at 6, or chase it above all else",
     "api:downtime": "Time between stories: domain, havens, projects",
     "api:frenzy": "The Beast rises: a frenzy check against anger or hunger",
     "api:rotschreck": "Fire or sunlight: the Red Fear",
@@ -273,6 +290,12 @@ export const DESC = {
     "api:daEcho": "Dark Ages: an Echo's roll against the fae's oaths; the level it reaches",
     "api:daColdIron": "Dark Ages: cold iron's aggravated wound and the Mists it costs",
     "rules:faeDA": "The Dark Ages fae rules at a glance, with page references",
+    "rules:ghostDA": "The Dark Ages ghost rules at a glance, with the page",
+    "api:ghostManifest": "Spend a point of Passion to touch the physical world for one turn",
+    "api:ghostSight": "Deathsight (the hand of death) or Lifesight (souls, as Auspex)",
+    "api:sampleSwarm": "Make an animal swarm from the V20 Dark Ages chart; it bites everyone inside it on its turn",
+    "api:spiderOn": "A spider on the chosen token: they roll to notice it, or its bite lands (poison as chosen)",
+    "api:sampleGhost": "Make the sample ghost of V20 Dark Ages, or mark the chosen Wraith sheet as a Dark Ages ghost",
     "api:c20Unleash": "Changeling 20th: 2 Glamour and a Nightmare; Glamour + Nightmare at 7; no Realm needed",
     "api:c20Invoke": "Changeling 20th: the Wyrd makes the mien and chimera real; the Autumn wards off the chimerical for an action",
     "api:c20Epiphany": "Changeling 20th: Reverie, Rapture, Ravaging, Revelry, Rhapsody or a night by a balefire",

@@ -454,6 +454,7 @@ Next free block: B7730
 | B7620-B7629 | The Main PC drives the merge train again after its repair (used B7620) | tools |
 | B7630-B7649 | Dark Ages depth desk: a Road's walkers in a town (used B7630-B7649) | NPC, Actions |
 | B7650-B7659 | gate7b pins the turn conductor; derange and powder name what changed (used B7651-B7656) | tools (gates) |
+| B7660-B7709 | V20 Dark Ages full check: gaps from the rule-by-rule pass (used B7660-B7703) | Creation, Chronicle, Actions, NPC, Combat |
 | B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
 <!-- decision-index:end -->
 
@@ -15393,6 +15394,224 @@ Reverse: take went and hospital out of the step 2 detail in tools/gate/gateafter
 Gates. On PR 2283's own run (job 2286) gate7b failed "Auto: the NPC moves round the wall on its turn": the runner (guard template, fears the supernatural) fled at once and had nowhere to run, because the hero the gate picked, the world's first player-owned actor, was a wraith, and wraiths are plainly inhuman to the NPC rules. The step is about the way round the wall, so the gate now picks the first player-owned actor that is not plainly inhuman (no wraith or spirit kind, no obvious power, no obvious flag), and falls back to the first one only when there is none. gate7b1 shares this cast. Not yet run in Foundry.
 
 Reverse: put back `game.actors.find(a => a.hasPlayerOwner && a.type !== "Group")` as the hero in cast() in tools/gate/gate7b.mjs.
+
+## B7660. A Nosferatu's Appearance is 0 and cannot be raised (2026-11-22)
+WoDX Creation (rules.mjs lockedAtZero, actor-data.mjs attributeLock, wizard.mjs, change-of-state.mjs, main.mjs). The full rule-by-rule check of V20 Dark Ages found the Nosferatu weakness unenforced: the book starts every Nosferatu at zero dots in Appearance, which cannot be raised (V20 Dark Ages p. 55). Now the Embrace sets it to 0, giving a sheet the clan takes its Appearance to 0, the creation wizard and the experience spend refuse a dot, and a sheet edit that raises it is put back. The Monstrous Flaw holds Appearance at 0 the same way (p. 421). Desk item fc-verify, the owner's pick "Verify now".
+
+Reverse: remove appearanceZero from the Nosferatu row in data/vampire.mjs and the updateActor hook in main.mjs.
+
+## B7661. Six bloodlines and the Ahrimanes, with the rules that set them apart (2026-11-22)
+WoDX Creation (data/vampire.mjs, actor-data.mjs, change-of-state.mjs), WoDX Chronicle (data/signatures.mjs), WoDX Actions (kindred-rules.js bloodlinePowerDiff, kindred.js, feeding-rules.js). The full check found seven bloodlines of V20 Dark Ages missing from the clan list: the Bonsam (p. 76), the Children of Osiris (p. 78), the Danava (p. 79), the Impundulu (p. 86), the Ramanga (p. 98), the Salubri watchers (p. 104) and the Valkyrjer of the Ahrimanes (p. 70). Each now has its Disciplines, its signature card and its weakness where a system can read it: a Child of Osiris cannot Embrace (p. 78) and prices the origin clan's Disciplines with Bardo; a Valkyrje's blood makes no ghoul and no bond (p. 71); a Ramanga's Presence and Aizina are one harder on another unless a piece of the victim is held (p. 98), with a box for it in the Use a Discipline window; an Impundulu's palate is a feeding rule (p. 87). The Ahrimanes close after 1492. The gate caught the new +1 being added to a frozen shared result when nothing resisted; the roll now works on a copy. Desk items fc-bloodlines ("Add all six") and the Ahrimanes date. Two house readings in PENDING-REVIEW.
+
+Reverse: remove the seven rows from CLANS and BLOODLINES, bloodlinePowerDiff and its call, the piece box, the impundulu feeding rule, the noEmbrace and noBondNoGhoul checks.
+
+## B7662. Flight, the lesser paths, Genius Loci, three Necromancy rituals and the Gargoyle Rituals (2026-11-22)
+WoDX Actions (data/disciplines-daw.json, path-effects.js, power-keywords.js, book-rituals.js, kindred-rules.js gargoyleRitual, kindred.js). The full check found these V20 Dark Ages powers absent: Flight, the Gargoyle Discipline (p. 221, five levels of gliding and flying with load); the four lesser paths of Thaumaturgy, Creatio Ignis, Iter Pernix, Potestas Motus and Potestas Tempestatum (pp. 297-299; the check first listed two, and the page check found four); the koldunic Genius Loci (p. 278); and the Necromancy rituals Bastone del Diavolo (p. 294), Treasures of Hades and Orphic Sojourn (p. 296). Each lesser path keeps one rule for all its levels, shown in the window and on the card. Creatio Ignis puts its aggravated levels on the effects card (asked first), Potestas Tempestatum the weather, Genius Loci a sense. The Gargoyle Rituals sidebar (p. 309) marks Donning the Mask of Shadows, Mirror of Second Sight, Firewalker, Heart of Stone and Stone Slumber; a Gargoyle with one enchanted in wakes it from the Cast a ritual window for one blood, with no roll, for the scene. Desk item fc-powers ("Add all").
+
+Reverse: remove the 30 rows and rules.lesser from disciplines-daw.json, their PATH_EFFECTS and keywords, the three rituals, the gargoyle marks and the enchanted box.
+
+## B7663. Auspex overstimulation and sudden revelations (2026-11-22)
+WoDX Actions (kindred-rules.js overstimulation, revelationDiff; kindred.js). The two Auspex rules of V20 Dark Ages pp. 194-195 had no system. Every Auspex card now carries two buttons: "Overstimulated?" rolls Willpower at 4 plus the stimulus's strength, and on a failure puts Overstimulated (-2 dice on anything but the stimulus) on the token for 10 minus Willpower turns, at least one; "Sudden revelation" lets the Storyteller roll the Auspex dots in secret at 4 to 9 and note the glimpse, whispered to the Storyteller. Desk item fc-powers ("Add all").
+
+Reverse: remove the two buttons and their handlers, overstimulate and suddenRevelation.
+
+## B7664. The 23 combination Disciplines of V20 Dark Ages (2026-11-22)
+WoDX Actions (data/rules/vampire/combinations-v20da.json, kindred.js loadData and the Use a Discipline window). V20 Dark Ages pp. 312-317 give 23 combination Disciplines, from Arsenal of Flesh and Bone to True Love's Face; WoDX had none of them (its 82 combinations are V20 Lore of the Clans, B7092). They now join the Dark Ages library in the B7092 shape: a row is offered when the sheet meets every Discipline and level it needs, its keywords go to the effects card, and the window shows the book's experience cost. Glare of Lies takes any Valeren; the Salubri powers name their branch. The book's rule that a combination with Dominate cannot reach a lower Generation is in Aura of Inescapable Truth's text. As with B7092, the power is offered once the dots are there and the Storyteller takes the experience: a house reading in PENDING-REVIEW. Desk item fc-combos ("Add all 23").
+
+Reverse: delete combinations-v20da.json and its loadData merge.
+
+## B7665. The 80 Merits and Flaws of V20 Dark Ages, checked one by one (2026-11-22)
+WoDX Chronicle (data/trait-lines.mjs DA_MERITS_FLAWS, daTable, eleven new rows; trait-effects.mjs SHOWS; trait-effects-more.mjs), WoDX Creation (wizard-rules.mjs meritOptions, lifepath.mjs), WoDX Actions (kindred-rules.js flawPowerDiff, kindred.js), WoDX Targeting (tags for the B7662 powers). Each of the 80 Merits and Flaws of V20 Dark Ages pp. 420-427 was matched to a WoDX row. Eleven had none and are added: Unclean, Impaired Sense, Ethical Prohibition, Debt of Gratitude, Apostate, Marked for Death, Outspoken Heretic, Nameless, Unlucky, Thirteenth Generation and Harbinger of the Abyss. Rivalry and Oathbreaker were held only as Mage rows and now reach vampires and ghouls. Four Dark Ages costs differ from V20 and now follow the book in the Dark Ages: Child 4, Lucky 1 to 5, Unbondable 3, Can't Cross Running Water 4. A Dark Ages vampire's creation (the wizard and the lifepath) now offers these 80, at these costs, and no V20-only rows. Effects where a system can read them: Impaired Sense +3 on that sense's rolls, Marked for Death -1 die on a Mental roll the Storyteller names, Outspoken Heretic up to +3 with the devout, Harbinger of the Abyss -2 on Intimidation and the frost and unease others sense, Unclean's sores to the eye, and Thirteenth Generation +1 on every Discipline roll; the rest are cards. Desk item fc-merits ("Add the ten and check all 80"; the check found eleven, plus the two Mage-only rows).
+
+Reverse: drop daTable from meritOptions and lifepath, and the eleven rows.
+
+## B7666. The staked vampire withers (2026-11-23)
+WoDX Actions (kindred-rules.js stakedNight, witheredMayRise; main.js newNight and torpor). V20 Dark Ages p. 354: a staked vampire still spends blood at the usual rate, and once the blood is gone the body dries and withers, and by the seventh day it mummifies into torpor. WoDX's New Night skipped no one for a stake and had no withering. New Night now spends a staked vampire's one blood point; with none, it marks one health level instead; at the seventh marked level it puts the vampire in torpor marked withered, and Rise refuses until blood has healed the body back to Injured (three or fewer levels). The Storyteller's Wake still works. The levels are lethal: a house reading in PENDING-REVIEW. Desk item fc-staked.
+
+Reverse: remove the staked block in newNight, the withered check in torpor, and the two rules.
+
+## B7667. Becoming Mortal (2026-11-23)
+WoDX Creation (states.mjs becomeMortal, becomeMortalDialog; states-rules.mjs mortalAgain, MORTAL_CATALYSTS; the api). V20 Dark Ages pp. 359-360 tell of Cainites who became mortal again, through slaying the sire, true love or an unselfish sacrifice, and leave the truth to the Storyteller. WoDX had no way to do it. The Storyteller's Becoming mortal window, in the shape of the other changes of state, makes a Mortal sheet from the vampire's: Attributes, Abilities, Virtues, Willpower and story stay, the Road's rating becomes Humanity, Disciplines are removed, and the vampire sheet is kept in its own folder with the tokens moved over. The catalyst and a note go on the card and in the chronology. What carries over is a house reading in PENDING-REVIEW. Desk item fc-staked.
+
+Reverse: remove becomeMortal, becomeMortalDialog, mortalAgain and their api entries.
+
+## B7668. Fixes to the B7662 powers the full test run caught (2026-11-23)
+WoDX Actions (path-effects.js, book-rituals.js, turn-rules.js, turns.js). The full harness run found three faults in the B7662 powers that the targeted tests had missed. Iter Pernix and Potestas Motus only showed a card; they now carry the Move keyword, on the caster and on a target. Treasures of Hades was tagged a summoning with nothing to summon; it pulls a relic, so it is a Make. Two book rules act each turn and had no system: High Winds (p. 298) now has everyone within 30 yards of the caster roll Dexterity at 6 on the caster's turn or be knocked down, through a new area roll in the each-turn rules; Levitation (p. 297) lets an unwilling one lifted roll Willpower each turn against the caster's Willpower and break free, in the shape of B7093. The 30 yards is a house reading in PENDING-REVIEW. Desk item fc-powers ("Add all").
+
+Reverse: put N("move") back on the two paths and "summon" on the ritual, and remove the high winds and levitation records and areaRolls.
+
+## B7669. The Roads of Appendix B: Blood, the Abyss, Paradox, the Code of Samiel, Set and the Path of Apep (2026-11-23)
+WoDX Actions (data/roads-daw.json, kindred-rules.js roadFor and SIN_EVENTS, kindred.js), WoDX NPC (road-flock-rules.mjs), WoDX Creation (data/advance.mjs). V20 Dark Ages Appendix B, Apocrypha of the Clans, gives full hierarchies for six Roads that WoDX lacked: the Assamite Road of Blood (p. 432; aura Resolve, on Willpower rolls; Conviction and Self-Control), the Lasombra Road of the Abyss (p. 442), the Ravnos Road of Paradox (p. 445; aura Confidence; Conviction and Self-Control), the Salubri warriors' Code of Samiel with its Ethics of Vindication (pp. 447-448; Conscience and Self-Control), and the Setite Road of Set with its heretical Path of Apep (p. 449). Each is now a Road in the Road window, with its hierarchy in WoDX's own words, its sins from play where a hierarchy line names the act (frenzy on the Road of Blood, feeding kills on Paradox, lies on the Code), a local group for the town factions, and a V20 Path to become in later eras. The book gives no aura or Virtues for some: the Abyss takes the Road of Sin's, the Code of Samiel the Road of Heaven's aura, the Road of Set the Virtues of V20's Path of Typhon and the Road of Heaven's aura, the Path of Apep Conviction and Instinct; each is marked as a house reading in the window and in PENDING-REVIEW. Finding a Road by name now tries an exact name first, so "Road of Blood" is no longer read as the Road of Yasa (Bloodbrothers). Desk item fc-apocrypha.
+
+Reverse: remove the six entries from roads-daw.json, SIN_EVENTS, FLOCKS and ROAD_TO_PATH, and the exact-name pass in roadFor.
+
+## B7670. The Setite castes: Warriors of Glycon and Witches of Echidna (2026-11-23)
+WoDX Creation (data/vampire.mjs), WoDX Chronicle (data/signatures.mjs), WoDX Actions (kindred-rules.js isEchidna, isGlycon, echidnaVisage; main.js changeBlood, beastRoll, endScene; kindred.js glyconCheck; profile-menus.js). V20 Dark Ages p. 450 gives two Setite castes with their own Disciplines and weaknesses; the full check listed the Warriors' roll as "the Setite conversion roll". Both are now lines in creation and on the signature card. A Witch of Echidna's frenzy check also rolls Self-Control at the same difficulty; failing either, or any frenzy check for a Witch with Instinct, puts on Echidna's Visage, Appearance 0 for the scene. A Witch who uses or takes in blood in a scene loses one point more when it ends, unless the blood fed Thaumaturgy or a ritual. A Warrior of Glycon's "Power within reach" in the menu rolls Willpower at 6, and the card says a surrender must be taken. Echidna takes one point per scene, not one per spend: the book's example (two spent, three lost) fits both, a house reading in PENDING-REVIEW. Desk item fc-apocrypha.
+
+Reverse: remove the two rows, their signature rows, the Echidna steps in changeBlood, beastRoll and endScene, and glyconCheck.
+
+## B7671. The Malkavian Orders' Rites of Enigmas and Ecstasy (2026-11-23)
+WoDX Actions (kindred-rules.js MALK_RITES, malkRiteDiscDiff; kindred.js malkRite and Use a Discipline; profile-menus.js). V20 Dark Ages p. 444 gives the two Orders of Mystery a rite each, an hour and a Willpower point for the night. "Rite of the Orders (Malkavian)" in the menu rolls it: the Rite of Enigmas, Perception + Enigmas at 8, sets the main Derangement aside, adds three dice to Enigmas and makes Auspex and Dementation one harder; the Rite of Ecstasy makes them one easier and forbids Willpower against a Derangement. The night's rite shows on the token and the Use a Discipline card names its step. The book names no difficulty for the Ecstasy roll; WoDX uses 6, a house reading in PENDING-REVIEW. The Derangement and Enigmas parts are on the card for the Storyteller. Desk item fc-apocrypha.
+
+Reverse: remove MALK_RITES, malkRiteDiscDiff, malkRite and the menu entry.
+
+## B7672. Demons of V20 Dark Ages: the eight Charms, Exorcism and the three sample demons (2026-11-23)
+WoDX Actions (spirit-charms.js demon group, SAMPLE_DEMONS, demonActorData; charms.js answer, teleport, reap, harvest, wish, dpossess, exorcise, sampleDemon; power-mods.js standingOf; summon-specs.js and summon-rules.js "rage" count; effects.js; profile-menus.js, theme-rules.js, main.js), WoDX Combat (main.js: an immunity stops its harm). V20 Dark Ages pp. 400-402 make a demon a spirit of Hell with Willpower, Rage, Gnosis and Essence, the same four traits the W20 spirit Charms window already plays, so the demon Charms join it as a "Demon Charms" group. Answer (10 Essence) brings the demon beside a targeted caller, unbound. Immunity to Fire is always on: fire harm from a blow or a power does nothing (a Fallen's evocation of that name is untouched, since it is a power item and not a Charm). Teleportation costs one Essence and works only below a third of the full pool. Reap Essence gives the demon the target's Willpower left. Harvest Soul kills a mortal, gives Willpower + Perception + Intelligence + Wits + unspent experience as Essence, and marks the soul held. Wish costs 20, or 10 under a contract, and records the wish for the Storyteller to add. Summon Hellhounds (5 Essence) calls one hound for each dot of Rage. A demon's Possession (5 Essence) makes a mortal or vampire roll Willpower against the demon's Gnosis. Exorcism, in the mortal, hunter, ghoul and vampire menus, rolls Intelligence + Occult at 6 against the demon's Essence, one Essence a success, and at none it is driven out of any body it rides and kept from the place for a hundred years. The full check said four sample demons; the book has three (the Scapegoat, the Man at the Crossroads, the Horror), and the Storyteller can make each one. Damage to a demon fills its health levels, as the settled health-tracks ruling has it for every spirit.
+
+Reverse: remove the demon group and its helpers, the six charms.js cases, exorcise and sampleDemon, standingOf and the immune checks in WoDX Combat, the Hellhounds spec and the "rage" count.
+
+## B7673. Ghouls: frenzy only at five points, regrowing lost parts, and the clan's weakness in a human ghoul (2026-11-23)
+WoDX Actions (hunter-rules.js GHOUL_DA, REGROW, ghoulFrenzy, regrowOutcome; main.js frenzy; hunter.js ghoulBlood), WoDX Creation (animal-ghoul-rules.mjs HUMAN_MARKS, humanMark; animal-blood.mjs syncMark). V20 Dark Ages p. 400, read in every era: a ghoul with fewer than five points of vitae cannot frenzy, and with five or more resists two lower. A lost part grows back for 1, 2 or 3 blood by size, a Willpower point and Stamina at 8; a botch loses it for good. The lost part comes off the lasting changes record when it grows back. A human ghoul with five points now shows the domitor's clan weakness as a mark, as animal ghouls already did, in WoDX's own words from the clan pages; Brujah blood makes the ghoul's frenzy two harder. The sheet keeps one blood pool, so blood held stands for the domitor's points (house reading).
+
+Reverse: remove GHOUL_DA, REGROW and the helpers, the ghoul step in frenzy, the regrow option, HUMAN_MARKS and the human branch in syncMark.
+
+## B7674. The people of the book: the Storyteller characters of V20 Dark Ages as sheets (2026-11-23)
+WoDX Creation (data/vtda-people.mjs PEOPLE, GROUPS; book-people-rules.mjs planOf; book-people.mjs makeBookPerson, bookPeopleDialog; apps.mjs "People of the book"; API bookPeople). V20 Dark Ages pp. 383-396: the 23 mortals of the uncommon people, the nobility, the Church and the vampire hunters, and the three examples of the Faithful (Brother Martin, Marisa, the Saint of the Vine), with the book's Attributes, Abilities, Backgrounds, Willpower, Road, Virtues and True Faith. Each sheet carries a one-line description in WoDX's own words and the page. Book Abilities the sheet has go on the sheet (Crafts is the system's craft); the Dark Ages Secondary Abilities (Archery, Commerce, Hearth Wisdom, Legerdemain, Ride, Seneschal, Theology) become Secondary Ability items. Marisa is 13 in the book; WoDX makes the foundling a grown helper of the orphanage (the age floor).
+
+Reverse: remove vtda-people.mjs, book-people-rules.mjs, book-people.mjs, the button and the API entry.
+
+## B7675. Holy Artifacts: their True Faith in the holder's hands (2026-11-23)
+WoDX Actions (hunter-rules.js ARTIFACT_DA, HOLY_ARTIFACTS, artifactOf, faithWithArtifact; hunter.js faithOf, holyNote, holyArtifact, makeArtifact; menus and API holyArtifact, makeArtifact, faithOf). V20 Dark Ages pp. 394-395: an item flagged wodx-actions.holyArtifact (1 to 5) adds its dots to the holder's True Faith, to ten at most, and gives them to someone with none; nothing while the Storyteller marks the holder as straying from the light (flag artifactStrayed). With several, the highest counts. The Storyteller's tool makes the book's three (the Wedding Band of Raquel, the Pacifist's Ji, the Lost Yoni) or one of their own; the book says they cannot be made by hand, so the tool is the Storyteller's word that one has arisen.
+
+Reverse: remove the rules, the artifact step in faithOf, the tool and its menu rows.
+
+## B7676. Ghosts of V20 Dark Ages: Passion as blood, manifesting, Deathsight and Lifesight (2026-11-23)
+WoDX Actions (ghost-da-rules.js, ghost-da.js; main.js blood and changeBlood read Pathos for a flagged ghost; profile-menus.js MENUS.ghostDA; theme-rules.js; API ghostManifest, ghostSight, sampleGhost, ghosts). p. 403: a Wraith sheet flagged wodx-actions.daGhost spends Passion (the sheet's Pathos) as blood for its Disciplines, which work across the Shroud without manifesting; a point of Passion manifests it for one turn (the sample's Strength 3 while manifested); Deathsight and Lifesight are rolls with what the ghost sees. The book names a roll for Deathsight and no pool: Perception + Awareness at 6 (house). Lifesight is the aura reading of Auspex: Perception + Empathy at 8. The Masked Trickster comes from the Storyteller's tool, with Thaumaturgy's Creatio Ignis and Potestas Motus as V20's Lure of Flames and Movement of the Mind.
+
+Reverse: remove the two files, the Pathos branch in blood and changeBlood, the menu and the API rows.
+
+## B7677. Animal swarms (2026-11-23)
+WoDX Combat (swarm-rules.js, swarm.js; main.js applyDamage, the attack path, soakAndApply and rollInitiative). p. 399: a swarm is one token (a Creature flagged wodx-combat.swarm) from the book's chart. On its turn in a fight it rolls its damage at 6 against everyone whose token stands inside its token (4 against someone it has overrun); a dodge at 8 (the card's button) takes successes off and keeps full speed; three or more before soak knock the victim down and overrun them. Harm to it: no soak, a weapon at most one level a turn, fire and area harm in full; dispersed at its health (token hidden), wiped out at two more. It acts on the chart's Initiative. Small bugs bite bashing (the book's small, harmless insects); the rest lethal.
+
+Reverse: remove the two files and the swarm branches in main.js.
+
+## B7678. The spider (2026-11-23)
+WoDX Combat (swarm-rules.js SPIDER_DA, VENOM, spiderBite; swarm.js spider), WoDX Actions (menu row spiderOn). p. 399: Perception + Alertness at 7 to notice a spider; unnoticed, it bites; a poisonous bite does 1 to 3 lethal (the Storyteller picks) and takes 1 die off every roll for the scene, after Poison on p. 360. The book points to p. 301 for the poison; the poison rules are on p. 360.
+
+Reverse: remove the spider rules, the tool and the menu row.
+
+
+## B7679. The manor's aspects (2026-11-23)
+WoDX Actions (domain-da-rules.js, domain-da.js; menu "Domain and manor"). V20 Dark Ages Companion pp. 108-109: the Domain Background's dots split among Area (at least 1), Defense, Prosperity and Secret Ways, kept on the holder (flag wodx-actions.domainDA). The window refuses more aspect dots than the Domain has and says how many are left to place.
+
+Reverse: remove domain-da.js, domain-da-rules.js, the menu rows and the API rows.
+
+## B7680. The people of a domain (2026-11-23)
+WoDX Actions (domain-da-rules.js POPULACE, SETTLEMENTS, RETINUE, STAFF). pp. 110-112: the sheet's Herd stands for the Populace (households, people, square miles, levies from the table); a settlement's rating is held only while the Populace is large enough, and gives Resources and Influence of its own; Servants give a travelling retinue; staff (armigers, clergy, seneschals and the rest) have pools of 4 plus their dots, less one for each person past the first, ten at most.
+
+Reverse: as B7679.
+
+## B7681. Fealty (2026-11-23)
+WoDX Actions (domain-da.js swear, endOath, the "WoDX Fealty" journal; menu "Fealty (GM)"). p. 106: the vassal offers two dots for each dot the liege anchors (reputation may stand in, five at most); a liege lends at most half of a Background. Swearing raises the vassal's Background by the Anchor (pooled, ten at most); a liege who cuts a vassal off takes it back and loses a dot of that Background; a vassal who breaks the oath has broken their word (the Roads that count it ask).
+
+Reverse: remove the fealty functions and the journal.
+
+## B7682. Domain events (2026-11-23)
+WoDX Actions (domain-da-rules.js EVENTS, domain-da.js domainEvent, the updateWorldTime tick; menu "Domain event (GM)"). pp. 113-115: the ten events, chosen or rolled; each moves the Background or aspect it names for a season (91 days on the world clock) unless the book says it lasts until resolved or while the visitors stay; the Servants rebuild after a disaster as many dots as their own; an itinerant court needs Servants equal to the overlord's Status or Influence and hires the rest for 1 Resources. When the event ends the dots go back.
+
+Reverse: remove the events and the tick.
+
+## B7683. Maturation (2026-11-23)
+WoDX Actions (domain-da-rules.js maturationCost). p. 105: the next dot of a domain Background costs twice its current rating in experience (2 for the first), halved with Prosperity where the book allows it.
+
+Reverse: remove maturationCost.
+
+## B7684. What a domain does on rolls (2026-11-23)
+WoDX Actions (power-mods.js domainOf), WoDX Chronicle (trait-rules.mjs roll tags commerce and seneschal). pp. 109, 112: Prosperity takes its dots off the difficulty of the holder's Commerce rolls; Servants take theirs off Seneschal and Leadership rolls; Secret Ways take theirs off Stealth rolls in the scene marked as the manor. An event that moves an aspect moves the shift with it.
+
+Reverse: remove domainOf from effectsOf and the two roll tags.
+
+## B7685. Maturation points for the years (2026-11-23)
+WoDX Creation (maturation-rules.mjs, maturation.mjs, advance-rules.mjs, advance.mjs), WoDX Chronicle (house rule yearsMaturation, on). Dark Ages: Vampire (2002) pp. 166-167 and the Dark Ages Storytellers Companion (2002) pp. 71-72: Pass the Years gives a Dark Ages Cainite maturation points by the years (a point a year for 5, a point each 5 to 30, each 10 to 130, then each 20 and 25 and 30) and by how they were spent (active, in danger at half again, seclusion at half, research and practice with a point a decade for Knowledges or physical traits, torpor only with Willpower 7, Perception 4 and 500 years). For that character it stands in for the house experience for the years and the Background fade. Off, the house experience comes back.
+
+Reverse: switch yearsMaturation off, or remove adv.maturation from propose.
+
+## B7686. The Willpower roll each century (2026-11-23)
+WoDX Creation (maturation-rules.mjs risksAndRewards). DASC p. 72: each century (or the downtime when shorter) rolls Willpower at the activity's difficulty; successes add points, a botch costs a die of points (never in seclusion), and in danger no success costs a die too. Ordinary, research and practice years keep at least a point a century.
+
+Reverse: drop the roll from mature().
+
+## B7687. Background upkeep and Tempting Fate (2026-11-23)
+WoDX Creation (maturation-rules.mjs payUpkeep, temptingFate). DASC p. 73: each Background but Generation costs a point a century (two in seclusion, research or torpor), the highest rated paid first; one left unpaid loses a dot. A pooled anchor rated 6 or more costs double (p. 74). In danger each Background rolls Willpower at 7: a botch loses a dot, a failure bars raising it, a success lets it be raised at +1 difficulty.
+
+Reverse: drop upkeep and Tempting Fate from mature().
+
+## B7688. Spending maturation points (2026-11-23)
+WoDX Creation (maturation-rules.mjs costOf, mayBuy; maturation.mjs MaturationApp), WoDX Actions (Kindred menu "Maturation"). DAV p. 166, DASC p. 73: points buy only traits already held, a dot a trait a century at most. Attributes 5 (10 once the Cainite's age passes Willpower times 100), Abilities 2, Disciplines 3 plus a point each two centuries past the second and 1 more out of clan (a sorcerer's dot also raises a path), Virtues 2, Road 1 below Willpower else 2, Willpower 2. Points from research and practice pay only for their kind; torpor's pay mental traits at three quarters.
+
+Reverse: remove the window and the menu entry; the points stay on the sheet's flag.
+
+## B7689. Raising Backgrounds in downtime (2026-11-23)
+WoDX Creation (maturation-rules.mjs raiseBackground). DASC pp. 74-75: a Background already held may be raised with a roll of its rating at the book's difficulty (Allies 7, Contacts 6, Domain 7, Herd 6, Influence 8, Mentor 7, Resources 8, Retainers 6, Status 8), +1 for each attempt after the first, +1 after Tempting Fate, +1 for a big pooled anchor; one success adds a dot and more add more; a botch loses a dot. Generation and new Backgrounds are refused; none can be raised after seclusion, research or torpor.
+
+Reverse: remove the Background rows from the window.
+
+## B7690. The Road of Night (2026-11-23)
+WoDX Actions (roads-daw.json night, kindred-rules.js roadFor), WoDX NPC (road-flock-rules.mjs night), WoDX Creation (ROAD_TO_PATH night). Dark Ages Storytellers Companion (2002) pp. 28-30: Via Noctis, the Redeemers, with its aura (Guilt, on rolls to draw out secrets or stir remorse), Virtues (Conviction and Self-Control), ten sins in WoDX's own words, its parish led by the Father or Mother above, and the Path of Heavenly Abode, which walks the Road's hierarchy. Leaving the Dark Ages it becomes the Path of Night. No sin from play: its killing sin turns on a confession play does not record. Road names now match exactly, a path's and then a Road's, before any partial match, so the Road of Heaven is not read as the Path of Heavenly Abode.
+
+Reverse: remove the night entries.
+
+## B7691. Elder Cainites at creation (2026-11-23)
+WoDX Creation (creation-totals.mjs daelder, derived-rules.mjs). Dark Ages Storytellers Companion (2002) printed p. 76, on Dark Ages: Vampire (2002)'s steps and bonus point costs: Attributes 10/7/5, Abilities 20/12/8, 10 Disciplines (half at least of the clan), 15 Backgrounds, 7 Virtues, 30 bonus points; the Road less 2 for the years (1 more each 150 years active past 300, for 15 more bonus points each), blood pool two dice, Generation from ninth. The line is a choice in the creation wizard.
+
+Reverse: remove the daelder line.
+
+## B7692. The Sleep of Ages (2026-11-23)
+WoDX Creation (maturation-rules.mjs sleepOfAges, maturation.mjs). Dark Ages Storytellers Companion (2002) pp. 75-76: a Cainite past 500 years who spends a downtime awake rolls the Road at 8 for a point of Willpower; each success holds off torpor a decade more, a failure means voluntary torpor, a botch torpor and a Derangement. The card says which and the Maturation window shows it; the Storyteller puts the character to sleep. Also from p. 75's example: one Background roll each 50 years of the downtime carries no penalty, the +1 starting after those.
+
+Reverse: drop the roll from mature().
+
+## B7693. The Thirst of Caine (2026-11-23)
+WoDX Creation (maturation-rules.mjs thirstTriggers, thirstRoll), WoDX Chronicle (house rule yearsThirstOfCaine, off). DASC pp. 76-77, the book's systematic option: once a downtime of a century or more, Willpower at the number of triggers (2 at least); the sheet supplies Road 3 or less, the Road of the Beast, Metamorphosis or Blood, 500 years active and a Nature outside Architect, Caregiver, Cavalier and Martyr; the Storyteller adds the rest in the flag thirstTriggers. A failure leaves them craving Cainite vitae, a second failure or any botch needing it.
+
+Reverse: switch yearsThirstOfCaine off.
+
+## B7694. The Dark Ages Companion's maneuvers (2026-11-23)
+WoDX Combat (rules.js DA2002, da2002Why, da2002After, chokeTurn; main.js setting companion2002Maneuvers, on). Dark Ages Companion (2002) pp. 34-36, optional rules there: Choke Hold (difficulty 7, held by the throat, a health level a turn after the first that cannot be soaked, death after Stamina turns at Incapacitated, broken by a resisted Strength roll; Cainites only silenced), Gobbet Rend (8, Potence 2 or claws; damage not all soaked tears away a blood point), Joint Break (8, Strength + 2, Brawl 4 and Strength 2; any damage breaks the limb), Neck Snap (9, Strength + 3, two actions, Brawl 2 and Strength 2; the victim soaks with Strength too; any level through kills a mortal, paralyses a Cainite until healed, drops a fast healer to Incapacitated) and Tendon Slice (blades with Melee 4 and Dexterity 2, or fangs and claws with Brawl 4; two levels cut a wrist or an ankle). A player is stopped short of a prerequisite; the Storyteller is told. The harm suggestions leave these out.
+
+Reverse: switch companion2002Maneuvers off.
+
+## B7695. The Storytellers Companion's supporting characters (2026-11-23)
+WoDX Creation (data/dasc-templates.mjs, supporting-cast-rules.mjs, supporting-cast.mjs; a "Supporting characters" button on the Creation panel). Dark Ages Storytellers Companion (2002) chapter 4, pdf pp. 58-61 (printed pp. 57-60): the twenty templates (seven everyday mortals, six notable mortals, two ghouls, five Cainites) with the book's numbers, and the table of experienced and exceptional versions (dots added to Attributes, Abilities, Backgrounds and Disciplines; Cainites at the 10th or 8th Generation; a ghoul's Disciplines in Potence, a Cainite's in clan Disciplines). The book leaves the placing of the added dots to the Storyteller; WoDX adds one dot a pass to each trait the template already has, highest first, up to 5. The 2002 Abilities are read for V20 Dark Ages: Dodge as Athletics, Larceny as Legerdemain, Herbalism as Medicine; Linguistics stays as a Secondary Knowledge. The Road is the two moral Virtues added; a Cainite rolls one die of blood. Four book names become gender-neutral on the sheet (Craftsperson, Levy Archer, Wise One, Mercenary Foot Soldier), with the book's name in the notes.
+
+Reverse: remove the button and the three files.
+
+## B7696. Demonic pacts, infernal investments and the Supplicium (2026-11-23)
+WoDX Actions (infernal-rules.js, infernal.js; "Infernal pacts" for the Storyteller and "Breathe flame" in the Kindred menus), WoDX Combat (body-rules.js infernalClaws, infernalBarbs, infernalLimb), WoDX Creation (change-of-state.mjs giveVitae). Dark Ages Companion (2002) ch. 7, pp. 165-166 and 175-177, checked against the page images. A pact is rated 1 (Malice) to 10 (Soul Pact) by the service; its rating is points spent on investments: Armor 1 (a soak die against bashing and lethal each time, a point of Appearance every third), Claws 1 (+1 retractable), Flame 3 (three aggravated levels, dodged against Dexterity + Occult, +1 level for 2 more points), Flight 3 (wings, +1 barbed), Limbs 2, Poison 1 (+1 sacs); Attributes at the new level + 2, Abilities + 1, Disciplines + 3, one level a pact; a single power at its level + 1; Dark Thaumaturgy at the new level; a year of life a point; a possessed servant 1, a bound demon 2. Each pact, each purchase and each new level of Dark Thaumaturgy whispers a Supplicium card: the demon prevailing takes a Road point with no remorse roll, at 0 the character walks the Via Diabolis at 1 (WoDX: Road of Sin, Path of the Devil); on it a fall to 0 calls the last Supplicium (lost: the soul is taken and the demon has the body; won: back to 1). Whoever drinks the infernalist's poisoned blood soaks five levels for each point. Everything is kept in the flag wodx-actions.infernal.
+
+Reverse: remove the two menu entries, the three body features and the poison check.
+
+## B7697. Dark Thaumaturgy, Maleficia and Striga (2026-11-23)
+WoDX Actions (data/disciplines-daw.json, path-effects.js, book-rituals.js, kindred-rules.js darkBotchCost and darkNotes, kindred.js, infernal-rules.js DARK_PATHS and DARK_DISCIPLINES, infernal.js). Dark Ages Companion (2002) pp. 105-111, checked against the page images. The first full check named only the paths; the pages hold four paths (Rego Venalis, Video Nefas, Rego Dolor, Rego Manes), eleven rituals and two Disciplines (Maleficia, Striga). Each of the 30 powers is a library row with book "DAC 2002", its printed page, the roll the book names and a short summary in WoDX's words, and an effect spec on the effects card cited to the Companion. Path powers take one blood and a Willpower roll at level + 3; a botch takes a permanent Willpower point off the sheet (p. 105). Rego Manes is five rows, one for each rank of demon it calls; summonings, the shadow servant and Barrenness stay the Storyteller's. The rituals join the Dark Ages ritual set with a book of their own, which the ritual cards cite. The Infernal pacts window offers the four paths and the two Disciplines by name.
+
+Reverse: remove the 30 rows and rules.dark, the 30 effect specs, the 11 rituals, the two helpers and the two option lists.
+
+## B7698. The Dark Ages Companion's demons (2026-11-23)
+WoDX Creation (data/dac-demons.mjs, dac-demons-rules.mjs, dac-demons.mjs; "Demons" in the Storyteller's creation window; API dacDemons). Dark Ages Companion (2002) ch. 7, printed pp. 180-185, checked against the page images. Ten stat blocks: Kaiser, the Huntsman, Spite, the Star Daemon, Belteroth, the Black Monk, Jenny Green Teeth, Gergimoth, the Familiar and the Custodes. Each is made as a Creature with blood and Disciplines (as WoDX makes a vozhd), its Dark Thaumaturgy and Thaumaturgy paths as path items, the 2002 Abilities read in V20 Dark Ages terms (Dodge is Athletics, Larceny is Legerdemain, Acting and Music are Performance), and the book's health levels on the sheet's seven slots with the book's penalties. The attack, the page and WoDX's own description go in the notes. The 2002 path names are read as V20 Dark Ages names them (Rego Elementum is Potestas Elementorum, Rego Motus is Potestas Motus, Cre Ignem is Creatio Ignis, Rego Tempestas is Potestas Tempestatum); Rego Terram keeps its name.
+
+Reverse: remove the three files, the window button and the API entry.
+
+## B7699. The Dark Ages Companion's elder powers (2026-11-23)
+WoDX Actions (data/disciplines-daw.json, power-keywords.js). Dark Ages Companion (2002) ch. 4, printed pp. 78-104, read from the page images. 53 elder powers that V20 Dark Ages does not hold, across Animalism, Auspex, Celerity, Chimerstry, Daimoinon, Dementation, Dominate, Fortitude, Mortis, Obfuscate, Obtenebration, Potence, Presence, Protean, Quietus, Serpentis, Vicissitude, Abombwe, Ogham and Valeren. Each is a library row with elder true, book "DAC 2002", its printed page, the roll the book names where it names one, and a short summary in WoDX's words; each has effect keywords. Celerity, Fortitude and Potence alternates say they are taken instead of the next dot (pp. 79, 83, 88). Left out as the same power under V20 Dark Ages: Diabolic Lure and Infernal Servitor (Lure Diabolik, Demonic Servitor), Prison of the Mind, Blood Awakening, the 2002 Abombwe, Ogham and Valeren levels 1-5, Safe Passage, Aversion and Purification. Deimos (pp. 100-101) is left out: V20 Dark Ages gives the Lamia the Path of the Twilight Garden, which holds the same powers. Obtenebration 8 is named "Night Shades (servants)" so it is not mistaken for V20 Dark Ages' Obtenebration 4.
+
+Reverse: remove the 53 rows and their keywords.
+
+## B7700. The Dark Ages Companion's Thaumaturgy paths (2026-11-23)
+WoDX Actions (data/disciplines-daw.json, path-effects.js). Dark Ages Companion (2002) pp. 92-96: Thaumaturgical Alchemy, the Way of the Levinbolt, Prey on the Soul's Fear and the Path of Warding, five levels each. They use the book's path system: one blood and a Willpower roll at level + 3 (Glyph of Enlightenment at 7 and Secure the Sacred Domain at 8, as their pages say). Each row carries book "DAC 2002", and its effect spec cites "Dark Ages Companion (2002)". The Levinbolt's strikes are dice the target may dodge, so their harm waits for the Storyteller.
+
+Reverse: remove the 20 rows and the 20 effect specs.
+
+## B7701. The V20 Dark Ages Companion's Roads and Paths (2026-11-23)
+WoDX Actions (data/roads-daw.json, kindred.js). V20 Dark Ages Companion pp. 20, 70 and 83-84, read from the book text. The Path of the Pure (the Katharoi's Path of the Road of Heaven, p. 20: its own ten sins, the Road's aura, Virtues and ethics), the Path of the Archangel (a Path of the Road of Heaven with an aura of Melancholia, p. 70), and the Road of Zarathustra as the book's two Roads (pp. 83-84): the Road of Angra Mainyu (the Path of Apep's chart with three rungs replaced, Conviction and Self-Control, an aura of Corruption) and the Road of Ahura Mazda (the Road of Humanity's chart with three sins added, Conviction and Self-Control, an aura of Goodness). The Road window now shows a Path's own aura and book where it has one. The Guides of Frashokereti's extra sin (a sidebar on p. 85) is left out: it is one cult's variant, not a Road.
+Reverse: remove the four entries and the two lines in kindred.js.
+
+## B7702. The V20 Dark Ages Companion's monsters (2026-11-23)
+WoDX Creation (data/v20dac-monsters.mjs, dac-demons-rules.mjs, dac-demons.mjs, main.mjs). V20 Dark Ages Companion pp. 35, 48, 66 and 97, from the book text: the Black Dog, the Fossegrim, the Kallikantzaros and the Pishacha, made from the Demons window into a folder of their own. The book gives them no health levels and no attack, so they keep the sheet's seven levels and fight with Brawl; Equivalent Disciplines are made as Disciplines, and the limits on them (only some powers, only on holy days) are in the notes with each one's Road rating and rules.
+Reverse: remove the data file, the ALL list and the monster lines in the plan and the window.
+
+## B7703. The Zoroastrian rituals (2026-11-23)
+WoDX Actions (book-rituals.js). V20 Dark Ages Companion pp. 85-86: Guardian's Gaze, Vengeance of Angra Mainyu, Tower of Silence, Yasna's Protection and Padyab, in the Cast a ritual window as a group of their own, in WoDX's words.
+Reverse: remove the five rows.
 
 ## B7720. The New PC runs lane 10 with its own runner (2026-11-23)
 The New PC (NEW_PC_LEBRUN, an HP OMEN 35L with 12 cores, 64 GB and an RTX 5080) gets lane 10 on port 30100 under

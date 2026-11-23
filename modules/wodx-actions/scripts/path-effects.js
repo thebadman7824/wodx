@@ -17,7 +17,14 @@ const K = "koldunic-sorcery-the-", NE = "necromancy-the-", TH = "thaumaturgy-pot
 /** B6858: a hedge curse's length by successes (HH2 p. 73): the next action, a scene, a day, a week, a month, a year. */
 const HH_CURSE = [["the next action", {kind: "rounds", rounds: 1}], ["one scene", {kind: "scene"}], ["one day", {kind: "time", seconds: DAY}],
   ["one week", {kind: "time", seconds: 7 * DAY}], ["one month", {kind: "time", seconds: 30 * DAY}], ["up to a year", {kind: "time", seconds: 365 * DAY}]];
+const DT = "dark-thaumaturgy-";
+/** B7697: Name the Crime's urge by successes, a turn to a month (DAC 2002 p. 105); a Minor Curse's hours (p. 109). */
+const NAME_CRIME = [["one turn", {kind: "rounds", rounds: 1}], ["one hour", 3600], ["one night", DAY], ["one week", 7 * DAY], ["one month", 30 * DAY]];
+const HOURS = [1, 2, 3, 4, 5].map(h => [`${h} hour${h === 1 ? "" : "s"}`, h * 3600]);
 const CURSE_LADDER = [["one night", DAY], ["one week", 7 * DAY], ["one month", 30 * DAY], ["one season", 91 * DAY], ["one year", 365 * DAY]];
+/** B7700: the Companion's Thaumaturgy paths (DAC 2002 pp. 92-96); Wrath of God's dread by successes (p. 94). */
+const TA = "thaumaturgy-thaumaturgical-alchemy-", LB = "thaumaturgy-way-of-the-levinbolt-", SF = "thaumaturgy-prey-on-the-souls-fear-", WD = "thaumaturgy-path-of-warding-";
+const WRATH = [["one turn", {kind: "rounds", rounds: 1}], ["five minutes", 300], ["one scene", {kind: "scene"}], ["several hours", 3 * 3600], ["one night", DAY]];
 export const PATH_EFFECTS = {
   // Koldunic Sorcery (pp. 275-278)
   [`${K}transylvanian-kraina-burebistas-throne`]: N(),
@@ -76,7 +83,47 @@ export const PATH_EFFECTS = {
   "valeren-watcher-souls-breath": [P("blood", 1, "self"), H("harm", 1, "lethal")],
   "valeren-warrior-song-of-the-blooded": T("boost", "Song of the Blooded", "scene", "self", {on: "physical", dice: 3}),
   "abyss-mysticism-cry-that-slays-the-light": KW("light", "self", {dark: true}),
-  [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true})
+  [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true}),
+  // B7662: the lesser paths and Genius Loci, from the full check of V20 Dark Ages (pp. 278, 297-299)
+  ...Object.fromEntries([1, 1, 2, 2, 3].map((lv, i) => [`thaumaturgy-creatio-ignis-${i + 1}`, H("harm", lv, "aggravated", {fixed: true, ask: true})])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-iter-pernix-${l}`, KW("move", "self")])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-potestas-motus-${l}`, KW("move", "one")])),
+  ...Object.fromEntries(["fog", "rain", "wind", "storm", "storm"].map((w, i) => [`thaumaturgy-potestas-tempestatum-${i + 1}`, KW("weather", "self", {weather: w})])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`koldunic-sorcery-genius-loci-${l}`, T("sense", "Genius Loci", "scene", "self")])),
+  // B7697: Dark Thaumaturgy, Maleficia and Striga, Dark Ages Companion (2002) pp. 105-111 (each row carries book "DAC 2002")
+  [`${DT}rego-venalis-nights-terror`]: T("boost", "Night's Terror", "night", "one", {sap: true, on: "all"}),
+  [`${DT}rego-venalis-poison-heart`]: KW("sway", "one"), [`${DT}rego-venalis-fool-the-hearts-eye`]: KW("illusion", "self"),
+  [`${DT}rego-venalis-name-the-crime`]: T("sway", "Name the Crime", {ladder: NAME_CRIME}, "one"), [`${DT}rego-venalis-unleash-the-dark-soul`]: S("summon"),
+  [`${DT}video-nefas-see-the-unseen`]: [T("sight", "See the Unseen", "scene", "self"), T("fortune", "Gazing into the spirit world", "scene", "self", {curse: true, shift: 1, once: false})],
+  [`${DT}video-nefas-learn-the-hearts-pain`]: KW("know", "one"), [`${DT}video-nefas-seize-the-moment`]: KW("know", "one"),
+  [`${DT}video-nefas-casting-the-bones`]: N("know"), [`${DT}video-nefas-recall-the-bloody-deed`]: S("summon"),
+  [`${DT}rego-dolor-strike-the-broken-limb`]: H("harm", 1, "lethal"),
+  [`${DT}rego-dolor-phantom-pain`]: T("boost", "Phantom Pain", "scene", "one", {sap: true, on: "all"}),
+  [`${DT}rego-dolor-curse-the-senses`]: T("fortune", "Cursed senses", "scene", "one", {curse: true, once: false}),
+  [`${DT}rego-dolor-feed-the-corruption`]: H("harm", 2, "lethal", {fixed: true, soak: false}),
+  [`${DT}rego-dolor-eternal-torment`]: H("harm", 1, "aggravated"),
+  ...Object.fromEntries(["an-insignificant", "a-least", "a-lesser", "a-minor", "a-specific"].map(k => [`${DT}rego-manes-call-${k}-demon`, S("summon")])),
+  "maleficia-evil-eye": T("fortune", "Evil Eye", {turns: 1}, "one", {curse: true}),
+  "maleficia-minor-curse": T("fortune", "Minor Curse", {ladder: HOURS}, "one", {curse: true, shift: 1, once: false}),
+  "maleficia-psalm-of-the-damned": T("boost", "Psalm of the Damned", "scene", "one", {sap: true, on: "all"}),
+  "maleficia-barrenness": S("free"),
+  "maleficia-greater-curse": T("fortune", "Greater Curse", {ladder: [["one year", 365 * DAY]]}, "one", {curse: true, shift: 1, once: false}),
+  "striga-strix": T("sense", "Strix", "scene", "self"),
+  "striga-scobax": T("fortune", "Plagued by vermin", "scene", "one", {curse: true, shift: 2, once: false}),
+  "striga-masca": T("shape", "Masca", "night", "self"),
+  "striga-hexe": H("harm", 1, "aggravated"),
+  "striga-fractura": [P("blood", -1, "self"), S("make")],
+  // B7700: four Thaumaturgy paths of the Dark Ages Companion (2002) pp. 92-96 (each row carries book "DAC 2002")
+  [`${TA}fortify-the-solid-form`]: KW("work", "self"), [`${TA}crystallize-liquid`]: KW("work", "self"), [`${TA}liquefy-the-solid-form`]: KW("work", "one"),
+  [`${TA}ethereal-stone`]: KW("hold", "one"), [`${TA}vaporous-transformation`]: KW("work", "self"),
+  // The bolt's dice are set by the level and can be dodged, so the harm waits for the Storyteller
+  ...Object.fromEntries(["spark", "illuminate", "body-of-light", "jupiters-aegis", "lightning-dance"].map(k => [`${LB}${k}`, S("harm")])),
+  [`${SF}startle-the-superstitious-mind`]: T("boost", "Startled", {turns: 1}, "one", {sap: true, on: "all"}),
+  [`${SF}rout-the-charging-hordes`]: KW("fear", "all"), [`${SF}wrath-of-god`]: T("hold", "Wrath of God", {ladder: WRATH}, "one"),
+  [`${SF}the-inner-demon`]: KW("fear", "one"), [`${SF}demonic-horde`]: KW("fear", "all"),
+  [`${WD}bar-the-common-passage`]: T("ward", "Bar the Common Passage", "night", "self"), [`${WD}glyph-of-scrying`]: T("sight", "Glyph of Scrying", {days: 1}, "self"),
+  [`${WD}runes-of-power`]: KW("ward", "self"), [`${WD}glyph-of-enlightenment`]: T("sight", "Glyph of Enlightenment", {days: 1}, "self"),
+  [`${WD}secure-the-sacred-domain`]: T("ward", "Secure the Sacred Domain", "night", "self")
 };
 
 /** Numina, by "numen:level" (The Hunters Hunted II). */
@@ -118,12 +165,16 @@ export const PATH_STORY = {
   "temporis-clios-kiss": "V20 Dark Ages p. 259: a journey into the past, the Storyteller's story",
   [`${NE}graves-decay-ashes-to-ashes`]: "V20 Dark Ages p. 283: a corpse turns to ash; WoDX keeps no corpses",
   [`${NE}path-of-haunting-spectral-menacing`]: "V20 Dark Ages p. 286: ghosts' powers on the target are easier; the Storyteller's ghosts roll them",
-  [`${TH}vitae-inner-vessel`]: "V20 Dark Ages p. 302: a lower Generation for a while; generation limits are the Storyteller's"
+  [`${TH}vitae-inner-vessel`]: "V20 Dark Ages p. 302: a lower Generation for a while; generation limits are the Storyteller's",
+  "maleficia-barrenness": "DAC 2002 p. 109: no children, and a vampire cannot Embrace; WoDX keeps no births, and the Embrace is the Storyteller's"
 };
+
+/** B7697: a power row from another book names it in its source. */
+const BOOK_NAME = {"DAC 2002": "Dark Ages Companion (2002)"};
 
 export function pathOutcomes(power, successes) {
   const spec = PATH_EFFECTS[power?.id] ?? S();
-  return outcomesOf(spec, {key: spec.kw, label: power?.n ?? power?.name ?? "", source: `V20 Dark Ages p. ${power?.p ?? "?"}`}, successes, String(power?.e ?? ""));
+  return outcomesOf(spec, {key: spec.kw, label: power?.n ?? power?.name ?? "", source: `${BOOK_NAME[power?.book] ?? "V20 Dark Ages"} p. ${power?.p ?? "?"}`}, successes, String(power?.e ?? ""));
 }
 
 /** What a Numen at a level does with its successes. */

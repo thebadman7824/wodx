@@ -65,7 +65,7 @@ test("the Discipline library is whole: unique ids, pages, codes the engine reads
   const ids = new Set();
   for ( const p of DISC.powers ) {
     assert.ok(!ids.has(p.id), `duplicate ${p.id}`); ids.add(p.id);
-    assert.ok(p.d && p.n && p.l >= 1 && Number.isFinite(p.p) && p.p >= 188 && p.p <= 316, `${p.id}: heading, name, level, page`);
+    assert.ok(p.d && p.n && p.l >= 1 && Number.isFinite(p.p) && (p.book === "DAC 2002" ? p.p >= 78 && p.p <= 111 : p.p >= 188 && p.p <= 316), `${p.id}: heading, name, level, page`); // B7697, B7699: the Companion's rows
     assert.ok(p.e && p.e.length <= 220, `${p.id}: a short summary, not book text`);
     for ( const part of K.poolParts(p.r) ) assert.ok(["attr", "ability", "trait", "number", "chooseAttr"].includes(part.kind), `${p.id}: ${p.r}`);
     if ( p.diff !== "" && p.diff !== "var" ) {

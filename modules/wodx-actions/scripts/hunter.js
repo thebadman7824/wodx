@@ -379,16 +379,45 @@ export function build(ctx) {
             return groundUnder(actor);
         } catch (e) { return null; }
     }
+    /** B7675: the Holy Artifact they hold, unless the Storyteller has marked them as straying from the light. */
+    const artifactIn = actor => H.artifactOf(actor?.items);
+    const strayed = actor => !!actor?.getFlag?.(MOD, "artifactStrayed");
     function faithOf(actor) {
-        const f = baseFaith(actor);
+        const a = artifactIn(actor);
+        const f = a ? H.faithWithArtifact(baseFaith(actor), a.dots, strayed(actor)) : baseFaith(actor);
         return f > 0 && onHoly(actor)?.own ? Math.min(10, f + 1) : f;
     }
-    /** The line on the True Faith window and card about the holy ground they stand on. */
+    /** The line on the True Faith window and card about the holy ground they stand on and the artifact they hold. */
     function holyNote(actor) {
+        const a = artifactIn(actor);
+        const an = !a ? "" : strayed(actor) ? ` (${a.name} gives nothing while they stray from the light)`
+            : ` (+${a.dots} from ${a.name}, ${H.ARTIFACT_DA.page})`;
         const g = onHoly(actor);
-        if (!g || !baseFaith(actor)) return "";
-        return g.own ? ` (one higher on holy ground: ${g.name}${g.words ? `, kept for ${g.words}` : ""})`
-            : ` (${g.name} is kept for ${g.words || "another faith"}, not theirs: no higher here)`;
+        if (!g || !faithOf(actor)) return an;
+        return an + (g.own ? ` (one higher on holy ground: ${g.name}${g.words ? `, kept for ${g.words}` : ""})`
+            : ` (${g.name} is kept for ${g.words || "another faith"}, not theirs: no higher here)`);
+    }
+    /** B7675: the Storyteller makes a Holy Artifact, one of the book's three or one of their own, on the chosen sheet. */
+    async function holyArtifact(actor) {
+        if (!game.user.isGM) return ctx.notify("The Storyteller decides where a Holy Artifact arises.");
+        const opts = H.HOLY_ARTIFACTS.map(x => `<option value="${x.key}">${esc(x.name)} (True Faith ${x.faith})</option>`).join("");
+        const content = `<form><p>Holy Artifacts arise on their own and cannot be made by hand. Holding one adds its True Faith to the holder's own, to ten at most, while they keep to the light (${H.ARTIFACT_DA.page}).${actor ? ` It goes to <b>${esc(actor.name)}</b>.` : " It goes to the Items directory."}</p>
+          <div class="form-group"><label>Which</label><select name="key">${opts}<option value="own">Another, named below</option></select></div>
+          <div class="form-group"><label>Name</label><input type="text" name="name" value=""/></div>
+          <div class="form-group"><label>True Faith</label><input type="number" name="faith" value="1" min="1" max="5"/></div></form>`;
+        return dialog("Holy Artifact (V20 Dark Ages)", content, "Make", fd => makeArtifact(actor, fd));
+    }
+    /** Writes the artifact. fd: {key} of the book's three, or {key: "own", name, faith}. */
+    async function makeArtifact(actor, fd = {}) {
+        if (!game.user.isGM) return null;
+        const b = H.HOLY_ARTIFACTS.find(x => x.key === fd.key);
+        const name = b?.name ?? (String(fd.name ?? "").trim() || "A Holy Artifact");
+        const dots = b?.faith ?? Math.min(H.ARTIFACT_DA.max, Math.max(H.ARTIFACT_DA.min, n(fd.faith) || 1));
+        const about = b ? `${b.about}${b.place ? " A place: whoever uses its space holds it." : ""}` : "";
+        const data = { name, type: "Item", system: { description: `<p>${esc(about)}</p><p class="wodx-quiet">True Faith ${dots}. ${H.ARTIFACT_DA.page}</p>` }, flags: { [MOD]: { holyArtifact: dots } } };
+        const it = actor ? (await actor.createEmbeddedDocuments("Item", [data]))[0] : await Item.create(data);
+        if (actor) await post(actor, `A Holy Artifact: ${name}`, `<div class="vta-note">True Faith ${dots}, held by ${esc(actor.name)}: their True Faith is now ${faithOf(actor)}.</div><div class="wodx-quiet">${H.ARTIFACT_DA.page}</div>`);
+        return it ?? null;
     }
 
     async function trueFaith(actor) {
@@ -564,14 +593,35 @@ export function build(ctx) {
         const b = P.resource(actor, "blood");
         if (!b.ok) return ctx.notify(`${actor.name} has no blood pool on the sheet.`);
         const st = attr(actor, "stamina"), da = lineNow() === "inquisitor";
+        const bodyApi = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.body ?? null : null;
+        const lost = (bodyApi?.of?.(actor) ?? []).filter(c => c?.feature === "lost" && !/for good/.test(c?.what ?? ""));
         const content = `<form><p><b>${esc(actor.name)}</b>: blood ${b.value}/${b.max}, Stamina ${st}. ${da ? "<b>The chronicle is in the Dark Ages: V20 Dark Ages p. 399 governs ghouls; these are the V20 Ghouls and Revenants rules.</b>" : "V20 Ghouls and Revenants, Chapter Two."}</p>
-          <div class="form-group"><label>What</label><select name="k" data-fixed><option value="drink">Drink vitae (overfeeding, p. 43)</option><option value="withdrawal">Withdrawal: resist a chance to feed (p. 43)</option><option value="day">An elder ghoul stays awake by day (p. 44)</option></select></div>
-          <div class="form-group"><label>Blood points drunk</label><input type="number" name="drink" value="1" min="1" max="20"/></div></form>`;
+          <div class="form-group"><label>What</label><select name="k" data-fixed><option value="drink">Drink vitae (overfeeding, p. 43)</option><option value="withdrawal">Withdrawal: resist a chance to feed (p. 43)</option><option value="day">An elder ghoul stays awake by day (p. 44)</option><option value="regrow">Grow back a lost part (V20 Dark Ages p. 400)</option></select></div>
+          <div class="form-group"><label>Blood points drunk</label><input type="number" name="drink" value="1" min="1" max="20"/></div>
+          ${lost.length ? `<div class="form-group"><label>Lost part to grow back</label><select name="part" data-fixed>${lost.map(c => `<option value="${esc(c.id)}">${esc(c.what || c.lostPart || "a part")} (${H.regrowSizeOf(c.lostPart || c.what)})</option>`).join("")}</select></div>` : ""}
+          <div class="form-group"><label>Or the size of a part not on the record</label><select name="size" data-fixed>${Object.entries(H.REGROW).map(([k, r]) => `<option value="${k}">${esc(r.label)}</option>`).join("")}</select></div></form>`;
         return dialog(`Ghoul blood: ${actor.name}`, content, "Go", async fd => {
             const virt = virtues(actor);
             if (fd.k === "withdrawal") {
                 const r = await rollPool(virt.selfcontrol.value, H.WITHDRAWAL.difficulty);
                 return post(actor, `${actor.name}: withdrawal`, rollBlock(`${virt.selfcontrol.label}`, r) + `<div class="vta-res ${r.successes > 0 && !r.botch ? "good" : "bad"}">${r.successes > 0 && !r.botch ? "The craving is held off." : "The craving wins: the chance to feed is taken."} Withdrawal lasts about ${H.WITHDRAWAL.weeks(st)} week${H.WITHDRAWAL.weeks(st) === 1 ? "" : "s"} (6 − Stamina).</div>`, [r.roll]);
+            }
+            if (fd.k === "regrow") {
+                // B7673: blood by the part's size, a Willpower, and Stamina at 8; a botch loses it for good (V20 Dark Ages p. 400)
+                const c = lost.find(x => x.id === fd.part) ?? null;
+                const size = c ? H.regrowSizeOf(c.lostPart || c.what) : (H.REGROW[fd.size] ? fd.size : "small");
+                const cost = H.REGROW[size].blood, wp = n(actor.system?.advantages?.willpower?.temporary);
+                if (b.value < cost) return ctx.notify(`${actor.name} needs ${cost} blood to grow it back (has ${b.value}).`);
+                if (wp < H.GHOUL_DA.regrowWillpower) return ctx.notify(`${actor.name} needs a Willpower point to grow it back.`);
+                await updateActor(actor, { [b.path]: b.value - cost, "system.advantages.willpower.temporary": wp - H.GHOUL_DA.regrowWillpower });
+                const r = await rollPool(st, H.GHOUL_DA.regrowDiff);
+                const out = H.regrowOutcome(r);
+                const what = c ? (c.what || c.lostPart) : H.REGROW[size].label.split(" (")[0].toLowerCase();
+                if (out === "grown" && c && bodyApi?.remove) await bodyApi.remove(actor, c.id);
+                if (out === "lost" && c) await bodyApi?.add?.(actor, { source: "scar", part: c.part ?? "whole", what: `${c.what || c.lostPart} lost for good`, feature: "lost", lostPart: c.lostPart, by: "a botched regrowth" }).catch?.(() => null);
+                if (out === "lost" && c && bodyApi?.remove) await bodyApi.remove(actor, c.id);
+                const text = out === "grown" ? `${esc(what)} grows back.` : out === "lost" ? `A botch: ${esc(what)} is lost for good; no blood will bring it back.` : `It does not take; the blood and Willpower are spent.`;
+                return post(actor, `${actor.name}: a lost part`, `<div class="vta-sec">${cost} blood and a Willpower spent.</div>` + rollBlock("Stamina", r, [`difficulty ${H.GHOUL_DA.regrowDiff}`]) + `<div class="vta-res ${out === "grown" ? "good" : "bad"}">${text}</div><div class="wodx-quiet">${H.GHOUL_DA.page}</div>`, [r.roll]);
             }
             if (fd.k === "day") {
                 const r = await rollPool(n(actor.system?.advantages?.willpower?.permanent), 6);
@@ -600,7 +650,7 @@ export function build(ctx) {
             keywords: NPW.keysOf(IB.blessingResults(b.id, 3)) })).filter(p => p.keywords.length);
     }
 
-    return { powersFor, ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow };
+    return { powersFor, ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow, holyArtifact, makeArtifact };
 }
 
 export function registerSettings() {

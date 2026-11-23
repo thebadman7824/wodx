@@ -58,6 +58,12 @@ import * as FOM from "./fomor.js";
 import * as FP from "./fomor-powers.js";
 import * as CHM from "./charms.js";
 import * as SCH from "./spirit-charms.js";
+import * as GHD from "./ghost-da.js";
+import * as DMD from "./domain-da.js";
+import * as INF from "./infernal.js";
+import * as INFR from "./infernal-rules.js";
+import * as DMR from "./domain-da-rules.js";
+import * as GHR from "./ghost-da-rules.js";
 import * as KER from "./kote-rules.js";
 import * as UXD from "./mummy.js";
 import * as UR from "./mummy-rules.js";
@@ -274,6 +280,8 @@ function willpower(actor) {
     return { temp: num(w.temporary), perm: num(w.permanent) };
 }
 function blood(actor) {
+    // B7676: a ghost of V20 Dark Ages spends Passion (the sheet's Pathos) as blood for its Disciplines (p. 403)
+    if (GHR.isDAGhost(actor)) { const p = actor.system?.advantages?.pathos ?? {}; const max = num(p.max) || 10; return { value: num(p.temporary), max, perTurn: max, passion: true }; }
     const b = actor?.system?.advantages?.bloodpool ?? {};
     const g = generationOf(actor);
     const table = R.generation(g);
@@ -357,10 +365,13 @@ async function spendWillpower(actor, n = 1) {
     if (setting("spendResources")) await updateActor(actor, { "system.advantages.willpower.temporary": w.temp - n });
     return true;
 }
-async function changeBlood(actor, delta) {
+const clanText = a => String(a?.system?.clan === "custom" ? a?.system?.custom?.clan ?? "" : a?.system?.clan ?? "");
+async function changeBlood(actor, delta, { sorcery = false } = {}) {
     const b = blood(actor);
     const v = Math.max(0, Math.min(b.max, b.value + delta));
-    if (setting("spendResources")) await updateActor(actor, { "system.advantages.bloodpool.temporary": v });
+    // B7670: Echidna takes one more at the scene's end from a Witch who used or took in blood, unless it fed sorcery (V20 Dark Ages p. 450)
+    if (delta && !sorcery && KR.isEchidna(clanText(actor)) && actor.isOwner) await setFlag(actor, "echidnaDue", true);
+    if (setting("spendResources")) await updateActor(actor, { [b.passion ? "system.advantages.pathos.temporary" : "system.advantages.bloodpool.temporary"]: v });
     return { before: b.value, after: v, wasted: (b.value + delta) - v };
 }
 
@@ -1323,6 +1334,9 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
     return dialog(`${v.selfcontrol.isInstinct ? "Instinct" : "Frenzy"} check`, content, "Roll", async fd => {
         await setFlag(actor, "beastWillpower", fd.wpAuto ? true : null);
         if (golconda) return post(actor, `${actor.name} resists frenzy`, `<div class="vta-big good">Golconda: the Beast is mastered: no frenzy.</div>`);
+        // B7673: a ghoul frenzies only with five or more points of vitae, and resists at two lower (V20 Dark Ages p. 400)
+        const gf = P.detectProfile(actor) === "ghoul" ? HR.ghoulFrenzy(b.value) : null;
+        if (gf && !gf.can) return post(actor, `${actor.name}: no frenzy`, `<div class="vta-big good">${esc(actor.name)} holds ${b.value} point${b.value === 1 ? "" : "s"} of vitae, fewer than ${HR.GHOUL_DA.frenzyAt}: there is not enough of the Beast in the blood to frenzy.</div><div class="wodx-quiet">${HR.GHOUL_DA.page}</div>`);
         const p = R.FRENZY_PROVOCATIONS[fd.prov];
         let diff = p?.diff ?? fd.diff;
         if (fd.prov === "atrocity") diff = 9 - v.conscience.value;
@@ -1331,8 +1345,12 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         // B3132: open fire in a mood region makes the Beast harder to hold
         const fire = DH.fireStep(actor);
         diff = diff + fd.mod + tm.diff + fire;  // B7120: past 10 counts (rollPool)
+        // B7673: the domitor's clan in a ghoul with five points (Brujah: two harder, V20 Dark Ages p. 400)
+        const mark = gf ? n(actor.flags?.["wodx-creation"]?.clanMark?.frenzy) : 0;
+        if (gf) diff = Math.max(2, diff + gf.diff + mark);
+        const gParts = gf ? [`Ghoul ${gf.diff} diff (VtDA20 p. 400)`, ...(mark ? [`Domitor's clan +${mark}`] : [])] : [];
         try { await TH.spendOnce(actor, tm); } catch (e) { /* nothing spent */ }
-        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
+        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: [...(tm.parts ?? []), ...(fire ? [`Open fire here +${fire} diff`] : []), ...gParts] });
     });
 }
 
@@ -1411,6 +1429,23 @@ async function beastRoll(actor, d, msg = null) {
             if (state.outcome === "botch") { await gainDerangement(actor, fear ? "fear" : "frenzy", fear ? "from a Rötschreck botch" : "from a frenzy botch"); await markBotch(actor, fear, d.diff); }
         }
     }
+    // B7670: a Witch of Echidna also rolls Self-Control at the same difficulty; failing either, or any check with Instinct,
+    // puts on Echidna's Visage (V20 Dark Ages p. 450)
+    if (!fear && !msg && !d.total && KR.isEchidna(clanText(actor))) {
+        let scFail = false;
+        if (!v.selfcontrol.isInstinct) {
+            const sc = await rollPool(Math.max(0, num(v.selfcontrol.value)), d.diff);
+            scFail = !(sc.successes > 0 && !sc.botch);
+            body += rollBlock("Self-Control (Echidna)", sc, [`difficulty ${d.diff}`]);
+            r.extra = sc.roll;
+        }
+        if (KR.echidnaVisage({ instinct: v.selfcontrol.isInstinct, frenzied: enter, selfControlFailed: scFail })) {
+            body += `<div class="vta-big bad">Echidna's Visage: Appearance 0 for the rest of the scene.</div>`;
+            if (chronicle()?.applyTimed && actor.isOwner) await chronicle().applyTimed(actor, { name: "Echidna's Visage", img: "icons/svg/terror.svg",
+                description: "Appearance 0 for the scene (V20 Dark Ages p. 450)", duration: { kind: "scene" }, source: "V20 Dark Ages p. 450", key: "echidna-visage",
+                changes: [{ key: "system.attributes.appearance.value", mode: 5, value: "0" }] });
+        }
+    }
     if (enter) {
         body += `<div class="vta-note">In frenzy: ignore wound penalties; +2 difficulty to Dominate the frenzied vampire, –2 for them to resist it; immune to Rötschreck. A Willpower point controls one action for a turn. Usually lasts a scene.${!fear && d.kind !== "instinct" ? " Frenzying without risking a Road dot can bring a Moment of Truth." : ""}</div>`;
         if (setting("applyChanges")) { await updateActor(actor, { "system.conditions.isfrenzy": true }); await setFlag(actor, "frenzyType", fear ? "fear" : "rage"); await condition(actor, fear ? "rotschreck" : "frenzy", true); }
@@ -1429,7 +1464,7 @@ async function beastRoll(actor, d, msg = null) {
         }
     }
     if (msg) await markUsed(msg);
-    return post(actor, `${actor.name}: ${fear ? "Rötschreck" : d.kind === "instinct" ? "Instinct" : "Frenzy"} check`, body, [r.roll], data);
+    return post(actor, `${actor.name}: ${fear ? "Rötschreck" : d.kind === "instinct" ? "Instinct" : "Frenzy"} check`, body, [r.roll, r.extra].filter(Boolean), data);
 }
 
 /**
@@ -2578,6 +2613,11 @@ export async function torpor({ actor: a } = {}) {
             await dm().wake(actor, t?.since);
             return post(actor, `${actor.name} rises from torpor`, `<div class="vta-note">${esc(actor.name)} rises Crippled and should heal or hunt at once.</div>`);
         }
+        // B7666: a vampire mummified on the stake rises only once fed back to Injured (V20 Dark Ages p. 354)
+        if (t?.withered) {
+            const d = healthTrack(actor).damage, filled = d.bashing + d.lethal + d.aggravated;
+            if (!KR.witheredMayRise(filled)) return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">Mummified: ${filled} health levels marked. Blood must heal the body back to Injured (3 or fewer) first (V20 Dark Ages p. 354).</div>`);
+        }
         const minDays = t.voluntary ? Math.ceil(t.days / 2) : t.days;
         let html = "";
         if (elapsed < minDays) html += `<div class="vta-warn">Only ${elapsed} of ${minDays} days have passed (game time). Rolling anyway at the Storyteller's word.</div>`;
@@ -2670,6 +2710,11 @@ export async function endScene({ actors, fromChronicle = false, map = false } = 
         if (Object.keys(upd).length) await actor.update(upd);
         if (q) await actor.unsetFlag(MOD, "quickening");
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
+        if (flag(actor, "echidnaDue")) {
+            const b = blood(actor);
+            if (b.value > 0) { await updateActor(actor, { "system.advantages.bloodpool.temporary": b.value - 1 }); bits.push(`Echidna takes the due: blood ${b.value} → ${b.value - 1}`); }
+            await actor.unsetFlag(MOD, "echidnaDue");
+        }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
     // A new map is a new scene too, but the Nature card waits for the Storyteller's own End scene (no card per map)
@@ -2725,7 +2770,25 @@ export async function newNight({ actors } = {}) {
         const upd = {}, bits = [];
         const vamp = isVampire(actor);
         const inTorpor = !!flag(actor, "torpor");
-        if (vamp && setting("nightlyBlood") && !inTorpor) {
+        // B7666: a staked vampire withers: a blood a night, then a health level a day, then torpor (V20 Dark Ages p. 354)
+        const staked = vamp && !inTorpor && !!chronicle()?.conditions?.hasCondition?.(actor, "staked");
+        if (staked) {
+            const b = blood(actor), d = healthTrack(actor).damage, filled = d.bashing + d.lethal + d.aggravated;
+            const st = KR.stakedNight({ blood: b.value, filled });
+            if (st.spend) { upd["system.advantages.bloodpool.temporary"] = Math.max(0, b.value - 1); bits.push(`staked: blood ${b.value} → ${b.value - 1}`); }
+            else {
+                Object.assign(upd, healthUpdate(actor, { ...d, lethal: d.lethal + 1 }));
+                bits.push("staked with no blood: the body dries and withers one health level");
+                if (st.torpor) {
+                    const rd = road(actor);
+                    await setFlag(actor, "torpor", { since: game.time.worldTime, days: R.torporLength(rd.value).days, voluntary: false, until: KR.torporUntil(game.time.worldTime, rd.value, { voluntary: false }), withered: true });
+                    await statusEffect(actor, "unconscious", true); await condition(actor, "torpor", true);
+                    await kx().logEvent(actor, "Withers on the stake and mummifies into torpor.", "torpor");
+                    bits.push("<b>mummified: torpor; rises only when fed back to Injured</b>");
+                }
+            }
+        }
+        if (vamp && setting("nightlyBlood") && !inTorpor && !staked) {
             const gol = flag(actor, "golconda");
             const b = blood(actor);
             const weekly = gol && (flag(actor, "golcondaNights") ?? 0) % 7 !== 6;
@@ -3036,7 +3099,7 @@ let PMX = null;
 function pm() {
     return PMX ??= PM.build({
         post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting,
-        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a),
+        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isDAGhost: a => GHR.isDAGhost(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a),
         // The menu's search also finds every common check and dramatic system, so nothing is a page away
         searchExtras: () => [
             ...CK.CHECKS.map(c => ({ spec: `check:${c.key}`, label: c.label, desc: `${c.note} (${c.ref})`, icon: "fa-search" })),
@@ -3139,6 +3202,24 @@ let FME = null;
 let CHME = null;
 function chmx() {
     return CHME ??= CHM.build({ post, rollPool, rollBlock, dialog, profile: a => P.detectProfile(a), notify: m => ui.notifications.warn(m) });
+}
+
+/** B7676: the ghosts of V20 Dark Ages. */
+let GHE = null;
+function ghx() {
+    return GHE ??= GHD.build({ post, rollPool, rollBlock, dialog, attr, findAbility, notify: m => ui.notifications.warn(m) });
+}
+
+/** B7679-B7684: domains, domain events and fealty (V20 Dark Ages Companion chapter 7). */
+let DOME = null;
+function dmx() {
+    return DOME ??= DMD.build({ dialog, notify: m => ui.notifications.warn(m), logEvent: (a, t, k) => kx().logEvent(a, t, k), sinPrompt: (a, e, w) => kx().sinPrompt(a, e, w) });
+}
+
+/** B7696: demonic pacts, infernal investments and the Supplicium (Dark Ages Companion 2002 ch. 7). */
+let INFE = null;
+function ix() {
+    return INFE ??= INF.build({ dialog, post, rollPool, rollBlock, attr, findAbility, notify: m => ui.notifications.warn(m), logEvent: (a, t, k) => kx().logEvent(a, t, k) });
 }
 
 /** B5162: fomor powers (Numbing). */
@@ -3444,6 +3525,16 @@ function bindCard(msg, el) {
         const r = await dm().onChatButton(b);
         if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
     }));
+    el.querySelectorAll?.("button.vta-btn[data-ix]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `ix|${b.dataset.ix}|${b.dataset.actor}|${b.dataset.arg ?? ""}`;
+        // The two Supplicium buttons answer one question: either one closes the card
+        const pair = ["prevails", "atones", "finalLost", "finalWon"].includes(b.dataset.ix) ? used.some(u => u.startsWith(`ix|`) && u.endsWith(`|${b.dataset.actor}|`) && !u.startsWith("ix|burn")) : false;
+        if (used.includes(key) || pair) return ui.notifications.info("Already done.");
+        const r = await ix().onChatButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
     el.querySelectorAll?.("button.vta-btn[data-vx]").forEach(b => b.addEventListener("click", async ev => {
         ev.preventDefault();
         await vx().onChatButton(b);
@@ -3489,7 +3580,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // B7121: the Storyteller's Clear for trying again, from the Scene row of every menu
     clearTries: async () => { const k = await clearRetries(null); ui.notifications.info(k ? `Failed tries forgotten for ${k} character${k === 1 ? "" : "s"}: the next attempt is a fresh one.` : "No failed tries are remembered."); return k; }, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.118.1", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.120.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3540,7 +3631,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // Test code: fetched only when a gate asks for it, so players never download it
     makeTestPack: (...args) => import("./garou-testpack.js").then(m => m.makeTestPack(...args)),
     // Kindred additions and automatic prompts (3.2.0)
-    useDiscipline: withActor(a => kx().useDiscipline(a)), castRitual: withActor(a => kx().castRitual(a)), setRoad: withActor(a => kx().setRoad(a)), roadFaith: withActor(a => rf().window(a)), roadFaithAct: (a, fd) => rf().act(resolveActor(a), fd), roadFaithInfo: a => rf().info(resolveActor(a)), roadFaithRules: RFR, downtime: withActor(a => kx().downtime(a)),
+    useDiscipline: withActor(a => kx().useDiscipline(a)), castRitual: withActor(a => kx().castRitual(a)), malkRite: withActor(a => kx().malkRite(a)), glyconCheck: withActor(a => kx().glyconCheck(a)), setRoad: withActor(a => kx().setRoad(a)), roadFaith: withActor(a => rf().window(a)), roadFaithAct: (a, fd) => rf().act(resolveActor(a), fd), roadFaithInfo: a => rf().info(resolveActor(a)), roadFaithRules: RFR, downtime: withActor(a => kx().downtime(a)),
     bloodHunt: (o = {}) => dm().bloodHunt(o.actor ? resolveActor(o.actor) : resolveActor()), callHunt: (a, o) => dm().callHunt(resolveActor(a), o), endHunt: (id, how) => dm().endHunt(id, how),
     oaths: withActor(a => dm().oaths(a)), diablerieMarks: withActor(a => dm().marks(a)), beastTurn: c => dm().onTurn(c ?? game.combat), wakeCard: (a, since) => dm().wake(resolveActor(a), since),
     debtsRules: DR_DEBTS, beastRules: DR_BEAST, debtsMarks: () => dm(),
@@ -3574,7 +3665,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), domainDA: withActor(a => dmx().window(a)), infernal: withActor(a => ix().window(a)), infernalFlame: withActor(a => ix().flame(a)), infernalPacts: { window: a => ix().window(resolveActor(a)), record: (a, fd) => ix().record(resolveActor(a), fd), pact: (a, o) => ix().makePact(resolveActor(a), o), spend: (a, id, b) => ix().spend(resolveActor(a), id, b), state: a => ix().stateOf(resolveActor(a)), prevails: a => ix().prevails(resolveActor(a)), final: (a, won) => ix().finalOutcome(resolveActor(a), won), flame: a => ix().flame(resolveActor(a)), rules: INFR }, maturation: withActor(a => creationApi()?.maturation?.open?.(a) ?? ui.notifications.warn("Maturation needs WoDX Creation.")), domainEvent: withActor(a => dmx().domainEvent(a)), fealty: (o = {}) => dmx().fealty(o?.actor ? resolveActor(o.actor) : resolveActor()), domain: { window: a => dmx().window(resolveActor(a)), save: (a, fd) => dmx().saveWindow(resolveActor(a), fd), state: a => dmx().stateOf(resolveActor(a)), event: (a, o) => dmx().domainEvent(resolveActor(a), o), end: (a, id) => dmx().endEvent(resolveActor(a), id), tick: t => dmx().tick(t), swear: o => dmx().swear(o), endOath: (id, how) => dmx().endOath(id, how), oaths: () => dmx().oaths(), rules: DMR }, ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();
@@ -3768,6 +3859,8 @@ function kindredHooks() {
         kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; if (again) { again = false; tick(); } });
     };
     Hooks.on("updateWorldTime", tick);
+    // B7682: a domain event's season ends with the world clock
+    Hooks.on("updateWorldTime", wt => { if (!game.user.isGM || chronicle()?.isSkipping?.()) return; dmx().tick(wt).catch(e => console.error("WoDX | domain", e)); });
     Hooks.on("updateWorldTime", (wt, dt) => {
         if (!game.user.isGM || chronicle()?.isSkipping?.()) return;
         sx().onClock(Number(dt) || 0).catch(e => console.error("WoDX |", e));

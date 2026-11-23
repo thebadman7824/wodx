@@ -95,6 +95,15 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       road("Road");
       wp(virtue(sys, "courage"), "Courage");
       break;
+    case "daelder": {
+      // B7691: the Road less 1 for each 150 years active, 2 at the least (DASC 2002 printed p. 76)
+      const r = roadBase(sys);
+      add("road", "Road", "system.advantages.path", Math.max(1, r.value - 2), `${r.from}, less 2 for the years`, {extra: "road", temp: false, value: true});
+      notes.push("An elder active for 450 years or more loses another dot of Road for each 150 years, and may take 15 more bonus points for each.");
+      wp(virtue(sys, "courage"), "Courage");
+      notes.push("Generation starts at ninth: each dot of the Generation Background makes it one lower.");
+      break;
+    }
     case "kote":
       wp(Math.max(5, n(sys?.advantages?.hun?.permanent)), "Hun, 5 at least");
       notes.push("Yin, Yang, Hun, P'o and Dharma follow the Direction and Dharma: set them with the Storyteller.");
@@ -181,6 +190,7 @@ export function startingBlood(lineId, {backgrounds = {}} = {}) {
   switch ( lineId ) {
     case "v20": return {roll: 1, plus: 0, how: "One die"};
     case "vtda20": return {roll: 1, plus: bg("Domain") + bg("Herd"), how: "One die + Domain + Herd"};
+    case "daelder": return {roll: 2, plus: 0, how: "Two dice; any past the Generation's limit are lost"};
     case "ghoul": case "revenant": return {roll: 0, plus: 1, how: "Starts at 1"};
     default: return null;
   }

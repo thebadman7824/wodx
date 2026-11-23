@@ -179,12 +179,18 @@ export function pathByName(road, name) {
 export function roadFor(data, name) {
     const S = normName(name);
     if (!S || !data?.roads) return null;
+    // B7690: exact names first, a path's then a Road's, so the Road of Heaven is not read as the Path of Heavenly Abode
     for (const [k, r] of Object.entries(data.roads)) {
-        for (const p of r.paths ?? []) if (pathNames(p).some(x => x === S || (S.length > 4 && x.includes(S)))) return { key: k, road: r, path: p };
+        for (const p of r.paths ?? []) if (pathNames(p).includes(S)) return { key: k, road: r, path: p };
+    }
+    const namesOf = (k, r) => [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
+    // B7669: an exact name first, so the Road of Blood is not read as the Road of Yasa ("Bloodbrothers")
+    for (const [k, r] of Object.entries(data.roads)) if (namesOf(k, r).includes(S)) return { key: k, road: r, path: null };
+    for (const [k, r] of Object.entries(data.roads)) {
+        for (const p of r.paths ?? []) if (pathNames(p).some(x => S.length > 4 && x.includes(S))) return { key: k, road: r, path: p };
     }
     for (const [k, r] of Object.entries(data.roads)) {
-        const names = [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
-        if (names.some(x => x === S || (S.length > 3 && (x.startsWith(S) || S.startsWith(x))))) return { key: k, road: r, path: null };
+        if (namesOf(k, r).some(x => S.length > 3 && (x.startsWith(S) || S.startsWith(x)))) return { key: k, road: r, path: null };
     }
     return null;
 }
@@ -264,6 +270,14 @@ export const SIN_EVENTS = {
     sin: SIN_ROAD_EVENTS, "Path of Pleasure": SIN_ROAD_EVENTS, "Path of the Devil": SIN_ROAD_EVENTS, "Path of Screams": { notRidden: 8, starve: 7 },
     bones: { frenzy: 6, killFrenzy: 6 },
     yasa: { killFrenzy: 4, lie: 8 },
+    // B7669: the Appendix B Roads (V20 Dark Ages pp. 432-449)
+    blood: { frenzy: 8, killFrenzy: 8, wordBroken: 3 },
+    abyss: { frenzy: 5, killFrenzy: 5, starve: 7 },
+    paradox: { killFeed: 7, kill: 3, killFrenzy: 3, embrace: 1 },
+    samiel: { lie: 8, feedUnwilling: 7 },
+    // B7690: the Road of Night (DASC 2002 p. 30); a kill is 8 only without a confession, which play does not record
+    night: {},
+    set: {}, "Path of Apep": {},
     // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
     // Path has no row for it, kill counts. A null is no sin. Instinct Paths sin on notRidden, Self-Control ones on frenzy.
     "v20-blood": { killFeed: 10, kill: null, frenzy: 6, killFrenzy: 6 },
@@ -546,3 +560,106 @@ export const beyondGolconda = name => GOLCONDA_BEYOND.includes(String(name ?? ""
 /** B5096: the sun counts one step weaker on the ladder for a vampire in Golconda (the owner's pick, a house rule). */
 export const GOLCONDA_SUN_LADDER = ["faint", "covered", "indirect", "cloudy", "direct"];
 export const golcondaSun = light => { const i = GOLCONDA_SUN_LADDER.indexOf(light); return i > 0 ? GOLCONDA_SUN_LADDER[i - 1] : light; };
+
+/**
+ * B7661: a bloodline's own weight on its Discipline rolls. The Ramanga use Presence and Aizina (their Obtenebration) at
+ * +1 difficulty on others, unless they hold a piece of the victim (V20 Dark Ages p. 98). clan: the sheet's clan text.
+ * Returns {diff, part} (diff 0 and part "" when nothing applies), and asks: whether the "piece" box is worth showing.
+ */
+/** B7697: does a botch of this power cost a permanent Willpower point? Dark Thaumaturgy paths (Dark Ages Companion (2002) p. 105). */
+export const darkBotchCost = p => !!p?.dark && /^dark thaumaturgy/i.test(String(p?.d ?? ""));
+
+/** B7697: the notes an infernal power's card carries, from the library's rules.dark (the path rule, Rego Manes, Maleficia). */
+export function darkNotes(p, rules = {}) {
+    if (!p?.dark || !rules) return [];
+    const d = String(p.d ?? "");
+    if (/^dark thaumaturgy/i.test(d)) return [rules.power, /rego manes/i.test(d) ? rules.manes : null].filter(Boolean);
+    if (/^maleficia$/i.test(d)) return [rules.maleficia].filter(Boolean);
+    return [];
+}
+
+export function bloodlinePowerDiff(clan, discipline, { onOther = true, piece = false } = {}) {
+    const ramanga = /ramanga/i.test(String(clan ?? ""));
+    const asks = ramanga && /presence|obtenebration|aizina/i.test(String(discipline ?? ""));
+    if (!asks || !onOther || piece) return { diff: 0, part: "", asks };
+    return { diff: 1, part: "Ramanga +1 (no piece of the victim held)", asks };
+}
+
+/**
+ * B7670: the Setite castes of V20 Dark Ages Appendix B (p. 450). clan: the sheet's clan text.
+ * Witches of Echidna: every frenzy check brings a Self-Control check at the same difficulty; failing either (or any
+ * frenzy check at all for a Witch with Instinct) puts on Echidna's Visage, Appearance 0 for the scene. And each scene
+ * the Witch uses or takes in blood, Echidna eats one more point at its end, unless the blood fed sorcery (Ritual or
+ * Thaumaturgy). Warriors of Glycon: a chance at power or a convert asks a Willpower roll at 6, or the Warrior chases it
+ * to the exclusion of all else.
+ */
+export const isEchidna = clan => /echidna|gorgon/i.test(String(clan ?? ""));
+export const isGlycon = clan => /glycon/i.test(String(clan ?? ""));
+export function echidnaVisage({ instinct = false, frenzied = false, selfControlFailed = false } = {}) {
+    return instinct || frenzied || selfControlFailed;
+}
+export const ECHIDNA_SORCERY = /thaumaturg|sorcery|ritual/i;
+export const GLYCON_DIFF = 6;
+
+/**
+ * B7671: the Rites of Enigmas and Ecstasy of the Malkavian Orders (V20 Dark Ages p. 444). Both take an hour and a
+ * Willpower point. Enigmas: Perception + Enigmas at 8; on a success the main Derangement is set aside for the night,
+ * Enigmas rolls gain three dice, and Auspex and Dementation are one harder. Ecstasy: a Willpower roll (difficulty 6,
+ * a house reading: the book names none); on a success Auspex and Dementation are one easier for the night, and no
+ * Willpower may be spent to set a Derangement aside.
+ */
+export const MALK_RITES = {
+    enigmas: { name: "Rite of Enigmas", pool: ["perception", "enigmas"], diff: 8, disc: +1, enigmasDice: 3, derangementOff: true, page: 444 },
+    ecstasy: { name: "Rite of Ecstasy", pool: ["willpower"], diff: 6, disc: -1, enigmasDice: 0, noWillpowerOnDerangement: true, page: 444, house: "the difficulty 6" }
+};
+export function malkRiteDiscDiff(discipline, rite) {
+    const r = MALK_RITES[rite];
+    return r && /auspex|dementation/i.test(String(discipline ?? "")) ? r.disc : 0;
+}
+
+/**
+ * B7662: a Gargoyle Ritual enchanted into a Gargoyle (V20 Dark Ages p. 309). It needs no roll, costs one blood point to
+ * wake (unless the ritual itself asks more), and lasts the scene or until dismissed. clan: the sheet's clan text.
+ * Returns {ok, why}: why says what stops it.
+ */
+export function gargoyleRitual(clan, ritual) {
+    if (!/gargoyle/i.test(String(clan ?? ""))) return { ok: false, why: "only a Gargoyle carries an enchanted ritual" };
+    if (!ritual?.gargoyle) return { ok: false, why: `${ritual?.n ?? "This ritual"} is not a Gargoyle Ritual` };
+    return { ok: true, why: "" };
+}
+
+/**
+ * B7663: Auspex overstimulation (V20 Dark Ages p. 195). A Willpower roll at 4, raised by how intense the stimulus is;
+ * on a failure the vampire loses two dice on everything else for 10 minus Willpower turns (at least one).
+ */
+export function overstimulation({ willpower = 0, intensity = 0 } = {}) {
+    return { diff: Math.max(4, Math.min(10, 4 + n(intensity))), turns: Math.max(1, 10 - n(willpower)), penalty: 2 };
+}
+/**
+ * B7663: a sudden revelation (V20 Dark Ages p. 194). The Storyteller rolls the Auspex dots in secret; the difficulty runs
+ * from 4 (a robber behind the door) to 9 (a plot years deep). Returns the clamped difficulty.
+ */
+export const revelationDiff = d => Math.max(4, Math.min(9, n(d) || 6));
+
+/**
+ * B7665: the Thirteenth Generation Flaw makes every Discipline activation roll one harder (V20 Dark Ages p. 426).
+ * flaws: the sheet's Flaw names. Returns {diff, part}.
+ */
+export function flawPowerDiff(flaws = []) {
+    const has = (flaws ?? []).some(f => /^thirteenth generation$/i.test(String(f ?? "").trim()));
+    return has ? { diff: 1, part: "Thirteenth Generation +1" } : { diff: 0, part: "" };
+}
+
+/**
+ * B7666: a staked vampire withers (V20 Dark Ages p. 354). Each night the stake costs a blood point; with none left the
+ * body gives up a health level a day, and at Incapacitated (the seventh level) it mummifies into torpor. blood: points
+ * now; filled: health levels marked now. Returns {spend, wither, torpor}.
+ */
+export const WITHER_TORPOR_AT = 7;
+export function stakedNight({ blood = 0, filled = 0 } = {}) {
+    if (n(blood) > 0) return { spend: 1, wither: false, torpor: false };
+    const after = n(filled) + 1;
+    return { spend: 0, wither: true, torpor: after >= WITHER_TORPOR_AT };
+}
+/** B7666: a mummified vampire rises only once fed back to Injured: three levels marked or fewer (p. 354). */
+export const witheredMayRise = filled => n(filled) <= 3;

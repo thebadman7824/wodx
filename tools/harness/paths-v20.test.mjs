@@ -32,8 +32,11 @@ test("B6724: the sheet's choice finds the Path; Humanity and Dark Ages Roads sta
   assert.equal(K.v20PathFor(PATHS, "custom", "Path of Night").key, "v20-night");
   assert.equal(K.v20PathFor(PATHS, "custom", "Road of Kings"), null);
   assert.equal(K.v20PathFor(PATHS, "custom", "Path of Chivalry"), null);
-  // The old fuzzy match read "Path of Blood" as the Road of Yasa (nickname Bloodbrothers)
-  assert.equal(K.roadFor(ROADS, "Path of Blood").key, "yasa");
+  // The old fuzzy match read "Path of Blood" as the Road of Yasa (nickname Bloodbrothers); B7669: with the Road of Blood
+  // in the data (V20 Dark Ages p. 432) an exact name wins, and the Road of Yasa is still found by its own names
+  assert.equal(K.roadFor(ROADS, "Path of Blood").key, "blood");
+  assert.equal(K.roadFor(ROADS, "Road of Blood").key, "blood");
+  assert.equal(K.roadFor(ROADS, "Bloodbrothers").key, "yasa");
   assert.equal(K.v20PathFor(PATHS, "wod.advantages.path.blood").key, "v20-blood");
 });
 

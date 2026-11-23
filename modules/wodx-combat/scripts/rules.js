@@ -725,7 +725,71 @@ export function kueiJinStaked(key, chi = null, metal = false) {
 /** A weapon that counts as a long metal blade or shaft for a Yang Kuei-jin (by its name). */
 export const LONG_METAL = /sword|sabre|saber|rapier|katana|jian|\bdao\b|spear|lance|pike|halberd|glaive|naginata|yari|bayonet|longsword|scimitar|falchion|iron bar|metal (bar|rod|pipe)|rebar|blade/i;
 /** The maneuver's key in MANEUVERS or CLASSIC ("normal" when it is neither). */
-export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC }).find(([, v]) => v === m)?.[0] ?? "normal";
+/**
+ * B7694: the new maneuvers of the Dark Ages Companion (2002) pp. 34-36, optional there and behind the
+ * companion2002Maneuvers setting here. diff and dmg are on top of a punch's or a claw's (difficulty 6, Strength):
+ * Choke Hold 7, Gobbet Rend 8, Joint Break 8 for Strength + 2, Neck Snap 9 for Strength + 3. needs: the least
+ * Abilities and Attributes; blade: a bladed weapon; brawl: a Brawl attack.
+ */
+export const DA2002 = {
+    choke: { label: "Choke Hold [DA Companion 2002] (+1 diff, no damage; held by the throat)", diff: 1, dmg: 0, dice: 0, noDamage: true, brawl: true, needs: {},
+        note: "Choke Hold: the victim cannot speak and is held; each turn after the first they lose a health level that cannot be soaked, unless they win a resisted Strength roll. Cainites cannot be throttled, only silenced (Dark Ages Companion 2002 p. 35)." },
+    gobbet: { label: "Gobbet Rend [DA Companion 2002] (+2 diff; a blood point torn away)", diff: 2, dmg: 0, dice: 0, brawl: true, needs: { potenceOrClaws: 2 },
+        note: "Gobbet Rend: unless the victim soaks it all, a blood point is torn away with the flesh (Dark Ages Companion 2002 p. 35)." },
+    jointbreak: { label: "Joint Break [DA Companion 2002] (+2 diff, +2 dmg; the limb breaks)", diff: 2, dmg: 2, dice: 0, brawl: true, needs: { brawl: 4, strength: 2 },
+        note: "Joint Break: any damage breaks the limb, useless until it heals (Dark Ages Companion 2002 p. 36)." },
+    necksnap: { label: "Neck Snap [DA Companion 2002] (+3 diff, +3 dmg, two actions; the neck breaks)", diff: 3, dmg: 3, dice: 0, brawl: true, needs: { brawl: 2, strength: 2 },
+        note: "Neck Snap takes two actions. The victim soaks with Strength added to Stamina; any level unsoaked breaks the neck: a mortal dies, a Cainite lies paralysed until it heals, a fast healer drops to Incapacitated (Dark Ages Companion 2002 p. 36)." },
+    tendon: { label: "Tendon Slice [DA Companion 2002] (blades; 2 levels cut a wrist or ankle)", diff: 0, dmg: 0, dice: 0, blade: true, needs: { melee: 4, dexterity: 2 },
+        note: "Tendon Slice: two or more levels cut the tendon: a wrist's hand cannot hold a weapon; an ankle cuts a biped's move to a quarter, a beast's to a half, for life unless healed by blood or magic (Dark Ages Companion 2002 p. 34)." }
+};
+const BLADE = /sword|knife|dagger|axe|blade|sabre|saber|scimitar|falchion|seax|scramasax|razor|sickle|scythe|claw|talon|fang/i;
+/** B7694: why a 2002 maneuver cannot be used with this weapon and these traits, or "". s: {brawl, melee, strength, dexterity, potence, protean, claws}. */
+export function da2002Why(key, s = {}, w = {}) {
+    const m = DA2002[key];
+    if (!m) return "";
+    const n = v => Number(v) || 0;
+    const brawlAttack = !!(w?.unarmed || w?.natural || w?.ability === "brawl");
+    if (m.brawl && !brawlAttack) return `${m.label.split(" [")[0]} is a Brawl maneuver`;
+    let need = m.needs ?? {};
+    if (m.blade) {
+        // fangs and claws serve for a blade with Brawl 4 (p. 34)
+        const fangs = brawlAttack && /claw|bite|fang|talon/i.test(w?.name ?? "");
+        if (fangs) need = { brawl: 4 };
+        else if (brawlAttack || w?.ranged || !BLADE.test(w?.name ?? "")) return "Tendon Slice needs a blade (or fangs and claws with Brawl 4)";
+    }
+    for (const k of ["brawl", "melee", "strength", "dexterity"]) if (need[k] && n(s[k]) < need[k]) return `${m.label.split(" [")[0]} needs ${k[0].toUpperCase() + k.slice(1)} ${need[k]}`;
+    if (need.potenceOrClaws && n(s.potence) < need.potenceOrClaws && !(n(s.protean) >= 2 && /claw/i.test(w?.name ?? ""))) return "Gobbet Rend needs Potence 2 or claws (Protean 2)";
+    return "";
+}
+/**
+ * B7694: what a landed 2002 maneuver leaves. levels: health levels after soak; profile: the victim's. Returns
+ * [{kind, ...}]: blood (points lost), cripple (part), neck (dies | paralysed | incapacitated), tendon (part).
+ */
+export function da2002After(key, { hit = false, levels = 0, profile = "mortal", aimed = "" } = {}) {
+    if (!hit) return [];
+    const L = Number(levels) || 0;
+    switch (key) {
+        case "gobbet": return L > 0 ? [{ kind: "blood", points: 1 }] : [];
+        case "jointbreak": return L > 0 ? [{ kind: "cripple", part: "arm-r", label: "Arm (broken)" }] : [];
+        case "necksnap": {
+            if (L <= 0) return [];
+            const how = profile === "vampire" ? "paralysed" : ["lupine", "supernatural", "spirit", "fae", "demon", "mummy"].includes(profile) ? "incapacitated" : "dies";
+            return [{ kind: "neck", how }];
+        }
+        case "tendon": return L >= 2 ? [{ kind: "tendon", part: /ankle|leg|foot/i.test(aimed) ? "leg-r" : "hand-r", label: /ankle|leg|foot/i.test(aimed) ? "Ankle (tendon cut)" : "Wrist (tendon cut)" }] : [];
+        default: return [];
+    }
+}
+/** B7694: a choke's turn: no harm the turn it is taken, then a level a turn; once Incapacitated, death after Stamina more turns. */
+export function chokeTurn({ round = 0, startRound = 0, incapacitated = false, incapTurns = 0, stamina = 1, vampire = false } = {}) {
+    if (vampire || Number(round) <= Number(startRound)) return { levels: 0, dies: false, incapTurns: Number(incapTurns) || 0 };
+    if (!incapacitated) return { levels: 1, dies: false, incapTurns: 0 };
+    const t = (Number(incapTurns) || 0) + 1;
+    return { levels: 0, dies: t >= Math.max(1, Number(stamina) || 1), incapTurns: t };
+}
+
+export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC, ...DA2002 }).find(([, v]) => v === m)?.[0] ?? "normal";
 
 /* B3921: standing up from a knockdown (V20 Dark Ages p. 348): Dexterity + Athletics at 6. A success stands them
  * up and costs 2 Initiative on the next turn; a failure keeps them down and loses the action. */
@@ -787,7 +851,7 @@ export function biteReady(grip, attackerUuid, combat) {
     return gripActive(grip, combat) && grip.by === attackerUuid;
 }
 /** A grip a victim may struggle out of at their action: hold, grapple, clinch (a tackle holds nobody). */
-export const GRIP_HOLDS = ["hold", "grapple", "clinch"];
+export const GRIP_HOLDS = ["hold", "grapple", "clinch", "choke"];
 /** The resisted Strength + Brawl roll: the victim breaks free only by rolling more successes (V20 Dark Ages pp. 346-347). */
 export function breaksFree(victimSuccesses, holderSuccesses) {
     return (Number(victimSuccesses) || 0) > Math.max(0, Number(holderSuccesses) || 0);
