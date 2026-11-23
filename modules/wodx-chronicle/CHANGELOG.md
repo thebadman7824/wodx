@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.142.1 (Switch for Dark Ages maturation (B7685))
 - 0.142.0 (Signature cards for the Bonsam, Children of Osiris, Danava, Impundulu, Ramanga, Salubri watchers and Valkyrjer (B7661); Signature cards for the Setite castes (B7670); The full check of the 80 Merits and Flaws of V20 Dark Ages (B7665): eleven new rows, the Dark Ages costs, and effects a system can read)
 - 0.141.1 (Two shared Future Darkness events (2044 Wraith, 2058 Hunter) no longer name the first chronicle's town: they now name only Moravia, so any chronicle can use them. The town's own lines live in WoDX Rothenstein)
 - 0.141.0 (Canon: shared dates live in one checked file, data/canon/index.mjs, read with canon("<id>") (B7170-B7175). The first six: the Camarilla founded 1435, the first Conclave 1486, the Convention of Thorns 1493, the Anarch Revolt 1335 to 1493, the Second Anarch Revolt 1944 and the Black Death 1347 to 1351, each with its book pages. The event list and the story chains read them)

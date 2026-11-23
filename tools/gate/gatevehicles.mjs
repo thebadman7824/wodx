@@ -143,12 +143,17 @@ export async function run() {
       await tf.update({x: 300, y: 200});
       await waitFor(() => V().vehicleFor(foe, tf)?.role === "reins", 4000);
       let card = "";
+      // B7732: each try opens a fight (an attack outside one opens an ambush), so the next try counted as a second, third...
+      // action that turn (job 2312: attack 7, -4 dice, +4 difficulty, past 10). Each try is a first action: end the fight first
+      const fightBefore = game.combat ? {ours: game.combat.scene?.id === scene.id, started: !!game.combat.started, round: game.combat.round} : null;
+      let cleared = 0;
       for ( let i = 0; i < 8 && !/takes it/.test(card); i++ ) {
+        if ( i > 0 ) for ( const c of game.combats.filter(c => c.scene?.id === scene.id) ) { await c.delete(); cleared++; }
         const [res] = await C.quickAttack({attacker: td.object, target: tf.object, weaponId: "vehicle:ram"}).catch(() => []);
         card = text(res?.message?.content ?? "");
         await sleep(300);
       }
-      G.ok("8. a real ram", /Ram with the/.test(card) && /second car takes it/i.test(card) && /that rammed/.test(card), {card: card.slice(0, 700)});
+      G.ok("8. a real ram", /Ram with the/.test(card) && /second car takes it/i.test(card) && /that rammed/.test(card), {card: card.slice(0, 700), fightBefore, cleared});
     });
 
     await G.step("10. an NPC takes a horse", async () => {
