@@ -10,6 +10,7 @@
  */
 const opt = ([label, g = "", p = null, text = ""]) => ({label, g, ...(p ? {p} : {}), ...(text ? {text} : {})});
 const sp = (key, label, title, text, options, x = {}) => ({key, label, ...x, beat: {title, text, options: options.map(opt)}});
+import * as RR from "../scripts/revenant-rules.mjs";
 const ALL = undefined;
 const DA = [[1100, 1499]];
 const SABBAT = [[1493, 2300]];
@@ -186,22 +187,35 @@ const ghoul = [
 const rev = (key, label, place) => sp(key, label, "The family", `You were born into ${label}. ${place}`, [
   ["The family's pride", "bg Status|bg Resources", "the family's eldest|who decides your tasks"],
   ["The family's shame", "flaw Enemy|ab Subterfuge", "a cousin|who reports on you"]]);
-const revenant = [
-  rev("bratovich", "the Bratovich", "Hunters, dog-breeders and killers in the Carpathian hills."),
-  rev("dhabi", "the D'Habi", "Scholars who hold their master's secrets and their own."),
-  rev("ducheski", "the Ducheski", "Keepers of an old Tzimisce sorcery."),
-  rev("enrathi", "the Enrathi", "A family who serves the Ravnos on the road."),
-  rev("grimaldi", "the Grimaldi", "Bankers and diplomats of the Mediterranean."),
-  rev("kairouan", "the Kairouan Brotherhood", "Hidden servants of an old North African master."),
-  rev("obertus", "the Obertus", "Monks and scholars in quiet houses."),
-  rev("oprichniki", "the Oprichniki", "Hunters of heretics with the tsars' old cruelty."),
-  rev("rafastio", "the Rafastio", "Sorcerers bound to the moon."),
-  rev("rossellini", "the Rossellini", "Necromancers in service to the dead."),
-  rev("anushin", "the Servants of Anushin-Rawan", "Servants of a Persian founder."),
+// B7846: every family in the years it lives (revenant-rules.mjs LINES), the Dark Ages ones first
+const PLACES = {
+  basarab: "Boyars of the Wallachian hills, proud of the old Dacian blood.",
+  bratovich: "Kennel-masters and killers who keep the Fiends' warhounds.",
+  danislav: "Wolf-blooded Kinfolk, a prize at any Fiend's court.",
+  grimaldi: "Merchants and bankers who work by daylight for their masters.",
+  obertus: "Monks, clerks and scholars who keep the old books.",
+  szantovich: "Beautiful spies who marry into the courts and forget nothing.",
+  vlaszy: "Magyar horsemen, the Fiends' cavalry, oathbound at coming of age.",
+  khavi: "Pale river-folk of the Baltic coast who serve one Fiend alone.",
+  krevcheski: "Tinkers and siege-builders in a mountain fortress.",
+  ducheski: "Makers of traps and engines for the Tremere.",
+  dhabi: "Old servants of the Baali, hiding what they know.",
+  enrathi: "Slavers for hire, older than the Empire.",
+  kairouan: "A brotherhood bred in the fortresses of the Children of Haqim.",
+  rafastio: "Witches of the Po who sold their blood for secrets.",
+  anushin: "The quiet servants of an island Elysium.",
+  rossellini: "The \"little brothers\" of a necromancer clan.",
+  oprichniki: "The tsar's old enforcers, serving Russian koldun.",
+  marijava: "Guardians and spies who travel in pairs to stay free.",
+  keskinen: "Alchemists of the north, sworn to their mistress's endless night.",
+  katayama: "The newest family, bred in a laboratory."
+};
+const revenant = RR.LINES.map(l => ({...rev(l.key, l.names ? `the ${l.names[0][2]} (later the ${l.names.at(-1)[2]})` : `the ${RR.nameIn(l, l.years[0])}`, PLACES[l.key] ?? ""), spans: [l.years], ...(/House/.test(l.why) ? {house: true} : {})}));
+revenant.push(
   sp("newfamily", "A family made in play", "The founder", "The family is new, founded by a master the chronicle knows.", [
     ["The first of the line", "bg Status|note The founding year and trait", "the founder|who began the family"],
     ["One of the first children", "bg Allies"]], {house: true})
-];
+);
 
 /* ------------------------------------------------------------------ */
 /*  Werewolf: tribes, auspices, Breeds, Fera and Hengeyokai            */

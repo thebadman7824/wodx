@@ -10,6 +10,8 @@ import {setLineage, setChronology, writeLineageJournal, dateLabel, handOver} fro
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "./totals-rules.mjs";
 import * as SR from "./states-rules.mjs";
+import * as RR from "./revenant-rules.mjs";
+import {yearNow, swearOath} from "./revenant.mjs";
 import {GHOUL} from "../data/vampire.mjs";
 
 const COPY = ["player", "nature", "demeanor", "concept", "appearance", "background", "roleplaytip", "derangement", "notes", "gear", "money", "traits"];
@@ -327,24 +329,38 @@ export async function awakenDialog() {
 export const canBeRevenant = actor => canChange(actor) && !actor.getFlag?.(MODULE_ID, "revenant");
 
 /**
- * GM: a mortal of a revenant family, born with the family's vitae (G&R): on the same Mortal sheet, as a ghoul's,
- * with Potence 1 and a family Discipline (or two family Disciplines), a pool of 10 that starts at 1 and is made
- * back at 1 a night, and the family's weakness noted.
+ * GM: a mortal of a revenant family, born with the family's vitae: on the same Mortal sheet, as a ghoul's, with
+ * Potence 1 and a family Discipline (or two family Disciplines), the family's pool (10, or 8 for the Dark Ages
+ * Grimaldi) that starts at 1 and is made back at 1 a day, and the family's weakness kept as a mark the rest of WoDX
+ * reads (B7840-B7848). The family's write-up is the one for the year: V20 Dark Ages before 1837 where it has one,
+ * V20 Ghouls and Revenants after (revenant-rules.mjs). regnant: the Fiend a Vlaszy swears the oath to; obsession:
+ * the field an Obertus or Keskinen is lost in.
  */
-export async function revenantBirth(mortal, {family, way = "standard", picks = [], time = game.time.worldTime} = {}) {
+export async function revenantBirth(mortal, {family, way = "standard", picks = [], time = game.time.worldTime, year = undefined, regnant = null, obsession = ""} = {}) {
   if ( !game.user.isGM ) return null;
   if ( !canBeRevenant(mortal) ) throw new Error(`${mortal?.name} is not a mortal who can be a revenant`);
-  const st = SR.revenantStart({family, way, picks, era: vampireEra()});
+  const y = year === undefined ? yearNow() : year;
+  const st = RR.startFor({family, year: y, way, picks, era: vampireEra()});
   if ( !st.family ) throw new Error("Pick a revenant family");
-  await mortal.update({
+  if ( !st.family.alive ) throw new Error(st.errors[0]);
+  const F = st.family, mark = F.mark ?? {};
+  const upd = {
     "system.settings.variant": "ghoul",
     "system.settings.haspath": true, "system.settings.hasbloodpool": true, "system.settings.hasvirtue": true,
     "system.settings.powers.hasdisciplines": true,
     "system.settings.variantsheet": CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire",
     "system.advantages.bloodpool.max": st.blood.max, "system.advantages.bloodpool.perturn": GHOUL.perTurn,
     "system.advantages.bloodpool.temporary": st.blood.start,
-    [`flags.${MODULE_ID}.revenant`]: {family, way, disciplines: st.disciplines, perNight: st.blood.perNight, weakness: st.family.weakness}
-  });
+    [`flags.${MODULE_ID}.revenant`]: {family: F.key, way, disciplines: st.disciplines, perNight: st.blood.perNight, weakness: F.weakness,
+      label: F.label, mark, book: F.book, page: F.page, year: y}
+  };
+  const field = String(obsession ?? "").trim();
+  if ( mark.obsession ) {
+    const was = String(mortal.system?.derangement ?? "").trim();
+    const d = `Obsession${field ? ` (${field})` : ""}: the family's weakness`;
+    if ( !was.includes(d) ) upd["system.derangement"] = was ? `${was}\n${d}` : d;
+  }
+  await mortal.update(upd);
   const have = new Map(disciplinesOf(mortal).map(d => [d.name.toLowerCase(), d]));
   const add = [];
   for ( const [k, v] of Object.entries(st.disciplines) ) {
@@ -352,16 +368,23 @@ export async function revenantBirth(mortal, {family, way = "standard", picks = [
     if ( old ) { if ( old.value < v ) await mortal.items.get(old.id).update({"system.value": v, "system.level": v}); }
     else add.push(disciplineItem(name, v));
   }
+  // The V20 Flaw the family carries (Kairouan Slow Healing, Oprichniki Haunted, Rossellini Deathsight), worth no freebies
+  if ( mark.flaw && !mortal.items.some(i => i.type === "Feature" && i.name.toLowerCase() === mark.flaw.toLowerCase()) ) {
+    add.push({name: mark.flaw, type: "Feature", system: {type: "wod.types.flaw", value: 0, level: "0"}, flags: {[MODULE_ID]: {revenantFlaw: F.key}}});
+  }
   if ( add.length ) await mortal.createEmbeddedDocuments("Item", add);
-  await setLineage(mortal, {family: {key: family, name: st.family.label}});
+  await setLineage(mortal, {family: {key: F.key, name: F.label}});
   await setChronology(mortal, {revenant: time});
+  if ( mark.oath && regnant ) await swearOath(mortal, regnant, time);
   const discs = Object.entries(st.disciplines).map(([k, v]) => `${SR.DISC_LABEL(k)} ${v}`).join(", ");
+  const book = F.book === "da" ? "V20 Dark Ages and V20 Ghouls and Revenants pdf 117, 120–122" : "V20 Ghouls and Revenants pdf 117, 120–122, 141 / printed 116, 119–121, 140";
   await ChatMessage.create({
     content: `<div class="wodx-card wodx-embrace"><h3>A revenant</h3>
-      <p><strong>${esc(mortal.name)}</strong> of the ${esc(st.family.label)} carries the family's vitae: ${esc(discs)}. Blood pool 10, starting at 1 and made back at 1 a night.</p>
-      <p>The family's weakness: ${esc(st.family.weakness)}</p>
+      <p><strong>${esc(mortal.name)}</strong> of the ${esc(F.label)} carries the family's vitae: ${esc(discs)}. Blood pool ${st.blood.max}, starting at 1 and made back at 1 a day (V20 p. 500).</p>
+      <p>The family's weakness: ${esc(F.weakness)}</p>
+      ${mark.oath && !regnant ? "<p>The oath is still to swear: open Family weakness when the revenant comes of age.</p>" : ""}
       <p>Revenants use only the first power of a Discipline, unless the Storyteller uses the optional table by the sponsor's Generation. Family Disciplines cost current × 15 experience, others current × 25, a new one 20.</p>
-      <p class="wodx-quiet">V20 Ghouls and Revenants pdf 117, 120–122, 141 / printed 116, 119–121, 140; the family ${esc(st.family.page)}. ${esc(dateLabel(time))}</p></div>`,
+      <p class="wodx-quiet">${esc(book)}; the family ${esc(F.page)}. ${esc(dateLabel(time))}</p></div>`,
     speaker: {alias: "Chronicle"}, whisper: whisperTo(mortal)
   });
   await writeLineageJournal();
@@ -532,19 +555,28 @@ export async function revenantDialog() {
   if ( !mortals.length ) return ui.notifications.warn("There is no mortal to mark as a revenant.");
   const sel = globalThis.canvas?.tokens?.controlled?.[0]?.actor;
   const pick = sel && canBeRevenant(sel) ? sel : mortals[0];
-  const fams = Object.entries(SR.FAMILIES).map(([k, f]) => [k, `${f.label} (${f.disciplines.map(SR.DISC_LABEL).join(", ")})`]);
-  const discs = [...new Set(Object.values(SR.FAMILIES).flatMap(f => f.disciplines))].sort().map(k => [k, SR.DISC_LABEL(k)]);
+  // B7840: only the families alive in the chronicle's year, by the write-up for that year
+  const year = yearNow();
+  const alive = RR.familiesIn(year);
+  const fams = alive.map(f => [f.key, `${f.label} (${f.disciplines.length ? f.disciplines.map(SR.DISC_LABEL).join(", ") : "Disciplines by the Storyteller"})`]);
+  const discs = [...new Set([...alive.flatMap(f => f.disciplines), "potence", "celerity", "fortitude", "auspex", "dominate", "presence", "obfuscate", "animalism"])].sort().map(k => [k, SR.DISC_LABEL(k)]);
+  const fiends = game.actors.filter(a => a.type === "Vampire").sort(byName).map(a => [a.id, a.name]);
+  const first = alive.find(f => f.key === "bratovich") ? "bratovich" : alive[0]?.key;
   const r = await ask("A revenant", `
-    <p>A child of a revenant family carries its vitae from birth (V20 Ghouls and Revenants). The sheet stays a mortal's, as a ghoul's, with
-      Potence 1 and one family Discipline, or two family Disciplines and no Potence. The book gives no age for the blood to show.</p>
+    <p>A child of a revenant family carries its vitae from birth, and it starts to flow at about ${RR.BLOOD_SHOWS_AT} (Dark Ages: Vampire p. 289). The sheet stays
+      a mortal's, as a ghoul's, with Potence 1 and one family Discipline, or two family Disciplines and no Potence.
+      ${year ? `The families listed are those in the world in ${year}, ${year < RR.MODERN_FROM ? "by V20 Dark Ages where it has them" : "by V20 Ghouls and Revenants"}.` : ""}</p>
     ${pickRow(mortals, pick)}
-    <div class="form-group"><label>Family</label>${searchBox("select[name=family]", "Search families…", "Search families")}<select name="family">${opts(fams, "grimaldi")}</select></div>
+    <div class="form-group"><label>Family</label>${searchBox("select[name=family]", "Search families…", "Search families")}<select name="family">${opts(fams, first)}</select></div>
     <div class="form-group"><label>Way</label><select name="way" data-fixed>${opts([["standard", "Potence 1 and a family Discipline"], ["alternate", "Two family Disciplines, no Potence"]], "standard")}</select></div>
     <div class="form-group"><label>Family Discipline</label><select name="d1" data-fixed><option value="">The family's first</option>${opts(discs, "")}</select></div>
-    <div class="form-group"><label>Second (two-Discipline way)</label><select name="d2" data-fixed><option value="">The family's next</option>${opts(discs, "")}</select></div>`,
-    "Mark a revenant", f => ({mortal: f.mortal.value, family: f.family.value, way: f.way.value, picks: [f.d1.value, f.d2.value].filter(Boolean)}));
+    <div class="form-group"><label>Second (two-Discipline way)</label><select name="d2" data-fixed><option value="">The family's next</option>${opts(discs, "")}</select></div>
+    <div class="form-group"><label>Vlaszy: oath sworn to</label><select name="regnant" data-fixed><option value="">Not yet (under age)</option>${opts(fiends, "")}</select></div>
+    <div class="form-group"><label>Obertus or Keskinen: the obsession</label><input type="text" name="obsession" placeholder="old maps, the Tremere, the stars..."/></div>`,
+    "Mark a revenant", f => ({mortal: f.mortal.value, family: f.family.value, way: f.way.value, picks: [f.d1.value, f.d2.value].filter(Boolean),
+      regnant: f.regnant.value, obsession: f.obsession.value}));
   if ( !r ) return null;
-  return revenantBirth(game.actors.get(r.mortal), r);
+  return revenantBirth(game.actors.get(r.mortal), {...r, regnant: r.regnant ? game.actors.get(r.regnant) : null});
 }
 
 export async function chrysalisDialog() {
