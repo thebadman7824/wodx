@@ -154,7 +154,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="people"><i class="fa-solid fa-users"></i> People</button>
           <button type="button" data-action="bookPeople" title="The Storyteller characters of V20 Dark Ages pp. 383-396"><i class="fa-solid fa-book-open"></i> People of the book</button>
           <button type="button" data-action="supportingCast" title="The supporting-character templates of the Dark Ages Storytellers Companion, base, experienced or exceptional"><i class="fa-solid fa-people-group"></i> Supporting characters</button>
-          <button type="button" data-action="dacDemons" title="The sample and bound demons of the Dark Ages Companion (2002) pp. 180-185"><i class="fa-solid fa-skull-crossbones"></i> Demons</button>
+          <button type="button" data-action="dacDemons" title="The sample and bound demons of the Dark Ages Companion (2002) pp. 180-185, and the four monsters of the V20 Dark Ages Companion"><i class="fa-solid fa-skull-crossbones"></i> Demons</button>
           ${isTestWorld() ? `<button type="button" data-action="skipTest" title="Test worlds only. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}
         </div>
         <div class="form-group"><label><input type="checkbox" data-action="toggleNPCs" ${this.showNPCs ? "checked" : ""}> Show every NPC (to make one an ally)</label></div>

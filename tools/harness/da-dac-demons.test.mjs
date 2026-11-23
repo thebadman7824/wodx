@@ -64,3 +64,29 @@ test("the Storyteller's window and the API", () => {
   assert.match(src("modules/wodx-creation/scripts/apps.mjs"), /data-action="dacDemons"/);
   assert.match(src("modules/wodx-creation/scripts/main.mjs"), /dacDemons: \{list/);
 });
+
+/* B7702: the four monsters of the V20 Dark Ages Companion */
+test("the V20 Companion's four monsters: the book's numbers, the usual health, rules in the notes", async () => {
+  const {MONSTERS, BOOK} = await import("../../modules/wodx-creation/data/v20dac-monsters.mjs");
+  assert.equal(BOOK, "V20 DA Companion");
+  assert.deepEqual(MONSTERS.map(m => [m.key, m.p]), [["black-dog", 35], ["fossegrim", 48], ["kallikantzaros", 66], ["pishacha", 97]]);
+  assert.deepEqual(R.ALL.map(d => d.key).slice(-4), MONSTERS.map(m => m.key));
+  for ( const m of MONSTERS ) {
+    const d = R.byKey(m.key);
+    assert.equal(R.pageOf(d), `V20 DA Companion p. ${m.p}`);
+    assert.equal(Object.keys(m.attributes).length, 9, m.key);
+    assert.ok(m.about.length <= 260 && !/—/.test(m.about + m.rules.join(" ")), m.key);
+    const p = R.plan(d, KEYS);
+    assert.ok(!Object.keys(p.update).some(k => k.startsWith("system.health.")), `${m.key}: the sheet's own seven levels`);
+    assert.equal(p.update["system.traits.health.totalhealthlevels.max"], undefined);
+    assert.equal(p.update["system.advantages.bloodpool.max"], m.blood);
+    const n = p.notes.join(" ");
+    assert.doesNotMatch(n, /Attack:|Health:/, m.key);
+    assert.match(n, new RegExp(`Road ${m.road}\\b`));
+    for ( const r of m.rules ) assert.ok(n.includes(r), m.key);
+  }
+  const b = R.plan(R.byKey("black-dog"), KEYS);
+  assert.deepEqual([b.update["system.attributes.charisma.value"], b.disciplines.Protean, b.update["system.advantages.willpower.permanent"]], [5, 7, 7]);
+  assert.equal(R.byKey("pishacha").disciplines.Dominate, 5);
+  assert.equal(R.byKey("kallikantzaros").blood, 9);
+});

@@ -164,6 +164,44 @@
       "Damaging the gods' images",
       "Cursing the gods"
      ]
+    },
+    {
+     "name": "Path of the Pure",
+     "p": 20,
+     "book": "V20 DA Companion",
+     "house": "The Katharoi's Path of the Road of Heaven, with its aura, Virtues and ethics (V20 Dark Ages pp. 119-120)",
+     "sins": [
+      "Desiring a material thing or a person",
+      "Feeding past half the blood pool",
+      "Deceiving by silence or stealth",
+      "Giving your blood to another",
+      "Telling a lie or tricking someone",
+      "Taking authority or honours, except as the Path's teacher",
+      "Lust, or drinking another Cainite's blood",
+      "Feeding for pleasure",
+      "Stealing or killing for pleasure",
+      "Torturing or ravaging for pleasure or power"
+     ]
+    },
+    {
+     "name": "Path of the Archangel",
+     "p": 70,
+     "book": "V20 DA Companion",
+     "aura": "Melancholia",
+     "auraOn": "when the follower's loss and longing, or being seen as a martyr, would move others",
+     "house": "A Path of the Road of Heaven with the Road's Virtues; the Nephilim's harder sin rolls are their bloodline's weakness, not the Path's (p. 70)",
+     "sins": [
+      "Giving in to any temptation",
+      "A night without creative work",
+      "Turning away someone who needs inspiration",
+      "Refusing a small sacrifice",
+      "Leaving a fellow Toreador unbaptised",
+      "A week without creative work",
+      "Giving in to the flesh",
+      "Abandoning someone in your care",
+      "Giving in to the Beast, as in frenzy",
+      "Refusing a great sacrifice"
+     ]
     }
    ]
   },
@@ -220,6 +258,24 @@
       "1": "Letting true darkness in"
      },
      "sinsPage": 125
+    },
+    {
+     "name": "Road of Ahura Mazda",
+     "p": 83,
+     "book": "V20 DA Companion",
+     "virtues": [
+      "conviction",
+      "selfcontrol"
+     ],
+     "aura": "Goodness",
+     "auraOn": "in a frenzy, two Willpower points name one thing the vampire will not do",
+     "house": "The second Road of Zarathustra: the Road of Humanity's chart with three sins added, and Conviction and Self-Control",
+     "sinsAt": {
+      "10": "Fearing Final Death",
+      "8": "Speaking evil, or ill of others",
+      "1": "Feeding on the good"
+     },
+     "sinsPage": 84
     }
    ]
   },
@@ -675,6 +731,30 @@
       "Putting another's wishes before your own",
       "Punishing someone for indecency",
       "Upholding the law"
+     ]
+    },
+    {
+     "name": "Road of Angra Mainyu",
+     "p": 83,
+     "book": "V20 DA Companion",
+     "virtues": [
+      "conviction",
+      "selfcontrol"
+     ],
+     "aura": "Corruption",
+     "auraOn": "+2 dice to persuade someone toward evil",
+     "house": "The Road of Zarathustra is two Roads. Every follower starts on this one, the Path of Apep's chart (V20 Dark Ages p. 449) with three rungs replaced, and may move once, free, to the Road of Ahura Mazda (usually from 5). Going back to Ahura Mazda later is a normal Road change (pp. 112-115)",
+     "sins": [
+      "Any act of kindness",
+      "Putting off the flesh's appetites",
+      "Passing up a chance to corrupt a mortal",
+      "Passing up a chance to corrupt a vampire",
+      "Passing up a chance to corrupt a holy person",
+      "Not undermining the mortal order around you",
+      "Not undermining Cainite power",
+      "Putting another's wishes before your own",
+      "Feeding on the wicked",
+      "Fearing frenzy"
      ]
     }
    ]

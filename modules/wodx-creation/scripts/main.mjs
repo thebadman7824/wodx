@@ -41,7 +41,6 @@ import * as BOOKPM from "./book-people.mjs";
 import * as DASC from "../data/dasc-templates.mjs";
 import * as SCR from "./supporting-cast-rules.mjs";
 import * as SCM from "./supporting-cast.mjs";
-import * as DACD from "../data/dac-demons.mjs";
 import * as DDR from "./dac-demons-rules.mjs";
 import * as DDM from "./dac-demons.mjs";
 
@@ -133,7 +132,7 @@ function start() {
     // B7695: the Dark Ages Storytellers Companion supporting-character templates
     supportingCast: {list: () => DASC.TEMPLATES, tiers: DASC.TIERS, build: (k, t) => SCR.build(k, t), make: (k, t) => SCM.makeSupporting(k, t), open: () => SCM.supportingCastDialog()},
     // B7698: the Dark Ages Companion demons (pp. 180-185)
-    dacDemons: {list: () => DACD.DEMONS, plan: k => DDR.plan(DDR.byKey(k)), make: k => DDM.makeDemon(k), open: () => DDM.demonsDialog()},
+    dacDemons: {list: () => DDR.ALL, plan: k => DDR.plan(DDR.byKey(k)), make: k => DDM.makeDemon(k), open: () => DDM.demonsDialog()},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople,
       // B6242: the People tables load on first use; load() resolves when they are in
       load: () => people.load(), loaded: () => !!people.loaded(), feminine: people.feminine}
