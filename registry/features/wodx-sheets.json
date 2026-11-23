@@ -1,5 +1,650 @@
 {
  "module": "wodx-sheets",
- "seeded": false,
- "rows": []
+ "seeded": true,
+ "rows": [
+  {
+   "id": "sheets.book-sheet",
+   "name": "The book's character sheet for each line and era (V20 Dark Ages Kindred and ghouls first)",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/main.mjs",
+    "modules/wodx-sheets/scripts/sheet-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 22,
+     "decisions": "B74, B75, B81"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:sheetFor"
+    },
+    "shown": {
+     "what": "the Core tab laid out as the line's printed sheet, section by section, with the system's own dots, rolls and health"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesheet1.mjs",
+     "step": "a missing Ability: the first dot adds Archery as a skill"
+    }
+   },
+   "open": [
+    "book: page not checked against the book text yet (the printed Dark Ages Kindred sheet's section order)",
+    "gatesheet1 drives a Dark Ages changeling; no gate step drives the Dark Ages Kindred sheet's own dots yet (gatesheet4 only checks which sheet each character gets)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    22
+   ]
+  },
+  {
+   "id": "sheets.appv2-sheets",
+   "name": "Line sheets on the newer sheet engine (ApplicationV2), one line at a time",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/main.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1556,
+     "decisions": "B6110-B6114"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:wodxSheet"
+    },
+    "shown": {
+     "what": "the same WoDX sheet over the system's ApplicationV2 sheet: tabs, lock, dots, typed fields and dropped items all work"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesheetv2.mjs",
+     "step": "6. a dot sets a value"
+    },
+    "book": {
+     "none": "a change of sheet engine; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1556
+   ]
+  },
+  {
+   "id": "sheets.line-skins",
+   "name": "Line skins: each line's look loads the first time a sheet of that line opens",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/skins.mjs",
+    "modules/wodx-sheets/scripts/skins-index.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1621,
+     "decisions": "B6060-B6063, B93, B96"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/skins.mjs:dress"
+    },
+    "shown": {
+     "what": "each sheet wears its line's paper and type; the page waits blank while the line file loads"
+    },
+    "gated": {
+     "gate": "tools/gate/gateskinsplit.mjs",
+     "step": "2. each sheet wears its own line's skin"
+    },
+    "book": {
+     "none": "look and loading of the sheet; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1621
+   ]
+  },
+  {
+   "id": "sheets.sheet-roll-mods",
+   "name": "A roll clicked on the sheet counts WoDX's merits, flaws, conditions and powers",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/sheet-rolls.mjs",
+    "modules/wodx-sheets/scripts/sheet-roll-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1638,
+     "decisions": "B6175, B6664, B6924, B6925, B7120"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/sheet-rolls.mjs:modsFor"
+    },
+    "shown": {
+     "what": "the roll card gets a WoDX line naming each part, and 'rolled at 10; 1 more success needed' past difficulty 10"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthsheets.mjs",
+     "step": "2. a sheet roll counts WoDX"
+    }
+   },
+   "open": [
+    "book: page not checked against the book text yet (V20 Dark Ages difficulty past 10)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1638,
+    2184
+   ]
+  },
+  {
+   "id": "sheets.nature-derangement",
+   "name": "Nature button on every sheet and Set off on the Derangements panel",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/main.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1638,
+     "decisions": "B3917, B6178"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:natureRow"
+    },
+    "shown": {
+     "what": "a Nature button and a Set off link on the sheet, including plain mortals in the system's layout"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetruthsheets.mjs",
+     "step": "3. the Nature button on a plain mortal"
+    }
+   },
+   "open": [
+    "book: page not checked against the book text yet (Nature regains Willpower; derangement bouts)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1638
+   ]
+  },
+  {
+   "id": "sheets.gender-line",
+   "name": "An optional Gender line under the name, in the player's own words",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/main.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 933,
+     "decisions": "B3501, B3500-B3503"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:genderField"
+    },
+    "shown": {
+     "what": "a Gender line under the name on every character sheet; for a player character it changes nothing in play"
+    },
+    "gated": {
+     "gate": "tools/gate/gategender.mjs",
+     "step": "4. sheet line"
+    },
+    "book": {
+     "none": "a WoDX house choice (B3500); not a book rule"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    933
+   ]
+  },
+  {
+   "id": "sheets.sheet-tools",
+   "name": "Sheet tools: the title bar's buttons and window controls in one menu",
+   "module": "wodx-sheets",
+   "core": false,
+   "files": [
+    "modules/wodx-sheets/scripts/main.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1556,
+     "decisions": "B2490-B2499, B6114"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:sheetToolsButton"
+    },
+    "shown": {
+     "what": "a Sheet tools button listing Print, History and the window controls by name"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplayerextras.mjs",
+     "step": "8. sheet tools"
+    },
+    "book": {
+     "none": "window controls; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1556
+   ]
+  },
+  {
+   "id": "sheets.beginner-view",
+   "name": "Beginner view on the sheet: quick rolls, zero Abilities folded, rare tabs behind More, hover help",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/beginner.mjs",
+    "modules/wodx-sheets/scripts/beginner-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 846,
+     "decisions": "B2822-B2825, B6668"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/beginner.mjs:quickRow"
+    },
+    "shown": {
+     "what": "a Quick rolls row at the top of Core, Show all under the Abilities, a More tab button and plain-words hover help"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplayerview.mjs",
+     "step": "13. quick rolls"
+    },
+    "book": {
+     "none": "a player-view layout; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    846
+   ]
+  },
+  {
+   "id": "sheets.in-play-strip",
+   "name": "The in-play strip, the Storyteller's notes and the header buttons on every WoDX sheet",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/extras.mjs",
+    "modules/wodx-sheets/scripts/extras-html.mjs",
+    "modules/wodx-sheets/scripts/extras-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 518,
+     "decisions": "B600-B610"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:decorate"
+    },
+    "shown": {
+     "what": "a strip across every tab (health, Willpower, the line's pools, soak, initiative, conditions) and a Storyteller-only notes box"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesheetextras.mjs",
+     "step": "the sheet shows the strip, Possessions, Ties, the Storyteller's notes and the header buttons"
+    },
+    "book": {
+     "none": "a summary of the sheet's own traits; no rule of its own"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    518
+   ]
+  },
+  {
+   "id": "sheets.possessions",
+   "name": "Possessions: containers, stacks, concealment, out-of-era flags, money by era, give and leave on the map",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/extras.mjs",
+    "modules/wodx-sheets/scripts/extras-html.mjs",
+    "modules/wodx-sheets/scripts/extras-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 518,
+     "decisions": "B600-B610, B2653, B6774"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:listen"
+    },
+    "shown": {
+     "what": "the Possessions tab in place of Gear: nested containers, counts, concealment sizes, era flags and the coins of the time"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesheetextras.mjs",
+     "step": "containers: things nest, a too-big thing is refused, a stack counts"
+    }
+   },
+   "open": [
+    "book: page not checked against the book text yet (V20 concealment steps P, J, T, N)",
+    "give and leave on the map are direct calls in gatesheetextras, not driven from the sheet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    518
+   ]
+  },
+  {
+   "id": "sheets.relationships",
+   "name": "The Relationships tab: every tie, what it does in play, family news, Followers",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/extras.mjs",
+    "modules/wodx-sheets/scripts/extras-html.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 653,
+     "decisions": "B1900-B1908, B2840, B3229, B3440"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:relationsOf"
+    },
+    "shown": {
+     "what": "ties grouped on the Relationships tab, each with what it does in play and where it came from; hidden ties kept from players"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebonds.mjs",
+     "step": "7. sheet"
+    }
+   },
+   "open": [
+    "book: page not checked against the book text yet (blood bond and ghoul ties)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    653
+   ]
+  },
+  {
+   "id": "sheets.history-print",
+   "name": "History with Undo for this session's edits, and Print",
+   "module": "wodx-sheets",
+   "core": false,
+   "files": [
+    "modules/wodx-sheets/scripts/extras.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 518,
+     "decisions": "B600-B610"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:openHistory"
+    },
+    "shown": {
+     "what": "a History window listing this session's edits with Undo, and a Print button"
+    }
+   },
+   "open": [
+    "gated: gatesheetextras checks History and Undo by a direct call and gatesheetv2 step 7 only finds the controls; no step drives Undo from the window"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    518
+   ]
+  },
+  {
+   "id": "sheets.changes-since",
+   "name": "Changed since last session: each change with its cause, cleared when read",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/extras.mjs",
+    "modules/wodx-sheets/scripts/extras-html.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 707,
+     "decisions": "B2320-B2323"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:installChanges"
+    },
+    "shown": {
+     "what": "a strip under the in-play strip listing each change and its cause (a card, the Storyteller, a player, the time skip, Undo)"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesheetchanges.mjs",
+     "step": "Willpower and a new item show, with the Storyteller as cause"
+    },
+    "book": {
+     "none": "a play aid; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    707
+   ]
+  },
+  {
+   "id": "sheets.features-card",
+   "name": "The features card: every line feature in force, when it fires and when it last fired",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/extras.mjs",
+    "modules/wodx-sheets/scripts/extras-html.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 707,
+     "decisions": "B2320-B2323"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:featuresOf"
+    },
+    "shown": {
+     "what": "a card on the sheet listing each clan or line feature in force, when it fires and when it last fired"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesheetchanges.mjs",
+     "step": "the features card lists the clan feature with when it fires"
+    },
+    "book": {
+     "none": "a view of features the rules modules apply; the rules' pages sit on their own rows"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    707
+   ]
+  },
+  {
+   "id": "sheets.body-tab",
+   "name": "The Body tab: shape, parts, what the body can do, where blows land, lasting changes",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/body-html.mjs",
+    "modules/wodx-sheets/scripts/extras.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 630,
+     "decisions": "B1200-B1210"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:bodyTabHtml"
+    },
+    "shown": {
+     "what": "a Body tab with the shape and why, the parts tree with what each hand holds, and where blows land"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebody.mjs",
+     "step": "the Body tab"
+    }
+   },
+   "open": [
+    "book: page not checked against the book text yet (Protean shapes, V20 Dark Ages)"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    630
+   ]
+  },
+  {
+   "id": "sheets.damage-doll",
+   "name": "The damage doll: a pixel figure on the Body tab coloured by the wounds on each part",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/scripts/doll-draw.mjs",
+    "modules/wodx-sheets/scripts/body-html.mjs",
+    "modules/wodx-sheets/scripts/extras.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 778,
+     "decisions": "B2690-B2699"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/extras.mjs:wireDoll"
+    },
+    "shown": {
+     "what": "a small figure at the top of the Body tab: purple for bashing, red for lethal, charred black for aggravated, false limbs by era"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedoll.mjs",
+     "step": "the Body tab draws the doll"
+    },
+    "book": {
+     "none": "house rule B2690: shows where the health track's levels landed; parts carry no health of their own"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    778
+   ]
+  },
+  {
+   "id": "sheets.anachronism-check",
+   "name": "The anachronism check: when the clock jumps, possessions and map things out of their time go on one card",
+   "module": "wodx-sheets",
+   "core": false,
+   "files": [
+    "modules/wodx-sheets/scripts/anachronism.mjs",
+    "modules/wodx-sheets/scripts/anachronism-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 543,
+     "decisions": "B760-B769, B2420-B2429, B7564"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/anachronism.mjs:check"
+    },
+    "shown": {
+     "what": "one Storyteller card naming each character's things and each map thing out of its time, with Keep it and Show me"
+    }
+   },
+   "open": [
+    "gated: every gateanachronism step is a direct call (tools/registry/strength.mjs); no step drives a real clock jump to the card"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    543
+   ]
+  },
+  {
+   "id": "sheets.bring-forward",
+   "name": "Bring forward: things on the maps swap for their equal in the card's year",
+   "module": "wodx-sheets",
+   "core": false,
+   "files": [
+    "modules/wodx-sheets/scripts/anachronism.mjs",
+    "modules/wodx-sheets/scripts/anachronism-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 830,
+     "decisions": "B2720-B2729"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/anachronism.mjs:bringForward"
+    },
+    "shown": {
+     "what": "a Bring forward button on the anachronism card and each row; a second card says what changed, with Undo"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebringforward.mjs",
+     "step": "buttons"
+    },
+    "book": {
+     "none": "a time-travel play aid across eras; no rule in the books"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    830
+   ]
+  },
+  {
+   "id": "sheets.standing-strip",
+   "name": "Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab",
+   "module": "wodx-sheets",
+   "core": false,
+   "files": [
+    "modules/wodx-sheets/scripts/standing-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2336,
+     "decisions": "B7754"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:standingStrip"
+    },
+    "shown": {
+     "what": "a read-only strip at the top of the Bio tab; each part opens the Road or the Domain and fealty window in WoDX Actions"
+    }
+   },
+   "open": [
+    "gated: weekly-review-picks-1123.test.mjs checks the lines and the hook; no gate step opens a sheet and finds the strip yet"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2336
+   ]
+  }
+ ]
 }
