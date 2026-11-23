@@ -4,11 +4,11 @@
  * never paths, user names, process names, ports or log lines.
  *
  * One script for every PC. Env (all optional):
- *   PC_STATUS_NAME   main | secondary | laptop      (default main)
+ *   PC_STATUS_NAME   main | secondary | laptop | newpc   (default main)
  *   PC_LANES         lane ids this PC drives, e.g. "2,3,4,5,6" (port = 30000 + 10 * id)   default "" (none)
  *   PC_RUNNER_MATCH  regex on a process command line that means "the PC job runner is running"  default "pcq.*runner\.mjs|runner\.mjs"
  *   PC_HOME          working folder for the clone (default <script folder>/../status-push-clone)
- *   PC_BUILD_ALL     "1" on the Main PC only: also builds registry/pc-status/all.json from the three files each cycle
+ *   PC_BUILD_ALL     "1" on the Main PC only: also builds registry/pc-status/all.json from the four files each cycle
  *   PC_LOCAL_AGENT_DIR  optional, a local-agent tasks folder (inbox/running counts), Main PC only
  *   PC_COMFY_URL     optional, ComfyUI's address on this PC (Main PC: http://127.0.0.1:8188): adds "comfy" (B7296)
  *   PC_OCR_MATCH, PC_OCR_LOOP_MATCH, PC_OCR_OUT, PC_OCR_LOG   optional, the book OCR (Secondary PC): adds "ocr" (B7296)
@@ -19,6 +19,7 @@
  * First run creates the clone and, if the branch does not exist yet, an orphan `pc-status` branch.
  * Run detached, outside any helper's process tree (Win32_Process Create), e.g.
  *   PC_STATUS_NAME=secondary PC_LANES=8 node status-push.mjs
+ *   PC_STATUS_NAME=newpc PC_LANES=10 node status-push.mjs   (the New PC)
  */
 import {spawnSync} from "node:child_process";
 import fs from "node:fs";
@@ -201,7 +202,7 @@ function write(rel, obj) {
 
 function buildAll() {
   const now = Date.now(), all = {time: new Date().toISOString(), staleAfterMin: STALE_MIN, pcs: {}};
-  for ( const n of ["main", "secondary", "laptop"] ) {
+  for ( const n of ["main", "secondary", "laptop", "newpc"] ) {
     try {
       const j = JSON.parse(fs.readFileSync(path.join(DIR, REL, `${n}.json`), "utf8"));
       const age = Math.round((now - Date.parse(j.time)) / 60000);

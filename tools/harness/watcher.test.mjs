@@ -9,9 +9,9 @@ const NOW = Date.parse("2026-11-18T03:00:00Z");
 const iso = minAgo => new Date(NOW - minAgo * 60e3).toISOString();
 const stamp = minAgo => `Updated ${iso(minAgo).slice(0, 16)}Z by the PC runner (x) at abc.`;
 const pc = (key, minAgo, extra = {}) => ({host: key, time: iso(minAgo), runnerUp: true, lanes: PCS.find(p => p.key === key).lanes.map(id => ({id, up: true})), gpu: null, issues: 0, ...extra});
-const statusIssue = (key, minAgo, more = "") => ({number: {main: 1066, secondary: 1822, laptop: 1805}[key], title: PCS.find(p => p.key === key).statusTitle, updated_at: iso(minAgo), body: `${stamp(minAgo)}\n${more}`});
-const healthy = (over = {}) => ({now: NOW, pcs: {main: pc("main", 2), secondary: pc("secondary", 3), laptop: pc("laptop", 1)},
-  statusIssues: [statusIssue("main", 1, "Merge train: front #1880, wait (gates not reported yet); line #1880, #1988"), statusIssue("secondary", 1), statusIssue("laptop", 1)],
+const statusIssue = (key, minAgo, more = "") => ({number: {main: 1066, secondary: 1822, laptop: 1805, newpc: 2308}[key], title: PCS.find(p => p.key === key).statusTitle, updated_at: iso(minAgo), body: `${stamp(minAgo)}\n${more}`});
+const healthy = (over = {}) => ({now: NOW, pcs: {main: pc("main", 2), secondary: pc("secondary", 3), laptop: pc("laptop", 1), newpc: pc("newpc", 2)},
+  statusIssues: [statusIssue("main", 1, "Merge train: front #1880, wait (gates not reported yet); line #1880, #1988"), statusIssue("secondary", 1), statusIssue("laptop", 1), statusIssue("newpc", 1)],
   jobs: [], alerts: [], local: {runner: true, watchdog: true, statusPush: true}, ...over});
 
 test("all clear when every PC, runner and job is fresh", () => {
@@ -34,6 +34,27 @@ test("a PC silent on both its status push and its runner reads as off; runner-on
 test("a missing status file or status issue counts as silent, not as fine", () => {
   const s = healthy({pcs: {...healthy().pcs, laptop: null}, statusIssues: healthy().statusIssues.filter(i => i.number !== 1805)});
   assert.ok(assess(s).problems.some(p => p.key === "laptop:silent"));
+});
+
+test("the New PC is watched like the Main PC and the Secondary: lane 10, its own status issue, silent, push and lane problems", () => {
+  const p = PCS.find(x => x.key === "newpc");
+  assert.deepEqual([p.label, p.statusTitle, p.lanes], ["New PC", "PC runner status (New PC)", [10]]);
+  const a = assess(healthy());
+  assert.ok(a.rows.some(r => r.pc === "New PC" && r.lanes === "10" && r.state === "ok" && /#2308/.test(r.runner)));
+  const off = healthy({pcs: {...healthy().pcs, newpc: null}, statusIssues: healthy().statusIssues.filter(i => i.number !== 2308)});
+  assert.ok(assess(off).problems.some(x => x.key === "newpc:silent" && /New PC is silent/.test(x.text)));
+  // No status file yet (status-push not started there) while its runner is alive: a push problem, not "off".
+  const noPush = assess(healthy({pcs: {...healthy().pcs, newpc: null}}));
+  assert.ok(noPush.problems.some(x => x.key === "newpc:push" && /never sent a status file \(registry\/pc-status\/newpc\.json\).*PC_STATUS_NAME=newpc PC_LANES=10/.test(x.text)));
+  assert.ok(!noPush.problems.some(x => x.key === "newpc:silent"));
+  assert.ok(noPush.rows.some(r => r.pc === "New PC" && r.state === "no status push"));
+  const lane = assess(healthy({pcs: {...healthy().pcs, newpc: pc("newpc", 2, {lanes: [{id: 10, up: false}]})}}));
+  assert.ok(lane.problems.some(x => x.key === "newpc:lane:10" && /New PC: lane 10 not answering/.test(x.text)));
+  const run = healthy(); run.statusIssues[3] = statusIssue("newpc", LIMITS.runnerStaleMin + 5);
+  assert.ok(assess(run).problems.some(x => x.key === "newpc:runner"));
+  // Its runner's "main PC runner has been silent" alert is listed as leaked once the Main PC is back, like the others'.
+  const leak = assess(healthy({alerts: [{number: 9, title: "New PC alert: the main PC runner has been silent for 30 minutes", created_at: iso(10)}]}));
+  assert.ok(leak.notes.some(n => /#9/.test(n)));
 });
 
 test("status push quiet but runner alive is a note, and its old lane readings are not trusted", () => {

@@ -121,6 +121,8 @@ workers with no new output for 60 minutes, and an OCR run that gave up. Until a 
 
 `status-push.mjs` here is the copy every PC runs, from `<home>\gpu-tools`. Main PC: set `PC_COMFY_URL=http://127.0.0.1:8188`.
 Secondary PC: set `PC_OCR_MATCH` (default `book_pipeline`), `PC_OCR_OUT` (the OCR output folder) and `PC_OCR_LOG` (its log).
+New PC: set `PC_STATUS_NAME=newpc` and `PC_LANES=10`. The watcher reads its status file `newpc.json` and its status
+issue "PC runner status (New PC)" the same way it reads the Main PC's and the Secondary's.
 
 The issue "PC watcher report" (label `pc-watch`) is rewritten each cycle. When a problem shows up on two cycles in a
 row, one issue "PC watcher alert" (label `pc-alert`) opens. It gets a comment when the list changes and closes when
