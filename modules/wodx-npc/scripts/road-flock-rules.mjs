@@ -13,6 +13,11 @@
  *   Sin (p. 134): praeceptors gather students and cults; at Saturnalia the foremost is the Lord of Misrule.
  *   Bones (p. 140): networks of scholars round monasteries and places of learning.
  *   Yasa (p. 141): no order but the Mongol families; Bloodbrothers keep near each other.
+ * Appendix B Roads (B7669):
+ *   Blood (p. 432): Sentinels keep to themselves; what order there is runs mentor to student.
+ *   Paradox (p. 445): hardly any order; when Asura meet they trade stories of their svadharma for a night.
+ *   Abyss (pp. 441-442), Samiel (pp. 447-448), Set (p. 449): the book gives no Organization; WoDX readings: the
+ *     mystics' brethren, a warrior band of the Salubri, a temple of Set's faithful under its priest.
  * WoDX readings (B7649): the group is a secret Kindred faction holding the scene it was gathered in, run on the
  * Storyteller's orders so it makes no moves by itself; its head is the member highest on the Road (for the Beast, the
  * one who holds the lead for now); a Road with no order gathers only when two or more of its walkers share the place.
@@ -28,7 +33,12 @@ export const FLOCKS = {
     metamorphosis: { flock: "Seekers", group: "Black Church", head: "none", structure: "none", meets: "a Black Church, to show what has been made", p: 133 },
     sin: { flock: "Sinners", group: "school", head: "praeceptor", structure: "cult", meets: "lessons, and Saturnalia", p: 134 },
     bones: { flock: "Gravediggers", group: "circle of scholars", head: "the most learned", structure: "network", meets: "a monastery or a place of learning", p: 140 },
-    yasa: { flock: "Bloodbrothers", group: "band", head: "the eldest of the family", structure: "family", meets: "the family's camp", p: 141 }
+    yasa: { flock: "Bloodbrothers", group: "band", head: "the eldest of the family", structure: "family", meets: "the family's camp", p: 141 },
+    blood: { flock: "Sentinels", group: "watch", head: "none", structure: "none", meets: "a mentor's teaching", p: 432 },
+    paradox: { flock: "Asura", group: "gathering", head: "none", structure: "none", meets: "a night of stories of success and failure", p: 445 },
+    abyss: { flock: "Abyss Mystics", group: "brethren", head: "the deepest in the dark", structure: "cult", meets: "study of the darkness", p: 441 },
+    samiel: { flock: "Warriors of Samiel", group: "warrior band", head: "the eldest warrior", structure: "network", meets: "the hunt for evil", p: 447 },
+    set: { flock: "Followers of Set", group: "temple", head: "the high priest", structure: "faith", meets: "the temple's rites", p: 449 }
 };
 
 const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || "here";

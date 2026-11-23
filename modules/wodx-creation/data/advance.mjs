@@ -70,6 +70,8 @@ export const ROAD_TO_PATH = {
   paradox: {to: "paradox"},
   set: {to: "typhon"},
   abyss: {to: "night"},
+  blood: {to: "blood", note: "The Road of Blood is the Assamite Path of Blood's forebear"},
+  samiel: {to: "humanity", or: ["accord"], note: "V20 has no Code of Samiel; the Storyteller picks"},
   yasa: {to: "humanity", or: ["accord"], note: "No V20 Path matches; the Storyteller picks"}
 };
 

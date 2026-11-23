@@ -106,6 +106,7 @@ function start() {
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups,
+    becomeMortal: states.becomeMortal, becomeMortalDialog: states.becomeMortalDialog,
     deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
     revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,
     fallenHost: states.fallenHost, fallenDialog: states.fallenDialog, possess: states.possess, possessDialog: states.possessDialog,

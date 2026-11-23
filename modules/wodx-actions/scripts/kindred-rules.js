@@ -182,9 +182,11 @@ export function roadFor(data, name) {
     for (const [k, r] of Object.entries(data.roads)) {
         for (const p of r.paths ?? []) if (pathNames(p).some(x => x === S || (S.length > 4 && x.includes(S)))) return { key: k, road: r, path: p };
     }
+    const namesOf = (k, r) => [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
+    // B7669: an exact name first, so the Road of Blood is not read as the Road of Yasa ("Bloodbrothers")
+    for (const [k, r] of Object.entries(data.roads)) if (namesOf(k, r).includes(S)) return { key: k, road: r, path: null };
     for (const [k, r] of Object.entries(data.roads)) {
-        const names = [k, r.name, r.latin, ...(String(r.nick ?? "").split(","))].map(normName).filter(Boolean);
-        if (names.some(x => x === S || (S.length > 3 && (x.startsWith(S) || S.startsWith(x))))) return { key: k, road: r, path: null };
+        if (namesOf(k, r).some(x => S.length > 3 && (x.startsWith(S) || S.startsWith(x)))) return { key: k, road: r, path: null };
     }
     return null;
 }
@@ -264,6 +266,12 @@ export const SIN_EVENTS = {
     sin: SIN_ROAD_EVENTS, "Path of Pleasure": SIN_ROAD_EVENTS, "Path of the Devil": SIN_ROAD_EVENTS, "Path of Screams": { notRidden: 8, starve: 7 },
     bones: { frenzy: 6, killFrenzy: 6 },
     yasa: { killFrenzy: 4, lie: 8 },
+    // B7669: the Appendix B Roads (V20 Dark Ages pp. 432-449)
+    blood: { frenzy: 8, killFrenzy: 8, wordBroken: 3 },
+    abyss: { frenzy: 5, killFrenzy: 5, starve: 7 },
+    paradox: { killFeed: 7, kill: 3, killFrenzy: 3, embrace: 1 },
+    samiel: { lie: 8, feedUnwilling: 7 },
+    set: {}, "Path of Apep": {},
     // V20 Paths of Enlightenment (B6724, V20 pp. 317-340). killFeed: a vessel drained to death while feeding; where a
     // Path has no row for it, kill counts. A null is no sin. Instinct Paths sin on notRidden, Self-Control ones on frenzy.
     "v20-blood": { killFeed: 10, kill: null, frenzy: 6, killFrenzy: 6 },
@@ -591,3 +599,17 @@ export function flawPowerDiff(flaws = []) {
     const has = (flaws ?? []).some(f => /^thirteenth generation$/i.test(String(f ?? "").trim()));
     return has ? { diff: 1, part: "Thirteenth Generation +1" } : { diff: 0, part: "" };
 }
+
+/**
+ * B7666: a staked vampire withers (V20 Dark Ages p. 354). Each night the stake costs a blood point; with none left the
+ * body gives up a health level a day, and at Incapacitated (the seventh level) it mummifies into torpor. blood: points
+ * now; filled: health levels marked now. Returns {spend, wither, torpor}.
+ */
+export const WITHER_TORPOR_AT = 7;
+export function stakedNight({ blood = 0, filled = 0 } = {}) {
+    if (n(blood) > 0) return { spend: 1, wither: false, torpor: false };
+    const after = n(filled) + 1;
+    return { spend: 0, wither: true, torpor: after >= WITHER_TORPOR_AT };
+}
+/** B7666: a mummified vampire rises only once fed back to Injured: three levels marked or fewer (p. 354). */
+export const witheredMayRise = filled => n(filled) <= 3;

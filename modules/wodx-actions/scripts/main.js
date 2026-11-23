@@ -2578,6 +2578,11 @@ export async function torpor({ actor: a } = {}) {
             await dm().wake(actor, t?.since);
             return post(actor, `${actor.name} rises from torpor`, `<div class="vta-note">${esc(actor.name)} rises Crippled and should heal or hunt at once.</div>`);
         }
+        // B7666: a vampire mummified on the stake rises only once fed back to Injured (V20 Dark Ages p. 354)
+        if (t?.withered) {
+            const d = healthTrack(actor).damage, filled = d.bashing + d.lethal + d.aggravated;
+            if (!KR.witheredMayRise(filled)) return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">Mummified: ${filled} health levels marked. Blood must heal the body back to Injured (3 or fewer) first (V20 Dark Ages p. 354).</div>`);
+        }
         const minDays = t.voluntary ? Math.ceil(t.days / 2) : t.days;
         let html = "";
         if (elapsed < minDays) html += `<div class="vta-warn">Only ${elapsed} of ${minDays} days have passed (game time). Rolling anyway at the Storyteller's word.</div>`;
@@ -2725,7 +2730,25 @@ export async function newNight({ actors } = {}) {
         const upd = {}, bits = [];
         const vamp = isVampire(actor);
         const inTorpor = !!flag(actor, "torpor");
-        if (vamp && setting("nightlyBlood") && !inTorpor) {
+        // B7666: a staked vampire withers: a blood a night, then a health level a day, then torpor (V20 Dark Ages p. 354)
+        const staked = vamp && !inTorpor && !!chronicle()?.conditions?.hasCondition?.(actor, "staked");
+        if (staked) {
+            const b = blood(actor), d = healthTrack(actor).damage, filled = d.bashing + d.lethal + d.aggravated;
+            const st = KR.stakedNight({ blood: b.value, filled });
+            if (st.spend) { upd["system.advantages.bloodpool.temporary"] = Math.max(0, b.value - 1); bits.push(`staked: blood ${b.value} → ${b.value - 1}`); }
+            else {
+                Object.assign(upd, healthUpdate(actor, { ...d, lethal: d.lethal + 1 }));
+                bits.push("staked with no blood: the body dries and withers one health level");
+                if (st.torpor) {
+                    const rd = road(actor);
+                    await setFlag(actor, "torpor", { since: game.time.worldTime, days: R.torporLength(rd.value).days, voluntary: false, until: KR.torporUntil(game.time.worldTime, rd.value, { voluntary: false }), withered: true });
+                    await statusEffect(actor, "unconscious", true); await condition(actor, "torpor", true);
+                    await kx().logEvent(actor, "Withers on the stake and mummifies into torpor.", "torpor");
+                    bits.push("<b>mummified: torpor; rises only when fed back to Injured</b>");
+                }
+            }
+        }
+        if (vamp && setting("nightlyBlood") && !inTorpor && !staked) {
             const gol = flag(actor, "golconda");
             const b = blood(actor);
             const weekly = gol && (flag(actor, "golcondaNights") ?? 0) % 7 !== 6;

@@ -79,8 +79,8 @@ export const PATH_EFFECTS = {
   [`${TH}vitae-cauldron-of-blood`]: H("harm", 1, "aggravated", {soak: false, ask: true}),
   // B7662: the lesser paths and Genius Loci, from the full check of V20 Dark Ages (pp. 278, 297-299)
   ...Object.fromEntries([1, 1, 2, 2, 3].map((lv, i) => [`thaumaturgy-creatio-ignis-${i + 1}`, H("harm", lv, "aggravated", {fixed: true, ask: true})])),
-  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-iter-pernix-${l}`, N("move")])),
-  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-potestas-motus-${l}`, N("move")])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-iter-pernix-${l}`, KW("move", "self")])),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`thaumaturgy-potestas-motus-${l}`, KW("move", "one")])),
   ...Object.fromEntries(["fog", "rain", "wind", "storm", "storm"].map((w, i) => [`thaumaturgy-potestas-tempestatum-${i + 1}`, KW("weather", "self", {weather: w})])),
   ...Object.fromEntries([1, 2, 3, 4, 5].map(l => [`koldunic-sorcery-genius-loci-${l}`, T("sense", "Genius Loci", "scene", "self")]))
 };
