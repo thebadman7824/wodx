@@ -1304,292 +1304,1688 @@
   },
   {
    "id": "b02",
-   "label": "",
+   "label": "Kitchen and Buttery",
    "rect": [
     4.006,
     4.4,
     10.012,
     18.2
    ],
-   "use": "home",
+   "use": "kitchen",
    "roof": true
   },
   {
    "id": "b03",
-   "label": "",
+   "label": "Servants' Lodging",
    "rect": [
     4.081,
     25.469,
     14.463,
     13.062
    ],
-   "use": "home",
+   "use": "lodging",
    "roof": true
   },
   {
    "id": "b04",
-   "label": "",
+   "label": "The Great Hall",
    "rect": [
     13.244,
     4.25,
     27.512,
     18.5
    ],
-   "use": "home",
+   "use": "hall",
    "roof": true
   },
   {
    "id": "b05",
-   "label": "",
+   "label": "Donjon, Guard Hall",
    "rect": [
     40.05,
     15.05,
     14.9,
     15.9
    ],
-   "use": "home",
+   "use": "guardhall",
    "roof": true
   }
  ],
- "rooms": [],
+ "rooms": [
+  {
+   "id": "great-hall",
+   "label": "Great hall",
+   "rect": [
+    14,
+    5,
+    26,
+    17
+   ],
+   "use": "hall"
+  },
+  {
+   "id": "dais",
+   "label": "Dais",
+   "rect": [
+    35,
+    9,
+    5,
+    9
+   ],
+   "use": "dais"
+  },
+  {
+   "id": "kitchen",
+   "label": "Kitchen",
+   "rect": [
+    4.6,
+    5,
+    8.8,
+    8
+   ],
+   "use": "kitchen"
+  },
+  {
+   "id": "buttery",
+   "label": "Buttery",
+   "rect": [
+    4.6,
+    13,
+    4.4,
+    9
+   ],
+   "use": "store"
+  },
+  {
+   "id": "pantry",
+   "label": "Pantry",
+   "rect": [
+    9,
+    13,
+    4.4,
+    9
+   ],
+   "use": "store"
+  },
+  {
+   "id": "servants-hall",
+   "label": "Servants' hall",
+   "rect": [
+    4.6,
+    26,
+    7.4,
+    12
+   ],
+   "use": "home"
+  },
+  {
+   "id": "sleeping-room",
+   "label": "Sleeping room",
+   "rect": [
+    12,
+    26,
+    6,
+    12
+   ],
+   "use": "home"
+  },
+  {
+   "id": "guard-hall",
+   "label": "Guard hall",
+   "rect": [
+    41,
+    16,
+    13,
+    14
+   ],
+   "use": "guardhall"
+  },
+  {
+   "id": "writing-room",
+   "label": "Writing room",
+   "rect": [
+    40.6,
+    5,
+    5.4,
+    8
+   ],
+   "use": "office"
+  },
+  {
+   "id": "ottilie-s-room",
+   "label": "Ottilie's Room",
+   "rect": [
+    46,
+    5,
+    4,
+    8
+   ],
+   "use": "home"
+  },
+  {
+   "id": "herb-garden",
+   "label": "Herb garden",
+   "rect": [
+    41,
+    33,
+    14,
+    8
+   ],
+   "use": "garden"
+  }
+ ],
  "slots": [
   {
-   "id": "open-hearth-on-its-slab-the-chancery",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (The Chancery)",
+   "id": "west-fireplace",
+   "obj": "fireplace",
+   "label": "West fireplace",
    "rect": [
-    44.8,
+    14.0,
+    14.9,
+    0.6,
+    1.2
+   ],
+   "facing": "E",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "east-fireplace",
+   "obj": "fireplace",
+   "label": "East fireplace",
+   "rect": [
+    39.4,
+    16.9,
+    0.6,
+    1.2
+   ],
+   "facing": "W",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "trestle-board",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    18.0,
+    10.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-2",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    20.4,
+    10.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-3",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    22.8,
+    10.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-4",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    25.2,
+    10.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-5",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    27.6,
+    10.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-6",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    30.0,
+    10.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "bench",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    18.0,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-2",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    19.6,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-3",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    21.2,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-4",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    22.8,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-5",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    24.4,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-6",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    26.0,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-7",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    27.6,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-8",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    29.2,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-9",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    30.8,
+    9.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-10",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    18.0,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-11",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    19.6,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-12",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    21.2,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-13",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    22.8,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-14",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    24.4,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-15",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    26.0,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-16",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    27.6,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-17",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    29.2,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-18",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    30.8,
+    10.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-7",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    18.0,
+    16.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-8",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    20.4,
+    16.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-9",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    22.8,
+    16.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-10",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    25.2,
+    16.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-11",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    27.6,
+    16.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "trestle-board-12",
+   "obj": "table-long",
+   "label": "Trestle board",
+   "rect": [
+    30.0,
+    16.15,
+    2.4,
+    0.7
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "bench-19",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    18.0,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-20",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    19.6,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-21",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    21.2,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-22",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    22.8,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-23",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    24.4,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-24",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    26.0,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-25",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    27.6,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-26",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    29.2,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-27",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    30.8,
+    15.725,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-28",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    18.0,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-29",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    19.6,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-30",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    21.2,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-31",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    22.8,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-32",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    24.4,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-33",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    26.0,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-34",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    27.6,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-35",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    29.2,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-36",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    30.8,
+    16.925,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "high-table",
+   "obj": "table-long",
+   "label": "High table",
+   "rect": [
+    36.15,
+    10.1,
+    0.7,
+    2.4
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "high-table-2",
+   "obj": "table-long",
+   "label": "High table",
+   "rect": [
+    36.15,
+    12.5,
+    0.7,
+    2.4
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "voivode-s-high-seat",
+   "obj": "chair",
+   "label": "Voivode's high seat",
+   "rect": [
+    37.35,
+    12.25,
+    0.5,
+    0.5
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-at-the-high-table",
+   "obj": "bench",
+   "label": "Bench at the high table",
+   "rect": [
+    37.225,
+    9.8,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-at-the-high-table-2",
+   "obj": "bench",
+   "label": "Bench at the high table",
+   "rect": [
+    37.225,
+    13.6,
+    0.35,
+    1.6
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "plate-cupboard",
+   "obj": "cupboard",
+   "label": "Plate cupboard",
+   "rect": [
+    14.05,
+    5.6,
+    0.4,
+    0.8
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "linen-chest",
+   "obj": "chest",
+   "label": "Linen chest",
+   "rect": [
+    39.0,
+    20.3,
+    0.6,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "kitchen-fireplace",
+   "obj": "fireplace",
+   "label": "Kitchen fireplace",
+   "rect": [
+    8.4,
+    5.0,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "bread-oven",
+   "obj": "oven-bread",
+   "label": "Bread oven",
+   "rect": [
+    4.7,
+    5.3,
+    1.4,
+    1.4
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "work-table",
+   "obj": "table",
+   "label": "Work table",
+   "rect": [
+    8.1,
+    8.55,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "pot-shelf",
+   "obj": "shelf",
+   "label": "Pot shelf",
+   "rect": [
+    12.775,
+    6.0,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "water-cask",
+   "obj": "cask",
+   "label": "Water cask",
+   "rect": [
+    4.775,
+    12.175,
+    0.45,
+    0.45
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "hand-quern",
+   "obj": "quern",
+   "label": "Hand quern",
+   "rect": [
+    12.6,
+    12.0,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    4.875,
+    13.775,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-2",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    4.875,
+    14.675,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-3",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    4.875,
+    15.575,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-4",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    4.875,
+    16.475,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-5",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    4.875,
+    17.375,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ale-cask-6",
+   "obj": "cask",
+   "label": "Ale cask",
+   "rect": [
+    4.875,
+    18.275,
+    0.45,
+    0.45
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bottle-rack",
+   "obj": "rack",
+   "label": "Bottle rack",
+   "rect": [
+    8.4,
+    16.9,
+    0.4,
+    1.2
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "flour-sack",
+   "obj": "sack",
+   "label": "Flour sack",
+   "rect": [
+    9.15,
+    13.825,
+    0.5,
+    0.35
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "flour-sack-2",
+   "obj": "sack",
+   "label": "Flour sack",
+   "rect": [
+    9.15,
+    14.825,
+    0.5,
+    0.35
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "flour-sack-3",
+   "obj": "sack",
+   "label": "Flour sack",
+   "rect": [
+    9.15,
+    15.825,
+    0.5,
+    0.35
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "flour-sack-4",
+   "obj": "sack",
+   "label": "Flour sack",
+   "rect": [
+    9.15,
+    16.825,
+    0.5,
+    0.35
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "pantry-shelf",
+   "obj": "shelf",
+   "label": "Pantry shelf",
+   "rect": [
+    13.025,
+    17.0,
+    0.25,
+    1.0
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "crate-of-stores",
+   "obj": "crate",
+   "label": "Crate of stores",
+   "rect": [
+    11.25,
+    18.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-of-stores-2",
+   "obj": "crate",
+   "label": "Crate of stores",
+   "rect": [
+    11.25,
+    19.7,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "open-hearth-on-its-slab",
+   "obj": "hearth",
+   "label": "Open hearth on its slab",
+   "rect": [
+    6.8,
+    26.5,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "board-table",
+   "obj": "table",
+   "label": "Board table",
+   "rect": [
+    7.6,
+    30.05,
+    1.8,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-37",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    7.7,
+    29.575,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-38",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    7.7,
+    31.075,
+    1.6,
+    0.35
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "box-bed",
+   "obj": "bed-box",
+   "label": "Box bed",
+   "rect": [
+    4.7,
+    34.55,
+    1.4,
+    0.9
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    9.0,
+    37.3,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "fireplace",
+   "obj": "fireplace",
+   "label": "Fireplace",
+   "rect": [
+    14.4,
+    37.4,
+    1.2,
+    0.6
+   ],
+   "facing": "N",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "straw-cot",
+   "obj": "cot",
+   "label": "Straw cot",
+   "rect": [
+    16.55,
+    26.6,
+    1.3,
+    0.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "straw-cot-2",
+   "obj": "cot",
+   "label": "Straw cot",
+   "rect": [
+    16.55,
+    28.6,
+    1.3,
+    0.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "straw-cot-3",
+   "obj": "cot",
+   "label": "Straw cot",
+   "rect": [
+    16.55,
+    32.6,
+    1.3,
+    0.8
+   ],
+   "facing": "W",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "chest-2",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    12.5,
+    26.1,
+    1.0,
+    0.6
+   ],
+   "facing": "S",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "guard-hall-fireplace",
+   "obj": "fireplace",
+   "label": "Guard hall fireplace",
+   "rect": [
+    53.4,
+    22.4,
+    0.6,
+    1.2
+   ],
+   "facing": "W",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "guards-table",
+   "obj": "table-long",
+   "label": "Guards' table",
+   "rect": [
+    46.15,
+    20.4,
+    0.7,
+    2.4
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "guards-table-2",
+   "obj": "table-long",
+   "label": "Guards' table",
+   "rect": [
+    46.15,
+    22.8,
+    0.7,
+    2.4
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "bench-39",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    45.725,
+    20.8,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-40",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    45.725,
+    23.2,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-41",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    46.925,
+    20.8,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "bench-42",
+   "obj": "bench",
+   "label": "Bench",
+   "rect": [
+    46.925,
+    23.2,
+    0.35,
+    1.6
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "weapon-rack",
+   "obj": "weapon-rack",
+   "label": "Weapon rack",
+   "rect": [
+    41.15,
+    17.5,
+    0.3,
+    1.0
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "weapon-rack-2",
+   "obj": "weapon-rack",
+   "label": "Weapon rack",
+   "rect": [
+    41.15,
+    24.5,
+    0.3,
+    1.0
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "arms-chest",
+   "obj": "chest",
+   "label": "Arms chest",
+   "rect": [
+    43.5,
+    29.3,
+    1.0,
+    0.6
+   ],
+   "facing": "N",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "open-hearth-on-its-slab-2",
+   "obj": "hearth",
+   "label": "Open hearth on its slab",
+   "rect": [
+    44.3,
     8.5,
     1.0,
     1.0
    ],
    "facing": "S",
    "art": "pending",
-   "auto": true
+   "auto": false
   },
   {
-   "id": "cask-the-chancery",
-   "obj": "cask",
-   "label": "Cask (The Chancery)",
+   "id": "copying-desk",
+   "obj": "desk",
+   "label": "Copying desk",
    "rect": [
-    41.606,
-    4.9,
-    0.45,
-    0.45
+    41.6,
+    5.75,
+    0.8,
+    0.5
    ],
-   "facing": "S",
+   "facing": "N",
    "art": "todo",
-   "auto": true
+   "auto": false
   },
   {
-   "id": "cask-b02",
-   "obj": "cask",
-   "label": "Cask (b02)",
+   "id": "lectern",
+   "obj": "lectern",
+   "label": "Lectern",
    "rect": [
-    13.068,
-    11.169,
-    0.45,
-    0.45
-   ],
-   "facing": "W",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "open-hearth-on-its-slab-b03",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (b03)",
-   "rect": [
-    4.531,
-    25.969,
-    1.0,
-    1.0
+    44.4,
+    5.4,
+    0.4,
+    0.4
    ],
    "facing": "S",
    "art": "pending",
-   "auto": true
+   "auto": false
   },
   {
-   "id": "box-bed-for-two-b03",
-   "obj": "bed-box",
-   "label": "Box bed for two (b03)",
+   "id": "stool",
+   "obj": "stool",
+   "label": "Stool",
    "rect": [
-    4.531,
-    36.631,
-    0.9,
-    1.4
-   ],
-   "facing": "N",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "household-table-b03",
-   "obj": "table",
-   "label": "Household table (b03)",
-   "rect": [
-    6.001,
-    25.969,
-    1.8,
-    0.9
+    41.85,
+    6.75,
+    0.3,
+    0.3
    ],
    "facing": "S",
-   "art": "todo",
-   "auto": true
+   "art": "keep",
+   "auto": false
   },
   {
-   "id": "chest-b03",
-   "obj": "chest",
-   "label": "Chest (b03)",
+   "id": "shelf-of-quires",
+   "obj": "shelf",
+   "label": "Shelf of quires",
    "rect": [
-    6.101,
-    37.431,
+    40.725,
+    10.5,
+    0.25,
+    1.0
+   ],
+   "facing": "E",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "seal-box",
+   "obj": "strongbox",
+   "label": "Seal box",
+   "rect": [
+    42.75,
+    12.425,
+    0.5,
+    0.35
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "box-bed-built-from-old-lecterns",
+   "obj": "bed-box",
+   "label": "Box bed built from old lecterns",
+   "rect": [
+    48.2,
+    6.55,
+    1.4,
+    0.9
+   ],
+   "facing": "W",
+   "art": "keep",
+   "auto": false
+  },
+  {
+   "id": "chest-3",
+   "obj": "chest",
+   "label": "Chest",
+   "rect": [
+    47.5,
+    12.2,
     1.0,
     0.6
    ],
    "facing": "N",
    "art": "keep",
-   "auto": true
+   "auto": false
   },
   {
-   "id": "bench-b03",
-   "obj": "bench",
-   "label": "Bench (b03)",
+   "id": "well",
+   "obj": "well",
+   "label": "Well",
    "rect": [
-    4.581,
-    27.239,
-    0.35,
-    1.6
-   ],
-   "facing": "E",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "wall-shelf-b03",
-   "obj": "shelf",
-   "label": "Wall shelf (b03)",
-   "rect": [
-    17.794,
-    25.919,
-    0.25,
-    1.0
-   ],
-   "facing": "W",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "cask-b03",
-   "obj": "cask",
-   "label": "Cask (b03)",
-   "rect": [
-    17.594,
-    27.383,
-    0.45,
-    0.45
-   ],
-   "facing": "W",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "open-hearth-on-its-slab-b04",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (b04)",
-   "rect": [
-    26.5,
-    13.0,
-    1.0,
-    1.0
-   ],
-   "facing": "S",
-   "art": "pending",
-   "auto": true
-  },
-  {
-   "id": "wall-shelf-b04",
-   "obj": "shelf",
-   "label": "Wall shelf (b04)",
-   "rect": [
-    13.694,
-    4.75,
-    1.0,
-    0.25
-   ],
-   "facing": "S",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "cask-b04",
-   "obj": "cask",
-   "label": "Cask (b04)",
-   "rect": [
-    13.744,
-    13.275,
-    0.45,
-    0.45
-   ],
-   "facing": "E",
-   "art": "todo",
-   "auto": true
-  },
-  {
-   "id": "open-hearth-on-its-slab-b05",
-   "obj": "hearth",
-   "label": "Open hearth on its slab (b05)",
-   "rect": [
-    47.0,
-    22.5,
-    1.0,
-    1.0
-   ],
-   "facing": "S",
-   "art": "pending",
-   "auto": true
-  },
-  {
-   "id": "bench-b05",
-   "obj": "bench",
-   "label": "Bench (b05)",
-   "rect": [
-    40.5,
-    15.55,
-    1.6,
-    0.35
+    29.6,
+    29.6,
+    0.8,
+    0.8
    ],
    "facing": "S",
    "art": "todo",
-   "auto": true
+   "auto": false
   },
   {
-   "id": "wall-shelf-b05",
-   "obj": "shelf",
-   "label": "Wall shelf (b05)",
+   "id": "horse-trough",
+   "obj": "trough",
+   "label": "Horse trough",
    "rect": [
-    40.5,
-    30.2,
-    1.0,
-    0.25
+    21.4,
+    40.3,
+    1.2,
+    0.4
    ],
-   "facing": "N",
-   "art": "keep",
-   "auto": true
-  },
-  {
-   "id": "cask-b05",
-   "obj": "cask",
-   "label": "Cask (b05)",
-   "rect": [
-    54.0,
-    15.5,
-    0.45,
-    0.45
-   ],
-   "facing": "W",
+   "facing": "S",
    "art": "todo",
-   "auto": true
+   "auto": false
   }
  ],
  "lights": [
@@ -1874,14 +3270,6 @@
    "color": "#ffb060"
   },
   {
-   "x": 27.0,
-   "y": 14.8,
-   "kind": "fire",
-   "bright": 1.88,
-   "dim": 7.5,
-   "color": "#ff9a40"
-  },
-  {
    "x": 39.4,
    "y": 18.275,
    "kind": "fire",
@@ -2064,6 +3452,22 @@
    "bright": 0.0,
    "dim": 1.6,
    "color": "#ffb060"
+  },
+  {
+   "x": 15.0,
+   "y": 15.5,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
+  },
+  {
+   "x": 39.0,
+   "y": 17.5,
+   "kind": "fire",
+   "bright": 1.5,
+   "dim": 7.0,
+   "color": "#ff9a40"
   }
  ],
  "labels": [
@@ -2209,11 +3613,6 @@
    "state": "to plan"
   }
  ],
- "open": [
-  "building b02 (unnamed): use guessed as a home",
-  "building b03 (unnamed): use guessed as a home",
-  "building b04 (unnamed): use guessed as a home",
-  "building b05 (unnamed): use guessed as a home"
- ],
- "seeded": true
+ "open": [],
+ "seeded": false
 }

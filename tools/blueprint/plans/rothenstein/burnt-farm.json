@@ -1,0 +1,407 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "burnt-farm",
+ "name": "Dolany's Burnt Farm and the Old Well",
+ "chronicle": "rothenstein",
+ "tier": 4,
+ "cells": [
+  40,
+  30
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "hand",
+  "from": "Book 1 omnibus (chronicle-rebuild v2), places section"
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    10,
+    6,
+    16,
+    6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    19,
+    6,
+    24,
+    6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24,
+    6,
+    24,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24,
+    12.5,
+    24,
+    14
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10,
+    6,
+    10,
+    11
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10,
+    13,
+    10,
+    14
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10,
+    14,
+    14,
+    14
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    17,
+    14,
+    24,
+    14
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28,
+    4,
+    36,
+    4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36,
+    4,
+    36,
+    12
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28,
+    4,
+    28,
+    7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    28,
+    10,
+    28,
+    12
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    30,
+    12,
+    36,
+    12
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    6,
+    4,
+    38,
+    2
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    38,
+    2,
+    39,
+    26
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    39,
+    26,
+    4,
+    27
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    4,
+    27,
+    6,
+    4
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "farmhouse-shell-roofless",
+   "label": "Farmhouse shell, roofless",
+   "rect": [
+    10,
+    6,
+    14,
+    8
+   ],
+   "use": "ruin"
+  },
+  {
+   "id": "barn-shell",
+   "label": "Barn shell",
+   "rect": [
+    28,
+    4,
+    8,
+    8
+   ],
+   "use": "ruin"
+  }
+ ],
+ "slots": [
+  {
+   "id": "cold-fireplace",
+   "obj": "fireplace",
+   "label": "Cold fireplace",
+   "rect": [
+    16.4,
+    6.0,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "charred-beams",
+   "obj": "woodpile",
+   "label": "Charred beams",
+   "rect": [
+    12.4,
+    8.7,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "charred-beams-2",
+   "obj": "woodpile",
+   "label": "Charred beams",
+   "rect": [
+    20.4,
+    10.7,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "the-old-well",
+   "obj": "well",
+   "label": "The old well",
+   "rect": [
+    17.6,
+    19.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dead-apple-tree",
+   "obj": "tree",
+   "label": "Dead apple tree",
+   "rect": [
+    1.2,
+    20.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dead-apple-tree-2",
+   "obj": "tree",
+   "label": "Dead apple tree",
+   "rect": [
+    32.2,
+    18.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dead-apple-tree-3",
+   "obj": "tree",
+   "label": "Dead apple tree",
+   "rect": [
+    28.2,
+    23.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "dead-apple-tree-4",
+   "obj": "tree",
+   "label": "Dead apple tree",
+   "rect": [
+    6.2,
+    22.2,
+    3.6,
+    3.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [],
+ "labels": [
+  {
+   "x": 5,
+   "y": 3,
+   "text": "Tumbled field wall",
+   "used": false
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-dolany",
+   "to": "dolany",
+   "rect": [
+    0,
+    13.5,
+    1.5,
+    3
+   ]
+  }
+ ],
+ "ground": [
+  {
+   "kind": "track",
+   "label": "overgrown track from Dolany",
+   "path": [
+    [
+     0,
+     15
+    ],
+    [
+     8,
+     15.5
+    ],
+    [
+     14,
+     16
+    ]
+   ],
+   "width": 0.8
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "What lies in the old well (E17, ruling 25)"
+ ],
+ "seeded": false,
+ "env": {
+  "outdoor": true,
+  "darkness": 0.85
+ }
+}

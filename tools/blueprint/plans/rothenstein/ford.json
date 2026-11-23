@@ -268,7 +268,109 @@
   }
  ],
  "open": [
-  "the river, the ford stones, the race and the wheel are not traced yet: trace them from the old scene picture"
+  "the ford stones and the mill race: art detail on the traced stream"
  ],
- "seeded": false
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "river",
+   "label": "the stream",
+   "path": [
+    [
+     26,
+     0
+    ],
+    [
+     27,
+     5
+    ],
+    [
+     28,
+     10
+    ],
+    [
+     26,
+     15
+    ],
+    [
+     25,
+     20
+    ],
+    [
+     26,
+     25
+    ],
+    [
+     28,
+     30
+    ],
+    [
+     29,
+     35
+    ],
+    [
+     29,
+     44
+    ]
+   ],
+   "width": 5.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "track from the River Road to Altenhof",
+   "path": [
+    [
+     0,
+     16
+    ],
+    [
+     8,
+     18
+    ],
+    [
+     16,
+     21
+    ],
+    [
+     24,
+     23
+    ],
+    [
+     32,
+     23
+    ],
+    [
+     45,
+     22.5
+    ],
+    [
+     58,
+     22
+    ]
+   ],
+   "width": 2,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "path to the old mill",
+   "path": [
+    [
+     17,
+     12
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     16,
+     21
+    ]
+   ],
+   "width": 1,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

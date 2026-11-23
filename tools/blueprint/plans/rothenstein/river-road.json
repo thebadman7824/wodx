@@ -746,5 +746,195 @@
  "open": [
   "building b02 (unnamed): use guessed as a home"
  ],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "the River Road",
+   "path": [
+    [
+     18,
+     0
+    ],
+    [
+     20,
+     8
+    ],
+    [
+     24,
+     14
+    ],
+    [
+     26,
+     22
+    ],
+    [
+     28,
+     30
+    ],
+    [
+     29,
+     38
+    ],
+    [
+     30,
+     46
+    ]
+   ],
+   "width": 3.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "road to the Riverside Quay",
+   "path": [
+    [
+     24,
+     16
+    ],
+    [
+     35,
+     14
+    ],
+    [
+     45,
+     12
+    ],
+    [
+     55,
+     11
+    ],
+    [
+     66,
+     10
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "track to the Ford",
+   "path": [
+    [
+     0,
+     30.5
+    ],
+    [
+     8,
+     29.5
+    ],
+    [
+     16,
+     28
+    ],
+    [
+     20,
+     27
+    ],
+    [
+     26,
+     26
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "field strips",
+   "path": [
+    [
+     2,
+     2
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     24
+    ],
+    [
+     2,
+     24
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "field strips",
+   "path": [
+    [
+     34,
+     2
+    ],
+    [
+     64,
+     2
+    ],
+    [
+     64,
+     9
+    ],
+    [
+     34,
+     9
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "the Fields",
+   "path": [
+    [
+     34,
+     20
+    ],
+    [
+     64,
+     20
+    ],
+    [
+     64,
+     34
+    ],
+    [
+     34,
+     34
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "field strips",
+   "path": [
+    [
+     36,
+     36
+    ],
+    [
+     64,
+     36
+    ],
+    [
+     64,
+     45
+    ],
+    [
+     36,
+     45
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

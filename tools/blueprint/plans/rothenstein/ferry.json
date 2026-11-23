@@ -989,5 +989,67 @@
  "open": [
   "building b03 (unnamed): use guessed as a home"
  ],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "river",
+   "label": "the river",
+   "path": [
+    [
+     0,
+     24
+    ],
+    [
+     20,
+     24.5
+    ],
+    [
+     40,
+     24.5
+    ],
+    [
+     60,
+     25
+    ]
+   ],
+   "width": 13,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "road to the River Road",
+   "path": [
+    [
+     30,
+     0
+    ],
+    [
+     31,
+     10
+    ],
+    [
+     31,
+     17.5
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "south: the road to Brno",
+   "path": [
+    [
+     31,
+     31
+    ],
+    [
+     31.5,
+     44
+    ]
+   ],
+   "width": 2.5,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

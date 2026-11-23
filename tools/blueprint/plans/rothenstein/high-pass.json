@@ -1,0 +1,382 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "high-pass",
+ "name": "The High Pass",
+ "chronicle": "rothenstein",
+ "tier": 4,
+ "cells": [
+  56,
+  32
+ ],
+ "square_ft": 5.0,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "hand",
+  "from": "Book 1 omnibus (chronicle-rebuild v2), places section"
+ },
+ "layers": [
+  "material",
+  "penumbra",
+  "shadowlands"
+ ],
+ "walls": [
+  {
+   "c": [
+    0,
+    12,
+    8,
+    10
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    8,
+    10,
+    16,
+    8
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    16,
+    8,
+    24,
+    7
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    24,
+    7,
+    34,
+    6
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    34,
+    6,
+    44,
+    4
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    44,
+    4,
+    56,
+    2
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    0,
+    28,
+    10,
+    27
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    10,
+    27,
+    18,
+    24
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    18,
+    24,
+    26,
+    22
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26,
+    22,
+    36,
+    21
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    36,
+    21,
+    46,
+    19
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    46,
+    19,
+    56,
+    17
+   ],
+   "kind": "solid"
+  },
+  {
+   "c": [
+    26,
+    11,
+    26,
+    13.5
+   ],
+   "kind": "fence"
+  },
+  {
+   "c": [
+    26,
+    16.5,
+    26,
+    19.5
+   ],
+   "kind": "fence"
+  }
+ ],
+ "doors": [],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "old-breastwork-where-anselm-held-the-pass",
+   "label": "Old breastwork where Anselm held the pass",
+   "rect": [
+    24,
+    10,
+    5,
+    11
+   ],
+   "use": "ruin"
+  },
+  {
+   "id": "the-ledge-of-the-second-light",
+   "label": "The ledge of the second light",
+   "rect": [
+    46,
+    5,
+    6,
+    4
+   ],
+   "use": "beacon"
+  }
+ ],
+ "slots": [
+  {
+   "id": "boulder",
+   "obj": "boulder",
+   "label": "Boulder",
+   "rect": [
+    11.6,
+    15.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-2",
+   "obj": "boulder",
+   "label": "Boulder",
+   "rect": [
+    32.6,
+    16.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-3",
+   "obj": "boulder",
+   "label": "Boulder",
+   "rect": [
+    41.6,
+    9.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "boulder-4",
+   "obj": "boulder",
+   "label": "Boulder",
+   "rect": [
+    49.6,
+    13.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "where-the-second-light-burns-x",
+   "obj": "brazier",
+   "label": "Where the second light burns (X)",
+   "rect": [
+    48.8,
+    6.8,
+    0.4,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
+ "lights": [
+  {
+   "x": 49,
+   "y": 7,
+   "kind": "fire",
+   "bright": 2.0,
+   "dim": 9.0,
+   "color": "#ff9a40"
+  }
+ ],
+ "labels": [
+  {
+   "x": 20,
+   "y": 6,
+   "text": "Cliff",
+   "used": false
+  },
+  {
+   "x": 24,
+   "y": 25,
+   "text": "Drop to the stream",
+   "used": false
+  }
+ ],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "to-mountain-trail",
+   "to": "mountain-trail",
+   "rect": [
+    0,
+    20.5,
+    1.5,
+    3
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "to-hungarian-march",
+   "to": "hungarian-march",
+   "rect": [
+    54.5,
+    8.5,
+    1.5,
+    3
+   ]
+  }
+ ],
+ "ground": [
+  {
+   "kind": "road",
+   "label": "pass road",
+   "path": [
+    [
+     0,
+     22
+    ],
+    [
+     10,
+     20
+    ],
+    [
+     20,
+     17
+    ],
+    [
+     28,
+     15
+    ],
+    [
+     38,
+     14
+    ],
+    [
+     48,
+     12
+    ],
+    [
+     56,
+     10
+    ]
+   ],
+   "width": 1.4
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "Snow closes the pass with the first heavy snow (T14): a winter stage of this map",
+  "The west end: which valley map it joins (set to mountain-trail for now)",
+  "hungarian-march is a tier 6 map, not drawn"
+ ],
+ "seeded": false,
+ "env": {
+  "outdoor": true,
+  "darkness": 0.9
+ }
+}

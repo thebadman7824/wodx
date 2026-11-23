@@ -18,6 +18,7 @@ One JSON file per map in `plans/<chronicle>/<id>.json`, format `wodx-blueprint`,
 | `rooms` | Named rooms, yards and spots: `rect`, `label`, `use`. |
 | `slots` | One per object: `obj` (a key of `catalogue.json`), `rect` at its true size, `facing` (the side its front faces: N, E, S, W), `art` (keep, pending, todo), `auto` (true when placed by a rule, for a person to check). |
 | `lights` | Foundry lights: `x`, `y`, `kind` (fire, lamp, eerie), `bright` and `dim` radius in squares. |
+| `ground` | Roads, tracks, paths, brooks, rivers and fields: `kind`, `path` (points in squares), `width` in squares, or `closed` for an area. Seeded from a `tools/pixelmap` drawer's `land.ground()` call. |
 | `exits` | Where the map joins another: `rect`, `to` (the other map's id). |
 | `eras` | One row per era stage (profile ids from `modules/wodx-chronicle/data/eras.json`, dark-ages to future-darkness), each `drawn` or `to plan`. |
 | `open` | Things a person still has to decide or check. |

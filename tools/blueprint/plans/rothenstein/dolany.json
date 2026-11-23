@@ -4247,5 +4247,143 @@
   "building b07 (unnamed): use guessed as a home",
   "building b12 (unnamed): use guessed as a home"
  ],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "brook",
+   "label": "stream",
+   "path": [
+    [
+     0,
+     7.5
+    ],
+    [
+     15,
+     7.8
+    ],
+    [
+     30,
+     7.5
+    ],
+    [
+     45,
+     8
+    ],
+    [
+     68,
+     8
+    ]
+   ],
+   "width": 3.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "village street",
+   "path": [
+    [
+     0,
+     24
+    ],
+    [
+     20,
+     23.5
+    ],
+    [
+     32,
+     23
+    ],
+    [
+     50,
+     23
+    ],
+    [
+     68,
+     24.5
+    ]
+   ],
+   "width": 3,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "road north to the High Woods and south",
+   "path": [
+    [
+     31,
+     0
+    ],
+    [
+     32,
+     10
+    ],
+    [
+     32,
+     23
+    ],
+    [
+     33,
+     35
+    ],
+    [
+     34,
+     50
+    ]
+   ],
+   "width": 3,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "water",
+   "label": "pond",
+   "path": [
+    [
+     22,
+     33
+    ],
+    [
+     25,
+     31.5
+    ],
+    [
+     28.5,
+     32.5
+    ],
+    [
+     28,
+     35.5
+    ],
+    [
+     23.5,
+     36
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "field strips",
+   "path": [
+    [
+     40,
+     46
+    ],
+    [
+     56,
+     46
+    ],
+    [
+     56,
+     50
+    ],
+    [
+     40,
+     50
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

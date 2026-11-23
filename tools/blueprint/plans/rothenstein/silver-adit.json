@@ -4732,8 +4732,216 @@
  ],
  "doors": [],
  "buildings": [],
- "rooms": [],
- "slots": [],
+ "rooms": [
+  {
+   "id": "main-drift",
+   "label": "Main drift",
+   "rect": [
+    30.5,
+    27,
+    3,
+    19
+   ],
+   "use": "mine"
+  },
+  {
+   "id": "the-junction",
+   "label": "The junction: the last red mark",
+   "rect": [
+    26,
+    21,
+    9,
+    5
+   ],
+   "use": "mine"
+  },
+  {
+   "id": "singing-chamber",
+   "label": "The singing chamber",
+   "rect": [
+    5,
+    6,
+    9,
+    8
+   ],
+   "use": "mine"
+  },
+  {
+   "id": "flooded-winze",
+   "label": "Flooded winze",
+   "rect": [
+    3,
+    31,
+    7,
+    6
+   ],
+   "use": "mine"
+  },
+  {
+   "id": "deepest-working",
+   "label": "The deepest working",
+   "rect": [
+    51,
+    35,
+    10,
+    8
+   ],
+   "use": "mine"
+  },
+  {
+   "id": "kasimirs-lair",
+   "label": "Kasimir's lair (own plan: in-kasimir)",
+   "rect": [
+    49,
+    9,
+    11,
+    8
+   ],
+   "use": "lair"
+  }
+ ],
+ "slots": [
+  {
+   "id": "ore-cart-on-the-rails",
+   "obj": "handcart",
+   "label": "Ore cart on the rails",
+   "rect": [
+    31.6,
+    37.9,
+    0.8,
+    1.2
+   ],
+   "facing": "N",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tool-rack-picks-and-shovels",
+   "obj": "rack",
+   "label": "Tool rack: picks and shovels",
+   "rect": [
+    30.8,
+    42.9,
+    0.4,
+    1.2
+   ],
+   "facing": "E",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "crate-of-props-and-wedges",
+   "obj": "crate",
+   "label": "Crate of props and wedges",
+   "rect": [
+    28.75,
+    24.3,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "lamp-hook-at-the-last-red-mark",
+   "obj": "lantern-post",
+   "label": "Lamp hook at the last red mark",
+   "rect": [
+    32.4,
+    24.9,
+    0.2,
+    0.2
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-of-red-veined-ore",
+   "obj": "sack",
+   "label": "Sack of red-veined ore",
+   "rect": [
+    54.825,
+    39.75,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "sack-of-red-veined-ore",
+   "obj": "sack",
+   "label": "Sack of red-veined ore",
+   "rect": [
+    56.025,
+    39.75,
+    0.35,
+    0.5
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-crate",
+   "obj": "crate",
+   "label": "Ore crate",
+   "rect": [
+    57.75,
+    37.3,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "pit-props",
+   "obj": "woodpile",
+   "label": "Pit props",
+   "rect": [
+    52.9,
+    36.7,
+    1.2,
+    0.6
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "humming-rock",
+   "obj": "boulder",
+   "label": "Humming rock",
+   "rect": [
+    7.6,
+    8.6,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "fallen-slab",
+   "obj": "boulder",
+   "label": "Fallen slab",
+   "rect": [
+    10.6,
+    11.1,
+    0.8,
+    0.8
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  }
+ ],
  "lights": [
   {
    "x": 54.0,
@@ -4750,6 +4958,22 @@
    "bright": 0.0,
    "dim": 6.0,
    "color": "#a02020"
+  },
+  {
+   "x": 32,
+   "y": 42,
+   "kind": "lamp",
+   "bright": 0.5,
+   "dim": 2.5,
+   "color": "#ffd890"
+  },
+  {
+   "x": 30.5,
+   "y": 23,
+   "kind": "lamp",
+   "bright": 0.5,
+   "dim": 2.5,
+   "color": "#ffd890"
   }
  ],
  "labels": [
@@ -4841,6 +5065,54 @@
    "state": "to plan"
   }
  ],
- "open": [],
- "seeded": true
+ "open": [
+  "Red chalk marks on every beam: art detail on the props, not slots"
+ ],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "path",
+   "label": "rails",
+   "path": [
+    [
+     32,
+     46
+    ],
+    [
+     32,
+     28
+    ],
+    [
+     30,
+     23
+    ]
+   ],
+   "width": 0.6,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "water",
+   "label": "flooded winze",
+   "path": [
+    [
+     5,
+     33
+    ],
+    [
+     9,
+     33
+    ],
+    [
+     9.5,
+     35.5
+    ],
+    [
+     5,
+     36.5
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

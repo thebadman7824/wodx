@@ -13,7 +13,7 @@ its true size, the lights, the exits to other maps, and the map's era stages. No
 
 Needs Python 3 and Pillow only.
 """
-import json, math, os, re, sys
+import ast, json, math, os, re, sys
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -76,7 +76,7 @@ def blank(id_, name, cells, tier, source):
     return {"format": "wodx-blueprint", "version": 1, "id": id_, "name": name, "chronicle": "rothenstein",
             "tier": tier, "cells": list(cells), "square_ft": SQ_FT, "art_grid_px": 128, "source": source,
             "layers": ["material"], "walls": [], "doors": [], "buildings": [], "rooms": [], "slots": [],
-            "lights": [], "labels": [], "exits": [],
+            "lights": [], "labels": [], "exits": [], "ground": [],
             "eras": [{"era": e, "state": "drawn" if e == "dark-ages" else "to plan"} for e in ERA_STAGES],
             "open": []}
 
@@ -181,7 +181,7 @@ def _name_buildings(bp):
 
 USES = [("mill", "mill"), ("smith", "smithy"), ("forge", "smithy"), ("chapel", "church"), ("church", "church"),
         ("hall", "hall"), ("inn", "inn"), ("tavern", "inn"), ("barn", "barn"), ("stable", "stable"), ("granary", "store"),
-        ("store", "store"), ("shed", "store"), ("hut", "home"), ("house", "home"), ("cottage", "home"), ("farm", "home")]
+        ("store", "store"), ("shed", "store"), ("watch", "guardhall"), ("guard", "guardhall"), ("tanner", "tannery"), ("hut", "home"), ("house", "home"), ("cottage", "home"), ("farm", "home")]
 
 
 def _use_of(label):
@@ -224,6 +224,8 @@ KITS = {
     "store": ["sack", "sack", "crate", "cask", "crate", "sack"],
     "barn": ["haystack", "cart", "sack"],
     "stable": ["stall-horse", "stall-horse", "trough", "haystack"],
+    "guardhall": ["hearth", "table", "bench", "bench", "weapon-rack", "chest", "cot", "cot"],
+    "tannery": ["vat", "vat", "vat", "rack", "workbench", "trough"],
 }
 
 
@@ -284,6 +286,33 @@ def furnish_buildings(bp):
 
 # ---------------------------------------------------------------- seeding from tools/pixelmap output
 
+GROUND_KINDS = ("road", "track", "path", "brook", "river", "field", "water", "wood", "hill")
+
+
+def drawer_ground(path):
+    """Roads and brooks a tools/pixelmap drawer lays with land.ground(): their centre lines in squares and full widths."""
+    if not path or not os.path.exists(path): return []
+    tree = ast.parse(open(path, encoding="utf-8").read()); lines, out = {}, []
+    for n in tree.body:
+        if isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
+            try: v = ast.literal_eval(n.value)
+            except Exception: continue
+            if isinstance(v, list) and v and all(isinstance(p, tuple) and len(p) == 2 for p in v): lines[n.targets[0].id] = v
+    for n in ast.walk(tree):
+        if not (isinstance(n, ast.Call) and getattr(n.func, "attr", "") == "ground"): continue
+        kw = {k.arg: k.value for k in n.keywords}
+        wide = ast.literal_eval(kw["wide"]) if "wide" in kw else 52
+        for el in getattr(kw.get("roads"), "elts", []):
+            nm, half = el.elts[0].id, ast.literal_eval(el.elts[1])
+            if nm in lines:
+                kind = "road" if half >= 60 else "track" if half >= 25 else "path"
+                out.append({"kind": kind, "label": nm, "path": [list(p) for p in lines[nm]], "width": round(2 * half / 128, 2)})
+        for el in getattr(kw.get("brooks"), "elts", []):
+            if getattr(el, "id", None) in lines:
+                out.append({"kind": "brook", "label": el.id, "path": [list(p) for p in lines[el.id]], "width": round(wide / 128, 2)})
+    return out
+
+
 def seed_pixelmap(mapdir, id_=None, tier=2, scene=None):
     name = os.path.basename(os.path.normpath(mapdir))
     if mapdir.endswith(".wodx.json"):                                   # a lone sidecar (tools/mapgen writes no dd2vtt)
@@ -295,6 +324,7 @@ def seed_pixelmap(mapdir, id_=None, tier=2, scene=None):
     W, H = side["cells"]
     bp = blank(id_ or slug(side["name"]), side["name"], (W, H), tier,
                {"kind": "pixelmap", "drawer": f"tools/pixelmap/maps/{name}.py", "seed": side.get("seed")})
+    bp["ground"] = drawer_ground(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "pixelmap", "maps", f"{name}.py"))
     if vtt:
         for seg in vtt["line_of_sight"]:
             bp["walls"].append({"c": [seg[0]["x"], seg[0]["y"], seg[-1]["x"], seg[-1]["y"]], "kind": "solid"})
@@ -361,7 +391,11 @@ def check(bp):
         mx, my = (dr["c"][0] + dr["c"][2]) / 2, (dr["c"][1] + dr["c"][3]) / 2
         for s in bp["slots"]:
             if s.get("auto") and _inside(s["rect"], mx, my, 0.3): out.append(f"slot {s['id']}: blocks a doorway at {mx:.1f},{my:.1f}")
-    if bp["walls"] and not bp["lights"]: out.append("no lights: every map needs Foundry lighting")
+    for i, g in enumerate(bp.get("ground", [])):
+        if g.get("kind") not in GROUND_KINDS: out.append(f"ground {i}: unknown kind {g.get('kind')}")
+        if len(g.get("path", [])) < 2: out.append(f"ground {i}: needs two or more points")
+    if bp["walls"] and not bp["lights"] and not bp.get("env", {}).get("outdoor"):
+        out.append("no lights: every map needs Foundry lighting (or env.outdoor with its darkness for an open-air map)")
     if not any(e["state"] == "drawn" for e in bp["eras"]): out.append("no era stage is drawn")
     return out
 
@@ -373,7 +407,9 @@ INK = {"bg": (16, 42, 77), "grid": (34, 70, 112), "grid5": (52, 92, 138), "wall"
        "secret": (255, 100, 160), "building": (140, 170, 205), "room": (95, 135, 180),
        "keep": (120, 230, 140), "pending": (250, 215, 90), "todo": (200, 210, 225),
        "fire": (255, 170, 70), "lamp": (255, 230, 160), "eerie": (170, 140, 255), "exit": (255, 110, 200),
-       "label": (205, 220, 240), "title": (255, 255, 255)}
+       "label": (205, 220, 240), "title": (255, 255, 255),
+       "g_road": (70, 78, 92), "g_track": (60, 70, 90), "g_path": (55, 66, 92), "g_brook": (28, 86, 140),
+       "g_river": (28, 86, 140), "g_water": (28, 86, 140), "g_field": (60, 110, 90), "g_wood": (50, 120, 80), "g_hill": (170, 90, 80)}
 
 
 def _font(px):
@@ -390,6 +426,12 @@ def _dash(dr, a, b, fill, width, on=6, off=5):
         e = min(L, t + on); dr.line([(a[0] + ux * t, a[1] + uy * t), (a[0] + ux * e, a[1] + uy * e)], fill=fill, width=width); t = e + off
 
 
+def _span(n, bp):
+    """n squares as a distance: feet on a battle map, kilometres on a travel map."""
+    ft = n * bp.get("square_ft", SQ_FT)
+    return f"{ft * 0.3048 / 1000:.2f} km".replace(".00 km", " km") if ft >= 500 else f"{ft:g} ft"
+
+
 def render(bp, out, px=None):
     W, H = bp["cells"]
     px = px or max(16, min(48, int(1800 / max(W, H))))
@@ -400,6 +442,12 @@ def render(bp, out, px=None):
     for i in range(W + 1): dr.line([(X(i), Y(0)), (X(i), Y(H))], fill=INK["grid5"] if i % 5 == 0 else INK["grid"], width=1)
     for j in range(H + 1): dr.line([(X(0), Y(j)), (X(W), Y(j))], fill=INK["grid5"] if j % 5 == 0 else INK["grid"], width=1)
     f_s, f_m, f_l = _font(max(9, px // 3)), _font(max(11, px // 2)), _font(22)
+    for g in bp.get("ground", []):
+        pts = [(X(x), Y(y)) for x, y in g["path"]]; c = INK.get("g_" + g["kind"], INK["g_road"])
+        if g.get("closed"): dr.polygon(pts, outline=c, width=2)
+        else:
+            w = max(2, int(g.get("width", 1) * px)); dr.line(pts, fill=c, width=w, joint="curve")
+            for p in pts: dr.ellipse([p[0] - w / 2, p[1] - w / 2, p[0] + w / 2, p[1] + w / 2], fill=c)
     for b in bp["buildings"]:
         x, y, w, h = b["rect"]
         for a, c in (((x, y), (x + w, y)), ((x + w, y), (x + w, y + h)), ((x + w, y + h), (x, y + h)), ((x, y + h), (x, y))):
@@ -445,20 +493,21 @@ def render(bp, out, px=None):
     dr.rectangle([0, 0, img.width, head - 1], fill=(10, 28, 54))
     dr.text((10, 8), f"{bp['name']}", fill=INK["title"], font=f_l)
     n_keep = sum(s["art"] == "keep" for s in bp["slots"]); n_pend = sum(s["art"] == "pending" for s in bp["slots"])
-    dr.text((10, 34), f"Blueprint {bp['id']} · tier {bp['tier']} · {W} x {H} squares of 5 ft ({W * 5} x {H * 5} ft) · "
+    dr.text((10, 34), f"Blueprint {bp['id']} · tier {bp['tier']} · {W} x {H} squares of {_span(1, bp)} ({_span(W, bp)} x {_span(H, bp)}) · "
                       f"{len(bp['slots'])} object slots ({n_keep} with approved art, {n_pend} pending) · layers: {', '.join(bp['layers'])}",
             fill=INK["label"], font=f_s)
     y0 = H * px + head + 10; x0 = 10
     leg = [("wall", "wall"), ("window", "window"), ("fence", "fence or edge"), ("door", "door"), ("secret", "secret door"),
            ("keep", "slot: approved art"), ("pending", "slot: art pending"), ("todo", "slot: no art yet"),
-           ("fire", "fire light"), ("eerie", "eerie light"), ("exit", "exit"), ("building", "roofed building")]
+           ("fire", "fire light"), ("eerie", "eerie light"), ("exit", "exit"), ("building", "roofed building"),
+           ("g_road", "road or track"), ("g_brook", "brook or river")]
     for k, t in leg:
         dr.rectangle([x0, y0 + 4, x0 + 14, y0 + 14], outline=INK[k], width=3)
         dr.text((x0 + 18, y0 + 2), t, fill=INK["label"], font=f_s); x0 += 30 + int(dr.textlength(t, font=f_s))
         if x0 > img.width - 140: x0 = 10; y0 += 18
     sx = img.width - 5 * px - 20; sy = H * px + head + foot - 18
     dr.line([(sx, sy), (sx + 5 * px, sy)], fill=INK["title"], width=3)
-    dr.text((sx, sy - 16), "25 ft", fill=INK["title"], font=f_s)
+    dr.text((sx, sy - 16), _span(5, bp), fill=INK["title"], font=f_s)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     img.save(out, optimize=True)
     return out
