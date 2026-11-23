@@ -134,6 +134,16 @@ BENJAMIN-PC runs a third runner from `D:\WoDX\pcq` with `runner.benjamin-pc.json
 "Secondary PC alert". It reads the same queue and claims jobs the same way; name `--lane 8` to send a job there.
 It has 8 cores and 16 GB, so it can take longer gate lists than lane 7. Book and Trove lookups stay on the main PC.
 
+## The New PC
+
+NEW_PC_LEBRUN (HP OMEN 35L: 12 cores, 64 GB, RTX 5080 16 GB) runs a fourth runner from `D:\WoDX\pcq` with
+`runner.new_pc_lebrun.json`: lane 10 (port 30100, `D:\WoDX\FoundryData-lane10`), its own status issue "PC runner
+status (New PC)" and alerts titled "New PC alert". Name `--lane 10` to send a job there. Its Foundry is the Node build
+(`D:\WoDX\Foundry\main.mjs`); its lane was set up from the cloud lane kit's known-good world and add-on modules. It
+drives no merge train and runs no stale-PR sweep, and book and Trove lookups stay on the main PC. It also holds the
+solo world (`D:\WoDX\FoundryData-solo`, port 30010), which no lane touches. Its gate runners are new-pc-gate-1 and
+new-pc-gate-2 (`gh-runner\install.ps1 -Name new-pc-gate`).
+
 ## Gates on every pull request (B7010)
 
 `.github/workflows/pc-gates.yml` queues the touched gates for every owner pull request from a claude/ branch, on
