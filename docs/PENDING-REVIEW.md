@@ -377,3 +377,5 @@ Ben approved these deletes in the project chat on 22 November: "Yes. Delete the 
 | 2026-11-23 | Elder Abilities before bonus points (full check, B7691) | Still none above 3, as Dark Ages: Vampire (2002) step three says | No cap for elders |
 | 2026-11-23 | The Sleep of Ages (full check, B7692) | Rolled each downtime spent awake past 500 years; the card reports it and the Storyteller puts the character to sleep | WoDX puts the character into torpor by itself |
 | 2026-11-23 | The Thirst of Caine (full check, B7693) | A switch, off by default, as the book offers it as an option | On by default |
+| 2026-11-23 | The 2002 maneuvers (full check, B7694) | Offered by default (setting on), though the book calls them optional | Off until the Storyteller turns them on |
+| 2026-11-23 | Which limb Joint Break and Tendon Slice mark (full check, B7694) | The right arm, or the wrist or ankle by the aim chosen | The Storyteller picks the side each time |

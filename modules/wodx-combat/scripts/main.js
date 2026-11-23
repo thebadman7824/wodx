@@ -76,6 +76,10 @@ function registerSettings() {
     s("classicManeuvers", "Offer World of Darkness: Combat maneuvers",
         "Add Heavy/Quick Strike, Heavy/Quick Kick and Grapple from the 1996 supplement to the maneuver list (optional rules).",
         Boolean, false);
+    // B7694
+    s("companion2002Maneuvers", "Offer the Dark Ages Companion (2002) maneuvers",
+        "Add Choke Hold, Gobbet Rend, Joint Break, Neck Snap and Tendon Slice to the maneuver list, each with its prerequisites and what it leaves (optional rules in that book).",
+        Boolean, true);
     s("showKindMenus", "Show actor-type options",
         "Show the attacker/defender type selectors and the type-specific options (Rage, Glamour, Pathos, banes...) in the attack dialog.",
         Boolean, true);
@@ -693,7 +697,8 @@ function kindOpts(sel, autoLabel) {
 }
 
 function maneuverTable() {
-    return setting("classicManeuvers") ? { ...R.MANEUVERS, ...R.CLASSIC } : R.MANEUVERS;
+    const t = setting("classicManeuvers") ? { ...R.MANEUVERS, ...R.CLASSIC } : R.MANEUVERS;
+    return setting("companion2002Maneuvers") ? { ...t, ...R.DA2002 } : t;
 }
 
 function attackDialogHtml(attacker, target, weapons, selWeapon) {
@@ -983,7 +988,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const gripWhy = [
         R.clinchLimit(attacker.getFlag?.(MOD, "clinch"), game.combat, target?.uuid ?? null, w?.id),
         w?.id === "unarmed:bite" && !w.natural && !R.biteReady(target?.getFlag?.(MOD, "grip"), attacker.uuid, game.combat) ? "a bite needs a clinch, hold or tackle on this target first" : "",
-        mkey === "riposte" && game.combat?.started && !R.riposteReady(recentCards().filter(d => AU.countThisRound([d], roundKey(), () => true)), attacker.uuid) ? "a riposte needs a successful defense earlier this turn" : ""
+        mkey === "riposte" && game.combat?.started && !R.riposteReady(recentCards().filter(d => AU.countThisRound([d], roundKey(), () => true)), attacker.uuid) ? "a riposte needs a successful defense earlier this turn" : "",
+        // B7694: the Dark Ages Companion (2002) maneuvers' prerequisites
+        R.da2002Why(mkey, { brawl: ability(attacker, "brawl").value, melee: ability(attacker, "melee").value, strength: attr(attacker, "strength"),
+            dexterity: attr(attacker, "dexterity"), potence: discipline(attacker, "Potence"), protean: discipline(attacker, "Protean") }, w)
     ].filter(Boolean);
     if (gripWhy.length) {
         if (!game.user.isGM) throw new Error(`${attacker.name}: ${gripWhy[0]}.`);
@@ -1265,7 +1273,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const grips = [];
     if (target && hit && !atk.botch) {
         const now = game.combat?.started ? { combat: game.combat.id, round: game.combat.round } : { combat: null, round: null };
-        const kind = mkey === "hold" ? "hold" : mkey === "c_grapple" ? "grapple" : w?.id === "unarmed:clinch" ? "clinch" : mkey === "tackle" ? "tackle" : null;
+        const kind = mkey === "hold" ? "hold" : mkey === "choke" ? "choke" : mkey === "c_grapple" ? "grapple" : w?.id === "unarmed:clinch" ? "clinch" : mkey === "tackle" ? "tackle" : null;
         if (kind) grips.push([target, "grip", { by: attacker.uuid, byName: attacker.name, kind, ...now }]);
         if (kind === "clinch") {
             grips.push([target, "clinch", { with: attacker.uuid, combat: now.combat }], [attacker, "clinch", { with: target.uuid, combat: now.combat }]);
@@ -1334,6 +1342,11 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
         if (offer && target.isOwner) await BD.offerMaim(target, offer, { attacker });
         else if (offer) requestGM({ action: "maim", uuid: target.uuid, offer, by: attacker?.name ?? "" });
+    }
+    // B7694: what a Dark Ages Companion (2002) maneuver leaves
+    if (target && R.DA2002[mkey]) {
+        const fx = R.da2002After(mkey, { hit: !!hit && !atk.botch, levels: outcome?.levels ?? 0, profile, aimed: String(fd.aimType ?? fd.targeting ?? "") });
+        if (fx.length) await da2002Effects(target, fx, attacker).catch(e => console.warn(`${MOD} | 2002 maneuver`, e));
     }
     return { attack: atk, defense: def, damage: dmg, soak, outcome, counter, message: msg };
 }
@@ -1503,7 +1516,8 @@ function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice),
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice)
+            + (fd.maneuver === "necksnap" ? attr(target, "strength") : 0), // B7694: Strength soaks a Neck Snap too (DAC 2002 p. 36)
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
@@ -2459,14 +2473,16 @@ export async function breakFree(actor, combat = game.combat) {
     };
     // a holder who is gone, down or out of the fight holds nobody
     if (!holder || cannotActWhy(holder) || chronicle()?.conditions?.hasCondition?.(holder, "incapacitated")) { await free(); return { free: true, line: `${actor.name} slips free: ${grip.byName ?? "the holder"} no longer holds on.` }; }
-    const pool = a => Math.max(0, attr(a, "strength") + ability(a, "brawl").value + woundPenalty(a));
+    // B7694: a choke is fought with Strength alone (DAC 2002 p. 35)
+    const pool = a => Math.max(0, attr(a, "strength") + (grip.kind === "choke" ? 0 : ability(a, "brawl").value) + woundPenalty(a));
     const rv = await rollPool(pool(actor), 6), rh = await rollPool(pool(holder), 6);
     const out = R.breaksFree(rv.botch ? 0 : rv.successes, rh.botch ? 0 : rh.successes);
     if (out) await free();
-    const what = { hold: "the hold", grapple: "the grapple", clinch: "the clinch" }[grip.kind];
-    const line = out ? `${actor.name} breaks free of ${what}.` : `${actor.name} stays in ${what} and can take no other physical action this turn.`;
+    const what = { hold: "the hold", grapple: "the grapple", clinch: "the clinch", choke: "the choke hold" }[grip.kind];
+    let line = out ? `${actor.name} breaks free of ${what}.` : `${actor.name} stays in ${what} and can take no other physical action this turn.`;
+    if (!out && grip.kind === "choke") line += ` ${await chokeTick(actor, grip, combat)}`;
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [rv.roll, rh.roll].filter(Boolean),
-        content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>Strength + Brawl, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
+        content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>${grip.kind === "choke" ? "Strength" : "Strength + Brawl"}, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
     return { free: out, line };
 }
 Hooks.on("updateCombat", (combat, changed) => {
@@ -2734,7 +2750,7 @@ export function computeHints(attacker, target, fdIn = {}, tokens = {}) {
     const table = maneuverTable();
     let best = null;
     for (const [k, m] of Object.entries(table)) {
-        if (AU.SUGGEST_SKIP.has(k) || m.noDamage) continue;
+        if (AU.SUGGEST_SKIP.has(k) || m.noDamage || R.DA2002[k]) continue; // B7694: the 2002 moves have prerequisites and costs of their own
         const p = planChoice(attacker, target, { ...fd, maneuver: k }, fd.weapon, tokens);
         if (p && (!best || p.expectedLevels > best.p.expectedLevels)) best = { k, m, p };
     }
@@ -3038,4 +3054,44 @@ async function markDazed(actor) {
     // In a fight Dazed lasts the next turn; outside one there are no turns, so it lasts until the scene ends
     const duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
     await api.applyTimed(actor, { name: "Dazed", condition: "dazed", key: "wodx-dazed", duration, source: "V20 Dark Ages p. 348" });
+}
+
+/* ---------- B7694: the Dark Ages Companion (2002) maneuvers ---------- */
+async function da2002Effects(target, fx, attacker) {
+    if (!target.isOwner && !game.user.isGM) return;
+    const lines = [];
+    for (const f of fx) {
+        if (f.kind === "blood") {
+            const now = blood(target);
+            if (now > 0) { await target.update({ "system.advantages.bloodpool.temporary": Math.max(0, now - f.points) }); lines.push(`${f.points} blood point torn away (${now} → ${now - f.points}).`); }
+            else lines.push("No blood left to tear away.");
+        } else if (f.kind === "cripple" || f.kind === "tendon") {
+            await target.createEmbeddedDocuments("ActiveEffect", [{ name: `Crippled: ${f.label.toLowerCase()}`, img: "icons/svg/bones.svg",
+                description: f.kind === "tendon" ? "Tendon cut (Dark Ages Companion 2002 p. 34): a wrist's hand holds no weapon; an ankle cuts the move to a quarter (a beast's to a half). For life, unless blood or magic heals it."
+                    : "Limb broken (Dark Ages Companion 2002 p. 36): useless until the damage heals.",
+                flags: { [MOD]: { crippled: f.part, da2002: f.kind } } }]);
+            lines.push(f.kind === "tendon" ? `The ${f.label.toLowerCase().replace(" (tendon cut)", "")} tendon is cut.` : "The limb breaks: useless until it heals.");
+        } else if (f.kind === "neck") {
+            if (f.how === "dies") { await killOutright(target); lines.push("The neck breaks: death."); }
+            else if (f.how === "paralysed") { await chronicle()?.conditions?.setCondition?.(target, "immobilized", true); lines.push("The neck breaks: paralysed until the damage is healed."); }
+            else { await chronicle()?.conditions?.setCondition?.(target, "incapacitated", true); lines.push("The neck breaks: Incapacitated, healing from there as usual."); }
+        }
+    }
+    if (lines.length) await ChatMessage.create({ speaker: { alias: "WoDX Combat" }, content: `<div class="vtc-card"><p><b>${esc(target.name)}</b>${attacker ? ` (by ${esc(attacker.name)})` : ""}: ${lines.map(esc).join(" ")}</p></div>` });
+}
+/** B7694: a death that is no wound's worsening: the track filled with lethal, any aggravated kept. */
+async function killOutright(actor) {
+    const t = healthTrack(actor), agg = Math.min(t.max, num(t.damage?.aggravated));
+    await setDamage(actor, { bashing: 0, lethal: t.max - agg, aggravated: agg });
+    try { await setStatus(actor, "dead"); } catch (e) { /* no status */ }
+}
+async function chokeTick(actor, grip, combat) {
+    const vampire = P.detectProfile(actor) === "vampire";
+    const incap = !!chronicle()?.conditions?.hasCondition?.(actor, "incapacitated") || actor.statuses?.has?.("unconscious");
+    const t = R.chokeTurn({ round: combat?.round ?? 0, startRound: grip.round ?? 0, incapacitated: incap, incapTurns: grip.incapTurns ?? 0, stamina: attr(actor, "stamina"), vampire });
+    if (t.incapTurns !== (grip.incapTurns ?? 0)) await actor.setFlag(MOD, "grip", { ...grip, incapTurns: t.incapTurns });
+    if (vampire) return "A Cainite needs no breath: only silenced.";
+    if (t.dies) { await killOutright(actor); return "Held past their Stamina while Incapacitated: they die."; }
+    if (t.levels) { await applyDamage(actor, "bashing", t.levels); return "A health level lost to the choke, not soaked (it heals at one an hour)."; }
+    return incap ? `Incapacitated in the choke: ${Math.max(0, attr(actor, "stamina") - t.incapTurns)} turn(s) more and they die.` : "No harm yet: the first turn only silences.";
 }
