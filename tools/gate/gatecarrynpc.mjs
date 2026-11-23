@@ -20,7 +20,9 @@
  *      moving the clock)
  * Result: Data/wodx-gate/gatecarrynpc-result.json.
  */
-import {gate, waitFor} from "./kit.mjs";
+import {gate, waitFor, inOrder} from "./kit.mjs";
+// B7773: a batch create does not keep its order (kit rule 1), so what it made is matched back to its data by name
+const madeInOrder = async (parent, type, data) => inOrder(await parent.createEmbeddedDocuments(type, data), data);
 
 const IX = "wodx-interactables", NPC = "wodx-npc";
 const body = (name, {str = 2} = {}) => ({name, type: "Mortal",
@@ -114,7 +116,7 @@ export async function run() {
 
     // B5087 to B5089: where they take them. The guards' own places are regions on this map.
     const savedPrisoners = foundry.utils.deepClone(game.settings.get(NPC, "prisoners") ?? []);
-    const [home, watch] = await scene.createEmbeddedDocuments("Region", [
+    const [home, watch] = await madeInOrder(scene, "Region", [
       {name: "Gate Carry home", shapes: [{type: "rectangle", x: 1400, y: 1200, width: 300, height: 300}], flags: {[NPC]: {place: {kind: "home"}}}},
       {name: "Gate Carry watch-house", shapes: [{type: "rectangle", x: 2400, y: 300, width: 300, height: 300}], flags: {[NPC]: {place: {kind: "gate"}}}}]);
     const inside = (d, r) => { const s = r.shapes[0]; const cx = d.x + 50, cy = d.y + 50; return cx >= s.x - 100 && cx <= s.x + s.width + 100 && cy >= s.y - 100 && cy <= s.y + s.height + 100; };
