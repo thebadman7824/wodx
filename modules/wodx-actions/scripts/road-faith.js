@@ -11,6 +11,10 @@ const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const npcFactions = () => game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api?.factions ?? null : null;
+const creationLearn = () => game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.learn ?? null : null;
+const storytellerApi = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api ?? null : null;
+const chronicleApi = () => game.modules.get("wodx-chronicle")?.api ?? null;
+export const T_TRUTH = "wodx-actions.roadTruth";
 const opt = (v, l, sel = false) => `<option value="${esc(v)}"${sel ? " selected" : ""}>${esc(l)}</option>`;
 
 export const storyNow = () => { try { return game.settings.get(MOD, "storyId") || "first"; } catch (e) { return "first"; } };
@@ -39,6 +43,32 @@ export function build(ctx) {
         await save(actor, after);
         await logEvent(actor, `A Moment of Truth: ${RF.CATALYSTS[key].label.toLowerCase()}${note ? ` (${note})` : ""}.`, "road");
         return `<div class="vta-note good">A Moment of Truth (${esc(RF.CATALYSTS[key].label.toLowerCase())}): ${forChange ? "the change of Road may be taken" : "a Road dot bought this story costs half (V20 Dark Ages p. 115)"}.</div>`;
+    }
+
+    /**
+     * B7750 (Desk item 2026-11-23-mc3): an event that matches the Road book's own prompt (an oath, for the Road of Kings) proposes
+     * a Moment of Truth to the Storyteller's approval queue. Returns true when one was proposed.
+     */
+    async function proposeTruth(actor, event, note = "") {
+        if ( !actor ) return false;
+        const hit = RF.truthFromEvent(ctx.roadOf(actor)?.key, event);
+        if ( !hit ) return false;
+        const story = storyNow();
+        if ( RF.openTruth(faith(actor), story) ) return false;
+        const ap = chronicleApi()?.approvals;
+        if ( !ap?.propose ) return false;
+        await ap.propose({ type: T_TRUTH, key: `roadTruth:${actor.id}:${story}:${event}`, title: `A Moment of Truth for ${actor.name}?`,
+            detail: `${hit.label}${note ? `: ${String(note).slice(0, 160)}` : ""}. The Road book counts it (${hit.src}). Approved, a Moment of Truth opens this story: the next Road dot costs half (V20 Dark Ages p. 115).`,
+            data: { actor: actor.id, note: `${hit.label}${note ? `: ${String(note).slice(0, 80)}` : ""}` } });
+        return true;
+    }
+    function registerHandlers() {
+        chronicleApi()?.approvals?.registerHandler?.(T_TRUTH, { label: "A Moment of Truth from the Road's own book", approve: async entry => {
+            const a = game.actors.get(entry.data?.actor);
+            if ( !a ) return;
+            const line = await openTruth(a, "event", String(entry.data?.note ?? ""));
+            if ( line ) await post(a, `${a.name}: the Road`, line);
+        } });
     }
 
     /** The record and the sheet together, for the window and the gates. */
@@ -119,10 +149,21 @@ export function build(ctx) {
                 const m = fd.mentorPick ? fromUuidSync(fd.mentorPick) : null;
                 const name = m?.name ?? String(fd.mentorName ?? "").trim();
                 if ( !name ) return ctx.notify("Name the Mentor.");
-                const mentor = { name, uuid: m?.uuid ?? null, rating: m ? road(m).value : n(fd.mentorRating), road: m ? ctx.roadOf(m)?.key ?? null : f.change?.to ?? ctx.roadOf(actor)?.key ?? null, since: game.time.worldTime };
+                // B7751 (Desk item 2026-11-23-mc1): the Mentor has to be willing, as a teacher does (WoDX Creation's B7131 terms)
+                let terms = null;
+                if ( m ) { try { terms = creationLearn()?.terms?.(actor, m, { next: road(actor).value + 1 }) ?? null; } catch (e) { console.warn("WoDX | Road Mentor", e); } }
+                const ok = RF.mentorAllowed(terms, { gm });
+                if ( !ok.ok ) return post(actor, title, `<div class="vta-note bad">${esc(ok.note)}</div>`);
+                const mentor = { name, uuid: m?.uuid ?? null, rating: m ? road(m).value : n(fd.mentorRating), road: m ? ctx.roadOf(m)?.key ?? null : f.change?.to ?? ctx.roadOf(actor)?.key ?? null, since: game.time.worldTime, ...(terms ? { will: terms.will } : {}) };
+                if ( ok.price ) {
+                    const what = `For teaching the ${road(actor).name}: ${ok.price.what}`;
+                    // Only the Storyteller's client writes the Ledger (a world setting); a player's price goes to them to write
+                    if ( gm ) { try { await storytellerApi()?.ledger?.save?.({ kind: ok.price.kind, ...(ok.price.size ? { size: ok.price.size } : {}), from: { id: actor.id, name: actor.name }, to: { id: m.id, name: m.name }, what }); } catch (e) { console.warn("WoDX | Road Mentor: Ledger", e); } }
+                    else await ChatMessage.create({ whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>A Mentor's price</h3><p>${esc(actor.name)} owes ${esc(m.name)}: ${esc(what)}${ok.price.size ? ` (a ${esc(ok.price.size)} ${esc(ok.price.kind)})` : ""}. Write it in the Ledger.</p></div>` });
+                }
                 await save(actor, { ...f, mentor });
                 await logEvent(actor, `Takes ${name} as a Mentor on the Road.`, "road");
-                return post(actor, title, `<div class="vta-note">${esc(name)} (${mentor.rating} dots) is the Mentor from today. ${f.change && mentor.road === f.change.to ? "A Mentor on the new Road, as the change asks (V20 Dark Ages p. 112)." : RF.mentorCounts(mentor, ctx.roadOf(actor)?.key, road(actor).value) ? "A Road dot costs less while they teach (V20 Dark Ages p. 111)." : "With no more dots than the character on this Road, they do not lower the cost."}</div>`);
+                return post(actor, title, `<div class="vta-note">${esc(name)} (${mentor.rating} dots) is the Mentor from today. ${ok.note ? `${esc(ok.note)} ` : ""}${f.change && mentor.road === f.change.to ? "A Mentor on the new Road, as the change asks (V20 Dark Ages p. 112)." : RF.mentorCounts(mentor, ctx.roadOf(actor)?.key, road(actor).value) ? "A Road dot costs less while they teach (V20 Dark Ages p. 111)." : "With no more dots than the character on this Road, they do not lower the cost."}</div>`);
             }
             case "clearMentor":
                 await save(actor, { ...f, mentor: null });
@@ -225,5 +266,5 @@ export function build(ctx) {
         return post(actor, title, body, [r.roll]);
     }
 
-    return { window, act, info, openTruth, changeRoll, faith };
+    return { window, act, info, openTruth, proposeTruth, registerHandlers, changeRoll, faith };
 }

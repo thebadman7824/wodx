@@ -129,6 +129,15 @@ export function willOf(learner, teacher) {
   return L.willingness({pc: !!teacher.hasPlayerOwner, attitude, trust, town: townOf(teacher), here: townOf(learner), name: teacher.name});
 }
 const blocks = w => w.will === "refuse" || !!w.trip;
+/**
+ * B7131 for the Road (B7751 (desk item 2026-11-23-mc1)): the same willingness for a Mentor on a Road, with the price asked when
+ * the Mentor is neither friend nor foe. next: the Road dot to be learned. Returns {will, trip, why, blocks, price}.
+ */
+export function teacherTerms(learner, teacher, {next = 1} = {}) {
+  const w = willOf(learner, teacher);
+  const price = w.will === "price" ? L.priceFor(yearNow(), {kindred: lineOf(learner) === "vampire" && lineOf(teacher) === "vampire", next}) : null;
+  return {...w, blocks: blocks(w), price};
+}
 
 /** Teachers in the world who know it well enough: the user's view of the world, those on the scene first. */
 export function teachersFor(actor, p, {user = game.user, limit = 12} = {}) {

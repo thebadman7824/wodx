@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7740
+Next free block: B7770
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -457,6 +457,8 @@ Next free block: B7740
 | B7660-B7709 | V20 Dark Ages full check: gaps from the rule-by-rule pass (used B7660-B7703) | Creation, Chronicle, Actions, NPC, Combat |
 | B7720-B7729 | New PC: lane 10 and its runner (used B7720-B7722) | tools |
 | B7730-B7739 | gates: apipaths money path, vehicles ram retries, powder names who deleted the gun (used B7731-B7735) | wodx-npc, tools (gates) |
+| B7750-B7759 | Improvement desk picks of 23 November 2026: Road and domain connections, the season turn, the daily PC tally (used B7750-B7755) | Actions, Creation, Sheets |
+| B7760-B7769 | Merge train speed: New PC lanes 11-13, small runners defer PR gate runs (used B7760-B7761) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15664,3 +15666,58 @@ Reverse: put back `const [gun] = await gunman.createEmbeddedDocuments(...)` in s
 Gates. gateapipaths walks the paths listed in tools/gate/fixtures/api-paths.json, and that list is made from the code by tools/audit/api-paths.mjs. Job 2322 still listed the old talk.mjs path because the list had not been made again after B7731. It is made again here (`node tools/audit/api-paths.mjs --write`): the old path is gone, and a few line numbers in talk.mjs moved by one. Not yet run in Foundry.
 
 Reverse: run the audit again after reversing B7731.
+
+## B7750. An oath of fealty proposes a Road of Kings Moment of Truth (2026-11-23)
+WoDX Actions. When a liege or a vassal who walks the Road of Kings swears an oath in the Fealty window, a Moment of Truth (the story event catalyst, V20 Dark Ages p. 115) is proposed to the Storyteller's approval queue, citing the Road of Kings book (PDF p. 62). It opens only when approved, and not when one is already open this story. Picked on the improvement desk (item 2026-11-23-mc3).
+
+Reverse: drop the proposeTruth call in domain-da.js swear().
+
+## B7751. A Road Mentor has to be willing (2026-11-23)
+WoDX Actions and WoDX Creation. Naming a character as Mentor in the Road window reads the same willingness as a teacher (B7131): welcomed or trusted, they teach; neither friend nor foe, they ask a price written to the Ledger; hostile or distrustful, or in another town, they refuse unless the Storyteller names them anyway. A Mentor typed by name is noted as the Storyteller's to confirm. House rule, as B7131. Desk item 2026-11-23-mc1.
+
+Reverse: drop the terms check in road-faith.js act("mentor").
+
+## B7752. Domain events reach the hunt (2026-11-23)
+WoDX Actions. Populace events already move the sheet's Herd, which the hunting window reads; the window now names them. An event that takes the manor's Area (a siege, a disaster) lowers the Domain dots the hunt counts by as much, while it runs. Desk item 2026-11-23-mc2.
+
+Reverse: drop huntFromDomain from the Hunt window.
+
+## B7753. The domain's season turn (2026-11-23)
+WoDX Actions. Every 91 days of world time (V20 Dark Ages Companion p. 113: an event lasts a season), each character with Domain 1 or more turns the season: a d10 of 1 to 5 brings no event (house rule), 6 to 10 rolls on the table, and the event goes to the approval queue; the Storyteller's card names the maturation price of the next Domain dot (p. 105). The first look at a domain only marks the season. From 1800 the card names the events in later words (tourists, crime, a takeover), with the same systems. Desk item 2026-11-23-im1.
+
+Reverse: drop the seasonTurn call in tick().
+
+## B7754. The Road and the domain on the sheet (2026-11-23)
+WoDX Sheets. A short read-only strip at the top of the Bio tab shows the Road, its rank, the Mentor and an open Moment of Truth, and the domain's aspects, running events, liege and vassals. Each part opens its own window in WoDX Actions. Desk item 2026-11-23-im2.
+
+Reverse: drop standingStrip from the sheet's render.
+
+## B7755. The daily PC tally (2026-11-23)
+PC tools. status-push.mjs also adds each five-minute sample to registry/pc-status/daily/(pc)-(date).json on the pc-status branch: runner up minutes, each lane's up and busy minutes (busy needs PC_LANES_JSON), GPU busy minutes and minutes held by the GPU guard by class, ComfyUI renders finished and OCR working minutes. Only counts and minutes, as the rest of the public status file. Picked on 17 November (us2) and again on 23 November (us2b).
+
+Reverse: drop the daily write in cycle().
+
+## B7760. The New PC drives lanes 10 to 13 (2026-11-23)
+Measured from the 54 gates jobs that finished between 19 and 23 November (their TIMES lines): a gate takes a median of
+13 s and an average of 16 s on the New PC's lane 10, against 25 s median (31 s average) on a Main PC lane with four
+running and 21 s on the Secondary PC. A train front's run of about 220 gates took 46 minutes on the Main PC's four lanes
+(job 2320) and 129 on the Secondary PC's one (job 2310). The New PC ran one lane with 47 GB of memory free, while a busy
+lane uses about 2.4 to 4.2 GB (registry/ram-baseline-2026-11-17.md) and about one core of its twelve. So it gets three
+more lanes, 11 to 13 on ports 30110 to 30130 (the next free ones after lane 10's 30100, and 30000 plus ten times the id
+as status-push.mjs expects), with data folders D:\WoDX\FoundryData-lane11 to -lane13, set up from the same known-good
+world as lane 10 with a setup-lane job each. A gates job's lanes share one queue only within one runner, so a run that
+starts on the New PC takes all four of its lanes. The watcher now expects lanes 10 to 13 on the New PC. Four, not more,
+until a run on all four shows how much each lane slows the others (four lanes on the Main PC ran each gate 16 to 21%
+slower than one or two did, 17 November).
+
+Reverse: take lanes 11 to 13 out of lanes.json, runner.new_pc_lebrun.json and watcher.mjs's PCS list.
+
+## B7761. A small runner leaves pull request gate runs to bigger ones for ten minutes (2026-11-23)
+Any runner that is free claims a queued gates job, so a pull request's whole-branch run (touched or every gate) could go
+to a runner with a single lane while one with four sat free a minute later; that is how job 2310 took 129 minutes. A
+runner whose settings hold prGatesDeferMinutes leaves such a job for that many minutes after its issue was opened, then
+takes it if nobody has (deferToBigger in tools/pcq/jobs.mjs). The Secondary PC (one lane) has 10; the Main PC and the
+New PC have none and take the job at once. A job named to a lane, a hand-picked gate list and a job that is not a pull
+request's are never held. The merge train still merges one pull request at a time.
+
+Reverse: remove prGatesDeferMinutes from runner.benjamin-pc.json (the check in runner.mjs then does nothing).

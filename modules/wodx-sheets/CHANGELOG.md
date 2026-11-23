@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.24.0 (The Road and the domain at a glance on the Bio tab (B7754))
 - 0.23.6 (The anachronism check's Live guard reads WoDX Chronicle's one Live-world list (B7564); a comment no longer names the first chronicle)
 - 0.23.5 (A sheet roll whose difficulty goes past 10 is rolled at 10 and needs one more success for each point past it (B7120): the general window hands the count to the system roller, and the roll card says "rolled at 10; 1 more success needed" instead of "difficulty held at 10")
 - 0.23.4 (A sheet roll passes a no-botch roll effect on to the system's roller (B6924); A sheet roll passes a halving roll effect on to the system's roller (B6925); Final audit fixes: search boxes on the quick-add roll menu and the Add coins container menu; the court, origin, fellowship and order pickers are marked as fixed lists (B6774); Gate run 1774 (B6950): a line skin slower than the four-second wait no longer counts as failed for good. The page stops waiting, the file goes on loading, and it counts as loaded when it lands; a second sheet of that line does not put the file in again)

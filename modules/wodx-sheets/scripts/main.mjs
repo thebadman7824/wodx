@@ -18,6 +18,7 @@ import MummyActorSheet, { MummyActorSheetV2 } from "../../../systems/worldofdark
 import { onV2 } from "../../../systems/worldofdarkness/module/actor/template/lines-v2.js";
 import * as BG from "./beginner.mjs";
 import * as SK from "./skins.mjs";
+import * as ST from "./standing-rules.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
 import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
@@ -330,6 +331,8 @@ function wodxSheet(Base, type) {
       const el = html.find ? html : $(html);
       // The extras (strip, Possessions, Ties, notes, search) come on every WoDX sheet, in either layout
       try { await X.decorate(this, el); } catch (e) { console.error("WoDX Sheets | extras", e); }
+      // B7754 (Desk item 2026-11-23-im2): the Road and the domain at a glance on the Bio tab, each opening its window
+      try { await standingStrip(this.actor, el); } catch (e) { console.error("WoDX Sheets | Road and domain", e); }
       if (!id) return html;
       const core = el.find(".tab.core");
       if (core.length) core.html(await foundry.applications.handlebars.renderTemplate(`modules/${MOD}/templates/core.hbs`, data));
@@ -373,6 +376,28 @@ function wodxSheet(Base, type) {
       return r;
     }
   };
+}
+
+/** B7754 (Desk item 2026-11-23-im2): WoDX Actions' Road and domain records as a short read-only strip at the top of the Bio tab. */
+async function standingStrip(actor, el) {
+  const act = game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null;
+  const bio = el.find(".tab.bio");
+  if ( !act || !bio.length ) return;
+  let road = null, domain = null, oaths = [];
+  try { road = act.roadFaithInfo?.(actor) ?? null; } catch (e) { road = null; }
+  try { domain = act.domain?.state?.(actor) ?? null; } catch (e) { domain = null; }
+  try { oaths = act.domain?.oaths?.() ?? []; } catch (e) { oaths = []; }
+  const L = ST.standingLines({ road, domain, oaths, name: actor.name });
+  if ( !L.road.length && !L.domain.length ) return;
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const part = (lines, key, label) => lines.length ? `<p class="wodx-standing-line"><a class="wodx-standing-open" data-open="${key}" title="Open the ${label} window"><b>${label}:</b></a> ${lines.map(esc).join("; ")}.</p>` : "";
+  const html = `<div class="clearareaBox area-box wodx-standing">${part(L.road, "road", "The Road")}${part(L.domain, "domain", "Domain and fealty")}</div>`;
+  bio.prepend(html);
+  bio.find(".wodx-standing-open").on("click", ev => {
+    ev.preventDefault();
+    const k = ev.currentTarget.dataset.open;
+    try { if ( k === "road" ) act.roadFaith?.(actor); else act.domainDA?.(actor); } catch (e) { console.warn("WoDX Sheets | open", e); }
+  });
 }
 
 function listeners(sheet, root) {
@@ -656,6 +681,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.23.6", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
+  game.modules.get(MOD).api = { version: "0.24.0", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });
