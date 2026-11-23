@@ -26,3 +26,4 @@
 {"file":"tools/harness/fronts.test.mjs","verdict":"working","how":"Clue count 7 matches the data; test passes","hash":"24bf76a6c585","at":"2026-11-23T18:20Z"}
 {"file":"tools/harness/chronicle-local.test.mjs","verdict":"working","how":"New test reads the shipped Rothenstein local block through every helper (feasts, titles, languages, caerns, hunters); 8/8 pass","hash":"db16665fa84d","at":"2026-11-23T18:20Z"}
 {"file":"tools/harness/saga.test.mjs","verdict":"working","how":"Long Watch dueBook years, era, step years and no clock moves asserted; test passes","hash":"16095c9adaa6","at":"2026-11-23T18:20Z"}
+{"file":"registry/features/wodx-npc.json","verdict":"working","how":"Added PR 2362 to npc.factions prs for the findActor guard; JSON parses","hash":"043332f300e6","at":"2026-11-23T18:33Z"}
