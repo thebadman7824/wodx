@@ -1,0 +1,1290 @@
+{
+ "format": "wodx-blueprint",
+ "version": 1,
+ "id": "valley",
+ "name": "The Valley (travel map, to scale)",
+ "chronicle": "rothenstein",
+ "tier": 4,
+ "cells": [
+  92,
+  54
+ ],
+ "square_ft": 820.2,
+ "art_grid_px": 128,
+ "source": {
+  "kind": "hand",
+  "from": "Book 1 omnibus: places, roads and travel; map exits of every Rothenstein plan"
+ },
+ "layers": [
+  "material"
+ ],
+ "walls": [],
+ "doors": [],
+ "buildings": [],
+ "rooms": [
+  {
+   "id": "rothenstein-lower-town",
+   "label": "Rothenstein, Lower Town",
+   "rect": [
+    41.0,
+    37.5,
+    6,
+    5
+   ],
+   "use": "place",
+   "maps": [
+    "lt-market",
+    "lt-church",
+    "lt-crafts",
+    "lt-quay",
+    "lt-westgate",
+    "lt-market-floors"
+   ]
+  },
+  {
+   "id": "kranzfels",
+   "label": "Kranzfels",
+   "rect": [
+    43.6,
+    34.4,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "keep-road",
+    "keep-bailey",
+    "keep-ward",
+    "keep-floors"
+   ]
+  },
+  {
+   "id": "river-road-crossroads",
+   "label": "River Road crossroads",
+   "rect": [
+    39.6,
+    43.2,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "river-road"
+   ]
+  },
+  {
+   "id": "toll-post-and-ivo-s-ferry",
+   "label": "Toll-post and Ivo's Ferry",
+   "rect": [
+    40.4,
+    47.2,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "ferry"
+   ]
+  },
+  {
+   "id": "the-ford-and-wenzel-s-mill",
+   "label": "The Ford and Wenzel's Mill",
+   "rect": [
+    24.8,
+    42.4,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "ford"
+   ]
+  },
+  {
+   "id": "altenhof",
+   "label": "Altenhof",
+   "rect": [
+    4.8,
+    40.0,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "altenhof"
+   ]
+  },
+  {
+   "id": "the-lower-mill",
+   "label": "The Lower Mill",
+   "rect": [
+    48.4,
+    42.8,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "lower-mill"
+   ]
+  },
+  {
+   "id": "the-ashfield",
+   "label": "The Ashfield",
+   "rect": [
+    54.0,
+    35.2,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "east-road"
+   ]
+  },
+  {
+   "id": "the-red-field",
+   "label": "The Red Field",
+   "rect": [
+    54.8,
+    32.0,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "red-field"
+   ]
+  },
+  {
+   "id": "the-old-grove",
+   "label": "The Old Grove",
+   "rect": [
+    54.8,
+    27.2,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "old-grove"
+   ]
+  },
+  {
+   "id": "the-forest-road",
+   "label": "The Forest Road",
+   "rect": [
+    37.6,
+    30.4,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "forest-road"
+   ]
+  },
+  {
+   "id": "dolany",
+   "label": "Dolany",
+   "rect": [
+    30.0,
+    25.6,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "dolany"
+   ]
+  },
+  {
+   "id": "the-burnt-farm",
+   "label": "The burnt farm",
+   "rect": [
+    25.6,
+    24.8,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "burnt-farm"
+   ]
+  },
+  {
+   "id": "the-high-woods",
+   "label": "The High Woods",
+   "rect": [
+    31.6,
+    16.0,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "high-woods"
+   ]
+  },
+  {
+   "id": "the-high-fold",
+   "label": "The High Fold",
+   "rect": [
+    24.4,
+    14.0,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "high-fold"
+   ]
+  },
+  {
+   "id": "radek-s-hollow",
+   "label": "Radek's Hollow",
+   "rect": [
+    58.8,
+    10.0,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "radek-hollow"
+   ]
+  },
+  {
+   "id": "the-mountain-trail",
+   "label": "The Mountain Trail",
+   "rect": [
+    76.8,
+    19.2,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "mountain-trail"
+   ]
+  },
+  {
+   "id": "the-mining-camp-and-the-adit",
+   "label": "The Mining Camp and the Adit",
+   "rect": [
+    72.8,
+    29.2,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "minecamp",
+    "silver-adit"
+   ]
+  },
+  {
+   "id": "the-high-pass",
+   "label": "The High Pass",
+   "rect": [
+    81.2,
+    4.8,
+    2.4,
+    1.6
+   ],
+   "use": "place",
+   "maps": [
+    "high-pass"
+   ]
+  }
+ ],
+ "slots": [],
+ "lights": [],
+ "labels": [],
+ "exits": [
+  {
+   "kind": "exit",
+   "name": "east beyond the pass",
+   "to": "hungarian-march",
+   "rect": [
+    82.4,
+    1.6,
+    3,
+    3
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "south: the road to Brno",
+   "to": "brno-road",
+   "rect": [
+    40.4,
+    52.0,
+    3,
+    3
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "west: the other villages",
+   "to": "west-villages",
+   "rect": [
+    0.8,
+    24.0,
+    3,
+    3
+   ]
+  },
+  {
+   "kind": "exit",
+   "name": "south-east: the far shrine, days away",
+   "to": "far-shrine",
+   "rect": [
+    86.4,
+    50.4,
+    3,
+    3
+   ]
+  }
+ ],
+ "ground": [
+  {
+   "kind": "river",
+   "label": "the river",
+   "path": [
+    [
+     0.0,
+     46.0
+    ],
+    [
+     20.0,
+     47.2
+    ],
+    [
+     40.0,
+     48.0
+    ],
+    [
+     45.2,
+     45.2
+    ],
+    [
+     50.0,
+     43.2
+    ],
+    [
+     68.0,
+     44.0
+    ],
+    [
+     92.0,
+     49.6
+    ]
+   ],
+   "width": 0.6
+  },
+  {
+   "kind": "brook",
+   "label": "the stream at the ford",
+   "path": [
+    [
+     26.8,
+     28.0
+    ],
+    [
+     26.4,
+     36.0
+    ],
+    [
+     26.0,
+     43.2
+    ],
+    [
+     25.6,
+     46.8
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "hill",
+   "label": "the red hill",
+   "path": [
+    [
+     51.2,
+     34.8
+    ],
+    [
+     59.2,
+     35.2
+    ],
+    [
+     61.6,
+     29.6
+    ],
+    [
+     59.2,
+     24.8
+    ],
+    [
+     52.8,
+     24.4
+    ],
+    [
+     50.4,
+     29.6
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "wood",
+   "label": "the high woods",
+   "path": [
+    [
+     20.0,
+     6.0
+    ],
+    [
+     44.0,
+     4.8
+    ],
+    [
+     50.0,
+     14.0
+    ],
+    [
+     40.0,
+     20.8
+    ],
+    [
+     22.0,
+     20.8
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "wood",
+   "label": "the forest",
+   "path": [
+    [
+     33.6,
+     28.8
+    ],
+    [
+     46.4,
+     26.4
+    ],
+    [
+     48.8,
+     33.6
+    ],
+    [
+     41.6,
+     36.4
+    ],
+    [
+     34.4,
+     33.6
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "field",
+   "label": "town fields",
+   "path": [
+    [
+     41.6,
+     41.2
+    ],
+    [
+     48.8,
+     42.0
+    ],
+    [
+     48.0,
+     38.4
+    ],
+    [
+     41.6,
+     38.4
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "field",
+   "label": "the Fields",
+   "path": [
+    [
+     32.0,
+     40.8
+    ],
+    [
+     39.2,
+     40.8
+    ],
+    [
+     39.2,
+     46.0
+    ],
+    [
+     32.0,
+     46.0
+    ]
+   ],
+   "closed": true
+  },
+  {
+   "kind": "road",
+   "label": "the Keep Road",
+   "path": [
+    [
+     44.0,
+     40.0
+    ],
+    [
+     45.2,
+     37.6
+    ],
+    [
+     44.8,
+     35.2
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "road",
+   "label": "the River Road",
+   "path": [
+    [
+     42.4,
+     40.0
+    ],
+    [
+     41.2,
+     42.0
+    ],
+    [
+     40.8,
+     44.0
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "road",
+   "label": "the River Road",
+   "path": [
+    [
+     40.8,
+     44.0
+    ],
+    [
+     41.6,
+     48.0
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "road",
+   "label": "the River Road west",
+   "path": [
+    [
+     40.8,
+     44.0
+    ],
+    [
+     34.0,
+     43.2
+    ],
+    [
+     26.0,
+     43.2
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "track",
+   "label": "the Altenhof track",
+   "path": [
+    [
+     26.0,
+     43.2
+    ],
+    [
+     18.0,
+     41.6
+    ],
+    [
+     12.0,
+     42.0
+    ],
+    [
+     6.0,
+     40.8
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "track",
+   "label": "the mill road",
+   "path": [
+    [
+     46.4,
+     40.0
+    ],
+    [
+     48.0,
+     42.0
+    ],
+    [
+     49.6,
+     43.6
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "road",
+   "label": "the East Road",
+   "path": [
+    [
+     46.4,
+     40.0
+    ],
+    [
+     50.4,
+     38.0
+    ],
+    [
+     55.2,
+     36.0
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "road",
+   "label": "the East Road",
+   "path": [
+    [
+     55.2,
+     36.0
+    ],
+    [
+     62.4,
+     34.0
+    ],
+    [
+     68.8,
+     32.0
+    ],
+    [
+     74.0,
+     30.0
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "path",
+   "label": "the path up the hill",
+   "path": [
+    [
+     55.2,
+     36.0
+    ],
+    [
+     56.0,
+     32.8
+    ]
+   ],
+   "width": 0.2
+  },
+  {
+   "kind": "path",
+   "label": "the path up the hill",
+   "path": [
+    [
+     56.0,
+     32.8
+    ],
+    [
+     56.0,
+     28.0
+    ]
+   ],
+   "width": 0.2
+  },
+  {
+   "kind": "road",
+   "label": "the Forest Road",
+   "path": [
+    [
+     42.4,
+     40.0
+    ],
+    [
+     40.8,
+     36.0
+    ],
+    [
+     38.8,
+     31.2
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "road",
+   "label": "the Forest Road",
+   "path": [
+    [
+     38.8,
+     31.2
+    ],
+    [
+     35.2,
+     28.4
+    ],
+    [
+     31.2,
+     26.4
+    ]
+   ],
+   "width": 0.4
+  },
+  {
+   "kind": "track",
+   "label": "the grove track up the north flank",
+   "path": [
+    [
+     38.8,
+     31.2
+    ],
+    [
+     44.0,
+     26.4
+    ],
+    [
+     50.4,
+     25.6
+    ],
+    [
+     56.0,
+     28.0
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "track",
+   "label": "the overgrown track",
+   "path": [
+    [
+     31.2,
+     26.4
+    ],
+    [
+     26.8,
+     25.6
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "track",
+   "label": "the woods road",
+   "path": [
+    [
+     31.2,
+     26.4
+    ],
+    [
+     32.0,
+     21.6
+    ],
+    [
+     32.8,
+     16.8
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "path",
+   "label": "the old path over the crown",
+   "path": [
+    [
+     56.0,
+     28.0
+    ],
+    [
+     48.0,
+     21.6
+    ],
+    [
+     40.0,
+     18.4
+    ],
+    [
+     32.8,
+     16.8
+    ]
+   ],
+   "width": 0.2
+  },
+  {
+   "kind": "track",
+   "label": "the fold track",
+   "path": [
+    [
+     32.8,
+     16.8
+    ],
+    [
+     28.8,
+     15.6
+    ],
+    [
+     25.6,
+     14.8
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "track",
+   "label": "the Ridge Road",
+   "path": [
+    [
+     32.8,
+     16.8
+    ],
+    [
+     46.0,
+     13.6
+    ],
+    [
+     60.0,
+     12.8
+    ],
+    [
+     70.0,
+     16.0
+    ],
+    [
+     78.0,
+     20.0
+    ]
+   ],
+   "width": 0.3
+  },
+  {
+   "kind": "path",
+   "label": "the goat path",
+   "path": [
+    [
+     60.0,
+     10.8
+    ],
+    [
+     60.0,
+     12.8
+    ]
+   ],
+   "width": 0.2
+  },
+  {
+   "kind": "path",
+   "label": "the miners' path",
+   "path": [
+    [
+     74.0,
+     30.0
+    ],
+    [
+     76.8,
+     24.8
+    ],
+    [
+     78.0,
+     20.0
+    ]
+   ],
+   "width": 0.2
+  },
+  {
+   "kind": "track",
+   "label": "the pass road",
+   "path": [
+    [
+     78.0,
+     20.0
+    ],
+    [
+     80.8,
+     12.8
+    ],
+    [
+     82.4,
+     5.6
+    ]
+   ],
+   "width": 0.3
+  }
+ ],
+ "eras": [
+  {
+   "era": "dark-ages",
+   "state": "drawn"
+  },
+  {
+   "era": "long-night",
+   "state": "to plan"
+  },
+  {
+   "era": "renaissance",
+   "state": "to plan"
+  },
+  {
+   "era": "age-of-reason",
+   "state": "to plan"
+  },
+  {
+   "era": "victorian",
+   "state": "to plan"
+  },
+  {
+   "era": "great-war",
+   "state": "to plan"
+  },
+  {
+   "era": "mid-century",
+   "state": "to plan"
+  },
+  {
+   "era": "modern",
+   "state": "to plan"
+  },
+  {
+   "era": "future-darkness",
+   "state": "to plan"
+  }
+ ],
+ "open": [
+  "Distances are set here for the first time: the book fixes only Altenhof at half a night's walk from the Lower Town (about 9 km) and the red hill east of the town",
+  "The red hill sits north-east of the town so both the East Road (its foot) and the Forest Road (its north flank) reach it",
+  "The far shrine is off the map in the Hungarian march: how many days away",
+  "The High Pass lies north of the Mountain Trail, as that scene's own label says"
+ ],
+ "kind": "travel",
+ "seeded": false,
+ "env": {
+  "outdoor": true,
+  "darkness": 0.0
+ },
+ "travel": [
+  {
+   "from": "Rothenstein, Lower Town",
+   "to": "Kranzfels",
+   "way": "country road",
+   "km": 1.3,
+   "foot_h": [
+    0.28,
+    0.43
+   ],
+   "horse_h": [
+    0.18,
+    0.27
+   ]
+  },
+  {
+   "from": "Rothenstein, Lower Town",
+   "to": "River Road crossroads",
+   "way": "country road",
+   "km": 1.1,
+   "foot_h": [
+    0.24,
+    0.36
+   ],
+   "horse_h": [
+    0.16,
+    0.23
+   ]
+  },
+  {
+   "from": "River Road crossroads",
+   "to": "Toll-post and Ivo's Ferry",
+   "way": "country road",
+   "km": 1.0,
+   "foot_h": [
+    0.23,
+    0.34
+   ],
+   "horse_h": [
+    0.15,
+    0.22
+   ]
+  },
+  {
+   "from": "River Road crossroads",
+   "to": "The Ford and Wenzel's Mill",
+   "way": "country road",
+   "km": 3.7,
+   "foot_h": [
+    0.82,
+    1.24
+   ],
+   "horse_h": [
+    0.53,
+    0.8
+   ]
+  },
+  {
+   "from": "The Ford and Wenzel's Mill",
+   "to": "Altenhof",
+   "way": "track",
+   "km": 5.1,
+   "foot_h": [
+    1.69,
+    2.54
+   ],
+   "horse_h": [
+    1.01,
+    1.52
+   ]
+  },
+  {
+   "from": "Rothenstein, Lower Town",
+   "to": "The Lower Mill",
+   "way": "track",
+   "km": 1.2,
+   "foot_h": [
+    0.4,
+    0.6
+   ],
+   "horse_h": [
+    0.24,
+    0.36
+   ]
+  },
+  {
+   "from": "Rothenstein, Lower Town",
+   "to": "The Ashfield",
+   "way": "country road",
+   "km": 2.4,
+   "foot_h": [
+    0.54,
+    0.81
+   ],
+   "horse_h": [
+    0.35,
+    0.52
+   ]
+  },
+  {
+   "from": "The Ashfield",
+   "to": "The Mining Camp and the Adit",
+   "way": "country road",
+   "km": 4.9,
+   "foot_h": [
+    1.1,
+    1.65
+   ],
+   "horse_h": [
+    0.71,
+    1.06
+   ]
+  },
+  {
+   "from": "The Ashfield",
+   "to": "The Red Field",
+   "way": "path",
+   "km": 0.8,
+   "foot_h": [
+    0.27,
+    0.41
+   ],
+   "horse_h": [
+    0.16,
+    0.25
+   ]
+  },
+  {
+   "from": "The Red Field",
+   "to": "The Old Grove",
+   "way": "path",
+   "km": 1.2,
+   "foot_h": [
+    0.4,
+    0.6
+   ],
+   "horse_h": [
+    0.24,
+    0.36
+   ]
+  },
+  {
+   "from": "Rothenstein, Lower Town",
+   "to": "The Forest Road",
+   "way": "country road",
+   "km": 2.4,
+   "foot_h": [
+    0.53,
+    0.79
+   ],
+   "horse_h": [
+    0.34,
+    0.51
+   ]
+  },
+  {
+   "from": "The Forest Road",
+   "to": "Dolany",
+   "way": "country road",
+   "km": 2.3,
+   "foot_h": [
+    0.5,
+    0.75
+   ],
+   "horse_h": [
+    0.32,
+    0.48
+   ]
+  },
+  {
+   "from": "The Forest Road",
+   "to": "The Old Grove",
+   "way": "track",
+   "km": 4.9,
+   "foot_h": [
+    1.63,
+    2.45
+   ],
+   "horse_h": [
+    0.98,
+    1.47
+   ]
+  },
+  {
+   "from": "Dolany",
+   "to": "The burnt farm",
+   "way": "track",
+   "km": 1.1,
+   "foot_h": [
+    0.37,
+    0.56
+   ],
+   "horse_h": [
+    0.22,
+    0.34
+   ]
+  },
+  {
+   "from": "Dolany",
+   "to": "The High Woods",
+   "way": "track",
+   "km": 2.4,
+   "foot_h": [
+    0.81,
+    1.22
+   ],
+   "horse_h": [
+    0.49,
+    0.73
+   ]
+  },
+  {
+   "from": "The Old Grove",
+   "to": "The High Woods",
+   "way": "path",
+   "km": 6.6,
+   "foot_h": [
+    2.19,
+    3.28
+   ],
+   "horse_h": [
+    1.31,
+    1.97
+   ]
+  },
+  {
+   "from": "The High Woods",
+   "to": "The High Fold",
+   "way": "track",
+   "km": 1.9,
+   "foot_h": [
+    0.62,
+    0.93
+   ],
+   "horse_h": [
+    0.37,
+    0.56
+   ]
+  },
+  {
+   "from": "The High Woods",
+   "to": "The Mountain Trail",
+   "way": "track",
+   "km": 11.8,
+   "foot_h": [
+    3.92,
+    5.88
+   ],
+   "horse_h": [
+    2.35,
+    3.53
+   ]
+  },
+  {
+   "from": "Radek's Hollow",
+   "to": "The Mountain Trail",
+   "way": "path",
+   "km": 0.5,
+   "foot_h": [
+    0.17,
+    0.25
+   ],
+   "horse_h": [
+    0.1,
+    0.15
+   ]
+  },
+  {
+   "from": "The Mining Camp and the Adit",
+   "to": "The Mountain Trail",
+   "way": "path",
+   "km": 2.7,
+   "foot_h": [
+    0.9,
+    1.36
+   ],
+   "horse_h": [
+    0.54,
+    0.81
+   ]
+  },
+  {
+   "from": "The Mountain Trail",
+   "to": "The High Pass",
+   "way": "track",
+   "km": 3.8,
+   "foot_h": [
+    1.26,
+    1.89
+   ],
+   "horse_h": [
+    0.76,
+    1.13
+   ]
+  }
+ ]
+}

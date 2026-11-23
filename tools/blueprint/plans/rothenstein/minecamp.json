@@ -1038,7 +1038,7 @@
  "buildings": [
   {
    "id": "b01",
-   "label": "",
+   "label": "Miners' cottage",
    "rect": [
     3.481,
     33.475,
@@ -1050,7 +1050,7 @@
   },
   {
    "id": "b02",
-   "label": "",
+   "label": "Miners' cottage",
    "rect": [
     19.462,
     32.475,
@@ -1062,7 +1062,7 @@
   },
   {
    "id": "b03",
-   "label": "",
+   "label": "Miners' cottage",
    "rect": [
     11.463,
     9.463,
@@ -1074,7 +1074,7 @@
   },
   {
    "id": "b04",
-   "label": "",
+   "label": "The Overseer's House",
    "rect": [
     35.4,
     23.4,
@@ -1086,7 +1086,7 @@
   },
   {
    "id": "b05",
-   "label": "",
+   "label": "Miners' cottage",
    "rect": [
     3.481,
     9.469,
@@ -1098,7 +1098,7 @@
   },
   {
    "id": "b06",
-   "label": "",
+   "label": "Miners' cottage",
    "rect": [
     12.062,
     34.475,
@@ -1110,7 +1110,7 @@
   },
   {
    "id": "b07",
-   "label": "The Old Wellhouse",
+   "label": "The Old Wellhouse (own plan: in-zdenka)",
    "rect": [
     45.4,
     33.4,
@@ -1121,7 +1121,41 @@
    "roof": true
   }
  ],
- "rooms": [],
+ "rooms": [
+  {
+   "id": "ore-shed",
+   "label": "Ore shed",
+   "rect": [
+    36,
+    8,
+    8,
+    4
+   ],
+   "use": "store"
+  },
+  {
+   "id": "tool-shed",
+   "label": "Tool shed",
+   "rect": [
+    46,
+    18,
+    6,
+    3.4
+   ],
+   "use": "store"
+  },
+  {
+   "id": "spoil-heaps",
+   "label": "Spoil heaps",
+   "rect": [
+    50,
+    28,
+    10,
+    6
+   ],
+   "use": "spoil"
+  }
+ ],
  "slots": [
   {
    "id": "open-hearth-on-its-slab-b01",
@@ -1640,6 +1674,146 @@
    "facing": "S",
    "art": "todo",
    "auto": true
+  },
+  {
+   "id": "ore-washing-trough",
+   "obj": "trough",
+   "label": "Ore-washing trough",
+   "rect": [
+    22.4,
+    16.4,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-washing-trough-2",
+   "obj": "trough",
+   "label": "Ore-washing trough",
+   "rect": [
+    23.7,
+    16.4,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-washing-trough-3",
+   "obj": "trough",
+   "label": "Ore-washing trough",
+   "rect": [
+    25.0,
+    16.4,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-washing-trough-4",
+   "obj": "trough",
+   "label": "Ore-washing trough",
+   "rect": [
+    22.4,
+    18.2,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-washing-trough-5",
+   "obj": "trough",
+   "label": "Ore-washing trough",
+   "rect": [
+    23.7,
+    18.2,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-washing-trough-6",
+   "obj": "trough",
+   "label": "Ore-washing trough",
+   "rect": [
+    25.0,
+    18.2,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "camp-fire",
+   "obj": "hearth",
+   "label": "Camp fire",
+   "rect": [
+    13.5,
+    23.0,
+    1.0,
+    1.0
+   ],
+   "facing": "S",
+   "art": "pending",
+   "auto": false
+  },
+  {
+   "id": "ore-crate",
+   "obj": "crate",
+   "label": "Ore crate",
+   "rect": [
+    37.75,
+    9.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "ore-crate-2",
+   "obj": "crate",
+   "label": "Ore crate",
+   "rect": [
+    40.75,
+    9.8,
+    0.5,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "tool-rack",
+   "obj": "rack",
+   "label": "Tool rack",
+   "rect": [
+    48.4,
+    18.4,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
   }
  ],
  "lights": [
@@ -2004,13 +2178,76 @@
    "state": "to plan"
   }
  ],
- "open": [
-  "building b01 (unnamed): use guessed as a home",
-  "building b02 (unnamed): use guessed as a home",
-  "building b03 (unnamed): use guessed as a home",
-  "building b04 (unnamed): use guessed as a home",
-  "building b05 (unnamed): use guessed as a home",
-  "building b06 (unnamed): use guessed as a home"
- ],
- "seeded": true
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "track",
+   "label": "slag road from the East Road to the adit",
+   "path": [
+    [
+     0,
+     30
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     20,
+     24
+    ],
+    [
+     28,
+     14
+    ],
+    [
+     30,
+     5
+    ]
+   ],
+   "width": 2,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "rails out of the adit",
+   "path": [
+    [
+     30,
+     5
+    ],
+    [
+     30,
+     12
+    ]
+   ],
+   "width": 0.6,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "path to the Mountain Trail",
+   "path": [
+    [
+     30,
+     12
+    ],
+    [
+     40,
+     9
+    ],
+    [
+     50,
+     8
+    ],
+    [
+     60,
+     8
+    ]
+   ],
+   "width": 1.5,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

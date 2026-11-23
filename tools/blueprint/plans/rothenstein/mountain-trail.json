@@ -219,7 +219,7 @@
  "buildings": [
   {
    "id": "b01",
-   "label": "",
+   "label": "The Herdsman's Shelter",
    "rect": [
     33.4,
     29.4,
@@ -231,7 +231,7 @@
   },
   {
    "id": "b02",
-   "label": "The Penitent's Hermitage",
+   "label": "The Penitent's Hermitage (own plan: in-anselm)",
    "rect": [
     7.4,
     13.4,
@@ -242,7 +242,19 @@
    "roof": true
   }
  ],
- "rooms": [],
+ "rooms": [
+  {
+   "id": "sheepfold",
+   "label": "Sheepfold",
+   "rect": [
+    43,
+    28,
+    10,
+    10
+   ],
+   "use": "pen"
+  }
+ ],
  "slots": [
   {
    "id": "open-hearth-on-its-slab-b01",
@@ -285,6 +297,34 @@
    "facing": "S",
    "art": "pending",
    "auto": true
+  },
+  {
+   "id": "water-trough",
+   "obj": "trough",
+   "label": "Water trough",
+   "rect": [
+    47.4,
+    36.8,
+    1.2,
+    0.4
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
+  },
+  {
+   "id": "wayside-cross-by-the-hermitage",
+   "obj": "shrine-wayside",
+   "label": "Wayside cross by the hermitage",
+   "rect": [
+    16.55,
+    13.05,
+    0.9,
+    0.9
+   ],
+   "facing": "S",
+   "art": "todo",
+   "auto": false
   }
  ],
  "lights": [
@@ -430,8 +470,104 @@
    "state": "to plan"
   }
  ],
- "open": [
-  "building b01 (unnamed): use guessed as a home"
- ],
- "seeded": true
+ "open": [],
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "track",
+   "label": "trail up to the High Pass",
+   "path": [
+    [
+     0,
+     29.5
+    ],
+    [
+     12,
+     28
+    ],
+    [
+     22,
+     24
+    ],
+    [
+     32,
+     18
+    ],
+    [
+     40,
+     13
+    ],
+    [
+     46,
+     5
+    ],
+    [
+     50,
+     0
+    ]
+   ],
+   "width": 2,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "path to the mining camp",
+   "path": [
+    [
+     0,
+     42
+    ],
+    [
+     10,
+     41
+    ],
+    [
+     20,
+     38
+    ],
+    [
+     30,
+     34
+    ],
+    [
+     33,
+     33
+    ]
+   ],
+   "width": 1.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "field",
+   "label": "snowfield",
+   "path": [
+    [
+     0,
+     0
+    ],
+    [
+     58,
+     0
+    ],
+    [
+     58,
+     12
+    ],
+    [
+     40,
+     14
+    ],
+    [
+     20,
+     13
+    ],
+    [
+     0,
+     12
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

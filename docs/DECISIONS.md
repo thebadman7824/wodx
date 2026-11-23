@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7800
+Next free block: B7820
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -462,6 +462,7 @@ Next free block: B7800
 | B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
 | B7780-B7789 | Map blueprints: every map planned as a true-size plan before its art (used B7780-B7784) | tools |
 | B7790-B7799 | Map blueprints: tier 1 hand pass, roads and rivers, the Book 1 places drawn (used B7790-B7793) | tools |
+| B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15817,3 +15818,23 @@ The to-scale valley map (night rides half again as long as day rides) is drawn o
 each place sits where its own map puts it. It stays in tier 4 as to draw.
 
 Reverse: draw it now from the book's distances alone.
+
+## B7810. The valley travel map sets the distances between places (2026-11-23)
+tools/blueprint/plans/rothenstein/valley.json, square 250 m. Every Rothenstein map is placed at a real distance from
+the Lower Town market, joined by the roads its own exits name. The book fixes only two things, and both hold:
+Altenhof is half a night's walk from the Lower Town (about 10 km, four hours on foot by night), and the red hill rises
+east of the town. The red hill sits to the north-east so both the East Road (its foot) and the Forest Road (its north
+flank) reach it. The High Pass lies north of the Mountain Trail, as that scene's label says. Each leg carries its
+length and its time on foot and on horseback by day and by night, from the road speeds of road-rules.mjs, with night
+half again as long. A ride from Kranzfels to Altenhof and back takes about five and a half hours by night.
+
+Reverse: move a place in valley.json and recompute its legs.
+
+## B7811. Tier 2 maps are named and furnished from their scene images (2026-11-23)
+The mining camp, the Mountain Trail, the Riverside Quay, the West Gate, the player camp and the Silver Adit get
+their buildings named from the scene images' own labels, a use for each, and the outdoor pieces the images show:
+ore-washing troughs, the players' wagons on the Common, the tinker's camp, the quay crates, the ore cart and pit props
+in the adit. Two kits join the uses: a guard hall and a tannery. Plain cottages keep the home kit, still marked auto
+for a person to check.
+
+Reverse: reseed the six plans with seed_all.py.
