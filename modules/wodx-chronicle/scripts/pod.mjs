@@ -438,11 +438,11 @@ export async function revealTwist(n, {variant = "", force = false} = {}) {
   // B6650-B6652: the reveal shows on the table, and the people who know act
   let shown = [];
   try { shown = await Reveals.onReveal(t.n, variant); } catch (e) { console.error(`${MODULE_ID} | twist ${t.n} shown`, e); }
-  await card(`Twist ${t.n} revealed: ${t.label}`, `<p>${chains.length ? `On ${esc(chains.join(" and "))}. ` : "A quiet twist. "}${variant && t.variants ? `Its heart: ${esc(t.variants[variant])}. ` : ""}The next twist can come in a month of game time.</p>${lines.length ? `<p>It changes:</p><ul>${lines.join("")}</ul>` : ""}${shown.length ? `<p>On the table:</p><ul>${shown.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}<p class="vta-note">The twist's own words are in the Storyteller's third volume.</p>`);
+  await card(`Twist ${t.n} revealed: ${t.label}`, `<p>${chains.length ? `On ${esc(chains.join(" and "))}. ` : "A quiet twist. "}${variant && t.variants ? `Its heart: ${esc(t.variants[variant])}. ` : ""}The next twist can come in ${TW.gapText()} of game time.</p>${lines.length ? `<p>It changes:</p><ul>${lines.join("")}</ul>` : ""}${shown.length ? `<p>On the table:</p><ul>${shown.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}<p class="vta-note">The twist's own words are in the Storyteller's third volume.</p>`);
   Hooks.callAll("wodxTwist", {n: t.n, variant, chains: TW.chainsOf(n), changes: r.changes});
   return r;
 }
-/** Take a reveal back (a slip of the hand). The month counts from the reveal before it. */
+/** Take a reveal back (a slip of the hand). The twist gap counts from the reveal before it. */
 export const unrevealTwist = n => podTurn(() => unrevealTwistNow(n));
 async function unrevealTwistNow(n) {
   if ( !game.user.isGM ) return;
@@ -463,11 +463,11 @@ function twistSection(s) {
     const r = tw.revealed?.[t.n], why = TW.whyNot(t.n, tw, ctx), notes = TW.heartNotes(t.n, tw);
     const hearts = t.variants && !r ? `<select data-fixed>${Object.entries(t.variants).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("")}</select>` : "";
     const act = r ? `revealed${r.variant ? ` (${esc(t.variants?.[r.variant] ?? r.variant)})` : ""} <button type="button" data-action="untwist" data-n="${t.n}">Take back</button>`
-      : why ? `<span class="vta-note">${esc(why)}</span>${/month|fits from|encounter/.test(why) ? ` <button type="button" data-action="twist" data-n="${t.n}" data-force="1" title="The company found it by its own hand">Reveal anyway</button>` : ""}`
+      : why ? `<span class="vta-note">${esc(why)}</span>${/One twist|fits from|encounter/.test(why) ? ` <button type="button" data-action="twist" data-n="${t.n}" data-force="1" title="The company found it by its own hand">Reveal anyway</button>` : ""}`
       : `<button type="button" data-action="twist" data-n="${t.n}">Reveal</button>`;
     return `<tr data-twist><td>${t.n}</td><td>${esc(t.label)}${t.free ? " (quiet)" : ""}${notes.length ? `<br><span class="vta-note">Another heart: ${esc(notes.join(" "))}</span>` : ""}</td><td>${hearts} ${act}</td></tr>`;
   }).join("");
-  return `<h3>Book one's twists</h3><p>${ch ? `Chapter ${TW.CHAPTERS.indexOf(ch) + 1}. ` : ""}One twist a month of game time. ${sug.next ? `Next by the quick order: ${sug.next}, ${esc(TW.twistOf(sug.next).label)}.` : "No twist is due."}${sug.quiet.length ? ` Quiet ones that fit any night: ${sug.quiet.join(", ")}.` : ""}</p>
+  return `<h3>Book one's twists</h3><p>${ch ? `Chapter ${TW.CHAPTERS.indexOf(ch) + 1}. ` : ""}One twist ${TW.gapText()} of game time. ${sug.next ? `Next by the quick order: ${sug.next}, ${esc(TW.twistOf(sug.next).label)}.` : "No twist is due."}${sug.quiet.length ? ` Quiet ones that fit any night: ${sug.quiet.join(", ")}.` : ""}</p>
     <ul>${tally}</ul><table class="wodx-check"><tbody>${rows}</tbody></table>
     <p class="vta-note">Each twist sits under the encounter of the same number. The twists' words are in the Storyteller's third volume; a revealed twist gives its partner another heart.</p>`;
 }

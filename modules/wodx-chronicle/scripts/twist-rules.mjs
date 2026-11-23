@@ -9,6 +9,12 @@ import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP} f
 import {DAY} from "./terms.mjs";
 export {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP};
 
+/** The twist gap in words, for the window and the cards: "a week", "a month", or so many days (B7802). */
+export function gapText(gap = TWIST_GAP) {
+  const d = Math.round(Number(gap) / DAY);
+  return d === 7 ? "a week" : d >= 28 && d <= 31 ? "a month" : `${d} ${d === 1 ? "day" : "days"}`;
+}
+
 export const twistOf = n => TWISTS.find(t => t.n === Number(n)) ?? null;
 export const chainsOf = n => CHAINS.filter(c => c.twists.includes(Number(n))).map(c => c.key);
 const idx = k => CHAPTERS.indexOf(k);
@@ -52,7 +58,7 @@ export function whyNot(n, state = {}, ctx = {}) {
   const last = state.last === undefined || state.last === null ? NaN : Number(state.last), at = Number(ctx.now) || 0;
   if ( !ctx.force && Number.isFinite(last) && at - last < TWIST_GAP ) {
     const days = Math.ceil((TWIST_GAP - (at - last)) / DAY);
-    return `One twist a month: the next can come in ${days} ${days === 1 ? "day" : "days"}.`;
+    return `One twist ${gapText().replace(/^(\d+ days?)$/, "every $1")}: the next can come in ${days} ${days === 1 ? "day" : "days"}.`;
   }
   return "";
 }
