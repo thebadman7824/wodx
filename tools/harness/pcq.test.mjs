@@ -426,3 +426,28 @@ test("B7447: the gates a lane finished before a fault and a reset keep their lin
   assert.match(src, /faultRetry\(`run-gate on lane \$\{lane\} stopped with [^\n]*, own, true\)/);
   assert.match(src, /return laneWork\(job, lane, i, n, tag, true, carry && job\.queue \? out : ""\)/, "only on a shared queue");
 });
+
+test("a small runner leaves a pull request's whole-branch gate run to bigger runners for a while (B7761)", async () => {
+  const {deferToBigger} = await import("../pcq/jobs.mjs");
+  const now = Date.parse("2026-11-23T14:00:00Z");
+  const issue = {title: "PC job: gates touched [PR #2323 f08123b192af]", created_at: "2026-11-23T13:55:00Z"};
+  const job = {kind: "gates", touched: true, gates: []};
+  assert.equal(deferToBigger(job, issue, 10, now), true, "5 minutes old: left for a bigger runner");
+  assert.equal(deferToBigger(job, {...issue, created_at: "2026-11-23T13:49:00Z"}, 10, now), false, "11 minutes old: nobody took it, so this runner does");
+  assert.equal(deferToBigger(job, issue, undefined, now), false, "no setting: never held");
+  assert.equal(deferToBigger(job, issue, 0, now), false);
+  assert.equal(deferToBigger({...job, lane: 8}, issue, 10, now), false, "a job named to a lane is that lane's");
+  assert.equal(deferToBigger({kind: "gates", gates: ["gate7b"]}, issue, 10, now), false, "a hand-picked list is not held");
+  assert.equal(deferToBigger({...job, touched: false, all: true}, issue, 10, now), true, "an every-gate run is held too");
+  assert.equal(deferToBigger(job, {...issue, title: "PC job: gates touched gates"}, 10, now), false, "not a pull request's job");
+  assert.equal(deferToBigger({kind: "deploy"}, issue, 10, now), false);
+  assert.equal(deferToBigger(job, {title: issue.title}, 10, now), false, "no time on the issue: not held");
+});
+
+test("the Secondary PC defers pull request gate runs and the New PC drives lanes 10 to 13 (B7760, B7761)", () => {
+  const read = f => JSON.parse(fs.readFileSync(new URL(`../pcq/${f}`, import.meta.url), "utf8"));
+  assert.equal(read("runner.benjamin-pc.json").prGatesDeferMinutes, 10);
+  assert.deepEqual(read("runner.new_pc_lebrun.json").lanes, [10, 11, 12, 13]);
+  assert.equal(read("runner.json").prGatesDeferMinutes, undefined, "the Main PC takes them at once");
+  assert.equal(read("runner.new_pc_lebrun.json").prGatesDeferMinutes, undefined, "so does the New PC");
+});

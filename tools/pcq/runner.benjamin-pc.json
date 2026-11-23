@@ -1,5 +1,5 @@
 {
-  "_about": "B6990: settings for the runner on the Secondary PC (BENJAMIN-PC, Ryzen 7 3800X 8 cores, 16 GB, RTX 2080 Super 8 GB). Keys here replace runner.json's. It drives lane 8 only, runs no book or Trove lookups (those files are on the Main PC), runs no stale-PR sweep (the main runner does), and watches the live site and the main runner. B7500 (19 Nov): this runner drove the merge train while the Main PC was down with a hardware fault. B7620 (22 Nov): the Main PC is repaired and drives the train again, so train is off here; it gates on lane 8 only.",
+  "_about": "B6990: settings for the runner on the Secondary PC (BENJAMIN-PC, Ryzen 7 3800X 8 cores, 16 GB, RTX 2080 Super 8 GB). Keys here replace runner.json's. It drives lane 8 only, runs no book or Trove lookups (those files are on the Main PC), runs no stale-PR sweep (the main runner does), and watches the live site and the main runner. B7500 (19 Nov): this runner drove the merge train while the Main PC was down with a hardware fault. B7620 (22 Nov): the Main PC is repaired and drives the train again, so train is off here; it gates on lane 8 only. B7761 (23 Nov): prGatesDeferMinutes leaves a pull request's whole-branch gate run to the Main PC or the New PC, which have more lanes, for 10 minutes before this runner takes it.",
   "name": "secondary PC runner",
   "statusTitle": "PC runner status (Secondary PC)",
   "alertPrefix": "Secondary PC alert",
@@ -11,5 +11,6 @@
   "minFreeGB": {"C": 15, "D": 50},
   "minFreeRamGB": 3,
   "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20},
+  "prGatesDeferMinutes": 10,
   "train": false
 }

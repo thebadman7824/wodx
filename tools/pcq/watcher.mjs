@@ -57,9 +57,10 @@ export const PCS = [
   {key: "main", label: "Main PC", statusTitle: "PC runner status", lanes: [2, 3, 4, 5, 6]},
   {key: "secondary", label: "Secondary PC", statusTitle: "PC runner status (Secondary PC)", lanes: [8]},
   {key: "laptop", label: "Laptop", statusTitle: "PC runner status (second PC)", lanes: [7]},
-  // The New PC (HP OMEN 35L, PR #2306): lane 10, status issue #2308. Its status file is newpc.json once its
-  // status-push.mjs runs with PC_STATUS_NAME=newpc PC_LANES=10; until then the watcher reports that it has never sent one.
-  {key: "newpc", label: "New PC", statusTitle: "PC runner status (New PC)", lanes: [10]},
+  // The New PC (HP OMEN 35L, PR #2306): lanes 10 to 13 (11 to 13 since B7760), status issue #2308. Its status file is
+  // newpc.json once its status-push.mjs runs with PC_STATUS_NAME=newpc PC_LANES=10,11,12,13; until then the watcher
+  // reports that it has never sent one.
+  {key: "newpc", label: "New PC", statusTitle: "PC runner status (New PC)", lanes: [10, 11, 12, 13]},
 ];
 
 const ageMin = (t, now) => t ? Math.round((now - Date.parse(t)) / MIN) : null;

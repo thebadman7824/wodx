@@ -238,7 +238,7 @@ test("lanes on the second PC are seen only there, with its own paths (B6880)", (
     assert.ok(three.allLaneIds.includes("8") && three.allLaneIds.includes("7"));
     process.env.WODX_HOST = "new_pc_lebrun";
     const four = L.loadConfig();
-    assert.deepEqual(four.lanes.map(l => l.id), [10], "the New PC sees lane 10 only");
+    assert.deepEqual(four.lanes.map(l => l.id), [10, 11, 12, 13], "the New PC sees lanes 10 to 13 only (B7760)");
     assert.equal(four.foundryMain, "D:/WoDX/Foundry/main.mjs");
     assert.ok(four.allLaneIds.includes("10") && four.allLaneIds.includes("8"));
     process.env.WODX_HOST = "desktop-mrkcmrg";

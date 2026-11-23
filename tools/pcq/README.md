@@ -139,12 +139,17 @@ It has 8 cores and 16 GB, so it can take longer gate lists than lane 7. Book and
 ## The New PC
 
 NEW_PC_LEBRUN (HP OMEN 35L: 12 cores, 64 GB, RTX 5080 16 GB) runs a fourth runner from `D:\WoDX\pcq` with
-`runner.new_pc_lebrun.json`: lane 10 (port 30100, `D:\WoDX\FoundryData-lane10`), its own status issue "PC runner
-status (New PC)" and alerts titled "New PC alert". Name `--lane 10` to send a job there. Its Foundry is the Node build
+`runner.new_pc_lebrun.json`: lanes 10 to 13 (ports 30100 to 30130, `D:\WoDX\FoundryData-lane10` to `-lane13`; lanes
+11 to 13 since B7760), its own status issue "PC runner status (New PC)" and alerts titled "New PC alert". Name
+`--lane 10` (or 11 to 13) to send a job there. A new lane there is set up with a setup-lane job naming it. Its Foundry is the Node build
 (`D:\WoDX\Foundry\main.mjs`); its lane was set up from the cloud lane kit's known-good world and add-on modules. It
 drives no merge train and runs no stale-PR sweep, and book and Trove lookups stay on the main PC. It also holds the
 solo world (`D:\WoDX\FoundryData-solo`, port 30010), which no lane touches. Its gate runners are new-pc-gate-1 and
 new-pc-gate-2 (`gh-runner\install.ps1 -Prefix new-pc-gate`).
+
+B7761: a runner with `prGatesDeferMinutes` in its settings (the Secondary PC: 10) leaves a pull request's touched or
+every-gate run to the runners with more lanes for that many minutes after the job is queued, then takes it if nobody
+has. Jobs named to a lane are never held.
 
 ## Gates on every pull request (B7010)
 
