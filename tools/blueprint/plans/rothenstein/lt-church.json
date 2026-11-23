@@ -2396,5 +2396,107 @@
   "building b07 (unnamed): use guessed as a home",
   "building b08 (unnamed): use guessed as a home"
  ],
- "seeded": true
+ "seeded": false,
+ "ground": [
+  {
+   "kind": "road",
+   "label": "cobbled street to the Keep Road",
+   "path": [
+    [
+     27,
+     29
+    ],
+    [
+     40,
+     29
+    ],
+    [
+     58,
+     29.5
+    ]
+   ],
+   "width": 4,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "road",
+   "label": "cobbled street to the Market Square",
+   "path": [
+    [
+     28,
+     27
+    ],
+    [
+     28,
+     36
+    ],
+    [
+     28,
+     44
+    ]
+   ],
+   "width": 3.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "path",
+   "label": "path to the church door",
+   "path": [
+    [
+     24.5,
+     22
+    ],
+    [
+     26,
+     27
+    ]
+   ],
+   "width": 1.5,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "track",
+   "label": "back lane",
+   "path": [
+    [
+     2,
+     37
+    ],
+    [
+     14,
+     37
+    ],
+    [
+     26,
+     36
+    ]
+   ],
+   "width": 2,
+   "traced": "maps-ref/backgrounds"
+  },
+  {
+   "kind": "water",
+   "label": "pond",
+   "path": [
+    [
+     40,
+     4
+    ],
+    [
+     44,
+     4
+    ],
+    [
+     45,
+     8
+    ],
+    [
+     41,
+     9
+    ]
+   ],
+   "closed": true,
+   "traced": "maps-ref/backgrounds"
+  }
+ ]
 }

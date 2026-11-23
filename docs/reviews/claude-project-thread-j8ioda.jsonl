@@ -14,3 +14,4 @@
 {"file":"changes/decisions/B7790.md","verdict":"working","how":"read in full; JSON parsed by the tests; scanned for gendered words and long dashes","hash":"532f4cf0aedb","at":"2026-11-23T17:47Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read in full; JSON parsed by the tests; scanned for gendered words and long dashes","hash":"0595318a1a3d","at":"2026-11-23T17:47Z"}
 {"glob":"tools/blueprint/plans/**","verdict":"working","how":"hand pass and tier 4 drawn by script from the scene notes and the Book 1 plan; every plan passes blueprint.py check; extra check that no hand slot crosses a wall; rendered and looked at by eye","at":"2026-11-23T17:47Z"}
+{"glob":"tools/blueprint/plans/**","verdict":"working","how":"roads, rivers and fields traced by eye from the 1600 px scene images in maps-ref/backgrounds over a 5-square grid; every plan passes blueprint.py check; dolany rendered and compared with its image","at":"2026-11-23T17:52Z"}
