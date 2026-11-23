@@ -58,6 +58,8 @@ import * as FOM from "./fomor.js";
 import * as FP from "./fomor-powers.js";
 import * as CHM from "./charms.js";
 import * as SCH from "./spirit-charms.js";
+import * as GHD from "./ghost-da.js";
+import * as GHR from "./ghost-da-rules.js";
 import * as KER from "./kote-rules.js";
 import * as UXD from "./mummy.js";
 import * as UR from "./mummy-rules.js";
@@ -274,6 +276,8 @@ function willpower(actor) {
     return { temp: num(w.temporary), perm: num(w.permanent) };
 }
 function blood(actor) {
+    // B7676: a ghost of V20 Dark Ages spends Passion (the sheet's Pathos) as blood for its Disciplines (p. 403)
+    if (GHR.isDAGhost(actor)) { const p = actor.system?.advantages?.pathos ?? {}; const max = num(p.max) || 10; return { value: num(p.temporary), max, perTurn: max, passion: true }; }
     const b = actor?.system?.advantages?.bloodpool ?? {};
     const g = generationOf(actor);
     const table = R.generation(g);
@@ -363,7 +367,7 @@ async function changeBlood(actor, delta, { sorcery = false } = {}) {
     const v = Math.max(0, Math.min(b.max, b.value + delta));
     // B7670: Echidna takes one more at the scene's end from a Witch who used or took in blood, unless it fed sorcery (V20 Dark Ages p. 450)
     if (delta && !sorcery && KR.isEchidna(clanText(actor)) && actor.isOwner) await setFlag(actor, "echidnaDue", true);
-    if (setting("spendResources")) await updateActor(actor, { "system.advantages.bloodpool.temporary": v });
+    if (setting("spendResources")) await updateActor(actor, { [b.passion ? "system.advantages.pathos.temporary" : "system.advantages.bloodpool.temporary"]: v });
     return { before: b.value, after: v, wasted: (b.value + delta) - v };
 }
 
@@ -1326,6 +1330,9 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
     return dialog(`${v.selfcontrol.isInstinct ? "Instinct" : "Frenzy"} check`, content, "Roll", async fd => {
         await setFlag(actor, "beastWillpower", fd.wpAuto ? true : null);
         if (golconda) return post(actor, `${actor.name} resists frenzy`, `<div class="vta-big good">Golconda: the Beast is mastered: no frenzy.</div>`);
+        // B7673: a ghoul frenzies only with five or more points of vitae, and resists at two lower (V20 Dark Ages p. 400)
+        const gf = P.detectProfile(actor) === "ghoul" ? HR.ghoulFrenzy(b.value) : null;
+        if (gf && !gf.can) return post(actor, `${actor.name}: no frenzy`, `<div class="vta-big good">${esc(actor.name)} holds ${b.value} point${b.value === 1 ? "" : "s"} of vitae, fewer than ${HR.GHOUL_DA.frenzyAt}: there is not enough of the Beast in the blood to frenzy.</div><div class="wodx-quiet">${HR.GHOUL_DA.page}</div>`);
         const p = R.FRENZY_PROVOCATIONS[fd.prov];
         let diff = p?.diff ?? fd.diff;
         if (fd.prov === "atrocity") diff = 9 - v.conscience.value;
@@ -1334,8 +1341,12 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         // B3132: open fire in a mood region makes the Beast harder to hold
         const fire = DH.fireStep(actor);
         diff = diff + fd.mod + tm.diff + fire;  // B7120: past 10 counts (rollPool)
+        // B7673: the domitor's clan in a ghoul with five points (Brujah: two harder, V20 Dark Ages p. 400)
+        const mark = gf ? n(actor.flags?.["wodx-creation"]?.clanMark?.frenzy) : 0;
+        if (gf) diff = Math.max(2, diff + gf.diff + mark);
+        const gParts = gf ? [`Ghoul ${gf.diff} diff (VtDA20 p. 400)`, ...(mark ? [`Domitor's clan +${mark}`] : [])] : [];
         try { await TH.spendOnce(actor, tm); } catch (e) { /* nothing spent */ }
-        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
+        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: [...(tm.parts ?? []), ...(fire ? [`Open fire here +${fire} diff`] : []), ...gParts] });
     });
 }
 
@@ -3084,7 +3095,7 @@ let PMX = null;
 function pm() {
     return PMX ??= PM.build({
         post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting,
-        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a),
+        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isDAGhost: a => GHR.isDAGhost(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a),
         // The menu's search also finds every common check and dramatic system, so nothing is a page away
         searchExtras: () => [
             ...CK.CHECKS.map(c => ({ spec: `check:${c.key}`, label: c.label, desc: `${c.note} (${c.ref})`, icon: "fa-search" })),
@@ -3187,6 +3198,12 @@ let FME = null;
 let CHME = null;
 function chmx() {
     return CHME ??= CHM.build({ post, rollPool, rollBlock, dialog, profile: a => P.detectProfile(a), notify: m => ui.notifications.warn(m) });
+}
+
+/** B7676: the ghosts of V20 Dark Ages. */
+let GHE = null;
+function ghx() {
+    return GHE ??= GHD.build({ post, rollPool, rollBlock, dialog, attr, findAbility, notify: m => ui.notifications.warn(m) });
 }
 
 /** B5162: fomor powers (Numbing). */
@@ -3622,7 +3639,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();

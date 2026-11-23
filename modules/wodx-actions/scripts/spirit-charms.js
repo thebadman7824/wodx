@@ -26,8 +26,10 @@ const W = p => `${BOOK} p. ${p}`;
 
 const P = (key, name, p, group, kind, fx, o = {}) => ({ key, name, p, group, kind, fx, cost: {}, keywords: [], ...o });
 
-export const GROUPS = { common: "Common Charms", specialty: "Specialty Charms", bane: "Bane Charms", weaver: "Weaver Charms", wyld: "Wyld Charms", sprite: "Sprite Charms" };
+export const GROUPS = { common: "Common Charms", specialty: "Specialty Charms", bane: "Bane Charms", weaver: "Weaver Charms", wyld: "Wyld Charms", sprite: "Sprite Charms", demon: "Demon Charms" };
 export const SPRITE_BOOK = "Dark Ages: Fae";
+/* B7672: a demon of V20 Dark Ages is a spirit of Hell with the same four traits, Essence its health (pp. 400-401) */
+export const DEMON_BOOK = "VtDA20";
 
 /** Pages are the printed pages of Werewolf: The Apocalypse 20th Anniversary Edition. */
 export const CHARMS = [
@@ -114,13 +116,31 @@ export const CHARMS = [
     P("speech", "Speech", 97, "sprite", "free", "Speaks aloud in any tongue it wants, where else it talks only to its master and other sprites. Three Essence an hour.",
         { book: SPRITE_BOOK, cost: { essence: 3 }, spec: T("speak", "Speech", { seconds: 3600 }, "self"), keywords: ["speak"] }),
     P("spriteflight", "Swift Flight", 97, "sprite", "free", "Three times its speed, up to 60 + Willpower x 3 yards a turn: quick enough that no mortal creature catches it. One Essence.",
-        { book: SPRITE_BOOK, cost: { essence: 1 }, does: "flight", lasts: "scene", keywords: ["move"] })
+        { book: SPRITE_BOOK, cost: { essence: 1 }, does: "flight", lasts: "scene", keywords: ["move"] }),
+
+    // Demon Charms (V20 Dark Ages p. 402, B7672)
+    P("answer", "Answer", 402, "demon", "free", "Hears anyone who means to call a demon, even through a summoning that fails, and goes to them, bound by nothing they did. Ten Essence.",
+        { book: DEMON_BOOK, cost: { essence: 10 }, does: "answer", keywords: ["move"] }),
+    P("fireimmunity", "Immunity to Fire", 402, "demon", "always", "Fire never burns it: every attempt to burn it, mundane or supernatural, fails outright.",
+        { book: DEMON_BOOK, does: "fireproof" }),
+    P("teleportation", "Teleportation", 402, "demon", "free", "With less than a third of its full Essence left, it spends one and is gone to safety, a reflexive action.",
+        { book: DEMON_BOOK, cost: { essence: 1 }, does: "teleport", keywords: ["move"] }),
+    P("reapessence", "Reap Essence", 402, "demon", "free", "Feeds on the one deed it drives people to: when someone rolls or spends Willpower on it, the demon gains their Willpower left as Essence.",
+        { book: DEMON_BOOK, does: "reap", keywords: ["charge"] }),
+    P("harvestsoul", "Harvest Soul", 402, "demon", "free", "When a contract comes due the mortal dies and the demon gains their Willpower, Mental Attributes and experience as Essence, and holds the soul.",
+        { book: DEMON_BOOK, does: "harvest", keywords: ["harm"] }),
+    P("wish", "Wish", 402, "demon", "free", "Grants one wish that a Background or Merit of 5 points or fewer can hold, added at once. Twenty Essence, ten under a contract.",
+        { book: DEMON_BOOK, cost: { essence: 20 }, sizes: [["free", "No contract (20 Essence)"], ["contract", "Under a contract (10 Essence)"]], does: "wish", keywords: ["boost"] }),
+    P("hellhounds", "Summon Hellhounds", 402, "demon", "free", "Five Essence calls one Hellhound for each dot of its Rage: dogs with Strength and Stamina raised to its Rage, their bites aggravated.",
+        { book: DEMON_BOOK, cost: { essence: 5 }, spec: T("summon", "Hellhounds", "scene", "self"), keywords: ["summon"] }),
+    P("demonpossession", "Possession", 402, "demon", "free", "Five Essence to ride a mortal or vampire who fails a Willpower roll against its Gnosis; it stays until it leaves or is driven out.",
+        { book: DEMON_BOOK, cost: { essence: 5 }, does: "dpossess", keywords: ["possess"] })
 ];
 
 export const BY_KEY = Object.fromEntries(CHARMS.map(c => [c.key, c]));
 const slug = s => String(s ?? "").toLowerCase().replace(/\(.*?\)/g, "").replace(/&/g, "and").replace(/[^a-z]/g, "");
 const ALIASES = { openmoonbridge: "moonbridge", moonbridge: "moonbridge", cleansetheblight: "cleanse", controlelectricalsystems: "controlelectrical",
-    solidifyreality: "solidify", reform: "reform", materialise: "materialize", armour: "armor" };
+    solidifyreality: "solidify", reform: "reform", materialise: "materialize", armour: "armor", immunetofire: "fireimmunity", summonhellhound: "hellhounds" };
 // the W20 Charm wins a shared name (Blast, Healing): a sprite's own is found through charmOf's sprite choice
 const BY_SLUG = Object.fromEntries([...CHARMS].reverse().map(c => [slug(c.name), c.key]));
 
@@ -128,15 +148,71 @@ const BY_SLUG = Object.fromEntries([...CHARMS].reverse().map(c => [slug(c.name),
 const SPRITE_NAMES = { blast: "spriteblast", healing: "spritehealing", reform: "spritereform", swiftflight: "spriteflight" };
 const SPRITE_ONLY = new Set(["animatetools", "paralyzingstare", "speech"]);
 
-/** The Charm a sheet item's name stands for, or null. A sprite's Blast, Healing, Reform and Swift Flight are its own. */
-export function charmOf(name, { sprite = false } = {}) {
+/* B7672: a demon's Possession is its own (V20 Dark Ages p. 402); the other demon Charms are found only on demons */
+const DEMON_NAMES = { possession: "demonpossession" };
+const DEMON_ONLY = new Set(["answer", "fireimmunity", "teleportation", "reapessence", "harvestsoul", "wish", "hellhounds"]);
+
+/** The Charm a sheet item's name stands for, or null. A sprite's Blast, Healing, Reform and Swift Flight are its own; a demon's Possession too. */
+export function charmOf(name, { sprite = false, demon = false } = {}) {
     const s = slug(name);
     if (sprite && SPRITE_NAMES[s]) return BY_KEY[SPRITE_NAMES[s]];
+    if (demon && DEMON_NAMES[s]) return BY_KEY[DEMON_NAMES[s]];
     const k = BY_SLUG[s] ?? ALIASES[s];
     return k ? BY_KEY[k] : null;
 }
 /** A faerie sprite: marked so, named so, or holding a Charm only sprites have. names: the Charm items' names. */
 export const isSpriteOf = ({ flag = false, name = "", names = [] } = {}) => !!flag || /\bsprite\b/i.test(String(name)) || names.some(x => SPRITE_ONLY.has(BY_KEY[BY_SLUG[slug(x)]]?.key));
+
+/** A demon of Hell: marked so, or holding a Charm only demons have (V20 Dark Ages p. 402). names: the Charm items' names. */
+export const isDemonOf = ({ flag = false, names = [] } = {}) => !!flag || names.some(x => DEMON_ONLY.has(BY_KEY[BY_SLUG[slug(x)] ?? ALIASES[slug(x)]]?.key));
+
+/** Teleportation works only below a third of the demon's full Essence (p. 402); an unknown full pool lets it go. */
+export const canTeleport = (essence, essenceMax) => !n(essenceMax) || 3 * n(essence) < n(essenceMax);
+
+/** Harvest Soul's Essence: the mortal's Willpower, Mental Attributes and experience points (p. 402). */
+export const harvestGain = ({ willpower = 0, perception = 0, intelligence = 0, wits = 0, xp = 0 } = {}) =>
+    Math.max(0, n(willpower) + n(perception) + n(intelligence) + n(wits) + n(xp));
+
+/** Reap Essence: the Willpower points the person has left after the deed (p. 402). */
+export const reapGain = willpowerLeft => Math.max(0, n(willpowerLeft));
+
+/** A demon's Possession: who it can ride, and the host's roll (Willpower against the demon's Gnosis, p. 402). */
+export const POSSESSABLE = new Set(["mortal", "ghoul", "kindred"]);
+export const possessRoll = (hostWillpower, demonGnosis) => ({ pool: Math.max(0, n(hostWillpower)), diff: Math.max(2, Math.min(10, n(demonGnosis) || 6)) });
+
+/** Exorcism (p. 402): Intelligence + Occult against the demon's Essence, each success one Essence; at none it is gone. */
+export const EXORCISM_DIFF = 6; // house reading: the book names no difficulty
+export const exorcismPool = (intelligence, occult) => Math.max(0, n(intelligence) + n(occult));
+export function exorcismHit(essence, successes) {
+    const left = Math.max(0, n(essence) - Math.max(0, n(successes)));
+    return { left, taken: n(essence) - left, gone: left === 0 };
+}
+/** A demon whose Essence runs out cannot come back to that place for a century (p. 401). */
+export const EXILE_YEARS = 100;
+
+/** The sample demons of V20 Dark Ages pp. 401-402: their four traits and Charms; the stories are the Storyteller's to read. */
+export const SAMPLE_DEMONS = [
+    { key: "scapegoat", name: "The Scapegoat", willpower: 2, rage: 2, gnosis: 2, essence: 6, charms: ["Reap Essence", "Teleportation", "Immunity to Fire"], p: 401,
+        about: "An imp that hides what people own and feeds on their hunt for it; blamed for a plague it did not cause." },
+    { key: "crossroads", name: "The Man at the Crossroads", willpower: 6, rage: 4, gnosis: 10, essence: 20, charms: ["Harvest Soul", "Wish", "Teleportation", "Summon Hellhounds", "Immunity to Fire"], p: 401,
+        about: "A crossroads demon who grants exactly what is asked for five years, then takes the soul and the life." },
+    { key: "horror", name: "The Horror", willpower: 6, rage: 15, gnosis: 5, essence: 26, charms: ["Immunity to Fire", "Reap Essence", "Wish", "Answer"], p: 402,
+        about: "Twenty feet of rage, lava and delight in pain, fed by screams." }
+];
+/** A sample demon as a WoDX Creature: the traits on the sheet and its Charms as Charm items. */
+export function demonActorData(d) {
+    const t = v => ({ permanent: v, temporary: v, roll: v, value: v });
+    return {
+        name: d.name, type: "Creature", img: "icons/svg/terror.svg",
+        system: { advantages: { willpower: t(d.willpower), rage: t(d.rage), gnosis: t(d.gnosis), essence: { temporary: d.essence, max: d.essence, permanent: d.essence } },
+            settings: { variant: "spirit", haswillpower: true, hasrage: true, hasgnosis: true, hasessence: true, powers: { hascharms: true } } },
+        flags: { "wodx-actions": { demon: true, sampleDemon: d.key }, world: { wodx: { profile: "spirit" } } },
+        items: d.charms.map(name => {
+            const c = charmOf(name, { demon: true });
+            return { name, type: "Power", img: "icons/svg/aura.svg", system: { type: "wod.types.charm", description: `<p>${c ? `${c.fx} (${pageOf(c)})` : name}</p>` } };
+        })
+    };
+}
 
 /** A sprite's Blast or Healing size: {type, levels}. */
 export function bought(size) {
@@ -179,12 +255,14 @@ export function costOf(c, { size = null, targetKind = null } = {}) {
     if (c.key === "animatetools") e = 2 * Math.max(1, n(size) || 1);
     if (PRICE[c.key]) { const b = bought(size); e = PRICE[c.key][b.type] * b.levels; }
     if (c.key === "paralyzingstare") e = stareCost(targetKind);
+    if (c.key === "wish" && size === "contract") e = 10;
     return e;
 }
 export function canPay(c, traits, opts = {}) {
     const e = costOf(c, opts);
     if (e > traits.essence) return { ok: false, why: `needs ${e} Essence, has ${traits.essence}`, essence: e };
     if (c.key === "flood" && opts.size === "streets" && traits.gnosis < 6) return { ok: false, why: "a town flood needs Gnosis 6 or more", essence: e };
+    if (c.key === "teleportation" && !canTeleport(traits.essence, traits.essenceMax)) return { ok: false, why: `it can flee only below a third of its Essence (${traits.essence} of ${traits.essenceMax})`, essence: e };
     if (c.key === "animatetools" && n(opts.size) > traits.gnosis) return { ok: false, why: `animates no more tools than its Gnosis (${traits.gnosis})`, essence: e };
     return { ok: true, why: "", essence: e };
 }

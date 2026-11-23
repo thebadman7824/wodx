@@ -293,7 +293,7 @@ export function summonResult(actor, r, successes, power = null, {bound = false} 
   const spec = (power?.name ? SUM.specFor(power.name, power.line ?? "") : null) ?? SR.KEYWORD_SPEC;
   const adv = actor?.system?.advantages ?? {};
   const ladder = r.out?.timed !== undefined ? r.out.timed : null;
-  const res = SR.resolve(spec, {successes: n(successes), faith: n(adv.faith?.permanent), torment: n(adv.torment?.permanent), level: n(r.out?.level ?? successes),
+  const res = SR.resolve(spec, {successes: n(successes), faith: n(adv.faith?.permanent), rage: n(adv.rage?.permanent), torment: n(adv.torment?.permanent), level: n(r.out?.level ?? successes),
     gnosisSpent: n(r.out?.spent?.gnosis), rageSpent: n(r.out?.spent?.rage), willpowerSpent: n(r.out?.spent?.willpower), bloodSpent: n(r.out?.spent?.blood),
     ladder, ladderLabel: r.out?.duration ?? null, bound, npc: !actor?.hasPlayerOwner});
   const caster = actor?.name ?? "the summoner";

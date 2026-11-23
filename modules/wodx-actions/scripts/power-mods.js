@@ -87,10 +87,12 @@ export function modsFrom(effects = [], ctx = {}) {
   const roll = tags.size > 0 || ctx.soak || ctx.initiative || ctx.frenzy;
   let dice = 0, diff = 0;
   const parts = [], once = [];
-  let ward = 0, wardName = "";
+  let ward = 0, wardName = "", immune = "";
   for ( const e of effects ) {
     if ( !e || e.disabled ) continue;
     const d = e.data ?? {};
+    // B7672: an immunity (a demon's Immunity to Fire, V20 Dark Ages p. 402) stops its kind of harm outright
+    if ( e.key === KEYS.ward && ctx.soak && d.immune && wardHolds(d.against, ctx.harm ?? {}) ) { immune = e.name; continue; }
     if ( e.key === KEYS.ward && ctx.soak && wardHolds(d.against, ctx.harm ?? {}) ) {
       // The stronger of two Wards counts (effects-rules KEYWORDS.ward)
       if ( n(d.dice) > ward ) { ward = n(d.dice); wardName = e.name; }
@@ -117,7 +119,8 @@ export function modsFrom(effects = [], ctx = {}) {
   if ( ward ) { dice += ward; parts.push(`${wardName} +${ward} armour`); }
   const pen = penaltyFrom(effects, ctx);
   if ( pen.dice ) { dice += pen.dice; parts.push(...pen.parts); }
-  return {dice, diff, parts, once};
+  if ( immune ) parts.push(`${immune}: no harm`);
+  return {dice, diff, parts, once, immune};
 }
 
 /** B6850: the tags of a shift that stands on attacks against its bearer, not on the bearer's own rolls. */
@@ -185,10 +188,18 @@ export function looksFrom(effects = []) {
 
 /** A character's live effects in the shape modsFrom reads. */
 export function effectsOf(actor) {
-  return [...(actor?.effects ?? [])].map(e => {
+  const out = [...(actor?.effects ?? [])].map(e => {
     const t = e.flags?.["wodx-chronicle"]?.timed ?? null;
     return {id: e.id, name: e.name ?? "", key: t?.key ?? null, data: t?.data ?? null, disabled: !!e.disabled};
   });
+  return [...out, ...standingOf(actor?.items ?? [])];
+}
+
+/** B7672: what a spirit's always-on Charm stands for in these terms: Immunity to Fire is no harm from fire (V20 Dark Ages p. 402). */
+export const FIRE_IMMUNE = /^\s*immun(e|ity) to fire\s*$/i;
+export function standingOf(items = []) {
+  const charm = [...items].filter(i => i?.type === "Power" && (i.system?.type === "wod.types.charm" || i.parent?.system?.settings?.powers?.hascharms));
+  return charm.some(i => FIRE_IMMUNE.test(i.name ?? "")) ? [{id: null, name: "Immunity to Fire", key: KEYS.ward, data: {against: "fire", immune: true}, disabled: false}] : [];
 }
 /** What the powers on a character do to one roll (see modsFrom). */
 export const powerMods = (actor, ctx = {}) => modsFrom(effectsOf(actor), ctx);

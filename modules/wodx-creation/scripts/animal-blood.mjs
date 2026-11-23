@@ -5,7 +5,7 @@
  *   - B5131 the beast's blood shows as the token's second bar, and its eyes catch the light red at night (a faint red
  *     light that shows only when the scene is dark).
  */
-import {MODULE_ID, isAnimalGhoul, clanOf, domitorOf} from "./actor-data.mjs";
+import {MODULE_ID, isAnimalGhoul, clanOf, domitorOf, lineOf} from "./actor-data.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 
 /** The mark has no duration, so its icon is set to show on the token always (Foundry 13 and later). */
@@ -18,10 +18,13 @@ export const EYES = {dim: 1, bright: 0, color: "#ff2a2a", alpha: 0.35, angle: 36
 
 /** Put on or take off the clan mark to match the beast's blood now. */
 export async function syncMark(actor) {
-  if ( !actor || !isAnimalGhoul(actor) ) return null;
+  // B7673: a human ghoul shows the clan's weakness too (V20 Dark Ages p. 400)
+  const beast = isAnimalGhoul(actor);
+  if ( !actor || (!beast && lineOf(actor) !== "ghoul") ) return null;
   const dom = domitorOf(actor);
   const clan = dom ? clanOf(dom)?.id ?? null : null;
-  const mark = AG.clanMark(clan, Number(actor.system?.advantages?.bloodpool?.temporary) || 0);
+  const pts = Number(actor.system?.advantages?.bloodpool?.temporary) || 0;
+  const mark = beast ? AG.clanMark(clan, pts) : AG.humanMark(clan, pts);
   const have = [...(actor.effects ?? [])].find(e => e.getFlag?.(MODULE_ID, "clanMark"));
   if ( mark && have?.getFlag(MODULE_ID, "clanMark") === clan ) {
     // a mark made before the icon was forced on gets it now
@@ -35,7 +38,7 @@ export async function syncMark(actor) {
   }
   await actor.setFlag(MODULE_ID, "clanMark", {clan, frenzy: mark.frenzy ?? 0});
   const [e] = await actor.createEmbeddedDocuments("ActiveEffect", [{name: `${dom.name}'s blood: ${mark.label}`, img: "icons/svg/blood.svg",
-    description: `${mark.text} (V20 Dark Ages p. 401: five or more points of the domitor's blood bring the clan's weakness.)`,
+    description: `${mark.text} (V20 Dark Ages p. 400: five or more points of the domitor's blood bring the clan's weakness.)`,
     statuses: [MARK], ...(SHOW_ALWAYS !== null ? {showIcon: SHOW_ALWAYS} : {}), flags: {[MODULE_ID]: {clanMark: clan}}}]);
   return e;
 }
@@ -59,7 +62,10 @@ export function registerAnimalBlood() {
     const blood = foundry.utils.hasProperty(change, "system.advantages.bloodpool");
     const ghouled = foundry.utils.hasProperty(change, `flags.${MODULE_ID}.animalGhoul`) || foundry.utils.hasProperty(change, `flags.${MODULE_ID}.lineage`);
     if ( !blood && !ghouled ) return;
-    if ( !isAnimalGhoul(actor) ) return;
+    if ( !isAnimalGhoul(actor) ) {
+      if ( lineOf(actor) === "ghoul" ) syncMark(actor).catch(e => console.error(`${MODULE_ID} | clan mark`, e));
+      return;
+    }
     syncMark(actor).catch(e => console.error(`${MODULE_ID} | clan mark`, e));
     if ( ghouled ) showBlood(actor).catch(e => console.error(`${MODULE_ID} | blood bar`, e));
   });
