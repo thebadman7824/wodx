@@ -943,7 +943,7 @@
    "modules/wodx-creation/scripts/lifepath.mjs:44",
    "modules/wodx-creation/scripts/skip-test.mjs:82",
    "modules/wodx-creation/scripts/time.mjs:296",
-   "modules/wodx-creation/scripts/totals-check.mjs:75",
+   "modules/wodx-creation/scripts/totals-check.mjs:77",
    "modules/wodx-creation/scripts/wizard.mjs:29",
    "modules/wodx-interactables/scripts/fill.mjs:17",
    "modules/wodx-library/scripts/examine.mjs:81",
@@ -2111,6 +2111,16 @@
    "modules/wodx-library/scripts/look.mjs:66",
    "modules/wodx-storyteller/scripts/dreams.mjs:87",
    "modules/wodx-storyteller/scripts/omens.mjs:95"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "traits",
+   "mockeryOf"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/garou.js:1156"
   ]
  },
  {
