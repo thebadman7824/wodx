@@ -21,6 +21,8 @@
  * B7296: this copy in tools/pcq is the one to deploy. Each PC runs it from <home>\gpu-tools\status-push.mjs (copy it
  * there; PC_HOME then defaults to <home>\status-push-clone). The laptop's PC watcher reads the comfy and ocr fields.
  * Push is never forced: fetch, write only our own file(s), commit, push; if rejected, fetch, rebase and retry (3 tries).
+ * The one exception is squash(): on the PC that builds all.json (PC_BUILD_ALL, the Main PC), once a day in the 04:00 UTC
+ * hour it replaces the pc-status branch's history with one commit of the newest files, with --force-with-lease.
  * Files from other PCs are never touched except all.json, which only the Main PC writes.
  * First run creates the clone and, if the branch does not exist yet, an orphan `pc-status` branch.
  * Run detached, outside any helper's process tree (Win32_Process Create), e.g.
@@ -260,6 +262,19 @@ function sync() {
   if ( f.status === 0 ) { git("checkout", "-q", "-B", BRANCH, `origin/${BRANCH}`); git("reset", "-q", "--hard", `origin/${BRANCH}`); }
   else if ( git("rev-parse", "--verify", "-q", BRANCH).status !== 0 ) git("checkout", "-q", "--orphan", BRANCH);
 }
+let lastSquash = "";
+/** The PC that builds all.json only (the Main PC): once a day after 04:00 UTC, replace the branch history with one commit holding the newest files. */
+function squash() {
+  const now = new Date(), day = now.toISOString().slice(0, 10);
+  if ( !BUILD_ALL || now.getUTCHours() !== 4 || lastSquash === day ) return;
+  lastSquash = day;
+  sync();
+  const tree = git("rev-parse", "HEAD^{tree}").stdout.trim();
+  const old = git("rev-parse", "HEAD").stdout.trim();
+  if ( !tree || !old ) return;
+  const c = git("commit-tree", tree, "-m", `pc status (squashed ${day})`).stdout.trim();
+  if ( c ) git("push", "-q", `--force-with-lease=${BRANCH}:${old}`, "origin", `${c}:refs/heads/${BRANCH}`);
+}
 
 function write(rel, obj) {
   const f = path.join(DIR, rel);
@@ -295,7 +310,7 @@ async function cycle() {
     const c = git("commit", "-q", "-m", `pc status ${NAME}`);
     if ( c.status !== 0 && /nothing to commit/.test(c.stdout + c.stderr) ) return;
     const p = git("push", "-q", "origin", BRANCH);
-    if ( p.status === 0 ) return;
+    if ( p.status === 0 ) { squash(); return; }
     await sleep(2000 + Math.random() * 3000);
   }
   console.error(new Date().toISOString(), "push failed 3 times");
