@@ -18,6 +18,9 @@
  *              places of power, once, when a scene whose name matches scene (a pattern) is in the world.
  *   hunters    {stage, region}  the stage the hunters of the region (else the homeland) start at in a new world
  *              (WoDX Storyteller hunters-rules STAGES key).
+ *   taints     [{clock, scene, per, max}]  a place whose Wyrm corruption follows one of the saga's long clocks (B7807):
+ *              each segment of the clock adds per levels (default 1) to the place whose scene name matches scene (a
+ *              pattern), up to max (default 9, so a clock alone never makes a Hellhole). WoDX Otherworlds applies it.
  */
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -27,7 +30,7 @@ const year = v => (v === null || v === undefined || v === "" || !Number.isFinite
 const slug = s => str(s, 60).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const norm = s => String(s ?? "").trim().toLowerCase().replace(/\s+/g, " ");
 
-const EMPTY = Object.freeze({feasts: [], titles: [], languages: [], caerns: [], hunters: null});
+const EMPTY = Object.freeze({feasts: [], titles: [], languages: [], caerns: [], hunters: null, taints: []});
 
 /** A chronicle pack's local block, cleaned: bad rows are dropped, never thrown on. */
 export function localOf(pack) {
@@ -42,7 +45,9 @@ export function localOf(pack) {
   const caerns = list(l.caerns).map(c => ({key: slug(c?.key || c?.name), name: str(c?.name), scene: str(c?.scene, 200), level: Math.max(1, Math.min(5, Math.trunc(num(c?.level)) || 1)),
     type: str(c?.type, 40), totem: str(c?.totem, 80), sept: str(c?.sept, 120), tribes: str(c?.tribes, 200)})).filter(c => c.key && c.name && c.scene);
   const h = l.hunters && typeof l.hunters === "object" ? {stage: str(l.hunters.stage, 40), region: str(l.hunters.region, 60)} : null;
-  return {feasts, titles, languages, caerns, hunters: h?.stage ? h : null};
+  const taints = list(l.taints).map(t => ({clock: str(t?.clock, 40), scene: str(t?.scene, 200),
+    per: Math.max(1, Math.min(10, Math.trunc(num(t?.per)) || 1)), max: Math.max(1, Math.min(10, Math.trunc(num(t?.max)) || 9))})).filter(t => t.clock && t.scene);
+  return {feasts, titles, languages, caerns, hunters: h?.stage ? h : null, taints};
 }
 
 /* ---- Feasts (B7611) ---- */
@@ -151,4 +156,24 @@ export function hunterStart(local = EMPTY, homeland = "") {
   if ( !h?.stage ) return null;
   const region = h.region || homeland;
   return region ? {region, stage: h.stage} : null;
+}
+
+/* ---- A place's taint on a saga clock (B7807) ---- */
+
+/** The corruption level a clock's segments ask of its place: 0 up to the row's max. */
+export const clockTaint = (t, clocks = {}) => Math.max(0, Math.min(t?.max ?? 9, Math.round(num(clocks?.[t?.clock]) * (t?.per ?? 1))));
+
+/**
+ * The places whose corruption follows a clock now: [{scene, clock, target}], one for each taints row whose pattern
+ * matches a scene. scenes: [{id, name}]. The first matching scene takes it, so one clock taints one place.
+ */
+export function taintPlans(local = EMPTY, clocks = {}, {scenes = []} = {}) {
+  const out = [];
+  for ( const t of local?.taints ?? [] ) {
+    let re = null;
+    try { re = new RegExp(t.scene, "i"); } catch (e) { re = null; }
+    const scene = re ? list(scenes).find(s => re.test(String(s?.name ?? ""))) : null;
+    if ( scene ) out.push({scene: scene.id, clock: t.clock, target: clockTaint(t, clocks)});
+  }
+  return out;
 }

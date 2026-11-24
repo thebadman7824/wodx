@@ -44,9 +44,21 @@ test("a chronicle's local block is cleaned, and a chronicle without one changes 
   }
 });
 
-test("the shipped Rothenstein chronicle fills no local hooks yet (the Book 1 rebuild does)", () => {
+test("the Rothenstein chronicle fills its local hooks from the Book 1 omnibus (B7804)", () => {
   const l = L.localOf(PACK);
-  assert.deepEqual([l.feasts, l.titles, l.languages, l.caerns, l.hunters], [[], [], [], [], null]);
+  const o = L.feastOptions(l);
+  assert.deepEqual(o.extra.map(f => f.slice(0, 2)), [[9, 1], [9, 28]], "St Aegidius and St Wenceslas are holy days");
+  assert.deepEqual(o.customs.map(f => f.slice(0, 2)), [[6, 23]], "the Kupala fires are a custom, not a holy day");
+  assert.equal(o.revels.length, 2);
+  assert.equal(C.churchDay(date(1200, 9, 1), o).feast, "St Aegidius, the parish feast", "chapter I opens on the parish feast");
+  assert.deepEqual(L.titlesFor(l, "council", 1200), {4: "Richter"});
+  assert.deepEqual(L.titlesFor(l, "council", 1900), {}, "the Richter seat ends with the old town law");
+  assert.deepEqual(L.languageNames(l), ["the Old Tongue"]);
+  assert.deepEqual(l.languages[0].closedIn, ["red-stone"]);
+  assert.equal(l.languages[0].intent, true);
+  assert.deepEqual(l.caerns.map(c => [c.key, c.level]), [["old-grove", 3]], "an active caern: Gauntlet 3");
+  assert.deepEqual(L.hunterStart(l, PACK.manifest.homeland), {region: "moravia", stage: "rumours"});
+  assert.ok(H.STAGES.some(s => s.key === l.hunters.stage));
 });
 
 test("feasts: a holy day and a local custom; the custom is named and makes a night of revel but is no day off", () => {
@@ -155,4 +167,26 @@ test("the hunters' start: the region opens at the stage, once a chronicle, and n
   assert.deepEqual(kept.state.started, ["test-town"]);
   assert.equal(H.applyStart({}, "test-town", {region: "x", stage: "nope"}, 0).region, null, "an unknown stage starts nothing");
   assert.deepEqual(H.normState({}).started, []);
+});
+
+test("taints (B7807): a place's corruption follows a long clock, capped, one place a row", () => {
+  const local = L.localOf({manifest: {local: {taints: [{clock: "blight", scene: "Dead Moor", per: 2, max: 5}, {clock: "", scene: "x"}, {clock: "y"}]}}});
+  assert.deepEqual(local.taints, [{clock: "blight", scene: "Dead Moor", per: 2, max: 5}]);
+  assert.equal(L.clockTaint(local.taints[0], {blight: 0}), 0);
+  assert.equal(L.clockTaint(local.taints[0], {blight: 2}), 4);
+  assert.equal(L.clockTaint(local.taints[0], {blight: 6}), 5, "never past max");
+  const scenes = [{id: "a", name: "The Market"}, {id: "b", name: "The Dead Moor"}, {id: "c", name: "Dead Moor (night)"}];
+  assert.deepEqual(L.taintPlans(local, {blight: 1}, {scenes}), [{scene: "b", clock: "blight", target: 2}]);
+  assert.deepEqual(L.taintPlans(local, {blight: 1}, {scenes: [{id: "a", name: "The Market"}]}), []);
+  assert.deepEqual(L.localOf({manifest: {local: {}}}).taints, []);
+  const d = L.localOf({manifest: {local: {taints: [{clock: "k", scene: "s"}]}}}).taints[0];
+  assert.equal(d.per, 1); assert.equal(d.max, 9);
+});
+
+test("Rothenstein: the Ashfield is the taint's one source, a level a field, never a Hellhole", () => {
+  const local = L.localOf(PACK);
+  assert.deepEqual(local.taints, [{clock: "ashfield", scene: "Ashfield", per: 1, max: 8}]);
+  const size = PACK.saga.SAGA_CLOCKS.find(c => c.key === "ashfield").size;
+  assert.equal(L.clockTaint(local.taints[0], {ashfield: size}), 8);
+  assert.deepEqual(L.taintPlans(local, {ashfield: 3}, {scenes: [{id: "s1", name: "The Ashfield"}]}), [{scene: "s1", clock: "ashfield", target: 3}]);
 });

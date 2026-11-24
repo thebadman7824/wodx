@@ -81,7 +81,7 @@ Hooks.once("ready", () => {
       netContest: realms.netContest, maelstrom: realms.maelstromStrike, wayOnSuccess: realms.wayOnSuccess, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
     // B3270-B3276: Wyrm corruption that spreads between places and into people
     corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
-      plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules,
+      plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, follow: corruption.followClocks, dialog: corruption.corruptionDialog, rules: corruptionRules,
       looks: corruptionLooks.api()},
     veil: veilLooks.api(),
     fading: fading.api(),

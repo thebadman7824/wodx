@@ -57,10 +57,12 @@ export async function run() {
       const roles = el?.querySelectorAll?.("[data-roles] tr[data-role]")?.length ?? 0;
       const clues = el?.querySelectorAll?.("[data-clues] tr[data-clue]")?.length ?? 0;
       await app?.close?.();
-      ok("1 api", typeof fr()?.tick === "function" && !fr().rules.validate().length && fronts === 6 && roles === 8 && clues === 6, {fronts, roles, clues});
+      ok("1 api", typeof fr()?.tick === "function" && !fr().rules.validate().length && fronts === 6 && roles === 8 && clues === 7, {fronts, roles, clues});
     });
     let courtScene = "";
     await step("2 first tick", async () => {
+      // B7800: Ludovic now writes from the first night too; hold the Church until step 6 so it steps there
+      await fr().hold("church", true);
       const n0 = cards().length;
       await fr().tick();
       await sleep(800);
@@ -104,6 +106,7 @@ export async function run() {
     });
     await step("6 clocks", async () => {
       const c0 = saga().state().clocks.church ?? 0;
+      await fr().hold("church", false);
       await fr().step("church"); await sleep(500);
       const c1 = saga().state().clocks.church ?? 0;
       ok("6 clocks", fr().state().fronts.church.at === 1 && c1 === c0 + 1, {church: [c0, c1]});

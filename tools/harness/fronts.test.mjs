@@ -16,13 +16,13 @@ test("the spine holds together: six fronts, two judgements, eight roles, six clu
   assert.deepEqual(F.FRONTS.map(f => f.every), [7, 7, 14, 14, 21, 14]);
   assert.equal(F.JUDGEMENTS.length, 2);
   assert.equal(F.ROLES.length, 8);
-  assert.equal(F.CLUES.length, 6);
+  assert.equal(F.CLUES.length, 7);
   for ( const c of F.CLUES ) assert.equal(c.carriers.length, 3);
 });
 
 test("each front steps on its own pace, and never before its step's chapter", () => {
   let st = F.normState({}, 0);
-  assert.deepEqual(F.dueFronts(st, {now: 0, played: []}), ["court", "marta"]);
+  assert.deepEqual(F.dueFronts(st, {now: 0, played: []}), ["court", "church", "marta"], "Ludovic writes from the first night (B7800)");
   st = F.step(st, "court", {now: 0}).state;
   assert.match(F.whyNot(st, "court", {now: 0, played: ["c1"]}), /Next step in 7 days/);
   assert.equal(F.whyNot(st, "court", {now: 7 * DAY, played: ["c1"]}), "");
@@ -80,7 +80,7 @@ test("roles pass down their lines as people fall, and the most trusted contact i
   st = F.setGone(st, "An elder who sat at the Dolany fire");
   st = F.setGone(st, "The burned pages at Radu's fire");
   assert.equal(F.holderOf(st, "words"), "The burned pages at Radu's fire", "the last of a lasting line stays");
-  st = F.setGone(F.setGone(st, "Old Radu"), "A character who took the Husbandman's gift");
+  st = F.setGone(F.setGone(st, "Old Radu"), "A character who took the Hospodář's gift");
   assert.equal(F.holderOf(st, "price"), "Bogdan Ursu");
   // The twist's heart takes the clerk out
   assert.equal(F.holderOf(st, "inside", {revealed: {24: {variant: "killed"}}}), "A councillor in Graff's debt");

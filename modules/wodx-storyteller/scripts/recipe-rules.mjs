@@ -21,6 +21,7 @@ export const STEPS = [
   {id: "check", phase: 1, label: "Check the world", undo: false, needs: {}},
   {id: "settings", phase: 1, label: "Homeland, opening night and lines", undo: false, needs: {"wodx-chronicle": "0.48.0"}},
   {id: "carry", phase: 1, label: "Bring across the old world's scenes, journals and cast", undo: true, needs: {}},
+  {id: "cast", phase: 1, label: "The chronicle's cast: missing people made, Roads and ghouls set on the sheets", undo: true, needs: {}},
   {id: "anchors", phase: 1, label: "Mark the anchor places and people", undo: true, needs: {}},
   {id: "ways", phase: 1, label: "Lay the Ways: the old exits, and doors to the places inside", undo: true, needs: {}},
   {id: "ground", phase: 2, label: "Generate the town around the anchors", undo: true, needs: {"wodx-interactables": "0.36.0"}},
@@ -93,6 +94,19 @@ export function validate(r, ctx = {}) {
   }
   const ages = r.ages ?? [];
   if ( ages.some((a, i) => i && a <= ages[i - 1]) ) out.push("The ages are not in order.");
+  const castNames = new Set();
+  for ( const p of r.cast?.people ?? [] ) {
+    if ( !p?.name ) { out.push("A person in the recipe's cast has no name."); continue; }
+    if ( castNames.has(p.name) ) out.push(`${p.name} is in the recipe's cast twice.`);
+    castNames.add(p.name);
+    if ( p.type && !CAST_TYPES.includes(p.type) ) out.push(`${p.name} has a kind of sheet the cast cannot make (${p.type}).`);
+    if ( p.variant && p.variant !== "ghoul" ) out.push(`${p.name} has an unknown variant (${p.variant}).`);
+  }
+  for ( const x of r.cast?.sheets ?? [] ) {
+    if ( !x?.match ) { out.push("A sheet change in the recipe's cast names no one."); continue; }
+    if ( x.road !== undefined && !/^(Road|Path) of /.test(String(x.road)) ) out.push(`${x.match}: a Road is written "Road of ..." (${x.road}).`);
+    if ( x.variant && x.variant !== "ghoul" ) out.push(`${x.match}: unknown variant (${x.variant}).`);
+  }
   return out;
 }
 
@@ -189,3 +203,49 @@ export function peopleAnchors(recipe, actors = []) {
     return {key: p.key, id: hit?.id ?? null, name: hit?.name ?? p.name, home: p.home ?? null, faction: p.faction ?? null};
   });
 }
+
+/* ---- The cast (B7806) ---- */
+
+/** The kinds of sheet the cast step makes. */
+export const CAST_TYPES = ["Mortal", "Vampire"];
+
+/**
+ * What the cast step does in a world. recipe.cast: {people: [{name, match, type, variant, note}], sheets: [{match, road,
+ * variant}]}. actors: [{id, name, playerOwned, road, variant}] where road is the sheet's Road as written ("Road of
+ * Kings", or "" for the sheet's default Humanity) and variant the sheet's variant. A person is made only when no
+ * Storyteller character's name holds their match (else their name); a sheet change names the shortest name that holds
+ * its match, and only what differs is changed. Returns {make, set, missing}.
+ */
+export function castPlan(recipe, actors = []) {
+  const free = (actors ?? []).filter(a => !a?.playerOwned);
+  const find = text => {
+    const w = String(text ?? "").toLowerCase();
+    if ( !w ) return null;
+    return free.filter(a => String(a.name ?? "").toLowerCase().includes(w)).sort((a, b) => a.name.length - b.name.length)[0] ?? null;
+  };
+  const make = [], set = [], missing = [];
+  for ( const p of recipe?.cast?.people ?? [] ) {
+    if ( !p?.name || find(p.match ?? p.name) ) continue;
+    make.push({name: p.name, type: CAST_TYPES.includes(p.type) ? p.type : "Mortal", variant: p.variant === "ghoul" ? "ghoul" : null, note: String(p.note ?? "")});
+  }
+  for ( const x of recipe?.cast?.sheets ?? [] ) {
+    const a = find(x?.match);
+    if ( !a ) { if ( x?.match ) missing.push(x.match); continue; }
+    const ch = {};
+    if ( x.road && a.road !== x.road ) ch.road = x.road;
+    if ( x.variant === "ghoul" && a.variant !== "ghoul" ) ch.variant = "ghoul";
+    if ( Object.keys(ch).length ) set.push({id: a.id, name: a.name, ...ch});
+  }
+  return {make, set, missing};
+}
+
+/** The sheet fields a cast change writes: {path: value}. */
+export function castFields(change = {}) {
+  const out = {};
+  if ( change.road ) { out["system.advantages.path.label"] = "custom"; out["system.advantages.path.custom"] = change.road; }
+  if ( change.variant ) out["system.settings.variant"] = change.variant;
+  return out;
+}
+
+/** A sheet's Road as the cast reads it: the written Road for a custom one, else "". */
+export const roadOn = system => (system?.advantages?.path?.label === "custom" ? String(system.advantages.path.custom ?? "") : "");

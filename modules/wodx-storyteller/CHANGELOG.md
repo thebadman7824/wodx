@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.116.0 (The builder brings a chronicle's cast in line with its recipe: missing people made, Roads and ghouls set on the sheets (B7806))
 - 0.115.1 (Fix: the Renaissance era primer said the Camarilla formed in 1486; it was founded in 1435 (Lore of the Clans pdf 251), and 1486 is its first Conclave. The primer now reads the date from the Chronicle canon (B7172); Fix: a town could be sacked twice by one storming when the second assault step came while the first was still being recorded (a slow world, two assaults close together). A battle or saga step now lands on a town once (B7177))
 - 0.115.0 (Chronicle-local hooks (Chronicle Packs Desk d1, B7612, B7615, B7616): institutions of the chronicle's town (by its market's name, manifest.town) keep the chronicle's title rows and show them in their years (instRanks); caerns from manifest.local.caerns go on the register once each (a removed one stays removed); the hunters' start is laid down once a chronicle, never over a region's record)
 - 0.114.0 (Carry to a new chronicle (Chronicle Packs Desk c2, B7573-B7574): characters, chosen people and items cross into a fresh world with their sheets whole, less the chronicle's mark, opening goals, the builder's mark and the old world's faction seats and owners (given back by player name); a second read of the same file makes no copies. The Threads of Fate deck loads again when the chronicle in play changes)

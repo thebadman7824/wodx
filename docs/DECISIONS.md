@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7820
+Next free block: B7830
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -462,7 +462,9 @@ Next free block: B7820
 | B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
 | B7780-B7789 | Map blueprints: every map planned as a true-size plan before its art (used B7780-B7784) | tools |
 | B7790-B7799 | Map blueprints: tier 1 hand pass, roads and rivers, the Book 1 places drawn (used B7790-B7793) | tools |
+| B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
+| B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15819,6 +15821,99 @@ each place sits where its own map puts it. It stays in tier 4 as to draw.
 
 Reverse: draw it now from the book's distances alone.
 
+## B7800. Book 1 follows the final omnibus: two years, new names, the doors of ruling 27 (2026-11-23)
+WoDX Rothenstein. Book 1 runs from St Aegidius' day, 1 Sep 1200, to Martinmas 1202 at the first snow, one act a year
+(ruling 17), with interludes for the two winters, the double feast of 1201 and the summers, and a thaw epilogue at
+Easter 1203 (ruling 19). Chapter days: I 1 Sep 1200, II 15 Sep, III 10 Oct, IV 16 Apr 1201, V 23 Jun (St John's Eve),
+VI 29 Sep, VII 11 Nov, VIII 17 Mar 1202 (mid-Lent), IX 29 Sep, X 11 Nov 1202. Every chapter still waits until it is
+played. The thing is the Rudý Hospodář under the red hill (ruling 21); the 906 binding takes the Words, the Ground and
+the Price and is half made (ruling 2), replacing "one life a generation". The ending texts follow the omnibus (take
+means catching it). The other lines' doors follow ruling 27: Silver Fang kin and an active caern, Old Vlasta, no fae
+freehold, Adelheid and the churchyard (the Ashfield leaves no dead). The lamp-bearer is Vojtek (ruling 3); the rite
+stands on the dark field; Ludovic writes from the first night and the diocese answers at VI; the hunter's line runs to
+the bishop's Lent inquiry and Thibault; the sire's clue names the Black Hand's silence and the Prague sibling; reveal
+texts for twists 1, 5, 8, 11 and 13 follow the lore desk (ruling 25). Encounters re-fit: the auditor in the first
+winter, the smoke and the winter pack from first frost to the thaw, the harvest game in the first autumn. Internal
+keys (husbandman, seal, c1 to c10) are unchanged, so saved worlds keep their state. Front pace is unchanged: each
+step still waits for its chapter, which spreads the fronts over the two years.
+
+Reverse: restore modules/wodx-rothenstein/data/saga.mjs, fronts.mjs, reveals.mjs, encounters.mjs from before this branch.
+
+## B7801. A book may start in the year the book before it ends (2026-11-23)
+WoDX Chronicle. The saga check used to refuse any book whose first year was the last year of the one before. Book 1's
+epilogue now falls in spring 1203 and the next book opens in November 1203, so the check allows the same year when the
+new book's first step comes after the old book's last.
+
+Reverse: put back `b.from <= lastTo` in saga-rules.mjs validate.
+
+## B7802. One twist a month, from the chronicle's own twist gap (2026-11-23)
+WoDX Chronicle and WoDX Rothenstein. Ruling 17 sets about one twist a month over Book 1's two years. The twist engine
+now reads a gap of its own (a pack's twists.GAP, falling back to its WEEK), so fronts keep their weekly twist hold.
+Rothenstein sets 30 days. The window and the twist card say "a month". Twist 13 (the hunter in Hungary) may come from
+chapter VIII, where the omnibus has the elder's emissary arrive.
+
+Reverse: drop GAP from the Rothenstein pack (the engine falls back to a week) and set twist 13 back to c9.
+
+## B7803. The valley's powers follow the omnibus cast (2026-11-23)
+WoDX Rothenstein and WoDX NPC. Kasimir leaves Konrad's cult for the court, where Ottilie, Sieglinde and Zdenka are
+sworn too (their sheets and ruling 24). The notes for the court, the cult, Marta, Radu, the council and the hunters
+follow rulings 21 to 27 (the steward a ghoul, the cult's winter growth, Marta's elders, Radu the koldun, the six
+council seats, the Cistercian preacher and Thibault). Two powers join: the margrave's officers (Ctibor) and the
+Grove's kin (Silver Fangs, an active caern). The Grove's kin have no leader on the map, so WoDX NPC's name finder
+now returns no one for an empty name instead of the first actor.
+
+Reverse: restore modules/wodx-rothenstein/data/factions.mjs and the two lines in findActor.
+
+## B7804. The valley's own days, seat, tongue, caern, hunters and two clocks (2026-11-23)
+WoDX Rothenstein. The pack fills manifest.local (the B7610 hooks) from ruling 27: St Aegidius on 1 Sep (the parish
+feast and a night of revel), St Wenceslas on 28 Sep, and the Kupala fires on St John's Eve as a village custom; the
+council's top seat is the Richter until the old town law ends in 1849; the Old Tongue cannot be learned in Book 1
+and hearers get the intent without a roll; the Old Grove is an active caern (level 3, Gauntlet 3) of Silver Fang
+kin; the hunters of Moravia open at Rumours. Two saga clocks follow ruling 27: the Guests grow (six segments, moved
+by the cult's galleries, miners and town steps) and Graff's road east (four, moved by the council's letter,
+mercenaries, burned ledger and escape). A seventh clue holds the true name, Črnomir (ruling 25), and the Weavers'
+Guild is led by an unnamed guild warden, with Lenka as a member. Calls: the Richter title end year (1849), the caern
+level (3, the lowest with Gauntlet 3), the clock sizes and which steps move them.
+
+Reverse: drop MANIFEST.local, the two clocks and their moves, the name clue and the warden.
+
+## B7805. A second prologue, the Long Watch (2026-11-23)
+WoDX Rothenstein. A prologue book from 908 to 1196 under the premyslid-duchy era plays the omnibus's flashbacks
+(rulings 9, 16, 20 and 23): the Hollow Man set at Altenhof (about 1070), the keep raised with blood in its
+foundations and the Charter sworn (about 1100), the first silver strike (about 1150), Altenhof's fire as a Price
+(about 1170, on St John's Eve), the physician's Embrace (1194) and the singing under the mine (1196). Prologue books
+are picked by year, so Book 1's dates do not move, and its steps move no long clock, so a world that skips it starts
+Book 1 as before. Calls: the strike's year (the omnibus says only "since the first strike") and the exact days.
+
+Reverse: drop the long-watch book from modules/wodx-rothenstein/data/saga.mjs.
+
+## B7806. The builder's cast step, and the Book 1 cast in the Rothenstein recipe (2026-11-23)
+WoDX Storyteller and WoDX Rothenstein. Step 6 of the plan, world data, is done through the builder instead of by hand
+in a testbed, so no world is edited outside a build and every change can be taken back. A new phase 1 step, the cast,
+runs after the carry: it makes each person in recipe.cast.people that no Storyteller character's name matches, and
+writes recipe.cast.sheets (a Road as the sheet's custom Road, as Marta's already is, and the ghoul variant). Undo
+deletes only what it made and restores each sheet's old values. The Rothenstein recipe lists the ten people the 14 Nov
+carry export lacks (Vojtek, the steward as a ghoul, Ruy of Toledo, the Cistercian preacher, Dalibor, old Bořek, Vesna,
+Matej, Dietrich, Ctibor's clerk) and the Roads of ruling 27 that are not Humanity (Kings for Bogdan, Mircea and
+Sieglinde; Metamorphosis for Konrad; the Beast for Kasimir; Heaven for Marta). Kasimir's anchor faction is now the
+court. Calls: Humanity sheets are left on the system's own Humanity; Radu, Ottilie, Zdenka and Wenzel keep it.
+
+Reverse: drop the cast step from recipe-rules.mjs and builder.mjs, and recipe.cast from the Rothenstein recipe.
+
+## B7807. The Ashfield clock sets the Ashfield's Wyrm taint (2026-11-24)
+WoDX Chronicle, WoDX Otherworlds and WoDX Rothenstein. Ruling 27 makes the Ashfield the taint's one source, and until
+now its saga clock only counted. A chronicle pack can now tie a place to one of its long clocks in manifest.local.taints
+({clock, scene, per, max}). WoDX Otherworlds reads it whenever the saga's clocks change, the chronicle in play changes or
+a scene is made, and moves the matching scene's Wyrm corruption by what the clock moved since last time (per levels a
+segment, up to max). It keeps what the clock gave in the place's own flag, so a Rite of Cleansing, the Storyteller's
+edit or the weekly turn still count, and taking the clock back takes its levels back (never below clean). It works with
+wyrmCorruption off, since the clock is the story and not the spread. The scene's sickly cast and the Penumbra's Wyrm
+lines follow at once. Rothenstein ties the Ashfield clock (8) to the Ashfield scene, one level a field, so a full
+clock is foul (8) and the clock alone never makes a Hellhole. Calls: one level a segment and a cap of 8; a Live world
+is left alone until its owner turns it on there.
+
+Reverse: drop taints from the Rothenstein manifest; followClocks and its hooks from corruption.mjs.
+
 ## B7810. The valley travel map sets the distances between places (2026-11-23)
 tools/blueprint/plans/rothenstein/valley.json, square 250 m. Every Rothenstein map is placed at a real distance from
 the Lower Town market, joined by the roads its own exits name. The book fixes only two things, and both hold:
@@ -15838,3 +15933,36 @@ in the adit. Two kits join the uses: a guard hall and a tannery. Plain cottages 
 for a person to check.
 
 Reverse: reseed the six plans with seed_all.py.
+
+## B7820. Mockery Breeds regenerate as Garou do; five more builds get creation totals (2026-11-23)
+WoDX Actions, Chronicle and Creation. The 23 November systems scorecard (registry/systems-scorecard-2026-11-23.md in the
+shared folder) found two rules gaps no thread held. First, #2096: W20 Book of the Wyrm gives each of its five Mockery
+Breeds the Garou's healing (War Wolves p. 167, Anurana p. 168, Samsa p. 170, Kerasi p. 172, Yeren p. 174), but only the
+War Wolf's silver was in play. Each round of a fight, garou.js regenRound now reads a Creature sheet's Mockery Breed
+through the Chronicle traits api (mockeryOf, now on the api) and regenerates it as a metis would, in every form, since a
+Creature sheet keeps no breed or form; the card names the breed and the page. Second, the creation check had no figures
+for The Hunters Hunted II hunters, plain mortals, Sorcerer Revised sorcerers, W20 Kinfolk or C20 Kinain. Each is now a
+line in creation-totals.mjs, read from the private text dumps on the pages cited, with research notes in
+docs/research/creation-totals, its derived Traits (Willpower, Humanity, Glamour, Banality) in derived-rules.mjs, and
+Numina counted from a sheet's numina Powers.
+
+Reverse: remove MOCKERY_REGEN and mockeryRegeneration from garou-rules.js and the mock branch from regenRound; remove
+the five entries from TOTALS and their cases from derivedTraits.
+
+## B7821. A Mortal sheet's variant picks its book; Changing Breeds read W20 for now (2026-11-23)
+WoDX Creation. defaultLine sent every Mortal sheet but a ghoul to Hunter: The Reckoning, whose figures are for the
+imbued, and a Changing Breed sheet to V20's vampire figures. Now ghoul, kinfolk, sorcerer and orpheus open on their own
+books; outside the Dark Ages true faith opens on HH2 and any other Mortal on the plain mortal's figures (HH2 without
+Numina, since no V20 book gives a mortal template); in the Dark Ages a plain mortal keeps the Inquisitor's figures, so
+the Rothenstein build is unchanged. A Changing Breed opens on W20 (Dark Ages: Werewolf in the Dark Ages) until W20
+Changing Breeds is in the text dumps and checked. Logged in docs/PENDING-REVIEW.md.
+
+Reverse: restore the old Mortal case and drop the Changing Breed case in defaultLine.
+
+## B7822. Kinain and sorcerers: what the books leave out (2026-11-23)
+WoDX Creation. C20 gives Kinain their Glamour (2 at most, 1 back a chapter), Banality 3, 1 Art dot, 2 Realm dots and
+the Backgrounds they may not take, but no Attribute, Ability, Background, Willpower or freebie figures; WoDX takes the
+changeling's and leaves Willpower to the Storyteller. No 20th-anniversary sorcerer book is in the dumps, so sorcerers
+follow Sorcerer Revised; its "equal for all" option (Mage figures) is not the default. Logged in docs/PENDING-REVIEW.md.
+
+Reverse: edit the kinain and sorcerer entries in creation-totals.mjs.

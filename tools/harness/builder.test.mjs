@@ -3,6 +3,7 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {fileURLToPath} from "node:url";
+import {readFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -56,7 +57,7 @@ test("steps run in order: one ready at a time, later phases wait", () => {
   assert.equal(rows.find(r => r.id === "anchors").state, "blocked");
   rows = R.planSteps({modules: {"wodx-chronicle": "0.40.0"}, record: {steps: {check: {at: 1}}}});
   assert.match(rows.find(r => r.id === "settings").reason, /wodx-chronicle 0\.48\.0/);
-  assert.ok(R.STEPS.filter(s => s.phase === R.PHASE_NOW).every(s => ["check", "settings", "carry", "anchors", "ways"].includes(s.id)));
+  assert.ok(R.STEPS.filter(s => s.phase === R.PHASE_NOW).every(s => ["check", "settings", "carry", "cast", "anchors", "ways"].includes(s.id)));
 });
 
 test("an older world's documents are sorted for the carry-over", () => {
@@ -94,4 +95,34 @@ test("anchors find the authored places and the cast, the shortest name first", (
   assert.equal(people.konrad.id, "a2");
   assert.equal(people.bogdan.id, null);
   assert.equal(people.konrad.home, "silver-adit");
+});
+
+test("the cast step makes only the missing people and sets only the Roads that differ (B7806)", () => {
+  const r = {cast: {people: [{name: "The steward", match: "steward", variant: "ghoul", note: "Serves the keep."}, {name: "Old Hana", note: ""},
+    {name: "A stranger", type: "Vampire"}], sheets: [{match: "Bogdan", road: "Road of Kings"}, {match: "Marta", road: "Road of Heaven"},
+    {match: "Nobody here", road: "Road of Sin"}, {match: "Hana", variant: "ghoul"}]}};
+  const actors = [{id: "b", name: "Voivode Bogdan Ursu", road: "", variant: null}, {id: "m", name: "Sister Marta", road: "Road of Heaven", variant: null},
+    {id: "h", name: "Old Hana", road: "", variant: null}, {id: "p", name: "The steward of the player", playerOwned: true}];
+  const plan = R.castPlan(r, actors);
+  assert.deepEqual(plan.make.map(p => [p.name, p.type, p.variant]), [["The steward", "Mortal", "ghoul"], ["A stranger", "Vampire", null]],
+    "a player's character never counts as the person, and Old Hana is there already");
+  assert.deepEqual(plan.set, [{id: "b", name: "Voivode Bogdan Ursu", road: "Road of Kings"}, {id: "h", name: "Old Hana", variant: "ghoul"}]);
+  assert.deepEqual(plan.missing, ["Nobody here"]);
+  assert.deepEqual(R.castFields({road: "Road of Kings", variant: "ghoul"}),
+    {"system.advantages.path.label": "custom", "system.advantages.path.custom": "Road of Kings", "system.settings.variant": "ghoul"});
+  assert.equal(R.roadOn({advantages: {path: {label: "custom", custom: "Road of Heaven"}}}), "Road of Heaven");
+  assert.equal(R.roadOn({advantages: {path: {label: "wod.advantages.path.humanity", custom: ""}}}), "");
+  assert.deepEqual(R.validate({...ROTHENSTEIN, cast: {people: [{name: "X", type: "Dragon"}, {name: "X"}], sheets: [{match: "Y", road: "Kings"}]}}, ctx).length, 3);
+});
+
+test("the Rothenstein cast follows the omnibus: ten missing people, the steward a ghoul, the Roads of ruling 27", () => {
+  const c = ROTHENSTEIN.cast;
+  assert.equal(c.people.length, 10);
+  assert.equal(c.people.find(p => /steward/.test(p.name)).variant, "ghoul");
+  const road = m => c.sheets.find(s => s.match.includes(m))?.road;
+  assert.deepEqual([road("Bogdan"), road("Konrad"), road("Kasimir"), road("Marta")], ["Road of Kings", "Road of Metamorphosis", "Road of the Beast", "Road of Heaven"]);
+  const roads = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/roads-daw.json"), "utf8"));
+  const names = new Set(JSON.stringify(roads).match(/"name": ?"Road of [^"]+"/g).map(x => x.replace(/"name": ?"|"$/g, "")));
+  for ( const s of c.sheets ) assert.ok(names.has(s.road), `${s.road} is a Dark Ages Road`);
+  assert.equal(ROTHENSTEIN.anchors.people.find(p => p.key === "kasimir").faction, "court", "Kasimir is sworn to the court (B7803)");
 });

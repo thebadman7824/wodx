@@ -9,8 +9,14 @@
  * Runs on the active Storyteller's client once a week of world time (checked at most once a game hour, never during a
  * skip) and when a time skip ends (up to ten years at once). A band change asks the Gauntlet to drift through the
  * existing drift proposal; a new Pentex concern and a Bane riding someone are only ever proposed.
+ *
+ * B7807: a chronicle in play can tie a place to one of its long clocks (manifest.local.taints). Whenever the saga's
+ * clocks change, the place's level moves by what the clock moved, whatever wyrmCorruption is set to, so the scene's
+ * sickly cast (corruption-looks.mjs) and the Penumbra follow the story. Never in a Live world.
  */
 import * as R from "./corruption-rules.mjs";
+import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
+import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {T_DRIFT} from "./drift.mjs";
 import {sheetNature} from "./senses.mjs";
@@ -296,7 +302,43 @@ export function registerCorruptionHandlers() {
   }});
 }
 
+/**
+ * B7807: move each place a chronicle ties to a long clock by what its clock moved. Returns the scenes changed. A call
+ * while one runs waits for that one, which goes round again to read the newest clocks. A Live world is left alone
+ * (its owner turns it on there).
+ */
+let following = null, followAgain = false;
+export function followClocks() {
+  if ( !isActiveGM() || isLiveWorld(game.world) ) return Promise.resolve([]);
+  if ( following ) { followAgain = true; return following; }
+  following = (async () => {
+    const changed = [];
+    do {
+      followAgain = false;
+      const pack = chron()?.chronicle?.current?.() ?? null;
+      const local = Local.localOf(pack);
+      if ( !local.taints.length ) break;
+      const saga = chron()?.pod?.saga;
+      const clocks = saga?.state?.()?.clocks ?? {};
+      const names = Object.fromEntries((saga?.rules?.SAGA_CLOCKS ?? []).map(c => [c.key, c.label]));
+      for ( const x of Local.taintPlans(local, clocks, {scenes: game.scenes.map(sc => ({id: sc.id, name: sc.name}))}) ) {
+        const scene = game.scenes.get(x.scene);
+        const next = R.followClock(scene?.flags?.[MODULE_ID]?.[FLAG] ?? {}, {key: x.clock, target: x.target, now: game.time.worldTime, name: names[x.clock] ?? x.clock});
+        if ( next && await setPlace(scene, next) && !changed.includes(scene.id) ) changed.push(scene.id);
+      }
+    } while ( followAgain );
+    return changed;
+  })().finally(() => { following = null; });
+  return following;
+}
+
 export function setupCorruption() {
+  const follow = () => followClocks().catch(e => console.error(`${MODULE_ID} | corruption clocks`, e));
+  follow();
+  Hooks.once("wodxChronicleReady", follow);
+  Hooks.on("updateSetting", s => { if ( s?.key === "wodx-chronicle.podState" ) follow(); });
+  Hooks.on("wodxChronicleInPlay", follow);
+  Hooks.on("createScene", follow);
   let lastHour = -1;
   Hooks.on("updateWorldTime", () => {
     const hour = Math.floor((game.time.worldTime ?? 0) / 3600);

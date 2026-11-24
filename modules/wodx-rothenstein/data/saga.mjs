@@ -17,17 +17,20 @@
 
 /** The long clocks the saga keeps from book to book. */
 export const SAGA_CLOCKS = [
-  {key: "sleeper", label: "The Red Husbandman stirs", size: 10, text: "How awake the thing under the ridge is. Full, and it walks the valley in a body of its choosing."},
+  {key: "sleeper", label: "The Rudý Hospodář stirs", size: 10, text: "How awake the thing under the red hill is. Full, and it walks the valley in a body of its choosing."},
   {key: "ashfield", label: "The Ashfield spreads", size: 8, text: "The dead ground. Each segment is a field, a farm or a street lost to it."},
   {key: "church", label: "The Church's eye on the valley", size: 8, text: "How close the Church, and later the state, is to learning what rules Rothenstein."},
-  {key: "charter", label: "The Charter holds", size: 6, text: "Whether the valley's Kindred keep one law among themselves. Empty, and it is every one for themself."}
+  {key: "charter", label: "The Charter holds", size: 6, text: "Whether the valley's Kindred keep one law among themselves. Empty, and it is every one for themself."},
+  // B7804: the omnibus's two Book 1 clocks (ruling 27)
+  {key: "guests", label: "The Guests grow", size: 6, text: "Konrad's believers and the changed miners: about seven at the first frost, fifteen by the second winter, thirty by the choosing if nobody stops it."},
+  {key: "flight", label: "Graff's road east", size: 4, text: "The Richter's second ledger and the escape already arranged. Full, and the Richter is gone east with the Adit's silver and every name in the ledger."}
 ];
 
-/** The endings of the first book, which later books answer. */
+/** The endings of the first book, which later books answer (B7800: the omnibus of 18 Nov 2026). */
 export const SAGA_ENDINGS = {
-  seal: {label: "Sealed", text: "The old binding was made again. The Husbandman sleeps under the stone, and the binding must be kept."},
-  sever: {label: "Severed", text: "The valley's tie to the Husbandman was cut. The ground heals slowly, and the thing went somewhere else."},
-  take: {label: "Taken", text: "Someone took what the Husbandman offered. The door is held open from this side now, by one of the company."},
+  seal: {label: "Sealed", text: "The old binding was made again with the Words, the Ground and the Price, and the Price was paid a second time. The Hospodář sleeps under the red hill, and the binding must be kept."},
+  sever: {label: "Severed", text: "What carried the thing was destroyed and the Adit walled up. The Ashfield draws back to its first edge, but the grafts in people stay, and something below still grows."},
+  take: {label: "Taken", text: "One of the company took the thing's gift and caught it with the gift. They carry it into the saga, and in the end it wins."},
   alone: {label: "Left alone", text: "The company walked away. Nobody kept, cut or took the binding, and the long clocks decide what the valley becomes."}
 };
 
@@ -38,44 +41,58 @@ export const SAGA = {
   title: "What Sleeps Beneath Rothenstein",
   where: "Rothenstein",
   region: "moravia",
-  origin: {year: 906, era: "migration-age", text: "In the last years of Great Moravia, when the Magyars broke the realm, the valley's first people bound something under the red ridge with a rite of stones, blood and a promise to keep feeding it a little. The Old Grove is what is left of the rite. Nobody living remembers the promise, but the ground does."},
+  origin: {year: 906, era: "migration-age", text: "In the last years of Great Moravia, the valley's binders sealed a thing that had gone to ground under the red hill east of the later town. The rite took three things: the Words, the Ground and the Price, a life. It was only half made, and it holds while the one who paid stays in the valley. The Old Grove on the hill's crown is what is left of it."},
   books: [
     {key: "prologue", n: 0, title: "The Binding", from: 880, to: 906, era: "migration-age", journal: null, lines: ["all"], prologue: true,
       text: "A prologue for those who start before the town: the valley in the days of Great Moravia.",
       steps: [
-        s("grove", "chapter", [880, 9, 1], "The ring of stones", "A Moravian lord's people raise the stones on the ridge where the cattle sicken. A wise woman says the hill is hungry and must be fed or bound."),
-        s("raid", "world", [902, 6, 1], "Riders on the plain", "Magyar horsemen burn the lowland villages. The valley's people hide in the caves under the ridge and hear something breathing in the rock.", {clocks: {sleeper: 1}}),
-        s("bind", "chapter", [906, 10, 31], "The promise", "With the realm falling, the elders bind the thing under the ridge and promise it one life a generation. The rite holds, and the story waits three hundred years.", {clocks: {sleeper: -1}})
+        s("grove", "chapter", [880, 9, 1], "The ring of stones", "The binders raise twelve standing stones on the crown of the red hill, where the cattle sicken and the ground runs with red roots. The Grove's wolf-kin say the thing below is of the Wyrm."),
+        s("raid", "world", [902, 6, 1], "Riders on the plain", "Magyar horsemen burn the lowland villages. The valley's people hide in the caves under the red hill and hear something breathing in the rock.", {clocks: {sleeper: 1}}),
+        s("bind", "chapter", [906, 10, 31], "The Words, the Ground and the Price", "With the realm falling, the binders and the Grove's kin bind the thing under the hill. A mortal voice speaks the Words, a grey stone from a far field is the Ground, and a child is the Price. Cainite blood falls into the rite, and it is only half made: it holds while the child's father stays.", {clocks: {sleeper: -1}})
       ]},
-    {key: "red-stone", n: 1, title: "What Sleeps Beneath Rothenstein", from: 1200, to: 1202, era: "dark-ages", journal: "What Sleeps Beneath Rothenstein", lines: ["all"],
-      text: "The first book: ten nights from the first of September 1200 to the first snow. Each chapter is a night of play and waits until it has been played, so a company that goes slowly carries the book on into the next years.",
+    // B7805: the omnibus's long watch between the binding and the first night (ruling 20 years)
+    {key: "long-watch", n: 0, title: "The Long Watch", from: 908, to: 1196, era: "premyslid-duchy", journal: null, lines: ["all"], prologue: true,
+      text: "A second prologue: three hundred years of keeping a half-made binding, from the fall of Great Moravia to the year the singing starts under the mine.",
+      steps: [
+        s("hollow", "chapter", [1070, 10, 31], "The Hollow Man", "Altenhof's keepers set a guardian at their lower door, over the keystone in the cellar. It does not sleep, it does not eat, and it lets nobody down the stair."),
+        s("keep", "chapter", [1100, 5, 1], "Blood in the foundations", "A Carpathian stranger with a silent sire raises a keep on the rock above the river and mixes blood into the mortar. Something under the stone answers. The first Hospites elders swear the Charter on the oath cloth."),
+        s("strike", "world", [1150, 8, 1], "The first strike", "Miners find silver in the red hill. The Adit is framed for something taller than a man, and a Silesian overseer goes down with the first shift and does not come up the same."),
+        s("fire", "chapter", [1170, 6, 23], "Altenhof burns", "The binding slips. Altenhof's lord, a keeper of the Grove, sets the tower alight as a Price. The lady goes back up for the candlesticks, the two children are left by the keystone, and Radu sees the Grove stir in the smoke."),
+        s("physician", "world", [1194, 11, 11], "The physician's Embrace", "A physician from Regensburg, who came east in a lord's train, is Embraced in the keep and set to the rites of the flesh."),
+        s("singing", "chapter", [1196, 6, 23], "The singing under the mine", "The physician starts listening to a singing below the last red mark and learning its grammar. The first volunteers write their names in a guest-book in blood. Nobody knows yet what they have caught.")
+      ]},
+    {key: "red-stone", n: 1, title: "What Sleeps Beneath Rothenstein", from: 1200, to: 1203, era: "dark-ages", journal: "What Sleeps Beneath Rothenstein", lines: ["all"],
+      text: "The first book: ten chapters over two years, from St Aegidius' day, 1 September 1200, to the first snow at Martinmas 1202, one act a year with open time between, and a thaw epilogue in the spring of 1203. Each chapter waits until it has been played, so a company that goes slowly carries the book on.",
       doors: {
         vampire: "Bogdan's invitation and the Charter bring the Kindred in, as before.",
-        werewolf: "The Ashfield is a wound in the land the Garou can smell from the passes; a caern's spirits go quiet.",
-        mage: "The Old Grove is a node gone sour, and the Adit's ore rings wrong under a Hermetic's hand.",
-        changeling: "The valley's dreams have a red taste, and a freehold's hob says the Husbandman eats stories too.",
-        wraith: "The miners who died in the deep galleries cannot cross; their Shadowlands are a field of ash.",
-        hunter: "Brother Anselm's watch and the bishop's letters are the hunters' way in; the inquisitors of the age come later.",
+        werewolf: "The Old Grove is an active caern of Silver Fang kin, strained by three hundred years of holding the binding, and the Ashfield is a Wyrm wound they can smell from the passes.",
+        mage: "Old Vlasta of Dolany is a hedge-witch of the Old Faith, and the Grove is a wellspring gone sour.",
+        changeling: "No freehold stands in the valley: the thing's rot drove the fae out long ago. A changeling comes from outside and feels at once how wrong the valley is.",
+        wraith: "Lady Adelheid haunts the ruins of Altenhof, and the fresh graves in St Aegidius' churchyard draw the new dead. What dies on the Ashfield leaves nothing: it is eaten.",
+        hunter: "Brother Anselm's count, Father Ludovic's true Faith and the bishop's Lent inquiry are the hunters' way in; the Pope's inquisitors come later.",
         mortal: "A settler family, a miner's widow or the reeve's clerk sees one thing too many."
       },
       steps: [
-        s("c1", "chapter", [1200, 9, 1], "Chapter I: The First Night", "The company crosses the river at the toll-post, swears the Charter before the voivode and is set before the welcome-feeding. An oath, a haven and one image they cannot shake.", {journal: "Session 1", wait: true}),
+        s("c1", "chapter", [1200, 9, 1], "Chapter I: The First Night", "St Aegidius' day, the parish feast, and the town is full. The company crosses the river at the toll-post, swears the Charter before the voivode and is set before the welcome-feeding. An oath, a haven and one image they cannot shake.", {journal: "Session 1", wait: true}),
         s("i1", "interlude", [1200, 9, 5], "The roads in", "Late summer on the roads. Travellers and the starving come down to the river crossing. Fit encounters: Toll of the Ridge Road, A Stranger at the Toll-Post.", {encounters: ["Encounter 05", "Encounter 13"]}),
-        s("c2", "chapter", [1200, 9, 8], "Chapter II: Court and Currents", "The first full court at Kranzfels. Marta, Konrad and Radu are met, and an errand sets the company between two factions.", {journal: "Session 2", wait: true}),
-        s("c3", "chapter", [1200, 9, 15], "Chapter III: The Ashfield Vigil", "The missing miner and the dead field. Something moved after it should have stopped. The first act ends: nobody can pretend the valley is right.", {journal: "Session 3", wait: true, clocks: {ashfield: 1}, signal: {kind: "saga", weight: 1, words: "the dead field grows in the Moravian valley"}}),
-        s("i2", "interlude", [1200, 9, 20], "Harvest home", "The sheaves come in thin. The council presses the Adit harder, and Bogdan sends a sealed letter east with a trusted courier. Fit encounters: The Harvest Game, The Black Grain, The Wedding Without a Bride.", {clocks: {sleeper: 1}, encounters: ["Encounter 02", "Encounter 04", "Encounter 15"]}),
-        s("c4", "chapter", [1200, 9, 24], "Chapter IV: Into the Adit", "The first descent. Galleries no miner dug, changed miners who still answer to their names, and Konrad at home among them.", {journal: "Session 4", wait: true, clocks: {sleeper: 1}}),
-        s("c5", "chapter", [1200, 10, 1], "Chapter V: Old Debts", "Old Radu, then the Baba's fire in the Grove: a name for the thing under the valley, the outline of a rite, and a debt agreed.", {journal: "Session 5", wait: true}),
-        s("i3", "interlude", [1200, 10, 5], "The town talks", "Father Ludovic writes to the bishop. The margrave's man comes to count the silver. Fit encounters: The Apothecary's Debt, The Margrave's Auditor.", {clocks: {church: 1}, encounters: ["Encounter 06", "Encounter 24"], signal: {kind: "saga", weight: 1, words: "a priest's letters about a Moravian town reach the bishop"}}),
-        s("c6", "chapter", [1200, 10, 8], "Chapter VI: Cracks in the Court", "Loyalty becomes expensive. Bogdan asks more, Marta wants a spy, and a trusted contact already belongs to Konrad.", {journal: "Session 6", wait: true, clocks: {charter: -1}}),
-        s("c7", "chapter", [1200, 10, 15], "Chapter VII: First Contact", "Bogdan's rite in the dark field. Grafted flesh, a vision and a voice offering something true for something small. The second act ends.", {journal: "Session 7", wait: true, clocks: {sleeper: 1}}),
-        s("i4", "interlude", [1200, 10, 20], "The bishop's answer", "An inquiry is ordered. Brother Anselm watches from the North Wood, and the Ashfield crosses the brook. Fit encounters: The Knight Who Wanted a Duel, The Witch of Dolany, The Girl Who Saw the Lady.", {clocks: {church: 2, ashfield: 1}, encounters: ["Encounter 20", "Encounter 21", "Encounter 19"], signal: {kind: "saga", weight: 2, words: "the Church opens an inquiry into a Moravian valley"}}),
-        s("c8", "chapter", [1200, 10, 25], "Chapter VIII: The Net Tightens", "The Lower Town has drawn its own conclusions. Ludovic and Anselm act, Konrad's cult walks in the open, and the company must manage exposure and the blight together.", {journal: "Session 8", wait: true}),
-        s("i5", "interlude", [1200, 10, 29], "The long gathering", "The nights grow long. The pieces of the old rite turn up one by one, and Bogdan overreaches. Fit encounters: The Hermit of the North Wood, The Ruins of Altenhof.", {clocks: {charter: -1}, encounters: ["Encounter 08", "Encounter 09"]}),
-        s("c9", "chapter", [1200, 11, 1], "Chapter IX: The Choosing", "All Saints. Bogdan's confession and the temptation it brings, Konrad's last offer, and the three pieces of the old rite on the altar stone. A decision, a cost and a clock.", {journal: "Session 9", wait: true}),
-        s("c10", "chapter", [1200, 11, 11], "Chapter X: Harvest", "Martinmas. The first snow has shut the High Pass and the keep lights its beacon. The chosen ending plays out, each of the company has a scene alone with what they did, and a messenger comes down from the pass. Pick the ending in the saga window.", {journal: "Session 10", wait: true, ending: ["seal", "sever", "take", "alone"], signal: {kind: "saga", weight: 3, words: "something under a Moravian ridge shows itself at the first snow"}}),
-        s("e1", "interlude", [1201, 3, 25], "The years after", "The valley counts its dead and its debts. The answer to Bogdan's bid comes, or does not. A year later a silent envoy from Constantinople rides in.", {
-          by: {seal: "The binding holds. The Ashfield stops growing, though nothing grows on it yet. Someone must keep the rite each year.", sever: "The ground starts to heal at the edges. Shepherds say the thing under the ridge went east with the spring floods.", take: "The valley is quiet in the wrong way. One of the company sleeps badly and wakes with dirt under their nails.", alone: "Nobody tends the stones. The Ashfield keeps its slow pace, and the court tells itself the worst is over."},
+        s("c2", "chapter", [1200, 9, 15], "Chapter II: Court and Currents", "The first full court at Kranzfels. Marta, Konrad and Radu are met, Sieglinde courts the same favour, Ottilie keeps the minutes, and an errand sets the company between two factions.", {journal: "Session 2", wait: true}),
+        s("i2", "interlude", [1200, 9, 22], "Harvest home", "The sheaves come in thin. The council presses the Adit harder, and Bogdan sends a sealed letter east with a trusted courier. Fit encounters: The Harvest Game, The Black Grain, The Wedding Without a Bride.", {clocks: {sleeper: 1}, encounters: ["Encounter 02", "Encounter 04", "Encounter 15"]}),
+        s("c3", "chapter", [1200, 10, 10], "Chapter III: The Ashfield Vigil", "The missing miner and the dead field at the foot of the red hill. Something moved after it should have stopped. The first act ends: nobody can pretend the valley is right.", {journal: "Session 3", wait: true, clocks: {ashfield: 1}, signal: {kind: "saga", weight: 1, words: "the dead field grows in the Moravian valley"}}),
+        s("w1", "interlude", [1200, 10, 20], "The first winter", "Open time until the thaw. The margrave's man comes to count the silver, the cult grows under the Adit, the Ashfield stands still under snow and the thing under the hill sleeps. Fit encounters: The Margrave's Auditor, The Apothecary's Debt, Smoke in the Lower Town, The Winter Pack.", {clocks: {church: 1}, encounters: ["Encounter 24", "Encounter 06", "Encounter 07", "Encounter 10"], signal: {kind: "saga", weight: 1, words: "a priest's letters about a Moravian town reach the bishop"}}),
+        s("w2", "interlude", [1201, 3, 25], "The double feast", "Easter falls on the Annunciation, and the valley reads it as an omen. The thaw comes late, the river rises and the second act waits under the last snow. Fit encounters: The Dam at the Lower Mill, The Wedding Without a Bride.", {encounters: ["Encounter 16", "Encounter 15"]}),
+        s("c4", "chapter", [1201, 4, 16], "Chapter IV: Into the Adit", "After the thaw, in a late snow. Galleries no miner dug, changed miners who still answer to their names, Kasimir at the fork, and Konrad at home among them.", {journal: "Session 4", wait: true, clocks: {sleeper: 1}}),
+        s("i3", "interlude", [1201, 5, 20], "Summer on the hill", "The Ashfield moves again with the growing season. Fit encounters: The Ruins of Altenhof, The Hermit of the North Wood, The Missing Child, The Witch of Dolany.", {encounters: ["Encounter 09", "Encounter 08", "Encounter 17", "Encounter 21"]}),
+        s("c5", "chapter", [1201, 6, 23], "Chapter V: Old Debts", "St John's Eve, and Dolany keeps the Kupala fires. Old Radu, then the Baba's fire in the Grove inside the festival: a name for the thing under the valley, the outline of a rite, and a debt agreed.", {journal: "Session 5", wait: true}),
+        s("i4", "interlude", [1201, 8, 15], "The second harvest", "The Assumption and the harvest. The town talks, and strangers come to the cross and the shrine. Fit encounters: The Girl Who Saw the Lady, The Knight Who Wanted a Duel, The Blind Man at the Cross.", {encounters: ["Encounter 19", "Encounter 20", "Encounter 22"]}),
+        s("c6", "chapter", [1201, 9, 29], "Chapter VI: Cracks in the Court", "Michaelmas. Loyalty becomes expensive. Bogdan names the season's service, Marta wants a spy, the diocese answers Ludovic, and a trusted contact already belongs to Konrad.", {journal: "Session 6", wait: true, clocks: {charter: -1}}),
+        s("c7", "chapter", [1201, 11, 11], "Chapter VII: First Contact", "Martinmas. Bogdan's rite in the dark field on the red hill's slope. Grafted flesh, a vision and a voice offering something true for something small. The second act ends.", {journal: "Session 7", wait: true, clocks: {sleeper: 1}}),
+        s("w3", "interlude", [1201, 11, 25], "The second winter", "Open time until Lent. The cult grows again, Peter hums a note the bees will not abide, and the bishop orders an inquiry for the spring. Fit encounters: Smoke in the Lower Town, The Winter Pack.", {clocks: {church: 2, ashfield: 1}, encounters: ["Encounter 07", "Encounter 10"], signal: {kind: "saga", weight: 2, words: "the Church opens an inquiry into a Moravian valley"}}),
+        s("c8", "chapter", [1202, 3, 17], "Chapter VIII: The Net Tightens", "Mid-Lent. The Lower Town has drawn its own conclusions. A preacher and a knight come on the bishop's business, Ludovic and Anselm act, Konrad's cult walks in the open, and the company must manage exposure and the blight together.", {journal: "Session 8", wait: true}),
+        s("i5", "interlude", [1202, 6, 1], "The long gathering", "Summer and harvest. The pieces of the old rite turn up one by one, and Bogdan overreaches. Fit encounters: The Hermit of the North Wood, The Ruins of Altenhof.", {clocks: {charter: -1}, encounters: ["Encounter 08", "Encounter 09"]}),
+        s("c9", "chapter", [1202, 9, 29], "Chapter IX: The Choosing", "Michaelmas. Bogdan's confession and the temptation it brings, Konrad's last offer, and the three pieces of the old rite on the altar stone. A decision, a cost and a clock.", {journal: "Session 9", wait: true}),
+        s("c10", "chapter", [1202, 11, 11], "Chapter X: Harvest", "Martinmas. The first snow has shut the High Pass and the keep lights its beacon. The chosen ending plays out, each of the company has a scene alone with what they did, and a second light burns on the pass. Pick the ending in the saga window.", {journal: "Session 10", wait: true, ending: ["seal", "sever", "take", "alone"], signal: {kind: "saga", weight: 3, words: "something under a Moravian hill shows itself at the first snow"}}),
+        s("e1", "interlude", [1203, 4, 6], "The thaw", "Easter 1203. One scene for each thread the ending left open. The valley counts its dead and its debts, and the answer to Bogdan's bid comes, or does not. Before the year is out a silent envoy from Constantinople rides in.", {
+          by: {seal: "The binding holds. The Ashfield stops growing, though nothing grows on it yet. Someone must keep the rite each year.", sever: "The Ashfield draws back to its first edge. The grafts in people stay, and the miners say something below still grows.", take: "The valley is quiet in the wrong way. One of the company sleeps badly and wakes with dirt under their nails.", alone: "Nobody tends the stones. The Ashfield keeps its slow pace, and the court tells itself the worst is over."},
           clocks: {church: -1}})
       ]},
     {key: "patriarch", n: 2, title: "The Patriarch's Last Dream", from: 1203, to: 1204, era: "dark-ages", journal: "The Patriarch's Last Dream (GM only)", lines: ["vampire"],
@@ -138,7 +155,7 @@ export const SAGA = {
       steps: [
         s("news", "world", [1240, 12, 1], "News from Kyiv", "Refugees say a great city in the east has fallen to riders who do not stop.", {signal: {kind: "saga", weight: 2, words: "riders from the steppe are coming west"}}),
         s("host", "world", [1241, 4, 9], "The host in Moravia", "After the battle in Silesia, the riders turn south through Moravia. Villages burn on the plain.", {town: "war", clocks: {sleeper: 1}}),
-        s("refuge", "chapter", [1241, 5, 1], "The caves under the ridge", "The valley's people hide in the caves, as their ancestors did in 902, and the thing in the rock wakes to them.", {by: {seal: "The binding must be kept with a full valley of frightened people sleeping on top of it.", sever: "The caves are empty of it, but something has been living there since it left.", take: "Whoever holds the door could close the caves to the riders, for a price."}}),
+        s("refuge", "chapter", [1241, 5, 1], "The caves under the red hill", "The valley's people hide in the caves, as their ancestors did in 902, and the thing in the rock wakes to them.", {by: {seal: "The binding must be kept with a full valley of frightened people sleeping on top of it.", sever: "The caves are empty of it, but something has been living there since it left.", take: "Whoever holds the door could close the caves to the riders, for a price."}}),
         s("gone", "chapter", [1242, 3, 1], "The riders turn back", "News comes that the Great Khan is dead, and the host goes home. The valley counts who did not come out of the caves.")
       ]},
     {key: "silver", n: 7, title: "Silver Under the Hill", from: 1290, to: 1305, era: "dark-ages", lines: ["all"],
@@ -176,7 +193,7 @@ export const SAGA = {
         s("window", "world", [1618, 5, 23], "Out of the window", "The Bohemian estates throw the emperor's men from a Prague window. Moravia joins the revolt in 1619.", {signal: {kind: "saga", weight: 2, words: "Bohemia is in revolt and war is coming"}}),
         s("white", "world", [1620, 11, 8], "The White Mountain", "The rebels are broken near Prague. Protestant lords lose their lands, and the valley gets a new Catholic master from Vienna.", {clocks: {church: 1}}),
         s("convert", "chapter", [1624, 3, 1], "Convert or leave", "The new lord's Jesuits come with a list. Families of the valley go into exile or kneel. The Herd is broken up.", {town: "exile", clocks: {charter: -1}}),
-        s("swedes", "chapter", [1645, 5, 1], "The Swedes at the pass", "A Swedish army besieges Brno and forages through the hills. Soldiers dig into the ridge for treasure.", {town: "siege", clocks: {sleeper: 1}}),
+        s("swedes", "chapter", [1645, 5, 1], "The Swedes at the pass", "A Swedish army besieges Brno and forages through the hills. Soldiers dig into the red hill for treasure.", {town: "siege", clocks: {sleeper: 1}}),
         s("hunger", "chapter", [1647, 2, 1], "The hungry years", "Plague, famine and wolves after the armies. The Ashfield spreads into fields nobody is alive to plough.", {town: "famine", clocks: {ashfield: 1}}),
         s("peace", "world", [1648, 10, 24], "Peace", "The peace is signed in Westphalia. Half the villages of the valley are empty.")
       ]},
@@ -203,7 +220,7 @@ export const SAGA = {
       text: "Revolution, the end of labour dues, Czech and German neighbours becoming two nations, and the war of 1866 with cholera behind it.",
       steps: [
         s("rising", "world", [1848, 3, 13], "The revolution", "Vienna rises. Labour dues on the land end that summer. The valley's Czech and German halves argue in two languages about what they are.", {signal: {kind: "saga", weight: 2, words: "revolution spreads through the Austrian lands"}}),
-        s("rail", "chapter", [1852, 5, 1], "The railway survey", "Engineers want a line through the valley and a cutting through the red ridge.", {clocks: {sleeper: 1}, by: {seal: "A cutting through the ridge would cut through the binding.", sever: "The cutting opens caves that something has been living in since 1202.", take: "The holder of the door has shares in the railway."}}),
+        s("rail", "chapter", [1852, 5, 1], "The railway survey", "Engineers want a line through the valley and a cutting through the red hill.", {clocks: {sleeper: 1}, by: {seal: "A cutting through the red hill would cut through the binding.", sever: "The cutting opens caves that something has been living in since 1202.", take: "The holder of the door has shares in the railway."}}),
         s("schools", "chapter", [1860, 9, 1], "Two schools", "The town splits into a Czech school and a German one. Old families take sides, and so do the Kindred who feed on them.", {clocks: {charter: -1}}),
         s("war", "world", [1866, 7, 3], "The Prussians", "After the battle at Hradec Králové, Prussian troops march through Moravia with cholera in their wagons.", {town: "war", clocks: {ashfield: 1}}),
         s("cholera", "chapter", [1866, 8, 1], "The cholera summer", "The Lower Town buries a tenth of its people in a month. The Shroud is thin over the new cemetery.", {town: "plague"})
@@ -212,7 +229,7 @@ export const SAGA = {
       text: "The Great War takes the valley's men to Galicia and the Isonzo, and brings back the influenza and a new state.",
       steps: [
         s("call", "world", [1914, 7, 31], "Mobilisation", "Posters go up in two languages. The valley's young men go east.", {town: "war", signal: {kind: "saga", weight: 2, words: "the Great War takes a Moravian valley's young men"}}),
-        s("letters", "chapter", [1916, 3, 1], "Letters from the front", "A soldier in a trench in Galicia writes home about a dream of the red ridge, and says something there knew their name.", {clocks: {sleeper: 1}}),
+        s("letters", "chapter", [1916, 3, 1], "Letters from the front", "A soldier in a trench in Galicia writes home about a dream of the red hill, and says something there knew their name.", {clocks: {sleeper: 1}}),
         s("hunger", "chapter", [1917, 1, 15], "The hungry winter", "Hunger in the towns. The Ashfield is ploughed for the first time in centuries, by desperate people.", {town: "famine", clocks: {ashfield: 1}}),
         s("republic", "world", [1918, 10, 28], "The republic", "Czechoslovakia is declared. The German town wakes up in a Czech state.", {clocks: {charter: -1}}),
         s("flu", "chapter", [1918, 11, 1], "The influenza", "The flu kills more of the valley than the war did. Wraiths crowd the Shadowlands of the new cemetery.", {town: "plague"}),
@@ -229,9 +246,9 @@ export const SAGA = {
         s("coup", "world", [1948, 2, 25], "February", "The Communist Party takes power. The church lands, the mines and the people's secrets belong to the state now.", {clocks: {church: 1}})
       ]},
     {key: "grey-shaft", n: 16, title: "The Grey Shaft", from: 1951, to: 1989, era: "mid-century", lines: ["all"],
-      text: "Uranium mining under the ridge, the secret police, the Prague Spring and its end, and the slow fall of the regime.",
+      text: "Uranium mining under the red hill, the secret police, the Prague Spring and its end, and the slow fall of the regime.",
       steps: [
-        s("survey", "chapter", [1951, 6, 1], "The prospectors", "State geologists with Soviet advisers find uranium under the red ridge. The Adit becomes a numbered shaft behind wire.", {town: "boom", clocks: {sleeper: 2}, by: {seal: "The binding lies in the path of the new shaft.", sever: "The shaft opens the caves the thing lived in; the geologists find its bed.", take: "The holder of the door goes to work for the ministry."}}),
+        s("survey", "chapter", [1951, 6, 1], "The prospectors", "State geologists with Soviet advisers find uranium under the red hill. The Adit becomes a numbered shaft behind wire.", {town: "boom", clocks: {sleeper: 2}, by: {seal: "The binding lies in the path of the new shaft.", sever: "The shaft opens the caves the thing lived in; the geologists find its bed.", take: "The holder of the door goes to work for the ministry."}}),
         s("camp", "chapter", [1953, 1, 1], "The labour camp", "Political prisoners dig the shaft. The dead are many, and the guards find their ghosts do not rest.", {clocks: {ashfield: 1}}),
         s("spring", "world", [1968, 8, 21], "The tanks", "The Warsaw Pact ends the Prague Spring. The valley's informers go back to work.", {signal: {kind: "saga", weight: 2, words: "the tanks come into Czechoslovakia"}}),
         s("file", "chapter", [1977, 1, 1], "The file", "The secret police open a file on a family of the valley whose members do not age.", {clocks: {church: 2}}),
@@ -243,20 +260,20 @@ export const SAGA = {
         s("flood", "world", [1997, 7, 7], "The flood", "A week of rain and the river takes the Lower Town. The water goes down into the old shafts and comes up somewhere else.", {town: "flood", clocks: {sleeper: 1, ashfield: 1}, signal: {kind: "saga", weight: 3, words: "flood waters open old shafts under a Moravian ridge"}}),
         s("mud", "chapter", [1997, 8, 1], "What the mud left", "Volunteers clearing the Lower Town find bones that are older than the town, and some that are not."),
         s("tourists", "chapter", [1998, 6, 1], "The heritage trail", "A European grant turns the old mine into a museum. Visitors go down every day."),
-        s("dreams", "chapter", [1999, 7, 1], "Red dreams", "In the summer of 1999 everyone touched by the valley dreams of a red star and a waking giant. The Husbandman dreams too, and it is not afraid.", {clocks: {sleeper: 1}, signal: {kind: "saga", weight: 3, words: "a sleeper under the red ridge dreams the red star's dream"}})
+        s("dreams", "chapter", [1999, 7, 1], "Red dreams", "In the summer of 1999 everyone touched by the valley dreams of a red star and a waking giant. The Hospodář dreams too, and it is not afraid.", {clocks: {sleeper: 1}, signal: {kind: "saga", weight: 3, words: "a sleeper under the red hill dreams the red star's dream"}})
       ]},
-    {key: "judgment", n: 18, title: "Judgment Under the Ridge", from: 2004, to: 2030, era: "time-of-judgment", lines: ["all"],
+    {key: "judgment", n: 18, title: "Judgment Under the Red Hill", from: 2004, to: 2030, era: "time-of-judgment", lines: ["all"],
       text: "The last book of the main timeline. The long clocks come due, and the valley learns whether eight hundred years of keeping were worth it.",
       steps: [
-        s("signs", "world", [2004, 1, 1], "The signs", "The Time of Judgment begins in the world beyond the valley. Whatever the Storyteller has chosen for it, the ridge answers.", {clocks: {sleeper: 1}}),
-        s("count", "chapter", [2005, 6, 1], "The reckoning of the clocks", "Read the saga's long clocks. A full Husbandman walks; an empty Charter means the Kindred fight each other first; a full Church's eye means the state already knows.", {by: {seal: "The keepers of the binding, if any line of them is left, are the valley's last defence.", sever: "The thing comes home from wherever it went, older and fed.", take: "The one who holds the door decides who comes through."}}),
-        s("ridge", "chapter", [2010, 10, 31], "The last night on the ridge", "The company, or their heirs, go up to the Old Grove for the last time.", {ending: ["seal", "sever", "take"]}),
+        s("signs", "world", [2004, 1, 1], "The signs", "The Time of Judgment begins in the world beyond the valley. Whatever the Storyteller has chosen for it, the red hill answers.", {clocks: {sleeper: 1}}),
+        s("count", "chapter", [2005, 6, 1], "The reckoning of the clocks", "Read the saga's long clocks. A full Hospodář walks; an empty Charter means the Kindred fight each other first; a full Church's eye means the state already knows.", {by: {seal: "The keepers of the binding, if any line of them is left, are the valley's last defence.", sever: "The thing comes home from wherever it went, older and fed.", take: "The one who holds the door decides who comes through."}}),
+        s("ridge", "chapter", [2010, 10, 31], "The last night on the red hill", "The company, or their heirs, go up to the Old Grove for the last time.", {ending: ["seal", "sever", "take"]}),
         s("after", "chapter", [2030, 6, 23], "Saint John's Eve, 2030", "Eight hundred and thirty-three years after the guest-feast. Whatever is left of Rothenstein lights its midsummer fires.")
       ]},
     {key: "arcology", n: 19, title: "The Valley Under Glass", from: 2031, to: 2300, era: "future-darkness", lines: ["all"], branch: "future",
-      text: "Only on the World of Future Darkness branch, which is off unless the Storyteller turns it on. The valley's heirs in an arcology that was built over the red ridge.",
+      text: "Only on the World of Future Darkness branch, which is off unless the Storyteller turns it on. The valley's heirs in an arcology that was built over the red hill.",
       steps: [
-        s("built", "world", [2060, 1, 1], "The arcology", "A sealed city is raised over the valley, and the ridge is its foundation."),
+        s("built", "world", [2060, 1, 1], "The arcology", "A sealed city is raised over the valley, and the red hill is its foundation."),
         s("deep", "chapter", [2075, 1, 1], "The lowest levels", "Maintenance crews on the lowest levels report a warm wall that breathes.", {clocks: {sleeper: 1}}),
         s("heir", "chapter", [2090, 1, 1], "The last heir", "Someone in the arcology carries the blood of the valley's keepers, and the wall knows it.")
       ]}
