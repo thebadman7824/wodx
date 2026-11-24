@@ -195,10 +195,13 @@
     },
     "shown": {
      "what": "the ambush roll on the card, and the free attack or the first turn it gives"
+    },
+    "gated": {
+     "gate": "tools/gate/gateambush.mjs",
+     "step": "1. a hidden attacker's Attack rolls the ambush with the sheets' pools"
     }
    },
    "open": [
-    "gated: gatefight 'ambush from hiding' is a direct call (tools/registry/strength.mjs); no step drives a hidden attacker's real attack",
     "book: the code cites V20 printed p. 274 and V20 Dark Ages printed p. 345; not checked against the book text yet"
    ],
    "deferred": [],
@@ -501,10 +504,13 @@
     },
     "shown": {
      "what": "the attack card names the lock and a misfire or wet powder"
+    },
+    "gated": {
+     "gate": "tools/gate/gatepowder.mjs",
+     "step": "1. wet powder will not fire from the attack window"
     }
    },
    "open": [
-    "gated: gatehuntpowder '7. black powder' is a direct call; no step fires a real gun in the rain",
     "book: the code cites V20 printed p. 272 (a botched shot) and p. 278 (reload); not checked against the book text yet"
    ],
    "deferred": [],
