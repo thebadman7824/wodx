@@ -53,11 +53,16 @@ export async function run() {
     });
 
     await G.step("3. standing still", async () => {
-      await A.give(tok, FIG);
-      await waitFor(() => shown().w === SR.FRAME_W && shown().sheet === SR.FRAME_W * (SR.FRAMES + 1), 15000);
+      const given = await A.give(tok, FIG);
+      const t0 = Date.now();
+      const loaded = await waitFor(() => shown().w === SR.FRAME_W && shown().sheet === SR.FRAME_W * (SR.FRAMES + 1), 15000);
       await sleep(600);
       const s = shown();
-      G.ok("3. standing still", s.w === SR.FRAME_W && s.x === SR.FRAME_W * SR.FRAMES, {shown: s});
+      // B7852: after other gates the picture once stayed one frame wide (#2412); record which picture the token shows
+      const src = String(tok.texture?.src ?? ""), mesh = String(tok.object?.mesh?.texture?.baseTexture?.resource?.src ?? tok.object?.mesh?.texture?.source?.resource?.src ?? tok.object?.mesh?.texture?.label ?? "");
+      G.ok("3. standing still", s.w === SR.FRAME_W && s.x === SR.FRAME_W * SR.FRAMES, {shown: s, loaded, waited: Date.now() - t0,
+        given: given === undefined ? "none" : (typeof given === "object" ? Object.keys(given ?? {}).slice(0, 6) : given),
+        src: src.split("/").slice(-2).join("/"), mesh: mesh.split("/").slice(-2).join("/"), want: SR.sheetPath?.(FIG)?.split("/").slice(-2).join("/"), act: act()});
     });
 
     await G.step("4. at rest: a stool of its own", async () => {

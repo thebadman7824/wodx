@@ -7,3 +7,6 @@
 {"file":"tools/gate/gategadgets.mjs","verdict":"working","how":"read each changed create and its uses; madeInOrder matches by name via kit inOrder, names unique in each batch; node --check; guard tests pass","hash":"5666a1da6094","at":"2026-11-23T14:34Z"}
 {"file":"tools/gate/gatecook.mjs","verdict":"working","how":"read each changed create and its uses; madeInOrder matches by name via kit inOrder, names unique in each batch; node --check; guard tests pass","hash":"c2a33941451f","at":"2026-11-23T14:34Z"}
 {"file":"changes/decisions/B7770.md","verdict":"working","how":"read in full; block claimed by this thread","hash":"8252460c3052","at":"2026-11-23T14:34Z"}
+{"file":"tools/gate/gatedach8.mjs","verdict":"working","how":"read in full; detail only, pass conditions unchanged; node --check; guard tests pass","hash":"e12854e93c36","at":"2026-11-24T08:52Z"}
+{"file":"tools/gate/gatespritelife.mjs","verdict":"working","how":"read in full; detail only, pass conditions unchanged; node --check; guard tests pass","hash":"075a91ff8f93","at":"2026-11-24T08:52Z"}
+{"file":"changes/decisions/B7850.md","verdict":"working","how":"read in full; block claimed by this thread","hash":"6ea5fe625c80","at":"2026-11-24T08:52Z"}

@@ -94,22 +94,33 @@ export async function run() {
       const btn = document.querySelector(`[data-message-id="${card?.id}"] [data-wodx-swarm-dodge]`);
       const dice = Number(va().system?.attributes?.dexterity?.value) + Number(va().system?.abilities?.athletics?.value || 0);
       const forced = await force(10);
-      let dodged = null, before = 0, harm = -1;
+      let dodged = null, before = 0, harm = -1, lines = null;
+      // B7851: the step failed with the dodge counted and no harm at all (#2411); record what the turn saw and wrote
+      const t0 = Date.now(), key = () => game.combat?.started ? `${game.combat.id}:${game.combat.round}` : "scene";
+      const why = {};
       try {
         btn?.click();
         await waitFor(() => !!va().getFlag("wodx-combat", "swarmDodge"), 20000).catch(() => null);
         dodged = va().getFlag("wodx-combat", "swarmDodge");
         before = filledOf(va());
-        try { await WC.swarm.turn(swarmTok.object); } finally { CONFIG.Dice.randomUniform = dice0; }
+        why.keyAtTurn = key(); why.inside = WC.swarm.victimsOf(swarmTok.object).map(t => t.id === vTok.id ? "victim" : t.name);
+        why.autoApply = game.settings.settings.has("wodx-combat.autoApply") ? game.settings.get("wodx-combat", "autoApply") : null;
+        try { lines = await WC.swarm.turn(swarmTok.object); } finally { CONFIG.Dice.randomUniform = dice0; }
         // The bite's harm is written after the turn's card (on a slower lane well after); the dice go back first, as in
         // step 5, so a soak rolled late does not roll the forced tens
         await waitFor(() => filledOf(va()) !== before, 60000).catch(() => null);
         harm = filledOf(va()) - before;
+        const text = m => String(m.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+        const since = game.messages.contents.filter(m => (m.timestamp ?? 0) >= t0);
+        why.lines = lines;
+        why.bite = since.filter(m => /swarms/.test(text(m))).map(m => text(m).slice(0, 160)).at(-1) ?? null;
+        why.damage = since.filter(m => /takes damage/.test(text(m))).map(m => text(m).slice(0, 160)).at(-1) ?? null;
+        why.keyNow = key();
       } finally { CONFIG.Dice.randomUniform = dice0; vTok.object?.release?.(); }
       // three dice at 4 forced to tens: three successes, less the dodge's
       const want = Math.max(0, 3 - Number(dodged?.successes));
       G.ok("5b. dodging the swarm from its card takes the dodge's successes off the next bite", forced && !!btn && Number(dodged?.successes) === dice && harm === want,
-        {button: !!btn, dice, dodged, harm, want});
+        {button: !!btn, dice, dodged, harm, want, why});
     });
 
     await G.step("6. harm to the swarm: a blade does one, fire disperses it", async () => {
