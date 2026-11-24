@@ -20,7 +20,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-senses | not yet | 0 | 0 | 0 |
 | wodx-sheets | yes | 20 | 0 | 3 |
 | wodx-solo | not yet | 0 | 0 | 0 |
-| wodx-storyteller | not yet | 3 | 0 | 1 |
+| wodx-storyteller | not yet | 4 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
 | wodx-voices | not yet | 0 | 0 | 0 |
 
@@ -38,7 +38,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feeding: what the Kiss does to the vessel, clan and bloodline palates, and the night's hunt (`actions.feeding`) | core | gated | 1 | gatefeed 2 feed on an unlinked mortal |
 | Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 3 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
 | How often a power may be used, and the costs it pays when it ends (`actions.limits-costs`) | core | shown | 1 |  |
-| Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 3 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
+| Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 4 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
 | Nature gives Willpower back when the character acts to it (`actions.nature`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
 | Powers that act each turn while they hold (`actions.timed-powers`) | core | gated |  | gatetimedpowers 1. a Heart Claw takes a lethal level on the bearer's next turn |
@@ -197,3 +197,4 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Great events and war at home in the sky over the towns (`storyteller.event-looks`) | core | gated | 1 | gatedatedplay 5 |
 | Market news: dated events and trade move the markets, applied from a card (`storyteller.market-news`) | core | gated |  | gatedatedplay 4 |
 | The Ledger: a dated debt, oath or boon comes due as the clock passes it (`storyteller.ledger-due`) | core | shown | 2 |  |
+| An inquisitor cell to live in: the daily round and chapter, rector and officers, the chapter-house, the Flock, confession, retreats (`storyteller.inquisitor-cell`) |  | gated | 2 | gateinqcell 3. Holy Ground 2 at the chapter-house: on the sheet, and two Willpower on waking |

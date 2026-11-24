@@ -107,6 +107,13 @@ export const ROTHENSTEIN = {
       {match: "Anselm", hunter: {precursor: "faithful", faith: 1}}
     ]
   },
+  // B7898: the hunters' household before the Inquisition (1223): no Rule, no rector, no Council of Faith. Father Ludovic
+  // lends his presbytery; the parish prays with them. WoDX Storyteller's cell window begins it from here.
+  cells: [
+    {key: "st-aegidius", name: "The faithful at St. Aegidius", precursor: true, members: ["Anselm", "Thibault"],
+      house: {kind: "presbytery", name: "Father Ludovic's Presbytery", disguise: "A priest's house like any other", servants: "Ludovic's housekeeper"},
+      flock: {name: "The parish of St. Aegidius", rating: 1, notes: "Lower Town households who come to Ludovic's Mass."}}
+  ],
   // The Ways step (B4810-B4813): the old world's exits between the walkable maps become Ways, and each place inside gets a
   // door from the street it stands on. By scene name; the door's end sits on the street map's south edge until the
   // Storyteller moves it. A private place of a schemer is locked (the lock rules decide); Bogdan's rooms ask first.

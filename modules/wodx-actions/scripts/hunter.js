@@ -430,16 +430,20 @@ export function build(ctx) {
         const g = groundUnder(actor);
         const gRating = g ? (g.own ? g.o.rating : 0) : null;
         const gLine = g ? (g.own ? `Praying in ${g.name}${g.words ? `, kept for ${g.words}` : ""}: Holy Ground ${g.o.rating}.` : `${g.name} is kept for ${g.words || "another faith"}: it is no holy ground to them (Holy Ground 0).`) : "";
+        // B7893-B7894: the cell's chapter-house Holy Ground and its Flock, when the map and the sheet have none
+        const cell = f.cell ?? null, houseHoly = n(cell?.holy), ownFlock = ctx.background(actor, "flock"), cellFlock = ownFlock ? 0 : n(cell?.flock);
         const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety} (prayer never raises it above Piety).${run ? ` Day ${run + 1} in a row: +${run} difficulty.` : ""}</p>${gLine ? `<p class="vta-note">${esc(gLine)}</p>` : ""}
           <div class="form-group"><label>Where</label><select name="src" data-fixed><option value="ground">Holy Ground (its rating)</option><option value="relic">Over a Holy Relic</option><option value="flock">With their Flock</option></select></div>
-          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${gRating ?? (ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1)}" min="0" max="5"/></div>
+          ${gRating === null && houseHoly ? `<div class="form-group"><label><input type="checkbox" name="house" checked/> At the chapter-house${cell.house ? `, ${esc(cell.house)}` : ""}: Holy Ground ${houseHoly}</label></div>` : ""}
+          ${cellFlock ? `<p class="vta-note">With the Flock: the cell's Flock${cell.flockName ? `, ${esc(cell.flockName)}` : ""}, ${cellFlock}.</p>` : ""}
+          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${gRating ?? (ownFlock || ctx.background(actor, "holy relic") || 1)}" min="0" max="5"/></div>
           <div class="form-group"><label>Hours of prayer</label><input type="number" name="hours" value="1" min="1" max="5"/></div>
           ${knows(actor, /wreathed in shadows/i) && ctx.background(actor, "flock") ? `<div class="form-group"><label><input type="checkbox" name="wreathed"/> With their Flock, Wreathed in Shadows (Zeal): gain the Flock's ${ctx.background(actor, "flock")} Conviction at once as well as the roll, even past Piety; the Flock is wrung out for any other inquisitor today</label></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Prayer: ${actor.name}`, content, "Pray", async fd => {
             const diff = H.prayerDifficulty(n(fd.hours), run);
             // holy ground on the map is read, not typed: its rating, or none for a house of another faith
-            const rating = fd.src === "ground" && gRating !== null ? gRating : n(fd.rating);
+            const rating = fd.src === "ground" && gRating !== null ? gRating : fd.src === "ground" && fd.house && houseHoly ? houseHoly : fd.src === "flock" && cellFlock ? cellFlock : n(fd.rating);
             fd.rating = rating;
             const r = await rollPool(rating, diff);
             // B7065: Wreathed in Shadows (Zeal), Dark Ages: Inquisitor p. 184: the Flock's rating at once, and this one may pass Piety
@@ -449,7 +453,7 @@ export function build(ctx) {
             await setConviction(actor, to);
             await setInq(actor, { prayerDay: today, prayerRun: run });
             const tnote = fd.advance ? await spendTime(actor, n(fd.hours) * 3600, "prayer") : "";
-            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + (flock ? `<div class="vta-note">Wreathed in Shadows (Zeal): +${flock} from the Flock at once, on top of the roll. The Flock is wrung out: no other inquisitor draws on it today (Dark Ages: Inquisitor p. 184).</div>` : "") + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
+            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + (fd.src === "ground" && gRating === null && fd.house && houseHoly ? `<div class="vta-note">At the chapter-house: Holy Ground ${houseHoly} from the cell's pooled Chapter-House (Dark Ages: Inquisitor p. 155).</div>` : "") + (fd.src === "flock" && cellFlock ? `<div class="vta-note">Joint prayer with the cell's Flock${cell.flockName ? `, ${esc(cell.flockName)}` : ""} (${cellFlock}).</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + (flock ? `<div class="vta-note">Wreathed in Shadows (Zeal): +${flock} from the Flock at once, on top of the roll. The Flock is wrung out: no other inquisitor draws on it today (Dark Ages: Inquisitor p. 184).</div>` : "") + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
         });
     }
 
@@ -465,16 +469,68 @@ export function build(ctx) {
         return post(actor, `${actor.name}: a holy relic`, rollBlock(`Holy Relics (${rating})`, r) + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>`, [r.roll]);
     }
 
+    /**
+     * B7895: a retreat (Companion pp. 95-96): a week to a month in cloister, on pilgrimage or alone. While it lasts the
+     * bank may pass one point a day, up to the highest Superior Virtue and its Virtue. One sought for an Endowment and
+     * ended early is rushed: a Curse roll.
+     */
+    async function retreat(actor, { days = 7, purpose = "bank", kind = "cloister" } = {}) {
+        const i = inq(actor), t = game.time.worldTime, d = CR.retreatDays(days);
+        if (CR.onRetreat(i.f.retreat, t)) return ctx.notify(`${actor.name} is on retreat already.`);
+        const r = { from: t, until: t + d * DAY, purpose: purpose === "endowment" ? "endowment" : "bank", kind: CR.RETREAT.kinds[kind] ? kind : "cloister" };
+        await setInq(actor, { retreat: r });
+        return post(actor, `${actor.name} goes on retreat`, `<div class="vta-note">${esc(CR.RETREAT.kinds[r.kind])}, for ${d} days${r.purpose === "endowment" ? ", to let an Endowment come in its own time" : ", to bank Conviction"}. Banking while away: up to ${CR.retreatCap(i, i.v)} (the highest Superior Virtue and its Virtue).</div><div class="wodx-quiet">${CR.COMPANION} pp. 95-96</div>`);
+    }
+    async function endRetreat(actor) {
+        const i = inq(actor), r = i.f.retreat, t = game.time.worldTime;
+        if (!r) return ctx.notify(`${actor.name} is not on retreat.`);
+        const end = CR.retreatEnd(r, t, DAY);
+        await setInq(actor, { retreat: null });
+        const msg = await post(actor, `${actor.name} comes back from retreat`, `<div class="${end.rushed ? "vta-warn" : "vta-res"}">${end.days} days away.${end.rushed ? " Ended before its time, with an Endowment sought: pride in rushing it, and the Curse roll follows." : ""}</div><div class="wodx-quiet">${CR.COMPANION} p. 96</div>`);
+        if (end.rushed) await curseRoll(actor, { from: "endowment", why: "A retreat rushed" });
+        return { ...end, msg };
+    }
+    /** B7893: waking on Holy Ground, the map's or the chapter-house's: two Willpower back, once a morning (Companion p. 98). */
+    async function wake(actor, { atHouse = false } = {}) {
+        const i = inq(actor), today = Math.floor(game.time.worldTime / DAY);
+        if (i.f.wakeDay === today) return null;
+        const g = groundUnder(actor), rating = g?.own ? n(g.o.rating) : atHouse ? n(i.f.cell?.holy) : 0;
+        if (rating <= 0) return null;
+        const wp = actor.system?.advantages?.willpower ?? {}, cur = n(wp.temporary), max = n(wp.permanent), to = Math.min(max, cur + 2);
+        await actor.update({ "system.advantages.willpower.temporary": to });
+        await setInq(actor, { wakeDay: today });
+        return post(actor, `${actor.name} wakes on holy ground`, `<div class="vta-res good">Willpower ${cur} → ${to}: a night's sleep on holy ground${g?.own ? `, ${esc(g.name)}` : i.f.cell?.house ? `, ${esc(i.f.cell.house)}` : ""}.</div><div class="wodx-quiet">${CR.COMPANION} p. 98</div>`);
+    }
+    /** B7896: Sanctification of the Homestead (Companion p. 116): an hour's rite, the standard ritus roll at 7. */
+    async function homestead(actor, { rating = null } = {}) {
+        const go = async art => {
+            const pool = attr(actor, "intelligence") + n(art);
+            const r = await rollPool(pool, 7);
+            await post(actor, `${actor.name}: Sanctification of the Homestead`, rollBlock(`Intelligence + Holy Art (${n(art)})`, r, ["difficulty 7"]) + `<div class="vta-res">${r.botch ? "A botch." : r.successes > 0 ? `${r.successes} day${r.successes === 1 ? "" : "s"} of ward.` : "No hold."}</div><div class="wodx-quiet">${CR.COMPANION} p. 116</div>`, [r.roll]);
+            return { successes: r.botch ? 0 : r.successes, botch: !!r.botch };
+        };
+        if (rating !== null) return go(rating);
+        return dialog(`Sanctification of the Homestead: ${actor.name}`, `<form><p>Holy water in every quarter, an ounce of frankincense and an hour of scripture (${CR.COMPANION} p. 116).</p><div class="form-group"><label>Holy Art rating</label><input type="number" name="rating" value="2" min="2" max="5"/></div></form>`, "Begin", fd => go(fd.rating));
+    }
+
     async function cashIn(actor) {
         const i = inq(actor);
+        // B7895: one point a day, or on retreat up to the highest Superior Virtue and its Virtue (Companion p. 96)
+        const today = Math.floor(game.time.worldTime / DAY), away = CR.onRetreat(i.f.retreat, game.time.worldTime);
+        const room = CR.bankRoom({ onRetreat: away, cap: CR.retreatCap(i, i.v), banked: i.banked, today, bankDay: i.f.bankDay ?? null, bankedToday: i.f.bankedToday });
         const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, banked ${i.banked}. Banking takes an hour of prayer a point; more than one a day needs a retreat (Dark Ages: Inquisitor p. 161).</p>
-          <div class="form-group"><label>Bank this many</label><input type="number" name="bank" value="0" min="0" max="${i.conviction}"/></div>
+          <p class="vta-note">${esc(room.why)} Room now: ${room.max}.</p>
+          <div class="form-group"><label>Bank this many</label><input type="number" name="bank" value="0" min="0" max="${Math.min(i.conviction, room.max)}"/></div>
           <div class="form-group"><label>Then buy</label><select name="buy" data-fixed><option value="">Nothing yet</option>${Object.entries(H.CASH_IN).map(([k, c]) => `<option value="${k}" ${i.banked >= c ? "" : ""}>${{ superior: "A Superior Virtue dot", orison: "An Orison", acolyte: "An Acolyte Endowment", advocate: "An Advocate Endowment", judge: "A Judge Endowment" }[k]} (${c})</option>`).join("")}</select> <select name="which" data-fixed>${Object.entries(H.SUPERIOR_LABEL).map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select></div>
           <div class="form-group"><label><input type="checkbox" name="inplay"/> An Endowment learned in play, not in a retreat: roll for a Curse (p. 203)</label> <label><input type="checkbox" name="newcat"/> of a kind they have none of yet</label> <label><input type="checkbox" name="legacy"/> a Legacy</label></div>${i.cocytus ? `<p class="vta-warn">In Cocytus: banked Conviction goes to Superior Virtues only (p. 204).</p>` : ""}${hasFeat(actor, /god.?s judgment/i) ? `<p class="vta-warn">God's Judgment: some Blessings are barred to them, by the Flaw's rating (${CR.REF} p. 169).</p>` : ""}</form>`;
         return dialog(`Bank Conviction: ${actor.name}`, content, "Go", async fd => {
-            const bank = Math.min(i.conviction, n(fd.bank));
+            const bank = Math.max(0, Math.min(i.conviction, room.max, n(fd.bank)));
             let banked = i.banked + bank, html = bank ? `<div class="vta-note">${bank} Conviction banked (${banked} in all).</div>` : "";
-            if (bank) await setConviction(actor, i.conviction - bank);
+            if (n(fd.bank) > bank) html += `<div class="vta-warn">${esc(room.why)}</div>`;
+            if (bank) {
+                await setConviction(actor, i.conviction - bank);
+                await setInq(actor, { bankDay: today, bankedToday: (i.f.bankDay === today ? n(i.f.bankedToday) : 0) + bank });
+            }
             if (fd.buy) {
                 const c = H.CASH_IN[fd.buy];
                 if (banked < c) html += `<div class="vta-warn">${c} banked needed; ${banked} so far.</div>`;
@@ -822,7 +878,7 @@ export function build(ctx) {
     }
 
     return { powersFor, ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, sinRoll, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow, holyArtifact, makeArtifact,
-        curseRoll, offerCurse, takeCurse, pietyPrompt, vision, onChatButton };
+        curseRoll, offerCurse, takeCurse, pietyPrompt, vision, onChatButton, retreat, endRetreat, wake, homestead };
 }
 
 export function registerSettings() {

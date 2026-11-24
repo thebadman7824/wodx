@@ -12,6 +12,7 @@
  *   Virtues: the Nature becomes the Impulse for good, Willpower comes back only by acting on it, and every Conviction
  *   spent on anything but a Superior Virtue is also taken from the bank.
  */
+import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Inquisitor";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -199,3 +200,35 @@ export const PRECURSORS = {
     murnau: { label: "Of the House of Murnau, with the family's sense for evil", order: "murnau", page: "pp. 67, 69" },
     faithful: { label: "One of the lone Faithful", order: "", page: "p. 62" }
 };
+
+/* ---------------- Retreats (Dark Ages: Inquisitor Companion pp. 95-96; Dark Ages: Inquisitor p. 161) ---------------- */
+
+export const COMPANION = "Dark Ages: Inquisitor Companion";
+/** A retreat lasts a week to a month (Companion p. 96); the troupe sets its length when it begins. */
+export const RETREAT = { min: 7, max: 30, kinds: { cloister: "In cloister", pilgrimage: "On pilgrimage, apart from the cell", alone: "Alone, far from the work of the Inquisition" } };
+export const retreatDays = d => Math.min(RETREAT.max, Math.max(RETREAT.min, Math.trunc(n(d)) || RETREAT.min));
+/** The most a retreat lets an inquisitor bank: the highest Superior Virtue plus the Virtue over it (Companion p. 96). */
+export function retreatCap(sv = {}, v = {}) {
+    const of = { faith: "conscience", wisdom: "selfcontrol", zeal: "courage" };
+    return Math.max(0, ...Object.entries(of).filter(([k]) => n(sv[k]) > 0).map(([k, vk]) => n(sv[k]) + n(v[vk])));
+}
+/**
+ * How much may be banked now. Off retreat: one point a day (p. 161). On retreat: up to the cap, whatever the day.
+ * @returns {{max, why}}
+ */
+export function bankRoom({ onRetreat = false, cap = 0, banked = 0, today = 0, bankDay = null, bankedToday = 0 } = {}) {
+    if (onRetreat) return { max: Math.max(0, n(cap) - n(banked)), why: `On retreat: up to ${n(cap)} banked (the highest Superior Virtue and its Virtue, ${COMPANION} p. 96).` };
+    const used = bankDay === today ? n(bankedToday) : 0;
+    return { max: Math.max(0, 1 - used), why: "One point a day; more needs a retreat (Dark Ages: Inquisitor p. 161)." };
+}
+/** Is a retreat on at time t? */
+export const onRetreat = (r, t) => !!r && n(t) >= n(r.from) && n(t) < n(r.until);
+/**
+ * The end of a retreat. One ended before its time while an Endowment was sought is rushed: pride, and a Curse roll
+ * (Companion p. 96; WoDX reads "rushed" as ended early, B7895).
+ */
+export function retreatEnd(r, t, day = DAY) {
+    const days = Math.max(0, Math.floor((n(t) - n(r?.from)) / day));
+    const rushed = !!r && r.purpose === "endowment" && n(t) < n(r.until);
+    return { days, rushed };
+}

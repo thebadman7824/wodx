@@ -49,6 +49,7 @@ import * as PowerLooks from "./power-looks.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as FaeOaths from "./fae-oaths.mjs";
 import * as Sept from "./sept.mjs";
+import * as Cell from "./cell.mjs";
 import * as Power from "./power.mjs";
 import * as Herds from "./herds.mjs";
 import * as Sites from "./sites.mjs";
@@ -151,6 +152,7 @@ Hooks.once("init", () => {
   FaeOaths.registerFaeOathHooks();
   Sept.registerSeptSettings(); // B7874: a sept to live in
   Sept.registerSeptHooks();
+  Cell.registerCellSettings(); // B7891: an inquisitor cell to live in
   Power.registerPowerSettings();
   Herds.registerHerdSettings();
   Sites.registerSiteSettings();
@@ -268,7 +270,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, receiveForeign: Money.receiveForeign, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), townScars: TownScars.api(), sickLooks: SickLooks.api(), powerLooks: PowerLooks.api(), contagion: Contagion.api(), faeOaths: FaeOaths.api(), sept: Sept.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), townScars: TownScars.api(), sickLooks: SickLooks.api(), powerLooks: PowerLooks.api(), contagion: Contagion.api(), faeOaths: FaeOaths.api(), sept: Sept.api(), cell: Cell.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     // B4861-B4866: the world's own hand (the watch, hunters, road encounters, levers)
@@ -407,6 +409,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => FaeOaths.FaeOathsApp.open()};
   tokens.tools.wodxSept = {name: "wodxSept", title: "The sept (chores, the moot, offices, rites taught by an elder, rank challenges)", icon: "fa-solid fa-moon", order: 114.3,
     button: true, visible: game.user.isGM, onChange: () => Sept.SeptApp.open()};
+  tokens.tools.wodxCell = {name: "wodxCell", title: "The inquisitor cell (the daily round and chapter, rector, chapter-house, Flock, retreats)", icon: "fa-solid fa-cross", order: 114.4,
+    button: true, visible: game.user.isGM, onChange: () => Cell.CellApp.open()};
   tokens.tools.wodxUpkeep = {name: "wodxUpkeep", title: "Upkeep (ties that need tending, hunting grounds and heat)", icon: "fa-solid fa-hand-holding-heart", order: 121,
     button: true, visible: game.user.isGM, onChange: () => Up.upkeepChooser()};
   tokens.tools.wodxDashboard = {name: "wodxDashboard", title: "The Storyteller's dashboard (the party, clocks, open threads, consequences)", icon: "fa-solid fa-gauge", order: 117,
