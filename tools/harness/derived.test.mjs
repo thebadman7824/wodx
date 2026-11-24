@@ -148,3 +148,39 @@ test("the wizard shows what a Mummy's Balance and Sekhem mean", async () => {
   assert.equal(api().wizardLedger(a).line, "mummy");
   assert.match(html, /What these mean[\s\S]*Sekhem<\/dt><dd>The life force/);
 });
+
+/* B7831: W20 Changing Breeds, each Breed's starting Rage, Gnosis and Willpower */
+test("Changing Breeds start by their own book: Bastet by tribe, Corax for all, Nuwisha without Rage", () => {
+  const b = D.derivedTraits("w20", {changingbreed: "Bastet", breed: "Feline", tribe: "Simba"});
+  assert.deepEqual(["rage", "gnosis", "willpower"].map(k => row(b, k).want), [5, 5, 2]);
+  assert.match(b.notes.join(" "), /W20 Changing Breeds pdf 67/);
+  const c = D.derivedTraits("w20", {changingbreed: "Corax", breed: "Corvid"});
+  assert.deepEqual(["rage", "gnosis", "willpower"].map(k => row(c, k).want), [1, 6, 3]);
+  assert.match(c.notes.join(" "), /Subterfuge, Enigmas and Dodge/);
+  const nu = D.derivedTraits("w20", {changingbreed: "Nuwisha", breed: "Latrani"});
+  assert.equal(row(nu, "rage"), undefined);
+  assert.deepEqual(["gnosis", "willpower"].map(k => row(nu, k).want), [5, 4]);
+  const mo = D.derivedTraits("w20", {changingbreed: "Mokolé", breed: "Suchid", auspice: "Rising Sun, Striking"});
+  assert.deepEqual(["rage", "gnosis", "willpower"].map(k => row(mo, k).want), [null, 4, 3]);
+  assert.match(row(mo, "rage").how, /Storyteller/);
+  const ra = D.derivedTraits("w20", {changingbreed: "Ratkin", breed: "Rodens", auspice: "Knife Skulker"});
+  assert.deepEqual(["rage", "gnosis", "willpower"].map(k => row(ra, k).want), [3, 5, 3]);
+  assert.equal(D.derivedTraits("w20", {changingbreed: "Ajaba", auspice: "Dusk"}).rows.find(r => r.key === "gnosis").want, 5);
+  // a Garou keeps the Garou tables; a Dark Ages Bastet still reads its own Breed
+  assert.equal(row(D.derivedTraits("w20", {changingbreed: "Garou", auspice: "Ahroun", breed: "Lupus", tribe: "Fianna"}), "rage").want, 5);
+  assert.equal(row(D.derivedTraits("daw", {changingbreed: "Bastet", tribe: "Khan"}), "rage").want, 5);
+  for ( const [k, F] of Object.entries(D.FERA_STARTS) ) assert.match(F.page, /^W20 Changing Breeds pdf \d+/, k);
+});
+
+test("a Bastet sheet's wizard sets its tribe's Rage and Willpower and its breed's Gnosis", async () => {
+  const a = await Actor.create({name: "Derived Simba", type: "Changing Breed", system: {changingbreed: "Bastet", breed: "Feline", tribe: "Simba"}});
+  const d = api().derived(a);
+  assert.deepEqual(["rage", "gnosis", "willpower"].map(k => d.rows.find(r => r.key === k)?.want), [5, 5, 2]);
+  const app = await api().wizard(a, "virtues");
+  await app.options.actions.derive.call(app, {}, {dataset: {key: ""}});
+  assert.deepEqual([a.system.advantages.rage.permanent, a.system.advantages.gnosis.permanent, a.system.advantages.willpower.permanent], [5, 5, 2]);
+  await app.close();
+  const review = await api().wizard(a, "review");
+  assert.match(review.element.textContent, /W20 Changing Breeds pdf 67/);
+  await review.close();
+});

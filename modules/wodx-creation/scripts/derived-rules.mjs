@@ -38,6 +38,49 @@ export const DARK_AGES_TRIBE_WILLPOWER = {"children of gaia": 3};
 export const isWilder = sys => field(sys ?? {}, "seeming").includes("wilder");
 export const SEEMING_BONUS = {childling: {glamour: 1}, wilder: {choice: true}, grump: {willpower: 1}};
 
+/**
+ * B7831: W20 Changing Breeds, each Breed's starting Rage, Gnosis and Willpower. by: which sheet field picks the row
+ * (auspice holds the aspect, auspice, path or seasonal auspice; tribe holds a Bastet tribe), or a number for every
+ * member. rage: false is a Breed with no Rage. Pages are the private dump's pdf pages (printed = pdf + 7).
+ * The other creation totals stay W20's (W20 Changing Breeds gives no figures of its own for them).
+ */
+export const FERA_STARTS = {
+  ajaba: {page: "W20 Changing Breeds pdf 42-43 / printed 49-50", rage: {by: "auspice", t: {dawn: 5, midnight: 3, dusk: 1}},
+    gnosis: {by: "auspice", t: {dawn: 1, midnight: 3, dusk: 5}}, willpower: 3},
+  ananasi: {page: "W20 Changing Breeds pdf 55 / printed 62", rage: false, gnosis: {by: "breed", t: {homid: 1, arachnid: 5}},
+    willpower: {by: "breed", t: {homid: 3, arachnid: 4}}, note: "Ananasi have no Rage; every Ananasi has a blood pool of 10."},
+  bastet: {page: "W20 Changing Breeds pdf 67-77 / printed 74-84",
+    rage: {by: "tribe", t: {bagheera: 2, balam: 4, bubasti: 1, ceilican: 3, khan: 5, pumonca: 4, qualmi: 2, simba: 5, swara: 2}},
+    gnosis: {by: "breed", t: {homid: 1, metis: 3, feline: 5}},
+    willpower: {by: "tribe", t: {bagheera: 4, balam: 3, bubasti: 5, ceilican: 3, khan: 2, pumonca: 4, qualmi: 5, simba: 2, swara: 4}}},
+  corax: {page: "W20 Changing Breeds pdf 88 / printed 95", rage: 1, gnosis: 6, willpower: 3,
+    note: "Raven's Gifts: every Corax starts with one more dot each of Subterfuge, Enigmas and Dodge."},
+  gurahl: {page: "W20 Changing Breeds pdf 100, 105-106 / printed 107, 112-113", rage: {by: "breed", t: {homid: 3, ursine: 4}},
+    gnosis: {by: "breed", t: {homid: 4, ursine: 5}}, willpower: 6},
+  kitsune: {page: "W20 Changing Breeds pdf 119-122 / printed 126-129", rage: {by: "auspice", t: {kataribe: 2, gukutsushi: 2, doshi: 3, eji: 4}},
+    gnosis: {by: "breed", t: {kojin: 3, roko: 5, shinju: 4}}, willpower: 5},
+  mokole: {page: "W20 Changing Breeds pdf 136-139 / printed 143-146", rage: null, gnosis: {by: "breed", t: {homid: 2, suchid: 4}},
+    willpower: {by: "auspice", t: {striking: 3, "rising sun": 3, unshading: 5, unshaded: 5, noonday: 5, warding: 3, "setting sun": 3,
+      concealing: 4, shrouded: 4, shining: 4, "midnight sun": 4, gathering: 5, decorated: 5, crowning: 5, eclipse: 5,
+      hemanta: 2, zarad: 3, grisma: 4, vasanta: 5, "tung chun": 3, "nam hsai": 5, "sai chau": 5, "pei tung": 4}},
+    note: "W20 Changing Breeds gives the Mokole no starting Rage: set it with the Storyteller. The Archid form gets as many Characteristics as the starting Gnosis."},
+  nagah: {page: "W20 Changing Breeds pdf 150-151 / printed 157-158",
+    rage: {by: "auspice", t: {kamakshi: 3, spring: 3, kartikeya: 4, summer: 4, kamsa: 3, autumn: 3, kali: 4, winter: 4}},
+    gnosis: {by: "breed", t: {balaram: 1, ahi: 3, vasuki: 5}}, willpower: 4},
+  nuwisha: {page: "W20 Changing Breeds pdf 162-163 / printed 169-170", rage: false, gnosis: {by: "breed", t: {homid: 1, latrani: 5}}, willpower: 4,
+    note: "Nuwisha have no Rage and cannot frenzy."},
+  ratkin: {page: "W20 Changing Breeds pdf 175-178 / printed 182-185",
+    rage: {by: "auspice", t: {"tunnel runner": 1, "shadow seer": 2, "knife skulker": 3, warrior: 5, "blade slave": 5, engineer: 2, "plague lord": 3, munchmausen: 4, twitcher: 5}},
+    gnosis: {by: "breed", t: {homid: 1, metis: 3, rodens: 5}}, willpower: 3},
+  rokea: {page: "W20 Changing Breeds pdf 192-193 / printed 199-200", rage: {by: "auspice", t: {brightwater: 5, dimwater: 4, darkwater: 3}},
+    gnosis: {by: "breed", t: {homid: 1, squamus: 5}}, willpower: 4}
+};
+/** The sheet's Breed as a FERA_STARTS key ("Mokolé" to mokole), or "" for a Garou or a Breed not in the table. */
+export const feraOf = sys => {
+  const k = low(sys?.changingbreed ?? field(sys, "changingbreed")).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return FERA_STARTS[k] ? k : "";
+};
+
 const lookup = (table, text, alias = {}) => {
   const t = low(text);
   if ( !t ) return null;
@@ -110,6 +153,25 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       notes.push("Yin, Yang, Hun, P'o and Dharma follow the Direction and Dharma: set them with the Storyteller.");
       break;
     case "w20": case "daw": {
+      // a Dark Ages Changing Breed too: DA:W gives only the Garou tables (house rule, docs/PENDING-REVIEW.md)
+      const fera = feraOf(sys);
+      if ( fera ) {
+        const F = FERA_STARTS[fera];
+        const pick = (spec, what) => {
+          if ( spec === false ) return {v: null, how: "This Breed has no " + what};
+          if ( spec === null || spec === undefined ) return {v: null, how: "The book gives no starting " + what + ": set it with the Storyteller"};
+          if ( typeof spec === "number" ) return {v: spec, how: "Every member starts at " + spec};
+          const v = lookup(spec.t, field(sys, spec.by));
+          return {v, how: v === null ? `Write the ${spec.by === "auspice" ? "aspect or auspice" : spec.by} on the sheet first` : `By ${spec.by === "auspice" ? "aspect" : spec.by}`};
+        };
+        const r = pick(F.rage, "Rage"), g = pick(F.gnosis, "Gnosis"), w = pick(F.willpower, "Willpower");
+        if ( F.rage !== false ) add("rage", "Rage", "system.advantages.rage", r.v, r.how, {extra: "rage"});
+        add("gnosis", "Gnosis", "system.advantages.gnosis", g.v, g.how, {extra: "gnosis"});
+        wp(w.v, w.how);
+        if ( F.note ) notes.push(F.note);
+        notes.push(`${F.page}.`);
+        break;
+      }
       const ausp = field(sys, "auspice"), breed = field(sys, "breed"), tribe = field(sys, "tribe");
       const r = lookup(RAGE_BY_AUSPICE, ausp), g = lookup(GNOSIS_BY_BREED, breed);
       const w = (lineId === "daw" ? lookup(DARK_AGES_TRIBE_WILLPOWER, tribe) : null) ?? lookup(WILLPOWER_BY_TRIBE, tribe, TRIBE_ALIAS);

@@ -626,7 +626,7 @@
    },
    "open": [
     "book: the changes of state are not checked against the book text yet; the creation totals are (B6443, B7820)",
-    "creation totals for the Changing Breeds wait for W20 Changing Breeds in the text dumps (B7821)"
+    "book: the Changing Breeds starting Rage, Gnosis and Willpower (B7831) are read from W20 Changing Breeds; the Mokole starting Rage is not in the book"
    ],
    "deferred": [],
    "faults": [],
