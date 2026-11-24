@@ -132,6 +132,10 @@
     },
     "shown": {
      "what": "the spend names where the trait is learned; the token carries a book mark while the study runs, and the end shows on the token"
+    },
+    "gated": {
+     "gate": "tools/gate/gatelearning.mjs",
+     "step": "3. the study ends and the trait rises"
     }
    },
    "open": [
