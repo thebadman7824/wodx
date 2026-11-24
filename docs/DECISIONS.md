@@ -422,7 +422,7 @@ Next free block: B7850
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
-| B7260-B7279 | Master Plan gaps: dated events and the Ledger proven on the real clock; Moravia's own news (used B7260-B7264) | Chronicle, Storyteller |
+| B7260-B7279 | Master Plan gaps: languages in chat, the sheet's second page and the archive of the dead through real clicks (used B7260-B7271) | Chronicle, Sheets, Creation |
 | B7290-B7299 | PC watcher: ComfyUI off between renders is normal (used B7290-B7297) | tools (pcq) |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
@@ -14601,6 +14601,62 @@ food to 1.5 and short and quiets the crowd, setting the clock back undoes all of
 It puts the clock, the hold, the fired list, the Ledger and the markets back.
 
 Reverse: delete tools/gate/gatedatedplay.mjs.
+
+## B7265. The second page and the archive are gated through their own buttons (2026-11-18)
+WoDX tools, tools/gate/gateplaypage.mjs. gatesheet5 and gatearchive call the modules' functions. The new gate opens a
+Dark Ages vampire's sheet and checks its second page, gives it a sword and checks the Combat block while the sheet is
+open, clicks the sword's row (its sheet opens), presses Feed on the page's row of actions and its window's Feed button
+(the blood pool rises by the 2 asked), ticks a test dead in the archive window and presses "Archive the ticked", presses
+"Bring back", and lets the released clock archive a test dead fifteen years gone. Characters the gate did not make are
+never ticked, and the clock step runs only when no one else is due.
+
+Reverse: delete tools/gate/gateplaypage.mjs and its registry rows' gated steps.
+
+## B7266. Languages in chat are gated in two browsers, typed into the chat box (2026-11-18)
+WoDX tools, tools/gate/gateplaylang.mjs, run by tools/harness/gate-two.mjs. Each line is typed into Foundry's own chat
+box and sent with Enter; the player reads the Storyteller's lines in their own chat log and presses "Try for the gist".
+A two-browser gate is not run by a gates job: queue it with submit.mjs gate-two gateplaylang.
+
+Reverse: delete tools/gate/gateplaylang.mjs.
+
+## B7267. A player speaks only the languages their characters know (2026-11-18)
+WoDX Chronicle, languages.mjs. "/in Latin ..." from a player whose characters have no Latin sends nothing, and Speaking
+set to such a language is not kept; a warning says why in both cases. The Storyteller speaks anything. Before, the
+Speaking list offered a player only their own languages, but any typed name was kept, and "/in" took any common
+language. House rule (the languages list is WoDX's table aid, B3162).
+
+Reverse: drop mayUse() from the chatMessage hook, the Speaking box's change handler and preCreateChatMessage.
+
+## B7268. "/in" is read from the text typed (2026-11-18)
+WoDX Chronicle, languages.mjs typedText(). Foundry 14's chat box is a ProseMirror editor and sends HTML
+("<p>/in Polish ...</p>"), so "/in" never matched and Foundry refused the line as an unknown command. The hook now reads
+the text typed, as Foundry's own command parser does; markup typed into the box does not reach the line.
+
+Reverse: pass the message to parseInCommand as it comes.
+
+## B7269. With Speaking set, a typed line is sent in character (2026-11-18)
+WoDX Chronicle, languages.mjs chatMessage hook. Foundry 14 sends a plain line out of character, without a speaker,
+unless the chat mode is In Character, so preCreateChatMessage never saw a speaking character and no typed line carried
+its language. When Speaking is set and a character speaks (a controlled token or the user's character), the hook sends
+the line itself, in character, in that language. A line with no character to speak it, or one starting with "/", is
+left to Foundry.
+
+Reverse: remove the Speaking branch from the chatMessage hook.
+
+## B7270. "Try for the gist" answers a click on any copy of the line (2026-11-18)
+WoDX Chronicle, languages.mjs. The button carries the line, the character and the languages, and one listener on the
+page reads a click on it, so a copy of the line (Foundry 14's chat notifications, a popped-out log) works as the log's
+own line does. The gate's first runs saw no card after the click; with this and a longer wait for the roll it passed
+three runs in a row. Which of the two fixed it was not isolated.
+
+Reverse: put the per-button click listener back.
+
+## B7271. Gates that release the clock settle the night's work before putting settings back (2026-11-18)
+WoDX tools, gatedatedplay and gateplaypage. The released clock's night's work closes up to 30 seconds after it starts,
+so a fixed wait put the settings back too early and left the lane changed. Both gates now hold the world again, close
+the open work through the night's-work api's settle(), wait until the written settings stop changing, then put them back.
+
+Reverse: go back to a fixed 5 second wait.
 
 ## B7290. The laptop watches the PC job system and only reports (2026-11-18)
 Ben asked for the laptop (DESKTOP-S6NV3Q9) to be used to keep everything in line. tools/pcq/watcher.mjs runs every 5 minutes from the scheduled task "WoDX PC watcher at logon" (tools/pcq/install-watcher.ps1, loop in run-watcher.ps1), below normal priority, on battery too. It reads only GitHub (the pc-status branch files, the runner status issues, pc-job issues, the merge train line, pc-alert issues) and the laptop's own process list. It never starts or stops a process, restarts OCR or art, or touches a lane, a world, a job or another tool's alert. It is taken as a fix to how the PCs are watched under the PC upkeep freeze, with no new lane or runner (logged in docs/PENDING-REVIEW.md). Its checks are fixed rules, not a local model: the laptop's i5-8210Y would sit at full load for each model call and slow lane 7.

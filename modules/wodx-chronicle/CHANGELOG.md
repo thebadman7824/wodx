@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.144.0 (Languages in chat work from Foundry 14's own chat box (B7268, B7269), a player speaks only the languages their characters know (B7267), and "Try for the gist" answers a click on any copy of the line (B7270). Gate gateplaylang types each line into the chat box and reads it in a second browser as a player)
 - 0.143.1 (A Danislav revenant takes aggravated damage from silver in a fight (B7844))
 - 0.143.0 (Chronicle local block: taints rows tie a place to a long clock, with taintPlans and clockTaint for the module that applies them (B7807))
 - 0.142.3 (The twist engine reads the chronicle's own gap between twists (twists.GAP, else its week), and the saga check lets a book start in the year the one before it ends when its first step comes later (B7801, B7802))
