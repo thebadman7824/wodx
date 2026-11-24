@@ -191,7 +191,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "Phase 7d, B2211-B2216"
+     "decisions": "Phase 7d, B2211-B2216, B7865"
     },
     "wired": {
      "reader": "modules/wodx-npc/scripts/factions.mjs:build"
@@ -707,7 +707,7 @@
    "steps": {
     "built": {
      "pr": 653,
-     "decisions": "B1900-B1905"
+     "decisions": "B1900-B1905, B7865"
     },
     "wired": {
      "reader": "modules/wodx-npc/scripts/people.mjs:build"
