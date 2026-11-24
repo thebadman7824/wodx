@@ -168,3 +168,25 @@ test("the hunters' start: the region opens at the stage, once a chronicle, and n
   assert.equal(H.applyStart({}, "test-town", {region: "x", stage: "nope"}, 0).region, null, "an unknown stage starts nothing");
   assert.deepEqual(H.normState({}).started, []);
 });
+
+test("taints (B7807): a place's corruption follows a long clock, capped, one place a row", () => {
+  const local = L.localOf({manifest: {local: {taints: [{clock: "blight", scene: "Dead Moor", per: 2, max: 5}, {clock: "", scene: "x"}, {clock: "y"}]}}});
+  assert.deepEqual(local.taints, [{clock: "blight", scene: "Dead Moor", per: 2, max: 5}]);
+  assert.equal(L.clockTaint(local.taints[0], {blight: 0}), 0);
+  assert.equal(L.clockTaint(local.taints[0], {blight: 2}), 4);
+  assert.equal(L.clockTaint(local.taints[0], {blight: 6}), 5, "never past max");
+  const scenes = [{id: "a", name: "The Market"}, {id: "b", name: "The Dead Moor"}, {id: "c", name: "Dead Moor (night)"}];
+  assert.deepEqual(L.taintPlans(local, {blight: 1}, {scenes}), [{scene: "b", clock: "blight", target: 2}]);
+  assert.deepEqual(L.taintPlans(local, {blight: 1}, {scenes: [{id: "a", name: "The Market"}]}), []);
+  assert.deepEqual(L.localOf({manifest: {local: {}}}).taints, []);
+  const d = L.localOf({manifest: {local: {taints: [{clock: "k", scene: "s"}]}}}).taints[0];
+  assert.equal(d.per, 1); assert.equal(d.max, 9);
+});
+
+test("Rothenstein: the Ashfield is the taint's one source, a level a field, never a Hellhole", () => {
+  const local = L.localOf(PACK);
+  assert.deepEqual(local.taints, [{clock: "ashfield", scene: "Ashfield", per: 1, max: 8}]);
+  const size = PACK.saga.SAGA_CLOCKS.find(c => c.key === "ashfield").size;
+  assert.equal(L.clockTaint(local.taints[0], {ashfield: size}), 8);
+  assert.deepEqual(L.taintPlans(local, {ashfield: 3}, {scenes: [{id: "s1", name: "The Ashfield"}]}), [{scene: "s1", clock: "ashfield", target: 3}]);
+});

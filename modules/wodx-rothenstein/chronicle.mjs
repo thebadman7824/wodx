@@ -55,7 +55,9 @@ export const MANIFEST = {
     titles: [{kind: "council", rank: 4, title: "Richter", to: 1849}],
     languages: [{name: "the Old Tongue", closedIn: ["red-stone"], intent: true, sounds: ["ur", "va", "dho", "ost", "rem", "ka", "zhi", "lu", "sva", "tor"]}],
     caerns: [{key: "old-grove", name: "The Old Grove", scene: "Old Grove", level: 3, tribes: "Silver Fang kin"}],
-    hunters: {stage: "rumours"}
+    hunters: {stage: "rumours"},
+    /** The Ashfield is the taint's one source: each field it takes deepens the Ashfield scene a level (B7807). */
+    taints: [{clock: "ashfield", scene: "Ashfield", per: 1, max: 8}]
   },
   /** The words that mark this chronicle in shared code (the guard test reads them). */
   marks: ["Rothenstein", "Kranzfels", "Bogdan Ursu", "Husbandman", "Rudý Hospodář", "Črnomir", "Richter Graff", "Father Ludovic",
