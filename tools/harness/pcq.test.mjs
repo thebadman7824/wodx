@@ -481,3 +481,26 @@ test("the Main PC leaves pull request gate runs to the New PC while the New PC h
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   assert.match(src, /conf\.prGatesPreferPeer && conf\.prGatesPreferPeer\.statusTitle !== conf\.statusTitle && leaveToPeer\(q\.job, q\.issue, await preferredPeer\(\), conf\.prGatesPreferPeer\) \) continue;/);
 });
+
+test("B7961 (#2393): an alert raised before a runner restart is found again by its mark, and duplicates close", async () => {
+  const {alertMark, adoptAlert} = await import("../pcq/jobs.mjs");
+  const mark = alertMark("Benjamin-PC", "peer");
+  assert.equal(mark, "<!-- pc-alert-key: benjamin-pc/peer -->", "the host is lowercased, as the runner's HOST is");
+  const open = [
+    {number: 2222, title: "Secondary PC alert: the main PC runner has been silent for 41 minutes", body: `x\n\n${mark}`},
+    {number: 2165, title: "Second PC alert: the main PC runner has been silent for 25 minutes", body: `y\n\n${mark}`},
+    {number: 2201, title: "Secondary PC alert: Lane 8 (port 30080) is down", body: `z\n\n${alertMark("benjamin-pc", "8")}`},
+    {number: 2300, title: "New PC alert: the main PC runner has been silent for 30 minutes", body: `w\n\n${alertMark("new_pc_lebrun", "peer")}`},
+    {number: 2056, title: "PC watcher alert", body: "no mark"},
+    {number: 2400, pull_request: {}, body: mark}];
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "peer"), {keep: 2165, extra: [2222]}, "the oldest is kept whatever its prefix; another host's and a pull request are not touched");
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "8"), {keep: 2201, extra: []});
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "gpu"), {keep: null, extra: []});
+  assert.deepEqual(adoptAlert(null, "benjamin-pc", "peer"), {keep: null, extra: []});
+  // the runner marks every alert it opens, and looks for an earlier one before opening and before clearing
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const fn = name => src.slice(src.indexOf(`async function ${name}(`), src.indexOf("\n}\n", src.indexOf(`async function ${name}(`)));
+  assert.match(fn("alert"), /await adopt\(key, s\);[\s\S]*if \( s\.alert \|\| DRY \) return;[\s\S]*alertMark\(HOST, key\)/);
+  assert.match(fn("recovered"), /state\[`_\$\{key\}`\] \?\?= \{\}[\s\S]*await adopt\(key, s\);[\s\S]*close\(s\.alert\)/, "a recovery after a restart still finds the alert to close");
+  assert.match(fn("adopt"), /adoptAlert\(openAlerts, HOST, key\)/);
+});

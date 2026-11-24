@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger, leaveToPeer} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger, leaveToPeer, alertMark, adoptAlert} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -177,17 +177,34 @@ async function healthCheck(id, force = false) {
   s.down = true;
   await alert(id, `Lane ${id} (port ${laneOf(id).port}) is down and did not start.`, r.out.slice(-1500));
 }
+// B7961 (#2393): the open pc-alert issues, read once after the runner starts, so an alert raised before a restart is
+// found again by its mark: closed when the fault clears, and not opened a second time while it lasts
+let openAlerts = null;
+async function adopt(key, s) {
+  if ( s.adopted || DRY ) return;
+  openAlerts ??= await gh("GET", `/issues?state=open&labels=${LABEL.alert}&per_page=100`).catch(e => { log(`could not read open alerts: ${e.message}`); return null; });
+  if ( !openAlerts ) return; // tried again at the next alert or recovery
+  s.adopted = true;
+  const {keep, extra} = adoptAlert(openAlerts, HOST, key);
+  if ( keep && !s.alert ) { s.alert = keep; log(`alert #${keep} (${key}) found open from before a restart`); }
+  for ( const n of extra ) {
+    await comment(n, `Duplicate of #${keep}, which stays open for this fault; closed by the runner.`).catch(() => {});
+    await close(n).catch(() => {}); log(`alert #${n} closed as a duplicate of #${keep}`);
+  }
+}
 async function alert(key, title, detail = "") {
   const s = state[key] ?? (state[`_${key}`] ??= {});
+  await adopt(key, s);
   if ( s.alert || DRY ) return;
   try {
     const i = await gh("POST", "/issues", {title: `${ALERT_PREFIX}: ${title}`, labels: [LABEL.alert],
-      body: `${title}\n\n\`\`\`\n${detail.slice(-3000)}\n\`\`\`\n\nThe runner closes this issue when it clears. Jobs keep running on the other lanes.`});
+      body: `${title}\n\n\`\`\`\n${detail.slice(-3000)}\n\`\`\`\n\nThe runner closes this issue when it clears. Jobs keep running on the other lanes.\n\n${alertMark(HOST, key)}`});
     s.alert = i.number; log(`alert #${i.number}: ${title}`);
   } catch (e) { log(`could not open alert: ${e.message}`); }
 }
 async function recovered(key) {
-  const s = state[key] ?? state[`_${key}`]; if ( !s ) return;
+  const s = state[key] ?? (state[`_${key}`] ??= {});
+  await adopt(key, s);
   s.down = false; s.why = null;
   if ( s.alert ) { await comment(s.alert, "Cleared.").catch(() => {}); await close(s.alert).catch(() => {}); log(`alert #${s.alert} cleared`); s.alert = null; }
 }

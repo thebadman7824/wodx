@@ -407,3 +407,20 @@ export function resumeState(queueLeft, takenRows, reports) {
 
 /** B7342: whether a gate's runs on main settle it (recheckStep needs no more): one failure, or two runs; no refused run. */
 export const mainSettled = runs => Array.isArray(runs) && !runs.includes(null) && (runs[0] === false || runs.length >= 2);
+
+/**
+ * B7961 (#2393): an alert's issue number lived only in the runner's memory, so after a restart the runner could not
+ * close it and opened a new one while the fault lasted (13 open alerts for one Main PC outage, 20-21 Nov). Each alert
+ * body now carries this hidden mark, which names the runner's host and the alert's key and does not change with the
+ * title prefix or the minutes in the title.
+ */
+export const alertMark = (host, key) => `<!-- pc-alert-key: ${String(host).toLowerCase()}/${key} -->`;
+/**
+ * The open alerts this runner raised for this key, from a list of open pc-alert issues: keep is the oldest (the one
+ * to close when the fault clears), extra the rest (duplicates to close now). Pure.
+ */
+export function adoptAlert(open, host, key) {
+  const mark = alertMark(host, key);
+  const mine = (open ?? []).filter(i => !i.pull_request && String(i.body ?? "").includes(mark)).map(i => i.number).sort((a, b) => a - b);
+  return {keep: mine[0] ?? null, extra: mine.slice(1)};
+}
