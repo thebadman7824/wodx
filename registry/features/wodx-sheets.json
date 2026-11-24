@@ -645,6 +645,40 @@
    "prs": [
     2336
    ]
+  },
+  {
+   "id": "sheets.page-two",
+   "name": "The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/templates/page2.hbs",
+    "modules/wodx-sheets/scripts/main.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B7265"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:listeners"
+    },
+    "shown": {
+     "what": "the second page under the book's first on a Dark Ages vampire's sheet: Merits and Flaws, Rituals, Paths, Derangements, Combat, Possessions, History and Description, and Use a Discipline, Frenzy, Feed"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplaypage.mjs",
+     "step": "4"
+    }
+   },
+   "open": [
+    "checked on the Dark Ages vampire sheet only; the other lines' second pages are checked by render in gatesheet5"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
+   ]
   }
  ]
 }

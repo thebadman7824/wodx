@@ -18,6 +18,16 @@ import {gate, waitFor} from "./kit.mjs";
 const CH = "wodx-chronicle", ST = "wodx-storyteller", NPC = "wodx-npc";
 const E = "wh-1241-the-mongols-in-moravia", GM = "gate-dated-market";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+/** Waits until what read() gives has not changed for three seconds (thirty at most): the night work has finished writing. */
+async function settle(read, {quiet = 3000, most = 30000} = {}) {
+  const t = Date.now();
+  let last = read(), since = Date.now();
+  while ( Date.now() - t < most ) {
+    await sleep(500);
+    const now = read();
+    if ( now !== last ) { last = now; since = Date.now(); } else if ( Date.now() - since >= quiet ) return;
+  }
+}
 const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
 export async function run() {
@@ -131,17 +141,20 @@ export async function run() {
       if ( saved.era && game.settings.get(CH, "activeEra") !== saved.era ) await game.settings.set(CH, "activeEra", saved.era);
       await game.settings.set(ST, "ledger", saved.ledger);
       await game.settings.set(ST, "markets", saved.markets);
-      // the night work the released clock started can still be writing: let it settle, then put both back
-      await sleep(5000);
+      // the gate's chat lines go first: deleting them can write to the Storyteller's log, which is put back after
+      const ids = mine().map(m => m.id);
+      if ( ids.length ) await ChatMessage.deleteDocuments(ids);
+      // then the hold as it was; the night work the released clock started can still be writing: let it settle,
+      // then put both back
+      await ch.hold(saved.held);
+      await (ch?.nightwork ?? game.modules.get(CH)?.api?.nightwork)?.settle?.();
+      await settle(() => WRITTEN.map(k => JSON.stringify(stored(k)?.value ?? null)).join());
       for ( const k of WRITTEN ) {
         const now = stored(k), was = writtenBefore[k];
         if ( !was && now ) await now.delete();
         else if ( was && now && now.value !== was.value ) await now.update({value: was.value});
         else if ( was && !now ) await game.settings.storage.get("world").documentClass.create(was);
       }
-      const ids = mine().map(m => m.id);
-      if ( ids.length ) await ChatMessage.deleteDocuments(ids);
-      await ch.hold(saved.held);
     } catch (e) { G.R.errors.push(`put back: ${e?.message ?? e}`); }
   }
   return G.finish();

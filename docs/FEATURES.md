@@ -8,9 +8,9 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | system | not yet | 0 | 0 | 0 |
 | wodx-actions | yes | 42 | 0 | 11 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
-| wodx-chronicle | not yet | 1 | 0 | 0 |
+| wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | yes | 22 | 0 | 6 |
+| wodx-creation | yes | 23 | 0 | 6 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | yes | 34 | 0 | 19 |
@@ -18,7 +18,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 19 | 0 | 3 |
+| wodx-sheets | yes | 20 | 0 | 3 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -76,6 +76,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Dated events: history fires on its date as the clock passes it (`chronicle.dated-events`) | core | gated | 2 | gatedatedplay 5 |
+| Languages in chat: speech in a language a player's characters lack shows as made-up words (`chronicle.languages-in-chat`) | core | gated | 2 | gateplaylang 4 |
 
 ## wodx-combat
 
@@ -102,6 +103,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Animals' traits, training and breeds; war ghouls, kennels and household beasts (`creation.animal-training`) | core | gated | 1 | gateanimalstock 5. the wizard offers animal retainers |
+| Archive of the dead: the long dead leave the world for a compendium, by hand or by the clock, and come back (`creation.archive-of-the-dead`) | core | gated | 1 | gateplaypage 5 |
 | Before the First Night: one hub per character with a card for each step, and the guided builder (`creation.first-night`) | core | book |  | gatefirstnight 4 build |
 | Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
 | Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 2 | gatedalines 3. a Valkyrje's blood makes no ghoul and no bond |
@@ -181,6 +183,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The features card: every line feature in force, when it fires and when it last fired (`sheets.features-card`) | core | book |  | gatesheetchanges the features card lists the clan feature with when it fires |
 | The in-play strip, the Storyteller's notes and the header buttons on every WoDX sheet (`sheets.in-play-strip`) | core | book |  | gatesheetextras the sheet shows the strip, Possessions, Ties, the Storyteller's notes and the header buttons |
 | The Relationships tab: every tie, what it does in play, family news, Followers (`sheets.relationships`) | core | gated | 1 | gatebonds 7. sheet |
+| The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions (`sheets.page-two`) | core | gated | 1 | gateplaypage 4 |
 | Bring forward: things on the maps swap for their equal in the card's year (`sheets.bring-forward`) |  | book |  | gatebringforward buttons |
 | History with Undo for this session's edits, and Print (`sheets.history-print`) |  | shown | 1 |  |
 | Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | shown | 1 |  |

@@ -55,7 +55,9 @@ export async function run() {
       const r = await D.hold(a, "paranoia", {give: true});
       const after = await persuadeDiff();
       const melee = fx(["melee"]);
-      G.ok("2. a bout makes the next roll harder", !!r && !r.held && deranged() && Number.isFinite(before) && after === Math.min(10, before + 2) && !melee.length,
+      // when the first roll failed, the second is a retry and carries its own +1 (the dice decide, so allow for it)
+      const retry = /Retry \(second try\) \+1 diff/.test(persuadeDiff.last ?? "") ? 1 : 0;
+      G.ok("2. a bout makes the next roll harder", !!r && !r.held && deranged() && Number.isFinite(before) && after === Math.min(10, before + 2 + retry) && /Paranoia \+2 diff/.test(persuadeDiff.last ?? "") && !melee.length,
         {held: r?.held, status: deranged(), before, after, melee, beforeCard, afterCard: persuadeDiff.last, clockMoved: game.time.worldTime - t0,
           effects: (T?.effects?.(a, {channel: "roll"}) ?? []).map(e => `${e.key}: ${e.label ?? e.name ?? ""}`).slice(0, 12)});
     });
