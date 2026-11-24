@@ -49,7 +49,6 @@
  "tools/gate/gatefeatures.mjs": "direct-call",
  "tools/gate/gatefollow.mjs": "direct-call",
  "tools/gate/gatefollowers.mjs": "direct-call",
- "tools/gate/gatefomor.mjs": "direct-call",
  "tools/gate/gatefounding.mjs": "direct-call",
  "tools/gate/gatefronts.mjs": "marker",
  "tools/gate/gategamble.mjs": "direct-call",

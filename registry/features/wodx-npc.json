@@ -1012,9 +1012,7 @@
      "step": "1. a changeling NPC's Sanctuary refills Glamour at the new night"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [

@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 42 | 0 | 11 |
+| wodx-actions | yes | 42 | 0 | 9 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
@@ -41,7 +41,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 1 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
 | Nature gives Willpower back when the character acts to it (`actions.nature`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
-| Powers that act each turn while they hold (`actions.timed-powers`) | core | shown | 1 |  |
+| Powers that act each turn while they hold (`actions.timed-powers`) | core | gated |  | gatetimedpowers 1. a Heart Claw takes a lethal level on the bearer's next turn |
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
 | Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 1 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
@@ -61,7 +61,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Dark Ages mages: Foundation and Pillars, the Grimoire, and Consensus by era (`actions.mage-da`) |  | gated | 1 | gate6n a Grimoire rote: Revoking the Gift of Adam casts with its Grimoire page |
 | Demon: The Fallen: lores, evocations, Faith and Torment, the apocalyptic form (`actions.demon`) |  | gated | 1 | gate6i choosing the dark effect costs a temporary Torment point |
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
-| Fomor powers and spirit Charms (`actions.fomor-charms`) |  | shown | 2 |  |
+| Fomor powers and spirit Charms (`actions.fomor-charms`) |  | gated | 1 | gatefomor 6. Regeneration closes a lethal level each new round |
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
 | The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | shown | 1 |  |
@@ -107,7 +107,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Before the First Night: one hub per character with a card for each step, and the guided builder (`creation.first-night`) | core | book |  | gatefirstnight 4 build |
 | Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
 | Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 1 | gateghoulclicks 2. Drink makes a ghoul |
-| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 2 | gatelearning 3. the study ends and the trait rises |
+| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 1 | gatelearning 3. the study ends and the trait rises |
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
@@ -147,7 +147,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | shown | 1 |  |
 | NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book |  | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
 | NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | shown | 1 |  |
-| NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated | 1 | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
+| NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated |  | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
 | NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | shown | 1 |  |
 | One ledger for every bond that makes one person serve another, and servants the world makes (`npc.servants`) | core | gated | 1 | gateservants4 6b. the pact gift answers |
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
