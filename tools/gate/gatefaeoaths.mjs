@@ -18,7 +18,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 export async function run() {
   const G = gate("gatefaeoaths", {stepTimeout: 45000});
-  const api = () => game.modules.get(ST)?.api?.faeOaths;
+  const api = () => game.modules.get(ST)?.api?.upkeep?.faeOaths;
   const keep = {oaths: foundry.utils.deepClone(game.settings.get(ST, "faeOaths")), ledger: foundry.utils.deepClone(game.settings.get(ST, "ledger"))};
   const t0 = Date.now();
   const cards = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wst-fae-oaths"));

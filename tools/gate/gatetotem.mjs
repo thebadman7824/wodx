@@ -106,7 +106,7 @@ export async function run() {
       await cy.update({"system.packname": "Gate Bear Pack", "system.packtotem": "Bear"});
       let text = "";
       const grab = (app, el) => { const root = el instanceof HTMLElement ? el : el?.[0];
-        if ( String(app.title ?? app.options?.window?.title ?? "").startsWith("Pack totem") ) { text = root?.textContent ?? ""; setTimeout(() => root?.querySelector("button")?.click(), 150); } };
+        if ( String(app.title ?? app.options?.window?.title ?? "").startsWith("Pack totem") ) { text = root?.textContent ?? ""; setTimeout(() => (root?.querySelector("button[data-action=ok]") ?? root?.querySelector("footer button"))?.click(), 150); } };
       const hk = Hooks.on("renderDialogV2", grab);
       try { await A.packTotem(cy); await sleep(500); } finally { Hooks.off("renderDialogV2", hk); }
       const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
@@ -114,7 +114,7 @@ export async function run() {
       await cy.update({"system.packtotem": "Horse"});
       let horse = "";
       const grab2 = (app, el) => { const root = el instanceof HTMLElement ? el : el?.[0];
-        if ( String(app.title ?? app.options?.window?.title ?? "").startsWith("Pack totem") ) { horse = root?.textContent ?? ""; setTimeout(() => root?.querySelector("button[data-action=cancel]")?.click() ?? root?.querySelector("button")?.click(), 150); } };
+        if ( String(app.title ?? app.options?.window?.title ?? "").startsWith("Pack totem") ) { horse = root?.textContent ?? ""; setTimeout(() => (root?.querySelector("button[data-action=cancel]") ?? root?.querySelector("footer button"))?.click(), 150); } };
       const hk2 = Hooks.on("renderDialogV2", grab2);
       try { await A.packTotem(cy); await sleep(500); } finally { Hooks.off("renderDialogV2", hk2); }
       G.ok("6. the age picks the totem table: Bear refuses Dark Ages packs", da ? (/will not answer/.test(text) && /p\. 193/.test(text) && /DA:W p\. 228/.test(horse) && !(st(cy).accepted))
