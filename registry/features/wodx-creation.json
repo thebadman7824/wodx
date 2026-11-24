@@ -734,7 +734,13 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/revenant-rules.mjs",
-    "modules/wodx-creation/scripts/revenant.mjs"
+    "modules/wodx-creation/scripts/revenant.mjs",
+    "modules/wodx-creation/scripts/states.mjs",
+    "modules/wodx-creation/scripts/time.mjs",
+    "modules/wodx-creation/scripts/apps.mjs",
+    "modules/wodx-creation/scripts/main.mjs",
+    "modules/wodx-actions/scripts/main.js",
+    "modules/wodx-npc/scripts/supernatural-rules.mjs"
    ],
    "steps": {
     "built": {
