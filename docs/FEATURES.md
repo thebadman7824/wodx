@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 0 |
-| wodx-creation | yes | 23 | 0 | 4 |
+| wodx-creation | yes | 23 | 0 | 3 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | yes | 34 | 0 | 19 |
@@ -111,7 +111,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
-| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | shown | 1 |  |
+| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated |  | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
 | The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
