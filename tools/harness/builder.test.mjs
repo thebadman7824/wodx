@@ -117,13 +117,13 @@ test("the cast step makes only the missing people and sets only the Roads that d
 
 test("the Rothenstein cast follows the omnibus: ten missing people, the steward a ghoul, the Roads of ruling 27; the Grove's sept (B7874)", () => {
   const c = ROTHENSTEIN.cast;
-  assert.equal(c.people.length, 17, "the omnibus's ten and the Old Grove's four elders and three Kinfolk");
+  assert.equal(c.people.length, 18, "the omnibus's ten, the Old Grove's four elders and three Kinfolk, and Thibault (B7890)");
   assert.equal(c.people.filter(p => p.type === "Werewolf").length, 4);
   assert.equal(c.people.find(p => /steward/.test(p.name)).variant, "ghoul");
   const road = m => c.sheets.find(s => s.match.includes(m))?.road;
   assert.deepEqual([road("Bogdan"), road("Konrad"), road("Kasimir"), road("Marta")], ["Road of Kings", "Road of Metamorphosis", "Road of the Beast", "Road of Heaven"]);
   const roads = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/roads-daw.json"), "utf8"));
   const names = new Set(JSON.stringify(roads).match(/"name": ?"Road of [^"]+"/g).map(x => x.replace(/"name": ?"|"$/g, "")));
-  for ( const s of c.sheets ) assert.ok(names.has(s.road), `${s.road} is a Dark Ages Road`);
+  for ( const s of c.sheets.filter(x => x.road) ) assert.ok(names.has(s.road), `${s.road} is a Dark Ages Road`);
   assert.equal(ROTHENSTEIN.anchors.people.find(p => p.key === "kasimir").faction, "court", "Kasimir is sworn to the court (B7803)");
 });

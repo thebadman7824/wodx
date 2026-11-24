@@ -38,12 +38,12 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feeding: what the Kiss does to the vessel, clan and bloodline palates, and the night's hunt (`actions.feeding`) | core | gated | 1 | gatefeed 2 feed on an unlinked mortal |
 | Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 3 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
 | How often a power may be used, and the costs it pays when it ends (`actions.limits-costs`) | core | shown | 1 |  |
-| Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 1 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
+| Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 3 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
 | Nature gives Willpower back when the character acts to it (`actions.nature`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
 | Powers that act each turn while they hold (`actions.timed-powers`) | core | gated |  | gatetimedpowers 1. a Heart Claw takes a lethal level on the bearer's next turn |
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
-| Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 1 | gatedasins 1. a lie told through the action window takes a Conscience dot |
+| Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 2 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
 | The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 1 | gate6e a card: header, roll, what changed with pips |
 | The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | shown | 1 |  |
@@ -52,7 +52,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
 | Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | shown | 2 |  |
-| Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 1 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
+| Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 2 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 1 |  |
 | With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 1 | gatesocial 6 window |

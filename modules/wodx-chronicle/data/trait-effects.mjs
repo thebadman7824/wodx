@@ -356,6 +356,10 @@ for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2, ...M
 
 /** Step 6 (Chronicle 0.21.0): traits WoDX Actions carries out in its own windows, for the Trait effects window. */
 export const HANDLED = {
+  // B7889: Dark Ages: Inquisitor (WoDX Actions' inquisitor windows)
+  "gods-judgment": "a warning in Bank Conviction that some Blessings are barred (the inquisitor window)",
+  "pure": "the inquisitor window's new-character line asks no starting Curse",
+  "holy-art-natural": "the inquisitor window names the cheaper Holy Art: current rating x4 experience, 8 for the first dot",
   "lucky": "a failed roll is rolled again, three times a story (the action window)",
   "efficient-digestion": "one more blood point for every two drunk (feeding)",
   "thin-blood": "every blood cost doubled (Spend Blood)",
@@ -406,6 +410,9 @@ export const PULLS = {
  * reveal clock, in nights from the day the entry is opened (house rule; the Storyteller moves it in the Ledger).
  */
 export const LEDGER = {
+  // B7889: Dark Ages: Inquisitor
+  "initiate": {kind: "debt", dir: "from", what: "A young student in their charge: they answer for the student's soul and life."},
+  "reformed-heretic": {kind: "consequence", dueNights: 180, what: "The old heresy comes to light unless they keep it buried."},
   "prestigious-sire": {kind: "boon", size: "trivial", dir: "to", what: "A favour owed for the sake of the sire's good name."},
   "boon": {kind: "boon", size: "minor", dir: "to", what: "A boon owed to the character (set its size to match the merit)."},
   "mole": {kind: "debt", dir: "to", what: "An informant inside a rival group who passes word to the character."},
@@ -426,6 +433,7 @@ export const LEDGER = {
  * reminder, in WoDX's own words; the book page is added from the table.
  */
 export const PROMPTS = {
+  "worship-obsession": {on: ["night"], text: "the day's worship must be kept; a missed day costs 2 Conviction, more than two days running a Piety roll (Dark Ages: Inquisitor p. 167)"},
   "eat-food": {on: ["social"], text: "can eat and drink at the table to pass as mortal, and must be rid of it later"},
   "infectious-bite": {on: ["feed"], text: "the bite may sicken the vessel unless the wound is closed"},
   "addiction": {on: ["night"], text: "craves the substance tonight; without it, penalties until fed"},

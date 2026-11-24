@@ -16,7 +16,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 export async function run() {
   const G = gate("gatesept", {stepTimeout: 45000});
-  const api = () => game.modules.get(ST)?.api?.sept;
+  const api = () => game.modules.get(ST)?.api?.upkeep?.sept;
   const Q = () => game.modules.get("wodx-chronicle")?.api?.approvals;
   const keep = foundry.utils.deepClone(game.settings.get(ST, "septs"));
   const t0 = Date.now();

@@ -219,6 +219,20 @@ export function castSheet(p = {}) {
     if ( Number.isFinite(Number(g.rank)) ) out["system.renown.rank"] = Math.max(0, Math.min(5, Math.trunc(Number(g.rank))));
   }
   if ( p.kin ) out["flags.world.wodx.kinfolk"] = String(p.kin);
+  if ( p.hunter ) out["flags.wodx-actions.inquisitor"] = hunterFlag(p.hunter);
+  return out;
+}
+
+/**
+ * B7890: a hunter of the Dark Ages, as WoDX Actions keeps one (flags["wodx-actions"].inquisitor). Before the
+ * Inquisition (1223) a hunter is a precursor (Dark Ages: Inquisitor pp. 62-69): no order yet, Superior Virtues of
+ * their own. h: {precursor, order, faith, wisdom, zeal, piety}.
+ */
+export const HUNTER_PRECURSORS = ["crusader", "st-denis", "murnau", "faithful"];
+export function hunterFlag(h = {}) {
+  const dot = v => Math.max(0, Math.min(5, Math.trunc(Number(v) || 0)));
+  const out = {precursor: HUNTER_PRECURSORS.includes(h.precursor) ? h.precursor : "faithful", order: String(h.order ?? ""), faith: dot(h.faith), wisdom: dot(h.wisdom), zeal: dot(h.zeal), curses: []};
+  if ( Number.isFinite(Number(h.piety)) && h.piety !== null && h.piety !== undefined ) out.piety = Math.max(0, Math.min(10, Math.trunc(Number(h.piety))));
   return out;
 }
 
@@ -248,6 +262,7 @@ export function castPlan(recipe, actors = []) {
     const ch = {};
     if ( x.road && a.road !== x.road ) ch.road = x.road;
     if ( x.variant === "ghoul" && a.variant !== "ghoul" ) ch.variant = "ghoul";
+    if ( x.hunter && !a.hunter ) ch.hunter = x.hunter;
     if ( Object.keys(ch).length ) set.push({id: a.id, name: a.name, ...ch});
   }
   return {make, set, missing};
@@ -258,6 +273,7 @@ export function castFields(change = {}) {
   const out = {};
   if ( change.road ) { out["system.advantages.path.label"] = "custom"; out["system.advantages.path.custom"] = change.road; }
   if ( change.variant ) out["system.settings.variant"] = change.variant;
+  if ( change.hunter ) out["flags.wodx-actions.inquisitor"] = hunterFlag(change.hunter);
   return out;
 }
 

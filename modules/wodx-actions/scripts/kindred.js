@@ -35,6 +35,7 @@ import * as DSR from "./daysleep-rules.js";
 import * as FOM from "./fomor.js";
 import * as FDR from "./fae-da-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as CUR from "./inq-curses-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -909,6 +910,11 @@ export function build(ctx) {
                 if (killer && P.detectProfile(killer) === "kindred") {
                     await logEvent(killer, `Kills ${actor.name}${killer.system?.conditions?.isfrenzy ? " in frenzy" : ""}.`, "kill");
                     await sinPrompt(killer, killer.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${actor.name} is killed`);
+                }
+                // B7888: an inquisitor who kills a Christian: the first sin against God (Dark Ages: Inquisitor p. 159)
+                else if (killer?.getFlag?.(MOD, "inquisitor")) {
+                    await logEvent(killer, `Kills ${actor.name}.`, "kill");
+                    await ctx.api()?.pietyPrompt?.(killer, "kill", `${actor.name} is killed`, { christian: CUR.christianVictim(actor.getFlag?.(MOD, "faith")), card: true });
                 }
             }
         }

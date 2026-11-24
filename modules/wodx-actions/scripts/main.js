@@ -42,6 +42,7 @@ import * as WR from "./wraith-rules.js";
 import * as WX from "./wraith.js";
 import * as HR from "./hunter-rules.js";
 import * as HX from "./hunter.js";
+import * as CUR from "./inq-curses-rules.js";
 import * as KRR from "./reckoning-rules.js";
 import * as RX from "./reckoning.js";
 import * as VR from "./voice-rules.js";
@@ -511,7 +512,7 @@ async function post(actor, title, body, rolls = [], data = null) {
     if (actor && AUTO_HIDE.has(actor.id)) { md.whisper = game.users.filter(u => u.isGM).map(u => u.id); md.blind = true; }
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
-    if (!data && /data-(kx|sx|wx|vx)=/.test(content)) data = { kind: "buttons" };
+    if (!data && /data-(kx|sx|wx|vx|hx)=/.test(content)) data = { kind: "buttons" };
     if (data) md.flags = { [MOD]: data };
     const msg = await ChatMessage.create(md);
     // Changes written just after the card (most builders post, then update the sheet) join it a moment later
@@ -1104,6 +1105,14 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
     // B7870: Humble Fae (an Echo of one, Dark Ages: Fae p. 112): the fae's Willpower rolls +3 for the scene
     if (fd.attr === "special:willpower" && Number(actor.getFlag?.("wodx-actions", "daFae")?.echoHumble?.scene) === LIM.sceneNo())
         tm = { ...tm, diff: (tm.diff ?? 0) + 3, parts: [...(tm.parts ?? []), "Humble Fae (an Echo) +3 (Dark Ages: Fae p. 112)"] };
+    // B7884: an inquisitor's Curses on their own rolls (Dark Ages: Inquisitor pp. 204-213)
+    try {
+        const held = actor.getFlag?.(MOD, "inquisitor")?.curses;
+        if (held?.length) {
+            const cm = CUR.curseMods(held, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...(fd.attr === "special:willpower" ? ["willpower"] : [])]);
+            if (cm.dice || cm.diff) tm = { ...tm, dice: (tm.dice ?? 0) + cm.dice, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
+        }
+    } catch (e) { console.warn("WoDX Actions | Curses", e); }
     // B7080: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
     // Humanity and the Roads keep the plain aura box
     const pb = pathBearingFor(actor, rd, fd, pool);
@@ -1243,6 +1252,10 @@ async function resolveAction(actor, target, fd) {
     if (isVampire(actor)) {
         const ev = KR.rollSinEvent({ preset: fd.preset ?? "", attr: fd.attr, ability: pool.abilityKey, successes: r.successes, botch: r.botch });
         if (ev) { try { const sp = await kx().sinPrompt(actor, ev, ev === "lie" ? "A lie told to get the better of someone" : "Something taken that was not theirs"); if (sp?.html) body += sp.html; } catch (e) { console.warn("WoDX | sin from a roll", e); } }
+    } else if (hx().isInquisitor(actor)) {
+        // B7888: an inquisitor's lie or theft is a sin against God (Dark Ages: Inquisitor p. 159)
+        const ev = KR.rollSinEvent({ preset: fd.preset ?? "", attr: fd.attr, ability: pool.abilityKey, successes: r.successes, botch: r.botch });
+        if (ev) { try { const sp = await hx().pietyPrompt(actor, ev, ev === "lie" ? "A lie told to get the better of someone" : "Something taken that was not theirs"); if (sp?.html) body += sp.html; } catch (e) { console.warn("WoDX | sin against God from a roll", e); } }
     }
     if (preset.note) body += `<div class="vta-note">${preset.note}</div>`;
 
@@ -3567,6 +3580,15 @@ function bindCard(msg, el) {
         const r = await ix().onChatButton(b);
         if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
     }));
+    // B7883: the hunter cards: a sin's Piety roll, the Curse the Storyteller gives
+    el.querySelectorAll?.("button.vta-btn[data-hx]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `hx|${b.dataset.hx}|${b.dataset.actor}|${b.dataset.hx === "curse" ? "" : b.dataset.arg ?? ""}`;
+        if (used.includes(key)) return ui.notifications.info("Already done.");
+        const r = await hx().onChatButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
     el.querySelectorAll?.("button.vta-btn[data-vx]").forEach(b => b.addEventListener("click", async ev => {
         ev.preventDefault();
         await vx().onChatButton(b);
@@ -3579,7 +3601,7 @@ function bindCard(msg, el) {
         if (b.hasAttribute("data-gm") && !game.user.isGM) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); fx().onButton(msg, b.dataset.fx).catch(e => console.error("WoDX |", e)); });
     });
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx]):not([data-dm])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx]):not([data-dm]):not([data-hx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -3697,7 +3719,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // The inner voice (3.5.0)
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
-    sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
+    sinGod: withActor(a => hx().sin(a)), curseRoll: (a, o) => hx().curseRoll(resolveActor(a), o), takeCurse: (a, id) => hx().takeCurse(resolveActor(a), id), pietyPrompt: (a, ev, what, o) => hx().pietyPrompt(resolveActor(a), ev, what, o), curses: CUR, inquisitorOf: a => (hx().isInquisitor(resolveActor(a)) ? hx().inq(resolveActor(a)) : null), spendConviction: (a, k = 1) => hx().spendConv(resolveActor(a), k), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
     trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), domainDA: withActor(a => dmx().window(a)), infernal: withActor(a => ix().window(a)), infernalFlame: withActor(a => ix().flame(a)), infernalPacts: { window: a => ix().window(resolveActor(a)), record: (a, fd) => ix().record(resolveActor(a), fd), pact: (a, o) => ix().makePact(resolveActor(a), o), spend: (a, id, b) => ix().spend(resolveActor(a), id, b), state: a => ix().stateOf(resolveActor(a)), prevails: a => ix().prevails(resolveActor(a)), final: (a, won) => ix().finalOutcome(resolveActor(a), won), flame: a => ix().flame(resolveActor(a)), rules: INFR }, maturation: withActor(a => creationApi()?.maturation?.open?.(a) ?? ui.notifications.warn("Maturation needs WoDX Creation.")), domainEvent: withActor(a => dmx().domainEvent(a)), fealty: (o = {}) => dmx().fealty(o?.actor ? resolveActor(o.actor) : resolveActor()), domain: { window: a => dmx().window(resolveActor(a)), save: (a, fd) => dmx().saveWindow(resolveActor(a), fd), state: a => dmx().stateOf(resolveActor(a)), event: (a, o) => dmx().domainEvent(resolveActor(a), o), end: (a, id) => dmx().endEvent(resolveActor(a), id), tick: t => dmx().tick(t), season: (t, o) => dmx().seasonTurn(t, o), swear: o => dmx().swear(o), endOath: (id, how) => dmx().endOath(id, how), oaths: () => dmx().oaths(), rules: DMR }, ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {

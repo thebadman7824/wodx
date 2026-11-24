@@ -165,7 +165,8 @@
     }
    },
    "open": [
-    "book: V20 Dark Ages Disciplines chapter; not checked against the book text yet"
+    "book: V20 Dark Ages Disciplines chapter; not checked against the book text yet",
+    "a mortal killed by an inquisitor asks the first sin against God's Piety roll (B7888)"
    ],
    "deferred": [],
    "faults": [],
@@ -268,7 +269,8 @@
     }
    },
    "open": [
-    "book: V20 Dark Ages Roads and the hierarchy of sins; not checked against the book text yet"
+    "book: V20 Dark Ages Roads and the hierarchy of sins; not checked against the book text yet",
+    "an inquisitor's lie or theft on a roll asks a Piety roll on the card, as a Road sin does (B7888, gateinqcurses)"
    ],
    "deferred": [],
    "faults": [],
@@ -893,12 +895,13 @@
    "files": [
     "modules/wodx-actions/scripts/hunter.js",
     "modules/wodx-actions/scripts/hunter-rules.js",
-    "modules/wodx-actions/scripts/inq-blessings.js"
+    "modules/wodx-actions/scripts/inq-blessings.js",
+    "modules/wodx-actions/scripts/inq-curses-rules.js"
    ],
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B42, B45"
+     "decisions": "B42, B45, B7883-B7890"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/hunter.js:build"
@@ -912,7 +915,9 @@
     }
    },
    "open": [
-    "book: Dark Ages: Inquisitor chapter five and V20 Dark Ages pp. 392 on (True Faith); not checked against the book text yet"
+    "book: Dark Ages: Inquisitor chapter five and V20 Dark Ages pp. 392 on (True Faith); the Curses, the Curse roll, Cocytus, the order benefits and the merits and flaws checked against DA:I pp. 129-139, 159, 166-169, 201-213 (B7883-B7890); the rest not checked against the book text yet",
+    "Curses from play: botched Piety and Superior Virtue rolls roll for a Curse, Blessings above the stage give one, the Storyteller picks it on the card, Cocytus drains the bank (B7883-B7886, gateinqcurses); narrative Curses (Solemn Oath, Company of Wolves, Personal Adversary) are the Storyteller's",
+    "Order benefits only from 1223 (the Oculi after 1227); before then a hunter is a precursor (B7887, B7890). Worship Obsession's daily cost, Holy Art Natural's experience and Pure at creation are not read yet (B7889)"
    ],
    "deferred": [],
    "faults": [],

@@ -72,6 +72,8 @@ export const ROTHENSTEIN = {
       {name: "The voivode's steward", match: "steward", variant: "ghoul", note: "A small grey servant at Kranzfels since childhood, as a parent was before. The family has served on the voivode's blood for generations. Knocks three raps, a pause, then one."},
       {name: "Ruy of Toledo, the fire-eater", match: "Ruy of Toledo", type: "Vampire", note: "The fire-eater in a painted mask with Kilian's troupe. Serves Mircea in the east, carries no letter and is here only to look: the first sign in a hundred years that the sire is watching."},
       {name: "The Cistercian preacher", match: "Cistercian", note: "A friar on the heresy circuit who comes with the bishop's Lent inquiry."},
+      {name: "Thibault de Montfaucon", match: "Thibault", hunter: {precursor: "crusader", zeal: 1},
+        note: "A knight sworn to the bishop of Olomouc who fought in the Holy Land and came home a hunter of the Devil's creatures. Rides with the Cistercian preacher on the Lent inquiry of 1202."},
       {name: "Foreman Dalibor", match: "Dalibor", note: "Foreman at the Silver Adit. Marks the hat brim for every miner short."},
       {name: "Old Bořek", match: "Bořek", note: "An old miner at the Silver Adit who has watched the red marks multiply."},
       {name: "Vesna", match: "Vesna", note: "Lost a spouse to the charcoal smoke and sent Matej to the mine. Sits by the lantern at the Adit mouth, which trims itself."},
@@ -100,7 +102,9 @@ export const ROTHENSTEIN = {
       {match: "Sieglinde", road: "Road of Kings"},
       {match: "Konrad the Flesh-Smith", road: "Road of Metamorphosis"},
       {match: "Kasimir", road: "Road of the Beast"},
-      {match: "Marta", road: "Road of Heaven"}
+      {match: "Marta", road: "Road of Heaven"},
+      // B7890: Brother Anselm keeps his count as one of the lone Faithful; there is no Inquisition before 1223
+      {match: "Anselm", hunter: {precursor: "faithful", faith: 1}}
     ]
   },
   // The Ways step (B4810-B4813): the old world's exits between the walkable maps become Ways, and each place inside gets a
