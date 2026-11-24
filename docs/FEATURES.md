@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | yes | 23 | 0 | 6 |
+| wodx-creation | yes | 23 | 0 | 5 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | yes | 34 | 0 | 19 |
@@ -106,7 +106,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Archive of the dead: the long dead leave the world for a compendium, by hand or by the clock, and come back (`creation.archive-of-the-dead`) | core | gated | 1 | gateplaypage 5 |
 | Before the First Night: one hub per character with a card for each step, and the guided builder (`creation.first-night`) | core | book |  | gatefirstnight 4 build |
 | Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
-| Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 2 | gatedalines 3. a Valkyrje's blood makes no ghoul and no bond |
+| Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 1 | gateghoulclicks 2. Drink makes a ghoul |
 | Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 2 | gatelearning 3. the study ends and the trait rises |
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
@@ -120,7 +120,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
-| Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | shown | 1 |  |
+| Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | gated |  | gatepassyears 3. Pass the years |
 | The archive of the dead, by hand and by itself as the clock moves on (`creation.archive`) |  | book |  | gatetruthsheets 8. the long dead go to the archive by themselves |
 | The Dark Ages Companion's demons and the V20 Dark Ages Companion's monsters as sheets (`creation.dac-demons`) |  | gated | 1 | gatedadacdemons 1. the window makes two demons with its Make button |
 | The Dark Ages Storytellers Companion's supporting characters as ready sheets, by tier (`creation.supporting-cast`) |  | gated | 1 | gatedasupporting 1. the window makes two experienced templates with its Make button |
