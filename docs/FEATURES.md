@@ -45,16 +45,16 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
 | Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 2 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
-| The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 1 | gate6e a card: header, roll, what changed with pips |
+| The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 2 | gate6e a card: header, roll, what changed with pips |
 | The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | shown | 1 |  |
 | The ghosts of V20 Dark Ages: Passion as blood, manifesting (`actions.ghosts-da`) | core | shown | 2 |  |
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
 | Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | shown | 2 |  |
-| Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 2 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
+| Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 3 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
-| Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 1 |  |
+| Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 2 |  |
 | With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 1 | gatesocial 6 window |
 | Changelings of the later eras: Arts, Realms, Nightmare, Imbalance and Banality (`actions.c20`) |  | gated | 1 | gate6h Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns |
 | Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 2 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |
@@ -68,7 +68,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The inner voice: the Beast, the Shadow, Rage and the Impulse played by someone (`actions.voice`) |  | parked |  | gate6d a whisper reaches only the character, the voice and the Storyteller |
 | The Kuei-jin: Chi, Dharma, the P'o and their Disciplines (`actions.kote`) |  | gated | 1 | gate6j Dharma 3 allows one Chi a turn |
 | The Reborn: Balance, Sekhem and Hekau (`actions.mummy`) |  | gated | 1 | gate6k Forbiddance: Balance against Willpower at 6 |
-| The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging (`actions.wraith`) |  | gated | 1 | gate6c use an Arcanos |
+| The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging (`actions.wraith`) |  | gated | 2 | gate6c use an Arcanos |
 | Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 3 | gate6b change form |
 
 ## wodx-chronicle

@@ -34,7 +34,8 @@
     }
    },
    "open": [
-    "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet"
+    "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet",
+    "The wraith menu's Danger group has the Haunt, a night in it and going into it (B7901)"
    ],
    "deferred": [],
    "faults": [],
@@ -166,7 +167,8 @@
    },
    "open": [
     "book: V20 Dark Ages Disciplines chapter; not checked against the book text yet",
-    "a mortal killed by an inquisitor asks the first sin against God's Piety roll (B7888)"
+    "a mortal killed by an inquisitor asks the first sin against God's Piety roll (B7888)",
+    "kindred.js witnessStep reads the Fog for wraiths (B7900)"
    ],
    "deferred": [],
    "faults": [],
@@ -491,7 +493,7 @@
    "steps": {
     "built": {
      "pr": 618,
-     "decisions": "Actions 3.42.0"
+     "decisions": "Actions 3.42.0, B7900"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/witness-rules.js:reaction"
@@ -501,7 +503,8 @@
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
+    "The Fog for the restless dead: reactions by Willpower, forgotten after, minors and animals outside it (B7900, gatewraithdead step 3)"
    ],
    "deferred": [],
    "faults": [],
@@ -1268,7 +1271,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B43, B44, B3553, B3554"
+     "decisions": "B43, B44, B3553, B3554, B7899-B7903"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/wraith.js:library"
@@ -1282,7 +1285,8 @@
     }
    },
    "open": [
-    "book: Wraith: The Oblivion 20th; not checked against the book text yet"
+    "book: Wraith: The Oblivion 20th; not checked against the book text yet",
+    "The valley's dead: the Crucible on a player's mortal's death, Haunts with echoes (Nightmarish and Forbidding roll), shelter from the storm by Haunt rating and crowding, and no wraith where the chronicle's souls are eaten (B7899, B7901-B7903, gatewraithdead)"
    ],
    "deferred": [],
    "faults": [],

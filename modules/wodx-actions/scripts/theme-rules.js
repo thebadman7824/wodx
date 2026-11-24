@@ -46,7 +46,7 @@ export const MENU_PLAN = {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useArcanos", "uses:pathos", "api:passion", "api:fetter", "api:memoriam", "api:caul", "api:soulforge"],
         resist: ["api:shadow", "api:shadowWhisper", "api:harrowing", "api:hazard"],
         recover: ["api:healCorpus", "uses:willpower"],
-        st: ["api:shadowguide", "api:hysteria", "api:maelstrom"],
+        st: ["api:shadowguide", "api:hysteria", "api:maelstrom", "api:haunt", "api:hauntNight", "api:hauntEnter"],
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:wraith"]
     },
     hunter: {
@@ -220,6 +220,9 @@ export const DESC = {
     "api:shadowguide": "Choose the player who voices this wraith's Shadow",
     "api:hysteria": "The living see a ghost: the Hysteria roll",
     "api:maelstrom": "Set the storm's force on this scene; roll the storm's harm",
+    "api:haunt": "Set this scene's Haunt: its rating and the echoes it has room for",
+    "api:hauntNight": "Mortals sleep in a Nightmarish Haunt: Willpower, or a day of harder rolls",
+    "api:hauntEnter": "Mortals go into a Forbidding Haunt: Willpower, or they flee",
     "api:soulforge": "Soulforging: oboli, soulsteel arms and armor or an Artifact from Corpus, as a long task",
     "rules:wraith": "The wraith rules at a glance, with page references",
     "api:hunterSheet": "The hunter's traits: Conviction, Piety or Creed, the stage of the hunt",

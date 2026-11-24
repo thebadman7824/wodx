@@ -27,6 +27,7 @@ import * as PE from "./path-effects.js";
 import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
+import { fogReaction } from "./wraith-rules.js";
 import * as MR from "./mummy-rules.js";
 import * as DR from "./demon-rules.js";
 import * as BR from "./book-rituals.js";
@@ -1209,8 +1210,11 @@ export function build(ctx) {
             else if (rule === "delirium") { const d = G.delirium(w, GX.basis(), GX.data().garou?.delirium); reaction = d.reaction; memory = d.memory; }
             else if (rule === "veil") reaction = MR.veil(w);
             else if (rule === "revelation") { const r = await rollPool(w, Math.max(2, faith)); rolls.push(r.roll); const re = DR.mortalReaction(r); reveal = re.key; reaction = re.key; }
-            const act = WR.witnessAct(reaction);
-            const keep = WR.remembers(rule, { memory, willpower: w, reveal, banality: n(a.system?.banality?.permanent) || 6 });
+            // B7900: the Fog for the restless dead, by Willpower; a minor or an animal is outside it (Wraith 20th pp. 284-285)
+            let fog = null;
+            if (rule === "hysteria" && !g) { let child = false; try { child = !!T?.age?.minor?.(a); } catch (e) { child = false; } fog = fogReaction(w, { child, beast: P.detectProfile(a) === "beast" }); reaction = `${fog.label}: ${fog.text}`; }
+            const act = fog ? fog.act : WR.witnessAct(reaction);
+            const keep = WR.remembers(rule, { memory, willpower: w, reveal, banality: n(a.system?.banality?.permanent) || 6, fog });
             try {
                 if (act === "freeze" && T?.applyTimed) await T.applyTimed(a, { name: "Frozen with fear", description: `Frozen by what ${who} is`, duration: { kind: "scene" }, condition: "immobilized", key: "wodx-witness-freeze", source: "WoDX witness step" });
                 if (act === "flee" && T?.applyTimed) await T.applyTimed(a, { name: "Afraid", description: `Afraid of ${who}`, duration: { kind: "scene" }, key: "wodx-effect-fear", source: "WoDX witness step" });

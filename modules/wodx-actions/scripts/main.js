@@ -3708,7 +3708,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     nature: withActor(a => nature({ actor: a })),
     derangement: withActor(a => game.modules.get("wodx-chronicle")?.api?.derangements?.hold?.(a)),
     shadow: withActor(a => wx().shadow(a)), shadowWhisper: withActor(a => wx().whisper(a)), shadowguide: withActor(a => wx().shadowguide(a)),
-    harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), maelstrom: () => wx().maelstrom(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
+    harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), maelstrom: () => wx().maelstrom(), haunt: () => wx().haunt(), autoStorm: () => wx().autoStorm(), hauntHere: () => wx().hauntHere(), hauntNight: () => wx().hauntNight(), hauntEnter: () => wx().hauntEnter(), crucible: (a, how) => wx().crucible(resolveActor(a), how), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
     corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), soulforge: withActor(a => sfx().forge(a)), soulforgeRules: () => sfx().rules, wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.library(), arcanoiLibraries: () => ({ w20: WX.DATA.w20, gw: WX.DATA.gw }),
     // Hunters, True Faith and Numina (3.4.0)
     hunterSheet: withActor(byLine(a => rx().sheet(a), a => hx().inquisitorSheet(a), hh2Note)),
@@ -3974,6 +3974,8 @@ function kindredHooks() {
     // and a Kindred's marks can be seen again (3.67.0)
     Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "marksSeen")) s.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
+    // B7899: a player's mortal killed: the Crucible card, or nothing where the chronicle says souls are eaten
+    Hooks.on("wodxDamageApplied", (actor, info) => { if (info?.condition === "dead") wx().onDeath(actor, info).catch(e => console.error("WoDX | Crucible", e)); });
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {
         try {

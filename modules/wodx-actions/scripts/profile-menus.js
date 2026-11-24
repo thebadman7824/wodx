@@ -130,7 +130,7 @@ export const MENUS = {
             ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
             ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"], ["api:chainThrall", "Hold a Thrall", "fa-link"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["rules:wraith", "Wraith rules", "fa-book"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["api:haunt", "The Haunt here (GM)", "fa-ghost"], ["api:hauntNight", "A night in the Haunt (GM)", "fa-bed"], ["api:hauntEnter", "Going into the Haunt (GM)", "fa-door-open"], ["rules:wraith", "Wraith rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },
