@@ -62,7 +62,9 @@ export async function run() {
     const test = m => m.content?.includes(actor.name) && /dice, diff \d+/.test(m.content ?? "");
     await waitFor(() => newestMessage(since, test), 8000);
     const m = newestMessage(since, test);
-    return m ? Number(/dice, diff (\d+)/.exec(m.content)?.[1]) : null;
+    // a roll straight after a failed one is a retry with its own +1 (the dice decide); the count leaves it out
+    const retry = /Retry \(second try\) \+1 diff/.test(String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ")) ? 1 : 0;
+    return m ? Number(/dice, diff (\d+)/.exec(m.content)?.[1]) - retry : null;
   }
   /** Fire a guilty verdict (law-trial's hook), find the sentence card, render it and press the button for `pick`. */
   async function sentenceByButton(actor, deeds, pick, region = "moravia") {
