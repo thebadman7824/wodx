@@ -209,3 +209,24 @@ test("an open batch the state file lost is taken up again from the mark in its b
   assert.equal(r.front, 900);
   assert.equal(r.action, "merge");
 });
+
+test("B7960: a runner git fault while a batch is rebuilt keeps the batch open with an alert, for at most maxHours", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const members = [{number: 20, ref: "claude/b20", head: "h20"}, {number: 21, ref: "claude/b21", head: "h21"}];
+  fs.writeFileSync(path.join(home, "train-state.json"), JSON.stringify({batch: {pr: 900, head: "hb900", members, since: Date.now()}}));
+  const alerts = [];
+  const fault = async () => ({setup: true, error: "git on the runner could not fetch main and the batch's branches (fatal: unable to access x): the runner's git setup needs a fix"});
+  const moved = mockGh({batchBehind: 3});
+  const w = await step({gh: moved.gh, home, apply: true, build: fault, alert: async k => alerts.push(k)});
+  assert.equal(w.action, "wait");
+  assert.deepEqual(alerts, ["train-git"]);
+  assert.ok(!moved.calls.some(c => c === "PATCH /pulls/900"), "the batch stays open");
+  assert.equal(stateOf(home).batch.pr, 900);
+  // past the cap the batch closes, and its members (still labelled) go on alone
+  fs.writeFileSync(path.join(home, "train-state.json"), JSON.stringify({batch: {...stateOf(home).batch, setupSince: Date.now() - 4 * 3600e3}}));
+  const late = mockGh({batchBehind: 3});
+  await step({gh: late.gh, home, apply: true, batch: 1, build: fault, prepare: async () => ({setup: true, error: "x"})});
+  assert.equal(late.bodies["PATCH /pulls/900"]?.state, "closed");
+  assert.match(late.bodies["POST /issues/900/comments"]?.body ?? "", /for over 3 hours/);
+  assert.ok(!late.calls.some(c => /issues\/2[01]\/labels/.test(c)), "the members stay in the train");
+});

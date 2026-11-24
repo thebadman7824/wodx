@@ -162,7 +162,10 @@ export async function step(ctx) {
       const names = cands.map(c => `#${c.number}`).join(", ");
       if ( !apply ) { Object.assign(out, {action: "batch", why: `${d.why}: would batch ${names} (up to ${maxBatch})`}); log(`train: #${pr.number} ${out.action}: ${out.why}`); return out; }
       const r = await (ctx.build ?? buildBatch)(ctx, cands, {max: maxBatch});
-      if ( r.error ) log(`train: no batch (${r.error}); #${pr.number} goes alone`);
+      if ( r.error ) {
+        log(`train: no batch (${r.error}); #${pr.number} goes alone`);
+        if ( r.setup ) await ctx.alert?.("train-git", "the merge train cannot run git merges (runner setup fault)", `${r.error}\n\nThe batch could not be built; the front goes alone. The runner log has git's full output.`);
+      }
       else if ( r.members.length >= 2 ) {
         const bp = await openBatch(gh, r);
         delete state.pr; delete state.head;
@@ -186,9 +189,27 @@ export async function step(ctx) {
       catch (e) { await leave(gh, pr.number, `the train could not mark the draft ready (${String(e.message).slice(0, 120)}): mark it ready for review, then add the label again`); out.action = "leave"; }
     }
     if ( d.action === "prepare" ) {
-      const r = await prepare(ctx, full.head.ref, head);
-      if ( r.error ) { await leave(gh, pr.number, r.error); out.action = "leave"; out.why = r.error; }
-      else { out.why += `: ${r.did}`; await comment(gh, pr.number, `Merge train: this pull request is at the front. ${r.did}; the gates run on the new head (${r.sha.slice(0, 8)}) and it merges when its checks are green.`); }
+      const r = await (ctx.prepare ?? prepare)(ctx, full.head.ref, head);
+      // B7960 (#2121): a git fault on the runner (no identity, a locked index) is not the pull request's fault, so it
+      // keeps its label and says so once per head, instead of every pull request in the line leaving in turn. The
+      // runner raises a pc-alert for it too (ctx.alert), since the whole line waits until the PC is fixed.
+      // A wait for the runner is capped at maxHours on one head, so a fault taken for the runner's never holds the line for good.
+      if ( r.error && r.setup && state.setupHead === head && Date.now() - state.setupSince > maxHours * 3600e3 ) {
+        const why = `${r.error}, for over ${maxHours} hours`;
+        delete state.setupHead; delete state.setupSince;
+        await leave(gh, pr.number, why); out.action = "leave"; out.why = why;
+      }
+      else if ( r.error && r.setup ) {
+        if ( state.setupHead !== head ) { state.setupHead = head; state.setupSince = Date.now(); }
+        out.action = "wait"; out.why = r.error;
+        await ctx.alert?.("train-git", "the merge train cannot run git merges (runner setup fault)", `${r.error}\n\nThe pull requests keep their labels and wait. The runner log has git's full output.`);
+        if ( state.setupWarned !== head ) { state.setupWarned = head; await comment(gh, pr.number, `Merge train: ${r.error}. This pull request keeps its place; the train tries again at its next step.`); }
+      }
+      else if ( r.error ) { await leave(gh, pr.number, r.error); out.action = "leave"; out.why = r.error; }
+      else {
+        out.why += `: ${r.did}`; delete state.setupWarned; delete state.setupHead; delete state.setupSince; await ctx.recovered?.("train-git");
+        await comment(gh, pr.number, `Merge train: this pull request is at the front. ${r.did}; the gates run on the new head (${r.sha.slice(0, 8)}) and it merges when its checks are green.`);
+      }
     }
     if ( d.action === "merge" ) {
       try {
@@ -246,29 +267,39 @@ async function leave(gh, n, why) {
 /**
  * Brings the branch up to date in the train's own worktree (<home>/train): merge origin/main in, stamp the release
  * notes, push with a lease on the head the train saw (a thread that pushed meanwhile wins, and the train looks again).
- * Returns {sha, did} or {error}.
+ * Returns {sha, did} or {error}; {setup: true, error} when the fault is the runner's own (B7960), not the branch's.
  */
 export async function prepare(ctx, ref, head) {
   const {git, home, repoRoot} = ctx;
   const dir = path.join(home, "train");
   const ok = r => r && r.status === 0;
-  if ( !ok(await git(["fetch", "-q", "origin", "main", `+refs/heads/${ref}:refs/remotes/origin/${ref}`], repoRoot)) ) return {error: `the train could not fetch ${ref}`};
-  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(await git(["worktree", "add", "--detach", "-f", dir, head], repoRoot)) ) return {error: "the train could not make its worktree"};
+  const failed = (r, what, error) => gitFailed(ctx, r, what, error);
+  let r;
+  if ( !ok(r = await git(["fetch", "-q", "origin", "main", `+refs/heads/${ref}:refs/remotes/origin/${ref}`], repoRoot)) ) return failed(r, `fetch ${ref}`, `the train could not fetch ${ref}`);
+  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(r = await git(["worktree", "add", "--detach", "-f", dir, head], repoRoot)) ) return failed(r, "make its worktree", "the train could not make its worktree");
   await git(["merge", "--abort"], dir);
-  if ( !ok(await git(["checkout", "-q", "-f", "--detach", head], dir)) ) return {error: `the train could not check out ${head.slice(0, 8)}`};
+  if ( !ok(r = await git(["checkout", "-q", "-f", "--detach", head], dir)) ) return failed(r, `check out ${head.slice(0, 8)}`, `the train could not check out ${head.slice(0, 8)}`);
   await git(["clean", "-q", "-fd"], dir);
   const did = [];
   const behind = (await git(["merge-base", "--is-ancestor", "origin/main", "HEAD"], dir)).status !== 0;
   if ( behind ) {
     const m = await git(["merge", "--no-edit", "-m", `Merge main into ${ref} (merge train)\n\nMerge-Train: yes`, "origin/main"], dir);
-    if ( !ok(m) ) { await git(["merge", "--abort"], dir); return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"}; }
+    if ( !ok(m) ) {
+      const f = mergeFailure(m, (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout);
+      await git(["merge", "--abort"], dir);
+      ctx.log?.(`train: git merge of main into ${ref} failed (exit ${m.status}): ${f.said}`);
+      if ( f.conflict ) return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"};
+      if ( f.setup ) return {setup: true, error: `git on the runner could not merge main in, though nothing conflicts (${redact(f.said)}): the runner's git setup needs a fix`};
+      return {error: `git could not merge main in, though nothing conflicts (${redact(f.said)}): fix the branch, push, then add the label again`};
+    }
     did.push("main merged in");
     const carried = await carryReviews(dir, head);
     if ( carried.error ) { await git(["reset", "-q", "--hard", head], dir); return {error: carried.error}; }
     if ( carried.n ) did.push(`${carried.n} file review(s) carried over`);
   }
   const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
-  if ( st.status !== 0 ) { await git(["reset", "-q", "--hard", head], dir); return {error: `merge-stamp refused: ${(st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400)}`}; }
+  if ( st.status !== 0 ) { await git(["reset", "-q", "--hard", head], dir); return stampFailed(ctx, st, "merge-stamp refused"); }
+
   if ( /Committed\./.test(st.stdout) ) {
     did.push("release notes stamped");
     // B7332: the stamp commit carries the train's trailer, so pc-gates.yml knows this push as the train's own
@@ -280,6 +311,46 @@ export async function prepare(ctx, ref, head) {
   if ( !ok(p) ) return {error: `the push to ${ref} was refused (${String(p.stderr ?? "").trim().slice(0, 200)}); if the thread pushed meanwhile, add the label again`};
   return {sha, did: did.join(" and ")};
 }
+
+/**
+ * B7960 (#2121): tells a real merge conflict from any other git failure, from the failed merge's spawnSync result and
+ * the unmerged paths (`git diff --name-only --diff-filter=U`, read before the abort). said: the last lines git printed,
+ * for the log and the comment. A merge refused for a missing identity (Secondary PC, 19 Nov) is not a conflict. Pure.
+ */
+export function mergeFailure(m, unmerged = "") {
+  const text = `${m?.stdout ?? ""}\n${m?.stderr ?? ""}`;
+  const conflict = /^CONFLICT\b/m.test(text) || String(unmerged ?? "").trim() !== "";
+  const said = gitSaid(m);
+  return {conflict, setup: !conflict && setupFault(text), said};
+}
+/** B7960: a train step that git refused: {setup, error} for a known runner fault (setupFault), else {error}. Logs git's words. */
+function gitFailed(ctx, r, what, error) {
+  const said = gitSaid(r);
+  ctx.log?.(`train: git could not ${what} (exit ${r?.status}): ${said}`);
+  return setupFault(`${r?.stdout ?? ""}\n${r?.stderr ?? ""}`) ? {setup: true, error: `git on the runner could not ${what} (${redact(said)}): the runner's git setup needs a fix`} : {error};
+}
+/** merge-stamp's refusal as gitFailed's result: a runner fault only when git itself said so. */
+function stampFailed(ctx, st, error) {
+  const said = (st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400);
+  if ( !setupFault(st.stdout + st.stderr) ) return {error: `${error}: ${said}`};
+  ctx.log?.(`train: merge-stamp failed: ${said}`);
+  return {setup: true, error: `git on the runner could not commit the stamp (${redact(said)}): the runner's git setup needs a fix`};
+}
+/** The last lines git printed, on one line. Pure. */
+export const gitSaid = r => `${r?.stdout ?? ""}\n${r?.stderr ?? ""}`.split("\n").map(l => l.trim()).filter(Boolean).slice(-3).join(" ").slice(0, 300) || `git exited ${r?.status ?? "with no status"}`;
+/**
+ * B7960: git's words for a fault of the runner's own machine (identity, a lock, permissions, disk, network), which
+ * no change to the branch can fix. Anything else (a conflict, unrelated histories, a hook) is the branch's. Pure.
+ */
+export const setupFault = text => String(text ?? "").split("\n")
+  .filter(l => /^\s*(fatal|error):/.test(l) || /identity unknown|tell me who you are/i.test(l)) // git's own lines, lower case
+  .some(l => /identity unknown|tell me who you are|unable to auto-detect email|\.lock'?:? File exists|Unable to create '[^']*\.lock'|could not lock|cannot lock ref|Another git process|Permission denied|No space left on device|unable to write|not a git repository|Could not resolve host|unable to access/i.test(l));
+
+/** git's words with addresses and local paths taken out, for a comment on the public repo (the log keeps them). Pure. */
+export const redact = s => String(s ?? "")
+  .replace(/'[^']*(?:[A-Za-z]:[\\/]|\/(?:home|Users)\/)[^']*'/g, "'<path>'")
+  .replace(/[^\s'"()]+@[^\s'"()]+/g, "<address>")
+  .replace(/(?:[A-Za-z]:[\\/]|\/(?:home|Users)\/)[^\s'"]*/g, "<path>");
 
 /** The lines a diff adds and removes, without positions: what the branch itself did to a file. */
 export const ownChange = diff => String(diff ?? "").split("\n").filter(l => /^[+-]/.test(l) && !/^(\+\+\+|---) /.test(l)).join("\n");
@@ -373,10 +444,11 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
   const dir = path.join(home, "train-batch");
   const ok = r => r && r.status === 0;
   const refs = members.map(m => `+refs/heads/${m.ref}:refs/remotes/origin/${m.ref}`);
-  if ( !ok(await git(["fetch", "-q", "origin", "main", ...refs], repoRoot)) ) return {error: "the train could not fetch main and the batch's branches"};
-  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(await git(["worktree", "add", "--detach", "-f", dir, "origin/main"], repoRoot)) ) return {error: "the train could not make its batch worktree"};
+  let g;
+  if ( !ok(g = await git(["fetch", "-q", "origin", "main", ...refs], repoRoot)) ) return gitFailed(ctx, g, "fetch main and the batch's branches", "the train could not fetch main and the batch's branches");
+  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(g = await git(["worktree", "add", "--detach", "-f", dir, "origin/main"], repoRoot)) ) return gitFailed(ctx, g, "make its batch worktree", "the train could not make its batch worktree");
   await git(["merge", "--abort"], dir);
-  if ( !ok(await git(["checkout", "-q", "-f", "--detach", "origin/main"], dir)) ) return {error: "the train could not check out main"};
+  if ( !ok(g = await git(["checkout", "-q", "-f", "--detach", "origin/main"], dir)) ) return gitFailed(ctx, g, "check out main", "the train could not check out main");
   await git(["clean", "-q", "-fd"], dir);
   const taken = new Set(), chosen = [], skipped = [];
   for ( const m of members ) {
@@ -388,7 +460,14 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
     if ( both.length ) { skipped.push({number: m.number, why: `it changes ${both.slice(0, 3).join(", ")}${both.length > 3 ? " and more" : ""}, as an earlier one in the batch does`}); continue; }
     const before = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
     const mg = await git(["merge", "--no-ff", "--no-edit", "-m", `Merge #${m.number} (${m.ref}) into the batch (merge train)\n\nMerge-Train: yes`, m.head], dir);
-    if ( !ok(mg) ) { await git(["merge", "--abort"], dir); await git(["reset", "-q", "--hard", before], dir); skipped.push({number: m.number, why: "it does not merge cleanly into the batch"}); continue; }
+    if ( !ok(mg) ) {
+      const f = mergeFailure(mg, (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout);
+      await git(["merge", "--abort"], dir); await git(["reset", "-q", "--hard", before], dir);
+      ctx.log?.(`train: git merge of #${m.number} into the batch failed (exit ${mg.status}): ${f.said}`);
+      if ( f.setup ) return {setup: true, error: `git on the runner could not merge #${m.number} into the batch (${redact(f.said)}): the runner's git setup needs a fix`};
+      skipped.push({number: m.number, why: f.conflict ? "it does not merge cleanly into the batch" : `git could not merge it into the batch, though nothing conflicts (${redact(f.said)})`});
+      continue;
+    }
     const carried = await carryReviews(dir, m.head, {other: "HEAD^1", what: `the merge of #${m.number} into the batch`});
     if ( carried.error ) { await git(["reset", "-q", "--hard", before], dir); skipped.push({number: m.number, why: carried.error}); continue; }
     for ( const f of files ) taken.add(f);
@@ -397,7 +476,7 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
   const names = chosen.map(m => `#${m.number}`).join(", ");
   if ( chosen.length < 2 ) return {members: chosen, skipped};
   const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
-  if ( st.status !== 0 ) return {error: `merge-stamp refused the batch of ${names}: ${(st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400)}`};
+  if ( st.status !== 0 ) return stampFailed(ctx, st, `merge-stamp refused the batch of ${names}`);
   const stamped = /Committed\./.test(st.stdout);
   if ( stamped ) await git(["commit", "--amend", "-q", "--no-edit", "--trailer", "Merge-Train: yes"], dir);
   const sha = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
@@ -476,6 +555,16 @@ export async function batchStep(ctx, state, order) {
   if ( (cmp.behind_by ?? 0) > 0 ) {
     if ( !apply ) return res("prepare", `behind main by ${cmp.behind_by}: would build the batch again`);
     const r = await (ctx.build ?? buildBatch)(ctx, b.members, {max: n, lease: bp.head.sha});
+    // B7960: the runner's own git fault is not the members' fault: the batch stays open and waits, with an alert
+    if ( r.setup ) {
+      // capped like the front's wait: after maxHours the batch closes and its members go on alone
+      b.setupSince ??= Date.now();
+      if ( Date.now() - b.setupSince > maxHours * 3600e3 ) { await close(`${r.error}, for over ${maxHours} hours`); delete state.batch; return null; }
+      await ctx.alert?.("train-git", "the merge train cannot run git merges (runner setup fault)", `${r.error}\n\nThe batch and the pull requests keep their places and wait. The runner log has git's full output.`);
+      return res("wait", r.error);
+    }
+    delete b.setupSince;
+    if ( !r.error && r.members?.length === n ) await ctx.recovered?.("train-git");
     if ( r.error || r.members?.length !== n ) { await close(r.error ?? `not all of ${nums} merge onto the new main`); delete state.batch; return null; }
     await gh("PATCH", `/pulls/${b.pr}`, {body: batchBody(r)}).catch(() => null);
     Object.assign(b, {head: r.sha, since: Date.now(), ran: 0});

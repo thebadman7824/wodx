@@ -7,3 +7,14 @@
 {"file":"tools/gate/gategadgets.mjs","verdict":"working","how":"read each changed create and its uses; madeInOrder matches by name via kit inOrder, names unique in each batch; node --check; guard tests pass","hash":"5666a1da6094","at":"2026-11-23T14:34Z"}
 {"file":"tools/gate/gatecook.mjs","verdict":"working","how":"read each changed create and its uses; madeInOrder matches by name via kit inOrder, names unique in each batch; node --check; guard tests pass","hash":"c2a33941451f","at":"2026-11-23T14:34Z"}
 {"file":"changes/decisions/B7770.md","verdict":"working","how":"read in full; block claimed by this thread","hash":"8252460c3052","at":"2026-11-23T14:34Z"}
+{"file":"tools/gate/gatedach8.mjs","verdict":"working","how":"read in full; detail only, pass conditions unchanged; node --check; guard tests pass","hash":"e12854e93c36","at":"2026-11-24T08:52Z"}
+{"file":"tools/gate/gatespritelife.mjs","verdict":"working","how":"read in full; detail only, pass conditions unchanged; node --check; guard tests pass","hash":"075a91ff8f93","at":"2026-11-24T08:52Z"}
+{"file":"changes/decisions/B7850.md","verdict":"working","how":"read in full; block claimed by this thread","hash":"6ea5fe625c80","at":"2026-11-24T08:52Z"}
+{"file":"tools/gate/gatedach8.mjs","verdict":"working","how":"read in full; victim re-placed inside swarm (position only) per job 2414 detail; node --check; guard tests pass","hash":"ecb87268e594","at":"2026-11-24T10:50Z"}
+{"file":"changes/decisions/B7850.md","verdict":"working","how":"read in full; block claimed by this thread","hash":"d1ccffa6239f","at":"2026-11-24T10:50Z"}
+{"file":"tools/pcq/jobs.mjs","verdict":"working","how":"Read in full; pcq.test.mjs passes 36/36, including the new peerRoom/leaveToPeer cases and the New PC self-exclusion","hash":"623bb6268f8a","at":"2026-11-24T14:09Z"}
+{"file":"tools/pcq/runner.mjs","verdict":"working","how":"Read in full; pcq.test.mjs passes 36/36, including the new peerRoom/leaveToPeer cases and the New PC self-exclusion","hash":"8ec4197d2e77","at":"2026-11-24T14:09Z"}
+{"file":"tools/pcq/runner.json","verdict":"working","how":"Read in full; pcq.test.mjs passes 36/36, including the new peerRoom/leaveToPeer cases and the New PC self-exclusion","hash":"26915bad43de","at":"2026-11-24T14:09Z"}
+{"file":"tools/pcq/runner.new_pc_lebrun.json","verdict":"working","how":"Read in full; pcq.test.mjs passes 36/36, including the new peerRoom/leaveToPeer cases and the New PC self-exclusion","hash":"6911ff90c955","at":"2026-11-24T14:09Z"}
+{"file":"tools/harness/pcq.test.mjs","verdict":"working","how":"Read in full; pcq.test.mjs passes 36/36, including the new peerRoom/leaveToPeer cases and the New PC self-exclusion","hash":"75255f42f441","at":"2026-11-24T14:09Z"}
+{"file":"changes/decisions/B7910.md","verdict":"working","how":"Read in full; pcq.test.mjs passes 36/36, including the new peerRoom/leaveToPeer cases and the New PC self-exclusion","hash":"e5a8e80e9e14","at":"2026-11-24T14:09Z"}

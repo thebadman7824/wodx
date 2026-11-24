@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7850
+Next free block: B7970
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -467,6 +467,9 @@ Next free block: B7850
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
 | B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
+| B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
+| B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
+| B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16081,3 +16084,45 @@ Reverse: remove the revenantWeakness button in apps.mjs and revenant.mjs weaknes
 An Obertus or Keskinen gets the Obsession Derangement on the sheet, with the field the Storyteller names. A Kairouan, Oprichniki or Rossellini gets the family's V20 Flaw (Slow Healing, Haunted, Deathsight) as a Flaw item worth no freebie points, so the rules that read those Flaws work. A Vlaszy may be given the oath at birth or later. The window says the blood starts to flow at about 13 (Dark Ages: Vampire p. 289), and Vlaszy majority is read as 16 (house reading).
 
 Reverse: edit revenantBirth in modules/wodx-creation/scripts/states.mjs.
+
+## B7851. gatedach8 records what the swarm's turn saw after a dodge (2026-11-24)
+Gates. Nightly job 2396 failed step 5b (issue 2411): the dodge was counted (1 die, 1 success) but the bite after it did no harm at all, where 2 lethal was wanted. It fails now and then, on main too. The step now records the dodge key at the turn and after it, who was inside the swarm, the autoApply setting, what the turn returned, and the text of its bite card and damage card. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: take why, lines, t0 and key out of step 5b in tools/gate/gatedach8.mjs.
+
+## B7852. gatespritelife records which picture the figure shows (2026-11-24)
+Gates. Nightly job 2396 failed step 3 (issue 2412): after other gates, the figure's picture stayed one frame wide (96 px) instead of the walk sheet. It passes in every PR run. The step now records whether its 15 s wait ran out and how long it took, what give returned, the token's texture path, the picture the mesh shows, the sheet it should show, and the figure's act flag. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: put back the plain `await A.give(tok, FIG)` and the short detail in step 3 of tools/gate/gatespritelife.mjs.
+
+## B7853. gatedach8 step 5b puts the victim back inside the swarm before its bite (2026-11-24)
+Gates. The detail from B7851 named the cause on its first run (job 2414): at the swarm's turn its card said "No one inside it". The victim had left the swarm's square between step 5 and step 5b, so the bite found no one and did no harm. Step 5b now records where the swarm and the victim stand and whether the victim is inside. If it is not, the step moves the victim back to the middle of the swarm (its position only, never its hidden state) before the turn. The pass condition is unchanged. What moved the token is not yet known; the recorded positions will show it. Not yet run in Foundry.
+
+Reverse: take the before record and the vTok.update out of step 5b in tools/gate/gatedach8.mjs.
+
+## B7911. Pull request gate runs go to the New PC first (2026-11-24)
+PC runners. The owner asked on 24 November 2026 that the New PC get priority for all new pull request runs, with the Main PC taking them when the New PC's queue is full. The New PC runs a gate set about 2 to 3 times faster than the Main PC (24 November run times: 74 to 172 gates in 16 to 22 minutes on the New PC, about 170 to 230 gates in 43 to 66 minutes on the Main PC). A new setting, prGatesPreferPeer in tools/pcq/runner.json ({statusTitle, maxMinutes 5, freshMinutes 15}), makes a runner leave a pull request's touched or every-gate run (title "[PR #n sha]", no lane named) to the runner whose status issue has that title while that status shows a free lane, is not holding, and was written in the last 15 minutes. It takes the run itself when the New PC is full, holding or silent, and after 5 minutes in any case, so no run waits on a New PC that does not pick it up. The status issue is read at most once a minute. runner.new_pc_lebrun.json clears the setting, and a runner never defers to its own status title. The Secondary PC shares the setting after its own 10 minute wait (B7761), so in practice it keeps its present behaviour. Train front jobs carry the same title and are covered too. Tested by tools/harness/pcq.test.mjs; not yet seen live.
+
+Reverse: take prGatesPreferPeer out of tools/pcq/runner.json and runner.new_pc_lebrun.json; the runner then takes jobs as before.
+
+## B7960. A git fault on the runner keeps a pull request in the train (2026-11-24)
+PC tools (tools/pcq/train.mjs). When merging main into the front, or a member into a batch, fails, the train reads
+git's output and the unmerged paths before it aborts. A real conflict (a CONFLICT line or unmerged paths) leaves the
+train as before. A failure that git's own fatal or error lines name as a fault of the runner's machine (no identity,
+as on the Secondary PC on 19 Nov with PR 1848; a lock; permissions; disk; network) is logged with git's words, keeps
+the label and comments once per head (addresses and local paths taken out), and the runner raises a pc-alert
+("train-git") that clears once a prepare or batch build works. The same holds for fetch, worktree, checkout and the
+merge-stamp commit, and a batch hit by it stays open with the alert. The wait is capped at the train's 3 hours (on one head, or for one batch), so a
+fault misread as the runner's never holds the line for good. Any other non-conflict failure (such as unrelated
+histories) leaves with git's words. Fixes issue 2121.
+
+Reverse: in prepare() treat every failed merge as a conflict again, and drop the r.setup branch in step().
+
+## B7961. PC runner alerts are found again after a restart (2026-11-24)
+PC tools (tools/pcq/runner.mjs, jobs.mjs). Each alert body ends with a hidden mark naming the runner's host and the
+alert key (alertMark). The first time after a start that a key raises or clears an alert, the runner reads the open
+pc-alert issues (fresh, all pages) and adopts the oldest with its mark (adoptAlert), closing any others as
+duplicates. The first healthy lane check and a cool first graphics card reading after a start count as a clear. A restart no
+longer leaves the old alert open for good or opens a new one while the fault lasts. Fixes issue 2393.
+
+Reverse: remove adopt() from alert() and recovered(), and the mark from the alert body.
