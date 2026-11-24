@@ -47,9 +47,10 @@ export async function run() {
       const msg = game.messages.get(asked?.messageId);
       const f = msg?.flags?.[MOD]?.oracle;
       const rec = (game.settings.get(MOD, "oracle") ?? []).at(-1);
-      G.ok("2. the oracle", !!msg && (msg.rolls ?? []).length === 1 && f?.answer === W.rules.oracleAnswer("likely", f?.face)
+      // the seat shifts the odds a step by the night's temper (a fight left in the Ledger by an earlier gate), so the answer follows the odds it used
+      G.ok("2. the oracle", !!msg && (msg.rolls ?? []).length === 1 && ["sure", "likely", "even"].includes(f?.odds) && f?.answer === W.rules.oracleAnswer(f?.odds, f?.face)
         && (msg.whisper ?? []).includes(game.user.id) && /wsolo-answer/.test(msg.content ?? "") && rec?.q === "WoDX gate: is the mill watched?" && rec?.actorId === actor.id,
-        {face: f?.face, answer: f?.answer, lead: asked?.lead});
+        {face: f?.face, odds: f?.odds, answer: f?.answer, lead: asked?.lead});
     });
     let oathId = null, rows = [];
     await G.step("3. the Leads page", async () => {
