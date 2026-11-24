@@ -9,7 +9,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-actions | yes | 42 | 0 | 9 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
-| wodx-combat | yes | 15 | 0 | 2 |
+| wodx-combat | yes | 15 | 0 | 0 |
 | wodx-creation | yes | 23 | 0 | 5 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
@@ -91,11 +91,11 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | How long a fight took: the clock moves by rounds times three seconds (`combat.fight-time`) | core | gated | 1 | gatetime fight length |
 | Standing up from a knockdown (`combat.knockdown-stand`) | core | gated | 1 | gateknockdown 4 |
 | The after-action card: what each fighter took, dealt and spent, and who saw it (`combat.aftermath`) | core | book |  | gatetable after-action card |
-| The ambush: Dexterity + Stealth against Perception + Alertness for a free attack (`combat.ambush`) | core | shown | 2 |  |
+| The ambush: Dexterity + Stealth against Perception + Alertness for a free attack (`combat.ambush`) | core | gated | 1 | gateambush 1. a hidden attacker's Attack rolls the ambush with the sheets' pools |
 | The body plan: shapes, parts, held gear coming off, where blows land, the maiming card (`combat.body-plan`) | core | book |  | gatebody the maiming card |
 | Turns that move on by themselves: NPC turns, player turns with a countdown, Hold and Act next (`combat.turn-conductor`) | core | gated | 1 | gate7b1 Everyone: the hero's action is spent, a countdown, then the turn ends with no click |
 | Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 1 | gatemove drowning in a fight |
-| Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | shown | 2 |  |
+| Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | gated | 1 | gatepowder 1. wet powder will not fire from the attack window |
 | Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming (`combat.vehicles`) |  | gated | 1 | gatetruthcombat 10. a quick attack on a vehicle's token comes off its sheet's Structure |
 
 ## wodx-creation
