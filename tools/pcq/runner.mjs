@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger, leaveToPeer} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger, leaveToPeer, alertMark, adoptAlert} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -170,24 +170,53 @@ async function healthCheck(id, force = false) {
   // screen) takes no jobs but setup-lane, or a gate job fails there without running a gate (job #1816 on lane 7).
   // Only lanes with a host: the main PC's older lanes may predate clean.json and must keep working.
   if ( laneOf(id).host && !fs.existsSync(path.join(laneDir(laneOf(id)), "clean.json")) ) { s.down = true; s.why = "setup not finished (no clean fingerprint; queue a setup-lane job)"; return; }
-  if ( await isUp(laneOf(id)) ) { if ( s.down ) await recovered(id); return; }
+  // B7961: the first healthy check after a start also clears a lane alert raised before the restart
+  if ( await isUp(laneOf(id)) ) { if ( s.down || !s.adopted ) await recovered(id); return; }
   log(`lane ${id} is down; starting it`);
   const r = await lanesCmd(["start", "--lane", id], {minutes: 6});
-  if ( r.code === 0 && await isUp(laneOf(id)) ) { if ( s.down ) await recovered(id); return; }
+  if ( r.code === 0 && await isUp(laneOf(id)) ) { if ( s.down || !s.adopted ) await recovered(id); return; }
   s.down = true;
   await alert(id, `Lane ${id} (port ${laneOf(id).port}) is down and did not start.`, r.out.slice(-1500));
 }
+// B7961 (#2393): the first time after a start that a key raises or clears an alert, the open pc-alert issues are read
+// (fresh, all pages) and the one with this runner's mark for the key is adopted, so an alert raised before a restart
+// is closed when the fault clears and not opened a second time while it lasts. Later calls use s.alert as before.
+async function openAlerts() {
+  const all = [];
+  for ( let page = 1; page <= 10; page++ ) {
+    const got = await gh("GET", `/issues?state=open&labels=${LABEL.alert}&per_page=100&page=${page}`);
+    all.push(...(got ?? []));
+    if ( (got ?? []).length < 100 ) break;
+  }
+  return all;
+}
+async function adopt(key, s) {
+  if ( DRY ) s.adopted = true;
+  if ( s.adopted || s.adoptRetry > Date.now() ) return;
+  const open = await openAlerts().catch(e => { log(`could not read open alerts: ${e.message}`); return null; });
+  if ( !open ) { s.adoptRetry = Date.now() + 10 * 60000; return; } // tried again in 10 minutes, not on every loop
+  s.adopted = true;
+  const {keep, extra} = adoptAlert(open, HOST, key, s.alert);
+  if ( keep && !s.alert ) log(`alert #${keep} (${key}) found open from before a restart`);
+  if ( keep ) s.alert = keep;
+  for ( const n of extra ) {
+    await comment(n, `Duplicate of #${keep}, which stays open for this fault; closed by the runner.`).catch(() => {});
+    await close(n).catch(() => {}); log(`alert #${n} closed as a duplicate of #${keep}`);
+  }
+}
 async function alert(key, title, detail = "") {
   const s = state[key] ?? (state[`_${key}`] ??= {});
+  await adopt(key, s);
   if ( s.alert || DRY ) return;
   try {
     const i = await gh("POST", "/issues", {title: `${ALERT_PREFIX}: ${title}`, labels: [LABEL.alert],
-      body: `${title}\n\n\`\`\`\n${detail.slice(-3000)}\n\`\`\`\n\nThe runner closes this issue when it clears. Jobs keep running on the other lanes.`});
+      body: `${title}\n\n\`\`\`\n${detail.slice(-3000)}\n\`\`\`\n\nThe runner closes this issue when it clears. Jobs keep running on the other lanes.\n\n${alertMark(HOST, key)}`});
     s.alert = i.number; log(`alert #${i.number}: ${title}`);
   } catch (e) { log(`could not open alert: ${e.message}`); }
 }
 async function recovered(key) {
-  const s = state[key] ?? state[`_${key}`]; if ( !s ) return;
+  const s = state[key] ?? (state[`_${key}`] ??= {});
+  await adopt(key, s);
   s.down = false; s.why = null;
   if ( s.alert ) { await comment(s.alert, "Cleared.").catch(() => {}); await close(s.alert).catch(() => {}); log(`alert #${s.alert} cleared`); s.alert = null; }
 }
@@ -618,7 +647,7 @@ let trainNow = null, trainBusy = false, lastTrain = 0, trainClock = true;
 function trainTick() {
   if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
   lastTrain = Date.now(); trainBusy = true;
-  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3, clockRuns: trainClock})
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, alert, recovered, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3, clockRuns: trainClock})
     .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
 }
 /** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */
@@ -792,6 +821,8 @@ for ( ;; ) {
     if ( g?.change === "hot" ) await alert("gpu", `graphics card running hot (core ${g.r.core} C${g.r.memory !== null ? `, memory ${g.r.memory} C` : ""})`,
       `Over ${gpu.GPU_LIMITS.core} C core${g.r.memory !== null ? ` or ${gpu.GPU_LIMITS.memory} C memory` : ""} for ${gpu.GPU_LIMITS.hotMinutes} minutes. Power ${g.r.watts} W, fan ${g.r.fan}%, load ${g.r.util}%. Log: logs/gpu-*.csv in the runner folder.`);
     else if ( g?.change === "cool" ) await recovered("gpu");
+    // B7961: a card already cool at the first reading after a start clears a heat alert raised before the restart
+    else if ( g?.r && !state._gpu?.adopted && g.r.core < gpu.GPU_LIMITS.clearCore && (g.r.memory === null || g.r.memory < gpu.GPU_LIMITS.clearMemory) ) await recovered("gpu");
     for ( const id of LANES ) await healthCheck(id);
     if ( conf.watch && Date.now() - lastWatch > (conf.watch.everyMinutes ?? 5) * 60000 ) { lastWatch = Date.now(); await watch(); }
     const issues = await openIssues(LABEL.job);

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7920
+Next free block: B7970
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -469,6 +469,7 @@ Next free block: B7920
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
+| B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16103,3 +16104,25 @@ Reverse: take the before record and the vTok.update out of step 5b in tools/gate
 PC runners. The owner asked on 24 November 2026 that the New PC get priority for all new pull request runs, with the Main PC taking them when the New PC's queue is full. The New PC runs a gate set about 2 to 3 times faster than the Main PC (24 November run times: 74 to 172 gates in 16 to 22 minutes on the New PC, about 170 to 230 gates in 43 to 66 minutes on the Main PC). A new setting, prGatesPreferPeer in tools/pcq/runner.json ({statusTitle, maxMinutes 5, freshMinutes 15}), makes a runner leave a pull request's touched or every-gate run (title "[PR #n sha]", no lane named) to the runner whose status issue has that title while that status shows a free lane, is not holding, and was written in the last 15 minutes. It takes the run itself when the New PC is full, holding or silent, and after 5 minutes in any case, so no run waits on a New PC that does not pick it up. The status issue is read at most once a minute. runner.new_pc_lebrun.json clears the setting, and a runner never defers to its own status title. The Secondary PC shares the setting after its own 10 minute wait (B7761), so in practice it keeps its present behaviour. Train front jobs carry the same title and are covered too. Tested by tools/harness/pcq.test.mjs; not yet seen live.
 
 Reverse: take prGatesPreferPeer out of tools/pcq/runner.json and runner.new_pc_lebrun.json; the runner then takes jobs as before.
+
+## B7960. A git fault on the runner keeps a pull request in the train (2026-11-24)
+PC tools (tools/pcq/train.mjs). When merging main into the front, or a member into a batch, fails, the train reads
+git's output and the unmerged paths before it aborts. A real conflict (a CONFLICT line or unmerged paths) leaves the
+train as before. A failure that git's own fatal or error lines name as a fault of the runner's machine (no identity,
+as on the Secondary PC on 19 Nov with PR 1848; a lock; permissions; disk; network) is logged with git's words, keeps
+the label and comments once per head (addresses and local paths taken out), and the runner raises a pc-alert
+("train-git") that clears once a prepare or batch build works. The same holds for fetch, worktree, checkout and the
+merge-stamp commit, and a batch hit by it stays open with the alert. The wait is capped at the train's 3 hours (on one head, or for one batch), so a
+fault misread as the runner's never holds the line for good. Any other non-conflict failure (such as unrelated
+histories) leaves with git's words. Fixes issue 2121.
+
+Reverse: in prepare() treat every failed merge as a conflict again, and drop the r.setup branch in step().
+
+## B7961. PC runner alerts are found again after a restart (2026-11-24)
+PC tools (tools/pcq/runner.mjs, jobs.mjs). Each alert body ends with a hidden mark naming the runner's host and the
+alert key (alertMark). The first time after a start that a key raises or clears an alert, the runner reads the open
+pc-alert issues (fresh, all pages) and adopts the oldest with its mark (adoptAlert), closing any others as
+duplicates. The first healthy lane check and a cool first graphics card reading after a start count as a clear. A restart no
+longer leaves the old alert open for good or opens a new one while the fault lasts. Fixes issue 2393.
+
+Reverse: remove adopt() from alert() and recovered(), and the mark from the alert body.
