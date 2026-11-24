@@ -84,6 +84,7 @@ import * as TURN from "./turns.js";
 import * as LIM from "./limits.js";
 import * as RTY from "./retry-rules.js";
 import * as AFC from "./after-costs.js";
+import * as MWN from "./mage-wonders.js";
 import * as ACR from "./after-cost-rules.js";
 import * as NPW from "./npc-power-rules.js";
 import * as PK from "./power-keywords.js";
@@ -3158,7 +3159,7 @@ function pm() {
 let MXE = null;
 /** Dark Ages mages (3.7.0, Phase 6f). */
 function mx() {
-    return MXE ??= MXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, willpower, spendWillpower, notify: m => ui.notifications.warn(m) });
+    return MXE ??= MXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, willpower, spendWillpower, setDamage, applyDamage, notify: m => ui.notifications.warn(m) });
 }
 
 let FXE = null;
@@ -3789,13 +3790,15 @@ Hooks.once("init", () => {
 });
 
 // B6025: a character who woke behind the age rolls its old Abilities at +1 difficulty until caught up (the card said so; now rolls do)
-Hooks.once("ready", () => {
+// B7935: the chronicle's api is set after an await in its own ready, so these wait for it (they never registered before)
+Hooks.once("ready", () => { const go = () => {
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => ((ctx.channel ?? "roll") === "roll" ? DR_BEAST.behindEffects(actor?.getFlag?.(MOD, "longSleep"), ctx.tags ?? []) : [])); }
     catch (e) { console.warn("WoDX Actions | behind the age", e); }
     // B7909: a Dark Ages mage's degree tells with the fellowship (Dark Ages: Mage p. 37)
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => mx().house.degreeEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | degree on rolls", e); }
     // B7926: a thrall's Aura of Sin on a Social roll (Dark Ages: Devil's Due p. 97)
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => thx().auraEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | aura of sin", e); }
+}; if (game.modules.get("wodx-chronicle")?.api?.traits) go(); else Hooks.once("wodxChronicleReady", go);
 });
 Hooks.once("ready", async () => {
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
@@ -3810,7 +3813,7 @@ Hooks.once("ready", async () => {
         SUM.connect(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // B4920-B4923: the one scene count, power use limits and Drained
         try { LIM.setup();
-        FOM.setup(); CHM.setup(); TRS.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
+        FOM.setup(); CHM.setup(); TRS.setup(); AFC.setup(); MWN.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // B5783: when a fight ends, an NPC demon with Alter Memory makes the mortals who saw it forget
         Hooks.on("deleteCombat", c => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) coverUp(c).catch(e => console.warn("WoDX | cover up", e)); });
         // Lifted and planted items, and being caught at it (3.21.0)

@@ -73,7 +73,12 @@ export function build(ctx) {
     }
     const save = (actor, patch) => setFlag(actor, "daMage", { ...(actor.getFlag(MOD, "daMage") ?? {}), ...patch });
     // B7904-B7909: the household and standing (Dark Ages: Mage pp. 37, 83-93)
-    const HO = HH.build(ctx, { info });
+    const HO = HH.build(ctx, { info, backlash: {
+        // B7927: a wonder's Backlash uses the casting's own buttons
+        html: (actor, out) => `<div class="vta-big bad">Backlash: ${out.ones} one${out.ones === 1 ? "" : "s"} to answer for.</div><div class="vta-res">Quintessence may cancel the 1s. Then the Storyteller chooses the kind.</div>
+          ${btn("cancel", actor, "Spend Quintessence on the 1s")} ${Object.entries(M.BACKLASH).map(([k, l]) => btn(k, actor, l.split(" (")[0], true)).join(" ")}<div class="wodx-quiet">${REF} pp. 136-140</div>`,
+        flag: (msg, actor, out, plan) => msg.setFlag(MOD, "daBacklash", { actor: actor.uuid, ones: out.ones, highest: plan.highest, pillarsUsed: plan.pillarsUsed, cancelled: 0, done: null })
+    } });
     // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
     const sceneKey = () => `s${LIM.sceneNo()}`;
 

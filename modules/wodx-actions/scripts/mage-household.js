@@ -14,6 +14,7 @@
 import * as H from "./mage-household-rules.js";
 import * as M from "./mage-da-rules.js";
 import * as P from "./profiles.js";
+import * as MW from "./mage-wonders.js";
 import {WEEK, HOUR, DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
@@ -35,7 +36,7 @@ const whisperTo = actor => [...new Set([...gmIds(), ...game.users.filter(u => !u
 /** A degree shows once the Storyteller has named one. */
 const degreeSet = h => Number(h?.degree) > 0;
 
-export function build(ctx, { info }) {
+export function build(ctx, { info, backlash }) {
     const { post, rollPool, rollBlock, dialog, setFlag, attr, background, spendWillpower, notify } = ctx;
     const permWill = actor => n(ctx.willpower?.(actor)?.perm ?? actor?.system?.advantages?.willpower?.permanent);
     const tempWill = actor => n(ctx.willpower?.(actor)?.temp ?? actor?.system?.advantages?.willpower?.temporary);
@@ -93,7 +94,11 @@ export function build(ctx, { info }) {
         ["devotion", "Pray (Devotion, once a session)", v => v.merits.devotion > 0],
         ["fount", "Listen to the Living Fount (once a story)", v => v.merits.livingFount > 0],
         ["show", "A small show of magic", v => !!v.i.fellowship],
-        ["witchwalk", "The witchwalk (Storyteller)", v => v.merits.witchwalk > 0]
+        ["witchwalk", "The witchwalk (Storyteller)", v => v.merits.witchwalk > 0],
+        // B7927-B7930: enchanting as a craft, and Tass (pp. 190-207)
+        ["enchant", "Enchant a wonder (a charm, an elixir, a tool)", v => !!v.i.fellowship],
+        ["use", "Use a wonder (an elixir or poultice)", () => true],
+        ["tass", "Harvest Tass from a creature or a fae", () => true]
     ];
 
     async function open(actor) {
@@ -526,6 +531,7 @@ export function build(ctx, { info }) {
         }
     }
 
-    const STEPS = { chantry, familiar, feed, destiny, library, pillar, servant, bribe, teach, talisman, degree, devotion, fount, show, witchwalk };
-    return { open, view, sheetLine, ...STEPS, familiarCanTake, familiarTakes, focusTalisman, castBlock, witnesses, afterCast, weekly, degreeEffects, rules: H };
+    const WX = MW.build(ctx, { info, house, saveHouse, backlash });
+    const STEPS = { chantry, familiar, feed, destiny, library, pillar, servant, bribe, teach, talisman, degree, devotion, fount, show, witchwalk, enchant: WX.enchant, use: WX.useWonder, tass: WX.tass };
+    return { open, view, sheetLine, ...STEPS, wonders: WX, familiarCanTake, familiarTakes, focusTalisman, castBlock, witnesses, afterCast, weekly, degreeEffects, rules: H };
 }

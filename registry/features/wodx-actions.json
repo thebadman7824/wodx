@@ -20,7 +20,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B51, B58, B7904, B7920"
+     "decisions": "B51, B58, B7904, B7920, B7927, B7935"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:action"
@@ -1117,7 +1117,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B71, B7862, B7904-B7909"
+     "decisions": "B71, B7862, B7904-B7909, B7927"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/mage-da.js:build"
@@ -1154,7 +1154,7 @@
    "steps": {
     "built": {
      "pr": null,
-     "decisions": "B7904-B7909"
+     "decisions": "B7904-B7909, B7927"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/mage-household.js:build"
@@ -1201,6 +1201,38 @@
    },
    "open": [
     "book: Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 read 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.mage-wonders",
+   "name": "A Dark Ages mage's everyday wonders (charms, elixirs, tools) enchanted as a craft, and Tass from creatures and the fae",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/mage-wonders.js",
+    "modules/wodx-actions/scripts/mage-wonders-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7927-B7930"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/mage-household.js:build"
+    },
+    "shown": {
+     "what": "Enchant a wonder, Use a wonder and Harvest Tass on the household window and their cards; a charmed weapon's damage or piercing on its sheet; wonder items on the sheet"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemagewonders.mjs",
+     "step": "1. unbreakable iron from the household window: the sword strikes +3"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Mage pp. 190-207 and Dark Ages: Fae p. 182 read 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
    ],
    "deferred": [],
    "faults": [],

@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 44 | 0 | 9 |
+| wodx-actions | yes | 45 | 0 | 9 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
@@ -56,6 +56,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 2 |  |
 | With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 1 | gatesocial 6 window |
+| A Dark Ages mage's everyday wonders (charms, elixirs, tools) enchanted as a craft, and Tass from creatures and the fae (`actions.mage-wonders`) |  | gated | 1 | gatemagewonders 1. unbreakable iron from the household window: the sword strikes +3 |
 | A Dark Ages mage's household and standing: chantry and its gossip, familiar, Destiny, Library, servants, talismans, degrees, the DA:Mage merits and flaws (`actions.mage-household`) |  | gated | 1 | gatemagehouse 1. the chantry with no community points: the commoners talk |
 | Changelings of the later eras: Arts, Realms, Nightmare, Imbalance and Banality (`actions.c20`) |  | gated | 1 | gate6h Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns |
 | Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 2 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |

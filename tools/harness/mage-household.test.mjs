@@ -122,6 +122,8 @@ test("B7904-B7909: wiring", () => {
   assert.match(d, /what === "familiar"/);
   assert.match(m, /\(\) => mx\(\)\.householdWeek\(\)/);
   assert.match(m, /mx\(\)\.house\.degreeEffects\(actor, ctx\)/);
+  // B7935: the trait sources wait for the chronicle's api, which is set after an await in its ready
+  assert.match(m, /if \(game\.modules\.get\("wodx-chronicle"\)\?\.api\?\.traits\) go\(\); else Hooks\.once\("wodxChronicleReady", go\);/);
   assert.match(m, /daHousehold: withActor/);
   assert.match(h, /daMageDestiny\(actor, k\) \? 0/);
   assert.match(h, /FELLOWSHIP_TICK/);
