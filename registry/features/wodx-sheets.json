@@ -635,11 +635,13 @@
     },
     "shown": {
      "what": "a read-only strip at the top of the Bio tab; each part opens the Road or the Domain and fealty window in WoDX Actions"
+    },
+    "gated": {
+     "gate": "tools/gate/gatestandingstrip.mjs",
+     "step": "1. the Bio tab's strip shows the sheet's Road and opens the Road window"
     }
    },
-   "open": [
-    "gated: weekly-review-picks-1123.test.mjs checks the lines and the hook; no gate step opens a sheet and finds the strip yet"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [

@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 0 |
-| wodx-creation | yes | 23 | 0 | 5 |
+| wodx-creation | yes | 23 | 0 | 4 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | yes | 34 | 0 | 19 |
@@ -18,7 +18,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 20 | 0 | 3 |
+| wodx-sheets | yes | 20 | 0 | 2 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -113,7 +113,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
 | The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | shown | 1 |  |
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
-| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | shown | 2 |  |
+| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
 | The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 3 | gatewizard 10 derived traits |
@@ -186,7 +186,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions (`sheets.page-two`) | core | gated | 1 | gateplaypage 4 |
 | Bring forward: things on the maps swap for their equal in the card's year (`sheets.bring-forward`) |  | book |  | gatebringforward buttons |
 | History with Undo for this session's edits, and Print (`sheets.history-print`) |  | shown | 1 |  |
-| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | shown | 1 |  |
+| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | gated |  | gatestandingstrip 1. the Bio tab's strip shows the sheet's Road and opens the Road window |
 | Sheet tools: the title bar's buttons and window controls in one menu (`sheets.sheet-tools`) |  | book |  | gateplayerextras 8. sheet tools |
 | The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | shown | 1 |  |
 
