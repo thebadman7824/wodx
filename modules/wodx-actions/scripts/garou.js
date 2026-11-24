@@ -14,6 +14,7 @@ import { floatOver } from "./daysleep.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
 import * as TOT from "./totem-rules.js";
+import * as DEED from "./garou-deeds-rules.js";
 export { bringsDelirium } from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -375,7 +376,30 @@ export function build(ctx) {
         const notes = kind === "fox"
             ? "Fox frenzy: takes Lupus and flees to safety, attacking only what blocks the way. Usually costs Wisdom (DA:W p. 95)."
             : `Berserk: ${gnosisSafe ? "spares packmates (Gnosis ≥ Rage)" : "attacks anything that moves, packmates too, and won't remember (Rage > Gnosis)"}. Bite, claw or run only; no Gifts, fetishes or stepping sideways; wound penalties ignored (DA:W pp. 94–95).${thrall ? " Thrall of the Wyrm: the Storyteller picks the targets; a Wits (7) botch after a kill brings the breed's horror." : ""}`;
+        // B7880: a frenzy costs Wisdom, a fox frenzy Glory as well (DA:W p. 99): a suggestion for the Storyteller to confirm
+        if (!thrall) await suggestDeed(actor, DEED.frenzyDeed(kind), { why: kind === "fox" ? "fled in a fox frenzy" : "went berserk" });
         return post(actor, `${actor.name}: ${thrall ? "Thrall of the Wyrm" : kind === "fox" ? "fox frenzy" : "berserk frenzy"}`, `<div class="vta-note">${esc(notes)}</div>`);
+    }
+
+    /**
+     * B7880: a deed seen in play raises a Renown suggestion on the Storyteller's approval queue; approving it applies the
+     * book's award (DA:W pp. 98-99). Only for player characters' shapeshifters; one per deed per actor per game day.
+     */
+    async function suggestDeed(actor, deedId, { why = "", key = null } = {}) {
+        if (!actor || !isShifter(actor) || !actor.hasPlayerOwner) return null;
+        const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
+        const p = DEED.deedProposal(actor, deedId, { why, key, day });
+        if (!p) return null;
+        return chronicle()?.approvals?.propose?.(p) ?? null;
+    }
+    async function approveDeed(entry) {
+        const d = entry?.data ?? {}, a = game.actors.get(d.actorId), deed = DEED.deedById(d.deed);
+        if (!a || !deed) return { ok: false, why: "The character or the deed is gone." };
+        const lines = await applyRenown([a], deed.d, deed.label.toLowerCase());
+        return { ok: true, lines };
+    }
+    function registerHandlers() {
+        chronicle()?.approvals?.registerHandler?.("wodx-actions.renown", { label: "Renown from a deed seen in play (Werewolf)", approve: approveDeed });
     }
 
     async function endFrenzy(actor) {
@@ -954,7 +978,12 @@ export function build(ctx) {
             const perm = Object.fromEntries(RENOWN.map(k => [k, i.renown[k].permanent]));
             const eligible = b === "daw" || D.rankChart?.[b] ? G.rankFor(i.auspice, perm, D.rankChart?.daw) : null;
             const rankNote = eligible !== null && eligible > i.rank ? ` Renown meets Rank ${eligible} (${D.rankNames?.[eligible] ?? ""}): a challenge set by a Garou of that rank is next (DA:W p. 101).` : "";
-            lines.push(`${actor.name}: ${parts.join(", ")}${reason ? ` (${reason})` : ""}.${rankNote}`);
+            // B7879: seven or more lost in one category for one deed is a crime (DA:W p. 98)
+            const crime = DEED.crimeIn(deltas);
+            const crimeNote = crime.length ? ` A crime: the sept judges and punishes it beyond the lost ${crime.map(k => renownLabel(i.fera, k)).join(" and ")} (DA:W p. 98).` : "";
+            lines.push(`${actor.name}: ${parts.join(", ")}${reason ? ` (${reason})` : ""}.${rankNote}${crimeNote}`);
+            // B7882: a rank challenge becomes a sept event (WoDX Storyteller's sept window lists it)
+            if (eligible !== null && eligible > i.rank) Hooks.callAll("wodxRankReady", { actorId: actor.id, name: actor.name, rank: eligible, from: i.rank });
         }
         if (lines.length) {
             await writeRenownLog(lines);
@@ -970,13 +999,22 @@ export function build(ctx) {
         const content = `<form><p>Renown is earned only when others hear of the deed; spirits count (DA:W p. 98).</p>
           ${shifters.length > 5 ? searchBox("div.wodx-renown-actors", "Search characters…", "Search characters") : ""}
           <div class="wodx-renown-actors" style="max-height:220px;overflow-y:auto;flex:none">${shifters.map(a => `<div class="form-group" data-search-item><label>${esc(a.name)}</label><input type="checkbox" name="a_${a.id}" ${sel.has(a.id) ? "checked" : ""}/></div>`).join("")}</div>
+          <div class="form-group"><label>The deed (DA:W pp. 98-99)</label><select name="deed" data-fixed data-wodx-deed><option value="">(set the numbers below)</option>${Object.entries(DEED.DEEDS).map(([k, v]) => `<option value="${k}">${esc(v.label)} (${esc(DEED.deltaLine(v.d))})</option>`).join("")}</select></div>
+          <div class="form-group"><label>A breach of the Litany (pp. 31-33)</label><select name="litany" data-fixed data-wodx-litany><option value="">(none)</option>${DEED.LITANY.map(l => `<option value="${l.id}">${esc(l.text)}${l.deed ? ` (${esc(DEED.deltaLine(DEED.DEEDS[l.deed].d))})` : " (the sept judges)"}</option>`).join("")}</select></div>
           ${RENOWN.map(k => `<div class="form-group"><label>${cap(k)} (temporary)</label><input type="number" name="${k}" value="0"/></div>`).join("")}
           <div class="form-group"><label>For</label><input type="text" name="reason" placeholder="the deed"/></div>
+          <p class="vta-note">A deed that costs seven or more in one category is a crime the sept punishes (p. 98).</p>
           <p class="vta-note">Losses beyond the pool break a permanent dot into ten (DA:W p. 100). Fera use their own Renown names for the same three slots.</p></form>`;
         return dialog("Award Renown", content, "Award", async fd => {
             const actors = shifters.filter(a => fd[`a_${a.id}`]);
             if (!actors.length) { ctx.notify("Pick at least one character."); return null; }
-            return applyRenown(actors, fd, fd.reason);
+            // B7879: the deed (or the Litany breach) sets the numbers when the boxes are left at 0
+            const lit = DEED.LITANY.find(l => l.id === fd.litany);
+            const deed = DEED.deedById(fd.deed || lit?.deed || "");
+            const typed = RENOWN.some(k => n(fd[k]));
+            const deltas = typed || !deed ? fd : deed.d;
+            const reason = fd.reason || [lit ? `broke the Litany: ${lit.text}` : "", deed && !typed ? deed.label.toLowerCase() : ""].filter(Boolean).join("; ");
+            return applyRenown(actors, deltas, reason);
         });
     }
 
@@ -1205,7 +1243,7 @@ export function build(ctx) {
             set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
     }
     return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
-        awardRenown, applyRenown, packTotem, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
+        awardRenown, applyRenown, suggestDeed, registerHandlers, packTotem, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
 }
 
 /** Settings this part adds (registered by main.js). */

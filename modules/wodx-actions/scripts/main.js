@@ -30,6 +30,7 @@ import * as PM from "./profile-menus.js";
 import * as F from "./flavor.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as GX from "./garou.js";
+import * as DEED from "./garou-deeds-rules.js";
 import * as KR from "./kindred-rules.js";
 import * as RFR from "./road-faith-rules.js";
 import * as RFX from "./road-faith.js";
@@ -1100,6 +1101,9 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
         if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
     } catch (e) { console.warn("WoDX Actions | conditions", e); }
+    // B7870: Humble Fae (an Echo of one, Dark Ages: Fae p. 112): the fae's Willpower rolls +3 for the scene
+    if (fd.attr === "special:willpower" && Number(actor.getFlag?.("wodx-actions", "daFae")?.echoHumble?.scene) === LIM.sceneNo())
+        tm = { ...tm, diff: (tm.diff ?? 0) + 3, parts: [...(tm.parts ?? []), "Humble Fae (an Echo) +3 (Dark Ages: Fae p. 112)"] };
     // B7080: a Path walker's bearing (V20 p. 310) counts on the rolls the Path names, or when the player ticks the box;
     // Humanity and the Roads keep the plain aura box
     const pb = pathBearingFor(actor, rd, fd, pool);
@@ -3619,7 +3623,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // Dark Ages fae (3.8.0)
     treasureUse: withActor(a => trx().use(a)), treasureGive: withActor(a => trx().give(a)), treasureOath: withActor(a => trx().keepOath(a)), treasuresOf: a => TRS.treasuresOf(resolveActor(a)), treasureDaily: () => trx().daily(),
     daFae: withActor(a => fx().sheet(a)), daCantrip: withActor(a => fx().cast(a)), daUnleash: withActor(a => fx().unleash(a)),
-    daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daMists: withActor(a => fx().mists(a)),
+    daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daEchoFor: (o = {}) => { const a = resolveActor(o.actor); return a ? fx().echo(a, o) : null; }, daMists: withActor(a => fx().mists(a)),
     daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
@@ -3655,6 +3659,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     chiminage: withActor(a => gx().chiminage(a)), packTotem: withActor(a => gx().packTotem(a)),
     awardRenown: () => gx().awardRenown(), delirium: (o = {}) => gx().deliriumCheck(o), moonRise: (o = {}) => gx().moonRise(o),
     applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
+    suggestDeed: (actor, deed, o = {}) => gx().suggestDeed(resolveActor(actor), deed, o), renownDeeds: DEED,
     garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g),
     // Test code: fetched only when a gate asks for it, so players never download it
     makeTestPack: (...args) => import("./garou-testpack.js").then(m => m.makeTestPack(...args)),
@@ -3772,6 +3777,7 @@ Hooks.once("ready", async () => {
         // B7750 (Desk item 2026-11-23-mc3): Moments of Truth from the Road books' own prompts, through the approval queue
         try { rf().registerHandlers(); } catch (e) { console.error("WoDX | road", e); }
         try { dmx().registerHandlers(); } catch (e) { console.error("WoDX | domain", e); }
+        try { gx().registerHandlers(); } catch (e) { console.error("WoDX | renown", e); } // B7880
     };
     if (chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
     // B5115: attacking someone an oath binds you to; B5119: a Puppeteer's rides

@@ -143,6 +143,8 @@ async function stepCast(r) {
   for ( const p of first.make ) {
     const data = {name: p.name, type: p.type, flags: builtFlag("cast", `person:${p.name}`),
       system: {...(p.note ? {notes: `<p>${esc(p.note)}</p>`} : {}), ...(p.variant ? {settings: {variant: p.variant}} : {})}};
+    // B7874: a Werewolf's tribe, auspice, breed and rank, and a Kinfolk's tribe
+    for ( const [k, v] of Object.entries(p.sheet ?? {}) ) foundry.utils.setProperty(data, k, v);
     const a = await Actor.create(data, {wodxBuilder: true});
     if ( a ) made.push({uuid: a.uuid, made: true});
   }

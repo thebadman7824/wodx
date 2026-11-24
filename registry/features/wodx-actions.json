@@ -218,7 +218,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "Actions 3.2"
+     "decisions": "Actions 3.2, B7880"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:frenzy"
@@ -233,7 +233,8 @@
    },
    "open": [
     "gatetruthactions step 9 drives a real frenzy check but checks Destiny's reroll of it",
-    "book: V20 Dark Ages frenzy and Rötschreck; not checked against the book text yet"
+    "book: V20 Dark Ages frenzy and Rötschreck; not checked against the book text yet",
+    "A Garou frenzy suggests the Renown it costs, Wisdom and for a fox frenzy Glory (DA:W p. 99; B7880, gatesept step 4)"
    ],
    "deferred": [],
    "faults": [],
@@ -1023,12 +1024,13 @@
     "modules/wodx-actions/scripts/garou-rules.js",
     "modules/wodx-actions/scripts/garou-testpack.js",
     "modules/wodx-actions/scripts/totem-rules.js",
-    "modules/wodx-actions/data/rules/werewolf/totems-da.json"
+    "modules/wodx-actions/data/rules/werewolf/totems-da.json",
+    "modules/wodx-actions/scripts/garou-deeds-rules.js"
    ],
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B39, B41, B7082-B7087, B7860-B7861"
+     "decisions": "B39, B41, B7082-B7087, B7860-B7861, B7879-B7882"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/garou.js:totemOf"
@@ -1042,8 +1044,9 @@
     }
    },
    "open": [
-    "book: pack totems checked against Dark Ages: Werewolf pp. 193, 227-231 (B7860); the rest not checked against the book text yet",
-    "Mockery Breeds regenerate each round (B7820, #2096; gatemorebuilds step 4); the Samsa's swarm escape (W20 Book of the Wyrm p. 170) is the Storyteller's"
+    "book: pack totems checked against Dark Ages: Werewolf pp. 193, 227-231 (B7860), Renown awards, the Litany and rank challenges against pp. 31-33, 98-101 (B7879-B7882); the rest not checked against the book text yet",
+    "Mockery Breeds regenerate each round (B7820, #2096; gatemorebuilds step 4); the Samsa's swarm escape (W20 Book of the Wyrm p. 170) is the Storyteller's",
+    "Renown from play: frenzies, chores, moots, refused offices and learned rites raise suggestions the Storyteller confirms (B7880, gatesept); other deeds stay in the Award Renown dialog"
    ],
    "deferred": [],
    "faults": [],
@@ -1182,7 +1185,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B72, B6560-B6566, B7866"
+     "decisions": "B72, B6560-B6566, B7866, B7870-B7873"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/fae-da.js:build"
@@ -1196,7 +1199,8 @@
     }
    },
    "open": [
-    "book: oaths and faerie food checked against Dark Ages: Fae pp. 85, 108-110 (B7866); the rest not checked against the book text yet"
+    "book: oaths, faerie food and Echoes checked against Dark Ages: Fae pp. 67-75, 85, 108-113, 182 (B7866, B7870-B7873); the rest not checked against the book text yet",
+    "Echoes from village life (bells, holy ground, iron and charms near a token) come as Storyteller prompts (B7871, gatefaeechoes); the Storyteller still judges Echoes the prompts cannot see"
    ],
    "deferred": [],
    "faults": [],

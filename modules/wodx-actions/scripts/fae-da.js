@@ -19,6 +19,8 @@
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
 import * as F from "./fae-da-rules.js";
+import * as H from "./hunter-rules.js";
+import * as P from "./profiles.js";
 import * as DC from "./fae-da-cantrips.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -118,6 +120,8 @@ export function build(ctx) {
     };
     async function spend(actor, which, k) {
         const i = info(actor);
+        // B7870: Thin Mists (an Echo of two, p. 112): Mists powers cost double for the scene
+        if (which === "mists" && n(i.f.echoThin?.scene) === LIM.sceneNo() && i.f.echoThin) k = k * 2;
         const have = i[which].temp;
         if (have < k) { notify(`${actor.name} has ${have} ${which === "mists" ? "Mists" : "Weaving"}; this needs ${k}.`); return false; }
         const patch = { [which]: { perm: i[which].perm, temp: have - k } };
@@ -306,6 +310,8 @@ export function build(ctx) {
             if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const ed = echoDiff(actor);
             if (ed) plan.notes.push(`an Echo this scene +${ed}`);
+            // B7870: Cantrip Unleashed (an Echo of four, p. 113): for a day each cantrip also calls up an Unleashing
+            if (n(i.f.echoUnleashed?.until) > game.time.worldTime) plan.notes.push("Cantrip Unleashed (an Echo): the Storyteller rolls an Unleashing pool too, two successes counting as one");
             if (fd.cloak && !(await spend(actor, "mists", 1))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             // B6662: the target's ward or Magic Resistance makes a cantrip on them harder
@@ -440,14 +446,28 @@ export function build(ctx) {
     /*  Echoes                                                         */
     /* -------------------------------------------------------------- */
 
-    async function echo(actor) {
+    /** B7871: an inquisitor's Conviction (Dark Ages: Inquisitor): on the sheet's resource, else the inquisitor flag. */
+    const convOf = a => { const c = P.resource(a, "conviction"); return c.ok ? c.value : n(a?.getFlag?.(MOD, "inquisitor")?.conviction); };
+    async function setConv(a, to) {
+        const c = P.resource(a, "conviction"), v = Math.max(0, Math.min(10, n(to)));
+        if (c.ok) return P.adjust(a, "conviction", v - c.value, { note: false });
+        return a.setFlag(MOD, "inquisitor", { ...(a.getFlag(MOD, "inquisitor") ?? {}), conviction: v });
+    }
+    /** pre: {e: the Echo's index, who: "none" | "mortal", wielder: an actor id, why: what set it off} from a village prompt. */
+    async function echo(actor, pre = {}) {
         const i = await needFae(actor);
         if (!i) return null;
+        const CE = F.COURT_ECHOES[i.court];
+        const wielders = game.actors.filter(a => a.id !== actor.id && !a.getFlag(MOD, "daFae"));
         const oaths = i.oaths.map((o, k) => ({ ...o, k })).filter(o => o.active !== false);
         const content = `<form>
-          <div class="form-group"><label>The Echo</label><select name="e" data-fixed><option value="">(another)</option>${i.echoes.map((e, k) => `<option value="${k}">${esc(e.trigger)}</option>`).join("")}</select></div>
-          <div class="form-group"><label>Who wields it</label><select name="who" data-fixed><option value="none">No one (bells, holy ground): 5 dice</option><option value="mortal">A mortal: their Willpower</option></select></div>
+          ${pre.why ? `<p><b>${esc(pre.why)}</b></p>` : ""}
+          <div class="form-group"><label>The Echo</label><select name="e" data-fixed><option value="">(another)</option>${i.echoes.map((e, k) => `<option value="${k}"${n(pre.e) === k && pre.e != null ? " selected" : ""}>${esc(e.trigger)}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Who wields it</label><select name="who" data-fixed><option value="none">No one (bells, holy ground): 5 dice</option><option value="mortal"${pre.who === "mortal" ? " selected" : ""}>A mortal: their Willpower</option></select></div>
+          <div class="form-group"><label>The mortal</label><select name="wielder" data-fixed><option value="">(by number)</option>${wielders.map(a => `<option value="${a.id}"${pre.wielder === a.id ? " selected" : ""}>${esc(a.name)}</option>`).join("")}</select></div>
           <div class="form-group"><label>The mortal's Willpower</label><input type="number" name="will" min="1" max="10" value="5"/></div>
+          <div class="form-group"><label>An inquisitor's Conviction: risked as dice (1-3), spent as successes</label><input type="number" name="risk" min="0" max="3" value="0"/><input type="number" name="convSpend" min="0" max="10" value="0"/></div>
+          ${CE ? `<p class="wodx-quiet">${esc(F.COURTS[i.court]?.label ?? i.court)} Echoes: ${esc(CE.style)}; ${esc(CE.holy)} (${REF} p. ${CE.page}).</p>` : ""}
           <div class="form-group"><label><input type="checkbox" name="name"/> The fae's true name (level 5 before oaths)</label></div>
           ${oaths.length ? `<fieldset><legend>Oaths to call on (rating at 7)</legend>${oaths.map(o => `<div class="form-group"><label><input type="checkbox" name="o-${o.k}" checked/> ${esc(oathLine(o))}</label></div>`).join("")}</fieldset>` : `<p class="wodx-quiet">No active oaths.</p>`}
           ${i.sprites ? `<div class="form-group"><label>Sprites dice to add (up to ${i.sprites} a session)</label><input type="number" name="sprites" min="0" max="${i.sprites}" value="0"/></div>` : ""}
@@ -457,9 +477,25 @@ export function build(ctx) {
             const e = fd.e !== "" && fd.e != null ? i.echoes[n(fd.e)] : null;
             const rolls = [];
             let er = { successes: 0, botch: false };
-            if (!fd.name) { er = await rollPool(fd.who === "mortal" ? Math.max(1, n(fd.will)) : 5, 7); rolls.push(er.roll); }
+            // B7871: a named mortal rolls their own Willpower; an inquisitor may risk Conviction as dice and spend it as successes (p. 182)
+            const wa = fd.who === "mortal" && fd.wielder ? game.actors.get(fd.wielder) : null;
+            const isInq = !!wa && (P.resource(wa, "conviction").ok || !!wa.getFlag(MOD, "inquisitor"));
+            const conv = isInq ? convOf(wa) : 0;
+            const risk = isInq ? Math.min(n(fd.risk), 3, conv) : 0, cspend = isInq ? Math.min(n(fd.convSpend), conv - risk) : 0;
+            const willDice = wa ? Math.max(1, n(wa.system?.advantages?.willpower?.permanent)) : Math.max(1, n(fd.will));
+            const ip = F.inquisitorEcho({ willpower: willDice, risk, spend: cspend });
+            const inqParts = [];
+            if (!fd.name) {
+                er = await rollPool(fd.who === "mortal" ? ip.dice : 5, 7); rolls.push(er.roll);
+                if (fd.who === "mortal" && ip.extra && !er.botch) { er = { ...er, successes: n(er.successes) + ip.extra }; inqParts.push(`${ip.extra} Conviction spent: +${ip.extra}`); }
+                if (isInq && (risk || cspend)) {
+                    const rk = H.riskConviction(risk, er, conv - cspend);
+                    await setConv(wa, rk.after);
+                    if (risk) inqParts.push(`${risk} Conviction risked: ${conv - cspend} to ${rk.after}${rk.lostAll ? " (a botch: all of it)" : ""}`);
+                }
+            }
             let oathS = 0, body = "";
-            if (!fd.name) body += rollBlock(fd.who === "mortal" ? "The mortal's Willpower" : "The Echo (5 dice)", er, [`${i.O.label}: ${i.O.echoShift > 0 ? "+1 success" : i.O.echoShift < 0 ? "−1 success" : "no shift"}`]);
+            if (!fd.name) body += rollBlock(fd.who === "mortal" ? `${wa ? esc(wa.name) : "The mortal"}'s Willpower${risk ? ` + ${risk} risked` : ""}` : "The Echo (5 dice)", er, [`${i.O.label}: ${i.O.echoShift > 0 ? "+1 success" : i.O.echoShift < 0 ? "−1 success" : "no shift"}`, ...inqParts]);
             const spriteDice = Math.min(n(fd.sprites), i.sprites);
             let spriteLeft = spriteDice;
             for (const o of oaths) {
@@ -477,7 +513,8 @@ export function build(ctx) {
             if (level) await save(actor, { echoesMet: [...(Array.isArray(i.f.echoesMet) ? i.f.echoesMet : []), { t: game.time.worldTime, level }].slice(-5) });
             body += `<div class="vta-big ${level ? "bad" : "good"}">${level ? `Echo, level ${level}` : "The Echo fails"}${e ? `: ${esc(e.trigger)}` : ""}.</div><div class="vta-res">${esc(F.ECHO_LEVELS[level])}</div>`;
             if (weave) body += `<div class="vta-note">${weave} Weaving spent: −${weave / 2}.</div>`;
-            if (level >= 1 && level <= 5) body += `<div class="vta-note">For instance: ${F.ECHO_PICKS[level].map(esc).join("; ")}.</div>`;
+            // B7870: the book's five effects for this level, each a button the Storyteller presses to make it so (pp. 112-113)
+            if (level >= 1 && level <= 5) body += `<div class="vta-note">The Storyteller picks the effect:</div><div class="vta-buttons">${F.ECHO_EFFECTS.filter(x => x.level === level).map(x => `<button type="button" class="vta-btn" data-fx="echopick:${x.id}" data-actor="${esc(actor.uuid)}" data-gm title="${esc(x.does)}">${esc(x.label)}</button>`).join("")}</div>`;
             // B6586: levels 1 to 4 take hold for the scene: the fae's own rolls (and attacks, through the Echo condition) are harder,
             // level 4 stops Unleashing, and the harm of levels 3 and 4 is a button the Storyteller presses
             if (level >= 1 && level <= 4) {
@@ -514,6 +551,7 @@ export function build(ctx) {
         const hidden = i.hiddenDays !== null;
         const content = `<form>
           <p><b>${esc(actor.name)}</b>: Mists ${i.mists.temp}/${i.mists.perm}.${hidden ? ` Hidden by the Mists for ${i.hiddenDays} day${i.hiddenDays === 1 ? "" : "s"} (Willpower ${i.willpower}).` : ""}${i.suppression.over ? " Weaving overspent today: +2 to Mists rolls." : ""}</p>
+          ${i.f.lost ? `<p class="vta-warn">Lost, after an Echo (${REF} p. 113): unless the player took a new permanent Echo instead.</p>` : ""}
           ${(() => { const d = drift(i); return d.signs.length ? `<p class="wodx-quiet">Warning signs: ${esc(d.signs.join(", "))}${d.near ? ` (close to ${d.toward ?? "Lost or Locked"})` : ""}.</p>` : ""; })()}
           <div class="form-group"><label>Use</label><select name="use" data-fixed>
             ${hidden ? `<option value="release">Let the Mists fall (end the hiding)</option>` : `<option value="hide">Hide from mortals (Mists, 7)</option>`}
@@ -667,6 +705,36 @@ export function build(ctx) {
         return dialog(`Cold iron: ${actor.name}`, `<form><div class="form-group"><label>Levels after soak</label><input type="number" name="k" min="1" max="10" value="1"/></div></form>`, "Apply", fd => go(Math.max(1, n(fd.k))));
     }
 
+    /** B7870: the Storyteller picks the Echo's effect on the card: a condition for the scene, harm, or a change to the fae. */
+    async function echoPick(msg, id) {
+        if (!game.user.isGM) return null;
+        const e = msg.getFlag(MOD, "daFaeEcho"), x = F.echoEffect(id);
+        const a = e?.actor ? await fromUuid(e.actor) : null;
+        if (!a || !x || x.level !== e.level) return null;
+        if ((e.picked ?? []).includes(id)) return notify(`${x.label} is already applied.`);
+        await msg.setFlag(MOD, "daFaeEcho", { ...e, picked: [...(e.picked ?? []), id] });
+        const ap = x.apply ?? {}, lines = [];
+        if (ap.cond) {
+            const C = game.modules.get("wodx-chronicle")?.api;
+            try {
+                C?.registerCondition?.({ id: `fae-echo-${id}`, name: x.label, img: "icons/svg/sound.svg", source: `${REF} pp. 112-113`, lines: ["changeling", "fae"], summary: x.does, mods: ap.cond });
+                await C?.timed?.applyTimed?.(a, { name: `Echo: ${x.label}`, duration: { kind: "scene" }, condition: `fae-echo-${id}`, key: `wodx-fae-echo-${id}`, source: `${REF} pp. 112-113` });
+                lines.push("For the scene, on the sheet's conditions.");
+            } catch (err) { console.warn("WoDX | Echo pick", err); }
+        }
+        if (ap.dmg) {
+            const C = game.modules.get("wodx-combat")?.api;
+            if (ap.dmg.soak && C?.soakAndApply) await C.soakAndApply(a.getActiveTokens?.()[0] ?? a, { mode: "levels", amount: ap.dmg.n, type: ap.dmg.type, soak: true });
+            else { const r = await game.wodxCombat?.applyDamage?.(a, ap.dmg.type, ap.dmg.n); lines.push(`${ap.dmg.n} ${ap.dmg.type}${r?.woundLabel ? `: now ${r.woundLabel}` : ""}.`); }
+        }
+        if (ap.sheet === "reveal") { await save(a, { hiddenSince: null, mienShown: game.time.worldTime }); lines.push("The Mists fall away: the mien shows."); }
+        if (ap.sheet === "thin") { await save(a, { echoThin: { scene: LIM.sceneNo() } }); lines.push("Mists powers cost double this scene."); }
+        if (ap.sheet === "humble") { await save(a, { echoHumble: { scene: LIM.sceneNo() } }); lines.push("Willpower rolls +3 this scene."); }
+        if (ap.sheet === "unleashed") { await save(a, { echoUnleashed: { until: game.time.worldTime + DAY } }); lines.push("For a day each cantrip also rolls an Unleashing pool."); }
+        if (ap.sheet === "lost") { await save(a, { lost: true, lostAt: game.time.worldTime }); lines.push("Lost, unless the player takes a new permanent Echo instead."); }
+        return post(a, `Echo: ${a.name}, ${x.label}`, `<div class="vta-big bad">${esc(x.does)}.</div>${lines.map(l => `<div class="vta-res">${esc(l)}</div>`).join("")}<div class="wodx-quiet">${REF} pp. 112-113</div>`);
+    }
+
     /** Card buttons: lower a havoc with Weaving; apply an Echo's level-5 harm. */
     async function onButton(msg, what) {
         if (what === "calm") {
@@ -695,6 +763,7 @@ export function build(ctx) {
             const r = await game.wodxCombat?.applyDamage?.(a, type, k);
             return post(a, `Echo: ${a.name}`, `<div class="vta-big bad">${k} ${type} levels.</div>${r?.woundLabel ? `<div class="vta-res">Now ${esc(r.woundLabel)}.</div>` : ""}`);
         }
+        if (String(what).startsWith("echopick:")) return echoPick(msg, String(what).slice(9));
         if (what === "echo5") {
             if (!game.user.isGM) return null;
             const e = msg.getFlag(MOD, "daFaeEcho");

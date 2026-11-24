@@ -42,7 +42,7 @@ export const FACTIONS = [
   {key: "margrave", name: "The margrave's officers", kind: "mortal", leader: "Ctibor", members: ["Ctibor"], places: [/inn/i],
     assets: {status: 3, resources: 2, retainers: 2, influence: {crown: 3}}, goals: [{move: "scheme", target: "council"}],
     notes: "The margrave's tax-reeve and six men in blue, counting the silver from the autumn of 1200: mine, smelter, mint and market have disagreed for two years. Silver not struck at the margrave's mint is a crime against the margrave; kill the reeve and a larger audit comes (B7803)."},
-  {key: "grove", name: "The Grove's kin", kind: "garou", leader: null, members: [], places: [/old grove/i],
+  {key: "grove", name: "The Grove's kin", kind: "garou", leader: "Jaromír Moon-Ward", members: ["Jaromír Moon-Ward", "Dobroslava Reads-the-Ash", "Svatopluk Stone-Watch", "Bohdana Winter-Song", "Hostivít of the Grove farm", "Milada of the Grove farm", "Radek of the Grove farm"], places: [/old grove/i],
     assets: {status: 2, contacts: 1, influence: {folk: 1}}, goals: [{move: "defend"}],
     notes: "Silver Fangs of the Bohemian forests and their Kinfolk. They knew the thing under the hill as a creature of the Wyrm and helped bind it in 906. The Old Grove is their active caern, strained by three hundred years of holding the binding (B7803)."}
 ];

@@ -56,7 +56,12 @@ export const ROTHENSTEIN = {
       {key: "sieglinde", name: "Sieglinde", home: "kranzfels", faction: null},
       {key: "zdenka", name: "Zdenka", home: "lower-town", faction: null},
       {key: "ivo", name: "Ivo", home: "ferry", faction: null},
-      {key: "etienne", name: "Etienne", home: "inn", faction: null}
+      {key: "etienne", name: "Etienne", home: "inn", faction: null},
+      {key: "jaromir", name: "Jaromír", home: "old-grove", faction: "grove"},
+      {key: "dobroslava", name: "Dobroslava", home: "old-grove", faction: "grove"},
+      {key: "svatopluk", name: "Svatopluk", home: "old-grove", faction: "grove"},
+      {key: "bohdana", name: "Bohdana", home: "old-grove", faction: "grove"},
+      {key: "hostivit", name: "Hostivít", home: "old-grove", faction: "grove"}
     ]
   },
   // The cast step (B7806): the Book 1 omnibus's people the old world never had, and the Roads its sheets lack (ruling 27).
@@ -72,7 +77,22 @@ export const ROTHENSTEIN = {
       {name: "Vesna", match: "Vesna", note: "Lost a spouse to the charcoal smoke and sent Matej to the mine. Sits by the lantern at the Adit mouth, which trims itself."},
       {name: "Matej", match: "Matej", note: "Vesna's child, a young miner who went down at Michaelmas into a gallery nobody dug."},
       {name: "Dietrich", match: "Dietrich", note: "Sir Reinhold's cousin, raised by the lady Irmgard. Alive in Egon's root cellar until chapter VII."},
-      {name: "Ctibor's clerk", match: "Ctibor's clerk", note: "The margrave's auditor's clerk. Konrad shaped this face and owns this tongue: the cult's inside man at the council."}
+      {name: "Ctibor's clerk", match: "Ctibor's clerk", note: "The margrave's auditor's clerk. Konrad shaped this face and owns this tongue: the cult's inside man at the council."},
+      // B7874: the Old Grove's sept (desk garou-sept): a Silver Fang elder council and the Kinfolk family that farms for it
+      {name: "Jaromír Moon-Ward", match: "Jaromír", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Ahroun", breed: "Homid", rank: 4},
+        note: "Sept leader at the Old Grove, of a Silver Fang line that has kept the stones since the binding. Proud of the pedigree, tired of the strain, and slow to trust the Kindred at Kranzfels."},
+      {name: "Dobroslava Reads-the-Ash", match: "Dobroslava", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Theurge", breed: "Lupus", rank: 4},
+        note: "Master of the Rite at the Old Grove. Keeps the Moot Rite, teaches rites for tribute, and reads the Ashfield's spread in the ash of the caern fire."},
+      {name: "Svatopluk Stone-Watch", match: "Svatopluk", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Philodox", breed: "Homid", rank: 3},
+        note: "Caern Marshall at the Old Grove: sets the bawn watch and turns away anyone who wanders in. Sits on the council of elders."},
+      {name: "Bohdana Winter-Song", match: "Bohdana", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Galliard", breed: "Homid", rank: 5},
+        note: "The oldest of the Grove's council and its Talesinger. Sings the tale of the binding at every moot, and laughs at the new prophecies."},
+      {name: "Hostivít of the Grove farm", match: "Hostivít", kin: "silver-fangs",
+        note: "Head of the Kinfolk family that farms the Grove's fields and pays the lord's tax for them. Keeps the pedigree in memory, three generations back."},
+      {name: "Milada of the Grove farm", match: "Milada", kin: "silver-fangs",
+        note: "Hostivít's eldest child. Runs the farm day to day and speaks for the kin at the moot's edge."},
+      {name: "Radek of the Grove farm", match: "Radek", kin: "silver-fangs",
+        note: "Hostivít's grandchild, sixteen and restless. The elders watch for the First Change."}
     ],
     sheets: [
       {match: "Bogdan Ursu", road: "Road of Kings"},

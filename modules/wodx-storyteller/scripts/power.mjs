@@ -286,6 +286,14 @@ export async function holdMoot(placeId, actorIds = [], {extra = 0} = {}) {
   return r;
 }
 
+/** B7876: a sept office given (the sept window): the caern's office holder by actor id, or cleared. */
+export async function setOffice(placeId, key, actorId = null) {
+  const p = caernAt(placeId);
+  if ( !p ) return null;
+  const who = actorId ? game.actors.get(actorId) : null;
+  return update(placeId, x => ({...x, offices: {...(x.offices ?? {}), [key]: who ? who.id : ""}}), who ? `${who.name} takes an office.` : "An office is left empty.");
+}
+
 export async function openCaern(placeId, actorId) {
   const p = caernAt(placeId), a = game.actors.get(actorId);
   if ( !p || !a ) return null;
@@ -576,5 +584,5 @@ export async function setupPower() {
 }
 
 export const rules = P;
-export const api = () => ({open: powerDialog, state, on, run, edit: editPlace, remove: removePlace, seedChronicle: seedChronicleCaerns, meditate, gatherTass, absorbTass, dream, reave, memberLeaves, destroy, placesIn, rules: P,
+export const api = () => ({open: powerDialog, state, setOffice, on, run, edit: editPlace, remove: removePlace, seedChronicle: seedChronicleCaerns, meditate, gatherTass, absorbTass, dream, reave, memberLeaves, destroy, placesIn, rules: P,
   caern: {moot: holdMoot, open: openCaern, raid: meetRaid, war: caernWar, reclaim: reclaimCaern, raise: raiseCaern, rules: C}});

@@ -115,9 +115,10 @@ test("the cast step makes only the missing people and sets only the Roads that d
   assert.deepEqual(R.validate({...ROTHENSTEIN, cast: {people: [{name: "X", type: "Dragon"}, {name: "X"}], sheets: [{match: "Y", road: "Kings"}]}}, ctx).length, 3);
 });
 
-test("the Rothenstein cast follows the omnibus: ten missing people, the steward a ghoul, the Roads of ruling 27", () => {
+test("the Rothenstein cast follows the omnibus: ten missing people, the steward a ghoul, the Roads of ruling 27; the Grove's sept (B7874)", () => {
   const c = ROTHENSTEIN.cast;
-  assert.equal(c.people.length, 10);
+  assert.equal(c.people.length, 17, "the omnibus's ten and the Old Grove's four elders and three Kinfolk");
+  assert.equal(c.people.filter(p => p.type === "Werewolf").length, 4);
   assert.equal(c.people.find(p => /steward/.test(p.name)).variant, "ghoul");
   const road = m => c.sheets.find(s => s.match.includes(m))?.road;
   assert.deepEqual([road("Bogdan"), road("Konrad"), road("Kasimir"), road("Marta")], ["Road of Kings", "Road of Metamorphosis", "Road of the Beast", "Road of Heaven"]);

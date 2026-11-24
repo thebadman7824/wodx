@@ -213,14 +213,89 @@ export function echoFive(origin) {
     if (origin === "inanimae") return { aggravated: 0, lethalPerTwoTurns: 0, newEchoes: 0, note: "falls apart into the element until enough of it gathers to rebuild" };
     return { aggravated: 3, lethalPerTwoTurns: 1, newEchoes: origin === "changeling" ? 2 : 0, note: origin === "changeling" ? "and two new permanent Echoes, the Storyteller's choice" : "" };
 }
-/** A short pick list per level, in WoDX's words (the book's 25 examples, pp. 112–113, are its own). */
-export const ECHO_PICKS = {
-    1: ["cannot bring itself to strike the bearer without a Willpower roll (6)", "+1 to every difficulty while it lasts", "must stay twenty feet from the source"],
-    2: ["+2 to Dominion, Mists and Weaving rolls", "Mists powers cost double", "pain as if Mauled for half Mists turns"],
-    3: ["three bashing levels, soakable", "frozen in place for Mists turns", "the mien glows into view"],
-    4: ["the fae's active magic within fifty yards fails", "blinded while near it", "thrown into imbalance for some hours"],
-    5: ["three aggravated levels, then a lethal level per two turns near it", "turned to stone (Dawn 5 Unleashed to restore)"]
+/**
+ * B7870: the 25 Echo effects (pp. 112-113), five to a level, in WoDX's words. apply is what the Echo card's button for it
+ * does: cond (a condition for the scene with roll mods), dmg (harm through WoDX Combat), sheet (a change to the fae's
+ * flags: hide ends, Mists cost double, cantrips Unleash for a day, Lost), or nothing beyond the card (note).
+ */
+export const ECHO_EFFECTS = [
+    { id: "intimidation", level: 1, label: "Aura of Intimidation", does: "cannot strike the Echo's bearer without a Willpower roll (6)", apply: { note: true } },
+    { id: "humble", level: 1, label: "Humble Fae", does: "overcome with sadness: every Willpower roll +3 difficulty", apply: { sheet: "humble" } },
+    { id: "itch", level: 1, label: "Itch", does: "a maddening itch: every difficulty +1 while it lasts", apply: { cond: { ownDiff: 1 } } },
+    { id: "paranoia", level: 1, label: "Paranoia", does: "puts their own safety first, striking first at anyone who might do them harm", apply: { note: true } },
+    { id: "safe", level: 1, label: "Safe Zone", does: "must stay twenty feet from the source", apply: { note: true } },
+    { id: "barred", level: 2, label: "Barred from the Otherworld", does: "+2 to Dominion, Mists and Weaving rolls", apply: { note: true } },
+    { id: "vitus", level: 2, label: "Saint Vitus's Dance", does: "jerking limbs while it is seen or heard: every action +1 difficulty", apply: { cond: { ownDiff: 1 } } },
+    { id: "fear", level: 2, label: "Fear of Humanity", does: "for Mists minutes, dealing with any mortal takes a Willpower roll (7)", apply: { note: true } },
+    { id: "hurtful", level: 2, label: "Hurtful Vision", does: "pain as if Mauled, on top of any wounds, for half Mists turns", apply: { note: true } },
+    { id: "thin", level: 2, label: "Thin Mists", does: "Mists powers cost double", apply: { sheet: "thin" } },
+    { id: "backlash", level: 3, label: "Backlash", does: "Unleashing fights back: two more dice on the Unleashing pool's havoc for a day", apply: { note: true } },
+    { id: "lash", level: 3, label: "Echo Lash", does: "three bashing levels of invisible blows, soakable", apply: { dmg: { type: "bashing", n: 3, soak: true } } },
+    { id: "frozen", level: 3, label: "Frozen", does: "cannot move for Mists turns", apply: { cond: { noAction: true } } },
+    { id: "mental", level: 3, label: "Mental Vulnerability", does: "+2 to Mental rolls near the Echo", apply: { note: true } },
+    { id: "mien", level: 3, label: "Mien Revealed", does: "the mien shows, glowing, with every Feature plain", apply: { sheet: "reveal" } },
+    { id: "unleashed", level: 4, label: "Cantrip Unleashed", does: "for a day every cantrip also rolls an Unleashing pool (two successes count as one)", apply: { sheet: "unleashed" } },
+    { id: "imbalance", level: 4, label: "Imbalance", does: "thrown into Weaving or Mists imbalance for hours equal to the rating", apply: { note: true } },
+    { id: "honest", level: 4, label: "Honest Mien", does: "every Mists or cantrip hiding the mien fails at once", apply: { sheet: "reveal" } },
+    { id: "disruption", level: 4, label: "Disruption", does: "every working of fae magic within fifty yards ends", apply: { note: true } },
+    { id: "deprived", level: 4, label: "Deprived Senses", does: "blind while near the Echo", apply: { cond: { ownDiffVision: 2 } } },
+    { id: "immolation", level: 5, label: "Immolation", does: "catches fire: three aggravated levels a turn until taken from the Echo", apply: { dmg: { type: "aggravated", n: 3 } } },
+    { id: "frenzy", level: 5, label: "Frenzy", does: "lashes out at everything, the source first, then flees howling; it passes within a day", apply: { note: true } },
+    { id: "lost", level: 5, label: "Lost", does: "becomes Lost at once, unless they take a new permanent Echo instead", apply: { sheet: "lost" } },
+    { id: "statue", level: 5, label: "Mythical Statue", does: "turned to stone (10 health levels, soak 20; Dawn 5 Unleashed brings them back Incapacitated)", apply: { cond: { noAction: true } } },
+    { id: "terrible", level: 5, label: "The Terrible Mien", does: "the mien shows twisted: Greater Features count against them, and Charisma and Appearance are lost for now", apply: { note: true } }
+];
+export const echoEffect = id => ECHO_EFFECTS.find(e => e.id === id) ?? null;
+/** The short pick list per level (older cards read it): the labels of the catalogue. */
+export const ECHO_PICKS = Object.fromEntries([1, 2, 3, 4, 5].map(l => [l, ECHO_EFFECTS.filter(e => e.level === l).map(e => `${e.label}: ${e.does}`)]));
+
+/**
+ * B7871: what in village life sets off an Echo (p. 113). Each kind has a test for the fae's own Echo trigger text and,
+ * for things a person carries, a test for the names of goods. who: "mortal" when a person wields it (their Willpower),
+ * "none" when it is only there (five dice).
+ */
+export const VILLAGE_TRIGGERS = {
+    bells: { label: "church bells", echo: /\bbells?\b/i, who: "none" },
+    holy: { label: "holy ground", echo: /holy ground|consecrated|church|chapel|sanctu/i, who: "none" },
+    cross: { label: "a cross or holy symbol", echo: /cross|crucifix|holy symbol|relic|rosary/i, goods: /\bcross\b|crucifix|rosary|reliquary|holy water|saint's medal/i, who: "mortal" },
+    iron: { label: "cold iron", echo: /\biron\b|horseshoe/i, goods: /\biron\b|horseshoe/i, who: "mortal" },
+    horseshoe: { label: "a horseshoe over the door", echo: /horseshoe/i, goods: /horseshoe/i, who: "none" },
+    salt: { label: "salt", echo: /\bsalt\b/i, goods: /\bsalt\b/i, who: "mortal" },
+    clover: { label: "a four-leaf clover", echo: /clover/i, goods: /clover/i, who: "mortal" },
+    mirror: { label: "a mirror", echo: /mirror/i, goods: /mirror/i, who: "none" },
+    charm: { label: "a folk charm (rowan, a hag stone, a corn dolly)", echo: /rowan|hag ?stone|corn dolly|charm|amulet/i, goods: /rowan|hag stone|corn dolly|charm|amulet/i, who: "mortal" },
+    rooster: { label: "a rooster's crow", echo: /rooster|cock'?s? crow/i, who: "none" },
+    prayer: { label: "prayer", echo: /pray/i, who: "mortal" }
 };
+/** The fae's Echoes this kind sets off: [{index, trigger}]. */
+export function echoesFor(echoes, kind) {
+    const T = VILLAGE_TRIGGERS[kind];
+    if (!T) return [];
+    return (echoes ?? []).map((e, index) => ({ index, trigger: String(e?.trigger ?? "") })).filter(e => T.echo.test(e.trigger));
+}
+/** The trigger kinds a carried good sets off. */
+export const goodsKinds = name => Object.entries(VILLAGE_TRIGGERS).filter(([, T]) => T.goods && T.goods.test(String(name ?? ""))).map(([k]) => k);
+/** The hours the church bells ring for the village: dawn prayer, noon and the evening prayer (a house reading). */
+export const BELL_HOURS = [6, 12, 18];
+/** Bell hours passed between two hours of the day (from exclusive, to inclusive), across midnight too. */
+export function bellsBetween(fromHour, toHour) {
+    const f = n(fromHour), t = n(toHour);
+    if (t === f) return [];
+    return BELL_HOURS.filter(h => (t > f ? h > f && h <= t : h > f || h <= t));
+}
+
+/** B7872: each Court's Echoes (pp. 67, 69, 71, 73, 75), in WoDX's words, with what the faith of the village does to them. */
+export const COURT_ECHOES = {
+    spring: { page: 67, style: "children's rhymes, fire brandished, being ordered away, screams, tears, the sight of mortal blood", holy: "holy symbols and prayers bite them less than most" },
+    summer: { page: 69, style: "long pagan rites of the wise folk that keep a household safe for a time", holy: "the symbols of Christ and other faiths drive them off" },
+    autumn: { page: 71, style: "scents and sounds: an herb or incense, a rhyme said over and over", holy: "rites that banish evil spirits, Christian, Jewish or Muslim, work well on them" },
+    winter: { page: 73, style: "simple things, hard to find: whistling, singing, clapping; icons and crosses, some only when pressed to the skin", holy: "a crucifix or holy symbol often, sometimes only by touch" },
+    solstice: { page: 75, style: "twisted forms of the other Courts' Echoes and local warding customs: garlic on the door, herbs on the pillow", holy: "it depends on the fae" }
+};
+/** The Echo roll's pool when an inquisitor wields it (p. 182): Willpower, plus Conviction risked as dice; Conviction spent adds successes. */
+export function inquisitorEcho({ willpower = 0, risk = 0, spend = 0 } = {}) {
+    return { dice: Math.max(1, n(willpower)) + Math.max(0, Math.min(3, n(risk))), extra: Math.max(0, n(spend)) };
+}
 
 /** The roll to escape a new Echo when mortals see the mien (p. 114): 10 dice at 7 with these losses. */
 export function newEchoPool({ lesser = 0, greater = 0, origin = "changeling", mortals = 1, cantrip = false, unleash = false, awry = false } = {}) {

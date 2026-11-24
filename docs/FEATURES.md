@@ -36,7 +36,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Debts and oaths, the Blood Hunt, and the marks of the Beast, low Humanity and diablerie (`actions.debts-marks`) | core | gated | 1 | gatedebtsmarks a. Blood Hunt |
 | Disciplines you can see on the map (`actions.discipline-looks`) | core | book |  | gatedalooks 1. Dread Gaze marks the token |
 | Feeding: what the Kiss does to the vessel, clan and bloodline palates, and the night's hunt (`actions.feeding`) | core | gated | 1 | gatefeed 2 feed on an unlinked mortal |
-| Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 2 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
+| Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 3 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
 | How often a power may be used, and the costs it pays when it ends (`actions.limits-costs`) | core | shown | 1 |  |
 | Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 1 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
@@ -57,7 +57,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 1 |  |
 | With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 1 | gatesocial 6 window |
 | Changelings of the later eras: Arts, Realms, Nightmare, Imbalance and Banality (`actions.c20`) |  | gated | 1 | gate6h Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns |
-| Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 1 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |
+| Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 2 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |
 | Dark Ages mages: Foundation and Pillars, the Grimoire, and Consensus by era (`actions.mage-da`) |  | gated | 1 | gate6n a Grimoire rote: Revoking the Gift of Adam casts with its Grimoire page |
 | Demon: The Fallen: lores, evocations, Faith and Torment, the apocalyptic form (`actions.demon`) |  | gated | 1 | gate6i choosing the dark effect costs a temporary Torment point |
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
@@ -69,7 +69,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Kuei-jin: Chi, Dharma, the P'o and their Disciplines (`actions.kote`) |  | gated | 1 | gate6j Dharma 3 allows one Chi a turn |
 | The Reborn: Balance, Sekhem and Hekau (`actions.mummy`) |  | gated | 1 | gate6k Forbiddance: Balance against Willpower at 6 |
 | The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging (`actions.wraith`) |  | gated | 1 | gate6c use an Arcanos |
-| Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 2 | gate6b change form |
+| Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 3 | gate6b change form |
 
 ## wodx-chronicle
 

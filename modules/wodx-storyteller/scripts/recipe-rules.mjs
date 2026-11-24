@@ -207,7 +207,20 @@ export function peopleAnchors(recipe, actors = []) {
 /* ---- The cast (B7806) ---- */
 
 /** The kinds of sheet the cast step makes. */
-export const CAST_TYPES = ["Mortal", "Vampire"];
+export const CAST_TYPES = ["Mortal", "Vampire", "Werewolf"];
+/** B7874: what a cast Werewolf's sheet is written with (tribe, auspice, breed, rank), and the tribe a Kinfolk is kin to. */
+export function castSheet(p = {}) {
+  const out = {};
+  if ( p.type === "Werewolf" && p.garou ) {
+    const g = p.garou;
+    if ( g.tribe ) { out["system.tribe"] = "custom"; out["system.custom.tribe"] = String(g.tribe); }
+    if ( g.auspice ) out["system.auspice"] = String(g.auspice);
+    if ( g.breed ) out["system.breed"] = String(g.breed);
+    if ( Number.isFinite(Number(g.rank)) ) out["system.renown.rank"] = Math.max(0, Math.min(5, Math.trunc(Number(g.rank))));
+  }
+  if ( p.kin ) out["flags.world.wodx.kinfolk"] = String(p.kin);
+  return out;
+}
 
 /**
  * What the cast step does in a world. recipe.cast: {people: [{name, match, type, variant, note}], sheets: [{match, road,
@@ -226,7 +239,8 @@ export function castPlan(recipe, actors = []) {
   const make = [], set = [], missing = [];
   for ( const p of recipe?.cast?.people ?? [] ) {
     if ( !p?.name || find(p.match ?? p.name) ) continue;
-    make.push({name: p.name, type: CAST_TYPES.includes(p.type) ? p.type : "Mortal", variant: p.variant === "ghoul" ? "ghoul" : null, note: String(p.note ?? "")});
+    const type = CAST_TYPES.includes(p.type) ? p.type : "Mortal";
+    make.push({name: p.name, type, variant: p.variant === "ghoul" ? "ghoul" : null, note: String(p.note ?? ""), sheet: castSheet({...p, type})});
   }
   for ( const x of recipe?.cast?.sheets ?? [] ) {
     const a = find(x?.match);
