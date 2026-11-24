@@ -56,3 +56,6 @@
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows and lines still there; registry check passes","hash":"d810d1618c8a","at":"2026-11-24T04:46Z"}
 {"file":"registry/features/wodx-creation.json","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows and lines still there; registry check passes","hash":"a30c603058dd","at":"2026-11-24T04:46Z"}
 {"file":"tools/lanes/gate-map-extra.json","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows and lines still there; registry check passes","hash":"bb16e748f009","at":"2026-11-24T04:46Z"}
+{"file":"docs/FEATURES.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"e7bec17ca007","at":"2026-11-24T07:52Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"c0e5de6f6c86","at":"2026-11-24T07:52Z"}
+{"file":"registry/features/wodx-creation.json","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"d93732c39a4d","at":"2026-11-24T07:52Z"}
