@@ -59,3 +59,6 @@
 {"file":"docs/FEATURES.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"e7bec17ca007","at":"2026-11-24T07:52Z"}
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"c0e5de6f6c86","at":"2026-11-24T07:52Z"}
 {"file":"registry/features/wodx-creation.json","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"d93732c39a4d","at":"2026-11-24T07:52Z"}
+{"file":"docs/FEATURES.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"d282217023fc","at":"2026-11-24T08:01Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"7b49872aadd7","at":"2026-11-24T08:01Z"}
+{"file":"registry/features/wodx-creation.json","verdict":"working","how":"Read the merge of main: main's side kept, this branch's rows still there; registry check passes","hash":"a175c507a050","at":"2026-11-24T08:01Z"}
