@@ -451,3 +451,33 @@ test("the Secondary PC defers pull request gate runs and the New PC drives lanes
   assert.equal(read("runner.json").prGatesDeferMinutes, undefined, "the Main PC takes them at once");
   assert.equal(read("runner.new_pc_lebrun.json").prGatesDeferMinutes, undefined, "so does the New PC");
 });
+
+test("the Main PC leaves pull request gate runs to the New PC while the New PC has a free lane (B7911)", async () => {
+  const {peerRoom, leaveToPeer} = await import("../pcq/jobs.mjs");
+  const now = Date.parse("2026-11-24T14:00:00Z");
+  const rows = states => ["# PC runner status (New PC)", "", "| Lane | Port | State |", "|---|---|---|", ...states.map((s, i) => `| ${10 + i} | ${30100 + i * 10} | ${s} |`), ""].join("\n");
+  const peer = (states, at = "2026-11-24T13:58:00Z", extra = "") => ({body: rows(states) + extra, updated_at: at});
+  assert.deepEqual(peerRoom(peer(["job #1", "free", "free", "job #2"]), now), {fresh: true, free: 2, hold: false});
+  assert.equal(peerRoom(peer(["free"], "2026-11-24T13:40:00Z"), now).fresh, false, "20 minutes old: silent");
+  assert.equal(peerRoom(peer(["free"], undefined, "\nHOLD: runner-hold\n"), now).hold, true);
+  assert.equal(peerRoom(peer(["free"], undefined, "\nFree: D: 400 GB, memory 3 GB (HOLDING: memory low)\n"), now).hold, true);
+  assert.equal(peerRoom(peer(["DOWN: no answer", "in use outside the runner (gate7b)"]), now).free, 0);
+  const issue = {title: "PC job: gates touched [PR #2420 abcdef123456]", created_at: "2026-11-24T13:58:00Z"};
+  const job = {kind: "gates", touched: true, gates: []};
+  const opts = {maxMinutes: 5, freshMinutes: 15};
+  assert.equal(leaveToPeer(job, issue, peer(["job #1", "free"]), opts, now), true, "a free New PC lane: left to it");
+  assert.equal(leaveToPeer(job, issue, peer(["job #1", "job #2"]), opts, now), false, "New PC full: the Main PC takes it");
+  assert.equal(leaveToPeer(job, issue, peer(["free"], "2026-11-24T13:30:00Z"), opts, now), false, "New PC silent: taken");
+  assert.equal(leaveToPeer(job, issue, peer(["free"], undefined, "\nHOLD: window\n"), opts, now), false, "New PC holding: taken");
+  assert.equal(leaveToPeer(job, issue, null, opts, now), false, "no status to read: taken");
+  assert.equal(leaveToPeer(job, {...issue, created_at: "2026-11-24T13:54:00Z"}, peer(["free"]), opts, now), false, "6 minutes unclaimed: taken");
+  assert.equal(leaveToPeer({...job, lane: 3}, issue, peer(["free"]), opts, now), false, "a job named to a lane is that lane's");
+  assert.equal(leaveToPeer({kind: "gates", gates: ["gate7b"]}, issue, peer(["free"]), opts, now), false, "a hand-picked list is not left");
+  assert.equal(leaveToPeer(job, {...issue, title: "PC job: gates all"}, peer(["free"]), opts, now), false, "not a pull request's job");
+  const read = f => JSON.parse(fs.readFileSync(new URL(`../pcq/${f}`, import.meta.url), "utf8"));
+  assert.equal(read("runner.json").prGatesPreferPeer.statusTitle, read("runner.new_pc_lebrun.json").statusTitle, "the Main PC points at the New PC's status issue");
+  assert.equal(read("runner.new_pc_lebrun.json").prGatesPreferPeer, null, "the New PC takes them at once (its file clears the shared setting)");
+  assert.equal(read("runner.benjamin-pc.json").prGatesPreferPeer, undefined, "the Secondary PC shares it, after its own wait");
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /conf\.prGatesPreferPeer && conf\.prGatesPreferPeer\.statusTitle !== conf\.statusTitle && leaveToPeer\(q\.job, q\.issue, await preferredPeer\(\), conf\.prGatesPreferPeer\) \) continue;/);
+});

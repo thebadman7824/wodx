@@ -11,5 +11,6 @@
   "minFreeGB": {"C": 15, "D": 50},
   "minFreeRamGB": 4,
   "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20},
-  "train": false
+  "train": false,
+  "prGatesPreferPeer": null
 }
