@@ -15,14 +15,22 @@ const {ROTHENSTEIN} = await imp("modules/wodx-rothenstein/data/recipe.mjs");
 const L = await imp("modules/wodx-chronicle/data/trait-lines.mjs");
 const T = await imp("modules/wodx-chronicle/scripts/trait-rules.mjs");
 
-test("B7883: 25 Curses, five to a category, stages 2-2-1, every category an order's", () => {
-  assert.equal(C.CURSES.length, 25);
+test("B7883, B7934: 25 Curses of the core book and 20 of the Companion, stages 2-2-1 and 2-1-1, every category an order's", () => {
+  assert.equal(C.CURSES.length, 45);
   for ( const k of Object.keys(C.CATEGORIES) ) {
-    const in_ = C.CURSES.filter(c => c.cat === k);
-    assert.deepEqual(in_.map(c => c.stage).sort(), [1, 1, 2, 2, 3], k);
+    const core = C.CURSES.filter(c => c.cat === k && !c.p), comp = C.CURSES.filter(c => c.cat === k && c.p);
+    assert.deepEqual(core.map(c => c.stage).sort(), [1, 1, 2, 2, 3], k);
+    assert.deepEqual(comp.map(c => c.stage).sort(), [1, 1, 2, 3], `${k}: the Companion's`);
+    for ( const c of comp ) assert.ok(c.p >= 118 && c.p <= 124 && C.pageOf(c) === `Companion p. ${c.p}`, c.id);
     assert.ok(C.categoryOf(C.CATEGORIES[k].order) === k);
   }
-  assert.equal(new Set(C.CURSES.map(c => c.id)).size, 25);
+  assert.equal(new Set(C.CURSES.map(c => c.id)).size, 45);
+  // B7934: Divinely Favored, Curse Prone, Grace and Order Prodigy (Companion pp. 126-127)
+  assert.equal(C.curseRollMods({favored: true}).mod, -2);
+  assert.equal(C.curseRollMods({prone: true}).mod, 2);
+  assert.deepEqual([C.callousWith([], 7, 5), C.callousWith([], 7, 5, {grace: true}), C.callousWith([], 8, 5, {grace: true}), C.callousWith([], 10, 8, {grace: true})], [true, false, true, false]);
+  assert.deepEqual([C.prodigySpares({prodigy: true, order: "acre", own: true}), C.prodigySpares({prodigy: true, order: "red", own: true}), C.prodigySpares({prodigy: true, order: "acre"})], [true, false, false]);
+  assert.deepEqual(C.curseMods(["lux-dei"], ["stealth"]).diff, 2);
   for ( const c of C.CURSES ) assert.ok(c.fx && !/—/.test(c.fx + (c.check ?? "")), c.id);
 });
 
@@ -40,10 +48,10 @@ test("B7884: the Curse roll's table and its eight modifiers (p. 202)", () => {
 test("B7884: the first Curse of a stage comes from the order's category, later ones from any (p. 204)", () => {
   const first = C.cursesFor("john", 2, ["book-of-revelations"]);
   assert.equal(first.forced, true);
-  assert.deepEqual(first.list.map(c => c.cat), ["visitations", "visitations"]);
+  assert.deepEqual(first.list.map(c => c.cat), ["visitations", "visitations", "visitations"], "two of the core book, one of the Companion (B7934)");
   const later = C.cursesFor("john", 2, ["glossolalia"]);
   assert.equal(later.forced, false);
-  assert.equal(later.list.length, 9);
+  assert.equal(later.list.length, 14, "9 of the core book and the Companion's 5 (B7934)");
   assert.equal(C.cursesFor("", 1, []).forced, false, "a precursor without an order picks from any");
 });
 

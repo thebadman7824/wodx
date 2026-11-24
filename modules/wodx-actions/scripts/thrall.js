@@ -30,7 +30,9 @@ export const isThrall = a => !!a?.getFlag?.(MOD, "thrall") && !a.getFlag(MOD, "t
 
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, setFlag, findAbility, background, spendWillpower, applyDamage, notify, attr } = ctx;
-    const flag = a => T.stateOf(foundry.utils.deepClone(a?.getFlag?.(MOD, "thrall") ?? {}));
+    // B7933: Untainted and Unbound Diabolist (Devil's Due pp. 98, 100) from the sheet's merits as well as the record
+    const merit = (a, key) => { try { return Number(game.modules.get("wodx-chronicle")?.api?.traits?.has?.(a, key)) > 0; } catch (e) { return false; } };
+    const flag = a => { const s = T.stateOf(foundry.utils.deepClone(a?.getFlag?.(MOD, "thrall") ?? {})); if (merit(a, "untainted")) s.untainted = true; if (merit(a, "unbound-diabolist")) s.unbound = true; return s; };
     const save = (a, patch) => setFlag(a, "thrall", { ...(a.getFlag(MOD, "thrall") ?? {}), ...patch });
     const virtue = (a, k) => n(a?.system?.advantages?.virtues?.[k]?.permanent);
     const permWill = a => n(a?.system?.advantages?.willpower?.permanent);
@@ -268,6 +270,7 @@ export function build(ctx) {
     }
     async function grant(actor, fd) {
         const s = flag(actor), v = Math.max(1, n(fd.value)), name = String(fd.name || (fd.kind === "taint" ? "A Taint" : "An Arcana"));
+        if (s.unbound) { notify(`${actor.name} is an Unbound Diabolist: no master grants Arcana or Taints (${REF} p. 98).`); return null; }
         if (fd.kind === "taint") {
             const b = T.addBurden(s, v, permWill(actor));
             if (!b.ok) { notify(`${actor.name}: ${b.why}.`); return null; }

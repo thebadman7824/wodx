@@ -29,7 +29,7 @@ export const categoryOf = order => Object.keys(CATEGORIES).find(k => CATEGORIES[
 export const STAGE_NAME = { 1: "Acolyte", 2: "Advocate", 3: "Judge" };
 
 /**
- * The 25 Curses. mods: what they do to the inquisitor's own rolls, by the roll's tags (WoDX Chronicle's trait tags):
+ * The 25 Curses of the core book and the Companion's 20 (B7934). mods: what they do to the inquisitor's own rolls, by the roll's tags (WoDX Chronicle's trait tags):
  * {tags, not, dice, diff, note}. rule: a rule the hunter code reads (lamb, penitence, injured). check: a roll the card
  * names when the moment comes.
  */
@@ -63,10 +63,32 @@ export const CURSES = [
     { id: "the-gloaming", name: "The Gloaming", cat: "visitations", stage: 1, check: "Willpower at 7 at dusk, or a trance in which they see the dead.", fx: "At dusk they slip toward the dead and see ghosts." },
     { id: "curse-of-the-scribe", name: "Curse of the Scribe", cat: "visitations", stage: 2, check: "Willpower when a vision takes them, or they write what it shows until it passes.", fx: "Visions that must be written down." },
     { id: "glossolalia", name: "Glossolalia", cat: "visitations", stage: 2, check: "Willpower under strain, or they speak in tongues.", fx: "Tongues take them under strain." },
-    { id: "spirit-tithe", name: "Spirit Tithe", cat: "visitations", stage: 3, check: "Piety at 8 on contact with a spirit, or a Willpower point is lost to it.", fx: "Spirits take a tithe of their will." }
+    { id: "spirit-tithe", name: "Spirit Tithe", cat: "visitations", stage: 3, check: "Piety at 8 on contact with a spirit, or a Willpower point is lost to it.", fx: "Spirits take a tithe of their will." },
+    // B7934: the Companion's Curses (Dark Ages: Inquisitor Companion pp. 118-124), four of each kind
+    { id: "contagion", name: "Contagion", cat: "anathemae", stage: 1, p: 118, check: "Willpower at 5 to stay among anyone not clergy or an inquisitor; a failure leaves as soon as is polite, a botch bolts.", fx: "The flock seems foul to them; they shun its company and touch." },
+    { id: "spys-bane", name: "Spy's Bane", cat: "anathemae", stage: 1, p: 118, check: "Once a session while watching a target, Willpower at 8, or a small calling card is left (a botch: a grand one).", fx: "Pride makes them leave a sign that the watched are watched." },
+    { id: "life-of-shadows", name: "Life of Shadows", cat: "anathemae", stage: 2, p: 118, check: "With strangers and those who have forgotten them, Charisma and Manipulation count as 1 and Appearance as 2; a week apart and a new friend forgets them.", fx: "Forgettable: names, faces and favours slip from every mind." },
+    { id: "sentence-of-solitude", name: "Sentence of Solitude", cat: "anathemae", stage: 3, p: 119, check: "In company: -1 die within 40 feet of another, -2 within 10, -3 within a foot (not among known fiends, nor while unseen).", fx: "The presence of others is pain to them." },
+    { id: "immaculate", name: "Immaculate", cat: "maledictio", stage: 1, p: 119, check: "On becoming aware of the supernatural, Stamina + Self-Control at 7, or ill: +1 difficulty on every roll until away from it (+2 on a botch).", fx: "Sickened by the presence of evil." },
+    { id: "lux-dei", name: "Lux Dei", cat: "maledictio", stage: 1, p: 119, mods: [{ tags: ["stealth"], diff: 2, note: "+2 difficulty on Stealth while the glow shows" }], fx: "A faint glow from the skin and eyes: +2 difficulty on Stealth, and fiends pick them out of a crowd at -2." },
+    { id: "devils-rapture", name: "Devil's Rapture", cat: "maledictio", stage: 2, p: 120, check: "Meeting a creature that is not hostile, Willpower at 8, or they must talk with it (a botch: outlandish offers).", fx: "Fascinated by the Devil's creatures, they seek to speak with them." },
+    { id: "friend-of-fiends", name: "Friend of Fiends", cat: "maledictio", stage: 3, p: 120, check: "Fiends will not use deadly force on them unless forced or frenzied; others spot the deference at Perception + Alertness 5.", fx: "The Enemy treats them as a kindred soul." },
+    { id: "curse-of-salt", name: "Curse of Salt", cat: "stigmata", stage: 1, p: 120, check: "Willpower at 8 to eat; two days unfed is +1 difficulty on Strength rolls, and at four days hunger forces food that never satisfies.", fx: "All they touch tastes of brine." },
+    { id: "burden-of-the-cross", name: "Burden of the Cross", cat: "stigmata", stage: 1, p: 121, check: "On foot: three quarters of walking speed, Stamina two lower for endurance (not soak), and -2 initiative.", fx: "The weight of the Cross drags at every step." },
+    { id: "stench-of-lazarus", name: "Stench of Lazarus", cat: "stigmata", stage: 2, p: 121, check: "Charisma counts as 1; carrion beasts follow; keen-nosed fiends smell them a mile off and track them at -3.", fx: "The stench of the four-day grave clings to them." },
+    { id: "lepers-visage", name: "Leper's Visage", cat: "stigmata", stage: 3, p: 122, check: "Appearance 0; no inquisitor's healing touches it, and any cure lasts only until they are next Callous.", fx: "They look a leper, though nothing spreads." },
+    { id: "true-poverty", name: "True Poverty", cat: "interdictions", stage: 1, p: 122, check: "Owning more than plain clothes, Willpower at 6 once a scene or it is given away; a Willpower point keeps one thing.", fx: "Bound to give away all they own." },
+    { id: "cains-blight", name: "Cain's Blight", cat: "interdictions", stage: 1, p: 122, check: "Once a scene (after a fight), Willpower at 7, or they must wash the blood away or take +1 difficulty on every roll until they do.", fx: "They feel the blood of the slain on them." },
+    { id: "forsaken", name: "Forsaken", cat: "interdictions", stage: 2, p: 123, check: "Without a relic or holy thing, Courage counts as 0: battle is shunned, and forced to it, -2 dice on combat.", fx: "Without a sign of God's favour they dare not fight." },
+    { id: "angel-of-wrath", name: "Angel of Wrath", cat: "interdictions", stage: 3, p: 123, check: "At any slight to God, Willpower at 8, or they answer it with violence.", fx: "No blasphemy, however small, goes unpunished." },
+    { id: "stray-vision", name: "Stray Vision", cat: "visitations", stage: 1, p: 123, check: "Once a day, Willpower at 8, or a trance of (12 - Willpower) turns seeing dark deeds far away.", fx: "Grim visions of things they cannot touch." },
+    { id: "possessed-tongue", name: "Possessed Tongue", cat: "visitations", stage: 1, p: 123, check: "Once a day in calm, Willpower at 8, or another voice speaks five sentences through them.", fx: "Something else speaks with their tongue." },
+    { id: "slave-to-visions", name: "Slave to Visions", cat: "visitations", stage: 2, p: 124, check: "When a vision comes it must be made in chalk, ink or clay: +1 difficulty on other rolls for three turns, +2 for three more, then +3.", fx: "Visions that must be shown to others." },
+    { id: "plague-of-angels", name: "A Plague of Angels", cat: "visitations", stage: 3, p: 124, mods: [{ tags: ["perception"], diff: 2, note: "+2 difficulty on Perception (and -3 initiative)" }], fx: "Strange angels and birds haunt them: +2 difficulty on Perception, -3 initiative." }
 ];
 export const curseById = id => CURSES.find(c => c.id === id) ?? null;
-export const pageOf = c => CATEGORIES[c?.cat]?.pages ?? "pp. 201-213";
+/** The page: the Companion's own (printed after "Dark Ages: Inquisitor", so "Companion p. N"), else the category's. */
+export const pageOf = c => (c?.p ? `Companion p. ${c.p}` : CATEGORIES[c?.cat]?.pages ?? "pp. 201-213");
 
 /** The Curse ids an inquisitor's record holds (strings or {id}). */
 export const idsOf = held => (Array.isArray(held) ? held : []).map(h => (typeof h === "string" ? h : h?.id)).filter(id => curseById(id));
@@ -97,6 +119,9 @@ export function curseRollMods(o = {}) {
     const fives = vals.filter(v => v >= 5).length;
     if (fives) add(-fives, `for ${fives} Superior Virtue${fives === 1 ? "" : "s"} at 5`);
     if (o.order === "murnau" && o.benefit) add(1, "the House of Murnau's drawback (p. 137)");
+    // B7934: Divinely Favored and Curse Prone (Dark Ages: Inquisitor Companion p. 127)
+    if (o.favored) add(-2, "Divinely Favored (Companion p. 127)");
+    if (o.prone) add(2, "Curse Prone (Companion p. 127)");
     return { mod, parts };
 }
 
@@ -134,9 +159,14 @@ export function cocytus(held, piety, sv = {}) {
 export const cocytusDrain = (banked, spent) => Math.max(0, n(banked) - Math.max(0, n(spent)));
 
 /** Callous (p. 162): Conviction above Piety; with Lamb of God, at Piety already. */
-export function callousWith(held, conviction, piety) {
-    return hasCurse(held, "lamb-of-god") ? n(conviction) >= n(piety) : n(conviction) > n(piety);
+export function callousWith(held, conviction, piety, { grace = false } = {}) {
+    // B7934: Grace lets Conviction run two above Piety, and at Piety 8 or more never makes them Callous (Companion p. 126)
+    if (grace && n(piety) >= 8) return false;
+    const top = n(piety) + (grace ? 2 : 0);
+    return hasCurse(held, "lamb-of-god") ? n(conviction) >= top : n(conviction) > top;
 }
+/** B7934: Order Prodigy: no Curse for learning the order's own Endowments, even rushed (Companion p. 126; not Murnau or the Red Order). */
+export const prodigySpares = ({ prodigy, order, own } = {}) => !!(prodigy && own && order && !["murnau", "red"].includes(order));
 
 /** What the Curses do to one of the inquisitor's rolls: {dice, diff, parts}. tags: the roll's trait tags. */
 export function curseMods(held, tags = []) {

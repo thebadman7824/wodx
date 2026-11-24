@@ -6,6 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
+import {DA_LINE_ROWS, DA_WIDEN, DA_PROMPTS, DA_HANDLED, DA_TRIGGERS} from "./trait-lines-da.mjs";
 import {EFFECTS_W6, EXTRA_PROMPTS} from "./trait-effects-w6.mjs";
 import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6, MORE_ATTITUDE_3, MORE_PROMPTS_7} from "./trait-effects-more.mjs";
 
@@ -291,11 +292,14 @@ export const BACKGROUNDS = [
 ];
 
 /** Books whose merits and flaws are in MERITS_FLAWS. The rest come with their own rows later (the design's step 11). */
-export const BOOKS_DONE = ["V20", ...LINE_BOOKS];
+export const BOOKS_DONE = ["V20", ...LINE_BOOKS, "DA:W", "DA:F", "DA:DD", "DA:IC"];
 
 // Step 11 (Chronicle 0.24.0): the other lines' rows join the table, and V20 entries they share take their holders
 for ( const e of MERITS_FLAWS ) if ( WIDEN[e.key] && !e.holders.includes("any") ) e.holders = [...new Set([...e.holders, ...WIDEN[e.key]])];
 MERITS_FLAWS.push(...LINE_MERITS_FLAWS);
+// B7931-B7933: Dark Ages: Werewolf and Dark Ages: Fae (trait-lines-da.mjs)
+for ( const e of MERITS_FLAWS ) if ( DA_WIDEN[e.key] && !e.holders.includes("any") ) e.holders = [...new Set([...e.holders, ...DA_WIDEN[e.key]])];
+MERITS_FLAWS.push(...DA_LINE_ROWS);
 
 // The no-effect audit (B3780-B3782): more effects, and the book's spelling for names the OCR spoiled (old kept as alias)
 for ( const e of MERITS_FLAWS ) {
@@ -377,6 +381,7 @@ export const HANDLED = {
   "light-sleeper": "wakes at once by day, with no Road cap on the dice",
   "prey-exclusion": "a reminder on every feeding card"
 };
+for ( const [k, v] of Object.entries(DA_HANDLED) ) HANDLED[k] ??= v;
 
 /**
  * Step 7 (Chronicle 0.22.0): traits that go off when the character walks into something on the map (pattern P4), read
@@ -394,6 +399,7 @@ export const TRIGGERS = {
   "light-sensitive": {words: ["sunlit", "daylight", "floodlight", "spotlight", "bonfire"], stop: false, text: "is hurt and dazzled by the bright light"},
   "phobia": {fromName: true, stop: false, text: "comes face to face with what they fear", roll: "Courage, or flee from it"}
 };
+for ( const [k, v] of Object.entries(DA_TRIGGERS) ) TRIGGERS[k] ??= v;
 
 /**
  * Step 7: traits that put something in the night's draw (pattern P8), read by WoDX Storyteller. chance: the share of
@@ -459,7 +465,7 @@ export const PROMPTS = {
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
 // B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
-for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7, ...EXTRA_PROMPTS}) ) PROMPTS[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7, ...EXTRA_PROMPTS, ...DA_PROMPTS}) ) PROMPTS[k] ??= v;
 // B3920: the backgrounds that now have a card or an attitude seed say so in the Trait effects window
 for ( const b of BACKGROUNDS ) {
   if ( b.hook === "story" && MORE_PROMPTS_7[b.key] ) b.hook = "prompt";

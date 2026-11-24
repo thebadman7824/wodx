@@ -65,24 +65,32 @@ export function timeBonus(dominion, t = {}) {
     return { hour, season };
 }
 
-/** Mists or Weaving 3 or more above the other (p. 102): "mists", "weaving" or null. */
-export function imbalance(mists, weaving) {
+/**
+ * Mists or Weaving 3 or more above the other (p. 102): "mists", "weaving" or null. gaps: the merits and flaws of pp. 100-101
+ * move the line (imbalanceGaps).
+ */
+export function imbalance(mists, weaving, gaps = {}) {
     const m = n(mists), w = n(weaving);
-    if (m - w >= 3) return "mists";
-    if (w - m >= 3) return "weaving";
+    if (m - w >= (n(gaps.mists) || 3)) return "mists";
+    if (w - m >= (n(gaps.weaving) || 3)) return "weaving";
     return null;
+}
+/** B7932: Free Thinker (Weaving may run 4 above), Stable Mind (Mists 4 above), Delicate Soul (either 2 above), pp. 100-101. */
+export function imbalanceGaps({ freeThinker = false, stableMind = false, delicateSoul = false } = {}) {
+    if (delicateSoul) return { mists: 2, weaving: 2 };
+    return { mists: stableMind ? 4 : 3, weaving: freeThinker ? 4 : 3 };
 }
 
 /** Cantrips allowed per Dominion: one per permanent Weaving dot, each at most the Dominion's rating (pp. 89, 120). */
-export function cantripCap(weaving, rating) { return { count: Math.max(0, n(weaving)), maxLevel: clamp(n(rating), 0, 5) }; }
+export function cantripCap(weaving, rating, extra = 0) { return { count: Math.max(0, n(weaving)) + Math.max(0, n(extra)), maxLevel: clamp(n(rating), 0, 5) }; }
 
 /** Check a cantrip list against the caps: [{dominion, problem}]. */
-export function cantripProblems(cantrips = [], { weaving = 0, dominions = {} } = {}) {
+export function cantripProblems(cantrips = [], { weaving = 0, dominions = {}, affinity = null } = {}) {
     const out = [];
     for (const d of DOMINION_IDS) {
         const mine = cantrips.filter(c => c.dominion === d);
-        // B6935: the caps come from cantripCap
-        const cap = cantripCap(weaving, dominions[d]), r = cap.maxLevel;
+        // B6935: the caps come from cantripCap; B7932: Cantrip Affinity, one more in the favoured Dominion (p. 100)
+        const cap = cantripCap(weaving, dominions[d], affinity && affinity === d ? 1 : 0), r = cap.maxLevel;
         if (mine.length && !r) out.push({ dominion: d, problem: `no ${DOMINIONS[d].label} dots` });
         if (mine.length > cap.count) out.push({ dominion: d, problem: `${mine.length} cantrips; Weaving ${n(weaving)} allows ${cap.count}` });
         for (const c of mine) if (n(c.level) > r) out.push({ dominion: d, problem: `${c.name} is level ${c.level}; ${DOMINIONS[d].label} is ${r}` });
@@ -127,7 +135,7 @@ export function castPlan({ dominion, rating = 0, trait = 0, traitLabel = "the tr
  * base pool). Changelings Unleash only in their mien.
  */
 export function unleashPlan({ dominion, rating = 0, origin = "changeling", court = null, mists = 0, weaving = 0, mien = true },
-    { time = {}, holding = 0, holdingCalm = false, weavingSpent = 0, base = 6, mod = 0 } = {}) {
+    { time = {}, holding = 0, holdingCalm = false, weavingSpent = 0, base = 6, mod = 0, control = false, gaps = {} } = {}) {
     const O = ORIGINS[origin] ?? ORIGINS.changeling;
     if (!DOMINIONS[dominion]) return { ok: false, why: "choose a Dominion" };
     if (n(rating) < 1) return { ok: false, why: `no dots in ${DOMINIONS[dominion].label}` };
@@ -135,9 +143,11 @@ export function unleashPlan({ dominion, rating = 0, origin = "changeling", court
     const low = lowering({ dominion, court, time, holding });
     const notes = [`Mists ${n(mists)} + ${DOMINIONS[dominion].label} ${n(rating)}`, ...low.notes];
     let diff = n(base) - low.down + n(mod);
-    if (imbalance(mists, weaving) === "weaving") { diff += 1; notes.push("+1 in Weaving imbalance"); }
+    if (imbalance(mists, weaving, gaps) === "weaving") { diff += 1; notes.push("+1 in Weaving imbalance"); }
     const difficulty = clamp(diff, 4, 10);
-    let wild = O.unleashDice - (holdingCalm ? 1 : 0);
+    // B7932: Unleashing Control (p. 100): three Unleashing dice, as the firstborn
+    let wild = (control ? Math.min(3, O.unleashDice) : O.unleashDice) - (holdingCalm ? 1 : 0);
+    if (control && O.unleashDice > 3) notes.push("Unleashing Control: three Unleashing dice");
     if (holdingCalm) notes.push("−1 Unleashing die in the holding");
     const spent = clamp(n(weavingSpent), 0, wild);
     wild -= spent;
@@ -298,9 +308,10 @@ export function inquisitorEcho({ willpower = 0, risk = 0, spend = 0 } = {}) {
 }
 
 /** The roll to escape a new Echo when mortals see the mien (p. 114): 10 dice at 7 with these losses. */
-export function newEchoPool({ lesser = 0, greater = 0, origin = "changeling", mortals = 1, cantrip = false, unleash = false, awry = false } = {}) {
+export function newEchoPool({ lesser = 0, greater = 0, origin = "changeling", mortals = 1, cantrip = false, unleash = false, awry = false, mod = 0 } = {}) {
     if (n(lesser) < 5 && n(greater) < 1) return { atRisk: false, dice: 0, difficulty: 7 };
-    let dice = 10 - Math.floor(n(lesser) / 5) - n(greater) - (origin === "inanimae" ? 1 : 0) - Math.floor(n(mortals) / 3) - (cantrip ? 1 : 0) - (unleash ? (awry ? 3 : 2) : 0);
+    // B7932: mod, the merits and flaws of pp. 98-99 (Cherished +1, Feared -1, Demonic -1 with a priest by)
+    let dice = 10 - Math.floor(n(lesser) / 5) - n(greater) - (origin === "inanimae" ? 1 : 0) - Math.floor(n(mortals) / 3) - (cantrip ? 1 : 0) - (unleash ? (awry ? 3 : 2) : 0) + n(mod);
     return { atRisk: true, dice: Math.max(0, dice), difficulty: 7 };
 }
 /** Any success is safe; a failure gives one Echo; a botch or no dice, two. */
@@ -410,3 +421,94 @@ export const mindShield = (dominions = {}, power = 0) => Math.max(n(dominions.da
 
 /** True in a Dark Ages chronicle (the era profile's id): the Dark Ages and the Long Night, which keeps its books. */
 export const isDarkAgesEra = id => id === "dark-ages" || id === "long-night";
+
+/* ---------------- B7938: the Features of the mien (pp. 104-107) ---------------- */
+
+/** The Lesser Features of pp. 105-106: cosmetic, no bonus of their own; five or more risk an Echo (p. 105). */
+export const LESSER_FEATURES = [
+    ["elemental-blessing", "Elemental Blessing", 105], ["elongated-appearance", "Elongated Appearance", 105], ["endowment-of-the-season", "Endowment of the Season", 105],
+    ["eyes-of-the-season", "Eyes of the Season", 106], ["faerie-size-lesser", "Faerie Size (Lesser)", 106], ["repulsive-countenance", "Repulsive Countenance", 106],
+    ["scent", "Scent", 106], ["skin-hue", "Skin Hue", 106], ["surreal-beauty", "Surreal Beauty", 106]
+];
+/**
+ * The Greater Features of pp. 106-107, and what each does while the mien shows. roll: [{tags, dice, diff, when}] (when: a tick
+ * the roll window offers); soak: dice on every soak (Armored Hide's three, a level off for each success, then Stamina);
+ * weapons: natural weapons {bite|claw|punch|horns: {bonus over Strength, type}}; variants by a word in the sheet's line.
+ */
+export const GREATER_FEATURES = {
+    "armored-hide": { name: "Armored Hide", p: 106, soak: 3, line: "three dice on any harm, a level off for each success, then Stamina soaks as usual" },
+    "beastly-visage": { name: "Beastly Visage", p: 106, roll: [{ tags: ["intimidation", "survival"], diff: -1 }, { tags: ["animalken"], diff: -3, when: "predator-beast" }], weapons: { biteDice: 1 },
+        line: "Intimidation and Survival -1, Animal Ken with predators -3, a die more on a bite" },
+    "elemental-form": { name: "Elemental Form", p: 106, variants: {
+        air: { line: "the wind always round them: half harm from a fall, smoke cleared" },
+        earth: { weapons: { punch: { bonus: 2, type: "lethal" } }, line: "crystal hands: a punch is Strength + 2 lethal" },
+        fire: { line: "smouldering flesh: flammable things catch at a touch" },
+        water: { roll: [{ tags: ["dodge"], dice: 2 }], line: "flowing round blows: +2 dice to dodge" },
+        wood: { line: "leaves that feed on the sun: an hour of sunlight a day for food; two hours give a point of Mists back once a day" } }, line: "choose air, earth, fire, water or wood" },
+    "eyes-of-the-mists": { name: "Eyes of the Mists", p: 106, variants: {
+        alluring: { line: "an alluring gaze: as the Entice cantrip (p. 150)" },
+        terrifying: { line: "a terrifying gaze: Courage or Willpower at 5 or flee" },
+        commanding: { line: "a commanding gaze: Willpower at 6 or loyal for the scene, +1 difficulty on anything done against them" } }, line: "alluring, terrifying or commanding" },
+    "faerie-size": { name: "Faerie Size (Greater)", p: 106, variants: {
+        giant: { roll: [{ tags: ["strength"], dice: 1 }], bruised: 3, line: "a giant up to fourteen feet: a dot of Strength, three more Bruised levels, -1 difficulty to hit them" },
+        tiny: { roll: [{ tags: ["dexterity"], dice: 1 }], line: "a dwarf down to a foot: a dot of Dexterity, Strength 3 at most, no Hurt level, +2 difficulty to hit them" } }, line: "a giant or a tiny one" },
+    "monsters-mien": { name: "Monster's Mien", p: 107, variants: {
+        teeth: { weapons: { bite: { bonus: 2, type: "aggravated" } }, line: "teeth like daggers: a bite of Strength + 2 aggravated" },
+        claws: { weapons: { claw: { bonus: 1, type: "aggravated" } }, line: "wicked claws: Strength + 1 aggravated, never sheathed" },
+        horns: { weapons: { horns: { bonus: 2, type: "lethal" } }, line: "horns: a gore of Strength + 2 lethal, three more soak dice on the head" } }, line: "teeth, claws or horns" },
+    "seasons-skin": { name: "Season's Skin", p: 107, roll: [{ tags: ["stealth"], diff: -2, when: "skin-blends" }], line: "Stealth -2 where the colour blends in; a soak die more in the Court's season" },
+    "size-of-my-choice": { name: "Size of My Choice", p: 107, roll: [{ tags: ["dodge"], dice: 2 }], line: "grows or shrinks twice the Mists in inches: +2 dice to dodge" }
+};
+/** The roll window's boxes for the Features that need one. */
+export const FEATURE_TICKS = [
+    { key: "predator-beast", label: "With a predatory animal (Beastly Visage)", feature: "beastly-visage" },
+    { key: "skin-blends", label: "Where your skin's colour blends in (Season's Skin)", feature: "seasons-skin" }
+];
+const slug = s => String(s ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+/** The Greater Feature a line of the fae window names, with its variant: {key, f, variant, v} or null. */
+export function featureOf(text) {
+    const s = slug(text);
+    const key = Object.keys(GREATER_FEATURES).find(k => s.startsWith(k) || s.startsWith(slug(GREATER_FEATURES[k].name)));
+    if (!key) return null;
+    const f = GREATER_FEATURES[key];
+    const variant = f.variants ? Object.keys(f.variants).find(v => new RegExp(`\\b${v}\\b`, "i").test(String(text))) ?? null : null;
+    return { key, f, variant, v: variant ? f.variants[variant] : null };
+}
+/** All the Greater Features on the sheet's lines, each once. */
+export function featuresOf(lines = []) {
+    const out = [];
+    for (const l of lines) { const x = featureOf(l); if (x && !out.some(o => o.key === x.key && o.variant === x.variant)) out.push(x); }
+    return out;
+}
+/** The Lesser Feature a line names (by its book name), or null. */
+export const lesserOf = text => LESSER_FEATURES.find(([k, nm]) => slug(text).startsWith(k) || slug(text).startsWith(slug(nm))) ?? null;
+/**
+ * What the Greater Features do to a roll while the mien shows: [{key, name, dice, diff, note}] for WoDX Chronicle's roll
+ * effects. tags: the roll's tags (with any box ticked).
+ */
+export function featureRollEffects(lines = [], { tags = [], mien = true } = {}) {
+    if (!mien) return [];
+    const T = new Set(tags), out = [];
+    for (const x of featuresOf(lines)) {
+        for (const r of [...(x.f.roll ?? []), ...(x.v?.roll ?? [])]) {
+            if (r.when && !T.has(r.when)) continue;
+            if (!r.tags.some(t => T.has(t))) continue;
+            out.push({ key: `feature-${x.key}`, name: `${x.f.name}${x.variant ? ` (${x.variant})` : ""}`, ...(r.dice ? { dice: r.dice } : {}), ...(r.diff ? { diff: r.diff } : {}),
+                note: `${x.v?.line ?? x.f.line} (${REF} p. ${x.f.p})` });
+        }
+    }
+    return out;
+}
+/** Soak dice and natural weapons the mien gives: {soak, names, weapons: {bite, claw, punch, horns}, biteDice, bruised}. */
+export function featureBody(lines = [], { mien = true } = {}) {
+    const out = { soak: 0, names: [], weapons: {}, biteDice: 0, bruised: 0 };
+    if (!mien) return out;
+    for (const x of featuresOf(lines)) {
+        const w = { ...(x.f.weapons ?? {}), ...(x.v?.weapons ?? {}) };
+        if (x.f.soak) { out.soak += x.f.soak; out.names.push(x.f.name); }
+        for (const k of ["bite", "claw", "punch", "horns"]) if (w[k]) out.weapons[k] = { ...w[k], why: `${x.f.name}${x.variant ? `: ${x.variant}` : ""}`, ref: `${REF} p. ${x.f.p}` };
+        if (w.biteDice) out.biteDice += w.biteDice;
+        if (x.v?.bruised) out.bruised += x.v.bruised;
+    }
+    return out;
+}

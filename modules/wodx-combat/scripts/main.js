@@ -39,6 +39,7 @@ import * as MTD from "./mounted.js";
 import * as VH from "./vehicles.js";
 import * as SW from "./swarm.js";
 import * as SWR from "./swarm-rules.js";
+import * as GM from "./garou-maneuvers.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
@@ -394,7 +395,18 @@ function weaponList(actor) {
     try { const rw = VH.ramWeapon(actor); if (rw) list.push(rw); } catch (e) { /* no vehicle */ }
     const GXR = garouRules();
     const nat = GXR?.isShifter?.(actor) ? GXR.naturalWeapons(actor) : null;
+    // B7938: a fae's Monster's Mien, Beastly Visage and an earthen Elemental Form (Dark Ages: Fae pp. 106-107)
+    const fb = faeBodyOf(actor);
+    if (fb?.weapons?.horns) { const h = fb.weapons.horns; list.push({ id: "unarmed:horns", unarmed: true, natural: true, ranged: false, name: `Horns (${h.why}, ${h.type})`, attribute: "dexterity", ability: "brawl",
+        accuracy: 0, dmgAttr: "strength", dmgBonus: h.bonus, type: h.type, diff: 6, secondaryId: "", minStr: 0, piercing: 0, desc: h.ref }); }
     for (const [k, u] of Object.entries(R.UNARMED)) {
+        const fw = fb?.weapons?.[k];
+        if (!nat && (fw || (k === "bite" && fb?.biteDice))) {
+            const bonus = (fw ? fw.bonus : u.dmgBonus) + (k === "bite" ? num(fb.biteDice) : 0), type = fw?.type ?? (k === "bite" ? "bashing" : u.type);
+            list.push({ id: `unarmed:${k}`, unarmed: true, natural: true, ranged: false, ...u, type, dmgBonus: bonus,
+                name: `${k === "bite" ? "Bite" : k === "claw" ? "Claws" : "Punch"} (${fw?.why ?? "Beastly Visage"}, ${type})`, secondaryId: "", minStr: 0, piercing: 0, desc: fw?.ref ?? "Dark Ages: Fae p. 106" });
+            continue;
+        }
         if (nat && (k === "bite" || k === "claw")) {
             const type = nat[k];
             if (!type) continue;
@@ -435,6 +447,8 @@ function weaponAbility(actor, w) {
 
 /** WoDX Actions' Werewolf and Fera helpers, when that module is on (Phase 6b). */
 function garouRules() { return game.wodxActions?.garouRules ?? null; }
+/** B7938: a Dark Ages fae's Greater Features in the mien (WoDX Actions): {soak, names, weapons, biteDice} or null. */
+function faeBodyOf(actor) { try { return game.wodxActions?.faeBody?.(actor) ?? null; } catch (e) { return null; } }
 /** Soak options read from WoDX Actions: a demon's apocalyptic form {formOn}; a Dark Ages fae (DA:Fae pp. 88, 104) {lethalSoak, baneSoak}. */
 function soakOpts(actor, profile) {
     if (profile === "demon") {
@@ -696,10 +710,14 @@ function kindOpts(sel, autoLabel) {
         Object.entries(P.PROFILES).map(([k, v]) => `<option value="${k}" ${sel === k ? "selected" : ""}>${v.label}</option>`).join("");
 }
 
-function maneuverTable() {
+function maneuverTable(actor = null) {
     const t = setting("classicManeuvers") ? { ...R.MANEUVERS, ...R.CLASSIC } : R.MANEUVERS;
-    return setting("companion2002Maneuvers") ? { ...t, ...R.DA2002 } : t;
+    const t2 = setting("companion2002Maneuvers") ? { ...t, ...R.DA2002 } : t;
+    // B7937: the Garou's maneuvers and pack tactics (Dark Ages: Werewolf pp. 102-105) for a shapechanger, and for lookups
+    return !actor || isShifterActor(actor) ? { ...t2, ...R.DAW } : t2;
 }
+function isShifterActor(a) { return getKind(a) === "lupine" || ["Werewolf", "Changing Breed"].includes(a?.type); }
+function garouForm(a) { try { return garouRules()?.info?.(a)?.form ?? "homid"; } catch (e) { return "homid"; } }
 
 function attackDialogHtml(attacker, target, weapons, selWeapon) {
     const aKind = getKind(attacker);
@@ -736,7 +754,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
   </fieldset>` : ""}
   <fieldset><legend>Attack</legend>
     <div class="form-group"><label>Weapon</label>${weapons.length > 5 ? searchBox("select[name=weapon]", "Search weapons…", "Search weapons") : ""}<select name="weapon">${wOpts}</select></div>
-    <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(), "normal")}</select></div>
+    <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(attacker), "normal")}</select></div>
     <div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>
     ${aimHtml(target)}
     <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
@@ -991,7 +1009,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         mkey === "riposte" && game.combat?.started && !R.riposteReady(recentCards().filter(d => AU.countThisRound([d], roundKey(), () => true)), attacker.uuid) ? "a riposte needs a successful defense earlier this turn" : "",
         // B7694: the Dark Ages Companion (2002) maneuvers' prerequisites
         R.da2002Why(mkey, { brawl: ability(attacker, "brawl").value, melee: ability(attacker, "melee").value, strength: attr(attacker, "strength"),
-            dexterity: attr(attacker, "dexterity"), potence: discipline(attacker, "Potence"), protean: discipline(attacker, "Protean") }, w)
+            dexterity: attr(attacker, "dexterity"), potence: discipline(attacker, "Potence"), protean: discipline(attacker, "Protean") }, w),
+        // B7937: the Garou's maneuvers: a shapechanger in the book's forms, a claw or bite, Savage on a foe already down
+        R.dawWhy(mkey, { shifter: isShifterActor(attacker), form: garouForm(attacker), brawlAttack: !!(w?.unarmed || w?.natural || w?.ability === "brawl"),
+            down: !!(target && chronicle()?.conditions?.hasCondition?.(target, "knockdown")) })
     ].filter(Boolean);
     if (gripWhy.length) {
         if (!game.user.isGM) throw new Error(`${attacker.name}: ${gripWhy[0]}.`);
@@ -1343,6 +1364,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (offer && target.isOwner) await BD.offerMaim(target, offer, { attacker });
         else if (offer) requestGM({ action: "maim", uuid: target.uuid, offer, by: attacker?.name ?? "" });
     }
+    // B7937: the taunt is spent on this attack; a Garou maneuver's marks (DA:W pp. 102-105)
+    if (GM.tauntedDice(attacker)) await GM.clearTaunt(attacker).catch(e => console.warn(`${MOD} | taunt`, e));
+    if (target && R.DAW[mkey]) await GM.afterHit(mkey, { attacker, target, hit: !!hit, botch: !!atk.botch, damageSuccesses: dmg?.successes ?? 0, levels: outcome?.levels ?? 0 }).catch(e => console.warn(`${MOD} | DA:W maneuver`, e));
     // B7694: what a Dark Ages Companion (2002) maneuver leaves
     if (target && R.DA2002[mkey]) {
         const fx = R.da2002After(mkey, { hit: !!hit && !atk.botch, levels: outcome?.levels ?? 0, profile, aimed: String(fd.aimType ?? fd.targeting ?? "") });
@@ -1458,6 +1482,9 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
     if (pm.parts.length) { pool.parts = [...(pool.parts ?? []), ...pm.parts]; pool.once = pm.once; }
+    // B7937: a successful Taunt takes dice off the next attack (Dark Ages: Werewolf p. 103)
+    const tz = Math.min(GM.tauntedDice(attacker), Math.max(0, pool.dice));
+    if (tz) { pool.dice -= tz; pool.parts = [...(pool.parts ?? []), `Taunted -${tz}`]; pool.taunted = tz; }
     if (w.wellMade) pool.parts = [...(pool.parts ?? []), `${w.name}: well made (${w.wellMade} difficulty)`];
     // B4792: a ram's pool is the driving pool, held to the vehicle's Maneuver
     if (w.vehicle) { try { const c = VH.capPool(attacker, w, pool.dice); if (c.note) { pool.dice = c.dice; pool.parts.push(c.note); } } catch (e) { /* no vehicle */ } }
@@ -1515,8 +1542,10 @@ function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
     const sp = R.soakPool({
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
-        armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice)
+        // B7937: the armour Fur Gnarl tore away does not soak a blow struck at the gnarled hide (DA:W p. 104)
+        armor: Math.max(0, (arm[dp.dmgType] ?? 0) - (fd.maneuver === "gnarled" ? GM.gnarlOf(target) : 0)) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
+        // B7938: a fae's Armored Hide: three dice more against any harm (Dark Ages: Fae p. 106)
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice) + num(pw.dice) + num(faeBodyOf(target)?.soak)
             + (fd.maneuver === "necksnap" ? attr(target, "strength") : 0), // B7694: Strength soaks a Neck Snap too (DAC 2002 p. 36)
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
@@ -1638,7 +1667,7 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
             minLevels: dp.minLevels ?? 0, noDamage: !!maneuver.noDamage });
         const score = maneuver.noDamage ? harm.expectedNet : harm.expectedLevels * (R.HARM_WEIGHT[dp.dmgType] ?? 1);
         plans.push({ w, valid: true, score: score + (w.equipped ? 1e-6 : 0), dmgType: dp.dmgType, rangeBand,
-            atkDice: pool.dice, atkDiff: pool.difficulty, defDice, ...harm });
+            atkDice: pool.dice, atkDiff: pool.difficulty, defDice, soakDice: target ? sp.dice : 0, ...harm });
     }
     const best = plans.filter(p => p.valid).sort((a, b) => b.score - a.score)[0] ?? null;
     return { best, plans };
@@ -2212,6 +2241,9 @@ const MACROS = [
     { name: "WoDX: Quick Attack", img: "icons/skills/melee/blade-tip-orange.webp", command: "game.wodxCombat.quickAttack();" },
     { name: "WoDX: Reload", img: "icons/weapons/ammunition/bullets-cartridge-shell-gray.webp", command: "game.wodxCombat.reload();" },
     { name: "WoDX: Light the match", img: "icons/svg/fire.svg", command: "game.wodxCombat.lightMatch();" },
+    // B7937: the Garou's Taunt and the pack's Harrying (Dark Ages: Werewolf pp. 103-105): the selected token at the targeted one
+    { name: "WoDX: Taunt", img: "icons/svg/sound.svg", command: "const a = canvas.tokens.controlled[0]?.actor, t = [...game.user.targets][0]?.actor; if (a && t) game.wodxCombat.daw.taunt(a, t); else ui.notifications.warn('Select the one taunting and target the foe.');" },
+    { name: "WoDX: Harry the prey", img: "icons/svg/pawprint.svg", command: "const a = canvas.tokens.controlled[0]?.actor, t = [...game.user.targets][0]?.actor; if (a && t) game.wodxCombat.daw.harry(a, t); else ui.notifications.warn('Select the chasing Garou and target the prey.');" },
     { name: "WoDX: Soak Policy", img: "icons/svg/shield.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.setSoakPolicy(a); else ui.notifications.warn('Select a token first.');" }
 ];
 
@@ -2248,8 +2280,9 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     SW.init({ rollPool, soakAndApply, markFollow, attr, ability });
+    GM.init({ rollPool, markFollow, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind });
     SW.hooks();
-    const api = { swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+    const api = { daw: { taunt: (a, t, o) => GM.taunt(a, t, o), harry: (c, p, o) => GM.harry(c, p, o), afterHit: GM.afterHit, gnarlOf: GM.gnarlOf, savagedBy: GM.savagedBy, tauntedDice: GM.tauntedDice }, swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
         getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.50.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
@@ -2429,18 +2462,22 @@ Hooks.on("combatStart", combat => {
 const standSeen = new Set();
 export async function standUp(actor, combat = game.combat) {
     if (!actor || !chronicle()?.conditions?.hasCondition?.(actor, "knockdown")) return null;
-    const dice = Math.max(0, attr(actor, "dexterity") + ability(actor, "athletics").value + woundPenalty(actor));
-    const r = await rollPool(dice, R.STAND_DIFF);
+    // B7937: under a Savage, Strength + Athletics at 4 + 1 for each Garou on them (Dark Ages: Werewolf p. 105)
+    const savaged = GM.savagedBy(actor).length;
+    const dice = Math.max(0, attr(actor, savaged ? "strength" : "dexterity") + ability(actor, "athletics").value + woundPenalty(actor));
+    const standDiff = savaged ? R.savageStandDiff(savaged) : R.STAND_DIFF;
+    const r = await rollPool(dice, standDiff);
     const res = R.standResult(r);
     if (res.up) {
         await chronicle().conditions.setCondition(actor, "knockdown", false);
+        if (savaged) await GM.clearSavaged(actor);
         if (combat?.started) await actor.setFlag(MOD, "stoodUp", { combat: combat.id, round: combat.round });
     } else if (combat?.started) {
         // B6151: the failed roll spends this turn's action: attacks refuse it and the turn conductor skips the turn
         await actor.setFlag(MOD, "lostAction", { combat: combat.id, round: combat.round });
     }
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: r.roll ? [r.roll] : [],
-        content: `<div class="vtc-card"><h3>${esc(actor.name)} tries to stand</h3><p>Dexterity + Athletics, ${dice} dice at ${R.STAND_DIFF}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}.</p>${diceHtml(r.faces, R.STAND_DIFF)}<p>${esc(res.line)}</p></div>` });
+        content: `<div class="vtc-card"><h3>${esc(actor.name)} tries to stand</h3><p>${savaged ? `Strength + Athletics under ${savaged} Garou (Savage)` : "Dexterity + Athletics"}, ${dice} dice at ${standDiff}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}.</p>${diceHtml(r.faces, R.STAND_DIFF)}<p>${esc(res.line)}</p></div>` });
     return { ...res, roll: r };
 }
 Hooks.on("updateCombat", (combat, changed) => {

@@ -36,7 +36,7 @@ test("C20: Creation's starting Tempers come from startingTempers", () => {
 
 test("Dark Ages fae: havocStep lowers a havoc on the card, cantripCap sets the caps", () => {
   assert.match(src("modules/wodx-actions/scripts/fae-da.js"), /F\.havocStep\(/);
-  assert.match(src("modules/wodx-actions/scripts/fae-da-rules.js"), /cantripCap\(weaving, dominions\[d\]\)/);
+  assert.match(src("modules/wodx-actions/scripts/fae-da-rules.js"), /cantripCap\(weaving, dominions\[d\], affinity && affinity === d \? 1 : 0\)/);
 });
 
 /* B7110-B7114: the rest of the Dark Ages fae exports reach play. */

@@ -13,6 +13,7 @@
 import * as PM from "./power-mods.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 import { AURA_TICKS } from "./thrall-rules.js";
+import { FEATURE_TICKS, featuresOf } from "./fae-da-rules.js";
 
 const NONE = Object.freeze({ dice: 0, diff: 0, parts: [] });
 
@@ -128,6 +129,8 @@ export function ticksFor(actor) {
         if (f?.daMage?.fellowship && f?.daHouse?.degree && !own.some(t => t.key === "fellowship")) own.push(FELLOWSHIP_TICK);
         // B7926: a thrall may tick the Aura of Sin on a roll (Dark Ages: Devil's Due p. 97)
         if (f?.thrall && !f.thrall.absolved) for (const t of AURA_TICKS) if (!own.some(x => x.key === t.key)) own.push(t);
+        // B7938: a fae's Beastly Visage and Season's Skin ask when the moment is theirs (Dark Ages: Fae pp. 106-107)
+        if (Array.isArray(f?.daFae?.greater)) { const have = featuresOf(f.daFae.greater).map(x => x.key); for (const t of FEATURE_TICKS) if (have.includes(t.feature) && !own.some(x => x.key === t.key)) own.push({ key: t.key, label: t.label }); }
         return [...TICKS.filter(t => tags.has(t.key)), ...own];
     } catch (e) { return []; }
 }

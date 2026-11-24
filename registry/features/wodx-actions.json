@@ -904,7 +904,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B42, B45, B7883-B7890, B7893-B7896"
+     "decisions": "B42, B45, B7883-B7890, B7893-B7896, B7934"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/hunter.js:build"
@@ -1039,7 +1039,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B39, B41, B7082-B7087, B7860-B7861, B7879-B7882"
+     "decisions": "B39, B41, B7082-B7087, B7860-B7861, B7879-B7882, B7936"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/garou.js:totemOf"
@@ -1186,7 +1186,7 @@
    "steps": {
     "built": {
      "pr": null,
-     "decisions": "B7920-B7926"
+     "decisions": "B7920-B7926, B7933"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/thrall.js:build"
@@ -1290,7 +1290,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B72, B6560-B6566, B7866, B7870-B7873"
+     "decisions": "B72, B6560-B6566, B7866, B7870-B7873, B7932, B7938"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/fae-da.js:build"

@@ -8,8 +8,8 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | system | not yet | 0 | 0 | 0 |
 | wodx-actions | yes | 45 | 0 | 9 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
-| wodx-chronicle | not yet | 2 | 0 | 0 |
-| wodx-combat | yes | 15 | 0 | 2 |
+| wodx-chronicle | not yet | 3 | 0 | 0 |
+| wodx-combat | yes | 16 | 0 | 2 |
 | wodx-creation | yes | 23 | 0 | 5 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
@@ -80,6 +80,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | --- | --- | --- | --- | --- |
 | Dated events: history fires on its date as the clock passes it (`chronicle.dated-events`) | core | gated | 2 | gatedatedplay 5 |
 | Languages in chat: speech in a language a player's characters lack shows as made-up words (`chronicle.languages-in-chat`) | core | gated | 2 | gateplaylang 4 |
+| The Dark Ages line books' merits and flaws: Werewolf, Fae, Devil's Due and the Inquisitor Companion (`chronicle.da-line-traits`) |  | gated | 2 | gatedalists 1 |
 
 ## wodx-combat
 
@@ -100,6 +101,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 1 | gatemove drowning in a fight |
 | Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | shown | 2 |  |
 | Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming (`combat.vehicles`) |  | gated | 1 | gatetruthcombat 10. a quick attack on a vehicle's token comes off its sheet's Structure |
+| The Garou maneuvers and pack tactics of Dark Ages: Werewolf (`combat.garou-maneuvers`) |  | gated |  | gatedawfill 2 |
 
 ## wodx-creation
 

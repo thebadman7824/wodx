@@ -82,9 +82,12 @@ export async function run() {
       const offered = [...el.querySelectorAll("button[data-hx=curse]")].map(b => b.dataset.arg);
       el.querySelector("button[data-arg=scent-of-hyacinth]").click();
       await waitFor(() => inq().curses.includes("scent-of-hyacinth"), 5000);
-      const shown = game.messages.contents.find(m => m.timestamp >= t1 && /<b>Scent of Hyacinth<\/b>/.test(m.content ?? "") && m.speaker?.actor === agnes.id);
+      // the Curse's card posts after the sheet changes
+      let shown = null;
+      await waitFor(() => (shown = game.messages.contents.find(m => m.timestamp >= t1 && /<b>Scent of Hyacinth<\/b>/.test(m.content ?? "") && m.speaker?.actor === agnes.id)), 5000).catch(() => null);
       const cat = id => A.curses.curseById(id)?.cat;
-      G.ok("2. the first Acolyte Curse is the order's own; the one clicked is on the sheet", offered.length === 2 && offered.every(id => cat(id) === "anathemae") && inq().curses.includes("scent-of-hyacinth") && !!shown,
+      // B7934: four Anathemae of the first stage, two of them the Companion's
+      G.ok("2. the first Acolyte Curse is the order's own; the one clicked is on the sheet", offered.length === 4 && offered.every(id => cat(id) === "anathemae") && inq().curses.includes("scent-of-hyacinth") && !!shown,
         {offered, curses: inq().curses, card: text(shown).slice(0, 200)});
     });
 

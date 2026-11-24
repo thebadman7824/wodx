@@ -82,6 +82,12 @@ export function parseOaths(text) {
 export const oathLine = o => `${F.OATHS[o.kind]?.label.split(" ")[0] ?? o.kind} ${o.rating}: ${o.terms}${o.active === false ? " (inactive)" : ""}`;
 const lines = t => String(t ?? "").split(/\n+/).map(l => l.trim()).filter(Boolean);
 
+/** B7932: a merit or flaw of Dark Ages: Fae pp. 98-102 on the sheet (WoDX Chronicle's trait table). */
+const has = (actor, key) => { try { return Number(game.modules.get("wodx-chronicle")?.api?.traits?.has?.(actor, key)) > 0; } catch (e) { return false; } };
+const faeMerits = actor => ({ freeThinker: has(actor, "free-thinker"), stableMind: has(actor, "stable-mind"), delicateSoul: has(actor, "delicate-soul"),
+    control: has(actor, "unleashing-control"), affinity: has(actor, "cantrip-affinity"), intolerant: has(actor, "echo-intolerant"),
+    cherished: has(actor, "cherished"), feared: has(actor, "feared"), demonic: has(actor, "demonic") });
+
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, setFlag, background, traits, spendWillpower, notify } = ctx;
 
@@ -96,10 +102,11 @@ export function build(ctx) {
         const day = Math.floor(game.time.worldTime / DAY);
         const wd = f.weavingDay?.day === day ? n(f.weavingDay.n) : 0;
         const hiddenDays = f.hiddenSince != null ? Math.floor((game.time.worldTime - n(f.hiddenSince)) / DAY) : null;
-        return { f, origin, O: F.ORIGINS[origin] ?? null, court, C: F.COURTS[court] ?? null, dominions, mists, weaving, willpower,
+        const mf = faeMerits(actor), gaps = F.imbalanceGaps(mf);
+        return { mf, gaps, f, origin, O: F.ORIGINS[origin] ?? null, court, C: F.COURTS[court] ?? null, dominions, mists, weaving, willpower,
             cantrips: Array.isArray(f.cantrips) ? f.cantrips : [], lesser: Array.isArray(f.lesser) ? f.lesser : [], greater: Array.isArray(f.greater) ? f.greater : [],
             echoes: Array.isArray(f.echoes) ? f.echoes : [], oaths: Array.isArray(f.oaths) ? f.oaths : [],
-            mien: !!(f.mien || F.ORIGINS[origin]?.alwaysMien), imbalance: F.imbalance(mists.perm, weaving.perm),
+            mien: !!(f.mien || F.ORIGINS[origin]?.alwaysMien), imbalance: F.imbalance(mists.perm, weaving.perm, gaps),
             weavingToday: wd, suppression: F.suppression({ spendsToday: wd, mists: mists.perm, streak: n(f.weavingStreak), willpower }),
             hiddenDays, holdings: background(actor, "Holdings"), sprites: background(actor, "Sprites"),
             gramarye: n(actor.system?.abilities?.gramarye?.value) || n(ctx.findAbility?.(actor, "gramarye")?.value) };
@@ -177,8 +184,9 @@ export function build(ctx) {
           <fieldset><legend>Dominions</legend>${dom}</fieldset>
           ${area("cantrips", "Cantrips", i.cantrips.map(cantripLine).join("\n"), "one a line: Night 1: Hush (manipulation) [veil]; the brackets say what it does; a cantrip the book names needs no brackets")}
           ${(() => { const picks = bookPicks(i.dominions, i.cantrips).filter(p => !p.known); return picks.length ? `<div class="form-group stacked"><label>Add from the book <small>the Dominions' named cantrips up to the dots on this sheet (Dark Ages: Fae pp. 123–162); hold Ctrl to pick several</small></label>${picks.length > 5 ? searchBox("select[name=book]", "Search the book's cantrips…", "Search the book's cantrips") : ""}<select name="book" multiple size="8" data-fixed>${picks.map(p => `<option value="${p.id}" title="${esc(DC.CANTRIPS[p.id].fx)}">${esc(p.label)}</option>`).join("")}</select></div>` : ""; })()}
-          ${area("lesser", "Lesser Features", i.lesser.join("\n"), "one a line")}
-          ${area("greater", "Greater Features", i.greater.join("\n"), "one a line")}
+          ${area("lesser", "Lesser Features", i.lesser.join("\n"), `one a line; the book's: ${F.LESSER_FEATURES.map(([, nm]) => nm).join(", ")} (cosmetic, ${REF} pp. 105-106)`)}
+          ${area("greater", "Greater Features", i.greater.join("\n"), `one a line, with its kind where it has one (Monster's Mien: horns). The book's work in play while the mien shows: ${Object.values(F.GREATER_FEATURES).map(g => `${g.name} (${g.line})`).join("; ")} (${REF} pp. 106-107)`)}
+          ${(() => { const fs = F.featuresOf(i.greater); return fs.length ? `<p class="vta-note">At work in the mien: ${fs.map(x => esc(`${x.f.name}${x.variant ? ` (${x.variant})` : ""}: ${x.v?.line ?? x.f.line}`)).join("; ")}.</p>` : ""; })()}
           ${area("echoes", "Echoes", i.echoes.map(e => e.trigger).join("\n"), "one trigger a line")}
           ${area("oaths", "Oaths", i.oaths.map(oathLine).join("\n"), "one a line: Iron 2: what each side keeps (inactive)")}
           <div class="form-group"><label><input type="checkbox" name="mien"${i.mien ? " checked" : ""}${i.O?.alwaysMien ? " disabled" : ""}/> In the fae mien now</label></div>
@@ -202,8 +210,8 @@ export function build(ctx) {
             const oaths = parseOaths(fd.oaths);
             await save(actor, { origin, court, mists, weaving, dominions, cantrips, lesser: lines(fd.lesser), greater: lines(fd.greater), echoes, oaths,
                 mien: origin && F.ORIGINS[origin].alwaysMien ? true : !!fd.mien, system: fd.system || null });
-            const probs = F.cantripProblems(cantrips, { weaving: weaving.perm, dominions });
-            notify(`${actor.name}: ${origin ? F.ORIGINS[origin].label : "no Origin"}${court ? `, ${F.COURTS[court].label} Court` : ""} saved.${probs.length ? ` Check: ${probs.map(p => p.problem).join("; ")}.` : ""}${F.imbalance(mists.perm, weaving.perm) ? ` In ${F.imbalance(mists.perm, weaving.perm) === "mists" ? "Mists" : "Weaving"} imbalance (Dark Ages: Fae p. 102).` : ""}`);
+            const probs = F.cantripProblems(cantrips, { weaving: weaving.perm, dominions, affinity: faeMerits(actor).affinity ? F.COURTS[court]?.favored ?? null : null });
+            notify(`${actor.name}: ${origin ? F.ORIGINS[origin].label : "no Origin"}${court ? `, ${F.COURTS[court].label} Court` : ""} saved.${probs.length ? ` Check: ${probs.map(p => p.problem).join("; ")}.` : ""}${F.imbalance(mists.perm, weaving.perm, F.imbalanceGaps(faeMerits(actor))) ? ` In ${F.imbalance(mists.perm, weaving.perm, F.imbalanceGaps(faeMerits(actor))) === "mists" ? "Mists" : "Weaving"} imbalance (Dark Ages: Fae p. 102).` : ""}`);
             return true;
         }, { width: 560 });
     }
@@ -371,7 +379,7 @@ export function build(ctx) {
         if (!i) return null;
         const clock = await clockNow();
         const content = `<form>
-          <p><b>${esc(actor.name)}</b>: Mists ${i.mists.perm}; Unleashing dice ${i.O.unleashDice}. Weaving ${i.weaving.temp} to spend.${i.O.unleashOnlyInMien && !i.mien ? " <b>Not in the mien:</b> a changeling Unleashes only in mien." : ""}</p>
+          <p><b>${esc(actor.name)}</b>: Mists ${i.mists.perm}; Unleashing dice ${i.mf.control && i.O.unleashDice > 3 ? `3 (Unleashing Control)` : i.O.unleashDice}. Weaving ${i.weaving.temp} to spend.${i.O.unleashOnlyInMien && !i.mien ? " <b>Not in the mien:</b> a changeling Unleashes only in mien." : ""}</p>
           <div class="form-group"><label>Dominion</label><select name="dominion" data-fixed>${DOM_OPTS(i.C?.favored, i.dominions)}</select></div>
           <div class="form-group stacked"><label>What the fae wants (a short intent)</label><input type="text" name="intent" value=""/></div>
           <div class="form-group"><label>Weaving to remove Unleashing dice</label><input type="number" name="weave" min="0" max="5" value="0"/></div>
@@ -383,7 +391,7 @@ export function build(ctx) {
             const d = fd.dominion;
             const time = fd.clock ? F.timeBonus(d, clock) : {};
             const plan = F.unleashPlan({ dominion: d, rating: i.dominions[d], origin: i.origin, court: i.court, mists: i.mists.perm, weaving: i.weaving.perm, mien: i.mien },
-                { time, holding: fd.holding ? 1 : 0, holdingCalm: !!fd.calm, weavingSpent: Math.min(n(fd.weave), i.weaving.temp), base: n(fd.base) || 6 });
+                { time, holding: fd.holding ? 1 : 0, holdingCalm: !!fd.calm, weavingSpent: Math.min(n(fd.weave), i.weaving.temp), base: n(fd.base) || 6, control: i.mf.control && i.origin !== "firstborn", gaps: i.gaps });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (echoHold(actor) >= 4) { notify(`${actor.name} met an Echo of the fourth level this scene: no Unleashing while it lasts.`); return null; }
             if (plan.weavingSpent && !(await spend(actor, "weaving", plan.weavingSpent))) return null;
@@ -486,7 +494,9 @@ export function build(ctx) {
             const ip = F.inquisitorEcho({ willpower: willDice, risk, spend: cspend });
             const inqParts = [];
             if (!fd.name) {
-                er = await rollPool(fd.who === "mortal" ? ip.dice : 5, 7); rolls.push(er.roll);
+                // B7932: Echo Intolerant (p. 100): one more die on the Echo's roll
+                er = await rollPool((fd.who === "mortal" ? ip.dice : 5) + (i.mf.intolerant ? 1 : 0), 7); rolls.push(er.roll);
+                if (i.mf.intolerant) inqParts.push(`Echo Intolerant: +1 die (${REF} p. 100)`);
                 if (fd.who === "mortal" && ip.extra && !er.botch) { er = { ...er, successes: n(er.successes) + ip.extra }; inqParts.push(`${ip.extra} Conviction spent: +${ip.extra}`); }
                 if (isInq && (risk || cspend)) {
                     const rk = H.riskConviction(risk, er, conv - cspend);
@@ -561,6 +571,8 @@ export function build(ctx) {
           <fieldset><legend>If mortals saw the mien</legend>
             <div class="form-group"><label>How many mortals</label><input type="number" name="mortals" min="1" max="99" value="1"/></div>
             <div class="form-group"><label><input type="checkbox" name="sawCantrip"/> They saw a cantrip cast</label></div>
+            ${i.mf.cherished || i.mf.feared ? `<div class="form-group"><label><input type="checkbox" name="legend" checked/> They know the fae's legend (${i.mf.cherished ? "Cherished, +1 die" : "Feared, -1 die"})</label></div>` : ""}
+            ${i.mf.demonic ? `<div class="form-group"><label><input type="checkbox" name="priest"/> A priest or holy person is by (Demonic, -1 die)</label></div>` : ""}
             <div class="form-group"><label><input type="checkbox" name="sawUnleash"/> They saw an Unleashing</label> <label><input type="checkbox" name="awry"/> and it went awry</label></div>
           </fieldset>
           <div class="form-group"><label>Kenning for</label><select name="target" data-fixed><option value="mortal">a mortal (1)</option><option value="humane-kindred">a Kindred on the Road of Humanity (1)</option><option value="homid">a homid Garou (1)</option><option value="supernatural">another supernatural being (2)</option></select></div>
@@ -603,7 +615,8 @@ export function build(ctx) {
                 // enhanced this scene, every Lesser Feature counts as a Greater one
                 const enh = i.f.enhanced != null && n(i.f.enhanced) === n(LIM.sceneNo());
                 const lesser = enh ? 0 : i.lesser.length, greater = i.greater.length + (enh ? i.lesser.length : 0);
-                const pool = F.newEchoPool({ lesser, greater, origin: i.origin, mortals: Math.max(1, n(fd.mortals)), cantrip: !!fd.sawCantrip, unleash: !!fd.sawUnleash, awry: !!fd.awry });
+                const mfMod = (fd.legend ? (i.mf.cherished ? 1 : 0) - (i.mf.feared ? 1 : 0) : 0) - (fd.priest && i.mf.demonic ? 1 : 0);
+                const pool = F.newEchoPool({ lesser, greater, origin: i.origin, mortals: Math.max(1, n(fd.mortals)), cantrip: !!fd.sawCantrip, unleash: !!fd.sawUnleash, awry: !!fd.awry, mod: mfMod });
                 if (!pool.atRisk) body += `<div class="vta-res good">Too few Features show (${i.lesser.length} Lesser, ${i.greater.length} Greater): no new Echo.</div>`;
                 else {
                     const r = pool.dice > 0 ? await rollPool(pool.dice, pool.difficulty) : { successes: 0, botch: false, roll: null };

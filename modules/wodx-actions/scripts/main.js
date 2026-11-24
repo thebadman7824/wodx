@@ -3669,6 +3669,8 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
     /** Dark Ages fae soak for WoDX Combat: in the mien Stamina soaks lethal (DA:Fae p. 104); cold iron is soakable (p. 88). */
     // B7110: soaksLethal is the rule (Dark Ages: Fae p. 104): in the mien, or a firstborn always
+    // B7938: the Greater Features of a Dark Ages fae's mien for WoDX Combat: soak dice and natural weapons (DA:Fae pp. 106-107)
+    faeBody: a => { if (!a || !FXD.isDA(a)) return null; const i = fx().info(a); return FDR.featureBody(i.greater, { mien: i.mien }); },
     faeSoak: a => { if (!a || !FXD.isDA(a)) return null; const i = fx().info(a); return { lethal: FDR.soaksLethal({ mien: i.mien, origin: i.origin }), coldIron: true }; },
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
@@ -3796,6 +3798,8 @@ Hooks.once("ready", () => { const go = () => {
     catch (e) { console.warn("WoDX Actions | behind the age", e); }
     // B7909: a Dark Ages mage's degree tells with the fellowship (Dark Ages: Mage p. 37)
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => mx().house.degreeEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | degree on rolls", e); }
+    // B7938: a Dark Ages fae's Greater Features on rolls while the mien shows (Dark Ages: Fae pp. 106-107)
+    try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => ((ctx.channel ?? "roll") === "roll" && FXD.isDA(actor) ? (() => { const i = fx().info(actor); return FDR.featureRollEffects(i.greater, { tags: ctx.tags ?? [], mien: i.mien }); })() : [])); } catch (e) { console.warn("WoDX Actions | fae Features", e); }
     // B7926: a thrall's Aura of Sin on a Social roll (Dark Ages: Devil's Due p. 97)
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => thx().auraEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | aura of sin", e); }
 }; if (game.modules.get("wodx-chronicle")?.api?.traits) go(); else Hooks.once("wodxChronicleReady", go);

@@ -646,8 +646,9 @@ export function build(ctx) {
             // The Gift's keywords on the effects card (Traits With Teeth step 4): the Dark Ages library, else the W20 list by name
             let fxItems = [];
             // A library Gift with no roll counts one success (B3751)
-            if (g?.book === "W20 CB" && successes > 0 && EF.isOn()) {
-                const pp = EF.planOf(actor, feraGiftResults(g, successes), successes, { name: g.n, line: "Werewolf (Changing Breeds)" });
+            // B7936: a Dark Ages Gift with its own spec (Survivor) works the same way
+            if ((g?.book === "W20 CB" || g?.spec) && successes > 0 && EF.isOn()) {
+                const pp = EF.planOf(actor, feraGiftResults(g, successes), successes, { name: g.n, line: g.book === "W20 CB" ? "Werewolf (Changing Breeds)" : "Werewolf (Dark Ages)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             } else if ((code || g) && successes > 0 && EF.isOn()) {
