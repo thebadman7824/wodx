@@ -89,15 +89,15 @@ export async function run() {
 
     await G.step("6. Regeneration closes a lethal level each new round", async () => {
       await body().update({"system.health.damage.lethal": 2});
-      const fight = await Combat.create({scene: scene.id, active: true});
-      await fight.createEmbeddedDocuments("Combatant", [{tokenId: ft.id, sceneId: scene.id, actorId: fo.id}]);
-      await fight.startCombat();
+      const combat = await Combat.create({scene: scene.id, active: true});
+      await combat.createEmbeddedDocuments("Combatant", [{tokenId: ft.id, sceneId: scene.id, actorId: fo.id}]);
+      await combat.startCombat();
       await wait(800);
-      await fight.nextRound();
+      await combat.nextRound();
       await waitFor(() => Number(body().system?.health?.damage?.lethal) === 1, 6000);
       const lethal = Number(body().system?.health?.damage?.lethal);
       const extra = body().getFlag(MOD, "extraActions");
-      await fight.delete().catch(() => null);
+      await combat.delete().catch(() => null);
       G.ok("6. Regeneration closes a lethal level each new round", lethal === 1, {lethal, extra});
     });
 

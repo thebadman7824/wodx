@@ -710,11 +710,13 @@
     },
     "shown": {
      "what": "a card on each beat of the power while it holds"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetimedpowers.mjs",
+     "step": "1. a Heart Claw takes a lethal level on the bearer's next turn"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1070,10 +1072,13 @@
     },
     "shown": {
      "what": "the fomor's and spirit's powers in their action windows, with cards"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefomor.mjs",
+     "step": "6. Regeneration closes a lethal level each new round"
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
     "book: W20 pp. 366-368 and 430-439; not checked against the book text yet"
    ],
    "deferred": [],

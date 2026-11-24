@@ -59,12 +59,11 @@
      "what": "a Give vitae window and a card naming the drink, the ghouling and the bond's step"
     },
     "gated": {
-     "gate": "tools/gate/gatedalines.mjs",
-     "step": "3. a Valkyrje's blood makes no ghoul and no bond"
+     "gate": "tools/gate/gateghoulclicks.mjs",
+     "step": "2. Drink makes a ghoul"
     }
    },
    "open": [
-    "gatedalines step 3 drives the Give vitae window but checks a refusal; no effect step checks an ordinary ghouling and bond end to end",
     "book: V20 Dark Ages ghouls and the blood bond; not checked against the book text yet"
    ],
    "deferred": [],
@@ -139,7 +138,6 @@
     }
    },
    "open": [
-    "gated: gatelearning '3. the study ends and the trait rises' is a direct call (tools/registry/strength.mjs); no step drives it from the window or the token",
     "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet"
    ],
    "deferred": [],
@@ -519,11 +517,13 @@
     },
     "shown": {
      "what": "the Pass the Years window with each character's proposed changes, ticked where the rules decide"
+    },
+    "gated": {
+     "gate": "tools/gate/gatepassyears.mjs",
+     "step": "3. Pass the years"
     }
    },
-   "open": [
-    "gated: gateera steps 3 to 6 are direct calls; step 7 (an effect step) checks the put back, not the passing"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
