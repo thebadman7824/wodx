@@ -326,4 +326,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {addBite, view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {addBite, view, of, has, effects, mockeryOf, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

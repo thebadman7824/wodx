@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.142.2 (The traits api now hands out mockeryOf, so other modules can read a Creature sheet's Mockery Breed (B7820))
 - 0.142.1 (Switch for Dark Ages maturation (B7685))
 - 0.142.0 (Signature cards for the Bonsam, Children of Osiris, Danava, Impundulu, Ramanga, Salubri watchers and Valkyrjer (B7661); Signature cards for the Setite castes (B7670); The full check of the 80 Merits and Flaws of V20 Dark Ages (B7665): eleven new rows, the Dark Ages costs, and effects a system can read)
 - 0.141.1 (Two shared Future Darkness events (2044 Wraith, 2058 Hunter) no longer name the first chronicle's town: they now name only Moravia, so any chronicle can use them. The town's own lines live in WoDX Rothenstein)
