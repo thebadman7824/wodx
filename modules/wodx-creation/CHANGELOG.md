@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.91.0 (Changing Breeds start with W20 Changing Breeds' own Rage, Gnosis and Willpower for each Breed, by aspect, auspice, tribe or breed (B7831))
 - 0.90.0 (Creation totals for The Hunters Hunted II hunters, plain mortals, Sorcerer Revised sorcerers, W20 Kinfolk and C20 Kinain, read from the books with page refs; a Mortal sheet's variant picks its book, and a Changing Breed opens on W20 until W20 Changing Breeds is checked (B7820-B7822))
 - 0.89.1 (learn.terms gives a teacher's willingness and price for WoDX Actions' Road Mentor (B7751))
 - 0.89.0 (The Dark Ages Companion's demons (B7698); Elder creation (B7691) and the Road of Night after the Dark Ages (B7690); Poisoned vitae (B7696); Maturation of Dark Ages: Vampire (2002) and its Storytellers Companion (B7685-B7689); Supporting-character templates (B7695); The V20 Dark Ages Companion's monsters (B7702))

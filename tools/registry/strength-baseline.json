@@ -78,7 +78,6 @@
  "tools/gate/gateknowing.mjs": "direct-call",
  "tools/gate/gatelanddates.mjs": "direct-call",
  "tools/gate/gatelaw.mjs": "direct-call",
- "tools/gate/gatelearning.mjs": "direct-call",
  "tools/gate/gateledger.mjs": "direct-call",
  "tools/gate/gatelegacy.mjs": "direct-call",
  "tools/gate/gatelegends.mjs": "marker",
