@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
+import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, mergeFailure, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
 
 const H = 3600e3;
 const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
@@ -207,4 +207,61 @@ test("B7203: a file review is carried over a merge with main when the branch's o
   assert.equal(added[0].file, "shared.txt");
   assert.equal(added[0].hash, hashOf("zero\none\ntwo\nthree\nbranch line\n"));
   assert.match(added[0].how, /^carried over by the merge train after main merged in: .*earlier check: read in full; ran the tests$/);
+});
+
+test("B7960 (#2121): a merge refused for a git fault is not a conflict; it names git's error and keeps the label", async () => {
+  // pure: a real conflict, the unmerged paths alone, and the 19 Nov identity fault
+  assert.equal(mergeFailure({status: 1, stdout: "Auto-merging a.txt\nCONFLICT (content): Merge conflict in a.txt\nAutomatic merge failed; fix conflicts and then commit the result.\n"}).conflict, true);
+  assert.equal(mergeFailure({status: 1, stdout: ""}, "a.txt\n").conflict, true);
+  const id = mergeFailure({status: 128, stderr: "Committer identity unknown\n\n*** Please tell me who you are.\n\nfatal: unable to auto-detect email address (got 'pc@host.(none)')\n"});
+  assert.equal(id.conflict, false);
+  assert.match(id.said, /unable to auto-detect email address/);
+  assert.equal(mergeFailure({status: 1}).said, "git exited 1");
+
+  // real git: a runner clone with no identity at all
+  const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-id-"));
+  const sh = (cwd, ...a) => { const r = spawnSync("git", a, {cwd, encoding: "utf8"}); if ( r.status ) throw new Error(`git ${a.join(" ")}: ${r.stderr}`); return r.stdout.trim(); };
+  const origin = path.join(t, "o.git"), work = path.join(t, "w"), clone = path.join(t, "r"), home = path.join(t, "h");
+  fs.mkdirSync(home);
+  sh(t, "init", "-q", "--bare", "-b", "main", origin); sh(t, "clone", "-q", origin, work);
+  sh(work, "config", "user.email", "t@example.com"); sh(work, "config", "user.name", "t");
+  fs.mkdirSync(path.join(work, "tools", "release"), {recursive: true});
+  fs.writeFileSync(path.join(work, "tools", "release", "merge-stamp.mjs"), "");
+  fs.writeFileSync(path.join(work, "a.txt"), "a");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "base"); sh(work, "push", "-q", "origin", "main");
+  sh(work, "checkout", "-q", "-b", "claude/id"); fs.writeFileSync(path.join(work, "b.txt"), "b");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "branch"); sh(work, "push", "-q", "origin", "claude/id");
+  const head = sh(work, "rev-parse", "HEAD");
+  sh(work, "checkout", "-q", "main"); fs.writeFileSync(path.join(work, "m.txt"), "m"); sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "main moves"); sh(work, "push", "-q", "origin", "main");
+  sh(t, "clone", "-q", origin, clone);
+  sh(clone, "config", "user.useConfigOnly", "true");
+  const env = {...process.env, GIT_CONFIG_GLOBAL: path.join(t, "none"), GIT_CONFIG_NOSYSTEM: "1"};
+  for ( const k of ["GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL", "EMAIL"] ) delete env[k];
+  const logged = [];
+  const git = async (argv, cwd) => spawnSync("git", argv, {cwd, encoding: "utf8", env});
+  const r = await prepare({git, home, repoRoot: clone, log: s => logged.push(s)}, "claude/id", head);
+  assert.equal(r.setup, true, r.error);
+  assert.ok(logged.some(s => /identity|email|who you are/i.test(s)), logged.join("; "));
+  assert.doesNotMatch(r.error, /does not merge in cleanly/);
+  assert.match(r.error, /runner's git setup needs a fix/);
+  assert.ok(logged.some(s => /git merge of main into claude\/id failed \(exit \d+\): .+/.test(s)), "git's own words are logged");
+  assert.equal(sh(origin, "rev-parse", "refs/heads/claude/id"), head, "nothing pushed");
+  assert.equal(spawnSync("git", ["status", "--porcelain"], {cwd: path.join(home, "train"), encoding: "utf8"}).stdout.trim(), "", "the worktree is left clean");
+
+  // step: the pull request keeps its label, and the comment comes once per head
+  const h2 = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const m = mockGh({behind: 3});
+  const fake = async () => ({setup: true, error: "git on the runner could not merge main in, though nothing conflicts (fatal: x): the runner's git setup needs a fix"});
+  const s1 = await step({gh: m.gh, home: h2, apply: true, batch: 1, prepare: fake});
+  assert.equal(s1.action, "wait");
+  assert.match(s1.why, /git setup needs a fix/);
+  assert.ok(!m.calls.some(c => c.startsWith("DELETE")), "label kept");
+  assert.equal(m.calls.filter(c => c === "POST /issues/20/comments").length, 1);
+  await step({gh: m.gh, home: h2, apply: true, batch: 1, prepare: fake});
+  assert.equal(m.calls.filter(c => c === "POST /issues/20/comments").length, 1, "no second comment for the same head");
+  // a real conflict still leaves, as before
+  const c = mockGh({behind: 3});
+  const s3 = await step({gh: c.gh, home: fs.mkdtempSync(path.join(os.tmpdir(), "train-")), apply: true, batch: 1, prepare: async () => ({error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"})});
+  assert.equal(s3.action, "leave");
+  assert.ok(c.calls.includes(`DELETE /issues/20/labels/${TRAIN_LABEL}`));
 });

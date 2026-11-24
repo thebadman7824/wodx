@@ -186,8 +186,14 @@ export async function step(ctx) {
       catch (e) { await leave(gh, pr.number, `the train could not mark the draft ready (${String(e.message).slice(0, 120)}): mark it ready for review, then add the label again`); out.action = "leave"; }
     }
     if ( d.action === "prepare" ) {
-      const r = await prepare(ctx, full.head.ref, head);
-      if ( r.error ) { await leave(gh, pr.number, r.error); out.action = "leave"; out.why = r.error; }
+      const r = await (ctx.prepare ?? prepare)(ctx, full.head.ref, head);
+      // B7960 (#2121): a git fault on the runner (no identity, a locked index) is not the pull request's fault, so it
+      // keeps its label and says so once per head, instead of every pull request in the line leaving in turn
+      if ( r.error && r.setup ) {
+        out.action = "wait"; out.why = r.error;
+        if ( state.setupWarned !== head ) { state.setupWarned = head; await comment(gh, pr.number, `Merge train: ${r.error}. This pull request keeps its place; the train tries again at its next step.`); }
+      }
+      else if ( r.error ) { await leave(gh, pr.number, r.error); out.action = "leave"; out.why = r.error; }
       else { out.why += `: ${r.did}`; await comment(gh, pr.number, `Merge train: this pull request is at the front. ${r.did}; the gates run on the new head (${r.sha.slice(0, 8)}) and it merges when its checks are green.`); }
     }
     if ( d.action === "merge" ) {
@@ -261,7 +267,13 @@ export async function prepare(ctx, ref, head) {
   const behind = (await git(["merge-base", "--is-ancestor", "origin/main", "HEAD"], dir)).status !== 0;
   if ( behind ) {
     const m = await git(["merge", "--no-edit", "-m", `Merge main into ${ref} (merge train)\n\nMerge-Train: yes`, "origin/main"], dir);
-    if ( !ok(m) ) { await git(["merge", "--abort"], dir); return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"}; }
+    if ( !ok(m) ) {
+      const f = mergeFailure(m, (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout);
+      await git(["merge", "--abort"], dir);
+      ctx.log?.(`train: git merge of main into ${ref} failed (exit ${m.status}): ${f.said}`);
+      if ( f.conflict ) return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"};
+      return {setup: true, error: `git on the runner could not merge main in, though nothing conflicts (${f.said}): the runner's git setup needs a fix`};
+    }
     did.push("main merged in");
     const carried = await carryReviews(dir, head);
     if ( carried.error ) { await git(["reset", "-q", "--hard", head], dir); return {error: carried.error}; }
@@ -279,6 +291,18 @@ export async function prepare(ctx, ref, head) {
   const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${ref}`, `--force-with-lease=refs/heads/${ref}:${head}`], dir);
   if ( !ok(p) ) return {error: `the push to ${ref} was refused (${String(p.stderr ?? "").trim().slice(0, 200)}); if the thread pushed meanwhile, add the label again`};
   return {sha, did: did.join(" and ")};
+}
+
+/**
+ * B7960 (#2121): tells a real merge conflict from any other git failure, from the failed merge's spawnSync result and
+ * the unmerged paths (`git diff --name-only --diff-filter=U`, read before the abort). said: the last lines git printed,
+ * for the log and the comment. A merge refused for a missing identity (Secondary PC, 19 Nov) is not a conflict. Pure.
+ */
+export function mergeFailure(m, unmerged = "") {
+  const text = `${m?.stdout ?? ""}\n${m?.stderr ?? ""}`;
+  const conflict = /^CONFLICT\b/m.test(text) || String(unmerged ?? "").trim() !== "";
+  const said = text.split("\n").map(l => l.trim()).filter(Boolean).slice(-3).join(" ").slice(0, 300) || `git exited ${m?.status ?? "with no status"}`;
+  return {conflict, said};
 }
 
 /** The lines a diff adds and removes, without positions: what the branch itself did to a file. */
@@ -388,7 +412,13 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
     if ( both.length ) { skipped.push({number: m.number, why: `it changes ${both.slice(0, 3).join(", ")}${both.length > 3 ? " and more" : ""}, as an earlier one in the batch does`}); continue; }
     const before = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
     const mg = await git(["merge", "--no-ff", "--no-edit", "-m", `Merge #${m.number} (${m.ref}) into the batch (merge train)\n\nMerge-Train: yes`, m.head], dir);
-    if ( !ok(mg) ) { await git(["merge", "--abort"], dir); await git(["reset", "-q", "--hard", before], dir); skipped.push({number: m.number, why: "it does not merge cleanly into the batch"}); continue; }
+    if ( !ok(mg) ) {
+      const f = mergeFailure(mg, (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout);
+      await git(["merge", "--abort"], dir); await git(["reset", "-q", "--hard", before], dir);
+      ctx.log?.(`train: git merge of #${m.number} into the batch failed (exit ${mg.status}): ${f.said}`);
+      skipped.push({number: m.number, why: f.conflict ? "it does not merge cleanly into the batch" : `git could not merge it into the batch, though nothing conflicts (${f.said})`});
+      continue;
+    }
     const carried = await carryReviews(dir, m.head, {other: "HEAD^1", what: `the merge of #${m.number} into the batch`});
     if ( carried.error ) { await git(["reset", "-q", "--hard", before], dir); skipped.push({number: m.number, why: carried.error}); continue; }
     for ( const f of files ) taken.add(f);
