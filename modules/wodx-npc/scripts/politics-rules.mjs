@@ -110,8 +110,28 @@ export const POLITIES = {
     notes: "Status among Anarchs is reputation, won by deeds and word of mouth rather than titles (V20 pdf 53). Before 1493 this is a band of the Anarch Revolt.",
     eras: {revolt: "Before 1493 the barony is a band of the Anarch Revolt, at war with its elders."}
   },
+  // B7865: the Dark Ages and the Long Night read Dark Ages: Werewolf: its sept positions (DA:W pp. 169-170), the moot
+  // each full moon and the revel hunt after it (pp. 29-30), the Litany (pp. 31-33). From 1450 the W20 sept below.
+  "garou-sept-da": {
+    label: "A Garou sept (the Dark Ages)", line: "werewolf", kinds: ["garou"], from: null, to: 1449,
+    body: "The sept", rank: "Rank", rankFrom: "rank", blocs: "tribe", gathering: {name: "moot", every: 4, meets: "The sept holds its moot under the full moon, and the Wyrm Foe leads the revel hunt after it."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "elder", title: "Sept leader", seats: 1, fill: "challenge", top: true, judge: true},
+      {key: "marshall", title: "Caern Marshall", seats: 1, fill: "appoint"},
+      {key: "ritemaster", title: "Master of the Rite", seats: 1, fill: "appoint"},
+      {key: "council", title: "Elder of the council", seats: 3, fill: "appoint"},
+      {key: "gatekeeper", title: "Gatekeeper", seats: 1, fill: "appoint"},
+      {key: "wyrmfoe", title: "Wyrm Foe", seats: 1, fill: "challenge"},
+      {key: "talesinger", title: "Talesinger", seats: 1, fill: "appoint"},
+      {key: "challengemaster", title: "Master of the Challenge", seats: 1, fill: "appoint"}
+    ],
+    law: ["mating with another Garou", "failing to fight the Wyrm", "showing the wolf to mortals", "defying an elder of higher Rank", "harming a cub", "leaving the caern unguarded", "eating the flesh of humans or wolves"],
+    notes: "The Litany is the Garou's law (DA:W pp. 31-33). The sept leader, the caern Marshall and the Master of the Rite consult a council of elders; the Gatekeeper takes chiminage and keeps the Moon Bridges and pathstones; the Wyrm Foe leads the revel after the moot; the Master of the Challenge keeps the assembly ground and judges challenges (DA:W pp. 169-170). Skipping moots draws suspicion (p. 30). Challenges end at submission, not death.",
+    eras: {}
+  },
   "garou-sept": {
-    label: "A Garou sept", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    label: "A Garou sept", line: "werewolf", kinds: ["garou"], from: 1450, to: null,
     body: "The sept", rank: "Rank", rankFrom: "rank", blocs: "tribe", gathering: {name: "moot", every: 4, meets: "The sept holds its moot under the full moon."},
     riseByChallenge: true, noKill: true,
     offices: [
@@ -671,7 +691,7 @@ export const DEFAULTS = {
     for ( const [key, re] of BREEDS ) if ( re.test(said) ) return key;
     const r = regionOfFaction(f, region);
     if ( beforeSettlers(r, y) && SETTLER_SHIFTERS[r] ) return SETTLER_SHIFTERS[r];
-    return REGION_SHIFTERS[r] ?? "garou-sept";
+    return REGION_SHIFTERS[r] ?? (y !== null && y <= TERMS.MEDIEVAL_YEAR_END ? "garou-sept-da" : "garou-sept");
   },
   fae: (y, f, region = null) => {
     const r = regionOfFaction(f, region), sp = beforeSettlers(r, y) ? sphereOf(r, y) : null;

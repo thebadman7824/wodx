@@ -6,6 +6,7 @@
  * cantrips: [{name, dominion, level, trait, note}], lesser: [text], greater: [text], echoes: [{trigger, note}],
  * oaths: [{kind, rating, terms, active}], mien: bool, hiddenSince, weavingDay: {day, n}, system: "da"|"c20"|null}.
  */
+import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Fae";
 
@@ -280,6 +281,12 @@ export function forgeCheck({ kind = "iron", rating = 1, gramarye = 0, weaving = 
     if (n(weaving) < n(rating)) return { ok: false, why: `needs ${rating} Weaving; has ${n(weaving)}` };
     return { ok: true, cost: n(rating) };
 }
+/** Faerie food (p. 85): a human who eats faerie meat or drink deducts one success from Willpower rolls to resist faerie
+ * wiles during the next day. The flag is {at, until} in world seconds. */
+export const FOOD = { loss: 1, lasts: DAY, page: 85 };
+export const foodActive = (flag, now = 0) => !!flag && Number.isFinite(Number(flag.until)) && Number(now) < Number(flag.until);
+export const afterFood = (successes, flag, now = 0) => (foodActive(flag, now) ? Math.max(0, n(successes) - FOOD.loss) : n(successes));
+
 /** Baptism washes away Iron and Stone Oaths (p. 108). */
 export const baptismClears = oaths => (oaths ?? []).filter(o => o.kind === "gold");
 

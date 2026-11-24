@@ -12,7 +12,7 @@
  *   7. a caern war won by the challengers: the sept changes and the offices fall empty
  *   8. long untended, the caern dies
  *   9. a caern lost to the Wyrm is taken back at level 1
- *  10. the window lists the caern with its acts
+ *  10. the window lists the caern with its acts and the age's Moon Bridge reach (B7864)
  *  11. clean up
  * Result: Data/wodx-gate/gatecaern-result.json.
  */
@@ -104,8 +104,13 @@ export async function run() {
     ok("9. taken back", r9?.won && cn().status === "lapsed" && cn().level === 1, {status: cn().status});
 
     // 10. The window
+    // B7864: at level 4 the window shows the age's Moon Bridge reach (DA:W p. 169: 4,000 miles; W20: 6,000)
+    await setCaern({level: 4, status: "held"});
+    const yr = Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 2000;
+    const CR = await import(`/modules/${MOD}/scripts/caern-rules.mjs?${Date.now()}`);
+    const miles = CR.bridgeMilesFor(4, yr).toLocaleString("en");
     const pw = await peek(() => P.open(), "wst-power", "the Spring");
-    ok("10. the window", /caern of Rage/.test(pw) && /Hold the moot/.test(pw) && /New caern/.test(pw), {window: pw.length});
+    ok("10. the window, with the age's Moon Bridge reach", /caern of Rage/.test(pw) && /Hold the moot/.test(pw) && /New caern/.test(pw) && pw.includes(`Moon Bridges to ${miles} miles`) && (yr > 1449 || miles === "4,000"), {window: pw.length, year: yr, miles});
   } catch (err) {
     R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`);
   } finally {

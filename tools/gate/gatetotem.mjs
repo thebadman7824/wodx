@@ -5,6 +5,8 @@
  *   3. the other packmate cannot take it the same scene
  *   4. a packmate draws a point of the totem's Willpower; the pool shows one less
  *   5. the Storyteller marks the ban broken: the Pack Trait no longer counts; the Rite of Contrition brings it back
+ *   6. B7860: in the Dark Ages (era profile dark-ages or long-night) the DA:W table: Bear will not answer a pack
+ *      (DA:W p. 193) and Horse (only in DA:W) is found with its page; in a later age Bear is offered as in W20
  * Run: await (await import(`/wodx-gate/gatetotem.mjs?${Date.now()}`)).run()
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -97,6 +99,26 @@ export async function run() {
       await waitFor(() => st(ana).claim?.id === "leadership", 4000);
       const on = await leadershipParts(A, ana);
       G.ok("5. a broken ban stops the Pack Trait; Contrition brings it back", !/Falcon/.test(off) && /Falcon: Leadership \(Pack Trait\) \+3/.test(on), {off, on});
+    });
+
+    await G.step("6. the age picks the totem table: Bear refuses Dark Ages packs", async () => {
+      const [cy] = await G.make(Actor, [{name: "Gate Totem: Cy", type: "Werewolf"}]);
+      await cy.update({"system.packname": "Gate Bear Pack", "system.packtotem": "Bear"});
+      let text = "";
+      const grab = (app, el) => { const root = el instanceof HTMLElement ? el : el?.[0];
+        if ( String(app.title ?? app.options?.window?.title ?? "").startsWith("Pack totem") ) { text = root?.textContent ?? ""; setTimeout(() => root?.querySelector("button")?.click(), 150); } };
+      const hk = Hooks.on("renderDialogV2", grab);
+      try { await A.packTotem(cy); await sleep(500); } finally { Hooks.off("renderDialogV2", hk); }
+      const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+      const da = ["dark-ages", "long-night"].includes(era);
+      await cy.update({"system.packtotem": "Horse"});
+      let horse = "";
+      const grab2 = (app, el) => { const root = el instanceof HTMLElement ? el : el?.[0];
+        if ( String(app.title ?? app.options?.window?.title ?? "").startsWith("Pack totem") ) { horse = root?.textContent ?? ""; setTimeout(() => root?.querySelector("button[data-action=cancel]")?.click() ?? root?.querySelector("button")?.click(), 150); } };
+      const hk2 = Hooks.on("renderDialogV2", grab2);
+      try { await A.packTotem(cy); await sleep(500); } finally { Hooks.off("renderDialogV2", hk2); }
+      G.ok("6. the age picks the totem table: Bear refuses Dark Ages packs", da ? (/will not answer/.test(text) && /p\. 193/.test(text) && /DA:W p\. 228/.test(horse) && !(st(cy).accepted))
+        : (/W20 p\. 374/.test(text) && !/will not answer/.test(text)), {era, text: text.slice(0, 300), horse: horse.slice(0, 200)});
     });
   } catch (e) {
     G.R.errors.push(String(e?.stack ?? e));

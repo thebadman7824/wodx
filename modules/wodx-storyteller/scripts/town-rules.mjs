@@ -420,7 +420,9 @@ export const LEVER_TOWN = {
   martial: {kind: "martial", prosperity: -0.2, unrest: 0.4, text: "Martial law: soldiers at the gates and in the squares, and no one gathers.", big: true},
   // B5824: a patron raises or restores a building (WoDX Chronicle's Parts of the Dark raiseBuilding)
   build: {kind: "build", prosperity: 0.15, unrest: -0.05, text: "A new building rises: masons, carters and hauliers are paid, and the town is proud of it.", big: false},
-  restore: {kind: "restore", prosperity: 0.1, unrest: -0.05, text: "An old building is put right, and the street around it lifts.", big: false}
+  restore: {kind: "restore", prosperity: 0.1, unrest: -0.05, text: "An old building is put right, and the street around it lifts.", big: false},
+  // B7868: the hetman speaks for the village; angered, they can tip even content peasants into revolt (Dark Ages: Fae p. 204)
+  hetman: {kind: "hetman", unrest: 0.6, text: "The hetman is angered and speaks against the village's masters, and the whole village grows sullen.", big: true}
 };
 const SCALE = {1: 1, 2: 1.5, 3: 2};
 /** A power's blow to one town: the POWER_TOWN figures times its scale; label names the caster and power. */

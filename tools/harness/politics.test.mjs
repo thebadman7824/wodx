@@ -188,7 +188,11 @@ const ginfo = {
 const sept = (extra = {}) => F.normFaction({id: "sept", name: "The sept", kind: "garou", leader: "e", members: ["e", "w", "y", "z", "pc"], ...extra});
 
 test("Garou, fae and Wraith factions keep the polity of their kind and age", () => {
-  assert.equal(PO.polityFor(sept(), 1197), "garou-sept");
+  assert.equal(PO.polityFor(sept(), 1197), "garou-sept-da", "B7865: a Dark Ages sept keeps the DA:W positions");
+  assert.equal(PO.polityFor(sept(), 1450), "garou-sept");
+  assert.equal(PO.polityFor(sept({polity: "garou-sept"}), 1202), "garou-sept-da", "a W20 sept picked for 1202 stands in as the DA one");
+  assert.deepEqual(PO.POLITIES["garou-sept-da"].offices.map(o => o.title), ["Sept leader", "Caern Marshall", "Master of the Rite", "Elder of the council", "Gatekeeper", "Wyrm Foe", "Talesinger", "Master of the Challenge"]);
+  assert.ok(!PO.POLITIES["garou-sept-da"].offices.some(o => /Truthcatcher|Warder/.test(o.title)));
   const fae = F.normFaction({id: "f", name: "Fae", kind: "fae", members: ["a", "b", "c"]});
   assert.equal(PO.polityFor(fae, 1300), "fae-court");
   assert.equal(PO.polityFor(fae, 1350), "commoner-freehold");
@@ -512,7 +516,7 @@ test("the Ananasi, Corax, Gurahl, Ratkin and Rokea by name; the Hengeyokai's own
   assert.equal(PO.polityFor(g("pacific-islands", "The Rokea of the reef"), 2000), "rokea-shiver");
   assert.equal(PO.polityFor(g("japan", "Nezumi of the docks"), 1700), "beast-court", "the rats of Asia sit in the Beast Courts");
   assert.equal(PO.polityFor(g("china", "Ratkin of the river"), 1700), "ratkin-nest", "a name wins over the region");
-  assert.equal(PO.polityFor(g("british-isles", "Fianna of the hill"), 1300), "garou-sept", "a plain sept is unchanged");
+  assert.equal(PO.polityFor(g("british-isles", "Fianna of the hill"), 1300), "garou-sept-da", "a plain sept is unchanged (the Dark Ages one in 1300)");
   const ppl = {a: {name: "A", tribe: "Tenere", house: "Hirayanu", rank: 3, title: 3}, b: {name: "B", tribe: "Forest Walkers", house: "Pyon", rank: 2, title: 2}, c: {name: "C", tribe: "Knife Skulkers", rank: 1, title: 1}};
   for ( const key of ["ananasi-web", "corax-flock", "gurahl-den", "ratkin-nest", "rokea-shiver", "hsien-court", "land-fae-circle"] ) {
     const P = PO.POLITIES[key];

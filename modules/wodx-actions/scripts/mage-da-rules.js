@@ -145,7 +145,11 @@ export function castPlan({ levels = {}, ratings = {}, foundation = 1, fellowship
 }
 const labelOf = (f, key) => pillarsOf(f).find(p => p.key === key)?.label ?? key;
 
-/** Quintessence a turn: 2 without Fount, then 2, 3, 4, 5, 6 by Fount; held 10, then 12–20 (pp. 86–87). */
+/**
+ * Quintessence a turn: 2 without Fount, then 2, 3, 4, 5, 6 by Fount; held 10, then 12–20 (pp. 86–87). B7862: the
+ * Quintessence rules on p. 89 say three a turn without Fount; WoDX keeps the Fount entry's two, since its table gives
+ * Fount 1 two a turn and three would make the first dot a loss (house reading, docs/PENDING-REVIEW.md).
+ */
 export const fountLimits = fount => ({ hold: fount > 0 ? 10 + 2 * Math.min(5, fount) : 10, perTurn: fount > 0 ? Math.min(6, 1 + Math.min(5, fount)) : 2 });
 
 /**

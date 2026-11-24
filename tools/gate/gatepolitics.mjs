@@ -126,8 +126,8 @@ export async function run() {
       await FX().stageFight({op: "pol-fight", faction: "gateCourt", challenger: made[2].id, holder: made[0].id, office: "prince", title: "Prince", how: "a challenge"});
       await sleep(300);
       const card = newestMessage();
-      ok("7. a sept, the fae courts of each age, no default for spirits; a staged challenge with no tokens comes as a card",
-        JSON.stringify(keys) === JSON.stringify(["garou-sept", "fae-court", "commoner-freehold", "noble-fief", null, "tradition-chantry", "technocracy-construct", "imbued-cell", "inquisition", "Rector"]) && game.messages.size > before && /challenges/.test(card?.content ?? ""), {keys});
+      ok("7. a Dark Ages sept (B7865), the fae courts of each age, no default for spirits; a staged challenge with no tokens comes as a card",
+        JSON.stringify(keys) === JSON.stringify(["garou-sept-da", "fae-court", "commoner-freehold", "noble-fief", null, "tradition-chantry", "technocracy-construct", "imbued-cell", "inquisition", "Rector"]) && game.messages.size > before && /challenges/.test(card?.content ?? ""), {keys});
     });
 
     await step("8. politics off", async () => {

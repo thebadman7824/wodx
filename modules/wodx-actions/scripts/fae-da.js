@@ -293,6 +293,10 @@ export function build(ctx) {
                 { time, holding: fd.holding ? 1 : 0, base, mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (pre) plan.notes.push(`difficulty ${base} from the book${pre.diff === "willpower" ? " (the target's Willpower)" : ""}`);
+            // B7866: against a target who ate faerie food in the last day, their Willpower is a step weaker (p. 85; a house reading)
+            if (pre?.diff === "willpower" && tActor && F.foodActive(tActor.getFlag?.(MOD, "faerieFood"), game.time.worldTime)) {
+                plan.difficulty = Math.max(3, plan.difficulty - 1); plan.notes.push(`${tActor.name} ate faerie food: -1 (${REF} p. ${F.FOOD.page})`);
+            }
             if (pre?.weaving && !(await spend(actor, "weaving", n(pre.weaving)))) return null;
             if (pre?.willpower && !(await spendWillpower(actor, n(pre.willpower)))) { notify(`${actor.name}: ${pre.name} costs a Willpower point.`); return null; }
             if (pre?.once) await setOnce(actor, c.preset, pre.once);
@@ -540,7 +544,18 @@ export function build(ctx) {
                 const cost = F.kenningCost(fd.target);
                 if (!(await spend(actor, "mists", cost))) return null;
                 body += `<div class="vta-res">${cost} Mists: Kenning 1 for a day.</div>`;
-                if (fd.unwilling) { const r = await rollPool(i.mists.perm, 6 + i.suppression.mistsPenalty); rolls.push(r.roll); body += rollBlock("Mists (against their Willpower, 6)", r) + `<div class="vta-note">The Storyteller rolls the target's Willpower (6); more successes and the gift fails.</div>`; }
+                if (fd.unwilling) {
+                    const r = await rollPool(i.mists.perm, 6 + i.suppression.mistsPenalty); rolls.push(r.roll); body += rollBlock("Mists (against their Willpower, 6)", r);
+                    // B7866: a targeted mortal's Willpower is rolled here; faerie food eaten in the last day costs them a success (p. 85)
+                    const tg = EF.targetsOf(actor), ta = !tg.self ? (tg.docs[0]?.actor ?? null) : null;
+                    if (ta) {
+                        const wr = await rollPool(n(ta.system?.advantages?.willpower?.permanent) || 1, 6); rolls.push(wr.roll);
+                        const food = ta.getFlag?.(MOD, "faerieFood"), fedNow = F.foodActive(food, game.time.worldTime);
+                        const theirs = wr.botch ? 0 : F.afterFood(wr.successes, food, game.time.worldTime), mine = r.botch ? 0 : r.successes;
+                        body += rollBlock(`${esc(ta.name)}: Willpower (6)`, wr, fedNow ? [`faerie food eaten: one success fewer (${REF} p. ${F.FOOD.page})`] : []);
+                        body += mine > theirs ? `<div class="vta-big good">The Kenning takes hold of ${esc(ta.name)}.</div>` : `<div class="vta-big bad">${esc(ta.name)} throws it off: the gift fails.</div>`;
+                    } else body += `<div class="vta-note">The Storyteller rolls the target's Willpower (6); more successes and the gift fails. Target the mortal to roll it here.</div>`;
+                }
             } else if (u === "enhance") {
                 if (!(await spend(actor, "mists", 2))) return null;
                 await save(actor, { enhanced: LIM.sceneNo() });
