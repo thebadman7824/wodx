@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, mergeFailure, redact, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
+import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, mergeFailure, redact, setupFault, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
 
 const H = 3600e3;
 const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
@@ -216,7 +216,12 @@ test("B7960 (#2121): a merge refused for a git fault is not a conflict; it names
   const id = mergeFailure({status: 128, stderr: "Committer identity unknown\n\n*** Please tell me who you are.\n\nfatal: unable to auto-detect email address (got 'pc@host.(none)')\n"});
   assert.equal(id.conflict, false);
   assert.match(id.said, /unable to auto-detect email address/);
+  assert.equal(id.setup, true, "a missing identity is the runner's fault");
   assert.equal(mergeFailure({status: 1}).said, "git exited 1");
+  const unrelated = mergeFailure({status: 128, stderr: "fatal: refusing to merge unrelated histories\n"});
+  assert.deepEqual([unrelated.conflict, unrelated.setup], [false, false], "unrelated histories are the branch's fault: it leaves, with git's words");
+  assert.ok(setupFault("fatal: Unable to create 'C:/Users/Jane Doe/wodx/.git/index.lock': File exists."));
+  assert.ok(!setupFault("error: Your local changes would be overwritten by merge"));
 
   // real git: a runner clone with no identity at all
   const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-id-"));
@@ -269,9 +274,43 @@ test("B7960 (#2121): a merge refused for a git fault is not a conflict; it names
   assert.deepEqual(cleared, ["train-git"]);
   // git's words reach the public repo without addresses or local paths
   assert.equal(redact("fatal: unable to auto-detect email address (got 'pc@HOST.(none)') in C:\\Users\\pc\\wodx and /home/pc/x"), "fatal: unable to auto-detect email address (got '<address>(none)') in <path> and <path>");
+  assert.equal(redact("fatal: Unable to create 'C:/Users/Jane Doe/wodx/.git/index.lock': File exists."), "fatal: Unable to create '<path>': File exists.");
+  // a merge that fails for the branch's own reason, not a conflict, leaves with git's words
+  const u = mockGh({behind: 3});
+  const s4 = await step({gh: u.gh, home: fs.mkdtempSync(path.join(os.tmpdir(), "train-")), apply: true, batch: 1, prepare: async () => ({error: "git could not merge main in, though nothing conflicts (fatal: refusing to merge unrelated histories): fix the branch, push, then add the label again"})});
+  assert.equal(s4.action, "leave");
   // a real conflict still leaves, as before
   const c = mockGh({behind: 3});
   const s3 = await step({gh: c.gh, home: fs.mkdtempSync(path.join(os.tmpdir(), "train-")), apply: true, batch: 1, prepare: async () => ({error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"})});
   assert.equal(s3.action, "leave");
   assert.ok(c.calls.includes(`DELETE /issues/20/labels/${TRAIN_LABEL}`));
+});
+
+test("B7960: a stamp refused for the runner's missing identity keeps a level branch in the train", async () => {
+  const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-st-"));
+  const sh = (cwd, ...a) => { const r = spawnSync("git", a, {cwd, encoding: "utf8"}); if ( r.status ) throw new Error(`git ${a.join(" ")}: ${r.stderr}`); return r.stdout.trim(); };
+  const origin = path.join(t, "o.git"), work = path.join(t, "w"), clone = path.join(t, "r"), home = path.join(t, "h");
+  fs.mkdirSync(home);
+  sh(t, "init", "-q", "--bare", "-b", "main", origin); sh(t, "clone", "-q", origin, work);
+  sh(work, "config", "user.email", "t@example.com"); sh(work, "config", "user.name", "t");
+  fs.mkdirSync(path.join(work, "tools", "release"), {recursive: true});
+  // a stand-in for merge-stamp that commits, as the real one does
+  fs.writeFileSync(path.join(work, "tools", "release", "merge-stamp.mjs"), `import fs from "node:fs"; import {execSync} from "node:child_process";
+fs.writeFileSync("stamped.txt", "1"); execSync("git add -A && git commit -q -m stamp", {stdio: "inherit"}); console.log("Committed.");`);
+  fs.writeFileSync(path.join(work, "a.txt"), "a");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "base"); sh(work, "push", "-q", "origin", "main");
+  sh(work, "checkout", "-q", "-b", "claude/st"); fs.writeFileSync(path.join(work, "b.txt"), "b");
+  sh(work, "add", "-A"); sh(work, "commit", "-q", "-m", "branch"); sh(work, "push", "-q", "origin", "claude/st");
+  const head = sh(work, "rev-parse", "HEAD");
+  sh(t, "clone", "-q", origin, clone); sh(clone, "config", "user.useConfigOnly", "true");
+  const env = {...process.env, GIT_CONFIG_GLOBAL: path.join(t, "none"), GIT_CONFIG_NOSYSTEM: "1"};
+  for ( const k of ["GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL", "EMAIL"] ) delete env[k];
+  const saved = {...process.env};
+  Object.assign(process.env, {GIT_CONFIG_GLOBAL: env.GIT_CONFIG_GLOBAL, GIT_CONFIG_NOSYSTEM: "1"});
+  for ( const k of ["GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL", "EMAIL"] ) delete process.env[k];
+  try {
+    const r2 = await prepare({git: async (argv, cwd) => spawnSync("git", argv, {cwd, encoding: "utf8", env}), home, repoRoot: clone}, "claude/st", head);
+    assert.equal(r2.setup, true, r2.error);
+    assert.match(r2.error, /could not commit the stamp/);
+  } finally { for ( const k of Object.keys(process.env) ) if ( !(k in saved) ) delete process.env[k]; Object.assign(process.env, saved); }
 });
