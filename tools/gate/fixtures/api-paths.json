@@ -595,9 +595,9 @@
   "uses": [
    "modules/wodx-actions/scripts/demon.js:326",
    "modules/wodx-actions/scripts/demon.js:363",
-   "modules/wodx-actions/scripts/garou.js:615",
-   "modules/wodx-actions/scripts/garou.js:616",
-   "modules/wodx-actions/scripts/garou.js:890",
+   "modules/wodx-actions/scripts/garou.js:617",
+   "modules/wodx-actions/scripts/garou.js:618",
+   "modules/wodx-actions/scripts/garou.js:894",
    "modules/wodx-actions/scripts/kindred.js:310",
    "modules/wodx-actions/scripts/kindred.js:311",
    "modules/wodx-actions/scripts/kindred.js:364",
@@ -849,8 +849,8 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/charms.js:484",
-   "modules/wodx-actions/scripts/garou.js:370",
-   "modules/wodx-actions/scripts/garou.js:391",
+   "modules/wodx-actions/scripts/garou.js:372",
+   "modules/wodx-actions/scripts/garou.js:393",
    "modules/wodx-actions/scripts/main.js:2765",
    "modules/wodx-actions/scripts/turns.js:94",
    "modules/wodx-actions/scripts/turns.js:125",
@@ -924,7 +924,7 @@
   "uses": [
    "modules/wodx-actions/scripts/effects.js:508",
    "modules/wodx-actions/scripts/fae-da.js:38",
-   "modules/wodx-actions/scripts/garou.js:151",
+   "modules/wodx-actions/scripts/garou.js:153",
    "modules/wodx-actions/scripts/hunter.js:40",
    "modules/wodx-actions/scripts/kindred.js:201",
    "modules/wodx-actions/scripts/kindred.js:429",
@@ -1650,8 +1650,8 @@
    "modules/wodx-otherworlds/scripts/journey.mjs:72",
    "modules/wodx-otherworlds/scripts/realms.mjs:194",
    "modules/wodx-otherworlds/scripts/realms.mjs:202",
-   "modules/wodx-storyteller/scripts/contagion.mjs:306",
-   "modules/wodx-storyteller/scripts/contagion.mjs:343",
+   "modules/wodx-storyteller/scripts/contagion.mjs:325",
+   "modules/wodx-storyteller/scripts/contagion.mjs:362",
    "modules/wodx-storyteller/scripts/core.mjs:391",
    "modules/wodx-storyteller/scripts/core.mjs:428",
    "modules/wodx-storyteller/scripts/core.mjs:463",
@@ -1708,7 +1708,7 @@
    "modules/wodx-otherworlds/scripts/journey.mjs:30",
    "modules/wodx-otherworlds/scripts/realms.mjs:210",
    "modules/wodx-otherworlds/scripts/realms.mjs:464",
-   "modules/wodx-storyteller/scripts/contagion.mjs:385",
+   "modules/wodx-storyteller/scripts/contagion.mjs:404",
    "modules/wodx-storyteller/scripts/inherit.mjs:143",
    "modules/wodx-storyteller/scripts/market-moves.mjs:240",
    "modules/wodx-storyteller/scripts/market-turn.mjs:182",
@@ -2133,7 +2133,7 @@
    "mockeryOf"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:1156"
+   "modules/wodx-actions/scripts/garou.js:1160"
   ]
  },
  {
@@ -2458,7 +2458,9 @@
    "modules/wodx-npc/scripts/carry-aftercare.mjs:342",
    "modules/wodx-npc/scripts/carry-aftercare.mjs:409",
    "modules/wodx-npc/scripts/family.mjs:126",
-   "modules/wodx-storyteller/scripts/contagion.mjs:221",
+   "modules/wodx-storyteller/scripts/contagion.mjs:225",
+   "modules/wodx-storyteller/scripts/contagion.mjs:240",
+   "modules/wodx-storyteller/scripts/fae-oaths.mjs:171",
    "modules/wodx-storyteller/scripts/hardship.mjs:97"
   ]
  },
@@ -2542,7 +2544,7 @@
    "modules/wodx-actions/scripts/fomor.js:165",
    "modules/wodx-npc/scripts/carry-aftercare.mjs:99",
    "modules/wodx-npc/scripts/carry-aftercare.mjs:277",
-   "modules/wodx-storyteller/scripts/contagion.mjs:330",
+   "modules/wodx-storyteller/scripts/contagion.mjs:349",
    "modules/wodx-storyteller/scripts/hardship.mjs:126"
   ]
  },
@@ -2701,8 +2703,8 @@
    "newPowerOption"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:662",
-   "modules/wodx-actions/scripts/garou.js:663"
+   "modules/wodx-actions/scripts/garou.js:664",
+   "modules/wodx-actions/scripts/garou.js:665"
   ]
  },
  {
@@ -2823,7 +2825,7 @@
    "xp"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:671"
+   "modules/wodx-actions/scripts/garou.js:673"
   ]
  },
  {
@@ -2833,7 +2835,7 @@
    "award"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:672"
+   "modules/wodx-actions/scripts/garou.js:674"
   ]
  },
  {
@@ -2843,8 +2845,8 @@
    "requestSpend"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:662",
-   "modules/wodx-actions/scripts/garou.js:666"
+   "modules/wodx-actions/scripts/garou.js:664",
+   "modules/wodx-actions/scripts/garou.js:668"
   ]
  },
  {
@@ -2854,7 +2856,7 @@
    "writeLogPage"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:675"
+   "modules/wodx-actions/scripts/garou.js:677"
   ]
  },
  {
@@ -4487,7 +4489,7 @@
   "uses": [
    "modules/wodx-actions/scripts/charms.js:207",
    "modules/wodx-actions/scripts/charms.js:304",
-   "modules/wodx-actions/scripts/garou.js:569",
+   "modules/wodx-actions/scripts/garou.js:571",
    "modules/wodx-actions/scripts/wraith.js:99",
    "modules/wodx-senses/scripts/otherworld-sight.mjs:94"
   ]
@@ -4548,7 +4550,7 @@
    "spirits"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:733",
+   "modules/wodx-actions/scripts/garou.js:735",
    "modules/wodx-storyteller/scripts/wonders.mjs:22"
   ]
  },
@@ -4559,7 +4561,7 @@
    "courtOptions"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:734"
+   "modules/wodx-actions/scripts/garou.js:736"
   ]
  },
  {
@@ -4569,7 +4571,7 @@
    "effect"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:735",
+   "modules/wodx-actions/scripts/garou.js:737",
    "modules/wodx-storyteller/scripts/wonders.mjs:122"
   ]
  },
@@ -4580,7 +4582,7 @@
    "move"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:1090"
+   "modules/wodx-actions/scripts/garou.js:1094"
   ]
  },
  {
@@ -4590,7 +4592,7 @@
    "of"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:654"
+   "modules/wodx-actions/scripts/garou.js:656"
   ]
  },
  {
@@ -4601,7 +4603,7 @@
    "summary"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/garou.js:654"
+   "modules/wodx-actions/scripts/garou.js:656"
   ]
  },
  {

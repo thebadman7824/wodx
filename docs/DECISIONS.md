@@ -468,6 +468,7 @@ Next free block: B7970
 | B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
+| B7860-B7909 | Splat depth build: fae oaths kept by the village (desk item fae-village) (used B7860-B7869) | Storyteller, Actions |
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 <!-- decision-index:end -->
@@ -16099,6 +16100,54 @@ Reverse: put back the plain `await A.give(tok, FIG)` and the short detail in ste
 Gates. The detail from B7851 named the cause on its first run (job 2414): at the swarm's turn its card said "No one inside it". The victim had left the swarm's square between step 5 and step 5b, so the bite found no one and did no harm. Step 5b now records where the swarm and the victim stand and whether the victim is inside. If it is not, the step moves the victim back to the middle of the swarm (its position only, never its hidden state) before the turn. The pass condition is unchanged. What moved the token is not yet known; the recorded positions will show it. Not yet run in Foundry.
 
 Reverse: take the before record and the vTok.update out of step 5b in tools/gate/gatedach8.mjs.
+
+## B7860. Pack totems read Dark Ages: Werewolf in the Dark Ages (2026-11-24)
+WoDX Actions. In the eras the Werewolf line already plays by DA:W (dark-ages and long-night, garou-rules basis "daw"), the totem window reads data/rules/werewolf/totems-da.json, the 12 totems of DA:W pp. 227-231 in WoDX words. Bear refuses every Garou pack (p. 193): the window says so and gives nothing. A totem DA:W does not list (Boar, Wendigo, Uktena and the rest) keeps its W20 row, marked as such, since packs outside Europe can still follow them. Ben's desk pick "fix" (splat depth desk, 24 Nov).
+
+Reverse: in garou.js totemOf, call TOT.totemFor(DATA.totems, ...) again.
+
+## B7861. Unicorn's healing and empathy ease stays on each packmate (2026-11-24)
+WoDX Actions. DA:W p. 231 makes Unicorn's -2 to healing and empathy a Pack trait; the totem grammar has no Pack trait that changes a difficulty, so each packmate has it, as in W20. House reading, logged in PENDING-REVIEW.
+
+Reverse: move the effect under pack with a new pack-difficulty reader in totem-rules.js.
+
+## B7862. Quintessence a turn without Fount stays at two (2026-11-24)
+WoDX Actions. Dark Ages: Mage gives two a turn in the Fount entry (p. 87) and three in the Quintessence rules (p. 89). WoDX keeps two: the Fount table gives Fount 1 two a turn, so three would make the first dot a loss. House reading, logged in PENDING-REVIEW.
+
+Reverse: change perTurn for fount 0 to 3 in fountLimits (mage-da-rules.js).
+
+## B7863. Sickness runs the DA:I course in Dark Ages years (2026-11-24)
+WoDX Storyteller. In the eras whose profile plays by the Dark Ages rules, plague, the flux, leprosy and consumption use DA:I p. 165: a Stamina roll each day at the book's difficulty (plague 7, flux 8, leprosy 9, consumption 10), a healer's Medicine (here a medicine taken) lowering it, five good days in a row ending it. Plague and the flux do a lethal level each bad day; consumption three lethal a week and a dot of Strength or Stamina; leprosy a dot of Appearance a month. House reading: a good day holds that day's harm off. Sicknesses DA:I does not list keep their M20 row. DA:I's St. Anthony's fire, dropsy and syphilis are not spreading sicknesses in the contagion model and are left for the fill-lists item.
+
+Reverse: in contagion.mjs people(), drop the daCourse branch.
+
+## B7864. Caerns read DA:W for Moon Bridges and sept positions to 1449 (2026-11-24)
+WoDX Storyteller. Moon Bridges reach 1,000 miles a caern level, 5,000 at level 5 (DA:W p. 169), against W20's 6,000 and 10,000 at levels 4 and 5. The caern editor offers the DA:W positions: sept leader, caern Marshall, Master of the Rite, council of elders, Gatekeeper, Wyrm Foe, Talesinger, Master of the Challenge (pp. 169-170). Office keys of both books survive a save, so a chronicle that crosses 1450 keeps its holders. The cut is 1449, as the Werewolf line's own basis.
+
+Reverse: use bridgeMiles and OFFICES again in caern-rules.mjs and power.mjs.
+
+## B7865. A Garou faction to 1449 keeps the Dark Ages sept polity (2026-11-24)
+WoDX NPC. New polity garou-sept-da (to 1449) with the DA:W seats; garou-sept runs from 1450. A faction that picked garou-sept in a Dark Ages year stands in as the DA one, as any polity out of its years does. Secrets that a sept cares about count for both.
+
+Reverse: delete garou-sept-da, set garou-sept from null, and put back the default in DEFAULTS.garou.
+
+## B7866. An oath ledger for the village (2026-11-24)
+WoDX Storyteller, new fae-oaths-rules.mjs and fae-oaths.mjs, the world setting faeOaths. Each oath keeps the five parts of DA:Fae pp. 109-110 (the fae's deal, the humans' duty, what breaks it on each side, the punishment in shame), its tier and rating (Iron 1-3, Stone 3-5, Gold 4-5), its Court and, if it rules a village, its town. An oath with a fae character on it is written onto that fae's sheet oath list (wodx-actions daFae.oaths, by ledgerId), which the Echo window already rolls as a shield; a broken oath stays on the sheet as inactive, a washed one leaves it. Breaking posts the punishment and the Court's way with breakers (pp. 67, 69, 71, 73, 74); a Spring fae pities a human tricked into it (house reading). Gold Oaths show to the village only as a custom (p. 108). The book's three village oaths (the windfall apples p. 33, the healing well p. 34, the miners' warning p. 39) are templates. Faerie food (p. 85) is a day's flag that the fae rolls read. Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: remove the two files, the faeOaths setting and the token control; drop the faerie food branches in fae-da.js.
+
+## B7867. Household helpers, the retinue, Retinue and Sprites as ties (2026-11-24)
+WoDX Storyteller. A household sprite (DA:Fae p. 183) is spurned by the Church or an unkept small oath and turns spiteful; a brownie (DA:Mage p. 194) refuses a first gift, leaves or turns murderous at the next (even odds, house reading), leaves when praised, and is mushrooms for seven days in sunlight. Only a content helper does the chores. A spiteful helper opens a Ledger consequence due in a week. A servant who tries to betray a fae master rolls Willpower at 10; one who raises a hand takes aggravated damage equal to the master's Mists (p. 94). The Retinue and Sprites Backgrounds become Upkeep ties (30 and 7 days, house reading): untended, they lose a dot on approval.
+
+Reverse: remove the helper and retinue parts of fae-oaths*.mjs and the retinue and sprites tie kinds in upkeep-rules.mjs.
+
+## B7868. The hetman and the rising (2026-11-24)
+WoDX Storyteller. LEVER_TOWN.hetman: the hetman angered raises a town's unrest by 0.6 at once (DA:Fae p. 204; the amount is a house reading). A town's rising (wodxTown kind "rising") breaks every oath recorded as ruling that town, so its fae lose the shield.
+
+Reverse: remove hetman from LEVER_TOWN and the rising hook in fae-oaths.mjs.
+
+## B7869. Gate and tests (2026-11-24)
+tools/gate/gatefaeoaths.mjs (8 steps) and tools/harness/fae-oaths.test.mjs.
 
 ## B7911. Pull request gate runs go to the New PC first (2026-11-24)
 PC runners. The owner asked on 24 November 2026 that the New PC get priority for all new pull request runs, with the Main PC taking them when the New PC's queue is full. The New PC runs a gate set about 2 to 3 times faster than the Main PC (24 November run times: 74 to 172 gates in 16 to 22 minutes on the New PC, about 170 to 230 gates in 43 to 66 minutes on the Main PC). A new setting, prGatesPreferPeer in tools/pcq/runner.json ({statusTitle, maxMinutes 5, freshMinutes 15}), makes a runner leave a pull request's touched or every-gate run (title "[PR #n sha]", no lane named) to the runner whose status issue has that title while that status shows a free lane, is not holding, and was written in the last 15 minutes. It takes the run itself when the New PC is full, holding or silent, and after 5 minutes in any case, so no run waits on a New PC that does not pick it up. The status issue is read at most once a minute. runner.new_pc_lebrun.json clears the setting, and a runner never defers to its own status title. The Secondary PC shares the setting after its own 10 minute wait (B7761), so in practice it keeps its present behaviour. Train front jobs carry the same title and are covered too. Tested by tools/harness/pcq.test.mjs; not yet seen live.
