@@ -10,7 +10,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 1 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | yes | 21 | 0 | 8 |
+| wodx-creation | yes | 22 | 0 | 8 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
 | wodx-npc | yes | 34 | 0 | 20 |
@@ -107,6 +107,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 2 | gatedalines 3. a Valkyrje's blood makes no ghoul and no bond |
 | Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | shown | 2 |  |
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
+| Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
 | The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | shown | 1 |  |
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
