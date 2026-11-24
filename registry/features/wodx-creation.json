@@ -454,11 +454,13 @@
     },
     "shown": {
      "what": "the Creation window with each character's line, sire or domitor and the buttons for its tools"
+    },
+    "gated": {
+     "gate": "tools/gate/gatecreationaward.mjs",
+     "step": "1. the Creation window's Award button gives the ticked character 3 experience"
     }
    },
-   "open": [
-    "gated: gatestates '6. Creation window buttons' is a direct call"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
