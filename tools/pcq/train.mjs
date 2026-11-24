@@ -557,9 +557,13 @@ export async function batchStep(ctx, state, order) {
     const r = await (ctx.build ?? buildBatch)(ctx, b.members, {max: n, lease: bp.head.sha});
     // B7960: the runner's own git fault is not the members' fault: the batch stays open and waits, with an alert
     if ( r.setup ) {
+      // capped like the front's wait: after maxHours the batch closes and its members go on alone
+      b.setupSince ??= Date.now();
+      if ( Date.now() - b.setupSince > maxHours * 3600e3 ) { await close(`${r.error}, for over ${maxHours} hours`); delete state.batch; return null; }
       await ctx.alert?.("train-git", "the merge train cannot run git merges (runner setup fault)", `${r.error}\n\nThe batch and the pull requests keep their places and wait. The runner log has git's full output.`);
       return res("wait", r.error);
     }
+    delete b.setupSince;
     if ( !r.error && r.members?.length === n ) await ctx.recovered?.("train-git");
     if ( r.error || r.members?.length !== n ) { await close(r.error ?? `not all of ${nums} merge onto the new main`); delete state.batch; return null; }
     await gh("PATCH", `/pulls/${b.pr}`, {body: batchBody(r)}).catch(() => null);
