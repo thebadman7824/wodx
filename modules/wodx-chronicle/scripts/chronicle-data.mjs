@@ -9,7 +9,7 @@
  *
  * A chronicle pack: {id, title, manifest, saga: {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, FIRST_BOOK},
  *   fronts: {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK},
- *   twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK},
+ *   twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, GAP},
  *   reveals: {REVEALS, JUDGED_FAVOURS, MURDERS, COLD}, encounters: {ENCOUNTERS, KINDS, LAST}}.
  * Several may register (desk a4); one is in play at a time.
  * manifest.local (optional, desk d1, B7610): what belongs to the chronicle's own place: feasts, seat titles, languages,
@@ -46,6 +46,8 @@ export let TWISTS = [];
 export let PAIRS = [];
 export let ORDER = [];
 export let LAST_CHAPTER = "";
+/** The least game time between two twists (B7802): the pack's twists.GAP, else its WEEK. */
+export let TWIST_GAP = TERMS_WEEK;
 
 /* Reveals */
 export let REVEALS = {};
@@ -90,6 +92,7 @@ function load(p) {
   PAIRS = t.PAIRS ?? [];
   ORDER = t.ORDER ?? [];
   LAST_CHAPTER = t.LAST_CHAPTER ?? "";
+  TWIST_GAP = t.GAP ?? t.WEEK ?? WEEK;
   REVEALS = r.REVEALS ?? {};
   JUDGED_FAVOURS = r.JUDGED_FAVOURS ?? [];
   MURDERS = r.MURDERS ?? [];

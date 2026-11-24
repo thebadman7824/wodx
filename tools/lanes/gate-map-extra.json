@@ -18,6 +18,7 @@
     "gatetruthwalk"
   ],
   "add": {
+    "gatemorebuilds": ["wodx-creation", "wodx-actions", "wodx-chronicle", "wodx-combat"],
     "gatepathbearing": [
       "wodx-actions"
     ],

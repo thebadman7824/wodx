@@ -174,7 +174,8 @@
     }
    },
    "open": [
-    "book: V20 Dark Ages character creation order and totals; not checked against the book text yet"
+    "book: V20 Dark Ages character creation order and totals; not checked against the book text yet",
+    "the five B7820 builds (HH2, mortal, sorcerer, Kinfolk, Kinain) have wizard power kinds and Background books; no gate walks the wizard through one yet"
    ],
    "deferred": [],
    "faults": [],
@@ -613,10 +614,15 @@
     },
     "shown": {
      "what": "the new sheet linked to the old and filed, and the creation check window against the book's totals"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemorebuilds.mjs",
+     "step": "3. HH2: two Numina dots cost 14 freebies"
     }
    },
    "open": [
-    "gated: every gatestates step is a direct call"
+    "book: the changes of state are not checked against the book text yet; the creation totals are (B6443, B7820)",
+    "creation totals for the Changing Breeds wait for W20 Changing Breeds in the text dumps (B7821)"
    ],
    "deferred": [],
    "faults": [],
