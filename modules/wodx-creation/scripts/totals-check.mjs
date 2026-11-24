@@ -36,7 +36,9 @@ export function totalsView(actor, lineId) {
     art: sum(i => i.type === "Power" && typed(/\.art$/)(i)),
     realm: sum(i => i.type === "Realm"),
     lore: sum(i => i.type === "Power" && typed(/lore/)(i)),
-    hekau: sum(i => i.type === "Power" && typed(/hekau/)(i))
+    hekau: sum(i => i.type === "Power" && typed(/hekau/)(i)),
+    // B7820: a mortal's Numina (HH2, Sorcerer Revised): the rating on each numina Power, not its sub-powers
+    numina: sum(i => i.type === "Power" && i.system?.type === "wod.types.numina")
   };
   // B5024: Pillars and Dominions as WoDX Actions keeps them; edges as Powers, with the hunter's Virtues in the same pool
   const fl = actor?.flags?.["wodx-actions"] ?? {};

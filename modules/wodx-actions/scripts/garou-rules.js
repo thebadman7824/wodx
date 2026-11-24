@@ -136,6 +136,24 @@ export function regeneration({ breed = "homid", form = "homid", fera = null }) {
 }
 
 /**
+ * B7820: the Mockery Breeds (W20 Book of the Wyrm, Pentex's made shapechangers) on a Creature sheet regenerate at the
+ * Garou's rate, which the book says for each of the five: War Wolves pdf 168 / printed 167, Anurana pdf 169 / printed
+ * 168, Samsa pdf 171 / printed 170, Kerasi pdf 173 / printed 172, Yeren pdf 175 / printed 174. A Creature sheet keeps
+ * no breed or form, so they regenerate in every form, as a metis does. Keys are mockeryOf()'s (wodx-chronicle traits).
+ */
+export const MOCKERY_REGEN = {
+    warwolves: { name: "War Wolf", page: "W20 Book of the Wyrm p. 167" },
+    anurana: { name: "Anurana", page: "W20 Book of the Wyrm p. 168" },
+    samsa: { name: "Samsa", page: "W20 Book of the Wyrm p. 170" },
+    kerasi: { name: "Kerasi", page: "W20 Book of the Wyrm p. 172" },
+    yeren: { name: "Yeren", page: "W20 Book of the Wyrm p. 174" }
+};
+export function mockeryRegeneration(key) {
+    const m = MOCKERY_REGEN[String(key ?? "").toLowerCase()];
+    return m ? { regen: true, why: "", name: m.name, page: m.page } : { regen: false, why: "Not a Mockery Breed." };
+}
+
+/**
  * Silver (or the breed's bane) against a shapechanger. Returns how the damage is soaked and what it counts as.
  * DA:W p. 102: homid or lupus in breed form soak at 6 and the rest is lethal; otherwise unsoakable aggravated.
  * W20 p. 255: in breed form a homid or lupus takes it as an ordinary weapon. Metis: unsoakable aggravated always.

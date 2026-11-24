@@ -179,6 +179,55 @@ export const TOTALS = {
     start: ["Balance 1 (3 at most)", "Willpower 5", "Sekhem = Balance"],
     costRef: "pdf 52 / printed 56"
   },
+  // B7820: the scorecard's missing builds (systems scorecard, 23 Nov 2026). Read from the private text dumps on the pages
+  // cited; the research notes are docs/research/creation-totals/{hh2,sorcerer-revised,w20-kinfolk,c20-kinain}.md.
+  hh2: {
+    label: "The Hunters Hunted II (V20): hunter", short: "HH2 hunter", sheet: "Mortal", ref: "HH2 pdf 36–42 / printed 35–41",
+    attributes: [6, 4, 3], abilities: [13, 9, 5], abilityCap: 3, backgrounds: 5,
+    // Numina have no free dots at creation: each is bought with freebies, at 7 a dot (pdf 36 / printed 35)
+    powers: [{key: "numina", label: "Numina", dots: 0, note: "None free: buy them with freebie points, from compatible paths."}],
+    virtues: 7, freebies: 21, flaws: 7,
+    costs: {attribute: 5, ability: 2, numina: 7, background: 1, virtue: 2, road: 2, willpower: 1},
+    start: ["Humanity = Conscience + Self-Control", "Willpower = Courage", "The Storyteller may allow Attributes 7/5/3"],
+    costRef: "pdf 36 / printed 35"
+  },
+  mortal: {
+    label: "A mortal (The Hunters Hunted II rules, no Numina)", short: "Mortal", sheet: "Mortal", ref: "HH2 pdf 36–42 / printed 35–41",
+    attributes: [6, 4, 3], abilities: [13, 9, 5], abilityCap: 3, backgrounds: 5,
+    powers: [], virtues: 7, freebies: 21, flaws: 7,
+    costs: {attribute: 5, ability: 2, background: 1, virtue: 2, road: 2, willpower: 1},
+    start: ["Humanity = Conscience + Self-Control", "Willpower = Courage"],
+    costRef: "pdf 36 / printed 35"
+  },
+  sorcerer: {
+    label: "Sorcerer Revised: a linear mage or psychic", short: "Sorcerer", sheet: "Mortal", ref: "Sorcerer Revised pdf 46–50 / printed 45–49",
+    attributes: [6, 4, 3], abilities: [11, 7, 4], abilityCap: 3, backgrounds: 5,
+    powers: [{key: "numina", label: "Numina (paths, rituals, psychic powers)", dots: 5, note: "Five points across paths and rituals or psychic powers; three at most in one path."}],
+    freebies: 21, flaws: 7,
+    costs: {attribute: 5, ability: 2, numina: 7, ritual: 3, background: 1, willpower: 1},
+    start: ["Willpower 5", "Mana pool = the Mana Background", "A Resonance Trait: Dynamic, Entropic or Static"],
+    costRef: "pdf 46 / printed 45"
+  },
+  kinfolk: {
+    label: "W20: Kinfolk", short: "Kinfolk", sheet: "Mortal", ref: "W20 pdf 382–384 / printed 380–382",
+    attributes: [6, 4, 3], abilities: [11, 7, 4], abilityCap: 3, backgrounds: 5,
+    // Gifts can't be bought at creation (W20 pdf 382 / printed 380); Numina cost 7 a dot, a second 14 (Kinfolk: A Breed Apart pdf 59 / printed 58)
+    powers: [], freebies: 21, flaws: 7,
+    costs: {attribute: 5, ability: 2, background: 1, willpower: 1, numina: 7},
+    start: ["Willpower 3", "No Gifts at creation: only through play", "No Totem Background"],
+    costRef: "pdf 382 / printed 380"
+  },
+  kinain: {
+    label: "C20: Kinain", short: "Kinain", sheet: "Changeling", ref: "C20 pdf 460–462 / printed 459–461",
+    // C20 gives Kinain no Attribute, Ability or freebie figures of their own; WoDX takes the changeling's (B7822)
+    attributes: [7, 5, 3], abilities: [13, 9, 5], abilityCap: 3, backgrounds: 5,
+    powers: [{key: "art", label: "Arts", dots: 1, note: "One Art dot; Faerie Blood sets how many Arts can be learnt."},
+      {key: "realm", label: "Realms", dots: 2, note: "One dot of the parent's affinity Realm and one of the player's choice."}],
+    freebies: 15, flaws: 7,
+    costs: {attribute: 5, ability: 2, background: 1, art: 5, realm: 2, willpower: 1},
+    start: ["Glamour: holds 2 at most, 1 back each chapter", "Banality 3, which never harms them", "A heritage (the parent's kith), one Birthright", "No Dreamers, Holdings, Remembrance, Retinue or Title"],
+    costRef: "pdf 145 / printed 144"
+  },
   orpheus: {
     label: "Orpheus", short: "Orpheus", sheet: "Mortal", ref: "Orpheus pdf 123–131 / printed 122–130",
     attributes: [6, 4, 3], abilities: [11, 7, 4], abilityCap: 3, backgrounds: 4,
@@ -204,7 +253,11 @@ export function defaultLine(sheetType, {variant = "", eraId = ""} = {}) {
     case "Hunter": return dark ? "inquisitor" : "htr";
     case "Demon": return "demon";
     case "Mummy": return "mummy";
-    case "Mortal": return variant === "ghoul" ? "ghoul" : dark ? "inquisitor" : "htr";
+    // B7821: a Mortal sheet's variant picks its book; a plain mortal in the Dark Ages keeps the Inquisitor's figures
+    case "Mortal": return variant === "ghoul" ? "ghoul" : variant === "kinfolk" ? "kinfolk" : variant === "sorcerer" ? "sorcerer"
+      : variant === "orpheus" ? "orpheus" : dark ? "inquisitor" : variant === "truefaith" ? "hh2" : "mortal";
+    // B7821: Changing Breeds read W20's Garou figures until W20 Changing Breeds is checked (its text is not in the dumps yet)
+    case "Changing Breed": return dark ? "daw" : "w20";
     default: return "v20";
   }
 }

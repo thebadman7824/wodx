@@ -87,7 +87,8 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
   const road = (label = "Humanity") => { const r = roadBase(sys); add("road", label, "system.advantages.path", r.value, r.from, {extra: "road", temp: false, value: true}); };
 
   switch ( lineId ) {
-    case "v20": case "ghoul": case "revenant":
+    // B7820: HH2 hunters and plain mortals keep V20's Humanity and Courage (HH2 pdf 36 / printed 35)
+    case "v20": case "ghoul": case "revenant": case "hh2": case "mortal":
       road(inUse(sys, "conviction") || inUse(sys, "instinct") ? "Humanity or Path" : "Humanity");
       wp(virtue(sys, "courage"), "Courage");
       break;
@@ -158,6 +159,20 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
     case "inquisitor":
       wp(virtue(sys, "courage") + n(sys?.advantages?.virtues?.zeal?.permanent), "Courage + Zeal");
       notes.push("Conviction is the order's Superior Virtue plus its Virtue: set it with the Storyteller.");
+      break;
+    // B7820: Kinfolk start at Willpower 3 (W20 pdf 382 / printed 380); a sorcerer at 5 (Sorcerer Revised pdf 46 / printed 45)
+    case "kinfolk":
+      wp(3, "Starts at 3");
+      notes.push("No Gifts at creation: a Kinfolk learns them in play from a teacher.");
+      break;
+    case "sorcerer":
+      wp(5, "Starts at 5");
+      notes.push("The Mana pool equals the Mana Background; pick a Resonance Trait (Dynamic, Entropic or Static).");
+      break;
+    case "kinain":
+      add("glamour", "Glamour", "system.advantages.glamour", 2, "Holds 2 at most, 1 back each chapter (C20 pdf 460 / printed 459)");
+      add("banality", "Banality", "system.advantages.banality", 3, "Starts at 3 (C20 pdf 461 / printed 460)");
+      notes.push("C20 gives Kinain no Willpower figure: set it with the Storyteller.");
       break;
     case "htr":
       wp(3, "Starts at 3");

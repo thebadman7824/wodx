@@ -60,8 +60,36 @@ const BOOK = {
   demon: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], v: 3, f: 15, c: {lore: 7, faith: 6, virtue: 2, willpower: 1}},
   kote: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [3], f: 15, c: {martialArts: 3, discipline: 10, chi: 3, hun: 3, po: 1, willpower: 1}},
   mummy: {a: [6, 4, 3], b: [11, 7, 4], bg: 3, p: [3], f: 5, c: {hekau: 5, balance: 4, sekhem: 1, spell: 1, ritual: 1, willpower: 1}},
-  orpheus: {a: [6, 4, 3], b: [11, 7, 4], bg: 4, p: [], f: 15, c: {horror: 7, otherHorror: 10, vitality: 5, willpower: 3}}
+  orpheus: {a: [6, 4, 3], b: [11, 7, 4], bg: 4, p: [], f: 15, c: {horror: 7, otherHorror: 10, vitality: 5, willpower: 3}},
+  // B7820: the builds the 23 Nov scorecard found missing
+  hh2: {a: [6, 4, 3], b: [13, 9, 5], bg: 5, p: [0], v: 7, f: 21, c: {numina: 7, virtue: 2, road: 2, willpower: 1}},
+  mortal: {a: [6, 4, 3], b: [13, 9, 5], bg: 5, p: [], v: 7, f: 21, c: {virtue: 2, road: 2, willpower: 1}},
+  sorcerer: {a: [6, 4, 3], b: [11, 7, 4], bg: 5, p: [5], f: 21, c: {numina: 7, ritual: 3, willpower: 1}},
+  kinfolk: {a: [6, 4, 3], b: [11, 7, 4], bg: 5, p: [], f: 21, c: {numina: 7, willpower: 1}},
+  kinain: {a: [7, 5, 3], b: [13, 9, 5], bg: 5, p: [1, 2], f: 15, c: {art: 5, realm: 2, willpower: 1}}
 };
+
+test("each Mortal variant and the Changing Breeds open on their own book (B7821)", () => {
+  assert.equal(defaultLine("Mortal", {variant: "general", eraId: "modern"}), "mortal");
+  assert.equal(defaultLine("Mortal", {variant: "", eraId: "victorian"}), "mortal");
+  assert.equal(defaultLine("Mortal", {variant: "general", eraId: "dark-ages"}), "inquisitor", "the Dark Ages keep the Inquisitor's figures");
+  assert.equal(defaultLine("Mortal", {variant: "truefaith", eraId: "modern"}), "hh2");
+  assert.equal(defaultLine("Mortal", {variant: "kinfolk", eraId: "dark-ages"}), "kinfolk");
+  assert.equal(defaultLine("Mortal", {variant: "sorcerer"}), "sorcerer");
+  assert.equal(defaultLine("Mortal", {variant: "orpheus"}), "orpheus");
+  assert.equal(defaultLine("Changing Breed", {eraId: "modern"}), "w20");
+  assert.equal(defaultLine("Changing Breed", {eraId: "dark-ages"}), "daw");
+  assert.equal(defaultLine("Hunter", {eraId: "modern"}), "htr");
+});
+
+test("an HH2 hunter on the book's totals buys Numina with freebies at 7 a dot", () => {
+  const v = {attributes: {physical: 6, social: 4, mental: 3}, abilities: {talent: {dots: 13, aboveCap: 0}, skill: {dots: 9, aboveCap: 0}, knowledge: {dots: 5, aboveCap: 0}},
+    backgrounds: 5, powers: {numina: 2}, virtues: 7};
+  const r = R.checkCreation(v, "hh2");
+  assert.equal(r.freebies.used, 14);
+  assert.equal(r.freebies.left, 7);
+  assert.equal(R.checkCreation({...v, powers: {}}, "mortal").freebies.used, 0);
+});
 
 test("each book's totals and costs match the book check", () => {
   for ( const [k, e] of Object.entries(BOOK) ) {

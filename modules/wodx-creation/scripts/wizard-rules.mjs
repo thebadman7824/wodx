@@ -163,7 +163,9 @@ export function canRaise(view, lineId, change, {page = "attributes", value = 0, 
 
 /** The kind a line's Merits and Flaws are held by (the trait table's holders). */
 export const LINE_KIND = {v20: "kindred", vtda20: "kindred", kote: "kindred", ghoul: "ghoul", revenant: "ghoul", w20: "lupine", daw: "lupine",
-  m20: "mage", dam: "mage", wr20: "wraith", c20: "fae", dafae: "fae", inquisitor: "hunter", htr: "hunter", demon: "demon", mummy: "mummy", orpheus: "mortal"};
+  m20: "mage", dam: "mage", wr20: "wraith", c20: "fae", dafae: "fae", inquisitor: "hunter", htr: "hunter", demon: "demon", mummy: "mummy", orpheus: "mortal",
+  // B7820: the new builds
+  hh2: "hunter", mortal: "mortal", sorcerer: "mortal", kinfolk: "kinfolk", kinain: "fae"};
 const KIND_ALSO = {ghoul: ["mortal"], hunter: ["mortal"], kinfolk: ["mortal"]};
 export const kindFits = (holders = [], kind) => !holders.length || holders.includes("any") || [kind, ...(KIND_ALSO[kind] ?? [])].some(k => holders.includes(k));
 
@@ -192,7 +194,9 @@ export function meritOptions(lineId, table = []) {
 export const BG_BOOKS = {v20: ["V20 core"], vtda20: ["V20 Dark Ages"], ghoul: ["V20 core"], revenant: ["V20 core"], kote: ["Kindred of the East"],
   w20: ["W20 core", "W20 Changing Breeds"], daw: ["W20 core"], m20: ["M20 core", "M20 Book of Secrets"], dam: ["M20 core"], wr20: ["Wraith 20"],
   c20: ["C20"], dafae: ["C20"], inquisitor: ["Hunters Hunted II"], htr: ["Hunters Hunted II"], demon: ["Demon: The Fallen"],
-  mummy: ["Mummy: The Resurrection", "Mummy 2nd"], orpheus: ["Orpheus"]};
+  mummy: ["Mummy: The Resurrection", "Mummy 2nd"], orpheus: ["Orpheus"],
+  // B7820: HH2 and plain mortals take V20's and HH2's lists; Kinfolk W20's; Kinain C20's; sorcerers the mortal lists
+  hh2: ["V20 core", "Hunters Hunted II"], mortal: ["V20 core", "Hunters Hunted II"], sorcerer: ["V20 core", "Hunters Hunted II"], kinfolk: ["W20 core"], kinain: ["C20"]};
 
 /** Backgrounds a line can take: [{key, name, book, page}], by name. */
 export function backgroundOptions(lineId, list = []) {
@@ -217,7 +221,9 @@ export const POWER_KIND = {
   // B5024: Pillars and Dominions go where WoDX Actions reads them (its daMage and daFae records); edges are Powers
   pillar: {store: "flagmap", flag: "daMage", field: "pillars", max: 3},
   dominion: {store: "flagmap", flag: "daFae", field: "dominions", max: 3},
-  edge: {store: "item", type: "Power", sub: "wod.types.edge", dots: true, max: 5}
+  edge: {store: "item", type: "Power", sub: "wod.types.edge", dots: true, max: 5},
+  // B7820: a mortal's Numina (HH2, Sorcerer Revised, Kinfolk): the sheet's numina Powers
+  numina: {store: "item", type: "Power", sub: "wod.types.numina", dots: true, max: 5}
 };
 /** B5024: the ids and names a flag-kept power offers: a fellowship's four Pillars (all when none is set), the four Dominions. */
 export function flagPowerIds(key, {fellowships = {}, dominions = {}, fellowship = ""} = {}) {
@@ -236,7 +242,9 @@ export const POWER_NAMES = {
   arcanoi: ["Argos", "Castigate", "Embody", "Fatalism", "Flux", "Inhabit", "Intimation", "Keening", "Lifeweb", "Mnemosynis", "Moliate", "Outrage", "Pandemonium", "Phantasm", "Puppetry", "Usury"],
   art: ["Autumn", "Chicanery", "Chronos", "Contract", "Dragon's Ire", "Legerdemain", "Metamorphosis", "Naming", "Oneiromancy", "Primal", "Pyretics", "Skycraft", "Soothsay", "Sovereign", "Wayfaring"],
   realm: ["Actor", "Fae", "Nature", "Prop", "Scene", "Time"],
-  hekau: ["Alchemy", "Amulets", "Celestial", "Effigy", "Necromancy", "Nomenclature"]
+  hekau: ["Alchemy", "Amulets", "Celestial", "Effigy", "Necromancy", "Nomenclature"],
+  // B7820: HH2's Numina (pdf 36 / printed 35)
+  numina: ["Astral Projection", "Cyberkinesis", "Path of Curses", "Path of Divination", "Path of Healing", "Psychometry", "Pyrokinesis", "Telekinesis", "Telepathy", "True Faith"]
 };
 
 const clanKey = s => String(s ?? "").toLowerCase().replace(/^clan\s+/, "").trim();
