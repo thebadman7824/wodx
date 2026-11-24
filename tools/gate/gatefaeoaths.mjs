@@ -9,6 +9,7 @@
  *   6. a brownie: a gift offends it and the chores stop; a spurned sprite opens a Ledger consequence
  *   7. faerie food marks the mortal for a day
  *   8. a servant who raises a hand to the master (the window's button) takes the master's Mists in aggravated damage
+ *      (a mortal servant marks it as lethal, VtDA20 p. 345, so the gate counts both)
  * Run: await (await import(`/wodx-gate/gatefaeoaths.mjs?${Date.now()}`)).run()
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -95,17 +96,18 @@ export async function run() {
         && api().rules.afterFood(2, f, game.time.worldTime) === 1, {flag: f});
     });
 
-    await G.step("8. raising a hand to the master (pressed in the window): the master's Mists in aggravated", async () => {
-      const before = Number(game.actors.get(hob.id).system.health?.damage?.aggravated ?? 0);
+    await G.step("8. raising a hand to the master (pressed in the window): the master's Mists in damage", async () => {
+      const hurt = () => { const d = game.actors.get(hob.id).system.health?.damage ?? {}; return Number(d.aggravated ?? 0) + Number(d.lethal ?? 0); };
+      const before = hurt();
       await api().open(); await sleep(500);
       const app = foundry.applications.instances.get("wodx-fae-oaths"), el = app.element;
       const f = el.querySelector("form.wst-retinue");
       f.elements.servant.value = hob.id; f.elements.master.value = fae.id;
       f.querySelector("button[data-action=harm]").click();
-      await waitFor(() => Number(game.actors.get(hob.id).system.health?.damage?.aggravated ?? 0) > before, 5000);
-      const after = Number(game.actors.get(hob.id).system.health?.damage?.aggravated ?? 0);
+      await waitFor(() => hurt() > before, 5000);
+      const after = hurt();
       await app.close();
-      G.ok("8. raising a hand to the master (pressed in the window): the master's Mists in aggravated", after - before === 3, {before, after});
+      G.ok("8. raising a hand to the master (pressed in the window): the master's Mists in damage", after - before === 3, {before, after});
     });
   } catch (e) {
     G.R.errors.push(String(e?.stack ?? e));
