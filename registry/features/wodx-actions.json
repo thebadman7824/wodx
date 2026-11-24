@@ -20,7 +20,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B51, B58, B7904"
+     "decisions": "B51, B58, B7904, B7920"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:action"
@@ -152,7 +152,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "Actions 3.2"
+     "decisions": "Actions 3.2, B7925"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/kindred.js:sheetDisciplines"
@@ -594,7 +594,7 @@
    "steps": {
     "built": {
      "pr": 555,
-     "decisions": "B3130-B3133, B6000-B6004, B7908-B7909"
+     "decisions": "B3130-B3133, B6000-B6004, B7908-B7909, B7926"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/trait-hooks.js:traitMods"
@@ -1169,6 +1169,38 @@
    },
    "open": [
     "book: Dark Ages: Mage pp. 37, 83-93 read in full 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.thrall",
+   "name": "The infernal thrall of Dark Ages: Devil's Due: Vice, Resolve, Torment, sins, pacts, rites and Absolution",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/thrall.js",
+    "modules/wodx-actions/scripts/thrall-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7920-B7926"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/thrall.js:build"
+    },
+    "shown": {
+     "what": "the thrall window and its cards (a sin, the Vice calling, atonement, holy ground, the Aura read, a pact sealed or failed, a gift of the master, research and rites, Absolution); the thrall's sin prompt with its button; the dawn card (Resolve, Consumption, the bond); the Aura of Sin ticks on a roll"
+    },
+    "gated": {
+     "gate": "tools/gate/gatethrall.mjs",
+     "step": "2. a planned murder from the window: Conscience fails and a point of Torment"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 read 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
    ],
    "deferred": [],
    "faults": [],

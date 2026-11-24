@@ -63,7 +63,7 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:ghoul"]
     },
     mortal: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk", "api:exorcise"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk", "api:exorcise", "api:thrall"],
         resist: ["api:hazard"],
         recover: ["api:healing", "uses:willpower", "api:domainDA"],
         st: ["api:imbue", "api:holyArtifact", "api:fealty", "api:domainEvent"],
@@ -167,6 +167,7 @@ export const DESC = {
     "api:exorcise": "Exorcism, a rite anyone can learn: Intelligence + Occult tears Essence from a demon or spirit until it is driven off (V20 Dark Ages)",
     "api:sampleDemon": "Make one of the sample demons of V20 Dark Ages with its traits and Charms",
     "api:maturation": "Spend the maturation points the years gave: traits already held, and a roll to raise Backgrounds (Dark Ages: Vampire 2002)",
+    "api:thrall": "A thrall of Hell: Vice, Resolve and Torment, sins, pacts, rites of summoning and binding, and Absolution (Dark Ages: Devil's Due)",
     "api:infernal": "Demonic pacts and infernal investments, and the Supplicium each one brings (Dark Ages Companion 2002)",
     "api:infernalFlame": "Breathe the flame an infernal pact gave: Dexterity + Occult, three aggravated levels (Dark Ages Companion 2002)",
     "api:domainDA": "The manor and its lands: the Domain's aspects, the people, settlements, Servants and staff (V20 Dark Ages Companion)",

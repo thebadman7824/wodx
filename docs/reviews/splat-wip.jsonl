@@ -74,3 +74,23 @@
 {"file":"registry/features/wodx-actions.json","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"00e6f3116993","at":"2026-11-24T15:07Z"}
 {"file":"tools/gate/gatemagehouse.mjs","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"efe38279bd6a","at":"2026-11-24T15:07Z"}
 {"file":"tools/harness/mage-household.test.mjs","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"517043bc1618","at":"2026-11-24T15:07Z"}
+{"file":"changes/decisions/B7920.md","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"e07611c6546e","at":"2026-11-24T15:31Z"}
+{"file":"changes/wodx-actions/thrall.md","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"aa79354c19ea","at":"2026-11-24T15:31Z"}
+{"file":"changes/wodx-rothenstein/voss-thrall.md","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"e9c42bd0a655","at":"2026-11-24T15:31Z"}
+{"file":"changes/wodx-storyteller/cast-thrall.md","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"8d775fbd3559","at":"2026-11-24T15:31Z"}
+{"file":"docs/FEATURES.md","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"c1e67572916b","at":"2026-11-24T15:31Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"879e0fe772cf","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/kindred.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"3ab09e57926d","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/main.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"272f9ee38d5f","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/profile-menus.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"6aea8a0600ae","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/theme-rules.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"42c11f4b92bd","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/thrall-rules.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"870be8b97c88","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/thrall.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"cf8edb9d9078","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-actions/scripts/trait-hooks.js","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"d5d6815ea107","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-rothenstein/data/recipe.mjs","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"afbb51b5712b","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-storyteller/scripts/builder.mjs","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"507fce24ab88","at":"2026-11-24T15:31Z"}
+{"file":"modules/wodx-storyteller/scripts/recipe-rules.mjs","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"b0762b4ee1af","at":"2026-11-24T15:31Z"}
+{"file":"registry/features/wodx-actions.json","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"704eb6166593","at":"2026-11-24T15:31Z"}
+{"file":"tools/gate/gatethrall.mjs","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"c1791b855a0c","at":"2026-11-24T15:31Z"}
+{"file":"tools/harness/builder.test.mjs","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"f5b2f2e60b5c","at":"2026-11-24T15:31Z"}
+{"file":"tools/harness/thrall.test.mjs","verdict":"working","how":"Read against Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 and the thrall tests","hash":"a75aee74b6df","at":"2026-11-24T15:31Z"}

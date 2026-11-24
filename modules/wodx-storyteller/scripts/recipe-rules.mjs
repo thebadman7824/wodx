@@ -7,6 +7,7 @@
  */
 
 import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {thrallFlag} from "../../wodx-actions/scripts/thrall-rules.js";
 
 export const RECIPE_VERSION = 1;
 
@@ -220,6 +221,8 @@ export function castSheet(p = {}) {
   }
   if ( p.kin ) out["flags.world.wodx.kinfolk"] = String(p.kin);
   if ( p.hunter ) out["flags.wodx-actions.inquisitor"] = hunterFlag(p.hunter);
+  // B7924: a thrall of Hell, as WoDX Actions keeps one (Dark Ages: Devil's Due)
+  if ( p.thrall ) out["flags.wodx-actions.thrall"] = thrallFlag(p.thrall);
   return out;
 }
 
@@ -263,6 +266,7 @@ export function castPlan(recipe, actors = []) {
     if ( x.road && a.road !== x.road ) ch.road = x.road;
     if ( x.variant === "ghoul" && a.variant !== "ghoul" ) ch.variant = "ghoul";
     if ( x.hunter && !a.hunter ) ch.hunter = x.hunter;
+    if ( x.thrall && !a.thrall ) ch.thrall = x.thrall;
     if ( Object.keys(ch).length ) set.push({id: a.id, name: a.name, ...ch});
   }
   return {make, set, missing};
@@ -274,6 +278,7 @@ export function castFields(change = {}) {
   if ( change.road ) { out["system.advantages.path.label"] = "custom"; out["system.advantages.path.custom"] = change.road; }
   if ( change.variant ) out["system.settings.variant"] = change.variant;
   if ( change.hunter ) out["flags.wodx-actions.inquisitor"] = hunterFlag(change.hunter);
+  if ( change.thrall ) out["flags.wodx-actions.thrall"] = thrallFlag(change.thrall);
   return out;
 }
 

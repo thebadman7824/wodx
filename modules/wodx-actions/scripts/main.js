@@ -64,6 +64,8 @@ import * as GHD from "./ghost-da.js";
 import * as DMD from "./domain-da.js";
 import * as INF from "./infernal.js";
 import * as INFR from "./infernal-rules.js";
+import * as THX from "./thrall.js";
+import * as THR from "./thrall-rules.js";
 import * as DMR from "./domain-da-rules.js";
 import * as GHR from "./ghost-da-rules.js";
 import * as KER from "./kote-rules.js";
@@ -1249,7 +1251,8 @@ async function resolveAction(actor, target, fd) {
         } catch (e) { console.warn("WoDX | sneaking", e); }
     }
     // B7633: a lie told or a theft that worked: the Roads that count it ask (the card names the level; it never rolls by itself)
-    if (isVampire(actor)) {
+    // B7925: a thrall's lies and thefts count on the thrall's hierarchy
+    if (isVampire(actor) || THX.isThrall(actor)) {
         const ev = KR.rollSinEvent({ preset: fd.preset ?? "", attr: fd.attr, ability: pool.abilityKey, successes: r.successes, botch: r.botch });
         if (ev) { try { const sp = await kx().sinPrompt(actor, ev, ev === "lie" ? "A lie told to get the better of someone" : "Something taken that was not theirs"); if (sp?.html) body += sp.html; } catch (e) { console.warn("WoDX | sin from a roll", e); } }
     } else if (hx().isInquisitor(actor)) {
@@ -3262,6 +3265,11 @@ function dmx() {
 }
 
 /** B7696: demonic pacts, infernal investments and the Supplicium (Dark Ages Companion 2002 ch. 7). */
+/** B7920-B7926: the infernal thrall of Dark Ages: Devil's Due. */
+let THXE = null;
+function thx() {
+    return THXE ??= THX.build({ dialog, post, rollPool, rollBlock, setFlag, attr, findAbility, background, spendWillpower, applyDamage, notify: m => ui.notifications.warn(m) });
+}
 let INFE = null;
 function ix() {
     return INFE ??= INF.build({ dialog, post, rollPool, rollBlock, attr, findAbility, notify: m => ui.notifications.warn(m), logEvent: (a, t, k) => kx().logEvent(a, t, k) });
@@ -3372,7 +3380,7 @@ let KXE = null;
 function kx() {
     return KXE ??= KX.build({ post, rollPool, rollBlock, dialog, updateActor, setFlag, attr, findAbility, abilityList, setting, spendWillpower,
         changeBlood, blood, background, isVampire, healthTrack, setDamage, healthText, statusEffect, condition, requestGM, R,
-        api: () => API, notify: m => ui.notifications.warn(m) });
+        api: () => API, notify: m => ui.notifications.warn(m), thrallSin: (a, e, w) => thx().sinPrompt(a, e, w) });
 }
 
 /** The launcher: the buttons follow the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). */
@@ -3601,7 +3609,16 @@ function bindCard(msg, el) {
         if (b.hasAttribute("data-gm") && !game.user.isGM) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); fx().onButton(msg, b.dataset.fx).catch(e => console.error("WoDX |", e)); });
     });
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx]):not([data-dm]):not([data-hx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    // B7920: a thrall's sin prompt, once a card
+    el.querySelectorAll?.("button.vta-btn[data-thx]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `thx|${b.dataset.thx}|${b.dataset.actor}|${b.dataset.level ?? ""}`;
+        if (used.includes(key)) return ui.notifications.info("Already done.");
+        const r = await thx().onButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx]):not([data-dm]):not([data-hx]):not([data-thx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -3720,7 +3737,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), curseRoll: (a, o) => hx().curseRoll(resolveActor(a), o), takeCurse: (a, id) => hx().takeCurse(resolveActor(a), id), pietyPrompt: (a, ev, what, o) => hx().pietyPrompt(resolveActor(a), ev, what, o), curses: CUR, inquisitorOf: a => (hx().isInquisitor(resolveActor(a)) ? hx().inq(resolveActor(a)) : null), spendConviction: (a, k = 1) => hx().spendConv(resolveActor(a), k), retreat: (a, o) => hx().retreat(resolveActor(a), o), endRetreat: a => hx().endRetreat(resolveActor(a)), wakeOnHolyGround: (a, o) => hx().wake(resolveActor(a), o), homestead: (a, o) => hx().homestead(resolveActor(a), o), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), domainDA: withActor(a => dmx().window(a)), infernal: withActor(a => ix().window(a)), infernalFlame: withActor(a => ix().flame(a)), infernalPacts: { window: a => ix().window(resolveActor(a)), record: (a, fd) => ix().record(resolveActor(a), fd), pact: (a, o) => ix().makePact(resolveActor(a), o), spend: (a, id, b) => ix().spend(resolveActor(a), id, b), state: a => ix().stateOf(resolveActor(a)), prevails: a => ix().prevails(resolveActor(a)), final: (a, won) => ix().finalOutcome(resolveActor(a), won), flame: a => ix().flame(resolveActor(a)), rules: INFR }, maturation: withActor(a => creationApi()?.maturation?.open?.(a) ?? ui.notifications.warn("Maturation needs WoDX Creation.")), domainEvent: withActor(a => dmx().domainEvent(a)), fealty: (o = {}) => dmx().fealty(o?.actor ? resolveActor(o.actor) : resolveActor()), domain: { window: a => dmx().window(resolveActor(a)), save: (a, fd) => dmx().saveWindow(resolveActor(a), fd), state: a => dmx().stateOf(resolveActor(a)), event: (a, o) => dmx().domainEvent(resolveActor(a), o), end: (a, id) => dmx().endEvent(resolveActor(a), id), tick: t => dmx().tick(t), season: (t, o) => dmx().seasonTurn(t, o), swear: o => dmx().swear(o), endOath: (id, how) => dmx().endOath(id, how), oaths: () => dmx().oaths(), rules: DMR }, ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), holyArtifact: withActor(a => hx().holyArtifact(a)), makeArtifact: (a, o) => hx().makeArtifact(a ? resolveActor(a) : null, o), faithOf: a => hx().faithOf(resolveActor(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), exorcise: withActor(a => chmx().exorcise(a)), sampleDemon: () => chmx().sampleDemon(), domainDA: withActor(a => dmx().window(a)), infernal: withActor(a => ix().window(a)), thrall: withActor(a => thx().open(a)), thralls: { open: a => thx().open(resolveActor(a)), setup: a => thx().setup(resolveActor(a)), state: a => thx().flag(resolveActor(a)), sin: (a, level, what) => thx().sinAt(resolveActor(a), level, what), sinPrompt: (a, e, w) => thx().sinPrompt(resolveActor(a), e, w), pact: (a, fd) => thx().sealPact(resolveActor(a), fd), fail: (a, id, o) => thx().failPact(resolveActor(a), id, o), grant: (a, fd) => thx().grant(resolveActor(a), fd), research: (a, fd) => thx().researchWeek(resolveActor(a), fd), perform: (a, id, o) => thx().performRite(resolveActor(a), id, o), absolve: (a, p, o) => thx().absolution(resolveActor(a), resolveActor(p), o), dawn: () => thx().dawn(), rules: THR }, infernalFlame: withActor(a => ix().flame(a)), infernalPacts: { window: a => ix().window(resolveActor(a)), record: (a, fd) => ix().record(resolveActor(a), fd), pact: (a, o) => ix().makePact(resolveActor(a), o), spend: (a, id, b) => ix().spend(resolveActor(a), id, b), state: a => ix().stateOf(resolveActor(a)), prevails: a => ix().prevails(resolveActor(a)), final: (a, won) => ix().finalOutcome(resolveActor(a), won), flame: a => ix().flame(resolveActor(a)), rules: INFR }, maturation: withActor(a => creationApi()?.maturation?.open?.(a) ?? ui.notifications.warn("Maturation needs WoDX Creation.")), domainEvent: withActor(a => dmx().domainEvent(a)), fealty: (o = {}) => dmx().fealty(o?.actor ? resolveActor(o.actor) : resolveActor()), domain: { window: a => dmx().window(resolveActor(a)), save: (a, fd) => dmx().saveWindow(resolveActor(a), fd), state: a => dmx().stateOf(resolveActor(a)), event: (a, o) => dmx().domainEvent(resolveActor(a), o), end: (a, id) => dmx().endEvent(resolveActor(a), id), tick: t => dmx().tick(t), season: (t, o) => dmx().seasonTurn(t, o), swear: o => dmx().swear(o), endOath: (id, how) => dmx().endOath(id, how), oaths: () => dmx().oaths(), rules: DMR }, ghostManifest: withActor(a => ghx().manifest(a)), ghostSight: withActor(a => ghx().sight(a)), sampleGhost: () => ghx().sampleGhost(canvas?.tokens?.controlled?.[0]?.actor ?? null), sampleSwarm: () => game.modules.get("wodx-combat")?.api?.swarm?.make?.() ?? ui.notifications.warn("Swarms need WoDX Combat."), spiderOn: () => game.modules.get("wodx-combat")?.api?.swarm?.spider?.() ?? ui.notifications.warn("Spiders need WoDX Combat."), ghosts: { manifest: a => ghx().manifest(resolveActor(a)), look: (a, k) => ghx().look(resolveActor(a), k), make: a => ghx().makeGhost(a ? resolveActor(a) : null), blood: a => blood(resolveActor(a)), spend: (a, k) => changeBlood(resolveActor(a), -Math.abs(Number(k) || 1)), rules: GHR }, acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH, exorcise: (a, o) => chmx().exorcise(resolveActor(a), o), sampleDemon: () => chmx().sampleDemon() }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();
@@ -3777,6 +3794,8 @@ Hooks.once("ready", () => {
     catch (e) { console.warn("WoDX Actions | behind the age", e); }
     // B7909: a Dark Ages mage's degree tells with the fellowship (Dark Ages: Mage p. 37)
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => mx().house.degreeEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | degree on rolls", e); }
+    // B7926: a thrall's Aura of Sin on a Social roll (Dark Ages: Devil's Due p. 97)
+    try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => thx().auraEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | aura of sin", e); }
 });
 Hooks.once("ready", async () => {
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
@@ -3930,7 +3949,7 @@ function kindredHooks() {
     // One run at a time; a move of the clock during a run gets one more run after it, so the newest time is never dropped.
     // Each routine runs on its own, so one that fails does not stop the rest.
     let fadeBusy = false, fadeAgain = false;
-    const clockRoutines = [() => mx().fadeAll(), () => mx().householdWeek(), () => fx().daily(), () => trx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
+    const clockRoutines = [() => mx().fadeAll(), () => mx().householdWeek(), () => thx().dawn(), () => fx().daily(), () => trx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
         () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical(), () => svx().enchantDaily()];
     async function fadeRun() {
         fadeBusy = true;

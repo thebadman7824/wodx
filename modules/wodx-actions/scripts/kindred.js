@@ -912,6 +912,11 @@ export function build(ctx) {
                     await logEvent(killer, `Kills ${actor.name}${killer.system?.conditions?.isfrenzy ? " in frenzy" : ""}.`, "kill");
                     await sinPrompt(killer, killer.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${actor.name} is killed`);
                 }
+                // B7925: a thrall who kills: a sin on the thrall's hierarchy (Dark Ages: Devil's Due p. 96)
+                else if (killer?.getFlag?.(MOD, "thrall") && !killer.getFlag(MOD, "thrall").absolved) {
+                    await logEvent(killer, `Kills ${actor.name}.`, "kill");
+                    await sinPrompt(killer, "kill", `${actor.name} is killed`);
+                }
                 // B7888: an inquisitor who kills a Christian: the first sin against God (Dark Ages: Inquisitor p. 159)
                 else if (killer?.getFlag?.(MOD, "inquisitor")) {
                     await logEvent(killer, `Kills ${actor.name}.`, "kill");
@@ -935,6 +940,9 @@ export function build(ctx) {
     /** A sin prompt with the Road's suggested level (event: kill, killFrenzy, killFeed, diablerie, frenzy, notRidden, and from B7633 lie, theft, wordBroken, feedUnwilling, starve, mindMortal, embrace). */
     async function sinPrompt(actor, event, what) {
         if (!setting("eventPrompts")) return null;
+        // B7925: a thrall of Hell sins by the thrall's own hierarchy (Dark Ages: Devil's Due p. 96)
+        const thrall = await ctx.thrallSin?.(actor, event, what);
+        if (thrall !== undefined) return thrall;
         const found = roadOf(actor);
         const level = K.sinForEvent(found, event);
         const rating = n(actor.system?.advantages?.path?.permanent);

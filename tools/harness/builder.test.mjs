@@ -117,7 +117,7 @@ test("the cast step makes only the missing people and sets only the Roads that d
 
 test("the Rothenstein cast follows the omnibus: ten missing people, the steward a ghoul, the Roads of ruling 27; the Grove's sept (B7874)", () => {
   const c = ROTHENSTEIN.cast;
-  assert.equal(c.people.length, 18, "the omnibus's ten, the Old Grove's four elders and three Kinfolk, and Thibault (B7890)");
+  assert.equal(c.people.length, 19, "the omnibus's ten, the Old Grove's four elders and three Kinfolk, Thibault (B7890) and Voss (B7924)");
   assert.equal(c.people.filter(p => p.type === "Werewolf").length, 4);
   assert.equal(c.people.find(p => /steward/.test(p.name)).variant, "ghoul");
   const road = m => c.sheets.find(s => s.match.includes(m))?.road;

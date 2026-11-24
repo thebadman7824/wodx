@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 43 | 0 | 9 |
+| wodx-actions | yes | 44 | 0 | 9 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 2 |
@@ -66,6 +66,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
 | The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | shown | 1 |  |
+| The infernal thrall of Dark Ages: Devil's Due: Vice, Resolve, Torment, sins, pacts, rites and Absolution (`actions.thrall`) |  | gated | 1 | gatethrall 2. a planned murder from the window: Conscience fails and a point of Torment |
 | The inner voice: the Beast, the Shadow, Rage and the Impulse played by someone (`actions.voice`) |  | parked |  | gate6d a whisper reaches only the character, the voice and the Storyteller |
 | The Kuei-jin: Chi, Dharma, the P'o and their Disciplines (`actions.kote`) |  | gated | 1 | gate6j Dharma 3 allows one Chi a turn |
 | The Reborn: Balance, Sekhem and Hekau (`actions.mummy`) |  | gated | 1 | gate6k Forbiddance: Balance against Willpower at 6 |

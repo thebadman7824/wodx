@@ -74,6 +74,13 @@ export const ROTHENSTEIN = {
       {name: "The Cistercian preacher", match: "Cistercian", note: "A friar on the heresy circuit who comes with the bishop's Lent inquiry."},
       {name: "Thibault de Montfaucon", match: "Thibault", hunter: {precursor: "crusader", zeal: 1},
         note: "A knight sworn to the bishop of Olomouc who fought in the Holy Land and came home a hunter of the Devil's creatures. Rides with the Cistercian preacher on the Lent inquiry of 1202."},
+      // B7924: the apothecary Voss, a thrall of Hell with a bound imp (desk infernal-voss; Dark Ages: Devil's Due)
+      {name: "Master Eckhart Voss", match: "Eckhart", thrall: {vice: "pride", resolve: 2, torment: 3, master: "The voice that answered at the grave",
+        pacts: [{id: "pact-draught", oath: "Each week I will brew the master's draught for one buyer, or my flesh will burn for it", obligation: 3, frequency: 3, consequence: 2}],
+        arcana: [{name: "Read the Sin", cost: 3}, {name: "Perfect Lie", cost: 3}, {name: "Sense Vitality", cost: 3}, {name: "Longevity", cost: 1}],
+        rites: [{id: "rite-bind-skrik", demon: "Skrik", kind: "bind", resolve: 2, torment: 5, willpower: 4, known: {nature: true, vice: true}}],
+        bound: [{name: "Skrik", resolve: 2, torment: 5, willpower: 4, note: "An imp bound to the laboratory's cellar"}]},
+        note: "The Lower Town apothecary. A spouse's death drove Voss to the grave at midnight, and something answered. The cures still work; the draughts sold under the counter do worse. Skrik, a small bound imp, keeps the cellar."},
       {name: "Foreman Dalibor", match: "Dalibor", note: "Foreman at the Silver Adit. Marks the hat brim for every miner short."},
       {name: "Old Bořek", match: "Bořek", note: "An old miner at the Silver Adit who has watched the red marks multiply."},
       {name: "Vesna", match: "Vesna", note: "Lost a spouse to the charcoal smoke and sent Matej to the mine. Sits by the lantern at the Adit mouth, which trims itself."},
@@ -104,7 +111,12 @@ export const ROTHENSTEIN = {
       {match: "Kasimir", road: "Road of the Beast"},
       {match: "Marta", road: "Road of Heaven"},
       // B7890: Brother Anselm keeps his count as one of the lone Faithful; there is no Inquisition before 1223
-      {match: "Anselm", hunter: {precursor: "faithful", faith: 1}}
+      {match: "Anselm", hunter: {precursor: "faithful", faith: 1}},
+      {match: "Eckhart", thrall: {vice: "pride", resolve: 2, torment: 3, master: "The voice that answered at the grave",
+          pacts: [{id: "pact-draught", oath: "Each week I will brew the master's draught for one buyer, or my flesh will burn for it", obligation: 3, frequency: 3, consequence: 2}],
+          arcana: [{name: "Read the Sin", cost: 3}, {name: "Perfect Lie", cost: 3}, {name: "Sense Vitality", cost: 3}, {name: "Longevity", cost: 1}],
+          rites: [{id: "rite-bind-skrik", demon: "Skrik", kind: "bind", resolve: 2, torment: 5, willpower: 4, known: {nature: true, vice: true}}],
+          bound: [{name: "Skrik", resolve: 2, torment: 5, willpower: 4, note: "An imp bound to the laboratory's cellar"}]}}
     ]
   },
   // B7898: the hunters' household before the Inquisition (1223): no Rule, no rector, no Council of Faith. Father Ludovic

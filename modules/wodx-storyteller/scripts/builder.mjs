@@ -135,7 +135,7 @@ async function stepCarry(r) {
  * and the sheets the recipe names get their Road and ghoul variant. What each sheet held before is kept for Undo.
  */
 let prevRecord = null; // rerunStep's record of the step, so a step run again adds to what it did before
-const actorRows = () => all(game.actors).map(x => ({id: x.id, name: x.name, playerOwned: !!x.hasPlayerOwner, road: R.roadOn(x.system), variant: x.system?.settings?.variant ?? null, hunter: !!x.flags?.["wodx-actions"]?.inquisitor}));
+const actorRows = () => all(game.actors).map(x => ({id: x.id, name: x.name, playerOwned: !!x.hasPlayerOwner, road: R.roadOn(x.system), variant: x.system?.settings?.variant ?? null, hunter: !!x.flags?.["wodx-actions"]?.inquisitor, thrall: !!x.flags?.["wodx-actions"]?.thrall}));
 async function stepCast(r) {
   const before = record().steps?.cast?.made ?? prevRecord?.made ?? [];
   const made = [...before];
