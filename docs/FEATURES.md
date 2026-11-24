@@ -113,7 +113,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | shown | 2 |  |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
-| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 2 | gatewizard 10 derived traits |
+| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 3 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |

@@ -179,14 +179,16 @@
    },
    "open": [
     "book: V20 Dark Ages character creation order and totals; not checked against the book text yet",
-    "the five B7820 builds (HH2, mortal, sorcerer, Kinfolk, Kinain) have wizard power kinds and Background books; no gate walks the wizard through one yet"
+    "the five B7820 builds (HH2, mortal, sorcerer, Kinfolk, Kinain) have wizard power kinds and Background books; no gate walks the wizard through one yet",
+    "book: the Changing Breeds' starting Rage, Gnosis and Willpower come from W20 Changing Breeds (FERA_STARTS, B7831); the Mokole starting Rage is not in the book"
    ],
    "deferred": [],
    "faults": [],
    "prs": [
     841,
     846,
-    864
+    864,
+    2398
    ]
   },
   {
