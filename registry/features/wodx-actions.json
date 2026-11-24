@@ -637,7 +637,7 @@
    "steps": {
     "built": {
      "pr": 553,
-     "decisions": "B781, B783, B3757, B4926, B5780-B5795"
+     "decisions": "B781, B783, B3757, B4926, B5780-B5795, B7936"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/power-effects.js:powerOutcomes"
@@ -709,7 +709,7 @@
    "steps": {
     "built": {
      "pr": 1239,
-     "decisions": "B4832-B4834"
+     "decisions": "B4832-B4834, B7934"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/turns.js:onTurn"
