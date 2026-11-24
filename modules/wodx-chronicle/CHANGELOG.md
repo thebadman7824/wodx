@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.143.1 (A Danislav revenant takes aggravated damage from silver in a fight (B7844))
 - 0.143.0 (Chronicle local block: taints rows tie a place to a long clock, with taintPlans and clockTaint for the module that applies them (B7807))
 - 0.142.3 (The twist engine reads the chronicle's own gap between twists (twists.GAP, else its week), and the saga check lets a book start in the year the one before it ends when its first step comes later (B7801, B7802))
 - 0.142.2 (The traits api now hands out mockeryOf, so other modules can read a Creature sheet's Mockery Breed (B7820))
