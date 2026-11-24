@@ -222,6 +222,8 @@ test("B7960 (#2121): a merge refused for a git fault is not a conflict; it names
   assert.deepEqual([unrelated.conflict, unrelated.setup], [false, false], "unrelated histories are the branch's fault: it leaves, with git's words");
   assert.ok(setupFault("fatal: Unable to create 'C:/Users/Jane Doe/wodx/.git/index.lock': File exists."));
   assert.ok(!setupFault("error: Your local changes would be overwritten by merge"));
+  assert.ok(!setupFault("Error: EACCES: permission denied, open 'modules/x/y.json'"), "a Node error from the branch's own files is not git's");
+  assert.ok(!setupFault("not ok 3 - a test that says Permission denied"), "only git's own fatal and error lines count");
 
   // real git: a runner clone with no identity at all
   const t = fs.mkdtempSync(path.join(os.tmpdir(), "train-id-"));
@@ -279,6 +281,16 @@ test("B7960 (#2121): a merge refused for a git fault is not a conflict; it names
   const u = mockGh({behind: 3});
   const s4 = await step({gh: u.gh, home: fs.mkdtempSync(path.join(os.tmpdir(), "train-")), apply: true, batch: 1, prepare: async () => ({error: "git could not merge main in, though nothing conflicts (fatal: refusing to merge unrelated histories): fix the branch, push, then add the label again"})});
   assert.equal(s4.action, "leave");
+  // a runner wait is capped: after maxHours on one head the pull request leaves, so a misread fault never holds the line for good
+  const capHome = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+  const cap = mockGh({behind: 3});
+  await step({gh: cap.gh, home: capHome, apply: true, batch: 1, prepare: fake});
+  const st = JSON.parse(fs.readFileSync(path.join(capHome, "train-state.json"), "utf8"));
+  assert.equal(st.setupHead, "h20");
+  fs.writeFileSync(path.join(capHome, "train-state.json"), JSON.stringify({...st, setupSince: Date.now() - 4 * 3600e3}));
+  const late = await step({gh: cap.gh, home: capHome, apply: true, batch: 1, prepare: fake});
+  assert.equal(late.action, "leave");
+  assert.match(late.why, /for over 3 hours/);
   // a real conflict still leaves, as before
   const c = mockGh({behind: 3});
   const s3 = await step({gh: c.gh, home: fs.mkdtempSync(path.join(os.tmpdir(), "train-")), apply: true, batch: 1, prepare: async () => ({error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"})});

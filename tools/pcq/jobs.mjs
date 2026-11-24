@@ -416,11 +416,14 @@ export const mainSettled = runs => Array.isArray(runs) && !runs.includes(null) &
  */
 export const alertMark = (host, key) => `<!-- pc-alert-key: ${String(host).toLowerCase()}/${key} -->`;
 /**
- * The open alerts this runner raised for this key, from a list of open pc-alert issues: keep is the oldest (the one
- * to close when the fault clears), extra the rest (duplicates to close now). Pure.
+ * The open alerts this runner raised for this key, from a list of open pc-alert issues: keep is the one it tracks
+ * already (current) if open, else the oldest (the one to close when the fault clears), extra the rest (duplicates to
+ * close now). Pure.
  */
-export function adoptAlert(open, host, key) {
+export function adoptAlert(open, host, key, current = null) {
   const mark = alertMark(host, key);
   const mine = (open ?? []).filter(i => !i.pull_request && String(i.body ?? "").includes(mark)).map(i => i.number).sort((a, b) => a - b);
-  return {keep: mine[0] ?? null, extra: mine.slice(1)};
+  // the one the runner already tracks (opened while an earlier read failed) stays, so it never closes its own alert
+  const keep = mine.includes(current) ? current : (mine[0] ?? null);
+  return {keep, extra: mine.filter(n => n !== keep)};
 }

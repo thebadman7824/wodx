@@ -191,12 +191,14 @@ async function openAlerts() {
   return all;
 }
 async function adopt(key, s) {
-  if ( s.adopted || DRY ) return;
+  if ( DRY ) s.adopted = true;
+  if ( s.adopted || s.adoptRetry > Date.now() ) return;
   const open = await openAlerts().catch(e => { log(`could not read open alerts: ${e.message}`); return null; });
-  if ( !open ) return; // tried again at the next alert or recovery
+  if ( !open ) { s.adoptRetry = Date.now() + 10 * 60000; return; } // tried again in 10 minutes, not on every loop
   s.adopted = true;
-  const {keep, extra} = adoptAlert(open, HOST, key);
-  if ( keep && !s.alert ) { s.alert = keep; log(`alert #${keep} (${key}) found open from before a restart`); }
+  const {keep, extra} = adoptAlert(open, HOST, key, s.alert);
+  if ( keep && !s.alert ) log(`alert #${keep} (${key}) found open from before a restart`);
+  if ( keep ) s.alert = keep;
   for ( const n of extra ) {
     await comment(n, `Duplicate of #${keep}, which stays open for this fault; closed by the runner.`).catch(() => {});
     await close(n).catch(() => {}); log(`alert #${n} closed as a duplicate of #${keep}`);

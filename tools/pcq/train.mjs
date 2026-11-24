@@ -162,7 +162,10 @@ export async function step(ctx) {
       const names = cands.map(c => `#${c.number}`).join(", ");
       if ( !apply ) { Object.assign(out, {action: "batch", why: `${d.why}: would batch ${names} (up to ${maxBatch})`}); log(`train: #${pr.number} ${out.action}: ${out.why}`); return out; }
       const r = await (ctx.build ?? buildBatch)(ctx, cands, {max: maxBatch});
-      if ( r.error ) log(`train: no batch (${r.error}); #${pr.number} goes alone`);
+      if ( r.error ) {
+        log(`train: no batch (${r.error}); #${pr.number} goes alone`);
+        if ( r.setup ) await ctx.alert?.("train-git", "the merge train cannot run git merges (runner setup fault)", `${r.error}\n\nThe batch could not be built; the front goes alone. The runner log has git's full output.`);
+      }
       else if ( r.members.length >= 2 ) {
         const bp = await openBatch(gh, r);
         delete state.pr; delete state.head;
@@ -190,14 +193,21 @@ export async function step(ctx) {
       // B7960 (#2121): a git fault on the runner (no identity, a locked index) is not the pull request's fault, so it
       // keeps its label and says so once per head, instead of every pull request in the line leaving in turn. The
       // runner raises a pc-alert for it too (ctx.alert), since the whole line waits until the PC is fixed.
-      if ( r.error && r.setup ) {
+      // A wait for the runner is capped at maxHours on one head, so a fault taken for the runner's never holds the line for good.
+      if ( r.error && r.setup && state.setupHead === head && Date.now() - state.setupSince > maxHours * 3600e3 ) {
+        const why = `${r.error}, for over ${maxHours} hours`;
+        delete state.setupHead; delete state.setupSince;
+        await leave(gh, pr.number, why); out.action = "leave"; out.why = why;
+      }
+      else if ( r.error && r.setup ) {
+        if ( state.setupHead !== head ) { state.setupHead = head; state.setupSince = Date.now(); }
         out.action = "wait"; out.why = r.error;
         await ctx.alert?.("train-git", "the merge train cannot run git merges (runner setup fault)", `${r.error}\n\nThe pull requests keep their labels and wait. The runner log has git's full output.`);
         if ( state.setupWarned !== head ) { state.setupWarned = head; await comment(gh, pr.number, `Merge train: ${r.error}. This pull request keeps its place; the train tries again at its next step.`); }
       }
       else if ( r.error ) { await leave(gh, pr.number, r.error); out.action = "leave"; out.why = r.error; }
       else {
-        out.why += `: ${r.did}`; delete state.setupWarned; await ctx.recovered?.("train-git");
+        out.why += `: ${r.did}`; delete state.setupWarned; delete state.setupHead; delete state.setupSince; await ctx.recovered?.("train-git");
         await comment(gh, pr.number, `Merge train: this pull request is at the front. ${r.did}; the gates run on the new head (${r.sha.slice(0, 8)}) and it merges when its checks are green.`);
       }
     }
@@ -263,12 +273,7 @@ export async function prepare(ctx, ref, head) {
   const {git, home, repoRoot} = ctx;
   const dir = path.join(home, "train");
   const ok = r => r && r.status === 0;
-  // B7960: a step that fails for a known runner fault (setupFault) keeps the pull request; any other failure leaves as before
-  const failed = (r, what, error) => {
-    const said = gitSaid(r);
-    ctx.log?.(`train: git could not ${what} (exit ${r?.status}): ${said}`);
-    return setupFault(said) ? {setup: true, error: `git on the runner could not ${what} (${redact(said)}): the runner's git setup needs a fix`} : {error};
-  };
+  const failed = (r, what, error) => gitFailed(ctx, r, what, error);
   let r;
   if ( !ok(r = await git(["fetch", "-q", "origin", "main", `+refs/heads/${ref}:refs/remotes/origin/${ref}`], repoRoot)) ) return failed(r, `fetch ${ref}`, `the train could not fetch ${ref}`);
   if ( !fs.existsSync(path.join(dir, ".git")) && !ok(r = await git(["worktree", "add", "--detach", "-f", dir, head], repoRoot)) ) return failed(r, "make its worktree", "the train could not make its worktree");
@@ -293,13 +298,8 @@ export async function prepare(ctx, ref, head) {
     if ( carried.n ) did.push(`${carried.n} file review(s) carried over`);
   }
   const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
-  if ( st.status !== 0 ) {
-    await git(["reset", "-q", "--hard", head], dir);
-    const said = (st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400);
-    // B7960: merge-stamp commits too, so a runner with no git identity fails here on a branch that is level with main
-    if ( setupFault(st.stdout + st.stderr) ) { ctx.log?.(`train: merge-stamp failed on ${ref}: ${said}`); return {setup: true, error: `git on the runner could not commit the stamp (${redact(said)}): the runner's git setup needs a fix`}; }
-    return {error: `merge-stamp refused: ${said}`};
-  }
+  if ( st.status !== 0 ) { await git(["reset", "-q", "--hard", head], dir); return stampFailed(ctx, st, "merge-stamp refused"); }
+
   if ( /Committed\./.test(st.stdout) ) {
     did.push("release notes stamped");
     // B7332: the stamp commit carries the train's trailer, so pc-gates.yml knows this push as the train's own
@@ -323,13 +323,28 @@ export function mergeFailure(m, unmerged = "") {
   const said = gitSaid(m);
   return {conflict, setup: !conflict && setupFault(text), said};
 }
+/** B7960: a train step that git refused: {setup, error} for a known runner fault (setupFault), else {error}. Logs git's words. */
+function gitFailed(ctx, r, what, error) {
+  const said = gitSaid(r);
+  ctx.log?.(`train: git could not ${what} (exit ${r?.status}): ${said}`);
+  return setupFault(`${r?.stdout ?? ""}\n${r?.stderr ?? ""}`) ? {setup: true, error: `git on the runner could not ${what} (${redact(said)}): the runner's git setup needs a fix`} : {error};
+}
+/** merge-stamp's refusal as gitFailed's result: a runner fault only when git itself said so. */
+function stampFailed(ctx, st, error) {
+  const said = (st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400);
+  if ( !setupFault(st.stdout + st.stderr) ) return {error: `${error}: ${said}`};
+  ctx.log?.(`train: merge-stamp failed: ${said}`);
+  return {setup: true, error: `git on the runner could not commit the stamp (${redact(said)}): the runner's git setup needs a fix`};
+}
 /** The last lines git printed, on one line. Pure. */
 export const gitSaid = r => `${r?.stdout ?? ""}\n${r?.stderr ?? ""}`.split("\n").map(l => l.trim()).filter(Boolean).slice(-3).join(" ").slice(0, 300) || `git exited ${r?.status ?? "with no status"}`;
 /**
  * B7960: git's words for a fault of the runner's own machine (identity, a lock, permissions, disk, network), which
  * no change to the branch can fix. Anything else (a conflict, unrelated histories, a hook) is the branch's. Pure.
  */
-export const setupFault = text => /identity unknown|Please tell me who you are|unable to auto-detect email|\.lock'?:? File exists|Unable to create '[^']*\.lock'|could not lock|cannot lock ref|Another git process|Permission denied|No space left on device|unable to write|not a git repository|Could not resolve host|unable to access/i.test(String(text ?? ""));
+export const setupFault = text => String(text ?? "").split("\n")
+  .filter(l => /^\s*(fatal|error):/.test(l) || /identity unknown|tell me who you are/i.test(l)) // git's own lines, lower case
+  .some(l => /identity unknown|tell me who you are|unable to auto-detect email|\.lock'?:? File exists|Unable to create '[^']*\.lock'|could not lock|cannot lock ref|Another git process|Permission denied|No space left on device|unable to write|not a git repository|Could not resolve host|unable to access/i.test(l));
 
 /** git's words with addresses and local paths taken out, for a comment on the public repo (the log keeps them). Pure. */
 export const redact = s => String(s ?? "")
@@ -429,10 +444,11 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
   const dir = path.join(home, "train-batch");
   const ok = r => r && r.status === 0;
   const refs = members.map(m => `+refs/heads/${m.ref}:refs/remotes/origin/${m.ref}`);
-  if ( !ok(await git(["fetch", "-q", "origin", "main", ...refs], repoRoot)) ) return {error: "the train could not fetch main and the batch's branches"};
-  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(await git(["worktree", "add", "--detach", "-f", dir, "origin/main"], repoRoot)) ) return {error: "the train could not make its batch worktree"};
+  let g;
+  if ( !ok(g = await git(["fetch", "-q", "origin", "main", ...refs], repoRoot)) ) return gitFailed(ctx, g, "fetch main and the batch's branches", "the train could not fetch main and the batch's branches");
+  if ( !fs.existsSync(path.join(dir, ".git")) && !ok(g = await git(["worktree", "add", "--detach", "-f", dir, "origin/main"], repoRoot)) ) return gitFailed(ctx, g, "make its batch worktree", "the train could not make its batch worktree");
   await git(["merge", "--abort"], dir);
-  if ( !ok(await git(["checkout", "-q", "-f", "--detach", "origin/main"], dir)) ) return {error: "the train could not check out main"};
+  if ( !ok(g = await git(["checkout", "-q", "-f", "--detach", "origin/main"], dir)) ) return gitFailed(ctx, g, "check out main", "the train could not check out main");
   await git(["clean", "-q", "-fd"], dir);
   const taken = new Set(), chosen = [], skipped = [];
   for ( const m of members ) {
@@ -460,7 +476,7 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
   const names = chosen.map(m => `#${m.number}`).join(", ");
   if ( chosen.length < 2 ) return {members: chosen, skipped};
   const st = spawnSync(process.execPath, [path.join(dir, "tools", "release", "merge-stamp.mjs"), "--commit", "--no-fetch"], {cwd: dir, encoding: "utf8", windowsHide: true});
-  if ( st.status !== 0 ) return {error: `merge-stamp refused the batch of ${names}: ${(st.stdout + st.stderr).trim().split("\n").slice(-4).join(" ").slice(0, 400)}`};
+  if ( st.status !== 0 ) return stampFailed(ctx, st, `merge-stamp refused the batch of ${names}`);
   const stamped = /Committed\./.test(st.stdout);
   if ( stamped ) await git(["commit", "--amend", "-q", "--no-edit", "--trailer", "Merge-Train: yes"], dir);
   const sha = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();

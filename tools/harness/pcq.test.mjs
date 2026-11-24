@@ -497,12 +497,15 @@ test("B7961 (#2393): an alert raised before a runner restart is found again by i
   assert.deepEqual(adoptAlert(open, "benjamin-pc", "8"), {keep: 2201, extra: []});
   assert.deepEqual(adoptAlert(open, "benjamin-pc", "gpu"), {keep: null, extra: []});
   assert.deepEqual(adoptAlert(null, "benjamin-pc", "peer"), {keep: null, extra: []});
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "peer", 2222), {keep: 2222, extra: [2165]}, "the alert the runner already tracks is kept, never closed as its own duplicate");
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "peer", 9999), {keep: 2165, extra: [2222]}, "a tracked number that is no longer open gives way to the open one");
   // the runner marks every alert it opens, and looks for an earlier one before opening and before clearing
   const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
   const fn = name => src.slice(src.indexOf(`async function ${name}(`), src.indexOf("\n}\n", src.indexOf(`async function ${name}(`)));
   assert.match(fn("alert"), /await adopt\(key, s\);[\s\S]*if \( s\.alert \|\| DRY \) return;[\s\S]*alertMark\(HOST, key\)/);
   assert.match(fn("recovered"), /state\[`_\$\{key\}`\] \?\?= \{\}[\s\S]*await adopt\(key, s\);[\s\S]*close\(s\.alert\)/, "a recovery after a restart still finds the alert to close");
-  assert.match(fn("adopt"), /await openAlerts\(\)[\s\S]*adoptAlert\(open, HOST, key\)/, "read fresh for each key, not a list kept from the start");
+  assert.match(fn("adopt"), /s\.adoptRetry = Date\.now\(\) \+ 10 \* 60000/, "a failed read backs off instead of listing on every loop");
+  assert.match(fn("adopt"), /await openAlerts\(\)[\s\S]*adoptAlert\(open, HOST, key, s\.alert\)/, "read fresh for each key, not a list kept from the start");
   assert.match(fn("openAlerts"), /page=\$\{page\}/, "all pages");
   assert.equal((fn("healthCheck").match(/if \( s\.down \|\| !s\.adopted \) await recovered\(id\)/g) ?? []).length, 2, "the first healthy check after a start clears a lane alert from before it");
   assert.match(src, /else if \( g\?\.r && !state\._gpu\?\.adopted && g\.r\.core < gpu\.GPU_LIMITS\.clearCore/, "a cool card at the first reading clears an old heat alert");
