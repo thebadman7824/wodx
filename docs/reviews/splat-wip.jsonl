@@ -56,3 +56,21 @@
 {"file":"registry/features/wodx-actions.json","verdict":"working","how":"Read against Wraith 20th pp. 281-291 and the wraith-dead tests; menu text checked by phase6e","hash":"9596bc34ff62","at":"2026-11-24T14:47Z"}
 {"file":"tools/gate/gatewraithdead.mjs","verdict":"working","how":"Read against Wraith 20th pp. 281-291 and the wraith-dead tests; menu text checked by phase6e","hash":"7400b2e2e127","at":"2026-11-24T14:47Z"}
 {"file":"tools/harness/wraith-dead.test.mjs","verdict":"working","how":"Read against Wraith 20th pp. 281-291 and the wraith-dead tests; menu text checked by phase6e","hash":"ceca7a442d28","at":"2026-11-24T14:47Z"}
+{"file":"changes/decisions/B7904.md","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"d8d493f31b8c","at":"2026-11-24T15:07Z"}
+{"file":"changes/wodx-actions/mage-household.md","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"0b51cb65bf08","at":"2026-11-24T15:07Z"}
+{"file":"changes/wodx-chronicle/da-mage-traits.md","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"57f74b72ec86","at":"2026-11-24T15:07Z"}
+{"file":"docs/FEATURES.md","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"11ce2cd86bfc","at":"2026-11-24T15:07Z"}
+{"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"c5143701a5f3","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/mage-da.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"00f277dde01f","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/mage-household-rules.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"29e3b0338540","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/mage-household.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"2a9f6861abb7","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/main.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"98e2a4c232f2","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/profile-menus.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"e0a7af496d59","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/social.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"f5512537f8f0","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/theme-rules.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"5d0744fdd70d","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-actions/scripts/trait-hooks.js","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"96024e06a49a","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-chronicle/data/trait-effects.mjs","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"9af715c51f6d","at":"2026-11-24T15:07Z"}
+{"file":"modules/wodx-chronicle/data/trait-lines.mjs","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"26876703a006","at":"2026-11-24T15:07Z"}
+{"file":"registry/features/wodx-actions.json","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"00e6f3116993","at":"2026-11-24T15:07Z"}
+{"file":"tools/gate/gatemagehouse.mjs","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"efe38279bd6a","at":"2026-11-24T15:07Z"}
+{"file":"tools/harness/mage-household.test.mjs","verdict":"working","how":"Read against Dark Ages: Mage pp. 37, 83-93 and the mage-household tests","hash":"517043bc1618","at":"2026-11-24T15:07Z"}

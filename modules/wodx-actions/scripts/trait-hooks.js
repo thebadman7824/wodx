@@ -109,6 +109,7 @@ export const TICKS = [
     { key: "taste", label: "Uses taste" }, { key: "touch", label: "Uses touch" }
 ];
 
+export const FELLOWSHIP_TICK = { key: "fellowship", label: "With your fellowship, or someone your lineage impresses" };
 export function ticksFor(actor) {
     const T = traits();
     if (!T || !actor) return [];
@@ -121,6 +122,9 @@ export function ticksFor(actor) {
         }
         // B3780: situations the merits and flaws name themselves (Introspection: the other side shares the Nature)
         const own = typeof T.ticks === "function" ? T.ticks(actor).filter(t => !TICKS.some(x => x.key === t.key)) : [];
+        // B7909: a Dark Ages mage with a degree may tick a roll with another of the fellowship
+        const f = actor.flags?.["wodx-actions"];
+        if (f?.daMage?.fellowship && f?.daHouse?.degree && !own.some(t => t.key === "fellowship")) own.push(FELLOWSHIP_TICK);
         return [...TICKS.filter(t => tags.has(t.key)), ...own];
     } catch (e) { return []; }
 }
@@ -151,11 +155,13 @@ const storyNow = () => { try { return game.settings.get("wodx-actions", "storyId
  *  do not spend it. */
 export const FORTUNE_BACKGROUNDS = ["destiny", "fate"];
 const rating = (actor, key) => { const T = traits(); try { return Math.max(0, Number(T?.has?.(actor, key)) || 0); } catch (e) { return 0; } };
+/** B7908: a Dark Ages mage's Destiny works by its own rule (Dark Ages: Mage p. 85: a roll for Willpower), not as rerolls. */
+const daMageDestiny = (actor, k) => k === "destiny" && !!actor?.flags?.["wodx-actions"]?.daMage?.fellowship && actor.flags["wodx-actions"].daMage.system !== "m20";
 export function rerollsPerStory(actor) {
-    return (holds(actor, "lucky") ? LUCKY_PER_STORY : 0) + FORTUNE_BACKGROUNDS.reduce((n, k) => n + rating(actor, k), 0);
+    return (holds(actor, "lucky") ? LUCKY_PER_STORY : 0) + FORTUNE_BACKGROUNDS.reduce((n, k) => n + (daMageDestiny(actor, k) ? 0 : rating(actor, k)), 0);
 }
 export function fortuneName(actor) {
-    const names = [holds(actor, "lucky") ? "Lucky" : "", ...FORTUNE_BACKGROUNDS.filter(k => rating(actor, k)).map(k => k[0].toUpperCase() + k.slice(1))].filter(Boolean);
+    const names = [holds(actor, "lucky") ? "Lucky" : "", ...FORTUNE_BACKGROUNDS.filter(k => rating(actor, k) && !daMageDestiny(actor, k)).map(k => k[0].toUpperCase() + k.slice(1))].filter(Boolean);
     return names.join(" and ") || "Lucky";
 }
 export function luckyLeft(actor) {

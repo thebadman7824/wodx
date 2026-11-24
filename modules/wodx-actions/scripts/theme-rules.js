@@ -86,7 +86,7 @@ export const MENU_PLAN = {
     },
     /** Dark Ages: Mage (3.7.0): the same bands, Foundation and Pillars in place of Arete. */
     mageDA: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "api:daGuide", "preset:researchmage", "api:numina", "api:trueFaith"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "api:daGuide", "api:daHousehold", "preset:researchmage", "api:numina", "api:trueFaith"],
         resist: ["api:daCountermagic", "api:hazard"],
         st: ["api:daCertamen"],
         recover: ["api:healing", "uses:willpower"],
@@ -279,6 +279,7 @@ export const DESC = {
     "api:m20Quiet": "Mage 20th: the Quiet as a state, its form and level; visions, tokens and lines only the player sees; rising out of it",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
+    "api:daHousehold": "Dark Ages: the chantry and its gossip, the familiar's Pact and meals, Destiny, the Library, servants, talismans and the fellowship's degree",
     "api:treasureUse": "A faerie Treasure: dust thrown, a charmed object's cantrip, a Changeling 20th Treasure's Art (its Glamour first)",
     "api:treasureOath": "An oathcrafted Treasure's bargain kept, so its bound essence stays",
     "api:treasureGive": "The Storyteller hands out a Treasure from the books, or one holding an Art's cantrip",

@@ -10,6 +10,7 @@
  *                           Storyteller picks; Scourging through WoDX Combat
  *   Twilight and Brandings  kept on the actor; they fade with abstinence on the Chronicle clock
  *   Cray and Fount          absorb from a cray, the Fount's monthly rite
+ *   The household           chantry, familiar, Destiny, Library, servants, talismans, degree (mage-household.js)
  *
  * Built by main.js with its helpers (ctx). Pure rules: mage-da-rules.js.
  */
@@ -19,6 +20,7 @@ import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
 import * as M from "./mage-da-rules.js";
 import * as G from "./mage-da-grimoire.js";
+import * as HH from "./mage-household.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -70,6 +72,8 @@ export function build(ctx) {
             specialty: { foundation: String(f.specialties?.foundation ?? ""), pillars: { ...(f.specialties?.pillars ?? {}) } } };
     }
     const save = (actor, patch) => setFlag(actor, "daMage", { ...(actor.getFlag(MOD, "daMage") ?? {}), ...patch });
+    // B7904-B7909: the household and standing (Dark Ages: Mage pp. 37, 83-93)
+    const HO = HH.build(ctx, { info });
     // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
     const sceneKey = () => `s${LIM.sceneNo()}`;
 
@@ -102,6 +106,7 @@ export function build(ctx) {
           <div class="form-group"><label>Rules on this sheet</label><select name="system" data-fixed>
             <option value="">By the era (Dark Ages: Mage in the Dark Ages)</option><option value="da"${i.f.system === "da" ? " selected" : ""}>Dark Ages: Mage always</option>
             <option value="m20"${i.f.system === "m20" ? " selected" : ""}>Mage 20th always</option></select></div>
+          ${HO.sheetLine(actor) ? `<p>${esc(HO.sheetLine(actor))}.</p>` : ""}
           <p class="wodx-quiet">Quintessence ${i.quintessence.value}${i.quintessence.max ? `/${i.quintessence.max}` : ""}; Fount ${i.fount} (holds ${M.fountLimits(i.fount).hold}, spends ${M.fountLimits(i.fount).perTurn} a turn); Cray ${i.cray}; Sanctum ${i.sanctum}. ${REF} pp. 79–93.</p>
         </form>`;
         return dialog(`Fellowship and Pillars: ${actor.name}`, content, "Save", async fd => {
@@ -125,6 +130,11 @@ export function build(ctx) {
         const i = info(actor);
         if (!i.fellowship) { notify(`${actor.name} has no fellowship yet: set it in Fellowship and Pillars.`); return sheet(actor); }
         const tries = actor.getFlag(MOD, "daTries"), here = tries?.key === sceneKey() ? tries : { failures: 0, botches: 0 };
+        const salt = HO.castBlock(actor);
+        if (salt) { notify(salt); return null; }
+        const focusT = HO.focusTalisman(actor);
+        const repulsive = HO.view(actor).merits.repulsive > 0;
+        const watched = repulsive && HO.witnesses(actor).length > 0;
         const rotes = M.ROTES.filter(r => r.f === i.fellowship);
         const now = await clockNow();
         const season = now ? G.seasonDay(now.month, now.day) : null;
@@ -138,7 +148,8 @@ export function build(ctx) {
           ${i.pillars.map(p => `<div class="form-group"><label>${esc(p.label)} (${p.rating}) <small>${esc(p.domain)}</small></label>${lvlSel(p)}</div>`).join("")}
           <div class="form-group"><label>Quintessence to lower the difficulty</label><input type="number" name="q" min="0" max="3" value="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="hurried"/> Hurried${i.fellowship === "oldfaith" && i.foundation >= 4 ? (i.foundation >= 5 ? " (Spontaneity 5: as a normal spell)" : " (Spontaneity 4: takes effect as cast)") : " (takes effect next turn; the shorter table)"}</label></div>
-          <div class="form-group"><label><input type="checkbox" name="freeFocus"/> Uses a focus no longer needed (−1)</label></div>
+          <div class="form-group"><label><input type="checkbox" name="freeFocus"${focusT ? " checked" : ""}/> ${focusT ? `Through ${esc(focusT.name)}, an attuned focus (−1)` : "Uses a focus no longer needed (−1)"}</label></div>
+          ${repulsive ? `<div class="form-group"><label><input type="checkbox" name="seen"${watched ? " checked" : ""}/> Repulsive Practice: someone watches how it is done</label></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="belief"/> Works with the place's own beliefs (cancels a 1, p. 103)</label></div>
           <div class="form-group"><label><input type="checkbox" name="foreign"/> Another fellowship's magic (its foci are needed)</label></div>
           ${i.sanctum ? `<div class="form-group"><label><input type="checkbox" name="sanctum"/> In the sanctum (Sanctum ${i.sanctum}: no Backlash${i.sanctum >= 2 ? `, −${i.sanctum >= 3 ? 2 : 1} difficulty` : ""}${i.sanctum >= 5 ? ", +1 die" : ""})</label></div>` : ""}
@@ -164,7 +175,7 @@ export function build(ctx) {
             if (!plim) return null;
             plan.difficulty += plim.diff;
             // B6662: the target's ward or Magic Resistance makes a spell on them harder
-            const rm = TH.targetResist(actor, ["magic"]);
+            const rm = (n(levels.mikhael) > 0 ? TH.targetResist(actor, ["magic", "mind"]) : TH.targetResist(actor, ["magic"]));
             plan.difficulty = Math.min(10, plan.difficulty + n(rm.diff));
             plan.notes.push(...rm.parts);
             const qSpend = Math.min(3, n(fd.q)) + plan.steady;
@@ -172,6 +183,7 @@ export function build(ctx) {
             if (qSpend > lim.perTurn) { notify(`${actor.name} can spend only ${lim.perTurn} Quintessence a turn (Fount ${i.fount}, pp. 86–87).`); return null; }
             if (qSpend > i.quintessence.value) { notify(`${actor.name} has ${i.quintessence.value} Quintessence; the spell needs ${qSpend}.`); return null; }
             if (qSpend) await P.adjust(actor, "quintessence", -qSpend);
+            const qScene = n(here.q);
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             if (n(fd.blot)) await game.wodxCombat?.applyDamage?.(actor, "lethal", n(fd.blot), { status: true });
             const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
@@ -213,8 +225,14 @@ export function build(ctx) {
                   <div class="wodx-quiet">${REF} pp. 136–140</div>`;
                 await setFlag(actor, "daTries", { key: sceneKey(), failures: here.failures, botches: here.botches + 1 });
             }
+            // B7909: the merits and flaws on a casting (Repulsive Practice seen, Arcane Madness, Inept Channeler)
+            const tries2 = actor.getFlag(MOD, "daTries");
+            if (tries2?.key === sceneKey()) await setFlag(actor, "daTries", { ...tries2, q: qScene + qSpend });
+            const after = await HO.afterCast(actor, { q: qSpend, qScene, seen: !!fd.seen });
+            body += after.html;
+            if (out.result === "backlash" && HO.familiarCanTake(actor, out.ones)) body += ` <button type="button" class="vta-btn" data-mx="familiar" data-actor="${esc(actor.uuid)}">The familiar takes it</button>`;
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
-            const msg = await post(actor, `${actor.name} casts${rote ? `: ${rote.name}` : ""}`, body, [r.roll, ...extraRolls].filter(Boolean),
+            const msg = await post(actor, `${actor.name} casts${rote ? `: ${rote.name}` : ""}`, body, [r.roll, ...extraRolls, ...after.rolls].filter(Boolean),
                 fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
             if (out.result === "backlash" && msg) await msg.setFlag(MOD, "daBacklash", { actor: actor.uuid, ones: out.ones, highest: plan.highest, pillarsUsed: plan.pillarsUsed, cancelled: 0, done: null });
             return msg;
@@ -234,6 +252,13 @@ export function build(ctx) {
         if (!actor) return null;
         if (b.done) return notify("This Backlash has been settled.");
         const left = b.ones - b.cancelled;
+        if (what === "familiar") {
+            if (!actor.isOwner) return notify("Only the mage's player or the Storyteller calls on the familiar.");
+            const took = await HO.familiarTakes(actor, left);
+            if (!took) return notify("The familiar cannot take another Backlash this story.");
+            await msg.setFlag(MOD, "daBacklash", { ...b, done: "familiar" });
+            return post(actor, `${took.name} takes the Backlash`, `<div class="vta-res good">${esc(took.name)} takes the Backlash on itself: nothing falls on ${esc(actor.name)}${took.cost > 1 ? " (a bad one: two of its uses)" : ""}.</div><div class="wodx-quiet">${REF} p. 86</div>`);
+        }
         if (what === "cancel") {
             if (!actor.isOwner) return notify("Only the mage's player or the Storyteller spends the Quintessence.");
             const q = P.resource(actor, "quintessence").value, most = M.canCancel(q, left);
@@ -541,5 +566,6 @@ export function build(ctx) {
             keywords: NPW.keysOf(DAE.daOutcomes(r, 3)) })).filter(p => p.keywords.length);
     }
 
-    return { powersFor, info, sheet, cast, onButton, quintessence, counter, guide, certamen, fadeAll, isDA, rules: M, grimoire: G };
+    return { powersFor, info, sheet, cast, onButton, quintessence, counter, guide, certamen, fadeAll, isDA, rules: M, grimoire: G,
+        household: a => HO.open(a), house: HO, householdWeek: () => HO.weekly() };
 }

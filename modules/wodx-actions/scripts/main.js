@@ -3641,7 +3641,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
-    daMageInfo: a => mx().info(resolveActor(a)), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
+    daMageInfo: a => mx().info(resolveActor(a)), daHousehold: withActor(a => mx().household(a)), daHouse: () => mx().house, daHouseholdWeek: () => mx().householdWeek(), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
     // Dark Ages fae (3.8.0)
     treasureUse: withActor(a => trx().use(a)), treasureGive: withActor(a => trx().give(a)), treasureOath: withActor(a => trx().keepOath(a)), treasuresOf: a => TRS.treasuresOf(resolveActor(a)), treasureDaily: () => trx().daily(),
     daFae: withActor(a => fx().sheet(a)), daCantrip: withActor(a => fx().cast(a)), daUnleash: withActor(a => fx().unleash(a)),
@@ -3775,6 +3775,8 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
     try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => ((ctx.channel ?? "roll") === "roll" ? DR_BEAST.behindEffects(actor?.getFlag?.(MOD, "longSleep"), ctx.tags ?? []) : [])); }
     catch (e) { console.warn("WoDX Actions | behind the age", e); }
+    // B7909: a Dark Ages mage's degree tells with the fellowship (Dark Ages: Mage p. 37)
+    try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => mx().house.degreeEffects(actor, ctx)); } catch (e) { console.warn("WoDX Actions | degree on rolls", e); }
 });
 Hooks.once("ready", async () => {
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
@@ -3928,7 +3930,7 @@ function kindredHooks() {
     // One run at a time; a move of the clock during a run gets one more run after it, so the newest time is never dropped.
     // Each routine runs on its own, so one that fails does not stop the rest.
     let fadeBusy = false, fadeAgain = false;
-    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => trx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
+    const clockRoutines = [() => mx().fadeAll(), () => mx().householdWeek(), () => fx().daily(), () => trx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
         () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical(), () => svx().enchantDaily()];
     async function fadeRun() {
         fadeBusy = true;

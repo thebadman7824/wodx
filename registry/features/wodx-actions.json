@@ -20,7 +20,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B51, B58"
+     "decisions": "B51, B58, B7904"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:action"
@@ -430,7 +430,7 @@
    "steps": {
     "built": {
      "pr": 526,
-     "decisions": "Actions 3.20.0, B6663"
+     "decisions": "Actions 3.20.0, B6663, B7909"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/social.js:build"
@@ -594,7 +594,7 @@
    "steps": {
     "built": {
      "pr": 555,
-     "decisions": "B3130-B3133, B6000-B6004"
+     "decisions": "B3130-B3133, B6000-B6004, B7908-B7909"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/trait-hooks.js:traitMods"
@@ -1117,7 +1117,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B71, B7862"
+     "decisions": "B71, B7862, B7904-B7909"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/mage-da.js:build"
@@ -1141,6 +1141,38 @@
     117,
     553
    ]
+  },
+  {
+   "id": "actions.mage-household",
+   "name": "A Dark Ages mage's household and standing: chantry and its gossip, familiar, Destiny, Library, servants, talismans, degrees, the DA:Mage merits and flaws",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/mage-household.js",
+    "modules/wodx-actions/scripts/mage-household-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7904-B7909"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/mage-household.js:build"
+    },
+    "shown": {
+     "what": "the household window and its cards; the weekly household card (familiar fed or weakening, the commoners' talk, the apprentice's mess); the familiar's button on a Backlash card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemagehouse.mjs",
+     "step": "1. the chantry with no community points: the commoners talk"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Mage pp. 37, 83-93 read in full 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
   },
   {
    "id": "actions.m20",
