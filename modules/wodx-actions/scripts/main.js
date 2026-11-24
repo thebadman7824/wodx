@@ -3663,7 +3663,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // Dark Ages fae (3.8.0)
     treasureUse: withActor(a => trx().use(a)), treasureGive: withActor(a => trx().give(a)), treasureOath: withActor(a => trx().keepOath(a)), treasuresOf: a => TRS.treasuresOf(resolveActor(a)), treasureDaily: () => trx().daily(),
     daFae: withActor(a => fx().sheet(a)), daCantrip: withActor(a => fx().cast(a)), daUnleash: withActor(a => fx().unleash(a)),
-    daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daEchoFor: (o = {}) => { const a = resolveActor(o.actor); return a ? fx().echo(a, o) : null; }, daMists: withActor(a => fx().mists(a)),
+    daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daEchoFor: (o = {}) => { const a = typeof o.actor === "string" ? (game.actors.get(o.actor) ?? fromUuidSync(o.actor)) : resolveActor(o.actor); return a ? fx().echo(a, o) : null; }, daMists: withActor(a => fx().mists(a)),
     daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,

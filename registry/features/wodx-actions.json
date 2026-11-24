@@ -20,7 +20,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B51, B58, B7904, B7920, B7927, B7935"
+     "decisions": "B51, B58, B7904, B7920, B7927, B7935, B7940"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:action"
@@ -1290,7 +1290,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B72, B6560-B6566, B7866, B7870-B7873, B7932, B7938"
+     "decisions": "B72, B6560-B6566, B7866, B7870-B7873, B7932, B7938, B7940"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/fae-da.js:build"
@@ -1367,7 +1367,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B43, B44, B3553, B3554, B7899-B7903"
+     "decisions": "B43, B44, B3553, B3554, B7899-B7903, B7940"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/wraith.js:library"

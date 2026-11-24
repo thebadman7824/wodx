@@ -48,12 +48,14 @@ export async function run() {
     });
 
     await G.step("3. Immolation on the card: three aggravated levels", async () => {
-      const before = Number(game.actors.get(fae.id).system.health?.damage?.aggravated ?? 0);
+      // a fae on a Mortal sheet takes the levels as WoDX Combat's mortal profile does (aggravated as lethal, VtDA20 p. 345): count both
+      const harm = () => { const d = game.actors.get(fae.id).system.health?.damage ?? {}; return Number(d.aggravated ?? 0) + Number(d.lethal ?? 0); };
+      const before = harm();
       const msg = await ChatMessage.create({speaker: {alias: "Gate"}, whisper: [game.user.id], flags: {[ACT]: {daFaeEcho: {actor: fae.uuid, level: 5, done: false}}},
         content: `<div class="vta-card"><button type="button" class="vta-btn" data-fx="echopick:immolation" data-actor="${fae.uuid}" data-gm>Immolation</button></div>`});
       render(msg).querySelector("[data-fx]").click();
-      await waitFor(() => Number(game.actors.get(fae.id).system.health?.damage?.aggravated ?? 0) > before, 6000);
-      const after = Number(game.actors.get(fae.id).system.health?.damage?.aggravated ?? 0);
+      await waitFor(() => harm() > before, 6000);
+      const after = harm();
       G.ok("3. Immolation on the card: three aggravated levels", after - before === 3, {before, after});
     });
 

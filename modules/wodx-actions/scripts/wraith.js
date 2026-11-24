@@ -651,7 +651,7 @@ export function build(ctx) {
         }
         await actor.setFlag(MOD, "wraithDeath", { crucible: "asked", at: game.time.worldTime });
         const u = actor.uuid;
-        return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>The Crucible: ${esc(actor.name)}</h3><p>A player's mortal has died. In a Crucible scene they live the death again, with the Shadowlands creeping in, alone as in a Harrowing; others may play the people of their memories. Only after it can they tear away their own Caul (${W.WR20} ${W.CRUCIBLE.page}).</p>
+        return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { kind: "buttons" } }, content: `<div class="vta-card"><h3>The Crucible: ${esc(actor.name)}</h3><p>A player's mortal has died. In a Crucible scene they live the death again, with the Shadowlands creeping in, alone as in a Harrowing; others may play the people of their memories. Only after it can they tear away their own Caul (${W.WR20} ${W.CRUCIBLE.page}).</p>
           <div class="vta-btns"><button type="button" class="vta-btn" data-wx="crucible" data-arg="rise" data-actor="${u}">Rise in the Caul (make the Enfant)</button><button type="button" class="vta-btn" data-wx="crucible" data-arg="rest" data-actor="${u}">Lay them to rest</button></div></div>` });
     }
     async function crucible(actor, how) {
@@ -667,7 +667,7 @@ export function build(ctx) {
             flags: { [MOD]: { wraithDeath: { crucible: "open", from: actor.id, at: game.time.worldTime } } } }]);
         await actor.setFlag(MOD, "wraithDeath", { ...was, crucible: "risen", enfant: enfant.id });
         await ctx.logEvent?.(actor, "Dies, and wakes in the Caul.", "death");
-        return ChatMessage.create({ whisper: ownerIds(enfant), speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>${esc(enfant.name)}, in the Caul</h3><p>A wraith's sheet is made for them: give it Passions and Fetters from the life just ended. Play the Crucible; when it is lived through, mark it here.</p>
+        return ChatMessage.create({ whisper: ownerIds(enfant), speaker: { alias: "WoDX" }, flags: { [MOD]: { kind: "buttons" } }, content: `<div class="vta-card"><h3>${esc(enfant.name)}, in the Caul</h3><p>A wraith's sheet is made for them: give it Passions and Fetters from the life just ended. Play the Crucible; when it is lived through, mark it here.</p>
           <div class="vta-btns"><button type="button" class="vta-btn" data-wx="crucible" data-arg="done" data-actor="${enfant.uuid}">The Crucible is lived through</button></div><div class="wodx-quiet">${W.WR20} ${W.CRUCIBLE.page}</div></div>` });
     }
 

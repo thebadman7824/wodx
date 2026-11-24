@@ -28,7 +28,7 @@ const answer = (title, fn) => { const hk = Hooks.on("renderDialogV2", (app, el) 
   setTimeout(() => root?.querySelector("button[data-action=ok]")?.click(), 150); }); return () => Hooks.off("renderDialogV2", hk); };
 
 export async function run() {
-  const G = gate("gatewraithdead", {stepTimeout: 45000});
+  const G = gate("gatewraithdead", {stepTimeout: 90000});
   if ( G.notLive() ) return "Not on the Live world.";
   const A = game.wodxActions;
   const uniform = CONFIG.Dice.randomUniform;
@@ -43,7 +43,8 @@ export async function run() {
     const [mara, wit, ghost] = await G.make(Actor, [{name: "Gate Dead: Mara", type: "Mortal", ownership: own},
       {name: "Gate Dead: Witness", type: "Mortal"}, {name: "Gate Dead: Ghost", type: "Wraith"}]);
     await wit.update({"system.advantages.willpower.permanent": 2, "system.advantages.willpower.temporary": 2});
-    const [, tw, tg] = await G.tokens(scene, [{actor: mara, x: 2, y: 2}, {actor: wit, x: 4, y: 2}, {actor: ghost, x: 6, y: 2}]);
+    // the witness's token is linked, so the fear and the night's sleep land on the actor the steps read
+    const [, tw, tg] = await G.tokens(scene, [{actor: mara, x: 2, y: 2}, {actor: wit, x: 4, y: 2, actorLink: true}, {actor: ghost, x: 6, y: 2}]);
     const enfant = () => game.actors.find(a => a.getFlag(AX, "wraithDeath")?.from === mara.id);
 
     await G.step("1. a player's mortal killed: the Crucible card makes the Enfant", async () => {
@@ -81,6 +82,8 @@ export async function run() {
       let card = null;
       await waitFor(() => (card = after(t3).find(m => /Gate Dead: Witness/.test(m.content ?? "") && /Panic/.test(m.content ?? ""))), 5000);
       const txt = String(card?.content ?? "").replace(/<[^>]+>/g, " ");
+      // the fear is put on the sheet after the card, slowly on a busy lane
+      await waitFor(() => [...(game.actors.get(wit.id).effects ?? [])].some(x => /Afraid/.test(x.name)), 15000).catch(() => null);
       const afraid = [...(game.actors.get(wit.id).effects ?? [])].some(x => /Afraid/.test(x.name));
       G.ok("3. the Fog: Willpower 2 panics and forgets", !!card && /flees/.test(txt) && /forgets/.test(txt) && afraid, {card: txt.slice(0, 240), afraid});
     });
@@ -95,7 +98,7 @@ export async function run() {
     await G.step("5. a night in the Nightmarish Haunt: +1 difficulty tomorrow", async () => {
       await dice(1);
       try { await A.hauntNight(); await sleep(500); } finally { CONFIG.Dice.randomUniform = uniform; }
-      await waitFor(() => [...(game.actors.get(wit.id).effects ?? [])].some(x => /^Poor sleep: \+1/.test(x.name)), 4000);
+      await waitFor(() => [...(game.actors.get(wit.id).effects ?? [])].some(x => /^Poor sleep: \+1/.test(x.name)), 15000).catch(() => null);
       G.ok("5. a night in the Nightmarish Haunt: +1 difficulty tomorrow", [...(game.actors.get(wit.id).effects ?? [])].some(x => /^Poor sleep: \+1/.test(x.name)) && Number(game.actors.get(wit.id).getFlag(AX, "hauntSleep")) === 1,
         {effects: [...(game.actors.get(wit.id).effects ?? [])].map(x => x.name)});
     });

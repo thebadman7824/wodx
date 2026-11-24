@@ -13,9 +13,17 @@ import {gate, waitFor} from "./kit.mjs";
 
 const ST = "wodx-storyteller";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+/** Fix every die to `face` (which uniform gives which face differs between Foundry versions, so it is found by trial). */
+const dice = async face => {
+  for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
+    CONFIG.Dice.randomUniform = () => u;
+    if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === face ) return;
+  }
+  throw new Error(`could not fix the dice to ${face}`);
+};
 
 export async function run() {
-  const G = gate("gatesept", {stepTimeout: 45000});
+  const G = gate("gatesept", {stepTimeout: 120000});
   const api = () => game.modules.get(ST)?.api?.upkeep?.sept;
   const Q = () => game.modules.get("wodx-chronicle")?.api?.approvals;
   const keep = foundry.utils.deepClone(game.settings.get(ST, "septs"));
@@ -24,7 +32,8 @@ export async function run() {
   const pendingFor = (id, deed) => (Q()?.pending?.() ?? []).find(p => p.type === "wodx-actions.renown" && p.data?.actorId === id && p.data?.deed === deed);
   const renown = (a, k) => Number(game.actors.get(a.id).system?.renown?.[k]?.temporary ?? 0);
   /** Approve the suggestion when it waits (a standing rule may have approved it already). */
-  const approve = async (a, deed) => { await waitFor(() => pendingFor(a.id, deed), 4000); const p = pendingFor(a.id, deed); if ( p ) await Q().decide(p.id, "approve", "gatesept"); await sleep(400); };
+  // a moot (its business and the caern) or a change of form can take 20 s on a busy lane before the suggestion comes
+  const approve = async (a, deed) => { await waitFor(() => pendingFor(a.id, deed), 40000).catch(() => null); const p = pendingFor(a.id, deed); if ( p ) await Q().decide(p.id, "approve", "gatesept"); await sleep(400); };
   const win = () => foundry.applications.instances.get("wodx-sept");
   const reopen = async () => { await api().open("sept"); await sleep(500); return win(); };
   try {
@@ -39,7 +48,7 @@ export async function run() {
       const app = await reopen();
       app.element.querySelector(`button[data-action=chore][data-id="${ilse.id}"]`).click();
       const day = Math.floor(game.time.worldTime / 86400);
-      await waitFor(() => api().state("sept").days[ilse.id]?.includes(day), 4000);
+      await waitFor(() => api().state("sept").days[ilse.id]?.includes(day), 15000);
       G.ok("1. Done today in the sept window counts the chore", api().state("sept").days[ilse.id]?.includes(day), {days: api().state("sept").days});
     });
 
@@ -50,7 +59,9 @@ export async function run() {
       f.elements[`here_${mirek.id}`].checked = false;
       f.querySelector("button[data-action=moot]").click();
       await approve(mirek, "missed-moot");
-      await waitFor(() => renown(mirek, "wisdom") < before, 5000);
+      await waitFor(() => renown(mirek, "wisdom") < before, 15000);
+      // the moot is saved once its business is done, which can come after the approval
+      await waitFor(() => api().state("sept").lastMoot !== null, 30000).catch(() => null);
       G.ok("2. the moot: the Garou who stayed away loses a Wisdom once approved", renown(mirek, "wisdom") === before - 1 && api().state("sept").lastMoot !== null,
         {before, after: renown(mirek, "wisdom")});
     });
@@ -62,19 +73,20 @@ export async function run() {
       f.elements.who.value = ilse.id;
       f.querySelector("button[data-action=office][data-accepts='0']").click();
       await approve(ilse, "refuse-office");
-      await waitFor(() => renown(ilse, "honor") < b.honor, 5000);
+      await waitFor(() => renown(ilse, "honor") < b.honor, 15000);
       G.ok("3. refusing an office costs Glory, Honor and Wisdom once approved", renown(ilse, "glory") === b.glory - 1 && renown(ilse, "honor") === b.honor - 2 && renown(ilse, "wisdom") === b.wisdom - 1,
         {b, after: {glory: renown(ilse, "glory"), honor: renown(ilse, "honor"), wisdom: renown(ilse, "wisdom")}});
     });
 
     await G.step("4. a fox frenzy costs Glory and Wisdom once approved", async () => {
       const b = {glory: renown(mirek, "glory"), wisdom: renown(mirek, "wisdom")};
-      const msg = await ChatMessage.create({speaker: {alias: "Gate"}, whisper: [game.user.id],
+      // as the Rage roll's card: its buttons are bound on a card with the module's flag
+      const msg = await ChatMessage.create({speaker: {alias: "Gate"}, whisper: [game.user.id], flags: {"wodx-actions": {garou: "rage"}},
         content: `<div class="vta-card"><button type="button" class="vta-btn" data-garou="fox" data-actor="${mirek.uuid}">Fox</button></div>`});
       const el = document.createElement("div"); el.innerHTML = msg.content; Hooks.callAll("renderChatMessageHTML", msg, el);
       el.querySelector("button[data-garou]").click();
       await approve(mirek, "fox-frenzy");
-      await waitFor(() => renown(mirek, "glory") < b.glory, 5000);
+      await waitFor(() => renown(mirek, "glory") < b.glory, 15000);
       G.ok("4. a fox frenzy costs Glory and Wisdom once approved", renown(mirek, "glory") === b.glory - 1 && renown(mirek, "wisdom") === b.wisdom - 1,
         {b, after: {glory: renown(mirek, "glory"), wisdom: renown(mirek, "wisdom")}});
       try { await game.actors.get(mirek.id).update({"system.conditions.isfrenzy": false}); } catch {}
@@ -84,11 +96,13 @@ export async function run() {
       await game.actors.get(ilse.id).update({"system.attributes.intelligence.value": 4, "system.abilities.rituals.value": 2});
       const r = await api().beginLesson("sept", {student: ilse.id, teacher: "Gate elder", rite: "Gate Rite of Cleansing", level: 1, tribute: "a month of firewood"});
       const was = CONFIG.Dice.randomUniform;
-      CONFIG.Dice.randomUniform = () => 0.95;
+      await dice(10);
       try {
         const app = await reopen();
         app.element.querySelector(`button[data-action=week][data-id="${r.lesson?.id}"]`).click();
-        await waitFor(() => game.actors.get(ilse.id).items.some(i => i.name === "Gate Rite of Cleansing"), 6000);
+        await waitFor(() => game.actors.get(ilse.id).items.some(i => i.name === "Gate Rite of Cleansing"), 15000);
+        // the lesson is saved as learned after the rite is on the sheet
+        await waitFor(() => api().state("sept").lessons.find(l => l.id === r.lesson?.id)?.state === "learned", 15000).catch(() => null);
       } finally { CONFIG.Dice.randomUniform = was; }
       const it = game.actors.get(ilse.id).items.find(i => i.name === "Gate Rite of Cleansing");
       G.ok("5. a rite lesson's last week puts the rite on the sheet", it?.type === "Power" && it.system.type === "wod.types.rite" && api().state("sept").lessons.find(l => l.id === r.lesson?.id)?.state === "learned",
@@ -97,14 +111,14 @@ export async function run() {
 
     await G.step("6. a rank challenge set and passed in the window raises the rank", async () => {
       Hooks.callAll("wodxRankReady", {actorId: ilse.id, name: ilse.name, rank: 2, from: 1});
-      await waitFor(() => api().state("sept").challenges.some(c => c.actorId === ilse.id && c.rank === 2), 4000);
+      await waitFor(() => api().state("sept").challenges.some(c => c.actorId === ilse.id && c.rank === 2), 15000);
       const c = api().state("sept").challenges.find(x => x.actorId === ilse.id);
       let app = await reopen();
       app.element.querySelector(`button[data-action=setc][data-id="${c.id}"]`).click();
-      await waitFor(() => api().state("sept").challenges.find(x => x.id === c.id)?.state === "set", 4000);
+      await waitFor(() => api().state("sept").challenges.find(x => x.id === c.id)?.state === "set", 15000);
       app = await reopen();
       app.element.querySelector(`button[data-action=endc][data-id="${c.id}"][data-passed='1']`).click();
-      await waitFor(() => Number(game.actors.get(ilse.id).system.renown?.rank) === 2, 5000);
+      await waitFor(() => Number(game.actors.get(ilse.id).system.renown?.rank) === 2, 15000);
       G.ok("6. a rank challenge set and passed in the window raises the rank", Number(game.actors.get(ilse.id).system.renown?.rank) === 2 && !!api().state("sept").challenges.find(x => x.id === c.id)?.task,
         {rank: game.actors.get(ilse.id).system.renown?.rank, challenge: api().state("sept").challenges.find(x => x.id === c.id)});
     });
