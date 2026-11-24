@@ -1022,12 +1022,13 @@
     "modules/wodx-actions/scripts/garou.js",
     "modules/wodx-actions/scripts/garou-rules.js",
     "modules/wodx-actions/scripts/garou-testpack.js",
-    "modules/wodx-actions/scripts/totem-rules.js"
+    "modules/wodx-actions/scripts/totem-rules.js",
+    "modules/wodx-actions/data/rules/werewolf/totems-da.json"
    ],
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B39, B41, B7082-B7087"
+     "decisions": "B39, B41, B7082-B7087, B7860-B7861"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/garou.js:totemOf"
@@ -1041,7 +1042,7 @@
     }
    },
    "open": [
-    "book: Dark Ages: Werewolf and W20; not checked against the book text yet",
+    "book: pack totems checked against Dark Ages: Werewolf pp. 193, 227-231 (B7860); the rest not checked against the book text yet",
     "Mockery Breeds regenerate each round (B7820, #2096; gatemorebuilds step 4); the Samsa's swarm escape (W20 Book of the Wyrm p. 170) is the Storyteller's"
    ],
    "deferred": [],
@@ -1104,7 +1105,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B71"
+     "decisions": "B71, B7862"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/mage-da.js:build"
@@ -1181,7 +1182,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B72, B6560-B6566"
+     "decisions": "B72, B6560-B6566, B7866"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/fae-da.js:build"
@@ -1195,7 +1196,7 @@
     }
    },
    "open": [
-    "book: Dark Ages: Fae; not checked against the book text yet"
+    "book: oaths and faerie food checked against Dark Ages: Fae pp. 85, 108-110 (B7866); the rest not checked against the book text yet"
    ],
    "deferred": [],
    "faults": [],

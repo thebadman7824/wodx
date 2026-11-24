@@ -49,6 +49,8 @@ export async function loadData() {
     for (const k of ["garou", "fera", "gifts-daw", "gifts-w20", "gifts-fera"]) if (!DATA[k]) DATA[k] = await fetchData(k);
     // B7082: the pack totems, a rules table (W20 pp. 371-377)
     if (!DATA.totems) DATA.totems = await fetchData("rules/werewolf/totems-w20");
+    // B7860: the Dark Ages table (DA:W pp. 227-231) for the Dark Ages and the Long Night
+    if (!DATA.totemsDA) DATA.totemsDA = await fetchData("rules/werewolf/totems-da");
     if (!DATA.garou) console.error("WoDX | WoDX Actions could not load data/garou.json");
     return DATA;
 }
@@ -63,7 +65,7 @@ export const totemState = actor => actor?.getFlag?.(MOD, "totem") ?? {};
 /** The totem row the character's pack follows: the flag override (wodx-actions.rules.totem) first, else the Pack Totem field. */
 export function totemOf(actor) {
     if (!DATA.totems || !actor) return null;
-    return TOT.totemFor(DATA.totems, actor.system?.packtotem ?? "", actor.getFlag?.(MOD, "rules")?.totem ?? "");
+    return TOT.totemForEra(DATA.totemsDA, DATA.totems, actor.system?.packtotem ?? "", actor.getFlag?.(MOD, "rules")?.totem ?? "", { daw: basis() === "daw" });
 }
 /** The character's packmates (the same Pack Name), the character first. */
 export function packOf(actor) {
@@ -99,7 +101,7 @@ export function totemGiftBox(actor) {
     const v = isShifter(actor) ? totemView(actor) : null;
     const g = v?.row?.pack?.giftDice;
     if (!g || !v.accepted || v.banned || !v.holds.includes("gift")) return "";
-    return `<div class="form-group"><label><input type="checkbox" name="totemGift"/> This Gift is one of ${esc(g.kinds)} (${esc(v.row.name)}: +${n(g.dice)} dice, W20 p. ${v.row.page})</label></div>`;
+    return `<div class="form-group"><label><input type="checkbox" name="totemGift"/> This Gift is one of ${esc(g.kinds)} (${esc(v.row.name)}: +${n(g.dice)} dice, ${esc(v.row.book ?? "W20")} p. ${v.row.page})</label></div>`;
 }
 /** The roll window's totem ticks (Thunder's name invoked, a Garou of another tribe...). */
 export function totemTicksHtml(actor, escF = esc) {
@@ -836,6 +838,8 @@ export function build(ctx) {
         const left = TOT.poolLeft(row, pack.map(a => (totemState(a).key === row.key ? n(totemState(a).spent) : 0)));
         const gm = game.user.isGM;
         const opts = [];
+        // B7860: a totem that will take no Garou pack in this age (Bear in the Dark Ages, DA:W p. 193)
+        if (row.refused) return dialog(`Pack totem: ${actor.name}`, `<p><b>${esc(row.name)}</b> will not answer.</p><p class="vta-note">${esc(row.refused)}</p><p class="vta-note">The pack gains none of ${esc(row.name)}'s gifts and owes no ban.</p>`, "Close", async () => null);
         if (!accepted) opts.push(["accept", `The totem accepts ${actor.name}'s pack`]);
         if (accepted && !banned) {
             for (const c of TOT.claimable(row)) {
@@ -858,7 +862,7 @@ export function build(ctx) {
             ...(I.notes ?? [])
         ].filter(Boolean);
         const packTraits = TOT.claimable(row).map(c => `${esc(c.label)}${held[c.id] ? ` (held by ${esc(nameOf(held[c.id]))})` : ""}`);
-        const content = `<form><p><b>${esc(row.name)}</b> (W20 p. ${row.page}, ${n(row.cost)} Background points)${banned ? ` <b>· ban broken: no gifts until a Rite of Contrition</b>` : ""}${accepted ? "" : " · not yet accepted"}</p>
+        const content = `<form><p><b>${esc(row.name)}</b> (${esc(row.book ?? "W20")} p. ${row.page}, ${n(row.cost)} Background points)${row.outOfBook ? " · not in the Dark Ages book, so its W20 row is used" : ""}${banned ? ` <b>· ban broken: no gifts until a Rite of Contrition</b>` : ""}${accepted ? "" : " · not yet accepted"}</p>
           ${ind.length ? `<p><b>Each packmate:</b> ${ind.map(esc).join("; ")}</p>` : ""}
           ${packTraits.length || n(row.pack?.willpower) ? `<p><b>Pack:</b> ${[...packTraits, n(row.pack?.willpower) ? `${n(row.pack.willpower)} Willpower a story, ${left} left` : ""].filter(Boolean).join("; ")}. One packmate holds a Pack Trait at a time, until the scene ends (p. 372).</p>` : ""}
           ${(row.pack?.notes ?? []).length ? `<p class="vta-note">${row.pack.notes.map(esc).join(" ")}</p>` : ""}
@@ -888,7 +892,7 @@ export function build(ctx) {
                     const c = TOT.claimable(row).find(x => x.id === id);
                     body = `<div class="vta-big good">${esc(actor.name)} takes ${esc(c.label)} from ${esc(row.name)} for this scene.</div>`;
                     try { await chronicle()?.applyTimed?.(actor, { name: `${row.name}: ${c.label}`, img: "icons/svg/aura.svg", duration: { kind: "scene" }, key: "wodx-totem-trait",
-                        description: `${c.label}, held from ${row.name} until the scene ends`, source: `W20 p. 372` }); } catch {}
+                        description: `${c.label}, held from ${row.name} until the scene ends`, source: row.book === "DA:W" ? "DA:W p. 228" : "W20 p. 372" }); } catch {}
                 } else {
                     await save({ claim: null });
                     body = `<div class="vta-note">${esc(actor.name)} lets the Pack Trait go; another packmate may take it.</div>`;

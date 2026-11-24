@@ -86,3 +86,48 @@ test("B7082: the totem window is on the Werewolf menu and the data loads", () =>
   assert.match(read("modules/wodx-actions/scripts/theme-rules.js"), /"api:packTotem": "/);
   assert.match(read("modules/wodx-actions/scripts/main.js"), /packTotem: withActor\(a => gx\(\)\.packTotem\(a\)\)/);
 });
+
+// B7860: the Dark Ages table (DA:W pp. 227-231) in the Dark Ages and the Long Night; Bear refuses (p. 193)
+const DA = JSON.parse(read("modules/wodx-actions/data/rules/werewolf/totems-da.json"));
+test("B7860: the Dark Ages totem table is sound: the book's 12 totems, pages 228-231", () => {
+  assert.deepEqual(T.problems(DA), []);
+  assert.equal(DA.book, "DA:W");
+  assert.deepEqual(DA.rows.map(r => r.key), ["falcon", "thunder", "horse", "pegasus", "stag", "fenris", "griffin", "rat", "cockroach", "owl", "raven", "unicorn"]);
+  for (const r of DA.rows) {
+    assert.ok(r.page >= 228 && r.page <= 231, r.key);
+    for (const e of r.individual?.effects ?? []) for (const t of e.tags) assert.ok(TAGS.has(t) || T.ATTRS.includes(t), `${r.key}: tag ${t} is not a roll tag`);
+  }
+  assert.ok(!DA.rows.some(r => r.key === "bear"));
+});
+
+test("B7860: the age picks the table; Bear refuses Dark Ages packs; a totem the DA book lacks falls back to W20", () => {
+  const da = name => T.totemForEra(DA, DATA, name, "", { daw: true });
+  assert.equal(da("Horse").book, "DA:W");
+  assert.equal(T.totemForEra(DA, DATA, "Horse", "", { daw: false }), null, "Horse is only in the Dark Ages book");
+  assert.equal(da("Falcon").book, "DA:W");
+  assert.equal(T.totemForEra(DA, DATA, "Falcon", "", { daw: false }).page, 373, "W20 outside the Dark Ages");
+  // DA Thunder gives Intimidation 1 as a Pack trait, W20 Thunder gives a tick for +2 dice
+  assert.equal(T.rollMods(da("Thunder"), { abilityKey: "intimidation", holds: ["intimidation"] }).dice, 1);
+  assert.deepEqual(T.ticksOf(da("Thunder")), []);
+  const bear = da("Bear");
+  assert.match(bear.refused, /p\. 193/);
+  assert.equal(T.rollMods(bear, { attrKey: "strength" }).dice, 0, "a refusing totem gives nothing");
+  assert.deepEqual(T.ticksOf(bear), []);
+  assert.equal(T.rollMods(T.totemForEra(DA, DATA, "Bear", "", { daw: false }), { attrKey: "strength" }).dice, 1, "Bear still answers in W20 ages");
+  const boar = da("Boar");
+  assert.equal(boar.outOfBook, true);
+  assert.equal(boar.book, "W20");
+  // Horse: a social roll with a Garou other than a Warder is +2 difficulty when ticked; Ride is a Pack trait
+  const horse = da("Horse");
+  assert.equal(T.rollMods(horse, { tags: ["charisma"], ticked: [T.ticksOf(horse)[0].label] }).diff, 2);
+  assert.equal(T.rollMods(horse, { tags: ["charisma"] }).diff, 0);
+  assert.equal(T.rollMods(horse, { abilityKey: "ride", holds: ["ride"] }).dice, 2);
+  assert.equal(T.rollMods(horse, { attrKey: "stamina" }).dice, 1);
+});
+
+test("B7860: the werewolf code loads the DA table and picks by the age", () => {
+  const garou = read("modules/wodx-actions/scripts/garou.js");
+  assert.match(garou, /fetchData\("rules\/werewolf\/totems-da"\)/);
+  assert.match(garou, /TOT\.totemForEra\(DATA\.totemsDA, DATA\.totems, .*daw: basis\(\) === "daw"/);
+  assert.match(garou, /if \(row\.refused\) return dialog/);
+});

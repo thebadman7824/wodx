@@ -22,6 +22,7 @@
  * The shares, chances, weeks and courses are the Storyteller's to change; WoDX starts from these (B3432-B3435).
  */
 import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 export {WEEK};
 
 export const STATE_VERSION = 1;
@@ -253,7 +254,8 @@ export const blankState = () => ({v: STATE_VERSION, towns: {}, immune: {}, seede
 
 export function normIllness(x = {}) {
   if ( !x || !DISEASES[x.disease] ) return null;
-  return {disease: x.disease, since: num(x.since), weeks: Math.max(0, Math.floor(num(x.weeks))), held: Math.max(0, Math.floor(num(x.held))), where: String(x.where ?? "").slice(0, 80)};
+  return {disease: x.disease, since: num(x.since), weeks: Math.max(0, Math.floor(num(x.weeks))), held: Math.max(0, Math.floor(num(x.held))),
+    ...(x.good ? {good: Math.max(0, Math.floor(num(x.good)))} : {}), where: String(x.where ?? "").slice(0, 80)};
 }
 
 export function normState(s) {
@@ -380,6 +382,49 @@ export function illnessWeek(x, rolled) {
   const over = (d.course !== null && weeks >= d.course) || (held >= 2 && d.dmg === "bashing");
   return {illness: over ? null : {...n, weeks, held}, damage: ok ? 0 : d.rating, dmg: d.dmg, over, strikes};
 }
+/*
+ * B7863: in the eras that play by the Dark Ages rules (the era profile's rules "darkages"), the sicknesses DA:I lists
+ * run its course, not the M20 toxin table: a Stamina roll each day at the sickness's difficulty (a healer's Medicine
+ * lowers it), five good days in a row and it is over (DA:I p. 165, which points to Dark Ages: Vampire pp. 255-256).
+ * per: "day" (damage each failed day), "week" (damage once a week unless the week holds), "month" (a mark every
+ * fourth week). A good day holds that day's harm off (house reading, B7863). Sicknesses DA:I does not list keep
+ * their M20 row.
+ */
+export const DA_COURSES = {
+  plague: {per: "day", n: 1, dmg: "lethal", diff: 7, note: "fever lays the sick low for the length of it", ref: "DA:I p. 165"},
+  flux: {per: "day", n: 1, dmg: "lethal", diff: 8, note: "the flux: a lethal level each bad day", ref: "DA:I p. 165"},
+  leprosy: {per: "month", n: 0, dmg: "lethal", diff: 9, appearance: 1, pools: 2, note: "Appearance falls a dot a month and the scars stay; -2 dice to Physical and Social rolls while sick", ref: "DA:I p. 165"},
+  consumption: {per: "week", n: 3, dmg: "lethal", diff: 10, wastes: 1, note: "three lethal levels a week and a dot of Strength or Stamina wasted; at zero the sick collapse", ref: "DA:I p. 165 (Tuberculosis)"}
+};
+export const DA_GOOD_DAYS = 5;
+/** Does this year play sickness by DA:I? The era profile's rule set decides (terms.darkAgesRules). */
+export const daSickness = year => TERMS.darkAgesRules(TERMS.eraAt(num(year)).id);
+/** The course a sickness runs in a year: the DA:I one in Dark Ages years where the book lists it, else null. */
+export const daCourse = (diseaseId, year) => (daSickness(year) ? DA_COURSES[diseaseId] ?? null : null);
+/** The difficulty of the roll against a sickness in a year (DA:I's in Dark Ages years, else the M20 row's). */
+export const diffFor = (diseaseId, year) => daCourse(diseaseId, year)?.diff ?? DISEASES[diseaseId]?.diff ?? 6;
+
+/**
+ * B7863: one week of a DA:I sickness. days: the successes of the week's seven daily Stamina rolls. Keeps `good`, the
+ * good days in a row so far. Returns {illness, damage, dmg, over, strikes, appearance, wastes, bad}.
+ */
+export function illnessWeekDA(x, days = []) {
+  const n = normIllness(x);
+  if ( !n ) return null;
+  const c = DA_COURSES[n.disease];
+  if ( !c ) return null;
+  const weeks = n.weeks + 1;
+  let good = Math.max(0, Math.floor(num(x.good))), bad = 0, damage = 0, over = false;
+  for ( const s of days ) {
+    if ( num(s) > 0 ) { good += 1; if ( good >= DA_GOOD_DAYS ) { over = true; break; } }
+    else { good = 0; bad += 1; if ( c.per === "day" ) damage += c.n; }
+  }
+  if ( c.per === "week" && bad && !over ) damage = c.n;
+  const monthMark = c.per === "month" && weeks % 4 === 0 && !over;
+  return {illness: over ? null : {...n, weeks, good}, damage, dmg: c.dmg, over, strikes: true, bad,
+    appearance: monthMark ? (c.appearance ?? 0) : 0, wastes: c.wastes && bad && !over ? c.wastes : 0};
+}
+
 export const strikesThisWeek = x => { const n = normIllness(x); return !!n && (!DISEASES[n.disease].monthly || (n.weeks + 1) % 4 === 0); };
 
 /* ---------------- History ---------------- */

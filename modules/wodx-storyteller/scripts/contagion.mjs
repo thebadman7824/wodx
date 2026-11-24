@@ -196,7 +196,7 @@ async function rollStamina(a, diff) {
 }
 
 /** The week for living player characters: catching it in a sick town, then the weekly roll while sick. */
-async function people(st, mst, rng) {
+async function people(st, mst, rng, year = 1197) {
   const lines = [], hurt = [], carriers = [];
   if ( setting("contagionPeople") === false ) return {lines, hurt, carriers};
   for ( const a of all(game.actors).filter(x => living(x)) ) {
@@ -204,16 +204,35 @@ async function people(st, mst, rng) {
     const o = m ? st.towns[m.id] : null;
     let x = st.people[a.id] ?? null;
     if ( !x && o && rng() < R.exposeChance(o) ) {
-      const d = R.DISEASES[o.disease];
-      const r = await rollStamina(a, d.diff);
-      if ( r.successes > 0 ) lines.push(`${a.name} is near the sick in ${m.name} and throws it off (Stamina ${d.diff}).`);
-      else { x = {disease: o.disease, since: now(), weeks: 0, held: 0, where: m.name}; st.people[a.id] = x; lines.push(`${a.name} catches ${d.label.toLowerCase()} in ${m.name} (failed Stamina ${d.diff}).`); }
+      const d = R.DISEASES[o.disease], dd = R.diffFor(o.disease, year);
+      const r = await rollStamina(a, dd);
+      if ( r.successes > 0 ) lines.push(`${a.name} is near the sick in ${m.name} and throws it off (Stamina ${dd}).`);
+      else { x = {disease: o.disease, since: now(), weeks: 0, held: 0, where: m.name}; st.people[a.id] = x; lines.push(`${a.name} catches ${d.label.toLowerCase()} in ${m.name} (failed Stamina ${dd}).`); }
       continue;
     }
     if ( !x ) continue;
     const d = R.DISEASES[x.disease];
     // B5012: a medicine taken in the last week (WoDX Library) makes the week's roll 1 easier
     const eased = now() - (Number(a.flags?.["wodx-library"]?.remedyAt) || -Infinity) <= R.REMEDY_WEEK ? R.REMEDY_EASE : 0;
+    // B7863: in Dark Ages years a sickness DA:I lists runs its course by a roll each day (DA:I p. 165)
+    const da = R.daCourse(x.disease, year);
+    if ( da ) {
+      const days = [];
+      for ( let i = 0; i < 7; i++ ) days.push((await rollStamina(a, Math.max(2, da.diff - eased))).successes);
+      const w = R.illnessWeekDA(x, days);
+      if ( !w ) { delete st.people[a.id]; continue; }
+      if ( w.illness ) st.people[a.id] = w.illness; else delete st.people[a.id];
+      if ( w.damage ) { await combat()?.applyDamage?.(a, w.dmg, w.damage); hurt.push({actor: a.id, dmg: w.dmg, n: w.damage}); }
+      const marks = [];
+      if ( w.appearance ) { const ap = a.system?.attributes?.appearance; const v = num(ap?.value); if ( v > 0 ) { await a.update({"system.attributes.appearance.value": v - w.appearance}); marks.push(`Appearance falls to ${v - w.appearance}, and the scars stay`); } }
+      if ( w.wastes ) {
+        const at = a.system?.attributes ?? {}, key = num(at.strength?.value) >= num(at.stamina?.value) ? "strength" : "stamina", v = num(at[key]?.value);
+        if ( v > 0 ) { await a.update({[`system.attributes.${key}.value`]: v - w.wastes}); marks.push(`the body wastes: ${key[0].toUpperCase()}${key.slice(1)} ${v - w.wastes}${v - w.wastes <= 0 ? "; they collapse, a lethal level an hour until death" : ""}`); }
+      }
+      lines.push(`${a.name}, sick with ${d.label.toLowerCase()} (${da.ref}): ${7 - w.bad} good day${7 - w.bad === 1 ? "" : "s"} of 7${w.damage ? `, ${w.damage} ${w.dmg}` : ""}${marks.length ? `; ${marks.join("; ")}` : ""}${w.over ? "; five good days in a row, and it is over" : ""}.`);
+      if ( w.illness && m && !st.towns[m.id] && !R.isImmune(st, m.id, x.disease, now()) ) carriers.push({market: m.id, disease: x.disease, who: a.name});
+      continue;
+    }
     const rolled = R.strikesThisWeek(x) ? await rollStamina(a, Math.max(2, d.diff - eased)) : null;
     const w = R.illnessWeek(x, rolled);
     if ( !w ) { delete st.people[a.id]; continue; }
@@ -286,7 +305,7 @@ export async function weekRun({weeks = 1, left = [], rand = Math.random} = {}) {
     }
   }
   // People, once for the run
-  const p = await people(st, mst, rand);
+  const p = await people(st, mst, rand, year);
   lines.push(...p.lines);
   hurt = p.hurt;
   for ( const c of p.carriers ) {
