@@ -103,6 +103,17 @@ export async function run() {
         await waitFor(() => !!va().getFlag("wodx-combat", "swarmDodge"), 20000).catch(() => null);
         dodged = va().getFlag("wodx-combat", "swarmDodge");
         before = filledOf(va());
+        // B7853: job 2414 showed "No one inside it" at the turn: the victim had left the swarm's square since step 5.
+        // Record where both stand, and put the victim back in the middle of the swarm (position only, never its
+        // hidden state), so the step tests the dodge and not whatever moved a token in between
+        const at = d => ({x: d?.x, y: d?.y, w: d?.width, h: d?.height, hidden: !!d?.hidden});
+        const isIn = () => WC.swarm.victimsOf(swarmTok.object).some(t => t.id === vTok.id);
+        why.before = {swarm: at(swarmTok), victim: at(vTok), inside: isIn()};
+        if ( !why.before.inside ) {
+          const gs = canvas.grid.size;
+          await vTok.update({x: swarmTok.x + Math.round((Number(swarmTok.width) * gs - Number(vTok.width) * gs) / 2), y: swarmTok.y + Math.round((Number(swarmTok.height) * gs - Number(vTok.height) * gs) / 2)}, {animate: false});
+          await waitFor(isIn, 5000).catch(() => null);
+        }
         why.keyAtTurn = key(); why.inside = WC.swarm.victimsOf(swarmTok.object).map(t => t.id === vTok.id ? "victim" : t.name);
         why.autoApply = game.settings.settings.has("wodx-combat.autoApply") ? game.settings.get("wodx-combat", "autoApply") : null;
         try { lines = await WC.swarm.turn(swarmTok.object); } finally { CONFIG.Dice.randomUniform = dice0; }
