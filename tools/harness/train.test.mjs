@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, mergeFailure, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
+import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare, mergeFailure, redact, TRAIN_LABEL, URGENT_LABEL} from "../pcq/train.mjs";
 
 const H = 3600e3;
 const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
@@ -252,13 +252,23 @@ test("B7960 (#2121): a merge refused for a git fault is not a conflict; it names
   const h2 = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
   const m = mockGh({behind: 3});
   const fake = async () => ({setup: true, error: "git on the runner could not merge main in, though nothing conflicts (fatal: x): the runner's git setup needs a fix"});
-  const s1 = await step({gh: m.gh, home: h2, apply: true, batch: 1, prepare: fake});
+  const alerts = [], cleared = [];
+  const hooks = {alert: async (k, t) => alerts.push(`${k}: ${t}`), recovered: async k => cleared.push(k)};
+  const s1 = await step({gh: m.gh, home: h2, apply: true, batch: 1, prepare: fake, ...hooks});
+  assert.deepEqual(alerts, ["train-git: the merge train cannot run git merges (runner setup fault)"], "the runner raises a pc-alert, since the whole line waits");
+  assert.deepEqual(cleared, []);
   assert.equal(s1.action, "wait");
   assert.match(s1.why, /git setup needs a fix/);
   assert.ok(!m.calls.some(c => c.startsWith("DELETE")), "label kept");
   assert.equal(m.calls.filter(c => c === "POST /issues/20/comments").length, 1);
-  await step({gh: m.gh, home: h2, apply: true, batch: 1, prepare: fake});
+  await step({gh: m.gh, home: h2, apply: true, batch: 1, prepare: fake, ...hooks});
   assert.equal(m.calls.filter(c => c === "POST /issues/20/comments").length, 1, "no second comment for the same head");
+  // once git works again the alert clears
+  const okm = mockGh({behind: 3});
+  await step({gh: okm.gh, home: h2, apply: true, batch: 1, prepare: async () => ({sha: "abcdef1234", did: "main merged in"}), ...hooks});
+  assert.deepEqual(cleared, ["train-git"]);
+  // git's words reach the public repo without addresses or local paths
+  assert.equal(redact("fatal: unable to auto-detect email address (got 'pc@HOST.(none)') in C:\\Users\\pc\\wodx and /home/pc/x"), "fatal: unable to auto-detect email address (got '<address>(none)') in <path> and <path>");
   // a real conflict still leaves, as before
   const c = mockGh({behind: 3});
   const s3 = await step({gh: c.gh, home: fs.mkdtempSync(path.join(os.tmpdir(), "train-")), apply: true, batch: 1, prepare: async () => ({error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"})});
