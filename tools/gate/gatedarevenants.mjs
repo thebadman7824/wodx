@@ -32,7 +32,15 @@ export async function run() {
   const seen = new Set(game.messages.contents.map(x => x.id));
   const fresh = (test, ms = 60000) => { let m = null; return waitFor(() => (m = game.messages.contents.find(x => !seen.has(x.id) && test(x))), ms).then(() => { for ( const x of game.messages.contents ) seen.add(x.id); return m; }).catch(() => null); };
   const dice0 = CONFIG.Dice.randomUniform;
-  const ones = () => { CONFIG.Dice.randomUniform = () => 0.01; };
+  // Fix every d10 to a one. Foundry's mapping from randomUniform to a face has changed between versions, so both
+  // readings are tried and the one that gives a one is kept (as gate-interact.mjs does).
+  const ones = async () => {
+    for ( const u of [0.05, 0.95] ) {
+      CONFIG.Dice.randomUniform = () => u;
+      if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === 1 ) return;
+    }
+    throw new Error("could not fix the dice to ones");
+  };
   const stored = key => game.settings.storage.get("world").getSetting?.(key) ?? null;
   const WRITTEN = ["wodx-chronicle.nightWork"];
   const writtenBefore = Object.fromEntries(WRITTEN.map(k => [k, stored(k)?.toObject?.() ?? null]));
@@ -85,7 +93,7 @@ export async function run() {
       setField(root, "light", "direct"); setField(root, "exposure", "1"); setField(root, "turns", "1");
       const rot = root?.querySelector?.("[name=rot]"); if ( rot ) rot.checked = false;
       await sleep(300);
-      ones();
+      await ones();
       root?.querySelector?.('button[data-action="ok"]')?.click();
       const card = await fresh(m => /sunlight/i.test(text(m)) && /Khavi/.test(text(m)), 45000);
       CONFIG.Dice.randomUniform = dice0;
@@ -134,7 +142,7 @@ export async function run() {
       const root = elOf(w);
       setField(root, "repel", "holy symbol");
       await sleep(300);
-      ones();
+      await ones();
       root?.querySelector?.('button[data-action="ok"]')?.click();
       const card = await fresh(m => /faces holy symbol/.test(text(m)), 30000);
       CONFIG.Dice.randomUniform = dice0;
