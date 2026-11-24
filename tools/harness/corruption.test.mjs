@@ -150,3 +150,22 @@ test("Pentex grows down its links through the 20th century, never before 1913", 
   assert.deepEqual(g, [{from: "a", to: "b"}]);
   assert.ok(R.pentexGrowth(2005) > R.pentexGrowth(1920));
 });
+
+test("B7807: a place follows a long clock by what the clock moved, and gives it back when taken back", () => {
+  let p = R.followClock({}, {key: "ashfield", target: 1, now: 5, name: "The Ashfield spreads"});
+  assert.equal(p.level, 1); assert.equal(p.clocks.ashfield, 1);
+  assert.match(p.log.at(-1).what, /Ashfield spreads: the taint deepens/);
+  assert.equal(R.followClock(p, {key: "ashfield", target: 1}), null, "no change, no write");
+  p = R.followClock(p, {key: "ashfield", target: 4});
+  assert.equal(p.level, 4);
+  // a Rite of Cleansing lowers it; the clock's next segment adds one on top of that, not back to the clock's figure
+  p = R.normPlace({...p, level: 2});
+  p = R.followClock(p, {key: "ashfield", target: 5});
+  assert.equal(p.level, 3); assert.equal(p.clocks.ashfield, 5);
+  p = R.followClock(p, {key: "ashfield", target: 2});
+  assert.equal(p.level, 0, "taking the clock back takes its levels back, not below clean");
+  assert.match(p.log.at(-1).what, /taken back/);
+  assert.equal(R.followClock({}, {key: "", target: 3}), null);
+  assert.equal(R.followClock({level: 9}, {key: "k", target: 10}).level, 10);
+  assert.deepEqual(R.normPlace({clocks: {a: 3, "": 2, b: 99}}).clocks, {a: 3, b: 10});
+});

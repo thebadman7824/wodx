@@ -462,7 +462,7 @@ Next free block: B7830
 | B7770-B7779 | gates: systemrolls and gate-maps order faults, batch-create order in six more gates (used B7771-B7773) | tools (gates) |
 | B7780-B7789 | Map blueprints: every map planned as a true-size plan before its art (used B7780-B7784) | tools |
 | B7790-B7799 | Map blueprints: tier 1 hand pass, roads and rivers, the Book 1 places drawn (used B7790-B7793) | tools |
-| B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7806) | Rothenstein, Chronicle |
+| B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
 <!-- decision-index:end -->
@@ -15899,6 +15899,20 @@ Sieglinde; Metamorphosis for Konrad; the Beast for Kasimir; Heaven for Marta). K
 court. Calls: Humanity sheets are left on the system's own Humanity; Radu, Ottilie, Zdenka and Wenzel keep it.
 
 Reverse: drop the cast step from recipe-rules.mjs and builder.mjs, and recipe.cast from the Rothenstein recipe.
+
+## B7807. The Ashfield clock sets the Ashfield's Wyrm taint (2026-11-24)
+WoDX Chronicle, WoDX Otherworlds and WoDX Rothenstein. Ruling 27 makes the Ashfield the taint's one source, and until
+now its saga clock only counted. A chronicle pack can now tie a place to one of its long clocks in manifest.local.taints
+({clock, scene, per, max}). WoDX Otherworlds reads it whenever the saga's clocks change, the chronicle in play changes or
+a scene is made, and moves the matching scene's Wyrm corruption by what the clock moved since last time (per levels a
+segment, up to max). It keeps what the clock gave in the place's own flag, so a Rite of Cleansing, the Storyteller's
+edit or the weekly turn still count, and taking the clock back takes its levels back (never below clean). It works with
+wyrmCorruption off, since the clock is the story and not the spread. The scene's sickly cast and the Penumbra's Wyrm
+lines follow at once. Rothenstein ties the Ashfield clock (8) to the Ashfield scene, one level a field, so a full
+clock is foul (8) and the clock alone never makes a Hellhole. Calls: one level a segment and a cap of 8; a Live world
+is left alone until its owner turns it on there.
+
+Reverse: drop taints from the Rothenstein manifest; followClocks and its hooks from corruption.mjs.
 
 ## B7810. The valley travel map sets the distances between places (2026-11-23)
 tools/blueprint/plans/rothenstein/valley.json, square 250 m. Every Rothenstein map is placed at a real distance from

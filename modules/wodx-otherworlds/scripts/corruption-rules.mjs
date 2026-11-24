@@ -86,6 +86,8 @@ export function normPlace(p = {}) {
     caern: !!p.caern,
     quiet: clamp(Math.round(num(p.quiet)), 0, 520),
     floor: level >= MAX || p.floor ? HELLHOLE_FLOOR : 0,
+    clocks: Object.fromEntries(Object.entries(p.clocks && typeof p.clocks === "object" ? p.clocks : {}).slice(0, 6)
+      .map(([k, v]) => [str(k, 40), clamp(Math.round(num(v)), 0, MAX)]).filter(([k]) => k)),
     log: (Array.isArray(p.log) ? p.log : []).slice(-20).map(e => ({at: num(e.at), what: str(e.what, 200)}))
   };
 }
@@ -307,4 +309,20 @@ export function driftFor(change) {
   if ( change.up && to >= BAND_INDEX.blighted ) return "taint";
   if ( !change.up && to < BAND_INDEX.blighted && (BAND_INDEX[change.from] ?? 0) >= BAND_INDEX.blighted ) return "mend";
   return null;
+}
+
+/**
+ * B7807: a place whose corruption follows one of the chronicle's long clocks (WoDX Chronicle chronicle-local-rules
+ * taintPlans). place.clocks[key] is what the clock gave the place last time; the place moves by the change since then,
+ * so a cleansing, a Storyteller's edit or the weekly turn still count, and taking the clock back takes its levels back.
+ * Returns the new place, or null when nothing changes.
+ */
+export function followClock(place, {key = "", target = 0, now = 0, name = "the long clock"} = {}) {
+  const p = normPlace(place), k = str(key, 40);
+  if ( !k ) return null;
+  const want = clamp(Math.round(num(target)), 0, MAX), had = num(p.clocks[k]);
+  if ( want === had ) return null;
+  const level = clamp(p.level + want - had, Math.min(p.floor, p.level), MAX);
+  const what = want > had ? `${str(name, 60)}: the taint deepens` : `${str(name, 60)}, taken back: the taint eases`;
+  return normPlace({...p, level, quiet: 0, clocks: {...p.clocks, [k]: want}, log: log(p, now, what)});
 }

@@ -12,12 +12,15 @@
  *   6. a Rite of Cleansing lifts a step and wards; a Hellhole stays at 7 or more
  *   7. Sense Wyrm: a vampire always, a clean mortal never
  *   8. the Storyteller's window opens with a row per place and closes
- *   9. clean up: scenes, actors, messages, our queue entries
+ *   9. B7807: with a chronicle in play that ties a place to a long clock (Rothenstein: the Ashfield), one more segment
+ *      on that clock deepens the place a level and setting it back eases it again. The clock and the place's flag are
+ *      put back as they were; a scratch scene stands in when the world has no scene of that name.
+ *  10. clean up: scenes, actors, messages, our queue entries
  * Result: Data/wodx-gate/gatecorruption-result.json.
  */
 import {handsOnStart} from "./kit.mjs";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const STEPS = 9;
+const STEPS = 10;
 const M = "wodx-otherworlds";
 
 async function save(R) {
@@ -95,6 +98,35 @@ async function body() {
     el?.querySelector("button[data-action=cancel]")?.click();
     await Promise.race([open, sleep(1500)]);
     ok("8. window", rows >= 2 && (rows <= 5 || search), {rows, search});
+
+    // 9. B7807: a place on a long clock
+    const pack = Ch.chronicle?.current?.() ?? null;
+    const L = await import("/modules/wodx-chronicle/scripts/chronicle-local-rules.mjs");
+    const row = L.localOf(pack).taints[0];
+    if ( !row ) ok("9. clock taint", false, {error: "no chronicle in play ties a place to a clock", chronicle: pack?.id ?? null});
+    else {
+      const saga = Ch.pod.saga, size = saga.rules.SAGA_CLOCKS.find(c => c.key === row.clock)?.size ?? 0;
+      const re = new RegExp(row.scene, "i");
+      let sc = game.scenes.find(x => re.test(x.name));
+      if ( !sc ) { sc = (await Scene.createDocuments([{name: `Gate ${row.scene}`, width: 1000, height: 1000, navigation: false}]))[0]; made.scenes.push(sc.id); }
+      const flagBefore = foundry.utils.deepClone(sc.flags?.[M]?.corruption ?? null);
+      const clockBefore = Number(saga.state().clocks?.[row.clock]) || 0;
+      const at = Math.min(clockBefore, size - 1);
+      try {
+        await saga.clock(row.clock, at); await O.corruption.follow(); await sleep(200);
+        const l0 = C.of(game.scenes.get(sc.id)).level;
+        await saga.clock(row.clock, at + 1); await O.corruption.follow(); await sleep(200);
+        const l1 = C.of(game.scenes.get(sc.id)).level;
+        await saga.clock(row.clock, at); await O.corruption.follow(); await sleep(200);
+        const l2 = C.of(game.scenes.get(sc.id)).level;
+        const want = Math.min(row.max, Math.round((at + 1) * row.per)) - Math.min(row.max, Math.round(at * row.per));
+        ok("9. clock taint", l1 - l0 === want && l2 === l0, {scene: sc.name, clock: row.clock, at, levels: [l0, l1, l2], want});
+      } finally {
+        await saga.clock(row.clock, clockBefore); await O.corruption.follow();
+        const s2 = game.scenes.get(sc.id);
+        if ( s2 && !made.scenes.includes(sc.id) ) await s2.update(flagBefore ? {[`flags.${M}.corruption`]: flagBefore} : {[`flags.${M}.-=corruption`]: null});
+      }
+    }
   } catch (e) {
     R.errors.push(String(e?.stack ?? e));
   } finally {
@@ -104,8 +136,8 @@ async function body() {
       if ( made.actors.length ) await Actor.deleteDocuments(made.actors);
       const msgs = game.messages.filter(m => m.timestamp >= msgStart && /Wyrm corruption|Gauntlet at Gate corruption/.test(m.content ?? ""));
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
-      ok("9. clean up", !made.scenes.some(id => game.scenes.get(id)) && !made.actors.some(id => game.actors.get(id)) && game.time.worldTime === t0);
-    } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("9. clean up", false); }
+      ok("10. clean up", !made.scenes.some(id => game.scenes.get(id)) && !made.actors.some(id => game.actors.get(id)) && game.time.worldTime === t0);
+    } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("10. clean up", false); }
   }
   return save(R);
 }

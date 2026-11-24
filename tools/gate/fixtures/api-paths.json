@@ -710,6 +710,7 @@
    "current"
   ],
   "uses": [
+   "modules/wodx-otherworlds/scripts/corruption.mjs:318",
    "modules/wodx-solo/scripts/arrival.mjs:39",
    "modules/wodx-storyteller/scripts/hunters.mjs:197",
    "modules/wodx-storyteller/scripts/institutions.mjs:52",
@@ -997,8 +998,8 @@
    "modules/wodx-library/scripts/weight.mjs:14",
    "modules/wodx-npc/scripts/main.mjs:133",
    "modules/wodx-npc/scripts/servant-world.mjs:25",
-   "modules/wodx-otherworlds/scripts/corruption.mjs:31",
-   "modules/wodx-otherworlds/scripts/corruption.mjs:234",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:37",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:240",
    "modules/wodx-otherworlds/scripts/journey.mjs:40",
    "modules/wodx-otherworlds/scripts/net.mjs:33",
    "modules/wodx-otherworlds/scripts/realm-maps.mjs:17",
@@ -1356,7 +1357,7 @@
    "modules/wodx-interactables/scripts/stock.mjs:43",
    "modules/wodx-npc/scripts/line-refill.mjs:110",
    "modules/wodx-npc/scripts/servant-world.mjs:241",
-   "modules/wodx-otherworlds/scripts/corruption.mjs:29",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:35",
    "modules/wodx-otherworlds/scripts/fading.mjs:76",
    "modules/wodx-otherworlds/scripts/main.mjs:129",
    "modules/wodx-otherworlds/scripts/realms.mjs:462",
@@ -1595,6 +1596,16 @@
   "target": "wodx-chronicle",
   "path": [
    "pod",
+   "saga"
+  ],
+  "uses": [
+   "modules/wodx-otherworlds/scripts/corruption.mjs:321"
+  ]
+ },
+ {
+  "target": "wodx-chronicle",
+  "path": [
+   "pod",
    "saga",
    "current"
   ],
@@ -1632,7 +1643,7 @@
    "modules/wodx-npc/scripts/memory.mjs:121",
    "modules/wodx-npc/scripts/servants.mjs:119",
    "modules/wodx-npc/scripts/servants.mjs:231",
-   "modules/wodx-otherworlds/scripts/corruption.mjs:204",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:210",
    "modules/wodx-otherworlds/scripts/crossing.mjs:363",
    "modules/wodx-otherworlds/scripts/crossing.mjs:371",
    "modules/wodx-otherworlds/scripts/journey.mjs:72",
@@ -2314,7 +2325,7 @@
    "modules/wodx-interactables/scripts/fill.mjs:67",
    "modules/wodx-library/scripts/main.mjs:48",
    "modules/wodx-npc/scripts/trust.mjs:187",
-   "modules/wodx-otherworlds/scripts/corruption.mjs:47",
+   "modules/wodx-otherworlds/scripts/corruption.mjs:53",
    "modules/wodx-storyteller/scripts/contagion.mjs:52",
    "modules/wodx-storyteller/scripts/haven-works.mjs:33",
    "modules/wodx-storyteller/scripts/hunters.mjs:58",
