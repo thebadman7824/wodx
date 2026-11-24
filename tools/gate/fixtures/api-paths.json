@@ -4736,7 +4736,7 @@
    "rules"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:1141"
+   "modules/wodx-npc/scripts/factions.mjs:1142"
   ]
  },
  {
@@ -4745,7 +4745,7 @@
    "battles"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/factions.mjs:1125"
+   "modules/wodx-npc/scripts/factions.mjs:1126"
   ]
  },
  {

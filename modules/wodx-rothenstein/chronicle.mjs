@@ -10,7 +10,7 @@
  */
 import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS} from "./data/saga.mjs";
 import {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK} from "./data/fronts.mjs";
-import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS as TWIST_CHAPTERS, WEEK as TWIST_WEEK} from "./data/twists.mjs";
+import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS as TWIST_CHAPTERS, WEEK as TWIST_WEEK, TWIST_GAP} from "./data/twists.mjs";
 import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD} from "./data/reveals.mjs";
 import {ENCOUNTERS, KINDS} from "./data/encounters.mjs";
 import {ROTHENSTEIN as RECIPE} from "./data/recipe.mjs";
@@ -42,6 +42,21 @@ export const MANIFEST = {
   books: SAGA.books.map(b => b.key),
   /** The book whose ending later books answer; fronts, twists and encounters run while it runs. */
   firstBook: "red-stone",
+  /**
+   * What is local to the valley (WoDX Chronicle chronicle-local-rules.mjs, B7610-B7616), filled from the Book 1
+   * omnibus, ruling 27 (B7804).
+   */
+  local: {
+    feasts: [
+      {month: 9, day: 1, name: "St Aegidius, the parish feast", revel: true},
+      {month: 9, day: 28, name: "St Wenceslas"},
+      {month: 6, day: 23, name: "The Kupala fires", custom: true, revel: true}
+    ],
+    titles: [{kind: "council", rank: 4, title: "Richter", to: 1849}],
+    languages: [{name: "the Old Tongue", closedIn: ["red-stone"], intent: true, sounds: ["ur", "va", "dho", "ost", "rem", "ka", "zhi", "lu", "sva", "tor"]}],
+    caerns: [{key: "old-grove", name: "The Old Grove", scene: "Old Grove", level: 3, tribes: "Silver Fang kin"}],
+    hunters: {stage: "rumours"}
+  },
   /** The words that mark this chronicle in shared code (the guard test reads them). */
   marks: ["Rothenstein", "Kranzfels", "Bogdan Ursu", "Husbandman", "Rudý Hospodář", "Črnomir", "Richter Graff", "Father Ludovic",
     "Baba Yaroslava", "Altenhof", "Ashfield", "Dolany", "Old Grove", "Silver Adit", "Ivo's Ferry", "red-stone"]
@@ -54,7 +69,7 @@ export const PACK = {
   manifest: MANIFEST,
   saga: {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, FIRST_BOOK: MANIFEST.firstBook},
   fronts: {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK},
-  twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS: TWIST_CHAPTERS, WEEK: TWIST_WEEK},
+  twists: {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS: TWIST_CHAPTERS, WEEK: TWIST_WEEK, GAP: TWIST_GAP},
   reveals: {REVEALS, JUDGED_FAVOURS, MURDERS, COLD},
   encounters: {ENCOUNTERS, KINDS, LAST: "c9"},
   /** The builder's recipe (WoDX Storyteller builder.mjs). */

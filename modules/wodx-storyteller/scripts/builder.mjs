@@ -5,7 +5,7 @@
  *
  * Phase 1 steps: check the world (and turn on the WoDX modules in a world made for the recipe), Start a chronicle
  * with the recipe's homeland, opening night and lines, bring across the old world's documents from the carry file,
- * mark the anchor places and people, and lay the Ways between the walkable maps. The later steps are listed with the phase that brings them.
+ * make the cast the recipe names and set their Roads (B7806), mark the anchor places and people, and lay the Ways between the walkable maps. The later steps are listed with the phase that brings them.
  *
  * The builder never works in rothenstein-live, and in no other world than the recipe's unless forced.
  */
@@ -130,6 +130,37 @@ async function stepCarry(r) {
   return {made: [...new Set([...prev, ...made])], note: `Brought across ${made.length} documents${skipped ? `; ${skipped} were here already` : ""}.`};
 }
 
+/**
+ * The cast (B7806): the people the recipe needs that the old world never had are made (each once, found again by name),
+ * and the sheets the recipe names get their Road and ghoul variant. What each sheet held before is kept for Undo.
+ */
+let prevRecord = null; // rerunStep's record of the step, so a step run again adds to what it did before
+const actorRows = () => all(game.actors).map(x => ({id: x.id, name: x.name, playerOwned: !!x.hasPlayerOwner, road: R.roadOn(x.system), variant: x.system?.settings?.variant ?? null}));
+async function stepCast(r) {
+  const before = record().steps?.cast?.made ?? prevRecord?.made ?? [];
+  const made = [...before];
+  const first = R.castPlan(r, actorRows());
+  for ( const p of first.make ) {
+    const data = {name: p.name, type: p.type, flags: builtFlag("cast", `person:${p.name}`),
+      system: {...(p.note ? {notes: `<p>${esc(p.note)}</p>`} : {}), ...(p.variant ? {settings: {variant: p.variant}} : {})}};
+    const a = await Actor.create(data, {wodxBuilder: true});
+    if ( a ) made.push({uuid: a.uuid, made: true});
+  }
+  const {set, missing} = R.castPlan(r, actorRows());
+  for ( const c of set ) {
+    const a = game.actors.get(c.id);
+    if ( !a ) continue;
+    const fields = R.castFields(c);
+    // The first value the builder found is the one Undo puts back
+    const had = made.find(m => m.uuid === a.uuid && !m.made);
+    const old = {};
+    for ( const k of Object.keys(fields) ) old[k] = foundry.utils.getProperty(a, k) ?? null;
+    if ( had ) had.old = {...old, ...had.old}; else made.push({uuid: a.uuid, made: false, old});
+    await a.update(fields);
+  }
+  return {made, note: `${first.make.length} people made, ${set.length} sheets set.${missing.length ? ` Not found: ${missing.join(", ")}.` : ""}`, missing};
+}
+
 async function stepAnchors(r) {
   const changes = record().steps?.anchors?.made ?? [];
   const seen = new Set(changes.map(c => c.uuid));
@@ -233,7 +264,7 @@ export async function takeBackWays(made = []) {
   return n;
 }
 
-const RUN = {check: stepCheck, settings: stepSettings, carry: stepCarry, anchors: stepAnchors, ways: stepWays};
+const RUN = {check: stepCheck, settings: stepSettings, carry: stepCarry, cast: stepCast, anchors: stepAnchors, ways: stepWays};
 
 /**
  * Run one step. opts: {force} lets the builder work in another world than the recipe's (never in Live).
@@ -262,7 +293,8 @@ export async function rerunStep(id, opts = {}) {
   const r = foundry.utils.deepClone(record());
   const prev = r.steps?.[id];
   if ( prev ) { delete r.steps[id]; await game.settings.set(MOD, "builder", r); }
-  const res = await runStep(id, opts);
+  prevRecord = prev ?? null;
+  const res = await runStep(id, opts).finally(() => { prevRecord = null; });
   if ( !res.ok && prev ) await saveStep(id, prev);
   return res;
 }
@@ -290,6 +322,14 @@ export async function undoStep(id) {
     }
   } else if ( id === "ways" ) {
     n = await takeBackWays(rec.made ?? []);
+  } else if ( id === "cast" ) {
+    // Only people the builder made and still flagged are deleted; a sheet gets back what it held before
+    for ( const c of rec.made ?? [] ) {
+      const d = fromUuidSync(c.uuid);
+      if ( !d ) continue;
+      if ( c.made ) { if ( builtKey(d) ) { await d.delete(); n++; } continue; }
+      if ( c.old ) { await d.update(c.old); n++; }
+    }
   } else if ( id === "anchors" ) {
     for ( const c of rec.made ?? [] ) {
       const d = fromUuidSync(c.uuid);

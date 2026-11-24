@@ -21,8 +21,9 @@ test("offered only on its maps, in its months and from its chapter", () => {
   const st = E.normState({}, 0);
   assert.deepEqual(E.due(st, {now: 0, played: [], month: 9, scene: "The Mountain Trail"}), [5]);
   assert.deepEqual(E.due(st, {now: 0, played: [], month: 9, scene: "Kranzfels · Inner Ward and Great Hall"}), []);
-  assert.match(E.whyNot(st, 7, {now: 0, played: ["c1", "c2"], month: 9, scene: "Lower Town · Craftsmen's Lane"}), /fits from chapter 4|fits in December/);
-  assert.match(E.whyNot(st, 7, {now: 0, played: ["c1", "c2", "c3"], month: 9, scene: "Lower Town · Craftsmen's Lane"}), /fits in December, January, February/);
+  assert.match(E.whyNot(st, 7, {now: 0, played: ["c1", "c2"], month: 9, scene: "Lower Town · Craftsmen's Lane"}), /fits from chapter 4|fits in October/);
+  // B7800: first frost (mid October) to the thaw
+  assert.match(E.whyNot(st, 7, {now: 0, played: ["c1", "c2", "c3"], month: 9, scene: "Lower Town · Craftsmen's Lane"}), /fits in October, November, December, January, February, March/);
   assert.equal(E.whyNot(st, 7, {now: 0, played: ["c1", "c2", "c3"], month: 12, scene: "Lower Town · Craftsmen's Lane"}), "");
   // Lenka waits a week in the valley; the missing child follows the hermit or the pack
   assert.match(E.whyNot(st, 3, {now: 3 * DAY, played: ["c1"], month: 9, scene: "Lower Town · Market Square"}), /7 days/);

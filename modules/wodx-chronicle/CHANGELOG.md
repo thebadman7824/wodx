@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.142.3 (The twist engine reads the chronicle's own gap between twists (twists.GAP, else its week), and the saga check lets a book start in the year the one before it ends when its first step comes later (B7801, B7802))
 - 0.142.2 (The traits api now hands out mockeryOf, so other modules can read a Creature sheet's Mockery Breed (B7820))
 - 0.142.1 (Switch for Dark Ages maturation (B7685))
 - 0.142.0 (Signature cards for the Bonsam, Children of Osiris, Danava, Impundulu, Ramanga, Salubri watchers and Valkyrjer (B7661); Signature cards for the Setite castes (B7670); The full check of the 80 Merits and Flaws of V20 Dark Ages (B7665): eleven new rows, the Dark Ages costs, and effects a system can read)

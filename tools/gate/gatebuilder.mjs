@@ -11,7 +11,7 @@
  * opening night by the settings step.
  *   1. the module: Storyteller 0.61.0, api.builder, the world's recipe flag, the button wanted
  *   2. the builder refuses every Live world, even forced, and another world unless forced
- *   3. every ready step runs in order: check, settings, carry, anchors
+ *   3. every ready step runs in order: check, settings, carry, cast, anchors, ways
  *   4. the homeland is the recipe's and the clock reads the recipe's opening year
  *   5. every document in the carry file is in the world, with its old id
  *   6. links in carried journals to carried documents resolve
@@ -19,6 +19,9 @@
  *   8. the anchors: the recipe's first person and first place anchors are marked; a scene's own kind of place is kept
  *   9. Undo on the anchors takes the marks off; running it again puts them back
  *  10. Undo on the carry removes only what the builder made; running it again brings everything back
+ *  11. the cast (B7806): run again after the carry came back, every person in the recipe's cast is in the world and
+ *      every sheet holds its Road; Undo deletes only the people it made and puts the sheets back; running it again
+ *      makes them once more
  * Result: Data/wodx-gate/gatebuilder-result.json.
  *
  * On a testbed world (rothenstein-wodx and the lanes) the build itself is not wanted, so the gate checks only what
@@ -178,5 +181,24 @@ async function body(R, ok, step, Rules, own) {
     await B().again("anchors");
     const missing = Object.entries(carry.docs ?? {}).flatMap(([t, l]) => l.filter(d => !game.collections.get(t)?.get(d._id))).length;
     ok("10 undo carry", u.ok && left === 0 && handKept && r.ok && missing === 0, {undo: u.note, left, handKept, again: r.note, missing});
+  });
+  await step("11 cast", async () => {
+    const cast = recipe.cast ?? {people: [], sheets: []};
+    const rows = () => [...game.actors].map(a => ({id: a.id, name: a.name, playerOwned: !!a.hasPlayerOwner, road: Rules.roadOn(a.system), variant: a.system?.settings?.variant ?? null}));
+    // The carry came back in step 10 with the old sheets, so the cast runs again to set them
+    const again = await B().again("cast");
+    const left = Rules.castPlan(recipe, rows());
+    const madeBy = [...game.actors].filter(a => a.flags?.[MOD]?.built?.step === "cast");
+    const ghouls = cast.people.filter(p => p.variant === "ghoul").every(p => game.actors.find(a => a.name.toLowerCase().includes((p.match ?? p.name).toLowerCase()))?.system?.settings?.variant === "ghoul");
+    const changed = (B().record().steps?.cast?.made ?? []).filter(m => !m.made).length;
+    const u = await B().undo("cast");
+    const gone = [...game.actors].filter(a => a.flags?.[MOD]?.built?.step === "cast").length;
+    const back = Rules.castPlan(recipe, rows());
+    const r = await B().run("cast");
+    const after = Rules.castPlan(recipe, rows());
+    ok("11 cast", again.ok && !left.make.length && !left.set.length && ghouls && u.ok && gone === 0
+      && back.set.length === changed && back.make.length === madeBy.length
+      && r.ok && !after.make.length && !after.set.length,
+      {again: again.note ?? again.error, made: madeBy.map(a => a.name), ghouls, undo: u.note, gone, changed, backSet: back.set.map(x => x.name), again2: r.note, after});
   });
 }

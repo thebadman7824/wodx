@@ -126,14 +126,17 @@ export function span({future = false} = {}) {
 /** Problems with the saga in plain words; empty means it is sound. eras = the Chronicle era ids (optional). */
 export function validate(saga = SAGA, {eras = null} = {}) {
   const out = [], keys = new Set(), clockKeys = SAGA_CLOCKS.map(c => c.key);
-  let lastTo = -Infinity;
+  let lastTo = -Infinity, lastAt = null;
   for ( const b of saga.books ?? [] ) {
     if ( keys.has(b.key) ) out.push(`The book ${b.key} is named twice.`);
     keys.add(b.key);
     if ( !b.title || !b.text ) out.push(`The book ${b.key} has no title or text.`);
     if ( !(b.from <= b.to) ) out.push(`The book ${b.key} ends before it starts.`);
-    if ( b.from <= lastTo ) out.push(`The book ${b.key} starts before the book ahead of it ends.`);
-    lastTo = b.to;
+    // B7801: a book may start in the year the one ahead of it ends, as long as its first step comes after that book's last.
+    const firstAt = b.steps?.[0]?.at;
+    if ( b.from < lastTo || (b.from === lastTo && !(lastAt && Array.isArray(firstAt) && daysBetween(lastAt, firstAt) > 0)) )
+      out.push(`The book ${b.key} starts before the book ahead of it ends.`);
+    lastTo = b.to; lastAt = b.steps?.at(-1)?.at ?? null;
     if ( eras && !eras.includes(b.era) ) out.push(`The book ${b.key} names an unknown era (${b.era}).`);
     if ( !(b.steps ?? []).length ) out.push(`The book ${b.key} has no steps.`);
     const sk = new Set();
