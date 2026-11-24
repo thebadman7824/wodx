@@ -256,7 +256,8 @@ export function defaultLine(sheetType, {variant = "", eraId = ""} = {}) {
     // B7821: a Mortal sheet's variant picks its book; a plain mortal in the Dark Ages keeps the Inquisitor's figures
     case "Mortal": return variant === "ghoul" ? "ghoul" : variant === "kinfolk" ? "kinfolk" : variant === "sorcerer" ? "sorcerer"
       : variant === "orpheus" ? "orpheus" : dark ? "inquisitor" : variant === "truefaith" ? "hh2" : "mortal";
-    // B7821: Changing Breeds read W20's Garou figures until W20 Changing Breeds is checked (its text is not in the dumps yet)
+    // B7821, B7831: a Changing Breed uses W20's creation figures (W20 Changing Breeds gives none of its own); its starting
+    // Rage, Gnosis and Willpower come from FERA_STARTS in derived-rules.mjs
     case "Changing Breed": return dark ? "daw" : "w20";
     default: return "v20";
   }

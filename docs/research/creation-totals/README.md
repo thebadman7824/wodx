@@ -8,6 +8,7 @@ One file per book. Each file gives the creation totals with page references (pdf
 | V20 Dark Ages | vtda20.md | 7/5/3 | 13/9/5 | 4 Disciplines | 5 | 15 | Courage |
 | V20 Ghouls and Revenants | v20-ghouls-revenants.md | 6/4/3 | 11/7/4 | Potence 1 + 1 dot | 5 | 21 | Courage |
 | W20 | w20.md | 7/5/3 | 13/9/5 | 3 Gifts | 5 | 15 | by tribe |
+| W20 Changing Breeds | w20-changing-breeds.md | 7/5/3 (W20) | 13/9/5 (W20) | 3 Gifts | 5 | 15 | by Breed |
 | Dark Ages: Werewolf | da-werewolf.md | 7/5/3 | 13/9/5 | 3 Gifts | 5 | 15 bonus | by tribe |
 | M20 | m20.md | 7/5/3 | 13/9/5 | 6 Sphere dots, Arete 1 | 7 | 15 | 5 |
 | Mage: The Dark Ages | da-mage.md | 7/5/3 | 13/9/5 | Foundation 1, 3 Pillar dots | 5 | 15 bonus | 5 |

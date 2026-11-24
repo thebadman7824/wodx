@@ -6,7 +6,8 @@
  *   1. the rule is on, and a teacher who knows Occult is offered; practice is closed for Occult
  *   2. a spend from the teacher: the experience goes at once, Occult does not move yet, a WoDX Storyteller long task
  *      is open, and the learner's token carries the study mark (status wodx-studying)
- *   3. the long task runs on the clock until it is done: Occult rises to 1, the mark comes off, a card says so
+ *   3. the clock moves and its own tick runs the long task until it is done: Occult rises to 1, the mark comes off,
+ *      a card says so
  *   4. a study stopped in Long tasks gives the experience back
  *   5. waived by the Storyteller, a spend raises the trait at once
  * Result: Data/wodx-gate/gatelearning-result.json.
@@ -57,19 +58,24 @@ export async function run() {
     await G.step("3. the study ends and the trait rises", async () => {
       if ( !rec ) return G.ok("3. the study ends and the trait rises", false, {error: "no study"});
       // Easy rolls so the gate does not wait on luck; the rule under test is what happens at the end
-      // The roll is made due now, as gateowners does: moving the clock starts the hook's own tick, which holds the next
+      // The roll is made due now and the clock moves a minute, so the Storyteller's own clock tick (the
+      // updateWorldTime hook) rolls it, the path play takes; each move waits for that tick to settle
+      const done = () => learner.flags?.[ST]?.tasks?.[rec.taskId]?.status === "done";
       const due = () => learner.update({[`flags.${ST}.tasks.${rec.taskId}.next`]: game.time.worldTime});
       await learner.update({[`flags.${ST}.tasks.${rec.taskId}.diff`]: 2, [`flags.${ST}.tasks.${rec.taskId}.goal`]: 1, [`flags.${ST}.tasks.${rec.taskId}.dice`]: 10});
-      for ( let i = 0; i < 6 && learner.flags?.[ST]?.tasks?.[rec.taskId]?.status !== "done"; i++ ) {
+      const since = Date.now();
+      const held = !!game.modules.get("wodx-chronicle")?.api?.isHeld?.();
+      for ( let i = 0; i < 6 && !done(); i++ ) {
         await due();
-        await S.tasks.tick({force: true});
+        await game.time.advance(60);
+        await settle(done, 4000);
       }
       // The card is posted last, after the rise and the mark: wait for it too
-      const learned = () => game.messages.contents.slice(-40).some(m => /has learned/.test(m.content ?? "") && m.content.includes(learner.name));
+      const learned = () => game.messages.contents.some(m => (m.timestamp ?? 0) >= since && /has learned/.test(m.content ?? "") && m.content.includes(learner.name));
       await settle(() => Number(learner.system.abilities.occult.value) === 1 && !studying() && learned());
       const card = learned();
       G.ok("3. the study ends and the trait rises", Number(learner.system.abilities.occult.value) === 1 && !studying() && card,
-        {occult: learner.system.abilities.occult.value, mark: studying(), card, status: learner.flags?.[ST]?.tasks?.[rec.taskId]?.status});
+        {held, occult: learner.system.abilities.occult.value, mark: studying(), card, status: learner.flags?.[ST]?.tasks?.[rec.taskId]?.status});
     });
 
     await G.step("4. stopping gives the experience back", async () => {
