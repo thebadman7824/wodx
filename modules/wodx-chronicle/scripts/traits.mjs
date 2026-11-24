@@ -91,6 +91,11 @@ export function toughness(actor) {
   if ( f.n > 0 ) { b.fewer = (b.fewer ?? 0) + f.n; b.names.push(...f.names.map(x => `${x}: Deadly Exposure`)); }
   // B6729: a War Wolf (a Mockery Breed on a Creature sheet) shares the Garou's weakness to silver (W20 Book of the Wyrm p. 168)
   if ( mockeryOf(actor) === "warwolves" && !b.silver ) { b.silver = true; b.names.push("War Wolf: silver"); }
+  // B7844: a Danislav revenant takes aggravated damage from silver (V20 Dark Ages p. 454), as WoDX Creation marks the family
+  try {
+    const rm = game.modules.get("wodx-creation")?.api?.revenant?.mark?.(actor);
+    if ( rm?.silver && !b.silver ) { b.silver = true; b.names.push("Revenant family: silver"); }
+  } catch (e) { /* no Creation */ }
   return b;
 }
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */

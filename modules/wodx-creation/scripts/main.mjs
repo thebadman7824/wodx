@@ -24,6 +24,8 @@ import * as firstChange from "./first-change.mjs";
 import * as people from "./people.mjs";
 import * as archive from "./archive.mjs";
 import * as states from "./states.mjs";
+import * as revenant from "./revenant.mjs";
+import * as revenantRules from "./revenant-rules.mjs";
 import * as maturation from "./maturation.mjs";
 import * as maturationRules from "./maturation-rules.mjs";
 import * as totals from "./totals-rules.mjs";
@@ -83,6 +85,8 @@ function start() {
   guard("xp.registerXPHandler", () => xp.registerXPHandler());
   guard("learn.registerLearning", () => learn.registerLearning());
   guard("people.registerPeople", () => people.registerPeople());
+  // B7840-B7848: the revenant families' weaknesses on frenzy and Willpower rolls
+  guard("revenant.registerRevenant", () => revenant.registerRevenant());
   guard("lifepath.registerLifepath", () => lifepath.registerLifepath());
   guard("firstNight.registerFirstNight", () => firstNight.registerFirstNight());
   guard("feedVitae.registerFeedVitae", () => feedVitae.registerFeedVitae());
@@ -119,7 +123,10 @@ function start() {
     maturation: {open: actor => maturation.MaturationApp.open(actor), mature: maturation.mature, offers: maturation.offers, buy: maturation.buy, state: maturation.stateOf, rules: maturationRules},
     becomeMortal: states.becomeMortal, becomeMortalDialog: states.becomeMortalDialog,
     deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
-    revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,
+    revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog,
+    // B7840-B7848: revenant families in every era and their weaknesses in play
+    revenant: {rules: revenantRules, families: y => revenantRules.familiesIn(y ?? revenant.yearNow()), of: revenant.familyOf, mark: revenant.markOf,
+      weakness: a => revenant.weaknessDialog(a ?? null), repel: revenant.repel, temptation: revenant.temptation, swearOath: revenant.swearOath, moonStep: revenant.moonStep}, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,
     fallenHost: states.fallenHost, fallenDialog: states.fallenDialog, possess: states.possess, possessDialog: states.possessDialog,
     secondBreath: states.secondBreath, secondBreathDialog: states.secondBreathDialog,
     totals, check: actor => CreationCheckApp.open(actor),

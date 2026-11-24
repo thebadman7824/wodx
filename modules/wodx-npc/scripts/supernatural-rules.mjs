@@ -41,7 +41,7 @@ export const SUPERNATURALS = {
     cowardice: 0.3, berserk: 0.9, frenzyProne: true, territory: 1.5, morale: 1, fears: KINDRED_FEARS, tactics: ["melee", "pack", "ground", "power"]}),
     preset: {label: "Anarchs, hunt together", blocks: [B(0, 24, "haven", "sleep", day), B(21, 4, "street", "hunt", {...night, label: "Running with the gang"}),
       B(0, 24, "haven", "rest", night)]}},
-  revenant: {kind: "ghoul", pick: /revenant|bratovitch|grimaldi|obertus|zantosa|danyavich|rafastio|ducheski/, template: T("Revenant family", "ghoul", {aggression: 1,
+  revenant: {kind: "ghoul", pick: /revenant|bratovit?ch|grimaldi|obertus|zantosa|szantovich|danyavich|rafastio|ducheski|krevcheski|basarab|danislav|vlaszy|khavi|d.?habi|enrathi|kairouan|oprichniki|rossellini|anushin|marijava|keskinen|katayama/, template: T("Revenant family", "ghoul", {aggression: 1,
     caution: 0.8, cunning: 0.6, loyalty: 2, cowardice: 0.3, berserk: 0.4, power: 0.6, fears: ["fire"], tactics: ["melee", "guard", "call", "pack"]}),
     preset: {label: "Revenant, serves by day, guards by night", blocks: [B(6, 18, "home", "work", {...day, label: "The household's work"}),
       B(0, 24, "home", "patrol", {...night, label: "Guards the house"}), B(0, 24, "home", "rest")]}},
