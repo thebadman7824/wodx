@@ -308,6 +308,34 @@ export function deferToBigger(job, issue, minutes, now = Date.now()) {
   return Number.isFinite(at) && now - at < Number(minutes) * 60000;
 }
 
+/**
+ * B7911 (Ben, 24 November 2026: "the New PC gets priority for all new PR runs, shunting to the Main PC when its queue
+ * is full"): what another runner's status issue says about room for a job. fresh: updated within freshMinutes (the
+ * runner rewrites it at once on a change and every 10 minutes regardless); free: its lanes marked "free"; hold: it
+ * takes no new jobs (runner-hold, a planned window, or low disk or memory). peer: {body, updated_at}.
+ */
+export function peerRoom(peer, now = Date.now(), freshMinutes = 15) {
+  const body = String(peer?.body ?? ""), at = Date.parse(peer?.updated_at ?? "");
+  const fresh = Number.isFinite(at) && now - at <= freshMinutes * 60000;
+  const free = [...body.matchAll(/^\|\s*\d+\s*\|\s*\d+\s*\|\s*free\s*\|\s*$/gm)].length;
+  const hold = /^HOLD:/m.test(body) || /\(HOLDING:/.test(body);
+  return {fresh, free, hold};
+}
+
+/**
+ * B7911: a runner with prGatesPreferPeer in its settings ({statusTitle, maxMinutes, freshMinutes}) leaves a pull
+ * request's whole-branch gate run to that peer while the peer has a free lane, so the peer takes it on its next pass.
+ * It takes the run itself when the peer is full, holding, or silent (its status older than freshMinutes), and after
+ * maxMinutes in any case, so a job is never left waiting on a peer that does not pick it up. The same jobs as
+ * deferToBigger qualify: a touched or every-gate run of a pull request, not named to a lane.
+ */
+export function leaveToPeer(job, issue, peer, opts = {}, now = Date.now()) {
+  const max = Number(opts?.maxMinutes ?? 5);
+  if ( !(max > 0) || !deferToBigger(job, issue, max, now) ) return false;
+  const r = peerRoom(peer, now, Number(opts?.freshMinutes ?? 15));
+  return r.fresh && !r.hold && r.free > 0;
+}
+
 /** Cuts a comment to GitHub's limit, keeping the start. */
 export const fit = (s, max = 60000) => s.length <= max ? s : `${s.slice(0, max - 200)}\n\n(cut: ${s.length - max + 200} more characters are in the runner log on the PC)`;
 

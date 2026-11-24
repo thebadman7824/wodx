@@ -33,7 +33,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger, leaveToPeer} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
@@ -655,6 +655,15 @@ let MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8
 // A busy runner stops taking new jobs once an update is due ("draining") and exits when the last job ends, so an update
 // never waits for a quiet moment that may not come.
 let draining = false, drainSince = 0, deferUntilIdle = false;
+// B7911: the preferred peer's status issue, read at most once a minute (null when it cannot be read: never held then)
+let peerCache = {at: 0, issue: null};
+async function preferredPeer() {
+  if ( Date.now() - peerCache.at < 60000 ) return peerCache.issue;
+  let issue = null;
+  try { issue = (await openIssues(LABEL.status)).find(i => i.title === conf.prGatesPreferPeer.statusTitle) ?? null; } catch (e) { log(`peer status read failed: ${e.message}`); }
+  peerCache = {at: Date.now(), issue};
+  return issue;
+}
 // B6353: a drain waits at most DRAIN_MIN minutes. A 100-gate touched run once held 19 queued jobs (four of them p1) for
 // most of an hour behind it; past the limit the runner takes jobs again and updates the next time it is idle (and at
 // the nightly lane reset, which restarts it anyway).
@@ -816,6 +825,8 @@ for ( ;; ) {
         if ( res.low.length ) continue;
         // B7761: a small runner gives the bigger ones first pick of a pull request's whole-branch gate run
         if ( deferToBigger(q.job, q.issue, conf.prGatesDeferMinutes) ) continue;
+        // B7911: the New PC first for pull request gate runs; this runner takes them when the New PC is full or silent
+        if ( conf.prGatesPreferPeer && conf.prGatesPreferPeer.statusTitle !== conf.statusTitle && leaveToPeer(q.job, q.issue, await preferredPeer(), conf.prGatesPreferPeer) ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
         const free = q.job.kind === "setup-lane" ? l => !state[l].busy && !lockState(laneOf(l), cfg).held : laneFree;
         // B6887: a small-jobs lane (lane 7) never takes a touched, every-gate or large run. Named on it, the job is
