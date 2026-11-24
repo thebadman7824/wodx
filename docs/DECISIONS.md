@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7830
+Next free block: B7840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -465,6 +465,7 @@ Next free block: B7830
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
+| B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -15966,3 +15967,15 @@ changeling's and leaves Willpower to the Storyteller. No 20th-anniversary sorcer
 follow Sorcerer Revised; its "equal for all" option (Mage figures) is not the default. Logged in docs/PENDING-REVIEW.md.
 
 Reverse: edit the kinain and sorcerer entries in creation-totals.mjs.
+
+## B7831. Changing Breeds start with their own book's Rage, Gnosis and Willpower (2026-11-24)
+WoDX Creation. B7821 left a Changing Breed sheet on W20's Garou figures because W20 Changing Breeds was not in the text
+dumps. It is now (the private OCR dump, item-ocr/w20cb.txt). W20 Changing Breeds gives each Breed its own starting Rage,
+Gnosis and Willpower: by aspect, auspice, path, tribe or breed, or one figure for every member. These are now
+FERA_STARTS in derived-rules.mjs, picked by the sheet's Breed (system.changingbreed), with the page cited. The book
+gives no other creation figures of its own, so Attributes, Abilities, Backgrounds, Gifts and freebies stay W20's.
+Ananasi and Nuwisha have no Rage. The Corax note names Raven's Gifts. The Mokole have no starting Rage in the book, so
+the row asks for the Storyteller. A Garou keeps the Garou tables. A Changing Breed in the Dark Ages uses the same figures, since DA:W gives only the
+Garou's (a house rule, in docs/PENDING-REVIEW.md).
+
+Reverse: remove FERA_STARTS, feraOf and the fera branch of the w20 case in derivedTraits.

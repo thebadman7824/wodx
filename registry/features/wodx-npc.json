@@ -1006,6 +1006,10 @@
     },
     "shown": {
      "what": "once a night the NPCs' pools rise on their sheets"
+    },
+    "gated": {
+     "gate": "tools/gate/gatenpcrefill.mjs",
+     "step": "1. a changeling NPC's Sanctuary refills Glamour at the new night"
     }
    },
    "open": [
