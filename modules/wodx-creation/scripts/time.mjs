@@ -1,6 +1,7 @@
 import {splatOf} from "./lines.mjs";
 import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf, isAnimal, animalKindOf} from "./actor-data.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
+import * as RR from "./revenant-rules.mjs";
 import {ghoulBloodMax, ghoulBloodSource, ghoulRuleEra, V20_ERAS, bondStage} from "./rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
 import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
@@ -148,10 +149,28 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       const newMax = kind ? AG.animalBloodMax(kind, toYear - ghouledYear) : ghoulBloodMax(rev && born !== null ? toYear - born : toYear - ghouledYear, {era, revenant: rev});
       const dustAt = kind ? span * 2 : GHOUL_AGING.dustAt;
       const oldMax = Number(actor.system?.advantages?.bloodpool?.max) || 10;
+      if ( rev ) {
+        // B7845: a revenant's own vitae keeps its Disciplines; true vitae keeps it ageless, its own only slows the years to a
+        // quarter, and it dies at 150 years plus 50 a dot of Stamina (Ghouls: Fatal Addiction p. 29). Its pool grows a point
+        // a century (Guide to the Sabbat), less the family's own cap (the Dark Ages Grimaldi hold 2 fewer).
+        const rm = actor.flags?.[MODULE_ID]?.revenant ?? {};
+        const capStep = rm.mark?.bloodMax ? 10 - Number(rm.mark.bloodMax) : 0;
+        const revMax = Math.max(1, newMax - (V20_ERAS.has(era) ? 0 : capStep));
+        // the body's age is kept apart from the calendar's once the years run slow (chronology bioAge)
+        const ageNow = Number.isFinite(Number(c.bioAge)) && c.bioAge !== null ? Number(c.bioAge) : (born !== null ? fromYear - born : null);
+        const ownAge = RR.ageOver({years, age: ageNow, stamina: Number(actor.system?.attributes?.stamina?.value) || 2, fed: false});
+        const growth = revMax !== oldMax ? `; blood pool ${oldMax} → ${revMax}` : "";
+        if ( domitor || l.domitor ) add("ghoulFed", `Fed true vitae by ${domitor?.name ?? l.domitor?.name}`,
+          `Does not age while a vampire's vitae lasts (Ghouls: Fatal Addiction p. 29)${growth}`, !gone, {newMax: revMax, domitorId: domitor?.id ?? l.domitor?.id});
+        add("revenantAges", "Lives on the family's vitae",
+          `Ages ${ownAge.aged} of the ${years} years${ownAge.ageAfter !== null ? ` (${ageNow} → ${ownAge.ageAfter})` : ""}; the life ends at ${ownAge.lifespan} (Ghouls: Fatal Addiction p. 29)${growth}${ownAge.dies ? "; <b>dies of age</b>" : ""}`,
+          !(domitor || l.domitor) || gone, {newMax: revMax, dies: ownAge.dies, bioAge: ownAge.ageAfter});
+      } else {
       add("ghoulFed", `Fed each month by ${domitor?.name ?? l.domitor?.name ?? "the domitor"}`,
         `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (${V20_ERAS.has(era) && !rev ? "+1 every two centuries" : "+1 a century"})` : ""} (${ghoulBloodSource(era)})`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
       add("vitaeLapses", "The vitae lapses",
         `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= dustAt ? " and turns to dust" : (kind && realEnd >= span ? ", past its natural span, and dies" : "")}; the Disciplines go dark (V20 Dark Ages p. 399)`, gone, {dust: realEnd >= dustAt});
+      }
     }
 
     // Bonds fade without a drink: one step per (12 − Willpower) months (V20DA p. 341)
@@ -254,6 +273,11 @@ async function applyChange(actor, change, plan, choice = null) {
       }
       return null;
     }
+    case "revenantAges":
+      await actor.update({"system.advantages.bloodpool.max": d.newMax});
+      if ( d.bioAge !== null && d.bioAge !== undefined ) await setChronology(actor, {bioAge: d.bioAge});
+      if ( d.dies ) await die(actor, plan.to, "age");
+      return null;
     case "vitaeLapses":
       await actor.update({
         "system.settings.variant": "general", "system.settings.variantsheet": "",
@@ -306,6 +330,8 @@ export async function applyPlan(plan, {accept = {}, born = {}, choices = {}, dry
       const on = isOn(accept, row, ch);
       if ( !on ) continue;
       if ( ch.kind === "ghoulFed" && (accept[row.actorId]?.[row.changes.find(c => c.kind === "vitaeLapses")?.id] ?? row.changes.find(c => c.kind === "vitaeLapses")?.checked) ) continue;
+      // B7845: a revenant fed true vitae does not also age on its own
+      if ( ch.kind === "revenantAges" && row.changes.some(c => c.kind === "ghoulFed" && isOn(accept, row, c)) ) continue;
       const choice = choices[row.actorId]?.[ch.id] ?? ch.data?.choice ?? null;
       const picked = ch.choices ? {...ch, picked: ch.choices.find(c => c.value === choice)?.label ?? choice} : ch;
       if ( !dryRun ) await applyChange(actor, ch, plan, choice);
