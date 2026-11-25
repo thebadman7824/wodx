@@ -13,7 +13,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-creation | yes | 23 | 0 | 3 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 19 |
+| wodx-npc | yes | 34 | 0 | 18 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -156,7 +156,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | shown | 1 |  |
 | Residents of generated towns and settlements (`npc.residents`) | core | shown | 1 |  |
 | Standing by community, with news of a deed travelling at the era's speed; social rank and feuds (`npc.standing`) | core | book |  | gatetruthnpc 11. untying a prisoner is a deed: standing in the town rises |
-| The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | shown | 2 |  |
+| The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | gated | 1 | gatehuntcalendar 1. the hunt window's calendar step is in the hunt's difficulty |
 | The topic menu: walk up to someone and pick a topic, and the talk generator for unwritten answers (`npc.talk`) | core | book |  | gatetalk the window |
 | Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | shown | 2 |  |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
