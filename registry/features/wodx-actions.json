@@ -689,11 +689,13 @@
     },
     "shown": {
      "what": "greyed options in the power windows once a power is used up, and the after-cost card when it ends"
+    },
+    "gated": {
+     "gate": "tools/gate/gategiftused.mjs",
+     "step": "1. a used once-a-scene Gift is greyed in the Gift window"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [

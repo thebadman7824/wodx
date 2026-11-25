@@ -319,11 +319,13 @@
     },
     "shown": {
      "what": "people with a name, trade, Nature, Demeanor, wants and secrets, sent to the approval queue or made at once"
+    },
+    "gated": {
+     "gate": "tools/gate/gatepeoplemake.mjs",
+     "step": "1. Make them now gives the sheet the window's Nature, Demeanor and Willpower"
     }
    },
-   "open": [
-    "gated: gatepeople '10. sheet' is graded marker and the rest are direct calls"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
