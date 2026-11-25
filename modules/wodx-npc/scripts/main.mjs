@@ -1285,7 +1285,7 @@ function installLook() {
   // Foundry lets a double-click through only to a user who may view the token's actor; a player may look at anyone
   const view = T.prototype._canView;
   if ( typeof view === "function" ) T.prototype._canView = function (user, event) {
-    if ( user && !user.isGM && this.document?.actor && !this.document.actor.testUserPermission?.(user, "LIMITED") && this.document.visible !== false && !this.document.hidden ) return true;
+    if ( user && !user.isGM && this.document?.actor && !this.document.actor.testUserPermission?.(user, "LIMITED") && this.isVisible !== false && !this.document.hidden ) return true;
     return view.call(this, user, event);
   };
   T.prototype._onClickLeft2 = function (event) {
@@ -1295,7 +1295,9 @@ function installLook() {
   };
   T.prototype._wodxLook = true;
 }
-Hooks.once("ready", installLook);
+// Before the first scene is drawn: a token's mouse handler keeps the methods it found when it was drawn
+Hooks.once("setup", installLook);
+Hooks.once("canvasInit", installLook);
 
 /* Phase 7c: routines, places and reactions, built with this module's grid helpers */
 const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, grid, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,

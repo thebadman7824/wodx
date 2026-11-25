@@ -103,12 +103,20 @@ async function press({userId, messageId, n, label}) {
   let el = H.findButton(messageId, pick), spare = null;
   // B8050 (#2482): a card the seat's chat log has not drawn (an older one) is drawn off screen, with its listeners
   if ( !el ) ({el, spare} = await drawnButton(msg, pick));
+  const before = {n: game.messages.size, flags: JSON.stringify(msg.flags ?? {})};
   if ( el ) el.click();
+  // A button drawn off screen only works when its own render hook bound it: it counts as pressed when something
+  // came of it (a new card, the card changed, or the button switched itself off)
+  let acted = !!el;
+  if ( el && spare ) {
+    await new Promise(r => setTimeout(r, 600));
+    acted = el.disabled || game.messages.size > before.n || JSON.stringify(game.messages.get(messageId)?.flags ?? {}) !== before.flags;
+  }
   if ( spare ) setTimeout(() => spare.remove(), 5000);
   await H.log({kind: "card", source: R.sourceOf(msg.flags), title: R.titleOf(msg), buttons: [String(label)], choice: String(label),
-    acted: !!el, note: el ? `pressed for ${game.users.get(userId)?.name ?? "the player"}` : "button not found on the seat's screen"});
-  reply(userId, "st.pressed", {label, done: !!el});
-  return !!el;
+    acted, note: acted ? `pressed for ${game.users.get(userId)?.name ?? "the player"}` : el ? "pressed off screen, and nothing came of it" : "button not found on the seat's screen"});
+  reply(userId, "st.pressed", {label, done: acted, offscreen: !!(el && spare && !acted)});
+  return acted;
 }
 
 /** B8050: the card drawn by its own renderHTML (the modules' render hooks bind its buttons) in a hidden box on the seat. */
@@ -299,7 +307,9 @@ class StEyes extends ApplicationV2 {
   }
   /** B8050 (#2482): empty the list; the cards stay in the seat's chat, and only new ones come here. */
   static #onClear() {
-    seenCards = []; unread = 0; clearedAt = Date.now();
+    // The seat's own times: the newest card cleared, so the player's clock never has to match the seat's
+    clearedAt = Math.max(clearedAt, ...seenCards.map(c => Number(c.at ?? 0)));
+    seenCards = []; unread = 0;
     try { globalThis.localStorage?.setItem?.("wodx-solo.eyesCleared", String(clearedAt)); } catch (e) { /* private window */ }
     this.render();
     refreshPanel();
@@ -399,7 +409,7 @@ function table(title, head, rows, width = 560) {
 const CLIENT = {
   "st.refused": p => ui.notifications.warn(`Storyteller tools: ${p.why}.`),
   // B8050 (#2482): what the press did shows as the card it makes, which comes into the list; the note says so
-  "st.pressed": p => ui.notifications[p.done ? "info" : "warn"](p.done ? `${p.label}: done on the seat. Any card it made comes into this list.` : `${p.label} could not be pressed: the card has no such button now.`),
+  "st.pressed": p => ui.notifications[p.done ? "info" : "warn"](p.done ? `${p.label}: done on the seat. Any card it made comes into this list.` : (p.offscreen ? `${p.label}: this older card's button did nothing from the list. Press it in the chat log, or ask again.` : `${p.label} could not be pressed: the card has no such button now.`)),
   "st.given": p => ui.notifications.info(`${p.name} is now on ${p.actor}'s sheet.`),
   "st.xp": p => ui.notifications.info(`${p.actor} has ${p.amount} more experience.`),
   "st.items": p => StGive.show(p.rows ?? [], p.query ?? null),
@@ -410,7 +420,7 @@ const CLIENT = {
     seenCards = p.replace ? fresh.slice(-R.EYES_CAP) : fresh.reduce((l, c) => R.addEyes(l, c), seenCards);
     const app = foundry.applications.instances?.get?.("wodx-solo-eyes");
     if ( app?.rendered ) app.render();
-    else if ( !p.replace ) { unread += incoming.length; refreshPanel(); }
+    else if ( !p.replace ) { unread += fresh.length; refreshPanel(); }
   },
   "st.check": p => table("Check the systems", ["", "Part", "How it stands"], (p.rows ?? []).map(r => [
     r.state === "ok" ? '<i class="fa-solid fa-circle-check" title="fine"></i>' : '<i class="fa-solid fa-triangle-exclamation" title="look at this"></i>',

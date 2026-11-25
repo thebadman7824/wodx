@@ -383,7 +383,10 @@ const ACTIONS = {
       try { ops = (haul.optionsFor?.(me) ?? []).filter(o => o.op === "take" && o.what === body?.uuid); } catch (e) { ops = []; }
       const op = ops.find(o => o.want === "carry" && !o.disabled) ?? ops.find(o => !o.disabled);
       if ( op ) { await haul.take(me, body, op.want); return; }
-      const why = ops[0]?.note || (haul.optionsFor?.(me) ?? []).find(o => o.op === "none")?.label || `${body?.name ?? "They"} is out of reach`;
+      const all = haul.optionsFor?.(me) ?? [];
+      const why = ops[0]?.note || (all.some(o => o.op === "release") ? "the hands are full: set down what is held first"
+        : all.find(o => o.op === "none" && String(o.label ?? "").startsWith(`${body?.name}:`))?.label || all.find(o => o.op === "none" && !String(o.label ?? "").includes(":"))?.label
+        || `${body?.name ?? "the body"} is out of reach`);
       ui.notifications.warn(`${me.name}: ${why}. A companion is asked instead.`);
     }
     ask("ask.carry", {tokenId: pick, sceneId: scene.id});
