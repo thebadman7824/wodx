@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 42 | 0 | 9 |
+| wodx-actions | yes | 42 | 0 | 8 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 2 | 0 | 0 |
 | wodx-combat | yes | 15 | 0 | 0 |
@@ -18,7 +18,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 20 | 0 | 2 |
+| wodx-sheets | yes | 20 | 0 | 1 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -51,7 +51,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
-| Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | shown | 2 |  |
+| Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | gated | 1 | gateretrywindow 1. a failed roll tried again in the action window is one harder |
 | Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 1 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 1 |  |
@@ -185,7 +185,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Relationships tab: every tie, what it does in play, family news, Followers (`sheets.relationships`) | core | gated | 1 | gatebonds 7. sheet |
 | The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions (`sheets.page-two`) | core | gated | 1 | gateplaypage 4 |
 | Bring forward: things on the maps swap for their equal in the card's year (`sheets.bring-forward`) |  | book |  | gatebringforward buttons |
-| History with Undo for this session's edits, and Print (`sheets.history-print`) |  | shown | 1 |  |
+| History with Undo for this session's edits, and Print (`sheets.history-print`) |  | gated |  | gatehistoryundo 1. Undo in the sheet's History window puts Strength back |
 | Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | gated |  | gatestandingstrip 1. the Bio tab's strip shows the sheet's Road and opens the Road window |
 | Sheet tools: the title bar's buttons and window controls in one menu (`sheets.sheet-tools`) |  | book |  | gateplayerextras 8. sheet tools |
 | The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | shown | 1 |  |
