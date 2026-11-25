@@ -68,13 +68,32 @@ function pull(scene, user, token) {
   return game.socket.emit("pullToScene", scene.id, user.id);
 }
 
+/** Is a point indoors? WoDX Senses knows the places; without it, out of doors. */
+const indoorAt = (scene, p) => { try { return !!game.modules.get("wodx-senses")?.api?.indoorAt?.(scene, p); } catch (e) { return false; } };
+
+/**
+ * #2475: a player's token sees a few squares in the dark outdoors and nothing in an unlit interior. The seat fits the
+ * range when the token stops somewhere new. A power's darkvision or a range set by hand is left as it is (R.sightFor).
+ */
+async function tokenSight(tok, ch) {
+  if ( !H.isSeat() || !on() || !("x" in (ch ?? {}) || "y" in (ch ?? {})) ) return;
+  if ( !tok?.actor?.hasPlayerOwner || !tok.sight?.enabled ) return;
+  const scene = tok.parent, g = Number(scene?.grid?.size) || 100;
+  const mid = {x: Number(tok.x) + Number(tok.width || 1) * g / 2, y: Number(tok.y) + Number(tok.height || 1) * g / 2};
+  const range = R.sightFor({indoor: indoorAt(scene, mid), gridDistance: scene?.grid?.distance, visionMode: tok.sight.visionMode, range: tok.sight.range});
+  if ( range === null || Number(tok.sight.range) === range ) return;
+  await tok.update({"sight.range": range});
+}
+
 /** Put a token for the actor at the landing's way in. */
 async function placeToken(actor, scene, {fresh = false} = {}) {
   const size = Number(actor.prototypeToken?.width) || 1;
   const to = R.wayIn({initial: scene.initial, width: scene.width, height: scene.height, padding: scene.padding, grid: {size: scene.grid?.size}}, size);
   // B8033 (#2475): a sheet whose token sees nothing in the dark gets a few squares of sight, in this scene's units
   // fresh: the sheet arrival has just made (its prototype holds only the bare number); later placings keep the player's
-  const sight = fresh || !(Number(actor.prototypeToken?.sight?.range) > 0) ? {sight: {enabled: true, range: R.sightRange(scene.grid?.distance), visionMode: "basic"}} : {};
+  // #2475: none in an unlit interior (the way in may be a room); tokenSight fits it again as the token moves
+  const mid = {x: to.x + size * (Number(scene.grid?.size) || 100) / 2, y: to.y + size * (Number(scene.grid?.size) || 100) / 2};
+  const sight = fresh || !(Number(actor.prototypeToken?.sight?.range) > 0) ? {sight: {enabled: true, range: R.sightFor({indoor: indoorAt(scene, mid), gridDistance: scene.grid?.distance}), visionMode: "basic"}} : {};
   const td = await actor.getTokenDocument({x: to.x, y: to.y, ...sight, flags: {[MOD]: {arrival: true}}});
   const [made] = await scene.createEmbeddedDocuments("Token", [td.toObject()]);
   await H.log({kind: "scene", source: MOD, title: scene.name, note: `${actor.name} placed at the way in`});
@@ -215,6 +234,7 @@ export function installArrival(helpers) {
       return yes ? pick({fresh: true}) : null;
     }
   });
+  Hooks.on("updateToken", (tok, ch) => { tokenSight(tok, ch).catch(e => console.warn(`${MOD} | sight`, e)); });
   // The panel's Make my character button goes once the player has one
   Hooks.on("updateUser", (u, ch) => {
     if ( u.id === game.user.id && "character" in (ch ?? {}) && foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered ) SoloPanel.open();

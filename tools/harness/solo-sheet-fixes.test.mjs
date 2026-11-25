@@ -271,3 +271,15 @@ test("#2505a: lines that age like mortals can't be born past a mortal lifespan; 
   assert.deepEqual(R.clampYears("mage", {birthYear: 1160, turnYear: 1180}, 1197), {birthYear: 1160, turnYear: 1180});
   assert.deepEqual(R.clampYears("vampire", {birthYear: -500, turnYear: 100}, 1197), {birthYear: -500, turnYear: 100});
 });
+
+test("#2475: a player's token sees a few squares outdoors and nothing in an unlit interior; a power's sight is left alone", async () => {
+  const S = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+  assert.equal(S.sightFor({indoor: false, gridDistance: 1}), 6);
+  assert.equal(S.sightFor({indoor: true, gridDistance: 1}), 0);
+  assert.equal(S.sightFor({indoor: false, gridDistance: 5, range: 0}), 30, "coming back out of doors gives the squares back");
+  assert.equal(S.sightFor({indoor: true, gridDistance: 1, visionMode: "darkvision"}), null, "Eyes of the Beast and the like keep their sight");
+  assert.equal(S.sightFor({indoor: true, gridDistance: 1, range: 20}), null, "a range set by hand stays");
+  const A = src("modules/wodx-solo/scripts/arrival.mjs");
+  assert.match(A, /Hooks\.on\("updateToken", \(tok, ch\) => \{ tokenSight\(tok, ch\)/);
+  assert.match(src("modules/wodx-senses/scripts/main.mjs"), /indoorAt: \(scene, p\) => R\.isIndoor\(placeAt\(scene, p\)\)/);
+});
