@@ -23,6 +23,8 @@ import * as D from "./lifepath-drill-rules.mjs";
 export {BANDS, LINES, SPLATS};
 export const VERSION = 1;
 /** Years from birth to each early scene. */
+/** #2505: a year in words: a minus year is before the common era (-500 is 500 BCE). */
+export const yearWords = y => { const n = Math.trunc(Number(y)); return Number.isFinite(n) ? (n < 0 ? `${-n} BCE` : String(n)) : ""; };
 export const AGE_AT = {birth: 0, youth: 12, adult: 20, later: 32};
 /** At most this many people are ticked to become NPCs by default; the player may tick more. */
 export const PEOPLE_DEFAULT = 3;
@@ -329,7 +331,7 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "
 /** The lifepath as journal or chat text. keptKeys: the suggestions kept (all when not given). */
 export function summaryHtml(sum, {name = "", keptKeys = null, splatLabel = ""} = {}) {
   const L = LINES[sum.line];
-  const head = `<p><strong>${esc(name || "A character")}</strong>: ${esc(L?.label ?? sum.line)}${splatLabel ? `, ${esc(splatLabel)}` : ""}. Born ${sum.birthYear}${sum.turnYear !== null ? `; ${esc(L?.turning ?? "the turn")} ${sum.turnYear}` : ""}.</p>`;
+  const head = `<p><strong>${esc(name || "A character")}</strong>: ${esc(L?.label ?? sum.line)}${splatLabel ? `, ${esc(splatLabel)}` : ""}. Born ${yearWords(sum.birthYear)}${sum.turnYear !== null ? `; ${esc(L?.turning ?? "the turn")} ${yearWords(sum.turnYear)}` : ""}.</p>`;
   const story = `<ol>${sum.story.map(s => `<li><strong>${s.year}, ${esc(s.title)}.</strong> ${esc(s.choice)}${s.text ? `: ${esc(s.text)}` : ""}</li>`).join("")}</ol>`;
   const kept = sum.gives.filter(g => !keptKeys || keptKeys.includes(g.key));
   const gives = kept.length ? `<h3>Suggestions kept</h3><ul>${kept.map(g => `<li>${esc(KINDS[g.kind])}: ${esc(g.name)}</li>`).join("")}</ul>` : "";

@@ -163,3 +163,14 @@ test("#2504: a player's menu shows what fits the character, the rest behind Show
   assert.match(PM, /Show every action \(\$\{hiddenN\} more that do not fit this character\)/);
   assert.match(src("modules/wodx-actions/styles/wodx-actions.css"), /button\.vta-unfit\[hidden\] \{ display: none !important; \}/);
 });
+
+test("#2505: a lifepath may begin before the common era", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/lifepath-rules.mjs")));
+  assert.equal(L.yearWords(-500), "500 BCE");
+  assert.equal(L.yearWords(1197), "1197");
+  const p = L.newPath({line: "vampire", birthYear: -500, turnYear: -470});
+  assert.equal(p.birthYear, -500);
+  const F = src("modules/wodx-creation/scripts/lifepath.mjs");
+  assert.match(F, /min="\$\{s\.line === "mortal" \? 1100 : -4000\}"/);
+  assert.match(F, /birthYear: yearIn\(f\.birthYear\.value, this\.setup\.birthYear\)/);
+});
