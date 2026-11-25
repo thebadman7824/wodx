@@ -211,10 +211,12 @@ test("#2474: Who they are asks each line's identity, and a Dark Ages Cainite pic
 });
 
 test("#2501, #2479: a solo sheet is unfinished until the player says it is ready; others never are", () => {
-  assert.equal(W.unfinished({soloMade: true}), true);
-  assert.equal(W.unfinished({soloMade: true, wizard: {done: true}}), false);
-  assert.equal(W.unfinished({soloMade: false}), false, "the Storyteller's own sheets are never held back");
-  assert.equal(W.unfinished({open: true}), true);
+  assert.equal(W.unfinished({soloMade: true, marked: true}), true);
+  assert.equal(W.unfinished({soloMade: true, marked: true, wizard: {done: true}}), false);
+  assert.equal(W.unfinished({soloMade: false, marked: true}), false, "the Storyteller's own sheets are never held back");
+  assert.equal(W.unfinished({soloMade: true}), false, "a sheet made before the Ready button is never held back");
+  assert.ok(W.IDENTITY.Werewolf.every(f => f.list), "the sheet keeps tribe, breed and auspice as list keys");
+  assert.ok(W.IDENTITY.Hunter[0].list === "CreedList");
   assert.equal(W.normWizard({done: true}).done, true);
   assert.equal(W.normWizard({done: "yes"}).done, undefined);
   const src = readFileSync(join(root, "modules/wodx-creation/scripts/wizard.mjs"), "utf8");

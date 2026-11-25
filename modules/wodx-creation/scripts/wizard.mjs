@@ -32,12 +32,17 @@ export const wizardOf = actor => W.normWizard(actor?.flags?.[MODULE_ID]?.[FLAG] 
 
 /** B8035: is the character still being made? Solo arrival's sheets until "This character is ready"; any sheet while the wizard is open. */
 export const creationUnfinished = actor => !!actor && W.unfinished({wizard: wizardOf(actor), soloMade: !!actor.flags?.["wodx-solo"]?.arrival,
-  open: !!foundry.applications.instances?.get?.(`wodx-wizard-${actor.id}`)?.rendered});
+  marked: Number(actor.flags?.["wodx-solo"]?.arrival?.ready) >= 1});
 
 /** The Dark Ages Roads (WoDX Actions' data), loaded once for the "Who they are" page (B8034). */
 let ROADS = null;
-const loadRoads = () => ROADS ??= fetch("modules/wodx-actions/data/roads-daw.json").then(r => (r.ok ? r.json() : null)).catch(() => null);
-const homeRegion = () => { try { return chron()?.chronicle?.current?.()?.manifest?.homeland ?? ""; } catch (e) { return ""; } };
+const loadRoads = () => ROADS ??= fetch("modules/wodx-actions/data/roads-daw.json").then(r => (r.ok ? r.json() : null)).catch(() => null)
+  .then(d => { if ( !d ) ROADS = null; return d; });
+/** The sheet's own choice lists (the system's listData: tribes, kiths, creeds...), for the fields it keeps as list keys. */
+const loadLists = actor => import(`/systems/${game.system.id}/module/scripts/select-helpers.js`).then(m => m.default.SetupItem(actor, true)).catch(e => { console.warn(`${MODULE_ID} | lists`, e); return {}; });
+const homeRegion = () => {
+  try { return chron()?.chronicle?.current?.()?.manifest?.homeland || chron()?.world?.homeland?.() || ""; } catch (e) { return ""; }
+};
 const langsOf = actor => (Array.isArray(actor?.flags?.["wodx-chronicle"]?.languages) ? actor.flags["wodx-chronicle"].languages.filter(Boolean) : []);
 /** The player view's hover help in WoDX Sheets, when that module has it: one text for each Trait in all of WoDX. */
 let sheetHelp = null;
@@ -152,13 +157,20 @@ export class WizardApp extends ApplicationV2 {
     Beasts.wirePanel(this.element);
     // B8034: the "Who they are" page writes each field as it changes
     if ( this.page === "who" && !this.roads ) loadRoads().then(d => { if ( d ) { this.roads = d; this.render(); } });
+    if ( this.page === "who" && !this.lists && W.identityFor(TOTALS[this.lineId]?.sheet).some(f => f.list) ) {
+      this.lists = {};
+      loadLists(this.actor).then(d => { this.lists = d ?? {}; this.render(); });
+    }
     for ( const el of this.element.querySelectorAll("input[name=who-text]") ) el.addEventListener("change", ev => this.actor.update({[ev.target.dataset.path]: String(ev.target.value ?? "").trim().slice(0, 80)}));
+    for ( const el of this.element.querySelectorAll("select[name=who-list]") ) el.addEventListener("change", async ev => { await this.actor.update({[ev.target.dataset.path]: ev.target.value}); this.render(); });
     this.element.querySelector("select[name=who-clan]")?.addEventListener("change", async ev => {
       await this.actor.update({"system.clan": ev.target.value ? "custom" : "", "system.custom.clan": ev.target.value});
       this.render();
     });
     this.element.querySelector("select[name=who-road]")?.addEventListener("change", async ev => {
       const [k, path] = String(ev.target.value).split("|");
+      // Choose… clears the Road again
+      if ( !k ) { await this.actor.update({"flags.wodx-actions.-=road": null}); return this.render(); }
       const r = this.roads?.roads?.[k];
       if ( !r ) return;
       // The same write as WoDX Actions' Road and Path (kindred.js setRoad), so sins, frenzy and the sheet follow it
@@ -167,7 +179,10 @@ export class WizardApp extends ApplicationV2 {
     });
     this.element.querySelector("input[name=who-lang]")?.addEventListener("change", async ev => {
       const v = String(ev.target.value ?? "").trim().slice(0, 40), rest = langsOf(this.actor).slice(1).filter(l => l.toLowerCase() !== v.toLowerCase());
-      await this.actor.update({"flags.wodx-chronicle.languages": v ? [v, ...rest] : rest});
+      // Through WoDX Chronicle where it is on, so its checks (a language closed in this book) hold here too
+      const set = chron()?.languages?.set;
+      if ( set ) await set(this.actor, v ? [v, ...rest] : rest);
+      else await this.actor.update({"flags.wodx-chronicle.languages": v ? [v, ...rest] : rest});
       this.render();
     });
     this.element.querySelector("select[name=line]")?.addEventListener("change", async ev => {
@@ -269,7 +284,8 @@ export class WizardApp extends ApplicationV2 {
     const a = this.actor, sys = a.system ?? {};
     const field = f => {
       if ( f.kind === "clan" ) {
-        const cur = (sys.clan === "custom" ? sys.custom?.clan : "") || "";
+        // A clan the sheet already has, typed or from its own list, shows as chosen
+        const cur = String((sys.clan === "custom" ? sys.custom?.clan : sys.clan ? game.i18n?.localize?.(sys.clan) ?? sys.clan : "") || "");
         const list = W.clansOpen(nowWhen());
         const known = list.some(c => c.name === cur);
         return `<div class="form-group"><label>${esc(f.label)}</label><select name="who-clan" data-fixed><option value="">Choose…</option>${
@@ -290,6 +306,13 @@ export class WizardApp extends ApplicationV2 {
           ${r ? `<p class="wodx-quiet">Virtues on this Road: ${vs.map(v => esc(this.roads.virtueLabels?.[v] ?? v)).join(" and ")} and Courage. Its sins and their order are in WoDX Actions, Disciplines and Road.</p>` : ""}`;
       }
       const v = foundry.utils.getProperty(a, f.path) ?? "";
+      if ( f.list ) {
+        const map = this.lists?.[f.list] ?? null, entries = map ? Object.entries(map) : [];
+        if ( !entries.length ) return `<div class="form-group"><label>${esc(f.label)}</label><span>${esc(v ? game.i18n?.localize?.(v) ?? v : "Not chosen yet")}</span></div>`;
+        const has = entries.some(([k]) => k === v);
+        return `<div class="form-group"><label>${esc(f.label)}</label><select name="who-list" data-path="${esc(f.path)}" data-fixed>${has ? "" : `<option value="${esc(v)}" selected>${esc(v ? game.i18n?.localize?.(v) ?? v : "Choose…")}</option>`}${
+          entries.map(([k, l]) => `<option value="${esc(k)}" ${k === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>`;
+      }
       return `<div class="form-group"><label>${esc(f.label)}</label><input type="text" name="who-text" data-path="${esc(f.path)}" value="${esc(v)}" maxlength="80"></div>`;
     };
     const langs = langsOf(a), native = langs[0] ?? "", suggest = W.nativeFor(homeRegion());
@@ -297,7 +320,7 @@ export class WizardApp extends ApplicationV2 {
       <p>Each choice goes on the sheet as soon as it is made. The Storyteller can change any of it later.</p>
       ${W.identityFor(L.sheet).map(field).join("")}
       ${L.sheet === "Vampire" ? `<p class="wodx-quiet">Generation is bought as the Generation Background, on the Backgrounds page; with none, the character is of the book's starting Generation.</p>` : ""}
-      <div class="form-group"><label>Native language</label><input type="text" name="who-lang" value="${esc(native)}" placeholder="${esc(suggest || "The language they grew up speaking")}" list="wodx-wz-langs" maxlength="40"></div>
+      <div class="form-group"><label>Native language</label><input type="text" name="who-lang" value="${esc(native)}" placeholder="${esc(suggest || "The language they grew up speaking")}" maxlength="40"></div>
       <p class="wodx-quiet">${native ? "Other languages come from Linguistics and Language Merits, in the Languages window." : suggest ? `Left empty, ${esc(suggest)} is set when the character is ready.` : "Type the language they grew up speaking."}</p>`;
   }
 
@@ -501,7 +524,8 @@ export class WizardApp extends ApplicationV2 {
     const a = this.actor, w = wizardOf(a);
     const up = {[`flags.${MODULE_ID}.${FLAG}`]: W.normWizard({...w, done: true})};
     const b = D.startingBlood(this.lineId, {backgrounds: bgDots(a)});
-    if ( b?.full ) up["system.advantages.bloodpool.temporary"] = n(a.system?.advantages?.bloodpool?.max) || 10;
+    // Only to a pool the sheet has: an unset maximum is left alone (#2473)
+    if ( b?.full && n(a.system?.advantages?.bloodpool?.max) > 0 ) up["system.advantages.bloodpool.temporary"] = n(a.system.advantages.bloodpool.max);
     const native = W.nativeFor(homeRegion());
     if ( !langsOf(a).length && native ) up["flags.wodx-chronicle.languages"] = [native];
     await a.update(up);
@@ -534,8 +558,13 @@ export class WizardApp extends ApplicationV2 {
     const b = D.startingBlood(this.lineId, {backgrounds: bgDots(this.actor)});
     if ( !b ) return;
     const max = n(this.actor.system?.advantages?.bloodpool?.max) || 10;
-    // B8035 (#2501): a new Cainite starts fully fed
-    if ( b.full ) { await this.actor.update({"system.advantages.bloodpool.temporary": max}); return this.render(); }
+    // B8035 (#2501): a new Cainite starts fully fed, to the pool the sheet has (none set: nothing to fill)
+    if ( b.full ) {
+      const top = n(this.actor.system?.advantages?.bloodpool?.max);
+      if ( top > 0 ) await this.actor.update({"system.advantages.bloodpool.temporary": top});
+      else ui.notifications.warn("The sheet has no blood pool size yet: set the Generation first.");
+      return this.render();
+    }
     let total = b.plus;
     if ( b.roll ) {
       const roll = await new Roll(`${b.roll}d10`).evaluate();

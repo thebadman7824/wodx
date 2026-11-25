@@ -520,6 +520,8 @@ export const SIGHT_SQUARES = 6;
 export const sightRange = (gridDistance = 1) => Math.max(1, Math.round(SIGHT_SQUARES * (Number(gridDistance) > 0 ? Number(gridDistance) : 1) * 10) / 10);
 
 /** The data for the lone player's new character. The seat makes it; the player owns it, and its token is linked. */
+/** B8035 (#2501): a sheet the arrival makes now waits for the wizard's Ready button; older sheets carry no mark. */
+export const READY_MARK = 1;
 export function newCharacterData({name, line, userId, at = 0} = {}) {
   const L = arrivalLine(line) ?? arrivalLine("mortal");
   const n = arrivalName(name);
@@ -527,6 +529,6 @@ export function newCharacterData({name, line, userId, at = 0} = {}) {
     name: n, type: L.type,
     ownership: {default: 0, [String(userId)]: 3},
     prototypeToken: {name: n, actorLink: true, disposition: 1, displayName: 30, sight: {enabled: true, range: SIGHT_SQUARES, visionMode: "basic"}},
-    flags: {"wodx-solo": {arrival: {line: L.id, userId: String(userId), at: Number(at) || 0}}}
+    flags: {"wodx-solo": {arrival: {line: L.id, userId: String(userId), at: Number(at) || 0, ready: READY_MARK}}}
   };
 }

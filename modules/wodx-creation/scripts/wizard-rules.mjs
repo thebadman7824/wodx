@@ -288,14 +288,15 @@ export function nextPage(pages, key, d = 1) {
 
 /**
  * The identity fields each sheet type asks for on the "Who they are" page, past Concept, Nature and Demeanor (which
- * every sheet has). path: where the system keeps it. kind "clan" and "road" are pickers; the rest are typed.
+ * every sheet has). path: where the system keeps it. kind "clan" and "road" are pickers; list: the sheet's own choice
+ * list (the system's listData) for a field the sheet keeps as a list key; the rest are typed.
  */
 export const IDENTITY = {
   Vampire: [{key: "clan", label: "Clan", kind: "clan"}, {key: "road", label: "Road and Path", kind: "road"}, {key: "sire", label: "Sire", path: "system.sire"}],
-  Werewolf: [{key: "tribe", label: "Tribe", path: "system.tribe"}, {key: "breed", label: "Breed", path: "system.breed"}, {key: "auspice", label: "Auspice", path: "system.auspice"}],
-  Mage: [{key: "affiliation", label: "Tradition or faction", path: "system.affiliation"}, {key: "essence", label: "Essence", path: "system.essence"}],
-  Changeling: [{key: "kith", label: "Kith", path: "system.kith"}, {key: "seeming", label: "Seeming", path: "system.seeming"}, {key: "court", label: "Court", path: "system.court"}],
-  Hunter: [{key: "creed", label: "Creed", path: "system.creed"}],
+  Werewolf: [{key: "tribe", label: "Tribe", path: "system.tribe", list: "TribeList"}, {key: "breed", label: "Breed", path: "system.breed", list: "BreedList"}, {key: "auspice", label: "Auspice", path: "system.auspice", list: "AuspiceList"}],
+  Mage: [{key: "affiliation", label: "Tradition or faction", path: "system.affiliation", list: "AffiliationList"}, {key: "essence", label: "Essence", path: "system.essence"}],
+  Changeling: [{key: "kith", label: "Kith", path: "system.kith", list: "KithList"}, {key: "seeming", label: "Seeming", path: "system.seeming", list: "SeemingList"}, {key: "court", label: "Court", path: "system.court", list: "CourtList"}],
+  Hunter: [{key: "creed", label: "Creed", path: "system.creed", list: "CreedList"}],
   Wraith: [{key: "life", label: "Who they were in life", path: "system.life"}, {key: "death", label: "How they died", path: "system.death"}],
   Mortal: []
 };
@@ -318,11 +319,12 @@ export const nativeFor = (region = "") => REGION_LANGUAGE[String(region ?? "")] 
 
 /**
  * Is the character still being made? (B8035, #2501, #2473, #2479) A sheet the solo arrival made counts as unfinished
- * until the player presses "This character is ready" on the wizard's last page; any sheet counts while the wizard
- * is open on it. A sheet made any other way (the Storyteller's, an old one) is never held back.
- *   wizard: normWizard's shape; soloMade: the sheet carries the wodx-solo arrival mark; open: the wizard is open on it.
+ * until the player presses "This character is ready" on the wizard's last page. A sheet made any other way (the
+ * Storyteller's, a table player's) is never held back, and neither is one the arrival made before the Ready button
+ * existed, which had no way to say it was done: those carry no ready mark (wodx-solo arrival.ready).
+ *   wizard: normWizard's shape; soloMade: the sheet carries the wodx-solo arrival mark; marked: its arrival.ready mark.
  */
-export function unfinished({wizard = {}, soloMade = false, open = false} = {}) {
-  if ( open ) return true;
-  return !!soloMade && !normWizard(wizard).done;
+export function unfinished({wizard = {}, soloMade = false, marked = false} = {}) {
+  if ( !soloMade || !marked ) return false;
+  return !normWizard(wizard).done;
 }

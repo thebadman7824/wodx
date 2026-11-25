@@ -64,7 +64,8 @@ export function registerFirstNight() {
   Hooks.on("wodxSessionEnded", () => countSessions().catch(e => console.error(`${MODULE_ID} | story hooks`, e)));
   // B8040 (#2496): the Storyteller (or the solo seat) ticks a step on their own client; the player's hub shows it too
   Hooks.on("updateActor", (a, ch) => { if ( foundry.utils.hasProperty(ch ?? {}, `flags.${MODULE_ID}.${FLAG}`) ) FirstNightApp.refresh(); });
-  Hooks.on("updateSetting", st => { if ( st?.key === "wodx-chronicle.approvals" ) FirstNightApp.refresh(); });
+  // The first approval ever creates the setting rather than changing it
+  for ( const h of ["createSetting", "updateSetting"] ) Hooks.on(h, st => { if ( st?.key === "wodx-chronicle.approvals" ) FirstNightApp.refresh(); });
 }
 
 /** GM: tick a step. */
