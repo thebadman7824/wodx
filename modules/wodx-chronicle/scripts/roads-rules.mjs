@@ -18,7 +18,7 @@ export const TRUTHS = [
   {key: "higher", label: "Cultivate the higher self"},
   {key: "shadow", label: "Conquer the Shadow"},
   {key: "self", label: "Make peace with yourself"},
-  {key: "living", label: "Make peace with the world of the living"},
+  {key: "living", label: "Come to terms with the living world"},
   {key: "identity", label: "Value identity over Corpus"},
   {key: "beyond", label: "Value Transcendence over identity"},
   {key: "virtues", label: "Perfect the positive virtues"}

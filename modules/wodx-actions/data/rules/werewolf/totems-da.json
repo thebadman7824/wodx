@@ -34,7 +34,7 @@
      "individual": {"renown": {"honor": 3}, "effects": [{"ch": "roll", "tags": ["stamina"], "dice": 1, "tick": "Running a long way", "note": "+1 Stamina die for long-distance running only"}]},
      "pack": {"traits": {"survival": 3}, "willpower": 3},
      "friends": "Fianna, and honoured among the fae",
-     "ban": "Respect all prey, with a Prayer for the Prey after every successful hunt, and always aid the fae and their kin."},
+     "ban": "Respect all prey, and perform the Prayer for the Prey whenever a hunt succeeds, and always aid the fae and their kin."},
     {"key": "fenris", "name": "Fenris", "aliases": ["Great Fenris"], "group": "war", "cost": 5, "page": 229,
      "individual": {"renown": {"glory": 2}, "attrChoice": ["strength", "dexterity", "stamina"]},
      "pack": {},

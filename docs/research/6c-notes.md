@@ -58,7 +58,7 @@ Mechanics only, in WoDX's own words, with page references. No book text. Decisio
   - Always: spend 1 Willpower to resist a power, Discipline, ghostly manifestation or witchcraft that would hurt or coerce her: her Faith is subtracted from its successes (doubled against Daimoinon).
   - •: repel the dark — 1 Willpower, roll Faith at the creature's current Willpower; no successes: it can't advance on her with ill intent; success: it flees a turn per success; touching it, the successes are aggravated damage.
   - ••: unease near the unnatural (no roll; the Storyteller may name a monster).
-  - •••: immune to Chimerstry, Dementation, Dominate, Obfuscate and other mind-clouding powers.
+  - •••: Chimerstry, Dementation, Dominate, Obfuscate and every other power that clouds the mind fail against them.
   - ••••: immune to the Blood Oath and ghouling; can't be raised as a ghost or a walking corpse; immune to Presence and emotion powers.
   - •••••: her prayer or kind words: vampires resist Rötschreck at 9 or flee the scene (or harm themselves if trapped); a monster that doesn't redeem itself next story loses a Road dot and its highest Virtue.
   - Miracles: at most once a story, the impossible without a roll.
@@ -88,7 +88,7 @@ Mechanics only, in WoDX's own words, with page references. No book text. Decisio
 - Conviction (pp. 159–161), 1–10: spend on Blessings; 1 on a Virtue roll for an automatic success (only Conviction there, never Willpower); 10 banked = a Superior Virtue dot or an Orison, 15 an Acolyte Endowment, 25 an Advocate, 35 a Judge one (p. 173); banking takes an hour of prayer a point.
   - Risking Conviction: once a scene, 1–3 on a Blessing roll, a die each; success: back with +1; failure: lost; botch: all Conviction lost.
   - Victory: primary Superior Virtue + its Virtue at 7: +1; botch −1.
-  - Prayer: an hour on Holy Ground, over a Holy Relic or with a Flock; roll that rating at 7, a point a success; each extra hour −1 (min 3); once a day, each later day +1 (max 10); never above Piety.
+  - Prayer: an hour spent on Holy Ground, beside a Holy Relic or among a Flock; roll that rating at 7, a point a success; each extra hour −1 (min 3); once a day, each later day +1 (max 10); never above Piety.
   - A new story: up to Conscience + Faith.
   - Holy Relics: once a story, the rating at 6, a point a success up to Piety (p. 156).
   - At 0: no Blessings, no Virtue rolls against the enemy (p. 161).

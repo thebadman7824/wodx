@@ -1293,7 +1293,7 @@
    "r": "charisma+expression",
    "d": "tWp",
    "t": "turns",
-   "e": "For one turn per success the target is barred from Rage: every Rage roll fails, no frenzy, no spending it.",
+   "e": "Rage is shut off from the target, one turn per success: every Rage roll fails, no frenzy, no spending it.",
    "book": "W20"
   },
   {

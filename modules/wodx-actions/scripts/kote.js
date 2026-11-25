@@ -162,7 +162,7 @@ export function build(ctx) {
             let body = `<div class="vta-sec">${it ? `<b>${esc(it.name)}</b>: ` : ""}${n(fd.k)} ${KIND[kind]} Chi.</div>`, rolls = [];
             if (def?.kind === "demon" || kind === "demon") {
                 const h = await rollPool(i.v.hun, Math.max(2, i.v.po || 6)); rolls.push(h.roll);
-                body += rollBlock("Hun harnesses the P'o", h) + `<div class="vta-res ${h.successes ? "good" : "bad"}">${h.successes ? "A controlled frenzy: the Hun keeps the body." : "The P'o takes the body while the Demon Art is used."}</div>`;
+                body += rollBlock("Hun harnesses the P'o", h) + `<div class="vta-res ${h.successes ? "good" : "bad"}">${h.successes ? "A controlled frenzy: the Hun keeps the body." : "The P'o holds the body for as long as the Demon Art runs."}</div>`;
             }
             let got = 1;
             if (n(fd.dice)) {

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.93.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.93.0 (The Aughisky, Lazarites, Skull Pigs and Fir Bolgs of Dark Ages: Werewolf (B7939))
 - 0.92.0 (Revenant families in every era (B7840-B7848): twenty family lines from V20 Dark Ages, V20 Ghouls and Revenants and Dark Ages: Vampire, each in the years it lives; weaknesses that work in play; revenant aging; lifepaths by family and year)
 - 0.91.0 (Changing Breeds start with W20 Changing Breeds' own Rage, Gnosis and Willpower for each Breed, by aspect, auspice, tribe or breed (B7831))

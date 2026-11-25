@@ -8,7 +8,7 @@
  * - How the years were spent: active (as the table), in danger (half again), in seclusion (half), research or practice
  *   (a point a decade more, kept for Knowledges or for Skills and physical Talents), torpor (only an old sleeper of
  *   strong mind, a point per 30 years, for mental traits).
- * - Risks and rewards: at the end of each century (or the downtime, if shorter) a Willpower roll at 7 (9 in seclusion,
+ * - Risks and rewards: when each century closes (or the downtime, if shorter) a Willpower roll at 7 (9 in seclusion,
  *   6 in danger); each success is a point more; a botch costs a die of points; in danger no success costs a die.
  * - Upkeep: each century every Background but Generation costs a point (2 in seclusion or torpor) or loses a dot.
  * - Tempting Fate: downtime in danger rolls Willpower at 7 for each Background; a botch loses a dot, a failure bars

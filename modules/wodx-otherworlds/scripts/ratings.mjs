@@ -29,7 +29,7 @@ export function makeRatingsBehavior() {
         reflective: new f.BooleanField({initial: false,
           label: "A reflective surface is at hand", hint: "Still water, a mirror, a polished shield."}),
         umbralStorm: new f.BooleanField({initial: false,
-          label: "Umbral storm", hint: "Wyld West: each 1 on a Gnosis roll counts as two."}),
+          label: "Umbral storm", hint: "Wyld West: every 1 rolled on Gnosis counts double."}),
         priority: new f.NumberField({required: true, nullable: false, initial: 0, integer: true,
           label: "Priority", hint: "Where regions overlap, the highest priority wins."})
       };

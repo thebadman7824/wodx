@@ -95,7 +95,7 @@ export function cardsFor(ev = {}, edges = [], {stepOf = () => 0} = {}) {
       if ( e.kind === "fetter" ) say(e.from, ev.kind === "death" ? `Your Fetter ${e.to.name} is gone: a Fetter's Harrowing waits, and the Fetter's dots are lost (Wraith 20th p. 309).` : `Your Fetter ${e.to.name} is hurt: you feel it, wherever you are.`);
       if ( e.kind === "dreamer" && ev.kind === "death" ) say(e.from, `Your Dreamer ${e.to.name} is dead: that well of Glamour is gone.`);
       if ( (e.kind === "packmate" || e.kind === "cellmate" || e.kind === "cabal" || e.kind === "wuOf") && ev.kind === "death" )
-        say(e.from, `${e.to.name}, of your ${e.kind === "packmate" ? "pack" : e.kind === "cellmate" ? "cell" : e.kind === "cabal" ? "cabal" : "wu"}, has fallen.${e.kind === "cellmate" ? " A Willpower roll (difficulty 7) or lose a point of temporary Willpower (house rule)." : ""}`);
+        say(e.from, `${e.to.name}, of your ${e.kind === "packmate" ? "pack" : e.kind === "cellmate" ? "cell" : e.kind === "cabal" ? "cabal" : "wu"}, has fallen.${e.kind === "cellmate" ? " Roll Willpower (difficulty 7); on a failure, 1 temporary Willpower is lost (house rule)." : ""}`);
       if ( e.kind === "familiar" && ev.kind === "death" ) say(e.from, `Your familiar ${e.to.name} is dead, and the loss is paid at once (M20 p. 407).`);
     }
   }

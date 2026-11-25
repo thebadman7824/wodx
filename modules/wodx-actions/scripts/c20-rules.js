@@ -152,7 +152,7 @@ export const COLD_IRON = { chimerical: true, physical: true, type: "aggravated",
  * adds to one Temper and brings its own trigger and immunity. Banality 10 is Undone. */
 export const BASE_TEMPERS = { willpower: 4, glamour: 4, banality: 3 };
 export const SEEMINGS = {
-    childling: { label: "Childling", bonus: { glamour: 1 }, trigger: "denying a new idea", immunity: "failing to overcome Banality does not trigger them" },
+    childling: { label: "Childling", bonus: { glamour: 1 }, trigger: "denying a new idea", immunity: "a failed roll against Banality is not a trigger for them" },
     wilder: { label: "Wilder", bonus: { choice: ["glamour", "willpower"] }, trigger: "refusing a chance of adventure", immunity: "chimerical killing in the service of an escapade" },
     grump: { label: "Grump", bonus: { willpower: 1 }, trigger: "failing to provide for someone in their care", immunity: "time near high Banality" }
 };

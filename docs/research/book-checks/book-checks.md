@@ -8,7 +8,7 @@ V20 core: printed page = pdf page − 8.
 
 | Topic | Mechanic | Page |
 |---|---|---|
-| Opening/Closing (Strength) | Difficulty 6 to 8, set by the door's material. Successes needed: about 1 for a standard interior door, 5 for a reinforced door, 10 or more for a vault door. It can be an extended action. On a botch, the character takes one lethal level (a hurt shoulder). | pdf 269 / printed 261 |
+| Opening/Closing (Strength) | Difficulty 6 to 8, set by the door's material. Successes needed: about 1 for a standard interior door, 5 for a reinforced door, 10 or more for a vault door. It may be rolled as an extended action. A botch costs one lethal health level (a wrenched shoulder). | pdf 269 / printed 261 |
 | Strength Feats chart | Feat Strength 3 breaks down a wooden door. 5 forces a metal fire door. 9 punches through a cement wall. 11 punches through 1-inch sheet metal. | pdf 269 / printed 261 |
 | Intrusion (Dexterity or Perception + Larceny) | Difficulty 5 for a standard lock, up to 9. Active security has to be beaten on the first try or the alarm goes off. A manual lock can be retried. The Storyteller may require a minimum Larceny. | pdf 268 / printed 260 |
 | Larceny Ability | 1 dot picks a simple lock. 3 dots open a standard locked window from outside. | pdf 113 / printed 105 |
@@ -122,7 +122,7 @@ Book: Dark Ages: Werewolf core. The pdf has no text layer, so I OCR'd pdf 78 to 
 | might-of-thor | 133 | OK, but **add the cost**: 1 Gnosis and 1 Rage. Willpower roll at difficulty 8. Strength doubles for one turn per success. For an hour afterwards, Physical Attributes drop to 1 and Willpower is halved, rounded up. |
 | ravens-curse | 138 | OK. A touch with the fingertips, 1 Gnosis, Manipulation + Archery at difficulty 7. Duration comes from a table by successes, starting at one hour for one success. |
 | spirit-witness | 122 | OK. A spirit that witnessed the event must be found first. Charisma + Investigation at a variable difficulty. Gaian spirits can't resist. |
-| balors-gaze | 135 | **Fix e/cost.** 1 Rage and 1 Gnosis, Perception + Occult at difficulty 8, for the rest of the scene. A foe who meets the gaze rolls Willpower (difficulty 8) and needs at least the user's successes, or takes **−5 dice, as if Crippled**. It gets past frenzy and Resist Pain. |
+| balors-gaze | 135 | **Fix e/cost.** 1 Rage and 1 Gnosis, Perception + Occult at difficulty 8; it lasts the scene. A foe who meets the gaze rolls Willpower (difficulty 8) and needs at least the user's successes, or takes **−5 dice, as if Crippled**. It gets past frenzy and Resist Pain. |
 | claws-of-the-glassblower | 130 | **Clarify e.** 1 Gnosis. After a claw hit the claws break off, and the glass does **1 aggravated level each round** it stays in the wound. It can be removed, but that takes time. |
 | dolorous-stroke | 138 | **Check e.** 1 Gnosis, and the attack takes the whole turn. On a hit, +2 damage dice. If it does 3 or more levels after soak, onlookers are dismayed. The OCR stops there, and I couldn't confirm the "lasting wound" in the stored summary. Read the page image before relying on it. |
 | earthfriends-pact | 123 | OK. 1 Gnosis, Charisma + Expression at difficulty 8. The ground shakes for 25 yards in every direction, and everyone except the user rolls Dexterity + Athletics. |

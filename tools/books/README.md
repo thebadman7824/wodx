@@ -31,3 +31,19 @@ against every book takes a minute or two rather than needing the PC. On the PC t
 A PC job packs each batch (`node tools/books/books.mjs pack <batch folder>`), zips the `<id>.txt` and `<id>.toc.txt` files of the batches changed since the last copy (never the page folders), hands the zips to a cloud session and unpacks them into
 `/mnt/project-files/book-text/`. The job file is `/mnt/project-files/jobs/book-text-sync-2026-11-13.md`; run it again
 after each OCR batch. `/mnt/project-files/book-text/SYNCED.md` says when each batch was last copied.
+
+## The overlap gate (B8020-B8023)
+
+`overlap-gate.mjs` turns the check into a pass or fail. A shared run passes when every word is a number or a game term
+from `overlap-terms.json` (stat lines, trait lists), or when its hash is in `overlap-allow.json` (names and titles a
+person checked). Everything else fails, with file, line, hash, book and pdf page; `--show` adds the words for the
+thread doing the rewrite (never paste them anywhere). The Rothenstein scripts (`ownBooks`) are the owner's own work and
+are not read.
+
+    node tools/books/overlap-gate.mjs --changed origin/main      what a branch changed (tools/quality-check.sh runs this)
+    node tools/books/overlap-gate.mjs                            every published folder (the daily 02:41 UTC run)
+    node tools/books/overlap-gate.mjs <file> --show              the words, for rewording
+    node tools/books/overlap-gate.mjs <file> --allow "power name, checked 2026-11-25"
+
+Without book text (GitHub's runners) it says skipped and passes. A failing run is reworded in WoDX's own words with the
+mechanics kept exact; only a name, title or list goes on the allowlist.

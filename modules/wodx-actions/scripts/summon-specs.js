@@ -2202,7 +2202,7 @@ export const SPECS = {
    "rankText": "4 Gaffling, 5 Jaggling, 7 totem avatar, 8-9 Incarna, 10 Celestine"
   },
   "page": "W20 p. 212",
-  "note": "Checked: the spirit cannot escape its caller and must attend, but nothing binds it to obey. Success count sets only its attitude."
+  "note": "Checked: the spirit has to come to its caller and cannot slip away, but nothing makes it obey. Success count sets only its attitude."
  },
  "vampire-dark-ages|unleash-the-dark-soul": {
   "what": "shade",

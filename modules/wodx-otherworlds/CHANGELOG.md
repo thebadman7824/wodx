@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.37.0 (A place on a long clock: when the chronicle in play ties a scene to one of its saga clocks (manifest.local.taints), the scene's Wyrm corruption moves with that clock, whatever the weekly spread setting is, and never in a Live world (B7807))
 - 0.36.3 (Fill from preset lists the scene-tag presets of the chronicle in play; the Rothenstein preset moved to WoDX Rothenstein unchanged (Chronicle Packs Desk f1). With no chronicle in play the preset row is hidden)
 - 0.36.2 (A Gauntlet or Shroud roll past difficulty 10 needs one more success a point, as every other roll does (B7120))

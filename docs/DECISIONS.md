@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8020
+Next free block: B8030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -475,6 +475,7 @@ Next free block: B8020
 | B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
+| B8020-B8029 | Book overlap: reword the prose that matched source books, and a gate that keeps new book text out (used B8020-B8023) | Actions, Chronicle, Combat, Creation, Interactables, Library, NPC, Otherworlds, Storyteller, system fork, tools (books) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8609,7 +8610,7 @@ WoDX NPC. The followers window lists every character the ledger binds to the mas
 Reverse: remove the ledger rows and the button from followers.mjs.
 
 ## B5102. A bond holds back the hand (2026-11-15)
-WoDX NPC and WoDX Combat. Before a bound servant attacks its master, it rolls Willpower at difficulty 8, one less if the master is cruel to it and one more if kind (V20 Dark Ages, page 343 of the pdf). Won, it must also spend a point of Willpower to strike; otherwise the attack does not happen. One drink, an unchained Thrall and Enchantment never hold a hand. The setting "Bonds hold back a blow" turns it off. The old after-the-blow warning steps aside while it is on. Desk item x4 (step one).
+WoDX NPC and WoDX Combat. Before a bound servant attacks its master, it rolls Willpower at difficulty 8, one less if the master is cruel to it and one more if kind (V20 Dark Ages, page 343 of the pdf). On a success it still pays 1 Willpower to strike; otherwise the attack does not happen. One drink, an unchained Thrall and Enchantment never hold a hand. The setting "Bonds hold back a blow" turns it off. The old after-the-blow warning steps aside while it is on. Desk item x4 (step one).
 
 Reverse: turn the setting off.
 
@@ -11767,8 +11768,8 @@ WoDX NPC. The 0.79.1 and 0.18.2 book-check rows were read against the books' tex
 and the Avatar Storm in 1999 (M20 pdf 136, 480); the Accordance War from 1969 to December 1973 (C20 pdf 29, 38-40,
 which gives no year for the Treaty of Concord; the open war ends with the new High King at the new year); the Anarch
 Revolt from 1381 (Guide to the Anarchs has no readable text here, so it stays as cited; Anarchs Unbound pdf 12-14
-agrees on the 14th and 15th centuries). Corrected: after 1999 the war is "less obvious than before, but no less
-intense" (M20 pdf 42), so after-the-storm is Hostile (-2) both ways, not -1. Kindred of the East pdf 32 says the
+agrees on the 14th and 15th centuries). Corrected: after 1999 the war is quieter on the surface but just as
+fierce (M20 pdf 42), so after-the-storm is Hostile (-2) both ways, not -1. Kindred of the East pdf 32 says the
 Cathayans count the Kin-jin as enemies but their hatred shows as wariness and suspicion, open hostility against the
 Western clans being rare; the old row had that the wrong way round (Cathayans -2, Kin-jin -1 "rarely hostile"), so
 both are now Tense (-1), the Kin-jin's side marked as WoDX's reading. The pooled Backgrounds comment named a pack's
@@ -13338,7 +13339,7 @@ WoDX Library. The coordinator's 87 (103 rows in the kits' lists today, 72 distin
 Reverse: remove data/wonder-fetish-powers.mjs and its import and spread in scripts/wonder-rules.mjs.
 
 ## B6780. Great Blow and Overhead Cleave leave no defense for the rest of the turn (2026-11-16)
-WoDX Combat. A Great Blow "may take no defensive actions in the turn" (V20 Dark Ages p. 347), and the house Overhead Cleave said the same, but nothing enforced it: the striker still dodged or parried later in the turn. The attack card now records noDefense from the maneuver (Great Blow gains the flag Cleave already had), and every defense plan except the mount's dodge (the mount defends, not the rider) is refused while that fighter has such a card this turn. The automatic defense says why.
+WoDX Combat. A Great Blow bars every defense for the rest of that turn (V20 Dark Ages p. 347), and the house Overhead Cleave said the same, but nothing enforced it: the striker still dodged or parried later in the turn. The attack card now records noDefense from the maneuver (Great Blow gains the flag Cleave already had), and every defense plan except the mount's dodge (the mount defends, not the rider) is refused while that fighter has such a card this turn. The automatic defense says why.
 
 Reverse: drop noDefense from greatblow, the noDefense field in the card data, and the committedThisRound check at the top of planDefense.
 
@@ -13348,7 +13349,7 @@ WoDX Combat. The book: roll damage normally; if the successes exceed the victim'
 Reverse: the disarm block after the damage roll in resolveAttack, dropWeapon, the "disarm" socket action and rules.disarmResult.
 
 ## B6782. A Tackle: both roll to stay standing (2026-11-16)
-WoDX Combat. After a Tackle, both combatants roll Dexterity + Athletics (difficulty 7) or suffer knockdown (V20 Dark Ages p. 348). Before, the victim always fell and the attacker never rolled. followOn now gives the Tackle's knockdown resist 7 for both; the attack rolls each fighter's pool, puts the rolls on the card, and marks only those who fail. The +1 difficulty to all actions next turn is not applied yet (listed for the Storyteller).
+WoDX Combat. After a Tackle, each fighter rolls Dexterity + Athletics (difficulty 7), and whoever fails is knocked down (V20 Dark Ages p. 348). Before, the victim always fell and the attacker never rolled. followOn now gives the Tackle's knockdown resist 7 for both; the attack rolls each fighter's pool, puts the rolls on the card, and marks only those who fail. The +1 difficulty to all actions next turn is not applied yet (listed for the Storyteller).
 
 Reverse: followOn's tackle entry back to the plain knockdown, and the resist block in resolveAttack.
 
@@ -16141,7 +16142,7 @@ WoDX Storyteller, new fae-oaths-rules.mjs and fae-oaths.mjs, the world setting f
 Reverse: remove the two files, the faeOaths setting and the token control; drop the faerie food branches in fae-da.js.
 
 ## B7867. Household helpers, the retinue, Retinue and Sprites as ties (2026-11-24)
-WoDX Storyteller. A household sprite (DA:Fae p. 183) is spurned by the Church or an unkept small oath and turns spiteful; a brownie (DA:Mage p. 194) refuses a first gift, leaves or turns murderous at the next (even odds, house reading), leaves when praised, and is mushrooms for seven days in sunlight. Only a content helper does the chores. A spiteful helper opens a Ledger consequence due in a week. A servant who tries to betray a fae master rolls Willpower at 10; one who raises a hand takes aggravated damage equal to the master's Mists (p. 94). The Retinue and Sprites Backgrounds become Upkeep ties (30 and 7 days, house reading): untended, they lose a dot on approval.
+WoDX Storyteller. A household sprite (DA:Fae p. 183) is spurned by the Church or an unkept small oath and turns spiteful; a brownie (DA:Mage p. 194) refuses a first gift, leaves or turns murderous at the next (even odds, house reading), leaves when praised, and is mushrooms for seven days in sunlight. Only a content helper does the chores. A spiteful helper opens a Ledger consequence due in a week. A servant who tries to betray a fae master rolls Willpower at 10; one who lifts a hand against the master suffers aggravated levels, as many as the master has dots of Mists (p. 94). The Retinue and Sprites Backgrounds become Upkeep ties (30 and 7 days, house reading): untended, they lose a dot on approval.
 
 Reverse: remove the helper and retinue parts of fae-oaths*.mjs and the retinue and sprites tie kinds in upkeep-rules.mjs.
 
@@ -16264,7 +16265,7 @@ WoDX Storyteller. A cell window (scene controls, "The inquisitor cell") keeps ea
 Reverse: remove cell.mjs and cell-rules.mjs and the cell lines in the Storyteller's main.mjs.
 
 ## B7892. The rector and the officers (2026-11-24)
-WoDX Storyteller. The rector is set by the Council of Faith; after a full year in the field the cell may elect another (Companion p. 74). Officers (sub-rector, treasurer, archivist, cellarer) are voted in, and the rector may veto; with the rector gone the sub-rector leads until a new one is chosen (p. 75).
+WoDX Storyteller. The rector is set by the Council of Faith; once the cell has served twelve months in the field it may vote in another (Companion p. 74). Officers (sub-rector, treasurer, archivist, cellarer) are voted in, and the rector may veto; with the rector gone the sub-rector leads until a new one is chosen (p. 75).
 
 Reverse: drop the rector and officers section of the cell window and its rules.
 
@@ -16519,3 +16520,23 @@ runner shows a train line (B7550), so it follows the move by itself.
 Reverse (the Main PC drives again): in one pull request, set `train` to `false` in runner.new_pc_lebrun.json and to
 `true` in runner.json. If the New PC is down it cannot drive anyway, so the order of the two runners' restarts does
 not matter then.
+
+## B8020. Prose that matched a book is reworded (2026-11-25)
+All modules, the system fork and docs. A full run of the 8-word overlap check (tools/books/books.mjs overlap, no cap, every published folder) found 5,280 shared runs: 696 distinct runs in 633 passages of 225 files. Each passage was read and sorted. 310 are game terms or lists (stat lines, Ability and trait lists, cost tables, book titles, power, path and place names), 13 match the owner's own Rothenstein scripts, and 107 are prose. The prose passages (123 places in 80 files) are now in WoDX's own words, with the mechanics, numbers and page references kept as the books give them; the Litany list in garou-deeds-rules.js is paraphrased. The full triage, with locations only, is in the project files (book-overlap/triage-2026-11-25.md). The runs themselves are never copied into the repository.
+
+Reverse: revert the rewording commit.
+
+## B8021. A shared run made only of game terms passes (2026-11-25)
+Tools. tools/books/overlap-terms.json lists the single words of game terms (Attributes, Abilities, Backgrounds, Disciplines, Spheres, tribes, health levels and similar) found in the term passages of B8020, leaving out stop words and common English words. A shared run of 8 words passes when every word is a number or on that list, so stat lines and trait lists never fail.
+
+Reverse: delete the words from overlap-terms.json; those runs then fail until allowlisted.
+
+## B8022. Names and titles pass by hash (2026-11-25)
+Tools. tools/books/overlap-allow.json keeps the SHA-256 (first 16 hex digits) of each shared run that a person checked and found to be a name, title or list but that B8021 does not cover (92 runs from the B8020 triage), with where it was first seen. No book words are kept, so the file cannot itself match a book. Books under ownBooks (rothenstein-scripts/, the owner's own writing) are not read. `overlap-gate.mjs --allow "<why>"` adds hashes after such a check.
+
+Reverse: remove a hash; that run fails again.
+
+## B8023. The overlap check is a gate (2026-11-25)
+Tools. tools/books/overlap-gate.mjs runs the overlap check and fails on any run that is not a term (B8021) or allowlisted (B8022). It prints locations and hashes only; `--show` adds the words for the thread doing the rewrite. tools/quality-check.sh runs it on the files changed since origin/main wherever the book text is (cloud threads); GitHub's runners do not hold the books, so there it says skipped. A daily scheduled run (02:41 UTC) checks all of main against /mnt/project-files/book-text and sends failing locations to the coordinator. Harness: tools/harness/overlap-gate.test.mjs.
+
+Reverse: take the Book overlap step out of tools/quality-check.sh and switch off the daily scheduled task.

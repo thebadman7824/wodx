@@ -72,6 +72,14 @@ echo "== Encyclopedia format"
 node tools/encyclopedia-check.mjs | tail -3 || true
 node tools/encyclopedia-check.mjs >/dev/null 2>&1 || { echo "FAIL encyclopedia"; fail=1; }
 
+echo "== Book overlap (rule 5, B8020)"
+# Needs the book text (cloud threads and the Main PC have it; GitHub's runners do not, so there it says skipped).
+# Only the files changed since origin/main are read here; the daily full run covers the rest.
+if git rev-parse --verify -q origin/main >/dev/null; then ov_args=(--changed origin/main); else ov_args=(); fi
+node tools/books/overlap-gate.mjs "${ov_args[@]}" >"$TMPD/qc.overlap" 2>&1; ov=$?
+tail -4 "$TMPD/qc.overlap"; rm -f "$TMPD/qc.overlap"
+[ $ov -eq 0 ] || { echo "FAIL book overlap"; fail=1; }
+
 echo "== UI fit (rule B17)"
 FOUNDRY_CSS="${FOUNDRY_CSS:-/mnt/user-data/uploads/Foundry Virtual Tabletop/resources/app/public/css/foundry2.css}"
 # Ben's PC: Foundry is installed on G:

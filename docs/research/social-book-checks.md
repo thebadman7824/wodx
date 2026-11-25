@@ -23,9 +23,9 @@ Three stages in a row. Each stage is a single roll, not extended.
   - Props and forged papers make the scam harder to see through; teamwork helps reveal it.
   - A botch collapses the scheme. In V20DA, a botch on detection means the mark falls for it badly.
 - **Fast-Talk:** Manipulation + Subterfuge, resisted by the target's Willpower, both at difficulty 6. Most successes wins; on a tie the character keeps talking. A botch angers the target.
-- **Interrogation, peaceful:** Manipulation + Empathy, resisted by Willpower, both at difficulty 6. Rolled at key points, every few minutes or at the end of a session.
+- **Interrogation, peaceful:** Manipulation + Empathy, resisted by Willpower, both at difficulty 6. Rolled at key moments: every few minutes, or once when a session ends.
 - **Interrogation, violent:** Manipulation + Intimidation, resisted by the higher of Stamina + 3 or Willpower. Rolled every minute or turn.
-  - The target loses one health level per turn of physical torture, or one temporary Willpower per turn of mental torture.
+  - Each turn of physical torture costs the target one health level; each turn of mental torture costs one temporary Willpower.
   - Interrogators can pool successes, even mixing Empathy and Intimidation (good cop, bad cop).
   - Each net success yields one more piece of information. If net successes exceed the target's permanent Willpower, the target tells everything.
   - A botch can destroy the subject's body or mind.

@@ -92,7 +92,7 @@ export function galeOf(successes) {
     const s = n(successes);
     if (s >= 5) return { weather: "storm", harm: { dice: 12, type: "lethal", who: "one" }, text: "tornadoes at chosen targets: 12 lethal dice, Dexterity + Dodge to cut it" };
     if (s >= 4) return { weather: "storm", harm: { dice: 10, type: "lethal", who: "all" }, text: "small tornadoes over the area: 10 lethal dice, Dexterity + Athletics to cut it" };
-    if (s >= 3) return { weather: "wind", text: "pockets of still air around people or small places" };
+    if (s >= 3) return { weather: "wind", text: "calm air gathers around people and in small spaces" };
     if (s >= 2) return { weather: "wind", shift: 2, text: "the wind on chosen people or things: their physical actions two harder" };
     if (s >= 1) return { weather: "wind", text: "the wind blows the way the player wants" };
     return { weather: "wind", text: "a gale with no one steering it" };

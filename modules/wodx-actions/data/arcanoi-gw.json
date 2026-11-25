@@ -142,7 +142,7 @@
 "diff": "t:angst",
 "c": "p2",
 "angst": true,
-"e": "Each success lowers the difficulty of the next Purify; the Pardoner gains 1 Angst."
+"e": "Every success takes 1 off the next Purify's difficulty; the Pardoner gains 1 Angst."
 },
 {
 "id": "gw-castigate-purify",

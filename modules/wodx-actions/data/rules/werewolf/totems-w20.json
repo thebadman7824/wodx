@@ -68,7 +68,7 @@
       "pack": {"traits": {"survival": 3, "subterfuge": 1, "enigmas": 1}},
       "friends": "Corax", "ban": "Carry no wealth: Raven provides."},
     {"key": "uktena", "name": "Uktena", "group": "wisdom", "cost": 7, "page": 376,
-      "individual": {"renown": {"wisdom": 2}, "effects": [{"ch": "roll", "tags": ["social"], "diff": 1, "tick": "Dealing with Garou of a tribe other than Uktena or Wendigo", "note": "+1 difficulty to Social rolls with other tribes"}],
+      "individual": {"renown": {"wisdom": 2}, "effects": [{"ch": "roll", "tags": ["social"], "diff": 1, "tick": "Dealing with Garou of a tribe other than Uktena or Wendigo", "note": "Social rolls toward Garou of other tribes at +1 difficulty"}],
         "notes": ["+3 soak dice in the Umbra", "2 extra experience each story for Enigmas, Occult, Rituals, Gifts or other mystic lore"]},
       "pack": {},
       "friends": "Uktena (who treat the pack as kin)", "ban": "Win back mystic lore, objects, places and creatures from the Wyrm's servants."},

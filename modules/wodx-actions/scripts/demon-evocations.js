@@ -231,7 +231,7 @@ export const EVOCATIONS = {
       "The prison spreads ill luck: whoever touches or carries it botches on 1 or 2.", S("bind")),
     "spirit:5": E("Put a soul into a body dead under 48 hours, healing it: body's Physical traits, soul's mind and skills. Faith days, or for good for a permanent Willpower point. Works for disembodied demons too.", "Faith days", "touch",
       "Willpower at their Torment for the soul: temporary derangement, permanent on failure, a frenzied monster on a botch.", S("rise")),
-    "realms:1": E("Read how thick the wall between the living and the dead is across 10 square yards times Faith.", "instant", "10 x Faith square yards",
+    "realms:1": E("Gauge how thin the Shroud is over 10 square yards times Faith.", "instant", "10 x Faith square yards",
       "Only weak places register.", N("sense")),
     "realms:2": E("Step bodily into the shadow lands (church or graveyard 6, old house 7, mall 8) and fly a mile a turn per Dexterity + Athletics 8 success, returning at the matching spot. Rolls there are 8 or worse; a botch costs Willpower, and at zero their host is lost. No passengers.", "until the demon returns", "self",
       "The demon leaves a seam that draws hauntings for Torment days.", S("sideways")),

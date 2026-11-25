@@ -135,7 +135,7 @@ export const FAITH_POWERS = {
         [0, "Spend 1 Willpower to resist a power that would hurt or coerce them: their Faith comes off its successes (doubled against Daimoinon)."],
         [1, "Repel the dark: 1 Willpower, Faith at the creature's current Willpower; it can't come at them with ill intent; each success, a turn of flight; touched, the successes are aggravated."],
         [2, "Unease near the unnatural."],
-        [3, "Immune to Chimerstry, Dementation, Dominate, Obfuscate and other mind-clouding powers."],
+        [3, "Chimerstry, Dementation, Dominate, Obfuscate and every other power that clouds the mind fail against them."],
         [4, "Immune to the Blood Oath and ghouling; can't rise as a ghost or a walking corpse; immune to Presence and emotion powers."],
         [5, "Their prayer or kind words: vampires resist Rötschreck at 9 or flee the scene."]
     ],

@@ -209,7 +209,7 @@ export function v20PathFor(data, label = "", custom = "") {
     let k = m && P[m[1]] ? m[1] : null;
     if (!k && custom && (!label || label === "custom")) {
         const c = String(custom).trim().toLowerCase().replace(/^the\s+/, "");
-        // B7081: another name the book gives the same Path ("Path of Death and the Soul" is the Path of the Bones, V20 p. 320)
+        // B7081: another name the book gives the same Path (the Path of the Bones, V20 p. 320, also goes by "Path of Death and the Soul")
         k = Object.keys(P).find(x => [P[x].name, ...(P[x].aliases ?? [])].some(nm => nm.toLowerCase() === c)) ?? null;
     }
     return k ? { key: `v20-${k}`, road: { ...P[k], book: data.book ?? "V20" }, path: null } : null;
@@ -587,7 +587,7 @@ export function bloodlinePowerDiff(clan, discipline, { onOther = true, piece = f
 
 /**
  * B7670: the Setite castes of V20 Dark Ages Appendix B (p. 450). clan: the sheet's clan text.
- * Witches of Echidna: every frenzy check brings a Self-Control check at the same difficulty; failing either (or any
+ * Witches of Echidna: each frenzy check comes with a second Self-Control check, same difficulty; failing either (or any
  * frenzy check at all for a Witch with Instinct) puts on Echidna's Visage, Appearance 0 for the scene. And each scene
  * the Witch uses or takes in blood, Echidna eats one more point at its end, unless the blood fed sorcery (Ritual or
  * Thaumaturgy). Warriors of Glycon: a chance at power or a convert asks a Willpower roll at 6, or the Warrior chases it
