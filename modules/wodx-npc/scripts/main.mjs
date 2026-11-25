@@ -85,6 +85,10 @@ function registerSettings() {
     name: "NPCs in combat", hint: "What NPCs with no player owner do on their turn, unless the scene or the NPC says otherwise.",
     scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
   });
+  game.settings.register(MOD, "walkRound", {
+    name: "My token walks round walls", hint: "When you drag your own token to a spot a wall stands in the way of, it walks a path round the walls and through open doors instead of stopping at the wall. Not in a fight, where each move is counted.",
+    scope: "client", config: true, type: Boolean, default: true
+  });
   game.settings.register(MOD, "gridless", {
     name: "Move NPCs on gridless scenes", hint: "On a scene with no grid, NPCs walk a square lattice of the scene's grid size, round walls, as on a square grid.",
     scope: "world", config: true, type: Boolean, default: true
@@ -1196,6 +1200,51 @@ export async function openNpcPanel() {
 /* ------------------------------------------------------------------ */
 /*  Hooks                                                              */
 /* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/*  #2492: a player's own token walks round walls                       */
+/* ------------------------------------------------------------------ */
+
+/** The cells of a path, keeping only the turns. */
+function turnsOf(path) {
+  if ( path.length <= 2 ) return path;
+  const out = [path[0]];
+  for ( let k = 1; k < path.length - 1; k++ ) {
+    const a = path[k - 1], b = path[k], c = path[k + 1];
+    if ( (b.i - a.i) !== (c.i - b.i) || (b.j - a.j) !== (c.j - b.j) ) out.push(b);
+  }
+  out.push(path[path.length - 1]);
+  return out;
+}
+/**
+ * A drag of the player's own token that a wall cuts short walks a path round the walls instead (the NPCs' own path
+ * finder). Only the dragging user's client, only off a fight, and only when there is a way: otherwise the move goes
+ * as Foundry makes it.
+ */
+function walkRound(doc, movement, operation) {
+  try {
+    if ( game.user.isGM || operation?.wodxWalkRound || movement?.method !== "dragging" ) return true;
+    if ( game.settings.get(MOD, "walkRound") === false ) return true;
+    const tok = doc.object;
+    if ( !tok || !doc.isOwner || canvas.scene?.id !== doc.parent?.id ) return true;
+    if ( game.combats?.some(c => c.started && c.scene?.id === doc.parent?.id && c.combatants.some(x => x.tokenId === doc.id)) ) return true;
+    const dest = movement.destination ?? {};
+    if ( !Number.isFinite(dest.x) || !Number.isFinite(dest.y) ) return true;
+    const half = {x: tok.w / 2, y: tok.h / 2};
+    const from = {x: doc.x + half.x, y: doc.y + half.y}, to = {x: dest.x + half.x, y: dest.y + half.y};
+    let hit = false;
+    try { hit = !!CONFIG.Canvas.polygonBackends.move.testCollision(from, to, {type: "move", mode: "any"}); } catch (e) { hit = false; }
+    if ( !hit ) return true;
+    const start = cellOf(tok), goal = grid().getOffset({x: dest.x + 1, y: dest.y + 1});
+    const hex = gridKind() === "hex";
+    const path = NR.findPath(start, goal, passableFor(tok), {maxNodes: 40000, neighbors: stepsFor(), heuristic: hex ? hexHeuristic(goal) : null});
+    if ( !path || path.length < 2 ) return true;
+    const waypoints = (hex ? path : turnsOf(path)).slice(1).map(c => topLeftFor(tok, c));
+    setTimeout(() => { doc.move(waypoints, {autoRotate: true, wodxWalkRound: true}).catch(e => console.warn(`${MOD} | walk round`, e)); }, 0);
+    return false;
+  } catch (e) { console.warn(`${MOD} | walk round`, e); return true; }
+}
+Hooks.on("preMoveToken", walkRound);
 
 /* Phase 7c: routines, places and reactions, built with this module's grid helpers */
 const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, grid, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,

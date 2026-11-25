@@ -103,3 +103,14 @@ test("#2490: a trip takes time in solo play, lands by the door, and a public pla
   const RR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/routine-rules.mjs")));
   assert.equal(RR.guessPlace("The Black Goat Tavern").kind, "tavern");
 });
+
+test("#2492: a player's dragged token walks round a wall on the NPCs' path finder", () => {
+  const M = src("modules/wodx-npc/scripts/main.mjs");
+  assert.match(M, /Hooks\.on\("preMoveToken", walkRound\);/);
+  const fn = M.slice(M.indexOf("function walkRound("), M.indexOf('Hooks.on("preMoveToken"'));
+  assert.match(fn, /game\.user\.isGM \|\| operation\?\.wodxWalkRound \|\| movement\?\.method !== "dragging"/, "only a player's drag, never its own walk");
+  assert.match(fn, /c\.started && c\.scene\?\.id === doc\.parent\?\.id/, "not in a fight");
+  assert.match(fn, /polygonBackends\.move\.testCollision/);
+  assert.match(fn, /if \( !path \|\| path\.length < 2 \) return true;/, "no way round: Foundry's own move");
+  assert.match(M, /register\(MOD, "walkRound", \{[\s\S]{0,400}scope: "client"/);
+});
