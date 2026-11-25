@@ -27,10 +27,13 @@ export async function run() {
     const GP = await import(`/modules/${ST}/scripts/goods-place-rules.mjs`);
     const {GOODS} = await import(`/modules/wodx-library/data/goods.mjs`);
     const W = await import(`/modules/wodx-library/data/goods-ways.mjs`);
-    const [kyoto, brno] = await Scene.create([
+    // B7980: a batch create does not keep its order (kit rule 1); nightly job 2448 priced Kyoto on the Moravian scene and
+    // Moravia on the Kyoto one, so each scene is matched by its name
+    const made = await Scene.create([
       {name: "WoDX gate: Kyoto market", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "japan"}}}},
       {name: "WoDX gate: Moravian market", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "moravia"}}}}]);
-    scenes.push(kyoto, brno);
+    scenes.push(...made);
+    const kyoto = made.find(s => s.name === "WoDX gate: Kyoto market"), brno = made.find(s => s.name === "WoDX gate: Moravian market");
     const year = Number(ch()?.eras?.currentYear?.()) || 1197;
     const wayOf = r => ch().world.rules.sphereFor(r, year);
     const inUse = (r, way) => (g, y) => W.inUseAt(g, y, {way, region: r});
