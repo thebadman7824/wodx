@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 45 | 0 | 8 |
+| wodx-actions | yes | 45 | 0 | 5 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
@@ -28,7 +28,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
-| A long roll's time moves the clock (`actions.spend-time`) | core | shown | 1 |  |
+| A long roll's time moves the clock (`actions.spend-time`) | core | gated |  | gatespendtime 1. an extended roll rolled until done moves the clock by its time |
 | A power's effect keywords on the effects card, and powers that apply or reach the world themselves (`actions.power-effects`) | core | gated | 1 | gatepowers 6 V20 Discipline library |
 | Building a domain: the manor's aspects, holdings and fealty (`actions.domain`) | core | gated | 1 | gatedadomain2 1. the Domain window saves the manor's aspects |
 | Common checks: noticing, reading a person, keeping one's feet, resisting (`actions.common-checks`) | core | gated | 1 | gatechecks 4 notice |
@@ -46,8 +46,8 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 2 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
 | The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 2 | gate6e a card: header, roll, what changed with pips |
-| The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | shown | 1 |  |
-| The ghosts of V20 Dark Ages: Passion as blood, manifesting (`actions.ghosts-da`) | core | shown | 2 |  |
+| The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | gated |  | gateenchant 1. Enchant from the changeling's Actions menu spends Glamour and binds the mortal |
+| The ghosts of V20 Dark Ages: Passion as blood, manifesting (`actions.ghosts-da`) | core | gated | 1 | gateghostmanifest 1. Manifest from the ghost's Actions menu spends Passion and sets Strength |
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |

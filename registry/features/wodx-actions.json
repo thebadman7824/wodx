@@ -852,10 +852,13 @@
     },
     "shown": {
      "what": "a Manifest button on a Dark Ages ghost's sheet that spends Passion and sets Strength for the turn"
+    },
+    "gated": {
+     "gate": "tools/gate/gateghostmanifest.mjs",
+     "step": "1. Manifest from the ghost's Actions menu spends Passion and sets Strength"
     }
    },
    "open": [
-    "gated: gatedach8 steps 2 to 4 are direct calls",
     "book: V20 Dark Ages p. 403; not checked against the book text yet"
    ],
    "deferred": [],
@@ -882,11 +885,13 @@
     },
     "shown": {
      "what": "with Move the clock ticked, the clock or the character's own time moves by the roll's time"
+    },
+    "gated": {
+     "gate": "tools/gate/gatespendtime.mjs",
+     "step": "1. an extended roll rolled until done moves the clock by its time"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -952,11 +957,13 @@
     },
     "shown": {
      "what": "a servant made through the action window and written on WoDX NPC's servant ledger"
+    },
+    "gated": {
+     "gate": "tools/gate/gateenchant.mjs",
+     "step": "1. Enchant from the changeling's Actions menu spends Glamour and binds the mortal"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
