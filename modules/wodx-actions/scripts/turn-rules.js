@@ -44,7 +44,16 @@ export const EVERY_TURN = {
   // B7668: Potestas Motus: an unwilling one lifted opposes with Willpower each turn (V20 Dark Ages p. 297), as B7093
   "levitation": {line: "Vampire (Dark Ages)", on: "target", roll: {pool: "willpower", diff: "caster:willpower", onWin: {end: true}}, page: "VtDA20 p. 297", text: "an unwilling one lifted rolls Willpower each turn against the caster's Willpower, and breaks free on a success"},
   "movement of the mind": {line: "Vampire (V20)", on: "target", roll: {pool: "willpower", diff: "caster:willpower", onWin: {end: true}}, page: "V20 p. 220", text: "a living thing held rolls Willpower each turn against the caster's Willpower, and breaks free on a success"},
-  "blood pump": {line: "Werewolf (Changing Breeds)", flag: "noBloodCap", page: "W20 CB p. 67", text: "no limit on the blood spent each turn"}
+  "blood pump": {line: "Werewolf (Changing Breeds)", flag: "noBloodCap", page: "W20 CB p. 67", text: "no limit on the blood spent each turn"},
+  // #2499: the Elder Powers given their own words (25 Nov), each checked on its V20 Dark Ages page
+  "chain the psyche": {line: "Vampire (Dark Ages)", on: "target", rounds: "successes", each: {damage: {levels: 1, type: "bashing", soak: false}}, page: "VtDA20 p. 220", text: "the thrall takes an unsoakable bashing level each turn, a turn per success"},
+  // Taste of Death: the first touch does the successes in aggravated levels; each turn after, one fewer (Fortitude soaks)
+  "taste of death": {on: "target", counter: {start: "successes", label: "aggravated levels of sap"}, each: {counter: -1, damage: {levels: "counter", type: "aggravated", soak: true}}, page: "VtDA20 p. 247", text: "the sap burns on: each turn one aggravated level fewer than the last, until none"},
+  "the darkness within": {line: "Vampire (Dark Ages)", on: "target", roll: {pool: "stamina", diff: 6, onFail: {pool: {key: "bloodpool", points: -2}}}, page: "VtDA20 p. 230", text: "the engulfed rolls Stamina at 6 each turn or loses two blood"},
+  // Too wide for the turn engine: the Storyteller runs them from the card each turn
+  "call forth the herald of hell": {line: "Vampire (Dark Ages)", storyteller: true, page: "VtDA20 p. 211", text: "each turn, mortals who see the demon lose Willpower dots (the Storyteller runs it)"},
+  "form of the storm": {line: "Vampire (Dark Ages)", each: {pool: {key: "bloodpool", points: -2, endIfEmpty: true}}, page: "VtDA20 p. 254", text: "two blood each turn keeps the storm; all inside take Serpentis bashing dice each turn (the Storyteller rolls for them)"},
+  "the last dracul": {line: "Vampire (Dark Ages)", storyteller: true, page: "VtDA20 p. 270", text: "the dragon's Strength-based Intimidation each turn (the Storyteller rolls it)"}
 };
 
 /**
@@ -116,7 +125,9 @@ export function stepOf(rec, roll = null) {
     if ( e.counter ) out.push({kind: "counter", by: e.counter});
     if ( e.end ) out.push({kind: "end"});
   };
-  add(rec.each);
+  // A counter that counts down before it hurts (Taste of Death): the step runs on what is left
+  if ( rec.each?.counter && rec.each?.damage?.levels === "counter" ) { out.push({kind: "counter", by: rec.each.counter}); add({...rec.each, counter: 0}); }
+  else add(rec.each);
   if ( rec.roll && roll ) {
     const won = n(roll.successes) > 0 && !roll.botch;
     add(won ? rec.roll.onWin : rec.roll.onFail);

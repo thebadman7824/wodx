@@ -2511,7 +2511,7 @@
 "diff": 7,
 "c": "",
 "t": "instant",
-"e": "Steps into one person-sized shadow and out of another in sight, or reaches through to grab something (Intelligence + Brawl). On arrival a Courage roll (difficulty 5; 7 if pulled through unwilling) or Rötschreck; a botch strands the vampire in the Abyss.",
+"e": "Steps through one person-sized shadow and out of another in sight, or reaches through to grab (Intelligence + Brawl). Then Courage at 5 (7 if pulled through unwilling) or Rötschreck; a botch strands them.",
 "elder": true
 },
 {
@@ -2550,7 +2550,7 @@
 "diff": 6,
 "c": "w2",
 "t": "instant",
-"e": "Two Willpower and three turns of focus fill the area with darkness; then all inside take a health level per success outright (aggravated for vampires). It then takes the dead, and mortals left at one health level, with it; each one taken still alive gives back a Willpower point.",
+"e": "Two Willpower and three turns of focus open a void: all inside take a level per success outright (aggravated for vampires). It takes the dead and mortals at one level; each taken alive gives a Willpower point.",
 "elder": true
 },
 {

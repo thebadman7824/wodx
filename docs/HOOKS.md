@@ -6,6 +6,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 
 | Hook | Sent by | Heard by |
 |---|---|---|
+| wodxTravelled | storyteller | solo (in solo play a trip's hours pass on the world clock, at most a fortnight in about 60 steps; trips under ten minutes leave it, B8056, #2490) |
 | wodxSoloArrived | solo | chronicle (in solo play the first-night tour is offered once the player's token is on the map, B5144) |
 | wodxFront | chronicle | chronicle (a judgement told as the truth makes Reinhold owe the company a favour, B6653) |
 | wodxChronicleInPlay | chronicle | chronicle and storyteller (the chronicle in play changed: closed or opened again; the world events and the Threads of Fate deck load its own again, B7572) |
@@ -92,6 +93,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxCreationDone | creation | `actor`: the wizard's This character is ready finished the sheet; the rest of WoDX opens up for it (#2501) |
 | wodxChronicleClosed | chronicle | `{id, book}`: a chronicle was closed in this world (Close this chronicle, B7570) |
 | wodxNightUndone | chronicle | pieces of the Hand's work taken back with the night's work: {ids, plan} (B6222) |
 | wodxSoloReported | solo | a problem reported in play was saved as a journal entry: {report, entryId}. The seat on the PC (tools/solo/seat.mjs --reports) hears it from outside the modules and writes the report to a file (B7162) |

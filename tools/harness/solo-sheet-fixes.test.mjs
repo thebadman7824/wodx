@@ -174,3 +174,21 @@ test("#2505: a lifepath may begin before the common era", async () => {
   assert.match(F, /min="\$\{s\.line === "mortal" \? 1100 : -4000\}"/);
   assert.match(F, /birthYear: yearIn\(f\.birthYear\.value, this\.setup\.birthYear\)/);
 });
+
+test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark Ages pp. 220, 230, 247)", async () => {
+  const TR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/turn-rules.js")));
+  const chain = TR.resolveRec(TR.everyTurnOf("Chain the Psyche", "Vampire (Dark Ages)"), {successes: 3});
+  assert.equal(chain.rounds, 3);
+  assert.deepEqual(TR.stepOf(chain), [{kind: "damage", levels: 1, type: "bashing", soak: false}]);
+  // Taste of Death: three successes did three on the touch; the next turns do two, then one, then end
+  const sap = TR.resolveRec(TR.everyTurnOf("Taste of Death"), {successes: 3});
+  assert.equal(sap.counter.value, 3);
+  const steps = TR.stepOf(sap);
+  assert.deepEqual(steps.map(s => s.kind), ["counter", "damage"], "the counter falls before the sap burns");
+  assert.equal(steps[1].levels, "counter");
+  assert.equal(steps[1].type, "aggravated");
+  const dark = TR.everyTurnOf("The Darkness Within", "Vampire (Dark Ages)");
+  assert.deepEqual(TR.stepOf(dark, {successes: 0}), [{kind: "pool", key: "bloodpool", points: -2}]);
+  assert.deepEqual(TR.stepOf(dark, {successes: 1}), []);
+  assert.match(src("modules/wodx-actions/scripts/turns.js"), /const levels = step\.levels === "counter" \? n\(rec\.counter\?\.value\)/);
+});
