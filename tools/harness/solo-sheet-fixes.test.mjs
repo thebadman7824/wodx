@@ -66,3 +66,19 @@ test("#2477: spent time keeps the guards a wait has", () => {
   for ( const g of [/placeOf\(user\)/, /making\(user\)/, /fightOn\(scene\.id\)\.length/, /game\.paused/, /if \( waiting \)/] ) assert.match(fn, g);
   assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:giveBlood": "Give a point of your vitae/);
 });
+
+test("#2487: Make the arrest sends the watch to the map, and every answer to the law is told", async () => {
+  const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/reach-rules.mjs")));
+  const spots = R.spotsNear({x: 0, y: 0}, {size: 100, width: 1000, height: 1000}, 2);
+  assert.ok(spots.length && spots.every(p => p.x >= 0 && p.y >= 0), "inside the scene");
+  assert.equal(spots[0].r, 1, "the nearest ring first");
+  assert.ok(spots.findIndex(p => p.r === 2) > spots.findLastIndex(p => p.r === 1), "rings in order");
+  assert.equal(spots.filter(p => p.r === 1).length, 3, "a corner token has three squares next to it");
+  const H = src("modules/wodx-chronicle/scripts/law-heat.mjs");
+  assert.match(H, /reach\.lawCome\(\{actorId, region, mode: "arrest", why: "the Storyteller's word"\}\)/);
+  assert.match(H, /await makeArrest\(b\.dataset\.actor, b\.dataset\.region\) : await letItGo\(/);
+  const RE = src("modules/wodx-storyteller/scripts/reach.mjs");
+  assert.match(RE, /polygonBackends\.move\.testCollision/);
+  assert.match(RE, /No one could be put on the map there; place them by hand\./);
+  assert.equal((RE.match(/await told\(a, /g) ?? []).length, 3, "resist, the sentence and going with them are each told");
+});
