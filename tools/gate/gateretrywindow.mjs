@@ -45,9 +45,12 @@ export async function run() {
       await waitFor(() => a().getFlag("wodx-actions", "retry"), 30000);
       const card = game.messages.contents.filter(m => (m.timestamp ?? 0) >= since).pop();
       // the second try: the same window for the same task
+      // the first window can still be fading out on a fast machine: wait for it to go, then read only the new one
+      await waitFor(() => !w1.isConnected, 10000);
       second = game.wodxActions.action({actor: a()});
-      await waitFor(() => oddsAt(actWin()), 20000);
-      const w2 = actWin();
+      const win2 = () => { const w = actWin(); return w && w !== w1 ? w : null; };
+      await waitFor(() => oddsAt(win2()), 20000);
+      const w2 = win2();
       const odds2 = oddsAt(w2), parts2 = partsOf(w2);
       G.ok("1. a failed roll tried again in the action window is one harder",
         !!odds1 && !!odds2 && odds2.difficulty === odds1.difficulty + 1 && odds2.dice === odds1.dice && /second try/.test(parts2) && !/second try/.test(parts1),
