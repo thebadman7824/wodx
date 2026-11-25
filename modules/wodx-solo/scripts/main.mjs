@@ -315,6 +315,7 @@ Hooks.once("ready", () => {
     // Other modules register their approval types in their own ready hooks: top up once they have
     setTimeout(() => { apply().catch(e => console.error(`${MOD} | top up`, e)); onQueue(); follow(player()); unpause("the seat sat down").catch(() => {}); }, 3000);
   } else if ( !game.user.isGM && !game.users.activeGM ) {
-    ui.notifications.warn(`${R.NAME}: the Storyteller's seat is empty, so the world stands still. Start the seat and it will carry on.`, {permanent: true});
+    // #2468: say what to do, in the player's terms (Play-Solo starts the world and the seat together)
+    ui.notifications.warn(`${R.NAME}: the Storyteller's seat is not running, so the world stands still. Close this window, start solo play with Play-Solo, and log in again as your player.`, {permanent: true});
   }
 });

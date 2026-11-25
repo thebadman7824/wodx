@@ -461,10 +461,14 @@ export function ownsByName(ownership = {}, userId = "") {
   return Number(ownership?.[String(userId)]) >= 3;
 }
 
-export function pickLanding(scenes = [], chosen = "", town = "") {
+export function pickLanding(scenes = [], chosen = "", town = "", named = "") {
   const list = (scenes ?? []).filter(s => s?.id && !isCoreScene(s));
   const flagged = list.find(s => s.landing);
   if ( flagged ) return flagged.id;
+  // B8032 (#2486): the chronicle names its own landing (its manifest's landing), ahead of any older pick
+  const want = String(named ?? "").trim().toLowerCase();
+  const own = want ? list.find(s => s.img && String(s.name ?? "").trim().toLowerCase().startsWith(want)) : null;
+  if ( own ) return own.id;
   if ( chosen && list.some(s => s.id === chosen) ) return chosen;
   const mapped = list.filter(s => s.img);
   for ( const re of landingNames(town) ) {
@@ -506,6 +510,14 @@ export function arrivalStep(has = {}) {
   return "ready";
 }
 
+/**
+ * B8033 (#2475): how far a new character sees in the dark with no light, in squares. Range 0 left a night map black.
+ * A few squares of dim sight, as anyone has by starlight; Auspex, Gifts and lights add to it through WoDX Senses.
+ */
+export const SIGHT_SQUARES = 6;
+/** The token's sight range in the scene's own units (Foundry measures sight in grid distance, not squares). */
+export const sightRange = (gridDistance = 1) => Math.max(1, Math.round(SIGHT_SQUARES * (Number(gridDistance) > 0 ? Number(gridDistance) : 1) * 10) / 10);
+
 /** The data for the lone player's new character. The seat makes it; the player owns it, and its token is linked. */
 export function newCharacterData({name, line, userId, at = 0} = {}) {
   const L = arrivalLine(line) ?? arrivalLine("mortal");
@@ -513,7 +525,7 @@ export function newCharacterData({name, line, userId, at = 0} = {}) {
   return {
     name: n, type: L.type,
     ownership: {default: 0, [String(userId)]: 3},
-    prototypeToken: {name: n, actorLink: true, disposition: 1, displayName: 30, sight: {enabled: true, range: 0}},
+    prototypeToken: {name: n, actorLink: true, disposition: 1, displayName: 30, sight: {enabled: true, range: SIGHT_SQUARES, visionMode: "basic"}},
     flags: {"wodx-solo": {arrival: {line: L.id, userId: String(userId), at: Number(at) || 0}}}
   };
 }

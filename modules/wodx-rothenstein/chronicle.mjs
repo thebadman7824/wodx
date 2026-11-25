@@ -25,6 +25,8 @@ export const MANIFEST = {
   title: SAGA.title,
   /** The town the chronicle's people call home; shared code uses this word instead of a name of its own. */
   town: "Rothenstein",
+  /** The scene a lone player lands on when they arrive (WoDX Solo, B8032): its name, or the start of it. */
+  landing: "Dolany Village",
   /** A region id from WoDX Chronicle's WORLD_REGIONS. */
   homeland: "moravia",
   /** The first night of play: [year, month, day]. */

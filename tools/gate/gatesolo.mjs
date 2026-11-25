@@ -221,7 +221,9 @@ async function player(ids) {
     const buttons = [...(el?.querySelectorAll?.("button[data-action=act]") ?? [])].map(b => b.dataset.id);
     // The main button (B2831) and the five under More
     const want = ["next", ...(S()?.rules?.PANEL ?? []).map(b => b.id)];
-    ok("9b. the panel", opened && byItself && want.every(id => buttons.includes(id)) && buttons.length === want.length, {byItself, buttons, want, minVersion: atLeast(MOD, "0.2.0")});
+    // #2467 (B8030): Report a problem is not inside the fold
+    const reportOut = !!el?.querySelector?.("button[data-action=act][data-id=report]") && !el?.querySelector?.("details.wsolo-more button[data-id=report]");
+    ok("9b. the panel", opened && byItself && want.every(id => buttons.includes(id)) && buttons.length === want.length && reportOut, {byItself, buttons, want, reportOut, minVersion: atLeast(MOD, "0.2.0")});
   });
   await step("9h. chronicle options from the panel", async () => {
     // B6757: the lone player sets the Storyteller's off-by-default options from the panel; the seat writes them and
@@ -448,6 +450,9 @@ async function finish(ids, playerSteps) {
     // An actor every player owns by default (an old test actor) is not the newcomer's character (B5146)
     const shared = await Actor.create({name: `${TAG} everyone's`, type: "Mortal", ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}});
     (ids.actors ??= []).push(shared.id);
+    // #2471 (B8031): nor is a stray sheet the newcomer owns by name that arrival did not make
+    const stray = await Actor.create({name: `${TAG} stray`, type: "Mortal", ownership: {default: 0, [second.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}});
+    ids.actors.push(stray.id);
     const actor = await ar.make(second.id, {name: `${TAG} newcomer's character`, line: "vampire"});
     if ( actor?.id ) (ids.actors ??= []).push(actor.id);
     const scene = game.scenes.get(ids.scene);
@@ -457,8 +462,8 @@ async function finish(ids, playerSteps) {
     const twice = game.actors.filter(a => a.name === "twice").length;
     for ( const a of game.actors.filter(a => a.name === "twice") ) await a.delete();
     ok("10f. arrival makes a character", actor?.type === "Vampire" && actor.testUserPermission(second, "OWNER") && game.users.get(second.id)?.character?.id === actor.id
-      && !!tok && tok.actorLink && tok.x === want.x && tok.y === want.y && twice === 0,
-      {type: actor?.type, owner: actor?.testUserPermission?.(second, "OWNER"), assigned: game.users.get(second.id)?.character?.id === actor?.id, token: tok ? {x: tok.x, y: tok.y, linked: tok.actorLink} : null, want, secondTime: again ? "brought in" : null, twice});
+      && !!tok && tok.actorLink && tok.x === want.x && tok.y === want.y && twice === 0 && Number(tok.sight?.range) > 0,
+      {sight: tok?.sight?.range ?? null, type: actor?.type, owner: actor?.testUserPermission?.(second, "OWNER"), assigned: game.users.get(second.id)?.character?.id === actor?.id, token: tok ? {x: tok.x, y: tok.y, linked: tok.actorLink} : null, want, secondTime: again ? "brought in" : null, twice});
   });
 
   await step("11. the stall report", async () => {
