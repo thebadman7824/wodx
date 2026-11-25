@@ -62,6 +62,9 @@ export function registerFirstNight() {
   C?.registerApprovalHandler?.(HOOK_APPROVAL, {label: "A story hook", approve: e => agreeHook(e.data?.actorId)});
   // A story hook not brought in after four sessions reminds the Storyteller (desk b3); counted when the Storyteller ends a session
   Hooks.on("wodxSessionEnded", () => countSessions().catch(e => console.error(`${MODULE_ID} | story hooks`, e)));
+  // B8040 (#2496): the Storyteller (or the solo seat) ticks a step on their own client; the player's hub shows it too
+  Hooks.on("updateActor", (a, ch) => { if ( foundry.utils.hasProperty(ch ?? {}, `flags.${MODULE_ID}.${FLAG}`) ) FirstNightApp.refresh(); });
+  Hooks.on("updateSetting", st => { if ( st?.key === "wodx-chronicle.approvals" ) FirstNightApp.refresh(); });
 }
 
 /** GM: tick a step. */

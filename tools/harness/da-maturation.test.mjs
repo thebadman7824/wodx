@@ -103,7 +103,8 @@ test("elder creation: the book's totals, the Road less 2, two dice of blood", as
   const sys = {advantages: {virtues: {conscience: {permanent: 3}, selfcontrol: {permanent: 4}, courage: {permanent: 3}}}};
   const road = D.derivedTraits("daelder", sys).rows.find(r => r.key === "road");
   assert.equal(road.want, 5);
-  assert.deepEqual(D.startingBlood("daelder"), {roll: 2, plus: 0, how: "Two dice; any past the Generation's limit are lost"});
+  assert.equal(D.startingBlood("daelder").full, true, "B8035: fully fed, the owner's house rule");
+  assert.equal(D.startingBlood("daelder").book, "Two dice; any past the Generation's limit are lost");
 });
 
 /* B7690: the Road of Night, Dark Ages Storytellers Companion (2002) pp. 28-30 */

@@ -265,9 +265,11 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
 export function startingBlood(lineId, {backgrounds = {}} = {}) {
   const bg = name => n(backgrounds[low(name)]);
   switch ( lineId ) {
-    case "v20": return {roll: 1, plus: 0, how: "One die"};
-    case "vtda20": return {roll: 1, plus: bg("Domain") + bg("Herd"), how: "One die + Domain + Herd"};
-    case "daelder": return {roll: 2, plus: 0, how: "Two dice; any past the Generation's limit are lost"};
+    // B8035 (#2501, the owner's call, 25 Nov 2026): a new Cainite starts fully fed, not on the book's die, so no new
+    // character can start in frenzy. The books' rolls (V20 p. 113, V20DA p. 156) are kept in "book" for reference.
+    case "v20": return {full: true, roll: 0, plus: 0, how: "A full pool (house rule; the book rolls one die)", book: "One die"};
+    case "vtda20": return {full: true, roll: 0, plus: 0, how: "A full pool (house rule; the book rolls one die + Domain + Herd)", book: "One die + Domain + Herd", bg: bg("Domain") + bg("Herd")};
+    case "daelder": return {full: true, roll: 0, plus: 0, how: "A full pool (house rule; the book rolls two dice)", book: "Two dice; any past the Generation's limit are lost"};
     case "ghoul": case "revenant": return {roll: 0, plus: 1, how: "Starts at 1"};
     default: return null;
   }

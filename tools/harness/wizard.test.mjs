@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
+import {readFileSync} from "node:fs";
 import {installMock} from "./foundry-mock.mjs";
 import {installActors} from "./actors-mock.mjs";
 
@@ -34,7 +35,7 @@ test("ready", async () => {
 });
 
 test("pages follow the book's order and skip what a line lacks", () => {
-  assert.deepEqual(W.pagesFor("v20").map(p => p.key), ["book", "attributes", "abilities", "powers", "backgrounds", "virtues", "meritsFlaws", "freebies", "review"]);
+  assert.deepEqual(W.pagesFor("v20").map(p => p.key), ["book", "who", "attributes", "abilities", "powers", "backgrounds", "virtues", "meritsFlaws", "freebies", "review"]);
   assert.ok(!W.pagesFor("w20").some(p => p.key === "virtues"), "W20 has no Virtues");
   assert.ok(!W.pagesFor("orpheus").some(p => p.key === "powers"), "Orpheus has no creation powers on the totals");
   assert.equal(W.nextPage(W.pagesFor("v20"), "review", 1), "review");
@@ -193,4 +194,38 @@ test("the Cyberpunks (B6612): a Future-branch bloodline from 2016 that brings Te
   assert.ok(!LR.splatsFor("vampire", 2030).some(s => s.key === "cyberpunks"), "classic timeline: no Cyberpunks");
   assert.ok(LR.splatsFor("vampire", 2030, {futureBranch: true}).some(s => s.key === "cyberpunks"));
   assert.ok(!LR.splatsFor("vampire", 2010, {futureBranch: true}).some(s => s.key === "cyberpunks"));
+});
+
+/* The first solo test's creation fixes (B8034 to B8041) */
+
+test("#2474: Who they are asks each line's identity, and a Dark Ages Cainite picks a Road", () => {
+  assert.equal(W.pagesFor("vtda20")[1].key, "who");
+  const v = W.identityFor("Vampire").map(f => f.key);
+  for ( const k of ["concept", "nature", "demeanor", "clan", "road", "sire"] ) assert.ok(v.includes(k), k);
+  assert.ok(W.identityFor("Werewolf").some(f => f.path === "system.tribe"));
+  assert.ok(W.identityFor("Changeling").some(f => f.path === "system.kith"));
+  assert.deepEqual(W.identityFor("Mortal").map(f => f.key), ["concept", "nature", "demeanor"]);
+  assert.ok(W.ROAD_LINES.includes("vtda20") && !W.ROAD_LINES.includes("v20"));
+  const src = readFileSync(join(root, "modules/wodx-creation/scripts/wizard.mjs"), "utf8");
+  assert.match(src, /"flags\.wodx-actions\.road": \{key: k, path: path \|\| null\}, "system\.advantages\.path\.custom"/, "the same write as WoDX Actions' Road and Path");
+});
+
+test("#2501, #2479: a solo sheet is unfinished until the player says it is ready; others never are", () => {
+  assert.equal(W.unfinished({soloMade: true}), true);
+  assert.equal(W.unfinished({soloMade: true, wizard: {done: true}}), false);
+  assert.equal(W.unfinished({soloMade: false}), false, "the Storyteller's own sheets are never held back");
+  assert.equal(W.unfinished({open: true}), true);
+  assert.equal(W.normWizard({done: true}).done, true);
+  assert.equal(W.normWizard({done: "yes"}).done, undefined);
+  const src = readFileSync(join(root, "modules/wodx-creation/scripts/wizard.mjs"), "utf8");
+  assert.match(src, /This character is ready/);
+  assert.match(src, /wodxCreationDone/);
+  const main = readFileSync(join(root, "modules/wodx-creation/scripts/main.mjs"), "utf8");
+  assert.match(main, /creationUnfinished\(me\) \) WizardApp\.openFor\(me\)/, "the wizard opens again after a refresh");
+});
+
+test("#2489: a native language from the chronicle's homeland", () => {
+  assert.equal(W.nativeFor("moravia"), "Czech");
+  assert.equal(W.nativeFor("levant"), "Arabic");
+  assert.equal(W.nativeFor("nowhere"), "");
 });

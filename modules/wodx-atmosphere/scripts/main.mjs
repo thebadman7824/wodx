@@ -433,6 +433,8 @@ function beat(volume) {
 export function heartbeatNow() {
   const a = game.user?.character;
   if ( !a || setting("heartbeat") === false ) return null;
+  // B8039 (#2473): no hunger cue while the character is still being made
+  try { if ( game.modules.get("wodx-creation")?.api?.unfinished?.(a) ) return null; } catch (e) { /* no Creation */ }
   const bp = a.system?.advantages?.bloodpool;
   const hb = AR.heartbeat({blood: bp?.temporary, max: bp?.max, hasBlood: /vampire/i.test(String(a.type)) || !!a.system?.settings?.hasbloodpool});
   return hb ? {...hb, volume: Math.min(1, Math.round(hb.volume * 2 * (Number(setting("cueVolume")) || 0.5) * 100) / 100)} : null;

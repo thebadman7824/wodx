@@ -69,6 +69,9 @@ export function placeOf(user) {
   const scene = viewed ?? scenes.find(s => s.active && holds(s)) ?? scenes.find(holds) ?? null;
   return {actor, scene, token: scene ? holds(scene) : null};
 }
+/** B8038 (#2501): the player's character is still being made (WoDX Creation's unfinished). */
+export const making = user => { try { return !!game.modules.get("wodx-creation")?.api?.unfinished?.(characterOf(user)); } catch (e) { return false; } };
+const FREE_WHILE_MAKING = new Set(["report", "pause", "stuck"]);
 const fightOn = sceneId => all(game.combats).filter(c => c.started && c.scene?.id === sceneId);
 
 async function latitudeAt(scene) {
@@ -99,6 +102,7 @@ export async function passTime(userId, choice) {
   const user = game.users.get(userId);
   const {actor, scene} = placeOf(user);
   if ( !actor || !scene ) { await tell(userId, "<p>Your character is on no scene, so time cannot pass for them.</p>"); return null; }
+  if ( making(user) ) { await tell(userId, "<p>Finish your character first. Time starts once you press This character is ready in the wizard.</p>"); return null; }
   if ( waiting ) { await tell(userId, "<p>Time is already passing.</p>"); return null; }
   if ( fightOn(scene.id).length ) { await tell(userId, "<p>Not while a fight is running.</p>"); return null; }
   if ( game.paused ) { await tell(userId, "<p>The game is paused. Go on first, then let time pass.</p>"); return null; }
@@ -363,7 +367,14 @@ export class SoloPanel extends ApplicationV2 {
   }
   _replaceHTML(result, content) { content.replaceChildren(result); }
   static #onAct(event, target) {
-    const run = ACTIONS[target.dataset.id];
+    // B8038 (#2501): while the character is still being made, only these stay open; the rest wait for the wizard
+    const id = target.dataset.id;
+    if ( !FREE_WHILE_MAKING.has(id) && making(game.user) ) {
+      ui.notifications.info("Finish your character first: on the wizard's last page, press This character is ready.");
+      game.modules.get("wodx-creation")?.api?.wizard?.(characterOf(game.user));
+      return;
+    }
+    const run = ACTIONS[id];
     if ( run ) Promise.resolve(run()).catch(e => console.error(`${MOD} | panel`, e));
   }
 }

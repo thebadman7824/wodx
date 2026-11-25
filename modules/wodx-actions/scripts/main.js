@@ -3388,6 +3388,13 @@ function kx() {
 export async function menu({ actor: a } = {}) {
     const actor = a?.actor ?? a ?? resolveActor();
     if (!actor) return ui.notifications.warn("WoDX Actions: select a token or assign a character first.");
+    // B8038 (#2501): a player's character still being made opens the wizard, not the menu
+    try {
+        if (!game.user.isGM && actor.isOwner && game.modules.get("wodx-creation")?.api?.unfinished?.(actor)) {
+            ui.notifications.info("Finish your character first: on the wizard's last page, press This character is ready.");
+            return game.modules.get("wodx-creation").api.wizard(actor);
+        }
+    } catch (e) { /* no Creation */ }
     const legacy = !setting("profileMenu");
     const kind = P.detectProfile(actor);
     let recentAll = {};

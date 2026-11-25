@@ -507,10 +507,14 @@ function genderField(app, html) {
   div.className = "bioInformationArea floating-label-group wodx-gender-field";
   const input = document.createElement("input");
   input.type = "text"; input.className = "sheet-infoValues"; input.value = gen.of(actor); input.autocomplete = "off"; input.maxLength = 40;
-  input.placeholder = "Optional"; input.setAttribute("aria-label", "Gender (optional)"); input.readOnly = !can;
+  input.setAttribute("aria-label", "Gender (optional)"); input.readOnly = !can;
   input.dataset.tooltip = actor.hasPlayerOwner ? "Optional. It describes the character and changes nothing in play." : "Optional. For a character the Storyteller runs, female or male follows the era's laws and customs.";
   const label = document.createElement("span"); label.className = "floating-label"; label.textContent = "Gender";
   div.append(input, label);
+  // B8041 (#2495): the word sits in the empty box as a hint, and moves up as a label once something is typed
+  const lift = () => div.classList.toggle("wodx-has-value", !!input.value.trim());
+  lift();
+  input.addEventListener("input", lift);
   input.addEventListener("change", ev => { ev.stopPropagation(); gen.set(actor, input.value).catch(e => console.warn("WoDX Sheets | gender", e)); });
   nameBox.after(div);
 }
