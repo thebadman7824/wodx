@@ -148,6 +148,14 @@ test("#2510: the time dial puts noon at the top and midnight at the foot", async
   assert.equal(v.icon, "fa-moon");
   assert.match(v.title, /22:00, night; the moon: full moon/);
   assert.match(src("modules/wodx-chronicle/scripts/main.mjs"), /installTimeDial\(\);/);
+  // Desk pick: the date and season under the hour, turned round south of the equator
+  const d = D.dialView({hour: 9, day: 12, month: 3, monthName: "March", year: 1197, latitude: 49.2, timeLabel: "09:00", dateLabel: "Wednesday, 12 March 1197"});
+  assert.equal(d.date, "12 March 1197, spring");
+  assert.match(d.title, /Wednesday, 12 March 1197, spring/);
+  assert.equal(D.seasonOf(1, 49), "winter");
+  assert.equal(D.seasonOf(1, -33), "summer");
+  assert.equal(D.dialView({day: 1, month: 7, monthName: "July", year: -311, latitude: 30}).date, "1 July 312 BCE, summer", "astronomical year -311 is 312 BCE");
+  assert.match(src("modules/wodx-chronicle/scripts/time-dial.mjs"), /<span class="wodx-dial-date">\$\{esc\(v\.date\)\}<\/span>/);
 });
 
 test("#2506: a player may ask for a trait at once, and the Storyteller's approval grants it with no study", () => {

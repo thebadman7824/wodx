@@ -10,7 +10,7 @@ const ID = "wodx-time-dial";
 const shown = () => { try { return game.settings.get(MODULE_ID, "timeDial") !== false; } catch (e) { return true; } };
 
 export function registerTimeDialSettings() {
-  game.settings.register(MODULE_ID, "timeDial", {name: "Show the time dial", hint: "A small dial at the top of the screen: the sun by day and the moon by night, with the hour where your scene stands. Click it for the clock.",
+  game.settings.register(MODULE_ID, "timeDial", {name: "Show the time dial", hint: "A small dial at the top of the screen: the sun by day and the moon by night, with the hour, date and season where your scene stands. Click it for the clock.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawDial()});
 }
 
@@ -30,7 +30,7 @@ export function drawDial() {
   el.className = `wodx-time-dial${v.night ? " night" : ""}`;
   el.setAttribute("aria-label", v.title);
   el.dataset.tooltip = v.title;
-  el.innerHTML = `<span class="wodx-dial-face"><span class="wodx-dial-hand" style="transform: rotate(${v.angle}deg)"><i class="fa-solid ${v.icon}" aria-hidden="true"></i></span></span><span class="wodx-dial-time">${esc(v.label)}</span>`;
+  el.innerHTML = `<span class="wodx-dial-face"><span class="wodx-dial-hand" style="transform: rotate(${v.angle}deg)"><i class="fa-solid ${v.icon}" aria-hidden="true"></i></span></span><span class="wodx-dial-text"><span class="wodx-dial-time">${esc(v.label)}</span><span class="wodx-dial-date">${esc(v.date)}</span></span>`;
 }
 
 export function installTimeDial() {
