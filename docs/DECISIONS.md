@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7990
+Next free block: B8010
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -473,6 +473,7 @@ Next free block: B7990
 | B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 | B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
+| B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16494,3 +16495,13 @@ Reverse: put back `const [kyoto, brno] = await Scene.create([...])` in tools/gat
 Gates. Nightly job 2448 failed "the way round the wall" and "a large NPC (2x2)": the runner stood at row 5 column 5, beside the hero on the hero's side of the wall, so its way was two squares and never went round. It starts at column 14 and no earlier step in the gate moves it, so something outside the gate moved it, as with the victim in gatedach8 (B7853). The step now records where the runner stood, whose turn it was, the scene's mode and the runner's moved flag (`runnerBefore`), and puts the runner back at column 14 (position only) before it asks for the way. The pass conditions are unchanged. Not yet run in Foundry.
 
 Reverse: take the runnerBefore record and the T.runner.document.update out of the way-round step in tools/gate/gate7b.mjs.
+
+## B8000. The Main PC stops driving the merge train (2026-11-25)
+tools/pcq/runner.json has `train: false`. Ben asked on 25 November for the merge train to move to the New PC, with
+the Main PC kept as a backup driver. Only one runner may drive the train (B7202), and both PCs are running, so the move
+takes two steps. This first step turns the Main PC's train off. Once the Main PC runner has restarted onto it and its
+status issue no longer shows a "Merge train:" line, the second step (B8010) turns the train on in
+runner.new_pc_lebrun.json. Between the two steps no runner drives the train: labelled pull requests wait in line, and
+nothing is lost.
+
+Reverse: set `train` back to `true` in runner.json. Do that only while runner.new_pc_lebrun.json has `train: false`.
