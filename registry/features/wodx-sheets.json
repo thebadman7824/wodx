@@ -401,11 +401,13 @@
     },
     "shown": {
      "what": "a History window listing this session's edits with Undo, and a Print button"
+    },
+    "gated": {
+     "gate": "tools/gate/gatehistoryundo.mjs",
+     "step": "1. Undo in the sheet's History window puts Strength back"
     }
    },
-   "open": [
-    "gated: gatesheetextras checks History and Undo by a direct call and gatesheetv2 step 7 only finds the controls; no step drives Undo from the window"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
