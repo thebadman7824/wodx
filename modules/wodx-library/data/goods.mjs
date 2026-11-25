@@ -18,6 +18,7 @@
  */
 
 import {WAYS, WAY_ROWS, LOCAL_COIN, REDATED, REDATED_WAYS, inUseAt, firstYearAt} from "./goods-ways.mjs";
+import {TAG_WAYS, tagsOf} from "./goods-tags.mjs";
 export {WAYS, LOCAL_COIN, inUseAt, firstYearAt};
 
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
@@ -2631,7 +2632,7 @@ export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) 
   const split = splitContainer(name);
   const g = {id: slug(RENAMED[name] ?? name), name: split?.name ?? name, was: RENAMED[name] ?? null, former: split ? name : null,
     container: split?.container ?? null, kind, from, to, eras, conceal, small: conceal === "P" || conceal === "J",
-    source: src ?? KIND_SOURCE[kind] ?? "hist", steps, ways: WHERE[name] ?? WAYS[name] ?? REDATED_WAYS[name] ?? null, localCoin: name === LOCAL_COIN};
+    source: src ?? KIND_SOURCE[kind] ?? "hist", steps, ways: WHERE[name] ?? WAYS[name] ?? TAG_WAYS[name] ?? REDATED_WAYS[name] ?? null, localCoin: name === LOCAL_COIN};
   g.values = Object.fromEntries(eras.map(e => [e, valueAt(g, Math.max(ERA_YEARS[e][0], from))]));
   g.value = eras.length ? g.values[eras[0]] : valueAt(g, from);
   const [use, kindStacks] = BEHAVIOUR_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind] ?? ["kept", false];
@@ -2641,6 +2642,10 @@ export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) 
   g.stack = stacks ? {plural, min: listed?.[1] ?? 1, max: listed?.[2] ?? (plural ? 3 : 1)} : null;
   const uses = USES_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind]?.[3] ?? [];
   Object.assign(g, {use, stacks, uses, sheet: KIND_BEHAVIOUR[kind]?.[2] ?? "Item"});
-  g.tags = {category: kind, ways: g.ways, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container};
+  // The tagging pass (goods-tags.mjs): who owns one, what it is for, what it is made of
+  const who = tagsOf(name);
+  g.station = who?.station ?? null; g.style = who?.style ?? null; g.material = who?.material ?? null;
+  g.tags = {category: kind, ways: g.ways, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container,
+    station: g.station, style: g.style, material: g.material};
   return g;
 });

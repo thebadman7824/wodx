@@ -10,6 +10,7 @@
  * Discipline to the level wanted). The times, difficulties and the table of books and schools are house figures
  * (B6232, B6233), logged in docs/PENDING-REVIEW.md.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const END = 9999;
 export const SOURCE_KINDS = {
@@ -328,8 +329,8 @@ export const ASK_DIFF = 6;
 export const askPool = ({charisma = 0, streetwise = 0, etiquette = 0} = {}) => Math.max(1, (Number(charisma) || 0) + Math.max(Number(streetwise) || 0, Number(etiquette) || 0));
 /** Successes from d10 faces at a difficulty, each one cancelling a success (V20 Dark Ages p. 322). botch: no success and a one. */
 export function countSuccesses(faces = [], diff = ASK_DIFF) {
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
-  return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+  const r = TERMS.successes(faces, diff);
+  return {successes: r.successes, botch: r.botch};
 }
 const WILL_ORDER = {teach: 0, price: 1, refuse: 2};
 /**
