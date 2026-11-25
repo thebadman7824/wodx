@@ -10,10 +10,10 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
-| wodx-creation | yes | 23 | 0 | 2 |
+| wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 18 |
+| wodx-npc | yes | 34 | 0 | 17 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -122,7 +122,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | gated |  | gatepeoplemake 1. Make them now gives the sheet the window's Nature, Demeanor and Willpower |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
 | The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 3 | gatewizard 10 derived traits |
-| The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
+| The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | gated | 1 | gatebookpeople 1. Make in People of the book gives the sheet the book's numbers |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
 | Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | gated |  | gatepassyears 3. Pass the years |
@@ -167,7 +167,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
 | Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | shown | 1 |  |
 | Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | shown | 1 |  |
-| Past lives, lines of teaching, the web of every tie and scene ideas from ties (`npc.legacy`) |  | shown | 1 |  |
+| Past lives, lines of teaching, the web of every tie and scene ideas from ties (`npc.legacy`) |  | gated |  | gatementorgone 1. the Move button on the teacher's death card puts the Mentor points on another Background |
 | Who holds a place, shown on its scene (`npc.faction-looks`) |  | shown | 1 |  |
 
 ## wodx-sheets

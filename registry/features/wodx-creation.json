@@ -351,10 +351,13 @@
     },
     "shown": {
      "what": "a window listing the book's Storyteller characters by group; each makes a sheet with the book's numbers and page"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebookpeople.mjs",
+     "step": "1. Make in People of the book gives the sheet the book's numbers"
     }
    },
    "open": [
-    "gated: no gate step makes a book person yet",
     "book: V20 Dark Ages pp. 383-396; not checked against the book text yet"
    ],
    "deferred": [],
