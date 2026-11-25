@@ -454,11 +454,13 @@
     },
     "shown": {
      "what": "the Creation window with each character's line, sire or domitor and the buttons for its tools"
+    },
+    "gated": {
+     "gate": "tools/gate/gatecreationaward.mjs",
+     "step": "1. the Creation window's Award button gives the ticked character 3 experience"
     }
    },
-   "open": [
-    "gated: gatestates '6. Creation window buttons' is a direct call"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -483,10 +485,13 @@
     },
     "shown": {
      "what": "a Group actor sheet listing members, the Backgrounds they pool and shared notes"
+    },
+    "gated": {
+     "gate": "tools/gate/gategroupsheet.mjs",
+     "step": "1. a member's dots typed on the Group sheet pool into the coterie"
     }
    },
    "open": [
-    "gated: no gate step opens the group sheet",
     "book: V20 Dark Ages p. 182 (coteries) and W20 pp. 140-141 (packs); not checked against the book text yet"
    ],
    "deferred": [],

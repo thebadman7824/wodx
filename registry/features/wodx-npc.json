@@ -328,10 +328,13 @@
     },
     "shown": {
      "what": "the hunt window names the day's feast or fast and its change to the difficulty"
+    },
+    "gated": {
+     "gate": "tools/gate/gatehuntcalendar.mjs",
+     "step": "1. the hunt window's calendar step is in the hunt's difficulty"
     }
    },
    "open": [
-    "gated: gatehuntpowder '6. the hunt window' is graded marker",
     "book: V20 p. 259 and V20 Dark Ages p. 334 (hunting grounds); not checked against the book text yet"
    ],
    "deferred": [],

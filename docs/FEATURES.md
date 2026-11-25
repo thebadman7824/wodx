@@ -6,19 +6,19 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 45 | 0 | 9 |
+| wodx-actions | yes | 45 | 0 | 8 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
-| wodx-creation | yes | 23 | 0 | 5 |
+| wodx-creation | yes | 23 | 0 | 3 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 19 |
+| wodx-npc | yes | 34 | 0 | 18 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 20 | 0 | 3 |
+| wodx-sheets | yes | 20 | 0 | 1 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 4 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -51,7 +51,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
-| Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | shown | 2 |  |
+| Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | gated | 1 | gateretrywindow 1. a failed roll tried again in the action window is one harder |
 | Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 3 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 2 |  |
@@ -116,9 +116,9 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
-| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | shown | 1 |  |
+| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated |  | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
-| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | shown | 2 |  |
+| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
 | The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 3 | gatewizard 10 derived traits |
@@ -161,7 +161,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | shown | 1 |  |
 | Residents of generated towns and settlements (`npc.residents`) | core | shown | 1 |  |
 | Standing by community, with news of a deed travelling at the era's speed; social rank and feuds (`npc.standing`) | core | book |  | gatetruthnpc 11. untying a prisoner is a deed: standing in the town rises |
-| The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | shown | 2 |  |
+| The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | gated | 1 | gatehuntcalendar 1. the hunt window's calendar step is in the hunt's difficulty |
 | The topic menu: walk up to someone and pick a topic, and the talk generator for unwritten answers (`npc.talk`) | core | book |  | gatetalk the window |
 | Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | shown | 2 |  |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
@@ -190,8 +190,8 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Relationships tab: every tie, what it does in play, family news, Followers (`sheets.relationships`) | core | gated | 1 | gatebonds 7. sheet |
 | The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions (`sheets.page-two`) | core | gated | 1 | gateplaypage 4 |
 | Bring forward: things on the maps swap for their equal in the card's year (`sheets.bring-forward`) |  | book |  | gatebringforward buttons |
-| History with Undo for this session's edits, and Print (`sheets.history-print`) |  | shown | 1 |  |
-| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | shown | 1 |  |
+| History with Undo for this session's edits, and Print (`sheets.history-print`) |  | gated |  | gatehistoryundo 1. Undo in the sheet's History window puts Strength back |
+| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | gated |  | gatestandingstrip 1. the Bio tab's strip shows the sheet's Road and opens the Road window |
 | Sheet tools: the title bar's buttons and window controls in one menu (`sheets.sheet-tools`) |  | book |  | gateplayerextras 8. sheet tools |
 | The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | shown | 1 |  |
 

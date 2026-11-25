@@ -128,10 +128,13 @@
     },
     "shown": {
      "what": "the action window and card name the attempt and its added difficulty"
+    },
+    "gated": {
+     "gate": "tools/gate/gateretrywindow.mjs",
+     "step": "1. a failed roll tried again in the action window is one harder"
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
     "book: V20 Dark Ages trying again; not checked against the book text yet"
    ],
    "deferred": [],
