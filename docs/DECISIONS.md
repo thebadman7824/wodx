@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8030
+Next free block: B8060
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -476,6 +476,7 @@ Next free block: B8030
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Book overlap: reword the prose that matched source books, and a gate that keeps new book text out (used B8020-B8023) | Actions, Chronicle, Combat, Creation, Interactables, Library, NPC, Otherworlds, Storyteller, system fork, tools (books) |
+| B8030-B8059 | Fixes from the first solo test (25 Nov): getting into play (used B8030-B8033) | Solo, Rothenstein, tools (release, solo) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16540,3 +16541,23 @@ Reverse: remove a hash; that run fails again.
 Tools. tools/books/overlap-gate.mjs runs the overlap check and fails on any run that is not a term (B8021) or allowlisted (B8022). It prints locations and hashes only; `--show` adds the words for the thread doing the rewrite. tools/quality-check.sh runs it on the files changed since origin/main wherever the book text is (cloud threads); GitHub's runners do not hold the books, so there it says skipped. A daily scheduled run (02:41 UTC) checks all of main against /mnt/project-files/book-text and sends failing locations to the coordinator. Harness: tools/harness/overlap-gate.test.mjs.
 
 Reverse: take the Book overlap step out of tools/quality-check.sh and switch off the daily scheduled task.
+
+## B8030. Report a problem sits outside the panel's fold (2026-11-25)
+WoDX Solo. The solo panel draws Report a problem as its own button under the main one, not in the folded More part, so a player who meets a fault can press it at once (#2467). The fold's summary no longer lists it.
+
+Reverse: put the report entry back in the folded list in panel.mjs.
+
+## B8031. Only a sheet arrival made, or the assigned one, is the player's character (2026-11-25)
+WoDX Solo. characterOf takes the user's assigned character first, as before. With none assigned, it now counts only an actor the player owns by name that arrival made for that player (flags.wodx-solo.arrival.userId), and never one named "(Deprecated)". Leftover test actors the player owns no longer block Make my character (#2471). The panel also offers Make a new character when one exists; it asks first, and the old sheet is left as it is.
+
+Reverse: drop the madeFor test from characterOf in panel.mjs.
+
+## B8032. A chronicle names its own landing (2026-11-25)
+WoDX Solo, WoDX Rothenstein. A chronicle's manifest may name the scene a lone player lands on (manifest.landing, the start of the scene's name). pickLanding takes the flagged scene first, then the chronicle's named landing (with a map), then the setting left by an earlier arrival, then the town's market, the active map and any map. Rothenstein names Dolany Village, so an older pick of Market Street no longer wins (#2486).
+
+Reverse: remove landing from the Rothenstein manifest; pickLanding then behaves as before.
+
+## B8033. A new character sees a few squares in the dark (2026-11-25)
+WoDX Solo. The new character's token has basic sight of 6 squares in the scene's own units (sightRange), set again when the token is placed at the way in, in place of range 0, which left a night map black (#2475). Lights, Auspex and Gifts still add to it through WoDX Senses. The walk checks the token's sight range and that the landing's map file loads on the player's client (#2476).
+
+Reverse: set SIGHT_SQUARES to 0.
