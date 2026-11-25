@@ -20,7 +20,7 @@ Summaries in our own words, read from the OCR text. Pages are printed (pdf). The
 
 - **Judgment**, 50 (pdf 53). The nearest thing to an official ending. Old metaplot schemes come due. Voormas tries to stop the Wheel of Ages and defeat death, while the Tenth Sphere of Judgment brings the Final Days. The story runs from the streets after the Reckoning to the realms beyond the Horizon.
 - **The Revolution Will Be Televised**, 96 (pdf 99). The Technocracy decides how the world ends and imposes its own version of the future. The Union wins.
-- **The Earth Will Shake**, 120 (pdf 123). Reality fights back: a meteor heads for Earth, in the physical world and in the Umbra at once. Surviving it takes Sleepers and mages working together.
+- **The Earth Will Shake**, 120 (pdf 123). Reality fights back: a meteor heads for Earth, on both sides of the Gauntlet at once. Surviving it takes Sleepers and mages working together.
 - **A Whimper, Not a Bang**, 144 (pdf 147). The end happens out of sight. Magick slowly dies, and Enlightened Science with it, leaving a purely mundane world. The question is whether any wonder can be saved.
 - **Hell on Earth**, 166 (pdf 169). The worst case: Descent, not Ascension. The Nephandi start Armageddon and even the united Traditions cannot stop it. The story is about surviving and fighting on in the hell that follows.
 

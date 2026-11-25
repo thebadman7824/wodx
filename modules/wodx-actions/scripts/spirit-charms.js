@@ -53,7 +53,7 @@ export const CHARMS = [
         { roll: "gnosis", diff: 6, sizes: [["simple", "A light, a door, a radio", 3], ["usual", "A car, a lift, a telephone exchange", 6], ["complex", "A power station, a mainframe", 9]], does: "lights", era: 1880, keywords: ["work"] }),
     P("createfires", "Create Fires", 367, "specialty", "roll", "Fire from nothing: Gnosis at 3 for a torch, 6 for a bonfire, 9 for an inferno. With nothing to burn it lasts one turn.",
         { roll: "gnosis", diff: 6, sizes: [["torch", "A torch's flame", 3], ["bonfire", "A bonfire", 6], ["inferno", "An inferno", 9]], does: "fire", keywords: ["harm"] }),
-    P("createwind", "Create Wind", 367, "specialty", "roll", "Raises or stills the wind: Gnosis at 3 for a strong breeze, 6 for a storm, 9 for a tornado.",
+    P("createwind", "Create Wind", 367, "specialty", "roll", "Raises or stills the wind: Gnosis at difficulty 3 gives a stiff breeze, 6 a storm, 9 a tornado.",
         { roll: "gnosis", diff: 6, sizes: [["breeze", "A strong breeze", 3], ["calm", "Still the wind", 6], ["storm", "A storm", 6], ["tornado", "A tornado", 9]], does: "wind", keywords: ["weather"] }),
     P("illuminate", "Illuminate", 367, "specialty", "free", "Light out to 20 yards around it, or every light nearby changes colour. No roll.",
         { does: "illuminate", lasts: "scene", keywords: ["light"] }),
@@ -73,7 +73,7 @@ export const CHARMS = [
         { roll: "gnosis", diff: 6, world: ["rubble"], keywords: ["harm"] }),
     P("shortout", "Short Out", 367, "specialty", "roll", "Fries the wiring of machines nearby on a Gnosis roll at 6: the lights go out.",
         { roll: "gnosis", diff: 6, does: "shortout", era: 1880, keywords: ["work"] }),
-    P("swiftflight", "Swift Flight", 367, "specialty", "free", "Flies at three times its speed, up to 60 + Willpower x 3 yards a turn.",
+    P("swiftflight", "Swift Flight", 367, "specialty", "free", "Flies at triple speed: as far as 60 + (Willpower x 3) yards each turn.",
         { does: "flight", lasts: "scene", keywords: ["move"] }),
     P("tracking", "Tracking", 367, "specialty", "free", "One Essence: follows its quarry without fail.",
         { cost: { essence: 1 }, does: "tracking", lasts: "scene", spec: T("sense", "Tracked by a spirit", "scene"), keywords: ["sense"] }),
@@ -115,7 +115,7 @@ export const CHARMS = [
         { book: SPRITE_BOOK, cost: { essence: 15 }, does: "reform", keywords: ["move"] }),
     P("speech", "Speech", 97, "sprite", "free", "Speaks aloud in any tongue it wants, where else it talks only to its master and other sprites. Three Essence an hour.",
         { book: SPRITE_BOOK, cost: { essence: 3 }, spec: T("speak", "Speech", { seconds: 3600 }, "self"), keywords: ["speak"] }),
-    P("spriteflight", "Swift Flight", 97, "sprite", "free", "Three times its speed, up to 60 + Willpower x 3 yards a turn: quick enough that no mortal creature catches it. One Essence.",
+    P("spriteflight", "Swift Flight", 97, "sprite", "free", "Triple speed, as far as 60 + (Willpower x 3) yards each turn: quick enough that no mortal creature catches it. One Essence.",
         { book: SPRITE_BOOK, cost: { essence: 1 }, does: "flight", lasts: "scene", keywords: ["move"] }),
 
     // Demon Charms (V20 Dark Ages p. 402, B7672)

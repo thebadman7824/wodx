@@ -208,7 +208,7 @@
   "summary": "A seventh-level Mortis power that rots a limb.",
   "claims": [
    {
-    "text": "The Cappadocian touches the target, spends a Willpower point and rolls Stamina + Medicine against the target’s Willpower, needing more successes than the target’s Stamina.",
+    "text": "With a touch, the Cappadocian pays a Willpower point and rolls Stamina + Medicine against the target’s Willpower, needing more successes than the target’s Stamina.",
     "tier": "stated",
     "refs": [
      {

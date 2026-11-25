@@ -17,7 +17,7 @@ export const PLACES = {
     ["The sun's fire citadel", "on the sun's liquid-fire surface, a burning citadel (Hyperion) or a tipi of white light (Katanka-Sonnak), past a gauntlet of fire elementals", "Umbra: The Velvet Shadow pdf 48 / p. 47"]
   ],
   "arcadia-gateway": [
-    ["The Palace of Summer", "Seelie seat on the eastern edge, on the coast of the Ocean of Dreams", "Umbra: The Velvet Shadow pdf 52 / p. 51"],
+    ["The Palace of Summer", "Seelie seat on the eastern edge, where the land meets the Ocean of Dreams", "Umbra: The Velvet Shadow pdf 52 / p. 51"],
     ["The Ocean of Dreams", "the sea off the realm's eastern coast", "Umbra: The Velvet Shadow pdf 52 / p. 51"],
     ["The Fortress of Winter", "Unseelie stronghold of Queen Marianna marking the western edge", "Umbra: The Velvet Shadow pdf 52 / p. 51"],
     ["The Autumn Country", "the northern quarter between summer and winter", "Umbra: The Velvet Shadow pdf 52 / p. 51"],
@@ -227,7 +227,7 @@ export const PLACES = {
     ["Inns and workshops of the Vale", "taverns, inns and workshops Kithain built for changeling and chimera visitors seeking rest", "Changeling: The Dreaming 20th pdf 307 / p. 306"],
     ["The thirteen gates", "magical gates to the Deep Dreaming guarded by traps, beasts, riddles and memory-knights of old sidhe; a fourteenth vanished during the Evanescence and its ruins are lost", "Changeling: The Dreaming 20th pdf 307 / p. 306"],
     ["Halostian's Laboratory", "the trap-filled domain of a War of Trees alchemist and schemer, reached only by leaving the Silver Path for the cursed Dusk Road and the Pale Swamps", "Changeling: The Dreaming 20th pdf 307 / p. 306"],
-    ["The Mistweir and Fin Bheara", "the cloud wall at the far edge (a foot to over a mile deep) with commoner hamlets along it; the great city of Fin Bheara, ruled half the year by a dark-haired sidhe queen and half by its boggan founder, is the usual starting point for crossing", "Changeling: The Dreaming 20th pdf 308 / p. 307"],
+    ["The Mistweir and Fin Bheara", "the cloud wall at the far edge (a foot to over a mile deep) with commoner hamlets along it; the great city of Fin Bheara, which a black-haired sidhe queen rules for six months of the year and its boggan founder for the other six, is the usual starting point for crossing", "Changeling: The Dreaming 20th pdf 308 / p. 307"],
     ["Hermit homes", "dwellings of powerful changelings who left the Autumn world for good to live out their time here, drawing sentient chimera around them", "Changeling: The Dreaming 20th pdf 307 / p. 306"]
   ],
   "deep-dreaming": [
@@ -260,7 +260,7 @@ export const PLACES = {
   ],
   "demon-abyss": [
     ["Gate of Hell", "Threshold on the plain of judgment through which the fallen were cast into the Pit", "Demon: The Fallen pdf 58 (printed 57)"],
-    ["Seals and outer boundary of the Abyss", "The walls between Hell and the realm of the dead, cracked by the Maelstrom so the lesser fallen could slip through", "Demon: The Fallen pdf 66-67 (printed 65-66)"]
+    ["Seals and outer boundary of the Abyss", "The barriers that keep Hell apart from the Underworld, split open by the Maelstrom so the lesser fallen could slip through", "Demon: The Fallen pdf 66-67 (printed 65-66)"]
   ],
 };
 
@@ -273,7 +273,7 @@ export const LAYOUT = {
     ["The realm spans from over the Penumbra up to the Membrane; its ground is spongy cloud forming plains, hills and mountains; all Moon Bridges pass through it at their peak", "Umbra: The Velvet Shadow pdf 47 / p. 46"],
     ["Luna hangs huge at one end of a near-black blue sky, Helios small and faint at the other, planets and stars between; the sun is reached in about a day, the moon only past the Lunes", "Umbra: The Velvet Shadow pdf 48 / p. 47"],
     ["Gaps between drifting clouds drop the traveller safely to a random spot in the Near Umbra", "Umbra: The Velvet Shadow pdf 47-48 / p. 46-47"],
-    ["The planetary domains lie in the Reaches between and beyond the moon and sun; past them, at the Membrane, are the Weaver, Wyld and Wyrm Reaches", "Umbra: The Velvet Shadow pdf 49 / p. 48"]
+    ["The planetary domains sit in the Reaches, out past the moon and the sun; past them, at the Membrane, are the Weaver, Wyld and Wyrm Reaches", "Umbra: The Velvet Shadow pdf 49 / p. 48"]
   ],
   "arcadia-gateway": [
     ["Seasons lie by compass: Summer east on the coast, Winter west, Autumn north, Spring south", "Umbra: The Velvet Shadow pdf 52 / p. 51"],
@@ -552,7 +552,7 @@ export const CHANGE = {
     ["20th century: Hand members Embraced then name the ghost-stars the Doomsday Clock", "The Black Hand: A Guide to the Tal'Mahe'Ra pdf 121 / p. 120"]
   ],
   "far-dreaming": [
-    ["After the Shattering (about 600 years before the Resurgence) the deeper Dreaming is out of reach; Renaissance Glamour starts to steady the roads, and by the mid-19th century a few Far and Deep trods reopen into new realms born of the Industrial Revolution and its novels", "Changeling: The Dreaming 20th pdf 301 / p. 300; pdf 308 / p. 307"],
+    ["After the Shattering (about 600 years before the Resurgence) the deeper Dreaming is out of reach; Renaissance Glamour starts to steady the roads, and around 1850 some Far and Deep trods open again into new realms born of the Industrial Revolution and its novels", "Changeling: The Dreaming 20th pdf 301 / p. 300; pdf 308 / p. 307"],
     ["1969 Resurgence: all three layers can be explored again; before it the Vale of Mists was one of the few stable places", "Changeling: The Dreaming 20th pdf 307-308 / p. 306-307"],
     ["2001 Evanescence: one of the fourteen gates collapses and vanishes; dark fae and monstrous chimera attack along trods afterwards", "Changeling: The Dreaming 20th pdf 307, 309 / p. 306, 308"]
   ],

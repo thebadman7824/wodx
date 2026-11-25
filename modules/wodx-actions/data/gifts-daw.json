@@ -377,7 +377,7 @@
 "p": 121,
 "c": "w1",
 "t": "scene",
-"e": "No wound penalties for the rest of the scene.",
+"e": "Wound penalties are ignored until the scene ends.",
 "id": "resist-pain"
 },
 {

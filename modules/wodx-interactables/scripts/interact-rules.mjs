@@ -369,7 +369,7 @@ export const fallDice = feet => Math.max(1, Math.floor((Math.max(0, Number(feet)
  * Targets on tiles. Shooting is the weapon's own Attribute and Ability (Dexterity + Firearms, or Archery before guns) at
  * the weapon's difficulty, with WoDX Combat's range bands: within the weapon's range +0, up to twice +1, up to three
  * times +2, and no further (VtDA20 p. 347). Aiming adds a die a turn, up to Perception, through Bonus dice: one shot,
- * Firearms 1 or more, a scope +2 on the first turn, not at a target moving faster than a walk (V20 core printed p. 277, pdf 285). Throwing something with no thrown weapon on the sheet is Dexterity + Athletics at 6 with a range of
+ * Firearms 1 or more, a scope +2 on the first turn, only against a target moving at a walk or slower (V20 core printed p. 277, pdf 285). Throwing something with no thrown weapon on the sheet is Dexterity + Athletics at 6 with a range of
  * THROW_YARDS (house rule). Striking a dummy is Dexterity + Melee with a hand weapon on the sheet, or Brawl, at 6.
  * A target with rings scores by successes (house rule): 1 the outer ring, 2 the inner ring, 3 or more the centre.
  * Something to break: a fragile thing breaks on any hit; anything else breaks the way a door does, by the lifting chart

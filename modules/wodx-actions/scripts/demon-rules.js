@@ -196,7 +196,7 @@ export const SINS = [
     [1, "Any cruel, selfish or thoughtless act; letting one happen in your presence; refusing to sacrifice for the greater good"],
     [2, "Harming any mortal creature beyond self-defense or the greater good; letting a lesser sin happen unopposed"],
     [3, "Harming a mortal (body, heart or soul) beyond self-defense or the greater good"],
-    [4, "Theft or deception without just cause; breaking your sworn word"],
+    [4, "Stealing or lying with no good reason; going back on an oath"],
     [5, "Harm through carelessness or neglect; neglecting duties; betraying a trust"],
     [6, "Destroying others' works; deliberate emotional cruelty or neglect"],
     [7, "Sins of passion: killing in rage, giving in to hate or prejudice or stoking it; self-destruction"],

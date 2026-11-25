@@ -98,7 +98,7 @@ export const RITUALS = [
       {id: "loose", label: "Tear off the binding and name a target", rollMaker: "witsOccult", diff: 9, consume: true,
         text: "It attacks with the caster's Wits + Occult at difficulty 9, damage the caster's Thaumaturgy; three health levels; attacks on it at +3; five turns of life per success at its making. A wooden one stakes as a stake does."}]}},
   {key: "flaming-weapon", name: "Flaming Weapon", path: "thaumaturgy", level: 2, blood: 3, time: 0.2, mark: "weapon",
-    needs: "the caster's palm cut on the weapon (one level of lethal damage that cannot be soaked)", eras: ["da"], book: DA, pdf: 305,
+    needs: "the caster's palm cut on the weapon (one unsoakable lethal health level)", eras: ["da"], book: DA, pdf: 305,
     does: "A heatless green flame sheathes the weapon; each strike that lands does aggravated damage, one charge for each success. It frightens no vampire and lights nothing. A charged wooden weapon that stakes a vampire spends every charge as aggravated damage.",
     item: {label: "Flaming weapon", chargesBySuccess: true, powers: [
       {id: "strike", label: "A strike lands in green fire", text: "This strike's damage is aggravated."}]}},

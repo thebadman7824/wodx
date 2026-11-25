@@ -42,7 +42,7 @@ export const DEMONS = [
     abilities: {Alertness: 5, Athletics: 4, Brawl: 4, Dodge: 6},
     disciplines: {Auspex: 1, Celerity: 4, Fortitude: 1, Potence: 2, Thaumaturgy: 5},
     paths: {"Thaumaturgy: Potestas Motus": 5, "Thaumaturgy: Potestas Tempestatum": 4}, blood: 15, willpower: 7,
-    about: "A dark winged shadow riding the winds with ragged wings, claws and cold eyes. Its shriek gives it away as it swoops; it seizes the lost and drops them from the heights."},
+    about: "A shadow on the wind, all torn wings, talons and a cold stare. Its shriek gives it away as it swoops; it seizes the lost and drops them from the heights."},
   {key: "black-monk", name: "The Black Monk", group: "Terrestrial demons", p: 183, kind: "demon", terrestrial: true,
     attributes: {strength: 5, dexterity: 4, stamina: 5, charisma: 4, manipulation: 6, appearance: 3, perception: 4, intelligence: 4, wits: 4},
     health: {0: 2, "-1": 2, "-2": 2, "-3": 1, "-5": 1}, end: "Dead", attack: "Weapon: six dice",

@@ -181,7 +181,7 @@ export async function awaken(mortal, {affinity, paradigm = "", practice = "", in
     content: `<div class="wodx-card wodx-embrace"><h3>The Awakening</h3>
       <p><strong>${esc(mage.name)}</strong> Awakens: Arete 1, ${esc(sphereLabel(affinity))} 1 (Affinity), Avatar ${st.avatar}, Quintessence ${st.quintessence}, Paradox 0.</p>
       ${st.willpowerCap ? `<p>Willpower ${wp} is below Arete, so it caps Sphere ranks and casting dice until it rises.</p>` : ""}
-      ${paradigm || practice || instruments ? `<p>Focus: ${esc([paradigm, practice, instruments].filter(Boolean).join("; "))}.</p>` : `<p>Pick a paradigm, a practice and at least seven instruments.</p>`}
+      ${paradigm || practice || instruments ? `<p>Focus: ${esc([paradigm, practice, instruments].filter(Boolean).join("; "))}.</p>` : `<p>Pick a paradigm, a practice and no fewer than seven instruments.</p>`}
       <p>More Spheres and Arete come from experience; each Arete dot needs a Seeking first.</p>
       <p class="wodx-quiet">M20 pdf 258, 329–330 / printed 257, 328–329. ${esc(dateLabel(time))}</p></div>`,
     speaker: {alias: "Chronicle"}, whisper: whisperTo(mage)

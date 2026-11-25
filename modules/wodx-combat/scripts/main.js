@@ -3078,7 +3078,7 @@ async function markFollow(actor, f) {
     if (!api?.applyTimed) return;
     let duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
     // B6151: a knockdown lasts until the character stands (the roll at the start of each of their turns), not one turn
-    // B6787: a hold lasts until the victim breaks free (the resisted roll at the start of each of their turns)
+    // B6787: a hold stays on until the victim escapes it (the resisted roll at the start of each of their turns)
     if (f.lasts === "grip") duration = { kind: "scene" };
     if (f.condition === "knockdown") { let roll = true; try { roll = !!setting("standUpRoll"); } catch (e) { roll = true; } duration = R.knockdownDuration({ inFight: !!game.combat?.started, standRoll: roll }); }
     await api.applyTimed(actor, { name: f.name, condition: f.condition, key: `wodx-${f.condition}`, duration, source: "V20 Dark Ages pp. 347–348" });

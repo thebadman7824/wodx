@@ -65,7 +65,7 @@ export const RIVALRIES = [
   {id: "setite-mummy", a: "clan:setite|follower of set|ministry", b: "line:mummy", from: null, to: null, ab: -3, ba: -3,
     note: "The servants of Set against the servants of Osiris", book: "Mummy: The Resurrection"},
   {id: "cathayan", a: "kuei-jin|cathayan", b: "line:kindred", bNot: "kuei-jin|cathayan", from: null, to: null, ab: -1, ba: -1,
-    note: "The Cathayans count the Kin-jin as enemies, but it shows as wariness and suspicion: open hostility against the Western clans is rare",
+    note: "The Cathayans count the Kin-jin as enemies, but it shows as wariness and suspicion: the Cathayans seldom move openly against the Western clans",
     book: "Kindred of the East pdf 31-32 (the Kin-jin's side is WoDX's reading)"},
   // Garou and the Changing Breeds
   {id: "garou-kindred", a: "line:lupine", b: "line:kindred", from: null, to: null, ab: -2, ba: -2,

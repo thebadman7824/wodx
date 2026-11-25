@@ -542,7 +542,7 @@ export const MORE_PROMPTS_6 = {
   "permanent-wound": {on: ["night"], text: "rises each night Wounded"},
   "slow-healing": {on: ["night", "fight"], text: "two blood points heal one bashing or lethal level; aggravated heals one level each five days"},
   "flesh-of-the-corpse": {on: ["fight", "social"], text: "healed wounds still show on the skin"},
-  "berserker": {on: ["fight"], text: "can enter a berserk frenzy at will, ignoring wound penalties"},
+  "berserker": {on: ["fight"], text: "may go berserk whenever they choose, with no wound penalties while it lasts"},
   "too-tough-to-die": {on: ["fight"], text: "harder to kill than wounds suggest"},
   "legendary-attributes": {on: ["night"], text: "one Attribute may go to six dots, with a heroic feat of its own"},
   "regeneration": {on: ["fight", "night"], text: "heals one chimerical level each turn of rest, and one physical level each hour"},

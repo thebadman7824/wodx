@@ -67,18 +67,18 @@ export function crimeIn(d = {}) { return RENOWN.filter(k => Number(d[k]) <= CRIM
 /** The Litany (pp. 31-33), each with the deed that prices a breach, where the award table gives one (B7881). */
 export const LITANY = [
   {id: "mate", text: "Garou shall not mate with Garou", deed: null},
-  {id: "wyrm", text: "Combat the Wyrm wherever it dwells and whenever it breeds", deed: "caern-overrun"},
+  {id: "wyrm", text: "Fight the Wyrm wherever it lives and wherever it spawns", deed: "caern-overrun"},
   {id: "territory", text: "Respect the territory of another", deed: "no-leave"},
   {id: "surrender", text: "Accept an honorable surrender", deed: "unjust-challenge"},
   {id: "submit", text: "Submit to those of higher station", deed: "no-leave"},
-  {id: "kill", text: "The first share of the kill for the greatest in station", deed: "no-leave"},
+  {id: "kill", text: "The highest in rank eats first from the kill", deed: "no-leave"},
   {id: "flesh", text: "You shall not eat the flesh of humans", deed: null},
   {id: "beneath", text: "Respect those beneath you; all are of Gaia", deed: "no-leave"},
   {id: "veil", text: "The Veil shall not be lifted", deed: "veil"},
   {id: "sickness", text: "Do not suffer your people to tend your sickness", deed: null},
-  {id: "peace", text: "The leader may be challenged at any time during peace", deed: "unjust-challenge"},
-  {id: "war", text: "The leader may not be challenged during wartime", deed: "unjust-challenge"},
-  {id: "caern", text: "You shall take no action that causes a caern to be violated", deed: "caern-overrun"}
+  {id: "peace", text: "In peacetime anyone may challenge the leader", deed: "unjust-challenge"},
+  {id: "war", text: "In wartime no one may challenge the leader", deed: "unjust-challenge"},
+  {id: "caern", text: "Never do anything that lets a caern be defiled", deed: "caern-overrun"}
 ];
 export const LITANY_PAGES = "pp. 31-33";
 

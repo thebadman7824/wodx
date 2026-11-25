@@ -1632,7 +1632,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Strength pools; a blood point turns those dice into automatic successes for the turn (damage too).",
+"e": "Adds its dots to Strength pools; for one turn, spending a blood point makes each of those dice an automatic success (damage too).",
 "passive": true
 },
 {
@@ -1645,7 +1645,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Strength pools; a blood point turns those dice into automatic successes for the turn (damage too).",
+"e": "Adds its dots to Strength pools; for one turn, spending a blood point makes each of those dice an automatic success (damage too).",
 "passive": true
 },
 {
@@ -1658,7 +1658,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Strength pools; a blood point turns those dice into automatic successes for the turn (damage too).",
+"e": "Adds its dots to Strength pools; for one turn, spending a blood point makes each of those dice an automatic success (damage too).",
 "passive": true
 },
 {
@@ -1671,7 +1671,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Strength pools; a blood point turns those dice into automatic successes for the turn (damage too).",
+"e": "Adds its dots to Strength pools; for one turn, spending a blood point makes each of those dice an automatic success (damage too).",
 "passive": true
 },
 {
@@ -1684,7 +1684,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Strength pools; a blood point turns those dice into automatic successes for the turn (damage too).",
+"e": "Adds its dots to Strength pools; for one turn, spending a blood point makes each of those dice an automatic success (damage too).",
 "passive": true
 },
 {
@@ -4342,7 +4342,7 @@
 "diff": 5,
 "c": "b1",
 "t": "var",
-"e": "Up to six mounts or one laden wagon.",
+"e": "As many as six mounts, or a single loaded wagon.",
 "trad": "thaum",
 "lesser": true
 },
@@ -4356,7 +4356,7 @@
 "diff": 6,
 "c": "b1",
 "t": "var",
-"e": "Up to twelve mounts or four supply wagons.",
+"e": "As many as twelve mounts, or four wagons of supplies.",
 "trad": "thaum",
 "lesser": true
 },
@@ -5799,7 +5799,7 @@
 "diff": 5,
 "c": "b1",
 "t": "turns",
-"e": "Each success turns a blood point's worth of liquid (about two pints) solid, at its own heat; spilled blood or boiling oil alike. Solid blood cannot be drunk.",
+"e": "Each success hardens one blood point's measure of liquid (roughly two pints), at its own heat; spilled blood or boiling oil alike. Solid blood cannot be drunk.",
 "trad": "thaum",
 "book": "DAC 2002"
 },

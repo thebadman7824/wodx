@@ -1037,18 +1037,12 @@ export class DialogPower extends FormApplication {
 
     // if rolling art/glamour then replace Nightmare number of dices to Nightmare dice (black dices) (p275)
 
-    //     Players can reduce the difficulty of a cantrip roll by 1 by
-    // replacing another three dice in the pool with Nightmare dice.
-    // The character must have three non-Nightmare dice in the pool
-    // to gain this benefit. Doing so does not increase the character’s
-    // Nightmare pool past that one roll (unless the player rolls some
-    // 10s, of course).
-
-    //      Nightmare dice function like normal dice for the roll,
-    // except that when the player rolls a 10 on a Nightmare die, she
-    // immediately adds another point to the character’s Nightmare
-    // pool. The character can accumulate multiple Nightmare points
-    // during a single roll, but the Nightmare rating never exceeds 10.
+    // Rule summary (own words): swapping three more pool dice for Nightmare dice
+    // takes 1 off a cantrip's difficulty, as long as three ordinary dice stay in
+    // the pool. The swap lasts for that roll only; the Nightmare rating rises
+    // only from 10s. A Nightmare die counts like any other die, but each 10 on
+    // one adds a point of Nightmare at once (several per roll are possible),
+    // to a cap of 10.
     
     async _rollPower(event) {
         if (this.object.close) {

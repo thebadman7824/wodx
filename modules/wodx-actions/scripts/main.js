@@ -2659,7 +2659,7 @@ export async function torpor({ actor: a } = {}) {
             await kx().logEvent(actor, "Rises from torpor.", "torpor");
             await dm().wake(actor, t?.since);
             html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt immediately.</div>`;
-        } else html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. Wait a night, spend another blood point, and try again.</div>`;
+        } else html += `<div class="vta-big bad">${esc(actor.name)} does not wake. Try again next night with one more blood point.</div>`;
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
     });
 }

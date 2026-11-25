@@ -263,7 +263,7 @@ export const LIVING_FOUNT_DIFF = 6;
 /** Witchwalk, by its points (p. 93). */
 export const WITCHWALK = [
     "",
-    "unnaturally pale skin, a sign of heresy in many places",
+    "skin far too pale, which many places take for a mark of heresy",
     "a light breeze follows wherever they go",
     "consecrated ground burns their feet: no harm, but great pain while they walk on it",
     "they cast no shadow",

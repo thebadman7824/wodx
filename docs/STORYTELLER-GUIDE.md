@@ -134,7 +134,7 @@ The Clock's buttons:
 
 **Cross the Shroud** (skull, Storyteller). Moves the selected tokens to the Shadowlands level and back, and whispers the place's Shroud and how they crossed. It makes no roll: each power rolls for itself. A Garou cannot step sideways from the Shadowlands.
 
-**Disconnection.** Each lunar cycle spent in one world adds +1 to crossing into the other. After a year and a day in the Umbra, a proposal reaches the queue.
+**Disconnection.** Each lunar cycle spent in one world adds +1 to crossing into the other. Once 366 days have passed in the Umbra, a proposal reaches the queue.
 
 **Read the Soul** (sparkling hand). Select the reader and target the one read. Auspex 2; Perception + Empathy at 8. Only you see the roll; the player sees what the soul shows for the successes, and a botch shows a false reading. The aura is drawn round the token for the reader alone for 20 seconds. Set a character's colours with the palette button; vampire, ghoul, werebeast, witch, ghost, fae and frenzy are read from the sheet.
 

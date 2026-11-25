@@ -87,7 +87,7 @@ export function limitOf(power = {}) {
     ?? (levelOf(power) >= GREAT_LEVEL ? HOUSE : null);
 }
 
-/** Drained (B4923, house rule): +1 difficulty on the bearer's own rolls for the rest of the scene after a great power ends. */
+/** Drained (B4923, house rule): once a great power ends, the bearer's own rolls are at +1 difficulty until the scene is over. */
 export const DRAINED = {id: "drained", name: "Drained", img: "icons/svg/degen.svg", source: "WoDX house rule",
   summary: "+1 difficulty on own rolls until the scene ends, after a power of the fifth level or higher", mods: {ownDiff: 1}};
 export const drains = (power = {}) => levelOf(power) >= GREAT_LEVEL;

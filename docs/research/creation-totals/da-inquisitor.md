@@ -7,7 +7,7 @@ The summary is on pdf 148 / printed 147. The full steps run to pdf 150 / printed
 ## Attributes and Abilities
 - Every Attribute starts at 1 dot. Physical, Social and Mental get 6 / 4 / 3 dots, as for mortals.
 - Talents, Skills and Knowledges get 11 / 7 / 4 dots, with no Ability above 3.
-- Every inquisitor must have at least Theology 1. Linguistics 1 (Latin) is recommended.
+- Theology 1 is the minimum for any inquisitor. Linguistics 1 (Latin) is advised.
 
 ## Advantages
 - One dot in the order's primary Superior Virtue. (pdf 150 / printed 149) Each Superior Virtue grows from a basic one:

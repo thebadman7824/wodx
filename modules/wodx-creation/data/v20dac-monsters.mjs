@@ -20,7 +20,7 @@ export const MONSTERS = [
     abilities: {Alertness: 2, "Animal Ken": 3, Awareness: 3, Brawl: 1, Empathy: 4, Etiquette: 3, Expression: 2, "Hearth Wisdom": 2, Legerdemain: 2, Occult: 2, Performance: 5, Subterfuge: 2},
     disciplines: {Animalism: 1, Auspex: 2, Potence: 2, Presence: 1, Spiritus: 2}, paths: {}, blood: 6, willpower: 7, road: 5,
     about: "A water spirit fused with a mortal by an ancient koldun, haunting the falls and pools of the North with an enchanted fiddle or harp. It hates the Tzimisce and draws others in to plot their fall.",
-    rules: ["It regains spent blood points by sleeping or playing music for six unbroken hours.",
+    rules: ["Six hours straight of sleep or of making music restores its spent blood points.",
       "Its Presence works only while it plays a stringed instrument or dances to another's music.",
       "Each week away from its own waters costs a point of permanent Willpower; at none it dies.",
       "After hours of communion and a real payment, a student may buy one dot of Charisma, Empathy, Performance or Presence at half the experience cost, once per fossegrim."]},

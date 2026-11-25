@@ -591,11 +591,11 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   Banality point per 1.
 - **Invoking the Autumn (p. 271):** a Willpower point: chimerical effects do not touch the character for an action; it
   is always a Banality trigger.
-- **Banality triggers (pp. 174, 269):** Glamour at 8 (higher for severe; automatic for the worst, such as killing a
-  changeling with cold iron): a failure gives a point, a botch a point per 1. Common triggers: invoking the Autumn,
+- **Banality triggers (pp. 174, 269):** Glamour at 8 (higher for severe; automatic for the worst, such as slaying a
+  changeling by cold iron): a failure gives a point, a botch a point per 1. Common triggers: invoking the Autumn,
   failing to overcome a target's Banality when enchanting (not childlings), destroying a Treasure, killing a
   changeling's chimerical self (wilders mostly immune), ending a changeling's mortal life, killing an enchanted mortal,
-  Dreamer or kinain, wielding cold iron, Ravaging or Rhapsody, breaking an oath; each seeming adds one (childling:
+  a Dreamer or one of the kinain, using cold iron, Ravaging or Rhapsody, breaking an oath; each seeming adds one (childling:
   denying a new idea; wilder: refusing adventure; grump: failing someone in their care) and each changeling has an
   antithesis. A Glamour point may instead remove a Banality point when it is gained (p. 174). Quests of Deed,
   Inspiration or Dreaming remove a Banality dot (a failed quest adds one) (pp. 174, 271–273).

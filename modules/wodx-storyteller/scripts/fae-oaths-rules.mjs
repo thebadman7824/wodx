@@ -222,7 +222,7 @@ export {FOOD, foodActive, afterFood} from "../../wodx-actions/scripts/fae-da-rul
 /** The retinue (p. 94). */
 export const RETINUE = {betrayDiff: 10, page: 94,
   upkeep: "Servants must be fed and clothed, or they revolt.",
-  harm: "A servant who tries to harm the master vomits blood and takes aggravated damage equal to the master's Mists."};
+  harm: "A servant who lifts a hand against the master coughs up blood and suffers aggravated levels, as many as the master has dots of Mists."};
 export const harmDamage = masterMists => Math.max(0, num(masterMists));
 
 /* ---- The state ---- */

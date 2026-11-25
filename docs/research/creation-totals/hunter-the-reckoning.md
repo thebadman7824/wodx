@@ -13,7 +13,7 @@ The summary is on pdf 85–86 / printed 84–85. The full steps are on pdf 89–
 - The list is Allies, Arsenal, Bystanders, Contacts, Destiny, Exposure, Fame, Influence, Mentor, Patron and Resources. (pdf 86 / printed 85)
 
 ## Virtues and edges
-- There are three Virtues: Zeal, Vision and Mercy, each rated 1 to 10. They start at 0, and the player spends 3 points among them. (pdf 90 / printed 89)
+- Hunters have three Virtues (Zeal, Vision, Mercy), each rated 1 to 10. They start at 0, and the player spends 3 points among them. (pdf 90 / printed 89)
 - Each creed has a primary Virtue:
   - Zeal: Avenger, Judge and Defender.
   - Vision: Visionary.

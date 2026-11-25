@@ -33,7 +33,7 @@ export const PATHS = {
 export const EDGES = [
     ["hide", "innocence", 1, ["wits", "mercy"], 6, 0, 148, "Unnoticed by monsters: each rolls Perception + Alertness at 6 to see the hunter."],
     ["illuminate", "innocence", 2, ["perception", "mercy"], 6, 0, 148, "Any success: every hunter present sees the supernatural creatures in the area for what they are."],
-    ["radiate", "innocence", 3, ["stamina", "mercy"], 6, 0, 149, "Each success adds 1 to the difficulty of supernatural attacks on the hunter."],
+    ["radiate", "innocence", 3, ["stamina", "mercy"], 6, 0, 149, "Supernatural attacks on the hunter are 1 harder per success."],
     ["confront", "innocence", 4, ["manipulation", "mercy"], 5, 1, 149, "Each success: an attacker spends a Willpower point to act against the hunter, and again for each later action."],
     ["blaze", "innocence", 5, ["strength", "mercy"], 8, 2, 149, "A light source becomes a weapon: one success deals its lethal dice (see the page's chart)."],
     ["demand", "martyrdom", 1, null, null, 0, 150, "Take a bashing level that can't be soaked: add Mercy to Strength for the turn."],
@@ -42,7 +42,7 @@ export const EDGES = [
     ["donate", "martyrdom", 4, ["", "mercy"], 7, 2, 151, "Mercy + the Attribute lent: give up to that many points of it to another for a time."],
     ["payback", "martyrdom", 5, ["manipulation", "mercy"], "t:stamina+4", 5, 151, "Impose a human limitation on a supernatural being (to breathe, to be solid)."],
     ["bluster", "redemption", 1, ["wits", "mercy"], 6, 0, 152, "Interrupt an action in sight, resisted by its attack roll; usable at any time in the turn."],
-    ["insinuate", "redemption", 2, ["manipulation", "mercy"], 6, 0, 152, "Each success adds 1 to the difficulty of the creature's next action, as forgotten feelings stir."],
+    ["insinuate", "redemption", 2, ["manipulation", "mercy"], 6, 0, 152, "The creature's next action is 1 harder per success, as forgotten feelings stir."],
     ["respire", "redemption", 3, ["stamina", "mercy"], 6, 0, 153, "Heal a bashing or lethal level a success, each paid for (see the page); dangerous to intangible foes too."],
     ["becalm", "redemption", 4, ["manipulation", "mercy"], 7, 1, 154, "Minutes equal to successes: anyone attempting violence or sudden movement rolls Stamina, Strength or Dexterity at 8 a turn."],
     ["suspend", "redemption", 5, ["charisma", "mercy"], 8, 2, 154, "Seal the material world from every other realm for the scene: no creature escapes it."],
