@@ -623,7 +623,11 @@ export function build(ctx) {
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             // 3.62.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
             const line = x => (beginner ? TR.actionLine(x.spec, x.desc) : "");
-            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
+            // #2504: a player sees what fits the character; the rest waits behind Show every action
+            const facts = { text: [actor.system?.clan, actor.system?.custom?.clan, actor.system?.bloodline, actor.system?.settings?.variant, ...(actor.items ?? []).map(i => i.name)].filter(x => typeof x === "string").join(" | ") };
+            const unfit = x => !isGM && !TR.fits(x.spec, facts);
+            const hiddenN = all.filter(unfit).length;
+            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${unfit(x) ? ' class="vta-unfit" hidden' : ""}${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
             const front = beginner ? TR.frontRow(g).filter(x => !pinned.includes(x.spec)) : [];
             const mine = new Set(all.map(x => x.spec));
             const extras = (ctx.searchExtras?.() ?? []).filter(x => !mine.has(x.spec));
@@ -643,6 +647,7 @@ export function build(ctx) {
               ${g.scene.length ? `<div class="vta-scene" role="group" aria-label="The scene">${g.scene.map(x => btn(x)).join("")}</div>` : ""}
               ${extras.length ? `<fieldset class="vta-grp vta-elsewhere"><legend>Also found <small>common checks and dramatic systems</small></legend><div class="vta-grp-btns">${extras.map(x => btn(x)).join("")}</div></fieldset>` : ""}
               </div>
+              ${hiddenN ? `<button type="button" class="vta-unfit-toggle" aria-expanded="false"><i class="fas fa-eye" aria-hidden="true"></i> Show every action (${hiddenN} more that do not fit this character)</button>` : ""}
               <p class="vta-hintbar" aria-live="polite" data-default="Type to find an action · arrow keys move · Enter uses it · right-click or Alt+P pins it">Type to find an action · arrow keys move · Enter uses it · right-click or Alt+P pins it</p>
             </div>`;
             return { kind, html };

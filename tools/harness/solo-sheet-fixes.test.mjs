@@ -151,3 +151,15 @@ test("#2506: a player may ask for a trait at once, and the Storyteller's approva
   assert.match(X, /if \( p\.instant \) return false;/, "never approved on its own as a small spend");
   assert.match(X, /spend\(actor, entry\.data\.purchase, \{by: game\.user\.name, waive: !!entry\.data\.purchase\?\.instant\}\)/);
 });
+
+test("#2504: a player's menu shows what fits the character, the rest behind Show every action", async () => {
+  const T = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/theme-rules.js")));
+  assert.equal(T.fits("api:malkRite", {text: "Brujah | Celerity"}), false);
+  assert.equal(T.fits("api:malkRite", {text: "Malkavian"}), true);
+  assert.equal(T.fits("api:conditioning", {text: "Tzimisce | Dominate"}), true);
+  assert.equal(T.fits("api:feed", {text: ""}), true, "an action not listed fits everyone");
+  const PM = src("modules/wodx-actions/scripts/profile-menus.js");
+  assert.match(PM, /const unfit = x => !isGM && !TR\.fits\(x\.spec, facts\);/);
+  assert.match(PM, /Show every action \(\$\{hiddenN\} more that do not fit this character\)/);
+  assert.match(src("modules/wodx-actions/styles/wodx-actions.css"), /button\.vta-unfit\[hidden\] \{ display: none !important; \}/);
+});

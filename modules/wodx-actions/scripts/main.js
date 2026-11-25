@@ -3488,6 +3488,13 @@ export async function menu({ actor: a } = {}) {
                     const b = ev.target?.closest?.("button[data-k]");
                     if (b && ev.altKey && (ev.key === "p" || ev.key === "P")) { ev.preventDefault(); pin(b); }
                 });
+                // #2504: the actions that do not fit this character, shown on request
+                const unfitTog = root.querySelector("button.vta-unfit-toggle");
+                unfitTog?.addEventListener("click", () => {
+                    const open = unfitTog.getAttribute("aria-expanded") !== "true";
+                    root.querySelectorAll("button.vta-unfit").forEach(b => { b.hidden = !open; });
+                    unfitTog.setAttribute("aria-expanded", String(open));
+                });
                 // 3.62.0 (B2817): in Beginner view the groups fold behind Every action; the search still finds them all
                 const tog = root.querySelector("button.vta-all-toggle");
                 tog?.addEventListener("click", () => {
