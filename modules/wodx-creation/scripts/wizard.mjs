@@ -324,7 +324,7 @@ export class WizardApp extends ApplicationV2 {
       ${W.identityFor(L.sheet).map(field).join("")}
       ${L.sheet === "Vampire" ? `<p class="wodx-quiet">Generation is bought as the Generation Background, on the Backgrounds page; with none, the character is of the book's starting Generation.</p>` : ""}
       <div class="form-group"><label>Native language</label><input type="text" name="who-lang" value="${esc(native)}" placeholder="${esc(suggest || "The language they grew up speaking")}" maxlength="40"></div>
-      <p class="wodx-quiet">${native ? "Other languages come from Linguistics and Language Merits, in the Languages window." : suggest ? `Left empty, ${esc(suggest)} is set when the character is ready.` : "Type the language they grew up speaking."}</p>`;
+      <p class="wodx-quiet">${native ? (["vtda20", "daelder"].includes(this.lineId) ? "Other languages come from the Multi-Lingual Merit (V20DA p. 422), in the Languages window." : "Other languages come from Linguistics and Language Merits, in the Languages window.") : suggest ? `Left empty, ${esc(suggest)} is set when the character is ready.` : "Type the language they grew up speaking."}</p>`;
   }
 
   #groups(kind, ctx) {

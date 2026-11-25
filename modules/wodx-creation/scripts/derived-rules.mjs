@@ -266,7 +266,7 @@ export function startingBlood(lineId, {backgrounds = {}} = {}) {
   const bg = name => n(backgrounds[low(name)]);
   switch ( lineId ) {
     // B8035 (#2501, the owner's call, 25 Nov 2026): a new Cainite starts fully fed, not on the book's die, so no new
-    // character can start in frenzy. The books' rolls (V20 p. 113, V20DA p. 156) are kept in "book" for reference.
+    // character can start in frenzy. The books' rolls (V20 p. 86, plus Domain on p. 113; V20DA p. 155) are kept in "book" for reference.
     case "v20": return {full: true, roll: 0, plus: 0, how: "A full pool (house rule; the book rolls one die)", book: "One die"};
     case "vtda20": return {full: true, roll: 0, plus: 0, how: "A full pool (house rule; the book rolls one die + Domain + Herd)", book: "One die + Domain + Herd", bg: bg("Domain") + bg("Herd")};
     case "daelder": return {full: true, roll: 0, plus: 0, how: "A full pool (house rule; the book rolls two dice)", book: "Two dice; any past the Generation's limit are lost"};

@@ -356,9 +356,9 @@ export function build(ctx) {
           </fieldset>
           <fieldset><legend>Against the sun</legend>
             <div class="form-group"><label><input type="checkbox" name="cover" ${actor.getFlag(MOD, "sunCover") ? "checked" : ""}/> Covered: cloak, hood and gloves over all the skin</label></div>
-            <p class="wodx-quiet">Covered means no bare skin: any sunlight then counts as covered light, soaked at difficulty 5. Uncovered, it counts as the light that falls there (direct sun soaks at 10).</p>
+            <p class="wodx-quiet">Covered means no bare skin: any sunlight then counts as covered light, soaked at difficulty 5. Uncovered, it counts as the light that falls there (direct sun soaks at 10). Only Fortitude soaks sunlight; without it, none is soaked.</p>
             <div class="form-group"><label><input type="checkbox" name="buried" ${actor.getFlag(MOD, "buried") ? "checked" : ""}/> Buried in the earth: the sun cannot reach them</label></div>
-            <div class="form-group"><label><input type="checkbox" name="vigil" ${actor.getFlag(MOD, "dawnVigil") ? "checked" : ""}/> Try to stay awake at dawn (the Road is rolled at difficulty 8; V20 pp. 262-263)</label></div>
+            <div class="form-group"><label><input type="checkbox" name="vigil" ${actor.getFlag(MOD, "dawnVigil") ? "checked" : ""}/> Try to stay awake at dawn (the Road is rolled at difficulty 8; V20DA p. 336)</label></div>
           </fieldset></form>`;
         return dialog(`Sun and haven: ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "sunCover", fd.cover ? true : null);

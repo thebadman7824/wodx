@@ -204,7 +204,7 @@ export async function chooseSource(actor, p) {
     : `<div class="form-group"><label><input type="checkbox" name="waive"> Ask the Storyteller to let it come at once, with no study (for a story reason)</label></div>`;
   const teachers = choices.filter(c => c.src.kind === "teacher");
   const how = `<p class="wodx-quiet">${esc(teachers.length
-    ? "A teacher is someone in the chronicle with more dots in it than you will have. Those you know of are listed first; one who will not teach you, or is in another town, is greyed out with the reason."
+    ? "A teacher is someone in the chronicle with at least as many dots in it as you will have. Those you know of are listed first; one who will not teach you, or is in another town, is greyed out with the reason."
     : `No one you know of has ${p.label} at ${p.next} or more. Pick "${L.SOURCE_KINDS.storyteller}" and the Storyteller finds one, or meet someone who knows it and ask again.`)}</p>`;
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog", "wodx-learn"],
