@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8010
+Next free block: B8020
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -474,6 +474,7 @@ Next free block: B8010
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 | B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
+| B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16505,3 +16506,16 @@ runner.new_pc_lebrun.json. Between the two steps no runner drives the train: lab
 nothing is lost.
 
 Reverse: set `train` back to `true` in runner.json. Do that only while runner.new_pc_lebrun.json has `train: false`.
+
+## B8010. The New PC drives the merge train (2026-11-25)
+tools/pcq/runner.new_pc_lebrun.json has `train: true`. This is the second step of the move Ben asked for on 25
+November. B8000 turned the Main PC's train off, and this merged only after the Main PC's status issue showed no
+"Merge train:" line, so the two never drove at once. Before the move the New PC passed three checks: git user.name and
+user.email are set in its runner clone, git credential fill returns the owner's token, and D: has room for the train
+worktree. It starts its own `<home>/train` worktree and train-state.json and reads the line afresh from the labels.
+The Main PC keeps its own train folder and state as the backup driver. The watcher reads the train from whichever
+runner shows a train line (B7550), so it follows the move by itself.
+
+Reverse (the Main PC drives again): in one pull request, set `train` to `false` in runner.new_pc_lebrun.json and to
+`true` in runner.json. If the New PC is down it cannot drive anyway, so the order of the two runners' restarts does
+not matter then.

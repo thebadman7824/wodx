@@ -192,8 +192,8 @@ repo copy first.
 
 ## The merge train (B7202)
 
-Pull requests labelled `merge-train` merge one at a time, oldest label first. Every few minutes the Main PC's runner
-(`"train": true` in runner.json; the other PCs' runners have it off) takes the front one: a draft is marked ready, main
+Pull requests labelled `merge-train` merge one at a time, oldest label first. Every few minutes the New PC's runner
+(`"train": true` in runner.new_pc_lebrun.json since B8010; the other PCs' runners have it off, and the Main PC is the backup) takes the front one: a draft is marked ready, main
 is merged in and the release notes stamped in its own worktree (`<home>/train`), the push is made with a lease on the
 head it saw, pc-gates.yml gates the new head and that gate job goes ahead of the rest of the queue, and it merges when
 `checks` and `wodx/merge-rules` are green. A conflict, a red result or nothing within `trainMaxHours` (3) takes it out

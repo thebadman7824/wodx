@@ -1,5 +1,5 @@
 {
-  "_about": "Settings for the runner on the New PC (NEW_PC_LEBRUN, HP OMEN 35L: Ryzen 9 9900X3D 12 cores, 64 GB, RTX 5080 16 GB), set up 23 November 2026. Keys here replace runner.json's. It drives lanes 10 to 13 (lanes 11 to 13 added the same day, B7760: one lane used about 16 s a gate and left 47 GB of memory free), runs no book or Trove lookups (those files are on the Main PC), runs no stale-PR sweep and no merge train (the Main PC keeps both until the owner moves them), and watches the live site and the main runner. It also hosts the solo world (port 30010), which no lane uses.",
+  "_about": "Settings for the runner on the New PC (NEW_PC_LEBRUN, HP OMEN 35L: Ryzen 9 9900X3D 12 cores, 64 GB, RTX 5080 16 GB), set up 23 November 2026. Keys here replace runner.json's. It drives lanes 10 to 13 (lanes 11 to 13 added the same day, B7760: one lane used about 16 s a gate and left 47 GB of memory free), runs no book or Trove lookups (those files are on the Main PC), runs no stale-PR sweep (the Main PC keeps it), drives the merge train from 25 Nov 2026 (B8010, the Main PC is its backup), and watches the live site and the main runner. It also hosts the solo world (port 30010), which no lane uses.",
   "name": "New PC runner",
   "statusTitle": "PC runner status (New PC)",
   "alertPrefix": "New PC alert",
@@ -11,6 +11,6 @@
   "minFreeGB": {"C": 15, "D": 50},
   "minFreeRamGB": 4,
   "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20},
-  "train": false,
+  "train": true,
   "prGatesPreferPeer": null
 }
