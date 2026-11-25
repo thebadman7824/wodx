@@ -12,6 +12,8 @@ const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
 /** Powers whose book rules act each turn, by name (lower case). */
 export const EVERY_TURN = {
+  // B7934: Blessed Litany (Dark Ages: Inquisitor Companion p. 115): the cornered fiend takes the successes in lethal dice each turn
+  "blessed litany": {line: "Hunter (Inquisitor)", on: "target", rounds: "successes", counter: {start: "successes", label: "lethal dice"}, each: {damage: {pool: "counter", type: "lethal", soak: true}}, page: "DA:I Companion p. 115", text: "a cornered fiend takes lethal dice equal to the successes each turn"},
   "silver claws": {each: {pool: {key: "rage", points: 1}}, page: "DA:W p. 126", text: "a Rage point each turn the claws are silver"},
   "claws of the glassblower": {on: "target", each: {damage: {levels: 1, type: "aggravated", soak: true}}, page: "DA:W p. 130", text: "an aggravated level each turn until the glass is dug out"},
   "heart claw": {on: "target", each: {damage: {levels: 1, type: "lethal", soak: false}}, page: "W20 p. 173", text: "an unsoakable lethal level each turn until the claw is dug out"},
@@ -88,7 +90,8 @@ export const worstOf = levels => Math.max(0, ...levels.map(n));
 
 /** The every-turn record for a power by name, or null. */
 export function everyTurnOf(name, line = "") {
-  const r = EVERY_TURN[String(name ?? "").replace(/^[•\s]+/, "").replace(/\s+\d+$/, "").trim().toLowerCase()] ?? null;
+  // B7934: an inquisitor's Corpus Lux is listed as "Corpus Lux N: Name"
+  const r = EVERY_TURN[String(name ?? "").replace(/^[•\s]+/, "").replace(/^corpus lux \d+:\s*/i, "").replace(/\s+\d+$/, "").trim().toLowerCase()] ?? null;
   return r && (!r.line || !line || r.line === line) ? r : null;
 }
 

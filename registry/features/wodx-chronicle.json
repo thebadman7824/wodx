@@ -71,6 +71,35 @@
    "prs": [
     1414
    ]
+  },
+  {
+   "id": "chronicle.da-line-traits",
+   "name": "The Dark Ages line books' merits and flaws: Werewolf, Fae, Devil's Due and the Inquisitor Companion",
+   "module": "wodx-chronicle",
+   "core": false,
+   "files": [
+    "modules/wodx-chronicle/data/trait-lines-da.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7931-B7934"
+    },
+    "wired": {
+     "reader": "modules/wodx-chronicle/data/trait-effects.mjs:MERITS_FLAWS"
+    },
+    "shown": {
+     "what": "the rows in the Trait effects window with book and page, their lines on the roll window's odds and its tick boxes, the fae window and the Curse roll card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedalists.mjs",
+     "step": "1"
+    }
+   },
+   "open": [
+    "gateinqcompanion gates the four inquisitor merits and flaws (steps 1-3)",
+    "many rows are cards to the Storyteller where the book gives no number (docs/PENDING-REVIEW.md)"
+   ]
   }
  ]
 }

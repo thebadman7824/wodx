@@ -69,10 +69,12 @@ import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as FAER from "../../wodx-actions/scripts/fae-da-rules.js";
+import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.55.1";
+const VERSION = "0.56.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1273,6 +1275,7 @@ export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = 
       if ( R.holyGround(o) && !inRect(from, r) && segHitsRect(from, to, r) ) cards.push(await holyCard(tokDoc, actor, doc, o, "enters"));
     }
   }
+  try { cards.push(...await echoesOnMove(tokDoc, actor, to)); } catch (e) { console.warn(`${MOD} | echoes`, e); }
   if ( setting("traps") === false ) return cards.filter(Boolean);
   for ( const {doc, o} of trapsOnPath(scene, from, to, {npc: !actor.hasPlayerOwner}) ) {
     if ( springing.has(doc.id) ) continue;
@@ -1459,6 +1462,58 @@ export function holyUnder(tokDoc) {
   }
   return house && R.holyGround(house.o) ? house : null;
 }
+/* ------------------------------------------------------------------ */
+/*  B7871: Echoes that fire from village life (Dark Ages: Fae p. 113) */
+/* ------------------------------------------------------------------ */
+
+const faeFlag = a => a?.getFlag?.("wodx-actions", "daFae");
+const isDaFae = a => !!faeFlag(a)?.origin;
+const echoSeen = new Map();
+/** Active GM: a card telling the Storyteller one of the fae's Echoes may fire, with a button that opens the Echo roll. */
+export async function echoPrompt(actor, kind, {why = "", wielder = null} = {}) {
+  if ( !isActiveGM() || !isDaFae(actor) ) return null;
+  const hits = FAER.echoesFor(faeFlag(actor).echoes, kind);
+  if ( !hits.length ) return null;
+  const key = `${actor.id}:${kind}:${wielder ?? ""}`, now = game.time.worldTime;
+  if ( now - (echoSeen.get(key) ?? -Infinity) < 600 ) return null; // once in ten minutes of the clock for the same thing
+  echoSeen.set(key, now);
+  const T = FAER.VILLAGE_TRIGGERS[kind];
+  const pre = {actor: actor.id, e: hits[0].index, who: wielder ? "mortal" : T.who === "mortal" ? "mortal" : "none", wielder, why: why || T.label};
+  return ChatMessage.create({speaker: {alias: "Echoes"}, whisper: gmIds(), flags: {[MOD]: {echoPrompt: pre}},
+    content: `<div class="wodx-card wit-echo"><h3>${esc(actor.name)}: an Echo stirs</h3><p>${esc(pre.why)}. ${esc(actor.name)}'s Echo: ${esc(hits[0].trigger)}.</p>
+      <button type="button" data-wit-echo>Roll the Echo</button><p class="wodx-quiet">Dark Ages: Fae p. 113</p></div>`});
+}
+/** The kinds a fae meets where a move ends: holy ground under them, and what the people within two squares carry. */
+async function echoesOnMove(tokDoc, actor, at = null) {
+  if ( !isDaFae(actor) ) return [];
+  const out = [], scene = tokDoc.parent;
+  if ( holyUnder(tokDoc) ) out.push(await echoPrompt(actor, "holy", {why: `${actor.name} steps onto holy ground`}));
+  const p = at ?? centerOf(tokDoc, scene), reach = 2 * (scene.grid?.size ?? 100);
+  for ( const o of scene.tokens?.contents ?? [] ) {
+    if ( o.id === tokDoc.id || !o.actor || isDaFae(o.actor) ) continue;
+    const q = centerOf(o, scene);
+    if ( Math.hypot(q.x - p.x, q.y - p.y) > reach ) continue;
+    for ( const it of o.actor.items ?? [] ) {
+      for ( const kind of FAER.goodsKinds(it.name) ) out.push(await echoPrompt(actor, kind, {why: `${o.actor.name} carries ${it.name}`, wielder: o.actor.id}));
+    }
+  }
+  return out.filter(Boolean);
+}
+/** The church bells at their hours ring for every fae on a scene with a house of worship. */
+let lastBellHour = null;
+async function bells() {
+  if ( !isActiveGM() ) return;
+  let h;
+  try { h = getEngine().timeToDate(game.time.worldTime).hour; } catch { return; }
+  const prev = lastBellHour; lastBellHour = h;
+  if ( prev === null || !FAER.bellsBetween(prev, h).length ) return;
+  for ( const scene of game.scenes?.contents ?? [] ) {
+    const church = (scene.regions?.contents ?? []).some(r => R.WORSHIP_PLACES.includes(r.flags?.["wodx-npc"]?.place?.kind));
+    if ( !church ) continue;
+    for ( const td of scene.tokens?.contents ?? [] ) if ( isDaFae(td.actor) ) await echoPrompt(td.actor, "bells", {why: `The church bells ring on ${scene.navName || scene.name}`});
+  }
+}
+
 /** Active GM: a card for a hazard hurting a character, with Undo. why: "enters" or "turn". */
 export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
   const key = `${doc.id}:${tokDoc.uuid}`;
@@ -2160,7 +2215,13 @@ Hooks.once("ready", () => {
   ensureStyles();
   refreshSun();
 });
-Hooks.on("updateWorldTime", () => { refreshSun(); });
+Hooks.on("updateWorldTime", () => { refreshSun(); bells().catch(e => console.warn(`${MOD} | bells`, e)); });
+// B7871: the Echo prompt's button opens the fae's Echo roll, set to the Echo and the person who set it off
+Hooks.on("renderChatMessageHTML", (msg, el) => {
+  const pre = msg.flags?.[MOD]?.echoPrompt, root = el?.[0] ?? el;
+  if ( !pre || !game.user.isGM ) return;
+  root?.querySelector?.("[data-wit-echo]")?.addEventListener("click", ev => { ev.preventDefault(); game.wodxActions?.daEchoFor?.(pre); });
+});
 Hooks.on("createChatMessage", msg => { if ( msg.flags?.[MOD]?.ask && isActiveGM() ) applyAsk(msg).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("renderChatMessageHTML", (msg, el) => {
   if ( !msg.flags?.[MOD]?.done ) return;

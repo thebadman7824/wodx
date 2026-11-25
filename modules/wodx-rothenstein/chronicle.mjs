@@ -57,7 +57,12 @@ export const MANIFEST = {
     caerns: [{key: "old-grove", name: "The Old Grove", scene: "Old Grove", level: 3, tribes: "Silver Fang kin"}],
     hunters: {stage: "rumours"},
     /** The Ashfield is the taint's one source: each field it takes deepens the Ashfield scene a level (B7807). */
-    taints: [{clock: "ashfield", scene: "Ashfield", per: 1, max: 8}]
+    taints: [{clock: "ashfield", scene: "Ashfield", per: 1, max: 8}],
+    /** B7901: Lady Adelheid's ruins and the churchyard's new graves are Haunts (the omnibus's wraith door, ruling 27). */
+    haunts: [{scene: "Altenhof", name: "The ruins of Altenhof", rating: 4, echoes: ["nightmarish"]},
+      {scene: "churchyard|Aegidius", name: "St Aegidius' churchyard", rating: 1, echoes: []}],
+    /** B7903: what dies on the Ashfield leaves nothing: it is eaten (the omnibus, saga.mjs). */
+    souls: [{scene: "Ashfield", fate: "eaten"}]
   },
   /** The words that mark this chronicle in shared code (the guard test reads them). */
   marks: ["Rothenstein", "Kranzfels", "Bogdan Ursu", "Husbandman", "Rudý Hospodář", "Črnomir", "Richter Graff", "Father Ludovic",

@@ -242,3 +242,89 @@ export function maelstromDice(force, { haunt = 0, roll = null } = {}) {
     if (h) dice -= n(force) === 1 ? 2 * h : n(force) === 4 ? Math.max(0, h - 1) : n(force) === 5 ? Math.floor(h / 2) : h;
     return Math.max(0, dice);
 }
+
+/* ------------------------------------------------------------------ */
+/*  The valley's dead and the living (B7899-B7905, Wraith 20th)        */
+/* ------------------------------------------------------------------ */
+
+export const WR20 = "Wraith: The Oblivion 20th Anniversary Edition";
+
+/**
+ * B7899: the Crucible scene (p. 281, the optional rule, taken). A player's mortal who dies may rise: the Storyteller
+ * plays the death again with them, and until that scene is lived through they cannot tear away their own Caul (a
+ * Reaper's help is unchanged).
+ */
+export const CRUCIBLE = { page: "p. 281" };
+export const caulSelfOpen = f => !f?.crucible || f.crucible === "done";
+
+/**
+ * B7900: the Fog (pp. 284-285): how a mortal reacts to the Restless by Willpower, and what they keep after. The chart's
+ * reactions; WoDX reads the "afterward their minds rationalize and repress" as forgetting for every mortal, and the
+ * acts on the map (falls still, flees, attacks) as the witness step's. Children and animals are not in the Fog.
+ */
+export const FOG = [null,
+    { key: "catatonic", label: "Catatonic Fear", act: "freeze", text: "terrified near to stillness, whimpering and crawling for a hiding place" },
+    { key: "panic", label: "Panic", act: "flee", text: "shrieks and flees by the straightest way that is not death" },
+    { key: "disbelief", label: "Disbelief", act: null, text: "denies it all: a trick, a mummer's play; arguing only angers them" },
+    { key: "berserk", label: "Berserk", act: "fight", text: "lashes out with whatever is at hand, then smashes things when blows do nothing" },
+    { key: "terror", label: "Terror", act: "flee", text: "gets away, reasoning as they go" },
+    { key: "conciliatory", label: "Conciliatory", act: null, text: "bargains: a message carried, unfinished business done" },
+    { key: "controlled", label: "Controlled Fear", act: null, text: "afraid, and in command of it" },
+    { key: "curiosity", label: "Curiosity", act: null, text: "more fascinated than afraid, and prying" },
+    { key: "anger", label: "Righteous Anger", act: "fight", text: "gives no ground and fights back" },
+    { key: "none", label: "No Reaction", act: null, text: "nothing special in it at all" }];
+export const CHILD_AGE = 13;
+/** The Fog for one mortal. child: younger than CHILD_AGE; beast: an animal. Neither is in the Fog. */
+export function fogReaction(willpower, { child = false, beast = false } = {}) {
+    if (child || beast) return { key: "outside", label: child ? "A child, outside the Fog" : "An animal, outside the Fog", act: null, text: "reacts as they would, and remembers", remembers: true };
+    const w = Math.max(1, Math.min(10, n(willpower) || 1));
+    return { ...FOG[w], willpower: w, remembers: false };
+}
+
+/**
+ * B7901: Haunt echoes (pp. 288-290): a Haunt that would take the Shroud below 4 gets one echo for each point past it.
+ * They act on mortals only (and the living supernatural), never on the Restless.
+ */
+export const ECHOES = {
+    deadly: { label: "Deadly", text: "Mortals here soak one die less; holding one's temper is +1 difficulty.", page: "p. 289" },
+    forbidding: { label: "Forbidding", text: "Animals will not come; a mortal rolls Willpower at 3 + the Haunt to go in, an hour a success; failing, they leave for the Haunt's rating in hours; a botch, days, and hysterical if forced.", page: "p. 289" },
+    isolated: { label: "Isolated", text: "Overlooked: +3 difficulty to find or notice it, even for those who have been.", page: "pp. 289-290" },
+    jinxed: { label: "Jinxed", text: "Once a story a Haunt level, the Storyteller visits ill luck on the living here.", page: "p. 290" },
+    nightmarish: { label: "Nightmarish", text: "A mortal who sleeps here rolls Willpower at 3 + the Haunt; failing, +1 difficulty all the next day, mounting night by night; a night elsewhere clears it.", page: "p. 290" },
+    obscured: { label: "Obscured", text: "Proof will not hold: roll the Haunt at 7 when someone tries to keep evidence; success, it spoils.", page: "p. 290" },
+    resonant: { label: "Resonant", text: "One feeling soaks the living: Empathy and Arcanoi about it 2 easier.", page: "p. 290" },
+    slipping: { label: "Slipping", text: "Glimpses of the past; Arcanoi here 1 easier.", page: "p. 290" }
+};
+/** How many echoes a Haunt has room for: one a point the Haunt would take the Shroud below 4. */
+export const echoSlots = (baseShroud, haunt) => Math.max(0, n(haunt) - Math.max(0, (n(baseShroud) || 7) - 4));
+/** A sleeper in a Nightmarish Haunt (p. 290): the roll's difficulty, and the next day's penalty after it. */
+export const nightmareDiff = haunt => Math.min(10, 3 + n(haunt));
+export const nightmareAfter = (penalty, ok) => Math.max(0, n(penalty) + (ok ? -1 : 1));
+/** Going into a Forbidding Haunt (p. 289): difficulty, then hours allowed or hours (or days) kept out. */
+export function forbidding(haunt, { successes = 0, botch = false } = {}) {
+    const h = n(haunt);
+    if (botch) return { enter: false, days: h, hysterical: true };
+    if (successes <= 0) return { enter: false, hours: h };
+    return { enter: true, hours: successes };
+}
+
+/**
+ * B7902: a Haunt in a Maelstrom (pp. 290-291). The storm's level less the Haunt's: nothing left, the wraiths inside are
+ * safe; else the storm breaks in after the Haunt's rating in hours, at the level left, and they add the Haunt to soak.
+ * Five wraiths a level; each extra group of the Haunt's rating takes a level off it. A Great Maelstrom halves the hours
+ * and is not lessened when it breaks in.
+ */
+export function shelter({ force = 0, haunt = 0, wraiths = 0, great = false } = {}) {
+    const h0 = Math.max(0, n(haunt)), cap = 5 * h0, over = Math.max(0, n(wraiths) - cap);
+    const h = h0 ? Math.max(0, h0 - (over ? Math.ceil(over / h0) : 0)) : 0;
+    const f = Math.max(0, n(force));
+    const left = great ? f : Math.max(0, f - h);
+    const safe = !great && h > 0 && f - h <= 0;
+    return { haunt: h0, effective: h, capacity: cap, over, safe, level: safe ? 0 : left, hours: h ? (great ? h / 2 : h) : 0, soak: h };
+}
+
+/**
+ * B7903: places where the dead leave nothing (a chronicle's local souls: a soul eaten where it falls). A death there
+ * gives no wraith and no Crucible.
+ */
+export const soulEaten = (fate) => fate === "eaten";

@@ -27,6 +27,7 @@ import * as PE from "./path-effects.js";
 import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
+import { fogReaction } from "./wraith-rules.js";
 import * as MR from "./mummy-rules.js";
 import * as DR from "./demon-rules.js";
 import * as BR from "./book-rituals.js";
@@ -35,6 +36,7 @@ import * as DSR from "./daysleep-rules.js";
 import * as FOM from "./fomor.js";
 import * as FDR from "./fae-da-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as CUR from "./inq-curses-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -910,6 +912,16 @@ export function build(ctx) {
                     await logEvent(killer, `Kills ${actor.name}${killer.system?.conditions?.isfrenzy ? " in frenzy" : ""}.`, "kill");
                     await sinPrompt(killer, killer.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${actor.name} is killed`);
                 }
+                // B7925: a thrall who kills: a sin on the thrall's hierarchy (Dark Ages: Devil's Due p. 96)
+                else if (killer?.getFlag?.(MOD, "thrall") && !killer.getFlag(MOD, "thrall").absolved) {
+                    await logEvent(killer, `Kills ${actor.name}.`, "kill");
+                    await sinPrompt(killer, "kill", `${actor.name} is killed`);
+                }
+                // B7888: an inquisitor who kills a Christian: the first sin against God (Dark Ages: Inquisitor p. 159)
+                else if (killer?.getFlag?.(MOD, "inquisitor")) {
+                    await logEvent(killer, `Kills ${actor.name}.`, "kill");
+                    await ctx.api()?.pietyPrompt?.(killer, "kill", `${actor.name} is killed`, { christian: CUR.christianVictim(actor.getFlag?.(MOD, "faith")), card: true });
+                }
             }
         }
         if (bits.length) return prompt(actor, actor.name, bits.join(""));
@@ -928,6 +940,9 @@ export function build(ctx) {
     /** A sin prompt with the Road's suggested level (event: kill, killFrenzy, killFeed, diablerie, frenzy, notRidden, and from B7633 lie, theft, wordBroken, feedUnwilling, starve, mindMortal, embrace). */
     async function sinPrompt(actor, event, what) {
         if (!setting("eventPrompts")) return null;
+        // B7925: a thrall of Hell sins by the thrall's own hierarchy (Dark Ages: Devil's Due p. 96)
+        const thrall = await ctx.thrallSin?.(actor, event, what);
+        if (thrall !== undefined) return thrall;
         const found = roadOf(actor);
         const level = K.sinForEvent(found, event);
         const rating = n(actor.system?.advantages?.path?.permanent);
@@ -1203,8 +1218,11 @@ export function build(ctx) {
             else if (rule === "delirium") { const d = G.delirium(w, GX.basis(), GX.data().garou?.delirium); reaction = d.reaction; memory = d.memory; }
             else if (rule === "veil") reaction = MR.veil(w);
             else if (rule === "revelation") { const r = await rollPool(w, Math.max(2, faith)); rolls.push(r.roll); const re = DR.mortalReaction(r); reveal = re.key; reaction = re.key; }
-            const act = WR.witnessAct(reaction);
-            const keep = WR.remembers(rule, { memory, willpower: w, reveal, banality: n(a.system?.banality?.permanent) || 6 });
+            // B7900: the Fog for the restless dead, by Willpower; a minor or an animal is outside it (Wraith 20th pp. 284-285)
+            let fog = null;
+            if (rule === "hysteria" && !g) { let child = false; try { child = !!T?.age?.minor?.(a); } catch (e) { child = false; } fog = fogReaction(w, { child, beast: P.detectProfile(a) === "beast" }); reaction = `${fog.label}: ${fog.text}`; }
+            const act = fog ? fog.act : WR.witnessAct(reaction);
+            const keep = WR.remembers(rule, { memory, willpower: w, reveal, banality: n(a.system?.banality?.permanent) || 6, fog });
             try {
                 if (act === "freeze" && T?.applyTimed) await T.applyTimed(a, { name: "Frozen with fear", description: `Frozen by what ${who} is`, duration: { kind: "scene" }, condition: "immobilized", key: "wodx-witness-freeze", source: "WoDX witness step" });
                 if (act === "flee" && T?.applyTimed) await T.applyTimed(a, { name: "Afraid", description: `Afraid of ${who}`, duration: { kind: "scene" }, key: "wodx-effect-fear", source: "WoDX witness step" });

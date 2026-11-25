@@ -6,10 +6,10 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 42 | 0 | 8 |
+| wodx-actions | yes | 45 | 0 | 8 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
-| wodx-chronicle | not yet | 2 | 0 | 0 |
-| wodx-combat | yes | 15 | 0 | 0 |
+| wodx-chronicle | not yet | 3 | 0 | 0 |
+| wodx-combat | yes | 16 | 0 | 0 |
 | wodx-creation | yes | 23 | 0 | 3 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
@@ -20,7 +20,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-senses | not yet | 0 | 0 | 0 |
 | wodx-sheets | yes | 20 | 0 | 1 |
 | wodx-solo | not yet | 0 | 0 | 0 |
-| wodx-storyteller | not yet | 3 | 0 | 1 |
+| wodx-storyteller | not yet | 4 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
 | wodx-voices | not yet | 0 | 0 | 0 |
 
@@ -36,28 +36,30 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Debts and oaths, the Blood Hunt, and the marks of the Beast, low Humanity and diablerie (`actions.debts-marks`) | core | gated | 1 | gatedebtsmarks a. Blood Hunt |
 | Disciplines you can see on the map (`actions.discipline-looks`) | core | book |  | gatedalooks 1. Dread Gaze marks the token |
 | Feeding: what the Kiss does to the vessel, clan and bloodline palates, and the night's hunt (`actions.feeding`) | core | gated | 1 | gatefeed 2 feed on an unlinked mortal |
-| Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 2 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
+| Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 3 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
 | How often a power may be used, and the costs it pays when it ends (`actions.limits-costs`) | core | shown | 1 |  |
-| Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 1 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
+| Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 4 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
 | Nature gives Willpower back when the character acts to it (`actions.nature`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
 | Powers that act each turn while they hold (`actions.timed-powers`) | core | gated |  | gatetimedpowers 1. a Heart Claw takes a lethal level on the bearer's next turn |
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
-| Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 1 | gatedasins 1. a lie told through the action window takes a Conscience dot |
+| Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 2 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
-| The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 1 | gate6e a card: header, roll, what changed with pips |
+| The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 2 | gate6e a card: header, roll, what changed with pips |
 | The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | shown | 1 |  |
 | The ghosts of V20 Dark Ages: Passion as blood, manifesting (`actions.ghosts-da`) | core | shown | 2 |  |
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
 | Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | gated | 1 | gateretrywindow 1. a failed roll tried again in the action window is one harder |
-| Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 1 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
+| Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 3 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
-| Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 1 |  |
+| Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 2 |  |
 | With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 1 | gatesocial 6 window |
+| A Dark Ages mage's everyday wonders (charms, elixirs, tools) enchanted as a craft, and Tass from creatures and the fae (`actions.mage-wonders`) |  | gated | 1 | gatemagewonders 1. unbreakable iron from the household window: the sword strikes +3 |
+| A Dark Ages mage's household and standing: chantry and its gossip, familiar, Destiny, Library, servants, talismans, degrees, the DA:Mage merits and flaws (`actions.mage-household`) |  | gated | 1 | gatemagehouse 1. the chantry with no community points: the commoners talk |
 | Changelings of the later eras: Arts, Realms, Nightmare, Imbalance and Banality (`actions.c20`) |  | gated | 1 | gate6h Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns |
-| Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 1 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |
+| Dark Ages fae: Mists, Weaving, Dominions, cantrips and Treasures (`actions.fae-da`) |  | gated | 2 | gate6g cold iron: an aggravated level through WoDX Combat and a Mists point |
 | Dark Ages mages: Foundation and Pillars, the Grimoire, and Consensus by era (`actions.mage-da`) |  | gated | 1 | gate6n a Grimoire rote: Revoking the Gift of Adam casts with its Grimoire page |
 | Demon: The Fallen: lores, evocations, Faith and Torment, the apocalyptic form (`actions.demon`) |  | gated | 1 | gate6i choosing the dark effect costs a temporary Torment point |
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
@@ -65,11 +67,12 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
 | The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | shown | 1 |  |
+| The infernal thrall of Dark Ages: Devil's Due: Vice, Resolve, Torment, sins, pacts, rites and Absolution (`actions.thrall`) |  | gated | 1 | gatethrall 2. a planned murder from the window: Conscience fails and a point of Torment |
 | The inner voice: the Beast, the Shadow, Rage and the Impulse played by someone (`actions.voice`) |  | parked |  | gate6d a whisper reaches only the character, the voice and the Storyteller |
 | The Kuei-jin: Chi, Dharma, the P'o and their Disciplines (`actions.kote`) |  | gated | 1 | gate6j Dharma 3 allows one Chi a turn |
 | The Reborn: Balance, Sekhem and Hekau (`actions.mummy`) |  | gated | 1 | gate6k Forbiddance: Balance against Willpower at 6 |
-| The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging (`actions.wraith`) |  | gated | 1 | gate6c use an Arcanos |
-| Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 2 | gate6b change form |
+| The wraith line: Arcanoi, Passions, Fetters, Corpus, soulforging (`actions.wraith`) |  | gated | 2 | gate6c use an Arcanos |
+| Werewolf and Fera: Rage, frenzy and the moon, Gnosis, forms, Gifts, totems (`actions.garou`) |  | gated | 3 | gate6b change form |
 
 ## wodx-chronicle
 
@@ -77,6 +80,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | --- | --- | --- | --- | --- |
 | Dated events: history fires on its date as the clock passes it (`chronicle.dated-events`) | core | gated | 2 | gatedatedplay 5 |
 | Languages in chat: speech in a language a player's characters lack shows as made-up words (`chronicle.languages-in-chat`) | core | gated | 2 | gateplaylang 4 |
+| The Dark Ages line books' merits and flaws: Werewolf, Fae, Devil's Due and the Inquisitor Companion (`chronicle.da-line-traits`) |  | gated | 2 | gatedalists 1 |
 
 ## wodx-combat
 
@@ -97,6 +101,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 1 | gatemove drowning in a fight |
 | Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | gated | 1 | gatepowder 1. wet powder will not fire from the attack window |
 | Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming (`combat.vehicles`) |  | gated | 1 | gatetruthcombat 10. a quick attack on a vehicle's token comes off its sheet's Structure |
+| The Garou maneuvers and pack tactics of Dark Ages: Werewolf (`combat.garou-maneuvers`) |  | gated |  | gatedawfill 2 |
 
 ## wodx-creation
 
@@ -197,3 +202,4 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Great events and war at home in the sky over the towns (`storyteller.event-looks`) | core | gated | 1 | gatedatedplay 5 |
 | Market news: dated events and trade move the markets, applied from a card (`storyteller.market-news`) | core | gated |  | gatedatedplay 4 |
 | The Ledger: a dated debt, oath or boon comes due as the clock passes it (`storyteller.ledger-due`) | core | shown | 2 |  |
+| An inquisitor cell to live in: the daily round and chapter, rector and officers, the chapter-house, the Flock, confession, retreats (`storyteller.inquisitor-cell`) |  | gated | 2 | gateinqcell 3. Holy Ground 2 at the chapter-house: on the sheet, and two Willpower on waking |

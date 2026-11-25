@@ -7,6 +7,7 @@
  */
 
 import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {thrallFlag} from "../../wodx-actions/scripts/thrall-rules.js";
 
 export const RECIPE_VERSION = 1;
 
@@ -207,7 +208,36 @@ export function peopleAnchors(recipe, actors = []) {
 /* ---- The cast (B7806) ---- */
 
 /** The kinds of sheet the cast step makes. */
-export const CAST_TYPES = ["Mortal", "Vampire"];
+export const CAST_TYPES = ["Mortal", "Vampire", "Werewolf"];
+/** B7874: what a cast Werewolf's sheet is written with (tribe, auspice, breed, rank), and the tribe a Kinfolk is kin to. */
+export function castSheet(p = {}) {
+  const out = {};
+  if ( p.type === "Werewolf" && p.garou ) {
+    const g = p.garou;
+    if ( g.tribe ) { out["system.tribe"] = "custom"; out["system.custom.tribe"] = String(g.tribe); }
+    if ( g.auspice ) out["system.auspice"] = String(g.auspice);
+    if ( g.breed ) out["system.breed"] = String(g.breed);
+    if ( Number.isFinite(Number(g.rank)) ) out["system.renown.rank"] = Math.max(0, Math.min(5, Math.trunc(Number(g.rank))));
+  }
+  if ( p.kin ) out["flags.world.wodx.kinfolk"] = String(p.kin);
+  if ( p.hunter ) out["flags.wodx-actions.inquisitor"] = hunterFlag(p.hunter);
+  // B7924: a thrall of Hell, as WoDX Actions keeps one (Dark Ages: Devil's Due)
+  if ( p.thrall ) out["flags.wodx-actions.thrall"] = thrallFlag(p.thrall);
+  return out;
+}
+
+/**
+ * B7890: a hunter of the Dark Ages, as WoDX Actions keeps one (flags["wodx-actions"].inquisitor). Before the
+ * Inquisition (1223) a hunter is a precursor (Dark Ages: Inquisitor pp. 62-69): no order yet, Superior Virtues of
+ * their own. h: {precursor, order, faith, wisdom, zeal, piety}.
+ */
+export const HUNTER_PRECURSORS = ["crusader", "st-denis", "murnau", "faithful"];
+export function hunterFlag(h = {}) {
+  const dot = v => Math.max(0, Math.min(5, Math.trunc(Number(v) || 0)));
+  const out = {precursor: HUNTER_PRECURSORS.includes(h.precursor) ? h.precursor : "faithful", order: String(h.order ?? ""), faith: dot(h.faith), wisdom: dot(h.wisdom), zeal: dot(h.zeal), curses: []};
+  if ( Number.isFinite(Number(h.piety)) && h.piety !== null && h.piety !== undefined ) out.piety = Math.max(0, Math.min(10, Math.trunc(Number(h.piety))));
+  return out;
+}
 
 /**
  * What the cast step does in a world. recipe.cast: {people: [{name, match, type, variant, note}], sheets: [{match, road,
@@ -226,7 +256,8 @@ export function castPlan(recipe, actors = []) {
   const make = [], set = [], missing = [];
   for ( const p of recipe?.cast?.people ?? [] ) {
     if ( !p?.name || find(p.match ?? p.name) ) continue;
-    make.push({name: p.name, type: CAST_TYPES.includes(p.type) ? p.type : "Mortal", variant: p.variant === "ghoul" ? "ghoul" : null, note: String(p.note ?? "")});
+    const type = CAST_TYPES.includes(p.type) ? p.type : "Mortal";
+    make.push({name: p.name, type, variant: p.variant === "ghoul" ? "ghoul" : null, note: String(p.note ?? ""), sheet: castSheet({...p, type})});
   }
   for ( const x of recipe?.cast?.sheets ?? [] ) {
     const a = find(x?.match);
@@ -234,6 +265,8 @@ export function castPlan(recipe, actors = []) {
     const ch = {};
     if ( x.road && a.road !== x.road ) ch.road = x.road;
     if ( x.variant === "ghoul" && a.variant !== "ghoul" ) ch.variant = "ghoul";
+    if ( x.hunter && !a.hunter ) ch.hunter = x.hunter;
+    if ( x.thrall && !a.thrall ) ch.thrall = x.thrall;
     if ( Object.keys(ch).length ) set.push({id: a.id, name: a.name, ...ch});
   }
   return {make, set, missing};
@@ -244,6 +277,8 @@ export function castFields(change = {}) {
   const out = {};
   if ( change.road ) { out["system.advantages.path.label"] = "custom"; out["system.advantages.path.custom"] = change.road; }
   if ( change.variant ) out["system.settings.variant"] = change.variant;
+  if ( change.hunter ) out["flags.wodx-actions.inquisitor"] = hunterFlag(change.hunter);
+  if ( change.thrall ) out["flags.wodx-actions.thrall"] = thrallFlag(change.thrall);
   return out;
 }
 

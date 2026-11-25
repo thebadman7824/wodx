@@ -468,8 +468,9 @@ Next free block: B7970
 | B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
-| B7860-B7909 | Splat depth build: fae oaths kept by the village (desk item fae-village) (used B7860-B7869) | Storyteller, Actions |
+| B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
+| B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 <!-- decision-index:end -->
 
@@ -16149,10 +16150,317 @@ Reverse: remove hetman from LEVER_TOWN and the rising hook in fae-oaths.mjs.
 ## B7869. Gate and tests (2026-11-24)
 tools/gate/gatefaeoaths.mjs (8 steps) and tools/harness/fae-oaths.test.mjs.
 
+## B7870. The 25 Echo effects, applied from the card (2026-11-24)
+WoDX Actions. fae-da-rules.js ECHO_EFFECTS holds DA:Fae pp. 112-113's 25 effects, five to a level (the eleven missing are Humble Fae, Paranoia, Saint Vitus's Dance, Fear of Humanity, Backlash, Cantrip Unleashed, Honest Mien, Immolation, Frenzy, Lost and the Terrible Mien). The Echo card shows the level's five as buttons for the Storyteller. Conditions for the scene: Itch and Saint Vitus's Dance +1 to all, Frozen and the Mythical Statue lose the action, Deprived Senses +2 on sight. Harm: Echo Lash 3 bashing soaked, Immolation 3 aggravated (one turn a press). Sheet: Mien Revealed and Honest Mien end the hiding; Thin Mists doubles Mists costs for the scene (spend); Humble Fae adds 3 to Willpower rolls in the roll window; Cantrip Unleashed notes the extra Unleashing on cast cards for a day; Lost is marked on the Mists window. The rest are the Storyteller's to play. Desk pick "auto" (splat depth desk, 24 Nov).
+
+Reverse: drop echoPick in fae-da.js and the readers; ECHO_PICKS was the old short list.
+
+## B7871. Village life sets off Echoes (2026-11-24)
+WoDX Interactables. VILLAGE_TRIGGERS (p. 113) match a fae's own Echo text: bells, holy ground, crosses and rosaries, iron, horseshoes, salt, clovers, mirrors, folk charms (rowan, hag stones, corn dollies), roosters, prayer. When a fae's move ends on holy ground or within two squares of someone carrying such goods, or the bells ring at 6, 12 or 18 on a scene with a house of worship (the hours are a house reading), the Storyteller gets a prompt once in ten minutes of the clock for the same thing; its button opens the Echo roll set to the Echo and the person.
+
+Reverse: remove echoesOnMove, bells and the prompt hook in wodx-interactables main.mjs.
+
+## B7872. Each Court's Echoes (2026-11-24)
+WoDX Actions. COURT_ECHOES (pp. 67, 69, 71, 73, 75) is shown on the Echo window for the fae's Court.
+
+Reverse: remove the line in echo().
+
+## B7873. An inquisitor on the Echo roll (2026-11-24)
+WoDX Actions. When the wielder is chosen, their own Willpower is rolled. An inquisitor may risk 1 to 3 Conviction as dice (DA:I p. 160's risk rule) and spend Conviction as successes (DA:Fae p. 182). Gate tools/gate/gatefaeechoes.mjs, harness fae-echoes.test.mjs.
+
+Reverse: drop the wielder and Conviction fields in echo().
+
+## B7874. The Old Grove is staffed (2026-11-24)
+WoDX Rothenstein and WoDX Storyteller. The recipe's cast makes the Grove's sept: four Silver Fang elders (Jaromír Moon-Ward, sept leader, Ahroun; Dobroslava Reads-the-Ash, Master of the Rite, Theurge; Svatopluk Stone-Watch, caern Marshall, Philodox; Bohdana Winter-Song, Talesinger, Galliard) and the Kinfolk family of the Grove farm (Hostivít, Milada, Radek), names of WoDX's own. The cast step can now make Werewolf sheets with tribe, auspice, breed and rank, and mark Kinfolk (recipe-rules castSheet). The Grove faction has its leader and seven members, and the four elders and Hostivít are anchored at the Old Grove. Silver Fangs fit the Holy Roman Empire's septs (DA:W pp. 38-47, 73). Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: drop the seven cast people, the five anchors and the faction's leader and members; CAST_TYPES back to Mortal and Vampire.
+
+## B7875. The caern's daily chores (2026-11-24)
+WoDX Storyteller. The sept window gives each Garou of the sept a share of the work of DA:W p. 167 (the kin's fields, shelters and barns, firewood, the bawn watch, the spirits, song and drumming) and a "Done today" mark. At the moot, a player's Garou who kept the share three days in four wins a point of Honor, and one who kept it fewer than one day in four loses two (p. 99), as suggestions on the approval queue. The thresholds are a house reading.
+
+Reverse: remove the chores section of sept.mjs and reckonChores in sept-rules.mjs.
+
+## B7876. The monthly moot and its business (2026-11-24)
+WoDX Storyteller. "Hold the moot" in the sept window: the Moot Rite fills the caern (Places of power), a player's Garou who stayed away gets a Wisdom loss suggested (p. 99), and the card lists the month's work, the Renown to confirm, rank challenges, lessons, the news, and the revel led by the Wyrm Foe (pp. 29-30, 169). A button on the card suggests the Honor lost for speaking without leave. Offices of the Dark Ages list (pp. 169-170) are taken (written on the caern) or refused (Glory, Honor and Wisdom suggested, p. 99).
+
+Reverse: remove holdMoot and offerOffice in sept.mjs and setOffice in power.mjs.
+
+## B7877. Rites taught by an elder for tribute (2026-11-24)
+WoDX Storyteller. A lesson names the student, the teacher, the rite, its level and the tribute; a rite above the student's Rituals cannot begin (p. 145). A week per level, each week Intelligence + Rituals; the difficulty is cut off at a page break in the book, so WoDX reads it as 10 minus Intelligence (3 to 9). A failed week costs a Willpower point to go on (none left, the lessons stop); a botch waits three full moons. The learned rite goes on the sheet as a rite Power, and Wisdom +1 is suggested (p. 99).
+
+Reverse: remove beginLesson and lessonWeek.
+
+## B7878. The news a Dark Ages sept talks about (2026-11-24)
+WoDX Storyteller. sept-rules NEWS: the ten prophecies of about 1200 that the tribes laugh at, the fall of Constantinople on 13 April 1204 that fulfils the Warders' prophecy, and the concolation the five tribes call after it (pp. 35-36, 74). Each is told at the first moot after its date. The concolation's date (1 September 1204) is a house reading.
+
+Reverse: empty NEWS.
+
+## B7879. The book's Renown awards in the Award Renown dialog (2026-11-24)
+WoDX Actions. garou-deeds-rules.js DEEDS holds the sample awards of DA:W pp. 98-99 in WoDX's words, and LITANY the thirteen tenets (pp. 31-33), each priced by the award table where it fits (a house reading; the others the sept judges). The dialog fills the numbers from a picked deed or breach when the boxes are left at 0. A loss of seven or more in one category is marked as a crime on the Renown card (p. 98).
+
+Reverse: drop the two selects and the crime line in garou.js.
+
+## B7880. Deeds seen in play raise Renown suggestions (2026-11-24)
+WoDX Actions. A player's Garou who frenzies gets a Wisdom loss suggested, and a fox frenzy a Glory loss too (p. 99); the sept window adds chores, moots, refused offices, speaking without leave and learned rites. Each goes on the approval queue as "Renown from a deed seen in play", because Renown is earned only when others hear of the deed (p. 98); approving it applies the award through applyRenown.
+
+Reverse: remove suggestDeed and its handler.
+
+## B7881. The Litany's breaches priced by the award table (2026-11-24)
+WoDX Actions. Combat the Wyrm and the caern tenet take Glory -3 (not stopping a caern being overrun); the Veil Honor -5; territory, station, the first share and respect for those beneath Honor -1; surrender and the two leader tenets Honor -3 (an unjust challenge). Mating, human flesh and sickness have no price in the table and are the sept's to judge.
+
+Reverse: set each LITANY deed to null.
+
+## B7882. Rank challenges become sept events (2026-11-24)
+WoDX Actions and WoDX Storyteller. When Renown meets the next rank, applyRenown calls wodxRankReady; the sept window lists the challenge, sets one of the ten samples of p. 101 (or the benefactor's own), and on "Passed" raises the rank on the sheet.
+
+Reverse: remove the hook call and the challenges section.
+
+## B7883. The Curses of Dark Ages: Inquisitor (2026-11-24)
+WoDX Actions. The 25 Curses of DA:I pp. 204-213 in five categories, each tied to an order (Anathemae the Oculi Dei, Interdictions the Knights of Acre, Maledictio the House of Murnau, Stigmata the Red Order, Visitations the Sisters of St. John), five a category at stages 1, 1, 2, 2, 3, in WoDX's own words (inq-curses-rules.js). The inquisitor window lists the Curses borne and lets the Storyteller give one. Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: remove inq-curses-rules.js and the Curses lines of hunter.js.
+
+## B7884. When a Curse comes (2026-11-24)
+WoDX Actions. A botched Piety roll and a botched roll on a Superior Virtue (a Virtue roll or a Blessing) roll for a Curse by themselves: one die plus the eight modifiers of p. 202, with the table's outcomes (+1 Conviction, nothing, -2 Conviction, or a Curse of stage one, two or three). A Blessing bought above the inquisitor's stage gives that stage's Curse with no roll; one learned in play (ticked in Bank Conviction) rolls (p. 203). The card offers the Curses of the stage rolled, only the order's own category for the first of each stage (p. 204), and the Storyteller clicks one. A Blessing roll counts as a roll on its Superior Virtue: a house reading.
+
+Reverse: drop curseRoll, offerCurse and takeCurse and the botch lines in hunter.js.
+
+## B7885. What the Curses do (2026-11-24)
+WoDX Actions. Curses with numbers count on the inquisitor's own rolls in the roll window and its odds line (Scent of Hyacinth, Allure of Gentle Hades, False Witness, Mark of the Beast, Boiled in Shame, Lashed in Judgment, Crowned by Thorns, Speared by Destiny). Lamb of God makes them Callous at Conviction equal to Piety; Endless Penitence stops prayer giving Conviction; Marked by the Cross bleeds when the primary Superior Virtue fails. The rest name their roll on the Curse's card for the Storyteller.
+
+Reverse: remove the Curses block in main.js buildPool and the Lamb, Penitence and Cross lines in hunter.js.
+
+## B7886. Cocytus (2026-11-24)
+WoDX Actions. When the Curse stages borne (a Judge Curse counts three) reach permanent Piety plus the Superior Virtues, the inquisitor falls into Cocytus (pp. 203-204): the card says the Nature is now the Impulse, Willpower comes back only by acting on it, every Conviction spent also leaves the bank, and the bank buys Superior Virtues only.
+
+Reverse: drop the cocytus flag and drain() in hunter.js.
+
+## B7887. The orders' benefits and drawbacks, from 1223 (2026-11-24)
+WoDX Actions. The inquisitor window offers the order's benefit and drawback in place of an Acolyte Endowment (pp. 129-139) only from the first Council of Faith in 1223 (p. 71), and for the Oculi Dei only after 1227. In play: the Knights check Piety one higher while carrying a relic, the Red Order gets three Exposure and resists the Impulse one harder while Callous, the Sisters call visions (a Willpower point, Perception + Empathy) with the Courage roll on a botch, the House of Murnau adds one to Curse rolls; the Background dots of the Murnau and Oculi benefits are noted for the player to add.
+
+Reverse: drop the benefit box, vision() and the order lines in hunter.js and ORDER_BENEFITS in inq-curses-rules.js.
+
+## B7888. Sins against God from play (2026-11-24)
+WoDX Actions. The same play events that ask a Road sin of a vampire ask a Piety roll of an inquisitor, on a card with the button: a mortal killed is the first sin (unless they kept another faith), a lie or a broken word the eighth, a theft the sixth. The theft as "a sinful impulse" (level 6) is a house reading; a disobeyed superior (level 6, DA:I Companion p. 73) is in the table for the Storyteller's use.
+
+Reverse: remove pietyPrompt, the inquisitor branch of the roll's sin event in main.js and the inquisitor kill in kindred.js.
+
+## B7889. The DA:I merits and flaws (2026-11-24)
+WoDX Chronicle. The eighteen merits and flaws of DA:I pp. 166-169 join the trait table for hunters and mortals, with their roll effects where a roll shows them (Hale, Pain Resistant, Weak Lungs, Elderly, Uncanny Logic, Sickened by the Flesh, Religious Heritage both ways, Evangelist, Blasphemous Tongue); WoDX Actions reads Ecstatic (a Blessing past three successes) and God's Judgment (Bank Conviction). Holy Aura is already in the table from The Hunters Hunted II.
+
+Reverse: remove the DA:I rows from trait-lines.mjs and "DA:I" from LINE_BOOKS.
+
+## B7890. Book 1 hunters are precursors (2026-11-24)
+WoDX Rothenstein and WoDX Storyteller. In 1197-1222 there is no Inquisition (DA:I pp. 62, 71), so Book 1's hunters are precursors: Brother Anselm as one of the lone Faithful (Faith 1), and Thibault de Montfaucon, the bishop's knight back from the Holy Land, as a crusader of Gauthier de Dampiere's kind (Zeal 1), made by the cast step with an inquisitor sheet and no order. The cast step can now write an inquisitor's record (recipe-rules hunterFlag).
+
+Reverse: drop Thibault from the cast and Anselm's sheet line, and hunterFlag in recipe-rules.mjs.
+
+## B7891. The cell's daily round and chapter under the Rule (2026-11-24)
+WoDX Storyteller. A cell window (scene controls, "The inquisitor cell") keeps each member's divine office and common meal day by day, and chapter three times a week (Dark Ages: Inquisitor Companion pp. 71-73). The week's reckoning lists who kept the Rule; WoDX counts the office and the meal on four days of seven as kept, and a player's inquisitor who kept fewer is asked for the Piety roll of disobedience, a sin at 6 (p. 73). Only from 1223, and never for a household of the faithful. Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: remove cell.mjs and cell-rules.mjs and the cell lines in the Storyteller's main.mjs.
+
+## B7892. The rector and the officers (2026-11-24)
+WoDX Storyteller. The rector is set by the Council of Faith; after a full year in the field the cell may elect another (Companion p. 74). Officers (sub-rector, treasurer, archivist, cellarer) are voted in, and the rector may veto; with the rector gone the sub-rector leads until a new one is chosen (p. 75).
+
+Reverse: drop the rector and officers section of the cell window and its rules.
+
+## B7893. The chapter-house (2026-11-24)
+WoDX Storyteller and Actions. The chapter-house is rented or lent, never the cell's own (Companion pp. 75-77): its kind, owner, disguise, servants and lands, and its rent, which WoDX counts monthly and names on the reckoning while unpaid. The pooled Chapter-House dots go to size, security (+1 to break in a dot), Holy Ground (+1 a dot) and prisons (three prisoners a dot), never past what was pooled (Dark Ages: Inquisitor p. 155). Its Holy Ground goes on each member's sheet: prayer at the chapter-house reads it, and a member who wakes there regains two Willpower once a morning (Companion p. 98, one of the book's optional Storyteller effects, taken).
+
+Reverse: drop the house section, the sheet link (flags wodx-actions.inquisitor.cell) and the chapter-house lines of prayer and wake in hunter.js.
+
+## B7894. The cell's Flock (2026-11-24)
+WoDX Storyteller and Actions. The cell names its Flock, a congregation that prays with it and is never sent against the Enemy (Dark Ages: Inquisitor p. 156; Companion p. 77). A member with no Flock of their own prays with the cell's: prayer with the Flock reads its rating, not a typed one.
+
+Reverse: drop the Flock section and the cell Flock lines of prayer.
+
+## B7895. Retreats (2026-11-24)
+WoDX Actions. A retreat lasts a week to a month, in cloister, on pilgrimage or alone (Companion pp. 95-96). Off retreat, banking takes one point of Conviction a day (Dark Ages: Inquisitor p. 161, now counted); on retreat it may go up to the highest Superior Virtue plus its Virtue. A retreat taken for an Endowment and ended before its time is rushed: the Curse roll follows (pride, p. 96). WoDX reads "rushed" as ended early.
+
+Reverse: drop retreat and endRetreat and the bank room in hunter.js cashIn.
+
+## B7896. Sanctification of the Homestead (2026-11-24)
+WoDX Actions and Storyteller. The Companion's level two ritus (p. 116): an hour's rite, Intelligence + Holy Art at 7; each success wards the dwelling a day against anything demon-ridden or inhuman that is not invited in; a botch bars it on that house for three days. Performed from the cell window, the ward is written on the chapter-house and named on the reckoning.
+
+Reverse: drop homestead in hunter.js and the ward lines of the cell.
+
+## B7897. Confession at chapter (2026-11-24)
+WoDX Storyteller. A sin brought to chapter: confessed, the sinner is penanced by the rector and stays; hidden and found out, they are judged harder (Companion p. 80). WoDX sends them to the Council of Faith: they leave the cell, and any office they held.
+
+Reverse: drop sinAtChapter and its buttons.
+
+## B7898. The household of the faithful before 1223 (2026-11-24)
+WoDX Storyteller and Rothenstein. Before the Inquisition there is no Rule, rector or Council; a cell marked as a household of the faithful keeps the round and the house but asks no Piety rolls. Rothenstein's recipe names one: the faithful at St. Aegidius (Brother Anselm and Thibault de Montfaucon), at Father Ludovic's Presbytery with the parish as its Flock. The cell window's "Begin from the chronicle" makes it.
+
+Reverse: remove cells from the Rothenstein recipe and seed in cell.mjs.
+
+## B7899. The Crucible when a player's mortal dies (2026-11-24)
+WoDX Actions. Wraith 20th p. 281's optional rule, taken. When Combat kills a player's mortal, the Storyteller gets a Crucible card: "Rise in the Caul" makes a wraith's sheet for them (the same owners) or "Lay them to rest". The Enfant cannot tear away its own Caul until the Storyteller marks "The Crucible is lived through"; a Reaper's help is unchanged. Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: drop onDeath and crucible in wraith.js, the wodxDamageApplied hook in main.js and the Caul's Crucible line.
+
+## B7900. The Fog (2026-11-24)
+WoDX Actions. A mortal who sees the restless dead reacts by Willpower on the Fog chart (pp. 284-285): Catatonic Fear falls still, Panic and Terror flee, Berserk and Righteous Anger attack, the rest show nothing on the map. Afterward the mind rationalizes it away: every mortal in the Fog forgets (a house reading of the book's "rationalize and repress"). Children (WoDX reads them as minors) and animals are outside the Fog and remember. It replaces the plain line the witness step gave for wraiths.
+
+Reverse: drop the Fog lines in kindred.js witnessStep and the hysteria case in witness-rules remembers.
+
+## B7901. Haunts and their echoes (2026-11-24)
+WoDX Actions and Chronicle. A scene's Haunt (the Storyteller's Haunt window, or a chronicle's own in manifest.local.haunts) lowers the Shroud by its rating, never below 4, and has room for one echo for each point past that (pp. 288-290). The eight echoes are listed with their rules; Nightmarish and Forbidding roll from the Storyteller's menu: a night there (Willpower at 3 + the Haunt; failing, +1 difficulty all the next day, mounting, a success taking one off) and going in (Willpower at 3 + the Haunt; failing, they flee). Rothenstein's ruins of Altenhof are a Haunt of 4 (Nightmarish) and St Aegidius' churchyard a Haunt of 1.
+
+Reverse: drop hauntHere, haunt, hauntNight and hauntEnter in wraith.js, the haunts field in chronicle-local-rules and the Rothenstein rows.
+
+## B7902. Shelter from the Maelstrom (2026-11-24)
+WoDX Actions. In a Haunt, the storm's level less the Haunt's rating: at nothing the wraiths inside are safe; else it breaks in after the Haunt's rating in hours at the level left, and the Haunt's rating joins their soak. A Haunt holds five wraiths a level; each group of extra wraiths the size of its rating takes a level off it (WoDX counts the first extra as a whole group); a Great Maelstrom halves the hours and is not lessened (pp. 290-291). The scene's storm roll uses it.
+
+Reverse: restore the indoors-as-Haunt-1 line in wraith.js autoStorm and drop W.shelter.
+
+## B7903. What dies where souls are eaten (2026-11-24)
+WoDX Actions, Chronicle and Rothenstein. A chronicle can name places where a death goes another way (manifest.local.souls). Rothenstein names the Ashfield: what dies there leaves nothing, it is eaten (the omnibus). A player's mortal killed there gets no Crucible card and no wraith, only a card saying so.
+
+Reverse: drop the souls field and its check in onDeath.
+
+## B7904. The chantry and the commoners' talk (2026-11-24)
+WoDX Actions. The household window spends the Chantry rating on size (a small home to a castle), security (+1 to break in a point), Aura damping on the grounds (as if the Foundation were that much lower, for cabal members only) and a place in the community (Dark Ages: Mage pp. 83-84). The optional chantry flaws rule lets security go to -3 when the Storyteller allows it. With no community points the commoners trade stories: each week on the Chronicle clock a rumour about the mage starts; one point spaces it to every second week, two to every fourth, three or more stop it (a house reading of "the more points, the less damaging"). Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: drop chantry and the gossip part of weekly in mage-household.js.
+
+## B7905. The familiar's Pact and its meals (2026-11-24)
+WoDX Actions. The Pact (its terms in the player's words) and the boons the Familiar's dots buy: Backlash negation, Communication, Knowledge, Protection (pp. 85-86). It eats its rating in Quintessence a week ("Feed the familiar"). Each finished week unfed weakens it a dot (its boons count that much lower, the largest first); fed again it recovers a dot a week; weakened to its rating, it dies. A Backlash card offers "The familiar takes it" while it has a use left this story; a bad Backlash (three 1s or more) costs two.
+
+Reverse: drop familiar, feed, familiarTakes and the familiar part of weekly; the button in mage-da.js cast and onButton.
+
+## B7906. The Library and a Pillar bought with experience (2026-11-24)
+WoDX Actions. Intelligence + Library to find lore, at the Storyteller's difficulty (p. 87). "Raise a Pillar with experience" prices the dot (current x 6, a new one 10; Pillar Natural current x 5, a new one 8, p. 93), rolls the Library at 8 to take one off a success (never below 1, a house reading), records the spend on the sheet's experience and raises the Pillar. Storyteller only, as WoDX's experience spends are.
+
+Reverse: drop library and pillar in mage-household.js.
+
+## B7907. Servants and the apprentice (2026-11-24)
+WoDX Actions. Servants are commoners or magical servants (pp. 87-88). Someone working on a commoner (the Storyteller's "Someone works on a servant") is resisted by the servant's steadiness (3 to 7 by how good they are) at 6, +1 with threats, +2 with a power of the mind; turned, what they know of the household starts a rumour. A magical servant cannot be turned without strong magic; it does its one task in half the time (a house reading of "much shorter times"). The apprentice (p. 92) joins the servants: as a Merit, loyal (-2 on that roll) while taught at least every four weeks; as a Flaw, a weekly mess on a d10 of 1-3 that costs the master a Willpower.
+
+Reverse: drop servant, bribe, teach and the apprentice part of weekly.
+
+## B7908. Destiny and talismans (2026-11-24)
+WoDX Actions. A Dark Ages mage's Destiny is the book's rule (p. 85): once a story against danger to the destiny, the rating in dice at 7, a spent Willpower back a success; fulfilled, the Background goes. Such a mage's Destiny no longer banks rerolls (B3919 stands for every other line). Talismans (p. 88) are named with a level and a kind: an attuned focus (the casting window ticks "Through it, an attuned focus, -1" by itself), a one-use item (spent from the window), or a lasting wonder; their levels together may not pass the rating (a house reading).
+
+Reverse: drop destiny and talisman in mage-household.js, daMageDestiny in trait-hooks.js and the focus line in mage-da.js cast.
+
+## B7909. Degrees of Attainment and the Dark Ages: Mage merits and flaws (2026-11-24)
+WoDX Actions and Chronicle. Each fellowship's ranks (p. 37, read with the fellowships' own chapters because the scan runs the table's columns together): Ahl-i-Batin Mutasawwif, Murid, Murshid, Qutb; Messianic Voices Catechumen, Disciple, Presbyter, Exarch or Curia minister; Old Faith Initiate, Mystes, Hierophant, Epoptes (only in a circle); Order of Hermes Apprentice, Disciple, Adept, Master; Spirit-Talkers Apprentice, Shaman, Master; Valdaermen Thane, Karl, Konungr. The Storyteller names the degree; it shows on the sheet, and with another of the fellowship (the roll's "With your fellowship" box) each rank above them is -1 Social difficulty, at most -2 (a house reading). The merits and flaws of pp. 90-93 join the trait table (book DA:M); Hale, Pain Resistant, Weak Lungs and Elderly are the Dark Ages: Inquisitor rows, now open to mages. Effects: Faint of Heart on gore (+1, as Sickened by the Flesh); Indomitable +2 to intimidate or threaten them (With this person) and +1 to will-breaking powers (Dominate, Mikha-El); Arcane Heritage -2 or +2 with the fellowship; Devotion (a prayer, once a session, 1-3 Willpower past the most); Apprentice (B7907); Repulsive Practice (a watched casting starts a rumour for the Church); Arcane Madness (spells past permanent Willpower a story ask Willpower at 7; failed, +1 to every roll for an hour, a botch +2); Chicanery (shows of magic free while a Quintessence is held); Inept Channeler (each Quintessence past permanent Willpower in a scene asks Willpower at 6; failed, a bashing level, a botch a lethal one); Living Fount (once a story, the Fount at 6: -1 on the next Enigmas or Occult roll this scene); Pillar Natural (B7906); Witchwalk (the Storyteller marks its moment: a seen sign starts talk, hallowed ground +2 to everything for the scene, salt wards a person a day or wounds).
+
+Reverse: drop the DA:M rows and the four widened holders in trait-lines.mjs, the HANDLED lines, degree and the merit steps in mage-household.js, the coerce resist in social.js and the fellowship tick in trait-hooks.js.
+
 ## B7911. Pull request gate runs go to the New PC first (2026-11-24)
 PC runners. The owner asked on 24 November 2026 that the New PC get priority for all new pull request runs, with the Main PC taking them when the New PC's queue is full. The New PC runs a gate set about 2 to 3 times faster than the Main PC (24 November run times: 74 to 172 gates in 16 to 22 minutes on the New PC, about 170 to 230 gates in 43 to 66 minutes on the Main PC). A new setting, prGatesPreferPeer in tools/pcq/runner.json ({statusTitle, maxMinutes 5, freshMinutes 15}), makes a runner leave a pull request's touched or every-gate run (title "[PR #n sha]", no lane named) to the runner whose status issue has that title while that status shows a free lane, is not holding, and was written in the last 15 minutes. It takes the run itself when the New PC is full, holding or silent, and after 5 minutes in any case, so no run waits on a New PC that does not pick it up. The status issue is read at most once a minute. runner.new_pc_lebrun.json clears the setting, and a runner never defers to its own status title. The Secondary PC shares the setting after its own 10 minute wait (B7761), so in practice it keeps its present behaviour. Train front jobs carry the same title and are covered too. Tested by tools/harness/pcq.test.mjs; not yet seen live.
 
 Reverse: take prGatesPreferPeer out of tools/pcq/runner.json and runner.new_pc_lebrun.json; the runner then takes jobs as before.
+
+## B7920. The thrall: Vice, Resolve, Torment and the hierarchy (2026-11-24)
+WoDX Actions. A mortal who took Resolve from a demon keeps a thrall record (flag wodx-actions.thrall): one of the seven Vices with the virtue that opposes it, Resolve and Torment (pp. 85-86, 94-96). A sin at the thrall's Torment counted two higher or above calls for Conscience at 6 (+1 with no Resolve left); a failure is a temporary point, and ten make a permanent dot. Atonement for an act of the opposing virtue costs one experience: a temporary point off, or a permanent dot into nine (pp. 98, 100). The effects of Torment (pp. 97-98): Consumption (Torment over Resolve is that many lethal levels at each dawn), Vice Addiction (Torment over Willpower: Self-Control at the Torment when the Vice calls, a botch is a sin), Vulnerability to Faith (the Faith in dice a turn, bashing for a thrall, nothing at Torment 1, Courage at the Torment to stay), and reading the Aura of Sin (Perception + Empathy at 12 less the Torment). At dawn a thrall regains a Resolve; a mage thrall rolls Foundation at 7 instead (p. 132). Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: drop thrall.js, thrall-rules.js, the thx builder, its api, clock routine and card binding in main.js, and api:thrall in profile-menus.js and theme-rules.js.
+
+## B7921. Pacts in three parts, Arcana and Taints (2026-11-24)
+WoDX Actions. A pact is "I will (or will not) do this, this often, or suffer that": Obligation + Consequence - Frequency, an abstention never rarer than 3, worth nothing at 0 or less (pp. 124-125). Sealed, it takes its value off the temporary Torment (p. 101). Failed by choice, the Consequence lands: 1 ends the pact and its Torment comes back, 2 an aggravated level, 3 a dot of the Ability named at the sealing, 4 a permanent Torment (or the Attribute named), 5 death; forced, a Willpower point as a warning. The master grants an Arcana within Torment x 10 + temporary Torment + Taints + Pacts, or lays a Taint that takes Torment off; Taints and Pacts stay within Willpower x 5 (p. 101).
+
+Reverse: drop pact, fail, invest and their helpers in thrall.js.
+
+## B7922. Rites, summoning and binding (2026-11-24)
+WoDX Actions. A rite is researched a week at a time: Intelligence + Demonology at 8 (Occult 10), one less for each of the demon's Nature, Vice and function known and three for its True Name, to the demon's Resolve + Torment; a botch ruins it and a second in a row leaves a rite that botches when spoken, which only the Storyteller hears (p. 102). Performing it rolls Wits + Demonology each hour or minute at the demon's Resolve (+2 Occult, -1 a ten helpers, -3 the True Name, 5 at least, impossible past 10) to its Resolve; a binding fails on two misses in a row or a botch, and a thrall cannot bind the master (pp. 93, 103). A bound demon obeys a day, then each dawn Wits + Occult against its Willpower at 6 until it wins.
+
+Reverse: drop research, perform and the bond part of dawn in thrall.js.
+
+## B7923. Absolution of the Damned (2026-11-24)
+WoDX Actions. An inquisitor's level 3 ritus: the thrall confesses, Intelligence + Holy Art at the Torment + 3 (10 at most); it works, and the thrall is a mortal again, at one die of lethal for each five points of Arcana (p. 133).
+
+Reverse: drop absolve and absolution in thrall.js.
+
+## B7924. The apothecary as a thrall (2026-11-24)
+WoDX Storyteller and WoDX Rothenstein. The cast step writes a thrall's record as it does a hunter's. Master Eckhart Voss is a thrall of pride at Resolve 2, Torment 3, with one weekly pact (a draught brewed for one buyer, or an aggravated level: worth 2), four Arcana (10 points: absolution costs two dice of lethal), and a binding rite for the imp Skrik, bound in the cellar.
+
+Reverse: drop the thrall in castSheet, castPlan and castFields, and Voss's entries in recipe.mjs.
+
+## B7925. Sins from play for a thrall (2026-11-24)
+WoDX Actions. The Road prompts ask a thrall by the thrall's hierarchy: a killing is a planned violation (8), in frenzy an impassioned one (7), a lie to get the better of someone a betrayed trust (5), a theft or a broken word 4, a power of the mind on a mortal intentional harm (6); a killing by a thrall and a thrall's lies and thefts on rolls now prompt. A house reading of which line names each act.
+
+Reverse: drop the thrallSin branch in kindred.js sinPrompt, the thrall killer branch and isThrall in the roll's sin check in main.js.
+
+## B7926. The Aura of Sin on rolls (2026-11-24)
+WoDX Actions. A thrall's roll offers two ticks: the Vice suits the deed (easier) or the other finds it foul (harder), by 1 at Torment 3-5, 2 at 6-8 and 3 at 9-10 (p. 97).
+
+Reverse: drop AURA_TICKS in trait-hooks.js ticksFor and the aura source in main.js.
+
+## B7927. Enchanting as a craft (2026-11-24)
+WoDX Actions. The household window's "Enchant a wonder" makes the everyday wonders of Dark Ages: Mage pp. 202-206 with the fellowship's own Pillars: a casting as any other (Foundation and Pillars, its difficulty, Quintessence to ease it and to steady a Pillar above the Foundation, Backlash with the casting's buttons). Done the local, superstitious way with the book's materials, one 1 is cancelled (pp. 203, 205). A charm is laid on a weapon on the sheet: a blessing of sharpness ignores a point of armour for every two successes, unbreakable iron strikes three harder. Anything else (elixirs, poultices, the cask, the waterskin, a divining rod) is made as an item to keep, give or use. The Pillar dots are read from a scan that blurs them (docs/PENDING-REVIEW.md). Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: drop mage-wonders.js, mage-wonders-rules.js, the three household choices, and the backlash helper passed to the household in mage-da.js.
+
+## B7928. The elixirs in play (2026-11-24)
+WoDX Actions. "Use a wonder" gives an elixir or poultice to the mage or another: strength +2 physical dice for three days; weakness -3 dice abed four days; vigour +1 physical for a day, then -2 for two days of rest (a reverter starts the rest when the day ends); clarity +1 mental and madness +2 mental difficulty until the next full moon (fifteen days); truth +4 difficulty to lie, falsehood +4 to honest Social rolls, for the scene; heavy sleep (Incapacitated) eight hours; a leech poultice closes a wound level per success, lethal first; a dead-leech poultice a lethal level, slow rot two; fertility or barrenness thirty days (an elixir of fertility does nothing to one who knows its purpose).
+
+Reverse: drop take and useWonder in mage-wonders.js and the wonderAfter reverter in setup.
+
+## B7929. Tass (2026-11-24)
+WoDX Actions. "Harvest Tass" adds the Quintessence a creature's body gives (Dark Ages: Mage pp. 190-198): Gluttony's venom 3, Lust's garnet 2, Pride's hair 1, Wrath's spike 2, a white unicorn 1 a wound level of blood, a red unicorn's tail hair 1, a sun-struck brownie's bones 3, a child stealer's blood 3, a goblin's heart 5, ten biscuits of malicious fae blood 10, a living troll's tail 3, a bound Risen 1; ghosts, the Re'em, Sloth and a homunculus give none. A fae's blood by origin (Dark Ages: Fae p. 182): firstborn 5 living or 10 dead, changeling 2 or 5, inanimae 3 or 7; a named living fae gives once a week, a dead one once.
+
+Reverse: drop tass and harvest.
+
+## B7930. Wonders on the mage's sheet (2026-11-24)
+WoDX Actions. A charmed weapon keeps the charms it bears (flag wodx-actions.charms with the values it had), and a weapon bears each charm once; a made wonder is an item with flag wodx-actions.wonder {key, maker, successes, made}.
+
+Reverse: drop the flags; the weapon's values stay as changed.
+
+## B7931. Dark Ages: Werewolf's own merits and flaws (2026-11-24)
+WoDX Chronicle. The nine of DA:W pp. 86-89 that the W20 rows do not carry join the trait table with their page: Mixed Morph (a partial change at -2, still a Willpower), Unobtrusive, Wolf Years, Callous (+1 on pack tactics), Devil's Own (+2 with Garou who know), Foreigner (+1 on Social rolls in a strange land), Wolf's Obsession, Spirit Rapport (-1 with spirits, -2 to bargain) and Slips Sideways (a map trigger at a weak Gauntlet). Moments the roll cannot tell are tick boxes in the roll window; the rest are cards to the Storyteller.
+
+Reverse: drop the DA:W rows in trait-lines-da.mjs.
+
+## B7932. Dark Ages: Fae's merits and flaws (2026-11-24)
+WoDX Chronicle and WoDX Actions. All 30 of DA:F pp. 97-101, with page. The fae window reads six of them: Free Thinker and Stable Mind let Weaving or Mists run 4 above the other before imbalance, Delicate Soul brings it at 2; Cantrip Affinity gives one more cantrip in the Court's favoured Dominion; Unleashing Control caps the Unleashing dice at three; Echo Intolerant adds a die to an Echo's roll. The new-Echo roll counts Cherished (+1) and Feared (-1) when mortals know the tale, and Demonic (-1) with a priest by. The rest work on rolls (Angelic, Unearthly Mien, Gift of the Bard and others) or as cards.
+
+Reverse: drop the DA:F rows, the gaps, extra, control, affinity and mod options in fae-da-rules.js and faeMerits in fae-da.js.
+
+## B7933. Dark Ages: Devil's Due's merits and flaws (2026-11-24)
+WoDX Chronicle and WoDX Actions. The ten of DD pp. 98-100 (Known Name as a merit and a flaw). The thrall record reads Untainted and Unbound Diabolist from the sheet as well as the record; an Unbound Diabolist is granted no Arcana or Taints. Out of Touch is +2 on Social rolls without a guide (house reading).
+
+Reverse: drop the DA:DD rows and merit() in thrall.js.
+
+## B7934. The Dark Ages: Inquisitor Companion (2026-11-24)
+WoDX Actions and WoDX Chronicle. Its 70 Blessings (nine Orisons, the Benedictions, Investitures, Legacies, Psalms, the Corpus Lux and eight ritae, pp. 98-117) join the Blessing window with the Companion's page on their card; its 20 Curses (pp. 118-124) join the Curse roll's offers by category and stage; Lux Dei counts on Stealth and Plague of Angels on Perception. Its 26 merits and flaws (pp. 124-127) join the trait table, and four change the inquisitor rules: Divinely Favored counts -2 and Curse Prone +2 on every Curse roll, Grace keeps them from Callous until Conviction passes Piety + 2 (never at Piety 8 or more), and Order Prodigy spares the Curse for an Endowment of the order's own (the bank's new box; not for Murnau or the Red Order).
+
+Reverse: drop COMPANION and refOf in inq-blessings.js, the Companion curses and the favored, prone, grace and prodigy options in inq-curses-rules.js, mf in hunter.js, and the DA:IC rows.
+
+## B7935. Trait effects from WoDX Actions switch on in play (2026-11-24)
+WoDX Actions. Three roll-effect sources (waking behind the age, B6025; a mage's degree with the fellowship, B7909; a thrall's Aura of Sin, B7926) were added in WoDX Actions' ready hook while the chronicle's api is set only after an await in its own ready, so in a live world they never registered. They now register when the api is there, or on wodxChronicleReady. Found by gatemagehouse step 7 on the cloud lane, which passes with the fix.
+
+Reverse: register the three sources directly in the ready hook again.
+
+## B7936. Survivor, the Dark Ages Bone Gnawer Gift (2026-11-24)
+WoDX Actions. The level-five Gift of DA:W p. 131 joins the Dark Ages Gift library (Stamina + Survival at 7, a day per success) with its own effects: three soak dice and a three-die ward against poison for the time it lasts. A Dark Ages Gift with its own spec goes through the effects card as a Changing Breeds Gift does. A supernatural poison or sickness doing half is not modelled (house reading).
+
+Reverse: drop the Survivor entry in gifts-daw.json and the spec branch in garou.js useGift.
+
+## B7937. The Garou's maneuvers and pack tactics (2026-11-24)
+WoDX Combat. Hamstring, Jaw Lock, Fur Gnarl, Strike the gnarled hide and Savage (DA:W pp. 102-105) join the attack list for a shapechanger, with the book's numbers in rules.js DAW. garou-maneuvers.js writes what they leave: a crippled leg, a pin and knockdown, the gnarl flag the gnarled strike leaves out of soak, and the savage flag that makes standing Strength + Athletics at 4 + 1 a Garou. Taunt takes a die for each two successes off the foe's next attack, which spends it; Harrying is a macro that rolls the chase and takes a Willpower point from prey driven on.
+
+Reverse: drop DAW and its helpers in rules.js, garou-maneuvers.js, and the B7937 lines in main.js.
+
+## B7938. Dark Ages: Fae's Greater and Lesser Features (2026-11-24)
+WoDX Actions and WoDX Combat. The Greater Features of DA:F pp. 106-107 work while the mien shows: Armored Hide is three soak dice, Monster's Mien and Beastly Visage give horns, claws or a bite as natural weapons, and the dice and difficulties the book gives go on rolls through the chronicle's trait sources, with tick boxes for moments the roll cannot tell. The Lesser Features of pp. 104-105 are a list the sheet names. The fae window shows "At work in the mien" for the Features it reads.
+
+Reverse: drop GREATER_FEATURES, LESSER_FEATURES and the feature functions in fae-da-rules.js, faeBody in WoDX Actions' api, and faeBodyOf in WoDX Combat.
+
+## B7939. The fomori and monsters of Dark Ages: Werewolf (2026-11-24)
+WoDX Creation. The Aughisky, Lazarites, Skull Pigs and Fir Bolgs of DA:W pp. 186-189 join the Storyteller's demons window in a folder of their own, with the books' numbers, Rage and Gnosis where rated, their fomor powers as Power items (so WoDX Actions' fomor rules work on them: Regeneration, Armored Hide, Immunity to the Delirium, Poison Tumors, Footpads), natural weapons, and the Fir Bolgs' hide of four soak dice. The Skull Pig's Poison Flesh is a note for the Storyteller.
+
+The DA:Mage pp. 90-93 completeness check found all 16 rows the full read listed as missing already in the trait table (B7909), so nothing was added for it.
+
+Reverse: drop daw-monsters.mjs, gearOf and the DAW lines in dac-demons-rules.mjs and dac-demons.mjs.
+
+## B7940. Buttons that did nothing on the Crucible and Echo cards (2026-11-24)
+WoDX Actions. Found by the PC and cloud-lane gates on the splat depth branch. The Crucible cards (a player's mortal killed, and the Enfant in the Caul) were posted without the module's flag, so their buttons were never bound; they now carry it. The village Echo prompt's "Roll the Echo" button passed the fae's id, which the api did not read as an actor; it now finds the fae by id or uuid. The gates gatesept, gatefaeechoes and gatewraithdead wait as long as a busy lane needs, fix the dice by trial, link the witness's token and give their test card the flag a Rage roll card carries.
+
+Reverse: drop the flags on the two Crucible cards in wraith.js and the id lookup in daEchoFor.
 
 ## B7960. A git fault on the runner keeps a pull request in the train (2026-11-24)
 PC tools (tools/pcq/train.mjs). When merging main into the front, or a member into a batch, fails, the train reads

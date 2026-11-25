@@ -124,9 +124,12 @@ export const lineRule = secret => LINE_RULE[secret] ?? null;
 /**
  * Does the witness keep what it saw? The Delirium's memory column (forgets, rationalizes, remembers); the Veil by the
  * same Willpower bands (a house reading: the book gives reactions only); Revelation by the witness's roll; the Mists by
- * Banality (a mortal of 6 or more forgets, C20 pp. 269-270, a house reading of "within a scene"); other kinds remember.
+ * Banality (a mortal of 6 or more forgets, C20 pp. 269-270, a house reading of "within a scene"); the Fog for the restless
+ * dead (B7900: forgotten, save by children and animals); other kinds remember.
  */
-export function remembers(rule, { memory = null, willpower = 3, reveal = null, banality = 6 } = {}) {
+export function remembers(rule, { memory = null, willpower = 3, reveal = null, banality = 6, fog = null } = {}) {
+  // B7900: the Fog (Wraith 20th pp. 284-285): the mind rationalizes and represses it after; children and animals keep it
+  if ( rule === "hysteria" && fog ) return !!fog.remembers;
   if ( rule === "delirium" ) return memory !== "forgets";
   if ( rule === "veil" ) return Number(willpower) >= 7;
   if ( rule === "revelation" ) return reveal === "copes";

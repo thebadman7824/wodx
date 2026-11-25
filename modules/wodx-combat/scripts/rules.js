@@ -789,7 +789,62 @@ export function chokeTurn({ round = 0, startRound = 0, incapacitated = false, in
     return { levels: 0, dies: t >= Math.max(1, Number(stamina) || 1), incapTurns: t };
 }
 
-export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC, ...DA2002 }).find(([, v]) => v === m)?.[0] ?? "normal";
+/**
+ * B7937: the Garou's learned maneuvers of Dark Ages: Werewolf (pp. 102-103) and three pack tactics (pp. 103-105), for a
+ * werewolf in the forms the book names. diff and dmg are on top of a claw's or a bite's (difficulty 6, Strength + 1):
+ * Hamstring is at 8 for Strength aggravated, Leaping Rake a claw at 8 in two actions, Fur Gnarl a claw at 7. The
+ * pack's follow-up on gnarled hide is at +2 with the stripped armour gone; Savage bites a foe who is down.
+ * forms: the shapes that may use it; pack: a pack tactic (packmates the book needs).
+ */
+export const DAW = {
+    hamstring: { label: "Hamstring [DA:W] (Crinos to Lupus; difficulty 8, Strength aggravated; a leg is crippled)", diff: 2, dmg: -1, dice: 0, brawl: true, forms: ["crinos", "hispo", "lupus"], aggravated: true,
+        note: "Hamstring: tendon and muscle torn from the legs: a biped can only crawl, slowly; a beast moves at half, and a second hamstring stops it. It fades only when the last level it caused heals (Dark Ages: Werewolf p. 102)." },
+    jawlock: { label: "Jaw Lock [DA:W] (Crinos to Lupus; a bite, then Strength + Athletics against theirs to pin them)", diff: 0, dmg: 0, dice: 0, noDamage: true, brawl: true, forms: ["crinos", "hispo", "lupus"],
+        note: "Jaw Lock: on a hit both roll Strength + Athletics; if the Garou wins, no damage, the foe is down and pinned; if the foe wins, they escape but take an ordinary bite (Dark Ages: Werewolf p. 103)." },
+    leapingrake: { label: "Leaping Rake [DA:W] (Glabro or Crinos; two actions: a leap, then the claw at 8)", diff: 2, dmg: 0, dice: 0, forms: ["glabro", "crinos"], actions: 2,
+        note: "Leaping Rake: Dexterity + Athletics at 3 for the leap's distance (six to ten feet to land out of reach), then the claw mid-leap; a botch on either lands them on the ground in reach (Dark Ages: Werewolf p. 103)." },
+    furgnarl: { label: "Fur Gnarl [DA:W pack tactic] (a claw at 7: each two damage successes tear away a point of armour)", diff: 1, dmg: 0, dice: 0, brawl: true, pack: 2,
+        note: "Fur Gnarl: every two damage successes before soak strip a point of armour (or hide); packmates who strike the place do so at +2 difficulty against the reduced soak (Dark Ages: Werewolf pp. 103-104)." },
+    gnarled: { label: "Strike the gnarled hide [DA:W pack tactic] (+2 diff; the torn armour does not soak)", diff: 2, dmg: 0, dice: 0, pack: 2,
+        note: "Strike the gnarled hide: the armour Fur Gnarl tore away does not soak this blow (Dark Ages: Werewolf p. 104)." },
+    savage: { label: "Savage [DA:W pack tactic] (Lupus or Hispo, on a foe knocked down: each bite makes standing harder)", diff: 0, dmg: 0, dice: 0, brawl: true, forms: ["hispo", "lupus"], pack: 3, needsDown: true,
+        note: "Savage: packmates leap on a foe brought down by a tackle or sweep; to stand or escape they roll Strength + Athletics at 4 + 1 for each Garou on them, 10 at most; five at most on a man-sized foe (Dark Ages: Werewolf p. 105)." }
+};
+/** B7937: why a DA:W maneuver cannot be used: {shifter, form, brawlAttack, down} (an empty string when it can). */
+export function dawWhy(key, { shifter = false, form = "homid", brawlAttack = true, down = false } = {}) {
+    const m = DAW[key];
+    if (!m) return "";
+    const name = m.label.split(" [")[0];
+    if (!shifter) return `${name} is a Garou maneuver`;
+    if (m.forms && !m.forms.includes(form)) return `${name} needs ${m.forms.map(f => f[0].toUpperCase() + f.slice(1)).join(" or ")} form`;
+    if (m.brawl && !brawlAttack) return `${name} is a claw or bite attack`;
+    if (m.needsDown && !down) return `${name} needs the foe knocked down first`;
+    return "";
+}
+/** B7937: armour Fur Gnarl tears away: one point for every two damage successes before soak (p. 104). */
+export const gnarlPoints = damageSuccesses => Math.floor(Math.max(0, Number(damageSuccesses) || 0) / 2);
+/** B7937: the Strength + Athletics difficulty to stand under a Savage: 4 + 1 for each Garou on them, 10 at most (p. 105). */
+export const savageStandDiff = garou => Math.min(10, 4 + Math.max(1, Number(garou) || 0));
+/** B7937: Jaw Lock's contest (p. 103): the Garou's Strength + Athletics successes against the foe's. */
+export function jawLockResult(atk = 0, def = 0) {
+    const a = Number(atk) || 0, d = Number(def) || 0;
+    if (a > d) return { pinned: true, bite: false, line: "pinned to the ground under the Garou's jaws" };
+    return { pinned: false, bite: true, line: "breaks free, but takes an ordinary bite" };
+}
+/** B7937: Taunt (p. 103): Manipulation + Intimidation (or Expression) at the foe's Wits + 4; every two successes take a die off their next action. */
+export const tauntDiff = wits => Math.min(10, 4 + Math.max(0, Number(wits) || 0));
+export const tauntDice = successes => Math.floor(Math.max(0, Number(successes) || 0) / 2);
+/**
+ * B7937: Harrying (pp. 104-105): the chaser's Dexterity + Athletics at 5 against the prey's; the chaser winning drives
+ * the prey on and it loses a Willpower point; the prey winning tries to break away, the pursuit then harder by its net successes.
+ */
+export function harryResult(chaser = 0, prey = 0) {
+    const c = Number(chaser) || 0, p = Number(prey) || 0;
+    if (c > p) return { driven: true, willpower: 1, pursuitUp: 0, line: "driven on into another of the pack: -1 Willpower" };
+    return { driven: false, willpower: 0, pursuitUp: Math.max(0, p - c), line: `breaks away${p > c ? `: the pack's pursuit roll is at +${p - c}` : ""}` };
+}
+
+export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC, ...DA2002, ...DAW }).find(([, v]) => v === m)?.[0] ?? "normal";
 
 /* B3921: standing up from a knockdown (V20 Dark Ages p. 348): Dexterity + Athletics at 6. A success stands them
  * up and costs 2 Initiative on the next turn; a failure keeps them down and loses the action. */

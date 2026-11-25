@@ -97,6 +97,39 @@
    "prs": [
     1414
    ]
+  },
+  {
+   "id": "storyteller.inquisitor-cell",
+   "name": "An inquisitor cell to live in: the daily round and chapter, rector and officers, the chapter-house, the Flock, confession, retreats",
+   "module": "wodx-storyteller",
+   "core": false,
+   "files": [
+    "modules/wodx-storyteller/scripts/cell.mjs",
+    "modules/wodx-storyteller/scripts/cell-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7891-B7898"
+    },
+    "wired": {
+     "reader": "modules/wodx-storyteller/scripts/cell.mjs:reckon"
+    },
+    "shown": {
+     "what": "the cell window, the week's reckoning card, and the chapter-house and Flock lines in prayer and on waking"
+    },
+    "gated": {
+     "gate": "tools/gate/gateinqcell.mjs",
+     "step": "3. Holy Ground 2 at the chapter-house: on the sheet, and two Willpower on waking"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Inquisitor Companion pp. 71-80, 95-98, 116 and Dark Ages: Inquisitor pp. 155-156 (B7891-B7898). The Rule's four days in seven, the monthly rent and the hidden sin sending a member to the Council are WoDX readings (docs/PENDING-REVIEW.md)",
+    "The Rule binds only from 1223; the Rothenstein household at St. Aegidius is a precursor (B7898). Torture and prisoners are a count only"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
   }
  ]
 }
