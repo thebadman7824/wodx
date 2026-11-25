@@ -28,7 +28,14 @@ export function registerLearnSettings() {
     name: "Learning needs a source", scope: "world", config: true, type: Boolean, default: true,
     hint: "When experience is spent, name a teacher, a book, a school or practice; the trait rises when the study is done (a long task). Off: experience raises a trait at once."
   });
+  // Desk pick (#2506): every study can go faster than the book's pace
+  game.settings.register(MODULE_ID, "learnSpeed", {
+    name: "How fast learning goes", scope: "world", config: true, type: String, default: "full",
+    choices: Object.fromEntries(Object.entries(L.SPEEDS).map(([k, v]) => [k, v.label])),
+    hint: "How long studying takes. Twice as fast needs half the successes, so about half the weeks; four times as fast, about a quarter. Studies already under way keep their pace."
+  });
 }
+const speedNow = () => { try { return game.settings.get(MODULE_ID, "learnSpeed") || "full"; } catch (e) { return "full"; } };
 
 export const recordsOf = actor => actor?.flags?.[MODULE_ID]?.learning ?? {};
 export const waived = actor => !!actor?.getFlag?.(MODULE_ID, "learnWaived");
@@ -159,7 +166,7 @@ export function choicesFor(actor, p, {user = game.user} = {}) {
   const out = [];
   const pool = plan => { try { return st?.tasks?.pool?.(actor, taskData(actor, q, plan)) ?? 3; } catch (e) { return 3; } };
   const push = (src, extra = {}) => {
-    const plan = L.planFor(q, src);
+    const plan = L.planFor(q, src, {speed: speedNow()});
     const ok = plan.ok && allowed.includes(src.kind) && !extra.closed;
     out.push({src, plan, ok, why: !allowed.includes(src.kind) ? why : (extra.closed || plan.why), time: L.timeWords(plan, pool(plan) + (plan.dice ?? 0))});
   };
@@ -272,7 +279,7 @@ export function resolveSource(actor, p, src) {
     if ( c.resources && backgroundDots(payerOf(actor), "Resources") < c.resources ) return {ok: false, why: `Needs Resources ${c.resources} to pay for it.`};
     src = {...src, name: c.name, quality: c.quality, interval: c.interval};
   }
-  const plan = L.planFor(q, src);
+  const plan = L.planFor(q, src, {speed: speedNow()});
   return plan.ok ? {ok: true, src, plan, q} : {ok: false, why: plan.why};
 }
 

@@ -207,6 +207,18 @@ test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark 
   assert.deepEqual(TR.stepOf(dark, {successes: 0}), [{kind: "pool", key: "bloodpool", points: -2}]);
   assert.deepEqual(TR.stepOf(dark, {successes: 1}), []);
   assert.match(src("modules/wodx-actions/scripts/turns.js"), /const levels = step\.levels === "counter" \? n\(rec\.counter\?\.value\)/);
+test("#2506 desk pick: a world setting makes every study twice or four times as fast", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+  const p = {kind: "ability", label: "Melee", key: "melee", current: 1, next: 2};
+  const full = L.planFor(p, {kind: "practice"});
+  assert.equal(full.goal, 4);
+  assert.equal(L.planFor(p, {kind: "practice"}, {speed: "half"}).goal, 2);
+  assert.equal(L.planFor(p, {kind: "practice"}, {speed: "quarter"}).goal, 1);
+  assert.equal(L.planFor(p, {kind: "practice"}, {speed: "nonsense"}).goal, 4, "an unknown speed is the book's pace");
+  assert.equal(L.planFor(p, {kind: "teacher", name: "Old Jan", rating: 1}, {speed: "quarter"}).ok, false, "a teacher still needs the level");
+  const M = src("modules/wodx-creation/scripts/learn.mjs");
+  assert.match(M, /register\(MODULE_ID, "learnSpeed", \{[\s\S]{0,200}scope: "world"/);
+  assert.equal((M.match(/L\.planFor\(q, src, \{speed: speedNow\(\)\}\)/g) ?? []).length, 2);
 });
 
 test("#2508: the look card's install mark doesn't clash with Chronicle's token looks (token._wodxLook)", () => {

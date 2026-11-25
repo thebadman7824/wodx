@@ -196,7 +196,20 @@ const giftGoal = p => Math.max(2, 2 * (Number(p?.level) || 1));
  * The plan for one source (B6232): {kind, name, id, interval, diff, dice, goal, ok, why}.
  * src: {kind, id?, name?, rating? (a teacher's dots), quality? (a book or course), interval?}.
  */
-export function planFor(p, src = {}) {
+export function planFor(p, src = {}, {speed = "full"} = {}) {
+  const plan = planAtFull(p, src);
+  return SPEEDS[speed] && speed !== "full" && Number.isFinite(plan.goal) ? {...plan, goal: quicker(plan.goal, speed)} : plan;
+}
+
+/**
+ * Desk pick (#2506, 25 Nov): a world setting shortens every study. The book's pace is "full"; "half" and "quarter"
+ * need that share of the successes, so about that share of the weeks. House rule; the book sets no pace (V20 Dark Ages
+ * pdf 186: the Storyteller decides, and one dot per Trait a story).
+ */
+export const SPEEDS = {full: {label: "The book's pace", share: 1}, half: {label: "Twice as fast (half the time)", share: 0.5}, quarter: {label: "Four times as fast (a quarter of the time)", share: 0.25}};
+export const quicker = (goal, speed = "full") => Math.max(1, Math.ceil((Number(goal) || 1) * (SPEEDS[speed]?.share ?? 1)));
+
+function planAtFull(p, src = {}) {
   const goal = goalOf(p);
   const next = Number(p?.next) || 1, current = Number(p?.current) || 0;
   const base = {kind: src.kind, id: src.id ?? "", name: src.name ?? SOURCE_KINDS[src.kind] ?? "", goal, ok: true, why: ""};
