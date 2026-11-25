@@ -2055,7 +2055,9 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
       ${feedingFields(actor, rule, { tags: vtags, fits, willing, fought: vessel ? foughtRecently(vessel, actor) : false })}
       ${leaveField(actor)}
     </form>`;
-    return dialog("WoDX Feed", content, "Feed", async fd => {
+    // Action priority: no feeding while busy with something that blocks it, and none from a vessel someone else is feeding from
+    if (LIM.refuseBusy(actor, "feed", vessel)) return;
+    return LIM.whileBusy(actor, "feeding", vessel, () => dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
         await savePalate(actor, rule, fd);
         if (vessel && fd.vtags !== undefined && !fixed) {
@@ -2068,7 +2070,7 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
             flesh: num(fd.flesh), tags: vessel ? KF.parseTags(fd.vtags) : [] });
         fed.html += await leaveSin(actor, fd, fed, vessel?.name ?? "a vessel");
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls, fed.undo ? { kind: "feed", actor: actor.uuid, undo: fed.undo } : null);
-    });
+    }));
 }
 
 /**

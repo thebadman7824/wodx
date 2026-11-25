@@ -283,3 +283,19 @@ test("#2475: a player's token sees a few squares outdoors and nothing in an unli
   assert.match(A, /Hooks\.on\("updateToken", \(tok, ch\) => \{ tokenSight\(tok, ch\)/);
   assert.match(src("modules/wodx-senses/scripts/main.mjs"), /indoorAt: \(scene, p\) => R\.isIndoor\(placeAt\(scene, p\)\)/);
 });
+
+test("Action priority: a busy character can't start a lesser action; the one they are busy with is taken up too", async () => {
+  const B = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/busy-rules.js")));
+  const now = 1_000_000;
+  const feeding = {kind: "feeding", with: "Actor.v", withName: "Jana", since: now};
+  assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "trade", now}), "Ota is feeding from Jana. Stop that first.");
+  assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "defend", now}), "", "defending gets through");
+  assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "power", now}), "", "a power outranks feeding");
+  assert.equal(B.busyWhy({name: "Ota", mine: null, action: "trade", theirs: {name: "Jana", rec: {kind: "fed", with: "Actor.x", withName: "Mirek", since: now}, me: "Actor.o"}, now}),
+    "Jana is being fed from by Mirek just now.");
+  assert.equal(B.busyWhy({name: "Ota", mine: {...feeding, since: now - B.STALE_MS - 1}, action: "trade", now}), "", "a stale record is ignored");
+  const S = src("modules/wodx-actions/scripts/social.js");
+  assert.match(S, /LIM\.refuseBusy\(actor, act === "trade" \? "trade"/);
+  assert.match(S, /LIM\.whileBusy\(actor, "trading", npc/);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /LIM\.whileBusy\(actor, "feeding", vessel, \(\) => dialog\("WoDX Feed"/);
+});
