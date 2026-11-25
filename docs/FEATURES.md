@@ -6,19 +6,19 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 42 | 0 | 11 |
+| wodx-actions | yes | 42 | 0 | 8 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
-| wodx-chronicle | not yet | 1 | 0 | 0 |
-| wodx-combat | yes | 15 | 0 | 2 |
-| wodx-creation | yes | 21 | 0 | 6 |
+| wodx-chronicle | not yet | 2 | 0 | 0 |
+| wodx-combat | yes | 15 | 0 | 0 |
+| wodx-creation | yes | 23 | 0 | 3 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 19 |
+| wodx-npc | yes | 34 | 0 | 18 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 19 | 0 | 3 |
+| wodx-sheets | yes | 20 | 0 | 1 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 3 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -41,7 +41,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 1 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
 | Nature gives Willpower back when the character acts to it (`actions.nature`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
-| Powers that act each turn while they hold (`actions.timed-powers`) | core | shown | 1 |  |
+| Powers that act each turn while they hold (`actions.timed-powers`) | core | gated |  | gatetimedpowers 1. a Heart Claw takes a lethal level on the bearer's next turn |
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
 | Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 1 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
@@ -51,7 +51,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
 | Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
-| Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | shown | 2 |  |
+| Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | gated | 1 | gateretrywindow 1. a failed roll tried again in the action window is one harder |
 | Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 1 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 1 |  |
@@ -61,7 +61,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Dark Ages mages: Foundation and Pillars, the Grimoire, and Consensus by era (`actions.mage-da`) |  | gated | 1 | gate6n a Grimoire rote: Revoking the Gift of Adam casts with its Grimoire page |
 | Demon: The Fallen: lores, evocations, Faith and Torment, the apocalyptic form (`actions.demon`) |  | gated | 1 | gate6i choosing the dark effect costs a temporary Torment point |
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
-| Fomor powers and spirit Charms (`actions.fomor-charms`) |  | shown | 2 |  |
+| Fomor powers and spirit Charms (`actions.fomor-charms`) |  | gated | 1 | gatefomor 6. Regeneration closes a lethal level each new round |
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
 | The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | shown | 1 |  |
@@ -76,6 +76,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Dated events: history fires on its date as the clock passes it (`chronicle.dated-events`) | core | gated | 2 | gatedatedplay 5 |
+| Languages in chat: speech in a language a player's characters lack shows as made-up words (`chronicle.languages-in-chat`) | core | gated | 2 | gateplaylang 4 |
 
 ## wodx-combat
 
@@ -90,11 +91,11 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | How long a fight took: the clock moves by rounds times three seconds (`combat.fight-time`) | core | gated | 1 | gatetime fight length |
 | Standing up from a knockdown (`combat.knockdown-stand`) | core | gated | 1 | gateknockdown 4 |
 | The after-action card: what each fighter took, dealt and spent, and who saw it (`combat.aftermath`) | core | book |  | gatetable after-action card |
-| The ambush: Dexterity + Stealth against Perception + Alertness for a free attack (`combat.ambush`) | core | shown | 2 |  |
+| The ambush: Dexterity + Stealth against Perception + Alertness for a free attack (`combat.ambush`) | core | gated | 1 | gateambush 1. a hidden attacker's Attack rolls the ambush with the sheets' pools |
 | The body plan: shapes, parts, held gear coming off, where blows land, the maiming card (`combat.body-plan`) | core | book |  | gatebody the maiming card |
 | Turns that move on by themselves: NPC turns, player turns with a countdown, Hold and Act next (`combat.turn-conductor`) | core | gated | 1 | gate7b1 Everyone: the hero's action is spent, a countdown, then the turn ends with no click |
 | Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 1 | gatemove drowning in a fight |
-| Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | shown | 2 |  |
+| Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | gated | 1 | gatepowder 1. wet powder will not fire from the attack window |
 | Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming (`combat.vehicles`) |  | gated | 1 | gatetruthcombat 10. a quick attack on a vehicle's token comes off its sheet's Structure |
 
 ## wodx-creation
@@ -102,22 +103,24 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | Animals' traits, training and breeds; war ghouls, kennels and household beasts (`creation.animal-training`) | core | gated | 1 | gateanimalstock 5. the wizard offers animal retainers |
+| Archive of the dead: the long dead leave the world for a compendium, by hand or by the clock, and come back (`creation.archive-of-the-dead`) | core | gated | 1 | gateplaypage 5 |
 | Before the First Night: one hub per character with a card for each step, and the guided builder (`creation.first-night`) | core | book |  | gatefirstnight 4 build |
 | Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
-| Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 2 | gatedalines 3. a Valkyrje's blood makes no ghoul and no bond |
-| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 2 | gatelearning 3. the study ends and the trait rises |
+| Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 1 | gateghoulclicks 2. Drink makes a ghoul |
+| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 1 | gatelearning 3. the study ends and the trait rises |
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
+| Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
-| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | shown | 1 |  |
+| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated |  | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
-| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | shown | 2 |  |
+| The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | shown | 1 |  |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
 | The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 3 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | shown | 2 |  |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
-| Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | shown | 1 |  |
+| Pass the Years: era advancement, ages and time awake across the centuries (`creation.pass-years`) |  | gated |  | gatepassyears 3. Pass the years |
 | The archive of the dead, by hand and by itself as the clock moves on (`creation.archive`) |  | book |  | gatetruthsheets 8. the long dead go to the archive by themselves |
 | The Dark Ages Companion's demons and the V20 Dark Ages Companion's monsters as sheets (`creation.dac-demons`) |  | gated | 1 | gatedadacdemons 1. the window makes two demons with its Make button |
 | The Dark Ages Storytellers Companion's supporting characters as ready sheets, by tier (`creation.supporting-cast`) |  | gated | 1 | gatedasupporting 1. the window makes two experienced templates with its Make button |
@@ -144,7 +147,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | shown | 1 |  |
 | NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book |  | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
 | NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | shown | 1 |  |
-| NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated | 1 | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
+| NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated |  | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
 | NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | shown | 1 |  |
 | One ledger for every bond that makes one person serve another, and servants the world makes (`npc.servants`) | core | gated | 1 | gateservants4 6b. the pact gift answers |
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
@@ -153,7 +156,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | shown | 1 |  |
 | Residents of generated towns and settlements (`npc.residents`) | core | shown | 1 |  |
 | Standing by community, with news of a deed travelling at the era's speed; social rank and feuds (`npc.standing`) | core | book |  | gatetruthnpc 11. untying a prisoner is a deed: standing in the town rises |
-| The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | shown | 2 |  |
+| The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | gated | 1 | gatehuntcalendar 1. the hunt window's calendar step is in the hunt's difficulty |
 | The topic menu: walk up to someone and pick a topic, and the talk generator for unwritten answers (`npc.talk`) | core | book |  | gatetalk the window |
 | Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | shown | 2 |  |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
@@ -180,9 +183,10 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The features card: every line feature in force, when it fires and when it last fired (`sheets.features-card`) | core | book |  | gatesheetchanges the features card lists the clan feature with when it fires |
 | The in-play strip, the Storyteller's notes and the header buttons on every WoDX sheet (`sheets.in-play-strip`) | core | book |  | gatesheetextras the sheet shows the strip, Possessions, Ties, the Storyteller's notes and the header buttons |
 | The Relationships tab: every tie, what it does in play, family news, Followers (`sheets.relationships`) | core | gated | 1 | gatebonds 7. sheet |
+| The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions (`sheets.page-two`) | core | gated | 1 | gateplaypage 4 |
 | Bring forward: things on the maps swap for their equal in the card's year (`sheets.bring-forward`) |  | book |  | gatebringforward buttons |
-| History with Undo for this session's edits, and Print (`sheets.history-print`) |  | shown | 1 |  |
-| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | shown | 1 |  |
+| History with Undo for this session's edits, and Print (`sheets.history-print`) |  | gated |  | gatehistoryundo 1. Undo in the sheet's History window puts Strength back |
+| Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | gated |  | gatestandingstrip 1. the Bio tab's strip shows the sheet's Road and opens the Road window |
 | Sheet tools: the title bar's buttons and window controls in one menu (`sheets.sheet-tools`) |  | book |  | gateplayerextras 8. sheet tools |
 | The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | shown | 1 |  |
 

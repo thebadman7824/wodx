@@ -214,3 +214,32 @@ test("WoDX Actions: the Hunt takes one less in a sick town and a carrier names t
   assert.match(a, /sick\?\.blood && sick\.disease \? \{ disease: sick\.disease, what: sick\.name \}/);
 });
 
+
+// B7863: in Dark Ages years the sicknesses DA:I lists run its daily course (DA:I p. 165)
+test("B7863: DA:I sickness: daily rolls, five good days in a row end it; M20 rows in later years", async () => {
+  const R = await import("../../modules/wodx-storyteller/scripts/contagion-rules.mjs");
+  assert.equal(R.daSickness(1202), true);
+  assert.equal(R.daSickness(1900), false);
+  assert.equal(R.diffFor("plague", 1202), 7);
+  assert.equal(R.diffFor("plague", 1900), 9, "M20 Bubonic Plague after the Dark Ages rules end");
+  assert.equal(R.diffFor("consumption", 1202), 10);
+  assert.equal(R.daCourse("smallpox", 1202), null, "DA:I does not list smallpox: the M20 row stands");
+  // plague: a lethal level each bad day
+  let w = R.illnessWeekDA({disease: "plague", weeks: 0}, [0, 0, 1, 1, 0, 1, 1]);
+  assert.equal(w.damage, 3); assert.equal(w.dmg, "lethal"); assert.equal(w.over, false); assert.equal(w.illness.good, 2);
+  // the run of good days carries across weeks: 2 + 3 = five in a row
+  w = R.illnessWeekDA(w.illness, [1, 1, 1, 0, 0, 0, 0]);
+  assert.equal(w.over, true); assert.equal(w.illness, null); assert.equal(w.damage, 0);
+  // consumption: three lethal a week and a wasted dot when the week has a bad day
+  w = R.illnessWeekDA({disease: "consumption"}, [1, 0, 1, 1, 1, 0, 1]);
+  assert.equal(w.damage, 3); assert.equal(w.wastes, 1);
+  // leprosy: no damage, a dot of Appearance every fourth week
+  w = R.illnessWeekDA({disease: "leprosy", weeks: 3}, [0, 0, 0, 0, 0, 0, 0]);
+  assert.equal(w.damage, 0); assert.equal(w.appearance, 1);
+  assert.equal(R.illnessWeekDA({disease: "leprosy", weeks: 1}, [0, 0, 0, 0, 0, 0, 0]).appearance, 0);
+  assert.equal(R.illnessWeekDA({disease: "smallpox"}, [0]), null);
+  const C = readFileSync(new URL("../../modules/wodx-storyteller/scripts/contagion.mjs", import.meta.url), "utf8");
+  assert.match(C, /const da = R\.daCourse\(x\.disease, year\)/);
+  assert.match(C, /R\.illnessWeekDA\(x, days\)/);
+  assert.match(C, /people\(st, mst, rand, year\)/);
+});

@@ -34,6 +34,9 @@ export const TIE_KINDS = {
   pacts: {label: "Pacts with thralls", days: 30, lapse: "A thrall the demon does not see drifts: the pact's Faith comes slower, and another may court them (Demon: the Fallen pdf 161).", act: "A visit to the thralls"},
   cult: {label: "A cult", days: 30, lapse: "A cult that is not led splits or drifts: fewer hands to keep the vessel between lives (Mummy: the Resurrection, Cult).", act: "A rite with the cult"},
   nest: {label: "A dragon nest", days: 30, lapse: "A dragon nest no one guards draws spirits, rivals and the Wan Kuei of other courts to its Chi (Kindred of the East pdf p. 18).", act: "Time at the nest"},
+  // B7867: a fae's servants and household sprites (Dark Ages: Fae pp. 94, 183)
+  retinue: {label: "A retinue", days: 30, lapse: "Servants who are not fed and clothed revolt sooner or later: some walk out of service (Dark Ages: Fae p. 94).", act: "Feed and clothe the retinue"},
+  sprites: {label: "Sprites", days: 7, lapse: "Sprites whose small oaths go unkept are spurned and turn vindictive (Dark Ages: Fae p. 183).", act: "Set out their milk and bread"},
   custom: {label: "Other", days: 30, lapse: "The Storyteller decides.", act: ""}
 };
 
@@ -42,7 +45,7 @@ export const BACKGROUND_TIES = [
   [/^herd/, "herd"], [/^domain|^hunting grounds/, "domain"], [/^retainer/, "people"], [/^allies|^ally/, "people"],
   [/^contacts?/, "people"], [/^kinfolk/, "kinfolk"], [/^mentor/, "mentor"], [/^dependents?/, "people"],
   [/^node\b/, "node"], [/^chantry|^construct\b/, "chantry"], [/^holdings?\b|^freehold/, "freehold"],
-  [/^dreamers?\b/, "dreamers"], [/^haunt\b/, "haunt"], [/^pacts?\b/, "pacts"], [/^cult\b/, "cult"], [/^dragon nest/, "nest"]
+  [/^dreamers?\b/, "dreamers"], [/^haunt\b/, "haunt"], [/^pacts?\b/, "pacts"], [/^cult\b/, "cult"], [/^dragon nest/, "nest"], [/^retinue\b/, "retinue"], [/^sprites?\b/, "sprites"]
 ];
 
 export function tieKindOfBackground(name) {
@@ -268,7 +271,7 @@ export function outbreakFor(year) {
  * The domitor's vitae (WoDX Actions ghoul withdrawal), a caern and custom ties keep their own handling.
  */
 export const LAPSE_NEGLECT = new Set(["fetter", "passion"]);
-export const LAPSE_DOT = new Set(["herd", "domain", "people", "kinfolk", "mentor", "node", "chantry", "freehold", "dreamers", "haunt", "pacts", "cult", "nest"]);
+export const LAPSE_DOT = new Set(["herd", "domain", "people", "kinfolk", "mentor", "node", "chantry", "freehold", "dreamers", "haunt", "pacts", "cult", "nest", "retinue", "sprites"]);
 export const lapseAction = kind => LAPSE_NEGLECT.has(kind) ? "neglect" : LAPSE_DOT.has(kind) ? "dot" : null;
 /** The sheet item a derived tie came from (tieKey(kind, item id)), or null. */
 export const itemIdOfTie = (key, kind) => (String(key ?? "").startsWith(`${kind}-`) ? String(key).slice(kind.length + 1) : null);

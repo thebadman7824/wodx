@@ -451,3 +451,63 @@ test("the Secondary PC defers pull request gate runs and the New PC drives lanes
   assert.equal(read("runner.json").prGatesDeferMinutes, undefined, "the Main PC takes them at once");
   assert.equal(read("runner.new_pc_lebrun.json").prGatesDeferMinutes, undefined, "so does the New PC");
 });
+
+test("the Main PC leaves pull request gate runs to the New PC while the New PC has a free lane (B7911)", async () => {
+  const {peerRoom, leaveToPeer} = await import("../pcq/jobs.mjs");
+  const now = Date.parse("2026-11-24T14:00:00Z");
+  const rows = states => ["# PC runner status (New PC)", "", "| Lane | Port | State |", "|---|---|---|", ...states.map((s, i) => `| ${10 + i} | ${30100 + i * 10} | ${s} |`), ""].join("\n");
+  const peer = (states, at = "2026-11-24T13:58:00Z", extra = "") => ({body: rows(states) + extra, updated_at: at});
+  assert.deepEqual(peerRoom(peer(["job #1", "free", "free", "job #2"]), now), {fresh: true, free: 2, hold: false});
+  assert.equal(peerRoom(peer(["free"], "2026-11-24T13:40:00Z"), now).fresh, false, "20 minutes old: silent");
+  assert.equal(peerRoom(peer(["free"], undefined, "\nHOLD: runner-hold\n"), now).hold, true);
+  assert.equal(peerRoom(peer(["free"], undefined, "\nFree: D: 400 GB, memory 3 GB (HOLDING: memory low)\n"), now).hold, true);
+  assert.equal(peerRoom(peer(["DOWN: no answer", "in use outside the runner (gate7b)"]), now).free, 0);
+  const issue = {title: "PC job: gates touched [PR #2420 abcdef123456]", created_at: "2026-11-24T13:58:00Z"};
+  const job = {kind: "gates", touched: true, gates: []};
+  const opts = {maxMinutes: 5, freshMinutes: 15};
+  assert.equal(leaveToPeer(job, issue, peer(["job #1", "free"]), opts, now), true, "a free New PC lane: left to it");
+  assert.equal(leaveToPeer(job, issue, peer(["job #1", "job #2"]), opts, now), false, "New PC full: the Main PC takes it");
+  assert.equal(leaveToPeer(job, issue, peer(["free"], "2026-11-24T13:30:00Z"), opts, now), false, "New PC silent: taken");
+  assert.equal(leaveToPeer(job, issue, peer(["free"], undefined, "\nHOLD: window\n"), opts, now), false, "New PC holding: taken");
+  assert.equal(leaveToPeer(job, issue, null, opts, now), false, "no status to read: taken");
+  assert.equal(leaveToPeer(job, {...issue, created_at: "2026-11-24T13:54:00Z"}, peer(["free"]), opts, now), false, "6 minutes unclaimed: taken");
+  assert.equal(leaveToPeer({...job, lane: 3}, issue, peer(["free"]), opts, now), false, "a job named to a lane is that lane's");
+  assert.equal(leaveToPeer({kind: "gates", gates: ["gate7b"]}, issue, peer(["free"]), opts, now), false, "a hand-picked list is not left");
+  assert.equal(leaveToPeer(job, {...issue, title: "PC job: gates all"}, peer(["free"]), opts, now), false, "not a pull request's job");
+  const read = f => JSON.parse(fs.readFileSync(new URL(`../pcq/${f}`, import.meta.url), "utf8"));
+  assert.equal(read("runner.json").prGatesPreferPeer.statusTitle, read("runner.new_pc_lebrun.json").statusTitle, "the Main PC points at the New PC's status issue");
+  assert.equal(read("runner.new_pc_lebrun.json").prGatesPreferPeer, null, "the New PC takes them at once (its file clears the shared setting)");
+  assert.equal(read("runner.benjamin-pc.json").prGatesPreferPeer, undefined, "the Secondary PC shares it, after its own wait");
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(src, /conf\.prGatesPreferPeer && conf\.prGatesPreferPeer\.statusTitle !== conf\.statusTitle && leaveToPeer\(q\.job, q\.issue, await preferredPeer\(\), conf\.prGatesPreferPeer\) \) continue;/);
+});
+
+test("B7961 (#2393): an alert raised before a runner restart is found again by its mark, and duplicates close", async () => {
+  const {alertMark, adoptAlert} = await import("../pcq/jobs.mjs");
+  const mark = alertMark("Benjamin-PC", "peer");
+  assert.equal(mark, "<!-- pc-alert-key: benjamin-pc/peer -->", "the host is lowercased, as the runner's HOST is");
+  const open = [
+    {number: 2222, title: "Secondary PC alert: the main PC runner has been silent for 41 minutes", body: `x\n\n${mark}`},
+    {number: 2165, title: "Second PC alert: the main PC runner has been silent for 25 minutes", body: `y\n\n${mark}`},
+    {number: 2201, title: "Secondary PC alert: Lane 8 (port 30080) is down", body: `z\n\n${alertMark("benjamin-pc", "8")}`},
+    {number: 2300, title: "New PC alert: the main PC runner has been silent for 30 minutes", body: `w\n\n${alertMark("new_pc_lebrun", "peer")}`},
+    {number: 2056, title: "PC watcher alert", body: "no mark"},
+    {number: 2400, pull_request: {}, body: mark}];
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "peer"), {keep: 2165, extra: [2222]}, "the oldest is kept whatever its prefix; another host's and a pull request are not touched");
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "8"), {keep: 2201, extra: []});
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "gpu"), {keep: null, extra: []});
+  assert.deepEqual(adoptAlert(null, "benjamin-pc", "peer"), {keep: null, extra: []});
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "peer", 2222), {keep: 2222, extra: [2165]}, "the alert the runner already tracks is kept, never closed as its own duplicate");
+  assert.deepEqual(adoptAlert(open, "benjamin-pc", "peer", 9999), {keep: 2165, extra: [2222]}, "a tracked number that is no longer open gives way to the open one");
+  // the runner marks every alert it opens, and looks for an earlier one before opening and before clearing
+  const src = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  const fn = name => src.slice(src.indexOf(`async function ${name}(`), src.indexOf("\n}\n", src.indexOf(`async function ${name}(`)));
+  assert.match(fn("alert"), /await adopt\(key, s\);[\s\S]*if \( s\.alert \|\| DRY \) return;[\s\S]*alertMark\(HOST, key\)/);
+  assert.match(fn("recovered"), /state\[`_\$\{key\}`\] \?\?= \{\}[\s\S]*await adopt\(key, s\);[\s\S]*close\(s\.alert\)/, "a recovery after a restart still finds the alert to close");
+  assert.match(fn("adopt"), /s\.adoptRetry = Date\.now\(\) \+ 10 \* 60000/, "a failed read backs off instead of listing on every loop");
+  assert.match(fn("adopt"), /await openAlerts\(\)[\s\S]*adoptAlert\(open, HOST, key, s\.alert\)/, "read fresh for each key, not a list kept from the start");
+  assert.match(fn("openAlerts"), /page=\$\{page\}/, "all pages");
+  assert.equal((fn("healthCheck").match(/if \( s\.down \|\| !s\.adopted \) await recovered\(id\)/g) ?? []).length, 2, "the first healthy check after a start clears a lane alert from before it");
+  assert.match(src, /else if \( g\?\.r && !state\._gpu\?\.adopted && g\.r\.core < gpu\.GPU_LIMITS\.clearCore/, "a cool card at the first reading clears an old heat alert");
+  assert.match(src, /trainStep\(\{[^}]*\balert, recovered\b/, "the train can raise and clear its own alert");
+});

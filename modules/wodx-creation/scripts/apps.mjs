@@ -3,6 +3,7 @@ import {MODULE_ID, esc, lineOf, spendLine, xpTotals, purchaseOptions, newDiscipl
 import {embraceDialog, vitaeDialog} from "./change-of-state.mjs";
 import {firstChangeDialog} from "./first-change.mjs";
 import {deathDialog, awakenDialog, revenantDialog, chrysalisDialog, fallenDialog, possessDialog, secondBreathDialog} from "./states.mjs";
+import {weaknessDialog} from "./revenant.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import {LifepathApp} from "./lifepath.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
@@ -53,6 +54,7 @@ export class CreationApp extends ApplicationV2 {
       death: () => deathDialog().then(() => CreationApp.refresh()),
       awaken: () => awakenDialog().then(() => CreationApp.refresh()),
       revenant: () => revenantDialog().then(() => CreationApp.refresh()),
+      revenantWeakness: () => weaknessDialog().then(() => CreationApp.refresh()),
       chrysalis: () => chrysalisDialog().then(() => CreationApp.refresh()),
       fallen: () => fallenDialog().then(() => CreationApp.refresh()),
       possess: () => possessDialog().then(() => CreationApp.refresh()),
@@ -139,6 +141,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="death"><i class="fa-solid fa-ghost"></i> Death into a wraith</button>
           <button type="button" data-action="awaken"><i class="fa-solid fa-wand-sparkles"></i> The Awakening</button>
           <button type="button" data-action="revenant"><i class="fa-solid fa-people-roof"></i> A revenant</button>
+          <button type="button" data-action="revenantWeakness" title="A revenant family's weakness: garlic and holy symbols, a pleasure offered, the oath, the moon"><i class="fa-solid fa-dna"></i> Family weakness</button>
           <button type="button" data-action="chrysalis"><i class="fa-solid fa-feather"></i> The Chrysalis</button>
           <button type="button" data-action="fallen"><i class="fa-solid fa-fire"></i> A Fallen takes a host</button>
           <button type="button" data-action="possess"><i class="fa-solid fa-person-rays"></i> A new host</button>

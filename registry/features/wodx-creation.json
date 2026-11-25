@@ -59,12 +59,11 @@
      "what": "a Give vitae window and a card naming the drink, the ghouling and the bond's step"
     },
     "gated": {
-     "gate": "tools/gate/gatedalines.mjs",
-     "step": "3. a Valkyrje's blood makes no ghoul and no bond"
+     "gate": "tools/gate/gateghoulclicks.mjs",
+     "step": "2. Drink makes a ghoul"
     }
    },
    "open": [
-    "gatedalines step 3 drives the Give vitae window but checks a refusal; no effect step checks an ordinary ghouling and bond end to end",
     "book: V20 Dark Ages ghouls and the blood bond; not checked against the book text yet"
    ],
    "deferred": [],
@@ -139,7 +138,6 @@
     }
    },
    "open": [
-    "gated: gatelearning '3. the study ends and the trait rises' is a direct call (tools/registry/strength.mjs); no step drives it from the window or the token",
     "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet"
    ],
    "deferred": [],
@@ -456,11 +454,13 @@
     },
     "shown": {
      "what": "the Creation window with each character's line, sire or domitor and the buttons for its tools"
+    },
+    "gated": {
+     "gate": "tools/gate/gatecreationaward.mjs",
+     "step": "1. the Creation window's Award button gives the ticked character 3 experience"
     }
    },
-   "open": [
-    "gated: gatestates '6. Creation window buttons' is a direct call"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -485,10 +485,13 @@
     },
     "shown": {
      "what": "a Group actor sheet listing members, the Backgrounds they pool and shared notes"
+    },
+    "gated": {
+     "gate": "tools/gate/gategroupsheet.mjs",
+     "step": "1. a member's dots typed on the Group sheet pool into the coterie"
     }
    },
    "open": [
-    "gated: no gate step opens the group sheet",
     "book: V20 Dark Ages p. 182 (coteries) and W20 pp. 140-141 (packs); not checked against the book text yet"
    ],
    "deferred": [],
@@ -519,11 +522,13 @@
     },
     "shown": {
      "what": "the Pass the Years window with each character's proposed changes, ticked where the rules decide"
+    },
+    "gated": {
+     "gate": "tools/gate/gatepassyears.mjs",
+     "step": "3. Pass the years"
     }
    },
-   "open": [
-    "gated: gateera steps 3 to 6 are direct calls; step 7 (an effect step) checks the put back, not the passing"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -737,6 +742,81 @@
    "faults": [],
    "prs": [
     2323
+   ]
+  },
+  {
+   "id": "creation.revenant-families",
+   "name": "Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/revenant-rules.mjs",
+    "modules/wodx-creation/scripts/revenant.mjs",
+    "modules/wodx-creation/scripts/states.mjs",
+    "modules/wodx-creation/scripts/time.mjs",
+    "modules/wodx-creation/scripts/apps.mjs",
+    "modules/wodx-creation/scripts/main.mjs",
+    "modules/wodx-actions/scripts/main.js",
+    "modules/wodx-npc/scripts/supernatural-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2379,
+     "decisions": "B7840-B7848"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/revenant.mjs:markOf"
+    },
+    "shown": {
+     "what": "the revenant window lists the year's families; the Khavi's sunlight card with its soak dice and bashing levels; the Family weakness roll cards"
+    },
+    "gated": {
+     "gate": "tools/gate/gatedarevenants.mjs",
+     "step": "2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude"
+    },
+    "book": {
+     "ref": "V20 Dark Ages pp. 453-454; V20 p. 500; V20 Ghouls and Revenants pdf 87-114"
+    }
+   },
+   "open": [],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2379
+   ]
+  },
+  {
+   "id": "creation.archive-of-the-dead",
+   "name": "Archive of the dead: the long dead leave the world for a compendium, by hand or by the clock, and come back",
+   "module": "wodx-creation",
+   "core": true,
+   "files": [
+    "modules/wodx-creation/scripts/archive.mjs",
+    "modules/wodx-creation/scripts/archive-rules.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B6179, B6414, B6750, B6770"
+    },
+    "wired": {
+     "reader": "modules/wodx-creation/scripts/archive.mjs:setupAutoArchive"
+    },
+    "shown": {
+     "what": "the Archive of the dead window (tick and archive, Bring back) and the 'WoDX · Archive of the dead' index journal"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplaypage.mjs",
+     "step": "5"
+    }
+   },
+   "open": [
+    "Bring back takes about 2 seconds on the testbed (395 characters) before its archive entry goes; measured on the cloud lane, not on a PC"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
    ]
   }
  ]

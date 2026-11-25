@@ -347,7 +347,7 @@ export async function raiseCaern(placeId, offered = 0) {
   if ( !r.ok ) { ui.notifications.warn(`${p.name}: ${r.why}`); return r; }
   await update(placeId, x => ({...x, ...r.caern}), `Grew to level ${r.caern.level}.`);
   await stepDrift(p.scene, "rite", "the caern grows");
-  await say([`${p.name} grows to level ${r.caern.level}: Gauntlet ${C.gauntletFor(r.caern.level)}, Moon Bridges to ${C.bridgeMiles(r.caern.level).toLocaleString("en")} miles.`], "A caern grows");
+  await say([`${p.name} grows to level ${r.caern.level}: Gauntlet ${C.gauntletFor(r.caern.level)}, Moon Bridges to ${C.bridgeMilesFor(r.caern.level, yearNow()).toLocaleString("en")} miles (${C.bridgeBook(yearNow())}).`], "A caern grows");
   return r;
 }
 
@@ -430,8 +430,8 @@ export async function editPlace(placeId = null, kind = "node") {
       <label>State <select name="status" data-fixed>${Object.entries(C.STATUS).map(([k, v]) => opt(k, v, k === p.status)).join("")}</select></label>
       <label><input type="checkbox" name="urban" ${p.urban ? "checked" : ""}> An urban caern (the Weaver presses harder)</label>
       <label><input type="checkbox" name="raids" ${p.raids ? "checked" : ""}> Raids come on the clock</label>
-      <fieldset><legend>Offices</legend>${Object.entries(C.OFFICES).map(([k, o]) => `<label>${esc(o.label)} ${holder(k)}</label>`).join("")}</fieldset>
-      <p class="hint">Offices of consequence (Warder, Master of the Rite, Gatekeeper) go to Adren and up; the Master of the Rite is the sept's highest-ranking Theurge${sug ? ` (here ${esc(nameOf(sug))})` : ""} (W20 pp. 55-56, 252). A level ${p.level} caern has a Gauntlet of ${C.gauntletFor(p.level)} and needs ${C.mootNeed(p.level)} Gnosis at each monthly moot (W20 pp. 206, 311).</p>`;
+      <fieldset><legend>Offices</legend>${Object.entries(C.officesFor(y)).map(([k, o]) => `<label>${esc(o.label)} ${holder(k)}</label>`).join("")}</fieldset>
+      <p class="hint">${C.daYear(y) ? `Dark Ages septs keep a leader, a caern Marshall over the bawn, a Master of the Rite and a council of elders, with a Gatekeeper, a Wyrm Foe, a Talesinger and, in a big or quarrelsome sept, a Master of the Challenge (DA:W pp. 169-170). Moon Bridges from a level ${p.level} caern reach ${C.bridgeMilesFor(p.level, y).toLocaleString("en")} miles (DA:W p. 169).` : `Offices of consequence (Warder, Master of the Rite, Gatekeeper) go to Adren and up; the Master of the Rite is the sept's highest-ranking Theurge${sug ? ` (here ${esc(nameOf(sug))})` : ""} (W20 pp. 55-56, 252).`} A level ${p.level} caern has a Gauntlet of ${C.gauntletFor(p.level)} and needs ${C.mootNeed(p.level)} Gnosis at each monthly moot (W20 pp. 206, 311).</p>`;
   } else {
     body = `<label>Rating (Holdings) <input type="number" name="base" min="1" max="5" value="${p.base}"></label>
       <label>Its balefire now <input type="number" name="rating" min="0" max="5" value="${p.rating}"></label>
@@ -456,7 +456,7 @@ export async function editPlace(placeId = null, kind = "node") {
     if ( res["m.new.actor"] ) members.push({actor: res["m.new.actor"], name: nameOf(res["m.new.actor"]), points: res["m.new.points"]});
     next = {...next, side: res.side, duties: res.duties, node: res.node || null, members: [...members, ...p.members.filter(m => m.gone)]};
   } else if ( p.kind === "caern" ) {
-    const offices = Object.fromEntries(Object.keys(C.OFFICES).map(k => [k, res[`o.${k}`] || null]).filter(([, v]) => v));
+    const offices = Object.fromEntries(Object.keys(C.officesFor(y)).map(k => [k, res[`o.${k}`] || null]).filter(([, v]) => v));
     next = {...next, level: res.level, type: res.type, totem: res.totem, sept: res.sept, tribes: res.tribes, garou: res.garou, status: res.status,
       urban: res.urban === "on", raids: res.raids === "on", offices, ...(res.status !== p.status && ["held", "lapsed"].includes(res.status) ? {lastMoot: now(), missed: 0} : {})};
   } else next = {...next, base: res.base, rating: Math.min(num(res.rating), num(res.base)), form: res.form, banality: res.banality, creator: res.creator || null};

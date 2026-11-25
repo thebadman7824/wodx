@@ -191,7 +191,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "Phase 7d, B2211-B2216"
+     "decisions": "Phase 7d, B2211-B2216, B7865"
     },
     "wired": {
      "reader": "modules/wodx-npc/scripts/factions.mjs:build"
@@ -328,10 +328,13 @@
     },
     "shown": {
      "what": "the hunt window names the day's feast or fast and its change to the difficulty"
+    },
+    "gated": {
+     "gate": "tools/gate/gatehuntcalendar.mjs",
+     "step": "1. the hunt window's calendar step is in the hunt's difficulty"
     }
    },
    "open": [
-    "gated: gatehuntpowder '6. the hunt window' is graded marker",
     "book: V20 p. 259 and V20 Dark Ages p. 334 (hunting grounds); not checked against the book text yet"
    ],
    "deferred": [],
@@ -707,7 +710,7 @@
    "steps": {
     "built": {
      "pr": 653,
-     "decisions": "B1900-B1905"
+     "decisions": "B1900-B1905, B7865"
     },
     "wired": {
      "reader": "modules/wodx-npc/scripts/people.mjs:build"
@@ -1012,9 +1015,7 @@
      "step": "1. a changeling NPC's Sanctuary refills Glamour at the new night"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [

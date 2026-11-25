@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7840
+Next free block: B7970
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -422,7 +422,7 @@ Next free block: B7840
 | B7230-B7239 | Gate runs put back what a gate leaves in the page: hooks, timers, swapped functions (used B7230) | tools (testbed lanes) |
 | B7240-B7249 | Cloud lane 9: headless Foundry gates in cloud threads (used B7240-B7243) | tools (testbed lanes) |
 | B7250-B7259 | gatevoices reads the Voices api against its start (used B7250) | tools (gates) |
-| B7260-B7279 | Master Plan gaps: dated events and the Ledger proven on the real clock; Moravia's own news (used B7260-B7264) | Chronicle, Storyteller |
+| B7260-B7279 | Master Plan gaps: languages in chat, the sheet's second page and the archive of the dead through real clicks (used B7260-B7271) | Chronicle, Sheets, Creation |
 | B7290-B7299 | PC watcher: ComfyUI off between renders is normal (used B7290-B7297) | tools (pcq) |
 | B7300-B7309 | Cloud lane 9 loads the PC world and modules (used B7300) | tools (testbed lanes) |
 | B7310-B7319 | gatetruthactions step 6 and gate7b name what moved the fight (used B7310-B7312) | tools (gates) |
@@ -466,6 +466,11 @@ Next free block: B7840
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
 | B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
+| B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
+| B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
+| B7860-B7909 | Splat depth build: fae oaths kept by the village (desk item fae-village) (used B7860-B7869) | Storyteller, Actions |
+| B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
+| B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -14601,6 +14606,62 @@ It puts the clock, the hold, the fired list, the Ledger and the markets back.
 
 Reverse: delete tools/gate/gatedatedplay.mjs.
 
+## B7265. The second page and the archive are gated through their own buttons (2026-11-18)
+WoDX tools, tools/gate/gateplaypage.mjs. gatesheet5 and gatearchive call the modules' functions. The new gate opens a
+Dark Ages vampire's sheet and checks its second page, gives it a sword and checks the Combat block while the sheet is
+open, clicks the sword's row (its sheet opens), presses Feed on the page's row of actions and its window's Feed button
+(the blood pool rises by the 2 asked), ticks a test dead in the archive window and presses "Archive the ticked", presses
+"Bring back", and lets the released clock archive a test dead fifteen years gone. Characters the gate did not make are
+never ticked, and the clock step runs only when no one else is due.
+
+Reverse: delete tools/gate/gateplaypage.mjs and its registry rows' gated steps.
+
+## B7266. Languages in chat are gated in two browsers, typed into the chat box (2026-11-18)
+WoDX tools, tools/gate/gateplaylang.mjs, run by tools/harness/gate-two.mjs. Each line is typed into Foundry's own chat
+box and sent with Enter; the player reads the Storyteller's lines in their own chat log and presses "Try for the gist".
+A two-browser gate is not run by a gates job: queue it with submit.mjs gate-two gateplaylang.
+
+Reverse: delete tools/gate/gateplaylang.mjs.
+
+## B7267. A player speaks only the languages their characters know (2026-11-18)
+WoDX Chronicle, languages.mjs. "/in Latin ..." from a player whose characters have no Latin sends nothing, and Speaking
+set to such a language is not kept; a warning says why in both cases. The Storyteller speaks anything. Before, the
+Speaking list offered a player only their own languages, but any typed name was kept, and "/in" took any common
+language. House rule (the languages list is WoDX's table aid, B3162).
+
+Reverse: drop mayUse() from the chatMessage hook, the Speaking box's change handler and preCreateChatMessage.
+
+## B7268. "/in" is read from the text typed (2026-11-18)
+WoDX Chronicle, languages.mjs typedText(). Foundry 14's chat box is a ProseMirror editor and sends HTML
+("<p>/in Polish ...</p>"), so "/in" never matched and Foundry refused the line as an unknown command. The hook now reads
+the text typed, as Foundry's own command parser does; markup typed into the box does not reach the line.
+
+Reverse: pass the message to parseInCommand as it comes.
+
+## B7269. With Speaking set, a typed line is sent in character (2026-11-18)
+WoDX Chronicle, languages.mjs chatMessage hook. Foundry 14 sends a plain line out of character, without a speaker,
+unless the chat mode is In Character, so preCreateChatMessage never saw a speaking character and no typed line carried
+its language. When Speaking is set and a character speaks (a controlled token or the user's character), the hook sends
+the line itself, in character, in that language. A line with no character to speak it, or one starting with "/", is
+left to Foundry.
+
+Reverse: remove the Speaking branch from the chatMessage hook.
+
+## B7270. "Try for the gist" answers a click on any copy of the line (2026-11-18)
+WoDX Chronicle, languages.mjs. The button carries the line, the character and the languages, and one listener on the
+page reads a click on it, so a copy of the line (Foundry 14's chat notifications, a popped-out log) works as the log's
+own line does. The gate's first runs saw no card after the click; with this and a longer wait for the roll it passed
+three runs in a row. Which of the two fixed it was not isolated.
+
+Reverse: put the per-button click listener back.
+
+## B7271. Gates that release the clock settle the night's work before putting settings back (2026-11-18)
+WoDX tools, gatedatedplay and gateplaypage. The released clock's night's work closes up to 30 seconds after it starts,
+so a fixed wait put the settings back too early and left the lane changed. Both gates now hold the world again, close
+the open work through the night's-work api's settle(), wait until the written settings stop changing, then put them back.
+
+Reverse: go back to a fixed 5 second wait.
+
 ## B7290. The laptop watches the PC job system and only reports (2026-11-18)
 Ben asked for the laptop (DESKTOP-S6NV3Q9) to be used to keep everything in line. tools/pcq/watcher.mjs runs every 5 minutes from the scheduled task "WoDX PC watcher at logon" (tools/pcq/install-watcher.ps1, loop in run-watcher.ps1), below normal priority, on battery too. It reads only GitHub (the pc-status branch files, the runner status issues, pc-job issues, the merge train line, pc-alert issues) and the laptop's own process list. It never starts or stops a process, restarts OCR or art, or touches a lane, a world, a job or another tool's alert. It is taken as a fix to how the PCs are watched under the PC upkeep freeze, with no new lane or runner (logged in docs/PENDING-REVIEW.md). Its checks are fixed rules, not a local model: the laptop's i5-8210Y would sit at full load for each model call and slow lane 7.
 
@@ -15979,3 +16040,138 @@ the row asks for the Storyteller. A Garou keeps the Garou tables. A Changing Bre
 Garou's (a house rule, in docs/PENDING-REVIEW.md).
 
 Reverse: remove FERA_STARTS, feraOf and the fera branch of the w20 case in derivedTraits.
+
+## B7840. Revenant families in every era (2026-11-23)
+WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
+
+Reverse: edit LINES, DA_FAMILIES and MODERN_FROM in modules/wodx-creation/scripts/revenant-rules.mjs.
+
+## B7841. The family weakness on frenzy and Willpower rolls (2026-11-23)
+WoDX Creation adds a WoDX Chronicle trait source: a Bratovich (both books) frenzies two harder, and a D'Habi's every Willpower roll is two harder. WoDX Actions now tags a Willpower roll in the roll window with "willpower" so effects on Willpower rolls count.
+
+Reverse: drop registerRevenant from wodx-creation main.mjs, or the willpower tag in wodx-actions buildPool.
+
+## B7842. Khavi in the sun (2026-11-23)
+WoDX Actions' hazard window: a Khavi revenant burns as a Cainite does, but the damage is bashing and is soaked with Stamina plus Fortitude at the sunlight's difficulty (V20 Dark Ages p. 454). Any other living character still takes no harm from the sun.
+
+Reverse: remove the khavi branch in resolveHazard (wodx-actions main.js).
+
+## B7843. A revenant's blood comes back a point a day (2026-11-23)
+WoDX Actions' New Night gives every revenant one blood point back from its own vitae, up to its pool (V20 p. 500), unless it is in torpor. No domitor is needed.
+
+Reverse: remove the revenant step in newNight (wodx-actions main.js).
+
+## B7844. Danislav and silver (2026-11-23)
+WoDX Chronicle's toughness reads the revenant mark, so a Danislav takes aggravated damage from a silver weapon in WoDX Combat, as a Garou does (V20 Dark Ages p. 454).
+
+Reverse: remove the B7844 lines in wodx-chronicle traits.mjs toughness.
+
+## B7845. How a revenant ages (2026-11-23)
+Pass the Years: a revenant fed true vitae by a vampire does not age; one living on its own vitae ages a quarter of the years and dies of age at 150 years plus 50 a dot of Stamina (Ghouls: Fatal Addiction p. 29). Dark Ages: Vampire p. 289 says their own vitae does not slow aging at all; WoDX takes the later book in every era (house reading). The pool still grows a point a century, held 2 lower for the Dark Ages Grimaldi. A revenant no longer gets the ghoul's "vitae lapses" change, which took its Disciplines away.
+
+Reverse: remove the rev branch in time.mjs and the revenantAges case.
+
+## B7846. Lifepaths for every family in its years (2026-11-23)
+The lifepath's revenant scenes are made from the same family lines, so a character born in 1230 can be a Vlaszy or a Khavi and one born in 1990 cannot. Lines with house years are marked house.
+
+Reverse: put back the hand list in modules/wodx-creation/data/lifepaths-splats.mjs.
+
+## B7847. The family weakness window (2026-11-23)
+WoDX Creation, "Family weakness" in the Creation window: garlic or a holy symbol shown to a Basarab is a Willpower roll at 6 (V20 Dark Ages gives no difficulty; 6 is the usual), failing which they must leave; a strong pleasure offered to a Szantovich (difficulty 6, Dark Ages: Vampire p. 289) or a Zantosa (the Storyteller's difficulty, 6 unless set) is a Willpower roll with no Willpower spent, and a failure records the addiction on the sheet; a Vlaszy swears the blood oath to a chosen Fiend (a full bond); a Rafastio sees the moon's step on Disciplines tonight. The window also names the frenzy, Willpower, sunlight and silver effects that count by themselves.
+
+Reverse: remove the revenantWeakness button in apps.mjs and revenant.mjs weaknessDialog.
+
+## B7848. What a revenant birth sets (2026-11-23)
+An Obertus or Keskinen gets the Obsession Derangement on the sheet, with the field the Storyteller names. A Kairouan, Oprichniki or Rossellini gets the family's V20 Flaw (Slow Healing, Haunted, Deathsight) as a Flaw item worth no freebie points, so the rules that read those Flaws work. A Vlaszy may be given the oath at birth or later. The window says the blood starts to flow at about 13 (Dark Ages: Vampire p. 289), and Vlaszy majority is read as 16 (house reading).
+
+Reverse: edit revenantBirth in modules/wodx-creation/scripts/states.mjs.
+
+## B7851. gatedach8 records what the swarm's turn saw after a dodge (2026-11-24)
+Gates. Nightly job 2396 failed step 5b (issue 2411): the dodge was counted (1 die, 1 success) but the bite after it did no harm at all, where 2 lethal was wanted. It fails now and then, on main too. The step now records the dodge key at the turn and after it, who was inside the swarm, the autoApply setting, what the turn returned, and the text of its bite card and damage card. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: take why, lines, t0 and key out of step 5b in tools/gate/gatedach8.mjs.
+
+## B7852. gatespritelife records which picture the figure shows (2026-11-24)
+Gates. Nightly job 2396 failed step 3 (issue 2412): after other gates, the figure's picture stayed one frame wide (96 px) instead of the walk sheet. It passes in every PR run. The step now records whether its 15 s wait ran out and how long it took, what give returned, the token's texture path, the picture the mesh shows, the sheet it should show, and the figure's act flag. The pass condition is unchanged. Not yet run in Foundry.
+
+Reverse: put back the plain `await A.give(tok, FIG)` and the short detail in step 3 of tools/gate/gatespritelife.mjs.
+
+## B7853. gatedach8 step 5b puts the victim back inside the swarm before its bite (2026-11-24)
+Gates. The detail from B7851 named the cause on its first run (job 2414): at the swarm's turn its card said "No one inside it". The victim had left the swarm's square between step 5 and step 5b, so the bite found no one and did no harm. Step 5b now records where the swarm and the victim stand and whether the victim is inside. If it is not, the step moves the victim back to the middle of the swarm (its position only, never its hidden state) before the turn. The pass condition is unchanged. What moved the token is not yet known; the recorded positions will show it. Not yet run in Foundry.
+
+Reverse: take the before record and the vTok.update out of step 5b in tools/gate/gatedach8.mjs.
+
+## B7860. Pack totems read Dark Ages: Werewolf in the Dark Ages (2026-11-24)
+WoDX Actions. In the eras the Werewolf line already plays by DA:W (dark-ages and long-night, garou-rules basis "daw"), the totem window reads data/rules/werewolf/totems-da.json, the 12 totems of DA:W pp. 227-231 in WoDX words. Bear refuses every Garou pack (p. 193): the window says so and gives nothing. A totem DA:W does not list (Boar, Wendigo, Uktena and the rest) keeps its W20 row, marked as such, since packs outside Europe can still follow them. Ben's desk pick "fix" (splat depth desk, 24 Nov).
+
+Reverse: in garou.js totemOf, call TOT.totemFor(DATA.totems, ...) again.
+
+## B7861. Unicorn's healing and empathy ease stays on each packmate (2026-11-24)
+WoDX Actions. DA:W p. 231 makes Unicorn's -2 to healing and empathy a Pack trait; the totem grammar has no Pack trait that changes a difficulty, so each packmate has it, as in W20. House reading, logged in PENDING-REVIEW.
+
+Reverse: move the effect under pack with a new pack-difficulty reader in totem-rules.js.
+
+## B7862. Quintessence a turn without Fount stays at two (2026-11-24)
+WoDX Actions. Dark Ages: Mage gives two a turn in the Fount entry (p. 87) and three in the Quintessence rules (p. 89). WoDX keeps two: the Fount table gives Fount 1 two a turn, so three would make the first dot a loss. House reading, logged in PENDING-REVIEW.
+
+Reverse: change perTurn for fount 0 to 3 in fountLimits (mage-da-rules.js).
+
+## B7863. Sickness runs the DA:I course in Dark Ages years (2026-11-24)
+WoDX Storyteller. In the eras whose profile plays by the Dark Ages rules, plague, the flux, leprosy and consumption use DA:I p. 165: a Stamina roll each day at the book's difficulty (plague 7, flux 8, leprosy 9, consumption 10), a healer's Medicine (here a medicine taken) lowering it, five good days in a row ending it. Plague and the flux do a lethal level each bad day; consumption three lethal a week and a dot of Strength or Stamina; leprosy a dot of Appearance a month. House reading: a good day holds that day's harm off. Sicknesses DA:I does not list keep their M20 row. DA:I's St. Anthony's fire, dropsy and syphilis are not spreading sicknesses in the contagion model and are left for the fill-lists item.
+
+Reverse: in contagion.mjs people(), drop the daCourse branch.
+
+## B7864. Caerns read DA:W for Moon Bridges and sept positions to 1449 (2026-11-24)
+WoDX Storyteller. Moon Bridges reach 1,000 miles a caern level, 5,000 at level 5 (DA:W p. 169), against W20's 6,000 and 10,000 at levels 4 and 5. The caern editor offers the DA:W positions: sept leader, caern Marshall, Master of the Rite, council of elders, Gatekeeper, Wyrm Foe, Talesinger, Master of the Challenge (pp. 169-170). Office keys of both books survive a save, so a chronicle that crosses 1450 keeps its holders. The cut is 1449, as the Werewolf line's own basis.
+
+Reverse: use bridgeMiles and OFFICES again in caern-rules.mjs and power.mjs.
+
+## B7865. A Garou faction to 1449 keeps the Dark Ages sept polity (2026-11-24)
+WoDX NPC. New polity garou-sept-da (to 1449) with the DA:W seats; garou-sept runs from 1450. A faction that picked garou-sept in a Dark Ages year stands in as the DA one, as any polity out of its years does. Secrets that a sept cares about count for both.
+
+Reverse: delete garou-sept-da, set garou-sept from null, and put back the default in DEFAULTS.garou.
+
+## B7866. An oath ledger for the village (2026-11-24)
+WoDX Storyteller, new fae-oaths-rules.mjs and fae-oaths.mjs, the world setting faeOaths. Each oath keeps the five parts of DA:Fae pp. 109-110 (the fae's deal, the humans' duty, what breaks it on each side, the punishment in shame), its tier and rating (Iron 1-3, Stone 3-5, Gold 4-5), its Court and, if it rules a village, its town. An oath with a fae character on it is written onto that fae's sheet oath list (wodx-actions daFae.oaths, by ledgerId), which the Echo window already rolls as a shield; a broken oath stays on the sheet as inactive, a washed one leaves it. Breaking posts the punishment and the Court's way with breakers (pp. 67, 69, 71, 73, 74); a Spring fae pities a human tricked into it (house reading). Gold Oaths show to the village only as a custom (p. 108). The book's three village oaths (the windfall apples p. 33, the healing well p. 34, the miners' warning p. 39) are templates. Faerie food (p. 85) is a day's flag that the fae rolls read. Desk pick "full" (splat depth desk, 24 Nov).
+
+Reverse: remove the two files, the faeOaths setting and the token control; drop the faerie food branches in fae-da.js.
+
+## B7867. Household helpers, the retinue, Retinue and Sprites as ties (2026-11-24)
+WoDX Storyteller. A household sprite (DA:Fae p. 183) is spurned by the Church or an unkept small oath and turns spiteful; a brownie (DA:Mage p. 194) refuses a first gift, leaves or turns murderous at the next (even odds, house reading), leaves when praised, and is mushrooms for seven days in sunlight. Only a content helper does the chores. A spiteful helper opens a Ledger consequence due in a week. A servant who tries to betray a fae master rolls Willpower at 10; one who raises a hand takes aggravated damage equal to the master's Mists (p. 94). The Retinue and Sprites Backgrounds become Upkeep ties (30 and 7 days, house reading): untended, they lose a dot on approval.
+
+Reverse: remove the helper and retinue parts of fae-oaths*.mjs and the retinue and sprites tie kinds in upkeep-rules.mjs.
+
+## B7868. The hetman and the rising (2026-11-24)
+WoDX Storyteller. LEVER_TOWN.hetman: the hetman angered raises a town's unrest by 0.6 at once (DA:Fae p. 204; the amount is a house reading). A town's rising (wodxTown kind "rising") breaks every oath recorded as ruling that town, so its fae lose the shield.
+
+Reverse: remove hetman from LEVER_TOWN and the rising hook in fae-oaths.mjs.
+
+## B7869. Gate and tests (2026-11-24)
+tools/gate/gatefaeoaths.mjs (8 steps) and tools/harness/fae-oaths.test.mjs.
+
+## B7911. Pull request gate runs go to the New PC first (2026-11-24)
+PC runners. The owner asked on 24 November 2026 that the New PC get priority for all new pull request runs, with the Main PC taking them when the New PC's queue is full. The New PC runs a gate set about 2 to 3 times faster than the Main PC (24 November run times: 74 to 172 gates in 16 to 22 minutes on the New PC, about 170 to 230 gates in 43 to 66 minutes on the Main PC). A new setting, prGatesPreferPeer in tools/pcq/runner.json ({statusTitle, maxMinutes 5, freshMinutes 15}), makes a runner leave a pull request's touched or every-gate run (title "[PR #n sha]", no lane named) to the runner whose status issue has that title while that status shows a free lane, is not holding, and was written in the last 15 minutes. It takes the run itself when the New PC is full, holding or silent, and after 5 minutes in any case, so no run waits on a New PC that does not pick it up. The status issue is read at most once a minute. runner.new_pc_lebrun.json clears the setting, and a runner never defers to its own status title. The Secondary PC shares the setting after its own 10 minute wait (B7761), so in practice it keeps its present behaviour. Train front jobs carry the same title and are covered too. Tested by tools/harness/pcq.test.mjs; not yet seen live.
+
+Reverse: take prGatesPreferPeer out of tools/pcq/runner.json and runner.new_pc_lebrun.json; the runner then takes jobs as before.
+
+## B7960. A git fault on the runner keeps a pull request in the train (2026-11-24)
+PC tools (tools/pcq/train.mjs). When merging main into the front, or a member into a batch, fails, the train reads
+git's output and the unmerged paths before it aborts. A real conflict (a CONFLICT line or unmerged paths) leaves the
+train as before. A failure that git's own fatal or error lines name as a fault of the runner's machine (no identity,
+as on the Secondary PC on 19 Nov with PR 1848; a lock; permissions; disk; network) is logged with git's words, keeps
+the label and comments once per head (addresses and local paths taken out), and the runner raises a pc-alert
+("train-git") that clears once a prepare or batch build works. The same holds for fetch, worktree, checkout and the
+merge-stamp commit, and a batch hit by it stays open with the alert. The wait is capped at the train's 3 hours (on one head, or for one batch), so a
+fault misread as the runner's never holds the line for good. Any other non-conflict failure (such as unrelated
+histories) leaves with git's words. Fixes issue 2121.
+
+Reverse: in prepare() treat every failed merge as a conflict again, and drop the r.setup branch in step().
+
+## B7961. PC runner alerts are found again after a restart (2026-11-24)
+PC tools (tools/pcq/runner.mjs, jobs.mjs). Each alert body ends with a hidden mark naming the runner's host and the
+alert key (alertMark). The first time after a start that a key raises or clears an alert, the runner reads the open
+pc-alert issues (fresh, all pages) and adopts the oldest with its mark (adoptAlert), closing any others as
+duplicates. The first healthy lane check and a cool first graphics card reading after a start count as a clear. A restart no
+longer leaves the old alert open for good or opens a new one while the fault lasts. Fixes issue 2393.
+
+Reverse: remove adopt() from alert() and recovered(), and the mark from the alert body.

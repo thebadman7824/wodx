@@ -129,9 +129,24 @@ test("caerns sit on the places-of-power register and run on its clock", () => {
 
 test("the wiring: window acts, api, editor; plain words players may read", () => {
   const p = src("modules/wodx-storyteller/scripts/power.mjs");
-  for ( const re of [/action: "caern", label: "New caern"/, /caern: \{moot: holdMoot/, /system\.advantages\.gnosis\.temporary/, /api\?\.drift/, /C\.OFFICES/] ) assert.match(p, re);
+  for ( const re of [/action: "caern", label: "New caern"/, /caern: \{moot: holdMoot/, /system\.advantages\.gnosis\.temporary/, /api\?\.drift/, /C\.officesFor\(y\)/] ) assert.match(p, re);
   const shown = (p + src("modules/wodx-storyteller/scripts/caern-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(shown, /B3[24]\d\d|house rule/i);
   assert.doesNotMatch(shown, /—/);
   assert.doesNotMatch(shown, /\b(he|she|him|her|his|hers)\b/);
+});
+
+// B7864: Dark Ages septs and Moon Bridges read DA:W pp. 169-170 to 1449, W20 after
+test("B7864: Moon Bridges and sept offices follow the Dark Ages book in Dark Ages years", async () => {
+  const C = await import("../../modules/wodx-storyteller/scripts/caern-rules.mjs");
+  assert.deepEqual([1, 2, 3, 4, 5].map(l => C.bridgeMilesFor(l, 1202)), [1000, 2000, 3000, 4000, 5000]);
+  assert.deepEqual([1, 2, 3, 4, 5].map(l => C.bridgeMilesFor(l, 1600)), [1000, 2000, 3000, 6000, 10000]);
+  assert.equal(C.bridgeBook(1202), "DA:W p. 169");
+  assert.deepEqual(Object.keys(C.officesFor(1202)), ["leader", "marshall", "rite", "council", "gatekeeper", "wyrmfoe", "talesinger", "challenge"]);
+  assert.ok(C.officesFor(1600).truthcatcher && !C.officesFor(1202).truthcatcher);
+  const c = C.normCaern({level: 4, offices: {marshall: "a", truthcatcher: "b"}});
+  assert.deepEqual(c.offices, {truthcatcher: "b", marshall: "a"}, "both books' office keys survive a save");
+  assert.match(C.describeCaern({name: "Old Grove", level: 4}, {year: 1202}), /Moon Bridges to 4,000 miles/);
+  assert.match(C.describeCaern({name: "Old Grove", level: 4}, {year: 1990}), /Moon Bridges to 6,000 miles/);
+  assert.deepEqual(C.officeNotes({offices: {marshall: "a"}}, [{id: "a", name: "Pup", rank: 1}], {year: 1202}), ["Pup holds Caern Marshall (keeps the bawn) below Adren (Rank 1)."]);
 });

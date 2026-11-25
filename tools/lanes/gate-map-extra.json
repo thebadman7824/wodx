@@ -5,6 +5,7 @@
     "gate6c-diag",
     "gatecssprobe",
     "gatedisplayb",
+    "gateplaylang",
     "gatedisplayd",
     "gatedebtsmarks",
     "gatelookhand",
@@ -17,6 +18,8 @@
     "gatetruthwalk"
   ],
   "add": {
+    "gateghoulclicks": ["wodx-creation", "wodx-sheets", "wodx-chronicle"],
+    "gatepassyears": ["wodx-creation", "wodx-chronicle", "wodx-sheets"],
     "gatemorebuilds": ["wodx-creation", "wodx-actions", "wodx-chronicle", "wodx-combat"],
     "gatepathbearing": [
       "wodx-actions"
@@ -122,8 +125,8 @@
     ]
   },
   "remove": {},
-  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks: run them by name on their own; gatesolo turns solo mode on). gatevoices is out again since Voices is shelved (B7134); run it by name if Voices ever stops the world from loading.",
-  "timeouts": {},
+  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks, gateplaylang: run them by name on their own; gatesolo turns solo mode on). gatevoices is out again since Voices is shelved (B7134); run it by name if Voices ever stops the world from loading.",
+  "timeouts": {"gatepassyears": 25},
   "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}.",
   "_clean": "Chronicle Packs Desk e2: the clean smoke set, run in wodx-clean (run-gate.mjs --world clean --clean-set) after the nightly full run, on one lane. gatecleanworld is left out of the map because in rothenstein-wodx a chronicle is in play on purpose; the others are ordinary gates that must also pass with no chronicle in play.",
   "clean": ["gatecleanworld", "gatethreads", "gateoworld", "gatepod", "gate7d", "gatebuilder", "gateevents"],

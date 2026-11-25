@@ -3,7 +3,8 @@
  *   await (await import(`/wodx-gate/gatestates2.mjs?${Date.now()}`)).run()
  * It makes four test mortals and deletes them, every sheet made from them, its chat cards, and the test folders if they were new.
  *   1. version and api
- *   2. a revenant: the same Mortal sheet, variant ghoul, Potence 1 and Celerity 1 (Grimaldi), blood 1 of 10, the weakness noted
+ *   2. a revenant: the same Mortal sheet, variant ghoul, Potence 1 and Celerity 1 (Grimaldi), blood 1 of the year's pool (8 for the
+ *      Dark Ages Grimaldi, V20 Dark Ages p. 453; 10 later), the weakness noted
  *   3. the Chrysalis: a Changeling sheet with the mortal's Traits, Glamour 5, Banality 3, Willpower 4, childling, kith kept
  *   4. a Fallen takes a host: a Demon sheet, House of Devourers, Faith 3, Torment 4, Conscience 3 / Conviction 1 / Courage 2, Willpower 5
  *   5. a new host: a willing thrall needs no roll and is taken; an ordinary body with set dice of 7s fails
@@ -44,7 +45,7 @@ export async function run() {
     const r = game.actors.get(rev.id);
     const discs = Object.fromEntries(r.items.filter(i => i.type === "Power").map(i => [i.name, Number(i.system.value)]));
     ok("2. a revenant", r.type === "Mortal" && r.system.settings.variant === "ghoul" && discs.Potence === 1 && discs.Celerity === 1
-      && A(r).bloodpool?.max === 10 && A(r).bloodpool?.temporary === 1 && !!r.getFlag(C, "revenant")?.weakness, {variant: r.system.settings.variant, discs, blood: A(r).bloodpool});
+      && A(r).bloodpool?.max === (api.revenant?.rules?.startFor?.({family: "grimaldi", year: r.getFlag(C, "revenant")?.year})?.blood?.max ?? 10) && A(r).bloodpool?.temporary === 1 && !!r.getFlag(C, "revenant")?.weakness, {variant: r.system.settings.variant, discs, blood: A(r).bloodpool});
 
     const ch = await mk("Gate Chrysalis", {"system.attributes.dexterity.value": 4, "system.abilities.athletics.value": 3, "system.advantages.willpower.permanent": 2});
     const c = await api.chrysalis(ch, {kith: "Pooka", seeming: "childling", moveTokens: false}); made.push(c); await sleep(500);

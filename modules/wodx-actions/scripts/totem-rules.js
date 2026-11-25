@@ -32,6 +32,21 @@ export function totemFor(data, name = "", flagKey = "") {
     return rows.find(r => [r.name, r.key, ...(r.aliases ?? [])].some(x => norm(x) === s)) ?? null;
 }
 
+/**
+ * B7860: the totem a pack follows in its age. In the Dark Ages and the Long Night (garou-rules basis "daw") the DA:W
+ * table (totems-da.json, pp. 227-231) comes first; a totem it refuses (Bear, p. 193) comes back as the W20 row with
+ * `refused` set, and a totem it does not list falls back to the W20 row with `outOfBook` set. Other ages read W20.
+ */
+export function totemForEra(da, w20, name = "", flagKey = "", { daw = false } = {}) {
+    if (!daw || !da) return totemFor(w20, name, flagKey);
+    const own = totemFor(da, name, flagKey);
+    if (own) return { ...own, book: da.book ?? "DA:W" };
+    const old = totemFor(w20, name, flagKey);
+    if (!old) return null;
+    const why = da.refused?.[old.key];
+    return why ? { ...old, book: w20?.book ?? "W20", refused: why } : { ...old, book: w20?.book ?? "W20", outOfBook: true };
+}
+
 /** The Pack Traits a packmate can claim: [{id, kind: "trait"|"gift", key?, dots?, dice?, kinds?, label}]. */
 export function claimable(row) {
     const out = [];
@@ -80,7 +95,7 @@ function meets(e, tags, ticked) {
  */
 export function rollMods(row, ctx = {}) {
     const out = { dice: 0, diff: 0, parts: [] };
-    if (!row || ctx.banned) return out;
+    if (!row || ctx.banned || row.refused) return out;
     const tags = (ctx.tags ?? []).map(t => String(t).toLowerCase());
     for (const k of [ctx.attrKey, ctx.abilityKey]) if (k) tags.push(String(k).toLowerCase());
     const ticked = ctx.ticked ?? [];
@@ -103,7 +118,7 @@ export function rollMods(row, ctx = {}) {
 }
 /** The ticks the totem offers on a roll window: [{label, note}]. */
 export function ticksOf(row, banned = false) {
-    if (!row || banned) return [];
+    if (!row || banned || row.refused) return [];
     return (row.individual?.effects ?? []).filter(e => e.tick).map(e => ({ label: e.tick, note: e.note ?? "" }));
 }
 
@@ -143,7 +158,7 @@ export function problems(data) {
     const out = [];
     const known = new Set([...ATTRS, "alertness", "athletics", "brawl", "dodge", "empathy", "expression", "intimidation", "leadership", "primalurge", "streetwise", "subterfuge",
         "animalken", "crafts", "drive", "etiquette", "firearms", "melee", "performance", "stealth", "survival", "computer", "enigmas", "investigation", "law", "linguistics",
-        "medicine", "occult", "rituals", "science"]);
+        "medicine", "occult", "rituals", "science", "ride", "archery"]);
     const keys = new Set();
     for (const r of data?.rows ?? []) {
         const w = `${r.key ?? "?"}`;

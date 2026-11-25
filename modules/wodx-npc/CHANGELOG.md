@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.108.0 (Dark Ages septs: a Garou faction in the Dark Ages and the Long Night keeps a sept with the positions of Dark Ages: Werewolf (pp. 169-170) and the Litany as its law (pp. 31-33); from 1450 the W20 sept as before (B7865))
+- 0.107.5 (The revenant archetype picks every family name, Dark Ages and modern (B7840))
 - 0.107.4 (A chronicle faction may have no leader on the map: the name finder returns no one for an empty name (B7803))
 - 0.107.3 (Small talk found the Storyteller's money rules at the wrong path, so a land's own coins never reached the talk lines; it now reads them where the Storyteller keeps them (B7731))
 - 0.107.2 (The Road of Night's local group (B7690))

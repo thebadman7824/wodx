@@ -41,6 +41,16 @@ const up = t => (t ? t[0].toUpperCase() + t.slice(1) : t);
 
 export const gauntletFor = level => [5, 4, 4, 3, 3, 2][clamp(int(level), 0, 5)];
 export const bridgeMiles = level => [0, 1000, 2000, 3000, 6000, 10000][clamp(int(level), 0, 5)];
+/**
+ * B7864: the Dark Ages and the Long Night (to 1449, as the Werewolf line's own basis) read Dark Ages: Werewolf, not
+ * W20: Moon Bridges reach 1,000 miles a caern level, 5,000 at level 5, and a bridge opened away from a caern (a Lune's)
+ * 1,000 (DA:W p. 169). The Gauntlet by level is the same in both books.
+ */
+export const DA_LAST_YEAR = TERMS.MEDIEVAL_YEAR_END;
+export const daYear = year => Number.isFinite(Number(year)) && Number(year) > 0 && Number(year) <= DA_LAST_YEAR;
+export const BRIDGE_DA = [0, 1000, 2000, 3000, 4000, 5000];
+export const bridgeMilesFor = (level, year) => (daYear(year) ? BRIDGE_DA[clamp(int(level), 0, 5)] : bridgeMiles(level));
+export const bridgeBook = year => (daYear(year) ? "DA:W p. 169" : "W20 p. 311");
 /** What the Moot Rite needs to fill the caern: 5 Gnosis a level. */
 export const mootNeed = level => 5 * clamp(int(level), 0, 5);
 
@@ -85,6 +95,26 @@ export const OFFICES = {
   den: {label: "Den parent (keeper of the cubs)", rank: 0}
 };
 
+/**
+ * B7864: the sept positions of Dark Ages: Werewolf (pp. 169-170): the sept leader, the caern Marshall who sets the
+ * bawn patrols, the Master of the Rite, a council of elders the three consult, the Gatekeeper (chiminage, Moon Bridges,
+ * pathstones), the Wyrm Foe who leads the revel after the moot, the Talesinger and, in a large or quarrelsome sept, the
+ * Master of the Challenge. No Truthcatcher, Warder or den parent in that book. Ranks are WoDX's suggestion as above.
+ */
+export const OFFICES_DA = {
+  leader: {label: "Sept leader", rank: 3},
+  marshall: {label: "Caern Marshall (keeps the bawn)", rank: 3},
+  rite: {label: "Master of the Rite", rank: 3, auspice: "theurge"},
+  council: {label: "Council of elders", rank: 4},
+  gatekeeper: {label: "Gatekeeper", rank: 3},
+  wyrmfoe: {label: "Wyrm Foe (leads the revel)", rank: 0},
+  talesinger: {label: "Talesinger", rank: 0},
+  challenge: {label: "Master of the Challenge", rank: 0}
+};
+/** The offices a sept fills in a year: the DA:W list to 1449, the W20 one after. */
+export const officesFor = year => (daYear(year) ? OFFICES_DA : OFFICES);
+const ALL_OFFICE_KEYS = [...new Set([...Object.keys(OFFICES), ...Object.keys(OFFICES_DA)])];
+
 /** Who should be Master of the Rite: the highest-ranking Theurge among the sept's Garou. */
 export function masterOfTheRite(garou = []) {
   const t = garou.filter(g => /theurge/i.test(String(g.auspice ?? ""))).sort((a, b) => num(b.rank) - num(a.rank));
@@ -92,9 +122,9 @@ export function masterOfTheRite(garou = []) {
 }
 
 /** Office holders below the suggested rank, for a quiet note to the Storyteller. */
-export function officeNotes(caern, garou = []) {
+export function officeNotes(caern, garou = [], {year = 2000} = {}) {
   const c = normCaern(caern), out = [];
-  for ( const [k, o] of Object.entries(OFFICES) ) {
+  for ( const [k, o] of Object.entries(officesFor(year)) ) {
     const who = c.offices[k];
     if ( !who ) continue;
     const g = garou.find(x => x.id === who);
@@ -116,7 +146,7 @@ export function blankCaern() {
 export function normCaern(c = {}) {
   const b = {...blankCaern(), ...c};
   const offices = {};
-  for ( const k of Object.keys(OFFICES) ) if ( b.offices?.[k] ) offices[k] = str(b.offices[k], 120);
+  for ( const k of ALL_OFFICE_KEYS ) if ( b.offices?.[k] ) offices[k] = str(b.offices[k], 120);
   const raid = b.raid && typeof b.raid === "object"
     ? {foe: b.raid.foe === "weaver" ? "weaver" : "wyrm", strength: clamp(int(b.raid.strength) || 1, 1, 5), at: num(b.raid.at), what: str(b.raid.what, 200)} : null;
   const level = clamp(int(b.level), 0, 5);
@@ -362,6 +392,6 @@ export function describeCaern(caern, {year = 2000} = {}) {
   const head = `${c.name ?? "Caern"}: caern of ${t.label}, level ${c.level}`;
   if ( !alive(c) ) return `${head}; ${STATUS[c.status].toLowerCase()}.`;
   return `${head}${c.totem ? `, totem ${c.totem}` : ""}; ${c.sept || "no sept"}${c.garou ? ` (${c.garou} Garou)` : ""}; ${STATUS[c.status].toLowerCase()}; `
-    + `Gnosis ${c.charge}/${mootNeed(c.level)}; Gauntlet ${gauntletFor(c.level)}; Moon Bridges to ${bridgeMiles(c.level).toLocaleString("en")} miles`
+    + `Gnosis ${c.charge}/${mootNeed(c.level)}; Gauntlet ${gauntletFor(c.level)}; Moon Bridges to ${bridgeMilesFor(c.level, year).toLocaleString("en")} miles`
     + `${c.raid ? `; RAID: ${c.raid.what}` : ""}${c.ready ? "; ready to grow" : ""}.`;
 }

@@ -298,6 +298,8 @@ function woundPenalty(actor) {
     return num(actor?.system?.health?.damage?.woundpenalty);
 }
 function isVampire(actor) { return P.detectProfile(actor) === "kindred"; }
+/** B7840: a revenant family's weakness as WoDX Creation reads it ({sun, silver, frenzy...}), or null. */
+function revenantMark(actor) { try { return game.modules.get("wodx-creation")?.api?.revenant?.mark?.(actor) ?? null; } catch (e) { return null; } }
 /** Legacy soak-profile name used by the v1 rules: vampire | ghoul | mortal | supernatural. */
 function profile(actor) {
     const k = P.detectProfile(actor);
@@ -1074,7 +1076,8 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
     const rd = road(actor);
     // Merits and flaws: tags from the pool and preset, plus any the player ticked (voice, risky, first meeting, a sense)
     const ticked = TH.ticksFor(actor).filter(t => fd[`tag-${t.key}`]).map(t => t.key);
-    let tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
+    // B7841: a Willpower roll carries the willpower tag, so effects on Willpower rolls (the D'Habi weakness) count
+    let tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...(fd.attr === "special:willpower" ? ["willpower"] : []), ...ticked], { target });
     // How the character moves (WoDX Combat 3.12.0): prone helps Stealth, flying helps sight, water spoils footing
     try {
         const kinds = [pool.abilityKey === "stealth" ? "stealth" : null, fd.attr === "perception" ? "perception" : null,
@@ -2804,6 +2807,11 @@ export async function newNight({ actors } = {}) {
             }
             if (gol) await actor.setFlag(MOD, "golcondaNights", (flag(actor, "golcondaNights") ?? 0) + 1);
         }
+        // B7843: a revenant makes back one blood point a day from its own vitae (V20 p. 500), up to its pool
+        if (!vamp && !inTorpor && revenantMark(actor)) {
+            const b = blood(actor), max = num(actor.system?.advantages?.bloodpool?.max) || 10;
+            if (b.value < max) { upd["system.advantages.bloodpool.temporary"] = b.value + 1; bits.push(`the family's vitae: blood ${b.value} → ${b.value + 1} (V20 p. 500)`); }
+        }
         // Nagaraja (V20 printed p. 407): a night without flesh costs one more die off every Physical pool
         if (vamp && feedingRule(actor)?.flesh) {
             const ns = KF.nightPassed(flag(actor, "nagaraja") ?? {});
@@ -2931,16 +2939,30 @@ async function resolveHazard(actor, fd) {
         type = p === "mortal" || p === "ghoul" ? "lethal" : "aggravated";
         html += `<div class="vta-sub">${sun ? R.SUNLIGHT_INTENSITY[fd.light].label : R.FIRE_HEAT[fd.heat].label}: ${perTurn} level${perTurn === 1 ? "" : "s"} per turn, automatically successful unless soaked; soak difficulty ${diff}.</div>`;
         const canSoak = p === "vampire" || p === "ghoul" ? fort > 0 : false;
-        if (sun && !isVampire(actor)) { html += `<div class="vta-note">Sunlight does not harm the living.</div>`; return post(actor, `${actor.name}: sunlight`, html); }
-        for (let t = 1; t <= Math.max(1, fd.turns); t++) {
-            let soaked = 0;
-            if (canSoak) {
-                const s = await rollPool(fort, diff, { canBotch: false });
+        // B7842: the Khavi burn as Cainites do, but bashing, soaked with Stamina and Fortitude (V20 Dark Ages p. 454)
+        const khavi = sun && !isVampire(actor) && revenantMark(actor)?.sun === "bashing";
+        if (sun && !isVampire(actor) && !khavi) { html += `<div class="vta-note">Sunlight does not harm the living.</div>`; return post(actor, `${actor.name}: sunlight`, html); }
+        if (khavi) {
+            type = "bashing";
+            const pool = attr(actor, "stamina") + fort;
+            html += `<div class="vta-note">A Khavi: the sun burns as it does a Cainite, but the damage is bashing, soaked with Stamina ${attr(actor, "stamina")} + Fortitude ${fort} (V20 Dark Ages p. 454).</div>`;
+            for (let t = 1; t <= Math.max(1, fd.turns); t++) {
+                const s = await rollPool(pool, diff, { canBotch: false });
                 rolls.push(s.roll);
-                soaked = s.successes;
-                html += rollBlock(`Turn ${t}: Fortitude soak`, s);
-            } else html += `<div class="vta-sec">Turn ${t}: ${p === "vampire" ? "no Fortitude: cannot soak" : "mortals cannot soak fire"}</div>`;
-            levels += Math.max(0, perTurn - soaked);
+                html += rollBlock(`Turn ${t}: Stamina + Fortitude soak`, s);
+                levels += Math.max(0, perTurn - s.successes);
+            }
+        } else {
+            for (let t = 1; t <= Math.max(1, fd.turns); t++) {
+                let soaked = 0;
+                if (canSoak) {
+                    const s = await rollPool(fort, diff, { canBotch: false });
+                    rolls.push(s.roll);
+                    soaked = s.successes;
+                    html += rollBlock(`Turn ${t}: Fortitude soak`, s);
+                } else html += `<div class="vta-sec">Turn ${t}: ${p === "vampire" ? "no Fortitude: cannot soak" : "mortals cannot soak fire"}</div>`;
+                levels += Math.max(0, perTurn - soaked);
+            }
         }
         if (fd.fortBlood) html += `<div class="vta-note">The Fortitude blood auto-soak does not work against fire or sunlight.</div>`;
         if (!sun) html += `<div class="vta-note">Burns: at Mauled, Appearance –1 until healed to Bruised; at Crippled or worse, –2.</div>`;
@@ -3586,7 +3608,7 @@ const API = { menu, action, clearRetries, retryRules: RTY,
     // B7121: the Storyteller's Clear for trying again, from the Scene row of every menu
     clearTries: async () => { const k = await clearRetries(null); ui.notifications.info(k ? `Failed tries forgotten for ${k} character${k === 1 ? "" : "s"}: the next attempt is a fresh one.` : "No failed tries are remembered."); return k; }, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.121.1", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, defend: POWMOD.defendMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.123.0", npcPowers, autoPower, fortune: { left: TH.luckyLeft, use: TH.useLucky, name: TH.fortuneName, html: TH.luckyHtml }, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { absDest: ACTS.absDest, powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS).filter(k => k !== "fetish"), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

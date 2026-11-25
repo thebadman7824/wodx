@@ -47,6 +47,7 @@ import * as TownScars from "./town-scars.mjs";
 import * as SickLooks from "./sick-looks.mjs";
 import * as PowerLooks from "./power-looks.mjs";
 import * as Contagion from "./contagion.mjs";
+import * as FaeOaths from "./fae-oaths.mjs";
 import * as Power from "./power.mjs";
 import * as Herds from "./herds.mjs";
 import * as Sites from "./sites.mjs";
@@ -145,6 +146,8 @@ Hooks.once("init", () => {
   TownLooks.registerTownLookSettings();
   TownScars.registerTownScarSettings();
   Contagion.registerContagionSettings();
+  FaeOaths.registerFaeOathSettings(); // B7866: fae oaths kept by the village
+  FaeOaths.registerFaeOathHooks();
   Power.registerPowerSettings();
   Herds.registerHerdSettings();
   Sites.registerSiteSettings();
@@ -262,7 +265,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, receiveForeign: Money.receiveForeign, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), townScars: TownScars.api(), sickLooks: SickLooks.api(), powerLooks: PowerLooks.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), townScars: TownScars.api(), sickLooks: SickLooks.api(), powerLooks: PowerLooks.api(), contagion: Contagion.api(), faeOaths: FaeOaths.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     // B4861-B4866: the world's own hand (the watch, hunters, road encounters, levers)
@@ -397,6 +400,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Threads.ThreadsApp.open()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
+  tokens.tools.wodxFaeOaths = {name: "wodxFaeOaths", title: "Fae oaths kept by the village (oaths, customs, household helpers, faerie food, the retinue)", icon: "fa-solid fa-clover", order: 114.2,
+    button: true, visible: game.user.isGM, onChange: () => FaeOaths.FaeOathsApp.open()};
   tokens.tools.wodxUpkeep = {name: "wodxUpkeep", title: "Upkeep (ties that need tending, hunting grounds and heat)", icon: "fa-solid fa-hand-holding-heart", order: 121,
     button: true, visible: game.user.isGM, onChange: () => Up.upkeepChooser()};
   tokens.tools.wodxDashboard = {name: "wodxDashboard", title: "The Storyteller's dashboard (the party, clocks, open threads, consequences)", icon: "fa-solid fa-gauge", order: 117,

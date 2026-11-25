@@ -401,11 +401,13 @@
     },
     "shown": {
      "what": "a History window listing this session's edits with Undo, and a Print button"
+    },
+    "gated": {
+     "gate": "tools/gate/gatehistoryundo.mjs",
+     "step": "1. Undo in the sheet's History window puts Strength back"
     }
    },
-   "open": [
-    "gated: gatesheetextras checks History and Undo by a direct call and gatesheetv2 step 7 only finds the controls; no step drives Undo from the window"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -635,15 +637,51 @@
     },
     "shown": {
      "what": "a read-only strip at the top of the Bio tab; each part opens the Road or the Domain and fealty window in WoDX Actions"
+    },
+    "gated": {
+     "gate": "tools/gate/gatestandingstrip.mjs",
+     "step": "1. the Bio tab's strip shows the sheet's Road and opens the Road window"
     }
    },
-   "open": [
-    "gated: weekly-review-picks-1123.test.mjs checks the lines and the hook; no gate step opens a sheet and finds the strip yet"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
     2336
+   ]
+  },
+  {
+   "id": "sheets.page-two",
+   "name": "The sheet's second page: Combat, Possessions, the line's own boxes and its row of actions",
+   "module": "wodx-sheets",
+   "core": true,
+   "files": [
+    "modules/wodx-sheets/templates/page2.hbs",
+    "modules/wodx-sheets/scripts/main.mjs"
+   ],
+   "steps": {
+    "built": {
+     "pr": 1414,
+     "decisions": "B7265"
+    },
+    "wired": {
+     "reader": "modules/wodx-sheets/scripts/main.mjs:listeners"
+    },
+    "shown": {
+     "what": "the second page under the book's first on a Dark Ages vampire's sheet: Merits and Flaws, Rituals, Paths, Derangements, Combat, Possessions, History and Description, and Use a Discipline, Frenzy, Feed"
+    },
+    "gated": {
+     "gate": "tools/gate/gateplaypage.mjs",
+     "step": "4"
+    }
+   },
+   "open": [
+    "checked on the Dark Ages vampire sheet only; the other lines' second pages are checked by render in gatesheet5"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    1414
    ]
   }
  ]

@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.123.0 (Dark Ages pack totems: in the Dark Ages and the Long Night a pack's totem comes from Dark Ages: Werewolf (pp. 227-231): its own traits, bans and Background costs, Horse added, Bear refusing every Garou pack (p. 193). A totem the Dark Ages book leaves out keeps its W20 row and says so. Later ages keep W20 (B7860, B7861). The Quintessence-per-turn note now cites both pages of Dark Ages: Mage (B7862); Faerie food (Dark Ages: Fae p. 85) on the fae rolls (B7866))
+- 3.122.0 (Revenant weaknesses in rolls (B7841-B7843): the Khavi in sunlight, a revenant's nightly vitae, and the willpower tag on Willpower rolls)
 - 3.121.1 (Mockery Breeds heal: a War Wolf, Anurana, Samsa, Kerasi or Yeren on a Creature sheet regenerates a level each round of a fight as a Garou does, rolling Stamina for lethal, and the regeneration card names the breed and its W20 Book of the Wyrm page (B7820, fixes #2096))
 - 3.121.0 (The Road and the domain connect: oaths as Road of Kings Moments of Truth (B7750), willing Road Mentors (B7751), domain events on the hunt (B7752) and the domain's season turn (B7753))
 - 3.120.0 (The Dark Ages Companion's elder powers and Thaumaturgy paths (B7699, B7700); Dark Thaumaturgy, Maleficia and Striga (B7697); Demonic pacts, investments and the Supplicium (B7696); Menu entry for Dark Ages maturation (B7688); The Road of Night (B7690); The V20 Dark Ages Companion's Roads, Paths and rituals (B7701, B7703))

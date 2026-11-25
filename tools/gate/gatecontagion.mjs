@@ -13,7 +13,8 @@
  *   6. it spreads along the trade link to the clean town (a sure roll)
  *   7. the card's Undo puts both towns, the market and the crowd back
  *   8. quarantine cuts the market off; opening the gates puts it back
- *   9. a living character in the sick town catches it or throws it off, then rolls each week (M20 p. 442)
+ *   9. a living character in the sick town catches it or throws it off, then rolls each week (M20 p. 442), or each
+ *      day by DA:I p. 165 in a Dark Ages year (B7863)
  *  10. a sickness in the approval queue starts the outbreak when approved
  *  11. the windows: Sickness in the towns, the Markets window's Sickness button
  *  12. clean up
@@ -125,7 +126,11 @@ export async function run() {
       const st9 = CO.state().people[a.id] ?? null;
       const r9b = await CO.week({weeks: 1, rand: () => 0.99});
       const line9b = (r9b?.lines ?? []).find(l => l.includes(a.name)) ?? "";
-      ok("9. a character catches it or throws it off, then rolls weekly", /catches|throws it off/.test(line9) && (!st9 || /sick with plague/.test(line9b)), {first: line9, then: line9b, sick: st9});
+      // B7863: in a Dark Ages year the week is seven daily rolls by DA:I p. 165 (plague at difficulty 7)
+      const yr = Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 2000;
+      const RR = await import(`/modules/${MOD}/scripts/contagion-rules.mjs?${Date.now()}`);
+      const daOk = !st9 || !RR.daSickness(yr) || (/DA:I p\. 165/.test(line9b) && /good days? of 7/.test(line9b) && /Stamina 7/.test(line9));
+      ok("9. a character catches it or throws it off, then rolls weekly (daily by DA:I in Dark Ages years)", /catches|throws it off/.test(line9) && (!st9 || /sick with plague/.test(line9b)) && daOk, {first: line9, then: line9b, sick: st9, year: yr});
     } else { ok("9. a character catches it or throws it off, then rolls weekly", true, {skipped: "no player user in this world"}); R.notes.push("Step 9 skipped: no player user."); }
 
     // 10. The approval queue (step 9's sure rolls can carry plague to Town, so clear it first)
