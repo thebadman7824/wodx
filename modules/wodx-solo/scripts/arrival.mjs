@@ -33,7 +33,7 @@ const on = () => H.isOn() && H.get("arrive") !== false;
 /*  The seat's side                                                    */
 /* ------------------------------------------------------------------ */
 
-const sceneRow = s => ({id: s.id, name: s.name, active: !!s.active, landing: !!s.getFlag?.(MOD, "landing"), img: s.background?.src ?? s.img ?? ""});
+const sceneRow = s => ({id: s.id, name: s.name, active: !!s.active, landing: !!s.getFlag?.(MOD, "landing"), made: !!s.getFlag?.(MOD, "made"), img: s.background?.src ?? s.img ?? ""});
 
 /** The town of the chronicle in play (its manifest), or "" with none (B7565). */
 const townInPlay = () => { try { return game.modules.get("wodx-chronicle")?.api?.chronicle?.current?.()?.manifest?.town ?? ""; } catch (e) { return ""; } };

@@ -130,6 +130,9 @@ async function setup() {
   ids.reportFolder = game.folders.some(f => f.type === "JournalEntry" && f.name === "Reported problems");
   ids.landingBefore = read(MOD, "landing");
   if ( ids.landingBefore !== undefined ) await game.settings.set(MOD, "landing", scene.id);
+  // B8032: a chronicle's named landing (Rothenstein's Dolany Village) outranks the setting, so the gate's scene is
+  // flagged as the landing too, which comes first; the scene goes at the end of the run
+  await scene.setFlag(MOD, "landing", true);
   await game.settings.set(MOD, "wait", 2);
   await game.settings.set(MOD, "act", true);
   const WAIT = 2000 + 2500;
