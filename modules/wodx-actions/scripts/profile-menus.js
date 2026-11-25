@@ -624,8 +624,8 @@ export function build(ctx) {
             // 3.62.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
             const line = x => (beginner ? TR.actionLine(x.spec, x.desc) : "");
             // #2504: a player sees what fits the character; the rest waits behind Show every action
-            const facts = { text: [actor.system?.clan, actor.system?.custom?.clan, actor.system?.bloodline, actor.system?.settings?.variant, ...(actor.items ?? []).map(i => i.name)].filter(x => typeof x === "string").join(" | ") };
-            const unfit = x => !isGM && !TR.fits(x.spec, facts);
+            const facts = { text: [actor.system?.clan, actor.system?.custom?.clan, actor.system?.bloodline, actor.system?.settings?.variant, ...(actor.items ?? []).map(i => i.name), ...Object.values(actor.system?.backgrounds ?? {}).map(b => (Number(b?.value) > 0 ? b?.label ?? b?.name : "")), ...Object.keys(actor.system?.advantages ?? {}).filter(k => Number(actor.system.advantages[k]?.permanent ?? actor.system.advantages[k]?.value) > 0)].filter(x => typeof x === "string").join(" | ") };
+            const unfit = x => !isGM && !pinned.includes(x.spec) && !TR.fits(x.spec, facts);
             const hiddenN = all.filter(unfit).length;
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${unfit(x) ? ' class="vta-unfit" hidden' : ""}${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
             const front = beginner ? TR.frontRow(g).filter(x => !pinned.includes(x.spec)) : [];

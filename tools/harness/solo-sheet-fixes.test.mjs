@@ -159,7 +159,7 @@ test("#2504: a player's menu shows what fits the character, the rest behind Show
   assert.equal(T.fits("api:conditioning", {text: "Tzimisce | Dominate"}), true);
   assert.equal(T.fits("api:feed", {text: ""}), true, "an action not listed fits everyone");
   const PM = src("modules/wodx-actions/scripts/profile-menus.js");
-  assert.match(PM, /const unfit = x => !isGM && !TR\.fits\(x\.spec, facts\);/);
+  assert.match(PM, /const unfit = x => !isGM && !pinned\.includes\(x\.spec\) && !TR\.fits\(x\.spec, facts\);/);
   assert.match(PM, /Show every action \(\$\{hiddenN\} more that do not fit this character\)/);
   assert.match(src("modules/wodx-actions/styles/wodx-actions.css"), /button\.vta-unfit\[hidden\] \{ display: none !important; \}/);
 });

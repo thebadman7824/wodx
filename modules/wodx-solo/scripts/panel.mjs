@@ -182,7 +182,8 @@ export async function spendTime(userId, seconds, label = "Time spent", {maxHours
 export async function onTravelled({userId, seconds, place} = {}) {
   if ( !H.isSeat() || !userId || game.users.get(userId)?.isGM ) return null;
   const total = R.spendSeconds(seconds, R.TRIP_MAX_HOURS);
-  if ( !total ) return null;
+  // A door or a stair (a few minutes) passes on the character's own clock only; the world clock moves for a trip
+  if ( total < R.TRIP_MIN_SECONDS ) return null;
   return spendTime(userId, total, `The way to ${place || "there"}`, {maxHours: R.TRIP_MAX_HOURS, step: R.tripStep(total),
     busy: "Time is already passing, so the trip's time was not added. Let time pass again once it stops."});
 }
@@ -377,9 +378,13 @@ const ACTIONS = {
     // B8051 (#2488): a body is the character's own to lift; a companion only when the character is down or cannot
     const body = scene.tokens.get(pick);
     if ( me && pick !== me.id && !haul.fallenOf(me)?.down ) {
-      const r = await haul.take(me, body);
-      if ( r?.ok ) return;
-      ui.notifications.warn(`${me.name}: ${r?.why || "cannot take hold"}. A companion is asked instead.`);
+      // The options are read here, where reach, weight and free hands are known; the take itself goes to the seat
+      let ops = [];
+      try { ops = (haul.optionsFor?.(me) ?? []).filter(o => o.op === "take" && o.what === body?.uuid); } catch (e) { ops = []; }
+      const op = ops.find(o => o.want === "carry" && !o.disabled) ?? ops.find(o => !o.disabled);
+      if ( op ) { await haul.take(me, body, op.want); return; }
+      const why = ops[0]?.note || (haul.optionsFor?.(me) ?? []).find(o => o.op === "none")?.label || `${body?.name ?? "They"} is out of reach`;
+      ui.notifications.warn(`${me.name}: ${why}. A companion is asked instead.`);
     }
     ask("ask.carry", {tokenId: pick, sceneId: scene.id});
   },

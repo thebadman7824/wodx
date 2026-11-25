@@ -280,12 +280,12 @@ export async function answer(d, message = null) {
       await combat()?.fight?.start?.({scene, tokens: [...d.tokens, near.id], source: "world", why: "resisting the law", sides, byHand: true});
     }
     await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} resists the law.`});
-    await told(a, near && d.tokens.length ? `${a?.name ?? "You"} resists. The fight begins.` : `${a?.name ?? "You"} resists, but there is no one here to fight. The law will try again.`);
+    await told(a, near && d.tokens.length ? `${a?.name ?? "Someone"} resists. The fight begins.` : `${a?.name ?? "Someone"} resists, but there is no one here to fight. The law will try again.`);
     return "resist";
   }
   // B6667: brought out of the watch's hands for the sentence: no second arrest, and the watch stay by the condemned
   // (the Storyteller's card on their coming has Send them away)
-  if ( d.mode === "sentence" ) { await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} is brought out for the sentence.`}); await told(a, `${a?.name ?? "You"} is brought out for the sentence.`); return "yield"; }
+  if ( d.mode === "sentence" ) { await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} is brought out for the sentence.`}); await told(a, `${a?.name ?? "Someone"} is brought out for the sentence.`); return "yield"; }
   if ( d.mode === "summon" ) await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} goes to be questioned and is let go.`});
   else {
     const has = L?.state?.()?.regions?.[d.region]?.[d.actor];
@@ -298,7 +298,7 @@ export async function answer(d, message = null) {
     await sendAway(scene.id, d.tokens);
     if ( d.mode !== "summon" ) await takeAway(scene, d.token, d);
   }
-  await told(a, d.mode === "summon" ? `${a?.name ?? "You"} goes to be questioned, and is let go.` : `${a?.name ?? "You"} goes with them, and is held until the trial. The Storyteller hears the case.`);
+  await told(a, d.mode === "summon" ? `${a?.name ?? "Someone"} goes to be questioned, and is let go.` : `${a?.name ?? "Someone"} goes with them, and is held until the trial. The Storyteller hears the case.`);
   return "yield";
 }
 

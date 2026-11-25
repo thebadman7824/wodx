@@ -1226,7 +1226,7 @@ function walkRound(doc, movement, operation) {
     if ( game.user.isGM || operation?.wodxWalkRound || movement?.method !== "dragging" ) return true;
     if ( game.settings.get(MOD, "walkRound") === false ) return true;
     const tok = doc.object;
-    if ( !tok || !doc.isOwner || canvas.scene?.id !== doc.parent?.id ) return true;
+    if ( !tok || !doc.isOwner || canvas.scene?.id !== doc.parent?.id || !squareGrid() ) return true;
     if ( game.combats?.some(c => c.started && c.scene?.id === doc.parent?.id && c.combatants.some(x => x.tokenId === doc.id)) ) return true;
     const dest = movement.destination ?? {};
     if ( !Number.isFinite(dest.x) || !Number.isFinite(dest.y) ) return true;
@@ -1235,9 +1235,10 @@ function walkRound(doc, movement, operation) {
     let hit = false;
     try { hit = !!CONFIG.Canvas.polygonBackends.move.testCollision(from, to, {type: "move", mode: "any"}); } catch (e) { hit = false; }
     if ( !hit ) return true;
-    const start = cellOf(tok), goal = grid().getOffset({x: dest.x + 1, y: dest.y + 1});
     const hex = gridKind() === "hex";
-    const path = NR.findPath(start, goal, passableFor(tok), {maxNodes: 40000, neighbors: stepsFor(), heuristic: hex ? hexHeuristic(goal) : null});
+    const start = cellOf(tok), goal = grid().getOffset(hex ? to : {x: dest.x + 1, y: dest.y + 1});
+    // A bounded search, so a drop in a sealed room never holds the screen: no path means Foundry's own move
+    const path = NR.findPath(start, goal, passableFor(tok), {maxNodes: 4000, neighbors: stepsFor(), heuristic: hex ? hexHeuristic(goal) : null});
     if ( !path || path.length < 2 ) return true;
     const waypoints = (hex ? path : turnsOf(path)).slice(1).map(c => topLeftFor(tok, c));
     setTimeout(() => { doc.move(waypoints, {autoRotate: true, wodxWalkRound: true}).catch(e => console.warn(`${MOD} | walk round`, e)); }, 0);
@@ -1281,6 +1282,12 @@ function installLook() {
   const T = CONFIG.Token?.objectClass;
   if ( !T?.prototype?._onClickLeft2 || T.prototype._wodxLook ) return;
   const base = T.prototype._onClickLeft2;
+  // Foundry lets a double-click through only to a user who may view the token's actor; a player may look at anyone
+  const view = T.prototype._canView;
+  if ( typeof view === "function" ) T.prototype._canView = function (user, event) {
+    if ( user && !user.isGM && this.document?.actor && !this.document.actor.testUserPermission?.(user, "LIMITED") && this.document.visible !== false && !this.document.hidden ) return true;
+    return view.call(this, user, event);
+  };
   T.prototype._onClickLeft2 = function (event) {
     const actor = this.document?.actor;
     if ( !game.user.isGM && actor && !actor.testUserPermission?.(game.user, "LIMITED") ) { lookAt(this); return; }

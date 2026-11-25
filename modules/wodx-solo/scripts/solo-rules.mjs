@@ -199,6 +199,7 @@ export function spendSeconds(seconds = 0, maxHours = HUNT_MAX_HOURS) {
 }
 /** #2490: a trip's time on the world clock, at most a fortnight, in no more than about 60 steps so a long trip ends soon. */
 export const TRIP_MAX_HOURS = 14 * 24;
+export const TRIP_MIN_SECONDS = 10 * 60;
 export const tripStep = total => Math.max(STEP, Math.ceil((Math.round(Number(total) || 0)) / 60));
 export const STEP = 600;
 
