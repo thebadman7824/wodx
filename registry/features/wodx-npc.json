@@ -868,11 +868,13 @@
     },
     "shown": {
      "what": "past lives and teachers on the Relationships tab, and scene ideas for the Storyteller"
+    },
+    "gated": {
+     "gate": "tools/gate/gatementorgone.mjs",
+     "step": "1. the Move button on the teacher's death card puts the Mentor points on another Background"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
