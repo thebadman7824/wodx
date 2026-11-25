@@ -193,10 +193,13 @@ export function huntHours(toDawn = 0) {
   return Math.max(1, Math.min(HUNT_MAX_HOURS, h));
 }
 /** Seconds a spent stretch of time may move the clock: whole seconds, never below 0 or past HUNT_MAX_HOURS. */
-export function spendSeconds(seconds = 0) {
+export function spendSeconds(seconds = 0, maxHours = HUNT_MAX_HOURS) {
   const s = Math.round(Number(seconds) || 0);
-  return Math.max(0, Math.min(HUNT_MAX_HOURS * 3600, s));
+  return Math.max(0, Math.min(Math.max(0, Number(maxHours) || 0) * 3600, s));
 }
+/** #2490: a trip's time on the world clock, at most a fortnight, in no more than about 60 steps so a long trip ends soon. */
+export const TRIP_MAX_HOURS = 14 * 24;
+export const tripStep = total => Math.max(STEP, Math.ceil((Math.round(Number(total) || 0)) / 60));
 export const STEP = 600;
 
 /** Seconds a wait asks for. toDusk / toDawn: seconds from now to the next dusk and dawn where the character is. */

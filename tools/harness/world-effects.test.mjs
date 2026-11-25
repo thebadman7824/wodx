@@ -33,7 +33,9 @@ test("the powers the words flag but the table leaves out were each read and left
     // B7662: Creatio Ignis 5 is one thrown flame on one target (V20 Dark Ages p. 297)
     "Inferno",
     // B7699: Renew the Earthly Pleasures floods one Cainite with mortal feelings (DAC 2002 p. 89)
-    "Renew the Earthly Pleasures"];
+    "Renew the Earthly Pleasures",
+    // #2499: Plague of Beasts is a swarm's attack pool in a fight, not a change to the place (V20 Dark Ages p. 194)
+    "Plague of Beasts"];
   const unread = [...new Set(sweep.unread.map(h => h.name.replace(/^[•\s]+/, "")))];
   assert.deepEqual(unread.filter(n => !LEFT_OUT.includes(n)), [], "a new power the words flag: read it and add it to WORLD_POWERS or here");
 });

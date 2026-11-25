@@ -147,9 +147,9 @@ export async function passTime(userId, choice) {
  * B8045 (#2477): time spent on something the player did (a hunt's hours). The clock moves at once, in the usual steps
  * so the world answers between them, and nothing stops it: the time was already used.
  */
-export async function spendTime(userId, seconds, label = "Time spent") {
+export async function spendTime(userId, seconds, label = "Time spent", {maxHours = R.HUNT_MAX_HOURS, step = R.STEP, busy = "Time is already passing, so the hunt's hours were not added. Let time pass again once it stops."} = {}) {
   if ( !H.isSeat() ) return null;
-  const total = R.spendSeconds(seconds);
+  const total = R.spendSeconds(seconds, maxHours);
   if ( !total ) return null;
   // The same guards as a wait: a character on a scene, made, out of a fight, the game running
   const user = game.users.get(userId);
@@ -158,14 +158,14 @@ export async function spendTime(userId, seconds, label = "Time spent") {
   if ( making(user) ) { await tell(userId, "<p>Finish your character first. Time starts once you press This character is ready in the wizard.</p>"); return null; }
   if ( fightOn(scene.id).length ) { await tell(userId, "<p>Not while a fight is running: the clock stays where it is.</p>"); return null; }
   if ( game.paused ) { await tell(userId, "<p>The game is paused, so the clock stays where it is.</p>"); return null; }
-  if ( waiting ) { await tell(userId, "<p>Time is already passing, so the hunt's hours were not added. Let time pass again once it stops.</p>"); return null; }
+  if ( waiting ) { await tell(userId, `<p>${esc(busy)}</p>`); return null; }
   const what = String(label ?? "Time spent").slice(0, 80);
   waiting = {userId, choice: "spend"};
   let passed = 0;
   try {
-    for ( const step of R.chunks(total) ) {
-      await game.time.advance(step);
-      passed += step;
+    for ( const n of R.chunks(total, step) ) {
+      await game.time.advance(n);
+      passed += n;
       await sleep(400);
       if ( !H.isSeat() ) break;
     }
@@ -173,6 +173,18 @@ export async function spendTime(userId, seconds, label = "Time spent") {
   await tell(userId, `<p>${esc(what)}: ${esc(R.span(passed))} passed.</p>`);
   await H.log({kind: "note", source: MOD, title: what, note: `${R.span(passed)} passed`});
   return {passed};
+}
+
+/**
+ * #2490: a trip by the travel window or a Way puts its time on the traveller's own clock (WoDX Storyteller). With one
+ * person playing there is one clock, so the seat moves the world clock on by the trip's time, with a wait's guards.
+ */
+export async function onTravelled({userId, seconds, place} = {}) {
+  if ( !H.isSeat() || !userId || game.users.get(userId)?.isGM ) return null;
+  const total = R.spendSeconds(seconds, R.TRIP_MAX_HOURS);
+  if ( !total ) return null;
+  return spendTime(userId, total, `The way to ${place || "there"}`, {maxHours: R.TRIP_MAX_HOURS, step: R.tripStep(total),
+    busy: "Time is already passing, so the trip's time was not added. Let time pass again once it stops."});
 }
 
 /** Pause the game, or start it again. */
@@ -449,6 +461,7 @@ export function registerPanelSettings() {
 export function installPanel(helpers) {
   H = helpers;
   game.socket.on(SOCKET, onSocket);
+  Hooks.on("wodxTravelled", p => { onTravelled(p).catch(e => console.error(`${MOD} | trip time`, e)); });
   Hooks.on("pauseGame", () => { if ( foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered ) SoloPanel.open(); });
   Hooks.on("getSceneControlButtons", controls => {
     const tokens = controls.tokens ?? controls.token;
