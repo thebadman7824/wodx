@@ -46,3 +46,23 @@ test("#2500: a carried light must be in the inventory (the Storyteller may light
   assert.match(CA, /filter\(k => game\.user\.isGM \|\| held\.includes\(k\.id\)\)/);
   assert.match(CA, /No light in the inventory/);
 });
+
+test("#2482: the Storyteller's cards can be cleared, lose their dead chat controls, and older cards can be pressed", async () => {
+  const R = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+  const out = R.stripCardControls('<header><a class="message-delete" data-action="deleteMessage"><i class="fa-solid fa-trash"></i></a></header><button class="vta-btn">Go</button>');
+  assert.doesNotMatch(out, /fa-trash|message-delete/);
+  assert.match(out, /<button class="vta-btn">Go<\/button>/);
+  const ST = src("modules/wodx-solo/scripts/st-tools.mjs");
+  assert.match(ST, /data-action="clear"><i class="fa-solid fa-trash"><\/i> Clear the list/);
+  assert.match(ST, /actions: \{press: StEyes\.#onPress, clear: StEyes\.#onClear\}/);
+  assert.match(ST, /ask\("ask\.st\.eyes", \{since: clearedAt\}\)/);
+  assert.match(ST, /Number\(m\.timestamp \?\? 0\) > Number\(since \|\| 0\)/);
+  assert.match(ST, /if \( !el \) \(\{el, spare\} = await drawnButton\(msg, pick\)\);/);
+});
+
+test("#2477: spent time keeps the guards a wait has", () => {
+  const P = src("modules/wodx-solo/scripts/panel.mjs");
+  const fn = P.slice(P.indexOf("export async function spendTime("), P.indexOf("/** Pause the game, or start it again. */"));
+  for ( const g of [/placeOf\(user\)/, /making\(user\)/, /fightOn\(scene\.id\)\.length/, /game\.paused/, /if \( waiting \)/] ) assert.match(fn, g);
+  assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:giveBlood": "Give a point of your vitae/);
+});

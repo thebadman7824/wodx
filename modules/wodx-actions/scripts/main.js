@@ -1907,7 +1907,7 @@ function huntTime(hours) {
     const solo = game.modules.get("wodx-solo");
     let moved = false;
     try { if (solo?.active && solo.api?.isOn?.() && solo.api.panel?.spend) { solo.api.panel.spend(h * 3600, "Hunting"); moved = true; } } catch (e) { console.warn("WoDX | hunt time", e); }
-    return `<div class="vta-note">The hunt took ${h} hour${h === 1 ? "" : "s"}${moved ? ": the clock moves on by that much." : "."}</div>`;
+    return `<div class="vta-note">The hunt took ${h} hour${h === 1 ? "" : "s"}${moved ? ". The seat moves the clock on by that much, and says so in a note." : "."}</div>`;
 }
 
 /** The hunt's pool and difficulty from the window's choices, and each change by name (for the odds and the card). */
@@ -2063,7 +2063,7 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
             const own = nt.filter(x => !auto.includes(x) && !["animal", "kindred", "vampire"].includes(x) || KF.parseTags(flag(vessel, "vesselTags") ?? []).includes(x));
             if (own.join() !== KF.parseTags(flag(vessel, "vesselTags") ?? []).join()) await setFlag(vessel, "vesselTags", own.length ? own : null);
         }
-        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks,
+        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: num(fd.cold), rolls, state: fd.vstate, drinks: num(fd.drinks),
             rule, fits: rule?.palate ? !!fd.fits : true, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering,
             flesh: num(fd.flesh), tags: vessel ? KF.parseTags(fd.vtags) : [] });
         fed.html += await leaveSin(actor, fd, fed, vessel?.name ?? "a vessel");

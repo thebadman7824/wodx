@@ -207,7 +207,7 @@ test("#2474: Who they are asks each line's identity, and a Dark Ages Cainite pic
   assert.deepEqual(W.identityFor("Mortal").map(f => f.key), ["concept", "nature", "demeanor"]);
   assert.ok(W.ROAD_LINES.includes("vtda20") && !W.ROAD_LINES.includes("v20"));
   const src = readFileSync(join(root, "modules/wodx-creation/scripts/wizard.mjs"), "utf8");
-  assert.match(src, /"flags\.wodx-actions\.road": \{key: k, path: path \|\| null\}, "system\.advantages\.path\.custom"/, "the same write as WoDX Actions' Road and Path");
+  assert.match(src, /"flags\.wodx-actions\.road": \{key: k, path: path \|\| null\}, "system\.advantages\.path\.label": "custom", "system\.advantages\.path\.custom"/, "the same write as WoDX Actions' Road and Path");
 });
 
 test("#2501, #2479: a solo sheet is unfinished until the player says it is ready; others never are", () => {

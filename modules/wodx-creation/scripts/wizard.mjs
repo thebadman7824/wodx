@@ -39,7 +39,7 @@ let ROADS = null;
 const loadRoads = () => ROADS ??= fetch("modules/wodx-actions/data/roads-daw.json").then(r => (r.ok ? r.json() : null)).catch(() => null)
   .then(d => { if ( !d ) ROADS = null; return d; });
 /** The sheet's own choice lists (the system's listData: tribes, kiths, creeds...), for the fields it keeps as list keys. */
-const loadLists = actor => import(`/systems/${game.system.id}/module/scripts/select-helpers.js`).then(m => m.default.SetupItem(actor, true)).catch(e => { console.warn(`${MODULE_ID} | lists`, e); return {}; });
+const loadLists = actor => import(foundry.utils.getRoute(`systems/${game.system.id}/module/scripts/select-helpers.js`)).then(m => m.default.SetupItem(actor, true)).catch(e => { console.warn(`${MODULE_ID} | lists`, e); return {}; });
 const homeRegion = () => {
   try { return chron()?.chronicle?.current?.()?.manifest?.homeland || chron()?.world?.homeland?.() || ""; } catch (e) { return ""; }
 };
@@ -170,7 +170,7 @@ export class WizardApp extends ApplicationV2 {
     this.element.querySelector("select[name=who-road]")?.addEventListener("change", async ev => {
       const [k, path] = String(ev.target.value).split("|");
       // Choose… clears the Road again
-      if ( !k ) { await this.actor.update({"flags.wodx-actions.-=road": null}); return this.render(); }
+      if ( !k ) { await this.actor.update({"flags.wodx-actions.-=road": null, "system.advantages.path.custom": ""}); return this.render(); }
       const r = this.roads?.roads?.[k];
       if ( !r ) return;
       // The same write as WoDX Actions' Road and Path (kindred.js setRoad), so sins, frenzy and the sheet follow it
@@ -307,11 +307,14 @@ export class WizardApp extends ApplicationV2 {
       }
       const v = foundry.utils.getProperty(a, f.path) ?? "";
       if ( f.list ) {
-        const map = this.lists?.[f.list] ?? null, entries = map ? Object.entries(map) : [];
-        if ( !entries.length ) return `<div class="form-group"><label>${esc(f.label)}</label><span>${esc(v ? game.i18n?.localize?.(v) ?? v : "Not chosen yet")}</span></div>`;
+        // the sheet's own "custom" choice needs its name typed on the sheet, so the wizard leaves it out
+        const map = this.lists?.[f.list] ?? null, entries = map ? Object.entries(map).filter(([k]) => k !== "custom") : [];
+        if ( entries.length ) {
         const has = entries.some(([k]) => k === v);
         return `<div class="form-group"><label>${esc(f.label)}</label><select name="who-list" data-path="${esc(f.path)}" data-fixed>${has ? "" : `<option value="${esc(v)}" selected>${esc(v ? game.i18n?.localize?.(v) ?? v : "Choose…")}</option>`}${
           entries.map(([k, l]) => `<option value="${esc(k)}" ${k === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>`;
+        }
+        // no list to hand (it did not load): typed, as before
       }
       return `<div class="form-group"><label>${esc(f.label)}</label><input type="text" name="who-text" data-path="${esc(f.path)}" value="${esc(v)}" maxlength="80"></div>`;
     };

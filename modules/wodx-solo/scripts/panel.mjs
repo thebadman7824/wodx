@@ -151,7 +151,14 @@ export async function spendTime(userId, seconds, label = "Time spent") {
   if ( !H.isSeat() ) return null;
   const total = R.spendSeconds(seconds);
   if ( !total ) return null;
-  if ( waiting ) { await tell(userId, "<p>Time is already passing.</p>"); return null; }
+  // The same guards as a wait: a character on a scene, made, out of a fight, the game running
+  const user = game.users.get(userId);
+  const {actor, scene} = placeOf(user);
+  if ( !actor || !scene ) { await tell(userId, "<p>Your character is on no scene, so time cannot pass for them.</p>"); return null; }
+  if ( making(user) ) { await tell(userId, "<p>Finish your character first. Time starts once you press This character is ready in the wizard.</p>"); return null; }
+  if ( fightOn(scene.id).length ) { await tell(userId, "<p>Not while a fight is running: the clock stays where it is.</p>"); return null; }
+  if ( game.paused ) { await tell(userId, "<p>The game is paused, so the clock stays where it is.</p>"); return null; }
+  if ( waiting ) { await tell(userId, "<p>Time is already passing, so the hunt's hours were not added. Let time pass again once it stops.</p>"); return null; }
   const what = String(label ?? "Time spent").slice(0, 80);
   waiting = {userId, choice: "spend"};
   let passed = 0;
@@ -313,7 +320,12 @@ const ACTIONS = {
     if ( pick === "hunt" ) {
       const {scene} = placeOf(game.user);
       let hours = 3;
-      try { hours = R.huntHours((await sunFrom(scene)).toDawn); } catch (e) { /* no calendar: three hours */ }
+      try {
+        const sun = await sunFrom(scene);
+        // by day (dawn comes before dusk) a vampire does not hunt
+        if ( sun.toDusk < sun.toDawn ) return ui.notifications.warn("It is day. Hunting waits for dusk.");
+        hours = R.huntHours(sun.toDawn);
+      } catch (e) { /* no calendar: three hours */ }
       return wa.hunt({actor: me, hours});
     }
     if ( pick ) { ask("ask.time", {choice: pick}); ui.notifications.info(`${R.WAITS[pick].label}.`); }

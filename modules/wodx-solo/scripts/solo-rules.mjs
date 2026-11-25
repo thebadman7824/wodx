@@ -179,6 +179,8 @@ export const WAITS = {
   dawn: {label: "Wait until dawn", to: "dawn", stops: ["fight", "paused", "word", "newcomer"]},
   day: {label: "Sleep the day", to: "dusk", stops: ["fight", "paused"], sleep: true}
 };
+/** B8035 (#2501): a sheet the arrival makes now waits for the wizard's Ready button; older sheets carry no mark. */
+export const READY_MARK = 1;
 export const MAX_WAIT = 36 * 3600;
 
 /* B8045 (#2477): hunting is one of the ways a night passes. The hunt rolls an hour at a time until prey is caught,
@@ -406,6 +408,12 @@ export function xpAmount(v) {
 export const xpNote = note => (String(note ?? "").trim().slice(0, 100) || "Given with the Storyteller tools");
 
 export const EYES_CAP = 60;
+/** B8050 (#2482): a chat card's header controls (delete, menu) taken out of its html, for a list where they cannot work. */
+export function stripCardControls(html = "") {
+  return String(html ?? "").replace(/<a\b[^>]*\b(?:message-delete|chat-control|message-control)\b[^>]*>[\s\S]*?<\/a>/gi, "")
+    .replace(/<button\b[^>]*\b(?:message-delete|chat-control|message-control)\b[^>]*>[\s\S]*?<\/button>/gi, "")
+    .replace(/<a\b[^>]*data-action="(?:deleteMessage|expandRoll|contextMenu)"[^>]*>[\s\S]*?<\/a>/gi, "");
+}
 /** Keep the newest cards, one per message, at most EYES_CAP. */
 export function addEyes(list = [], card, cap = EYES_CAP) {
   const out = (list ?? []).filter(c => c && c.id !== card?.id);
@@ -535,8 +543,6 @@ export const SIGHT_SQUARES = 6;
 export const sightRange = (gridDistance = 1) => Math.max(1, Math.round(SIGHT_SQUARES * (Number(gridDistance) > 0 ? Number(gridDistance) : 1) * 10) / 10);
 
 /** The data for the lone player's new character. The seat makes it; the player owns it, and its token is linked. */
-/** B8035 (#2501): a sheet the arrival makes now waits for the wizard's Ready button; older sheets carry no mark. */
-export const READY_MARK = 1;
 export function newCharacterData({name, line, userId, at = 0} = {}) {
   const L = arrivalLine(line) ?? arrivalLine("mortal");
   const n = arrivalName(name);

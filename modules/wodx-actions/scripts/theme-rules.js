@@ -36,7 +36,7 @@ export const INTENTS = [
 /** Per line: each intent's buttons, most used first; "scene" is the strip at the foot of the menu. */
 export const MENU_PLAN = {
     kindred: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise", "api:infernalFlame"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:giveBlood", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise", "api:infernalFlame"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
         recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA", "api:maturation"],
         st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent", "api:infernal"],
@@ -158,6 +158,7 @@ export const DESC = {
     "api:seduction": "Seduce, charm or beguile: the social system, step by step",
     "api:hunt": "Hunt for a vessel in the domain: the hunting roll for the place and the method",
     "api:feed": "Drink from the targeted token: blood gained, harm to the vessel",
+    "api:giveBlood": "Give a point of your vitae to the mortal, ghoul or animal you target, next to you",
     "api:spendBlood": "Spend blood to heal, raise an Attribute or wake by day",
     "api:bloodOath": "Bind or be bound: a step of the blood oath",
     "api:diablerie": "Drink a Cainite's soul: each step of diablerie",
@@ -573,6 +574,7 @@ export const COST = {
     "api:withPerson": "Costs nothing, unless you use a power.",
     "api:useDiscipline": "Blood or Willpower when the power asks for it.",
     "api:feed": "Gains blood. The vessel may be hurt.",
+    "api:giveBlood": "Spends a blood point. The drinker takes a step toward the Blood Oath.",
     "api:hunt": "Takes time in the night.",
     "api:spendBlood": "Spends blood.",
     "uses:willpower": "Spends Willpower.",
