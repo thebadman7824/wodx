@@ -143,6 +143,31 @@ export async function passTime(userId, choice) {
   return {passed, why};
 }
 
+/**
+ * B8045 (#2477): time spent on something the player did (a hunt's hours). The clock moves at once, in the usual steps
+ * so the world answers between them, and nothing stops it: the time was already used.
+ */
+export async function spendTime(userId, seconds, label = "Time spent") {
+  if ( !H.isSeat() ) return null;
+  const total = R.spendSeconds(seconds);
+  if ( !total ) return null;
+  if ( waiting ) { await tell(userId, "<p>Time is already passing.</p>"); return null; }
+  const what = String(label ?? "Time spent").slice(0, 80);
+  waiting = {userId, choice: "spend"};
+  let passed = 0;
+  try {
+    for ( const step of R.chunks(total) ) {
+      await game.time.advance(step);
+      passed += step;
+      await sleep(400);
+      if ( !H.isSeat() ) break;
+    }
+  } finally { waiting = null; }
+  await tell(userId, `<p>${esc(what)}: ${esc(R.span(passed))} passed.</p>`);
+  await H.log({kind: "note", source: MOD, title: what, note: `${R.span(passed)} passed`});
+  return {passed};
+}
+
 /** Pause the game, or start it again. */
 export async function togglePause(userId) {
   if ( !H.isSeat() ) return null;
@@ -228,6 +253,7 @@ export async function setOption(userId, key, value) {
 const SEAT = {
   "ask.options": async p => { for ( const [k, v] of Object.entries(p.values ?? {}) ) await setOption(p.userId, k, v); },
   "ask.time": p => passTime(p.userId, p.choice),
+  "ask.spend": p => spendTime(p.userId, p.seconds, p.label),
   "ask.pause": p => togglePause(p.userId),
   "ask.stuck": p => unstick(p.userId, p.fix),
   "ask.curtain": p => curtain(p.userId)
@@ -279,7 +305,17 @@ async function choose(title, choices, intro = "") {
 const ACTIONS = {
   next() { ask("ask.time", {choice: R.NEXT.wait}); ui.notifications.info(`${R.NEXT.label} ${R.NEXT.hint}`); },
   async time() {
-    const pick = await choose("Let time pass", R.WAITS, "The clock moves ten minutes at a time and stops if something happens.");
+    // B8045 (#2477): a vampire can spend the night hunting, which moves the clock by the hours the hunt takes
+    const me = characterOf(game.user), wa = game.wodxActions;
+    const hunts = !!(me && wa?.hunt && wa.isVampire?.(me));
+    const choices = hunts ? {...R.WAITS, hunt: R.HUNT_CHOICE} : R.WAITS;
+    const pick = await choose("Let time pass", choices, "The clock moves ten minutes at a time and stops if something happens.");
+    if ( pick === "hunt" ) {
+      const {scene} = placeOf(game.user);
+      let hours = 3;
+      try { hours = R.huntHours((await sunFrom(scene)).toDawn); } catch (e) { /* no calendar: three hours */ }
+      return wa.hunt({actor: me, hours});
+    }
     if ( pick ) { ask("ask.time", {choice: pick}); ui.notifications.info(`${R.WAITS[pick].label}.`); }
   },
   travel() {
@@ -403,5 +439,5 @@ export function installPanel(helpers) {
   if ( !game.user.isGM && H.isOn() && H.get("panel") !== false ) setTimeout(() => SoloPanel.open(), 1000);
 }
 
-export const panelApi = {open: () => SoloPanel.open(), ask, passTime, togglePause, unstick, curtain, setOption, busy: () => waiting};
+export const panelApi = {open: () => SoloPanel.open(), ask, passTime, spend: (seconds, label) => ask("ask.spend", {seconds, label}), togglePause, unstick, curtain, setOption, busy: () => waiting};
 export {ask, SOCKET};

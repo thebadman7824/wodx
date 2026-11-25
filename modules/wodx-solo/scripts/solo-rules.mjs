@@ -180,6 +180,21 @@ export const WAITS = {
   day: {label: "Sleep the day", to: "dusk", stops: ["fight", "paused"], sleep: true}
 };
 export const MAX_WAIT = 36 * 3600;
+
+/* B8045 (#2477): hunting is one of the ways a night passes. The hunt rolls an hour at a time until prey is caught,
+   and the clock then moves by the hours it took. */
+export const HUNT_CHOICE = {label: "Hunt the rest of the night", hint: "Roll an hour at a time until you catch prey or dawn comes; the clock moves by the hours used."};
+export const HUNT_MAX_HOURS = 12;
+/** Whole hours a hunt may use before dawn: at least one, at most HUNT_MAX_HOURS. */
+export function huntHours(toDawn = 0) {
+  const h = Math.floor((Number(toDawn) || 0) / 3600);
+  return Math.max(1, Math.min(HUNT_MAX_HOURS, h));
+}
+/** Seconds a spent stretch of time may move the clock: whole seconds, never below 0 or past HUNT_MAX_HOURS. */
+export function spendSeconds(seconds = 0) {
+  const s = Math.round(Number(seconds) || 0);
+  return Math.max(0, Math.min(HUNT_MAX_HOURS * 3600, s));
+}
 export const STEP = 600;
 
 /** Seconds a wait asks for. toDusk / toDawn: seconds from now to the next dusk and dawn where the character is. */
