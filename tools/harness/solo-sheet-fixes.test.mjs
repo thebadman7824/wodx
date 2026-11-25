@@ -207,6 +207,8 @@ test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark 
   assert.deepEqual(TR.stepOf(dark, {successes: 0}), [{kind: "pool", key: "bloodpool", points: -2}]);
   assert.deepEqual(TR.stepOf(dark, {successes: 1}), []);
   assert.match(src("modules/wodx-actions/scripts/turns.js"), /const levels = step\.levels === "counter" \? n\(rec\.counter\?\.value\)/);
+});
+
 test("#2506 desk pick: a world setting makes every study twice or four times as fast", async () => {
   const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
   const p = {kind: "ability", label: "Melee", key: "melee", current: 1, next: 2};
