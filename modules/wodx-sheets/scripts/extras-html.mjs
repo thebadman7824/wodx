@@ -7,10 +7,17 @@ import { CONCEAL, TIE_ROLES } from "./extras-rules.mjs";
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const searchBox = (target, placeholder) => `<input type="search" class="wodx-search" data-search="${esc(target)}" placeholder="${esc(placeholder)}" aria-label="${esc(placeholder)}" autocomplete="off" spellcheck="false">`;
 
+/** #2508: a condition on the strip says what it does: on hover, on focus and to a screen reader. */
+export function condHtml(c) {
+  const name = typeof c === "string" ? c : String(c?.name ?? "");
+  const what = typeof c === "string" ? "" : [c?.summary, c?.source].filter(Boolean).join(" ");
+  if ( !what ) return `<span class="wodx-cond">${esc(name)}</span>`;
+  return `<span class="wodx-cond" tabindex="0" data-tooltip="${esc(what)}" aria-label="${esc(`${name}: ${what}`)}">${esc(name)} <i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>`;
+}
 /** The strip across the top of every tab. */
 export function stripHtml(view) {
   const cells = view.cells.map(c => `<div class="wodx-strip-cell${c.warn ? " warn" : ""}" data-key="${esc(c.key)}"><span class="wodx-strip-label">${esc(c.label)}</span><span class="wodx-strip-val">${esc(c.text)}</span></div>`).join("");
-  const conds = view.conditions.length ? `<div class="wodx-strip-conds">${view.conditions.map(c => `<span class="wodx-cond">${esc(c)}</span>`).join("")}</div>` : "";
+  const conds = view.conditions.length ? `<div class="wodx-strip-conds">${view.conditions.map(condHtml).join("")}</div>` : "";
   return `<div class="wodx-strip" role="status" aria-label="In play">${cells}${conds}</div>`;
 }
 

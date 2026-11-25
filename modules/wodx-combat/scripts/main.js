@@ -742,6 +742,9 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
         return `<div class="form-group vtc-kind" data-kinds="${bo.kinds.join(" ")}"><label>${bo.label}${extra} [${r.ok ? r.value : "—"}]</label>
           <input type="number" name="boost_${bo.id}" value="0" min="0" max="${bo.max}" style="width:4em"/></div>`;
     }).join("");
+    // #2509: Aim at names the part and sets the targeting size from it, so Targeting shows only when there are no parts
+    const aim = aimHtml(target);
+    const aimField = aim ? `${aim}<input type="hidden" name="targeting" value="none"/>` : "";
     return `
 <form class="vtc-form">
   <p class="vtc-head"><b>${attacker.name}</b> attacks <b>${target ? target.name : "(no target)"}</b></p>
@@ -755,8 +758,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
   <fieldset><legend>Attack</legend>
     <div class="form-group"><label>Weapon</label>${weapons.length > 5 ? searchBox("select[name=weapon]", "Search weapons…", "Search weapons") : ""}<select name="weapon">${wOpts}</select></div>
     <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(attacker), "normal")}</select></div>
-    <div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>
-    ${aimHtml(target)}
+    ${aimField || `<div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>`}
     <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
     <div class="form-group"><label>Position</label><select name="flank" data-fixed>
        <option value="auto" selected>Automatic: from the tokens' facing</option><option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
@@ -1861,7 +1863,7 @@ function aimHtml(target) {
     const parts = b ? BodyRules.aimOptions(b) : [];
     if (!parts.length) return "";
     const size = { medium: "+1", small: "+2", precise: "+3" };
-    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">No part (the targeting size, or where it lands)</option>${parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("")}</select></div>`;
+    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">No part (the blow lands where it falls)</option>${parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("")}</select></div>`;
 }
 
 function attackCard(c) {

@@ -1246,6 +1246,50 @@ function walkRound(doc, movement, operation) {
 }
 Hooks.on("preMoveToken", walkRound);
 
+/* ------------------------------------------------------------------ */
+/*  #2508: a player's double-click on someone else's token              */
+/* ------------------------------------------------------------------ */
+
+/** What a player can see of a token they cannot open: its name, how hurt it looks, and its conditions with what they do. */
+export function lookCard(tok) {
+  const doc = tok?.document ?? tok, actor = doc?.actor;
+  const name = doc?.name || "Someone";
+  const rows = [];
+  try {
+    const w = actor?.system?.health?.damage?.woundlevel;
+    if ( w ) rows.push(`<p><b>How hurt they look:</b> ${esc(game.i18n.localize(w))}</p>`);
+  } catch (e) { /* no health */ }
+  const conds = [];
+  try { for ( const c of chron()?.conditions?.conditionsOf?.(actor) ?? [] ) conds.push({name: c.name, what: c.summary ?? ""}); } catch (e) { /* no Chronicle */ }
+  try {
+    for ( const id of actor?.statuses ?? [] ) {
+      if ( String(id).startsWith("wodx-") ) continue;
+      const fx = (CONFIG.statusEffects ?? []).find(e => e.id === id);
+      if ( fx ) conds.push({name: game.i18n.localize(fx.name ?? fx.label ?? id), what: fx.description ? game.i18n.localize(fx.description) : ""});
+    }
+  } catch (e) { /* no statuses */ }
+  rows.push(conds.length ? `<p><b>Conditions:</b></p><ul>${conds.map(c => `<li><b>${esc(c.name)}</b>${c.what ? `: ${esc(c.what)}` : ""}</li>`).join("")}</ul>` : "<p>No conditions you can see.</p>");
+  rows.push(`<p class="hint">Target them (T) for the WoDX Actions on them: speak, aim, feed, carry.</p>`);
+  return {name, html: rows.join("")};
+}
+function lookAt(tok) {
+  const {name, html} = lookCard(tok);
+  return foundry.applications.api.DialogV2.prompt({window: {title: name}, classes: ["wodx-dialog", "wnpc-look"], content: html, ok: {label: "Close"}, rejectClose: false}).catch(() => null);
+}
+/** A double-click that would do nothing (no right to open the sheet) shows the look card instead. */
+function installLook() {
+  const T = CONFIG.Token?.objectClass;
+  if ( !T?.prototype?._onClickLeft2 || T.prototype._wodxLook ) return;
+  const base = T.prototype._onClickLeft2;
+  T.prototype._onClickLeft2 = function (event) {
+    const actor = this.document?.actor;
+    if ( !game.user.isGM && actor && !actor.testUserPermission?.(game.user, "LIMITED") ) { lookAt(this); return; }
+    return base.call(this, event);
+  };
+  T.prototype._wodxLook = true;
+}
+Hooks.once("ready", installLook);
+
 /* Phase 7c: routines, places and reactions, built with this module's grid helpers */
 const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, grid, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,
   hexHeuristic, cellsFor, walk, approach, yardsBetween, obvious, hiddenByObfuscate});

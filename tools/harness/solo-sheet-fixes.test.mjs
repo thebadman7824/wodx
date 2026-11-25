@@ -114,3 +114,40 @@ test("#2492: a player's dragged token walks round a wall on the NPCs' path finde
   assert.match(fn, /if \( !path \|\| path\.length < 2 \) return true;/, "no way round: Foundry's own move");
   assert.match(M, /register\(MOD, "walkRound", \{[\s\S]{0,400}scope: "client"/);
 });
+
+test("#2509: Aim at replaces Targeting when the target has parts to aim at", () => {
+  const M = src("modules/wodx-combat/scripts/main.js");
+  assert.match(M, /const aimField = aim \? `\$\{aim\}<input type="hidden" name="targeting" value="none"\/>` : "";/);
+  assert.match(M, /\$\{aimField \|\| `<div class="form-group"><label>Targeting<\/label>/);
+});
+
+test("#2508: conditions say what they do, on the sheet and on a look at someone else's token", async () => {
+  const X = await import(pathToFileURL(join(root, "modules/wodx-sheets/scripts/extras-html.mjs")));
+  const h = X.condHtml({name: "Held", summary: "Attacks against them gain two dice.", source: "V20 Dark Ages p. 348"});
+  assert.match(h, /data-tooltip="Attacks against them gain two dice\. V20 Dark Ages p\. 348"/);
+  assert.match(h, /aria-label="Held: /);
+  assert.equal(X.condHtml("Prone"), '<span class="wodx-cond">Prone</span>');
+  const N = src("modules/wodx-npc/scripts/main.mjs");
+  assert.match(N, /if \( !game\.user\.isGM && actor && !actor\.testUserPermission\?\.\(game\.user, "LIMITED"\) \) \{ lookAt\(this\); return; \}/);
+});
+
+test("#2510: the time dial puts noon at the top and midnight at the foot", async () => {
+  const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/time-dial-rules.mjs")));
+  assert.equal(D.dialAngle(12), 0);
+  assert.equal(Math.abs(D.dialAngle(0)), 180);
+  assert.equal(D.dialAngle(18), 90);
+  const v = D.dialView({hour: 22, minute: 0, isNight: true, moon: {name: "Full Moon"}, timeLabel: "22:00"});
+  assert.equal(v.icon, "fa-moon");
+  assert.match(v.title, /22:00, night; the moon: full moon/);
+  assert.match(src("modules/wodx-chronicle/scripts/main.mjs"), /installTimeDial\(\);/);
+});
+
+test("#2506: a player may ask for a trait at once, and the Storyteller's approval grants it with no study", () => {
+  const L = src("modules/wodx-creation/scripts/learn.mjs");
+  assert.match(L, /Ask the Storyteller to let it come at once, with no study/);
+  assert.match(L, /if \( result\.waive \) return \{instant: true\};/);
+  assert.match(L, /and the Storyteller finds one, or meet someone who knows it and ask again/);
+  const X = src("modules/wodx-creation/scripts/xp.mjs");
+  assert.match(X, /if \( p\.instant \) return false;/, "never approved on its own as a small spend");
+  assert.match(X, /spend\(actor, entry\.data\.purchase, \{by: game\.user\.name, waive: !!entry\.data\.purchase\?\.instant\}\)/);
+});
