@@ -233,6 +233,18 @@ export const TARGETING = {
     precise: { label: "Precise (eye, heart, ring) +3 diff, +2 dmg", diff: 3, dmg: 2 }
 };
 
+/**
+ * #2509: Aim at an item the target holds, by the book's sizes (VtDA20 p. 346): a shield or sword is medium, a knife
+ * small, a ring precise. The blow strikes the item, so it takes the size's difficulty and damage but no hit location.
+ */
+export const HELD_AIMS = [
+    { id: "held:medium", size: "medium", label: "A large item they hold, like a shield or sword (+1 diff)" },
+    { id: "held:small", size: "small", label: "A small item they hold, like a knife (+2 diff, +1 dmg)" },
+    { id: "held:precise", size: "precise", label: "A tiny item they hold, like a ring (+3 diff, +2 dmg)" }
+];
+/** The targeting size for an Aim at choice that names a held item, or null for a part or nothing. */
+export const heldAim = (aim) => HELD_AIMS.find(h => h.id === String(aim ?? ""))?.size ?? null;
+
 /** Close combat maneuvers that modify a weapon attack (VtDA20 p. 346-347). */
 export const MANEUVERS = {
     normal: { label: "Normal attack", diff: 0, dmg: 0, dice: 0 },

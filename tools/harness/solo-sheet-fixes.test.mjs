@@ -115,10 +115,18 @@ test("#2492: a player's dragged token walks round a wall on the NPCs' path finde
   assert.match(M, /register\(MOD, "walkRound", \{[\s\S]{0,400}scope: "client"/);
 });
 
-test("#2509: Aim at replaces Targeting when the target has parts to aim at", () => {
+test("#2509: Aim at is the one control, with an item they hold; Targeting is gone", async () => {
   const M = src("modules/wodx-combat/scripts/main.js");
-  assert.match(M, /const aimField = aim \? `\$\{aim\}<input type="hidden" name="targeting" value="none"\/>` : "";/);
-  assert.match(M, /\$\{aimField \|\| `<div class="form-group"><label>Targeting<\/label>/);
+  assert.match(M, /const aimField = `\$\{aimHtml\(target\)\}<input type="hidden" name="targeting" value="none"\/>`;/);
+  assert.doesNotMatch(M, /<label>Targeting<\/label>/, "no Targeting select left");
+  assert.match(M, /<optgroup label="An item they hold">/);
+  assert.match(M, /if \(hit && fd\.aimType === "item"\)/, "an item aimed at has no hit location");
+  const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")));
+  assert.equal(R.heldAim("held:medium"), "medium");
+  assert.equal(R.heldAim("held:precise"), "precise");
+  assert.equal(R.heldAim("head"), null);
+  assert.equal(R.heldAim(""), null);
+  for ( const h of R.HELD_AIMS ) assert.ok(R.TARGETING[h.size], `${h.id} has a book size`);
 });
 
 test("#2508: conditions say what they do, on the sheet and on a look at someone else's token", async () => {
