@@ -48,10 +48,17 @@ Write-Host "Starting the Storyteller's seat (a hidden browser signed in as the S
 $seatProc = Start-Process -FilePath "node" -ArgumentList "`"$seat`" --url https://localhost:$Port --reports `"$Reports`"" -WorkingDirectory $Repo -WindowStyle Minimized -PassThru
 Write-Host ""
 Write-Host "Ready. Open https://localhost:$Port in your browser and log in as your player (not as the Storyteller)."
-Write-Host "Close the seat's window, or this one, to stop solo play."
-try { Wait-Process -Id $seatProc.Id } finally {
-  if ( $world -and -not $world.HasExited ) {
-    Write-Host "The seat stopped, so the world stops too."
-    & taskkill.exe /T /F /PID $world.Id | Out-Null
+Write-Host "To stop solo play, close the seat's window, or press Ctrl+C here. Both stop the world too."
+
+function Stop-World {
+  # Foundry may outlive the cmd window that started it, so stop whatever listens on the port as well
+  if ( $world -and -not $world.HasExited ) { & taskkill.exe /T /F /PID $world.Id 2>$null | Out-Null }
+  if ( $world ) {
+    $owners = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
+    foreach ( $id in $owners ) { & taskkill.exe /T /F /PID $id 2>$null | Out-Null }
   }
+}
+try { Wait-Process -Id $seatProc.Id } finally {
+  if ( -not $seatProc.HasExited ) { & taskkill.exe /T /F /PID $seatProc.Id 2>$null | Out-Null }
+  if ( $world ) { Write-Host "The seat stopped, so the world stops too."; Stop-World }
 }

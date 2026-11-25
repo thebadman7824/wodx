@@ -119,8 +119,9 @@ try {
       const s = await evalIn(() => ({name: game.user.character?.name, type: game.user.character?.type, scene: canvas.scene?.name, controlled: canvas.tokens.controlled.length,
         wizard: [...foundry.applications.instances.values()].some(a => String(a.id).startsWith("wodx-wizard-") && a.rendered),
         // #2475: the token sees something in the dark
-        sight: canvas.tokens.controlled[0]?.document?.sight?.range ?? 0}));
-      return {pass: s.controlled > 0 && s.wizard && s.type === "Vampire" && s.sight > 0, ...s, shot: await shot("token-and-wizard")};
+        sight: canvas.tokens.controlled[0]?.document?.sight?.range ?? 0,
+        want: game.modules.get("wodx-solo")?.api?.rules?.sightRange?.(canvas.scene?.grid?.distance) ?? null}));
+      return {pass: s.controlled > 0 && s.wizard && s.type === "Vampire" && s.sight > 0 && (s.want === null || s.sight === s.want), ...s, shot: await shot("token-and-wizard")};
     });
     await step("05 the first-night tour", async () => {
       await evalIn(() => { for ( const a of [...foundry.applications.instances.values()] ) if ( String(a.id).startsWith("wodx-wizard-") ) a.close(); });

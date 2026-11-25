@@ -462,7 +462,7 @@ async function finish(ids, playerSteps) {
     const twice = game.actors.filter(a => a.name === "twice").length;
     for ( const a of game.actors.filter(a => a.name === "twice") ) await a.delete();
     ok("10f. arrival makes a character", actor?.type === "Vampire" && actor.testUserPermission(second, "OWNER") && game.users.get(second.id)?.character?.id === actor.id
-      && !!tok && tok.actorLink && tok.x === want.x && tok.y === want.y && twice === 0 && Number(tok.sight?.range) > 0,
+      && !!tok && tok.actorLink && tok.x === want.x && tok.y === want.y && twice === 0 && Number(tok.sight?.range) === rules.sightRange?.(scene.grid?.distance),
       {sight: tok?.sight?.range ?? null, type: actor?.type, owner: actor?.testUserPermission?.(second, "OWNER"), assigned: game.users.get(second.id)?.character?.id === actor?.id, token: tok ? {x: tok.x, y: tok.y, linked: tok.actorLink} : null, want, secondTime: again ? "brought in" : null, twice});
   });
 

@@ -99,6 +99,11 @@ async function deploy(o) {
   if (!existsSync(join(data, 'worlds', world))) throw new Error(`no world ${world} under ${data}`);
   const port = Number(o.port ?? 30010);
   if (await listening(port)) throw new Error(`something is listening on port ${port}: the world is running. Stop it first; never deploy while someone plays.`);
+  // 0. The user-data asset folders (#2476): checked before anything is touched
+  const from = o.assetsFrom && resolve(o.assetsFrom) !== data ? resolve(o.assetsFrom) : null;
+  const plan = assetPlan({sourceHas: f => !!from && existsSync(join(from, f)), targetHas: f => existsSync(join(data, f))});
+  const lacking = plan.filter(a => a.action === 'fail').map(a => a.folder);
+  if (lacking.length) throw new Error(`the scenes point at ${lacking.join(', ')}, which this Data folder lacks; pass --assets-from <a Data folder that has the maps> (nothing was changed)`);
   const commit = git('rev-parse', `${o.commit ?? 'origin/main'}^{commit}`);
   try { execFileSync('git', ['-C', repo, 'merge-base', '--is-ancestor', commit, 'origin/main']); }
   catch { throw new Error(`${commit.slice(0, 7)} is not on origin/main: a release candidate is a commit of main`); }
@@ -127,24 +132,20 @@ async function deploy(o) {
     if (!o.dry) { rmSync(to, {recursive: true, force: true}); cpSync(join(src, p.from), to, {recursive: true}); }
   }
   if (!o.dry) stamp(data, commit, date, o.label);
-  // 3b. The user-data asset folders (#2476)
-  const from = o.assetsFrom ? resolve(o.assetsFrom) : null;
-  const plan = assetPlan({sourceHas: f => !!from && existsSync(join(from, f)), targetHas: f => existsSync(join(data, f))});
-  const lacking = [];
+  // 3b. The asset folders
   for (const a of plan) {
     if (a.action === 'copy') {
       if (!o.dry) cpSync(join(from, a.folder), join(data, a.folder), {recursive: true, force: true});
       log.push(`assets: ${a.folder} ${o.dry ? 'would be ' : ''}copied from ${from}`);
-    } else if (a.action === 'keep') log.push(`assets: ${a.folder} already in the Data folder (no --assets-from, kept as it is)`);
-    else if (a.action === 'missing') log.push(`assets: WARNING ${a.folder} is in neither Data folder; scenes that use it will show black`);
-    else { lacking.push(a.folder); log.push(`assets: MISSING ${a.folder}: the scenes point at it and nothing was copied. Pass --assets-from <the Main PC's Data folder>`); }
+    } else if (a.action === 'keep') log.push(`assets: ${a.folder} already in the Data folder, kept as it is`);
+    else log.push(`assets: WARNING ${a.folder} is in neither Data folder; scenes that use it will show black`);
   }
   if (!o.dry) for (const p of pk) for (const f of md5Mismatches(walk(join(src, p.from)), walk(join(data, p.to)))) bad.push(`${p.to}/${f}`);
   rmSync(tmp, {recursive: true, force: true});
   log.push(`copied: ${pk.length} packages from ${commit.slice(0, 7)} (${date})${o.dry ? ' (dry, nothing copied)' : ''}`);
   log.push(o.dry ? 'MD5: not checked (dry run, nothing copied)' : bad.length ? `MD5 MISMATCH in ${bad.length} file(s): ${bad.slice(0, 10).join(', ')}` : 'MD5: every copied file matches the commit');
   if (!o.dry) writeFileSync(join(data, 'wodx-rc.json'), `${JSON.stringify({label: o.label, commit, date, world, deployedAt: new Date().toISOString()}, null, 1)}\n`);
-  return {ok: !bad.length && !lacking.length, dry: !!o.dry, label: o.label, commit, log};
+  return {ok: !bad.length, dry: !!o.dry, label: o.label, commit, log};
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

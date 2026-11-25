@@ -529,6 +529,7 @@ test("#2486: the chronicle's own landing beats an older pick and the market, but
   assert.equal(R.pickLanding(world, "m", "Rothenstein", "Dolany Village"), "d", "the manifest's landing, over the setting left by an older arrival");
   assert.equal(R.pickLanding(world, "", "Rothenstein", ""), "m", "no landing named: as before");
   assert.equal(R.pickLanding([...world, s("f", "Cellar", {landing: true})], "", "", "Dolany Village"), "f", "a flagged scene still comes first");
+  assert.equal(R.pickLanding([...world, s("b", "By night: the way in", {landing: true, img: ""})], "", "", "Dolany Village"), "d", "a plain night scene made before the maps gives way to the named landing");
   assert.equal(R.pickLanding([s("d", "Dolany Village", {img: ""}), ...world.slice(0, 1)], "", "", "Dolany Village"), "m", "a named landing with no map is passed over");
 });
 
@@ -539,6 +540,7 @@ test("#2475: the sight range follows the scene's units", () => {
   assert.ok(R.sightRange(0) > 0 && R.sightRange(undefined) > 0);
   const src = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
   assert.match(src, /R\.sightRange\(scene\.grid\?\.distance\)/, "the token placed at the way in gets sight in the scene's units");
+  assert.match(src, /madeHere \|\|/, "a sheet arrival made always gets the scene-unit range, not the prototype's bare number");
 });
 
 test("#2471: a stray owned actor is not the player's character; only one arrival made, or the assigned one", async () => {

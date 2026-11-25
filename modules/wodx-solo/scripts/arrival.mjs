@@ -73,7 +73,8 @@ async function placeToken(actor, scene) {
   const size = Number(actor.prototypeToken?.width) || 1;
   const to = R.wayIn({initial: scene.initial, width: scene.width, height: scene.height, padding: scene.padding, grid: {size: scene.grid?.size}}, size);
   // B8033 (#2475): a sheet whose token sees nothing in the dark gets a few squares of sight, in this scene's units
-  const sight = Number(actor.prototypeToken?.sight?.range) > 0 ? {} : {sight: {enabled: true, range: R.sightRange(scene.grid?.distance), visionMode: "basic"}};
+  const madeHere = !!actor.flags?.[MOD]?.arrival;
+  const sight = madeHere || !(Number(actor.prototypeToken?.sight?.range) > 0) ? {sight: {enabled: true, range: R.sightRange(scene.grid?.distance), visionMode: "basic"}} : {};
   const td = await actor.getTokenDocument({x: to.x, y: to.y, ...sight, flags: {[MOD]: {arrival: true}}});
   const [made] = await scene.createEmbeddedDocuments("Token", [td.toObject()]);
   await H.log({kind: "scene", source: MOD, title: scene.name, note: `${actor.name} placed at the way in`});
@@ -114,6 +115,9 @@ export async function make(userId, {name, line, fresh = false} = {}) {
   // One character each: a player who already has one is brought to it instead, unless they asked for a new one
   // and said yes to the question (B8031, #2471); the old sheet is left as it is
   if ( characterOf(user) && !fresh ) return arrive(userId);
+  // A second press, or a second window, within a few seconds of a new character makes no third one
+  const last = Number(user.character?.flags?.[MOD]?.arrival?.at) || 0;
+  if ( fresh && last && Date.now() - last < 15000 ) return arrive(userId);
   making.add(userId);
   try {
     const actor = await Actor.create(R.newCharacterData({name, line, userId, at: Date.now()}));

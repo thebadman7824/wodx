@@ -463,11 +463,12 @@ export function ownsByName(ownership = {}, userId = "") {
 
 export function pickLanding(scenes = [], chosen = "", town = "", named = "") {
   const list = (scenes ?? []).filter(s => s?.id && !isCoreScene(s));
-  const flagged = list.find(s => s.landing);
-  if ( flagged ) return flagged.id;
-  // B8032 (#2486): the chronicle names its own landing (its manifest's landing), ahead of any older pick
+  // B8032 (#2486): the chronicle names its own landing (its manifest's landing), ahead of any older pick. A scene
+  // flagged as the landing still comes first, unless it is a plain night scene with no map made before the maps came
   const want = String(named ?? "").trim().toLowerCase();
   const own = want ? list.find(s => s.img && String(s.name ?? "").trim().toLowerCase().startsWith(want)) : null;
+  const flagged = list.find(s => s.landing);
+  if ( flagged && (flagged.img || !own) ) return flagged.id;
   if ( own ) return own.id;
   if ( chosen && list.some(s => s.id === chosen) ) return chosen;
   const mapped = list.filter(s => s.img);
