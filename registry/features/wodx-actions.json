@@ -947,11 +947,13 @@
     },
     "shown": {
      "what": "a servant made through the action window and written on WoDX NPC's servant ledger"
+    },
+    "gated": {
+     "gate": "tools/gate/gateenchant.mjs",
+     "step": "1. Enchant from the changeling's Actions menu spends Glamour and binds the mortal"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
