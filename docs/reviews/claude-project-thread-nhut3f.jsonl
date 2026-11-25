@@ -1,0 +1,3 @@
+{"file":"tools/gate/gate7b.mjs","verdict":"working","how":"Read in full; node --check passes; gate-rules.test.mjs 4/4; merge-stamp --check meets every merge rule","hash":"7b8e83e28c8a","at":"2026-11-25T09:06Z"}
+{"file":"tools/gate/gatemarketgoods.mjs","verdict":"working","how":"Read in full; node --check passes; gate-rules.test.mjs 4/4; merge-stamp --check meets every merge rule","hash":"8f7677b78448","at":"2026-11-25T09:06Z"}
+{"file":"changes/decisions/B7980.md","verdict":"working","how":"Read in full; node --check passes; gate-rules.test.mjs 4/4; merge-stamp --check meets every merge rule","hash":"b95437b955ff","at":"2026-11-25T09:06Z"}
