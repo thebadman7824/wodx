@@ -150,10 +150,45 @@ export function teacherTerms(learner, teacher, {next = 1} = {}) {
 export function teachersFor(actor, p, {user = game.user, limit = 12} = {}) {
   const here = new Set((canvas?.scene?.tokens ?? []).map(t => t.actorId));
   const next = Number(p?.next) || 1;
-  return [...(game.actors ?? [])].filter(a => a.id !== actor.id && (user.isGM || a.visible) && !a.flags?.["wodx-npc"]?.passerbyBase)
+  const known = new Set(knownTeachers(actor));
+  return [...(game.actors ?? [])].filter(a => a.id !== actor.id && (user.isGM || a.visible || known.has(a.id)) && !a.flags?.["wodx-npc"]?.passerbyBase)
     .map(a => ({a, rating: ratingOf(a, p)})).filter(x => x.rating >= next)
     .sort((x, y) => (Number(here.has(y.a.id)) - Number(here.has(x.a.id))) || (y.rating - x.rating) || x.a.name.localeCompare(y.a.name))
     .slice(0, limit);
+}
+
+/** Teachers the character has heard of by asking around (Find a teacher): actor ids. */
+export const knownTeachers = actor => Array.isArray(actor?.flags?.[MODULE_ID]?.knownTeachers) ? actor.flags[MODULE_ID].knownTeachers : [];
+const rawDots = (a, path) => num(foundry.utils.getProperty(a?.system ?? {}, path));
+
+/**
+ * Desk pick (#2506): Find a teacher. The character asks around their town for someone who knows the trait to the level
+ * needed (Charisma + Streetwise or Etiquette, difficulty 6, house rule). A success names the best one found and they join
+ * the teachers the character knows of; the result is told to the owners and the Storyteller. Returns {found, why}.
+ */
+export async function findTeacher(actor, p) {
+  const next = Number(p?.next) || 1;
+  const here = townOf(actor);
+  if ( !here ) return {found: null, why: "Asking around needs a town: the character's token must stand in one."};
+  const known = new Set(knownTeachers(actor));
+  const cands = [...(game.actors ?? [])].filter(a => a.id !== actor.id && !known.has(a.id) && !a.visible && !a.flags?.["wodx-npc"]?.passerbyBase)
+    .map(a => ({a, rating: ratingOf(a, p)})).filter(x => x.rating >= next)
+    .map(({a, rating}) => ({id: a.id, name: a.name, rating, will: willOf(actor, a).will, sameTown: townOf(a) === here}));
+  const pool = L.askPool({charisma: rawDots(actor, "attributes.charisma.value"), streetwise: rawDots(actor, "abilities.streetwise.value"), etiquette: rawDots(actor, "abilities.etiquette.value")});
+  const roll = await new Roll(`${pool}d10`).evaluate();
+  const faces = (roll.dice?.[0]?.results ?? []).map(r => r.result);
+  const {successes, botch} = L.countSuccesses(faces, L.ASK_DIFF);
+  const pick = successes > 0 ? L.askAroundPick(cands, next) : null;
+  let text;
+  if ( pick ) {
+    await actor.setFlag(MODULE_ID, "knownTeachers", [...known, pick.id]);
+    text = `${actor.name} asks around ${here} and hears of ${pick.name}, who knows ${p.label} to ${pick.rating}${pick.will === "price" ? " and will want something for it" : ""}.`;
+  } else if ( successes > 0 ) text = `${actor.name} asks around ${here}, but no one there knows ${p.label} well enough to teach it. The Storyteller may know of someone further off.`;
+  else text = botch ? `${actor.name} asks around ${here} and only stirs talk: no one will say.` : `${actor.name} asks around ${here} and learns nothing tonight.`;
+  const whisper = game.users.filter(u => u.isGM || actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper, rolls: [roll],
+    content: `<div class="wodx-card"><p><b>Find a teacher: ${esc(p.label)} ${next}</b></p><p>Charisma + ${rawDots(actor, "abilities.streetwise.value") >= rawDots(actor, "abilities.etiquette.value") && rawDots(actor, "abilities.streetwise.value") > 0 ? "Streetwise" : "Etiquette"}, ${pool} dice at ${L.ASK_DIFF}: ${successes} success${successes === 1 ? "" : "es"}${botch ? " (a botch)" : ""}.</p><p>${esc(text)}</p></div>`});
+  return {found: pick, why: text};
 }
 
 /** Every source for this purchase, with its plan and the reason when it is closed. */
@@ -198,6 +233,7 @@ export function choicesFor(actor, p, {user = game.user} = {}) {
 /*  The dialog                                   */
 /* -------------------------------------------- */
 
+const allowsTeacher = choices => choices.some(c => c.src.kind === "storyteller");
 /** Ask where it is learned. Returns a source, {waive: true} (GM: learn at once), or null. */
 export async function chooseSource(actor, p) {
   const {DialogV2} = foundry.applications.api;
@@ -209,20 +245,27 @@ export async function chooseSource(actor, p) {
   // #2506: the player may ask for it at once (the Storyteller decides); the Storyteller may simply grant it
   const gm = game.user.isGM ? `<div class="form-group"><label><input type="checkbox" name="waive"> Waive it this time: learn at once</label></div>`
     : `<div class="form-group"><label><input type="checkbox" name="waive"> Ask the Storyteller to let it come at once, with no study (for a story reason)</label></div>`;
+  // Desk pick (#2506): ask around town for a teacher, then choose again with whoever turned up
+  const find = allowsTeacher(choices) ? `<div class="form-group"><label><input type="checkbox" name="find"> Find a teacher: ask around town for someone who knows it (Charisma + Streetwise or Etiquette)</label></div>` : "";
   const teachers = choices.filter(c => c.src.kind === "teacher");
   const how = `<p class="wodx-quiet">${esc(teachers.length
     ? "A teacher is someone in the chronicle with at least as many dots in it as you will have. Those you know of are listed first; one who will not teach you, or is in another town, is greyed out with the reason."
-    : `No one you know of has ${p.label} at ${p.next} or more. Pick "${L.SOURCE_KINDS.storyteller}" and the Storyteller finds one, or meet someone who knows it and ask again.`)}</p>`;
+    : `No one you know of has ${p.label} at ${p.next} or more. Tick Find a teacher to ask around town, pick "${L.SOURCE_KINDS.storyteller}" and the Storyteller finds one, or meet someone who knows it and ask again.`)}</p>`;
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog", "wodx-learn"],
     window: {title: `Where is it learned? ${p.label}`},
     content: `<p>${esc(p.label)} ${p.current} → ${p.next} for ${p.cost} experience. The points are spent now; the trait rises when the study is done.</p>
       <p class="wodx-quiet">${esc(why)}</p>
-      ${how}<ul class="wodx-list wodx-learn-list" data-fixed>${choices.map(row).join("")}</ul>${gm}`,
-    ok: {label: game.user.isGM ? "Begin" : "Ask", callback: (event, button) => ({i: Number(button.form.elements.src?.value ?? -1), waive: !!button.form.elements.waive?.checked})},
+      ${how}<ul class="wodx-list wodx-learn-list" data-fixed>${choices.map(row).join("")}</ul>${find}${gm}`,
+    ok: {label: game.user.isGM ? "Begin" : "Ask", callback: (event, button) => ({i: Number(button.form.elements.src?.value ?? -1), waive: !!button.form.elements.waive?.checked, find: !!button.form.elements.find?.checked})},
     rejectClose: false
   });
   if ( !result ) return null;
+  if ( result.find ) {
+    const r = await findTeacher(actor, p);
+    if ( !r.found ) ui.notifications.info(r.why);
+    return chooseSource(actor, p);
+  }
   if ( result.waive && game.user.isGM ) return {waive: true};
   if ( result.waive ) return {instant: true};
   const c = choices[result.i];

@@ -315,3 +315,28 @@ export function priceFor(year, {kindred = false, next = 1} = {}) {
     : "a contract: hours of work, data or a favour owed";
   return {kind: "debt", size: null, what};
 }
+
+/* -------------------------------------------------------------------- */
+/*  Find a teacher (desk pick, #2506, 25 Nov)                             */
+/* -------------------------------------------------------------------- */
+
+/**
+ * Asking around town for someone who teaches a trait: Charisma + the better of Streetwise and Etiquette, difficulty 6
+ * (house rule: the books set no roll for it; V20 Dark Ages has no Streetwise, so Etiquette there).
+ */
+export const ASK_DIFF = 6;
+export const askPool = ({charisma = 0, streetwise = 0, etiquette = 0} = {}) => Math.max(1, (Number(charisma) || 0) + Math.max(Number(streetwise) || 0, Number(etiquette) || 0));
+/** Successes from d10 faces at a difficulty, each one cancelling a success (V20 Dark Ages p. 322). botch: no success and a one. */
+export function countSuccesses(faces = [], diff = ASK_DIFF) {
+  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+}
+const WILL_ORDER = {teach: 0, price: 1, refuse: 2};
+/**
+ * Whom asking around turns up, best first: someone in the learner's town before anyone else, a willing teacher before
+ * one who asks a price, the more skilled first. A refuser is never named. cands: [{id, name, rating, will, sameTown}].
+ */
+export function askAroundPick(cands = [], next = 1) {
+  return cands.filter(c => (Number(c.rating) || 0) >= next && c.will !== "refuse" && c.sameTown)
+    .sort((a, b) => (WILL_ORDER[a.will] ?? 1) - (WILL_ORDER[b.will] ?? 1) || (Number(b.rating) || 0) - (Number(a.rating) || 0) || String(a.name).localeCompare(String(b.name)))[0] ?? null;
+}

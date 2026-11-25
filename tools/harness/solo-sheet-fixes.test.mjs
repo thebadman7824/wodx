@@ -228,3 +228,25 @@ test("#2508: the look card's install mark doesn't clash with Chronicle's token l
   assert.doesNotMatch(N, /prototype\._wodxLook\b/, "a mark on Token.prototype named _wodxLook made every token's look state the boolean true");
   assert.match(src("modules/wodx-chronicle/scripts/token-looks.mjs"), /token\._wodxLook \?\? \(token\._wodxLook = /);
 });
+
+test("#2506 desk pick: Find a teacher asks around town and names the best one there", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+  assert.equal(L.askPool({charisma: 3, streetwise: 0, etiquette: 2}), 5);
+  assert.equal(L.askPool({charisma: 2, streetwise: 3, etiquette: 1}), 5);
+  assert.equal(L.askPool({}), 1);
+  assert.deepEqual(L.countSuccesses([6, 7, 1, 3], 6), {successes: 1, botch: false});
+  assert.deepEqual(L.countSuccesses([1, 3], 6), {successes: 0, botch: true});
+  const cands = [
+    {id: "a", name: "Abbot Vit", rating: 4, will: "price", sameTown: true},
+    {id: "b", name: "Brother Jan", rating: 2, will: "teach", sameTown: true},
+    {id: "c", name: "Far Teacher", rating: 5, will: "teach", sameTown: false},
+    {id: "d", name: "Proud Ota", rating: 5, will: "refuse", sameTown: true},
+    {id: "e", name: "Novice", rating: 1, will: "teach", sameTown: true}
+  ];
+  assert.equal(L.askAroundPick(cands, 2).id, "b", "a willing one in town first; never a refuser, one too far off, or one who knows too little");
+  assert.equal(L.askAroundPick(cands, 3).id, "a");
+  assert.equal(L.askAroundPick(cands, 6), null);
+  const M = src("modules/wodx-creation/scripts/learn.mjs");
+  assert.match(M, /known\.has\(a\.id\)/, "a teacher heard of is listed though the sheet is closed");
+  assert.match(M, /if \( result\.find \) \{[\s\S]{0,160}return chooseSource\(actor, p\);/);
+});
