@@ -250,3 +250,12 @@ test("#2506 desk pick: Find a teacher asks around town and names the best one th
   assert.match(M, /known\.has\(a\.id\)/, "a teacher heard of is listed though the sheet is closed");
   assert.match(M, /if \( result\.find \) \{[\s\S]{0,160}return chooseSource\(actor, p\);/);
 });
+
+test("#2508 desk pick: the look card says what the character knows of them: the tie, their manner, tales heard", () => {
+  const N = src("modules/wodx-npc/scripts/main.mjs");
+  assert.match(N, /const known = lookKnows\(doc, lookerOf\(\)\);/);
+  assert.match(N, /people\.ties\.of\(me\)\.filter\(e => e\.uuid === base\?\.uuid \|\| e\.to\?\.id === id\)/);
+  assert.match(N, /attitude\.of\(them, me\)/);
+  assert.match(N, /rumours\?\.heardBy\?\.\(me\.id\)/, "only tales this character heard, never every rumour");
+  assert.match(N, /if \( !me \|\| !them \|\| !id \|\| me\.id === id \) return out;/);
+});
