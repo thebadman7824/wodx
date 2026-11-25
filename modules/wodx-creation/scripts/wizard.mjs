@@ -174,7 +174,7 @@ export class WizardApp extends ApplicationV2 {
       const r = this.roads?.roads?.[k];
       if ( !r ) return;
       // The same write as WoDX Actions' Road and Path (kindred.js setRoad), so sins, frenzy and the sheet follow it
-      await this.actor.update({"flags.wodx-actions.road": {key: k, path: path || null}, "system.advantages.path.custom": path || r.name});
+      await this.actor.update({"flags.wodx-actions.road": {key: k, path: path || null}, "system.advantages.path.label": "custom", "system.advantages.path.custom": path || r.name});
       this.render();
     });
     this.element.querySelector("input[name=who-lang]")?.addEventListener("change", async ev => {

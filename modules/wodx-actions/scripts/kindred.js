@@ -103,6 +103,24 @@ export function roadOf(actor) {
     return K.roadFor(DATA.roads, name.startsWith("wod.") ? "" : name);
 }
 
+/** B8047 (#2481): the sheet's own Road name; the system sheet heads the track with path.custom only when path.label is "custom". */
+export const roadSheetUpdate = name => ({ "system.advantages.path.label": "custom", "system.advantages.path.custom": String(name ?? "") });
+
+/**
+ * B8047 (#2481): sheets given a Road before the fix still say Humanity: the active Storyteller writes the Road's name on
+ * each once. Returns how many were changed.
+ */
+export async function syncRoadNames(actors = game.actors) {
+    if (!DATA.roads) return 0;
+    let k = 0;
+    for (const a of actors ?? []) {
+        const f = a?.getFlag?.(MOD, "road"), r = f?.key ? DATA.roads.roads[f.key] : null;
+        if (!r || a.system?.advantages?.path?.label === "custom") continue;
+        try { await a.update(roadSheetUpdate(f.path || r.name)); k++; } catch (e) { console.warn(`${MOD} | road name`, e); }
+    }
+    return k;
+}
+
 /* ================================================================== */
 
 export function build(ctx) {
@@ -490,6 +508,8 @@ export function build(ctx) {
     async function setRoad(actor) {
         if (!DATA.roads) return ctx.notify("The Roads data didn't load.");
         const cur = roadOf(actor);
+        // B8047 (#2480): the Storyteller sets a Road; a player reads their own Road, its sins and how to keep it
+        if (!game.user.isGM) return showRoad(actor, cur);
         const opts = [];
         for (const [k, r] of Object.entries(DATA.roads.roads)) {
             opts.push([`${k}|`, r.name]);
@@ -515,10 +535,26 @@ export function build(ctx) {
             const pa = r.paths.find(p => p.name === path);
             const vs = pa?.virtues ?? r.virtues;
             await ctx.setFlag(actor, "road", { key: k, path: path || null });
-            if (fd.writeSheet) await updateActor(actor, { "system.advantages.path.custom": path || r.name });
+            // B8047 (#2481): the sheet shows path.custom only while path.label is "custom"
+            if (fd.writeSheet) await updateActor(actor, roadSheetUpdate(path || r.name));
             await logEvent(actor, `Walks the ${path || r.name}.`, "road");
             return post(actor, `${actor.name}: ${esc(path || r.name)}`, `<div class="vta-note">Virtues: ${vs.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage. Aura: ${esc(pa?.aura ?? r.aura)}. Sin, frenzy and Rötschreck rolls now use these.</div>`);
         }, { width: 540, render: root => { show(root); root.querySelector("[name=road]").addEventListener("change", () => show(root)); } });
+    }
+
+    /** B8047 (#2480): a player's view of their Road: its Virtues, aura and sins in order, and what to do next. */
+    async function showRoad(actor, cur) {
+        const rating = n(actor.system?.advantages?.path?.permanent);
+        const vs = cur ? (cur.path?.virtues ?? cur.road?.virtues ?? []) : [];
+        const body = cur?.road
+            ? `<p><b>${esc(cur.path ? `${cur.road.name}: ${cur.path.name}` : cur.road.name)}</b>, rating ${rating}.</p>
+              <p class="vta-note"><b>Virtues:</b> ${vs.map(v => esc(DATA.roads.virtueLabels[v] ?? v)).join(" and ")} and Courage · <b>Aura:</b> ${esc(cur.path?.aura ?? cur.road.aura ?? "")}</p>
+              <p class="vta-note">A sin at or below the rating asks for a Degeneration roll; a sin above it costs nothing. Acting by the Road when it is hard is how the rating is kept, and raising it costs experience at the Storyteller's word.</p>
+              ${hierarchyTable(cur, rating)}`
+            : `<p>${esc(actor.name)} walks no Road WoDX knows yet.</p>`;
+        const DialogV2 = foundry.applications.api.DialogV2;
+        return DialogV2.prompt({ classes: ["wodx", "wodx-dialog"], window: { title: `Road: ${actor.name}` }, position: { width: 540 }, rejectClose: false,
+            content: `${body}<p class="wodx-quiet">Only the Storyteller can change a Road.</p>`, ok: { label: "Close" } });
     }
 
     /* ---------------- Prestation ---------------- */

@@ -3862,6 +3862,8 @@ Hooks.once("ready", () => { const go = () => {
 }; if (game.modules.get("wodx-chronicle")?.api?.traits) go(); else Hooks.once("wodxChronicleReady", go);
 });
 Hooks.once("ready", async () => {
+    // B8047 (#2481): once the Roads data is in, a sheet given a Road before shows its name instead of Humanity
+    setTimeout(() => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) KX.syncRoadNames().catch(e => console.warn("WoDX | road names", e)); }, 8000);
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
     const withChronicle = () => {
         chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
