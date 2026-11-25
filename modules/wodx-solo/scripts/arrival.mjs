@@ -69,12 +69,12 @@ function pull(scene, user, token) {
 }
 
 /** Put a token for the actor at the landing's way in. */
-async function placeToken(actor, scene) {
+async function placeToken(actor, scene, {fresh = false} = {}) {
   const size = Number(actor.prototypeToken?.width) || 1;
   const to = R.wayIn({initial: scene.initial, width: scene.width, height: scene.height, padding: scene.padding, grid: {size: scene.grid?.size}}, size);
   // B8033 (#2475): a sheet whose token sees nothing in the dark gets a few squares of sight, in this scene's units
-  const madeHere = !!actor.flags?.[MOD]?.arrival;
-  const sight = madeHere || !(Number(actor.prototypeToken?.sight?.range) > 0) ? {sight: {enabled: true, range: R.sightRange(scene.grid?.distance), visionMode: "basic"}} : {};
+  // fresh: the sheet arrival has just made (its prototype holds only the bare number); later placings keep the player's
+  const sight = fresh || !(Number(actor.prototypeToken?.sight?.range) > 0) ? {sight: {enabled: true, range: R.sightRange(scene.grid?.distance), visionMode: "basic"}} : {};
   const td = await actor.getTokenDocument({x: to.x, y: to.y, ...sight, flags: {[MOD]: {arrival: true}}});
   const [made] = await scene.createEmbeddedDocuments("Token", [td.toObject()]);
   await H.log({kind: "scene", source: MOD, title: scene.name, note: `${actor.name} placed at the way in`});
@@ -124,7 +124,7 @@ export async function make(userId, {name, line, fresh = false} = {}) {
     await user.update({character: actor.id});
     await H.log({kind: "note", source: MOD, title: "A character was made for the player", note: `${actor.name}, ${R.arrivalLine(line)?.label ?? "Mortal"}, for ${user.name}`});
     const scene = await landing();
-    const token = await placeToken(actor, scene);
+    const token = await placeToken(actor, scene, {fresh: true});
     if ( user.viewedScene !== scene.id ) pull(scene, user, token);
     reply(userId, "arrive.ready", {actorId: actor.id, sceneId: scene.id, tokenId: token.id, made: true});
     await tell(userId, `<p><b>${esc(actor.name)}</b> stands at the way in. The character wizard is open to build the sheet; drag the token to move.</p>`);

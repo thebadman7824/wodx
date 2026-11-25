@@ -100,7 +100,8 @@ async function deploy(o) {
   const port = Number(o.port ?? 30010);
   if (await listening(port)) throw new Error(`something is listening on port ${port}: the world is running. Stop it first; never deploy while someone plays.`);
   // 0. The user-data asset folders (#2476): checked before anything is touched
-  const from = o.assetsFrom && resolve(o.assetsFrom) !== data ? resolve(o.assetsFrom) : null;
+  const same = (a, b) => (process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b);
+  const from = o.assetsFrom && !same(resolve(o.assetsFrom), data) ? resolve(o.assetsFrom) : null;
   const plan = assetPlan({sourceHas: f => !!from && existsSync(join(from, f)), targetHas: f => existsSync(join(data, f))});
   const lacking = plan.filter(a => a.action === 'fail').map(a => a.folder);
   if (lacking.length) throw new Error(`the scenes point at ${lacking.join(', ')}, which this Data folder lacks; pass --assets-from <a Data folder that has the maps> (nothing was changed)`);

@@ -50,15 +50,21 @@ Write-Host ""
 Write-Host "Ready. Open https://localhost:$Port in your browser and log in as your player (not as the Storyteller)."
 Write-Host "To stop solo play, close the seat's window, or press Ctrl+C here. Both stop the world too."
 
+# A process already gone is not an error here: each stop carries on whatever happens
+function Stop-Tree([int]$id) {
+  try { Get-CimInstance Win32_Process -Filter "ParentProcessId=$id" -ErrorAction SilentlyContinue | ForEach-Object { Stop-Tree $_.ProcessId } } catch { }
+  Stop-Process -Id $id -Force -ErrorAction SilentlyContinue
+}
 function Stop-World {
   # Foundry may outlive the cmd window that started it, so stop whatever listens on the port as well
-  if ( $world -and -not $world.HasExited ) { & taskkill.exe /T /F /PID $world.Id 2>$null | Out-Null }
+  if ( $world ) { Stop-Tree $world.Id }
   if ( $world ) {
-    $owners = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
-    foreach ( $id in $owners ) { & taskkill.exe /T /F /PID $id 2>$null | Out-Null }
+    $owners = @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique)
+    foreach ( $id in $owners ) { Stop-Tree $id }
   }
 }
-try { Wait-Process -Id $seatProc.Id } finally {
-  if ( -not $seatProc.HasExited ) { & taskkill.exe /T /F /PID $seatProc.Id 2>$null | Out-Null }
+try { Wait-Process -Id $seatProc.Id -ErrorAction SilentlyContinue } finally {
+  $ErrorActionPreference = "Continue"
+  Stop-Tree $seatProc.Id
   if ( $world ) { Write-Host "The seat stopped, so the world stops too."; Stop-World }
 }

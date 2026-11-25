@@ -540,7 +540,7 @@ test("#2475: the sight range follows the scene's units", () => {
   assert.ok(R.sightRange(0) > 0 && R.sightRange(undefined) > 0);
   const src = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
   assert.match(src, /R\.sightRange\(scene\.grid\?\.distance\)/, "the token placed at the way in gets sight in the scene's units");
-  assert.match(src, /madeHere \|\|/, "a sheet arrival made always gets the scene-unit range, not the prototype's bare number");
+  assert.match(src, /placeToken\(actor, scene, \{fresh: true\}\)/, "a sheet arrival has just made gets the scene-unit range, not the prototype's bare number");
 });
 
 test("#2471: a stray owned actor is not the player's character; only one arrival made, or the assigned one", async () => {
@@ -565,7 +565,7 @@ test("#2467: Report a problem is outside the folded part of the panel", () => {
 
 test("#2468: Play-Solo starts the world and the seat, and the empty-seat notice says so", () => {
   const ps = readFileSync(join(root, "tools/solo/Play-Solo.ps1"), "utf8");
-  for ( const k of ["Start-Solo.bat", "seat.mjs", "--reports", "Wait-Process", "taskkill", "::1"] ) assert.ok(ps.includes(k), `Play-Solo.ps1 has ${k}`);
+  for ( const k of ["Start-Solo.bat", "seat.mjs", "--reports", "Wait-Process", "Stop-Process", "Get-NetTCPConnection", "::1"] ) assert.ok(ps.includes(k), `Play-Solo.ps1 has ${k}`);
   assert.ok(existsSync(join(root, "tools/solo/Play-Solo.bat")));
   const main = readFileSync(join(root, "modules/wodx-solo/scripts/main.mjs"), "utf8");
   assert.match(main, /start solo play with Play-Solo/);
