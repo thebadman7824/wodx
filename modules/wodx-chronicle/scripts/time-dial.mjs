@@ -19,7 +19,7 @@ export function drawDial() {
   if ( !shown() ) { el?.remove(); return; }
   let t;
   try { t = describeAt(globalThis.canvas?.scene ?? null, game.time.worldTime); } catch (e) { return; }
-  const v = D.dialView(t);
+  const v = D.dialView(t ?? {});
   if ( !el ) {
     el = document.createElement("button");
     el.id = ID;
@@ -34,7 +34,9 @@ export function drawDial() {
 }
 
 export function installTimeDial() {
-  Hooks.on("updateWorldTime", () => drawDial());
-  Hooks.on("canvasReady", () => drawDial());
-  drawDial();
+  // Never let the dial stop WoDX Chronicle's start: a failed draw is logged and skipped
+  const safe = () => { try { drawDial(); } catch (e) { console.warn(`${MODULE_ID} | time dial`, e); } };
+  Hooks.on("updateWorldTime", safe);
+  Hooks.on("canvasReady", safe);
+  safe();
 }
