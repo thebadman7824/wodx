@@ -360,8 +360,16 @@ const ACTIONS = {
     const down = all(scene.tokens).filter(t => t.actor && !t.hidden && haul.fallenOf(t)?.down && !(t.flags?.["wodx-interactables"]?.haul?.by ?? []).length);
     if ( !down.length ) { ui.notifications.info("Nobody here is down."); return; }
     const pick = await choose("Carry the fallen", Object.fromEntries(down.map(t => [t.id, {label: t.name, hint: t.id === me?.id ? "(your character)" : ""}])),
-      "A companion of yours goes to them and carries or drags them to safety.");
-    if ( pick ) ask("ask.carry", {tokenId: pick, sceneId: scene.id});
+      "Your character lifts or drags them, within their Strength. When your character is the one down, a companion comes for them.");
+    if ( !pick ) return;
+    // B8051 (#2488): a body is the character's own to lift; a companion only when the character is down or cannot
+    const body = scene.tokens.get(pick);
+    if ( me && pick !== me.id && !haul.fallenOf(me)?.down ) {
+      const r = await haul.take(me, body);
+      if ( r?.ok ) return;
+      ui.notifications.warn(`${me.name}: ${r?.why || "cannot take hold"}. A companion is asked instead.`);
+    }
+    ask("ask.carry", {tokenId: pick, sceneId: scene.id});
   },
   async curtain() {
     const yes = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Lift the curtain"}, rejectClose: false,

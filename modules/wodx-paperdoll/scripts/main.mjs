@@ -395,4 +395,23 @@ Hooks.once("ready", () => {
   startSprites();
   startMounts();
   if ( drawnOn() && isBaker() ) setTimeout(bakeAll, 1500);
+  // B8053 (#2491): the Storyteller's computer puts each character's own drawn sprite on its tokens as they come
+  // (a new token, a scene opened, a figure kept), and writes the roster the sprite batch draws from when a figure
+  // changes, so the next batch draws it. A figure no batch has drawn yet keeps the portrait picture until then.
+  if ( isBaker() ) {
+    const S = spriteApi;
+    S.loadOwn?.().then(() => S.dress?.(canvas?.scene)).catch(e => console.warn(`${MOD} | dress`, e));
+    Hooks.on("canvasReady", c => { if ( isBaker() ) S.dress?.(c?.scene).catch(e => console.warn(`${MOD} | dress`, e)); });
+    Hooks.on("createToken", t => {
+      if ( !isBaker() || t.flags?.[MOD]?.sprite ) return;
+      const name = S.own?.(t.actorId);
+      if ( name ) S.give(t, name).catch(e => console.warn(`${MOD} | sprite`, e));
+    });
+    let rosterSoon = null;
+    Hooks.on("updateActor", (a, ch) => {
+      if ( !isBaker() || !foundry.utils.hasProperty(ch ?? {}, `flags.${MOD}.figure`) ) return;
+      clearTimeout(rosterSoon);
+      rosterSoon = setTimeout(() => S.saveRoster?.().catch(e => console.warn(`${MOD} | roster`, e)), 2000);
+    });
+  }
 });

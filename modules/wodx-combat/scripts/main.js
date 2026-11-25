@@ -2522,6 +2522,23 @@ export async function breakFree(actor, combat = game.combat) {
         content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>${grip.kind === "choke" ? "Strength" : "Strength + Brawl"}, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
     return { free: out, line };
 }
+/* B8052 (#2494): a fight's holds end with it. When a fight is ended (by the tracker or the solo panel's I am stuck),
+ * the active Storyteller clears every fighter's grip, clinch and the marks a blow left (off balance, hooked,
+ * overextended), and the Held condition, so nothing carries into the next fight. */
+export const FIGHT_MARKS = ["grip", "clinch", "offBalance", "hooked", "overextended"];
+export async function clearFightMarks(combat) {
+    const seen = new Set();
+    for (const c of combat?.combatants ?? []) {
+        const actor = c.actor;
+        if (!actor || seen.has(actor.uuid)) continue;
+        seen.add(actor.uuid);
+        const had = FIGHT_MARKS.filter(k => actor.getFlag?.(MOD, k) !== undefined);
+        if (had.length) await actor.update(Object.fromEntries(had.map(k => [`flags.${MOD}.-=${k}`, null]))).catch(e => console.warn(`${MOD} | fight marks`, e));
+        try { if (chronicle()?.conditions?.hasCondition?.(actor, "held")) await chronicle().conditions.setCondition(actor, "held", false); } catch (e) { /* no conditions */ }
+    }
+    return seen.size;
+}
+Hooks.on("deleteCombat", combat => { if (isActiveGM()) clearFightMarks(combat).catch(e => console.warn(`${MOD} | fight marks`, e)); });
 Hooks.on("updateCombat", (combat, changed) => {
     if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
     const c = combat.combatant;
