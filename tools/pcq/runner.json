@@ -1,5 +1,5 @@
 {
-  "_about": "PC runner settings (B4100-B4109). train: this runner drives the merge train (B7202; one PC at a time: the Main PC again since its repair, B7620; the Secondary PC stood in while it was down, B7500); trainMinutes, trainMaxHours and sweepUpdates are optional. lanes: the testbed lanes the runner drives, never 1, and not 6 (kept for the local agents since 2026-11-16, B6527). light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment. prGatesPreferPeer (B7911, Ben 24 Nov): pull request gate runs go to the New PC first; this runner takes one only when the New PC has no free lane, is holding, its status is older than freshMinutes, or the run has waited maxMinutes.",
+  "_about": "PC runner settings (B4100-B4109). train: this runner drives the merge train (B7202; one PC at a time: the New PC from 25 Nov, B8000-B8010, with the Main PC as its backup; the Main PC drove it from B7620, and the Secondary PC stood in while it was down, B7500); trainMinutes, trainMaxHours and sweepUpdates are optional. lanes: the testbed lanes the runner drives, never 1, and not 6 (kept for the local agents since 2026-11-16, B6527). light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment. prGatesPreferPeer (B7911, Ben 24 Nov): pull request gate runs go to the New PC first; this runner takes one only when the New PC has no free lane, is holding, its status is older than freshMinutes, or the run has waited maxMinutes.",
   "home": "D:/WoDX/pcq",
   "lanes": [2, 3, 4, 5],
   "light": 2,
@@ -8,6 +8,6 @@
   "minFreeRamGB": 3,
   "bookText": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/text",
   "trove": "F:/TheTrove",
-  "train": true,
+  "train": false,
   "prGatesPreferPeer": {"statusTitle": "PC runner status (New PC)", "maxMinutes": 5, "freshMinutes": 15}
 }

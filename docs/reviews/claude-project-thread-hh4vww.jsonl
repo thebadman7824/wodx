@@ -1,0 +1,2 @@
+{"file":"tools/pcq/runner.json","verdict":"working","how":"read the diff: only train true to false and the _about text; checked runner.mjs reads conf.train at start and the runner restarts on any tools/pcq change (updateDue)","hash":"d0ced0b2aa51","at":"2026-11-25T13:04Z"}
+{"file":"changes/decisions/B8000.md","verdict":"working","how":"read the fragment: front matter matches the claimed block B8000-B8009 and thread","hash":"4254c24f21df","at":"2026-11-25T13:04Z"}
