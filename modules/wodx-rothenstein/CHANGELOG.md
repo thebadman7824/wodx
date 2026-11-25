@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.4.1 (The chronicle names its solo landing, Dolany Village (B8032), so a lone player arrives there)
 - 0.4.0 (The Old Grove's sept: a Silver Fang elder council and the Kinfolk of the Grove farm (B7874); The faithful at St. Aegidius, a household before 1223 (B7898); Book 1's hunters are precursors of the Inquisition: Anselm one of the lone Faithful, Thibault a crusader knight (B7890); The valley's Haunts and the Ashfield's eaten souls (B7901, B7903); The apothecary of encounter 6 is a Devil's Due thrall; absolution would cost two dice of lethal (B7924))
 - 0.3.0 (The Ashfield is the taint's one source: its saga clock now sets the Ashfield scene's Wyrm corruption, a level a field, up to 8 (B7807))
 - 0.2.0 (Book 1 follows the final omnibus (B7800-B7806): two years in ten chapters with open winters and a thaw epilogue, the Rudý Hospodář under the red hill, the Words, the Ground and the Price of 906, the doors of ruling 27, one twist a month, and twelve valley powers in the faction window: Kasimir, Ottilie, Sieglinde and Zdenka at the court, plus the margrave's officers and the Grove's kin. The valley keeps its own feasts, the Richter, the Old Tongue and the Old Grove's caern; the hunters open at Rumours; two new long clocks track the Guests and Graff's road east; and a seventh clue holds the true name. A second prologue, the Long Watch, plays the three hundred years from 908 to 1196. The recipe's cast adds the ten people the old world lacked and the Roads of the valley's Kindred)

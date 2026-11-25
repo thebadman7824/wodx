@@ -96,8 +96,13 @@ try {
     });
     await step("02 the first screen", async () => {
       await sleep(2500);
-      const s = await evalIn(() => ({scene: canvas.scene?.name ?? null, map: !!(canvas.scene?.background?.src), dark: canvas.scene?.environment?.darknessLevel ?? null, seat: !!game.users.activeGM}));
-      return {pass: !!s.scene && s.seat, ...s, shot: await shot("first-screen")};
+      // #2476: the map's file must load on the player's client, not just be named on the scene
+      const s = await evalIn(async () => {
+        const src = canvas.scene?.background?.src ?? "";
+        const loads = src ? await fetch(src, {method: "HEAD"}).then(r => r.ok).catch(() => false) : false;
+        return {scene: canvas.scene?.name ?? null, map: !!src, src, loads, dark: canvas.scene?.environment?.darknessLevel ?? null, seat: !!game.users.activeGM};
+      });
+      return {pass: !!s.scene && s.seat && (!s.map || s.loads), ...s, shot: await shot("first-screen")};
     });
     await step("03 the arrival window", async () => {
       const dlg = page.locator(".wsolo-arrive");
@@ -112,8 +117,11 @@ try {
       await page.waitForFunction(() => !!game.user.character && canvas.tokens?.controlled?.some(t => t.actor?.id === game.user.character.id), null, {timeout: 30000});
       await sleep(1500);
       const s = await evalIn(() => ({name: game.user.character?.name, type: game.user.character?.type, scene: canvas.scene?.name, controlled: canvas.tokens.controlled.length,
-        wizard: [...foundry.applications.instances.values()].some(a => String(a.id).startsWith("wodx-wizard-") && a.rendered)}));
-      return {pass: s.controlled > 0 && s.wizard && s.type === "Vampire", ...s, shot: await shot("token-and-wizard")};
+        wizard: [...foundry.applications.instances.values()].some(a => String(a.id).startsWith("wodx-wizard-") && a.rendered),
+        // #2475: the token sees something in the dark
+        sight: canvas.tokens.controlled[0]?.document?.sight?.range ?? 0,
+        want: game.modules.get("wodx-solo")?.api?.rules?.sightRange?.(canvas.scene?.grid?.distance) ?? null}));
+      return {pass: s.controlled > 0 && s.wizard && s.type === "Vampire" && s.sight > 0 && (s.want === null || s.sight === s.want), ...s, shot: await shot("token-and-wizard")};
     });
     await step("05 the first-night tour", async () => {
       await evalIn(() => { for ( const a of [...foundry.applications.instances.values()] ) if ( String(a.id).startsWith("wodx-wizard-") ) a.close(); });

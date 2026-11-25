@@ -33,15 +33,17 @@ const on = () => H.isOn() && H.get("arrive") !== false;
 /*  The seat's side                                                    */
 /* ------------------------------------------------------------------ */
 
-const sceneRow = s => ({id: s.id, name: s.name, active: !!s.active, landing: !!s.getFlag?.(MOD, "landing"), img: s.background?.src ?? s.img ?? ""});
+const sceneRow = s => ({id: s.id, name: s.name, active: !!s.active, landing: !!s.getFlag?.(MOD, "landing"), made: !!s.getFlag?.(MOD, "made"), img: s.background?.src ?? s.img ?? ""});
 
 /** The town of the chronicle in play (its manifest), or "" with none (B7565). */
 const townInPlay = () => { try { return game.modules.get("wodx-chronicle")?.api?.chronicle?.current?.()?.manifest?.town ?? ""; } catch (e) { return ""; } };
+/** The scene the chronicle in play names as its landing (its manifest's landing), or "" (B8032). */
+const landingInPlay = () => { try { return game.modules.get("wodx-chronicle")?.api?.chronicle?.current?.()?.manifest?.landing ?? ""; } catch (e) { return ""; } };
 
 /** The landing scene, made when the world has none with a map. The seat only. */
 export async function landing() {
   if ( !H.isSeat() ) return null;
-  const id = R.pickLanding(all(game.scenes).map(sceneRow), H.get("landing") ?? "", townInPlay());
+  const id = R.pickLanding(all(game.scenes).map(sceneRow), H.get("landing") ?? "", townInPlay(), landingInPlay());
   let scene = id ? game.scenes.get(id) : null;
   if ( !scene ) {
     scene = await Scene.create({...R.landingBlank(townInPlay()), flags: {[MOD]: {landing: true, made: true}}});
@@ -67,10 +69,13 @@ function pull(scene, user, token) {
 }
 
 /** Put a token for the actor at the landing's way in. */
-async function placeToken(actor, scene) {
+async function placeToken(actor, scene, {fresh = false} = {}) {
   const size = Number(actor.prototypeToken?.width) || 1;
   const to = R.wayIn({initial: scene.initial, width: scene.width, height: scene.height, padding: scene.padding, grid: {size: scene.grid?.size}}, size);
-  const td = await actor.getTokenDocument({x: to.x, y: to.y, flags: {[MOD]: {arrival: true}}});
+  // B8033 (#2475): a sheet whose token sees nothing in the dark gets a few squares of sight, in this scene's units
+  // fresh: the sheet arrival has just made (its prototype holds only the bare number); later placings keep the player's
+  const sight = fresh || !(Number(actor.prototypeToken?.sight?.range) > 0) ? {sight: {enabled: true, range: R.sightRange(scene.grid?.distance), visionMode: "basic"}} : {};
+  const td = await actor.getTokenDocument({x: to.x, y: to.y, ...sight, flags: {[MOD]: {arrival: true}}});
   const [made] = await scene.createEmbeddedDocuments("Token", [td.toObject()]);
   await H.log({kind: "scene", source: MOD, title: scene.name, note: `${actor.name} placed at the way in`});
   return made;
@@ -103,19 +108,23 @@ async function bringIn(user) {
 
 const making = new Set();
 /** Make the player's character from the name and line they picked, then bring them in. */
-export async function make(userId, {name, line} = {}) {
+export async function make(userId, {name, line, fresh = false} = {}) {
   if ( !H.isSeat() || !on() ) return null;
   const user = game.users.get(userId);
   if ( !user || user.isGM || making.has(userId) ) return null;
-  // One character each: a player who already has one is brought to it instead
-  if ( characterOf(user) ) return arrive(userId);
+  // One character each: a player who already has one is brought to it instead, unless they asked for a new one
+  // and said yes to the question (B8031, #2471); the old sheet is left as it is
+  if ( characterOf(user) && !fresh ) return arrive(userId);
+  // A second press, or a second window, within a few seconds of a new character makes no third one
+  const last = Number(user.character?.flags?.[MOD]?.arrival?.at) || 0;
+  if ( fresh && last && Date.now() - last < 15000 ) return arrive(userId);
   making.add(userId);
   try {
     const actor = await Actor.create(R.newCharacterData({name, line, userId, at: Date.now()}));
     await user.update({character: actor.id});
     await H.log({kind: "note", source: MOD, title: "A character was made for the player", note: `${actor.name}, ${R.arrivalLine(line)?.label ?? "Mortal"}, for ${user.name}`});
     const scene = await landing();
-    const token = await placeToken(actor, scene);
+    const token = await placeToken(actor, scene, {fresh: true});
     if ( user.viewedScene !== scene.id ) pull(scene, user, token);
     reply(userId, "arrive.ready", {actorId: actor.id, sceneId: scene.id, tokenId: token.id, made: true});
     await tell(userId, `<p><b>${esc(actor.name)}</b> stands at the way in. The character wizard is open to build the sheet; drag the token to move.</p>`);
@@ -141,20 +150,20 @@ function closeUserConfig() {
 
 let picking = false;
 /** Ask for a name and a line; the seat makes the character. */
-export async function pick() {
+export async function pick({fresh = false} = {}) {
   if ( picking || game.user.isGM ) return null;
   picking = true;
   closeUserConfig();
   try {
     const opts = R.ARRIVAL_LINES.map((l, i) => `<label class="wsolo-choice"><input type="radio" name="line" value="${l.id}"${i === 0 ? " checked" : ""}> ${esc(l.label)}<span class="wodx-quiet"> ${esc(l.hint)}</span></label>`).join("");
     const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog", "wsolo-arrive"], window: {title: R.arrivalTitle(townInPlay())},
-      content: `<p>You have no character yet. Give a name and pick what they are. The character wizard opens next to build the sheet.</p>
+      content: `<p>${fresh ? "A new character joins the chronicle. Your old one stays as it is." : "You have no character yet."} Give a name and pick what they are. The character wizard opens next to build the sheet.</p>
         <div class="form-group"><label>Name</label><input type="text" name="name" maxlength="${R.NAME_MAX}" placeholder="${esc(R.DEFAULT_NAME)}" autofocus></div>
         <fieldset class="wsolo-choices" data-fixed><legend>What they are</legend>${opts}</fieldset>`,
       ok: {label: "Arrive", callback: (ev, b) => ({name: b.form.elements.name?.value ?? "", line: b.form.querySelector("input[name=line]:checked")?.value ?? "mortal"})},
       rejectClose: false});
     if ( !got ) { ui.notifications.info("When you are ready, open your panel (the moon button) and press Make my character."); return null; }
-    ask("ask.arrive.make", got);
+    ask("ask.arrive.make", {...got, fresh: !!fresh});
     return got;
   } finally { picking = false; }
 }
@@ -192,9 +201,19 @@ export function installArrival(helpers) {
   addAsks({"ask.arrive": p => arrive(p.userId), "ask.arrive.make": p => make(p.userId, p)},
     {"arrive.pick": () => pick(), "arrive.ready": p => ready(p).catch(e => console.warn(`${MOD} | arrive`, e))});
   setArriveUi({
-    html: () => (!game.user.isGM && on() && !characterOf(game.user)
-      ? `<button type="button" class="wsolo-arrive-btn" data-action="arrive"><i class="fa-solid fa-user-plus"></i> Make my character</button>` : ""),
-    open: () => pick()
+    html: () => {
+      if ( game.user.isGM || !on() ) return "";
+      return !characterOf(game.user)
+        ? `<button type="button" class="wsolo-arrive-btn" data-action="arrive"><i class="fa-solid fa-user-plus"></i> Make my character</button>`
+        : `<button type="button" class="wsolo-arrive-new" data-action="arrivenew" title="Start a new character. The one you have now stays as it is."><i class="fa-solid fa-user-plus"></i> Make a new character</button>`;
+    },
+    open: async (fresh = false) => {
+      if ( !fresh ) return pick();
+      // B8031 (#2471): a second character only after a plain question; the old one is kept
+      const yes = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Make a new character"}, rejectClose: false,
+        content: `<p>Start a new character? <b>${esc(characterOf(game.user)?.name ?? "Your character")}</b> stays as it is, and you play the new one from now on.</p>`});
+      return yes ? pick({fresh: true}) : null;
+    }
   });
   // The panel's Make my character button goes once the player has one
   Hooks.on("updateUser", (u, ch) => {

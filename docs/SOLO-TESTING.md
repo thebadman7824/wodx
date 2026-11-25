@@ -17,15 +17,27 @@ A release candidate is one commit of main named `rc-YYYY-MM-DD`. A night's play 
    on it, and the gates that touch the core pass on the testbed.
 2. Tag it, on the PC: `node tools/release/rc.mjs tag --commit <sha>`.
 3. Deploy it, on the PC (the PC helper), with the solo world stopped:
-   `node tools/release/rc.mjs deploy --data D:\WoDX\FoundryData-solo\Data --label rc-YYYY-MM-DD --commit <sha> --port 30010 --backups D:\WoDX\Backups`
+   `node tools/release/rc.mjs deploy --data D:\WoDX\FoundryData-solo\Data --label rc-YYYY-MM-DD --commit <sha> --port 30010 --backups D:\WoDX\Backups --assets-from <a Data folder with the maps>`
    It refuses while anything listens on 30010, because someone may be playing. It backs up the world, the WoDX
    modules and the system, copies the system and every wodx- module from that commit, stamps them with the label,
    and checks every copied file's MD5 against the commit. Don't play on a build whose check fails.
+   The maps, tiles and sounds live in user-data folders (`rothenstein-places`, `wodx-maps`, `wodx-kits`), not in a
+   package. `--assets-from` copies them from a Data folder that has them (the Main PC's testbed Data). Without it,
+   the deploy fails when the solo Data folder lacks `rothenstein-places`, since every scene would show black (#2476).
 4. Tell the owner the label in one line. Every report carries it (from each package's release.json),
    so a fault names the build it was met on.
 
 A new build goes in at most every few days. Never deploy mid-week without the owner knowing, and never while the
 owner is playing (standing rule 4).
+
+## Starting a night of solo play
+
+All of WoDX's work runs on the Storyteller's client, so the world needs the Storyteller's seat (`tools/solo/seat.mjs`,
+a hidden browser signed in as the Storyteller) running beside it. `tools/solo/Play-Solo.bat` does both (#2468):
+it starts the world with `Start-Solo.bat` in `D:\WoDX\FoundryData-solo`, waits for port 30010, then starts the seat
+from the clean clone (`D:\WoDX\rc-clean`) with `--reports D:\WoDX\reports\solo`. Log in as your player, never as
+the Storyteller. Closing the seat's window stops the world too. If a player sees "the Storyteller's seat is not
+running", the seat is not up: start Play-Solo again.
 
 ## Report a problem
 

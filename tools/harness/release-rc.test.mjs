@@ -24,3 +24,15 @@ test("the MD5 check names missing and changed files, never the stamp", () => {
   const got = [{path: "a.mjs", md5: "1"}, {path: "b.mjs", md5: "x"}, {path: "release.json", md5: "stamped"}];
   assert.deepEqual(md5Mismatches(want, got), ["b.mjs", "c.mjs"]);
 });
+
+test("#2476: the map folders are copied from a source, kept, or fail the deploy when the player would see black", async () => {
+  const {assetPlan, RC_ASSETS} = await import("../release/rc.mjs");
+  assert.ok(RC_ASSETS.includes("rothenstein-places"));
+  const all = f => true, none = f => false;
+  assert.ok(assetPlan({sourceHas: all}).every(a => a.action === "copy"));
+  assert.ok(assetPlan({targetHas: all}).every(a => a.action === "keep"));
+  const empty = assetPlan({});
+  assert.equal(empty.find(a => a.folder === "rothenstein-places").action, "fail");
+  assert.ok(empty.filter(a => a.folder !== "rothenstein-places").every(a => a.action === "missing"));
+  assert.equal(assetPlan({sourceHas: none, targetHas: f => f === "rothenstein-places"}).find(a => a.folder === "rothenstein-places").action, "keep");
+});

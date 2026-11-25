@@ -331,8 +331,10 @@ test("panel.mjs 0.2.1: with no assigned character, the one on the viewed scene i
   const said = [];
   globalThis.ChatMessage = {create: async d => { said.push(d); return d; }};
   const owner = ids => function (u) { return ids.includes(u.id); };
-  const monk = {id: "monk", name: "Brother", hasPlayerOwner: true, type: "Mortal", testUserPermission: owner(["p1", "p2"])};
-  const mine = {id: "mine", name: "Gate character", hasPlayerOwner: true, type: "Mortal", testUserPermission: owner(["p1"])};
+  // B8031: both were made by arrival for p1; a stray owned actor no longer counts (see the #2471 test)
+  const made = {"wodx-solo": {arrival: {userId: "p1"}}};
+  const monk = {id: "monk", name: "Brother", hasPlayerOwner: true, type: "Mortal", flags: made, testUserPermission: owner(["p1", "p2"])};
+  const mine = {id: "mine", name: "Gate character", hasPlayerOwner: true, type: "Mortal", flags: made, testUserPermission: owner(["p1"])};
   const tokA = {actorId: "monk", width: 1, update: async function (d) { Object.assign(this, d); }, x: 7, y: 7};
   const tokB = {actorId: "mine", width: 1, update: async function (d) { Object.assign(this, d); }, x: 0, y: 0};
   const village = {id: "v", name: "Village", active: false, tokens: [tokA], width: 1000, height: 1000, padding: 0, grid: {size: 100}};
@@ -490,6 +492,7 @@ test("arrival: the steps, the lines and a typed name", () => {
   assert.equal(d.ownership.default, 0);
   assert.equal(d.prototypeToken.actorLink, true);
   assert.equal(d.prototypeToken.sight.enabled, true);
+  assert.ok(d.prototypeToken.sight.range > 0, "#2475: a new character sees a little in the dark");
   assert.equal(R.newCharacterData({line: "nonsense", userId: "p1"}).type, "Mortal");
 });
 
@@ -500,7 +503,7 @@ test("arrival.mjs: the seat makes the character, assigns it, places its token an
   assert.ok(/soloWaits\(\)\s*\)\s*\{\s*Hooks\.once\("wodxSoloArrived"/.test(guide), "the first-night tour waits for the token in solo play");
   assert.ok(guide.indexOf("soloWaits()") < guide.indexOf("put({offered: true})"), "the tour is not marked offered before the token is there");
   const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
-  assert.ok(panel.includes("ARRIVE_UI.html?.()") && panel.includes("arrive: () => ARRIVE_UI.open?.()"), "the panel offers Make my character");
+  assert.ok(panel.includes("ARRIVE_UI.html?.()") && panel.includes("arrive: () => ARRIVE_UI.open?.()") && panel.includes("arrivenew: () => ARRIVE_UI.open?.(true)"), "the panel offers Make my character");
 });
 
 test("arrival: Foundry's welcome scene is never the landing and always gives way; a default owner is nobody's (B5146, B5147)", () => {
@@ -516,4 +519,61 @@ test("arrival: Foundry's welcome scene is never the landing and always gives way
   assert.equal(R.ownsByName({default: 3}, "p1"), false);
   assert.equal(R.ownsByName({default: 0, p1: 3}, "p1"), true);
   assert.equal(R.ownsByName({p1: 2}, "p1"), false);
+});
+
+/* The first solo test's fixes (25 Nov 2026, B8030 to B8033) */
+
+test("#2486: the chronicle's own landing beats an older pick and the market, but never the flagged scene", () => {
+  const s = (id, name, x = {}) => ({id, name, img: "map.webp", active: false, landing: false, ...x});
+  const world = [s("m", "Locus · Market Street"), s("d", "Dolany Village (gridless trial)"), s("y", "The yard", {active: true})];
+  assert.equal(R.pickLanding(world, "m", "Rothenstein", "Dolany Village"), "d", "the manifest's landing, over the setting left by an older arrival");
+  assert.equal(R.pickLanding([...world, s("g", "Gate", {landing: true, img: ""})], "m", "Rothenstein", "Dolany Village"), "g", "a scene flagged by hand wins, map or not");
+  assert.equal(R.pickLanding([...world, s("n", "Night", {landing: true, made: true, img: ""})], "m", "Rothenstein", "Dolany Village"), "d", "the plain night scene arrival made gives way to the chronicle's landing");
+  assert.equal(R.pickLanding(world, "", "Rothenstein", ""), "m", "no landing named: as before");
+  assert.equal(R.pickLanding([...world, s("f", "Cellar", {landing: true})], "", "", "Dolany Village"), "f", "a flagged scene still comes first");
+  assert.equal(R.pickLanding([...world, s("b", "By night: the way in", {landing: true, made: true, img: ""})], "", "", "Dolany Village"), "d", "a plain night scene made before the maps gives way to the named landing");
+  assert.equal(R.pickLanding([s("d", "Dolany Village", {img: ""}), ...world.slice(0, 1)], "", "", "Dolany Village"), "m", "a named landing with no map is passed over");
+});
+
+test("#2475: the sight range follows the scene's units", () => {
+  assert.equal(R.sightRange(1), R.SIGHT_SQUARES);
+  assert.equal(R.sightRange(5), R.SIGHT_SQUARES * 5);
+  assert.equal(R.sightRange(1.5), R.SIGHT_SQUARES * 1.5);
+  assert.ok(R.sightRange(0) > 0 && R.sightRange(undefined) > 0);
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
+  assert.match(src, /R\.sightRange\(scene\.grid\?\.distance\)/, "the token placed at the way in gets sight in the scene's units");
+  assert.match(src, /placeToken\(actor, scene, \{fresh: true\}\)/, "a sheet arrival has just made gets the scene-unit range, not the prototype's bare number");
+});
+
+test("#2471: a stray owned actor is not the player's character; only one arrival made, or the assigned one", async () => {
+  const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  assert.match(panel, /named\(a\) && madeFor\(a, user\)/);
+  assert.match(panel, /deprecated/i);
+  const arrival = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
+  assert.match(arrival, /characterOf\(user\) && !fresh/, "a new character is made only when asked for");
+  assert.match(arrival, /Make a new character/);
+  assert.match(arrival, /DialogV2\.confirm/, "the new character is asked about first");
+  const d = R.newCharacterData({name: "Ilse", line: "vampire", userId: "p1"});
+  assert.equal(d.flags["wodx-solo"].arrival.userId, "p1", "the sheet arrival makes carries the mark that makes it the player's");
+});
+
+test("#2467: Report a problem is outside the folded part of the panel", () => {
+  const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  assert.match(panel, /R\.PANEL\.filter\(b => b\.id !== "report"\)/);
+  assert.match(panel, /wsolo-report/);
+  const at = panel.indexOf("wsolo-report"), fold = panel.indexOf("<details class=\"wsolo-more\"");
+  assert.ok(at > 0 && at < fold, "the report button comes before the fold");
+});
+
+test("#2468: Play-Solo starts the world and the seat, and the empty-seat notice says so", () => {
+  const ps = readFileSync(join(root, "tools/solo/Play-Solo.ps1"), "utf8");
+  for ( const k of ["Start-Solo.bat", "seat.mjs", "--reports", "Wait-Process", "Stop-Process", "Get-NetTCPConnection", "::1"] ) assert.ok(ps.includes(k), `Play-Solo.ps1 has ${k}`);
+  assert.ok(existsSync(join(root, "tools/solo/Play-Solo.bat")));
+  const main = readFileSync(join(root, "modules/wodx-solo/scripts/main.mjs"), "utf8");
+  assert.match(main, /start solo play with Play-Solo/);
+});
+
+test("#2486: Rothenstein names its landing", async () => {
+  const C = await import(pathToFileURL(join(root, "modules/wodx-rothenstein/chronicle.mjs")));
+  assert.equal(C.MANIFEST.landing, "Dolany Village");
 });

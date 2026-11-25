@@ -40,10 +40,12 @@ export const setFateUi = ui => Object.assign(FATE_UI, ui);
 /* ------------------------------------------------------------------ */
 
 /**
- * The character a player plays (0.2.1): the one assigned to them; else one they own with a token on the scene they
- * view, one they own alone before one they share; else the first they own alone, then the first they own at all.
+ * The character a player plays (0.2.1): the one assigned to them; else one arrival made for them (B8031) with a token
+ * on the scene they view, one they own alone before one they share; else the first they own alone, then any.
  */
-const ownable = a => a?.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
+const ownable = a => a?.hasPlayerOwner && !/group/i.test(String(a.type ?? "")) && !/\(deprecated\)/i.test(String(a.name ?? ""));
+/** B8031 (#2471): only a sheet arrival made counts as a player's own when none is assigned; stray owned actors do not. */
+const madeFor = (a, user) => String(a?.flags?.[MOD]?.arrival?.userId ?? "") === String(user?.id ?? "");
 const ownsAlone = (a, user) => !all(game.users).some(u => u.id !== user.id && !u.isGM && a.testUserPermission?.(u, "OWNER"));
 export function characterOf(user) {
   if ( !user ) return null;
@@ -51,7 +53,7 @@ export function characterOf(user) {
   const named = a => (a?.ownership ? R.ownsByName(a.ownership, user.id) : !!a?.testUserPermission?.(user, "OWNER"));
   const byDefault = a => Number(a?.ownership?.default) >= 3 && !named(a);
   if ( user.character && !byDefault(user.character) ) return user.character;
-  const mine = all(game.actors).filter(a => ownable(a) && named(a));
+  const mine = all(game.actors).filter(a => ownable(a) && named(a) && madeFor(a, user));
   const viewed = game.scenes?.get?.(user.viewedScene) ?? all(game.scenes).find(s => s.id === user.viewedScene);
   const onView = viewed ? mine.filter(a => all(viewed.tokens).some(t => t.actorId === a.id)) : [];
   const alone = list => list.find(a => ownsAlone(a, user));
@@ -254,7 +256,7 @@ function onSocket(msg, senderId) {
 function ask(type, payload = {}) {
   const p = {...payload, userId: game.user.id};
   if ( H.isSeat() ) return SEAT[type](p).catch(e => console.error(`${MOD} | ${type}`, e));
-  if ( !game.users.activeGM ) { ui.notifications.warn(`${R.NAME}: the Storyteller's seat is empty, so nothing can be done.`); return null; }
+  if ( !game.users.activeGM ) { ui.notifications.warn(`${R.NAME}: the Storyteller's seat is not running, so nothing can be done. Start solo play with Play-Solo.`); return null; }
   game.socket.emit(SOCKET, {type, payload: p});
   return null;
 }
@@ -333,7 +335,7 @@ export class SoloPanel extends ApplicationV2 {
     classes: ["wodx", "wsolo-panel"],
     window: {title: R.NAME, icon: "fa-solid fa-moon", resizable: false},
     position: {width: 340, height: "auto", top: 80, left: 120},
-    actions: {act: SoloPanel.#onAct, st: (ev, t) => ST_UI.open?.(t.dataset.id), sttoggle: () => ST_UI.toggle?.(), arrive: () => ARRIVE_UI.open?.()}
+    actions: {act: SoloPanel.#onAct, st: (ev, t) => ST_UI.open?.(t.dataset.id), sttoggle: () => ST_UI.toggle?.(), arrive: () => ARRIVE_UI.open?.(), arrivenew: () => ARRIVE_UI.open?.(true)}
   };
   static open() {
     const app = foundry.applications.instances?.get?.("wodx-solo-panel") ?? new SoloPanel();
@@ -343,7 +345,10 @@ export class SoloPanel extends ApplicationV2 {
     const div = document.createElement("div");
     div.className = "wsolo-buttons";
     const paused = !!game.paused;
-    const rest = R.PANEL.map(b => {
+    // B8030 (#2467): Report a problem stays in reach, outside the folded part
+    const shown = b => `<button type="button" data-action="act" data-id="${b.id}"><i class="${b.icon}"></i> ${esc(b.label)}</button>`;
+    const reportBtn = R.PANEL.find(b => b.id === "report");
+    const rest = R.PANEL.filter(b => b.id !== "report").map(b => {
       const icon = b.id === "pause" && paused ? "fa-solid fa-play" : b.icon;
       const label = b.id === "pause" ? (paused ? "Go on" : "Pause") : b.label;
       return `<button type="button" data-action="act" data-id="${b.id}"><i class="${icon}"></i> ${esc(label)}</button>`;
@@ -351,7 +356,8 @@ export class SoloPanel extends ApplicationV2 {
     // One main button; the rest under More, open once the player has opened it (B2831)
     div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}${FATE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, sleep through the years, pause, I am stuck, the curtain, carry the fallen, chronicle options, report a problem</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      ${reportBtn ? `<div class="wsolo-buttons wsolo-report">${shown(reportBtn)}</div>` : ""}
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, sleep through the years, pause, I am stuck, the curtain, carry the fallen, chronicle options</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }

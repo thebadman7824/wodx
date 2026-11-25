@@ -791,6 +791,7 @@
   "uses": [
    "modules/wodx-otherworlds/scripts/corruption.mjs:318",
    "modules/wodx-solo/scripts/arrival.mjs:39",
+   "modules/wodx-solo/scripts/arrival.mjs:41",
    "modules/wodx-storyteller/scripts/hunters.mjs:197",
    "modules/wodx-storyteller/scripts/institutions.mjs:52",
    "modules/wodx-storyteller/scripts/power.mjs:563"
@@ -1651,7 +1652,7 @@
   ],
   "uses": [
    "modules/wodx-npc/scripts/family.mjs:40",
-   "modules/wodx-solo/scripts/panel.mjs:73",
+   "modules/wodx-solo/scripts/panel.mjs:75",
    "modules/wodx-solo/scripts/world.mjs:214"
   ]
  },
@@ -2910,7 +2911,7 @@
    "wizard"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/arrival.mjs:174"
+   "modules/wodx-solo/scripts/arrival.mjs:183"
   ]
  },
  {
@@ -3123,7 +3124,7 @@
   "uses": [
    "modules/wodx-interactables/scripts/main.mjs:2201",
    "modules/wodx-solo/scripts/companions.mjs:18",
-   "modules/wodx-solo/scripts/panel.mjs:304"
+   "modules/wodx-solo/scripts/panel.mjs:306"
   ]
  },
  {
@@ -3135,7 +3136,7 @@
   "uses": [
    "modules/wodx-solo/scripts/companions.mjs:87",
    "modules/wodx-solo/scripts/companions.mjs:106",
-   "modules/wodx-solo/scripts/panel.mjs:306"
+   "modules/wodx-solo/scripts/panel.mjs:308"
   ]
  },
  {
@@ -4796,7 +4797,7 @@
    "director"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:175"
+   "modules/wodx-solo/scripts/panel.mjs:177"
   ]
  },
  {
@@ -4806,8 +4807,8 @@
    "direct"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:176",
-   "modules/wodx-solo/scripts/panel.mjs:177"
+   "modules/wodx-solo/scripts/panel.mjs:178",
+   "modules/wodx-solo/scripts/panel.mjs:179"
   ]
  },
  {
@@ -4825,7 +4826,7 @@
    "aid"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:184",
+   "modules/wodx-solo/scripts/panel.mjs:186",
    "modules/wodx-solo/scripts/world.mjs:44"
   ]
  },
@@ -4836,8 +4837,8 @@
    "draw"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:185",
-   "modules/wodx-solo/scripts/panel.mjs:185"
+   "modules/wodx-solo/scripts/panel.mjs:187",
+   "modules/wodx-solo/scripts/panel.mjs:187"
   ]
  },
  {
@@ -4847,7 +4848,7 @@
    "propose"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:187"
+   "modules/wodx-solo/scripts/panel.mjs:189"
   ]
  },
  {
@@ -5167,7 +5168,7 @@
    "openOnYourOwn"
   ],
   "uses": [
-   "modules/wodx-solo/scripts/panel.mjs:280"
+   "modules/wodx-solo/scripts/panel.mjs:282"
   ]
  },
  {
