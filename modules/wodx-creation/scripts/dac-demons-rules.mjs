@@ -9,14 +9,18 @@
  *  - The sheet is a Creature with blood and Disciplines (as WoDX makes a vozhd), marked as the Companion's demon.
  *  - B7702: the V20 Dark Ages Companion's monsters keep the sheet's own seven health levels (the book gives none) and
  *    carry their Road rating and rules in the notes.
+ *  - B7939: the fomori and monsters of Dark Ages: Werewolf (pp. 186-189) have no blood: they carry Rage and Gnosis
+ *    where the book rates them, their fomor powers, natural weapons and hide (powers, weapons, armor), made by dac-demons.mjs.
  */
 import {DEMONS, BOOK} from "../data/dac-demons.mjs";
 import {MONSTERS, BOOK as MONSTER_BOOK} from "../data/v20dac-monsters.mjs";
+import {MONSTERS as DAW_MONSTERS, BOOK as DAW_BOOK} from "../data/daw-monsters.mjs";
 import {planOf} from "./book-people-rules.mjs";
 import {HEALTH_LEVELS} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The Companion's demons, then the V20 Dark Ages Companion's four monsters (B7702), each with its own book. */
-export const ALL = [...DEMONS.map(d => ({...d, book: BOOK})), ...MONSTERS.map(m => ({...m, book: MONSTER_BOOK}))];
+export const ALL = [...DEMONS.map(d => ({...d, book: BOOK})), ...MONSTERS.map(m => ({...m, book: MONSTER_BOOK})),
+  ...DAW_MONSTERS.map(m => ({...m, book: DAW_BOOK}))];
 export const byKey = key => ALL.find(d => d.key === key) ?? null;
 export const pageOf = d => `${d.book ?? BOOK} p. ${d.p}`;
 
@@ -67,14 +71,28 @@ export function plan(d, systemKeys = []) {
   const base = planOf({...d, abilities: convertAbilities(d.abilities), willpower: d.willpower, nature: "", demeanor: "", group: d.group}, systemKeys);
   const h = d.health ? healthOf(d) : null;
   const update = {...base.update, ...(h?.update ?? {}),
-    "system.settings.variant": "general", "system.settings.haswillpower": true, "system.settings.hasbloodpool": true,
+    "system.settings.variant": "general", "system.settings.haswillpower": true, "system.settings.hasbloodpool": !!d.blood,
     "system.settings.powers.hasdisciplines": true, "system.settings.powers.haspowers": true,
     "system.advantages.bloodpool.max": d.blood, "system.advantages.bloodpool.temporary": d.blood,
+    ...(d.rage ? {"system.settings.hasrage": true, "system.advantages.rage.permanent": d.rage, "system.advantages.rage.temporary": d.rage} : {}),
+    ...(d.gnosis ? {"system.settings.hasgnosis": true, "system.advantages.gnosis.permanent": d.gnosis, "system.advantages.gnosis.temporary": d.gnosis} : {}),
     ...(h ? {"system.traits.health.totalhealthlevels.max": h.levels, "system.traits.health.totalhealthlevels.value": h.levels} : {})};
   const notes = [d.about, d.attack ? `Attack: ${d.attack}.` : "", d.rule ?? "", h ? `Health: ${bookLevels(d)} levels, the last ${d.end}.` : "",
     d.road !== undefined ? `Road ${d.road}.` : "", ...(d.rules ?? []),
     d.immaterial ? "Has no body: Strength, Dexterity and Stamina are not rated." : "",
     d.terrestrial ? "A terrestrial demon: slain, it is dead, not dispelled." : "",
     d.flies ? "Flies." : ""].filter(Boolean);
-  return {update, secondary: base.secondary, disciplines: {...d.disciplines}, paths: {...d.paths}, notes};
+  return {update, secondary: base.secondary, disciplines: {...d.disciplines}, paths: {...d.paths}, notes, items: gearOf(d)};
+}
+
+/** B7939: a DA:W monster's fomor powers, natural weapons and hide as Item data (the names fomor-powers.js reads). */
+export function gearOf(d) {
+  const ref = pageOf(d), out = [];
+  for ( const name of d.powers ?? [] ) out.push({name, type: "Power", system: {type: "wod.types.power", value: 1, description: `<p>A fomor power (${ref}).</p>`}});
+  for ( const w of d.weapons ?? [] ) out.push({name: w.name, type: "Melee Weapon", img: "icons/svg/pawprint.svg",
+    system: {isnatural: true, isequipped: true, attack: {attribute: "dexterity", ability: "brawl", secondaryabilityid: "", accuracy: 0, isrollable: true},
+      damage: {attribute: "strength", bonus: Number(w.bonus) || 0, type: w.type, isrollable: true}, difficulty: 6, description: `<p>Strength + ${w.bonus}, ${w.type} (${ref}).</p>`}});
+  if ( d.armor ) out.push({name: d.armor.name, type: "Armor", img: "icons/svg/shield.svg",
+    system: {isequipped: true, soak: {bashing: d.armor.soak, lethal: d.armor.soak, aggravated: d.armor.soak}, description: `<p>${d.armor.soak} more soak dice (${ref}).</p>`}});
+  return out;
 }

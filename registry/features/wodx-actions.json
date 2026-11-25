@@ -20,7 +20,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B51, B58"
+     "decisions": "B51, B58, B7904, B7920, B7927, B7935, B7940"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:action"
@@ -34,7 +34,8 @@
     }
    },
    "open": [
-    "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet"
+    "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet",
+    "The wraith menu's Danger group has the Haunt, a night in it and going into it (B7901)"
    ],
    "deferred": [],
    "faults": [],
@@ -154,7 +155,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "Actions 3.2"
+     "decisions": "Actions 3.2, B7925"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/kindred.js:sheetDisciplines"
@@ -168,7 +169,9 @@
     }
    },
    "open": [
-    "book: V20 Dark Ages Disciplines chapter; not checked against the book text yet"
+    "book: V20 Dark Ages Disciplines chapter; not checked against the book text yet",
+    "a mortal killed by an inquisitor asks the first sin against God's Piety roll (B7888)",
+    "kindred.js witnessStep reads the Fog for wraiths (B7900)"
    ],
    "deferred": [],
    "faults": [],
@@ -221,7 +224,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "Actions 3.2"
+     "decisions": "Actions 3.2, B7880"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/main.js:frenzy"
@@ -236,7 +239,8 @@
    },
    "open": [
     "gatetruthactions step 9 drives a real frenzy check but checks Destiny's reroll of it",
-    "book: V20 Dark Ages frenzy and Rötschreck; not checked against the book text yet"
+    "book: V20 Dark Ages frenzy and Rötschreck; not checked against the book text yet",
+    "A Garou frenzy suggests the Renown it costs, Wisdom and for a fox frenzy Glory (DA:W p. 99; B7880, gatesept step 4)"
    ],
    "deferred": [],
    "faults": [],
@@ -270,7 +274,8 @@
     }
    },
    "open": [
-    "book: V20 Dark Ages Roads and the hierarchy of sins; not checked against the book text yet"
+    "book: V20 Dark Ages Roads and the hierarchy of sins; not checked against the book text yet",
+    "an inquisitor's lie or theft on a roll asks a Piety roll on the card, as a Road sin does (B7888, gateinqcurses)"
    ],
    "deferred": [],
    "faults": [],
@@ -428,7 +433,7 @@
    "steps": {
     "built": {
      "pr": 526,
-     "decisions": "Actions 3.20.0, B6663"
+     "decisions": "Actions 3.20.0, B6663, B7909"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/social.js:build"
@@ -491,7 +496,7 @@
    "steps": {
     "built": {
      "pr": 618,
-     "decisions": "Actions 3.42.0"
+     "decisions": "Actions 3.42.0, B7900"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/witness-rules.js:reaction"
@@ -501,7 +506,8 @@
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
+    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
+    "The Fog for the restless dead: reactions by Willpower, forgotten after, minors and animals outside it (B7900, gatewraithdead step 3)"
    ],
    "deferred": [],
    "faults": [],
@@ -591,7 +597,7 @@
    "steps": {
     "built": {
      "pr": 555,
-     "decisions": "B3130-B3133, B6000-B6004"
+     "decisions": "B3130-B3133, B6000-B6004, B7908-B7909, B7926"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/trait-hooks.js:traitMods"
@@ -634,7 +640,7 @@
    "steps": {
     "built": {
      "pr": 553,
-     "decisions": "B781, B783, B3757, B4926, B5780-B5795"
+     "decisions": "B781, B783, B3757, B4926, B5780-B5795, B7936"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/power-effects.js:powerOutcomes"
@@ -706,7 +712,7 @@
    "steps": {
     "built": {
      "pr": 1239,
-     "decisions": "B4832-B4834"
+     "decisions": "B4832-B4834, B7934"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/turns.js:onTurn"
@@ -900,12 +906,13 @@
    "files": [
     "modules/wodx-actions/scripts/hunter.js",
     "modules/wodx-actions/scripts/hunter-rules.js",
-    "modules/wodx-actions/scripts/inq-blessings.js"
+    "modules/wodx-actions/scripts/inq-blessings.js",
+    "modules/wodx-actions/scripts/inq-curses-rules.js"
    ],
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B42, B45"
+     "decisions": "B42, B45, B7883-B7890, B7893-B7896, B7934"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/hunter.js:build"
@@ -919,7 +926,10 @@
     }
    },
    "open": [
-    "book: Dark Ages: Inquisitor chapter five and V20 Dark Ages pp. 392 on (True Faith); not checked against the book text yet"
+    "book: Dark Ages: Inquisitor chapter five and V20 Dark Ages pp. 392 on (True Faith); the Curses, the Curse roll, Cocytus, the order benefits and the merits and flaws checked against DA:I pp. 129-139, 159, 166-169, 201-213 (B7883-B7890); the rest not checked against the book text yet",
+    "Curses from play: botched Piety and Superior Virtue rolls roll for a Curse, Blessings above the stage give one, the Storyteller picks it on the card, Cocytus drains the bank (B7883-B7886, gateinqcurses); narrative Curses (Solemn Oath, Company of Wolves, Personal Adversary) are the Storyteller's",
+    "Order benefits only from 1223 (the Oculi after 1227); before then a hunter is a precursor (B7887, B7890). Worship Obsession's daily cost, Holy Art Natural's experience and Pure at creation are not read yet (B7889)",
+    "Retreats bank past a point a day up to the highest Superior Virtue and its Virtue; ended early for an Endowment, a Curse roll; the cell's chapter-house Holy Ground and Flock count in prayer, and waking on holy ground gives two Willpower (B7893-B7896, gateinqcell)"
    ],
    "deferred": [],
    "faults": [],
@@ -1033,12 +1043,13 @@
     "modules/wodx-actions/scripts/garou-rules.js",
     "modules/wodx-actions/scripts/garou-testpack.js",
     "modules/wodx-actions/scripts/totem-rules.js",
-    "modules/wodx-actions/data/rules/werewolf/totems-da.json"
+    "modules/wodx-actions/data/rules/werewolf/totems-da.json",
+    "modules/wodx-actions/scripts/garou-deeds-rules.js"
    ],
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B39, B41, B7082-B7087, B7860-B7861"
+     "decisions": "B39, B41, B7082-B7087, B7860-B7861, B7879-B7882, B7936"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/garou.js:totemOf"
@@ -1052,8 +1063,9 @@
     }
    },
    "open": [
-    "book: pack totems checked against Dark Ages: Werewolf pp. 193, 227-231 (B7860); the rest not checked against the book text yet",
-    "Mockery Breeds regenerate each round (B7820, #2096; gatemorebuilds step 4); the Samsa's swarm escape (W20 Book of the Wyrm p. 170) is the Storyteller's"
+    "book: pack totems checked against Dark Ages: Werewolf pp. 193, 227-231 (B7860), Renown awards, the Litany and rank challenges against pp. 31-33, 98-101 (B7879-B7882); the rest not checked against the book text yet",
+    "Mockery Breeds regenerate each round (B7820, #2096; gatemorebuilds step 4); the Samsa's swarm escape (W20 Book of the Wyrm p. 170) is the Storyteller's",
+    "Renown from play: frenzies, chores, moots, refused offices and learned rites raise suggestions the Storyteller confirms (B7880, gatesept); other deeds stay in the Award Renown dialog"
    ],
    "deferred": [],
    "faults": [],
@@ -1115,7 +1127,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B71, B7862"
+     "decisions": "B71, B7862, B7904-B7909, B7927"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/mage-da.js:build"
@@ -1139,6 +1151,102 @@
     117,
     553
    ]
+  },
+  {
+   "id": "actions.mage-household",
+   "name": "A Dark Ages mage's household and standing: chantry and its gossip, familiar, Destiny, Library, servants, talismans, degrees, the DA:Mage merits and flaws",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/mage-household.js",
+    "modules/wodx-actions/scripts/mage-household-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7904-B7909, B7927"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/mage-household.js:build"
+    },
+    "shown": {
+     "what": "the household window and its cards; the weekly household card (familiar fed or weakening, the commoners' talk, the apprentice's mess); the familiar's button on a Backlash card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemagehouse.mjs",
+     "step": "1. the chantry with no community points: the commoners talk"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Mage pp. 37, 83-93 read in full 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.thrall",
+   "name": "The infernal thrall of Dark Ages: Devil's Due: Vice, Resolve, Torment, sins, pacts, rites and Absolution",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/thrall.js",
+    "modules/wodx-actions/scripts/thrall-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7920-B7926, B7933"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/thrall.js:build"
+    },
+    "shown": {
+     "what": "the thrall window and its cards (a sin, the Vice calling, atonement, holy ground, the Aura read, a pact sealed or failed, a gift of the master, research and rites, Absolution); the thrall's sin prompt with its button; the dawn card (Resolve, Consumption, the bond); the Aura of Sin ticks on a roll"
+    },
+    "gated": {
+     "gate": "tools/gate/gatethrall.mjs",
+     "step": "2. a planned murder from the window: Conscience fails and a point of Torment"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Devil's Due pp. 85-103, 124-126, 132-133 read 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.mage-wonders",
+   "name": "A Dark Ages mage's everyday wonders (charms, elixirs, tools) enchanted as a craft, and Tass from creatures and the fae",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/mage-wonders.js",
+    "modules/wodx-actions/scripts/mage-wonders-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7927-B7930"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/mage-household.js:build"
+    },
+    "shown": {
+     "what": "Enchant a wonder, Use a wonder and Harvest Tass on the household window and their cards; a charmed weapon's damage or piercing on its sheet; wonder items on the sheet"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemagewonders.mjs",
+     "step": "1. unbreakable iron from the household window: the sword strikes +3"
+    }
+   },
+   "open": [
+    "book: Dark Ages: Mage pp. 190-207 and Dark Ages: Fae p. 182 read 24 Nov 2026; house readings in docs/PENDING-REVIEW.md"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
   },
   {
    "id": "actions.m20",
@@ -1192,7 +1300,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B72, B6560-B6566, B7866"
+     "decisions": "B72, B6560-B6566, B7866, B7870-B7873, B7932, B7938, B7940"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/fae-da.js:build"
@@ -1206,7 +1314,8 @@
     }
    },
    "open": [
-    "book: oaths and faerie food checked against Dark Ages: Fae pp. 85, 108-110 (B7866); the rest not checked against the book text yet"
+    "book: oaths, faerie food and Echoes checked against Dark Ages: Fae pp. 67-75, 85, 108-113, 182 (B7866, B7870-B7873); the rest not checked against the book text yet",
+    "Echoes from village life (bells, holy ground, iron and charms near a token) come as Storyteller prompts (B7871, gatefaeechoes); the Storyteller still judges Echoes the prompts cannot see"
    ],
    "deferred": [],
    "faults": [],
@@ -1268,7 +1377,7 @@
    "steps": {
     "built": {
      "pr": 22,
-     "decisions": "B43, B44, B3553, B3554"
+     "decisions": "B43, B44, B3553, B3554, B7899-B7903, B7940"
     },
     "wired": {
      "reader": "modules/wodx-actions/scripts/wraith.js:library"
@@ -1282,7 +1391,8 @@
     }
    },
    "open": [
-    "book: Wraith: The Oblivion 20th; not checked against the book text yet"
+    "book: Wraith: The Oblivion 20th; not checked against the book text yet",
+    "The valley's dead: the Crucible on a player's mortal's death, Haunts with echoes (Nightmarish and Forbidding roll), shelter from the storm by Haunt rating and crowding, and no wraith where the chronicle's souls are eaten (B7899, B7901-B7903, gatewraithdead)"
    ],
    "deferred": [],
    "faults": [],

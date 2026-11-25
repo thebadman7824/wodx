@@ -24,6 +24,9 @@ import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
+import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
+import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
+import { current as chronicleNow } from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -98,7 +101,16 @@ export function build(ctx) {
         let base = null;
         try { base = tok ? game.modules.get("wodx-otherworlds")?.api?.placeOf?.(tok)?.ratings?.shroud : null; } catch (e) { base = null; }
         const hysteria = n(canvas?.scene?.getFlag?.(MOD, "hysteria"));
-        return { base: Number.isFinite(base) ? base : null, rating: W.shroudRating({ base: Number.isFinite(base) ? base : 7, hysteria }), hysteria };
+        // B7901: a Haunt here lowers the Shroud by its rating, to 4 at least (Wraith 20th p. 288)
+        const h = hauntHere();
+        return { base: Number.isFinite(base) ? base : null, rating: W.shroudRating({ base: Number.isFinite(base) ? base : 7, hysteria, haunt: h?.rating ?? 0 }), hysteria, haunt: h };
+    }
+    /** B7901: this scene's Haunt: the Storyteller's own (a scene flag), else the chronicle's for a scene of this name. */
+    function hauntHere(scene = canvas?.scene) {
+        if (!scene) return null;
+        const own = scene.getFlag?.(MOD, "haunt");
+        if (own && n(own.rating) > 0) return { name: own.name || scene.name, rating: Math.min(5, n(own.rating)), echoes: (own.echoes ?? []).filter(k => W.ECHOES[k]) };
+        try { const h = Local.hauntOn(Local.localOf(chronicleNow()), scene.name); return h ? { name: h.name || scene.name, rating: h.rating, echoes: h.echoes.filter(k => W.ECHOES[k]) } : null; } catch (e) { return null; }
     }
 
     /* ---------------- Arcanoi ---------------- */
@@ -118,16 +130,24 @@ export function build(ctx) {
         let indoor = false;
         try { indoor = game.modules.get("wodx-atmosphere")?.api?.weather?.isOutdoor?.(canvas.scene) === false; } catch (e) { indoor = false; }
         const lines = [];
-        for (const t of canvas.tokens?.placeables ?? []) {
+        // B7902: a Haunt shelters five wraiths a level; the storm's level less the Haunt's, breaking in after its rating in hours (Wraith 20th pp. 290-291)
+        const haunt = hauntHere();
+        const here = (canvas.tokens?.placeables ?? []).filter(t => t.actor && isWraith(t.actor));
+        const sh = haunt ? W.shelter({ force, haunt: haunt.rating, wraiths: here.length, great: !!great() }) : null;
+        for (const t of here) {
             const a = t.actor;
-            if (!a || !isWraith(a)) continue;
-            const dice = W.maelstromDice(force, { haunt: indoor ? 1 : 0 });
+            if (sh?.safe) { lines.push(`<li>${esc(a.name)}: sheltered in ${esc(haunt.name)}</li>`); continue; }
+            const level = sh ? sh.level : force;
+            const dice = W.maelstromDice(level, { haunt: sh ? 0 : indoor ? 1 : 0 });
             if (!dice) { lines.push(`<li>${esc(a.name)}: sheltered</li>`); continue; }
             const r = await rollPool(dice, 6, { canBotch: false });
-            const agg = Math.random() < W.AGG_CHANCE[force];
-            if (r.successes) await corpusDamage(a, agg ? "aggravated" : "lethal", r.successes);
-            lines.push(`<li>${esc(a.name)}: ${dice} dice, ${r.successes} ${agg ? "aggravated" : "lethal"} on the Corpus</li>`);
+            const s = sh?.soak ? await rollPool(sh.soak, 6, { canBotch: false }) : null;
+            const hurt = Math.max(0, r.successes - (s?.successes ?? 0));
+            const agg = Math.random() < W.AGG_CHANCE[Math.min(5, level)];
+            if (hurt) await corpusDamage(a, agg ? "aggravated" : "lethal", hurt);
+            lines.push(`<li>${esc(a.name)}: ${dice} dice${s ? `, the Haunt soaks ${s.successes}` : ""}, ${hurt} ${agg ? "aggravated" : "lethal"} on the Corpus</li>`);
         }
+        if (sh) lines.push(`<li class="wodx-quiet">${esc(haunt.name)}, Haunt ${sh.haunt}: ${sh.safe ? "the storm cannot reach in" : `the storm breaks in after ${sh.hours} hour${sh.hours === 1 ? "" : "s"} at level ${sh.level}`}; room for ${sh.capacity}${sh.over ? `, ${sh.over} too many (the Haunt counts as ${sh.effective})` : ""} (${W.WR20} pp. 290-291).</li>`);
         if (!lines.length) return null;
         const g = great();
         return ChatMessage.create({ content: `<div class="vta-card"><h3>The Maelstrom, force ${force}${g ? `: ${esc(g.name)}` : ""}</h3><p>The storm tears at the wraiths here${indoor ? " (indoors: some shelter)" : ""}. Outdoors +${W.MAELSTROM[force].diff} difficulty to everything.</p><ul>${lines.join("")}</ul><p class="wodx-quiet">Wraith: The Great War p. 87</p></div>`, speaker: { alias: "WoDX" } });
@@ -613,6 +633,101 @@ export function build(ctx) {
             whisper: ownerIds(actor), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
+    /* ---------------- The valley's dead and the living (B7899-B7903) ---------------- */
+
+    /**
+     * B7899, B7903: a player's mortal dies. Where the chronicle says souls are eaten, nothing rises; elsewhere the
+     * Storyteller is asked about a Crucible: the death played again, and the Enfant made in the Caul.
+     */
+    async function onDeath(actor, d = {}) {
+        if (!isActiveGM() || !actor || d.condition !== "dead" || !actor.hasPlayerOwner) return null;
+        if (P.detectProfile(actor) !== "mortal" || actor.getFlag(MOD, "wraithDeath")) return null;
+        const scene = actor.getActiveTokens?.()[0]?.document?.parent ?? canvas?.scene;
+        let fate = "";
+        try { fate = Local.soulFateOn(Local.localOf(chronicleNow()), scene?.name ?? ""); } catch (e) { fate = ""; }
+        if (W.soulEaten(fate)) {
+            await actor.setFlag(MOD, "wraithDeath", { crucible: "eaten", at: game.time.worldTime });
+            return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>${esc(actor.name)} is gone</h3><p>Died on ${esc(scene?.name ?? "this ground")}, where what dies leaves nothing: the soul is eaten. No wraith rises and no Crucible is played.</p></div>` });
+        }
+        await actor.setFlag(MOD, "wraithDeath", { crucible: "asked", at: game.time.worldTime });
+        const u = actor.uuid;
+        return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { kind: "buttons" } }, content: `<div class="vta-card"><h3>The Crucible: ${esc(actor.name)}</h3><p>A player's mortal has died. In a Crucible scene they live the death again, with the Shadowlands creeping in, alone as in a Harrowing; others may play the people of their memories. Only after it can they tear away their own Caul (${W.WR20} ${W.CRUCIBLE.page}).</p>
+          <div class="vta-btns"><button type="button" class="vta-btn" data-wx="crucible" data-arg="rise" data-actor="${u}">Rise in the Caul (make the Enfant)</button><button type="button" class="vta-btn" data-wx="crucible" data-arg="rest" data-actor="${u}">Lay them to rest</button></div></div>` });
+    }
+    async function crucible(actor, how) {
+        if (!game.user.isGM) return ctx.notify("The Storyteller decides.");
+        if (how === "rest") { await actor.setFlag(MOD, "wraithDeath", { ...(actor.getFlag(MOD, "wraithDeath") ?? {}), crucible: "rest" }); return post(actor, `${actor.name} rests`, `<div class="vta-note">Laid to rest: no wraith rises.</div>`); }
+        if (how === "done") {
+            await actor.setFlag(MOD, "wraithDeath", { ...(actor.getFlag(MOD, "wraithDeath") ?? {}), crucible: "done" });
+            return post(actor, `${actor.name}: the Crucible`, `<div class="vta-res good">The Crucible is lived through: they know they are dead, and may tear away the Caul (${W.WR20} ${W.CRUCIBLE.page}).</div>`);
+        }
+        const was = actor.getFlag(MOD, "wraithDeath") ?? {};
+        if (was.enfant && game.actors.get(was.enfant)) return ctx.notify(`${actor.name} has risen already.`);
+        const [enfant] = await Actor.create([{ name: actor.name, type: "Wraith", img: actor.img, ownership: foundry.utils.deepClone(actor.ownership ?? {}),
+            flags: { [MOD]: { wraithDeath: { crucible: "open", from: actor.id, at: game.time.worldTime } } } }]);
+        await actor.setFlag(MOD, "wraithDeath", { ...was, crucible: "risen", enfant: enfant.id });
+        await ctx.logEvent?.(actor, "Dies, and wakes in the Caul.", "death");
+        return ChatMessage.create({ whisper: ownerIds(enfant), speaker: { alias: "WoDX" }, flags: { [MOD]: { kind: "buttons" } }, content: `<div class="vta-card"><h3>${esc(enfant.name)}, in the Caul</h3><p>A wraith's sheet is made for them: give it Passions and Fetters from the life just ended. Play the Crucible; when it is lived through, mark it here.</p>
+          <div class="vta-btns"><button type="button" class="vta-btn" data-wx="crucible" data-arg="done" data-actor="${enfant.uuid}">The Crucible is lived through</button></div><div class="wodx-quiet">${W.WR20} ${W.CRUCIBLE.page}</div></div>` });
+    }
+
+    /** B7901: the Storyteller sets this scene's Haunt: its rating and the echoes it has room for (Wraith 20th pp. 288-290). */
+    async function haunt() {
+        if (!game.user.isGM || !canvas?.scene) return ctx.notify("The Storyteller sets a Haunt.");
+        const cur = hauntHere();
+        const content = `<form><p>A Haunt lowers the Shroud by its rating, never below 4. Each point it would go lower buys an echo, acting on the living only (${W.WR20} pp. 288-290).</p>
+          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${cur?.rating ?? 0}" min="0" max="5"/></div>
+          <div class="form-group"><label>Name</label><input type="text" name="name" value="${esc(cur?.name ?? canvas.scene.name)}"/></div>
+          ${Object.entries(W.ECHOES).map(([k, e]) => `<div class="form-group"><label><input type="checkbox" name="e_${k}" ${cur?.echoes?.includes(k) ? "checked" : ""}/> ${esc(e.label)}: ${esc(e.text)}</label></div>`).join("")}</form>`;
+        return dialog("The Haunt here", content, "Set", async fd => {
+            const rating = Math.max(0, Math.min(5, n(fd.rating)));
+            if (!rating) { await canvas.scene.unsetFlag(MOD, "haunt"); return post(null, "The Haunt", `<div class="vta-note">No Haunt here.</div>`); }
+            const base = shroudAt(null).base ?? 7, room = W.echoSlots(base, rating);
+            const echoes = Object.keys(W.ECHOES).filter(k => fd[`e_${k}`]).slice(0, room);
+            await canvas.scene.setFlag(MOD, "haunt", { rating, name: String(fd.name ?? "").slice(0, 120), echoes });
+            return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, content: `<div class="vta-card"><h3>${esc(fd.name || canvas.scene.name)}: Haunt ${rating}</h3><p>Room for ${room} echo${room === 1 ? "" : "es"} (the Shroud here from ${base}).</p>${echoes.length ? `<ul>${echoes.map(k => `<li><b>${esc(W.ECHOES[k].label)}</b>: ${esc(W.ECHOES[k].text)}</li>`).join("")}</ul>` : ""}<div class="wodx-quiet">${W.WR20} pp. 288-290</div></div>` });
+        });
+    }
+    const livingHere = () => (canvas.tokens?.placeables ?? []).map(t => t.actor).filter(a => a && ["mortal", "hunter"].includes(P.detectProfile(a)));
+    /**
+     * B7901: a night in a Nightmarish Haunt: each mortal sleeper rolls Willpower at 3 + the Haunt; failing, the next day's
+     * difficulties are one higher, mounting; a success takes one off (p. 290). The penalty rides a standing effect.
+     */
+    async function hauntNight(actors = livingHere()) {
+        const h = hauntHere();
+        if (!h?.echoes?.includes("nightmarish")) return ctx.notify("No Nightmarish Haunt here.");
+        const T = game.modules.get("wodx-chronicle")?.api;
+        const lines = [], rolls = [];
+        for (const a of actors) {
+            const r = await rollPool(n(a.system?.advantages?.willpower?.permanent) || 3, W.nightmareDiff(h.rating));
+            rolls.push(r.roll);
+            const ok = r.successes > 0 && !r.botch, before = n(a.getFlag(MOD, "hauntSleep")), after = W.nightmareAfter(before, ok);
+            await a.setFlag(MOD, "hauntSleep", after);
+            try {
+                // one standing effect, replaced each night (the same key): a whole day of +N difficulty
+                if (after && T?.applyTimed) await T.applyTimed(a, { name: `Poor sleep: +${after} difficulty`, key: "wodx-effect-fortune:poor-sleep", data: { shift: after, once: false }, duration: { kind: "time", seconds: DAY }, description: `Nightmares in ${h.name}.`, source: `${W.WR20} p. 290` });
+                else for (const e of [...(a.effects ?? [])].filter(e => String(e.name ?? "").startsWith("Poor sleep"))) await e.delete();
+            } catch (e) { console.warn(`${MOD} | haunt night`, e); }
+            lines.push(`<li>${esc(a.name)}: ${ok ? "sleeps through it" : "nightmares"}; +${after} difficulty tomorrow</li>`);
+        }
+        return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, rolls, content: `<div class="vta-card"><h3>A night in ${esc(h.name)}</h3><p>Willpower at ${W.nightmareDiff(h.rating)} (Nightmarish).</p><ul>${lines.join("")}</ul><div class="wodx-quiet">${W.WR20} p. 290</div></div>` });
+    }
+    /** B7901: mortals going into a Forbidding Haunt: Willpower at 3 + the Haunt; those who fail flee (p. 289). */
+    async function hauntEnter(actors = livingHere()) {
+        const h = hauntHere();
+        if (!h?.echoes?.includes("forbidding")) return ctx.notify("No Forbidding Haunt here.");
+        const T = game.modules.get("wodx-chronicle")?.api;
+        const lines = [], rolls = [];
+        for (const a of actors) {
+            const r = await rollPool(n(a.system?.advantages?.willpower?.permanent) || 3, W.nightmareDiff(h.rating));
+            rolls.push(r.roll);
+            const f = W.forbidding(h.rating, { successes: r.successes, botch: r.botch });
+            if (!f.enter) { try { await T?.applyTimed?.(a, { name: "Afraid", description: `Will not stay in ${h.name}`, duration: { kind: "scene" }, key: "wodx-effect-fear", source: `${W.WR20} p. 289` }); } catch (e) { /* no effects */ } }
+            lines.push(`<li>${esc(a.name)}: ${f.enter ? `may stay ${f.hours} hour${f.hours === 1 ? "" : "s"}` : f.days ? `will not come in for ${f.days} days, hysterical if forced` : `must leave, and stays out ${f.hours} hours`}</li>`);
+        }
+        return ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, rolls, content: `<div class="vta-card"><h3>Going into ${esc(h.name)}</h3><p>Willpower at ${W.nightmareDiff(h.rating)} (Forbidding).</p><ul>${lines.join("")}</ul><div class="wodx-quiet">${W.WR20} p. 289</div></div>` });
+    }
+
     /* ---------------- The Caul ---------------- */
 
     async function caul(actor) {
@@ -623,6 +738,8 @@ export function build(ctx) {
         return dialog("The Caul", content, "Go", async fd => {
             if (!(await spendWillpower(actor, 1))) return null;
             if (fd.who === "self") {
+                // B7899: one who died in play lives the Crucible before tearing the Caul alone (Wraith 20th p. 281)
+                if (!W.caulSelfOpen(actor.getFlag(MOD, "wraithDeath"))) { await gain(actor, "willpower", 1); return ctx.notify(`${actor.name} must live through the Crucible first: the Storyteller marks it on the Crucible card (Wraith 20th p. 281).`); }
                 const r = await rollPool(i.willpower.perm, W.CAUL_SELF.difficulty);
                 const add = r.botch ? 0 : r.successes;
                 if (add) await ctx.updateActor(actor, { "system.advantages.pathos.temporary": i.pathos.temp + add });
@@ -746,6 +863,7 @@ export function build(ctx) {
         const k = b.dataset.wx;
         if (k === "angst") { if (!isGuide(a)) return ctx.notify("The Shadowguide or the Storyteller decides."); await P.adjust(a, "angst", n(b.dataset.arg) || 1); return toGuide(a, "Angst", `<p>+${n(b.dataset.arg) || 1} temporary Angst.</p>`); }
         if (!(a.isOwner || game.user.isGM)) return ctx.notify("Only the character's owner or the GM can do that.");
+        if (k === "crucible") return crucible(a, b.dataset.arg);
         if (k === "harrowing") return harrowing(a, { kind: b.dataset.arg || "general" });
         if (k === "vsAngst") return vsAngst(a);
         if (k === "spectre") {
@@ -766,7 +884,8 @@ export function build(ctx) {
         return W.artsFor(lib.arts, info(actor).arcanoi).filter(a => a.r).map(a => ({ use: "useArcanos", field: "art", value: a.id, name: a.n, disc: a.d, level: a.l,
             set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id }));
     }
-    return { powersFor, fetterScene, restAll, maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
+    return { powersFor, fetterScene, restAll, maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits,
+        hauntHere, haunt, hauntNight, hauntEnter, onDeath, crucible };
 }
 
 export function registerSettings() {

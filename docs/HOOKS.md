@@ -84,6 +84,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxGrudgeMove | npc | interactables (harm done leaves blood, a witness and traces, B3368); sent with {npc, character, move} (B3348) |
 | wodxWeather | atmosphere | interactables (rain and snow wash evidence outdoors, B3366); Senses reads `api.weather.now()` instead |
 | wodxBodyTaken | npc | sent when an NPC has carried someone where it meant to, {body, actor, name, by, byActor, faction, place, placeName, intent (safe, rest, burial, hidden, prison, proof), dead, offstage}; npc (aftercare: the hurt tended, the dead buried by their faith, dead foes disposed of, prisoners kept, questioned and fed, B5710-B5721) |
+| wodxRankReady | actions | storyteller (a Garou whose Renown meets the next rank gets a rank challenge listed in the sept window, B7882) |
 
 ## Extension points (sent, nobody listens yet)
 

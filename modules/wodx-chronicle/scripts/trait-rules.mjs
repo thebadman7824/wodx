@@ -199,7 +199,9 @@ const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", 
   // B6851: Demon: the Fallen's Intuition, for a form power that eases it
   "intuition",
   // B7684: the Dark Ages Abilities a domain eases (V20 Dark Ages Companion pp. 109, 112)
-  "commerce", "seneschal"]);
+  "commerce", "seneschal",
+  // B7932: the Dark Ages Knowledges a merit eases (Dark Ages: Fae p. 99)
+  "enigmas", "gramarye"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {

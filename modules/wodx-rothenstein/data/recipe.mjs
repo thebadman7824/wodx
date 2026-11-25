@@ -56,7 +56,12 @@ export const ROTHENSTEIN = {
       {key: "sieglinde", name: "Sieglinde", home: "kranzfels", faction: null},
       {key: "zdenka", name: "Zdenka", home: "lower-town", faction: null},
       {key: "ivo", name: "Ivo", home: "ferry", faction: null},
-      {key: "etienne", name: "Etienne", home: "inn", faction: null}
+      {key: "etienne", name: "Etienne", home: "inn", faction: null},
+      {key: "jaromir", name: "Jaromír", home: "old-grove", faction: "grove"},
+      {key: "dobroslava", name: "Dobroslava", home: "old-grove", faction: "grove"},
+      {key: "svatopluk", name: "Svatopluk", home: "old-grove", faction: "grove"},
+      {key: "bohdana", name: "Bohdana", home: "old-grove", faction: "grove"},
+      {key: "hostivit", name: "Hostivít", home: "old-grove", faction: "grove"}
     ]
   },
   // The cast step (B7806): the Book 1 omnibus's people the old world never had, and the Roads its sheets lack (ruling 27).
@@ -67,12 +72,36 @@ export const ROTHENSTEIN = {
       {name: "The voivode's steward", match: "steward", variant: "ghoul", note: "A small grey servant at Kranzfels since childhood, as a parent was before. The family has served on the voivode's blood for generations. Knocks three raps, a pause, then one."},
       {name: "Ruy of Toledo, the fire-eater", match: "Ruy of Toledo", type: "Vampire", note: "The fire-eater in a painted mask with Kilian's troupe. Serves Mircea in the east, carries no letter and is here only to look: the first sign in a hundred years that the sire is watching."},
       {name: "The Cistercian preacher", match: "Cistercian", note: "A friar on the heresy circuit who comes with the bishop's Lent inquiry."},
+      {name: "Thibault de Montfaucon", match: "Thibault", hunter: {precursor: "crusader", zeal: 1},
+        note: "A knight sworn to the bishop of Olomouc who fought in the Holy Land and came home a hunter of the Devil's creatures. Rides with the Cistercian preacher on the Lent inquiry of 1202."},
+      // B7924: the apothecary Voss, a thrall of Hell with a bound imp (desk infernal-voss; Dark Ages: Devil's Due)
+      {name: "Master Eckhart Voss", match: "Eckhart", thrall: {vice: "pride", resolve: 2, torment: 3, master: "The voice that answered at the grave",
+        pacts: [{id: "pact-draught", oath: "Each week I will brew the master's draught for one buyer, or my flesh will burn for it", obligation: 3, frequency: 3, consequence: 2}],
+        arcana: [{name: "Read the Sin", cost: 3}, {name: "Perfect Lie", cost: 3}, {name: "Sense Vitality", cost: 3}, {name: "Longevity", cost: 1}],
+        rites: [{id: "rite-bind-skrik", demon: "Skrik", kind: "bind", resolve: 2, torment: 5, willpower: 4, known: {nature: true, vice: true}}],
+        bound: [{name: "Skrik", resolve: 2, torment: 5, willpower: 4, note: "An imp bound to the laboratory's cellar"}]},
+        note: "The Lower Town apothecary. A spouse's death drove Voss to the grave at midnight, and something answered. The cures still work; the draughts sold under the counter do worse. Skrik, a small bound imp, keeps the cellar."},
       {name: "Foreman Dalibor", match: "Dalibor", note: "Foreman at the Silver Adit. Marks the hat brim for every miner short."},
       {name: "Old Bořek", match: "Bořek", note: "An old miner at the Silver Adit who has watched the red marks multiply."},
       {name: "Vesna", match: "Vesna", note: "Lost a spouse to the charcoal smoke and sent Matej to the mine. Sits by the lantern at the Adit mouth, which trims itself."},
       {name: "Matej", match: "Matej", note: "Vesna's child, a young miner who went down at Michaelmas into a gallery nobody dug."},
       {name: "Dietrich", match: "Dietrich", note: "Sir Reinhold's cousin, raised by the lady Irmgard. Alive in Egon's root cellar until chapter VII."},
-      {name: "Ctibor's clerk", match: "Ctibor's clerk", note: "The margrave's auditor's clerk. Konrad shaped this face and owns this tongue: the cult's inside man at the council."}
+      {name: "Ctibor's clerk", match: "Ctibor's clerk", note: "The margrave's auditor's clerk. Konrad shaped this face and owns this tongue: the cult's inside man at the council."},
+      // B7874: the Old Grove's sept (desk garou-sept): a Silver Fang elder council and the Kinfolk family that farms for it
+      {name: "Jaromír Moon-Ward", match: "Jaromír", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Ahroun", breed: "Homid", rank: 4},
+        note: "Sept leader at the Old Grove, of a Silver Fang line that has kept the stones since the binding. Proud of the pedigree, tired of the strain, and slow to trust the Kindred at Kranzfels."},
+      {name: "Dobroslava Reads-the-Ash", match: "Dobroslava", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Theurge", breed: "Lupus", rank: 4},
+        note: "Master of the Rite at the Old Grove. Keeps the Moot Rite, teaches rites for tribute, and reads the Ashfield's spread in the ash of the caern fire."},
+      {name: "Svatopluk Stone-Watch", match: "Svatopluk", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Philodox", breed: "Homid", rank: 3},
+        note: "Caern Marshall at the Old Grove: sets the bawn watch and turns away anyone who wanders in. Sits on the council of elders."},
+      {name: "Bohdana Winter-Song", match: "Bohdana", type: "Werewolf", garou: {tribe: "Silver Fangs", auspice: "Galliard", breed: "Homid", rank: 5},
+        note: "The oldest of the Grove's council and its Talesinger. Sings the tale of the binding at every moot, and laughs at the new prophecies."},
+      {name: "Hostivít of the Grove farm", match: "Hostivít", kin: "silver-fangs",
+        note: "Head of the Kinfolk family that farms the Grove's fields and pays the lord's tax for them. Keeps the pedigree in memory, three generations back."},
+      {name: "Milada of the Grove farm", match: "Milada", kin: "silver-fangs",
+        note: "Hostivít's eldest child. Runs the farm day to day and speaks for the kin at the moot's edge."},
+      {name: "Radek of the Grove farm", match: "Radek", kin: "silver-fangs",
+        note: "Hostivít's grandchild, sixteen and restless. The elders watch for the First Change."}
     ],
     sheets: [
       {match: "Bogdan Ursu", road: "Road of Kings"},
@@ -80,9 +109,23 @@ export const ROTHENSTEIN = {
       {match: "Sieglinde", road: "Road of Kings"},
       {match: "Konrad the Flesh-Smith", road: "Road of Metamorphosis"},
       {match: "Kasimir", road: "Road of the Beast"},
-      {match: "Marta", road: "Road of Heaven"}
+      {match: "Marta", road: "Road of Heaven"},
+      // B7890: Brother Anselm keeps his count as one of the lone Faithful; there is no Inquisition before 1223
+      {match: "Anselm", hunter: {precursor: "faithful", faith: 1}},
+      {match: "Eckhart", thrall: {vice: "pride", resolve: 2, torment: 3, master: "The voice that answered at the grave",
+          pacts: [{id: "pact-draught", oath: "Each week I will brew the master's draught for one buyer, or my flesh will burn for it", obligation: 3, frequency: 3, consequence: 2}],
+          arcana: [{name: "Read the Sin", cost: 3}, {name: "Perfect Lie", cost: 3}, {name: "Sense Vitality", cost: 3}, {name: "Longevity", cost: 1}],
+          rites: [{id: "rite-bind-skrik", demon: "Skrik", kind: "bind", resolve: 2, torment: 5, willpower: 4, known: {nature: true, vice: true}}],
+          bound: [{name: "Skrik", resolve: 2, torment: 5, willpower: 4, note: "An imp bound to the laboratory's cellar"}]}}
     ]
   },
+  // B7898: the hunters' household before the Inquisition (1223): no Rule, no rector, no Council of Faith. Father Ludovic
+  // lends his presbytery; the parish prays with them. WoDX Storyteller's cell window begins it from here.
+  cells: [
+    {key: "st-aegidius", name: "The faithful at St. Aegidius", precursor: true, members: ["Anselm", "Thibault"],
+      house: {kind: "presbytery", name: "Father Ludovic's Presbytery", disguise: "A priest's house like any other", servants: "Ludovic's housekeeper"},
+      flock: {name: "The parish of St. Aegidius", rating: 1, notes: "Lower Town households who come to Ludovic's Mass."}}
+  ],
   // The Ways step (B4810-B4813): the old world's exits between the walkable maps become Ways, and each place inside gets a
   // door from the street it stands on. By scene name; the door's end sits on the street map's south edge until the
   // Storyteller moves it. A private place of a schemer is locked (the lock rules decide); Bogdan's rooms ask first.

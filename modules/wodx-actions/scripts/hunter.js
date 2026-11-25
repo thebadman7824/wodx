@@ -21,6 +21,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as IB from "./inq-blessings.js";
+import * as CR from "./inq-curses-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
@@ -55,17 +56,30 @@ export function build(ctx) {
             order: f.order ?? "", faith: n(f.faith), wisdom: n(f.wisdom), zeal: n(f.zeal),
             piety: f.piety === undefined ? v.conscience.value + v.selfcontrol.value : n(f.piety),
             conviction: conv.ok ? conv.value : n(f.conviction), convOnSheet: conv.ok,
-            banked: n(f.banked), exposure: ctx.background(actor, "exposure"),
-            v: { conscience: v.conscience.value, selfcontrol: v.selfcontrol.value, courage: v.courage.value }, f
+            banked: n(f.banked), benefit: !!f.benefit, precursor: f.precursor ?? "", curses: CR.idsOf(f.curses), cocytus: !!f.cocytus,
+            // B7887: the Red Order's benefit adds three dots of Exposure (Dark Ages: Inquisitor p. 133)
+            exposure: ctx.background(actor, "exposure") + n(CR.benefitDots(f.order, !!f.benefit).exposure),
+            v: { conscience: v.conscience.value, selfcontrol: v.selfcontrol.value, courage: v.courage.value }, f,
+            // B7934: the Companion's merits and flaws the inquisitor rules read (Dark Ages: Inquisitor Companion pp. 126-127)
+            mf: { grace: hasFeat(actor, /^grace\b/i), favored: hasFeat(actor, /^divinely favou?red\b/i), prone: hasFeat(actor, /^curse[- ]prone\b/i), prodigy: hasFeat(actor, /^order prodigy\b/i) }
         };
     }
+    /** B7885: Callous, with Lamb of God at Piety already (Dark Ages: Inquisitor pp. 162, 205). */
+    const callousOf = i => CR.callousWith(i.curses, i.conviction, i.piety, { grace: i.mf?.grace });
+    /** The Feature items on the sheet whose names match (the DA:I merits and flaws). */
+    const hasFeat = (actor, re) => [...(actor?.items ?? [])].some(it => it.type === "Feature" && re.test(it.name ?? ""));
+    /** A relic on them: the Holy Relics Background or a Holy Artifact held. */
+    const relicOn = actor => ctx.background(actor, "holy relic") > 0 || !!H.artifactOf(actor?.items);
+    /** B7887: the Piety that decides which sins call the roll (the Knights' drawback: one higher with a relic, p. 131). */
+    const pietyFor = (actor, i = inq(actor)) => CR.pietyFor(i.piety, { order: i.order, benefit: i.benefit, relic: relicOn(actor) });
+    const primaryOf = i => H.ORDERS[i.order]?.primary ?? "faith";
     const isInquisitor = actor => !!actor?.getFlag(MOD, "inquisitor");
     async function setInq(actor, patch) { return ctx.setFlag(actor, "inquisitor", { ...(actor.getFlag(MOD, "inquisitor") ?? {}), ...patch }); }
     async function setConviction(actor, value) {
         const i = inq(actor), to = Math.max(0, Math.min(10, n(value)));
         if (i.convOnSheet) { await P.adjust(actor, "conviction", to - i.conviction, { note: false }); }
         else await setInq(actor, { conviction: to });
-        if (H.callous(to, i.piety) && !H.callous(i.conviction, i.piety)) await post(actor, `${actor.name} grows Callous`, `<div class="vta-warn">Conviction ${to} is above Piety ${i.piety}: Empathy rolls +2 difficulty; when their Impulse applies, Conscience + Faith at 6 to resist it (Dark Ages: Inquisitor p. 162).</div>`);
+        if (CR.callousWith(i.curses, to, i.piety, { grace: i.mf?.grace }) && !callousOf(i)) await post(actor, `${actor.name} grows Callous`, `<div class="vta-warn">Conviction ${to} is above Piety ${i.piety}: Empathy rolls +2 difficulty; when their Impulse applies, Conscience + Faith at 6 to resist it (Dark Ages: Inquisitor p. 162).</div>`);
         return to;
     }
     const stage = i => H.stageOf(i);
@@ -77,6 +91,11 @@ export function build(ctx) {
           <div class="form-group"><label>Faith / Wisdom / Zeal</label><input type="number" name="faith" value="${i.faith}" min="0" max="5" style="width:4em"/> <input type="number" name="wisdom" value="${i.wisdom}" min="0" max="5" style="width:4em"/> <input type="number" name="zeal" value="${i.zeal}" min="0" max="5" style="width:4em"/></div>
           <div class="form-group"><label>Piety</label><input type="number" name="piety" value="${i.piety}" min="0" max="10"/></div>
           <div class="form-group"><label>Conviction</label><input type="number" name="conviction" value="${i.conviction}" min="0" max="10"/></div>
+          <div class="form-group"><label>Before the Inquisition</label><select name="precursor" data-fixed><option value="">(a sworn inquisitor)</option>${Object.entries(CR.PRECURSORS).map(([k, x]) => `<option value="${k}" ${k === i.precursor ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select></div>
+          ${benefitBox(i)}
+          ${hasFeat(actor, /holy art natural/i) ? `<p class="wodx-quiet">Holy Art Natural: their chosen path costs current rating x4 experience, 8 for the first dot (${CR.REF} p. 169).</p>` : ""}
+          ${cursesLine(actor, i)}
+          ${game.user.isGM ? `<div class="form-group"><label>Give a Curse</label><select name="addCurse" data-fixed><option value="">(none)</option>${CR.CURSES.filter(c => !i.curses.includes(c.id)).map(c => `<option value="${c.id}">${esc(CR.CATEGORIES[c.cat].label)} · ${CR.STAGE_NAME[c.stage]}: ${esc(c.name)}</option>`).join("")}</select></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="start"/> New character: set Conviction, Piety and Willpower from the Virtues (Dark Ages: Inquisitor p. 147)</label></div></form>`;
         return dialog(`Inquisitor: ${actor.name}`, content, "Save", async fd => {
             const sv = { faith: Math.min(n(fd.faith), i.v.conscience), wisdom: Math.min(n(fd.wisdom), i.v.selfcontrol), zeal: Math.min(n(fd.zeal), i.v.courage) };
@@ -87,19 +106,132 @@ export function build(ctx) {
                 piety = s.piety; conv = s.conviction;
                 await updateActor(actor, { "system.advantages.willpower.permanent": s.willpower, "system.advantages.willpower.temporary": s.willpower });
                 html += `<div class="vta-note">Starting Conviction ${s.conviction}, Piety ${s.piety}, Willpower ${s.willpower}.</div>`;
+                // B7889: the starting Acolyte Curse of the order's category (p. 203), unless Pure (p. 169) or the order benefit was taken
+                html += hasFeat(actor, /^pure\b/i) ? `<div class="vta-note">Pure: no starting Curse (${CR.REF} p. 169).</div>` : fd.benefit ? "" : `<div class="vta-note">The starting Curse: one of the first stage from the order's own category (${CR.REF} p. 203), given with Give a Curse.</div>`;
             }
-            await setInq(actor, { order: fd.order, ...sv, piety });
+            // B7887: the order's benefit only once the order serves the Inquisition (1223; the Oculi after 1227)
+            const open = CR.benefitOpen(fd.order, yearNow());
+            const benefit = !!fd.benefit && open.ok;
+            if (fd.benefit && !open.ok) html += `<div class="vta-warn">${esc(open.why)}</div>`;
+            await setInq(actor, { order: fd.order, ...sv, piety, precursor: fd.precursor ?? "", benefit });
+            if (benefit && CR.ORDER_BENEFITS[fd.order]) html += `<div class="vta-note">Order benefit: ${esc(CR.ORDER_BENEFITS[fd.order].benefit)} Drawback: ${esc(CR.ORDER_BENEFITS[fd.order].drawback)} (${CR.REF} ${CR.ORDER_BENEFITS[fd.order].page})</div>`;
+            if (fd.addCurse && game.user.isGM) await takeCurse(actor, fd.addCurse);
             await setConviction(actor, stage(sv) === "servant" ? Math.min(1, conv) : conv);
             const st = stage(sv);
             return post(actor, `${actor.name}: inquisitor`, `${html}<div class="vta-sec">${esc(H.ORDERS[fd.order]?.label ?? "No order")} · ${H.STAGE_LABEL[st]} (True Faith equivalent ${H.STAGE_FAITH[st]}) · Faith ${sv.faith}, Wisdom ${sv.wisdom}, Zeal ${sv.zeal} · Piety ${piety}</div>${clipped ? `<div class="vta-warn">A Superior Virtue can't pass its Virtue (Dark Ages: Inquisitor p. 157): lowered.</div>` : ""}<div class="wodx-quiet">Dark Ages: Inquisitor pp. 146–158</div>`);
         });
     }
 
+    const yearNow = () => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { return null; } };
+    /** B7887: the order benefit box: open from 1223 (the Oculi after 1227), a precursor's note before then. */
+    function benefitBox(i) {
+        const open = CR.benefitOpen(i.order || "acre", yearNow());
+        if (!open.ok) return `<p class="wodx-quiet">${esc(open.why)}</p>`;
+        return `<div class="form-group"><label><input type="checkbox" name="benefit" ${i.benefit ? "checked" : ""}/> The order's benefit and drawback instead of an Acolyte Endowment (${CR.REF} pp. 129-139)</label></div>`;
+    }
+    /** The Curses they bear, and how near Cocytus. */
+    function cursesLine(actor, i) {
+        const K = CR.cocytus(i.curses, i.piety, i);
+        if (!i.curses.length) return `<p class="wodx-quiet">No Curses yet.</p>`;
+        return `<p>Curses: ${i.curses.map(id => esc(CR.curseById(id).name)).join(", ")}. Stages ${K.stages} of ${K.limit} (Piety and Superior Virtues)${i.cocytus ? ": <b>in Cocytus</b>" : ""}.</p>`;
+    }
+
     /** Spend 1 Conviction (null when there is none). */
     async function spendConv(actor, k = 1) {
         const i = inq(actor);
         if (i.conviction < k) { ctx.notify(`${actor.name} has only ${i.conviction} Conviction.`); return null; }
-        return setConviction(actor, i.conviction - k);
+        const to = await setConviction(actor, i.conviction - k);
+        await drain(actor, k);
+        return to;
+    }
+    /**
+     * B7886: in Cocytus, Conviction spent on anything but a Superior Virtue is taken from the bank as well (p. 204).
+     * Returns the card line, or "".
+     */
+    async function drain(actor, k) {
+        const i = inq(actor);
+        if (!i.cocytus || k <= 0 || i.banked <= 0) return "";
+        const to = CR.cocytusDrain(i.banked, k);
+        await setInq(actor, { banked: to });
+        return `<div class="vta-warn">Cocytus: the bank pays too, ${i.banked} → ${to} (${CR.REF} p. 204).</div>`;
+    }
+
+    /* ---------------- Curses (B7883-B7886) ---------------- */
+
+    const hbtn = (k, actor, label, arg = "") => `<button type="button" class="vta-btn" data-hx="${k}" data-actor="${esc(actor?.uuid ?? "")}" data-arg="${esc(arg)}">${esc(label)}</button>`;
+    /** The buttons to take a Curse of a stage: the order's own category for the first of that stage (p. 204). */
+    function curseChoices(actor, stage) {
+        const i = inq(actor), C = CR.cursesFor(i.order, stage, i.curses);
+        if (!C.list.length) return `<div class="vta-note">No ${CR.STAGE_NAME[stage]} Curse is left to give.</div>`;
+        return `<div class="vta-note">${C.forced ? `The first ${CR.STAGE_NAME[stage]} Curse comes from the order's own ${CR.CATEGORIES[C.category].label} (p. 204).` : `Any ${CR.STAGE_NAME[stage]} Curse not held.`} The Storyteller picks:</div><div class="wodx-row">${C.list.map(c => hbtn("curse", actor, c.name, c.id)).join(" ")}</div>`;
+    }
+    /**
+     * The Curse roll (p. 202). from: "primary" | "other" (a botched Superior Virtue roll), "endowment" (one gained in
+     * play), why: the card's line. Applies the Conviction it gives or takes, and offers the Curses of the stage rolled.
+     */
+    async function curseRoll(actor, { from = null, why = "", newCategory = false, legacy = false, own = false } = {}) {
+        if (!isInquisitor(actor)) return null;
+        const i = inq(actor);
+        if (from === "endowment" && CR.prodigySpares({ prodigy: i.mf.prodigy, order: i.order, own })) return post(actor, `${actor.name}: no Curse`, `<div class="vta-res good">${esc(why || "An Endowment learned")}: Order Prodigy, and it is the order's own. No Curse roll.</div><div class="wodx-quiet">${CR.REF} Companion p. 126</div>`);
+        const M = CR.curseRollMods({ callous: callousOf(i), held: i.curses, from, order: i.order, sv: i, benefit: i.benefit, newCategory, legacy, favored: i.mf.favored, prone: i.mf.prone });
+        const roll = await new Roll("1d10").evaluate();
+        const total = n(roll.total) + M.mod, O = CR.curseOutcome(total);
+        let html = `<div class="vta-sec">${esc(why || "The Curse roll")}: a die of ${n(roll.total)}${M.parts.length ? `, ${esc(M.parts.join(", "))}` : ""}, ${total} in all.</div><div class="vta-res ${O.stage || O.conviction < 0 ? "bad" : "good"}">${esc(O.line)}</div>`;
+        if (O.conviction) { const to = await setConviction(actor, i.conviction + O.conviction); html += `<div class="vta-note">Conviction ${i.conviction} → ${to}.</div>`; }
+        if (O.stage) html += curseChoices(actor, O.stage);
+        await setInq(actor, { lastCurseRoll: { total, stage: O.stage, at: game.time.worldTime } });
+        await ctx.logEvent?.(actor, `The Curse roll: ${O.line}`, "piety");
+        return post(actor, `${actor.name}: a Curse roll`, html + `<div class="wodx-quiet">${CR.REF} pp. 202-203</div>`, [roll]);
+    }
+    /** A Blessing learned above their stage brings that stage's Curse with no roll (p. 203). */
+    async function offerCurse(actor, stage, why = "") {
+        return post(actor, `${actor.name}: a Curse`, `<div class="vta-res bad">${esc(why || "Above their stage")}: a Curse of the ${CR.STAGE_NAME[stage]} stage, with no roll.</div>${curseChoices(actor, stage)}<div class="wodx-quiet">${CR.REF} p. 203</div>`);
+    }
+    /** The Storyteller gives the Curse; Cocytus is checked (pp. 203-204). */
+    async function takeCurse(actor, id) {
+        const c = CR.curseById(id), i = inq(actor);
+        if (!c || !isInquisitor(actor)) return null;
+        if (i.curses.includes(id)) { ctx.notify(`${actor.name} already bears ${c.name}.`); return null; }
+        const curses = [...(Array.isArray(i.f.curses) ? i.f.curses : []), { id, at: game.time.worldTime }];
+        await setInq(actor, { curses });
+        const after = inq(actor), K = CR.cocytus(after.curses, after.piety, after);
+        let html = `<div class="vta-sec"><b>${esc(c.name)}</b> (${CR.CATEGORIES[c.cat].label}, ${CR.STAGE_NAME[c.stage]}): ${esc(c.fx)}</div>${c.check ? `<div class="vta-note">${esc(c.check)}</div>` : ""}${c.mods?.length ? `<div class="vta-note">Counted on their rolls: ${esc(c.mods.map(m => m.note).join("; "))}.</div>` : ""}`;
+        html += `<div class="wodx-quiet">Curse stages ${K.stages}; Piety and Superior Virtues ${K.limit}.</div>`;
+        if (K.fallen && !after.cocytus) {
+            await setInq(actor, { cocytus: true });
+            html += `<div class="vta-warn"><b>Cocytus.</b> The Curses have outgrown Piety and the Superior Virtues: the Nature is now the Impulse, Willpower comes back only by acting on it, and every Conviction spent on anything but a Superior Virtue is taken from the bank as well (${CR.REF} pp. 203-204).</div>`;
+        }
+        await ctx.logEvent?.(actor, `Bears a Curse: ${c.name}.`, "piety");
+        return post(actor, `${actor.name}: ${c.name}`, html + `<div class="wodx-quiet">${CR.REF} ${CR.pageOf(c)}</div>`);
+    }
+
+    /* ---------------- Sins from play (B7888) ---------------- */
+
+    /**
+     * A sin play saw (a kill, a lie, a theft, a broken word): the card line with the Piety roll button, or a note that
+     * it is above their Piety. o.christian false: the one killed kept another faith (no first-level sin). o.card: post it.
+     */
+    async function pietyPrompt(actor, event, what = "", { christian = true, card = false } = {}) {
+        if (!isInquisitor(actor)) return null;
+        if ((event === "kill" || event === "killFrenzy") && !christian) return null;
+        const level = CR.pietyEvent(event);
+        if (level === null) return null;
+        const p = pietyFor(actor), roll = level <= p;
+        const text = H.PIETY_SINS.find(([l]) => l === level)?.[1] ?? "";
+        const html = `<p>${esc(what)}. A sin against God at level ${level} (“${esc(text)}”)${roll ? "" : `, above their Piety of ${p}: no roll`}.</p>${roll ? hbtn("sin", actor, `Piety roll (level ${level})`, `${level}|${what}`) : ""}<div class="wodx-quiet">${CR.REF} p. 159</div>`;
+        if (!card) return { html, level, roll };
+        const ids = game.users.filter(u => u.isGM || actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}: a sin against God?</h3>${html}</div>`, whisper: ids, speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+    }
+    /** A chat button of the hunter cards (data-hx). */
+    async function onChatButton(b) {
+        const actor = await fromUuid(b.dataset.actor ?? "");
+        const a = actor?.actor ?? actor;
+        if (!a) return null;
+        const arg = String(b.dataset.arg ?? "");
+        if (b.dataset.hx === "sin") { const [lvl, ...w] = arg.split("|"); return sinRoll(a, n(lvl), w.join("|")); }
+        if (b.dataset.hx === "curse") { if (!game.user.isGM) { ctx.notify("The Storyteller gives the Curse."); return null; } return takeCurse(a, arg); }
+        return null;
     }
 
     /* ---------------- Blessings ---------------- */
@@ -129,7 +261,7 @@ export function build(ctx) {
         if (i.conviction < 1) return ctx.notify(`${actor.name} has no Conviction: no Blessings until it returns (Dark Ages: Inquisitor p. 161).`);
         const list = blessingsOn(actor);
         const risked = actor.getFlag(MOD, "riskScene") === sceneKey();
-        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety}${H.callous(i.conviction, i.piety) ? " (<b>Callous</b>)" : ""}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety}${callousOf(i) ? " (<b>Callous</b>)" : ""}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}.</p>
           <div class="form-group"><label>From the book</label>${searchBox("select[name=bk]", "Search the book's Blessings…", "Search the book's Blessings")}<select name="bk" data-fixed><option value="">(none: set the roll by hand)</option>${IB.BLESSINGS.map(b => `<option value="${b.id}">${esc(b.kind)} · ${esc(b.use)}: ${esc(b.name)}</option>`).join("")}</select></div>
           <div class="wodx-bless-info wodx-quiet"></div>
           <div class="form-group"><label>Blessing</label>${list.length > 5 ? searchBox("select[name=b]", "Search Blessings…", "Search Blessings") : ""}<select name="b" data-fixed><option value="">— another (type its name) —</option>${list.map(b => `<option value="${esc(b.name)}">${esc(b.name)}</option>`).join("")}</select> <input type="text" name="other" placeholder="Name"/></div>
@@ -149,7 +281,7 @@ export function build(ctx) {
             set("sv", rp.sv || "faith");
             if (rp.sv === "virtue") set("rating", i.v[rp.trait] ?? n(findAbility(actor, rp.trait)?.value));
             set("diff", typeof b.diff === "number" ? b.diff : b.diff === "piety" ? Math.max(2, Math.min(10, i.piety)) : 6);
-            if (box) box.textContent = `${b.fx} Cost: ${b.cost} Conviction${b.wp ? " and a Willpower point" : ""}.${b.diff === "t" ? " Difficulty: the target's Willpower, or the roll is opposed." : b.diff === "var" ? " The Storyteller sets the difficulty." : ""}${b.stage ? ` Needs the ${b.stage} stage.` : ""} ${IB.REF} p. ${b.p}.`;
+            if (box) box.textContent = `${b.fx} Cost: ${b.cost} Conviction${b.wp ? " and a Willpower point" : ""}.${b.diff === "t" ? " Difficulty: the target's Willpower, or the roll is opposed." : b.diff === "var" ? " The Storyteller sets the difficulty." : ""}${b.stage ? ` Needs the ${b.stage} stage.` : ""} ${IB.refOf(b)}.`;
         };
         return dialog(`A Blessing: ${actor.name}`, content, "Invoke", async fd => {
             const bk = IB.blessingById(fd.bk) ?? IB.blessingByName(fd.other?.trim() || fd.b);
@@ -158,7 +290,7 @@ export function build(ctx) {
                 if (!bk) return { html: "", items: [] };
                 let html = `<div class="vta-sec"><b>${esc(bk.name)}</b>: ${esc(bk.fx)}</div>`, items = [];
                 if (got > 0 && EF.isOn()) {
-                    const pp = EF.planOf(actor, IB.blessingResults(bk, got, { source: `${IB.REF} p. ${bk.p}` }), got, { name: bk.name, line: "Hunter (Inquisitor)" });
+                    const pp = EF.planOf(actor, IB.blessingResults(bk, got, { source: `${IB.refOf(bk)}` }), got, { name: bk.name, line: "Hunter (Inquisitor)" });
                     html += pp.html; items = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
                 return { html, items };
@@ -175,7 +307,8 @@ export function build(ctx) {
             if (cost + risk > i.conviction) return ctx.notify(`Not enough Conviction (${i.conviction}).`);
             let after = i.conviction - cost;
             await setConviction(actor, after);
-            if (fd.noroll) { const E = effectsOf(1); return post(actor, `${actor.name}: ${esc(name)}`, `<div class="vta-note">${cost} Conviction.${bk ? "" : " See Dark Ages: Inquisitor, Chapter Five, for its effect."}</div>${E.html}${await gain(1)}${bk ? `<div class="wodx-quiet">${IB.REF} p. ${bk.p}</div>` : ""}`, [], fxCard(E.items)); }
+            const dline = await drain(actor, cost);
+            if (fd.noroll) { const E = effectsOf(1); return post(actor, `${actor.name}: ${esc(name)}`, `<div class="vta-note">${cost} Conviction.${bk ? "" : " See Dark Ages: Inquisitor, Chapter Five, for its effect."}</div>${E.html}${await gain(1)}${bk ? `<div class="wodx-quiet">${IB.refOf(bk)}</div>` : ""}`, [], fxCard(E.items)); }
             const rating = fd.sv === "path" || fd.sv === "virtue" ? n(fd.rating) : i[fd.sv];
             const dice = attr(actor, fd.attr) + rating + risk;
             // B6662: the target's ward or Magic Resistance makes a Blessing on them harder
@@ -183,7 +316,7 @@ export function build(ctx) {
             // B7120: past 10 the roll needs more successes, so the difficulty is not capped here
             const C = await catechumen(actor, await rollPool(dice, n(fd.diff) + n(rm.diff)), !!fd.catechumen);
             const r = C.r;
-            let body = C.note + rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
+            let body = C.note + dline + rollBlock(`${cap(fd.attr)} + ${fd.sv === "path" ? "path" : fd.sv === "virtue" ? "Virtue" : H.SUPERIOR_LABEL[fd.sv]}${risk ? ` + ${risk} risked` : ""}`, r, [cost ? `${cost} Conviction spent` : "", ...rm.parts].filter(Boolean));
             if (risk) {
                 const R = H.riskConviction(risk, r, after);
                 await actor.setFlag(MOD, "riskScene", sceneKey());
@@ -192,7 +325,11 @@ export function build(ctx) {
             }
             const got = r.botch ? 0 : r.successes, E = effectsOf(got);
             body += E.html + (got > 0 ? await gain(got) : "");
-            return post(actor, `${actor.name}: ${esc(name)}`, body + `<div class="wodx-quiet">${esc(fd.kind)} · Dark Ages: Inquisitor, ${bk ? `p. ${bk.p}` : "Chapter Five"}</div>`, [r.roll], fxCard(E.items));
+            // B7889: Ecstatic (DA:I p. 169): more than three successes, Willpower at 6 or an ecstatic fit
+            if (got > 3 && hasFeat(actor, /^ecstatic\b/i)) body += `<div class="vta-warn">Ecstatic: more than three successes. Willpower at 6, or tongues, fits or prophecy take them; a Willpower point puts it off a scene (${CR.REF} p. 169).</div>`;
+            // B7884: a botch with a Superior Virtue brings the Curse roll (p. 203)
+            if (r.botch && H.SUPERIOR_LABEL[fd.sv]) Promise.resolve().then(() => curseRoll(actor, { from: fd.sv === primaryOf(i) ? "primary" : "other", why: `A botched ${H.SUPERIOR_LABEL[fd.sv]} roll` })).catch(e => console.warn("WoDX | Curse roll", e));
+            return post(actor, `${actor.name}: ${esc(name)}`, body + `<div class="wodx-quiet">${esc(fd.kind)} · ${bk ? IB.refOf(bk) : "Dark Ages: Inquisitor, Chapter Five"}</div>`, [r.roll], fxCard(E.items));
         }, { width: 540, render: root => { fillBk(root); root.querySelector("[name=bk]")?.addEventListener("change", () => fillBk(root)); return aim(root, { actor, power: r => { const nm = r.querySelector("[name=other]")?.value?.trim() || r.querySelector("[name=b]")?.value; return nm ? { id: nm, n: nm } : null; } }); } });
     }
 
@@ -211,21 +348,24 @@ export function build(ctx) {
             <option value="thrall">Resist mind control (Self-Control + Wisdom, 6, opposed)</option>
             <option value="memory">Recall a stolen or buried memory (Self-Control + Wisdom, 6)</option>
             <option value="impulse">Resist the Impulse while Callous (Conscience + Faith, 6)</option>
-            <option value="victory">A victory over the enemy (primary Superior Virtue + Virtue, 7)</option></select></div>
+            <option value="victory">A victory over the enemy (primary Superior Virtue + Virtue, 7)</option>${i.order === "john" && i.benefit ? `<option value="vision">Call a vision (the Sisters' benefit: a Willpower point, Perception + Empathy, 6)</option>` : ""}</select></div>
           <div class="form-group"><label>The power's successes (opposed)</label><input type="number" name="vs" value="0" min="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="conv"/> Spend 1 Conviction for a success</label></div>${catechumenBox(actor)}</form>`;
         return dialog(`Virtue roll: ${actor.name}`, content, "Roll", async fd => {
+            if (fd.k === "vision") return vision(actor);
             const map = { danger: ["courage", "zeal"], supernatural: ["courage", "zeal"], fear: ["courage", "zeal"], thrall: ["selfcontrol", "wisdom"], memory: ["selfcontrol", "wisdom"], impulse: ["conscience", "faith"] };
             let [vk, sk] = map[fd.k] ?? [];
             if (fd.k === "victory") { sk = H.ORDERS[i.order]?.primary ?? "faith"; vk = H.SUPERIOR[sk]; }
             let need = 0;
             if (H.needsConviction(i[sk]) && fd.k !== "victory" && fd.k !== "impulse") need = 1;
             if (need + (fd.conv ? 1 : 0) > i.conviction) return ctx.notify(need ? `Without ${H.SUPERIOR_LABEL[sk]}, the roll costs a Conviction point not on hand (Dark Ages: Inquisitor p. 162).` : "No Conviction to spend.");
-            if (need + (fd.conv ? 1 : 0)) await setConviction(actor, i.conviction - need - (fd.conv ? 1 : 0));
-            const diff = fd.k === "supernatural" ? H.terrorDifficulty("supernatural", i.exposure) : fd.k === "victory" ? 7 : 6;
+            let dline = "";
+            if (need + (fd.conv ? 1 : 0)) { await setConviction(actor, i.conviction - need - (fd.conv ? 1 : 0)); dline = await drain(actor, need + (fd.conv ? 1 : 0)); }
+            // B7887: the Red Order's drawback: the Impulse one harder while Callous (p. 133)
+            const diff = fd.k === "supernatural" ? H.terrorDifficulty("supernatural", i.exposure) : fd.k === "victory" ? 7 : fd.k === "impulse" ? CR.impulseDiff({ order: i.order, benefit: i.benefit, callous: callousOf(i) }) : 6;
             const C = await catechumen(actor, await rollPool(i.v[vk] + i[sk], diff, { willpower: !!fd.conv }), !!fd.catechumen);
             const r = C.r;
-            let body = C.note + rollBlock(`${cap(vk === "selfcontrol" ? "Self-Control" : vk)} + ${H.SUPERIOR_LABEL[sk]}`, r, [need ? "1 Conviction (no Superior Virtue)" : "", fd.conv ? "1 Conviction: a success" : ""].filter(Boolean));
+            let body = C.note + dline + rollBlock(`${cap(vk === "selfcontrol" ? "Self-Control" : vk)} + ${H.SUPERIOR_LABEL[sk]}`, r, [need ? "1 Conviction (no Superior Virtue)" : "", fd.conv ? "1 Conviction: a success" : ""].filter(Boolean));
             const s = r.botch ? 0 : r.successes;
             if (fd.k === "danger" || fd.k === "supernatural") {
                 const T = H.terrorResult(fd.k, r);
@@ -239,44 +379,74 @@ export function build(ctx) {
                 body += `<div class="vta-res">${d > 0 ? "+1 Conviction" : d < 0 ? "Shaken: −1 Conviction" : "No change"} (Dark Ages: Inquisitor p. 160).</div>`;
             } else if (fd.k === "impulse") body += `<div class="vta-res">${s ? "The Impulse is held back." : "The Impulse wins."}</div>`;
             else body += `<div class="vta-res">${s} success${s === 1 ? "" : "es"}: the more, the clearer the memory (it must beat a power's successes).</div>`;
+            // B7884: a botched Superior Virtue roll brings the Curse roll (p. 202), one worse on the order's primary Virtue
+            if (r.botch) Promise.resolve().then(() => curseRoll(actor, { from: sk === primaryOf(i) ? "primary" : "other", why: `A botched ${H.SUPERIOR_LABEL[sk]} roll` })).catch(e => console.warn("WoDX | Curse roll", e));
+            if (i.curses.includes("marked-by-the-cross") && sk === primaryOf(i) && (r.botch || r.successes < 1)) body += `<div class="vta-warn">Marked by the Cross: the wounds bleed. Stamina + Faith at 6, or a level of bashing (${CR.REF} p. 211).</div>`;
             return post(actor, `${actor.name}: Virtue roll`, body + `<div class="wodx-quiet">Dark Ages: Inquisitor pp. 160–163</div>`, [r.roll]);
         });
     }
 
     async function sin(actor) {
+        const i = inq(actor), p = pietyFor(actor, i);
+        const content = `<form><p><b>${esc(actor.name)}</b>: Piety ${i.piety}${p !== i.piety ? ` (checked as ${p}: a Knight of Acre carrying a relic, p. 131)` : ""}. Sins at or below their Piety call for the roll (Dark Ages: Inquisitor p. 159).</p>
+          <div class="form-group"><label>The sin</label><select name="lvl" data-fixed>${H.PIETY_SINS.map(([l, t]) => `<option value="${l}" ${H.pietyAt(p, l) ? "" : "disabled"}>${l}: ${esc(t)}</option>`).join("")}</select></div></form>`;
+        return dialog(`A sin against God: ${actor.name}`, content, "Roll", fd => sinRoll(actor, n(fd.lvl), ""));
+    }
+    /** The Piety roll for a sin (p. 159); a botch brings the Curse roll (p. 202). */
+    async function sinRoll(actor, level, what = "") {
         const i = inq(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b>: Piety ${i.piety}. Sins at or below their Piety call for the roll (Dark Ages: Inquisitor p. 159).</p>
-          <div class="form-group"><label>The sin</label><select name="lvl" data-fixed>${H.PIETY_SINS.map(([l, t]) => `<option value="${l}" ${H.pietyAt(i.piety, l) ? "" : "disabled"}>${l}: ${esc(t)}</option>`).join("")}</select></div></form>`;
-        return dialog(`A sin against God: ${actor.name}`, content, "Roll", async fd => {
-            const c = H.callous(i.conviction, i.piety);
-            const r = await rollPool(i.v.conscience + i.faith, H.pietyRoll({ callous: c }).difficulty);
-            const out = H.pietyResult(r);
-            if (out.conviction) await setConviction(actor, i.conviction + out.conviction);
-            if (out.piety) await setInq(actor, { piety: Math.max(0, i.piety + out.piety) });
-            await ctx.logEvent?.(actor, `Sin against God (${fd.lvl}): ${out.piety ? "Piety lost" : "confessed in their heart"}.`, "piety");
-            return post(actor, `${actor.name}: a sin`, rollBlock(`Conscience + Faith${c ? " (Callous)" : ""}`, r) + `<div class="vta-res ${out.piety ? "bad" : ""}">${out.piety ? `Excused: Piety ${i.piety} → ${i.piety - 1}.` : "The sin is recognized: −1 Conviction (confession restores it)."}${out.curse ? " <b>A botch: roll for a new Curse (Dark Ages: Inquisitor p. 201).</b>" : ""}</div>`, [r.roll]);
-        });
+        const c = callousOf(i);
+        const r = await rollPool(i.v.conscience + i.faith, H.pietyRoll({ callous: c }).difficulty);
+        const out = H.pietyResult(r);
+        if (out.conviction) await setConviction(actor, i.conviction + out.conviction);
+        if (out.piety) await setInq(actor, { piety: Math.max(0, i.piety + out.piety) });
+        await ctx.logEvent?.(actor, `Sin against God (${level}${what ? `: ${what}` : ""}): ${out.piety ? "Piety lost" : "confessed in their heart"}.`, "piety");
+        if (out.curse) Promise.resolve().then(() => curseRoll(actor, { why: "A botched Piety roll" })).catch(e => console.warn("WoDX | Curse roll", e));
+        return post(actor, `${actor.name}: a sin`, (what ? `<div class="vta-sec">${esc(what)} (level ${level}).</div>` : "") + rollBlock(`Conscience + Faith${c ? " (Callous)" : ""}`, r) + `<div class="vta-res ${out.piety ? "bad" : ""}">${out.piety ? `Excused: Piety ${i.piety} → ${i.piety - 1}.` : "The sin is recognized: −1 Conviction (confession restores it)."}${out.curse ? " <b>A botch: the Curse roll follows (Dark Ages: Inquisitor p. 202).</b>" : ""}</div>`, [r.roll]);
+    }
+    /** B7887: the Sisters' benefit (p. 135): a vision called for a Willpower point; a botch is the drawback's Courage roll. */
+    async function vision(actor) {
+        const i = inq(actor);
+        if (!(i.order === "john" && i.benefit)) return ctx.notify("Only a Sister of St. John with the order's benefit calls visions.");
+        if (!(await spendWillpower(actor, 1))) return null;
+        const r = await rollPool(attr(actor, "perception") + n(findAbility(actor, "empathy")?.value), 6);
+        let body = rollBlock("Perception + Empathy", r, ["1 Willpower"]) + `<div class="vta-res">${r.botch ? "A botch: a vision of horror." : r.successes > 0 ? `A vision comes (${r.successes} success${r.successes === 1 ? "" : "es"}); the Storyteller says what it shows.` : "Nothing comes."}</div>`;
+        const rolls = [r.roll];
+        if (r.botch) {
+            const c = await rollPool(i.v.courage, 7); rolls.push(c.roll);
+            body += rollBlock("Courage", c, ["difficulty 7"]);
+            if (c.botch) { await spendWillpower(actor, 1); await setConviction(actor, inq(actor).conviction - 1); body += `<div class="vta-res bad">Shattered: a Willpower point and a Conviction point lost.</div>`; }
+            else if (c.successes < 1) { await spendWillpower(actor, 1); body += `<div class="vta-res bad">Horror: a Willpower point lost.</div>`; }
+            else body += `<div class="vta-res">Shaken, no more.</div>`;
+        }
+        return post(actor, `${actor.name}: a vision`, body + `<div class="wodx-quiet">${CR.REF} p. 135</div>`, rolls);
     }
 
     async function prayer(actor) {
         const i = inq(actor);
         const f = i.f, today = Math.floor(game.time.worldTime / DAY);
         if (f.prayerDay === today) return ctx.notify("Prayer renews Conviction once a day (Dark Ages: Inquisitor p. 160).");
+        // B7885: Endless Penitence (p. 207): prayer gives them no Conviction
+        if (i.curses.includes("endless-penitence")) return post(actor, `${actor.name} prays`, `<div class="vta-res bad">Endless Penitence: they pray, and no Conviction comes of it (${CR.REF} p. 207).</div>`);
         const run = f.prayerDay === today - 1 ? n(f.prayerRun) + 1 : 0;
         // B6362: holy ground on the map gives its own rating, and none when it is kept for another faith
         const g = groundUnder(actor);
         const gRating = g ? (g.own ? g.o.rating : 0) : null;
         const gLine = g ? (g.own ? `Praying in ${g.name}${g.words ? `, kept for ${g.words}` : ""}: Holy Ground ${g.o.rating}.` : `${g.name} is kept for ${g.words || "another faith"}: it is no holy ground to them (Holy Ground 0).`) : "";
+        // B7893-B7894: the cell's chapter-house Holy Ground and its Flock, when the map and the sheet have none
+        const cell = f.cell ?? null, houseHoly = n(cell?.holy), ownFlock = ctx.background(actor, "flock"), cellFlock = ownFlock ? 0 : n(cell?.flock);
         const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety} (prayer never raises it above Piety).${run ? ` Day ${run + 1} in a row: +${run} difficulty.` : ""}</p>${gLine ? `<p class="vta-note">${esc(gLine)}</p>` : ""}
           <div class="form-group"><label>Where</label><select name="src" data-fixed><option value="ground">Holy Ground (its rating)</option><option value="relic">Over a Holy Relic</option><option value="flock">With their Flock</option></select></div>
-          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${gRating ?? (ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1)}" min="0" max="5"/></div>
+          ${gRating === null && houseHoly ? `<div class="form-group"><label><input type="checkbox" name="house" checked/> At the chapter-house${cell.house ? `, ${esc(cell.house)}` : ""}: Holy Ground ${houseHoly}</label></div>` : ""}
+          ${cellFlock ? `<p class="vta-note">With the Flock: the cell's Flock${cell.flockName ? `, ${esc(cell.flockName)}` : ""}, ${cellFlock}.</p>` : ""}
+          <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${gRating ?? (ownFlock || ctx.background(actor, "holy relic") || 1)}" min="0" max="5"/></div>
           <div class="form-group"><label>Hours of prayer</label><input type="number" name="hours" value="1" min="1" max="5"/></div>
           ${knows(actor, /wreathed in shadows/i) && ctx.background(actor, "flock") ? `<div class="form-group"><label><input type="checkbox" name="wreathed"/> With their Flock, Wreathed in Shadows (Zeal): gain the Flock's ${ctx.background(actor, "flock")} Conviction at once as well as the roll, even past Piety; the Flock is wrung out for any other inquisitor today</label></div>` : ""}
           <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Prayer: ${actor.name}`, content, "Pray", async fd => {
             const diff = H.prayerDifficulty(n(fd.hours), run);
             // holy ground on the map is read, not typed: its rating, or none for a house of another faith
-            const rating = fd.src === "ground" && gRating !== null ? gRating : n(fd.rating);
+            const rating = fd.src === "ground" && gRating !== null ? gRating : fd.src === "ground" && fd.house && houseHoly ? houseHoly : fd.src === "flock" && cellFlock ? cellFlock : n(fd.rating);
             fd.rating = rating;
             const r = await rollPool(rating, diff);
             // B7065: Wreathed in Shadows (Zeal), Dark Ages: Inquisitor p. 184: the Flock's rating at once, and this one may pass Piety
@@ -286,7 +456,7 @@ export function build(ctx) {
             await setConviction(actor, to);
             await setInq(actor, { prayerDay: today, prayerRun: run });
             const tnote = fd.advance ? await spendTime(actor, n(fd.hours) * 3600, "prayer") : "";
-            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + (flock ? `<div class="vta-note">Wreathed in Shadows (Zeal): +${flock} from the Flock at once, on top of the roll. The Flock is wrung out: no other inquisitor draws on it today (Dark Ages: Inquisitor p. 184).</div>` : "") + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
+            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + (fd.src === "ground" && gLine ? `<div class="vta-note">${esc(gLine)}</div>` : "") + (fd.src === "ground" && gRating === null && fd.house && houseHoly ? `<div class="vta-note">At the chapter-house: Holy Ground ${houseHoly} from the cell's pooled Chapter-House (Dark Ages: Inquisitor p. 155).</div>` : "") + (fd.src === "flock" && cellFlock ? `<div class="vta-note">Joint prayer with the cell's Flock${cell.flockName ? `, ${esc(cell.flockName)}` : ""} (${cellFlock}).</div>` : "") + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + (flock ? `<div class="vta-note">Wreathed in Shadows (Zeal): +${flock} from the Flock at once, on top of the roll. The Flock is wrung out: no other inquisitor draws on it today (Dark Ages: Inquisitor p. 184).</div>` : "") + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
         });
     }
 
@@ -302,15 +472,68 @@ export function build(ctx) {
         return post(actor, `${actor.name}: a holy relic`, rollBlock(`Holy Relics (${rating})`, r) + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>`, [r.roll]);
     }
 
+    /**
+     * B7895: a retreat (Companion pp. 95-96): a week to a month in cloister, on pilgrimage or alone. While it lasts the
+     * bank may pass one point a day, up to the highest Superior Virtue and its Virtue. One sought for an Endowment and
+     * ended early is rushed: a Curse roll.
+     */
+    async function retreat(actor, { days = 7, purpose = "bank", kind = "cloister" } = {}) {
+        const i = inq(actor), t = game.time.worldTime, d = CR.retreatDays(days);
+        if (CR.onRetreat(i.f.retreat, t)) return ctx.notify(`${actor.name} is on retreat already.`);
+        const r = { from: t, until: t + d * DAY, purpose: purpose === "endowment" ? "endowment" : "bank", kind: CR.RETREAT.kinds[kind] ? kind : "cloister" };
+        await setInq(actor, { retreat: r });
+        return post(actor, `${actor.name} goes on retreat`, `<div class="vta-note">${esc(CR.RETREAT.kinds[r.kind])}, for ${d} days${r.purpose === "endowment" ? ", to let an Endowment come in its own time" : ", to bank Conviction"}. Banking while away: up to ${CR.retreatCap(i, i.v)} (the highest Superior Virtue and its Virtue).</div><div class="wodx-quiet">${CR.COMPANION} pp. 95-96</div>`);
+    }
+    async function endRetreat(actor) {
+        const i = inq(actor), r = i.f.retreat, t = game.time.worldTime;
+        if (!r) return ctx.notify(`${actor.name} is not on retreat.`);
+        const end = CR.retreatEnd(r, t, DAY);
+        await setInq(actor, { retreat: null });
+        const msg = await post(actor, `${actor.name} comes back from retreat`, `<div class="${end.rushed ? "vta-warn" : "vta-res"}">${end.days} days away.${end.rushed ? " Ended before its time, with an Endowment sought: pride in rushing it, and the Curse roll follows." : ""}</div><div class="wodx-quiet">${CR.COMPANION} p. 96</div>`);
+        if (end.rushed) await curseRoll(actor, { from: "endowment", why: "A retreat rushed" });
+        return { ...end, msg };
+    }
+    /** B7893: waking on Holy Ground, the map's or the chapter-house's: two Willpower back, once a morning (Companion p. 98). */
+    async function wake(actor, { atHouse = false } = {}) {
+        const i = inq(actor), today = Math.floor(game.time.worldTime / DAY);
+        if (i.f.wakeDay === today) return null;
+        const g = groundUnder(actor), rating = g?.own ? n(g.o.rating) : atHouse ? n(i.f.cell?.holy) : 0;
+        if (rating <= 0) return null;
+        const wp = actor.system?.advantages?.willpower ?? {}, cur = n(wp.temporary), max = n(wp.permanent), to = Math.min(max, cur + 2);
+        await actor.update({ "system.advantages.willpower.temporary": to });
+        await setInq(actor, { wakeDay: today });
+        return post(actor, `${actor.name} wakes on holy ground`, `<div class="vta-res good">Willpower ${cur} → ${to}: a night's sleep on holy ground${g?.own ? `, ${esc(g.name)}` : i.f.cell?.house ? `, ${esc(i.f.cell.house)}` : ""}.</div><div class="wodx-quiet">${CR.COMPANION} p. 98</div>`);
+    }
+    /** B7896: Sanctification of the Homestead (Companion p. 116): an hour's rite, the standard ritus roll at 7. */
+    async function homestead(actor, { rating = null } = {}) {
+        const go = async art => {
+            const pool = attr(actor, "intelligence") + n(art);
+            const r = await rollPool(pool, 7);
+            await post(actor, `${actor.name}: Sanctification of the Homestead`, rollBlock(`Intelligence + Holy Art (${n(art)})`, r, ["difficulty 7"]) + `<div class="vta-res">${r.botch ? "A botch." : r.successes > 0 ? `${r.successes} day${r.successes === 1 ? "" : "s"} of ward.` : "No hold."}</div><div class="wodx-quiet">${CR.COMPANION} p. 116</div>`, [r.roll]);
+            return { successes: r.botch ? 0 : r.successes, botch: !!r.botch };
+        };
+        if (rating !== null) return go(rating);
+        return dialog(`Sanctification of the Homestead: ${actor.name}`, `<form><p>Holy water in every quarter, an ounce of frankincense and an hour of scripture (${CR.COMPANION} p. 116).</p><div class="form-group"><label>Holy Art rating</label><input type="number" name="rating" value="2" min="2" max="5"/></div></form>`, "Begin", fd => go(fd.rating));
+    }
+
     async function cashIn(actor) {
         const i = inq(actor);
+        // B7895: one point a day, or on retreat up to the highest Superior Virtue and its Virtue (Companion p. 96)
+        const today = Math.floor(game.time.worldTime / DAY), away = CR.onRetreat(i.f.retreat, game.time.worldTime);
+        const room = CR.bankRoom({ onRetreat: away, cap: CR.retreatCap(i, i.v), banked: i.banked, today, bankDay: i.f.bankDay ?? null, bankedToday: i.f.bankedToday });
         const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, banked ${i.banked}. Banking takes an hour of prayer a point; more than one a day needs a retreat (Dark Ages: Inquisitor p. 161).</p>
-          <div class="form-group"><label>Bank this many</label><input type="number" name="bank" value="0" min="0" max="${i.conviction}"/></div>
-          <div class="form-group"><label>Then buy</label><select name="buy" data-fixed><option value="">Nothing yet</option>${Object.entries(H.CASH_IN).map(([k, c]) => `<option value="${k}" ${i.banked >= c ? "" : ""}>${{ superior: "A Superior Virtue dot", orison: "An Orison", acolyte: "An Acolyte Endowment", advocate: "An Advocate Endowment", judge: "A Judge Endowment" }[k]} (${c})</option>`).join("")}</select> <select name="which" data-fixed>${Object.entries(H.SUPERIOR_LABEL).map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select></div></form>`;
+          <p class="vta-note">${esc(room.why)} Room now: ${room.max}.</p>
+          <div class="form-group"><label>Bank this many</label><input type="number" name="bank" value="0" min="0" max="${Math.min(i.conviction, room.max)}"/></div>
+          <div class="form-group"><label>Then buy</label><select name="buy" data-fixed><option value="">Nothing yet</option>${Object.entries(H.CASH_IN).map(([k, c]) => `<option value="${k}" ${i.banked >= c ? "" : ""}>${{ superior: "A Superior Virtue dot", orison: "An Orison", acolyte: "An Acolyte Endowment", advocate: "An Advocate Endowment", judge: "A Judge Endowment" }[k]} (${c})</option>`).join("")}</select> <select name="which" data-fixed>${Object.entries(H.SUPERIOR_LABEL).map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select></div>
+          <div class="form-group"><label><input type="checkbox" name="inplay"/> An Endowment learned in play, not in a retreat: roll for a Curse (p. 203)</label> <label><input type="checkbox" name="newcat"/> of a kind they have none of yet</label> <label><input type="checkbox" name="own"/> of their own order's (Order Prodigy)</label> <label><input type="checkbox" name="legacy"/> a Legacy</label></div>${i.cocytus ? `<p class="vta-warn">In Cocytus: banked Conviction goes to Superior Virtues only (p. 204).</p>` : ""}${hasFeat(actor, /god.?s judgment/i) ? `<p class="vta-warn">God's Judgment: some Blessings are barred to them, by the Flaw's rating (${CR.REF} p. 169).</p>` : ""}</form>`;
         return dialog(`Bank Conviction: ${actor.name}`, content, "Go", async fd => {
-            const bank = Math.min(i.conviction, n(fd.bank));
+            const bank = Math.max(0, Math.min(i.conviction, room.max, n(fd.bank)));
             let banked = i.banked + bank, html = bank ? `<div class="vta-note">${bank} Conviction banked (${banked} in all).</div>` : "";
-            if (bank) await setConviction(actor, i.conviction - bank);
+            if (n(fd.bank) > bank) html += `<div class="vta-warn">${esc(room.why)}</div>`;
+            if (bank) {
+                await setConviction(actor, i.conviction - bank);
+                await setInq(actor, { bankDay: today, bankedToday: (i.f.bankDay === today ? n(i.f.bankedToday) : 0) + bank });
+            }
             if (fd.buy) {
                 const c = H.CASH_IN[fd.buy];
                 if (banked < c) html += `<div class="vta-warn">${c} banked needed; ${banked} so far.</div>`;
@@ -320,7 +543,15 @@ export function build(ctx) {
                         const cur = i[fd.which], lim = i.v[H.SUPERIOR[fd.which]];
                         if (cur >= Math.min(5, lim)) { banked += c; html += `<div class="vta-warn">${H.SUPERIOR_LABEL[fd.which]} can't pass ${cap(H.SUPERIOR[fd.which])} ${lim}.</div>`; }
                         else { await setInq(actor, { [fd.which]: cur + 1 }); html += `<div class="vta-res good">${H.SUPERIOR_LABEL[fd.which]} ${cur} → ${cur + 1}.</div>`; }
-                    } else html += `<div class="vta-res good">Bought: add the Blessing to the sheet. ${["advocate", "judge"].includes(fd.buy) && ["acolyte", "servant"].includes(stage(i)) ? "<b>Above their stage: the Storyteller rolls for a Curse (Dark Ages: Inquisitor p. 201).</b>" : ""}</div>`;
+                    } else if (i.cocytus) { banked += c; html += `<div class="vta-warn">In Cocytus the bank buys Superior Virtues only (${CR.REF} p. 204).</div>`; }
+                    else {
+                        html += `<div class="vta-res good">Bought: add the Blessing to the sheet.</div>`;
+                        // B7884: above their stage, that stage's Curse with no roll; in play, the Curse roll (p. 203)
+                        const want = { acolyte: 1, advocate: 2, judge: 3 }[fd.buy] ?? 0, have = { servant: 0, acolyte: 1, advocate: 2, judge: 3 }[stage(i)] ?? 0;
+                        if (want > have && CR.prodigySpares({ prodigy: i.mf.prodigy, order: i.order, own: !!fd.own })) html += `<div class="vta-res good">Order Prodigy: the order's own Endowment brings no Curse (${CR.REF} Companion p. 126).</div>`;
+                        else if (want > have) Promise.resolve().then(() => offerCurse(actor, want, `A ${CR.STAGE_NAME[want]} Blessing learned at the ${H.STAGE_LABEL[stage(i)]} stage`)).catch(e => console.warn("WoDX | Curse", e));
+                        else if (fd.inplay && fd.buy !== "orison") Promise.resolve().then(() => curseRoll(actor, { from: "endowment", why: "An Endowment learned in play", newCategory: !!fd.newcat, legacy: !!fd.legacy, own: !!fd.own })).catch(e => console.warn("WoDX | Curse roll", e));
+                    }
                 }
             }
             await setInq(actor, { banked });
@@ -650,7 +881,8 @@ export function build(ctx) {
             keywords: NPW.keysOf(IB.blessingResults(b.id, 3)) })).filter(p => p.keywords.length);
     }
 
-    return { powersFor, ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow, holyArtifact, makeArtifact };
+    return { powersFor, ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, sinRoll, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow, holyArtifact, makeArtifact,
+        curseRoll, offerCurse, takeCurse, pietyPrompt, vision, onChatButton, retreat, endRetreat, wake, homestead };
 }
 
 export function registerSettings() {

@@ -133,7 +133,7 @@ export const POWER_KEYWORDS = {
     "hunters-harmony": [["speak"]], "inspiration": [["boost"]], "lambent-flame": [["light","fortune"]],
     "ley-lines": [["sense"]], "mans-skin": [["shape","illusion"]], "master-of-fire": [["ward"]],
     "mothers-touch": [["mend"]], "persuasion": [["boost"]], "preys-cry": [["illusion"]],
-    "razor-claws": [["harm","boost"]], "resist-pain": [["boost"]], "resist-toxin": [["ward"]],
+    "razor-claws": [["harm","boost"]], "resist-pain": [["boost"]], "resist-toxin": [["ward"]], "survivor": [["boost","ward"]],
     "scent-of-running-water": [["veil"],1], "scent-of-the-honeycomb": [["sense"]], "scent-of-the-true-form": [["sense"]],
     "seizing-the-edge": [["fortune"]], "sense-wyrm": [["sense"]], "shed": [["boost"]],
     "smell-of-man": [["sway"]], "snow-running": [["move","veil"]], "speed-of-thought": [["hasten"]],

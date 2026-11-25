@@ -21,6 +21,11 @@
  *   taints     [{clock, scene, per, max}]  a place whose Wyrm corruption follows one of the saga's long clocks (B7807):
  *              each segment of the clock adds per levels (default 1) to the place whose scene name matches scene (a
  *              pattern), up to max (default 9, so a clock alone never makes a Hellhole). WoDX Otherworlds applies it.
+ *   haunts     [{scene, name, rating, echoes}]  Haunts of the restless dead on the chronicle's own places (B7901): the
+ *              scene name pattern, the Haunt's rating 1-5 and its echoes (WoDX Actions wraith-rules ECHOES keys).
+ *              WoDX Actions reads them on a scene that has no Haunt of its own set.
+ *   souls      [{scene, fate}]  places where a death goes another way (B7903): fate "eaten", the soul is eaten where it
+ *              falls, and no wraith rises.
  */
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -30,7 +35,7 @@ const year = v => (v === null || v === undefined || v === "" || !Number.isFinite
 const slug = s => str(s, 60).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const norm = s => String(s ?? "").trim().toLowerCase().replace(/\s+/g, " ");
 
-const EMPTY = Object.freeze({feasts: [], titles: [], languages: [], caerns: [], hunters: null, taints: []});
+const EMPTY = Object.freeze({feasts: [], titles: [], languages: [], caerns: [], hunters: null, taints: [], haunts: [], souls: []});
 
 /** A chronicle pack's local block, cleaned: bad rows are dropped, never thrown on. */
 export function localOf(pack) {
@@ -47,8 +52,19 @@ export function localOf(pack) {
   const h = l.hunters && typeof l.hunters === "object" ? {stage: str(l.hunters.stage, 40), region: str(l.hunters.region, 60)} : null;
   const taints = list(l.taints).map(t => ({clock: str(t?.clock, 40), scene: str(t?.scene, 200),
     per: Math.max(1, Math.min(10, Math.trunc(num(t?.per)) || 1)), max: Math.max(1, Math.min(10, Math.trunc(num(t?.max)) || 9))})).filter(t => t.clock && t.scene);
-  return {feasts, titles, languages, caerns, hunters: h?.stage ? h : null, taints};
+  const haunts = list(l.haunts).map(x => ({scene: str(x?.scene, 200), name: str(x?.name), rating: Math.max(1, Math.min(5, Math.trunc(num(x?.rating)) || 1)),
+    echoes: list(x?.echoes).map(e => str(e, 20)).filter(Boolean).slice(0, 8)})).filter(x => x.scene);
+  const souls = list(l.souls).map(x => ({scene: str(x?.scene, 200), fate: str(x?.fate, 20)})).filter(x => x.scene && x.fate);
+  return {feasts, titles, languages, caerns, hunters: h?.stage ? h : null, taints, haunts, souls};
 }
+
+/* ---- The dead (B7901, B7903) ---- */
+
+const matches = (pattern, name) => { try { return new RegExp(pattern, "i").test(String(name ?? "")); } catch (e) { return false; } };
+/** The chronicle's Haunt on a scene of this name, or null. */
+export const hauntOn = (local = EMPTY, sceneName = "") => (local?.haunts ?? []).find(h => matches(h.scene, sceneName)) ?? null;
+/** What becomes of a soul that dies on a scene of this name: "eaten", or "" for the usual way. */
+export const soulFateOn = (local = EMPTY, sceneName = "") => (local?.souls ?? []).find(x => matches(x.scene, sceneName))?.fate ?? "";
 
 /* ---- Feasts (B7611) ---- */
 

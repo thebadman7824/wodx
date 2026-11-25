@@ -2209,6 +2209,44 @@
 "id": "maw-of-the-whale"
 },
 {
+"n": "Survivor",
+"l": 5,
+"g": [
+"bone-gnawers"
+],
+"p": 131,
+"c": "g1",
+"r": "stamina+survival",
+"d": 7,
+"t": "days",
+"e": "A day per success with no need to eat, drink or sleep and three more dots of Stamina (past 10 if need be); natural poison and disease do nothing, supernatural ones half.",
+"id": "survivor",
+"spec": [
+{
+"kw": "boost",
+"kind": "timed",
+"name": "Survivor",
+"lasts": {
+"days": 1
+},
+"who": "self",
+"on": "soak",
+"dice": 3
+},
+{
+"kw": "ward",
+"kind": "timed",
+"name": "Survivor",
+"lasts": {
+"days": 1
+},
+"who": "self",
+"dice": 3,
+"against": "poison"
+}
+]
+},
+{
 "n": "Nightmare Possession",
 "l": 5,
 "g": [
