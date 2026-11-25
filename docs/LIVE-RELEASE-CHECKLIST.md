@@ -27,6 +27,15 @@ Before a build goes to Live, it is played in the solo world as a frozen release 
 12. Write the release log entry: date, commit, versions, settings changed.
 13. If something is wrong, put the previous release folder back and restart. Restore the backup only if world data changed.
 
+## Release, 2026-11-25 (ccdd0a4): what to know next time
+
+- Log: /mnt/project-files/releases/live-release-2026-11-25-ccdd0a4.md (project files). Live went from 5854053 to ccdd0a4, and wodx-rothenstein was switched on in rothenstein-live.
+- A rehearsal came first: the fresh Live world backup, unpacked on a free testbed lane as `rothenstein-live-rehearsal`, with the release deployed and every sheet kind opened. It found nothing, and it is worth keeping for any release that spans many module versions.
+- The 11 November release scripts were gone from %TEMP% on the Main PC and were rebuilt: %TEMP%\wodx-vps\rel-ccdd0a4.sh (checks, backups, staging, then `swap`), D:\WoDX\pcq\ops\world-modcfg.cjs (turns a module on or off in a stopped world) and D:\WoDX\pcq\ops\rehearsal-check.mjs. Keep them outside %TEMP% from now on.
+- `ssh root@wodx.online` answered "Permission denied (publickey)" until Ben gave the go-ahead in the Main PC thread. The key needs a passphrase and is served by the Windows ssh-agent; `ssh-add -l` on the Main PC shows whether the agent holds it.
+- Step 7's droplet snapshot was skipped: doctl is not set up on the PC, and the server backups (world and previous code) were taken instead.
+- After the swap, 96 compendium LevelDB files under systems/worldofdarkness/packs no longer match the MD5 manifest. Foundry rewrites them when it opens the packs, so check the manifest with Foundry stopped.
+
 ## Security routine (Security Desk, 13 November 2026)
 
 - Before each game night, even without a release: the Users list check (step 11a) and a reboot if `/var/run/reboot-required` exists.
