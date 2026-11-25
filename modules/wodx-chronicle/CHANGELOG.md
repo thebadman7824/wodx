@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.145.0 (The merits and flaws of Dark Ages: Werewolf (pp. 86-89), Dark Ages: Fae (pp. 97-101), Dark Ages: Devil's Due (pp. 98-100) and the Dark Ages: Inquisitor Companion (pp. 124-127) join the trait table, 75 rows (B7931-B7934); Dark Ages: Mage merits and flaws, pp. 90-93 (B7909); The eighteen merits and flaws of Dark Ages: Inquisitor (pp. 166-169) in the trait table, with their roll effects (B7889); manifest.local.haunts and manifest.local.souls (B7901, B7903))
 - 0.144.0 (Languages in chat work from Foundry 14's own chat box (B7268, B7269), a player speaks only the languages their characters know (B7267), and "Try for the gist" answers a click on any copy of the line (B7270). Gate gateplaylang types each line into the chat box and reads it in a second browser as a player)
 - 0.143.1 (A Danislav revenant takes aggravated damage from silver in a fight (B7844))
 - 0.143.0 (Chronicle local block: taints rows tie a place to a long clock, with taintPlans and clockTaint for the module that applies them (B7807))
