@@ -101,6 +101,28 @@ export function stagesOf(path) {
   return path.drill ? all.filter(s => !DRILLED.has(s)) : all;
 }
 
+/**
+ * Lines whose bodies age like a mortal's: they can't be born longer ago than a mortal lifespan before
+ * the chronicle's year (the owner's call, 25 Nov). Vampires, ghouls, revenants, wraiths, mummies and
+ * Kuei-jin do not age this way and keep the long range down to 4000 BCE.
+ */
+export const MORTAL_LIFESPAN = 70;
+export const AGES_LIKE_MORTALS = new Set(["mortal", "mage", "werewolf", "hunter", "changeling", "demon", "orpheus"]);
+export const OLDEST_YEAR = -4000;
+
+/** The earliest birth year the setup allows for a line, given the chronicle's year. */
+export function earliestBirth(line, nowYear) {
+  const now = num(nowYear) ?? 1197;
+  return AGES_LIKE_MORTALS.has(line) ? now - MORTAL_LIFESPAN : OLDEST_YEAR;
+}
+
+/** Birth and turn years held inside the line's range: born no earlier than earliestBirth, turned no earlier than born. */
+export function clampYears(line, {birthYear, turnYear}, nowYear) {
+  const b = Math.max(earliestBirth(line, nowYear), num(birthYear) ?? 1200);
+  const t = turnYear === null || turnYear === undefined ? turnYear : Math.max(b, num(turnYear) ?? b);
+  return {birthYear: b, turnYear: t};
+}
+
 /** A fresh lifepath. drill: a finished drill-down (lifepath-drill-rules.mjs) that stands for the mortal years. */
 export function newPath({line = "mortal", splat = null, birthYear, turnYear = null, seed = "wodx", drill = null} = {}) {
   const L = LINES[line] ? line : "mortal";

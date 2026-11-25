@@ -187,7 +187,7 @@ test("#2505: a lifepath may begin before the common era", async () => {
   const p = L.newPath({line: "vampire", birthYear: -500, turnYear: -470});
   assert.equal(p.birthYear, -500);
   const F = src("modules/wodx-creation/scripts/lifepath.mjs");
-  assert.match(F, /min="\$\{s\.line === "mortal" \? 1100 : -4000\}"/);
+  assert.match(F, /min="\$\{R\.earliestBirth\(s\.line, yearNow\(\)\)\}"/);
   assert.match(F, /birthYear: yearIn\(f\.birthYear\.value, this\.setup\.birthYear\)/);
 });
 
@@ -258,4 +258,16 @@ test("#2508 desk pick: the look card says what the character knows of them: the 
   assert.match(N, /attitude\.of\(them, me\)/);
   assert.match(N, /rumours\?\.heardBy\?\.\(me\.id\)/, "only tales this character heard, never every rumour");
   assert.match(N, /if \( !me \|\| !them \|\| !id \|\| me\.id === id \) return out;/);
+});
+
+test("#2505a: lines that age like mortals can't be born past a mortal lifespan; the undying keep the long range", async () => {
+  const R = await import("../../modules/wodx-creation/scripts/lifepath-rules.mjs");
+  assert.equal(R.earliestBirth("mage", 1197), 1127);
+  assert.equal(R.earliestBirth("werewolf", 1197), 1127);
+  assert.equal(R.earliestBirth("mortal", 1197), 1127);
+  assert.equal(R.earliestBirth("vampire", 1197), -4000);
+  assert.equal(R.earliestBirth("wraith", 1197), -4000);
+  assert.deepEqual(R.clampYears("mage", {birthYear: 900, turnYear: 950}, 1197), {birthYear: 1127, turnYear: 1127});
+  assert.deepEqual(R.clampYears("mage", {birthYear: 1160, turnYear: 1180}, 1197), {birthYear: 1160, turnYear: 1180});
+  assert.deepEqual(R.clampYears("vampire", {birthYear: -500, turnYear: 100}, 1197), {birthYear: -500, turnYear: 100});
 });
