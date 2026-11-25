@@ -251,12 +251,21 @@ async function body() {
     ok("the unseen: with the hero hidden, it searches", top.action === "search", {top: `${top.label}: ${top.why}`});
   });
   await step("the way round the wall: never through it", async () => {
+    // B7981: nightly job 2448 found the runner at row 5 column 5, beside the hero and on the hero's side of the wall,
+    // so the way was two squares and never went round. Record where it stood, and put it back at its start (column 14,
+    // position only) so the step tests the way round the wall and not whatever moved it in the steps before
+    R.runnerBefore = {cell: npc().cellOf(T.runner), turn: turnOf(combat), mode: sc.getFlag(MOD, "mode") ?? null,
+      moved: T.runner.document.getFlag("wodx-combat", "moved") ?? null};
+    if ( T.runner.document.x !== 1400 || T.runner.document.y !== 500 ) {
+      await T.runner.document.update({x: 1400, y: 500}, {animate: false, wodxMove: false});
+      await sleep(600);
+    }
     const a = npc().cellOf(T.runner), b = npc().cellOf(T.hero);
     const direct = npc().wallBetween({i: 5, j: 10}, {i: 5, j: 11}, T.runner);
     const way = npc().approach(T.runner, T.hero);
     const steps = (way.path ?? []).slice(1).map((c, k) => npc().wallBetween(way.path[k], c, T.runner));
     ok("the way round the wall: never through it", direct && !!way.path && steps.every(x => !x) && way.path.some(c => c.i >= 10),
-      {from: a, to: b, blockedStraight: direct, squares: way.path?.length ?? 0, cost: way.cost, through: way.path?.filter(c => c.j === 10 || c.j === 11)});
+      {from: a, to: b, blockedStraight: direct, squares: way.path?.length ?? 0, cost: way.cost, through: way.path?.filter(c => c.j === 10 || c.j === 11), before: R.runnerBefore});
   });
   await step("a large NPC (2x2) finds a way it fits through", async () => {
     await T.runner.document.update({width: 2, height: 2}, {animate: false});

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B7970
+Next free block: B7990
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -472,6 +472,7 @@ Next free block: B7970
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
 | B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
+| B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16483,3 +16484,13 @@ duplicates. The first healthy lane check and a cool first graphics card reading 
 longer leaves the old alert open for good or opens a new one while the fault lasts. Fixes issue 2393.
 
 Reverse: remove adopt() from alert() and recovered(), and the mark from the alert body.
+
+## B7980. gatemarketgoods matches its two scenes by name (2026-11-25)
+Gates. Nightly job 2448 failed steps 2 and 3: the Kyoto step priced its good on the Moravian scene (here: moravia) and the Moravia step on the Kyoto scene (here: japan). The two scenes are made in one batch, and a batch create does not keep its order (kit rule 1, `inOrder` in tools/gate/kit.mjs). The gate now finds each scene by its name. The pass conditions are unchanged. Not yet run in Foundry.
+
+Reverse: put back `const [kyoto, brno] = await Scene.create([...])` in tools/gate/gatemarketgoods.mjs.
+
+## B7981. gate7b puts the runner back at its start before the way round the wall (2026-11-25)
+Gates. Nightly job 2448 failed "the way round the wall" and "a large NPC (2x2)": the runner stood at row 5 column 5, beside the hero on the hero's side of the wall, so its way was two squares and never went round. It starts at column 14 and no earlier step in the gate moves it, so something outside the gate moved it, as with the victim in gatedach8 (B7853). The step now records where the runner stood, whose turn it was, the scene's mode and the runner's moved flag (`runnerBefore`), and puts the runner back at column 14 (position only) before it asks for the way. The pass conditions are unchanged. Not yet run in Foundry.
+
+Reverse: take the runnerBefore record and the T.runner.document.update out of the way-round step in tools/gate/gate7b.mjs.
