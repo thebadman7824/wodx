@@ -717,12 +717,13 @@
    "core": false,
    "files": [
     "modules/wodx-creation/scripts/dac-demons.mjs",
-    "modules/wodx-creation/scripts/dac-demons-rules.mjs"
+    "modules/wodx-creation/scripts/dac-demons-rules.mjs",
+    "modules/wodx-creation/data/daw-monsters.mjs"
    ],
    "steps": {
     "built": {
      "pr": 2323,
-     "decisions": "B7698, B7702"
+     "decisions": "B7698, B7702, B7939"
     },
     "wired": {
      "reader": "modules/wodx-creation/scripts/dac-demons.mjs:demonsDialog"

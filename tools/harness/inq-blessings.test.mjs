@@ -13,7 +13,8 @@ test("every Blessing has a kind, a page, a known keyword and results (B3755)", (
   for ( const b of IB.BLESSINGS ) {
     assert.ok(!ids.has(b.id), `${b.id}: unique`); ids.add(b.id);
     assert.ok(H.ENDOWMENT_KINDS.includes(b.kind), `${b.name}: kind`);
-    assert.ok(b.p >= 170 && b.p <= 201, `${b.name}: page`);
+    // B7934: the Companion's rows carry their own book (printed pp. 98-117)
+    assert.ok(b.ref ? b.ref === IB.REF_C && b.p >= 98 && b.p <= 117 : b.p >= 170 && b.p <= 201, `${b.name}: page`);
     assert.ok(E.KEYWORDS[b.spec.kw], `${b.name}: keyword ${b.spec.kw}`);
     const res = IB.blessingResults(b.id, 2);
     assert.ok(res.length, `${b.name}: results`);

@@ -8,8 +8,13 @@
  * The Superior Virtues themselves roll in the Virtue roll window. Pure: no Foundry calls.
  */
 import { H, T, C, N, HL, outcomesOf } from "./mage-da-effects.js";
+import { DAY, WEEK } from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Inquisitor";
+/** B7934: the Companion's Blessings carry their own book. */
+export const REF_C = "Dark Ages: Inquisitor Companion";
+/** "Book p. N" for a Blessing, from its own book. */
+export const refOf = b => `${b?.ref ?? REF} p. ${b?.p}`;
 /** A pool moved: points per success (or fixed), on whom; drain takes it away. */
 export const PL = (pool, per, who = "one", o = {}) => ({ kw: "charge", kind: "pool", pool, per, who, fixed: !!o.fixed, drain: !!o.drain });
 /** Conviction regained by the user: one per success, up to the cap ("piety" or a trait name). */
@@ -18,7 +23,7 @@ export const CV = (cap = "piety") => ({ kw: "charge", kind: "conv", cap, who: "s
 const B = (id, name, kind, use, stage, roll, diff, cost, p, fx, spec, o = {}) => ({ id, name, kind, use, stage, roll, diff, cost, p, fx, spec, ...o });
 const sc = "scene";
 
-export const BLESSINGS = [
+const CORE = [
     // Orisons (p. 174-176)
     B("moral-compass", "Moral Compass", "Orison", "Conscience", "", "perception+conscience", 6, 0, 174, "Reads the sin and Piety of those close by; five successes pick out pagans and heretics.", N("know")),
     B("noahs-favor", "Noah's Favor", "Orison", "Conscience", "", "perception+animal ken", 6, 1, 174, "Speaks heart to heart with an animal, or soothes it.", T("speak", "Noah's Favor", sc, "one")),
@@ -124,6 +129,95 @@ export const BLESSINGS = [
     B("r-chrism", "Chrism of the Blessed Myroblite", "Holy Art", "Ritus 4", "", "", 6, 0, 200, "An anointing that closes wounds; a vial thrown at a demon, vampire or evil spirit burns for ten aggravated dice, fading after.", H("harm", 10, "aggravated", { fixed: true, ask: true }))
 ];
 
+/**
+ * B7934: the Orisons, Endowments, Corpus Lux and ritae of the Dark Ages: Inquisitor Companion (printed pp. 98-117), in
+ * the same shape. Corpus Lux rolls Charisma + path unless the entry says otherwise; the ritae roll Intelligence + Holy
+ * Art at the page's difficulty.
+ */
+const CO = { ref: REF_C };
+const hours = k => Array.from({ length: k }, (_, i) => [`${i + 1} hour${i ? "s" : ""}`, 3600 * (i + 1)]);
+const FOREVER = [["for good", 3155760000]];
+export const COMPANION = [
+    // Orisons (pp. 98-101)
+    B("c-kindness", "Gift of Kindness", "Orison", "Conscience", "", "intelligence+conscience", 6, 1, 98, "Always: Charisma rolls that threaten no one are -1 difficulty. A point and the roll: how to carry oneself among strangers, even the right phrase in their tongue.", N("know"), CO),
+    B("c-compassion", "Touch of Compassion", "Orison", "Conscience", "", "perception+medicine", 6, 0, 98, "A touch and a turn: the wounds, sickness or poison and how bad; a point more gives the best cure the age knows (or that none exists).", N("know"), CO),
+    B("c-aesthetic", "Aesthetic Eye", "Orison", "Conscience", "", "perception+alertness", 7, 1, 99, "Tells whether a thing was made or changed by an unnatural hand (not what kind).", N("sense"), CO),
+    B("c-loaves", "Loaves and Fishes", "Orison", "Self-Control", "", "", 6, 1, 99, "A meal for one, prayed over, feeds five for each Conviction point (three a day at most).", N("free"), { ...CO, story: "Companion p. 99: who is fed is the hardship window's call; WoDX keeps no plate" }),
+    B("c-jacob", "Dream of Jacob", "Orison", "Self-Control", "", "stamina+selfcontrol", 6, 1, 100, "A trance like death, a day for each point spent (one a success at most): no food, a Willpower point back each day, no waking early. A botch: a Conviction point and a lethal level.", PL("willpower", 1, "self"), CO),
+    B("c-carried", "Carried by Faith", "Orison", "Self-Control", "", "dexterity+selfcontrol", 6, 1, 100, "Always: Stamina rolls to travel on foot -1 difficulty. A point and the roll: no footprints for the scene.", T("veil", "Carried by Faith", sc, "self"), CO),
+    B("c-fear", "Fear of God", "Orison", "Courage", "", "charisma+courage", "t", 1, 100, "Always: Intimidation -1 difficulty. A point and the roll: the target cowers a turn per success, defending only (a monster resists with Willpower at the user's Piety, a mortal spends Willpower).", T("fear", "Fear of God", { turns: 1 }, "one"), CO),
+    B("c-vigor", "Blessed Vigor", "Orison", "Courage", "", "", 6, 1, 100, "Each Conviction point sets aside a level of wound penalties for the scene; at its end Courage at 5 plus the wound levels, or a bashing level. Not while Incapacitated.", T("boost", "Blessed Vigor", sc, "self", { painless: true }), CO),
+    B("c-moses", "Grace of Moses", "Orison", "Courage", "", "perception+courage", 6, 1, 100, "Always: Survival -1 difficulty. A point and the roll: a way to live through a hostile land (water, shelter, a stranger's help, fire).", N("know"), CO),
+    // Benedictions, Oculi Dei (pp. 101-104)
+    B("c-endure-w", "Endurance Everlasting (Wisdom)", "Benediction", "Wisdom", "acolyte", "stamina+wisdom", 6, 1, 101, "Two days a success without sleep or food, and a point a success for the Mental Attributes (to 6, 7 or 8 by stage); not again until it ends.", T("boost", "Endurance Everlasting", { days: 2 }, "self", { on: "mental" }), CO),
+    B("c-endure-f", "Endurance Everlasting (Faith)", "Benediction", "Faith", "acolyte", "stamina+faith", 6, 1, 101, "Two Willpower a success for the scene, only to fend off mind powers (Dominate, Vessel and the like).", PL("willpower", 2, "self"), CO),
+    B("c-endure-z", "Endurance Everlasting (Zeal)", "Benediction", "Zeal", "acolyte", "stamina+zeal", 5, 0, 102, "Eight hours a success of full exertion without rest (travel or work, not battle); then a day a success barely able to hobble.", N("free"), { ...CO, story: "Companion p. 101: hours of travel or work outside a fight; WoDX keeps no fatigue clock, the Storyteller marks the hobbling days" }),
+    B("c-light-w", "Divine Light (Wisdom)", "Benediction", "Wisdom", "acolyte", "perception+wisdom", 6, 0, 102, "Knows who watches or follows: a turn at one success, a scene at three, the follower's aim at four, scrying at five.", N("sense"), CO),
+    B("c-light-f", "Divine Light (Faith)", "Benediction", "Faith", "acolyte", "perception+faith", 6, 1, 102, "Sees magic or Disciplines at work, and who works them, five feet a success.", N("sense"), CO),
+    B("c-light-z", "Divine Light (Zeal)", "Benediction", "Zeal", "acolyte", "perception+zeal", 6, 1, 102, "A sense of danger for the scene, from foreboding at one success to who plots it and how to turn it at five.", N("know"), CO),
+    B("c-libera-w", "Libera Me (Wisdom)", "Benediction", "Wisdom", "advocate", "wits+wisdom", 6, 0, 103, "Throws off mind control (two successes for Presence, mages and the fae); three and a point cast out a possessing demon.", T("ward", "Libera Me: the mind its own", sc, "self", { against: "mind" }), CO),
+    B("c-libera-f", "Libera Me (Faith)", "Benediction", "Faith", "advocate", "dexterity+faith", 6, 0, 103, "Chains, ropes, locks and snares fall away, a success for each binding.", N("free"), { ...CO, story: "Companion p. 103: bindings and locks fall away; the Storyteller lifts the Held or Bound marks by hand" }),
+    B("c-libera-z", "Libera Me (Zeal)", "Benediction", "Zeal", "advocate", "charisma+zeal", 7, 0, 103, "Whoever holds the user, by hand or by magic, is slammed to the ground, stunned a turn for each success past the first.", { kw: "trip", kind: "kw", who: "all" }, CO),
+    B("c-vow-w", "Vow of Silence (Wisdom)", "Benediction", "Wisdom", "judge", "wits+wisdom", 5, 1, 104, "Each success takes three from any supernatural sense seeking the user (Heightened Senses, telepathy, finding spells).", T("veil", "Vow of Silence", sc, "self"), CO),
+    B("c-vow-f", "Vow of Silence (Faith)", "Benediction", "Faith", "judge", "wits+faith", 7, 1, 104, "No aura, dream, ghost, corpse or touched thing gives the user away, for a scene up to a year by successes.", T("veil", "Vow of Silence: the trail covered", { ladder: [["one scene", { kind: "scene" }], ["one day", DAY], ["one week", WEEK], ["one month", 30 * DAY], ["one year", 365 * DAY]] }, "self"), CO),
+    B("c-vow-z", "Vow of Silence (Zeal)", "Benediction", "Zeal", "judge", "", 6, 1, 104, "Under torture or mind control the sought knowledge is simply gone, until the user is free again.", T("ward", "Vow of Silence", sc, "self", { against: "mind" }), CO),
+    // Investitures, Knights of Acre (pp. 104-107)
+    B("c-lamb-z", "Lamb of God (Zeal)", "Investiture", "Zeal", "acolyte", "stamina+zeal", 5, 0, 104, "Takes the blow without striking or dodging; its damage before soak falls on the attacker: bashing at one or two successes, lethal at three or four, aggravated at five. Only in true battle.", N("free"), { ...CO, story: "Companion p. 104: the blow's damage before soak goes back to the attacker; the Storyteller applies it with WoDX Combat's damage window" }),
+    B("c-lamb-f", "Lamb of God (Faith)", "Investiture", "Faith", "acolyte", "stamina+faith", 6, 0, 105, "Each success takes one from an attack seen coming; a point makes it reflexive.", T("ward", "Lamb of God", { turns: 1 }, "self"), CO),
+    B("c-lamb-w", "Lamb of God (Wisdom)", "Investiture", "Wisdom", "acolyte", "strength+wisdom", 6, 1, 105, "The damage taken heals a fellow inquisitor as much: bashing at one success, lethal at two, any kind at three.", N("free"), { ...CO, story: "Companion p. 104: the levels taken heal another inquisitor; the Storyteller heals them on that sheet" }),
+    B("c-shield-z", "Shield of God (Zeal)", "Investiture", "Zeal", "acolyte", "stamina+zeal", 7, 1, 105, "Three turns in fire, even magical fire, unburnt; a point more for each three turns after.", T("ward", "Shield of God: unburnt", { turns: 3 }, "self", { dice: 10, against: "fire" }), CO),
+    B("c-shield-f", "Shield of God (Faith)", "Investiture", "Faith", "acolyte", "stamina+faith", 6, 1, 106, "Ten minutes more under water for each success, holding the breath.", N("free"), { ...CO, story: "Companion p. 105: breath held longer under water; WoDX keeps no breath count" }),
+    B("c-shield-w", "Shield of God (Wisdom)", "Investiture", "Wisdom", "acolyte", "stamina+wisdom", 6, 1, 106, "Each success takes twenty feet off a fall.", N("free"), { ...CO, story: "Companion p. 105: a fall shortened; WoDX rolls no falls" }),
+    B("c-rock-z", "Enduring Rock of Faith (Zeal)", "Investiture", "Zeal", "advocate", "stamina+zeal", 6, 1, 106, "Prayed before the first blow: each success lowers an attack a grade this scene (aggravated to lethal, lethal to bashing, bashing to nothing).", T("ward", "Enduring Rock of Faith", sc, "self"), CO),
+    B("c-rock-f", "Enduring Rock of Faith (Faith)", "Investiture", "Faith", "advocate", "stamina+faith", 6, 1, 106, "A soak roll may be rolled again once for each success this scene, keeping the better.", N("free"), { ...CO, story: "Companion p. 106: a soak rerolled and the better kept; the soak dice are rolled again by hand" }),
+    B("c-rock-w", "Enduring Rock of Faith (Wisdom)", "Investiture", "Wisdom", "advocate", "", 6, 1, 106, "Resisting thralldom is difficulty 4 for the scene.", N("free"), { ...CO, story: "Companion p. 106: resisting thralldom at 4; the resisting roll is the Storyteller's" }),
+    B("c-milius-z", "Milius Dei (Zeal)", "Investiture", "Zeal", "judge", "", 6, 1, 106, "This turn a full dodge against every attack seen, even while attacking.", N("free"), { ...CO, story: "Companion p. 106: a full dodge against every attack this turn while still attacking; the defense rolls are made as usual" }),
+    B("c-milius-f", "Milius Dei (Faith)", "Investiture", "Faith", "judge", "", 6, 1, 107, "Up to Faith attacks this scene heal the levels they would have taken; once a scene.", N("free"), { ...CO, story: "Companion p. 106: the attacks' levels heal instead of harm; the Storyteller heals them after each blow" }),
+    B("c-milius-w", "Milius Dei (Wisdom)", "Investiture", "Wisdom", "judge", "", 6, 0, 107, "For the scene no supernatural weapon (claw, fang, enchanted blade) harms the Knight; spells and plain weapons still do.", T("ward", "Milius Dei: proof against unholy arms", sc, "self", { dice: 10, against: "supernatural" }), CO),
+    // Legacies, House Murnau (pp. 107-110)
+    B("c-insight-f", "Divine Insight (Faith)", "Legacy", "Faith", "acolyte", "perception+faith", 6, 1, 107, "The direction of a creature once seen, from a compass point to the place and its landmarks by successes.", N("know"), CO),
+    B("c-insight-w", "Divine Insight (Wisdom)", "Legacy", "Wisdom", "acolyte", "perception+wisdom", "t", 0, 107, "A creature's desires, from what drives it to its aims; at four Wisdom joins Social rolls against it, at five one question answered. Once a day a creature.", N("know"), CO),
+    B("c-insight-z", "Divine Insight (Zeal)", "Legacy", "Zeal", "acolyte", "intelligence+zeal", 6, 0, 108, "Leads toward the nearest source of a creature's power or comfort.", N("know"), CO),
+    B("c-flock-f", "Surveying the Devil's Flock (Faith)", "Legacy", "Faith", "acolyte", "manipulation+faith", 6, 1, 108, "A laying on of hands: the target cannot hear, see or read a supernatural master, a day a success.", T("ward", "Deaf to the master", { days: 1 }, "one"), CO),
+    B("c-flock-w", "Surveying the Devil's Flock (Wisdom)", "Legacy", "Wisdom", "acolyte", "perception+wisdom", 6, 0, 108, "Whether a mortal ever served a supernatural master; more successes tell when, how gravely, what master, how long and how they feel now.", N("know"), CO),
+    B("c-flock-z", "Surveying the Devil's Flock (Zeal)", "Legacy", "Zeal", "acolyte", "charisma+zeal", 6, 1, 108, "A thrall sees the master truly: all control is broken for a day, in fury; after, remorse.", T("sway", "Woken from thralldom", { days: 1 }, "one"), CO),
+    B("c-fangs-f", "Pulling the Serpent's Fangs (Faith)", "Legacy", "Faith", "advocate", "manipulation+faith", 6, 1, 109, "Every supernatural thing in sight is struck dumb, three turns a success; incantations and spoken commands fail.", T("sway", "Struck dumb", { turns: 3 }, "all"), CO),
+    B("c-fangs-w", "Pulling the Serpent's Fangs (Wisdom)", "Legacy", "Wisdom", "advocate", "charisma+wisdom", 6, 0, 109, "A creature must spend a Willpower a success each time it moves against the user this scene; spent out, it seeks to make peace.", T("sway", "Loath to harm", sc, "one"), CO),
+    B("c-fangs-z", "Pulling the Serpent's Fangs (Zeal)", "Legacy", "Zeal", "advocate", "manipulation+zeal", 6, 1, 109, "Only the beast is left, three turns a success: vampires and werewolves frenzy, mages sleep, the fae do strange things.", T("sway", "The beast let loose", { turns: 3 }, "one"), CO),
+    B("c-fearno-f", "Fear No Evil (Faith)", "Legacy", "Faith", "judge", "charisma+faith", 7, 2, 109, "A circle five feet a success: supernatural things (ghouls too) keep out, or take three aggravated levels a turn; one caught inside must keep still.", T("ward", "Fear No Evil: the circle", sc, "self"), CO),
+    B("c-fearno-w", "Fear No Evil (Wisdom)", "Legacy", "Wisdom", "judge", "charisma+wisdom", 6, 1, 109, "One creature in sight that loses Willpower at 8 treats the user as a beloved friend for the scene, and is furious after.", T("sway", "Fear No Evil: a beloved friend", sc, "one"), CO),
+    B("c-fearno-z", "Fear No Evil (Zeal)", "Legacy", "Zeal", "judge", "manipulation+zeal", 6, 3, 110, "Every supernatural thing within fifty feet that rolls fewer successes on Willpower at 8 falls on the nearest other with its deadliest attack.", T("sway", "Fear No Evil: at each other's throats", sc, "all"), CO),
+    // Psalms, Sisters of St. John (pp. 110-113)
+    B("c-jub-f", "Jubilation (Faith)", "Psalm", "Faith", "acolyte", "", 6, 1, 110, "Each friend who sings heals a level: bashing with up to nine voices, lethal up to 29, any kind with thirty or more.", HL(1, { who: "all" }), CO),
+    B("c-jub-w", "Jubilation (Wisdom)", "Psalm", "Wisdom", "acolyte", "", 6, 1, 111, "The singers sleep well and wake with one, two or three Willpower more, by voices.", PL("willpower", 1, "all", { fixed: true }), CO),
+    B("c-jub-z", "Jubilation (Zeal)", "Psalm", "Zeal", "acolyte", "", 6, 1, 111, "Fiends in hearing are pained and deafened: -1 die and eight hours with up to nine voices, -2 and a day up to 29, -3 and two days past that.", T("boost", "Jubilation: the din", sc, "all", { dice: 1, sap: true, on: "all" }), CO),
+    B("c-remem-f", "Remembrance Song (Faith)", "Psalm", "Faith", "acolyte", "charisma+faith", 6, 1, 111, "One listener a success: Courage -1 difficulty, emotion powers on them +1, a Conviction point for the scene (never Callous); not for the Callous.", T("fortune", "Remembrance Song", sc, "each", { shift: 1, tags: ["courage"] }), CO),
+    B("c-remem-w", "Remembrance Song (Wisdom)", "Psalm", "Wisdom", "acolyte", "charisma+wisdom", 7, 1, 111, "Three turns of song: true memories in full detail, back a week to twenty years by successes; false ones are seen through.", N("know"), CO),
+    B("c-remem-z", "Remembrance Song (Zeal)", "Psalm", "Zeal", "acolyte", "intelligence+zeal", 6, 1, 112, "A message of 100 words, and 20 more a success, carried word for word to its one hearer, then forgotten.", N("speak"), CO),
+    B("c-sera-f", "Song of the Seraphim (Faith)", "Psalm", "Faith", "advocate", "wits+faith", 6, 1, 112, "None within ten feet can lie, even by leaving things out, three turns a success.", T("sway", "Song of the Seraphim: no lie spoken", { turns: 3 }, "all"), CO),
+    B("c-sera-w", "Song of the Seraphim (Wisdom)", "Psalm", "Wisdom", "advocate", "perception+wisdom", 6, 1, 112, "Every illusion within ten feet a success falls away for good (Chimerstry, Obfuscate, glamour).", N("sense"), CO),
+    B("c-sera-z", "Song of the Seraphim (Zeal)", "Psalm", "Zeal", "advocate", "charisma+zeal", 6, 2, 112, "A fiend or Callous inquisitor loses a Willpower a success; at none it gives up the fight, or the lie.", PL("willpower", 1, "one", { drain: true }), CO),
+    B("c-vox-f", "Vox Dei (Faith)", "Psalm", "Faith", "judge", "charisma+faith", 6, 2, 112, "All in hearing with Willpower under the user's Willpower plus successes run to confess every dealing with the Devil's creatures (ghouls and the blood-bound too).", T("sway", "Vox Dei: confession", sc, "all"), CO),
+    B("c-vox-w", "Vox Dei (Wisdom)", "Psalm", "Wisdom", "judge", "perception+wisdom", 6, 2, 112, "Touching a creature, sings its true thoughts, a concept a turn for two turns a success (8 if it knows no human tongue).", N("know"), CO),
+    B("c-vox-z", "Vox Dei (Zeal)", "Psalm", "Zeal", "judge", "charisma+zeal", 7, 2, 113, "Dies Irae: every lair in hearing is destroyed, slowly at one success, at once at five; at two or more it is Holy Ground for a week. An unsoakable bashing level to the singer per success.", T("place", "Holy Ground after Dies Irae", { ladder: [["one week", WEEK]] }, "self"), CO),
+    // Holy Art: Corpus Lux, Charisma + path (pp. 114-115)
+    B("cl1", "Rebuking the Sight of the Tainted", "Holy Art", "Corpus Lux 1", "", "perception+path", 6, 0, 114, "In a mirror or still water, anything not wholly human casts no reflection; a failure, not again on them for a day.", N("sense"), CO),
+    B("cl2", "Protection of the Holy Cross", "Holy Art", "Corpus Lux 2", "", "charisma+path", "t", 0, 114, "A cross held up drives the target back steps equal to successes plus Faith while the user holds; a point holds it where it is on a failure; Willpower ignores it a turn.", T("fear", "Held back by the Cross", sc, "one"), CO),
+    B("cl3", "Empower the Instrument of Faith", "Holy Art", "Corpus Lux 3", "", "charisma+path", 6, 0, 114, "A blessed thing (a Bible, a rosary, a wafer) strikes for an aggravated level, a turn a success; a point adds a level.", T("imbue", "Instrument of Faith", { turns: 1 }, "self"), CO),
+    B("cl4", "Blessed Litany", "Holy Art", "Corpus Lux 4", "", "charisma+path", 7, 1, 115, "Within five feet a Piety dot, fiends flee for successes plus Faith turns; one cornered takes lethal dice equal to the successes each turn. Once a scene.", T("fear", "Blessed Litany", { turns: 1 }, "all"), CO),
+    B("cl5", "Radiant Presence of the Lord", "Holy Art", "Corpus Lux 5", "", "charisma+path", 8, 2, 115, "Golden light, a turn a success: darkness and illusions fail, hidden forms show, and vampires burn as in sunlight of the user's Piety. A botch risks a Curse.", H("harm", 1, "aggravated", { who: "all", ask: true }), CO),
+    // Ritae (pp. 115-118)
+    B("rc-clarity", "Prayer for Clarity", "Holy Art", "Ritus 1", "", "intelligence+path", 5, 0, 116, "Twenty minutes of prayer: the successes add to remembering the last day.", N("know"), CO),
+    B("rc-rest", "Blessing of Eternal Rest", "Holy Art", "Ritus 1", "", "intelligence+path", 6, 1, 116, "A body dead under three days, sprinkled and prayed over: powers on the corpse or its soul are harder by the successes (10 at most).", T("ward", "Blessing of Eternal Rest", { ladder: FOREVER }, "one"), CO),
+    B("rc-homestead", "Sanctification of the Homestead", "Holy Art", "Ritus 2", "", "intelligence+path", 7, 0, 116, "An hour with holy water and frankincense: no demon or inhuman thing enters uninvited, a day a success. A botch: not again on that house for three days.", T("place", "A sanctified homestead", { days: 1 }, "self"), CO),
+    B("rc-way", "Finding the Way Through the Word", "Holy Art", "Ritus 2", "", "intelligence+path", 8, 0, 116, "On Holy Ground, an hour with the Bible (a die an hour more): a yes or no on God's will for each success. Once a story.", N("know"), CO),
+    B("rc-veiled", "Veiled Presence of the Holy", "Holy Art", "Ritus 3", "", "intelligence+path", 7, 0, 117, "Anointed and silent: seeing the user as more than a plain mortal is harder by the successes, an hour a success (a point an hour more).", T("veil", "Veiled Presence of the Holy", { ladder: hours(5) }, "self"), CO),
+    B("rc-abel", "Tears of the Weeping Heart of Abel", "Holy Art", "Ritus 3", "", "intelligence+path", 7, 1, 117, "Blessed water made fierce, a point a vial: each vial strikes a supernatural thing for an aggravated level.", T("make", "Tears of Abel", { ladder: FOREVER }, "self"), CO),
+    B("rc-vestments", "Donning the Vestments of Sacred Resilience", "Holy Art", "Ritus 4", "", "intelligence+path", 7, 0, 117, "A soaked vestment, two hours' prayer on Holy Ground: two levels of a supernatural thing's damage soaked a success, an hour a success.", T("ward", "Vestments of Sacred Resilience", { ladder: hours(5) }, "self"), CO),
+    B("rc-sacrifice", "Investment of the Lasting Sacrifice", "Holy Art", "Ritus 5", "", "intelligence+path", 8, 6, 117, "Three days' fast and two points a day on Holy Ground: a crucifix fiends cannot come within five feet of, or strike its bearer, without Willpower (a one-dot Holy Relic).", T("make", "A crucifix of the Lasting Sacrifice", { ladder: FOREVER }, "self"), CO)
+];
+
+export const BLESSINGS = [...CORE, ...COMPANION];
 const BY_ID = new Map(BLESSINGS.map(b => [b.id, b]));
 export const blessingById = id => BY_ID.get(id) ?? null;
 export const blessingByName = name => { const k = String(name ?? "").trim().toLowerCase(); return k ? BLESSINGS.find(b => b.name.toLowerCase() === k || b.name.toLowerCase().replace(/ \(.*\)$/, "") === k) ?? null : null; };
@@ -141,7 +235,7 @@ export function blessingResults(id, successes, { source = "" } = {}) {
     if (!b?.spec) return [];
     const s = b.roll ? Number(successes) || 0 : Math.max(1, Number(successes) || 0);
     if (s < 1) return [];
-    const base = { key: b.spec.kw, label: b.name, source: source || `${REF} p. ${b.p}` };
+    const base = { key: b.spec.kw, label: b.name, source: source || refOf(b) };
     if (b.spec.kind === "pool") {
         const pts = b.spec.fixed ? b.spec.per : b.spec.per * s;
         return [{ key: "charge", who: b.spec.who, out: { ...base, kind: "pool", pool: b.spec.pool, points: b.spec.drain ? -pts : pts, text: `${pts} ${b.spec.pool} ${b.spec.drain ? "drawn out" : "given"}: ${b.fx}` } }];

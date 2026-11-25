@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.93.0 (The Aughisky, Lazarites, Skull Pigs and Fir Bolgs of Dark Ages: Werewolf (B7939))
 - 0.92.0 (Revenant families in every era (B7840-B7848): twenty family lines from V20 Dark Ages, V20 Ghouls and Revenants and Dark Ages: Vampire, each in the years it lives; weaknesses that work in play; revenant aging; lifepaths by family and year)
 - 0.91.0 (Changing Breeds start with W20 Changing Breeds' own Rage, Gnosis and Willpower for each Breed, by aspect, auspice, tribe or breed (B7831))
 - 0.90.0 (Creation totals for The Hunters Hunted II hunters, plain mortals, Sorcerer Revised sorcerers, W20 Kinfolk and C20 Kinain, read from the books with page refs; a Mortal sheet's variant picks its book, and a Changing Breed opens on W20 until W20 Changing Breeds is checked (B7820-B7822))

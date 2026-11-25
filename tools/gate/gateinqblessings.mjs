@@ -35,8 +35,10 @@ const set = (root, name, value) => {
   el.dispatchEvent(new Event("change", {bubbles: true}));
 };
 /** The last WoDX card for an actor after a time. */
-const cardFor = (actor, t0, ms = 8000) => waitFor(() => game.messages.contents.find(m => m.timestamp >= t0 && m.speaker?.actor === actor.id && /vta-card/.test(m.content ?? "")), ms)
-  .then(() => game.messages.contents.filter(m => m.timestamp >= t0 && m.speaker?.actor === actor.id && /vta-card/.test(m.content ?? "")).pop() ?? null);
+// B7885: the "grows Callous" card that a rise past Piety posts is not the roll's card
+const rollCard = (actor, t0) => m => m.timestamp >= t0 && m.speaker?.actor === actor.id && /vta-card/.test(m.content ?? "") && !/grows Callous/.test(m.content ?? "");
+const cardFor = (actor, t0, ms = 8000) => waitFor(() => game.messages.contents.find(rollCard(actor, t0)), ms)
+  .then(() => game.messages.contents.filter(rollCard(actor, t0)).pop() ?? null);
 /** Fix every d10 to one face, trying both readings of randomUniform (as gate-interact.mjs does). */
 const dice = async face => {
   for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {

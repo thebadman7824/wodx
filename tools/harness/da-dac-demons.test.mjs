@@ -70,7 +70,7 @@ test("the V20 Companion's four monsters: the book's numbers, the usual health, r
   const {MONSTERS, BOOK} = await import("../../modules/wodx-creation/data/v20dac-monsters.mjs");
   assert.equal(BOOK, "V20 DA Companion");
   assert.deepEqual(MONSTERS.map(m => [m.key, m.p]), [["black-dog", 35], ["fossegrim", 48], ["kallikantzaros", 66], ["pishacha", 97]]);
-  assert.deepEqual(R.ALL.map(d => d.key).slice(-4), MONSTERS.map(m => m.key));
+  assert.deepEqual(R.ALL.filter(d => d.book === BOOK).map(d => d.key), MONSTERS.map(m => m.key));
   for ( const m of MONSTERS ) {
     const d = R.byKey(m.key);
     assert.equal(R.pageOf(d), `V20 DA Companion p. ${m.p}`);
@@ -89,4 +89,35 @@ test("the V20 Companion's four monsters: the book's numbers, the usual health, r
   assert.deepEqual([b.update["system.attributes.charisma.value"], b.disciplines.Protean, b.update["system.advantages.willpower.permanent"]], [5, 7, 7]);
   assert.equal(R.byKey("pishacha").disciplines.Dominate, 5);
   assert.equal(R.byKey("kallikantzaros").blood, 9);
+});
+
+/* B7939: the fomori and monsters of Dark Ages: Werewolf pp. 186-189 */
+test("DA:W's four monsters: the book's numbers, Rage and Gnosis, fomor powers the fomor rules read, weapons and hide", async () => {
+  const {MONSTERS, BOOK} = await import("../../modules/wodx-creation/data/daw-monsters.mjs");
+  const FP = await import("../../modules/wodx-actions/scripts/fomor-powers.js");
+  assert.equal(BOOK, "Dark Ages: Werewolf");
+  assert.deepEqual(MONSTERS.map(m => [m.key, m.p]), [["aughisky", 186], ["lazarite", 186], ["skull-pig", 187], ["fir-bolg", 188]]);
+  assert.deepEqual(R.ALL.filter(d => d.book === BOOK).map(d => d.key), MONSTERS.map(m => m.key));
+  for ( const m of MONSTERS ) {
+    const d = R.byKey(m.key), p = R.plan(d, KEYS);
+    assert.equal(Object.keys(m.attributes).length, 9, m.key);
+    assert.ok(!/—/.test(m.about + m.rules.join(" ")) && !/\b(she|he|her|his)\b/i.test(m.about + m.rules.join(" ")), m.key);
+    assert.equal(p.update["system.settings.hasbloodpool"], false, `${m.key}: no blood`);
+    for ( const it of p.items.filter(i => i.type === "Power") ) assert.ok(FP.powerOf(it.name), `${m.key}: ${it.name} is a fomor power`);
+  }
+  const a = R.plan(R.byKey("aughisky"), KEYS);
+  assert.equal(a.update["system.attributes.strength.value"], 7);
+  assert.equal(R.healthOf(R.byKey("aughisky")).levels, 9);
+  assert.deepEqual(a.items.filter(i => i.type === "Melee Weapon").map(i => [i.name, i.system.damage.bonus, i.system.damage.type, i.system.isnatural]),
+    [["Hoof strike", 1, "aggravated", true], ["Bite", 1, "aggravated", true]]);
+  assert.ok(a.items.some(i => i.name === "Armored Hide"));
+  const s = R.plan(R.byKey("skull-pig"), KEYS);
+  assert.deepEqual([s.update["system.attributes.stamina.value"], s.update["system.advantages.rage.permanent"], s.update["system.advantages.gnosis.permanent"], s.update["system.settings.hasrage"]], [8, 5, 3, true]);
+  assert.match(s.notes.join(" "), /Poison Flesh.*Stamina at 6/);
+  const f = R.plan(R.byKey("fir-bolg"), KEYS);
+  assert.deepEqual(f.items.filter(i => i.type === "Armor").map(i => i.system.soak), [{bashing: 4, lethal: 4, aggravated: 4}]);
+  assert.equal(f.update["system.advantages.willpower.permanent"], 7);
+  assert.equal(R.pageOf(R.byKey("fir-bolg")), "Dark Ages: Werewolf p. 188");
+  assert.deepEqual(R.plan(R.byKey("lazarite"), KEYS).items.map(i => i.name), ["Immunity to the Delirium", "Poison Tumors"]);
+  assert.match(src("modules/wodx-creation/scripts/dac-demons.mjs"), /items\.push\(\.\.\.p\.items\)/);
 });

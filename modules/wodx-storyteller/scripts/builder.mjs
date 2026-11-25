@@ -135,7 +135,7 @@ async function stepCarry(r) {
  * and the sheets the recipe names get their Road and ghoul variant. What each sheet held before is kept for Undo.
  */
 let prevRecord = null; // rerunStep's record of the step, so a step run again adds to what it did before
-const actorRows = () => all(game.actors).map(x => ({id: x.id, name: x.name, playerOwned: !!x.hasPlayerOwner, road: R.roadOn(x.system), variant: x.system?.settings?.variant ?? null}));
+const actorRows = () => all(game.actors).map(x => ({id: x.id, name: x.name, playerOwned: !!x.hasPlayerOwner, road: R.roadOn(x.system), variant: x.system?.settings?.variant ?? null, hunter: !!x.flags?.["wodx-actions"]?.inquisitor, thrall: !!x.flags?.["wodx-actions"]?.thrall}));
 async function stepCast(r) {
   const before = record().steps?.cast?.made ?? prevRecord?.made ?? [];
   const made = [...before];
@@ -143,6 +143,8 @@ async function stepCast(r) {
   for ( const p of first.make ) {
     const data = {name: p.name, type: p.type, flags: builtFlag("cast", `person:${p.name}`),
       system: {...(p.note ? {notes: `<p>${esc(p.note)}</p>`} : {}), ...(p.variant ? {settings: {variant: p.variant}} : {})}};
+    // B7874: a Werewolf's tribe, auspice, breed and rank, and a Kinfolk's tribe
+    for ( const [k, v] of Object.entries(p.sheet ?? {}) ) foundry.utils.setProperty(data, k, v);
     const a = await Actor.create(data, {wodxBuilder: true});
     if ( a ) made.push({uuid: a.uuid, made: true});
   }

@@ -149,7 +149,10 @@ export function build(ctx) {
         const rd = road(actor);
         // Merits and flaws on both sides: the speaker's (read against the NPC's kind), and the NPC's Weak-Willed on its resisting roll
         const tags = [...TH.tagsFor(`social-${act.key}`, pick.attr, pool.abilityKey), ...(at && !at.met ? ["first-meeting"] : [])];
-        const tm = TH.traitMods(actor, tags, { target: npc });
+        // B7909: a will hard to coerce (Indomitable, Dark Ages: Mage p. 91) makes intimidation and threats harder
+        const rm = ["intimidate", "threaten"].includes(act.key) ? TH.resistMods(npc, ["coerce"], actor) : { diff: 0, parts: [] };
+        const tm0 = TH.traitMods(actor, tags, { target: npc });
+        const tm = { ...tm0, diff: (tm0.diff ?? 0) + (rm.diff ?? 0), parts: [...(tm0.parts ?? []), ...(rm.parts ?? [])] };
         const nm = TH.traitMods(npc, ["resist-social"], { target: actor });
         // B5754: the Curse (DA:W p. 91; W20 p. 263): a Garou's Rage over a human's Willpower costs Social dice with them
         const curse = kindOf?.(actor) === "lupine" && ["mortal", "hunter", "ghoul"].includes(kindOf?.(npc))

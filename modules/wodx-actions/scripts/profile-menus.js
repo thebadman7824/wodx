@@ -48,7 +48,7 @@ export const MENUS = {
     mortal: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
-            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:holyArtifact", "A Holy Artifact (GM, V20 Dark Ages)", "fa-ring"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:pactGift", "A pact gift", "fa-file-signature"], ["api:exorcise", "Exorcism (rite)", "fa-cross"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:fomorPower", "Fomor powers", "fa-biohazard"]]],
+            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:holyArtifact", "A Holy Artifact (GM, V20 Dark Ages)", "fa-ring"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:pactGift", "A pact gift", "fa-file-signature"], ["api:thrall", "A thrall of Hell (Devil's Due)", "fa-skull"], ["api:exorcise", "Exorcism (rite)", "fa-cross"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:fomorPower", "Fomor powers", "fa-biohazard"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
@@ -94,7 +94,8 @@ export const MENUS = {
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
             ["Magic", [["api:daCast", "Cast a spell (Foundation + Pillar)", "fa-hat-wizard"], ["api:daMage", "Fellowship and Pillars", "fa-scroll"],
                 ["api:daQuintessence", "Gather Quintessence (cray, Fount, Moon)", "fa-gem"], ["uses:quintessence", "Quintessence", "fa-coins"],
-                ["api:daCountermagic", "Countermagic", "fa-shield-alt"], ["api:daGuide", "Using the Art (Pillar guide)", "fa-book-open"], ["api:daCertamen", "Certámen (the duel arcane)", "fa-khanda"]]],
+                ["api:daCountermagic", "Countermagic", "fa-shield-alt"], ["api:daGuide", "Using the Art (Pillar guide)", "fa-book-open"], ["api:daCertamen", "Certámen (the duel arcane)", "fa-khanda"],
+                ["api:daHousehold", "The household (chantry, familiar, servants, degree)", "fa-house-user"]]],
             ["Sorcery and Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
@@ -130,7 +131,7 @@ export const MENUS = {
             ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
             ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"], ["api:chainThrall", "Hold a Thrall", "fa-link"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["rules:wraith", "Wraith rules", "fa-book"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["api:haunt", "The Haunt here (GM)", "fa-ghost"], ["api:hauntNight", "A night in the Haunt (GM)", "fa-bed"], ["api:hauntEnter", "Going into the Haunt (GM)", "fa-door-open"], ["rules:wraith", "Wraith rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
         ]
     },

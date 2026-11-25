@@ -46,7 +46,7 @@ export const MENU_PLAN = {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useArcanos", "uses:pathos", "api:passion", "api:fetter", "api:memoriam", "api:caul", "api:soulforge"],
         resist: ["api:shadow", "api:shadowWhisper", "api:harrowing", "api:hazard"],
         recover: ["api:healCorpus", "uses:willpower"],
-        st: ["api:shadowguide", "api:hysteria", "api:maelstrom"],
+        st: ["api:shadowguide", "api:hysteria", "api:maelstrom", "api:haunt", "api:hauntNight", "api:hauntEnter"],
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:wraith"]
     },
     hunter: {
@@ -63,7 +63,7 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:ghoul"]
     },
     mortal: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk", "api:exorcise"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk", "api:exorcise", "api:thrall"],
         resist: ["api:hazard"],
         recover: ["api:healing", "uses:willpower", "api:domainDA"],
         st: ["api:imbue", "api:holyArtifact", "api:fealty", "api:domainEvent"],
@@ -86,7 +86,7 @@ export const MENU_PLAN = {
     },
     /** Dark Ages: Mage (3.7.0): the same bands, Foundation and Pillars in place of Arete. */
     mageDA: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "api:daGuide", "preset:researchmage", "api:numina", "api:trueFaith"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "api:daGuide", "api:daHousehold", "preset:researchmage", "api:numina", "api:trueFaith"],
         resist: ["api:daCountermagic", "api:hazard"],
         st: ["api:daCertamen"],
         recover: ["api:healing", "uses:willpower"],
@@ -167,6 +167,7 @@ export const DESC = {
     "api:exorcise": "Exorcism, a rite anyone can learn: Intelligence + Occult tears Essence from a demon or spirit until it is driven off (V20 Dark Ages)",
     "api:sampleDemon": "Make one of the sample demons of V20 Dark Ages with its traits and Charms",
     "api:maturation": "Spend the maturation points the years gave: traits already held, and a roll to raise Backgrounds (Dark Ages: Vampire 2002)",
+    "api:thrall": "A thrall of Hell: Vice, Resolve and Torment, sins, pacts, rites of summoning and binding, and Absolution (Dark Ages: Devil's Due)",
     "api:infernal": "Demonic pacts and infernal investments, and the Supplicium each one brings (Dark Ages Companion 2002)",
     "api:infernalFlame": "Breathe the flame an infernal pact gave: Dexterity + Occult, three aggravated levels (Dark Ages Companion 2002)",
     "api:domainDA": "The manor and its lands: the Domain's aspects, the people, settlements, Servants and staff (V20 Dark Ages Companion)",
@@ -220,6 +221,9 @@ export const DESC = {
     "api:shadowguide": "Choose the player who voices this wraith's Shadow",
     "api:hysteria": "The living see a ghost: the Hysteria roll",
     "api:maelstrom": "Set the storm's force on this scene; roll the storm's harm",
+    "api:haunt": "Set this scene's Haunt: its rating and the echoes it has room for",
+    "api:hauntNight": "Mortals sleep in a Nightmarish Haunt: Willpower, or a day of harder rolls",
+    "api:hauntEnter": "Mortals go into a Forbidding Haunt: Willpower, or they flee",
     "api:soulforge": "Soulforging: oboli, soulsteel arms and armor or an Artifact from Corpus, as a long task",
     "rules:wraith": "The wraith rules at a glance, with page references",
     "api:hunterSheet": "The hunter's traits: Conviction, Piety or Creed, the stage of the hunt",
@@ -276,6 +280,7 @@ export const DESC = {
     "api:m20Quiet": "Mage 20th: the Quiet as a state, its form and level; visions, tokens and lines only the player sees; rising out of it",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
+    "api:daHousehold": "Dark Ages: the chantry and its gossip, the familiar's Pact and meals, Destiny, the Library, servants, talismans and the fellowship's degree",
     "api:treasureUse": "A faerie Treasure: dust thrown, a charmed object's cantrip, a Changeling 20th Treasure's Art (its Glamour first)",
     "api:treasureOath": "An oathcrafted Treasure's bargain kept, so its bound essence stays",
     "api:treasureGive": "The Storyteller hands out a Treasure from the books, or one holding an Art's cantrip",

@@ -16,7 +16,7 @@ import * as T from "./target-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-targeting";
-const VERSION = "0.4.3";
+const VERSION = "0.4.4";
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const C = () => game.wodxCombat;

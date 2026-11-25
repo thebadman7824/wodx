@@ -6,6 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
+import {DA_LINE_ROWS, DA_WIDEN, DA_PROMPTS, DA_HANDLED, DA_TRIGGERS} from "./trait-lines-da.mjs";
 import {EFFECTS_W6, EXTRA_PROMPTS} from "./trait-effects-w6.mjs";
 import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6, MORE_ATTITUDE_3, MORE_PROMPTS_7} from "./trait-effects-more.mjs";
 
@@ -291,11 +292,14 @@ export const BACKGROUNDS = [
 ];
 
 /** Books whose merits and flaws are in MERITS_FLAWS. The rest come with their own rows later (the design's step 11). */
-export const BOOKS_DONE = ["V20", ...LINE_BOOKS];
+export const BOOKS_DONE = ["V20", ...LINE_BOOKS, "DA:W", "DA:F", "DA:DD", "DA:IC"];
 
 // Step 11 (Chronicle 0.24.0): the other lines' rows join the table, and V20 entries they share take their holders
 for ( const e of MERITS_FLAWS ) if ( WIDEN[e.key] && !e.holders.includes("any") ) e.holders = [...new Set([...e.holders, ...WIDEN[e.key]])];
 MERITS_FLAWS.push(...LINE_MERITS_FLAWS);
+// B7931-B7933: Dark Ages: Werewolf and Dark Ages: Fae (trait-lines-da.mjs)
+for ( const e of MERITS_FLAWS ) if ( DA_WIDEN[e.key] && !e.holders.includes("any") ) e.holders = [...new Set([...e.holders, ...DA_WIDEN[e.key]])];
+MERITS_FLAWS.push(...DA_LINE_ROWS);
 
 // The no-effect audit (B3780-B3782): more effects, and the book's spelling for names the OCR spoiled (old kept as alias)
 for ( const e of MERITS_FLAWS ) {
@@ -356,6 +360,20 @@ for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2, ...M
 
 /** Step 6 (Chronicle 0.21.0): traits WoDX Actions carries out in its own windows, for the Trait effects window. */
 export const HANDLED = {
+  // B7889: Dark Ages: Inquisitor (WoDX Actions' inquisitor windows)
+  "gods-judgment": "a warning in Bank Conviction that some Blessings are barred (the inquisitor window)",
+  "pure": "the inquisitor window's new-character line asks no starting Curse",
+  "holy-art-natural": "the inquisitor window names the cheaper Holy Art: current rating x4 experience, 8 for the first dot",
+  // B7909: Dark Ages: Mage (WoDX Actions' household and casting windows)
+  "devotion": "a prayer in the household window gives 1-3 Willpower past the most, once a session",
+  "apprentice": "the household window takes the apprentice on as a servant: loyal and steadier when taught (a Merit), or a weekly mess (a Flaw)",
+  "repulsive-practice": "a casting watched by someone starts a rumour for the Church",
+  "arcane-madness": "spells past permanent Willpower in a story ask a Willpower roll at 7; failed, +1 difficulty for an hour",
+  "chicanery": "small shows of magic cost nothing while a Quintessence is held (the household window)",
+  "inept-channeler": "each Quintessence past permanent Willpower in a scene asks a Willpower roll at 6, or a wound",
+  "living-fount": "once a story, the Fount at 6 for a hint: -1 difficulty on Enigmas or Occult",
+  "pillar-natural": "a Pillar bought with experience in the household window costs current x5, 8 for the first dot",
+  "witchwalk": "the Storyteller marks its moment in the household window: talk, pain on hallowed ground, salt",
   "lucky": "a failed roll is rolled again, three times a story (the action window)",
   "efficient-digestion": "one more blood point for every two drunk (feeding)",
   "thin-blood": "every blood cost doubled (Spend Blood)",
@@ -363,6 +381,7 @@ export const HANDLED = {
   "light-sleeper": "wakes at once by day, with no Road cap on the dice",
   "prey-exclusion": "a reminder on every feeding card"
 };
+for ( const [k, v] of Object.entries(DA_HANDLED) ) HANDLED[k] ??= v;
 
 /**
  * Step 7 (Chronicle 0.22.0): traits that go off when the character walks into something on the map (pattern P4), read
@@ -380,6 +399,7 @@ export const TRIGGERS = {
   "light-sensitive": {words: ["sunlit", "daylight", "floodlight", "spotlight", "bonfire"], stop: false, text: "is hurt and dazzled by the bright light"},
   "phobia": {fromName: true, stop: false, text: "comes face to face with what they fear", roll: "Courage, or flee from it"}
 };
+for ( const [k, v] of Object.entries(DA_TRIGGERS) ) TRIGGERS[k] ??= v;
 
 /**
  * Step 7: traits that put something in the night's draw (pattern P8), read by WoDX Storyteller. chance: the share of
@@ -406,6 +426,9 @@ export const PULLS = {
  * reveal clock, in nights from the day the entry is opened (house rule; the Storyteller moves it in the Ledger).
  */
 export const LEDGER = {
+  // B7889: Dark Ages: Inquisitor
+  "initiate": {kind: "debt", dir: "from", what: "A young student in their charge: they answer for the student's soul and life."},
+  "reformed-heretic": {kind: "consequence", dueNights: 180, what: "The old heresy comes to light unless they keep it buried."},
   "prestigious-sire": {kind: "boon", size: "trivial", dir: "to", what: "A favour owed for the sake of the sire's good name."},
   "boon": {kind: "boon", size: "minor", dir: "to", what: "A boon owed to the character (set its size to match the merit)."},
   "mole": {kind: "debt", dir: "to", what: "An informant inside a rival group who passes word to the character."},
@@ -426,6 +449,7 @@ export const LEDGER = {
  * reminder, in WoDX's own words; the book page is added from the table.
  */
 export const PROMPTS = {
+  "worship-obsession": {on: ["night"], text: "the day's worship must be kept; a missed day costs 2 Conviction, more than two days running a Piety roll (Dark Ages: Inquisitor p. 167)"},
   "eat-food": {on: ["social"], text: "can eat and drink at the table to pass as mortal, and must be rid of it later"},
   "infectious-bite": {on: ["feed"], text: "the bite may sicken the vessel unless the wound is closed"},
   "addiction": {on: ["night"], text: "craves the substance tonight; without it, penalties until fed"},
@@ -441,7 +465,7 @@ export const PROMPTS = {
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
 // B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
-for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7, ...EXTRA_PROMPTS}) ) PROMPTS[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7, ...EXTRA_PROMPTS, ...DA_PROMPTS}) ) PROMPTS[k] ??= v;
 // B3920: the backgrounds that now have a card or an attitude seed say so in the Trait effects window
 for ( const b of BACKGROUNDS ) {
   if ( b.hook === "story" && MORE_PROMPTS_7[b.key] ) b.hook = "prompt";
