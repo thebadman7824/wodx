@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.51.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 3.51.0 (The Garou's maneuvers and pack tactics of Dark Ages: Werewolf, and a Dark Ages fae's Greater Features in a fight (B7937-B7938))
 - 3.50.0 (Infernal body features (B7696); The Dark Ages Companion's maneuvers (B7694))
 - 3.49.0 (Immunity to Fire in the damage cards (V20 Dark Ages p. 402, B7672); Animal swarms and the spider (V20 Dark Ages p. 399, B7677, B7678))
