@@ -13,7 +13,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 17 |
+| wodx-npc | yes | 34 | 0 | 16 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -157,7 +157,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | One ledger for every bond that makes one person serve another, and servants the world makes (`npc.servants`) | core | gated | 1 | gateservants4 6b. the pact gift answers |
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
 | Places, routines on the clock, duties and what an NPC does after its first reaction (`npc.routines`) | core | book |  | gateduties 7. the duty moves the token on the clock |
-| Pregnancy and birth by century and place, child sheets and growing up (`npc.family`) | core | shown | 1 |  |
+| Pregnancy and birth by century and place, child sheets and growing up (`npc.family`) | core | gated |  | gatebirth 1. the clock passing the due date brings the birth and the child's sheet |
 | Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | shown | 1 |  |
 | Residents of generated towns and settlements (`npc.residents`) | core | shown | 1 |  |
 | Standing by community, with news of a deed travelling at the era's speed; social rank and feuds (`npc.standing`) | core | book |  | gatetruthnpc 11. untying a prisoner is a deed: standing in the town rises |
