@@ -13,7 +13,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 15 |
+| wodx-npc | yes | 34 | 0 | 12 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -147,7 +147,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Fear: a Kindred NPC shies from fire in a fight (`npc.fear`) | core | gated | 1 | gate7b fear: a Kindred NPC shies from a torch in the hero's hand |
 | Followers who take orders: one window for a character's followers, orders and day jobs (`npc.followers`) | core | book |  | gatefollowers3 3. quick order |
 | Footpads, burglars and highwaymen on the prowl pick a mark and demand money (`npc.prowl`) | core | shown | 1 |  |
-| How each NPC regards each character, and why (`npc.attitude`) | core | shown | 1 |  |
+| How each NPC regards each character, and why (`npc.attitude`) | core | gated |  | gatefoughtregard 1. the fight ends: the NPC's regard names the character with Fought them |
 | Natural rivalries between kinds of NPC, and NPCs who start a fight by themselves (`npc.rivalry`) | core | book |  | gaterivals start the fight |
 | NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | shown | 1 |  |
 | NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book |  | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
@@ -158,12 +158,12 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
 | Places, routines on the clock, duties and what an NPC does after its first reaction (`npc.routines`) | core | book |  | gateduties 7. the duty moves the token on the clock |
 | Pregnancy and birth by century and place, child sheets and growing up (`npc.family`) | core | gated |  | gatebirth 1. the clock passing the due date brings the birth and the child's sheet |
-| Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | shown | 1 |  |
+| Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | gated |  | gatetiehide 1. the eye button hides a tie: marked for the Storyteller, gone from a player's view |
 | Residents of generated towns and settlements (`npc.residents`) | core | shown | 1 |  |
 | Standing by community, with news of a deed travelling at the era's speed; social rank and feuds (`npc.standing`) | core | book |  | gatetruthnpc 11. untying a prisoner is a deed: standing in the town rises |
 | The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | gated | 1 | gatehuntcalendar 1. the hunt window's calendar step is in the hunt's difficulty |
 | The topic menu: walk up to someone and pick a topic, and the talk generator for unwritten answers (`npc.talk`) | core | book |  | gatetalk the window |
-| Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | shown | 2 |  |
+| Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | gated | 1 | gateboonkept 1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
 | Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | shown | 1 |  |
 | Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | shown | 1 |  |
