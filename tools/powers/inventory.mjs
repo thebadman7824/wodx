@@ -32,6 +32,7 @@ const H = await import(A("scripts/hunter-rules.js"));
 const R = await import(A("scripts/reckoning-rules.js"));
 const O = await import(A("scripts/orpheus-rules.js"));
 const OS = await import(A("scripts/orpheus-stains.js"));
+const OX = await import(A("scripts/orpheus-spectres.js"));
 const KA = await import(A("scripts/kote-arts.js"));
 const F = await import(A("scripts/fae-da-rules.js"));
 const MD = await import(A("scripts/mage-da-rules.js"));
@@ -207,6 +208,16 @@ for ( const [id, h] of Object.entries(O.HORRORS) ) {
 for ( const [id, st] of Object.entries(OS.STAINS) ) {
   add("Orpheus", "Stains", st.label, { src: st, status: OS.applies(id) ? "applies" : "card", story: OS.applies(id) ? undefined : st.gain, kw: (st.fx ?? []).map(f => f.key),
     page: `Orpheus ${st.page}`, how: `Call up a Stain: Spite tapped, a die each at 7; ${st.weapon ? "its weapon on the sheet" : st.fx?.length ? "its effects card" : "the card for the Storyteller"}` });
+}
+/* -- Orpheus: the Spectral arsenal (B7833, orpheus-spectres.js), a Spectre's Horrors from Spite tapped and its Thorns */
+for ( const [id, h] of Object.entries(OX.HORRORS) ) {
+  add("Orpheus", "Spectral Horrors", h.label, { src: h, status: OX.applies(id) ? "applies" : "card", story: OX.applies(id) ? undefined : OX.horrorLine(id, OX.tapRange(id).max),
+    kw: OX.horrorResults(id, 2).map(r => r.key), page: `Orpheus ${h.page}`, how: `A Spectre's Horror or Thorn: Spite tapped, its rating a scene; ${OX.applies(id) ? "the effects card" : "the card for the Storyteller"}` });
+}
+for ( const [id, t] of Object.entries(OX.THORNS) ) {
+  const on = !!OX.thornItem(id);
+  add("Orpheus", "Spectral Thorns", t.label, { src: t, status: on ? "applies" : "card", story: on ? undefined : t.text, kw: [],
+    page: `Orpheus ${t.page}`, how: `A Spectre's Horror or Thorn: ${on ? "on the sheet as armour or a natural weapon" : "the card for the Storyteller"}` });
 }
 /* -- Kindred of the East: the Disciplines power by power (kote.js Spend Chi) */
 for ( const p of KA.POWERS ) {

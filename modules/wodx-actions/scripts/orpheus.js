@@ -22,6 +22,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as OH from "./orpheus-horrors.js";
 import * as OS from "./orpheus-stains.js";
+import * as OX from "./orpheus-spectres.js";
 import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
@@ -264,6 +265,66 @@ export function build(ctx) {
             return post(actor, `${actor.name}: ${s.label}`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 520, render: root => { describe(root); root.querySelector("[name=s]")?.addEventListener("change", () => describe(root)); } });
     }
+    /* -- a Spectre's arsenal: a Horror from Spite tapped, or a Thorn on the sheet (B7833) -- */
+    async function spectre(actor) {
+        const i = info(actor), sk = `s${LIM.sceneNo()}`, f = flag(actor);
+        const tapped = f.spectreScene === sk ? n(f.spectreTapped) : 0;
+        const opts = [...Object.entries(OX.HORRORS).map(([k, h]) => [`h:${k}`, `Horror: ${h.label}`]), ...Object.entries(OX.THORNS).map(([k, t]) => [`t:${k}`, `Thorn: ${t.label}`])];
+        const content = `<form><p>${esc(actor.name)}: Spite ${i.spite.rating}, ${tapped} tapped this scene; Willpower ${i.willpower.temp}. A Spectre taps its Spite rating and never spends it; past its rating in a scene, each Willpower point buys three more.</p>
+          <div class="form-group"><label>Power</label><select name="w">${opts.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Spite tapped (Horrors)</label><input type="number" name="p" min="0" max="10" value="1"/></div>
+          <div class="form-group"><label>Carapace kind</label><select name="c">${Object.entries(OX.CARAPACE).map(([k, c]) => `<option value="${k}"${k === "scales" ? " selected" : ""}>${esc(c.label)} (+${c.soak} soak)</option>`).join("")}</select></div>
+          <div class="wodx-spectre-info vta-note"></div></form>`;
+        const describe = root => {
+            const [kind, key] = String(root.querySelector("[name=w]")?.value ?? "").split(":");
+            const box = root.querySelector(".wodx-spectre-info");
+            if (!box) return;
+            if (kind === "t") { const t = OX.THORNS[key]; box.innerHTML = t ? `<b>${esc(t.label)}</b>: ${esc(t.text)}. <span class="wodx-quiet">(${REF} ${t.page})</span>` : ""; return; }
+            const h = OX.HORRORS[key], k = n(root.querySelector("[name=p]")?.value);
+            box.innerHTML = h ? `<b>${esc(h.label)}</b> at ${k} Spite: ${esc(OX.horrorLine(key, k))}${h.note ? ` (${esc(h.note)})` : ""}. Lasts ${esc(h.lasts)}. <span class="wodx-quiet">(${REF} ${h.page})</span>` : "";
+        };
+        return dialog(`A Spectre: ${actor.name}`, content, "Use it", async fd => {
+            const [kind, key] = String(fd.w ?? "").split(":");
+            let body = "", fxItems = [];
+            if (kind === "t") {
+                const t = OX.THORNS[key];
+                if (!t) return null;
+                const data = OX.thornItem(key, { kind: fd.c });
+                const had = data && actor.items.find(x => x.getFlag(MOD, "thorn") === key);
+                if (had) await had.delete();
+                const made = data ? await actor.createEmbeddedDocuments("Item", [data]) : [];
+                body = `<div class="vta-big">${esc(t.label)}: ${esc(t.text)}.</div>`
+                    + (made.length ? `<div class="vta-res good">${esc(data.name)} on the sheet.</div>` : `<div class="vta-note">The Storyteller runs it from this card.</div>`)
+                    + `<div class="wodx-quiet">${REF} ${t.page}</div>`;
+                return post(actor, `${actor.name}: ${t.label}`, body, []);
+            }
+            const h = OX.HORRORS[key];
+            if (!h) return null;
+            const rg = OX.tapRange(key), k = Math.max(rg.min, Math.min(rg.max, n(fd.p)));
+            const now = info(actor), plan = OX.tapPlan(now.spite.rating, tapped, k, now.willpower.temp);
+            if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            if (plan.willpower) await updateActor(actor, { "system.advantages.willpower.temporary": now.willpower.temp - plan.willpower });
+            await saveFlag(actor, { spectreScene: sk, spectreTapped: tapped + k });
+            body = `<div class="vta-big bad">${esc(h.label)}, ${k} Spite tapped: ${esc(OX.horrorLine(key, k))}.</div>`;
+            if (h.note) body += `<div class="vta-sec">${esc(cap(h.note))}.</div>`;
+            body += `<div class="vta-res">Spite ${now.spite.rating} stays; ${tapped + k} tapped this scene${plan.willpower ? `, ${plan.willpower} Willpower spent to go past the rating` : ""}. Lasts ${esc(h.lasts)}.</div>`;
+            if (h.lasts === "the scene") {
+                const T = game.modules.get("wodx-chronicle")?.api ?? null;
+                try {
+                    await T?.applyTimed?.(actor, { name: `Horror: ${h.label}`, img: "icons/svg/terror.svg", description: OX.horrorLine(key, k), duration: { kind: "scene" },
+                        key: `wodx-orpheus-spectre-${key}`, source: `${REF} ${h.page}` });
+                } catch (e) { console.warn(`${MOD} | spectre`, e); body += `<div class="vta-note">Take the Horror off by hand at the end of the scene.</div>`; }
+            }
+            const res = OX.horrorResults(key, k, { name: h.label });
+            if (res.length && EF.isOn()) {
+                const pp = EF.planOf(actor, res, 1, { name: h.label, line: "Orpheus" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            } else if (!OX.applies(key)) body += `<div class="vta-note">The Storyteller runs what it does from this card.</div>`;
+            body += `<div class="wodx-quiet">${REF} ${h.page}; p. 267</div>`;
+            return post(actor, `${actor.name}: ${h.label}`, body, [], fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 540, render: root => { describe(root); for ( const x of root.querySelectorAll("[name=w], [name=p]") ) { x.addEventListener("change", () => describe(root)); x.addEventListener("input", () => describe(root)); } } });
+    }
     async function spite(actor) {
         const i = info(actor);
         const content = `<form><p>${line(i)}. ${esc(cap(i.state.text))}. Stains may be called up at will from Spite 4.</p>
@@ -361,5 +422,5 @@ export function build(ctx) {
             keywords: NPW.keysOf(OH.horrorResults(key, v, 3, { name: it.name })) })).filter(p => p.keywords.length);
     }
 
-    return { powersFor, restAll, info, horror, stain, stainEnd, vitality, harm, spite, project, setup, isOrpheus, rules: O, stains: OS };
+    return { powersFor, restAll, info, horror, stain, stainEnd, spectre, vitality, harm, spite, project, setup, isOrpheus, rules: O, stains: OS, spectres: OX };
 }

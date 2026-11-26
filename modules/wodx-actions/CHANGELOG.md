@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.127.0 (Orpheus: a Spectre's arsenal, the five Thorns and eight Spectral Horrors of the core book, with their page (B7833))
 - 3.126.0 (Orpheus: the twenty Stains of the core book, called up at will from Spite 4, with their page, gain and cost (B7832))
 - 3.125.2 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 3.125.1 (Book overlap rewording (B8024): one more line that shared 8 words with a Wraith book (found after the late Wraith OCR) is now in WoDX's own words. Its meaning and page reference are unchanged)

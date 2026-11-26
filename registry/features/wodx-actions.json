@@ -1591,6 +1591,37 @@
    ]
   },
   {
+   "id": "actions.orpheus-spectres",
+   "name": "Orpheus: a Spectre's Thorns and Horrors, from Spite tapped",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/orpheus-spectres.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7833"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/orpheus.js:spectre"
+    },
+    "shown": {
+     "what": "the Spectre window from the Orpheus menu; its Thorn on the sheet and a scene-long Horror as a timed effect on the token"
+    },
+    "gated": {
+     "gate": "tools/gate/gatespectrethorn.mjs",
+     "step": "1. Thorn: Claws, Use it: Claws (Thorn) on the sheet"
+    }
+   },
+   "open": [
+    "book: Orpheus pp. 267-269; summaries read from the book text, not yet checked line by line"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
    "id": "actions.infernal-pacts",
    "name": "Demonic pacts, infernal investments and the Supplicium",
    "module": "wodx-actions",
