@@ -312,7 +312,8 @@ export async function prepare(ctx, ref, head) {
   }
   const sha = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
   if ( sha === head ) return {error: "the train had nothing to do but the branch still reads as behind or unstamped"};
-  const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${ref}`, `--force-with-lease=refs/heads/${ref}:${head}`], dir);
+  // B8134: --no-verify, so the push guard (B8130) never stops the train's own push; the guard is for threads
+  const p = await git(["push", "-q", "--no-verify", "origin", `HEAD:refs/heads/${ref}`, `--force-with-lease=refs/heads/${ref}:${head}`], dir);
   if ( !ok(p) ) return {error: `the push to ${ref} was refused (${String(p.stderr ?? "").trim().slice(0, 200)}); if the thread pushed meanwhile, add the label again`};
   return {sha, did: did.join(" and ")};
 }
@@ -530,7 +531,7 @@ export async function buildBatch(ctx, members, {max = BATCH_MAX, lease = null, b
   if ( stamped ) await git(["commit", "--amend", "-q", "--no-edit", "--trailer", "Merge-Train: yes"], dir);
   const sha = (await git(["rev-parse", "HEAD"], dir)).stdout.trim();
   const now = lease ?? (String((await git(["ls-remote", "origin", `refs/heads/${branch}`], dir)).stdout ?? "").split(/\s/)[0] || "");
-  const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${branch}`, `--force-with-lease=refs/heads/${branch}:${now}`], dir);
+  const p = await git(["push", "-q", "--no-verify", "origin", `HEAD:refs/heads/${branch}`, `--force-with-lease=refs/heads/${branch}:${now}`], dir);
   if ( !ok(p) ) return {error: `the push to ${branch} was refused (${String(p.stderr ?? "").trim().slice(0, 200)})`};
   const carried = chosen.reduce((n, m) => n + m.carried, 0);
   return {sha, members: chosen, skipped, did: [`${names} merged onto main`, carried ? `${carried} file review(s) carried over` : "", stamped ? "release notes stamped once" : ""].filter(Boolean).join(", ")};
