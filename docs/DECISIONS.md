@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8060
+Next free block: B8140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -338,6 +338,7 @@ Next free block: B8060
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
 | B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
+| B6140-B6149 | Sprite tokens: own sprite automatically, door work plays moves, sprite check gate (used B6140-B6148) | Paperdoll, Interactables, PC job runner |
 | B6150-B6154 | Done-claims audit fixes for WoDX Combat: hook relay, knockdown, full defence, body conditions, extra-action pass (used B6150-B6154) | Combat, Paperdoll, Actions |
 | B6155-B6159 | Done-claims audit fixes for WoDX Actions (Golconda caps, the day's sleep in every window, conditions on rolls, frenzy held turn by turn, the inner voice) (used B6155-B6159) | Actions, system fork |
 | B6160-B6164 | Done-claims audit fixes for WoDX Chronicle (ghoul feeding, derangement bouts, skip and hold, looks, patrons) (used B6160-B6164) | Chronicle |
@@ -477,6 +478,8 @@ Next free block: B8060
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
+| B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
+| B8130-B8139 | Fewer merge train ejects: review-list fragments, conflicts the train settles, label on green (used B8130-B8133) | tools (release, pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10635,6 +10638,45 @@ WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold 
 
 Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
 
+## B6140. A token wears its character's drawn sprite by itself (2026-11-15, Ben's question on how WoDX picks a sprite)
+WoDX Paperdoll. A sprite drawn by the batch for a character used to reach a token only when the Storyteller picked it from the token's buttons or a macro called dress(): a token a routine brought in showed the plain picture. Now the active Storyteller's computer dresses the scene in view when it opens and when the drawn sprites are learnt, and gives a new token its character's sprite as it is made. A token that already wears another sprite (picked by hand, a Garou form) is left as it is. World setting spriteDress, on.
+Reverse: set "Tokens wear their character's drawn sprite" off, or remove onTokenMade and autoDress in sprites.mjs.
+Merged 26 Nov: main had meanwhile put drawn sprites on tokens from WoDX Paperdoll's main.mjs (B8053), so this branch keeps that one, drops its own onTokenMade, autoDress and the "Tokens wear their character's drawn sprite" setting, and keeps only the fitting of a token whose prototype carried a sprite (fitMade).
+
+## B6141. Interactables tells when work is done at a door or a thing (2026-11-15, bug found in a code check)
+WoDX Interactables. B2616 said Interactables would call wodxInteractableWorked; no module ever called it, so picking a lock, forcing a door or listening never played a move. applyAsk and the search now call it on the Storyteller's computer with the token, the option's id, the thing and the result.
+Reverse: remove the two Hooks.callAll("wodxInteractableWorked") lines in interactables main.mjs.
+Merged 17 Nov: main had meanwhile sent the same message from WoDX Interactables (B6784), so this branch leaves that module as main has it; sending it twice made each move play twice and broke the Interactables tests. Searching does not send it.
+
+## B6142. More kinds of work have a move (2026-11-15)
+WoDX Paperdoll. Striking, knocking over, tearing down or desecrating a thing plays the sprite's blow; examining a thing closely and searching a hiding place play the looking-about move, as listening already did.
+Reverse: drop the two new lines in workFor (sprite-rules.mjs).
+
+## B6143. A gate that checks what the canvas shows (2026-11-15)
+tools/gate/gatespritecheck.mjs walks four figures four ways, turns a rider with a horse, runs a real NPC routine from placing to working to walking to sitting, listens at a real door, and checks B6140, reading the frame the token shows. It saves map pictures beside its result.
+Reverse: delete the gate.
+
+## B6144. The Storyteller asks for sprites from inside the game (2026-11-15, Ben's "yes, please do")
+WoDX Paperdoll and the PC job runner. Paperdoll's settings have a "Draw sprites now" button for the Storyteller: it writes roster.json and request.json into the world's wodx-sprites folder. The PC runner (tools/pcq/sprite-draw.mjs) looks for unanswered requests in the Foundry data folders named in runner.json (spriteData: the testbed lanes 2 to 6 only; never lane 1, which is the owner's own Foundry data, and never the Live world; corrected 17 Nov at merge review), runs tools/sprites/batch.py on the roster into that folder at below-normal priority, one world at a time, and writes status.json. The game reads status.json every 20 seconds, learns the new sprites and the tokens put them on (B6140). A world whose data folder the runner does not watch (Live, hosted elsewhere) gets a note after three minutes that no drawer has answered.
+Reverse: remove spriteData from runner.json (the runner then never draws), and the spriteDraw menu in sprites.mjs.
+Changed 26 Nov (B8101): no gate lane draws any more; the solo world on the New PC does.
+
+## B6145. A sprite is never drawn tilted (2026-11-15, the seated smith on the testbed lay at a slant)
+WoDX Paperdoll. NPC routines walk tokens with autoRotate, which turns the token toward its path; the sprite then showed the turned picture, so a figure seated on its stool lay sideways at a slant and looked to be leaning back in mid-air. A sprite already shows its way by its rows, so the figure is now drawn upright whatever the token's rotation. The rotation itself stays on the token for anything that reads it. The stool the seated pose sits on is drawn in the sprite sheet; on a map seat the seat pose is used and no second stool is drawn.
+Reverse: remove upright() and its refreshToken hook in sprites.mjs.
+
+## B6146. Riders sit astride (2026-11-15, Ben: "Fix the sitting positions for mounted sprites")
+WoDX Paperdoll and the sprite drawer. The riding sheet was the standing figure with its legs pressed shorter: seen from the side the legs hung straight down, seen from the front they stayed together, so a rider looked to stand in the saddle. It is now drawn joint by joint like the other poses (wear.py ride, riding()): hips in the saddle, thighs forward and down round the barrel, shins hanging a little back, hands low on the reins, knees and feet spread either side seen from front or back, rising and settling a pixel with the gait. Coming toward the viewer, a rider astride was drawn over the horse's head; now the rider is drawn whole and the mount's picture is laid over it, so the head and chest are in front and the rider, set six drawn pixels higher on a beast (not on a bicycle or motorbike), shows head and shoulders above. Vehicle seats (benches, windows) are unchanged. The proto riding sheets are redrawn; the batch's version goes to 14, so "Draw sprites now" redraws everyone's own sprite with the new seat.
+Reverse: drop 'ride' from drawn() in proto_attacks.py and the behind/layFronts lines in mounts.mjs.
+
+## B6147. A walk on a slow screen is still a walk (2026-11-15, found by the sprite check gate)
+WoDX Paperdoll. A token that moved three squares or more between two looks was taken as set down, not walked, so it slid with no steps and kept its old facing. On a slow or busy screen (the testbed's freshly started lanes) a routine's walk covers that much between frames, so the figure crossed the map without turning. Now a long step counts as a placement only when Foundry is not walking the token.
+Reverse: drop the walking argument of step() in sprite-rules.mjs and its use in sprites.mjs.
+
+## B6148. The sprite check sees facing on a warm screen (2026-11-17, found by the sprite check gate)
+Gate only (gatespritecheck step 3). On a freshly reset lane Foundry sometimes lays an NPC routine's first walk down in one go with no animation, so the sprite never moves and has nothing to face; the check then failed although the routine arrived and the token sat. When no movement was seen, the check now helps the seated figure up (a held seat otherwise stays put wherever the token is dragged) and moves the same token three squares left with an animated step, in view, and requires it to face left on the way, then puts it back. A walk that was animated is still judged as before (it must face right toward the tavern).
+Reverse: drop the probe block in gatespritecheck step 3 and judge turned.includes("right") alone.
+
 ## B6150. A player's attack and damage hooks fire on the Storyteller's client too (2026-11-15)
 WoDX Combat. wodxAttackRolled and wodxDamageApplied fired only on the client that rolled or applied, and nearly every
 listener (WoDX Actions' fomor blows, touch harm, oaths and Rötschreck, WoDX Senses' gunshot overload, WoDX
@@ -16668,3 +16710,54 @@ Reverse: each is one change in its module, listed in docs/PENDING-REVIEW.md.
 WoDX Creation, WoDX Actions. Birth and turn years go down to -4000 (minus is BCE) for lines other than mortals (#2505). The 167 placeholder entries in disciplines-daw.json (the Elder Powers and the Necromancy paths) have descriptions, rolls and costs in WoDX's own words (#2499).
 
 Reverse: set the year minimum back to 1100.
+
+## B8100. A new character, a new NPC and a kept figure or look ask for their sprite by themselves (2026-11-26, #2491)
+WoDX Paperdoll. B8053 put a drawn sprite on its tokens, but a character with no drawn sprite yet waited until someone ran the sprite batch, so new characters and NPCs stayed plain pictures and a kept figure changed nothing (the solo test). Now, with the world setting "New and changed characters get their sprite by themselves" (on), the Storyteller's computer asks the PC sprite drawer (B6144) half a minute after the last new actor or kept figure or look; many changes close together make one request. The drawer draws only the new and changed characters, and when it is done the scene in view puts the new sprites on, and later tokens take them as they come (B8053). Asked this way the game shows no notice unless something was drawn.
+Reverse: set the setting off, or remove the createActor hook and askSoon in sprites.mjs and its call in main.mjs.
+
+## B8101. The solo world is the one that draws, and no gate lane does (2026-11-26)
+PC job runner. A gate makes characters, and with B8100 each would start a drawing on a gate lane, so runner.json's spriteData is now empty and the New PC's (runner.new_pc_lebrun.json) names only the solo world, D:/WoDX/FoundryData-solo. The New PC's python is its system Python 3.12 (%LOCALAPPDATA%/Programs/Python/Python312, numpy and Pillow already there); a runner whose Python is missing says so once in its log and draws nothing. gatespritecheck turns the new setting off while it runs and checks the ask with it on, taking the ask back before it is sent.
+Reverse: put the lane folders back in spriteData.
+
+## B8130. A clone refuses a push to a pull request in the merge train (2026-11-26)
+Tools. Of the 32 pull requests the train ejected from 17 to 25 November, 9 left because of a push while labelled: 3 were
+the train's own commits (fixed by B7390), and 6 were threads that pushed a fix or merged main after labelling. A
+pre-push hook (tools/git-hooks/pre-push.mjs) now asks GitHub for the branch's open pull request and refuses the push
+when it carries `merge-train`, saying to take the label off first. Commits that all carry `Merge-Train: yes` (the
+train's) go through, `WODX_PUSH_GUARD=off` passes one push, and a push GitHub cannot be asked about goes through, so
+the guard never blocks work offline; the train's own eject (B7332) still catches what it misses. review.mjs, claim.mjs
+and merge-stamp.mjs set `core.hooksPath` to tools/git-hooks on first run (only when it is unset), so each thread's
+clone has the guard before it labels.
+
+Reverse: `git config --unset core.hooksPath` in a clone, or take the installHooks calls out of the three scripts.
+
+## B8131. Review-list rows are fragments, stamped at merge (2026-11-26)
+Tools. Of the 13 pull requests the train ejected for a merge conflict from 17 to 25 November, docs/PENDING-REVIEW.md
+clashed in about 8 of the 11 whose files could be read, because every branch appended rows to the same table end and
+the daily auto-approval moved rows on main. A branch now writes its rows in changes/pending-review/<name>.md, one
+four-cell table row per line; merge-stamp checks each row (four cells, a date first) and appends them to the end of
+the Waiting for review table, skipping a row the table already holds. docs/PENDING-REVIEW.md joins the files the
+stamp writes, so it needs no file review of its own.
+
+Reverse: write rows into docs/PENDING-REVIEW.md by hand again and drop the pending-review branch of readFragments.
+
+## B8132. The train settles conflicts in the review list and generated files (2026-11-26)
+Tools. When main does not merge in cleanly and every conflicted file is docs/PENDING-REVIEW.md, docs/FEATURES.md or
+the api-paths fixture, the train settles them itself instead of ejecting: the review list is main's file plus the
+table rows the branch added (rows main moved to an approved section stay there), docs/FEATURES.md is written again
+from registry/features/, and the api-paths fixture is main's (the stamp writes it again). The merge commit keeps the
+`Merge-Train: yes` trailer. A pull request GitHub calls unmergeable is now prepared rather than ejected at once, and a
+conflict in any other file still ejects it, now naming the files. It changes tools/pcq/train.mjs outside the PC helper
+because the coordinator asked this thread to fix the train's ejects ahead of other work (26 November).
+
+Reverse: put back the "leave" for mergeable false in decide() and empty SETTLED in tools/pcq/train.mjs.
+
+## B8133. Label for the train only on green checks (2026-11-26)
+Tools. Two pull requests left the train on red checks from 17 to 25 November (1836 and 2272; on 2272 one harness test
+failed on the head). The train cannot tell a thread's red head from one main broke, so the rule is on the thread:
+label only once `checks` is green on the head and merge-stamp --check lists nothing but fragments to stamp
+(docs/WORKFLOW.md, section 6). The gate side needs no change: since 21 November a gate that fails only on order or
+fails on main too already passes the gate status (B7441, B7521), and the recheck asymmetry of #2163 was fixed on 20
+November (B7540).
+
+Reverse: take the sentence out of docs/WORKFLOW.md, section 6.
