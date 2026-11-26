@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const TRR = await imp("modules/wodx-npc/scripts/trust-rules.mjs");
-const TR = await imp("modules/wodx-npc/scripts/ties-rules.mjs");
+const TRR = await imp("modules/wodx-rules/npc/trust-rules.mjs");
+const TR = await imp("modules/wodx-rules/npc/ties-rules.mjs");
 const XH = await imp("modules/wodx-sheets/scripts/extras-html.mjs");
 
 test("trust moves by events, stays in -5 to +5 and keeps a short log", () => {

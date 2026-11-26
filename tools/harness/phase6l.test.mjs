@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6l: the crucible (WoDX Actions 3.10.0, Orpheus) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const O = await import(join(root, "modules/wodx-actions/scripts/orpheus-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const O = await import(join(root, "modules/wodx-rules/actions/orpheus-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 
 test("five Shades and their bases; four Laments; ten Horrors and their prerequisites (pp. 122–124)", () => {
   assert.equal(Object.keys(O.SHADES).length, 5);

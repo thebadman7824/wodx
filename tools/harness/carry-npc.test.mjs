@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/npc-rules.mjs")));
+const NR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/npc-rules.mjs")));
 const SR = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
 
 const guard = NR.profileOf({}, "guard");
@@ -98,7 +98,7 @@ test("wiring: NPC reads the fallen and acts; Solo watches the player's character
 });
 
 /* ---------------- B5087 to B5089: where they take them ---------------- */
-import * as CG from "../../modules/wodx-npc/scripts/carry-goal-rules.mjs";
+import * as CG from "../../modules/wodx-rules/npc/carry-goal-rules.mjs";
 
 test("rescue: a Cainite to a haven, a living mortal home, a dead mortal to their own home for burial, else off the map (B5087)", () => {
   const places = [{id: "h1", kind: "haven", scene: "s1"}, {id: "home1", kind: "home", scene: "s1"}, {id: "home2", kind: "home", scene: "s2"}];

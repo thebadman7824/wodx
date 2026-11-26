@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-chronicle/scripts/law-heat-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+const H = await imp("modules/wodx-rules/chronicle/law-heat-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
 const D = H.DAY;
 
 test("law heat: a deed's weight follows the land's law and the age's catch", () => {

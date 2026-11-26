@@ -13,8 +13,8 @@
  * B3110: then every venture characters have put money into pays its share or takes its loss (ventures.mjs).
  * B3430: last, sickness moves on in the towns and spreads along the links and with the caravans that left (contagion.mjs).
  */
-import * as R from "./market-turn-rules.mjs";
-import * as MK from "./market-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/market-turn-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Own from "./owners.mjs";
 import * as Rumours from "./rumours.mjs";

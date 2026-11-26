@@ -11,7 +11,7 @@ const KD = await imp("modules/wodx-library/data/wonders-kuei-jin.mjs");
 const R = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const KK = await imp("modules/wodx-library/scripts/wonders-kuei-jin.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const kit = KK.kueiJinKit;
 
 const art = (id, name, v) => ({id, type: "Power", name, system: {type: "wod.types.discipline", value: v}});

@@ -3,9 +3,9 @@
  * (flags.wodx-senses.sight); each player's own map shows their own character's sight, and only if their setting
  * allows. The button "My sight" on the token tools steps through the sights the character has, then off.
  */
-import * as S from "./sight-rules.mjs";
+import * as S from "../../wodx-rules/senses/sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
-import * as O from "./otherworld-sight-rules.mjs";
+import * as O from "../../wodx-rules/senses/otherworld-sight-rules.mjs";
 import * as OW from "./otherworld-sight.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

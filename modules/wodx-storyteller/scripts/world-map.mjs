@@ -16,18 +16,18 @@ let WM = null, loading = null;
 /** Load the world map's rules and grid once. Returns the rules. */
 export function load() {
   if ( WM ) return Promise.resolve(WM);
-  loading ??= import("./world-map-rules.mjs").then(m => (WM = m)).catch(err => { loading = null; throw err; });
+  loading ??= import("../../wodx-rules/storyteller/world-map-rules.mjs").then(m => (WM = m)).catch(err => { loading = null; throw err; });
   return loading;
 }
 /** The rules once loaded, else null. */
 export const loaded = () => WM;
 const need = () => { if ( !WM ) throw new Error("WoDX Storyteller: the world map is not loaded yet; await api.worldMap.load() first"); return WM; };
-import * as D from "./discovery-rules.mjs";
-import * as LR from "./letters-rules.mjs";
-import {mediaYear} from "../../wodx-chronicle/scripts/media-rules.mjs";
+import * as D from "../../wodx-rules/storyteller/discovery-rules.mjs";
+import * as LR from "../../wodx-rules/storyteller/letters-rules.mjs";
+import {mediaYear} from "../../wodx-rules/chronicle/media-rules.mjs";
 import * as C from "./core.mjs";
 import {addTool} from "./hand.mjs";
-import * as GO from "./go-rules.mjs";
+import * as GO from "../../wodx-rules/storyteller/go-rules.mjs";
 import {tick as hardshipTick} from "./hardship.mjs";
 
 const {esc} = C;

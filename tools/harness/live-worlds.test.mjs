@@ -25,8 +25,8 @@ test("a chronicle's Live worlds join the list when it registers, and every modul
   try {
     assert.ok(LW.isLiveWorld("gate-live-world"));
     const solo = await imp("modules/wodx-solo/scripts/solo-rules.mjs");
-    const recipe = await imp("modules/wodx-storyteller/scripts/recipe-rules.mjs");
-    const auto = await imp("modules/wodx-chronicle/scripts/automation-rules.mjs");
+    const recipe = await imp("modules/wodx-rules/storyteller/recipe-rules.mjs");
+    const auto = await imp("modules/wodx-rules/chronicle/automation-rules.mjs");
     for ( const list of [solo.NEVER_WORLDS, recipe.FORBIDDEN_WORLDS, auto.NEVER_SEED] ) {
       assert.equal(list, LW.LIVE_WORLDS);
       assert.ok(list.includes("gate-live-world"));

@@ -9,15 +9,15 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
-const AR = await load("modules/wodx-chronicle/scripts/automation-rules.mjs");
-const QR = await load("modules/wodx-chronicle/scripts/approvals-rules.mjs");
-const WR = await load("modules/wodx-chronicle/scripts/waiting-rules.mjs");
+const AR = await load("modules/wodx-rules/chronicle/automation-rules.mjs");
+const QR = await load("modules/wodx-rules/chronicle/approvals-rules.mjs");
+const WR = await load("modules/wodx-rules/chronicle/waiting-rules.mjs");
 const SOLO = await load("modules/wodx-solo/scripts/solo-rules.mjs");
-const FE = await load("modules/wodx-combat/scripts/fight-end-rules.js");
-const SR = await load("modules/wodx-storyteller/scripts/spend-rules.mjs");
-const K = await load("modules/wodx-storyteller/scripts/kits-rules.mjs");
-const J = await load("modules/wodx-otherworlds/scripts/journey-rules.mjs");
-const CR = await load("modules/wodx-creation/scripts/rules.mjs");
+const FE = await load("modules/wodx-rules/combat/fight-end-rules.js");
+const SR = await load("modules/wodx-rules/storyteller/spend-rules.mjs");
+const K = await load("modules/wodx-rules/storyteller/kits-rules.mjs");
+const J = await load("modules/wodx-rules/otherworlds/journey-rules.mjs");
+const CR = await load("modules/wodx-rules/creation/rules.mjs");
 const TR = await load("modules/wodx-targeting/scripts/target-rules.mjs");
 
 function sources(mod) {

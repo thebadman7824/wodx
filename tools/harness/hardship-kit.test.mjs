@@ -9,7 +9,7 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 
 /* Storyteller hardship: bedding against the cold, shade against the heat (B3906) */
-const H = await imp("modules/wodx-storyteller/scripts/hardship-rules.mjs");
+const H = await imp("modules/wodx-rules/storyteller/hardship-rules.mjs");
 
 test("the weather's danger is cold or heat", () => {
   assert.equal(H.weatherCause({tempDay: 2, tempNight: -6}), "cold");

@@ -1,6 +1,6 @@
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
-import * as R from "./roads-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/roads-rules.mjs";
 
 /**
  * WoDX Chronicle, B6304-B6309: Transcendence for wraiths, the Road Back for the Kuei-jin and Redemption for demons,

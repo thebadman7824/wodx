@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const TR = await imp("modules/wodx-storyteller/scripts/town-rules.mjs");
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const TR = await imp("modules/wodx-rules/storyteller/town-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 const never = () => () => 0.99, always = () => () => 0;
 const M = (id, over = {}) => ({id, name: id[0].toUpperCase() + id.slice(1), scenes: ["s"], traders: [], links: [], ...over});
 const weeks = (n, st, ms, opt = {}) => { const ev = []; for ( let i = 0; i < n; i++ ) { const r = TR.weekTowns(st, ms, {year: 1600, month: 3, randFor: never, ...opt}); st = r.state; ev.push(...r.events); } return {st, ev}; };
@@ -170,13 +170,13 @@ test("the town wiring: settings, hooks, approval, windows", () => {
   assert.match(t, /Hooks\.callAll\("wodxTown"/);
   assert.match(t, /searchBox\(/);
   assert.match(src("modules/wodx-storyteller/scripts/markets.mjs"), /action: "towns"/);
-  const shown = (t + src("modules/wodx-storyteller/scripts/town-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+  const shown = (t + src("modules/wodx-rules/storyteller/town-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(shown, /B3\d\d\d|house rule/i);
 });
 
 test("talk and crowds follow the town (NPC, B3320, B3321)", async () => {
-  const O = await imp("modules/wodx-npc/scripts/overheard-rules.mjs");
-  const P = await imp("modules/wodx-npc/scripts/passerby-rules.mjs");
+  const O = await imp("modules/wodx-rules/npc/overheard-rules.mjs");
+  const P = await imp("modules/wodx-rules/npc/passerby-rules.mjs");
   const {OVERHEARD} = await imp("modules/wodx-npc/data/grammar/overheard.mjs");
   const t = TR.normTown({id: "brno", people: 1000});
   assert.equal(O.townTopic(TR.view(t), 1400), null, "an ordinary town gives nothing");
@@ -202,7 +202,7 @@ test("talk and crowds follow the town (NPC, B3320, B3321)", async () => {
 });
 
 test("a rising or a sack costs the factions that hold the town (NPC, B3330)", async () => {
-  const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
+  const F = await imp("modules/wodx-rules/npc/faction-rules.mjs");
   const st = {factions: [
     {id: "lord", name: "The lord", kind: "mortal", places: ["Scene.s1.Region.r1"], assets: {status: 3, retainers: 2, resources: 2}, standing: {}},
     {id: "guild", name: "The guild", kind: "mortal", places: [], assets: {status: 2}, standing: {}},

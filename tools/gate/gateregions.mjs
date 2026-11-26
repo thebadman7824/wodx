@@ -52,7 +52,7 @@ export async function run() {
         && typeof ch()?.church?.faithOf === "function", {chron: v("wodx-chronicle"), st: v("wodx-storyteller"), npc: v("wodx-npc")});
     });
     await step("the rumour mill reads the homeland", async () => {
-      const Media = await import("/modules/wodx-chronicle/scripts/media-rules.mjs");
+      const Media = await import("/modules/wodx-rules/chronicle/media-rules.mjs");
       const fut = !!game.settings.get("wodx-chronicle", "rule.futureBranch");
       const want = Media.mediaFor(year, {future: fut, region: home});
       ok("the rumour mill reads the homeland", st().rumours.media()?.id === want.id, {got: st().rumours.media()?.id, want: want.id});
@@ -75,7 +75,7 @@ export async function run() {
     });
     await step("a Western NPC keeps its hours, and a tick runs", async () => {
       const k = npc().routines.keepOf(made[2]);
-      const RR = await import("/modules/wodx-npc/scripts/routine-rules.mjs");
+      const RR = await import("/modules/wodx-rules/npc/routine-rules.mjs");
       const plain = RR.blocksOf(made[2].flags["wodx-npc"].routine, "civilian", year);
       const same = k.faith !== "western" || JSON.stringify(plain) === JSON.stringify(npc().routines.blocksFor(made[2]));
       const r = await npc().routines.tick("jump", {scene: null, post: false});

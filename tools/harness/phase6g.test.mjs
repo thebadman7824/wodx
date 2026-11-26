@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6g: Dark Ages fae (WoDX Actions 3.8.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(join(root, "modules/wodx-actions/scripts/fae-da-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const F = await import(join(root, "modules/wodx-rules/actions/fae-da-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 // fae-da.js imports search.mjs (no Foundry at load), so its parsers can be tested too
 const FX = await import(join(root, "modules/wodx-actions/scripts/fae-da.js"));
 
@@ -141,7 +141,7 @@ test("wiring: Actions 3.8.0, the Dark Ages fae menu, the cantrip button routed b
   assert.match(main, /FXD\.isDA\(a\) \? fx\(\)\.cast\(a\) : (pm|cx)\(\)\.cantrip\(a\)/);
   assert.match(main, /button\.vta-btn\[data-fx\]/);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  const src = readFileSync(join(root, "modules/wodx-actions/scripts/fae-da.js"), "utf8") + readFileSync(join(root, "modules/wodx-actions/scripts/fae-da-rules.js"), "utf8");
+  const src = readFileSync(join(root, "modules/wodx-actions/scripts/fae-da.js"), "utf8") + readFileSync(join(root, "modules/wodx-rules/actions/fae-da-rules.js"), "utf8");
   const strings = src.match(/`[^`]*`|"[^"\n]{12,}"/g).join(" ").replace(/<[^>]+>/g, " ");
   assert.ok(!words.test(strings), strings.match(words)?.[0]);
 });

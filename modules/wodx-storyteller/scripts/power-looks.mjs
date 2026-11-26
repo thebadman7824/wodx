@@ -6,7 +6,7 @@
  * for a balefire, a flickering flame) at the scene's heart, sized and dimmed by the place's strength, seen only by a
  * viewer whose character could see it (WoDX Otherworlds' nature of the viewer's tokens) and by the Storyteller.
  */
-import * as L from "./power-look-rules.mjs";
+import * as L from "../../wodx-rules/storyteller/power-look-rules.mjs";
 import * as Power from "./power.mjs";
 import {MOD} from "./core.mjs";
 

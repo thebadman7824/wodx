@@ -9,7 +9,7 @@ import {installMock} from "./foundry-mock.mjs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 installMock({dataRoot: root});
 const {placeOf} = await import(join(root, "modules/wodx-otherworlds/scripts/ratings.mjs"));
-const W = await import(join(root, "modules/wodx-atmosphere/scripts/weather-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/atmosphere/weather-rules.mjs"));
 
 const scene = (id, outdoors) => ({id, name: id, regions: [], flags: {"wodx-otherworlds": {ratings: {settlement: "town", shroud: 7}}, outdoors},
   getFlag(s, k) { return this.flags?.[s]?.[k]; }});

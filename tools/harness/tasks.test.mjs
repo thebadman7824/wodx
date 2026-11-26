@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const {DAY, WEEK} = R;
 
 test("tasks: a new task fills in its kind's starting point", () => {
@@ -142,7 +142,7 @@ test("tasks: Crafts tasks read the system's craft key", () => {
 });
 
 test("tasks: a complication's delay stops a catch-up tick's rolls (B6167)", async () => {
-  const P = await imp("modules/wodx-storyteller/scripts/projects-rules.mjs");
+  const P = await imp("modules/wodx-rules/storyteller/projects-rules.mjs");
   // a week-a-roll task four weeks behind after a time skip
   const t0 = 100 + 4 * WEEK;
   let t = R.normTask({id: "a", kind: "wonder", started: 0, next: 100});

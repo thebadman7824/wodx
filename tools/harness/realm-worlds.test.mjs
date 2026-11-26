@@ -1,8 +1,8 @@
 /* WoDX Otherworlds 0.21.0 (B2556 to B2559): the coarse map of each realm past the near worlds. Pure rules. */
 import test from "node:test";
 import assert from "node:assert/strict";
-import * as RW from "../../modules/wodx-otherworlds/scripts/realm-worlds-rules.mjs";
-import {REALMS, REALM_ORDER} from "../../modules/wodx-otherworlds/scripts/realm-maps-rules.mjs";
+import * as RW from "../../modules/wodx-rules/otherworlds/realm-worlds-rules.mjs";
+import {REALMS, REALM_ORDER} from "../../modules/wodx-rules/otherworlds/realm-maps-rules.mjs";
 
 const maps = Object.fromEntries(RW.REALM_IDS.map(id => [id, RW.build(id, {year: 1197})]));
 

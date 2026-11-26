@@ -52,40 +52,36 @@ branches, listed below.
 
 ## Order of work
 
-Each step is one PR through the /ship loop and the merge train, with the harness, the touched gates and the
-integration check.
+Each move is a `git mv` (no copy left behind, so git follows the rename when another branch edits the old file), and
+`tools/rules-core/move.mjs` rewrites every import of a moved file across the repo: module scripts, harness tests, gates
+and tools. Because the move is mechanical and each pull request costs a full PC gate run, the work goes in three steps,
+not one per module (B8065):
 
-1. **Core.** The package, the guard test, `terms.mjs`, `calendar-math.mjs` and the pure half of `calendar.mjs` moved
-   in. Chronicle keeps `calendar.mjs` with the two Foundry functions plus a re-export, and `terms.mjs` and
-   `calendar-math.mjs` as re-exports, so the hundreds of files that import them keep working and open branches do
-   not clash. The bundler learns the package (below). Chronicle changes, so nearly every gate runs once.
-2. **Leaf modules first**, smallest gate fan-out and no open-branch clashes: Paperdoll, Senses, Sheets, Otherworlds,
-   Library, Atmosphere, Interactables.
-3. **The big three**: NPC, Storyteller, Chronicle, one PR each (Storyteller may split in two).
-4. **After the solo-fix PRs merge**: Combat, Actions, Creation, Solo, and the held files below.
-5. **Retire the re-exports**: point every remaining import at the package and delete the Chronicle copies.
-6. **Pay-off**: gates that only check pure rules move to the harness, so they stop taking a Foundry lane.
-
-Each move is a `git mv` (no copy left behind, so git follows the rename when another branch edits the old file), and a
-script rewrites every import of a moved file across the repo: module scripts, harness tests, gates and tools.
+1. **Core and almost everything** (PR 2539): the package, the guard test, the core, and 347 rules files from 14
+   modules. Chronicle keeps `terms.mjs`, `calendar-math.mjs` and the Foundry half of `calendar.mjs` as re-exports, so
+   open branches keep working.
+2. **The held files**, moved the same way once the solo-fix design PR (2546) merges.
+3. **Retire the re-exports**: point every remaining import at the core and delete the Chronicle copies. Then fold the
+   49 module files the package still imports (book tables and helpers, the `outside` list) into the package, and move
+   gates that only check pure rules to the harness, so they stop taking a Foundry lane.
 
 Not moved: WoDX Targeting (dropped on the solo-test desk, item 2509) and WoDX Voices (shelved, B7134).
 
-### Held until the solo-fix work merges
+### Held until the solo-fix design PR merges
 
-PR 2525 and its follow-up design PR edit these rules files, so they stay where they are until both merge:
-Actions `theme-rules.js`, `turn-rules.js`, `busy-rules.js` (new), Atmosphere `adaptive-rules.mjs`, Chronicle
-`time-dial-rules.mjs`, Combat `rules.js`, Creation `derived-rules.mjs`, `first-night-rules.mjs`, `learn-rules.mjs`,
-`lifepath-rules.mjs`, `wizard-rules.mjs`, Interactables `carry-rules.mjs`, Solo `solo-rules.mjs`, Storyteller
-`reach-rules.mjs`.
+PR 2546 edits these rules files, so they stay where they are until it merges: Chronicle `time-dial-rules.mjs`, Combat
+`rules.js`, Creation `learn-rules.mjs`, `lifepath-rules.mjs`, `wizard-rules.mjs`, Interactables `loose-rules.mjs`, Solo
+`solo-rules.mjs`. Its two new files, Actions `busy-rules.js` and Creation `kit-rules.mjs`, go on the waiting list when
+it merges and move in step 2.
 
 ## Risks and what handles them
 
 - **Bundling for slow machines.** The release bundler keeps any file imported across packages out of the bundles so it
   has one copy in the browser. Moved naively, every rules file would become such a file and load on its own. The
-  bundler instead treats a package file reached by only one module as part of that module, which is exactly today's
-  result; a file reached by two or more modules stays on its own, as it does now. `bundle.mjs --check` totals before
-  and after each step go in the PR.
+  bundler instead treats a package file reached by only one module as part of that module; a file reached by two or
+  more modules, or by any file loaded on its own, stays on its own. Measured on step 1: 65 more files load on their
+  own (154 against 89), each of which was in the browser twice before (in a bundle and on its own), and the total
+  download is about 2 percent larger (12,900 KB against 12,634 KB).
 - **State held in a file.** Seven rules files keep a top-level `let` and 66 a top-level Map or Set. The bundling rule
   above never makes a second copy of a file that more than one module loads, so shared state stays shared.
 - **Open branches.** Files an open PR edits are held (list above). Long-held PRs (1584, 1597, 1715, 1727, 1846) will

@@ -10,7 +10,7 @@
  * 0.36.0: goods follow the scene's region and way of life in the chronicle's year (WoDX Chronicle and Library), and
  * the coin of the place is named in the local money (WoDX Storyteller). Each module stays optional.
  */
-import * as F from "./fill-rules.mjs";
+import * as F from "../../wodx-rules/interactables/fill-rules.mjs";
 
 const MOD = "wodx-interactables";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -79,7 +79,7 @@ export function whereFor(scene = canvas?.scene) {
 export async function coinNamer(where) {
   if ( !game.modules.get("wodx-storyteller")?.active || !where?.money || where.year === null ) return null;
   try {
-    const M = await import("../../wodx-storyteller/scripts/money-rules.mjs");
+    const M = await import("../../wodx-rules/storyteller/money-rules.mjs");
     const L = await import("../../wodx-library/data/goods-ways.mjs");
     const m = M.moneyFor(where.year, where.money);
     // A land that trades without coin has no coin of the place to find

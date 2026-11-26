@@ -19,15 +19,15 @@
  *              lights and sounds of its "WoDX: Alert zone" regions come on while the alarm holds.
  * Player characters are never moved, placed or removed.
  */
-import * as R from "./routine-rules.mjs";
-import * as NR from "./npc-rules.mjs";
-import * as AR from "./alert-rules.mjs";
-import * as FR from "./fight-rules.mjs";
-import * as AN from "./animal-rules.mjs";
-import * as MR from "./mortal-rules.mjs";
-import * as FW from "./follow-rules.mjs";
-import * as HN from "./hunt-npc-rules.mjs";
-import * as DU from "./duty-rules.mjs";
+import * as R from "../../wodx-rules/npc/routine-rules.mjs";
+import * as NR from "../../wodx-rules/npc/npc-rules.mjs";
+import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
+import * as FR from "../../wodx-rules/npc/fight-rules.mjs";
+import * as AN from "../../wodx-rules/npc/animal-rules.mjs";
+import * as MR from "../../wodx-rules/npc/mortal-rules.mjs";
+import * as FW from "../../wodx-rules/npc/follow-rules.mjs";
+import * as HN from "../../wodx-rules/npc/hunt-npc-rules.mjs";
+import * as DU from "../../wodx-rules/npc/duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";

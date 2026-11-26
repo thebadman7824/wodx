@@ -7,7 +7,7 @@ import {readFileSync} from "node:fs";
 
 /* WoDX Actions 3.22.0: Mage effect keywords, the spend plan, routes, and the apply step with Undo */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const E = await import(join(root, "modules/wodx-actions/scripts/effects-rules.js"));
+const E = await import(join(root, "modules/wodx-rules/actions/effects-rules.js"));
 const src = p => readFileSync(join(root, p), "utf8");
 
 test("keywords bring the lowest Sphere the caster can work, merged by highest", () => {
@@ -167,7 +167,7 @@ test("3.25.0: countermagick takes successes off the card; reflected, the rest la
 });
 
 test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it to the Storyteller", async () => {
-  const M = await import(join(root, "modules/wodx-actions/scripts/mage-da-rules.js"));
+  const M = await import(join(root, "modules/wodx-rules/actions/mage-da-rules.js"));
   const D = await import(join(root, "modules/wodx-actions/scripts/mage-da-effects.js"));
   assert.equal(M.ROTES.length, 97);
   for ( const r of M.ROTES ) {
@@ -216,7 +216,7 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   }
   assert.deepEqual(PE.pathOutcomes(paths[0], 0), []);
   assert.equal(PE.isPath("Quietus"), false);
-  const H = await import(join(root, "modules/wodx-actions/scripts/hunter-rules.js"));
+  const H = await import(join(root, "modules/wodx-rules/actions/hunter-rules.js"));
   for ( const k of Object.keys(PE.NUMINA_EFFECTS) ) { const [key, l] = k.split(":"); assert.ok(H.NUMINA[key] && +l >= 1 && +l <= 5, k); }
   const fire = PE.numinaOutcomes("pyrokinesis", 4, 3, H.NUMINA.pyrokinesis);
   assert.deepEqual(fire.map(o => [o.out.levels, o.out.type, o.ask]), [[2, "aggravated", true]]);
@@ -369,7 +369,7 @@ test("Actions 3.31.0: the Storyteller's effect and saved rituals", () => {
 
 test("Actions 3.32.0: keywords for the lines with no power data yet", async () => {
   const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
-  const { KEYWORDS } = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+  const { KEYWORDS } = await import("../../modules/wodx-rules/actions/effects-rules.js");
   const sets = ["v20", "w20", "c20", "htr", "dtf", "mummy", "orpheus"];
   for ( const s of sets ) {
     const list = Object.entries(PK.LINE_KEYWORDS[s]);
@@ -393,7 +393,7 @@ test("Actions 3.32.0: keywords for the lines with no power data yet", async () =
 
 test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window", async () => {
   const BR = await import("../../modules/wodx-actions/scripts/book-rituals.js");
-  const { KEYWORDS } = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+  const { KEYWORDS } = await import("../../modules/wodx-rules/actions/effects-rules.js");
   const c = BR.bookRitualCounts();
   assert.deepEqual(Object.keys(c), ["v20", "v20da", "w20", "daw", "mummy"]);
   assert.ok(Object.values(c).reduce((a, b) => a + b, 0) >= 300);

@@ -156,7 +156,7 @@ async function setup() {
       {noted, deed, note: note && {text: note.text, won: note.won, rows: note.rows}});
   });
   await step("g. Elders", async () => {
-    const LD = await import("/modules/wodx-creation/scripts/lifepath-drill-rules.mjs");
+    const LD = await import("/modules/wodx-rules/creation/lifepath-drill-rules.mjs");
     const now = Number(CH()?.eras?.currentYear?.()) || 1490;
     const since = LD.newSince({turnYear: 330, nowYear: now, line: "vampire", seed: "wodx-gate", region: "moravia"});
     const steps = LD.sinceSteps(since);

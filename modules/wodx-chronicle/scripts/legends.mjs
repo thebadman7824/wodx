@@ -2,11 +2,11 @@ import {MODULE_ID, esc, isActiveGM, setting, setSetting, log} from "./util.mjs";
 import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import * as events from "./events.mjs";
-import * as L from "./legends-rules.mjs";
-import {inLegends} from "./events-rules.mjs";
-import * as LS from "./legend-standing-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/legends-rules.mjs";
+import {inLegends} from "../../wodx-rules/chronicle/events-rules.mjs";
+import * as LS from "../../wodx-rules/chronicle/legend-standing-rules.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
-import {officeTitle, polityFor} from "../../wodx-npc/scripts/politics-rules.mjs";
+import {officeTitle, polityFor} from "../../wodx-rules/npc/politics-rules.mjs";
 
 /**
  * WoDX Chronicle 0.40.0: the Legends book (B1700-B1702). A journal of what has really happened in this chronicle,

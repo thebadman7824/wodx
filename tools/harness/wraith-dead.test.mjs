@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const W = await imp("modules/wodx-actions/scripts/wraith-rules.js");
-const WR = await imp("modules/wodx-actions/scripts/witness-rules.js");
-const L = await imp("modules/wodx-chronicle/scripts/chronicle-local-rules.mjs");
+const W = await imp("modules/wodx-rules/actions/wraith-rules.js");
+const WR = await imp("modules/wodx-rules/actions/witness-rules.js");
+const L = await imp("modules/wodx-rules/chronicle/chronicle-local-rules.mjs");
 const {MANIFEST} = await imp("modules/wodx-rothenstein/chronicle.mjs");
 
 test("B7899: the Crucible holds the Caul until it is lived through", () => {

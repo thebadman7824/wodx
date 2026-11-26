@@ -7,8 +7,8 @@ import {readFileSync} from "node:fs";
 
 /* WoDX Actions (B3560 to B3565): debts and oaths, the Beast at the wheel, low Humanity, long torpor, diablerie's marks. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const D = await import(join(root, "modules/wodx-actions/scripts/debts-rules.js"));
-const B = await import(join(root, "modules/wodx-actions/scripts/beast-marks-rules.js"));
+const D = await import(join(root, "modules/wodx-rules/actions/debts-rules.js"));
+const B = await import(join(root, "modules/wodx-rules/actions/beast-marks-rules.js"));
 const YEAR = 365.25 * 86400;
 
 test("the hunt takes the form of its age and sect", () => {
@@ -143,7 +143,7 @@ test("the menus and the API reach every new part", () => {
 });
 
 test("the pixel face shows low Humanity (Paperdoll, B3566)", async () => {
-  const F = await import(join(root, "modules/wodx-paperdoll/scripts/face64-rules.mjs"));
+  const F = await import(join(root, "modules/wodx-rules/paperdoll/face64-rules.mjs"));
   assert.deepEqual([7, 4, 3, 2, 1, 0].map(r => F.lowHumanityFor(r)), [0, 0, 1, 1, 2, 2]);
   assert.equal(F.lowHumanityFor(1, {humanity: false}), 0);
   assert.equal(F.lowHumanityLevel(5), 2); assert.equal(F.lowHumanityLevel(undefined), 0);

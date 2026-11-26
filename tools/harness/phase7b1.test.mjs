@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* The 7b follow-on: the turn conductor (WoDX Combat 3.7.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const CR = await import(join(root, "modules/wodx-combat/scripts/conductor-rules.js"));
+const CR = await import(join(root, "modules/wodx-rules/combat/conductor-rules.js"));
 const base = (o = {}) => ({level: "npc", paused: false, phase: "main", c: {isNPC: true, npcMode: "auto"}, npcDone: false, actionSpent: false, graceOver: false, timerOver: false, blocks: {}, ...o});
 
 test("off means off; a paused game never advances", () => {

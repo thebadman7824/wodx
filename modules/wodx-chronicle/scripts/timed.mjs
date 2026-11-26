@@ -1,7 +1,7 @@
 import {MODULE_ID, isActiveGM, setting} from "./util.mjs";
 import {secondsToNextDawn} from "./calendar.mjs";
 import {placeOf} from "./place.mjs";
-import {placeTime} from "./place-rules.mjs";
+import {placeTime} from "../../wodx-rules/chronicle/place-rules.mjs";
 import {getCondition, STATUS_PREFIX} from "./conditions.mjs";
 
 /**

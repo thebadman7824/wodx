@@ -1,12 +1,12 @@
-import * as DR from "./dashboard-rules.mjs";
+import * as DR from "../../wodx-rules/storyteller/dashboard-rules.mjs";
 import * as C from "./core.mjs";
-import * as W from "./world-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Rumours from "./rumours.mjs";
-import * as RR from "./rumour-rules.mjs";
+import * as RR from "../../wodx-rules/storyteller/rumour-rules.mjs";
 import * as Clocks from "./clocks.mjs";
-import {clockSVG} from "./clock-rules.mjs";
+import {clockSVG} from "../../wodx-rules/storyteller/clock-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

@@ -6,13 +6,13 @@
  * Everything runs on the Storyteller's computer. Players see only a chat card (Call for a roll), and a button on it
  * when the Storyteller asks them to roll; the Storyteller's client rolls for them, so a player's computer does no work.
  */
-import * as G from "./glance-rules.mjs";
-import * as CR from "./callroll-rules.mjs";
-import * as PF from "./preflight-rules.mjs";
-import * as WR from "./wrapup-rules.mjs";
+import * as G from "../../wodx-rules/storyteller/glance-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/callroll-rules.mjs";
+import * as PF from "../../wodx-rules/storyteller/preflight-rules.mjs";
+import * as WR from "../../wodx-rules/storyteller/wrapup-rules.mjs";
 import * as C from "./core.mjs";
-import {lineFor} from "./prelude-rules.mjs";
-import {CHECKS, GROUPS} from "../../wodx-actions/scripts/checks-rules.js";
+import {lineFor} from "../../wodx-rules/storyteller/prelude-rules.mjs";
+import {CHECKS, GROUPS} from "../../wodx-rules/actions/checks-rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 

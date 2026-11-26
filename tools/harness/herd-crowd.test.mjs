@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as PR from "../../modules/wodx-npc/scripts/passerby-rules.mjs";
+import * as PR from "../../modules/wodx-rules/npc/passerby-rules.mjs";
 
 /* A district fed on too much empties at night (B4630) */
 test("herd crowd: fewer people out at night as the district thins; days and new months as before", () => {

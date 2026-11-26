@@ -2,8 +2,8 @@ import test from "node:test";
 import {fileURLToPath} from "node:url";
 import assert from "node:assert/strict";
 import {execFileSync} from "node:child_process";
-import * as E from "../../modules/wodx-library/scripts/ency-rules.mjs";
-import * as S from "../../modules/wodx-library/scripts/shelf-rules.mjs";
+import * as E from "../../modules/wodx-rules/library/ency-rules.mjs";
+import * as S from "../../modules/wodx-rules/library/shelf-rules.mjs";
 
 /* WoDX Library 0.3.0: the Encyclopaedia Tenebrarum's frame. */
 const books = [{id: "v20", title: "Vampire: The Masquerade 20th Anniversary Edition", short: "V20"}];

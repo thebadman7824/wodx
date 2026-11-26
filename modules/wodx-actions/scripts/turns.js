@@ -5,9 +5,9 @@
  * failure (or a win) does. Each turn's result goes on a card to the bearer's players and the Storyteller (an NPC's
  * rolls to the Storyteller only). The effect ends with its own timer, or when a roll ends it.
  */
-import * as TR from "./turn-rules.js";
+import * as TR from "../../wodx-rules/actions/turn-rules.js";
 export const rules = TR;
-import { countSuccesses } from "./core-rules.js";
+import { countSuccesses } from "../../wodx-rules/actions/core-rules.js";
 import { poolDice } from "./summons.js";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

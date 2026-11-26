@@ -6,7 +6,7 @@
  *   Look closer: Perception + the category's best Ability, difficulty 6; the card goes to the roller and the Storyteller.
  *   Examine notes (Storyteller only): where it is from, how well made, false, stolen, worn, uncanny, and their own lines.
  */
-import * as X from "./examine-rules.mjs";
+import * as X from "../../wodx-rules/library/examine-rules.mjs";
 
 const MOD = "wodx-library";
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");

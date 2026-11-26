@@ -3,7 +3,7 @@
  * sprite rig draws. The picture here is quick, one ready layer per piece; the walking sprite itself is drawn from the
  * saved choice with the next batch (B2586). Rules in figure-rules.mjs. buildMenu and paint need no Foundry.
  */
-import * as F from "./figure-rules.mjs";
+import * as F from "../../wodx-rules/paperdoll/figure-rules.mjs";
 const MOD = "wodx-paperdoll";
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);

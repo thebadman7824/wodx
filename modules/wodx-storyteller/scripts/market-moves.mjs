@@ -9,9 +9,9 @@
  * character stands or belongs; Suggest: every move waits; Off: moves only by hand) and tradersBroke (on or off).
  * Factions are read from WoDX NPC and never changed here: a tax or a raid moves no dots and no standing by itself.
  */
-import * as MV from "./market-moves-rules.mjs";
-import * as MK from "./market-rules.mjs";
-import * as CR from "./caravan-rules.mjs";
+import * as MV from "../../wodx-rules/storyteller/market-moves-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/caravan-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Money from "./money.mjs";
 import * as Caravans from "./caravans.mjs";

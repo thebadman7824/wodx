@@ -5,7 +5,7 @@
  * the Storyteller's per-player hides still apply first. The rules are in player-view-rules.mjs.
  */
 import {MODULE_ID, esc} from "./util.mjs";
-import * as R from "./player-view-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/player-view-rules.mjs";
 import {currentYear} from "./eras.mjs";
 import {PrefsApp, openGlossary} from "./player-help.mjs";
 import {toolShown} from "./player-tools.mjs";

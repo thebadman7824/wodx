@@ -1,8 +1,8 @@
 import {MODULE_ID, esc, setting} from "./util.mjs";
 import {describeTime} from "./calendar.mjs";
-import * as PR from "./place-rules.mjs";
-import * as WR from "./world-rules.mjs";
-import {FAITHS} from "./faith-rules.mjs";
+import * as PR from "../../wodx-rules/chronicle/place-rules.mjs";
+import * as WR from "../../wodx-rules/chronicle/world-rules.mjs";
+import {FAITHS} from "../../wodx-rules/chronicle/faith-rules.mjs";
 
 /** WoDX Chronicle 0.39.0: a scene's own place for the sun (the rules are in place-rules.mjs). */
 

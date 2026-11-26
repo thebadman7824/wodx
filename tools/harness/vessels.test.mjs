@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/rules.js")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/rules.js")));
 
 test("vessels: drink, drugs and disease, each with its page", () => {
   assert.deepEqual(Object.keys(R.VESSEL_STATES), ["clean", "drunk", "stimulant", "hallucinogen", "opiate", "disease"]);

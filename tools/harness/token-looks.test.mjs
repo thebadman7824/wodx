@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as T from "../../modules/wodx-chronicle/scripts/token-look-rules.mjs";
+import * as T from "../../modules/wodx-rules/chronicle/token-look-rules.mjs";
 
 /* Frenzy, Rotschreck and derangement bouts (B4632) */
 test("token looks: looks combine, Light drops movement, Off shows nothing; each derangement has a screen edge", () => {

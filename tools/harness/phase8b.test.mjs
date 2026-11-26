@@ -3,11 +3,11 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
-import * as N from "../../modules/wodx-storyteller/scripts/night-rules.mjs";
+import * as N from "../../modules/wodx-rules/storyteller/night-rules.mjs";
 import {NIGHT_TABLES} from "../../modules/wodx-storyteller/data/night-tables.mjs";
-import * as J from "../../modules/wodx-otherworlds/scripts/journey-rules.mjs";
+import * as J from "../../modules/wodx-rules/otherworlds/journey-rules.mjs";
 import {JOURNEY_TABLES} from "../../modules/wodx-otherworlds/data/journey-tables.mjs";
-import * as K from "../../modules/wodx-atmosphere/scripts/kits-rules.mjs";
+import * as K from "../../modules/wodx-rules/atmosphere/kits-rules.mjs";
 
 const ranged = defs => defs.map(d => ({...d, results: G.withRanges(d.results)}));
 const lookup = (defs, era) => { const all = ranged(defs); return id => G.resolveTable(all, id, {era, culture: null}); };

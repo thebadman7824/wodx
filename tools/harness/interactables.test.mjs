@@ -11,7 +11,7 @@ import {dirname, join} from "node:path";
  * the gate in Foundry checks the real canvas, door controls, wall config window and collisions.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/interactables/interact-rules.mjs"));
 const MOD = "wodx-interactables";
 
 /* ---------------- the rules ---------------- */
@@ -1614,7 +1614,7 @@ test("runtime: the WoDX part of the tile config keeps the climb's choices", () =
 
 /* ---------------- 0.12.0: pictures, markers and map events ---------------- */
 
-const S = await import(join(root, "modules/wodx-interactables/scripts/state-rules.mjs"));
+const S = await import(join(root, "modules/wodx-rules/interactables/state-rules.mjs"));
 
 test("states: each kind reads its state from its flags, the usual one first", () => {
   const box = f => R.describeContainer({container: true, ...f});
@@ -1897,7 +1897,7 @@ test("runtime: the tile config keeps the target's choices, and Clear the scorebo
 /* ---------------- 0.15.0: living maps ---------------- */
 
 test("living maps: conditions, events and years decide whether a tile's rule holds", async () => {
-  const L = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/living-rules.mjs")));
+  const L = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/living-rules.mjs")));
   const winterNight = {year: 1350, month: 1, day: 10, isNight: true, church: {}, weather: ["snow-lying", "cold"], fired: ["black-death"]};
   assert.equal(L.seasonOfMonth(12), "winter");
   assert.equal(L.seasonOfMonth(4), "spring");
@@ -1920,7 +1920,7 @@ test("living maps: conditions, events and years decide whether a tile's rule hol
 });
 
 test("living maps: the change a tile needs, the form's ticked boxes, the words and the moment key", async () => {
-  const L = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/living-rules.mjs")));
+  const L = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/living-rules.mjs")));
   assert.deepEqual(L.changeFor({mode: "show", when: ["night"]}, true, {hidden: true}), {hidden: false});
   assert.deepEqual(L.changeFor({mode: "show", when: ["night"]}, false, {hidden: false}), {hidden: true});
   assert.deepEqual(L.changeFor({mode: "show", when: ["night"]}, true, {hidden: false}), {});

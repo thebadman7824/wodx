@@ -18,8 +18,8 @@ const M = await load(A("mummy-rules.js"));
 const Dm = await load(A("demon-rules.js"));
 const DR = await load(A("debts-rules.js"));
 const SR = await load(A("social-rules.js"));
-const D = await load(join(root, "modules/wodx-chronicle/scripts/derangement-rules.mjs"));
-const H = await load(join(root, "modules/wodx-npc/scripts/hearts-rules.mjs"));
+const D = await load(join(root, "modules/wodx-rules/chronicle/derangement-rules.mjs"));
+const H = await load(join(root, "modules/wodx-rules/npc/hearts-rules.mjs"));
 const table = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/garou.json"), "utf8")).delirium;
 
 test("each line's rule gives a witness something to do on the map", () => {

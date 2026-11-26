@@ -10,12 +10,12 @@
  * Stored on the scene: flags.wodx-storyteller.herd = {month, fed: {class: n}, feeds, stage, log}.
  * World setting herdPools (on or off).
  */
-import * as R from "./herd-rules.mjs";
-import * as U from "./upkeep-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/herd-rules.mjs";
+import * as U from "../../wodx-rules/storyteller/upkeep-rules.mjs";
 import * as Towns from "./towns.mjs";
 import * as Hunters from "./hunters.mjs";
 import {MOD, SOCKET, esc, chron, npc, isPC, isActiveGM, gmIds, setting} from "./core.mjs";
-import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import {faithFor} from "../../wodx-rules/chronicle/faith-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const now = () => game.time?.worldTime ?? 0;

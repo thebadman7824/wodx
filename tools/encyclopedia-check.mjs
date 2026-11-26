@@ -11,7 +11,7 @@
 import {readFileSync, readdirSync, statSync, existsSync} from "node:fs";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
-import * as E from "../modules/wodx-library/scripts/ency-rules.mjs";
+import * as E from "../modules/wodx-rules/library/ency-rules.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dir = join(root, "modules/wodx-library/data/encyclopedia");

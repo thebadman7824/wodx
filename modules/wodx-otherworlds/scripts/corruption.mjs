@@ -14,8 +14,8 @@
  * clocks change, the place's level moves by what the clock moved, whatever wyrmCorruption is set to, so the scene's
  * sickly cast (corruption-looks.mjs) and the Penumbra follow the story. Never in a Live world.
  */
-import * as R from "./corruption-rules.mjs";
-import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
+import * as R from "../../wodx-rules/otherworlds/corruption-rules.mjs";
+import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
 import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {T_DRIFT} from "./drift.mjs";

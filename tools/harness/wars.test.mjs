@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 
 /* NPC + Storyteller: factions that go to war by themselves, mortal and supernatural wars (B2211-B2216) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(join(root, "modules/wodx-npc/scripts/war-rules.mjs"));
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
-const B = await import(join(root, "modules/wodx-storyteller/scripts/battle-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/npc/war-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
+const B = await import(join(root, "modules/wodx-rules/storyteller/battle-rules.mjs"));
 
 const fac = (id, kind, o = {}) => F.normFaction({id, name: o.name ?? id, kind, assets: {status: 3, retainers: 3, resources: 2, domain: 1, ...(o.assets ?? {})}, places: o.places ?? [], standing: o.standing ?? {}, ...o.extra});
 const st = (...fs) => F.normState({factions: fs});

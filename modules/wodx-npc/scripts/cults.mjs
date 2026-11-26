@@ -17,8 +17,8 @@
  *             Preach, Hold a gathering, Ask for a following and, for the Storyteller, Initiate and Ordain.
  * Players act by socket; the Storyteller's client writes. Everything is off until the world setting cultsOn is set.
  */
-import * as C from "./cult-rules.mjs";
-import * as DU from "./duty-rules.mjs";
+import * as C from "../../wodx-rules/npc/cult-rules.mjs";
+import * as DU from "../../wodx-rules/npc/duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";

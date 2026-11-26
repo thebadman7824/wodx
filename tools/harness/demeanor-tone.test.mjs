@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
-import * as TK from "../../modules/wodx-npc/scripts/talk-rules.mjs";
+import * as TK from "../../modules/wodx-rules/npc/talk-rules.mjs";
 
 /* An NPC's Demeanor sets the tone of their stock talk (B3918) */
 

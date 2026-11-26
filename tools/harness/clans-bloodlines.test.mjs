@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 /* B6777: the clans and bloodlines the lifepath offers have their in-clan Disciplines (V20, V20DA, Ebony Kingdom) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-creation/scripts/rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/creation/rules.mjs"));
 const W = await import(join(root, "modules/wodx-creation/scripts/wizard-rules.mjs"));
 
 test("B6777: Giovanni and the bloodlines have their own Disciplines, by era", () => {

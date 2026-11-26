@@ -11,10 +11,10 @@
  * Built by main.js with its helpers (ctx). Pure rules: m20-rules.js.
  */
 import * as LIM from "./limits.js";
-import * as M from "./m20-rules.js";
+import * as M from "../../wodx-rules/actions/m20-rules.js";
 import { floatOver } from "./daysleep.js";
 import { aim, castIntent } from "./aim.js";
-import * as C from "./consensus-rules.js";
+import * as C from "../../wodx-rules/actions/consensus-rules.js";
 import * as EF from "./effects.js";
 import * as TH from "./trait-hooks.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

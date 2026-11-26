@@ -1,11 +1,11 @@
-import * as D from "./doll-rules.mjs";
+import * as D from "../../wodx-rules/paperdoll/doll-rules.mjs";
 import {registerSpriteSettings, startSprites, spriteApi, ageOf, markChild} from "./sprites.mjs";
 import {registerMountSettings, startMounts, mountApi} from "./mounts.mjs";
 import {registerFaceSettings, startFaces, faceApi} from "./face64.mjs";
 import {makeFigureApp} from "./figure.mjs";
-import * as FG from "./figure-rules.mjs";
-import {SKIN_LIST, HAIR} from "./face-rules.mjs";
-import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
+import * as FG from "../../wodx-rules/paperdoll/figure-rules.mjs";
+import {SKIN_LIST, HAIR} from "../../wodx-rules/paperdoll/face-rules.mjs";
+import {measure, findEyes, checkFeatures, SIZE} from "../../wodx-rules/paperdoll/fit-rules.mjs";
 
 /**
  * WoDX Paperdoll 0.1.0: a player builds the character's look (face parts, colours, era clothes) in a window on the

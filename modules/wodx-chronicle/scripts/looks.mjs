@@ -13,7 +13,7 @@
  * own scene weather.
  */
 import {MODULE_ID, SOCKET} from "./util.mjs";
-import * as R from "./looks-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/looks-rules.mjs";
 
 const FLAG = "looks";
 const SEQ_PREFIX = "wodx-look-";

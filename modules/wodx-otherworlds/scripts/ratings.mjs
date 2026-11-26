@@ -1,6 +1,6 @@
-import {SETTLEMENTS, gauntletFor, DEFAULT_CHART} from "./rules.mjs";
-import {normDrift, withDrift, banalityWithDrift, shroudWithDrift} from "./drift-rules.mjs";
-import {groundShift, shiftRating} from "./mark-rules.mjs";
+import {SETTLEMENTS, gauntletFor, DEFAULT_CHART} from "../../wodx-rules/otherworlds/rules.mjs";
+import {normDrift, withDrift, banalityWithDrift, shroudWithDrift} from "../../wodx-rules/otherworlds/drift-rules.mjs";
+import {groundShift, shiftRating} from "../../wodx-rules/otherworlds/mark-rules.mjs";
 
 export const MODULE_ID = "wodx-otherworlds";
 /** Foundry names a module's sub-type "<module id>.<type>"; read the real key from the game model when it is there. */

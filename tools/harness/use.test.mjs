@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 const good = n => G.GOODS.find(g => g.name === n);
 
 test("use: every ability of every good is on the roster, and most goods have one", () => {

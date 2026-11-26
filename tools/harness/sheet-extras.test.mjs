@@ -7,7 +7,7 @@ import {readFileSync} from "node:fs";
 
 /* WoDX Sheets 0.7.0: the sheet extras (possessions, money, strip, ties, history) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const X = await import(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs"));
+const X = await import(join(root, "modules/wodx-rules/sheets/extras-rules.mjs"));
 const H = await import(join(root, "modules/wodx-sheets/scripts/extras-html.mjs"));
 const G = await import(join(root, "modules/wodx-library/data/goods.mjs"));
 

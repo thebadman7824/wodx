@@ -12,10 +12,10 @@
  *             sceneName, means, heard: {sceneUuid: at}, townAt, witnesses, dropped}].
  * Everything is the active Storyteller's; players never see a description or a test.
  */
-import * as W from "./wanted-rules.mjs";
-import * as GR from "./grudge-rules.mjs";
-import * as FW from "./follow-rules.mjs";
-import * as MR from "./mortal-rules.mjs";
+import * as W from "../../wodx-rules/npc/wanted-rules.mjs";
+import * as GR from "../../wodx-rules/npc/grudge-rules.mjs";
+import * as FW from "../../wodx-rules/npc/follow-rules.mjs";
+import * as MR from "../../wodx-rules/npc/mortal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

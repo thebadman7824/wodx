@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 const DAE = await import("../../modules/wodx-actions/scripts/mage-da-effects.js");
 const FX = await import("../../modules/wodx-actions/scripts/fae-da.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 
 test("only extended rituals, journeys and judgements stay the Storyteller's call (B3752)", () => {
   const specs = Object.values(DAE.DA_EFFECTS);

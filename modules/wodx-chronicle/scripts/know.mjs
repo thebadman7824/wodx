@@ -1,6 +1,6 @@
 import {MODULE_ID, esc} from "./util.mjs";
-import * as KR from "./know-rules.mjs";
-import {LANGUAGES} from "./languages-rules.mjs";
+import * as KR from "../../wodx-rules/chronicle/know-rules.mjs";
+import {LANGUAGES} from "../../wodx-rules/chronicle/languages-rules.mjs";
 import {languagesOf, charactersOf} from "./languages.mjs";
 
 /**

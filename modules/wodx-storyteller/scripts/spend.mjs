@@ -8,8 +8,8 @@
  *                                               Storyteller's client it spends at once.
  *   api.time.clockRow() / bindClockRow(el)      The Time row on the Chronicle Clock: each character's own time.
  */
-import * as SR from "./spend-rules.mjs";
-import * as W from "./world-rules.mjs";
+import * as SR from "../../wodx-rules/storyteller/spend-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
 import {MOD, SOCKET, esc, chron, isActiveGM, setting, pcs, whereIs, absentIds, ownerOf, advancePersonal, setPersonal, personalTime, log, tell, sceneName} from "./core.mjs";
 
 export const T_TIME = `${MOD}.time`;

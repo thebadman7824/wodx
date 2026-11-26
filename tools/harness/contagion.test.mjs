@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/contagion-rules.mjs");
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/contagion-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 const never = () => 0.99, always = () => 0;
 
 test("every disease has a rating, a difficulty, a book or rated-beside reference and a note", () => {
@@ -163,7 +163,7 @@ test("a sick character rolls each week: the rating as damage on a failure, a slo
 });
 
 test("the town turn takes its sickness from the towns' own outbreaks when they spread (B3437)", async () => {
-  const TR = await imp("modules/wodx-storyteller/scripts/town-rules.mjs");
+  const TR = await imp("modules/wodx-rules/storyteller/town-rules.mjs");
   const o = {...R.newOutbreak({market: "brno", disease: "plague"}), week: 9};
   const h = R.townHit(o);
   assert.equal(h.name, "Plague");
@@ -217,7 +217,7 @@ test("WoDX Actions: the Hunt takes one less in a sick town and a carrier names t
 
 // B7863: in Dark Ages years the sicknesses DA:I lists run its daily course (DA:I p. 165)
 test("B7863: DA:I sickness: daily rolls, five good days in a row end it; M20 rows in later years", async () => {
-  const R = await import("../../modules/wodx-storyteller/scripts/contagion-rules.mjs");
+  const R = await import("../../modules/wodx-rules/storyteller/contagion-rules.mjs");
   assert.equal(R.daSickness(1202), true);
   assert.equal(R.daSickness(1900), false);
   assert.equal(R.diffFor("plague", 1202), 7);

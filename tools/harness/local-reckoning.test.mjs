@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const L = await imp("modules/wodx-chronicle/scripts/local-reckoning-rules.mjs");
-const R = await imp("modules/wodx-chronicle/scripts/reckoning-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/local-reckoning-rules.mjs");
+const R = await imp("modules/wodx-rules/chronicle/reckoning-rules.mjs");
 const C = await imp("modules/wodx-chronicle/scripts/calendar-math.mjs");
 
 const W = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];

@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-chronicle/scripts/player-view-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/chronicle/player-view-rules.mjs"));
 
 test("view: the player's own pick, then the Storyteller's, then the world default", () => {
   assert.equal(R.viewFor({mine: "full", byUser: "beginner", fallback: "beginner"}), "full");
@@ -72,7 +72,7 @@ test("the Storyteller's window lists every drawer button", async () => {
   for ( const name of Object.keys(R.TOOL_GROUP) ) assert.ok(src.includes(`"${name}"`), `${name} missing from PLAYER_TOOLS`);
 });
 
-const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
+const TR = await import(join(root, "modules/wodx-rules/actions/theme-rules.js"));
 
 test("actions front row: the line's first five acts, in its own order", () => {
   const sections = [["Do", TR.MENU_PLAN.kindred.act.map(s => [s, s, "fa-x"])]];
@@ -106,8 +106,8 @@ test("quieter chat: world cards fold, rolls never", () => {
   assert.ok(long.endsWith("...") && long.length <= 94);
 });
 
-const SB = await import(join(root, "modules/wodx-sheets/scripts/beginner-rules.mjs"));
-const CKR = await import(join(root, "modules/wodx-actions/scripts/checks-rules.js"));
+const SB = await import(join(root, "modules/wodx-rules/sheets/beginner-rules.mjs"));
+const CKR = await import(join(root, "modules/wodx-rules/actions/checks-rules.js"));
 
 test("sheet quick rolls: defaults are real checks; the player's own list wins; at most eight", () => {
   const known = new Set(CKR.CHECKS.map(c => c.key));
@@ -179,13 +179,13 @@ test("What can I do now: the moment is read right and only usable things are off
   assert.ok(R.ON_BAR.has("wodxNow"));
 });
 
-const Q = await import(join(root, "modules/wodx-creation/scripts/quick-start-rules.mjs"));
-const BR = await import(join(root, "modules/wodx-creation/scripts/first-night-build-rules.mjs"));
-const TT = await import(join(root, "modules/wodx-creation/scripts/totals-rules.mjs"));
-const LS = await import(join(root, "modules/wodx-creation/scripts/lifepath-short-rules.mjs"));
-const LD = await import(join(root, "modules/wodx-creation/scripts/lifepath-drill-rules.mjs"));
+const Q = await import(join(root, "modules/wodx-rules/creation/quick-start-rules.mjs"));
+const BR = await import(join(root, "modules/wodx-rules/creation/first-night-build-rules.mjs"));
+const TT = await import(join(root, "modules/wodx-rules/creation/totals-rules.mjs"));
+const LS = await import(join(root, "modules/wodx-rules/creation/lifepath-short-rules.mjs"));
+const LD = await import(join(root, "modules/wodx-rules/creation/lifepath-drill-rules.mjs"));
 const LR = await import(join(root, "modules/wodx-creation/scripts/lifepath-rules.mjs"));
-const FN = await import(join(root, "modules/wodx-creation/scripts/first-night-rules.mjs"));
+const FN = await import(join(root, "modules/wodx-rules/creation/first-night-rules.mjs"));
 
 function sheet(abilities) {
   const ab = (names, type) => Object.fromEntries(names.map(n => [n, {type, value: 0, label: n}]));
@@ -250,9 +250,9 @@ test("First Night checklist: the next step and the count left", () => {
 });
 
 const GL = await import(join(root, "modules/wodx-library/data/glossary.mjs"));
-const XR = await import(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs"));
-const CR = await import(join(root, "modules/wodx-interactables/scripts/case-rules.mjs"));
-const FR = await import(join(root, "modules/wodx-paperdoll/scripts/figure-rules.mjs"));
+const XR = await import(join(root, "modules/wodx-rules/sheets/extras-rules.mjs"));
+const CR = await import(join(root, "modules/wodx-rules/interactables/case-rules.mjs"));
+const FR = await import(join(root, "modules/wodx-rules/paperdoll/figure-rules.mjs"));
 const SR = await import(join(root, "modules/wodx-solo/scripts/solo-rules.mjs"));
 
 test("step 6: purse line, starter board, figure slots, solo main button, presets", () => {

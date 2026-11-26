@@ -13,10 +13,10 @@
  *   onEffect(...)         r2  a Puppeteer riding the same mortal again makes them a consort
  * Every change that needs the Storyteller goes through Chronicle's approvals, and approving does it.
  */
-import * as R from "./servant-actions-rules.js";
+import * as R from "../../wodx-rules/actions/servant-actions-rules.js";
 import * as EF from "./effects.js";
 import * as DE from "./demon-evocations.js";
-import { stOutcomes } from "./effects-rules.js";
+import { stOutcomes } from "../../wodx-rules/actions/effects-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";

@@ -6,8 +6,8 @@ import {dirname, join} from "node:path";
 
 // WoDX Storyteller: Threads of Fate, the signal board and the weave (B3650-B3656).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const S = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/signals-rules.mjs")));
-const T = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/threads-rules.mjs")));
+const S = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/signals-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/threads-rules.mjs")));
 const DAY = 86400;
 const seq = vals => { let i = 0; return () => vals[i++ % vals.length]; };
 
@@ -122,7 +122,7 @@ test("threads: the age floor keeps romance away from anyone under 18", () => {
 
 test("threads: the shared deck has about 130 cards (a chronicle's own are in its module), a unique hook for every world region, and doors for every line", async () => {
   const {CARDS} = await import(pathToFileURL(join(root, "modules/wodx-storyteller/data/threads-cards.mjs")));
-  const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs")));
+  const W = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/world-rules.mjs")));
   const deck = CARDS.map(T.normCard);
   assert.ok(deck.length >= 130, `${deck.length} cards`);
   assert.ok(deck.every(c => !c.key.startsWith("roth-")), "Rothenstein's cards live in wodx-rothenstein");

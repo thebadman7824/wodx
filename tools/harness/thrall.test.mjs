@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const T = await imp("modules/wodx-actions/scripts/thrall-rules.js");
-const RR = await imp("modules/wodx-storyteller/scripts/recipe-rules.mjs");
+const T = await imp("modules/wodx-rules/actions/thrall-rules.js");
+const RR = await imp("modules/wodx-rules/storyteller/recipe-rules.mjs");
 
 test("B7920: a new thrall, the Vices with their virtues, and Torment that rolls over at ten", () => {
   const f = T.thrallFlag({});
@@ -145,7 +145,7 @@ test("B7920-B7926: wiring", () => {
   assert.match(k, /await sinPrompt\(killer, "kill", `\$\{actor\.name\} is killed`\);/);
   assert.match(h, /for \(const t of AURA_TICKS\)/);
   assert.match(src("modules/wodx-actions/scripts/profile-menus.js"), /"api:thrall"/);
-  const shared = src("modules/wodx-actions/scripts/thrall.js") + src("modules/wodx-actions/scripts/thrall-rules.js");
+  const shared = src("modules/wodx-actions/scripts/thrall.js") + src("modules/wodx-rules/actions/thrall-rules.js");
   assert.ok(!/Skrik|Voss|Eckhart|Rothenstein/.test(shared), "the shared module names no chronicle");
   assert.ok(!/—/.test(shared));
 });

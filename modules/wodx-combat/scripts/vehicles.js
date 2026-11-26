@@ -12,7 +12,7 @@
  *   - the one at the wheel swerves in place of dodging; anyone else sat inside does not dodge.
  * World setting "vehicleCombat" (on by default) turns it all off.
  */
-import * as VR from "./vehicle-rules.js";
+import * as VR from "../../wodx-rules/combat/vehicle-rules.js";
 import * as MVJ from "./movement.js";
 
 let D = null;

@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 /* B6779f: the dots a change leaves to spend are read by Spend experience: free dots on the rows they pay for */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const CP = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/change-points-rules.mjs")));
-const SR = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/states-rules.mjs")));
-const TR = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/totals-rules.mjs")));
+const CP = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/change-points-rules.mjs")));
+const SR = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/states-rules.mjs")));
+const TR = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/totals-rules.mjs")));
 
 test("every pool a change writes has a reader", () => {
   const writers = {

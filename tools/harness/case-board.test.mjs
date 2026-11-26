@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as C from "../../modules/wodx-interactables/scripts/case-rules.mjs";
-import * as K from "../../modules/wodx-library/scripts/know-rules.mjs";
+import * as C from "../../modules/wodx-rules/interactables/case-rules.mjs";
+import * as K from "../../modules/wodx-rules/library/know-rules.mjs";
 
 /* WoDX Interactables 0.32.0: the case board. */
 test("cards go on free spots, and the same thing is not pinned twice", () => {

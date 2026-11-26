@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const H = await imp("modules/wodx-npc/scripts/hearts-rules.mjs");
-const TR = await imp("modules/wodx-npc/scripts/ties-rules.mjs");
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const H = await imp("modules/wodx-rules/npc/hearts-rules.mjs");
+const TR = await imp("modules/wodx-rules/npc/ties-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 
 test("warmth moves by events, a liked kind counts double, and the supernatural truth caps or slows it", () => {
   let t = H.moveWarmth({}, "b", "gift", {nature: "Bon Vivant"});

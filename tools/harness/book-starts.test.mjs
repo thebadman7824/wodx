@@ -6,9 +6,9 @@ import {dirname, join} from "node:path";
 
 /* B6779e: starting traits the books give, by era and by tribe or bloodline */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/rules.mjs")));
-const SR = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/states-rules.mjs")));
-const D = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/derived-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/rules.mjs")));
+const SR = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/states-rules.mjs")));
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/derived-rules.mjs")));
 const wp = tribe => D.derivedTraits("w20", {tribe}).rows.find(r => r.key === "willpower")?.want ?? null;
 
 test("a ghoul's pool by the era's book", () => {

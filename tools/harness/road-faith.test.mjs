@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as RF from "../../modules/wodx-actions/scripts/road-faith-rules.js";
+import * as RF from "../../modules/wodx-rules/actions/road-faith-rules.js";
 
 // Dark Ages depth desk item 3 (B7644-B7648): walking a Road as a faith with people in it (V20 Dark Ages pp. 111-115).
 

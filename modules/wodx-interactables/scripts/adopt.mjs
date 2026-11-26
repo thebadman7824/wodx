@@ -6,7 +6,7 @@
  * shutters on the imported walls get their settings, chests, beds, hay, ovens and wells become interactable, and
  * places and trigger regions are drawn. "Undo the map adoption" takes it all back. Nothing runs on players' machines.
  */
-import * as A from "./adopt-rules.mjs";
+import * as A from "../../wodx-rules/interactables/adopt-rules.mjs";
 
 const MOD = "wodx-interactables";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -51,7 +51,7 @@ export async function faithOf(scene) {
     if ( !c?.active ) return null;
     const region = c.api?.world?.here?.(scene)?.id, year = Number(c.api?.eras?.currentYear?.()) || 1197;
     if ( !region ) return null;
-    const F = await import("../../wodx-chronicle/scripts/faith-rules.mjs");
+    const F = await import("../../wodx-rules/chronicle/faith-rules.mjs");
     return F.faithFor(region, year);
   } catch (e) { return null; }
 }

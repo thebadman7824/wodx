@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const W = await import("../../modules/wodx-actions/scripts/world-effects.js");
-const TR = await import("../../modules/wodx-storyteller/scripts/town-rules.mjs");
+const TR = await import("../../modules/wodx-rules/storyteller/town-rules.mjs");
 
 const sweep = (() => {
   const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "wodx-ws-")), "s.json");

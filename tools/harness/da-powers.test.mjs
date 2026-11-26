@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {readFileSync} from "node:fs";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
-import {powersFor, gargoyleRitual, overstimulation, revelationDiff} from "../../modules/wodx-actions/scripts/kindred-rules.js";
+import {powersFor, gargoyleRitual, overstimulation, revelationDiff} from "../../modules/wodx-rules/actions/kindred-rules.js";
 import {BOOK_RITUALS} from "../../modules/wodx-actions/scripts/book-rituals.js";
 
 // B7662-B7663: the powers, rituals and Auspex rules the full check of V20 Dark Ages found missing (pp. 194-309).
@@ -51,7 +51,7 @@ test("the 23 combination Disciplines of V20 Dark Ages", async () => {
   const C = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/rules/vampire/combinations-v20da.json"), "utf8")).rows;
   assert.equal(C.length, 23);
   assert.equal(new Set(C.map(r => r.id)).size, 23);
-  const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+  const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
   for ( const r of C ) {
     assert.ok(r.needs.length >= 2 && r.xp > 0 && r.p >= 313 && r.p <= 317 && r.e.length <= 220, r.id);
     for ( const k of r.k ) assert.ok(E.KEYWORDS[k], `${r.id} ${k}`);

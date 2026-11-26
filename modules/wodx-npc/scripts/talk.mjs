@@ -17,8 +17,8 @@
  * feasts, fasts and weather, rumours about the character, debts in the Ledger, remembering the last visit, farewells,
  * remarks while about a routine, cries of alarm and pain, and trade and social-roll lines for WoDX Actions (stock()).
  */
-import * as TK from "./talk-rules.mjs";
-import {isAnimal} from "./animal-rules.mjs";
+import * as TK from "../../wodx-rules/npc/talk-rules.mjs";
+import {isAnimal} from "../../wodx-rules/npc/animal-rules.mjs";
 import * as STOCK from "../data/stock-talk.mjs";
 import * as MORE from "../data/stock-talk-more.mjs";
 import * as G from "./talk-grammar.mjs";
@@ -26,9 +26,9 @@ import {HOUSE} from "../data/grammar/house.mjs";
 import {GROUPS_GRAMMAR, SIDE_FACTS} from "../data/grammar/groups.mjs";
 import {OVERHEARD} from "../data/grammar/overheard.mjs";
 import {REGION_TALK} from "../data/region-talk.mjs";
-import * as RT from "./region-talk-rules.mjs";
-import * as AR from "./alert-rules.mjs";
-import * as F from "./faces-rules.mjs";
+import * as RT from "../../wodx-rules/npc/region-talk-rules.mjs";
+import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
+import * as F from "../../wodx-rules/npc/faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 

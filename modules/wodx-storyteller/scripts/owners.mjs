@@ -12,11 +12,11 @@
  * the Storyteller's client). A holding's upkeep and income are paid on the month's pay day with the allowance.
  * Owning never adds Background dots: the Storyteller awards them or the player buys them (B850).
  */
-import * as O from "./owner-rules.mjs";
-import * as CR from "./craft-rules.mjs";
-import * as B from "./build-rules.mjs";
-import * as MR from "./money-rules.mjs";
-import * as MK from "./market-rules.mjs";
+import * as O from "../../wodx-rules/storyteller/owner-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/craft-rules.mjs";
+import * as B from "../../wodx-rules/storyteller/build-rules.mjs";
+import * as MR from "../../wodx-rules/storyteller/money-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import {MOD, esc, isActiveGM, isPC, chron, log, whereNow} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -193,7 +193,7 @@ async function goodsData() {
 export async function makeable(year = yearNow(), where = null) {
   const G = await goodsData();
   // 0.31.0: food, drink, medicine and drugs go through Cook, brew or mix (Library recipes) instead
-  const RR = await import("../../wodx-library/scripts/recipe-rules.mjs").catch(() => null);
+  const RR = await import("../../wodx-rules/library/recipe-rules.mjs").catch(() => null);
   const had = (g, w) => (RR?.inUse ? RR.inUse(g, year, w) : year >= g.from && year <= g.to);
   const known = G.GOODS.filter(g => had(g, where)).map(g => g.name);
   return G.GOODS.filter(g => !RR?.inScope?.(g)).map(g => ({good: g, here: !where || had(g, where), r: CR.recipeFor(g, year, {valueAt: G.valueAt, known})}))
@@ -206,7 +206,7 @@ export async function startCraft(a, goodId, {buy = false} = {}) {
   const G = await goodsData(), y = yearNow();
   const good = G.GOODS.find(g => g.id === goodId);
   // 0.31.0: a written recipe (food, drink, medicine, drugs) runs through Cook, brew or mix
-  const RR = await import("../../wodx-library/scripts/recipe-rules.mjs").catch(() => null);
+  const RR = await import("../../wodx-rules/library/recipe-rules.mjs").catch(() => null);
   if ( good && RR?.inScope?.(good) ) { const ck = game.modules.get(MOD)?.api?.cookery; if ( ck ) return ck.start(a, goodId, {buy}); }
   const at = whereNow(a.getActiveTokens?.()?.[0]?.document?.parent ?? canvas?.scene);
   const inUse = RR?.inUse ?? ((g, yr) => yr >= g.from && yr <= g.to);

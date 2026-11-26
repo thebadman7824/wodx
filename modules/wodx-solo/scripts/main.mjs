@@ -31,7 +31,7 @@
  * player gets when the seat is empty.
  */
 import * as R from "./solo-rules.mjs";
-import {NEVER_AUTO} from "../../wodx-chronicle/scripts/approvals-rules.mjs";
+import {NEVER_AUTO} from "../../wodx-rules/chronicle/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 import {registerArrivalSettings, installArrival, arrivalApi} from "./arrival.mjs";

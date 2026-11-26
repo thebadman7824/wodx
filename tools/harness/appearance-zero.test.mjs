@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {lockedAtZero, findClan} from "../../modules/wodx-creation/scripts/rules.mjs";
+import {lockedAtZero, findClan} from "../../modules/wodx-rules/creation/rules.mjs";
 
 // B7660: a Nosferatu starts with Appearance 0 that cannot be raised (V20 Dark Ages p. 55); so does anyone Monstrous (p. 421).
 test("a Nosferatu's Appearance is held at 0, other Attributes are not", () => {

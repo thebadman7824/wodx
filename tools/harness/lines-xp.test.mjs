@@ -5,7 +5,7 @@ import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {installMock} from "./foundry-mock.mjs";
-import * as LX from "../../modules/wodx-creation/scripts/lines-xp-rules.mjs";
+import * as LX from "../../modules/wodx-rules/creation/lines-xp-rules.mjs";
 import * as L from "../../modules/wodx-creation/scripts/learn-rules.mjs";
 import {splatOf, familyOf} from "../../modules/wodx-creation/scripts/lines.mjs";
 

@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 
 /* The vehicle's own sheet (B4968, B4969): its figures by the year it was built, its Structure track, headlights. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const VS = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/vehicle-sheet-rules.mjs")).href);
+const VS = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/vehicle-sheet-rules.mjs")).href);
 
 test("a vehicle's figures come from the year it was built", () => {
   const old = VS.figures({kind: "car", built: 1925}, 1995), now = VS.figures({kind: "car"}, 1995);
@@ -44,7 +44,7 @@ test("the module declares its vehicle kind and the system skips it", () => {
 });
 
 test("a vehicle on its own sheet is got into whatever the chronicle's year", async () => {
-  const IR = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs")).href);
+  const IR = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/interact-rules.mjs")).href);
   const o = {...IR.describeMount({mount: true, mountKind: "car"}), vehicle: true};
   const opts = IR.optionsFor(o, {actorId: "a1", year: 1850, kind: "mortal", dexterity: 3, abilities: {drive: 3}});
   assert.ok(opts.some(x => x.id === "mount"));

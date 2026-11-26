@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as RV from "../../modules/wodx-npc/scripts/rivalry-rules.mjs";
-import * as NR from "../../modules/wodx-npc/scripts/npc-rules.mjs";
-import * as R from "../../modules/wodx-npc/scripts/routine-rules.mjs";
-import * as S from "../../modules/wodx-combat/scripts/start-rules.js";
+import * as RV from "../../modules/wodx-rules/npc/rivalry-rules.mjs";
+import * as NR from "../../modules/wodx-rules/npc/npc-rules.mjs";
+import * as R from "../../modules/wodx-rules/npc/routine-rules.mjs";
+import * as S from "../../modules/wodx-rules/combat/start-rules.js";
 
 /* Natural rivalries and more NPC behaviour (WoDX NPC 0.18.0, Combat 3.10.0) */
 

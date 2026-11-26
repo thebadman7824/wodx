@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as H from "../../modules/wodx-actions/scripts/hunter-rules.js";
-import * as AG from "../../modules/wodx-creation/scripts/animal-ghoul-rules.mjs";
+import * as H from "../../modules/wodx-rules/actions/hunter-rules.js";
+import * as AG from "../../modules/wodx-rules/creation/animal-ghoul-rules.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 

@@ -1,7 +1,7 @@
 /** The primer for a scene far from home (Storyteller, B5940 to B5942). */
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as S from "../../modules/wodx-storyteller/scripts/setup-rules.mjs";
+import * as S from "../../modules/wodx-rules/storyteller/setup-rules.mjs";
 
 const era = {id: "long-night", name: "The Long Night", start: 1347};
 

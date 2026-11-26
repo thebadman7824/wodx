@@ -2,8 +2,8 @@
  * WoDX NPC: an NPC of any line mends with its own power after a fight or when carried home (B6315). The Foundry side
  * of aftercare-rules lineMend, shared by aftercare.mjs and carry-aftercare.mjs.
  */
-import * as AC from "./aftercare-rules.mjs";
-import * as LR from "./lines-rules.mjs";
+import * as AC from "../../wodx-rules/npc/aftercare-rules.mjs";
+import * as LR from "../../wodx-rules/npc/lines-rules.mjs";
 
 const linesApi = () => { try { return game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.lines ?? null : null; } catch (e) { return null; } };
 /** The all-lines key of an actor (or a token's actor: its base sheet). */

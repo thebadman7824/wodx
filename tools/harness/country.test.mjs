@@ -4,8 +4,8 @@
  */
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as C from "../../modules/wodx-storyteller/scripts/country-rules.mjs";
-import * as W from "../../modules/wodx-storyteller/scripts/world-rules.mjs";
+import * as C from "../../modules/wodx-rules/storyteller/country-rules.mjs";
+import * as W from "../../modules/wodx-rules/storyteller/world-rules.mjs";
 import * as D from "../../modules/wodx-storyteller/data/country.mjs";
 import fs from "node:fs";
 import {execFileSync} from "node:child_process";

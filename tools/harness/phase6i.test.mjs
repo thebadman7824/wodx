@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6i: the fallen (WoDX Actions 3.10.0, Demon: The Fallen) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const D = await import(join(root, "modules/wodx-actions/scripts/demon-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const D = await import(join(root, "modules/wodx-rules/actions/demon-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 
 test("seven Houses with their starting Torment and three lores; 23 lore paths of five evocations (pp. 99–112, 171–215)", () => {
   assert.equal(Object.keys(D.HOUSES).length, 7);

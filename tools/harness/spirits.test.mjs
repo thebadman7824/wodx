@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const S = await import(join(root, "modules/wodx-otherworlds/scripts/spirit-rules.mjs"));
+const S = await import(join(root, "modules/wodx-rules/otherworlds/spirit-rules.mjs"));
 
 test("moves change the chosen court, or the courts the move names", () => {
   let r = S.applyMove({}, "paid", {court: "weaver", at: 5});

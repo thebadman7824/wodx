@@ -2,7 +2,7 @@ import {MODULE_ID, esc, lineOf, chronology} from "./actor-data.mjs";
 import {splatOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
-import * as AR from "./archive-rules.mjs";
+import * as AR from "../../wodx-rules/creation/archive-rules.mjs";
 
 /**
  * The archive of the dead. A long chronicle piles up the dead (filed in "WoDX · The Dead" by Pass the Years and

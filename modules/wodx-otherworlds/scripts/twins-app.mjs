@@ -2,7 +2,7 @@ import {MODULE_ID} from "./ratings.mjs";
 import {LAYERS, TWIN_LAYERS, loadManifest, planTwins, buildTwins, removeTwins, makeUmbralPath, layersOf, twinOf} from "./twins.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {addDreamingLevel, makeTrod} from "./realms.mjs";
-import {TRODS} from "./realms-rules.mjs";
+import {TRODS} from "../../wodx-rules/otherworlds/realms-rules.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");

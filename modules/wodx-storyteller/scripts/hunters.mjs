@@ -16,13 +16,13 @@
  *   After      hunt-follow.mjs (B5699-B5703): proof taken, raids followed through, the investigator on the map, the morgue.
  * Nothing runs on players' machines, and players never see the hunters' files.
  */
-import * as H from "./hunters-rules.mjs";
-import * as Reach from "./reach-rules.mjs";
+import * as H from "../../wodx-rules/storyteller/hunters-rules.mjs";
+import * as Reach from "../../wodx-rules/storyteller/reach-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import {huntFollowApi} from "./hunt-follow.mjs";
 import {MOD, esc, isActiveGM, setting, chron, npc, log} from "./core.mjs";
-import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
-import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
+import {faithFor} from "../../wodx-rules/chronicle/faith-rules.mjs";
+import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const T_HUNTERS = `${MOD}.hunters`;

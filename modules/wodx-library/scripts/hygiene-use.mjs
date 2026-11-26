@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the Foundry side of washing, grooming and cosmetics (B3909; rules in hygiene-rules.mjs).
  */
-import * as H from "./hygiene-rules.mjs";
+import * as H from "../../wodx-rules/library/hygiene-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-library";

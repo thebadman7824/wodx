@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const FR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/followers-rules.mjs")));
-const W = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/wanted-rules.mjs")));
-const L = await import(pathToFileURL(join(root, "modules/wodx-library/scripts/look-rules.mjs")));
+const FR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/followers-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/wanted-rules.mjs")));
+const L = await import(pathToFileURL(join(root, "modules/wodx-rules/library/look-rules.mjs")));
 const XH = await import(pathToFileURL(join(root, "modules/wodx-sheets/scripts/extras-html.mjs")));
 
 const DAY = 86400;

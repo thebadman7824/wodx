@@ -10,10 +10,10 @@
  */
 import {MAGE_WONDERS, MAGE_FETISH, DIFF, byKey as mageByKey} from "../data/wonders-mage.mjs";
 import {WONDERS as GAROU_ROWS, MAKES} from "../data/wonders.mjs";
-import {KEYWORDS, spheresFor, leanOf} from "../../wodx-actions/scripts/effects-rules.js";
-import {SPHERES} from "../../wodx-actions/scripts/m20-rules.js";
+import {KEYWORDS, spheresFor, leanOf} from "../../wodx-rules/actions/effects-rules.js";
+import {SPHERES} from "../../wodx-rules/actions/m20-rules.js";
 import {registerLine} from "./wonder-registry.mjs";
-import * as GR from "./wonder-rules.mjs";
+import * as GR from "../../wodx-rules/library/wonder-rules.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const para = s => `<p>${String(s ?? "").replace(/[<>&]/g, c => ({"<": "&lt;", ">": "&gt;", "&": "&amp;"})[c])}</p>`;

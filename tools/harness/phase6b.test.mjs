@@ -69,7 +69,7 @@ function mortal(name, wp = 3, {kinfolk = null} = {}) {
 
 /* ---------------- The rules (pure) ---------------- */
 
-const G = await import(join(root, "modules/wodx-actions/scripts/garou-rules.js"));
+const G = await import(join(root, "modules/wodx-rules/actions/garou-rules.js"));
 const D = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/garou.json"), "utf8"));
 const F = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/fera.json"), "utf8"));
 const L = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/gifts-daw.json"), "utf8"));

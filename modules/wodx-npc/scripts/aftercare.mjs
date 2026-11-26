@@ -12,9 +12,9 @@
  *   n7  marriage  wodxMarried: the spouses share a home; wodxDivorced moves the mover back
  *   Flags: wodx-npc.mend {last}, kissed {until}, tokenAway {why, after, until, pending, hid, place} (B6665), standoffs {otherId: at}, gone {why, at}, diedBy [ids], homeBefore.
  */
-import * as AC from "./aftercare-rules.mjs";
+import * as AC from "../../wodx-rules/npc/aftercare-rules.mjs";
 import * as LM from "./line-mend.mjs";
-import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import {faithFor} from "../../wodx-rules/chronicle/faith-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";
 

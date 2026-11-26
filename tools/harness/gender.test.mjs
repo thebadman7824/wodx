@@ -1,9 +1,9 @@
 // One gender for every module (B3500-B3503): what is recorded, what a rule may use, players untouched, 1 in 100 nonbinary.
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as G from "../../modules/wodx-chronicle/scripts/gender-rules.mjs";
-import * as W from "../../modules/wodx-storyteller/scripts/will-rules.mjs";
-import * as PR from "../../modules/wodx-creation/scripts/people-rules.mjs";
+import * as G from "../../modules/wodx-rules/chronicle/gender-rules.mjs";
+import * as W from "../../modules/wodx-rules/storyteller/will-rules.mjs";
+import * as PR from "../../modules/wodx-rules/creation/people-rules.mjs";
 
 test("gender: written forms made plain", () => {
   assert.equal(G.normalize("F"), "female"); assert.equal(G.normalize("woman"), "female"); assert.equal(G.normalize("Male"), "male");

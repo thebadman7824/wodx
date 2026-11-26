@@ -7,7 +7,7 @@
 import {readFileSync, writeFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
-import * as G from "../../modules/wodx-library/scripts/gear-rules.mjs";
+import * as G from "../../modules/wodx-rules/library/gear-rules.mjs";
 import {GEAR_WAYS, LOCAL_GEAR} from "../../modules/wodx-library/data/gear-ways.mjs";
 import {GEAR_FX, PLAIN_STORY} from "../../modules/wodx-library/data/gear-effects.mjs";
 

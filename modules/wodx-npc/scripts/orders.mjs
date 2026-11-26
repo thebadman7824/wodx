@@ -12,8 +12,8 @@
  * to the approval queue instead. While an order holds, the NPC's routine is paused (reason "order"). Followers walk
  * after their leader stops moving, on the Storyteller's client only; players' clients do nothing but send the request.
  */
-import * as DU from "./duty-rules.mjs";
-import * as O from "./order-rules.mjs";
+import * as DU from "../../wodx-rules/npc/duty-rules.mjs";
+import * as O from "../../wodx-rules/npc/order-rules.mjs";
 import * as SV from "./servants.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";

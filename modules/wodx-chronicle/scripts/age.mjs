@@ -3,7 +3,7 @@
  * character is under 18 now; api.age.romance(...actors) is the check every romantic or sexual action calls first.
  * A world-wide guard also takes a lover, spouse or troth tie off a sheet when either end is a minor, whatever made it.
  */
-import * as AR from "./age-rules.mjs";
+import * as AR from "../../wodx-rules/chronicle/age-rules.mjs";
 import {getEngine} from "./calendar.mjs";
 
 const yearOf = t => { try { return getEngine().timeToDate(Number(t) || 0).year; } catch (e) { return null; } };

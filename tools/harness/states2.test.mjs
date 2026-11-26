@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as SR from "../../modules/wodx-creation/scripts/states-rules.mjs";
+import * as SR from "../../modules/wodx-rules/creation/states-rules.mjs";
 
 test("revenant: Potence 1 and one family Discipline, or two family Disciplines", () => {
   const a = SR.revenantStart({family: "grimaldi"});

@@ -10,8 +10,8 @@
  */
 import {MODULE_ID, esc, setting, setSetting, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
-import * as L from "./law-rules.mjs";
-import * as H from "./law-heat-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
+import * as H from "../../wodx-rules/chronicle/law-heat-rules.mjs";
 import * as place from "./place.mjs";
 import {isLightTouch, holdLaw} from "./quiet.mjs";
 const traitHas = (a, k) => Number(game.modules.get(MODULE_ID)?.api?.traits?.has?.(a, k)) || 0;

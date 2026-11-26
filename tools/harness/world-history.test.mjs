@@ -9,7 +9,7 @@ import WH from "../../modules/wodx-chronicle/data/world-history.mjs";
 import EVENTS from "../../modules/wodx-chronicle/data/events.mjs";
 import FUTURE from "../../modules/wodx-chronicle/data/future-events.mjs";
 import FW from "../../modules/wodx-chronicle/data/future-world.mjs";
-import * as R from "../../modules/wodx-chronicle/scripts/events-rules.mjs";
+import * as R from "../../modules/wodx-rules/chronicle/events-rules.mjs";
 
 test("B5920: the shipped file is the build of the research files", () => {
   assert.deepEqual(WH.events, parse(readFiles()));

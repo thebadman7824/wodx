@@ -8,11 +8,11 @@
  *   An undying owner whose will says "held through false heirs" must hide each passing: when the clock jumps, one
  *   card asks for the Intelligence + Finance rolls the gap needs.
  */
-import * as WR from "./will-rules.mjs";
+import * as WR from "../../wodx-rules/storyteller/will-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM} from "./core.mjs";
 import * as Money from "./money.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import {ratingsOf, ratingFrom} from "../../wodx-rules/chronicle/when-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 

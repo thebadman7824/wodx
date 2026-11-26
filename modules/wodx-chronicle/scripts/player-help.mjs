@@ -7,7 +7,7 @@
  *     and Full presets; each setting can still be changed one by one, here or in Configure Settings
  */
 import {MODULE_ID, esc} from "./util.mjs";
-import * as R from "./player-view-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/player-view-rules.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 

@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(join(root, "modules/wodx-chronicle/scripts/front-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/chronicle/front-rules.mjs"));
 const DAY = 86400;
 const ALL = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"];
 

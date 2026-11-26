@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import * as B from "../books/books.mjs";
-import * as E from "../../modules/wodx-library/scripts/ency-rules.mjs";
+import * as E from "../../modules/wodx-rules/library/ency-rules.mjs";
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wodx-books-"));
 fs.mkdirSync(path.join(dir, "batch9", "made"), {recursive: true});

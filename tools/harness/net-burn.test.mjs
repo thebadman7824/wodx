@@ -11,7 +11,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mock = installMock({dataRoot: root});
 mock.asGM();
 mock.setupTime();
-const N = await import(join(root, "modules/wodx-otherworlds/scripts/net-rules.mjs"));
+const N = await import(join(root, "modules/wodx-rules/otherworlds/net-rules.mjs"));
 const net = await import(join(root, "modules/wodx-otherworlds/scripts/net.mjs"));
 const DAY = 86400;
 

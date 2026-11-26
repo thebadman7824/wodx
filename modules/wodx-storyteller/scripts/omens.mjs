@@ -13,20 +13,20 @@
  *   Omens    a great sign may show in the world: the Storyteller approves a line (wodx-storyteller.worldOmen) posted
  *            to everyone.
  */
-import * as O from "./omen-rules.mjs";
+import * as O from "../../wodx-rules/storyteller/omen-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import * as Dreams from "./dreams.mjs";
-import * as D from "./dreams-rules.mjs";
+import * as D from "../../wodx-rules/storyteller/dreams-rules.mjs";
 import * as Hunters from "./hunters.mjs";
-import * as HR from "./hunters-rules.mjs";
-import * as CR from "./contagion-rules.mjs";
+import * as HR from "../../wodx-rules/storyteller/hunters-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/contagion-rules.mjs";
 import * as Signals from "./signals.mjs";
 import {backgroundsOf} from "./havens.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, whereIs} from "./core.mjs";
-import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {sphereFor} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {dateKey} from "../../wodx-chronicle/scripts/events-rules.mjs";
-import {countSuccesses} from "../../wodx-actions/scripts/core-rules.js";
+import {dateKey} from "../../wodx-rules/chronicle/events-rules.mjs";
+import {countSuccesses} from "../../wodx-rules/actions/core-rules.js";
 
 const T_DREAM = `${MOD}.omen`, T_WORLD = `${MOD}.worldOmen`;
 const now = () => game.time?.worldTime ?? 0;

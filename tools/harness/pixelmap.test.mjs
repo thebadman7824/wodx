@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const dir = join(root, "tools/gate/fixtures/pixel-farmhouse");
-const A = await import(join(root, "modules/wodx-interactables/scripts/adopt-rules.mjs"));
-const S = await import(join(root, "modules/wodx-interactables/scripts/state-rules.mjs"));
+const A = await import(join(root, "modules/wodx-rules/interactables/adopt-rules.mjs"));
+const S = await import(join(root, "modules/wodx-rules/interactables/state-rules.mjs"));
 const I = await import(join(root, "tools/gate/mapimport.mjs"));
 const MOD = "wodx-interactables";
 

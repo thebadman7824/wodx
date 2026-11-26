@@ -9,11 +9,11 @@ import { join, dirname } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const U = await load("modules/wodx-library/scripts/use-rules.mjs");
-const AR = await load("modules/wodx-actions/scripts/rules.js");
-const X = await load("modules/wodx-library/scripts/examine-rules.mjs");
-const IR = await load("modules/wodx-interactables/scripts/interact-rules.mjs");
-const TR = await load("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const U = await load("modules/wodx-rules/library/use-rules.mjs");
+const AR = await load("modules/wodx-rules/actions/rules.js");
+const X = await load("modules/wodx-rules/library/examine-rules.mjs");
+const IR = await load("modules/wodx-rules/interactables/interact-rules.mjs");
+const TR = await load("modules/wodx-rules/storyteller/tasks-rules.mjs");
 
 test("a state in the body becomes roll effects", () => {
   const d = U.intoxBites("drunk", {count: 5});

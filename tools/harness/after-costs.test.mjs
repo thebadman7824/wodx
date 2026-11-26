@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const AC = await import(join(root, "modules/wodx-actions/scripts/after-cost-rules.js"));
+const AC = await import(join(root, "modules/wodx-rules/actions/after-cost-rules.js"));
 
 test("each desk power has its cost and page", () => {
   const want = {"Survivor": "sleep", "Messenger's Fortitude": "sleep", "Blood of Potency": "bloodCap", "Strengthening the Demon": "hunRoll",

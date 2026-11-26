@@ -16,7 +16,7 @@
  *
  * A master and the Storyteller see a faint ring on each servant's token, in the bond's colour; nobody else does.
  */
-import * as SR from "./servant-rules.mjs";
+import * as SR from "../../wodx-rules/npc/servant-rules.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

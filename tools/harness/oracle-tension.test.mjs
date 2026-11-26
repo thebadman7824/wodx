@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const W = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/world-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/world-rules.mjs")));
 
 test("Pressure makes bad news likelier, a rest good news, a steady night leaves the odds alone", () => {
   assert.equal(W.shiftOdds("even", "pressure", "bad").odds, "likely");

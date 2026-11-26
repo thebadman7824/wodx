@@ -11,8 +11,8 @@ import {dirname, join} from "node:path";
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const R = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 
 test("own money: no region borrows another land's money any more where it had its own", () => {
   const want = {korea: "korean", "southeast-asia": "southeast-asian", nusantara: "malay", "carpathians-balkans": "hungarian", aegean: "greek",
@@ -191,7 +191,7 @@ test("coin of the place: money gone out of use there becomes a keepsake, and the
 });
 
 test("the sheet's coin names follow the chronicle's money in every region (Sheets 0.15.2, B2653)", async () => {
-  const X = await imp("modules/wodx-sheets/scripts/extras-rules.mjs");
+  const X = await imp("modules/wodx-rules/sheets/extras-rules.mjs");
   assert.deepEqual(X.coinsFromMoney(R.moneyFor(1700, "moravian")), ["Kreuzer", "Gulden"]);
   assert.deepEqual(X.coinsFromMoney(R.moneyFor(1750, "korean")), ["Mun", "Jeon", "Nyang"]);
   assert.equal(X.coinsFromMoney({units: []}), null);

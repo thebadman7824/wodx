@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await imp("modules/wodx-actions/scripts/fae-da-rules.js");
-const H = await imp("modules/wodx-actions/scripts/hunter-rules.js");
+const F = await imp("modules/wodx-rules/actions/fae-da-rules.js");
+const H = await imp("modules/wodx-rules/actions/hunter-rules.js");
 
 test("B7870: the 25 Echo effects, five to a level, with the eleven that were missing", () => {
   assert.equal(F.ECHO_EFFECTS.length, 25);

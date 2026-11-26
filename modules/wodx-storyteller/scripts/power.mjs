@@ -16,13 +16,13 @@
  * the Weaver pressing in, caern wars, and a caern dying or being taken. A lapse or a lost raid steps the scene's
  * Gauntlet drift (WoDX Otherworlds); a moot that ends a lapse, or a caern that grows, thins it again.
  */
-import * as P from "./power-rules.mjs";
-import * as C from "./caern-rules.mjs";
-import * as U from "./upkeep-rules.mjs";
+import * as P from "../../wodx-rules/storyteller/power-rules.mjs";
+import * as C from "../../wodx-rules/storyteller/caern-rules.mjs";
+import * as U from "../../wodx-rules/storyteller/upkeep-rules.mjs";
 import * as Sites from "./sites.mjs";
 import {MOD, esc, chron, isActiveGM, gmIds, setting} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
+import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

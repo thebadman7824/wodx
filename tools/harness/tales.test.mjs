@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const T = await imp("modules/wodx-storyteller/scripts/tale-rules.mjs");
-const R = await imp("modules/wodx-storyteller/scripts/rumour-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tale-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/rumour-rules.mjs");
 
 test("tales: words from slots", () => {
   assert.equal(T.taleText({who: "Ada", did: "struck the reeve", where: "the market", tone: -1, how: "badly"}), "Ada struck the reeve at the market, badly");

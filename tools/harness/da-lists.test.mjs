@@ -11,8 +11,8 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const D = await imp("modules/wodx-chronicle/data/trait-effects.mjs");
 const L = await imp("modules/wodx-chronicle/data/trait-lines-da.mjs");
-const T = await imp("modules/wodx-chronicle/scripts/trait-rules.mjs");
-const F = await imp("modules/wodx-actions/scripts/fae-da-rules.js");
+const T = await imp("modules/wodx-rules/chronicle/trait-rules.mjs");
+const F = await imp("modules/wodx-rules/actions/fae-da-rules.js");
 
 const feat = (name, kind = "merit") => ({id: name, name, kind, value: 0});
 const view = (kind, ...features) => ({kind, features});
@@ -103,7 +103,7 @@ test("B7934: the Inquisitor Companion's merits and flaws: every one in the table
   assert.equal(T.sumEffects(T.effectsFor(h, {channel: "roll", tags: [...T.rollTags("charisma"), "church"]})).diff, -2);
   assert.equal(T.sumEffects(T.effectsFor(h, {channel: "resist", tags: T.rollTags("perception", "empathy")})).diff, 2);
   for ( const k of ["grace", "order-prodigy", "divinely-favored", "curse-prone"] ) assert.ok(D.HANDLED[k], k);
-  const C = src("modules/wodx-actions/scripts/inq-curses-rules.js"), H = src("modules/wodx-actions/scripts/hunter.js");
+  const C = src("modules/wodx-rules/actions/inq-curses-rules.js"), H = src("modules/wodx-actions/scripts/hunter.js");
   assert.match(C, /if \(o\.favored\) add\(-2/);
   assert.match(H, /favored: i\.mf\.favored, prone: i\.mf\.prone/);
   assert.match(H, /CR\.callousWith\(i\.curses, i\.conviction, i\.piety, \{ grace: i\.mf\?\.grace \}\)/);

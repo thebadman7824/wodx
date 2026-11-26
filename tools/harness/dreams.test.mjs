@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as D from "../../modules/wodx-storyteller/scripts/dreams-rules.mjs";
+import * as D from "../../modules/wodx-rules/storyteller/dreams-rules.mjs";
 
 /* WoDX Storyteller 0.6.0: dreams and visions you write. */
 test("a dream is kept clean, and one with no character is dropped", () => {

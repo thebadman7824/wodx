@@ -40,8 +40,8 @@ export async function run() {
   const scenes = [];
   const t0 = game.time.worldTime;
   try {
-    const PR = await import(`/modules/wodx-npc/scripts/passerby-rules.mjs?${Date.now()}`);
-    const RS = await import(`/modules/wodx-npc/scripts/resident-rules.mjs?${Date.now()}`);
+    const PR = await import(`/modules/wodx-rules/npc/passerby-rules.mjs?${Date.now()}`);
+    const RS = await import(`/modules/wodx-rules/npc/resident-rules.mjs?${Date.now()}`);
     const made = await Scene.create([{name: "WoDX gate: Cairo ways", width: 1200, height: 1000, padding: 0.1, grid: {size: 100, distance: 5}},
       {name: "WoDX gate: Brno ways", width: 1200, height: 1000, padding: 0.1, grid: {size: 100, distance: 5}}]);
     const cairo = made.find(s => s.name.endsWith("Cairo ways")), brno = made.find(s => s.name.endsWith("Brno ways"));

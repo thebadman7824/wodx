@@ -13,10 +13,10 @@
  * "Letters on the way" (the hand), and can lose one, put it back some days or have it read on the way. An answer to a
  * letter goes back the same long way. Players see a letter for them only when it arrives.
  */
-import * as L from "./letters-rules.mjs";
+import * as L from "../../wodx-rules/storyteller/letters-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, pcs, chron, whereIs} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {mediaYear} from "../../wodx-chronicle/scripts/media-rules.mjs";
+import {mediaYear} from "../../wodx-rules/chronicle/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as WMap from "./world-map.mjs";
 import {addTool} from "./hand.mjs";

@@ -68,7 +68,7 @@ test("demons and mummies soak by their own books (DtF pp. 171, 247; MtR p. 136)"
 });
 
 test("WoDX Actions soaks with the one Combat copy: a Garou falling soaks lethal", async () => {
-  const A = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/core-rules.js")).href);
+  const A = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/core-rules.js")).href);
   assert.equal(A.soakPool, R.soakPool);
   assert.equal(A.soakPool({profile: "lupine", damageType: "lethal", stamina: 4}).dice, 4);
 });

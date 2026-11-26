@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as D from "../../modules/wodx-actions/scripts/domain-da-rules.js";
+import * as D from "../../modules/wodx-rules/actions/domain-da-rules.js";
 import * as PM from "../../modules/wodx-actions/scripts/profile-menus.js";
-import * as TR from "../../modules/wodx-actions/scripts/theme-rules.js";
-import {rollTags} from "../../modules/wodx-chronicle/scripts/trait-rules.mjs";
+import * as TR from "../../modules/wodx-rules/actions/theme-rules.js";
+import {rollTags} from "../../modules/wodx-rules/chronicle/trait-rules.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 

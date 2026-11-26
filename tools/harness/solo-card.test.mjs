@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* WoDX Solo, step 3 of The Lone Chronicle: card scenes for places with no map (B6040 to B6044) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/card-rules.mjs")));
-const Country = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/country-rules.mjs")));
+const K = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/card-rules.mjs")));
+const Country = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/country-rules.mjs")));
 
 test("card towns: standing in the year, and not drawn already", () => {
   const towns = [{id: "brno", name: "Brno", since: 0}, {id: "ostrava", name: "Ostrava", since: 1267}, {id: "olomouc", name: "Olomouc", since: 0}];

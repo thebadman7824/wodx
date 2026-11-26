@@ -4,8 +4,8 @@
  * the arrival, the ways out, the landmarks and the hazards. Then the selected tokens can be sent there, the way a power
  * or a road carries them, and brought back to where they stood. The rules are in realm-maps-rules.mjs.
  */
-import * as RM from "./realm-maps-rules.mjs";
-import * as WR from "./wild-rules.mjs";
+import * as RM from "../../wodx-rules/otherworlds/realm-maps-rules.mjs";
+import * as WR from "../../wodx-rules/otherworlds/wild-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

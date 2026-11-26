@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 /* WoDX NPC 0.46.0: the residents of a generated town (B2500 to B2504) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const RS = await import(join(root, "modules/wodx-npc/scripts/resident-rules.mjs"));
-const RR = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
-const A = await import(join(root, "modules/wodx-interactables/scripts/adopt-rules.mjs"));
+const RS = await import(join(root, "modules/wodx-rules/npc/resident-rules.mjs"));
+const RR = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
+const A = await import(join(root, "modules/wodx-rules/interactables/adopt-rules.mjs"));
 
 /** A town sidecar, as the regions adopting it would leave them. */
 function regionsOf(name) {

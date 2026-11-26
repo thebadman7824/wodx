@@ -12,26 +12,26 @@
  *   Off:     nothing.
  * Attacks go through WoDX Combat's quick attack (every automatic choice), so the dice and the rules are Combat's own.
  */
-import * as HN from "./hunt-npc-rules.mjs";
+import * as HN from "../../wodx-rules/npc/hunt-npc-rules.mjs";
 import {build as buildProwl} from "./prowl.mjs";
 import {build as buildAftercare} from "./aftercare.mjs";
 import * as LM from "./line-mend.mjs";
 import * as REFILL from "./line-refill.mjs";
-import * as LR from "./lines-rules.mjs";
-import * as NR from "./npc-rules.mjs";
-import * as PP from "./power-pick-rules.mjs";
-import * as RR from "./routine-rules.mjs";
-import * as AN from "./animal-rules.mjs";
-import * as MR from "./mortal-rules.mjs";
-import * as SR from "./supernatural-rules.mjs";
+import * as LR from "../../wodx-rules/npc/lines-rules.mjs";
+import * as NR from "../../wodx-rules/npc/npc-rules.mjs";
+import * as PP from "../../wodx-rules/npc/power-pick-rules.mjs";
+import * as RR from "../../wodx-rules/npc/routine-rules.mjs";
+import * as AN from "../../wodx-rules/npc/animal-rules.mjs";
+import * as MR from "../../wodx-rules/npc/mortal-rules.mjs";
+import * as SR from "../../wodx-rules/npc/supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildCarryGoals} from "./carry-goals.mjs";
 import {build as buildCarryAftercare} from "./carry-aftercare.mjs";
-import * as CG from "./carry-goal-rules.mjs";
+import * as CG from "../../wodx-rules/npc/carry-goal-rules.mjs";
 import * as FactionLooks from "./faction-looks.mjs";
 import {build as buildFounding} from "./founding.mjs";
-import * as OR from "./order-rules.mjs";
+import * as OR from "../../wodx-rules/npc/order-rules.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
@@ -48,7 +48,7 @@ import {build as buildDayJobs} from "./day-jobs.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import {build as buildCults} from "./cults.mjs";
-import * as RV from "./rivalry-rules.mjs";
+import * as RV from "../../wodx-rules/npc/rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
 import * as FATES from "./fates.mjs";
 import * as BONDS from "./bonds.mjs";
@@ -60,8 +60,8 @@ import * as HEARTS from "./hearts.mjs";
 import * as FAMILY from "./family.mjs";
 import * as STANDING from "./standing.mjs";
 import * as LEGACY from "./legacy.mjs";
-import * as PO from "./politics-rules.mjs";
-import * as AR from "./alert-rules.mjs";
+import * as PO from "../../wodx-rules/npc/politics-rules.mjs";
+import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

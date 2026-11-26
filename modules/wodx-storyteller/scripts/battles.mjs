@@ -1,11 +1,11 @@
-import * as B from "./battle-rules.mjs";
+import * as B from "../../wodx-rules/storyteller/battle-rules.mjs";
 import * as X from "./battle-extras.mjs";
 import * as W from "./siege-works.mjs";
 import * as C from "./core.mjs";
 import * as Clocks from "./clocks.mjs";
-import * as T from "./tasks-rules.mjs";
+import * as T from "../../wodx-rules/storyteller/tasks-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {partOf} from "../../wodx-chronicle/scripts/events-rules.mjs";
+import {partOf} from "../../wodx-rules/chronicle/events-rules.mjs";
 
 /**
  * WoDX Storyteller 0.43.0: battles and sieges (B2200-B2209). The rules are in battle-rules.mjs.

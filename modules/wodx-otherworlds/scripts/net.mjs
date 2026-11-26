@@ -12,7 +12,7 @@
  */
 import {MODULE_ID} from "./ratings.mjs";
 import {STATUS} from "./crossing.mjs";
-import * as N from "./net-rules.mjs";
+import * as N from "../../wodx-rules/otherworlds/net-rules.mjs";
 import * as T from "./technica.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";

@@ -3,8 +3,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as RR from "../../modules/wodx-otherworlds/scripts/realms-rules.mjs";
-import * as J from "../../modules/wodx-otherworlds/scripts/journey-rules.mjs";
+import * as RR from "../../modules/wodx-rules/otherworlds/realms-rules.mjs";
+import * as J from "../../modules/wodx-rules/otherworlds/journey-rules.mjs";
 import {JOURNEY_TABLES} from "../../modules/wodx-otherworlds/data/journey-tables.mjs";
 import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
 

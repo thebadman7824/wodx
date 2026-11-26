@@ -64,7 +64,7 @@ export function autoPlan(types = [], current = {}, never = ["request"]) {
 /* ------------------------------ the watcher ------------------------------ */
 
 /* The watcher's reading of a card lives in WoDX Chronicle, so the Waiting tray makes the same choice (B2452). */
-export {plain, buttonsOf, AVOID, PREFER, waits, pickButton, forStoryteller, titleOf, sourceOf} from "../../wodx-chronicle/scripts/waiting-rules.mjs";
+export {plain, buttonsOf, AVOID, PREFER, waits, pickButton, forStoryteller, titleOf, sourceOf} from "../../wodx-rules/chronicle/waiting-rules.mjs";
 
 /* ------------------------------ the log ------------------------------ */
 

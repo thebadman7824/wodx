@@ -4,8 +4,8 @@
  * a roll and a card. Supernatural pregnancies add story hooks to the Storyteller's card only. Nothing is ever shown
  * of conception, and nothing sexual is ever described. Both parents must be adults (Chronicle's age floor, B3210).
  */
-import * as F from "./family-rules.mjs";
-import * as H from "./hearts-rules.mjs";
+import * as F from "../../wodx-rules/npc/family-rules.mjs";
+import * as H from "../../wodx-rules/npc/hearts-rules.mjs";
 import * as HEARTS from "./hearts.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {DAY, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";

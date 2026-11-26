@@ -15,8 +15,8 @@
  * State in podState.saga.fronts (see front-rules.mjs). Storyteller only; the saga window holds the controls.
  */
 import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
-import * as F from "./front-rules.mjs";
-import * as S from "./saga-rules.mjs";
+import * as F from "../../wodx-rules/chronicle/front-rules.mjs";
+import * as S from "../../wodx-rules/chronicle/saga-rules.mjs";
 
 /** The first book of the chronicle in play (read when used: the chronicle registers after this file loads). */
 const book = () => S.FIRST_BOOK;

@@ -2,9 +2,9 @@
  * How often a power may be used, in play (B4920-B4925): the one scene count, the uses each actor has made, the greyed
  * options in the power windows, the check before the roll and the Drained condition after a great power.
  */
-import * as L from "./limit-rules.js";
+import * as L from "../../wodx-rules/actions/limit-rules.js";
 import * as AFC from "./after-costs.js";
-import * as ACR from "./after-cost-rules.js";
+import * as ACR from "../../wodx-rules/actions/after-cost-rules.js";
 import * as PM from "./power-mods.js";
 import * as TH from "./trait-hooks.js";
 

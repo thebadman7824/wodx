@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* Phase 6m: mages of the later eras (WoDX Actions 3.11.0, Mage 20th) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const M = await import(join(root, "modules/wodx-actions/scripts/m20-rules.js"));
+const M = await import(join(root, "modules/wodx-rules/actions/m20-rules.js"));
 
 test("Arete is capped by permanent Willpower: dice and Spheres (p. 329, Zafira's example)", () => {
   assert.equal(M.castingDice(4, 5), 4);

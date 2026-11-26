@@ -29,14 +29,14 @@ const rel = set => [...set].map(f => f.slice(root.length + 1));
 test("Storyteller's main script does not pull in the world map grid", () => {
   const g = rel(staticGraph(join(root, "modules/wodx-storyteller/scripts/main.mjs")));
   assert.ok(g.includes("modules/wodx-storyteller/scripts/world-map.mjs"), "the window file is still loaded");
-  for ( const heavy of ["modules/wodx-storyteller/scripts/world-map-rules.mjs", "modules/wodx-storyteller/data/world.mjs"] )
+  for ( const heavy of ["modules/wodx-rules/storyteller/world-map-rules.mjs", "modules/wodx-storyteller/data/world.mjs"] )
     assert.ok(!g.includes(heavy), `${heavy} is statically imported`);
 });
 
 test("Otherworlds' main script does not pull in the realm world maps", () => {
   const g = rel(staticGraph(join(root, "modules/wodx-otherworlds/scripts/main.mjs")));
   assert.ok(g.includes("modules/wodx-otherworlds/scripts/realm-worlds.mjs"), "the window file is still loaded");
-  for ( const heavy of ["modules/wodx-otherworlds/scripts/realm-worlds-rules.mjs", "modules/wodx-otherworlds/scripts/realm-places.mjs"] )
+  for ( const heavy of ["modules/wodx-rules/otherworlds/realm-worlds-rules.mjs", "modules/wodx-otherworlds/scripts/realm-places.mjs"] )
     assert.ok(!g.includes(heavy), `${heavy} is statically imported`);
 });
 

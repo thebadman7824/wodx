@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 // WoDX NPC: cults and congregations that gather around a character (B3240-B3249).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const C = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/cult-rules.mjs")));
+const C = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/cult-rules.mjs")));
 const DAY = 86400;
 const place = {key: "Scene.s1", name: "The market"};
 const seq = vals => { let i = 0; return () => vals[i++ % vals.length]; };
@@ -166,7 +166,7 @@ test("cults: awe keyed by scene uuid survives the flag (stored as a list, keyed 
 });
 
 test("a gathering gives what the cult promises, once a week (B5960 to B5964)", async () => {
-  const C = await import("../../modules/wodx-npc/scripts/cult-rules.mjs");
+  const C = await import("../../modules/wodx-rules/npc/cult-rules.mjs");
   assert.deepEqual(C.gatheringGift("thralls", 4), {pool: "faith", path: "system.advantages.faith", gain: 4, label: "Faith", cap: 10});
   assert.equal(C.gatheringGift("dreamers", 3).gain, 3);
   const w = C.gatheringGift("remembrance", 3, [8, 1, 10]);

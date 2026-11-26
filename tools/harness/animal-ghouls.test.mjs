@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as AG from "../../modules/wodx-creation/scripts/animal-ghoul-rules.mjs";
-import * as AN from "../../modules/wodx-npc/scripts/animal-rules.mjs";
+import * as AG from "../../modules/wodx-rules/creation/animal-ghoul-rules.mjs";
+import * as AN from "../../modules/wodx-rules/npc/animal-rules.mjs";
 
 /* Ghouled animals (B5040 to B5049) */
 

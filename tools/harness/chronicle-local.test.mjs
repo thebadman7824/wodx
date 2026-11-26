@@ -8,12 +8,12 @@ import {dirname, join} from "node:path";
 /* What belongs to one chronicle's own place (Chronicle Packs Desk d1, B7610-B7616) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-chronicle/scripts/chronicle-local-rules.mjs"));
-const C = await import(join(root, "modules/wodx-chronicle/scripts/church-rules.mjs"));
-const LR = await import(join(root, "modules/wodx-chronicle/scripts/languages-rules.mjs"));
-const I = await import(join(root, "modules/wodx-storyteller/scripts/institution-rules.mjs"));
-const P = await import(join(root, "modules/wodx-storyteller/scripts/power-rules.mjs"));
-const H = await import(join(root, "modules/wodx-storyteller/scripts/hunters-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/chronicle/chronicle-local-rules.mjs"));
+const C = await import(join(root, "modules/wodx-rules/chronicle/church-rules.mjs"));
+const LR = await import(join(root, "modules/wodx-rules/chronicle/languages-rules.mjs"));
+const I = await import(join(root, "modules/wodx-rules/storyteller/institution-rules.mjs"));
+const P = await import(join(root, "modules/wodx-rules/storyteller/power-rules.mjs"));
+const H = await import(join(root, "modules/wodx-rules/storyteller/hunters-rules.mjs"));
 const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 const {PACK} = await import(join(root, "modules/wodx-rothenstein/chronicle.mjs"));
 const src = f => readFileSync(join(root, f), "utf8");

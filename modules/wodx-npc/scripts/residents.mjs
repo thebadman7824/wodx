@@ -8,7 +8,7 @@
  * The routines then put each resident where the hour says. "Remove the residents" takes them all back.
  * The rules are in resident-rules.mjs.
  */
-import * as RS from "./resident-rules.mjs";
+import * as RS from "../../wodx-rules/npc/resident-rules.mjs";
 import * as LM from "./line-mend.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

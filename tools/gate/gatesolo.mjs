@@ -145,7 +145,7 @@ async function setup() {
     const wrong = now.filter(n => n.value !== undefined && n.value !== n.to), missing = now.filter(n => n.value === undefined).map(n => n.key);
     const auto = read(CHRON, "autoApprove") ?? {};
     // A player's own ruling always waits (Chronicle's NEVER_AUTO, B3521), so those are not expected on sight
-    const never = (await import("/modules/wodx-chronicle/scripts/approvals-rules.mjs").catch(() => ({}))).NEVER_AUTO ?? ["request"];
+    const never = (await import("/modules/wodx-rules/chronicle/approvals-rules.mjs").catch(() => ({}))).NEVER_AUTO ?? ["request"];
     const notAuto = Q().types().map(t => t.type).filter(t => !never.includes(t) && auto[t] !== true);
     ok("2. the switch", S().isOn() && S().isSeat() && !wrong.length && !notAuto.length && !game.paused, {wrong, missing, notAuto, kinds: Q().types().length, paused: game.paused});
   });

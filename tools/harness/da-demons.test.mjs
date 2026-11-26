@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import * as SC from "../../modules/wodx-actions/scripts/spirit-charms.js";
 import * as PM from "../../modules/wodx-actions/scripts/power-mods.js";
-import * as SR from "../../modules/wodx-actions/scripts/summon-rules.js";
+import * as SR from "../../modules/wodx-rules/actions/summon-rules.js";
 import { SPECS, specKey } from "../../modules/wodx-actions/scripts/summon-specs.js";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");

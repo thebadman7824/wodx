@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* WoDX Solo, step 5 of The Lone Chronicle: the Beast, torpor and the years, death and heirs (B6530 to B6536) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/fate-rules.mjs")));
-const KR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/kindred-rules.js")));
+const F = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/fate-rules.mjs")));
+const KR = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/kindred-rules.js")));
 const src = readFileSync(join(root, "modules/wodx-solo/scripts/fate.mjs"), "utf8");
 
 test("the Beast goes for an enemy in sight, else the nearest living being, within reach", () => {

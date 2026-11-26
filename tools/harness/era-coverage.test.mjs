@@ -4,11 +4,11 @@ import {test} from "node:test";
 import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
 import {NIGHT_TABLES} from "../../modules/wodx-storyteller/data/night-tables.mjs";
 import {PEOPLE_TABLES} from "../../modules/wodx-creation/data/people.mjs";
-import {COMMON} from "../../modules/wodx-creation/scripts/people-rules.mjs";
-import * as F from "../../modules/wodx-interactables/scripts/fill-rules.mjs";
-import * as S from "../../modules/wodx-library/scripts/shelf-rules.mjs";
-import {isDarkAgesEra as faeDA} from "../../modules/wodx-actions/scripts/fae-da-rules.js";
-import {isDarkAgesEra as mageDA} from "../../modules/wodx-actions/scripts/mage-da-rules.js";
+import {COMMON} from "../../modules/wodx-rules/creation/people-rules.mjs";
+import * as F from "../../modules/wodx-rules/interactables/fill-rules.mjs";
+import * as S from "../../modules/wodx-rules/library/shelf-rules.mjs";
+import {isDarkAgesEra as faeDA} from "../../modules/wodx-rules/actions/fae-da-rules.js";
+import {isDarkAgesEra as mageDA} from "../../modules/wodx-rules/actions/mage-da-rules.js";
 import {werewolfSet} from "../../modules/wodx-creation/scripts/first-change.mjs";
 
 /* The era audit (2026-11-10): every era gets content that fits it, 1197 to the World of Future Darkness */
@@ -82,7 +82,7 @@ test("2099 fills containers with Future Darkness gear; the shelves show the eras
 });
 
 test("Wraith: the Great War Arcanoi serve 1914 to 1918 only, not the years after with no era book", async () => {
-  const WR = await import("../../modules/wodx-actions/scripts/wraith-rules.js");
+  const WR = await import("../../modules/wodx-rules/actions/wraith-rules.js");
   assert.equal(WR.libraryFor("great-war", 1916), "gw");
   assert.equal(WR.libraryFor("great-war", null), "gw");
   assert.equal(WR.libraryFor("great-war", 1950), "w20");
@@ -92,9 +92,9 @@ test("Wraith: the Great War Arcanoi serve 1914 to 1918 only, not the years after
 test("the bridge eras: the Age of Reason (1601 to 1836) and Mid-century (1919 to 1989) get content of their own or borrow it", async () => {
   const {readFileSync} = await import("node:fs");
   const R = await import("../../modules/wodx-chronicle/scripts/era-resolve.mjs");
-  const K = await import("../../modules/wodx-atmosphere/scripts/kits-rules.mjs");
-  const Setup = await import("../../modules/wodx-storyteller/scripts/setup-rules.mjs");
-  const H = await import("../../modules/wodx-actions/scripts/hunter-rules.js");
+  const K = await import("../../modules/wodx-rules/atmosphere/kits-rules.mjs");
+  const Setup = await import("../../modules/wodx-rules/storyteller/setup-rules.mjs");
+  const H = await import("../../modules/wodx-rules/actions/hunter-rules.js");
   const T = await import("../../modules/wodx-chronicle/scripts/theme.mjs");
   const data = JSON.parse(readFileSync(new URL("../../modules/wodx-chronicle/data/eras.json", import.meta.url)));
   const {profiles} = R.mergeProfiles(data.profiles);

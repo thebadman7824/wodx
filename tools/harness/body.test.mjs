@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const B = await imp("modules/wodx-storyteller/scripts/body-rules.mjs");
+const B = await imp("modules/wodx-rules/storyteller/body-rules.mjs");
 
 test("body: a change needs words and falls back to safe keys", () => {
   assert.equal(B.normChange({what: "  "}), null);

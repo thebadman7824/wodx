@@ -20,7 +20,7 @@ test("the guard's own reading: comments and strings never count, a name the file
   assert.deepEqual(foundryUses("const t = `${game.time.worldTime}s`;"), ["game"]);
   assert.equal(codeOnly("a('x // y') + b").includes("//"), false);
   assert.equal(isRulesFile("modules/wodx-npc/scripts/feud-rules.mjs"), true);
-  assert.equal(isRulesFile("modules/wodx-actions/scripts/rules.js"), true);
+  assert.equal(isRulesFile("modules/wodx-rules/actions/rules.js"), true);
   assert.equal(isRulesFile("modules/wodx-npc/scripts/rulesheet.mjs"), false);
 });
 

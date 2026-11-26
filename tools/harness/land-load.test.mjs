@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const MV = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/movement-rules.js")));
+const MV = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/movement-rules.js")));
 
 test("By weight: a quarter or half of the lift is nothing, past half is +1, past the lift halves the pace", () => {
   assert.equal(MV.landLoad().steps, 0);

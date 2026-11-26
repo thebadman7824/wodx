@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as N from "../../modules/wodx-storyteller/scripts/night-rules.mjs";
+import * as N from "../../modules/wodx-rules/storyteller/night-rules.mjs";
 import * as Reg from "../../modules/wodx-library/scripts/wonder-registry.mjs";
 import "../../modules/wodx-library/scripts/wonder-lines.mjs";
 import {NIGHT_TABLES} from "../../modules/wodx-storyteller/data/night-tables.mjs";

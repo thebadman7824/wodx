@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6f: Dark Ages mages (WoDX Actions 3.7.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const M = await import(join(root, "modules/wodx-actions/scripts/mage-da-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const M = await import(join(root, "modules/wodx-rules/actions/mage-da-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 const hermes = {ratings: {anima: 2, corona: 1, primus: 3, vires: 2}, foundation: 2, fellowship: "hermes"};
 
 test("six fellowships, each with a Foundation, four Pillars and perks; every rote's Pillars belong to its fellowship", () => {
@@ -120,7 +120,7 @@ test("wiring: the Dark Ages mage menu, the cast button routed by era, gender-neu
   const main = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
   assert.match(main, /MXD\.isDA\(a\) \? mx\(\)\.cast\(a\) : /);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  const src = readFileSync(join(root, "modules/wodx-actions/scripts/mage-da.js"), "utf8") + readFileSync(join(root, "modules/wodx-actions/scripts/mage-da-rules.js"), "utf8");
+  const src = readFileSync(join(root, "modules/wodx-actions/scripts/mage-da.js"), "utf8") + readFileSync(join(root, "modules/wodx-rules/actions/mage-da-rules.js"), "utf8");
   const strings = src.match(/`[^`]*`|"[^"\n]{12,}"/g).join(" ").replace(/<[^>]+>/g, " ");
   assert.ok(!words.test(strings), strings.match(words)?.[0]);
 });

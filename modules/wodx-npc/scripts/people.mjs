@@ -1,8 +1,8 @@
-import * as TR from "./ties-rules.mjs";
+import * as TR from "../../wodx-rules/npc/ties-rules.mjs";
 import * as LM from "./line-mend.mjs";
-import * as SX from "./secrets-rules.mjs";
-import * as OP from "./opinion-rules.mjs";
-import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import * as SX from "../../wodx-rules/npc/secrets-rules.mjs";
+import * as OP from "../../wodx-rules/npc/opinion-rules.mjs";
+import {ratingsOf, ratingFrom} from "../../wodx-rules/chronicle/when-rules.mjs";
 import * as STANDING from "./standing.mjs";
 import * as KIN from "./kin.mjs";
 import * as BONDS from "./bonds.mjs";

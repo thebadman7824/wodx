@@ -12,7 +12,7 @@
  *   Events    Every applied card becomes one map event, passed on by the hook wodxMapEvent (and again with undone: true
  *             when the Storyteller presses Undo). The active Storyteller's client sends it; nothing here acts on it.
  */
-import * as S from "./state-rules.mjs";
+import * as S from "../../wodx-rules/interactables/state-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";

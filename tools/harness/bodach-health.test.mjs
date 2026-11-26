@@ -8,7 +8,7 @@ import {join, dirname} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
-const S = await load("modules/wodx-chronicle/scripts/signature-rules.mjs");
+const S = await load("modules/wodx-rules/chronicle/signature-rules.mjs");
 const R = await load("modules/wodx-combat/scripts/rules.js");
 const row = k => S.faeRows({kith: [k]})[0];
 const lvl = (value, penalty) => ({value, total: value, penalty, label: "x"});

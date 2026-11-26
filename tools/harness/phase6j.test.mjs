@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6j: the Kuei-jin (WoDX Actions 3.10.0, Kindred of the East) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(join(root, "modules/wodx-actions/scripts/kote-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const K = await import(join(root, "modules/wodx-rules/actions/kote-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 
 test("five Dharmas with their Virtues; the Dharma chart (p. 54)", () => {
   assert.equal(Object.keys(K.DHARMAS).length, 5);

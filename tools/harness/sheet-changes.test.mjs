@@ -7,9 +7,9 @@ import {readFileSync} from "node:fs";
 
 /* WoDX Sheets 0.13.0 and Chronicle 0.43.0: changed since last session, and the features card */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const X = await import(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs"));
+const X = await import(join(root, "modules/wodx-rules/sheets/extras-rules.mjs"));
 const H = await import(join(root, "modules/wodx-sheets/scripts/extras-html.mjs"));
-const S = await import(join(root, "modules/wodx-chronicle/scripts/signature-rules.mjs"));
+const S = await import(join(root, "modules/wodx-rules/chronicle/signature-rules.mjs"));
 
 const sys = (o = {}) => ({health: {damage: {bashing: 0, lethal: 0, aggravated: 0, ...(o.dmg ?? {})}},
   advantages: {willpower: {temporary: o.wp ?? 5, permanent: 5}, bloodpool: {temporary: o.blood ?? 10, max: 10}},

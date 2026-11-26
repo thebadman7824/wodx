@@ -24,7 +24,7 @@ export async function run() {
   const before = new Set(game.messages.map(m => m.id));
   const scenes = [];
   try {
-    const GP = await import(`/modules/${ST}/scripts/goods-place-rules.mjs`);
+    const GP = await import(`/modules/wodx-rules/storyteller/goods-place-rules.mjs`);
     const {GOODS} = await import(`/modules/wodx-library/data/goods.mjs`);
     const W = await import(`/modules/wodx-library/data/goods-ways.mjs`);
     // B7980: a batch create does not keep its order (kit rule 1); nightly job 2448 priced Kyoto on the Moravian scene and

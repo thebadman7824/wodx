@@ -9,11 +9,11 @@
  *   Experience  x6  a player character's bound servant becomes their ally in WoDX Creation: the master's XP pays, at the servant's own costs
  * Kuei-jin (k2) keep Retainers through orders and blood cults through the cult system; nothing more is needed here.
  */
-import * as W from "./servant-world-rules.mjs";
-import * as SR from "./servant-rules.mjs";
+import * as W from "../../wodx-rules/npc/servant-world-rules.mjs";
+import * as SR from "../../wodx-rules/npc/servant-rules.mjs";
 import * as SV from "./servants.mjs";
-import * as DU from "./duty-rules.mjs";
-import * as LR from "./lines-rules.mjs";
+import * as DU from "../../wodx-rules/npc/duty-rules.mjs";
+import * as LR from "../../wodx-rules/npc/lines-rules.mjs";
 
 const MOD = "wodx-npc";
 const num = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

@@ -5,7 +5,7 @@
  * keywords it uses (a house reading). Mage 20th has no named rituals in the core book, only the ritual rules, so it
  * has no list here; Book of Secrets would be the source.
  */
-import { KEYWORDS, ritualFrom } from "./effects-rules.js";
+import { KEYWORDS, ritualFrom } from "../../wodx-rules/actions/effects-rules.js";
 import { powerOutcomes } from "./power-effects.js";
 
 export const BOOK_RITUALS = {

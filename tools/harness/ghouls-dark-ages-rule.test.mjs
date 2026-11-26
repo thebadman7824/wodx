@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
    no era, and a world that saved the old key still reads house rules without error. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const H = (await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/house-rules.mjs")))).default;
-const R = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/rules.mjs")));
+const H = (await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/house-rules.mjs")))).default;
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/rules.mjs")));
 
 test("the ghoul switch is deleted and the ghoul rules stay the Dark Ages ones in every era", () => {
   assert.equal(H.switches.find(s => s.id === "ghoulsDarkAges"), undefined, "switch removed");

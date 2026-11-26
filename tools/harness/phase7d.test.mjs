@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* Phase 7d: factions, faction turns, hunting grounds and breaches (WoDX NPC 0.3.0), the pure rules */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
 const streamFor = key => G.stream("test-seed", key);
 let n = 0;

@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6h: changelings of the later eras (WoDX Actions 3.9.0, Changeling 20th) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const C = await import(join(root, "modules/wodx-actions/scripts/c20-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const C = await import(join(root, "modules/wodx-rules/actions/c20-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 
 test("eighteen Arts; four primary Realms and two modifiers, five levels each (pp. 197–236)", () => {
   assert.equal(Object.keys(C.ARTS).length, 18);
@@ -94,7 +94,7 @@ test("wiring: Actions 3.9.0, the later-era fae menu, the cantrip button by era, 
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
   assert.match(pm, /api:c20Unleash/);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  const src = readFileSync(join(root, "modules/wodx-actions/scripts/c20.js"), "utf8") + readFileSync(join(root, "modules/wodx-actions/scripts/c20-rules.js"), "utf8");
+  const src = readFileSync(join(root, "modules/wodx-actions/scripts/c20.js"), "utf8") + readFileSync(join(root, "modules/wodx-rules/actions/c20-rules.js"), "utf8");
   const strings = src.match(/`[^`]*`|"[^"\n]{12,}"/g).join(" ").replace(/<[^>]+>/g, " ");
   assert.ok(!words.test(strings), strings.match(words)?.[0]);
 });

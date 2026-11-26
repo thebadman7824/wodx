@@ -12,13 +12,13 @@ let RW = null, loading = null;
  * or load() is called, not when the world starts. The other calls read them only after that first load. */
 export function load() {
   if ( RW ) return Promise.resolve(RW);
-  loading ??= import("./realm-worlds-rules.mjs").then(m => (RW = m)).catch(err => { loading = null; throw err; });
+  loading ??= import("../../wodx-rules/otherworlds/realm-worlds-rules.mjs").then(m => (RW = m)).catch(err => { loading = null; throw err; });
   return loading;
 }
 /** The rules once loaded, else null. */
 export const loaded = () => RW;
 const need = () => { if ( !RW ) throw new Error("WoDX Otherworlds: the realm world maps are not loaded yet; await api.realmWorlds.load() first"); return RW; };
-import {REALMS, LINES} from "./realm-maps-rules.mjs";
+import {REALMS, LINES} from "../../wodx-rules/otherworlds/realm-maps-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

@@ -39,7 +39,7 @@ export async function run() {
   const mark = () => new Set(game.messages.contents.map(m => m.id));
   const fresh = before => game.messages.contents.filter(m => !before.has(m.id) && m.flags?.[MOD]?.overheard);
   try {
-    const OR = await import(`/modules/wodx-npc/scripts/overheard-rules.mjs?${Date.now()}`);
+    const OR = await import(`/modules/wodx-rules/npc/overheard-rules.mjs?${Date.now()}`);
     const sceneData = ["Brno", "Cairo", "earshot", "street"].map(n => ({name: `WoDX gate: Overheard ${n}`, width: 2000, height: 1200, padding: 0.1, grid: {size: G, distance: 5}}));
     const made = inOrder(await Scene.createDocuments(sceneData), sceneData);
     scenes.push(...made);

@@ -3,9 +3,9 @@
  * spotlight), the players' "Out on your own" window (travel and solo play), and the dialogs for convening, beats,
  * travel places, the night's summary and the report between sessions.
  */
-import * as W from "./world-rules.mjs";
-import * as Road from "./road-rules.mjs";
-import * as Country from "./country-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
+import * as Road from "../../wodx-rules/storyteller/road-rules.mjs";
+import * as Country from "../../wodx-rules/storyteller/country-rules.mjs";
 import * as C from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

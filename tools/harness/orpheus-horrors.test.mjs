@@ -7,9 +7,9 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const O = await import("../../modules/wodx-actions/scripts/orpheus-rules.js");
+const O = await import("../../modules/wodx-rules/actions/orpheus-rules.js");
 const OH = await import("../../modules/wodx-actions/scripts/orpheus-horrors.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 
 test("every Horror has six level lines, a page and results with known keywords (B3748)", () => {
   assert.deepEqual(Object.keys(OH.HORROR_FX).sort(), Object.keys(O.HORRORS).sort());

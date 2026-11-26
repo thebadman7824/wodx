@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
    the map, the night's draw, Ledger entries and prompts to the Storyteller */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
 const src = p => readFileSync(join(root, p), "utf8");
 const feat = (name, kind = "flaw") => ({id: name, name, kind, value: 1});
 const vamp = (...names) => ({kind: "kindred", features: names.map(n => feat(n))});

@@ -93,8 +93,9 @@ for ( const f of code ) {
   }
   // paths written as text
   for ( const [o, n] of moves ) {
+    // with or without the modules/ in front ("wodx-npc/scripts/x-rules.mjs" too)
     const oldTail = o.replace(/^modules\//, ""), newTail = n.replace(/^modules\//, "");
-    out = out.split(`modules/${oldTail}`).join(`modules/${newTail}`);
+    out = out.split(oldTail).join(newTail);
   }
   if ( out !== src ) edits.push([f, out]);
 }

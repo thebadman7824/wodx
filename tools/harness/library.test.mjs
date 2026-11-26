@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as S from "../../modules/wodx-library/scripts/shelf-rules.mjs";
+import * as S from "../../modules/wodx-rules/library/shelf-rules.mjs";
 import {MANUAL, CHANGES} from "../../modules/wodx-library/data/manual.mjs";
-import houseRules from "../../modules/wodx-chronicle/data/house-rules.mjs";
+import houseRules from "../../modules/wodx-rules/chronicle/house-rules.mjs";
 
 /* WoDX Library 0.2.0: the shelves, the manual and what's new. */
 const J = f => JSON.parse(readFileSync(new URL(`../../modules/${f}`, import.meta.url), "utf8"));

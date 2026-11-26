@@ -13,10 +13,10 @@
  *     or written by the Storyteller at the table), and the tie goes to troupe ties with what happened.
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
-import * as P from "./first-night-prelude-rules.mjs";
+import * as P from "../../wodx-rules/creation/first-night-prelude-rules.mjs";
 import * as LP from "./lifepath-rules.mjs";
 import {lifepathOf, makePeople} from "./lifepath.mjs";
-import {TOTALS} from "./totals-rules.mjs";
+import {TOTALS} from "../../wodx-rules/creation/totals-rules.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 

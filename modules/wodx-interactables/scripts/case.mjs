@@ -11,7 +11,7 @@
  * Hidden cards only hide: they are in the journal's data, which a player who owns the journal could read with the
  * browser's tools. Keep anything truly secret in the Storyteller's own notes.
  */
-import * as C from "./case-rules.mjs";
+import * as C from "../../wodx-rules/interactables/case-rules.mjs";
 import * as Inv from "./investigation.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

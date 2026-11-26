@@ -8,9 +8,9 @@
 import {MODULE_ID, esc, lineOf, lineage, disciplineItem, disciplinesOf, keepLifepath, vampireEra} from "./actor-data.mjs";
 import {setLineage, setChronology, writeLineageJournal, dateLabel, handOver} from "./lineage.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "./totals-rules.mjs";
-import * as SR from "./states-rules.mjs";
-import * as RR from "./revenant-rules.mjs";
+import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "../../wodx-rules/creation/totals-rules.mjs";
+import * as SR from "../../wodx-rules/creation/states-rules.mjs";
+import * as RR from "../../wodx-rules/creation/revenant-rules.mjs";
 import {yearNow, swearOath} from "./revenant.mjs";
 import {GHOUL} from "../data/vampire.mjs";
 

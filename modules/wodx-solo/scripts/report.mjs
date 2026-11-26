@@ -13,7 +13,7 @@
  *                it is saved) and files them in the feature registry as faults.
  * The form is a tool window, out of the fiction: plain words, nothing in the game world changes.
  */
-import * as P from "./report-rules.mjs";
+import * as P from "../../wodx-rules/solo/report-rules.mjs";
 import * as R from "./solo-rules.mjs";
 import {addAsks, addActions, ask, SOCKET, characterOf, placeOf} from "./panel.mjs";
 

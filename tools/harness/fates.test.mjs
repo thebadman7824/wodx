@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 // Off-screen lives of supernatural NPCs (B3260-B3266).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/fates-rules.mjs")));
+const F = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/fates-rules.mjs")));
 
 const always = () => 0;      // every chance comes true
 const never = () => 0.999999; // no chance comes true

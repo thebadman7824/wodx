@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {generationRow, childeGeneration, findClan, clanDisciplines, ghoulDisciplineCap, ghoulBloodMax, ghoulCanLearn,
-  bondStage, xpCost, traitMax} from "../scripts/rules.mjs";
+  bondStage, xpCost, traitMax} from "../../wodx-rules/creation/rules.mjs";
 
 test("generation chart (V20DA p. 340)", () => {
   assert.deepEqual(generationRow(12), {generation: 12, maxTrait: 5, bloodMax: 11, perTurn: 1});

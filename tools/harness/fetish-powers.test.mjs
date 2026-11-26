@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 /* B6779b: fetishes whose book names a roll of their own get it as a Use button */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(pathToFileURL(join(root, "modules/wodx-library/scripts/wonder-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/library/wonder-rules.mjs")));
 const P = await import(pathToFileURL(join(root, "modules/wodx-library/scripts/wonder-powers.mjs")));
 const D = (await import(pathToFileURL(join(root, "modules/wodx-library/data/wonders.mjs")))).WONDERS;
 const flagOf = key => W.itemsFor(D.find(x => x.key === key))[0].flags["wodx-library"].wonder;

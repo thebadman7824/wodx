@@ -11,7 +11,7 @@ const C = await imp("modules/wodx-library/data/wonders-changeling.mjs");
 const R = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const CK = await imp("modules/wodx-library/scripts/wonders-changeling.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const kit = CK.changelingKit;
 
 const actor = (stuff = 5) => ({name: "Wren", system: {advantages: {glamour: {temporary: 4, permanent: 6}}}, items: [

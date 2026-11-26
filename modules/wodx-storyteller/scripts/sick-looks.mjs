@@ -6,7 +6,7 @@
  * ill. Getting better takes both away. The status is a WoDX Chronicle condition with no roll effect of its own: the
  * weekly Stamina rolls stay where they were.
  */
-import * as R from "./contagion-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/contagion-rules.mjs";
 import {MOD, chron, isActiveGM, setting} from "./core.mjs";
 
 export const SICK = {id: "sick", name: "Sick", img: "icons/svg/poison.svg", source: "WoDX house rule (sickness in the towns)",

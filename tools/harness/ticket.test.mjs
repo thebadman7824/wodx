@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 /* The referee ticket (B3520 to B3523): the pool, the risks by line and book, the Storyteller's difficulty change. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/ticket-rules.mjs")).href);
-const Q = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/approvals-rules.mjs")).href);
-const HR = (await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/house-rules.mjs")).href)).default;
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/ticket-rules.mjs")).href);
+const Q = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/approvals-rules.mjs")).href);
+const HR = (await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/house-rules.mjs")).href)).default;
 
 const sheet = {name: "Ilse", profile: "mage", attributes: {wits: 3, manipulation: 2}, abilities: {occult: 4, subterfuge: 1}};
 

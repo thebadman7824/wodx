@@ -10,8 +10,8 @@
  * Hidden world state wodx-storyteller.siteState = {v, list}. World setting holyGround (on or off).
  * Hooks out: wodxSiteDraw {site, role, points, by}, wodxSiteQuarrel {site, roles, claims}.
  */
-import * as S from "./site-rules.mjs";
-import * as P from "./power-rules.mjs";
+import * as S from "../../wodx-rules/storyteller/site-rules.mjs";
+import * as P from "../../wodx-rules/storyteller/power-rules.mjs";
 import {MOD, esc, chron, isActiveGM, gmIds, setting, log} from "./core.mjs";
 
 export const T_QUARREL = `${MOD}.siteQuarrel`;

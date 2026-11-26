@@ -8,8 +8,8 @@
  *   - Households: when a household is seeded as a vampire's ghouls (WoDX NPC's residents), its beasts come with it.
  */
 import {MODULE_ID, esc, lineOf, isAnimal, animalKindOf, isAnimalGhoul, clanOf, domitorOf, disciplinesOf, disciplineItem} from "./actor-data.mjs";
-import * as AG from "./animal-ghoul-rules.mjs";
-import * as AK from "./animal-keepers-rules.mjs";
+import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
+import * as AK from "../../wodx-rules/creation/animal-keepers-rules.mjs";
 import {makeBeast} from "./animal-stock.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

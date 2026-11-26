@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as AM from "../../modules/wodx-combat/scripts/ambush-rules.js";
+import * as AM from "../../modules/wodx-rules/combat/ambush-rules.js";
 
 /* The ambush (WoDX Combat 3.11.0): V20 p. 274, V20 Dark Ages p. 345 */
 

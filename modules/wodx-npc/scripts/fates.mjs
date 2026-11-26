@@ -11,11 +11,11 @@
  *   Actor flag wodx-npc.fates.keep = true keeps an NPC out of it (the Storyteller's own plans for them stand).
  *   Player characters are never touched: Pass the Years handles them.
  */
-import * as F from "./fates-rules.mjs";
-import {officesOf, polityFor, POLITIES} from "./politics-rules.mjs";
+import * as F from "../../wodx-rules/npc/fates-rules.mjs";
+import {officesOf, polityFor, POLITIES} from "../../wodx-rules/npc/politics-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
-import {sexFromDraw} from "../../wodx-chronicle/scripts/gender-rules.mjs";
+import {sexFromDraw} from "../../wodx-rules/chronicle/gender-rules.mjs";
 
 const MOD = "wodx-npc";
 const DEAD_FOLDER = "WoDX · The Dead";

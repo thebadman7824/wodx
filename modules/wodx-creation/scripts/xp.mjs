@@ -1,13 +1,13 @@
 import {MODULE_ID, esc, spendLine, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
-import {byTheBook} from "./rules.mjs";
+import {byTheBook} from "../../wodx-rules/creation/rules.mjs";
 import {dateLabel} from "./lineage.mjs";
 import * as Learn from "./learn.mjs";
 import {SOURCE_KINDS} from "./learn-rules.mjs";
-import {LINE_XP} from "./lines-xp-rules.mjs";
+import {LINE_XP} from "../../wodx-rules/creation/lines-xp-rules.mjs";
 import {XP} from "../data/vampire.mjs";
 import {labelOf} from "./lines.mjs";
-import * as CP from "./change-points-rules.mjs";
-import * as RF from "../../wodx-actions/scripts/road-faith-rules.js";
+import * as CP from "../../wodx-rules/creation/change-points-rules.mjs";
+import * as RF from "../../wodx-rules/actions/road-faith-rules.js";
 
 /**
  * The experience log. Awards and spends are upstream Experience items (so the sheet's totals stay right), each

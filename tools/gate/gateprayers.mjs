@@ -34,7 +34,7 @@ export async function run() {
   const scenes = [], actors = [];
   const t0 = game.time.worldTime;
   try {
-    const RR = await import(`/modules/wodx-npc/scripts/routine-rules.mjs?${Date.now()}`);
+    const RR = await import(`/modules/wodx-rules/npc/routine-rules.mjs?${Date.now()}`);
     const made0 = await Scene.create([{name: "WoDX gate: Cairo", width: 1000, height: 1000, padding: 0},
       {name: "WoDX gate: Al-Azhar", width: 1000, height: 1000, padding: 0}, {name: "WoDX gate: Brno", width: 1000, height: 1000, padding: 0}]);
     const [cairo, azhar, brno] = ["Cairo", "Al-Azhar", "Brno"].map(n => made0.find(x => x.name.endsWith(n)));

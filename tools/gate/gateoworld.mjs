@@ -74,7 +74,7 @@ export async function run() {
         {fast: fast?.trip?.mode, want, train: train?.trip?.mode});
     });
     await step("routines by age", async () => {
-      const Rr = await import("/modules/wodx-npc/scripts/routine-rules.mjs");
+      const Rr = await import("/modules/wodx-rules/npc/routine-rules.mjs");
       const year = Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 0;
       const age = Rr.ageOf(year);
       const blocks = Rr.blocksOf({preset: "labourer"}, "civilian", year);

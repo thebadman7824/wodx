@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import * as RR from "../../modules/wodx-storyteller/scripts/rumour-rules.mjs";
+import * as RR from "../../modules/wodx-rules/storyteller/rumour-rules.mjs";
 import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
 
 /* WoDX Storyteller 0.8.0: the rumour network. */

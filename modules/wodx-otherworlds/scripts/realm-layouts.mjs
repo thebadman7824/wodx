@@ -9,7 +9,7 @@
  *   on / back put the two ways out; sealed: ground the arrival cannot reach turns to rock.
  */
 import {between, shuffled} from "../../wodx-chronicle/scripts/gen-core.mjs";
-import {T, walkable, inB, grid, noise, spread, compound, hamlet, LAYOUT} from "./realm-maps-rules.mjs";
+import {T, walkable, inB, grid, noise, spread, compound, hamlet, LAYOUT} from "../../wodx-rules/otherworlds/realm-maps-rules.mjs";
 
 /* ------------------------------------------------------------------ small drawing helpers */
 const clampP = (cols, rows, p, e = 2) => ({x: Math.max(e, Math.min(cols - 1 - e, Math.round(p.x))), y: Math.max(e, Math.min(rows - 1 - e, Math.round(p.y)))});

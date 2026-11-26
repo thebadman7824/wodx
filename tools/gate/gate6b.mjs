@@ -189,7 +189,7 @@ async function runGate(K) {
             const g0 = W.system.advantages.gnosis.temporary, e0 = W.effects.size;
             answer(r => { set(r, "gift", item.id); });
             const n = game.messages.size; await A().useGift({ actor: { actor: W } }); const m = await untilMsg(n); await sleep(500);
-            const cost = A().garouRules ? (await import("/modules/wodx-actions/scripts/garou-rules.js")).giftCost(g?.c) : {};
+            const cost = A().garouRules ? (await import("/modules/wodx-rules/actions/garou-rules.js")).giftCost(g?.c) : {};
             ok("use a Gift", W.system.advantages.gnosis.temporary === g0 - (cost.gnosis ?? 0), { gnosisBefore: g0, gnosisAfter: W.system.advantages.gnosis.temporary,
                 effectAdded: W.effects.size > e0, duration: g?.t, card: text(m).slice(0, 220) });
         });

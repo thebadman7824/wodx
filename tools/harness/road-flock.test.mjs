@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as FL from "../../modules/wodx-npc/scripts/road-flock-rules.mjs";
+import * as FL from "../../modules/wodx-rules/npc/road-flock-rules.mjs";
 
 // Dark Ages depth desk item 3, part 2 (B7649): a Road's walkers in a town as a small Kindred faction.
 const place = {uuid: "Scene.abc123", name: "Rothenstein Market"};

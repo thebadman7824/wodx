@@ -3,7 +3,7 @@ import {planSkip, applyPlan, yearOf} from "./time.mjs";
 import {giveVitae} from "./change-of-state.mjs";
 import {setChronology} from "./lineage.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {bondStage} from "./rules.mjs";
+import {bondStage} from "../../wodx-rules/creation/rules.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**

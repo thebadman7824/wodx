@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as WR from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
-import * as PR from "../../modules/wodx-npc/scripts/passerby-rules.mjs";
+import * as WR from "../../modules/wodx-rules/chronicle/world-rules.mjs";
+import * as PR from "../../modules/wodx-rules/npc/passerby-rules.mjs";
 import {LOCAL_LOOKS, LOCAL_AGES, localTable} from "../../modules/wodx-npc/scripts/passerby-local.mjs";
 
 /* Local looks for passers-by within one way of life (NPC 0.52.0, B2674) */

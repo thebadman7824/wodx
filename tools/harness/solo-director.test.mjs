@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* WoDX Solo, step 4 of The Lone Chronicle: the director, experience from the night's log, the recap (B6045 to B6049) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const D = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/director-rules.mjs")));
-const WR = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/wrapup-rules.mjs")));
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/director-rules.mjs")));
+const WR = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/wrapup-rules.mjs")));
 const DAY = 86400;
 const at = (night, hour) => (night * DAY) + (DAY / 2) + (hour * 3600); // hours after noon
 const NOW = at(100, 9); // night 100, 9 hours after noon

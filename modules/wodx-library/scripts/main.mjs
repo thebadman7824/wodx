@@ -1,6 +1,6 @@
-import * as G from "./gear-rules.mjs";
+import * as G from "../../wodx-rules/library/gear-rules.mjs";
 import * as Sh from "./shelves.mjs";
-import * as SR from "./shelf-rules.mjs";
+import * as SR from "../../wodx-rules/library/shelf-rules.mjs";
 import {setupExamine, examineApi} from "./examine.mjs";
 import {setupUse, useApi} from "./use.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -8,7 +8,7 @@ import * as Reg from "./wonder-registry.mjs";
 import {setupGearInstall, gearInstallApi} from "./gear-install.mjs";
 import {armsApi} from "./arms-use.mjs";
 import {setupFaith, faithApi} from "./faith-use.mjs";
-import * as HR from "./house-rules.mjs";
+import * as HR from "../../wodx-rules/library/house-rules.mjs";
 import {setupHygiene} from "./hygiene-use.mjs";
 import "./wonder-lines.mjs";
 import {setupWeight} from "./weight.mjs";
@@ -213,9 +213,9 @@ Hooks.once("ready", async () => {
   // 0.10.0: recipes for food, drink, medicine and drugs (the window is Storyteller's Cook, brew or mix)
   try { const Kn = await import("./know.mjs"); game.modules.get(MOD).api.know = Kn.setupKnow(); } catch (err) { console.warn("WoDX Library | What they could know could not start", err); }
   // B3630: the supernatural items each line can make (Storyteller's long tasks run the work)
-  try { const Wr = await import("./wonder-rules.mjs"); game.modules.get(MOD).api.wonders = {...Wr, registerLine: Reg.registerLine, kitFor: Reg.kitFor, lines: Reg.lines, rowOf: Reg.rowOf, applyCosts: Reg.applyCosts,
+  try { const Wr = await import("../../wodx-rules/library/wonder-rules.mjs"); game.modules.get(MOD).api.wonders = {...Wr, registerLine: Reg.registerLine, kitFor: Reg.kitFor, lines: Reg.lines, rowOf: Reg.rowOf, applyCosts: Reg.applyCosts,
     settingOf: key => { try { return game.settings.get(MOD, key); } catch (e) { return undefined; } }, kinfolkMay: () => { try { return !!game.settings.get(MOD, "craftKinfolk"); } catch (e) { return false; } }, enabled: line => { const k = Reg.kitFor(line)?.setting ?? Wr.LINES[line]?.setting; try { return !!k && !!game.settings.get(MOD, k); } catch (e) { return false; } }}; } catch (err) { console.warn("WoDX Library | supernatural items could not load", err); }
-  try { game.modules.get(MOD).api.recipes = await import("./recipe-rules.mjs"); } catch (err) { console.warn("WoDX Library | recipes could not load", err); }
+  try { game.modules.get(MOD).api.recipes = await import("../../wodx-rules/library/recipe-rules.mjs"); } catch (err) { console.warn("WoDX Library | recipes could not load", err); }
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();
     const have = game.packs.get(`world.${PACK_NAME}`) ?? game.packs.find(p => p.metadata?.name === PACK_NAME && p.metadata?.packageType === "world");

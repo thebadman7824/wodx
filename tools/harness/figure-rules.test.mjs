@@ -2,8 +2,8 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync, existsSync} from "node:fs";
-import * as F from "../../modules/wodx-paperdoll/scripts/figure-rules.mjs";
-import * as SR from "../../modules/wodx-paperdoll/scripts/sprite-rules.mjs";
+import * as F from "../../modules/wodx-rules/paperdoll/figure-rules.mjs";
+import * as SR from "../../modules/wodx-rules/paperdoll/sprite-rules.mjs";
 const at = p => new URL(`../../${p}`, import.meta.url);
 const cat = JSON.parse(readFileSync(at(`${F.FOLDER}/catalogue.json`), "utf8"));
 

@@ -10,9 +10,9 @@ import {readFileSync, existsSync} from "node:fs";
  * WoDX Senses. The gate in Foundry checks scenes, the sky setting, playlists and sounds.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(join(root, "modules/wodx-atmosphere/scripts/weather-rules.mjs"));
-const K = await import(join(root, "modules/wodx-atmosphere/scripts/kits-rules.mjs"));
-const S = await import(join(root, "modules/wodx-senses/scripts/senses-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/atmosphere/weather-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/atmosphere/kits-rules.mjs"));
+const S = await import(join(root, "modules/wodx-rules/senses/senses-rules.mjs"));
 const {gregorianToJDN} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 const eras = JSON.parse(readFileSync(join(root, "modules/wodx-chronicle/data/eras.json"), "utf8"));
 const senses = JSON.parse(readFileSync(join(root, "modules/wodx-senses/data/world.json"), "utf8"));
@@ -235,7 +235,7 @@ test("Senses: fog and mist make sight harder out of doors, rain masks scent, sto
 
 /* ---------------- the world template: Start a chronicle ---------------- */
 
-const Setup = await import(join(root, "modules/wodx-storyteller/scripts/setup-rules.mjs"));
+const Setup = await import(join(root, "modules/wodx-rules/storyteller/setup-rules.mjs"));
 
 test("template: every era profile has a primer, and the Storyteller screen pages are plain", () => {
   for ( const p of eras.profiles ) {

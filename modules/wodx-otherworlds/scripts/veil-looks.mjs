@@ -5,11 +5,11 @@
  * faint grey mist where the Shroud is thin, each only for a viewer whose character could see it; and a dark haze round
  * a Wyrm-tainted person, through WoDX Chronicle's token looks, only for a viewer who senses the Wyrm.
  */
-import * as V from "./veil-look-rules.mjs";
+import * as V from "../../wodx-rules/otherworlds/veil-look-rules.mjs";
 import {MODULE_ID, placeOf as ratingsAt} from "./ratings.mjs";
 import {natureOf} from "./senses.mjs";
 import {taintOf} from "./corruption.mjs";
-import {registersAsWyrm} from "./corruption-rules.mjs";
+import {registersAsWyrm} from "../../wodx-rules/otherworlds/corruption-rules.mjs";
 
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const fxOff = () => { try { return game.settings.get("wodx-chronicle", "fxLevel") === "off"; } catch (e) { return false; } };

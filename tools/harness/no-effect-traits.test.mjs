@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* The no-effect audit, merits and flaws (B3780-B3782): more roll effects, tick boxes, cards, the OCR names fixed */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
 const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects.mjs")));
 const M = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects-more.mjs")));
 

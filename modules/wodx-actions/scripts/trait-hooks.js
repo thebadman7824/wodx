@@ -12,8 +12,8 @@
  */
 import * as PM from "./power-mods.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
-import { AURA_TICKS } from "./thrall-rules.js";
-import { FEATURE_TICKS, featuresOf } from "./fae-da-rules.js";
+import { AURA_TICKS } from "../../wodx-rules/actions/thrall-rules.js";
+import { FEATURE_TICKS, featuresOf } from "../../wodx-rules/actions/fae-da-rules.js";
 
 const NONE = Object.freeze({ dice: 0, diff: 0, parts: [] });
 

@@ -9,10 +9,10 @@
  * asks first), while anything automation does to a player character (an encounter on the road, a beat that calls
  * characters together, a solo result that changes the world) waits in the approval queue.
  */
-import * as W from "./world-rules.mjs";
-import * as Road from "./road-rules.mjs";
-import * as Country from "./country-rules.mjs";
-import * as MoneyRules from "./money-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
+import * as Road from "../../wodx-rules/storyteller/road-rules.mjs";
+import * as Country from "../../wodx-rules/storyteller/country-rules.mjs";
+import * as MoneyRules from "../../wodx-rules/storyteller/money-rules.mjs";
 import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

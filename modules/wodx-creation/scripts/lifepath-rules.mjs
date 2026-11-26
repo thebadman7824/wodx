@@ -19,7 +19,7 @@ import {BANDS, LINES, MORTAL_EVENTS} from "../data/lifepaths.mjs";
 import {TURNING_EVENTS} from "../data/lifepaths-turnings.mjs";
 import {SPLATS} from "../data/lifepaths-splats.mjs";
 
-import * as D from "./lifepath-drill-rules.mjs";
+import * as D from "../../wodx-rules/creation/lifepath-drill-rules.mjs";
 export {BANDS, LINES, SPLATS};
 export const VERSION = 1;
 /** #2505: a year in words: a minus year is before the common era (-500 is 500 BCE). */

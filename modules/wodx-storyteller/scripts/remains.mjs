@@ -9,7 +9,7 @@
  *   (WoDX Storyteller's Hunting grounds and heat, when that is on). The Bodies window (Upkeep) lists and edits them.
  *   Nothing runs on players' machines.
  */
-import * as R from "./remains-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/remains-rules.mjs";
 import {MOD, esc, isActiveGM, setting, chron} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {addHeat} from "./upkeep.mjs";

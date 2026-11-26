@@ -1,10 +1,10 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {findClan, clanDisciplines, clanOpen} from "../../modules/wodx-creation/scripts/rules.mjs";
+import {findClan, clanDisciplines, clanOpen} from "../../modules/wodx-rules/creation/rules.mjs";
 import {BLOODLINES} from "../../modules/wodx-chronicle/data/signatures.mjs";
-import {bloodlinePowerDiff} from "../../modules/wodx-actions/scripts/kindred-rules.js";
-import {clanKey, ruleFor, nourishment} from "../../modules/wodx-actions/scripts/feeding-rules.js";
+import {bloodlinePowerDiff} from "../../modules/wodx-rules/actions/kindred-rules.js";
+import {clanKey, ruleFor, nourishment} from "../../modules/wodx-rules/actions/feeding-rules.js";
 
 // B7661: the Dark Ages lines the full check of V20 Dark Ages found missing (chapter 2, pp. 70-105).
 const BOOK = {bonsam: ["Abombwe", "Obfuscate", "Potence"], danava: ["Dominate", "Fortitude", "Thaumaturgy"],

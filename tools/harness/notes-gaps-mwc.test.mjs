@@ -9,14 +9,14 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const Q = await imp("modules/wodx-actions/scripts/quiet-rules.js");
-const S = await imp("modules/wodx-actions/scripts/soulforge-rules.js");
-const B = await imp("modules/wodx-actions/scripts/banal-life-rules.js");
-const MR = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
-const TR = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
-const PR = await imp("modules/wodx-chronicle/scripts/place-rules.mjs");
-const RR = await imp("modules/wodx-npc/scripts/routine-rules.mjs");
-const PB = await imp("modules/wodx-npc/scripts/passerby-rules.mjs");
+const Q = await imp("modules/wodx-rules/actions/quiet-rules.js");
+const S = await imp("modules/wodx-rules/actions/soulforge-rules.js");
+const B = await imp("modules/wodx-rules/actions/banal-life-rules.js");
+const MR = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
+const TR = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
+const PR = await imp("modules/wodx-rules/chronicle/place-rules.mjs");
+const RR = await imp("modules/wodx-rules/npc/routine-rules.mjs");
+const PB = await imp("modules/wodx-rules/npc/passerby-rules.mjs");
 
 test("Quiet: from 1450; the level follows the Paradox pool; the three M20 forms (pp. 555-559)", () => {
   assert.ok(!Q.applies(1300) && Q.applies(1450) && Q.applies(2005) && Q.applies(null));
@@ -49,7 +49,7 @@ test("Quiet ends by the book: three successes in one roll, a mindscape, a cure, 
 });
 
 test("Quiet is wired: the menu, the Storyteller's tools and the token hook", () => {
-  const main = src("modules/wodx-actions/scripts/main.js"), menus = src("modules/wodx-actions/scripts/profile-menus.js"), theme = src("modules/wodx-actions/scripts/theme-rules.js");
+  const main = src("modules/wodx-actions/scripts/main.js"), menus = src("modules/wodx-actions/scripts/profile-menus.js"), theme = src("modules/wodx-rules/actions/theme-rules.js");
   assert.match(menus, /api:m20Quiet/);
   assert.match(theme, /"api:m20Quiet":/);
   assert.match(main, /Hooks\.on\("refreshToken", t => QX\.onRefreshToken\(t\)\)/);
@@ -120,8 +120,8 @@ test("everyday Banality: banal places, Autumn People, long tasks; heavier with t
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /blx\(\)\.endScene\(endedScene\(o\)\)/);
   assert.match(main, /Hooks\.on\("wodxTaskDone"/);
-  assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:c20Everyday":/);
-  assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:soulforge":/);
+  assert.match(src("modules/wodx-rules/actions/theme-rules.js"), /"api:c20Everyday":/);
+  assert.match(src("modules/wodx-rules/actions/theme-rules.js"), /"api:soulforge":/);
 });
 
 test("the new text keeps to the house style: no gendered pronouns or em-dashes in prose", () => {

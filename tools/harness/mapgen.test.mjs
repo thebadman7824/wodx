@@ -18,7 +18,7 @@ const ERA_ASSETS = existsSync(NEW_ASSETS) ? `${ASSETS},${NEW_ASSETS}` : ASSETS;
 const SAMPLE_MAP = "/mnt/project-files/maps-ref/scripts/sample-walls-cottage inside.dungeondraft_map";
 const py = (() => { for ( const p of ["python3", "python"] ) { try { execFileSync(p, ["--version"]); return p; } catch (e) { /* next */ } } return null; })();
 const skip = !py || !existsSync(ASSETS) || !existsSync(SAMPLE_MAP) ? "needs Python 3, the asset list and the sample map" : false;
-const A = await import(join(root, "modules/wodx-interactables/scripts/adopt-rules.mjs"));
+const A = await import(join(root, "modules/wodx-rules/interactables/adopt-rules.mjs"));
 const run = (args, cwd) => execFileSync(py, args, {cwd, encoding: "utf8", timeout: 300000});
 
 test("mapgen: every building type furnishes facing every way, under many seeds", {skip}, () => {

@@ -2,7 +2,7 @@
  * WoDX Sheets 0.7.0: the markup of the sheet extras, built from the views in extras-rules.mjs. Pure strings, so the
  * sample page and the tests draw exactly what the sheet draws.
  */
-import { CONCEAL, TIE_ROLES } from "./extras-rules.mjs";
+import { CONCEAL, TIE_ROLES } from "../../wodx-rules/sheets/extras-rules.mjs";
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const searchBox = (target, placeholder) => `<input type="search" class="wodx-search" data-search="${esc(target)}" placeholder="${esc(placeholder)}" aria-label="${esc(placeholder)}" autocomplete="off" spellcheck="false">`;

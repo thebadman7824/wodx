@@ -10,9 +10,9 @@
  * Road, Rage, Gnosis, Arete, Glamour) are bought on the freebie page and kept in the wizard's ledger.
  */
 import {daTable} from "../../wodx-chronicle/data/trait-lines.mjs";
-import {TOTALS, checkCreation} from "./totals-rules.mjs";
+import {TOTALS, checkCreation} from "../../wodx-rules/creation/totals-rules.mjs";
 import {CLANS} from "../data/vampire.mjs";
-import {clanOpen, clansOpen} from "./rules.mjs";
+import {clanOpen, clansOpen} from "../../wodx-rules/creation/rules.mjs";
 export {clanOpen, clansOpen};
 
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));

@@ -76,8 +76,8 @@ test("B6302: a Kuei-jin's Chi aspect decides what holds them (KotE pdf pp. 11, 7
   assert.ok(CR.LONG_METAL.test("Katana") && CR.LONG_METAL.test("Iron bar") && !CR.LONG_METAL.test("Wooden stake") && !CR.LONG_METAL.test("Pistol"));
 });
 
-const RD = await import(join(root, "modules/wodx-chronicle/scripts/roads-rules.mjs"));
-const VL = await import(join(root, "modules/wodx-otherworlds/scripts/veil-look-rules.mjs"));
+const RD = await import(join(root, "modules/wodx-rules/chronicle/roads-rules.mjs"));
+const VL = await import(join(root, "modules/wodx-rules/otherworlds/veil-look-rules.mjs"));
 
 test("B6304: each road belongs to its line", () => {
   assert.equal(RD.roadLine({type: "Wraith"}), "wraith");

@@ -19,13 +19,13 @@
  *              Penumbra's resonance there. Kinds of place come from WoDX NPC's place tags.
  * Nothing here changes the world, so nothing goes through the approval queue.
  */
-import * as R from "./senses-rules.mjs";
+import * as R from "../../wodx-rules/senses/senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerPerceptionSettings, setupPerception, refreshScreen} from "./perception.mjs";
 import {registerQuiet, applyQuiet, quietCard} from "./quiet.mjs";
 import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 import * as OW from "./otherworld-sight.mjs";
-import * as OR from "./otherworld-sight-rules.mjs";
+import * as OR from "../../wodx-rules/senses/otherworld-sight-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 
@@ -766,8 +766,8 @@ Hooks.once("ready", async () => {
   applyQuiet();
   await loadTables();
   try { CAL = await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { CAL = null; }
-  try { guessPlace = (await import("../../wodx-npc/scripts/routine-rules.mjs")).guessPlace; } catch (e) { guessPlace = null; }
-  try { IR = await import("../../wodx-interactables/scripts/interact-rules.mjs"); } catch (e) { IR = null; }
+  try { guessPlace = (await import("../../wodx-rules/npc/routine-rules.mjs")).guessPlace; } catch (e) { guessPlace = null; }
+  try { IR = await import("../../wodx-rules/interactables/interact-rules.mjs"); } catch (e) { IR = null; }
   game.socket.on(SOCKET, async msg => {
     if ( msg?.type === "ask" && isActiveGM() ) {
       try { await answer(msg.payload); } catch (e) { console.error(`${MOD} |`, e); }

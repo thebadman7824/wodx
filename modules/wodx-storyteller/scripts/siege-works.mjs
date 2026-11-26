@@ -1,4 +1,4 @@
-import * as SW from "./siege-works-rules.mjs";
+import * as SW from "../../wodx-rules/storyteller/siege-works-rules.mjs";
 import * as C from "./core.mjs";
 
 /**

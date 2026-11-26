@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {MERITS_FLAWS, SHOWS} from "../../modules/wodx-chronicle/data/trait-effects.mjs";
 import {daTable, DA_MERITS_FLAWS} from "../../modules/wodx-chronicle/data/trait-lines.mjs";
 import {meritOptions} from "../../modules/wodx-creation/scripts/wizard-rules.mjs";
-import {flawPowerDiff} from "../../modules/wodx-actions/scripts/kindred-rules.js";
+import {flawPowerDiff} from "../../modules/wodx-rules/actions/kindred-rules.js";
 
 // B7665: the 80 Merits and Flaws of V20 Dark Ages (printed pp. 420-427), checked one by one in the full check.
 test("a Dark Ages vampire is offered the book's 80, at the book's costs", () => {

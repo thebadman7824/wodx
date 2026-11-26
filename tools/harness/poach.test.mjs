@@ -6,9 +6,9 @@ import {dirname, join} from "node:path";
 
 // Dark Ages depth desk item 6 (B7638-B7640): a poacher in a player's domain.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const P = await import(join(root, "modules/wodx-npc/scripts/poach-rules.mjs"));
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
-const PO = await import(join(root, "modules/wodx-npc/scripts/politics-rules.mjs"));
+const P = await import(join(root, "modules/wodx-rules/npc/poach-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
+const PO = await import(join(root, "modules/wodx-rules/npc/politics-rules.mjs"));
 
 const holder = {id: "h", leader: "npcLord", members: ["pc1", "npc2"]};
 const h = {trespass: {faction: "h", name: "The Fief", security: 2}};

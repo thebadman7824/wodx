@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* Phase 6k: the Reborn (WoDX Actions 3.10.0, Mummy: The Resurrection) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const M = await import(join(root, "modules/wodx-actions/scripts/mummy-rules.js"));
+const M = await import(join(root, "modules/wodx-rules/actions/mummy-rules.js"));
 
 test("six Amenti, their soul parts and paths; six paths of Hekau (p. 56, Chapters Two and Four)", () => {
   assert.equal(Object.keys(M.AMENTI).length, 6);

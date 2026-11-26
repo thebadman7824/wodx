@@ -4,8 +4,8 @@
  * or the world before the Storyteller approves it.
  */
 import {MOD, esc, chron, setting, isActiveGM, log, entries, isPC} from "./core.mjs";
-import * as N from "./night-rules.mjs";
-import * as Pace from "./pacing-rules.mjs";
+import * as N from "../../wodx-rules/storyteller/night-rules.mjs";
+import * as Pace from "../../wodx-rules/storyteller/pacing-rules.mjs";
 export {N};
 import {NIGHT_TABLES} from "../data/night-tables.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

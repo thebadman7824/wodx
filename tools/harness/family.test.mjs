@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const F = await imp("modules/wodx-npc/scripts/family-rules.mjs");
-const H = await imp("modules/wodx-npc/scripts/hearts-rules.mjs");
+const F = await imp("modules/wodx-rules/npc/family-rules.mjs");
+const H = await imp("modules/wodx-rules/npc/hearts-rules.mjs");
 const XH = await imp("modules/wodx-sheets/scripts/extras-html.mjs");
 
 test("a pregnancy is due about nine months on the clock", () => {
@@ -81,7 +81,7 @@ test("family is wired: the age floor, the approval, the clock, the hooks and the
 });
 
 // Child sheets, growing up, schooling and players as children (B3443-B3228).
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 const LP = await imp("modules/wodx-creation/scripts/lifepath-rules.mjs");
 
 test("a child's sheet is held to caps by age and filled toward the age's dots", () => {

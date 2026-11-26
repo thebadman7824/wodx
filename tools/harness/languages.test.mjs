@@ -8,7 +8,7 @@ import {installMock} from "./foundry-mock.mjs";
 import {installActors} from "./actors-mock.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-chronicle/scripts/languages-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/chronicle/languages-rules.mjs"));
 
 test("Linguistics: 1, 2, 4, 8, 16 beyond the native tongue", () => {
   assert.deepEqual([0, 1, 2, 3, 4, 5, 7].map(L.linguisticsAllows), [0, 1, 2, 4, 8, 16, 16]);

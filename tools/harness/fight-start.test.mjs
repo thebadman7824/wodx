@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as S from "../../modules/wodx-combat/scripts/start-rules.js";
-import * as FR from "../../modules/wodx-npc/scripts/fight-rules.mjs";
-import * as R from "../../modules/wodx-npc/scripts/routine-rules.mjs";
-import * as W from "../../modules/wodx-chronicle/scripts/when-rules.mjs";
+import * as S from "../../modules/wodx-rules/combat/start-rules.js";
+import * as FR from "../../modules/wodx-rules/npc/fight-rules.mjs";
+import * as R from "../../modules/wodx-rules/npc/routine-rules.mjs";
+import * as W from "../../modules/wodx-rules/chronicle/when-rules.mjs";
 
 /* Fights that start by themselves (WoDX Combat 3.9.0, NPC 0.15.0, Chronicle 0.18.1) */
 

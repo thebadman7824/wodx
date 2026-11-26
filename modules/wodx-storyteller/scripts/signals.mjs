@@ -12,8 +12,8 @@
  * Only the active Storyteller writes the list. Every post also calls the hook wodxSignal with the clean signal, so a
  * weight 3 signal can wake the weave at once.
  */
-import * as S from "./signals-rules.mjs";
-import * as HR from "./hunters-rules.mjs";
+import * as S from "../../wodx-rules/storyteller/signals-rules.mjs";
+import * as HR from "../../wodx-rules/storyteller/hunters-rules.mjs";
 import {MOD, chron, isActiveGM, setting, mutate} from "./core.mjs";
 
 const now = () => game.time?.worldTime ?? 0;

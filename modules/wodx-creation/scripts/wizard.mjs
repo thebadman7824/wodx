@@ -5,15 +5,15 @@
  * it is chosen, so the sheet, the creation check and Before the First Night always agree. The pure part is
  * wizard-rules.mjs.
  */
-import * as MDA from "../../wodx-actions/scripts/mage-da-rules.js";
-import * as FDA from "../../wodx-actions/scripts/fae-da-rules.js";
+import * as MDA from "../../wodx-rules/actions/mage-da-rules.js";
+import * as FDA from "../../wodx-rules/actions/fae-da-rules.js";
 import {MODULE_ID, esc, attributeLock} from "./actor-data.mjs";
-import {TOTALS} from "./totals-rules.mjs";
+import {TOTALS} from "../../wodx-rules/creation/totals-rules.mjs";
 import {totalsView, lineFor, CreationCheckApp} from "./totals-check.mjs";
-import * as B from "./first-night-build-rules.mjs";
+import * as B from "../../wodx-rules/creation/first-night-build-rules.mjs";
 import * as W from "./wizard-rules.mjs";
-import * as Q from "./quick-start-rules.mjs";
-import * as D from "./derived-rules.mjs";
+import * as Q from "../../wodx-rules/creation/quick-start-rules.mjs";
+import * as D from "../../wodx-rules/creation/derived-rules.mjs";
 import {traitNote} from "../data/trait-notes.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
@@ -46,7 +46,7 @@ const homeRegion = () => {
 const langsOf = actor => (Array.isArray(actor?.flags?.["wodx-chronicle"]?.languages) ? actor.flags["wodx-chronicle"].languages.filter(Boolean) : []);
 /** The player view's hover help in WoDX Sheets, when that module has it: one text for each Trait in all of WoDX. */
 let sheetHelp = null;
-import("../../wodx-sheets/scripts/beginner-rules.mjs").then(m => { sheetHelp = typeof m.helpFor === "function" ? m.helpFor : null; }).catch(() => null);
+import("../../wodx-rules/sheets/beginner-rules.mjs").then(m => { sheetHelp = typeof m.helpFor === "function" ? m.helpFor : null; }).catch(() => null);
 const noteFor = (label, lineId, group) => traitNote(label, lineId, {help: sheetHelp, group});
 
 /** What a page's Traits mean, folded under one line: [{label, group}]. */

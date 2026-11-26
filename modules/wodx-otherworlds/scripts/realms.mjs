@@ -5,7 +5,7 @@
 import {MODULE_ID} from "./ratings.mjs";
 import {STATUS, applyLocally} from "./crossing.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
-import * as RR from "./realms-rules.mjs";
+import * as RR from "../../wodx-rules/otherworlds/realms-rules.mjs";
 import {makeWay} from "./ways.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

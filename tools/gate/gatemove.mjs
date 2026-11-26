@@ -117,7 +117,7 @@ export async function run() {
       ok("Earth Meld", hid === true && a.hidden === false);
     });
     await step("jump reach and fall height", async () => {
-      const src = await (await fetch(`/modules/wodx-actions/scripts/checks-rules.js?${Date.now()}`)).text();
+      const src = await (await fetch(`/modules/wodx-rules/actions/checks-rules.js?${Date.now()}`)).text();
       ok("jump reach and fall height", /export function jumpReach/.test(src) && game.wodxActions?.hazard?.length >= 0 && typeof game.wodxActions?.hazard === "function");
     });
     await step("other modules", async () => {

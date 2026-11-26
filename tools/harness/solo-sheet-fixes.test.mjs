@@ -36,7 +36,7 @@ test("#2483: the targeting panel clears an area outline when the power is not an
 });
 
 test("#2500: a carried light must be in the inventory (the Storyteller may light any)", async () => {
-  const C = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/carry-rules.mjs")));
+  const C = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/carry-rules.mjs")));
   assert.deepEqual(C.heldKinds(["Tallow candles", "Sword"]), ["candle"]);
   assert.deepEqual(C.heldKinds(["Electric torch"]), ["electric"], "an electric torch is not a torch");
   assert.deepEqual(C.heldKinds(["Pitch torch", "Storm lantern"]), ["torch", "lantern"]);
@@ -64,11 +64,11 @@ test("#2477: spent time keeps the guards a wait has", () => {
   const P = src("modules/wodx-solo/scripts/panel.mjs");
   const fn = P.slice(P.indexOf("export async function spendTime("), P.indexOf("/** Pause the game, or start it again. */"));
   for ( const g of [/placeOf\(user\)/, /making\(user\)/, /fightOn\(scene\.id\)\.length/, /game\.paused/, /if \( waiting \)/] ) assert.match(fn, g);
-  assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:giveBlood": "Give a point of your vitae/);
+  assert.match(src("modules/wodx-rules/actions/theme-rules.js"), /"api:giveBlood": "Give a point of your vitae/);
 });
 
 test("#2487: Make the arrest sends the watch to the map, and every answer to the law is told", async () => {
-  const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/reach-rules.mjs")));
+  const R = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/reach-rules.mjs")));
   const spots = R.spotsNear({x: 0, y: 0}, {size: 100, width: 1000, height: 1000}, 2);
   assert.ok(spots.length && spots.every(p => p.x >= 0 && p.y >= 0), "inside the scene");
   assert.equal(spots[0].r, 1, "the nearest ring first");
@@ -100,7 +100,7 @@ test("#2490: a trip takes time in solo play, lands by the door, and a public pla
   assert.equal(regionBox([]), null);
   const N = src("modules/wodx-npc/scripts/passersby.mjs");
   assert.match(N, /const on = typeof c\.on === "boolean" \? c\.on : \(soloOn\(\) && PUBLIC_KINDS\.has\(guess\)\);/);
-  const RR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/routine-rules.mjs")));
+  const RR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/routine-rules.mjs")));
   assert.equal(RR.guessPlace("The Black Goat Tavern").kind, "tavern");
 });
 
@@ -153,7 +153,7 @@ test("#2506: a player may ask for a trait at once, and the Storyteller's approva
 });
 
 test("#2504: a player's menu shows what fits the character, the rest behind Show every action", async () => {
-  const T = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/theme-rules.js")));
+  const T = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/theme-rules.js")));
   assert.equal(T.fits("api:malkRite", {text: "Brujah | Celerity"}), false);
   assert.equal(T.fits("api:malkRite", {text: "Malkavian"}), true);
   assert.equal(T.fits("api:conditioning", {text: "Tzimisce | Dominate"}), true);
@@ -176,7 +176,7 @@ test("#2505: a lifepath may begin before the common era", async () => {
 });
 
 test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark Ages pp. 220, 230, 247)", async () => {
-  const TR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/turn-rules.js")));
+  const TR = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/turn-rules.js")));
   const chain = TR.resolveRec(TR.everyTurnOf("Chain the Psyche", "Vampire (Dark Ages)"), {successes: 3});
   assert.equal(chain.rounds, 3);
   assert.deepEqual(TR.stepOf(chain), [{kind: "damage", levels: 1, type: "bashing", soak: false}]);

@@ -7,7 +7,7 @@
  *   Read    Start a chronicle's "Characters from an earlier chronicle" box names the file; each document is made in
  *           the folder "Carried across", once (a second read of the same file makes no copies).
  */
-import * as C from "./carry-rules.mjs";
+import * as C from "../../wodx-rules/storyteller/carry-rules.mjs";
 import {MOD, esc, isPC} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

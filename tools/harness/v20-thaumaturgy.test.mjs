@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const read = p => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), "utf8"));
-const K = await import("../../modules/wodx-actions/scripts/kindred-rules.js");
+const K = await import("../../modules/wodx-rules/actions/kindred-rules.js");
 const PK = await import("../../modules/wodx-actions/scripts/power-keywords-lines.js");
 const DA = read("modules/wodx-actions/data/disciplines-daw.json").powers;
 const V20 = read("modules/wodx-actions/data/disciplines-v20.json").powers;

@@ -12,7 +12,7 @@
  * Everyday dishes are made at once with no roll when the pool is at least the difficulty; everything else is a long
  * task (an extended action, V20 pp. 251-252) that rolls as game time passes. Ingredients are used up at the start.
  */
-import * as CR from "./craft-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/craft-rules.mjs";
 import {MOD, esc, isActiveGM, chron, whereNow} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
@@ -35,7 +35,7 @@ let L = null;
 export async function lib() {
   if ( L ) return L;
   try {
-    const [R, G, U] = await Promise.all([import("../../wodx-library/scripts/recipe-rules.mjs"), import("../../wodx-library/data/goods.mjs"), import("../../wodx-library/scripts/use-rules.mjs")]);
+    const [R, G, U] = await Promise.all([import("../../wodx-rules/library/recipe-rules.mjs"), import("../../wodx-library/data/goods.mjs"), import("../../wodx-rules/library/use-rules.mjs")]);
     L = {R, G, U};
   } catch (e) { console.warn(`${MOD} | recipes need WoDX Library`, e); L = null; }
   return L;
@@ -344,7 +344,7 @@ export async function takeApart(a, item) {
   const s = await salvageOfItem(item);
   if ( !s.ok ) return s;
   let qualitiesOf = null;
-  try { qualitiesOf = (await import("../../wodx-library/scripts/link-rules.mjs")).qualitiesOf ?? null; } catch (e) { /* not there yet */ }
+  try { qualitiesOf = (await import("../../wodx-rules/library/link-rules.mjs")).qualitiesOf ?? null; } catch (e) { /* not there yet */ }
   const carried = all(a.items).filter(i => i.id !== item.id).map(i => i.name);
   const tool = l.R.apartTool(s.tool, carried, qualitiesOf);
   if ( !tool.ok && !game.user.isGM ) return {ok: false, why: `${cap(tool.why)}.`};

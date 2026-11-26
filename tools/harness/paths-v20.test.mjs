@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const read = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
-const K = await import("../../modules/wodx-actions/scripts/kindred-rules.js");
+const K = await import("../../modules/wodx-rules/actions/kindred-rules.js");
 const PATHS = JSON.parse(read("modules/wodx-actions/data/paths-v20.json"));
 const ROADS = JSON.parse(read("modules/wodx-actions/data/roads-daw.json"));
 const BIO = read("system/worldofdarkness/assets/data/sheet/bio.js");
@@ -77,7 +77,7 @@ test("B6724: roadOf reads the V20 Path first, and a vessel drained while feeding
 });
 
 test("B6725: a Bastet's own tribe's Gifts are its own; another tribe's are not; other Fera groups unchanged", async () => {
-  const G = await import("../../modules/wodx-actions/scripts/garou-rules.js");
+  const G = await import("../../modules/wodx-rules/actions/garou-rules.js");
   const FERA = JSON.parse(read("modules/wodx-actions/data/gifts-fera.json")).gifts;
   const bagheera = FERA.find(g => g.breed === "Bastet" && g.sub === "Bagheera");
   const simba = FERA.find(g => g.breed === "Bastet" && g.sub === "Simba");
@@ -95,7 +95,7 @@ test("B6725: a Bastet's own tribe's Gifts are its own; another tribe's are not; 
 });
 
 // B7080-B7081: each Path's bearing (V20 p. 310 and the Path pages), and the two other names the book gives
-const R = await import("../../modules/wodx-actions/scripts/rules.js");
+const R = await import("../../modules/wodx-rules/actions/rules.js");
 const path = k => K.v20PathFor(PATHS, `wod.advantages.path.${k}`);
 
 test("B7080: the bearing table in the data gives the V20 p. 310 steps, the same as the Road aura", () => {

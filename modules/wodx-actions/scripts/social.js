@@ -1,10 +1,10 @@
-import * as SR from "./social-rules.js";
-import { curseDice } from "./garou-rules.js";
+import * as SR from "../../wodx-rules/actions/social-rules.js";
+import { curseDice } from "../../wodx-rules/actions/garou-rules.js";
 import { socialDiff, socialDice } from "./after-costs.js";
 import * as TH from "./trait-hooks.js";
 import * as TRD from "./trade.js";
 import { conditionMods } from "./limits.js";
-import { needsSight } from "./after-cost-rules.js";
+import { needsSight } from "../../wodx-rules/actions/after-cost-rules.js";
 
 /**
  * B6663: the roller's registered conditions (Drained, Ravenous, Blurred sight on a sight roll...) on a roll made here,

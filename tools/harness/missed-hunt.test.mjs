@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* Missed connections x6 (Actions 3.45.0): the hour, the era, the crowd and the weather nudge a hunt */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const HN = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/hunt-night-rules.js")));
+const HN = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/hunt-night-rules.js")));
 
 test("a medieval town in the small hours is all but empty", () => {
   const nd = HN.huntNudge({year: 1230, hour: 3, area: "market"});

@@ -17,15 +17,15 @@
  *              (in the Dark Ages, the Inquisition: B42). Each rise is a queue card, so the Storyteller can stop it.
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
-import * as DU from "./duty-rules.mjs";
-import * as F from "./faction-rules.mjs";
+import * as DU from "../../wodx-rules/npc/duty-rules.mjs";
+import * as F from "../../wodx-rules/npc/faction-rules.mjs";
 import {calendarFor} from "./hunt-calendar.mjs";
-import * as WR from "./war-rules.mjs";
-import * as PO from "./politics-rules.mjs";
-import * as SX from "./secrets-rules.mjs";
-import * as POACH from "./poach-rules.mjs";
-import * as FLOCK from "./road-flock-rules.mjs";
-import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
+import * as WR from "../../wodx-rules/npc/war-rules.mjs";
+import * as PO from "../../wodx-rules/npc/politics-rules.mjs";
+import * as SX from "../../wodx-rules/npc/secrets-rules.mjs";
+import * as POACH from "../../wodx-rules/npc/poach-rules.mjs";
+import * as FLOCK from "../../wodx-rules/npc/road-flock-rules.mjs";
+import * as Media from "../../wodx-rules/chronicle/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

@@ -129,7 +129,7 @@ test("the window, the menus, Combat's soak and the NPC choice are wired", () => 
   assert.match(m, /CHM\.isSpirit\(actor\)\) from\.push\(\.\.\.chmx\(\)\.powersFor/);
   assert.match(m, /spiritCharm: withActor/);
   assert.match(m, /CHM\.setup\(\)/);
-  assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:spiritCharm"/);
+  assert.match(src("modules/wodx-rules/actions/theme-rules.js"), /"api:spiritCharm"/);
   assert.match(src("modules/wodx-actions/scripts/profile-menus.js"), /"api:spiritCharm", "Spirit Charms"/);
   for (const p of ["modules/wodx-actions/scripts/profiles.js", "modules/wodx-combat/scripts/profiles.js"])
     assert.match(src(p), /key === "beast" && \/\\bspirit\\b\/\.test\(variant\)/);

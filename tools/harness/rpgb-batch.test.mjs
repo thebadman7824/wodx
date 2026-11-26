@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const AR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/alert-rules.mjs")));
-const R = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs")));
-const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/when-rules.mjs")));
+const AR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/alert-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/interact-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/when-rules.mjs")));
 
 test("a household answers: same name, within call, not players' characters, not down, not already fighting", () => {
   const others = [
@@ -104,7 +104,7 @@ test("a mood stays while any player's character is inside", async () => {
 });
 
 test("Ledger objectives: steps tick from map events, and finishing marks it kept without any Experience", async () => {
-  const L = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/ledger-rules.mjs")));
+  const L = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/ledger-rules.mjs")));
   const e = L.normEntry({kind: "objective", what: "Find the reliquary before the abbey falls", from: "Anna", steps: "reach the cellar stairs\nopen the reliquary\nfound the trapdoor"});
   assert.equal(e.steps.length, 3);
   assert.deepEqual(e.steps.map(s => s.verb), ["reach", "open", "found"]);
@@ -128,7 +128,7 @@ test("Ledger objectives: steps tick from map events, and finishing marks it kept
 });
 
 test("faction standing toward a character: steps by word, a test and an outcome", async () => {
-  const F = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/faction-rules.mjs")));
+  const F = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/faction-rules.mjs")));
   const f = F.normFaction({id: "f1", name: "The Voivode's court", key: "court", people: {pc1: 2, pc2: "hostile", pc3: 9, pc4: 0}});
   assert.deepEqual(f.people, {pc1: 2, pc2: -2, pc3: 3});
   assert.equal(F.peopleWord(2), "Welcome");
@@ -147,7 +147,7 @@ test("faction standing toward a character: steps by word, a test and an outcome"
 });
 
 test("recipes: a long task waits for its workshop's era and its materials, and makes a thing", async () => {
-  const T = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/tasks-rules.mjs")));
+  const T = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/tasks-rules.mjs")));
   const t = T.normTask({kind: "craft", name: "Plates of the dead", workshop: "darkroom", needs: "silver nitrate; glass plates", makes: "Photographs of the dead"});
   assert.equal(t.workshop, "darkroom");
   assert.deepEqual(T.recipeCheck(t, {year: 1800, carried: ["silver nitrate", "glass plates"]}).ok, false);
@@ -164,7 +164,7 @@ test("recipes: a long task waits for its workshop's era and its materials, and m
 });
 
 test("talk sheets: the Storyteller's own lines, shown when they fit the character", async () => {
-  const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/npc-rules.mjs")));
+  const NR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/npc-rules.mjs")));
   const lines = NR.parseTalk("kind kindred => Will not speak of the abbot to a Cainite.\ncarries seal => Opens the archive.\nGrumbles about the price of salt.\n# a note");
   assert.equal(lines.length, 3);
   const mortal = {actor: {kind: "mortal", items: ["The bishop's seal"]}};

@@ -6,7 +6,7 @@
  * dealt and spent, the acts seen in chat, who outside the fight could see it, and a button that records the breach in
  * the Masquerade ledger (WoDX Actions) and starts a rumour (WoDX Storyteller). Nothing reaches the players.
  */
-import * as AR from "./aftermath-rules.js";
+import * as AR from "../../wodx-rules/combat/aftermath-rules.js";
 import {lengthOf} from "./fight-time.js";
 
 const MOD = "wodx-combat";

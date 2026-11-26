@@ -12,7 +12,7 @@
  * World setting wodx-sheets.sheetRollMods (on by default) turns it off.
  */
 import { DialogGeneralRoll } from "../../../systems/worldofdarkness/module/dialogs/dialog-generalroll.js";
-import * as RR from "./sheet-roll-rules.mjs";
+import * as RR from "../../wodx-rules/sheets/sheet-roll-rules.mjs";
 
 const MOD = "wodx-sheets";
 const api = id => (game.modules.get(id)?.active ? game.modules.get(id).api : null);

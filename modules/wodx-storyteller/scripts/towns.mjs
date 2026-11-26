@@ -13,19 +13,19 @@
  * Hidden world state wodx-storyteller.townState. Big events start rumours from the town's traders, go in the
  * Storyteller's log, and fire wodxTown {town, kind, text, big} for other modules (passers-by, factions, town scars).
  */
-import * as TR from "./town-rules.mjs";
+import * as TR from "../../wodx-rules/storyteller/town-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import * as TownScars from "./town-scars.mjs";
-import * as MT from "./market-turn-rules.mjs";
-import * as MK from "./market-rules.mjs";
-import * as MV from "./market-moves-rules.mjs";
-import * as News from "./market-news-rules.mjs";
+import * as MT from "../../wodx-rules/storyteller/market-turn-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
+import * as MV from "../../wodx-rules/storyteller/market-moves-rules.mjs";
+import * as News from "../../wodx-rules/storyteller/market-news-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Battles from "./battles.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {WORLD_REGIONS} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {WORLD_REGIONS} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const TYPE = `${MOD}.town`;

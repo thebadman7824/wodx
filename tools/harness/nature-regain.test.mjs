@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
-import * as N from "../../modules/wodx-actions/scripts/nature-rules.js";
+import * as N from "../../modules/wodx-rules/actions/nature-rules.js";
 
 /* Acting to one's Nature gives a Willpower point back (B3916) */
 

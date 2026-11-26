@@ -13,8 +13,8 @@ await imp("modules/wodx-library/scripts/wonder-lines.mjs");
 const Reg = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const D = await imp("modules/wodx-library/data/wonders-wraith.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const SR = await imp("modules/wodx-paperdoll/scripts/sprite-rules.mjs");
-const AR = await imp("modules/wodx-creation/scripts/advance-rules.mjs");
+const SR = await imp("modules/wodx-rules/paperdoll/sprite-rules.mjs");
+const AR = await imp("modules/wodx-rules/creation/advance-rules.mjs");
 const K = Reg.kitFor("wraith");
 
 const sheet = (o = {}) => ({system: {advantages: {pathos: {temporary: 9}, angst: {temporary: 7}, corpus: {temporary: 10, max: 10}, willpower: {permanent: 5}},

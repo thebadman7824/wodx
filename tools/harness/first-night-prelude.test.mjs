@@ -1,11 +1,11 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as P from "../../modules/wodx-creation/scripts/first-night-prelude-rules.mjs";
-import * as B from "../../modules/wodx-creation/scripts/first-night-build-rules.mjs";
+import * as P from "../../modules/wodx-rules/creation/first-night-prelude-rules.mjs";
+import * as B from "../../modules/wodx-rules/creation/first-night-build-rules.mjs";
 import * as LP from "../../modules/wodx-creation/scripts/lifepath-rules.mjs";
-import * as PR from "../../modules/wodx-storyteller/scripts/prelude-rules.mjs";
-import {normRecord} from "../../modules/wodx-creation/scripts/first-night-rules.mjs";
+import * as PR from "../../modules/wodx-rules/storyteller/prelude-rules.mjs";
+import {normRecord} from "../../modules/wodx-rules/creation/first-night-rules.mjs";
 
 /* WoDX Creation 0.13.0: the guided builder, the prelude runner and the troupe ties (Chronicle Start Desk b1, p1 to p3, t1, t2) */
 
