@@ -97,7 +97,7 @@ function registerSettings() {
         "Matchlocks, wheellocks and flintlocks misfire on a botch, and on any 1 in rain or standing in water; heavy rain puts out a match and a misfire there wets the powder until the gun is reloaded. A gun that names no lock takes the lock of the year. Percussion caps and cartridges use the plain botch rule.",
         Boolean, true);
     s("movementLimit", "Movement in a fight",
-        "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. By default a player's move past the running speed (or a carrying or dragging pace) is stopped, and a player's attack after moving more than half the running speed is refused (the GM is never stopped, and only warned). Show the pace only to make both warnings.",
+        "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. By default a move past the running speed (or a carrying or dragging pace) is stopped for a player, and for an NPC the Storyteller drags or moves with the keys (hold Alt to move one further), and a player's attack after moving more than half the running speed is refused. Show the pace only to make both warnings.",
         String, "block", { choices: { block: "Show it, stop moves past the running speed and attacks after a long move", note: "Show the pace only (warnings)", off: "Off" } });
     s("turnMoves", "Moves out of turn",
         "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
@@ -2421,7 +2421,11 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     const total = (prev?.tag === tag ? Number(prev.yards) || 0 : 0) + yards;
     const cap = way.limit === null ? lim.run : way.limit;
     const p = way.limit === null ? AU.pace(total, lim) : (total <= cap + 1e-6 ? way.mode : "over");
-    if (p === "over" && mode === "block" && !game.user.isGM) {
+    // #2485: an NPC the Storyteller drags (or moves with the keys) keeps to the same running speed as a player's
+    // character; Alt held while moving lets the Storyteller past it for a shove, a fall or a power
+    const method = options?.movement?.[doc.id]?.method ?? options?.movement?.method ?? "";
+    const gmHand = game.user.isGM && !doc.actor.hasPlayerOwner && ["dragging", "keyboard"].includes(method) && !game.keyboard?.isModifierActive?.("Alt");
+    if (p === "over" && mode === "block" && (!game.user.isGM || gmHand)) {
         ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their ${way.limit === null ? "running speed" : `${MV_LABEL(way.mode).toLowerCase()} limit`} this turn (${cap}${way.note ? `; ${way.note}` : lim.note ? `; ${lim.note}` : ""}).`);
         return false;
     }
