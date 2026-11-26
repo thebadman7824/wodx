@@ -56,7 +56,9 @@ export function decide(f, {maxHours = 3} = {}) {
   if ( !f.ownBranch ) return {action: "leave", why: "the train only takes the owner's pull requests from claude/ branches of this repository"};
   // Threads open draft pull requests; the label says the work is done, so the train marks it ready itself
   if ( f.draft ) return {action: "ready", why: "a draft: the label says it is done, so the train marks it ready for review"};
-  if ( f.mergeable === false ) return {action: "leave", why: "it has a merge conflict with main: merge main into the branch, fix the conflict, push, then add the label again"};
+  // B8132: a conflict only in files the train writes itself (resolvable) is settled by the train's own merge, so a
+  // pull request GitHub calls unmergeable is prepared; prepare() leaves it when any other file conflicts
+  if ( f.mergeable === false ) return {action: "prepare", why: "GitHub sees a conflict with main: the train merges main in itself and settles conflicts only in the review list and generated files"};
   if ( f.mergeable === null ) return {action: "wait", why: "GitHub is still working out whether it merges cleanly"};
   if ( f.behind > 0 || f.fragments > 0 ) return {action: "prepare", why: [f.behind > 0 ? `behind main by ${f.behind}` : "", f.fragments > 0 ? `${f.fragments} release note(s) to stamp` : ""].filter(Boolean).join(", ")};
   if ( f.gates === "failure" ) return {action: "leave", why: "its gates failed on the head: fix them, push, then add the label again"};
@@ -284,11 +286,14 @@ export async function prepare(ctx, ref, head) {
   const behind = (await git(["merge-base", "--is-ancestor", "origin/main", "HEAD"], dir)).status !== 0;
   if ( behind ) {
     const m = await git(["merge", "--no-edit", "-m", `Merge main into ${ref} (merge train)\n\nMerge-Train: yes`, "origin/main"], dir);
-    if ( !ok(m) ) {
-      const f = mergeFailure(m, (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout);
+    const settled = ok(m) ? null : await settleConflicts(ctx, dir, (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout);
+    if ( settled ) did.push(`conflicts settled in ${settled.join(", ")}`);
+    if ( !ok(m) && !settled ) {
+      const unmerged = (await git(["diff", "--name-only", "--diff-filter=U"], dir))?.stdout ?? "";
+      const f = mergeFailure(m, unmerged), clash = unmerged.split("\n").map(x => x.trim()).filter(Boolean);
       await git(["merge", "--abort"], dir);
       ctx.log?.(`train: git merge of main into ${ref} failed (exit ${m.status}): ${f.said}`);
-      if ( f.conflict ) return {error: "main does not merge in cleanly: merge main into the branch, fix the conflict, push, then add the label again"};
+      if ( f.conflict ) return {error: `main does not merge in cleanly${clash.length ? ` (conflicts in ${clash.slice(0, 5).join(", ")}${clash.length > 5 ? ` and ${clash.length - 5} more` : ""})` : ""}: merge main into the branch, fix the conflict, push, then add the label again`};
       if ( f.setup ) return {setup: true, error: `git on the runner could not merge main in, though nothing conflicts (${redact(f.said)}): the runner's git setup needs a fix`};
       return {error: `git could not merge main in, though nothing conflicts (${redact(f.said)}): fix the branch, push, then add the label again`};
     }
@@ -310,6 +315,50 @@ export async function prepare(ctx, ref, head) {
   const p = await git(["push", "-q", "origin", `HEAD:refs/heads/${ref}`, `--force-with-lease=refs/heads/${ref}:${head}`], dir);
   if ( !ok(p) ) return {error: `the push to ${ref} was refused (${String(p.stderr ?? "").trim().slice(0, 200)}); if the thread pushed meanwhile, add the label again`};
   return {sha, did: did.join(" and ")};
+}
+
+/**
+ * B8132: the files whose merge conflicts the train settles itself. Of the 13 pull requests ejected for a conflict
+ * from 17 to 25 November, docs/PENDING-REVIEW.md was in about 8 of the 11 whose files could be read: every branch
+ * appends rows at the same table end. docs/FEATURES.md is written from registry/features/, and the api-paths fixture
+ * is written again by every stamp, so neither holds anything a branch wrote by hand.
+ */
+export const SETTLED = ["docs/PENDING-REVIEW.md", "docs/FEATURES.md", "tools/gate/fixtures/api-paths.json"];
+/** Whether every unmerged path is one the train settles. Pure. */
+export const settleable = unmerged => { const u = String(unmerged ?? "").split("\n").map(s => s.trim()).filter(Boolean); return u.length > 0 && u.every(f => SETTLED.includes(f)); };
+/**
+ * The review list after a merge: main's file, then the table rows the branch added (rows on the branch side that the
+ * merge base did not have and main does not hold). Rows main moved to an approved section stay where main put them. Pure.
+ */
+export function settlePending(base, ours, theirs) {
+  const row = l => /^\| \d{4}-\d{2}-\d{2} \|/.test(l.trim());
+  const had = new Set(String(base ?? "").split("\n").map(l => l.trim()));
+  const mainHas = new Set(String(theirs ?? "").split("\n").map(l => l.trim()));
+  const added = String(ours ?? "").split("\n").map(l => l.trim()).filter(l => row(l) && !had.has(l) && !mainHas.has(l));
+  return added.length ? String(theirs).replace(/\s*$/, "\n") + added.join("\n") + "\n" : String(theirs);
+}
+/**
+ * In a merge stopped on conflicts: when they are all in SETTLED files, settle them and commit the merge. Returns the
+ * settled paths, or null (nothing done; the caller aborts the merge as before).
+ */
+async function settleConflicts(ctx, dir, unmerged) {
+  if ( !settleable(unmerged) ) return null;
+  const {git} = ctx, files = String(unmerged).split("\n").map(s => s.trim()).filter(Boolean);
+  const stage = async (n, f) => { const r = await git(["show", `:${n}:${f}`], dir); return r?.status === 0 ? r.stdout : ""; };
+  for ( const f of files ) {
+    const theirs = await stage(3, f);
+    const text = f === "docs/PENDING-REVIEW.md" ? settlePending(await stage(1, f), await stage(2, f), theirs) : theirs;
+    fs.writeFileSync(path.join(dir, f), text);
+  }
+  if ( files.includes("docs/FEATURES.md") ) {
+    const r = spawnSync(process.execPath, [path.join(dir, "tools", "registry", "registry.mjs"), "summary", "--write"], {cwd: dir, encoding: "utf8", windowsHide: true});
+    if ( r.status !== 0 ) { ctx.log?.(`train: FEATURES.md could not be written again: ${(r.stderr || r.stdout).slice(-300)}`); return null; }
+  }
+  if ( (await git(["add", "--", ...files], dir))?.status !== 0 ) return null;
+  const c = await git(["commit", "-q", "--no-edit"], dir);
+  if ( c?.status !== 0 ) { ctx.log?.(`train: the settled merge could not be committed: ${gitSaid(c)}`); return null; }
+  ctx.log?.(`train: settled conflicts in ${files.join(", ")}`);
+  return files;
 }
 
 /**

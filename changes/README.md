@@ -53,6 +53,18 @@ Claim the block first: `node tools/decisions/claim.mjs --thread <thread id> --fe
 The stamp adds the index row (with "used B3070-B3073" worked out from the sections), puts the sections in number
 order in docs/DECISIONS.md and moves "Next free block" up.
 
+## Rows for the review list: `changes/pending-review/<any-name>.md`
+
+A choice Claude made without waiting (docs/PENDING-REVIEW.md) goes in a fragment, not in the file itself (B8131),
+since every branch appending to the same table end was the commonest merge conflict on the train. Write the rows as
+they would stand in the Waiting for review table, one per line:
+
+    | 2026-11-26 | The question | The choice made | How to reverse it |
+
+The stamp appends them to the end of the Waiting for review table. Name the file after the feature. An older branch
+that edited docs/PENDING-REVIEW.md by hand still merges: the train settles a conflict in that file itself, keeping
+main's file and adding the branch's new rows at the end (B8132).
+
 ## Before merging
 
 The merge rules (docs/WORKFLOW.md, section 6) must hold first: a note here for every module the branch changes, a

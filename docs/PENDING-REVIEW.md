@@ -4,7 +4,7 @@ Each Monday, approved sections more than a week old move to docs/archive/pending
 
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
-New entries go at the end of the "Waiting for review" table, which is last in this file.
+New entries go at the end of the "Waiting for review" table, which is last in this file. A branch writes them as a fragment, changes/pending-review/<name>.md, which the merge stamp appends here (B8131, changes/README.md).
 
 Tiers (Finish-Line Desk, item w5, 17 November 2026). Classify each question before logging it:
 - Low: reversible and inside a design Ben already approved. Take the recommendation and log a row here. It never goes on the daily decisions desk; the Monday review lists these rows for Ben to skim.

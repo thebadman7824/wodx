@@ -60,7 +60,7 @@ export const REVIEW_DIR = "docs/reviews";
 
 /** Files merge-stamp writes, or that hold the notes and reviews themselves: never need their own review. */
 export const STAMPED = [/^changes\/[^/]+\//, /^docs\/reviews\/[^/]+\.jsonl$/, /^modules\/[\w-]+\/CHANGELOG\.md$/, /^docs\/MODULES\.md$/,
-  /^docs\/DECISIONS\.md$/, /^tools\/gate\/fixtures\/api-paths\.json$/];
+  /^docs\/DECISIONS\.md$/, /^tools\/gate\/fixtures\/api-paths\.json$/, /^docs\/PENDING-REVIEW\.md$/];
 export const isStamped = f => STAMPED.some(r => r.test(f));
 /** Files whose change can change a gate result (the inputs of gate-map's touched()). */
 export const gateInput = f => /^(modules|system)\//.test(f) || /^tools\/gate\//.test(f);
@@ -109,7 +109,7 @@ export function branchNotes(g, base, head) {
   const out = [];
   for ( const file of [...added].sort() ) {
     const m = /^changes\/([\w-]+)\/([^/]+\.md)$/.exec(file);
-    if ( !m || m[1] === "decisions" || m[2] === "README.md" ) continue;
+    if ( !m || m[1] === "decisions" || m[1] === "pending-review" || m[2] === "README.md" ) continue;
     let text = g.show(head, file);
     if ( text === null ) {
       // Gone at the head (merge-stamp removed it): the last commit on the branch that touched it removed it, so its
