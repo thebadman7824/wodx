@@ -6,8 +6,8 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
-const CK = await import(join(root, "modules/wodx-actions/scripts/checks-rules.js"));
+const TR = await import(join(root, "modules/wodx-rules/actions/theme-rules.js"));
+const CK = await import(join(root, "modules/wodx-rules/actions/checks-rules.js"));
 
 test("Exorcism shows for a character who learned the rite; the manor for one with a Domain", () => {
   assert.equal(TR.fits("api:exorcise", {text: "brujah | sword"}), false);

@@ -6,7 +6,7 @@
  * Wounds are the health-track index (0 unhurt, 1 Bruised … 6 Crippled, 7 Incapacitated).
  */
 import * as TK from "./talk-rules.mjs";
-import {TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+import {TURN_SECONDS} from "../core/terms.mjs";
 import {ANIMAL_TEMPLATES, ANIMALS} from "./animal-rules.mjs";
 import {MORTAL_TEMPLATES, MORTALS} from "./mortal-rules.mjs";
 import {SUPERNATURAL_TEMPLATES, pickSupernatural} from "./supernatural-rules.mjs";
