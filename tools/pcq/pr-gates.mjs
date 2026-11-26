@@ -16,6 +16,7 @@
  *   - an earlier commit of the pull request has a passing wodx/gates status and no module, system or gate file differs
  *     from it (version stamps ignored, the same test merge-rules.mjs uses), so stamp commits start nothing
  *   - a job for this exact commit is already queued or running
+ *   - this exact commit already has a passing wodx/gates status (B8172: marking a draft ready runs this again)
  * When only main moved since the last finished touched job of the pull request (merges of main, stamps, carried
  * reviews: no gate input the branch itself changed), the job runs only the gates main's merge touched plus the gates
  * that did not pass last time (B7442; a touched job with "since").
@@ -49,6 +50,11 @@ export function isHold({title = "", labels = [], headRef = ""}) {
 export function parseGates(out) {
   const m = /^GATES (\[.*\])\s*$/m.exec(out ?? "");
   return m ? JSON.parse(m[1]).filter(g => /^[\w-]+$/.test(g)) : [];
+}
+
+/** True when this commit's own wodx/gates status is green (B8172: a ready_for_review or title event on the same head). */
+export function headPassed(statuses = []) {
+  return (statuses ?? []).find(x => x.context === GATE_CONTEXT)?.state === "success";
 }
 
 /** The newest earlier commit with a passing wodx/gates status whose gate inputs match the head, or null. */
@@ -262,6 +268,13 @@ async function main() {
   }
 
   if ( isHold({title, labels, headRef}) ) { say(`PR #${pr} is a hold or handoff: no gates queued.`); finish(0); }
+
+  // B8172: marking a draft ready (or a title edit) runs this again on a head whose gates already passed; the pull
+  // request's commit list leaves the head out, so the check below never saw it (PR 2637 #2655 then #2657, PR 2662
+  // #2663 then #2668, 26 Nov). A run started by hand (workflow_dispatch) still queues.
+  if ( env("GITHUB_EVENT_NAME") !== "workflow_dispatch" && headPassed(await api(owner, "GET", `/commits/${head}/statuses?per_page=100`).catch(() => [])) ) {
+    say(`PR #${pr}: ${GATE_CONTEXT} already passed on this head (${head.slice(0, 8)}): nothing queued.`); finish(0);
+  }
 
   const list = spawnSync(process.execPath, [path.join(ROOT, "tools", "lanes", "run-gate.mjs"), "--touched", "--list", "--base", "origin/main", "--repo", ROOT], {cwd: ROOT, encoding: "utf8", windowsHide: true});
   if ( list.status !== 0 ) { console.error((list.stderr || list.stdout || "").slice(-1500)); say("run-gate.mjs --touched --list failed"); finish(1); }
