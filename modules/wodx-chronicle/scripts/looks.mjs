@@ -229,7 +229,7 @@ export function shake({ms = 1500, px = 12} = {}) {
 export function registerLooks() {
   game.settings.register(MODULE_ID, "fxLevel", {
     name: "Moving effects on the map",
-    hint: "Fire, floods, storms and earthquakes that powers and events bring. Light shows them fainter and fewer, Off keeps only the plain coloured shapes and still weather. Only for you: pick Light or Off on a slow computer.",
+    hint: "How much fire, flood and storm effects show on this computer. Pick Light or Off on a slow computer.",
     scope: "client", config: true, type: String, choices: R.LEVELS, default: R.DEFAULT_LEVEL,
     onChange: () => { render().catch(e => console.warn("WoDX | looks", e)); }
   });

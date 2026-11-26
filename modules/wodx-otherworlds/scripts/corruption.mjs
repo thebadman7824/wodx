@@ -43,7 +43,7 @@ const nameOf = s => s?.navName || s?.name || "A place";
 export function registerCorruptionSettings() {
   game.settings.register(MODULE_ID, "wyrmCorruption", {name: "Wyrm corruption spreads", scope: "world", config: true, type: String, default: "off",
     choices: {off: "Off", suggest: "Suggest (each week waits in the approval queue)", auto: "Auto (applies, with an Undo card)"},
-    hint: "Once a week of game time, places you have marked as tainted grow worse from what feeds them, Banes breed, and blighted places spread to the places linked to them. People who live there take on taint. House rules on the W20 spirit world. Nothing happens until you set up a place in the Wyrm corruption window."});
+    hint: "Tainted places grow worse each week and spread their taint to linked places and the people who live there."});
   game.settings.register(MODULE_ID, "corruptionState", {scope: "world", config: false, type: Object, default: {last: null}});
 }
 

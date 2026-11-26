@@ -202,10 +202,10 @@ export async function recap(userId, {force = false, night = null, actorId = null
 export function registerDirectorSettings() {
   for ( const k of ["directed", "brought", "awarded", "recapped"] ) game.settings.register(MOD, k, {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MOD, "director", {name: "The director brings the night's trouble",
-    hint: "Once a night, at dusk, one or two of the character's live threads come to them: flaws that pull trouble, a storyline's beat, oaths and debts, clocks. Pressure after quiet nights, a rest after hard ones, by the trouble dial.",
+    hint: "Each dusk, one or two of the character's open threads (flaws, oaths, debts, storylines) come calling.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "nightXp", {name: "Experience at the end of each night",
-    hint: "In the morning, the lone player's character gets the experience the log shows for the night, from the line's own list in the book: being there, real danger, something learned, a lead closed. At most 5.",
+    hint: "Each morning the character gets the night's experience by the book's list, at most 5.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

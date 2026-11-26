@@ -38,7 +38,7 @@ export function registerArchiveSettings() {
   });
   game.settings.register(MODULE_ID, "autoArchive", {
     name: "Archive the long dead by itself",
-    hint: "When the clock moves on, the dead and Pass the Years' old copies who have been dead (or kept) this long go to the archive of the dead by themselves, unless a player has them or a linked token stands on a scene. Links in journals, character notes and item text follow them.",
+    hint: "The long dead are moved to the archive of the dead by themselves, unless a player has them.",
     scope: "world", config: true, type: Number, choices: AR.AUTO_YEARS, default: AR.AUTO_DEFAULT
   });
 }

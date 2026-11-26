@@ -32,7 +32,7 @@ const all = c => (c ? [...(c.contents ?? c)] : []);
 
 export function registerInstitutionSettings() {
   game.settings.register(MOD, "institutionState", {scope: "world", config: false, type: Object, default: {list: [], last: null}});
-  game.settings.register(MOD, "institutions", {name: "Towns have institutions to climb", hint: "Each town gets its church, guild, council, watch, press and more as its year and size allow. Characters climb them as downtime projects and pull their levers with the Storyteller's leave.",
+  game.settings.register(MOD, "institutions", {name: "Towns have institutions to climb", hint: "Each town has its church, guild, council and watch, which characters can rise in and use.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 const on = () => setting("institutions") !== false;

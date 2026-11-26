@@ -10,7 +10,7 @@ const on = () => { try { return !!game.settings.get(MOD, "quiet"); } catch (e) {
 
 export function registerQuiet(refresh) {
   game.settings.register(MOD, "quiet", {
-    name: "A quiet interface", hint: "Tuck the sidebar, hotbar and player list away, show my character's health as a word at the top, and put difficulties on roll cards in words. Alt+Q shows or hides the panels at any time.",
+    name: "A quiet interface", hint: "Hides the sidebar, hotbar and player list, and shows health and difficulties in words. Alt+Q shows or hides the panels.",
     scope: "client", config: true, type: Boolean, default: false, onChange: () => { applyQuiet(); refresh?.(); }
   });
   game.keybindings?.register?.(MOD, "quietToggle", {

@@ -27,7 +27,7 @@ const powerList = () => { try { return P.normState(setting("powerState")).list; 
 
 export function registerSiteSettings() {
   game.settings.register(MOD, "holyGround", {name: "Holy ground shared by several claims (house rule)", scope: "world", config: true, type: Boolean, default: true,
-    hint: "A place that is a caern, a Node, a freehold and an Elysium at once shares one strength. Drawing Gnosis, Quintessence or Glamour lowers it; below half every role gives half. Each holder is told when another draws. Off: each place draws on its own."});
+    hint: "A place that serves several kinds of power shares one strength between them. Off: each draws on its own."});
   game.settings.register(MOD, "siteState", {scope: "world", config: false, type: Object, default: S.blankState()});
 }
 

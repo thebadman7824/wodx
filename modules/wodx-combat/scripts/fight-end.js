@@ -20,7 +20,7 @@ const D = () => CONST.TOKEN_DISPOSITIONS ?? { HOSTILE: -1, NEUTRAL: 0, FRIENDLY:
 export function registerFightEndSettings() {
     game.settings.register(MOD, "fightEnd", {
         name: "End fights by themselves",
-        hint: "When one side has nobody left standing (down, or gone from the scene) for a full turn. Suggest whispers you a card with End the fight; Auto ends it. The after-action card follows either way.",
+        hint: "Ends the fight, or offers to, once one side has nobody left standing for a full turn.",
         scope: "world", config: true, type: String, default: "suggest", choices: FE.MODES
     });
 }

@@ -38,7 +38,7 @@ async function save(st) { if ( game.user.isGM ) await game.settings.set(MOD, "po
 
 export function registerPowerSettings() {
   game.settings.register(MOD, "placesOfPower", {name: "Places of power run on the clock", scope: "world", config: true, type: Boolean, default: true,
-    hint: "Nodes fill with Quintessence and Tass week by week, lost balefire ranks come back, an untended freehold in a dull place fades, and a caern without its monthly moot lapses, loses levels and draws raids (Upkeep, Places of power). Off: the places stay as they are."});
+    hint: "Places of power fill, fade or lapse week by week depending on how they're tended. Off: they stay as they are."});
   game.settings.register(MOD, "powerState", {scope: "world", config: false, type: Object, default: P.blankState()});
 }
 

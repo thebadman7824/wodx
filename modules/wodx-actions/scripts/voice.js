@@ -24,7 +24,7 @@ const owners = actor => game.users.filter(u => !u.isGM && actor?.testUserPermiss
 
 export function registerSettings() {
     game.settings.register(MOD, "voicesOn", {
-        name: "Inner voices", hint: "Let players voice each other's Beast, Shadow, Rage or Impulse. Each player still opts in for their own character; the X-card pauses every voice for the scene.",
+        name: "Inner voices", hint: "Players may speak for each other's Beast, Shadow, Rage or Impulse. Each player opts in, and the X-card pauses it.",
         scope: "world", config: true, type: Boolean, default: false
     });
     game.settings.register(MOD, "voicePause", { scope: "world", config: false, type: String, default: "" });

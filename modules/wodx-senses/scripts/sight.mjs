@@ -20,7 +20,7 @@ export function registerSight() {
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawSight()
   });
   game.settings.register(MOD, "colourSafe", {
-    name: "Colour-blind safe colours", hint: "Aura and Lifesight rings, and the other WoDX tints that carry meaning, use colours that stay apart for colour-blind eyes. Every ring also shows its words on the map either way.",
+    name: "Colour-blind safe colours", hint: "Uses colours that colour-blind eyes can tell apart for aura rings and other WoDX tints.",
     scope: "client", config: true, type: Boolean, default: false, onChange: () => { drawSight(); Hooks.callAll("wodxColourSafe", !!setting("colourSafe")); }
   });
   game.settings.register(MOD, "ringWords", {
@@ -28,7 +28,7 @@ export function registerSight() {
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawSight()
   });
   game.settings.register(MOD, "auraNeedsRead", {
-    name: "Aura Perception needs Read the Soul", hint: "A ring shows round a creature only after the character has read that token's soul (WoDX Otherworlds), and only as much as the successes showed. A reading holds for an hour of game time. Off: every creature in view shows its ring.",
+    name: "Aura Perception needs Read the Soul", hint: "A creature's aura ring shows only after the character has read it, for an hour of game time. Off: every creature in view shows one.",
     scope: "world", config: true, type: Boolean, default: true, onChange: () => drawSight()
   });
   game.settings.register(MOD, "overload", {

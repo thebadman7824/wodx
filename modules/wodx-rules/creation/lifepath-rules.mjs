@@ -174,9 +174,27 @@ export function eventById(id, pool = allEvents(), path = null) {
   return pool.find(e => e.id === id) ?? null;
 }
 
+/**
+ * #2505: the older scenes were written for the first chronicle, in Moravia. A scene or a choice that names the Czech
+ * lands (Prague, Brno, the Hussites, the White Mountain...) shows only for a life lived there: when the drill put the
+ * character in another region, it is left out. A path with no region picked (older records) keeps them all.
+ */
+export const CZECH_WORDS = /\b(moravi\w*|bohemi\w*|prague|praha|brno|olomouc|czech\w*|kutn[aá] hora|jihlava|hussites?|hus|white mountain|p[rř]emyslids?|sokol|sudeten\w*|austerlitz|velvet)\b/i;
+const CZECH_HOME = "moravia";
+/** The region the path's drill picked, from its flags, or null. */
+export const regionFlag = (flags = new Set()) => { for ( const f of flags ) if ( String(f).startsWith("region:") ) return String(f).slice(7); return null; };
+const czech = x => CZECH_WORDS.test(`${x?.title ?? x?.label ?? ""} ${x?.text ?? ""}`);
+/** Is a choice shown for this path? A Czech choice is hidden for a life lived in another region. */
+export function optionShown(o, flags) {
+  const r = regionFlag(flags);
+  return !r || r === CZECH_HOME || !czech(o);
+}
+
 /** Does a scene fit the path at this stage? */
 export function fits(e, path, stage, flags, year) {
   if ( e.stage !== stage ) return false;
+  if ( !optionShown(e, flags) ) return false;
+  if ( Array.isArray(e.options) && e.options.length && !e.options.some(o => optionShown(o, flags)) ) return false;
   const w = e.when ?? {};
   if ( w.lines && !w.lines.includes(path.line) ) return false;
   if ( w.notLines && w.notLines.includes(path.line) ) return false;

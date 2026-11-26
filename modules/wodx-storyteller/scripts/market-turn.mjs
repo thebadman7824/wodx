@@ -39,7 +39,7 @@ const saveTurn = patch => game.settings.set(MOD, "marketTurnState", {...turnStat
 
 export function registerMarketTurnSettings() {
   game.settings.register(MOD, "marketTurn", {name: "Markets move each week", scope: "world", config: true, type: String, default: "auto",
-    hint: "Once a week of game time every market makes, uses and trades goods, and its prices follow supply and the season. Auto: small changes apply with an Undo card; a market going short or empty where a player character is waits in the approval queue. Suggest: every change waits in the queue. Off: markets change only by hand. Nothing happens until you set up a market.",
+    hint: "Each week every market makes, uses and trades goods, and its prices follow supply and the season.",
     choices: {auto: "Auto", suggest: "Suggest", off: "Off"}});
   game.settings.register(MOD, "marketTurnState", {scope: "world", config: false, type: Object, default: {last: null, told: []}});
 }

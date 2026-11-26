@@ -20,7 +20,7 @@ const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rul
 export function registerAftermathSettings() {
   game.settings.register(MOD, "afterAction", {
     name: "After-action card", scope: "world", config: true, type: Boolean, default: true,
-    hint: "When a fight ends, the Storyteller gets a card: damage taken and dealt, blood and Willpower spent, powers seen, witnesses in sight, and a button to record a Masquerade breach and start a rumour."
+    hint: "When a fight ends, the Storyteller gets a card of what happened in it, with a button to record a Masquerade breach."
   });
 }
 /** The start snapshots as {uuid: snap}, from the stored pairs. */

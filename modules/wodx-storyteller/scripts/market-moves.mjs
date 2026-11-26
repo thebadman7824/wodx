@@ -29,10 +29,10 @@ const words = mv => { const e = era(); return MV.describe(mv, {year: e.year, fut
 
 export function registerMoveSettings() {
   game.settings.register(MOD, "marketMoves", {name: "Factions act on markets", scope: "world", config: true, type: String, default: "auto",
-    hint: "With the weekly market turn, a faction that runs itself may tax a market it holds, corner a kind of goods, smuggle past a rival's tax or raid a rival's market. Auto: a move applies with an Undo card, and waits in the approval queue where a player character stands or belongs to the faction. Suggest: every move waits in the queue. Off: only the moves you set by hand in the Markets window. Nothing happens until a market and a faction share a place.",
+    hint: "Factions tax, corner, smuggle and raid in the markets each week, with Undo.",
     choices: {auto: "Auto", suggest: "Suggest", off: "Off"}});
   game.settings.register(MOD, "tradersBroke", {name: "Traders can go broke", scope: "world", config: true, type: Boolean, default: true,
-    hint: "Each week a trader's takings follow the supply of what the shop sells, less taxes, against the keep of the shop. Four weeks the till cannot cover and the shop shuts until trade has been good for eight weeks. Off: tills change only when a shop restocks or sells."});
+    hint: "A shop's till rises and falls with its trade each week, and a shop that can't pay its way shuts. Off: tills change only on a sale."});
 }
 
 /** Every faction as the market rules read it. */

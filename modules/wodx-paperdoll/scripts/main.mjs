@@ -15,7 +15,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "../../wodx-rules/paperdoll
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.33.0";
+export const VERSION = "0.33.1";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;

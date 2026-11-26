@@ -70,7 +70,7 @@ export function kitFor(actor, {seed = null} = {}) {
   const inUse = g => D.ways.inUseAt(g, year, place);
   const eraGear = D.gearRules.forEra?.(D.gear, eraNow(), place.region ? {year, ...place} : null) ?? D.gear;
   const rows = K.suggestKit({goods: D.goods, gear: eraGear, inUse, price: r => priceFor(r, D), station, abilities: abilitiesOf(actor),
-    gearStation: n => D.tags.gearStationOf?.(n) ?? null, seed: seed ?? actor.id ?? actor.name});
+    gearStation: n => D.tags.gearStationOf?.(n) ?? null, seed: seed ?? actor.id ?? actor.name, year});
   let monthly = 0;
   try {
     const R = money()?.rules;

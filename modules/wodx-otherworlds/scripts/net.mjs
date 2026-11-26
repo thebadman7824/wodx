@@ -64,7 +64,7 @@ const statusIds = a => [...(a?.statuses ?? [])];
 /* ------------------------------------------------------------------ */
 
 export function registerNetSettings() {
-  game.settings.register(MODULE_ID, "netIce", {name: "ICE acts on its own", hint: "When the ICE of a data fortress takes its Net turn by itself after a runner acts: always, only when a lone player plays (the Lone Chronicle), or never (the Storyteller presses ICE acts in the Net window).",
+  game.settings.register(MODULE_ID, "netIce", {name: "ICE acts on its own", hint: "When a data fortress's ICE acts by itself: always, only in a lone game, or never.",
     scope: "world", config: true, type: String, choices: {solo: "When a lone player plays", always: "Always", off: "Never"}, default: "solo"});
 }
 export function registerNetStatuses() {

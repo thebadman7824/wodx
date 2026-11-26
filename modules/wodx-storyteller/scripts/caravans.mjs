@@ -38,7 +38,7 @@ const now = () => game.time?.worldTime ?? 0;
 
 export function registerCaravanSettings() {
   game.settings.register(MOD, "caravans", {name: "Caravans carry the trade between markets", scope: "world", config: true, type: Boolean, default: true,
-    hint: "When linked markets trade in the weekly turn, the goods leave as a caravan of the year (a pack train, wagons, a goods train, lorries) and arrive after the days the road takes. A caravan lost on the road delivers nothing. Off: goods arrive at once, as before. Nothing happens until two markets are linked."});
+    hint: "Goods traded between towns travel as a caravan and arrive days later, or are lost on the road. Off: they arrive at once."});
   game.settings.register(MOD, "caravanState", {scope: "world", config: false, type: Object, default: CR.blankState()});
 }
 export const on = () => setting("caravans") !== false;

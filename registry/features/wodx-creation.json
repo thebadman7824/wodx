@@ -184,7 +184,8 @@
     "book: V20 Dark Ages character creation order and totals; not checked against the book text yet",
     "the five B7820 builds (HH2, mortal, sorcerer, Kinfolk, Kinain) have wizard power kinds and Background books; no gate walks the wizard through one yet",
     "book: the Changing Breeds' starting Rage, Gnosis and Willpower come from W20 Changing Breeds (FERA_STARTS, B7831); the Mokole starting Rage is not in the book",
-    "the What they carry page (B8120, desk pick inv1, kit-rules.mjs): no gate walks it to Ready yet; the second solo test checks it"
+    "the What they carry page (B8120, desk pick inv1, kit-rules.mjs): no gate walks it to Ready yet; the second solo test checks it",
+    "B8144: the starting kit picks the period's clothes before 1800; gate step still to write"
    ],
    "deferred": [],
    "faults": [],
@@ -228,7 +229,8 @@
     }
    },
    "open": [
-    "mortal lifespan (B8095): a gate step that sets 1000 for a mage in 1197 and checks 1127"
+    "mortal lifespan (B8095): a gate step that sets 1000 for a mage in 1197 and checks 1127",
+    "B8141 (#2505): options tied to Moravia hide for a character from another region; gate step still to write"
    ],
    "deferred": [],
    "faults": [],

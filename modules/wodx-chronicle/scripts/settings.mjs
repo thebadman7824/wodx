@@ -22,7 +22,7 @@ export function registerSettings(hooks) {
 
   game.settings.register(MODULE_ID, "homeland", {
     name: "Homeland",
-    hint: "Where in the world the chronicle is set. Choosing one sets the latitude, the part of the world and the people's names below, and the weather follows it. Money keeps its own setting in WoDX Storyteller, because purses are not converted.",
+    hint: "Where the chronicle is set: it sets the latitude, the names and the weather. Money is set in WoDX Storyteller.",
     scope: "world", config: true, type: String, default: DEFAULT_REGION,
     choices: Object.fromEntries(Object.entries(WORLD_REGIONS).map(([k, v]) => [k, v.label])),
     onChange: value => hooks.onHomelandChange?.(value)

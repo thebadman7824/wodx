@@ -223,7 +223,7 @@ export function setupVehicles(deps) {
   D = deps;
   game.settings.register(D.MOD, "vehicleCombat", {
     name: "Fighting in and around vehicles (Durability, ramming)",
-    hint: "Those inside a closed car, lorry or coach are shielded unless the attack scores 4 successes; armoured vehicles and aircraft shield them fully. A vehicle's Durability turns damage aside and the rest wrecks it, shown on its tile. Ramming is on the attack menu at the wheel: Durability + a die a 10 mph + its mass. The one at the wheel swerves in place of dodging. Mage 20th pp. 458-463. Needs WoDX Interactables' vehicles.",
+    hint: "People inside a closed vehicle are shielded from attacks, vehicles can be wrecked, and the driver can ram.",
     scope: "world", config: true, type: Boolean, default: true
   });
   Hooks.once("ready", () => game.socket.on(D.SOCKET, p => { if ( p?.vehicles ) onSocket(p); }));

@@ -36,7 +36,7 @@ const marketName = (st, id) => MK.marketById(st, id)?.name ?? id;
 
 export function registerContagionSettings() {
   game.settings.register(MOD, "contagion", {name: "Sickness spreads between towns", scope: "world", config: true, type: String, default: "auto",
-    hint: "Once a week a sick town moves on through its outbreak, its prices and crowds follow, and it may pass the sickness to the towns it trades with. History offers the outbreaks of the year and land. Auto: a town falls sick at once unless a player character is there, which waits in the approval queue. Suggest: every new sick town waits in the queue. Off: nothing spreads. Needs markets set up.",
+    hint: "Sickness runs through a town week by week, changes its prices and crowds, and can spread to towns it trades with.",
     choices: {auto: "Auto", suggest: "Suggest", off: "Off"}});
   game.settings.register(MOD, "contagionPeople", {name: "Characters can fall sick", scope: "world", config: true, type: Boolean, default: true,
     hint: "A living player character in a sick town may catch the sickness and rolls Stamina each week (M20 p. 442). The card has Undo."});

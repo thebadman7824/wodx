@@ -427,7 +427,7 @@ export function build(ctx) {
 
 /** Settings this part adds (registered by main.js). */
 export function registerSettings(register) {
-    game.settings.register(MOD, "sunDamage", { name: "Sunlight damage", hint: "When a Cainite stands in sunlight (a Sunlight region, a region named sunlit, or the open on a scene marked outdoors, outside walls' shadows): roll and apply it each turn of a fight, on stepping into the sun and while the clock runs; or post a card with a button; or nothing.",
+    game.settings.register(MOD, "sunDamage", { name: "Sunlight damage", hint: "A vampire standing in sunlight takes its damage each turn (or a card offers it, or nothing happens).",
         scope: "world", config: true, type: String, default: "apply", choices: { apply: "Roll and apply it", prompt: "A card with a button", off: "Off" } });
     register("dawnWarnings", "Warn before dawn", "Whispered cards 30 and 10 minutes before sunrise, saying whether each Cainite is in their haven.", Boolean, true);
     register("wallHeight", "Height of walls (feet)", "For the shadows walls cast by day; a scene can set its own in Sky and sun.", Number, 10);

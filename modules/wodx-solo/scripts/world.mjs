@@ -258,7 +258,7 @@ export function registerWorldSettings() {
   game.settings.register(MOD, "leadsDone", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MOD, "rolled", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MOD, "encounters", {name: "Night encounters find the lone player",
-    hint: "Each part of the night may bring one of the night's encounters onto the character's scene, a few squares off and in plain sight (a one in three chance). A scene's flag wodx-solo.encounters set to none keeps them away.",
+    hint: "Each part of the night may bring an encounter onto the character's scene, in plain sight.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

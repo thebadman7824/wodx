@@ -20,7 +20,7 @@ export function registerChurchSettings() {
   });
   game.settings.register(MODULE_ID, "faith", {
     name: "Whose holy days the chronicle keeps",
-    hint: "By the homeland follows the region and the year (the Muslim year in Cairo, the lunar year in China). A scene far from home follows its own region, or the year picked for it in Where this scene stands.",
+    hint: "The church calendar follows the chronicle's land and year, or a scene's own region.",
     scope: "world", config: true, type: String, default: "",
     choices: {"": "By the homeland", ...Object.fromEntries(Object.entries(F.FAITHS).map(([id, f]) => [id, f.label]))}
   });

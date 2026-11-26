@@ -35,7 +35,7 @@ export function registerStateSettings() {
     scope: "client", config: true, type: String, default: "full", choices: S.EFFECTS
   });
   game.settings.register(MOD, "markers", {
-    name: "State markers", hint: "A tile with no picture for its new state (a chest forced, an altar desecrated) shows a small marker with the state's word. Off: only tiles with their own pictures change.",
+    name: "State markers", hint: "A changed object with no picture for its new state (a chest forced open) shows a small label saying so.",
     scope: "world", config: true, type: Boolean, default: true, onChange: () => drawMarkers()
   });
 }

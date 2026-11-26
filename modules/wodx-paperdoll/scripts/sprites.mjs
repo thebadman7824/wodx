@@ -19,10 +19,10 @@ export function registerSpriteSettings() {
   game.settings.register(MOD, "sprites", {scope: "world", config: true, name: "Sprite tokens walk and turn",
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
-    hint: "A character with a routine (WoDX NPC) sleeps lying down, sits at rest, works with the hands, kneels at prayer, drinks seated and carries a load on errands; beasts graze and lie down. They get up when they walk. Off: everyone stands.", type: Boolean, default: true});
+    hint: "NPC figures lie down to sleep, sit, kneel and carry loads as their routine goes.", type: Boolean, default: true});
   // B8100 (#2491): a new character, a new NPC and a kept figure or look ask the PC sprite drawer by themselves
   game.settings.register(MOD, "spriteAutoDraw", {scope: "world", config: true, name: "New and changed characters get their sprite by themselves",
-    hint: "When a character or NPC is made, or a figure or look is kept, the Storyteller's computer asks the PC sprite drawer for the new and changed sprites about half a minute later, and the tokens put them on when they are drawn. Off: only Draw sprites now asks.", type: Boolean, default: true});
+    hint: "New characters and changed looks get their sprites drawn on the PC by themselves.", type: Boolean, default: true});
   // B6144: the Storyteller asks the PC to draw everyone's sprite, from inside the game. Foundry wants an application
   // class for a menu: this one only opens the confirming window.
   try {

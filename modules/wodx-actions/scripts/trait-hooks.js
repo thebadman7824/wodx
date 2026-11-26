@@ -95,7 +95,7 @@ export function powerTags(discipline = "") {
 export function registerTraitSetting() {
     game.settings.register("wodx-actions", "traitRolls", {
         name: "Merits and flaws on rolls",
-        hint: "Merits and flaws from the WoDX trait table change the dice and difficulty of the rolls they name, for players and NPCs alike, and each shows on the card. Needs WoDX Chronicle.",
+        hint: "Merits and Flaws change the rolls they name, for players and NPCs alike.",
         scope: "world", config: true, type: Boolean, default: true
     });
 }

@@ -25,11 +25,11 @@ export function registerPerceptionSettings() {
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawTrails()
   });
   game.settings.register(MOD, "unseenAuto", {
-    name: "Noticing rolls itself", hint: "With the unseen on: when a player's character comes within sight of a hidden character, after either moves five squares, and at each turn of a fight, the noticing roll is made on its own. The token's HUD button still rolls it by hand.",
+    name: "Noticing rolls itself", hint: "Rolls on its own to notice a hidden character when a player's character comes within sight.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "unseen", {
-    name: "The unseen show only to those who find them", hint: "A character hidden by Obfuscate, sneaking or the Invisible status, with no player of its own, shows only to the players whose characters found it. The roll is made on its own as they come near (Noticing rolls itself), or from the token's HUD (Who sees through it?).",
+    name: "The unseen show only to those who find them", hint: "A hidden NPC shows only to the players whose characters noticed it.",
     scope: "world", config: true, type: Boolean, default: true, onChange: () => refreshVisibility()
   });
 }

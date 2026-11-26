@@ -26,7 +26,7 @@ export const on = () => setting("herdPools") !== false;
 
 export function registerHerdSettings() {
   game.settings.register(MOD, "herdPools", {name: "Herd pools by district (house rule)", scope: "world", config: true, type: Boolean, default: true,
-    hint: "Each district with a hunting ground holds a month's pool of vessels by class, sized from its town's people. Feeding past it makes hunting there harder and brings warnings, sickness, rumours and the hunters. Off: districts never run dry."});
+    hint: "Each hunting ground has a month's supply of vessels. Overfeeding makes hunting harder and draws trouble. Off: it never runs dry."});
 }
 
 const sceneName = s => s?.navName || s?.name || "a district";

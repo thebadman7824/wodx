@@ -93,7 +93,7 @@ function watch(actor) {
 
 export function registerCarrySettings() {
   game.settings.register(MOD, "carry", {name: "Companions carry the fallen",
-    hint: "In a Lone Chronicle, when the player's character goes down, the nearest companion (one who serves them, else a friendly NPC) carries or drags them away from danger by itself. The panel's Carry the fallen asks a companion to carry anyone else who is down.",
+    hint: "When your character goes down, the nearest companion carries or drags them out of danger.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

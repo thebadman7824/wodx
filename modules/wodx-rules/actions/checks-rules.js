@@ -146,3 +146,16 @@ export function jumpReach(successes) {
   const s = Math.max(0, Number(successes) || 0);
   return { yards: s, upFeet: 2 * s };
 }
+
+/**
+ * #2504: checks that belong to an age. Before the year a check's tool is in common use, a player does not see it unless
+ * the character has the Ability anyway (a time traveller, a ghost of later days). The Storyteller sees every check.
+ */
+export const FROM_YEAR = { computer: 1950 };
+/** Does a check fit the year? has(ability): the character's dots in it. year null: the chronicle's year is not known. */
+export function fitsYear(check, year = null, has = () => 0) {
+    const from = FROM_YEAR[check?.key];
+    if (!from || year === null || year === undefined || !Number.isFinite(Number(year)) || Number(year) >= from) return true;
+    return (check.pools ?? []).some(([, ab]) => ab && Number(has(ab)) > 0);
+}
+

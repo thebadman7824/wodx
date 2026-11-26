@@ -28,7 +28,7 @@ const now = () => game.time?.worldTime ?? 0;
 const layer = () => chron()?.looks ?? null;
 
 export function registerTownLookSettings() {
-  game.settings.register(MOD, "townLooks", {name: "Show town events on the map", hint: "A town's fire, flood, storm, earthquake, riot or sack leaves marks on that town's scenes: fire and smoke, water in the low streets, rubble, barricades. They fade with game time.",
+  game.settings.register(MOD, "townLooks", {name: "Show town events on the map", hint: "A town's disasters leave marks on its maps (smoke, floods, rubble) that fade over time.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

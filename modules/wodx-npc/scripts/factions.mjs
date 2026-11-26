@@ -48,7 +48,7 @@ export function build(ctx) {
 
   function registerSettings() {
     game.settings.register(MOD, "factions", {scope: "world", config: false, type: Object, default: F.blankState()});
-    game.settings.register(MOD, "spillover", {name: "Standing spills over (house rule)", hint: "When a faction's regard for a character moves, its close friends move the same way a step and its enemies the other way, through the approval queue. Off: only the faction itself moves.",
+    game.settings.register(MOD, "spillover", {name: "Standing spills over (house rule)", hint: "When a faction warms or cools toward a character, its friends follow and its enemies do the opposite. Off: only that faction changes.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "factionMode", {
       name: "Faction turns and rumours", hint: "Suggest sends every result to the approval queue. Auto applies small ones (a Background dot, a rumour moving a step) with an Undo card, and sends big ones to the queue.",
@@ -63,11 +63,11 @@ export function build(ctx) {
       scope: "world", config: true, type: Boolean, default: true
     });
     game.settings.register(MOD, "factionWars", {
-      name: "Factions go to war by themselves", hint: "At a faction turn, a faction Hostile or worse toward a rival may take up arms for a place the rival holds. The war is fought off the screen with WoDX Storyteller's battles (a battle that turn, a siege a week a turn); what it changes waits in the approval queue. A war where a player character stands waits for the Storyteller. Needs WoDX Storyteller.",
+      name: "Factions go to war by themselves", hint: "Hostile factions may go to war over places their rivals hold, fought off screen.",
       scope: "world", config: true, type: Boolean, default: true
     });
     game.settings.register(MOD, "factionPolitics", {
-      name: "Politics inside factions", hint: "Factions that keep a court, a diocese or a barony run their own politics each faction turn: seats, standing, charges and favours. Off by default; changes that touch a player character or the top seat wait in the approval queue.",
+      name: "Politics inside factions", hint: "Courts, dioceses and baronies run their own politics each faction turn.",
       scope: "world", config: true, type: Boolean, default: false
     });
     game.settings.register(MOD, "turnDays", {

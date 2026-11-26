@@ -31,7 +31,7 @@ export function registerLegendsSettings() {
   game.settings.register(MODULE_ID, "legendDeeds", {scope: "world", config: false, type: Array, default: []});
   // B3160: a world setting so the Storyteller can turn the suggestions off
   game.settings.register(MODULE_ID, "legendStanding", {scope: "world", config: true, type: Boolean, default: true,
-    name: "Legends suggest Renown and Status", hint: "A deed in the Legends book (a seat won or lost, a boon kept or broken, a fight won) puts a change of Renown, Status or standing for the player characters in it in the approval queue."});
+    name: "Legends suggest Renown and Status", hint: "A great deed offers the player characters in it a change of Renown, Status or standing, for the Storyteller to approve."});
 }
 
 /** Active GM: record a deed for the book (B3161). {id, at, text, people: [{id, name}], won, place}. */

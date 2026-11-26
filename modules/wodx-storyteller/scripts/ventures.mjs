@@ -33,7 +33,7 @@ const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 
 export function registerVentureSettings() {
   game.settings.register(MOD, "ventures", {name: "Characters can put money into ventures", scope: "world", config: true, type: Boolean, default: true,
-    hint: "A character can put money into a caravan, a workshop or a trading house on a market you have set up (Property and building, Ventures). Each weekly market turn it pays a share into the purse or loses part of its value. Off: no new ventures, and those standing earn and lose nothing."});
+    hint: "Characters can invest in a caravan, workshop or trading house that earns or loses money each week."});
   game.settings.register(MOD, "ventureState", {scope: "world", config: false, type: Object, default: VR.blankState()});
 }
 

@@ -30,9 +30,9 @@ const days = since => (since === null || since === undefined ? null : Math.max(0
 export function registerMoneySettings() {
   game.settings.register(MOD, "money", {name: "Money by era", hint: "Once a month of game time, tell the Storyteller how each character lives on their Resources, and the coin of the day.",
     scope: "world", config: true, type: Boolean, default: true});
-  game.settings.register(MOD, "changers", {name: "Money changers far from home", hint: "On a scene that stands in another region (the Clock, Where this scene stands), prices are charged to the purse in the coin of home with a money changer's cut on top, and the price is also named in the money of the place. Off: prices abroad are the same as at home.",
+  game.settings.register(MOD, "changers", {name: "Money changers far from home", hint: "Abroad, prices are paid in home coin plus a money changer's cut. Off: prices abroad are the same as at home.",
     scope: "world", config: true, type: Boolean, default: true});
-  game.settings.register(MOD, "goodsByPlace", {name: "Prices know where goods come from", hint: "A good brought from far off costs two or three times as much, the land's own goods a quarter less, and each land has a few kinds of goods cheap and a few dear until world trade evens them out (1900 to 2000). The price says why. Off: the same price everywhere. House rules.",
+  game.settings.register(MOD, "goodsByPlace", {name: "Prices know where goods come from", hint: "Goods from far away cost more and local goods less. Off: the same price everywhere (house rule).",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "moneyRegion", {name: "Coins of the day", hint: "Which land's coins to name (a house rule from history; the books name none).",
     scope: "world", config: true, type: String, default: "moravian", choices: Object.fromEntries(Object.entries(R.COINS).map(([k, v]) => [k, v.label]))});

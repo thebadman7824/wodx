@@ -79,7 +79,7 @@ test("routines: the reactions follow through on the map", () => {
   assert.match(s, /watchHouseHere\(\)/, "an informer walks off");
   assert.match(s, /FW\.reportArrives/, "a stopped informer's word is lost");
   assert.match(s, /releaseHostages\(combat\)/, "hostages are let go when the fight ends");
-  assert.match(s, /walkBeats\(scene, t\)/, "the watch walks its beat");
+  assert.match(s, /walkBeats\(scene, t(, secs)?\)/, "the watch walks its beat");
 });
 
 // Part two: r1, r2, g1, g2 (B5687, B5688, B5690, B5691)

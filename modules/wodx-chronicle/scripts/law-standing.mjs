@@ -14,7 +14,7 @@ const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; }
 const regionOf = scene => { try { return place.regionHere(scene)?.id ?? place.homeland() ?? "moravia"; } catch (e) { return "moravia"; } };
 
 export function registerStandingSettings() {
-  game.settings.register(MODULE_ID, "lawStanding", {name: "Standing before the law", hint: "How the law treats the unfree, the clergy, the nobility and the rich. As history by default; softened keeps the effects on trials and sentences but bars no one from office; off makes everyone equal before the law.",
+  game.settings.register(MODULE_ID, "lawStanding", {name: "Standing before the law", hint: "How the law treats people by their rank: as in history, softened, or everyone equal.",
     scope: "world", config: true, type: String, default: "history", choices: S.MODES});
 }
 export const mode = () => (S.MODES[setting("lawStanding")] ? setting("lawStanding") : "history");

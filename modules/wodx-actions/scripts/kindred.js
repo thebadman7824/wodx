@@ -1391,7 +1391,7 @@ export function registerSettings(register) {
     register("historyLog", "History journal", "Write sins, frenzies, oaths, diablerie, torpor, Renown, boons and downtime to a page per character in \"WoDX History\".", Boolean, true);
     register("witnessAsk", "Ask who saw a Discipline", "After a Discipline is used where mortals or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw.", Boolean, true);
     register("witnessRange", "Witness range (feet)", "How far a mortal token can see a feeding, a Discipline or a Crinos for the witness checks (walls block sight).", Number, 60);
-    game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At sunrise and sunset on the Chronicle clock: New Night run automatically at dusk (the default), a card with a New Night button, or nothing. The day's sleep and rising are their own setting.",
+    game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At dusk, starts the new night for every vampire (or offers a button, or does nothing).",
         scope: "world", config: true, type: String, default: "auto", choices: { prompt: "Cards with buttons", auto: "New Night automatically at dusk", off: "Off" } });
     game.settings.register(MOD, "willpowerRecovery", { name: "Willpower recovery", hint: "One point a night (New Night), or all of it at the end of a story (End of story), or no automatic recovery.",
         scope: "world", config: true, type: String, default: "night", choices: { night: "One a night (and all at a story's end)", story: "All at the end of a story only", off: "Off" } });

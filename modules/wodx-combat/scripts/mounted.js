@@ -200,7 +200,7 @@ export function setupMounted(deps) {
   D = deps;
   game.settings.register(D.MOD, "mountedCombat", {
     name: "Fighting from the saddle (the books' mounted combat)",
-    hint: "A blow from the saddle may use the horse's Strength and Dexterity, the horse dodges once a turn for its rider, a rider struck rolls Stamina + Ride to stay on (thrown, the token comes off the horse and lies knocked down), the lance needs Ride 3 and Melee 3 and its charge unhorses, and a bow shot from a moving horse is +2 or +4. V20 Dark Ages p. 399 and Dark Ages: Vampire pp. 244-245. Needs the ways of moving setting and WoDX Interactables' mounts.",
+    hint: "Fighting from horseback: the horse's Strength and dodge help the rider, a hit rider may be thrown, and a lance charge can unhorse.",
     scope: "world", config: true, type: Boolean, default: true
   });
   Hooks.once("ready", () => game.socket.on(D.SOCKET, p => { if ( p?.mounted ) onSocket(p); }));

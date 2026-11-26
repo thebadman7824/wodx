@@ -832,7 +832,7 @@ export async function bodiesFollow(tile) {
 export function setupHaul(d = {}) {
   deps = d;
   game.settings.register(MOD, "haul", {
-    name: "Carrying the fallen and moving large things", hint: "Anyone next to a fallen character can carry or drag them, and anyone can push, pull or haul furniture, carts and stores on the map, by the lifting chart (VtDA20 p. 335). Carried and dragged bodies move with the carrier on the map; a bleeding body leaves a trail; furniture in a doorway blocks it.",
+    name: "Carrying the fallen and moving large things", hint: "Characters can carry or drag the fallen and push or haul furniture and carts, as far as their Strength allows.",
     scope: "world", config: true, type: Boolean, default: true
   });
   const on = () => setting("haul") !== false;

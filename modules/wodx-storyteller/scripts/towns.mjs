@@ -43,7 +43,7 @@ function seeded(seed) { let a = hashOf(seed) || 1; return () => { a |= 0; a = (a
 
 export function registerTownSettings() {
   game.settings.register(MOD, "townTurn", {name: "Towns change over time", scope: "world", config: true, type: String, default: "auto",
-    hint: "Once a week of game time every market's town grows or shrinks, does better or worse and grows angrier or calmer, from its market, sieges, plague years and disasters (fire, flood, storm, earthquake, failed harvests), with riots and risings when anger boils over. Auto: the week lands with an Undo card; an event where a player character stands waits in the approval queue. Suggest: every change waits in the queue. Off: towns change only by hand.",
+    hint: "Each week every town grows or shrinks and grows angrier or calmer, with riots when anger boils over.",
     choices: {auto: "Auto", suggest: "Suggest", off: "Off"}});
   game.settings.register(MOD, "townState", {scope: "world", config: false, type: Object, default: TR.blankState()});
 }

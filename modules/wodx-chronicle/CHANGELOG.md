@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.147.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.147.0 (The time dial shows the date and season, and a failed draw never stops Chronicle's start (B8091))
 - 0.146.1 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 0.146.0 (Fixes from the first solo test (B8055, B8058): the law card's Make the arrest sends the watch (WoDX Storyteller) or tells the culprit's players, Let it go leaves a line, and a time dial (each person can hide it) shows the hour, day or night and the moon (#2510))
