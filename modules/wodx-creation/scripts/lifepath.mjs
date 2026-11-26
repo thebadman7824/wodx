@@ -324,7 +324,7 @@ export class LifepathApp extends ApplicationV2 {
     const others = R.candidates(p).length > 1;
     const body = e
       ? `<h2>${esc(e.title)}</h2><p>${esc(e.text)}</p>${e.house ? `<p class="wodx-quiet">A house reading: the books give no clear year for this.</p>` : ""}
-        <div class="wodx-lp-options">${e.options.map((o, i) => `<button type="button" class="wodx-lp-option" data-action="pick" data-index="${i}">
+        <div class="wodx-lp-options">${e.options.map((o, i) => !R.optionShown(o, R.flagsOf(p)) ? "" : `<button type="button" class="wodx-lp-option" data-action="pick" data-index="${i}">
           <strong>${esc(o.label)}</strong>${o.text ? `<br><span>${esc(o.text)}</span>` : ""}
           ${R.parseGives(o.g).length ? `<br><span class="wodx-quiet">${R.parseGives(o.g).map(g => esc(`${R.KINDS[g.kind]}: ${g.name}`)).join(", ")}</span>` : ""}
           ${o.p ? `<br><span class="wodx-quiet">Someone from your past: ${esc(R.parsePerson(o.p).role)}</span>` : ""}</button>`).join("")}</div>`
