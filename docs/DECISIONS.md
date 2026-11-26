@@ -478,7 +478,7 @@ Next free block: B8190
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
-| B8060-B8089 | Rules core: one Foundry-free rules package (used B8060-B8068) | Chronicle, Rules, Actions, Atmosphere, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Rothenstein, Senses, Solo, Storyteller, Targeting |
+| B8060-B8089 | Rules core: one Foundry-free rules package (used B8060-B8069) | Rules, Actions, Chronicle, Creation, Interactables, Library, NPC, Otherworlds, Rothenstein, Sheets, Storyteller |
 | B8090-B8099 | Solo test desk picks: action priority, item tags, lifespan, dark interiors, teachers, time dial (used B8090-B8098) | Actions, Chronicle, Combat, Creation, Library, NPC, Senses, Solo |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
@@ -16933,6 +16933,16 @@ rules core test fails any import of the old paths. An open branch that still imp
 test, which names the line to change.
 
 Reverse: restore the two files as `export * from "../../wodx-rules/core/<file>.mjs"` and the export * in calendar.mjs.
+
+## B8069. The rules package holds its own book tables (2026-11-26)
+WoDX Rules and the modules whose data it reads. The 51 files outside the package that rules files imported (the
+outside list), and the 27 more those files import, 78 in all (44 of them Creation data), move into
+modules/wodx-rules with `node tools/rules-core/move.mjs --outside`. Each keeps its path under its module: a data file
+goes to wodx-rules/<module>/data/, a script to wodx-rules/<module>/. Every import, gate URL and registry path points
+at the new place. The package now imports nothing from outside it, and the outside list in the guard baseline is
+empty, so the package can be lifted whole.
+
+Reverse: `git mv` the files back to their old paths and re-point the imports (the rename list is in this commit).
 
 ## B8090. Aim at is the one control; Targeting is gone (2026-11-26)
 WoDX Combat. Aim at lists the target's parts and, in its own group, an item they hold: a large one like a shield or sword, a small one like a knife, a tiny one like a ring, at the sizes the book gives (V20 Dark Ages p. 346). A blow aimed at an item lands on it, and the Storyteller says what it does. The separate Targeting list is dropped, the owner's desk pick of 25 November (#2509).

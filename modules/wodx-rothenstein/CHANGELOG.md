@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.4.3 (The book tables and helpers the rules package reads (the outside list: Creation, Chronicle, Library, NPC, Storyteller, Otherworlds and Actions data) moved into modules/wodx-rules, and every import points at their new place (B8069). Nothing changes in play)
 - 0.4.2 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 0.4.1 (The chronicle names its solo landing, Dolany Village (B8032), so a lone player arrives there)
 - 0.4.0 (The Old Grove's sept: a Silver Fang elder council and the Kinfolk of the Grove farm (B7874); The faithful at St. Aegidius, a household before 1223 (B7898); Book 1's hunters are precursors of the Inquisition: Anselm one of the lone Faithful, Thibault a crusader knight (B7890); The valley's Haunts and the Ashfield's eaten souls (B7901, B7903); The apothecary of encounter 6 is a Devil's Due thrall; absolution would cost two dice of lethal (B7924))

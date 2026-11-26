@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.133.2 (The book tables and helpers the rules package reads (the outside list: Creation, Chronicle, Library, NPC, Storyteller, Otherworlds and Actions data) moved into modules/wodx-rules, and every import points at their new place (B8069). Nothing changes in play)
 - 3.133.1 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 3.133.0 (Plain words (B8180, #2503): every action's description in the WoDX Actions menu is one plain line saying what happens, and sixteen button names that were a slash or a bare list now say what the button does; Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 3.132.2 (M20 rotes: the Warp-Gate summary and the file's opening note are reworded in our own words, with the mechanics unchanged; the book overlap gate had found two runs that matched the books word for word)
