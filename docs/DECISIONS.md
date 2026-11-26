@@ -483,6 +483,7 @@ Next free block: B8180
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 | B8140-B8149 | Solo test fixes part 4: what fits, region lifepath, plain settings, NPC pace, 1197 clothing (used B8140-B8144) | Actions, Creation, Combat, NPC, Library, Chronicle, Senses, Sheets, Solo, Storyteller and others (setting hints) |
+| B8160-B8169 | Scorecard gap 9: an NPC in torpor wakes when a year passes (used B8160) | NPC |
 | B8170-B8179 | Merge train batches of up to five (used B8170) | Repository workflow |
 <!-- decision-index:end -->
 
@@ -16994,6 +16995,22 @@ Reverse: pass no yards to walkTo and walkToRegion, and drop the gmHand check in 
 WoDX Library and Creation. 22 garments the goods list lacked: braies, a coif, leg wraps, a dyed tunic, the bliaut, a corded mantle, a ring brooch, a shoulder hood, felt and straw hats, the pointed Jewish hat, ankle and riding boots, a fur-lined over-tunic, a sheepskin coat, a linen veil, a silk headband, Slavic temple rings, a tablet-woven belt, hose garters, an alb and a work smock. Each carries station, style and material tags and WoDX's own description. Before 1800 a starting kit picks the period's own clothes before the loosely dated borrowed list. The owner's Tags desk note, 26 Nov.
 
 Reverse: remove the 22 rows and the year preference in suggestKit.
+
+## B8160. gatefateswake: a one-year Pass the years wakes a sleeper, run by name off the train (2026-11-26)
+WoDX NPC's off-screen lives wake an NPC whose torpor has run out when the clock jumps. No control moves the clock
+by less than a year (Pass the years takes whole years), so the gate drives the one a Storyteller uses: the Creation
+window's Pass the years, one year, with every character's own changes unticked, then Yes. The world is released at
+the question, because a skip in a held world runs no skip hooks. The gate checks the sleeper's sheet, which shows the
+Torpor condition before and not after, and that the sleeper's torpor record is cleared. Should the jump make the
+Off-screen lives card, the gate presses Approve on it in the approvals queue.
+A one-year Pass the years usually makes no card at all: off-screen lives count a year as 365.25 days and a calendar
+year is 365, so it takes the short path that only wakes sleepers (#2627, left for its own fix).
+Because every module's year work runs, the gate takes about 20 minutes on cloud lane 9 and every character is put
+back afterwards. It is listed in notGates, so neither the train nor the nightly run picks it. It is run by name on a
+New PC lane when nothing else is waiting.
+
+Reverse: delete tools/gate/gatefateswake.mjs, its notGates and timeouts entries in tools/lanes/gate-map-extra.json,
+and the gated step on npc.fates in registry/features/wodx-npc.json.
 
 ## B8170. Merge train batches hold up to five pull requests (2026-11-26)
 Repository workflow, the owner's choice ("You have my approval to go from 3 to 5 per batch", 13:12Z), once the eject
