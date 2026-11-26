@@ -476,10 +476,10 @@ Next free block: B8140
 | B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
-| B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
+| B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
-| B8130-B8139 | Fewer merge train ejects: review-list fragments, conflicts the train settles, label on green (used B8130-B8133) | tools (release, pcq) |
+| B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -1409,7 +1409,7 @@ House rule. The Storyteller picks the ground each turn: open country, a road, to
 Reverse: GROUNDS and LIT_FROM in chase-rules.mjs.
 
 ## B913. Flat out, falls and crashes in a chase (2026-11-11)
-Going flat out is +3 difficulty, the books' "fast while losing pursuers" (V20 core printed p. 258, V20 Dark Ages printed p. 335). A motor vehicle flat out goes 30 mph past its safe speed, never past its top: the book's +1 difficulty for each 10 mph over the safe speed is taken as the same +3, not added to it (house reading). Anything else flat out is half as fast again (house rule). The books give no crash damage. A botch on a horse, a mule, a bicycle or a motorcycle throws the rider; in a car or a motorboat it is a crash; both roll as falling (V20 core printed p. 296): one die of bashing for each 10 mph, one to ten, and ten dice are lethal, as a fall of 100 feet (house reading). The Storyteller applies the damage from a button on the card. A rider who catches someone gets +1 damage die for each turn spent at speed, five at most, on the first blow (mounted combat, V20 Dark Ages printed p. 398); the card says so.
+Going flat out is +3 difficulty, the books' "fast while losing pursuers" (V20 core printed p. 258, V20 Dark Ages printed p. 335). A motor vehicle flat out goes 30 mph past its safe speed, never past its top: the book's +1 difficulty per 10 mph above the safe speed is taken as the same +3, not added to it (house reading). Anything else flat out is half as fast again (house rule). The books give no crash damage. A botch on a horse, a mule, a bicycle or a motorcycle throws the rider; in a car or a motorboat it is a crash; both roll as falling (V20 core printed p. 296): one die of bashing for each 10 mph, one to ten, and ten dice are lethal, as a fall of 100 feet (house reading). The Storyteller applies the damage from a button on the card. A rider who catches someone gets +1 damage die for each turn spent at speed, five at most, on the first blow (mounted combat, V20 Dark Ages printed p. 398); the card says so.
 
 Reverse: OVER_SAFE, crashDice and crashType in chase-rules.mjs; FLAT_OUT for the difficulty.
 
@@ -4716,7 +4716,7 @@ By default it is not kept in Russia and Central Asia from 1929 to 1990 (the Sovi
 Reverse: empty WORSHIP_HIDDEN in routine-rules.mjs.
 
 ## B3000. The wizard works out the Traits that follow from the others (2026-11-13)
-WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; Arete 1, Willpower 5 and Quintessence equal to the Avatar for Mage; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
+WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; for Mage, Arete 1, Willpower 5 and as much Quintessence as the Avatar rating; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
 
 Reverse: drop #derived from wizard.mjs; the old "Still to set by hand" line was the starting-value text.
 
@@ -16589,6 +16589,16 @@ All modules. The first daily overlap gate run (26 Nov, main 06d57d9) found 4 dis
 
 Reverse: revert the commit; remove the hash noted "novel title" from tools/books/overlap-allow.json.
 
+## B8025. Matches from the full 1,644-book check are reworded or allowlisted (2026-11-26)
+All modules. The Secondary PC ran the overlap gate against every oWoD book (26 Nov, main 06d57d9) and found 52 distinct runs. 4 were already fixed by B8024. 32 were prose and are now in WoDX's own words, in 35 files (including the encyclopedia, Gift and power data, rules scripts, docs/DECISIONS.md and the era-timelines research files). 16 were names, trait or Ability lists, a stat line and two cost tables, so their hashes go on the allowlist (B8022), each noted with B8025.
+
+Reverse: revert the commit; remove the hashes noted B8025 from tools/books/overlap-allow.json.
+
+## B8026. Stamped release notes are found inside a train batch (2026-11-26)
+Tools. When the train stamps a pull request and then batches it, the batch's merge commits hid the commit that removed each release note, so rule 1 read the note as empty and failed the batch ("no front matter") twice for PR 2562. The look-up now uses the full history without merge commits, as the decision look-up already did. A harness test builds the batch case.
+
+Reverse: revert the commit.
+
 ## B8030. Report a problem sits outside the panel's fold (2026-11-25)
 WoDX Solo. The solo panel draws Report a problem as its own button under the main one, not in the folded More part, so a player who meets a fault can press it at once (#2467). The fold's summary no longer lists it.
 
@@ -16761,3 +16771,13 @@ fails on main too already passes the gate status (B7441, B7521), and the recheck
 November (B7540).
 
 Reverse: take the sentence out of docs/WORKFLOW.md, section 6.
+
+## B8134. The push guard never stops the train's own push (2026-11-26)
+Tools. At 05:59Z the train ejected PR 2568 because the push guard (B8130) refused the train's own merge-and-stamp push:
+the guard read every commit new to the branch, and a merge of main brings main's commits, which never carry the
+train's trailer. The guard now reads first-parent commits only (the merge and the stamp, both with
+`Merge-Train: yes`), and the train pushes with `--no-verify`, so the guard is for threads only. The runner's PCs got
+the hook because merge-stamp set core.hooksPath in the runner's clone.
+
+Reverse: drop `--no-verify` from the pushes in tools/pcq/train.mjs and `--first-parent` from newMessages in
+tools/git-hooks/pre-push.mjs.

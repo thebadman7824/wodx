@@ -177,7 +177,7 @@ export const WONDERS = [
   {key: "wyrmflesh", name: "Wyrmflesh", line: "garou", kind: "fetish", level: 3, gnosis: 6, spirit: "a Bane", court: "wyrm", wyrm: true, atrocity: true,
     does: "A tunic of tattooed, tanned human skin taken over a lunar month from a living victim. It adds three dice to soak against all damage, silver included, changes with the wearer's form, and shrieks and bleeds when anything gets through.", book: BOW, pdf: 185},
   {key: "baneklaive", name: "Baneklaive", line: "garou", kind: "fetish", level: 5, gnosis: 7, spirit: "a Bane", court: "wyrm", wyrm: true, silver: 2,
-    does: "The Black Spiral Dancers' answer to the grand klaive: a sword-length silver blade with twisted runes and threads of balefire, so it wounds as both silver and a thing of the Wyrm. Woken, it adds a die to the wielder's Melee pool. Against a spirit, every two levels of damage give the wielder back a point of Gnosis, from one spirit a scene.", book: BOW, pdf: 185,
+    does: "What the Black Spiral Dancers made to rival the grand klaive: a sword-length silver blade with twisted runes and threads of balefire, so it wounds as both silver and a thing of the Wyrm. Woken, it adds a die to the wielder's Melee pool. Against a spirit, every two levels of damage give the wielder back a point of Gnosis, from one spirit a scene.", book: BOW, pdf: 185,
     weapon: {attr: "strength", bonus: 3, type: "aggravated", diff: 7, ability: "melee", hands: 2, note: "Silver and a Wyrm-emanation: werewolves soak it only in breed form. Woken, one more Melee die."}}
 ];
 

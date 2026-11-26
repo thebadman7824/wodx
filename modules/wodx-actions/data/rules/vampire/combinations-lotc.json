@@ -1271,7 +1271,7 @@
    "c": "b5",
    "t": "var",
    "xp": 21,
-   "e": "Three one-hour rituals on three nights in a row, five blood each, at a difficulty the vampire picks; if all three succeed, a corrupt air settles on the place for as long as the vampire exists or the place stays the same. Others need a Willpower roll at that difficulty to enter.",
+   "e": "Three one-hour rituals on three nights in a row, five blood each, at a difficulty the vampire picks; if all three succeed, a corrupt air settles on the place until the vampire is destroyed or the place is changed. Others need a Willpower roll at that difficulty to enter.",
    "book": "V20 LotC",
    "k": [
     "fear",
