@@ -96,3 +96,8 @@
 {"file":"registry/features/wodx-actions.json","verdict":"working","how":"registry check 0 problems; summary rewritten by registry.mjs summary --write; registry harness passes","hash":"b0d02c28c498","at":"2026-11-26T11:07Z"}
 {"file":"registry/features/wodx-storyteller.json","verdict":"working","how":"registry check 0 problems; summary rewritten by registry.mjs summary --write; registry harness passes","hash":"268377ee9ac2","at":"2026-11-26T11:07Z"}
 {"file":"docs/FEATURES.md","verdict":"working","how":"registry check 0 problems; summary rewritten by registry.mjs summary --write; registry harness passes","hash":"a1d80067bb84","at":"2026-11-26T11:07Z"}
+{"file":"modules/wodx-npc/scripts/overheard.mjs","verdict":"working","how":"read the diff; gateoverheardwalk 2/2 and gateoverheard 7/7 on lane 9; overheard harness passes","hash":"3ba120c3fa32","at":"2026-11-26T12:19Z"}
+{"file":"tools/gate/gateoverheardwalk.mjs","verdict":"working","how":"read the diff; gateoverheardwalk 2/2 and gateoverheard 7/7 on lane 9; overheard harness passes","hash":"2210b0a0da40","at":"2026-11-26T12:19Z"}
+{"file":"tools/gate/gateoverheard.mjs","verdict":"working","how":"read the diff; gateoverheardwalk 2/2 and gateoverheard 7/7 on lane 9; overheard harness passes","hash":"8e3ade5a3654","at":"2026-11-26T12:19Z"}
+{"file":"registry/features/wodx-npc.json","verdict":"working","how":"registry check 0 problems; summary rewritten by the tool; full harness 4608 pass","hash":"f1fca01415a7","at":"2026-11-26T12:19Z"}
+{"file":"docs/FEATURES.md","verdict":"working","how":"registry check 0 problems; summary rewritten by the tool; full harness 4608 pass","hash":"10681566b0a7","at":"2026-11-26T12:19Z"}
