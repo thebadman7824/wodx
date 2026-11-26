@@ -978,7 +978,10 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
     const target = targetActor();
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
     const first = CK.byKey(check) ?? CK.CHECKS[0];
-    const groups = CK.GROUPS.map(([g, label]) => `<optgroup label="${esc(label)}">${opts(CK.CHECKS.filter(c => c.group === g).map(c => [c.key, c.label]), first.key)}</optgroup>`).join("");
+    // #2504: a player sees the checks that fit the chronicle's year (no computer in 1197); the Storyteller sees all
+    const yr = yearNow(), hasAb = k => num(actor.system?.abilities?.[k]?.value ?? actor.system?.abilities?.[k]);
+    const shown = c => game.user?.isGM || c.key === first.key || CK.fitsYear(c, yr, hasAb);
+    const groups = CK.GROUPS.map(([g, label]) => `<optgroup label="${esc(label)}">${opts(CK.CHECKS.filter(c => c.group === g && shown(c)).map(c => [c.key, c.label]), first.key)}</optgroup>`).join("");
     const content = `<form>
       <div class="form-group"><label>Check</label>${searchBox("select[name=check]", "Search checks…", "Search checks")}<select name="check">${groups}</select></div>
       <p class="vta-note vta-check-pool"></p>
