@@ -118,7 +118,7 @@ export function stainResults(key, turns, { name = "", source = "" } = {}) {
 export function stainWeapon(key) {
     const w = STAINS[key]?.weapon;
     if (!w) return null;
-    return { name: w.name, type: w.reach ? "Ranged Weapon" : "Melee Weapon", img: "icons/svg/claw.svg",
+    return { name: w.name, type: w.reach ? "Ranged Weapon" : "Melee Weapon", img: "icons/svg/sword.svg",
         system: { difficulty: 6, damage: { attribute: "strength", bonus: w.bonus, type: w.type, isrollable: true },
             attack: { attribute: "dexterity", ability: "brawl", accuracy: 0, isrollable: true }, description: `<p>${STAINS[key].gain}. ${REF} ${STAINS[key].page}.</p>` },
         flags: { "wodx-library": { implant: true }, "wodx-actions": { stainWeapon: key } } };
