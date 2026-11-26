@@ -477,11 +477,13 @@
     },
     "shown": {
      "what": "a trade window from With this person with the prices, haggling and the goods moving between sheets"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetradebuy.mjs",
+     "step": "1. Buy from them, then Deal: the good moves to the character's sheet and the price changes purses"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -758,11 +760,13 @@
     },
     "shown": {
      "what": "the summoned being's token on the map with its time left, gone when it ends"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesummontime.mjs",
+     "step": "1. called for an hour: on the canvas, then gone once the clock passes it"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1028,11 +1032,13 @@
     },
     "shown": {
      "what": "edges in the action window with Conviction spent and risked on the card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesecondsight.mjs",
+     "step": "1. Spend 1 Conviction for second sight: the sheet's Conviction falls by one"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
