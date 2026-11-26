@@ -308,7 +308,7 @@ try {
         try { page0 = pageBack(); } catch (e) { error ??= `putting the page back: ${e?.message ?? e}`; }
         const moved = game.time.worldTime - t0;
         if ( moved ) await game.time.advance(-moved);
-        let settingsBack = 0, docsGone = 0;
+        let settingsBack = 0, docsGone = 0; const docsBy = {};
         const settingsPass = async () => {
           for ( const s of store() ) {
             if ( skip(s.key) ) continue;
@@ -323,7 +323,7 @@ try {
         if ( cleanDocs ) for ( const c of COLS.filter(c => ids[c]) ) {
           const extra = [...game[c]].filter(d => !ids[c].has(d.id)).map(d => d.id);
           if ( !extra.length ) continue;
-          try { await game[c].documentClass.deleteDocuments(extra); docsGone += extra.length; } catch {}
+          try { await game[c].documentClass.deleteDocuments(extra); docsGone += extra.length; docsBy[c] = extra.length; } catch {}
         }
         // The scene that was active and the one viewed come back too: a gate's own scene deleted above must not leave
         // the next gate with no scene to view.
@@ -339,7 +339,7 @@ try {
         await new Promise(r => setTimeout(r, 3000));
         try { await settingsPass(); } catch (e) { error ??= `putting late settings back: ${e?.message ?? e}`; }
         const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
-        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut, page: page0};
+        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, docsBy, shut, page: page0};
       }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000, callerSrc: gateCaller.toString()});
       let out;
       sinceSignIn++;
@@ -363,7 +363,7 @@ try {
         try { out.flagsBack = await page.evaluate(PUT_FLAGS_BACK, flagPlan(flagsBefore, await page.evaluate(READ_FLAGS))); }
         catch (e) { out.flagsBack = 0; const note = `putting flags back: ${e?.message ?? e}`; if ( out.error ) out.error += `; ${note}`; else out.error = note; }
       }
-      const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : "",
+      const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted (${Object.entries(out.docsBy ?? {}).map(([c, n]) => `${c} ${n}`).join(", ")})` : "",
         out.flagsBack ? `flags put back on ${out.flagsBack} document(s)` : "",
         out.sheetsBack ? `sheets put back on ${out.sheetsBack} document(s)` : "",
         out.shut?.length ? `closed ${out.shut.length} window(s) left waiting: ${out.shut.join("; ")}` : "",
