@@ -124,10 +124,21 @@ function havenWith(actorId) {
 const lineOf = a => { const l = TERMS.lineOf(a); return l === "kueijin" ? "vampire" : l; };
 
 /** A point a few squares from a token (or the scene's middle), so the people arrive close by. */
-function nearPoint(scene, token, step = 3) {
+function nearPoint(scene, token, step = 3, taken = new Set()) {
   const size = scene.grid?.size ?? 100;
-  if ( token ) return {x: token.x + step * size, y: token.y};
-  return {x: Math.round((scene.width ?? 2000) / 2), y: Math.round((scene.height ?? 2000) / 2)};
+  if ( !token ) return {x: Math.round((scene.width ?? 2000) / 2), y: Math.round((scene.height ?? 2000) / 2)};
+  // #2487: a free spot in the open by the token, not one behind a wall, so the people sent can be seen
+  const dims = scene.dimensions ?? {};
+  const spots = R.spotsNear({x: token.x, y: token.y}, {size, width: dims.width ?? scene.width ?? 2000, height: dims.height ?? scene.height ?? 2000}, Math.max(2, step));
+  const busy = new Set([...all(scene.tokens).map(t => `${Math.round(t.x)},${Math.round(t.y)}`), ...taken]);
+  const onCanvas = globalThis.canvas?.scene?.id === scene.id;
+  const half = size / 2, from = {x: token.x + half, y: token.y + half};
+  const blocked = p => {
+    if ( !onCanvas ) return false;
+    try { return !!CONFIG.Canvas.polygonBackends.move.testCollision(from, {x: p.x + half, y: p.y + half}, {type: "move", mode: "any"}); } catch (e) { return false; }
+  };
+  const spot = spots.find(p => !busy.has(`${p.x},${p.y}`) && !blocked(p));
+  return spot ? {x: spot.x, y: spot.y} : {x: token.x + step * size, y: token.y};
 }
 
 /* ---- sending people ---- */
@@ -141,13 +152,17 @@ export async function send({kind = null, extras = null, scene, near = null, host
   const list = extras ?? R.forceFor(kind, yearNow());
   const made = [];
   let i = 0;
+  const taken = new Set();
   for ( const e of list ) {
     if ( !K.EXTRAS.find(x => x.key === e.key) ) continue;
-    const p = nearPoint(scene, near, 3 + Math.floor(i / 5));
-    const size = scene.grid?.size ?? 100;
-    const toks = await Between.makeExtras(e.key, {n: e.n, x: p.x, y: p.y + (i % 5) * size, scene, hidden: false, quiet: true, flags: {reach: {kind: kind ?? "road", ...flag}}});
-    made.push(...toks.filter(t => t?.documentName === "Token" || t?.parent));
-    i += e.n;
+    // #2487: each of them on a free spot of their own by the token, in the open
+    for ( let j = 0; j < Math.max(1, Math.round(Number(e.n) || 1)); j++ ) {
+      const p = nearPoint(scene, near, 3 + Math.floor(i / 8), taken);
+      taken.add(`${p.x},${p.y}`);
+      const toks = await Between.makeExtras(e.key, {n: 1, x: p.x, y: p.y, scene, hidden: false, quiet: true, flags: {reach: {kind: kind ?? "road", ...flag}}});
+      made.push(...toks.filter(t => t?.documentName === "Token" || t?.parent));
+      i += 1;
+    }
   }
   if ( hostile && near && made.length ) {
     const sides = Object.fromEntries([...made.map(t => [t.id, "a"]), [near.id, "b"]]);
@@ -240,8 +255,10 @@ export async function lawCome({actorId, region, mode = "arrest", at = null, why 
   const owners = ownerIds(a);
   const data = {actor: actorId, region, mode, scene: w.scene.id, token: w.token.id, tokens: made.map(t => t.id), done: false};
   const where = `${w.place?.name ? `${w.place.name}, ` : ""}${w.scene.navName || w.scene.name}`;
+  // #2487: say so when no one could be put on the map, so the Storyteller can place them by hand
+  const none = made.length ? "" : " No one could be put on the map there; place them by hand.";
   await gmCard(mode === "sentence" ? `The sentence on ${a.name}` : `The law comes for ${a.name}`,
-    mode === "sentence" ? `${words} bring them out at ${where} to carry out the sentence${why ? ` (${why})` : ""}.` : `${words} at ${where}${why ? ` (${why})` : ""}.`, {scene: w.scene, tokens: made});
+    (mode === "sentence" ? `${words} bring them out at ${where} to carry out the sentence${why ? ` (${why})` : ""}.` : `${words} at ${where}${why ? ` (${why})` : ""}.`) + none, {scene: w.scene, tokens: made});
   if ( !owners.length || !isPC(a) ) return answer({...data, choice: "yield"});
   return ChatMessage.create({speaker: {alias: words.replace(/^\w/, c => c.toUpperCase())}, whisper: [...owners, ...gmIds()],
     content: `<div class="wodx-card wst-reach wst-reach-law"><p><b>${esc(a.name)}:</b> ${esc(words)} are here ${esc(LAW_WORDS[mode] ?? LAW_WORDS.arrest)}.</p>
@@ -263,11 +280,12 @@ export async function answer(d, message = null) {
       await combat()?.fight?.start?.({scene, tokens: [...d.tokens, near.id], source: "world", why: "resisting the law", sides, byHand: true});
     }
     await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} resists the law.`});
+    await told(a, near && d.tokens.length ? `${a?.name ?? "Someone"} resists. The fight begins.` : `${a?.name ?? "Someone"} resists, but there is no one here to fight. The law will try again.`);
     return "resist";
   }
   // B6667: brought out of the watch's hands for the sentence: no second arrest, and the watch stay by the condemned
   // (the Storyteller's card on their coming has Send them away)
-  if ( d.mode === "sentence" ) { await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} is brought out for the sentence.`}); return "yield"; }
+  if ( d.mode === "sentence" ) { await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} is brought out for the sentence.`}); await told(a, `${a?.name ?? "Someone"} is brought out for the sentence.`); return "yield"; }
   if ( d.mode === "summon" ) await log({kind: "note", actor: d.actor, name: a?.name, text: `${a?.name} goes to be questioned and is let go.`});
   else {
     const has = L?.state?.()?.regions?.[d.region]?.[d.actor];
@@ -280,7 +298,15 @@ export async function answer(d, message = null) {
     await sendAway(scene.id, d.tokens);
     if ( d.mode !== "summon" ) await takeAway(scene, d.token, d);
   }
+  await told(a, d.mode === "summon" ? `${a?.name ?? "Someone"} goes to be questioned, and is let go.` : `${a?.name ?? "Someone"} goes with them, and is held until the trial. The Storyteller hears the case.`);
   return "yield";
+}
+
+/** #2487: what came of the law's card, told to the culprit's players and the Storyteller. */
+async function told(a, text) {
+  if ( !a ) return null;
+  return ChatMessage.create({speaker: {alias: "The law"}, whisper: [...ownerIds(a), ...gmIds()],
+    content: `<div class="wodx-card wst-reach wst-reach-told"><p>${esc(text)}</p></div>`});
 }
 
 /** B6165: hide the culprit's token and mark it lawTaken. */

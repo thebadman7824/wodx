@@ -16,7 +16,7 @@ import * as T from "./target-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-targeting";
-const VERSION = "0.4.4";
+const VERSION = "0.4.5";
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const C = () => game.wodxCombat;
@@ -254,6 +254,8 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
     castDefault();
     const t = currentTag();
     const key = t ? T.tagCode(t) : "none";
+    // B8048 (#2483): the area's outline belongs to an area power only; any other choice, or targets set by hand, clear it
+    if ( t?.intent !== "area" || handSet() ) clearPreview();
     const castRow = cast ? `<div class="wodx-aim-cast"><label>Aimed at <select class="wodx-aim-intent" data-fixed aria-label="Aimed at">${intentOptions(intent)}</select></label></div>` : "";
     if ( handSet() ) {
       const names = [...game.user.targets].map(x => x.name);

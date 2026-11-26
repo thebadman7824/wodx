@@ -26,17 +26,17 @@ export const HORIZON_YEARS = 5;
 
 /** The steps, in the order the hub shows them. auto: the hub can tell from the sheet; gm: only the Storyteller ticks it. */
 export const STEPS = [
-  {key: "sessionZero", label: "Session Zero", hint: "Tone, lines and veils, the X-card, house rules. Once for the whole table.", world: true},
-  {key: "ties", label: "Troupe ties", hint: "How this character knows the others."},
-  {key: "concept", label: "Concept", hint: "Concept, Nature and Demeanor on the sheet.", auto: true},
-  {key: "lifepath", label: "Lifepath", hint: "Optional: scenes from the life before.", auto: true, optional: true},
-  {key: "build", label: "Build", hint: "Points spent to the book's creation totals.", auto: true},
+  {key: "sessionZero", label: "Session Zero", hint: "Agree the tone, what stays out of the story, and the house rules. Done once for the whole table; marking it done ticks it for everyone.", world: true},
+  {key: "ties", label: "Troupe ties", hint: "Say how this character knows the others. Each tie goes on both sheets. Playing alone, mark it done."},
+  {key: "concept", label: "Concept", hint: "Fill in Concept, Nature and Demeanor (the wizard's Who they are page). Ticks itself once all three are on the sheet.", auto: true},
+  {key: "lifepath", label: "Lifepath", hint: "Optional: play or pick scenes from the life before. Each scene can give dots, ties or trouble.", auto: true, optional: true},
+  {key: "build", label: "Build", hint: "Spend the book's dots and freebie points in the wizard. Ticks itself when the totals match the book.", auto: true},
   {key: "meritsFlaws", label: "Merits and Flaws", hint: `Flaws give at most ${FLAW_CAP} freebie points; the Storyteller agrees to each.`, auto: true},
-  {key: "fit", label: "Fit with the year and place", hint: "The clan, language and gear against the chronicle's year."},
-  {key: "prelude", label: "Prelude", hint: "The life before and the change, played or written."},
-  {key: "recheck", label: "Check after the prelude", hint: "The book's totals again, with what the prelude gave.", auto: true},
-  {key: "forecast", label: "Trouble ahead", hint: "What the choices will cost later. Read it together."},
-  {key: "signoff", label: "Sign-off", hint: "The Storyteller signs the character off for the first night.", gm: true, last: true}
+  {key: "fit", label: "Fit with the year and place", hint: "Check the clan, language and gear make sense in the chronicle's year. Mark it done once they do."},
+  {key: "prelude", label: "Prelude", hint: "Play or write the life before and the night it changed. Mark it done when it is told."},
+  {key: "recheck", label: "Check after the prelude", hint: "The book's totals again, with what the prelude gave. Ticks itself when they still match.", auto: true},
+  {key: "forecast", label: "Trouble ahead", hint: "A list of what this character's Flaws, ties and clan will bring later (enemies, debts, weaknesses). Read it, then mark it done; nothing changes on the sheet."},
+  {key: "signoff", label: "Sign-off", hint: "The Storyteller says the character is ready for the first night.", gm: true, last: true}
 ];
 export const STEP_KEYS = STEPS.map(s => s.key);
 export const stepByKey = k => STEPS.find(s => s.key === k) ?? null;

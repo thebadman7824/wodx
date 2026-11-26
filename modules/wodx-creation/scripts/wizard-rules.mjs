@@ -25,7 +25,8 @@ export const RANK = ["Primary", "Secondary", "Tertiary"];
 export function pagesFor(lineId) {
   const L = TOTALS[lineId];
   if ( !L ) return [];
-  const out = [{key: "book", label: "The book"}, {key: "attributes", label: "Attributes"}, {key: "abilities", label: "Abilities"}];
+  // B8034 (#2474): who the character is comes right after the book, before any dots are spent
+  const out = [{key: "book", label: "The book"}, {key: "who", label: "Who they are"}, {key: "attributes", label: "Attributes"}, {key: "abilities", label: "Abilities"}];
   if ( (L.powers ?? []).length ) out.push({key: "powers", label: L.powers.map(p => p.label).join(" and ")});
   out.push({key: "backgrounds", label: "Backgrounds"});
   if ( L.virtues !== undefined ) out.push({key: "virtues", label: "Virtues"});
@@ -89,6 +90,8 @@ export function normWizard(w = {}) {
   for ( const [k, v] of Object.entries(w?.bought ?? {}) ) if ( EXTRAS[k] && n(v) ) out.bought[k] = n(v);
   // B5024: where a wilder's seeming point goes
   if ( w?.wilder === "willpower" || w?.wilder === "glamour" ) out.wilder = w.wilder;
+  // B8035 (#2501): the player said the character is ready
+  if ( w?.done === true ) out.done = true;
   return out;
 }
 
@@ -277,4 +280,51 @@ export function nextPage(pages, key, d = 1) {
   const i = pages.findIndex(p => p.key === key);
   const j = Math.max(0, Math.min(pages.length - 1, (i < 0 ? 0 : i) + d));
   return pages[j]?.key ?? "book";
+}
+
+/* ------------------------------------------------------------------ */
+/*  Who they are (B8034, #2474) and when the character is finished     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The identity fields each sheet type asks for on the "Who they are" page, past Concept, Nature and Demeanor (which
+ * every sheet has). path: where the system keeps it. kind "clan" and "road" are pickers; list: the sheet's own choice
+ * list (the system's listData) for a field the sheet keeps as a list key; the rest are typed.
+ */
+export const IDENTITY = {
+  Vampire: [{key: "clan", label: "Clan", kind: "clan"}, {key: "road", label: "Road and Path", kind: "road"}, {key: "sire", label: "Sire", path: "system.sire"}],
+  Werewolf: [{key: "tribe", label: "Tribe", path: "system.tribe", list: "TribeList"}, {key: "breed", label: "Breed", path: "system.breed", list: "BreedList"}, {key: "auspice", label: "Auspice", path: "system.auspice", list: "AuspiceList"}],
+  Mage: [{key: "affiliation", label: "Tradition or faction", path: "system.affiliation", list: "AffiliationList"}, {key: "essence", label: "Essence", path: "system.essence"}],
+  Changeling: [{key: "kith", label: "Kith", path: "system.kith", list: "KithList"}, {key: "seeming", label: "Seeming", path: "system.seeming", list: "SeemingList"}, {key: "court", label: "Court", path: "system.court", list: "CourtList"}],
+  Hunter: [{key: "creed", label: "Creed", path: "system.creed", list: "CreedList"}],
+  Wraith: [{key: "life", label: "Who they were in life", path: "system.life"}, {key: "death", label: "How they died", path: "system.death"}],
+  Mortal: []
+};
+/** Every sheet's own three. */
+export const IDENTITY_COMMON = [{key: "concept", label: "Concept", path: "system.concept"}, {key: "nature", label: "Nature", path: "system.nature"}, {key: "demeanor", label: "Demeanor", path: "system.demeanor"}];
+export const identityFor = (sheet = "Mortal") => [...IDENTITY_COMMON, ...(IDENTITY[sheet] ?? [])];
+/** Roads come from the Dark Ages books: the lines that pick one. Every other Vampire keeps Humanity or a Path by name. */
+export const ROAD_LINES = ["vtda20", "daelder"];
+
+/**
+ * A native language for where the character comes from, from WoDX Chronicle's region (B8036, #2489). The player can
+ * change it. "" when WoDX has no single language for the region.
+ */
+export const REGION_LANGUAGE = {
+  "moravia": "Czech", "german-lands": "German", "british-isles": "English", "france": "French", "iberia": "Spanish", "italy": "Italian",
+  "low-countries": "Dutch", "scandinavia": "Norse", "poland-baltic": "Polish", "carpathians-balkans": "Hungarian", "russia": "Russian",
+  "aegean": "Greek", "anatolia": "Turkish", "levant": "Arabic", "egypt": "Arabic"
+};
+export const nativeFor = (region = "") => REGION_LANGUAGE[String(region ?? "")] ?? "";
+
+/**
+ * Is the character still being made? (B8035, #2501, #2473, #2479) A sheet the solo arrival made counts as unfinished
+ * until the player presses "This character is ready" on the wizard's last page. A sheet made any other way (the
+ * Storyteller's, a table player's) is never held back, and neither is one the arrival made before the Ready button
+ * existed, which had no way to say it was done: those carry no ready mark (wodx-solo arrival.ready).
+ *   wizard: normWizard's shape; soloMade: the sheet carries the wodx-solo arrival mark; marked: its arrival.ready mark.
+ */
+export function unfinished({wizard = {}, soloMade = false, marked = false} = {}) {
+  if ( !soloMade || !marked ) return false;
+  return !normWizard(wizard).done;
 }

@@ -19,7 +19,7 @@ import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.118.1";
+export const VERSION = "0.118.2";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -296,8 +296,48 @@ export function tripWords(plan) {
 }
 
 /** Where a token lands on a scene: the place's own spot, else the middle of the scene. */
-function landing(scene, actor, at = null) {
-  const t = {...travelOf(scene), ...(at ? {x: at.x, y: at.y} : {})};
+/** #2490: the box round a region's shapes (rectangles, ellipses and polygons), or null. */
+export function regionBox(shapes = []) {
+  const xs = [], ys = [];
+  for ( const sh of shapes ?? [] ) {
+    if ( !sh ) continue;
+    if ( Array.isArray(sh.points) && sh.points.length >= 2 ) for ( let i = 0; i + 1 < sh.points.length; i += 2 ) { xs.push(sh.points[i]); ys.push(sh.points[i + 1]); }
+    else if ( sh.type === "ellipse" || sh.type === "circle" ) { const rx = sh.radiusX ?? sh.radius ?? 0, ry = sh.radiusY ?? sh.radius ?? 0; xs.push(sh.x - rx, sh.x + rx); ys.push(sh.y - ry, sh.y + ry); }
+    else if ( Number.isFinite(sh.x) && Number.isFinite(sh.y) ) { xs.push(sh.x, sh.x + (sh.width ?? 0)); ys.push(sh.y, sh.y + (sh.height ?? 0)); }
+  }
+  if ( !xs.length ) return null;
+  const x = Math.min(...xs), y = Math.min(...ys);
+  return {x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y};
+}
+const WAY_TYPE = `${MOD}.way`;
+const DOOR_NAME = /\b(door|doors|gate|entrance|entry|way in|threshold|front)\b/i;
+const OPEN_NAME = /\b(common room|taproom|tap room|hall|nave|street|square|market|yard|courtyard|bar|parlou?r|foyer|lobby)\b/i;
+/**
+ * #2490: where a traveller comes in when the place has no landing spot of its own: the Way on that scene that leads back
+ * to where they came from, else any Way there (a door or gate), else a region named for a door or a public room. The
+ * spot is a step inside, toward the middle of the map, so they stand by the door and not on the Way itself.
+ */
+export function entranceSpot(scene, from = null) {
+  const regions = all(scene?.regions);
+  if ( !regions.length ) return null;
+  const ways = regions.filter(r => all(r.behaviors).some(b => b.type === WAY_TYPE && !b.disabled));
+  const back = from ? ways.find(r => all(r.behaviors).some(b => b.type === WAY_TYPE && b.system?.to === from.id)) : null;
+  const pick = back ?? ways[0] ?? regions.find(r => DOOR_NAME.test(r.name ?? "")) ?? regions.find(r => OPEN_NAME.test(r.name ?? ""));
+  const box = pick ? regionBox(pick.shapes) : null;
+  if ( !box ) return null;
+  const d = scene.dimensions ?? {}, size = d.size ?? scene.grid?.size ?? 100;
+  const cx = box.x + box.w / 2, cy = box.y + box.h / 2;
+  if ( !ways.includes(pick) ) return {x: cx, y: cy};
+  const mx = (d.sceneX ?? 0) + (d.sceneWidth ?? scene.width ?? 1000) / 2, my = (d.sceneY ?? 0) + (d.sceneHeight ?? scene.height ?? 1000) / 2;
+  const dx = mx - cx, dy = my - cy, len = Math.hypot(dx, dy) || 1;
+  const step = Math.max(box.w, box.h) / 2 + size;
+  return {x: cx + (dx / len) * step, y: cy + (dy / len) * step};
+}
+
+function landing(scene, actor, at = null, from = null) {
+  const spot = travelOf(scene), own = Number.isFinite(spot?.x) && Number.isFinite(spot?.y);
+  const door = !at && !own ? entranceSpot(scene, from) : null;
+  const t = {...spot, ...(at ? {x: at.x, y: at.y} : door ?? {})};
   const d = scene.dimensions ?? {};
   const size = (d.size ?? scene.grid?.size ?? 100);
   const w = (actor?.prototypeToken?.width ?? 1) * size, h = (actor?.prototypeToken?.height ?? 1) * size;
@@ -314,7 +354,7 @@ export async function moveToScene(actor, scene, {from = null, at = null} = {}) {
   if ( !isActiveGM() || !actor || !scene ) return null;
   const origin = from ?? whereIs(actor);
   if ( origin?.id === scene.id ) return all(scene.tokens).find(t => t.actorId === actor.id) ?? null;
-  const td = await actor.getTokenDocument(landing(scene, actor, at));
+  const td = await actor.getTokenDocument(landing(scene, actor, at, origin));
   const data = td?.toObject ? td.toObject() : td;
   const [made] = await scene.createEmbeddedDocuments("Token", [data], {wodxTravel: true});
   if ( origin ) {
@@ -413,6 +453,8 @@ export async function travel({actorId, destId, userId = null, approved = false, 
     text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.${route}${halts}${paid}`,
     ...(sched?.toll ? {attention: `Forced pace: a Stamina roll (difficulty 7) for each of ${sched.toll} ${sched.toll === 1 ? "day" : "days"}, or a level of bashing harm each, for mounts too`} : {})});
   pull(user, plan.dest.id);
+  // #2490: the trip's time, for a table that keeps one clock (the Lone Chronicle moves the world clock on by it)
+  if ( plan.minutes ) Hooks.callAll("wodxTravelled", {actorId, userId: user, seconds: plan.minutes * 60, place: plan.dest.name, scene: plan.dest.scene?.id ?? null});
   // 0.49.0: a caravan out on the same road is noted for the Storyteller
   try { await game.modules.get(MOD)?.api?.upkeep?.caravans?.onTrip?.({actor, fromScene: plan.from?.id ?? null, destScene: plan.dest.id, start: plan.start, arrive: plan.arrive}); }
   catch (e) { console.error(`${MOD} | caravans`, e); }

@@ -36,7 +36,7 @@ export const INTENTS = [
 /** Per line: each intent's buttons, most used first; "scene" is the strip at the foot of the menu. */
 export const MENU_PLAN = {
     kindred: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise", "api:infernalFlame"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:giveBlood", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie", "api:malkRite", "api:exorcise", "api:infernalFlame"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin", "api:glyconCheck"],
         recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad", "api:roadFaith", "api:domainDA", "api:maturation"],
         st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory", "api:sampleDemon", "api:sampleGhost", "api:sampleSwarm", "api:spiderOn", "api:fealty", "api:domainEvent", "api:infernal"],
@@ -158,6 +158,7 @@ export const DESC = {
     "api:seduction": "Seduce, charm or beguile: the social system, step by step",
     "api:hunt": "Hunt for a vessel in the domain: the hunting roll for the place and the method",
     "api:feed": "Drink from the targeted token: blood gained, harm to the vessel",
+    "api:giveBlood": "Give a point of your vitae to the mortal, ghoul or animal you target, next to you",
     "api:spendBlood": "Spend blood to heal, raise an Attribute or wake by day",
     "api:bloodOath": "Bind or be bound: a step of the blood oath",
     "api:diablerie": "Drink a Cainite's soul: each step of diablerie",
@@ -370,6 +371,28 @@ export const DESC = {
 };
 
 /**
+ * #2504: actions that fit only some characters, as tests on what the sheet holds (facts: {text}, the clan, bloodline,
+ * variant and every item name, in lower case). An action not listed fits everyone of its line. A player sees only
+ * what fits, with a button to show the rest; the Storyteller sees all.
+ */
+export const FITS = {
+    "api:malkRite": f => /malkav/.test(f.text),
+    "api:glyconCheck": f => /glycon/.test(f.text),
+    "api:conditioning": f => /\bdominate\b/.test(f.text),
+    "api:infernal": f => /infernal|\bpact\b|investment/.test(f.text),
+    "api:infernalFlame": f => /infernal|investment|flame/.test(f.text),
+    "api:trueFaith": f => /true ?faith/.test(f.text),
+    "api:numina": f => /numin|psychic|telepath|psychokines|clairvoy/.test(f.text),
+    "api:hedgeMagic": f => /hedge|sorcer|\bpath of\b|ritual/.test(f.text),
+    "api:pactGift": f => /\bpact\b|infernal|investment/.test(f.text),
+    "api:thrall": f => /thrall|\bpact\b|infernal/.test(f.text),
+    "api:fomorPower": f => /fomor|taint|bane/.test(f.text),
+    "api:kinfolk": f => /kinfolk|kin-fetch|\bgnosis\b/.test(f.text)
+};
+/** Does an action fit a character (facts as above)? */
+export const fits = (spec, facts = {}) => { const t = FITS[spec]; return !t || !!t({ text: String(facts.text ?? "").toLowerCase() }); };
+
+/**
  * Group a menu's buttons by intent. sections: the profile's [title, [[spec, label, icon], ...]] list (all its buttons).
  * Returns {bands: [{id, label, hint, buttons}], scene: buttons} with buttons as {spec, label, icon, desc}; a button the
  * plan does not list goes by its section's title (Scene → the strip; "(GM)" → Storyteller; danger words → Resist).
@@ -573,6 +596,7 @@ export const COST = {
     "api:withPerson": "Costs nothing, unless you use a power.",
     "api:useDiscipline": "Blood or Willpower when the power asks for it.",
     "api:feed": "Gains blood. The vessel may be hurt.",
+    "api:giveBlood": "Spends a blood point. The drinker takes a step toward the Blood Oath.",
     "api:hunt": "Takes time in the night.",
     "api:spendBlood": "Spends blood.",
     "uses:willpower": "Spends Willpower.",

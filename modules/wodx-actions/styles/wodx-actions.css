@@ -58,3 +58,8 @@
 .vta-card .vta-plain { margin: 4px 0; font-weight: 600; }
 .vta-card details.vta-fold > summary { cursor: pointer; font-size: 0.85em; opacity: 0.8; }
 details.vta-more-opts > summary { cursor: pointer; margin: 6px 0; font-weight: 600; }
+
+/* #2504: actions that do not fit the character wait behind Show every action */
+.wodx-menu2 button.vta-unfit[hidden] { display: none !important; }
+.wodx-menu2 button.vta-unfit { opacity: 0.75; }
+.wodx-menu2 .vta-unfit-toggle { margin: 6px 0 0; width: auto; }

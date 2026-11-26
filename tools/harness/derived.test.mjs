@@ -91,7 +91,12 @@ test("every line gives rows or notes, and the sheet value is read back", () => {
   const d = D.derivedTraits("w20", {auspice: "Ragabash", advantages: {rage: {permanent: 1}}});
   assert.equal(row(d, "rage").have, 1);
   assert.equal(row(d, "rage").off, false);
-  assert.deepEqual(D.startingBlood("vtda20", {backgrounds: {domain: 1, herd: 2}}), {roll: 1, plus: 3, how: "One die + Domain + Herd"});
+  // B8035 (#2501): a new Cainite starts fully fed; the book's roll is kept for reference
+  const da = D.startingBlood("vtda20", {backgrounds: {domain: 1, herd: 2}});
+  assert.equal(da.full, true);
+  assert.equal(da.roll, 0);
+  assert.equal(da.book, "One die + Domain + Herd");
+  assert.equal(D.startingBlood("v20").full, true);
   assert.equal(D.startingBlood("ghoul").plus, 1);
   assert.equal(D.startingBlood("m20"), null);
 });

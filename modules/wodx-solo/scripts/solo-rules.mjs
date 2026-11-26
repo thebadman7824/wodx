@@ -179,7 +179,28 @@ export const WAITS = {
   dawn: {label: "Wait until dawn", to: "dawn", stops: ["fight", "paused", "word", "newcomer"]},
   day: {label: "Sleep the day", to: "dusk", stops: ["fight", "paused"], sleep: true}
 };
+/** B8035 (#2501): a sheet the arrival makes now waits for the wizard's Ready button; older sheets carry no mark. */
+export const READY_MARK = 1;
 export const MAX_WAIT = 36 * 3600;
+
+/* B8045 (#2477): hunting is one of the ways a night passes. The hunt rolls an hour at a time until prey is caught,
+   and the clock then moves by the hours it took. */
+export const HUNT_CHOICE = {label: "Hunt the rest of the night", hint: "Roll an hour at a time until you catch prey or dawn comes; the clock moves by the hours used."};
+export const HUNT_MAX_HOURS = 12;
+/** Whole hours a hunt may use before dawn: at least one, at most HUNT_MAX_HOURS. */
+export function huntHours(toDawn = 0) {
+  const h = Math.floor((Number(toDawn) || 0) / 3600);
+  return Math.max(1, Math.min(HUNT_MAX_HOURS, h));
+}
+/** Seconds a spent stretch of time may move the clock: whole seconds, never below 0 or past HUNT_MAX_HOURS. */
+export function spendSeconds(seconds = 0, maxHours = HUNT_MAX_HOURS) {
+  const s = Math.round(Number(seconds) || 0);
+  return Math.max(0, Math.min(Math.max(0, Number(maxHours) || 0) * 3600, s));
+}
+/** #2490: a trip's time on the world clock, at most a fortnight, in no more than about 60 steps so a long trip ends soon. */
+export const TRIP_MAX_HOURS = 14 * 24;
+export const TRIP_MIN_SECONDS = 10 * 60;
+export const tripStep = total => Math.max(STEP, Math.ceil((Math.round(Number(total) || 0)) / 60));
 export const STEP = 600;
 
 /** Seconds a wait asks for. toDusk / toDawn: seconds from now to the next dusk and dawn where the character is. */
@@ -391,6 +412,12 @@ export function xpAmount(v) {
 export const xpNote = note => (String(note ?? "").trim().slice(0, 100) || "Given with the Storyteller tools");
 
 export const EYES_CAP = 60;
+/** B8050 (#2482): a chat card's header controls (delete, menu) taken out of its html, for a list where they cannot work. */
+export function stripCardControls(html = "") {
+  return String(html ?? "").replace(/<a\b[^>]*\b(?:message-delete|chat-control|message-control)\b[^>]*>[\s\S]*?<\/a>/gi, "")
+    .replace(/<button\b[^>]*\b(?:message-delete|chat-control|message-control)\b[^>]*>[\s\S]*?<\/button>/gi, "")
+    .replace(/<a\b[^>]*data-action="(?:deleteMessage|expandRoll|contextMenu)"[^>]*>[\s\S]*?<\/a>/gi, "");
+}
 /** Keep the newest cards, one per message, at most EYES_CAP. */
 export function addEyes(list = [], card, cap = EYES_CAP) {
   const out = (list ?? []).filter(c => c && c.id !== card?.id);
@@ -527,6 +554,6 @@ export function newCharacterData({name, line, userId, at = 0} = {}) {
     name: n, type: L.type,
     ownership: {default: 0, [String(userId)]: 3},
     prototypeToken: {name: n, actorLink: true, disposition: 1, displayName: 30, sight: {enabled: true, range: SIGHT_SQUARES, visionMode: "basic"}},
-    flags: {"wodx-solo": {arrival: {line: L.id, userId: String(userId), at: Number(at) || 0}}}
+    flags: {"wodx-solo": {arrival: {line: L.id, userId: String(userId), at: Number(at) || 0, ready: READY_MARK}}}
   };
 }

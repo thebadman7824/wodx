@@ -45,11 +45,14 @@ async function tell(doc, text) {
 }
 
 /** Light, put out or replace a token's carried light. */
+/** B8049 (#2500): the kinds of light this token's actor has in its inventory. The Storyteller may light any. */
+const heldBy = doc => C.heldKinds([...(doc?.actor?.items ?? [])].map(i => i.name));
 export async function carry(doc, what, kind) {
   const year = yearNow(), now = game.time.worldTime;
   let s = stateOf(doc);
   if ( what === "fresh" ) {
     if ( !C.kindsFor(year).some(k => k.id === kind) ) return ui.notifications.warn("That cannot be had in this year.");
+    if ( !game.user.isGM && !heldBy(doc).includes(kind) ) return ui.notifications.warn(`${doc.name} has no ${C.CARRIED[kind].label.toLowerCase()} to light.`);
     s = C.fresh(kind, year, now);
     const why = C.cannotLight(s, weatherCtx(doc.parent));
     if ( why ) { await save(doc, {...s, lit: false}, false); return ui.notifications.warn(why); }
@@ -80,19 +83,22 @@ export async function carry(doc, what, kind) {
 export async function openCarry(tok) {
   const doc = tok?.document ?? tok;
   if ( !doc?.isOwner ) return;
-  const year = yearNow(), kinds = C.kindsFor(year), s = stateOf(doc);
+  const year = yearNow(), s = stateOf(doc), held = heldBy(doc);
+  // B8049 (#2500): only a light the character has; the Storyteller may light any the year allows
+  const kinds = C.kindsFor(year).filter(k => game.user.isGM || held.includes(k.id));
   const now = s?.lit ? C.burn(s, game.time.worldTime, {}).state : s;
   const status = s ? `${C.CARRIED[s.kind]?.label ?? "A light"}, ${s.lit ? "lit" : "out"}, ${C.leftWords(now?.left)}.` : "Carrying no light.";
-  const opts = kinds.map(k => `<option value="${k.id}">${esc(k.label)}</option>`).join("");
-  const buttons = [{action: "fresh", label: "Light a fresh one", default: true}];
+  const opts = kinds.length ? kinds.map(k => `<option value="${k.id}">${esc(k.label)}</option>`).join("") : `<option value="" disabled selected>No light in the inventory</option>`;
+  const buttons = kinds.length ? [{action: "fresh", label: "Light a fresh one", default: true}] : [];
+  if ( !kinds.length && !s ) buttons.push({action: "none", label: "Close", default: true});
   if ( s && !s.lit && num(s.left) > 0 ) buttons.push({action: "light", label: "Light it again"});
   if ( s?.lit ) buttons.push({action: "out", label: "Put it out"});
   if ( s ) buttons.push({action: "drop", label: "Set it down"});
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, classes: ["wodx-dialog", "wix-carry"],
     window: {title: `Carried light: ${doc.name}`},
-    content: `<p>${esc(status)}</p><div class="form-group"><label>Light</label><select name="kind" data-fixed>${opts}</select></div><p class="hint">A torch lasts about an hour, a candle four, a lantern's oil eight. Out of doors, wind puts out a candle and a downpour or a storm puts out a torch.</p>`,
+    content: `<p>${esc(status)}</p><div class="form-group"><label>Light</label><select name="kind" data-fixed>${opts}</select></div>${kinds.length ? "" : `<p class="wix-carry-none">${esc(doc.name)} carries nothing to light: a candle, a torch or a lantern must be in the inventory first.</p>`}<p class="hint">A torch lasts about an hour, a candle four, a lantern's oil eight. Out of doors, wind puts out a candle and a downpour or a storm puts out a torch.</p>`,
     buttons: buttons.map(b => ({...b, callback: (ev, btn) => ({what: b.action, kind: btn.form?.elements?.kind?.value})}))});
-  if ( res?.what ) await carry(doc, res.what, res.kind);
+  if ( res?.what && res.what !== "none" ) await carry(doc, res.what, res.kind);
 }
 
 /** The Storyteller's client: burn every lit carried light down to now. */

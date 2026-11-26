@@ -30,6 +30,8 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const chron = () => game.modules.get("wodx-chronicle")?.api;
+/** #2505: a year from a field; 0 and minus years are kept (before the common era), a blank keeps the old one. */
+const yearIn = (v, old) => { const n = Number(v); return v !== "" && v !== null && v !== undefined && Number.isFinite(n) ? Math.trunc(n) : old; };
 const yearNow = () => { try { return getEngine().timeToDate(game.time?.worldTime ?? 0).year; } catch { return 1197; } };
 const STAGE_LABEL = {birth: "Birth", youth: "Youth", adult: "Adult life", later: "Later life", turning: "The turn", splat: "Among your own", after: "The first teaching", after2: "The first years"};
 const APPROVAL = "wodx-lifepath-people";
@@ -187,8 +189,8 @@ export class LifepathApp extends ApplicationV2 {
 
   #readSetup(form, rerender = false) {
     const f = form.elements;
-    this.setup = {line: f.line.value, splat: f.splat?.value ?? "", birthYear: Number(f.birthYear.value) || this.setup.birthYear,
-      turnYear: Number(f.turnYear?.value) || this.setup.turnYear, short: (f.length_?.value ?? (this.setup.short ? "short" : "long")) === "short"};
+    this.setup = {line: f.line.value, splat: f.splat?.value ?? "", birthYear: yearIn(f.birthYear.value, this.setup.birthYear),
+      turnYear: yearIn(f.turnYear?.value, this.setup.turnYear), short: (f.length_?.value ?? (this.setup.short ? "short" : "long")) === "short"};
     if ( rerender ) { this.setup.splat = R.guessSplat(this.setup.line, splatText(this.actor)) ?? ""; this.render(); }
   }
 
@@ -219,8 +221,8 @@ export class LifepathApp extends ApplicationV2 {
           <div class="form-group"><label>Line</label><select name="line" data-fixed>${lines}</select></div>
           <div class="form-group"><label>${esc(L.splatLabel)}</label>${searchBox("select[name=splat]", "Search…", `Search ${L.splatLabel}`)}
             <select name="splat"><option value="">Not chosen yet</option>${splats.map(x => `<option value="${x.key}" ${x.key === s.splat ? "selected" : ""}>${esc(x.label)}${x.house ? " (house reading)" : ""}</option>`).join("")}</select></div>
-          <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="1100" max="2290" value="${s.birthYear}"><p class="notes">No later than ${s.line === "mortal" ? `the chronicle's year, ${yearNow()}` : "the year of the turn"}.</p></div>
-          ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="1100" max="2300" value="${s.turnYear}"></div>`}
+          <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="${s.line === "mortal" ? 1100 : -4000}" max="2290" value="${s.birthYear}"><p class="notes">No later than ${s.line === "mortal" ? `the chronicle's year, ${yearNow()}` : "the year of the turn"}.${s.line === "mortal" ? "" : " A year before the common era is a minus number: -500 is 500 BCE."}${s.birthYear < 0 ? ` That is ${-s.birthYear} BCE.` : ""}</p></div>
+          ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="-4000" max="2300" value="${s.turnYear}"></div>`}
           <div class="form-group" data-fixed><label>How much to answer</label><div>
             <label class="wodx-check"><input type="radio" name="length_" value="short" ${s.short ? "checked" : ""}> Short: where the character comes from; the dice tell the rest as a paragraph</label>
             <label class="wodx-check"><input type="radio" name="length_" value="long" ${s.short ? "" : "checked"}> Long: every step of the life, one by one</label></div></div>

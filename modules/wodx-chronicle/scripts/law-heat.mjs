@@ -128,6 +128,32 @@ export async function arrest(actorId, region) {
   Hooks.callAll("wodxArrest", {actor: actorId, name: actor?.name ?? e.name, region, deeds: e.deeds, year: yearNow()});
   return s.regions[region][actorId];
 }
+/**
+ * #2487: the heat card's Make the arrest. With WoDX Storyteller on, the watch come to the culprit on the map and the
+ * culprit's players choose to go with them or resist (their answer makes the arrest). Without it, the arrest is made
+ * at once and the culprit's players are told.
+ */
+export async function makeArrest(actorId, region) {
+  if ( !game.user.isGM ) return "";
+  const reach = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.reach : null;
+  let sent = null;
+  if ( reach?.lawCome ) { try { sent = await reach.lawCome({actorId, region, mode: "arrest", why: "the Storyteller's word"}); } catch (e) { console.warn("WoDX | law comes", e); } }
+  if ( sent ) return "The watch go to make the arrest.";
+  const done = await arrest(actorId, region);
+  const actor = game.actors.get(actorId);
+  if ( done ) await heatNote(actor, `${actor?.name ?? "Someone"} is arrested and held until the trial. The Storyteller hears the case.`, true);
+  return done ? "Arrested." : "There is no one to arrest.";
+}
+/** #2487: the heat card's Let it go, with a line on the card's own thread so it is seen. */
+export async function letItGo(actorId, region) {
+  const done = await lowerHeat(actorId, region, 0);
+  if ( done ) await heatNote(game.actors.get(actorId), `The law lets ${game.actors.get(actorId)?.name ?? "it"} go, for now.`, false);
+  return "The law lets it go.";
+}
+async function heatNote(actor, text, players) {
+  const owners = players && actor ? game.users.filter(u => !u.isGM && actor.testUserPermission?.(u, "OWNER")).map(u => u.id) : [];
+  return ChatMessage.create({speaker: {alias: "The law"}, whisper: [...owners, ...gmIds()], content: `<div class="wodx-card wodx-law-heat"><p>${esc(text)}</p></div>`});
+}
 /** Let it go, or lower it by a factor (a bribe, an amnesty). */
 export async function lowerHeat(actorId, region, factor = 0) {
   if ( !game.user.isGM ) return null;
@@ -165,9 +191,8 @@ export function registerHeatHooks() {
     if ( !game.user.isGM || !message.flags?.[MODULE_ID]?.lawHeat ) return;
     for ( const b of el.querySelectorAll?.("[data-action='wodx-law-arrest'], [data-action='wodx-law-drop']") ?? [] ) b.addEventListener("click", async () => {
       b.disabled = true;
-      if ( b.dataset.action === "wodx-law-arrest" ) await arrest(b.dataset.actor, b.dataset.region);
-      else await lowerHeat(b.dataset.actor, b.dataset.region, 0);
-      ui.notifications?.info?.(b.dataset.action === "wodx-law-arrest" ? "Arrested." : "The law lets it go.");
+      const said = b.dataset.action === "wodx-law-arrest" ? await makeArrest(b.dataset.actor, b.dataset.region) : await letItGo(b.dataset.actor, b.dataset.region);
+      ui.notifications?.info?.(said);
     });
   });
 }

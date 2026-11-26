@@ -29,6 +29,21 @@ const nowWhen = () => { let year = null, futureBranch = false; try { year = Numb
 const darkEra = () => { try { return ["dark-ages", "long-night"].includes(chron()?.eras?.activeEra?.()?.profile?.id ?? ""); } catch (e) { return false; } };
 
 export const wizardOf = actor => W.normWizard(actor?.flags?.[MODULE_ID]?.[FLAG] ?? {});
+
+/** B8035: is the character still being made? Solo arrival's sheets until "This character is ready"; any sheet while the wizard is open. */
+export const creationUnfinished = actor => !!actor && W.unfinished({wizard: wizardOf(actor), soloMade: !!actor.flags?.["wodx-solo"]?.arrival,
+  marked: Number(actor.flags?.["wodx-solo"]?.arrival?.ready) >= 1});
+
+/** The Dark Ages Roads (WoDX Actions' data), loaded once for the "Who they are" page (B8034). */
+let ROADS = null;
+const loadRoads = () => ROADS ??= fetch("modules/wodx-actions/data/roads-daw.json").then(r => (r.ok ? r.json() : null)).catch(() => null)
+  .then(d => { if ( !d ) ROADS = null; return d; });
+/** The sheet's own choice lists (the system's listData: tribes, kiths, creeds...), for the fields it keeps as list keys. */
+const loadLists = actor => import(foundry.utils.getRoute(`systems/${game.system.id}/module/scripts/select-helpers.js`)).then(m => m.default.SetupItem(actor, true)).catch(e => { console.warn(`${MODULE_ID} | lists`, e); return {}; });
+const homeRegion = () => {
+  try { return chron()?.chronicle?.current?.()?.manifest?.homeland || chron()?.world?.homeland?.() || ""; } catch (e) { return ""; }
+};
+const langsOf = actor => (Array.isArray(actor?.flags?.["wodx-chronicle"]?.languages) ? actor.flags["wodx-chronicle"].languages.filter(Boolean) : []);
 /** The player view's hover help in WoDX Sheets, when that module has it: one text for each Trait in all of WoDX. */
 let sheetHelp = null;
 import("../../wodx-sheets/scripts/beginner-rules.mjs").then(m => { sheetHelp = typeof m.helpFor === "function" ? m.helpFor : null; }).catch(() => null);
@@ -75,7 +90,7 @@ export class WizardApp extends ApplicationV2 {
     position: {width: 680, height: "auto"},
     actions: {go: WizardApp.#onGo, step: WizardApp.#onStep, extra: WizardApp.#onExtra, other: WizardApp.#onOther, addItem: WizardApp.#onAddItem,
       removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub,
-      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, wilder: WizardApp.#onWilder, animal: WizardApp.#onAnimal}
+      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, ready: WizardApp.#onReady, wilder: WizardApp.#onWilder, animal: WizardApp.#onAnimal}
   };
 
   static openFor(actor, page = null) {
@@ -129,10 +144,47 @@ export class WizardApp extends ApplicationV2 {
       </div>`;
     return div;
   }
-  _replaceHTML(result, content) { content.replaceChildren(result); }
+  // B8041 (#2495): a dot added or taken back redraws the page; it keeps its place instead of jumping to the top
+  _replaceHTML(result, content) {
+    const top = this._scrollPage === this.page ? (content.querySelector(".wodx-scroll")?.scrollTop ?? 0) : 0;
+    content.replaceChildren(result);
+    this._scrollPage = this.page;
+    const box = content.querySelector(".wodx-scroll");
+    if ( box && top ) box.scrollTop = top;
+  }
 
   _onRender() {
     Beasts.wirePanel(this.element);
+    // B8034: the "Who they are" page writes each field as it changes
+    if ( this.page === "who" && !this.roads ) loadRoads().then(d => { if ( d ) { this.roads = d; this.render(); } });
+    if ( this.page === "who" && !this.lists && W.identityFor(TOTALS[this.lineId]?.sheet).some(f => f.list) ) {
+      this.lists = {};
+      loadLists(this.actor).then(d => { this.lists = d ?? {}; this.render(); });
+    }
+    for ( const el of this.element.querySelectorAll("input[name=who-text]") ) el.addEventListener("change", ev => this.actor.update({[ev.target.dataset.path]: String(ev.target.value ?? "").trim().slice(0, 80)}));
+    for ( const el of this.element.querySelectorAll("select[name=who-list]") ) el.addEventListener("change", async ev => { await this.actor.update({[ev.target.dataset.path]: ev.target.value}); this.render(); });
+    this.element.querySelector("select[name=who-clan]")?.addEventListener("change", async ev => {
+      await this.actor.update({"system.clan": ev.target.value ? "custom" : "", "system.custom.clan": ev.target.value});
+      this.render();
+    });
+    this.element.querySelector("select[name=who-road]")?.addEventListener("change", async ev => {
+      const [k, path] = String(ev.target.value).split("|");
+      // Choose… clears the Road again
+      if ( !k ) { await this.actor.update({"flags.wodx-actions.-=road": null, "system.advantages.path.custom": ""}); return this.render(); }
+      const r = this.roads?.roads?.[k];
+      if ( !r ) return;
+      // The same write as WoDX Actions' Road and Path (kindred.js setRoad), so sins, frenzy and the sheet follow it
+      await this.actor.update({"flags.wodx-actions.road": {key: k, path: path || null}, "system.advantages.path.label": "custom", "system.advantages.path.custom": path || r.name});
+      this.render();
+    });
+    this.element.querySelector("input[name=who-lang]")?.addEventListener("change", async ev => {
+      const v = String(ev.target.value ?? "").trim().slice(0, 40), rest = langsOf(this.actor).slice(1).filter(l => l.toLowerCase() !== v.toLowerCase());
+      // Through WoDX Chronicle where it is on, so its checks (a language closed in this book) hold here too
+      const set = chron()?.languages?.set;
+      if ( set ) await set(this.actor, v ? [v, ...rest] : rest);
+      else await this.actor.update({"flags.wodx-chronicle.languages": v ? [v, ...rest] : rest});
+      this.render();
+    });
     this.element.querySelector("select[name=line]")?.addEventListener("change", async ev => {
       const w = wizardOf(this.actor);
       w.line = ev.target.value;
@@ -165,6 +217,7 @@ export class WizardApp extends ApplicationV2 {
   #page(key, ctx) {
     switch ( key ) {
       case "book": return this.#book(ctx);
+      case "who": return this.#who(ctx);
       case "attributes": return this.#groups("attributes", ctx);
       case "abilities": return this.#groups("abilities", ctx);
       case "powers": return this.#powers(ctx);
@@ -224,6 +277,54 @@ export class WizardApp extends ApplicationV2 {
       <p>Pick what the character was before the story, and the wizard spends the Attributes, Abilities${L.virtues !== undefined ? " and Virtues" : ""} for you. You can change any of it on the next pages, and still choose the ${esc((L.powers ?? []).map(p => p.label).join(" and ") || "powers")}, Backgrounds and freebies yourself.</p>
       <div class="wodx-wz-add"><select name="quick-concept" aria-label="Concept for the quick start" data-fixed>${Object.entries(Q.CONCEPTS).map(([k, c]) => `<option value="${k}">${esc(c.label)}</option>`).join("")}</select>
         <button type="button" data-action="quick"><i class="fa-solid fa-bolt"></i> Fill in a starting build</button></div>`;
+  }
+
+  /** B8034 (#2474), B8036 (#2489): who the character is, written to the sheet as it is chosen. */
+  #who({L, lineId}) {
+    const a = this.actor, sys = a.system ?? {};
+    const field = f => {
+      if ( f.kind === "clan" ) {
+        // A clan the sheet already has, typed or from its own list, shows as chosen
+        const cur = String((sys.clan === "custom" ? sys.custom?.clan : sys.clan ? game.i18n?.localize?.(sys.clan) ?? sys.clan : "") || "");
+        const list = W.clansOpen(nowWhen());
+        const known = list.some(c => c.name === cur);
+        return `<div class="form-group"><label>${esc(f.label)}</label><select name="who-clan" data-fixed><option value="">Choose…</option>${
+          list.map(c => `<option value="${esc(c.name)}" ${c.name === cur ? "selected" : ""}>${esc(c.name)}</option>`).join("")}${cur && !known ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : ""}</select></div>`;
+      }
+      if ( f.kind === "road" ) {
+        if ( !W.ROAD_LINES.includes(lineId) ) return `<p class="wodx-quiet">${esc(L.short)} uses Humanity, or a Path chosen with the Storyteller, on the sheet.</p>`;
+        const roads = this.roads?.roads ?? null;
+        if ( !roads ) return `<p class="wodx-quiet">The list of Roads is loading.</p>`;
+        const f0 = a.flags?.["wodx-actions"]?.road ?? {};
+        const sel = f0.key ? `${f0.key}|${f0.path ?? ""}` : "";
+        const opts = Object.entries(roads).flatMap(([k, r]) => [[`${k}|`, r.name], ...(r.paths ?? []).map(p => [`${k}|${p.name}`, `${r.name}: ${p.name}`])]);
+        const [k, path] = sel.split("|");
+        const r = roads[k], pa = r?.paths?.find(p => p.name === path);
+        const vs = pa?.virtues ?? r?.virtues ?? [];
+        return `<div class="form-group"><label>${esc(f.label)}</label><select name="who-road" data-fixed><option value="">Choose…</option>${
+          opts.map(([v, l]) => `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
+          ${r ? `<p class="wodx-quiet">Virtues on this Road: ${vs.map(v => esc(this.roads.virtueLabels?.[v] ?? v)).join(" and ")} and Courage. Its sins and their order are in WoDX Actions, Disciplines and Road.</p>` : ""}`;
+      }
+      const v = foundry.utils.getProperty(a, f.path) ?? "";
+      if ( f.list ) {
+        // the sheet's own "custom" choice needs its name typed on the sheet, so the wizard leaves it out
+        const map = this.lists?.[f.list] ?? null, entries = map ? Object.entries(map).filter(([k]) => k !== "custom") : [];
+        if ( entries.length ) {
+        const has = entries.some(([k]) => k === v);
+        return `<div class="form-group"><label>${esc(f.label)}</label><select name="who-list" data-path="${esc(f.path)}" data-fixed>${has ? "" : `<option value="${esc(v)}" selected>${esc(v ? game.i18n?.localize?.(v) ?? v : "Choose…")}</option>`}${
+          entries.map(([k, l]) => `<option value="${esc(k)}" ${k === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>`;
+        }
+        // no list to hand (it did not load): typed, as before
+      }
+      return `<div class="form-group"><label>${esc(f.label)}</label><input type="text" name="who-text" data-path="${esc(f.path)}" value="${esc(v)}" maxlength="80"></div>`;
+    };
+    const langs = langsOf(a), native = langs[0] ?? "", suggest = W.nativeFor(homeRegion());
+    return `<h3>Who they are</h3>
+      <p>Each choice goes on the sheet as soon as it is made. The Storyteller can change any of it later.</p>
+      ${W.identityFor(L.sheet).map(field).join("")}
+      ${L.sheet === "Vampire" ? `<p class="wodx-quiet">Generation is bought as the Generation Background, on the Backgrounds page; with none, the character is of the book's starting Generation.</p>` : ""}
+      <div class="form-group"><label>Native language</label><input type="text" name="who-lang" value="${esc(native)}" placeholder="${esc(suggest || "The language they grew up speaking")}" maxlength="40"></div>
+      <p class="wodx-quiet">${native ? (["vtda20", "daelder"].includes(this.lineId) ? "Other languages come from the Multi-Lingual Merit (V20DA p. 422), in the Languages window." : "Other languages come from Linguistics and Language Merits, in the Languages window.") : suggest ? `Left empty, ${esc(suggest)} is set when the character is ready.` : "Type the language they grew up speaking."}</p>`;
   }
 
   #groups(kind, ctx) {
@@ -339,7 +440,7 @@ export class WizardApp extends ApplicationV2 {
     return `<h4>Traits that follow from the others</h4>
       ${rows ? `<table class="wodx-table wodx-wz-derived"><thead><tr><th>Trait</th><th>Sheet</th><th>Book</th><th>How</th><th></th></tr></thead><tbody>${rows}</tbody></table>` : ""}
       ${off > 1 ? `<p><button type="button" data-action="derive" data-key=""><i class="fa-solid fa-wand-magic"></i> Set all ${off}</button></p>` : ""}
-      ${blood ? `<p>Blood to start with: ${esc(blood.how)}. Now ${bloodNow}. <button type="button" data-action="blood">${blood.roll ? `<i class="fa-solid fa-dice-d10"></i> Roll it` : "Set it"}</button></p>` : ""}
+      ${blood ? `<p>Blood to start with: ${esc(blood.how)}. Now ${bloodNow}. <button type="button" data-action="blood">${blood.full ? "Fill the pool" : blood.roll ? `<i class="fa-solid fa-dice-d10"></i> Roll it` : "Set it"}</button></p>` : ""}
       ${d.notes.length ? `<p class="wodx-quiet">${d.notes.map(esc).join(" ")}</p>` : ""}
       ${ctx.lineId === "c20" && D.isWilder(this.actor.system) ? `<p>A wilder's point: <button type="button" data-action="wilder" data-to="glamour" ${(wizardOf(this.actor).wilder ?? "glamour") === "glamour" ? "disabled" : ""}>Glamour</button> <button type="button" data-action="wilder" data-to="willpower" ${wizardOf(this.actor).wilder === "willpower" ? "disabled" : ""}>Willpower</button></p>` : ""}
       <p class="wodx-quiet">From ${esc(d.ref)}. Dots bought with freebies and the prelude's Willpower are added on top.</p>
@@ -412,7 +513,28 @@ export class WizardApp extends ApplicationV2 {
       ${warn.length ? `<ul class="wodx-wz-warn">${warn.map(w => `<li>${esc(w)}</li>`).join("")}</ul>` : `<p>${led.ok ? "Everything matches the book." : ""}</p>`}
       ${this.#derived(ctx)}
       <div class="wodx-buttons"><button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
-        <button type="button" data-action="hub"><i class="fa-solid fa-moon"></i> Before the First Night</button></div>`;
+        <button type="button" data-action="hub"><i class="fa-solid fa-moon"></i> Before the First Night</button></div>
+      ${wizardOf(this.actor).done ? `<p><i class="fa-solid fa-check"></i> This character is ready to play.</p>`
+        : `<p>When the sheet is as you want it, say so. Until then the rest of WoDX waits for you.</p>
+      <div class="wodx-buttons"><button type="button" data-action="ready" class="wodx-wz-ready"><i class="fa-solid fa-flag-checkered"></i> This character is ready</button></div>`}`;
+  }
+
+  /**
+   * B8035 (#2501): the player says the character is done. A new Cainite's pool is filled (the owner's house rule), a
+   * native language is set where none is, the wizard closes and the rest of WoDX opens up (Hooks "wodxCreationDone").
+   */
+  static async #onReady() {
+    const a = this.actor, w = wizardOf(a);
+    const up = {[`flags.${MODULE_ID}.${FLAG}`]: W.normWizard({...w, done: true})};
+    const b = D.startingBlood(this.lineId, {backgrounds: bgDots(a)});
+    // Only to a pool the sheet has: an unset maximum is left alone (#2473)
+    if ( b?.full && n(a.system?.advantages?.bloodpool?.max) > 0 ) up["system.advantages.bloodpool.temporary"] = n(a.system.advantages.bloodpool.max);
+    const native = W.nativeFor(homeRegion());
+    if ( !langsOf(a).length && native ) up["flags.wodx-chronicle.languages"] = [native];
+    await a.update(up);
+    ui.notifications.info(`${a.name} is ready. The night begins.`);
+    Hooks.callAll("wodxCreationDone", a);
+    await this.close();
   }
 
   /* -------------------------------------------- */
@@ -438,13 +560,20 @@ export class WizardApp extends ApplicationV2 {
   static async #onBlood() {
     const b = D.startingBlood(this.lineId, {backgrounds: bgDots(this.actor)});
     if ( !b ) return;
+    const max = n(this.actor.system?.advantages?.bloodpool?.max) || 10;
+    // B8035 (#2501): a new Cainite starts fully fed, to the pool the sheet has (none set: nothing to fill)
+    if ( b.full ) {
+      const top = n(this.actor.system?.advantages?.bloodpool?.max);
+      if ( top > 0 ) await this.actor.update({"system.advantages.bloodpool.temporary": top});
+      else ui.notifications.warn("The sheet has no blood pool size yet: set the Generation first.");
+      return this.render();
+    }
     let total = b.plus;
     if ( b.roll ) {
       const roll = await new Roll(`${b.roll}d10`).evaluate();
       await roll.toMessage({speaker: ChatMessage.getSpeaker({actor: this.actor}), flavor: `Starting blood: ${b.how}`});
       total += roll.total;
     }
-    const max = n(this.actor.system?.advantages?.bloodpool?.max) || 10;
     await this.actor.update({"system.advantages.bloodpool.temporary": Math.min(max, total)});
     this.render();
   }

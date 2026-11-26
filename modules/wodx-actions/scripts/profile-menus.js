@@ -28,8 +28,8 @@ const WILL = ["uses:willpower", "Willpower", "fa-brain"];
 export const MENUS = {
     kindred: {
         sections: [
-            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
-            ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
+            ["Blood", [["api:hunt", "Hunt", "fa-paw"], ["api:feed", "Feed on target", "fa-tint"], ["api:giveBlood", "Give my blood to target", "fa-droplet"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
             ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:conditioning", "Dominate Conditioning", "fa-user-lock"], ["api:setRoad", "Road and Path", "fa-road"], ["api:roadFaith", "The Road: rank, Mentor, Moments of Truth", "fa-route"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"], ["api:malkRite", "Rite of the Orders (Malkavian)", "fa-eye"], ["api:glyconCheck", "Power within reach (Warrior of Glycon)", "fa-crown"], ["api:exorcise", "Exorcism (rite)", "fa-cross"], ["api:infernal", "Infernal pacts (Storyteller)", "fa-file-signature"], ["api:infernalFlame", "Breathe flame (infernal)", "fa-fire"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"], ["api:diablerieMarks", "Marks of diablerie", "fa-eye"]]],
             ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"], ["api:domainDA", "Domain and manor", "fa-chess-rook"], ["api:maturation", "Maturation", "fa-hourglass"]]],
@@ -623,7 +623,11 @@ export function build(ctx) {
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             // 3.62.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
             const line = x => (beginner ? TR.actionLine(x.spec, x.desc) : "");
-            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
+            // #2504: a player sees what fits the character; the rest waits behind Show every action
+            const facts = { text: [actor.system?.clan, actor.system?.custom?.clan, actor.system?.bloodline, actor.system?.settings?.variant, ...(actor.items ?? []).map(i => i.name), ...Object.values(actor.system?.backgrounds ?? {}).map(b => (Number(b?.value) > 0 ? b?.label ?? b?.name : "")), ...Object.keys(actor.system?.advantages ?? {}).filter(k => Number(actor.system.advantages[k]?.permanent ?? actor.system.advantages[k]?.value) > 0)].filter(x => typeof x === "string").join(" | ") };
+            const unfit = x => !isGM && !pinned.includes(x.spec) && !TR.fits(x.spec, facts);
+            const hiddenN = all.filter(unfit).length;
+            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${unfit(x) ? ' class="vta-unfit" hidden' : ""}${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
             const front = beginner ? TR.frontRow(g).filter(x => !pinned.includes(x.spec)) : [];
             const mine = new Set(all.map(x => x.spec));
             const extras = (ctx.searchExtras?.() ?? []).filter(x => !mine.has(x.spec));
@@ -643,6 +647,7 @@ export function build(ctx) {
               ${g.scene.length ? `<div class="vta-scene" role="group" aria-label="The scene">${g.scene.map(x => btn(x)).join("")}</div>` : ""}
               ${extras.length ? `<fieldset class="vta-grp vta-elsewhere"><legend>Also found <small>common checks and dramatic systems</small></legend><div class="vta-grp-btns">${extras.map(x => btn(x)).join("")}</div></fieldset>` : ""}
               </div>
+              ${hiddenN ? `<button type="button" class="vta-unfit-toggle" aria-expanded="false"><i class="fas fa-eye" aria-hidden="true"></i> Show every action (${hiddenN} more that do not fit this character)</button>` : ""}
               <p class="vta-hintbar" aria-live="polite" data-default="Type to find an action · arrow keys move · Enter uses it · right-click or Alt+P pins it">Type to find an action · arrow keys move · Enter uses it · right-click or Alt+P pins it</p>
             </div>`;
             return { kind, html };

@@ -154,3 +154,15 @@
 .wodx-guide-glow { outline: 3px solid #e8b04a !important; outline-offset: 2px; animation: wodx-guide-pulse 1.4s ease-in-out infinite; }
 @keyframes wodx-guide-pulse { 50% { outline-color: #e8b04a55; } }
 @media (prefers-reduced-motion: reduce) { .wodx-guide-glow { animation: none; } }
+
+/* #2510: the time dial */
+.wodx-time-dial { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 70; display: flex; align-items: center; gap: 6px;
+  padding: 3px 10px 3px 4px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(20, 16, 12, 0.78); color: #f0e6d2;
+  font-size: 13px; line-height: 1; width: auto; min-height: 0; cursor: pointer; }
+.wodx-time-dial:focus-visible { outline: 2px solid #e0b050; }
+.wodx-time-dial .wodx-dial-face { position: relative; width: 24px; height: 24px; border-radius: 50%;
+  background: linear-gradient(to bottom, #6fa8d8 0%, #6fa8d8 50%, #1a2238 50%, #1a2238 100%); overflow: hidden; }
+.wodx-time-dial .wodx-dial-hand { position: absolute; inset: 0; display: block; }
+.wodx-time-dial .wodx-dial-hand i { position: absolute; top: 1px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #ffd24a; }
+.wodx-time-dial.night .wodx-dial-hand i { color: #e8ecf5; }
+@media (prefers-reduced-motion: no-preference) { .wodx-time-dial .wodx-dial-hand { transition: transform 0.6s ease; } }

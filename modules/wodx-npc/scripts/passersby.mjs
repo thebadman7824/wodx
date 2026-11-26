@@ -1,7 +1,10 @@
 import * as PR from "./passerby-rules.mjs";
 import * as CR from "./crowd-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {PLACE_KINDS} from "./routine-rules.mjs";
+import {PLACE_KINDS, guessPlace} from "./routine-rules.mjs";
+/** #2490: the kinds of place where passers-by come by themselves in the Lone Chronicle. */
+export const PUBLIC_KINDS = new Set(["tavern", "market", "street", "church", "mosque", "synagogue", "temple", "castle", "gate", "workplace", "alley", "docks", "park", "station", "yard"]);
+const soloOn = () => { try { const m = game.modules.get("wodx-solo"); return !!m?.active && !!m.api?.isOn?.(); } catch (e) { return false; } };
 
 /**
  * WoDX NPC 0.27.0 (B970 to B975): passers-by and animals on the map. passerby-rules.mjs has the rules.
@@ -48,7 +51,11 @@ export function build({MOD, esc, isActiveGM, chron}) {
   const crowdOf = scene => {
     const c = scene?.getFlag?.(MOD, "crowd") ?? {};
     const kind = scene?.flags?.[MOD]?.place?.kind;
-    return {on: !!c.on, density: c.density ?? "normal", animals: c.animals ?? true, place: PLACE_KINDS[kind] ? kind : "street", doors: Array.isArray(c.doors) ? c.doors : []};
+    // #2490: in the Lone Chronicle (no Storyteller to switch them on) a public place the Storyteller never set has its
+    // people, read from the scene's name; a scene the Storyteller set keeps what was set
+    const guess = PLACE_KINDS[kind] ? "" : guessPlace(scene?.name).kind;
+    const on = typeof c.on === "boolean" ? c.on : (soloOn() && PUBLIC_KINDS.has(guess));
+    return {on, density: c.density ?? "normal", animals: c.animals ?? true, place: PLACE_KINDS[kind] ? kind : (PLACE_KINDS[guess] ? guess : "street"), doors: Array.isArray(c.doors) ? c.doors : []};
   };
 
   /**

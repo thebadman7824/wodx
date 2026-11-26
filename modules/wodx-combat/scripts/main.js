@@ -742,6 +742,9 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
         return `<div class="form-group vtc-kind" data-kinds="${bo.kinds.join(" ")}"><label>${bo.label}${extra} [${r.ok ? r.value : "—"}]</label>
           <input type="number" name="boost_${bo.id}" value="0" min="0" max="${bo.max}" style="width:4em"/></div>`;
     }).join("");
+    // #2509: Aim at names the part and sets the targeting size from it, so Targeting shows only when there are no parts
+    const aim = aimHtml(target);
+    const aimField = aim ? `${aim}<input type="hidden" name="targeting" value="none"/>` : "";
     return `
 <form class="vtc-form">
   <p class="vtc-head"><b>${attacker.name}</b> attacks <b>${target ? target.name : "(no target)"}</b></p>
@@ -755,8 +758,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
   <fieldset><legend>Attack</legend>
     <div class="form-group"><label>Weapon</label>${weapons.length > 5 ? searchBox("select[name=weapon]", "Search weapons…", "Search weapons") : ""}<select name="weapon">${wOpts}</select></div>
     <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(attacker), "normal")}</select></div>
-    <div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>
-    ${aimHtml(target)}
+    ${aimField || `<div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>`}
     <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
     <div class="form-group"><label>Position</label><select name="flank" data-fixed>
        <option value="auto" selected>Automatic: from the tokens' facing</option><option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
@@ -1861,7 +1863,7 @@ function aimHtml(target) {
     const parts = b ? BodyRules.aimOptions(b) : [];
     if (!parts.length) return "";
     const size = { medium: "+1", small: "+2", precise: "+3" };
-    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">No part (the targeting size, or where it lands)</option>${parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("")}</select></div>`;
+    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">No part (the blow lands where it falls)</option>${parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("")}</select></div>`;
 }
 
 function attackCard(c) {
@@ -2283,7 +2285,7 @@ Hooks.once("init", () => {
     GM.init({ rollPool, markFollow, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind });
     SW.hooks();
     const api = { daw: { taunt: (a, t, o) => GM.taunt(a, t, o), harry: (c, p, o) => GM.harry(c, p, o), afterHit: GM.afterHit, gnarlOf: GM.gnarlOf, savagedBy: GM.savagedBy, tauntedDice: GM.tauntedDice }, swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.51.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.51.2", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;
@@ -2522,6 +2524,23 @@ export async function breakFree(actor, combat = game.combat) {
         content: `<div class="vtc-card"><h3>${esc(actor.name)} struggles against ${esc(holder.name)}</h3><p>${grip.kind === "choke" ? "Strength" : "Strength + Brawl"}, resisted at 6: ${esc(actor.name)} ${rv.successes}, ${esc(holder.name)} ${rh.successes}.</p>${diceHtml(rv.faces, 6)}${diceHtml(rh.faces, 6)}<p>${esc(line)}</p></div>` });
     return { free: out, line };
 }
+/* B8052 (#2494): a fight's holds end with it. When a fight is ended (by the tracker or the solo panel's I am stuck),
+ * the active Storyteller clears every fighter's grip, clinch and the marks a blow left (off balance, hooked,
+ * overextended), and the Held condition, so nothing carries into the next fight. */
+export const FIGHT_MARKS = ["grip", "clinch", "offBalance", "hooked", "overextended"];
+export async function clearFightMarks(combat) {
+    const seen = new Set();
+    for (const c of combat?.combatants ?? []) {
+        const actor = c.actor;
+        if (!actor || seen.has(actor.uuid)) continue;
+        seen.add(actor.uuid);
+        const had = FIGHT_MARKS.filter(k => actor.getFlag?.(MOD, k) !== undefined);
+        if (had.length) await actor.update(Object.fromEntries(had.map(k => [`flags.${MOD}.-=${k}`, null]))).catch(e => console.warn(`${MOD} | fight marks`, e));
+        try { if (chronicle()?.conditions?.hasCondition?.(actor, "held")) await chronicle().conditions.setCondition(actor, "held", false); } catch (e) { /* no conditions */ }
+    }
+    return seen.size;
+}
+Hooks.on("deleteCombat", combat => { if (isActiveGM()) clearFightMarks(combat).catch(e => console.warn(`${MOD} | fight marks`, e)); });
 Hooks.on("updateCombat", (combat, changed) => {
     if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
     const c = combat.combatant;

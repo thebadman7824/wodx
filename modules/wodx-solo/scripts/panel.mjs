@@ -69,6 +69,9 @@ export function placeOf(user) {
   const scene = viewed ?? scenes.find(s => s.active && holds(s)) ?? scenes.find(holds) ?? null;
   return {actor, scene, token: scene ? holds(scene) : null};
 }
+/** B8038 (#2501): the player's character is still being made (WoDX Creation's unfinished). */
+export const making = user => { try { return !!game.modules.get("wodx-creation")?.api?.unfinished?.(characterOf(user)); } catch (e) { return false; } };
+const FREE_WHILE_MAKING = new Set(["report", "pause", "stuck"]);
 const fightOn = sceneId => all(game.combats).filter(c => c.started && c.scene?.id === sceneId);
 
 async function latitudeAt(scene) {
@@ -99,6 +102,7 @@ export async function passTime(userId, choice) {
   const user = game.users.get(userId);
   const {actor, scene} = placeOf(user);
   if ( !actor || !scene ) { await tell(userId, "<p>Your character is on no scene, so time cannot pass for them.</p>"); return null; }
+  if ( making(user) ) { await tell(userId, "<p>Finish your character first. Time starts once you press This character is ready in the wizard.</p>"); return null; }
   if ( waiting ) { await tell(userId, "<p>Time is already passing.</p>"); return null; }
   if ( fightOn(scene.id).length ) { await tell(userId, "<p>Not while a fight is running.</p>"); return null; }
   if ( game.paused ) { await tell(userId, "<p>The game is paused. Go on first, then let time pass.</p>"); return null; }
@@ -137,6 +141,51 @@ export async function passTime(userId, choice) {
   await tell(userId, `<p>${text}</p>`);
   await H.log({kind: "note", source: MOD, title: w.label, note: why ? `stopped after ${R.span(passed)}: ${R.STOP_WORDS[why]}` : `${R.span(passed)} passed`});
   return {passed, why};
+}
+
+/**
+ * B8045 (#2477): time spent on something the player did (a hunt's hours). The clock moves at once, in the usual steps
+ * so the world answers between them, and nothing stops it: the time was already used.
+ */
+export async function spendTime(userId, seconds, label = "Time spent", {maxHours = R.HUNT_MAX_HOURS, step = R.STEP, busy = "Time is already passing, so the hunt's hours were not added. Let time pass again once it stops."} = {}) {
+  if ( !H.isSeat() ) return null;
+  const total = R.spendSeconds(seconds, maxHours);
+  if ( !total ) return null;
+  // The same guards as a wait: a character on a scene, made, out of a fight, the game running
+  const user = game.users.get(userId);
+  const {actor, scene} = placeOf(user);
+  if ( !actor || !scene ) { await tell(userId, "<p>Your character is on no scene, so time cannot pass for them.</p>"); return null; }
+  if ( making(user) ) { await tell(userId, "<p>Finish your character first. Time starts once you press This character is ready in the wizard.</p>"); return null; }
+  if ( fightOn(scene.id).length ) { await tell(userId, "<p>Not while a fight is running: the clock stays where it is.</p>"); return null; }
+  if ( game.paused ) { await tell(userId, "<p>The game is paused, so the clock stays where it is.</p>"); return null; }
+  if ( waiting ) { await tell(userId, `<p>${esc(busy)}</p>`); return null; }
+  const what = String(label ?? "Time spent").slice(0, 80);
+  waiting = {userId, choice: "spend"};
+  let passed = 0;
+  try {
+    for ( const n of R.chunks(total, step) ) {
+      await game.time.advance(n);
+      passed += n;
+      await sleep(400);
+      if ( !H.isSeat() ) break;
+    }
+  } finally { waiting = null; }
+  await tell(userId, `<p>${esc(what)}: ${esc(R.span(passed))} passed.</p>`);
+  await H.log({kind: "note", source: MOD, title: what, note: `${R.span(passed)} passed`});
+  return {passed};
+}
+
+/**
+ * #2490: a trip by the travel window or a Way puts its time on the traveller's own clock (WoDX Storyteller). With one
+ * person playing there is one clock, so the seat moves the world clock on by the trip's time, with a wait's guards.
+ */
+export async function onTravelled({userId, seconds, place} = {}) {
+  if ( !H.isSeat() || !userId || game.users.get(userId)?.isGM ) return null;
+  const total = R.spendSeconds(seconds, R.TRIP_MAX_HOURS);
+  // A door or a stair (a few minutes) passes on the character's own clock only; the world clock moves for a trip
+  if ( total < R.TRIP_MIN_SECONDS ) return null;
+  return spendTime(userId, total, `The way to ${place || "there"}`, {maxHours: R.TRIP_MAX_HOURS, step: R.tripStep(total),
+    busy: "Time is already passing, so the trip's time was not added. Let time pass again once it stops."});
 }
 
 /** Pause the game, or start it again. */
@@ -224,6 +273,7 @@ export async function setOption(userId, key, value) {
 const SEAT = {
   "ask.options": async p => { for ( const [k, v] of Object.entries(p.values ?? {}) ) await setOption(p.userId, k, v); },
   "ask.time": p => passTime(p.userId, p.choice),
+  "ask.spend": p => spendTime(p.userId, p.seconds, p.label),
   "ask.pause": p => togglePause(p.userId),
   "ask.stuck": p => unstick(p.userId, p.fix),
   "ask.curtain": p => curtain(p.userId)
@@ -275,7 +325,22 @@ async function choose(title, choices, intro = "") {
 const ACTIONS = {
   next() { ask("ask.time", {choice: R.NEXT.wait}); ui.notifications.info(`${R.NEXT.label} ${R.NEXT.hint}`); },
   async time() {
-    const pick = await choose("Let time pass", R.WAITS, "The clock moves ten minutes at a time and stops if something happens.");
+    // B8045 (#2477): a vampire can spend the night hunting, which moves the clock by the hours the hunt takes
+    const me = characterOf(game.user), wa = game.wodxActions;
+    const hunts = !!(me && wa?.hunt && wa.isVampire?.(me));
+    const choices = hunts ? {...R.WAITS, hunt: R.HUNT_CHOICE} : R.WAITS;
+    const pick = await choose("Let time pass", choices, "The clock moves ten minutes at a time and stops if something happens.");
+    if ( pick === "hunt" ) {
+      const {scene} = placeOf(game.user);
+      let hours = 3;
+      try {
+        const sun = await sunFrom(scene);
+        // by day (dawn comes before dusk) a vampire does not hunt
+        if ( sun.toDusk < sun.toDawn ) return ui.notifications.warn("It is day. Hunting waits for dusk.");
+        hours = R.huntHours(sun.toDawn);
+      } catch (e) { /* no calendar: three hours */ }
+      return wa.hunt({actor: me, hours});
+    }
     if ( pick ) { ask("ask.time", {choice: pick}); ui.notifications.info(`${R.WAITS[pick].label}.`); }
   },
   travel() {
@@ -308,8 +373,23 @@ const ACTIONS = {
     const down = all(scene.tokens).filter(t => t.actor && !t.hidden && haul.fallenOf(t)?.down && !(t.flags?.["wodx-interactables"]?.haul?.by ?? []).length);
     if ( !down.length ) { ui.notifications.info("Nobody here is down."); return; }
     const pick = await choose("Carry the fallen", Object.fromEntries(down.map(t => [t.id, {label: t.name, hint: t.id === me?.id ? "(your character)" : ""}])),
-      "A companion of yours goes to them and carries or drags them to safety.");
-    if ( pick ) ask("ask.carry", {tokenId: pick, sceneId: scene.id});
+      "Your character lifts or drags them, within their Strength. When your character is the one down, a companion comes for them.");
+    if ( !pick ) return;
+    // B8051 (#2488): a body is the character's own to lift; a companion only when the character is down or cannot
+    const body = scene.tokens.get(pick);
+    if ( me && pick !== me.id && !haul.fallenOf(me)?.down ) {
+      // The options are read here, where reach, weight and free hands are known; the take itself goes to the seat
+      let ops = [];
+      try { ops = (haul.optionsFor?.(me) ?? []).filter(o => o.op === "take" && o.what === body?.uuid); } catch (e) { ops = []; }
+      const op = ops.find(o => o.want === "carry" && !o.disabled) ?? ops.find(o => !o.disabled);
+      if ( op ) { await haul.take(me, body, op.want); return; }
+      const all = haul.optionsFor?.(me) ?? [];
+      const why = ops[0]?.note || (all.some(o => o.op === "release") ? "the hands are full: set down what is held first"
+        : all.find(o => o.op === "none" && String(o.label ?? "").startsWith(`${body?.name}:`))?.label || all.find(o => o.op === "none" && !String(o.label ?? "").includes(":"))?.label
+        || `${body?.name ?? "the body"} is out of reach`);
+      ui.notifications.warn(`${me.name}: ${why}. A companion is asked instead.`);
+    }
+    ask("ask.carry", {tokenId: pick, sceneId: scene.id});
   },
   async curtain() {
     const yes = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Lift the curtain"}, rejectClose: false,
@@ -363,7 +443,14 @@ export class SoloPanel extends ApplicationV2 {
   }
   _replaceHTML(result, content) { content.replaceChildren(result); }
   static #onAct(event, target) {
-    const run = ACTIONS[target.dataset.id];
+    // B8038 (#2501): while the character is still being made, only these stay open; the rest wait for the wizard
+    const id = target.dataset.id;
+    if ( !FREE_WHILE_MAKING.has(id) && making(game.user) ) {
+      ui.notifications.info("Finish your character first: on the wizard's last page, press This character is ready.");
+      game.modules.get("wodx-creation")?.api?.wizard?.(characterOf(game.user));
+      return;
+    }
+    const run = ACTIONS[id];
     if ( run ) Promise.resolve(run()).catch(e => console.error(`${MOD} | panel`, e));
   }
 }
@@ -382,6 +469,7 @@ export function registerPanelSettings() {
 export function installPanel(helpers) {
   H = helpers;
   game.socket.on(SOCKET, onSocket);
+  Hooks.on("wodxTravelled", p => { onTravelled(p).catch(e => console.error(`${MOD} | trip time`, e)); });
   Hooks.on("pauseGame", () => { if ( foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered ) SoloPanel.open(); });
   Hooks.on("getSceneControlButtons", controls => {
     const tokens = controls.tokens ?? controls.token;
@@ -392,5 +480,5 @@ export function installPanel(helpers) {
   if ( !game.user.isGM && H.isOn() && H.get("panel") !== false ) setTimeout(() => SoloPanel.open(), 1000);
 }
 
-export const panelApi = {open: () => SoloPanel.open(), ask, passTime, togglePause, unstick, curtain, setOption, busy: () => waiting};
+export const panelApi = {open: () => SoloPanel.open(), ask, passTime, spend: (seconds, label) => ask("ask.spend", {seconds, label}), togglePause, unstick, curtain, setOption, busy: () => waiting};
 export {ask, SOCKET};

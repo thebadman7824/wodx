@@ -27,7 +27,7 @@ import * as Mood from "./mood.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.18.5";
+const VERSION = "0.18.6";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -433,6 +433,8 @@ function beat(volume) {
 export function heartbeatNow() {
   const a = game.user?.character;
   if ( !a || setting("heartbeat") === false ) return null;
+  // B8039 (#2473): no hunger cue while the character is still being made
+  try { if ( game.modules.get("wodx-creation")?.api?.unfinished?.(a) ) return null; } catch (e) { /* no Creation */ }
   const bp = a.system?.advantages?.bloodpool;
   const hb = AR.heartbeat({blood: bp?.temporary, max: bp?.max, hasBlood: /vampire/i.test(String(a.type)) || !!a.system?.settings?.hasbloodpool});
   return hb ? {...hb, volume: Math.min(1, Math.round(hb.volume * 2 * (Number(setting("cueVolume")) || 0.5) * 100) / 100)} : null;

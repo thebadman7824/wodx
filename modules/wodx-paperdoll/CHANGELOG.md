@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.32.4 (Fixes from the first solo test (B8053): each character's own drawn sprite goes on its tokens as scenes and tokens come, and the save says when the sprite batch draws a new look)
 - 0.32.3 (A talking face rolls the features of the clan, tribe or Tradition picked from the sheet's list (Order of Hermes, Get of Fenris and the rest), not only of a name typed in by hand (B6817); Final audit fix (B6783): the form-change and feeding moves were played only on the Storyteller's computer, but their hooks fire only on the computer that acted, so a player's action showed nothing. Each token is now played on the computer that acted when that user owns it; Final audit second pass (B6789): onFed reads the relayed wodxFed payload; the Storyteller's computer plays the moves of tokens no player owns and the feeder's computer plays the tokens its user owns, so nothing plays twice)
 - 0.32.2 (Sprite tokens play an attack once when WoDX Combat fires it again on the Storyteller's client for a player's roll (B6150))
 - 0.32.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
