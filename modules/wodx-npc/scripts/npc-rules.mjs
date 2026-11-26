@@ -317,6 +317,20 @@ export function trimPath(path, budget, cost = squareCost) {
   }
   return out;
 }
+/**
+ * #2485: how far an NPC goes out of a fight. A routine walk covers what the walking pace (V20 Dark Ages p. 333: 7 yards a
+ * turn, more with Celerity) reaches in the time that passed, a turn being three seconds (p. 343), at least one turn's
+ * walk. A reaction (an alarm, a call, a challenge, a chase) covers three turns at a run, as running away already does.
+ * null seconds means no time is known: the walk is not cut.
+ */
+export const TURN_SECONDS = 3;
+export const REACT_TURNS = 3;
+export function walkReach(walkYards, seconds) {
+  if ( seconds == null || !Number.isFinite(Number(seconds)) ) return null;
+  const turns = Math.max(1, Math.floor(Math.abs(Number(seconds)) / TURN_SECONDS));
+  return Math.max(0, Number(walkYards) || 0) * turns;
+}
+export const reactReach = runYards => Math.max(0, Number(runYards) || 0) * REACT_TURNS;
 /** A path's full cost. */
 export const pathCost = (path, cost = squareCost) => (path ?? []).slice(1).reduce((t, c, k) => t + cost(path[k], c), 0);
 

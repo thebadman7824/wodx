@@ -295,13 +295,35 @@ export function build(ctx) {
     out.push(path[path.length - 1]);
     return out;
   }
-  /** Walk a token to a cell along a real path round walls; jump when there is none. Returns "walked" | "jumped". */
-  async function walkTo(tok, goal) {
+  /** #2485: the NPC's walk and run in yards, from Combat's movement (its wounds and powers count). */
+  function paceOf(tok) {
+    const m = C()?.movementFor?.(tok?.actor) ?? null;
+    return {walk: Number(m?.walk ?? 7), run: Number(m?.run ?? 20)};
+  }
+  /** How far a routine walk goes in `secs` seconds (null: as far as it needs). */
+  const routineReach = (tok, secs) => NR.walkReach(paceOf(tok).walk, secs);
+  /** How far a reaction away from a fight goes: three turns at a run. */
+  const reactionReach = tok => NR.reactReach(paceOf(tok).run);
+  /** A path cut to `yards` (null: whole). */
+  function cutPath(path, yards) {
+    if ( yards == null || !path ) return path;
+    return NR.trimPath(path, ctx.cellsFor(yards), ctx.stepCost());
+  }
+  /**
+   * Walk a token to a cell along a real path round walls; jump when there is none. Returns "walked" | "short" | "jumped".
+   * yards: how far it may go this time (#2485); "short" when it stopped on the way, to go on at the next tick.
+   */
+  async function walkTo(tok, goal, yards = null) {
     const start = ctx.cellOf(tok);
     if ( start.i === goal.i && start.j === goal.j ) return "walked";
     const hex = ctx.gridKind() === "hex";
-    const path = NR.findPath(start, goal, ctx.passableFor(tok), {maxNodes: 40000, neighbors: ctx.stepsFor(), heuristic: hex ? ctx.hexHeuristic(goal) : null});
-    if ( path ) { await ctx.walk(tok, hex ? path : corners(path)); return "walked"; }
+    const full = NR.findPath(start, goal, ctx.passableFor(tok), {maxNodes: 40000, neighbors: ctx.stepsFor(), heuristic: hex ? ctx.hexHeuristic(goal) : null});
+    if ( full ) {
+      const path = cutPath(full, yards);
+      if ( path.length > 1 ) await ctx.walk(tok, hex ? path : corners(path));
+      return path.length === full.length ? "walked" : "short";
+    }
+    if ( yards != null ) return "short";
     await teleport(tok.document, ctx.topLeftFor(tok, goal));
     return "jumped";
   }
@@ -340,8 +362,9 @@ export function build(ctx) {
   }
 
   /** Carry out items on the scene in view. Returns {snap, notes}. Only pending ones; Auto skips hand-placed removals. */
-  async function applyItems(scene, items, {auto = false} = {}) {
+  async function applyItems(scene, items, {auto = false, secs = null} = {}) {
     const snap = {created: [], removed: [], moved: []}, notes = [], walks = [];
+    let short = 0;
     const places = listPlaces(), busy = busyCells();
     for ( const it of items ) {
       if ( it.status === "done" || (auto && it.type === "remove" && it.hand) ) continue;
@@ -359,7 +382,8 @@ export function build(ctx) {
             snap.created.push(made.uuid);
             for ( const c of ctx.cellsAt(a.shape, a.cell) ) busy.add(`${c.i},${c.j}`);
             // The new token is drawn a moment after it is made; then it walks in from the door
-            if ( a.then ) walks.push(new Promise(r => setTimeout(r, 300)).then(() => made.object ? walkTo(made.object, a.then) : null));
+            if ( a.then ) walks.push(new Promise(r => setTimeout(r, 300)).then(() => made.object ? walkTo(made.object, a.then, routineReach(made.object, secs)) : null)
+              .then(r => { if ( r === "short" ) short++; }));
           }
         } else if ( it.type === "walk" || it.type === "jump" ) {
           const tok = canvas.tokens.get(it.tokenId);
@@ -370,15 +394,30 @@ export function build(ctx) {
           if ( it.type === "jump" || !onGrid() ) {
             if ( !(await teleport(tok.document, ctx.topLeftFor(tok, goal))) ) notes.push(`${actor.name}: could not be moved to ${p.name}`);
           }
-          else walks.push(walkTo(tok, goal).then(r => { if ( r === "jumped" ) notes.push(`${actor.name}: no way through, moved straight there`); }));
+          else walks.push(walkTo(tok, goal, routineReach(tok, secs)).then(r => {
+            if ( r === "jumped" ) notes.push(`${actor.name}: no way through, moved straight there`);
+            if ( r === "short" ) { short++; notes.push(`${actor.name}: on the way to ${p.name}`); }
+          }));
         } else if ( it.type === "remove" ) {
           const d = scene.tokens.get(it.tokenId);
           if ( !d ) { it.status = "skipped"; continue; }
-          snap.removed.push(d.toObject());
+          const rec = d.toObject();
+          snap.removed.push(rec);
           const ent = it.walkOut && onGrid() ? entranceOf(scene) : null;
           const tok = d.object;
           const go = async () => {
-            if ( ent && tok ) { const c = freeCellsIn(ent, tok, ctx.cellOf(tok), busyCells([tok.id]))[0]; if ( c ) await walkTo(tok, c); }
+            if ( ent && tok ) {
+              const c = freeCellsIn(ent, tok, ctx.cellOf(tok), busyCells([tok.id]))[0];
+              const from = {uuid: d.uuid, x: d.x, y: d.y};
+              // #2485: one still on the way out stays on the map and leaves at a later tick (Undo puts it back)
+              if ( c && (await walkTo(tok, c, routineReach(tok, secs))) === "short" ) {
+                snap.removed.splice(snap.removed.indexOf(rec), 1);
+                snap.moved.push(from);
+                short++;
+                notes.push(`${actor.name}: on the way out`);
+                return;
+              }
+            }
             await d.delete();
           };
           walks.push(go());
@@ -391,7 +430,9 @@ export function build(ctx) {
       }
     }
     await Promise.allSettled(walks);
-    return {snap, notes};
+    // #2485: a walk cut short goes on at the next tick, so the same plan must not be taken for one already done
+    if ( short ) lastKey.set(scene.id, "");
+    return {snap, notes, short};
   }
 
   async function undoSnap(scene, snap) {
@@ -440,16 +481,16 @@ export function build(ctx) {
 
   const lastKey = new Map();
   let lastCard = null;
-  async function postRoutineCard(scene, items, how, t) {
+  async function postRoutineCard(scene, items, how, t, secs = null) {
     if ( !items.length ) { lastKey.set(scene.id, ""); return null; }
     const key = JSON.stringify(items.map(i => [i.type, i.actorId, i.tokenId ?? "", i.place ?? ""]));
     if ( lastKey.get(scene.id) === key ) return null;
     lastKey.set(scene.id, key);
     const places = listPlaces();
     const mode = NR.modeOf({scene: flag(scene, "routineMode"), world: setting("routineMode")});
-    const plan = {scene: scene.uuid, sceneName: scene.name, how, mode, items, time: t, timeLabel: describer()(t).timeLabel, notes: []};
+    const plan = {scene: scene.uuid, sceneName: scene.name, how, mode, items, time: t, timeLabel: describer()(t).timeLabel, notes: [], secs};
     if ( mode === "auto" ) {
-      const {snap, notes} = await applyItems(scene, items, {auto: true});
+      const {snap, notes} = await applyItems(scene, items, {auto: true, secs});
       plan.snap = snap; plan.notes = notes;
     }
     // The last card still waiting goes out of date
@@ -470,7 +511,7 @@ export function build(ctx) {
     if ( !plan || plan.stale || !game.user.isGM ) return null;
     const scene = await fromUuid(plan.scene);
     if ( scene?.id !== canvas.scene?.id ) { ui.notifications.warn("WoDX NPC: view that scene first."); return null; }
-    const {snap, notes} = await applyItems(scene, plan.items);
+    const {snap, notes} = await applyItems(scene, plan.items, {secs: plan.secs ?? null});
     plan.snap = {created: [...(plan.snap?.created ?? []), ...snap.created], removed: [...(plan.snap?.removed ?? []), ...snap.removed], moved: [...(plan.snap?.moved ?? []), ...snap.moved]};
     plan.notes = [...(plan.notes ?? []), ...notes];
     await msg.update({[`flags.${MOD}.routine`]: plan, content: routineCardHtml(plan, listPlaces())});
@@ -497,7 +538,7 @@ export function build(ctx) {
    * Bring every routine up to the clock, then plan the scene in view. how: walk | jump | open | skip | resume.
    * Returns {changed: [actor names], items, card}.
    */
-  async function tick(how = "walk", {scene = canvas?.scene, post = true} = {}) {
+  async function tick(how = "walk", {scene = canvas?.scene, post = true, secs = null} = {}) {
     if ( !isActiveGM() ) return null;
     await loadCalendar();
     const t = game.time.worldTime, describeBy = describers(), places = listPlaces();
@@ -540,11 +581,11 @@ export function build(ctx) {
       const taken = new Set(items.map(i => i.tokenId).filter(Boolean));
       items.push(...(await beatItems(scene, t).catch(e => { console.error(`${MOD} | beats`, e); return []; })).filter(i => !taken.has(i.tokenId)));
     }
-    const card = post ? await postRoutineCard(scene, items, how, t) : null;
+    const card = post ? await postRoutineCard(scene, items, how, t, how === "walk" ? secs : null) : null;
     if ( how === "walk" || how === "resume" ) await checkStays(scene, t);
     // B5686 (r3): the watch walks its beat
     let beats = [];
-    if ( how === "walk" ) beats = await walkBeats(scene, t).catch(e => { console.error(`${MOD} | beats`, e); return []; });
+    if ( how === "walk" ) beats = await walkBeats(scene, t, secs).catch(e => { console.error(`${MOD} | beats`, e); return []; });
     return {updates, items, card, beats, fed};
   }
 
@@ -558,9 +599,9 @@ export function build(ctx) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       // A clock set forward by hours is placed, not walked
-      const how = pendingDelta > 2 * 3600 ? "jump" : "walk";
+      const how = pendingDelta > 2 * 3600 ? "jump" : "walk", secs = pendingDelta;
       pendingDelta = 0;
-      track(tick(how)).catch(e => console.error(`${MOD} |`, e));
+      track(tick(how, {secs})).catch(e => console.error(`${MOD} |`, e));
       track(checkAlerts()).catch(e => console.error(`${MOD} |`, e));
     }, 400);
   }
@@ -1137,13 +1178,17 @@ export function build(ctx) {
     const p = id ? listPlaces().find(x => x.id === id && x.region && x.scene?.id === canvas.scene?.id) : null;
     return p?.region ?? null;
   }
-  /** Walk a token to the nearest free cell of a region. */
-  async function walkToRegion(tok, region, snap) {
+  /**
+   * Walk a token to the nearest free cell of a region. yards: how far it may go (#2485); a reaction by default, three
+   * turns at a run. Returns true when it moved at all.
+   */
+  async function walkToRegion(tok, region, snap, yards = reactionReach(tok)) {
     const cell = freeCellsIn(region, tok, ctx.cellOf(tok), busyCells([tok.id]))[0];
     if ( !cell ) return false;
-    snap?.moved?.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
-    await walkTo(tok, cell);
-    return true;
+    const at = {uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y};
+    snap?.moved?.push(at);
+    await walkTo(tok, cell, yards);
+    return tok.document.x !== at.x || tok.document.y !== at.y;
   }
   /** m2, m5: make for home on this map, else run from the trouble. Returns "home", "away" or "". */
   async function goAway(tok, from, snap) {
@@ -1158,13 +1203,15 @@ export function build(ctx) {
     if ( path && path.length > 1 ) { await ctx.walk(tok, corners(path)); return "away"; }
     return "";
   }
-  /** m3, m2: walk up to someone (to speaking distance). */
+  /** m3, m2: walk up to someone (to speaking distance), as far as three turns at a run take them (#2485). */
   async function goTo(tok, to, snap) {
     if ( !onGrid() || !to ) return false;
     const way = ctx.approach(tok, to);
     if ( !way?.path ) return false;
+    const path = cutPath(way.path, reactionReach(tok));
+    if ( path.length < 2 ) return false;
     snap?.moved?.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
-    await ctx.walk(tok, corners(way.path));
+    await ctx.walk(tok, corners(path));
     return true;
   }
   /** m4: where an informer goes to tell: a watch-house on this map, else the way in. */
@@ -1214,12 +1261,12 @@ export function build(ctx) {
     return due;
   }
   /** Auto mode: the guards walk their beat now. */
-  async function walkBeats(scene, t) {
+  async function walkBeats(scene, t, secs = null) {
     const moved = [];
     for ( const {tok, a, mode, p, next} of await beatsDue(scene, t) ) {
       if ( mode !== "auto" ) continue;
       await a.setFlag(MOD, "beat", {at: t, to: next ?? null});
-      if ( p && await walkToRegion(tok, p.region, null) ) moved.push(`${tok.name} walks the beat to ${p.name}`);
+      if ( p && await walkToRegion(tok, p.region, null, routineReach(tok, secs)) ) moved.push(`${tok.name} walks the beat to ${p.name}`);
     }
     return moved;
   }
