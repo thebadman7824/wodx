@@ -254,6 +254,28 @@ test("B7006: the owner's own work and a branch needing no gate are success", () 
   assert.equal(R.outcome({...base, bensOwn: false, gateWaiting: false, rules: {note: [], gates: ["x"], review: []}}), "failure");
 });
 
+test("B8026: a stamped note is still read when the stamped branch is merged into a train batch", () => {
+  const s = scratch();
+  try {
+    s.put("modules/wodx-foo/scripts/main.mjs", 'export const VERSION = "1.0.0";\nexport const n = 3;\n');
+    s.put("changes/wodx-foo/three.md", "---\nbump: patch\n---\nFoo counts to three.\n");
+    s.commit(`Foo counts to three${trailer}`);
+    fs.rmSync(path.join(s.dir, "changes/wodx-foo/three.md"));
+    s.put("docs/DECISIONS.md", "stamped\n");
+    s.commit("Stamp versions, changelogs and decisions for merge");
+    // the train batches it: a branch off main merges the stamped branch, then stamps the batch
+    s.git("checkout", "-q", "-b", "batch", "main");
+    s.git("-c", "user.name=Claude", "-c", "user.email=a@example.invalid", "merge", "-q", "--no-ff", "--no-edit", "claude/x");
+    s.put("docs/MODULES.md", "batch stamp\n");
+    s.commit("Stamp versions, changelogs and decisions for merge");
+    const g = R.gitIn(s.dir), base = s.git("merge-base", "main", "HEAD");
+    const notes = R.branchNotes(g, base, "HEAD");
+    assert.deepEqual(notes.map(n => n.file), ["changes/wodx-foo/three.md"]);
+    assert.ok(notes[0].frag, "the note is read as it stood before the first stamp");
+    assert.deepEqual(R.noteProblems(["wodx-foo"], notes), []);
+  } finally { fs.rmSync(s.dir, {recursive: true, force: true}); }
+});
+
 test("B7520: notes and decision fragments stay found after a stamp and a second merge of main", () => {
   const s = scratch();
   try {

@@ -241,7 +241,7 @@ export const HEALTH_PAGE = `<h2>Health and damage</h2>
 <li><b>Bashing</b> (fists, falls, clubs): mortals and vampires soak it with Stamina; vampires halve what gets through.</li>
 <li><b>Lethal</b> (blades, bullets): mortals cannot soak it without armour; vampires and other supernatural beings soak it with Stamina.</li>
 <li><b>Aggravated</b> (fire, sunlight, the claws and fangs of the supernatural): vampires soak it only with Fortitude; Garou soak it with Stamina; mortals cannot. Each line's book has the last word.</li>
-<li>Damage dice are the weapon's, plus one for each success on the attack after the first.</li>
+<li>Damage dice are the weapon's, plus one per attack success beyond the first.</li>
 </ul>
 <p class="wodx-quiet">WoDX Combat applies soak and damage by the line's own book; this page is the short form.</p>`;
 
