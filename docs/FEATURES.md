@@ -13,7 +13,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 5 |
+| wodx-npc | yes | 34 | 0 | 3 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -158,7 +158,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book | 1 | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
 | NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | shown | 1 |  |
 | NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated |  | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
-| NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | shown | 1 |  |
+| NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | gated |  | gateoverheardwalk 2. round the wall's end: the talk comes to the chat and the Overheard window |
 | One ledger for every bond that makes one person serve another, and servants the world makes (`npc.servants`) | core | gated | 1 | gateservants4 6b. the pact gift answers |
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
 | Places, routines on the clock, duties and what an NPC does after its first reaction (`npc.routines`) | core | book | 1 | gateduties 7. the duty moves the token on the clock |
@@ -171,7 +171,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | gated | 1 | gateboonkept 1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
 | Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | gated |  | gatekinbring 1. Bring into play in the tree: the member's own sheet opens |
-| Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | shown | 1 |  |
+| Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | gated | 2 | gatefateswake 1. a year passes and the sleeper's sheet no longer shows Torpor |
 | Past lives, lines of teaching, the web of every tie and scene ideas from ties (`npc.legacy`) |  | gated |  | gatementorgone 1. the Move button on the teacher's death card puts the Mentor points on another Background |
 | Who holds a place, shown on its scene (`npc.faction-looks`) |  | gated |  | gatefactionend 1. End in the Factions window: the banners leave the canvas |
 

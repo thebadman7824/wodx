@@ -474,11 +474,13 @@
     },
     "shown": {
      "what": "lines of talk between NPCs over their tokens and in chat for those in earshot"
+    },
+    "gated": {
+     "gate": "tools/gate/gateoverheardwalk.mjs",
+     "step": "2. round the wall's end: the talk comes to the chat and the Overheard window"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1068,10 +1070,15 @@
     },
     "shown": {
      "what": "a card for the Storyteller naming what each supernatural NPC did in the gap"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefateswake.mjs",
+     "step": "1. a year passes and the sleeper's sheet no longer shows Torpor"
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+    "gatefateswake is heavy and in notGates: run it by name on a New PC lane (B8160)",
+    "a one-year Pass the years usually makes no Off-screen lives card (#2627)"
    ],
    "deferred": [],
    "faults": [],

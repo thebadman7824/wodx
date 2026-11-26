@@ -39,7 +39,7 @@ import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArg
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 import {pendingRequests, draw as drawSprites} from "./sprite-draw.mjs";
-import {step as trainStep, isFrontJob} from "./train.mjs";
+import {step as trainStep, isFrontJob, BATCH_MAX} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
 import * as PRIO from "./prio.mjs";
 import {readQueue, putBack, stop as stopQueue} from "../lanes/gate-queue.mjs";
@@ -650,7 +650,7 @@ let trainNow = null, trainBusy = false, lastTrain = 0, trainClock = true;
 function trainTick() {
   if ( !conf.train || trainBusy || Date.now() - lastTrain < (conf.trainMinutes ?? 3) * 60000 ) return;
   lastTrain = Date.now(); trainBusy = true;
-  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, alert, recovered, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? 3, clockRuns: trainClock})
+  trainStep({gh, graphql, git, home: HOME, repoRoot: ROOT, log, alert, recovered, apply: !DRY, maxHours: conf.trainMaxHours ?? 3, batch: conf.trainBatch ?? BATCH_MAX, clockRuns: trainClock})
     .then(r => { trainNow = r; }).catch(e => log(`train step failed: ${e.message}`)).finally(() => { trainBusy = false; });
 }
 /** The front pull request's gate jobs go first, so the train never waits behind the rest of the queue. */
