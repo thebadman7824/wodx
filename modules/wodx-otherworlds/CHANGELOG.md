@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.3 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.37.2 (Book overlap rewording (B8024): one more line that shared 8 words with a Wraith book (found after the late Wraith OCR) is now in WoDX's own words. Its meaning and page reference are unchanged)
 - 0.37.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.37.0 (A place on a long clock: when the chronicle in play ties a scene to one of its saga clocks (manifest.local.taints), the scene's Wyrm corruption moves with that clock, whatever the weekly spread setting is, and never in a Live world (B7807))
