@@ -8,6 +8,9 @@
   "minFreeRamGB": 3,
   "bookText": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/text",
   "trove": "F:/TheTrove",
+  "_sprites": "B6144, B8100: Foundry user data folders whose worlds may ask for sprites from inside the game, and the Python with numpy and Pillow that runs tools/sprites/batch.py. Never lane 1 (the owner's own data) or the Live world, and no gate lane: gates make characters, and each would start a drawing. The solo world is on the New PC (runner.new_pc_lebrun.json).",
+  "spriteData": [],
+  "python": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/.venv/Scripts/python.exe",
   "train": false,
   "prGatesPreferPeer": {"statusTitle": "PC runner status (New PC)", "maxMinutes": 5, "freshMinutes": 15}
 }

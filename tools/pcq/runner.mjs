@@ -26,6 +26,8 @@
  *   so any thread can see the runner is alive.
  * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every few minutes the Main PC's runner moves the
  * merge train on (train.mjs, B7202), and the gate job of the pull request at its front runs before other gate jobs. Every minute it logs the graphics card heat (gpu.mjs).
+ * It also draws sprites a world's Storyteller asked for from inside the game (sprite-draw.mjs, B6144), one world at a
+ * time, in that world's own wodx-sprites folder (not while the runner is on hold).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -36,6 +38,7 @@ import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, worldArgs, withEarlier, isInfraFault, laneClashes, fit, failingGates, resumeState, mainSettled, gateDigest, gatePassed, recheckStep, gateStatusFor, GATE_CONTEXT, resetsFirst, deferToBigger, leaveToPeer, alertMark, adoptAlert} from "./jobs.mjs";
 import {loadConfig, getLane, laneDir, laneUrl, laneRefuses, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
+import {pendingRequests, draw as drawSprites} from "./sprite-draw.mjs";
 import {step as trainStep, isFrontJob} from "./train.mjs";
 import * as gpu from "./gpu.mjs";
 import * as PRIO from "./prio.mjs";
@@ -774,7 +777,7 @@ for ( const i of await openIssues(LABEL.running) ) {
   await comment(i.number, kept ? `The runner restarted while this ran; it will go on from the ${kept.left.length} gate(s) it had not passed (${kept.passed.length} passed gate(s) kept, if the commit is the same).`
     : "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
-let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, lastWatch = 0;
+let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, lastWatch = 0, drawing = false, spriteSaid = false;
 let lastGpu = 0; const gpuWatch = gpu.watcher();
 function gpuCheck() {
   if ( Date.now() - lastGpu < 60000 ) return null;
@@ -785,15 +788,15 @@ function gpuCheck() {
 }
 for ( ;; ) {
   try {
-    if ( draining && !active.size ) { log("exiting for an update"); process.exit(75); }
+    if ( draining && !active.size && !drawing ) { log("exiting for an update"); process.exit(75); }
     if ( draining && Date.now() - drainSince > DRAIN_MIN * 60000 ) {
       log(`the update has waited ${DRAIN_MIN} min on ${active.size} running job(s); taking jobs again, updating when idle`);
       draining = false; deferUntilIdle = true;
     }
-    if ( deferUntilIdle && !active.size ) { log("idle: exiting for the update"); process.exit(75); }
+    if ( deferUntilIdle && !active.size && !drawing ) { log("idle: exiting for the update"); process.exit(75); }
     if ( !draining && Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
-      if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
+      if ( !active.size && !drawing ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
       // B7207: the status issue still says what is running while it waits
       await status([], "runner-off: stops once the running job(s) end").catch(() => {});
       // B7330: a job still running while the runner stops can be cancelled (pc-cancel or a closed issue): runner-off
@@ -815,6 +818,18 @@ for ( ;; ) {
       sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json"), update: !!conf.sweepUpdates})
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
         .catch(e => log(`sweep failed: ${e.message}`)).finally(() => { sweeping = false; });
+    }
+    // Sprites asked for from inside the game (B6144): one world at a time, beside the jobs
+    // B8100: a PC that hosts a world which may ask (spriteData) but has no Python set, or a Python path that is not there, says so once
+    if ( !spriteSaid && conf.spriteData?.length && (!conf.python || (path.isAbsolute(expand(conf.python)) && !fs.existsSync(expand(conf.python)))) ) {
+      spriteSaid = true; log(`sprites: no Python with numpy and Pillow at "${conf.python ?? ""}" (runner config "python"), so no sprites are drawn here`);
+    }
+    if ( !drawing && !draining && !holding && Array.isArray(conf.spriteData) && conf.python && !(path.isAbsolute(expand(conf.python)) && !fs.existsSync(expand(conf.python))) ) {
+      const req = pendingRequests(conf.spriteData.map(expand)).find(Boolean);
+      if ( req && !resources().low.length ) {
+        drawing = true;
+        drawSprites(req, {run, python: expand(conf.python), root: ROOT, log}).catch(e => log(`sprites failed: ${e.message}`)).finally(() => { drawing = false; });
+      }
     }
     // Graphics card heat (B6520): log each minute, alert when it stays hot.
     const g = gpuCheck();
