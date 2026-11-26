@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.50.0 (Item tags: station, style, material, trade and where for clothing, tools, arms and coin goods, and a station for gear (B8098))
 - 0.49.4 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 0.49.3 (Book overlap rewording (B8024): one more line that shared 8 words with a Wraith book (found after the late Wraith OCR) is now in WoDX's own words. Its meaning and page reference are unchanged)
 - 0.49.2 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
