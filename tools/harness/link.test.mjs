@@ -80,7 +80,7 @@ test("links: the five kits are separate goods, old ids kept on the first part", 
 
 test("links: wired into the Use window", () => {
   const u = src("modules/wodx-library/scripts/use.mjs");
-  assert.match(u, /import \* as L from "\.\/link-rules\.mjs"/);
+  assert.match(u, /import \* as L from "\.\.\/\.\.\/wodx-rules\/library\/link-rules\.mjs"/);
   assert.match(u, /whatIsMissing\(actor, item, good, ability\)/);
   assert.match(u, /Hooks\.on\("createItem", onCreateItem\)/);
   assert.match(u, /"_refill"/);

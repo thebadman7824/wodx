@@ -125,7 +125,7 @@ test("everyday Banality: banal places, Autumn People, long tasks; heavier with t
 });
 
 test("the new text keeps to the house style: no gendered pronouns or em-dashes in prose", () => {
-  for ( const f of ["quiet-rules.js", "quiet.js", "soulforge-rules.js", "soulforge.js", "banal-life-rules.js", "banal-life.js"] ) {
+  for ( const f of ["../../wodx-rules/actions/quiet-rules.js", "quiet.js", "../../wodx-rules/actions/soulforge-rules.js", "soulforge.js", "../../wodx-rules/actions/banal-life-rules.js", "banal-life.js"] ) {
     const t = src(`modules/wodx-actions/scripts/${f}`);
     assert.doesNotMatch(t, /\b(he|she|him|her|his|hers|himself|herself)\b/i, f);
     assert.doesNotMatch(t, /—/, f);

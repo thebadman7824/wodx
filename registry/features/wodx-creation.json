@@ -10,7 +10,7 @@
    "files": [
     "modules/wodx-creation/scripts/change-of-state.mjs",
     "modules/wodx-creation/scripts/lineage.mjs",
-    "modules/wodx-creation/scripts/rules.mjs"
+    "modules/wodx-rules/creation/rules.mjs"
    ],
    "steps": {
     "built": {
@@ -82,8 +82,8 @@
     "modules/wodx-creation/scripts/xp.mjs",
     "modules/wodx-creation/scripts/apps.mjs",
     "modules/wodx-creation/scripts/lines.mjs",
-    "modules/wodx-creation/scripts/lines-xp-rules.mjs",
-    "modules/wodx-creation/scripts/change-points-rules.mjs",
+    "modules/wodx-rules/creation/lines-xp-rules.mjs",
+    "modules/wodx-rules/creation/change-points-rules.mjs",
     "modules/wodx-creation/scripts/actor-data.mjs"
    ],
    "steps": {
@@ -158,8 +158,8 @@
    "files": [
     "modules/wodx-creation/scripts/wizard.mjs",
     "modules/wodx-creation/scripts/wizard-rules.mjs",
-    "modules/wodx-creation/scripts/derived-rules.mjs",
-    "modules/wodx-creation/scripts/quick-start-rules.mjs"
+    "modules/wodx-rules/creation/derived-rules.mjs",
+    "modules/wodx-rules/creation/quick-start-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -200,9 +200,9 @@
    "files": [
     "modules/wodx-creation/scripts/lifepath.mjs",
     "modules/wodx-creation/scripts/lifepath-rules.mjs",
-    "modules/wodx-creation/scripts/lifepath-drill-rules.mjs",
-    "modules/wodx-creation/scripts/lifepath-short-rules.mjs",
-    "modules/wodx-creation/scripts/lifepath-threads-rules.mjs"
+    "modules/wodx-rules/creation/lifepath-drill-rules.mjs",
+    "modules/wodx-rules/creation/lifepath-short-rules.mjs",
+    "modules/wodx-rules/creation/lifepath-threads-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -241,9 +241,9 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/first-night.mjs",
-    "modules/wodx-creation/scripts/first-night-rules.mjs",
+    "modules/wodx-rules/creation/first-night-rules.mjs",
     "modules/wodx-creation/scripts/first-night-build.mjs",
-    "modules/wodx-creation/scripts/first-night-build-rules.mjs"
+    "modules/wodx-rules/creation/first-night-build-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -280,7 +280,7 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/first-night-prelude.mjs",
-    "modules/wodx-creation/scripts/first-night-prelude-rules.mjs",
+    "modules/wodx-rules/creation/first-night-prelude-rules.mjs",
     "modules/wodx-creation/scripts/first-night-seed.mjs"
    ],
    "steps": {
@@ -312,7 +312,7 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/people.mjs",
-    "modules/wodx-creation/scripts/people-rules.mjs"
+    "modules/wodx-rules/creation/people-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -344,7 +344,7 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/book-people.mjs",
-    "modules/wodx-creation/scripts/book-people-rules.mjs"
+    "modules/wodx-rules/creation/book-people-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -377,7 +377,7 @@
    "module": "wodx-creation",
    "core": true,
    "files": [
-    "modules/wodx-creation/scripts/animal-ghoul-rules.mjs",
+    "modules/wodx-rules/creation/animal-ghoul-rules.mjs",
     "modules/wodx-creation/scripts/animal-blood.mjs",
     "modules/wodx-creation/scripts/feed-vitae.mjs"
    ],
@@ -414,9 +414,9 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/animal-stock.mjs",
-    "modules/wodx-creation/scripts/animal-stock-rules.mjs",
+    "modules/wodx-rules/creation/animal-stock-rules.mjs",
     "modules/wodx-creation/scripts/animal-keepers.mjs",
-    "modules/wodx-creation/scripts/animal-keepers-rules.mjs"
+    "modules/wodx-rules/creation/animal-keepers-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -519,7 +519,7 @@
    "files": [
     "modules/wodx-creation/scripts/pass-years.mjs",
     "modules/wodx-creation/scripts/advance.mjs",
-    "modules/wodx-creation/scripts/advance-rules.mjs",
+    "modules/wodx-rules/creation/advance-rules.mjs",
     "modules/wodx-creation/scripts/time.mjs",
     "modules/wodx-creation/scripts/skip-test.mjs"
    ],
@@ -553,7 +553,7 @@
    "core": false,
    "files": [
     "modules/wodx-creation/scripts/archive.mjs",
-    "modules/wodx-creation/scripts/archive-rules.mjs"
+    "modules/wodx-rules/creation/archive-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -622,8 +622,8 @@
    "core": false,
    "files": [
     "modules/wodx-creation/scripts/states.mjs",
-    "modules/wodx-creation/scripts/states-rules.mjs",
-    "modules/wodx-creation/scripts/totals-rules.mjs",
+    "modules/wodx-rules/creation/states-rules.mjs",
+    "modules/wodx-rules/creation/totals-rules.mjs",
     "modules/wodx-creation/scripts/totals-check.mjs"
    ],
    "steps": {
@@ -660,7 +660,7 @@
    "core": false,
    "files": [
     "modules/wodx-creation/scripts/maturation.mjs",
-    "modules/wodx-creation/scripts/maturation-rules.mjs"
+    "modules/wodx-rules/creation/maturation-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -694,7 +694,7 @@
    "core": false,
    "files": [
     "modules/wodx-creation/scripts/supporting-cast.mjs",
-    "modules/wodx-creation/scripts/supporting-cast-rules.mjs"
+    "modules/wodx-rules/creation/supporting-cast-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -728,7 +728,7 @@
    "core": false,
    "files": [
     "modules/wodx-creation/scripts/dac-demons.mjs",
-    "modules/wodx-creation/scripts/dac-demons-rules.mjs",
+    "modules/wodx-rules/creation/dac-demons-rules.mjs",
     "modules/wodx-creation/data/daw-monsters.mjs"
    ],
    "steps": {
@@ -762,14 +762,14 @@
    "module": "wodx-creation",
    "core": true,
    "files": [
-    "modules/wodx-creation/scripts/revenant-rules.mjs",
+    "modules/wodx-rules/creation/revenant-rules.mjs",
     "modules/wodx-creation/scripts/revenant.mjs",
     "modules/wodx-creation/scripts/states.mjs",
     "modules/wodx-creation/scripts/time.mjs",
     "modules/wodx-creation/scripts/apps.mjs",
     "modules/wodx-creation/scripts/main.mjs",
     "modules/wodx-actions/scripts/main.js",
-    "modules/wodx-npc/scripts/supernatural-rules.mjs"
+    "modules/wodx-rules/npc/supernatural-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -804,7 +804,7 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/archive.mjs",
-    "modules/wodx-creation/scripts/archive-rules.mjs"
+    "modules/wodx-rules/creation/archive-rules.mjs"
    ],
    "steps": {
     "built": {

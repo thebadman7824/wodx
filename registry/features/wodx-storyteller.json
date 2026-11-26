@@ -39,7 +39,7 @@
    "core": true,
    "files": [
     "modules/wodx-storyteller/scripts/market-news.mjs",
-    "modules/wodx-storyteller/scripts/market-news-rules.mjs"
+    "modules/wodx-rules/storyteller/market-news-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -71,7 +71,7 @@
    "core": true,
    "files": [
     "modules/wodx-storyteller/scripts/town-looks.mjs",
-    "modules/wodx-storyteller/scripts/town-look-rules.mjs"
+    "modules/wodx-rules/storyteller/town-look-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -105,7 +105,7 @@
    "core": false,
    "files": [
     "modules/wodx-storyteller/scripts/cell.mjs",
-    "modules/wodx-storyteller/scripts/cell-rules.mjs"
+    "modules/wodx-rules/storyteller/cell-rules.mjs"
    ],
    "steps": {
     "built": {

@@ -119,7 +119,7 @@ test("wiring: Actions 3.10, the Demon menu and API, gender-neutral text (B48)", 
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
   assert.match(pm, /MENUS\.demon = /);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["demon.js", "demon-rules.js"] ) {
+  for ( const f of ["demon.js", "../../wodx-rules/actions/demon-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     const strings = src.match(/`[^`]*`|"[^"\n]*"/g) ?? [];
     for ( const s of strings ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);

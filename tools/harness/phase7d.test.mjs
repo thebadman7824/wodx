@@ -263,7 +263,7 @@ test("the module: version 0.4.0, the factions in the API, gender-neutral text, n
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
   const main = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
   for ( const k of ["openFactions", "runFactionTurns", "endSession", "reportBreach", "huntingFor", "wodxFactions"] ) assert.ok(main.includes(k), k);
-  for ( const f of ["factions.mjs", "faction-rules.mjs"] ) {
+  for ( const f of ["factions.mjs", "../../wodx-rules/npc/faction-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");
     const strings = (src.match(/`[^`]*`|"[^"\n]*"/g) ?? []).join(" ").replace(/<[^>]+>/g, " ");
     assert.ok(!/\b(he|she|him|her|his|hers|himself|herself)\b/i.test(strings), `${f}: gender-neutral`);

@@ -202,7 +202,7 @@ test("the fourteen each-turn powers from the desk (B4838-B4849)", async () => {
   assert.deepEqual(SR.payFor({pool: "quintessence", per: 1}, 4, 2), {count: 2, paid: 2});
   assert.equal(SS.SPECS["mage-dark-ages|one-fights-as-many"].extra, true);
   const sm = src("modules/wodx-actions/scripts/summons.js"), tu = src("modules/wodx-actions/scripts/turns.js"), fx = src("modules/wodx-actions/scripts/effects.js");
-  assert.match(sm, /import \* as E from "\.\/effects-rules\.js"/);
+  assert.match(sm, /import \* as E from "\.\.\/\.\.\/wodx-rules\/actions\/effects-rules\.js"/);
   for ( const needle of ["export async function shareWounds", "SR.payFor("] ) assert.ok(sm.includes(needle), needle);
   for ( const needle of ["wodxAttackRolled", "wodx-turn-skip", "export async function onHealed", "export const noBloodCap", "strikes("] ) assert.ok(tu.includes(needle), needle);
   for ( const needle of ["TR.resolveRec(", "TURN.onHealed(", "touchHarm", "onBreak", "everyEffect", "?.extra"] ) assert.ok(fx.includes(needle), needle);

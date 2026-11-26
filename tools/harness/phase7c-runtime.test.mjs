@@ -318,7 +318,7 @@ test("the module: manifest declares the Reaction behaviour; in-game text is gend
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
   assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}, alertZone: {}, trigger: {}}});
-  for ( const f of ["routines.mjs", "routine-rules.mjs"] ) {
+  for ( const f of ["routines.mjs", "../../wodx-rules/npc/routine-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");
     const strings = (src.match(/`[^`]*`|"[^"\n]*"/g) ?? []).join(" ").replace(/<[^>]+>/g, " ");
     assert.ok(!/\b(he|she|him|her|his|hers|himself|herself)\b/i.test(strings), `${f}: gender-neutral`);

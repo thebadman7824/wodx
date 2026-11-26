@@ -9,8 +9,8 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/main.mjs",
-    "modules/wodx-npc/scripts/npc-rules.mjs",
-    "modules/wodx-npc/scripts/lines-rules.mjs",
+    "modules/wodx-rules/npc/npc-rules.mjs",
+    "modules/wodx-rules/npc/lines-rules.mjs",
     "modules/wodx-npc/scripts/hook-relay.mjs"
    ],
    "steps": {
@@ -19,7 +19,7 @@
      "decisions": "B65, B66, B6310, B6760"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/npc-rules.mjs:scoreOptions"
+     "reader": "modules/wodx-rules/npc/npc-rules.mjs:scoreOptions"
     },
     "shown": {
      "what": "a plan whispered to the Storyteller, best first, each with its reason; on Auto the NPC acts and the turn moves on"
@@ -48,7 +48,7 @@
    "module": "wodx-npc",
    "core": true,
    "files": [
-    "modules/wodx-npc/scripts/npc-rules.mjs"
+    "modules/wodx-rules/npc/npc-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -56,7 +56,7 @@
      "decisions": "B66"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/npc-rules.mjs:scoreOptions"
+     "reader": "modules/wodx-rules/npc/npc-rules.mjs:scoreOptions"
     },
     "shown": {
      "what": "the NPC's plan names the torch and it keeps away from it on the map"
@@ -81,7 +81,7 @@
    "module": "wodx-npc",
    "core": true,
    "files": [
-    "modules/wodx-npc/scripts/power-pick-rules.mjs"
+    "modules/wodx-rules/npc/power-pick-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -89,7 +89,7 @@
      "decisions": "B4926, B4927"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/power-pick-rules.mjs:pick"
+     "reader": "modules/wodx-rules/npc/power-pick-rules.mjs:pick"
     },
     "shown": {
      "what": "on Auto the NPC's power card on its own turn, or the next best act when mortals are watching"
@@ -116,10 +116,10 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/routines.mjs",
-    "modules/wodx-npc/scripts/routine-rules.mjs",
-    "modules/wodx-npc/scripts/follow-rules.mjs",
-    "modules/wodx-npc/scripts/duty-rules.mjs",
-    "modules/wodx-npc/scripts/hunt-npc-rules.mjs"
+    "modules/wodx-rules/npc/routine-rules.mjs",
+    "modules/wodx-rules/npc/follow-rules.mjs",
+    "modules/wodx-rules/npc/duty-rules.mjs",
+    "modules/wodx-rules/npc/hunt-npc-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -154,7 +154,7 @@
    "module": "wodx-npc",
    "core": true,
    "files": [
-    "modules/wodx-npc/scripts/alert-rules.mjs"
+    "modules/wodx-rules/npc/alert-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -162,7 +162,7 @@
      "decisions": "Phase 7c"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/alert-rules.mjs:raise"
+     "reader": "modules/wodx-rules/npc/alert-rules.mjs:raise"
     },
     "shown": {
      "what": "guards and townsfolk turn toward the trouble and the scene stays on alarm for an hour"
@@ -184,10 +184,10 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/factions.mjs",
-    "modules/wodx-npc/scripts/faction-rules.mjs",
+    "modules/wodx-rules/npc/faction-rules.mjs",
     "modules/wodx-npc/scripts/founding.mjs",
-    "modules/wodx-npc/scripts/politics-rules.mjs",
-    "modules/wodx-npc/scripts/war-rules.mjs"
+    "modules/wodx-rules/npc/politics-rules.mjs",
+    "modules/wodx-rules/npc/war-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -221,7 +221,7 @@
    "core": false,
    "files": [
     "modules/wodx-npc/scripts/faction-looks.mjs",
-    "modules/wodx-npc/scripts/faction-look-rules.mjs"
+    "modules/wodx-rules/npc/faction-look-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -250,7 +250,7 @@
    "module": "wodx-npc",
    "core": true,
    "files": [
-    "modules/wodx-npc/scripts/poach-rules.mjs"
+    "modules/wodx-rules/npc/poach-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -258,7 +258,7 @@
      "decisions": "B7638-B7640"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/poach-rules.mjs:trackPool"
+     "reader": "modules/wodx-rules/npc/poach-rules.mjs:trackPool"
     },
     "shown": {
      "what": "signs of the poacher posted in the domain, a tracking roll for the holder, and the factions' regard changing"
@@ -283,7 +283,7 @@
    "module": "wodx-npc",
    "core": true,
    "files": [
-    "modules/wodx-npc/scripts/road-flock-rules.mjs"
+    "modules/wodx-rules/npc/road-flock-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -291,7 +291,7 @@
      "decisions": "B7649"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/road-flock-rules.mjs:flockSpec"
+     "reader": "modules/wodx-rules/npc/road-flock-rules.mjs:flockSpec"
     },
     "shown": {
      "what": "the Luminaries of a scene gathered from the Road window as a faction"
@@ -317,7 +317,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/hunt-calendar.mjs",
-    "modules/wodx-npc/scripts/hunt-calendar-rules.mjs"
+    "modules/wodx-rules/npc/hunt-calendar-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -351,8 +351,8 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/attitude.mjs",
-    "modules/wodx-npc/scripts/attitude-rules.mjs",
-    "modules/wodx-npc/scripts/opinion-rules.mjs"
+    "modules/wodx-rules/npc/attitude-rules.mjs",
+    "modules/wodx-rules/npc/opinion-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -383,7 +383,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/faces.mjs",
-    "modules/wodx-npc/scripts/faces-rules.mjs"
+    "modules/wodx-rules/npc/faces-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -413,9 +413,9 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/talk.mjs",
-    "modules/wodx-npc/scripts/talk-rules.mjs",
+    "modules/wodx-rules/npc/talk-rules.mjs",
     "modules/wodx-npc/scripts/talk-grammar.mjs",
-    "modules/wodx-npc/scripts/region-talk-rules.mjs"
+    "modules/wodx-rules/npc/region-talk-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -452,7 +452,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/overheard.mjs",
-    "modules/wodx-npc/scripts/overheard-rules.mjs"
+    "modules/wodx-rules/npc/overheard-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -482,10 +482,10 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/passersby.mjs",
-    "modules/wodx-npc/scripts/passerby-rules.mjs",
+    "modules/wodx-rules/npc/passerby-rules.mjs",
     "modules/wodx-npc/scripts/passerby-world.mjs",
     "modules/wodx-npc/scripts/passerby-local.mjs",
-    "modules/wodx-npc/scripts/crowd-rules.mjs"
+    "modules/wodx-rules/npc/crowd-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -524,9 +524,9 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/residents.mjs",
-    "modules/wodx-npc/scripts/resident-rules.mjs",
+    "modules/wodx-rules/npc/resident-rules.mjs",
     "modules/wodx-npc/scripts/settlement.mjs",
-    "modules/wodx-npc/scripts/settlement-rules.mjs"
+    "modules/wodx-rules/npc/settlement-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -557,8 +557,8 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/rivalry.mjs",
-    "modules/wodx-npc/scripts/rivalry-rules.mjs",
-    "modules/wodx-npc/scripts/fight-rules.mjs"
+    "modules/wodx-rules/npc/rivalry-rules.mjs",
+    "modules/wodx-rules/npc/fight-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -594,11 +594,11 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/followers.mjs",
-    "modules/wodx-npc/scripts/followers-rules.mjs",
+    "modules/wodx-rules/npc/followers-rules.mjs",
     "modules/wodx-npc/scripts/orders.mjs",
-    "modules/wodx-npc/scripts/order-rules.mjs",
+    "modules/wodx-rules/npc/order-rules.mjs",
     "modules/wodx-npc/scripts/day-jobs.mjs",
-    "modules/wodx-npc/scripts/day-jobs-rules.mjs"
+    "modules/wodx-rules/npc/day-jobs-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -635,9 +635,9 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/servants.mjs",
-    "modules/wodx-npc/scripts/servant-rules.mjs",
+    "modules/wodx-rules/npc/servant-rules.mjs",
     "modules/wodx-npc/scripts/servant-world.mjs",
-    "modules/wodx-npc/scripts/servant-world-rules.mjs"
+    "modules/wodx-rules/npc/servant-world-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -672,7 +672,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/bonds.mjs",
-    "modules/wodx-npc/scripts/bond-rules.mjs"
+    "modules/wodx-rules/npc/bond-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -706,8 +706,8 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/people.mjs",
-    "modules/wodx-npc/scripts/ties-rules.mjs",
-    "modules/wodx-npc/scripts/secrets-rules.mjs"
+    "modules/wodx-rules/npc/ties-rules.mjs",
+    "modules/wodx-rules/npc/secrets-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -737,7 +737,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/trust.mjs",
-    "modules/wodx-npc/scripts/trust-rules.mjs"
+    "modules/wodx-rules/npc/trust-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -768,7 +768,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/hearts.mjs",
-    "modules/wodx-npc/scripts/hearts-rules.mjs"
+    "modules/wodx-rules/npc/hearts-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -800,7 +800,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/family.mjs",
-    "modules/wodx-npc/scripts/family-rules.mjs"
+    "modules/wodx-rules/npc/family-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -832,7 +832,7 @@
    "core": false,
    "files": [
     "modules/wodx-npc/scripts/kin.mjs",
-    "modules/wodx-npc/scripts/kin-rules.mjs"
+    "modules/wodx-rules/npc/kin-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -862,7 +862,7 @@
    "core": false,
    "files": [
     "modules/wodx-npc/scripts/legacy.mjs",
-    "modules/wodx-npc/scripts/legacy-rules.mjs"
+    "modules/wodx-rules/npc/legacy-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -894,7 +894,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/standing.mjs",
-    "modules/wodx-npc/scripts/standing-rules.mjs"
+    "modules/wodx-rules/npc/standing-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -929,10 +929,10 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/memory.mjs",
-    "modules/wodx-npc/scripts/memory-rules.mjs",
-    "modules/wodx-npc/scripts/grudge-rules.mjs",
+    "modules/wodx-rules/npc/memory-rules.mjs",
+    "modules/wodx-rules/npc/grudge-rules.mjs",
     "modules/wodx-npc/scripts/wanted.mjs",
-    "modules/wodx-npc/scripts/wanted-rules.mjs"
+    "modules/wodx-rules/npc/wanted-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -964,11 +964,11 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/aftercare.mjs",
-    "modules/wodx-npc/scripts/aftercare-rules.mjs",
+    "modules/wodx-rules/npc/aftercare-rules.mjs",
     "modules/wodx-npc/scripts/carry-aftercare.mjs",
-    "modules/wodx-npc/scripts/carry-aftercare-rules.mjs",
+    "modules/wodx-rules/npc/carry-aftercare-rules.mjs",
     "modules/wodx-npc/scripts/carry-goals.mjs",
-    "modules/wodx-npc/scripts/carry-goal-rules.mjs",
+    "modules/wodx-rules/npc/carry-goal-rules.mjs",
     "modules/wodx-npc/scripts/line-mend.mjs"
    ],
    "steps": {
@@ -1005,7 +1005,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/line-refill.mjs",
-    "modules/wodx-npc/scripts/line-refill-rules.mjs"
+    "modules/wodx-rules/npc/line-refill-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -1037,7 +1037,7 @@
    "core": false,
    "files": [
     "modules/wodx-npc/scripts/fates.mjs",
-    "modules/wodx-npc/scripts/fates-rules.mjs"
+    "modules/wodx-rules/npc/fates-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -1067,7 +1067,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/cults.mjs",
-    "modules/wodx-npc/scripts/cult-rules.mjs"
+    "modules/wodx-rules/npc/cult-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -1097,7 +1097,7 @@
    "core": true,
    "files": [
     "modules/wodx-npc/scripts/prowl.mjs",
-    "modules/wodx-npc/scripts/prowl-rules.mjs"
+    "modules/wodx-rules/npc/prowl-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -1126,9 +1126,9 @@
    "module": "wodx-npc",
    "core": true,
    "files": [
-    "modules/wodx-npc/scripts/animal-rules.mjs",
-    "modules/wodx-npc/scripts/mortal-rules.mjs",
-    "modules/wodx-npc/scripts/supernatural-rules.mjs"
+    "modules/wodx-rules/npc/animal-rules.mjs",
+    "modules/wodx-rules/npc/mortal-rules.mjs",
+    "modules/wodx-rules/npc/supernatural-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -1136,7 +1136,7 @@
      "decisions": "B1000-B1013"
     },
     "wired": {
-     "reader": "modules/wodx-npc/scripts/supernatural-rules.mjs:pickSupernatural"
+     "reader": "modules/wodx-rules/npc/supernatural-rules.mjs:pickSupernatural"
     },
     "shown": {
      "what": "each NPC's temperament and routine follow its archetype"

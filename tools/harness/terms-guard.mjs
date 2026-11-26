@@ -60,7 +60,7 @@ export function check() {
   const found = {};
   for ( const f of walk(MODULES) ) {
     const rel = path.relative(MODULES, f).split(path.sep).join("/");
-    if ( OWNERS.has(rel) || !/\/(scripts|data)\//.test(`/${rel}`) ) continue;
+    if ( OWNERS.has(rel) || !/\/(scripts|data)\//.test(`/${rel}`) && !rel.startsWith("wodx-rules/") ) continue;  // the rules core too
     const text = fs.readFileSync(f, "utf8");
     for ( const [rule, fn] of Object.entries(RULES) ) {
       const n = fn(text);

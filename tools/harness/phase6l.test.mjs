@@ -76,7 +76,7 @@ test("wiring: the Orpheus menu by the sheet's variant, the API; gender-neutral t
   for ( const k of ["orphHorror", "orphVitality", "orphHarm", "orphSpite", "orphProject", "orphSetup"] ) assert.match(main, new RegExp(`${k}: withActor`));
   assert.match(readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8"), /kind === "mortal" && ctx\.isOrpheus\?\.\(actor\)\) \? MENUS\.orpheus/);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["orpheus.js", "orpheus-rules.js"] ) {
+  for ( const f of ["orpheus.js", "../../wodx-rules/actions/orpheus-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     for ( const s of src.match(/`[^`]*`|"[^"\n]*"/g) ?? [] ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);
   }

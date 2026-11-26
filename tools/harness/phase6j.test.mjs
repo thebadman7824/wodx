@@ -103,7 +103,7 @@ test("wiring: the Kuei-jin menu by the sheet's variant, the API, gender-neutral 
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
   assert.match(pm, /kind === "kindred" && ctx\.isKotE\?\.\(actor\)\) \? MENUS\.kote/);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["kote.js", "kote-rules.js"] ) {
+  for ( const f of ["kote.js", "../../wodx-rules/actions/kote-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     for ( const s of src.match(/`[^`]*`|"[^"\n]*"/g) ?? [] ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);
   }

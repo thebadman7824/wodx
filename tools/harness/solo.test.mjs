@@ -10,9 +10,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const R = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
 
+/** A module's scripts, and its rules in the rules core (modules/wodx-rules/<module without wodx->). */
 function sources(mod) {
-  const dir = join(root, "modules", mod, "scripts");
-  return existsSync(dir) ? readdirSync(dir).filter(f => /\.m?js$/.test(f)).map(f => readFileSync(join(dir, f), "utf8")).join("\n") : "";
+  const read = dir => existsSync(dir) ? readdirSync(dir).filter(f => /\.m?js$/.test(f)).map(f => readFileSync(join(dir, f), "utf8")).join("\n") : "";
+  return read(join(root, "modules", mod, "scripts")) + "\n" + read(join(root, "modules/wodx-rules", mod.replace(/^wodx-/, "")));
 }
 
 test("every setting on the preset list is registered by its module", () => {
@@ -20,7 +21,7 @@ test("every setting on the preset list is registered by its module", () => {
     const src = sources(p.mod);
     const key = p.key.startsWith("rule.") ? "rule." : p.key;
     const found = p.key.startsWith("rule.")
-      ? /`rule\.\$\{/.test(src) && readFileSync(join(root, "modules", p.mod, "data/house-rules.mjs"), "utf8").includes(p.key.slice(5))
+      ? /`rule\.\$\{/.test(src) && readFileSync(join(root, "modules", p.mod, "../wodx-rules/chronicle/house-rules.mjs"), "utf8").includes(p.key.slice(5))
       : new RegExp(`(register\\(\\s*(MOD|MODULE_ID),\\s*|\\bs\\()"${key}"`).test(src);
     assert.ok(found, `${p.mod}.${p.key} is not registered`);
   }

@@ -19,7 +19,7 @@ test("the ghoul switch is deleted and the ghoul rules stay the Dark Ages ones in
   assert.equal(R.ghoulBloodMax(250), 12);
   const hits = [];
   for ( const mod of readdirSync(join(root, "modules")) ) {
-    for ( const sub of ["scripts", "data"] ) {
+    for ( const sub of ["scripts", "data", ...(mod === "wodx-rules" ? readdirSync(join(root, "modules", mod)) : [])] ) {
       let files = [];
       try { files = readdirSync(join(root, "modules", mod, sub)); } catch (e) { continue; }
       for ( const f of files ) if ( /\.m?js$/.test(f) && readFileSync(join(root, "modules", mod, sub, f), "utf8").includes("ghoulsDarkAges") ) hits.push(`${mod}/${sub}/${f}`);

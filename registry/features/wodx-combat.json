@@ -81,7 +81,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/conductor.js",
-    "modules/wodx-combat/scripts/conductor-rules.js"
+    "modules/wodx-rules/combat/conductor-rules.js"
    ],
    "steps": {
     "built": {
@@ -115,7 +115,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/conductor.js",
-    "modules/wodx-combat/scripts/conductor-rules.js"
+    "modules/wodx-rules/combat/conductor-rules.js"
    ],
    "steps": {
     "built": {
@@ -149,7 +149,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/start.js",
-    "modules/wodx-combat/scripts/start-rules.js"
+    "modules/wodx-rules/combat/start-rules.js"
    ],
    "steps": {
     "built": {
@@ -183,7 +183,7 @@
    "module": "wodx-combat",
    "core": true,
    "files": [
-    "modules/wodx-combat/scripts/ambush-rules.js",
+    "modules/wodx-rules/combat/ambush-rules.js",
     "modules/wodx-combat/scripts/start.js"
    ],
    "steps": {
@@ -218,7 +218,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/fight-end.js",
-    "modules/wodx-combat/scripts/fight-end-rules.js"
+    "modules/wodx-rules/combat/fight-end-rules.js"
    ],
    "steps": {
     "built": {
@@ -253,7 +253,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/fight-time.js",
-    "modules/wodx-combat/scripts/fight-time-rules.js"
+    "modules/wodx-rules/combat/fight-time-rules.js"
    ],
    "steps": {
     "built": {
@@ -287,7 +287,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/aftermath.js",
-    "modules/wodx-combat/scripts/aftermath-rules.js"
+    "modules/wodx-rules/combat/aftermath-rules.js"
    ],
    "steps": {
     "built": {
@@ -322,7 +322,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/body.js",
-    "modules/wodx-combat/scripts/body-rules.js"
+    "modules/wodx-rules/combat/body-rules.js"
    ],
    "steps": {
     "built": {
@@ -357,7 +357,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/movement.js",
-    "modules/wodx-combat/scripts/movement-rules.js"
+    "modules/wodx-rules/combat/movement-rules.js"
    ],
    "steps": {
     "built": {
@@ -391,7 +391,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/mounted.js",
-    "modules/wodx-combat/scripts/mounted-rules.js"
+    "modules/wodx-rules/combat/mounted-rules.js"
    ],
    "steps": {
     "built": {
@@ -425,7 +425,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/swarm.js",
-    "modules/wodx-combat/scripts/swarm-rules.js"
+    "modules/wodx-rules/combat/swarm-rules.js"
    ],
    "steps": {
     "built": {
@@ -459,7 +459,7 @@
    "core": false,
    "files": [
     "modules/wodx-combat/scripts/vehicles.js",
-    "modules/wodx-combat/scripts/vehicle-rules.js"
+    "modules/wodx-rules/combat/vehicle-rules.js"
    ],
    "steps": {
     "built": {
@@ -492,7 +492,7 @@
    "module": "wodx-combat",
    "core": false,
    "files": [
-    "modules/wodx-combat/scripts/powder-rules.js",
+    "modules/wodx-rules/combat/powder-rules.js",
     "modules/wodx-combat/scripts/main.js"
    ],
    "steps": {

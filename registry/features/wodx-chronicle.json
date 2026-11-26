@@ -9,7 +9,7 @@
    "core": true,
    "files": [
     "modules/wodx-chronicle/scripts/events.mjs",
-    "modules/wodx-chronicle/scripts/events-rules.mjs"
+    "modules/wodx-rules/chronicle/events-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -44,7 +44,7 @@
    "core": true,
    "files": [
     "modules/wodx-chronicle/scripts/languages.mjs",
-    "modules/wodx-chronicle/scripts/languages-rules.mjs"
+    "modules/wodx-rules/chronicle/languages-rules.mjs"
    ],
    "steps": {
     "built": {

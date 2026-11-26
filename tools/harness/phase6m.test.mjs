@@ -70,7 +70,7 @@ test("wiring: the cast button routes later-era mages to Mage 20th; gender-neutra
   assert.match(main, /MXD\.isDA\(a\) \? mx\(\)\.cast\(a\) : a\?\.type === "Mage"/);
   for ( const k of ["m20Cast", "m20Backlash", "m20Counter"] ) assert.match(main, new RegExp(`${k}: withActor`));
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["m20.js", "m20-rules.js"] ) {
+  for ( const f of ["m20.js", "../../wodx-rules/actions/m20-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     for ( const s of src.match(/`[^`]*`|"[^"\n]*"/g) ?? [] ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);
   }

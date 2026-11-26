@@ -29,7 +29,7 @@ test("every setting a level sets is registered by its module", () => {
   for ( const p of AR.TOUCHED ) {
     const src = sources(p.mod);
     const found = p.key.startsWith("rule.")
-      ? readFileSync(join(root, "modules", p.mod, "data/house-rules.mjs"), "utf8").includes(p.key.slice(5))
+      ? readFileSync(join(root, "modules", p.mod, "../wodx-rules/chronicle/house-rules.mjs"), "utf8").includes(p.key.slice(5))
       : new RegExp(`(register\\(\\s*(MOD|MODULE_ID|D\\.MOD),\\s*|\\bs\\()"${p.key}"`).test(src);
     assert.ok(found, `${p.mod}.${p.key} is not registered`);
   }

@@ -52,7 +52,7 @@ for ( const r of base.notMoved ) {
 if ( !moves.size ) { console.log(`Nothing to move for ${mod}.`); process.exit(0); }
 for ( const n of moves.values() ) if ( fs.existsSync(abs(n)) ) { console.error(`${n} already exists`); process.exit(1); }
 
-const code = walk(abs("modules")).concat(walk(abs("tools")))
+const code = walk(abs("modules")).concat(walk(abs("tools")), walk(abs("registry")))
   .filter(f => /\.(m?js|json)$/.test(f) && !/CHANGELOG/.test(f) && path.resolve(f) !== BASELINE);
 const SPEC = /((?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)["'])(\.{1,2}\/[^"'?]+)((?:\?[^"']*)?["'])/g;
 const where = new Map([...moves].map(([o, n]) => [o, n]));

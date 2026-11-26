@@ -172,8 +172,10 @@ test("B6743: card-only rows with a book number now change the roll when ticked",
 test("B6746: every roll effect is reachable: a tick box, or a tag some roll in the modules makes", async () => {
   const fs = await import("node:fs");
   const lits = new Set();
-  for ( const m of fs.readdirSync(join(root, "modules")) ) {
-    const dir = join(root, "modules", m, "scripts");
+  // each module's scripts, and each folder of the rules core (modules/wodx-rules/<module>)
+  const dirs = fs.readdirSync(join(root, "modules")).map(m => join(root, "modules", m, "scripts"))
+    .concat(fs.readdirSync(join(root, "modules/wodx-rules"), {withFileTypes: true}).filter(e => e.isDirectory()).map(e => join(root, "modules/wodx-rules", e.name)));
+  for ( const dir of dirs ) {
     if ( !fs.existsSync(dir) ) continue;
     for ( const f of fs.readdirSync(dir) ) if ( /\.m?js$/.test(f) && !/trait-effects/.test(f) )
       for ( const x of fs.readFileSync(join(dir, f), "utf8").matchAll(/["'`]([a-z][a-z0-9-]*)["'`]/g) ) lits.add(x[1]);
