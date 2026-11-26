@@ -3185,10 +3185,10 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
 /* ================================================================== */
 
 const MENU = [
-    ["action", "fa-dice-d10", "Any roll / dramatic system"], ["quickCheck", "fa-search", "Common checks"], ["hunt", "fa-paw", "Hunt"], ["feed", "fa-tint", "Feed on target"],
+    ["action", "fa-dice-d10", "Make a roll"], ["quickCheck", "fa-search", "Common checks"], ["hunt", "fa-paw", "Hunt"], ["feed", "fa-tint", "Feed on target"],
     ["spendBlood", "fa-heartbeat", "Spend blood"], ["frenzy", "fa-fire-alt", "Frenzy"], ["rotschreck", "fa-running", "Rötschreck"],
-    ["endFrenzy", "fa-hand-paper", "End frenzy"], ["sin", "fa-balance-scale", "Sin / degeneration"], ["seduction", "fa-heart", "Seduction"],
-    ["bloodOath", "fa-link", "Blood Oath"], ["daytime", "fa-sun", "Awaken by day"], ["hazard", "fa-burn", "Sun / fire / fall"],
+    ["endFrenzy", "fa-hand-paper", "End frenzy"], ["sin", "fa-balance-scale", "A sin against the Road"], ["seduction", "fa-heart", "Seduction"],
+    ["bloodOath", "fa-link", "Blood Oath"], ["daytime", "fa-sun", "Awaken by day"], ["hazard", "fa-burn", "Hurt by sun, fire or a fall"],
     ["torpor", "fa-bed", "Torpor"], ["diablerie", "fa-skull", "Diablerie"], ["endScene", "fa-flag-checkered", "End scene"],
     ["newNight", "fa-moon", "New night (GM)"], ["useDiscipline", "fa-hand-sparkles", "Use a Discipline"], ["castRitual", "fa-book-dead", "Cast a ritual"], ["setRoad", "fa-road", "Road"],
     ["downtime", "fa-hourglass-half", "Downtime"], ["healing", "fa-band-aid", "Healing"], ["boons", "fa-handshake", "Prestation (GM)"],
