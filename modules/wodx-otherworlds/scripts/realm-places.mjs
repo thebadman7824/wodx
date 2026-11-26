@@ -191,7 +191,7 @@ export const PLACES = {
     ["Renegade river outposts", "Ferryman enclaves and Renegade posts along the river, each about an hour apart from Stygia outward", "The Sea of Shadows pdf 21, 27 / p. 20, 26"]
   ],
   "stygia": [
-    ["The Isle of Sorrows", "the rocky island at the River of Death's delta on which Charon built Stygia", "Wraith 20th pdf 94; The Sea of Shadows pdf 28 / p. 27"],
+    ["The Isle of Sorrows", "a stony island where the River of Death meets the sea, and where Charon raised Stygia", "Wraith 20th pdf 94; The Sea of Shadows pdf 28 / p. 27"],
     ["The sea-wall", "wall of melted-down wraith plasm, later bound with Stygian steel, built round the isle after the First Great Maelstrom", "The Sea of Shadows pdf 24 / p. 23"],
     ["The Shining Ones' temples", "temples on land the Senate granted near the docks of the Sunless Sea, refuges for souls bound for the Far Shores", "Wraith 20th pdf 95"],
     ["The water clocks", "Stygia's timekeeping, counting the Sunless Sea's two daily tides", "The Sea of Shadows pdf 24 / p. 23"],
