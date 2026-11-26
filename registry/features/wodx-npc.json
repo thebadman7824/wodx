@@ -810,11 +810,13 @@
     },
     "shown": {
      "what": "family news on the Relationships tab, a birth card when the time comes, and a child's sheet"
+    },
+    "gated": {
+     "gate": "tools/gate/gatebirth.mjs",
+     "step": "1. the clock passing the due date brings the birth and the child's sheet"
     }
    },
-   "open": [
-    "gated: gatefamily '4. sheet' is graded marker and the rest are direct calls"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
