@@ -343,7 +343,8 @@
    },
    "open": [
     "book: page not checked against the book text yet (V20 concealment steps P, J, T, N)",
-    "give and leave on the map are direct calls in gatesheetextras, not driven from the sheet"
+    "give and leave on the map are direct calls in gatesheetextras, not driven from the sheet",
+    "Drop and Pick up (B8122, desk pick inv3) go through WoDX Interactables' piles: no gate drops and picks up from the sheet yet; the second solo test checks it"
    ],
    "deferred": [],
    "faults": [],

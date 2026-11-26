@@ -622,7 +622,18 @@ export function listen(sheet, root) {
       case "leave": {
         const tok = actor.getActiveTokens?.()?.[0];
         if ( !tok ) return ui.notifications.warn("Put the character's token on the map first.");
+        // Desk pick inv3 (26 Nov): Drop puts it on the pile at the character's feet, shown with a simple icon, where
+        // anyone can pick it up again; a container with things in it still goes down as a box
+        const loose = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.loose : null;
+        if ( loose?.setDown && !XR.isContainer?.(it) && loose.setDownChoices?.(actor)?.some(c => c.id === it.id) ) return loose.setDown(tok.document, [it.id]);
         return viaGM({ op: "leave", from: actor.id, item: it.id, scene: tok.scene.id, x: tok.center.x, y: tok.center.y }, doLeave);
+      }
+      case "pick-up": {
+        const tok = actor.getActiveTokens?.()?.[0];
+        if ( !tok ) return ui.notifications.warn("Put the character's token on the map first.");
+        const loose = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.loose : null;
+        if ( !loose?.openPickUp ) return ui.notifications.warn("Picking things up needs WoDX Interactables on.");
+        return loose.openPickUp(tok.document);
       }
       case "add-coins": return addCoins(actor);
     }

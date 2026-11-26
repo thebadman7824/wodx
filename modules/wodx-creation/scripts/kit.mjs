@@ -10,6 +10,7 @@
  */
 import * as K from "./kit-rules.mjs";
 import {MODULE_ID} from "./actor-data.mjs";
+import {isNPC} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const LIB = "wodx-library";
 const SOCKET = `module.${MODULE_ID}`;
@@ -107,7 +108,7 @@ export async function takeKit(actor, rows, budget) {
 /* ---------------------------------------------------------------- NPC things on first meeting (inv2) */
 
 const carries = a => [...(a?.items ?? [])].some(i => ["Item", "Melee Weapon", "Ranged Weapon", "Armor"].includes(i.type) && !i.system?.isnatural);
-const isNPC = a => !!a && !a.hasPlayerOwner;
+
 
 /** Fill an NPC who carries nothing, once. On a player's computer the Storyteller's does it. */
 export async function ensureKit(npc) {
@@ -116,7 +117,13 @@ export async function ensureKit(npc) {
     if ( game.users.some(u => u.isGM && u.active) ) game.socket.emit(SOCKET, {type: "kit.npc", payload: {actor: npc.uuid}});
     return false;
   }
-  if ( game.users.activeGM?.id !== game.user.id ) return false;
+  if ( game.users.activeGM?.id !== game.user.id || FILLING.has(npc.uuid) ) return false;
+  // Two quick meetings must not give two kits: a second call while the first runs does nothing
+  FILLING.add(npc.uuid);
+  try { return await fillNpc(npc); } finally { FILLING.delete(npc.uuid); }
+}
+const FILLING = new Set();
+async function fillNpc(npc) {
   await loadKit();
   const k = kitFor(npc);
   if ( !k ) return false;

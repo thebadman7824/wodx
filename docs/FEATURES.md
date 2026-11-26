@@ -116,12 +116,12 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book | 1 | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
-| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated |  | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
+| The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated | 1 | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
 | The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | gated |  | gatepeoplemake 1. Make them now gives the sheet the window's Nature, Demeanor and Willpower |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
-| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 3 | gatewizard 10 derived traits |
+| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 4 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | gated | 1 | gatebookpeople 1. Make in People of the book gives the sheet the book's numbers |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
@@ -181,7 +181,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Line sheets on the newer sheet engine (ApplicationV2), one line at a time (`sheets.appv2-sheets`) | core | book |  | gatesheetv2 6. a dot sets a value |
 | Line skins: each line's look loads the first time a sheet of that line opens (`sheets.line-skins`) | core | book |  | gateskinsplit 2. each sheet wears its own line's skin |
 | Nature button on every sheet and Set off on the Derangements panel (`sheets.nature-derangement`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
-| Possessions: containers, stacks, concealment, out-of-era flags, money by era, give and leave on the map (`sheets.possessions`) | core | gated | 2 | gatesheetextras containers: things nest, a too-big thing is refused, a stack counts |
+| Possessions: containers, stacks, concealment, out-of-era flags, money by era, give and leave on the map (`sheets.possessions`) | core | gated | 3 | gatesheetextras containers: things nest, a too-big thing is refused, a stack counts |
 | The Body tab: shape, parts, what the body can do, where blows land, lasting changes (`sheets.body-tab`) | core | gated | 1 | gatebody the Body tab |
 | The book's character sheet for each line and era (V20 Dark Ages Kindred and ghouls first) (`sheets.book-sheet`) | core | gated | 2 | gatesheet1 a missing Ability: the first dot adds Archery as a skill |
 | The damage doll: a pixel figure on the Body tab coloured by the wounds on each part (`sheets.damage-doll`) | core | book |  | gatedoll the Body tab draws the doll |

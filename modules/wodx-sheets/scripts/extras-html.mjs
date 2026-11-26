@@ -33,7 +33,7 @@ function rowHtml(r, editable) {
       ${r.depth ? `<a class="wodx-act" data-act="take-out" title="Take it out"><i class="fa-solid fa-arrow-up-from-bracket"></i></a>` : ""}
       ${r.usable ? `<a class="wodx-act" data-act="use" title="Use it"><i class="fa-solid fa-hand-sparkles"></i></a>` : ""}
       <a class="wodx-act" data-act="give" title="Give to someone"><i class="fa-solid fa-hand-holding"></i></a>
-      <a class="wodx-act" data-act="leave" title="Leave it here, on the map"><i class="fa-solid fa-location-dot"></i></a>
+      <a class="wodx-act" data-act="leave" title="Drop it here, on the map"><i class="fa-solid fa-arrow-down"></i></a>
       <a class="wodx-act" data-act="container" title="${r.isContainer ? "Container settings" : "Make it a container"}"><i class="fa-solid fa-box-open"></i></a>
       <a class="wodx-act" data-act="edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
       <a class="wodx-act" data-act="delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
@@ -78,7 +78,7 @@ export function possessionsHtml(view, { money, editable = true, gearNotes = "" }
         <option value="">Everything</option><option value="weapons">Weapons</option><option value="armor">Armor</option><option value="fetishes">Fetishes and talens</option>
         <option value="money">Money</option><option value="goods">Goods and gear</option><option value="containers">Containers</option><option value="off-era">Out of era</option>
       </select>
-      ${editable ? `<a class="wodx-act wodx-btn" data-act="new-item"><i class="fa-solid fa-square-plus"></i> Add</a>` : ""}</div>
+      ${editable ? `<a class="wodx-act wodx-btn" data-act="pick-up" title="Pick up what lies within reach"><i class="fa-solid fa-hand-back-fist"></i> Pick up</a> <a class="wodx-act wodx-btn" data-act="new-item"><i class="fa-solid fa-square-plus"></i> Add</a>` : ""}</div>
     ${warn}
     <div class="wodx-poss-list" data-search-item-parent>${groups || `<div class="wodx-quiet">Nothing carried.</div>`}</div>
     <div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">Other gear</span></div>
