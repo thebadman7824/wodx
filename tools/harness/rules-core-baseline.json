@@ -104,6 +104,7 @@
     "modules/wodx-chronicle/scripts/scars-rules.mjs",
     "modules/wodx-chronicle/scripts/signature-rules.mjs",
     "modules/wodx-chronicle/scripts/ticket-rules.mjs",
+    "modules/wodx-chronicle/scripts/time-dial-rules.mjs",
     "modules/wodx-chronicle/scripts/token-look-rules.mjs",
     "modules/wodx-chronicle/scripts/trait-bite-rules.mjs",
     "modules/wodx-chronicle/scripts/trait-rules.mjs",

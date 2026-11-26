@@ -20,3 +20,4 @@
 {"file":"docs/PENDING-REVIEW.md","verdict":"working","how":"read in full against the repo counts; FEATURES.md written by registry.mjs summary; text-cleanup test passes","hash":"5d77362c5622","at":"2026-11-26T02:00Z"}
 {"file":"docs/LIVE-RELEASE-CHECKLIST.md","verdict":"working","how":"read in full against the repo counts; FEATURES.md written by registry.mjs summary; text-cleanup test passes","hash":"e4d5fda7a9b9","at":"2026-11-26T02:00Z"}
 {"file":"docs/FEATURES.md","verdict":"working","how":"read in full against the repo counts; FEATURES.md written by registry.mjs summary; text-cleanup test passes","hash":"9e2b555ce638","at":"2026-11-26T02:00Z"}
+{"file":"tools/harness/rules-core-baseline.json","verdict":"working","how":"after merging main (PR 2525): added its new held file time-dial-rules.mjs to notMoved; rules-core and bundle tests pass","hash":"16ce33eee47b","at":"2026-11-26T02:58Z"}
