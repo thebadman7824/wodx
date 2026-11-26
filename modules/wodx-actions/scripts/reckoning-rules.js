@@ -29,6 +29,9 @@ export const PATHS = {
     deviance: { label: "Deviance", virtue: "vision", creed: "wayward", book: "wayward" }
 };
 /** B7834: the creed books whose new edges are listed (printed pages; the Wayward scan has none, so its PDF pages). */
+/** B7834: a no-roll edge whose strength on the effects card is a Virtue, not one success (Protect: Zeal soak dice). */
+export const EDGE_STRENGTH = { protect: "zeal" };
+
 export const EDGE_BOOKS = {
     avenger: "Hunter Book: Avenger", defender: "Hunter Book: Defender", hermit: "Hunter Book: Hermit", innocent: "Hunter Book: Innocent",
     judge: "Hunter Book: Judge", martyr: "Hunter Book: Martyr", redeemer: "Hunter Book: Redeemer", wayward: "Hunter Book: Wayward"

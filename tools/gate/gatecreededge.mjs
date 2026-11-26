@@ -4,7 +4,7 @@
  * as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatecreededge.mjs?${Date.now()}`)).run()
  * It makes its own hunter, and removes it; never moves the clock.
- *   1. Use an edge, Protect, Use: Conviction 4 to 3, and the card reads Hunter Book: Defender p. 76
+ *   1. Use an edge, Protect, Use: Conviction 4 to 3, the card reads Hunter Book: Defender p. 76, and its Ward is 4 armour dice (Zeal 4)
  * Result: Data/wodx-gate/gatecreededge-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -39,7 +39,7 @@ export async function run() {
       const card = () => game.messages.contents.filter(m => (m.timestamp ?? 0) >= since && /Gate Creed Defender: Protect/.test(`${m.content ?? ""} ${m.flavor ?? ""}`)).at(-1);
       await waitFor(() => !!card(), 60000);
       const text = card()?.content ?? "";
-      G.ok("1. Use an edge, Protect: a Conviction spent, the card names Hunter Book: Defender p. 76", before === 4 && conv() === 3 && /Hunter Book: Defender p\. 76/.test(text),
+      G.ok("1. Use an edge, Protect: a Conviction spent, the card names Hunter Book: Defender p. 76", before === 4 && conv() === 3 && /Hunter Book: Defender p\. 76/.test(text) && /4 armour dice/.test(text.replace(/<[^>]+>/g, " ")),
         {before, after: conv(), info: info.slice(0, 200), card: text.replace(/<[^>]+>/g, " ").slice(0, 300)});
     });
   } catch (e) {

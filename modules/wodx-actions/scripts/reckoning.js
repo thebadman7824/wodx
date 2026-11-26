@@ -150,7 +150,7 @@ export function build(ctx) {
                 return { html: pp.html, items: pp.items.filter(x => x.route !== "off" && x.route !== "st") };
             };
             const fxOf = items => items.length ? { kind: "effects", caster: actor.name, items } : undefined;
-            if (!e.roll) { const pl = plan(1); await lim.done({ successes: 1 }); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">${e.ref}</div>`, [], fxOf(pl.items)); }
+            if (!e.roll) { const pl = plan(K.EDGE_STRENGTH[e.id] ? Math.max(1, n(i.virtues[K.EDGE_STRENGTH[e.id]])) : 1); await lim.done({ successes: 1 }); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">${e.ref}</div>`, [], fxOf(pl.items)); }
             const [a, v] = e.roll;
             const stat = k => (ATTR.includes(k) ? attr(actor, k) : K.VIRTUES.includes(k) ? i.virtues[k] : (findAbility(actor, k)?.value ?? 0));
             const dice = (a ? stat(a) : 0) + stat(v) + risk + n(fd.bonus);

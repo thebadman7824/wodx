@@ -41,3 +41,8 @@ test("Spiral's whirlwind works each turn, a yard and a half of radius a success 
   assert.equal(r.each.damage.levels, "counter");
   assert.equal(TR.everyTurnOf("Spiral", "Mage (M20)"), null);
 });
+
+test("Protect's soak dice are the hunter's Zeal on the effects card (B7834)", () => {
+  assert.equal(K.EDGE_STRENGTH.protect, "zeal");
+  assert.equal(K.edgeFor("Protect").roll, null);
+});
