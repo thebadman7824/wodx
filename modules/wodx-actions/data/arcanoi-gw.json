@@ -467,7 +467,7 @@
 "diff": 6,
 "c": "",
 "angst": false,
-"e": "Tell whether Kinesis was used on an object in the last month."
+"e": "Tell whether anyone has used Kinesis on an object within the past month."
 },
 {
 "id": "gw-kinesis-straddle",
