@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.147.3 (Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 0.147.2 (The shared terms, the calendar maths and the date engine moved to the rules core, modules/wodx-rules/core (B8060). scripts/terms.mjs, scripts/calendar-math.mjs and scripts/calendar.mjs pass the same names on from there, so every existing import works and every module still shares one date engine; calendar.mjs keeps only the Foundry calendar class and config)
 - 0.147.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.147.0 (The time dial shows the date and season, and a failed draw never stops Chronicle's start (B8091))

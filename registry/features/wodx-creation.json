@@ -301,10 +301,14 @@
     },
     "shown": {
      "what": "the prelude played scene by scene with rolls; at sign-off one card per thing to seed (an enemy NPC, Ledger entries, Backgrounds)"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefirstnightseed.mjs",
+     "step": "1. Sign off, Make it, and the enemy's sheet"
     }
    },
    "open": [
-    "gated: gatefirstnight steps 5 and 6 are direct calls and step 7 (sign-off and seed cards) is graded marker"
+    "the prelude runner's scenes (gatefirstnight steps 5 and 6) are still direct calls"
    ],
    "deferred": [],
    "faults": [],

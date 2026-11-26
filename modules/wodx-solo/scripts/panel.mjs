@@ -437,7 +437,7 @@ export class SoloPanel extends ApplicationV2 {
     div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}${FATE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
       ${reportBtn ? `<div class="wsolo-buttons wsolo-report">${shown(reportBtn)}</div>` : ""}
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, sleep through the years, pause, I am stuck, the curtain, carry the fallen, chronicle options</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, time, travel and the rest</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }

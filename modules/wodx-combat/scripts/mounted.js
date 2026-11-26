@@ -199,7 +199,7 @@ async function onSocket(p) {
 export function setupMounted(deps) {
   D = deps;
   game.settings.register(D.MOD, "mountedCombat", {
-    name: "Fighting from the saddle (the books' mounted combat)",
+    name: "Fighting from the saddle",
     hint: "Fighting from horseback: the horse's Strength and dodge help the rider, a hit rider may be thrown, and a lance charge can unhorse.",
     scope: "world", config: true, type: Boolean, default: true
   });

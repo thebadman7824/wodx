@@ -6,14 +6,14 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 49 | 0 | 1 |
+| wodx-actions | yes | 49 | 0 | 0 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
-| wodx-creation | yes | 23 | 0 | 1 |
+| wodx-creation | yes | 23 | 0 | 0 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 3 |
+| wodx-npc | yes | 34 | 0 | 1 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -55,7 +55,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | gated | 1 | gateretrywindow 1. a failed roll tried again in the action window is one harder |
 | Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 3 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
-| Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 2 |  |
+| Who an act startles and how far word of it goes (`actions.witness`) | core | gated | 1 | gatewitnesscrinos 1. the war form walks into sight and the mortal falls still |
 | With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 2 | gatesocial 6 window |
 | A Dark Ages mage's everyday wonders (charms, elixirs, tools) enchanted as a craft, and Tass from creatures and the fae (`actions.mage-wonders`) |  | gated | 1 | gatemagewonders 1. unbreakable iron from the household window: the sword strikes +3 |
 | A Dark Ages mage's household and standing: chantry and its gossip, familiar, Destiny, Library, servants, talismans, degrees, the DA:Mage merits and flaws (`actions.mage-household`) |  | gated | 1 | gatemagehouse 1. the chantry with no community points: the commoners talk |
@@ -125,7 +125,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The Embrace: a mortal becomes a vampire, keeps their traits and is handed to their player (`creation.embrace`) | core | gated | 1 | gatetruthsheets 4. the Embrace hands the player over |
 | The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | gated |  | gatepeoplemake 1. Make them now gives the sheet the window's Nature, Demeanor and Willpower |
-| The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
+| The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | gated | 1 | gatefirstnightseed 1. Sign off, Make it, and the enemy's sheet |
 | The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 5 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | gated | 1 | gatebookpeople 1. Make in People of the book gives the sheet the book's numbers |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
@@ -148,7 +148,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Courtship, marriage and the law, children, households and loved ones as a weak spot (`npc.hearts`) | core | gated |  | gatewedding 1. Approve on the wedding card marries them, shown as Spouse on the Relationships tab |
 | Cults and congregations that gather around a character (`npc.cults`) | core | gated |  | gategatheringgift 1. Hold a gathering: the founder's Faith rises by the cult's Followers |
 | Faces you have met: a stranger's token shows a description until you learn the name (`npc.faces`) | core | shown | 1 |  |
-| Factions and domains: members, places held, faction turns, founding, politics and war (`npc.factions`) | core | shown | 1 |  |
+| Factions and domains: members, places held, faction turns, founding, politics and war (`npc.factions`) | core | gated | 1 | gatefactionturn 1. Run a turn: the card shows the move's dice and the window says the turn ran |
 | Fear: a Kindred NPC shies from fire in a fight (`npc.fear`) | core | gated | 1 | gate7b fear: a Kindred NPC shies from a torch in the hero's hand |
 | Followers who take orders: one window for a character's followers, orders and day jobs (`npc.followers`) | core | book |  | gatefollowers3 3. quick order |
 | Footpads, burglars and highwaymen on the prowl pick a mark and demand money (`npc.prowl`) | core | gated |  | gateprowlmark 1. 23:00: the footpad closes in on the lone character, with a card to pay, talk or fight |
@@ -156,7 +156,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Natural rivalries between kinds of NPC, and NPCs who start a fight by themselves (`npc.rivalry`) | core | book |  | gaterivals start the fight |
 | NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | gated |  | gatearchetypehours 1. 10:00 on a weekday: the cutpurse stands in the market |
 | NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book | 1 | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
-| NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | shown | 1 |  |
+| NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | gated | 1 | gatememoryremembered 1. They saw to it, and the Who remembers window shows the NPC |
 | NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated |  | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
 | NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | gated |  | gateoverheardwalk 2. round the wall's end: the talk comes to the chat and the Overheard window |
 | One ledger for every bond that makes one person serve another, and servants the world makes (`npc.servants`) | core | gated | 1 | gateservants4 6b. the pact gift answers |
@@ -171,7 +171,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | gated | 1 | gateboonkept 1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
 | Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | gated |  | gatekinbring 1. Bring into play in the tree: the member's own sheet opens |
-| Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | gated | 2 | gatefateswake 1. a year passes and the sleeper's sheet no longer shows Torpor |
+| Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | gated | 1 | gatefateswake 1. a year passes and the sleeper's sheet no longer shows Torpor |
 | Past lives, lines of teaching, the web of every tie and scene ideas from ties (`npc.legacy`) |  | gated |  | gatementorgone 1. the Move button on the teacher's death card puts the Mentor points on another Background |
 | Who holds a place, shown on its scene (`npc.faction-looks`) |  | gated |  | gatefactionend 1. End in the Factions window: the banners leave the canvas |
 

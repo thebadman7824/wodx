@@ -205,10 +205,14 @@
     },
     "shown": {
      "what": "the Factions window, faction turn cards for the Storyteller, and wars that start by themselves"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefactionturn.mjs",
+     "step": "1. Run a turn: the card shows the move's dice and the window says the turn ran"
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+    "wars that start by themselves have no gate that drives them and checks the effect yet"
    ],
    "deferred": [],
    "faults": [],
@@ -965,10 +969,14 @@
     },
     "shown": {
      "what": "what an NPC remembers of a character in its notes; a wanted description posted and fading with time"
+    },
+    "gated": {
+     "gate": "tools/gate/gatememoryremembered.mjs",
+     "step": "1. They saw to it, and the Who remembers window shows the NPC"
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
+    "the wanted half (a description that spreads and fades) has no gate that drives it and checks the effect yet"
    ],
    "deferred": [],
    "faults": [],
@@ -1077,8 +1085,7 @@
     }
    },
    "open": [
-    "gatefateswake is heavy and in notGates: run it by name on a New PC lane (B8160)",
-    "a one-year Pass the years usually makes no Off-screen lives card (#2627)"
+    "gatefateswake is heavy and in notGates: run it by name on a New PC lane (B8160)"
    ],
    "deferred": [],
    "faults": [],

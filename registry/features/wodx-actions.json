@@ -512,10 +512,13 @@
     },
     "shown": {
      "what": "onlookers' reactions on the card and a breach for the Storyteller when mortals see the supernatural"
+    },
+    "gated": {
+     "gate": "tools/gate/gatewitnesscrinos.mjs",
+     "step": "1. the war form walks into sight and the mortal falls still"
     }
    },
    "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)",
     "The Fog for the restless dead: reactions by Willpower, forgotten after, minors and animals outside it (B7900, gatewraithdead step 3)"
    ],
    "deferred": [],
@@ -1689,7 +1692,7 @@
    ],
    "deferred": [],
    "faults": [],
-   "prs": []
+   "prs": [2645]
   },
   {
    "id": "actions.infernal-pacts",
