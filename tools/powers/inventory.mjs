@@ -37,6 +37,7 @@ const KA = await import(A("scripts/kote-arts.js"));
 const F = await import(A("scripts/fae-da-rules.js"));
 const MD = await import(A("scripts/mage-da-rules.js"));
 const M20 = await import(A("scripts/m20-rules.js"));
+const M20R = await import(A("scripts/m20-rotes.js"));
 const MU = await import(A("scripts/mummy-rules.js"));
 const C20 = await import(A("scripts/c20-rules.js"));
 const CA = await import(A("scripts/c20-arts.js"));
@@ -114,6 +115,8 @@ for ( const [file, set, line] of [["arcanoi-w20.json", "wraith", "Wraith (W20)"]
 /* -- Mage: M20 Spheres (Cast window with keywords) */
 for ( const s of M20.SPHERES ) for ( let l = 1; l <= 5; l++ )
   add("Mage (M20)", "Spheres", `${s[0].toUpperCase() + s.slice(1)} ${l}`, { src: null, status: "applies", page: "M20", how: "Cast window: keywords, spend plan, Undo" });
+/* -- Mage: M20 rotes, Adjustments and Procedures of the core book (B7836): Cast window presets */
+for ( const r of M20R.ALL_ROTES ) add("Mage (M20)", r.book ? "Techniques (How Do You DO That?)" : "Rotes (core book)", r.name, { src: r, status: applyingKw(r.keywords) ? "applies" : "card", story: applyingKw(r.keywords) ? undefined : (M20R.STORY[r.id] ?? `${r.book ?? "M20"} ${r.page}: the Storyteller works it from the rote's text (a Free Effect)`), kw: r.keywords, page: `${r.book ?? "M20"} ${r.page}`, how: "Cast window: the rote fills in its Spheres, keywords and kind" });
 /* -- Mage: Dark Ages rotes (mage-da.js) */
 for ( const r of MD.ROTES ) {
   const s = DAE.DA_EFFECTS[r.id];

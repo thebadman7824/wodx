@@ -86,7 +86,7 @@ export const nameKey = s => fold(s).replace(/^[•\s]+/, "").trim();
  */
 export const WORLD_POWERS = {
   // Demon: the Fallen (Lores of Storms, the Earth and Flame)
-  "summon water": ["water"], "manipulate weather": ["storm"], "command the storm": ["storm"], "earthquake": ["quake", "rubble"],
+  "summon water": ["water"], "manipulate weather": ["storm"], "command the storm": ["storm"], "earthquake": ["quake", "rubble"], "shaking the earth": ["quake", "rubble"],
   "roil the earth": ["rubble"], "Demon (DtF)|ignite": ["blaze"], "Demon (DtF)|fuel": ["blaze"], "command the flame": ["blaze"],
   // Werewolf (Dark Ages, W20 and the Changing Breeds)
   "command the blaze": ["fire", "blaze"], "blaze of glory": ["blaze"], "gaia's vengeance": ["cleanse"], "riot": ["riot"],

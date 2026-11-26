@@ -1637,7 +1637,7 @@
    ],
    "steps": {
     "built": {
-     "pr": null,
+     "pr": 2602,
      "decisions": "B7834"
     },
     "wired": {
@@ -1654,6 +1654,38 @@
    "open": [
     "book: Hunter Book: Innocent printed p. 81 missing from the scan (Innocence level 5 and the end of Bond)",
     "Hermit and Wayward creeds: paths only, no starting Conviction in CREEDS"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.m20-rotes",
+   "name": "Mage 20th: the core book's rotes in the Cast window",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/m20-rotes.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7836"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/m20.js:cast"
+    },
+    "shown": {
+     "what": "the Cast window's A rote list offers the book rotes with their page; picking one fills in Spheres and keywords and shows its text"
+    },
+    "gated": {
+     "gate": "tools/gate/gatem20rote.mjs",
+     "step": "1. Cast an Effect, A rote: Talons fills in Life 3, Shape, and the page"
+    }
+   },
+   "open": [
+    "book: M20 pp. 601-611; summaries read from the book text, not yet checked line by line",
+    "book: How Do You DO That? (B7837), 96 named feats; summaries read from the book text, not yet checked line by line"
    ],
    "deferred": [],
    "faults": [],

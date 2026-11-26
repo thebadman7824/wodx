@@ -91,7 +91,7 @@ test("every keyword has a label, a Sphere floor, a feat and a plain description"
 
 test("the Mage 20th cast uses the keywords and posts a card the Storyteller's client applies", () => {
   const m20 = src("modules/wodx-actions/scripts/m20.js");
-  assert.match(m20, /EF\.fieldset\(i\.spheres, EF\.rotesOf\(actor\)\)/); assert.match(m20, /EF\.wire\(root/); assert.match(m20, /kind: "effects"/);
+  assert.match(m20, /EF\.fieldset\(i\.spheres, rotes\)/); assert.match(m20, /const rotes = \[\.\.\.EF\.rotesOf\(actor\)/); assert.match(m20, /EF\.wire\(root/); assert.match(m20, /kind: "effects"/);
   const fx = src("modules/wodx-actions/scripts/effects.js");
   assert.match(fx, /createChatMessage/); assert.match(fx, /isActiveGM\(\)/); assert.match(fx, /setDamage/);
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /isLiveWorld\(game\.world\)/); // B7564: the shared Live list

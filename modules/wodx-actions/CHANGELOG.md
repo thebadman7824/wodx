@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.131.0 (Mage 20th: How Do You DO That?'s named feats and techniques as Cast window presets, with their page (B7837))
+- 3.130.0 (Mage 20th: the core book's rotes, Adjustments and Procedures as Cast window presets, with their page (B7836))
 - 3.129.0 (The NPC menu asks WoDX Creation to fill an NPC who carries nothing (B8121); Action priority (B8097): feeding, being fed from and trading take a character up, and a lesser action waits until it ends)
 - 3.128.0 (Hunter: the creed books' edges, five a book (Innocent four, a page missing from the scan), with their page (B7834))
 - 3.127.0 (Orpheus: a Spectre's arsenal, the five Thorns and eight Spectral Horrors of the core book, with their page (B7833))
