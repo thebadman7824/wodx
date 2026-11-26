@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.118.7 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
+- 0.118.6 (Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 0.118.5 (This module's rules files moved to the rules core, modules/wodx-rules/storyteller (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.118.4 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.118.3 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)

@@ -13,7 +13,7 @@ const C = await import(join(root, "modules/wodx-rules/chronicle/church-rules.mjs
 const FR = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
 const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
 const AR = await import(join(root, "modules/wodx-rules/actions/rules.js"));
-const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {DateEngine} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 
 const engine = new DateEngine({epoch: [1197, 1, 1], reform: "bohemia-1584"});
 const date = (y, m, d, hour = 22) => engine.timeToDate(engine.dateToTime({year: y, month: m, day: d, hour, minute: 0}));

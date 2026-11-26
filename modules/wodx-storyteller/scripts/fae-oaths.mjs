@@ -16,7 +16,7 @@ import * as Markets from "./markets.mjs";
 import * as Towns from "./towns.mjs";
 import * as Led from "./ledger.mjs";
 import {MOD, esc, setting, mutate, gmIds, isActiveGM} from "./core.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const ACT = "wodx-actions";
 const now = () => game.time?.worldTime ?? 0;

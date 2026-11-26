@@ -62,7 +62,7 @@ export function build(ctx) {
     /** The clock's sun: {isNight, toDusk, timeLabel}. isNight null when the Chronicle is missing. */
     async function sunClock(now = game.time.worldTime, scene = null) {
         try {
-            const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+            const cal = await import("../../wodx-rules/core/calendar.mjs");
             // B6185: the sun where the sleeper lies (a scene's own latitude and hour), through the shared terms
             const T = game.modules.get("wodx-chronicle")?.api?.terms;
             const p = T?.placeNow ? T.placeNow(scene, now) : { time: now, latitude: game.settings.get("wodx-chronicle", "latitude") };

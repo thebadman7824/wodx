@@ -180,7 +180,7 @@ export function setupBody() {
   game.settings.register(MOD, "hitLocations", {name: "Hit locations (house rule)",
     hint: "Each hit lands on a part of the body, aimed or at random, and a heavy blow can maim.",
     scope: "world", config: true, type: Boolean, default: true});
-  game.settings.register(MOD, "bodyGear", {name: "Gear comes off in shapes that cannot use it (house rule)",
+  game.settings.register(MOD, "bodyGear", {name: "Shapes without hands drop their gear (house rule)",
     hint: "A character who changes into a shape without hands drops what they hold, and armor that no longer fits comes off.",
     scope: "world", config: true, type: Boolean, default: true});
   const later = actor => setTimeout(() => checkShape(actor).catch(e => console.warn("WoDX Combat | body", e)), 50);

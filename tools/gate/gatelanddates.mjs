@@ -23,7 +23,7 @@ export async function run() {
   try {
     const R = await import(`/modules/wodx-rules/chronicle/reckoning-rules.mjs`);
     const L = await import(`/modules/wodx-rules/chronicle/local-reckoning-rules.mjs`);
-    const {describeTime} = await import(`/modules/${MOD}/scripts/calendar.mjs`);
+    const {describeTime} = await import(`/modules/wodx-rules/core/calendar.mjs`);
     const lat = () => game.settings.get(MOD, "latitude");
     try { ruleBefore = game.settings.get(MOD, "rule.eraReckoning"); await game.settings.set(MOD, "rule.eraReckoning", true); } catch (e) { G.R.notes.push(`rule: ${e.message}`); }
     try { cardBefore = game.settings.get("wodx-atmosphere", "openingCard"); await game.settings.set("wodx-atmosphere", "openingCard", true); } catch (e) { cardBefore = null; }

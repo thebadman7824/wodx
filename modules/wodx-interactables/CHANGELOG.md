@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.57.3 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 0.57.2 (This module's rules files moved to the rules core, modules/wodx-rules/interactables (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.57.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.57.0 (Pick up from the sheet and icons on piles (B8122), the owner's desk pick inv3)

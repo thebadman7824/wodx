@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as M from "../scripts/calendar-math.mjs";
+import * as M from "../../wodx-rules/core/calendar-math.mjs";
 
 test("known JDNs", () => {
   assert.equal(M.gregorianToJDN(2000, 1, 1), 2451545);

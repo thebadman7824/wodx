@@ -76,7 +76,7 @@ async function cardFor(town, actor, scene) {
   const year = await yearOf(actor);
   let time = "", weather = null;
   try {
-    const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+    const cal = await import("../../wodx-rules/core/calendar.mjs");
     let lat = 50;
     try { lat = game.settings.get("wodx-chronicle", "latitude") ?? 50; } catch (e) { lat = 50; }
     const d = cal.describeTime(t, lat);

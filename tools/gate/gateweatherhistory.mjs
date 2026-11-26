@@ -20,7 +20,7 @@ export async function run() {
   const msgs0 = new Set(game.messages.map(m => m.id));
   try {
     const api = game.modules.get(AT)?.api?.weather;
-    const M = await import(`/modules/${CH}/scripts/calendar-math.mjs`);
+    const M = await import(`/modules/wodx-rules/core/calendar-math.mjs`);
     const night = (y, m, d) => M.gregorianToJDN(y, m, d);
     const [plains, home] = await G.make(Scene, [
       {name: "WoDX gate: the Plains", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "north-america-west"}}}},

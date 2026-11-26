@@ -20,8 +20,8 @@
  * the fact's own words (a rumour, a feast, a name). #they# #them# #their# #theirs# #themself# #theyre# #theyve#
  * are always they, them and so on, so generated text stays gender-neutral.
  */
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 /** Era bands, as stock talk (data/stock-talk.mjs) has them. */
 export const BANDS = ["medieval", "earlymodern", "nineteenth", "twentieth", "modern", "future"];

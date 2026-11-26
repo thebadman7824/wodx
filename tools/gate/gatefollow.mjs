@@ -23,7 +23,7 @@ export async function run() {
   const memWas = (() => { try { return game.settings.get(MOD, "memory"); } catch (e) { return null; } })();
   try {
     // The beats rest on the hour (B5686) and sight is shorter at night: play at twenty past noon. Cleanup puts the clock back.
-    const {getEngine} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+    const {getEngine} = await import("/modules/wodx-rules/core/calendar.mjs");
     const eng = getEngine(), d0 = eng.timeToDate(game.time.worldTime);
     let at = eng.dateToTime({year: d0.year, month: d0.month, day: d0.day, hour: 12, minute: 20});
     if ( at <= game.time.worldTime ) at += 86400;

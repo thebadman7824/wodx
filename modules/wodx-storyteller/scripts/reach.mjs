@@ -25,8 +25,8 @@ import * as Rumours from "./rumours.mjs";
 import * as Money from "./money.mjs";
 import * as MR from "../../wodx-rules/storyteller/money-rules.mjs";
 import {MOD, SOCKET, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const hourNow = () => Math.floor(((now() % DAY) + DAY) % DAY / 3600);

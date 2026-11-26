@@ -498,7 +498,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
 export function setupMovement(deps) {
   D = deps;
   game.settings.register(D.MOD, "movementModes", {
-    name: "Flying, swimming, climbing and other ways of moving",
+    name: "Flying, swimming and climbing",
     hint: "Each way of moving (walk, swim, fly, climb, ride) has its own speed and needs the power or skill for it. Deep water can drown, and a heavy load slows.",
     scope: "world", config: true, type: Boolean, default: true
   });

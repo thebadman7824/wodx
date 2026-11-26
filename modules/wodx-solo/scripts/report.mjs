@@ -63,7 +63,7 @@ async function context() {
     if ( s?.state === "mixed" ) build.mixed = true;
   } catch (e) { build = build ?? {}; }
   let gameDate = "";
-  try { const cal = await import("../../wodx-chronicle/scripts/calendar.mjs"); gameDate = cal.describeTime(game.time.worldTime)?.dateLabel ?? ""; } catch (e) { gameDate = ""; }
+  try { const cal = await import("../../wodx-rules/core/calendar.mjs"); gameDate = cal.describeTime(game.time.worldTime)?.dateLabel ?? ""; } catch (e) { gameDate = ""; }
   const cards = all(game.messages).slice(-P.CARDS_KEPT).map(m => { try { return R.titleOf(m); } catch (e) { return ""; } }).filter(Boolean);
   const windows = [...(foundry.applications.instances?.values?.() ?? [])].filter(a => a?.rendered).map(a => a.id).filter(Boolean);
   const modules = Object.fromEntries([...game.modules].filter(m => m.active && m.id.startsWith("wodx-")).map(m => [m.id, m.version ?? ""]));

@@ -8,7 +8,7 @@
  */
 import * as F from "../../wodx-rules/npc/faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-npc";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, setting} from "./util.mjs";
-import {describeTime} from "./calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import * as PR from "../../wodx-rules/chronicle/place-rules.mjs";
 import * as WR from "../../wodx-rules/chronicle/world-rules.mjs";
 import {FAITHS} from "../../wodx-rules/chronicle/faith-rules.mjs";

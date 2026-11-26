@@ -7,8 +7,8 @@
 import * as F from "../../wodx-rules/npc/family-rules.mjs";
 import * as H from "../../wodx-rules/npc/hearts-rules.mjs";
 import * as HEARTS from "./hearts.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {DAY, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
+import {DAY, YEAR} from "../../wodx-rules/core/terms.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 

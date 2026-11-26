@@ -12,11 +12,11 @@
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import * as R from "../../wodx-rules/chronicle/ghoul-need-rules.mjs";
-import {getEngine} from "./calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {isQuiet} from "./quiet.mjs";
 import {offerFeed} from "./signatures.mjs";
 import {isSkipping} from "./skip.mjs";
-import {MONTH} from "./terms.mjs";
+import {MONTH} from "../../wodx-rules/core/terms.mjs";
 
 const FLAG = "ghoulNeed";
 const SIG = "sig";
@@ -33,7 +33,7 @@ export function registerGhoulNeedSettings() {
   game.settings.register(MODULE_ID, "ghoulNeedSkips", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MODULE_ID, "ghoulNeed", {
     name: "Ghouls need vitae each month", scope: "world", config: true, type: Boolean, default: true,
-    hint: "A ghoul who goes a month without vitae loses it, then its Disciplines, and fights the craving (V20 Dark Ages pp. 400 to 401)."
+    hint: "A ghoul who goes a month without vitae loses it, then its Disciplines, and fights the craving."
   });
 }
 

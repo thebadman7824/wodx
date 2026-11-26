@@ -63,8 +63,8 @@ export function build(ctx) {
     /** The sun now: {altitude, azimuth, phase, dateLabel, timeLabel, toDawn (s)}. */
     async function sunNow(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
         try {
-            const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
-            const cm = await import("../../wodx-chronicle/scripts/calendar-math.mjs");
+            const cal = await import("../../wodx-rules/core/calendar.mjs");
+            const cm = await import("../../wodx-rules/core/calendar-math.mjs");
             let lat = game.settings.get("wodx-chronicle", "latitude");
             // 3.50.0: a scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
             try {
@@ -431,7 +431,7 @@ export function registerSettings(register) {
         scope: "world", config: true, type: String, default: "apply", choices: { apply: "Roll and apply it", prompt: "A card with a button", off: "Off" } });
     register("dawnWarnings", "Warn before dawn", "Whispered cards 30 and 10 minutes before sunrise, saying whether each Cainite is in their haven.", Boolean, true);
     register("wallHeight", "Height of walls (feet)", "For the shadows walls cast by day; a scene can set its own in Sky and sun.", Number, 10);
-    game.settings.register(MOD, "sky", { name: "Sky", hint: "The weather caps sunlight: cloudy days are \"cloudy\" (soak 9), heavy cloud, rain or fog \"faint\" (soak 3). Also set from Sky and sun.",
+    game.settings.register(MOD, "sky", { name: "Sky", hint: "Bad weather weakens sunlight: cloud makes it milder, and heavy cloud, rain or fog milder still. Sky and sun sets it too.",
         scope: "world", config: true, type: String, default: "clear", choices: Object.fromEntries(Object.entries(S.SKIES).map(([k, v]) => [k, v.label])) });
     game.settings.register(MOD, "dawnWarned", { scope: "world", config: false, type: Object, default: {} });
 }

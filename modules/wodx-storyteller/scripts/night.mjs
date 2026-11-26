@@ -9,7 +9,7 @@ import * as Pace from "../../wodx-rules/storyteller/pacing-rules.mjs";
 export {N};
 import {NIGHT_TABLES} from "../data/night-tables.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const TN = {night: `${MOD}.night`, aid: `${MOD}.aid`};
 const all = c => (c ? [...(c.contents ?? c)] : []);
@@ -59,7 +59,7 @@ const paceHtml = p => (p ? `<p class="wstory-pace"><i class="fa-solid fa-gauge-s
 
 /* ---- where and when ---- */
 
-async function cal() { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs").catch(() => null); return CAL; }
+async function cal() { CAL ??= await import("../../wodx-rules/core/calendar.mjs").catch(() => null); return CAL; }
 const latitude = () => { try { return Number(game.settings.get("wodx-chronicle", "latitude")) || 50.1; } catch (e) { return 50.1; } };
 
 /** The night now: its date (the evening it began) and the part of the night. */

@@ -15,7 +15,7 @@
  */
 import * as L from "../../wodx-rules/storyteller/letters-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, pcs, chron, whereIs} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {mediaYear} from "../../wodx-rules/chronicle/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as WMap from "./world-map.mjs";

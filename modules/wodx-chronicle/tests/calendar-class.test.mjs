@@ -12,7 +12,7 @@ globalThis.foundry = {
       {name: "Fall", monthStart: 9, monthEnd: 11}, {name: "Winter", monthStart: 12, monthEnd: 2}]}}},
   utils: {deepClone: o => structuredClone(o)}
 };
-const C = await import("../scripts/calendar.mjs");
+const C = {...await import("../../wodx-rules/core/calendar.mjs"), ...await import("../scripts/calendar.mjs")};
 const Cls = C.makeCalendarClass();
 const cal = new Cls(C.makeCalendarConfig());
 
@@ -52,7 +52,7 @@ test("next dusk is ahead and at a plausible hour", () => {
 
 // B6381: the clock's Day and WoDX Actions' sun agree to the second, and the clock moved to dawn reads Day
 test("night and day: one line, the sun's altitude against -0.833 degrees", async () => {
-  const M = await import("../scripts/calendar-math.mjs");
+  const M = await import("../../wodx-rules/core/calendar-math.mjs");
   const S = await import("../../wodx-rules/actions/sunlight-rules.js");
   const lat = 49.2;
   for ( const start of [0, 86400 * 100 + 3600 * 2, 86400 * 200 + 3600 * 20, 86400 * 300] ) {

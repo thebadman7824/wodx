@@ -5,7 +5,7 @@
  */
 import {MODULE_ID} from "./ratings.mjs";
 import * as N from "../../wodx-rules/otherworlds/net-rules.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const num = v => Number(v) || 0;

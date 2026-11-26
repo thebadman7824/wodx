@@ -40,7 +40,7 @@ export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) { G.ok("1. world", false, {error: "Run this gate in rothenstein-wodx only"}); return G.save(); }
   const api = game.modules.get(C)?.api?.archive;
   const ch = game.modules.get(CH)?.api;
-  const {getEngine} = await import(`/modules/${CH}/scripts/calendar.mjs`);
+  const {getEngine} = await import(`/modules/wodx-rules/core/calendar.mjs`);
   const t0 = game.time.worldTime;
   const year = getEngine().timeToDate?.(t0)?.year ?? 1200;
   const at = y => getEngine().dateToTime({year: y, month: 3, day: 1, hour: 12});

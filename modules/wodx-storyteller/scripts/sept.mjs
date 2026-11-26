@@ -17,8 +17,8 @@ import * as R from "../../wodx-rules/storyteller/sept-rules.mjs";
 import * as C from "../../wodx-rules/storyteller/caern-rules.mjs";
 import * as Power from "./power.mjs";
 import {MOD, esc, setting, mutate, gmIds, isActiveGM, isPC, chron} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const all = c => [...(c ?? [])];

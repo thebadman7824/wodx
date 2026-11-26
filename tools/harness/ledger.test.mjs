@@ -76,7 +76,7 @@ let factions = {factions: [{id: "f1", name: "The German council", leader: "graff
 game.modules.set("wodx-npc", {api: {factions: {state: () => structuredClone(factions), mutate: async fn => { const out = await fn(structuredClone(factions)); factions = out.state; }}}});
 const actor = (id, name, flags = {}) => { const a = {id, name, flags}; game.actors.set(id, a); return a; };
 
-const cal = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const cal = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 cal.setReform?.("bohemia-1584");
 const Led = await import(join(root, "modules/wodx-storyteller/scripts/ledger.mjs"));
 const C = await import(join(root, "modules/wodx-storyteller/scripts/core.mjs"));

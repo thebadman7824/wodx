@@ -21,7 +21,7 @@ let lastKey = null, running = null;
 
 /** The moment, as the rules read it. */
 export async function context(time = game.time.worldTime) {
-  CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs");
+  CAL ??= await import("../../wodx-rules/core/calendar.mjs");
   let lat = 50;
   try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { lat = 50; }
   const d = CAL.describeTime(time, lat);

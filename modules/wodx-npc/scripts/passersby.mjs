@@ -98,7 +98,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
   /* ---------------- Where and when ---------------- */
 
   async function now() {
-    cal ??= await import("../../wodx-chronicle/scripts/calendar.mjs");
+    cal ??= await import("../../wodx-rules/core/calendar.mjs");
     // B6185: the street's own sun and hour (a scene far from home), through the shared terms
     const T = game.modules.get("wodx-chronicle")?.api?.terms;
     const p = T?.placeNow ? T.placeNow(null) : {time: game.time.worldTime, latitude: (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })()};

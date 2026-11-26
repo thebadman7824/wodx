@@ -12,7 +12,7 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const L = await imp("modules/wodx-rules/chronicle/local-reckoning-rules.mjs");
 const R = await imp("modules/wodx-rules/chronicle/reckoning-rules.mjs");
-const C = await imp("modules/wodx-chronicle/scripts/calendar-math.mjs");
+const C = await imp("modules/wodx-rules/core/calendar-math.mjs");
 
 const W = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const M = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

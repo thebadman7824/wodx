@@ -6,7 +6,7 @@
  * It makes one mortal of its own ("WoDX gate: Watcher", Perception 3, Alertness 2, Willpower 6), rolls with it, and
  * deletes it and its chat cards at the end. Rothenstein's own actors and scenes are not touched; the clock never moves.
  *   1. the module: WoDX Actions 3.13.0 or later, quickCheck, 41 checks, the new presets
- *   2. the menu: "Any roll / dramatic system" then "Common checks" in the Act group, with a description
+ *   2. the menu: "Make a roll" then "Common checks" in the Act group, with a description
  *   3. the Common checks window: one select of 41 checks with a search box; the pool line names Perception 3 + Alertness 2
  *   4. a Perception check: Notice something rolls 5 dice at 6 and posts a card with the page
  *   5. an untrained Knowledge (First aid with no Medicine) is refused on the card

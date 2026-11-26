@@ -17,7 +17,7 @@ import * as R from "../../wodx-rules/actions/servant-actions-rules.js";
 import * as EF from "./effects.js";
 import * as DE from "./demon-evocations.js";
 import { stOutcomes } from "../../wodx-rules/actions/effects-rules.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

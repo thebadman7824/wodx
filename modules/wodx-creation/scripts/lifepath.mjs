@@ -25,7 +25,7 @@ import {MERITS_FLAWS} from "../../wodx-chronicle/data/trait-effects.mjs";
 import {daTable} from "../../wodx-chronicle/data/trait-lines.mjs";
 import {WORLD_REGIONS, cultureOf} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {generate, createPeople} from "./people.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;

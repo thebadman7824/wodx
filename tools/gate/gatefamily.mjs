@@ -62,7 +62,7 @@ export async function run() {
       ok("1. the family API is there", typeof fam()?.conceive === "function" && typeof fam()?.birth === "function" && typeof fam()?.rules?.birthDifficulty === "function");
     });
     await step("2. conceive", async () => {
-      const year = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
+      const year = (await import("/modules/wodx-rules/core/calendar.mjs")).getEngine().timeToDate(t0).year;
       const docs = await Actor.createDocuments([
         {name: "Gate Family Ana", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: year - 28}, sex: "female"}}},
         {name: "Gate Family Bo", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: year - 30}, sex: "male"}}},
@@ -143,7 +143,7 @@ export async function run() {
       ok("9. a Garou with a mortal: the Storyteller's card has the story hook", r?.ok && /Rage/.test(card?.content ?? ""), {why: r?.why, card: !!card});
       await fam().end(cara);
     });
-    const year = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
+    const year = (await import("/modules/wodx-rules/core/calendar.mjs")).getEngine().timeToDate(t0).year;
     await step("10. child sheet", async () => {
       const b = game.actors.get(baby?.id);
       const attrs = Object.values(b?.system?.attributes ?? {}).map(x => Number(x?.value) || 0);

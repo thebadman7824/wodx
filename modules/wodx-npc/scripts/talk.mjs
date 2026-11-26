@@ -30,7 +30,7 @@ import * as RT from "../../wodx-rules/npc/region-talk-rules.mjs";
 import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import * as F from "../../wodx-rules/npc/faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, isActiveGM, chron, savedProfile} = ctx;
@@ -48,8 +48,8 @@ export function build(ctx) {
     game.settings.register(MOD, "speakGate", {name: "Beasts and ghosts need a power to talk", hint: "Animals and ghosts answer only a character with a Speak power running (or a shapeshifter, for beasts, and the dead, for ghosts).",
       scope: "world", config: true, type: Boolean, default: true});
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
-    game.settings.register(MOD, "talkAskWait", {name: "\"Ask me first\": seconds before the NPC answers by itself",
-      hint: "When an NPC is set to \"ask me first\" and you have not picked a line in this time, they say the first written line that fits, so the player is not left standing. A later pick still goes out. 0 waits for you however long it takes.",
+    game.settings.register(MOD, "talkAskWait", {name: "\"Ask me first\": seconds before the NPC answers",
+      hint: "If you have not picked a line in this time, the NPC says the first written line that fits. 0 waits as long as it takes.",
       scope: "world", config: true, type: Number, default: 60, range: {min: 0, max: 600, step: 10}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "NPCs greet, gossip and pass on news on their own when you haven't written a line for it.",
       scope: "world", config: true, type: Boolean, default: true});

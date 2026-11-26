@@ -9,7 +9,7 @@
  * the path can enchant: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk, ghouls.
  */
 import {registerLine} from "./wonder-registry.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const para = s => `<p>${String(s ?? "").replace(/[<>&]/g, c => ({"<": "&lt;", ">": "&gt;", "&": "&amp;"})[c])}</p>`;

@@ -153,7 +153,7 @@ export function gate(name, {stepTimeout = 30000} = {}) {
   async function yearAtLeast(min, to = 1995) {
     const eras = game.modules.get("wodx-chronicle")?.api?.eras, y = Number(eras?.currentYear?.()) || 0;
     if ( !y || y >= min ) return y;
-    const {getEngine} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+    const {getEngine} = await import("/modules/wodx-rules/core/calendar.mjs");
     await game.time.advance(getEngine().dateToTime({year: to, month: 6, day: 15, hour: 21}) - game.time.worldTime);
     await new Promise(r => setTimeout(r, 500));
     const now = Number(eras.currentYear()) || 0;

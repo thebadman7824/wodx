@@ -6,7 +6,7 @@
 import * as D from "../../wodx-rules/otherworlds/drift-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const T_DRIFT = `${MODULE_ID}.drift`;
 const NOT_A_PLACE = /battle ?map|\bcombat\b|\btest\b|\(gate/i;

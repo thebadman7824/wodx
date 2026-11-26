@@ -36,7 +36,7 @@ export async function run() {
   const ch = game.modules.get(CH)?.api, st = game.modules.get(ST)?.api;
   const Markets = await import(`/modules/${ST}/scripts/markets.mjs`);
   const looks = ch?.looks;
-  const {getEngine} = await import(`/modules/${CH}/scripts/calendar.mjs`);
+  const {getEngine} = await import(`/modules/wodx-rules/core/calendar.mjs`);
   const at = (y, m, d, h) => getEngine().dateToTime({year: y, month: m, day: d, hour: h});
   const t0 = game.time.worldTime;
   const saved = {

@@ -9,7 +9,7 @@
  *   {{name}}        a value given by the caller (vars)
  */
 import {CULTURE_BORROW} from "../../wodx-rules/chronicle/world-rules.mjs";
-import * as TERMS from "./terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 /** A 128-bit hash of a string, as four 32-bit numbers (cyrb128). */
 export function hash128(str) {

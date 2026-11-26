@@ -55,7 +55,7 @@ export function build(ctx) {
 
   function registerSettings() {
     game.settings.register(MOD, "routineMode", {
-      name: "NPC routines and reactions", hint: "What WoDX does when the clock moves an NPC with a routine, when a scene opens, and when a watcher notices someone in a WoDX: Reaction region.",
+      name: "NPC routines and reactions", hint: "What happens when the clock moves an NPC on its routine, when a scene opens, and when a watcher notices someone.",
       scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
     });
     game.settings.register(MOD, "curfewStart", {
@@ -78,7 +78,7 @@ export function build(ctx) {
   /* ------------------------------------------------------------------ */
 
   let cal = null;
-  async function loadCalendar() { cal ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); return cal; }
+  async function loadCalendar() { cal ??= await import("../../wodx-rules/core/calendar.mjs"); return cal; }
   /** describe(time) for the rules: the Chronicle's own reading of the clock, with the feast of the day. */
   function describer(faith = "western") {
     const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();

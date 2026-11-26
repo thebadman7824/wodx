@@ -49,7 +49,7 @@ export function drawJourney({realm = "tempest", hours = 2, storm = false, travel
 
 /** The moon's phase index now (0 new ... 4 full), from WoDX Chronicle's calendar. */
 let CAL = null;
-import("../../wodx-chronicle/scripts/calendar.mjs").then(m => { CAL = m; }).catch(() => { CAL = null; });
+import("../../wodx-rules/core/calendar.mjs").then(m => { CAL = m; }).catch(() => { CAL = null; });
 export function moonNow() {
   if ( !CAL ) return null;
   let lat;

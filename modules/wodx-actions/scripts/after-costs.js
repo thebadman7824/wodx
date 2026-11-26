@@ -6,8 +6,8 @@
  * pays when the scene ends.
  */
 import * as AC from "../../wodx-rules/actions/after-cost-rules.js";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const WINDOW = 120000;

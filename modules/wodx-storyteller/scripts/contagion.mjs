@@ -17,9 +17,9 @@ import * as Markets from "./markets.mjs";
 import * as Rumours from "./rumours.mjs";
 import {living} from "./hardship.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting, log, tripContext} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 export const TYPE = `${MOD}.contagion`;
 const NPC = "wodx-npc", ACT = "wodx-actions";
@@ -39,7 +39,7 @@ export function registerContagionSettings() {
     hint: "Sickness runs through a town week by week, changes its prices and crowds, and can spread to towns it trades with.",
     choices: {auto: "Auto", suggest: "Suggest", off: "Off"}});
   game.settings.register(MOD, "contagionPeople", {name: "Characters can fall sick", scope: "world", config: true, type: Boolean, default: true,
-    hint: "A living player character in a sick town may catch the sickness and rolls Stamina each week (M20 p. 442). The card has Undo."});
+    hint: "A living player character in a sick town may catch the sickness, and rolls Stamina each week. The card has Undo."});
   game.settings.register(MOD, "contagionState", {scope: "world", config: false, type: Object, default: R.blankState()});
 }
 

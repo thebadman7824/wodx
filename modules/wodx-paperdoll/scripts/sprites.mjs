@@ -7,7 +7,7 @@ import * as SR from "../../wodx-rules/paperdoll/sprite-rules.mjs";
 import * as LR from "../../wodx-rules/paperdoll/line-rules.mjs";
 import * as FG from "../../wodx-rules/paperdoll/figure-rules.mjs";
 import {healthLevel, randomLook} from "../../wodx-rules/paperdoll/doll-rules.mjs";
-import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {YEAR} from "../../wodx-rules/core/terms.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();
 /** Who sits on a mount or in a vehicle just now (mounts.mjs keeps it): token id -> {facing, pose, moving}. */
@@ -21,8 +21,8 @@ export function registerSpriteSettings() {
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
     hint: "NPC figures lie down to sleep, sit, kneel and carry loads as their routine goes.", type: Boolean, default: true});
   // B8100 (#2491): a new character, a new NPC and a kept figure or look ask the PC sprite drawer by themselves
-  game.settings.register(MOD, "spriteAutoDraw", {scope: "world", config: true, name: "New and changed characters get their sprite by themselves",
-    hint: "New characters and changed looks get their sprites drawn on the PC by themselves.", type: Boolean, default: true});
+  game.settings.register(MOD, "spriteAutoDraw", {scope: "world", config: true, name: "Draw sprites for new characters by themselves",
+    hint: "New characters and changed looks get their sprites drawn by themselves.", type: Boolean, default: true});
   // B6144: the Storyteller asks the PC to draw everyone's sprite, from inside the game. Foundry wants an application
   // class for a menu: this one only opens the confirming window.
   try {

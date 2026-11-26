@@ -9,10 +9,10 @@ import * as Reveals from "./reveals.mjs";
 import {watched} from "../../wodx-rules/chronicle/signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
-import {DAY} from "./terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 import {current as chronicleInPlay, chronicles, settleInPlay} from "./chronicle-data.mjs";
 import * as CL from "../../wodx-rules/chronicle/close-rules.mjs";
-import {describeTime} from "./calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {record as nightRecord} from "./nightwork.mjs";
 /** The saga's name for cards and windows: the chronicle in play names it (Chronicle Packs Desk d2). */
 const sagaName = () => (P.saga.SAGA.where ? `The ${P.saga.SAGA.where} saga` : "The chronicle's saga");

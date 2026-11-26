@@ -13,7 +13,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const W = await import(join(root, "modules/wodx-rules/atmosphere/weather-rules.mjs"));
 const K = await import(join(root, "modules/wodx-rules/atmosphere/kits-rules.mjs"));
 const S = await import(join(root, "modules/wodx-rules/senses/senses-rules.mjs"));
-const {gregorianToJDN} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {gregorianToJDN} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 const eras = JSON.parse(readFileSync(join(root, "modules/wodx-chronicle/data/eras.json"), "utf8"));
 const senses = JSON.parse(readFileSync(join(root, "modules/wodx-senses/data/world.json"), "utf8"));
 const year = (seed, climate, y, fn) => { const j0 = gregorianToJDN(y, 1, 1); for ( let i = 0; i < 365; i++ ) fn(W.weatherFor(seed, climate, j0 + i), i); };

@@ -14,7 +14,7 @@
  */
 import * as M from "../data/wonders-mummy.mjs";
 import {registerLine} from "./wonder-registry.mjs";
-import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+import {MONTH} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const SEKHEM = "system.advantages.sekhem.temporary";

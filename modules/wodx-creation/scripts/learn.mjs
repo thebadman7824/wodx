@@ -11,7 +11,7 @@ import {MODULE_ID, esc, lineOf, payerOf, disciplinesOf, clanOf, vampireEra, appl
 import {itemIsCat} from "../../wodx-rules/creation/lines-xp-rules.mjs";
 import {clanDisciplines} from "../../wodx-rules/creation/rules.mjs";
 import * as L from "../../wodx-rules/creation/learn-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const ST = "wodx-storyteller";
 const SECOND_ABILITY = /^wod\.types\.(talent|skill|knowledge)secondability$/;

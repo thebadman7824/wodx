@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.51.3 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
+- 0.51.2 (Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 0.51.1 (This module's rules files moved to the rules core, modules/wodx-rules/library (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.51.0 (Clothing of 1197 (B8144): 22 garments the goods list lacked, tagged by station, style and material, with their own descriptions)
 - 0.50.0 (Item tags: station, style, material, trade and where for clothing, tools, arms and coin goods, and a station for gear (B8098))

@@ -59,7 +59,7 @@ export async function run() {
   };
   const msgsBefore = new Set(game.messages.map(m => m.id));
   // World time for a date, through the WoDX calendar's own engine
-  const {getEngine} = await import(`/modules/${M}/scripts/calendar.mjs`);
+  const {getEngine} = await import(`/modules/wodx-rules/core/calendar.mjs`);
   const at = (y, m, d) => getEngine().dateToTime({year: y, month: m, day: d, hour: 21});
   const keyOf = t => { const d = getEngine().timeToDate(t); return d.year * 10000 + d.month * 100 + d.day; };
   const cards = () => game.messages.filter(m => !msgsBefore.has(m.id) && /wodx-events/.test(m.content ?? "") && !/wodx-hidden-events/.test(m.content ?? ""));

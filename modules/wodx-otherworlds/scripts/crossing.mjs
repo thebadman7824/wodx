@@ -1,7 +1,7 @@
 import {MODULE_ID, placeOf} from "./ratings.mjs";
 import {planAttempt, countRoll, outcomeOf, SETTLEMENTS, disconnection} from "../../wodx-rules/otherworlds/rules.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const STATUS = {
   umbra: {id: "wodx-umbra", name: "In the Umbra", img: "icons/svg/portal.svg"},

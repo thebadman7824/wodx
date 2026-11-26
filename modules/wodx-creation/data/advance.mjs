@@ -3,7 +3,7 @@
  * "WoDX choice" marks what the books leave open. Each optional rule sits behind a house-rule switch in WoDX Chronicle.
  * Design: "WoDX: Carrying a Character Across Eras".
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 /** The house-rule switches (WoDX Chronicle, rule.<id>) and what each one sets. */
 export const SWITCHES = {
