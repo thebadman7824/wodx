@@ -7,7 +7,7 @@
  *   Harm to the swarm: counted on the swarm, not a health track; dispersed at its health, gone at two more.
  *   The Storyteller makes a swarm from the chart.
  */
-import * as S from "./swarm-rules.js";
+import * as S from "../../wodx-rules/combat/swarm-rules.js";
 
 const MOD = "wodx-combat";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

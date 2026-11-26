@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as R from "../../modules/wodx-creation/scripts/lifepath-rules.mjs";
+import * as R from "../../modules/wodx-rules/creation/lifepath-rules.mjs";
 import {keepLifepath} from "../../modules/wodx-creation/scripts/actor-data.mjs";
 
 /* WoDX Creation 0.11.0: lifepaths for every line and splat, 1197 to the World of Future Darkness (Improvement Desk cr1). */

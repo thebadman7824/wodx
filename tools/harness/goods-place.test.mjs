@@ -4,8 +4,8 @@
  */
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as GP from "../../modules/wodx-storyteller/scripts/goods-place-rules.mjs";
-import * as N from "../../modules/wodx-storyteller/scripts/market-news-rules.mjs";
+import * as GP from "../../modules/wodx-rules/storyteller/goods-place-rules.mjs";
+import * as N from "../../modules/wodx-rules/storyteller/market-news-rules.mjs";
 import {GOODS} from "../../modules/wodx-library/data/goods.mjs";
 import {inUseAt} from "../../modules/wodx-library/data/goods-ways.mjs";
 

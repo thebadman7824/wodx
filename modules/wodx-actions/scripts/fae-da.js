@@ -18,14 +18,14 @@
  */
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
-import * as F from "./fae-da-rules.js";
-import * as H from "./hunter-rules.js";
+import * as F from "../../wodx-rules/actions/fae-da-rules.js";
+import * as H from "../../wodx-rules/actions/hunter-rules.js";
 import * as P from "./profiles.js";
 import * as DC from "./fae-da-cantrips.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
-import * as E from "./effects-rules.js";
+import * as E from "../../wodx-rules/actions/effects-rules.js";
 import * as PW from "./power-effects.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 

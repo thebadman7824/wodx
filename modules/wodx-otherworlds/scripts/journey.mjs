@@ -6,7 +6,7 @@
 import {MODULE_ID, placeOf} from "./ratings.mjs";
 import {tokenLayer} from "./twins.mjs";
 import {STATUS} from "./crossing.mjs";
-import * as J from "./journey-rules.mjs";
+import * as J from "../../wodx-rules/otherworlds/journey-rules.mjs";
 import {JOURNEY_TABLES} from "../data/journey-tables.mjs";
 
 export {J};

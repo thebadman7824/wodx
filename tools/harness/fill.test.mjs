@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await imp("modules/wodx-interactables/scripts/fill-rules.mjs");
+const F = await imp("modules/wodx-rules/interactables/fill-rules.mjs");
 const gear = JSON.parse(src("modules/wodx-library/data/gear.json")).items;
 const seq = (...v) => { let i = 0; return () => v[i++ % v.length]; };
 /* A seeded random source (mulberry32), so every draw in this file comes out the same on every run. */

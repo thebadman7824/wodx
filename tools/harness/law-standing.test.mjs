@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const S = await imp("modules/wodx-chronicle/scripts/law-standing-rules.mjs");
-const P = await imp("modules/wodx-chronicle/scripts/law-punish-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+const S = await imp("modules/wodx-rules/chronicle/law-standing-rules.mjs");
+const P = await imp("modules/wodx-rules/chronicle/law-punish-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
 
 test("standing: ranks map to classes before the law", () => {
   assert.equal(S.classOf("Serf"), "unfree");

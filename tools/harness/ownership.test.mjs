@@ -10,12 +10,12 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const O = await imp("modules/wodx-storyteller/scripts/owner-rules.mjs");
-const CR = await imp("modules/wodx-storyteller/scripts/craft-rules.mjs");
-const B = await imp("modules/wodx-storyteller/scripts/build-rules.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const O = await imp("modules/wodx-rules/storyteller/owner-rules.mjs");
+const CR = await imp("modules/wodx-rules/storyteller/craft-rules.mjs");
+const B = await imp("modules/wodx-rules/storyteller/build-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const MR = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
+const MR = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
 
 test("owner records: actor, faction, a name only; junk is nobody", () => {
   assert.equal(O.normOwner(null), null);

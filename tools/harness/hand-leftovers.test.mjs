@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
-const TB = await imp("modules/wodx-chronicle/scripts/trait-bite-rules.mjs");
-const LH = await imp("modules/wodx-chronicle/scripts/law-heat-rules.mjs");
-const E = await imp("modules/wodx-actions/scripts/effects-rules.js");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
+const TB = await imp("modules/wodx-rules/chronicle/trait-bite-rules.mjs");
+const LH = await imp("modules/wodx-rules/chronicle/law-heat-rules.mjs");
+const E = await imp("modules/wodx-rules/actions/effects-rules.js");
 const CH = await imp("modules/wodx-interactables/scripts/chase.mjs");
 
 test("B5178: a stimulant crashes about an hour later, softer and sooner when weak, later when strong", () => {
@@ -66,7 +66,7 @@ test("B5170-B5173: holy ground, Martyr, Marauder, the winds act", () => {
   assert.match(src("modules/wodx-actions/scripts/demon.js"), /lore === "winds"/);
 });
 
-const AR = await imp("modules/wodx-creation/scripts/advance-rules.mjs");
+const AR = await imp("modules/wodx-rules/creation/advance-rules.mjs");
 const WH = await imp("modules/wodx-library/scripts/wonders-hunter.mjs");
 test("B5391: a place Fetter goes with its town", () => {
   const towns = [{name: "Steinfeld", scars: [{kind: "sack", year: 1420}], history: []}, {name: "Brno", scars: [{kind: "fire", year: 1420}], history: [{year: 1500, people: 9000, prosperity: 3}]},

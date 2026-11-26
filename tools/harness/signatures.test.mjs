@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as S from "../../modules/wodx-chronicle/scripts/signature-rules.mjs";
+import * as S from "../../modules/wodx-rules/chronicle/signature-rules.mjs";
 
 /* Signature features, Vampire first (Chronicle 0.25.0, Splat Features Desk, B1120 to B1124) */
 

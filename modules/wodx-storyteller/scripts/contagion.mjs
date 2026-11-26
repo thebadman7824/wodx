@@ -10,9 +10,9 @@
  * queue where a player character is (all of them on Suggest); the week's changes come with one Undo card.
  * Hidden world state wodx-storyteller.contagionState (contagion-rules normState).
  */
-import * as R from "./contagion-rules.mjs";
-import * as MK from "./market-rules.mjs";
-import * as MT from "./market-turn-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/contagion-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
+import * as MT from "../../wodx-rules/storyteller/market-turn-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Rumours from "./rumours.mjs";
 import {living} from "./hardship.mjs";

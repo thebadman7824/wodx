@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const D = await imp("modules/wodx-paperdoll/scripts/doll-rules.mjs");
-const F = await imp("modules/wodx-paperdoll/scripts/fit-rules.mjs");
+const D = await imp("modules/wodx-rules/paperdoll/doll-rules.mjs");
+const F = await imp("modules/wodx-rules/paperdoll/fit-rules.mjs");
 const V = await imp("modules/wodx-paperdoll/vendor/dicebear-lorelei.mjs");
 let Resvg = null;
 try { ({Resvg} = createRequire(import.meta.url)("@resvg/resvg-js")); } catch (e) { /* the fitting tests skip */ }
@@ -329,7 +329,7 @@ test("lasting changes: in the composed picture", {skip: !Resvg && "@resvg/resvg-
   assert.ok(r.width > 0);
 });
 
-const MR = await imp("modules/wodx-paperdoll/scripts/mouth-rules.mjs");
+const MR = await imp("modules/wodx-rules/paperdoll/mouth-rules.mjs");
 test("fantastic skins: the fae and the uncanny may have them, mortals never", () => {
   assert.ok(D.FACE.SKIN_FANTASTIC.length >= 12 && D.FACE.SKIN_FANTASTIC.every(h => D.SKIN[h] && !D.FACE.SKIN_HUMAN.includes(h)));
   const roll = who => Array.from({length: 200}, (_, i) => D.randomLook(`who ${i}`, who).colors.skin);

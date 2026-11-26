@@ -103,7 +103,7 @@ export async function run() {
     });
 
     await G.step("7. fetterguard", async () => {
-      const AR = await import(`/modules/wodx-creation/scripts/advance-rules.mjs?${Date.now()}`);
+      const AR = await import(`/modules/wodx-rules/creation/advance-rules.mjs?${Date.now()}`);
       const towns = [{name: "Steinfeld", scars: [{kind: "sack", year: 1420}], history: []}];
       const base = {fromYear: 1400, toYear: 1500, years: 100, awakeYears: 100, fromEra: {id: "x"}, toEra: {id: "x"}};
       const v = {line: "wraith", fetters: [{id: "f1", name: "The well at Steinfeld"}], towns};

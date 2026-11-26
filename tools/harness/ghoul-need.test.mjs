@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as R from "../../modules/wodx-chronicle/scripts/ghoul-need-rules.mjs";
+import * as R from "../../modules/wodx-rules/chronicle/ghoul-need-rules.mjs";
 
 /* A ghoul going without vitae (B5050 to B5054) */
 
@@ -32,8 +32,8 @@ test("an animal with its vitae gone ages a year a week, dies past its span, dust
   assert.equal(R.ageing({...base, emptySince: null, now: R.WEEK * 50}).age, 6);
 });
 
-import * as NR from "../../modules/wodx-npc/scripts/npc-rules.mjs";
-import * as O from "../../modules/wodx-npc/scripts/order-rules.mjs";
+import * as NR from "../../modules/wodx-rules/npc/npc-rules.mjs";
+import * as O from "../../modules/wodx-rules/npc/order-rules.mjs";
 
 const foe = (more = {}) => ({id: "e1", name: "Foe", visible: true, distance: 1, reach: true, wounds: 0, fearSources: [], attackDice: 4, ...more});
 

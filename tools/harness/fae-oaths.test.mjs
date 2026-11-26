@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/fae-oaths-rules.mjs");
-const F = await imp("modules/wodx-actions/scripts/fae-da-rules.js");
-const U = await imp("modules/wodx-storyteller/scripts/upkeep-rules.mjs");
-const TR = await imp("modules/wodx-storyteller/scripts/town-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/fae-oaths-rules.mjs");
+const F = await imp("modules/wodx-rules/actions/fae-da-rules.js");
+const U = await imp("modules/wodx-rules/storyteller/upkeep-rules.mjs");
+const TR = await imp("modules/wodx-rules/storyteller/town-rules.mjs");
 const DAY = 86400;
 
 const oath = (x = {}) => R.normOath({tier: "iron", rating: 2, court: "summer", fae: [{id: "f1", name: "Ash"}], humans: [{id: "h1", name: "Ola"}],

@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as L from "../../modules/wodx-storyteller/scripts/town-look-rules.mjs";
+import * as L from "../../modules/wodx-rules/storyteller/town-look-rules.mjs";
 
 /* Town events shown on the town's scenes (B4620) */
 
@@ -99,7 +99,7 @@ test("haven fire: starts in the middle of the scene, smoke while it burns, scorc
 
 /* Hardship weather on the scene (B4627) */
 test("hardship look: cold snows, wet rains, heat glares; storms when severe; none hands back to the sky", async () => {
-  const H = await import("../../modules/wodx-storyteller/scripts/hardship-rules.mjs");
+  const H = await import("../../modules/wodx-rules/storyteller/hardship-rules.mjs");
   assert.equal(H.hardshipLook("none"), null);
   assert.equal(H.hardshipLook("auto"), null);
   assert.deepEqual(H.hardshipLook("harsh", "cold"), {weather: "snow", glare: false});

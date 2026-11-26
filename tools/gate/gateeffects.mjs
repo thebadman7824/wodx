@@ -35,7 +35,7 @@ async function runGate(K) {
   if ( game.world.id === "rothenstein-live" ) return "Not on the Live world.";
   const MOD = "wodx-actions";
   const fx = () => game.modules.get(MOD)?.api?.effects;
-  const E = await import(`/modules/${MOD}/scripts/effects-rules.js?${Date.now()}`);
+  const E = await import(`/modules/wodx-rules/actions/effects-rules.js?${Date.now()}`);
   const dmg = a => ({...(a.system?.health?.damage ?? {})});
   const wp = a => Number(a.system?.advantages?.willpower?.temporary) || 0;
   const sum = d => (Number(d.bashing) || 0) + (Number(d.lethal) || 0) + (Number(d.aggravated) || 0);
@@ -201,7 +201,7 @@ async function runGate(K) {
       ok("12 countermagick on a card", waited && cut && back, {waited, a, b});
     });
     await step("13 a Dark Ages rote", async () => {
-      const DA = game.modules.get(MOD).api.daMageRules ?? (await import(`/modules/${MOD}/scripts/mage-da-rules.js?${Date.now()}`));
+      const DA = game.modules.get(MOD).api.daMageRules ?? (await import(`/modules/wodx-rules/actions/mage-da-rules.js?${Date.now()}`));
       const rote = id => DA.ROTES.find(r => r.id === id);
       const before = dmg(caster);
       const harm = game.modules.get(MOD).api.effects.daPlan(caster, rote("verdantslumber"), 2);
@@ -232,7 +232,7 @@ async function runGate(K) {
       const timed = !!(wr?.effect && fromUuidSync(wr.effect));
       // B4820: Summon Elemental now calls the elemental by its spec (the Storyteller's hand before that)
       const st = api.effects.pathPlan(caster, pw("thaumaturgy-potestas-elementorum-summon-elemental"), 3).items.some(i => i.key === "summon" || i.out?.kind === "summon" || i.route === "st");
-      const H = api.hunterRules ?? (await import(`/modules/${MOD}/scripts/hunter-rules.js?${Date.now()}`));
+      const H = api.hunterRules ?? (await import(`/modules/wodx-rules/actions/hunter-rules.js?${Date.now()}`));
       const fire = api.effects.numinaPlan(caster, "pyrokinesis", 3, 2, H.NUMINA.pyrokinesis);
       const asks = fire.items.every(i => i.route === "queue" && i.out.levels === 2);
       await fx().undo([...recs, wr].filter(Boolean));

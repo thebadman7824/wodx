@@ -7,12 +7,12 @@
  *   Everything but the downtime form is the Storyteller's; the scene preload is the one step that makes players'
  *   computers load anything early, and only when pressed.
  */
-import * as P from "./prep-rules.mjs";
-import * as K from "./kits-rules.mjs";
+import * as P from "../../wodx-rules/storyteller/prep-rules.mjs";
+import * as K from "../../wodx-rules/storyteller/kits-rules.mjs";
 import * as C from "./core.mjs";
 import * as Dash from "./dashboard.mjs";
 import * as Tasks from "./tasks.mjs";
-import {normLetters} from "./letters-rules.mjs";
+import {normLetters} from "../../wodx-rules/storyteller/letters-rules.mjs";
 import {addTool} from "./hand.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

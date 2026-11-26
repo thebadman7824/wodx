@@ -10,9 +10,9 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const G = await imp("modules/wodx-library/data/goods.mjs");
 const L = await imp("modules/wodx-library/data/goods-ways.mjs");
 const T = await imp("modules/wodx-library/data/goods-text.mjs");
-const F = await imp("modules/wodx-interactables/scripts/fill-rules.mjs");
-const W = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
-const M = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
+const F = await imp("modules/wodx-rules/interactables/fill-rules.mjs");
+const W = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
+const M = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
 
 const row = n => G.GOODS.find(g => (g.former ?? g.name) === n);
 const at = (n, year, region) => G.inUseAt(row(n), year, {region, way: W.sphereFor(region, year)});

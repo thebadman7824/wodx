@@ -1,8 +1,8 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as L from "../../modules/wodx-otherworlds/scripts/corruption-look-rules.mjs";
-import {normPlace} from "../../modules/wodx-otherworlds/scripts/corruption-rules.mjs";
+import * as L from "../../modules/wodx-rules/otherworlds/corruption-look-rules.mjs";
+import {normPlace} from "../../modules/wodx-rules/otherworlds/corruption-rules.mjs";
 
 /* Wyrm corruption shown on the place's scene (B4621) */
 

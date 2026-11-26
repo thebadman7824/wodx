@@ -6,7 +6,7 @@
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
 import {recordDrink} from "./lineage.mjs";
-import * as RR from "./revenant-rules.mjs";
+import * as RR from "../../wodx-rules/creation/revenant-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const num = v => Math.max(0, Math.trunc(Number(v) || 0));

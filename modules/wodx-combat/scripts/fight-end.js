@@ -8,7 +8,7 @@
  *
  * Runs on the active Storyteller's client only.
  */
-import * as FE from "./fight-end-rules.js";
+import * as FE from "../../wodx-rules/combat/fight-end-rules.js";
 
 const MOD = "wodx-combat";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);

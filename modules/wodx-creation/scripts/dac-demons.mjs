@@ -8,8 +8,8 @@ import {MODULE_ID, esc, disciplineItem} from "./actor-data.mjs";
 import {GROUPS} from "../data/dac-demons.mjs";
 import {MONSTERS} from "../data/v20dac-monsters.mjs";
 import {MONSTERS as DAW_MONSTERS} from "../data/daw-monsters.mjs";
-import * as DR from "./dac-demons-rules.mjs";
-import {keyOf} from "./book-people-rules.mjs";
+import * as DR from "../../wodx-rules/creation/dac-demons-rules.mjs";
+import {keyOf} from "../../wodx-rules/creation/book-people-rules.mjs";
 
 const FOLDER = "WoDX · Demons (Dark Ages Companion)";
 const MONSTER_FOLDER = "WoDX · Monsters (V20 Dark Ages Companion)";

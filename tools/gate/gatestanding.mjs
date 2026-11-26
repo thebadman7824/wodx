@@ -76,7 +76,7 @@ export async function run() {
       const [heir] = await Actor.createDocuments([{name: "Wenzel Gatefeud", type: "Mortal"}]);
       made.push(heir);
       // The rivalry rules are not on the NPC API; the gate loads the file
-      const RV = await import("/modules/wodx-npc/scripts/rivalry-rules.mjs");
+      const RV = await import("/modules/wodx-rules/npc/rivalry-rules.mjs");
       const sides = npc().standing.feudSidesOf(heir), rows = npc().standing.feudRows();
       ok("5. a family feud takes in a member by name and is a rivalry row", sides.includes(`feud:${feud.id}a`) && rows.some(r => r.id === `feud-${feud.id}`)
         && RV.rowsBetween([`feud:${feud.id}a`], [`feud:${feud.id}b`], 1300, rows).length === 1, {sides, rows: rows.length});

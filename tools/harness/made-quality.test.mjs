@@ -2,8 +2,8 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as TR from "../../modules/wodx-actions/scripts/trade-rules.js";
-import * as X from "../../modules/wodx-library/scripts/examine-rules.mjs";
+import * as TR from "../../modules/wodx-rules/actions/trade-rules.js";
+import * as X from "../../modules/wodx-rules/library/examine-rules.mjs";
 
 /* Handmade work reaches trade, Examine and use (NPC look design, PR 1) */
 const src = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");

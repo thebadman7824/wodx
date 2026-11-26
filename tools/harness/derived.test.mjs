@@ -17,7 +17,7 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
-const D = await import(join(root, "modules/wodx-creation/scripts/derived-rules.mjs"));
+const D = await import(join(root, "modules/wodx-rules/creation/derived-rules.mjs"));
 const {TOTALS} = await import(join(root, "modules/wodx-creation/data/creation-totals.mjs"));
 
 test("ready", async () => {

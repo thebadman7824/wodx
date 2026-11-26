@@ -9,10 +9,10 @@ import {readFileSync} from "node:fs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const RR = await imp("modules/wodx-sheets/scripts/sheet-roll-rules.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
-const G = await imp("modules/wodx-library/scripts/gear-rules.mjs");
-const D = await imp("modules/wodx-library/scripts/gadget-rules.mjs");
+const RR = await imp("modules/wodx-rules/sheets/sheet-roll-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
+const G = await imp("modules/wodx-rules/library/gear-rules.mjs");
+const D = await imp("modules/wodx-rules/library/gadget-rules.mjs");
 const src = p => readFileSync(join(root, p), "utf8");
 
 test("B6175: a sheet roll sums the trait effects, the powers and the conditions", () => {

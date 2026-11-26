@@ -14,8 +14,8 @@
  * Pure rules: sunlight-rules.js. Built by main.js with its helpers (ctx).
  */
 
-import * as S from "./sunlight-rules.js";
-import * as KRG from "./kindred-rules.js";
+import * as S from "../../wodx-rules/actions/sunlight-rules.js";
+import * as KRG from "../../wodx-rules/actions/kindred-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { floatLocal } from "./daysleep.js";
@@ -68,7 +68,7 @@ export function build(ctx) {
             let lat = game.settings.get("wodx-chronicle", "latitude");
             // 3.50.0: a scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
             try {
-                const PR = await import("../../wodx-chronicle/scripts/place-rules.mjs");
+                const PR = await import("../../wodx-rules/chronicle/place-rules.mjs");
                 const pt = PR.placeTime(scene?.flags?.["wodx-chronicle"]?.place ?? {}, time, lat);
                 lat = pt.latitude; time = pt.time;
             } catch (e) { /* older Chronicle */ }

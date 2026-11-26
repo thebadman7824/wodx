@@ -274,7 +274,7 @@ async function runGate(K) {
 
         // B6920: Wraith 20th p. 204, Pandemonium feeds the Shadow a point per 1 in the Tempest or Stygia, never in the Labyrinth
         await step("Pandemonium in the Labyrinth gives no Angst", async () => {
-            const WR = await import(`/modules/wodx-actions/scripts/wraith-rules.js?${Date.now()}`);
+            const WR = await import(`/modules/wodx-rules/actions/wraith-rules.js?${Date.now()}`);
             const lab = WR.realmAngst("Pandemonium", "labyrinth", [1, 1, 2, 7]), storm = WR.realmAngst("Pandemonium", "tempest", [1, 1, 7]);
             ok("Pandemonium in the Labyrinth gives no Angst", lab === 0 && storm === 2, { lab, storm });
         });

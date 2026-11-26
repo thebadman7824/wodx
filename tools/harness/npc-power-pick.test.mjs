@@ -4,8 +4,8 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const PP = await import(join(root, "modules/wodx-npc/scripts/power-pick-rules.mjs"));
-const NPW = await import(join(root, "modules/wodx-actions/scripts/npc-power-rules.js"));
+const PP = await import(join(root, "modules/wodx-rules/npc/power-pick-rules.mjs"));
+const NPW = await import(join(root, "modules/wodx-rules/actions/npc-power-rules.js"));
 
 const claws = {name: "Feral Claws", level: 2, uses: ["attack"], obvious: true};
 const dominate = {name: "Command", level: 1, uses: ["hold"], obvious: false};

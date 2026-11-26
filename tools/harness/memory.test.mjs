@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const M = await imp("modules/wodx-npc/scripts/memory-rules.mjs");
+const M = await imp("modules/wodx-rules/npc/memory-rules.mjs");
 const {YEAR, SEASON} = M;
 
 test("memory: notes are cleaned and kept short", () => {

@@ -15,8 +15,8 @@
 
 import * as P from "./profiles.js";
 import * as GX from "./garou.js";
-import * as GR from "./garou-rules.js";
-import * as TR from "./theme-rules.js";
+import * as GR from "../../wodx-rules/actions/garou-rules.js";
+import * as TR from "../../wodx-rules/actions/theme-rules.js";
 import * as LIM from "./limits.js";
 
 /* ------------------------------------------------------------------ */

@@ -41,7 +41,7 @@ globalThis.Roll = class {
 };
 
 const T = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/tasks.mjs")));
-const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/tasks-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/tasks-rules.mjs")));
 
 test("long tasks: a forced tick waits for the running tick, a clock tick does not (B6481)", async () => {
   flags["wodx-storyteller"].tasks.t1 = R.normTask({id: "t1", kind: "craft", name: "Chest", goal: 100, interval: "hour", trouble: false, started: 0, next: 98 * HOUR});

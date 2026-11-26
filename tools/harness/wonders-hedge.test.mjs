@@ -11,7 +11,7 @@ await imp("modules/wodx-library/scripts/wonder-lines.mjs");
 const R = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const HK = await imp("modules/wodx-library/scripts/wonders-hedge.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const kit = HK.hedgeKit;
 
 const actor = (path = 3, wp = 4) => ({name: "Jana", system: {abilities: {occult: {value: 3}, science: {value: 1}, craft: {value: 2}}, advantages: {willpower: {temporary: wp, permanent: 5}}},

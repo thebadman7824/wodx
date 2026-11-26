@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const S = await imp("modules/wodx-npc/scripts/standing-rules.mjs");
-const RR = await imp("modules/wodx-storyteller/scripts/rumour-rules.mjs");
-const RV = await imp("modules/wodx-npc/scripts/rivalry-rules.mjs");
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const S = await imp("modules/wodx-rules/npc/standing-rules.mjs");
+const RR = await imp("modules/wodx-rules/storyteller/rumour-rules.mjs");
+const RV = await imp("modules/wodx-rules/npc/rivalry-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 const DAY = 86400;
 
 test("standing: a deed counts where it was done at once, elsewhere when the news arrives, and small deeds stay local", () => {

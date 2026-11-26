@@ -37,7 +37,7 @@ const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
  * res: resources shown/spent by the menus: [id, label].
  * bane: what ignores natural soak (silver, cold iron...).
  */
-import { lineClass } from "./theme-rules.js";
+import { lineClass } from "../../wodx-rules/actions/theme-rules.js";
 
 export const PROFILES = {
     kindred:  { label: "Kindred (Cainite)",        soak: "vampire", res: ["blood", "willpower"], bane: "fire / sunlight" },

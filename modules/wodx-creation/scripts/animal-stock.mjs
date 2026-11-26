@@ -8,8 +8,8 @@
  *     one beast wait for the Storyteller's leave (the approval queue), then the beast is made by itself.
  */
 import {MODULE_ID, esc, lineOf, isAnimal, animalKindOf, applyTraining, disciplinesOf, disciplineItem} from "./actor-data.mjs";
-import * as AG from "./animal-ghoul-rules.mjs";
-import * as AS from "./animal-stock-rules.mjs";
+import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
+import * as AS from "../../wodx-rules/creation/animal-stock-rules.mjs";
 import {makeGhoul} from "./change-of-state.mjs";
 import {setLineage} from "./lineage.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";

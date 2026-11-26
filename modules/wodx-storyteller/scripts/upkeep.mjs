@@ -11,9 +11,9 @@
  *                   ground and the heat; a hunt, a botch or a feeding seen adds heat; at Hunted the era's response
  *                   goes to the approval queue, and approving it starts a rumour.
  */
-import * as U from "./upkeep-rules.mjs";
-import * as CR from "./contagion-rules.mjs";
-import * as W from "./world-rules.mjs";
+import * as U from "../../wodx-rules/storyteller/upkeep-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/contagion-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

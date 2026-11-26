@@ -6,7 +6,7 @@
  *     light that shows only when the scene is dark).
  */
 import {MODULE_ID, isAnimalGhoul, clanOf, domitorOf, lineOf} from "./actor-data.mjs";
-import * as AG from "./animal-ghoul-rules.mjs";
+import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 
 /** The mark has no duration, so its icon is set to show on the token always (Foundry 13 and later). */
 const SHOW_ALWAYS = (() => { try { return CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS ?? null; } catch (e) { return null; } })();

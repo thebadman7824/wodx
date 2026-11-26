@@ -10,8 +10,8 @@
  *            crossed: a roll the Storyteller calls; lost, the seat goes (wodxRegimeTurn with only that character)
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
-import * as L from "./law-rules.mjs";
-import * as R from "./law-regime-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/law-regime-rules.mjs";
 import * as place from "./place.mjs";
 import {amnesty, addDeed} from "./law-heat.mjs";
 import {marksOf} from "./law-punish.mjs";

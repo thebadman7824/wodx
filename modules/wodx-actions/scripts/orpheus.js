@@ -13,10 +13,10 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: orpheus-rules.js.
  */
-import * as NPW from "./npc-power-rules.js";
+import * as NPW from "../../wodx-rules/actions/npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
-import * as O from "./orpheus-rules.js";
+import * as O from "../../wodx-rules/actions/orpheus-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";

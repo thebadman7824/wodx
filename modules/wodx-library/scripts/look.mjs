@@ -5,9 +5,9 @@
  * api.look.of(actor) -> the reading; api.look.station(actor) -> an NPC's own station; api.look.rules.
  * Nothing is stored here: WoDX NPC reads it at a meeting, WoDX Chronicle's "Only when" tests read it for talk lines.
  */
-import * as L from "./look-rules.mjs";
-import * as X from "./examine-rules.mjs";
-import * as HY from "./hygiene-rules.mjs";
+import * as L from "../../wodx-rules/library/look-rules.mjs";
+import * as X from "../../wodx-rules/library/examine-rules.mjs";
+import * as HY from "../../wodx-rules/library/hygiene-rules.mjs";
 
 const MOD = "wodx-library";
 let G = null;

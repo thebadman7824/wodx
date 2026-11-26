@@ -14,11 +14,11 @@
  *
  * Voices are shelved (B2750): text only, no sound.
  */
-import * as OR from "./overheard-rules.mjs";
+import * as OR from "../../wodx-rules/npc/overheard-rules.mjs";
 import * as G from "./talk-grammar.mjs";
-import * as TK from "./talk-rules.mjs";
-import * as AR from "./alert-rules.mjs";
-import {isAnimal} from "./animal-rules.mjs";
+import * as TK from "../../wodx-rules/npc/talk-rules.mjs";
+import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
+import {isAnimal} from "../../wodx-rules/npc/animal-rules.mjs";
 import {SIDE_FACTS} from "../data/grammar/groups.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
@@ -198,7 +198,8 @@ export function build(ctx) {
       buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => ({action: "save", on: !!b.form.elements.on?.checked})},
         {action: "talk", label: "Make two talk now", callback: (ev, b) => ({action: "talk", on: !!b.form.elements.on?.checked})},
         {action: "clear", label: "Clear the record", callback: () => ({action: "clear"})}, {action: "cancel", label: "Cancel"}]});
-    if ( !res || res.action === "cancel" ) return null;
+    // Cancel (and the close button) answers with the button's name, not an object: leave the scene as it was (B7839, #2618)
+    if ( !res || typeof res !== "object" || res.action === "cancel" ) return null;
     if ( res.action === "clear" ) return scene.update({[`flags.${MOD}.overheard`]: {off: !!cur.off, log: []}});
     await scene.update({[`flags.${MOD}.overheard`]: {off: !res.on, log: cur.log ?? []}});
     if ( res.action === "talk" ) {

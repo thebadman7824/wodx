@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* Trait effects step 9 (Storyteller 0.30.0): codex pages that need knowledge, Survival against the weather */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const X = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/codex-rules.mjs")));
-const H = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/hardship-rules.mjs")));
+const X = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/codex-rules.mjs")));
+const H = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/hardship-rules.mjs")));
 const src = p => readFileSync(join(root, p), "utf8");
 
 test("a page tagged [Occult 5] needs Intelligence + Occult of 5; several tags are alternatives", () => {

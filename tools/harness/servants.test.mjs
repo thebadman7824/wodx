@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const SR = await imp("modules/wodx-npc/scripts/servant-rules.mjs");
-const FR = await imp("modules/wodx-npc/scripts/followers-rules.mjs");
-const O = await imp("modules/wodx-npc/scripts/order-rules.mjs");
+const SR = await imp("modules/wodx-rules/npc/servant-rules.mjs");
+const FR = await imp("modules/wodx-rules/npc/followers-rules.mjs");
+const O = await imp("modules/wodx-rules/npc/order-rules.mjs");
 
 test("the ledger reads the older stores in place and the new bonds from the sheet", () => {
   const flags = {

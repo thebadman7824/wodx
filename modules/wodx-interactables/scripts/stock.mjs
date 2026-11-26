@@ -1,4 +1,4 @@
-import * as R from "./interact-rules.mjs";
+import * as R from "../../wodx-rules/interactables/interact-rules.mjs";
 
 /**
  * WoDX Interactables 0.23.0: stock lists on the clock. A container with a stock list and "Draw the stock" set is drawn

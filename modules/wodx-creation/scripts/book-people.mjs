@@ -5,7 +5,7 @@
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
 import {PEOPLE, GROUPS} from "../data/vtda-people.mjs";
-import * as BR from "./book-people-rules.mjs";
+import * as BR from "../../wodx-rules/creation/book-people-rules.mjs";
 
 const FOLDER = "WoDX · People of the book (V20 Dark Ages)";
 

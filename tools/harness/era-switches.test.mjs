@@ -12,17 +12,17 @@ import {readFileSync, readdirSync} from "node:fs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const M = p => join(root, "modules", p);
 const T = await import(M("wodx-chronicle/scripts/terms.mjs"));
-const K = await import(M("wodx-storyteller/scripts/kits-rules.mjs"));
-const B = await import(M("wodx-sheets/scripts/beginner-rules.mjs"));
-const R = await import(M("wodx-interactables/scripts/interact-rules.mjs"));
-const F = await import(M("wodx-interactables/scripts/fill-rules.mjs"));
+const K = await import(M("wodx-rules/storyteller/kits-rules.mjs"));
+const B = await import(M("wodx-rules/sheets/beginner-rules.mjs"));
+const R = await import(M("wodx-rules/interactables/interact-rules.mjs"));
+const F = await import(M("wodx-rules/interactables/fill-rules.mjs"));
 const eras = JSON.parse(readFileSync(M("wodx-chronicle/data/eras.json"), "utf8"));
 
 /** Each switch and the files that read it from the profile in force. */
 const READERS = {
   firearms: ["wodx-storyteller/scripts/between.mjs", "wodx-npc/scripts/trust.mjs", "wodx-interactables/scripts/main.mjs"],
   morality: ["wodx-sheets/scripts/beginner.mjs", "wodx-npc/scripts/factions.mjs", "wodx-creation/scripts/change-of-state.mjs"],
-  gauntletChart: ["wodx-storyteller/scripts/glance-rules.mjs", "wodx-otherworlds/scripts/ratings.mjs"],
+  gauntletChart: ["wodx-rules/storyteller/glance-rules.mjs", "wodx-otherworlds/scripts/ratings.mjs"],
   cyberware: ["wodx-interactables/scripts/fill.mjs"]
 };
 
@@ -40,9 +40,9 @@ test("every switch a profile carries has a reader, and each reader reads it", ()
 test("no module decides by its own year where the switch exists (the old checks are gone)", () => {
   const trust = readFileSync(M("wodx-npc/scripts/trust.mjs"), "utf8");
   assert.doesNotMatch(trust, /< 1600 \? "bandit"/);
-  const kits = readFileSync(M("wodx-storyteller/scripts/kits-rules.mjs"), "utf8");
+  const kits = readFileSync(M("wodx-rules/storyteller/kits-rules.mjs"), "utf8");
   assert.doesNotMatch(kits, /y < 1600/);
-  const beg = readFileSync(M("wodx-sheets/scripts/beginner-rules.mjs"), "utf8");
+  const beg = readFileSync(M("wodx-rules/sheets/beginner-rules.mjs"), "utf8");
   assert.doesNotMatch(beg, /year < 1450/);
   const eraApi = readFileSync(M("wodx-chronicle/scripts/eras.mjs"), "utf8");
   assert.match(eraApi, /export function eraSwitch\(key\)/);
@@ -97,7 +97,7 @@ test("cyberware: a clinic draws it only where the switch or the gear's era list 
 });
 
 test("each profile's switches are of a kind the readers know", () => {
-  const charts = Object.keys((readFileSync(M("wodx-otherworlds/scripts/rules.mjs"), "utf8").match(/"(dark-ages|w20|wild-west)": \{/g) ?? []).reduce((o, m) => ({...o, [m.slice(1, m.indexOf('"', 1))]: 1}), {}));
+  const charts = Object.keys((readFileSync(M("wodx-rules/otherworlds/rules.mjs"), "utf8").match(/"(dark-ages|w20|wild-west)": \{/g) ?? []).reduce((o, m) => ({...o, [m.slice(1, m.indexOf('"', 1))]: 1}), {}));
   for ( const p of eras.profiles ) {
     const r = p.rules ?? {};
     assert.ok([false, true, "early"].includes(r.firearms), `${p.id} firearms`);

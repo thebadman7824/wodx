@@ -11,10 +11,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const load = p => import(pathToFileURL(join(root, p)));
-const IR = await load("modules/wodx-interactables/scripts/interact-rules.mjs");
-const C = await load("modules/wodx-interactables/scripts/chase-rules.mjs");
-const VR = await load("modules/wodx-combat/scripts/vehicle-rules.js");
-const NR = await load("modules/wodx-npc/scripts/npc-rules.mjs");
+const IR = await load("modules/wodx-rules/interactables/interact-rules.mjs");
+const C = await load("modules/wodx-rules/interactables/chase-rules.mjs");
+const VR = await load("modules/wodx-rules/combat/vehicle-rules.js");
+const NR = await load("modules/wodx-rules/npc/npc-rules.mjs");
 
 const ride = (kind, year, role = "reins", extra = {}) => ({...C.rideInFight(kind, year, "road"), kind, role, label: IR.MOUNTS[kind].label, year, ...extra});
 const ch = (abilities = {}, year = 1990) => ({actorId: "a1", year, dexterity: 3, abilities});

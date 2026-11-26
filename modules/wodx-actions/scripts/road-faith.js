@@ -5,7 +5,7 @@
  *
  * Built by main.js with its helpers (ctx).
  */
-import * as RF from "./road-faith-rules.js";
+import * as RF from "../../wodx-rules/actions/road-faith-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

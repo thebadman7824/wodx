@@ -15,7 +15,7 @@
  * Result: Data/wodx-gate/gateservants4-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
-import {NEVER_AUTO} from "/modules/wodx-chronicle/scripts/approvals-rules.mjs";
+import {NEVER_AUTO} from "/modules/wodx-rules/chronicle/approvals-rules.mjs";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const TYPES = ["wodx-npc.bind", "wodx-npc.condition", "wodx-actions.partedMists", "wodx-actions.oathBroken", "wodx-actions.pact", "wodx-actions.pressName"];

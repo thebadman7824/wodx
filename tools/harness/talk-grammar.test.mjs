@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const G = await imp("modules/wodx-npc/scripts/talk-grammar.mjs");
-const TK = await imp("modules/wodx-npc/scripts/talk-rules.mjs");
+const TK = await imp("modules/wodx-rules/npc/talk-rules.mjs");
 const STOCK = await imp("modules/wodx-npc/data/stock-talk.mjs");
 const MORE = await imp("modules/wodx-npc/data/stock-talk-more.mjs");
 const {HOUSE} = await imp("modules/wodx-npc/data/grammar/house.mjs");

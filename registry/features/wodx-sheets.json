@@ -9,7 +9,7 @@
    "core": true,
    "files": [
     "modules/wodx-sheets/scripts/main.mjs",
-    "modules/wodx-sheets/scripts/sheet-rules.mjs"
+    "modules/wodx-rules/sheets/sheet-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -113,7 +113,7 @@
    "core": true,
    "files": [
     "modules/wodx-sheets/scripts/sheet-rolls.mjs",
-    "modules/wodx-sheets/scripts/sheet-roll-rules.mjs"
+    "modules/wodx-rules/sheets/sheet-roll-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -250,7 +250,7 @@
    "core": true,
    "files": [
     "modules/wodx-sheets/scripts/beginner.mjs",
-    "modules/wodx-sheets/scripts/beginner-rules.mjs"
+    "modules/wodx-rules/sheets/beginner-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -286,7 +286,7 @@
    "files": [
     "modules/wodx-sheets/scripts/extras.mjs",
     "modules/wodx-sheets/scripts/extras-html.mjs",
-    "modules/wodx-sheets/scripts/extras-rules.mjs"
+    "modules/wodx-rules/sheets/extras-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -323,7 +323,7 @@
    "files": [
     "modules/wodx-sheets/scripts/extras.mjs",
     "modules/wodx-sheets/scripts/extras-html.mjs",
-    "modules/wodx-sheets/scripts/extras-rules.mjs"
+    "modules/wodx-rules/sheets/extras-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -564,7 +564,7 @@
    "core": false,
    "files": [
     "modules/wodx-sheets/scripts/anachronism.mjs",
-    "modules/wodx-sheets/scripts/anachronism-rules.mjs"
+    "modules/wodx-rules/sheets/anachronism-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -596,7 +596,7 @@
    "core": false,
    "files": [
     "modules/wodx-sheets/scripts/anachronism.mjs",
-    "modules/wodx-sheets/scripts/anachronism-rules.mjs"
+    "modules/wodx-rules/sheets/anachronism-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -630,7 +630,7 @@
    "module": "wodx-sheets",
    "core": false,
    "files": [
-    "modules/wodx-sheets/scripts/standing-rules.mjs"
+    "modules/wodx-rules/sheets/standing-rules.mjs"
    ],
    "steps": {
     "built": {

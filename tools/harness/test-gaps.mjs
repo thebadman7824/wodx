@@ -1,7 +1,7 @@
 // Writes docs/TEST-GAPS.md: harness line coverage per module file, the files the harness never loads, and which
 // gates name each module. Run from tools/harness: node test-gaps.mjs (it runs the whole suite with coverage).
 import {spawnSync} from "node:child_process";
-import {readdirSync, readFileSync, writeFileSync, statSync} from "node:fs";
+import {readdirSync, readFileSync, writeFileSync, statSync, existsSync} from "node:fs";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 
@@ -26,8 +26,12 @@ const gateDir = join(root, "tools/gate");
 const gates = readdirSync(gateDir).filter(f => f.endsWith(".mjs")).map(f => [f, readFileSync(join(gateDir, f), "utf8")]);
 const out = ["# Test gaps", "", "Written by tools/harness/test-gaps.mjs. Harness line coverage of each module file (`node --test --experimental-test-coverage`), the files the harness never loads, and the gates in tools/gate that name the module. A low harness figure on a file of windows and hooks is expected where a gate covers it.", ""];
 for (const m of mods) {
-  const files = readdirSync(join(root, "modules", m, "scripts")).filter(f => /\.m?js$/.test(f));
-  const got = new Map(rows.filter(r => r.path.startsWith(`modules/${m}/scripts/`)).map(r => [r.path.split("/").at(-1), r]));
+  // the rules core has no scripts folder: its files sit in one folder per source module (docs/RULES-CORE.md)
+  const sub = m === "wodx-rules" ? "" : "scripts/";
+  const files = m === "wodx-rules"
+    ? readdirSync(join(root, "modules", m), {recursive: true}).map(f => String(f).split("\\").join("/")).filter(f => /\.m?js$/.test(f))
+    : existsSync(join(root, "modules", m, "scripts")) ? readdirSync(join(root, "modules", m, "scripts")).filter(f => /\.m?js$/.test(f)) : [];
+  const got = new Map(rows.filter(r => r.path.startsWith(`modules/${m}/${sub}`)).map(r => [r.path.slice(`modules/${m}/${sub}`.length), r]));
   const mean = got.size ? [...got.values()].reduce((s, r) => s + r.lines, 0) / got.size : 0;
   const g = gates.filter(([, src]) => src.includes(m)).map(([f]) => f.replace(/\.mjs$/, ""));
   out.push(`## ${m}`, "", `${got.size} of ${files.length} files loaded by the harness, mean line coverage ${mean.toFixed(0)}%. Gates: ${g.join(", ") || "none"}.`, "");

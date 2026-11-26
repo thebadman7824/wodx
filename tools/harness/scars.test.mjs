@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const R = await import("../../modules/wodx-chronicle/scripts/scars-rules.mjs");
+const R = await import("../../modules/wodx-rules/chronicle/scars-rules.mjs");
 const read = p => fs.readFileSync(path.join(ROOT, p), "utf8");
 
 const house = (key, x, y) => ({ key, x, y, w: 400, h: 300, tiles: [`${key}-t1`, `${key}-t2`], lights: [`${key}-l1`],

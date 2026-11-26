@@ -9,11 +9,11 @@
  *
  * The builder never works in rothenstein-live, and in no other world than the recipe's unless forced.
  */
-import * as R from "./recipe-rules.mjs";
-import * as S from "./setup-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/recipe-rules.mjs";
+import * as S from "../../wodx-rules/storyteller/setup-rules.mjs";
 import * as Setup from "./setup.mjs";
 import * as Ways from "./ways.mjs";
-import * as WR from "./way-rules.mjs";
+import * as WR from "../../wodx-rules/storyteller/way-rules.mjs";
 import {MOD, esc} from "./core.mjs";
 import {chronicles, current} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
@@ -56,7 +56,7 @@ async function stepCheck(r, {force}) {
   const here = R.canBuildHere(game.world.id, r, {force});
   if ( !here.ok ) return {error: here.reason};
   const regions = Object.keys(game.modules.get("wodx-chronicle")?.api?.world?.regions ?? {});
-  const kinds = await import("../../wodx-npc/scripts/routine-rules.mjs").then(m => Object.keys(m.PLACE_KINDS ?? {})).catch(() => []);
+  const kinds = await import("../../wodx-rules/npc/routine-rules.mjs").then(m => Object.keys(m.PLACE_KINDS ?? {})).catch(() => []);
   const problems = R.validate(r, {regions: regions.length ? regions : undefined, placeKinds: kinds.length ? kinds : undefined});
   if ( problems.length ) return {error: problems.join(" ")};
   // In a world made for this recipe, turn on the WoDX modules that are installed but off (Foundry reloads after)

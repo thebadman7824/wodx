@@ -4,9 +4,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as RF from "../../modules/wodx-actions/scripts/road-faith-rules.js";
-import * as D from "../../modules/wodx-actions/scripts/domain-da-rules.js";
-import * as ST from "../../modules/wodx-sheets/scripts/standing-rules.mjs";
+import * as RF from "../../modules/wodx-rules/actions/road-faith-rules.js";
+import * as D from "../../modules/wodx-rules/actions/domain-da-rules.js";
+import * as ST from "../../modules/wodx-rules/sheets/standing-rules.mjs";
 import * as SP from "../pcq/status-push.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");

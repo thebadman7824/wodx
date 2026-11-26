@@ -4,7 +4,7 @@
  * A line may start with tags in square brackets that say who {name} must be: kindred, living (mortals, ghouls, Garou...),
  * beast or spirit; flesh = living, kindred or beast; person = living or kindred. Untagged lines fit everyone.
  * Edit freely: add lines to a pool, or empty a pool to silence it. */
-import { CHECKS } from "./checks-rules.js";
+import { CHECKS } from "../../wodx-rules/actions/checks-rules.js";
 const CHECK_BY_TITLE = new Map(CHECKS.map(c => [c.label.toLowerCase().split(" (")[0].trim(), c]));
 
 export const POOLS = {

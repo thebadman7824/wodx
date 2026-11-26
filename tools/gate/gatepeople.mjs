@@ -124,7 +124,7 @@ export async function run() {
     await step("9. trait-gated lines", async () => {
       await childe.createEmbeddedDocuments("Item", [{name: "Dominate", type: "Power", system: {type: "wod.types.discipline", value: 2}}]);
       const W = chron().when;
-      const TK = await import(`/modules/wodx-npc/scripts/talk-rules.mjs?${Date.now()}`);
+      const TK = await import(`/modules/wodx-rules/npc/talk-rules.mjs?${Date.now()}`);
       ok("9. Dominate 2 passes, Dominate 3 does not; the line is marked", W.check("Dominate 2", {actor: childe}).ok && !W.check("Dominate 3", {actor: childe}).ok
         && TK.gateLabel("Dominate 2; night") === "Dominate 2");
     });

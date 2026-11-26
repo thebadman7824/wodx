@@ -11,7 +11,7 @@
  * game.modules.get("wodx-chronicle").api.derangements = {rules, of, hold, gain, end, boutOf}.
  */
 import {MODULE_ID, esc} from "./util.mjs";
-import * as D from "./derangement-rules.mjs";
+import * as D from "../../wodx-rules/chronicle/derangement-rules.mjs";
 import {registerCondition, setCondition, hasCondition} from "./conditions.mjs";
 import {addSource} from "./traits.mjs";
 import {isQuiet, isLightTouch} from "./quiet.mjs";

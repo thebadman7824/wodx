@@ -1,4 +1,4 @@
-import * as N from "./naval-rules.mjs";
+import * as N from "../../wodx-rules/storyteller/naval-rules.mjs";
 import * as C from "./core.mjs";
 import {draw} from "./siege-works.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

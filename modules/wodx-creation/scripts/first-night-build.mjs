@@ -7,11 +7,11 @@
  * Vampire books first, as the desk asked.
  */
 import {esc} from "./actor-data.mjs";
-import {TOTALS, checkCreation} from "./totals-rules.mjs";
+import {TOTALS, checkCreation} from "../../wodx-rules/creation/totals-rules.mjs";
 import {totalsView, CreationCheckApp} from "./totals-check.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
-import * as R from "./first-night-rules.mjs";
-import * as B from "./first-night-build-rules.mjs";
+import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
+import * as B from "../../wodx-rules/creation/first-night-build-rules.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const chron = () => game.modules.get("wodx-chronicle")?.active ? game.modules.get("wodx-chronicle").api : null;
@@ -55,7 +55,7 @@ export class BuildApp extends ApplicationV2 {
     const fb = res.freebies;
     let feats = [];
     try { feats = chron()?.traits?.of?.(a)?.matched ?? []; } catch (e) { feats = []; }
-    const tables = await import("../../wodx-chronicle/scripts/trait-rules.mjs").catch(() => ({}));
+    const tables = await import("../../wodx-rules/chronicle/trait-rules.mjs").catch(() => ({}));
     const flawPts = R.flawPoints(feats);
     const mf = feats.filter(f => f.kind === "merit" || f.kind === "flaw" || f.kind === "background")
       .map(f => { const c = R.costLine(f.key, tables); return `<li>${esc(f.name)} ${f.value ? `(${f.value})` : ""}${c ? `: <span class="wodx-quiet">${esc(c)}</span>` : ""}</li>`; }).join("");

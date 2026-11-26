@@ -11,8 +11,8 @@ import {join, dirname} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const dir = join(root, "modules/wodx-actions/scripts");
 const load = p => import(pathToFileURL(join(dir, p)));
-const RTY = await load("retry-rules.js");
-const R = await load("rules.js");
+const RTY = await load("../../wodx-rules/actions/retry-rules.js");
+const R = await load("../../wodx-rules/actions/rules.js");
 const main = readFileSync(join(dir, "main.js"), "utf8");
 
 test("B7121: the memory counts failures per task, target and scene, and a success clears it", () => {

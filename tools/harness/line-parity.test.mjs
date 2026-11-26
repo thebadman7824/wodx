@@ -11,9 +11,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 installMock({dataRoot: root});
 const A = p => import(join(root, "modules/wodx-actions/scripts", p));
 const PM = await A("profile-menus.js");
-const TR = await A("theme-rules.js");
-const GR = await A("garou-rules.js");
-const CR = await import(join(root, "modules/wodx-combat/scripts/rules.js"));
+const TR = await A("../../wodx-rules/actions/theme-rules.js");
+const GR = await A("../../wodx-rules/actions/garou-rules.js");
+const CR = await import(join(root, "modules/wodx-rules/combat/rules.js"));
 
 const specs = k => PM.MENUS[k].sections.flatMap(([, b]) => b.map(([s]) => s));
 
@@ -76,8 +76,8 @@ test("B6302: a Kuei-jin's Chi aspect decides what holds them (KotE pdf pp. 11, 7
   assert.ok(CR.LONG_METAL.test("Katana") && CR.LONG_METAL.test("Iron bar") && !CR.LONG_METAL.test("Wooden stake") && !CR.LONG_METAL.test("Pistol"));
 });
 
-const RD = await import(join(root, "modules/wodx-chronicle/scripts/roads-rules.mjs"));
-const VL = await import(join(root, "modules/wodx-otherworlds/scripts/veil-look-rules.mjs"));
+const RD = await import(join(root, "modules/wodx-rules/chronicle/roads-rules.mjs"));
+const VL = await import(join(root, "modules/wodx-rules/otherworlds/veil-look-rules.mjs"));
 
 test("B6304: each road belongs to its line", () => {
   assert.equal(RD.roadLine({type: "Wraith"}), "wraith");

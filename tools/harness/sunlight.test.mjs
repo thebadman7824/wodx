@@ -13,7 +13,7 @@ CONFIG.statusEffects = [];
 globalThis.canvas = {scene: null, tokens: {controlled: [], placeables: []}};
 game.combat = null;
 
-const S = await import(join(root, "modules/wodx-actions/scripts/sunlight-rules.js"));
+const S = await import(join(root, "modules/wodx-rules/actions/sunlight-rules.js"));
 const AU = await import(join(root, "modules/wodx-combat/scripts/auto.js"));
 
 test("the sun's place: equinox noon at 50° N is 40° up in the south; morning in the east; night below the horizon", () => {

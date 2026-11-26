@@ -11,7 +11,7 @@
  *   master's Mists in aggravated damage.
  * Rules: fae-oaths-rules.mjs. Dark Ages: Fae pp. 33-39, 67-74, 85, 94, 108-110, 183, 204; Dark Ages: Mage p. 194.
  */
-import * as R from "./fae-oaths-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/fae-oaths-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Towns from "./towns.mjs";
 import * as Led from "./ledger.mjs";

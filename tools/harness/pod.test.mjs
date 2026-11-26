@@ -2,7 +2,7 @@ import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engin
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as P from "../../modules/wodx-chronicle/scripts/pod-rules.mjs";
+import * as P from "../../modules/wodx-rules/chronicle/pod-rules.mjs";
 
 /* Four ideas from the Princes of Darkness mod (Chronicle 0.37.0, B1511 to B1518) */
 

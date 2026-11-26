@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const B = await imp("modules/wodx-library/scripts/gamble-rules.mjs");
+const B = await imp("modules/wodx-rules/library/gamble-rules.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 
 test("dice, cards and board games can be played for a stake, and Gamble does something", () => {
   assert.equal(U.ABILITIES.gamble.effect, "gamble");

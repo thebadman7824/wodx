@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.132.2 (M20 rotes: the Warp-Gate summary and the file's opening note are reworded in our own words, with the mechanics unchanged; the book overlap gate had found two runs that matched the books word for word)
+- 3.132.1 (This module's rules files moved to the rules core, modules/wodx-rules/actions (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 3.132.0 (Show what fits (B8140, #2504): the quick check menu leaves out checks the character could not make in this year, and the exorcism and domain checks only show for a character with the trait. Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 3.131.0 (Mage 20th: How Do You DO That?'s named feats and techniques as Cast window presets, with their page (B7837))
 - 3.130.0 (Mage 20th: the core book's rotes, Adjustments and Procedures as Cast window presets, with their page (B7836))

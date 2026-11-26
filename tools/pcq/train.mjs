@@ -18,7 +18,7 @@
  *      merges with the head it saw. Either red, or no result within trainMaxHours (default 3): the pull request
  *      leaves the train with a comment.
  * Pull requests behind the front are not brought up to date and not gated again while they wait.
- *   4. B7445: when the front would be prepared and up to two green pull requests behind it change other files, the
+ *   4. B7445: when the front would be prepared and up to four green pull requests behind it change other files, the
  *      train builds one batch pull request of them instead (buildBatch, batchStep below); that batch is the front.
  *
  *   node tools/pcq/train.mjs           what the train would do now (reads GitHub, changes nothing)
@@ -152,7 +152,7 @@ export async function step(ctx) {
     otherChecksFailed: othersFailed(runs.check_runs),
     frontFor: state.ran};
   const d = decide(f, {maxHours});
-  // B7445: a front that needs main and a stamp anyway takes up to two green pull requests behind it into one batch
+  // B7445, B8170: a front that needs main and a stamp anyway takes up to four green pull requests behind it into one batch
   const maxBatch = state.maxBatch ?? ctx.batch ?? BATCH_MAX;
   if ( d.action === "prepare" && maxBatch >= 2 && !pr.urgent && eligible(f).ok ) {
     const cands = [{number: pr.number, ref: full.head.ref, head}];
@@ -447,7 +447,7 @@ export async function carryReviews(dir, oldHead, {other = "HEAD^2", what = "the 
 
 /* ---- B7445: batches. Up to BATCH_MAX green pull requests from the front of the line merge as one ---- */
 
-export const BATCH_BRANCH = "claude/merge-train-batch", BATCH_MAX = 3, BATCH_LOOK = 6;
+export const BATCH_BRANCH = "claude/merge-train-batch", BATCH_MAX = 5, BATCH_LOOK = 10;
 const MARK = /<!-- merge-train-batch (\[.*?\]) -->/;
 
 /**

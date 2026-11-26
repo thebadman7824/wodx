@@ -10,8 +10,8 @@ import {readFileSync} from "node:fs";
  * the drawing, the echoes and the ties in Foundry.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const O = await import(join(root, "modules/wodx-senses/scripts/otherworld-sight-rules.mjs"));
-const DA = await import(join(root, "modules/wodx-actions/scripts/mage-da-rules.js"));
+const O = await import(join(root, "modules/wodx-rules/senses/otherworld-sight-rules.mjs"));
+const DA = await import(join(root, "modules/wodx-rules/actions/mage-da-rules.js"));
 const src = f => readFileSync(join(root, f), "utf8");
 
 test("who has which sight", () => {

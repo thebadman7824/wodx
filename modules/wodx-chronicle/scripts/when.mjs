@@ -3,7 +3,7 @@ import {describeTime} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as church from "./church.mjs";
 import * as conditions from "./conditions.mjs";
-import * as W from "./when-rules.mjs";
+import * as W from "../../wodx-rules/chronicle/when-rules.mjs";
 import {whenFeats} from "./traits.mjs";
 
 /**

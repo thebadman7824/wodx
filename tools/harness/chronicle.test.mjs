@@ -215,7 +215,7 @@ test("era test: a character per line in every era, all pass", async () => {
 });
 
 test("queue relief: the rules route a proposal and pick a bulk decision's entries", async () => {
-  const QR = await import(join(root, "modules/wodx-chronicle/scripts/approvals-rules.mjs"));
+  const QR = await import(join(root, "modules/wodx-rules/chronicle/approvals-rules.mjs"));
   assert.equal(QR.routeProposal("era-change"), "queue");
   assert.equal(QR.routeProposal("era-change", {auto: {"era-change": true}}), "auto");
   assert.equal(QR.routeProposal("request", {auto: {request: true}}), "queue", "a player's request always waits");
@@ -303,7 +303,7 @@ test("B6748: Take the recommended for all takes only the rows the Waiting tray s
 });
 
 test("knowledge-gated handouts: needs, readers, and what each sees", async () => {
-  const KR = await import(join(root, "modules/wodx-chronicle/scripts/know-rules.mjs"));
+  const KR = await import(join(root, "modules/wodx-rules/chronicle/know-rules.mjs"));
   assert.deepEqual(KR.parseNeeds("Latin or Occult 3"), [{name: "Latin", key: "latin", dots: 0}, {name: "Occult", key: "occult", dots: 3}]);
   assert.deepEqual(KR.parseNeeds("Animal Ken 2; Auspex 2").map(n => n.key), ["animalken", "auspex"]);
   assert.deepEqual(KR.parseNeeds(""), []);

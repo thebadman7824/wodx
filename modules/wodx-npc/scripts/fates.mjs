@@ -11,11 +11,11 @@
  *   Actor flag wodx-npc.fates.keep = true keeps an NPC out of it (the Storyteller's own plans for them stand).
  *   Player characters are never touched: Pass the Years handles them.
  */
-import * as F from "./fates-rules.mjs";
-import {officesOf, polityFor, POLITIES} from "./politics-rules.mjs";
+import * as F from "../../wodx-rules/npc/fates-rules.mjs";
+import {officesOf, polityFor, POLITIES} from "../../wodx-rules/npc/politics-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
-import {sexFromDraw} from "../../wodx-chronicle/scripts/gender-rules.mjs";
+import {sexFromDraw} from "../../wodx-rules/chronicle/gender-rules.mjs";
 
 const MOD = "wodx-npc";
 const DEAD_FOLDER = "WoDX · The Dead";
@@ -92,7 +92,7 @@ export function planFor(from, to) {
 export async function onSkipEnd(info = {}) {
   if ( !isActiveGM() ) return;
   try { if ( !game.settings.get(MOD, "npcFates") ) return; } catch (e) { return; }
-  if ( !((Number(info.to) - Number(info.from)) / YEAR_SECONDS >= 1) ) return wakeDue(info.to);
+  if ( !F.isLongJump(info.from, info.to) ) return wakeDue(info.to);
   const plan = planFor(info.from, info.to);
   if ( !plan.result.events.length ) return;
   await chron()?.propose?.({type: T.fates, key: `npc-fates:${info.from}:${info.to}`, title: `Off-screen lives, ${plan.fromYear} to ${plan.toYear}`,

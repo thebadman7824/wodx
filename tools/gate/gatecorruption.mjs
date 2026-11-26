@@ -101,7 +101,7 @@ async function body() {
 
     // 9. B7807: a place on a long clock
     const pack = Ch.chronicle?.current?.() ?? null;
-    const L = await import("/modules/wodx-chronicle/scripts/chronicle-local-rules.mjs");
+    const L = await import("/modules/wodx-rules/chronicle/chronicle-local-rules.mjs");
     const row = L.localOf(pack).taints[0];
     if ( !row ) ok("9. clock taint", false, {error: "no chronicle in play ties a place to a clock", chronicle: pack?.id ?? null});
     else {

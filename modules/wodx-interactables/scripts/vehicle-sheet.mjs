@@ -8,7 +8,7 @@
  *   - headlights on the token for a motor vehicle from 1900.
  * Getting in, driving and fighting go as for a mount tile: main.mjs reads its token as a mount (beastOf).
  */
-import * as VR from "./vehicle-sheet-rules.mjs";
+import * as VR from "../../wodx-rules/interactables/vehicle-sheet-rules.mjs";
 
 const MOD = "wodx-interactables";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

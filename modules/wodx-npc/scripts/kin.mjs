@@ -7,7 +7,7 @@
  *   When the clock jumps a year or more (a time skip, Pass the years), one approval card reports what the gap did to
  *   every player character's ties and grows every family line; nothing is written until it is approved.
  */
-import * as K from "./kin-rules.mjs";
+import * as K from "../../wodx-rules/npc/kin-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 

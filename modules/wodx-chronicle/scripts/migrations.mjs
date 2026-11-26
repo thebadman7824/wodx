@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, isActiveGM, setting, setSetting, log} from "./util.mjs";
-import {planMigrations, carriesFlags, backupName, targetVersion} from "./migrations-rules.mjs";
+import {planMigrations, carriesFlags, backupName, targetVersion} from "../../wodx-rules/chronicle/migrations-rules.mjs";
 
 /**
  * Data versions and migrations for every WoDX module.

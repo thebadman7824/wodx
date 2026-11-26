@@ -4,8 +4,8 @@
  * with their own figure. Everything is drawn on each computer: nothing is saved but the Storyteller's picks
  * (flags.wodx-paperdoll.mount {look, style, scheme, off}). Rules in mount-rules.mjs.
  */
-import * as MR from "./mount-rules.mjs";
-import * as SR from "./sprite-rules.mjs";
+import * as MR from "../../wodx-rules/paperdoll/mount-rules.mjs";
+import * as SR from "../../wodx-rules/paperdoll/sprite-rules.mjs";
 import {seated} from "./sprites.mjs";
 const MOD = "wodx-paperdoll", IX = "wodx-interactables", VEHICLE = "wodx-interactables.vehicle";
 const states = new Map(), sheets = new Map(), frames = new Map(), cuts = new Map(), held = new Map(), shown = new Map();

@@ -11,7 +11,7 @@
  * WoDX Clan features' own ghoul card stands aside while this is on.
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
-import * as R from "./ghoul-need-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/ghoul-need-rules.mjs";
 import {getEngine} from "./calendar.mjs";
 import {isQuiet} from "./quiet.mjs";
 import {offerFeed} from "./signatures.mjs";

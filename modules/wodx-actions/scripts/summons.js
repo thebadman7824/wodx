@@ -17,10 +17,10 @@
  *             it falls still or leaves; a familiar's death costs its mage as M20 says
  * An NPC's summons serve that NPC: WoDX NPC runs their turns like any of its fighters.
  */
-import * as E from "./effects-rules.js";
-import * as SR from "./summon-rules.js";
+import * as E from "../../wodx-rules/actions/effects-rules.js";
+import * as SR from "../../wodx-rules/actions/summon-rules.js";
 import { SPECS, NOT_SUMMON, specKey } from "./summon-specs.js";
-import { countSuccesses } from "./core-rules.js";
+import { countSuccesses } from "../../wodx-rules/actions/core-rules.js";
 
 /** Past this many yards, a being bound to stay near rolls to stay in hand (B4823, house reading). */
 export const AWAY_YARDS = 20;
@@ -389,7 +389,7 @@ function onEnd(actor, data) {
 export async function sweepUpkeep(now = game.time?.worldTime ?? 0) {
   if ( !isActiveGM() ) return 0;
   let k = 0;
-  const E = await import("./effects-rules.js");
+  const E = await import("../../wodx-rules/actions/effects-rules.js");
   for ( const scene of game.scenes ?? [] ) for ( const tok of [...(scene.tokens ?? [])] ) {
     const rec = flagOf(tok);
     if ( !rec?.upkeep || rec.dormant ) continue;

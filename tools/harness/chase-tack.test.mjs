@@ -9,7 +9,7 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 
 /* Interactables chase: a rider's tack (B3907) */
-const C = await imp("modules/wodx-interactables/scripts/chase-rules.mjs");
+const C = await imp("modules/wodx-rules/interactables/chase-rules.mjs");
 
 test("bareback is +1, spurs ease a flat-out ride, and nothing changes on foot or with the Library off", () => {
   const full = {saddle: true, bridle: true, urge: false, names: {}};

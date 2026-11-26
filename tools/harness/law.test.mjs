@@ -7,8 +7,8 @@ import {dirname, join} from "node:path";
 /* The law of the land (WoDX Chronicle, B3490-B3492): law families, Moravia's own rows, the Law here card */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-chronicle/scripts/law-rules.mjs"));
-const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/chronicle/law-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
 
 test("every world region has a law family, and every family id used is known or planned", () => {
   const planned = new Set(["common", "orthodox", "islamic", "steppe", "south-asia", "chinese", "japanese", "african", "americas", "pacific", "north"]);

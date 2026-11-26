@@ -4,8 +4,8 @@
  * Ticked entries go into the character's codex (WoDX Storyteller), so the player reads only what was put there.
  * Opened from the Storyteller's hand, or game.modules.get("wodx-library").api.know.open().
  */
-import * as K from "./know-rules.mjs";
-import * as E from "./ency-rules.mjs";
+import * as K from "../../wodx-rules/library/know-rules.mjs";
+import * as E from "../../wodx-rules/library/ency-rules.mjs";
 import {sources} from "./shelves.mjs";
 import {lineOfActor} from "./use.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

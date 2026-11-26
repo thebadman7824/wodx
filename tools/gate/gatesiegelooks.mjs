@@ -20,7 +20,7 @@ export async function run() {
   const TL = () => game.modules.get(MOD)?.api?.upkeep?.townLooks;
   const KEY = "siege:gate-sg";
   const wait = async (f, ms = 6000) => { for ( let t = 0; t < ms && !f(); t += 100 ) await new Promise(r => setTimeout(r, 100)); return f(); };
-  const B = await import("/modules/wodx-storyteller/scripts/battle-rules.mjs");
+  const B = await import("/modules/wodx-rules/storyteller/battle-rules.mjs");
   const setSiege = async patch => {
     const s = foundry.utils.deepClone(game.settings.get(MOD, "battles") ?? {});
     const list = (s.list ?? []).filter(b => b.id !== "gatesiege");

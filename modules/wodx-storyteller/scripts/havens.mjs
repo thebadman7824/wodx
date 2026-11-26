@@ -6,7 +6,7 @@
  *   security for anyone who is not an owner or guest. The window is the Storyteller's; exposing a haven logs it on the
  *   tracker with a flag for attention.
  */
-import * as H from "./haven-rules.mjs";
+import * as H from "../../wodx-rules/storyteller/haven-rules.mjs";
 import {MOD, esc, isPC, log} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

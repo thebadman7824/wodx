@@ -11,9 +11,9 @@
  *   scene ideas once a game week, one approval card of scenes the ties suggest; approved ideas go in the Ledger
  *   who sees    hidden ties show to the character who found them out; trust and warmth only to the one who feels them
  */
-import * as LR from "./legacy-rules.mjs";
-import * as TR from "./ties-rules.mjs";
-import * as SR from "./standing-rules.mjs";
+import * as LR from "../../wodx-rules/npc/legacy-rules.mjs";
+import * as TR from "../../wodx-rules/npc/ties-rules.mjs";
+import * as SR from "../../wodx-rules/npc/standing-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";

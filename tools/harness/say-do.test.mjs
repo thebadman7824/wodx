@@ -1,9 +1,9 @@
 // Say or Do Desk (B5823-B5825): pure rules for sentences, buildings and project complications.
 import test from "node:test";
 import assert from "node:assert/strict";
-import * as LP from "../../modules/wodx-chronicle/scripts/law-punish-rules.mjs";
-import * as PR from "../../modules/wodx-storyteller/scripts/projects-rules.mjs";
-import * as TR from "../../modules/wodx-storyteller/scripts/town-rules.mjs";
+import * as LP from "../../modules/wodx-rules/chronicle/law-punish-rules.mjs";
+import * as PR from "../../modules/wodx-rules/storyteller/projects-rules.mjs";
+import * as TR from "../../modules/wodx-rules/storyteller/town-rules.mjs";
 
 test("B5823: a fine is a month's modest living at weight 3, scaled and bounded", () => {
   assert.equal(LP.fineAmount(100, 3), 100);

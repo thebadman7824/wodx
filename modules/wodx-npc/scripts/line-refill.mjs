@@ -8,7 +8,7 @@
  *      token and whispers the Storyteller one card for the night.
  * NPC rolls stay with the Storyteller (standing rule 19). Setting npcRefill turns it off.
  */
-import * as RR from "./line-refill-rules.mjs";
+import * as RR from "../../wodx-rules/npc/line-refill-rules.mjs";
 import * as LM from "./line-mend.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

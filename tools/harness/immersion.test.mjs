@@ -10,12 +10,12 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const C = await imp("modules/wodx-interactables/scripts/carry-rules.mjs");
-const P = await imp("modules/wodx-senses/scripts/perception-rules.mjs");
-const R = await imp("modules/wodx-chronicle/scripts/reckoning-rules.mjs");
-const L = await imp("modules/wodx-storyteller/scripts/letters-rules.mjs");
-const O = await imp("modules/wodx-atmosphere/scripts/opening-rules.mjs");
-const F = await imp("modules/wodx-npc/scripts/faces-rules.mjs");
+const C = await imp("modules/wodx-rules/interactables/carry-rules.mjs");
+const P = await imp("modules/wodx-rules/senses/perception-rules.mjs");
+const R = await imp("modules/wodx-rules/chronicle/reckoning-rules.mjs");
+const L = await imp("modules/wodx-rules/storyteller/letters-rules.mjs");
+const O = await imp("modules/wodx-rules/atmosphere/opening-rules.mjs");
+const F = await imp("modules/wodx-rules/npc/faces-rules.mjs");
 
 test("carried light: kinds follow the year, and fuel follows the kind", () => {
   assert.deepEqual(C.kindsFor(1197).map(k => k.id), ["candle", "torch", "lantern"]);
@@ -121,7 +121,7 @@ test("era time: reckon puts the date as the character would have it", () => {
   assert.equal(R.reckon(d, {church: {day: "Saint Gregory", season: "Lent"}}).date, "Wednesday, Saint Gregory, in the year of Our Lord 1197");
   assert.equal(R.reckon({...d, year: 1890}).time, "12:00 p.m.");
   assert.equal(R.reckon({...d, year: 2040}, {eraId: "future-darkness"}).date, "2040-03-12");
-  const hr = src("modules/wodx-chronicle/data/house-rules.mjs");
+  const hr = src("modules/wodx-rules/chronicle/house-rules.mjs");
   assert.ok(hr.includes('"id": "eraReckoning"'));
   assert.ok(src("modules/wodx-chronicle/scripts/clock-app.mjs").includes("reckon(now"));
 });

@@ -11,8 +11,8 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 await imp("modules/wodx-library/scripts/wonder-lines.mjs");
 const Reg = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
-const S = await imp("modules/wodx-actions/scripts/soulforge-rules.js");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const S = await imp("modules/wodx-rules/actions/soulforge-rules.js");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const K = Reg.kitFor("wraith");
 
 const sheet = (o = {}) => ({system: {advantages: {pathos: {temporary: 6}, corpus: {temporary: 10, max: 10}, willpower: {permanent: 5}},

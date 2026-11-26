@@ -1,5 +1,5 @@
 import {MODULE_ID, esc} from "./util.mjs";
-import * as T from "./trait-rules.mjs";
+import * as T from "../../wodx-rules/chronicle/trait-rules.mjs";
 
 /**
  * WoDX Chronicle 0.23.0 (Traits With Teeth step 8): backgrounds made into things in the world, by the Storyteller.

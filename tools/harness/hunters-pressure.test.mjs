@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-storyteller/scripts/hunters-rules.mjs");
+const H = await imp("modules/wodx-rules/storyteller/hunters-rules.mjs");
 const DAY = H.DAY;
 
 test("hunters: the line by year follows WoDX's hunter rules (B42)", () => {

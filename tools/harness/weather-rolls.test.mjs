@@ -11,7 +11,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mock = installMock({dataRoot: root, worldFlags: {wodx: {phase: 8}}});
 mock.asGM();
 mock.setupTime?.();
-const W = await import(join(root, "modules/wodx-atmosphere/scripts/weather-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/atmosphere/weather-rules.mjs"));
 const A = await import(join(root, "modules/wodx-atmosphere/scripts/main.mjs"));
 await Hooks.callAll("init");
 game.modules.set("wodx-atmosphere", {active: true});

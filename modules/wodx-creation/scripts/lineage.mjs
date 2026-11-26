@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, lineOf, lineage, chronology, generationOf, clanNameOf} from "./actor-data.mjs";
-import {bondStage} from "./rules.mjs";
+import {bondStage} from "../../wodx-rules/creation/rules.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 /**

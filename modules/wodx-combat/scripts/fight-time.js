@@ -3,7 +3,7 @@
  * When a started fight is ended, the active Storyteller moves the time once: the clock, or the fighters' own time when
  * they are apart from the main group (WoDX Storyteller's api.time). The after-action card names the length.
  */
-import * as FT from "./fight-time-rules.js";
+import * as FT from "../../wodx-rules/combat/fight-time-rules.js";
 
 const MOD = "wodx-combat";
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 
 const L = await import("../../modules/wodx-actions/scripts/power-keywords-lines.js");
 const W = await import("../../modules/wodx-library/data/wonders.mjs");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 const F = (L.LINE_KEYWORDS ?? L.default).fetish;
 // Weapons and plain gear: their own item does the work (B6737)
 const TEXT_ONLY = ["magpies-swag", "dsiah", "fang-dagger", "sun-whip", "ironhammer", "klaive", "puda", "grand-klaive", "jarlhammer", "wind-snorkel", "blade-of-the-kings"];

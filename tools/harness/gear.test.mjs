@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* WoDX Library 0.1.0: gear by era, from the book tables */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-library/scripts/gear-rules.mjs"));
+const G = await import(join(root, "modules/wodx-rules/library/gear-rules.mjs"));
 const {build} = await import(join(root, "tools/library/build-gear.mjs"));
 const data = JSON.parse(readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8"));
 const by = n => data.items.find(i => i.name === n);
@@ -103,7 +103,7 @@ test("gear by region: each weapon of another land fights as a book weapon and ke
 });
 
 test("gear by region: every region and way of life named is one WoDX Chronicle knows", async () => {
-  const Wr = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  const Wr = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
   const known = new Set([...Object.keys(Wr.WORLD_REGIONS), ...Object.keys(Wr.SPHERES), "*"]);
   const keysOf = w => Object.keys(w ?? {});
   for ( const [n, w] of Object.entries(W.GEAR_WAYS) ) for ( const k of keysOf(w) ) assert.ok(known.has(k), `${n}: ${k}`);

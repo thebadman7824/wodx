@@ -10,7 +10,7 @@
  * World setting "mountedCombat" (on by default) turns all of it off; the saddle's Ability cap and the charge dice
  * (B2440-B2445) stay with "movementModes".
  */
-import * as MT from "./mounted-rules.js";
+import * as MT from "../../wodx-rules/combat/mounted-rules.js";
 import * as MVJ from "./movement.js";
 
 let D = null;

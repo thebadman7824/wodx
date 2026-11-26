@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 /* Crisis levers for a region (B3524 to B3527): ranges, the era's words, records and undo; Wyrm spread rate and lever drift. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/levers-rules.mjs")).href);
-const C = await import(pathToFileURL(join(root, "modules/wodx-otherworlds/scripts/corruption-rules.mjs")).href);
-const D = await import(pathToFileURL(join(root, "modules/wodx-otherworlds/scripts/drift-rules.mjs")).href);
+const L = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/levers-rules.mjs")).href);
+const C = await import(pathToFileURL(join(root, "modules/wodx-rules/otherworlds/corruption-rules.mjs")).href);
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/otherworlds/drift-rules.mjs")).href);
 
 test("levers keep to their ranges and steps; the Gauntlet moves at most 2 either way", () => {
   assert.equal(L.clampLever("gauntlet", 5), 2);

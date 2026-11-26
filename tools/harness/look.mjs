@@ -14,7 +14,7 @@ const {chromium} = require("playwright");
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const [foundryCss, dir, kitArg] = process.argv.slice(2);
 if ( !foundryCss || !dir || !existsSync(join(dir, "windows.json")) ) { console.error("Usage: node look.mjs <foundry2.css> <ui-fit output folder> [kits]"); process.exit(2); }
-const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
+const TR = await import(join(root, "modules/wodx-rules/actions/theme-rules.js"));
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
 const windows = JSON.parse(readFileSync(join(dir, "windows.json"), "utf8"));
 const kits = (kitArg ?? "dark-ages,victorian,great-war,modern").split(",");

@@ -9,8 +9,8 @@ import { readFileSync } from "node:fs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const PB = await load("system/worldofdarkness/module/scripts/wodx-pack-bonuses.js");
-const CR = await load("modules/wodx-combat/scripts/rules.js");
-const G = await load("modules/wodx-actions/scripts/garou-rules.js");
+const CR = await load("modules/wodx-rules/combat/rules.js");
+const G = await load("modules/wodx-rules/actions/garou-rules.js");
 
 const trait = (name, o = {}) => ({ type: "Trait", name, system: { type: "wod.types.apocalypticform", bonuslist: [], isactive: false, ...o } });
 
@@ -57,7 +57,7 @@ test("a War Wolf on a Creature sheet takes silver as aggravated (W20 Book of the
 });
 
 test("a switched-on form Trait grows its natural weapons on the body (Demon: the Fallen; Shintai aspects)", async () => {
-  const B = await load("modules/wodx-combat/scripts/body-rules.js");
+  const B = await load("modules/wodx-rules/combat/body-rules.js");
   const w = name => B.bodyOf({ effects: [{ name, description: "The character manifests something." }] }).weapons;
   assert.deepEqual([w("Claws").claw.type, w("Claws").claw.bonus], ["aggravated", 2]);
   assert.equal(w("Claws/Teeth").bite.bonus, 2);

@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const J = await imp("modules/wodx-npc/scripts/day-jobs-rules.mjs");
-const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const J = await imp("modules/wodx-rules/npc/day-jobs-rules.mjs");
+const F = await imp("modules/wodx-rules/npc/faction-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 
 test("the powers a job works through follow the age, and every one touches a sphere that age has", () => {
   for ( const y of [1197, 1350, 1600, 1750, 1880, 1960, 2010, 2080] ) {

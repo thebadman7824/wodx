@@ -50,9 +50,9 @@
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
  */
-import * as R from "./interact-rules.mjs";
-import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
-import {actionPool} from "../../wodx-actions/scripts/rules.js";
+import * as R from "../../wodx-rules/interactables/interact-rules.mjs";
+import {countSuccesses, clampDifficulty} from "../../wodx-rules/actions/core-rules.js";
+import {actionPool} from "../../wodx-rules/actions/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerStateSettings, setupStates, publish} from "./states.mjs";
 import {setupLiving} from "./living.mjs";
@@ -61,20 +61,20 @@ import {setupHaul} from "./haul.mjs";
 import {setupLoose, contentsKg, looseFor} from "./loose.mjs";
 import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
-import * as FillRules from "./fill-rules.mjs";
+import * as FillRules from "../../wodx-rules/interactables/fill-rules.mjs";
 import * as Stock from "./stock.mjs";
 import {setupHookListeners} from "./hook-listeners.mjs";
 import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
-import * as VS from "./vehicle-sheet-rules.mjs";
+import * as VS from "../../wodx-rules/interactables/vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import * as FAER from "../../wodx-actions/scripts/fae-da-rules.js";
+import * as FAER from "../../wodx-rules/actions/fae-da-rules.js";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.57.1";
+const VERSION = "0.57.2";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

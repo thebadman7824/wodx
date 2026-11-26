@@ -15,12 +15,12 @@
  *   warns when nothing in Possessions has it, and the user may go ahead; full-or-empty supplies; liquids warn
  *   when there is nothing to carry them in.
  */
-import * as U from "./use-rules.mjs";
-import * as L from "./link-rules.mjs";
-import * as X from "./examine-rules.mjs";
+import * as U from "../../wodx-rules/library/use-rules.mjs";
+import * as L from "../../wodx-rules/library/link-rules.mjs";
+import * as X from "../../wodx-rules/library/examine-rules.mjs";
 import * as WU from "./wonder-use.mjs";
 import * as AU from "./arms-use.mjs";
-import * as AR from "./arms-rules.mjs";
+import * as AR from "../../wodx-rules/library/arms-rules.mjs";
 import * as FU from "./faith-use.mjs";
 import * as HU from "./hygiene-use.mjs";
 import * as GU from "./gamble-use.mjs";
@@ -59,7 +59,7 @@ export async function abilitiesOfItem(item) {
   // 2026-11-12: a food or drink a recipe uses can be cooked with as well as eaten
   if ( good && ["food", "drink"].includes(good.kind) && !list.includes("cook") ) {
     try {
-      RR ??= await import("./recipe-rules.mjs");
+      RR ??= await import("../../wodx-rules/library/recipe-rules.mjs");
       if ( RR.usesOf(good.name, G.GOODS, yearNow()).length ) list.push("cook");
     } catch (e) { /* recipes not loaded */ }
   }

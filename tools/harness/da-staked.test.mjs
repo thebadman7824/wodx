@@ -1,8 +1,8 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {stakedNight, witheredMayRise, WITHER_TORPOR_AT} from "../../modules/wodx-actions/scripts/kindred-rules.js";
-import {mortalAgain, MORTAL_CATALYSTS} from "../../modules/wodx-creation/scripts/states-rules.mjs";
+import {stakedNight, witheredMayRise, WITHER_TORPOR_AT} from "../../modules/wodx-rules/actions/kindred-rules.js";
+import {mortalAgain, MORTAL_CATALYSTS} from "../../modules/wodx-rules/creation/states-rules.mjs";
 
 // B7666: a staked vampire still pays a blood point a night; with none left, the body withers (V20 Dark Ages).
 test("staked: a blood point a night, then withering, then torpor", () => {
@@ -25,7 +25,7 @@ test("becoming mortal keeps the person, names the catalyst", () => {
 
 // B7668: the high wind and Levitation each act each turn (V20 Dark Ages pp. 297-298)
 test("high winds roll for all inside; a lifted unwilling one fights free", async () => {
-  const TR = await import("../../modules/wodx-actions/scripts/turn-rules.js");
+  const TR = await import("../../modules/wodx-rules/actions/turn-rules.js");
   const hw = TR.everyTurnOf("High Winds", "Vampire (Dark Ages)");
   assert.equal(hw.areaRoll.pool, "dexterity"); assert.equal(hw.areaRoll.diff, 6); assert.equal(hw.areaRoll.onFail.condition, "knockdown");
   const lv = TR.everyTurnOf("Levitation", "Vampire (Dark Ages)");

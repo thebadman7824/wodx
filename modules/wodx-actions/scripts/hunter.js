@@ -11,17 +11,17 @@
  * Built by main.js with its helpers (ctx). Pure rules: hunter-rules.js.
  */
 
-import * as NPW from "./npc-power-rules.js";
+import * as NPW from "../../wodx-rules/actions/npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
 import { spendTime } from "./spend-time.js";
-import * as H from "./hunter-rules.js";
+import * as H from "../../wodx-rules/actions/hunter-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as IB from "./inq-blessings.js";
-import * as CR from "./inq-curses-rules.js";
+import * as CR from "../../wodx-rules/actions/inq-curses-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";

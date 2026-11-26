@@ -4,11 +4,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {existsSync, readFileSync} from "node:fs";
-import * as WM from "../../modules/wodx-storyteller/scripts/world-map-rules.mjs";
-import * as D from "../../modules/wodx-storyteller/scripts/discovery-rules.mjs";
+import * as WM from "../../modules/wodx-rules/storyteller/world-map-rules.mjs";
+import * as D from "../../modules/wodx-rules/storyteller/discovery-rules.mjs";
 import * as W from "../../modules/wodx-storyteller/data/world.mjs";
-import * as CH from "../../modules/wodx-otherworlds/scripts/worlds-chart-rules.mjs";
-import {REALMS} from "../../modules/wodx-otherworlds/scripts/realm-maps-rules.mjs";
+import * as CH from "../../modules/wodx-rules/otherworlds/worlds-chart-rules.mjs";
+import {REALMS} from "../../modules/wodx-rules/otherworlds/realm-maps-rules.mjs";
 
 const P = {brno: {lon: 16.6, lat: 49.2}, london: {lon: -0.1, lat: 51.5}, newYork: {lon: -74, lat: 40.7}, kyoto: {lon: 135.8, lat: 35}, cairo: {lon: 31.2, lat: 30}, lima: {lon: -77, lat: -12},
   sydney: {lon: 151.2, lat: -33.9}, timbuktu: {lon: -3, lat: 16.8}, delhi: {lon: 77.2, lat: 28.6}, lagos: {lon: 3.4, lat: 6.5}, mexico: {lon: -99.1, lat: 19.4}, beijing: {lon: 116.4, lat: 39.9}};
@@ -244,8 +244,8 @@ test("known world: the waters off an unknown coast are closed, and the Cape open
   assert.ok(s.includes(WM.SHROUD) && !/NaN|undefined/.test(s));
 });
 
-test("world map: its regions are WoDX Chronicle's world regions, when that list is in the repo", {skip: !existsSync(new URL("../../modules/wodx-chronicle/scripts/world-rules.mjs", import.meta.url)) && "the world regions list is not merged yet"}, async () => {
-  const {WORLD_REGIONS} = await import("../../modules/wodx-chronicle/scripts/world-rules.mjs");
+test("world map: its regions are WoDX Chronicle's world regions, when that list is in the repo", {skip: !existsSync(new URL("../../modules/wodx-rules/chronicle/world-rules.mjs", import.meta.url)) && "the world regions list is not merged yet"}, async () => {
+  const {WORLD_REGIONS} = await import("../../modules/wodx-rules/chronicle/world-rules.mjs");
   const unknown = W.REGION_IDS.filter(id => !WORLD_REGIONS[id]);
   assert.deepEqual(unknown, []);
   assert.deepEqual(Object.keys(WORLD_REGIONS).filter(id => !W.REGION_IDS.includes(id)), [], "every world region has ground on the map");

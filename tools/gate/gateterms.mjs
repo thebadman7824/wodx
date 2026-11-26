@@ -41,12 +41,12 @@ export async function run() {
     await G.step("2. every module's dice count agrees", async () => {
       const M = p => import(`/modules/${p}?${Date.now()}`);
       const list = [
-        ["combat", await M("wodx-combat/scripts/rules.js"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
-        ["chronicle", await M("wodx-chronicle/scripts/referee-rules.mjs"), (m, f, d) => m.successes(f, d).successes, "successes"],
+        ["combat", await M("wodx-rules/combat/rules.js"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
+        ["chronicle", await M("wodx-rules/chronicle/referee-rules.mjs"), (m, f, d) => m.successes(f, d).successes, "successes"],
         // B7120: NPC and Otherworlds report the count after a difficulty past 10 takes its successes off
-        ["npc", await M("wodx-npc/scripts/faction-rules.mjs"), (m, f, d) => m.successes(f, d).net, "successes"],
-        ["library", await M("wodx-library/scripts/arms-rules.mjs"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
-        ["otherworlds", await M("wodx-otherworlds/scripts/rules.mjs"), (m, f, d) => m.countRoll(f, d).net, "successes"]
+        ["npc", await M("wodx-rules/npc/faction-rules.mjs"), (m, f, d) => m.successes(f, d).net, "successes"],
+        ["library", await M("wodx-rules/library/arms-rules.mjs"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
+        ["otherworlds", await M("wodx-rules/otherworlds/rules.mjs"), (m, f, d) => m.countRoll(f, d).net, "successes"]
       ];
       const rolls = [[[10, 1, 6], 6], [[10], 12], [[10, 10, 10], 12], [[2, 2], 1], [[1, 6], 6]];
       const off = [];
@@ -105,7 +105,7 @@ export async function run() {
 
     await G.step("7. a metre is a yard; a turn is the table's turn", async () => {
       const toYards = game.modules.get("wodx-combat")?.api?.auto?.toYards;
-      const L = await import(`/modules/wodx-actions/scripts/limit-rules.js?${Date.now()}`);
+      const L = await import(`/modules/wodx-rules/actions/limit-rules.js?${Date.now()}`);
       const key3 = L.periodKey("turn", {worldTime: 7, scene: 1, turnSeconds: 3}), keyDefault = L.periodKey("turn", {worldTime: 7, scene: 1});
       G.ok("7. a metre is a yard; a turn is the table's turn", (toYards ? toYards(10, "m") === 10 : true) && T.toYards(1, "mi") === 1760
         && key3 === "t1:2" && keyDefault === key3, {combat: toYards?.(10, "m"), key3, keyDefault});
@@ -114,10 +114,10 @@ export async function run() {
     await G.step("9. the other modules read the same words", async () => {
       const M = p => import(`/modules/${p}?${Date.now()}`).catch(() => null);
       const [tg, cr, se, cra, sh, pd, so, intr] = await Promise.all([M("wodx-targeting/scripts/target-rules.mjs"),
-        M("wodx-interactables/scripts/carry-rules.mjs"), M("wodx-senses/scripts/senses-rules.mjs"), M("wodx-creation/data/advance.mjs"),
-        M("wodx-sheets/scripts/extras-rules.mjs"), M("wodx-paperdoll/scripts/doll-rules.mjs"), M("wodx-solo/scripts/solo-rules.mjs"),
-        M("wodx-interactables/scripts/fill-rules.mjs")]);
-      const [talk, know, deeds] = await Promise.all([M("wodx-npc/scripts/talk-rules.mjs"), M("wodx-library/scripts/know-rules.mjs"),
+        M("wodx-rules/interactables/carry-rules.mjs"), M("wodx-rules/senses/senses-rules.mjs"), M("wodx-creation/data/advance.mjs"),
+        M("wodx-rules/sheets/extras-rules.mjs"), M("wodx-rules/paperdoll/doll-rules.mjs"), M("wodx-rules/solo/solo-rules.mjs"),
+        M("wodx-rules/interactables/fill-rules.mjs")]);
+      const [talk, know, deeds] = await Promise.all([M("wodx-rules/npc/talk-rules.mjs"), M("wodx-rules/library/know-rules.mjs"),
         M("wodx-storyteller/scripts/battle-deeds.mjs")]);
       const got = {
         targeting: tg?.shapeFromText?.("a 10-meter radius")?.size,

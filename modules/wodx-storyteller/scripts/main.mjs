@@ -13,21 +13,21 @@
  */
 import * as C from "./core.mjs";
 import * as Wills from "./wills.mjs";
-import * as WillRules from "./will-rules.mjs";
+import * as WillRules from "../../wodx-rules/storyteller/will-rules.mjs";
 import * as A from "./apps.mjs";
-import * as W from "./world-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
 import * as Builder from "./builder.mjs";
 import * as Ways from "./ways.mjs";
-import * as WayRules from "./way-rules.mjs";
+import * as WayRules from "../../wodx-rules/storyteller/way-rules.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
 import * as Letters from "./letters.mjs";
-import * as LettersRules from "./letters-rules.mjs";
+import * as LettersRules from "../../wodx-rules/storyteller/letters-rules.mjs";
 import * as Up from "./upkeep.mjs";
-import * as UpRules from "./upkeep-rules.mjs";
+import * as UpRules from "../../wodx-rules/storyteller/upkeep-rules.mjs";
 import * as Money from "./money.mjs";
 import * as Markets from "./markets.mjs";
 import * as News from "./market-news.mjs";
@@ -56,51 +56,51 @@ import * as Sites from "./sites.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
 import * as PassTime from "./pass-time.mjs";
-import * as SpendRules from "./spend-rules.mjs";
-import * as ProjectRules from "./projects-rules.mjs";
-import * as TaskRules from "./tasks-rules.mjs";
+import * as SpendRules from "../../wodx-rules/storyteller/spend-rules.mjs";
+import * as ProjectRules from "../../wodx-rules/storyteller/projects-rules.mjs";
+import * as TaskRules from "../../wodx-rules/storyteller/tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
-import * as HavenRules from "./haven-rules.mjs";
+import * as HavenRules from "../../wodx-rules/storyteller/haven-rules.mjs";
 import * as Body from "./body.mjs";
-import * as BodyRules from "./body-rules.mjs";
+import * as BodyRules from "../../wodx-rules/storyteller/body-rules.mjs";
 import * as Hard from "./hardship.mjs";
-import * as HardRules from "./hardship-rules.mjs";
+import * as HardRules from "../../wodx-rules/storyteller/hardship-rules.mjs";
 import * as Remains from "./remains.mjs";
 import * as HuntFollow from "./hunt-follow.mjs";
-import * as RemainsRules from "./remains-rules.mjs";
+import * as RemainsRules from "../../wodx-rules/storyteller/remains-rules.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Levers from "./levers.mjs";
 import * as Reach from "./reach.mjs";
 import * as Inherit from "./inherit.mjs";
-import * as MoneyRules from "./money-rules.mjs";
+import * as MoneyRules from "../../wodx-rules/storyteller/money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
-import * as Road from "./road-rules.mjs";
-import * as Country from "./country-rules.mjs";
+import * as Road from "../../wodx-rules/storyteller/road-rules.mjs";
+import * as Country from "../../wodx-rules/storyteller/country-rules.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
-import * as PreludeRules from "./prelude-rules.mjs";
+import * as PreludeRules from "../../wodx-rules/storyteller/prelude-rules.mjs";
 import * as Hand from "./hand.mjs";
 import * as Between from "./between.mjs";
 import * as WorldMap from "./world-map.mjs";
-import * as DiscoveryRules from "./discovery-rules.mjs";
+import * as DiscoveryRules from "../../wodx-rules/storyteller/discovery-rules.mjs";
 import * as Teleport from "./teleport.mjs";
 import * as Own from "./owners.mjs";
 import * as Wonders from "./wonders.mjs";
 import * as Cook from "./cookery.mjs";
-import * as OwnRules from "./owner-rules.mjs";
-import * as CraftRules from "./craft-rules.mjs";
-import * as BuildRules from "./build-rules.mjs";
+import * as OwnRules from "../../wodx-rules/storyteller/owner-rules.mjs";
+import * as CraftRules from "../../wodx-rules/storyteller/craft-rules.mjs";
+import * as BuildRules from "../../wodx-rules/storyteller/build-rules.mjs";
 import * as Clocks from "./clocks.mjs";
-import * as ClockRules from "./clock-rules.mjs";
+import * as ClockRules from "../../wodx-rules/storyteller/clock-rules.mjs";
 import * as Battles from "./battles.mjs";
 import * as Naval from "./naval.mjs";
-import * as NavalRules from "./naval-rules.mjs";
+import * as NavalRules from "../../wodx-rules/storyteller/naval-rules.mjs";
 import * as BattleDeeds from "./battle-deeds.mjs";
 import * as BattleAftermath from "./battle-aftermath.mjs";
 import * as BattleExtras from "./battle-extras.mjs";
-import * as BattleRules from "./battle-rules.mjs";
+import * as BattleRules from "../../wodx-rules/storyteller/battle-rules.mjs";
 import * as SiegeWorks from "./siege-works.mjs";
-import * as SiegeWorksRules from "./siege-works-rules.mjs";
+import * as SiegeWorksRules from "../../wodx-rules/storyteller/siege-works-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -242,7 +242,7 @@ Hooks.once("ready", () => {
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     // Chronicle Packs Desk c2: carry characters and items to a new chronicle in a fresh world
     carry: {open: () => import("./carry-app.mjs").then(m => m.openCarry()), write: (picks, opts) => import("./carry-app.mjs").then(m => m.writeCarry(picks, opts)),
-      read: path => import("./carry-app.mjs").then(m => m.readCarry(path)), rules: () => import("./carry-rules.mjs")},
+      read: path => import("./carry-app.mjs").then(m => m.readCarry(path)), rules: () => import("../../wodx-rules/storyteller/carry-rules.mjs")},
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules, refreshPrimer: Setup.refreshPrimer, refreshAbroad: Setup.refreshAbroad},
     builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, get recipes() { return Builder.recipes(); }, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},

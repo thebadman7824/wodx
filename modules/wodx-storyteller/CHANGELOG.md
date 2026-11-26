@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.118.5 (This module's rules files moved to the rules core, modules/wodx-rules/storyteller (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.118.4 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.118.3 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 0.118.2 (Fixes from the first solo test (B8055, B8056): the watch stand on free spots in the open by the culprit, each answer to the law is told, a place with no landing spot is entered by its door (the Way back, any Way, a door or a public room), and a trip announces its time (wodxTravelled) for a table with one clock)

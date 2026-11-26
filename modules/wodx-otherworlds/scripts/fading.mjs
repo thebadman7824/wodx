@@ -7,7 +7,7 @@
  */
 import {MODULE_ID} from "./ratings.mjs";
 import {STATUS, worldOf} from "./crossing.mjs";
-import * as F from "./fading-rules.mjs";
+import * as F from "../../wodx-rules/otherworlds/fading-rules.mjs";
 
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");

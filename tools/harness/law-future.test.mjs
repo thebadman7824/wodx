@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await imp("modules/wodx-chronicle/scripts/law-future-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
-const P = await imp("modules/wodx-chronicle/scripts/law-punish-rules.mjs");
+const F = await imp("modules/wodx-rules/chronicle/law-future-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
+const P = await imp("modules/wodx-rules/chronicle/law-punish-rules.mjs");
 
 test("future: off the branch, the law of 2022 holds", () => {
   const a = L.lawOf("moravia", 2022), b = L.lawOf("moravia", 2070);

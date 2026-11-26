@@ -16,7 +16,7 @@ game.combat = null;
 game.scenes = {viewed: null, find: () => null};
 
 const S = p => import(join(root, "modules/wodx-actions/scripts", p));
-const C = await S("c20-rules.js");
+const C = await S("../../wodx-rules/actions/c20-rules.js");
 
 /* ---------------- Pure rules ---------------- */
 

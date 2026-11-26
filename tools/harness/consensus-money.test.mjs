@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
-const C = await imp("modules/wodx-actions/scripts/consensus-rules.js");
+const R = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
+const C = await imp("modules/wodx-rules/actions/consensus-rules.js");
 
 test("money: at home a character lives at their rating", () => {
   for ( let d = 0; d <= 5; d++ ) assert.equal(R.livingAs({dots: d}).level, d);

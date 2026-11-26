@@ -7,7 +7,7 @@ const SYS = "../../system/worldofdarkness/";
 const src = p => readFileSync(new URL(SYS + p, import.meta.url), "utf8");
 globalThis.CONFIG ??= { worldofdarkness: { lowestDifficulty: 2 } };
 const { applyWodxRollMods, WODX_ORIGINS } = await import(SYS + "module/scripts/wodx-roll-mods.js");
-const RR = await import("../../modules/wodx-sheets/scripts/sheet-roll-rules.mjs");
+const RR = await import("../../modules/wodx-rules/sheets/sheet-roll-rules.mjs");
 
 // WoDX Sheets' modsFor, built from its pure rules: a Grieving mourner (socialDice -1) and a tired one (traits -1 die)
 const grieving = [{ id: "grieving", name: "Grieving", mods: { socialDice: -1 } }];

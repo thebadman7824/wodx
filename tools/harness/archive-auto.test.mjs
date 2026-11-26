@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 /* B6414: the archive of the dead by itself, and links that follow */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const AR = await import(join(root, "modules/wodx-creation/scripts/archive-rules.mjs"));
+const AR = await import(join(root, "modules/wodx-rules/creation/archive-rules.mjs"));
 
 test("due: dead or kept long enough, never when the setting is off or the actor must stay", () => {
   assert.equal(AR.due({kind: "dead"}, {diedYear: 1190, nowYear: 1200, years: 10}), true);

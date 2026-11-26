@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8150
+Next free block: B8180
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -466,7 +466,7 @@ Next free block: B8150
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gap 9: the Ledger's due date shows on the sheet (used B7831-B7838) | NPC, Sheets |
+| B7830-B7839 | Scorecard gap 9: overheard talk gated, and a fix to its window (used B7831-B7839) | NPC |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -478,11 +478,14 @@ Next free block: B8150
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
+| B8060-B8089 | Rules core: one Foundry-free rules package (used B8060-B8067) | Rules, Chronicle, Actions, Atmosphere, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller |
 | B8090-B8099 | Solo test desk picks: action priority, item tags, lifespan, dark interiors, teachers, time dial (used B8090-B8098) | Actions, Chronicle, Combat, Creation, Library, NPC, Senses, Solo |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 | B8140-B8149 | Solo test fixes part 4: what fits, region lifepath, plain settings, NPC pace, 1197 clothing (used B8140-B8144) | Actions, Creation, Combat, NPC, Library, Chronicle, Senses, Sheets, Solo, Storyteller and others (setting hints) |
+| B8160-B8169 | Off-screen lives on a one-year Pass the years (used B8160-B8161) | NPC |
+| B8170-B8179 | Merge train batches of up to five (used B8170) | Repository workflow |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16192,6 +16195,15 @@ is due is a story hook (show, don't tell); the card stays whispered.
 Reverse: drop the due flag from the Ledger edges in ties-rules.mjs (edges) and the wodx-tie-due span in
 extras-html.mjs (relationsHtml). For a Storyteller-only badge, show the span only when gm is true.
 
+## B7839. Cancel in the Overheard talk window leaves the scene as it was (2026-11-26)
+WoDX NPC. Pressing Cancel or closing the scene's Overheard talk window used to save the scene with overheard talk
+switched off, because the window's answer for Cancel is the button's name, not the form (#2618). Now Cancel and close
+change nothing. The new gate gateoverheardwalk drives the real trigger: a character's token walks up to two NPCs,
+first behind a wall that stops sound (nothing heard), then round its end (the exchange comes to the chat as an
+Overheard whisper, the window lists it as heard by that character, and Cancel leaves the switch on).
+
+Reverse: restore the old check `if ( !res || res.action === "cancel" ) return null;` in overheard.mjs open().
+
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
 
@@ -16839,6 +16851,78 @@ WoDX Creation, WoDX Actions. Birth and turn years go down to -4000 (minus is BCE
 
 Reverse: set the year minimum back to 1100.
 
+## B8060. The rules core is a library module, modules/wodx-rules (2026-11-26)
+WoDX Rules. Every rules file moves into one folder that Foundry serves as a module with no scripts, so the modules
+reach it with the `../../wodx-rules/...` paths they already use for each other and the harness loads it in plain Node.
+Folders follow the module a file came from (core/, npc/, storyteller/ ...), file names unchanged. No module lists it
+under relationships.requires: that would make the gate map run every gate on any rules change and ask each world to
+switch a new module on; an installed module's files load while it is off. Plan: docs/RULES-CORE.md.
+
+Reverse: move the files back with git mv and drop the folder.
+
+## B8061. The guard: no Foundry in the rules, and the package only grows (2026-11-26)
+WoDX Rules. tools/harness/rules-core.test.mjs fails a file in the package, or in any rules file's reach, that names a
+Foundry global (comments and strings left out); a package file that will not load in plain Node with Foundry's
+globals set to throw; an import from outside the package not on the `outside` list; and a rules file outside the
+package not on `notMoved` or `stay`. The lists in tools/harness/rules-core-baseline.json only shrink. One file is
+known to name Foundry, Storyteller's sept-rules.mjs (an optional randomID with a fallback); it is fixed when Storyteller
+moves.
+
+Reverse: delete the test and its baseline.
+
+## B8062. Terms and the calendar move first; Chronicle keeps re-exports (2026-11-26)
+WoDX Rules, WoDX Chronicle. terms.mjs and calendar-math.mjs move to core/ whole; calendar.mjs splits, its date engine
+and clock reading to core/calendar.mjs and only makeCalendarClass and makeCalendarConfig (which read foundry.data
+inside init) left in Chronicle. Chronicle's three files re-export the core, so the hundreds of existing imports and
+open branches keep working, and one date engine is shared (a reform set through either path is the same engine).
+tools/rules-core/move.mjs moves a module's rules files later, with git mv and every path rewritten.
+
+Reverse: move the files back and drop the re-exports.
+
+## B8063. Bundling: a rules core file belongs to the one module that uses it (2026-11-26)
+Release bundler. A file imported across packages stays out of every bundle so the browser has one copy. A rules core
+file reached by only one module, directly or through other rules core files, is bundled into that module, which is
+what happened before it moved; one reached by two or more stays out, as before. So moving files into the package
+leaves loading on slow machines as it was (bundle.mjs --check totals in each PR).
+
+Reverse: drop the owner map in tools/release/bundle.mjs sharedFiles.
+
+## B8064. Not moved: WoDX Targeting and WoDX Voices (2026-11-26)
+WoDX Rules. Targeting is dropped (solo-test design desk, item 2509) and Voices is shelved (B7134), so their two rules
+files stay in place, listed under `stay`.
+
+Reverse: take them off `stay` and run the move for that module.
+
+## B8065. All the rules files move in one step; held files after the solo-fix work (2026-11-26)
+WoDX Rules and every module with rules files. Moving one module per pull request would have cost a full PC gate run
+each, and the move is mechanical, so tools/rules-core/move.mjs moved 347 rules files from 14 modules in one change.
+Seven files the solo-fix design PR is editing stay where they are until it merges (Chronicle time-dial-rules, Combat
+rules.js, Creation learn-, lifepath- and wizard-rules, Interactables loose-rules, Solo solo-rules). Storyteller's
+sept-rules.mjs makes its own 16-character ids instead of asking Foundry, so nothing in the rules core names Foundry.
+The bundler now loads 65 more files on their own: each was reached both by a bundle and by a file loaded on its own,
+so before this it was in the browser twice (two copies of any state it kept). The download grows by about 2 percent.
+
+Reverse: run the move back (git mv each file to its module's scripts folder and rewrite the imports).
+
+## B8066. The PC gate queue copes with a very large pull request (2026-11-26)
+Tools (tools/pcq/pr-gates.mjs, upkeep). The queue job failed twice on this pull request with "fetch failed" after one to
+two minutes, while other pull requests queued in seconds. The likely cause: its check of whether only main moved since the last run read
+three versions of each of the 1,251 changed files with git, holding the script for minutes, and the next GitHub call
+then failed (the log did not name the call). The check now stops at the first file the branch changed itself (all it needs to know), and a network
+fault on a GitHub call is tried once more after three seconds, naming the call if it fails again.
+
+Reverse: drop first: true in sinceRun and the retry in api().
+
+## B8067. The held files move in the same pull request (2026-11-26)
+WoDX Rules, Actions, Chronicle, Combat, Creation, Interactables, Solo. The solo-fix design PR (2546) merged while this
+pull request waited for the merge train, so the seven files it had edited (Chronicle time-dial-rules, Combat rules.js,
+Creation learn-, lifepath- and wizard-rules, Interactables loose-rules, Solo solo-rules) and its two new rules files
+(Actions busy-rules.js, Creation kit-rules.mjs) moved here with tools/rules-core/move.mjs, not in a pull request of
+their own. Every rules file is now in the package; notMoved is empty. The move tool also takes a moved file off the
+outside list.
+
+Reverse: git mv the nine files back and list them on notMoved.
+
 ## B8090. Aim at is the one control; Targeting is gone (2026-11-26)
 WoDX Combat. Aim at lists the target's parts and, in its own group, an item they hold: a large one like a shield or sword, a small one like a knife, a tiny one like a ring, at the sizes the book gives (V20 Dark Ages p. 346). A blow aimed at an item lands on it, and the Storyteller says what it does. The separate Targeting list is dropped, the owner's desk pick of 25 November (#2509).
 
@@ -16984,3 +17068,37 @@ Reverse: pass no yards to walkTo and walkToRegion, and drop the gmHand check in 
 WoDX Library and Creation. 22 garments the goods list lacked: braies, a coif, leg wraps, a dyed tunic, the bliaut, a corded mantle, a ring brooch, a shoulder hood, felt and straw hats, the pointed Jewish hat, ankle and riding boots, a fur-lined over-tunic, a sheepskin coat, a linen veil, a silk headband, Slavic temple rings, a tablet-woven belt, hose garters, an alb and a work smock. Each carries station, style and material tags and WoDX's own description. Before 1800 a starting kit picks the period's own clothes before the loosely dated borrowed list. The owner's Tags desk note, 26 Nov.
 
 Reverse: remove the 22 rows and the year preference in suggestKit.
+
+## B8160. gatefateswake: a one-year Pass the years wakes a sleeper, run by name off the train (2026-11-26)
+WoDX NPC's off-screen lives wake an NPC whose torpor has run out when the clock jumps. No control moves the clock
+by less than a year (Pass the years takes whole years), so the gate drives the one a Storyteller uses: the Creation
+window's Pass the years, one year, with every character's own changes unticked, then Yes. The world is released at
+the question, because a skip in a held world runs no skip hooks. The gate checks the sleeper's sheet, which shows the
+Torpor condition before and not after, and that the sleeper's torpor record is cleared. Should the jump make the
+Off-screen lives card, the gate presses Approve on it in the approvals queue.
+A one-year Pass the years usually makes no card at all: off-screen lives count a year as 365.25 days and a calendar
+year is 365, so it takes the short path that only wakes sleepers (#2627, left for its own fix).
+Because every module's year work runs, the gate takes about 20 minutes on cloud lane 9 and every character is put
+back afterwards. It is listed in notGates, so neither the train nor the nightly run picks it. It is run by name on a
+New PC lane when nothing else is waiting.
+
+Reverse: delete tools/gate/gatefateswake.mjs, its notGates and timeouts entries in tools/lanes/gate-map-extra.json,
+and the gated step on npc.fates in registry/features/wodx-npc.json.
+
+## B8161. A skip of 360 days or more counts as a year for off-screen lives (2026-11-26)
+WoDX NPC. Off-screen lives counted a skip as a year or more only from 365.25 days, but Pass the years moves the clock
+by calendar years, and a calendar year is 365 days unless it crosses 29 February. So a one-year Pass the years
+usually made no Off-screen lives card and only woke sleepers (#2627). A skip of 360 days or more now counts (room for the few hours a running clock moves between the plan and the skip)
+(fates-rules.mjs isLongJump), so a one-year Pass the years brings the card: Embraces, deaths, diablerie, Rank and
+Arete for supernatural NPCs, and the wakings with them.
+
+Reverse: make isLongJump compare against 365.25 days again (LONG_JUMP_DAYS) (YEAR from wodx-chronicle terms.mjs).
+
+## B8170. Merge train batches hold up to five pull requests (2026-11-26)
+Repository workflow, the owner's choice ("You have my approval to go from 3 to 5 per batch", 13:12Z), once the eject
+fixes (B8130-B8134) had merged. BATCH_MAX in tools/pcq/train.mjs goes from 3 to 5, and the runner's default
+(`trainBatch` unset in runner.json) now follows BATCH_MAX instead of its own 3. The train looks up to 10 pull requests
+behind the front for members (BATCH_LOOK, was 6), so a line with a few ineligible ones can still fill a batch. The
+halving retry is unchanged: a red batch of five is followed by at most three, then two, then the front alone.
+
+Reverse: set BATCH_MAX back to 3 and BATCH_LOOK to 6, or set "trainBatch": 3 in runner.json.

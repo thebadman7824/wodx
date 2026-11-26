@@ -1,7 +1,7 @@
-import * as K from "./clock-rules.mjs";
+import * as K from "../../wodx-rules/storyteller/clock-rules.mjs";
 import * as C from "./core.mjs";
-import * as T from "./tasks-rules.mjs";
-import * as U from "./upkeep-rules.mjs";
+import * as T from "../../wodx-rules/storyteller/tasks-rules.mjs";
+import * as U from "../../wodx-rules/storyteller/upkeep-rules.mjs";
 import * as Led from "./ledger.mjs";
 import {rawTasks} from "./tasks.mjs";
 import {huntOf, tieActors, tiesOf} from "./upkeep.mjs";

@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const U = await imp("modules/wodx-storyteller/scripts/upkeep-rules.mjs");
+const U = await imp("modules/wodx-rules/storyteller/upkeep-rules.mjs");
 const DAY = U.DAY;
 
 test("nights between two times are whole days", () => {
@@ -142,7 +142,7 @@ test("wiring: hooks, handlers, socket and the Hunt dialog", () => {
   assert.doesNotMatch(u, /getFlag\("wodx-creation"/);
 });
 
-const D = await imp("modules/wodx-otherworlds/scripts/drift-rules.mjs");
+const D = await imp("modules/wodx-rules/otherworlds/drift-rules.mjs");
 
 test("a Gauntlet that moves: steps, limits, undo", () => {
   let d = D.normDrift({});

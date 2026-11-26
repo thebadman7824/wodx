@@ -107,7 +107,7 @@ export async function run() {
     // B7864: at level 4 the window shows the age's Moon Bridge reach (DA:W p. 169: 4,000 miles; W20: 6,000)
     await setCaern({level: 4, status: "held"});
     const yr = Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 2000;
-    const CR = await import(`/modules/${MOD}/scripts/caern-rules.mjs?${Date.now()}`);
+    const CR = await import(`/modules/wodx-rules/storyteller/caern-rules.mjs?${Date.now()}`);
     const miles = CR.bridgeMilesFor(4, yr).toLocaleString("en");
     const pw = await peek(() => P.open(), "wst-power", "the Spring");
     ok("10. the window, with the age's Moon Bridge reach", /caern of Rage/.test(pw) && /Hold the moot/.test(pw) && /New caern/.test(pw) && pw.includes(`Moon Bridges to ${miles} miles`) && (yr > 1449 || miles === "4,000"), {window: pw.length, year: yr, miles});

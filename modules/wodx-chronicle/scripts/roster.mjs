@@ -6,7 +6,7 @@
  * character; the Storyteller approves and picks which sheet the player gets. Rules in roster-rules.mjs.
  */
 import {MODULE_ID, esc, emit, isActiveGM} from "./util.mjs";
-import * as RR from "./roster-rules.mjs";
+import * as RR from "../../wodx-rules/chronicle/roster-rules.mjs";
 import * as approvals from "./approvals.mjs";
 import {searchBox} from "./search.mjs";
 

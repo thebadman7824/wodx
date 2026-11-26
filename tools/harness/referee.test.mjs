@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 /* The crossover referee (WoDX Chronicle 0.17.0): cases, picking, what the sheets work out to. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/referee-rules.mjs")).href);
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/referee-rules.mjs")).href);
 const {default: T} = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/rules-clashes.mjs")).href);
-const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/routine-rules.mjs")).href);
+const NR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/routine-rules.mjs")).href);
 // B6243: a decision more than a month old is in docs/archive/decisions-<month>.md
 const {allDecisionsText} = await import(pathToFileURL(join(root, "tools/docs/archive-decisions.mjs")).href);
 const decisions = allDecisionsText(root);
@@ -140,7 +140,7 @@ test("every power has at least one line that uses it, and every line can use som
 });
 
 test("the book checks: changelings, wraiths, ghouls, the imbued (0.17.1)", async () => {
-  const H = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/hunter-rules.js")).href);
+  const H = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/hunter-rules.js")).href);
   for ( const e of ERAS.profiles ) for ( const y of [null, 1200, 1700, 1998, 1999, 2010, 2030] ) for ( const fb of [false, true] )
     assert.equal(R.isReckoning(e.id, y, {futureBranch: fb}), H.hunterLine(e.id, y, {futureBranch: fb}) === "reckoning", `${e.id} ${y} ${fb}`);
   assert.equal(R.casesFor({power: "mind", from: "kindred", to: "fae", book: "late"})[0].status, "settled");

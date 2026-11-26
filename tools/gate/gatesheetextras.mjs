@@ -15,7 +15,7 @@ const until = async (test, ms = 5000) => { const t = Date.now(); while (Date.now
 
 export async function run() {
   const X = game.modules.get(MOD)?.api?.extras;
-  const XR = await import(`/modules/${MOD}/scripts/extras-rules.mjs`);
+  const XR = await import(`/modules/wodx-rules/sheets/extras-rules.mjs`);
   const a = game.actors.find(x => x.name === "Wren (6g, changeling of Spring)") ?? game.actors.find(x => x.sheet?.constructor?.name?.startsWith("Wodx"));
   const b = game.actors.find(x => x.id !== a?.id && x.sheet?.constructor?.name?.startsWith("Wodx") && x.isOwner);
   const hadNotes = !!game.journal.find(j => j.getFlag(MOD, "stNotes")), hadFolder = !!game.folders.find(f => f.type === "Item" && f.getFlag(MOD, "left"));

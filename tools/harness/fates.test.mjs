@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 // Off-screen lives of supernatural NPCs (B3260-B3266).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/fates-rules.mjs")));
+const F = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/fates-rules.mjs")));
 
 const always = () => 0;      // every chance comes true
 const never = () => 0.999999; // no chance comes true
@@ -96,4 +96,13 @@ test("wiring: setting off by default, the skip hook, the approval, the api", () 
   assert.match(f, /!a\.hasPlayerOwner/);
   assert.match(m, /FATES\.registerSettings\(\);\n  FATES\.listen\(\);/);
   assert.match(m, /fates: \{plan: FATES\.planFor/);
+});
+
+test("#2627: a one-year Pass the years is a long jump, a calendar year short of 365.25 days included", () => {
+  const D = 86400;
+  assert.equal(F.isLongJump(0, 365 * D), true, "an ordinary calendar year");
+  assert.equal(F.isLongJump(0, 366 * D), true, "a leap year");
+  assert.equal(F.isLongJump(0, 365 * D - 3 * 3600), true, "a calendar year less the hours the running clock moved before the skip");
+  assert.equal(F.isLongJump(0, 300 * D), false, "ten months");
+  assert.equal(F.isLongJump(0, 30 * D), false, "a month wakes sleepers only");
 });

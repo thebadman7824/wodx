@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const TK = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/talk-rules.mjs")));
-const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/npc-rules.mjs")));
-const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/when-rules.mjs")));
+const TK = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/talk-rules.mjs")));
+const NR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/npc-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/when-rules.mjs")));
 
 const SHEET = `[greet] Nods without looking up from the ledger.
 [none] Shrugs and goes back to work.

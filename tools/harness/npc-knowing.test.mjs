@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as RV from "../../modules/wodx-npc/scripts/rivalry-rules.mjs";
-import * as TK from "../../modules/wodx-npc/scripts/talk-rules.mjs";
-import * as F from "../../modules/wodx-npc/scripts/faces-rules.mjs";
+import * as RV from "../../modules/wodx-rules/npc/rivalry-rules.mjs";
+import * as TK from "../../modules/wodx-rules/npc/talk-rules.mjs";
+import * as F from "../../modules/wodx-rules/npc/faces-rules.mjs";
 
 /* What an NPC can tell of a character, and what a player sees before meeting one (WoDX NPC 0.33.0, B1380-B1382) */
 

@@ -5,7 +5,7 @@
  * events fire as usual. One "Not now" ends the ask. An ask nobody finishes lapses after ten minutes.
  * The Storyteller can agree for the table from the card. Asks are kept on the active Storyteller's client.
  */
-import * as SR from "./spend-rules.mjs";
+import * as SR from "../../wodx-rules/storyteller/spend-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, pcs, ownerOf, gmIds, whereIs} from "./core.mjs";
 import {presentWhere, spend} from "./spend.mjs";
 

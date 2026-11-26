@@ -7,7 +7,7 @@ import {readFileSync} from "node:fs";
 
 // WoDX NPC 0.17.0: founding, splitting, ending and absorbing factions; player-run factions; years and eras.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
 
 const seq = (...xs) => { let i = 0; return () => xs[i++ % xs.length]; };
 const stream = () => { let x = 7; return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; }; };

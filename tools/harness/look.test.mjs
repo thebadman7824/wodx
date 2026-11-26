@@ -2,13 +2,13 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as L from "../../modules/wodx-library/scripts/look-rules.mjs";
-import * as W from "../../modules/wodx-chronicle/scripts/when-rules.mjs";
-import * as AT from "../../modules/wodx-npc/scripts/attitude-rules.mjs";
-import * as SR from "../../modules/wodx-actions/scripts/social-rules.js";
-import * as TK from "../../modules/wodx-npc/scripts/talk-rules.mjs";
-import * as RR from "../../modules/wodx-npc/scripts/routine-rules.mjs";
-import * as RV from "../../modules/wodx-npc/scripts/rivalry-rules.mjs";
+import * as L from "../../modules/wodx-rules/library/look-rules.mjs";
+import * as W from "../../modules/wodx-rules/chronicle/when-rules.mjs";
+import * as AT from "../../modules/wodx-rules/npc/attitude-rules.mjs";
+import * as SR from "../../modules/wodx-rules/actions/social-rules.js";
+import * as TK from "../../modules/wodx-rules/npc/talk-rules.mjs";
+import * as RR from "../../modules/wodx-rules/npc/routine-rules.mjs";
+import * as RV from "../../modules/wodx-rules/npc/rivalry-rules.mjs";
 import * as MORE from "../../modules/wodx-npc/data/stock-talk-more.mjs";
 
 /* How NPCs read a character's look (Library 0.14.0, NPC 0.32.0, Chronicle 0.32.0, Actions 3.45.0) */

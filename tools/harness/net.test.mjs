@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as N from "../../modules/wodx-otherworlds/scripts/net-rules.mjs";
+import * as N from "../../modules/wodx-rules/otherworlds/net-rules.mjs";
 
 test("which Net: the Digital Web from 1990, decks on the Future branch from 2005", () => {
   assert.equal(N.netKind(1989, false), null);

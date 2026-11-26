@@ -2,9 +2,9 @@
 // Usage: node tools/goods/build-desk.mjs <out.json>
 import {writeFileSync} from "node:fs";
 const G = await import(new URL("../../modules/wodx-library/data/goods.mjs", import.meta.url));
-const M = await import(new URL("../../modules/wodx-storyteller/scripts/money-rules.mjs", import.meta.url));
+const M = await import(new URL("../../modules/wodx-rules/storyteller/money-rules.mjs", import.meta.url));
 const T = await import(new URL("../../modules/wodx-library/data/goods-text.mjs", import.meta.url));
-const X = await import(new URL("../../modules/wodx-library/scripts/examine-rules.mjs", import.meta.url));
+const X = await import(new URL("../../modules/wodx-rules/library/examine-rules.mjs", import.meta.url));
 // Prices in Moravia (Rothenstein's land), at the start of each era the good is in use (or its first year)
 const priceText = g => Object.fromEntries(g.eras.map(e => {
   const y = Math.max(G.ERA_YEARS[e][0], g.from);

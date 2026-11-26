@@ -358,7 +358,7 @@ test("attacks: the likeliest foe, and the panel can switch or clear it", () => {
 });
 
 test("WoDX NPC aims its power plans with the same ranking as the power windows", async () => {
-  const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/npc-rules.mjs")));
+  const NR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/npc-rules.mjs")));
   const state = {self: {id: "me", name: "Elder", wounds: 0}, tokens: [
     {id: "a", name: "Near", side: "foe", visible: true, distance: 4, reach: false, los: true, lastHitMe: null},
     {id: "b", name: "Biter", side: "foe", visible: true, distance: 9, reach: false, los: true, lastHitMe: 3},

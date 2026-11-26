@@ -53,7 +53,7 @@ test("next dusk is ahead and at a plausible hour", () => {
 // B6381: the clock's Day and WoDX Actions' sun agree to the second, and the clock moved to dawn reads Day
 test("night and day: one line, the sun's altitude against -0.833 degrees", async () => {
   const M = await import("../scripts/calendar-math.mjs");
-  const S = await import("../../wodx-actions/scripts/sunlight-rules.js");
+  const S = await import("../../wodx-rules/actions/sunlight-rules.js");
   const lat = 49.2;
   for ( const start of [0, 86400 * 100 + 3600 * 2, 86400 * 200 + 3600 * 20, 86400 * 300] ) {
     const toDawn = C.secondsToNextDawn(start, lat), dawn = start + toDawn;

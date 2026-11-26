@@ -6,7 +6,7 @@
  * A feature may name a slot (eyes, brow, nose, lips, chin, neck, ears, head, hair, beard, cheekL, cheekR, foreL, foreR,
  * temples, skin, aura): the roller never gives a face two features in one slot.
  */
-import {FEATURES, H} from "./face64-rules.mjs";
+import {FEATURES, H} from "../../wodx-rules/paperdoll/face64-rules.mjs";
 export {H};
 
 export const {mix, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;

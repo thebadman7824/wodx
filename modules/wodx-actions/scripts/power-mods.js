@@ -9,7 +9,7 @@
  * The numbers ride in the effect's WoDX Chronicle timed data (effects.js timedData), so an old effect without them
  * counts nothing, as before.
  */
-import * as DOM from "./domain-da-rules.js";
+import * as DOM from "../../wodx-rules/actions/domain-da-rules.js";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 /** B6850: a Blessing or Curse key, the plain one or a standing scoped one ("wodx-effect-fortune:<name>:<tags>"). */

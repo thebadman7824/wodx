@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const G = await imp("modules/wodx-library/data/goods.mjs");
 const T = await imp("modules/wodx-library/data/goods-text.mjs");
-const X = await imp("modules/wodx-library/scripts/examine-rules.mjs");
+const X = await imp("modules/wodx-rules/library/examine-rules.mjs");
 
 test("examine: every good has a description, and no description names a good that is not there", () => {
   const names = new Set(G.GOODS.map(g => g.former ?? g.name));
@@ -94,7 +94,7 @@ test("examine: names and descriptions say plainly what a thing is; origin and hi
 });
 
 test("examine: a possession's description sits in a fold under its row that starts closed (Sheets 0.8.2)", async () => {
-  const R = await imp("modules/wodx-sheets/scripts/extras-rules.mjs");
+  const R = await imp("modules/wodx-rules/sheets/extras-rules.mjs");
   const H = await imp("modules/wodx-sheets/scripts/extras-html.mjs");
   assert.equal(R.plainDesc("<p>A thin gold coin &amp; more.</p>"), "A thin gold coin & more.");
   assert.equal(R.plainDesc("x".repeat(700)).length, 600);

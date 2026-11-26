@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const P = await imp("modules/wodx-storyteller/scripts/power-rules.mjs");
-const U = await imp("modules/wodx-storyteller/scripts/upkeep-rules.mjs");
+const P = await imp("modules/wodx-rules/storyteller/power-rules.mjs");
+const U = await imp("modules/wodx-rules/storyteller/upkeep-rules.mjs");
 const W = P.WEEK, D = P.DAY;
 
 test("a Node's weekly output follows the year and splits half free, half Tass (M20 p. 320)", () => {
@@ -141,7 +141,7 @@ test("the wiring: settings, clock, upkeep chooser, api; plain words players may 
   assert.match(p, /system\.advantages\.glamour\.temporary/);
   // A place written back must keep its id, name and scene: every update spreads the stored place first
   for ( const m of p.matchAll(/await update\(placeId, x => ([^,]+?)[,)]/g) ) assert.match(m[1], /^\(\{\.\.\.x\b|^x$/, `update keeps the place: ${m[1]}`);
-  const shown = (p + src("modules/wodx-storyteller/scripts/power-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+  const shown = (p + src("modules/wodx-rules/storyteller/power-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(shown, /B3[24]\d\d|house rule/i);
   assert.doesNotMatch(shown, /—/);
   assert.doesNotMatch(shown, /\b(he|she|him|her|his|hers)\b/);

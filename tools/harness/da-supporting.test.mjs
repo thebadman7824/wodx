@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import {TEMPLATES, GROUPS, TIERS, ABILITY_2002} from "../../modules/wodx-creation/data/dasc-templates.mjs";
-import * as SC from "../../modules/wodx-creation/scripts/supporting-cast-rules.mjs";
-import * as BR from "../../modules/wodx-creation/scripts/book-people-rules.mjs";
+import * as SC from "../../modules/wodx-rules/creation/supporting-cast-rules.mjs";
+import * as BR from "../../modules/wodx-rules/creation/book-people-rules.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const sum = o => Object.values(o ?? {}).reduce((s, v) => s + v, 0);

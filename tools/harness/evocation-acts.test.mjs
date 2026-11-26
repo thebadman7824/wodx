@@ -2,11 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import * as DE from "../../modules/wodx-actions/scripts/demon-evocations.js";
 import * as ACT from "../../modules/wodx-actions/scripts/acts.js";
-import * as E from "../../modules/wodx-actions/scripts/effects-rules.js";
+import * as E from "../../modules/wodx-rules/actions/effects-rules.js";
 import * as PW from "../../modules/wodx-actions/scripts/power-effects.js";
 import * as MH from "../../modules/wodx-actions/scripts/mummy-hekau.js";
 import * as BR from "../../modules/wodx-actions/scripts/book-rituals.js";
-import * as TK from "../../modules/wodx-npc/scripts/talk-rules.mjs";
+import * as TK from "../../modules/wodx-rules/npc/talk-rules.mjs";
 
 const kinds = (lore, level, s = 3) => DE.evocationResults(lore, level, s, {faith: 3}).map(r => r.out.kind);
 
@@ -116,7 +116,7 @@ test("B5793: a binding holds the bound character's token", async () => {
 });
 
 test("B5795: a pact gift does what it gives", async () => {
-  const R = await import("../../modules/wodx-actions/scripts/servant-actions-rules.js");
+  const R = await import("../../modules/wodx-rules/actions/servant-actions-rules.js");
   const [g] = R.giftItems([{k: "evocation", level: 2}], {demon: "Dagon", demonId: "d1"});
   assert.equal(g.flags["wodx-actions"].pactGift.demonId, "d1");
   assert.equal(g.flags["wodx-actions"].pactGift.level, 2);

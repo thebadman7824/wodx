@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
    no era, and a world that saved the old key still reads house rules without error. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const H = (await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/house-rules.mjs")))).default;
-const R = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/rules.mjs")));
+const H = (await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/house-rules.mjs")))).default;
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/rules.mjs")));
 
 test("the ghoul switch is deleted and the ghoul rules stay the Dark Ages ones in every era", () => {
   assert.equal(H.switches.find(s => s.id === "ghoulsDarkAges"), undefined, "switch removed");
@@ -19,7 +19,7 @@ test("the ghoul switch is deleted and the ghoul rules stay the Dark Ages ones in
   assert.equal(R.ghoulBloodMax(250), 12);
   const hits = [];
   for ( const mod of readdirSync(join(root, "modules")) ) {
-    for ( const sub of ["scripts", "data"] ) {
+    for ( const sub of ["scripts", "data", ...(mod === "wodx-rules" ? readdirSync(join(root, "modules", mod)) : [])] ) {
       let files = [];
       try { files = readdirSync(join(root, "modules", mod, sub)); } catch (e) { continue; }
       for ( const f of files ) if ( /\.m?js$/.test(f) && readFileSync(join(root, "modules", mod, sub, f), "utf8").includes("ghoulsDarkAges") ) hits.push(`${mod}/${sub}/${f}`);

@@ -1,6 +1,6 @@
 import {MODULE_ID, isActiveGM, setting} from "./util.mjs";
 import * as skip from "./skip.mjs";
-import * as P from "./pace-rules.mjs";
+import * as P from "../../wodx-rules/chronicle/pace-rules.mjs";
 
 /** WoDX Chronicle 0.39.0: the clock that runs with the table (the rules are in pace-rules.mjs). */
 

@@ -8,7 +8,7 @@
  * wait in the approval queue, the Storyteller's keywords stay the Storyteller's call (route in effects-rules.js).
  * Passive powers, and powers with an effects spec of their own (path magic, Numina), are left out.
  */
-import { KEYWORDS, stOutcomes } from "./effects-rules.js";
+import { KEYWORDS, stOutcomes } from "../../wodx-rules/actions/effects-rules.js";
 import { keywordsOf, slugOf } from "./power-keywords.js";
 
 /** Keywords that only make sense on someone else: with no target they are dropped, never turned on the user. */

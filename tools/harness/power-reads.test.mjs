@@ -19,7 +19,7 @@ const RR = await imp("tools/powers/read-rules.mjs");
 const PM = await imp("modules/wodx-actions/scripts/power-mods.js");
 const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
 const BR = await imp("modules/wodx-actions/scripts/book-rituals.js");
-const E = await imp("modules/wodx-actions/scripts/effects-rules.js");
+const E = await imp("modules/wodx-rules/actions/effects-rules.js");
 const MH = await imp("modules/wodx-actions/scripts/mummy-hekau.js");
 
 const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "wodx-reads-")), "inv.json");

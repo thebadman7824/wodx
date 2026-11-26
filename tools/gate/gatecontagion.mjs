@@ -128,7 +128,7 @@ export async function run() {
       const line9b = (r9b?.lines ?? []).find(l => l.includes(a.name)) ?? "";
       // B7863: in a Dark Ages year the week is seven daily rolls by DA:I p. 165 (plague at difficulty 7)
       const yr = Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 2000;
-      const RR = await import(`/modules/${MOD}/scripts/contagion-rules.mjs?${Date.now()}`);
+      const RR = await import(`/modules/wodx-rules/storyteller/contagion-rules.mjs?${Date.now()}`);
       const daOk = !st9 || !RR.daSickness(yr) || (/DA:I p\. 165/.test(line9b) && /good days? of 7/.test(line9b) && /Stamina 7/.test(line9));
       ok("9. a character catches it or throws it off, then rolls weekly (daily by DA:I in Dark Ages years)", /catches|throws it off/.test(line9) && (!st9 || /sick with plague/.test(line9b)) && daOk, {first: line9, then: line9b, sick: st9, year: yr});
     } else { ok("9. a character catches it or throws it off, then rolls weekly", true, {skipped: "no player user in this world"}); R.notes.push("Step 9 skipped: no player user."); }

@@ -187,10 +187,11 @@ again. review.mjs, claim.mjs and merge-stamp.mjs point the clone's `core.hooksPa
 they run; `node tools/git-hooks/install.mjs` does it by hand. The train's own commits (trailer `Merge-Train: yes`) go
 through, `WODX_PUSH_GUARD=off` lets one push through, and a push goes through unchecked when GitHub cannot be asked.
 
-**Batches (B7445, Ben, 18 November 2026).** When the front needs main and a stamp anyway, the train takes up to two
+**Batches (B7445, 18 November 2026; five at most since B8170, 26 November 2026).** When the front needs main and a
+stamp anyway, the train takes up to four
 green pull requests behind it that change other files into one batch pull request ("Merge train batch: #a, #b"),
 stamped and gated once. Its merge puts each member's head on main, and GitHub shows each as merged. A red batch is
-closed and tried again with half as many, down to one, so the pull request at fault leaves the train with its own
+closed and tried again with half as many (5, 3, 2, then 1), so the pull request at fault leaves the train with its own
 reason. Nothing changes for the thread: label it and stop pushing. A push to a batched pull request takes it out of
 the train as before and closes the batch.
 

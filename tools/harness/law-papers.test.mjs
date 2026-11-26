@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const P = await imp("modules/wodx-chronicle/scripts/law-papers-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
-const R = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const P = await imp("modules/wodx-rules/chronicle/law-papers-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 
 test("papers: the records grow with the years", () => {
   assert.deepEqual(P.recordsFor("latin", 1197).map(r => r.id), ["rolls"]);

@@ -7,7 +7,7 @@ import {readFileSync, readdirSync, existsSync, mkdtempSync, mkdirSync, writeFile
 import {join, dirname} from "node:path";
 import {tmpdir} from "node:os";
 import {fileURLToPath} from "node:url";
-import {parseStamp, summarise, shortDate} from "../../modules/wodx-chronicle/scripts/release-rules.mjs";
+import {parseStamp, summarise, shortDate} from "../../modules/wodx-rules/chronicle/release-rules.mjs";
 import {stamp, packageFolders} from "../release/stamp.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");

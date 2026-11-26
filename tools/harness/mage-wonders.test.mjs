@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const W = await imp("modules/wodx-actions/scripts/mage-wonders-rules.js");
-const M = await imp("modules/wodx-actions/scripts/mage-da-rules.js");
+const W = await imp("modules/wodx-rules/actions/mage-wonders-rules.js");
+const M = await imp("modules/wodx-rules/actions/mage-da-rules.js");
 
 test("B7927: every wonder is made with real Pillars of its fellowships, and each does something in play", () => {
   for ( const w of W.WONDERS ) {
@@ -72,7 +72,7 @@ test("B7927-B7930: wiring", () => {
   assert.match(h, /enchant: WX\.enchant, use: WX\.useWonder, tass: WX\.tass/);
   assert.match(d, /HH\.build\(ctx, \{ info, backlash: \{/);
   assert.match(m, /MXD\.build\(\{[^}]*setDamage, applyDamage/);
-  const shared = src("modules/wodx-actions/scripts/mage-wonders.js") + src("modules/wodx-actions/scripts/mage-wonders-rules.js");
+  const shared = src("modules/wodx-actions/scripts/mage-wonders.js") + src("modules/wodx-rules/actions/mage-wonders-rules.js");
   assert.ok(!/Rothenstein|Voss/.test(shared));
   assert.ok(!/—/.test(shared));
   assert.ok(!/\b(he|she|his|her|him)\b/i.test(shared.replace(/heal|here|her[a-z]/gi, "")));

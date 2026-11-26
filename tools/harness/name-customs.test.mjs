@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const NC = await imp("modules/wodx-creation/data/name-customs.mjs");
-const PR = await imp("modules/wodx-creation/scripts/people-rules.mjs");
+const PR = await imp("modules/wodx-rules/creation/people-rules.mjs");
 const {PEOPLE_TABLES} = await imp("modules/wodx-creation/data/people.mjs");
 const G = await imp("modules/wodx-chronicle/scripts/gen-core.mjs");
-const RS = await imp("modules/wodx-npc/scripts/resident-rules.mjs");
+const RS = await imp("modules/wodx-rules/npc/resident-rules.mjs");
 
 const lookup = (era, culture = "bohemia") => id => G.resolveTable(PEOPLE_TABLES, id, {era, culture});
 const people = (n, {era, culture, year, origin, sex = "male", trade = "farmer", later = null}) => Array.from({length: n}, (_, i) =>

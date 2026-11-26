@@ -14,7 +14,7 @@
  * The active Storyteller's client keeps the scene's echoes (flags.wodx-senses.echoes) and strain marks
  * (flags.wodx-senses.strain) from map events, wounds, crossings and vulgar magick (hook wodxMagickWorked).
  */
-import * as O from "./otherworld-sight-rules.mjs";
+import * as O from "../../wodx-rules/senses/otherworld-sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -68,7 +68,7 @@ export function sightNow(a, chosen) {
 
 /** A mage's sight costs the casting roll. Returns true when it holds. */
 export async function rollFor(a, sight) {
-  if ( !castPlan ) { try { castPlan = (await import("../../wodx-actions/scripts/mage-da-rules.js")).castPlan; } catch (e) { castPlan = null; } }
+  if ( !castPlan ) { try { castPlan = (await import("../../wodx-rules/actions/mage-da-rules.js")).castPlan; } catch (e) { castPlan = null; } }
   const plan = O.mageRoll(traitsOf(a), sight, {castPlan});
   if ( !plan || plan.dice <= 0 ) { ui.notifications.warn(`${a.name} has no dice for ${O.OTHER[sight].label}.`); return false; }
   const ok = await foundry.applications.api.DialogV2.confirm({window: {title: O.OTHER[sight].label},

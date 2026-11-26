@@ -1,5 +1,5 @@
 import {MODULE_ID, sceneRatings, activeChartId, behaviorType} from "./ratings.mjs";
-import {SETTLEMENTS, CHARTS, gauntletFor, suggestSettlement, battlemapParent} from "./rules.mjs";
+import {SETTLEMENTS, CHARTS, gauntletFor, suggestSettlement, battlemapParent} from "../../wodx-rules/otherworlds/rules.mjs";
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import {clearCrossing} from "./crossing.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

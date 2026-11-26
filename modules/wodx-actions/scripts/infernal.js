@@ -11,7 +11,7 @@
  *   prevails" takes a Road point (no remorse roll) and at 0 moves the character to the Road of Sin, Path of the Devil;
  *   on that Path a fall to 0 asks for the last Supplicium.
  */
-import * as I from "./infernal-rules.js";
+import * as I from "../../wodx-rules/actions/infernal-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

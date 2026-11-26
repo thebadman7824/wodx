@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* WoDX Storyteller 0.21.0: teleport the selected tokens to the cursor. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const S = p => join(root, "modules/wodx-storyteller/scripts", p);
-const R = await import(S("teleport-rules.mjs"));
+const R = await import(S("../../wodx-rules/storyteller/teleport-rules.mjs"));
 
 test("one token lands with its centre on the point", () => {
   const [t] = R.landing([{id: "a", x: 0, y: 0, w: 100, h: 100}], {x: 550, y: 350});

@@ -6,9 +6,9 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const E = await import(join(root, "modules/wodx-chronicle/scripts/encounter-rules.mjs"));
-const TW = await import(join(root, "modules/wodx-chronicle/scripts/twist-rules.mjs"));
-const F = await import(join(root, "modules/wodx-chronicle/scripts/front-rules.mjs"));
+const E = await import(join(root, "modules/wodx-rules/chronicle/encounter-rules.mjs"));
+const TW = await import(join(root, "modules/wodx-rules/chronicle/twist-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/chronicle/front-rules.mjs"));
 const DAY = 86400;
 
 test("twenty-four encounters, each with maps, people, a window and what happens unmet", () => {
@@ -91,8 +91,8 @@ test("a twist waits for its encounter, unless forced", () => {
 });
 
 test("B6813: every Rothenstein person keeps a daily round that exists in 1200", async () => {
-  const R = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
-  const RR = await import(join(root, "modules/wodx-chronicle/scripts/reveal-rules.mjs"));
+  const R = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
+  const RR = await import(join(root, "modules/wodx-rules/chronicle/reveal-rules.mjs"));
   const ok = R.presetsFor(1200);
   for ( const e of E.ENCOUNTERS ) for ( const p of e.people ) assert.ok(ok[p.preset], `encounter ${e.n}: ${p.name} (${p.preset})`);
   for ( const [n, r] of Object.entries(RR.REVEALS) ) for ( const a of r.after ?? [] ) if ( a.preset ) assert.ok(ok[a.preset], `twist ${n}: ${a.who} (${a.preset})`);

@@ -7,7 +7,7 @@ const DC = await import("../../modules/wodx-actions/scripts/fae-da-cantrips.js")
 const TR = await import("../../modules/wodx-actions/scripts/fae-treasures.js");
 const SC = await import("../../modules/wodx-actions/scripts/spirit-charms.js");
 const FX = await import("../../modules/wodx-actions/scripts/fae-da.js");
-const F = await import("../../modules/wodx-actions/scripts/fae-da-rules.js");
+const F = await import("../../modules/wodx-rules/actions/fae-da-rules.js");
 
 test("every book cantrip has its Dominion, level, trait, page and a summary in WoDX's words", () => {
   assert.ok(DC.IDS.length >= 180, `only ${DC.IDS.length} presets`);

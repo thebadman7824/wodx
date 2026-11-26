@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* Trait effects step 6 (Actions 3.35.0, Chronicle 0.21.0): sleep, feeding, blood costs, Lucky */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
 const src = p => readFileSync(join(root, p), "utf8");
 const feat = (name, kind = "merit") => ({id: name, name, kind, value: 1});
 

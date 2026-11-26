@@ -27,7 +27,7 @@ const mortal = {uuid: "Actor.mortal", id: "mortal", name: "Vessel", type: "Morta
 const tVes = tok("tVes", mortal, "gm");
 const all = [tHero, tKin, tVes];
 globalThis.canvas = {ready: false, grid: {size: 100}, tokens: {placeables: all, get: id => all.find(t => t.id === id)}};
-const SR = await import("../../modules/wodx-paperdoll/scripts/sprite-rules.mjs");
+const SR = await import("../../modules/wodx-rules/paperdoll/sprite-rules.mjs");
 const S = await import("../../modules/wodx-paperdoll/scripts/sprites.mjs");
 SR.learn("worlds/t/wodx-sprites", {sprites: {p1: {name: "Player figure", acts: ["shift", "feed", "pick", "search", "swing", "swoon"]}}});
 S.startSprites();

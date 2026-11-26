@@ -10,7 +10,7 @@ import {readFileSync, existsSync} from "node:fs";
  * fallback, and the Freesound fetch tool's licence checks.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(join(root, "modules/wodx-atmosphere/scripts/kits-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/atmosphere/kits-rules.mjs"));
 const F = await import(join(root, "tools/atmosphere/fetch-cues.mjs"));
 
 test("a kit folder's faith cues and the common folder's heartbeat are sorted as cues", () => {

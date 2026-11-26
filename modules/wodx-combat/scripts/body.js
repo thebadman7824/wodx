@@ -8,7 +8,7 @@
  *  - The maiming card: offered to the Storyteller after a heavy blow to a limb or eye; "Mark as lost" adds a lasting
  *    change in WoDX Storyteller (house rule B1204).
  */
-import * as B from "./body-rules.js";
+import * as B from "../../wodx-rules/combat/body-rules.js";
 import { effectsOf } from "./movement.js";
 
 const MOD = "wodx-combat", ST = "wodx-storyteller";

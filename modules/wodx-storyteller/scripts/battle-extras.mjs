@@ -1,7 +1,7 @@
 import * as BD from "./battle-deeds.mjs";
 import * as BA from "./battle-aftermath.mjs";
 import * as C from "./core.mjs";
-import * as T from "./tasks-rules.mjs";
+import * as T from "../../wodx-rules/storyteller/tasks-rules.mjs";
 import * as Led from "./ledger.mjs";
 
 /**

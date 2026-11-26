@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const W = await imp("modules/wodx-library/scripts/wonder-rules.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const W = await imp("modules/wodx-rules/library/wonder-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 
 const garou = (o = {}) => W.makerOf({profile: "lupine", gnosis: 5, willpower: 6, rituals: 3, rites: ["Rite of the Fetish", "Rite of Binding"], ...o});
 

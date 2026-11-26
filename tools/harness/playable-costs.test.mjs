@@ -25,7 +25,7 @@ test("Strengthening the Demon: two Demon Chi a success, at most 10, a turn a suc
 });
 
 test("the after-costs name both powers, by their pages", async () => {
-  const AC = await imp("modules/wodx-actions/scripts/after-cost-rules.js");
+  const AC = await imp("modules/wodx-rules/actions/after-cost-rules.js");
   assert.equal(AC.costOf({name: "Strengthening the Demon"})?.cost.kind, "hunRoll");
   assert.equal(AC.costOf({name: "Numbing"})?.cost.kind, "fomorEnd");
 });

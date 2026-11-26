@@ -3,7 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as RM from "../../modules/wodx-otherworlds/scripts/realm-maps-rules.mjs";
+import * as RM from "../../modules/wodx-rules/otherworlds/realm-maps-rules.mjs";
 
 const YEARS = [1197, 1348, 1500, 1700, 1916, 1945, 1969, 1999, 2010, 2050, 2095];
 const centre = r => r.at ?? {x: r.rect[0] + Math.floor(r.rect[2] / 2), y: r.rect[1] + Math.floor(r.rect[3] / 2)};
@@ -209,7 +209,7 @@ test("Foundry: draw a realm, send tokens in, bring them back where they stood", 
   assert.equal(sent.length, 2);
   assert.equal(town.tokens.size, 0);
   assert.equal(s.tokens.size, 2);
-  const model = RMF.modelOf(s), spots = (await import("../../modules/wodx-otherworlds/scripts/realm-maps-rules.mjs")).arrivalSpots(model, 2);
+  const model = RMF.modelOf(s), spots = (await import("../../modules/wodx-rules/otherworlds/realm-maps-rules.mjs")).arrivalSpots(model, 2);
   assert.deepEqual(sent.map(t => [t.x, t.y]), spots.map(c => [c.x * 100, c.y * 100]), "they land on the arrival");
   assert.deepEqual(sent[0].flags["wodx-otherworlds"].cameFrom, {scene: town.id, x: 500, y: 600, level: null, elevation: 0});
   assert.deepEqual(socket, [["pullToScene", s.id, "u1"]], "the owning player is pulled there");

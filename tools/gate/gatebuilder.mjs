@@ -56,7 +56,7 @@ export async function run() {
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
   const {isLiveWorld} = await import(`/modules/wodx-chronicle/scripts/live-worlds.mjs`);
   if ( isLiveWorld(game.world) ) throw new Error("Never in a Live world.");
-  const Rules = await import(`/modules/${MOD}/scripts/recipe-rules.mjs?${Date.now()}`);
+  const Rules = await import(`/modules/wodx-rules/storyteller/recipe-rules.mjs?${Date.now()}`);
   const C = await CD();
   const inPlay = C.currentId();
   // No recipe here (no chronicle in play, or one without a recipe): the gate's own chronicle stands in for the run

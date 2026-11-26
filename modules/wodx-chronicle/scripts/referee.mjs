@@ -6,7 +6,7 @@
  */
 import {MODULE_ID, esc, rule} from "./util.mjs";
 import {searchBox} from "./search.mjs";
-import * as R from "./referee-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/referee-rules.mjs";
 import CLASHES from "../data/rules-clashes.mjs";
 import * as eras from "./eras.mjs";
 import {addHandTool} from "./hand-tool.mjs";

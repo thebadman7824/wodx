@@ -3,7 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as RF from "../../modules/wodx-otherworlds/scripts/reflect-rules.mjs";
+import * as RF from "../../modules/wodx-rules/otherworlds/reflect-rules.mjs";
 
 const load = n => JSON.parse(readFileSync(new URL(`../mapgen/samples/${n}.wodx.json`, import.meta.url), "utf8"));
 const grown = load("reflecttown");   // grown from the medieval town to 1960

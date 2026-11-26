@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-chronicle/scripts/law-regime-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+const R = await imp("modules/wodx-rules/chronicle/law-regime-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
 
 test("regime: the turns of rule come from the law records", () => {
   const t = R.turnsBetween(L.rowsFor("moravia"), 1197, 2022);

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as R from "../scripts/rules.mjs";
+import * as R from "../../wodx-rules/otherworlds/rules.mjs";
 
 test("Dark Ages chart matches the book", () => {
   const v = R.CHARTS["dark-ages"].values;

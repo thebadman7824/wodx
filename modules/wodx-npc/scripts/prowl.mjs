@@ -3,8 +3,8 @@
  * player's character as a mark, closes in on the map and demands money. The player answers on the card: pay, talk or
  * fight, and the criminal acts on the answer. prowl-rules.mjs has the rules.
  */
-import * as PW from "./prowl-rules.mjs";
-import * as MR from "./mortal-rules.mjs";
+import * as PW from "../../wodx-rules/npc/prowl-rules.mjs";
+import * as MR from "../../wodx-rules/npc/mortal-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };

@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* Adopt a generated map (Interactables 0.19.0): the sidecar the farmstead generator writes, read and applied */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const A = await import(join(root, "modules/wodx-interactables/scripts/adopt-rules.mjs"));
-const R = await import(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs"));
+const A = await import(join(root, "modules/wodx-rules/interactables/adopt-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/interactables/interact-rules.mjs"));
 const SAMPLE = readFileSync(join(root, "tools/mapgen/samples/kessler-steading.wodx.json"), "utf8");
 const MOD = "wodx-interactables";
 const FRAME = {sceneX: 280, sceneY: 210, size: 140, distance: 5, sceneWidth: 0, sceneHeight: 0};
@@ -231,7 +231,7 @@ test("adopt: wired into Interactables, Storyteller only, short lists marked", ()
 });
 
 /* Town generator sidecars (tools/mapgen/ddtown.py; Interactables 0.21.0 keeps households on their buildings) */
-const F = await import(join(root, "modules/wodx-interactables/scripts/fill-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/interactables/fill-rules.mjs"));
 const TOWNS = ["hohenhausen", "birbach", "rotheim-a2", "schondorf"].map(n => [n, readFileSync(join(root, `tools/mapgen/samples/${n}.wodx.json`), "utf8")]);
 
 test("adopt: the village and town sidecars read cleanly, households and all", () => {

@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const P = await imp("modules/wodx-chronicle/scripts/law-punish-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+const P = await imp("modules/wodx-rules/chronicle/law-punish-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
 
 test("sentences: the land allows them, the deeds weigh them", () => {
   assert.equal(P.tierOf([{deed: "fight"}]).tier, "light");
@@ -73,5 +73,5 @@ test("B6669: medieval Moravia has a time sentence in the gaol, until prison take
   assert.ok(!at(1300).includes("prison"));
   assert.ok(at(1790).includes("prison") && !at(1790).includes("gaol"));
   assert.equal(P.markFor("gaol", {year: 1300, region: "moravia", weight: 4}).kind, "time");
-  assert.match(src("modules/wodx-chronicle/scripts/law-rules.mjs"), /B6669: a medieval time sentence\. Mage: The Dark Ages \(pdf p\. 219\)/);
+  assert.match(src("modules/wodx-rules/chronicle/law-rules.mjs"), /B6669: a medieval time sentence\. Mage: The Dark Ages \(pdf p\. 219\)/);
 });

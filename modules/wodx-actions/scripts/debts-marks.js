@@ -18,9 +18,9 @@
  *                          and roll the taint; the victim's soul at nightfall when that setting is on.
  */
 import * as LIM from "./limits.js";
-import * as D from "./debts-rules.js";
-import * as B from "./beast-marks-rules.js";
-import * as C from "./c20-rules.js";
+import * as D from "../../wodx-rules/actions/debts-rules.js";
+import * as B from "../../wodx-rules/actions/beast-marks-rules.js";
+import * as C from "../../wodx-rules/actions/c20-rules.js";
 import * as P from "./profiles.js";
 import * as TH from "./trait-hooks.js";
 import * as FD from "./fae-da.js";

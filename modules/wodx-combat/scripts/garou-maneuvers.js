@@ -9,7 +9,7 @@
  *   Taunt: flag wodx-combat.taunted {dice}: dice off the foe's next attack
  *   Harrying: the chaser's Dexterity + Athletics against the prey's at 5; driven on, the prey loses a Willpower point
  */
-import * as R from "./rules.js";
+import * as R from "../../wodx-rules/combat/rules.js";
 
 const MOD = "wodx-combat";
 const REF = "Dark Ages: Werewolf";

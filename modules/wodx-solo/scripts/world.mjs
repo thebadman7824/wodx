@@ -17,9 +17,9 @@
  *   setting wodx-solo.encounters  Boolean  "Night encounters find the lone player" (default on)
  *   scene flag wodx-solo.encounters  "town", "wilds" or "none": which encounters a scene takes (none: never)
  */
-import * as W from "./world-rules.mjs";
-import {temperOf} from "./director-rules.mjs";
-import * as R from "./solo-rules.mjs";
+import * as W from "../../wodx-rules/solo/world-rules.mjs";
+import {temperOf} from "../../wodx-rules/solo/director-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {addAsks, addActions, placeOf, tell, ask} from "./panel.mjs";
 
 const MOD = "wodx-solo";

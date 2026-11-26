@@ -5,11 +5,11 @@
  * undoable from the same window. Rules in levers-rules.mjs.
  */
 import {MOD, esc, setting, chron, log} from "./core.mjs";
-import * as L from "./levers-rules.mjs";
+import * as L from "../../wodx-rules/storyteller/levers-rules.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Hunters from "./hunters.mjs";
-import * as CR from "./contagion-rules.mjs";
-import * as HR from "./hunters-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/contagion-rules.mjs";
+import * as HR from "../../wodx-rules/storyteller/hunters-rules.mjs";
 import {addTool} from "./hand.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

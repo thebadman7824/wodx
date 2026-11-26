@@ -172,8 +172,8 @@ export async function run() {
       const o = t => ix.rules.optionsFor(ix.describeObj(t), {...c, kept: false});
       const bikeOk = ix.rules.optionsFor(ix.describeObj(bike), c).some(x => x.id === "mount");
       const faeOpts = o(fae), faeNo = faeOpts.some(x => x.id === "onlyNote") && !faeOpts.some(x => x.id === "mount" || x.id === "board"), gryNo = !!o(gry).find(x => x.id === "skillNote")?.disabled;
-      const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
-      const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
+      const ride = {...(await import("/modules/wodx-rules/interactables/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
+      const MT = await import("/modules/wodx-rules/combat/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
       G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {fae: faeOpts.map(x => x.id), gryOpts: o(gry).map(x => `${x.id}${x.disabled ? "(off)" : ""}`).slice(0, 4), bikeOk, faeNo, gryNo, kind: c.kind, year: c.year, dodge});
     });

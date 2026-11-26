@@ -8,8 +8,8 @@
  *              from the Factions button on the token tools. The orders are spent on the turn.
  * The rules are in faction-rules.mjs (foundFaction, normOrders, runTurn).
  */
-import * as F from "./faction-rules.mjs";
-import * as PO from "./politics-rules.mjs";
+import * as F from "../../wodx-rules/npc/faction-rules.mjs";
+import * as PO from "../../wodx-rules/npc/politics-rules.mjs";
 
 export function build(ctx, fx) {
   const {MOD, esc, gmIds, isActiveGM} = ctx;

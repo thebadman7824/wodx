@@ -5,7 +5,7 @@
  * for the marks that matter in play. A scene with no twin levels yet gets plain tinted ones. Undo removes it all.
  * Rules in reflect-rules.mjs.
  */
-import * as RF from "./reflect-rules.mjs";
+import * as RF from "../../wodx-rules/otherworlds/reflect-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {LAYERS, layersOf} from "./twins.mjs";
 

@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the Foundry side of faith and occult goods (B3902 to B3904; rules in faith-rules.mjs).
  */
-import * as F from "./faith-rules.mjs";
+import * as F from "../../wodx-rules/library/faith-rules.mjs";
 import {rollPool} from "./arms-use.mjs";
 
 const MOD = "wodx-library";

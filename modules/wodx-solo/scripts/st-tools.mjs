@@ -22,10 +22,10 @@
  * player, with no other player logged in. Each ask checks that again, and the seat switches the tools off the moment
  * another player logs in or the mode goes off.
  */
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {addAsks, setStUi, ask, SOCKET, characterOf, placeOf, tell, SoloPanel} from "./panel.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {listHTML as nightHTML} from "../../wodx-chronicle/scripts/nightwork-rules.mjs";
+import {listHTML as nightHTML} from "../../wodx-rules/chronicle/nightwork-rules.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";

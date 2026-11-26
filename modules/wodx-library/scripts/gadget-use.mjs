@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the Foundry side of seeds, fire-lighters and timepieces (B3911; rules in gadget-rules.mjs).
  */
-import * as D from "./gadget-rules.mjs";
+import * as D from "../../wodx-rules/library/gadget-rules.mjs";
 
 const MOD = "wodx-library";
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");

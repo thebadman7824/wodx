@@ -1,10 +1,10 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as F from "../../modules/wodx-npc/scripts/faction-rules.mjs";
+import * as F from "../../modules/wodx-rules/npc/faction-rules.mjs";
 import EV from "../../modules/wodx-chronicle/data/events.mjs";
-import * as MN from "../../modules/wodx-storyteller/scripts/market-news-rules.mjs";
-import {isMaelstrom} from "../../modules/wodx-npc/scripts/politics-rules.mjs";
+import * as MN from "../../modules/wodx-rules/storyteller/market-news-rules.mjs";
+import {isMaelstrom} from "../../modules/wodx-rules/npc/politics-rules.mjs";
 
 /* Every classic dated event changes something (B3922, B3923) */
 

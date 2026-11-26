@@ -7,13 +7,13 @@
  * between the two markets while a caravan is out is noted in the Storyteller's log.
  * World settings: caravans (on or off) and the hidden caravanState = {v, list}.
  */
-import * as CR from "./caravan-rules.mjs";
-import * as MK from "./market-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/caravan-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import * as Markets from "./markets.mjs";
-import * as Country from "./country-rules.mjs";
+import * as Country from "../../wodx-rules/storyteller/country-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Money from "./money.mjs";
-import * as GP from "./goods-place-rules.mjs";
+import * as GP from "../../wodx-rules/storyteller/goods-place-rules.mjs";
 import {MOD, esc, chron, isActiveGM, gmIds, setting, log, timeLabel, tripContext, travelOf, sceneName} from "./core.mjs";
 
 let KINDS = {};

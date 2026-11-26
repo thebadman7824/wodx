@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* The town generator's households by region (settle.py, B3290 to B3293) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
 const py = (() => { for ( const p of ["python3", "python"] ) { try { execFileSync(p, ["--version"]); return p; } catch (e) { /* next */ } } return null; })();
 const run = code => JSON.parse(execFileSync(py, ["-c", code], {cwd: join(root, "tools/mapgen"), encoding: "utf8"}));
 
@@ -79,7 +79,7 @@ print(json.dumps(miss))`);
 });
 
 test("settle: the Settlements window says whose trades a record follows", async () => {
-  const SR = await import(join(root, "modules/wodx-npc/scripts/settlement-rules.mjs"));
+  const SR = await import(join(root, "modules/wodx-rules/npc/settlement-rules.mjs"));
   const base = {format: SR.FORMAT, version: 1, id: "x", year: 1965, households: [{id: "x.a", people: ["mayor"]}]};
   const fr = SR.readRecord({...base, region: "france", tradeAge: "postwar"}).data;
   assert.equal(fr.tradeAge, "postwar");

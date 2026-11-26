@@ -2,8 +2,8 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as K from "../../modules/wodx-actions/scripts/kindred-rules.js";
-import {FLOCKS} from "../../modules/wodx-npc/scripts/road-flock-rules.mjs";
+import * as K from "../../modules/wodx-rules/actions/kindred-rules.js";
+import {FLOCKS} from "../../modules/wodx-rules/npc/road-flock-rules.mjs";
 import {ROAD_TO_PATH} from "../../modules/wodx-creation/data/advance.mjs";
 
 const ROADS = JSON.parse(readFileSync(new URL("../../modules/wodx-actions/data/roads-daw.json", import.meta.url), "utf8"));

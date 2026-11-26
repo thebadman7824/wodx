@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* WoDX Storyteller 0.18.0: between sessions (next session sheet, scene kits, quick extras, hooks, absent players, the recap, downtime). */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const S = p => join(root, "modules/wodx-storyteller/scripts", p);
-const P = await import(S("prep-rules.mjs"));
-const K = await import(S("kits-rules.mjs"));
+const P = await import(S("../../wodx-rules/storyteller/prep-rules.mjs"));
+const K = await import(S("../../wodx-rules/storyteller/kits-rules.mjs"));
 
 test("next session sheet: sections in order, empty ones left out, only open tasks and letters on the way", () => {
   const s = P.nextSession({now: 0, clocks: [{at: 3600, what: "Dawn"}], consequences: [{due: null, kind: "Oath", from: {name: "Anna"}, to: {name: "Bo"}, what: "a favour"}],

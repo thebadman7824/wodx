@@ -6,9 +6,9 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const B = await import(join(root, "modules/wodx-storyteller/scripts/battle-rules.mjs"));
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
-const L = await import(join(root, "modules/wodx-chronicle/scripts/legends-rules.mjs"));
+const B = await import(join(root, "modules/wodx-rules/storyteller/battle-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/chronicle/legends-rules.mjs"));
 
 const field = (over = {}) => B.normBattle({id: "b1", name: "The fight at the ford", place: "Brno ford", year: 1420,
   sides: [{name: "Crusaders", men: 2000, quality: 4}, {name: "Hussites", men: 1500, quality: 3, position: "works", defends: true}], ...over});

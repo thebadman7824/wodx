@@ -6,7 +6,7 @@
  * adopted and its residents are seeded; the residents window then reads the review (residents.mjs calls afterSeed).
  * The rules are in settlement-rules.mjs.
  */
-import * as SR from "./settlement-rules.mjs";
+import * as SR from "../../wodx-rules/npc/settlement-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const FOLDER = "WoDX settlements", IX = "wodx-interactables", SHEETS = "wodx-sheets";

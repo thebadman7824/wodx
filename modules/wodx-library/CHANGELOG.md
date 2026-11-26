@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.51.1 (This module's rules files moved to the rules core, modules/wodx-rules/library (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.51.0 (Clothing of 1197 (B8144): 22 garments the goods list lacked, tagged by station, style and material, with their own descriptions)
 - 0.50.0 (Item tags: station, style, material, trade and where for clothing, tools, arms and coin goods, and a station for gear (B8098))
 - 0.49.4 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)

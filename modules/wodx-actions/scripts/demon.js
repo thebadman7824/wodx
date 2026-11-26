@@ -13,10 +13,10 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
-import * as NPW from "./npc-power-rules.js";
+import * as NPW from "../../wodx-rules/actions/npc-power-rules.js";
 import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
-import * as D from "./demon-rules.js";
+import * as D from "../../wodx-rules/actions/demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as DE from "./demon-evocations.js";

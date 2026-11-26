@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as H from "../../modules/wodx-actions/scripts/hunter-rules.js";
-import * as GR from "../../modules/wodx-actions/scripts/ghost-da-rules.js";
-import * as SW from "../../modules/wodx-combat/scripts/swarm-rules.js";
+import * as H from "../../modules/wodx-rules/actions/hunter-rules.js";
+import * as GR from "../../modules/wodx-rules/actions/ghost-da-rules.js";
+import * as SW from "../../modules/wodx-rules/combat/swarm-rules.js";
 import * as PM from "../../modules/wodx-actions/scripts/profile-menus.js";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");

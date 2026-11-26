@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 /* WoDX NPC 0.48.0: settlements, the record of a whole generated place (B2520 to B2529) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-npc/scripts/settlement-rules.mjs"));
-const RS = await import(join(root, "modules/wodx-npc/scripts/resident-rules.mjs"));
-const A = await import(join(root, "modules/wodx-interactables/scripts/adopt-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/npc/settlement-rules.mjs"));
+const RS = await import(join(root, "modules/wodx-rules/npc/resident-rules.mjs"));
+const A = await import(join(root, "modules/wodx-rules/interactables/adopt-rules.mjs"));
 const sample = y => readFileSync(join(root, `tools/mapgen/samples/steinfeld-${y}.settlement.json`), "utf8");
 const sidecar = y => readFileSync(join(root, `tools/mapgen/samples/steinfeld-${y}.wodx.json`), "utf8");
 const rec = y => SR.readRecord(sample(y)).data;
@@ -192,7 +192,7 @@ test("settlement: the journal says what the place is, in plain words, with nothi
 });
 
 test("settlement: the map's sidecar names its settlement, and the adoption plan says where the record goes", async () => {
-  const A = await import("../../modules/wodx-interactables/scripts/adopt-rules.mjs");
+  const A = await import("../../modules/wodx-rules/interactables/adopt-rules.mjs");
   const {readFileSync} = await import("node:fs");
   const text = readFileSync(new URL("../mapgen/samples/steinfeld-1995.wodx.json", import.meta.url), "utf8");
   const sc = A.parseSidecar(text).data;

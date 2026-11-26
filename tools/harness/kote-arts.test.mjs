@@ -4,8 +4,8 @@ import {test} from "node:test";
 import assert from "node:assert/strict";
 
 const KA = await import("../../modules/wodx-actions/scripts/kote-arts.js");
-const K = await import("../../modules/wodx-actions/scripts/kote-rules.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const K = await import("../../modules/wodx-rules/actions/kote-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 
 test("every Discipline has five levels and every power a page and a known keyword (B3750)", () => {
   for ( const art of Object.keys(K.ARTS) ) {
