@@ -778,11 +778,13 @@
     },
     "shown": {
      "what": "warmth on the Relationships tab, marriage cards by the law of the time and place, and a household together"
+    },
+    "gated": {
+     "gate": "tools/gate/gatewedding.mjs",
+     "step": "1. Approve on the wedding card marries them, shown as Spouse on the Relationships tab"
     }
    },
-   "open": [
-    "gated: gatehearts '8. sheet' is graded marker and the rest are direct calls"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
