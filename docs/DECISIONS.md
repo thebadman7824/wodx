@@ -479,7 +479,7 @@ Next free block: B8140
 | B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
-| B8130-B8139 | Fewer merge train ejects: review-list fragments, conflicts the train settles, label on green (used B8130-B8133) | tools (release, pcq) |
+| B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16761,3 +16761,13 @@ fails on main too already passes the gate status (B7441, B7521), and the recheck
 November (B7540).
 
 Reverse: take the sentence out of docs/WORKFLOW.md, section 6.
+
+## B8134. The push guard never stops the train's own push (2026-11-26)
+Tools. At 05:59Z the train ejected PR 2568 because the push guard (B8130) refused the train's own merge-and-stamp push:
+the guard read every commit new to the branch, and a merge of main brings main's commits, which never carry the
+train's trailer. The guard now reads first-parent commits only (the merge and the stamp, both with
+`Merge-Train: yes`), and the train pushes with `--no-verify`, so the guard is for threads only. The runner's PCs got
+the hook because merge-stamp set core.hooksPath in the runner's clone.
+
+Reverse: drop `--no-verify` from the pushes in tools/pcq/train.mjs and `--first-parent` from newMessages in
+tools/git-hooks/pre-push.mjs.
