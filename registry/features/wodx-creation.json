@@ -120,7 +120,7 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/learn.mjs",
-    "modules/wodx-creation/scripts/learn-rules.mjs"
+    "modules/wodx-rules/creation/learn-rules.mjs"
    ],
    "steps": {
     "built": {
@@ -158,10 +158,10 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/wizard.mjs",
-    "modules/wodx-creation/scripts/wizard-rules.mjs",
+    "modules/wodx-rules/creation/wizard-rules.mjs",
     "modules/wodx-rules/creation/derived-rules.mjs",
     "modules/wodx-rules/creation/quick-start-rules.mjs",
-    "modules/wodx-creation/scripts/kit-rules.mjs",
+    "modules/wodx-rules/creation/kit-rules.mjs",
     "modules/wodx-creation/scripts/kit.mjs"
    ],
    "steps": {
@@ -203,7 +203,7 @@
    "core": true,
    "files": [
     "modules/wodx-creation/scripts/lifepath.mjs",
-    "modules/wodx-creation/scripts/lifepath-rules.mjs",
+    "modules/wodx-rules/creation/lifepath-rules.mjs",
     "modules/wodx-rules/creation/lifepath-drill-rules.mjs",
     "modules/wodx-rules/creation/lifepath-short-rules.mjs",
     "modules/wodx-rules/creation/lifepath-threads-rules.mjs"

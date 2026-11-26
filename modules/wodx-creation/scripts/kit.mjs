@@ -8,7 +8,7 @@
  *                         Off-screen life (purses, shop tills, the fates of time jumps) runs on coin and never reads
  *                         what an NPC holds, so making the things at first meeting changes nothing that went before.
  */
-import * as K from "./kit-rules.mjs";
+import * as K from "../../wodx-rules/creation/kit-rules.mjs";
 import {MODULE_ID} from "./actor-data.mjs";
 import {isNPC} from "../../wodx-chronicle/scripts/terms.mjs";
 

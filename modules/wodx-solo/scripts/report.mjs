@@ -14,7 +14,7 @@
  * The form is a tool window, out of the fiction: plain words, nothing in the game world changes.
  */
 import * as P from "../../wodx-rules/solo/report-rules.mjs";
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {addAsks, addActions, ask, SOCKET, characterOf, placeOf} from "./panel.mjs";
 
 const MOD = "wodx-solo";

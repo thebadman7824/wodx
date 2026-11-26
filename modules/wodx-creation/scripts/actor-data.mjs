@@ -2,7 +2,7 @@ import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLe
 import {XP} from "../data/vampire.mjs";
 import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import * as AS from "../../wodx-rules/creation/animal-stock-rules.mjs";
-import {learningFor} from "./learn-rules.mjs";
+import {learningFor} from "../../wodx-rules/creation/learn-rules.mjs";
 import {splatOf} from "./lines.mjs";
 import * as LX from "../../wodx-rules/creation/lines-xp-rules.mjs";
 import * as RF from "../../wodx-rules/actions/road-faith-rules.js";

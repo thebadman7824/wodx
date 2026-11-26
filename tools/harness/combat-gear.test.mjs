@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* The no-effect audit, gear in the fight (B3800-B3803) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/rules.js")));
 const src = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
 const row = (type, settingtype, value, isactive = true) => ({type: "Item", system: {bonuslist: [{type, settingtype, value, isactive}]}});
 

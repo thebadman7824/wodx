@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+const L = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/learn-rules.mjs")));
 
 test("Friendly teaches, neutral asks a price, hostile refuses; trust counts as much as warmth", () => {
   assert.equal(L.willingness({attitude: 2}).will, "teach");

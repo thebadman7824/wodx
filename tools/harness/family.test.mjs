@@ -82,7 +82,7 @@ test("family is wired: the age floor, the approval, the clock, the hooks and the
 
 // Child sheets, growing up, schooling and players as children (B3443-B3228).
 const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
-const LP = await imp("modules/wodx-creation/scripts/lifepath-rules.mjs");
+const LP = await imp("modules/wodx-rules/creation/lifepath-rules.mjs");
 
 test("a child's sheet is held to caps by age and filled toward the age's dots", () => {
   assert.equal(F.attrCap(5), 1); assert.equal(F.attrCap(9), 2); assert.equal(F.attrCap(15), 3);

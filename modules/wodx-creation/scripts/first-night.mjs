@@ -13,7 +13,7 @@
  */
 import {MODULE_ID, esc, generationOf} from "./actor-data.mjs";
 import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
-import * as LP from "./lifepath-rules.mjs";
+import * as LP from "../../wodx-rules/creation/lifepath-rules.mjs";
 import {lifepathOf, splatText, LifepathApp} from "./lifepath.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";

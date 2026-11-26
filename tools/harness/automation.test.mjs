@@ -12,7 +12,7 @@ const load = p => import(pathToFileURL(join(root, p)));
 const AR = await load("modules/wodx-rules/chronicle/automation-rules.mjs");
 const QR = await load("modules/wodx-rules/chronicle/approvals-rules.mjs");
 const WR = await load("modules/wodx-rules/chronicle/waiting-rules.mjs");
-const SOLO = await load("modules/wodx-solo/scripts/solo-rules.mjs");
+const SOLO = await load("modules/wodx-rules/solo/solo-rules.mjs");
 const FE = await load("modules/wodx-rules/combat/fight-end-rules.js");
 const SR = await load("modules/wodx-rules/storyteller/spend-rules.mjs");
 const K = await load("modules/wodx-rules/storyteller/kits-rules.mjs");

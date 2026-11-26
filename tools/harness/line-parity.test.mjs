@@ -13,7 +13,7 @@ const A = p => import(join(root, "modules/wodx-actions/scripts", p));
 const PM = await A("profile-menus.js");
 const TR = await A("../../wodx-rules/actions/theme-rules.js");
 const GR = await A("../../wodx-rules/actions/garou-rules.js");
-const CR = await import(join(root, "modules/wodx-combat/scripts/rules.js"));
+const CR = await import(join(root, "modules/wodx-rules/combat/rules.js"));
 
 const specs = k => PM.MENUS[k].sections.flatMap(([, b]) => b.map(([s]) => s));
 

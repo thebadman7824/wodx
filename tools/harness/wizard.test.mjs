@@ -18,7 +18,7 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
-const W = await import(join(root, "modules/wodx-creation/scripts/wizard-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/creation/wizard-rules.mjs"));
 const R = await import(join(root, "modules/wodx-rules/creation/first-night-rules.mjs"));
 const {MERITS_FLAWS, BACKGROUNDS} = await import(join(root, "modules/wodx-chronicle/data/trait-effects.mjs"));
 
@@ -182,7 +182,7 @@ test("the wizard window walks a vampire through the book and writes to the sheet
 
 test("the Cyberpunks (B6612): a Future-branch bloodline from 2016 that brings Technica", async () => {
   const R = await import("../../modules/wodx-rules/creation/rules.mjs");
-  const LR = await import("../../modules/wodx-creation/scripts/lifepath-rules.mjs");
+  const LR = await import("../../modules/wodx-rules/creation/lifepath-rules.mjs");
   const C = R.findClan("Cyberpunks");
   assert.deepEqual(W.clanDisciplines("Cyberpunks"), ["Celerity", "Potence", "Technica"]);
   assert.equal(R.clanOpen(C, {year: 2030, futureBranch: true}), true);

@@ -1,14 +1,6 @@
 {
   "_about": "Rules core (B8060, docs/RULES-CORE.md). notMoved: rules files still in their modules; the list may only shrink, and the move is done when it is empty. stay: rules files of dropped or shelved modules that never move. foundryKnown: files in the rules reach that still name Foundry, to fix; may only shrink. outside: files outside modules/wodx-rules that a package file may import; may only shrink.",
-  "notMoved": [
-    "modules/wodx-chronicle/scripts/time-dial-rules.mjs",
-    "modules/wodx-combat/scripts/rules.js",
-    "modules/wodx-creation/scripts/learn-rules.mjs",
-    "modules/wodx-creation/scripts/lifepath-rules.mjs",
-    "modules/wodx-creation/scripts/wizard-rules.mjs",
-    "modules/wodx-interactables/scripts/loose-rules.mjs",
-    "modules/wodx-solo/scripts/solo-rules.mjs"
-  ],
+  "notMoved": [],
   "stay": [
     "modules/wodx-targeting/scripts/target-rules.mjs",
     "modules/wodx-voices/scripts/voice-rules.mjs"
@@ -24,10 +16,10 @@
     "modules/wodx-chronicle/data/signatures.mjs",
     "modules/wodx-chronicle/data/trait-effects-w6.mjs",
     "modules/wodx-chronicle/data/trait-effects.mjs",
+    "modules/wodx-chronicle/data/trait-lines.mjs",
     "modules/wodx-chronicle/scripts/chronicle-data.mjs",
     "modules/wodx-chronicle/scripts/gen-core.mjs",
     "modules/wodx-chronicle/scripts/live-worlds.mjs",
-    "modules/wodx-combat/scripts/rules.js",
     "modules/wodx-creation/data/advance.mjs",
     "modules/wodx-creation/data/creation-totals.mjs",
     "modules/wodx-creation/data/dac-demons.mjs",
@@ -36,6 +28,9 @@
     "modules/wodx-creation/data/lifepath-drill.mjs",
     "modules/wodx-creation/data/lifepath-local-events.mjs",
     "modules/wodx-creation/data/lifepath-since-lines.mjs",
+    "modules/wodx-creation/data/lifepaths-splats.mjs",
+    "modules/wodx-creation/data/lifepaths-turnings.mjs",
+    "modules/wodx-creation/data/lifepaths.mjs",
     "modules/wodx-creation/data/lines-xp.mjs",
     "modules/wodx-creation/data/name-customs.mjs",
     "modules/wodx-creation/data/people-order.mjs",
@@ -44,7 +39,6 @@
     "modules/wodx-creation/data/v20dac-monsters.mjs",
     "modules/wodx-creation/data/vampire.mjs",
     "modules/wodx-creation/data/vtda-people.mjs",
-    "modules/wodx-creation/scripts/lifepath-rules.mjs",
     "modules/wodx-library/data/goods-arms.mjs",
     "modules/wodx-library/data/goods-crops.mjs",
     "modules/wodx-library/data/goods-house.mjs",

@@ -10,7 +10,7 @@
 import {MODULE_ID, esc, lineOf, payerOf, disciplinesOf, clanOf, vampireEra, applyPurchase, disciplineItem, powersOf} from "./actor-data.mjs";
 import {itemIsCat} from "../../wodx-rules/creation/lines-xp-rules.mjs";
 import {clanDisciplines} from "../../wodx-rules/creation/rules.mjs";
-import * as L from "./learn-rules.mjs";
+import * as L from "../../wodx-rules/creation/learn-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 const ST = "wodx-storyteller";

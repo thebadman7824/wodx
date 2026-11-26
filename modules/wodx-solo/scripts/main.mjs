@@ -30,7 +30,7 @@
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
  */
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {NEVER_AUTO} from "../../wodx-rules/chronicle/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";

@@ -12,7 +12,7 @@ import * as animalStockRules from "../../wodx-rules/creation/animal-stock-rules.
 import * as animalGhouls from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import * as xp from "./xp.mjs";
 import * as learn from "./learn.mjs";
-import * as learnRules from "./learn-rules.mjs";
+import * as learnRules from "../../wodx-rules/creation/learn-rules.mjs";
 import * as lines from "./lines.mjs";
 import {CreationApp, SpendApp, awardDialog} from "./apps.mjs";
 import * as time from "./time.mjs";
@@ -31,11 +31,11 @@ import * as maturationRules from "../../wodx-rules/creation/maturation-rules.mjs
 import * as totals from "../../wodx-rules/creation/totals-rules.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import * as lifepath from "./lifepath.mjs";
-import * as lifepathRules from "./lifepath-rules.mjs";
+import * as lifepathRules from "../../wodx-rules/creation/lifepath-rules.mjs";
 import {threadsOf} from "../../wodx-rules/creation/lifepath-threads-rules.mjs";
 import * as firstNight from "./first-night.mjs";
 import * as firstNightRules from "../../wodx-rules/creation/first-night-rules.mjs";
-import * as wizardRules from "./wizard-rules.mjs";
+import * as wizardRules from "../../wodx-rules/creation/wizard-rules.mjs";
 import {WizardApp, creationUnfinished, ledgerFor as wizardLedger, derivedFor} from "./wizard.mjs";
 import * as derivedRules from "../../wodx-rules/creation/derived-rules.mjs";
 import * as BOOKP from "../data/vtda-people.mjs";
@@ -46,7 +46,7 @@ import * as SCM from "./supporting-cast.mjs";
 import * as DDR from "../../wodx-rules/creation/dac-demons-rules.mjs";
 import * as DDM from "./dac-demons.mjs";
 import * as kit from "./kit.mjs";
-import * as kitRules from "./kit-rules.mjs";
+import * as kitRules from "../../wodx-rules/creation/kit-rules.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;

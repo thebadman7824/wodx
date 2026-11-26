@@ -9,7 +9,7 @@ import {join, dirname} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const S = await load("modules/wodx-rules/chronicle/signature-rules.mjs");
-const R = await load("modules/wodx-combat/scripts/rules.js");
+const R = await load("modules/wodx-rules/combat/rules.js");
 const row = k => S.faeRows({kith: [k]})[0];
 const lvl = (value, penalty) => ({value, total: value, penalty, label: "x"});
 const track = dmg => ({system: {health: {bruised: lvl(1, 0), hurt: lvl(1, -1), injured: lvl(1, -1), wounded: lvl(1, -2), mauled: lvl(1, -2), crippled: lvl(1, -5), incapacitated: lvl(1, 0),

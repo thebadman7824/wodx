@@ -3,7 +3,7 @@
  * Everything here works on plain numbers so it can be unit-tested outside Foundry.
  * Rules references are to Vampire: The Dark Ages 20th Anniversary Edition (VtDA20).
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../core/terms.mjs";
 
 export const WOUND_LEVELS = TERMS.HEALTH_LEVELS;
 

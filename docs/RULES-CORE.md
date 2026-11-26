@@ -60,16 +60,17 @@ not one per module (B8065):
 1. **Core and almost everything** (PR 2539): the package, the guard test, the core, and 347 rules files from 14
    modules. Chronicle keeps `terms.mjs`, `calendar-math.mjs` and the Foundry half of `calendar.mjs` as re-exports, so
    open branches keep working.
-2. **The held files**, moved the same way once the solo-fix design PR (2546) merges.
+2. **The held files**, moved the same way once the solo-fix design PR (2546) merges. It merged while PR 2539 waited
+   for the train, so they moved in PR 2539 too (B8067): every rules file now lives in the package.
 3. **Retire the re-exports**: point every remaining import at the core and delete the Chronicle copies. Then fold the
    49 module files the package still imports (book tables and helpers, the `outside` list) into the package, and move
    gates that only check pure rules to the harness, so they stop taking a Foundry lane.
 
 Not moved: WoDX Targeting (dropped on the solo-test desk, item 2509) and WoDX Voices (shelved, B7134).
 
-### Held until the solo-fix design PR merges
+### Held until the solo-fix design PR merged (moved since, B8067)
 
-PR 2546 edits these rules files, so they stay where they are until it merges: Chronicle `time-dial-rules.mjs`, Combat
+PR 2546 edited these rules files, so they stayed where they were until it merged: Chronicle `time-dial-rules.mjs`, Combat
 `rules.js`, Creation `learn-rules.mjs`, `lifepath-rules.mjs`, `wizard-rules.mjs`, Interactables `loose-rules.mjs`, Solo
 `solo-rules.mjs`. Its two new files, Actions `busy-rules.js` and Creation `kit-rules.mjs`, go on the waiting list when
 it merges and move in step 2.

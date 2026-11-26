@@ -10,7 +10,7 @@
  * A thread comes from a person from the past (their role and note are read for what is open), or from a Flaw the
  * player kept (Enemy, Clan Enmity, Hunted, Dark Secret) when no person already carries it.
  */
-import {LINES, summary, PEOPLE_ALIVE_SPAN} from "../../wodx-creation/scripts/lifepath-rules.mjs";
+import {LINES, summary, PEOPLE_ALIVE_SPAN} from "./lifepath-rules.mjs";
 
 /** The kinds of open thread, in the order they are dealt (the sharper ones first). */
 export const THREAD_KINDS = {

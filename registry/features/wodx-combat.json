@@ -41,7 +41,7 @@
    "core": true,
    "files": [
     "modules/wodx-combat/scripts/main.js",
-    "modules/wodx-combat/scripts/rules.js",
+    "modules/wodx-rules/combat/rules.js",
     "modules/wodx-combat/scripts/profiles.js",
     "modules/wodx-combat/scripts/auto.js",
     "modules/wodx-combat/scripts/flavor.js"
@@ -528,7 +528,7 @@
    "core": false,
    "files": [
     "modules/wodx-combat/scripts/garou-maneuvers.js",
-    "modules/wodx-combat/scripts/rules.js",
+    "modules/wodx-rules/combat/rules.js",
     "modules/wodx-combat/scripts/main.js"
    ],
    "steps": {

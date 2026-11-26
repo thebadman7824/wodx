@@ -7,7 +7,7 @@
  *   the watcher  a card, window or queue entry that waits for a Storyteller is answered after a short wait, or logged
  *   the log      what the seat decided, kept from the player until asked for
  */
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../core/terms.mjs";
 import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 export const NAME = "The Lone Chronicle";
 /** Worlds the mode never acts in, whatever the setting says. */
@@ -64,7 +64,7 @@ export function autoPlan(types = [], current = {}, never = ["request"]) {
 /* ------------------------------ the watcher ------------------------------ */
 
 /* The watcher's reading of a card lives in WoDX Chronicle, so the Waiting tray makes the same choice (B2452). */
-export {plain, buttonsOf, AVOID, PREFER, waits, pickButton, forStoryteller, titleOf, sourceOf} from "../../wodx-rules/chronicle/waiting-rules.mjs";
+export {plain, buttonsOf, AVOID, PREFER, waits, pickButton, forStoryteller, titleOf, sourceOf} from "../chronicle/waiting-rules.mjs";
 
 /* ------------------------------ the log ------------------------------ */
 

@@ -10,7 +10,7 @@
  * Discipline to the level wanted). The times, difficulties and the table of books and schools are house figures
  * (B6232, B6233), logged in docs/PENDING-REVIEW.md.
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../core/terms.mjs";
 
 export const END = 9999;
 export const SOURCE_KINDS = {

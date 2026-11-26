@@ -24,7 +24,7 @@ test("a chronicle's Live worlds join the list when it registers, and every modul
   CD.registerChronicle({id: "gate-live", manifest: {live: ["gate-live-world"]}});
   try {
     assert.ok(LW.isLiveWorld("gate-live-world"));
-    const solo = await imp("modules/wodx-solo/scripts/solo-rules.mjs");
+    const solo = await imp("modules/wodx-rules/solo/solo-rules.mjs");
     const recipe = await imp("modules/wodx-rules/storyteller/recipe-rules.mjs");
     const auto = await imp("modules/wodx-rules/chronicle/automation-rules.mjs");
     for ( const list of [solo.NEVER_WORLDS, recipe.FORBIDDEN_WORLDS, auto.NEVER_SEED] ) {
@@ -47,7 +47,7 @@ test("no WoDX module keeps its own copy of the Live list (a chronicle's manifest
 });
 
 test("the solo landing and its words follow the chronicle's town, and name none with no chronicle", async () => {
-  const R = await imp("modules/wodx-solo/scripts/solo-rules.mjs");
+  const R = await imp("modules/wodx-rules/solo/solo-rules.mjs");
   const s = (id, name, x = {}) => ({id, name, img: "map.webp", active: false, landing: false, ...x});
   const world = [s("a", "Field"), s("b", "Harbourtown: Quay"), s("c", "The yard", {active: true})];
   assert.equal(R.pickLanding(world, "", "Harbourtown"), "b");

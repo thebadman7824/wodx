@@ -19,7 +19,7 @@
  */
 import * as W from "../../wodx-rules/solo/world-rules.mjs";
 import {temperOf} from "../../wodx-rules/solo/director-rules.mjs";
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {addAsks, addActions, placeOf, tell, ask} from "./panel.mjs";
 
 const MOD = "wodx-solo";

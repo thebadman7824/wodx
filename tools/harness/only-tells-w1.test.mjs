@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const PB = await load("system/worldofdarkness/module/scripts/wodx-pack-bonuses.js");
-const CR = await load("modules/wodx-combat/scripts/rules.js");
+const CR = await load("modules/wodx-rules/combat/rules.js");
 const G = await load("modules/wodx-rules/actions/garou-rules.js");
 
 const trait = (name, o = {}) => ({ type: "Trait", name, system: { type: "wod.types.apocalypticform", bonuslist: [], isactive: false, ...o } });

@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const NR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/npc-rules.mjs")));
-const SR = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+const SR = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/solo-rules.mjs")));
 
 const guard = NR.profileOf({}, "guard");
 const self = (o = {}) => ({kind: "mortal", wounds: 0, run: 20, ...o});

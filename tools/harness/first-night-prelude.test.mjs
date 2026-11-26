@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import * as P from "../../modules/wodx-rules/creation/first-night-prelude-rules.mjs";
 import * as B from "../../modules/wodx-rules/creation/first-night-build-rules.mjs";
-import * as LP from "../../modules/wodx-creation/scripts/lifepath-rules.mjs";
+import * as LP from "../../modules/wodx-rules/creation/lifepath-rules.mjs";
 import * as PR from "../../modules/wodx-rules/storyteller/prelude-rules.mjs";
 import {normRecord} from "../../modules/wodx-rules/creation/first-night-rules.mjs";
 

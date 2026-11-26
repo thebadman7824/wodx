@@ -14,7 +14,7 @@
  *
  * The Storyteller's own client runs the asks; a player's client only draws the panel and the answers.
  */
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 
 const MOD = "wodx-solo";
 const SOCKET = `module.${MOD}`;

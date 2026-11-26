@@ -17,7 +17,7 @@
  *   setting wodx-solo.landing  String   the scene chosen as the landing
  *   setting wodx-solo.arrive   Boolean  bring the player in (default on)
  */
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {addAsks, setArriveUi, ask, SOCKET, characterOf, placeOf, tell, SoloPanel} from "./panel.mjs";
 
 const MOD = "wodx-solo";

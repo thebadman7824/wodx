@@ -94,7 +94,7 @@ test("dice: V20 difficulty 2 to 10, a 10 always hits, 1s cancel, botch with no h
 test("every dice count in WoDX agrees with the shared one", async () => {
   const M = p => import(path.join(ROOT, "modules", p));
   const counts = [
-    [await M("wodx-combat/scripts/rules.js"), m => (f, d) => m.countSuccesses(f, d).successes],
+    [await M("wodx-rules/combat/rules.js"), m => (f, d) => m.countSuccesses(f, d).successes],
     [await M("wodx-rules/chronicle/referee-rules.mjs"), m => (f, d) => m.successes(f, d).successes],
     [await M("wodx-rules/npc/faction-rules.mjs"), m => (f, d) => m.successes(f, d).net],
     [await M("wodx-rules/library/arms-rules.mjs"), m => (f, d) => m.countSuccesses(f, d).successes],

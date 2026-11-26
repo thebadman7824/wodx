@@ -41,7 +41,7 @@ export async function run() {
     await G.step("2. every module's dice count agrees", async () => {
       const M = p => import(`/modules/${p}?${Date.now()}`);
       const list = [
-        ["combat", await M("wodx-combat/scripts/rules.js"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
+        ["combat", await M("wodx-rules/combat/rules.js"), (m, f, d) => m.countSuccesses(f, d).successes, "successes"],
         ["chronicle", await M("wodx-rules/chronicle/referee-rules.mjs"), (m, f, d) => m.successes(f, d).successes, "successes"],
         // B7120: NPC and Otherworlds report the count after a difficulty past 10 takes its successes off
         ["npc", await M("wodx-rules/npc/faction-rules.mjs"), (m, f, d) => m.successes(f, d).net, "successes"],
@@ -115,7 +115,7 @@ export async function run() {
       const M = p => import(`/modules/${p}?${Date.now()}`).catch(() => null);
       const [tg, cr, se, cra, sh, pd, so, intr] = await Promise.all([M("wodx-targeting/scripts/target-rules.mjs"),
         M("wodx-rules/interactables/carry-rules.mjs"), M("wodx-rules/senses/senses-rules.mjs"), M("wodx-creation/data/advance.mjs"),
-        M("wodx-rules/sheets/extras-rules.mjs"), M("wodx-rules/paperdoll/doll-rules.mjs"), M("wodx-solo/scripts/solo-rules.mjs"),
+        M("wodx-rules/sheets/extras-rules.mjs"), M("wodx-rules/paperdoll/doll-rules.mjs"), M("wodx-rules/solo/solo-rules.mjs"),
         M("wodx-rules/interactables/fill-rules.mjs")]);
       const [talk, know, deeds] = await Promise.all([M("wodx-rules/npc/talk-rules.mjs"), M("wodx-rules/library/know-rules.mjs"),
         M("wodx-storyteller/scripts/battle-deeds.mjs")]);

@@ -218,7 +218,7 @@ export async function growthPlan(aLike, toYear) {
   const rand = F.seeded(`${sheet.seed}:${to}`);
   let scene = null;
   try {
-    const LP = await import("../../wodx-creation/scripts/lifepath-rules.mjs");
+    const LP = await import("../../wodx-rules/creation/lifepath-rules.mjs");
     const stage = to >= 13 || from >= 12 ? "youth" : "birth";
     const path = LP.newPath({line: "mortal", birthYear: born, seed: sheet.seed});
     const flags = LP.flagsOf(path);

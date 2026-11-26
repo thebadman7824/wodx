@@ -11,7 +11,7 @@ const load = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const W = await load("modules/wodx-rules/actions/wraith-rules.js");
 const A = await load("modules/wodx-rules/creation/advance-rules.mjs");
-const WR = await load("modules/wodx-creation/scripts/wizard-rules.mjs");
+const WR = await load("modules/wodx-rules/creation/wizard-rules.mjs");
 const D = await load("modules/wodx-rules/creation/derived-rules.mjs");
 const MDA = await load("modules/wodx-rules/actions/mage-da-rules.js");
 const FDA = await load("modules/wodx-rules/actions/fae-da-rules.js");

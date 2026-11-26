@@ -15,11 +15,11 @@
  *
  * Scenes are tied to years, so the same line plays differently in 1197, 1348, 1916 or 2050.
  */
-import {BANDS, LINES, MORTAL_EVENTS} from "../data/lifepaths.mjs";
-import {TURNING_EVENTS} from "../data/lifepaths-turnings.mjs";
-import {SPLATS} from "../data/lifepaths-splats.mjs";
+import {BANDS, LINES, MORTAL_EVENTS} from "../../wodx-creation/data/lifepaths.mjs";
+import {TURNING_EVENTS} from "../../wodx-creation/data/lifepaths-turnings.mjs";
+import {SPLATS} from "../../wodx-creation/data/lifepaths-splats.mjs";
 
-import * as D from "../../wodx-rules/creation/lifepath-drill-rules.mjs";
+import * as D from "./lifepath-drill-rules.mjs";
 export {BANDS, LINES, SPLATS};
 export const VERSION = 1;
 /** #2505: a year in words: a minus year is before the common era (-500 is 500 BCE). */

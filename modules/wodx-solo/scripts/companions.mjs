@@ -10,7 +10,7 @@
  *
  *   setting wodx-solo.carry   Boolean  "Companions carry the fallen" (default on)
  */
-import * as R from "./solo-rules.mjs";
+import * as R from "../../wodx-rules/solo/solo-rules.mjs";
 import {addAsks, characterOf, tell} from "./panel.mjs";
 
 const MOD = "wodx-solo";

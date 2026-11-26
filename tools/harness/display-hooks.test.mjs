@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import * as S from "../../modules/wodx-rules/senses/sight-rules.mjs";
 import * as B from "../../modules/wodx-rules/combat/body-rules.js";
-import * as R from "../../modules/wodx-combat/scripts/rules.js";
+import * as R from "../../modules/wodx-rules/combat/rules.js";
 import * as L from "../../modules/wodx-rules/interactables/living-rules.mjs";
 
 /* The Display-Only Systems Desk, batch A (B2900-B2904): systems that used to show something now feed the rules. */

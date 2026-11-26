@@ -6,7 +6,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(join(root, "modules/wodx-creation/scripts/kit-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/creation/kit-rules.mjs"));
 const {GOODS} = await import(join(root, "modules/wodx-library/data/goods.mjs"));
 const W = await import(join(root, "modules/wodx-library/data/goods-ways.mjs"));
 const T = await import(join(root, "modules/wodx-library/data/goods-tags.mjs"));

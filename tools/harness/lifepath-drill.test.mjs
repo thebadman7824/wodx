@@ -2,7 +2,7 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import * as D from "../../modules/wodx-rules/creation/lifepath-drill-rules.mjs";
-import * as R from "../../modules/wodx-creation/scripts/lifepath-rules.mjs";
+import * as R from "../../modules/wodx-rules/creation/lifepath-rules.mjs";
 import {buildScenes} from "../../modules/wodx-rules/creation/first-night-prelude-rules.mjs";
 import {WORLD_REGIONS} from "../../modules/wodx-rules/chronicle/world-rules.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../modules/wodx-chronicle/data/trait-effects.mjs";

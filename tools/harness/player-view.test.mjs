@@ -184,7 +184,7 @@ const BR = await import(join(root, "modules/wodx-rules/creation/first-night-buil
 const TT = await import(join(root, "modules/wodx-rules/creation/totals-rules.mjs"));
 const LS = await import(join(root, "modules/wodx-rules/creation/lifepath-short-rules.mjs"));
 const LD = await import(join(root, "modules/wodx-rules/creation/lifepath-drill-rules.mjs"));
-const LR = await import(join(root, "modules/wodx-creation/scripts/lifepath-rules.mjs"));
+const LR = await import(join(root, "modules/wodx-rules/creation/lifepath-rules.mjs"));
 const FN = await import(join(root, "modules/wodx-rules/creation/first-night-rules.mjs"));
 
 function sheet(abilities) {
@@ -253,7 +253,7 @@ const GL = await import(join(root, "modules/wodx-library/data/glossary.mjs"));
 const XR = await import(join(root, "modules/wodx-rules/sheets/extras-rules.mjs"));
 const CR = await import(join(root, "modules/wodx-rules/interactables/case-rules.mjs"));
 const FR = await import(join(root, "modules/wodx-rules/paperdoll/figure-rules.mjs"));
-const SR = await import(join(root, "modules/wodx-solo/scripts/solo-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/solo/solo-rules.mjs"));
 
 test("step 6: purse line, starter board, figure slots, solo main button, presets", () => {
   assert.equal(XR.purseLine("3 groschen 7 pence"), "3 groschen and some pence");

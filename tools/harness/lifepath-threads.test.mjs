@@ -3,7 +3,7 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as LP from "../../modules/wodx-creation/scripts/lifepath-rules.mjs";
+import * as LP from "../../modules/wodx-rules/creation/lifepath-rules.mjs";
 import * as T from "../../modules/wodx-rules/creation/lifepath-threads-rules.mjs";
 import * as FP from "../../modules/wodx-rules/creation/first-night-prelude-rules.mjs";
 import * as P from "../../modules/wodx-rules/chronicle/pod-rules.mjs";

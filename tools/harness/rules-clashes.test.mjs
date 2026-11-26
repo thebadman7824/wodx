@@ -12,7 +12,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const {default: T} = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/rules-clashes.mjs")).href);
 const {render} = await import(pathToFileURL(join(root, "tools/clashes/render.mjs")).href);
-const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")).href);
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/rules.js")).href);
 // B6243: a decision more than a month old is in docs/archive/decisions-<month>.md
 const {allDecisionsText} = await import(pathToFileURL(join(root, "tools/docs/archive-decisions.mjs")).href);
 const decisions = allDecisionsText(root);

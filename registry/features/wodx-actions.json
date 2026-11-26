@@ -433,7 +433,7 @@
    "files": [
     "modules/wodx-actions/scripts/social.js",
     "modules/wodx-rules/actions/social-rules.js",
-    "modules/wodx-actions/scripts/busy-rules.js"
+    "modules/wodx-rules/actions/busy-rules.js"
    ],
    "steps": {
     "built": {

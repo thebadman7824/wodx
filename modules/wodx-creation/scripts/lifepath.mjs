@@ -14,7 +14,7 @@
  * player. Opened from the Creation window, from a character sheet's header, or game.wodx.creation.lifepath(actor).
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
-import * as R from "./lifepath-rules.mjs";
+import * as R from "../../wodx-rules/creation/lifepath-rules.mjs";
 import * as D from "../../wodx-rules/creation/lifepath-drill-rules.mjs";
 import * as S from "../../wodx-rules/creation/lifepath-short-rules.mjs";
 import {ORIGINS} from "../data/lifepath-drill.mjs";

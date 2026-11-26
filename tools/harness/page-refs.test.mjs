@@ -11,7 +11,7 @@ const PINNED = ["wodx-actions/scripts/demon.js", "wodx-actions/scripts/fae-da.js
   "wodx-actions/scripts/mage-da.js", "wodx-rules/actions/mage-da-rules.js", "wodx-actions/scripts/mummy.js",
   "wodx-actions/scripts/reckoning.js", "wodx-rules/actions/rules.js", "wodx-actions/scripts/wraith.js",
   "wodx-actions/scripts/kindred.js", "wodx-actions/scripts/main.js", "wodx-actions/scripts/c20.js",
-  "wodx-combat/scripts/rules.js", "wodx-creation/scripts/change-of-state.mjs", "wodx-creation/scripts/time.mjs",
+  "wodx-rules/combat/rules.js", "wodx-creation/scripts/change-of-state.mjs", "wodx-creation/scripts/time.mjs",
   "wodx-chronicle/scripts/conditions.mjs"];
 const code = f => readFileSync(join(root, "modules", f), "utf8").replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^\s*\/\/.*$/gm, " ");
 

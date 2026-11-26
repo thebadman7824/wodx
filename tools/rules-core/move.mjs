@@ -114,7 +114,7 @@ for ( const [o, n] of moves ) execFileSync("git", ["mv", o, n], {cwd: ROOT});
 const text = fs.readFileSync(BASELINE, "utf8");
 const b = JSON.parse(text);
 b.notMoved = b.notMoved.filter(r => !moves.has(r));
-b.outside = [...new Set([...b.outside, ...outsideNeeded])].filter(r => !r.startsWith("modules/wodx-rules/")).sort();
+b.outside = [...new Set([...b.outside, ...outsideNeeded])].filter(r => !r.startsWith("modules/wodx-rules/") && !moves.has(r)).sort();  // a moved file is inside now
 const lines = ["{"];
 const keys = Object.keys(b);
 keys.forEach((k, i) => {

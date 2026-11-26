@@ -8,7 +8,7 @@ import {CreationCheckApp} from "./totals-check.mjs";
 import {LifepathApp} from "./lifepath.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
 import {needsSource, waived, setWaived, recordsOf, IMG} from "./learn.mjs";
-import {openLearning} from "./learn-rules.mjs";
+import {openLearning} from "../../wodx-rules/creation/learn-rules.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
 import * as LX from "../../wodx-rules/creation/lines-xp-rules.mjs";

@@ -3,7 +3,7 @@
  * (continent, region, people, origin); the dice tell the rest from the same region and year tables the long path
  * uses, and the story is shown as one paragraph. Every pick can still be changed with Back, or the long path chosen.
  */
-import * as R from "../../wodx-creation/scripts/lifepath-rules.mjs";
+import * as R from "./lifepath-rules.mjs";
 import * as D from "./lifepath-drill-rules.mjs";
 
 /** The drill steps the short path still asks. */

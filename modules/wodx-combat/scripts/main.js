@@ -19,7 +19,7 @@
  *   menu / macros keep working from v1.x
  */
 
-import * as R from "./rules.js";
+import * as R from "../../wodx-rules/combat/rules.js";
 import * as P from "./profiles.js";
 import * as F from "./flavor.js";
 import * as AU from "./auto.js";

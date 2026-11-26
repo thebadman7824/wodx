@@ -43,7 +43,7 @@ const C20 = await import(A("../wodx-rules/actions/c20-rules.js"));
 const CA = await import(A("scripts/c20-arts.js"));
 const MH = await import(A("scripts/mummy-hekau.js"));
 const OH = await import(A("scripts/orpheus-horrors.js"));
-const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
+const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-rules/combat/rules.js")).href);
 
 /** Keywords that only tell the user something; they do not change the game. B5788-B5790: Sense lays a detection sense on the
  * token, Know finds out a secret or pins a clue, and Speak opens talk with beasts and ghosts, so none is only a card now. */

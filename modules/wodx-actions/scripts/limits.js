@@ -7,7 +7,7 @@ import * as AFC from "./after-costs.js";
 import * as ACR from "../../wodx-rules/actions/after-cost-rules.js";
 import * as PM from "./power-mods.js";
 import * as TH from "./trait-hooks.js";
-import * as BZ from "./busy-rules.js";
+import * as BZ from "../../wodx-rules/actions/busy-rules.js";
 
 const MOD = "wodx-actions";
 const FLAG = "limits";

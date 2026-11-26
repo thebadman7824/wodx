@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* WoDX Solo 0.1.0: the switch, the watcher's choices and the log, with no Foundry */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/solo-rules.mjs")));
 
 /** A module's scripts, and its rules in the rules core (modules/wodx-rules/<module without wodx->). */
 function sources(mod) {
