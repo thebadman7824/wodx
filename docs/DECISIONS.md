@@ -473,7 +473,7 @@ Next free block: B8140
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
 | B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
-| B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
+| B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start, gateaftercare waits for the walk, gateplayerview names its cards (used B7980-B7983) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
@@ -16571,6 +16571,21 @@ Reverse: put back `const [kyoto, brno] = await Scene.create([...])` in tools/gat
 Gates. Nightly job 2448 failed "the way round the wall" and "a large NPC (2x2)": the runner stood at row 5 column 5, beside the hero on the hero's side of the wall, so its way was two squares and never went round. It starts at column 14 and no earlier step in the gate moves it, so something outside the gate moved it, as with the victim in gatedach8 (B7853). The step now records where the runner stood, whose turn it was, the scene's mode and the runner's moved flag (`runnerBefore`), and puts the runner back at column 14 (position only) before it asks for the way. The pass conditions are unchanged. Not yet run in Foundry.
 
 Reverse: take the runnerBefore record and the T.runner.document.update out of the way-round step in tools/gate/gate7b.mjs.
+
+## B7982. gateaftercare waits for the tended tokens to walk in (2026-11-26)
+Gates. Nightly job 2565 (main c4a50ffe) failed step 2 "a shared NPC's token is tended as itself": the tending had picked
+this scene's hospital, but the token stood at (16, 8), still walking there. The step waited only for the place to be
+set, not for the token to arrive. It now also waits up to 12 seconds for both tokens to stand inside the hospital
+before it checks.
+
+Reverse: take the arrived wait out of step 2 in tools/gate/gateaftercare.mjs.
+
+## B7983. gateplayerview names the chat cards it counts (2026-11-26)
+Gates. The same nightly failed step 17 "what can I do now" with 2 chat cards after Look around, where 1 is expected. The
+detail now lists each new card (speaker, flavor, text, whether it holds a roll, its flag scopes), so the next failure
+says where the extra card came from. The check itself is unchanged.
+
+Reverse: drop `which` from the step 17 detail.
 
 ## B8000. The Main PC stops driving the merge train (2026-11-25)
 tools/pcq/runner.json has `train: false`. Ben asked on 25 November for the merge train to move to the New PC, with
