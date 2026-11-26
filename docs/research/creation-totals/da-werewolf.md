@@ -13,7 +13,7 @@ The summary pages are pdf 81–82 / printed 80–81.
 - Backgrounds: 5 dots, restricted by tribe.
 - Werewolves may take Allies, Contacts, Mentor and Resources from Dark Ages: Vampire (pp. 153–156 of that book), plus these: Ancestors, Fetish, Hunting Grounds, Kinfolk, Pure Breed, Rites and Totem. (pdf 82 / printed 81)
 - Hunting Grounds is new compared with W20.
-- Gifts: three Level One Gifts, one each from breed, auspice and tribe.
+- Gifts: three Level One Gifts: one from the breed list, one from the auspice list, one from the tribe list.
 - Rank 1 (cliath). Renown: 3 points, split by auspice.
 
 ## Rage, Gnosis and Willpower

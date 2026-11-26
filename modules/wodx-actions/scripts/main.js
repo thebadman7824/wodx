@@ -2145,14 +2145,14 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             const r = await ownRoll(willpower(actor).perm, 6);
             rolls.push(r.roll);
             html += rollBlock(`${rule.label}: feeding on the unwilling, Willpower (6)`, r, cm.parts);
-            if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
+            if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll until the night ends (${esc(rule.page)}).</div>`; }
         }
     }
     if (rule?.mustFight === "wpRoll" && !fought && !vampireVessel) {
         const r = await ownRoll(willpower(actor).perm, 6);
         rolls.push(r.roll);
         html += rollBlock(`${rule.label}: feeding on someone not beaten in a fight, Willpower (6)`, r, cm.parts);
-        if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
+        if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll until the night ends (${esc(rule.page)}).</div>`; }
     }
     if (nightPenalty && setting("applyChanges") && actor.isOwner) {
         // B6370: the penalty is read by every roll (power-mods penalty: Any roll, Common checks, social, frenzy, powers, attacks, the sheet)
