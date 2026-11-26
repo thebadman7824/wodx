@@ -35,7 +35,8 @@
    },
    "open": [
     "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet",
-    "The wraith menu's Danger group has the Haunt, a night in it and going into it (B7901)"
+    "The wraith menu's Danger group has the Haunt, a night in it and going into it (B7901)",
+    "feed (main.js) checks action priority before its window and holds the feeding busy record while it is open (B8097)"
    ],
    "deferred": [],
    "faults": [],
@@ -431,7 +432,8 @@
    "core": true,
    "files": [
     "modules/wodx-actions/scripts/social.js",
-    "modules/wodx-actions/scripts/social-rules.js"
+    "modules/wodx-actions/scripts/social-rules.js",
+    "modules/wodx-actions/scripts/busy-rules.js"
    ],
    "steps": {
     "built": {
@@ -450,7 +452,8 @@
     }
    },
    "open": [
-    "book: V20 social rolls; not checked against the book text yet"
+    "book: V20 social rolls; not checked against the book text yet",
+    "action priority (B8097): a gate step that trades with a vessel mid-feed and checks the refusal; clinches (held) not wired yet"
    ],
    "deferred": [],
    "faults": [],
@@ -700,7 +703,9 @@
      "step": "1. a used once-a-scene Gift is greyed in the Gift window"
     }
    },
-   "open": [],
+   "open": [
+    "busy records (B8097) live here: setBusy, clearBusy, refuseBusy, whileBusy; gated with actions.social"
+   ],
    "deferred": [],
    "faults": [],
    "prs": [

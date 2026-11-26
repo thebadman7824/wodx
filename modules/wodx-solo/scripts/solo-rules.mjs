@@ -546,6 +546,20 @@ export const SIGHT_SQUARES = 6;
 /** The token's sight range in the scene's own units (Foundry measures sight in grid distance, not squares). */
 export const sightRange = (gridDistance = 1) => Math.max(1, Math.round(SIGHT_SQUARES * (Number(gridDistance) > 0 ? Number(gridDistance) : 1) * 10) / 10);
 
+/**
+ * The sight a player's token gets where it stands (#2475, the owner's pick of 25 Nov): a few squares outdoors, where
+ * the stars or the moon give something to see by, and none in an unlit interior. Foundry still shows any lit place in
+ * view, so a lit room, a carried light and the token's own light all show. null: leave the token alone (a power's
+ * darkvision, or a range someone set by hand). The book: a Cainite with no powers sees like a human, and pitch dark
+ * adds 2 to difficulty (V20 Dark Ages p. 346); Eyes of the Beast sees in pitch dark (p. 240).
+ */
+export function sightFor({indoor = false, gridDistance = 1, visionMode = "basic", range = null} = {}) {
+  if ( visionMode && visionMode !== "basic" ) return null;
+  const out = sightRange(gridDistance);
+  if ( range !== null && range !== undefined && Number(range) !== 0 && Number(range) !== out ) return null;
+  return indoor ? 0 : out;
+}
+
 /** The data for the lone player's new character. The seat makes it; the player owns it, and its token is linked. */
 export function newCharacterData({name, line, userId, at = 0} = {}) {
   const L = arrivalLine(line) ?? arrivalLine("mortal");

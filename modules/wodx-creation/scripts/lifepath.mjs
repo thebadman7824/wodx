@@ -221,8 +221,8 @@ export class LifepathApp extends ApplicationV2 {
           <div class="form-group"><label>Line</label><select name="line" data-fixed>${lines}</select></div>
           <div class="form-group"><label>${esc(L.splatLabel)}</label>${searchBox("select[name=splat]", "Search…", `Search ${L.splatLabel}`)}
             <select name="splat"><option value="">Not chosen yet</option>${splats.map(x => `<option value="${x.key}" ${x.key === s.splat ? "selected" : ""}>${esc(x.label)}${x.house ? " (house reading)" : ""}</option>`).join("")}</select></div>
-          <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="${s.line === "mortal" ? 1100 : -4000}" max="2290" value="${s.birthYear}"><p class="notes">No later than ${s.line === "mortal" ? `the chronicle's year, ${yearNow()}` : "the year of the turn"}.${s.line === "mortal" ? "" : " A year before the common era is a minus number: -500 is 500 BCE."}${s.birthYear < 0 ? ` That is ${-s.birthYear} BCE.` : ""}</p></div>
-          ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="-4000" max="2300" value="${s.turnYear}"></div>`}
+          <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="${R.earliestBirth(s.line, yearNow())}" max="2290" value="${s.birthYear}"><p class="notes">No later than ${s.line === "mortal" ? `the chronicle's year, ${yearNow()}` : "the year of the turn"}.${R.AGES_LIKE_MORTALS.has(s.line) ? ` This line ages like a mortal, so no earlier than ${R.earliestBirth(s.line, yearNow())} (about ${R.MORTAL_LIFESPAN} years before the chronicle's year).` : " A year before the common era is a minus number: -500 is 500 BCE."}${s.birthYear < 0 ? ` That is ${-s.birthYear} BCE.` : ""}</p></div>
+          ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="${R.earliestBirth(s.line, yearNow())}" max="2300" value="${s.turnYear}"></div>`}
           <div class="form-group" data-fixed><label>How much to answer</label><div>
             <label class="wodx-check"><input type="radio" name="length_" value="short" ${s.short ? "checked" : ""}> Short: where the character comes from; the dice tell the rest as a paragraph</label>
             <label class="wodx-check"><input type="radio" name="length_" value="long" ${s.short ? "" : "checked"}> Long: every step of the life, one by one</label></div></div>
@@ -372,8 +372,8 @@ export class LifepathApp extends ApplicationV2 {
     if ( form ) this.#readSetup(form);
     const s = this.setup;
     const open = R.lineOpen(s.line, s.turnYear);
-    const turnYear = open.ok ? s.turnYear : open.from;
-    const birthYear = Math.min(s.birthYear, turnYear);
+    const held = R.clampYears(s.line, {birthYear: Math.min(s.birthYear, open.ok ? s.turnYear : open.from), turnYear: open.ok ? s.turnYear : open.from}, yearNow());
+    const turnYear = held.turnYear, birthYear = held.birthYear;
     const age = (s.line === "mortal" ? Math.max(yearNow(), birthYear) : turnYear) - birthYear;
     this.begun = {line: s.line, splat: s.splat, birthYear, turnYear, short: !!s.short};
     this.path = null;

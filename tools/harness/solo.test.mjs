@@ -541,7 +541,7 @@ test("#2475: the sight range follows the scene's units", () => {
   assert.equal(R.sightRange(1.5), R.SIGHT_SQUARES * 1.5);
   assert.ok(R.sightRange(0) > 0 && R.sightRange(undefined) > 0);
   const src = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
-  assert.match(src, /R\.sightRange\(scene\.grid\?\.distance\)/, "the token placed at the way in gets sight in the scene's units");
+  assert.match(src, /R\.sightFor\(\{indoor: indoorAt\(scene, mid\), gridDistance: scene\.grid\?\.distance\}\)/, "the token placed at the way in gets sight in the scene's units, none in an unlit room");
   assert.match(src, /placeToken\(actor, scene, \{fresh: true\}\)/, "a sheet arrival has just made gets the scene-unit range, not the prototype's bare number");
 });
 
