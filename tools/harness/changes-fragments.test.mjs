@@ -34,8 +34,8 @@ test("every fragment under changes/ is well formed", () => {
 });
 
 test("main holds no fragment waiting to be stamped", {skip: !(process.env.GITHUB_EVENT_NAME === "push" && process.env.GITHUB_REF === "refs/heads/main")}, () => {
-  const {modules, decisions} = S.readFragments(ROOT);
-  assert.deepEqual([...modules, ...decisions].map(x => x.file), [], "a branch merged without node tools/release/merge-stamp.mjs");
+  const {modules, decisions, pending} = S.readFragments(ROOT);
+  assert.deepEqual([...modules, ...decisions, ...pending].map(x => x.file), [], "a branch merged without node tools/release/merge-stamp.mjs");
 });
 
 test("versions bump and compare", () => {
@@ -94,4 +94,19 @@ test("a new feature's release note names its effect in play (Ben's standing rule
   assert.equal(effectWarnings(parseFragment("---\nbump: minor\neffect: none\n---\nNote.")).length, 1, "none needs a reason");
   assert.equal(effectWarnings(parseFragment("---\nbump: minor\neffect: none, a calendar date the server keeps only\n---\nNote.")).length, 0);
   assert.equal(effectWarnings(parseFragment("---\nbump: patch\n---\nFix.")).length, 0, "fixes need none");
+});
+
+// B8131: review-list rows come as fragments, stamped at the end of the Waiting for review table
+test("pending-review fragments: rows are checked and appended once to the Waiting table", () => {
+  const rows = S.pendingRows("---\nthread: x\n---\n| 2026-11-26 | Q | C | R |\n\n| 2026-11-26 | Q2 | C2 | R2 |\n");
+  assert.deepEqual(rows, ["| 2026-11-26 | Q | C | R |", "| 2026-11-26 | Q2 | C2 | R2 |"]);
+  assert.deepEqual(S.checkPendingRows(rows), []);
+  assert.equal(S.checkPendingRows(["| Q | C | R |"]).length, 1, "three cells");
+  assert.equal(S.checkPendingRows(["| today | Q | C | R |"]).length, 1, "no date");
+  assert.equal(S.checkPendingRows([]).length, 1);
+  const doc = "# P\n\n## Approved\n\n| a |\n\n## Waiting for review\n\n| Date | Question | Choice made | How to reverse it |\n|---|---|---|---|\n| 2026-11-25 | Old | c | r |\n";
+  const out = S.stampPending(doc, rows);
+  assert.equal(out, doc + rows.join("\n") + "\n");
+  assert.equal(S.stampPending(out, rows), out, "a row the table holds is not added twice");
+  assert.throws(() => S.stampPending("# P\n", rows));
 });

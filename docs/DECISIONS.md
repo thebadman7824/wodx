@@ -479,7 +479,7 @@ Next free block: B8140
 | B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
-| B8130-B8139 | Fewer merge train ejects: the push guard (used B8130) | tools (git hooks, release) |
+| B8130-B8139 | Fewer merge train ejects: review-list fragments, conflicts the train settles, label on green (used B8130-B8133) | tools (release, pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16730,3 +16730,34 @@ and merge-stamp.mjs set `core.hooksPath` to tools/git-hooks on first run (only w
 clone has the guard before it labels.
 
 Reverse: `git config --unset core.hooksPath` in a clone, or take the installHooks calls out of the three scripts.
+
+## B8131. Review-list rows are fragments, stamped at merge (2026-11-26)
+Tools. Of the 13 pull requests the train ejected for a merge conflict from 17 to 25 November, docs/PENDING-REVIEW.md
+clashed in about 8 of the 11 whose files could be read, because every branch appended rows to the same table end and
+the daily auto-approval moved rows on main. A branch now writes its rows in changes/pending-review/<name>.md, one
+four-cell table row per line; merge-stamp checks each row (four cells, a date first) and appends them to the end of
+the Waiting for review table, skipping a row the table already holds. docs/PENDING-REVIEW.md joins the files the
+stamp writes, so it needs no file review of its own.
+
+Reverse: write rows into docs/PENDING-REVIEW.md by hand again and drop the pending-review branch of readFragments.
+
+## B8132. The train settles conflicts in the review list and generated files (2026-11-26)
+Tools. When main does not merge in cleanly and every conflicted file is docs/PENDING-REVIEW.md, docs/FEATURES.md or
+the api-paths fixture, the train settles them itself instead of ejecting: the review list is main's file plus the
+table rows the branch added (rows main moved to an approved section stay there), docs/FEATURES.md is written again
+from registry/features/, and the api-paths fixture is main's (the stamp writes it again). The merge commit keeps the
+`Merge-Train: yes` trailer. A pull request GitHub calls unmergeable is now prepared rather than ejected at once, and a
+conflict in any other file still ejects it, now naming the files. It changes tools/pcq/train.mjs outside the PC helper
+because the coordinator asked this thread to fix the train's ejects ahead of other work (26 November).
+
+Reverse: put back the "leave" for mergeable false in decide() and empty SETTLED in tools/pcq/train.mjs.
+
+## B8133. Label for the train only on green checks (2026-11-26)
+Tools. Two pull requests left the train on red checks from 17 to 25 November (1836 and 2272; on 2272 one harness test
+failed on the head). The train cannot tell a thread's red head from one main broke, so the rule is on the thread:
+label only once `checks` is green on the head and merge-stamp --check lists nothing but fragments to stamp
+(docs/WORKFLOW.md, section 6). The gate side needs no change: since 21 November a gate that fails only on order or
+fails on main too already passes the gate status (B7441, B7521), and the recheck asymmetry of #2163 was fixed on 20
+November (B7540).
+
+Reverse: take the sentence out of docs/WORKFLOW.md, section 6.
