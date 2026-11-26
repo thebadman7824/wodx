@@ -1,4 +1,4 @@
-/* B7445: merge-train batches. Up to three green pull requests from the front of the line are merged onto main in one
+/* B7445: merge-train batches. Up to five green pull requests from the front of the line are merged onto main in one
    batch pull request, stamped once and gated once; when it merges each member's head is on main. A red batch is
    closed and the next one takes half as many, down to the front alone. */
 import assert from "node:assert/strict";
@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
-import {eligible, buildBatch, step, adoptBatch, BATCH_BRANCH, TRAIN_LABEL} from "../pcq/train.mjs";
+import {eligible, buildBatch, step, adoptBatch, BATCH_BRANCH, BATCH_MAX, TRAIN_LABEL} from "../pcq/train.mjs";
 
 const green = {ownBranch: true, draft: false, mergeable: true, checks: "success", gates: null, mergeRules: "pending", mergeRulesWhy: ""};
 
@@ -129,12 +129,12 @@ test("step batches the front with the green ones behind it, merges the batch, th
   const dry = mockGh();
   const plan = await step({gh: dry.gh, home, apply: false, build});
   assert.equal(plan.action, "batch");
-  assert.match(plan.why, /would batch #20, #21, #22 \(up to 3\)/);
+  assert.match(plan.why, /would batch #20, #21, #22 \(up to 5\)/);
   assert.ok(!dry.calls.some(c => /^(PUT|POST|PATCH|DELETE)/.test(c)) && asked === null, "without apply nothing is built or posted");
 
   const a = mockGh();
   const r = await step({gh: a.gh, home, apply: true, build});
-  assert.deepEqual(asked, {cands: [20, 21, 22], max: 3});
+  assert.deepEqual(asked, {cands: [20, 21, 22], max: 5});
   assert.equal(r.action, "batch");
   assert.equal(r.front, 900, "the batch pull request is the front, so its gate job goes first");
   assert.deepEqual(r.batch, [20, 21]);
@@ -229,4 +229,19 @@ test("B7960: a runner git fault while a batch is rebuilt keeps the batch open wi
   assert.equal(late.bodies["PATCH /pulls/900"]?.state, "closed");
   assert.match(late.bodies["POST /issues/900/comments"]?.body ?? "", /for over 3 hours/);
   assert.ok(!late.calls.some(c => /issues\/2[01]\/labels/.test(c)), "the members stay in the train");
+});
+
+test("B8170: batches hold up to five, and a red batch of five halves to three, then two, then one", async () => {
+  assert.equal(BATCH_MAX, 5);
+  const runner = fs.readFileSync(new URL("../pcq/runner.mjs", import.meta.url), "utf8");
+  assert.match(runner, /batch: conf\.trainBatch \?\? BATCH_MAX/, "the runner's default follows BATCH_MAX");
+  const red = {batchStatuses: [{context: "wodx/gates", state: "failure"}, {context: "wodx/merge-rules", state: "failure", description: "Not ready: gate result"}]};
+  for ( const [n, next] of [[5, 3], [3, 2], [2, 1]] ) {
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), "train-"));
+    const members = Array.from({length: n}, (_, i) => ({number: 20 + i, ref: `claude/b${20 + i}`, head: `h${20 + i}`}));
+    fs.writeFileSync(path.join(home, "train-state.json"), JSON.stringify({batch: {pr: 900, head: "hb900", members, since: Date.now()}}));
+    const s = await step({gh: mockGh({...red, line: members.map(m => m.number)}).gh, home, apply: true, build: async () => assert.fail("no build on a red batch")});
+    assert.equal(s.action, "split", `a red batch of ${n} splits`);
+    assert.equal(stateOf(home).maxBatch, next, `a red batch of ${n} is followed by at most ${next}`);
+  }
 });
