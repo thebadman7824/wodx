@@ -9,7 +9,7 @@ import * as TR from "../../wodx-rules/actions/turn-rules.js";
 export const rules = TR;
 import { countSuccesses } from "../../wodx-rules/actions/core-rules.js";
 import { poolDice } from "./summons.js";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

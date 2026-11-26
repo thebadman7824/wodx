@@ -19,7 +19,7 @@ game.modules.set(M, {});
 const {DialogV2} = foundry.applications.api;
 const api = () => game.modules.get(M).api;
 const chron = () => game.modules.get("wodx-chronicle").api;
-const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 const at = (year, month = 1, day = 1) => getEngine().dateToTime({year, month, day, hour: 21, minute: 0});
 
 test("ready", async () => {

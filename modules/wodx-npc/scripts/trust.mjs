@@ -14,9 +14,9 @@
  *             powers that can find it are listed for the Storyteller
  */
 import * as TRR from "../../wodx-rules/npc/trust-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /**
  * B6668: who a mortal sends to strike back: bandits while guns are not on the sheet, thugs once they are (the era

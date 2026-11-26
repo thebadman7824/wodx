@@ -79,7 +79,7 @@ async function latitudeAt(scene) {
   catch (e) { return 50; }
 }
 async function sunFrom(scene) {
-  const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+  const cal = await import("../../wodx-rules/core/calendar.mjs");
   const lat = await latitudeAt(scene), now = game.time.worldTime;
   return {toDusk: cal.secondsToNextDusk(now, lat), toDawn: cal.secondsToNextDawn(now, lat)};
 }

@@ -121,7 +121,7 @@ async function body(R, ok, step, Rules, own) {
   });
   await step("4 settings", async () => {
     const C = game.modules.get("wodx-chronicle").api;
-    const cal = await import(`/modules/wodx-chronicle/scripts/calendar.mjs`);
+    const cal = await import(`/modules/wodx-rules/core/calendar.mjs`);
     const d = cal.getEngine().timeToDate(game.time.worldTime);
     ok("4 settings", C.world.homeland() === recipe.homeland && d.year === recipe.opening.year, {homeland: C.world.homeland(), wants: recipe.homeland, date: d});
   });

@@ -68,13 +68,13 @@ import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "../../wodx-rules/interactables/vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 import * as FAER from "../../wodx-rules/actions/fae-da-rules.js";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.57.2";
+const VERSION = "0.57.3";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

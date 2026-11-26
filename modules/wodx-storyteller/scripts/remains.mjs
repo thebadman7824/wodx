@@ -11,7 +11,7 @@
  */
 import * as R from "../../wodx-rules/storyteller/remains-rules.mjs";
 import {MOD, esc, isActiveGM, setting, chron} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {addHeat} from "./upkeep.mjs";
 
 const now = () => game.time?.worldTime ?? 0;

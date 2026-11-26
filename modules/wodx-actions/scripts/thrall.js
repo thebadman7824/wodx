@@ -12,7 +12,7 @@
  *   On a Social roll    the Aura of Sin ticks (trait-hooks.js): the Vice suits the deed, or the other finds it foul
  */
 import * as T from "../../wodx-rules/actions/thrall-rules.js";
-import { DAY, HOUR } from "../../wodx-chronicle/scripts/terms.mjs";
+import { DAY, HOUR } from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const REF = T.REF;

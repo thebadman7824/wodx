@@ -1,7 +1,7 @@
 import * as L from "../../wodx-rules/storyteller/ledger-rules.mjs";
 import * as Wills from "./wills.mjs";
 import {MOD, esc, chron, npc, isActiveGM, setting, mutate as mutateSetting, log, isPC, pcs} from "./core.mjs";
-import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine, describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**

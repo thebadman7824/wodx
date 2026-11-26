@@ -15,7 +15,7 @@ import * as D from "../../wodx-rules/chronicle/derangement-rules.mjs";
 import {registerCondition, setCondition, hasCondition} from "./conditions.mjs";
 import {addSource} from "./traits.mjs";
 import {isQuiet, isLightTouch} from "./quiet.mjs";
-import * as TERMS from "./terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const FLAG = "bout";
 const now = () => game.time?.worldTime ?? 0;

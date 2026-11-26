@@ -486,7 +486,7 @@ test("the clock heals mortals by the chart, wakes the torpid, and marks dawn and
   assert.equal(v.getFlag("wodx-actions", "torpor").reminded, true);
   S.autoTorporRise = true;
   // the clock reads night at the epoch: coming from day, that is dusk
-  const t0 = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+  const t0 = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
   const night = t0.describeTime(game.time.worldTime, game.settings.get("wodx-chronicle", "latitude")).isNight;
   await game.settings.set("wodx-actions", "sunState", night ? "day" : "night");
   mock.log.chat.length = 0;

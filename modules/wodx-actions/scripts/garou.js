@@ -22,7 +22,7 @@ import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
 import { outcomesOf } from "./mage-da-effects.js";
 import * as FOM from "./fomor.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -193,7 +193,7 @@ const renownLabel = (fera, k) => fera?.renown?.[RENOWN.indexOf(k)] ?? k[0].toUpp
 /** Current moon phase index (0 new … 4 full … 7) from the Chronicle Clock. */
 export async function moonNow() {
     try {
-        const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+        const cal = await import("../../wodx-rules/core/calendar.mjs");
         const lat = game.settings.get("wodx-chronicle", "latitude");
         const t = cal.describeTime(game.time.worldTime, lat);
         return { index: t.moon.index, name: t.moon.name, isNight: t.isNight, jdn: t.jdn, hour: t.hour, time: t };

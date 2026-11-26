@@ -63,10 +63,10 @@ import * as LEGACY from "./legacy.mjs";
 import * as PO from "../../wodx-rules/npc/politics-rules.mjs";
 import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.112.4";
+const VERSION = "0.112.5";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

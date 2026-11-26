@@ -12,7 +12,7 @@
  * scene's short side), mark or text (a sign drawn as words), color, line (spots in a row), wash (the whole scene).
  * Scene "@company" means the scene the company stands in.
  */
-import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY, WEEK} from "../../wodx-rules/core/terms.mjs";
 export {WEEK};
 
 export const FRONTS = [

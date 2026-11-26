@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const R = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
 const NR = await import(join(root, "modules/wodx-rules/npc/npc-rules.mjs"));
-const {DateEngine, sunTimes} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {DateEngine, sunTimes} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 
 // Rothenstein's clock: 1197 epoch, Bohemia's reform, latitude 50
 const engine = new DateEngine({epoch: [1197, 1, 1], reform: "bohemia-1584"});

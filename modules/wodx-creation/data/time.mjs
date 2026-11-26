@@ -1,7 +1,7 @@
 /**
  * Phase 4: what the years do. Book rules carry their page; "WoDX choice" marks what the books leave open.
  */
-import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {YEAR} from "../../wodx-rules/core/terms.mjs";
 
 export const SECONDS_PER_YEAR = YEAR;
 export const SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12;

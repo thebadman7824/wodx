@@ -13,7 +13,7 @@
  *             when the Storyteller presses Undo). The active Storyteller's client sends it; nothing here acts on it.
  */
 import * as S from "../../wodx-rules/interactables/state-rules.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SOCKET = `module.${MOD}`;

@@ -21,7 +21,7 @@ import {MODULE_ID} from "./ratings.mjs";
 import {T_DRIFT} from "./drift.mjs";
 import {sheetNature} from "./senses.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 
 export const T_TURN = `${MODULE_ID}.corruption`;
 export const T_PENTEX = `${MODULE_ID}.pentex`;

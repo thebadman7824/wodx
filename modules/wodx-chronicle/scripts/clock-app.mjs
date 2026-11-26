@@ -1,5 +1,5 @@
 import {esc, rule, setting, setSetting, MODULE_ID} from "./util.mjs";
-import {describeTime, getEngine, secondsToNextDusk, secondsToNextDawn, MONTHS, REFORMS} from "./calendar.mjs";
+import {describeTime, getEngine, secondsToNextDusk, secondsToNextDawn, MONTHS, REFORMS} from "../../wodx-rules/core/calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
 import * as safety from "./safety.mjs";
@@ -14,7 +14,7 @@ import {FAITHS, faithFounded} from "../../wodx-rules/chronicle/faith-rules.mjs";
 import * as place from "./place.mjs";
 import {offsetWords} from "../../wodx-rules/chronicle/place-rules.mjs";
 import {paceLine} from "./pace.mjs";
-import * as TERMS from "./terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 

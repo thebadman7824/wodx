@@ -19,7 +19,7 @@
 import { H, T, C, K, P, HL, outcomesOf } from "./mage-da-effects.js";
 import * as CA from "./c20-arts.js";
 import * as DC from "./fae-da-cantrips.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 const X = (name, level, book, page, kind, use, fx, spec, extra = {}) => ({ name, level, book, page, kind, use, fx, spec, ...extra });

@@ -60,11 +60,11 @@ const fightOn = sceneId => all(game.combats).filter(c => c.started && c.scene?.i
 const combatOf = tokenDoc => all(game.combats).find(c => c.started && all(c.combatants).some(x => x.tokenId === tokenDoc?.id)) ?? null;
 
 async function calendarYear() {
-  try { const cal = await import("../../wodx-chronicle/scripts/calendar.mjs"); return cal.getEngine().timeToDate(game.time.worldTime).year; }
+  try { const cal = await import("../../wodx-rules/core/calendar.mjs"); return cal.getEngine().timeToDate(game.time.worldTime).year; }
   catch (e) { return yearNow(); }
 }
 async function dateLabel(time) {
-  try { const cal = await import("../../wodx-chronicle/scripts/calendar.mjs"); return cal.describeTime(time).dateLabel; } catch (e) { return ""; }
+  try { const cal = await import("../../wodx-rules/core/calendar.mjs"); return cal.describeTime(time).dateLabel; } catch (e) { return ""; }
 }
 
 /* ------------------------------------------------------------------ */

@@ -7,7 +7,7 @@ import * as SR from "../../wodx-rules/paperdoll/sprite-rules.mjs";
 import * as LR from "../../wodx-rules/paperdoll/line-rules.mjs";
 import * as FG from "../../wodx-rules/paperdoll/figure-rules.mjs";
 import {healthLevel, randomLook} from "../../wodx-rules/paperdoll/doll-rules.mjs";
-import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {YEAR} from "../../wodx-rules/core/terms.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();
 /** Who sits on a mount or in a vehicle just now (mounts.mjs keeps it): token id -> {facing, pose, moving}. */

@@ -243,7 +243,7 @@ export async function run() {
 
     await G.step("8. the long dead go to the archive by themselves", async () => {
       // B6414: someone dead eleven years, a journal that links them; the clock moves a day and they go, the link with them
-      const {getEngine, describeTime} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+      const {getEngine, describeTime} = await import("/modules/wodx-rules/core/calendar.mjs");
       const nowYear = describeTime(game.time.worldTime).year;
       const [old] = await G.make(Actor, [mortal("Gate TruthSheets Long Dead")]);
       const id = old.id;

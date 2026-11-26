@@ -478,7 +478,7 @@ Next free block: B8190
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
-| B8060-B8089 | Rules core: one Foundry-free rules package (used B8060-B8067) | Rules, Chronicle, Actions, Atmosphere, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller |
+| B8060-B8089 | Rules core: one Foundry-free rules package (used B8060-B8068) | Chronicle, Rules, Actions, Atmosphere, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Rothenstein, Senses, Solo, Storyteller, Targeting |
 | B8090-B8099 | Solo test desk picks: action priority, item tags, lifespan, dark interiors, teachers, time dial (used B8090-B8098) | Actions, Chronicle, Combat, Creation, Library, NPC, Senses, Solo |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
@@ -16923,6 +16923,16 @@ their own. Every rules file is now in the package; notMoved is empty. The move t
 outside list.
 
 Reverse: git mv the nine files back and list them on notMoved.
+
+## B8068. Chronicle's copies of the terms and the calendar go (2026-11-26)
+WoDX Chronicle and every module that reads the shared terms or the date engine. With every rules file in the package
+(B8067), the re-exports B8062 kept for open branches are retired: imports of terms.mjs, calendar-math.mjs and the
+engine half of calendar.mjs point at modules/wodx-rules/core, Chronicle's terms.mjs and calendar-math.mjs are
+deleted, and its calendar.mjs keeps only makeCalendarClass and makeCalendarConfig, with no export * of the core. A
+rules core test fails any import of the old paths. An open branch that still imports them fails the cross-imports
+test, which names the line to change.
+
+Reverse: restore the two files as `export * from "../../wodx-rules/core/<file>.mjs"` and the export * in calendar.mjs.
 
 ## B8090. Aim at is the one control; Targeting is gone (2026-11-26)
 WoDX Combat. Aim at lists the target's parts and, in its own group, an item they hold: a large one like a shield or sword, a small one like a knife, a tiny one like a ring, at the sizes the book gives (V20 Dark Ages p. 346). A blow aimed at an item lands on it, and the Storyteller says what it does. The separate Targeting list is dropped, the owner's desk pick of 25 November (#2509).

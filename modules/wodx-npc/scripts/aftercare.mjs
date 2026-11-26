@@ -15,7 +15,7 @@
 import * as AC from "../../wodx-rules/npc/aftercare-rules.mjs";
 import * as LM from "./line-mend.mjs";
 import {faithFor} from "../../wodx-rules/chronicle/faith-rules.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";
 
 export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {

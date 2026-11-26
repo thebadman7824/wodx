@@ -4,7 +4,7 @@
  * Willpower), how long it runs, one line per Vitality level (0 to 5), and results(): the effects-card items for a use.
  * Pure: no Foundry calls.
  */
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 import {outcomesOf, N} from "./mage-da-effects.js";
 const n = v => Number(v) || 0;
 const turns = k => ({ label: `${k + 1} turn${k ? "s" : ""}`, timed: { kind: "rounds", rounds: k + 1 } });

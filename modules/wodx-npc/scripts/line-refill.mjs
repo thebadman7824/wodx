@@ -10,7 +10,7 @@
  */
 import * as RR from "../../wodx-rules/npc/line-refill-rules.mjs";
 import * as LM from "./line-mend.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-npc", ACT = "wodx-actions";
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

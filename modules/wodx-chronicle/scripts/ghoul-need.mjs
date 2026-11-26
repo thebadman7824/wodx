@@ -12,11 +12,11 @@
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import * as R from "../../wodx-rules/chronicle/ghoul-need-rules.mjs";
-import {getEngine} from "./calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {isQuiet} from "./quiet.mjs";
 import {offerFeed} from "./signatures.mjs";
 import {isSkipping} from "./skip.mjs";
-import {MONTH} from "./terms.mjs";
+import {MONTH} from "../../wodx-rules/core/terms.mjs";
 
 const FLAG = "ghoulNeed";
 const SIG = "sig";

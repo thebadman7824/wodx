@@ -1,5 +1,5 @@
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 /**
  * WoDX Actions (B5780-B5791): effects WoDX works out itself, for powers whose book effect is more than a keyword's
  * plain result. Each runs on the active Storyteller's client from the effects card (effects.js applyCore), and returns

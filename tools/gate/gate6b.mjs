@@ -155,7 +155,7 @@ async function runGate(K) {
 
         /* 6. Moon Rage at nightfall (B40) */
         await step("moon rage", async () => {
-            const cal = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+            const cal = await import("/modules/wodx-rules/core/calendar.mjs");
             const lat = game.settings.get("wodx-chronicle", "latitude");
             const now = cal.describeTime(game.time.worldTime, lat);
             await W.update({ "system.advantages.rage.temporary": 1 });

@@ -111,7 +111,7 @@ export async function run() {
     });
     await step("6 light", async () => {
       const W = A.rules.W;
-      const cal = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+      const cal = await import("/modules/wodx-rules/core/calendar.mjs");
       const lat = Number(get("wodx-chronicle", "latitude")) || 50.1;
       const t = cal.describeTime(game.time.worldTime, lat);
       const want = W.darknessFor({altitude: W.sunAltitude(t.jdn, t.hour + t.minute / 60, lat), moon: t.moon.illumination, sky: "storm", night: 0.9});

@@ -3,7 +3,7 @@ import {test} from "node:test";
 import assert from "node:assert/strict";
 import * as W from "../../modules/wodx-rules/atmosphere/weather-rules.mjs";
 import {WORLD_REGIONS} from "../../modules/wodx-rules/chronicle/world-rules.mjs";
-import {gregorianToJDN} from "../../modules/wodx-chronicle/scripts/calendar-math.mjs";
+import {gregorianToJDN} from "../../modules/wodx-rules/core/calendar-math.mjs";
 
 const at = (region) => ({region, climate: WORLD_REGIONS[region].climate});
 

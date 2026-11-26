@@ -5,9 +5,9 @@ import {test} from "node:test";
 import fs from "node:fs";
 import path from "node:path";
 import {RULES, check, compare, loadBaseline, ROOT} from "./terms-guard.mjs";
-import * as T from "../../modules/wodx-chronicle/scripts/terms.mjs";
+import * as T from "../../modules/wodx-rules/core/terms.mjs";
 
-test("no module writes its own copy of a shared term (use modules/wodx-chronicle/scripts/terms.mjs)", () => {
+test("no module writes its own copy of a shared term (use modules/wodx-rules/core/terms.mjs)", () => {
   const {fresh} = compare(check(), loadBaseline());
   assert.deepEqual(fresh, [], `Import these from terms.mjs (or api.terms in play) instead:\n  ${fresh.join("\n  ")}`);
 });

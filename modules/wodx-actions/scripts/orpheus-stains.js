@@ -13,7 +13,7 @@
  * die from behind, Man-o'-War's halved bashing and Withered's extra bashing dice stay on the card, since no roll knows
  * which way a blow came from or halves it; Dagger Tongue is a thrown-range Brawl attack.
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const n = v => Number(v) || 0;
 

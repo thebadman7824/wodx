@@ -21,7 +21,7 @@ import {bookPeopleDialog} from "./book-people.mjs";
 import {supportingCastDialog} from "./supporting-cast.mjs";
 import {demonsDialog} from "./dac-demons.mjs";
 import {runSkipTest, isTestWorld} from "./skip-test.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const OBSERVER = 2;

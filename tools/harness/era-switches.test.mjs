@@ -11,7 +11,7 @@ import {readFileSync, readdirSync} from "node:fs";
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const M = p => join(root, "modules", p);
-const T = await import(M("wodx-chronicle/scripts/terms.mjs"));
+const T = await import(M("wodx-rules/core/terms.mjs"));
 const K = await import(M("wodx-rules/storyteller/kits-rules.mjs"));
 const B = await import(M("wodx-rules/sheets/beginner-rules.mjs"));
 const R = await import(M("wodx-rules/interactables/interact-rules.mjs"));

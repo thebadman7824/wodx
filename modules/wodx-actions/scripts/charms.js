@@ -18,7 +18,7 @@ import * as LIM from "./limits.js";
 import * as SC from "./spirit-charms.js";
 import * as EF from "./effects.js";
 import * as E from "../../wodx-rules/actions/effects-rules.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

@@ -6,7 +6,7 @@ import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mj
 import {nightNow} from "./night.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Signals from "./signals.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 /**
  * The rumour network: a rumour, once started (from the night's draw when approved, or by hand), passes between the

@@ -24,7 +24,7 @@ export async function run() {
   const before = new Set(game.messages.map(m => m.id));
   const cards = () => game.messages.filter(m => !before.has(m.id) && /wodx-events/.test(m.content ?? ""));
   try {
-    const {getEngine} = await import(`/modules/${M}/scripts/calendar.mjs`);
+    const {getEngine} = await import(`/modules/wodx-rules/core/calendar.mjs`);
     const at = (y, m, d) => getEngine().dateToTime({year: y, month: m, day: d, hour: 21});
     await G.scene();
     await api.hold(true);

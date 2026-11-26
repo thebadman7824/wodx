@@ -113,7 +113,7 @@ test("labels and override cleaning", () => {
 /* Runtime, on the Foundry stand-in */
 const mock = installMock({dataRoot: root});
 await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
-const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 const M = "wodx-chronicle";
 const date = (y, m, d) => getEngine().dateToTime({year: y, month: m, day: d, hour: 21});
 

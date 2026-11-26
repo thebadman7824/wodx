@@ -10,7 +10,7 @@
  */
 import * as K from "../../wodx-rules/creation/kit-rules.mjs";
 import {MODULE_ID} from "./actor-data.mjs";
-import {isNPC} from "../../wodx-chronicle/scripts/terms.mjs";
+import {isNPC} from "../../wodx-rules/core/terms.mjs";
 
 const LIB = "wodx-library";
 const SOCKET = `module.${MODULE_ID}`;

@@ -11,7 +11,7 @@
  * Player characters and NPCs are read the same way.
  */
 import * as PM from "./power-mods.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 import { AURA_TICKS } from "../../wodx-rules/actions/thrall-rules.js";
 import { FEATURE_TICKS, featuresOf } from "../../wodx-rules/actions/fae-da-rules.js";
 

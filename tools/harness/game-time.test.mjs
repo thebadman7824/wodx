@@ -12,7 +12,7 @@ const PR = await import(join(root, "modules/wodx-rules/chronicle/place-rules.mjs
 const PA = await import(join(root, "modules/wodx-rules/chronicle/pace-rules.mjs"));
 const FT = await import(join(root, "modules/wodx-rules/combat/fight-time-rules.js"));
 const J = await import(join(root, "modules/wodx-rules/otherworlds/journey-rules.mjs"));
-const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {DateEngine} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 
 const where = (...pairs) => pairs.map(([id, scene]) => ({id, scene}));
 
@@ -73,7 +73,7 @@ test("a scene's own place: latitude and hours from home", () => {
 });
 
 test("a far scene's sun rises at its own hour, in every era", async () => {
-  const cal = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+  const cal = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
   const engine = new DateEngine({epoch: [1197, 1, 1], reform: "bohemia-1584"});
   for ( const year of [1197, 1600, 1880, 1999, 2030] ) {
     const t = engine.dateToTime({year, month: 6, day: 21, hour: 12, minute: 0});

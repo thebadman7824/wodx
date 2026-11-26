@@ -17,7 +17,7 @@ import * as E from "../../wodx-rules/chronicle/encounter-rules.mjs";
 import * as F from "../../wodx-rules/chronicle/front-rules.mjs";
 import * as S from "../../wodx-rules/chronicle/saga-rules.mjs";
 import * as Fronts from "./fronts.mjs";
-import {getEngine} from "./calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 /** The first book of the chronicle in play (read when used: the chronicle registers after this file loads). */
 const book = () => S.FIRST_BOOK;

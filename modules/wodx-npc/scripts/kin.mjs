@@ -8,8 +8,8 @@
  *   every player character's ties and grows every family line; nothing is written until it is approved.
  */
 import * as K from "../../wodx-rules/npc/kin-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
+import {YEAR} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-npc";
 const chron = () => game.modules.get("wodx-chronicle")?.api;

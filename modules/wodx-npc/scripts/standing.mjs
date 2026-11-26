@@ -12,7 +12,7 @@
  *             fight starter take them up
  */
 import * as SR from "../../wodx-rules/npc/standing-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const MOD = "wodx-npc";
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);

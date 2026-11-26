@@ -38,7 +38,7 @@ export async function run() {
   const t0 = game.time.worldTime, held = !!chron?.isHeld?.(), viewed = canvas.scene?.id;
   const firedBefore = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "eventsFired"));
   let scene = null;
-  const {getEngine} = await import(`/modules/wodx-chronicle/scripts/calendar.mjs`);
+  const {getEngine} = await import(`/modules/wodx-rules/core/calendar.mjs`);
   const at = (y, m, d, h) => getEngine().dateToTime({year: y, month: m, day: d, hour: h});
   const BASE = "icons/svg/windmill.svg", REPAINT = "icons/svg/fire.svg";
   const tile = name => scene.tiles.find(t => t.getFlag(MOD, "gate") === name);

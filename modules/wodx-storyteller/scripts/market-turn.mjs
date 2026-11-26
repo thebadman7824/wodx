@@ -23,7 +23,7 @@ import * as Caravans from "./caravans.mjs";
 import * as Ventures from "./ventures.mjs";
 import * as Contagion from "./contagion.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 
 export const TYPE = `${MOD}.market`;
 let KINDS = {};

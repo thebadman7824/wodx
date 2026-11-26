@@ -1,11 +1,9 @@
 /**
  * The WoDX calendar for Foundry (B8060). The date engine and the clock reading live in the rules core
- * (wodx-rules/core/calendar.mjs) and are re-exported here; this file adds only the two pieces that need Foundry: the
- * calendar class and its config, both built inside init.
+ * (wodx-rules/core/calendar.mjs), which every module imports itself (B8068); this file holds only the two pieces that
+ * need Foundry: the calendar class and its config, both built inside init.
  */
 import {getEngine, EPOCH_YEAR} from "../../wodx-rules/core/calendar.mjs";
-
-export * from "../../wodx-rules/core/calendar.mjs";
 
 /**
  * Build the calendar class. Called inside init, when foundry.data.CalendarData is available.

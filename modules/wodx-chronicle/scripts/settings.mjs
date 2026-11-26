@@ -1,6 +1,6 @@
 import {MODULE_ID} from "./util.mjs";
 import HOUSE_RULE_DATA from "../../wodx-rules/chronicle/house-rules.mjs";
-import {REFORMS} from "./calendar-math.mjs";
+import {REFORMS} from "../../wodx-rules/core/calendar-math.mjs";
 import {WORLD_REGIONS, DEFAULT_REGION} from "../../wodx-rules/chronicle/world-rules.mjs";
 
 /** House-rule definitions. */

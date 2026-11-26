@@ -11,10 +11,10 @@
 import * as WR from "../../wodx-rules/storyteller/will-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM} from "./core.mjs";
 import * as Money from "./money.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {ratingsOf, ratingFrom} from "../../wodx-rules/chronicle/when-rules.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const T = {estate: `${MOD}.estate`, falseHeir: `${MOD}.false-heir`};
 const yearAt = t => getEngine().timeToDate(Number(t) || 0).year;

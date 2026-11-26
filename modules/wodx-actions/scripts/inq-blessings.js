@@ -8,7 +8,7 @@
  * The Superior Virtues themselves roll in the Virtue roll window. Pure: no Foundry calls.
  */
 import { H, T, C, N, HL, outcomesOf } from "./mage-da-effects.js";
-import { DAY, WEEK } from "../../wodx-chronicle/scripts/terms.mjs";
+import { DAY, WEEK } from "../../wodx-rules/core/terms.mjs";
 
 export const REF = "Dark Ages: Inquisitor";
 /** B7934: the Companion's Blessings carry their own book. */

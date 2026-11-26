@@ -35,7 +35,7 @@ import * as DSX from "./daysleep.js";
 import * as DSR from "../../wodx-rules/actions/daysleep-rules.js";
 import * as FOM from "./fomor.js";
 import * as FDR from "../../wodx-rules/actions/fae-da-rules.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 import * as CUR from "../../wodx-rules/actions/inq-curses-rules.js";
 
 const MOD = "wodx-actions";
@@ -75,7 +75,7 @@ export async function loadData() {
 /** Date label of the chronicle clock, if WoDX Chronicle's calendar is there. */
 async function clockNow(time = game.time.worldTime) {
     try {
-        const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+        const cal = await import("../../wodx-rules/core/calendar.mjs");
         const lat = game.settings.get("wodx-chronicle", "latitude");
         return cal.describeTime(time, lat);
     } catch (e) { return { dateLabel: "", timeLabel: "", isNight: null }; }

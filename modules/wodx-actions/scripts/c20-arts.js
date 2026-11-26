@@ -8,7 +8,7 @@
  */
 import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
 import * as PK from "./power-keywords.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const A = (art, level, fx, lasts, type, spec = null, extra = {}) => ({ art, level, fx, lasts, type, spec, ...extra });
 

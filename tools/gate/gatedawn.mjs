@@ -36,7 +36,7 @@ export async function run() {
       && ["dawnDread", "dawnPressure"].every(k => game.settings.settings.has(`${MOD}.${k}`)) && act?.active && !foundry.utils.isNewerVersion("3.16.0", act.version),
       {atmosphere: A?.version, actions: act?.version});
 
-    const cal = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+    const cal = await import("/modules/wodx-rules/core/calendar.mjs");
     const lat = Number(get("wodx-chronicle", "latitude")) || 50.1;
     const dawn = game.time.worldTime + cal.secondsToNextDawn(game.time.worldTime, lat);
     const at = m => dawn - m * 60;

@@ -5,7 +5,7 @@
  * twists' own words stay in the Storyteller's volumes; the labels here are short handles in our own words.
  * Pure data: twist-rules.mjs reads it.
  */
-import {WEEK, DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {WEEK, DAY} from "../../wodx-rules/core/terms.mjs";
 export {WEEK};
 
 /** The chains: key, a handle, the twists on it and the chapters it pays off in. */

@@ -6,7 +6,7 @@
  * judgement, stays the Storyteller's call and is only listed on the card.
  */
 import { H, T, C, N, S, K as KW, P, MV, HL, outcomesOf } from "./mage-da-effects.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /**
  * Dark Ages path powers, by power id, from a page check of each power (2026-11-11). Summoned beings, raised dead,
