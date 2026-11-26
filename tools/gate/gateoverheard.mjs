@@ -95,7 +95,9 @@ export async function run() {
       // Foundry 14: a jump, not a walked move, so nothing on the way can stop or shorten it
       if ( typeof me.move === "function" ) await me.move([{x: 9 * G, y: 5 * G, action: "displace"}]);
       else await me.update({x: 9 * G, y: 5 * G}, {animate: false});
-      await sleep(1800); // the move itself may trigger a look; either way one exchange is enough
+      // the move itself triggers a look 1.5 s later; on a slow lane its whisper and record can take a minute to save, and
+      // a second look meanwhile is refused as too soon: wait for the record first. Either way one exchange is enough
+      for ( let t = Date.now(); Date.now() - t < 60000 && !npc().overheard.log(ear).length; ) await sleep(500);
       const near = npc().overheard.log(ear).length ? {ok: true, by: "move"} : await npc().overheard.run(ear);
       if ( wasPaused ) await game.togglePause(true, {broadcast: true});
       if ( !pcOK ) ok("4. earshot", true, {skipped: "no player user owns the listener, so nobody can be in earshot"});
