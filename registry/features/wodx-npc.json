@@ -32,7 +32,9 @@
      "none": "house rule (B65, B66): the books leave this to the Storyteller"
     }
    },
-   "open": [],
+   "open": [
+    "the look card's knowledge lines (B8094, lookKnows in main.mjs) need a row of their own and a gate step with a tie and a rumour"
+   ],
    "deferred": [],
    "faults": [],
    "prs": [

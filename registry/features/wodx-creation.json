@@ -139,7 +139,8 @@
     }
    },
    "open": [
-    "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet"
+    "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet",
+    "study speed (B8092) and Find a teacher (B8093): a gate step for Find a teacher in a town with a teacher"
    ],
    "deferred": [],
    "faults": [],
@@ -223,7 +224,9 @@
      "none": "a WoDX creation aid (Improvement Desk cr1); the books have no lifepath tables"
     }
    },
-   "open": [],
+   "open": [
+    "mortal lifespan (B8095): a gate step that sets 1000 for a mage in 1197 and checks 1127"
+   ],
    "deferred": [],
    "faults": [],
    "prs": [
