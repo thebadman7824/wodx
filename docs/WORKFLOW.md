@@ -171,7 +171,9 @@ GITHUB_TOKEN), and `merge-stamp.mjs --check` includes it.
 
 **The merge train (B7202, Ben, 17 November 2026).** Pull requests merge one at a time. When rules 1, 3 and 4 hold
 (notes, reviews, registry) and the code is final, add the label `merge-train` to the pull request and stop pushing to
-it. Do not merge main in, stamp or merge it yourself: the Main PC's runner works on the pull request at the front of
+it. Label only once `checks` is green on the head and `node tools/release/merge-stamp.mjs --check` lists no problem
+but the fragments waiting to be stamped (B8133: 2 pull requests left the train on red checks, 17 to 25 November).
+Do not merge main in, stamp or merge it yourself: the Main PC's runner works on the pull request at the front of
 the line (oldest label first). It marks a draft ready, merges main in (a merge, never a rebase), runs merge-stamp,
 pushes, lets pc-gates.yml gate the new head (that gate job runs before other gate jobs) and merges when `checks` and
 `wodx/merge-rules` are green. A conflict, a red result or no result within 3 hours takes the pull request out of the
