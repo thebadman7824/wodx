@@ -92,7 +92,7 @@ export function planFor(from, to) {
 export async function onSkipEnd(info = {}) {
   if ( !isActiveGM() ) return;
   try { if ( !game.settings.get(MOD, "npcFates") ) return; } catch (e) { return; }
-  if ( !((Number(info.to) - Number(info.from)) / YEAR_SECONDS >= 1) ) return wakeDue(info.to);
+  if ( !F.isLongJump(info.from, info.to) ) return wakeDue(info.to);
   const plan = planFor(info.from, info.to);
   if ( !plan.result.events.length ) return;
   await chron()?.propose?.({type: T.fates, key: `npc-fates:${info.from}:${info.to}`, title: `Off-screen lives, ${plan.fromYear} to ${plan.toYear}`,

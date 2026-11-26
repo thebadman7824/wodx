@@ -21,8 +21,18 @@ import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 import {embraceReason, withoutLeave, EMBRACE_REASONS} from "./duty-rules.mjs";
 export {EMBRACE_REASONS};
 import {TORPOR} from "../../wodx-creation/data/time.mjs";
+import {DAY} from "../core/terms.mjs";
 
 /** The actor types that live off-screen, and the line each one follows. */
+/**
+ * #2627: whether a skip is long enough for off-screen lives (a year or more). A one-year Pass the years moves the
+ * clock a calendar year (365 days, 366 in a leap year) from where it stood when the plan was made, and a running clock
+ * has moved on a little by the time the skip starts, so the skip itself is a little short of that; measuring by the
+ * 365.25-day year left nearly all of them out. 360 days keeps a few days' room.
+ */
+export const LONG_JUMP_DAYS = 360;
+export const isLongJump = (from, to) => (Number(to) - Number(from)) >= LONG_JUMP_DAYS * DAY;
+
 export const LINE_OF_TYPE = {
   Vampire: "vampire", Werewolf: "garou", "Changing Breed": "garou", Mage: "mage", Changeling: "changeling",
   Wraith: "wraith", Mummy: "mummy", Demon: "demon", Hunter: "hunter"
