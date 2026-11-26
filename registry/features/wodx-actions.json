@@ -70,7 +70,8 @@
     }
    },
    "open": [
-    "book: V20 Dark Ages Abilities chapter; not checked against the book text yet"
+    "book: V20 Dark Ages Abilities chapter; not checked against the book text yet",
+    "B8140 (#2504): the quick check menu hides checks that do not fit the year or the character; gate step still to write"
    ],
    "deferred": [],
    "faults": [],
