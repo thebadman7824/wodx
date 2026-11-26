@@ -38,24 +38,59 @@ const pkgOf = p => {
   return ["modules", "systems"].includes(r[0]) && r[1] ? join(root, r[0], r[1]) : null;
 };
 
-/** Every file one package imports from another (static or import()): those stay unbundled. */
+/** The rules core (B8060): its files belong to the module that uses them when the bundles are made. */
+const RULES_PKG = join(MODS, "wodx-rules");
+
+/**
+ * Every file one package imports from another (static or import()): those stay unbundled, so each has one copy in
+ * the browser. A rules core file (modules/wodx-rules) reached by one module only, directly or through other rules core
+ * files, is bundled into that module as if it still sat there (B8060), which is what happened before it moved; one
+ * reached by two or more modules stays unbundled, as any shared file does.
+ * Returns {shared, owner}: owner maps each rules core file bundled into a module to that module's folder.
+ */
 export function sharedFiles(files) {
-  const shared = new Set();
+  const shared = new Set(), edges = new Map();
   const re = /(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)["'`]([^"'`]+)["'`]/g;
   for ( const f of files ) {
-    const src = readFileSync(f, "utf8");
+    const src = readFileSync(f, "utf8"), out = [];
     for ( const m of src.matchAll(re) ) {
       if ( !m[1].startsWith(".") ) continue;
       const to = resolve(dirname(f), m[1]);
-      if ( pkgOf(to) && pkgOf(to) !== pkgOf(f) ) shared.add(to);
+      out.push(to);
+      if ( pkgOf(to) && pkgOf(to) !== pkgOf(f) && pkgOf(to) !== RULES_PKG ) shared.add(to);
+    }
+    edges.set(f, out);
+  }
+  // which modules reach each rules core file, through rules core files only
+  const reach = new Map();
+  for ( const f of files ) {
+    if ( pkgOf(f) === RULES_PKG ) continue;
+    const from = pkgOf(f), queue = (edges.get(f) ?? []).filter(t => pkgOf(t) === RULES_PKG);
+    while ( queue.length ) {
+      const t = queue.pop();
+      const set = reach.get(t) ?? new Set();
+      if ( set.has(from) ) continue;
+      set.add(from);
+      reach.set(t, set);
+      for ( const n of edges.get(t) ?? [] ) if ( pkgOf(n) === RULES_PKG ) queue.push(n);
     }
   }
-  return shared;
+  const owner = new Map();
+  for ( const [f, set] of reach ) {
+    if ( set.size === 1 ) owner.set(f, [...set][0]);
+    else shared.add(f);
+  }
+  // a module file a rules core file imports is shared unless that rules file is bundled into the same module
+  for ( const [f, out] of edges ) {
+    if ( pkgOf(f) !== RULES_PKG ) continue;
+    for ( const to of out ) if ( pkgOf(to) && pkgOf(to) !== RULES_PKG && owner.get(f) !== pkgOf(to) ) shared.add(to);
+  }
+  return {shared, owner};
 }
 
 const mods = existsSync(MODS) ? readdirSync(MODS).filter(m => m.startsWith("wodx-") && existsSync(join(MODS, m, "module.json"))) : [];
 const all = [...mods.flatMap(m => walk(join(MODS, m))), ...(existsSync(SYS) ? readdirSync(SYS, {withFileTypes: true}).filter(e => e.isDirectory()).flatMap(e => walk(join(SYS, e.name))) : [])];
-const shared = sharedFiles(all);
+const {shared, owner} = sharedFiles(all);
 const report = [];
 for ( const m of mods ) {
   const dir = join(MODS, m);
@@ -73,7 +108,7 @@ for ( const m of mods ) {
         b.onResolve({filter: /^\./}, a => {
           if ( !a.importer ) return null;
           const to = resolve(a.resolveDir, a.path);
-          if ( pkgOf(to) === dir && !shared.has(to) ) return null;
+          if ( (pkgOf(to) === dir || owner.get(to) === dir) && !shared.has(to) ) return null;
           let rel = relative(outdir, to).split(sep).join("/");
           if ( !rel.startsWith(".") ) rel = `./${rel}`;
           return {path: rel, external: true};

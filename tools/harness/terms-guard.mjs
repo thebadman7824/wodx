@@ -19,7 +19,8 @@ export const ROOT = path.resolve(HERE, "../..");
 const MODULES = path.join(ROOT, "modules");
 export const BASELINE = path.join(HERE, "terms-guard-baseline.json");
 /** The files that define the terms themselves. */
-const OWNERS = new Set(["wodx-chronicle/scripts/terms.mjs", "wodx-chronicle/scripts/calendar-math.mjs", "wodx-chronicle/scripts/calendar.mjs"]);
+const OWNERS = new Set(["wodx-rules/core/terms.mjs", "wodx-rules/core/calendar-math.mjs", "wodx-rules/core/calendar.mjs",
+  "wodx-chronicle/scripts/calendar.mjs"]);
 
 const UNIT_NAMES = "DAY|WEEK|MONTH|YEAR|HOUR|MINUTE|NIGHT|SECONDS_A_DAY|SECONDS_PER_DAY|SECONDS_PER_YEAR|YEAR_SECONDS|MONTH_SECONDS|TURN|TURN_SECONDS|DEFAULT_TURN|SCENE_SECONDS|LUNAR_MONTH|LUNAR_MONTH_DAYS|LUNAR_CYCLE_DAYS|SYNODIC_MONTH|YEAR_AND_A_DAY_DAYS";
 const count = (text, re) => (text.match(re) ?? []).length;
