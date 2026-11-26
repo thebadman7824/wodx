@@ -2644,8 +2644,8 @@ export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) 
   Object.assign(g, {use, stacks, uses, sheet: KIND_BEHAVIOUR[kind]?.[2] ?? "Item"});
   // The tagging pass (goods-tags.mjs): who owns one, what it is for, what it is made of
   const who = tagsOf(name);
-  g.station = who?.station ?? null; g.style = who?.style ?? null; g.material = who?.material ?? null;
+  g.station = who?.station ?? null; g.style = who?.style ?? null; g.material = who?.material ?? null; g.trade = who?.trade ?? null;
   g.tags = {category: kind, ways: g.ways, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container,
-    station: g.station, style: g.style, material: g.material};
+    station: g.station, style: g.style, material: g.material, trade: g.trade};
   return g;
 });
