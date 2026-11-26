@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.118.3 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 0.118.2 (Fixes from the first solo test (B8055, B8056): the watch stand on free spots in the open by the culprit, each answer to the law is told, a place with no landing spot is entered by its door (the Way back, any Way, a door or a public room), and a trip announces its time (wodxTravelled) for a table with one clock)
 - 0.118.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.118.0 (The cast step writes a hunter's inquisitor record from the recipe (B7890); The cast step writes a thrall's record as it does a hunter's (B7924); An inquisitor cell to live in (Dark Ages: Inquisitor Companion pp. 71-80, 116; B7891-B7898); A sept to live in (Dark Ages: Werewolf pp. 29-36, 74, 99, 101, 144-145, 167-170): chores, the monthly moot, offices, rites taught for tribute, rank challenges and the news of 1200-1204 (B7874-B7878, B7882))

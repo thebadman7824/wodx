@@ -53,7 +53,7 @@
 "r": "manipulation+stealth",
 "d": 7,
 "t": "scene",
-"e": "Each success adds one to the difficulty of Perception rolls to notice them.",
+"e": "Perception rolls to notice them are 1 harder per success.",
 "id": "blur-of-the-milky-eye"
 },
 {
